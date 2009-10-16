@@ -1,0 +1,69 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<!--HW rings; the ane and ine suffix are included seperately as there are limitations as to what heteroatoms they can be used with-->
+<tokenLists>
+  <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="W">
+      <token value="3" valType="unsatring">iren</token>
+      <token value="3" valType="ring">iran</token>
+      <token value="3" valType="unsatring">irin</token>
+      <token value="3" valType="ring">iridin</token>
+
+      <token value="4" valType="unsatring">et</token>
+      <token value="4" valType="ring">etan</token>
+      <token value="4" valType="ring">etidin</token>
+      <token value="4" valType="partunsatring">etin</token>
+      <token value="4" valType="partunsatring">eten</token>
+
+      <token value="5" valType="unsatring">ol</token>
+      <token value="5" valType="ring">olan</token>
+      <token value="5" valType="ring">olidin</token>
+      <token value="5" valType="partunsatring">olin</token>
+      <token value="5" valType="partunsatring">olen</token>
+
+      <token value="6" valType="ring">inan</token>
+      <token value="6" valType="unsatring">inin</token>
+
+      <token value="7" valType="unsatring">epin</token>
+      <token value="7" valType="ring">epan</token>
+
+      <token value="8" valType="unsatring">ocin</token>
+      <token value="8" valType="ring">ocan</token>
+
+      <token value="9" valType="unsatring">onin</token>
+      <token value="9" valType="ring">onan</token>
+
+      <token value="10" valType="unsatring">ecin</token>
+      <token value="10" valType="ring">ecan</token>
+      
+      <!--Extension for fused rings according to FR-2.2.1(c)-->
+      <token value="11" valType="unsatring">cycloundecin</token>
+      <token value="12" valType="unsatring">cyclododecin</token>
+      <token value="13" valType="unsatring">cyclotridecin</token>
+      <token value="14" valType="unsatring">cyclotetradecin</token>
+      <token value="15" valType="unsatring">cyclopentadecin</token>
+      <token value="16" valType="unsatring">cyclohexadecin</token>
+      <token value="17" valType="unsatring">cycloheptadecin</token>
+      <token value="18" valType="unsatring">cyclooctadecin</token>
+      <token value="19" valType="unsatring">cyclononadecin</token>
+      <token value="20" valType="unsatring">cycloeicosin</token>
+      <token value="20" valType="unsatring">cycloicosin</token>
+      <token value="21" valType="unsatring">cyclohenicosin</token>
+      <token value="22" valType="unsatring">cyclodocosin</token>
+      <token value="23" valType="unsatring">cyclotricosin</token>
+      <token value="24" valType="unsatring">cyclotetracosin</token>
+      <token value="25" valType="unsatring">cyclopentacosin</token>
+      <token value="26" valType="unsatring">cyclohexacosin</token>
+      <token value="27" valType="unsatring">cycloheptacosin</token>
+      <token value="28" valType="unsatring">cyclooctacosin</token>
+      <token value="29" valType="unsatring">cyclononacosin</token>
+      <token value="30" valType="unsatring">cyclotriacontin</token>
+  </tokenList>
+
+  <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="K"><!--the ine suffix -->
+    <token value="6" valType="unsatring">in</token>
+  </tokenList>
+
+  <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="k"><!--the ane suffix -->
+    <token value="6" valType="ring">an</token>
+  </tokenList>
+</tokenLists>

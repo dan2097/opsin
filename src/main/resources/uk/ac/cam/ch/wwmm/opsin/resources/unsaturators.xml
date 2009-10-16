@@ -1,0 +1,17 @@
+﻿<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
+<!-- See the dtd for full details. "value" is bond order in this context -->
+<tokenLists>
+  <tokenList tagname="unsaturator" symbol="u">
+      <token value="1" locant="1">ane</token>
+      <token value="1" locant="1">an</token>
+      <token value="2">en</token>
+      <token value="2">ene</token>
+      <token value="3">yne</token>
+      <token value="3">yn</token>
+  </tokenList>
+
+  <tokenList tagname="unsaturator" symbol="à">
+      <token value="1" locant="1">ane</token>
+      <token value="1" locant="1">an</token>
+  </tokenList>
+</tokenLists>

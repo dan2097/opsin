@@ -1,0 +1,40 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="x">
+<!-- implement ylene =diyl  e.g. neopentylene, vinylene, butylene, naphthylene-->
+  <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">methylene</token>
+  <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">carbene</token>
+  <token value="CC" outIDs="1,2" valType="SMILES">ethylene</token>
+  <token value="C#C" outIDs="1,2" valType="SMILES">ethynylene</token>
+
+  <token value="c1ccccc1" outIDs="1,2" valType="SMILES">phenylene</token>
+  <token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1" valType="SMILES">semicarbazono</token>
+  <token value="NC(=O)N" labels="3/2//1" outIDs="1,4" valType="SMILES">ureylene</token>
+  <token value="c1ccccc1" labels="1/2/3/4/5/6" outIDs="7,8" valType="SMILES" addGroup="C locant1;C locant2">xylylene</token>
+
+
+  <token value="CCC" outIDs="1,2" valType="SMILES">propylene</token>
+
+  <!--<token value="NN" labels="none" outIDs="1,1,2,2" valType="SMILES">azino</token>-->
+  <token value="N=N" labels="none" outIDs="1,2" valType="SMILES">azo</token><!--rule C-911 needs to be implemented to use this properly-->
+  <token value="N=[N+]O" labels="none" outIDs="1,2" valType="SMILES">azoxy</token><!--rule C-911 needs to be implemented to use this properly-->
+  <token value="N" labels="none" outIDs="1,1" valType="SMILES">nitrene</token>
+  <token value="N" labels="none" outIDs="1,1" valType="SMILES">aminylene</token>
+  <token value="N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">imino</token>
+  <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
+  <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
+
+  <token value="[N+]([O-])" labels="none" outIDs="1?,1?,1" valType="SMILES" usableAsAJoiner="yes">nitroryl</token>
+  <token value="P|5(=O)([O-])" labels="none" valType="SMILES" outIDs="1?,1" usableAsAJoiner="yes">phosphinato</token>
+  <token value="[As|5](=O)([O-])" labels="none" valType="SMILES" outIDs="1?,1" usableAsAJoiner="yes">arsinato</token>
+  <token value="[Sb|5](=O)([O-])" labels="none" valType="SMILES" outIDs="1?,1" usableAsAJoiner="yes">stibinato</token>
+
+  <token value="[Si]" labels="none" outIDs="1,1" valType="SMILES">silylene</token>
+
+  <token value="O" labels="none" outIDs="1?,1" valType="SMILES" usableAsAJoiner="yes">oxy</token>
+  <token value="S" labels="none" outIDs="1?,1" valType="SMILES" usableAsAJoiner="yes">thio</token>
+  <token value="[Se]" labels="none" outIDs="1?,1" valType="SMILES" usableAsAJoiner="yes">seleno</token>
+  <token value="[Te]" labels="none" outIDs="1?,1" valType="SMILES" usableAsAJoiner="yes">telluro</token>
+</tokenList>
+
+

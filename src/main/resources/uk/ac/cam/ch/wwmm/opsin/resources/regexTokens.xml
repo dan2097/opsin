@@ -1,0 +1,49 @@
+﻿<!DOCTYPE regexTokenList SYSTEM "regexTokenList.dtd">
+<!-- regex == the regular expression to recognise as a token
+	symbol == the one-letter code that goes into the grammar in regexes.xml
+	tagname == the type of XML element to turn the token into.
+  type == Sets the type attribute on the XML element, useful for differentiating related elements
+  ignoreWhenWritingXML == Tells the parser not to form an XML element out of these. That means that these entries are only syntactic and contain no useful information and are not useful after parsing has completed
+
+  name == used for regexes that are simply substituted into other regexes using %{name}% notation
+ -->
+<regexTokenList>
+  <regexToken name="%elementSymbol%" regex="(He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)"/>
+  <regexToken name="%openBracket%" regex="[\[\(\{]"/>
+  <regexToken name="%closeBracket%" regex="[\]\)\}]"/>
+  <regexToken name="%locantNoPrime%" regex="([1-9]\d*[a-z]?)"/><!--standard numeric locant with optional letter-->
+
+<!--Assembles the rather large regex for detecting all locant variants-->
+  <regexToken name="%cistrans%" regex="([rct]-)"/><!--relative/cis/trans descriptor-->
+  <regexToken name="%locant%" regex="([1-9]\d*[a-z]?'*)"/><!--standard numeric locant with optional letter/primes-->
+  <regexToken name="%locantTypes%" regex="(%locant%|%elementSymbol%'*%locant%?)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4 etc.-->
+  <regexToken name="%locantTypesOptionalHyphen%" regex="([1-9]\d*([a-z]'+)?'*|%elementSymbol%'+|%elementSymbol%'*[1-9]\d*([a-z]'+)?'*)"/><!--subset that do not end with a letter-->
+  <regexToken name="%indicatedHydrogen%" regex="(%locant%H)"/>
+  <regexToken name="%compoundLocantOrIndicatedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
+  <regexToken name="%allLocantForms%" regex="(%cistrans%?%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>
+  <regexToken name="%formsWhereHyphenIsOptional%" regex="(%cistrans%?(%locantTypes%%compoundLocantOrIndicatedHydrogen%|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
+  <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" />
+
+  <regexToken regex="-" symbol="h" tagname="hyphen" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="-" symbol="ä" tagname="hyphen"/>
+  <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" />
+  <regexToken regex="%closeBracket%" symbol="c" tagname="closebracket" />
+  <regexToken regex="(?i)spiro\[(\d+(\^[\(\{]?\d+[\)\}]?)?\.)+\d+(\^[\(\{]?\d+[\)\}]?)?\]" symbol="S" tagname="spiro" />
+  <regexToken regex="(?i)cyclo\[\d+(\.\d+(\^?[\(\{]?\d+,\d+[\)\}]?\^?\^?)?)+\]" symbol="B" tagname="vonBaeyer" />
+  <regexToken regex="(?i)\[[1-9]\d*\]annulen" symbol="N" tagname="annulen" />
+  <regexToken regex="\[(%locantNoPrime%(,%locantNoPrime%)*)?-?[a-z]*\]" symbol="F" tagname="fusion" />
+  <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-" symbol="e" tagname="hydrogen" />
+  <regexToken regex="[eE]" symbol="Z" tagname="e" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="n-" symbol="n" tagname="alkanen" /><!--case sensitive so must be a regex-->
+  <regexToken regex="((?i:ortho|meta|para)|o|m|p)-" symbol="O" tagname="orthoMetaPara" />
+  <regexToken regex="%openBracket%" symbol="T" tagname="optionalOpenBracket" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="%closeBracket%" symbol="U" tagname="optionalCloseBracket" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" />
+  <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" />
+  <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" />
+  <regexToken regex="(rel-)?%openBracket%(%locant%|%elementSymbol%'*)?([EZez]|[RSrs]\*?)(,(%locant%|%elementSymbol%'*)?([EZez]|[RSrs]\*?))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" />
+
+  <regexToken regex="" symbol="é" tagname="endOfSubstituent" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="" symbol="â" tagname="endOfMainGroup" ignoreWhenWritingXML="yes"/>
+</regexTokenList>

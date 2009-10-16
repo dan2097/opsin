@@ -1,0 +1,36 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<!--class these as either chains or rings -->
+<tokenList tagname="group" type="simpleGroup" subType="simpleGroupStem" symbol="g">
+  <token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amin</token>
+  <token value="[N-]=[N+]=[N-]" labels="none" valType="SMILES">azid</token>
+  <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazin</token>
+  <token value="NO" labels="none" valType="SMILES" usableAsAJoiner="yes">hydroxylamin</token>
+  <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidin</token>
+  <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerol</token>
+  <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerin</token>
+  <token value="C=C=O" labels="none" valType="SMILES">keten</token>
+
+  <token value="C#C" valType="SMILES" usableAsAJoiner="yes">acetylen</token>
+  <token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>
+  
+  <token value="P" valType="SMILES" usableAsAJoiner="yes">phosphin</token>
+  <token value="[As]" valType="SMILES" usableAsAJoiner="yes">arsin</token>
+  <token value="[Sb]" valType="SMILES" usableAsAJoiner="yes">stibin</token>
+  <token value="[Bi]" valType="SMILES" usableAsAJoiner="yes">bismuthin</token>
+
+<!-- trivial acid derived ketones -->
+  <token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" valType="SMILES" usableAsAJoiner="yes">aceton</token>
+  <token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES" usableAsAJoiner="yes">propion</token>
+  <token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES" usableAsAJoiner="yes">propionon</token>
+  <token value="CCCC(=O)CCC" labels="1/2/3/4//5/6/7" defaultInLocant="7" valType="SMILES" usableAsAJoiner="yes">butyron</token>
+  <token value="CCCCC(=O)CCCC" labels="1/2/3/4/5//6/7/8/9" defaultInLocant="9" valType="SMILES" usableAsAJoiner="yes">valeron</token>
+
+  <token value="CC(C)C(=O)C(C)C" labels="none" valType="SMILES">isobutyron</token>
+  <token value="CC(C)CC(=O)CC(C)C" labels="none" valType="SMILES">isovaleron</token>
+
+  <token value="CCCCCCCCCCCC(=O)CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12//13/14/15/16/17/18/19/20/21/22/23" defaultInLocant="23" valType="SMILES" usableAsAJoiner="yes">lauron</token>
+  <token value="CCCCCCCCCCCCCC(=O)CCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14//15/16/17/18/19/20/21/22/23/24/25/26/27" defaultInLocant="27" valType="SMILES" usableAsAJoiner="yes">myriston</token>
+  <token value="CCCCCCCCCCCCCCCC(=O)CCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16//17/18/19/20/21/22/23/24/25/26/27/28/29/30/31" defaultInLocant="31" valType="SMILES" usableAsAJoiner="yes">palmiton</token>
+  <token value="CCCCCCCCCCCCCCCCCC(=O)CCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18//19/20/21/22/23/24/25/26/27/28/29/30/31/32/33/34/35" defaultInLocant="35" valType="SMILES" usableAsAJoiner="yes">stearon</token>
+</tokenList>

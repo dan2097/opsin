@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE suffixApplicability SYSTEM "suffixApplicability.dtd">
+<!-- This file dictates what suffixes are applicabily to the group types that OPSIN recognises.
+There are currently 4 main types: acidStem, substituent, cyclic and acyclic.
+Other types are used under specific conditions e.g. chalcogenAcidStem
+If a type in OPSIN corresponds to a group type then it is used:
+Hence acidStem is OPSIN type acidStem
+As an exception to this simpleGroup also uses substituent
+All other groups are classified into cyclic or acyclic by querying the atom where the suffix is expected to attach as to whether or not it is in a ring.
+In some cases it is further specified that a suffix only applies to a certain subtype e.g. yl has different meanings to different acids
+The value is the suffixValue that is in the name (or in some cases produced by OPSIN) whilst the text is what should be looked up in suffixRules
+-->
+<suffixApplicability>
+  <groupType type="substituent"><!--e.g. hydrazin to hydrazinyl or bor to boryl -->
+    <suffix value="carbonyl">carbonyl</suffix>
+    <suffix value="oxy">oxy</suffix>
+    <suffix value="oyl">oyl</suffix>
+    <suffix value="sulfenyl">sulfenyl</suffix>
+    <suffix value="sulfinyl">sulfinyl</suffix>
+    <suffix value="sulfonyl">sulfonyl</suffix>
+    <suffix value="yl">yl</suffix>
+    <suffix value="ylidene">ylidene</suffix>
+    <suffix value="ylidyne">ylidyne</suffix>
+  </groupType>
+
+  <groupType type="acidStem"><!--e.g. acet to acetamide -->
+    <suffix value="aldehyde">aldehyde</suffix>
+    <suffix value="amide">amide</suffix>
+    <suffix value="amido">amido</suffix>
+    <suffix value="anilide">anilide</suffix>
+    <suffix value="ate">ate</suffix>
+    <suffix value="carbohydrazide">carbohydrazide</suffix>
+    <suffix value="carbohydrazonic">carbohydrazonic</suffix>
+    <suffix value="carbohydrazonoyl">carbohydrazonoyl</suffix>
+    <suffix value="carbohydroxamic">carbohydroxamic</suffix>
+    <suffix value="carbohydroximic">carbohydroximic</suffix>
+    <suffix value="carbohydroximoyl">carbohydroximoyl</suffix>
+    <suffix value="carbonate">carbonate</suffix>
+    <suffix value="carbonyl">carbonyl</suffix>
+    <suffix value="carbothioyl">carbothioyl</suffix>
+    <suffix value="carboximidic">carboximidic</suffix>
+    <suffix value="carboximidoyl">carboximidoyl</suffix>
+    <suffix value="hydrazide">hydrazide</suffix>
+    <suffix value="hydrazonic">hydrazonic</suffix>
+    <suffix value="hydrazonoyl">hydrazonoyl</suffix>
+    <suffix value="hydroxamic">hydroxamic</suffix>
+    <suffix value="hydroximic">hydroximic</suffix>
+    <suffix value="hydroximoyl">hydroximoyl</suffix>
+    <suffix value="ic">ic</suffix>
+    <suffix value="ide">ide</suffix>
+    <suffix value="imidic">imidic</suffix>
+    <suffix value="imidoyl">imidoyl</suffix>
+    <suffix value="ium">ium</suffix>
+    <suffix value="ite">ite</suffix>
+    <suffix value="nitrile">nitrile</suffix>
+    <suffix value="onaphthone">onaphthone</suffix>
+    <!-- one is handled by hard coding common examples of its use -->
+    <suffix value="ophenone">ophenone</suffix>
+    <suffix value="ous">ous</suffix>
+    <suffix value="oxy" subType="ylForAcyl">oxy-ylForAcyl</suffix>
+    <suffix value="oxy" subType="oylForAcyl">oxy</suffix>
+    <suffix value="oyl">oyl</suffix>
+    <suffix value="sulfenyl">sulfenyl</suffix>
+    <suffix value="sulfinyl">sulfinyl</suffix>
+    <suffix value="sulfonyl">sulfonyl</suffix>
+    <suffix value="yl" subType="ylForAcyl">oyl</suffix>
+    <suffix value="yl" subType="oylForAcyl">yl</suffix>
+    <suffix value="ylidene" subType="oylForAcyl">ylidene</suffix>
+    <suffix value="ylidyne" subType="oylForAcyl">ylidyne</suffix>
+  </groupType>
+
+  <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->
+    <suffix value="ate">ite</suffix>
+    <suffix value="ic">ous</suffix>
+    <suffix value="yl">yl-plusOptionalOutID</suffix>
+    <suffix value="ylidene">ylidene</suffix>
+  </groupType>
+
+  <groupType type="acyclic"><!--e.g. ethan to ethanimine-->
+    <suffix value="al">aldehyde</suffix>
+    <suffix value="aldehyde">aldehyde</suffix>
+    <suffix value="amide">amide</suffix>
+    <suffix value="amido">amido</suffix>
+    <suffix value="amine">amine</suffix>
+    <suffix value="anilide">anilide</suffix>
+    <suffix value="ate">ate</suffix>
+    <suffix value="carbaldehyde">carbaldehyde</suffix>
+    <suffix value="carbohydrazide">carbohydrazide</suffix>
+    <suffix value="carbohydrazonic">carbohydrazonic</suffix>
+    <suffix value="carbohydrazonoyl">carbohydrazonoyl</suffix>
+    <suffix value="carbohydroxamic">carbohydroxamic</suffix>
+    <suffix value="carbohydroximic">carbohydroximic</suffix>
+    <suffix value="carbohydroximoyl">carbohydroximoyl</suffix>
+    <suffix value="carbonitrile">carbonitrile</suffix>
+    <suffix value="carbothioyl">carbothioyl</suffix>
+    <suffix value="carboxamide">carboxamide</suffix>
+    <suffix value="carboxamido">carboxamido</suffix>
+    <suffix value="carboxanilide">carboxanilide</suffix>
+    <suffix value="carboximidamide">carboximidamide</suffix>
+    <suffix value="carboximidic">carboximidic</suffix>
+    <suffix value="carboximidoyl">carboximidoyl</suffix>
+    <suffix value="diazonium">diazonium</suffix>
+    <suffix value="hydrazide">hydrazide</suffix>
+    <suffix value="hydrazonic">hydrazonic</suffix>
+    <suffix value="hydrazonoyl">hydrazonoyl</suffix>
+    <suffix value="hydroxamic">hydroxamic</suffix>
+    <suffix value="hydroximic">hydroximic</suffix>
+    <suffix value="hydroximoyl">hydroximoyl</suffix>
+    <suffix value="ic">ic</suffix>
+    <suffix value="ide">ide</suffix>
+    <suffix value="imidic">imidic</suffix>
+    <suffix value="imidoyl">imidoyl</suffix>
+    <suffix value="imidamide">imidamide</suffix>
+    <suffix value="imine">imine</suffix>
+    <suffix value="ium">ium</suffix>
+    <suffix value="ite">ite</suffix>
+    <suffix value="nitrile">nitrile</suffix>
+    <suffix value="ol">ol</suffix>
+    <suffix value="olate">olate</suffix>
+    <suffix value="onaphthone">onaphthone</suffix>
+    <suffix value="one">oneOnChain</suffix>
+    <suffix value="ophenone">ophenone</suffix>
+    <suffix value="ous">ous</suffix>
+    <suffix value="oxide">oxide</suffix>
+    <suffix value="seleninic">seleninic</suffix>
+    <suffix value="selenonic">selenonic</suffix>
+    <suffix value="sulfinic">sulfinic</suffix>
+    <suffix value="sulfonate">sulfonate</suffix>
+    <suffix value="sulfonic">sulfonic</suffix>
+    <suffix value="tellurinic">tellurinic</suffix>
+    <suffix value="telluronic">telluronic</suffix>
+    <suffix value="thiolate">thiolate</suffix>
+
+<!-- INCOMPLETE-->
+
+    <suffix value="boronic">boronic</suffix>
+    <suffix value="carboxylic">carboxylic</suffix>
+    <suffix value="carboxylate">carboxylate</suffix>
+    <suffix value="sulfonamide">sulfonamide</suffix>
+
+<!--inline-->
+    <suffix value="carbonyl">carbonyl</suffix>
+    <suffix value="oxy">oxy</suffix>
+    <suffix value="oyl">oyl</suffix>
+    <suffix value="sulfenyl">sulfenyl</suffix>
+    <suffix value="sulfinyl">sulfinyl</suffix>
+    <suffix value="sulfonyl">sulfonyl</suffix>
+    <suffix value="yl">yl</suffix>
+    <suffix value="ylidene">ylidene</suffix>
+    <suffix value="ylidyne">ylidyne</suffix>
+  </groupType>
+
+  <groupType type="cyclic"><!--e.g. benz to benzoate or toluen to toluene-2-carbaldehyde -->
+    <suffix value="al">carbaldehyde</suffix>
+    <suffix value="aldehyde">carbaldehyde</suffix>
+    <suffix value="amide">carboxamide</suffix>
+    <suffix value="amido">carboxamido</suffix>
+    <suffix value="amine">amine</suffix>
+    <suffix value="carboxanilide">anilide</suffix>
+    <suffix value="ate">carboxylate</suffix>
+    <suffix value="carbaldehyde">carbaldehyde</suffix>
+    <suffix value="carbohydrazide">carbohydrazide</suffix>
+    <suffix value="carbohydrazonic">carbohydrazonic</suffix>
+    <suffix value="carbohydrazonoyl">carbohydrazonoyl</suffix>
+    <suffix value="carbohydroxamic">carbohydroxamic</suffix>
+    <suffix value="carbohydroximic">carbohydroximic</suffix>
+    <suffix value="carbohydroximoyl">carbohydroximoyl</suffix>
+    <suffix value="carbonitrile">carbonitrile</suffix>
+    <suffix value="carbothioyl">carbothioyl</suffix>
+    <suffix value="carboxamide">carboxamide</suffix>
+    <suffix value="carboxamido">carboxamido</suffix>
+    <suffix value="carboxanilide">carboxanilide</suffix>
+    <suffix value="carboximidamide">carboximidamide</suffix>
+    <suffix value="carboximidic">carboximidic</suffix>
+    <suffix value="carboximidoyl">carboximidoyl</suffix>
+    <suffix value="diazonium">diazonium</suffix>
+    <suffix value="hydrazide">carbohydrazide</suffix>
+    <suffix value="hydrazonic">carbohydrazonic</suffix>
+    <suffix value="hydrazonoyl">carbohydrazonoyl</suffix>
+    <suffix value="hydroxamic">carbohydroxamic</suffix>
+    <suffix value="hydroximic">carbohydroximic</suffix>
+    <suffix value="hydroximoyl">carbohydroximoyl</suffix>
+    <suffix value="ic">carboxylic</suffix>
+    <suffix value="ide">ide</suffix>
+    <suffix value="imidic">carboximidic</suffix>
+    <suffix value="imidoyl">carboximidoyl</suffix>
+    <suffix value="imidamide">carboximidamide</suffix>
+    <suffix value="imine">imine</suffix>
+    <suffix value="ium">ium</suffix>
+    <suffix value="ite">carboxylite</suffix>
+    <suffix value="nitrile">carbonitrile</suffix>
+    <suffix value="ol">ol</suffix>
+    <suffix value="olate">olate</suffix>
+    <suffix value="one">one</suffix>
+    <suffix value="oxide">oxide</suffix>
+    <suffix value="seleninic">seleninic</suffix>
+    <suffix value="selenonic">selenonic</suffix>
+    <suffix value="sulfinic">sulfinic</suffix>
+    <suffix value="sulfonate">sulfonate</suffix>
+    <suffix value="sulfonic">sulfonic</suffix>
+    <suffix value="tellurinic">tellurinic</suffix>
+    <suffix value="telluronic">telluronic</suffix>
+    <suffix value="thiolate">thiolate</suffix>
+
+<!--inline-->
+    <suffix value="carbonyl">carbonyl</suffix>
+    <suffix value="oxy">oxy</suffix>
+    <suffix value="oyl">carbonyl</suffix>
+    <suffix value="sulfenyl">sulfenyl</suffix>
+    <suffix value="sulfinyl">sulfinyl</suffix>
+    <suffix value="sulfonyl">sulfonyl</suffix>
+    <suffix value="yl">yl</suffix>
+    <suffix value="ylidene">ylidene</suffix>
+    <suffix value="ylidyne">ylidyne</suffix>
+
+<!-- INCOMPLETE-->
+
+    <suffix value="boronic">boronic</suffix>
+    <suffix value="carboxylic">carboxylic</suffix>
+    <suffix value="carboxylate">carboxylate</suffix>
+    <suffix value="sulfonamide">sulfonamide</suffix>
+  </groupType>
+</suffixApplicability>

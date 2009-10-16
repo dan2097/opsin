@@ -1,0 +1,118 @@
+﻿<!DOCTYPE regexes SYSTEM "regexes.dtd">
+<regexes>
+<!-- These define the basic grammar of chemical words. These build the single-letter
+codes found in regexTokens and the other tokenlist files into a large regular
+expression, which is used in parsing.
+
+Note that this is NOT a CFG! This file is read entry by entry, building up
+a dictionary of the translated form of each term as it goes. This has
+the consquence that if you want to use a term, you must define it in a previous
+<regex> first. Note that this disallows recursive definitions, and hence this
+does not define a CFG.
+ -->
+
+<!-- base level regexes, a mirror of the token files -->
+  <regex name="%alkaneStem%" value="a"/>
+  <regex name="%irregularAlkaneStem%" value="A"/>
+  <regex name="%alkanen%" value="n"/>
+  <regex name="%suffix%" value="s"/>
+  <regex name="%unsaturator%" value="u"/>
+  <regex name="%inlineSuffix%" value="i"/>
+  <regex name="%simpleSubstituent%" value="x"/>
+  <regex name="%simpleMultiplier%" value="m"/>
+  <regex name="%elidedAMultiplier%" value="r"/>
+  <regex name="%groupMultiplier%" value="R"/>
+  <regex name="%simpleGroupStem%" value="g"/>
+  <regex name="%simpleGroup%" value="G"/>
+  <regex name="%locantGroup%" value="l"/>
+  <regex name="%hyphen%" value="h"/>
+  <regex name="%openBracket%" value="o"/>
+  <regex name="%closeBracket%" value="c"/>
+  <regex name="%acidStem%" value="d"/>
+  <regex name="%arylSubstituent%" value="b"/>
+  <regex name="%cyclo%" value="C"/>
+  <regex name="%vonBaeyer%" value="B"/>
+  <regex name="%spiro%" value="S"/>
+  <regex name="%heteroAtom%" value="H"/>
+  <regex name="%heteroAtomaElided%" value="v"/>
+  <regex name="%hantzschWidmanSuffix%" value="W"/>
+  <regex name="%arylStem%" value="z"/>
+  <regex name="%fusionRing%" value="f"/>
+  <regex name="%fusionBracket%" value="F"/>
+  <regex name="%hydro%" value="y"/>
+  <regex name="%capitalH%" value="e"/>
+  <regex name="%annulen%" value="N"/>
+  <regex name="%orthoMetaPara%" value="O"/>
+  <regex name="%stereochemistryBracket%" value="E"/>
+  <regex name="%cisOrTrans%" value="t"/>
+  <regex name="%heteroStem%" value="p"/>
+  <regex name="%o%" value="Y"/>
+  <regex name="%e%" value="Z"/>
+  <regex name="%inlineChargeSuffix%" value="I"/>
+  <regex name="%suffixableSubstituent%" value="X"/>
+  <regex name="%hwHeteroAtom%" value="D"/>
+  <regex name="%optionalOpenBracket%" value="T"/>
+  <regex name="%optionalCloseBracket%" value="U"/>
+  <regex name="%hwAneCompatible%" value="j"/>
+  <regex name="%hwIneCompatible%" value="J"/>
+  <regex name="%hwAne%" value="k"/>
+  <regex name="%hwIne%" value="K"/>
+  <regex name="%ringAssemblyMultiplier%" value="P"/>
+  <regex name="%ringAssemblyLocant%" value="L"/>
+  <regex name="%vonBaeyerMultiplier%" value="M"/>
+  <regex name="%structuralOpenBracket%" value="q"/>
+  <regex name="%structuralCloseBracket%" value="Q"/>
+  <regex name="%repeatableInlineSuffix%" value="w"/>
+  <regex name="%FR2hydrocarbonComponent%" value="V"/>
+  <regex name="%FR2hydrocarbonComponente%" value="Ç"/>
+  <regex name="%replacementInfix%" value="ü"/>
+  <regex name="%endOfSubstituent%" value="é"/>
+  <regex name="%endOfMainGroup%" value="â"/>
+  <regex name="%interSubstituentHyphen%" value="ä"/>
+  <regex name="%ane%" value="à"/>
+  <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
+  <!--up to ascii 134 used so far -->
+
+<!-- composite regexes
+	Note that %substituent% and %chemical% are reserved words: don't change these.
+ -->
+  <regex name="%rootSuffix%" value="(%suffix%|%suffixesThatCanHaveEeuphonicO%)"/>
+  <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
+  <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
+  <regex name="%ring%" value="(%cyclo%|%vonBaeyerMultiplier%%vonBaeyer%|%simpleMultiplierGroup%?%spiro%)"/>
+  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|%cisOrTrans%)%hyphen%?)"/>
+  <regex name="%newLocantGroupNoOMP%" value="(%hyphen%?%locantGroup%?)"/>
+  <regex name="%newLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
+  <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
+  <regex name="%infixedInlineSuffix%" value="(%replacementInfix%%o%?%inlineSuffix%|%structuralOpenBracket%%multiplier%?%replacementInfix%%o%?%inlineSuffix%%structuralCloseBracket%)"/>
+  <regex name="%unlocantedInlineSuffixGroup%" value="(%simpleMultiplierGroup%?(%infixedInlineSuffix%|%inlineSuffix%))"/>
+  <regex name="%inlineSuffixGroup%" value="(%newLocantGroup%?%unlocantedInlineSuffixGroup%)"/>
+  <regex name="%repeatableInlineSuffixGroup%" value="(%newLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
+  <regex name="%inlineChargeGroup%" value="(%newLocantGroup%?%multiplier%?%inlineChargeSuffix%)"/>
+  <regex name="%unsaturation%" value="(%newLocantGroupNoOMP%?%multiplier%?%unsaturator%)"/>
+  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|%locantGroup%?%multiplier%?)%heteroAtom%%hyphen%?)"/>
+  <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
+  <regex name="%bigCapitalH%" value="(%capitalH%)"/>
+  <regex name="%hantzschWidmanRing%" value="((%newLocantGroupNoStartingHyphen%|(%optionalOpenBracket%%newLocantGroup%%optionalCloseBracket%))?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
+  <regex name="%fusor%" value="((%fusionRing%|%ring%%alkaneStem%|%annulen%%o%|%vonBaeyerMultiplier%(%FR2hydrocarbonComponent%|%FR2hydrocarbonComponente%)%o%|%hantzschWidmanRing%%o%)%fusionBracket%?)"/>
+  <regex name="%hwHeteroCycle%" value="(%bigCapitalH%?%fusor%*%hantzschWidmanRing%%e%?)"/>
+  <regex name="%newArylStem%" value="((%heteroReplacement%+%hydroGroup%?)?%bigCapitalH%?%newLocantGroupNoStartingHyphen%?%fusor%*((%arylStem%|%annulen%|%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)%e%?|%vonBaeyerMultiplier%%FR2hydrocarbonComponente%%e%))"/>
+  <regex name="%alkaneRing%" value="((%heteroReplacement%*|%hydroGroup%?(%heteroReplacement%+%hydroGroup%?)?%bigCapitalH%?%fusor%*%ring%)%alkaneStem%)"/>
+  <regex name="%alkane%" value="(%alkaneRing%|%heteroReplacement%*%irregularAlkaneStem%|%alkanen%%alkaneStem%)"/>
+  <regex name="%heteroChain%" value="((%heteroReplacement%*(%cyclo%|%vonBaeyerMultiplier%%vonBaeyer%))?((%multiplier%%heteroStem%%unsaturation%+)|(%heteroStem%%ane%)))"/>
+  <regex name="%alternatingHeteroChain%" value="(%cyclo%?%multiplier%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturation%+)"/>
+  <regex name="%newArylSubstituent%" value="%newLocantGroupNoStartingHyphen%?%arylSubstituent%"/><!--e.g. o-tol, pyrid-->
+  <regex name="%ringAssemblyRing%" value ="((%hydroGroup%?(%newArylStem%|%hwHeteroCycle%)%inlineChargeGroup%*%inlineSuffixGroup%?)|(%newArylSubstituent%%inlineChargeGroup%*%inlineSuffixGroup%)|(%alkaneRing%%unsaturation%*%inlineChargeGroup%*%newLocantGroup%?%inlineSuffix%?))" />
+  <regex name="%ringAssembly%" value="((%ringAssemblyLocant%|%orthoMetaPara%)?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|(%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%)))"/>
+  <regex name="%substituentStem%" value="(%alkane%%unsaturation%*|%newArylStem%|%hwHeteroCycle%|%newArylSubstituent%|%heteroChain%|%alternatingHeteroChain%|%suffixableSubstituent%|%simpleGroupStem%%e%?|%ringAssembly%)"/>
+  <regex name="%mainGroupStem%" value="(%alkane%%unsaturation%+|%newArylStem%|%hwHeteroCycle%|%heteroChain%|%alternatingHeteroChain%|%ringAssembly%)"/>
+  <regex name="%subsituentBody%" value="(%simpleSubstituent%|%acidStem%%inlineChargeGroup%*%unlocantedInlineSuffixGroup%|%substituentStem%%inlineChargeGroup%*%inlineSuffixGroup%%repeatableInlineSuffixGroup%*%inlineChargeGroup%*)"/>
+  <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%openBracket%)"/>
+  <regex name="%substituent%" value="(%locantOpenBracket%*%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%subsituentBody%%closeBracket%*%interSubstituentHyphen%?%endOfSubstituent%)"/>
+  <regex name="%infixedSuffix%" value="((%replacementInfix%((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%))|(%structuralOpenBracket%%multiplier%?%replacementInfix%((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%)%structuralCloseBracket%))"/>
+  <regex name="%unlocantedSuffixGroup%" value="((%multiplier%?(%infixedSuffix%|%rootSuffix%))|(%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%))"/>  
+  <regex name="%suffixGroup%" value="(%newLocantGroup%?%unlocantedSuffixGroup%)"/>
+  <regex name="%complexGroup%" value="(%newLocantGroupNoStartingHyphen%?(%mainGroupStem%%inlineChargeGroup%*%suffixGroup%?|%newArylSubstituent%%inlineChargeGroup%*%suffixGroup%|%acidStem%%unlocantedSuffixGroup%))"/>
+  <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*(%simpleGroupStem%%e%?|%simpleGroup%|%complexGroup%)%closeBracket%*%endOfMainGroup%)"/>
+  <regex name="%chemical%" value="(%substituent%*%mainGroup%)"/>
+</regexes>
