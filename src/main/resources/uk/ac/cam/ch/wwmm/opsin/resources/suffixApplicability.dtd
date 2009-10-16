@@ -1,0 +1,8 @@
+<!ELEMENT suffixApplicability (groupType)+>
+
+<!ELEMENT groupType     (suffix)+>
+<!ATTLIST groupType type CDATA #REQUIRED>
+
+<!ELEMENT suffix (#PCDATA)>
+<!ATTLIST suffix value CDATA #REQUIRED
+               subType CDATA #IMPLIED>

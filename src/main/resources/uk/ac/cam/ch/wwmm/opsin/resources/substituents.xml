@@ -1,0 +1,11 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="group" type="substituent" subType="substituent" symbol="X">
+  <token value="B" labels="none" valType="SMILES" usableAsAJoiner="yes">bor</token>
+  <token value="[Si]" labels="none" valType="SMILES" usableAsAJoiner="yes">sil</token>
+  <token value="[Ge]" labels="none" valType="SMILES" usableAsAJoiner="yes">germ</token>
+  <token value="[Sn]" labels="none" valType="SMILES" usableAsAJoiner="yes">stann</token>
+  <token value="[Pb]" labels="none" valType="SMILES" usableAsAJoiner="yes">plumb</token>
+
+  <token value="CC(=O)c1ccccc1" labels="///1/2/3/4/5/6" valType="SMILES">phenac</token>
+</tokenList>

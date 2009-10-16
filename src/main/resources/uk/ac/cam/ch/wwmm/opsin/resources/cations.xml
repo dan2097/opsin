@@ -1,0 +1,9 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="group" type="simpleGroup" subType="cation" symbol="G">
+  <token value="[Li+]" labels="none" valType="SMILES">lithium</token>
+  <token value="[Na+]" labels="none" valType="SMILES">sodium</token>
+  <token value="[K+]" labels="none" valType="SMILES">potassium</token>
+  <token value="[Rb+]" labels="none" valType="SMILES">rubidium</token>
+  <token value="[Cs+]" labels="none" valType="SMILES">caesium</token>
+</tokenList>

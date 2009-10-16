@@ -1,0 +1,100 @@
+﻿<!DOCTYPE wordRules SYSTEM "wordRules.dtd">
+<!-- These say how to split a word into tokens. These interact with the code in a complex way -->
+<!-- The first regex to match the word is used, otherwise binaryOrOther is used -->
+<!--If more words are matched than are described the additional words are assumed to be of type full-->
+<wordRules>
+  <stringReplacement name="%subEnding%" value="(?:yl|o|xy|idene|ylene)"/>
+  <stringReplacement name="%closeBracket%" value="(?:[\]\)\}])"/>
+  <stringReplacement name="%substituent%" value="(?:[^ £]+%subEnding%%closeBracket%*)"/>
+  <stringReplacement name="%multiplier%" value="(?:mono|di|tri|tetra|penta|hexa|hepta|octa|nona|deca)"/>
+  <stringReplacement name="%locant%" value="(?:\d+(?:,\d+)*-?)"/>
+  <stringReplacement name="%monovalentFunctionalGroup%" value="(?:azide|bromide|chloride|cyanate|cyanide|fluoride|fulminate|hydroperoxide|iodide|isocyanate|isocyanide|isoselenocyanate|isothiocyanate|selenocyanate|thiocyanate)"/>
+  <stringReplacement name="%monovalentLiteralFunctionalGroup%" value="(?:alcohol|selenol|thiol)"/>
+  <stringReplacement name="%divalentLiteralFunctionalGroup%" value="(?:ether|ketone|oxide|peroxide|selenide|selenone|selenoxide|selone|selenoketone|sulfide|sulfone|sulfoxide|telluride|telluroketone|tellurone|telluroxide|thioketone)"/>
+
+  <wordRule name="functionalClassEster" regex="([^ £]+(?:ic|ous))[ ]*(acid)[ ]+(%substituent%)[ \-]*(ester)">
+    <word type="full" />
+    <word type="literal" />
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="functionalClassEster" regex="([^ £]+(?:ate|amide))[ ]+(%substituent%)[ \-]*(ester)">
+    <word type="full" />
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="amide" regex="([^ £]+(?:ic|ous))[ ]*(acid)[ ]+(%substituent%)[ \-]*(amide)">
+    <word type="full" />
+    <word type="literal" />
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+  
+  <wordRule name="amide" regex="([^ £]+(?:ic|ous))[ ]*(acid)[ \-]*(amide)">
+    <word type="full" />
+    <word type="literal" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="glycol" regex="([^ £]+(?:diyl|ylene)%closeBracket%*)[ ]*(glycol)">
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="oxime" regex="([^ £]+(?&lt;!%subEnding%))[ ]*(%locant%?%multiplier%?oxime)">
+    <word type="full" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="oxime" regex="([^ £]+(?&lt;!%subEnding%))[ ]+(%substituent%)[ ]*(oxime)">
+    <word type="full" />
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+<!-- hydrazide, lactone, lactam, hydrazone, anhydride, semicarbazone, acetal, hemiacetal, ketal -->
+
+  <!--<wordRule name="oxide" regex="([^ £]+)[ ]*(oxide)">
+    <word type="full" />
+    <word type="literal" />
+  </wordRule>-->
+
+  <wordRule name="diester" regex="(%substituent%)[ ]+(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="full" />
+  </wordRule>
+  <wordRule name="ester" regex="(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
+    <word type="substituent" />
+    <word type="full" />
+  </wordRule>
+
+  <wordRule name="acid" regex="([^ £]+(?:ic|ous))[ ]*(acid)">
+    <word type="full" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="divalentLiteralFunctionalGroup" regex="(%substituent%)[ ]+(%substituent%)[ ]*(%divalentLiteralFunctionalGroup%)">
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="divalentLiteralFunctionalGroup" regex="(%substituent%)[ ]*(%divalentLiteralFunctionalGroup%)">
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+  <wordRule name="monovalentFunctionalGroup" regex="(%substituent%)[ ]*(%multiplier%?(?&lt;!hydro)%monovalentFunctionalGroup%)+">
+    <word type="substituent" />
+    <word type="full" />
+  </wordRule>
+
+  <wordRule name="monovalentLiteralFunctionalGroup" regex="(%substituent%)[ ]*(%monovalentLiteralFunctionalGroup%)">
+    <word type="substituent" />
+    <word type="literal" />
+  </wordRule>
+
+</wordRules>

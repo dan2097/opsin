@@ -1,0 +1,58 @@
+<!-- A list of tokens -->
+<!ELEMENT tokenLists (tokenList)+>
+<!ELEMENT tokenList (token)+>
+<!ATTLIST tokenList tagname CDATA #REQUIRED
+                    type CDATA #IMPLIED
+                    subType CDATA #IMPLIED
+                    symbol CDATA #REQUIRED>
+<!-- tagname == the name of the XML element that tokens
+in this file will be translated to
+type == the type attribute on the XML element
+subType == gives additional information about what exactly the tokens represent
+symbol == the one-letter code for the token, for the
+grammar in regexes.xml -->
+
+<!ELEMENT token (#PCDATA)>
+<!ATTLIST token value CDATA #REQUIRED
+        valType (chain|ring|unsatring|partunsatring|atom|SMILES|dbkey) #IMPLIED
+        labels CDATA #IMPLIED
+        fusedRingNumbering CDATA #IMPLIED
+        defaultInLocant CDATA #IMPLIED
+        defaultInID CDATA #IMPLIED
+        outID CDATA #IMPLIED
+        outIDs CDATA #IMPLIED
+        functionalIDs CDATA #IMPLIED
+        addGroup CDATA #IMPLIED
+        addHeteroAtom CDATA #IMPLIED
+        addBond CDATA #IMPLIED
+        usableAsAJoiner CDATA #IMPLIED
+        frontLocantsExpected CDATA #IMPLIED
+        suffixAppliesTo CDATA #IMPLIED
+        additionalValue CDATA #IMPLIED
+        locant CDATA #IMPLIED>
+<!--
+  (the #PCDATA inside the tag) = the string to match
+  value == depends on valType, or see the file itself
+   valType = chain => aliphatic chain of $VALUE carbons
+   valType = ring => aliphatic chain of $VALUE carbons
+   valType = unsatring => conjugated chain of $VALUE carbons
+   valType = partunsatring => aliphatic chain of $VALUE carbons which will later have at least one bond unsaturated
+   valType = atom => single atom of the given symbol
+   valType = dbkey => a key to fragments.xml
+   valType = SMILES => see the SMILESFragmentBuilder class
+  labels == What the locants are for this group. See the SMILESFragmentBuilder class
+  fusedRingNumbering ==same as above but for some rings with non standard numbering. This numbering is used to decide which sides correspond to the letters employed in fusing rings. It is neccesary where non standard numbering does not precess regularly around the edge of the fused ring system c.f. purine
+  defaultInLocant == The locant of the atom which by default an incoming fragment should connect to. Typically used on groups
+  defaultInID == As above but using the id of the atom instead. IDs are relative to this particular fragment
+  outID == An id that is designed as being an outID. This ID is relative to this particular fragment. If you want just one outID use this, not outIDs
+  outIDs == Comma seperated ids of locations of radicals on a substituent. ? after id if this id is never used when the substituent is substituted onto. Typically used on substituents. IDs are relative to this particular fragment
+  functionalIDs == Comma seperated ids of locations which are functionalIDs on a group. IDs are relative to this particular fragment. Functional IDs are used in ester formation.
+  addGroup == list of the following format SMILESofGroupToBeAdded then a space then the word id or locant, then an id or locant as appropriate. If multiple groups are to be added seperate by semicolons e.g. "=O locant9;=O locant10" to add two double bonded oxygens, one by default at locant 9 and the other by default at locant 10
+  addHeteroAtom == list of the following format element of atm then a space then the word id or locant, then an id or locant as appropriate. If multiple heteroatoms are to be added seperate by semicolons e.g. "N locant1;S locant3"
+  addBond == list of the following format order of bond then a space then the word id or locant, then an id or locant as appropriate. If multiple bonds are to be added seperate by semicolons e.g. "2 locant1;3 locant3"
+  usableAsAJoiner == "no" or missing. If no then make sure not to use it as such when assigning implicit brackets
+  frontLocantsExpected == comma seperated list of locants indicating what locants are expected in front of this group. If one of these locants are found it will preferentially be assigned to the suffix of the group. The group should correspond to a retained name. (codified in P-29.6 of IUPAC 2004 rules)
+  suffixAppliesTo == comma seperated ids indicating where the suffix following a group should be applied. Currently used to direct the formation of trivial di-acids. IDs are relative to this particular fragment
+  additionalValue == Another value that the token takes. Currently only used for suffixes that mean the addition of two discrete suffixes
+  locant == used for an/ane to prevent a locant being given
+  -->

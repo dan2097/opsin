@@ -1,0 +1,8 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="group" type="simpleGroup" subType="anion" symbol="G">
+  <token value="[F-]" labels="none" valType="SMILES">fluoride</token>
+  <token value="[Cl-]" labels="none" valType="SMILES">chloride</token>
+  <token value="[Br-]" labels="none" valType="SMILES">bromide</token>
+  <token value="[I-]" labels="none" valType="SMILES">iodide</token>
+</tokenList>

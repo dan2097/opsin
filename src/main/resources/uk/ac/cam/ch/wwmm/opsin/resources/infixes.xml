@@ -1,0 +1,13 @@
+﻿<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="infix" symbol="ü">
+  <token value="OO" valType="SMILES">perox</token>
+  <!--<token value="SO" valType="SMILES">thioperoxo</token> is it SO or OS???-->
+  <token value="SS" valType="SMILES">dithioperox</token>
+  <token value="[Se][Se]" valType="SMILES">diselenoperox</token>
+  <token value="[Te][Te]" valType="SMILES">ditellurooperox</token>
+  <!--<token value="[Se]S" valType="SMILES">selenothioperoxo</token> is it [Se]S or S[Se]???-->
+  <token value="S" valType="SMILES">thi</token>
+  <token value="[Se]" valType="SMILES">selen</token>
+  <token value="[Te]" valType="SMILES">tellur</token>
+</tokenList>

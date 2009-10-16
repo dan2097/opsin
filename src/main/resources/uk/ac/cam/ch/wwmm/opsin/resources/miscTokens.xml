@@ -1,0 +1,27 @@
+﻿<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
+<!-- See the DTD for more details -->
+<tokenLists>
+  <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V"><!--the a is part of the multiplier and the e is assumed to be optional -->
+    <token value="polyacene">cen</token>
+    <token value="polyalene">len</token>
+    <token value="polyphenylene">phenylen</token>
+    <token value="polynaphthylene">naphthylen</token>
+    <token value="polyhelicene">helicen</token>
+  </tokenList>
+  <tokenList tagname="hydrocarbonFusedRingSystem" symbol="Ç"><!--as above but an e is compulsory when not used as a fusion component to avoid confusion with tetraphenyl-->
+    <token value="polyaphene">phen</token>
+  </tokenList>
+  
+  <tokenList tagname="cyclo" symbol="C">
+    <token value="cyclo">cyclo</token>
+  </tokenList>
+
+  <tokenList tagname="hydro" symbol="y">
+    <token value="hydro">hydro</token>
+  </tokenList>
+
+  <tokenList tagname="stereoChemistry" type="cisOrTrans" symbol="t">
+    <token value="cis">cis</token>
+    <token value="trans">trans</token>
+  </tokenList>
+</tokenLists>

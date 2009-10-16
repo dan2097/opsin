@@ -1,0 +1,139 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="G">
+  <token value="N" labels="none" valType="SMILES">ammonia</token>
+  <token value="O" labels="none" valType="SMILES">water</token>
+  <token value="[N+]" labels="none" valType="SMILES">ammonium</token>
+  <token value="[P+]" labels="none" valType="SMILES">phosphonium</token>
+  <token value="[As+]" labels="none" valType="SMILES">arsonium</token>
+  <token value="[Sb+]" labels="none" valType="SMILES">stibonium</token>
+  <token value="[Bi+]" labels="none" valType="SMILES">bismuthonium</token>
+  <token value="[O+]" labels="none" valType="SMILES">oxonium</token>
+  <token value="[S+]" labels="none" valType="SMILES">sulfonium</token>
+  <token value="[Se+]" labels="none" valType="SMILES">selenonium</token>
+  <token value="[Te+]" labels="none" valType="SMILES">telluronium</token>
+  <token value="[F+]" labels="none" valType="SMILES">fluoronium</token>
+  <token value="[Cl+]" labels="none" valType="SMILES">chloronium</token>
+  <token value="[Br+]" labels="none" valType="SMILES">bromonium</token>
+  <token value="[I+]" labels="none" valType="SMILES">iodonium</token>
+
+  <token value="F" labels="none" valType="SMILES">hydrofluoride</token>
+  <token value="Cl" labels="none" valType="SMILES">hydrochloride</token>
+  <token value="Br" labels="none" valType="SMILES">hydrobromide</token>
+  <token value="I" labels="none" valType="SMILES">hydroiodide</token>
+  <token value="[At]" labels="none" valType="SMILES">hydroastatide</token>
+
+  <token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'" valType="SMILES">biacetyl</token>
+
+  <token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
+  <token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious</token>
+  <token value="B(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">boric</token>
+  <token value="BO" labels="none" valType="SMILES" functionalIDs="2">borinic</token>
+  <token value="B(O)O" labels="none" valType="SMILES" functionalIDs="2,3">boronic</token>
+  <token value="BrO" labels="none" valType="SMILES" functionalIDs="2">hypobromous</token>
+  <token value="ClO" labels="none" valType="SMILES" functionalIDs="2">hypochlorous</token>
+  <token value="FO" labels="none" valType="SMILES" functionalIDs="2">hypofluorous</token>
+  <token value="IO" labels="none" valType="SMILES" functionalIDs="2">hypoiodous</token>
+  <token value="[N+](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="3">nitric</token>
+  <token value="N(=O)O" labels="none" valType="SMILES" functionalIDs="3">nitrous</token>
+  <token value="[Se](=O)(=O)(O)O" labels="none" valType="SMILES" functionalIDs="4,5">selenic</token>
+  <token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">selenous</token>
+  <token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">silicic</token>
+  <token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">orthosilicic</token>
+  <token value="[Te](=O)(=O)(O)O" labels="none" valType="SMILES" functionalIDs="4,5">telluric</token>
+  <token value="[Te](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">tellurous</token>
+
+
+
+<!--remember to move a lot of these to simpleGroupStems, also they're not all simplegroups.... -->
+  <token value="N1C(=O)NC(=O)C(=O)C(=O)1" labels="1/2//3/4//5//6/" valType="SMILES">alloxane</token>
+  <token value="N[O-]" labels="none" valType="SMILES">aminoxide</token>
+  <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
+  <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">benzidine</token>
+  <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">4,4'-benzidine</token>
+  <token value="NC(=N)NC(=N)N" labels="1//2/3//4/5" valType="SMILES">biguanide</token><!--also multiplier guanide should be allowed-->
+  <token value="NC(=O)NC(=O)N" labels="1/2//3/4//5" valType="SMILES">biuret</token><!--also multiplier uret should be allowed-->
+  <token value="C123C4CC5CC1.C25(C)C.C3.O4" labels="1/2/3/4/5/6/7/8/9/10/" valType="SMILES">borneol</token>
+  <token value="C(Br)(Br)(Br)" labels="none" valType="SMILES">bromoform</token>
+  <token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
+  <token value="NNC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbazone</token>
+  <token value="N=NC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbodiazone</token>
+  <token value="N=C=N" labels="none" valType="SMILES">carbodiimide</token>
+  <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbonohydrazide</token>
+  <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbohydrazide</token>
+  <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbazide</token>
+  <token value="C(Cl)(Cl)Cl)" labels="none" valType="SMILES">chloroform</token>
+  <token value="[O-]C(=O)CC(O)(C(=O)[O-])CC(=O)[O-]" labels="none" valType="SMILES">citrate</token>
+  <token value="OC(=O)CC(O)(C(=O)O)CC(=O)O" labels="none" valType="SMILES" functionalIDs="1,9,13">citric</token><!--no clear definition as to what citryl means-->
+  <token value="[O-]C#N" labels="none" valType="SMILES">cyanate</token>
+  <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic</token>
+  <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
+  <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES">diacetamide</token>
+  <token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES">dibenzamide</token>
+  <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
+  <token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
+  <token value="NN=CN=N" valType="SMILES">formazan</token>
+  <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
+  <token value="CC(CCC=C(C)C)=CCO" labels="none" valType="SMILES">geraniol</token>
+  <token value="C(=O)C(=O)" labels="1//2/" valType="SMILES">glyoxal</token>
+  <token value="N1C(=O)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">hydantoin</token>
+  <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
+  <token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
+  <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazide</token>
+  <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
+  <token value="N=C=O" labels="none" valType="SMILES" functionalIDs="1">isocyanic</token>
+  <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>
+  <token value="[N-]=C=[Se]" labels="none" valType="SMILES">isoselenocyanate</token>
+  <token value="NC([Se])=N" labels="1//2/3" valType="SMILES">isoselenourea</token>
+  <token value="NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazide</token>
+  <token value="[N-]=C=[Te]" labels="none" valType="SMILES">isotellurocyanate</token>
+  <token value="NC([Te])=N" labels="1//2/3" valType="SMILES">isotellurourea</token>
+  <token value="[N-]=C=S" labels="none" valType="SMILES">isothiocyanate</token>
+  <token value="NC(S)=N" labels="1//2/3" valType="SMILES">isothiourea</token>
+  <token value="NC(O)=N" labels="1//2/3" valType="SMILES">isourea</token>
+  <token value="C12CC3C4CC1.C2.C4(C)C.O3" labels="1/2/3/4/5/6/7/8/9/10/" valType="SMILES">menthol</token>
+  <token value="C(=O)C(=O)" labels="1/2" valType="SMILES">oxaldehyde</token>
+  <token value="NC(=O)C(=O)N" labels="none" valType="SMILES">oxamide</token>
+  <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
+  <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performic</token>
+  <token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>
+  <token value="CC(=O)OO" labels="2/1///" valType="SMILES" functionalIDs="5">peracetic</token>
+  <token value="c1ccccc1C(=O)OO" labels="2/3/4/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoic</token>
+  <token value="C(=O)(Cl)Cl" labels="none" valType="SMILES">phosgene</token>
+  <token value="P([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4">phosphite</token>
+  <token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphate</token>
+  <token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoate</token>
+  <token value="CC(CCCC(CCCC(CCCC(C)C)C)C)CCO" labels="none" valType="SMILES">phytol</token>
+  <token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1[O-]" labels="2////3/4////5/6////1/" valType="SMILES" functionalIDs="16">picrate</token>
+  <token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2////3/4////5/6////1/" valType="SMILES" functionalIDs="16">picric</token>
+  <token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
+  <token value="CCC[O-]" labels="1/2/3/" valType="SMILES">propoxide</token>
+  <token value="c1(O)ccc(O)cc1" labels="1//2/3/4//5/6" valType="SMILES">quinol</token>
+  <token value="c1(O)cc(O)ccc1" labels="1//2/3//4/5/6" valType="SMILES">resorcin</token>
+  <token value="S1C(=S)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">rhodanine</token>
+  <token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenite</token>
+  <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenate</token>
+  <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenoate</token>
+  <token value="[Se-]C#N" labels="none" valType="SMILES">selenocyanate</token>
+  <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
+  <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfite</token>
+  <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
+  <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfoate</token>
+  <token value="[S-]C#N" labels="none" valType="SMILES">thiocyanate</token>
+  <token value="C(=S)(Cl)Cl" labels="none" valType="SMILES">thiophosgene</token>
+  <token value="C(=[Se])(Cl)Cl" labels="none" valType="SMILES">selenophosgene</token>
+  <token value="C(=[Te])(Cl)Cl" labels="none" valType="SMILES">tellurophosgene</token>
+  <token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurite</token>
+  <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurate</token>
+  <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">telluroate</token>
+  <token value="CC(=O)N(C(=O)C)C(=O)C" labels="none" valType="SMILES">triacetamide</token>
+  <token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none" valType="SMILES">tribenzamide</token>
+  <token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
+  <token value="[N+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
+  <token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>
+
+<!-- Special cases-->
+  <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3">formamide</token> <!--special case which should be removed -->
+  <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3">methanamide</token><!--special case which should be removed -->
+  <token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
+</tokenList>

@@ -1,0 +1,5 @@
+<!ELEMENT regexes (regex)+>
+
+<!ELEMENT regex EMPTY>
+<!ATTLIST regex name  CDATA #REQUIRED
+                value CDATA #REQUIRED>
