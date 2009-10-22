@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
+
 import nu.xom.Element;
 
 /**
@@ -81,13 +83,15 @@ public class BuildState {
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
 	HashMap<Element, Element> firstMultiRadical;//hash of word element against substituent/root element with multi radical
+	OpsinMode mode;
 
-	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
+	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, OpsinMode mode) {
 		idManager = new IDManager();
 		fragManager = new FragmentManager(sBuilder, cmlBuilder, idManager);
 		wordRule = null;
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
 		firstMultiRadical = new HashMap<Element, Element>();
+		this.mode =mode;
 	}
 }

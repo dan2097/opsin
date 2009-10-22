@@ -5,6 +5,7 @@
   <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">methylene</token>
   <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">carbene</token>
   <token value="CC" outIDs="1,2" valType="SMILES">ethylene</token>
+  <token value="C=C" outIDs="1,2" valType="SMILES">vinylene</token>
   <token value="C#C" outIDs="1,2" valType="SMILES">ethynylene</token>
 
   <token value="c1ccccc1" outIDs="1,2" valType="SMILES">phenylene</token>
@@ -15,14 +16,18 @@
 
   <token value="CCC" outIDs="1,2" valType="SMILES">propylene</token>
 
+  <token value="NN" outIDs="2?,1" valType="SMILES" usableAsAJoiner="yes">hydrazo</token>
   <!--<token value="NN" labels="none" outIDs="1,1,2,2" valType="SMILES">azino</token>-->
   <token value="N=N" labels="none" outIDs="1,2" valType="SMILES">azo</token><!--rule C-911 needs to be implemented to use this properly-->
   <token value="N=[N+]O" labels="none" outIDs="1,2" valType="SMILES">azoxy</token><!--rule C-911 needs to be implemented to use this properly-->
   <token value="N" labels="none" outIDs="1,1" valType="SMILES">nitrene</token>
   <token value="N" labels="none" outIDs="1,1" valType="SMILES">aminylene</token>
   <token value="N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">imino</token>
+  <token value="[N+]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes">iminio</token>
   <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
   <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
+
+  <token value="OO" labels="none" outIDs="2?,1" valType="SMILES" usableAsAJoiner="yes">peroxy</token>
 
   <token value="[N+]([O-])" labels="none" outIDs="1?,1?,1" valType="SMILES" usableAsAJoiner="yes">nitroryl</token>
   <token value="P|5(=O)([O-])" labels="none" valType="SMILES" outIDs="1?,1" usableAsAJoiner="yes">phosphinato</token>

@@ -14,7 +14,7 @@ class BuildResults {
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
 	 * If at the end of building any IDs are unused R groups will be added to indicate radicals
 	 * These OutIDs are the same objects as are present in the fragments*/
-	private LinkedList<OutID> outIDs;
+	LinkedList<OutID> outIDs;
 	
 	/**The ID or IDs of the atoms that may be used to from things like esters*/
 	LinkedList<Integer> functionalIDs;
@@ -27,6 +27,7 @@ class BuildResults {
 		outIDs = new LinkedList<OutID>();
 		List<OutID> givenOutIDs =mainFrag.getOutIDs();
 		for (OutID outID : givenOutIDs) {
+			outID.setBuildResults(this);
 			outIDs.add(outID);
 		}
 		functionalIDs = new LinkedList<Integer>();

@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>opsin</groupId>
+	<artifactId>opsin</artifactId>
+	<name>OPSIN</name>
+	<version>0.5.3-SNAPSHOT</version>
+	<description>Open Parser for Structural IUPAC Nomenclature</description>
+	<contributors>
+		<contributor>
+			<name>Daniel Lowe</name>
+			<email>dl387@cam.ac.uk</email>
+			<url>http://bitbucket.org/dan2097</url>
+			<organization>University of Cambridge</organization>
+			<organizationUrl>http://www.cam.ac.uk</organizationUrl>
+			<roles>
+			   <role>Lead Programmer</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Peter Corbett</name>
+		</contributor>
+		<contributor>
+			<name>Albina Asadulina</name>
+		</contributor>
+	</contributors>
+	<repositories>
+      <repository>
+         <id>wwmm</id>
+         <url>http://wwmm.ch.cam.ac.uk/maven2</url>
+      </repository>
+   </repositories>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.5</source>
+               <target>1.5</target>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <testFailureIgnore>false</testFailureIgnore>
+            </configuration>
+         </plugin>
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+            <descriptorRefs>
+            	<descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+             <archive>
+                <manifest>
+                   <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToStructure</mainClass>
+                </manifest>
+             </archive>
+           </configuration>
+         </plugin>
+      </plugins>
+   </build>
+   <dependencies>
+      <dependency>
+         <groupId>dk.brics</groupId>
+         <artifactId>automaton</artifactId>
+         <version>1.11</version>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.5</version>
+  		 <scope>test</scope>
+      </dependency>
+      <dependency>
+      	<groupId>commons-io</groupId>
+      	<artifactId>commons-io</artifactId>
+      	<version>1.4</version>
+      </dependency>
+      <dependency>
+      	<groupId>xom</groupId>
+      	<artifactId>xom</artifactId>
+      	<version>1.1</version>
+      </dependency>
+      <dependency>
+         <groupId>net.sf</groupId>
+         <artifactId>jniinchi</artifactId>
+         <version>0.5</version>
+      </dependency>
+   </dependencies>
+</project>

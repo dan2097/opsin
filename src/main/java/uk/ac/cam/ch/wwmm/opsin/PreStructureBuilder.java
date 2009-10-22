@@ -12,6 +12,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
@@ -948,11 +949,12 @@ public class PreStructureBuilder {
 				Element newSuffix = new Element("suffix");
 				if (symmetricSuffixes){
 					newSuffix.addAttribute(new Attribute("value", suffix.getAttributeValue("value")));
+					newSuffix.addAttribute(new Attribute("type",  suffix.getAttributeValue("type")));
 				}
 				else{
 					newSuffix.addAttribute(new Attribute("value", suffix.getAttributeValue("additionalValue")));
+					newSuffix.addAttribute(new Attribute("type", "root"));
 				}
-				newSuffix.addAttribute(new Attribute("type", "root"));
 				newSuffix.addAttribute(new Attribute("locantID", Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[i]) -1)));
 				XOMTools.insertAfter(suffix, newSuffix);
 				suffixes.add(newSuffix);
@@ -1469,8 +1471,9 @@ public class PreStructureBuilder {
 	 * @param substituents
 	 * @return boolean: has any functional replacement occured
 	 * @throws StructureBuildingException
+	 * @throws PostProcessingException 
 	 */
-	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException {
+	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException, PostProcessingException {
 		boolean doneSomething =false;
 		for (Element group : groups) {
 			if (matchChalogenReplacment.matcher(group.getValue()).matches()){
@@ -1947,7 +1950,7 @@ public class PreStructureBuilder {
 					nextEl = (Element) XOMTools.getNextSibling(currentEl);
 					if (groupFound==0 ||
 							(inlineSuffixSeen ==0 && currentEl.getLocalName().equals("suffix") && currentEl.getAttributeValue("type").equals("inline") && currentEl.getAttribute("locant")==null)||
-							(currentEl.getLocalName().equals("suffix") && currentEl.getAttribute("subType")!=null && currentEl.getAttributeValue("subType").equals("charge"))){
+							(currentEl.getLocalName().equals("suffix") && currentEl.getAttributeValue("type").equals("charge"))){
 						currentEl.detach();
 						elementToResolve.appendChild(currentEl);
 					}
@@ -2100,6 +2103,32 @@ public class PreStructureBuilder {
 				if (!placeInImplicitBracket){
 					continue;
 				}
+			}
+			
+			
+
+			Element twoElementsBeforeSubstituent =(Element)XOMTools.getPreviousSibling(group.getParent());
+			//prevent bracketing to multi radicals
+			//This is really tacky...
+			//TODO do this properly...
+			if (group.getAttribute("outIDs")!=null && (group.getAttribute("usableAsAJoiner")==null || twoElementsBeforeSubstituent==null )){
+				continue;
+			}
+			Element afterGroup = (Element)XOMTools.getNextSibling(group);
+			int inlineSuffixCount =0;
+			int multiplier=1;
+			while (afterGroup !=null){
+				if(afterGroup.getLocalName().equals("multiplier")){
+					multiplier =Integer.parseInt(afterGroup.getAttributeValue("value"));
+				}
+				else if(afterGroup.getLocalName().equals("suffix") && afterGroup.getAttributeValue("type").equals("inline")){
+					inlineSuffixCount +=(multiplier);
+					multiplier=1;
+				}
+				afterGroup = (Element)XOMTools.getNextSibling(afterGroup);
+			}
+			if (inlineSuffixCount >=2){
+				continue;
 			}
 
 			Element bracket = new Element("bracket");
@@ -2637,7 +2666,7 @@ public class PreStructureBuilder {
 						thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);//c.f. oxydicyclohexane, 3-methyloxydicyclohexane, methyleneoxydicyclohexane
 					}
 					else{
-						if (previousGroup==null){//something like carbonyl dichloride
+						if (previousGroup==null || state.mode.equals(OpsinMode.poly)){//something like carbonyl dichloride
 							thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
 						}
 						else{
@@ -2679,6 +2708,7 @@ public class PreStructureBuilder {
 			OpsinTools.setTextChild(group, possibleGroupMultiplier.getValue() +group.getValue());
 			possibleGroupMultiplier.detach();
 		}
+		if (state.mode.equals(OpsinMode.poly)){return;}
 		possibleGroupMultiplier =(Element)subOrRoot.getChild(0);
 		groupMultiplier =false;
 		if (possibleGroupMultiplier.getLocalName().equals("multiplier") && !possibleGroupMultiplier.getAttributeValue("value").equals("1")){
@@ -2690,8 +2720,8 @@ public class PreStructureBuilder {
 		if (previousGroup != null && groupMultiplier==false && previousGroup.getParent().getParent()==subOrRoot.getParent()){
 			Fragment previousFrag = state.xmlFragmentMap.get(previousGroup);
 			Element previousSubstituent =(Element) previousGroup.getParent();
-			if ((thisFrag.getOutIDs().size()>=2 || group.getAttribute("outIDs") !=null) &&
-					(previousFrag.getOutIDs().size()>=2 || previousGroup.getAttribute("outIDs") !=null) &&
+			if ((thisFrag.getOutIDs().size()==2 || group.getAttribute("outIDs") !=null) &&
+					(previousFrag.getOutIDs().size()==2 || previousGroup.getAttribute("outIDs") !=null) &&
 					previousSubstituent.getChildElements().size()==1){
 				List<OutID> outIDs =previousFrag.getOutIDs();
 				OutID outID =outIDs.get(outIDs.size()-1);
@@ -2793,10 +2823,23 @@ public class PreStructureBuilder {
 					}
 				}
 				else{//gives, for example, the methylene of methylenecyclohexane one outID of valency 2
-					for (int i = outIDs.size() -1; i >=0 ; i--) {
-						thisFrag.removeOutID(outIDs.get(i));
+					if (state.mode.equals(OpsinMode.poly)){
+						if (outIDsSize>2){//e.g. nitrilo
+							for (int i = outIDs.size() -1; i >=1 ; i--) {
+								thisFrag.removeOutID(outIDs.get(i));
+							}
+							//set the outIds so the one with valency greater than 2 is the first and the other is second
+							OutID singleBondoutId = thisFrag.getOutID(0);
+							thisFrag.removeOutID(0);
+							thisFrag.addOutID(id, outIDsSize -1, true);
+							thisFrag.addOutID(singleBondoutId);
+						}
+					}else{
+						for (int i = outIDs.size() -1; i >=0 ; i--) {
+							thisFrag.removeOutID(outIDs.get(i));
+						}
+						thisFrag.addOutID(id, outIDsSize, true);
 					}
-					thisFrag.addOutID(id, outIDsSize, true);
 				}
 			}
 			else if (possibleMultiplier.getLocalName().equals("multiplier") && outIDsSize==1){//special case where something like benzylidene is being used as if it meant benzdiyl for multiplicative nomenclature

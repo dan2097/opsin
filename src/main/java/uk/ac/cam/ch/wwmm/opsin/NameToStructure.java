@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.PreProcessorResults;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMFormatter;
 
 import nu.xom.Document;
@@ -35,6 +37,9 @@ public class NameToStructure {
 		}
 	}
 
+	/**Identifies name type and rejects a few special cases.*/
+	private PreProcessor preProcessor;
+
 	/**Does finite-state non-destructive parsing on chemical names.*/
 	private Parser parser;
 
@@ -50,7 +55,7 @@ public class NameToStructure {
 	/** A builder for fragments specified as references to a CML data file */
 	private CMLFragmentBuilder cmlBuilder;
 
-	/**Constructs the CML molecule from the postprocessor results.*/
+	/**Constructs the CML molecule from the postProcessor results.*/
 	private StructureBuilder structureBuilder;
 
 	private static NameToStructure myInstance;
@@ -66,15 +71,16 @@ public class NameToStructure {
 	}
 
 
-	/**Initialises the name-to-structure convertor.
+	/**Initialises the name-to-structure converter.
 	 *
-	 * @throws Exception If the convertor cannot be initialised, most likely due to bad or missing data files.
+	 * @throws Exception If the converter cannot be initialised, most likely due to bad or missing data files.
 	 */
 	public NameToStructure() throws Exception {
 		System.out.println("Initialising OPSIN... ");
 		try {
 			/*Initialise all of OPSIN's classes. Some classes are injected as dependencies into subsequent classes*/
 
+			preProcessor = new PreProcessor();
 			//Allows retrieving of OPSIN resources
 			ResourceGetter resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 			TokenManager tokenManager = new TokenManager(resourceGetter);
@@ -92,7 +98,7 @@ public class NameToStructure {
 			preStructureBuilder = new PreStructureBuilder(structureBuilder, fusedRingBuilder, resourceGetter);
 
 		} catch (Exception e) {
-			throw new NameToStructureException(e.getMessage());
+			throw new NameToStructureException(e.getMessage(), e);
 		}
 		System.out.println("OPSIN initialised");
 	}
@@ -136,13 +142,14 @@ public class NameToStructure {
 	 * @return An OPSIN fragment containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public synchronized Fragment parseToOpsinFragment(String name, boolean verbose) {
-		name=name.trim();//remove leading and trailing whitespace
-		if("amine".equalsIgnoreCase(name)) return null; //One tiny annoying exception...
-		if("thiol".equalsIgnoreCase(name)) return null; //OK a few more, not enough to merit a file
-		if("carboxylic acid".equalsIgnoreCase(name)) return null;
+		PreProcessorResults preProcRes = preProcessor.preProcess(name);
+		if (preProcRes ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
+		OpsinMode mode = preProcRes.getMode();
+		name = preProcRes.getChemicalName();
 		try {
+			if(verbose) System.out.println("Mode: " + mode);
 			if(verbose) System.out.println(name);
-			List<Element> p = parser.parse(name);
+			List<Element> p = parser.parse(name, mode);
 			//if(verbose) for(Element e : p) System.out.println(new XOMFormatter().elemToString(e));
 			Comparator<Element> sortParses= new SortParses();
 			Collections.sort(p, sortParses);//less tokens preferred
@@ -150,7 +157,7 @@ public class NameToStructure {
 			for(Element pe : p) {//foreach parse
 				try {
 					if(verbose) System.out.println(new XOMFormatter().elemToString(pe));
-					BuildState state = new BuildState(sBuilder, cmlBuilder);
+					BuildState state = new BuildState(sBuilder, cmlBuilder, mode);
 					Element pp = postProcessor.postProcess(pe, state);
 					if(pp != null) {
 						if(verbose) System.out.println(new XOMFormatter().elemToString(pp));
@@ -193,7 +200,7 @@ public class NameToStructure {
 			} else if(name.equals("END")) {
 				end = true;
 			} else {
-				Element output = nts.parseToCML(name);
+				Element output = nts.parseToCML(name,true);
 				if(output == null) {
 					System.out.println("Did not parse.");
 					System.out.flush();
