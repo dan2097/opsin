@@ -1,7 +1,7 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
 <!-- value = a reference to suffixRules.xml -->   
-<tokenList tagname="suffix" type="inline" subType="charge" symbol="I">
+<tokenList tagname="suffix" type="charge" symbol="I">
   <token value="ium">ium</token>
   <token value="ide">ide</token>
   <token value="ide">id</token>

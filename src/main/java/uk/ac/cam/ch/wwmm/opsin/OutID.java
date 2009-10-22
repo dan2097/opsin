@@ -16,7 +16,12 @@ public class OutID {
 	boolean setExplicitly;
 	Fragment frag;
 	String locant;
+	BuildResults buildResults = null;//TODO get rid of this abomination
 	
+	void setBuildResults(BuildResults buildResults) {
+		this.buildResults = buildResults;
+	}
+
 	OutID(int id, int valency, Boolean setExplicitly, Fragment frag, String locant) {
 		this.id = id;
 		this.valency = valency;

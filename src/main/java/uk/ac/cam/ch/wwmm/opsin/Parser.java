@@ -6,6 +6,7 @@ import java.util.List;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import uk.ac.cam.ch.wwmm.opsin.ParseRules.TwoReturnValues;
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
 import uk.ac.cam.ch.wwmm.ptclib.misc.Combinations;
 
 /**Conducts finite-state parsing on chemical names. Preserves the name itself, just adding XML
@@ -37,14 +38,15 @@ class Parser {
 	/**Parses a chemical name to an XML representation of the parse.
 	 *
 	 * @param name The name to parse.
+	 * @param mode 
 	 * @return The parse.
 	 * @throws ParsingException If the name is unparsable.
 	 */
-	List<Element> parse(String name) throws ParsingException {
+	List<Element> parse(String name, OpsinMode mode) throws ParsingException {
 		Parse p = new Parse();
 		p.name = name;
 		p.words = new ArrayList<ParseWord>();
-		wordRules.parse(p);
+		wordRules.parse(p, mode);
 
 		List<Integer> parseCounts = new ArrayList<Integer>();
 		int totalParses = 1;

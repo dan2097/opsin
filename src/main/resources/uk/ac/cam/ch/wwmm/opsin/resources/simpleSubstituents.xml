@@ -114,7 +114,6 @@
   <token value="N=C=S" labels="none" valType="SMILES">isothiocyanato</token>
   <token value="O" labels="none" valType="SMILES">hydroxy</token>
   <token value="OO" labels="none" valType="SMILES">hydroperoxy</token>
-  <token value="OO" labels="none" valType="SMILES" usableAsAJoiner="yes">peroxy</token>
   <token value="OO" labels="none" valType="SMILES" usableAsAJoiner="yes">peroxyl</token>
   <token value="OO" labels="none" valType="SMILES" usableAsAJoiner="yes">dioxyl</token>
 
@@ -155,6 +154,7 @@
   <token value="C(=O)C(=O)OC" labels="none" valType="SMILES">methoxalyl</token>
   <token value="C(=O)C(=O)OCC" labels="none" valType="SMILES">ethoxalyl</token>
 
+  <token value="[Si](C)(C)C" labels="none" valType="SMILES">tms</token>
 </tokenList>
 
 

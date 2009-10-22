@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
@@ -29,6 +30,9 @@ class StructureBuilder {
 	Fragment buildFragment(BuildState state, Element molecule) throws StructureBuildingException {
 		String wordRule = state.wordRule;
 		Elements words = molecule.getChildElements();
+		if (words.size()==0){
+			throw new StructureBuildingException("Molecule contains no words!?");
+		}
 		BuildResults moleculeBuildResults =null;//contains every atom in the molecule. If a mixture was the input then both "molecules" will be in this
 		int substituentCount = OpsinTools.findChildElementsWithTagNameAndAttribute(molecule, "word", "type", "substituent").size();
 		//TODO factor these into separate methods and maybe the rest of the class into a separate class
@@ -395,6 +399,45 @@ class StructureBuilder {
 //				}
 //			}
 //		}
+		else if(wordRule.equals("polymer")) {
+			for (Element word : state.firstMultiRadical.keySet()) {//don't use multiplicative nomenclature
+				state.firstMultiRadical.put(word, null);
+			}
+			Element polymer = molecule.getFirstChildElement("word");
+			moleculeBuildResults =resolveWordOrBracket(state, polymer, null, new LinkedHashSet<Fragment>());
+			int inIdCount=0;
+			Fragment firstFragment =null;
+			for (Fragment frag : moleculeBuildResults.fragments) {
+				inIdCount +=frag.getInIDs().size();
+				if (frag.getInIDs().size()!=0){
+					firstFragment =frag;
+				}
+			}
+			if (moleculeBuildResults.getOutIDCount() ==2  && inIdCount ==0){//e.g. poly(ethylene)
+				Atom inAtom =moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+				Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
+				state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(0).valency);
+				Atom outAtom =moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
+				rGroup =state.fragManager.buildSMILES("[Rn]");
+				state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(1).valency);
+				moleculeBuildResults.removeAllOutIDs();
+			}
+			else if (moleculeBuildResults.getOutIDCount() ==1 && inIdCount==1){//other cases
+				OutID inId = firstFragment.getInID(0);
+				Atom inAtom = firstFragment.getAtomByIdOrNextSuitableAtomOrThrow(inId.id, inId.valency);
+				Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
+				state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), inId.valency);
+				firstFragment.removeInID(0);
+
+				Atom outAtom =moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+				rGroup =state.fragManager.buildSMILES("[Rn]");
+				state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(0).valency);
+				moleculeBuildResults.removeOutID(0);
+			}
+			else{
+				throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 1 outIDs, found: " +moleculeBuildResults.getOutIDCount() +" ,expected 1 inIDs, found: " +inIdCount);
+			}
+		}
 		else if(wordRule.equals("binaryOrOther")) {
 			moleculeBuildResults=resolveWordOrBracket(state, words.get(words.size()-1), null, new LinkedHashSet<Fragment>());
 			for (int i = words.size()-2; i >=0; i--) {//allows resolving of counter ions first
@@ -402,7 +445,6 @@ class StructureBuilder {
 			}
 		}else if(wordRule.equals("simple") || wordRule.equals("acid")) {
 			Element word = molecule.getFirstChildElement("word");
-			if(word == null) throw new StructureBuildingException("Molecule contains no words!?");
 			moleculeBuildResults =resolveWordOrBracket(state, word, null, new LinkedHashSet<Fragment>());
 		}
 		else{
@@ -943,22 +985,86 @@ class StructureBuilder {
 			Fragment parentFrag, String locantStr) throws StructureBuildingException {
 
 		Fragment fragToBeJoined =fragToBeJoinedBuildResults.getMainFragment();
+		boolean polymerMode =false;
+		if (state.mode.equals(OpsinMode.poly) && fragToBeJoinedBuildResults.getOutIDCount() ==2){
+			polymerMode =true;
+		}
 		if (fragToBeJoinedBuildResults.getOutIDCount() <=0){
 			throw new StructureBuildingException("Fragment does not have any specified outIDs!");
 		}
-		Atom from =fragToBeJoinedBuildResults.getOutAtom(0);
-		int bondOrder =fragToBeJoinedBuildResults.getFirstOutID().valency;
-		if (fragToBeJoinedBuildResults.getFirstOutID().setExplicitly != true){//not set explicitly so may be an inappropriate atom
-			from=fragToBeJoined.getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
-		}
-		fragToBeJoinedBuildResults.removeOutID(0);
-
-		Atom to =null;
-		if(locantStr.equals("0")){
-			to = parentFrag.getAtomByIdOrNextSuitableAtom(parentFrag.getDefaultInID(), bondOrder, true);
+		Atom from;
+		int bondOrder;
+		if (polymerMode){
+			OutID firstOutID = fragToBeJoined.getOutID(0);
+			fragToBeJoined.addInID(firstOutID.id, firstOutID.valency, firstOutID.setExplicitly);
+			fragToBeJoined.removeOutID(firstOutID);
+			fragToBeJoinedBuildResults.removeOutID(0);
+			from = fragToBeJoinedBuildResults.getOutAtom(0);
+			bondOrder = fragToBeJoinedBuildResults.getOutID(0).valency;
+			fragToBeJoined.removeOutID(fragToBeJoined.getOutID(0));
+			fragToBeJoinedBuildResults.removeOutID(0);
 		}
 		else{
-			to =parentFrag.getAtomByLocant(locantStr);
+			from = fragToBeJoinedBuildResults.getOutAtom(0);
+			bondOrder =fragToBeJoinedBuildResults.getFirstOutID().valency;
+			if (fragToBeJoinedBuildResults.getFirstOutID().setExplicitly != true){//not set explicitly so may be an inappropriate atom
+				from=fragToBeJoined.getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
+			}
+			fragToBeJoinedBuildResults.removeOutID(0);
+		}
+
+
+		Atom to =null;
+		if (polymerMode){//TODO allow names like poly[oxy(dichloromethyl)methylene] e.g. search for next with two outIDs or an inId
+			Element nextSubOrBracket = (Element) XOMTools.getNextSibling(parentSubstituentOrBracketOfFrag);
+			if (nextSubOrBracket == null){
+				throw new StructureBuildingException("Polymer building failed: Element not found where element expected");
+			}
+			while (nextSubOrBracket.getLocalName().equals("bracket")) {//pick the right most non bracket
+				nextSubOrBracket = (Element) nextSubOrBracket.getChild(nextSubOrBracket.getChildCount()-1);
+				if (nextSubOrBracket.getLocalName().equals("hyphen")){
+					nextSubOrBracket = (Element) XOMTools.getPreviousSibling(nextSubOrBracket);
+				}
+			}
+			Element group = nextSubOrBracket.getFirstChildElement("group");
+			if (group == null){
+				throw new StructureBuildingException("Polymer building failed: group not found where group expected");
+			}
+			parentFrag = state.xmlFragmentMap.get(group);//get the next fragment along
+			int parentExpectedBondOrder;
+			if (parentFrag.getOutIDs().size()==2){
+				OutID outId =parentFrag.getOutID(0);
+				to =parentFrag.getAtomByIDOrThrow(outId.id);
+				parentExpectedBondOrder =outId.valency;
+				outId.buildResults.outIDs.remove(outId);
+				parentFrag.removeOutID(0);
+			}
+			else if (parentFrag.getInIDs().size()==1){
+				to =parentFrag.getAtomByIDOrThrow(parentFrag.getInID(0).id);
+				parentExpectedBondOrder =parentFrag.getInID(0).valency;
+				parentFrag.removeInID(0);
+			}
+			else{
+				throw new StructureBuildingException("Polymer building failed: Fragment was expected to be have two outIDs or an inId but in fact had: " +parentFrag.getOutIDs().size() +" outIDs and : " +parentFrag.getInIDs().size() +" inIDs");
+			}
+			if (parentExpectedBondOrder != bondOrder){//wrong outId on the frag to be joined has been utilised, expected to happen in ambiguous cases such as nitrilo
+				OutID theRealOutId = fragToBeJoined.getInID(0);
+				fragToBeJoined.removeInID(0);
+				fragToBeJoined.addInID(from.getID(), bondOrder, true);
+				from = fragToBeJoined.getAtomByIDOrThrow(theRealOutId.id);//probably the same atom as before
+				bondOrder = theRealOutId.valency;
+				if (parentExpectedBondOrder != bondOrder){
+					throw new StructureBuildingException("Polymer building failed: bond order disagreement");
+				}
+			}
+		}
+		else{
+			if(locantStr.equals("0")){
+				to = parentFrag.getAtomByIdOrNextSuitableAtom(parentFrag.getDefaultInID(), bondOrder, true);
+			}
+			else{
+				to =parentFrag.getAtomByLocant(locantStr);
+			}
 		}
 
 		//case where you should actually be substituting onto the previous element e.g. 5-(4-methylphenylcarbonyl)pentane

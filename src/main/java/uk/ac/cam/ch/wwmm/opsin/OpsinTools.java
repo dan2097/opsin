@@ -77,7 +77,7 @@ class OpsinTools {
 	 */
 	public static Node getNext(Node node) {
 		Element parent = (Element) node.getParent();
-		if (parent.getLocalName().equals("molecule")){
+		if (parent == null || parent.getLocalName().equals("molecule")){
 			return null;
 		}
 		int index = parent.indexOf(node);
@@ -98,7 +98,7 @@ class OpsinTools {
 	 */
 	public static Node getPrevious(Node node) {
 		Element parent = (Element) node.getParent();
-		if (parent.getLocalName().equals("molecule")){
+		if (parent == null || parent.getLocalName().equals("molecule")){
 			return null;
 		}
 		int index = parent.indexOf(node);
@@ -122,7 +122,7 @@ class OpsinTools {
 	 */
 	public static Node getNextAtSameOrLowerLevel(Node node) {
 		Element parent = (Element) node.getParent();
-		if (parent.getLocalName().equals("molecule")){
+		if (parent == null || parent.getLocalName().equals("molecule")){
 			return null;
 		}
 		int index = parent.indexOf(node);
@@ -146,7 +146,7 @@ class OpsinTools {
 		  current=(Element)current.getParent();
 	  }
 	  Element parent = (Element) current.getParent();
-	  if (parent.getLocalName().equals("molecule")){
+	  if (parent == null || parent.getLocalName().equals("molecule")){
 		  return null;
 	  }
 	  int index = parent.indexOf(current);
@@ -222,10 +222,14 @@ class OpsinTools {
 	 * @param currentElem: the element to look for following siblings of
 	 * @param type: the "localname" of the element type desired
 	 * @return
+	 * @throws PostProcessingException 
 	 */
-	public static ArrayList<Element> getLaterSiblingElementsOfType(Element currentElem, String type) {
+	public static ArrayList<Element> getLaterSiblingElementsOfType(Element currentElem, String type) throws PostProcessingException {
 		ArrayList<Element> laterSiblingElementsOfType= new ArrayList<Element>();
 		Element parent =(Element) currentElem.getParent();
+		if (parent==null){
+			throw new PostProcessingException("Node has no parent!");
+		}
 		Elements potentialMatches =parent.getChildElements(type);
 		int indexOfCurrentElem =parent.indexOf(currentElem);
 		for (int i = 0; i < potentialMatches.size(); i++) {
@@ -242,10 +246,14 @@ class OpsinTools {
 	 * @param currentElem: the element to look for previous siblings of
 	 * @param type: the "localname" of the element type desired
 	 * @return
+	 * @throws PostProcessingException 
 	 */
-	public static ArrayList<Element> getEarlierSiblingElementsOfType(Element currentElem, String type) {
+	public static ArrayList<Element> getEarlierSiblingElementsOfType(Element currentElem, String type) throws PostProcessingException {
 		ArrayList<Element> earlierSiblingElementsOfType= new ArrayList<Element>();
 		Element parent =(Element) currentElem.getParent();
+		if (parent==null){
+			throw new PostProcessingException("Node has no parent!");
+		}
 		Elements potentialMatches =parent.getChildElements(type);
 		int indexOfCurrentElem =parent.indexOf(currentElem);
 		for (int i = 0; i < potentialMatches.size(); i++) {
@@ -262,9 +270,13 @@ class OpsinTools {
 	 * @param el
 	 * @param elementsToIgnore
 	 * @return
+	 * @throws PostProcessingException 
 	 */
-	public static Element getNextIgnoringCertainElements(Element el, String[] elementsToIgnore) {
+	public static Element getNextIgnoringCertainElements(Element el, String[] elementsToIgnore) throws PostProcessingException {
 		ParentNode parent = el.getParent();
+		if (parent==null){
+			throw new PostProcessingException("Node has no parent!");
+		}
 		int i = parent.indexOf(el);
 		if (i+1 >= parent.getChildCount()) return null;
 		Element next =(Element)parent.getChild(i+1);

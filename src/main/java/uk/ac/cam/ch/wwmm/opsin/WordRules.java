@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
+
 import dk.brics.automaton.RunAutomaton;
 
 import nu.xom.Element;
@@ -32,7 +34,7 @@ class WordRules {
 		List<String> wordTypes;
 		/**The name of the wordRule.*/
 		String name;
-		/**Does this wordRule employ tchniques not implemented by automaton e.g. lookbehind.*/
+		/**Does this wordRule employ techniques not implemented by automaton e.g. lookbehind.*/
 		boolean hasFeaturesUnsupportedByAutomaton =false;
 
 		/**Makes a wordRule based on an XML element.
@@ -133,10 +135,26 @@ class WordRules {
 	 * wordRule should apply to it.
 	 *
 	 * @param p The Parse object containing the name, into which the results will be put.
+	 * @param mode 
 	 * @throws ParsingException
 	 */
-	void parse(Parse p) throws ParsingException {
+	void parse(Parse p, OpsinMode mode) throws ParsingException {
 		String chemicalName =p.name;
+		if (mode.equals(OpsinMode.poly)){//temporary kludge until wordRules system is rewritten
+			//TODO do this properly
+			String [] wordArray = chemicalName.split("\\s+");
+			if (wordArray.length==1){
+				p.wordRule="polymer";
+				ParseWord pw = new ParseWord();
+				pw.word = wordArray[0];
+				pw.wordType = "substituent";
+				p.words.add(pw);
+				return;
+			}
+			else{
+				throw new ParsingException("Unsupported Polymer name");
+			}
+		}
 		String chemicalNameLowerCase =chemicalName.toLowerCase();
 		char[] chemicalNameArray=chemicalName.toCharArray();
 		List<Integer> parsingStartingPoints =new ArrayList<Integer>();
