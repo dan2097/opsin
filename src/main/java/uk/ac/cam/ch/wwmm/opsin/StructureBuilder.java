@@ -1016,21 +1016,10 @@ class StructureBuilder {
 
 		Atom to =null;
 		if (polymerMode){//TODO allow names like poly[oxy(dichloromethyl)methylene] e.g. search for next with two outIDs or an inId
-			Element nextSubOrBracket = (Element) XOMTools.getNextSibling(parentSubstituentOrBracketOfFrag);
-			if (nextSubOrBracket == null){
-				throw new StructureBuildingException("Polymer building failed: Element not found where element expected");
+			parentFrag = getNextInScopeMultiValentFragment(parentSubstituentOrBracketOfFrag, state);
+			if (parentFrag ==null){
+				throw new StructureBuildingException("Polymer building failed: No suitable fragment found to connect to");
 			}
-			while (nextSubOrBracket.getLocalName().equals("bracket")) {//pick the right most non bracket
-				nextSubOrBracket = (Element) nextSubOrBracket.getChild(nextSubOrBracket.getChildCount()-1);
-				if (nextSubOrBracket.getLocalName().equals("hyphen")){
-					nextSubOrBracket = (Element) XOMTools.getPreviousSibling(nextSubOrBracket);
-				}
-			}
-			Element group = nextSubOrBracket.getFirstChildElement("group");
-			if (group == null){
-				throw new StructureBuildingException("Polymer building failed: group not found where group expected");
-			}
-			parentFrag = state.xmlFragmentMap.get(group);//get the next fragment along
 			int parentExpectedBondOrder;
 			if (parentFrag.getOutIDs().size()==2){
 				OutID outId =parentFrag.getOutID(0);
@@ -1090,6 +1079,53 @@ class StructureBuilder {
 			}
 		}
 		state.fragManager.attachFragments(from, to, bondOrder);
+	}
+
+	/**
+	 * Given a subsituent/bracket finds the next multi valent substituent/root that is in scope and hence its group
+	 * e.g. for oxy(dichloromethyl)methylene given oxy substituent the methylene group would be found
+	 * for oxy(dichloroethylene) given oxy substituent the ethylene group would be found
+	 * for oxy(carbonylimino) given oxy carbonyl would be found
+	 * @param substituentOrBracket
+	 * @param state 
+	 * @return frag
+	 * @throws StructureBuildingException 
+	 */
+	private Fragment getNextInScopeMultiValentFragment(Element substituentOrBracket, BuildState state) throws StructureBuildingException {
+		if (!substituentOrBracket.getLocalName().equals("substituent") && !substituentOrBracket.getLocalName().equals("bracket")){
+			throw new StructureBuildingException("Input to this function should be a substituent or bracket");
+		}
+		if (substituentOrBracket.getParent()==null){
+			throw new StructureBuildingException("substituent did not have a parent!");
+		}
+		Element parent =(Element) substituentOrBracket.getParent();
+		
+		List<Element> children = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"substituent", "bracket", "root"});//will be returned in index order
+		int indexOfSubstituent =parent.indexOf(substituentOrBracket);
+		for (Element child : children) {
+			if (parent.indexOf(child) <=indexOfSubstituent){//only want things after the input
+				continue;
+			}
+			List<Element> childDescendants;
+			if (child.getLocalName().equals("bracket")){
+				childDescendants = OpsinTools.findDescendantElementsWithTagNames(child, new String[]{"substituent", "root"});//will be returned in depth-first order
+			}
+			else{
+				childDescendants =new ArrayList<Element>();
+				childDescendants.add(child);
+			}
+			for (Element descendantChild : childDescendants) {
+				Element group = descendantChild.getFirstChildElement("group");
+				if (group == null){
+					throw new StructureBuildingException("substituent/root is missing its group");
+				}
+				Fragment possibleFrag = state.xmlFragmentMap.get(group);
+				if ((possibleFrag.getOutIDs().size()==2 && possibleFrag.getInIDs().size()==0)||(possibleFrag.getOutIDs().size()==0 && possibleFrag.getInIDs().size()==1)){
+					return possibleFrag;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
