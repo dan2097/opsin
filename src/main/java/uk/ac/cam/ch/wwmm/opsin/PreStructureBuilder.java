@@ -2666,7 +2666,7 @@ public class PreStructureBuilder {
 						thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);//c.f. oxydicyclohexane, 3-methyloxydicyclohexane, methyleneoxydicyclohexane
 					}
 					else{
-						if (previousGroup==null || state.mode.equals(OpsinMode.poly)){//something like carbonyl dichloride
+						if (previousGroup==null || state.mode.equals(OpsinMode.poly) && state.xmlFragmentMap.get(previousGroup).getOutIDs().size() == 2){//something like carbonyl dichloride
 							thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
 						}
 						else{
