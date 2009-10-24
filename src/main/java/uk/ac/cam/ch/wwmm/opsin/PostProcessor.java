@@ -1028,6 +1028,20 @@ class PostProcessor {
 				}
 			}
 		}
+		
+		//resolves for example trimethylene to propan-1,3-diyl
+		if (groupValue.equals("methylene")){
+			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
+			if (beforeGroup!=null && beforeGroup.getLocalName().equals("multiplier") && beforeGroup.getAttributeValue("type").equals("basic")){
+				group.getAttribute("value").setValue(StringTools.multiplyString("C", Integer.parseInt(beforeGroup.getAttributeValue("value"))));
+				group.getAttribute("outIDs").setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue("value")));
+				groupValue = beforeGroup.getValue() + groupValue;
+				beforeGroup.detach();
+				if (group.getAttribute("labels")!=null){//use standard numbering
+					group.getAttribute("labels").detach();
+				}
+			}
+		}
 	}
 
 	/**

@@ -400,9 +400,6 @@ class StructureBuilder {
 //			}
 //		}
 		else if(wordRule.equals("polymer")) {
-			for (Element word : state.firstMultiRadical.keySet()) {//don't use multiplicative nomenclature
-				state.firstMultiRadical.put(word, null);
-			}
 			Element polymer = molecule.getFirstChildElement("word");
 			moleculeBuildResults =resolveWordOrBracket(state, polymer, null, new LinkedHashSet<Fragment>());
 			int inIdCount=0;
@@ -471,71 +468,221 @@ class StructureBuilder {
 		return uniFrag;
 	}
 
-	/**Resolves the contents of a &lt;word&gt; or &lt;bracket&gt; tag, recursively.
-	 * @param state 
-	 *
-	 * @param wob The &lt;word&gt; or &lt;bracket&gt; tag.
-	 * @param parentFrag The fragment that the results are to be attached to. May be null.
-	 * @param fragmentsToAvoid Usually empty list of fragments that should not be joined to their parentFrag
-	 * @return A buildResults for the results of building.
-	 * @throws StructureBuildingException If the contents won't build properly.
+	/**
+	 * Resolves a word:
+	 * Locanted attributes of words are resolved onto their group
+	 * Locanted substitution is performed
+	 * Connections involving multi radicals are processed
+	 * Unlocanted attributes of words are resolved onto their group
+	 * 
+	 * @param state
+	 * @param word
+	 * @throws StructureBuildingException
 	 */
-	BuildResults resolveWordOrBracket(BuildState state, Element wob, Fragment parentFrag, LinkedHashSet<Fragment> fragmentsToAvoid) throws StructureBuildingException {
-		if (parentFrag==null && wob.getLocalName().equals("word")){
-			if (state.firstMultiRadical.get(wob) !=null){
-				ArrayList<Element> elements =new ArrayList<Element>();
-				Element root =state.firstMultiRadical.get(wob);
-				state.firstMultiRadical.remove(wob);
-				elements.add(root);
-				BuildResults buildResults = resolveRootOrSubstituent(state, root, null, new ArrayList<Element>(), fragmentsToAvoid);
-				BuildResults buildResultsMultiplicative = resolveWordOrBracketLeftToRight(state, buildResults, elements);
-				buildResultsMultiplicative.mergeBuildResults(resolveWordOrBracket(state, wob, null, buildResultsMultiplicative.fragments));
+	void resolveWordContents(BuildState state, Element word) throws StructureBuildingException {
+		if (!word.getLocalName().equals("word")){
+			throw new StructureBuildingException("A word is the expected input");
+		}
+		List<Element> subsAndRoots = OpsinTools.findDescendantElementsWithTagNames(word, new String[]{"substituent","root"});
+		for (Element subOrRoot : subsAndRoots) {
+			resolveLocantedFeatures(subOrRoot, state);//e.g. unsaturators, hydro groups and heteroatom replacement
+		}
 
-				List<Element> groups =OpsinTools.findDescendantElementsWithTagName(wob, "group");
-				for (Element group : groups) {
-					if (!buildResults.fragments.contains(state.xmlFragmentMap.get(group))){
-						throw new StructureBuildingException("OPSIN's multiplicative nomenclature implementation has failed to resolve all groups!");
-					}
-				}
-				return buildResultsMultiplicative;
+		List<Element> multipliers = OpsinTools.findDescendantElementsWithTagName(word, "multiplier");//these should be group level multipliers e.g the di in diethylbenzene or ethylenedibenzene
+		for (int i =multipliers.size()-1; i>=0; i--) {//resolve from right to left
+			Element subOrRoot = subsAndRoots.get(i);
+			processMultipliedBracketsAndLocantedSubstituents(state, subOrRoot);
+		}
+		
+		
+		//substitution occurs left to right so by doing this right to left you ensure that any groups that will come into existence
+		//due to multipliers being expanded will be in existence
+		for (int i =subsAndRoots.size()-1; i>=0; i--) {
+			Element subOrRoot = subsAndRoots.get(i);
+			processMultipliedBracketsAndLocantedSubstituents(state, subOrRoot);
+		}
+			
+		for (Element subOrRoot : subsAndRoots) {
+			processMultiradicals(subOrRoot);
+		}
+		
+		for (Element subOrRoot : subsAndRoots) {
+			resolveUnLocantedFeatures(subOrRoot);//e.g. unsaturators, hydro groups and heteroatom replacement
+		}
+		
+		for (Element subOrRoot : subsAndRoots) {
+			processUnLocantedSubstituents(subOrRoot);
+		}
+	}
+
+	/**
+	 * Adds locanted unsaturators, heteroatoms and hydrogen elements to the group within the sub or root
+	 * @param subOrRoot
+	 * @param state
+	 * @throws StructureBuildingException 
+	 */
+	private void resolveLocantedFeatures(Element subOrRoot, BuildState state) throws StructureBuildingException {
+		Elements groups = subOrRoot.getChildElements("group");
+		if (groups.size()!=1){
+			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
+		}
+		Element group = subOrRoot.getFirstChildElement("group");
+		Fragment thisFrag = state.xmlFragmentMap.getFirstFragment(group);
+
+		ArrayList<Element> unsaturators = new ArrayList<Element>();
+		ArrayList<Element> heteroatoms = new ArrayList<Element>();
+		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
+
+		Elements children =subOrRoot.getChildElements();
+		for (int i = 0; i < children.size(); i++) {
+			Element currentEl =children.get(i);
+			String elName =currentEl.getLocalName();
+			if (elName.equals("unsaturator")){
+				unsaturators.add(currentEl);
+			}
+			else if (elName.equals("heteroatom")){
+				heteroatoms.add(currentEl);
+			}
+			else if (elName.equals("hydro")){
+				hydrogenElements.add(currentEl);
+			}
+			else if (elName.equals("hydrogen")){
+				hydrogenElements.add(currentEl);
+			}
+			else if (elName.equals("indicatedHydrogen")){
+				hydrogenElements.add(currentEl);
 			}
 		}
-		String locantStr = "0";
+		/*
+		 * Add locanted functionality
+		 */
+		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
+			Element hydrogen = hydrogenElements.get(i);
+			String locant = getLocant(hydrogen);
+			if(!locant.equals("0")) {
+				thisFrag.getAtomByLocantOrThrow(locant).subtractSpareValency(1);
+				hydrogenElements.remove(hydrogen);
+			}
+			hydrogen.detach();
+		}
 
+		for(int i=unsaturators.size() -1;i >= 0;i--) {
+			Element unsaturator = unsaturators.get(i);
+			String locant = getLocant(unsaturator);
+			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue("value"));
+			if(bondOrder <= 1) {
+				continue;
+			}
+			if(!locant.equals("0")){
+				unsaturators.remove(unsaturator);
+				Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
+				if (unsaturator.getAttribute("compoundLocant")!=null){
+					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
+				}
+				else{
+					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
+				}
+			}
+			unsaturator.detach();
+		}
+
+		for(int i=heteroatoms.size() -1;i >= 0;i--) {
+			Element heteroatom = heteroatoms.get(i);
+			String locant = getLocant(heteroatom);
+			String atomSMILES = heteroatom.getAttributeValue("value");
+			if(!locant.equals("0")) {
+				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
+				heteroatoms.remove(heteroatom);
+			}
+			heteroatom.detach();
+		}
+	}
+	
+	private void processMultipliedBracketsAndLocantedSubstituents(BuildState state, Element subOrRoot) throws StructureBuildingException {
+		assignAvailableLocantToSubstituent(subOrRoot);
+		
+	}
+	
+//	/**
+//	 * Assigns locants to substituents/brackets
+//	 * @param subOrRoot
+//	 * @throws PostProcessingException
+//	 */
+//	private void assignAvailableLocantToSubstituent(Element subOrRoot) throws StructureBuildingException {
+//		Element locant =subOrRoot.getFirstChildElement("locant");
+//
+//		if(locant != null && subOrRoot.getFirstChildElement("multiplier")==null) {
+//			if(locant.getAttribute("compoundLocant")!=null){
+//				throw new StructureBuildingException("A compound locant cannot be used to locant a sub/bracket!");
+//			}
+//			if (subOrRoot.getLocalName().equals("root")){
+//				throw new StructureBuildingException("Unable to assign all locants");
+//			}
+//			Element parent =(Element) subOrRoot.getParent();
+//			if (!parent.getLocalName().equals("word")){//attempt to find cases where locant will not be utilised. This if statement allows the use of locants for ester formation
+//				Elements children =parent.getChildElements();
+//				boolean foundSomethingToSubstitute =false;
+//				for (int i = parent.indexOf(subOrRoot) +1 ; i < children.size(); i++) {
+//					if (!children.get(i).getLocalName().equals("hyphen")){
+//						foundSomethingToSubstitute = true;
+//					}
+//				}
+//				if (!foundSomethingToSubstitute){
+//					throw new PostProcessingException("Unable to assign all locants");
+//				}
+//			}
+//			subOrRoot.addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
+//			locant.detach();
+//			if (subOrRoot.getFirstChildElement("locant")!=null){
+//				throw new PostProcessingException("Unable to assign all locants");
+//			}
+//		}
+//	}
+	
+
+	/**Resolves the contents of a word or bracket element, recursively.
+	 * @param state 
+	 * @param wob The word or bracket element.
+	 * @throws StructureBuildingException If the contents won't build properly.
+	 */
+	BuildResults joinGroupsInWordOrBracketRecursively(BuildState state, Element wob) throws StructureBuildingException {
+		String locantStr = "0";
 		if(wob.getAttribute("locant")!= null) {
 			locantStr = wob.getAttributeValue("locant");
 		}
-		Element root = wob.getFirstChildElement("root");
 		List<Element> bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(wob, new String[]{"bracket", "substituent"});
+		
+		for (Element element : bracketsOrSubs) {
+			
+		}
+		
 		BuildResults buildResults = null;
-		if(root == null) {
-			Element lastBracketOrSub = bracketsOrSubs.get(bracketsOrSubs.size()-1);
-			if (lastBracketOrSub.getLocalName().equals("bracket")){
-				//if this is a bracket things get complicated as we need to have resolved everything in this recursively,
-				//starting from the last deepest bracket. The criteria of being the last element takes priority over depth
-				while (lastBracketOrSub.getLocalName().equals("bracket")){
-					bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(lastBracketOrSub, new String[]{"bracket", "substituent", "root"});
-					lastBracketOrSub = bracketsOrSubs.get(bracketsOrSubs.size()-1);
-				}
-				root =lastBracketOrSub;
-				buildResults = resolveRootOrSubstituent(state, lastBracketOrSub, null, new ArrayList<Element>(), fragmentsToAvoid );
-				do {
-					lastBracketOrSub = (Element) lastBracketOrSub.getParent();
-					bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(lastBracketOrSub, new String[]{"bracket", "substituent", "root"});
-					for (int i = bracketsOrSubs.size() -2; i >=0; i--) {//don't use last element as that's the root
-						Element currentChild= bracketsOrSubs.get(i);
-						if (currentChild.getLocalName().equals("bracket")){
-							buildResults.mergeBuildResults(resolveWordOrBracket(state, currentChild, buildResults.getMainFragment(), fragmentsToAvoid));
-						}
-						else{
-							buildResults.mergeBuildResults(resolveRootOrSubstituent(state, currentChild , buildResults.getMainFragment(), new ArrayList<Element>(), fragmentsToAvoid));
-						}
+		Element lastBracketOrSub = bracketsOrSubs.get(bracketsOrSubs.size()-1);
+		if (lastBracketOrSub.getLocalName().equals("bracket")){
+			//if this is a bracket things get complicated as we need to have resolved everything in this recursively,
+			//starting from the last deepest bracket. The criteria of being the last element takes priority over depth
+			while (lastBracketOrSub.getLocalName().equals("bracket")){
+				bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(lastBracketOrSub, new String[]{"bracket", "substituent", "root"});
+				lastBracketOrSub = bracketsOrSubs.get(bracketsOrSubs.size()-1);
+			}
+			root =lastBracketOrSub;
+			buildResults = resolveRootOrSubstituent(state, lastBracketOrSub, null, new ArrayList<Element>(), fragmentsToAvoid );
+			do {
+				lastBracketOrSub = (Element) lastBracketOrSub.getParent();
+				bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(lastBracketOrSub, new String[]{"bracket", "substituent", "root"});
+				for (int i = bracketsOrSubs.size() -2; i >=0; i--) {//don't use last element as that's the root
+					Element currentChild= bracketsOrSubs.get(i);
+					if (currentChild.getLocalName().equals("bracket")){
+						buildResults.mergeBuildResults(resolveWordOrBracket(state, currentChild, buildResults.getMainFragment(), fragmentsToAvoid));
 					}
-				} while(!lastBracketOrSub.equals(wob));
-			}
-			else{
-				root =lastBracketOrSub;
-			}
+					else{
+						buildResults.mergeBuildResults(resolveRootOrSubstituent(state, currentChild , buildResults.getMainFragment(), new ArrayList<Element>(), fragmentsToAvoid));
+					}
+				}
+			} while(!lastBracketOrSub.equals(wob));
+		}
+		else{
+			root =lastBracketOrSub;
 		}
 		if (buildResults==null){
 			buildResults = resolveRootOrSubstituent(state, root, null, bracketsOrSubs, fragmentsToAvoid);
