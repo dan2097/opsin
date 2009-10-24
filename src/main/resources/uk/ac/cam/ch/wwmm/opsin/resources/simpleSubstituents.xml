@@ -7,7 +7,7 @@
   <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
   <token value="CCCCC" valType="SMILES">amyl</token>
   <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilino</token>
-  <token value="COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outID="9">anisidino</token>
+  <token value="COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
   <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
   <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/"  valType="SMILES">4,4'-benzidino</token>
   <token value="OCCCC" labels="/1/2/3/4" valType="SMILES" usableAsAJoiner="yes">butoxyl</token>
@@ -30,14 +30,14 @@
   <token value="C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
   <token value="S(=O)(=O)C" labels="none" valType="SMILES">mesyl</token>
   <token value="OC" labels="/1" valType="SMILES" usableAsAJoiner="yes">methoxyl</token>
-  <token value="morpholine" valType="dbkey" outID="4">morpholino</token>
+  <token value="morpholine" valType="dbkey" outIDs="4">morpholino</token>
   <token value="C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes">oxalaceto</token>
   <token value="[O-]" labels="none" valType="SMILES">oxido</token>
   <token value="OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes">propoxyl</token>
-  <token value="S1CCNCC1" valType="SMILES" outID="4">thiomorpholino</token>
-  <token value="[Se]1CCNCC1" valType="SMILES" outID="4">selenomorpholino</token>
-  <token value="[Te]1CCNCC1" valType="SMILES" outID="4">telluromorpholino</token>
-  <token value="CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outID="10">phenetidino</token>
+  <token value="S1CCNCC1" valType="SMILES" outIDs="4">thiomorpholino</token>
+  <token value="[Se]1CCNCC1" valType="SMILES" outIDs="4">selenomorpholino</token>
+  <token value="[Te]1CCNCC1" valType="SMILES" outIDs="4">telluromorpholino</token>
+  <token value="CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
   <token value="c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
   <token value="piperazine" valType="dbkey">piperazino</token>
   <token value="piperidine" valType="dbkey">piperidino</token>
@@ -54,7 +54,7 @@
   <token value="[Te](O)" labels="none" valType="SMILES">tellureno</token>
   <token value="[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
   <token value="[Te](=O)(=O)(O)" labels="none" valType="SMILES">tellurono</token>
-  <token value="toluene" valType="dbkey" addGroup="N locant4" outID="8">toluidino</token>
+  <token value="toluene" valType="dbkey" addGroup="N locant4" outIDs="8">toluidino</token>
   <token value="S(=O)(=O)c1ccc(C)cc1" labels="///1/2/3/4//5/6" valType="SMILES">tosyl</token>
   <token value="NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes">ureido</token>
   <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="C locant2;C locant3">xylidino</token>

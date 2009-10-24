@@ -195,26 +195,19 @@ public class PreStructureBuilder {
 				resolveRemainingSuffixes(state, subOrRoot);
 			}
 
-			ArrayList<Element> subsOrRootsToRemove =new ArrayList<Element>();
-			for (Element subOrRoot : substituentsAndRoot) {
-				assignOutIDsToTrivialMultiRadicals(state, subOrRoot, subsOrRootsToRemove);//TODO do more vigorously
-			}
-			substituentsAndRoot.removeAll(subsOrRootsToRemove);
-			substituentsAndRootAndBrackets.removeAll(subsOrRootsToRemove);
-
 			removePointlessBrackets(brackets, substituentsAndRootAndBrackets);//e.g. (tetramethyl)azanium == tetramethylazanium
 
 			for (Element subOrRoot : substituentsAndRoot) {
-				identifyMultiplicativeNomenclature(state, subOrRoot);//TODO do more vigorously
+				handleMultiRadicalSpecialCases(state, subOrRoot);
 			}
 
 			//initially there should only be at maximum one root but after there may be multiple roots! (which are added into roots)
-			if (root!=null){
-				processMultiplicativeNomenclature(state, roots, substituentsAndRootAndBrackets);//TODO handle roots with substitution e.g. 3,3'-methylenebis(2-methyltoluene)
-			}
-			for (Element e : substituentsAndRootAndBrackets) {
-				processGroupMultipliers(state, e);
-			}
+//			if (root!=null){
+//				processMultiplicativeNomenclature(state, roots, substituentsAndRootAndBrackets);//TODO handle roots with substitution e.g. 3,3'-methylenebis(2-methyltoluene)
+//			}
+//			for (Element e : substituentsAndRootAndBrackets) {
+//				processGroupMultipliers(state, e);
+//			}
 		}
 
 		return elem;
@@ -382,8 +375,13 @@ public class PreStructureBuilder {
 			}
 		}
 
-		if (group.getAttribute("outID")!=null){//adds and outID at the specified atom
-			thisFrag.addOutID(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue("outID")) -1, 1, true);
+		if (group.getAttribute("outIDs")!=null){//adds outIDs at the specified atoms
+			String[] radicalPositions = matchComma.split(group.getAttributeValue("outIDs"));
+			int firstIdInFrag =thisFrag.getIdOfFirstAtom();
+			for (int i = 0; i < radicalPositions.length; i++) {
+				String radicalID =radicalPositions[i];
+				thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
+			}
 		}
 
 		if (group.getAttribute("functionalIDs")!=null){
@@ -2607,155 +2605,6 @@ public class PreStructureBuilder {
 	}
 
 	/**
-	 * Uses the number of outIDs that are definitely present to assign the number of outIDs on substituents that can have a variable number of outIDs
-	 * Hence at this point it can be determined if a multi radical susbtituent is present in the name
-	 * This would be expected in multiplicative nomenclature and is noted in the state so that the StructureBuilder knows to resolve the
-	 * section of the name from that point onwards in a left to right manner rather than right to left
-	 * @param state
-	 * @param subsOrRootsToRemove
-	 * @param subOrRoot: The sub/root to look in
-	 * @return boolean whether multiplicative nomenclature was encountered
-	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
-	 */
-	private void assignOutIDsToTrivialMultiRadicals(BuildState state, Element subOrRoot, ArrayList<Element> subsOrRootsToRemove) throws StructureBuildingException, PostProcessingException{
-		Element group =subOrRoot.getFirstChildElement("group");
-		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
-		Element possibleGroupMultiplier =(Element)subOrRoot.getChild(0);
-		Element possibleSubstituentMultiplier = (Element)group.getParent().getParent().getChild(0);
-		Element firstElInNextSilbingSubOrRoot =(Element) OpsinTools.getNextAtSameOrLowerLevel(subOrRoot);
-		boolean groupMultiplier =false;
-		if (possibleGroupMultiplier.getLocalName().equals("multiplier") && !possibleGroupMultiplier.getAttributeValue("value").equals("1")){
-			groupMultiplier =true;
-		}
-		boolean substituentMultiplier =false;
-		if (possibleSubstituentMultiplier != null && possibleSubstituentMultiplier.getLocalName().equals("multiplier") && !possibleSubstituentMultiplier.getAttributeValue("value").equals("1")){
-			substituentMultiplier =true;
-		}
-
-		boolean followingSiblingElStartsWithAMultiplier =false;
-		if (firstElInNextSilbingSubOrRoot!=null && firstElInNextSilbingSubOrRoot.getLocalName().equals("multiplier") && !firstElInNextSilbingSubOrRoot.getAttributeValue("value").equals("1")){
-			followingSiblingElStartsWithAMultiplier =true;
-		}
-
-		//A multiradical which is multiplied and is not preceded by locants (otherwise locants would be present before the multiplier and hence groupMultiplier would be false)
-		if (group.getAttribute("outIDs") !=null){
-			if (group.getValue().equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
-				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutIDs().size() < 2){//must be preceded by a multi radical
-					throw new PostProcessingException("Invalid use of amine as a substituent!");
-				}
-			}
-			group.addAttribute(new Attribute ("isAMultiRadical", "yes"));
-
-			String[] radicalPositions = matchComma.split(group.getAttributeValue("outIDs"));
-			int firstIdInFrag =thisFrag.getIdOfFirstAtom();
-
-
-			int multiplier =1;
-			if (followingSiblingElStartsWithAMultiplier ==true){
-				multiplier= Integer.parseInt(firstElInNextSilbingSubOrRoot.getAttributeValue("value"));
-			}
-
-			for (int i = 0; i < radicalPositions.length; i++) {
-				String radicalID =radicalPositions[i];
-				if (radicalID.endsWith("?")){//outID is context dependant e.g. oxy in methyloxy vs oxydibenzene
-					radicalID=radicalID.substring(0, radicalID.length()-1);
-					if (multiplier >1 && groupMultiplier ==false  && substituentMultiplier ==false){
-						multiplier--;
-						thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);//c.f. oxydicyclohexane, 3-methyloxydicyclohexane, methyleneoxydicyclohexane
-					}
-					else{
-						if (previousGroup==null || state.mode.equals(OpsinMode.poly) && state.xmlFragmentMap.get(previousGroup).getOutIDs().size() == 2){//something like carbonyl dichloride
-							thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
-						}
-						else{
-							thisFrag.setDefaultInID(firstIdInFrag + Integer.parseInt(radicalID) -1);
-							//e.g. 3,3'-tetramethylenedioxydibenzoic acid, the oxy only has 1 outID
-						}
-					}
-				}
-				else if (i!=0 || (groupMultiplier ==false && substituentMultiplier ==false)  ) {
-					thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
-				}
-				else{
-					thisFrag.setDefaultInID(firstIdInFrag + Integer.parseInt(radicalID) -1);
-				}
-			}
-		}
-
-		//resolves for example trimethylene to propan-1,3-diyl
-		if ((thisFrag.getOutIDs().size()>=2 || group.getAttribute("outIDs") !=null) && groupMultiplier ==true && (previousGroup==null || Integer.parseInt(possibleGroupMultiplier.getAttributeValue("value"))>2)){
-			int multiplierValue =Integer.parseInt(possibleGroupMultiplier.getAttributeValue("value"));
-			List<OutID> outIDs =thisFrag.getOutIDs();
-			if (outIDs.size()==1 ){
-				thisFrag.addOutID(outIDs.get(0));
-			}
-			Fragment clone = state.fragManager.copyAndRelabel(thisFrag);
-			clone.removeOutID(0);
-			for (int i = 1; i < multiplierValue; i++) {
-				Fragment tempFrag = state.fragManager.copyAndRelabel(clone);
-				OutID outID =outIDs.get(outIDs.size()-1);
-				Atom outAtom =thisFrag.getAtomByIDOrThrow(outID.id);
-				Atom inAtom =tempFrag.getAtomByIDOrThrow(tempFrag.getDefaultInID());
-				state.fragManager.incorporateFragment(tempFrag, inAtom.getID(), thisFrag, outAtom.getID(), outID.valency);
-				for (OutID fromTempFrag : tempFrag.getOutIDs()) {
-					thisFrag.addOutID(fromTempFrag);
-				}
-				thisFrag.removeOutID(outID);
-			}
-			state.fragManager.removeFragment(clone);
-			OpsinTools.setTextChild(group, possibleGroupMultiplier.getValue() +group.getValue());
-			possibleGroupMultiplier.detach();
-		}
-		if (state.mode.equals(OpsinMode.poly)){return;}
-		possibleGroupMultiplier =(Element)subOrRoot.getChild(0);
-		groupMultiplier =false;
-		if (possibleGroupMultiplier.getLocalName().equals("multiplier") && !possibleGroupMultiplier.getAttributeValue("value").equals("1")){
-			groupMultiplier =true;
-		}
-
-		//resolves for example ethyleneoxy into a single structure with outIDs on the first carbon and on the oxygen.
-		//The two substituents must share the same parent e.g. not carbonyl)ethylene
-		if (previousGroup != null && groupMultiplier==false && previousGroup.getParent().getParent()==subOrRoot.getParent()){
-			Fragment previousFrag = state.xmlFragmentMap.get(previousGroup);
-			Element previousSubstituent =(Element) previousGroup.getParent();
-			if ((thisFrag.getOutIDs().size()==2 || group.getAttribute("outIDs") !=null) &&
-					(previousFrag.getOutIDs().size()==2 || previousGroup.getAttribute("outIDs") !=null) &&
-					previousSubstituent.getChildElements().size()==1){
-				List<OutID> outIDs =previousFrag.getOutIDs();
-				OutID outID =outIDs.get(outIDs.size()-1);
-				if (thisFrag.getOutIDs().size()>=2 ){
-					state.fragManager.incorporateFragment(thisFrag, outID.id, previousFrag, thisFrag.getOutID(0).id, outID.valency);
-					thisFrag.removeOutID(0);
-				}
-				else{
-					state.fragManager.incorporateFragment(thisFrag, outID.id, previousFrag, thisFrag.getDefaultInID(), outID.valency);
-				}
-				previousFrag.removeOutID(outID);
-				for (OutID outIDFromThisFrag : thisFrag.getOutIDs()) {
-					previousFrag.addOutID(outIDFromThisFrag);
-				}
-				OpsinTools.setTextChild(previousGroup, previousGroup.getValue() +group.getValue());
-				state.xmlFragmentMap.remove(group);
-				subsOrRootsToRemove.add(subOrRoot);
-				subOrRoot.getParent().removeChild(subOrRoot);
-			}
-		}
-
-		//check on whether this multiradical is used in multiplicative nomenclature.
-		//If it is then it may need its first outID removed. e.g. [ethylenebis(sulfane-diyl)]dicyclohexane
-		if (thisFrag.getOutIDs().size()>1 &&  group.getAttribute("outIDs") ==null){
-			group.addAttribute(new Attribute ("isAMultiRadical", "yes"));
-			//Preceded by a multiplier
-			if (groupMultiplier==true || substituentMultiplier ==true){
-				thisFrag.setDefaultInID(thisFrag.getOutID(0).id);
-				thisFrag.removeOutID(0);
-			}
-		}
-	}
-
-	/**
 	 * Removes brackets that only contain one element.
 	 * Removed brackets are reflected in brackets and substituentsAndRootAndBrackets
 	 * @param brackets
@@ -2786,43 +2635,35 @@ public class PreStructureBuilder {
 	 * @throws PostProcessingException
 	 * @throws StructureBuildingException
 	 */
-	private void identifyMultiplicativeNomenclature(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
+	private void handleMultiRadicalSpecialCases(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
 		Element group =subOrRoot.getFirstChildElement("group");
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		Element possibleMultiplier= (Element)OpsinTools.getNext(subOrRoot.getChild(subOrRoot.getChildCount()-1));
 		int outIDsSize = thisFrag.getOutIDs().size();
-//		System.out.println("OUDIDS" +thisFrag.getOutIDs().size());
-//		System.out.println(subOrRoot.toXML());
-		if (possibleMultiplier !=null){//i.e. this isn't the root
-			if (outIDsSize >=2 && possibleMultiplier.getLocalName().equals("multiplier")){//multiplicative nomenclaturee
-				Element parentWord =OpsinTools.getParentWord(group);
-				if (state.firstMultiRadical.get(parentWord)==null){
-					state.firstMultiRadical.put(parentWord, (Element)group.getParent());
+		if (thisFrag.getOutIDs().size() >=2){
+			group.addAttribute(new Attribute ("isAMultiRadical", "yes"));
+			Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
+			if (group.getValue().equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
+				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutIDs().size() < 2){//must be preceded by a multi radical
+					throw new PostProcessingException("Invalid use of amine as a substituent!");
 				}
 			}
-			else if (outIDsSize>=2){ //e.g. methylenecyclohexane
+		}
+
+		Element possibleMultiplier= (Element)OpsinTools.getNext(subOrRoot.getChild(subOrRoot.getChildCount()-1));
+
+//		System.out.println("OUDIDS" +thisFrag.getOutIDs().size());
+//		System.out.println(subOrRoot.toXML());
+		if (possibleMultiplier !=null){//i.e. this is not the root -there is something after the group
+			if (outIDsSize>=2 && !possibleMultiplier.getLocalName().equals("multiplier")){//look for cases like methylenecyclohexane. need to convert 2 outIDs into 1 outID valency 2
 				List<OutID> outIDs =thisFrag.getOutIDs();
-				int flag=0;
-				int id =0;
-				for (OutID outID : outIDs) {
-					if (id ==0){
-						id =outID.id;
-					}
-					else{
-						if (id!=outID.id){
-							flag=1;
-						}
+				int id = outIDs.get(0).id;
+				boolean allOnSameAtom =true;
+				for (OutID outID : outIDs) {//all outIDs must be on the same atom
+					if (id!=outID.id){
+						allOnSameAtom=false;
 					}
 				}
-				if (flag==1){
-					if (!state.wordRule.equals("simple") && !state.wordRule.equals("binaryOrOther")){ //cludge to allow certain esters to still work
-						//e.g. pentane-1,5-diyl bis(chloroformate)
-					}
-					else{
-						throw new PostProcessingException("Currently unhandled use of multi radicals!");
-					}
-				}
-				else{//gives, for example, the methylene of methylenecyclohexane one outID of valency 2
+				if (allOnSameAtom){
 					if (state.mode.equals(OpsinMode.poly)){
 						if (outIDsSize>2){//e.g. nitrilo
 							for (int i = outIDs.size() -1; i >=1 ; i--) {
@@ -2856,10 +2697,6 @@ public class PreStructureBuilder {
 						outID.valency=1;
 						for (int i = 1; i < value; i++) {
 							thisFrag.addOutID(outID.id, 1, outID.setExplicitly);
-						}
-
-						if (state.firstMultiRadical.get(parentWord)==null){
-							state.firstMultiRadical.put(parentWord, (Element)group.getParent());
 						}
 					}
 				}

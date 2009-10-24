@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,8 +27,8 @@ public class BuildState {
 	/**
 	 * Wrapper class for returning multiple objects
 	 */
-	final class BiDirectionalHashMap implements Map<Element, Fragment>{
-		HashMap<Element, Fragment> xmlFragmentMap = new HashMap<Element, Fragment>();
+	final class BiDirectionalHashMap implements Map<Element, List<Fragment>>{
+		HashMap<Element, List<Fragment>> xmlFragmentMap = new HashMap<Element, List<Fragment>>();
 		HashMap<Fragment, Element> fragmentXmlMap = new HashMap<Fragment, Element>();
 		public void clear() {
 			xmlFragmentMap.clear();
@@ -39,10 +40,10 @@ public class BuildState {
 		public boolean containsValue(Object value) {
 			return xmlFragmentMap.containsValue(value);
 		}
-		public Set<java.util.Map.Entry<Element, Fragment>> entrySet() {
+		public Set<java.util.Map.Entry<Element, List<Fragment>>> entrySet() {
 			return xmlFragmentMap.entrySet();
 		}
-		public Fragment get(Object key) {
+		public List<Fragment> get(Object key) {
 			return xmlFragmentMap.get(key);
 		}
 		public boolean isEmpty() {
@@ -51,29 +52,57 @@ public class BuildState {
 		public Set<Element> keySet() {
 			return xmlFragmentMap.keySet();
 		}
-		public Fragment put(Element key, Fragment value) {
+		public List<Fragment> put(Element key, Fragment value) {
 			fragmentXmlMap.put(value, key);
+			List<Fragment> l = new ArrayList<Fragment>();
+			l.add(value);
+			return xmlFragmentMap.put(key, l);
+		}
+		public List<Fragment> put(Element key, List<Fragment> value) {
+			for (Fragment frag : value) {
+				fragmentXmlMap.put(frag, key);
+			}
 			return xmlFragmentMap.put(key, value);
 		}
-		public void putAll(Map<? extends Element, ? extends Fragment> m) {
+		public void putAll(Map<? extends Element, ? extends List<Fragment>> m) {
 			for (Element el : m.keySet()) {
-				fragmentXmlMap.put(m.get(el), el);
+				List<Fragment> frags = m.get(el);
+				for (Fragment frag : frags) {
+					fragmentXmlMap.put(frag, el);
+				}
 			}
 			xmlFragmentMap.putAll(m);
 		}
-		public Fragment remove(Object key) {
-			Fragment f =xmlFragmentMap.remove(key);
+		public List<Fragment> remove(Object key) {
+			List<Fragment> f =xmlFragmentMap.remove(key);
 			fragmentXmlMap.remove(f);
 			return f;
 		}
 		public int size() {
 			return xmlFragmentMap.size();
 		}
-		public Collection<Fragment> values() {
+		public Collection<List<Fragment>> values() {
 			return xmlFragmentMap.values();
 		}
 		public Element getElement(Object key) {
 			return fragmentXmlMap.get(key);
+		}
+		/**
+		 * Convenience method to return the first fragment (or null if no fragment was associated)
+		 * @param group
+		 * @return
+		 */
+		public Fragment getFirstFragment(Element group) {
+			List<Fragment> frags = get(group);
+			if (frags ==null){
+				return null;
+			}
+			if (frags.size() >=1){
+				return frags.get(0);
+			}
+			else{
+				return null;
+			}
 		}
 	}
 
@@ -82,7 +111,6 @@ public class BuildState {
 	String wordRule;
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
-	HashMap<Element, Element> firstMultiRadical;//hash of word element against substituent/root element with multi radical
 	OpsinMode mode;
 
 	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, OpsinMode mode) {
@@ -91,7 +119,6 @@ public class BuildState {
 		wordRule = null;
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
-		firstMultiRadical = new HashMap<Element, Element>();
 		this.mode =mode;
 	}
 }
