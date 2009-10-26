@@ -1,18 +1,14 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
-
-import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
-import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
-import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
+import static  uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
 
 /**Constructs a single OPSIN fragment which describes the molecule from the postprocessor results.
  *
@@ -33,58 +29,19 @@ class StructureBuilder {
 		if (words.size()==0){
 			throw new StructureBuildingException("Molecule contains no words!?");
 		}
-		BuildResults moleculeBuildResults =null;//contains every atom in the molecule. If a mixture was the input then both "molecules" will be in this
-		int substituentCount = OpsinTools.findChildElementsWithTagNameAndAttribute(molecule, "word", "type", "substituent").size();
-		//TODO factor these into separate methods and maybe the rest of the class into a separate class
-		if(wordRule.equals("ester") || wordRule.equals("diester")) { //e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
-			int i=0;
-			Element currentWord=words.get(i);
-			do{
-				BuildResults substituentBuildResults =resolveWordOrBracket(state, currentWord, null, new LinkedHashSet<Fragment>());
-				if (moleculeBuildResults==null){
-					moleculeBuildResults =substituentBuildResults;
-				}
-				else{
-					moleculeBuildResults.mergeBuildResults(substituentBuildResults);
-				}
-				if (substituentBuildResults.getOutIDCount() ==1){
-					String locantForSubstituent = getLocantForSubstituent(currentWord);
-					if (locantForSubstituent!=null){
-						substituentBuildResults.getFirstOutID().locant=locantForSubstituent;//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
-					}
-				}
-				i++;
-				currentWord=words.get(i);
-			}
-			while (currentWord.getAttributeValue("type").equals("substituent"));
-
-			while(i <words.size() && words.get(i).getAttributeValue("type").equals("full")) {
-				moleculeBuildResults.mergeBuildResults(resolveWordOrBracket(state, words.get(i), null, new LinkedHashSet<Fragment>()));
-				i++;
-			}
-
-			int esterIdCount = moleculeBuildResults.functionalIDs.size();
-			int esterBondsToForm =Math.min(moleculeBuildResults.functionalIDs.size(), moleculeBuildResults.getOutIDCount());
-
-			if (substituentCount > esterIdCount){
-				throw new StructureBuildingException("Name appears to have erroneous spaces interfering with ester interpretation");
-			}
-
-			for(i=0;i<esterBondsToForm;i++) {
-				Atom ateAtom;
-				if (moleculeBuildResults.getFirstOutID().locant!=null){
-					ateAtom =determineFunctionalAtomToUse(moleculeBuildResults.getFirstOutID().locant, moleculeBuildResults);
-				}
-				else{
-					ateAtom =moleculeBuildResults.getFunctionalOutAtom(0);
-					moleculeBuildResults.functionalIDs.remove(0);
-				}
-				state.fragManager.attachFragments(ateAtom,moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
-				moleculeBuildResults.removeOutID(0);
-				ateAtom.setCharge(0);
-			}
+		if(wordRule.equals("ester") || wordRule.equals("diester")) {
+			buildEster(state, words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
 		}
-		else if (wordRule.equals("functionalClassEster")){//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
+		else if(wordRule.equals("polymer")) {
+			buildPolymer(state, words);
+		}else if(wordRule.equals("simple") || wordRule.equals("acid")) {
+			Element word = molecule.getFirstChildElement("word");
+			resolveWordOrBracket(state, word);
+		}
+		else{
+			throw new StructureBuildingException("Unknown Word Rule");
+		}
+		/*else if (wordRule.equals("functionalClassEster")){//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
 			if (!words.get(0).getAttributeValue("type").equals("full")){
 				throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 			}
@@ -399,54 +356,12 @@ class StructureBuilder {
 //				}
 //			}
 //		}
-		else if(wordRule.equals("polymer")) {
-			Element polymer = molecule.getFirstChildElement("word");
-			moleculeBuildResults =resolveWordOrBracket(state, polymer, null, new LinkedHashSet<Fragment>());
-			int inIdCount=0;
-			Fragment firstFragment =null;
-			for (Fragment frag : moleculeBuildResults.fragments) {
-				inIdCount +=frag.getInIDs().size();
-				if (frag.getInIDs().size()!=0){
-					firstFragment =frag;
-				}
-			}
-			if (moleculeBuildResults.getOutIDCount() ==2  && inIdCount ==0){//e.g. poly(ethylene)
-				Atom inAtom =moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-				Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
-				state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(0).valency);
-				Atom outAtom =moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
-				rGroup =state.fragManager.buildSMILES("[Rn]");
-				state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(1).valency);
-				moleculeBuildResults.removeAllOutIDs();
-			}
-			else if (moleculeBuildResults.getOutIDCount() ==1 && inIdCount==1){//other cases
-				OutID inId = firstFragment.getInID(0);
-				Atom inAtom = firstFragment.getAtomByIdOrNextSuitableAtomOrThrow(inId.id, inId.valency);
-				Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
-				state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), inId.valency);
-				firstFragment.removeInID(0);
-
-				Atom outAtom =moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-				rGroup =state.fragManager.buildSMILES("[Rn]");
-				state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(0).valency);
-				moleculeBuildResults.removeOutID(0);
-			}
-			else{
-				throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 1 outIDs, found: " +moleculeBuildResults.getOutIDCount() +" ,expected 1 inIDs, found: " +inIdCount);
-			}
-		}
 		else if(wordRule.equals("binaryOrOther")) {
 			moleculeBuildResults=resolveWordOrBracket(state, words.get(words.size()-1), null, new LinkedHashSet<Fragment>());
 			for (int i = words.size()-2; i >=0; i--) {//allows resolving of counter ions first
 				moleculeBuildResults.mergeBuildResults(resolveWordOrBracket(state, words.get(i), null, new LinkedHashSet<Fragment>()));
-			}
-		}else if(wordRule.equals("simple") || wordRule.equals("acid")) {
-			Element word = molecule.getFirstChildElement("word");
-			moleculeBuildResults =resolveWordOrBracket(state, word, null, new LinkedHashSet<Fragment>());
-		}
-		else{
-			throw new StructureBuildingException("Unknown Word Rule");
-		}
+			}*/
+
 		state.fragManager.tidyUpFragments();//FIXME remove this?
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
@@ -462,367 +377,108 @@ class StructureBuilder {
 //			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
 //			state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(i).valency);
 //		}
-		if (moleculeBuildResults.getOutIDCount()>0){
-			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
+
+		if (uniFrag.getOutIDs().size()>0 || uniFrag.getInIDs().size()>0){
+			//throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		return uniFrag;
 	}
 
-	/**
-	 * Resolves a word:
-	 * Locanted attributes of words are resolved onto their group
-	 * Locanted substitution is performed
-	 * Connections involving multi radicals are processed
-	 * Unlocanted attributes of words are resolved onto their group
-	 * 
-	 * @param state
-	 * @param word
-	 * @throws StructureBuildingException
-	 */
-	void resolveWordContents(BuildState state, Element word) throws StructureBuildingException {
-		if (!word.getLocalName().equals("word")){
-			throw new StructureBuildingException("A word is the expected input");
-		}
-		List<Element> subsAndRoots = OpsinTools.findDescendantElementsWithTagNames(word, new String[]{"substituent","root"});
-		for (Element subOrRoot : subsAndRoots) {
-			resolveLocantedFeatures(subOrRoot, state);//e.g. unsaturators, hydro groups and heteroatom replacement
-		}
-
-		List<Element> multipliers = OpsinTools.findDescendantElementsWithTagName(word, "multiplier");//these should be group level multipliers e.g the di in diethylbenzene or ethylenedibenzene
-		for (int i =multipliers.size()-1; i>=0; i--) {//resolve from right to left
-			Element subOrRoot = subsAndRoots.get(i);
-			processMultipliedBracketsAndLocantedSubstituents(state, subOrRoot);
-		}
-		
-		
-		//substitution occurs left to right so by doing this right to left you ensure that any groups that will come into existence
-		//due to multipliers being expanded will be in existence
-		for (int i =subsAndRoots.size()-1; i>=0; i--) {
-			Element subOrRoot = subsAndRoots.get(i);
-			processMultipliedBracketsAndLocantedSubstituents(state, subOrRoot);
-		}
-			
-		for (Element subOrRoot : subsAndRoots) {
-			processMultiradicals(subOrRoot);
-		}
-		
-		for (Element subOrRoot : subsAndRoots) {
-			resolveUnLocantedFeatures(subOrRoot);//e.g. unsaturators, hydro groups and heteroatom replacement
-		}
-		
-		for (Element subOrRoot : subsAndRoots) {
-			processUnLocantedSubstituents(subOrRoot);
-		}
-	}
-
-	/**
-	 * Adds locanted unsaturators, heteroatoms and hydrogen elements to the group within the sub or root
-	 * @param subOrRoot
-	 * @param state
-	 * @throws StructureBuildingException 
-	 */
-	private void resolveLocantedFeatures(Element subOrRoot, BuildState state) throws StructureBuildingException {
-		Elements groups = subOrRoot.getChildElements("group");
-		if (groups.size()!=1){
-			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
-		}
-		Element group = subOrRoot.getFirstChildElement("group");
-		Fragment thisFrag = state.xmlFragmentMap.getFirstFragment(group);
-
-		ArrayList<Element> unsaturators = new ArrayList<Element>();
-		ArrayList<Element> heteroatoms = new ArrayList<Element>();
-		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
-
-		Elements children =subOrRoot.getChildElements();
-		for (int i = 0; i < children.size(); i++) {
-			Element currentEl =children.get(i);
-			String elName =currentEl.getLocalName();
-			if (elName.equals("unsaturator")){
-				unsaturators.add(currentEl);
-			}
-			else if (elName.equals("heteroatom")){
-				heteroatoms.add(currentEl);
-			}
-			else if (elName.equals("hydro")){
-				hydrogenElements.add(currentEl);
-			}
-			else if (elName.equals("hydrogen")){
-				hydrogenElements.add(currentEl);
-			}
-			else if (elName.equals("indicatedHydrogen")){
-				hydrogenElements.add(currentEl);
-			}
-		}
-		/*
-		 * Add locanted functionality
-		 */
-		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
-			Element hydrogen = hydrogenElements.get(i);
-			String locant = getLocant(hydrogen);
-			if(!locant.equals("0")) {
-				thisFrag.getAtomByLocantOrThrow(locant).subtractSpareValency(1);
-				hydrogenElements.remove(hydrogen);
-			}
-			hydrogen.detach();
-		}
-
-		for(int i=unsaturators.size() -1;i >= 0;i--) {
-			Element unsaturator = unsaturators.get(i);
-			String locant = getLocant(unsaturator);
-			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue("value"));
-			if(bondOrder <= 1) {
-				continue;
-			}
-			if(!locant.equals("0")){
-				unsaturators.remove(unsaturator);
-				Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
-				if (unsaturator.getAttribute("compoundLocant")!=null){
-					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
-				}
-				else{
-					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
+	private void buildEster(BuildState state, Elements words) throws StructureBuildingException {
+		int i = resolvePreceedingFullWordsAndReturnNonFullIndice(state, words);
+		Element currentWord=words.get(i);
+		BuildResults substituentsBr = new BuildResults();
+		while (currentWord.getAttributeValue("type").equals("substituent")){
+			resolveWordOrBracket(state, currentWord);
+			BuildResults substituentBr = new BuildResults(state, currentWord);
+			if (substituentBr.getOutIDCount() ==1){//TODO add support for locanted terepthaloyl
+				String locantForSubstituent = getLocantForSubstituent(currentWord);
+				if (locantForSubstituent!=null){
+					substituentBr.getFirstOutID().locant=locantForSubstituent;//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
 				}
 			}
-			unsaturator.detach();
-		}
-
-		for(int i=heteroatoms.size() -1;i >= 0;i--) {
-			Element heteroatom = heteroatoms.get(i);
-			String locant = getLocant(heteroatom);
-			String atomSMILES = heteroatom.getAttributeValue("value");
-			if(!locant.equals("0")) {
-				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
-				heteroatoms.remove(heteroatom);
+			else if (substituentBr.getOutIDCount() ==0){
+				throw new StructureBuildingException("Substituent was expected to have at least one outID");
 			}
-			heteroatom.detach();
+			substituentsBr.mergeBuildResults(substituentBr);
+			currentWord=words.get(++i);
 		}
-	}
-	
-	private void processMultipliedBracketsAndLocantedSubstituents(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		assignAvailableLocantToSubstituent(subOrRoot);
 		
-	}
-	
-//	/**
-//	 * Assigns locants to substituents/brackets
-//	 * @param subOrRoot
-//	 * @throws PostProcessingException
-//	 */
-//	private void assignAvailableLocantToSubstituent(Element subOrRoot) throws StructureBuildingException {
-//		Element locant =subOrRoot.getFirstChildElement("locant");
-//
-//		if(locant != null && subOrRoot.getFirstChildElement("multiplier")==null) {
-//			if(locant.getAttribute("compoundLocant")!=null){
-//				throw new StructureBuildingException("A compound locant cannot be used to locant a sub/bracket!");
-//			}
-//			if (subOrRoot.getLocalName().equals("root")){
-//				throw new StructureBuildingException("Unable to assign all locants");
-//			}
-//			Element parent =(Element) subOrRoot.getParent();
-//			if (!parent.getLocalName().equals("word")){//attempt to find cases where locant will not be utilised. This if statement allows the use of locants for ester formation
-//				Elements children =parent.getChildElements();
-//				boolean foundSomethingToSubstitute =false;
-//				for (int i = parent.indexOf(subOrRoot) +1 ; i < children.size(); i++) {
-//					if (!children.get(i).getLocalName().equals("hyphen")){
-//						foundSomethingToSubstitute = true;
-//					}
-//				}
-//				if (!foundSomethingToSubstitute){
-//					throw new PostProcessingException("Unable to assign all locants");
-//				}
-//			}
-//			subOrRoot.addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
-//			locant.detach();
-//			if (subOrRoot.getFirstChildElement("locant")!=null){
-//				throw new PostProcessingException("Unable to assign all locants");
-//			}
-//		}
-//	}
-	
+		if (i == words.size() || !words.get(i).getAttributeValue("type").equals("full")){
+			throw new StructureBuildingException("Full word not found where full word expected: missing ate group in ester");
+		}
+		resolveWordOrBracket(state, words.get(i));
+		BuildResults mainGroupBr = new BuildResults(state, words.get(i));
+		i++;
+		
 
-	/**Resolves the contents of a word or bracket element, recursively.
-	 * @param state 
-	 * @param wob The word or bracket element.
-	 * @throws StructureBuildingException If the contents won't build properly.
-	 */
-	BuildResults joinGroupsInWordOrBracketRecursively(BuildState state, Element wob) throws StructureBuildingException {
-		String locantStr = "0";
-		if(wob.getAttribute("locant")!= null) {
-			locantStr = wob.getAttributeValue("locant");
+		int esterIdCount = mainGroupBr.getFunctionalIDCount();
+		int outIDCount =substituentsBr.getOutIDCount();
+		if (outIDCount > esterIdCount){
+			throw new StructureBuildingException("There are more radicals in the substituents than there are places to form esters");
 		}
-		List<Element> bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(wob, new String[]{"bracket", "substituent"});
-		
-		for (Element element : bracketsOrSubs) {
-			
-		}
-		
-		BuildResults buildResults = null;
-		Element lastBracketOrSub = bracketsOrSubs.get(bracketsOrSubs.size()-1);
-		if (lastBracketOrSub.getLocalName().equals("bracket")){
-			//if this is a bracket things get complicated as we need to have resolved everything in this recursively,
-			//starting from the last deepest bracket. The criteria of being the last element takes priority over depth
-			while (lastBracketOrSub.getLocalName().equals("bracket")){
-				bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(lastBracketOrSub, new String[]{"bracket", "substituent", "root"});
-				lastBracketOrSub = bracketsOrSubs.get(bracketsOrSubs.size()-1);
+		for(i=0; i< outIDCount; i++) {
+			Atom ateAtom;
+			if (substituentsBr.getFirstOutID().locant!=null){
+				ateAtom =determineFunctionalAtomToUse(substituentsBr.getFirstOutID().locant, mainGroupBr);
 			}
-			root =lastBracketOrSub;
-			buildResults = resolveRootOrSubstituent(state, lastBracketOrSub, null, new ArrayList<Element>(), fragmentsToAvoid );
-			do {
-				lastBracketOrSub = (Element) lastBracketOrSub.getParent();
-				bracketsOrSubs = OpsinTools.findChildElementsWithTagNames(lastBracketOrSub, new String[]{"bracket", "substituent", "root"});
-				for (int i = bracketsOrSubs.size() -2; i >=0; i--) {//don't use last element as that's the root
-					Element currentChild= bracketsOrSubs.get(i);
-					if (currentChild.getLocalName().equals("bracket")){
-						buildResults.mergeBuildResults(resolveWordOrBracket(state, currentChild, buildResults.getMainFragment(), fragmentsToAvoid));
-					}
-					else{
-						buildResults.mergeBuildResults(resolveRootOrSubstituent(state, currentChild , buildResults.getMainFragment(), new ArrayList<Element>(), fragmentsToAvoid));
-					}
-				}
-			} while(!lastBracketOrSub.equals(wob));
+			else{
+				ateAtom =mainGroupBr.getFunctionalAtom(0);
+				mainGroupBr.removeFunctionalID(0);
+			}
+			state.fragManager.attachFragments(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
+			substituentsBr.removeOutID(0);
+			ateAtom.setCharge(0);
+		}
+		resolveTrailingFullWords(state, words, i);
+	}
+
+
+
+	private void buildPolymer(BuildState state, Elements words) throws StructureBuildingException {
+		if (words.size()>1){
+			throw new StructureBuildingException("Currently unsupported polymer name type");
+		}
+		Element polymer = words.get(0);
+		resolveWordOrBracket(state, polymer);
+		BuildResults polymerBr = new BuildResults(state, polymer);
+		if (polymerBr.getOutIDCount() ==2 && polymerBr.getInIDCount()==0){
+			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
+			state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(0).valency);
+			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
+			rGroup =state.fragManager.buildSMILES("[Rn]");
+			state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(1).valency);
+			polymerBr.removeAllOutIDs();
 		}
 		else{
-			root =lastBracketOrSub;
+			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outIDs, found: " +polymerBr.getOutIDCount() +" ,expected 0 inIDs, found: " +polymerBr.getInIDCount());
 		}
-		if (buildResults==null){
-			buildResults = resolveRootOrSubstituent(state, root, null, bracketsOrSubs, fragmentsToAvoid);
-			Elements roots= wob.getChildElements("root");
-			for (int i = 1; i < roots.size(); i++) {//special case where there are multiple roots e.g. naphthalene-1,5-diyl 4,4'-bis(2,5-dioxo-1H-pyrrol-1-yl)dibenzoate (this is not technically multiplicative)
-				buildResults.mergeBuildResults(resolveRootOrSubstituent(state, roots.get(i), null, new ArrayList<Element>(), fragmentsToAvoid));
-			}
-		}
-
-		if(parentFrag != null && !fragmentsToAvoid.contains(buildResults.getMainFragment())) {
-			joinFragments(state, buildResults, (Element) root.getParent(), parentFrag, locantStr);
-		}
-		return buildResults;
 	}
 
-
-	/**Resolves the contents of a &lt;word&gt; or &lt;bracket&gt; tag, recursively BUT from left to right
-	 * This is utilised by multiplicative nomenclature
-	 * @param state
-	 * @param buildResults The current building progress (this function is called recursively)
-	 * @param roots The elements upon which building is occuring. Say for ethylenediaminetetraacetic acid this would initially contain ethylene, then when it's run next would contain both amines
-	 * @return A buildResults for the results of building
-	 * @throws StructureBuildingException If the contents won't build properly.
-	 */
-	private BuildResults resolveWordOrBracketLeftToRight(BuildState state, BuildResults buildResults, ArrayList<Element> roots) throws StructureBuildingException {
-		ArrayList<Element> elementsUsed =new ArrayList<Element>();
-		int numberOfOutIDs =buildResults.getOutIDCount();
-		if (numberOfOutIDs <=1){//no longer multiplicative nomenclature (should be the end of the name...)
-			if (numberOfOutIDs==1){
-				for (Element root : roots) {//I think if this code is run something has gone wrong!
-					Element group=root.getFirstChildElement("group");
-					if (group!=null){
-						buildResults.fragments.remove(state.xmlFragmentMap.get(group));
-					}
-				}
+	private int resolvePreceedingFullWordsAndReturnNonFullIndice(BuildState state, Elements words) throws StructureBuildingException {
+		for (int i = 0; i < words.size(); i++) {
+			Element word =words.get(i);
+			if (word.getAttributeValue("type").equals("full")){
+				resolveWordOrBracket(state, word);
 			}
-			return buildResults;
-		}
-
-		int outIDsPerRoot =numberOfOutIDs/roots.size();
-//		System.out.println("number of roots: " + roots.size());
-//		System.out.println("outIdsPerRoot " + outIDsPerRoot);
-		int extraOutIDs = numberOfOutIDs % roots.size();//if this is not 0 then the resulting structure will be a radical
-		if (extraOutIDs!=0){
-			throw new StructureBuildingException("Unhandled use of multiplicative nomenclature");
-		}
-
-		//resolve left to right
-		mainLoop: for (int i = 0; i < roots.size(); i++) {
-			Element root =roots.get(i);
-			int outIDsForThisRoot =outIDsPerRoot;
-			//System.out.println("Root " + i);
-			Element parent =(Element) root.getParent();
-
-			int indexOfRoot =parent.indexOf(root);
-			Elements children =parent.getChildElements();
-			ArrayList<Element> potentialSubsAndRoots =new ArrayList<Element>();
-			for (int j = 0; j < children.size(); j++) {
-				Element currentElement = children.get(j);
-				if (j > indexOfRoot && (currentElement.getLocalName().equals("substituent") || currentElement.getLocalName().equals("bracket") || currentElement.getLocalName().equals("root"))
-						&& !roots.contains(currentElement) && !elementsUsed.contains(currentElement)){
-					
-					if (currentElement.getLocalName().equals("bracket")){
-						if (currentElement.getAttribute("type")==null){//don't want to explore implicit brackets
-							Element foundEl =getFirstUnusedSubOrRootFromBracket(state, currentElement, roots, elementsUsed);
-							if (foundEl!=null){
-								potentialSubsAndRoots.add(foundEl);
-							}
-						}
-					}
-					else{
-						Element group =currentElement.getFirstChildElement("group");
-						if (group.getAttribute("isAMultiRadical")!=null || state.xmlFragmentMap.get(group).getOutIDs().size()==0){//you want either a linker or a terminal. e.g. oxy, nitrilo etc. or a ender e.g. phenol, benzene, ethanol.
-							potentialSubsAndRoots.add(currentElement);
-						}
-					}
-				}
-			}
-			if (potentialSubsAndRoots.size() ==0){break;}
-
-//			System.out.println(root.toXML());
-//			System.out.println("number of available options: " + potentialSubsAndRoots.size());
-
-
-			//TODO Do this properly e.g. only do it in specific cases e.g. methylenecyclohexane, not methandiylcyclohexane
-//			int bondOrder =outIDsPerRoot/potentialBracketsOrSubs.size();
-//			if (potentialBracketsOrSubs.size() < outIDsForThisRoot){//some of the outID need to be removed and others have their valency increased
-//				if (outIDsPerRoot % potentialBracketsOrSubs.size() !=0){
-//					throw new StructureBuildingException("Unhandled use of multiplicative nomenclature");
-//				}
-//				int valencyCount=0;//how much valency has been changed
-//				ArrayList<OutID> outIDsToRemove =new ArrayList<OutID>();
-//				for (OutID outId : buildResults.outIDs) {
-//					if (valencyCount>0 && outId.valency==1){
-//						outIDsToRemove.add(outId);
-//						valencyCount--;
-//					}
-//					if (outId.valency<bondOrder){
-//						valencyCount= valencyCount+(bondOrder-outId.valency);
-//						outId.valency=bondOrder;
-//					}
-//				}
-//				buildResults.outIDs.removeAll(outIDsToRemove);
-//			}
-
-			for (int j = 0; j < potentialSubsAndRoots.size(); j++) {
-				Element currentSubOrRoot = potentialSubsAndRoots.get(j);
-				if (outIDsForThisRoot >=1){
-					//System.out.println("current: " + currentSubOrRoot.toXML());
-					if(!buildResults.fragments.contains(state.xmlFragmentMap.get(currentSubOrRoot.getFirstChildElement("group")))){
-						BuildResults tempChildBuildResults = resolveRootOrSubstituent(state, currentSubOrRoot , null, new ArrayList<Element>(), new LinkedHashSet<Fragment>());
-						joinFragmentsMultiplicative(state, tempChildBuildResults, buildResults);
-						buildResults.mergeBuildResults(tempChildBuildResults);
-						elementsUsed.add(currentSubOrRoot);
-						outIDsForThisRoot--;
-					}
-				}
-				else{
-					continue mainLoop;
-				}
+			else{
+				return i;
 			}
 		}
-		if (elementsUsed.size()!=0){
-			return resolveWordOrBracketLeftToRight(state, buildResults, elementsUsed);
-		}
-
-		if (numberOfOutIDs !=0 && roots.size() >0){
-			for (int i = 0; i < roots.size(); i++) {
-				Element parent =(Element) roots.get(i).getParent();
-				if (parent.getLocalName().equals("bracket")){
-					roots.set(i, parent);
-				}
-				else{
-					return buildResults;
-					//as it isn't in a bracket all of the molecule should have been evaluated, so the only conclusion is that the molecule is a radical
-				}
+		throw new StructureBuildingException("No non full words were encountered!");
+	}
+	
+	private void resolveTrailingFullWords(BuildState state, Elements words, int indice) throws StructureBuildingException {
+		for (int i = indice; i < words.size(); i++) {
+			Element word =words.get(i);
+			if (word.getAttributeValue("type").equals("full")){
+				resolveWordOrBracket(state, word);
 			}
-			return resolveWordOrBracketLeftToRight(state, buildResults, roots);
+			else{
+				throw new StructureBuildingException("Non full word found where only full words were expected");
+			}
 		}
-		return buildResults;
 	}
 
 	/**
@@ -863,447 +519,6 @@ class StructureBuilder {
 		else{
 			throw new StructureBuildingException("Empty bracket!");
 		}
-	}
-	
-
-	/**Resolves the contents of a &lt;root&gt; or &lt;substituent&gt; tag.
-	 * @param state 
-	 * @param rootOrSub The &lt;root&gt; or &lt;substituent&gt; tag.
-	 * @param parentFrag The fragment to which the built fragment will be attached. May be null.
-	 * @param bracketsOrSubsNodes The elements which should be evaluated and connected to the fragment built from rootOrSub. Can be empty
-	 * @param fragmentsToAvoid Usually empty list of fragments that should not be joined to their parentFrag
-	 * @return A buildResults for the results of building.
-	 * @throws StructureBuildingException If the contents won't build properly.
-	 */
-	BuildResults resolveRootOrSubstituent(BuildState state, Element rootOrSub, Fragment parentFrag, List<Element> bracketsOrSubs, LinkedHashSet<Fragment> fragmentsToAvoid) throws StructureBuildingException {
-		Element group = rootOrSub.getFirstChildElement("group");
-		Fragment thisFrag = state.xmlFragmentMap.get(group);
-
-		ArrayList<Element> unsaturators = new ArrayList<Element>();
-		ArrayList<Element> heteroatoms = new ArrayList<Element>();
-		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
-
-		Elements children =rootOrSub.getChildElements();
-		for (int i = 0; i < children.size(); i++) {
-			Element currentEl =children.get(i);
-			String elName =currentEl.getLocalName();
-			if (elName.equals("unsaturator")){
-				unsaturators.add(currentEl);
-			}
-			else if (elName.equals("heteroatom")){
-				heteroatoms.add(currentEl);
-			}
-			else if (elName.equals("hydro")){
-				hydrogenElements.add(currentEl);
-			}
-			else if (elName.equals("hydrogen")){
-				hydrogenElements.add(currentEl);
-			}
-			else if (elName.equals("indicatedHydrogen")){
-				hydrogenElements.add(currentEl);
-			}
-		}
-
-		/*
-		 *OutID queries from this point onwards should be directed to the buildResults
-		 */
-		BuildResults buildResults = new BuildResults(thisFrag);
-		if (fragmentsToAvoid.contains(buildResults.getMainFragment())){
-			buildResults.functionalIDs.clear();
-			buildResults.removeAllOutIDs();
-		}
-
-		int idOfFirstAtomInFragment= thisFrag.getIdOfFirstAtom();
-		//used if locants are not specified; whenever used it is incremented
-		//all non-suffix atoms in the fragment are eventually checked if the defaultId does not correspond to a suitable atom
-		//e.g. if the id was 3 in a 5 atom fragment which had ids 1-5, atoms would be checked for suitability in the order 3,4,5,1,2
-		int defaultId = idOfFirstAtomInFragment;
-
-		/*
-		 * Add locanted functionality
-		 */
-		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
-			Element hydrogen = hydrogenElements.get(i);
-			String locant = getLocant(hydrogen);
-			if(!locant.equals("0")) {
-				thisFrag.getAtomByLocantOrThrow(locant).subtractSpareValency(1);
-				hydrogenElements.remove(hydrogen);
-			}
-			hydrogen.detach();
-		}
-
-		for(int i=unsaturators.size() -1;i >= 0;i--) {
-			Element unsaturator = unsaturators.get(i);
-			String locant = getLocant(unsaturator);
-			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue("value"));
-			if(bondOrder <= 1) {
-				continue;
-			}
-			if(!locant.equals("0")){
-				unsaturators.remove(unsaturator);
-				Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
-				if (unsaturator.getAttribute("compoundLocant")!=null){
-					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
-				}
-				else{
-					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
-				}
-			}
-			unsaturator.detach();
-		}
-
-		for(int i=heteroatoms.size() -1;i >= 0;i--) {
-			Element heteroatom = heteroatoms.get(i);
-			String locant = getLocant(heteroatom);
-			String atomSMILES = heteroatom.getAttributeValue("value");
-			if(!locant.equals("0")) {
-				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
-				heteroatoms.remove(heteroatom);
-			}
-			heteroatom.detach();
-		}
-
-		for(int i=bracketsOrSubs.size() -1;i >= 0;i--) {
-			Element bracketOrSub = bracketsOrSubs.get(i);
-			if (bracketOrSub.equals(rootOrSub)){continue;}
-			if(bracketOrSub.getAttribute("locant") != null) {
-				//slim possibility does exist that the locant is not referring to this fragment
-				if (thisFrag.getAtomByLocant(bracketOrSub.getAttributeValue("locant"))!=null){
-					if (bracketOrSub.getLocalName().equals("bracket")){
-						buildResults.mergeBuildResults(resolveWordOrBracket(state, bracketOrSub, thisFrag, fragmentsToAvoid));
-					}
-					else{
-						buildResults.mergeBuildResults(resolveRootOrSubstituent(state, bracketOrSub , thisFrag, new ArrayList<Element>(), fragmentsToAvoid));
-					}
-					bracketsOrSubs.remove(i);
-				}
-			}
-		}
-
-		if(parentFrag != null) {
-			/* attach the Fragment that has just been built to the parentFrag */
-			if(!fragmentsToAvoid.contains(buildResults.getMainFragment()) && rootOrSub.getAttribute("locant") != null) {
-				String locantStr =rootOrSub.getAttributeValue("locant");
-				joinFragments(state, buildResults, rootOrSub, parentFrag, locantStr);
-			}
-		}
-
-		/*
-		 * Add unlocanted functionality
-		 */	
-
-		if (hydrogenElements.size()>0){
-			/*
-			 * This function is not entirely straightforward as certain atoms definitely should have their spare valency reduced
-			 * However names are not consistent as to whether they bother having the hydro tags do this!
-			 * The atoms in atomsWithSV are in atom order those that can take a hydro element and then those that shouldn't really take a hydro element as it's absence is unambiguous
-			 */
-			LinkedList<Atom> atomsWithSV = new LinkedList<Atom>();
-			LinkedList<Atom> atomsWhichImplicitlyWillHaveTheirSVRemoved = new LinkedList<Atom>();
-			List<Atom> atomList =thisFrag.getAtomList();
-			for (Atom atom : atomList) {
-				if (atom.getType().equals("suffix")){
-					break;
-				}
-				atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
-				if (atom.getSpareValency() >=1){
-					if (atom.getNote("OneSuffixAttached")!=null){
-						atomsWhichImplicitlyWillHaveTheirSVRemoved.add(atom);
-					}
-					else{
-						atomsWithSV.add(atom);
-					}
-				}
-			}
-			atomsWithSV.addAll(atomsWhichImplicitlyWillHaveTheirSVRemoved);//these end up at the end of the list
-			if (hydrogenElements.size()> atomsWithSV.size()){
-				throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
-						hydrogenElements.size() + " hydrogen adding tags but only " +  atomsWithSV.size() +" positions that can be hydrogenated)" );
-			}
-			for(int j=0;j<hydrogenElements.size();j++) {
-				Atom atomToReduceSpareValencyOn=atomsWithSV.removeFirst();
-				atomToReduceSpareValencyOn.subtractSpareValency(1);
-				hydrogenElements.get(j).detach();
-			}
-		}
-
-		for(int j=0;j<unsaturators.size();j++) {
-			Element unsaturator = unsaturators.get(j);
-			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue("value"));
-			if(bondOrder <= 1) {
-				continue;
-			}
-			//checks if both atoms can accept an extra bond (if double bond) or two extra bonds (if triple bond)
-
-			Atom currentAtom =thisFrag.getAtomByIDOrThrow(defaultId);
-			Atom nextAtom =thisFrag.getAtomByIDOrThrow(defaultId +1);
-			while (currentAtom.getSpareValency() != 0 || ValencyChecker.checkValencyAvailableForBond(currentAtom, bondOrder-1 + currentAtom.getOutValency()) != true ||
-					nextAtom.getSpareValency() != 0 || ValencyChecker.checkValencyAvailableForBond(nextAtom, bondOrder-1 + nextAtom.getOutValency()) != true){
-				defaultId++;
-				currentAtom =thisFrag.getAtomByIDOrThrow(defaultId);
-				nextAtom =thisFrag.getAtomByIDOrThrow(defaultId +1);
-				if (currentAtom.getType().equals("suffix") || nextAtom.getType().equals("suffix")){
-					throw new StructureBuildingException("No suitable atom found");
-				}
-			}
-			Integer idOfFirstAtomInMultipleBond=currentAtom.getID();
-			if (unsaturator.getAttribute("compoundLocant")!=null){
-				state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
-			}
-			else{
-				state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
-			}
-			defaultId=idOfFirstAtomInMultipleBond +2;
-			unsaturator.detach();
-		}
-		defaultId = idOfFirstAtomInFragment;
-
-		for(int j=0;j<heteroatoms.size();j++) {
-			Element heteroatom = heteroatoms.get(j);
-			String atomSMILES = heteroatom.getAttributeValue("value");
-			//finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
-			Atom atomToReplaceWithHeteroAtom=thisFrag.getAtomByIDOrThrow(defaultId);
-			while (ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES) != true){
-				defaultId++;
-				atomToReplaceWithHeteroAtom=thisFrag.getAtomByIDOrThrow(defaultId);
-				if (atomToReplaceWithHeteroAtom.getType().equals("suffix")){
-					throw new StructureBuildingException("No suitable atom found");
-				}
-			}
-			state.fragManager.makeHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES, true);
-			defaultId++;
-			heteroatom.detach();
-		}
-		defaultId = idOfFirstAtomInFragment;
-
-		if (thisFrag.getOutIDs().size()>0){//assign any outIDs that have not been set to a specific atom to a specific atom
-			for (OutID outID : thisFrag.getOutIDs()) {
-				if (!outID.setExplicitly){
-					defaultId=outID.id;
-					Atom atomToAssociateOutIDWith=thisFrag.getAtomByIDOrThrow(defaultId);
-					while (ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutIDWith, atomToAssociateOutIDWith.getSpareValency() + atomToAssociateOutIDWith.getOutValency() +outID.valency) != true){
-						defaultId++;
-						atomToAssociateOutIDWith=thisFrag.getAtomByIDOrThrow(defaultId);
-						if (atomToAssociateOutIDWith.getType().equals("suffix")){
-							throw new StructureBuildingException("No suitable atom found");
-						}
-					}
-					outID.id=defaultId;
-					outID.setExplicitly=true;
-					atomToAssociateOutIDWith.addOutValency(outID.valency);
-					defaultId = idOfFirstAtomInFragment;
-				}
-			}
-		}
-
-		for(int i=bracketsOrSubs.size() -1;i >= 0;i--) {
-			Element bracketOrSub = bracketsOrSubs.get(i);
-			if (bracketOrSub.equals(rootOrSub)){continue;}
-			if (bracketOrSub.getLocalName().equals("bracket")){
-				buildResults.mergeBuildResults(resolveWordOrBracket(state, bracketOrSub, thisFrag, fragmentsToAvoid));
-			}
-			else{
-				buildResults.mergeBuildResults(resolveRootOrSubstituent(state, bracketOrSub , thisFrag, new ArrayList<Element>(), fragmentsToAvoid));
-			}
-		}
-
-		if(parentFrag != null) {
-			/* attach the Fragment that has just been built to the parentFrag */
-			if(!fragmentsToAvoid.contains(buildResults.getMainFragment()) && rootOrSub.getAttribute("locant") == null) {
-				joinFragments(state, buildResults, rootOrSub, parentFrag, "0");
-			}
-		}
-
-		return buildResults;
-	}
-
-	/**
-	 * Used to join two fragments. If the locant is not present on the parent alternative feasible fragments will be accessed to
-	 * try to find a fragment with a suitable locant which assumedly was the fragment to which bonding was intended
-	 * @param state 
-	 * @param fragToBeJoinedBuildResults: BuildResults for the fragment to be joined
-	 * @param parentSubstituentOrBracketOfFrag: The XML corresponding to the substituent/bracket this fragment is in
-	 * This is a bracket if called from resolveWordOrBracket or a substituent if called from resolveRootOrSubstituent
-	 * @param parentFrag: The parent fragment to attach to
-	 * @param locantStr: A locant on this fragment
-	 * @throws StructureBuildingException
-	 */
-	private void joinFragments(BuildState state, BuildResults fragToBeJoinedBuildResults, Element parentSubstituentOrBracketOfFrag,
-			Fragment parentFrag, String locantStr) throws StructureBuildingException {
-
-		Fragment fragToBeJoined =fragToBeJoinedBuildResults.getMainFragment();
-		boolean polymerMode =false;
-		if (state.mode.equals(OpsinMode.poly) && fragToBeJoinedBuildResults.getOutIDCount() ==2){
-			polymerMode =true;
-		}
-		if (fragToBeJoinedBuildResults.getOutIDCount() <=0){
-			throw new StructureBuildingException("Fragment does not have any specified outIDs!");
-		}
-		Atom from;
-		int bondOrder;
-		if (polymerMode){
-			OutID firstOutID = fragToBeJoined.getOutID(0);
-			fragToBeJoined.addInID(firstOutID.id, firstOutID.valency, firstOutID.setExplicitly);
-			fragToBeJoined.removeOutID(firstOutID);
-			fragToBeJoinedBuildResults.removeOutID(0);
-			from = fragToBeJoinedBuildResults.getOutAtom(0);
-			bondOrder = fragToBeJoinedBuildResults.getOutID(0).valency;
-			fragToBeJoined.removeOutID(fragToBeJoined.getOutID(0));
-			fragToBeJoinedBuildResults.removeOutID(0);
-		}
-		else{
-			from = fragToBeJoinedBuildResults.getOutAtom(0);
-			bondOrder =fragToBeJoinedBuildResults.getFirstOutID().valency;
-			if (fragToBeJoinedBuildResults.getFirstOutID().setExplicitly != true){//not set explicitly so may be an inappropriate atom
-				from=fragToBeJoined.getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
-			}
-			fragToBeJoinedBuildResults.removeOutID(0);
-		}
-
-
-		Atom to =null;
-		if (polymerMode){//TODO allow names like poly[oxy(dichloromethyl)methylene] e.g. search for next with two outIDs or an inId
-			parentFrag = getNextInScopeMultiValentFragment(parentSubstituentOrBracketOfFrag, state);
-			if (parentFrag ==null){
-				throw new StructureBuildingException("Polymer building failed: No suitable fragment found to connect to");
-			}
-			int parentExpectedBondOrder;
-			if (parentFrag.getOutIDs().size()==2){
-				OutID outId =parentFrag.getOutID(0);
-				to =parentFrag.getAtomByIDOrThrow(outId.id);
-				parentExpectedBondOrder =outId.valency;
-				outId.buildResults.outIDs.remove(outId);
-				parentFrag.removeOutID(0);
-			}
-			else if (parentFrag.getInIDs().size()==1){
-				to =parentFrag.getAtomByIDOrThrow(parentFrag.getInID(0).id);
-				parentExpectedBondOrder =parentFrag.getInID(0).valency;
-				parentFrag.removeInID(0);
-			}
-			else{
-				throw new StructureBuildingException("Polymer building failed: Fragment was expected to be have two outIDs or an inId but in fact had: " +parentFrag.getOutIDs().size() +" outIDs and : " +parentFrag.getInIDs().size() +" inIDs");
-			}
-			if (parentExpectedBondOrder != bondOrder){//wrong outId on the frag to be joined has been utilised, expected to happen in ambiguous cases such as nitrilo
-				OutID theRealOutId = fragToBeJoined.getInID(0);
-				fragToBeJoined.removeInID(0);
-				fragToBeJoined.addInID(from.getID(), bondOrder, true);
-				from = fragToBeJoined.getAtomByIDOrThrow(theRealOutId.id);//probably the same atom as before
-				bondOrder = theRealOutId.valency;
-				if (parentExpectedBondOrder != bondOrder){
-					throw new StructureBuildingException("Polymer building failed: bond order disagreement");
-				}
-			}
-		}
-		else{
-			if(locantStr.equals("0")){
-				to = parentFrag.getAtomByIdOrNextSuitableAtom(parentFrag.getDefaultInID(), bondOrder, true);
-			}
-			else{
-				to =parentFrag.getAtomByLocant(locantStr);
-			}
-		}
-
-		//case where you should actually be substituting onto the previous element e.g. 5-(4-methylphenylcarbonyl)pentane
-		if (to==null){
-			if(locantStr.equals("0")){
-				ArrayList<Fragment> possibleParents =findAlternativeFragments(state, parentSubstituentOrBracketOfFrag);
-				for (Fragment fragment : possibleParents) {
-					to = fragment.getAtomByIdOrNextSuitableAtom(fragment.getDefaultInID(), bondOrder, true);
-					if (to !=null){
-						break;
-					}
-				}
-				if (to  ==null){
-					throw new StructureBuildingException("Cannot find fragment to reasonably attach atom with id: " +from.getID() +" to using unspecified locant");
-				}
-			}
-			else{
-				parentFrag =findAlternativeFragmentWithLocant(state, parentSubstituentOrBracketOfFrag, locantStr);
-				if (parentFrag  ==null){
-					throw new StructureBuildingException("Cannot find fragment to reasonably attach atom with id: " +from.getID() +" to using locant: " + locantStr);
-				}
-				to =parentFrag.getAtomByLocant(locantStr);
-			}
-		}
-		state.fragManager.attachFragments(from, to, bondOrder);
-	}
-
-	/**
-	 * Given a subsituent/bracket finds the next multi valent substituent/root that is in scope and hence its group
-	 * e.g. for oxy(dichloromethyl)methylene given oxy substituent the methylene group would be found
-	 * for oxy(dichloroethylene) given oxy substituent the ethylene group would be found
-	 * for oxy(carbonylimino) given oxy carbonyl would be found
-	 * @param substituentOrBracket
-	 * @param state 
-	 * @return frag
-	 * @throws StructureBuildingException 
-	 */
-	private Fragment getNextInScopeMultiValentFragment(Element substituentOrBracket, BuildState state) throws StructureBuildingException {
-		if (!substituentOrBracket.getLocalName().equals("substituent") && !substituentOrBracket.getLocalName().equals("bracket")){
-			throw new StructureBuildingException("Input to this function should be a substituent or bracket");
-		}
-		if (substituentOrBracket.getParent()==null){
-			throw new StructureBuildingException("substituent did not have a parent!");
-		}
-		Element parent =(Element) substituentOrBracket.getParent();
-		
-		List<Element> children = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"substituent", "bracket", "root"});//will be returned in index order
-		int indexOfSubstituent =parent.indexOf(substituentOrBracket);
-		for (Element child : children) {
-			if (parent.indexOf(child) <=indexOfSubstituent){//only want things after the input
-				continue;
-			}
-			List<Element> childDescendants;
-			if (child.getLocalName().equals("bracket")){
-				childDescendants = OpsinTools.findDescendantElementsWithTagNames(child, new String[]{"substituent", "root"});//will be returned in depth-first order
-			}
-			else{
-				childDescendants =new ArrayList<Element>();
-				childDescendants.add(child);
-			}
-			for (Element descendantChild : childDescendants) {
-				Element group = descendantChild.getFirstChildElement("group");
-				if (group == null){
-					throw new StructureBuildingException("substituent/root is missing its group");
-				}
-				Fragment possibleFrag = state.xmlFragmentMap.get(group);
-				if ((possibleFrag.getOutIDs().size()==2 && possibleFrag.getInIDs().size()==0)||(possibleFrag.getOutIDs().size()==0 && possibleFrag.getInIDs().size()==1)){
-					return possibleFrag;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Joins two fragments together. The main difference between this and joinFragments is that this function expects no specified locants
-	 * and that in this on the parentBuildResult loses an OutID, not the fragment to be joined.
-	 * @param state 
-	 * @param fragToBeJoinedBuildResults
-	 * @param parentFragBuildResults
-	 * @throws StructureBuildingException
-	 */
-	private void joinFragmentsMultiplicative(BuildState state, BuildResults fragToBeJoinedBuildResults, BuildResults parentFragBuildResults) throws StructureBuildingException {
-		Fragment fragToBeJoined =fragToBeJoinedBuildResults.getMainFragment();
-		if (parentFragBuildResults.getOutIDCount() <=0){
-			throw new StructureBuildingException("Fragment does not have any specified outIDs!");
-		}
-		Atom from =parentFragBuildResults.getOutAtom(0);
-		int bondOrder =parentFragBuildResults.getFirstOutID().valency;
-		if (parentFragBuildResults.getFirstOutID().setExplicitly != true){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
-		}
-		parentFragBuildResults.removeOutID(0);
-
-		Atom to;
-		if (fragToBeJoined.getInIDs().size() > 0){//inID may have been explicitly specified e.g. N,N'-(butane-2,2-diyl)bis(acrylamide) specifies the N position on the acrylamide
-			to = fragToBeJoined.getAtomByIDOrThrow(fragToBeJoined.getInID(0).id);
-			fragToBeJoined.removeInID(0);
-		}
-		else{
-			 to = fragToBeJoined.getAtomByIdOrNextSuitableAtomOrThrow(fragToBeJoined.getDefaultInID(), bondOrder);
-		}
-		state.fragManager.attachFragments(from, to, bondOrder);
 	}
 
 	/**
@@ -1350,57 +565,6 @@ class StructureBuilder {
 	}
 	
 	/**
-	 * Finds all the groups accessible from the currentElement taking into account brackets
-	 * i.e. those that it is feasible that the group of the currentElement could substitute onto
-	 * @param state 
-	 * @param currentElement
-	 * @return A list of fragments in the order to try them as possible parent fragments
-	 */
-	private ArrayList<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
-		Stack<Element> s = new Stack<Element>();
-		s.add(startingElement);
-		ArrayList<Fragment> foundFragments =new ArrayList<Fragment>();
-		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
-		while (s.size()>0){
-			Element currentElement =s.pop();
-			if (currentElement.getLocalName().equals("group")){
-				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
-				foundFragments.add(groupFrag);
-				continue;
-			}
-			Element parent = (Element)currentElement.getParent();
-			List<Element> siblings = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"bracket", "substituent", "root"});
-
-			for (Element bracketOrSub : siblings) {
-				if (!doneFirstIteration && parent.indexOf(bracketOrSub )<=parent.indexOf(currentElement)){
-					continue;
-				}
-				if (bracketOrSub.getLocalName().equals("bracket")){
-					s.push((Element)bracketOrSub.getChild(0));
-				}
-				else{
-					Element group = bracketOrSub.getFirstChildElement("group");
-					s.push(group);
-				}
-			}
-			doneFirstIteration =true;
-		}
-		return foundFragments;
-	}
-
-
-	/**Gets the locant from a group/suffix tag, defaulting to "0"
-	 *
-	 * @param element
-	 * @return The locant on the group/suffix tag.
-	 */
-	static String getLocant(Element element) {
-		String locantStr = element.getAttributeValue("locant");
-		if(locantStr == null) return "0";
-		return locantStr;
-	}
-	
-	/**
 	 * Return the locant associated with the first child of a word if there is only child
 	 * else returns null
 	 * @param currentWord
@@ -1431,25 +595,25 @@ class StructureBuilder {
 	/**
 	 * Finds a suitable functional atom corresponding to the given locant
 	 * @param locant
-	 * @param moleculeBuildResults
+	 * @param mainGroupBR
 	 * @return functionalAtomToUse
 	 * @throws StructureBuildingException
 	 */
-	private Atom determineFunctionalAtomToUse(String locant, BuildResults moleculeBuildResults) throws StructureBuildingException {
-		for (int i = 0; i < moleculeBuildResults.functionalIDs.size(); i++) {
-			Atom possibleAtom = moleculeBuildResults.getAtomById(moleculeBuildResults.functionalIDs.get(i));
+	private Atom determineFunctionalAtomToUse(String locant, BuildResults mainGroupBR) throws StructureBuildingException {
+		for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 			if (possibleAtom.hasLocant(locant)){
-				moleculeBuildResults.functionalIDs.remove(i);
+				mainGroupBR.removeFunctionalID(i);
 				return possibleAtom;
 			}
 		}
 		//None of the functional atoms had an appropriate locant. Look for the special case where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
-		for (int i = 0; i < moleculeBuildResults.functionalIDs.size(); i++) {
-			Atom possibleAtom = moleculeBuildResults.getAtomById(moleculeBuildResults.functionalIDs.get(i));
+		for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 			if (possibleAtom.getNote("ambiguousElementAssignment")!=null){
 				String[] atomIDs =possibleAtom.getNote("ambiguousElementAssignment").split(",");
 				for (int j = 0; j < atomIDs.length; j++) {
-					Atom a =moleculeBuildResults.getAtomById(Integer.parseInt(atomIDs[j]));
+					Atom a =mainGroupBR.getAtomByIdOrThrow(Integer.parseInt(atomIDs[j]));
 					if (a.hasLocant(locant)){
 						//swap locants and element type
 						List<String> tempLocants =new ArrayList<String>(a.getLocants());
@@ -1482,7 +646,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	private void makeHydrogensExplicit(BuildState state) throws StructureBuildingException {
-		List<Fragment> fragments = state.fragManager.getFragPile();
+		Set<Fragment> fragments = state.fragManager.getFragPile();
 		for (Fragment fragment : fragments) {
 			List<Atom> atomList =fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
