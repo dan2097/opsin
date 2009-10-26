@@ -48,11 +48,11 @@ class Fragment {
 
 	/**The IDs of atoms that are used on this fragment to form things like esters
 	 * Initially empty */
-	private LinkedList<Integer> functionalIDs = new LinkedList<Integer>();
+	private LinkedList<FunctionalID> functionalIDs = new LinkedList<FunctionalID>();
 	
 	/**The IDs of atoms that must be bonded to and the order of the bonds. Currently used in suffixes and in multiplicative nomenclature
 	 * Initially empty */
-	private LinkedList<OutID> inIDs = new LinkedList<OutID>();
+	private LinkedList<InID> inIDs = new LinkedList<InID>();
 
 	/**The ID of the atom that fragments connecting to the fragment connect to if a locant has not been specified
 	 * Set by the first atom to be added to the fragment. This is typically the one with locant 1
@@ -164,6 +164,7 @@ class Fragment {
 	}
 
 	/**Imports all of the atoms and bonds from another fragment into this one.
+	 * Also imports outIDs/inIDs and functionalIDs
 	 *
 	 * @param frag The fragment from which the atoms and bonds are to be imported.
 	 */
@@ -175,6 +176,9 @@ class Fragment {
 		for(Bond bond : frag.getBondList()) {
 			addBond(bond, false);
 		}
+		outIDs.addAll(frag.getOutIDs());
+		inIDs.addAll(frag.getInIDs());
+		functionalIDs.addAll(frag.getFunctionalIDs());
 	}
 
 	/**Gets the id of the atom in the fragment with the specified locant.
@@ -408,7 +412,7 @@ class Fragment {
 	/**Adds an outID
 	 * @throws StructureBuildingException */
 	void addOutID(int id, int valency, Boolean setExplicitly) throws StructureBuildingException {
-		outIDs.add(new OutID(id, valency, setExplicitly, this, null));
+		outIDs.add(new OutID(id, valency, setExplicitly, this));
 		if (setExplicitly){
 			getAtomByIDOrThrow(id).addOutValency(valency);
 		}
@@ -417,7 +421,7 @@ class Fragment {
 	/**Adds an outID
 	 * @throws StructureBuildingException */
 	void addOutID(OutID outID) throws StructureBuildingException {
-		outIDs.add(new OutID(outID.id, outID.valency, outID.setExplicitly, outID.frag, outID.locant));
+		outIDs.add(new OutID(outID.id, outID.valency, outID.setExplicitly, outID.frag));
 		if (outID.setExplicitly){
 			getAtomByIDOrThrow(outID.id).addOutValency(outID.valency);
 		}
@@ -453,7 +457,7 @@ class Fragment {
 	}
 	
 	/**Gets the linkedList of inIDs. This is not modifiable, use the relevant methods in this class to modify it*/
-	List<OutID> getInIDs() {
+	List<InID> getInIDs() {
 		return Collections.unmodifiableList(inIDs);
 	}
 
@@ -462,17 +466,15 @@ class Fragment {
 	 * @param i
 	 * @return
 	 */
-	OutID getInID(int i) {
+	InID getInID(int i) {
 		return inIDs.get(i);
 	}
 
 	/**Adds an inID
 	 * @throws StructureBuildingException */
-	void addInID(int id, int valency, Boolean setExplicitly) throws StructureBuildingException {
-		inIDs.add(new OutID(id,valency,setExplicitly, this, null));
-		if (setExplicitly){
-			getAtomByIDOrThrow(id).addOutValency(valency);
-		}
+	void addInID(int id, int valency) throws StructureBuildingException {
+		inIDs.add(new InID(id, valency, this));
+		getAtomByIDOrThrow(id).addOutValency(1);
 	}
 
 	/**
@@ -481,10 +483,8 @@ class Fragment {
 	 * @throws StructureBuildingException 
 	 */
 	void removeInID(int i) throws StructureBuildingException {
-		OutID removedinID = inIDs.remove(i);
-		if (removedinID.setExplicitly){
-			getAtomByIDOrThrow(removedinID.id).addOutValency(-removedinID.valency);
-		}
+		InID removedinID = inIDs.remove(i);
+		getAtomByIDOrThrow(removedinID.id).addOutValency(-1);
 	}
 	
 	/**
@@ -500,8 +500,8 @@ class Fragment {
 	}
 
 	/**Gets the linkedList of functionalIDs*/
-	List<Integer> getFunctionalIDs() {
-		return functionalIDs;
+	List<FunctionalID> getFunctionalIDs() {
+		return Collections.unmodifiableList(functionalIDs);
 	}
 
 	/**
@@ -509,17 +509,17 @@ class Fragment {
 	 * @param i
 	 * @return
 	 */
-	int getFunctionalID(int i) {
+	FunctionalID getFunctionalID(int i) {
 		return functionalIDs.get(i);
 	}
 
 	/**Adds a functionalID*/
 	void addFunctionalID(int id) {
-		functionalIDs.add(id);
+		functionalIDs.add(new FunctionalID(id, this));
 	}
 
 	/**Adds a list of functionalIDs*/
-	void addFunctionalIDs(List<Integer> functionalIDs) {
+	void addFunctionalIDs(List<FunctionalID> functionalIDs) {
 		this.functionalIDs.addAll(functionalIDs);
 	}
 
@@ -529,6 +529,14 @@ class Fragment {
 	 */
 	void removeFunctionalID(int i) {
 		functionalIDs.remove(i);
+	}
+	
+	/**
+	 * Removes the specified functionalID from the functionalIDs linkedList
+	 * @param functionalID
+	 */
+	void removeFunctionalID(FunctionalID functionalID) {
+		functionalIDs.remove(functionalID);
 	}
 
 	/** Looks for the atom that would have had a hydrogen indicated,
@@ -849,7 +857,7 @@ class Fragment {
 			bondList.remove(bond);
 			bond.getFromAtom().removeBond(bond);
 			bond.getToAtom().removeBond(bond);
-			fm.getBondPile().remove(bond);//if this bond was an inter-fragment bond it is removed from the inter-fragment bond list
+			fm.removeInterFragmentBondIfPresent(bond);//if this bond was an inter-fragment bond it is removed from the inter-fragment bond list
 		}
 		int atomID =atom.getID();
 		atomMapFromId.remove(atomID);

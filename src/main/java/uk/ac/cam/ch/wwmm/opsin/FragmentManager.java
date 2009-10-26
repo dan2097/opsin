@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import nu.xom.Element;
 
@@ -65,9 +67,11 @@ class FragmentManager {
 	}
 
 	/** All of the atom-containing fragments in the molecule */
-	private List<Fragment> fragPile;
+	private Set<Fragment> fragPile;
 	/** All of the inter-fragment bonds */
-	private List<Bond> bondPile;
+	private Set<Bond> bondPile;
+	/** A mapping between fragments and inter fragment bonds */
+	private Map<Fragment,Set<Bond>> fragToInterFragmentBond;
 	/** A builder for fragments specified as SMILES */
 	private SMILESFragmentBuilder sBuilder;
 	/** A builder for fragments specified as references to a CML data file */
@@ -87,8 +91,9 @@ class FragmentManager {
 		this.sBuilder = sBuilder;
 		this.cmlBuilder = cmlBuilder;
 		this.idManager = idManager;
-		fragPile = new LinkedList<Fragment>();
-		bondPile = new LinkedList<Bond>();
+		fragPile = new LinkedHashSet<Fragment>();
+		bondPile = new LinkedHashSet<Bond>();
+		fragToInterFragmentBond = new HashMap<Fragment, Set<Bond>>();
 	}
 
 	/** Builds a fragment, based on a reference to a CML data file
@@ -101,7 +106,7 @@ class FragmentManager {
 	 */
 	Fragment buildCML(String idStr, String type, String subType) throws StructureBuildingException {
 		Fragment newFrag = cmlBuilder.build(idStr, type, subType, idManager);
-		fragPile.add(newFrag);
+		addFragment(newFrag);
 		return newFrag;
 	}
 
@@ -136,7 +141,7 @@ class FragmentManager {
 	 */
 	Fragment buildSMILES(String smiles, String type, String subType, String labelMapping) throws StructureBuildingException {
 		Fragment newFrag = sBuilder.build(smiles, type, subType, labelMapping, idManager);
-		fragPile.add(newFrag);
+		addFragment(newFrag);
 		return newFrag;
 	}
 
@@ -167,6 +172,8 @@ class FragmentManager {
 	void attachFragments(Atom fromAtom, Atom toAtom, int bondOrder) {
 		Bond b =new Bond(fromAtom, toAtom, bondOrder);
 		bondPile.add(b);
+		fragToInterFragmentBond.get(fromAtom.getFrag()).add(b);
+		fragToInterFragmentBond.get(toAtom.getFrag()).add(b);
 		fromAtom.addBond(b);
 		toAtom.addBond(b);
 	}
@@ -182,7 +189,7 @@ class FragmentManager {
 	void incorporateFragment(Fragment suffixFrag, int fromID, Fragment toFrag, int toID, int bondOrder) throws StructureBuildingException {
 		toFrag.importFrag(suffixFrag);
 		toFrag.addBond(new Bond(toFrag.getAtomByIDOrThrow(fromID), toFrag.getAtomByIDOrThrow(toID), bondOrder));
-		fragPile.remove(suffixFrag);
+		removeFragment(suffixFrag);
 	}
 
 	/** Adjusts the order of a bond in a fragment.
@@ -233,7 +240,7 @@ class FragmentManager {
 	void makeHeteroatom(Atom a, String atomSymbol, boolean assignLocant) throws StructureBuildingException {
 		if(atomSymbol.startsWith("[")) {
 			Fragment f = sBuilder.build(atomSymbol, idManager);
-			fragPile.remove(f);
+			removeFragment(f);
 			Atom referenceAtom = f.getAtomList().get(0);
 			atomSymbol =referenceAtom.getElement();
 			a.setCharge(referenceAtom.getCharge());
@@ -304,22 +311,40 @@ class FragmentManager {
 		}
 	}
 
-	List<Bond> getBondPile() {
-		return bondPile;
+	Set<Bond> getBondPile() {
+		return Collections.unmodifiableSet(bondPile);
 	}
 
-	List<Fragment> getFragPile() {
-		return fragPile;
+	Set<Fragment> getFragPile() {
+		return Collections.unmodifiableSet(fragPile);
 	}
 
 	/**
-	 * Removes a fragment from the fragPile. Throws an exception if fragment wasn't present
+	 * Adds a fragment to the fragPile
+	 * @param frag
+	 * @throws StructureBuildingException
+	 */
+	void addFragment(Fragment frag) throws StructureBuildingException {
+		fragPile.add(frag);
+		fragToInterFragmentBond.put(frag, new HashSet<Bond>());
+	}
+	
+	/**
+	 * Removes a fragment from the fragPile and inter fragment bonds from the bondpile.
+	 * Throws an exception if fragment wasn't present
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
 	void removeFragment(Fragment frag) throws StructureBuildingException {
 		if (!fragPile.remove(frag)){
 			throw new StructureBuildingException("Fragment not found in fragPile");
+		}
+		if (fragToInterFragmentBond.get(frag) !=null){
+			Set<Bond> interFragmentBondsInvolvingFragment = fragToInterFragmentBond.get(frag);
+			for (Bond bond : interFragmentBondsInvolvingFragment) {
+				bondPile.remove(bond);
+			}
+			fragToInterFragmentBond.remove(frag);
 		}
 	}
 
@@ -387,8 +412,8 @@ class FragmentManager {
 		List<Atom> atomList =originalFragment.getAtomList();
 		newFragment.setIndicatedHydrogen(originalFragment.getIndicatedHydrogen());
 		List<OutID> outIDs =originalFragment.getOutIDs();
-		List<Integer> functionalIDs =originalFragment.getFunctionalIDs();
-		List<OutID> inIDs =originalFragment.getInIDs();
+		List<FunctionalID> functionalIDs =originalFragment.getFunctionalIDs();
+		List<InID> inIDs =originalFragment.getInIDs();
 		int defaultInId =originalFragment.getDefaultInID();
 		for (Atom atom : atomList) {
 			int ID = idManager.getNextID();
@@ -417,11 +442,11 @@ class FragmentManager {
 		for (int i = 0; i < outIDs.size(); i++) {
 			newFragment.addOutID(idMap.get(outIDs.get(i).id), outIDs.get(i).valency, outIDs.get(i).setExplicitly);
 		}
-		for (Integer ID : functionalIDs) {
+		for (FunctionalID ID : functionalIDs) {
 			newFragment.addFunctionalID(idMap.get(ID));
 		}
 		for (int i = 0; i < inIDs.size(); i++) {
-			newFragment.addInID(idMap.get(inIDs.get(i).id), inIDs.get(i).valency, inIDs.get(i).setExplicitly);
+			newFragment.addInID(idMap.get(inIDs.get(i).id), inIDs.get(i).valency);
 		}
 		newFragment.setDefaultInID(idMap.get(defaultInId));
 		List<Bond> bondList =originalFragment.getBondList();
@@ -433,7 +458,7 @@ class FragmentManager {
 			}
 			newFragment.addBond(newBond);
 		}
-		fragPile.add(newFragment);
+		addFragment(newFragment);
 		return newFragment;
 	}
 
@@ -567,15 +592,38 @@ class FragmentManager {
 		Element clone = new Element(elementToBeCloned);
 		List<Element> originalGroups = OpsinTools.findDescendantElementsWithTagName(elementToBeCloned, "group");
 		List<Element> clonedGroups = OpsinTools.findDescendantElementsWithTagName(clone, "group");
+		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
 		for (int j = 0; j < originalGroups.size(); j++) {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(j));
-			state.xmlFragmentMap.put((Element)clonedGroups.get(j), state.fragManager.copyAndRelabel(originalFragment, stringToAddToAllLocants));
+			Fragment newFragment = copyAndRelabel(originalFragment, stringToAddToAllLocants);
+			oldNewFragmentMapping.put(originalFragment, newFragment);
+			state.xmlFragmentMap.put((Element)clonedGroups.get(j), newFragment);
 			ArrayList<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(j));
 			ArrayList<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {
 				newSuffixFragments.add(state.fragManager.copyAndRelabel(suffix));
 			}
 			state.xmlSuffixMap.put((Element)clonedGroups.get(j), newSuffixFragments);
+		}
+		Set<Bond> interFragmentBondsToClone = new HashSet<Bond>();
+		for (Fragment originalFragment : oldNewFragmentMapping.keySet()) {//add inter fragment bonds to cloned fragments
+			for (Bond bond : fragToInterFragmentBond.get(originalFragment)) {
+				interFragmentBondsToClone.add(bond);
+			}
+		}
+		for (Bond bond : interFragmentBondsToClone) {
+			Atom originalFromAtom = bond.getFromAtom();
+			Atom originalToAtom = bond.getToAtom();
+			Fragment originalFragment1 = originalFromAtom.getFrag();
+			Fragment originalFragment2 = originalToAtom.getFrag();
+			if (!oldNewFragmentMapping.containsKey(originalFragment1) || (!oldNewFragmentMapping.containsKey(originalFragment2))){
+				throw new StructureBuildingException("An element that was clone contained a bond that went outside the scope of the cloning");
+			}
+			Fragment newFragment1 = oldNewFragmentMapping.get(originalFragment1);
+			Fragment newFragment2 = oldNewFragmentMapping.get(originalFragment2);
+			Atom fromAtom = newFragment1.getAtomList().get(originalFragment1.getAtomList().indexOf(originalFromAtom));
+			Atom toAtom = newFragment2.getAtomList().get(originalFragment2.getAtomList().indexOf(originalToAtom));
+			attachFragments(fromAtom, toAtom, bond.getOrder());
 		}
 		return clone;
 	}
@@ -599,7 +647,7 @@ class FragmentManager {
 	 * @param atomThatReplacesTerminal
 	 * @throws StructureBuildingException
 	 */
-	public void replaceTerminalAtomWithFragment(Atom terminalAtom, Atom atomThatReplacesTerminal) throws StructureBuildingException {
+	void replaceTerminalAtomWithFragment(Atom terminalAtom, Atom atomThatReplacesTerminal) throws StructureBuildingException {
 		Fragment parentFrag = terminalAtom.getFrag();
 		Fragment childFrag = atomThatReplacesTerminal.getFrag();
 		if (parentFrag == childFrag){
@@ -622,6 +670,17 @@ class FragmentManager {
 			parentFrag.addBond(new Bond(terminalAtom, neighbour, childFrag.findBond(atomThatReplacesTerminal, neighbour).getOrder()));
 		}
 		parentFrag.removeAtom(atomThatReplacesTerminal, this);
-		fragPile.remove(childFrag);
+		removeFragment(childFrag);
+	}
+
+	/**
+	 * Checks if this bond is an inter fragment bond and if it is removes it
+	 * @param bond
+	 */
+	void removeInterFragmentBondIfPresent(Bond bond) {
+		if (bondPile.remove(bond)){
+			fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
+			fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
+		}
 	}
 }

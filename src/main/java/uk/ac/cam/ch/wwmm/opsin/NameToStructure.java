@@ -95,7 +95,7 @@ public class NameToStructure {
 			structureBuilder = new StructureBuilder();
 
 			FusedRingBuilder fusedRingBuilder = new FusedRingBuilder();
-			preStructureBuilder = new PreStructureBuilder(structureBuilder, fusedRingBuilder, resourceGetter);
+			preStructureBuilder = new PreStructureBuilder(fusedRingBuilder, resourceGetter);
 
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
@@ -165,6 +165,7 @@ public class NameToStructure {
 						if(psb != null) {
 							if(verbose) System.out.println(new XOMFormatter().elemToString(psb));
 							frag = structureBuilder.buildFragment(state, psb);
+							if(verbose) System.out.println(new XOMFormatter().elemToString(pp));
 							break;
 						}
 					}
