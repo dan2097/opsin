@@ -1875,6 +1875,7 @@ public class PreStructureBuilder {
 						throw new PostProcessingException("Most likely the ringAssemblyLocant: " + previousEl.getValue() + " is actually a normal locant that is supposed to apply to elements after the ring assembly");
 					}
 				}
+				//locantText might be something like 1,1':3',1''
 				String[] perRingLocantArray =matchColon.split(locantText);
 				if (perRingLocantArray.length !=(mvalue -1)){
 					throw new PostProcessingException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
@@ -1908,7 +1909,7 @@ public class PreStructureBuilder {
 
 			Element elementToResolve = new Element("substituent");//temporary element containing elements that should be resolved before the ring is duplicated
 			Element nextEl =(Element) XOMTools.getNextSibling(multiplier);
-			if (nextEl.getLocalName().equals("structuralOpenBracket")){
+			if (nextEl.getLocalName().equals("structuralOpenBracket")){//brackets have been provided to aid disambiguation. These brackets are detached
 				Element currentEl =nextEl;
 				nextEl = (Element) XOMTools.getNextSibling(currentEl);
 				currentEl.detach();
@@ -1923,13 +1924,13 @@ public class PreStructureBuilder {
 				}
 			}
 			else{
-				int groupFound =0;
-				int inlineSuffixSeen=0;
+				int groupFound = 0;
+				int inlineSuffixSeen = 0;
 				while (nextEl !=null){
 					Element currentEl =nextEl;
 					nextEl = (Element) XOMTools.getNextSibling(currentEl);
 					if (groupFound==0 ||
-							(inlineSuffixSeen ==0 && currentEl.getLocalName().equals("suffix") && currentEl.getAttributeValue("type").equals("inline") && currentEl.getAttribute("locant")==null)||
+							(inlineSuffixSeen == 0 && currentEl.getLocalName().equals("suffix") && currentEl.getAttributeValue("type").equals("inline") && currentEl.getAttribute("locant")==null)||
 							(currentEl.getLocalName().equals("suffix") && currentEl.getAttributeValue("type").equals("charge"))){
 						currentEl.detach();
 						elementToResolve.appendChild(currentEl);
@@ -1938,45 +1939,48 @@ public class PreStructureBuilder {
 						break;
 					}
 					if (currentEl.getLocalName().equals("group")){
-						groupFound=1;
+						groupFound = 1;
 					}
 					if ((currentEl.getLocalName().equals("suffix") && currentEl.getAttributeValue("type").equals("inline"))){
-						inlineSuffixSeen=1;
+						inlineSuffixSeen = 1;
 					}
 				}
 			}
 
 			Elements suffixes =elementToResolve.getChildElements("suffix");
-			Fragment orginalFragment =state.xmlFragmentMap.get(group);
-			resolveSuffixes(state, orginalFragment, suffixes, group);
-			StructureBuildingMethods.resolveRootOrSubstituentLocanted(state, elementToResolve);
-			Fragment fragmentToDuplicate = orginalFragment;
+			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
+			resolveSuffixes(state, fragmentToResolveAndDuplicate, suffixes, group);
+			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
+			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
 			group.detach();
 			XOMTools.insertAfter(multiplier, group);
 
-			int bondOrder =1;
-			if (fragmentToDuplicate.getOutIDs().size()>0){
-				bondOrder =fragmentToDuplicate.getOutID(0).valency;
-				fragmentToDuplicate.removeOutID(0);
+			int bondOrder = 1;
+			if (fragmentToResolveAndDuplicate.getOutIDs().size()>0){//e.g. bicyclohexanylidene
+				bondOrder =fragmentToResolveAndDuplicate.getOutID(0).valency;
+				fragmentToResolveAndDuplicate.removeOutID(0);
+			}
+			if (fragmentToResolveAndDuplicate.getOutIDs().size()>0){
+				throw new StructureBuildingException("Ring assembly fragment should have one or no OutIDs; not more than one!");
 			}
 
 			ArrayList<Fragment> clonedFragments = new ArrayList<Fragment>();
 			for (int j = 1; j < mvalue; j++) {
-				clonedFragments.add(state.fragManager.copyAndRelabel(fragmentToDuplicate, StringTools.multiplyString("'", j)));
+				clonedFragments.add(state.fragManager.copyAndRelabel(fragmentToResolveAndDuplicate, StringTools.multiplyString("'", j)));
 			}
 			for (int j = 0; j < mvalue-1; j++) {
 				Fragment clone =clonedFragments.get(j);
 				Atom atomOnParent;
 				Atom atomOnLatestClone;
-				if (ringJoiningLocants.size()>0){
-					atomOnParent = fragmentToDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(0));
+				if (ringJoiningLocants.size()>0){//locants defined
+					atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(0));
 					atomOnLatestClone = clone.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(1));
 				}
 				else{
-					atomOnParent =fragmentToDuplicate.getAtomByIdOrNextSuitableAtomOrThrow(fragmentToDuplicate.getDefaultInID(), bondOrder);
+					atomOnParent =fragmentToResolveAndDuplicate.getAtomByIdOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInID(), bondOrder);
 					atomOnLatestClone = clone.getAtomByIdOrNextSuitableAtomOrThrow(clone.getDefaultInID(), bondOrder);
 				}
-				state.fragManager.incorporateFragment(clone, atomOnLatestClone.getID(), fragmentToDuplicate, atomOnParent.getID(), bondOrder);
+				state.fragManager.incorporateFragment(clone, atomOnLatestClone.getID(), fragmentToResolveAndDuplicate, atomOnParent.getID(), bondOrder);
 			}
 			OpsinTools.setTextChild(group, multiplier.getValue() +group.getValue());
 			multiplier.detach();
@@ -2589,8 +2593,6 @@ public class PreStructureBuilder {
 
 			if (suffixFrag!=null){//merge suffix frag and parent fragment
 				frag.importFrag(suffixFrag);
-				frag.addOutIDs(suffixFrag.getOutIDs());
-				frag.addFunctionalIDs(suffixFrag.getFunctionalIDs());
 				state.fragManager.removeFragment(suffixFrag);
 			}
 		}
