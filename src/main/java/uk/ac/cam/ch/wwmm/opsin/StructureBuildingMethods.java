@@ -56,6 +56,7 @@ class StructureBuildingMethods {
 			if (subBracketOrRoot.getLocalName().equals("bracket")){
 				recursivelyResolveLocantedFeatures(state,subBracketOrRoot);
 				if (potentiallyCanSubstitute(subBracketOrRoot)){
+					performAdditiveOperations(state, subBracketOrRoot);
 					performLocantedSubstitutiveOperations(state, subBracketOrRoot);
 				}
 			}
@@ -206,7 +207,10 @@ class StructureBuildingMethods {
 		Fragment frag = state.xmlFragmentMap.get(group);
 		if (frag.getOutIDs().size() >=1){
 			if (subBracketOrRoot.getAttribute("locant")!=null){
-				throw new StructureBuildingException("Substituent has an unused outId and has a locant but locanted susbtitution has already been performed!");
+				throw new StructureBuildingException("Substituent has an unused outId and has a locant but locanted susbtitution should already been been performed!");
+			}
+			if (group.getAttribute("isAMultiRadical")!=null && frag.getOutIDs().size() ==1 ){//already been used for bonding once
+				return;
 			}
 			if (subBracketOrRoot.getAttribute("multiplier")!=null){//e.g. 1,2-diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot, null);
@@ -227,7 +231,7 @@ class StructureBuildingMethods {
 	 * @param subOrRoot
 	 * @throws StructureBuildingException 
 	 */
-	private static void resolveLocantedFeatures(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	static void resolveLocantedFeatures(BuildState state, Element subOrRoot) throws StructureBuildingException {
 		Elements groups = subOrRoot.getChildElements("group");
 		if (groups.size()!=1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
@@ -310,7 +314,7 @@ class StructureBuildingMethods {
 	 * @param subOrRoot
 	 * @throws StructureBuildingException 
 	 */
-	private static void resolveUnLocantedFeatures(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	static void resolveUnLocantedFeatures(BuildState state, Element subOrRoot) throws StructureBuildingException {
 		Elements groups = subOrRoot.getChildElements("group");
 		if (groups.size()!=1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
@@ -454,13 +458,19 @@ class StructureBuildingMethods {
 		}
 	}
 
-	private static void performAdditiveOperations(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		Element group =subOrRoot.getFirstChildElement("group");
+	private static void performAdditiveOperations(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {
+		Element group;
+		if (subBracketOrRoot.getLocalName().equals("bracket")){
+			group =findRightMostGroupInBracket(subBracketOrRoot);
+		}
+		else{
+			group =subBracketOrRoot.getFirstChildElement("group");
+		}
 		Fragment frag = state.xmlFragmentMap.get(group);
 		if (frag.getOutIDs().size() >=1){
-			if (frag.getOutIDs().size()>=2){
+			if (group.getAttribute("isAMultiRadical")!=null){
 				//this should be either additive nomenclature or multiplicative nomenclature
-				Fragment nextFrag = getNextInScopeMultiValentFragment(subOrRoot, state);
+				Fragment nextFrag = getNextInScopeMultiValentFragment(subBracketOrRoot, state);
 				if (nextFrag!=null){
 					Element parentEl = (Element) state.xmlFragmentMap.getElement(nextFrag).getParent();
 					if (parentEl.getFirstChildElement("multiplier")!=null){//multiplicative nomenclature
@@ -471,8 +481,8 @@ class StructureBuildingMethods {
 					}
 				}
 			}
-			else if (subOrRoot.getAttribute("locant")==null){//e.g. chlorocarbonyl
-				Fragment nextFrag = getNextInScopeFragment(state, subOrRoot);
+			else if (subBracketOrRoot.getAttribute("locant")==null){//e.g. chlorocarbonyl
+				Fragment nextFrag = getNextInScopeFragment(state, subBracketOrRoot);
 				if (nextFrag!=null && nextFrag.getOutIDs().size()>=1 && state.xmlFragmentMap.getElement(nextFrag).getAttribute("isAMultiRadical")!=null){
 					if (state.xmlFragmentMap.getElement(nextFrag).getAttribute("substitutionRemovesOutIDs")!=null){//e.g. aminocarbonyl
 						joinFragmentsAdditively(state, frag, nextFrag);
@@ -481,22 +491,19 @@ class StructureBuildingMethods {
 				}
 			}
 		}
-		else if (!subOrRoot.getLocalName().equals("root")){//FIXME move this
+		else if (!subBracketOrRoot.getLocalName().equals("root")){//FIXME move this
 			throw new StructureBuildingException("Everything other than the root of the compound is expected to form bonds of some sort");
 		}
 	}
 
-	private static Fragment getNextInScopeFragment(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		if (!subOrRoot.getLocalName().equals("substituent") && !subOrRoot.getLocalName().equals("root")){
-			throw new StructureBuildingException("Input to this function should be a substituent or root");
+	private static Fragment getNextInScopeFragment(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {
+		if (subBracketOrRoot.getParent()==null){
+			throw new StructureBuildingException("substituent/bracket/root did not have a parent!");
 		}
-		if (subOrRoot.getParent()==null){
-			throw new StructureBuildingException("substituent/root did not have a parent!");
-		}
-		Element parent =(Element) subOrRoot.getParent();
+		Element parent =(Element) subBracketOrRoot.getParent();
 		
 		List<Element> children = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"substituent", "bracket", "root"});//will be returned in index order
-		int indexOfSubstituent =parent.indexOf(subOrRoot);
+		int indexOfSubstituent =parent.indexOf(subBracketOrRoot);
 		for (Element child : children) {
 			if (parent.indexOf(child) <=indexOfSubstituent){//only want things after the input
 				continue;
@@ -559,7 +566,7 @@ class StructureBuildingMethods {
 					throw new StructureBuildingException("substituent/root is missing its group");
 				}
 				Fragment possibleFrag = state.xmlFragmentMap.get(group);
-				if ((possibleFrag.getOutIDs().size()==2 && possibleFrag.getInIDs().size()==0)||(possibleFrag.getOutIDs().size()==0 && possibleFrag.getInIDs().size()==1)){
+				if (possibleFrag.getOutIDs().size() >=1 && group.getAttribute("isAMultiRadical")!=null ||(possibleFrag.getOutIDs().size()==0 && possibleFrag.getInIDs().size()==1)){
 					return possibleFrag;
 				}
 			}
@@ -586,13 +593,34 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutId but had none");
 		}
 		OutID out =null;
+
 		for (int i =outIdCount -1; i>=0; i--) {
 			if (fragToBeJoined.getOutID(i).valency == bondOrder){
 				out = fragToBeJoined.getOutID(i);
+				break;
 			}
 		}
+
 		if (out ==null){
-			throw new StructureBuildingException("Additive bond formation failure: bond order disagreement");
+			if (outIdCount >=bondOrder){//handles cases like nitrilo needing to be -N= (remove later outIds first as per usual)
+				int valency =0;
+				for (int i =outIdCount -1; i>=0; i--) {
+					OutID nextOutID = fragToBeJoined.getOutID(i);
+					valency += nextOutID.valency;
+					if (valency==bondOrder){
+						nextOutID.valency=valency;
+						out = nextOutID;
+						break;
+					}
+					fragToBeJoined.removeOutID(nextOutID);
+				}
+				if (out==null){
+					throw new StructureBuildingException("Additive bond formation failure: bond order disagreement");
+				}
+			}
+			else{
+				throw new StructureBuildingException("Additive bond formation failure: bond order disagreement");
+			}
 		}
 		
 		Atom from = fragToBeJoined.getAtomByIDOrThrow(out.id);
@@ -602,6 +630,7 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutID(out);
 	
 		state.fragManager.attachFragments(from, to, bondOrder);
+		System.out.println("Additively bonded to: " + from.getID() + " " + to.getID());
 	}
 
 	private static void joinFragmentsSubstitutively(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
@@ -627,6 +656,7 @@ class StructureBuildingMethods {
 		}
 		fragToBeJoined.removeOutID(out);
 		state.fragManager.attachFragments(from, atomToJoinTo, bondOrder);
+		System.out.println("Substitutively bonded to: " + from.getID() + " " + atomToJoinTo.getID());
 	}
 
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder) throws StructureBuildingException {
