@@ -1949,7 +1949,7 @@ public class PreStructureBuilder {
 			Elements suffixes =elementToResolve.getChildElements("suffix");
 			Fragment orginalFragment =state.xmlFragmentMap.get(group);
 			resolveSuffixes(state, orginalFragment, suffixes, group);
-			StructureBuildingMethods.resolveRootOrSubstituent(state, elementToResolve);
+			StructureBuildingMethods.resolveRootOrSubstituentLocanted(state, elementToResolve);
 			Fragment fragmentToDuplicate = orginalFragment;
 			group.detach();
 			XOMTools.insertAfter(multiplier, group);
