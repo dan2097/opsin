@@ -484,7 +484,7 @@ class Fragment {
 	 */
 	void removeInID(int i) throws StructureBuildingException {
 		InID removedinID = inIDs.remove(i);
-		getAtomByIDOrThrow(removedinID.id).addOutValency(-1);
+		getAtomByIDOrThrow(removedinID.id).addOutValency(-removedinID.valency);
 	}
 	
 	/**
@@ -492,11 +492,9 @@ class Fragment {
 	 * @param inID
 	 * @throws StructureBuildingException 
 	 */
-	void removeInID(OutID inID) throws StructureBuildingException {
+	void removeInID(InID inID) throws StructureBuildingException {
 		inIDs.remove(inID);
-		if (inID.setExplicitly){
-			getAtomByIDOrThrow(inID.id).addOutValency(-inID.valency);
-		}
+		getAtomByIDOrThrow(inID.id).addOutValency(-inID.valency);
 	}
 
 	/**Gets the linkedList of functionalIDs*/

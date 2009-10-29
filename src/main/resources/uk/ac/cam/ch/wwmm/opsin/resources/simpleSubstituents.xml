@@ -91,6 +91,8 @@
   <token value="Cl" labels="none" valType="SMILES">chloro</token>
   <token value="I" labels="none" valType="SMILES">iodo</token>
   <token value="[Li]" labels="none" valType="SMILES">lithio</token>
+  <token value="[Na]" labels="none" valType="SMILES">sodio</token>
+  <token value="[K]" labels="none" valType="SMILES">potassio</token>
 
   <token value="F=O" labels="none" valType="SMILES">fluorosyl</token>
   <token value="Br=O" labels="none" valType="SMILES">bromosyl</token>

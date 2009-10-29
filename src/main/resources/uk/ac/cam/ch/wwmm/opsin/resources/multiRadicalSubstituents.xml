@@ -10,6 +10,7 @@
 
   <token value="c1ccccc1" outIDs="1,2" valType="SMILES">phenylene</token>
   <token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1" valType="SMILES">semicarbazono</token>
+  <token value="[Si]O" outIDs="1,2" valType="SMILES">siloxane</token>
   <token value="NC(=O)N" labels="3/2//1" outIDs="1,4" valType="SMILES">ureylene</token>
   <token value="c1ccccc1" labels="1/2/3/4/5/6" outIDs="7,8" valType="SMILES" addGroup="C locant1;C locant2">xylylene</token>
 
