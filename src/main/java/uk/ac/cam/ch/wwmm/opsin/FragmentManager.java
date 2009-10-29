@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
+
 import nu.xom.Element;
 
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
@@ -442,8 +444,8 @@ class FragmentManager {
 		for (int i = 0; i < outIDs.size(); i++) {
 			newFragment.addOutID(idMap.get(outIDs.get(i).id), outIDs.get(i).valency, outIDs.get(i).setExplicitly);
 		}
-		for (FunctionalID ID : functionalIDs) {
-			newFragment.addFunctionalID(idMap.get(ID));
+		for (FunctionalID functionalID : functionalIDs) {
+			newFragment.addFunctionalID(idMap.get(functionalID.id));
 		}
 		for (int i = 0; i < inIDs.size(); i++) {
 			newFragment.addInID(idMap.get(inIDs.get(i).id), inIDs.get(i).valency);
@@ -584,26 +586,38 @@ class FragmentManager {
 	 * has it's own group and suffix fragments
 	 * @param elementToBeCloned
 	 * @param state The current buildstate
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	Element cloneElement(BuildState state, Element elementToBeCloned) throws StructureBuildingException {
+		return cloneElement(state, elementToBeCloned, "");
+	}
+
+	/**
+	 * Takes an element and produces a copy of it. Groups and suffixes are copied so that the new element
+	 * has it's own group and suffix fragments
+	 * @param elementToBeCloned
+	 * @param state The current buildstate
 	 * @param string A string to append to all locants in the cloned fragments
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	Element cloneElement(Element elementToBeCloned, BuildState state, String stringToAddToAllLocants) throws StructureBuildingException {
+	Element cloneElement(BuildState state, Element elementToBeCloned, String stringToAddToAllLocants) throws StructureBuildingException {
 		Element clone = new Element(elementToBeCloned);
 		List<Element> originalGroups = OpsinTools.findDescendantElementsWithTagName(elementToBeCloned, "group");
 		List<Element> clonedGroups = OpsinTools.findDescendantElementsWithTagName(clone, "group");
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
-		for (int j = 0; j < originalGroups.size(); j++) {
-			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(j));
+		for (int i = 0; i < originalGroups.size(); i++) {
+			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
 			Fragment newFragment = copyAndRelabel(originalFragment, stringToAddToAllLocants);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
-			state.xmlFragmentMap.put((Element)clonedGroups.get(j), newFragment);
-			ArrayList<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(j));
+			state.xmlFragmentMap.put((Element)clonedGroups.get(i), newFragment);
+			ArrayList<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
 			ArrayList<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {
 				newSuffixFragments.add(state.fragManager.copyAndRelabel(suffix));
 			}
-			state.xmlSuffixMap.put((Element)clonedGroups.get(j), newSuffixFragments);
+			state.xmlSuffixMap.put((Element)clonedGroups.get(i), newSuffixFragments);
 		}
 		Set<Bond> interFragmentBondsToClone = new HashSet<Bond>();
 		for (Fragment originalFragment : oldNewFragmentMapping.keySet()) {//add inter fragment bonds to cloned fragments
@@ -628,16 +642,38 @@ class FragmentManager {
 		return clone;
 	}
 
-	/**
-	 * Takes an element and produces a copy of it. Groups and suffixes are copied so that the new element
-	 * has it's own group and suffix fragments
-	 * @param elementToBeCloned
-	 * @param state The current buildstate
-	 * @return
-	 * @throws StructureBuildingException
-	 */
-	Element cloneElement(Element elementToBeCloned, BuildState state) throws StructureBuildingException {
-		return cloneElement(elementToBeCloned, state, "");
+	void multiplyFragments(BuildState state, Element elementToBeCloned, int multiplier) throws StructureBuildingException {
+		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(elementToBeCloned, "group");
+		Map<Fragment, Integer> fragmentToOriginalAtomCount = new HashMap<Fragment, Integer>();
+		for (int i = 0; i < groups.size(); i++) {
+			Fragment fragment =state.xmlFragmentMap.get(groups.get(i));
+			fragmentToOriginalAtomCount.put(fragment, fragment.getAtomList().size());
+		}
+		for (int i = 0; i < groups.size(); i++) {
+			Fragment originalFragment =state.xmlFragmentMap.get(groups.get(i));
+			for (int j = 1; j < multiplier; j++) {
+				Fragment newFrag = copyAndRelabel(originalFragment, StringTools.multiplyString("'", multiplier));
+				originalFragment.importFrag(newFrag);
+				removeFragment(newFrag);
+			}
+		}
+		for (int i = 0; i < groups.size(); i++) {
+			Fragment originalFragment =state.xmlFragmentMap.get(groups.get(i));
+			for (int j = 1; j < multiplier; j++) {
+				for (Bond bond : fragToInterFragmentBond.get(originalFragment)) {//add inter fragment bonds to cloned fragment
+					Atom originalFromAtom = bond.getFromAtom();
+					Atom originalToAtom = bond.getToAtom();
+					Fragment fragment1 = originalFromAtom.getFrag();
+					Fragment fragment2 = originalToAtom.getFrag();
+					if (!fragmentToOriginalAtomCount.containsKey(fragment1) || (!fragmentToOriginalAtomCount.containsKey(fragment2))){
+						throw new StructureBuildingException("An element that was clone contained a bond that went outside the scope of the cloning");
+					}
+					Atom fromAtom = fragment1.getAtomList().get(fragment1.getAtomList().indexOf(originalFromAtom) + fragmentToOriginalAtomCount.get(fragment1)*j);
+					Atom toAtom = fragment2.getAtomList().get(fragment2.getAtomList().indexOf(originalToAtom) + fragmentToOriginalAtomCount.get(fragment1)*j);
+					attachFragments(fromAtom, toAtom, bond.getOrder());
+				}
+			}
+		}
 	}
 
 	/**
