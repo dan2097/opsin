@@ -224,7 +224,7 @@ class OpsinTools {
 	 * @return
 	 * @throws PostProcessingException 
 	 */
-	public static ArrayList<Element> getLaterSiblingElementsOfType(Element currentElem, String type) throws PostProcessingException {
+	public static ArrayList<Element> getNextSiblingsOfType(Element currentElem, String type) throws PostProcessingException {
 		ArrayList<Element> laterSiblingElementsOfType= new ArrayList<Element>();
 		Element parent =(Element) currentElem.getParent();
 		if (parent==null){
@@ -241,6 +241,28 @@ class OpsinTools {
 	}
 	
 	/**
+	 * Returns an arrayList containing sibling elements of the given types after the given element.
+	 * These elements need not be continuous and are returned in the order encountered
+	 * @param currentElem: the element to look for following siblings of
+	 * @param type: the "localname" of the element types desired
+	 * @return
+	 */
+	public static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] types){
+		List<Element> laterSiblingElementsOfTypes= new ArrayList<Element>();
+		currentElem =(Element) XOMTools.getNextSibling(currentElem);
+		while (currentElem !=null){
+			String name =currentElem.getLocalName();
+			for (String type : types) {
+				if (name.equals(type)){
+					laterSiblingElementsOfTypes.add(currentElem);
+					break;
+				}
+			}
+			currentElem =(Element) XOMTools.getNextSibling(currentElem);
+		}
+		return laterSiblingElementsOfTypes;
+	}
+	/**
 	 * Returns an arrayList containing sibling elements of the given type before the given element.
 	 * These elements need not be continuous
 	 * @param currentElem: the element to look for previous siblings of
@@ -248,7 +270,7 @@ class OpsinTools {
 	 * @return
 	 * @throws PostProcessingException 
 	 */
-	public static ArrayList<Element> getEarlierSiblingElementsOfType(Element currentElem, String type) throws PostProcessingException {
+	public static ArrayList<Element> getPreviousSiblingsOfType(Element currentElem, String type) throws PostProcessingException {
 		ArrayList<Element> earlierSiblingElementsOfType= new ArrayList<Element>();
 		Element parent =(Element) currentElem.getParent();
 		if (parent==null){

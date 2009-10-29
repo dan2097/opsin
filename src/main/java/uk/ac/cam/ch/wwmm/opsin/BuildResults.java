@@ -27,13 +27,13 @@ class BuildResults {
 	private LinkedHashSet<Fragment> fragments;
 
 	/**A BuildResults is constructed from a list of Fragments.
-	 * This constructor creates this list from the groups present in an XML word element.*/
-	BuildResults(BuildState state, Element word) {
+	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.*/
+	BuildResults(BuildState state, Element wordSubOrBracket) {
 		outIDs = new LinkedList<OutID>();
 		functionalIDs = new LinkedList<FunctionalID>();
 		inIDs = new LinkedList<InID>();
 		fragments = new LinkedHashSet<Fragment>();
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(word, "group");
+		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(wordSubOrBracket, "group");
 		for (Element group : groups) {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			fragments.add(frag);
@@ -51,6 +51,10 @@ class BuildResults {
 		functionalIDs = new LinkedList<FunctionalID>();
 		inIDs = new LinkedList<InID>();
 		fragments = new LinkedHashSet<Fragment>();
+	}
+	
+	int getFragmentCount(){
+		return fragments.size();
 	}
 	
 	/**

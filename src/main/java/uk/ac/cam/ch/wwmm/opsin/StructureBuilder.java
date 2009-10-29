@@ -3,7 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -32,6 +31,9 @@ class StructureBuilder {
 		if(wordRule.equals("ester") || wordRule.equals("diester")) {
 			buildEster(state, words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
 		}
+		else if(wordRule.equals("functionalClassEster")) {
+			buildFunctionalClassEster(state, words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
+		}
 		else if(wordRule.equals("polymer")) {
 			buildPolymer(state, words);
 		}else if(wordRule.equals("simple") || wordRule.equals("acid")) {
@@ -41,44 +43,7 @@ class StructureBuilder {
 		else{
 			throw new StructureBuildingException("Unknown Word Rule");
 		}
-		/*else if (wordRule.equals("functionalClassEster")){//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
-			if (!words.get(0).getAttributeValue("type").equals("full")){
-				throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
-			}
-			moleculeBuildResults =resolveWordOrBracket(state, words.get(0), null, new LinkedHashSet<Fragment>());//the group
-			if (!words.get(1).getAttributeValue("type").equals("literal")){//acid
-				throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
-			}
-			if (moleculeBuildResults.functionalIDs.size()==0){
-				throw new StructureBuildingException("No functionalIds detected!");
-			}
-			int i;
-			int subsToCheck = Math.min(moleculeBuildResults.functionalIDs.size(),substituentCount);
-			for (i = 2 ; i < 2 + subsToCheck; i++) {
-				if (!words.get(i).getAttributeValue("type").equals("substituent")){
-					throw new StructureBuildingException("Word: " + i + " was expected to be a substituent to satisfy the number of functionalIds");
-				}
-				moleculeBuildResults.mergeBuildResults(resolveWordOrBracket(state, words.get(i), null, new LinkedHashSet<Fragment>()));
-				
-				String locantForSubstituent = getLocantForSubstituent(words.get(i));
-				Atom functionalAtom;
-				if (locantForSubstituent!=null){
-					functionalAtom =determineFunctionalAtomToUse(locantForSubstituent, moleculeBuildResults);
-				}
-				else{
-					functionalAtom =moleculeBuildResults.getFunctionalOutAtom(0);
-					moleculeBuildResults.functionalIDs.remove(0);
-				}
-				state.fragManager.attachFragments(functionalAtom,moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
-				moleculeBuildResults.removeOutID(0);
-			}
-			if (!words.get(i).getAttributeValue("type").equals("literal")){//ester
-				throw new StructureBuildingException("Number of words different to expectations; did not find ester");
-			}
-			if (moleculeBuildResults.getOutIDCount()!=0){
-				throw new StructureBuildingException("Could not find corresponding functionalId for all outIds!");
-			}
-		}
+		/*
 		else if (wordRule.equals("amide")){//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide, ethanoic acid amide
 			if (!words.get(0).getAttributeValue("type").equals("full")){
 				throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
@@ -435,6 +400,54 @@ class StructureBuilder {
 
 
 
+	private void buildFunctionalClassEster(BuildState state, Elements words) throws StructureBuildingException {
+		if (!words.get(0).getAttributeValue("type").equals("full")){
+			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
+		}
+		resolveWordOrBracket(state, words.get(0));//the group
+		BuildResults acidBr = new BuildResults(state, words.get(0));
+		if (!words.get(1).getAttributeValue("type").equals("literal")){//acid
+			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
+		}
+		if (acidBr.getFunctionalIDCount()==0){
+			throw new StructureBuildingException("No functionalIds detected!");
+		}
+	
+		int i=2;
+		Element currentWord = words.get(i);
+		while (currentWord.getAttributeValue("type").equals("substituent")){
+			if (acidBr.getFunctionalIDCount()==0){
+				throw new StructureBuildingException("Insufficient functionalIDs on acid");
+			}
+			resolveWordOrBracket(state, currentWord);
+			BuildResults substituentBr = new BuildResults(state, currentWord);
+			if (substituentBr.getOutIDCount() ==1){
+				String locantForSubstituent = getLocantForSubstituent(currentWord);
+				Atom functionalAtom;
+				if (locantForSubstituent!=null){
+					functionalAtom =determineFunctionalAtomToUse(locantForSubstituent, acidBr);
+				}
+				else{
+					functionalAtom =acidBr.getFunctionalAtom(0);
+					acidBr.removeFunctionalID(0);
+				}
+				if (substituentBr.getOutID(0).valency!=1){
+					throw new StructureBuildingException("Substituent was expected to have only have an outgoing valency of 1");
+				}
+				state.fragManager.attachFragments(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
+				substituentBr.removeOutID(0);
+			}
+			else {
+				throw new StructureBuildingException("Substituent was expected to have one outID");
+			}
+			currentWord=words.get(++i);
+		}
+		if (!words.get(i++).getAttributeValue("type").equals("literal")){//ester
+			throw new StructureBuildingException("Number of words different to expectations; did not find ester");
+		}
+		resolveTrailingFullWords(state, words, i);
+	}
+
 	private void buildPolymer(BuildState state, Elements words) throws StructureBuildingException {
 		if (words.size()>1){
 			throw new StructureBuildingException("Currently unsupported polymer name type");
@@ -479,89 +492,6 @@ class StructureBuilder {
 				throw new StructureBuildingException("Non full word found where only full words were expected");
 			}
 		}
-	}
-
-	/**
-	 * Finds the first acceptable sub or root child of the element given (which is a bracket). Any brackets that are encountered are recursively enumerated
-	 * @param state 
-	 * @param currentElement The bracket from which to search the children of
-	 * @param roots Used to check whether the element is unacceptable
-	 * @param elementsUsed Used to check whether the element is unacceptable
-	 * @return element The element found or null
-	 * @throws StructureBuildingException 
-	 */
-	private Element getFirstUnusedSubOrRootFromBracket(BuildState state, Element currentElement, ArrayList<Element> roots, ArrayList<Element> elementsUsed) throws StructureBuildingException {
-		Elements bracketChildren =currentElement.getChildElements();
-		if (bracketChildren.size() > 0){
-			for (int i = 0; i < bracketChildren.size(); i++) {
-				Element bracketChild = bracketChildren.get(i);
-				if (bracketChild.getLocalName().equals("substituent") || bracketChild.getLocalName().equals("bracket") || bracketChild.getLocalName().equals("root")){
-					if (bracketChild.getLocalName().equals("bracket") ){
-						if (bracketChild.getAttribute("type")==null){
-							Element foundEl = getFirstUnusedSubOrRootFromBracket(state, bracketChild, roots, elementsUsed);
-							if (foundEl!=null){
-								return foundEl;
-							}
-						}
-					}
-					else{
-						if (!roots.contains(currentElement) && !elementsUsed.contains(currentElement)){
-							Element group =bracketChild.getFirstChildElement("group");
-							if (group.getAttribute("isAMultiRadical")!=null || state.xmlFragmentMap.get(group).getOutIDs().size()==0){//you want either a linker or a terminal. e.g. oxy, nitrilo etc. or a ender e.g. phenol, benzene, ethanol.
-								return bracketChild;
-							}
-						}
-					}
-				}
-			}
-			return null;
-		}
-		else{
-			throw new StructureBuildingException("Empty bracket!");
-		}
-	}
-
-	/**
-	 * Checks through the groups accessible from the currentElement taking into account brackets
-	 * i.e. those that it is feasible that the group of the currentElement could substitute onto
-	 * @param state 
-	 * @param currentElement
-	 * @param locant: the locant string to check for the presence of
-	 * @return The fragment with the locant, or null
-	 * @throws StructureBuildingException 
-	 */
-	private Fragment findAlternativeFragmentWithLocant(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
-		Stack<Element> s = new Stack<Element>();
-		s.add(startingElement);
-		
-		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
-		while (s.size()>0){
-			Element currentElement =s.pop();
-			if (currentElement.getLocalName().equals("group")){
-				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
-				if (groupFrag.hasLocant(locant)){
-					return groupFrag;
-				}
-				continue;
-			}
-			Element parent = (Element)currentElement.getParent();
-			List<Element> siblings = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"bracket", "substituent", "root"});
-
-			for (Element bracketOrSub : siblings) {
-				if (!doneFirstIteration && parent.indexOf(bracketOrSub )<=parent.indexOf(currentElement)){
-					continue;
-				}
-				if (bracketOrSub.getLocalName().equals("bracket")){
-					s.push((Element)bracketOrSub.getChild(0));
-				}
-				else{
-					Element group = bracketOrSub.getFirstChildElement("group");
-					s.push(group);
-				}
-			}
-			doneFirstIteration =true;
-		}
-		return null;
 	}
 	
 	/**

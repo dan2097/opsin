@@ -11,6 +11,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
@@ -1526,7 +1527,7 @@ public class PreStructureBuilder {
 					}
 					else{
 						//only consider ic suffixes when it's not simple atom replacement e.g. peroxy.
-						ArrayList<Element> suffixElements =OpsinTools.getLaterSiblingElementsOfType(groupToBeModified, "suffix");
+						ArrayList<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, "suffix");
 						for (int i = 0; i < suffixElements.size(); i++) {
 							if (suffixElements.get(i).getAttributeValue("value").equals("ic")||suffixElements.get(i).getAttributeValue("value").equals("ous")){
 								Fragment suffixFrag =suffixes.get(i);
@@ -2653,6 +2654,17 @@ public class PreStructureBuilder {
 					throw new PostProcessingException("Invalid use of amine as a substituent!");
 				}
 			}
+			if (state.mode.equals(OpsinMode.poly)){
+				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
+					int valency =0;
+					for (int i = 2; i < outIDsSize -1; i++) {
+						OutID nextOutID = thisFrag.getOutID(i);
+						valency += nextOutID.valency;
+						thisFrag.removeOutID(nextOutID);
+					}
+					thisFrag.getOutID(1).valency+=valency;
+				}
+			}
 		}
 
 		//Element possibleMultiplier= (Element)OpsinTools.getNext(subOrRoot.getChild(subOrRoot.getChildCount()-1));
@@ -2844,7 +2856,7 @@ public class PreStructureBuilder {
 					throw new PostProcessingException("Unable to assign all locants");
 				}
 				for(int i=multiVal -1; i>=1; i--) {
-					Element clone = state.fragManager.cloneElement(word, state);
+					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
 						subOrBracket.addAttribute(new Attribute("locant", locants.get(i).getAttributeValue("value")));
 					}
