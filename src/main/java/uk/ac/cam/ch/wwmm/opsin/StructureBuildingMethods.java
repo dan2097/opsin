@@ -140,7 +140,7 @@ class StructureBuildingMethods {
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
-				currentElement = state.fragManager.cloneElement(subOrBracket, state, StringTools.multiplyString("'", i));
+				currentElement = state.fragManager.cloneElement(state, subOrBracket, StringTools.multiplyString("'", i));
 				clonedElements.add(currentElement);
 			}
 			else{
@@ -489,7 +489,7 @@ class StructureBuildingMethods {
 		if (frag.getOutIDs().size() >=1 && subBracketOrRoot.getAttribute("multiplier") ==null){
 			Element nextSiblingEl = (Element) XOMTools.getNextSibling(subBracketOrRoot);
 			if (nextSiblingEl.getAttribute("multiplier")!=null && frag.getOutIDs().size() == Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier"))){//probably multiplicative nomenclature, should be as many outIds as the multiplier
-				performMultiplicativeOperations(state, frag, nextSiblingEl);
+				performMultiplicativeOperations(state, group, nextSiblingEl);
 				group.addAttribute(new Attribute("resolved","yes"));
 			}
 			else if (group.getAttribute("isAMultiRadical")!=null){
@@ -520,29 +520,48 @@ class StructureBuildingMethods {
 			}
 		}
 	}
+	
+	/**
+	 * Creates a build results from the input group for use as the input to the real performMultiplicativeOperations function
+	 * @param state
+	 * @param group
+	 * @param multipliedParent
+	 * @throws StructureBuildingException 
+	 */
+	private static void performMultiplicativeOperations(BuildState state, Element group, Element multipliedParent) throws StructureBuildingException{
+		BuildResults multiRadicalBR = new BuildResults(state, (Element) group.getParent());
+		performMultiplicativeOperations(state, multiRadicalBR, multipliedParent);
+	}
 
-	private static void performMultiplicativeOperations(BuildState state, Fragment multiradicalFrag, Element multipliedParent) throws StructureBuildingException {
+	private static void performMultiplicativeOperations(BuildState state, BuildResults multiRadicalBR, Element multipliedParent) throws StructureBuildingException {
 		int multiplier = Integer.parseInt(multipliedParent.getAttributeValue("multiplier"));
-		//System.out.println(multiplier +" multiplicative bonds to be formed");
+		if (multiplier!=multiRadicalBR.getOutIDCount()){
+			throw new StructureBuildingException("Multiplication bond formation failure: number of outIDs disagree with multiplier(multiplier: " + multiplier + ", outIDcount: " + multiRadicalBR.getOutIDCount()+ ") , this is an OPSIN bug");
+		}
+		System.out.println(multiplier +" multiplicative bonds to be formed");
 		multipliedParent.removeAttribute(multipliedParent.getAttribute("multiplier"));
-		String[] inLocantArray = null;
-		if (multipliedParent.getAttribute("inLocants")!=null){
+		List<String> inLocants = null;
+		if (multipliedParent.getAttribute("inLocants")!=null){//true for the root of a multiplicative name
 			String inLocantsString = multipliedParent.getAttributeValue("inLocants");
 			if (inLocantsString.equals("default")){
-				inLocantArray = new String[multiplier];
+				inLocants = new ArrayList<String>(multiplier);
 				for (int i = 0; i < multiplier; i++) {
-					inLocantArray[i]="default";
+					inLocants.add("default");
 				}
 			}
 			else{
-				inLocantArray = matchComma.split(inLocantsString);
+				inLocants = StringTools.arrayToList(matchComma.split(inLocantsString));
+				if (inLocants.size() != multiplier){
+					throw new StructureBuildingException("Mismatch between multiplier and number inLocants in multiplicative nomenclature");
+				}
 			}
 		}
 		List<Element> clonedElements = new ArrayList<Element>();
+		BuildResults newBr = new BuildResults();
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
-				currentElement = state.fragManager.appendClonedFragmentToEachFragment(multipliedParent, state, StringTools.multiplyString("'", i));
+				currentElement = state.fragManager.cloneElement(state, multipliedParent, StringTools.multiplyString("'", i));
 				clonedElements.add(currentElement);
 			}
 			else{
@@ -556,22 +575,68 @@ class StructureBuildingMethods {
 				group = currentElement.getFirstChildElement("group");
 			}
 			Fragment frag = state.xmlFragmentMap.get(group);
-			if (inLocantArray !=null){
-				String locant = inLocantArray[i];
-				if (locant.equals("default")){
-					frag.addInID(frag.getDefaultInID(), 1);
+			if (inLocants !=null){
+				boolean inIdAdded =false;
+				for (int j = inLocants.size() -1; j >=0; j--) {
+					String locant = inLocants.get(j);
+					if (locant.equals("default")){//note that if one entry in inLocantArray is default then they all are "default"
+						frag.addInID(frag.getDefaultInID(), 1);
+						inIdAdded=true;
+						inLocants.remove(j);
+						break;
+					}
+					else{
+						Atom inAtom = frag.getAtomByLocant(locant);
+						if (inAtom!=null){
+							frag.addInID(inAtom.getID(), 1);
+							inIdAdded=true;
+							inLocants.remove(j);
+							break;
+						}
+					}
 				}
-				else{
-					frag.addInID(frag.getAtomByLocantOrThrow(locant).getID(), 1);
+				if (!inIdAdded){
+					throw new StructureBuildingException("Locants for inIDs on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 				}
 			}
 			if (frag.getInIDs().size()!=1 && frag.getOutIDs().size() ==0 ){
 				throw new StructureBuildingException("Multiplication bond formation failure: OPSIN bug, input to joinFragmentsMultiplicatively was unexpected");
 			}
 			
-			joinFragmentsAdditively(state, multiradicalFrag, frag);
-
+			joinFragmentsAdditively(state, multiRadicalBR.getOutID(i).frag, frag);
+			if (inLocants ==null){
+				//currentElement is not a root element. Need to build up a new BuildResults so as to call performMultiplicativeOperations again
+				//at this stage an outID has been removed from the fragment within currentElement through an additive bond
+				newBr.mergeBuildResults(new BuildResults(state, currentElement));
+			}
 		}
+
+		if (newBr.getFragmentCount()>=2){
+			List<Element> siblings = OpsinTools.getNextSiblingsOfTypes(multipliedParent, new String[]{"substituent", "bracket", "root"});
+			if (siblings.size()==0){
+				Element parentOfMultipliedEl = (Element) multipliedParent.getParent();
+				if (parentOfMultipliedEl.getLocalName().equals("bracket")){//brackets are allowed
+					siblings = OpsinTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{"substituent", "bracket", "root"});
+					if (siblings.get(0).getAttribute("multiplier")==null){
+						throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
+					}
+					performMultiplicativeOperations(state, newBr, siblings.get(0));
+				}
+				else{
+					throw new StructureBuildingException("Could not find suitable element to continue multiplicative nomenclature");
+				}
+			}
+			else{
+				if (siblings.get(0).getAttribute("multiplier")==null){
+					throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
+				}
+				performMultiplicativeOperations(state, newBr, siblings.get(0));
+			}
+		}
+		if (newBr.getFragmentCount()==1){
+			throw new StructureBuildingException("Multiplicative nomenclarture cannot yield only one temporary terminal fragment");
+		}
+		
 		for (Element clone : clonedElements) {//make sure cloned substituents don't substitute onto each other!
 			XOMTools.insertAfter(multipliedParent, clone);
 		}

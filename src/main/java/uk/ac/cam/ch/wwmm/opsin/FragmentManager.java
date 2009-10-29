@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
-
 import nu.xom.Element;
 
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
@@ -640,40 +638,6 @@ class FragmentManager {
 			attachFragments(fromAtom, toAtom, bond.getOrder());
 		}
 		return clone;
-	}
-
-	void multiplyFragments(BuildState state, Element elementToBeCloned, int multiplier) throws StructureBuildingException {
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(elementToBeCloned, "group");
-		Map<Fragment, Integer> fragmentToOriginalAtomCount = new HashMap<Fragment, Integer>();
-		for (int i = 0; i < groups.size(); i++) {
-			Fragment fragment =state.xmlFragmentMap.get(groups.get(i));
-			fragmentToOriginalAtomCount.put(fragment, fragment.getAtomList().size());
-		}
-		for (int i = 0; i < groups.size(); i++) {
-			Fragment originalFragment =state.xmlFragmentMap.get(groups.get(i));
-			for (int j = 1; j < multiplier; j++) {
-				Fragment newFrag = copyAndRelabel(originalFragment, StringTools.multiplyString("'", multiplier));
-				originalFragment.importFrag(newFrag);
-				removeFragment(newFrag);
-			}
-		}
-		for (int i = 0; i < groups.size(); i++) {
-			Fragment originalFragment =state.xmlFragmentMap.get(groups.get(i));
-			for (int j = 1; j < multiplier; j++) {
-				for (Bond bond : fragToInterFragmentBond.get(originalFragment)) {//add inter fragment bonds to cloned fragment
-					Atom originalFromAtom = bond.getFromAtom();
-					Atom originalToAtom = bond.getToAtom();
-					Fragment fragment1 = originalFromAtom.getFrag();
-					Fragment fragment2 = originalToAtom.getFrag();
-					if (!fragmentToOriginalAtomCount.containsKey(fragment1) || (!fragmentToOriginalAtomCount.containsKey(fragment2))){
-						throw new StructureBuildingException("An element that was clone contained a bond that went outside the scope of the cloning");
-					}
-					Atom fromAtom = fragment1.getAtomList().get(fragment1.getAtomList().indexOf(originalFromAtom) + fragmentToOriginalAtomCount.get(fragment1)*j);
-					Atom toAtom = fragment2.getAtomList().get(fragment2.getAtomList().indexOf(originalToAtom) + fragmentToOriginalAtomCount.get(fragment1)*j);
-					attachFragments(fromAtom, toAtom, bond.getOrder());
-				}
-			}
-		}
 	}
 
 	/**
