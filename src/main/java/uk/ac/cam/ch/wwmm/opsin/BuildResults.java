@@ -1,8 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import nu.xom.Element;
 
@@ -53,6 +55,14 @@ class BuildResults {
 		fragments = new LinkedHashSet<Fragment>();
 	}
 	
+	/**
+	 * Returns a read only view of the fragments in this BuildResults
+	 * @return
+	 */
+	Set<Fragment> getFragments(){
+		return Collections.unmodifiableSet(fragments);
+	}
+
 	int getFragmentCount(){
 		return fragments.size();
 	}
