@@ -773,8 +773,8 @@ public class PreStructureBuilder {
 			}
 			else if (heteroCount==0 && currentElem.getAttribute("outIDs")!=null) {//e.g. 1,4-phenylene
 				String[] outIDs = matchComma.split(currentElem.getAttributeValue("outIDs"), -1);
-				if (count ==outIDs.length && currentElem.getAttribute("substitutionRemovesOutIDs")==null){//things like oxy do not need to have their outIDs specified
-					Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
+				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
+				if (count ==outIDs.length && groupFragment.getAtomList().size()>1){//things like oxy do not need to have their outIDs specified
 					int idOfFirstAtomInFrag =groupFragment.getIdOfFirstAtom();
 					boolean foundLocantNotPresentOnFragment = false;
 					for (int i = outIDs.length-1; i >=0; i--) {
@@ -1082,14 +1082,8 @@ public class PreStructureBuilder {
 					}
 					else{
 						suffixFrag.importFrag(tempSuffixFrag);
-						if(suffixRuleTag.getAttribute("setsOutID") != null) {
-							suffixFrag.addOutIDs(tempSuffixFrag.getOutIDs());
-						}
-						else if(suffixRuleTag.getAttribute("setsDefaultInID") != null) {
+						if(suffixRuleTag.getAttribute("setsDefaultInID") != null) {
 							suffixFrag.setDefaultInID(tempSuffixFrag.getDefaultInID());
-						}
-						else if	(suffixRuleTag.getAttribute("setsFunctionalID") != null) {
-							suffixFrag.addFunctionalIDs(tempSuffixFrag.getFunctionalIDs());
 						}
 						state.fragManager.removeFragment(tempSuffixFrag);
 					}
@@ -1168,9 +1162,6 @@ public class PreStructureBuilder {
 			String outIDs =StringTools.multiplyString(atom.getID() -frag.getIdOfFirstAtom() +1 +",", atomsRemoved);//add an id relative to this frag
 			outIDs =outIDs.substring(0, outIDs.length()-1);//remove extra comma
 			group.addAttribute(new Attribute("outIDs", outIDs));
-			if (group.getAttribute("substitutionRemovesOutIDs")==null){
-				group.addAttribute(new Attribute("substitutionRemovesOutIDs", "yes"));//c.f. carbonyl
-			}
 		}
 	}
 
@@ -2155,7 +2146,7 @@ public class PreStructureBuilder {
 				String locantText = locant.getAttributeValue("value");
 
 				if (theSubstituentGroupFragment.hasLocant("2")){//if only has locant 1 then assume substitution onto it not intended
-					if(!theSubstituentGroupFragment.hasLocant(locantText)){
+					if(!theSubstituentGroupFragment.hasLocant(locantText)){//TODO ignore primes?
 						flag=1;
 					}
 				}
@@ -2587,9 +2578,6 @@ public class PreStructureBuilder {
 							frag.addOutID(firstAtomID, 1, false);
 						}
 					}
-					if (group.getAttribute("substitutionRemovesOutIDs")==null){
-						group.addAttribute(new Attribute("substitutionRemovesOutIDs", "yes"));//c.f. sulfonyl
-					}
 				}
 				else{
 					throw new StructureBuildingException("Unknown suffix rule:" + suffixRuleTagName);
@@ -2647,7 +2635,7 @@ public class PreStructureBuilder {
 		}
 		int outIDsSize = thisFrag.getOutIDs().size();
 		if (outIDsSize >=2){
-			group.addAttribute(new Attribute ("isAMultiRadical", "yes"));
+			group.addAttribute(new Attribute ("isAMultiRadical", Integer.toString(outIDsSize)));
 			Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
 			if (group.getValue().equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
 				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutIDs().size() < 2){//must be preceded by a multi radical
@@ -2657,7 +2645,7 @@ public class PreStructureBuilder {
 			if (state.mode.equals(OpsinMode.poly)){
 				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
 					int valency =0;
-					for (int i = 2; i < outIDsSize -1; i++) {
+					for (int i = 2; i < outIDsSize; i++) {
 						OutID nextOutID = thisFrag.getOutID(i);
 						valency += nextOutID.valency;
 						thisFrag.removeOutID(nextOutID);

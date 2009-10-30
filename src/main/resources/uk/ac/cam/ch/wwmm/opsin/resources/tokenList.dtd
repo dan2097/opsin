@@ -19,7 +19,7 @@ grammar in regexes.xml -->
         defaultInLocant CDATA #IMPLIED
         defaultInID CDATA #IMPLIED
         outIDs CDATA #IMPLIED
-        substitutionRemovesOutIDs CDATA #IMPLIED
+        canCombineOutIDs CDATA #IMPLIED
         functionalIDs CDATA #IMPLIED
         addGroup CDATA #IMPLIED
         addHeteroAtom CDATA #IMPLIED
@@ -44,7 +44,7 @@ grammar in regexes.xml -->
   defaultInLocant == The locant of the atom which by default an incoming fragment should connect to. Typically used on groups
   defaultInID == As above but using the id of the atom instead. IDs are relative to this particular fragment
   outIDs == Comma separated ids of locations of radicals on a substituent. Typically used on substituents to create multivalent substituents. IDs are relative to this particular fragment
-  substitutionRemovesOutIDs == yes or no. Absence of this attribute is equivalent to no. This would be no for things like methylene but yes for things like oxy c.f. aminomethylenecyclohexane vs aminooxycyclohexane. Not all outIDs can be removed in this manner
+  canCombineOutIDs == yes or no. Absence of this attribute is equivalent to no. This is yes for non standard substituents like methylene/imino that will perform like methanylidene/azanylidene if they cannot be used as a linked. This attribute is needed to differentiate this behaviour from the standard behaviour that say methandiyl would be expected to give
   functionalIDs == Comma seperated ids of locations which are functionalIDs on a group. IDs are relative to this particular fragment. Functional IDs are used in ester formation.
   addGroup == list of the following format SMILESofGroupToBeAdded then a space then the word id or locant, then an id or locant as appropriate. If multiple groups are to be added seperate by semicolons e.g. "=O locant9;=O locant10" to add two double bonded oxygens, one by default at locant 9 and the other by default at locant 10
   addHeteroAtom == list of the following format element of atm then a space then the word id or locant, then an id or locant as appropriate. If multiple heteroatoms are to be added seperate by semicolons e.g. "N locant1;S locant3"
