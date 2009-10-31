@@ -234,13 +234,12 @@ class FragmentManager {
 	 *
 	 * @param a The atom to change to a heteroatom
 	 * @param atomSymbol The atomic symbol to be used
-	 * @param assignLocant Whether a locant should be assigned to the heteroatom if the locant is not used eleswhere
+	 * @param assignLocant Whether a locant should be assigned to the heteroatom if the locant is not used elsewhere
 	 * @throws StructureBuildingException if the atom could not be found
 	 */
 	void makeHeteroatom(Atom a, String atomSymbol, boolean assignLocant) throws StructureBuildingException {
 		if(atomSymbol.startsWith("[")) {
 			Fragment f = sBuilder.build(atomSymbol, idManager);
-			removeFragment(f);
 			Atom referenceAtom = f.getAtomList().get(0);
 			atomSymbol =referenceAtom.getElement();
 			a.setCharge(referenceAtom.getCharge());
