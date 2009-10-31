@@ -222,9 +222,9 @@ sense of this -->
   <rule value="yl">
     <setOutID />
   </rule>
-  <rule value="yl-plusOptionalOutID">
+  <rule value="diyl">
     <setOutID />
-    <setOptionalOutID />
+    <setOutID />
   </rule>
   <rule value="ylidene">
     <setOutID outValency="2" />

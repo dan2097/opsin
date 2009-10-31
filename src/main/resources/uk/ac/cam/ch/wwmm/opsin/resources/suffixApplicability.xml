@@ -72,7 +72,7 @@ The value is the suffixValue that is in the name (or in some cases produced by O
   <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->
     <suffix value="ate">ite</suffix>
     <suffix value="ic">ous</suffix>
-    <suffix value="yl">yl-plusOptionalOutID</suffix>
+    <suffix value="yl">diyl</suffix>
     <suffix value="ylidene">ylidene</suffix>
   </groupType>
 

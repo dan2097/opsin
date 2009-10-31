@@ -381,7 +381,7 @@ public class PreStructureBuilder {
 			}
 		}
 
-		if (thisFrag.getOutIDs().size()==0 && groupType.equals("substituent") && groupSubType.equals("simpleSubstituent")){
+		if (thisFrag.getOutIDs().size()==0 && group.getAttribute("outIDs")==null && groupType.equals("substituent") && groupSubType.equals("simpleSubstituent")){
 			//simple substituents implicitly will be given an outID assuming the SMILESbuilder hasn't already given them one
 			thisFrag.addOutID(thisFrag.getIdOfFirstAtom(), 1, true);
 		}
@@ -2438,6 +2438,9 @@ public class PreStructureBuilder {
 			if (idOnParentFragToUse==0 && suffix.getAttribute("locantID")!=null){
 				idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue("locantID"));
 			}
+			if (idOnParentFragToUse==0 && (suffixTypeToUse.equals("acid") || suffixTypeToUse.equals("chalcogenAcidStem"))){//means that e.g. sulfonyl has an explicit outID
+				idOnParentFragToUse = firstAtomID;
+			}
 
 			String compoundLocant = null;
 			if (suffix.getAttribute("compoundLocant")!=null){
@@ -2561,23 +2564,6 @@ public class PreStructureBuilder {
 							frag.addOutID(firstAtomID, 1, false);
 						}
 					}
-				}else if(suffixRuleTagName.equals("setOptionalOutID")) {
-					if(suffixRuleTag.getAttribute("outValency") != null) {
-						if(idOnParentFragToUse!=0){
-							frag.addOutID(idOnParentFragToUse, Integer.parseInt(suffixRuleTag.getAttributeValue("outValency")), true);
-						}
-						else{
-							frag.addOutID(firstAtomID, Integer.parseInt(suffixRuleTag.getAttributeValue("outValency")), false);
-						}
-					}
-					else{
-						if(idOnParentFragToUse!=0){
-							frag.addOutID(idOnParentFragToUse, 1, true);
-						}
-						else{
-							frag.addOutID(firstAtomID, 1, false);
-						}
-					}
 				}
 				else{
 					throw new StructureBuildingException("Unknown suffix rule:" + suffixRuleTagName);
@@ -2624,7 +2610,42 @@ public class PreStructureBuilder {
 	 */
 	private void handleMultiRadicals(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
 		Element group =subOrRoot.getFirstChildElement("group");
+		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
+		if (groupValue.equals("methylene") || groupValue.equals("thio")){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
+			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
+			if (beforeGroup!=null && beforeGroup.getLocalName().equals("multiplier") && beforeGroup.getAttributeValue("type").equals("basic") && XOMTools.getPreviousSibling(beforeGroup)==null){
+				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue("value"));
+				Element afterGroup = (Element) OpsinTools.getNext(group);
+				if (afterGroup !=null && afterGroup.getLocalName().equals("multiplier")&& Integer.parseInt(afterGroup.getAttributeValue("value")) == multiplierVal &&
+						OpsinTools.getPreviousGroup(group)!=null && ((Element)OpsinTools.getPreviousGroup(group)).getAttribute("isAMultiRadical")!=null &&
+						!((Element)OpsinTools.getPrevious(beforeGroup)).getLocalName().equals("multiplier")){
+					//Something like nitrilotrithiotriacetic acid:
+					//preceeded by a multiplier that is equal to the multiplier that follows it and the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
+				}
+				else{
+					if (groupValue.equals("methylene")){
+						group.getAttribute("value").setValue(StringTools.multiplyString("C", multiplierVal));
+					}
+					else if (groupValue.equals("thio")){
+						group.getAttribute("value").setValue(StringTools.multiplyString("S", multiplierVal));
+					}
+					else{
+						throw new PostProcessingException("unexpected group value");
+					}
+					group.getAttribute("outIDs").setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue("value")));
+					OpsinTools.setTextChild(group, beforeGroup.getValue() + groupValue);
+					beforeGroup.detach();
+					if (group.getAttribute("labels")!=null){//use standard numbering
+						group.getAttribute("labels").detach();
+					}
+					state.fragManager.removeFragment(thisFrag);
+					thisFrag =resolveGroup(state, group);
+					state.xmlFragmentMap.put(group, thisFrag);
+				}
+			}
+		}
+		
 		if (group.getAttribute("outIDs")!=null){//adds outIDs at the specified atoms
 			String[] radicalPositions = matchComma.split(group.getAttributeValue("outIDs"));
 			int firstIdInFrag =thisFrag.getIdOfFirstAtom();
@@ -2635,13 +2656,15 @@ public class PreStructureBuilder {
 		}
 		int outIDsSize = thisFrag.getOutIDs().size();
 		if (outIDsSize >=2){
-			group.addAttribute(new Attribute ("isAMultiRadical", Integer.toString(outIDsSize)));
-			Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
-			if (group.getValue().equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
+			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
+				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
 				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutIDs().size() < 2){//must be preceded by a multi radical
 					throw new PostProcessingException("Invalid use of amine as a substituent!");
 				}
 			}
+
+			group.addAttribute(new Attribute ("isAMultiRadical", Integer.toString(outIDsSize)));
+
 			if (state.mode.equals(OpsinMode.poly)){
 				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
 					int valency =0;
@@ -2749,6 +2772,11 @@ public class PreStructureBuilder {
 			else{
 				throw new PostProcessingException("Mismatch between number of locants and number of roots");
 			}
+			Element word =(Element) rightMostElement.getParent();
+			if(!word.getLocalName().equals("word")){
+				throw new StructureBuildingException("Excpected input to function was the child of a word (OPSIN bug)");
+			}
+			state.multiplicativeNomenclaturePresent.add(word);
 		}
 	}
 

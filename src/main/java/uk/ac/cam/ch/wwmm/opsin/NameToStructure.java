@@ -201,7 +201,7 @@ public class NameToStructure {
 			} else if(name.equals("END")) {
 				end = true;
 			} else {
-				Element output = nts.parseToCML(name,true);
+				Element output = nts.parseToCML(name);
 				if(output == null) {
 					System.out.println("Did not parse.");
 					System.out.flush();

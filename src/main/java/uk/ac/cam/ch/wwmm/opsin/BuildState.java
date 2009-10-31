@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import nu.xom.Element;
 
 /**
  * Used to pass the current mode, IDManager, FragmentManager and wordRule around as well as a mapping between the XML and fragments
+ * Also contains which words appear to feature multiplicative nomenclature to aid in disambiguation
  *
  * @author dl387
  *
@@ -77,6 +79,8 @@ public class BuildState {
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
 	OpsinMode mode;
+	HashSet<Element> multiplicativeNomenclaturePresent;
+	boolean debug = true;
 
 	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, OpsinMode mode) {
 		idManager = new IDManager();
@@ -84,6 +88,7 @@ public class BuildState {
 		wordRule = null;
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
+		multiplicativeNomenclaturePresent = new HashSet<Element>();
 		this.mode =mode;
 	}
 }
