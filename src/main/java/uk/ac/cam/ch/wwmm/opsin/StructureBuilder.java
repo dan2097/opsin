@@ -135,7 +135,7 @@ class StructureBuilder {
 //		}
 
 		if (uniFrag.getOutIDs().size()>0 || uniFrag.getInIDs().size()>0){
-			//throw new StructureBuildingException("Radicals are currently set to not convert to structures");
+			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		return uniFrag;
 	}

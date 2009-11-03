@@ -509,8 +509,10 @@ class StructureBuildingMethods {
 		if (outIDCount >=1){
 			if (subBracketOrRoot.getAttribute("multiplier") ==null){
 				Element nextSiblingEl = (Element) XOMTools.getNextSibling(subBracketOrRoot);
-				if (nextSiblingEl.getAttribute("multiplier")!=null && (outIDCount >= Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier"))//probably multiplicative nomenclature, should be as many outIds as the multiplier
-						||outIDCount==1 && frag.getOutID(0).valency==2 && Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier"))==2)){
+				if (nextSiblingEl.getAttribute("multiplier")!=null && 
+						(outIDCount >= Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier")) || //probably multiplicative nomenclature, should be as many outIds as the multiplier
+						outIDCount==1 && frag.getOutID(0).valency==2 && Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier"))==2) &&
+						hasRootLikeOrMultiRadicalGroup(state, nextSiblingEl)){
 					if (outIDCount==1){//special case e.g. 4,4'-(benzylidene)dianiline
 						OutID out = frag.getOutID(0);
 						out.valency = 1;
@@ -612,6 +614,29 @@ class StructureBuildingMethods {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Searches the input for something that either is a multiRadical or has no outIDs i.e. not dimethyl
+	 * @param state 
+	 * @param subBracketOrRoot
+	 * @return
+	 */
+	private static boolean hasRootLikeOrMultiRadicalGroup(BuildState state, Element subBracketOrRoot) {
+		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(subBracketOrRoot, "group");
+		for (Element group : groups) {
+			Fragment frag =state.xmlFragmentMap.get(group);
+			int outIdCount =frag.getOutIDs().size();
+			if (group.getAttribute("isAMultiRadical")!=null){
+				if (outIdCount >=1 ){
+					return true;//a multi radical
+				}
+			}
+			else if (outIdCount ==0 && group.getAttribute("resolved")==null){
+				return true;// a terminus
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -758,6 +783,7 @@ class StructureBuildingMethods {
 			
 			Element multiRadicalGroup =state.xmlFragmentMap.getElement(multiRadicalBR.getOutID(i).frag);
 			if (multiRadicalGroup.getAttribute("resolved")==null){
+				resolveUnLocantedFeatures(state, (Element) multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
 				multiRadicalGroup.addAttribute(new Attribute("resolved","yes"));
 			}
 			joinFragmentsAdditively(state, multiRadicalBR.getOutID(i).frag, frag);

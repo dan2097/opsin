@@ -227,7 +227,7 @@ public class PreStructureBuilder {
 			locant.setLocalName("locant");
 			locant.removeChildren();
 			locant.addAttribute(new Attribute("type", "orthoMetaPara"));
-			if(afterOmpLocant.getLocalName().equals("multiplier") || afterOmpLocant.getAttribute("outIDs")!=null) {
+			if(afterOmpLocant.getLocalName().equals("multiplier") || (afterOmpLocant.getAttribute("outIDs")!=null && matchComma.split(afterOmpLocant.getAttributeValue("outIDs")).length>1) ) {
 				if (matchOrtho.matcher(locantText).matches()){
 					locant.appendChild("1,2-");
 				}
@@ -504,6 +504,7 @@ public class PreStructureBuilder {
 				}
 				if (newFrag.getOutIDs().size() ==1) {
 					OutID newFragOutID = newFrag.getOutID(0);
+					newFrag.removeOutID(newFragOutID);
 					state.fragManager.incorporateFragment(newFrag, newFragOutID.id, parentFrag, atomOnParentFrag.getID(), newFragOutID.valency);
 				}
 				else{
@@ -676,7 +677,7 @@ public class PreStructureBuilder {
 						boolean locantModified =false;//did determineLocantMeaning do something?
 						if (locantValues[locantValues.length-1].endsWith("'") && group!=null && subOrBracketOrRoot.indexOf(group) > subOrBracketOrRoot.indexOf(locant)){//quite possible that this is referring to a multiplied root
 
-							if (group.getAttribute("outIDs")!=null){
+							if (group.getAttribute("outIDs")!=null && matchComma.split(group.getAttributeValue("outIDs")).length>1){
 								locantModified=determineLocantMeaning(state, locant, locantValues, root);
 							}
 							else{
@@ -771,7 +772,7 @@ public class PreStructureBuilder {
 					return false;//there is a case where locants don't apply to heteroatoms in a HW system, but in that case only one locant is expected so this function would not be called
 				}
 			}
-			else if (heteroCount==0 && currentElem.getAttribute("outIDs")!=null) {//e.g. 1,4-phenylene
+			else if (heteroCount==0 && currentElem.getAttribute("outIDs")!=null ) {//e.g. 1,4-phenylene
 				String[] outIDs = matchComma.split(currentElem.getAttributeValue("outIDs"), -1);
 				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
 				if (count ==outIDs.length && groupFragment.getAtomList().size()>1){//things like oxy do not need to have their outIDs specified
@@ -2008,11 +2009,11 @@ public class PreStructureBuilder {
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals("multiplier") && beforeGroup.getAttributeValue("type").equals("basic") && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue("value"));
 				Element afterGroup = (Element) OpsinTools.getNext(group);
-				if (afterGroup !=null && afterGroup.getLocalName().equals("multiplier")&& Integer.parseInt(afterGroup.getAttributeValue("value")) == multiplierVal &&
+				if (((afterGroup !=null && afterGroup.getLocalName().equals("multiplier")&& Integer.parseInt(afterGroup.getAttributeValue("value")) == multiplierVal) || afterGroup==null) &&
 						OpsinTools.getPreviousGroup(group)!=null && ((Element)OpsinTools.getPreviousGroup(group)).getAttribute("isAMultiRadical")!=null &&
 						!((Element)OpsinTools.getPrevious(beforeGroup)).getLocalName().equals("multiplier")){
-					//Something like nitrilotrithiotriacetic acid:
-					//preceeded by a multiplier that is equal to the multiplier that follows it and the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
+					//Something like nitrilotrithiotriacetic acid or oxetane-3,3-diyldimethylene:
+					//preceeded by a multiplier that is equal to the multiplier that follows it (or nothing follows it) and the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
 				}
 				else{
 					if (groupValue.equals("methylene")){
@@ -2740,7 +2741,6 @@ public class PreStructureBuilder {
 			if(!word.getLocalName().equals("word")){
 				throw new StructureBuildingException("Excpected input to function was the child of a word (OPSIN bug)");
 			}
-			state.multiplicativeNomenclaturePresent.add(word);
 		}
 	}
 

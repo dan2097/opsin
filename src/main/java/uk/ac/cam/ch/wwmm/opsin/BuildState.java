@@ -3,7 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -79,7 +78,6 @@ public class BuildState {
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
 	OpsinMode mode;
-	HashSet<Element> multiplicativeNomenclaturePresent;
 	boolean debug = false;
 
 	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, OpsinMode mode) {
@@ -88,7 +86,6 @@ public class BuildState {
 		wordRule = null;
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
-		multiplicativeNomenclaturePresent = new HashSet<Element>();
 		this.mode =mode;
 	}
 }
