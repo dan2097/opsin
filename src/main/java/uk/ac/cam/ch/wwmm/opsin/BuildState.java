@@ -80,7 +80,7 @@ public class BuildState {
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
 	OpsinMode mode;
 	HashSet<Element> multiplicativeNomenclaturePresent;
-	boolean debug = true;
+	boolean debug = false;
 
 	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, OpsinMode mode) {
 		idManager = new IDManager();

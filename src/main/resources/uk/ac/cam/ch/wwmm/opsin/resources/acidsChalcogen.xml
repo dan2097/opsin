@@ -4,14 +4,14 @@
 These differ from the  more commonly used chalcogen stems e.g. sulfuric in that they can be used to unambiguously form acyl groups
 However the rules for doing so are subtly different than for normal acids hence the need for a different type-->
 <tokenList tagname="group" type="chalcogenAcidStem" subType="n/a" symbol="d">
-  <token value="S(=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfon</token>
-  <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfin</token>
-  <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">thion</token>
-  <token value="S" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfen</token>
-  <token value="[Se](=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">selenon</token>
-  <token value="[Se](=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">selenin</token>
-  <token value="[Se]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenen</token>
-  <token value="[Te](=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">telluron</token>
-  <token value="[Te](=O)" labels="none" valType="SMILES" usableAsAJoiner="yes">tellurin</token>
-  <token value="[Te]" labels="none" valType="SMILES" usableAsAJoiner="yes">telluren</token>
+  <token value="S(=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfon</token>
+  <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfin</token>
+  <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thion</token>
+  <token value="S" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfen</token>
+  <token value="[Se](=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">selenon</token>
+  <token value="[Se](=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">selenin</token>
+  <token value="[Se]" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">selenen</token>
+  <token value="[Te](=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluron</token>
+  <token value="[Te](=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">tellurin</token>
+  <token value="[Te]" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluren</token>
 </tokenList>

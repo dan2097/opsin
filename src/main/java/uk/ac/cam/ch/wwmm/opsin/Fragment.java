@@ -176,6 +176,15 @@ class Fragment {
 		for(Bond bond : frag.getBondList()) {
 			addBond(bond, false);
 		}
+		for (OutID outID: frag.getOutIDs()) {
+			outID.frag =this;
+		}
+		for (InID inID: frag.getInIDs()) {
+			inID.frag =this;
+		}
+		for (FunctionalID functionalID: frag.getFunctionalIDs()) {
+			functionalID.frag =this;
+		}
 		outIDs.addAll(frag.getOutIDs());
 		inIDs.addAll(frag.getInIDs());
 		functionalIDs.addAll(frag.getFunctionalIDs());

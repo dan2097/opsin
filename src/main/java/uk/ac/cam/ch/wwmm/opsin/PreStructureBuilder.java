@@ -182,6 +182,10 @@ public class PreStructureBuilder {
 				processComplicatedSpiroNomenclature(state, subOrRoot);
 			}
 
+			for (Element subOrRoot : substituentsAndRoot) {
+				handleMultiRadicals(state, subOrRoot);
+			}
+
 			//System.out.println(new XOMFormatter().elemToString(elem));
 			findAndStructureImplictBrackets(state, substituents, brackets);
 
@@ -189,14 +193,10 @@ public class PreStructureBuilder {
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				matchLocantsToIndirectFeatures(state, subOrRoot);
-				resolveRemainingSuffixes(state, subOrRoot);
+				resolveSuffixes(state, subOrRoot.getFirstChildElement("group"), subOrRoot.getChildElements("suffix"));
 			}
 
 			removePointlessBrackets(brackets, substituentsAndRootAndBrackets);//e.g. (tetramethyl)azanium == tetramethylazanium
-
-			for (Element subOrRoot : substituentsAndRoot) {
-				handleMultiRadicals(state, subOrRoot);
-			}
 			
 			if (word.getChildCount()>1){
 				assignLocantsToMultipliedRootIfPresent(state, (Element) word.getChild(word.getChildCount()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
@@ -966,7 +966,7 @@ public class PreStructureBuilder {
 			if (!carbon.getElement().equals("C")){
 				throw new PostProcessingException("Carbon not found where carbon expected");
 			}
-			resolveSuffixes(state, suffixableFragment, subOrRoot.getChildElements("suffix"), lastGroupElementInSubOrRoot);
+			resolveSuffixes(state, lastGroupElementInSubOrRoot, subOrRoot.getChildElements("suffix"));
 			for (Element suffix : suffixes) {//suffixes have already been resolved so need to be detached to avoid being passed to resolveSuffixes later
 				suffix.detach();
 			}
@@ -1945,7 +1945,7 @@ public class PreStructureBuilder {
 
 			Elements suffixes =elementToResolve.getChildElements("suffix");
 			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
-			resolveSuffixes(state, fragmentToResolveAndDuplicate, suffixes, group);
+			resolveSuffixes(state, group, suffixes);
 			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
 			group.detach();
@@ -1989,6 +1989,143 @@ public class PreStructureBuilder {
 
 	}
 
+	/**
+	 * Uses the number of outIDs that are present to assign the number of outIDs on substituents that can have a variable number of outIDs
+	 * Hence at this point it can be determined if a multi radical susbtituent is present in the name
+	 * This would be expected in multiplicative nomenclature and is noted in the state so that the StructureBuilder knows to resolve the
+	 * section of the name from that point onwards in a left to right manner rather than right to left
+	 * @param state
+	 * @param subOrRoot: The sub/root to look in
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
+	private void handleMultiRadicals(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
+		Element group =subOrRoot.getFirstChildElement("group");
+		String groupValue =group.getValue();
+		Fragment thisFrag = state.xmlFragmentMap.get(group);
+		if (groupValue.equals("methylene") || groupValue.equals("thio")){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
+			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
+			if (beforeGroup!=null && beforeGroup.getLocalName().equals("multiplier") && beforeGroup.getAttributeValue("type").equals("basic") && XOMTools.getPreviousSibling(beforeGroup)==null){
+				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue("value"));
+				Element afterGroup = (Element) OpsinTools.getNext(group);
+				if (afterGroup !=null && afterGroup.getLocalName().equals("multiplier")&& Integer.parseInt(afterGroup.getAttributeValue("value")) == multiplierVal &&
+						OpsinTools.getPreviousGroup(group)!=null && ((Element)OpsinTools.getPreviousGroup(group)).getAttribute("isAMultiRadical")!=null &&
+						!((Element)OpsinTools.getPrevious(beforeGroup)).getLocalName().equals("multiplier")){
+					//Something like nitrilotrithiotriacetic acid:
+					//preceeded by a multiplier that is equal to the multiplier that follows it and the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
+				}
+				else{
+					if (groupValue.equals("methylene")){
+						group.getAttribute("value").setValue(StringTools.multiplyString("C", multiplierVal));
+					}
+					else if (groupValue.equals("thio")){
+						group.getAttribute("value").setValue(StringTools.multiplyString("S", multiplierVal));
+					}
+					else{
+						throw new PostProcessingException("unexpected group value");
+					}
+					group.getAttribute("outIDs").setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue("value")));
+					OpsinTools.setTextChild(group, beforeGroup.getValue() + groupValue);
+					beforeGroup.detach();
+					if (group.getAttribute("labels")!=null){//use standard numbering
+						group.getAttribute("labels").detach();
+					}
+					state.fragManager.removeFragment(thisFrag);
+					thisFrag =resolveGroup(state, group);
+					state.xmlFragmentMap.put(group, thisFrag);
+					group.removeAttribute(group.getAttribute("usableAsAJoiner"));
+				}
+			}
+		}
+		
+		if (group.getAttribute("outIDs")!=null){//adds outIDs at the specified atoms
+			String[] radicalPositions = matchComma.split(group.getAttributeValue("outIDs"));
+			int firstIdInFrag =thisFrag.getIdOfFirstAtom();
+			for (int i = 0; i < radicalPositions.length; i++) {
+				String radicalID =radicalPositions[i];
+				thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
+			}
+		}
+		int outIDsSize = thisFrag.getOutIDs().size();
+		if (outIDsSize >=2){
+			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
+				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
+				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutIDs().size() < 2){//must be preceded by a multi radical
+					throw new PostProcessingException("Invalid use of amine as a substituent!");
+				}
+			}
+			if (state.mode.equals(OpsinMode.poly)){
+				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
+					int valency =0;
+					for (int i = 2; i < outIDsSize; i++) {
+						OutID nextOutID = thisFrag.getOutID(i);
+						valency += nextOutID.valency;
+						thisFrag.removeOutID(nextOutID);
+					}
+					thisFrag.getOutID(1).valency+=valency;
+				}
+			}
+		}
+
+		int totalOutIds = outIDsSize + calculateOutIdsToBeAddedFromInlineSuffixes(state, group, subOrRoot.getChildElements("suffix"));
+		if (totalOutIds >= 2){
+			group.addAttribute(new Attribute ("isAMultiRadical", Integer.toString(totalOutIds)));
+		}
+	}
+
+	/**
+	 * Calculates number of OutIDs that the resolveSuffixes method will add.
+	 * In principle if a suffix had a different number of suffixes depending on whether it was added to a cyclic or acyclic atom this would return incorrectly.
+	 * @param state
+	 * @param group
+	 * @param suffixes
+	 * @return numberOfOutIds that will be added by resolveSuffixes
+	 * @throws StructureBuildingException
+	 * @throws PostProcessingException
+	 */
+	private int calculateOutIdsToBeAddedFromInlineSuffixes(BuildState state, Element group, Elements suffixes) throws StructureBuildingException, PostProcessingException {
+		int outIDsThatWillBeAdded = 0;
+		Fragment frag = state.xmlFragmentMap.get(group);
+		String groupType = frag.getType();
+		String subgroupType = frag.getSubType();
+		String suffixTypeToUse =null;
+		boolean suffixTypeDetermined =false;
+		if (suffixApplicability.containsKey(groupType)){
+			suffixTypeToUse =groupType;
+			suffixTypeDetermined=true;
+		}
+		else if (groupType.equals("simpleGroup")){
+			suffixTypeToUse="substituent";
+			suffixTypeDetermined=true;
+		}
+		if (!suffixTypeDetermined){
+			boolean cyclic = frag.getFirstAtom().getAtomIsInACycle();
+			if (cyclic){
+				suffixTypeToUse="cyclic";
+			}
+			else{
+				suffixTypeToUse="acyclic";
+			}
+		}
+		List<Fragment> suffixList =state.xmlSuffixMap.get(group);
+		for (Fragment suffix : suffixList) {
+			outIDsThatWillBeAdded += suffix.getOutIDs().size();
+		}
+		for(int i=0;i<suffixes.size();i++) {
+			Element suffix = suffixes.get(i);
+			String suffixValue = suffix.getAttributeValue("value");
+			Elements suffixRuleTags =getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+			for(int j=0;j<suffixRuleTags.size();j++) {
+				Element suffixRuleTag = suffixRuleTags.get(j);
+				String suffixRuleTagName =suffixRuleTag.getLocalName();
+				if(suffixRuleTagName.equals("setOutID")) {
+					outIDsThatWillBeAdded +=1;
+				}
+			}	
+		}
+		return outIDsThatWillBeAdded;
+	}
+
 	/**Looks for places where brackets should have been, and does the same
 	 * as findAndStructureBrackets. E.g. dimethylaminobenzene -> (dimethylamino)benzene.
 	 * The bracketting in the above case occurs when the substituent that is being procesed is the amino group
@@ -2000,24 +2137,24 @@ public class PreStructureBuilder {
 	 */
 	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws PostProcessingException, StructureBuildingException {
 
-		for (Element theSubstituent : substituents) {
-			String firstElInSubName =((Element)theSubstituent.getChild(0)).getLocalName();
+		for (Element substituent : substituents) {
+			String firstElInSubName =((Element)substituent.getChild(0)).getLocalName();
 			if (firstElInSubName.equals("locant") ||firstElInSubName.equals("multiplier")){
 				continue;
 			}
 
-			Element theSubstituentGroup = theSubstituent.getFirstChildElement("group");
-			String theSubstituentSubType = theSubstituentGroup.getAttributeValue("subType");
-			String theSubstituentType = theSubstituentGroup.getAttributeValue("type");
+			Element substituentGroup = substituent.getFirstChildElement("group");
+			String theSubstituentSubType = substituentGroup.getAttributeValue("subType");
+			String theSubstituentType = substituentGroup.getAttributeValue("type");
 
 			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent
-			if (theSubstituentGroup.getAttribute("usableAsAJoiner")==null){
+			if (substituentGroup.getAttribute("usableAsAJoiner")==null){
 				continue;
 			}
-			Fragment theSubstituentGroupFragment =state.xmlFragmentMap.get(theSubstituentGroup);
+			Fragment frag =state.xmlFragmentMap.get(substituentGroup);
 
 			//there must be an element after the substituent for the implicit bracket to be required
-			Element elementAftersubstituent =(Element)XOMTools.getNextSibling(theSubstituent);
+			Element elementAftersubstituent =(Element)XOMTools.getNextSibling(substituent);
 			if (elementAftersubstituent ==null ||
 					!elementAftersubstituent.getLocalName().equals("substituent") &&
 					!elementAftersubstituent.getLocalName().equals("bracket") &&
@@ -2027,7 +2164,7 @@ public class PreStructureBuilder {
 
 			//checks that the element before is a substituent or a bracket which will obviously include substituent/s
 			//this makes sure there's more than just a substituent in the bracket
-			Element elementBeforeSubstituent =(Element)XOMTools.getPreviousSibling(theSubstituent);
+			Element elementBeforeSubstituent =(Element)XOMTools.getPreviousSibling(substituent);
 			if (elementBeforeSubstituent ==null||
 					!elementBeforeSubstituent.getLocalName().equals("substituent") &&
 					!elementBeforeSubstituent.getLocalName().equals("bracket")){
@@ -2035,7 +2172,7 @@ public class PreStructureBuilder {
 			}
 
 			//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
-			Element elementDirectlyBeforeSubstituent = (Element) OpsinTools.getPrevious(theSubstituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
+			Element elementDirectlyBeforeSubstituent = (Element) OpsinTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
 			if (elementDirectlyBeforeSubstituent.getLocalName().equals("hyphen")){
 				continue;
 			}
@@ -2043,13 +2180,13 @@ public class PreStructureBuilder {
 			//prevents alkyl chains being bracketed together e.g. ethylmethylamine
 			//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
 			List<Element> groupElements  = OpsinTools.findDescendantElementsWithTagName(elementBeforeSubstituent, "group");//one for a substituent, possibly more for a bracket
-			Element group =groupElements.get(groupElements.size()-1);
-			if (group==null){throw new PostProcessingException("No group where group was expected");}
+			Element lastGroupOfElementBeforeSub =groupElements.get(groupElements.size()-1);
+			if (lastGroupOfElementBeforeSub==null){throw new PostProcessingException("No group where group was expected");}
 			if (theSubstituentType.equals("chain") && theSubstituentSubType.equals("alkaneStem") &&
-					group.getAttributeValue("type").equals("chain") && (group.getAttributeValue("subType").equals("alkaneStem") || group.getAttributeValue("subType").equals("alkaneStem-irregular"))){
+					lastGroupOfElementBeforeSub.getAttributeValue("type").equals("chain") && (lastGroupOfElementBeforeSub.getAttributeValue("subType").equals("alkaneStem") || lastGroupOfElementBeforeSub.getAttributeValue("subType").equals("alkaneStem-irregular"))){
 				boolean placeInImplicitBracket =false;
 
-				Element suffixAfterGroup=(Element)XOMTools.getNextSibling(group, "suffix");
+				Element suffixAfterGroup=(Element)XOMTools.getNextSibling(lastGroupOfElementBeforeSub, "suffix");
 				//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane (other suffixes don't need to be considered as they would produce silly structures)
 				if (suffixAfterGroup !=null && matchInlineSuffixesThatAreAlsoGroups.matcher(suffixAfterGroup.getValue()).matches()){
 					placeInImplicitBracket =true;
@@ -2064,7 +2201,7 @@ public class PreStructureBuilder {
 						}
 						else if (currentElementName.equals("locant")){
 							String locantText =childrenOfElementBeforeSubstituent.get(i).getAttributeValue("value");
-							if(!theSubstituentGroupFragment.hasLocant(locantText)){
+							if(!frag.hasLocant(locantText)){
 								foundLocantNotReferringToChain=true;
 								break;
 							}
@@ -2084,30 +2221,9 @@ public class PreStructureBuilder {
 					continue;
 				}
 			}
-			
-			
 
-			Element twoElementsBeforeSubstituent =(Element)XOMTools.getPreviousSibling(group.getParent());
-			//prevent bracketing to multi radicals
-			//This is really tacky...
-			//TODO do this properly...
-			if (group.getAttribute("outIDs")!=null && (group.getAttribute("usableAsAJoiner")==null || twoElementsBeforeSubstituent==null )){
-				continue;
-			}
-			Element afterGroup = (Element)XOMTools.getNextSibling(group);
-			int inlineSuffixCount =0;
-			int multiplier=1;
-			while (afterGroup !=null){
-				if(afterGroup.getLocalName().equals("multiplier")){
-					multiplier =Integer.parseInt(afterGroup.getAttributeValue("value"));
-				}
-				else if(afterGroup.getLocalName().equals("suffix") && afterGroup.getAttributeValue("type").equals("inline")){
-					inlineSuffixCount +=(multiplier);
-					multiplier=1;
-				}
-				afterGroup = (Element)XOMTools.getNextSibling(afterGroup);
-			}
-			if (inlineSuffixCount >=2){
+			//prevent bracketing to multi radicals unless through substitution they are likely to cease being multiradicals
+			if (lastGroupOfElementBeforeSub.getAttribute("isAMultiRadical")!=null && lastGroupOfElementBeforeSub.getAttribute("acceptsAdditiveBonds")==null){
 				continue;
 			}
 
@@ -2145,8 +2261,8 @@ public class PreStructureBuilder {
 				}
 				String locantText = locant.getAttributeValue("value");
 
-				if (theSubstituentGroupFragment.hasLocant("2")){//if only has locant 1 then assume substitution onto it not intended
-					if(!theSubstituentGroupFragment.hasLocant(locantText)){//TODO ignore primes?
+				if (frag.hasLocant("2")){//if only has locant 1 then assume substitution onto it not intended
+					if(!frag.hasLocant(locantText)){//TODO ignore primes?
 						flag=1;
 					}
 				}
@@ -2165,7 +2281,7 @@ public class PreStructureBuilder {
 						continue;//ignore stereochemistry elements, atleast for the moment
 					}
 					String locantText = locant.getAttributeValue("value");
-					if (!checkLocantPresentOnPotentialRoot(state, theSubstituent, locantText)){
+					if (!checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
 						flag =1;
 					}
 				}
@@ -2184,7 +2300,7 @@ public class PreStructureBuilder {
 							&& shouldBeAGroupOrSubOrBracket.getLocalName().equals("group") ||
 							shouldBeAGroupOrSubOrBracket.getLocalName().equals("substituent") ||
 							shouldBeAGroupOrSubOrBracket.getLocalName().equals("bracket")){
-						if (matchInlineSuffixesThatAreAlsoGroups.matcher(theSubstituentGroup.getValue()).matches()){//e.g. 4, 4'-dimethoxycarbonyl-2, 2'-bioxazole
+						if (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()){//e.g. 4, 4'-dimethoxycarbonyl-2, 2'-bioxazole
 							locantElements.add(shouldBeAMultiplierNode);
 						}
 						else{//don't bracket complex multiplied substituents
@@ -2210,7 +2326,7 @@ public class PreStructureBuilder {
 			 * A special case when a multiplier should be moved
 			 * e.g. tripropan-2-yloxyphosphane -->tri(propan-2-yloxy)phosphane
 			 */
-			if (locantElements.size()==0 && matchInlineSuffixesThatAreAlsoGroups.matcher(theSubstituentGroup.getValue()).matches()){
+			if (locantElements.size()==0 && matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()){
 				Element possibleMultiplier =childrenOfElementBeforeSubstituent.get(0);
 				if (possibleMultiplier.getLocalName().equals("multiplier")){
 					if (childrenOfElementBeforeSubstituent.get(1).getLocalName().equals("group")){
@@ -2220,9 +2336,9 @@ public class PreStructureBuilder {
 				}
 			}
 
-			Element parent = (Element)theSubstituent.getParent();
+			Element parent = (Element)substituent.getParent();
 			int startIndex=parent.indexOf(elementBeforeSubstituent);
-			int endIndex=parent.indexOf(theSubstituent);
+			int endIndex=parent.indexOf(substituent);
 			for(int i = 0 ; i <= (endIndex-startIndex);i++) {
 				Node n = parent.getChild(startIndex);
 				n.detach();
@@ -2364,30 +2480,15 @@ public class PreStructureBuilder {
 		}
 	}
 
-
-	/**
-	 * Resolves the effects of remaining suffixes and attaches resolved suffixes.
-	 * @param state
-	 * @param subOrRoot: The sub/root to look in
-	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
-	 */
-	private void resolveRemainingSuffixes(BuildState state, Element subOrRoot) throws StructureBuildingException, PostProcessingException{
-		Element group =subOrRoot.getFirstChildElement("group");
-		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		Elements suffixes =subOrRoot.getChildElements("suffix");
-		resolveSuffixes(state, thisFrag, suffixes, group);
-	}
-
 	/**Process the effects of suffixes upon a fragment.
 	 * @param state
-	 * @param frag The fragment to which to add the suffixes
+	 * @param group The group element for the fragment to which the suffixes will be added
 	 * @param suffixes The suffix elements for a fragment.
-	 * @param group The element for the group that the fragment will attach to
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
 	 * @throws PostProcessingException
 	 */
-	private void resolveSuffixes(BuildState state, Fragment frag, Elements suffixes,  Element group) throws StructureBuildingException, PostProcessingException {
+	private void resolveSuffixes(BuildState state, Element group, Elements suffixes) throws StructureBuildingException, PostProcessingException {
+		Fragment frag = state.xmlFragmentMap.get(group);
 		int firstAtomID = frag.getIdOfFirstAtom();//typically equivalent to locant 1
 		List<Atom> atomList =frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
 		int defaultAtom =0;//indice in atomList
@@ -2597,143 +2698,6 @@ public class PreStructureBuilder {
 		}
 	}
 
-
-	/**
-	 * Uses the number of outIDs that are present to assign the number of outIDs on substituents that can have a variable number of outIDs
-	 * Hence at this point it can be determined if a multi radical susbtituent is present in the name
-	 * This would be expected in multiplicative nomenclature and is noted in the state so that the StructureBuilder knows to resolve the
-	 * section of the name from that point onwards in a left to right manner rather than right to left
-	 * @param state
-	 * @param subOrRoot: The sub/root to look in
-	 * @throws PostProcessingException
-	 * @throws StructureBuildingException
-	 */
-	private void handleMultiRadicals(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
-		Element group =subOrRoot.getFirstChildElement("group");
-		String groupValue =group.getValue();
-		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		if (groupValue.equals("methylene") || groupValue.equals("thio")){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
-			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
-			if (beforeGroup!=null && beforeGroup.getLocalName().equals("multiplier") && beforeGroup.getAttributeValue("type").equals("basic") && XOMTools.getPreviousSibling(beforeGroup)==null){
-				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue("value"));
-				Element afterGroup = (Element) OpsinTools.getNext(group);
-				if (afterGroup !=null && afterGroup.getLocalName().equals("multiplier")&& Integer.parseInt(afterGroup.getAttributeValue("value")) == multiplierVal &&
-						OpsinTools.getPreviousGroup(group)!=null && ((Element)OpsinTools.getPreviousGroup(group)).getAttribute("isAMultiRadical")!=null &&
-						!((Element)OpsinTools.getPrevious(beforeGroup)).getLocalName().equals("multiplier")){
-					//Something like nitrilotrithiotriacetic acid:
-					//preceeded by a multiplier that is equal to the multiplier that follows it and the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
-				}
-				else{
-					if (groupValue.equals("methylene")){
-						group.getAttribute("value").setValue(StringTools.multiplyString("C", multiplierVal));
-					}
-					else if (groupValue.equals("thio")){
-						group.getAttribute("value").setValue(StringTools.multiplyString("S", multiplierVal));
-					}
-					else{
-						throw new PostProcessingException("unexpected group value");
-					}
-					group.getAttribute("outIDs").setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue("value")));
-					OpsinTools.setTextChild(group, beforeGroup.getValue() + groupValue);
-					beforeGroup.detach();
-					if (group.getAttribute("labels")!=null){//use standard numbering
-						group.getAttribute("labels").detach();
-					}
-					state.fragManager.removeFragment(thisFrag);
-					thisFrag =resolveGroup(state, group);
-					state.xmlFragmentMap.put(group, thisFrag);
-				}
-			}
-		}
-		
-		if (group.getAttribute("outIDs")!=null){//adds outIDs at the specified atoms
-			String[] radicalPositions = matchComma.split(group.getAttributeValue("outIDs"));
-			int firstIdInFrag =thisFrag.getIdOfFirstAtom();
-			for (int i = 0; i < radicalPositions.length; i++) {
-				String radicalID =radicalPositions[i];
-				thisFrag.addOutID(firstIdInFrag + Integer.parseInt(radicalID) -1, 1, true);
-			}
-		}
-		int outIDsSize = thisFrag.getOutIDs().size();
-		if (outIDsSize >=2){
-			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
-				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
-				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutIDs().size() < 2){//must be preceded by a multi radical
-					throw new PostProcessingException("Invalid use of amine as a substituent!");
-				}
-			}
-
-			group.addAttribute(new Attribute ("isAMultiRadical", Integer.toString(outIDsSize)));
-
-			if (state.mode.equals(OpsinMode.poly)){
-				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
-					int valency =0;
-					for (int i = 2; i < outIDsSize; i++) {
-						OutID nextOutID = thisFrag.getOutID(i);
-						valency += nextOutID.valency;
-						thisFrag.removeOutID(nextOutID);
-					}
-					thisFrag.getOutID(1).valency+=valency;
-				}
-			}
-		}
-
-		//Element possibleMultiplier= (Element)OpsinTools.getNext(subOrRoot.getChild(subOrRoot.getChildCount()-1));
-
-//		System.out.println("OUDIDS" +thisFrag.getOutIDs().size());
-//		System.out.println(subOrRoot.toXML());
-//		if (possibleMultiplier !=null){//i.e. this is not the root -there is something after the group
-//			if (outIDsSize>=2 && !possibleMultiplier.getLocalName().equals("multiplier")){//look for cases like methylenecyclohexane. need to convert 2 outIDs into 1 outID valency 2
-//				List<OutID> outIDs =thisFrag.getOutIDs();
-//				int id = outIDs.get(0).id;
-//				boolean allOnSameAtom =true;
-//				for (OutID outID : outIDs) {//all outIDs must be on the same atom
-//					if (id!=outID.id){
-//						allOnSameAtom=false;
-//					}
-//				}
-//				if (allOnSameAtom){
-//					if (state.mode.equals(OpsinMode.poly)){
-//						if (outIDsSize>2){//e.g. nitrilo
-//							for (int i = outIDs.size() -1; i >=1 ; i--) {
-//								thisFrag.removeOutID(outIDs.get(i));
-//							}
-//							//set the outIds so the one with valency greater than 2 is the first and the other is second
-//							OutID singleBondoutId = thisFrag.getOutID(0);
-//							thisFrag.removeOutID(0);
-//							thisFrag.addOutID(id, outIDsSize -1, true);
-//							thisFrag.addOutID(singleBondoutId);
-//						}
-//					}else{
-//						for (int i = outIDs.size() -1; i >=0 ; i--) {
-//							thisFrag.removeOutID(outIDs.get(i));
-//						}
-//						thisFrag.addOutID(id, outIDsSize, true);
-//					}
-//				}
-//			}
-//			else if (possibleMultiplier.getLocalName().equals("multiplier") && outIDsSize==1){//special case where something like benzylidene is being used as if it meant benzdiyl for multiplicative nomenclature
-//				//this is allowed in the IUPAC 79 recommendations but not recommended in the current recommendations
-//				OutID outID =thisFrag.getOutID(0);
-//				if (outID.valency == Integer.parseInt(possibleMultiplier.getAttributeValue("value"))){
-//					Element parentWord =OpsinTools.getParentWord(group);
-//					Element root =parentWord.getFirstChildElement("root");
-//					if (!parentWord.getAttributeValue("type").equals("full")|| ((Element)root.getChild(0)).getLocalName().equals("multiplier")){//checks that the name appears to be multiplicative
-//						int value =outID.valency;
-//						if (outID.setExplicitly){
-//							thisFrag.getAtomByIDOrThrow(outID.id).addOutValency(-(outID.valency-1));//correct outValency
-//						}
-//						outID.valency=1;
-//						for (int i = 1; i < value; i++) {
-//							thisFrag.addOutID(outID.id, 1, outID.setExplicitly);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		System.out.println("OUDIDS" +thisFrag.getOutIDs().size());
-//		System.out.println(subOrRoot.toXML());
-	}
 
 	/**
 	 * Given the right most child of a word:

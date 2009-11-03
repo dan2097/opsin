@@ -32,9 +32,12 @@ class StructureBuilder {
 			throw new StructureBuildingException("Molecule contains no words!?");
 		}
 
-		if(wordRule.equals("simple") || wordRule.equals("acid")) {
+		if(wordRule.equals("simple")) {
 			Element word = molecule.getFirstChildElement("word");
 			resolveWordOrBracket(state, word);
+		}
+		else if (wordRule.equals("acid")){
+			buildAcid(state,words);//ethanoic acid
 		}
 		else if(wordRule.equals("ester") || wordRule.equals("diester")) {
 			buildEster(state, words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
@@ -135,6 +138,14 @@ class StructureBuilder {
 			//throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		return uniFrag;
+	}
+
+	private void buildAcid(BuildState state, Elements words) throws StructureBuildingException {
+		resolveWordOrBracket(state, words.get(0));
+		if (words.size()<2 || !words.get(1).getAttributeValue("type").equals("literal")){
+			throw new StructureBuildingException("literal word acid missing");
+		}
+		resolveTrailingFullWords(state, words, 2);
 	}
 
 	private void buildEster(BuildState state, Elements words) throws StructureBuildingException {
@@ -339,9 +350,7 @@ class StructureBuilder {
 			substituentBR.removeOutID(0);
 			ideAtom.setCharge(0);
 		}
-		if (wordIndice!=words.size()-1){
-			throw new StructureBuildingException("Unexpected extra words");
-		}
+		resolveTrailingFullWords(state, words, ++wordIndice);//e.g. ethyl chloride hydrochloride
 	}
 
 	private void buildMonovalentLiteralFunctionalGroup(BuildState state,Elements words) throws StructureBuildingException {
