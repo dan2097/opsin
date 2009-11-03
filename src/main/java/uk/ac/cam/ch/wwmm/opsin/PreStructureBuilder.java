@@ -11,7 +11,6 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
@@ -2055,7 +2054,7 @@ public class PreStructureBuilder {
 					throw new PostProcessingException("Invalid use of amine as a substituent!");
 				}
 			}
-			if (state.mode.equals(OpsinMode.poly)){
+			if (state.wordRule.equals("polymer")){
 				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
 					int valency =0;
 					for (int i = 2; i < outIDsSize; i++) {

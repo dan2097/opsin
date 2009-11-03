@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
-
 import dk.brics.automaton.RunAutomaton;
 
 import nu.xom.Element;
@@ -88,6 +86,7 @@ class WordRules {
 	private Pattern matchNonCapturing = Pattern.compile("\\?:");
 	private Pattern matchLookBehind = Pattern.compile("\\(\\?<\\!(([^(]+?\\))|(\\([^(]+?\\)\\)))");
 	private RunAutomaton allWordRulesRunAutomaton;
+	private Pattern matchPoly = Pattern.compile("(?:poly|oligo)[\\[\\(\\{](.+)[\\]\\)\\}]", Pattern.CASE_INSENSITIVE );//poly or oligo followed by a bracket name
 
 	/**Initialises the WordRules.
 	 * @param resourceGetter 
@@ -135,13 +134,15 @@ class WordRules {
 	 * wordRule should apply to it.
 	 *
 	 * @param p The Parse object containing the name, into which the results will be put.
-	 * @param mode 
 	 * @throws ParsingException
 	 */
-	void parse(Parse p, OpsinMode mode) throws ParsingException {
+	void parse(Parse p) throws ParsingException {
 		String chemicalName =p.name;
-		if (mode.equals(OpsinMode.poly)){//temporary kludge until wordRules system is rewritten
-			//TODO do this properly
+		
+		//TODO do this properly
+		Matcher polyMatcher = matchPoly.matcher(chemicalName);//temporary kludge until wordRules system is rewritten
+		if (polyMatcher.matches()){//Name is a polymer/oligomer name
+			chemicalName = polyMatcher.group(1);//strip off starting poly( and trailing closing bracket
 			String [] wordArray = chemicalName.split("\\s+");
 			if (wordArray.length==1){
 				p.wordRule="polymer";

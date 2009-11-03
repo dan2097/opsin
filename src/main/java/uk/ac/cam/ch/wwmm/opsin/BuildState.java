@@ -6,13 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
-
 import nu.xom.Element;
 
 /**
  * Used to pass the current mode, IDManager, FragmentManager and wordRule around as well as a mapping between the XML and fragments
- * Also contains which words appear to feature multiplicative nomenclature to aid in disambiguation
  *
  * @author dl387
  *
@@ -77,15 +74,13 @@ public class BuildState {
 	String wordRule;
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
-	OpsinMode mode;
 	boolean debug = false;
 
-	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, OpsinMode mode) {
+	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
 		idManager = new IDManager();
 		fragManager = new FragmentManager(sBuilder, cmlBuilder, idManager);
 		wordRule = null;
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
-		this.mode =mode;
 	}
 }

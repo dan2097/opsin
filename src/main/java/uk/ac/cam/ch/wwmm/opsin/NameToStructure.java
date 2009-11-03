@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import uk.ac.cam.ch.wwmm.opsin.PreProcessor.OpsinMode;
-import uk.ac.cam.ch.wwmm.opsin.PreProcessor.PreProcessorResults;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMFormatter;
 
 import nu.xom.Document;
@@ -142,14 +140,11 @@ public class NameToStructure {
 	 * @return An OPSIN fragment containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public synchronized Fragment parseToOpsinFragment(String name, boolean verbose) {
-		PreProcessorResults preProcRes = preProcessor.preProcess(name);
-		if (preProcRes ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
-		OpsinMode mode = preProcRes.getMode();
-		name = preProcRes.getChemicalName();
+		name = preProcessor.preProcess(name);
+		if (name ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
 		try {
-			if(verbose) System.out.println("Mode: " + mode);
 			if(verbose) System.out.println(name);
-			List<Element> p = parser.parse(name, mode);
+			List<Element> p = parser.parse(name);
 			//if(verbose) for(Element e : p) System.out.println(new XOMFormatter().elemToString(e));
 			Comparator<Element> sortParses= new SortParses();
 			Collections.sort(p, sortParses);//less tokens preferred
@@ -157,7 +152,7 @@ public class NameToStructure {
 			for(Element pe : p) {//foreach parse
 				try {
 					if(verbose) System.out.println(new XOMFormatter().elemToString(pe));
-					BuildState state = new BuildState(sBuilder, cmlBuilder, mode);
+					BuildState state = new BuildState(sBuilder, cmlBuilder);
 					Element pp = postProcessor.postProcess(pe, state);
 					if(pp != null) {
 						if(verbose) System.out.println(new XOMFormatter().elemToString(pp));

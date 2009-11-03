@@ -3,7 +3,7 @@
 <!-- The first regex to match the word is used, otherwise binaryOrOther is used -->
 <!--If more words are matched than are described the additional words are assumed to be of type full-->
 <wordRules>
-  <stringReplacement name="%subEnding%" value="(?:yl|o|xy|idene|ylene)"/>
+  <stringReplacement name="%subEnding%" value="(?:yl|o|xy|idene|ylene|ydrogen)"/>
   <stringReplacement name="%closeBracket%" value="(?:[\]\)\}])"/>
   <stringReplacement name="%substituent%" value="(?:[^ £]+%subEnding%%closeBracket%*)"/>
   <stringReplacement name="%multiplier%" value="(?:mono|di|tri|tetra|penta|hexa|hepta|octa|nona|deca)"/>
