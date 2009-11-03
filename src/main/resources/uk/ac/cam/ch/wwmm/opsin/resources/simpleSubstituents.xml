@@ -24,6 +24,7 @@
   <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
   <token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token>
   <token value="[H]" labels="none" valType="SMILES">hydro</token>
+  <token value="[H]" labels="none" valType="SMILES">hydrogen</token>
   <token value="[Se]" labels="none" valType="SMILES">hydroseleno</token>
   <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
   <token value="NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazido</token>

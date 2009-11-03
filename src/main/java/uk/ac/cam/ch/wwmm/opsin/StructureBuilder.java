@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
@@ -19,6 +20,8 @@ import static  uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 
+	private static Pattern matchDigits = Pattern.compile("\\d+");
+	
 	/**	Builds a molecule as a Fragment based on preStructurebuilder output.
 	 * @param state 
 	 * @param molecule The preStructurebuilderr output.
@@ -568,13 +571,7 @@ class StructureBuilder {
 		if (children.size()==1){
 			Element child =children.get(0);
 			if (child.getAttribute("locant")!=null){
-				String locant =child.getAttributeValue("locant");
-				if (!locant.matches("\\d+")){//FIXME accept numeric locants
-					return locant;
-				}
-				else{
-					return null;
-				}
+				return child.getAttributeValue("locant");
 			}
 			else{
 				return null;
@@ -600,33 +597,47 @@ class StructureBuilder {
 				return possibleAtom;
 			}
 		}
-		//None of the functional atoms had an appropriate locant. Look for the special case where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
-		for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
-			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
-			if (possibleAtom.getNote("ambiguousElementAssignment")!=null){
-				String[] atomIDs =possibleAtom.getNote("ambiguousElementAssignment").split(",");
-				for (int j = 0; j < atomIDs.length; j++) {
-					Atom a =mainGroupBR.getAtomByIdOrThrow(Integer.parseInt(atomIDs[j]));
-					if (a.hasLocant(locant)){
-						//swap locants and element type
-						List<String> tempLocants =new ArrayList<String>(a.getLocants());
-						List<String> tempLocants2 =new ArrayList<String>(possibleAtom.getLocants());
-						a.clearLocants();
-						possibleAtom.clearLocants();
-						for (String l : tempLocants) {
-							possibleAtom.addLocant(l);
+		if (matchDigits.matcher(locant).matches()){
+			//None of the functional atoms had an appropriate locant. Look for the case whether the locant refers to the backbone. e.g. 5-methyl 2-aminopentanedioate
+			for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
+				if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAtom, locant)!=null){
+					mainGroupBR.removeFunctionalID(i);
+					return possibleAtom;
+				}
+			}
+		}
+		else{
+			//None of the functional atoms had an appropriate locant. Look for the special case where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
+			for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
+				if (possibleAtom.getNote("ambiguousElementAssignment")!=null){
+					String[] atomIDs =possibleAtom.getNote("ambiguousElementAssignment").split(",");
+					for (int j = 0; j < atomIDs.length; j++) {
+						Atom a =mainGroupBR.getAtomByIdOrThrow(Integer.parseInt(atomIDs[j]));
+						if (a.hasLocant(locant)){
+							//swap locants and element type
+							List<String> tempLocants =new ArrayList<String>(a.getLocants());
+							List<String> tempLocants2 =new ArrayList<String>(possibleAtom.getLocants());
+							a.clearLocants();
+							possibleAtom.clearLocants();
+							for (String l : tempLocants) {
+								possibleAtom.addLocant(l);
+							}
+							for (String l : tempLocants2) {
+								a.addLocant(l);
+							}
+							String originalElement =possibleAtom.getElement();
+							possibleAtom.setElement(a.getElement());
+							a.setElement(originalElement);
+							mainGroupBR.removeFunctionalID(i);
+							return possibleAtom;
 						}
-						for (String l : tempLocants2) {
-							a.addLocant(l);
-						}
-						String originalElement =possibleAtom.getElement();
-						possibleAtom.setElement(a.getElement());
-						a.setElement(originalElement);
-						return possibleAtom;
 					}
 				}
 			}
 		}
+
 		throw new StructureBuildingException("Cannot find functional atom with locant: " +locant + " to form an ester with");
 	}
 	
