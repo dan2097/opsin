@@ -64,14 +64,13 @@ does not define a CFG.
   <regex name="%structuralCloseBracket%" value="Q"/>
   <regex name="%repeatableInlineSuffix%" value="w"/>
   <regex name="%FR2hydrocarbonComponent%" value="V"/>
-  <regex name="%FR2hydrocarbonComponente%" value="Ç"/>
   <regex name="%replacementInfix%" value="ü"/>
   <regex name="%endOfSubstituent%" value="é"/>
   <regex name="%endOfMainGroup%" value="â"/>
   <regex name="%interSubstituentHyphen%" value="ä"/>
   <regex name="%ane%" value="à"/>
   <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
-  <!--up to ascii 134 used so far -->
+  <!--up to ascii 134 used so far Ç unused -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.
@@ -94,9 +93,9 @@ does not define a CFG.
   <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
   <regex name="%bigCapitalH%" value="(%capitalH%)"/>
   <regex name="%hantzschWidmanRing%" value="((%newLocantGroupNoStartingHyphen%|(%optionalOpenBracket%%newLocantGroup%%optionalCloseBracket%))?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
-  <regex name="%fusor%" value="((%fusionRing%|%ring%%alkaneStem%|%annulen%%o%|%vonBaeyerMultiplier%(%FR2hydrocarbonComponent%|%FR2hydrocarbonComponente%)%o%|%hantzschWidmanRing%%o%)%fusionBracket%?)"/>
+  <regex name="%fusor%" value="((%fusionRing%|%ring%%alkaneStem%|%annulen%%o%|%vonBaeyerMultiplier%%FR2hydrocarbonComponent%%o%|%hantzschWidmanRing%%o%)%fusionBracket%?)"/>
   <regex name="%hwHeteroCycle%" value="(%bigCapitalH%?%fusor%*%hantzschWidmanRing%%e%?)"/>
-  <regex name="%newArylStem%" value="((%heteroReplacement%+%hydroGroup%?)?%bigCapitalH%?%newLocantGroupNoStartingHyphen%?%fusor%*((%arylStem%|%annulen%|%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)%e%?|%vonBaeyerMultiplier%%FR2hydrocarbonComponente%%e%))"/>
+  <regex name="%newArylStem%" value="((%heteroReplacement%+%hydroGroup%?)?%bigCapitalH%?%newLocantGroupNoStartingHyphen%?%fusor%*((%arylStem%|%annulen%|%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)%e%?))"/>
   <regex name="%alkaneRing%" value="((%heteroReplacement%*|%hydroGroup%?(%heteroReplacement%+%hydroGroup%?)?%bigCapitalH%?%fusor%*%ring%)%alkaneStem%)"/>
   <regex name="%alkane%" value="(%alkaneRing%|%heteroReplacement%*%irregularAlkaneStem%|%alkanen%%alkaneStem%)"/>
   <regex name="%heteroChain%" value="((%heteroReplacement%*(%cyclo%|%vonBaeyerMultiplier%%vonBaeyer%))?((%multiplier%%heteroStem%%unsaturation%+)|(%heteroStem%%ane%)))"/>

@@ -4,12 +4,10 @@
   <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V"><!--the a is part of the multiplier and the e is assumed to be optional -->
     <token value="polyacene">cen</token>
     <token value="polyalene">len</token>
+    <token value="polyaphene">phen</token><!--ambiguity between this and multiplier phenyl e.g. hexaphenylbenzene is resolved in the postprocessor generally in favour of phenyl-->
     <token value="polyphenylene">phenylen</token>
     <token value="polynaphthylene">naphthylen</token>
     <token value="polyhelicene">helicen</token>
-  </tokenList>
-  <tokenList tagname="hydrocarbonFusedRingSystem" symbol="Ç"><!--as above but an e is compulsory when not used as a fusion component to avoid confusion with tetraphenyl-->
-    <token value="polyaphene">phen</token>
   </tokenList>
   
   <tokenList tagname="cyclo" symbol="C">

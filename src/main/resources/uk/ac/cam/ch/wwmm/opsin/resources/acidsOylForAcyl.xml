@@ -62,14 +62,14 @@
 
   <!--P-67.1.1 IUPAC 2004 mononuclear acids-->
   <token value="[As]" labels="none" valType="SMILES">arsin</token>
-	<token value="[As]O" labels="none" valType="SMILES" usableAsAJoiner="yes">arson</token>
+	<token value="[As]O" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">arson</token>
   <token value="[N+]" labels="none" valType="SMILES">azin</token>
-  <token value="[N+]O" labels="none" valType="SMILES" usableAsAJoiner="yes">azon</token>
-  <token value="[N+](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes">azor</token>
+  <token value="[N+]O" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">azon</token>
+  <token value="[N+](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">azor</token>
   <token value="P" labels="none" valType="SMILES">phosphin</token>
-  <token value="PO" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphon</token>
+  <token value="PO" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">phosphon</token>
   <token value="[Sb]" labels="none" valType="SMILES">stibin</token>
-  <token value="[Sb]O" labels="none" valType="SMILES" usableAsAJoiner="yes">stibon</token>
+  <token value="[Sb]O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibon</token>
 
 
 </tokenList>

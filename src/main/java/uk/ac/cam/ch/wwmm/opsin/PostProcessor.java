@@ -133,7 +133,7 @@ class PostProcessor {
 		List<Element> multipliers = OpsinTools.findDescendantElementsWithTagName(elem, "multiplier");
 		for (Element apparentMultiplier : multipliers) {
 			Element nextEl = (Element)XOMTools.getNextSibling(apparentMultiplier);
-			if(nextEl !=null && nextEl.getLocalName().equals("group")){
+			if(nextEl !=null && nextEl.getLocalName().equals("group")){//detects ambiguous use of things like tetradeca
 				String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
 				HashMap<String, HashMap<Character, Token>> tokenDict =tokenManager.tokenDict;
 				HashMap<Character,Token> tokenMap = tokenDict.get(multiplierAndGroup);
@@ -143,6 +143,20 @@ class PostProcessor {
 							!isThisALocant.getLocalName().equals("locant") ||
 							isThisALocant.getValue().split(",").length != Integer.parseInt(apparentMultiplier.getAttributeValue("value"))){
 						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as two tokens!");
+					}
+				}
+			}
+			
+			if (nextEl !=null && nextEl.getLocalName().equals("hydrocarbonFusedRingSystem")&& nextEl.getValue().equals("phen")){
+				Element possibleSuffix = (Element) XOMTools.getNextSibling(nextEl);
+				if (possibleSuffix!=null){//null if not used as substituent
+					String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
+					if (possibleSuffix.getValue().equals("yl")){
+						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as one token!");
+					}
+					Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
+					if (isThisALocant != null && isThisALocant.getLocalName().equals("locant") && isThisALocant.getValue().split(",").length == Integer.parseInt(apparentMultiplier.getAttributeValue("value"))){
+						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as one token!");
 					}
 				}
 			}
