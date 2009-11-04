@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
-import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -36,14 +34,14 @@ class StructureBuildingMethods {
 		recursivelyResolveUnLocantedFeatures(state, word);
 		//TODO check all things that can substitute have outIDs
 		//TOOD think whether you can avoid the need to have a cansubstitute function by only using appropriate group
-		List<Element> subsBracketsAndRoots = OpsinTools.findDescendantElementsWithTagNames(word, new String[]{"bracket","substituent","root"});
+		List<Element> subsBracketsAndRoots = XOMTools.getDescendantElementsWithTagNames(word, new String[]{"bracket","substituent","root"});
 		for (int i = 0; i < subsBracketsAndRoots.size(); i++) {
 			Element subsBracketsAndRoot = subsBracketsAndRoots.get(i);
 			if (subsBracketsAndRoot.getAttribute("multiplier")!=null){
 				throw new StructureBuildingException("Structure building problem: multiplier on :" +subsBracketsAndRoot.getLocalName() + " was never used");
 			}
 		}
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(word, "group");
+		List<Element> groups = XOMTools.getDescendantElementsWithTagName(word, "group");
 		for (int i = 0; i < groups.size(); i++) {
 			Element group = groups.get(i);
 			if (group.getAttribute("resolved")==null && i!=groups.size()-1){
@@ -65,7 +63,7 @@ class StructureBuildingMethods {
 		if (!word.getLocalName().equals("word") && !word.getLocalName().equals("bracket")){
 			throw new StructureBuildingException("A word or bracket is the expected input");
 		}
-		List<Element> subsBracketsAndRoots = OpsinTools.findChildElementsWithTagNames(word, new String[]{"bracket","substituent","root"});
+		List<Element> subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(word, new String[]{"bracket","substituent","root"});
 		//substitution occurs left to right so by doing this right to left you ensure that any groups that will come into existence
 		//due to multipliers being expanded will be in existence
 		for (int i =subsBracketsAndRoots.size()-1; i>=0; i--) {
@@ -96,7 +94,7 @@ class StructureBuildingMethods {
 		if (!word.getLocalName().equals("word") && !word.getLocalName().equals("bracket")){
 			throw new StructureBuildingException("A word or bracket is the expected input");
 		}
-		List<Element> subsBracketsAndRoots = OpsinTools.findChildElementsWithTagNames(word, new String[]{"bracket","substituent","root"});
+		List<Element> subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(word, new String[]{"bracket","substituent","root"});
 		//substitution occurs left to right so by doing this right to left you ensure that any groups that will come into existence
 		//due to multipliers being expanded will be in existence
 		for (int i =subsBracketsAndRoots.size()-1; i>=0; i--) {
@@ -623,7 +621,7 @@ class StructureBuildingMethods {
 	 * @return
 	 */
 	private static boolean hasRootLikeOrMultiRadicalGroup(BuildState state, Element subBracketOrRoot) {
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(subBracketOrRoot, "group");
+		List<Element> groups = XOMTools.getDescendantElementsWithTagName(subBracketOrRoot, "group");
 		for (Element group : groups) {
 			Fragment frag =state.xmlFragmentMap.get(group);
 			int outIdCount =frag.getOutIDs().size();
@@ -802,11 +800,11 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Multiplicative nomenclarture cannot yield only one temporary terminal fragment");
 		}
 		if (newBr.getFragmentCount()>=2){
-			List<Element> siblings = OpsinTools.getNextSiblingsOfTypes(multipliedParent, new String[]{"substituent", "bracket", "root"});
+			List<Element> siblings = XOMTools.getNextSiblingsOfTypes(multipliedParent, new String[]{"substituent", "bracket", "root"});
 			if (siblings.size()==0){
 				Element parentOfMultipliedEl = (Element) multipliedParent.getParent();
 				if (parentOfMultipliedEl.getLocalName().equals("bracket")){//brackets are allowed
-					siblings = OpsinTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{"substituent", "bracket", "root"});
+					siblings = XOMTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{"substituent", "bracket", "root"});
 					if (siblings.get(0).getAttribute("multiplier")==null){
 						throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
 					}
@@ -848,7 +846,7 @@ class StructureBuildingMethods {
 		}
 		Element parent =(Element) substituentOrBracket.getParent();
 		
-		List<Element> children = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"substituent", "bracket", "root"});//will be returned in index order
+		List<Element> children = XOMTools.getChildElementsWithTagNames(parent, new String[]{"substituent", "bracket", "root"});//will be returned in index order
 		int indexOfSubstituent =parent.indexOf(substituentOrBracket);
 		for (Element child : children) {
 			if (parent.indexOf(child) <=indexOfSubstituent){//only want things after the input
@@ -859,7 +857,7 @@ class StructureBuildingMethods {
 			}
 			List<Element> childDescendants;
 			if (child.getLocalName().equals("bracket")){
-				childDescendants = OpsinTools.findDescendantElementsWithTagNames(child, new String[]{"substituent", "root"});//will be returned in depth-first order
+				childDescendants = XOMTools.getDescendantElementsWithTagNames(child, new String[]{"substituent", "root"});//will be returned in depth-first order
 			}
 			else{
 				childDescendants =new ArrayList<Element>();
@@ -892,7 +890,7 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Input to this function should be a bracket");
 		}
 		
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(bracket, "group");//will be returned in index order
+		List<Element> groups = XOMTools.getDescendantElementsWithTagName(bracket, "group");//will be returned in index order
 		for (Element group : groups) {
 			Fragment possibleFrag = state.xmlFragmentMap.get(group);
 			if (group.getAttribute("isAMultiRadical")!=null &&
@@ -1029,7 +1027,7 @@ class StructureBuildingMethods {
 				continue;
 			}
 			Element parent = (Element)currentElement.getParent();
-			List<Element> siblings = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"bracket", "substituent", "root"});
+			List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{"bracket", "substituent", "root"});
 	
 			for (Element bracketOrSub : siblings) {
 				if (bracketOrSub.getAttribute("multiplier")!=null){
@@ -1075,7 +1073,7 @@ class StructureBuildingMethods {
 				continue;
 			}
 			Element parent = (Element)currentElement.getParent();
-			List<Element> siblings = OpsinTools.findChildElementsWithTagNames(parent, new String[]{"bracket", "substituent", "root"});
+			List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{"bracket", "substituent", "root"});
 	
 			for (Element bracketOrSub : siblings) {
 				if (bracketOrSub.getAttribute("multiplier")!=null){
@@ -1098,9 +1096,9 @@ class StructureBuildingMethods {
 	}
 
 	static Element findRightMostGroupInBracket(Element bracket) {
-		List<Element> subsBracketsAndRoots = OpsinTools.findChildElementsWithTagNames(bracket, new String[]{"bracket","substituent","root"});
+		List<Element> subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(bracket, new String[]{"bracket","substituent","root"});
 		while (subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getLocalName().equals("bracket")){
-			subsBracketsAndRoots = OpsinTools.findChildElementsWithTagNames(subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1), new String[]{"bracket","substituent","root"});
+			subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1), new String[]{"bracket","substituent","root"});
 		}
 		return subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getFirstChildElement("group");
 	}
@@ -1190,7 +1188,7 @@ class StructureBuildingMethods {
 	 * @param primesString
 	 */
 	private static void addPrimesToLocantedStereochemistryElements(Element bracket, String primesString) {
-		List<Element> stereoChemistryElements =OpsinTools.findDescendantElementsWithTagName(bracket, "stereoChemistry");
+		List<Element> stereoChemistryElements =XOMTools.getDescendantElementsWithTagName(bracket, "stereoChemistry");
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getParent().equals(bracket)){continue;}
 			if (!getLocant(stereoChemistryElement).equals("0")){

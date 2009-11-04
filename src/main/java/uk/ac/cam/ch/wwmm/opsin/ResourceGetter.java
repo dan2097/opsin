@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,55 +8,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.JarURLConnection;
+import java.io.Reader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.jar.JarEntry;
 
 import nu.xom.Builder;
 import nu.xom.Document;
-import sun.net.www.protocol.file.FileURLConnection;
-import uk.ac.cam.ch.wwmm.ptclib.io.FileTools;
-import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 
-/**Gets resource files from packages. Useful for incuding data in JAR files.
+/**Gets resource files from packages. Useful for including data in JAR files.
+ * Cut down version of resourceGetter found in OSCAR
  * 
  * @author ptc24
  *
  */
 public final class ResourceGetter {
 
-	//private static Builder builder = new Builder();
 	String resourcePath;
 	String workspace;
-	String resourcePrefix;
-	
-	/**
-	 * Sets the current location of OPSIN. Paths to resources will be relative to this location.
-	 * @param workspace
-	 */
-	public void setWorkspace(String workspace) {
-		this.workspace = workspace;
-	}
-
-	/**
-	 * Sets a prefix to be added to the location of OPSIN resources. By default there is none.
-	 * @param resourcePrefix
-	 */
-	public void setResourcePrefix(String resourcePrefix) {
-		this.resourcePrefix = resourcePrefix;
-	}
-
-	private boolean skipFiles; 
+	String resourcePrefix = "none";
+	private boolean skipFiles = false; 
 	
 	/**Sets up a resourceGetter to get resources from a particular path.
 	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.ptclib.files.resources should be
@@ -66,60 +34,36 @@ public final class ResourceGetter {
 	 * @param resourcePath The /-separated resource path.
 	 */
 	public ResourceGetter(String resourcePath) {
-		this(resourcePath, false);
-	}
-	
-	/**Sets up a resourceGetter to get resources from a particular path.
-	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.ptclib.files.resources should be
-	 *  /uk/ac/cam/ch/wwmm/ptclib/files/resources/
-	 * 
-	 * @param resourcePath The /-separated resource path.
-	 * @param skipFiles Whether or not to skip reading files from the oscar3 workspace
-	 */
-	@SuppressWarnings("unchecked")
-	public ResourceGetter(String resourcePath, boolean skipFiles) {
-		this.skipFiles = skipFiles;
 		if(resourcePath.startsWith("/")) resourcePath = resourcePath.substring(1);
 		this.resourcePath = resourcePath;
-		
-		//checks for the prescence of Oscar3Props by reflection. If it is found workspace/resourcePrefix will derive from it instead of local values
-		Method oscar3PropsGetInstance;
-
-		// TODO Booo! Stealth cyclic dependency!
+		String currentWorkspace;
 		try {
-			Class oscar3PropsClass = Class.forName("uk.ac.cam.ch.wwmm.oscar3.Oscar3Props");
-			oscar3PropsGetInstance =oscar3PropsClass.getMethod("getInstance");
-		} catch(Exception e){
-			oscar3PropsGetInstance=null;
+			currentWorkspace =new File("").getCanonicalPath();
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to determine working directory");
 		}
+		this.workspace =currentWorkspace;
+	}
 
-		if (oscar3PropsGetInstance!=null){//OSCAR3 props appears to be present
-			try {
-				Object oscar3Props =oscar3PropsGetInstance.invoke(null);
-				Class c =oscar3Props.getClass();
-				try {
-					workspace = (String) c.getField("workspace").get(oscar3Props);
-				} catch (Exception e){
-					throw new RuntimeException("Error attempting to read workspace field in oscar3Props");
-				}
-				try {
-					resourcePrefix = (String) c.getField("resourcePrefix").get(oscar3Props);
-				}catch (Exception e){
-					throw new RuntimeException("Error attempting to read workspace field in oscar3Props");
-				}
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		} else {
-			try {
-				workspace =new File("").getCanonicalPath();
-			} catch (IOException e) {
-				throw new RuntimeException("Unable to determine working directory");
-			}
-			resourcePrefix="none";
-		}
+
+	/**
+	 * Sets up a resourceGetter to get resources from a particular path.
+	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.opsin.resources should be
+	 *  /uk/ac/cam/ch/wwmm/opsin/resources/
+	 * @param resourcePath The /-separated resource path.
+	 * @param skipFiles Whether or not to skip reading files from the oscar3 workspace
+	 * @param workspace
+	 * @param resourcePrefix
+	 */
+	public ResourceGetter(String resourcePath, boolean skipFiles, String workspace, String resourcePrefix) {
+		if(resourcePath.startsWith("/")) resourcePath = resourcePath.substring(1);
+		this.resourcePath = resourcePath;
+		this.skipFiles = skipFiles;
+		this.workspace = workspace;
+		this.resourcePrefix = resourcePrefix; 
+		
+		//workspace = (String) c.getField("workspace").get(oscar3Props);
+		//resourcePrefix = (String) c.getField("resourcePrefix").get(oscar3Props);
 	}
 	
 	private File getResDir() {
@@ -227,168 +171,6 @@ public final class ResourceGetter {
 		}
 	}
 	
-	/**Fetches a data file from resourcePath, and writes it as the given file. 
-	 * 
-	 * @param name The resource to write.
-	 * @param file The file to write it to.
-	 * @throws Exception If the files cannot be read or written.
-	 */
-	public void writeToFile(String name, File file) throws Exception {
-		FileOutputStream fos = new FileOutputStream(file);
-		FileTools.pipeStreamToStream(getStream(name), fos);
-		fos.close();
-	}
-
-	/**Copies the contents of the resourcePath into a new directory, recursively.
-	 * WARNING: the resources directory must not contain files with no dot in them,
-	 * as the presence/absence of a dot is taken to indicate whether or not a particular
-	 * resource is a directory or not.
-	 * 
-	 * @param file
-	 * @throws Exception
-	 */
-	public void writeDirRecursive(File file) throws Exception {
-		if(!file.exists()) file.mkdirs();
-		InputStream is = getStream("");
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String line = br.readLine();
-		while(line != null) {
-			if(line.contains(".")) {
-				writeToFile(line, new File(file, line));
-			} else {
-				ResourceGetter subRg = new ResourceGetter(resourcePath + line + "/");
-				subRg.writeDirRecursive(new File(file, line));
-			}
-			line = br.readLine();
-		}
-	}
-	
-	/**Fetches a data file from resourcePath as an InputStream, removes comments starting with \s#, and
-	 * returns each line in a list.
-	 * 
-	 * @param name The name of the file to get an InputStream of.
-	 * @return A List of Strings corresponding to the file.
-	 * @throws Exception If the resouce file couldn't be found.
-	 */	
-	public List<String> getStrings(String name) throws Exception {
-		return getStrings(name, true);
-	}
-
-	private List<String> getFilesFromClasspath() throws Exception {
-		List<String> files = new ArrayList<String>();
-		ClassLoader l = Thread.currentThread().getContextClassLoader();
-		Enumeration<URL> urls = l.getResources(resourcePath);
-		while(urls.hasMoreElements()) {
-			URL url = urls.nextElement();
-			URLConnection conn = url.openConnection();
-			if(conn instanceof JarURLConnection) {
-				JarURLConnection jconn = (JarURLConnection)conn;
-				if(jconn.getJarEntry().isDirectory()) {
-					Enumeration<JarEntry> entries = jconn.getJarFile().entries();
-					while(entries.hasMoreElements()) {
-						JarEntry entry = entries.nextElement();
-						String name = entry.getName();
-						if(name.startsWith(resourcePath)) {
-							String after = name.substring(resourcePath.length());
-							if(after.length() == 0) {
-								
-							} else if(!after.contains("/")) {
-								files.add(after);
-							} else if(after.matches("[^/]+/")) {
-								files.add(after.substring(0, after.length()-1));
-							}
-						}
-					}		
-				}
-			} else if(conn instanceof FileURLConnection) {
-				File f = new File(URLDecoder.decode(url.getPath(), "UTF-8"));
-				if(f.exists() && f.isDirectory()) {
-					File [] ff = f.listFiles();
-					for(int i=0;i<ff.length;i++) {
-						files.add(ff[i].getName());
-					}
-				}
-			}
-		}
-		return files;
-	}
-	
-	/**Gets a list of files that are available for this resourceGetter.
-	 * 
-	 * @return The available files.
-	 * @throws Exception
-	 */
-	public List<String> getFiles() throws Exception {
-		Set<String> seen = new LinkedHashSet<String>();
-		try {
-			seen.addAll(getFilesFromClasspath());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if(resourcePath.equals("/") || resourcePath.equals("")) {
-			seen.add("uk");
-		}
-		File resDir = getResDir();
-		if(resDir != null && resDir.exists() && resDir.isDirectory()) {
-			seen.addAll(StringTools.arrayToList(resDir.list()));
-		}
-		return new ArrayList<String>(seen);
-	}
-	
-	/**Fetches a data file from resourcePath as an InputStream, removes comments starting with \s#, and
-	 * returns each line in a list.
-	 * 
-	 * @param name The name of the file to get an InputStream of.
-	 * @param UTF8 Whether to load the strings in UTF8
-	 * @return A List of Strings corresponding to the file.
-	 * @throws Exception If the resouce file couldn't be found.
-	 */	
-	public List<String> getStrings(String name, boolean UTF8) throws Exception {
-		List<String> results = new ArrayList<String>();
-    	InputStream is = getStream(name);
-    	InputStreamReader isr;
-		if(UTF8) {
-    		isr = new InputStreamReader(is, "UTF-8");
-    	} else {
-    		isr = new InputStreamReader(is);
-    	}
-		BufferedReader br = new BufferedReader(isr);
-    	String line = br.readLine();
-    	while(line != null) {
-    		line = line.split("\\s*#")[0];
-    		if(line.length() == 0) {
-        		line = br.readLine();
-    			continue;
-    		}
-    		results.add(line);
-    		line = br.readLine();
-    	}
-    	return results;
-	}
-
-	/**Fetches a data file from resourcePath as an InputStream, removes comments starting with \s#, and
-	 * returns each line in a set.
-	 * 
-	 * @param name The name of the file to get an InputStream of.
-	 * @return A Set of Strings corresponding to the file.
-	 * @throws Exception If the resouce file couldn't be found.
-	 */	
-	public Set<String> getStringSet(String name) throws Exception {
-		Set<String> results = new HashSet<String>();
-    	BufferedReader br = new BufferedReader(new InputStreamReader(getStream(name), "UTF-8"));
-    	String line = br.readLine();
-    	while(line != null) {
-    		line = line.split("\\s*#")[0];
-    		if(line.length() == 0) {
-        		line = br.readLine();
-    			continue;
-    		}
-    		results.add(line);
-    		line = br.readLine();
-    	}
-    	return results;
-	}
-	
 	/**Fetches a data file from resourcePath, and returns the entire contents
 	 * as a string.
 	 * 
@@ -397,7 +179,21 @@ public final class ResourceGetter {
 	 * @throws Exception
 	 */
 	public String getString(String name) throws Exception {
-		return FileTools.readText(new InputStreamReader(getStream(name), "UTF-8"));
+		return readText(new InputStreamReader(getStream(name), "UTF-8"));
+	}
+	
+	/**Reads a text file into a single string.
+	 * 
+	 * @param r The Reader to read the text file.
+	 * @return The string.
+	 * @throws Exception
+	 */
+	public String readText(Reader r) throws Exception {
+		BufferedReader br = new BufferedReader(r);
+		StringBuffer sb = new StringBuffer();
+		while(br.ready()) sb.append((char)br.read());
+		br.close();
+		return sb.toString();
 	}
 	
 }

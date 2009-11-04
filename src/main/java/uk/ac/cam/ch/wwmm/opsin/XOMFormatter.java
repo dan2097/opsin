@@ -1,4 +1,4 @@
-package uk.ac.cam.ch.wwmm.ptclib.xml;
+package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

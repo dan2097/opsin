@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
-import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -95,7 +93,7 @@ class PostProcessor {
 		/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
 		resolveAmbiguities(elem);
 
-		List<Element> substituentsAndRoot = OpsinTools.findDescendantElementsWithTagNames(elem, new String[]{"substituent", "root"});
+		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(elem, new String[]{"substituent", "root"});
 
 		for (Element subOrRoot: substituentsAndRoot) {
 			processHeterogenousHydrides(subOrRoot);
@@ -103,7 +101,7 @@ class PostProcessor {
 			processStereochemistry(subOrRoot);
 			processInfixes(subOrRoot);
 		}
-		List<Element> groups =  OpsinTools.findDescendantElementsWithTagName(elem, "group");
+		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(elem, "group");
 
 		processHydroCarbonRings(elem);
 		for (Element group : groups) {
@@ -130,7 +128,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void resolveAmbiguities(Element elem) throws PostProcessingException {
-		List<Element> multipliers = OpsinTools.findDescendantElementsWithTagName(elem, "multiplier");
+		List<Element> multipliers = XOMTools.getDescendantElementsWithTagName(elem, "multiplier");
 		for (Element apparentMultiplier : multipliers) {
 			Element nextEl = (Element)XOMTools.getNextSibling(apparentMultiplier);
 			if(nextEl !=null && nextEl.getLocalName().equals("group")){//detects ambiguous use of things like tetradeca
@@ -162,7 +160,7 @@ class PostProcessor {
 			}
 		}
 
-		List<Element> fusions = OpsinTools.findDescendantElementsWithTagName(elem, "fusion");
+		List<Element> fusions = XOMTools.getDescendantElementsWithTagName(elem, "fusion");
 		for (Element fusion : fusions) {
 			if (matchNumberLocantsOnlyFusionBracket.matcher(fusion.getValue()).matches()){
 				Element nextGroup =(Element) XOMTools.getNextSibling(fusion, "group");
@@ -209,7 +207,7 @@ class PostProcessor {
 				if(multipliedElem.getLocalName().equals("heteroatom")){
 					Element possiblyAnotherHeteroAtom = (Element)XOMTools.getNextSibling(multipliedElem);
 					if (possiblyAnotherHeteroAtom !=null && possiblyAnotherHeteroAtom.getLocalName().equals("heteroatom")){
-						Element possiblyAnUnsaturator = OpsinTools.getNextIgnoringCertainElements(possiblyAnotherHeteroAtom, new String[]{"locant", "multiplier"});//typically ane but can be ene or yne e.g. triphosphaza-1,3-diene
+						Element possiblyAnUnsaturator = XOMTools.getNextSiblingIgnoringCertainElements(possiblyAnotherHeteroAtom, new String[]{"locant", "multiplier"});//typically ane but can be ene or yne e.g. triphosphaza-1,3-diene
 						if (possiblyAnUnsaturator !=null && possiblyAnUnsaturator.getLocalName().equals("unsaturator")){
 							//chain of alternating heteroatoms
 							int mvalue = Integer.parseInt(m.getAttributeValue("value"));
@@ -338,7 +336,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processInfixes(Element elem) throws PostProcessingException {
-		List<Element> infixes = OpsinTools.findDescendantElementsWithTagName(elem, "infix");
+		List<Element> infixes = XOMTools.getDescendantElementsWithTagName(elem, "infix");
 		for (Element infix : infixes) {
 			Element suffix = (Element) XOMTools.getNextSibling(infix);
 			if (suffix ==null || !suffix.getLocalName().equals("suffix")){
@@ -377,7 +375,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processHydroCarbonRings(Element elem) throws PostProcessingException {
-		List<Element> annulens = OpsinTools.findDescendantElementsWithTagName(elem, "annulen");
+		List<Element> annulens = XOMTools.getDescendantElementsWithTagName(elem, "annulen");
 		for (Element annulen : annulens) {
 			String annulenValue =annulen.getValue();
 	        Matcher match = matchAnnulene.matcher(annulenValue);
@@ -404,7 +402,7 @@ class PostProcessor {
 			annulen.getParent().replaceChild(annulen, group);
 		}
 
-		List<Element> hydrocarbonFRSystems = OpsinTools.findDescendantElementsWithTagName(elem, "hydrocarbonFusedRingSystem");
+		List<Element> hydrocarbonFRSystems = XOMTools.getDescendantElementsWithTagName(elem, "hydrocarbonFusedRingSystem");
 		for (Element hydrocarbonFRSystem : hydrocarbonFRSystems) {
 			Element multiplier = (Element)XOMTools.getPreviousSibling(hydrocarbonFRSystem);
 			if(multiplier != null && multiplier.getLocalName().equals("multiplier")) {
@@ -974,7 +972,7 @@ class PostProcessor {
 		String groupValue =group.getValue();
 		/* Benzyl, benzyloxy etc. Add a methylene */
 		if(groupValue.equals("benz")) {
-			Element possibleSuffix = OpsinTools.getNextIgnoringCertainElements(group, new String[]{"locant", "multiplier"});
+			Element possibleSuffix = XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{"locant", "multiplier"});
 			if (possibleSuffix !=null && possibleSuffix.getLocalName().equals("suffix")) {
 				group.getAttribute("value").setValue("Cc1ccccc1");
 				group.getAttribute("valType").setValue("SMILES");
@@ -1060,7 +1058,7 @@ class PostProcessor {
 				Element possibleLocant =(Element) XOMTools.getPreviousSibling(potentialRing, "locant");
 				if (possibleLocant !=null){
 					if (potentialRing.getAttribute("frontLocantsExpected")!=null){//check whether the group was expecting a locant e.g. 2-furyl
-						String locantValue =OpsinTools.removeDashIfPresent(possibleLocant.getValue());
+						String locantValue =StringTools.removeDashIfPresent(possibleLocant.getValue());
 						String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue("frontLocantsExpected"));
 						for (String expectedLocant : expectedLocants) {
 							if (locantValue.equals(expectedLocant)){
@@ -1071,7 +1069,7 @@ class PostProcessor {
 					}
 					//check whether the group is a HW system e.g. 1,3-thiazole
 					if (potentialRing.getAttributeValue("subType").equals("hantzschWidman")){
-						String locantValue =OpsinTools.removeDashIfPresent(possibleLocant.getValue());
+						String locantValue =StringTools.removeDashIfPresent(possibleLocant.getValue());
 						int locants = matchComma.split(locantValue).length;
 						int heteroCount = 0;
 						Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocant);
@@ -1152,7 +1150,7 @@ class PostProcessor {
 					if(blevel == 0) {
 						closeBracket = child;
 						Element bracket = structureBrackets(openBracket, closeBracket);
-						while(findAndStructureBrackets(OpsinTools.findDescendantElementsWithTagName(bracket, "substituent")));
+						while(findAndStructureBrackets(XOMTools.getDescendantElementsWithTagName(bracket, "substituent")));
 						return true;
 					}
 				}
@@ -1213,7 +1211,7 @@ class PostProcessor {
 	 */
 	private void addOmittedSpaces(BuildState state, Element elem) {
 		if (state.wordRule.equals("divalentLiteralFunctionalGroup")){
-			List<Element> substituentWords = OpsinTools.findChildElementsWithTagNameAndAttribute(elem, "word", "type", "substituent");
+			List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(elem, "word", "type", "substituent");
 			if (substituentWords.size()==1){//potentially been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
 				Elements children  =substituentWords.get(0).getChildElements();
 				if (children.size()==2){

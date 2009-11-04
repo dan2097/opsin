@@ -35,7 +35,7 @@ class BuildResults {
 		functionalIDs = new LinkedList<FunctionalID>();
 		inIDs = new LinkedList<InID>();
 		fragments = new LinkedHashSet<Fragment>();
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(wordSubOrBracket, "group");
+		List<Element> groups = XOMTools.getDescendantElementsWithTagName(wordSubOrBracket, "group");
 		for (Element group : groups) {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			fragments.add(frag);

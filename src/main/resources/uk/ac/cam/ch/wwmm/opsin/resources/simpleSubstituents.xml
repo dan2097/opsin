@@ -91,9 +91,6 @@
   <token value="Br" labels="none" valType="SMILES">bromo</token>
   <token value="Cl" labels="none" valType="SMILES">chloro</token>
   <token value="I" labels="none" valType="SMILES">iodo</token>
-  <token value="[Li]" labels="none" valType="SMILES">lithio</token>
-  <token value="[Na]" labels="none" valType="SMILES">sodio</token>
-  <token value="[K]" labels="none" valType="SMILES">potassio</token>
 
   <token value="F=O" labels="none" valType="SMILES">fluorosyl</token>
   <token value="Br=O" labels="none" valType="SMILES">bromosyl</token>
@@ -129,7 +126,7 @@
 
   <token value="P|5(=O)(O)(O)" labels="none" valType="SMILES">phosphono</token>
   <token value="P|5(=O)([O-])([O-])" labels="none" valType="SMILES">phosphonato</token>
-  <token value="P|5(=O)" labels="none" valType="SMILES">phosphinoyl</token><!--if generated systematically be OPSIN this wouldn't be explicitly valency 5-->
+  <token value="P|5(=O)" labels="none" valType="SMILES">phosphinoyl</token><!--if generated systematically by OPSIN this wouldn't be explicitly valency 5-->
   <token value="P|3" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
 
   <token value="[As|5](=O)(O)(O)" labels="none" valType="SMILES">arsono</token>
@@ -158,6 +155,110 @@
   <token value="C(=O)C(=O)OCC" labels="none" valType="SMILES">ethoxalyl</token>
 
   <token value="[Si](C)(C)C" labels="none" valType="SMILES">tms</token>
+
+  <token value="[Ac]" labels="none" valType="SMILES">actinio</token>
+  <token value="[Al]" labels="none" valType="SMILES">aluminio</token>
+  <token value="[Am]" labels="none" valType="SMILES">americio</token>
+  <token value="[Sb]" labels="none" valType="SMILES">antimonio</token>
+  <token value="[Ar]" labels="none" valType="SMILES">argonio</token>
+  <token value="[As]" labels="none" valType="SMILES">arsenio</token>
+  <token value="[At]" labels="none" valType="SMILES">astatio</token>
+  <token value="[Ba]" labels="none" valType="SMILES" usableAsAJoiner="yes">bario</token>
+  <token value="[Bk]" labels="none" valType="SMILES">berkelio</token>
+  <token value="[Be]" labels="none" valType="SMILES" usableAsAJoiner="yes">beryllio</token>
+  <token value="[Bi]" labels="none" valType="SMILES">bismuthio</token>
+  <token value="[B]" labels="none" valType="SMILES">borio</token>
+  <token value="[Br]" labels="none" valType="SMILES">bromio</token>
+  <token value="[Cd]" labels="none" valType="SMILES" usableAsAJoiner="yes">cadmio</token>
+  <token value="[Cs]" labels="none" valType="SMILES">caesio</token>
+  <token value="[Ca]" labels="none" valType="SMILES" usableAsAJoiner="yes">calcio</token>
+  <token value="[Cf]" labels="none" valType="SMILES">californio</token>
+  <token value="[Ce]" labels="none" valType="SMILES">cerio</token>
+  <token value="[Cl]" labels="none" valType="SMILES">chlorio</token>
+  <token value="[Cr]" labels="none" valType="SMILES">chromio</token>
+  <token value="[Co]" labels="none" valType="SMILES">cobaltio</token>
+  <token value="[Cu]" labels="none" valType="SMILES">cuprio</token>
+  <token value="[Cm]" labels="none" valType="SMILES">curio</token>
+  <token value="[Dy]" labels="none" valType="SMILES">dysprosio</token>
+  <token value="[Es]" labels="none" valType="SMILES">einsteinio</token>
+  <token value="[Er]" labels="none" valType="SMILES">erbio</token>
+  <token value="[Eu]" labels="none" valType="SMILES">europio</token>
+  <token value="[Fm]" labels="none" valType="SMILES">fermio</token>
+  <token value="[F]" labels="none" valType="SMILES">fluorio</token>
+  <token value="[Fr]" labels="none" valType="SMILES">francio</token>
+  <token value="[Gd]" labels="none" valType="SMILES">gadolinio</token>
+  <token value="[Ga]" labels="none" valType="SMILES">gallio</token>
+  <token value="[Ge]" labels="none" valType="SMILES">germanio</token>
+  <token value="[Au]" labels="none" valType="SMILES">aurio</token>
+  <token value="[Hf]" labels="none" valType="SMILES">hafnio</token>
+  <token value="[He]" labels="none" valType="SMILES">helio</token>
+  <token value="[Ho]" labels="none" valType="SMILES">holmio</token>
+  <token value="[In]" labels="none" valType="SMILES">indio</token>
+  <token value="[I]" labels="none" valType="SMILES">iodio</token>
+  <token value="[Ir]" labels="none" valType="SMILES">iridio</token>
+  <token value="[Fe]" labels="none" valType="SMILES">ferrio</token>
+  <token value="[Kr]" labels="none" valType="SMILES">kryptonio</token>
+  <token value="[La]" labels="none" valType="SMILES">lanthanio</token>
+  <token value="[Lr]" labels="none" valType="SMILES">lawrencio</token>
+  <token value="[Pb]" labels="none" valType="SMILES">plumbio</token>
+  <token value="[Li]" labels="none" valType="SMILES">lithio</token>
+  <token value="[Lu]" labels="none" valType="SMILES">lutetio</token>
+  <token value="[Mg]" labels="none" valType="SMILES" usableAsAJoiner="yes">magnesio</token>
+  <token value="[Mn]" labels="none" valType="SMILES">manganio</token>
+  <token value="[Md]" labels="none" valType="SMILES">mendelevio</token>
+  <token value="[Hg]" labels="none" valType="SMILES" usableAsAJoiner="yes">mercurio</token>
+  <token value="[Mo]" labels="none" valType="SMILES">molybdenio</token>
+  <token value="[Nd]" labels="none" valType="SMILES">neodymio</token>
+  <token value="[Ne]" labels="none" valType="SMILES">neonio</token>
+  <token value="[Np]" labels="none" valType="SMILES">neptunio</token>
+  <token value="[Ni]" labels="none" valType="SMILES">nickelio</token>
+  <token value="[Nb]" labels="none" valType="SMILES">niobio</token>
+  <token value="[No]" labels="none" valType="SMILES">nobelio</token>
+  <token value="[Os]" labels="none" valType="SMILES">osmio</token>
+  <token value="[Pd]" labels="none" valType="SMILES">palladio</token>
+  <token value="[P]" labels="none" valType="SMILES">phosphorio</token>
+  <token value="[Pt]" labels="none" valType="SMILES">platinio</token>
+  <token value="[Pu]" labels="none" valType="SMILES">plutonio</token>
+  <token value="[Po]" labels="none" valType="SMILES" usableAsAJoiner="yes">polonio</token>
+  <token value="[K]" labels="none" valType="SMILES">potassio</token>
+  <token value="[K]" labels="none" valType="SMILES">kalio</token>
+  <token value="[Pr]" labels="none" valType="SMILES">praseodymio</token>
+  <token value="[Pm]" labels="none" valType="SMILES">promethio</token>
+  <token value="[Pa]" labels="none" valType="SMILES">protactinio</token>
+  <token value="[Ra]" labels="none" valType="SMILES" usableAsAJoiner="yes">radio</token>
+  <token value="[Rn]" labels="none" valType="SMILES">radonio</token>
+  <token value="[Re]" labels="none" valType="SMILES">rhenio</token>
+  <token value="[Rh]" labels="none" valType="SMILES">rhodio</token>
+  <token value="[Rb]" labels="none" valType="SMILES">rubidio</token>
+  <token value="[Ru]" labels="none" valType="SMILES">ruthenio</token>
+  <token value="[Sm]" labels="none" valType="SMILES">samario</token>
+  <token value="[Sc]" labels="none" valType="SMILES">scandio</token>
+  <token value="[Se]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenio</token>
+  <token value="[Si]" labels="none" valType="SMILES">silicio</token>
+  <token value="[Ag]" labels="none" valType="SMILES">argentio</token>
+  <token value="[Na]" labels="none" valType="SMILES">sodio</token>
+  <token value="[Na]" labels="none" valType="SMILES">natrio</token>
+  <token value="[Sr]" labels="none" valType="SMILES" usableAsAJoiner="yes">strontio</token>
+  <token value="[S]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfurio</token>
+  <token value="[Ta]" labels="none" valType="SMILES">tantalio</token>
+  <token value="[Tc]" labels="none" valType="SMILES">technetio</token>
+  <token value="[Te]" labels="none" valType="SMILES" usableAsAJoiner="yes">tellurio</token>
+  <token value="[Tb]" labels="none" valType="SMILES">terbio</token>
+  <token value="[Tl]" labels="none" valType="SMILES">thallio</token>
+  <token value="[Th]" labels="none" valType="SMILES">thorio</token>
+  <token value="[Tm]" labels="none" valType="SMILES">thulio</token>
+  <token value="[Sn]" labels="none" valType="SMILES">stannio</token>
+  <token value="[Ti]" labels="none" valType="SMILES">titanio</token>
+  <token value="[W]" labels="none" valType="SMILES">tungstenio</token>
+  <token value="[W]" labels="none" valType="SMILES">wolframio</token>
+  <token value="[U]" labels="none" valType="SMILES">uranio</token>
+  <token value="[V]" labels="none" valType="SMILES">vanadio</token>
+  <token value="[Xe]" labels="none" valType="SMILES">xenonio</token>
+  <token value="[Yb]" labels="none" valType="SMILES">ytterbio</token>
+  <token value="[Y]" labels="none" valType="SMILES">yttrio</token>
+  <token value="[Zn]" labels="none" valType="SMILES" usableAsAJoiner="yes">zincio</token>
+  <token value="[Zr]" labels="none" valType="SMILES">zirconio</token>
+
 </tokenList>
 
 

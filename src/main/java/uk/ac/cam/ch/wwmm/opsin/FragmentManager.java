@@ -12,7 +12,6 @@ import java.util.Set;
 
 import nu.xom.Element;
 
-import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
 
 /** Holds the Fragments during the construction of the molecule,
  * and handles the building of new fragments.
@@ -601,8 +600,8 @@ class FragmentManager {
 	 */
 	Element cloneElement(BuildState state, Element elementToBeCloned, String stringToAddToAllLocants) throws StructureBuildingException {
 		Element clone = new Element(elementToBeCloned);
-		List<Element> originalGroups = OpsinTools.findDescendantElementsWithTagName(elementToBeCloned, "group");
-		List<Element> clonedGroups = OpsinTools.findDescendantElementsWithTagName(clone, "group");
+		List<Element> originalGroups = XOMTools.getDescendantElementsWithTagName(elementToBeCloned, "group");
+		List<Element> clonedGroups = XOMTools.getDescendantElementsWithTagName(clone, "group");
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
 		for (int i = 0; i < originalGroups.size(); i++) {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
