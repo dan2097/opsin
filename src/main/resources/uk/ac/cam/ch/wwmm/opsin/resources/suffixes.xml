@@ -9,9 +9,10 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="al">al</token>
     <token value="aldehyde">aldehyde</token>
     <token value="ic" additionalValue="aldehyde">aldehydic</token>
+    <token value="ate" additionalValue="amide">amate</token>
+    <token value="ic" additionalValue="amide">amic</token>
     <token value="amide">amide</token>
     <token value="amine">amine</token>
-    <token value="ic" additionalValue="amide">amic</token>
     <token value="ic" additionalValue="anilide">anilic</token>
     <token value="anilide">anilide</token>
     <token value="carbaldehyde">carbaldehyde</token>

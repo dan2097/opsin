@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import uk.ac.cam.ch.wwmm.ptclib.xml.XOMFormatter;
 
 import nu.xom.Document;
 import nu.xom.Element;
@@ -21,8 +20,8 @@ public class NameToStructure {
 
 	class SortParses implements Comparator<Element>{
 		public int compare(Element el1, Element el2){
-			int elementsInEl1 = OpsinTools.countDescendantElements(el1);
-			int elementsInEl2 = OpsinTools.countDescendantElements(el2);
+			int elementsInEl1 = XOMTools.countDescendantElements(el1);
+			int elementsInEl2 = XOMTools.countDescendantElements(el2);
 			if ( elementsInEl1> elementsInEl2){
 				return 1;
 			}

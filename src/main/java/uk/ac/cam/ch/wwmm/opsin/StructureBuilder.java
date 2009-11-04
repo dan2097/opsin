@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.ptclib.string.StringTools;
-import uk.ac.cam.ch.wwmm.ptclib.xml.XOMTools;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -313,7 +311,7 @@ class StructureBuilder {
 	private void buildMonovalentFunctionalGroup(BuildState state, Elements words) throws StructureBuildingException {
 		int wordIndice = resolvePreceedingFullWordsAndReturnNonFullIndice(state, words);
 		resolveWordOrBracket(state, words.get(wordIndice));
-		List<Element> groups = OpsinTools.findDescendantElementsWithTagName(words.get(0), "group");
+		List<Element> groups = XOMTools.getDescendantElementsWithTagName(words.get(0), "group");
 		for (Element group : groups) {//replaces outIDs with valency greater than 1 with multiple outIDs; e.g. ylidene -->diyl
 			Fragment frag = state.xmlFragmentMap.get(group);
 			for (int i = frag.getOutIDs().size()-1; i>=0; i--) {
@@ -447,7 +445,7 @@ class StructureBuilder {
 		if (!words.get(1).getAttributeValue("type").equals("literal")){//acid
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
-		int substituentCount = OpsinTools.findChildElementsWithTagNameAndAttribute((Element) words.get(0).getParent(), "word", "type", "substituent").size();
+		int substituentCount = XOMTools.getChildElementsWithTagNameAndAttribute((Element) words.get(0).getParent(), "word", "type", "substituent").size();
 		if (acidBr.getFunctionalIDCount() < substituentCount){
 			throw new StructureBuildingException("More substituents than acid functionalIDs detcted during amide construction!");
 		}
@@ -692,12 +690,12 @@ class StructureBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	private void matchStereochemistryToAtomsAndBonds(BuildState state, Element molecule) throws StructureBuildingException {
-		List<Element> stereoChemistryEls = OpsinTools.findDescendantElementsWithTagName(molecule, "stereoChemistry");
+		List<Element> stereoChemistryEls = XOMTools.getDescendantElementsWithTagName(molecule, "stereoChemistry");
 		for (Element stereoChemistryEl : stereoChemistryEls) {
 			String stereoChemistryType =stereoChemistryEl.getAttributeValue("type");
 			Element parent = (Element) stereoChemistryEl.getParent().getParent();//want to iterate at the level above the containing substituent or bracket
 			//generally the LAST group in this list will be the appropriate groups e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
-			List<Element> possibleGroups = OpsinTools.findDescendantElementsWithTagName(parent, "group");
+			List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, "group");
 			if (stereoChemistryType.equals("RorS")){
 				String locant = getLocant(stereoChemistryEl);
 				String rOrS = stereoChemistryEl.getAttributeValue("value");
@@ -712,9 +710,9 @@ class StructureBuilder {
 				if (a ==null && parent.getLocalName().equals("word") && parent.getAttributeValue("type").equals("substituent")){
 					//something like (3R,4R,5R)-ethyl 4-acetamido-5-amino-3-(pentan-3-yloxy)cyclohex-1-enecarboxylate
 					//I think this is a violation of the IUPAC rules...but anyway...
-					List<Element> words = OpsinTools.findChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), "word", "type", "full");
+					List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), "word", "type", "full");
 					wordLoop: for (Element word : words) {
-						possibleGroups = OpsinTools.findDescendantElementsWithTagName(word, "group");
+						possibleGroups = XOMTools.getDescendantElementsWithTagName(word, "group");
 						for (int i = possibleGroups.size()-1; i >=0; i--) {
 							a = state.xmlFragmentMap.get(possibleGroups.get(i)).getAtomByLocant(locant);
 							if (a !=null && a.getBonds().size()==4 && (a.getExplicitHydrogens()==null || a.getExplicitHydrogens()<=1)){
@@ -769,9 +767,9 @@ class StructureBuilder {
 				}
 				if ((a==null || b==null) && parent.getLocalName().equals("word") && parent.getAttributeValue("type").equals("substituent") ){
 					//the element is in front of a substituent and may refer to the full group
-					List<Element> words = OpsinTools.findChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), "word", "type", "full");
+					List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), "word", "type", "full");
 					wordLoop: for (Element word : words) {
-						possibleGroups = OpsinTools.findDescendantElementsWithTagName(word, "group");
+						possibleGroups = XOMTools.getDescendantElementsWithTagName(word, "group");
 						for (int i = possibleGroups.size()-1; i >=0; i--) {
 							a = state.xmlFragmentMap.get(possibleGroups.get(i)).getAtomByLocant(locant);
 							if (a !=null){

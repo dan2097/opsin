@@ -36,7 +36,7 @@ class CMLFragmentBuilder {
 	 * @throws StructureBuildingException If the fragment cannot be found, or multiple instances are detected,
 	 */
 	Fragment build(String id, String type, String subType, IDManager idManager) throws StructureBuildingException {
-		List<Element> toBuildElements = OpsinTools.findChildElementsWithTagNameAndAttribute(fragmentDoc.getRootElement(), "molecule", "id", id);
+		List<Element> toBuildElements = XOMTools.getChildElementsWithTagNameAndAttribute(fragmentDoc.getRootElement(), "molecule", "id", id);
 		if(toBuildElements.size() == 0) throw new StructureBuildingException("Fragment " + id + " could not be found in the fragments file.");
 		if(toBuildElements.size() > 1) throw new StructureBuildingException("Fragment " + id + " is not unique in the fragments file.");
 		Element cmlMol = toBuildElements.get(0);
