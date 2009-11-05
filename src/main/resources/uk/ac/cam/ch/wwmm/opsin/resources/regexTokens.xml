@@ -15,9 +15,10 @@
 
 <!--Assembles the rather large regex for detecting all locant variants-->
   <regexToken name="%cistrans%" regex="([rct]-)"/><!--relative/cis/trans descriptor-->
+  <regexToken name="%greek%" regex="(alpha|beta|gamma|delta|epsilon|zeta|eta)"/>
   <regexToken name="%locant%" regex="([1-9]\d*[a-z]?'*)"/><!--standard numeric locant with optional letter/primes-->
-  <regexToken name="%locantTypes%" regex="(%locant%|%elementSymbol%'*%locant%?)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4 etc.-->
-  <regexToken name="%locantTypesOptionalHyphen%" regex="([1-9]\d*([a-z]'+)?'*|%elementSymbol%'+|%elementSymbol%'*[1-9]\d*([a-z]'+)?'*)"/><!--subset that do not end with a letter-->
+  <regexToken name="%locantTypes%" regex="(%locant%|%elementSymbol%'*%locant%?|%greek%)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4 etc.-->
+  <regexToken name="%locantTypesOptionalHyphen%" regex="([1-9]\d*([a-z]'+)?'*|%elementSymbol%'+|%elementSymbol%'*[1-9]\d*([a-z]'+)?'*|%greek%)"/><!--subset that do not end with a letter-->
   <regexToken name="%indicatedHydrogen%" regex="(%locant%H)"/>
   <regexToken name="%compoundLocantOrIndicatedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
   <regexToken name="%allLocantForms%" regex="(%cistrans%?%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>

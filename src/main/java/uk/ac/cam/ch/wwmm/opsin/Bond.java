@@ -65,10 +65,24 @@ class Bond {
 	 */
 	Element toCMLBond() {
 		Element elem = new Element("bond");
+		elem.addAttribute(new Attribute("id", "a" + Integer.toString(from.getID())
+				+ "_a" + Integer.toString(to.getID())));
 		elem.addAttribute(new Attribute("atomRefs2", "a" + Integer.toString(from.getID())
 				+ " a" + Integer.toString(to.getID())));
-		elem.addAttribute(new Attribute("order", Integer.toString(order)));
+		if (order==1){
+			elem.addAttribute(new Attribute("order", "S"));
+		}
+		else if (order==2){
+			elem.addAttribute(new Attribute("order", "D"));
+		}
+		else if (order==3){
+			elem.addAttribute(new Attribute("order", "T"));
+		}
+		else{
+			elem.addAttribute(new Attribute("order", "unknown"));
+		}
 		if (bondStereoElement!=null){
+			bondStereoElement.addAttribute(new Attribute("convention","cmlDict:cistrans"));
 			elem.appendChild(bondStereoElement);
 		}
 		return elem;

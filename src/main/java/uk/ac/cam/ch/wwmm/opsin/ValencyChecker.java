@@ -49,10 +49,10 @@ class ValencyChecker {
 
 		//in order of priority in the HW system
 		valencyInHW = new HashMap<String, Integer>();
-		valencyInHW.put("F", 1);
-		valencyInHW.put("Cl", 1);
-		valencyInHW.put("Br", 1);
-		valencyInHW.put("I", 1);
+		valencyInHW.put("F", 3);//IUPAC says 1 for halogens, but this makes no sense as in a ring valency will never be 1
+		valencyInHW.put("Cl", 3);
+		valencyInHW.put("Br", 3);
+		valencyInHW.put("I", 3);
 		valencyInHW.put("O", 2);
 		valencyInHW.put("S", 2);
 		valencyInHW.put("Se", 2);

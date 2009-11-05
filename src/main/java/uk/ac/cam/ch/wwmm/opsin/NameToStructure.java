@@ -13,8 +13,8 @@ import nu.xom.Serializer;
 
 /** The "master" class, to turn a name into a structure.
  *
+ * @author dl387
  * @author ptc24
- *
  */
 public class NameToStructure {
 
@@ -118,7 +118,7 @@ public class NameToStructure {
 		else{
 			Element cml = null;
 			try{
-				cml = frag.toCMLMolecule();
+				cml = frag.toCMLMolecule(name);
 			}
 			catch (Exception e) {
 				if (verbose){

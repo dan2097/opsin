@@ -36,7 +36,7 @@ public class CMLFragmentBuilderTest {
 				"<bond atomRefs2=\"a4 a5\" order=\"1\" />" +
 				"<bond atomRefs2=\"a5 a6\" order=\"2\" />" +
 				"<bond atomRefs2=\"a6 a1\" order=\"1\" />" +
-				"</bondArray></molecule></cml>", benzene.toCMLMolecule().toXML());
+				"</bondArray></molecule></cml>", benzene.toCMLMolecule("benzene").toXML());
 	}
 
 }
