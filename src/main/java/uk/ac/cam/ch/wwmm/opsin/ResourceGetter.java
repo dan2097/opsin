@@ -27,9 +27,10 @@ public final class ResourceGetter {
 	String resourcePrefix = "none";
 	private boolean skipFiles = false; 
 	
-	/**Sets up a resourceGetter to get resources from a particular path.
-	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.ptclib.files.resources should be
-	 *  /uk/ac/cam/ch/wwmm/ptclib/files/resources/
+	/**
+	 * Sets up a resourceGetter to get resources from a particular path.
+	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.opsin.resources should be
+	 *  /uk/ac/cam/ch/wwmm/opsin/resources/
 	 * 
 	 * @param resourcePath The /-separated resource path.
 	 */

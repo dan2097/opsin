@@ -169,7 +169,7 @@ class Atom {
 		elem.addAttribute(new Attribute("elementType", element));
 		if(charge != 0)
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
-		if (explicitHydrogens!=null && explicitHydrogens==0){
+		if (explicitHydrogens!=null && explicitHydrogens==0){//prevent adding of implicit hydrogen
 			elem.addAttribute(new Attribute("hydrogenCount", "0"));
 		}
 		if(atomParityElement != null){
@@ -178,6 +178,7 @@ class Atom {
 		for(String l : locants) {
 			Element locant = new Element("label");
 			locant.addAttribute(new Attribute("value", l));
+			locant.addAttribute(new Attribute("dictRef", "cmlDict:locant" ));
 			elem.appendChild(locant);
 		}
 		return elem;

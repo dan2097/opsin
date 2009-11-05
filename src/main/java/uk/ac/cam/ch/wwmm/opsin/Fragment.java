@@ -87,14 +87,22 @@ class Fragment {
 	/**Produces a CML cml element, corresponding to the molecule. The cml element contains
 	 * a molecule, which contains an atomArray and bondArray filled with atoms and bonds.
 	 * The molecule element has a dummy id of m1.
+	 * @param chemicalName 
 	 *
 	 * @return The CML element.
 	 * @see Atom
 	 * @see Bond
 	 */
-	Element toCMLMolecule() {
+	Element toCMLMolecule(String chemicalName) {
 		Element cml = new Element("cml");
+		cml.addAttribute(new Attribute("convention","cmlDict:cmllite"));
+		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
+		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
 		Element molecule = new Element("molecule");
+		Element name = new Element("name");
+		name.appendChild(chemicalName);
+		name.addAttribute(new Attribute("dictRef","nameDict:unknown"));
+		molecule.appendChild(name);
 		molecule.addAttribute(new Attribute("id", "m1"));
 		Element atomArray = new Element("atomArray");
 		for(Atom atom : atomCollection) {
