@@ -71,6 +71,7 @@ class PostProcessor {
 	private Pattern matchAnnulene = Pattern.compile("\\[([1-9]\\d*)\\]annulen");
 	private Pattern matchStereochemistry = Pattern.compile("(\\d+[a-z]?)([RSEZrsez])");
 	private Pattern matchRS = Pattern.compile("[RSrs]");
+	private Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
 	private Pattern matchComma =Pattern.compile(",");
 	private Pattern matchDot =Pattern.compile("\\.");
 	private Pattern matchNonDigit =Pattern.compile("\\D+");
@@ -85,10 +86,10 @@ class PostProcessor {
 	 *
 	 * @param elem The element to postprocess.
 	 * @param state
-	 * @return The postprocessed element. The same as elem.
+	 * @return 
 	 * @throws Exception
 	 */
-	Element postProcess(Element elem, BuildState state) throws Exception {
+	void postProcess(Element elem, BuildState state) throws Exception {
 		state.wordRule=elem.getAttributeValue("wordRule");
 		/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
 		resolveAmbiguities(elem);
@@ -100,6 +101,7 @@ class PostProcessor {
 			processIndicatedHydrogens(subOrRoot);
 			processStereochemistry(subOrRoot);
 			processInfixes(subOrRoot);
+			processLambdaConvention(subOrRoot);
 		}
 		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(elem, "group");
 
@@ -118,8 +120,6 @@ class PostProcessor {
 		}
 
 		addOmittedSpaces(state, elem);//e.g. change ethylmethyl ether to ethyl methyl ether
-
-		return elem;
 	}
 
 	/**
@@ -367,6 +367,49 @@ class PostProcessor {
 				possibleBracket.detach();
 				bracket.detach();
 			}
+		}
+	}
+
+	/**
+	 * Identifies lambdaConvention elements.
+	 * The elementsValue is expected to be a comma seperated list of value of the following form:
+	 * optional locant, the word lambda and then a number (with possibly some attempt to indicate this number is superscripted)
+	 * @param subOrRoot
+	 * @throws PostProcessingException 
+	 */
+	private void processLambdaConvention(Element subOrRoot) throws PostProcessingException {
+		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
+		for (Element lambdaConventionEl : lambdaConventionEls) {
+			Element possibleHeteroAtom = (Element) XOMTools.getNextSibling(lambdaConventionEl);
+			if (possibleHeteroAtom!=null && possibleHeteroAtom.getLocalName().equals("heteroatom")){
+				throw new PostProcessingException("Currently unsupported");
+//				possibleHeteroAtom.addAttribute(valencyChange);
+//				if (locantAtr!=null){
+//					possibleHeteroAtom.addAttribute(locantAtr);
+//				}
+//				lambdaConventionEl.detach();
+			}
+			String[] lambdaValues = matchComma.split(lambdaConventionEl.getValue());
+			for (String lambdaValue : lambdaValues) {
+				Matcher m = matchLambdaConvention.matcher(lambdaValue);
+				if (m.matches()){
+					Attribute valencyChange = new Attribute("lambda", m.group(2));
+					Attribute locantAtr = null;
+					if (m.group(1)!=null){
+						locantAtr = new Attribute("locant", m.group(1));
+					}
+					Element newLambda = new Element("lambdaConvention");
+					newLambda.addAttribute(valencyChange);
+					if (locantAtr!=null){
+						newLambda.addAttribute(locantAtr);
+					}
+					XOMTools.insertBefore(lambdaConventionEl, newLambda);
+				}
+				else {
+					throw new PostProcessingException("malformed lamba convention element. This indicates a mismatch between this function and OPSIN's grammar in regexTokens.xml");
+				}
+			}
+			lambdaConventionEl.detach();
 		}
 	}
 

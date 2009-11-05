@@ -329,9 +329,12 @@ class StructureBuildingMethods {
 		for(int i=heteroatoms.size() -1;i >= 0;i--) {
 			Element heteroatom = heteroatoms.get(i);
 			String locant = getLocant(heteroatom);
-			String atomSMILES = heteroatom.getAttributeValue("value");
 			if(!locant.equals("0")) {
+				String atomSMILES = heteroatom.getAttributeValue("value");
 				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
+				if (heteroatom.getAttribute("lambda")!=null){
+					thisFrag.getAtomByLocantOrThrow(locant).setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+				}
 				heteroatoms.remove(heteroatom);
 				heteroatom.detach();
 			}
@@ -462,6 +465,9 @@ class StructureBuildingMethods {
 				}
 			}
 			state.fragManager.makeHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES, true);
+			if (heteroatom.getAttribute("lambda")!=null){
+				atomToReplaceWithHeteroAtom.setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+			}
 			defaultId++;
 			heteroatom.detach();
 		}

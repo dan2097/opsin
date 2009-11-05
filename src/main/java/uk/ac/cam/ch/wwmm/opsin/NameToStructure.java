@@ -143,26 +143,22 @@ public class NameToStructure {
 		if (name ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
 		try {
 			if(verbose) System.out.println(name);
-			List<Element> p = parser.parse(name);
+			List<Element> parses = parser.parse(name);
 			//if(verbose) for(Element e : p) System.out.println(new XOMFormatter().elemToString(e));
 			Comparator<Element> sortParses= new SortParses();
-			Collections.sort(p, sortParses);//less tokens preferred
+			Collections.sort(parses, sortParses);//less tokens preferred
 			Fragment frag = null;
-			for(Element pe : p) {//foreach parse
+			for(Element parse : parses) {
 				try {
-					if(verbose) System.out.println(new XOMFormatter().elemToString(pe));
+					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
 					BuildState state = new BuildState(sBuilder, cmlBuilder);
-					Element pp = postProcessor.postProcess(pe, state);
-					if(pp != null) {
-						if(verbose) System.out.println(new XOMFormatter().elemToString(pp));
-						Element psb = preStructureBuilder.postProcess(pp, state);
-						if(psb != null) {
-							if(verbose) System.out.println(new XOMFormatter().elemToString(psb));
-							frag = structureBuilder.buildFragment(state, psb);
-							if(verbose) System.out.println(new XOMFormatter().elemToString(pp));
-							break;
-						}
-					}
+					postProcessor.postProcess(parse, state);
+					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					preStructureBuilder.postProcess(state, parse);
+					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					frag = structureBuilder.buildFragment(state, parse);
+					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					break;
 				} catch (Exception e) {
 					if(verbose) e.printStackTrace();
 				}
