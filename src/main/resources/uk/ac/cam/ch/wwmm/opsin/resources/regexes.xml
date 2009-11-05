@@ -64,13 +64,14 @@ does not define a CFG.
   <regex name="%structuralCloseBracket%" value="Q"/>
   <regex name="%repeatableInlineSuffix%" value="w"/>
   <regex name="%FR2hydrocarbonComponent%" value="V"/>
+  <regex name="%lambdaConvention%" value="Ç"/>
   <regex name="%replacementInfix%" value="ü"/>
   <regex name="%endOfSubstituent%" value="é"/>
   <regex name="%endOfMainGroup%" value="â"/>
   <regex name="%interSubstituentHyphen%" value="ä"/>
   <regex name="%ane%" value="à"/>
   <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
-  <!--up to ascii 134 used so far Ç unused -->
+  <!--up to ascii 134 used -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.

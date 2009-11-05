@@ -12,6 +12,7 @@
   <regexToken name="%openBracket%" regex="[\[\(\{]"/>
   <regexToken name="%closeBracket%" regex="[\]\)\}]"/>
   <regexToken name="%locantNoPrime%" regex="([1-9]\d*[a-z]?)"/><!--standard numeric locant with optional letter-->
+  <regexToken name="%superScriptedNumber%" regex="\^\d+|\^?%openBracket%\d+%closeBracket%"/><!--either ^number of ^(number) of (number) currently-->
 
 <!--Assembles the rather large regex for detecting all locant variants-->
   <regexToken name="%cistrans%" regex="([rct]-)"/><!--relative/cis/trans descriptor-->
@@ -38,6 +39,7 @@
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes"/>
   <regexToken regex="n-" symbol="n" tagname="alkanen" /><!--case sensitive so must be a regex-->
   <regexToken regex="((?i:ortho|meta|para)|o|m|p)-" symbol="O" tagname="orthoMetaPara" />
+  <regexToken regex="(%locantTypes%?lambda(%superScriptedNumber%|\d+))(,%locantTypes%?lambda(%superScriptedNumber%|\d+))*-?" symbol="Ç" tagname="lambdaConvention" />
   <regexToken regex="%openBracket%" symbol="T" tagname="optionalOpenBracket" ignoreWhenWritingXML="yes"/>
   <regexToken regex="%closeBracket%" symbol="U" tagname="optionalCloseBracket" ignoreWhenWritingXML="yes"/>
   <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" />

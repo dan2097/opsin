@@ -122,10 +122,10 @@ public class PreStructureBuilder {
 	 * associated with each substituent/root. Multiplicative nomenclature can result in there being multiple roots
 	 *
 	 * @param elem The element to postprocess.
-	 * @return The postprocessed element. The same as elem.
+	 * @return 
 	 * @throws Exception
 	 */
-	Element postProcess(Element elem, BuildState state) throws Exception {
+	void postProcess(BuildState state, Element elem) throws Exception {
 		Elements words =elem.getChildElements("word");
 		for (int i = 0; i < words.size(); i++) {
 			Element word =words.get(i);
@@ -180,6 +180,7 @@ public class PreStructureBuilder {
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
+				applyLambdaConvention(state, subOrRoot);
 				handleMultiRadicals(state, subOrRoot);
 			}
 
@@ -205,8 +206,6 @@ public class PreStructureBuilder {
 			processWordLevelMultiplierIfApplicable(state, word);
 			
 		}
-
-		return elem;
 	}
 
 	/**Handles special features of locants e.g. ortho/meta/para, indicated hydrogen, cis/trans in locant
@@ -1777,6 +1776,9 @@ public class PreStructureBuilder {
 					}
 					Atom a =hwRing.getAtomByLocantOrThrow(locant);
 					a.setElement(elementReplacement);
+					if (heteroatom.getAttribute("lambda")!=null){
+						a.setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+					}
 					heteroatom.detach();
 					elementsToRemove.add(heteroatom);
 				}
@@ -1798,6 +1800,9 @@ public class PreStructureBuilder {
 				}
 				Atom a =hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant));
 				a.setElement(elementReplacement);
+				if (heteroatom.getAttribute("lambda")!=null){
+					a.setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+				}
 				heteroatom.detach();
 			}
 
@@ -1986,6 +1991,24 @@ public class PreStructureBuilder {
 		// TODO Auto-generated method stub
 
 	}
+
+	private void applyLambdaConvention(BuildState state, Element subOrRoot) throws StructureBuildingException {
+		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
+		for (Element lambdaConventionEl : lambdaConventionEls) {
+			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement("group"));
+			if (lambdaConventionEl.getAttribute("locant")!=null){
+				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue("locant")).setValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
+			}
+			else{
+				if (frag.getAtomList().size()!=1){
+					throw new StructureBuildingException("Ambiguous use of lambda convention. Fragment has more than 1 atom but no locant was specified for the lambda");
+				}
+				frag.getFirstAtom().setValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
+			}
+			lambdaConventionEl.detach();
+		}
+	}
+
 
 	/**
 	 * Uses the number of outIDs that are present to assign the number of outIDs on substituents that can have a variable number of outIDs
@@ -2404,7 +2427,7 @@ public class PreStructureBuilder {
 				for (int i = locants.size()-1; i >=0 ; i--) {
 					Element locant =locants.get(i);
 					String locantValue =locant.getAttributeValue("value");
-					if (!checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValue)){
+					if (i >0 || !checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValue)){//the first locant is most likely a locant indicating where this subsituent should be attached. If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
 						if (thisFrag.hasLocant(locantValue)){//locant not available elsewhere and is available on the group associated with this element
 							if (locantAble ==null){
 								//Find elements that can have locants but don't currently

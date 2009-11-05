@@ -368,23 +368,6 @@ class FragmentManager {
 	}
 
 	/**
-	 * Fixes things like quaternary nitrogen not being given positive charges
-	 * @throws StructureBuildingException
-	 */
-	void tidyUpFragments() throws StructureBuildingException {
-		for(Fragment f : fragPile) {
-			List<Atom> atomsInFrag=f.getAtomList();
-			for(Atom a : atomsInFrag){
-				if (a.getElement().equals("N") && a.getIncomingValency()==4 && a.getCharge()==0){
-					a.setCharge(1);
-				}
-			}
-		}
-	}
-
-
-
-	/**
 	 * Creates a copy of a fragment by copying data
 	 * labels the atoms using new ids from the idManager and adds to the fragManager in state
 	 * @param originalFragment

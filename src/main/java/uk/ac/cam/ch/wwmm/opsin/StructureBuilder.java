@@ -119,7 +119,6 @@ class StructureBuilder {
 //			}
 //		}
 
-		state.fragManager.tidyUpFragments();//FIXME remove this?
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
 		makeHydrogensExplicit(state);
@@ -349,7 +348,7 @@ class StructureBuilder {
 			Atom subAtom=substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			state.fragManager.attachFragments(ideAtom, subAtom, 1);
 			substituentBR.removeOutID(0);
-			ideAtom.setCharge(0);
+			ideAtom.setCharge(ideAtom.getCharge()+1);
 		}
 		resolveTrailingFullWords(state, words, ++wordIndice);//e.g. ethyl chloride hydrochloride
 	}
