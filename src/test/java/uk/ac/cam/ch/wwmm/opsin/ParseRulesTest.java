@@ -24,7 +24,7 @@ public class ParseRulesTest {
 		assertTrue("Regex is a decent size", regex.length() > 10);
 		assertFalse("Regex contains no %", regex.contains("%"));
 
-		TwoReturnValues returned = pr.getParses("hexane", "simple");
+		TwoReturnValues<List<ParseTokens>,Boolean> returned = pr.getParses("hexane", "simple");
 		List<ParseTokens> parseTokenList =returned.getFirst();
 		boolean interSubHyphenAllowed =returned.getSecond();
 		assertEquals("One lex", 1, parseTokenList.size());

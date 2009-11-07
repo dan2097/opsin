@@ -87,7 +87,7 @@ class BuildResults {
 	 */
 	Atom getOutAtomTakingIntoAccountWhetherSetExplicitly(int i) throws StructureBuildingException {
 		OutID outID = outIDs.get(i);
-		if (outID.setExplicitly==true){
+		if (outID.setExplicitly){
 			return getOutAtom(i);
 		}
 		else{

@@ -373,24 +373,41 @@ class PostProcessor {
 	/**
 	 * Identifies lambdaConvention elements.
 	 * The elementsValue is expected to be a comma seperated list of value of the following form:
-	 * optional locant, the word lambda and then a number (with possibly some attempt to indicate this number is superscripted)
+	 * optional locant, the word lambda and then a number which is the valency specified (with possibly some attempt to indicate this number is superscripted)
+	 * If the element is followed by heteroatoms (possibly multiplied) they are multiplied and the locant/lambda assigned to them
+	 * Otherwise a new lambdaConvention element is created with the valency specified by the lambda convention taking the attribute "lambda" 
 	 * @param subOrRoot
 	 * @throws PostProcessingException 
 	 */
 	private void processLambdaConvention(Element subOrRoot) throws PostProcessingException {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
 		for (Element lambdaConventionEl : lambdaConventionEls) {
-			Element possibleHeteroAtom = (Element) XOMTools.getNextSibling(lambdaConventionEl);
-			if (possibleHeteroAtom!=null && possibleHeteroAtom.getLocalName().equals("heteroatom")){
-				throw new PostProcessingException("Currently unsupported");
-//				possibleHeteroAtom.addAttribute(valencyChange);
-//				if (locantAtr!=null){
-//					possibleHeteroAtom.addAttribute(locantAtr);
-//				}
-//				lambdaConventionEl.detach();
-			}
 			String[] lambdaValues = matchComma.split(lambdaConventionEl.getValue());
-			for (String lambdaValue : lambdaValues) {
+			Element possibleHeteroatomOrMultiplier = (Element) XOMTools.getNextSibling(lambdaConventionEl);
+			List<Element> heteroatoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
+			if (possibleHeteroatomOrMultiplier!=null){
+				if (lambdaValues.length ==1 && possibleHeteroatomOrMultiplier.getLocalName().equals("heteroatom")){
+					heteroatoms.add(possibleHeteroatomOrMultiplier);
+				}
+				else if (possibleHeteroatomOrMultiplier.getLocalName().equals("multiplier")){
+					int multiplier = Integer.parseInt(possibleHeteroatomOrMultiplier.getAttributeValue("value"));
+					if (multiplier==lambdaValues.length){
+						Element possibleHeteroatom = (Element) XOMTools.getNextSibling(possibleHeteroatomOrMultiplier);
+						if (possibleHeteroatom !=null && possibleHeteroatom.getLocalName().equals("heteroatom")){
+							heteroatoms.add(possibleHeteroatom);
+							for (int i = 1; i < multiplier; i++) {
+								Element newHeteroAtom =new Element(possibleHeteroatom);
+								XOMTools.insertAfter(possibleHeteroatom, newHeteroAtom);
+								heteroatoms.add(newHeteroAtom);
+							}
+							possibleHeteroatomOrMultiplier.detach();
+						}
+					}
+				}
+			}
+
+			for (int i = 0; i < lambdaValues.length; i++) {
+				String lambdaValue = lambdaValues[i];
 				Matcher m = matchLambdaConvention.matcher(lambdaValue);
 				if (m.matches()){
 					Attribute valencyChange = new Attribute("lambda", m.group(2));
@@ -398,12 +415,21 @@ class PostProcessor {
 					if (m.group(1)!=null){
 						locantAtr = new Attribute("locant", m.group(1));
 					}
-					Element newLambda = new Element("lambdaConvention");
-					newLambda.addAttribute(valencyChange);
-					if (locantAtr!=null){
-						newLambda.addAttribute(locantAtr);
+					if (heteroatoms.size()==0){
+						Element newLambda = new Element("lambdaConvention");
+						newLambda.addAttribute(valencyChange);
+						if (locantAtr!=null){
+							newLambda.addAttribute(locantAtr);
+						}
+						XOMTools.insertBefore(lambdaConventionEl, newLambda);
 					}
-					XOMTools.insertBefore(lambdaConventionEl, newLambda);
+					else{
+						Element heteroAtom = heteroatoms.get(i);
+						heteroAtom.addAttribute(valencyChange);
+						if (locantAtr!=null){
+							heteroAtom.addAttribute(locantAtr);
+						}
+					}
 				}
 				else {
 					throw new PostProcessingException("malformed lamba convention element. This indicates a mismatch between this function and OPSIN's grammar in regexTokens.xml");
@@ -979,7 +1005,7 @@ class PostProcessor {
 					}
 
 					String SMILES;
-					if (conjugate==true){
+					if (conjugate){
 						//will have conjugated double bonds as is dictated by fusion nomenclature
 						SMILES = "c1" + StringTools.multiplyString("c", chainlen -1) + "1";
 					}

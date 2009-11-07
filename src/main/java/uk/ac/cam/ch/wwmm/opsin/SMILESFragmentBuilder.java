@@ -566,22 +566,12 @@ class SMILESFragmentBuilder {
 									atom4 = followingBond.getFromAtom();
 								}
 								bondStereoEl.addAttribute(new Attribute("atomRefs4", "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
-								Boolean upFirst = null;
+								Boolean upFirst;
 								if (preceedingBond.getStereochemistry().equals("\\")){
-									if (preceedingBond.getToAtom() == atom2){//in normally constructed SMILES this will be the case but you could write C(/F)=C/F instead of F\C=C/F
-										upFirst = true;
-									}
-									else{
-										upFirst = false;
-									}
+									upFirst = preceedingBond.getToAtom() == atom2;//in normally constructed SMILES this will be the case but you could write C(/F)=C/F instead of F\C=C/F
 								}
 								else if (preceedingBond.getStereochemistry().equals("/")){
-									if (preceedingBond.getToAtom() == atom2){
-										upFirst = false;
-									}
-									else{
-										upFirst = true;
-									}
+									upFirst = preceedingBond.getToAtom() != atom2;
 								}
 								else{
 									throw new StructureBuildingException(preceedingBond.getStereochemistry() + " is not a slash!");
@@ -589,20 +579,10 @@ class SMILESFragmentBuilder {
 								
 								Boolean upSecond = null;
 								if (followingBond.getStereochemistry().equals("\\")){
-									if (followingBond.getFromAtom() == atom3){
-										upSecond = false;
-									}
-									else{
-										upSecond = true;
-									}
+									upSecond = followingBond.getFromAtom() != atom3;
 								}
 								else if (followingBond.getStereochemistry().equals("/")){
-									if (followingBond.getFromAtom() == atom3){
-										upSecond = true;
-									}
-									else{
-										upSecond = false;
-									}
+									upSecond = followingBond.getFromAtom() == atom3;
 								}
 								else{
 									throw new StructureBuildingException(followingBond.getStereochemistry() + " is not a slash!");

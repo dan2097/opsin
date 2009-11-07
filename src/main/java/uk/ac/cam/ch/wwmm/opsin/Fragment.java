@@ -154,7 +154,7 @@ class Fragment {
 	 */
 	void addBond(Bond bond, boolean associateWithAtoms) {
 		bondList.add(bond);
-		if (associateWithAtoms ==true){
+		if (associateWithAtoms){
 			bond.getFromAtom().addBond(bond);
 			bond.getToAtom().addBond(bond);
 		}
@@ -598,7 +598,7 @@ class Fragment {
 			if(b.getOrder() > 1) {
 				Atom firstAtom =b.getFromAtom();
 				Atom secondAtom =b.getToAtom();
-				if (firstAtom.getAtomIsInACycle()==true && secondAtom.getAtomIsInACycle()==true){
+				if (firstAtom.getAtomIsInACycle() && secondAtom.getAtomIsInACycle()){
 					int orderExtra = b.getOrder() - 1;
 					b.setOrder(1);
 					firstAtom.addSpareValency(orderExtra);
@@ -931,12 +931,7 @@ class Fragment {
 	 * @throws StructureBuildingException 
 	 */
 	boolean hasLocant(String locant) throws StructureBuildingException {
-		if (getAtomByLocant(locant)!=null){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return getAtomByLocant(locant)!=null;
 	}
 
 	Integer getIndicatedHydrogen() {
@@ -988,13 +983,13 @@ class Fragment {
 				continue;
 			}
 			if (takeIntoAccountOutValency){
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getSpareValency() + currentAtom.getOutValency()) == true){
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getSpareValency() + currentAtom.getOutValency())){
 					flag=1;
 					break;
 				}
 			}
 			else{
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getSpareValency()) == true){
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getSpareValency())){
 					flag=1;
 					break;
 				}
@@ -1018,13 +1013,13 @@ class Fragment {
 					continue;
 				}
 				if (takeIntoAccountOutValency){
-					if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getOutValency()) == true){
+					if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getOutValency())){
 						flag=1;
 						break;
 					}
 				}
 				else{
-					if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired) == true){
+					if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired)){
 						flag=1;
 						break;
 					}

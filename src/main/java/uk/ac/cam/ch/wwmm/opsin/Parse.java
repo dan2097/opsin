@@ -14,13 +14,19 @@ class Parse {
 	/**The rule detailing the arrangement of words within the name.*/
 	String wordRule;
 	/**The words within the name, and their parsing data.*/
-	List<ParseWord> words;
+	List<ParseWord> words = new ArrayList<ParseWord>();
 	
+	/**
+	 * Creates a parse object for a chemicalName
+	 * @param chemicalName
+	 */
+	public Parse(String chemicalName) {
+		this.name = chemicalName;
+	}
+
 	Parse deepCopy() {
-		Parse p = new Parse();
-		p.name = name;
+		Parse p = new Parse(name);
 		p.wordRule = wordRule;
-		p.words = new ArrayList<ParseWord>();
 		for(ParseWord pw : words) {
 			p.words.add(pw.deepCopy());
 		}

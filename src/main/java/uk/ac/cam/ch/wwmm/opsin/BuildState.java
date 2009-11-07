@@ -15,10 +15,18 @@ import nu.xom.Element;
  *
  */
 public class BuildState {
+	
+	IDManager idManager;
+	FragmentManager fragManager;
+	String wordRule;
+	BiDirectionalHashMap xmlFragmentMap;
+	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
+	boolean debug = false;
+	
 	/**
 	 * Wrapper class for returning multiple objects
 	 */
-	final class BiDirectionalHashMap implements Map<Element, Fragment>{
+	final static class BiDirectionalHashMap implements Map<Element, Fragment>{
 		HashMap<Element, Fragment> xmlFragmentMap = new HashMap<Element, Fragment>();
 		HashMap<Fragment, Element> fragmentXmlMap = new HashMap<Fragment, Element>();
 		public void clear() {
@@ -68,13 +76,6 @@ public class BuildState {
 			return fragmentXmlMap.get(key);
 		}
 	}
-
-	IDManager idManager;
-	FragmentManager fragManager;
-	String wordRule;
-	BiDirectionalHashMap xmlFragmentMap;
-	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
-	boolean debug = false;
 
 	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
 		idManager = new IDManager();

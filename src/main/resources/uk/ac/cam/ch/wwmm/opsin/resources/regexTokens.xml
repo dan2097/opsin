@@ -26,6 +26,9 @@
   <regexToken name="%formsWhereHyphenIsOptional%" regex="(%cistrans%?(%locantTypes%%compoundLocantOrIndicatedHydrogen%|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" />
 
+  <regexToken name = "%lambdaConvention%" regex="(%locantTypes%?lambda(%superScriptedNumber%|\d+))" />
+  <regexToken regex="%lambdaConvention%(,%lambdaConvention%)*-?" symbol="Ç" tagname="lambdaConvention" />
+
   <regexToken regex="-" symbol="h" tagname="hyphen" ignoreWhenWritingXML="yes"/>
   <regexToken regex="-" symbol="ä" tagname="hyphen"/>
   <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" />
@@ -39,7 +42,6 @@
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes"/>
   <regexToken regex="n-" symbol="n" tagname="alkanen" /><!--case sensitive so must be a regex-->
   <regexToken regex="((?i:ortho|meta|para)|o|m|p)-" symbol="O" tagname="orthoMetaPara" />
-  <regexToken regex="(%locantTypes%?lambda(%superScriptedNumber%|\d+))(,%locantTypes%?lambda(%superScriptedNumber%|\d+))*-?" symbol="Ç" tagname="lambdaConvention" />
   <regexToken regex="%openBracket%" symbol="T" tagname="optionalOpenBracket" ignoreWhenWritingXML="yes"/>
   <regexToken regex="%closeBracket%" symbol="U" tagname="optionalCloseBracket" ignoreWhenWritingXML="yes"/>
   <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" />

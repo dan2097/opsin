@@ -85,10 +85,8 @@ class Parser {
 	 * @throws ParsingException If the name is unparsable.
 	 */
 	List<Element> parse(String name) throws ParsingException {
-		Parse p = new Parse();
-		p.name = name;
-		p.words = new ArrayList<ParseWord>();
-		wordRules.parse(p);
+		Parse p = new Parse(name);//TODO make parser/parseword/parsetokens fields need getters/setters
+		wordRules.parse(p);//populates the words and wordRule field of the parse
 
 		List<Integer> parseCounts = new ArrayList<Integer>();
 		int totalParses = 1;
@@ -98,7 +96,7 @@ class Parser {
 			if(pw.wordType.equals("literal")) {
 				parseCounts.add(1);
 			} else {
-				TwoReturnValues returned = parseRules.getParses(pw.word, pw.wordType);
+				TwoReturnValues<List<ParseTokens>,Boolean> returned = parseRules.getParses(pw.word, pw.wordType);
 				pw.parseTokens =returned.getFirst();
 				if (pw.parseTokens.size()>128){
 					throw new ParsingException("Too many parses generated, the current limit is 128: " + pw.parseTokens.size());
@@ -107,7 +105,7 @@ class Parser {
 				if (pw.parseTokens.size()==0 && p.wordRule.equals("binaryOrOther")){
 					if (j +1 <p.words.size()){
 						ParseWord nextWord =p.words.get(j+1);
-						if(interSubHyphenAllowed ==true && !nextWord.word.startsWith("-")){
+						if(interSubHyphenAllowed && !nextWord.word.startsWith("-")){
 							pw.word+="-";//only add a - if the word is lexable up to this point and allows a hyphen as it's next character
 						}
 						pw.word+=nextWord.word;

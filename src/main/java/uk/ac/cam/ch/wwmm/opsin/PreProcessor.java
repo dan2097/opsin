@@ -14,20 +14,24 @@ import java.util.regex.Pattern;
  */
 class PreProcessor {
 	//private Pattern semiColon =Pattern.compile(";");
-	private Pattern matchDollar = Pattern.compile("\\$");
-
-	private HashMap<String, String> letterGreekMap = new HashMap<String, String>();
 	
-	public PreProcessor() {
-		letterGreekMap.put("a", "alpha");
-		letterGreekMap.put("b", "beta");
-		letterGreekMap.put("g", "gamma");
-		letterGreekMap.put("d", "delta");
-		letterGreekMap.put("e", "epsilon");
+	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
+	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
+	
+	private static final String AMINE = "amine";
+	private static final String THIOL = "thiol";
+	private static final String CARBOXYLIC_ACID = "carboxylic acid";
+	
+	static {
+		GREEK_MAP.put("a", "alpha");
+		GREEK_MAP.put("b", "beta");
+		GREEK_MAP.put("g", "gamma");
+		GREEK_MAP.put("d", "delta");
+		GREEK_MAP.put("e", "epsilon");
 //		letterGreekMap.put("z", "zeta");
 //		letterGreekMap.put("i", "iota");
 //		letterGreekMap.put("k", "kappa");
-		letterGreekMap.put("l", "lambda");
+		GREEK_MAP.put("l", "lambda");
 //		letterGreekMap.put("m", "mu");
 //		letterGreekMap.put("n", "nu");
 //		letterGreekMap.put("x", "xi");
@@ -47,19 +51,20 @@ class PreProcessor {
 	 */
 	String preProcess(String chemicalName) {
 		chemicalName=chemicalName.trim();//remove leading and trailing whitespace
-		if (chemicalName.equals("")){return null;}
-		if("amine".equalsIgnoreCase(chemicalName)) return null;//trigenericammonia
-		if("thiol".equalsIgnoreCase(chemicalName)) return null;//genericsulfane
-		if("carboxylic acid".equalsIgnoreCase(chemicalName)) return null;//genericmethanoic acid
+		if ("".equals(chemicalName)){return null;}
+
+		if(AMINE.equalsIgnoreCase(chemicalName)) {return null;}//trigenericammonia
+		if(THIOL.equalsIgnoreCase(chemicalName)) {return null;}//genericsulfane
+		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {return null;}//genericmethanoic acid
 		//Alcohol Aldehyde Alkane Alkene Alkyne Amide Amine Azo compound Benzene derivative Carboxylic acid Cyanate Disulfide Ester Ether Haloalkane Hydrazone Imine Isocyanide Isocyanate Ketone Oxime Nitrile Nitro compound Nitroso compound Peroxide Phosphoric acid Pyridine derivative Sulfone Sulfonic acid Sulfoxide Thioester Thioether Thiol
 		
-		Matcher m = matchDollar.matcher(chemicalName);
+		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
 		while (m.find()){
 			if (chemicalName.length()>m.end()){
 				String letter = chemicalName.substring(m.end(), m.end()+1).toLowerCase();
-				if (letterGreekMap.containsKey(letter)){
-					chemicalName = chemicalName.substring(0, m.end()-1) +letterGreekMap.get(letter) +  chemicalName.substring(m.end()+1);
-					m = matchDollar.matcher(chemicalName);
+				if (GREEK_MAP.containsKey(letter)){
+					chemicalName = chemicalName.substring(0, m.end()-1) +GREEK_MAP.get(letter) +  chemicalName.substring(m.end()+1);
+					m = MATCH_DOLLAR.matcher(chemicalName);
 				}
 			}
 		}
