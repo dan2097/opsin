@@ -298,7 +298,7 @@ class Atom {
 	void removeElementSymbolLocants() {
 		for (int i = locants.size()-1; i >=0; i--) {
 			String l =locants.get(i);
-			if (matchElementSymbolLocant.matcher(l).matches()==true){
+			if (matchElementSymbolLocant.matcher(l).matches()){
 				frag.removeMappingFromAtomLocantMap(l);
 				locants.remove(i);
 			}
@@ -358,7 +358,7 @@ class Atom {
 		ArrayList<String> elementSymbolLocants =new ArrayList<String>();
 		for (int i = 0; i <locants.size(); i++) {
 			String l =locants.get(i);
-			if (matchElementSymbolLocant.matcher(l).matches()==true){
+			if (matchElementSymbolLocant.matcher(l).matches()){
 				elementSymbolLocants.add(l);
 			}
 		}

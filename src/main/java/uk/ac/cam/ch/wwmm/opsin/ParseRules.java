@@ -34,25 +34,30 @@ class ParseRules {
 	}
 
 	/**
-	 * Wrapper class for returning multiple objects
+	 * Wrapper class for returning two objects
 	 */
-	final class TwoReturnValues {
-		final List<ParseTokens> first;
-		final boolean second;
-
-		public TwoReturnValues(List<ParseTokens> first, boolean second) {
-			this.first = first;
-			this.second = second;
-		}
-
-		public List<ParseTokens> getFirst() {
-			return first;
-		}
-
-		public boolean getSecond() {
-			return second;
-		}
+	final class TwoReturnValues<T, S>{
+	  public TwoReturnValues(T f, S s){ 
+	    first = f;
+	    second = s;   
+	  }
+	 
+	  public T getFirst(){
+	    return first;
+	  }
+	 
+	  public S getSecond()   {
+	    return second;
+	  }
+	 
+	  public String toString()  { 
+	    return "(" + first.toString() + ", " + second.toString() + ")"; 
+	  }
+	 
+	  private T first;
+	  private S second;
 	}
+
 
 	/** Maps regular expression names to regular expressions. */
 	HashMap<String, String> regexDict;
@@ -138,7 +143,7 @@ class ParseRules {
 	 * @param wordRule The word rule for the word.
 	 * @return A list of possible annotations for the word.
 	 */
-	TwoReturnValues getParses(String chemicalWord, String wordRule) {
+	TwoReturnValues<List<ParseTokens>,Boolean> getParses(String chemicalWord, String wordRule) {
 		//largestLex=chemicalWord;
 		RunAutomaton automaton = getAutomatonForWordRule(wordRule);
 		AnnotatorState as = new AnnotatorState();
@@ -165,7 +170,7 @@ class ParseRules {
 		if (outputList.size()==0){
 			//System.out.println(largestLex);
 		}
-		TwoReturnValues output =new TwoReturnValues(outputList, interSubHyphenAllowed);
+		TwoReturnValues<List<ParseTokens>,Boolean> output =new TwoReturnValues<List<ParseTokens>,Boolean>(outputList, interSubHyphenAllowed);
 		return output;
 	}
 

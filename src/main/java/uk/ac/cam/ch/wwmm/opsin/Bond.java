@@ -142,7 +142,7 @@ class Bond {
 	 * Returns either null or one of E,Z,e,z
 	 * @return
 	 */
-	String getStereochemistry() {
+	String getStereochemistry() {//TODO make two functions to handle /\ stereochemistry and EZ stereochemistry and use enums
 		return stereochemistry;
 	}
 

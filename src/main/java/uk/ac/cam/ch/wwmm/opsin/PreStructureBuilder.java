@@ -262,7 +262,7 @@ public class PreStructureBuilder {
 			//e.g. 1(9H),5,7 -->indicatedHydrogen tag value (9H) and 1,5,7
 			//can get as complicated as 1,2(2H,7H)
 			Matcher matches =matchIndicatedHydrogen.matcher(locantText);
-			if (matches.find()==true){
+			if (matches.find()){
 				do {
 					Element indicatedHydrogenElement=new Element("indicatedHydrogen");
 					indicatedHydrogenElement.addAttribute(new Attribute("locant", matches.group(1)));
@@ -276,7 +276,7 @@ public class PreStructureBuilder {
 			 * Strip out cis/trans information built into locant - currently unhandled
 			 */
 			matches =matchCisTransInLocants.matcher(locantText);
-			if (matches.find()==true){
+			if (matches.find()){
 				do {
 					//currently do nothing
 				}
@@ -451,7 +451,7 @@ public class PreStructureBuilder {
 					}
 
 				}
-				if (assignlocants==true){
+				if (assignlocants){
 					for (int i = groupsToBeAdded.length -1; i >=0 ; i--) {
 						//if less locants than expected are specified the locants of only the later groups will be changed
 						//e.g. 4-xylene will transform 1,2-xylene to 1,4-xylene
@@ -722,7 +722,7 @@ public class PreStructureBuilder {
 					}
 					String locantValue =locantValues[j];
 					Matcher matches =matchCompoundLocant.matcher(locantValue);
-					if (matches.find()==true){
+					if (matches.find()){
 						singleLocant.addAttribute(new Attribute("compoundLocant", matches.group(1)));
 						locantValue = matches.replaceAll("");
 					}
@@ -1638,7 +1638,7 @@ public class PreStructureBuilder {
 			doneFirstIteration =true;
 		}
 
-		if (foundSibling ==false){//Special case: anything the group could potentially substitute onto is in a bracket. The bracket is checked recursively
+		if (!foundSibling){//Special case: anything the group could potentially substitute onto is in a bracket. The bracket is checked recursively
 			s = new Stack<Element>();
 			s.add(startingElement);
 			doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
@@ -1736,7 +1736,7 @@ public class PreStructureBuilder {
 					hasSiorGeorSborPb =true;
 				}
 			}
-			if (ringSize == 6 && ringType.equals("ring") && hasNitrogen ==false && hasSiorGeorSborPb ==true && (group.getValue().equals("in") ||group.getValue().equals("an"))){
+			if (ringSize == 6 && ringType.equals("ring") && !hasNitrogen && hasSiorGeorSborPb && (group.getValue().equals("in") ||group.getValue().equals("an"))){
 				throw new PostProcessingException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sb/Pb)");
 			}
 			String name = "";
@@ -1992,6 +1992,13 @@ public class PreStructureBuilder {
 
 	}
 
+	/**
+	 * Searches for lambdaConvention elements and applies the valency they specify to the atom
+	 * they specify on the substituent/root's fragment
+	 * @param state
+	 * @param subOrRoot
+	 * @throws StructureBuildingException
+	 */
 	private void applyLambdaConvention(BuildState state, Element subOrRoot) throws StructureBuildingException {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
 		for (Element lambdaConventionEl : lambdaConventionEls) {
@@ -2452,7 +2459,7 @@ public class PreStructureBuilder {
 						else{//usually indicates the name will fail unless the suffix has the locant or heteroatom replacement will create the locant
 							List<Fragment> suffixes =state.xmlSuffixMap.get(group);
 							//I do not want to assign element locants as in locants on the suffix as I currently know of no examples where this actually occurs
-							if (matchElementSymbol.matcher(locantValue).matches()==true || locant.getAttribute("compoundLocant")!=null){
+							if (matchElementSymbol.matcher(locantValue).matches() || locant.getAttribute("compoundLocant")!=null){
 								continue;
 							}
 							for (Fragment suffix : suffixes) {

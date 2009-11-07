@@ -48,22 +48,22 @@ public class FusedRingBuilder {
 
 
 				//bridgehead carbon do not increment numbering
-				if (isAaHeteroatom ==false && atomA.getIncomingValency()>=3){
+				if (!isAaHeteroatom && atomA.getIncomingValency()>=3){
 					i++;
 					continue;
 				}
 				
 				Atom atomB=sequenceB.get(j);
 				boolean isBaHeteroatom =!atomB.getElement().equals("C");
-				if (isBaHeteroatom ==false && atomB.getIncomingValency()>=3){
+				if (!isBaHeteroatom && atomB.getIncomingValency()>=3){
 					j++;
 					continue;
 				}
 
-				if (isAaHeteroatom ==true && isBaHeteroatom ==false){
+				if (isAaHeteroatom && !isBaHeteroatom){
 					return -1;
 				}
-				if (isBaHeteroatom ==true && isAaHeteroatom ==false){
+				if (isBaHeteroatom && !isAaHeteroatom){
 					return 1;
 				}
 	    		i++;j++;

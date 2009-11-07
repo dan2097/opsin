@@ -242,7 +242,7 @@ class WordRules {
 						}
 						return;
 					}
-					else if (r.hasFeaturesUnsupportedByAutomaton==false){
+					else if (!r.hasFeaturesUnsupportedByAutomaton){
 						throw new ParsingException("Fault in parser, automaton found a match, but JAVA regex couldn't");
 					}
 				}

@@ -139,14 +139,16 @@ public class NameToStructure {
 	 * @return An OPSIN fragment containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public synchronized Fragment parseToOpsinFragment(String name, boolean verbose) {
-		name = preProcessor.preProcess(name);
-		if (name ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
+		if (name==null){
+			throw new IllegalArgumentException("String given for name was null");
+		}
 		try {
+			name = preProcessor.preProcess(name);
+			if (name ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
 			if(verbose) System.out.println(name);
 			List<Element> parses = parser.parse(name);
-			//if(verbose) for(Element e : p) System.out.println(new XOMFormatter().elemToString(e));
-			Comparator<Element> sortParses= new SortParses();
-			Collections.sort(parses, sortParses);//less tokens preferred
+			//if(verbose) for(Element parse : parses) System.out.println(new XOMFormatter().elemToString(parse));
+			Collections.sort(parses, new SortParses());//fewer tokens preferred
 			Fragment frag = null;
 			for(Element parse : parses) {
 				try {
