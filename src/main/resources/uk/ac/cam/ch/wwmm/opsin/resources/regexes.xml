@@ -71,7 +71,8 @@ does not define a CFG.
   <regex name="%interSubstituentHyphen%" value="ä"/>
   <regex name="%ane%" value="à"/>
   <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
-  <!--up to ascii 134 used -->
+  <regex name="%heteroAtomLocant%" value="ç"/>
+  <!--up to ascii 135 used -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.
@@ -90,10 +91,10 @@ does not define a CFG.
   <regex name="%repeatableInlineSuffixGroup%" value="(%newLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
   <regex name="%inlineChargeGroup%" value="(%newLocantGroup%?%multiplier%?%inlineChargeSuffix%)"/>
   <regex name="%unsaturation%" value="(%newLocantGroupNoOMP%?%multiplier%?%unsaturator%)"/>
-  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locantGroup%|%lambdaConvention%)?%multiplier%?)%heteroAtom%%hyphen%?)"/>
+  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|%heteroAtomLocant%?%multiplier%?)%heteroAtom%%hyphen%?)"/>
   <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
   <regex name="%bigCapitalH%" value="(%capitalH%)"/>
-  <regex name="%hantzschWidmanRing%" value="((%newLocantGroupNoStartingHyphen%|%lambdaConvention%|(%optionalOpenBracket%%newLocantGroup%%optionalCloseBracket%))?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
+  <regex name="%hantzschWidmanRing%" value="((%orthoMetaPara%|%heteroAtomLocant%|(%optionalOpenBracket%%newLocantGroup%%optionalCloseBracket%))?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
   <regex name="%fusor%" value="((%fusionRing%|%ring%%alkaneStem%|%annulen%%o%|%vonBaeyerMultiplier%%FR2hydrocarbonComponent%%o%|%hantzschWidmanRing%%o%)%fusionBracket%?)"/>
   <regex name="%hwHeteroCycle%" value="(%bigCapitalH%?%fusor%*%hantzschWidmanRing%%e%?)"/>
   <regex name="%newArylStem%" value="((%heteroReplacement%+%hydroGroup%?)?%bigCapitalH%?%newLocantGroupNoStartingHyphen%?%fusor%*((%arylStem%|%annulen%|%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)%e%?))"/>

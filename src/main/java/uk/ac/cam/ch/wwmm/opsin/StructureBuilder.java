@@ -845,7 +845,7 @@ class StructureBuilder {
 	 */
 	private void applyStereochemistry(Fragment uniFrag) throws StructureBuildingException {
 		List<Atom> atomList =uniFrag.getAtomList();
-		if (atomList.size()>300){return;}//FIXME temporary workaround for CIP code running out of memory
+		if (atomList.size()>250){return;}//FIXME temporary workaround for CIP code running out of memory
 		for (Atom atom : atomList) {
 			if (atom.getStereochemistry()!=null){
 				List<Atom> cipOrderedAtoms = CIPresolver.getCIPOrderedAtoms(uniFrag, atom, atom.getAtomNeighbours());

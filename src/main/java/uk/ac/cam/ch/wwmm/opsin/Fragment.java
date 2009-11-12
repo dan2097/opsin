@@ -736,6 +736,7 @@ class Fragment {
 		while(svCount > 0) {
 			boolean foundTerminalFlag = false;
 			boolean foundNonBridgeHeadFlag = false;
+			boolean foundBridgeHeadFlag = false;
 			for(Atom a : atomCollection) {
 				if(a.getSpareValency() > 0) {
 					int count = 0;
@@ -751,7 +752,7 @@ class Fragment {
 								a.subtractSpareValency(1);
 								aa.subtractSpareValency(1);
 								findBondOrThrow(a, aa).addOrder(1);
-								svCount -= 2;
+								svCount -= 2;//Two atoms where for one of them this bond is the only double bond it can possible form
 								break;
 							}
 						}
@@ -768,14 +769,34 @@ class Fragment {
 								a.subtractSpareValency(1);
 								aa.subtractSpareValency(1);
 								findBondOrThrow(a, aa).addOrder(1);
-								svCount -= 2;
+								svCount -= 2;//Two atoms where one of them is not a bridge head
 								break;
 							}
 						}
 					}
 					if(foundNonBridgeHeadFlag) break;
 				}
-				if(!foundNonBridgeHeadFlag) throw new StructureBuildingException("Could not assign all higher order bonds.");
+				if(!foundNonBridgeHeadFlag){
+					for(Atom a : atomCollection) {
+						List<Atom> neighbours =getAtomNeighbours(a);
+						if(a.getSpareValency() > 0) {
+							for(Atom aa : neighbours) {
+								if(aa.getSpareValency() > 0) {
+									foundBridgeHeadFlag = true;
+									a.subtractSpareValency(1);
+									aa.subtractSpareValency(1);
+									findBondOrThrow(a, aa).addOrder(1);
+									svCount -= 2;//Two atoms where both of them are a bridge head e.g. necessary for something like coronene
+									break;
+								}
+							}
+						}
+						if(foundBridgeHeadFlag) break;
+					}
+					if(!foundBridgeHeadFlag){
+						throw new StructureBuildingException("Could not assign all higher order bonds.");
+					}
+				}
 			}
 		}
 	}
