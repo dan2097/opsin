@@ -372,50 +372,110 @@ class PostProcessor {
 
 	/**
 	 * Identifies lambdaConvention elements.
-	 * The elementsValue is expected to be a comma seperated list of value of the following form:
+	 * The elementsValue is expected to be a comma seperated lambda values and 0 or more locants. Where a lambda value has the following form:
 	 * optional locant, the word lambda and then a number which is the valency specified (with possibly some attempt to indicate this number is superscripted)
 	 * If the element is followed by heteroatoms (possibly multiplied) they are multiplied and the locant/lambda assigned to them
 	 * Otherwise a new lambdaConvention element is created with the valency specified by the lambda convention taking the attribute "lambda" 
+	 * In the case where heteroatoms belong to a fused ring system a new lambdaConvention element is also created. The original locants are retained in the benzo specific fused ring nomenclature:
+	 * 2H-5lambda^5-phosphinino[3,2-b]pyran --> 2H 5lambda^5 phosphinino[3,2-b]pyran  BUT
+	 * 1lambda^4,5-Benzodithiepin  --> 1lambda^4 1,5-Benzodithiepin
 	 * @param subOrRoot
 	 * @throws PostProcessingException 
 	 */
 	private void processLambdaConvention(Element subOrRoot) throws PostProcessingException {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
+		boolean fusedRingPresent = false;
+		if (lambdaConventionEls.size()>0){
+			if (subOrRoot.getChildElements("group").size()>1){
+				fusedRingPresent = true;
+			}
+		}
 		for (Element lambdaConventionEl : lambdaConventionEls) {
-			String[] lambdaValues = matchComma.split(lambdaConventionEl.getValue());
+			boolean benzoFusedRing =false;//Is the lambdaConvention el followed by benz/benzo of a fused ring system (these have front locants which correspond to the final fused rings numbering)
+			String[] lambdaValues = matchComma.split(StringTools.removeDashIfPresent(lambdaConventionEl.getValue()));
 			Element possibleHeteroatomOrMultiplier = (Element) XOMTools.getNextSibling(lambdaConventionEl);
-			List<Element> heteroatoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
-			if (possibleHeteroatomOrMultiplier!=null){
-				if (lambdaValues.length ==1 && possibleHeteroatomOrMultiplier.getLocalName().equals("heteroatom")){
-					heteroatoms.add(possibleHeteroatomOrMultiplier);
+			int heteroCount = 0;
+			int multiplierValue = 1;
+			while(possibleHeteroatomOrMultiplier != null){
+				if(possibleHeteroatomOrMultiplier.getLocalName().equals("heteroatom")) {
+					heteroCount+=multiplierValue;
+					multiplierValue =1;
+				} else if (possibleHeteroatomOrMultiplier.getLocalName().equals("multiplier")){
+					multiplierValue = Integer.parseInt(possibleHeteroatomOrMultiplier.getAttributeValue("value"));
 				}
-				else if (possibleHeteroatomOrMultiplier.getLocalName().equals("multiplier")){
-					int multiplier = Integer.parseInt(possibleHeteroatomOrMultiplier.getAttributeValue("value"));
-					if (multiplier==lambdaValues.length){
-						Element possibleHeteroatom = (Element) XOMTools.getNextSibling(possibleHeteroatomOrMultiplier);
-						if (possibleHeteroatom !=null && possibleHeteroatom.getLocalName().equals("heteroatom")){
-							heteroatoms.add(possibleHeteroatom);
-							for (int i = 1; i < multiplier; i++) {
-								Element newHeteroAtom =new Element(possibleHeteroatom);
-								XOMTools.insertAfter(possibleHeteroatom, newHeteroAtom);
-								heteroatoms.add(newHeteroAtom);
+				else{
+					break;
+				}
+				possibleHeteroatomOrMultiplier = (Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier);
+			}
+			boolean assignLambdasToHeteroAtoms =false;
+			if (lambdaValues.length==heteroCount){//heteroatom and number of locants +lambdas must match
+				if (fusedRingPresent && possibleHeteroatomOrMultiplier!=null && possibleHeteroatomOrMultiplier.getLocalName().equals("group") && possibleHeteroatomOrMultiplier.getAttributeValue("subType").equals("hantzschWidman")){
+					//You must not set the locants of a HW system which forms a component of a fused ring system. The locant specified corresponds to the complete fused ring system.
+				}
+				else{
+					assignLambdasToHeteroAtoms =true;
+				}
+			}
+			else if(heteroCount==0 && fusedRingPresent &&
+					possibleHeteroatomOrMultiplier!=null && possibleHeteroatomOrMultiplier.getLocalName().equals("group") && 
+					possibleHeteroatomOrMultiplier.getValue().equals("benzo")||possibleHeteroatomOrMultiplier.getValue().equals("benz")){
+				benzoFusedRing = true;
+			}
+			List<Element> heteroAtoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
+			if (assignLambdasToHeteroAtoms){//populate heteroAtoms, multiplied heteroatoms are multiplied out
+				Element multiplier = null;
+				Element heteroatomOrMultiplier = (Element) XOMTools.getNextSibling(lambdaConventionEl);
+				while(heteroatomOrMultiplier != null){
+					if(heteroatomOrMultiplier.getLocalName().equals("heteroatom")) {
+						heteroAtoms.add(heteroatomOrMultiplier);
+						if (multiplier!=null){
+							for (int i = 1; i < Integer.parseInt(multiplier.getAttributeValue("value")); i++) {
+								Element newHeteroAtom = new Element(heteroatomOrMultiplier);
+								XOMTools.insertAfter(heteroatomOrMultiplier, newHeteroAtom);
+								heteroAtoms.add(newHeteroAtom);
 							}
-							possibleHeteroatomOrMultiplier.detach();
+							multiplier.detach();
+							multiplier=null;
+						}
+					} else if (heteroatomOrMultiplier.getLocalName().equals("multiplier")){
+						if (multiplier !=null){
+							break;
+						}
+						else{
+							multiplier = heteroatomOrMultiplier;
 						}
 					}
+					else{
+						break;
+					}
+					heteroatomOrMultiplier = (Element)XOMTools.getNextSibling(heteroatomOrMultiplier);
 				}
 			}
 
-			for (int i = 0; i < lambdaValues.length; i++) {
+			for (int i = 0; i < lambdaValues.length; i++) {//assign all the lambdas to heteroatoms or to newly created lambdaConvention elements
 				String lambdaValue = lambdaValues[i];
 				Matcher m = matchLambdaConvention.matcher(lambdaValue);
-				if (m.matches()){
+				if (m.matches()){//a lambda
 					Attribute valencyChange = new Attribute("lambda", m.group(2));
 					Attribute locantAtr = null;
 					if (m.group(1)!=null){
 						locantAtr = new Attribute("locant", m.group(1));
 					}
-					if (heteroatoms.size()==0){
+					if (benzoFusedRing){
+						if (m.group(1)==null){
+							throw new PostProcessingException("Locant not found for lambda convention before a benzo fused ring system");
+						}
+						lambdaValues[i] = m.group(1);
+					}
+					if (assignLambdasToHeteroAtoms){
+						Element heteroAtom = heteroAtoms.get(i);
+						heteroAtom.addAttribute(valencyChange);
+						if (locantAtr!=null){
+							heteroAtom.addAttribute(locantAtr);
+						}
+					}
+					else{
 						Element newLambda = new Element("lambdaConvention");
 						newLambda.addAttribute(valencyChange);
 						if (locantAtr!=null){
@@ -423,19 +483,26 @@ class PostProcessor {
 						}
 						XOMTools.insertBefore(lambdaConventionEl, newLambda);
 					}
-					else{
-						Element heteroAtom = heteroatoms.get(i);
-						heteroAtom.addAttribute(valencyChange);
-						if (locantAtr!=null){
-							heteroAtom.addAttribute(locantAtr);
+				}
+				else{//just a locant e.g 1,3lambda5
+					if (!assignLambdasToHeteroAtoms){
+						if (!benzoFusedRing){
+							throw new PostProcessingException("Lambda convention not specified for locant: " + lambdaValue);
 						}
 					}
-				}
-				else {
-					throw new PostProcessingException("malformed lamba convention element. This indicates a mismatch between this function and OPSIN's grammar in regexTokens.xml");
+					else{
+						Element heteroAtom = heteroAtoms.get(i);
+						heteroAtom.addAttribute(new Attribute("locant", lambdaValue));
+					}
 				}
 			}
-			lambdaConventionEl.detach();
+			if (!benzoFusedRing){
+				lambdaConventionEl.detach();
+			}
+			else{
+				lambdaConventionEl.setLocalName("locant");
+				XOMTools.setTextChild(lambdaConventionEl, StringTools.arrayToString(lambdaValues, ","));
+			}
 		}
 	}
 

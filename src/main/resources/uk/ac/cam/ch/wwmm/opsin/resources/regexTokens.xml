@@ -27,9 +27,7 @@
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" />
 
   <regexToken name = "%lambdaConvention%" regex="(%locantTypes%?lambda(%superScriptedNumber%|\d+))" />
-  <regexToken regex="%lambdaConvention%(,%lambdaConvention%)*-?" symbol="Ç" tagname="lambdaConvention" />
-  <regexToken regex="(%lambdaConvention%|%locantTypes%,)*(%lambdaConvention%-?|%locantTypesOptionalHyphen%-?|%locantTypes%-)" symbol="ç"  type="heteroAtomLocant" tagname="locant" /><!--locant where any locants may have lambda specified-->
-
+  <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(lambdaConvention-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="Ç" tagname="lambdaConvention" /><!--a set of either locants or lamdas. There must be at least one lambda-->
   <regexToken regex="-" symbol="h" tagname="hyphen" ignoreWhenWritingXML="yes"/>
   <regexToken regex="-" symbol="ä" tagname="hyphen"/>
   <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" />

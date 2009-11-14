@@ -199,7 +199,7 @@ class FragmentManager {
 	 */
 	void unsaturate(int fromAtomID, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		int toAtomID = fromAtomID + 1;
-		if (fragment.getAtomByID(toAtomID)==null){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
+		if (fragment.getAtomByID(toAtomID)==null || fragment.getAtomByID(toAtomID).getType().equals("suffix")){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
 			List<Atom> neighbours =fragment.getAtomByIDOrThrow(fromAtomID).getAtomNeighbours();
 			if (neighbours.size() >=2){
 				int firstID =fragment.getIdOfFirstAtom();
