@@ -752,11 +752,13 @@ public class PreStructureBuilder {
 		int count =locantValues.length;
 		Element currentElem = (Element)XOMTools.getNextSibling(locant);
 		int heteroCount = 0;
+		int multiplierValue = 1;
 		while(currentElem != null && !currentElem.getLocalName().equals("group")){
 			if(currentElem.getLocalName().equals("heteroatom")) {
-				heteroCount++;
+				heteroCount+=multiplierValue;
+				multiplierValue =1;
 			} else if (currentElem.getLocalName().equals("multiplier")){
-				heteroCount += Integer.parseInt(currentElem.getAttributeValue("value")) -1;
+				multiplierValue = Integer.parseInt(currentElem.getAttributeValue("value"));
 			}
 			currentElem = (Element)XOMTools.getNextSibling(currentElem);
 		}
