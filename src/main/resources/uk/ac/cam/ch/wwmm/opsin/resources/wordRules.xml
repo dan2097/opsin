@@ -61,12 +61,18 @@
     <word type="literal" />
   </wordRule>-->
 
-  <wordRule name="diester" regex="(%substituent%)[ ]+(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
+  <wordRule name="ester" regex="(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
+    <word type="substituent" />
+    <word type="full" />
+  </wordRule>
+  <wordRule name="multiEster" regex="(%substituent%)[ ]+(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
     <word type="substituent" />
     <word type="substituent" />
     <word type="full" />
   </wordRule>
-  <wordRule name="ester" regex="(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
+  <wordRule name="multiEster" regex="(%substituent%)[ ]+(%substituent%)[ ]+(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
+    <word type="substituent" />
+    <word type="substituent" />
     <word type="substituent" />
     <word type="full" />
   </wordRule>
