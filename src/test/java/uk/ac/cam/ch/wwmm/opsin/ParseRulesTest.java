@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import uk.ac.cam.ch.wwmm.opsin.ParseRules.TwoReturnValues;
 
 
 public class ParseRulesTest {
