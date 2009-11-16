@@ -40,7 +40,7 @@ class StructureBuilder {
 		else if (wordRule.equals("acid")){
 			buildAcid(state,words);//ethanoic acid
 		}
-		else if(wordRule.equals("ester") || wordRule.equals("diester")) {
+		else if(wordRule.equals("ester") || wordRule.equals("multiEster")) {
 			buildEster(state, words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
 		}
 		else if (wordRule.equals("divalentLiteralFunctionalGroup")){

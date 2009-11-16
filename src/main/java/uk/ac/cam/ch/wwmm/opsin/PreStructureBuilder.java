@@ -2421,7 +2421,7 @@ public class PreStructureBuilder {
 		}
 		if (locantList.size()>0 && group!=null){
 			boolean allowIndirectLocants =true;
-			if(state.wordRule.equals("diester")){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
+			if(state.wordRule.equals("multiEster")){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
 				Element parentEl=(Element) subOrRoot.getParent();
 				if (parentEl.getLocalName().equals("word") && parentEl.getAttributeValue("type").equals("substituent") && parentEl.getChildCount()==1 &&
 						locants.size()==1 && (locants.get(0).getAttribute("type")==null || !locants.get(0).getAttributeValue("type").equals("orthoMetaPara"))){
