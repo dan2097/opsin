@@ -18,7 +18,6 @@
     <token value="hydroximoyl">ohydroximoyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
-    <!--<token value="yloxy">yloxy</token> Removed as no longer believed to be necessary-->
     <token value="sulfenyl">sulfenyl</token>
     <token value="sulfinyl">sulfinyl</token>
     <token value="sulfonyl">sulfonyl</token>
@@ -27,18 +26,8 @@
     <token value="ylidyne">ylidyne</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, basically anything which isn't a standalone substituent e.g. oxy, carbonyl etc.-->
+  <tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes etc.-->
     <token value="amido">amido</token>
-    <token value="oyl" additionalValue="amide">amoyl</token>
-    <token value="carbohydrazonoyl">carbohydrazonoyl</token>
-    <token value="carbohydroximoyl">carbohydroximoyl</token>
-    <token value="carbothioyl">carbothioyl</token>
-    <token value="carboximidoyl">carboximidoyl</token>
-    <token value="hydrazonoyl">hydrazonoyl</token>
-    <token value="hydroximoyl">hydroximoyl</token>
-    <token value="imidoyl">imidoyl</token>
-    <token value="hydrazonoyl">ohydrazonoyl</token>
-    <token value="hydroximoyl">ohydroximoyl</token>
     <token value="oyl">oyl</token>
     <token value="yl">yl</token>
     <token value="ylidene">ylidene</token>
