@@ -33,31 +33,6 @@ class ParseRules {
 		ArrayList<String> tokens;
 	}
 
-	/**
-	 * Wrapper class for returning two objects
-	 */
-	final class TwoReturnValues<T, S>{
-	  public TwoReturnValues(T f, S s){ 
-	    first = f;
-	    second = s;   
-	  }
-	 
-	  public T getFirst(){
-	    return first;
-	  }
-	 
-	  public S getSecond()   {
-	    return second;
-	  }
-	 
-	  public String toString()  { 
-	    return "(" + first.toString() + ", " + second.toString() + ")"; 
-	  }
-	 
-	  private T first;
-	  private S second;
-	}
-
 
 	/** Maps regular expression names to regular expressions. */
 	HashMap<String, String> regexDict;

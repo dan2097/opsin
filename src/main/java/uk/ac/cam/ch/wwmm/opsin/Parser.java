@@ -5,7 +5,6 @@ import java.util.List;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
-import uk.ac.cam.ch.wwmm.opsin.ParseRules.TwoReturnValues;
 
 /** For a list of integers, generate all lists of non-negative integers where all
  * of the list members are strictly lower than their corresponding integer in the
