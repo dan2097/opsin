@@ -515,12 +515,14 @@ class StructureBuildingMethods {
 				Element nextSiblingEl = (Element) XOMTools.getNextSibling(subBracketOrRoot);
 				if (nextSiblingEl.getAttribute("multiplier")!=null && 
 						(outIDCount >= Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier")) || //probably multiplicative nomenclature, should be as many outIds as the multiplier
-						outIDCount==1 && frag.getOutID(0).valency==2 && Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier"))==2) &&
+						outIDCount==1 && frag.getOutID(0).valency==Integer.parseInt(nextSiblingEl.getAttributeValue("multiplier"))) &&
 						hasRootLikeOrMultiRadicalGroup(state, nextSiblingEl)){
 					if (outIDCount==1){//special case e.g. 4,4'-(benzylidene)dianiline
 						OutID out = frag.getOutID(0);
+						for (int i = 1; i < out.valency; i++) {
+							frag.addOutID(out.id, 1, out.setExplicitly);
+						}
 						out.valency = 1;
-						frag.addOutID(out.id, 1, out.setExplicitly);
 						//special case where something like benzylidene is being used as if it meant benzdiyl for multiplicative nomenclature
 						//this is allowed in the IUPAC 79 recommendations but not recommended in the current recommendations
 					}
