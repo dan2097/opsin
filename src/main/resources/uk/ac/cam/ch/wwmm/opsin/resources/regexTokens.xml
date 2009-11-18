@@ -39,6 +39,7 @@
   <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-" symbol="e" tagname="hydrogen" />
   <regexToken regex="[eE]" symbol="Z" tagname="e" ignoreWhenWritingXML="yes"/>
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes"/>
+  <regexToken regex="," symbol="ç" tagname="comma" ignoreWhenWritingXML="yes"/>
   <regexToken regex="n-" symbol="n" tagname="alkanen" /><!--case sensitive so must be a regex-->
   <regexToken regex="((?i:ortho|meta|para)|o|m|p)-" symbol="O" tagname="orthoMetaPara" />
   <regexToken regex="%openBracket%" symbol="T" tagname="optionalOpenBracket" ignoreWhenWritingXML="yes"/>

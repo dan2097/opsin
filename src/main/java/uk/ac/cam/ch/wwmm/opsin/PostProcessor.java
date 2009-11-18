@@ -279,7 +279,8 @@ class PostProcessor {
 		}
 	}
 
-	/** Handles stereoChemistry (R/S currently)
+	/** Handles stereoChemistry (R/Z/E/Z/cis/trans)
+	 *  Will assign a locant to a stereoChemistry element if one was specified/available
 	 *
 	 * @param elem The substituent/root to looks for stereoChemistry in.
 	 * @throws PostProcessingException
@@ -335,6 +336,13 @@ class PostProcessor {
 					}
 				}
 				stereoChemistryElement.detach();
+			}
+			else if (stereoChemistryElement.getAttributeValue("type").equals("cisOrTrans")){//assign a locant if one is directly before the cis/trans
+				Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
+				if (possibleLocant !=null && possibleLocant.getLocalName().equals("locant") && matchComma.split(possibleLocant.getValue()).length==1){
+					stereoChemistryElement.addAttribute(new Attribute("locant", StringTools.removeDashIfPresent(possibleLocant.getValue())));
+					possibleLocant.detach();
+				}
 			}
 		}
 	}

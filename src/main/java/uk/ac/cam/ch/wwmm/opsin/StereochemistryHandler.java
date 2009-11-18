@@ -68,6 +68,16 @@ public class StereochemistryHandler {
 				assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 			}
 			else if (stereoChemistryType.equals("cisOrTrans")){
+				String cisOrTrans = stereoChemistryEl.getAttributeValue("value");
+				if (cisOrTrans.equalsIgnoreCase("cis")){
+					stereoChemistryEl.getAttribute("value").setValue("Z");
+				}
+				else if (cisOrTrans.equalsIgnoreCase("trans")){
+					stereoChemistryEl.getAttribute("value").setValue("E");
+				}
+				else{
+					throw new StructureBuildingException("Unexpected cis/trans stereochemistry type: " +cisOrTrans);
+				}
 				assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 			}
 			else{
@@ -286,7 +296,7 @@ public class StereochemistryHandler {
 			bond.setBondStereoElement(atomRefs4, "C");
 		}
 		else{
-			throw new StructureBuildingException("Unexpected stereochemistry type: " + bond.getStereochemistry());
+			throw new StructureBuildingException("Unexpected stereochemistry type: " + eOrZ);
 		}
 	}
 

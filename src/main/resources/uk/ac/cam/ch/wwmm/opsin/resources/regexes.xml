@@ -71,7 +71,8 @@ does not define a CFG.
   <regex name="%interSubstituentHyphen%" value="ä"/>
   <regex name="%ane%" value="à"/>
   <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
-  <!--up to ascii 134 used -->
+  <regex name="%comma%" value="ç"/>
+  <!--up to ascii 135 used -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.
@@ -81,7 +82,7 @@ does not define a CFG.
   <regex name="%rootSuffix%" value="(%suffix%|%suffixesThatCanHaveEeuphonicO%)"/>
   <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
-  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|%cisOrTrans%)%hyphen%?)"/>
+  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locantGroup%?%cisOrTrans%)(%comma%%locantGroup%?%cisOrTrans%)*)%hyphen%?)"/>
   <regex name="%newLocantGroupNoOMP%" value="(%hyphen%?%locantGroup%?)"/>
   <regex name="%newLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->

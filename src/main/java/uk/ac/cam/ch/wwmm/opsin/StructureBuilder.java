@@ -523,7 +523,7 @@ class StructureBuilder {
 		BuildResults polymerBr = new BuildResults(state, polymer);
 		if (polymerBr.getOutIDCount() ==2 && polymerBr.getInIDCount()==0){
 			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
+			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");//TODO stop using actual atoms (confuses E/Z!)
 			state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(0).valency);
 			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
 			rGroup =state.fragManager.buildSMILES("[Rn]");
