@@ -664,4 +664,13 @@ class FragmentManager {
 			fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
 		}
 	}
+	
+	/**
+	 * Gets a set of the inter fragment bonds a fragment is involved in
+	 * @param frag
+	 * @return set of inter fragment bonds
+	 */
+	Set<Bond> getInterFragmentBonds(Fragment frag) {
+		return fragToInterFragmentBond.get(frag);
+	}
 }
