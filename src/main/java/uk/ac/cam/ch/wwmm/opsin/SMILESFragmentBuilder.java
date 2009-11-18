@@ -1,11 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
@@ -54,7 +49,7 @@ class SMILESFragmentBuilder {
 
 		/**Creates a stack frame with given parameters.
 		 *
-		 * @param atomIDval The value for atomID.
+		 * @param a An atom or null
 		 * @param bondOrderVal The value for bondOrder.
 		 */
 		StackFrame(Atom a, int bondOrderVal) {
@@ -83,7 +78,7 @@ class SMILESFragmentBuilder {
 	private static Set<String> organicAtoms = new HashSet<String>();
 	/**Aromatic Atoms.*/
 	private static Set<String> aromaticAtoms = new HashSet<String>();
-	
+
 	static {
 		organicAtoms.add("B");
 		organicAtoms.add("C");
@@ -95,7 +90,7 @@ class SMILESFragmentBuilder {
 		organicAtoms.add("Cl");
 		organicAtoms.add("Br");
 		organicAtoms.add("I");
-		
+
 		aromaticAtoms.add("c");
 		aromaticAtoms.add("n");
 		aromaticAtoms.add("o");
@@ -115,7 +110,7 @@ class SMILESFragmentBuilder {
 	 *
 	 * @param smiles The SMILES string to build from.
 	 * @return The built fragment.
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles, IDManager idManager) throws StructureBuildingException {
 		return build(smiles, "", "", "", idManager);
@@ -126,7 +121,7 @@ class SMILESFragmentBuilder {
 	 * @param smiles The SMILES string to build from.
 	 * @param type The type of fragment being built.
 	 * @return The built fragment.
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles, String type, String subType, String labelMapping, IDManager idManager) throws StructureBuildingException {
 		if (smiles==null){
@@ -145,16 +140,14 @@ class SMILESFragmentBuilder {
 		if(!labelMapping.equals("none") && !labelMapping.equals("fusedRing") ) {
 			labelMap = new ArrayList<String>();
 			String [] mappingTmp = matchSlash.split(labelMapping, -1);
-			for(int i=0;i<mappingTmp.length;i++) {
-				labelMap.add(mappingTmp[i]);//place slash delimited labels into arrayList
-			}
+            labelMap.addAll(Arrays.asList(mappingTmp));//place slash delimited labels into arrayList
 		}
 		int currentNumber = 1;
 		Fragment currentFrag = new Fragment(type, subType);
 		Stack<StackFrame> stack = new Stack<StackFrame>();
 		stack.push(new StackFrame(null, 1));
 		HashMap<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures
-		String tmpString = new String(smiles);
+		String tmpString = smiles;
 		char firstCharacter =tmpString.charAt(0);
 		if(firstCharacter == '=' || firstCharacter == '#') {//used by OPSIN to specify the valency with which this fragment connects (1 if not specified)
 			tmpString = tmpString.substring(1);
@@ -207,11 +200,11 @@ class SMILESFragmentBuilder {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
 					String labels[] = matchComma.split(labelMap.get(currentNumber-1));
-					for(int i=0;i<labels.length;i++) {
-						if (!labels[i].equals("")){
-							atom.addLocant(labels[i]);
-						}
-					}
+                    for (String label : labels) {
+                        if (!label.equals("")) {
+                            atom.addLocant(label);
+                        }
+                    }
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom !=null) {
@@ -254,7 +247,7 @@ class SMILESFragmentBuilder {
 		        if (!isotope.equals("")){
 		        	throw new StructureBuildingException("Isotopically labelled atoms in SMILES are not yet supported");
 		        }
-		        
+
 		        if (atomString.length() > 0){
 		        	nextChar = atomString.substring(0,1);
 		        	atomString = atomString.substring(1);
@@ -299,11 +292,11 @@ class SMILESFragmentBuilder {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
 					String labels[] = matchComma.split(labelMap.get(currentNumber-1));
-					for(int i=0;i<labels.length;i++) {
-						if (!labels[i].equals("")){
-							atom.addLocant(labels[i]);
-						}
-					}
+                    for (String label : labels) {
+                        if (!label.equals("")) {
+                            atom.addLocant(label);
+                        }
+                    }
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom != null) {
@@ -330,7 +323,7 @@ class SMILESFragmentBuilder {
 				stack.peek().atom = atom;
 				stack.peek().bondOrder = 1;
 				currentNumber += 1;
-		        
+
 		        int hydrogenCount =0;
 		        int charge = 0;
 		        Boolean chiralityClockwise = null;
@@ -534,7 +527,7 @@ class SMILESFragmentBuilder {
 		if (labelMap != null && labelMap.size() >= currentNumber ){
 			throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.size() + ", atoms: " + (currentNumber -1) );
 		}
-		
+
 		if(labelMapping.equals("fusedRing")) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
 			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
 			FragmentManager.relabelFusedRingSystem(currentFrag);
@@ -576,7 +569,7 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(preceedingBond.getStereochemistry() + " is not a slash!");
 								}
-								
+
 								Boolean upSecond = null;
 								if (followingBond.getStereochemistry().equals("\\")){
 									upSecond = followingBond.getFromAtom() != atom3;
@@ -587,7 +580,7 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(followingBond.getStereochemistry() + " is not a slash!");
 								}
-								
+
 								if (upFirst == upSecond){
 									bondStereoEl.appendChild("C");
 								}
@@ -599,14 +592,14 @@ class SMILESFragmentBuilder {
 							}
 						}
 					}
-					
+
 				}
 			}
 		}
 		for (Bond bond : bonds) {
 			bond.setStereochemistry(null);
 		}
-		
+
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
 			List<Atom> aList =currentFrag.getAtomList();
 			int lastAtomID =aList.get(aList.size()-1).getID();
@@ -628,7 +621,7 @@ class SMILESFragmentBuilder {
 				}
 			}
 		}
-		
+
 		if(firstCharacter == '='){
 			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),2, true);
 		}

@@ -269,8 +269,8 @@ class ValencyChecker {
 
 	/** Check whether valency is available on the atom to form a bond of the given order.
 	 * spareValency and outValency are not taken into account.
-	 * @param atom you are interested in
-	 * @param order of bond required
+	 * @param a atom you are interested in
+	 * @param bondOrder order of bond required
 	 */
 	static boolean checkValencyAvailableForBond(Atom a, int bondOrder) {
 		int valency =a.getIncomingValency() +bondOrder;
@@ -289,17 +289,16 @@ class ValencyChecker {
 
 	/** Check whether changing to a heteroatom will result in valency being exceeded
 	 * spareValency and outValency is taken into account
-	 * @param atom you are interested in
-	 * @param element symbol of heteroatom
+	 * @param a atom you are interested in
+	 * @param heteroatom element symbol of heteroatom
 	 */
 	static boolean checkValencyAvailableForReplacementByHeteroatom(Atom a, String heteroatom) {
 		int valency =a.getIncomingValency();
 		valency +=a.getSpareValency();
 		valency +=a.getOutValency();
 		Integer maxValOfHeteroAtom = getMaxValency(heteroatom, 0);
-		if(maxValOfHeteroAtom==null) return true;
-		return valency <= maxValOfHeteroAtom;
-	}
+        return maxValOfHeteroAtom == null || valency <= maxValOfHeteroAtom;
+		}
 
 	/**
 	 * Returns the default valency of an element or null if unknown
@@ -311,7 +310,7 @@ class ValencyChecker {
 		if (charge != 0){return null;}
 		return expectedDefaultValency.get(element);
 	}
-	
+
 	/**
 	 * Returns the valency of an element in the HW system (useful for deciding whether something should have double bonds in a ring) or null if unknown
 	 * Note that the HW system makes no claim about valency when the atom is charged

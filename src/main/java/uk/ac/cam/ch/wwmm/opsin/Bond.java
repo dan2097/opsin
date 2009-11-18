@@ -22,15 +22,15 @@ class Bond {
 	 * "e" or "z" indicate relative stereochemistry
 	 * null by default*/
 	private String stereochemistry = null;
-	
+
 	/**
 	 * Holds the bondStereo tag to be associated with this bond upon output
 	 * null by default
 	 */
 	private Element bondStereoElement = null;
-	
+
 	private int smilesNumber;
-	
+
 	/**
 	 * it the bond is fusion bond it contains the rings that it connects
 	 */
@@ -48,15 +48,15 @@ class Bond {
 		this.order = order;
 		smilesNumber = 0;
 	}
-	
+
 	public ArrayList<Ring> getFusedRings() {
 		return fusedRings;
 	}
-	
+
 	public void  addFusedRing(Ring ring) {
 		if (fusedRings.size()<2) fusedRings.add(ring);
 	}
-	
+
 
 	/**Produces a nu.xom.Element corresponding to a CML bond tag.
 	 * Has attributes of atomRefs2 and order.
@@ -137,7 +137,7 @@ class Bond {
 	void addOrder(int o) {
 		order += o;
 	}
-	
+
 	/**
 	 * Returns either null or one of E,Z,e,z
 	 * @return

@@ -10,12 +10,12 @@ import sea36.chem.core.CMLAtom;
 import sea36.chem.core.CMLBond;
 import sea36.chem.core.CMLMolecule;
 
-public class OpsinToChemKitWrapper {
-	
+class OpsinToChemKitWrapper {
+
 	private Map<CMLAtom,Atom> chemKitAtomToOpsinAtomMap = new HashMap<CMLAtom, Atom>();
 	private Map<Atom, CMLAtom> opsinAtomToChemKitAtomMap = new HashMap<Atom, CMLAtom>();
 	private CMLMolecule chemKitMolecule =  new CMLMolecule();
-	
+
 	OpsinToChemKitWrapper(Fragment opsinFragment) {
 		List<Atom> atoms = opsinFragment.getAtomList();
 		for (Atom atom : atoms) {
@@ -98,11 +98,11 @@ public class OpsinToChemKitWrapper {
 	CMLMolecule getChemKitMolecule() {
 		return chemKitMolecule;
 	}
-	
+
 	Atom getOpsinAtomFromChemKitAtom(CMLAtom a) {
 		return chemKitAtomToOpsinAtomMap.get(a);
 	}
-	
+
 	CMLAtom getChemKitAtomFromOpsinAtom(Atom a) {
 		return opsinAtomToChemKitAtomMap.get(a);
 	}

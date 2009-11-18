@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
+﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the dtd for full details. "value" is bond order in this context -->
 <tokenLists>
   <tokenList tagname="unsaturator" symbol="u">

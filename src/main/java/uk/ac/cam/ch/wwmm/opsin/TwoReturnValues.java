@@ -5,7 +5,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  *
  * @author dl387
  */
-public final class TwoReturnValues<T, S> {
+final class TwoReturnValues<T, S> {
 
    public TwoReturnValues(T f, S s) {
       first = f;

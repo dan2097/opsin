@@ -27,7 +27,7 @@ class Atom {
 	private String element;
 
 	/**The locants that pertain to the atom.*/
-	private List<String> locants = new ArrayList<String>();
+	private final List<String> locants = new ArrayList<String>();
 
 	/**The formal charge on the atom.*/
 	private int charge = 0;
@@ -36,7 +36,7 @@ class Atom {
 	 * "r" or "s" indicate relative stereochemistry
 	 * null by default*/
 	private String stereochemistry = null;
-	
+
 	/**
 	 * Holds the atomParity tag to be associated with this atom upon output
 	 * null by default
@@ -44,7 +44,7 @@ class Atom {
 	private Element atomParityElement = null;
 
 	/**The bonds that involve the atom*/
-	private List<Bond> bonds = new ArrayList<Bond>();
+	private final List<Bond> bonds = new ArrayList<Bond>();
 
 	/**A hashmap in which notes can be associated with the atom. */
 	private HashMap<String,String> notes = new HashMap<String, String>();
@@ -76,7 +76,7 @@ class Atom {
 	 * Takes same values as type in Fragment. Useful for discriminating suffix atoms from other atoms when a suffix is incorporated into another fragments
 	 */
 	private String type;
-	
+
 	/**
 	 * Is this atom in a ring. Default false. Set by the CycleDetector.
 	 * Double bonds are only converted to spareValency if atom is in a ring
@@ -84,15 +84,15 @@ class Atom {
 	 */
 	private boolean atomIsInACycle =false;
 
-	private static Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
-	private static Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
+	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
+	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 
 	/** Builds an Atom from scratch.
 	 * @param ID The ID number, unique to the atom in the molecule being built
 	 * @param locants A list of locants, typically numerical but can also include something like N
 	 * @param element The atomic symbol of the chemical element
 	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom(int ID, List<String> locants, String element, Fragment frag) throws StructureBuildingException {
 		this(ID, element, frag);
@@ -106,7 +106,7 @@ class Atom {
 	 * @param locant A locant, typically numerical but could also be something like N
 	 * @param element The atomic symbol of the chemical element
 	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom(int ID, String locant, String element, Fragment frag) throws StructureBuildingException {
 		this(ID, element, frag);
@@ -117,7 +117,7 @@ class Atom {
 	 * @param ID The ID number, unique to the atom in the molecule being built
 	 * @param element The atomic symbol of the chemical element
 	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom(int ID, String element, Fragment frag) throws StructureBuildingException {
 		if (frag==null){
@@ -225,7 +225,7 @@ class Atom {
 				sb.deleteCharAt(sb.length()-1);
 				sb.append(Integer.toString(smilesNumber));
 			} else {
-				sb.append(Integer.toString(smilesNumber) + ")");
+                sb.append(Integer.toString(smilesNumber)).append(")");
 			}
 			return;
 		}
@@ -309,7 +309,7 @@ class Atom {
 	 *
 	 * @param locant The locant to test for
 	 * @return true if it has, false if not
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	boolean hasLocant(String locant) throws StructureBuildingException {
 		for(String l : locants) {
@@ -356,12 +356,11 @@ class Atom {
 	 */
 	List<String> getElementSymbolLocants() {
 		ArrayList<String> elementSymbolLocants =new ArrayList<String>();
-		for (int i = 0; i <locants.size(); i++) {
-			String l =locants.get(i);
-			if (matchElementSymbolLocant.matcher(l).matches()){
-				elementSymbolLocants.add(l);
-			}
-		}
+        for (String l : locants) {
+            if (matchElementSymbolLocant.matcher(l).matches()) {
+                elementSymbolLocants.add(l);
+            }
+        }
 		return elementSymbolLocants;
 	}
 
@@ -525,7 +524,6 @@ class Atom {
 	/**
 	 * Allows the retrieval of a string of information associated with this atom from a hash
 	 * @param key
-	 * @param value
 	 */
 	String getNote(String key) {
 		return notes.get(key);
@@ -627,7 +625,7 @@ class Atom {
 	 * Sets a note if a nitrogen with 3 bonds and a spare valency is encountered e.g. N-methylpyridine
 	 * Does nothing if the atom has no spare valency
 	 * @param takeIntoAccountExternalBonds
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	void ensureSVIsConsistantWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
 		if (spareValency > 0 ){

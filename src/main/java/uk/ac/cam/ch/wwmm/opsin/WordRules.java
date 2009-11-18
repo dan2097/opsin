@@ -84,12 +84,12 @@ class WordRules {
 	private HashMap<String, String> stringReplacements;
 	private Pattern matchStringReplacement = Pattern.compile("%.*?%");
 	private Pattern matchNonCapturing = Pattern.compile("\\?:");
-	private Pattern matchLookBehind = Pattern.compile("\\(\\?<\\!(([^(]+?\\))|(\\([^(]+?\\)\\)))");
+	private Pattern matchLookBehind = Pattern.compile("\\(\\?<!(([^(]+?\\))|(\\([^(]+?\\)\\)))");
 	private RunAutomaton allWordRulesRunAutomaton;
 	private Pattern matchPoly = Pattern.compile("(?:poly|oligo)[\\[\\(\\{](.+)[\\]\\)\\}]", Pattern.CASE_INSENSITIVE );//poly or oligo followed by a bracket name
 
 	/**Initialises the WordRules.
-	 * @param resourceGetter 
+	 * @param resourceGetter
 	 *
 	 * @throws Exception If the data file can't be read properly.
 	 */
@@ -138,7 +138,7 @@ class WordRules {
 	 */
 	void parse(Parse p) throws ParsingException {
 		String chemicalName =p.name;
-		
+
 		//TODO do this properly
 		Matcher polyMatcher = matchPoly.matcher(chemicalName);//temporary kludge until wordRules system is rewritten
 		if (polyMatcher.matches()){//Name is a polymer/oligomer name
@@ -188,7 +188,7 @@ class WordRules {
 
 			for (Integer acceptState : acceptStates) {
 				state = allWordRulesRunAutomaton.step(acceptState, NON_CHEM_CHAR);
-	
+
 				/*
 				 * Determine which regexes succeeded in matching.
 				 * The regexes with lower ids are more specific and hence the one with the lowest id will be used in preference
@@ -197,7 +197,7 @@ class WordRules {
 				Collections.sort(wordIDs);
 				for (Integer idOfWordRule : wordIDs) {//typically there will only be one wordID
 					int wordRule =Integer.valueOf(idOfWordRule);
-		
+
 					WordRule r =wordRuleList.get(wordRule);
 					Matcher m = r.regex.matcher(chemicalNameLowerCase);
 					if(m.find(startingPoint)) {
@@ -230,7 +230,7 @@ class WordRules {
 								p.words.add(pw);
 							}
 						}
-						
+
 						if (end!=chemicalName.length()){
 							String [] wordArray = chemicalName.substring(end, chemicalName.length()).trim().split("\\s+");
 							for(int i=0;i<wordArray.length;i++) {
@@ -277,19 +277,18 @@ class WordRules {
 	 */
 	private ArrayList<Integer> determineAllWordRulesThatMatched(int state, String wordIDSoFar, ArrayList<Integer> wordIDs) {
 		char[] stateSymbols = allWordRulesRunAutomaton.getCharIntervals();
-		for (int j = 0; j < stateSymbols.length; j++) {
-			int potentialNextState = allWordRulesRunAutomaton.step(state, stateSymbols[j]);
-			if (potentialNextState != -1) {
-				int currentState =potentialNextState;
-				wordIDSoFar +=stateSymbols[j];
-				if (allWordRulesRunAutomaton.isAccept(currentState)){
-					wordIDs.add(Integer.valueOf(wordIDSoFar));
-					continue;
-				}else{
-					determineAllWordRulesThatMatched(currentState, wordIDSoFar, wordIDs);
-				}
-			}
-		}
+        for (char stateSymbol : stateSymbols) {
+            int potentialNextState = allWordRulesRunAutomaton.step(state, stateSymbol);
+            if (potentialNextState != -1) {
+                int currentState = potentialNextState;
+                wordIDSoFar += stateSymbol;
+                if (allWordRulesRunAutomaton.isAccept(currentState)) {
+                    wordIDs.add(Integer.valueOf(wordIDSoFar));
+                } else {
+                    determineAllWordRulesThatMatched(currentState, wordIDSoFar, wordIDs);
+                }
+            }
+        }
 		return wordIDs;
 	}
 }

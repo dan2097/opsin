@@ -320,13 +320,12 @@ class FragmentManager {
 	/**
 	 * Adds a fragment to the fragPile
 	 * @param frag
-	 * @throws StructureBuildingException
 	 */
-	void addFragment(Fragment frag) throws StructureBuildingException {
+	void addFragment(Fragment frag)  {
 		fragPile.add(frag);
 		fragToInterFragmentBond.put(frag, new HashSet<Bond>());
 	}
-	
+
 	/**
 	 * Removes a fragment from the fragPile and inter fragment bonds from the bondpile.
 	 * Throws an exception if fragment wasn't present
@@ -420,15 +419,15 @@ class FragmentManager {
 			newFragment.addAtom(newAtom);
 			idMap.put(atom.getID(),ID);
 		}
-		for (int i = 0; i < outIDs.size(); i++) {
-			newFragment.addOutID(idMap.get(outIDs.get(i).id), outIDs.get(i).valency, outIDs.get(i).setExplicitly);
-		}
+        for (OutID outID : outIDs) {
+            newFragment.addOutID(idMap.get(outID.id), outID.valency, outID.setExplicitly);
+        }
 		for (FunctionalID functionalID : functionalIDs) {
 			newFragment.addFunctionalID(idMap.get(functionalID.id));
 		}
-		for (int i = 0; i < inIDs.size(); i++) {
-			newFragment.addInID(idMap.get(inIDs.get(i).id), inIDs.get(i).valency);
-		}
+        for (InID inID : inIDs) {
+            newFragment.addInID(idMap.get(inID.id), inID.valency);
+        }
 		newFragment.setDefaultInID(idMap.get(defaultInId));
 		List<Bond> bondList =originalFragment.getBondList();
 		for (Bond bond : bondList) {
@@ -444,14 +443,14 @@ class FragmentManager {
 	}
 
 	static void relabelFusedRingSystem(Fragment fusedring){
-		relabelFusedRingSystem(fusedring, fusedring.getAtomList());
+		relabelFusedRingSystem(fusedring.getAtomList());
 	}
 
 	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
 	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
 	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
 	 */
-	static void relabelFusedRingSystem(Fragment fusedring, List<Atom> atomList) {
+	static void relabelFusedRingSystem(List<Atom> atomList) {
 		int locantVal = 0;
 		char locantLetter = 'a';
 		for (Atom atom : atomList) {
@@ -577,7 +576,7 @@ class FragmentManager {
 	 * has it's own group and suffix fragments
 	 * @param elementToBeCloned
 	 * @param state The current buildstate
-	 * @param string A string to append to all locants in the cloned fragments
+	 * @param stringToAddToAllLocants A string to append to all locants in the cloned fragments
 	 * @return
 	 * @throws StructureBuildingException
 	 */
@@ -590,13 +589,13 @@ class FragmentManager {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
 			Fragment newFragment = copyAndRelabel(originalFragment, stringToAddToAllLocants);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
-			state.xmlFragmentMap.put((Element)clonedGroups.get(i), newFragment);
+			state.xmlFragmentMap.put(clonedGroups.get(i), newFragment);
 			ArrayList<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
 			ArrayList<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {
 				newSuffixFragments.add(state.fragManager.copyAndRelabel(suffix));
 			}
-			state.xmlSuffixMap.put((Element)clonedGroups.get(i), newSuffixFragments);
+			state.xmlSuffixMap.put(clonedGroups.get(i), newSuffixFragments);
 		}
 		Set<Bond> interFragmentBondsToClone = new HashSet<Bond>();
 		for (Fragment originalFragment : oldNewFragmentMapping.keySet()) {//add inter fragment bonds to cloned fragments
@@ -644,7 +643,7 @@ class FragmentManager {
 		for (String locant : atomThatReplacesTerminal.getLocants()) {
 			terminalAtom.addLocant(locant);
 		}
-		
+
 		parentFrag.importFrag(childFrag);
 		List<Atom> neighbours = atomThatReplacesTerminal.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
@@ -664,7 +663,7 @@ class FragmentManager {
 			fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
 		}
 	}
-	
+
 	/**
 	 * Gets a set of the inter fragment bonds a fragment is involved in
 	 * @param frag

@@ -14,14 +14,14 @@ import java.util.regex.Pattern;
  */
 class PreProcessor {
 	//private Pattern semiColon =Pattern.compile(";");
-	
+
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
-	
+
 	private static final String AMINE = "amine";
 	private static final String THIOL = "thiol";
 	private static final String CARBOXYLIC_ACID = "carboxylic acid";
-	
+
 	static {
 		GREEK_MAP.put("a", "alpha");
 		GREEK_MAP.put("b", "beta");
@@ -43,7 +43,7 @@ class PreProcessor {
 //		letterGreekMap.put("f", "phi");
 //		letterGreekMap.put("o", "omega");
 	}
-	
+
 	/**
 	 * Master method for PreProcessing
 	 * @param chemicalName
@@ -57,7 +57,7 @@ class PreProcessor {
 		if(THIOL.equalsIgnoreCase(chemicalName)) {return null;}//genericsulfane
 		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {return null;}//genericmethanoic acid
 		//Alcohol Aldehyde Alkane Alkene Alkyne Amide Amine Azo compound Benzene derivative Carboxylic acid Cyanate Disulfide Ester Ether Haloalkane Hydrazone Imine Isocyanide Isocyanate Ketone Oxime Nitrile Nitro compound Nitroso compound Peroxide Phosphoric acid Pyridine derivative Sulfone Sulfonic acid Sulfoxide Thioester Thioether Thiol
-		
+
 		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
 		while (m.find()){
 			if (chemicalName.length()>m.end()){
@@ -68,7 +68,7 @@ class PreProcessor {
 				}
 			}
 		}
-		
+
 		//chemicalName=semiColon.matcher(chemicalName).replaceAll(" ");
 
 		return chemicalName;

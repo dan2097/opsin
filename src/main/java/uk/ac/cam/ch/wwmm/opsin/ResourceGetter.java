@@ -16,22 +16,22 @@ import nu.xom.Document;
 
 /**Gets resource files from packages. Useful for including data in JAR files.
  * Cut down version of resourceGetter found in OSCAR
- * 
+ *
  * @author ptc24
  *
  */
-public final class ResourceGetter {
+final class ResourceGetter {
 
-	String resourcePath;
-	String workspace;
-	String resourcePrefix = "none";
-	private boolean skipFiles = false; 
-	
+	private String resourcePath;
+	private String workspace;
+	private String resourcePrefix = "none";
+	private boolean skipFiles = false;
+
 	/**
 	 * Sets up a resourceGetter to get resources from a particular path.
 	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.opsin.resources should be
 	 *  /uk/ac/cam/ch/wwmm/opsin/resources/
-	 * 
+	 *
 	 * @param resourcePath The /-separated resource path.
 	 */
 	public ResourceGetter(String resourcePath) {
@@ -61,18 +61,18 @@ public final class ResourceGetter {
 		this.resourcePath = resourcePath;
 		this.skipFiles = skipFiles;
 		this.workspace = workspace;
-		this.resourcePrefix = resourcePrefix; 
-		
+		this.resourcePrefix = resourcePrefix;
+
 		//workspace = (String) c.getField("workspace").get(oscar3Props);
 		//resourcePrefix = (String) c.getField("resourcePrefix").get(oscar3Props);
 	}
-	
+
 	private File getResDir() {
 		if(skipFiles) return null;
 		File resourcesTop = new File(workspace, "resources");
 		return new File(resourcesTop, resourcePath);
 	}
-	
+
 	private File getFile(String name) {
 		File f = new File(getResDir(), name);
 		if(f.isDirectory()) return null;
@@ -85,14 +85,13 @@ public final class ResourceGetter {
 		File resourcesTop = new File(workspace, "resources");
 		File resDir = new File(resourcesTop, resourcePath);
 		if(!resDir.exists()) resDir.mkdirs();
-		File f = new File(resDir, name);
-		return f;
+		return new File(resDir, name);
 	}
-	
+
 	/**Sets up an output stream to which a resource file can be written; this
-	 * resource file will be in a subdirectory of the resources directory in 
+	 * resource file will be in a subdirectory of the resources directory in
 	 * the workspace.
-	 * 
+	 *
 	 * @param name The name of the file to write.
 	 * @return The output stream.
 	 * @throws Exception
@@ -102,10 +101,10 @@ public final class ResourceGetter {
 		File f = getFileForWriting(name);
 		return new FileOutputStream(f);
 	}
-	
+
 	/**Fetches a data file from resourcePath,
 	 * and parses it to an XML Document.
-	 * 
+	 *
 	 * @param name The name of the file to parse.
 	 * @return The parsed document.
 	 * @throws Exception If the document can't be found, or can't parse, or is malformed/invalid.
@@ -118,17 +117,16 @@ public final class ResourceGetter {
 			} else {
 				ClassLoader l = getClass().getClassLoader();
 				if(!skipFiles && !"none".equals(resourcePrefix)) {
-					URL url = l.getResource(resourcePrefix + resourcePath + name);        					
+					URL url = l.getResource(resourcePrefix + resourcePath + name);
 					try {
-						Document d = new Builder().build(url.toString());						
+						Document d = new Builder().build(url.toString());
 						if(d != null) return d;
 					} catch (Exception e) {
 						// Squelching the exceptions that come from failing to find a file here
 					}
 				}
-				URL url = l.getResource(resourcePath + name);        
-				Document d = new Builder().build(url.toString());
-				return d;
+				URL url = l.getResource(resourcePath + name);
+				return new Builder().build(url.toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,7 +135,7 @@ public final class ResourceGetter {
 	}
 
 	/**Fetches a data file from resourcePath as an InputStream.
-	 * 
+	 *
 	 * @param name The name of the file to get an InputStream of.
 	 * @return An InputStream corresponding to the file.
 	 * @throws Exception If the resouce file couldn't be found.
@@ -151,7 +149,7 @@ public final class ResourceGetter {
 			} else {
 				ClassLoader l = getClass().getClassLoader();
 				if(!skipFiles && !"none".equals(resourcePrefix)) {
-					URL url = l.getResource(resourcePrefix + resourcePath + name);        					
+					URL url = l.getResource(resourcePrefix + resourcePath + name);
 					try {
 						if(url != null) {
 							InputStream i = url.openStream();
@@ -163,18 +161,17 @@ public final class ResourceGetter {
 				}
 				URL url = l.getResource(resourcePath + name);
 				if(url == null) return null;
-				InputStream i = url.openStream();
-				return i;
+				return url.openStream();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Could not get resource file: " + name);
 		}
 	}
-	
+
 	/**Fetches a data file from resourcePath, and returns the entire contents
 	 * as a string.
-	 * 
+	 *
 	 * @param name The file to fetch.
 	 * @return The string.
 	 * @throws Exception
@@ -182,9 +179,9 @@ public final class ResourceGetter {
 	public String getString(String name) throws Exception {
 		return readText(new InputStreamReader(getStream(name), "UTF-8"));
 	}
-	
+
 	/**Reads a text file into a single string.
-	 * 
+	 *
 	 * @param r The Reader to read the text file.
 	 * @return The string.
 	 * @throws Exception
@@ -196,5 +193,5 @@ public final class ResourceGetter {
 		br.close();
 		return sb.toString();
 	}
-	
+
 }

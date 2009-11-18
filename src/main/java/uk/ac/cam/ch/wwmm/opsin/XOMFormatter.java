@@ -8,17 +8,17 @@ import nu.xom.Element;
 import nu.xom.Serializer;
 
 /**Turns a XOM Element into a pretty indented string.
- * 
+ *
  * @author ptc24
  *
  */
-public class XOMFormatter {
+class XOMFormatter {
 
-	ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-	Serializer serializer;	
+	private ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+	private Serializer serializer;
 
 	/**Sets up a new XOMFormatter.
-	 * 
+	 *
 	 */
 	public XOMFormatter() {
 		super();
@@ -28,12 +28,12 @@ public class XOMFormatter {
 			serializer.setMaxLength(300);
 		    }
 		    catch (IOException ex) {
-		       System.err.println(ex); 
+		       System.err.println(ex);
 		    }
 	}
 
 	/**Converts an Element to an indented string.
-	 * 
+	 *
 	 * @param elem The Element to convert to a string.
 	 * @return The string.
 	 */

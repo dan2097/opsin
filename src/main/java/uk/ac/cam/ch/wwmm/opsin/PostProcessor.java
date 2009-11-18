@@ -87,7 +87,7 @@ class PostProcessor {
 	 *
 	 * @param elem The element to postprocess.
 	 * @param state
-	 * @return 
+	 * @return
 	 * @throws Exception
 	 */
 	void postProcess(Element elem, BuildState state) throws Exception {
@@ -145,7 +145,7 @@ class PostProcessor {
 					}
 				}
 			}
-			
+
 			if (nextEl !=null && nextEl.getLocalName().equals("hydrocarbonFusedRingSystem")&& nextEl.getValue().equals("phen")){
 				Element possibleSuffix = (Element) XOMTools.getNextSibling(nextEl);
 				if (possibleSuffix!=null){//null if not used as substituent
@@ -176,9 +176,8 @@ class PostProcessor {
 	 * These are chains of one heteroatom or alternating heteroatoms and are expressed using SMILES
 	 * They are typically treated in an analagous way to alkanes
 	 * @param elem The root/substituents
-	 * @throws PostProcessingException If there is a disagreement.
 	 */
-	private void processHeterogenousHydrides(Element elem) throws PostProcessingException {
+	private void processHeterogenousHydrides(Element elem)  {
 		Elements multipliers = elem.getChildElements("multiplier");
 		for(int i=0;i<multipliers.size();i++) {
 			Element m = multipliers.get(i);
@@ -263,18 +262,17 @@ class PostProcessor {
 			Element hydrogen = hydrogens.get(i);
 			String txt = hydrogen.getChild(0).getValue();
 			String[] hydrogenLocants =txt.split(",");
-			for (int j = 0; j < hydrogenLocants.length; j++) {
-				if(hydrogenLocants[j].endsWith("H-")) {
-					Element newHydrogenElement =new Element("hydrogen");
-					newHydrogenElement.addAttribute(new Attribute("locant", hydrogenLocants[j].substring(0, hydrogenLocants[j].length()-2)));
-					XOMTools.insertAfter(hydrogen, newHydrogenElement);
-				}
-				else if(hydrogenLocants[j].endsWith("H")) {
-					Element newHydrogenElement =new Element("hydrogen");
-					newHydrogenElement.addAttribute(new Attribute("locant", hydrogenLocants[j].substring(0, hydrogenLocants[j].length()-1)));
-					XOMTools.insertAfter(hydrogen, newHydrogenElement);
-				}
-			}
+            for (String hydrogenLocant : hydrogenLocants) {
+                if (hydrogenLocant.endsWith("H-")) {
+                    Element newHydrogenElement = new Element("hydrogen");
+                    newHydrogenElement.addAttribute(new Attribute("locant", hydrogenLocant.substring(0, hydrogenLocant.length() - 2)));
+                    XOMTools.insertAfter(hydrogen, newHydrogenElement);
+                } else if (hydrogenLocant.endsWith("H")) {
+                    Element newHydrogenElement = new Element("hydrogen");
+                    newHydrogenElement.addAttribute(new Attribute("locant", hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
+                    XOMTools.insertAfter(hydrogen, newHydrogenElement);
+                }
+            }
 			hydrogen.detach();
 		}
 	}
@@ -297,43 +295,37 @@ class PostProcessor {
 				else{
 					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
 					String[] stereoChemistryDescriptors = matchComma.split(txt);
-					for (int j = 0; j < stereoChemistryDescriptors.length; j++) {
-						String stereoChemistryDescriptor =stereoChemistryDescriptors[j];
-						if (stereoChemistryDescriptor.length()>1){
-							Matcher m =matchStereochemistry.matcher(stereoChemistryDescriptor);
-							if (m.matches()){
-								Element stereoChemEl =new Element("stereoChemistry");
-								stereoChemEl.addAttribute(new Attribute("locant", m.group(1)));
-								stereoChemEl.addAttribute(new Attribute("value", m.group(2).toUpperCase()));
-								stereoChemEl.appendChild(stereoChemistryDescriptor);
-								XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
-								if (matchRS.matcher(m.group(2)).matches()){
-									stereoChemEl.addAttribute(new Attribute("type", "RorS"));
-								}
-								else{
-									stereoChemEl.addAttribute(new Attribute("type", "EorZ"));
-								}
-							}
-							else{
-								throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
-							}
-						}
-						else{
-							Element stereoChemEl =new Element("stereoChemistry");
-							stereoChemEl.addAttribute(new Attribute("value", stereoChemistryDescriptor.toUpperCase()));
-							stereoChemEl.appendChild(stereoChemistryDescriptor);
-							XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
-							if (matchRS.matcher(stereoChemistryDescriptor).matches()){
-								stereoChemEl.addAttribute(new Attribute("type", "RorS"));
-							}
-							else if (matchEZ.matcher(stereoChemistryDescriptor).matches()){
-								stereoChemEl.addAttribute(new Attribute("type", "EorZ"));
-							}
-							else{
-								throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
-							}
-						}
-					}
+                    for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
+                        if (stereoChemistryDescriptor.length() > 1) {
+                            Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
+                            if (m.matches()) {
+                                Element stereoChemEl = new Element("stereoChemistry");
+                                stereoChemEl.addAttribute(new Attribute("locant", m.group(1)));
+                                stereoChemEl.addAttribute(new Attribute("value", m.group(2).toUpperCase()));
+                                stereoChemEl.appendChild(stereoChemistryDescriptor);
+                                XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
+                                if (matchRS.matcher(m.group(2)).matches()) {
+                                    stereoChemEl.addAttribute(new Attribute("type", "RorS"));
+                                } else {
+                                    stereoChemEl.addAttribute(new Attribute("type", "EorZ"));
+                                }
+                            } else {
+                                throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+                            }
+                        } else {
+                            Element stereoChemEl = new Element("stereoChemistry");
+                            stereoChemEl.addAttribute(new Attribute("value", stereoChemistryDescriptor.toUpperCase()));
+                            stereoChemEl.appendChild(stereoChemistryDescriptor);
+                            XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
+                            if (matchRS.matcher(stereoChemistryDescriptor).matches()) {
+                                stereoChemEl.addAttribute(new Attribute("type", "RorS"));
+                            } else if (matchEZ.matcher(stereoChemistryDescriptor).matches()) {
+                                stereoChemEl.addAttribute(new Attribute("type", "EorZ"));
+                            } else {
+                                throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+                            }
+                        }
+                    }
 				}
 				stereoChemistryElement.detach();
 			}
@@ -395,12 +387,12 @@ class PostProcessor {
 	 * The elementsValue is expected to be a comma seperated lambda values and 0 or more locants. Where a lambda value has the following form:
 	 * optional locant, the word lambda and then a number which is the valency specified (with possibly some attempt to indicate this number is superscripted)
 	 * If the element is followed by heteroatoms (possibly multiplied) they are multiplied and the locant/lambda assigned to them
-	 * Otherwise a new lambdaConvention element is created with the valency specified by the lambda convention taking the attribute "lambda" 
+	 * Otherwise a new lambdaConvention element is created with the valency specified by the lambda convention taking the attribute "lambda"
 	 * In the case where heteroatoms belong to a fused ring system a new lambdaConvention element is also created. The original locants are retained in the benzo specific fused ring nomenclature:
 	 * 2H-5lambda^5-phosphinino[3,2-b]pyran --> 2H 5lambda^5 phosphinino[3,2-b]pyran  BUT
 	 * 1lambda^4,5-Benzodithiepin  --> 1lambda^4 1,5-Benzodithiepin
 	 * @param subOrRoot
-	 * @throws PostProcessingException 
+	 * @throws PostProcessingException
 	 */
 	private void processLambdaConvention(Element subOrRoot) throws PostProcessingException {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
@@ -438,7 +430,7 @@ class PostProcessor {
 				}
 			}
 			else if(heteroCount==0 && fusedRingPresent &&
-					possibleHeteroatomOrMultiplier!=null && possibleHeteroatomOrMultiplier.getLocalName().equals("group") && 
+					possibleHeteroatomOrMultiplier!=null && possibleHeteroatomOrMultiplier.getLocalName().equals("group") &&
 					possibleHeteroatomOrMultiplier.getValue().equals("benzo")||possibleHeteroatomOrMultiplier.getValue().equals("benz")){
 				benzoFusedRing = true;
 			}
@@ -775,7 +767,7 @@ class PostProcessor {
 	/**Looks (multiplier)cyclo/spiro/cyclo tags before chain
 	 * and replaces them with a group with appropriate SMILES
 	 * Note that only simple spiro tags are handled at this stage i.e. not dispiro
-	 * @param elem A group which is potentially a chain
+	 * @param group A group which is potentially a chain
 	 * @throws PostProcessingException
 	 */
 	private void processRings(Element group) throws PostProcessingException {
@@ -1122,7 +1114,7 @@ class PostProcessor {
 	/**Handles special cases in IUPAC nomenclature.
 	 * Benzyl etc.
 	 * @param state
-	 * @param elem The group to look for irregularities in.
+	 * @param group The group to look for irregularities in.
 	 */
 	private void handleIrregularities(Element group, BuildState state) throws PostProcessingException {
 		String groupValue =group.getValue();
@@ -1200,7 +1192,7 @@ class PostProcessor {
 
 	/**
 	 * Converts hydro substituents to properties of the next group of type ring
-	 * @param Element group
+	 * @param group
 	 * @throws PostProcessingException
 	 */
 	private void processHydroSubstituents(Element group) throws PostProcessingException {
@@ -1237,7 +1229,7 @@ class PostProcessor {
 							}
 							currentElem = (Element)XOMTools.getNextSibling(currentElem);
 						}
-						if (heteroCount==locants){//number of locants must match number 
+						if (heteroCount==locants){//number of locants must match number
 							targetRing =potentialRing;
 						}
 					}
@@ -1246,7 +1238,7 @@ class PostProcessor {
 					targetRing =potentialRing;
 				}
 			}
-			
+
 			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
 			if (targetRing ==null){
 				Element nextSubOrRootOrBracketfromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling

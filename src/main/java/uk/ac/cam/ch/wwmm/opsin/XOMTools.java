@@ -10,26 +10,26 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 import nu.xom.Text;
 
-/** 
+/**
  * Accessory functions for the manipulation of XOM Nodes/Elements
  * Only those that are neccesary for OPSIN's execution
  * @author dl387
  * @author ptc24
  */
 public final class XOMTools {
-	
+
     /**Gets the next sibling of a given node.
     *
     * @param node The reference node.
     * @return The next Sibling, or null.
-    */	
+    */
 	public static Node getNextSibling(Node node) {
 		ParentNode parent = node.getParent();
 		int i = parent.indexOf(node);
 		if (i+1 >= parent.getChildCount()) return null;
 		return parent.getChild(i+1);
 	}
-	
+
 	/**Gets the first next sibling of a given node whose tagname matches the given string.
     *
     * @param current The reference node.
@@ -67,8 +67,8 @@ public final class XOMTools {
 		if (i==0) return null;
 		return parent.getChild(i-1);
 	}
-	
-	
+
+
 	/**Gets the first previous sibling of a given node whose tagname matches the given string.
     *
     * @param current The reference node.
@@ -117,7 +117,7 @@ public final class XOMTools {
 		int i = parent.indexOf(node);
 		parent.insertChild(newNode, i+1);
 	}
- 
+
 	/**Sets the namespace URI of an Element, and all child elements,
 	 * recursively.
 	 *
@@ -133,7 +133,7 @@ public final class XOMTools {
 
 	/**
 	 * Gets the next node. This element need not be a sibling
-	 * @param current: starting node
+	 * @param node: starting node
 	 * @return
 	 */
 	public static Node getNext(Node node) {
@@ -154,7 +154,7 @@ public final class XOMTools {
 
 	/**
 	 * Gets the previous node. This element need not be a sibling
-	 * @param current: starting node
+	 * @param node: starting node
 	 * @return
 	 */
 	public static Node getPrevious(Node node) {
@@ -217,7 +217,7 @@ public final class XOMTools {
 	 * Returns an arrayList containing sibling elements of the given types after the given element.
 	 * These elements need not be continuous and are returned in the order encountered
 	 * @param currentElem: the element to look for following siblings of
-	 * @param type: the "localname" of the element types desired
+	 * @param types: An array of the "localname"s of the element types desired
 	 * @return
 	 */
 	public static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] types){
@@ -423,7 +423,6 @@ public final class XOMTools {
 	 * Finds and returns the count of descendant elements
 	 * Equivalent to the size of the nodes array returned from the xquery .//* from the startingElement
 	 * @param startingElement
-	 * @param elementName
 	 * @return
 	 */
 	public static int countDescendantElements(Element startingElement) {

@@ -19,7 +19,7 @@ class CMLFragmentBuilder {
 	private Document fragmentDoc;
 
 	/**Initialises the builder.
-	 * @param resourceGetter 
+	 * @param resourceGetter
 	 *
 	 * @throws Exception If the fragments file can't be found, or the document can't be built.
 	 */
@@ -49,7 +49,7 @@ class CMLFragmentBuilder {
 	 * @param type The type of the fragment, for the purpose of suffix interpretation.
 	 * @param subType The subType of the fragment, for the purpose of suffix interpretation.
 	 * @return The built fragment.
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Fragment build(Element cmlMol, String type, String subType, IDManager idManager) throws StructureBuildingException {
 		Element atomArray = cmlMol.getFirstChildElement("atomArray");
