@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 /**Thrown during the construction of the CML molecule.
- * 
+ *
  * @author ptc24
  *
  */

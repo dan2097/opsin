@@ -3,7 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 /**A "struct" containing data on the parsing of a word in a chemical name.
- * 
+ *
  * @author ptc24
  *
  */
@@ -14,7 +14,7 @@ class ParseWord {
 	String wordType;
 	/**All of the possible tokenisations of the word.*/
 	List<ParseTokens> parseTokens;
-	
+
 	ParseWord deepCopy() {
 		ParseWord pw = new ParseWord();
 		pw.word = word;
@@ -29,7 +29,7 @@ class ParseWord {
 		}
 		return pw;
 	}
-	
+
 	public String toString() {
 		return "[" + word + ", " + wordType + ", " + parseTokens.toString() + "]";
 	}

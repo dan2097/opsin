@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
+﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
   <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V"><!--the a is part of the multiplier and the e is assumed to be optional -->

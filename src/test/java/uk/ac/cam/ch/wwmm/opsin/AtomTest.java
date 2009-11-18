@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class AtomTest {
 
-	static Builder builder = new Builder();
+	static final Builder builder = new Builder();
 	private Fragment frag;
 	
 	@Before

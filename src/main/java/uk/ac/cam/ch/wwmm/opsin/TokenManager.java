@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
-import nu.xom.Text;
 
 /**Holds all of the tokens used in parsing of chemical names.
  * Generates XML Elements for tokens.
@@ -32,7 +31,7 @@ class TokenManager {
 	HashMap<Character, List<Pattern>> symbolRegexesDict;
 
 	/**Generates the TokenManager.
-	 * @param resourceGetter 
+	 * @param resourceGetter
 	 *
 	 * @throws Exception If the XML token and regex files can't be read in properly.
 	 */
@@ -46,7 +45,7 @@ class TokenManager {
 		Document tokenFiles = resourceGetter.getXMLDocument("index.xml");
 		Elements files = tokenFiles.getRootElement().getChildElements("tokenFile");
 		for(int i=0;i<files.size();i++) {
-			Element rootElement = resourceGetter.getXMLDocument(((Text)files.get(i).getChild(0)).getValue()).getRootElement();
+			Element rootElement = resourceGetter.getXMLDocument(files.get(i).getChild(0).getValue()).getRootElement();
 			List<Element> tokenLists =new ArrayList<Element>();
 			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
 				Elements children =rootElement.getChildElements();
@@ -61,7 +60,7 @@ class TokenManager {
 				char symbol = tokenList.getAttributeValue("symbol").charAt(0);
 				Elements tokenElements = tokenList.getChildElements("token");
 				for(int j=0;j<tokenElements.size();j++) {
-					String t = ((Text)tokenElements.get(j).getChild(0)).getValue();
+					String t = tokenElements.get(j).getChild(0).getValue();
 
 					if(!tokenDict.containsKey(t)) {
 						tokenDict.put(t, new HashMap<Character, Token>());

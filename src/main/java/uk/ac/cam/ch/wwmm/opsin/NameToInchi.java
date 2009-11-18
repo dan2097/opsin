@@ -25,7 +25,7 @@ public class NameToInchi {
 	public NameToInchi() throws Exception {
 		n2s = NameToStructure.getInstance();
 	}
-	
+
 	/**Parses a chemical name, returning an unambiguous InChI representation of the molecule.
 	 *
 	 * @param name The chemical name to parse.
@@ -53,7 +53,7 @@ public class NameToInchi {
 			return inchi;
 		}
 	}
-	
+
 	private String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{
 		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<Integer, JniInchiAtom>();
 		List<INCHI_OPTION> options = new ArrayList<INCHI_OPTION>();
@@ -123,8 +123,8 @@ public class NameToInchi {
     	}
     	return output.getInchi();
 	}
-	
-	
+
+
 	/**Run OPSIN as a standalone component for Inchi generation
 	 *
 	 * @param args

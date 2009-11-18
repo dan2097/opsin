@@ -18,13 +18,13 @@ class BuildResults {
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
 	 * These OutIDs are the same objects as are present in the fragments*/
 	private LinkedList<OutID> outIDs;
-	
+
 	/**The ID or IDs of the atoms that may be used to from things like esters*/
 	private LinkedList<FunctionalID> functionalIDs;
-	
+
 	/**The ID or IDs of the atoms that must have bonds formed to them. Rarely used expect in the root of multiplicative names*/
 	private LinkedList<InID> inIDs;
-	
+
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
 	private LinkedHashSet<Fragment> fragments;
 
@@ -44,7 +44,7 @@ class BuildResults {
 			inIDs.addAll(frag.getInIDs());
 		}
 	}
-	
+
 	/**
 	 * Construct a blank buildResults
 	 */
@@ -54,7 +54,7 @@ class BuildResults {
 		inIDs = new LinkedList<InID>();
 		fragments = new LinkedHashSet<Fragment>();
 	}
-	
+
 	/**
 	 * Returns a read only view of the fragments in this BuildResults
 	 * @return
@@ -66,24 +66,24 @@ class BuildResults {
 	int getFragmentCount(){
 		return fragments.size();
 	}
-	
+
 	/**
 	 * Returns the atom corresponding to position i in the outID list
 	 * @param i index
 	 * @return atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom getOutAtom(int i) throws StructureBuildingException {
 		OutID outID = outIDs.get(i);
 		return outID.frag.getAtomByIDOrThrow(outID.id);
 	}
-	
+
 	/**
 	 * Returns the atom corresponding to position i in the outIDs list
 	 * If not set explicitly and atom would violate valency or break aromaticity another is looked for
 	 * @param i index
 	 * @return atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom getOutAtomTakingIntoAccountWhetherSetExplicitly(int i) throws StructureBuildingException {
 		OutID outID = outIDs.get(i);
@@ -94,15 +94,15 @@ class BuildResults {
 			return outID.frag.getAtomByIdOrNextSuitableAtomOrThrow(outID.id, outID.valency);
 		}
 	}
-	
+
 	OutID getOutID(int i){
 		return outIDs.get(i);
 	}
-	
+
 	int getOutIDCount(){
 		return outIDs.size();
 	}
-	
+
 	void removeOutID(int i) throws StructureBuildingException{
 		OutID outID =outIDs.get(i);
 		if (outID.frag!=null){
@@ -110,36 +110,36 @@ class BuildResults {
 		}
 		outIDs.remove(i);
 	}
-	
+
 	void removeAllOutIDs() throws StructureBuildingException{
 		for (int i = outIDs.size() -1; i >=0 ; i--) {
 			removeOutID(i);
 		}
 	}
-	
+
 	/**
 	 * Returns the atom corresponding to position i in the functionalIDs list
 	 * @param i index
 	 * @return atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom getFunctionalAtom(int i) throws StructureBuildingException {
 		FunctionalID functionalId =functionalIDs.get(i);
 		return functionalId.frag.getAtomByIDOrThrow(functionalId.id);
 	}
-	
-	void removeFunctionalID(int i) throws StructureBuildingException{
+
+	void removeFunctionalID(int i) {
 		FunctionalID functionalID =functionalIDs.get(i);
 		if (functionalID.frag!=null){
 			functionalID.frag.removeFunctionalID(functionalID);
 		}
 		functionalIDs.remove(i);
 	}
-	
+
 	int getFunctionalIDCount(){
 		return functionalIDs.size();
 	}
-	
+
 	/**
 	 * Returns the first OutId
 	 * @return OutID
@@ -147,15 +147,15 @@ class BuildResults {
 	OutID getFirstOutID(){
 		return outIDs.get(0);
 	}
-	
+
 	int getInIDCount(){
 		return inIDs.size();
 	}
 	/**
 	 * Returns the atom corresponding to the given id assuming the atom the id corresponds to is within the list of fragment in this Buildresults
-	 * @param i index
+	 * @param id index
 	 * @return atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom getAtomByIdOrThrow(int id) throws StructureBuildingException {
 		for (Fragment fragment : fragments) {

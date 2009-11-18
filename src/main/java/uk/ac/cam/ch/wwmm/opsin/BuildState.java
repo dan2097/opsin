@@ -14,15 +14,15 @@ import nu.xom.Element;
  * @author dl387
  *
  */
-public class BuildState {
-	
+class BuildState {
+
 	IDManager idManager;
 	FragmentManager fragManager;
 	String wordRule;
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
 	boolean debug = false;
-	
+
 	/**
 	 * Wrapper class for returning multiple objects
 	 */

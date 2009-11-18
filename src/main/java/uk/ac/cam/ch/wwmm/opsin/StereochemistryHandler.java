@@ -18,15 +18,15 @@ import nu.xom.Element;
  * @author dl387
  *
  */
-public class StereochemistryHandler {
+class StereochemistryHandler {
 
 	/**
 	 * Master method for assigning and processing stereochemistry elements
 	 * @param state
-	 * @param molecule 
+	 * @param molecule
 	 * @param uniFrag
 	 * @param stereoChemistryEls
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	static void processStereochemicalElements(BuildState state, Element molecule, Fragment uniFrag, List<Element> stereoChemistryEls) throws StructureBuildingException {
 		OpsinToChemKitWrapper chemKitMoleculeWrapper = new OpsinToChemKitWrapper(uniFrag);
@@ -42,22 +42,21 @@ public class StereochemistryHandler {
 			Bond b = uniFrag.findBondOrThrow(chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom(stereoBond.getBond().getAtom0()),chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom( stereoBond.getBond().getAtom1()));
 			bondStereoBondMap.put(b, stereoBond);
 		}
-		
-		matchStereochemistryToAtomsAndBonds(state, molecule, stereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
+
+		matchStereochemistryToAtomsAndBonds(state, stereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
 	}
-	
-	
+
+
 	/**
 	 * Finds all stereochemistry elements and attempts to locate a suitable atom/bond for them
 	 * Currently only locanted stereochemistry elements are supported
-	 * @param state 
+	 * @param state
 	 * @param stereoChemistryEls A list of stereochemistry elements
-	 * @param molecule The molecule element
-	 * @param bondStereoBondMap 
-	 * @param atomStereoCentreMap 
-	 * @throws StructureBuildingException 
+	 * @param atomStereoCentreMap
+	 * @param bondStereoBondMap
+	 * @throws StructureBuildingException
 	 */
-	private static void matchStereochemistryToAtomsAndBonds(BuildState state, Element molecule, List<Element> stereoChemistryEls, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) throws StructureBuildingException {
+	private static void matchStereochemistryToAtomsAndBonds(BuildState state, List<Element> stereoChemistryEls, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) throws StructureBuildingException {
 		for (int i = stereoChemistryEls.size()-1; i >=0 ; i--) {
 			Element stereoChemistryEl = stereoChemistryEls.get(i);
 			String stereoChemistryType =stereoChemistryEl.getAttributeValue("type");
@@ -85,14 +84,14 @@ public class StereochemistryHandler {
 			}
 			stereoChemistryEl.detach();
 		}
-		
+
 	}
 
 	/**
 	 * Handles R/S stereochemistry. r/s is not currently handled
 	 * @param state
 	 * @param stereoChemistryEl
-	 * @param atomStereoCentreMap 
+	 * @param atomStereoCentreMap
 	 * @throws StructureBuildingException
 	 */
 	private static void assignStereoCentre(BuildState state,Element stereoChemistryEl, Map<Atom, StereoCentre> atomStereoCentreMap) throws StructureBuildingException {
@@ -153,14 +152,14 @@ public class StereochemistryHandler {
 		}
 		throw new StructureBuildingException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 	}
-	
+
 
 	/**
 	 * Assigns atom parity to the given atom in accordance with the CIP rules
 	 * @param atom The stereoAtom
 	 * @param stereoCentre
 	 * @param rOrS The description given in the name
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	private static void applyStereoChemistryToStereoCentre(Atom atom, StereoCentre stereoCentre, String rOrS) throws StructureBuildingException {
 		List<CMLAtom> cipOrderedAtoms =stereoCentre.getNeighbours();
@@ -273,7 +272,7 @@ public class StereochemistryHandler {
 		}
 		throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
 	}
-	
+
 
 	/**
 	 * Assigns bondstereo to the given bond in accordance with the CIP rules

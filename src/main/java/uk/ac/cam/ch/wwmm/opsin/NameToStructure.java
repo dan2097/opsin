@@ -130,7 +130,7 @@ public class NameToStructure {
 			return cml;
 		}
 	}
-	
+
 	/**Parses a chemical name, returning an OPSIN fragment which represents the molecule.
 	 * This is null if the name cannot be interpreted
 	 *

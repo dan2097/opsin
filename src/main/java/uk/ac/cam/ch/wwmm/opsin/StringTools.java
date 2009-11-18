@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;import java.util.List;
 
 /**Static routines for string manipulation.
  * This is a specially tailored version of StringTools as found in OSCAR for use in OPSIN
@@ -58,7 +58,7 @@ public final class StringTools {
 	public static String stringListToString(List<String> l, String separator) {
 		StringBuffer sb = new StringBuffer();
 		for(int i=0;i<l.size();i++) {
-			sb.append(l.get(i).toString());
+			sb.append(l.get(i));
 			if(separator != null && i < l.size()-1) sb.append(separator);
 		}
 		return sb.toString();
@@ -106,9 +106,8 @@ public final class StringTools {
 			if(c == ')' || c == ']' || c == '}') bracketLevel--;
 			if(bracketLevel == -1) return false;
 		}
-		if(bracketLevel == 0) return true;
-		return false;
-	}
+        return bracketLevel == 0;
+		}
 
 	/**Joins an array of strings into a single string.
 	 *
@@ -188,15 +187,13 @@ public final class StringTools {
 	}
 
 	/**Converts a string array to an ArrayList.
-	 *
+	 * 
 	 * @param array The array.
 	 * @return The ArrayList.
 	 */
 	public static List<String> arrayToList(String [] array) {
 		List<String> list = new ArrayList<String>();
-		for(int i=0;i<array.length;i++) {
-			list.add(array[i]);
-		}
+        list.addAll(Arrays.asList(array));
 		return list;
 	}
 

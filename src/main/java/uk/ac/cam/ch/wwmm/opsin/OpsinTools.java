@@ -50,7 +50,7 @@ class OpsinTools {
 	public static ArrayList<Element> elementsToElementArrayList(Elements elements) {
 		ArrayList<Element> elementList =new ArrayList<Element>(elements.size());
 		for (int i = 0, n=elements.size(); i < n; i++) {
-			elementList.add((Element) elements.get(i));
+			elementList.add(elements.get(i));
 		}
 		return elementList;
 	}
@@ -137,7 +137,7 @@ class OpsinTools {
 	 * @param startingAtom
 	 * @param targetLocant
 	 * @return the matching atom or null
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	public static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) throws StructureBuildingException {
 		LinkedList<Atom> stack = new LinkedList<Atom>();
@@ -152,7 +152,7 @@ class OpsinTools {
 					continue;
 				}
 				List<String> locants = neighbour.getLocants();
-				
+
 				//A main group atom, would expect to only find one except in something strange like succinimide
 				//The locants.size()>0 condition allows things like terephthalate to work which have an atom between the suffixes and main atoms that has no locant
 				if (locants.size()>0 && !neighbour.getType().equals("suffix")){

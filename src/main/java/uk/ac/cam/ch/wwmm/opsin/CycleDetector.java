@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 class CycleDetector {
-	
+
 	/**
 	 * Performs a depth first search for rings hence assigning whether atoms are in rings or not
 	 * This is necessary for deciding the applicability, and in some cases meaning, of suffixes and to determine what atoms are capable of having spare valency
@@ -28,7 +28,7 @@ class CycleDetector {
 			for (Atom neighbour : neighbours) {
 				atomStack.add(new Atom[]{neighbour,a});//record both the atom and the atom from which you came from
 			}
-	
+
 			while (atomStack.size()>0){
 				Atom[] nextAtomArray =atomStack.removeLast();//depth first traversal
 				a =nextAtomArray[0];

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**A "struct" containing data on the parsing of a chemical name.
- * 
+ *
  * @author ptc24
  *
  */
@@ -15,7 +15,7 @@ class Parse {
 	String wordRule;
 	/**The words within the name, and their parsing data.*/
 	List<ParseWord> words = new ArrayList<ParseWord>();
-	
+
 	/**
 	 * Creates a parse object for a chemicalName
 	 * @param chemicalName
@@ -32,7 +32,7 @@ class Parse {
 		}
 		return p;
 	}
-	
+
 	public String toString() {
 		return "[" + name + ", " + wordRule + ", " + words.toString() + "]";
 	}

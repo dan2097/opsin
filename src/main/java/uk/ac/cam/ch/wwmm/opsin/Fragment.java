@@ -48,7 +48,7 @@ class Fragment {
 	/**The IDs of atoms that are used on this fragment to form things like esters
 	 * Initially empty */
 	private LinkedList<FunctionalID> functionalIDs = new LinkedList<FunctionalID>();
-	
+
 	/**The IDs of atoms that must be bonded to and the order of the bonds. Currently used in suffixes and in multiplicative nomenclature
 	 * Initially empty */
 	private LinkedList<InID> inIDs = new LinkedList<InID>();
@@ -61,14 +61,14 @@ class Fragment {
 	/**The id of the indicated Hydrogen on the fragment.
 	 * Defaults to null.*/
 	private Integer indicatedHydrogen;
-	
+
 	private static Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 	private static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
 	/**Makes an empty Fragment with a given type and subType.
 	 *
 	 * @param type The type of the fragment
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Fragment(String type, String subType) throws StructureBuildingException {
 		if (type==null){
@@ -87,7 +87,7 @@ class Fragment {
 	/**Produces a CML cml element, corresponding to the molecule. The cml element contains
 	 * a molecule, which contains an atomArray and bondArray filled with atoms and bonds.
 	 * The molecule element has a dummy id of m1.
-	 * @param chemicalName 
+	 * @param chemicalName
 	 *
 	 * @return The CML element.
 	 * @see Atom
@@ -149,8 +149,8 @@ class Fragment {
 	 * Adds a bond to the fragment.
 	 * associateWithAtoms is false when adding to the dummyFragment, bondpile, which does not contain any atoms
 	 * or if the atoms are known to already have the bond associated with them
-	 * @param Bond bond
-	 * @param Boolean associateWithAtoms
+	 * @param bond
+	 * @param associateWithAtoms
 	 */
 	void addBond(Bond bond, boolean associateWithAtoms) {
 		bondList.add(bond);
@@ -225,7 +225,7 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The found atom, or null if it is not found
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Atom getAtomByLocant(String locant) throws StructureBuildingException {
 		Atom a =atomMapFromLocant.get(locant);
@@ -239,7 +239,7 @@ class Fragment {
 				return null;
 			}
 			String elementSymbol = m.group(1);
-			locant = elementSymbol +m.group(2);//the element symbol +primes	
+			locant = elementSymbol +m.group(2);//the element symbol +primes
 			//depth first search for the atom with this locant terminating whenever a numeric locant is encountered
 			LinkedList<Atom> stack = new LinkedList<Atom>();
 			stack.add(a);
@@ -380,7 +380,7 @@ class Fragment {
 	 * @param a1 An atom
 	 * @param a2 Another atom
 	 * @return The bond found
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	Bond findBondOrThrow(Atom a1, Atom a2) throws StructureBuildingException {
 		Bond b = findBond(a1, a2);
@@ -442,7 +442,7 @@ class Fragment {
 			getAtomByIDOrThrow(outID.id).addOutValency(outID.valency);
 		}
 	}
-	
+
 	/**Adds a list of outIDs, copies of the given outIDs are not made*/
 	void addOutIDs(List<OutID> outIDs) {
 		this.outIDs.addAll(outIDs);
@@ -451,7 +451,7 @@ class Fragment {
 	/**
 	 * Removes the outID at a specific index of the outIDs linkedList
 	 * @param i
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	void removeOutID(int i) throws StructureBuildingException {
 		OutID removedOutID = outIDs.remove(i);
@@ -459,11 +459,11 @@ class Fragment {
 			getAtomByIDOrThrow(removedOutID.id).addOutValency(-removedOutID.valency);
 		}
 	}
-	
+
 	/**
 	 * Removes the specified outID from the outIDs linkedList
 	 * @param outID
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	void removeOutID(OutID outID) throws StructureBuildingException {
 		outIDs.remove(outID);
@@ -471,7 +471,7 @@ class Fragment {
 			getAtomByIDOrThrow(outID.id).addOutValency(-outID.valency);
 		}
 	}
-	
+
 	/**Gets the linkedList of inIDs. This is not modifiable, use the relevant methods in this class to modify it*/
 	List<InID> getInIDs() {
 		return Collections.unmodifiableList(inIDs);
@@ -496,17 +496,17 @@ class Fragment {
 	/**
 	 * Removes the inID at a specific index of the inIDs linkedList
 	 * @param i
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	void removeInID(int i) throws StructureBuildingException {
 		InID removedinID = inIDs.remove(i);
 		getAtomByIDOrThrow(removedinID.id).addOutValency(-removedinID.valency);
 	}
-	
+
 	/**
 	 * Removes the specified inID from the inIDs linkedList
 	 * @param inID
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	void removeInID(InID inID) throws StructureBuildingException {
 		inIDs.remove(inID);
@@ -544,7 +544,7 @@ class Fragment {
 	void removeFunctionalID(int i) {
 		functionalIDs.remove(i);
 	}
-	
+
 	/**
 	 * Removes the specified functionalID from the functionalIDs linkedList
 	 * @param functionalID
@@ -584,16 +584,14 @@ class Fragment {
 			if(nCandidate != null) {
 				indicatedHydrogen = nCandidate.getID();
 				nCandidate.addSpareValency(1);
-				return;
 			}
 		}
 	}
 
 	/**Looks for double and higher bonds, converts them to single bonds
 	 * and adds corresponding spareValencies to the atoms they join.
-	 * @throws StructureBuildingException
 	 */
-	void convertHighOrderBondsToSpareValencies() throws StructureBuildingException {
+	void convertHighOrderBondsToSpareValencies()  {
 		for(Bond b : bondList) {
 			if(b.getOrder() > 1) {
 				Atom firstAtom =b.getFromAtom();
@@ -805,7 +803,7 @@ class Fragment {
 	 *
 	 * @param atom The reference atom
 	 * @return The list of atoms connected to the atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	List<Atom> getAtomNeighbours(Atom atom) throws StructureBuildingException {
 		List<Atom> results = new ArrayList<Atom>();
@@ -828,15 +826,15 @@ class Fragment {
 		}
 		return results;
 	}
-	
+
 	/**Calculates the number of bonds connecting to the atom, excluding bonds to implicit
 	 * hydrogens. Double bonds count as
 	 * two bonds, etc. Eg ethene - both C's have an incoming valency of 2.
-	 * 
+	 *
 	 * Only bonds to atoms within the fragment are counted. Suffix atoms are excluded
 	 *
 	 * @return Incoming Valency
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	int getIntraFragmentIncomingValency(Atom atom) throws StructureBuildingException {
 		int v = 0;
@@ -949,7 +947,7 @@ class Fragment {
 	 * Checks to see whether a locant is present on this fragment
 	 * @param string
 	 * @return
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	boolean hasLocant(String locant) throws StructureBuildingException {
 		return getAtomByLocant(locant)!=null;
@@ -971,7 +969,7 @@ class Fragment {
 		}
 		return a;
 	}
-	
+
 	/**
 	 * Takes an id and additional valency required. Returns the atom associated with that id if adding the specified valency will not violate
 	 * that atom type's maximum valency.
@@ -992,7 +990,7 @@ class Fragment {
 		int atomCounter=0;
 		int atomListPosition=atomList.indexOf(currentAtom);
 		int startingIndex =atomListPosition;
-		
+
 		do {//aromaticity preserved
 			atomCounter++;
 			if (atomListPosition >= atomList.size()){
@@ -1022,7 +1020,7 @@ class Fragment {
 		atomListPosition =startingIndex;
 		atomCounter=0;
 		if (flag==0){
-			
+
 			do {//aromaticity dropped
 				atomCounter++;
 				if (atomListPosition >= atomList.size()){
@@ -1066,7 +1064,7 @@ class Fragment {
 		}
 		throw new StructureBuildingException("Fragment is empty");
 	}
-	
+
 	/**
 	 * Returns the the first atom that was added to this fragment
 	 * @return

@@ -23,7 +23,7 @@ class AutomatonInitialiser {
 	 * resource folder will not typically be writable)
 	 * @param automatonName : A name for the automaton so that it can it can be saved/loaded from disk
 	 * @param regex : the regex from which to build the RunAutomaton
-	 * @param resourceGetter 
+	 * @param resourceGetter
 	 * @return A RunAutomaton, may have been built from scratch or loaded from a file
 	 */
 	static RunAutomaton getAutomaton(String automatonName, String regex, ResourceGetter resourceGetter) {
@@ -55,5 +55,5 @@ class AutomatonInitialiser {
 
 		return ra;
 	}
-	
+
 }

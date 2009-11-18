@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 /**Thrown during postprocessing.
- * 
+ *
  * @author ptc24
  *
  */

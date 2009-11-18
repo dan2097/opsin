@@ -9,7 +9,7 @@ import nu.xom.Element;
 /** For a list of integers, generate all lists of non-negative integers where all
  * of the list members are strictly lower than their corresponding integer in the
  * input list.
- * 
+ *
  * @author ptc24
  *
  */
@@ -17,15 +17,15 @@ final class Combinations {
 
 	private List<List<Integer>> combList;
 	private List<Integer> scheme;
-	
+
 	private Combinations() {
-		
+
 	}
-	
+
 	/**For a list of integers, generate all lists of non-negative integers where
 	 * all of the list members are strictly lower than their corresponding
 	 * integer in the input list.
-	 * 
+	 *
 	 * @param scheme The input list of integers.
 	 * @return The list of lists.
 	 */
@@ -36,7 +36,7 @@ final class Combinations {
 		c.grow(new ArrayList<Integer>());
 		return c.combList;
 	}
-	
+
 	private void grow(List<Integer> soFar) {
 		if(soFar.size() == scheme.size()) {
 			combList.add(soFar);
@@ -67,8 +67,8 @@ class Parser {
 	private TokenManager tokenManager;
 
 	/**Initialises the parser.
-	 * @param tokenManager 
-	 * @param parseRules 
+	 * @param tokenManager
+	 * @param parseRules
 	 * @param wordRules
 	 */
 	Parser(WordRules wordRules, ParseRules parseRules, TokenManager tokenManager) {
@@ -174,20 +174,20 @@ class Parser {
 		int annotPos = 0;
 		Element chunk = new Element("substituent");
 		elem.appendChild(chunk);
-		for(int i=0;i<tokens.size();i++) {
-			if(annotPos >= annotations.get(annotNumber).size()) {
-				annotPos = 0;
-				annotNumber++;
-				chunk = new Element("substituent");
-				elem.appendChild(chunk);
-			}
-			Element tokenElement = tokenManager.makeTokenElement(tokens.get(i),
-					annotations.get(annotNumber).get(annotPos));
-			if (tokenElement !=null){//null for tokens that have ignoreWhenWritingXML set
-				chunk.appendChild(tokenElement);
-			}
-			annotPos++;
-		}
+        for (String token : tokens) {
+            if (annotPos >= annotations.get(annotNumber).size()) {
+                annotPos = 0;
+                annotNumber++;
+                chunk = new Element("substituent");
+                elem.appendChild(chunk);
+            }
+            Element tokenElement = tokenManager.makeTokenElement(token,
+                    annotations.get(annotNumber).get(annotPos));
+            if (tokenElement != null) {//null for tokens that have ignoreWhenWritingXML set
+                chunk.appendChild(tokenElement);
+            }
+            annotPos++;
+        }
 		if(pw.wordType.equals("full")) {
 			chunk.setLocalName("root");
 		}

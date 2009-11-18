@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 /**Thrown during finite-state parsing.
- * 
+ *
  * @author ptc24
  *
  */
