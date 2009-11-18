@@ -71,6 +71,7 @@ class PostProcessor {
 	private Pattern matchAnnulene = Pattern.compile("\\[([1-9]\\d*)\\]annulen");
 	private Pattern matchStereochemistry = Pattern.compile("(\\d+[a-z]?)([RSEZrsez])");
 	private Pattern matchRS = Pattern.compile("[RSrs]");
+	private Pattern matchEZ = Pattern.compile("[EZez]");
 	private Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
 	private Pattern matchComma =Pattern.compile(",");
 	private Pattern matchDot =Pattern.compile("\\.");
@@ -317,8 +318,19 @@ class PostProcessor {
 							}
 						}
 						else{
-							//TODO Implement Sam's code for detecting chiral centres
-							//currently unsupported e.g. (R) or (Z)
+							Element stereoChemEl =new Element("stereoChemistry");
+							stereoChemEl.addAttribute(new Attribute("value", stereoChemistryDescriptor.toUpperCase()));
+							stereoChemEl.appendChild(stereoChemistryDescriptor);
+							XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
+							if (matchRS.matcher(stereoChemistryDescriptor).matches()){
+								stereoChemEl.addAttribute(new Attribute("type", "RorS"));
+							}
+							else if (matchEZ.matcher(stereoChemistryDescriptor).matches()){
+								stereoChemEl.addAttribute(new Attribute("type", "EorZ"));
+							}
+							else{
+								throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+							}
 						}
 					}
 				}

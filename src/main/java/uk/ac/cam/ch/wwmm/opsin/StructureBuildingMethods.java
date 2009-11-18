@@ -227,14 +227,25 @@ class StructureBuildingMethods {
 		Element parentWordOrBracket =(Element) subOrBracket.getParent();
 		int indexOfSubOrBracket = parentWordOrBracket.indexOf(subOrBracket);
 		subOrBracket.detach();
+
+		List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier in the sub/bracket
+		Element multiplierEl = subOrBracket.getFirstChildElement("multiplier");
+		if (multiplierEl ==null){
+			throw new StructureBuildingException("Multiplier not found where multiplier expected");
+		}
+		for (int j = subOrBracket.indexOf(multiplierEl) -1 ; j >=0 ; j--) {
+			Element el = (Element) subOrBracket.getChild(j);
+			el.detach();
+			elementsNotToBeMultiplied.add(el);
+		}
+		multiplierEl.detach();
+	
 		List<Element> multipliedElements = new ArrayList<Element>();
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
 				currentElement = state.fragManager.cloneElement(state, subOrBracket, StringTools.multiplyString("'", i));
-				if (currentElement.getLocalName().equals("bracket")){
-					addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));
-				}
+				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
 			}
 			else{
 				currentElement = subOrBracket;
@@ -252,6 +263,9 @@ class StructureBuildingMethods {
 		}
 		for (Element multipliedElement : multipliedElements) {//attach all the multiplied subs/brackets
 			parentWordOrBracket.insertChild(multipliedElement, indexOfSubOrBracket);
+		}
+		for (Element el : elementsNotToBeMultiplied) {//re-add anything before multiplier to original subOrBracket
+			subOrBracket.insertChild(el, 0);
 		}
 	}
 
@@ -656,17 +670,26 @@ class StructureBuildingMethods {
 		int multiplier = Integer.parseInt(subOrBracket.getAttributeValue("multiplier"));
 		subOrBracket.removeAttribute(subOrBracket.getAttribute("multiplier"));
 		List<Element> clonedElements = new ArrayList<Element>();
+		List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier in the sub/bracket
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
 				currentElement = state.fragManager.cloneElement(state, subOrBracket, StringTools.multiplyString("'", i));
-				if (currentElement.getLocalName().equals("bracket")){
-					addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));
-				}
+				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
 				clonedElements.add(currentElement);
 			}
 			else{
 				currentElement = subOrBracket;
+				Element multiplierEl = subOrBracket.getFirstChildElement("multiplier");
+				if (multiplierEl ==null){
+					throw new StructureBuildingException("Multiplier not found where multiplier expected");
+				}
+				for (int j = subOrBracket.indexOf(multiplierEl) -1 ; j >=0 ; j--) {
+					Element el = (Element) subOrBracket.getChild(j);
+					el.detach();
+					elementsNotToBeMultiplied.add(el);
+				}
+				multiplierEl.detach();
 			}
 			Element group;
 			if (currentElement.getLocalName().equals("bracket")){
@@ -683,6 +706,9 @@ class StructureBuildingMethods {
 		}
 		for (Element clone : clonedElements) {//make sure cloned substituents don't substitute onto each other!
 			XOMTools.insertAfter(subOrBracket, clone);
+		}
+		for (Element el : elementsNotToBeMultiplied) {//re-add anything before multiplier to original subOrBracket
+			subOrBracket.insertChild(el, 0);
 		}
 	}
 
@@ -1195,16 +1221,14 @@ class StructureBuildingMethods {
 	 * @param backet
 	 * @param primesString
 	 */
-	private static void addPrimesToLocantedStereochemistryElements(Element bracket, String primesString) {
-		List<Element> stereoChemistryElements =XOMTools.getDescendantElementsWithTagName(bracket, "stereoChemistry");
+	private static void addPrimesToLocantedStereochemistryElements(Element subOrBracket, String primesString) {
+		List<Element> stereoChemistryElements =XOMTools.getDescendantElementsWithTagName(subOrBracket, "stereoChemistry");
 		for (Element stereoChemistryElement : stereoChemistryElements) {
-			if (stereoChemistryElement.getParent().equals(bracket)){continue;}
 			if (!getLocant(stereoChemistryElement).equals("0")){
 				stereoChemistryElement.getAttribute("locant").setValue(getLocant(stereoChemistryElement) + primesString);
 			}
 		}
 	}
-
 
 	/**Gets the locant from a group/suffix tag, defaulting to "0"
 	 *

@@ -2796,7 +2796,7 @@ public class PreStructureBuilder {
 			}
 			multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
 			subOrBracket.addAttribute(new Attribute("multiplier", possibleMultiplier.getAttributeValue("value")));
-			possibleMultiplier.detach();
+			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
 		}
 		if(locants.size() > 0) {
 			if (subOrBracket.getLocalName().equals("root")){
@@ -2848,7 +2848,6 @@ public class PreStructureBuilder {
 			Element multiplier = subOrBracket.getFirstChildElement("multiplier");
 			if (multiplier !=null){
 				int multiVal =Integer.parseInt(multiplier.getAttributeValue("value"));
-				multiplier.detach();
 				if (multiVal ==1){return;}
 				Elements locants =subOrBracket.getChildElements("locant");
 				boolean assignLocants =false;
@@ -2858,18 +2857,29 @@ public class PreStructureBuilder {
 						if(locants.get(i).getAttribute("compoundLocant")!=null){
 							throw new PostProcessingException("A compound locant cannot be used to locant a sub/bracket!");
 						}
+						locants.get(i).detach();
 					}
 					subOrBracket.addAttribute(new Attribute("locant", locants.get(0).getAttributeValue("value")));
 				}
 				else if (locants.size()!=0){
 					throw new PostProcessingException("Unable to assign all locants");
 				}
+				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
+				for (int i = subOrBracket.indexOf(multiplier) -1 ; i >=0 ; i--) {
+					Element el = (Element) subOrBracket.getChild(i);
+					el.detach();
+					elementsNotToBeMultiplied.add(el);
+				}
+				multiplier.detach();
 				for(int i=multiVal -1; i>=1; i--) {
 					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
 						subOrBracket.addAttribute(new Attribute("locant", locants.get(i).getAttributeValue("value")));
 					}
 					XOMTools.insertAfter(word, clone);
+				}
+				for (Element el : elementsNotToBeMultiplied) {//re-add anything before multiplier to original word
+					subOrBracket.insertChild(el, 0);
 				}
 			}
 		}

@@ -5,6 +5,38 @@
 	<name>OPSIN</name>
 	<version>0.5.3-SNAPSHOT</version>
 	<description>Open Parser for Structural IUPAC Nomenclature</description>
+	
+	<profiles>
+	  <profile>
+	    <id>no-inchi</id>
+	    <dependencies>
+	      <dependency>
+            <groupId>net.sf</groupId>
+            <artifactId>jniinchi</artifactId>
+            <version>0.5</version>
+            <scope>provided</scope>
+          </dependency>
+	    </dependencies>
+	    
+	    <build>
+	      <plugins>
+	        <plugin>
+	          <artifactId>maven-compiler-plugin</artifactId>
+	          <configuration>
+              <source>1.5</source>
+              <target>1.5</target>
+	            <excludes>
+	              <exclude>**/NameToInchi.java</exclude>
+                  <exclude>dl/tmp/**</exclude>
+	            </excludes>
+	          </configuration>
+	        </plugin>
+	      </plugins>
+	    </build>
+	    
+	  </profile>
+	</profiles>
+	
 	<contributors>
 		<contributor>
 			<name>Daniel Lowe</name>
@@ -28,6 +60,10 @@
          <id>wwmm</id>
          <url>http://wwmm.ch.cam.ac.uk/maven2</url>
       </repository>
+      <repository>
+	    <id>sea36</id>
+	    <url>http://daedal.ch.cam.ac.uk:8080/m2repo</url>
+	  </repository> 
    </repositories>
    <build>
       <plugins>
@@ -82,6 +118,16 @@
          <groupId>net.sf</groupId>
          <artifactId>jniinchi</artifactId>
          <version>0.5</version>
+      </dependency>
+      <dependency>
+		<groupId>sea36.chemkit</groupId>
+		<artifactId>chemkit-base</artifactId>
+		<version>0.3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>sea36.chemkit</groupId>
+		<artifactId>chemkit-stereo</artifactId>
+		<version>0.3-SNAPSHOT</version>
       </dependency>
    </dependencies>
 </project>
