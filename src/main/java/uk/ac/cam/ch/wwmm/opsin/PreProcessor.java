@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
  *
  */
 class PreProcessor {
-	//private Pattern semiColon =Pattern.compile(";");
-
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
@@ -48,8 +46,9 @@ class PreProcessor {
 	 * Master method for PreProcessing
 	 * @param chemicalName
 	 * @return
+	 * @throws PreProcessingException 
 	 */
-	String preProcess(String chemicalName) {
+	String preProcess(String chemicalName) throws PreProcessingException {
 		chemicalName=chemicalName.trim();//remove leading and trailing whitespace
 		if ("".equals(chemicalName)){return null;}
 
@@ -58,14 +57,12 @@ class PreProcessor {
 		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {return null;}//genericmethanoic acid
 		//Alcohol Aldehyde Alkane Alkene Alkyne Amide Amine Azo compound Benzene derivative Carboxylic acid Cyanate Disulfide Ester Ether Haloalkane Hydrazone Imine Isocyanide Isocyanate Ketone Oxime Nitrile Nitro compound Nitroso compound Peroxide Phosphoric acid Pyridine derivative Sulfone Sulfonic acid Sulfoxide Thioester Thioether Thiol
 
-		chemicalName = processGreeks(chemicalName);
-
-		//chemicalName=semiColon.matcher(chemicalName).replaceAll(" ");
-
+		chemicalName = processDollarPrefixedGreeks(chemicalName);
+		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
 		return chemicalName;
 	}
 
-	private String processGreeks(String chemicalName) {
+	private String processDollarPrefixedGreeks(String chemicalName) {
 		//StringTools.unicodeToLatin(chemicalName);
 		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
 		while (m.find()){
