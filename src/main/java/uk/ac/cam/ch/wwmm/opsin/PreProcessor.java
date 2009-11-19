@@ -58,6 +58,15 @@ class PreProcessor {
 		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {return null;}//genericmethanoic acid
 		//Alcohol Aldehyde Alkane Alkene Alkyne Amide Amine Azo compound Benzene derivative Carboxylic acid Cyanate Disulfide Ester Ether Haloalkane Hydrazone Imine Isocyanide Isocyanate Ketone Oxime Nitrile Nitro compound Nitroso compound Peroxide Phosphoric acid Pyridine derivative Sulfone Sulfonic acid Sulfoxide Thioester Thioether Thiol
 
+		chemicalName = processGreeks(chemicalName);
+
+		//chemicalName=semiColon.matcher(chemicalName).replaceAll(" ");
+
+		return chemicalName;
+	}
+
+	private String processGreeks(String chemicalName) {
+		//StringTools.unicodeToLatin(chemicalName);
 		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
 		while (m.find()){
 			if (chemicalName.length()>m.end()){
@@ -68,9 +77,6 @@ class PreProcessor {
 				}
 			}
 		}
-
-		//chemicalName=semiColon.matcher(chemicalName).replaceAll(" ");
-
 		return chemicalName;
 	}
 }
