@@ -1,13 +1,9 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;import java.util.List;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**Static routines for string manipulation.
  * This is a specially tailored version of StringTools as found in OSCAR for use in OPSIN
@@ -17,24 +13,7 @@ import java.util.Arrays;import java.util.List;
  */
 public final class StringTools {
 
-	/** Lowercase Greek Unicode characters */
-	public static String lowerGreek = "\u03b1\u03b2\u03b3\u03b4\u03b5\u03b6\u03b7\u03b8\u03b9\u03ba\u03bb\u03bc\u03bd\u03be\u03bf\u03c0\u03c1\u03c2\u03c3\u03c4\u03c5\u03c6\u03c7\u03c8\u03c9";
-	/** Quotation marks of various Unicode forms */
-	public static String quoteMarks = "\"'\u2018\u2019\u201A\u201B\u201C\u201D\u201E\u201F";
-	/** Hyphens, dashes and the like */
-	public static String hyphens = "-\u2010\u2011\u2012\u2013\u2014\u2015";
-	/** A regex fragment for any hyphen or other dash */
-	public static String hyphensRe = "(?:-|\u2010|\u2011|\u2012|\u2013|\u2014|\u2015)";
-	/** Apostrophes, backticks, primess etc */
-	public static String primes = "'`\u2032\u2033\u2034";
-	/** The en dash */
-	public static String enDash = "\u2013";
-	/** The em dash */
-	public static String emDash = "\u2014";
-	/** Whitespace characters. */
-	public static String whiteSpace = "\u0020\u0085\u00a0\u1680\u180e\u2000\u2001\u2002\u2003" +
-			"\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000";
-
+	private static final Pattern MATCH_WHITESPACE = Pattern.compile("\\s+");
 
 	/**Converts a list of characters into a string.
 	 *
@@ -130,64 +109,78 @@ public final class StringTools {
 	 *
 	 * @param s The string to convert.
 	 * @return The converted string.
+	 * @throws PreProcessingException
 	 */
-	public static String unicodeToLatin(String s) {
-		boolean hasUnicode = false;
-		for(int i=0;i<s.length();i++) {
-			char c = s.charAt(i);
+	public static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
+		s = MATCH_WHITESPACE.matcher(s).replaceAll(" ");//normalise white space
+		StringBuilder sb = new StringBuilder(s);
+		for(int i=0;i<sb.length();i++) {
+			char c = sb.charAt(i);
 			if(c >= 128) {
-				hasUnicode = true;
-				break;
+				sb.replace(i, i+1, getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
+			}
+			else if (c ==96){
+				sb.replace(i, i+1, "'");//replace back ticks with apostrophe
 			}
 		}
-		if(!hasUnicode) return s;
-		s = s.replace("\u03b1", "alpha");
-		s = s.replace("\u03b2", "beta");
-		s = s.replace("\u03b3", "gamma");
-		s = s.replace("\u03b4", "delta");
-		s = s.replace("\u03b5", "epsilon");
-		s = s.replace("\u03b6", "zeta");
-		s = s.replace("\u03b7", "eta");
-		s = s.replace("\u03b8", "theta");
-		s = s.replace("\u03b9", "iota");
-		s = s.replace("\u03ba", "kappa");
-		s = s.replace("\u03bb", "lambda");
-		s = s.replace("\u03bc", "mu");
-		s = s.replace("\u03bd", "nu");
-		s = s.replace("\u03be", "xi");
-		s = s.replace("\u03bf", "omicron");
-		s = s.replace("\u03c0", "pi");
-		s = s.replace("\u03c1", "rho");
-		s = s.replace("\u03c2", "stigma");
-		s = s.replace("\u03c3", "sigma");
-		s = s.replace("\u03c4", "tau");
-		s = s.replace("\u03c5", "upsilon");
-		s = s.replace("\u03c6", "phi");
-		s = s.replace("\u03c7", "chi");
-		s = s.replace("\u03c8", "psi");
-		s = s.replace("\u03c9", "omega");
-
-		Charset charset = Charset.forName("ISO-8859-1");
-	    CharsetDecoder decoder = charset.newDecoder();
-	    CharsetEncoder encoder = charset.newEncoder();
-	    try {
-	        ByteBuffer bbuf = encoder.encode(CharBuffer.wrap(s));
-	        CharBuffer cbuf = decoder.decode(bbuf);
-	        return cbuf.toString();
-	    } catch (CharacterCodingException e) {
-	    	s = s.replaceAll("[^A-Za-z0-9_+-]", "_");
-		    try {
-		    	ByteBuffer bbuf = encoder.encode(CharBuffer.wrap(s));
-		    	CharBuffer cbuf = decoder.decode(bbuf);
-		    	return cbuf.toString();
-		    } catch (CharacterCodingException ee) {
-		    	return null;
-		    }
-	    }
+		return sb.toString();
 	}
 
+    private static String getReplacementForNonASCIIChar(char c) throws PreProcessingException {
+        switch (c) {
+            case '\u03b1': return "alpha";//greeks
+            case '\u03b2': return "beta";
+            case '\u03b3': return "gamma";
+            case '\u03b4': return "delta";
+            case '\u03b5': return "epsilon";
+            case '\u03b6': return "zeta";
+            case '\u03b7': return "eta";
+            case '\u03b8': return "theta";
+            case '\u03b9': return "iota";
+            case '\u03ba': return "kappa";
+            case '\u03bb': return "lambda";
+            case '\u03bc': return "mu";
+            case '\u03bd': return "nu";
+            case '\u03be': return "xi";
+            case '\u03bf': return "omicron";
+            case '\u03c0': return "pi";
+            case '\u03c1': return "rho";
+            case '\u03c2': return "stigma";
+            case '\u03c3': return "sigma";
+            case '\u03c4': return "tau";
+            case '\u03c5': return "upsilon";
+            case '\u03c6': return "phi";
+            case '\u03c7': return "chi";
+            case '\u03c8': return "psi";
+            case '\u03c9': return "omega";
+
+            case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
+            case '\u2019': return "'";
+            case '\u201B': return "'";
+            case '\u2032': return "'";//primes
+            case '\u2033': return "''";
+            case '\u2034': return "'''";
+            case '\u2057': return "''''";
+            case '\u2035': return "'";//back primes
+            case '\u2036': return "''";
+            case '\u2037': return "'''";
+
+            case '\u2010': return "-";//dashes, hyphens and the minus sign
+            case '\u2011': return "-";
+            case '\u2012': return "-";
+            case '\u2013': return "-";
+            case '\u2014': return "-";
+            case '\u2015': return "-";
+            case '\u2212': return "-";
+            
+            case '\uFEFF': return "";//BOM-found at the start of some UTF files
+
+            default: throw new PreProcessingException("Unrecognised unicode character: " + c);
+        }
+    }
+
 	/**Converts a string array to an ArrayList.
-	 * 
+	 *
 	 * @param array The array.
 	 * @return The ArrayList.
 	 */
@@ -208,7 +201,7 @@ public final class StringTools {
 		}
 		return locantText;
 	}
-	
+
 	/**
 	 * Any primes at the end of the string are removed
 	 * @param locantText
