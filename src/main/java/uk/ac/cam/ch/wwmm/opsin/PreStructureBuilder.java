@@ -2143,7 +2143,7 @@ class PreStructureBuilder {
 	 */
 	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws PostProcessingException, StructureBuildingException {
 
-		for (Element substituent : substituents) {
+		for (Element substituent : substituents) {//will attempt to bracket this substituent with the substituent before it
 			String firstElInSubName =((Element)substituent.getChild(0)).getLocalName();
 			if (firstElInSubName.equals("locant") ||firstElInSubName.equals("multiplier")){
 				continue;
@@ -2203,9 +2203,7 @@ class PreStructureBuilder {
 					Boolean foundLocantNotReferringToChain =null;
 					for (int i = 0; i < childrenOfElementBeforeSubstituent.size(); i++) {
 						String currentElementName = childrenOfElementBeforeSubstituent.get(i).getLocalName();
-						if (currentElementName.equals("stereoChemistry")){
-						}
-						else if (currentElementName.equals("locant")){
+						if (currentElementName.equals("locant")){
 							String locantText =childrenOfElementBeforeSubstituent.get(i).getAttributeValue("value");
 							if(!frag.hasLocant(locantText)){
 								foundLocantNotReferringToChain=true;
@@ -2214,6 +2212,8 @@ class PreStructureBuilder {
 							else{
 								foundLocantNotReferringToChain=false;
 							}
+						}
+						else if (currentElementName.equals("stereoChemistry")){
 						}
 						else{
 							break;
@@ -2233,25 +2233,21 @@ class PreStructureBuilder {
 				continue;
 			}
 
-			Element bracket = new Element("bracket");
-			bracket.addAttribute(new Attribute("type", "implicit"));
-
 			/*
 			 * locant may need to be moved. This occurs when the group in elementBeforeSubstituent is not supposed to be locanted onto
 			 *  theSubstituentGroup
 			 *  e.g. 2-aminomethyl-1-chlorobenzene where the 2 refers to the benzene NOT the methyl
 			 */
-			ArrayList<Element> locantElements =new ArrayList<Element>();
-			Elements childrenOfElementBeforeSubstituent  =elementBeforeSubstituent.getChildElements();
-			int nonStereoChemistryLocants =0;
+			ArrayList<Element> locantElements =new ArrayList<Element>();//sometimes moved
+			ArrayList<Element> stereoChemistryElements =new ArrayList<Element>();//always moved if bracketing occurs
+			Elements childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
 			for (int i = 0; i < childrenOfElementBeforeSubstituent.size(); i++) {
 				String currentElementName = childrenOfElementBeforeSubstituent.get(i).getLocalName();
 				if (currentElementName.equals("stereoChemistry")){
-					locantElements.add(childrenOfElementBeforeSubstituent.get(i));
+					stereoChemistryElements.add(childrenOfElementBeforeSubstituent.get(i));
 				}
 				else if (currentElementName.equals("locant")){
 					locantElements.add(childrenOfElementBeforeSubstituent.get(i));
-					nonStereoChemistryLocants++;
 				}
 				else{
 					break;
@@ -2259,52 +2255,45 @@ class PreStructureBuilder {
 			}
 
 			//either all locants will be moved, or none
-			Boolean moveLocants=null;
-			int flag=0;
+			Boolean moveLocants = false;
+			boolean foundReasonToMoveLocants = false;
 			for (Element locant : locantElements) {
-				if (!locant.getLocalName().equals("locant")){
-					continue;//ignore stereochemistry elements, at least for the moment
-				}
-				String locantText = locant.getAttributeValue("value");
+				String locantText = StringTools.removePrimesIfPresent(locant.getAttributeValue("value"));
 
 				if (frag.hasLocant("2")){//if only has locant 1 then assume substitution onto it not intended
-					if(!frag.hasLocant(locantText)){//TODO ignore primes?
-						flag=1;
+					if(!frag.hasLocant(locantText)){
+						foundReasonToMoveLocants = true;
 					}
 				}
 				else{
-					flag=1;
+					foundReasonToMoveLocants = true;
 				}
 			}
-			if (flag==0){
-				moveLocants =false;//if the locant applies to the theSubstituentGroup then don't move
+			if (foundReasonToMoveLocants){// a locant does not appear to refer to this fragment, but does it refer to another?
+				boolean allLocantsFoundOnPotentialRoot = true;
+				for (Element locant : locantElements) {
+					String locantText = StringTools.removePrimesIfPresent(locant.getAttributeValue("value"));
+					if (!checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
+						allLocantsFoundOnPotentialRoot = false;
+						break;
+					}
+				}
+                if (allLocantsFoundOnPotentialRoot){
+                	moveLocants =true;
+                }
 			}
 
-			flag =0;
-			if (moveLocants ==null){
-				for (Element locant : locantElements) {
-					if (!locant.getLocalName().equals("locant")){
-						continue;//ignore stereochemistry elements, atleast for the moment
-					}
-					String locantText = locant.getAttributeValue("value");
-					if (!checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
-						flag =1;
-					}
-				}
-                moveLocants = flag == 0;
-			}
-			if (moveLocants && nonStereoChemistryLocants>1){
+			if (moveLocants && locantElements.size() > 1){
 				Element shouldBeAMultiplierNode = (Element)XOMTools.getNextSibling(locantElements.get(locantElements.size()-1));
-				if (shouldBeAMultiplierNode instanceof Element){
+				if (shouldBeAMultiplierNode !=null && shouldBeAMultiplierNode.getLocalName().equals("multiplier")){
 					Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSibling(shouldBeAMultiplierNode);
-					if (shouldBeAGroupOrSubOrBracket instanceof Element && shouldBeAMultiplierNode.getLocalName().equals("multiplier")
-							&& shouldBeAGroupOrSubOrBracket.getLocalName().equals("group") ||
-							shouldBeAGroupOrSubOrBracket.getLocalName().equals("substituent") ||
-							shouldBeAGroupOrSubOrBracket.getLocalName().equals("bracket")){
-						if (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()){//e.g. 4, 4'-dimethoxycarbonyl-2, 2'-bioxazole
+					if (shouldBeAGroupOrSubOrBracket !=null){
+						if (shouldBeAGroupOrSubOrBracket.getLocalName().equals("group") && 
+								(matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
+								|| shouldBeAMultiplierNode.getAttributeValue("type").equals("group"))){//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
 							locantElements.add(shouldBeAMultiplierNode);
 						}
-						else{//don't bracket complex multiplied substituents
+						else{//don't bracket other complex multiplied substituents (name hasn't given enough hints if indeed bracketing was expected)
 							continue;
 						}
 					}
@@ -2316,6 +2305,14 @@ class PreStructureBuilder {
 					moveLocants =false;
 				}
 			}
+
+			Element bracket = new Element("bracket");
+			bracket.addAttribute(new Attribute("type", "implicit"));
+
+            for (Element stereoChemistryElement : stereoChemistryElements) {
+            	stereoChemistryElement.detach();
+                bracket.appendChild(stereoChemistryElement);
+            }
 			if (moveLocants){
                 for (Element locantElement : locantElements) {
                     locantElement.detach();
@@ -2324,12 +2321,13 @@ class PreStructureBuilder {
 			}
 
 			/*
-			 * A special case when a multiplier should be moved
-			 * e.g. tripropan-2-yloxyphosphane -->tri(propan-2-yloxy)phosphane
+			 * Case when a multiplier should be moved
+			 * e.g. tripropan-2-yloxyphosphane -->tri(propan-2-yloxy)phosphane or trispropan-2-ylaminophosphane --> tris(propan-2-ylamino)phosphane
 			 */
-			if (locantElements.size()==0 && matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()){
+			if (locantElements.size()==0){
 				Element possibleMultiplier =childrenOfElementBeforeSubstituent.get(0);
-				if (possibleMultiplier.getLocalName().equals("multiplier")){
+				if (possibleMultiplier.getLocalName().equals("multiplier") && (
+						matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches() || possibleMultiplier.getAttributeValue("type").equals("group"))){
 					if (childrenOfElementBeforeSubstituent.get(1).getLocalName().equals("group")){
 						childrenOfElementBeforeSubstituent.get(0).detach();
 						bracket.appendChild(childrenOfElementBeforeSubstituent.get(0));

@@ -208,4 +208,16 @@ public final class StringTools {
 		}
 		return locantText;
 	}
+	
+	/**
+	 * Any primes at the end of the string are removed
+	 * @param locantText
+	 * @return
+	 */
+	public static String removePrimesIfPresent(String locantText){
+		while(locantText.endsWith("'")) {
+			locantText = locantText.substring(0, locantText.length()-1);
+		}
+		return locantText;
+	}
 }
