@@ -30,7 +30,7 @@ public class NameToInchi {
 	 *
 	 * @param name The chemical name to parse.
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
-	 * @return An Inchi string, containing the parsed molecule, or null if the molecule would not parse.
+	 * @return An InChI string, containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public String parseToInchi(String name, boolean verbose) {
 		Fragment frag = n2s.parseToOpsinFragment(name, verbose);

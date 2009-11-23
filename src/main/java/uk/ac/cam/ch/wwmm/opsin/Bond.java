@@ -18,18 +18,19 @@ class Bond {
 	/** The bond order */
 	private int order;
 
-	/**If the bond can be either cis or trans this can be defined by setting this to either "E" or "Z"
-	 * "e" or "z" indicate relative stereochemistry
+	static enum SMILES_BOND_DIRECTION{
+		RSLASH,
+		LSLASH
+	}
+	/** If this bond was built from SMILES can be set to either RSLASH or LSLASH. Subsequently read to add a bondStereoElement
 	 * null by default*/
-	private String stereochemistry = null;
+	private SMILES_BOND_DIRECTION smilesBondDirection = null;
 
 	/**
 	 * Holds the bondStereo tag to be associated with this bond upon output
 	 * null by default
 	 */
 	private Element bondStereoElement = null;
-
-	private int smilesNumber;
 
 	/**
 	 * it the bond is fusion bond it contains the rings that it connects
@@ -46,7 +47,6 @@ class Bond {
 		this.from = from;
 		this.to = to;
 		this.order = order;
-		smilesNumber = 0;
 	}
 
 	public ArrayList<Ring> getFusedRings() {
@@ -139,15 +139,15 @@ class Bond {
 	}
 
 	/**
-	 * Returns either null or one of E,Z,e,z
+	 * Returns either null or RSLASH or LSLASH
 	 * @return
 	 */
-	String getStereochemistry() {//TODO make two functions to handle /\ stereochemistry and EZ stereochemistry and use enums
-		return stereochemistry;
+	SMILES_BOND_DIRECTION getSmilesStereochemistry() {
+		return smilesBondDirection;
 	}
 
-	void setStereochemistry(String stereochemistry) {
-		this.stereochemistry = stereochemistry;
+	void setSmilesStereochemistry(SMILES_BOND_DIRECTION bondDirection) {
+		this.smilesBondDirection = bondDirection;
 	}
 
 	Element getBondStereoElement() {
@@ -163,15 +163,4 @@ class Bond {
 		bondStereoElement.addAttribute(new Attribute("atomRefs4", atomRefs4));
 		bondStereoElement.appendChild(CorT);
 	}
-
-	int getSMILESNumber() {
-		return smilesNumber;
-	}
-
-	int assignSMILESNumber(IDManager idm) {
-		smilesNumber = idm.getNextID();
-		return smilesNumber;
-	}
-
-
 }

@@ -32,11 +32,6 @@ class Atom {
 	/**The formal charge on the atom.*/
 	private int charge = 0;
 
-	/**If the atom is a stereo centre and has defined stereochemistry takes a value of "R" or "S"
-	 * "r" or "s" indicate relative stereochemistry
-	 * null by default*/
-	private String stereochemistry = null;
-
 	/**
 	 * Holds the atomParity tag to be associated with this atom upon output
 	 * null by default
@@ -61,9 +56,6 @@ class Atom {
 	/**The total bond order of all bonds that are expected to be used for inter fragment bonding
 	 * e.g. in butan-2-ylidene this would be 2 for the atom at position 2 and 0 for the other 3 */
 	private int outValency = 0;
-
-	//used by visitForSmiles
-	private boolean visited = false;
 
 	/** Hydrogen count in CML, used subsequently to set the atom's valency when it's neighbours are known
 	 * null if hydrogens are implicit*/
@@ -209,48 +201,6 @@ class Atom {
 			}
 		}
 		return null;
-	}
-
-	void clearSMILES() {
-		visited = false;
-	}
-
-	void visitForSMILES(StringBuffer sb, Atom from, IDManager idm) throws StructureBuildingException {
-		if(visited) {
-			Bond b = frag.findBond(ID, from.getID());
-			int smilesNumber;
-			if(b.getSMILESNumber() == 0) smilesNumber = b.assignSMILESNumber(idm);
-			else smilesNumber = b.getSMILESNumber();
-			if(sb.charAt(sb.length()-1) == '(') {
-				sb.deleteCharAt(sb.length()-1);
-				sb.append(Integer.toString(smilesNumber));
-			} else {
-                sb.append(Integer.toString(smilesNumber)).append(")");
-			}
-			return;
-		}
-		visited = true;
-		sb.append(element);
-		List<Atom> neighbours = frag.getAtomNeighbours(this);
-		if(from != null) neighbours.remove(from);
-		if(neighbours.size() == 0) {
-			sb.append(")");
-		} else {
-			while(neighbours.size() > 1) {
-				sb.append("(");
-				Atom to = neighbours.get(0);
-				Bond b = frag.findBond(ID, to.getID());
-				if(b.getOrder() == 2) sb.append("=");
-				if(b.getOrder() == 3) sb.append("#");
-				to.visitForSMILES(sb, this, idm);
-				neighbours.remove(to);
-			}
-			Atom to = neighbours.get(0);
-			Bond b = frag.findBond(ID, to.getID());
-			if(b.getOrder() == 2) sb.append("=");
-			if(b.getOrder() == 3) sb.append("#");
-			to.visitForSMILES(sb, this, idm);
-		}
 	}
 
 	/**Adds a locant to the Atom. Other locants are preserved.
@@ -527,14 +477,6 @@ class Atom {
 	 */
 	String getNote(String key) {
 		return notes.get(key);
-	}
-
-	String getStereochemistry() {
-		return stereochemistry;
-	}
-
-	void setStereochemistry(String stereochemistry) {
-		this.stereochemistry = stereochemistry;
 	}
 
 	List<Bond> getBonds() {

@@ -406,7 +406,6 @@ class FragmentManager {
 			Atom newAtom =new Atom(ID, newLocants, atom.getElement(), newFragment);
 			newAtom.setCharge(atom.getCharge());
 			newAtom.setSpareValency(atom.getSpareValency());
-			newAtom.setStereochemistry(atom.getStereochemistry());
 			if (atom.getAtomParityElement() != null){
 				newAtom.setAtomParityElement(new Element(atom.getAtomParityElement()));
 			}
@@ -432,7 +431,7 @@ class FragmentManager {
 		List<Bond> bondList =originalFragment.getBondList();
 		for (Bond bond : bondList) {
 			Bond newBond=new Bond(newFragment.getAtomByIDOrThrow(idMap.get(bond.getFrom())),newFragment.getAtomByIDOrThrow(idMap.get(bond.getTo())), bond.getOrder());
-			newBond.setStereochemistry(bond.getStereochemistry());
+			newBond.setSmilesStereochemistry(bond.getSmilesStereochemistry());
 			if (bond.getBondStereoElement() != null){
 				newBond.setBondStereoElement(new Element(bond.getBondStereoElement()));
 			}
