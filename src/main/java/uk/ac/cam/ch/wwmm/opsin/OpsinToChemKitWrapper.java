@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nu.xom.Element;
 import sea36.chem.base.ChemicalElement;
 import sea36.chem.base.Order;
 import sea36.chem.core.CMLAtom;
+import sea36.chem.core.CMLAtomParity;
 import sea36.chem.core.CMLBond;
+import sea36.chem.core.CMLBondStereo;
 import sea36.chem.core.CMLMolecule;
+import sea36.chem.core.CMLAtomParity.Parity;
+import sea36.chem.core.CMLBondStereo.Type;
 
 class OpsinToChemKitWrapper {
 
@@ -42,21 +47,21 @@ class OpsinToChemKitWrapper {
 		}
 		chemKitAtom.setFormalCharge(atom.getCharge());
 		chemKitAtom.setId("a" +atom.getID());
-//		if (atom.getAtomParityElement()!=null){//TODO get this working
-//			Element originalAtomParity = atom.getAtomParityElement();
-//			CMLAtomParity cmlAtomParity = new CMLAtomParity();
-//			cmlAtomParity.setAtomRefs4(originalAtomParity.getAttributeValue("atomRefs4"));
-//			if (Float.parseFloat(originalAtomParity.getValue())>=1){
-//				cmlAtomParity.setParity(Parity.EVEN);
-//			}
-//			else if (Float.parseFloat(originalAtomParity.getValue()) <= -1){
-//				cmlAtomParity.setParity(Parity.ODD);
-//			}
-//			else{
-//				cmlAtomParity.setParity(Parity.UNKNOWN);
-//			}
-//			chemKitAtom.appendChild(cmlAtomParity);
-//		}
+		if (atom.getAtomParityElement()!=null){
+			Element originalAtomParity = atom.getAtomParityElement();
+			CMLAtomParity cmlAtomParity = new CMLAtomParity();
+			cmlAtomParity.setAtomRefs4(originalAtomParity.getAttributeValue("atomRefs4"));
+			if (Float.parseFloat(originalAtomParity.getValue()) > 0.1){
+				cmlAtomParity.setParity(Parity.EVEN);
+			}
+			else if (Float.parseFloat(originalAtomParity.getValue()) < -0.1){
+				cmlAtomParity.setParity(Parity.ODD);
+			}
+			else{
+				cmlAtomParity.setParity(Parity.UNKNOWN);
+			}
+			chemKitAtom.appendChild(cmlAtomParity);
+		}
 		return chemKitAtom;
 	}
 
@@ -77,21 +82,21 @@ class OpsinToChemKitWrapper {
 			bondOrder =Order.UNKNOWN;
 		}
 		CMLBond chemKitBond = new CMLBond(atom1, atom2, bondOrder);
-//		if (bond.getBondStereoElement()!=null){//TODO get this working
-//			Element originalBondStereo = bond.getBondStereoElement();
-//			CMLBondStereo cmlBondStereo = new CMLBondStereo();
-//			cmlBondStereo.setAtomRefs4(originalBondStereo.getAttributeValue("atomRefs4"));
-//			if (originalBondStereo.getValue().equals("C")){
-//				cmlBondStereo.setType(Type.CIS);
-//			}
-//			else if (originalBondStereo.getValue().equals("T")){
-//				cmlBondStereo.setType(Type.TRANS);
-//			}
-//			else{
-//				cmlBondStereo.setType(Type.UNKNOWN);
-//			}
-//			chemKitBond.appendChild(cmlBondStereo);
-//		}
+		if (bond.getBondStereoElement()!=null){
+			Element originalBondStereo = bond.getBondStereoElement();
+			CMLBondStereo cmlBondStereo = new CMLBondStereo();
+			cmlBondStereo.setAtomRefs4(originalBondStereo.getAttributeValue("atomRefs4"));
+			if (originalBondStereo.getValue().equals("C")){
+				cmlBondStereo.setType(Type.CIS);
+			}
+			else if (originalBondStereo.getValue().equals("T")){
+				cmlBondStereo.setType(Type.TRANS);
+			}
+			else{
+				cmlBondStereo.setType(Type.UNKNOWN);
+			}
+			chemKitBond.appendChild(cmlBondStereo);
+		}
 		return chemKitBond;
 	}
 

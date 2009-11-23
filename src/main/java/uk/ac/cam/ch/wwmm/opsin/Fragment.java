@@ -119,15 +119,6 @@ class Fragment {
 		return cml;
 	}
 
-	String toSMILES() throws StructureBuildingException {
-		StringBuffer sb = new StringBuffer();
-		IDManager idm = new IDManager();
-		getAtomList().get(0).visitForSMILES(sb, null, idm);
-
-		sb.deleteCharAt(sb.length()-1);
-		return sb.toString();
-	}
-
 	/**Adds an atom to the fragment. Does not tell the atom that it is in the fragment.*/
 	void addAtom(Atom atom) {
 		if (defaultInID==0){//the first atom becomes the defaultInID

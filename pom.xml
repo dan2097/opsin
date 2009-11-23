@@ -129,5 +129,10 @@
 		<artifactId>chemkit-stereo</artifactId>
 		<version>0.3-SNAPSHOT</version>
       </dependency>
+      <dependency>
+     	<groupId>sea36.chemkit</groupId>
+		<artifactId>chemkit-io-smiles</artifactId>
+		<version>0.3-SNAPSHOT</version>
+	  </dependency>
    </dependencies>
 </project>

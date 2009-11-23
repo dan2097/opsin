@@ -3,6 +3,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 
@@ -45,7 +47,7 @@ class SMILESFragmentBuilder {
 		/**The order of the bond about to be formed.*/
 		int bondOrder;
 		/**Whether the bond is a \ or / bond for use in determining cis/trans.*/
-		String slash;
+		SMILES_BOND_DIRECTION slash;
 
 		/**Creates a stack frame with given parameters.
 		 *
@@ -169,9 +171,9 @@ class SMILESFragmentBuilder {
 			} else if(nextChar.equals("#")){
 				stack.peek().bondOrder = 3;
 			} else if(nextChar.equals("/")){
-				stack.peek().slash = nextChar;
+				stack.peek().slash = SMILES_BOND_DIRECTION.RSLASH;
 			} else if(nextChar.equals("\\")){
-				stack.peek().slash = nextChar;
+				stack.peek().slash = SMILES_BOND_DIRECTION.LSLASH;
 			} else if(nextChar.equals(".")){
 				stack.peek().atom = null;
 			} else if(upperLetters.contains(nextChar) || lowerLetters.contains(nextChar)) {//organic atoms
@@ -211,7 +213,7 @@ class SMILESFragmentBuilder {
 					Bond b = new Bond(stack.peek().atom, atom, stack.peek().bondOrder);
 					currentFrag.addBond(b);
 					if (stack.peek().slash!=null){
-						b.setStereochemistry(stack.peek().slash);
+						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
 					}
 					if (stack.peek().atom.getAtomParityElement()!=null){
@@ -303,7 +305,7 @@ class SMILESFragmentBuilder {
 					Bond b = new Bond(stack.peek().atom, atom, stack.peek().bondOrder);
 					currentFrag.addBond(b);
 					if (stack.peek().slash!=null){
-						b.setStereochemistry(stack.peek().slash);
+						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
 					}
 					if (stack.peek().atom.getAtomParityElement()!=null){
@@ -459,9 +461,9 @@ class SMILESFragmentBuilder {
 						if(stack.peek().slash !=null) {
 							throw new StructureBuildingException("ring closure should not have cis/trans specified twice!");
 						}
-						b.setStereochemistry(sf.slash);
+						b.setSmilesStereochemistry(sf.slash);
 					} else if(stack.peek().slash !=null) {
-						b.setStereochemistry(stack.peek().slash);
+						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
 					}
 					if (stack.peek().atom.getAtomParityElement()!=null){
@@ -537,10 +539,10 @@ class SMILESFragmentBuilder {
 			if (centralBond.getOrder()==2){
 				List<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
 				for (Bond preceedingBond : fromAtomBonds) {
-					if (preceedingBond.getStereochemistry()!=null){
+					if (preceedingBond.getSmilesStereochemistry()!=null){
 						List<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
-							if (followingBond.getStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
+							if (followingBond.getSmilesStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
 								Element bondStereoEl = new Element("bondStereo");
 								Atom atom2 = centralBond.getFromAtom();
 								Atom atom1;
@@ -560,25 +562,25 @@ class SMILESFragmentBuilder {
 								}
 								bondStereoEl.addAttribute(new Attribute("atomRefs4", "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
 								Boolean upFirst;
-								if (preceedingBond.getStereochemistry().equals("\\")){
+								if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
 									upFirst = preceedingBond.getToAtom() == atom2;//in normally constructed SMILES this will be the case but you could write C(/F)=C/F instead of F\C=C/F
 								}
-								else if (preceedingBond.getStereochemistry().equals("/")){
+								else if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.RSLASH){
 									upFirst = preceedingBond.getToAtom() != atom2;
 								}
 								else{
-									throw new StructureBuildingException(preceedingBond.getStereochemistry() + " is not a slash!");
+									throw new StructureBuildingException(preceedingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
 
 								Boolean upSecond = null;
-								if (followingBond.getStereochemistry().equals("\\")){
+								if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
 									upSecond = followingBond.getFromAtom() != atom3;
 								}
-								else if (followingBond.getStereochemistry().equals("/")){
+								else if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.RSLASH){
 									upSecond = followingBond.getFromAtom() == atom3;
 								}
 								else{
-									throw new StructureBuildingException(followingBond.getStereochemistry() + " is not a slash!");
+									throw new StructureBuildingException(followingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
 
 								if (upFirst == upSecond){
@@ -597,7 +599,7 @@ class SMILESFragmentBuilder {
 			}
 		}
 		for (Bond bond : bonds) {
-			bond.setStereochemistry(null);
+			bond.setSmilesStereochemistry(null);
 		}
 
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
