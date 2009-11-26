@@ -7,6 +7,7 @@ import java.util.List;
 import sea36.chem.base.ChemicalElement;
 import sea36.chem.core.CMLAtom;
 import sea36.chem.core.CMLAtomArray;
+import sea36.chem.core.CMLAtomParity;
 import sea36.chem.core.CMLMolecule;
 import sea36.chem.io.smiles.SmilesWriter;
 
@@ -50,15 +51,17 @@ public class NameToSmiles {
 		CMLMolecule mol = chemKitWrapper.getChemKitMolecule();
 		CMLAtomArray atoms = mol.getAtomArray();
 		for (CMLAtom atom : atoms) {
-			List<CMLAtom> neighbours = mol.getNeighbourList(atom);
-			int hydrogen = 0;
-			for (CMLAtom neighbour : neighbours) {
-				if (neighbour.getChemicalElement().equals(ChemicalElement.H) ){
-					mol.removeAtomAndConnectedBonds(neighbour);
-					hydrogen++;
+            if (CMLAtomParity.findAtomParity(atom) ==null){
+				List<CMLAtom> neighbours = mol.getNeighbourList(atom);
+				int hydrogen = 0;
+				for (CMLAtom neighbour : neighbours) {
+					if (neighbour.getChemicalElement().equals(ChemicalElement.H) ){
+						mol.removeAtomAndConnectedBonds(neighbour);
+						hydrogen++;
+					}
 				}
-			}
-			atom.setHydrogenCount(hydrogen);
+				atom.setHydrogenCount(hydrogen);
+            }
 		}
 		SmilesWriter sw = new SmilesWriter();
 		return sw.writeMolecule(mol);
