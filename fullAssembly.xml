@@ -1,0 +1,30 @@
+<assembly>
+  <id>jar-with-dependencies</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>opsin:core</include>
+        <include>opsin:inchi</include>
+        <include>opsin:smiles</include>
+      </includes>
+      <binaries>
+        <unpack>true</unpack>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <unpack>true</unpack>
+      <scope>runtime</scope>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>${project.build.outputDirectory}</directory>
+    </fileSet>
+  </fileSets>
+</assembly>

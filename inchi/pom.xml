@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+   <parent>
+      <artifactId>opsin</artifactId>
+      <groupId>opsin</groupId>
+      <version>0.5.4-SNAPSHOT</version>
+   </parent>
+	<artifactId>inchi</artifactId>
+	<name>OPSIN_InChI_Support</name>
+	<description>Adds NameToInchi class for converting names directly to InChIs</description>
+  <build>
+    <plugins>
+       <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+           <archive>
+              <manifest>
+                 <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToInchi</mainClass>
+              </manifest>
+           </archive>
+         </configuration>
+       </plugin>
+    </plugins>
+  </build>
+   <dependencies>
+      <dependency>
+        <groupId>opsin</groupId>
+        <artifactId>core</artifactId>
+        <version>0.5.4-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf</groupId>
+        <artifactId>jniinchi</artifactId>
+        <version>0.5</version>
+      </dependency>
+   </dependencies>
+</project>
