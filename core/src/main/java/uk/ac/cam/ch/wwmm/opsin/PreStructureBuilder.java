@@ -2783,7 +2783,7 @@ class PreStructureBuilder {
 						foundSomethingToSubstitute = true;
 					}
 				}
-				if (!foundSomethingToSubstitute){System.out.println(subOrBracket.toXML());
+				if (!foundSomethingToSubstitute){
 					throw new PostProcessingException("Unable to assign all locants");
 				}
 			}
