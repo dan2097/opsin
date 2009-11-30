@@ -12,7 +12,7 @@ import nu.xom.Serializer;
  * @author ptc24
  *
  */
-class XOMFormatter {
+public class XOMFormatter {
 
 	private ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 	private Serializer serializer;
