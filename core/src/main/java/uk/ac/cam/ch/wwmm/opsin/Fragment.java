@@ -1073,7 +1073,7 @@ class Fragment {
 	 * @param atomList
 	 * @throws StructureBuildingException
 	 */
-	void reorderAtomCollection(ArrayList<Atom> atomList) throws StructureBuildingException {
+	void reorderAtomCollection(List<Atom> atomList) throws StructureBuildingException {
 		if (atomMapFromId.size()!=atomList.size()){
 			throw new StructureBuildingException("atom list is not the same size as the number of atoms in the fragment");
 		}

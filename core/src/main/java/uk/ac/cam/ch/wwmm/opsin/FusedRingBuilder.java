@@ -1,8 +1,17 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import sea36.chem.core.CMLAtom;
+import sea36.chem.rings.SSSRFinder;
 
 
 import nu.xom.Element;
@@ -22,9 +31,9 @@ class FusedRingBuilder {
 	 * @author dl387
 	 *
 	 */
-	private class SortAtomSequences implements Comparator<ArrayList<Atom>> {
+	private class SortAtomSequences implements Comparator<List<Atom>> {
 
-	    public int compare(ArrayList<Atom> sequenceA, ArrayList<Atom> sequenceB){
+	    public int compare(List<Atom> sequenceA, List<Atom> sequenceB){
 	    	if (sequenceA.size() != sequenceB.size()){
 	    		//Error in fused ring building. Identified ring sequences not the same lengths!
 	    		return 0;
@@ -244,8 +253,8 @@ class FusedRingBuilder {
 		if (fusions.size() >1){
 			throw new PostProcessingException("Unsupported fused ring system: more than 1 fusion");
 		}
-		ArrayList<Fragment> rings = new ArrayList<Fragment>();
-		HashMap<Fragment,HashMap<String, ArrayList<String>>> ringsInformation = new HashMap<Fragment,HashMap<String, ArrayList<String>>>();
+		List<Fragment> rings = new ArrayList<Fragment>();
+		HashMap<Fragment,HashMap<String, List<String>>> ringsInformation = new HashMap<Fragment,HashMap<String, List<String>>>();
 
 		/*
 		 * Resolve the Groups
@@ -266,8 +275,8 @@ class FusedRingBuilder {
 
 		int numbersMissing=0;
 		int lettersMissing=0;
-		ArrayList<String> numericalLocantsOfChild = new ArrayList<String>();
-		ArrayList<String> letterLocantsOfParent = new ArrayList<String>();
+		List<String> numericalLocantsOfChild = new ArrayList<String>();
+		List<String> letterLocantsOfParent = new ArrayList<String>();
 		if (fusions.size() > 0){
 			Element fusion = fusions.get(0);
 			String[] fusionArray=fusion.getValue().split("-");
@@ -351,10 +360,10 @@ class FusedRingBuilder {
 		}
 
 
-		HashMap <String, ArrayList<String>> tempHash = new HashMap<String, ArrayList<String>>();
+		HashMap <String, List<String>> tempHash = new HashMap<String, List<String>>();
 		tempHash.put("numericalLocants",numericalLocantsOfChild);
 		ringsInformation.put(rings.get(0), tempHash );
-		tempHash = new HashMap<String, ArrayList<String>>();
+		tempHash = new HashMap<String, List<String>>();
 		tempHash.put("letterLocants",letterLocantsOfParent);
 		ringsInformation.put(rings.get(1), tempHash );
 
@@ -395,13 +404,13 @@ class FusedRingBuilder {
 	 * @return fused Fragment
 	 * @throws StructureBuildingException
 	 */
-	private Fragment fuseRings(BuildState state, ArrayList<Fragment> rings, HashMap<Fragment, HashMap<String, ArrayList<String>>> ringsInformation) throws StructureBuildingException {
-		ArrayList<List<Atom>> childAtomsToBeConnectedToParent = new ArrayList<List<Atom>>();
-		ArrayList<Integer> parentAtomIds = new ArrayList<Integer>();
+	private Fragment fuseRings(BuildState state, List<Fragment> rings, HashMap<Fragment, HashMap<String, List<String>>> ringsInformation) throws StructureBuildingException {
+		List<List<Atom>> childAtomsToBeConnectedToParent = new ArrayList<List<Atom>>();
+		List<Integer> parentAtomIds = new ArrayList<Integer>();
 		Fragment childRing =rings.get(0);
 		Fragment parentRing =rings.get(1);
-		ArrayList<String> locantsOfChild = ringsInformation.get(childRing).get("numericalLocants");
-		ArrayList<String> letterLocantsOfParent = ringsInformation.get(parentRing).get("letterLocants");
+		List<String> locantsOfChild = ringsInformation.get(childRing).get("numericalLocants");
+		List<String> letterLocantsOfParent = ringsInformation.get(parentRing).get("letterLocants");
 		String firstLocant =locantsOfChild.get(0);
 		String secondLocant =locantsOfChild.get(1);
 
@@ -518,14 +527,14 @@ class FusedRingBuilder {
 	 */
 	public void numberFusedRing(Fragment fusedRing) throws StructureBuildingException {
 
-		ArrayList<Ring> rings = (ArrayList<Ring>) getSetOfSmallestRings(fusedRing);
+		List<Ring> rings = getSetOfSmallestRings(fusedRing);
 
-		ArrayList<ArrayList<Atom>> atomSequences = new ArrayList<ArrayList<Atom>>();
+		List<List<Atom>> atomSequences = new ArrayList<List<Atom>>();
 
 		// Special case when there are only 2 rings. This is expected to be faster than a more thorough analysis
 		if (rings.size() ==2){
 			List<Atom> atomList =fusedRing.getAtomList();
-			ArrayList<Atom> bridgeheads =new ArrayList<Atom>();
+			List<Atom> bridgeheads =new ArrayList<Atom>();
 			for (Atom atom : atomList) {
 				if (fusedRing.getAtomNeighbours(atom).size()==3){
 					bridgeheads.add(atom);
@@ -536,7 +545,7 @@ class FusedRingBuilder {
 				for (Atom  neighbour :  neighbours) {
 					if (!bridgeheads.contains(neighbour)){
 						//found starting atom
-						ArrayList<Atom> atomsVisited =new ArrayList<Atom>();
+						List<Atom> atomsVisited =new ArrayList<Atom>();
 						atomsVisited.add(bridgeheadAtom);
 
 						Atom nextAtom =neighbour;
@@ -566,17 +575,17 @@ class FusedRingBuilder {
 
 			if (checkRingAreInChain(rings, fusedRing))
 			{
-				ArrayList<Ring> tRings = findTerminalRings(rings);
+				List<Ring> tRings = findTerminalRings(rings);
 				Ring tRing = tRings.get(0);
 
-				ArrayList<Bond> fusedBonds = tRing.getFusedBonds();
+				List<Bond> fusedBonds = tRing.getFusedBonds();
 				if (fusedBonds == null || fusedBonds.size()<=0) throw new StructureBuildingException("No fused bonds found");
 				if (fusedBonds.size()>1) throw new StructureBuildingException("Terminal ring connected to more than 2 rings");
 
 				// if there are more, we should go through atom most counterclockwise in the ring segh all the tRings
 
 				enumerateRingAtoms(rings, tRing);
-				ArrayList<Ring> orderedRings = new ArrayList<Ring>();
+				List<Ring> orderedRings = new ArrayList<Ring>();
 				int[] path = getDirectionsPath(rings, fusedBonds.get(0), tRing, orderedRings);
 
 				atomSequences = applyRules(path, orderedRings);
@@ -587,14 +596,14 @@ class FusedRingBuilder {
 
 				// find missing atoms
 				if(atomSequences.size()<=0) throw new StructureBuildingException("No path found");
-				ArrayList<Atom> takenAtoms = atomSequences.get(0);
+				List<Atom> takenAtoms = atomSequences.get(0);
 
-				ArrayList<Atom> missingAtoms = new ArrayList<Atom>();
+				List<Atom> missingAtoms = new ArrayList<Atom>();
 				for(Atom atom : fusedRing.getAtomList()) {
 					if(!takenAtoms.contains(atom)) missingAtoms.add(atom);
 				}
 				// add  missing atoms to each path
-				for (ArrayList<Atom> path : atomSequences) {
+				for (List<Atom> path : atomSequences) {
 					for(Atom atom : fusedRing.getAtomList()) {
 						if(!path.contains(atom)) path.add(atom);
 					}
@@ -620,10 +629,10 @@ class FusedRingBuilder {
 	//*****************************************************************************************************
 	private class ConnectivityTable
 	{
-		public ArrayList<Ring> col1 = new ArrayList<Ring>();
-		public ArrayList<Ring> col2 = new ArrayList<Ring>();
-		public ArrayList<Integer> col3 = new ArrayList<Integer>();
-		public ArrayList<Ring> usedRings = new ArrayList<Ring>();
+		public List<Ring> col1 = new ArrayList<Ring>();
+		public List<Ring> col2 = new ArrayList<Ring>();
+		public List<Integer> col3 = new ArrayList<Integer>();
+		public List<Ring> usedRings = new ArrayList<Ring>();
 	}
 
 	/**
@@ -632,9 +641,9 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<ArrayList<Atom>> number6MemberRings(ArrayList<Ring> rings) throws StructureBuildingException
+	private List<List<Atom>> number6MemberRings(List<Ring> rings) throws StructureBuildingException
 	{
-		ArrayList<Ring> tRings = findTerminalRings(rings);
+		List<Ring> tRings = findTerminalRings(rings);
 		if (tRings == null || tRings.size()<0) throw new StructureBuildingException("Terminal rings not found");
 		Ring tRing = tRings.get(0);
 		Bond b1 = getNonFusedBond(tRing.getBondSet());
@@ -644,13 +653,13 @@ class FusedRingBuilder {
 		ConnectivityTable ct = new ConnectivityTable();
 		buildTable(tRing, null, 0, b1, b1.getFromAtom(), ct);
 
-		ArrayList<Integer> dirs = findLongestChainDirection(ct);
+		List<Integer> dirs = findLongestChainDirection(ct);
 
 		// add all the paths together and return
-		ArrayList<ArrayList<Atom>> paths = new ArrayList<ArrayList<Atom>>();
+		List<List<Atom>> paths = new ArrayList<List<Atom>>();
 		for (Integer dir : dirs) {
-			ArrayList<ArrayList<Atom>> dirPaths = findPossiblePaths(dir, ct);
-			for (ArrayList<Atom> path : dirPaths) {
+			List<List<Atom>> dirPaths = findPossiblePaths(dir, ct);
+			for (List<Atom> path : dirPaths) {
 				paths.add(path);
 			}
 		}
@@ -665,9 +674,9 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<ArrayList<Atom>> findPossiblePaths(int newDir, ConnectivityTable ct) throws StructureBuildingException
+	private List<List<Atom>> findPossiblePaths(int newDir, ConnectivityTable ct) throws StructureBuildingException
 	{
-		//ArrayList<Integer> col3 = new  ArrayList<Integer>(this.col3);
+		//List<Integer> col3 = new  ArrayList<Integer>(this.col3);
 		if ( ct.col1.size() != ct.col2.size() || ct.col2.size() != ct.col3.size() || ct.col1.size() <= 0) throw new StructureBuildingException("Sizes of arrays are not equal");
 
 		int n = ct.col3.size();
@@ -755,7 +764,7 @@ class FusedRingBuilder {
 		}
 
 
-		ArrayList< int[]> chains = findChains(ringMap);
+		List< int[]> chains = findChains(ringMap);
 
 		// find candidates for different directions and different quadrants
 
@@ -769,15 +778,15 @@ class FusedRingBuilder {
 			chainqs[c] = qs;
 		}
 
-		ArrayList<ArrayList<Atom>> paths = new ArrayList<ArrayList<Atom>> ();
+		List<List<Atom>> paths = new ArrayList<List<Atom>> ();
 
 		//  order for each right corner candidates for each chain
-		ArrayList<String> chainCandidates = new ArrayList<String>();
+		List<String> chainCandidates = new ArrayList<String>();
 		rulesBCD(chainqs, chainCandidates);
 		int c = 0;
 		for(String cand : chainCandidates)
 		{
-			ArrayList<ArrayList<Atom>> chainPaths = new ArrayList<ArrayList<Atom>> ();
+			List<List<Atom>> chainPaths = new ArrayList<List<Atom>> ();
 			int[] chain = chains.get(c);
 			int midChain = chain[0] + chain[1] - 1;
 
@@ -786,10 +795,10 @@ class FusedRingBuilder {
 				Ring[][] qRingMap = transformRingWithQuadrant(ringMap, qr);
 				boolean inverseAtoms = false;
 				if (qr == 1 || qr == 3) inverseAtoms = true;
-				ArrayList<Atom> quadrantPath = orderAtoms(qRingMap, midChain, inverseAtoms);
+				List<Atom> quadrantPath = orderAtoms(qRingMap, midChain, inverseAtoms);
 				chainPaths.add(quadrantPath);
 			}
-			for (ArrayList<Atom> chainPath : chainPaths) {
+			for (List<Atom> chainPath : chainPaths) {
 				paths.add(chainPath);
 			}
 			c++;
@@ -806,13 +815,13 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms) throws StructureBuildingException
+	private List<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms) throws StructureBuildingException
 	{
 		int w = ringMap.length;
 		if (w<0 || ringMap[0].length < 0) throw new StructureBuildingException("Mapping results are wrong");
 		int h = ringMap[0].length;
 
-		ArrayList<Atom> atomPath = new ArrayList<Atom>();
+		List<Atom> atomPath = new ArrayList<Atom>();
 
 		// find upper right ring
 		Ring iRing = null;
@@ -821,7 +830,7 @@ class FusedRingBuilder {
 		}
 		if (iRing == null) throw new StructureBuildingException("Upper right ring not found");
 
-		Ring prevRing = findUpperLeftNeighbor(ringMap, iRing);
+		Ring prevRing = findUpperLeftNeighbour(ringMap, iRing);
 		Bond prevBond = findFusionBond(iRing, prevRing);
 		Bond nextBond = null;
 
@@ -837,8 +846,8 @@ class FusedRingBuilder {
 
 			stNumber = iRing.getBondNumber(prevBond) ;
 
-			ArrayList<Bond> cbonds = iRing.getCyclicBondSet();
-			ArrayList<Bond> fbonds = iRing.getFusedBonds();
+			List<Bond> cbonds = iRing.getCyclicBondSet();
+			List<Bond> fbonds = iRing.getFusedBonds();
 			if (!inverseAtoms)
 			{
 				for(int bi=0; bi<size; bi++)
@@ -928,13 +937,13 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private Ring findUpperLeftNeighbor (Ring[][] ringMap, Ring iRing) throws StructureBuildingException
+	private Ring findUpperLeftNeighbour (Ring[][] ringMap, Ring iRing) throws StructureBuildingException
 	{
 		Ring nRing = null;
 		int minx = Integer.MAX_VALUE;
 		int maxy = 0;
 
-		for (Ring ring : iRing.getNeighbors())
+		for (Ring ring : iRing.getNeighbours())
 		{
 			// upper left would be previous ring
 			int xy[] = findRingPosition(ringMap, ring);
@@ -1006,13 +1015,13 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList< int[]> findChains(Ring[][] ringMap) throws StructureBuildingException
+	private List< int[]> findChains(Ring[][] ringMap) throws StructureBuildingException
 	{
 		int w = ringMap.length;
 		if (w<0 || ringMap[0].length < 0) throw new StructureBuildingException("Mapping results are wrong");
 		int h = ringMap[0].length;
 
-		ArrayList< int[]> chains = new ArrayList< int[]>(); // Arraylist containing int arrays with all data for each chain: 0-chain length, 1-iChain, 2-jChain
+		List< int[]> chains = new ArrayList< int[]>(); // List containing int arrays with all data for each chain: 0-chain length, 1-iChain, 2-jChain
 
 		int maxChain = 0;
 		int chain = 0;
@@ -1100,12 +1109,12 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<Integer> findLongestChainDirection(ConnectivityTable ct) throws StructureBuildingException
+	private List<Integer> findLongestChainDirection(ConnectivityTable ct) throws StructureBuildingException
 	{
 		if (ct.col1.size() != ct.col2.size() || ct.col2.size() != ct.col3.size()) throw new StructureBuildingException("Sizes of arrays are not equal");
 
-		ArrayList<Integer> directions = new  ArrayList<Integer>();
-		ArrayList<Integer> lengths = new  ArrayList<Integer>();
+		List<Integer> directions = new  ArrayList<Integer>();
+		List<Integer> lengths = new  ArrayList<Integer>();
 
 		// Ring c1;
 		Ring c2;
@@ -1186,7 +1195,7 @@ class FusedRingBuilder {
 		iRing.makeCyclicSets(prevBond, atom);
 		ct.usedRings.add(iRing);
 
-		for (Ring ring : iRing.getNeighbors())
+		for (Ring ring : iRing.getNeighbours())
 		{
 			// go back to ring we come from too, take the connection 2 times
 
@@ -1222,7 +1231,7 @@ class FusedRingBuilder {
 	 * @param bondSet
 	 * @return
 	 */
-	private Bond getNonFusedBond(ArrayList<Bond> bondSet)
+	private Bond getNonFusedBond(List<Bond> bondSet)
 	{
 		for (Bond bond : bondSet) {
 			if(bond.getFusedRings() == null || bond.getFusedRings().size() < 1)
@@ -1273,7 +1282,7 @@ class FusedRingBuilder {
 	 */
 	private Bond findFusionBond (Ring r1, Ring r2)
 	{
-		ArrayList<Bond> b2 = r2.getBondSet();
+		List<Bond> b2 = r2.getBondSet();
 		for(Bond bond : r1.getBondSet())
 			if (b2.contains(bond)) return bond;
 
@@ -1317,7 +1326,7 @@ class FusedRingBuilder {
 	 * @param rings
 	 * @return
 	 */
-	private  boolean checkRingsAre6Membered(ArrayList<Ring> rings)
+	private  boolean checkRingsAre6Membered(List<Ring> rings)
 	{
 		for (Ring ring : rings) {
 			if (ring.size() != 6) return false;
@@ -1336,16 +1345,16 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<ArrayList<Atom>> applyRules(int[] path, ArrayList<Ring> pRings) throws StructureBuildingException
+	private List<List<Atom>> applyRules(int[] path, List<Ring> pRings) throws StructureBuildingException
 	{
 		int i;
 		int si=0;
 		int maxChain=0;
 
 		int curDir = 0;
-		ArrayList<Integer> maxDir = new ArrayList<Integer>();
+		List<Integer> maxDir = new ArrayList<Integer>();
 
-		ArrayList<ArrayList<Atom>> allAtomOrders = new ArrayList<ArrayList<Atom>>();
+		List<List<Atom>> allAtomOrders = new ArrayList<List<Atom>>();
 
 		//int[] path = {0,0,1,1};
 
@@ -1394,8 +1403,8 @@ class FusedRingBuilder {
 		if (maxDir.size()<=0) throw new StructureBuildingException("Chains are not recognized in the molecule");
 
 		for (int dir : maxDir) {
-			ArrayList<ArrayList<Atom>> orders = getOrderInEachDirection(path, pRings, dir, maxChain);
-			for (ArrayList<Atom> order : orders) {
+			List<List<Atom>> orders = getOrderInEachDirection(path, pRings, dir, maxChain);
+			for (List<Atom> order : orders) {
 				allAtomOrders.add (order);
 			}
 		}
@@ -1415,11 +1424,11 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<ArrayList<Atom>> getOrderInEachDirection(int[] path, ArrayList<Ring> pRings, int maxDir, int maxChain) throws StructureBuildingException
+	private List<List<Atom>> getOrderInEachDirection(int[] path, List<Ring> pRings, int maxDir, int maxChain) throws StructureBuildingException
 	{
 		//for further analyses we change the orientation.
 		int i;
-		ArrayList<String> chainVariants = new ArrayList<String>();
+		List<String> chainVariants = new ArrayList<String>();
 		boolean sequence = false;
 		path = path.clone(); // not to change real object
 
@@ -1427,7 +1436,7 @@ class FusedRingBuilder {
 		if (Math.abs(maxDir) == 4)
 		{
 			int[] copyPath = path.clone();
-			ArrayList<Ring> inversedRings = new ArrayList<Ring>();
+			List<Ring> inversedRings = new ArrayList<Ring>();
 			int l = path.length;
 
 			if (pRings.size() < path.length) throw new StructureBuildingException("The path does not correspond to array of rings");
@@ -1450,7 +1459,7 @@ class FusedRingBuilder {
 		}
 
 		// Rule A
-		ArrayList<Integer> chains = new ArrayList<Integer>();
+		List<Integer> chains = new ArrayList<Integer>();
 		// find the longest chains
 		int si=0;
 		for (i=0; i<path.length; i++)
@@ -1484,12 +1493,12 @@ class FusedRingBuilder {
 
 		int ichain = 0;
 
-		ArrayList<Ring> inversedRings = new ArrayList<Ring>();
+		List<Ring> inversedRings = new ArrayList<Ring>();
 		for (int k=pRings.size()-1; k>=0; k--) { // make once inversed, dont repeat
 			inversedRings.add(pRings.get(k));
 		}
 
-		ArrayList<ArrayList<Atom>> atomOrders = new ArrayList<ArrayList<Atom>>();
+		List<List<Atom>> atomOrders = new ArrayList<List<Atom>>();
 
 		for (String chain :chainVariants)
 		{
@@ -1502,14 +1511,14 @@ class FusedRingBuilder {
 
 				int stChain = chains.get(ichain);
 
-				ArrayList<Ring> ringsToPass;
+				List<Ring> ringsToPass;
 				if (q == 1 || q == 2) {
 					stChain = path.length - stChain - maxChain;
 					ringsToPass = inversedRings;
 				}
 				else ringsToPass = new ArrayList<Ring>(pRings);
 
-				ArrayList<Atom> oAtoms = createAtomOrder(ringsToPass, getTransformedPath(path, q), stChain, maxChain, q, inverseAtoms);
+				List<Atom> oAtoms = createAtomOrder(ringsToPass, getTransformedPath(path, q), stChain, maxChain, q, inverseAtoms);
 				atomOrders.add(oAtoms);
 
 			}
@@ -1524,7 +1533,7 @@ class FusedRingBuilder {
 	 * @param chainVariants
 	 * @throws StructureBuildingException
 	 */
-	private void rulesBCD(float[][] qs, ArrayList<String> chainVariants) throws StructureBuildingException
+	private void rulesBCD(float[][] qs, List<String> chainVariants) throws StructureBuildingException
 	{
 		// Analyse quadrants
 
@@ -1627,7 +1636,7 @@ class FusedRingBuilder {
 
 	}
 	/**
-	 * Adds atoms to the array in the order according to the rules,. Finds the uppermost right ring, starting from it adds atoms to the result arraylist
+	 * Adds atoms to the array in the order according to the rules,. Finds the uppermost right ring, starting from it adds atoms to the result List
 	 * @param rings
 	 * @param path
 	 * @param chainStart
@@ -1637,11 +1646,11 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private ArrayList<Atom> createAtomOrder(ArrayList<Ring> rings, int[] path, int chainStart, int chainLen, int quadrant, boolean inverseAtoms) throws StructureBuildingException
+	private List<Atom> createAtomOrder(List<Ring> rings, int[] path, int chainStart, int chainLen, int quadrant, boolean inverseAtoms) throws StructureBuildingException
 	{
 		// atom order is changed when we transform the right corner from the 1st and 3d quadrant (start from 0)
 		// rings order is inversed when we transform from 1st and 2d quadrant (start from 0)
-		ArrayList<Atom> atomPath = new ArrayList<Atom>();
+		List<Atom> atomPath = new ArrayList<Atom>();
 
 		// find the upper right ring
 		int height=0;
@@ -1695,7 +1704,7 @@ class FusedRingBuilder {
 		if (upperRightPath<0 || upperRightPath>rings.size()) throw new StructureBuildingException();
 
 
-		ArrayList<Bond> fusedBonds;
+		List<Bond> fusedBonds;
 		Bond prevFusedBond = null;
 		Bond curFusedBond = null;
 		Ring ring = rings.get(upperRightPath);
@@ -1784,7 +1793,7 @@ class FusedRingBuilder {
 
 			if (finished) break;
 
-			ArrayList<Ring> fusedRings = curFusedBond.getFusedRings();
+			List<Ring> fusedRings = curFusedBond.getFusedRings();
 			for (Ring fRing : fusedRings) {
 				if (ring != fRing) { ring = fRing; break;}
 			}
@@ -1940,19 +1949,19 @@ class FusedRingBuilder {
 	 * @param rings
 	 * @return
 	 */
-	private ArrayList<Ring> findTerminalRings(ArrayList<Ring> rings)
+	private List<Ring> findTerminalRings(List<Ring> rings)
 	{
-		ArrayList<Ring> tRings = new ArrayList<Ring>();
+		List<Ring> tRings = new ArrayList<Ring>();
 
 		int minFusedBonds = Integer.MAX_VALUE;
 		for  (Ring ring : rings)
 		{
-			if (ring.getNOFusedBonds() < minFusedBonds) minFusedBonds = ring.getNOFusedBonds();
+			if (ring.getNumberOfFusedBonds() < minFusedBonds) minFusedBonds = ring.getNumberOfFusedBonds();
 		}
 
 		for  (Ring ring : rings)
 		{
-			if (ring.getNOFusedBonds() == minFusedBonds) tRings.add(ring);
+			if (ring.getNumberOfFusedBonds() == minFusedBonds) tRings.add(ring);
 		}
 		return tRings;
 	}
@@ -1961,7 +1970,7 @@ class FusedRingBuilder {
 	 * Fills the value fusedRings for bonds, calcuclates the number of fused bonds in a ring
 	 * @param rings
 	 */
-	private void setFusedRings(ArrayList<Ring> rings)
+	private void setFusedRings(List<Ring> rings)
 	{
 		for (Ring curRing : rings) {
 			for(Bond bond : curRing.getBondSet()) { 			// go through all the bonds for the current ring
@@ -1973,11 +1982,11 @@ class FusedRingBuilder {
 							bond.addFusedRing(ring);			// if so, then add the rings into fusedRing array in the bond
 							bond.addFusedRing(curRing);			// and decrease number of free bonds for both rings
 
-							ring.incrNOFFusedBonds();
-							curRing.incrNOFFusedBonds();
+							ring.incrementNumberOfFusedBonds();
+							curRing.incrementNumberOfFusedBonds();
 
-							ring.addNeighbor(curRing);
-							curRing.addNeighbor(ring);
+							ring.addNeighbour(curRing);
+							curRing.addNeighbour(ring);
 						}
 					}
 				}
@@ -1991,10 +2000,10 @@ class FusedRingBuilder {
 	 * @param frag
 	 * @return
 	 */
-	private boolean checkRingAreInChain(ArrayList<Ring> rings, Fragment frag)
+	private boolean checkRingAreInChain(List<Ring> rings, Fragment frag)
 	{
 		for (Ring ring : rings) {
-			if (ring.getNOFusedBonds() > 2) return false;
+			if (ring.getNumberOfFusedBonds() > 2) return false;
 			if (ring.size()>9) return false;
 		}
 
@@ -2017,7 +2026,7 @@ class FusedRingBuilder {
 	 * @param tRing
 	 * @throws StructureBuildingException
 	 */
-	private void enumerateRingAtoms(ArrayList<Ring> rings, Ring tRing) throws StructureBuildingException
+	private void enumerateRingAtoms(List<Ring> rings, Ring tRing) throws StructureBuildingException
 	{
 		if (rings == null || rings.size()<=0) throw new StructureBuildingException();
 
@@ -2032,7 +2041,7 @@ class FusedRingBuilder {
 			if (i==rings.size()-1) break;
 
 			// find the bond between current ring and next one
-			ArrayList<Bond> fusedBonds = iRing.getFusedBonds();
+			List<Bond> fusedBonds = iRing.getFusedBonds();
 			if (fusedBonds == null || fusedBonds.size()<=0) throw new StructureBuildingException();
 			for (Bond fBond : fusedBonds) {
 				if (stBond != fBond) {stBond = fBond; break;} // we take the bond different from the current
@@ -2050,7 +2059,7 @@ class FusedRingBuilder {
 			}
 
 			// take next ring fused to the current
-			ArrayList<Ring> fusedRings = stBond.getFusedRings();
+			List<Ring> fusedRings = stBond.getFusedRings();
 			if (fusedRings == null || fusedRings.size()<2) throw new StructureBuildingException();
 			if (iRing != fusedRings.get(0)) iRing = fusedRings.get(0);
 			else iRing = fusedRings.get(1);
@@ -2066,7 +2075,7 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private int[] getDirectionsPath(ArrayList<Ring> rings, Bond startBond, Ring tRing, ArrayList<Ring> orderedRings) throws StructureBuildingException
+	private int[] getDirectionsPath(List<Ring> rings, Bond startBond, Ring tRing, List<Ring> orderedRings) throws StructureBuildingException
 	{
 		//String fPath = tRing.size() + "R"; // because from the first ring we go right
 		int[] path = new int[rings.size()-1];
@@ -2081,7 +2090,7 @@ class FusedRingBuilder {
 		for (int i=0; i<rings.size()-1; i++)
 		{
 			// take the ring fused to one from the previous loop step
-			ArrayList<Ring> fusedRings = stBond.getFusedRings();
+			List<Ring> fusedRings = stBond.getFusedRings();
 			if (fusedRings == null || fusedRings.size()<2) throw new StructureBuildingException();
 			if (iRing != fusedRings.get(0)) iRing = fusedRings.get(0);
 			else iRing = fusedRings.get(1);
@@ -2090,7 +2099,7 @@ class FusedRingBuilder {
 			orderedRings.add(iRing);
 
 			// find the next fused bond between current ring and the next
-			ArrayList<Bond> fusedBonds = iRing.getFusedBonds();
+			List<Bond> fusedBonds = iRing.getFusedBonds();
 			if (fusedBonds == null || fusedBonds.size()<=0) throw new StructureBuildingException();
 			if (fusedBonds.size() == 1) break;		// we came to the last ring in the chain
 			for (Bond fBond : fusedBonds) {
@@ -2216,162 +2225,29 @@ class FusedRingBuilder {
 
 		return dir;
 	}
-	/** get set of smallest rings.
-	 * crude
-	 * @param update replace current list
-	 * @return list of rings
+	/** Employs chemKit to find the smallest set of smallest rings in input fragment
+	 * An exception is thrown if the input fragment has less than 2 rings
+	 * @param Fragment An OPSIN fragment
+	 * @return List<Ring> The smallest set of smallest rings
 	 */
 	List<Ring> getSetOfSmallestRings(Fragment frag) throws StructureBuildingException {
-		ArrayList<Atom> atomSet = (ArrayList<Atom>) frag.getAtomList();
-
-		List<Ring> ringList = getRings(atomSet);
-
-		if (ringList.size() > 1) {
-			boolean change = true;
-			while (change) {
-				for (int i = 0; i < ringList.size(); i++) {
-					Ring ring = ringList.get(i);
-					change = reduceRingSizes(ring, ringList);
+		List<Ring> sssr = new ArrayList<Ring>();
+		OpsinToChemKitWrapper chemKitMoleculeWrapper = new OpsinToChemKitWrapper(frag);
+		List<sea36.chem.rings.Ring> chemKitSSSR = SSSRFinder.findSSSR(chemKitMoleculeWrapper.getChemKitMolecule());
+		if (chemKitSSSR.size() > 1) {
+			for (sea36.chem.rings.Ring chemKitRing : chemKitSSSR) {
+				List<Atom> orderedOpsinAtomsInRing = new ArrayList<Atom>();
+				List<CMLAtom> orderedAtoms = chemKitRing.getOrderedAtoms();//in order of going around ring
+				for (CMLAtom atom : orderedAtoms) {
+					orderedOpsinAtomsInRing.add(chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom(atom));
 				}
+				sssr.add(new Ring(orderedOpsinAtomsInRing));
 			}
 		}
-		else throw new StructureBuildingException("Ring perception system did not recognize fused rings");
+		else throw new StructureBuildingException("Ring perception system found less than 2 rings within input fragment!");
 
-		return ringList;
+		return sssr;
 	}
-
-	/** get list of rings.
-	 * not necessarily SSSR
-	 * @return list of rings
-	 * @throws StructureBuildingException
-	 */
-	List<Ring> getRings(ArrayList<Atom> atomSet ) throws StructureBuildingException {
-		List<Ring> ringList = new ArrayList<Ring>();
-		Set<Atom> usedAtoms = new HashSet<Atom>();
-
-		Atom root = atomSet.get(0);
-		Atom parentAtom = null;
-		Map<Atom, Atom> atomToParentMap = new HashMap<Atom, Atom>();
-		Set<Bond> linkBondSet = new LinkedHashSet<Bond>();
-
-		expand(root, parentAtom, usedAtoms, atomToParentMap, linkBondSet);
-
-		for (Bond bond : linkBondSet) {
-			Ring ring = getRing(bond, atomToParentMap);
-			ringList.add(ring);
-		}
-
-		return ringList;
-	}
-
-	private Ring getRing(Bond bond, Map<Atom, Atom> atomToParentMap) throws StructureBuildingException {
-		Atom atomFrom =  bond.getFromAtom() ;
-		Atom atomTo = bond.getToAtom();
-		ArrayList<Atom>  atomSet0 = getAncestors(atomFrom, atomToParentMap);
-		ArrayList<Atom>  atomSet1 = getAncestors(atomTo, atomToParentMap);
-		ArrayList<Bond>  bondSet0 = getAncestors1(atomFrom, atomToParentMap, atomSet1);
-		ArrayList<Bond>  bondSet1 = getAncestors1(atomTo, atomToParentMap, atomSet0);
-		ArrayList<Bond>  mergedBondSet = symmetricDifference (bondSet0, bondSet1);
-
-		mergedBondSet.add(bond);
-		return new Ring(mergedBondSet);
-	}
-
-
-	private ArrayList<Atom>  getAncestors(Atom atom, Map<Atom, Atom> atomToParentMap) {
-		ArrayList<Atom> newAtomSet = new ArrayList<Atom> ();
-
-		atom = atomToParentMap.get(atom);
-		if (atom != null && !newAtomSet.contains(atom)) {
-			newAtomSet.add(atom);
-		}
-
-		return newAtomSet;
-	}
-
-	private ArrayList<Bond>  getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap, ArrayList<Atom> atomSet) throws StructureBuildingException {
-		Fragment molecule =atom.getFrag();
-		ArrayList<Bond> newBondSet = new ArrayList<Bond>();
-		while (true) {
-			Atom atom1 = atomToParentMap.get(atom);
-			if (atom1 == null) {
-				break;
-			}
-			Bond bond = molecule.findBondOrThrow(atom, atom1);
-			if (newBondSet.contains(bond)) {
-				break;
-			}
-			newBondSet.add(bond);
-			atom = atom1;
-		}
-		return newBondSet;
-	}
-
-	private void expand(Atom atom, Atom parentAtom,
-			Set<Atom> usedAtoms, Map<Atom, Atom> atomToParentMap,
-			Set<Bond> linkBondSet) throws StructureBuildingException {
-
-		usedAtoms.add(atom);
-		atomToParentMap.put(atom, parentAtom);
-		List<Atom> ligandAtomList = atom.getAtomNeighbours();
-		Fragment fragment = atom.getFrag();
-
-		for (int i = 0; i < ligandAtomList.size(); i++) {
-			Atom ligandAtom = ligandAtomList.get(i);
-			if (ligandAtom.equals(parentAtom)) {
-				// skip existing bond
-			} else if (usedAtoms.contains(ligandAtom)) {
-				Bond linkBond = fragment.findBondOrThrow(atom, ligandAtom);
-				linkBondSet.add(linkBond);
-				// already treated
-			} else {
-				expand(ligandAtom, atom, usedAtoms, atomToParentMap, linkBondSet);
-			}
-		}
-	}
-
-
-	/**
-	 * @param ring
-	 * @throws StructureBuildingException
-	 */
-	private boolean reduceRingSizes(Ring ring, List<Ring> newList) throws StructureBuildingException {
-		boolean change = false;
-		for (int i = 0; i < newList.size(); i++) {
-			Ring target = newList.get(i);
-			if (target == ring) {
-				continue;
-			}
-
-			ArrayList<Bond> newBondSet = symmetricDifference ( target.getBondSet(), ring.getBondSet() ) ;
-			if (newBondSet.size() < target.size()) {
-				Ring newRing = new Ring(newBondSet);
-				newList.set(i, newRing);
-				change = true;
-			}
-		}
-		return change;
-	}
-
-
-	 ArrayList<Bond> symmetricDifference(ArrayList<Bond> bondSet1, ArrayList<Bond> bondSet2) {
-	 	 ArrayList<Bond> newBondSet = new ArrayList<Bond>();
-
-        for (int i = 0; i < bondSet1.size(); i++) {
-            if (!bondSet2.contains(bondSet1.get(i))) {
-                newBondSet.add(bondSet1.get(i));
-            }
-        }
-        for (int i = 0; i < bondSet2.size(); i++) {
-            Bond bond = bondSet2.get(i);
-            if (!bondSet1.contains(bond)) {
-                newBondSet.add(bond);
-            }
-        }
-
-	    return newBondSet;
-	 }
-
 
 
 	/**

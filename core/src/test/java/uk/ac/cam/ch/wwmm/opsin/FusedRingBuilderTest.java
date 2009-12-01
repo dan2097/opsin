@@ -184,7 +184,7 @@ public class FusedRingBuilderTest {
 	}
 
 	@Test
-	@Ignore //SSSR not found
+	@Ignore //Transient BUG in path finding code
 	public void ovalene() throws StructureBuildingException {
 		compareNumbering("c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19", "1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k");
 	}
