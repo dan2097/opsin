@@ -383,7 +383,7 @@ class Atom {
 	}
 
 	void checkIncomingValency() throws StructureBuildingException {
-		if(!ValencyChecker.checkValency(this)) throw new StructureBuildingException();
+		if(!ValencyChecker.checkValency(this)) throw new StructureBuildingException("Atom is in unphysical valency state! Element: " + getElement() + " valency: " + getIncomingValency());
 	}
 
 	/**Calculates the number of bonds connecting to the atom, excluding bonds to implicit
