@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 
 import nu.xom.Document;
 import nu.xom.Element;
@@ -17,6 +20,8 @@ import nu.xom.Serializer;
  * @author ptc24
  */
 public class NameToStructure {
+	
+	private static final Logger LOG = Logger.getLogger(NameToStructure.class);
 
 	class SortParses implements Comparator<Element>{
 		public int compare(Element el1, Element el2){
@@ -72,8 +77,9 @@ public class NameToStructure {
 	 *
 	 * @throws Exception If the converter cannot be initialised, most likely due to bad or missing data files.
 	 */
-	public NameToStructure() throws Exception {
-		System.out.println("Initialising OPSIN... ");
+	private NameToStructure() throws NameToStructureException {
+		LOG.setLevel(Level.ALL);//FIXME remove this
+		LOG.info("Initialising OPSIN... ");
 		try {
 			/*Initialise all of OPSIN's classes. Some classes are injected as dependencies into subsequent classes*/
 
@@ -97,7 +103,7 @@ public class NameToStructure {
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
 		}
-		System.out.println("OPSIN initialised");
+		LOG.info("OPSIN initialised");
 	}
 
 	public Element parseToCML(String name) {
@@ -152,20 +158,29 @@ public class NameToStructure {
 			Fragment frag = null;
 			for(Element parse : parses) {
 				try {
-					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					if (verbose && LOG.isDebugEnabled()){
+						LOG.debug(new XOMFormatter().elemToString(parse));
+					}
 					BuildState state = new BuildState(sBuilder, cmlBuilder);
 					postProcessor.postProcess(parse, state);
-					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					if (verbose && LOG.isDebugEnabled()){
+						LOG.debug(new XOMFormatter().elemToString(parse));
+					}
 					preStructureBuilder.postProcess(state, parse);
-					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					if (verbose && LOG.isDebugEnabled()){
+						LOG.debug(new XOMFormatter().elemToString(parse));
+					}
 					frag = structureBuilder.buildFragment(state, parse);
-					if(verbose) System.out.println(new XOMFormatter().elemToString(parse));
+					if (verbose && LOG.isDebugEnabled()){
+						LOG.debug(new XOMFormatter().elemToString(parse));
+					}
 					break;
 				} catch (Exception e) {
-					if(verbose) e.printStackTrace();
+					if (verbose && LOG.isDebugEnabled()){
+						LOG.warn(e.getMessage(),e);
+					}
 				}
 			}
-			if(frag == null) throw new Exception();
 			return frag;
 		} catch (Exception e) {
 			if(verbose) e.printStackTrace();

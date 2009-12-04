@@ -126,6 +126,7 @@
   <token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurite</token>
   <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurate</token>
   <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">telluroate</token>
+  <token value="[O-]S(=O)(=O)c1ccc(C)cc1" labels="////1/2/3/4//5/6" valType="SMILES" functionalIDs="1">tosylate</token>
   <token value="CC(=O)N(C(=O)C)C(=O)C" labels="none" valType="SMILES">triacetamide</token>
   <token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none" valType="SMILES">tribenzamide</token>
   <token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>

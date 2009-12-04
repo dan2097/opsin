@@ -111,14 +111,14 @@ does not define a CFG.
   <regex name="%alternatingHeteroChain%" value = "(%multiplier%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturation%+)"/>
   <regex name="%alkaneChain%" value = "(%irregularAlkaneStem%|%alkanen%?%alkaneStem%)"/>
 
-  <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%unsaturation%+)"/>;
-  <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneChain%%unsaturation%+)"/>;
-  <regex name="%chainSubstituent%" value = "((%chainGroup%|%alkaneChain%)%inlineEndings%)"/>;
+  <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%unsaturation%+)"/>
+  <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneChain%%unsaturation%+)"/>
+  <regex name="%chainSubstituent%" value = "((%chainGroup%|%alkaneChain%)%inlineEndings%)"/>
 
-  <regex name="%acidGroup%" value = "(%acidStem%%unlocantedSuffixGroup%)"/>;
-  <regex name="%acidSubstituent%" value = "(%acidStem%%unlocantedInlineSuffixGroup%)"/>;
+  <regex name="%acidGroup%" value = "(%acidStem%%unlocantedSuffixGroup%)"/>
+  <regex name="%acidSubstituent%" value = "(%acidStem%%unlocantedInlineSuffixGroup%)"/>
 
-  <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineEndings%)"/>;
+  <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineEndings%)"/>
 
   <!--cyclic-->
   <regex name="%semiTrivialFusedRing%" value = "(%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)"/>

@@ -12,13 +12,13 @@ public class NameToStructureTest_FromPapers {
 
 	@Test
 	public void testNameToStructure() throws Exception {
-		NameToStructure nts = new NameToStructure();
+		NameToStructure nts = NameToStructure.getInstance();
 		assertNotNull("Got a name to structure convertor", nts);
 	}
 
 	@Test
 	public void testParseToCML() throws Exception {
-		NameToStructure nts = new NameToStructure();
+		NameToStructure nts = NameToStructure.getInstance();
 		Element cml = nts.parseToCML("ethane");
 		assertEquals("Parsed ethane OK", "<cml xmlns=\"http://www.xml-cml.org/schema\" " +
 				"xmlns:cmlDict=\"http://www.xml-cml.org/dictionary/cml/\" " +
