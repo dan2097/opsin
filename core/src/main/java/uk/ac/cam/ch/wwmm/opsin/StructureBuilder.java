@@ -60,6 +60,9 @@ class StructureBuilder {
 		else if (wordRule.equals("glycol")){
 			buildGlycol(state, words);//e.g. ethylene glycol
 		}
+		else if(wordRule.equals("oxime")) {
+			buildOxime(state, words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
+		}
 		else if(wordRule.equals("binaryOrOther")) {
 			for (int i = 0; i < words.size(); i++) {
 				resolveWordOrBracket(state, words.get(i));
@@ -71,52 +74,6 @@ class StructureBuilder {
 		else{
 			throw new StructureBuildingException("Unknown Word Rule");
 		}
-//		else if (wordRule.equals("oxime")){//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
-//			int substituentPresent;
-//			if (words.size()==2){
-//				substituentPresent=0;
-//			}
-//			else if (words.size()==3){
-//				substituentPresent=1;
-//			}
-//			else{
-//				throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
-//			}
-//
-//			int numberOfOximes =1;
-//			moleculeBuildResults =resolveWordOrBracket(words.get(0), null, new LinkedHashSet<Fragment>());//the group
-//			List<List<Atom>> matches = moleculeBuildResults.subStructureSearch("O=C", state.fragManager);
-//			System.out.println(matches.size());
-//			if (matches.size() < numberOfOximes){
-//				throw new StructureBuildingException("Insufficient carbonyl groups found!");
-//			}
-//
-//			for (int i = 0; i < numberOfOximes; i++) {
-//				List<Atom> atomList = matches.get(i);
-//				Atom atomToBeReplaced =atomList.get(0);//the oxygen of the carbonyl
-//				Fragment parentFrag =atomToBeReplaced.getFrag();
-//				atomToBeReplaced.setElement("N");
-//				int ID = state.idManager.getNextID();
-//				List<Atom> parentFragAtomList =parentFrag.getAtomList();
-//				for (Atom atom :parentFragAtomList) {
-//					if (atom.hasLocant("O")){
-//						atom.removeLocant("O");
-//					}
-//				}
-//				Atom addedHydroxy = new Atom(ID, "O", "O", parentFrag);
-//				parentFrag.addAtom(addedHydroxy);
-//				Bond newBond =new Bond(atomToBeReplaced.getID(), addedHydroxy.getID(), 1);
-//				parentFrag.addBond(newBond);
-//				if (i== 0 && substituentPresent==1){
-//					moleculeBuildResults.mergeBuildResults(resolveWordOrBracket(words.get(1), null, new LinkedHashSet<Fragment>()));
-//					if (moleculeBuildResults.getOutIDCount() !=1){
-//						throw new StructureBuildingException("Expected outID on substituent before oxime");
-//					}
-//					state.fragManager.attachFragments(addedHydroxy, moleculeBuildResults.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), moleculeBuildResults.getOutID(0).valency);
-//					moleculeBuildResults.removeOutID(0);
-//				}
-//			}
-//		}
 
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
@@ -512,6 +469,76 @@ class StructureBuilder {
 			state.fragManager.attachFragments(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
 		}
 		resolveTrailingFullWords(state, words, wordIndice + 2);
+	}
+
+	private void buildOxime(BuildState state, Elements words) throws StructureBuildingException {
+		int wordIndice  = resolvePreceedingFullWordsAndReturnNonFullIndice(state, words);
+		BuildResults moleculeToModify = new BuildResults(state, words.get(wordIndice-1));//the group which the oxime will modify
+		BuildResults substituentBR;
+		if (words.get(wordIndice).getAttributeValue("type").equals("literal") && words.get(wordIndice).getValue().equals("oxime")){
+			substituentBR = null;
+		}
+		else if (words.get(wordIndice).getAttributeValue("type").equals("substituent")){
+			resolveWordOrBracket(state, words.get(wordIndice));
+			substituentBR = new BuildResults(state, words.get(wordIndice));
+			wordIndice++;
+			if (!words.get(wordIndice).getAttributeValue("type").equals("literal") || !words.get(wordIndice).getValue().equals("oxime")){
+				throw new StructureBuildingException("Expected literal(oxime)");
+			}
+		}
+		else{
+			throw new StructureBuildingException("Expected either substituent or literal(oxime)");//TODO support dioxime, trioxime etc.
+		}
+
+		int numberOfOximes =1;
+		List<Atom> matches = new ArrayList<Atom>();
+		for (Fragment frag : moleculeToModify.getFragments()){//find all carbonyl oxygen
+			List<Atom> atomList = frag.getAtomList();
+			for (Atom atom : atomList) {
+				if (atom.getElement().equals("O") && atom.getCharge()==0){
+					List<Atom> neighbours =atom.getAtomNeighbours();
+					if (neighbours.size()==1){
+						if (neighbours.get(0).getElement().equals("C")){
+							Bond b = frag.findBond(atom, neighbours.get(0));
+							if (b !=null && b.getOrder()==2){
+								matches.add(atom);
+							}
+						}
+					}
+				}
+			}
+		}
+		if (matches.size() < numberOfOximes){
+			throw new StructureBuildingException("Insufficient carbonyl groups found!");
+		}
+
+		for (int i = 0; i < numberOfOximes; i++) {
+			Atom atomToBeReplaced =matches.get(i);//the oxygen of the carbonyl
+			Fragment parentFrag =atomToBeReplaced.getFrag();
+			atomToBeReplaced.setElement("N");
+			List<Atom> parentFragAtomList =parentFrag.getAtomList();
+			for (Atom atom :parentFragAtomList) {
+				if (atom.hasLocant("O")){
+					atom.removeLocant("O");
+				}
+			}
+			Atom addedHydroxy = new Atom(state.idManager.getNextID(), "O", "O", parentFrag);
+			parentFrag.addAtom(addedHydroxy);
+			Bond newBond =new Bond(atomToBeReplaced, addedHydroxy, 1);
+			parentFrag.addBond(newBond);
+			if (i== 0 && substituentBR !=null){
+				if (substituentBR.getOutIDCount() !=1){
+					throw new StructureBuildingException("Expected outID on substituent before oxime");
+				}
+				String locant = getLocantForSubstituent(words.get(wordIndice -1));
+				if (locant !=null && !locant.equals("O")){
+					throw new StructureBuildingException("The only locant expected for a substituent connecting to an oxime is an O. Found: " + locant);
+				}
+				state.fragManager.attachFragments(addedHydroxy, substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), substituentBR.getOutID(0).valency);
+				substituentBR.removeOutID(0);
+			}
+		}
+		resolveTrailingFullWords(state, words, ++wordIndice);
 	}
 
 	private void buildPolymer(BuildState state, Elements words) throws StructureBuildingException {
