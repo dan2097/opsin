@@ -11,6 +11,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
 
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import nu.xom.Builder;
 import nu.xom.Document;
 
@@ -125,8 +128,27 @@ final class ResourceGetter {
 						// Squelching the exceptions that come from failing to find a file here
 					}
 				}
+				XMLReader xmlReader;
+				try{
+					xmlReader = XMLReaderFactory.createXMLReader();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException("No XML Reader could be initialised!");
+				}
+				try{
+					xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?");
+				}
+				Builder xomBuilder = new Builder(xmlReader);
 				URL url = l.getResource(resourcePath + name);
-				return new Builder().build(url.toString());
+				if (url == null){
+					throw new Exception();
+				}
+				return xomBuilder.build(url.openStream());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,7 +160,7 @@ final class ResourceGetter {
 	 *
 	 * @param name The name of the file to get an InputStream of.
 	 * @return An InputStream corresponding to the file.
-	 * @throws Exception If the resouce file couldn't be found.
+	 * @throws Exception If the resource file couldn't be found.
 	 */
 	public InputStream getStream(String name) throws Exception {
 		if(name == null) name="";
@@ -160,7 +182,9 @@ final class ResourceGetter {
 					}
 				}
 				URL url = l.getResource(resourcePath + name);
-				if(url == null) return null;
+				if (url == null){
+					throw new Exception();
+				}
 				return url.openStream();
 			}
 		} catch (Exception e) {
