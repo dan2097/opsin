@@ -27,7 +27,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void bromoChloroFluoroMethane() {
-		Fragment f = n2s.parseToOpsinFragment("bromochlorofluoromethane", false);
+		Fragment f = n2s.parseChemicalName("bromochlorofluoromethane", false).getStructure();
 		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
 		StereoAnalyser stereoAnalyser = new StereoAnalyser();
 		stereoAnalyser.setIgnoreRecursiveStereoCentres(true);
@@ -44,7 +44,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void Nacetylleucine() throws StructureBuildingException {
-		Fragment f = n2s.parseToOpsinFragment("N-acetylleucine", false);
+		Fragment f = n2s.parseChemicalName("N-acetylleucine", false).getStructure();
 		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
 		StereoAnalyser stereoAnalyser = new StereoAnalyser();
 		stereoAnalyser.setIgnoreRecursiveStereoCentres(true);
@@ -78,7 +78,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void but2ene() {
-		Fragment f = n2s.parseToOpsinFragment("but-2-ene", false);
+		Fragment f = n2s.parseChemicalName("but-2-ene", false).getStructure();
 		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
 		StereoAnalyser stereoAnalyser = new StereoAnalyser();
 		stereoAnalyser.setIgnoreRecursiveStereoCentres(true);

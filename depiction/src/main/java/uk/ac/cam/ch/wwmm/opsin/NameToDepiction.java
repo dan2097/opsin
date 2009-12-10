@@ -31,14 +31,14 @@ public class NameToDepiction {
 	 * @return A RenderedImage containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public RenderedImage parseToDepiction(String name, boolean verbose) {
-		Fragment frag = n2s.parseToOpsinFragment(name, verbose);
-		if (frag == null){
+		OpsinResult result = n2s.parseChemicalName(name, verbose);
+		if (result.getStructure() == null){
 			return null;
 		}
 		else{
 			RenderedImage depiction = null;
 			try{
-				depiction = opsinFragmentToDepiction(frag, verbose);
+				depiction = opsinFragmentToDepiction(result.getStructure(), verbose);
 			}
 			catch (Exception e) {
 				if (verbose){

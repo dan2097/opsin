@@ -24,14 +24,14 @@ public class NameToSmiles {
 	 * @return A SMILES string, containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public String parseToSmiles(String name, boolean verbose) {
-		Fragment frag = n2s.parseToOpsinFragment(name, verbose);
-		if (frag == null){
+		OpsinResult result = n2s.parseChemicalName(name, verbose);
+		if (result.getStructure() == null){
 			return null;
 		}
 		else{
 			String smiles = null;
 			try{
-				smiles = opsinFragmentToSmiles(frag, verbose);
+				smiles = opsinFragmentToSmiles(result.getStructure(), verbose);
 			}
 			catch (Exception e) {
 				if (verbose){

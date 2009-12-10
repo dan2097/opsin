@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
+
 
 import nu.xom.Document;
 import nu.xom.Element;
@@ -117,42 +119,29 @@ public class NameToStructure {
 	 * @return A CML element, containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public Element parseToCML(String name, boolean verbose) {
-		Fragment frag = parseToOpsinFragment(name, verbose);
-		if (frag == null){
-			return null;
-		}
-		else{
-			Element cml = null;
-			try{
-				cml = frag.toCMLMolecule(name);
-			}
-			catch (Exception e) {
-				if (verbose){
-					e.printStackTrace();
-				}
-				return null;
-			}
-			if(verbose) System.out.println(new XOMFormatter().elemToString(cml));
-			return cml;
-		}
+		OpsinResult result = parseChemicalName(name, verbose);
+		if(result.getCml() != null && verbose) System.out.println(new XOMFormatter().elemToString(result.getCml()));
+		return result.getCml();
 	}
 
-	/**Parses a chemical name, returning an OPSIN fragment which represents the molecule.
-	 * This is null if the name cannot be interpreted
+	/**Parses a chemical name, returning an OpsinResult which represents the molecule.
+	 * This object contains in the status whether the name was parsed succesfully
+	 * A message which may contain additional information if the status was warning/failure
+	 * A CML representation of the structure
 	 *
 	 * @param name The chemical name to parse.
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
-	 * @return An OPSIN fragment containing the parsed molecule, or null if the molecule would not parse.
+	 * @return OpsinResult
 	 */
-	public synchronized Fragment parseToOpsinFragment(String name, boolean verbose) {
+	public synchronized OpsinResult parseChemicalName(String name, boolean verbose) {
 		if (name==null){
 			throw new IllegalArgumentException("String given for name was null");
 		}
+		String message = "";
 		try {
-			name = preProcessor.preProcess(name);
-			if (name ==null){return null;}//not a specific chemical name e.g. amine/carboxylic acid or a blank string
 			if(verbose) System.out.println(name);
-			List<Element> parses = parser.parse(name);
+			String modifiedName = preProcessor.preProcess(name);
+			List<Element> parses = parser.parse(modifiedName);
 			//if(verbose) for(Element parse : parses) System.out.println(new XOMFormatter().elemToString(parse));
 			Collections.sort(parses, new SortParses());//fewer tokens preferred
 			Fragment frag = null;
@@ -176,15 +165,19 @@ public class NameToStructure {
 					}
 					break;
 				} catch (Exception e) {
+					if (message.equals("")){
+						message += e.getMessage();
+					}
 					if (verbose && LOG.isDebugEnabled()){
 						LOG.warn(e.getMessage(),e);
 					}
 				}
 			}
-			return frag;
+			return new OpsinResult(frag, frag != null ? OPSIN_RESULT_STATUS.SUCCESS : OPSIN_RESULT_STATUS.FAILURE, message, name);
 		} catch (Exception e) {
+			message += e.getMessage();
 			if(verbose) e.printStackTrace();
-			return null;
+			return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, message, name);
 		}
 	}
 

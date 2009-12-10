@@ -22,7 +22,7 @@ public class SSSRTest {
 	
 	@Test
 	public void testFindSSSR() {
-		Fragment f = n2s.parseToOpsinFragment("ovalene", false);
+		Fragment f = n2s.parseChemicalName("ovalene", false).getStructure();
 		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
 		List<Ring> rings = SSSRFinder.findSSSR(chemKitWrapper.getChemKitMolecule());
 		assertEquals(10, rings.size());
