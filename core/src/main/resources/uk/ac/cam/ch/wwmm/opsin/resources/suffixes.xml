@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
+﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <!-- value = a reference to suffixApplicability.xml -->
 <!--The suffixes are divided into two lists: Suffixes that may start with a euphonic o have the instance without the o in the second list.
