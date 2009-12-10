@@ -43,7 +43,6 @@ class PreStructureBuilder {
 	private Pattern matchPara =Pattern.compile("[pP]");
 	private Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro|peroxy");
 	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfin|sulfon");
-	private Pattern matchSuffixesThatGoAtEndOfChainsByDefault = Pattern.compile("al|amide|ate|hydrazide|hydrazonic|hydroxamic|hydroximic|ic|imidic|nitrile|oyl|sulfonate");
 
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private HashMap<String, String[]> specialHWRings;
@@ -2459,26 +2458,39 @@ class PreStructureBuilder {
 		//put di-carbon modifying suffixes e.g. oic acids, aldehydes on opposite ends of chain
 		Elements suffixEls = subOrRoot.getChildElements("suffix");
 		for (int i = 0; i < suffixEls.size()-1; i++) {
-			Element diCarbonModifyingSuffix1 = suffixEls.get(i);
-			if (matchSuffixesThatGoAtEndOfChainsByDefault.matcher(diCarbonModifyingSuffix1.getAttributeValue("value")).matches()){
-				if ((diCarbonModifyingSuffix1).getAttribute("locant")==null && XOMTools.getNextSibling(diCarbonModifyingSuffix1) != null){
-					Element diCarbonModifyingSuffix2 =(Element)XOMTools.getNextSibling(diCarbonModifyingSuffix1);
-					if (diCarbonModifyingSuffix2.getLocalName().equals("suffix") &&
-							matchSuffixesThatGoAtEndOfChainsByDefault.matcher(diCarbonModifyingSuffix2.getAttributeValue("value")).matches() &&
-							diCarbonModifyingSuffix2.getAttribute("locant")==null){
-						Element hopefullyAChain = (Element) XOMTools.getPreviousSibling((Element)diCarbonModifyingSuffix1, "group");
-						if (hopefullyAChain != null && hopefullyAChain.getAttributeValue("type").equals("chain")){
-							diCarbonModifyingSuffix1.addAttribute(new Attribute("locant", "1"));
-							diCarbonModifyingSuffix2.addAttribute(new Attribute("locant", Integer.toString(state.xmlFragmentMap.get(hopefullyAChain).getChainLength())));
-							break;
-						}
+			Element terminalSuffix1 = suffixEls.get(i);
+			if (isATerminalSuffix(terminalSuffix1) && XOMTools.getNextSibling(terminalSuffix1) != null){
+				Element terminalSuffix2 =(Element)XOMTools.getNextSibling(terminalSuffix1);
+				if (isATerminalSuffix(terminalSuffix2)){
+					Element hopefullyAChain = (Element) XOMTools.getPreviousSibling((Element)terminalSuffix1, "group");
+					if (hopefullyAChain != null && hopefullyAChain.getAttributeValue("type").equals("chain")){
+						terminalSuffix1.addAttribute(new Attribute("locant", "1"));
+						terminalSuffix2.addAttribute(new Attribute("locant", Integer.toString(state.xmlFragmentMap.get(hopefullyAChain).getChainLength())));
+						break;
 					}
 				}
 			}
 		}
 	}
+	
+	/**
+	 * Checks whether a suffix element is:
+	 * a suffix, an inline suffix OR terminal root suffix, has no current locant
+	 * @param suffix
+	 * @return
+	 */
+	private boolean isATerminalSuffix(Element suffix){
+		if (
+			suffix.getLocalName().equals("suffix") && 
+			suffix.getAttribute("locant")==null && 
+		   (suffix.getAttributeValue("type").equals("inline") || suffix.getAttribute("subType")!=null && suffix.getAttributeValue("subType").equals("terminal"))){
+			return true;
+		}
+		return false;
+	}
 
-	/**Process the effects of suffixes upon a fragment.
+	/**Process the effects of suffixes upon a fragment. 
+	 * Unlocanted non-terminal suffixes are not attached yet. All other suffix effects are performed
 	 * @param state
 	 * @param group The group element for the fragment to which the suffixes will be added
 	 * @param suffixes The suffix elements for a fragment.
@@ -2502,7 +2514,7 @@ class PreStructureBuilder {
 			suffixTypeToUse="substituent";
 			suffixTypeDetermined=true;
 		}
-		List<Fragment> suffixList =state.xmlSuffixMap.get(group);
+		List<Fragment> suffixList = state.xmlSuffixMap.get(group);
 		for(int i=0;i<suffixes.size();i++) {
 			Element suffix = suffixes.get(i);
 			String suffixValue = suffix.getAttributeValue("value");
@@ -2562,7 +2574,6 @@ class PreStructureBuilder {
 					InID connectingInfo = suffixFrag.getInID(0);
 					int bondOrder =connectingInfo.valency;
 					suffixFrag.removeInID(0);
-
 					if(idOnParentFragToUse==0) {
 						if(suffixRuleTag.getAttribute("ketoneLocant") != null && suffixRuleTag.getAttributeValue("ketoneLocant").equals("yes")) {
 							if(defaultAtom == 0) defaultAtom = state.fragManager.findKetoneAtomIndice(frag, defaultAtom);
