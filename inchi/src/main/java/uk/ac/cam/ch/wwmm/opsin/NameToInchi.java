@@ -33,14 +33,14 @@ public class NameToInchi {
 	 * @return An InChI string, containing the parsed molecule, or null if the molecule would not parse.
 	 */
 	public String parseToInchi(String name, boolean verbose) {
-		Fragment frag = n2s.parseToOpsinFragment(name, verbose);
-		if (frag == null){
+		OpsinResult result = n2s.parseChemicalName(name, verbose);
+		if (result.getStructure() == null){
 			return null;
 		}
 		else{
 			String inchi = null;
 			try{
-				inchi = opsinFragmentToInchi(frag, verbose);
+				inchi = opsinFragmentToInchi(result.getStructure(), verbose);
 			}
 			catch (Exception e) {
 				if (verbose){

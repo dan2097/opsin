@@ -50,11 +50,19 @@ class PreProcessor {
 	 */
 	String preProcess(String chemicalName) throws PreProcessingException {
 		chemicalName=chemicalName.trim();//remove leading and trailing whitespace
-		if ("".equals(chemicalName)){return null;}
+		if ("".equals(chemicalName)){
+			throw new PreProcessingException("Input chemical name was blank!");
+		}
 
-		if(AMINE.equalsIgnoreCase(chemicalName)) {return null;}//trigenericammonia
-		if(THIOL.equalsIgnoreCase(chemicalName)) {return null;}//genericsulfane
-		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {return null;}//genericmethanoic acid
+		if(AMINE.equalsIgnoreCase(chemicalName)) {
+			throw new PreProcessingException("Amine is a generic term rather than a specific chemical");//trigenericammonia
+		}
+		if(THIOL.equalsIgnoreCase(chemicalName)) {
+			throw new PreProcessingException("Thiol is a generic term rather than a specific chemical");//genericsulfane
+		}
+		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {
+			throw new PreProcessingException("Carboxylic acid is a generic term rather than a specific chemical");//genericmethanoic acid
+		}
 		//Alcohol Aldehyde Alkane Alkene Alkyne Amide Amine Azo compound Benzene derivative Carboxylic acid Cyanate Disulfide Ester Ether Haloalkane Hydrazone Imine Isocyanide Isocyanate Ketone Oxime Nitrile Nitro compound Nitroso compound Peroxide Phosphoric acid Pyridine derivative Sulfone Sulfonic acid Sulfoxide Thioester Thioether Thiol
 
 		chemicalName = processDollarPrefixedGreeks(chemicalName);
