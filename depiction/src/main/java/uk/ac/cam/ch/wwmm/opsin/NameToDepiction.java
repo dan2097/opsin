@@ -59,7 +59,7 @@ public class NameToDepiction {
 		Layout2D layout = new Layout2D();
 		layout.generateCoordinates(mol);
 		Renderer r = new Renderer(mol);
-		return r.createImage(new Dimension(640,480));
+		return r.createImage(new Dimension(640,480),20);
 	}
 
 	/**Run OPSIN as a standalone component for depiction generation
