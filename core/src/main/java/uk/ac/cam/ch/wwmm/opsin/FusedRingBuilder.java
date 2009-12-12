@@ -525,7 +525,7 @@ class FusedRingBuilder {
 	 * @param fusedRing
 	 * @throws StructureBuildingException
 	 */
-	public void numberFusedRing(Fragment fusedRing) throws StructureBuildingException {
+	void numberFusedRing(Fragment fusedRing) throws StructureBuildingException {
 
 		List<Ring> rings = getSetOfSmallestRings(fusedRing);
 

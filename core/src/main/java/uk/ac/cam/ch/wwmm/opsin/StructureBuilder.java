@@ -531,7 +531,7 @@ class StructureBuilder {
 					throw new StructureBuildingException("Expected outID on substituent before oxime");
 				}
 				String locant = getLocantForSubstituent(words.get(wordIndice -1));
-				if (locant !=null && !locant.equals("O")){
+				if (locant !=null && !locant.startsWith("O")){
 					throw new StructureBuildingException("The only locant expected for a substituent connecting to an oxime is an O. Found: " + locant);
 				}
 				state.fragManager.attachFragments(addedHydroxy, substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), substituentBR.getOutID(0).valency);

@@ -33,7 +33,7 @@
   <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" />
   <regexToken regex="%closeBracket%" symbol="c" tagname="closebracket" />
   <regexToken regex="(?i)spiro\[(\d+(\^[\(\{]?\d+[\)\}]?)?\.)+\d+(\^[\(\{]?\d+[\)\}]?)?\]" symbol="S" tagname="spiro" />
-  <regexToken regex="(?i)cyclo\[\d+(\.\d+(\^?[\(\{]?\d+,\d+[\)\}]?\^?\^?)?)+\]" symbol="B" tagname="vonBaeyer" />
+  <regexToken regex="(?i)cyclo\[\d+\.\d+\.\d+(\.\d+\^?[\(\{]?\d+,\d+[\)\}]?\^?\^?)*\]" symbol="B" tagname="vonBaeyer" />
   <regexToken regex="(?i)\[[1-9]\d*\]annulen" symbol="N" tagname="annulen" />
   <regexToken regex="\[(%locantNoPrime%(,%locantNoPrime%)*)?-?[a-z]*\]" symbol="F" tagname="fusion" />
   <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-" symbol="e" tagname="hydrogen" />
