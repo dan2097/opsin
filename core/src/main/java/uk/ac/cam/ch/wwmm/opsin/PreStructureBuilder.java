@@ -983,10 +983,6 @@ class PreStructureBuilder {
 			suffixTypeToUse =groupType;
 			suffixTypeDetermined=true;
 		}
-		else if (groupType.equals("simpleGroup")){
-			suffixTypeToUse="substituent";
-			suffixTypeDetermined=true;
-		}
 
 		//if suffixTypeToUse is still null then it is type cyclic or acyclic as determined by the atom property atomIsInACycle
         for (Element suffix : suffixes) {
@@ -1092,7 +1088,9 @@ class PreStructureBuilder {
 			throw new PostProcessingException("Suffix Type: "+ suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
 		}
 		List<Element> potentiallyApplicableSuffixes =groupToSuffixMap.get(suffixValue);
-		if(potentiallyApplicableSuffixes==null || potentiallyApplicableSuffixes.size()==0 ) throw new PostProcessingException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")according to suffixApplicability.xml");
+		if(potentiallyApplicableSuffixes==null || potentiallyApplicableSuffixes.size()==0 ) {
+			throw new PostProcessingException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")according to suffixApplicability.xml");
+		}
 		Element chosenSuffix=null;
         for (Element suffix : potentiallyApplicableSuffixes) {
             if (suffix.getAttribute("subType") != null) {
@@ -2153,10 +2151,7 @@ class PreStructureBuilder {
 			suffixTypeToUse =groupType;
 			suffixTypeDetermined=true;
 		}
-		else if (groupType.equals("simpleGroup")){
-			suffixTypeToUse="substituent";
-			suffixTypeDetermined=true;
-		}
+
 		if (!suffixTypeDetermined){
 			boolean cyclic = frag.getFirstAtom().getAtomIsInACycle();
 			if (cyclic){
@@ -2564,10 +2559,7 @@ class PreStructureBuilder {
 			suffixTypeToUse =groupType;
 			suffixTypeDetermined=true;
 		}
-		else if (groupType.equals("simpleGroup")){
-			suffixTypeToUse="substituent";
-			suffixTypeDetermined=true;
-		}
+
 		List<Fragment> suffixList = state.xmlSuffixMap.get(group);
 		for(int i=0;i<suffixes.size();i++) {
 			Element suffix = suffixes.get(i);
