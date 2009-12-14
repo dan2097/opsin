@@ -22,7 +22,7 @@ does not define a CFG.
   <regex name="%simpleMultiplier%" value="m"/>
   <regex name="%elidedAMultiplier%" value="r"/>
   <regex name="%groupMultiplier%" value="R"/>
-  <regex name="%simpleGroupStem%" value="g"/>
+  <regex name="%groupStemAllowingInlineSuffixes%" value="g"/>
   <regex name="%simpleGroup%" value="G"/>
   <regex name="%locantGroup%" value="l"/>
   <regex name="%hyphen%" value="h"/>
@@ -72,7 +72,8 @@ does not define a CFG.
   <regex name="%ane%" value="à"/>
   <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
   <regex name="%comma%" value="ç"/>
-  <!--up to ascii 135 used -->
+  <regex name="%groupStemAllowingAllSuffixes%" value="ê"/>
+  <!--up to ascii 136 used -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.
@@ -119,7 +120,7 @@ does not define a CFG.
   <regex name="%acidGroup%" value = "(%acidStem%%unlocantedSuffixGroup%)"/>
   <regex name="%acidSubstituent%" value = "(%acidStem%%unlocantedInlineSuffixGroup%)"/>
 
-  <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineEndings%)"/>
+  <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
 
   <!--cyclic-->
   <regex name="%semiTrivialFusedRing%" value = "(%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)"/>
@@ -145,12 +146,12 @@ does not define a CFG.
   <regex name="%ringAssembly%" value = "((%ringAssemblyLocant%|%orthoMetaPara%)?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%))"/>
 
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|(%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%)%inlineEndings%|%fusedRingSystem%%inlineEndings%)"/>
-  <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|%simpleGroupStem%%e%?%inlineEndings%)"/>
+  <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
   <regex name="%subsituentBody%" value= "(%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%)"/>
   <regex name="%substituent%" value= "(%locantOpenBracket%*%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%subsituentBody%%closeBracket%*%interSubstituentHyphen%?%endOfSubstituent%)"/>
 
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%|%fusedRingSystem%)%rootEnding%)"/>
-  <regex name="%allOtherSuffixableGroups%" value = "((%simpleGroupStem%%e%?|%chainGroup%)%rootEnding%|%acidGroup%)"/>
+  <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
   <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%))"/>
   <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
 

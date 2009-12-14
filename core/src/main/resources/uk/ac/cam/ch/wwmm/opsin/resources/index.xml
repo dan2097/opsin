@@ -9,7 +9,8 @@
 
   <tokenFile>arylGroups.xml</tokenFile>
   <tokenFile>simpleGroups.xml</tokenFile>
-  <tokenFile>simpleGroupStems.xml</tokenFile>
+  <tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
+  <tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
   <tokenFile>irregularAlkanes.xml</tokenFile>
   <tokenFile>anions.xml</tokenFile>
   <tokenFile>cations.xml</tokenFile>
