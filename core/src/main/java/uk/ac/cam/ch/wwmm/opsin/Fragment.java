@@ -481,7 +481,7 @@ class Fragment {
 	 * @throws StructureBuildingException */
 	void addInID(int id, int valency) throws StructureBuildingException {
 		inIDs.add(new InID(id, valency, this));
-		getAtomByIDOrThrow(id).addOutValency(1);
+		getAtomByIDOrThrow(id).addOutValency(valency);
 	}
 
 	/**
