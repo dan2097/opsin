@@ -1,13 +1,40 @@
 ﻿<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
-<!-- See the DTD for more details -->
+<!-- value is:
+A comma seperated list of:
+{
+SMILES bond type to oxygen
+O (for oxygen)
+(optional and currently ignored) SMILES bond type from oxygen
+}
+
+then the SMILES replacement
+ -->
 <tokenList tagname="infix" symbol="ü">
-  <token value="OO" valType="SMILES">perox</token>
-  <!--<token value="SO" valType="SMILES">thioperoxo</token> is it SO or OS???-->
-  <token value="SS" valType="SMILES">dithioperox</token>
-  <token value="[Se][Se]" valType="SMILES">diselenoperox</token>
-  <token value="[Te][Te]" valType="SMILES">ditellurooperox</token>
-  <!--<token value="[Se]S" valType="SMILES">selenothioperoxo</token> is it [Se]S or S[Se]???-->
-  <token value="S" valType="SMILES">thi</token>
-  <token value="[Se]" valType="SMILES">selen</token>
-  <token value="[Te]" valType="SMILES">tellur</token>
+  <token value="-O:N" valType="SMILES">amid</token>
+  <token value="-O:N=[N+]=[N-]" valType="SMILES">azid</token>
+  <token value="-O:Br" valType="SMILES">bromid</token>
+  <token value="-O:Cl" valType="SMILES">chlorid</token>
+  <token value="-O:OC#N" valType="SMILES">cyanatid</token>
+  <token value="-O:C#N" valType="SMILES">cyanid</token>
+  <token value="-O-:SS" valType="SMILES">dithioperox</token>
+  <token value="-O:F" valType="SMILES">fluorid</token>
+  <token value="-O:NN" valType="SMILES">hydrazid</token>
+  <token value="=O:=NN" valType="SMILES">hydrazon</token>
+  <token value="=O:=N" valType="SMILES">imid</token>
+  <token value="-O:I" valType="SMILES">iodid</token>
+  <token value="-O:N=C=O" valType="SMILES">isocyanatid</token>
+  <token value="-O:[N+]#[C-]" valType="SMILES">isocyanid</token>
+  <token value="-O:N=C=S" valType="SMILES">isothiocyanatid</token>
+  <token value="=O,-O:#N" valType="SMILES">nitrid</token>
+  <token value="-O-:OO" valType="SMILES">perox</token>
+  <token value="=O,-O:[Se]" valType="SMILES">selen</token>
+  <token value="=O,-O:[Te]" valType="SMILES">tellur</token>
+  <token value="=O,-O:S" valType="SMILES">thi</token>
+  <token value="-O:SC#N" valType="SMILES">thiocyanatid</token>
+
+  <!--<token value="-O-:SO" valType="SMILES">thioperoxo</token> is it SO or OS???-->
+  <token value="-O-:[Se][Se]" valType="SMILES">diselenoperox</token>
+  <token value="-O-:[Te][Te]" valType="SMILES">ditellurooperox</token>
+  <!--<token value="-O-:[Se]S" valType="SMILES">selenothioperoxo</token> is it [Se]S or S[Se]???-->
+
 </tokenList>

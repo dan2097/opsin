@@ -506,7 +506,7 @@ class FragmentManager {
 			List<Atom> atomList =fragment.getAtomList();
 
 			/*
-			 * Sort them such that single bonded atoms are higher priority than doubled bonded games
+			 * Sort them such that single bonded atoms are higher priority than doubled bonded atoms
 			 */
 			Collections.sort(atomList, new SortAtomsForElementSymbols());
 			for (Atom atom : atomList) {//add the locants

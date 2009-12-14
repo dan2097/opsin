@@ -36,10 +36,8 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="amide">amide</token>
     <token value="ic" additionalValue="anilide">anilic</token>
     <token value="anilide">anilide</token>
-    <token value="imidamide">imidamide</token>
     <token value="imidamide">amidine</token><!--deprecated-->
     <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="imidic">imidic</token>
     <token value="ite">ite</token>
     <token value="ate">oate</token>
     <token value="hydrazide">ohydrazide</token>
@@ -51,12 +49,17 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="nitrile">onitrile</token>
     <token value="ophenone">ophenone</token>
     <token value="ous">ous</token>
+    <token value="selone">selone</token>
     <token value="sulfonate">sulfonate</token>
+    <token value="tellone">tellone</token>
 
+    <token value="sulfenic">sulfenic</token>
     <token value="sulfinic">sulfinic</token>
     <token value="sulfonic">sulfonic</token>
+    <token value="selenenic">selenenic</token>
     <token value="seleninic">seleninic</token>
     <token value="selenonic">selenonic</token>
+    <token value="tellurenic">tellurenic</token>
     <token value="tellurinic">tellurinic</token>
     <token value="telluronic">telluronic</token>
 

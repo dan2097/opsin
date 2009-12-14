@@ -42,7 +42,7 @@ class PreStructureBuilder {
 	private Pattern matchMeta =Pattern.compile("[mM]");
 	private Pattern matchPara =Pattern.compile("[pP]");
 	private Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro|peroxy");
-	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfin|sulfon");
+	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private HashMap<String, String[]> specialHWRings;
@@ -1178,7 +1178,7 @@ class PreStructureBuilder {
 				if (suffixFrag==null){
 					throw new PostProcessingException("infix has erroneously been assigned to a suffix which does not correspond to a suffix fragment. suffix: " + suffix.getValue());
 				}
-				String replacementSMILES = suffix.getAttributeValue("infix");
+				String infixTransformation = suffix.getAttributeValue("infix");//e.g. =O:S,-O:S (which indicates replacing either a double or single bonded oxygen with S)
 				int infixCount = Integer.parseInt(suffix.getAttributeValue("infixCount"));
 				List<Atom> atomList =suffixFrag.getAtomList();
 				LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
@@ -1199,11 +1199,6 @@ class PreStructureBuilder {
 
 						}
 					}
-				}
-				Matcher m =matchUpperCase.matcher(replacementSMILES);
-				int atomCount=0;
-				while(m.find()) {
-					atomCount++;//assumption made that number of upper case letter = number of atoms the SMILES is describing
 				}
 				int oxygenAvailable = singleBondedOxygen.size() +doubleBondedOxygen.size();
 
@@ -1257,39 +1252,98 @@ class PreStructureBuilder {
 						throw new PostProcessingException("Multiplier expected in front of infix");
 					}
 				}
-
-				if (atomCount>1){//something like peroxy
-					if (infixCount > singleBondedOxygen.size()){
-						throw new StructureBuildingException("Cannot find single bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
+				String[] transformationArray = matchColon.split(infixTransformation);
+				if (transformationArray.length !=2){
+					throw new StructureBuildingException("Atom to be replaced and replacement not specified correctly in infix: " + infixTransformation);
+				}
+				String[] transformations = matchComma.split(transformationArray[0]);
+				String replacementSMILES = transformationArray[1];
+				boolean acceptDoubleBondedOxygen = false;
+				boolean acceptSingleBondedOxygen = false;
+				for (String transformation : transformations) {
+					if (transformation.startsWith("=")){
+						acceptDoubleBondedOxygen = true;
+					}
+					else if (transformation.startsWith("-")){
+						acceptSingleBondedOxygen = true;
+					}
+					else{
+						throw new StructureBuildingException("Malformed infix transformation. Expected to start with either - or =. Transformation was: " +transformation);
+					}
+					if (transformation.length()<2 || transformation.charAt(1)!='O'){
+						throw new StructureBuildingException("Only replacement by oxygen is supported. Check infix defintions");
 					}
 				}
-				else{
+				boolean infixAssignmentAmbiguous =false;
+				if (acceptSingleBondedOxygen && !acceptDoubleBondedOxygen){
+					if ( infixCount > singleBondedOxygen.size()){
+						throw new StructureBuildingException("Cannot find single bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
+					}
+					if (infixCount != singleBondedOxygen.size()){
+						infixAssignmentAmbiguous=true;
+					}
+				}
+				if (!acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
+					if (infixCount > doubleBondedOxygen.size()){
+						throw new StructureBuildingException("Cannot find double bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
+					}
+					if (infixCount != doubleBondedOxygen.size()){
+						infixAssignmentAmbiguous=true;
+					}
+				}
+				if (acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
 					if (infixCount > oxygenAvailable){
 						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
 					}
+					if (infixCount != oxygenAvailable){
+						infixAssignmentAmbiguous=true;
+					}
 				}
 
-				boolean infixAssignmentAmbiguous =false;
 				ArrayList<Atom> ambiguousElementAtoms = new ArrayList<Atom>();
-				if (infixCount != oxygenAvailable){
-					infixAssignmentAmbiguous=true;
-				}
 				for (int j = 0; j < infixCount; j++) {
-					if (atomCount>1){//something like peroxy
-						state.fragManager.replaceTerminalAtomWithFragment(singleBondedOxygen.get(0), state.fragManager.buildSMILES(replacementSMILES, "suffix", "none").getFirstAtom());
+					Atom atomToUse = null;
+					if (acceptDoubleBondedOxygen && doubleBondedOxygen.size()>0 ){
+						atomToUse = doubleBondedOxygen.removeFirst();
+					}
+					else if (acceptSingleBondedOxygen && singleBondedOxygen.size()>0 ){
+						atomToUse = singleBondedOxygen.removeFirst();
 					}
 					else{
-						Atom a;
-						if (doubleBondedOxygen.size()>0){
-							a=doubleBondedOxygen.removeFirst();
+						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");//this would be a bug
+					}
+					Fragment replacementFrag =state.fragManager.buildSMILES(replacementSMILES, "suffix", "none");
+					int bondOrder =0;
+					if (replacementFrag.getOutIDs().size()>0){
+						bondOrder = replacementFrag.getOutID(0).valency;
+						replacementFrag.removeOutID(0);
+						//e.g. in nitrido the replacement is #N so need to set bond order to Oxygen appropriately
+						if (atomToUse.getAtomNeighbours().size() >0){
+							atomToUse.getFrag().findBondOrThrow(atomToUse.getAtomNeighbours().get(0),atomToUse).setOrder(bondOrder);
+						}
+						else if (atomToUse.getFrag().getInIDs().size()>0){
+							boolean flag = false;
+							for (InID inId : atomToUse.getFrag().getInIDs()){
+								if (inId.id ==atomToUse.getID()){
+									inId.valency=bondOrder;
+									flag =true;
+									break;
+								}
+							}
+							if (!flag){
+								throw new StructureBuildingException("Cannot find inID associated with atom in suffix");
+							}
 						}
 						else{
-							a=singleBondedOxygen.removeFirst();
+							throw new StructureBuildingException("OPSIN bug: Could not find inID for unconnected suffix and atom has no neighbours!");
 						}
-						state.fragManager.makeHeteroatom(a, replacementSMILES, false);
-						if (infixAssignmentAmbiguous){
-							ambiguousElementAtoms.add(a);
-						}
+					}
+					int charge = atomToUse.getCharge();
+					state.fragManager.replaceTerminalAtomWithFragment(atomToUse, replacementFrag.getFirstAtom());
+					atomToUse.setCharge(charge);
+					
+					if (infixAssignmentAmbiguous){
+						ambiguousElementAtoms.add(atomToUse);
 					}
 				}
 				if (infixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl ethanthioate

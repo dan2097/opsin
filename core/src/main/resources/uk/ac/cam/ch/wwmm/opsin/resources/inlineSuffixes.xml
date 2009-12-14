@@ -14,14 +14,19 @@
     <token value="hydrazonoyl">hydrazonoyl</token>
     <token value="hydroximoyl">hydroximoyl</token>
     <token value="amido" additionalValue="aldehyde">imido</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="imidoyl">imidoyl</token>
     <token value="hydrazonoyl">ohydrazonoyl</token>
     <token value="hydroximoyl">ohydroximoyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
+    <token value="selenenyl">selenenyl</token>
+    <token value="seleninyl">seleninyl</token>
+    <token value="selenonyl">selenonyl</token>
     <token value="sulfenyl">sulfenyl</token>
     <token value="sulfinyl">sulfinyl</token>
     <token value="sulfonyl">sulfonyl</token>
+    <token value="tellurenyl">tellurenyl</token>
+    <token value="tellurinyl">tellurinyl</token>
+    <token value="telluronyl">telluronyl</token>
     <token value="yl">yl</token>
     <token value="ylidene">ylidene</token>
     <token value="ylidyne">ylidyne</token>

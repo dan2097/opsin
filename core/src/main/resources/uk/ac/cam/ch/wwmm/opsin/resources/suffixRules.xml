@@ -122,14 +122,6 @@ sense of this -->
   <rule value="ide">
     <changecharge charge="-1" />
   </rule>
-  <rule value="imidic">
-    <addgroup SMILES="N" bondOrder="2"/>
-    <addgroup SMILES="O" setsFunctionalID="yes"/>
-  </rule>
-  <rule value="imidoyl">
-    <addgroup SMILES="N" bondOrder="2"/>
-    <setOutID />
-  </rule>
   <rule value="imidamide"><!--order of Ns determines primes-->
     <addgroup SMILES="N"/>
     <addgroup SMILES="N" bondOrder="2" />
@@ -183,23 +175,44 @@ sense of this -->
     <addgroup SMILES="O" bondOrder="2" />
     <setOutID />
   </rule>
+  <rule value="selenenic">
+    <addgroup SMILES="[Se]O-" setsFunctionalID="yes"/>
+  </rule>
+  <rule value="selenenyl">
+    <addgroup SMILES="[Se]" setsOutID="yes"/>
+  </rule>
   <rule value="seleninic">
     <addgroup SMILES="[Se](=O)O-" setsFunctionalID="yes"/>
+  </rule>
+  <rule value="seleninyl">
+    <addgroup SMILES="[Se](=O)" setsOutID="yes"/>
   </rule>
   <rule value="selenonic">
     <addgroup SMILES="[Se](=O)(=O)O-" setsFunctionalID="yes"/>
   </rule>
+  <rule value="selenonyl">
+    <addgroup SMILES="[Se](=O)(=O)" setsOutID="yes"/>
+  </rule>
+  <rule value="seloneOnChain">
+    <addgroup SMILES="[Se]" bondOrder="2" ketoneLocant="yes" />
+  </rule>
+  <rule value="selone">
+    <addgroup SMILES="[Se]" bondOrder="2" />
+  </rule>
+  <rule value="sulfenic">
+    <addgroup SMILES="SO-" setsFunctionalID="yes"/>
+  </rule>
   <rule value="sulfenyl">
     <addgroup SMILES="S" setsOutID="yes"/>
+  </rule>
+  <rule value="sulfinic">
+    <addgroup SMILES="S(=O)O-" setsFunctionalID="yes"/>
   </rule>
   <rule value="sulfinyl">
     <addgroup SMILES="S(=O)" setsOutID="yes"/>
   </rule>
   <rule value="sulfonamide">
     <addgroup SMILES="S(=O)(=O)N-" setsFunctionalID="yes" />
-  </rule>
-  <rule value="sulfinic">
-    <addgroup SMILES="S(=O)O-" setsFunctionalID="yes"/>
   </rule>
   <rule value="sulfonate">
     <addgroup SMILES="S(=O)(=O)[O-]-" setsFunctionalID="yes" />
@@ -210,11 +223,29 @@ sense of this -->
   <rule value="sulfonyl">
     <addgroup SMILES="S(=O)(=O)" setsOutID="yes"/>
   </rule>
+  <rule value="telloneOnChain">
+    <addgroup SMILES="[Te]" bondOrder="2" ketoneLocant="yes" />
+  </rule>
+  <rule value="tellone">
+    <addgroup SMILES="[Te]" bondOrder="2" />
+  </rule>
+  <rule value="tellurenic">
+    <addgroup SMILES="[Te]O-" setsFunctionalID="yes"/>
+  </rule>
+  <rule value="tellurenyl">
+    <addgroup SMILES="[Te]" setsOutID="yes"/>
+  </rule>
   <rule value="tellurinic">
     <addgroup SMILES="[Te](=O)O-" setsFunctionalID="yes"/>
   </rule>
+  <rule value="tellurinyl">
+    <addgroup SMILES="[Te](=O)" setsOutID="yes"/>
+  </rule>
   <rule value="telluronic">
     <addgroup SMILES="[Te](=O)(=O)O-" setsFunctionalID="yes"/>
+  </rule>
+  <rule value="telluronyl">
+    <addgroup SMILES="[Te](=O)(=O)" setsOutID="yes"/>
   </rule>
   <rule value="thiolate">
     <addgroup SMILES="[S-]" />
