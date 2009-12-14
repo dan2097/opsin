@@ -35,7 +35,7 @@
   <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">meta-menth</token>
   <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">o-menth</token>
   <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">ortho-menth</token>
-  <token value="C12CCC(CC2)C1" valType="SMILES">norbor</token>
+  <token value="C12CCC(CC2)C1" valType="SMILES">norborn</token>
     <token value="C12CCC(CC2)C1" valType="SMILES">norcamph</token>
     <token value="C12CCC(CC2)C1" valType="SMILES">norbornyl</token>
   <token value="C12CCCCC2C1" valType="SMILES">norcar</token>
