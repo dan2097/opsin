@@ -5,7 +5,13 @@
   <token value="N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
   <token value="OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
   <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
+  <token value="OCCCCC" valType="SMILES">amoxy</token>
   <token value="CCCCC" valType="SMILES">amyl</token>
+  <token value="OCCC(C)C" valType="SMILES">isoamoxy</token>
+  <token value="CCC(C)C" valType="SMILES">isoamyl</token>
+  <token value="CC(C)(C)C" valType="SMILES">neoamyl</token>
+  <token value="C(C)(C)CC" labels="none" valType="SMILES">t-amyl</token>
+  <token value="C(C)(C)CC" labels="none" valType="SMILES">tert-amyl</token>
   <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilino</token>
   <token value="COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
   <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
@@ -16,8 +22,39 @@
   <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbonohydrazido</token>
   <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbohydrazido</token>
   <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbazido</token>
+  <token value="C(=O)OC" labels="///1" valType="SMILES" usableAsAJoiner="yes">carbmethoxy</token><!--deprecated alternative to alkaneoxycarbonyl-->
+  <token value="C(=O)OC" labels="///1" valType="SMILES" usableAsAJoiner="yes">carbomethoxy</token>
+  <token value="C(=O)OCC" labels="///1/2" valType="SMILES" usableAsAJoiner="yes">carbethoxy</token>
+  <token value="C(=O)OCC" labels="///1/2" valType="SMILES" usableAsAJoiner="yes">carboethoxy</token>
+  <token value="C(=O)OCCC" labels="///1/2/3" valType="SMILES" usableAsAJoiner="yes">carbopropoxy</token>
+  <token value="C(=O)OCCC" labels="///1/2/3" valType="SMILES" usableAsAJoiner="yes">carbpropoxy</token>
+  <token value="C(=O)OCCCC" labels="///1/2/3/4" valType="SMILES" usableAsAJoiner="yes">carbobutoxy</token>
+  <token value="C(=O)OCCCC" labels="///1/2/3/4" valType="SMILES" usableAsAJoiner="yes">carbbutoxy</token>
+  <token value="C(=O)OCCCCC" labels="///1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">carbopentoxy</token>
+  <token value="C(=O)OCCCCC" labels="///1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">carbpentoxy</token>
+  <token value="C(=O)OCCCCCC" labels="///1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">carbohexoxy</token>
+  <token value="C(=O)OCCCCCC" labels="///1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">carbhexoxy</token>
+  <token value="C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">carboheptoxy</token>
+  <token value="C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">carbheptoxy</token>
+  <token value="C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">carbooctoxy</token>
+  <token value="C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">carboctoxy</token>
+  <token value="C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">carbononoxy</token>
+  <token value="C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">carbnonoxy</token>
+  <token value="C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">carbodecoxy</token>
+  <token value="C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">carbdecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">carboundecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">carbundecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" valType="SMILES" usableAsAJoiner="yes">carbododecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" valType="SMILES" usableAsAJoiner="yes">carbdodecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" valType="SMILES" usableAsAJoiner="yes">carbotridecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" valType="SMILES" usableAsAJoiner="yes">carbtridecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes">carbotetradecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes">carbtetradecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes">carbopentadecoxy</token>
+  <token value="C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes">carbpentadecoxy</token>
   <token value="C#" valType="SMILES">carbyne</token>
   <token value="CC=CC" valType="SMILES">crotyl</token>
+  <token value="[N+]#N" labels="none" valType="SMILES">diazonio</token>
   <token value="OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes">ethoxyl</token>
   <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
   <token value="C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES">hydantoyl</token>
@@ -31,6 +68,7 @@
   <token value="C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
   <token value="S(=O)(=O)C" labels="none" valType="SMILES">mesyl</token>
   <token value="OC" labels="/1" valType="SMILES" usableAsAJoiner="yes">methoxyl</token>
+  <token value="CO" labels="none" valType="SMILES">methylol</token>
   <token value="morpholine" valType="dbkey" outIDs="4">morpholino</token>
   <token value="C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes">oxalaceto</token>
   <token value="[O-]" labels="none" valType="SMILES">oxido</token>

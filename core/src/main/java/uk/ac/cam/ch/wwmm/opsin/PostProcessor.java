@@ -69,7 +69,7 @@ class PostProcessor {
 	private Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+[a-z]?(,\\d+[a-z]?)*\\]");
 	private Pattern matchVonBaeyer = Pattern.compile("(\\d+\\^?[\\({]?\\d*,?\\d*[\\)}]?\\^?\\^?)");
 	private Pattern matchAnnulene = Pattern.compile("\\[([1-9]\\d*)\\]annulen");
-	private Pattern matchStereochemistry = Pattern.compile("(\\d+[a-z]?)([RSEZrsez])");
+	private Pattern matchStereochemistry = Pattern.compile("((?:\\d+[a-z]?|[A-Z][a-z]?)'*)([RSEZrsez])");
 	private Pattern matchRS = Pattern.compile("[RSrs]");
 	private Pattern matchEZ = Pattern.compile("[EZez]");
 	private Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
