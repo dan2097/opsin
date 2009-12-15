@@ -86,7 +86,7 @@ public final class StringTools {
 			if(bracketLevel == -1) return false;
 		}
         return bracketLevel == 0;
-		}
+	}
 
 	/**Joins an array of strings into a single string.
 	 *
@@ -173,6 +173,13 @@ public final class StringTools {
             case '\u2015': return "-";
             case '\u2212': return "-";
             
+            case '\u00A0': return " ";//Non-breaking spaces
+            case '\u2007': return " ";
+            case '\u202F': return " ";
+            
+            case '\u200b': return "";//zero width space
+            case '\u200d': return "";//zero width joiner
+
             case '\uFEFF': return "";//BOM-found at the start of some UTF files
 
             default: throw new PreProcessingException("Unrecognised unicode character: " + c);
