@@ -73,7 +73,12 @@ does not define a CFG.
   <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
   <regex name="%comma%" value="ç"/>
   <regex name="%groupStemAllowingAllSuffixes%" value="ê"/>
-  <!--up to ascii 136 used -->
+  <regex name="%aminoAcidEndsInIne%" value="ë"/>
+  <regex name="%aminoAcidEndsInAn%" value="è"/>
+  <regex name="%aminoAcidEndsInIc%" value="ï"/>
+  <regex name="%ine%" value="î"/>
+  <regex name="%ic%" value="ì"/>
+  <!--up to ascii 141 used -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.
@@ -117,7 +122,9 @@ does not define a CFG.
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneChain%%unsaturationBlock%)"/>
   <regex name="%chainSubstituent%" value = "((%chainGroup%|%alkaneChain%)%inlineEndings%)"/>
 
-  <regex name="%acidGroup%" value = "(%acidStem%%unlocantedSuffixGroup%)"/>
+  <regex name="%aminoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%|%aminoAcidEndsInIc%%ane%)"/>
+  <regex name="%aminoAcidGroup%" value="(%aminoAcid%|%aminoAcid%%unlocantedSuffixGroup%)"/>
+  <regex name="%acidGroup%" value = "(%acidStem%%unlocantedSuffixGroup%|%aminoAcidGroup%)"/>
   <regex name="%acidSubstituent%" value = "(%acidStem%%unlocantedInlineSuffixGroup%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>

@@ -68,6 +68,8 @@
   <token value="[O-]C#N" labels="none" valType="SMILES">cyanate</token>
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic</token>
   <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
+  <token labels="none" valType="SMILES" value="NCCSSCCN">cystamine</token>
+  <token labels="/2,alpha/3,beta//" valType="SMILES" value="NCCS">cysteamine</token>
   <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES">diacetamide</token>
   <token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES">dibenzamide</token>
   <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
@@ -76,6 +78,7 @@
   <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
   <token value="CC(CCC=C(C)C)=CCO" labels="none" valType="SMILES">geraniol</token>
   <token value="C(=O)C(=O)" labels="1//2/" valType="SMILES">glyoxal</token>
+  <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi" valType="SMILES" value="NCCc1cncn1">histamine</token>
   <token value="N1C(=O)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">hydantoin</token>
   <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
   <token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
@@ -92,9 +95,10 @@
   <token value="NC(S)=N" labels="1//2/3" valType="SMILES">isothiourea</token>
   <token value="NC(O)=N" labels="1//2/3" valType="SMILES">isourea</token>
   <token value="C12CC3C4CC1.C2.C4(C)C.O3" labels="1/2/3/4/5/6/7/8/9/10/" valType="SMILES">menthol</token>
+  <token labels="/2,alpha/3,beta/4,gamma//methyl/" valType="SMILES" value="NCCCSC">methioninamine</token>
+  <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
   <token value="C(=O)C(=O)" labels="1/2" valType="SMILES">oxaldehyde</token>
   <token value="NC(=O)C(=O)N" labels="none" valType="SMILES">oxamide</token>
-  <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
   <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performic</token>
   <token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>
   <token value="CC(=O)OO" labels="2/1///" valType="SMILES" functionalIDs="5">peracetic</token>
@@ -130,6 +134,8 @@
   <token value="[O-]S(=O)(=O)c1ccc(C)cc1" labels="////1/2/3/4//5/6" valType="SMILES" functionalIDs="1">tosylate</token>
   <token value="CC(=O)N(C(=O)C)C(=O)C" labels="none" valType="SMILES">triacetamide</token>
   <token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none" valType="SMILES">tribenzamide</token>
+  <token labels="/alpha/beta/1/2/3/4/5/6/" valType="SMILES" value="NCCc1ccc(cc1)O">tyramine</token>
+  <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a" valType="SMILES" value="NCCc1cnc2ccccc12">tryptamine</token>
   <token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
   <token value="[N+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
   <token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>

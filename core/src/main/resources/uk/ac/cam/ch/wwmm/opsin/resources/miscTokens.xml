@@ -22,4 +22,13 @@
     <token value="cis">cis</token>
     <token value="trans">trans</token>
   </tokenList>
+
+  <tokenList tagname="ine" symbol="î"><!--used for amino acids-->
+    <token value="ine">ine</token>
+    <token value="ine">in</token>
+  </tokenList>
+
+  <tokenList tagname="ic" symbol="î"><!--used for amino acids-->
+    <token value="ic">ic</token>
+  </tokenList>
 </tokenLists>
