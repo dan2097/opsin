@@ -1,6 +1,6 @@
 <!ELEMENT suffixRulesList (rule)+>
 
-<!ELEMENT rule (addgroup|doublebond|triplebond|setOutID|setOptionalOutID|changecharge)*>
+<!ELEMENT rule (addgroup|setOutID|changecharge)*>
 <!ATTLIST rule value CDATA #REQUIRED
                subType CDATA #IMPLIED>
 
@@ -14,11 +14,7 @@
                     outValency CDATA #IMPLIED
                     ketoneLocant (yes|no) #IMPLIED>
 
-<!ELEMENT fail EMPTY>
-<!ELEMENT doublebond EMPTY>
-<!ELEMENT triplebond EMPTY>
 <!ELEMENT setOutID EMPTY>
 <!ATTLIST setOutID outValency CDATA #IMPLIED>
-<!ELEMENT setOptionalOutID EMPTY>
 <!ELEMENT changecharge EMPTY>
 <!ATTLIST changecharge charge CDATA #REQUIRED>

@@ -32,12 +32,6 @@
          <version>1.11</version>
       </dependency>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.5</version>
-  		 <scope>test</scope>
-      </dependency>
-      <dependency>
       	<groupId>xom</groupId>
       	<artifactId>xom</artifactId>
       	<version>1.2.3</version>
@@ -51,6 +45,18 @@
         <groupId>sea36.chemkit</groupId>
         <artifactId>chemkit-stereo</artifactId>
         <version>0.3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.5</version>
+  		 <scope>test</scope>
+      </dependency>
+      <dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-all</artifactId>
+		<version>1.8.2</version> 
+		<scope>test</scope>
       </dependency>
    </dependencies>
 </project>

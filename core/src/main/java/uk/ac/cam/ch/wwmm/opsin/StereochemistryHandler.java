@@ -198,8 +198,8 @@ class StereochemistryHandler {
 		for (int i = possibleGroups.size()-1; i >=0; i--) {
 			Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 			if (locant.equals("0")){//undefined locant
-				List<Bond> bondList = correspondingFrag.getBondList();
-				for (Bond potentialBond : bondList) {
+				Set<Bond> bondSet = correspondingFrag.getBondSet();
+				for (Bond potentialBond : bondSet) {
 					if (bondStereoBondMap.containsKey(potentialBond)){
 						applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 						bondStereoBondMap.remove(potentialBond);
@@ -218,7 +218,7 @@ class StereochemistryHandler {
 			else{
 				Atom firstAtomInBond = correspondingFrag.getAtomByLocant(locant);
 				if (firstAtomInBond !=null){
-					List<Bond> bonds = firstAtomInBond.getBonds();
+					Set<Bond> bonds = firstAtomInBond.getBonds();
 					for (Bond potentialBond : bonds) {
 						if (bondStereoBondMap.containsKey(potentialBond)){
 							applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
@@ -237,8 +237,8 @@ class StereochemistryHandler {
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 					if (locant.equals("0")){//undefined locant
-						List<Bond> bondList = correspondingFrag.getBondList();
-						for (Bond potentialBond : bondList) {
+						Set<Bond> bondSet = correspondingFrag.getBondSet();
+						for (Bond potentialBond : bondSet) {
 							if (bondStereoBondMap.containsKey(potentialBond)){
 								applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 								bondStereoBondMap.remove(potentialBond);
@@ -257,7 +257,7 @@ class StereochemistryHandler {
 					else{
 						Atom firstAtomInBond = correspondingFrag.getAtomByLocant(locant);
 						if (firstAtomInBond !=null){
-							List<Bond> bonds = firstAtomInBond.getBonds();
+							Set<Bond> bonds = firstAtomInBond.getBonds();
 							for (Bond potentialBond : bonds) {
 								if (bondStereoBondMap.containsKey(potentialBond)){
 									applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);

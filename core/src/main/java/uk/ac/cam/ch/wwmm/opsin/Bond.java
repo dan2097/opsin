@@ -12,9 +12,9 @@ import nu.xom.Element;
  */
 class Bond {
 	/** The Atom the bond comes from */
-	private Atom from;
+	private final Atom from;
 	/** The Atom the bond goes to */
-	private Atom to;
+	private final Atom to;
 	/** The bond order */
 	private int order;
 
@@ -37,7 +37,8 @@ class Bond {
 	 */
 	private ArrayList<Ring> fusedRings = new ArrayList<Ring>(2);
 
-	/**Creates a new Bond.
+	/** DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	 * Creates a new Bond.
 	 *
 	 * @param from The Atom the bond comes from.
 	 * @param to The Atom the bond goes to.
@@ -49,11 +50,11 @@ class Bond {
 		this.order = order;
 	}
 
-	public ArrayList<Ring> getFusedRings() {
+	ArrayList<Ring> getFusedRings() {
 		return fusedRings;
 	}
 
-	public void  addFusedRing(Ring ring) {
+	void  addFusedRing(Ring ring) {
 		if (fusedRings.size()<2) fusedRings.add(ring);
 	}
 

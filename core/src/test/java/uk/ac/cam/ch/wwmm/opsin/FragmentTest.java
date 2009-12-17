@@ -1,13 +1,18 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class FragmentTest {
 
 	private Fragment frag;
+	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,41 +47,41 @@ public class FragmentTest {
 	@Test
 	public void testAddAtom() throws StructureBuildingException {
 		assertEquals("Has no atoms", 0, frag.getAtomList().size());
-		frag.addAtom(new Atom(1, "1", "C", frag));
+		frag.addAtom(new Atom(1, "C", frag));
 		assertEquals("Now has one atom", 1, frag.getAtomList().size());
 	}
 
 	@Test
 	public void testAddBond() throws StructureBuildingException {
-		frag.addAtom(new Atom(1, "1", "C", frag));
-		frag.addAtom(new Atom(2, "2", "C", frag));
-		assertEquals("Has no bonds", 0, frag.getBondList().size());
-		frag.addBond(new Bond(frag.getAtomByID(1), frag.getAtomByID(2), 1));
-		assertEquals("Now has one bond", 1, frag.getBondList().size());
+		frag.addAtom(new Atom(1, "C", frag));
+		frag.addAtom(new Atom(2, "C", frag));
+		assertEquals("Has no bonds", 0, frag.getBondSet().size());
+		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
+		assertEquals("Now has one bond", 1, frag.getBondSet().size());
 	}
 
 	@Test
 	public void testImportFrag() throws StructureBuildingException {
-		frag.addAtom(new Atom(1, "1", "C", frag));
-		frag.addAtom(new Atom(2, "2", "C", frag));
-		frag.addBond(new Bond(frag.getAtomByID(1), frag.getAtomByID(2), 1));
+		frag.addAtom(new Atom(1, "C", frag));
+		frag.addAtom(new Atom(2, "C", frag));
+		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		Fragment newFrag = new Fragment();
-		newFrag.addAtom(new Atom(3, "1", "C", frag));
-		newFrag.addAtom(new Atom(4, "2", "C", frag));
-		newFrag.addBond(new Bond(newFrag.getAtomByID(3), newFrag.getAtomByID(4), 1));
+		newFrag.addAtom(new Atom(3, "C", newFrag));
+		newFrag.addAtom(new Atom(4, "C", newFrag));
+		fm.createBond(newFrag.getAtomByID(3), newFrag.getAtomByID(4), 1);
 		assertEquals("Fragment has two atoms", 2, frag.getAtomList().size());
-		assertEquals("Fragment has one bond", 1, frag.getBondList().size());
+		assertEquals("Fragment has one bond", 1, frag.getBondSet().size());
 		frag.importFrag(newFrag);
-		assertEquals("Fragment now has two atoms", 4, frag.getAtomList().size());
-		assertEquals("Fragment now has one bond", 2, frag.getBondList().size());
+		assertEquals("Fragment now has four atoms", 4, frag.getAtomList().size());
+		assertEquals("Fragment now has two bonds", 2, frag.getBondSet().size());
 	}
 
 	@Test
 	public void testGetIDFromLocant() throws StructureBuildingException {
-		Atom atom = new Atom(10, "1", "C", frag);
+		Atom atom = new Atom(10, "C", frag);
 		atom.addLocant("a");
 		frag.addAtom(atom);
-		atom = new Atom(20, "2", "C", frag);
+		atom = new Atom(20, "C", frag);
 		atom.addLocant("silly");
 		frag.addAtom(atom);
 		assertEquals("Locant a has ID 10", 10, frag.getIDFromLocant("a"));
@@ -86,10 +91,10 @@ public class FragmentTest {
 
 	@Test
 	public void testGetAtomByLocant() throws StructureBuildingException {
-		Atom atom1 = new Atom(10, "1", "C", frag);
+		Atom atom1 = new Atom(10, "C", frag);
 		atom1.addLocant("a");
 		frag.addAtom(atom1);
-		Atom atom2 = new Atom(20, "2", "C", frag);
+		Atom atom2 = new Atom(20, "C", frag);
 		atom2.addLocant("silly");
 		frag.addAtom(atom2);
 		assertEquals("Locant a gets atom1", atom1, frag.getAtomByLocant("a"));
@@ -99,9 +104,9 @@ public class FragmentTest {
 
 	@Test
 	public void testGetAtomByID() throws StructureBuildingException {
-		Atom atom1 = new Atom(10, "1", "C", frag);
+		Atom atom1 = new Atom(10, "C", frag);
 		frag.addAtom(atom1);
-		Atom atom2 = new Atom(20, "2", "C", frag);
+		Atom atom2 = new Atom(20, "C", frag);
 		frag.addAtom(atom2);
 		assertEquals("ID 10 gets atom1", atom1, frag.getAtomByID(10));
 		assertEquals("ID 20 gets atom2", atom2, frag.getAtomByID(20));
@@ -109,30 +114,14 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testReduceSpareValency() throws Exception {
-		Atom atom = new Atom(10, "1", "C", frag);
-		frag.addAtom(atom);
-		atom.setSpareValency(1);
-		assertEquals("Atom a has spareValency 1", 1, atom.getSpareValency());
-		atom.subtractSpareValency(1);
-		assertEquals("Atom a has spareValency 0", 0, atom.getSpareValency());
-		try {
-			atom.subtractSpareValency(1);
-			assertFalse("Should throw an exception", true);
-		} catch(StructureBuildingException e) {
-
-		}
-	}
-
-	@Test
 	public void testFindBond() throws StructureBuildingException {
-		frag.addAtom(new Atom(1, "1", "C", frag));
-		frag.addAtom(new Atom(2, "2", "C", frag));
-		frag.addAtom(new Atom(3, "3", "N", frag));
-		frag.addAtom(new Atom(4, "4", "O", frag));
-		frag.addBond(new Bond(frag.getAtomByID(2), frag.getAtomByID(4), 2));
-		frag.addBond(new Bond(frag.getAtomByID(1), frag.getAtomByID(2), 1));
-		frag.addBond(new Bond(frag.getAtomByID(1), frag.getAtomByID(3), 3));
+		frag.addAtom(new Atom(1, "C", frag));
+		frag.addAtom(new Atom(2, "C", frag));
+		frag.addAtom(new Atom(3, "N", frag));
+		frag.addAtom(new Atom(4, "O", frag));
+		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(4), 2);
+		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
+		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(3), 3);
 		Bond b = frag.findBond(2, 4);
 		assertNotNull("Found a bond", b);
 		assertEquals("..a double bond", 2, b.getOrder());
@@ -146,43 +135,60 @@ public class FragmentTest {
 	@Test
 	public void testGetChainLength() throws StructureBuildingException {
 		assertEquals("No chain", 0, frag.getChainLength());
-		frag.addAtom(new Atom(1, "1", "C", frag));
+		Atom a1 =new Atom(1, "C", frag);
+		a1.addLocant("1");
+		frag.addAtom(a1);
 		assertEquals("Methane", 1, frag.getChainLength());
-		frag.addAtom(new Atom(2, "2", "C", frag));
-		frag.addBond(new Bond(frag.getAtomByID(1), frag.getAtomByID(2), 1));
+		Atom a2 =new Atom(2, "C", frag);
+		a2.addLocant("2");
+		frag.addAtom(a2);
+		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		assertEquals("ethane", 2, frag.getChainLength());
-		frag.addAtom(new Atom(3, "3", "C", frag));
-		frag.addBond(new Bond(frag.getAtomByID(2), frag.getAtomByID(3), 1));
+		Atom a3 =new Atom(3, "C", frag);
+		a1.addLocant("3");
+		frag.addAtom(a3);
+		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(3), 1);
 		assertEquals("propane", 3, frag.getChainLength());
 
 	}
 
 
-//	@Test
-//	public void testRelabelSuffixLocants() throws StructureBuildingException {
-//		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-//		IDManager idManager = new IDManager();
-//		Fragment parentFrag = sBuilder.build("CC", idManager);
-//		frag = sBuilder.build("N", idManager);
-//		assertEquals("Can't find locant N in frag", 0, frag.getIDFromLocant("N"));
-//		frag.relabelSuffixLocants(parentFrag);
-//		assertEquals("Can find locant N in frag: ID = 3", 3, frag.getIDFromLocant("N"));
-//		parentFrag.importFrag(frag);
-//		frag = sBuilder.build("N", idManager);
-//		assertEquals("Can't find locant N' in frag", 0, frag.getIDFromLocant("N'"));
-//		frag.relabelSuffixLocants(parentFrag);
-//		assertEquals("Can find locant N' in frag: ID = 4", 4, frag.getIDFromLocant("N'"));
-//		frag = sBuilder.build("C", idManager);
-//		assertEquals("Can find locant 1 in frag: ID = 5", 5, frag.getIDFromLocant("1"));
-//		frag.relabelSuffixLocants(parentFrag);
-//		assertEquals("Can't find locant 1 in frag", 0, frag.getIDFromLocant("1"));
-//	}
+	@Test
+	public void testRelabelSuffixLocants() throws StructureBuildingException {
+		frag = fm.buildSMILES("C(N)N");
+		assertEquals("Can't find locant N in frag", 0, frag.getIDFromLocant("N"));
+		assertEquals("Can't find locant N in frag", 0, frag.getIDFromLocant("N'"));
+		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
+		assertEquals("Can find locant N in frag: ID = 2", 2, frag.getIDFromLocant("N"));
+		assertEquals("Can find locant N in frag: ID = 3", 3, frag.getIDFromLocant("N'"));
+	}
+	
+	@Test
+	@Ignore
+	public void testLabelCarbamimidamido() throws StructureBuildingException {
+		frag =  fm.buildSMILES("NC(=N)N-");
+		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
+		assertEquals("Can find locant N in frag: ID = 4", 4, frag.getIDFromLocant("N"));
+		assertEquals("Can find locant N in frag: ID = 1", 1, frag.getIDFromLocant("N'"));
+		assertEquals("Can find locant N in frag: ID = 3", 3, frag.getIDFromLocant("N''"));
+	}
+	
+	@Test
+	@Ignore
+	public void testLabelHydrazonoHydrazide() throws StructureBuildingException {
+		frag =  fm.buildSMILES("C(=NN)NN");
+		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
+		assertEquals("Can find locant N in frag: ID = 4", 4, frag.getIDFromLocant("N"));
+		assertEquals("Can find locant N in frag: ID = 5", 5, frag.getIDFromLocant("N'"));
+		assertEquals("Can find locant N in frag: ID = 2", 2, frag.getIDFromLocant("N''"));
+		assertEquals("Can find locant N in frag: ID = 3", 3, frag.getIDFromLocant("N'''"));
+	}
 
 	@Test
 	public void testPickUpIndicatedHydrogen() throws StructureBuildingException {
 		//TODO: this, properly.
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment pyrrole = sBuilder.build("NC=CC=C", new IDManager());
+		Fragment pyrrole = sBuilder.build("NC=CC=C", fm);
 		pyrrole.pickUpIndicatedHydrogen();
 		//assertEquals("Pyrrole is 1H", "1", pyrrole.)
 	}
@@ -190,13 +196,13 @@ public class FragmentTest {
 	@Test
 	public void testConvertHighOrderBondsToSpareValencies() throws Exception {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", new IDManager());
+		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
 		CycleDetector.assignWhetherAtomsAreInCycles(naphthalene);
 		naphthalene.convertHighOrderBondsToSpareValencies();
 		for(Atom a : naphthalene.getAtomList()) {
-			assertEquals("All atoms have one sv", 1, a.getSpareValency());
+			assertEquals("All atoms have sv", true, a.hasSpareValency());
 		}
-		for(Bond b : naphthalene.getBondList()) {
+		for(Bond b : naphthalene.getBondSet()) {
 			assertEquals("All bonds are of order 1", 1, b.getOrder());
 		}
 	}
@@ -204,34 +210,33 @@ public class FragmentTest {
 	@Test
 	public void testConvertSpareValenciesToDoubleBonds() throws Exception {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		IDManager idManager = new IDManager();
-		Fragment dhp = sBuilder.build("C1=CCC=CC1", idManager);
+		Fragment dhp = sBuilder.build("C1=CCC=CC1", fm);
 		CycleDetector.assignWhetherAtomsAreInCycles(dhp);
 		dhp.convertHighOrderBondsToSpareValencies();
 		dhp.convertSpareValenciesToDoubleBonds();
 		for(Atom a : dhp.getAtomList()) {
-			assertEquals("All atoms have no sv", 0, a.getSpareValency());
+			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment funnydiene = sBuilder.build("C(=C)C=C", idManager);
+		Fragment funnydiene = sBuilder.build("C(=C)C=C", fm);
 		CycleDetector.assignWhetherAtomsAreInCycles(funnydiene);
 		funnydiene.convertHighOrderBondsToSpareValencies();
 		funnydiene.convertSpareValenciesToDoubleBonds();
 		for(Atom a : funnydiene.getAtomList()) {
-			assertEquals("All atoms have no sv", 0, a.getSpareValency());
+			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", idManager);
+		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
 		CycleDetector.assignWhetherAtomsAreInCycles(naphthalene);
 		naphthalene.convertHighOrderBondsToSpareValencies();
 		naphthalene.convertSpareValenciesToDoubleBonds();
 		for(Atom a : naphthalene.getAtomList()) {
-			assertEquals("All atoms have no sv", 0, a.getSpareValency());
+			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment pentalene = sBuilder.build("C12C(=CC=C1)C=CC=2", idManager);
+		Fragment pentalene = sBuilder.build("C12C(=CC=C1)C=CC=2", fm);
 		CycleDetector.assignWhetherAtomsAreInCycles(pentalene);
 		pentalene.convertHighOrderBondsToSpareValencies();
 		pentalene.convertSpareValenciesToDoubleBonds();
 		for(Atom a : pentalene.getAtomList()) {
-			assertEquals("All atoms have no sv", 0, a.getSpareValency());
+			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
 
 	}
@@ -239,7 +244,7 @@ public class FragmentTest {
 	@Test
 	public void testGetAtomNeighbours() throws Exception {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", new IDManager());
+		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
 		assertEquals("Atom 1 has two neighbours",
 				2, naphthalene.getAtomNeighbours(naphthalene.getAtomByID(1)).size());
 		assertEquals("Atom 5 has three neighbours",

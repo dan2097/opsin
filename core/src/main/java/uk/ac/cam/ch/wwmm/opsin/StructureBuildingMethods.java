@@ -313,7 +313,7 @@ class StructureBuildingMethods {
 			Element hydrogen = hydrogenElements.get(i);
 			String locant = getLocant(hydrogen);
 			if(!locant.equals("0")) {
-				thisFrag.getAtomByLocantOrThrow(locant).subtractSpareValency(1);
+				thisFrag.getAtomByLocantOrThrow(locant).setSpareValency(false);
 				hydrogenElements.remove(hydrogen);
 				hydrogen.detach();
 			}
@@ -330,10 +330,10 @@ class StructureBuildingMethods {
 				unsaturators.remove(unsaturator);
 				Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
 				if (unsaturator.getAttribute("compoundLocant")!=null){
-					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
+					FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
 				}
 				else{
-					state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
+					FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
 				}
 				unsaturator.detach();
 			}
@@ -407,7 +407,7 @@ class StructureBuildingMethods {
 					break;
 				}
 				atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
-				if (atom.getSpareValency() >=1){
+				if (atom.hasSpareValency()){
 					if (atom.getNote("OneSuffixAttached")!=null){
 						atomsWhichImplicitlyWillHaveTheirSVRemoved.add(atom);
 					}
@@ -423,7 +423,7 @@ class StructureBuildingMethods {
 			}
             for (Element hydrogenElement : hydrogenElements) {
                 Atom atomToReduceSpareValencyOn = atomsWithSV.removeFirst();
-                atomToReduceSpareValencyOn.subtractSpareValency(1);
+                atomToReduceSpareValencyOn.setSpareValency(false);
                 hydrogenElement.detach();
             }
 		}
@@ -443,8 +443,8 @@ class StructureBuildingMethods {
 
             Atom currentAtom = thisFrag.getAtomByIDOrThrow(defaultId);
             Atom nextAtom = thisFrag.getAtomByIDOrThrow(defaultId + 1);
-            while (currentAtom.getSpareValency() != 0 || !ValencyChecker.checkValencyAvailableForBond(currentAtom, bondOrder - 1 + currentAtom.getOutValency()) ||
-                    nextAtom.getSpareValency() != 0 || !ValencyChecker.checkValencyAvailableForBond(nextAtom, bondOrder - 1 + nextAtom.getOutValency())) {
+            while (currentAtom.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(currentAtom, bondOrder - 1 + currentAtom.getOutValency()) ||
+                    nextAtom.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(nextAtom, bondOrder - 1 + nextAtom.getOutValency())) {
                 defaultId++;
                 currentAtom = thisFrag.getAtomByIDOrThrow(defaultId);
                 nextAtom = thisFrag.getAtomByIDOrThrow(defaultId + 1);
@@ -454,9 +454,9 @@ class StructureBuildingMethods {
             }
             Integer idOfFirstAtomInMultipleBond = currentAtom.getID();
             if (unsaturator.getAttribute("compoundLocant") != null) {
-                state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
+            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue("compoundLocant"), bondOrder, thisFrag);
             } else {
-                state.fragManager.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
+            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
             }
             defaultId = idOfFirstAtomInMultipleBond + 2;
             unsaturator.detach();
@@ -488,7 +488,7 @@ class StructureBuildingMethods {
 				if (!outID.setExplicitly){
 					defaultId=outID.id;
 					Atom atomToAssociateOutIDWith=thisFrag.getAtomByIDOrThrow(defaultId);
-					while (!ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutIDWith, atomToAssociateOutIDWith.getSpareValency() + atomToAssociateOutIDWith.getOutValency() + outID.valency)){
+					while (!ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutIDWith, (atomToAssociateOutIDWith.hasSpareValency() ? 1 : 0) + atomToAssociateOutIDWith.getOutValency() + outID.valency)){
 						defaultId++;
 						atomToAssociateOutIDWith=thisFrag.getAtomByIDOrThrow(defaultId);
 						if (atomToAssociateOutIDWith.getType().equals("suffix")){
@@ -996,7 +996,7 @@ class StructureBuildingMethods {
 		}
 		fragToBeJoined.removeOutID(out);
 
-		state.fragManager.attachFragments(from, to, bondOrder);
+		state.fragManager.createBond(from, to, bondOrder);
 		if (state.debug){System.out.println("Additively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + to.getID() + " (" +state.xmlFragmentMap.getElement(to.getFrag()).getValue()+")" );}
 	}
 
@@ -1020,7 +1020,7 @@ class StructureBuildingMethods {
 			from=from.getFrag().getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
 		}
 		fragToBeJoined.removeOutID(out);
-		state.fragManager.attachFragments(from, atomToJoinTo, bondOrder);
+		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
 		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}
 

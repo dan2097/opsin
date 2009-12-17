@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.jniinchi.INCHI_BOND_TYPE;
 import net.sf.jniinchi.INCHI_OPTION;
@@ -67,7 +68,7 @@ public class NameToInchi {
 			jAtom.setImplicitH(0);
 			opsinIdAtomMap.put(atom.getID(), jAtom);
 		}
-		List<Bond> bondList =frag.getBondList();
+		Set<Bond> bondList =frag.getBondSet();
 		for (Bond bond : bondList) {
 			input.addBond(new JniInchiBond(opsinIdAtomMap.get(bond.getFrom()), opsinIdAtomMap.get(bond.getTo()), INCHI_BOND_TYPE.getValue(bond.getOrder())));
 		}

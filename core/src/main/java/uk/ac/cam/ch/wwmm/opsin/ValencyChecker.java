@@ -294,7 +294,7 @@ class ValencyChecker {
 	 */
 	static boolean checkValencyAvailableForReplacementByHeteroatom(Atom a, String heteroatom) {
 		int valency =a.getIncomingValency();
-		valency +=a.getSpareValency();
+		valency +=a.hasSpareValency() ? 1 : 0;
 		valency +=a.getOutValency();
 		Integer maxValOfHeteroAtom = getMaxValency(heteroatom, 0);
         return maxValOfHeteroAtom == null || valency <= maxValOfHeteroAtom;

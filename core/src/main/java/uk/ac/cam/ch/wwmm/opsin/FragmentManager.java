@@ -2,7 +2,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -14,57 +13,12 @@ import nu.xom.Element;
 
 
 /** Holds the Fragments during the construction of the molecule,
- * and handles the building of new fragments.
+ * handles the building of new fragments and handles the creation/deletion of atoms/bonds
  *
  * @author ptc24
  *
  */
 class FragmentManager {
-
-	/**
-	 * Sorts a list of atoms such that their order agrees with the order symbolic locants are typically assigned
-	 * @author dl387
-	 *
-	 */
-	static class SortAtomsForElementSymbols implements Comparator<Atom> {
-
-	    public int compare(Atom a, Atom b){
-	    	int compare =a.getElement().compareTo(b.getElement());
-	    	if (compare !=0){//only bother comparing properly if elements are the same
-	    		return compare;
-	    	}
-
-	    	if (a.getBonds().size() >b.getBonds().size()){//less bonds is preferred
-	    		return 1;
-	    	}
-	    	if (a.getBonds().size() <b.getBonds().size()){
-	    		return -1;
-	    	}
-
-	    	int aTotalBondOrder =0;
-	    	for (Bond bonda : a.getBonds()) {
-				aTotalBondOrder +=bonda.getOrder();
-			}
-
-	    	int bTotalBondOrder =0;
-	    	for (Bond bondb : b.getBonds()) {
-				bTotalBondOrder +=bondb.getOrder();
-			}
-
-	    	aTotalBondOrder +=a.getOutValency();//take into account the bond/s which hasn't been added yet which will go to a main fragment
-	    	bTotalBondOrder +=b.getOutValency();//take into account the bond/s which hasn't been added yet which will go to a main fragment
-
-	    	if (aTotalBondOrder >bTotalBondOrder){//lower order bonds are preferred
-	    		return 1;
-	    	}
-	    	if (aTotalBondOrder <bTotalBondOrder){
-	    		return -1;
-	    	}
-
-	    	return 0;
-	    }
-	}
-
 	/** All of the atom-containing fragments in the molecule */
 	private Set<Fragment> fragPile;
 	/** All of the inter-fragment bonds */
@@ -104,7 +58,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException If the fragment can't be built
 	 */
 	Fragment buildCML(String idStr, String type, String subType) throws StructureBuildingException {
-		Fragment newFrag = cmlBuilder.build(idStr, type, subType, idManager);
+		Fragment newFrag = cmlBuilder.build(idStr, type, subType, this);
 		addFragment(newFrag);
 		return newFrag;
 	}
@@ -123,6 +77,7 @@ class FragmentManager {
 	 *
 	 * @param smiles The fragment to build
 	 * @param type The fragment type
+	 * @param labelMapping How to label the fragment
 	 * @return The built fragment
 	 * @throws StructureBuildingException
 	 */
@@ -135,11 +90,12 @@ class FragmentManager {
 	 * @param smiles The fragment to build
 	 * @param type The fragment type
 	 * @param subType The fragment subType
+	 * @param labelMapping How to label the fragment
 	 * @return The built fragment
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles, String type, String subType, String labelMapping) throws StructureBuildingException {
-		Fragment newFrag = sBuilder.build(smiles, type, subType, labelMapping, idManager);
+		Fragment newFrag = sBuilder.build(smiles, type, subType, labelMapping, this);
 		addFragment(newFrag);
 		return newFrag;
 	}
@@ -150,82 +106,45 @@ class FragmentManager {
 	 * are not copied.
 	 *
 	 * @return The unified fragment
+	 * @throws StructureBuildingException 
 	 */
-	Fragment getUnifiedFragment() {
+	Fragment getUnifiedFragment() throws StructureBuildingException {
 		Fragment outFrag = new Fragment();
 		for(Fragment f : fragPile) {
 			outFrag.importFrag(f);
 		}
 		for (Bond interFragmentBond : bondPile) {
-			outFrag.addBond(interFragmentBond, false);//already will have been associated with atoms hence false
+			outFrag.addBond(interFragmentBond);
 		}
 		return outFrag;
 	}
 
-	/** Joins two fragments together, by creating a bond between them
+	/** Incorporates a fragment, usually a suffix, into a parent fragment
 	 *
-	 * @param fromAtom The identity of an atom on one fragment
-	 * @param toAtom The identity of an atom on another fragment
-	 * @param bondOrder The order of the joining bond
+	 * @param childFrag The fragment to be incorporated
+	 * @param parentFrag The parent fragment
 	 */
-	void attachFragments(Atom fromAtom, Atom toAtom, int bondOrder) {
-		Bond b =new Bond(fromAtom, toAtom, bondOrder);
-		bondPile.add(b);
-		fragToInterFragmentBond.get(fromAtom.getFrag()).add(b);
-		fragToInterFragmentBond.get(toAtom.getFrag()).add(b);
-		fromAtom.addBond(b);
-		toAtom.addBond(b);
+	void incorporateFragment(Fragment childFrag, Fragment parentFrag) throws StructureBuildingException {
+		parentFrag.importFrag(childFrag);
+		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {
+			if (bond.getFromAtom().getFrag() ==parentFrag || bond.getToAtom().getFrag() ==parentFrag){
+				parentFrag.addBond(bond);//add as an intra fragment bond
+			}
+		}
+		removeFragment(childFrag);//also removes inter fragment bonds
 	}
-
+	
 	/** Incorporates a fragment, usually a suffix, into a parent fragment, creating a bond between them.
 	 *
-	 * @param suffixFrag The fragment to be incorporated
+	 * @param childFrag The fragment to be incorporated
 	 * @param fromID An id on that fragment
-	 * @param toFrag The parent fragment
+	 * @param parentFrag The parent fragment
 	 * @param toID An id on that fragment
 	 * @param bondOrder The order of the joining bond
 	 */
-	void incorporateFragment(Fragment suffixFrag, int fromID, Fragment toFrag, int toID, int bondOrder) throws StructureBuildingException {
-		toFrag.importFrag(suffixFrag);
-		toFrag.addBond(new Bond(toFrag.getAtomByIDOrThrow(fromID), toFrag.getAtomByIDOrThrow(toID), bondOrder));
-		removeFragment(suffixFrag);
-	}
-
-	/** Adjusts the order of a bond in a fragment.
-	 *
-	 * @param fromAtomID The id of the lower-numbered atom in the bond
-	 * @param bondOrder The new bond order
-	 * @param fragment The fragment
-	 */
-	void unsaturate(int fromAtomID, int bondOrder, Fragment fragment) throws StructureBuildingException {
-		int toAtomID = fromAtomID + 1;
-		if (fragment.getAtomByID(toAtomID)==null || fragment.getAtomByID(toAtomID).getType().equals("suffix")){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
-			List<Atom> neighbours =fragment.getAtomByIDOrThrow(fromAtomID).getAtomNeighbours();
-			if (neighbours.size() >=2){
-				int firstID =fragment.getIdOfFirstAtom();
-				for (Atom a : neighbours) {
-					if (a.getID() ==firstID){
-						toAtomID=firstID;
-						break;
-					}
-				}
-			}
-		}
-		Bond b = fragment.findBondOrThrow(fromAtomID, toAtomID);
-		b.setOrder(bondOrder);
-	}
-
-	/** Adjusts the order of a bond in a fragment.
-	 *
-	 * @param fromAtomID The id of the first atom in the bond
-	 * @param locantTo The locant of the other atom in the bond
-	 * @param bondOrder The new bond order
-	 * @param fragment The fragment
-	 */
-	void unsaturate(int fromAtomID, String locantTo, int bondOrder, Fragment fragment) throws StructureBuildingException {
-		int toAtomID = fragment.getIDFromLocantOrThrow(locantTo);
-		Bond b = fragment.findBondOrThrow(fromAtomID, toAtomID);
-		b.setOrder(bondOrder);
+	void incorporateFragment(Fragment childFrag, int fromID, Fragment parentFrag, int toID, int bondOrder) throws StructureBuildingException {
+		incorporateFragment(childFrag, parentFrag);
+		createBond(parentFrag.getAtomByIDOrThrow(fromID), parentFrag.getAtomByIDOrThrow(toID), bondOrder);
 	}
 
 	/** Converts an atom in a fragment to a different atomic symbol.
@@ -238,7 +157,7 @@ class FragmentManager {
 	 */
 	void makeHeteroatom(Atom a, String atomSymbol, boolean assignLocant) throws StructureBuildingException {
 		if(atomSymbol.startsWith("[")) {
-			Fragment f = sBuilder.build(atomSymbol, idManager);
+			Fragment f = sBuilder.build(atomSymbol, this);
 			Atom referenceAtom = f.getAtomList().get(0);
 			atomSymbol =referenceAtom.getElement();
 			a.setCharge(referenceAtom.getCharge());
@@ -250,27 +169,8 @@ class FragmentManager {
 		}
 	}
 
-	/** Works out where to put an "one", if this is unspecified. position 2 for propanone
-	 * and higher, else 1. Position 2 is assumed to be 1 higher than the atomIndice given.
-	 *
-	 * @param fragment The fragment
-	 * @return the appropriate atom indice
-	 */
-	int findKetoneAtomIndice(Fragment fragment, int atomIndice) {
-		if(fragment.getChainLength() < 3){
-			return atomIndice;
-		}
-		else
-			if (atomIndice +1>=fragment.getAtomList().size()){
-				return 1;//this probably indicates a problem with the input name but nonetheless 1 is a better answer than an indice which isn't even in the range of the fragment
-			}
-			else{
-				return atomIndice +1;
-			}
-	}
-
 	/** Gets an atom, given an id number
-	 *
+	 * Use this if you don't know what fragment the atom is in
 	 * @param id The id of the atom
 	 * @return The atom, or null if no such atom exists.
 	 */
@@ -283,7 +183,7 @@ class FragmentManager {
 	}
 
 	/** Gets an atom, given an id number, throwing if fails.
-	 *
+	 * Use this if you don't know what fragment the atom is in
 	 * @param id The id of the atom
 	 * @return The atom
 	 */
@@ -293,9 +193,9 @@ class FragmentManager {
 		return a;
 	}
 
-	/**Turns all of the spare valencies in the framents into double bonds.
+	/**Turns all of the spare valencies in the fragments into double bonds.
 	 *
-	 * @throws Exception
+	 * @throws StructureBuildingException
 	 */
 	void convertSpareValenciesToDoubleBonds() throws StructureBuildingException {
 		for(Fragment f : fragPile) {
@@ -303,6 +203,10 @@ class FragmentManager {
 		}
 	}
 
+	/**
+	 * Checks valencies are all chemically reasonable. An exception is thrown if any are not
+	 * @throws StructureBuildingException
+	 */
 	void checkValencies() throws StructureBuildingException {
 		for(Fragment f : fragPile) {
 			f.checkValencies();
@@ -321,13 +225,13 @@ class FragmentManager {
 	 * Adds a fragment to the fragPile
 	 * @param frag
 	 */
-	void addFragment(Fragment frag)  {
+	private void addFragment(Fragment frag)  {
 		fragPile.add(frag);
 		fragToInterFragmentBond.put(frag, new HashSet<Bond>());
 	}
 
 	/**
-	 * Removes a fragment from the fragPile and inter fragment bonds from the bondpile.
+	 * Removes a fragment from the fragPile and inter fragment bonds associated with it from the bondpile/fragToInterFragmentBond.
 	 * Throws an exception if fragment wasn't present
 	 * @param frag
 	 * @throws StructureBuildingException
@@ -339,23 +243,16 @@ class FragmentManager {
 		if (fragToInterFragmentBond.get(frag) !=null){
 			Set<Bond> interFragmentBondsInvolvingFragment = fragToInterFragmentBond.get(frag);
 			for (Bond bond : interFragmentBondsInvolvingFragment) {
+				if (bond.getFromAtom().getFrag() ==frag){
+					fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
+				}
+				else{
+					fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
+				}
 				bondPile.remove(bond);
 			}
 			fragToInterFragmentBond.remove(frag);
 		}
-	}
-
-	/**
-	 * Changes the charge on the atom described by the given id by the given amount
-	 * @param Id
-	 * @param charge
-	 * @param fragment
-	 * @throws StructureBuildingException
-	 */
-	void changeCharge(int Id, int charge, Fragment fragment) throws StructureBuildingException {
-		Atom atom= fragment.getAtomByIDOrThrow(Id);
-		int currentCharge =atom.getCharge();
-		atom.setCharge(currentCharge+=charge);
 	}
 
 	int getOverallCharge() {
@@ -368,9 +265,9 @@ class FragmentManager {
 
 	/**
 	 * Creates a copy of a fragment by copying data
-	 * labels the atoms using new ids from the idManager and adds to the fragManager in state
+	 * labels the atoms using new ids from the idManager
 	 * @param originalFragment
-	 * @return
+	 * @return the clone of the fragment
 	 * @throws StructureBuildingException
 	 */
 	Fragment copyAndRelabel(Fragment originalFragment) throws StructureBuildingException {
@@ -380,10 +277,10 @@ class FragmentManager {
 
 	/**
 	 * Creates a copy of a fragment by copying data
-	 * labels the atoms using new ids from the idManager and adds to the fragManager in state
+	 * labels the atoms using new ids from the idManager
 	 * @param originalFragment
 	 * @param stringToAddToAllLocants: typically used to append primes to all locants, can be null
-	 * @return
+	 * @return the clone of the fragment
 	 * @throws StructureBuildingException
 	 */
 	Fragment copyAndRelabel(Fragment originalFragment, String stringToAddToAllLocants) throws StructureBuildingException {
@@ -396,16 +293,19 @@ class FragmentManager {
 		List<InID> inIDs =originalFragment.getInIDs();
 		int defaultInId =originalFragment.getDefaultInID();
 		for (Atom atom : atomList) {
-			int ID = idManager.getNextID();
+			int id = idManager.getNextID();
 			ArrayList<String> newLocants = new ArrayList<String>(atom.getLocants());
 			if (stringToAddToAllLocants !=null){
 				for (int i = 0; i < newLocants.size(); i++) {
 					newLocants.set(i, newLocants.get(i) + stringToAddToAllLocants);
 				}
 			}
-			Atom newAtom =new Atom(ID, newLocants, atom.getElement(), newFragment);
+			Atom newAtom =new Atom(id, atom.getElement(), newFragment);
+			for (String newLocant : newLocants) {
+				newAtom.addLocant(newLocant);
+			}
 			newAtom.setCharge(atom.getCharge());
-			newAtom.setSpareValency(atom.getSpareValency());
+			newAtom.setSpareValency(atom.hasSpareValency());
 			if (atom.getAtomParityElement() != null){
 				newAtom.setAtomParityElement(new Element(atom.getAtomParityElement()));
 			}
@@ -416,7 +316,7 @@ class FragmentManager {
 			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
 			newAtom.setNotes(new HashMap<String, String>(atom.getNotes()));
 			newFragment.addAtom(newAtom);
-			idMap.put(atom.getID(),ID);
+			idMap.put(atom.getID(),id);
 		}
         for (OutID outID : outIDs) {
             newFragment.addOutID(idMap.get(outID.id), outID.valency, outID.setExplicitly);
@@ -428,134 +328,16 @@ class FragmentManager {
             newFragment.addInID(idMap.get(inID.id), inID.valency);
         }
 		newFragment.setDefaultInID(idMap.get(defaultInId));
-		List<Bond> bondList =originalFragment.getBondList();
-		for (Bond bond : bondList) {
-			Bond newBond=new Bond(newFragment.getAtomByIDOrThrow(idMap.get(bond.getFrom())),newFragment.getAtomByIDOrThrow(idMap.get(bond.getTo())), bond.getOrder());
+		Set<Bond> bondSet =originalFragment.getBondSet();
+		for (Bond bond : bondSet) {
+			Bond newBond = createBond(newFragment.getAtomByIDOrThrow(idMap.get(bond.getFrom())),newFragment.getAtomByIDOrThrow(idMap.get(bond.getTo())), bond.getOrder());
 			newBond.setSmilesStereochemistry(bond.getSmilesStereochemistry());
 			if (bond.getBondStereoElement() != null){
 				newBond.setBondStereoElement(new Element(bond.getBondStereoElement()));
 			}
-			newFragment.addBond(newBond);
 		}
 		addFragment(newFragment);
 		return newFragment;
-	}
-
-	static void relabelFusedRingSystem(Fragment fusedring){
-		relabelFusedRingSystem(fusedring.getAtomList());
-	}
-
-	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
-	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
-	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
-	 */
-	static void relabelFusedRingSystem(List<Atom> atomList) {
-		int locantVal = 0;
-		char locantLetter = 'a';
-		for (Atom atom : atomList) {
-			atom.clearLocants();
-		}
-		for (Atom atom : atomList) {
-			if(!atom.getElement().equals("C") || atom.getBonds().size() < 3) {
-				locantVal++;
-				locantLetter = 'a';
-				atom.addLocant(Integer.toString(locantVal));
-			} else {
-				atom.addLocant(Integer.toString(locantVal) + locantLetter);
-				locantLetter++;
-			}
-		}
-	}
-
-	/**
-	 * Assign element locants to groups/suffixes. These are in addition to any numerical locants that are present.
-	 * Adds primes to make each locant unique.
-	 * For groups a locant is not given to carbon atoms
-	 * If an element appears in a suffix then element locants are not assigned to occurrences of that element in the parent group
-	 * @param suffixableFragment
-	 * @param suffixFragments
-	 */
-	static void assignElementLocants(Fragment suffixableFragment, ArrayList<Fragment> suffixFragments) {
-		HashMap<String,Integer> elementCount =new HashMap<String,Integer>();//keeps track of how many times each element has been seen
-
-		HashSet<Atom> atomsToIgnore = new HashSet<Atom>();//atoms which already have a symbolic locant
-		ArrayList<Fragment> allFragments =new ArrayList<Fragment>(suffixFragments);
-		allFragments.add(suffixableFragment);
-		/*
-		 * First check whether any element locants have already been assigned, these will take precedence
-		 */
-		for (Fragment fragment : allFragments) {
-			List<Atom> atomList =fragment.getAtomList();
-			for (Atom atom : atomList) {
-				List<String> elementSymbolLocants =atom.getElementSymbolLocants();
-				for (String locant : elementSymbolLocants) {
-					int primeCount =0;
-					for(int i=0;i<locant.length();i++) {
-						if(locant.charAt(i) == '\'') primeCount++;
-					}
-					String element =locant.substring(0, locant.length()-primeCount);
-					if (elementCount.get(element)==null || (elementCount.get(element) < primeCount +1)){
-						elementCount.put(element, primeCount +1);
-					}
-					atomsToIgnore.add(atom);
-				}
-			}
-		}
-
-		for (Fragment fragment : suffixFragments) {
-			List<Atom> atomList =fragment.getAtomList();
-
-			/*
-			 * Sort them such that single bonded atoms are higher priority than doubled bonded atoms
-			 */
-			Collections.sort(atomList, new SortAtomsForElementSymbols());
-			for (Atom atom : atomList) {//add the locants
-				if (atomsToIgnore.contains(atom)){continue;}
-				String element =atom.getElement();
-				if (elementCount.get(element)==null){
-					atom.addLocant(element);
-					elementCount.put(element,1);
-				}
-				else{
-					int count =elementCount.get(element);
-					atom.addLocant(element + StringTools.multiplyString("'", count));
-					elementCount.put(element, count +1);
-				}
-			}
-		}
-		HashSet<String> elementToIgnore = new HashSet<String>(elementCount.keySet());
-		elementCount =new HashMap<String,Integer>();
-		List<Atom> atomList =suffixableFragment.getAtomList();
-		Atom atomToAddCLabelTo=null;//only add a C label if there is only one C in the main group
-		for (Atom atom : atomList) {
-			if (atomsToIgnore.contains(atom)){continue;}
-			String element =atom.getElement();
-			if (elementToIgnore.contains(element)){
-				continue;
-			}
-			if (element.equals("C")){
-				if (atomToAddCLabelTo !=null){
-					elementToIgnore.add("C");
-					atomToAddCLabelTo=null;
-				}
-				else{
-					atomToAddCLabelTo =atom;
-				}
-				continue;
-			}
-			if (elementCount.get(element)==null){
-				atom.addLocant(element);
-				elementCount.put(element,1);
-			}
-			else{
-				int count =elementCount.get(element);
-				atom.addLocant(element + StringTools.multiplyString("'", count));
-				elementCount.put(element, count +1);
-			}
-		}
-		if (atomToAddCLabelTo !=null){
-			atomToAddCLabelTo.addLocant("C");
-		}
 	}
 
 	/**
@@ -614,7 +396,7 @@ class FragmentManager {
 			Fragment newFragment2 = oldNewFragmentMapping.get(originalFragment2);
 			Atom fromAtom = newFragment1.getAtomList().get(originalFragment1.getAtomList().indexOf(originalFromAtom));
 			Atom toAtom = newFragment2.getAtomList().get(originalFragment2.getAtomList().indexOf(originalToAtom));
-			attachFragments(fromAtom, toAtom, bond.getOrder());
+			createBond(fromAtom, toAtom, bond.getOrder());
 		}
 		return clone;
 	}
@@ -633,7 +415,7 @@ class FragmentManager {
 			throw new StructureBuildingException("Replacing atom and terminal should be different fragments");
 		}
 		List<Atom> atomNeighbours = terminalAtom.getAtomNeighbours();
-		if (atomNeighbours.size() > 1 || (atomNeighbours.size() == 1 &&  terminalAtom.getOutValency() >0)){
+		if (atomNeighbours.size() > 1){
 			throw new StructureBuildingException("Atom to be attached to fragment should only have one bond");
 		}
 		terminalAtom.setElement(atomThatReplacesTerminal.getElement());
@@ -643,24 +425,33 @@ class FragmentManager {
 			terminalAtom.addLocant(locant);
 		}
 
-		parentFrag.importFrag(childFrag);
+		incorporateFragment(childFrag, parentFrag);
 		List<Atom> neighbours = atomThatReplacesTerminal.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			parentFrag.addBond(new Bond(terminalAtom, neighbour, childFrag.findBond(atomThatReplacesTerminal, neighbour).getOrder()));
+			createBond(terminalAtom, neighbour, childFrag.findBond(atomThatReplacesTerminal, neighbour).getOrder());
 		}
-		parentFrag.removeAtom(atomThatReplacesTerminal, this);
-		removeFragment(childFrag);
+		removeAtomAndAssociatedBonds(atomThatReplacesTerminal);
 	}
 
 	/**
 	 * Checks if this bond is an inter fragment bond and if it is removes it
 	 * @param bond
 	 */
-	void removeInterFragmentBondIfPresent(Bond bond) {
+	private void removeInterFragmentBondIfPresent(Bond bond) {
 		if (bondPile.remove(bond)){
 			fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
 			fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
 		}
+	}
+	
+	/**
+	 * Adds a bond to the inter fragment bond list and fragment to inter-fragment bond mappings
+	 * @param bond
+	 */
+	private void addInterFragmentBond(Bond bond) {
+		bondPile.add(bond);
+		fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).add(bond);
+		fragToInterFragmentBond.get(bond.getToAtom().getFrag()).add(bond);
 	}
 
 	/**
@@ -670,5 +461,55 @@ class FragmentManager {
 	 */
 	Set<Bond> getInterFragmentBonds(Fragment frag) {
 		return fragToInterFragmentBond.get(frag);
+	}
+
+	/**
+	 * Create a new Atom of the given element belonging to the given fragment
+	 * @param elementSymbol
+	 * @param frag
+	 * @return Atom
+	 * @throws StructureBuildingException
+	 */
+	Atom createAtom(String elementSymbol, Fragment frag) throws StructureBuildingException {
+		Atom a = new Atom(idManager.getNextID(), elementSymbol, frag);
+		frag.addAtom(a);
+		return a;
+	}
+	
+	/**
+	 * Create a new bond between two atoms.
+	 * The bond is associated with these atoms.
+	 * It is also listed as an inter-fragment bond or associated with a fragment
+	 * @param fromAtom
+	 * @param toAtom
+	 * @param bondOrder
+	 * @return Bond
+	 */
+	Bond createBond(Atom fromAtom, Atom toAtom, int bondOrder) {
+		Bond b = new Bond(fromAtom, toAtom, bondOrder);
+		fromAtom.addBond(b);
+		toAtom.addBond(b);
+		if (fromAtom.getFrag() == toAtom.getFrag()){
+			fromAtom.getFrag().addBond(b);
+		}
+		else{
+			addInterFragmentBond(b);
+		}
+		return b;
+	}
+	
+	void removeAtomAndAssociatedBonds(Atom atom){
+		ArrayList<Bond> bondsToBeRemoved=new ArrayList<Bond>(atom.getBonds());
+		for (Bond bond : bondsToBeRemoved) {
+			removeBond(bond);
+		}
+		atom.getFrag().removeAtom(atom);
+	}
+	
+	void removeBond(Bond bond){
+		bond.getFromAtom().getFrag().removeBond(bond);
+		bond.getFromAtom().removeBond(bond);
+		bond.getToAtom().removeBond(bond);
+		removeInterFragmentBondIfPresent(bond);
 	}
 }

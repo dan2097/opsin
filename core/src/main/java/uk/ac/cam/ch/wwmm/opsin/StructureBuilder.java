@@ -158,7 +158,7 @@ class StructureBuilder {
 				ateAtom =ateGroups.getFunctionalAtom(0);
 				ateGroups.removeFunctionalID(0);
 			}
-			state.fragManager.attachFragments(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
+			state.fragManager.createBond(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
 			substituentsBr.removeOutID(0);
 			ateAtom.setCharge(0);
 		}
@@ -255,15 +255,15 @@ class StructureBuilder {
 		Atom outAtom =substituent1.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 		substituent1.removeOutID(0);
 		if (diValentGroup.getOutIDs().size()==1){//c.f. peroxide where it is a linker
-			state.fragManager.attachFragments(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getOutID(0).id), 1);
+			state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getOutID(0).id), 1);
 			diValentGroup.removeOutID(0);
 		}
 		else{
-			state.fragManager.attachFragments(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+			state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
 		}
 		outAtom = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 		substituent2.removeOutID(0);
-		state.fragManager.attachFragments(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+		state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
 		resolveTrailingFullWords(state, words, wordIndice + 1);
 	}
 
@@ -306,7 +306,7 @@ class StructureBuilder {
 			Fragment ideFrag = state.xmlFragmentMap.get(ideGroup);
 			Atom ideAtom = ideFrag.getAtomByIDOrThrow(ideFrag.getDefaultInID());
 			Atom subAtom=substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-			state.fragManager.attachFragments(ideAtom, subAtom, 1);
+			state.fragManager.createBond(ideAtom, subAtom, 1);
 			substituentBR.removeOutID(0);
 			ideAtom.setCharge(ideAtom.getCharge()+1);
 		}
@@ -338,7 +338,7 @@ class StructureBuilder {
 			if (substituentBr.getOutID(i).valency !=1){
 				throw new StructureBuildingException("OutID has unexpected valency. Expected 1. Actual: " + substituentBr.getOutID(i).valency);
 			}
-			state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), 1);
+			state.fragManager.createBond(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), 1);
 			substituentBr.removeOutID(i);
 		}
 		resolveTrailingFullWords(state, words, wordIndice);
@@ -378,7 +378,7 @@ class StructureBuilder {
 				if (substituentBr.getOutID(0).valency!=1){
 					throw new StructureBuildingException("Substituent was expected to have only have an outgoing valency of 1");
 				}
-				state.fragManager.attachFragments(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
+				state.fragManager.createBond(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
 				substituentBr.removeOutID(0);
 			}
 			else {
@@ -466,7 +466,7 @@ class StructureBuilder {
 				throw new StructureBuildingException("OutID has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutID(i).valency);
 			}
 			theDiRadical.removeOutID(0);
-			state.fragManager.attachFragments(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
+			state.fragManager.createBond(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
 		}
 		resolveTrailingFullWords(state, words, wordIndice + 2);
 	}
@@ -522,10 +522,10 @@ class StructureBuilder {
 					atom.removeLocant("O");
 				}
 			}
-			Atom addedHydroxy = new Atom(state.idManager.getNextID(), "O", "O", parentFrag);
+			Atom addedHydroxy = state.fragManager.createAtom("O", parentFrag);
+			addedHydroxy.addLocant("O");
 			parentFrag.addAtom(addedHydroxy);
-			Bond newBond =new Bond(atomToBeReplaced, addedHydroxy, 1);
-			parentFrag.addBond(newBond);
+			state.fragManager.createBond(atomToBeReplaced, addedHydroxy, 1);
 			if (i== 0 && substituentBR !=null){
 				if (substituentBR.getOutIDCount() !=1){
 					throw new StructureBuildingException("Expected outID on substituent before oxime");
@@ -534,7 +534,7 @@ class StructureBuilder {
 				if (locant !=null && !locant.startsWith("O")){
 					throw new StructureBuildingException("The only locant expected for a substituent connecting to an oxime is an O. Found: " + locant);
 				}
-				state.fragManager.attachFragments(addedHydroxy, substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), substituentBR.getOutID(0).valency);
+				state.fragManager.createBond(addedHydroxy, substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), substituentBR.getOutID(0).valency);
 				substituentBR.removeOutID(0);
 			}
 		}
@@ -551,10 +551,10 @@ class StructureBuilder {
 		if (polymerBr.getOutIDCount() ==2 && polymerBr.getInIDCount()==0){
 			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");//TODO stop using actual atoms (confuses E/Z!)
-			state.fragManager.attachFragments(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(0).valency);
+			state.fragManager.createBond(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(0).valency);
 			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
 			rGroup =state.fragManager.buildSMILES("[Rn]");
-			state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(1).valency);
+			state.fragManager.createBond(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(1).valency);
 			polymerBr.removeAllOutIDs();
 		}
 		else{
@@ -689,11 +689,8 @@ class StructureBuilder {
 				}
 				int currentId = 0;
 				for (int i = 1; i <= explicitHydrogensToAdd; i++) {
-					currentId = state.idManager.getNextID();
-					Atom a = new Atom(currentId, "H", fragment);
-					fragment.addAtom(a);
-					Bond b =new Bond(parentAtom, a, 1);
-					fragment.addBond(b);
+					Atom a = state.fragManager.createAtom("H", fragment);
+					state.fragManager.createBond(parentAtom, a, 1);
 				}
 				if (parentAtom.getAtomParityElement()!=null){
 					if (explicitHydrogensToAdd >1){

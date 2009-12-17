@@ -2,6 +2,10 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+
+import nu.xom.Builder;
+import nu.xom.Element;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,18 +13,19 @@ import org.junit.Test;
 
 public class CMLFragmentBuilderTest {
 
-	IDManager idManager;
-	CMLFragmentBuilder cmlBuilder;
+	private CMLFragmentBuilder cmlBuilder;
+	private FragmentManager fm;
+	private Builder builder = new Builder();
 
 	@Before
 	public void setUp() throws Exception {
-		idManager = new IDManager();
 		cmlBuilder = new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/"));
+		fm = new FragmentManager(new SMILESFragmentBuilder(), cmlBuilder, new IDManager());
 	}
 
 	@Test
 	public void testBuildStringString() throws Exception {
-		Fragment benzene = cmlBuilder.build("benzene", "null", "null", idManager);//hydrogens are implicit
+		Fragment benzene = cmlBuilder.build("benzene", "null", "null", fm);//hydrogens are implicit
 		assertNotNull("Got benzene", benzene);
 		assertEquals("Benzene is correct", "<cml xmlns=\"http://www.xml-cml.org/schema\" " +
 				"xmlns:cmlDict=\"http://www.xml-cml.org/dictionary/cml/\" " +
@@ -41,6 +46,17 @@ public class CMLFragmentBuilderTest {
 				"<bond id=\"a5_a6\" atomRefs2=\"a5 a6\" order=\"D\" />" +
 				"<bond id=\"a6_a1\" atomRefs2=\"a6 a1\" order=\"S\" />" +
 				"</bondArray></molecule></cml>", benzene.toCMLMolecule("benzene").toXML());
+	}
+	
+	@Test
+	public void testAtom() throws Exception {
+		Element cmlAtom = builder.build("<atom id=\"a10\" elementType=\"C\" formalCharge=\"-1\">" +
+				"<label value=\"1\" /></atom>", "/localhost").getRootElement();
+		Atom atom =cmlBuilder.buildAtomFromCML(fm, cmlAtom, mock(Fragment.class));
+		assertNotNull("Got atom", atom);
+		assertEquals("Id = 1", 1, atom.getID());
+		assertEquals("Element = C", "C", atom.getElement());
+		assertEquals("Charge = -1", -1, atom.getCharge());
 	}
 
 }

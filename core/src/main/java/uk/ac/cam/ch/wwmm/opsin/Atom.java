@@ -1,14 +1,16 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
-import nu.xom.Elements;
 
 /**
  * An atom. Carries information about which fragment it is in, and an ID
@@ -39,7 +41,7 @@ class Atom {
 	private Element atomParityElement = null;
 
 	/**The bonds that involve the atom*/
-	private final List<Bond> bonds = new ArrayList<Bond>();
+	private final Set<Bond> bonds = new LinkedHashSet<Bond>();
 
 	/**A hashmap in which notes can be associated with the atom. */
 	private HashMap<String,String> notes = new HashMap<String, String>();
@@ -47,11 +49,11 @@ class Atom {
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
 
-	/**The number of not-to-implicit-hydrogen bonds going to or from the atom,
-	 * that are not currently assigned. For example, benzene could be temporarily represented
-	 * by six singly-bonded atoms, each with a spare valency of one, and later converted into
-	 * a fully-specified valence structure.*/
-	private int spareValency = 0;
+	/** Whether an atom is part of a delocalised set of double bonds. A double bond in a kekule structure
+	 * can be mapped to a single bond with this attribute set to true on both atoms that were in the double bond
+	 * For example, benzene could be temporarily represented by six singly-bonded atoms, each with a set
+	 * spare valency attribute , and later converted into a fully-specified valence structure.*/
+	private boolean spareValency = false;
 
 	/**The total bond order of all bonds that are expected to be used for inter fragment bonding
 	 * e.g. in butan-2-ylidene this would be 2 for the atom at position 2 and 0 for the other 3 */
@@ -79,33 +81,8 @@ class Atom {
 	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
 	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 
-	/** Builds an Atom from scratch.
-	 * @param ID The ID number, unique to the atom in the molecule being built
-	 * @param locants A list of locants, typically numerical but can also include something like N
-	 * @param element The atomic symbol of the chemical element
-	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException
-	 */
-	Atom(int ID, List<String> locants, String element, Fragment frag) throws StructureBuildingException {
-		this(ID, element, frag);
-		for (String locant : locants) {
-			addLocant(locant);
-		}
-	}
-
-	/** Builds an Atom from scratch.
-	 * @param ID The ID number, unique to the atom in the molecule being built
-	 * @param locant A locant, typically numerical but could also be something like N
-	 * @param element The atomic symbol of the chemical element
-	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException
-	 */
-	Atom(int ID, String locant, String element, Fragment frag) throws StructureBuildingException {
-		this(ID, element, frag);
-		addLocant(locant);
-	}
-
-	/** Builds an Atom from scratch.
+	/** DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	 * Builds an Atom from scratch.
 	 * @param ID The ID number, unique to the atom in the molecule being built
 	 * @param element The atomic symbol of the chemical element
 	 * @param frag the Fragment to contain the Atom
@@ -122,31 +99,6 @@ class Atom {
 		this.ID = ID;
 		this.element = element;
 		this.type =frag.getType();
-	}
-
-	/**Builds an Atom from a CML Atom tag. Looks at elementType and formalCharge
-	 * attributes, hydrogenCount, and label tags contained within. id attributes are ignored.
-	 *
-	 * @param ID The ID number, unique to the atom in the molecule being built
-	 * @param cmlAtom The nu.xom.Element for the Atom in CML
-	 * @param frag the Fragment to contain the Atom
-	 */
-	Atom(int ID, Element cmlAtom, Fragment frag) {
-		this.frag = frag;
-		this.ID = ID;
-		element = cmlAtom.getAttributeValue("elementType");
-		this.type =frag.getType();
-		Elements cmlLocants = cmlAtom.getChildElements("label");
-		for(int i=0;i<cmlLocants.size();i++)
-			addLocant(cmlLocants.get(0).getAttributeValue("value"));
-		String chargeStr = cmlAtom.getAttributeValue("formalCharge");
-		if(chargeStr != null){
-			charge = Integer.parseInt(chargeStr);
-		}
-		String hcStr = cmlAtom.getAttributeValue("hydrogenCount");
-		if(hcStr != null) {
-			explicitHydrogens = Integer.parseInt(hcStr);
-		}
 	}
 
 	/**Produces a nu.xom.Element for a CML Atom tag, containing
@@ -353,6 +305,15 @@ class Atom {
 	int getCharge() {
 		return charge;
 	}
+	
+	/**Modifies the charge of this atom by the amount given. This can be a negative integer
+	 *
+	 * @param c The integer amount to modify the atom's charge by
+	 */
+	void addCharge(int c) {
+		charge +=c;
+		valency=null;//valency will now be non-standard
+	}
 
 	/**Sets the formal charge on the atom.
 	 *
@@ -374,12 +335,9 @@ class Atom {
 	/**Removes a bond to the atom
 	 *
 	 * @param b The bond to be removed
-	 * @throws StructureBuildingException
 	 */
-	void removeBond(Bond b) throws StructureBuildingException {
-		if(!bonds.remove(b)){
-			throw new StructureBuildingException("Atom is not associated with this bond!");
-		}
+	boolean removeBond(Bond b) {
+		return bonds.remove(b);
 	}
 
 	void checkIncomingValency() throws StructureBuildingException {
@@ -400,39 +358,20 @@ class Atom {
 		return v;
 	}
 
-	/**Gets the spare valency on the atom.
+	/**Does the atom have spare valency to form double bonds?
 	 *
-	 * @return The spare valency
+	 * @return true if atom has spare valency
 	 */
-	int getSpareValency() {
+	boolean hasSpareValency() {
 		return spareValency;
 	}
 
-	/**Sets the spare valency on the atom.
+	/**Set whether an atom has spare valency
 	 *
 	 * @param sv The spare valency
 	 */
-	void setSpareValency(int sv) {
+	void setSpareValency(boolean sv) {
 		spareValency = sv;
-	}
-
-	/**Adds to the spare valency on the atom.
-	 *
-	 * @param sv The spare valency to be added
-	 */
-	void addSpareValency(int sv) {
-		spareValency += sv;
-	}
-
-	/**Subtracts from the spare valency on the atom.
-	 *
-	 * @param sv The spare valency to be subtracted
-	 * @throws StructureBuildingException
-	 */
-	void subtractSpareValency(int sv) throws StructureBuildingException {
-		if(spareValency < 1) throw new StructureBuildingException("Atom with locants " +
-				locants + " has no spare valency to reduce.");
-		spareValency -= sv;
 	}
 
 	/**Gets the total bond order of the bonds expected to be created from this atom for inter fragment bonding
@@ -479,8 +418,8 @@ class Atom {
 		return notes.get(key);
 	}
 
-	List<Bond> getBonds() {
-		return bonds;
+	Set<Bond> getBonds() {
+		return Collections.unmodifiableSet(bonds);
 	}
 
 	/**Gets a list of atoms that connect to the atom
@@ -570,7 +509,7 @@ class Atom {
 	 * @throws StructureBuildingException
 	 */
 	void ensureSVIsConsistantWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
-		if (spareValency > 0 ){
+		if (spareValency){
 			Integer maxValency;
 			if (valency!=null){
 				maxValency=valency;
@@ -591,18 +530,24 @@ class Atom {
 				else{
 					maxSpareValency =maxValency-frag.getIntraFragmentIncomingValency(this);
 				}
-				if (maxSpareValency < spareValency){
-					if (element.equals("N")&& spareValency==1 && charge==0){//special case where a charge has erroneously been omitted e.g. 1-methylpyridine
+				if (maxSpareValency < 1){
+					if (element.equals("N")&& charge==0){//special case where a charge has erroneously been omitted e.g. 1-methylpyridine
 						setNote("Possibly Should Be Charged", "1");
 					}
-					if (maxSpareValency > 0 ){
-						setSpareValency(maxSpareValency);
-					}
-					else{
-						setSpareValency(0);
-					}
+					setSpareValency(false);
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Returns the the first bond in the atom's bondSet or null if it has no bonds
+	 * @return
+	 */
+	Bond getFirstBond() {
+		for (Bond b: bonds) {
+			return b;
+		}
+		return null;
 	}
 }
