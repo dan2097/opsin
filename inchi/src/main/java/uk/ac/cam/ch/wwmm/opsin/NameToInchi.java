@@ -35,10 +35,17 @@ public class NameToInchi {
 	 */
 	public String parseToInchi(String name, boolean verbose) {
 		OpsinResult result = n2s.parseChemicalName(name, verbose);
-		if (result.getStructure() == null){
-			return null;
-		}
-		else{
+		return convertResultToInChI(result, verbose);
+	}
+	
+	/**
+	 * Converts an OPSIN result to InChI. Null is returned if this conversion fails
+	 * @param result
+	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
+	 * @return String InChI
+	 */
+	public String convertResultToInChI(OpsinResult result, boolean verbose){
+		if (result.getStructure() !=null){
 			String inchi = null;
 			try{
 				inchi = opsinFragmentToInchi(result.getStructure(), verbose);
@@ -53,6 +60,7 @@ public class NameToInchi {
 			if(verbose) System.out.println(inchi);
 			return inchi;
 		}
+		return null;
 	}
 
 	private String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{
