@@ -32,10 +32,17 @@ public class NameToDepiction {
 	 */
 	public RenderedImage parseToDepiction(String name, boolean verbose) {
 		OpsinResult result = n2s.parseChemicalName(name, verbose);
-		if (result.getStructure() == null){
-			return null;
-		}
-		else{
+		return convertResultToDepction(result, verbose);
+	}
+	
+	/**
+	 * Converts an OPSIN result to a rendered image. Null is returned if this conversion fails
+	 * @param result
+	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
+	 * @return RenderedImage depiction of molecule
+	 */
+	public RenderedImage convertResultToDepction(OpsinResult result, boolean verbose){
+		if (result.getStructure() !=null){
 			RenderedImage depiction = null;
 			try{
 				depiction = opsinFragmentToDepiction(result.getStructure(), verbose);
@@ -49,6 +56,7 @@ public class NameToDepiction {
 			if (depiction ==null){return null;}//depiction failed
 			return depiction;
 		}
+		return null;
 	}
 
 	private RenderedImage opsinFragmentToDepiction(Fragment frag, boolean verbose) {

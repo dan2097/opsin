@@ -25,10 +25,17 @@ public class NameToSmiles {
 	 */
 	public String parseToSmiles(String name, boolean verbose) {
 		OpsinResult result = n2s.parseChemicalName(name, verbose);
-		if (result.getStructure() == null){
-			return null;
-		}
-		else{
+		return convertResultToSMILES(result, verbose);
+	}
+	
+	/**
+	 * Converts an OPSIN result to SMILES. Null is returned if this conversion fails
+	 * @param result
+	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
+	 * @return String SMILES
+	 */
+	public String convertResultToSMILES(OpsinResult result, boolean verbose){
+		if (result.getStructure() !=null){
 			String smiles = null;
 			try{
 				smiles = opsinFragmentToSmiles(result.getStructure(), verbose);
@@ -43,8 +50,8 @@ public class NameToSmiles {
 			if(verbose) System.out.println(smiles);
 			return smiles;
 		}
+		return null;
 	}
-	
 
 	private String opsinFragmentToSmiles(Fragment frag, boolean verbose){
 		OpsinToChemKitWrapper chemKitWrapper = new OpsinToChemKitWrapper(frag);

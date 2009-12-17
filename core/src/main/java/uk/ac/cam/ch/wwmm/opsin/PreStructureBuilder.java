@@ -2659,33 +2659,27 @@ class PreStructureBuilder {
 				} else if(suffixRuleTagName.equals("changecharge")) {
 					int chargeChange =Integer.parseInt(suffixRuleTag.getAttributeValue("charge"));
 					if(idOnParentFragToUse==0){
-						//Typically if a locant has not been specified and it's an ium then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
-						//It's extremely rare to want a carbocation
-						if (chargeChange == 1){
-							Atom possibleAtom =null;
-							for (Atom a : atomList) {
-								String element =a.getElement();
-								if (element.equals("N")){
+						//Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
+						//It's extremely rare to want a carbocation so any heteroatom is preferred with preference given to N
+						Atom possibleAtom =null;
+						for (Atom a : atomList) {
+							String element =a.getElement();
+							if (element.equals("N")){
+								possibleAtom =a;
+								break;
+							}
+							else if (!element.equals("C")){
+								if (possibleAtom == null){
 									possibleAtom =a;
-									break;
 								}
-								else if (!element.equals("C")){
-									if (possibleAtom == null){
-										possibleAtom =a;
-									}
-								}
-							}
-							if (possibleAtom==null){
-								idOnParentFragToUse =atomList.get(defaultAtom).getID();
-								defaultAtom++;
-							}
-							else{
-								idOnParentFragToUse =possibleAtom.getID();
 							}
 						}
-						else{
+						if (possibleAtom==null){
 							idOnParentFragToUse =atomList.get(defaultAtom).getID();
 							defaultAtom++;
+						}
+						else{
+							idOnParentFragToUse =possibleAtom.getID();
 						}
 					}
 					frag.getAtomByIDOrThrow(idOnParentFragToUse).addCharge(chargeChange);

@@ -47,6 +47,7 @@
 
 <!--some of these should be moved to a groupStem file or some kind of acid file -->
   <token value="N1C(=O)NC(=O)C(=O)C(=O)1" labels="1/2//3/4//5//6/" valType="SMILES">alloxane</token>
+  <token value="[N-]" labels="none" valType="SMILES">amide</token>
   <token value="N[O-]" labels="none" valType="SMILES">aminoxide</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
   <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">benzidine</token>
