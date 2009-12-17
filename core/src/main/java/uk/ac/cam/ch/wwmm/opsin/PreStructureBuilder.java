@@ -624,7 +624,7 @@ class PreStructureBuilder {
 				else{
 					throw new PostProcessingException("malformed addBond tag");
 				}
-				state.fragManager.unsaturate(atomOnParentFrag.getID(), Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
+				FragmentTools.unsaturate(atomOnParentFrag.getID(), Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
 			}
 		}
 	}
@@ -946,8 +946,13 @@ class PreStructureBuilder {
 			if (suffixes.size() !=2){
 				throw new PostProcessingException("Expected two suffixes fragments for cyclic imide");
 			}
-			Atom nitrogen =suffixFragments.get(0).getAtomList().get(1);//amide
-			if (!nitrogen.getElement().equals("N")){
+			Atom nitrogen =null;
+			for (Atom a : suffixFragments.get(0).getAtomList()) {
+				if (a.getElement().equals("N")){//amide
+					nitrogen =a;
+				}
+			}
+			if (nitrogen ==null){
 				throw new PostProcessingException("Nitrogen not found where nitrogen expected");
 			}
 			Atom carbon = suffixableFragment.getAtomByIDOrThrow(Integer.parseInt(suffixes.get(1).getAttributeValue("locantID")));
@@ -958,7 +963,7 @@ class PreStructureBuilder {
 			for (Element suffix : suffixes) {//suffixes have already been resolved so need to be detached to avoid being passed to resolveSuffixes later
 				suffix.detach();
 			}
-			suffixableFragment.addBond(new Bond(nitrogen, carbon, 1));//join the N of the amide to the carbon of the acid to form the cyclic imide
+			state.fragManager.createBond(nitrogen, carbon, 1);//join the N of the amide to the carbon of the acid to form the cyclic imide
 		}
 	}
 
@@ -1017,12 +1022,11 @@ class PreStructureBuilder {
             }
             Fragment suffixFrag = null;
             /*
-                * Temp fragments are build for each addGroup rule and then merged into suffixFrag
-                */
+             * Temp fragments are build for each addGroup rule and then merged into suffixFrag
+             */
             for (int j = 0; j < suffixRuleTags.size(); j++) {
                 Element suffixRuleTag = suffixRuleTags.get(j);
                 if (suffixRuleTag.getLocalName().equals("addgroup")) {
-                    Fragment tempSuffixFrag = null;
                     String bondOrderStr = suffixRuleTag.getAttributeValue("bondOrder");
                     int bondOrder = 1;
                     if (bondOrderStr != null) bondOrder = Integer.parseInt(bondOrderStr);
@@ -1031,6 +1035,7 @@ class PreStructureBuilder {
                         labels = suffixRuleTag.getAttributeValue("labels");
                     }
 
+                    Fragment tempSuffixFrag = null;
                     if (suffixRuleTag.getAttribute("setsOutID") != null) {
                         tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "outSuffix", labels);
                         if (tempSuffixFrag.getOutIDs().size() == 0) {
@@ -1053,15 +1058,12 @@ class PreStructureBuilder {
 
 
                     if (suffixFrag == null) {
-                        suffixFrag = tempSuffixFrag;
-                    } else {
-                        suffixFrag.importFrag(tempSuffixFrag);
-                        if (suffixRuleTag.getAttribute("setsDefaultInID") != null) {
-                            suffixFrag.setDefaultInID(tempSuffixFrag.getDefaultInID());
-                        }
-                        state.fragManager.removeFragment(tempSuffixFrag);
+                    	suffixFrag = state.fragManager.buildSMILES("[R]", "suffix", "suffix" , "none");
                     }
-                    suffixFrag.addInID(tempSuffixFrag.getDefaultInID(), bondOrder);
+                    state.fragManager.incorporateFragment(tempSuffixFrag, tempSuffixFrag.getDefaultInID(), suffixFrag, suffixFrag.getIdOfFirstAtom(), bondOrder);
+                    if (suffixRuleTag.getAttribute("setsDefaultInID") != null) {
+                        suffixFrag.setDefaultInID(tempSuffixFrag.getDefaultInID());
+                    }
                 }
             }
             if (suffixFrag != null) {
@@ -1125,7 +1127,7 @@ class PreStructureBuilder {
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && neighbour.getFrag().equals(frag)){
 				if (frag.findBond(atom, neighbour).getOrder()==1){
-					frag.removeAtom(neighbour, state.fragManager);
+					state.fragManager.removeAtomAndAssociatedBonds(neighbour);
 					atomsRemoved++;
 				}
 			}
@@ -1183,8 +1185,8 @@ class PreStructureBuilder {
 				LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
 				for (Atom a : atomList) {
 					if (a.getElement().equals("O")){//find terminal oxygens
-						if ((a.getBonds().size()==1 && a.getOutValency()==0)|| (a.getBonds().size()==0)){
-							int incomingValency =a.getOutValency() +a.getIncomingValency();
+						if (a.getBonds().size()==1){
+							int incomingValency = a.getIncomingValency();
 							if (incomingValency ==2){
 								doubleBondedOxygen.add(a);
 							}
@@ -1552,9 +1554,8 @@ class PreStructureBuilder {
 								List<Atom> atomList =suffixFrag.getAtomList();
 								for (Atom a : atomList) {
 									if (a.getElement().equals("O")){
-								    	int totalBondOrder =a.getIncomingValency();
-								    	totalBondOrder += a.getOutValency();//take into account the bond which hasn't been added yet to a main fragment
-										if (totalBondOrder==1 || (atomCount==1 && totalBondOrder==2)){
+								    	int incomingValency =a.getIncomingValency();
+										if (incomingValency==1 || (atomCount==1 && incomingValency==2)){
 											replaceableAtoms.add(a);
 										}
 									}
@@ -1709,21 +1710,6 @@ class PreStructureBuilder {
 	}
 
 	/**
-	 * Assigns Element symbols to groups and suffixes.
-	 * Suffixes have preference.
-	 * @param state
-	 * @param subOrRoot
-	 */
-	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) {
-		Elements groupsOfSubOrRoot = subOrRoot.getChildElements("group");
-		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
-		ArrayList<Fragment> suffixFragments =state.xmlSuffixMap.get(lastGroupElementInSubOrRoot);
-		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
-		FragmentManager.assignElementLocants(suffixableFragment, suffixFragments);
-	}
-
-
-	/**
 	 * Handles Hantzsch-Widman rings. Adds SMILES to the group corresponding to the ring's structure
 	 * @param state
 	 * @param subOrRoot
@@ -1783,7 +1769,7 @@ class PreStructureBuilder {
 					}
 					else if (specialRingInformation[0].equals("saturated")){
 						for (Atom a: hwRing.getAtomList()) {
-							a.setSpareValency(0);
+							a.setSpareValency(false);
 						}
 					}//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
 					for (int j = 1; j < specialRingInformation.length; j++) {
@@ -1845,8 +1831,8 @@ class PreStructureBuilder {
 					int defaultId=hwRing.getIdOfFirstAtom();
 					firstInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId);
 					secondInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId +1);
-					while (firstInDoubleBond.getSpareValency() != 0 || !ValencyChecker.checkValencyAvailableForBond(firstInDoubleBond, 1) ||
-							secondInDoubleBond.getSpareValency() != 0 || !ValencyChecker.checkValencyAvailableForBond(secondInDoubleBond, 1)){
+					while (firstInDoubleBond.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(firstInDoubleBond, 1) ||
+							secondInDoubleBond.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(secondInDoubleBond, 1)){
 						defaultId++;
 						firstInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId);
 						secondInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId +1);
@@ -1865,6 +1851,21 @@ class PreStructureBuilder {
 			}
 			XOMTools.setTextChild(group, name);
 		}
+	}
+
+
+	/**
+	 * Assigns Element symbols to groups and suffixes.
+	 * Suffixes have preference.
+	 * @param state
+	 * @param subOrRoot
+	 */
+	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) {
+		Elements groupsOfSubOrRoot = subOrRoot.getChildElements("group");
+		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
+		ArrayList<Fragment> suffixFragments =state.xmlSuffixMap.get(lastGroupElementInSubOrRoot);
+		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
+		FragmentTools.assignElementLocants(suffixableFragment, suffixFragments);
 	}
 
 
@@ -2599,9 +2600,8 @@ class PreStructureBuilder {
 				idOnParentFragToUse = firstAtomID;
 			}
 
-			String compoundLocant = null;
 			if (suffix.getAttribute("compoundLocant")!=null){
-				compoundLocant=suffix.getAttributeValue("compoundLocant");
+				throw new StructureBuildingException("Error: Compound locant assigned to suffix!");
 			}
 
 			Fragment suffixFrag =null;
@@ -2614,62 +2614,48 @@ class PreStructureBuilder {
 				}
 				if(suffixRuleTagName.equals("addgroup")) {
 					if (suffixFrag==null){
-						suffixFrag = suffixList.get(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
-						suffixList.remove(0);
+						if (suffixList.size() <=0){
+							throw new PostProcessingException("OPSIN Bug: Suffixlist should not be empty");
+						}
+						suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
 					}
-					InID connectingInfo = suffixFrag.getInID(0);
-					int bondOrder =connectingInfo.valency;
-					suffixFrag.removeInID(0);
+					if (suffixFrag.getFirstAtom().getBonds().size() <=0){
+						throw new PostProcessingException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
+					}
+					Bond bondToSuffix = suffixFrag.getFirstAtom().getFirstBond();
 					if(idOnParentFragToUse==0) {
 						if(suffixRuleTag.getAttribute("ketoneLocant") != null && suffixRuleTag.getAttributeValue("ketoneLocant").equals("yes")) {
-							if(defaultAtom == 0) defaultAtom = state.fragManager.findKetoneAtomIndice(frag, defaultAtom);
+							if(defaultAtom == 0) defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
 							idOnParentFragToUse = atomList.get(defaultAtom).getID();
 							defaultAtom++;
 						}
 						else{
 							idOnParentFragToUse =atomList.get(defaultAtom).getID();
 						}
-						idOnParentFragToUse =frag.getAtomByIdOrNextSuitableAtomOrThrow(idOnParentFragToUse, bondOrder).getID();
+						idOnParentFragToUse =frag.getAtomByIdOrNextSuitableAtomOrThrow(idOnParentFragToUse, bondToSuffix.getOrder()).getID();
 					}
 					//create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
-					Atom suffixAtom = suffixFrag.getAtomByIDOrThrow(connectingInfo.id);
-					Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
-					if (parentfragAtom.getCharge()==1 && parentfragAtom.getElement().equals("N") && suffixAtom.getElement().equals("O") && suffixAtom.getCharge()==0 && bondOrder ==2){//special case to cope with azinic acid and the like
-						suffixAtom.setCharge(-1);
-						bondOrder =1;
+					
+					Atom suffixAtom;
+					if (bondToSuffix.getToAtom().getElement().equals("R")){
+						suffixAtom = bondToSuffix.getFromAtom();
 					}
-					Bond newBond =new Bond(suffixAtom,parentfragAtom, bondOrder);
-					suffixFrag.getAtomByIDOrThrow(connectingInfo.id).addBond(newBond);
-					frag.getAtomByIDOrThrow(idOnParentFragToUse).addBond(newBond);
-					suffixFrag.addBond(newBond,false);
+					else{
+						suffixAtom = bondToSuffix.getToAtom();
+					}
+					Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
+					if (parentfragAtom.getCharge()==1 && parentfragAtom.getElement().equals("N") && suffixAtom.getElement().equals("O") && suffixAtom.getCharge()==0 && bondToSuffix.getOrder() ==2){//special case to cope with azinic acid and the like
+						suffixAtom.setCharge(-1);
+						bondToSuffix.setOrder(1);
+					}
+					state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
 					if(suffixRuleTag.getAttribute("setsDefaultInID") != null) {
 						frag.setDefaultInID(suffixFrag.getDefaultInID());
 					}
 					if (suffixValue.equals("one") && groupType.equals("ring")){//special case: one acts in a similar way to the hydro tag c.f. tetrahydrobenzen-1,4-dione
-						frag.getAtomByIDOrThrow(idOnParentFragToUse).setNote("OneSuffixAttached", "1");
+						parentfragAtom.setNote("OneSuffixAttached", "1");
 					}
-				} else if(suffixRuleTagName.equals("doublebond")) {
-					if(idOnParentFragToUse==0){
-						idOnParentFragToUse = atomList.get(defaultAtom).getID();
-						defaultAtom +=2;
-					}
-					if (compoundLocant!=null){
-						state.fragManager.unsaturate(idOnParentFragToUse, compoundLocant, 2, frag);
-					}
-					else{
-						state.fragManager.unsaturate(idOnParentFragToUse, 2, frag);
-					}
-				} else if(suffixRuleTagName.equals("triplebond")) {
-					if(idOnParentFragToUse==0){
-						idOnParentFragToUse = atomList.get(defaultAtom).getID();
-						defaultAtom +=2;
-					}
-					if (compoundLocant!=null){
-						state.fragManager.unsaturate(idOnParentFragToUse, compoundLocant, 3, frag);
-					}
-					else{
-						state.fragManager.unsaturate(idOnParentFragToUse, 3, frag);
-					}
+					state.fragManager.removeBond(bondToSuffix);
 				} else if(suffixRuleTagName.equals("changecharge")) {
 					int chargeChange =Integer.parseInt(suffixRuleTag.getAttributeValue("charge"));
 					if(idOnParentFragToUse==0){
@@ -2702,7 +2688,7 @@ class PreStructureBuilder {
 							defaultAtom++;
 						}
 					}
-					state.fragManager.changeCharge(idOnParentFragToUse, chargeChange, frag);
+					frag.getAtomByIDOrThrow(idOnParentFragToUse).addCharge(chargeChange);
 				}else if(suffixRuleTagName.equals("setOutID")) {
 					if(suffixRuleTag.getAttribute("outValency") != null) {
 						if(idOnParentFragToUse!=0){
@@ -2727,8 +2713,8 @@ class PreStructureBuilder {
 			}
 
 			if (suffixFrag!=null){//merge suffix frag and parent fragment
-				frag.importFrag(suffixFrag);
-				state.fragManager.removeFragment(suffixFrag);
+				state.fragManager.removeAtomAndAssociatedBonds(suffixFrag.getFirstAtom());//the dummy R atom
+				state.fragManager.incorporateFragment(suffixFrag, frag);
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -489,7 +490,7 @@ class FusedRingBuilder {
 			childAtomsToBeConnectedToParent.add(i, neighbours);
 		}
 		for (int i = 0; i < locantsOfChild.size(); i++) {
-			childRing.removeAtomByLocant(locantsOfChild.get(i), state.fragManager);
+			state.fragManager.removeAtomAndAssociatedBonds(childRing.getAtomByLocantOrThrow(locantsOfChild.get(i)));
 		}
 
 		parentAtomIds.add(0, (int)letterLocantsOfParent.get(0).charAt(0) -97);
@@ -508,7 +509,7 @@ class FusedRingBuilder {
 		for (int i = 0; i < parentAtomIds.size(); i++) {
 			for (Atom atom : childAtomsToBeConnectedToParent.get(i)) {
 				//System.out.println("Atom ID " + atom.getID() +" bonded to " +  parentAtomIds.get(i));
-				parentRing.addBond(new Bond(atom, sortedAtomsInParent.get(parentAtomIds.get(i)), 1));
+				state.fragManager.createBond(atom, sortedAtomsInParent.get(parentAtomIds.get(i)), 1);
 			}
 		}
 		state.fragManager.removeFragment(childRing);
@@ -621,7 +622,7 @@ class FusedRingBuilder {
 		// find the preferred numbering scheme then relabel with this scheme
 		Collections.sort( atomSequences, new SortAtomSequences());
 		fusedRing.setDefaultInID(atomSequences.get(0).get(0).getID());
-		FragmentManager.relabelFusedRingSystem(atomSequences.get(0));
+		FragmentTools.relabelFusedRingSystem(atomSequences.get(0));
 		fusedRing.reorderAtomCollection(atomSequences.get(0));
 
 	}
@@ -2008,7 +2009,7 @@ class FusedRingBuilder {
 		}
 
 		for (Atom atom : frag.getAtomList()){
-			List<Bond> bonds = atom.getBonds();
+			Set<Bond> bonds = atom.getBonds();
 			if (bonds.size()>2){
 				int nFused = 0;
 				for (Bond bond : bonds) {

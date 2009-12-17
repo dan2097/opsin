@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,7 @@ class Fragment {
 	private HashMap<String, Atom> atomMapFromLocant = new HashMap<String, Atom>();
 
 	/**The bonds in the fragment*/
-	private List<Bond> bondList = new ArrayList<Bond>();
+	private Set<Bond> bondSet = new LinkedHashSet<Bond>();
 
 	/**The type of the fragment, for the purpose of resolving suffixes*/
 	private String type = "";
@@ -65,9 +66,10 @@ class Fragment {
 	private static Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 	private static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
-	/**Makes an empty Fragment with a given type and subType.
-	 *
+	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	 * Makes an empty Fragment with a given type and subType.
 	 * @param type The type of the fragment
+	 * @param subType The subtype of the fragment 
 	 * @throws StructureBuildingException
 	 */
 	Fragment(String type, String subType) throws StructureBuildingException {
@@ -81,7 +83,8 @@ class Fragment {
 		this.subType = subType;
 	}
 
-	/**Makes an empty fragment with no specified type.*/
+	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	 * Makes an empty fragment with no specified type.*/
 	Fragment() {}
 
 	/**Produces a CML cml element, corresponding to the molecule. The cml element contains
@@ -109,7 +112,7 @@ class Fragment {
 			atomArray.appendChild(atom.toCMLAtom());
 		}
 		Element bondArray = new Element("bondArray");
-		for(Bond bond : bondList) {
+		for(Bond bond : bondSet) {
 			bondArray.appendChild(bond.toCMLBond());
 		}
 		molecule.appendChild(atomArray);
@@ -129,6 +132,7 @@ class Fragment {
 			atomMapFromLocant.put(locant, atom);
 		}
 		atomMapFromId.put(atom.getID(), atom);
+		atom.setFrag(this);
 	}
 
 	/**Gets atomList.*/
@@ -138,27 +142,20 @@ class Fragment {
 
 	/**
 	 * Adds a bond to the fragment.
-	 * associateWithAtoms is false when adding to the dummyFragment, bondpile, which does not contain any atoms
-	 * or if the atoms are known to already have the bond associated with them
 	 * @param bond
-	 * @param associateWithAtoms
 	 */
-	void addBond(Bond bond, boolean associateWithAtoms) {
-		bondList.add(bond);
-		if (associateWithAtoms){
-			bond.getFromAtom().addBond(bond);
-			bond.getToAtom().addBond(bond);
-		}
-	}
-
-	/**Adds a bond to the fragment.*/
 	void addBond(Bond bond) {
-		addBond(bond,true);
+		bondSet.add(bond);
+	}
+	
+	/**Removes a bond to the fragment if it is present.*/
+	boolean removeBond(Bond bond) {
+		return bondSet.remove(bond);
 	}
 
-	/**Gets bondList.*/
-	List<Bond> getBondList() {
-		return bondList;
+	/**Gets bondSet.*/
+	Set<Bond> getBondSet() {
+		return Collections.unmodifiableSet(bondSet);
 	}
 
 	/**Imports all of the atoms and bonds from another fragment into this one.
@@ -169,10 +166,9 @@ class Fragment {
 	void importFrag(Fragment frag) {
 		for(Atom atom : frag.getAtomList()) {
 			addAtom(atom);
-			atom.setFrag(this);
 		}
-		for(Bond bond : frag.getBondList()) {
-			addBond(bond, false);
+		for(Bond bond : frag.getBondSet()) {
+			addBond(bond);
 		}
 		for (OutID outID: frag.getOutIDs()) {
 			outID.frag =this;
@@ -305,18 +301,6 @@ class Fragment {
 		Atom a = getAtomByID(id);
 		if(a == null) throw new StructureBuildingException("Couldn't find atom with id " + id + ".");
 		return a;
-	}
-
-	/**Reduces the spare valency of the atom at the given locant.
-	 *
-	 * @param locant The locant of the atom.
-	 * @throws StructureBuildingException If the atom cannot be found, or has no spare valency.
-	 */
-	void reduceSpareValency(String locant) throws StructureBuildingException {
-		Atom a =getAtomByLocantOrThrow(locant);
-		if(a.getSpareValency() < 1) throw new StructureBuildingException("Atom at locant " +
-				locant + " has no spare valency to reduce.");
-		a.subtractSpareValency(1);
 	}
 
 	/**Finds a bond between two specified atoms within the fragment.
@@ -551,7 +535,7 @@ class Fragment {
 		int svCount = 0;
 		int dvCount = 0; /* Divalent, like O */
 		for(Atom a : atomCollection) {
-			svCount += a.getSpareValency();
+			svCount += a.hasSpareValency() ? 1 : 0;
 			if(a.getElement().equals("O")) dvCount++;
 			if(a.getElement().equals("S")) dvCount++;
 			if(a.getElement().equals("Se")) dvCount++;
@@ -561,11 +545,11 @@ class Fragment {
 			// Now we're looking for a trivalent C, or failing that a divalent N/P/As/Sb
 			Atom nCandidate = null;
 			for(Atom a : atomCollection) {
-				if(a.getAtomIsInACycle() && a.getSpareValency() == 0) {
+				if(a.getAtomIsInACycle() && !a.hasSpareValency()) {
 					String element =a.getElement();
 					if (element.equals("C")){
 						indicatedHydrogen = a.getID();
-						a.addSpareValency(1);
+						a.setSpareValency(true);
 						return;
 					} else if(element.equals("N") || element.equals("P") || element.equals("As") || element.equals("Sb")) {
 						nCandidate = a;
@@ -574,7 +558,7 @@ class Fragment {
 			}
 			if(nCandidate != null) {
 				indicatedHydrogen = nCandidate.getID();
-				nCandidate.addSpareValency(1);
+				nCandidate.setSpareValency(true);
 			}
 		}
 	}
@@ -583,15 +567,14 @@ class Fragment {
 	 * and adds corresponding spareValencies to the atoms they join.
 	 */
 	void convertHighOrderBondsToSpareValencies()  {
-		for(Bond b : bondList) {
-			if(b.getOrder() > 1) {
+		for(Bond b : bondSet) {
+			if(b.getOrder() == 2) {
 				Atom firstAtom =b.getFromAtom();
 				Atom secondAtom =b.getToAtom();
 				if (firstAtom.getAtomIsInACycle() && secondAtom.getAtomIsInACycle()){
-					int orderExtra = b.getOrder() - 1;
 					b.setOrder(1);
-					firstAtom.addSpareValency(orderExtra);
-					secondAtom.addSpareValency(orderExtra);
+					firstAtom.setSpareValency(true);
+					secondAtom.setSpareValency(true);
 				}
 			}
 		}
@@ -618,10 +601,10 @@ class Fragment {
 		 */
 		List<Atom> atomsThatOnlyBorderATriValentN = new ArrayList<Atom>();
 		atomLoop: for(Atom a : atomCollection) {
-			if(a.getSpareValency() > 0) {
+			if(a.hasSpareValency()) {
 				boolean flag=false;
 				for(Atom aa : getAtomNeighbours(a)) {
-					if(aa.getSpareValency() > 0){
+					if(aa.hasSpareValency()){
 						continue atomLoop;
 					}
 					if (aa.getNote("Possibly Should Be Charged")!=null){
@@ -632,14 +615,14 @@ class Fragment {
 					atomsThatOnlyBorderATriValentN.add(a);
 					continue;
 				}
-				a.setSpareValency(0);
+				a.setSpareValency(false);
 				a.setNote("Possibly Should Be Charged", null);
 			}
 		}
 
 		int svCount = 0;
 		for(Atom a : atomCollection) {
-			svCount += a.getSpareValency();
+			svCount += a.hasSpareValency() ? 1 :0;
 		}
 
 		/*
@@ -648,7 +631,7 @@ class Fragment {
 		*/
 		Atom atomToReduceValencyAt =null;
 		if (indicatedHydrogen!=null){
-			if (getAtomByID(indicatedHydrogen)==null || getAtomByID(indicatedHydrogen).getSpareValency()==0){
+			if (getAtomByID(indicatedHydrogen)==null || !getAtomByID(indicatedHydrogen).hasSpareValency()){
 				indicatedHydrogen = null;
 			}
 			else{
@@ -668,7 +651,7 @@ class Fragment {
 					}
 					if (a.getBonds().size() -intraFragmentBonds>=1){//the atom must have atleast one inter fragment bond (bond to suffix counts)
 						a.setCharge(1);
-						a.setSpareValency(1);
+						a.setSpareValency(true);
 						svCount++;
 						break;
 					}
@@ -676,7 +659,7 @@ class Fragment {
 			}
 			if ((svCount %2) ==1){
 				for (Atom a : atomsThatOnlyBorderATriValentN) {
-					a.setSpareValency(0);
+					a.setSpareValency(false);
 					svCount--;
 				}
 			}
@@ -685,10 +668,10 @@ class Fragment {
 		if((svCount % 2) == 1) {
 			if (atomToReduceValencyAt == null){
 				for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
-					if(a.getSpareValency() > 0) {
+					if(a.hasSpareValency()) {
 						int atomsWithSV =0;
 						for(Atom aa : getAtomNeighbours(a)) {
-							if(aa.getSpareValency() > 0) {
+							if(aa.hasSpareValency()) {
 								atomsWithSV++;
 							}
 						}
@@ -700,7 +683,7 @@ class Fragment {
 				}
 				if (atomToReduceValencyAt==null){
 					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine  else just pick the first atom with SV encountered
-						if(a.getSpareValency() > 0) {
+						if(a.hasSpareValency()) {
 							if (atomToReduceValencyAt==null){
 								atomToReduceValencyAt=a;
 							}
@@ -718,7 +701,7 @@ class Fragment {
 					}
 				}
 			}
-			atomToReduceValencyAt.subtractSpareValency(1);
+			atomToReduceValencyAt.setSpareValency(false);
 			svCount--;
 		}
 
@@ -727,19 +710,19 @@ class Fragment {
 			boolean foundNonBridgeHeadFlag = false;
 			boolean foundBridgeHeadFlag = false;
 			for(Atom a : atomCollection) {
-				if(a.getSpareValency() > 0) {
+				if(a.hasSpareValency()) {
 					int count = 0;
 					for(Atom aa : getAtomNeighbours(a)) {
-						if(aa.getSpareValency() > 0) {
+						if(aa.hasSpareValency()) {
 							count++;
 						}
 					}
 					if(count == 1) {
 						for(Atom aa : getAtomNeighbours(a)) {
-							if(aa.getSpareValency() > 0) {
+							if(aa.hasSpareValency()) {
 								foundTerminalFlag = true;
-								a.subtractSpareValency(1);
-								aa.subtractSpareValency(1);
+								a.setSpareValency(false);
+								aa.setSpareValency(false);
 								findBondOrThrow(a, aa).addOrder(1);
 								svCount -= 2;//Two atoms where for one of them this bond is the only double bond it can possible form
 								break;
@@ -751,12 +734,12 @@ class Fragment {
 			if(!foundTerminalFlag) {
 				for(Atom a : atomCollection) {
 					List<Atom> neighbours =getAtomNeighbours(a);
-					if(a.getSpareValency() > 0 && neighbours.size() < 3) {
+					if(a.hasSpareValency() && neighbours.size() < 3) {
 						for(Atom aa : neighbours) {
-							if(aa.getSpareValency() > 0) {
+							if(aa.hasSpareValency()) {
 								foundNonBridgeHeadFlag = true;
-								a.subtractSpareValency(1);
-								aa.subtractSpareValency(1);
+								a.setSpareValency(false);
+								aa.setSpareValency(false);
 								findBondOrThrow(a, aa).addOrder(1);
 								svCount -= 2;//Two atoms where one of them is not a bridge head
 								break;
@@ -768,12 +751,12 @@ class Fragment {
 				if(!foundNonBridgeHeadFlag){
 					for(Atom a : atomCollection) {
 						List<Atom> neighbours =getAtomNeighbours(a);
-						if(a.getSpareValency() > 0) {
+						if(a.hasSpareValency()) {
 							for(Atom aa : neighbours) {
-								if(aa.getSpareValency() > 0) {
+								if(aa.hasSpareValency()) {
 									foundBridgeHeadFlag = true;
-									a.subtractSpareValency(1);
-									aa.subtractSpareValency(1);
+									a.setSpareValency(false);
+									aa.setSpareValency(false);
 									findBondOrThrow(a, aa).addOrder(1);
 									svCount -= 2;//Two atoms where both of them are a bridge head e.g. necessary for something like coronene
 									break;
@@ -858,31 +841,10 @@ class Fragment {
 	}
 
 	/**
-	 * Removes an atom and the bonds joined to it
-	 * The fragmentManager is necessary to remove inter fragment bonds
+	 * Removes an atom from this fragment
 	 * @param atom
-	 * @throws StructureBuildingException
 	 */
-	void removeAtomByLocant(String locant, FragmentManager fm) throws StructureBuildingException {
-		Atom atom =getAtomByLocantOrThrow(locant);
-		removeAtom(atom, fm);
-	}
-
-	/**
-	 * Removes an atom and the bonds joined to it
-	 * The fragmentManager is necessary to remove inter fragment bonds
-	 * @param atom
-	 * @param fm
-	 * @throws StructureBuildingException
-	 */
-	void removeAtom(Atom atom, FragmentManager fm) throws StructureBuildingException {
-		ArrayList<Bond> bondsToBeRemoved=new ArrayList<Bond>(atom.getBonds());
-		for (Bond bond : bondsToBeRemoved) {
-			bondList.remove(bond);
-			bond.getFromAtom().removeBond(bond);
-			bond.getToAtom().removeBond(bond);
-			fm.removeInterFragmentBondIfPresent(bond);//if this bond was an inter-fragment bond it is removed from the inter-fragment bond list
-		}
+	void removeAtom(Atom atom) {
 		int atomID =atom.getID();
 		atomMapFromId.remove(atomID);
 		for (String l : atom.getLocants()) {
@@ -993,13 +955,13 @@ class Fragment {
 				continue;
 			}
 			if (takeIntoAccountOutValency){
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getSpareValency() + currentAtom.getOutValency())){
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					flag=1;
 					break;
 				}
 			}
 			else{
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getSpareValency())){
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
 					flag=1;
 					break;
 				}
@@ -1050,10 +1012,7 @@ class Fragment {
 	 * @throws StructureBuildingException
 	 */
 	int getIdOfFirstAtom() throws StructureBuildingException {
-		for (Atom a: atomCollection) {
-			return a.getID();
-		}
-		throw new StructureBuildingException("Fragment is empty");
+		return getFirstAtom().getID();
 	}
 
 	/**

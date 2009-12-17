@@ -114,18 +114,21 @@ class SMILESFragmentBuilder {
 	 * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
-	Fragment build(String smiles, IDManager idManager) throws StructureBuildingException {
-		return build(smiles, "", "", "", idManager);
+	Fragment build(String smiles, FragmentManager fragManaager) throws StructureBuildingException {
+		return build(smiles, "", "", "", fragManaager);
 	}
 
-	/**Build a Fragment based on a SMILES string.
-	 *
+	/**
+	 * Build a Fragment based on a SMILES string.
 	 * @param smiles The SMILES string to build from.
 	 * @param type The type of fragment being built.
-	 * @return The built fragment.
+	 * @param subType The subtype of fragment being built.
+	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "" for default numbering or "none"
+	 * @param fragManager
+	 * @return Fragment The built fragment.
 	 * @throws StructureBuildingException
 	 */
-	Fragment build(String smiles, String type, String subType, String labelMapping, IDManager idManager) throws StructureBuildingException {
+	Fragment build(String smiles, String type, String subType, String labelMapping, FragmentManager fragManager) throws StructureBuildingException {
 		if (smiles==null){
 			throw new StructureBuildingException("SMILES specified is null");
 		}
@@ -178,7 +181,7 @@ class SMILESFragmentBuilder {
 				stack.peek().atom = null;
 			} else if(upperLetters.contains(nextChar) || lowerLetters.contains(nextChar)) {//organic atoms
 		        String elementType = nextChar;
-		        int sv = 0;//spare valency
+		        boolean spareValency =false;
 		        if(upperLetters.contains(elementType)) {//normal atoms
 					if(tmpString.length() > 0 && lowerLetters.contains(tmpString.substring(0,1)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
 						elementType += tmpString.substring(0,1);
@@ -193,11 +196,10 @@ class SMILESFragmentBuilder {
 						throw new StructureBuildingException(elementType +" is not an aromatic Element. If it is actually an element it should not be in lower case");
 					}
 					elementType = elementType.toUpperCase();
-					sv++;
+					spareValency =true;
 		        }
-				int ID = idManager.getNextID();
-				Atom atom = new Atom(ID, elementType, currentFrag);
-				atom.addSpareValency(sv);
+				Atom atom = fragManager.createAtom(elementType, currentFrag);
+				atom.setSpareValency(spareValency);
 				if(labelMapping.equals("")) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
@@ -210,8 +212,7 @@ class SMILESFragmentBuilder {
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom !=null) {
-					Bond b = new Bond(stack.peek().atom, atom, stack.peek().bondOrder);
-					currentFrag.addBond(b);
+					Bond b = fragManager.createBond(stack.peek().atom, atom, stack.peek().bondOrder);
 					if (stack.peek().slash!=null){
 						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
@@ -259,7 +260,7 @@ class SMILESFragmentBuilder {
 		        }
 		// elementType
 		        String elementType = nextChar;
-		        int sv = 0;//spare valency
+		        boolean spareValency = false;
 		        if(upperLetters.contains(elementType)) {//normal atoms
 					if(atomString.length() > 0 && lowerLetters.contains(atomString.substring(0,1))) {
 						elementType += atomString.substring(0,1);
@@ -282,14 +283,13 @@ class SMILESFragmentBuilder {
 						}
 						elementType = elementType.toUpperCase();
 					}
-					sv++;
+					spareValency =true;
 		        }
 		        else{
 		        	throw new StructureBuildingException(elementType +" is not a valid element type!");
 		        }
-				int ID = idManager.getNextID();
-				Atom atom = new Atom(ID, elementType, currentFrag);
-				atom.setSpareValency(sv);
+				Atom atom = fragManager.createAtom(elementType, currentFrag);
+				atom.setSpareValency(spareValency);
 				if(labelMapping.equals("")) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
@@ -302,8 +302,7 @@ class SMILESFragmentBuilder {
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom != null) {
-					Bond b = new Bond(stack.peek().atom, atom, stack.peek().bondOrder);
-					currentFrag.addBond(b);
+					Bond b = fragManager.createBond(stack.peek().atom, atom, stack.peek().bondOrder);
 					if (stack.peek().slash!=null){
 						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
@@ -451,12 +450,11 @@ class SMILESFragmentBuilder {
 					}
 					Bond b;
 					if (stack.peek().slash ==null){
-						b = new Bond(sf.atom, stack.peek().atom, bondOrder);
+						b = fragManager.createBond(sf.atom, stack.peek().atom, bondOrder);
 					}
 					else{
-						b = new Bond(stack.peek().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
+						b = fragManager.createBond(stack.peek().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
 					}
-					currentFrag.addBond(b);
 					if(sf.slash !=null) {
 						if(stack.peek().slash !=null) {
 							throw new StructureBuildingException("ring closure should not have cis/trans specified twice!");
@@ -532,15 +530,15 @@ class SMILESFragmentBuilder {
 
 		if(labelMapping.equals("fusedRing")) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
 			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
-			FragmentManager.relabelFusedRingSystem(currentFrag);
+			FragmentTools.relabelFusedRingSystem(currentFrag);
 		}
-		List<Bond> bonds = currentFrag.getBondList();
+		Set<Bond> bonds = currentFrag.getBondSet();
 		mainLoop: for (Bond centralBond : bonds) {//identify cases of E/Z stereochemistry and add appropriate bondstereo tags
 			if (centralBond.getOrder()==2){
-				List<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
+				Set<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
 				for (Bond preceedingBond : fromAtomBonds) {
 					if (preceedingBond.getSmilesStereochemistry()!=null){
-						List<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
+						Set<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
 							if (followingBond.getSmilesStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
 								Element bondStereoEl = new Element("bondStereo");

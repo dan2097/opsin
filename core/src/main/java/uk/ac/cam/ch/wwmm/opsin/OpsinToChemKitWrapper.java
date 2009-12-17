@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nu.xom.Element;
 import sea36.chem.base.ChemicalElement;
@@ -29,7 +30,7 @@ class OpsinToChemKitWrapper {
 			opsinAtomToChemKitAtomMap.put(atom, chemKitAtom);
 			chemKitMolecule.addAtom(chemKitAtom);
 		}
-		List<Bond> bonds = opsinFragment.getBondList();
+		Set<Bond> bonds = opsinFragment.getBondSet();
 		for (Bond bond : bonds) {
 			CMLBond chemKitBond = opsinBondToChemKitBond(bond);
 			chemKitMolecule.addAndGenerateId(chemKitBond);
