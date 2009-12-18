@@ -417,15 +417,32 @@ class StructureBuildingMethods {
 				}
 			}
 			atomsWithSV.addAll(atomsWhichImplicitlyWillHaveTheirSVRemoved);//these end up at the end of the list
-			if (hydrogenElements.size()> atomsWithSV.size()){
-				throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
-						hydrogenElements.size() + " hydrogen adding tags but only " +  atomsWithSV.size() +" positions that can be hydrogenated)" );
+			boolean saturateAllAtoms =false;
+			for (Element hydrogenElement : hydrogenElements) {
+				if (hydrogenElement.getValue().equals("perhydro")){
+					saturateAllAtoms =true;
+					hydrogenElement.detach();
+				}
 			}
-            for (Element hydrogenElement : hydrogenElements) {
-                Atom atomToReduceSpareValencyOn = atomsWithSV.removeFirst();
-                atomToReduceSpareValencyOn.setSpareValency(false);
-                hydrogenElement.detach();
-            }
+			if (saturateAllAtoms){
+				if (hydrogenElements.size() != 1){
+					throw new StructureBuildingException("Unexpected indication of hydrogen when perhydro makes such indication redundnant");
+				}
+	            for (Atom atomToReduceSpareValencyOn : atomsWithSV) {
+	                atomToReduceSpareValencyOn.setSpareValency(false);
+	            }
+			}
+			else{
+				if (hydrogenElements.size()> atomsWithSV.size()){
+					throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
+							hydrogenElements.size() + " hydrogen adding tags but only " +  atomsWithSV.size() +" positions that can be hydrogenated)" );
+				}
+	            for (Element hydrogenElement : hydrogenElements) {
+	                Atom atomToReduceSpareValencyOn = atomsWithSV.removeFirst();
+	                atomToReduceSpareValencyOn.setSpareValency(false);
+	                hydrogenElement.detach();
+	            }
+			}
 		}
 
 		int idOfFirstAtomInFragment= thisFrag.getIdOfFirstAtom();

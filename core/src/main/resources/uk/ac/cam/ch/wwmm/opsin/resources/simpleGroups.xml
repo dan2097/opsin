@@ -46,6 +46,7 @@
 
 
 <!--some of these should be moved to a groupStem file or some kind of acid file -->
+  <token value="[C-]#[C-]" labels="none" valType="SMILES">acetylide</token>
   <token value="N1C(=O)NC(=O)C(=O)C(=O)1" labels="1/2//3/4//5//6/" valType="SMILES">alloxane</token>
   <token value="[N-]" labels="none" valType="SMILES">amide</token>
   <token value="N[O-]" labels="none" valType="SMILES">aminoxide</token>
@@ -82,6 +83,7 @@
   <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi" valType="SMILES" value="NCCc1cncn1">histamine</token>
   <token value="N1C(=O)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">hydantoin</token>
   <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
+  <token value="[O-]" labels="none" valType="SMILES">hydroxide</token>
   <token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
   <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazide</token>
   <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>

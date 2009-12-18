@@ -16,6 +16,7 @@
 
   <tokenList tagname="hydro" symbol="y">
     <token value="hydro">hydro</token>
+    <token value="perhydro">perhydro</token>
   </tokenList>
 
   <tokenList tagname="stereoChemistry" type="cisOrTrans" symbol="t">

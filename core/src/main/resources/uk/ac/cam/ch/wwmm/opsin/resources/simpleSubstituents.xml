@@ -61,6 +61,7 @@
   <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
   <token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token>
   <token value="[H]" labels="none" valType="SMILES">hydro</token>
+  <token value="[H]" labels="none" valType="SMILES">perhydro</token>
   <token value="[H]" labels="none" valType="SMILES">hydrogen</token>
   <token value="[Se]" labels="none" valType="SMILES">hydroseleno</token>
   <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
@@ -129,6 +130,10 @@
   <token value="Br" labels="none" valType="SMILES">bromo</token>
   <token value="Cl" labels="none" valType="SMILES">chloro</token>
   <token value="I" labels="none" valType="SMILES">iodo</token>
+  <!--<token value="F" labels="none" valType="SMILES">perfluoro</token>
+  <token value="Br" labels="none" valType="SMILES">perbromo</token>
+  <token value="Cl" labels="none" valType="SMILES">perchloro</token>
+  <token value="I" labels="none" valType="SMILES">periodo</token>-->
 
   <token value="F=O" labels="none" valType="SMILES">fluorosyl</token>
   <token value="Br=O" labels="none" valType="SMILES">bromosyl</token>
