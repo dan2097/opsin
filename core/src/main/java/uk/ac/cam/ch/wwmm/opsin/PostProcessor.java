@@ -1196,7 +1196,14 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processHydroSubstituents(Element group) throws PostProcessingException {
-		if (group.getValue().equals("hydro")){
+		String groupValue = group.getValue();
+		if (groupValue.equals("hydro") || groupValue.equals("perhydro")){
+			if (groupValue.equals("hydro")){
+				Element multiplier = (Element) XOMTools.getPreviousSibling(group);
+				if (multiplier == null || !multiplier.getLocalName().equals("multiplier") ){
+					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
+				}
+			}
 			Element hydroSubstituent =(Element) group.getParent();
 			Element targetRing =null;
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
@@ -1264,7 +1271,7 @@ class PostProcessor {
 					child.detach();
 					if (child.getLocalName().equals("group")){
 						child =new Element("hydro");
-						child.appendChild("hydro");
+						child.appendChild(groupValue);
 					}
 					targetRing.getParent().insertChild(child, 0);
 				}

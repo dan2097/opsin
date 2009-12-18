@@ -108,7 +108,7 @@ does not define a CFG.
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%openBracket%)"/>
   <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="((%heteroReplacement%|%hydroGroup%)*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?))"/><!--bigCapitalH before lambdaConvention is preferred-->
-  <regex name="%ringNonDetachableFeatures%" value="((%heteroReplacement%*|%hydroGroup%?%heteroReplacement%+%hydroGroup%?)(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes or for some retained ring names e.g. 3,8-phenanthroline or for benzo in fused rings where locants specify heteroatom positions-->
+  <regex name="%ringNonDetachableFeatures%" value="(%heteroReplacement%*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes or for some retained ring names e.g. 3,8-phenanthroline or for benzo in fused rings where locants specify heteroatom positions-->
   <regex name="%acyclicNonDetachableFeatures%" value="(%heteroReplacement%*%lambdaConvention%?%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->
 
 
