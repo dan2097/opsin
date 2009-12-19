@@ -10,7 +10,7 @@
                     labels CDATA #IMPLIED
                     setsOutID (yes|no) #IMPLIED
                     setsDefaultInID (yes|no) #IMPLIED
-                    setsFunctionalID (yes|no) #IMPLIED
+                    functionalIDs CDATA #IMPLIED
                     outValency CDATA #IMPLIED
                     ketoneLocant (yes|no) #IMPLIED>
 

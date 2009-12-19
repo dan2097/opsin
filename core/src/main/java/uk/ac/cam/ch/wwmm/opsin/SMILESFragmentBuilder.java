@@ -606,9 +606,6 @@ class SMILESFragmentBuilder {
 			if (subType.equals("inSuffix")){
 				currentFrag.setDefaultInID(lastAtomID);
 			}
-			else if (subType.equals("functionalSuffix")){
-				currentFrag.addFunctionalID(lastAtomID);
-			}
 			else{
 				if (lastCharacter == '#'){
 					currentFrag.addOutID(lastAtomID,3, true);
