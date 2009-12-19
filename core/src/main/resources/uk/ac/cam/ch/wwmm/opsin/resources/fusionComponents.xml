@@ -49,9 +49,9 @@
   <token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoarsinolino</token>
   <token value="isobenzofuran" valType="dbkey">isobenzofurano</token>
   <token value="c1occc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isochromeno</token>
-  <token value="c1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thioisochromeno</token>
-  <token value="c1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenoisochromeno</token>
-  <token value="c1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">telluroisochromeno</token>
+  <token value="c1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromeno</token>
+  <token value="c1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromeno</token>
+  <token value="c1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromeno</token>
   <token value="isoindole" valType="dbkey">isoindolo</token>
   <token value="isoxazole" valType="dbkey">isooxazolo</token>
   <token value="isoxazole" valType="dbkey">isoxazolo</token>

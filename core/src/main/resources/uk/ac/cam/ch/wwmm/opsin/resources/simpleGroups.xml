@@ -72,8 +72,8 @@
   <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
   <token labels="none" valType="SMILES" value="NCCSSCCN">cystamine</token>
   <token labels="/2,alpha/3,beta//" valType="SMILES" value="NCCS">cysteamine</token>
-  <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES">diacetamide</token>
-  <token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES">dibenzamide</token>
+  <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
+  <token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamide</token>
   <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
   <token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
   <token value="NN=CN=N" valType="SMILES">formazan</token>
@@ -100,8 +100,9 @@
   <token value="C12CC3C4CC1.C2.C4(C)C.O3" labels="1/2/3/4/5/6/7/8/9/10/" valType="SMILES">menthol</token>
   <token labels="/2,alpha/3,beta/4,gamma//methyl/" valType="SMILES" value="NCCCSC">methioninamine</token>
   <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
+  <token value="N[N+](=O)([O-])" labels="none" valType="SMILES" functionalIDs="1,1">nitramide</token>
   <token value="C(=O)C(=O)" labels="1/2" valType="SMILES">oxaldehyde</token>
-  <token value="NC(=O)C(=O)N" labels="none" valType="SMILES">oxamide</token>
+  <token value="NC(=O)C(=O)N" labels="none" valType="SMILES" functionalIDs="1,1,6,6">oxamide</token>
   <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performic</token>
   <token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>
   <token value="CC(=O)OO" labels="2/1///" valType="SMILES" functionalIDs="5">peracetic</token>
@@ -144,7 +145,7 @@
   <token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>
 
 <!-- Special cases-->
-  <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3">formamide</token> <!--special case which should be removed -->
-  <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3">methanamide</token><!--special case which should be removed -->
+  <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">formamide</token> <!--special case which should be removed -->
+  <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">methanamide</token><!--special case which should be removed -->
   <token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
 </tokenList>

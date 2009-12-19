@@ -7,6 +7,8 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
 <tokenLists>
   <tokenList tagname="suffix" type="root" symbol="s">
     <token value="amine">amine</token>
+    <token value="aminide">aminide</token>
+    <token value="aminium">aminium</token>
     <token value="carbaldehyde">carbaldehyde</token>
     <token value="carbohydrazide">carbohydrazide</token>
     <token value="carbonitrile">carbonitrile</token>
@@ -20,6 +22,8 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="carboximidic">carboximidic</token>
     <token value="diazonium">diazonium</token>
     <token value="imine">imine</token>
+    <token value="iminide">iminide</token>
+    <token value="iminium">iminium</token>
     <token value="ol">ol</token>
     <token value="olate">olate</token>
     <token value="one">one</token>
@@ -34,10 +38,12 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="ate" additionalValue="amide">amate</token>
     <token value="ic" additionalValue="amide">amic</token>
     <token value="amide">amide</token>
+    <token value="amidium">amidium</token>
     <token value="ic" additionalValue="anilide">anilic</token>
     <token value="anilide">anilide</token>
     <token value="imidamide">amidine</token><!--deprecated-->
     <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by PreStructureBuilder-->
     <token value="ite">ite</token>
     <token value="ate">oate</token>
     <token value="hydrazide">ohydrazide</token>
@@ -47,6 +53,7 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="ic">oic</token>
     <token value="onaphthone">onaphthone</token>
     <token value="nitrile">onitrile</token>
+    <token value="nitrilium">onitrilium</token>
     <token value="ophenone">ophenone</token>
     <token value="ous">ous</token>
     <token value="selone">selone</token>
@@ -91,5 +98,6 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="hydroximic">hydroximic</token>
     <token value="ic">ic</token>
     <token value="nitrile">nitrile</token>
+    <token value="nitrilium">nitrilium</token>
   </tokenList>
 </tokenLists>

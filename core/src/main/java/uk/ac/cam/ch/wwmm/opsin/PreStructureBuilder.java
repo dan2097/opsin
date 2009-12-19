@@ -1047,11 +1047,17 @@ class PreStructureBuilder {
                         }
                     } else if (suffixRuleTag.getAttribute("setsDefaultInID") != null) {
                         tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "inSuffix", labels);
-                    } else if (suffixRuleTag.getAttribute("setsFunctionalID") != null) {
+                    } else if (suffixRuleTag.getAttribute("functionalIDs") != null) {
                         tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "functionalSuffix", labels);
-                        if (tempSuffixFrag.getFunctionalIDs().size() == 0) {
-                            tempSuffixFrag.addFunctionalID(tempSuffixFrag.getIdOfFirstAtom());
-                        }
+                        String[] relativeIdsToAddFunctionalIdsTo = matchComma.split(suffixRuleTag.getAttributeValue("functionalIDs"));
+                        for (String relativeId : relativeIdsToAddFunctionalIdsTo) {
+                        	List<Atom> atomList = tempSuffixFrag.getAtomList();
+                        	int atomIndice = Integer.parseInt(relativeId) -1;
+                        	if (atomIndice >=atomList.size()){
+                        		throw new StructureBuildingException("Check suffixRules.xml: Atom requested to have a functionalId was not within the suffix fragment");
+                        	}
+                        	tempSuffixFrag.addFunctionalID(atomList.get(atomIndice).getID());
+						}
                     } else {
                         tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "suffix", labels);
                     }
