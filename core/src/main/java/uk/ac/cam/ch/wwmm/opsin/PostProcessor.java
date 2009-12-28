@@ -164,10 +164,35 @@ class PostProcessor {
 
 		List<Element> fusions = XOMTools.getDescendantElementsWithTagName(elem, "fusion");
 		for (Element fusion : fusions) {
-			if (matchNumberLocantsOnlyFusionBracket.matcher(fusion.getValue()).matches()){
+			String fusionText = fusion.getValue();
+			if (matchNumberLocantsOnlyFusionBracket.matcher(fusionText).matches()){
 				Element nextGroup =(Element) XOMTools.getNextSibling(fusion, "group");
 				if (nextGroup !=null && nextGroup.getAttributeValue("subType").equals("hantzschWidman")){
-					throw new PostProcessingException("This fusion bracket is in fact more likely to be a description of the locants of a HW ring");
+					int heteroCount = 0;
+					int multiplierValue = 1;
+					int hwRingSize = Integer.parseInt(nextGroup.getAttributeValue("value"));
+					Element currentElem = (Element) XOMTools.getNextSibling(fusion);
+					while(currentElem != null && !currentElem.getLocalName().equals("group")){
+						if(currentElem.getLocalName().equals("heteroatom")) {
+							heteroCount+=multiplierValue;
+							multiplierValue =1;
+						} else if (currentElem.getLocalName().equals("multiplier")){
+							multiplierValue = Integer.parseInt(currentElem.getAttributeValue("value"));
+						}
+						currentElem = (Element)XOMTools.getNextSibling(currentElem);
+					}
+					String[] locants = matchComma.split(fusionText.substring(1, fusionText.length()-1));
+					if (locants.length == heteroCount){
+						boolean foundLocantNotInHwSystem =false;
+						for (String locant : locants) {
+							if (hwRingSize > Integer.parseInt(locant.substring(0,1))){
+								foundLocantNotInHwSystem =true;
+							}
+						}
+						if (!foundLocantNotInHwSystem){
+						throw new PostProcessingException("This fusion bracket is in fact more likely to be a description of the locants of a HW ring");
+						}
+					}
 				}
 			}
 		}

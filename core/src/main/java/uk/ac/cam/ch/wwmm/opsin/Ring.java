@@ -20,11 +20,11 @@ class Ring {
 	Ring(List<Atom> atomSet) throws StructureBuildingException {
 		this.atomSet = atomSet;
 		List<Bond> orderedBonds = new ArrayList<Bond>();
-		RingAtomIterator ringIteratorFromAtom0 = new RingAtomIterator(atomSet, 0);
-		RingAtomIterator ringIteratorFromAtom1 = new RingAtomIterator(atomSet, 1);
-		while (ringIteratorFromAtom0.hasNext()) {
-			Atom a1 = ringIteratorFromAtom0.next();
-			Atom a2 = ringIteratorFromAtom1.next();
+		CyclicAtomList ringIteratorFromAtom0 = new CyclicAtomList(atomSet);
+		CyclicAtomList ringIteratorFromAtom1 = new CyclicAtomList(atomSet, 0);
+		for (int i = 0; i < atomSet.size(); i++) {
+			Atom a1 = ringIteratorFromAtom0.getNext();
+			Atom a2 = ringIteratorFromAtom1.getNext();
 			orderedBonds.add(a1.getFrag().findBondOrThrow(a1, a2));
 		}
 		this.bondSet = orderedBonds;

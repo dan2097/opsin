@@ -17,10 +17,8 @@ import org.junit.Test;
 public class FusedRingBuilderTest {
 
 	static FragmentManager fm;
-	static FusedRingBuilder frbuilder;
 	@BeforeClass
 	public static void setUp() throws Exception {
-		frbuilder = new FusedRingBuilder();
 		fm = new FragmentManager(new SMILESFragmentBuilder(), new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/")), new IDManager());
 	}
 
@@ -444,7 +442,7 @@ public class FusedRingBuilderTest {
 	private void compareNumbering(String smiles, String labels) throws StructureBuildingException {
 		Fragment fusedRing =fm.buildSMILES(smiles, "", "none");
 		String[] labelArray =labels.split("/", -1);
-		frbuilder.numberFusedRing(fusedRing);
+		FusedRingNumberer.numberFusedRing(fusedRing);
 		List<Atom> atomList =fusedRing.getAtomList();
 		for (int i = 0; i < atomList.size(); i++) {
 			if (!labelArray[i].equals("")){//exterior atom locant
