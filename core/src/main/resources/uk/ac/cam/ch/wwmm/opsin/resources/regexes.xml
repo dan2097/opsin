@@ -78,7 +78,8 @@ does not define a CFG.
   <regex name="%aminoAcidEndsInIc%" value="ï"/>
   <regex name="%ine%" value="î"/>
   <regex name="%ic%" value="ì"/>
-  <!--up to ascii 141 used -->
+  <regex name="%higherOrderFusor%" value="Ä"/>
+  <!--up to ascii 142 used -->
 
 <!-- composite regexes
 	Note that %substituent% and %chemical% are reserved words: don't change these.
@@ -136,7 +137,7 @@ does not define a CFG.
   <regex name="%cycloChainSubstituent%" value = "(%cyclo%%alkaneStem%)"/>
   <regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiro%%alkaneStem%%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
   <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|(%optionalOpenBracket%%newLocantGroup%%optionalCloseBracket%))?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
-  <regex name="%fusor%" value = "((%fusionRing%|%cycloChainSubstituent%|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)%fusionBracket%?)"/>
+  <regex name="%fusionComponent%" value = "(%fusionRing%|%cycloChainSubstituent%|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
   <regex name="%trivialRingSubstituentGroup%" value = "(%trivialRingSubstituent%%unlocantedSuffixGroup%)" /><!-- possibly this term should be replaced by special cases-->
 <!-- allows abbreviated alkanes e.g. bicyclo[2.2.2]octyl instead of bicyclo[2.2.2]octanyl-->
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
@@ -146,7 +147,7 @@ does not define a CFG.
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%cycloChain%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%)%inlineEndings%|%trivialRingSubstituent%%inlineSuffixGroup%)"/>
 
   <!--Complex terms-->
-  <regex name="%fusedRingSystem%" value = "(%fusor%+%ringGroup%)"/>
+  <regex name="%fusedRingSystem%" value = "((%fusionComponent%%higherOrderFusor%?)*(%fusionComponent%%fusionBracket%?)+%ringGroup%)"/>
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringSubstituent%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%inlineSuffixGroup%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
