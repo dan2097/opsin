@@ -147,7 +147,7 @@ does not define a CFG.
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%cycloChain%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%)%inlineEndings%|%trivialRingSubstituent%%inlineSuffixGroup%)"/>
 
   <!--Complex terms-->
-  <regex name="%fusedRingSystem%" value = "((%fusionComponent%%higherOrderFusor%?)*(%fusionComponent%%fusionBracket%?)+%ringGroup%)"/>
+  <regex name="%fusedRingSystem%" value = "(((%optionalOpenBracket%%locantGroup%%optionalCloseBracket%)|%locantGroup%)?(%fusionComponent%%higherOrderFusor%?)*(%fusionComponent%%fusionBracket%?)+%ringGroup%)"/>
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringSubstituent%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%inlineSuffixGroup%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
