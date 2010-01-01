@@ -249,7 +249,7 @@ class Atom {
 	 * @return The list of locants (may be empty)
 	 */
 	List<String> getLocants() {
-		return locants;
+		return Collections.unmodifiableList(locants);
 	}
 
 	/**Returns the subset of the locants which are element symbol locants e.g. N, S', Se

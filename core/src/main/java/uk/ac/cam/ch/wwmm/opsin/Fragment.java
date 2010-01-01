@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 
@@ -24,7 +23,7 @@ import nu.xom.Element;
  */
 class Fragment {
 
-	/**A mapping between IDs and the atoms in this fragment, also keeps track of the order atoms are added*/
+	/**A mapping between IDs and the atoms in this fragment, by default is ordered by the order atoms are added to the fragment*/
 	private LinkedHashMap<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
 
 	/**Equivalent to and synced to atomMapFromId.values() */
@@ -122,9 +121,9 @@ class Fragment {
 		return cml;
 	}
 
-	/**Adds an atom to the fragment. Does not tell the atom that it is in the fragment.*/
+	/**Adds an atom to the fragment and associates it with this fragment*/
 	void addAtom(Atom atom) {
-		if (defaultInID==0){//the first atom becomes the defaultInID
+		if (defaultInID==0){//the first atom added becomes the defaultInID
 			defaultInID =atom.getID();
 		}
 		List<String> locants =atom.getLocants();
@@ -1040,6 +1039,22 @@ class Fragment {
 		for (Atom atom : atomList) {
 			atomMapFromId.put(atom.getID(), atom);
 		}
+	}
+
+	/**
+	 * Reorders the fragment's internal atomList by the value of the first locant of the atoms
+	 * e.g. 1,2,3,3a,3b,4
+	 * Used for assuring the correct order of atom iteration when performing ring fusion
+	 */
+	void sortAtomListByLocant() {
+		LinkedHashMap<Integer, Atom> reorderedIdToAtomMapping = new LinkedHashMap<Integer, Atom>();
+		List<Atom> atomList =getAtomList();
+		Collections.sort(atomList, new FragmentTools.SortByLocants());
+		for (Atom atom : atomList) {
+			reorderedIdToAtomMapping.put(atom.getID(),atom);
+		}
+		atomMapFromId = reorderedIdToAtomMapping;
+		atomCollection = atomMapFromId.values();
 	}
 }
 

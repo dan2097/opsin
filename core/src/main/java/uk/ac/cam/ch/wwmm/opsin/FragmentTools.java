@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class FragmentTools {
 	/**
@@ -49,6 +51,70 @@ class FragmentTools {
 	    	}
 
 	    	return 0;
+	    }
+	}
+	/**
+	 * Sorts by number, then by letter e.g. 4,3,3b,5,3a,2 -->2,3,3a,3b,4,5
+	 * @author dl387
+	 *
+	 */
+	static class SortByLocants implements Comparator<Atom> {
+		static Pattern matchdigits = Pattern.compile("(\\d+).*");
+    	static Pattern matchletters = Pattern.compile(".*([a-z]+)");
+
+	    public int compare(Atom atoma, Atom atomb){
+	    	String locanta =atoma.getFirstLocant();
+	    	String locantb =atomb.getFirstLocant();
+
+	    	Matcher m1  =matchdigits.matcher(locanta);
+	    	int locantaNumber=0;
+	    	if (m1.matches()){
+	    		locantaNumber=Integer.parseInt(m1.group(1));
+	    	}
+	    	else{
+	    		return 0;//invalid locant (could be intentionally invalid)
+	    	}
+
+	    	Matcher m2  =matchdigits.matcher(locantb);
+	    	int locantbNumber=0;
+	    	if (m2.matches()){
+	    		locantbNumber=Integer.parseInt(m2.group(1));
+	    	}
+	    	else{
+	    		return 0;//invalid locant (could be intentionally invalid)
+	    	}
+
+	        if (locantaNumber >locantbNumber) {
+	            return 1;//e.g. 3 vs 2 or 3a vs 2
+	        } else if (locantbNumber >locantaNumber) {
+	            return -1;//e.g. 2 vs 3 or 2 vs 3a
+	        }
+	        else{
+	        	m1  =matchletters.matcher(locanta);
+	        	String locantaLetter="";
+	        	if (m1.matches()){
+	        		locantaLetter=m1.group(1);
+	        	}
+	        	else{
+	        		return -1;// e.g. 1 vs 1a
+	        	}
+
+	        	m2  =matchletters.matcher(locantb);
+	        	String locantbLetter="";
+	        	if (m2.matches()){
+	        		locantbLetter=m2.group(1);
+	        	}
+	        	else{
+	        		return 1;//e.g. 1a vs 1
+	        	}
+
+	            if (locantaLetter.compareTo(locantbLetter)>=1) {
+	                return 1;//e.g. 1b vs 1a
+	            } else if (locantbLetter.compareTo(locantaLetter)>=1) {
+	                return -1;//e.g. 1a vs 1b
+	            }
+	            return 0;
+	        }
 	    }
 	}
 	
@@ -229,6 +295,18 @@ class FragmentTools {
 				atom.addLocant(Integer.toString(locantVal) + locantLetter);
 				locantLetter++;
 			}
+		}
+	}
+	
+	/**
+	 * Adds the given string to all the first locants of the atoms.
+	 * Other locants are removed
+	 * @param atomList
+	 * @param stringToAdd
+	 */
+	static void relabelLocants(List<Atom> atomList, String stringToAdd) {
+		for (Atom atom : atomList) {
+			atom.replaceLocant(atom.getFirstLocant() + stringToAdd);
 		}
 	}
 }

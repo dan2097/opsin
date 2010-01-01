@@ -10,6 +10,11 @@ import java.util.Set;
 import sea36.chem.core.CMLAtom;
 import sea36.chem.rings.SSSRFinder;
 
+/**
+ * Numbers fusedRings
+ * @author aa593
+ *
+ */
 class FusedRingNumberer {
 
 	/**
