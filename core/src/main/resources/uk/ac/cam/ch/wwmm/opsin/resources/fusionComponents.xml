@@ -1,149 +1,156 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <!--Exhaustive set of fusion components (FR-2.1.1 through FR-2.2.8)-->
-<tokenList tagname="group" type="ring" subType="fusionRing" symbol="f">
-  <token value="aceanthrylene" valType="dbkey">aceanthryleno</token>
-  <token value="acenaphthylene" valType="dbkey">acenaphthyleno</token>
-  <token value="acenaphthylene" valType="dbkey">acenaphth</token>
-  <token value="acenaphthylene" valType="dbkey">acenaphtho</token>
-  <token value="acephenanthrylene" valType="dbkey">acephenanthryleno</token>
-  <token value="c1cccc2[as]c3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridarsino</token>
-  <token value="c1cccc2nc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridino</token>
-  <token value="c1cccc2pc3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridophosphino</token>
-  <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES">anthraceno</token>
-  <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES">anthra</token>
-  <token value="c1cccc2[as]c3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">arsanthreno</token>
-  <token value="c1cccc2[as]cc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">arsanthridino</token>
-  <token value="c1cc[as]2ccccc12" labels="1/2/3/4/5/6/7/8/8a" valType="SMILES">arsindolizino</token>
-  <token value="[as]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">arsindolo</token>
-  <token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">arsinolino</token>
-  <token value="c1ccc[as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">arsinolizino</token>
-  <token value="azulene" valType="dbkey">azuleno</token>
-  <token value="benzene" valType="dbkey">benzeno</token>
-  <token value="benzene" valType="dbkey">benzo</token>
-  <token value="benzene" valType="dbkey">benz</token>
-  <token value="c1nccc2c3ccccc3nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">betacarbolino</token>
-  <token value="c1nccc2c3ccccc3nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">beta-carbolino</token>
-  <token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthreno</token>
-  <token value="c1cccc2c3ccccc3nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">carbazolo</token>
-  <token value="chromene" valType="dbkey">chromeno</token>
-  <token value="s1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thiochromeno</token>
-  <token value="[se]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenochromeno</token>
-  <token value="[te]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tellurochromeno</token>
-  <token value="chrysene" valType="dbkey">chryseno</token>
-  <token value="cinnoline" valType="dbkey">cinnolino</token>
-  <token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g">coroneno</token>
-  <token value="fluoranthene" valType="dbkey">fluorantheno</token>
-  <token value="fluorene" valType="dbkey">fluoreno</token>
-  <token value="furan" valType="dbkey">furano</token>
-  <token value="furan" valType="dbkey">furo</token>
-  <token value="imidazole" valType="dbkey">imidazolo</token>
-  <token value="imidazole" valType="dbkey">imidazo</token>
-  <token value="as-indacene" valType="dbkey">as-indaceno</token>
-  <token value="s-indacene" valType="dbkey">s-indaceno</token>
-  <token value="indazole" valType="dbkey">indazolo</token>
-  <token value="indene" valType="dbkey">indeno</token>
-  <token value="indole" valType="dbkey">indolo</token>
-  <token value="indolizine" valType="dbkey">indolizino</token>
-  <token value="c1[as]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isoarsindolo</token>
-  <token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoarsinolino</token>
-  <token value="isobenzofuran" valType="dbkey">isobenzofurano</token>
-  <token value="c1occc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isochromeno</token>
-  <token value="c1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromeno</token>
-  <token value="c1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromeno</token>
-  <token value="c1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromeno</token>
-  <token value="isoindole" valType="dbkey">isoindolo</token>
-  <token value="isoxazole" valType="dbkey">isooxazolo</token>
-  <token value="isoxazole" valType="dbkey">isoxazolo</token>
-  <token value="c1pcc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isophosphindolo</token>
-  <token value="c1pccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isophosphinolino</token>
-  <token value="isoquinoline" valType="dbkey">isoquino</token>
-  <token value="isoquinoline" valType="dbkey">isoquinolino</token>
-  <token value="[se]1nccc1" valType="SMILES">isoselenazolo</token>
-  <token value="[te]1nccc1" valType="SMILES">isotellurazolo</token>
-  <token value="isothiazole" valType="dbkey">isothiazolo</token>
-  <token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">mercuranthreno</token>
-  <token value="naphthacene" valType="dbkey">naphthaceno</token>
-  <token value="naphthalene" valType="dbkey">naphthaleno</token>
-  <token value="naphthalene" valType="dbkey">naphth</token>
-  <token value="naphthalene" valType="dbkey">naphtho</token>
-  <token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8">naphthyridino</token>
-  <token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k" valType="SMILES">ovaleno</token>
-  <token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthreno</token>
-  <token value="perimidine" valType="dbkey">perimidino</token>
-  <token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">peryleno</token>
-  <token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">perylo</token>
-  <token value="phenalene" valType="dbkey">phenaleno</token>
-  <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthreno</token>
-  <token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phenanthridino</token>
-  <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthro</token>
-  <token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7">phenanthrolino</token>
-  <token value="phenazine" valType="dbkey">phenazino</token>
-  <token value="c1cccc2oc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxazino</token>
-  <token value="c1cccc2sc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiazino</token>
-  <token value="c1cccc2[se]c3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoselenazino</token>
-  <token value="c1cccc2[te]c3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenotellurazino</token>
-  <token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenophosphazinino</token>
-  <token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenophosphazino</token>
-  <token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenarsazinino</token>
-  <token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoarsazino</token>
-  <token value="c1cccc2nc3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercurazino</token>
-  <token value="c1cccc2nc3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercazino</token>
-  <token value="c1cccc2oc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxathiino</token>
-  <token value="c1cccc2oc3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaselenino</token>
-  <token value="c1cccc2oc3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxatellurino</token>
-  <token value="c1cccc2oc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaphosphinino</token>
-  <token value="c1cccc2oc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaphosphino</token>
-  <token value="c1cccc2oc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxarsinino</token>
-  <token value="c1cccc2oc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxarsino</token>
-  <token value="c1cccc2oc3ccccc3[sb]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxastibinino</token>
-  <token value="c1cccc2oc3ccccc3[sb]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxantimonino</token>
-  <token value="c1cccc2sc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiarsinino</token>
-  <token value="c1cccc2sc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiarsino</token>
-  <token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercurino</token>
-  <token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phosphanthreno</token>
-  <token value="c1cccc2pcc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phosphanthridino</token>
-  <token value="p1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">phosphindolo</token>
-  <token value="c1ccp2ccccc12" labels="1/2/3/4/5/6/7/8/8a" valType="SMILES">phosphindolizino</token>
-  <token value="p1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">phosphinolino</token>
-  <token value="c1cccp2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">phosphinolizino</token>
-  <token value="phthalazine" valType="dbkey">phthalazino</token>
-  <token value="c1cccc2ccc3c4ccc5ccccc5c4ccc3c21" labels="1/2/3/4/4a/5/6/6a/6b/7/8/8a/9/10/11/12/12a/12b/13/14/14a/14b" valType="SMILES">piceno</token>
-  <token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiadeno</token>
-  <token value="pteridine" valType="dbkey">pteridino</token>
-  <token value="n1cnc2ncnc2c1" labels="1/2/3/4/9/8/7/5/6" fusedRingNumbering="1/2/3/3a/4/5/6/6a/7" valType="SMILES">purino</token>
-  <token value="pyran" valType="dbkey">pyrano</token>
-  <token value="s1ccccc1" valType="SMILES">thiopyrano</token>
-  <token value="[se]1ccccc1" valType="SMILES">selenopyrano</token>
-  <token value="[te]1ccccc1" valType="SMILES">telluropyrano</token>
-  <token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/16a/15b/15c/15d/15e" valType="SMILES">pyranthreno</token>
-  <token value="pyrazine" valType="dbkey">pyrazino</token>
-  <token value="pyrazole" valType="dbkey">pyrazolo</token>
-  <token value="pyrene" valType="dbkey">pyreno</token>
-  <token value="pyridazine" valType="dbkey">pyridazino</token>
-  <token value="pyridine" valType="dbkey">pyridino</token>
-  <token value="pyridine" valType="dbkey">pyrido</token>
-  <token value="pyrimidine" valType="dbkey">pyrimidino</token>
-  <token value="pyrimidine" valType="dbkey">pyrimido</token>
-  <token value="c1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrrolizino</token>
-  <token value="pyrrole" valType="dbkey">pyrrolo</token>
-  <token value="quinazoline" valType="dbkey">quinazolino</token>
-  <token value="quinoline" valType="dbkey">quino</token>
-  <token value="quinoline" valType="dbkey">quinolino</token>
-  <token value="c1cccn2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinolizino</token>
-  <token value="quinoxaline" valType="dbkey">quinoxalino</token>
-  <token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubiceno</token>
-  <token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenanthreno</token>
-  <token value="[se]1cccc1" valType="SMILES">selenopheno</token>
-  <token value="C1=CC=CC=2[Si]=C3C=CC=CC3=[Si]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthreno</token>
-  <token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluranthreno</token>
-  <token value="[te]1cccc1" valType="SMILES">telluropheno</token>
-  <token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thianthreno</token>
-  <token value="thiophene" valType="dbkey">thieno</token>
-  <token value="thiophene" valType="dbkey">thiopheno</token>
-  <token value="c1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b" valType="SMILES">trindeno</token>
-  <token value="c1cccc2oc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">xantheno</token>
-  <token value="c1cccc2sc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thioxantheno</token>
-  <token value="c1cccc2[se]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenoxantheno</token>
-  <token value="c1cccc2[te]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluroxantheno</token>
-</tokenList>
+<tokenLists>
+  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="Å">
+  <!-- benzo is special as fused rings formed from benzo are treated as components and a locant in front of a benzo assigns locants for this component-->
+    <token value="benzene" valType="dbkey">benzo</token>
+    <token value="benzene" valType="dbkey">benz</token>
+  </tokenList>
+  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="f">
+    <token value="aceanthrylene" valType="dbkey">aceanthryleno</token>
+    <token value="acenaphthylene" valType="dbkey">acenaphthyleno</token>
+    <token value="acenaphthylene" valType="dbkey">acenaphth</token>
+    <token value="acenaphthylene" valType="dbkey">acenaphtho</token>
+    <token value="acephenanthrylene" valType="dbkey">acephenanthryleno</token>
+    <token value="c1cccc2[as]c3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridarsino</token>
+    <token value="c1cccc2nc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridino</token>
+    <token value="c1cccc2pc3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridophosphino</token>
+    <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES">anthraceno</token>
+    <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES">anthra</token>
+    <token value="c1cccc2[as]c3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">arsanthreno</token>
+    <token value="c1cccc2[as]cc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">arsanthridino</token>
+    <token value="c1cc[as]2ccccc12" labels="1/2/3/4/5/6/7/8/8a" valType="SMILES">arsindolizino</token>
+    <token value="[as]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">arsindolo</token>
+    <token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">arsinolino</token>
+    <token value="c1ccc[as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">arsinolizino</token>
+    <token value="azulene" valType="dbkey">azuleno</token>
+    <token value="benzene" valType="dbkey">benzo</token>
+    <token value="benzene" valType="dbkey">benz</token>
+    <token value="benzene" valType="dbkey">benzeno</token>
+    <token value="c1nccc2c3ccccc3nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">betacarbolino</token>
+    <token value="c1nccc2c3ccccc3nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">beta-carbolino</token>
+    <token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthreno</token>
+    <token value="c1cccc2c3ccccc3nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">carbazolo</token>
+    <token value="chromene" valType="dbkey">chromeno</token>
+    <token value="s1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thiochromeno</token>
+    <token value="[se]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenochromeno</token>
+    <token value="[te]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tellurochromeno</token>
+    <token value="chrysene" valType="dbkey">chryseno</token>
+    <token value="cinnoline" valType="dbkey">cinnolino</token>
+    <token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g">coroneno</token>
+    <token value="fluoranthene" valType="dbkey">fluorantheno</token>
+    <token value="fluorene" valType="dbkey">fluoreno</token>
+    <token value="furan" valType="dbkey">furano</token>
+    <token value="furan" valType="dbkey">furo</token>
+    <token value="imidazole" valType="dbkey">imidazolo</token>
+    <token value="imidazole" valType="dbkey">imidazo</token>
+    <token value="as-indacene" valType="dbkey">as-indaceno</token>
+    <token value="s-indacene" valType="dbkey">s-indaceno</token>
+    <token value="indazole" valType="dbkey">indazolo</token>
+    <token value="indene" valType="dbkey">indeno</token>
+    <token value="indole" valType="dbkey">indolo</token>
+    <token value="indolizine" valType="dbkey">indolizino</token>
+    <token value="c1[as]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isoarsindolo</token>
+    <token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoarsinolino</token>
+    <token value="isobenzofuran" valType="dbkey">isobenzofurano</token>
+    <token value="c1occc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isochromeno</token>
+    <token value="c1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromeno</token>
+    <token value="c1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromeno</token>
+    <token value="c1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromeno</token>
+    <token value="isoindole" valType="dbkey">isoindolo</token>
+    <token value="isoxazole" valType="dbkey">isooxazolo</token>
+    <token value="isoxazole" valType="dbkey">isoxazolo</token>
+    <token value="c1pcc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isophosphindolo</token>
+    <token value="c1pccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isophosphinolino</token>
+    <token value="isoquinoline" valType="dbkey">isoquino</token>
+    <token value="isoquinoline" valType="dbkey">isoquinolino</token>
+    <token value="[se]1nccc1" valType="SMILES">isoselenazolo</token>
+    <token value="[te]1nccc1" valType="SMILES">isotellurazolo</token>
+    <token value="isothiazole" valType="dbkey">isothiazolo</token>
+    <token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">mercuranthreno</token>
+    <token value="naphthacene" valType="dbkey">naphthaceno</token>
+    <token value="naphthalene" valType="dbkey">naphthaleno</token>
+    <token value="naphthalene" valType="dbkey">naphth</token>
+    <token value="naphthalene" valType="dbkey">naphtho</token>
+    <token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8">naphthyridino</token>
+    <token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k" valType="SMILES">ovaleno</token>
+    <token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthreno</token>
+    <token value="perimidine" valType="dbkey">perimidino</token>
+    <token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">peryleno</token>
+    <token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">perylo</token>
+    <token value="phenalene" valType="dbkey">phenaleno</token>
+    <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthreno</token>
+    <token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phenanthridino</token>
+    <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthro</token>
+    <token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7">phenanthrolino</token>
+    <token value="phenazine" valType="dbkey">phenazino</token>
+    <token value="c1cccc2oc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxazino</token>
+    <token value="c1cccc2sc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiazino</token>
+    <token value="c1cccc2[se]c3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoselenazino</token>
+    <token value="c1cccc2[te]c3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenotellurazino</token>
+    <token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenophosphazinino</token>
+    <token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenophosphazino</token>
+    <token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenarsazinino</token>
+    <token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoarsazino</token>
+    <token value="c1cccc2nc3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercurazino</token>
+    <token value="c1cccc2nc3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercazino</token>
+    <token value="c1cccc2oc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxathiino</token>
+    <token value="c1cccc2oc3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaselenino</token>
+    <token value="c1cccc2oc3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxatellurino</token>
+    <token value="c1cccc2oc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaphosphinino</token>
+    <token value="c1cccc2oc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaphosphino</token>
+    <token value="c1cccc2oc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxarsinino</token>
+    <token value="c1cccc2oc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxarsino</token>
+    <token value="c1cccc2oc3ccccc3[sb]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxastibinino</token>
+    <token value="c1cccc2oc3ccccc3[sb]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxantimonino</token>
+    <token value="c1cccc2sc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiarsinino</token>
+    <token value="c1cccc2sc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiarsino</token>
+    <token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercurino</token>
+    <token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phosphanthreno</token>
+    <token value="c1cccc2pcc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phosphanthridino</token>
+    <token value="p1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">phosphindolo</token>
+    <token value="c1ccp2ccccc12" labels="1/2/3/4/5/6/7/8/8a" valType="SMILES">phosphindolizino</token>
+    <token value="p1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">phosphinolino</token>
+    <token value="c1cccp2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">phosphinolizino</token>
+    <token value="phthalazine" valType="dbkey">phthalazino</token>
+    <token value="c1cccc2ccc3c4ccc5ccccc5c4ccc3c21" labels="1/2/3/4/4a/5/6/6a/6b/7/8/8a/9/10/11/12/12a/12b/13/14/14a/14b" valType="SMILES">piceno</token>
+    <token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiadeno</token>
+    <token value="pteridine" valType="dbkey">pteridino</token>
+    <token value="n1cnc2ncnc2c1" labels="1/2/3/4/9/8/7/5/6" fusedRingNumbering="1/2/3/3a/4/5/6/6a/7" valType="SMILES">purino</token>
+    <token value="pyran" valType="dbkey">pyrano</token>
+    <token value="s1ccccc1" valType="SMILES">thiopyrano</token>
+    <token value="[se]1ccccc1" valType="SMILES">selenopyrano</token>
+    <token value="[te]1ccccc1" valType="SMILES">telluropyrano</token>
+    <token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/16a/15b/15c/15d/15e" valType="SMILES">pyranthreno</token>
+    <token value="pyrazine" valType="dbkey">pyrazino</token>
+    <token value="pyrazole" valType="dbkey">pyrazolo</token>
+    <token value="pyrene" valType="dbkey">pyreno</token>
+    <token value="pyridazine" valType="dbkey">pyridazino</token>
+    <token value="pyridine" valType="dbkey">pyridino</token>
+    <token value="pyridine" valType="dbkey">pyrido</token>
+    <token value="pyrimidine" valType="dbkey">pyrimidino</token>
+    <token value="pyrimidine" valType="dbkey">pyrimido</token>
+    <token value="c1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrrolizino</token>
+    <token value="pyrrole" valType="dbkey">pyrrolo</token>
+    <token value="quinazoline" valType="dbkey">quinazolino</token>
+    <token value="quinoline" valType="dbkey">quino</token>
+    <token value="quinoline" valType="dbkey">quinolino</token>
+    <token value="c1cccn2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinolizino</token>
+    <token value="quinoxaline" valType="dbkey">quinoxalino</token>
+    <token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubiceno</token>
+    <token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenanthreno</token>
+    <token value="[se]1cccc1" valType="SMILES">selenopheno</token>
+    <token value="C1=CC=CC=2[Si]=C3C=CC=CC3=[Si]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthreno</token>
+    <token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluranthreno</token>
+    <token value="[te]1cccc1" valType="SMILES">telluropheno</token>
+    <token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thianthreno</token>
+    <token value="thiophene" valType="dbkey">thieno</token>
+    <token value="thiophene" valType="dbkey">thiopheno</token>
+    <token value="c1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b" valType="SMILES">trindeno</token>
+    <token value="c1cccc2oc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">xantheno</token>
+    <token value="c1cccc2sc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thioxantheno</token>
+    <token value="c1cccc2[se]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenoxantheno</token>
+    <token value="c1cccc2[te]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluroxantheno</token>
+  </tokenList>
+</tokenLists>

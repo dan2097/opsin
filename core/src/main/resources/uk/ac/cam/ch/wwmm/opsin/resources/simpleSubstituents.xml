@@ -168,15 +168,18 @@
   <token value="=S" labels="none" valType="SMILES">thioxo</token>
   <token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
   <token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
-
   <token value="P|5(=O)(O)(O)" labels="none" valType="SMILES">phosphono</token>
   <token value="P|5(=O)([O-])([O-])" labels="none" valType="SMILES">phosphonato</token>
+  <token value="P|5(=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P|5(=O)(O)O in biochemical nomenclature-->
   <token value="P|5(=O)" labels="none" valType="SMILES">phosphinoyl</token><!--if generated systematically by OPSIN this wouldn't be explicitly valency 5-->
+  <token value="P=O" labels="none" valType="SMILES">phosphoroso</token>
   <token value="P|3" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
 
   <token value="[As|5](=O)(O)(O)" labels="none" valType="SMILES">arsono</token>
   <token value="[As|5](=O)([O-])([O-])" labels="none" valType="SMILES">arsonato</token>
+  <token value="[As|5](=O)=O" labels="none" valType="SMILES">arso</token>
   <token value="[As|5](=O)" labels="none" valType="SMILES">arsinoyl</token>
+  <token value="[As]=O" labels="none" valType="SMILES">arsoroso</token>
   <token value="[As|3]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsino</token>
 
   <token value="[Sb|5](=O)(O)(O)" labels="none" valType="SMILES">stibono</token>
