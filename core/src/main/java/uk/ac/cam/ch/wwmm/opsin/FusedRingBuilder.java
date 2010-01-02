@@ -73,14 +73,16 @@ class FusedRingBuilder {
 		if (previous!=null && previous.getLocalName().equals("multiplier")){//e.g. dibenzothiophene
 			throw new StructureBuildingException("multiplied components cannot currently be fused");
 		}
-		if (groups.get(0).getValue().equals("benz") || groups.get(0).getValue().equals("benzo")){
-			Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(0));
-			if (!possibleFusionbracket.getLocalName().equals("fusion")){
-				//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
-				//and have a special convention for indicating the position of heteroatoms 
-				benzoSpecificFusion(state, groups.get(0), groups.get(1));
-				groups.get(0).detach();
-				groups =subOrRoot.getChildElements("group");
+		for(int i= groups.size() -2;i >=0; i--) {
+			if (groups.get(i).getValue().equals("benz") || groups.get(i).getValue().equals("benzo")){
+				Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(i));
+				if (!possibleFusionbracket.getLocalName().equals("fusion")){
+					//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
+					//and have a special convention for indicating the position of heteroatoms 
+					benzoSpecificFusion(state, groups.get(i), groups.get(i+1));
+					groups.get(i).detach();
+					groups =subOrRoot.getChildElements("group");
+				}
 			}
 		}
 		List<Element> nameComponents  = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"fusion","group"});
