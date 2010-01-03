@@ -16,6 +16,7 @@ import nu.xom.Elements;
  *
  */
 class FusedRingBuilder {
+	private Pattern matchSemiColon = Pattern.compile(";");
 	private Pattern matchColon = Pattern.compile(":");
 	private Pattern matchComma = Pattern.compile(",");
 	private Pattern matchDash = Pattern.compile("-");
@@ -31,10 +32,9 @@ class FusedRingBuilder {
 	 * Returns the substituent/root with the 2 groups fused together into 1 group
 	 * @param state: contains the current id and fragment manager
 	 * @param subOrRoot Element (substituent or root)
-	 * @throws PostProcessingException
 	 * @throws StructureBuildingException
 	 */
-	Element processFusedRings(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
+	Element processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
 		Elements groups =subOrRoot.getChildElements("group");
 		if (groups.size() < 2){return subOrRoot;}//nothing to fuse
 		Element lastGroup = groups.get(groups.size()-1);
@@ -49,7 +49,7 @@ class FusedRingBuilder {
 				List<Atom> atomList = ring.getAtomList();
 				for (Atom atom : atomList) {
 					if (!atom.getAtomIsInACycle()){
-						throw new PostProcessingException("Inappropriate group used in fusion nomenclature. Only groups composed entirely of atoms in cycles may be used. i.e. not: " + group.getValue());
+						throw new StructureBuildingException("Inappropriate group used in fusion nomenclature. Only groups composed entirely of atoms in cycles may be used. i.e. not: " + group.getValue());
 					}
 				}
 				if (group.getAttribute("fusedRingNumbering")!=null){
@@ -69,22 +69,7 @@ class FusedRingBuilder {
 				ring.sortAtomListByLocant();//for those where the order the locants are in is sensible
 			}
 		}
-		Element previous = (Element) XOMTools.getPreviousSibling(groups.get(0));//TODO support this
-		if (previous!=null && previous.getLocalName().equals("multiplier")){//e.g. dibenzothiophene
-			throw new StructureBuildingException("multiplied components cannot currently be fused");
-		}
-		for(int i= groups.size() -2;i >=0; i--) {
-			if (groups.get(i).getValue().equals("benz") || groups.get(i).getValue().equals("benzo")){
-				Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(i));
-				if (!possibleFusionbracket.getLocalName().equals("fusion")){
-					//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
-					//and have a special convention for indicating the position of heteroatoms 
-					benzoSpecificFusion(state, groups.get(i), groups.get(i+1));
-					groups.get(i).detach();
-					groups =subOrRoot.getChildElements("group");
-				}
-			}
-		}
+		groups = processBenzoFusions(state, subOrRoot, groups);//FR-2.2.8  e.g. in 2H-[1,3]benzodioxino[6',5',4':10,5,6]anthra[2,3-b]azepine  benzodioxino is one component
 		List<Element> nameComponents  = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"fusion","group"});
 		nameComponents.remove(lastGroup);
 		
@@ -100,6 +85,7 @@ class FusedRingBuilder {
 		int fusionLevel = 0;
 		List<Fragment> fragmentInScopeForEachFusionLevel = new ArrayList<Fragment>();
 		fragmentInScopeForEachFusionLevel.add(0, parentRing);//theLast ring fused or parentRing
+		List<Fragment> componentFragments = new ArrayList<Fragment>();
 		for (int i = nameComponents.size()-1; i>=0; i--) {
 			Element fusion = null;
 			if (nameComponents.get(i).getLocalName().equals("fusion")){
@@ -109,60 +95,106 @@ class FusedRingBuilder {
 				throw new StructureBuildingException("Group not found where group expected. This is probably a bug");
 			}
 			Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(i));
-			if (fusion==null || matchColon.split(fusion.getValue()).length==1){
-				if (fusion!=null){//A fusion bracket without a colon is always used when applying to the parent component
-					//check for case of ommitted locant from a higher order fusion bracket e.g. cyclopenta[4,5]pyrrolo[2,3-c]pyridine
-					if (matchDash.split(fusion.getValue()).length==1 && 
-							matchComma.split(fusion.getValue()).length >1 &&
-							allAtomsAreIdentical(nextComponent)){
-						List<String> numericalLocantsOfParent = Arrays.asList(matchComma.split(fusion.getValue().substring(1, fusion.getValue().length()-1)));
-						List<String> numericalLocantsOfChild = findPossibleNumericalLocants(nextComponent, numericalLocantsOfParent.size()-1);
-						processHigherOrderFusionDescriptors(state, nextComponent, fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfChild, numericalLocantsOfParent);
+			int multiplier = 1;
+			Element possibleMultiplierEl = (Element) XOMTools.getPreviousSibling(nameComponents.get(i));//e.g. the di of difuro
+			if (possibleMultiplierEl != null && possibleMultiplierEl.getLocalName().equals("multiplier")){
+				multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue("value"));
+			}
+			String[] fusionDescriptors =null;
+			if (fusion !=null){
+				String fusionDescriptorString = fusion.getValue().substring(1, fusion.getValue().length()-1);
+				if (multiplier ==1){
+					fusionDescriptors = new String[]{fusionDescriptorString};
+				}
+				else{
+					if (matchSemiColon.split(fusionDescriptorString).length >1){
+						fusionDescriptors = matchSemiColon.split(fusionDescriptorString);
+					}
+					else if (matchColon.split(fusionDescriptorString).length >1){
+						fusionDescriptors = matchColon.split(fusionDescriptorString);
+					}
+					else if (matchComma.split(fusionDescriptorString).length >1){
+						fusionDescriptors = matchComma.split(fusionDescriptorString);
+					}
+					else{//multiplier does not appear to mean multiplied component. Could be indicating multiplication of the whole fused ring system
+						multiplier =1;
+						fusionDescriptors = new String[]{fusionDescriptorString};
+					}
+				}
+			}
+			if (multiplier >1){
+				possibleMultiplierEl.detach();
+			}
+			Fragment[] fusionComponents = new Fragment[multiplier];
+			for (int j = 0; j < multiplier; j++) {
+				if (j>0){
+					fusionComponents[j] = state.fragManager.copyAndRelabel(nextComponent,  StringTools.multiplyString("'", j));
+				}
+				else{
+					fusionComponents[j] = nextComponent;
+				}
+			}
+			
+			for (int j = 0; j < multiplier; j++) {
+				Fragment component = fusionComponents[j];
+				componentFragments.add(component);
+				if (fusion !=null){
+					if (matchColon.split(fusionDescriptors[j]).length==1){//A fusion bracket without a colon is used when applying to the parent component (except in a special case where locants are ommitted)
+						//check for case of omitted locant from a higher order fusion bracket e.g. cyclopenta[4,5]pyrrolo[2,3-c]pyridine
+						if (matchDash.split(fusionDescriptors[j]).length==1 && 
+								matchComma.split(fusionDescriptors[j]).length >1 &&
+								allAtomsAreIdentical(component)){
+							relabelAccordingToFusionLevel(component, fusionLevel);
+							List<String> numericalLocantsOfParent = Arrays.asList(matchComma.split(fusionDescriptors[j]));
+							List<String> numericalLocantsOfChild = findPossibleNumericalLocants(component, numericalLocantsOfParent.size()-1);
+							processHigherOrderFusionDescriptors(state, component, fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfChild, numericalLocantsOfParent);
+						}
+						else{
+							fusionLevel = 0;
+							relabelAccordingToFusionLevel(component, fusionLevel);
+							performSimpleFusion(state, fusionDescriptors[j], component, fragmentInScopeForEachFusionLevel.get(fusionLevel));//e.g. pyrano[3,2-b]imidazo[4,5-e]pyridine where both are level 0 fusions
+						}
 					}
 					else{
-						fusionLevel = 0;
-						performSimpleFusion(state, fusion, nextComponent, fragmentInScopeForEachFusionLevel.get(fusionLevel));//e.g. pyrano[3,2-b]imidazo[4,5-e]pyridine where both are level 0 fusions
+						String firstLocant = matchComma.split(fusionDescriptors[j])[0];
+						int numberOfPrimes = -j;//determine number of primes in fusor and hence determine fusion level
+						for(int k = firstLocant.length() -1; k>0; k--){
+							if (firstLocant.charAt(k)=='\''){
+								numberOfPrimes++;
+							}
+						}
+						if (numberOfPrimes != fusionLevel){
+							if (fusionLevel == numberOfPrimes +1){
+								fusionLevel = numberOfPrimes;
+							}
+							else{
+								throw new StructureBuildingException("Incorrect number of primes in fusion bracket: " +fusionDescriptors[j]);
+							}
+						}
+						relabelAccordingToFusionLevel(component, fusionLevel);
+						performHigherOrderFusion(state, fusionDescriptors[j], component, fragmentInScopeForEachFusionLevel.get(fusionLevel));
 					}
 				}
 				else{
-					if (fusionLevel > 0){
-						FragmentTools.relabelLocants(nextComponent.getAtomList(), StringTools.multiplyString("'", fusionLevel));
-					}
-					performSimpleFusion(state, fusion, nextComponent, fragmentInScopeForEachFusionLevel.get(fusionLevel));
+					relabelAccordingToFusionLevel(component, fusionLevel);
+					performSimpleFusion(state, null, component, fragmentInScopeForEachFusionLevel.get(fusionLevel));
 				}
-			}
-			else{
-				String firstLocant = matchComma.split(fusion.getValue())[0];
-				int numberOfPrimes =0;//determine number of primes in fusor and hence determine fusion level
-				for(int j = firstLocant.length() -1; j>0; j--){
-					if (firstLocant.charAt(j)=='\''){
-						numberOfPrimes++;
-					}
-				}
-				if (numberOfPrimes != fusionLevel){
-					if (fusionLevel == numberOfPrimes +1){
-						fusionLevel = numberOfPrimes;
-					}
-					else{
-						throw new StructureBuildingException("Incorrect number of primes in fusion bracket: " +fusion.getValue());
-					}
-				}
-				FragmentTools.relabelLocants(nextComponent.getAtomList(), StringTools.multiplyString("'", fusionLevel));
-				performHigherOrderFusion(state, fusion, nextComponent, fragmentInScopeForEachFusionLevel.get(fusionLevel));
 			}
 			fusionLevel++;
-			if (fragmentInScopeForEachFusionLevel.size() <= fusionLevel){
-				fragmentInScopeForEachFusionLevel.add(fusionLevel, nextComponent);
-			}
-			else{
-				fragmentInScopeForEachFusionLevel.set(fusionLevel, nextComponent);
+			if (multiplier ==1){//multiplied components may not be substituted onto
+				if (fragmentInScopeForEachFusionLevel.size() <= fusionLevel){
+					fragmentInScopeForEachFusionLevel.add(fusionLevel, fusionComponents[0]);
+				}
+				else{
+					fragmentInScopeForEachFusionLevel.set(fusionLevel, fusionComponents[0]);
+				}
 			}
 		}
 
-		for(int i=0; i< groups.size() - 1 ;i++) {
-			Fragment ring =state.xmlFragmentMap.get(groups.get(i));
+		for (Fragment ring : componentFragments) {
 			state.fragManager.incorporateFragment(ring, parentRing);
 		}
+
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
 		state.fragManager.removeFragment(parentRing);
 		Fragment fusedRing =state.fragManager.copyAndRelabel(parentRing);//makes sure the IDs are continuous
@@ -189,11 +221,62 @@ class FusedRingBuilder {
 		return fusedRingEl;
 	}
 
-	private void performSimpleFusion(BuildState state, Element fusion, Fragment childRing, Fragment parentRing) throws StructureBuildingException {
+	/**
+	 * Searches groups for benz(o) components and fuses them in accordance with
+	 * FR-2.2.8 Heterobicyclic components with a benzene ring
+	 * Returns the the list of group elements This will have been modified if this function has done anything
+	 * @param state
+	 * @param subOrRoot
+	 * @param groups
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private Elements processBenzoFusions(BuildState state, Element subOrRoot, Elements groups) throws StructureBuildingException {
+		for(int i= groups.size() -2;i >=0; i--) {
+			if (groups.get(i).getValue().equals("benz") || groups.get(i).getValue().equals("benzo")){
+				Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(i));
+				Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(groups.get(i));
+				if (!possibleFusionbracket.getLocalName().equals("fusion") && (possibleMultiplier==null || !possibleMultiplier.getLocalName().equals("multiplier")) ){
+					//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
+					//and have a special convention for indicating the position of heteroatoms 
+					benzoSpecificFusion(state, groups.get(i), groups.get(i+1));
+					groups.get(i).detach();
+					groups =subOrRoot.getChildElements("group");
+				}
+			}
+		}
+		return groups;
+	}
+
+	/**
+	 * Modifies nextComponent's locants according to the fusionLevel.
+	 * @param nextComponent
+	 * @param fusionLevel
+	 * @throws StructureBuildingException
+	 */
+	private void relabelAccordingToFusionLevel(Fragment component, int fusionLevel) throws StructureBuildingException {
+		if (fusionLevel > 0){
+			FragmentTools.relabelLocants(component.getAtomList(), StringTools.multiplyString("'", fusionLevel));
+		}
+	}
+
+	/**
+	 * Handles fusion between components where the fusion descriptor is of the form:
+	 * comma separated locants dash letters
+	 * e.g imidazo[4,5-d]pyridine
+	 * The fusionDescriptor may be given as null or the letter/numerical part omitted.
+	 * Sensible defaults will be found instead
+	 * @param state
+	 * @param fusionDescriptor
+	 * @param childRing
+	 * @param parentRing
+	 * @throws StructureBuildingException
+	 */
+	private void performSimpleFusion(BuildState state, String fusionDescriptor, Fragment childRing, Fragment parentRing) throws StructureBuildingException {
 		List<String> numericalLocantsOfChild = null;
 		List<String> letterLocantsOfParent = null;
-		if (fusion != null){
-			String[] fusionArray = matchDash.split(fusion.getValue().substring(1, fusion.getValue().length()-1));
+		if (fusionDescriptor != null){
+			String[] fusionArray = matchDash.split(fusionDescriptor);
 			if (fusionArray.length ==2){
 				numericalLocantsOfChild = Arrays.asList(matchComma.split(fusionArray[0]));
 				char[] tempLetterLocantsOfParent = fusionArray[1].toCharArray();
@@ -383,17 +466,19 @@ class FusedRingBuilder {
 	}
 	
 	/**
-	 * pyrido[1'',2'':1',2']imidazo[4',5':5,6]pyrazino[2,3-b]phenazine
+	 * Handles fusion between components where the fusion descriptor is of the form:
+	 * comma separated locants colon comma separated locants
+	 * e.g pyrido[1'',2'':1',2']imidazo
 	 * @param state
-	 * @param higherOrderFusion
+	 * @param fusionDescriptor
 	 * @param nextComponent
 	 * @param fusedRing
 	 * @throws StructureBuildingException 
 	 */
-	private void performHigherOrderFusion(BuildState state, Element higherOrderFusion, Fragment nextComponent, Fragment fusedRing) throws StructureBuildingException {
+	private void performHigherOrderFusion(BuildState state, String fusionDescriptor, Fragment nextComponent, Fragment fusedRing) throws StructureBuildingException {
 		List<String> numericalLocantsOfChild = null;
 		List<String> numericalLocantsOfParent = null;
-		String[] fusionArray = matchColon.split(higherOrderFusion.getValue().substring(1, higherOrderFusion.getValue().length()-1));
+		String[] fusionArray = matchColon.split(fusionDescriptor);
 		if (fusionArray.length ==2){
 			numericalLocantsOfChild = Arrays.asList(matchComma.split(fusionArray[0]));
 			numericalLocantsOfParent = Arrays.asList(matchComma.split(fusionArray[1]));
@@ -568,9 +653,8 @@ class FusedRingBuilder {
 	 * @param benzoEl
 	 * @param parentEl
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
 	 */
-	private void benzoSpecificFusion(BuildState state, Element benzoEl, Element parentEl) throws StructureBuildingException, PostProcessingException {
+	private void benzoSpecificFusion(BuildState state, Element benzoEl, Element parentEl) throws StructureBuildingException {
 		
 		/*
 		 * Perform the fusion, number it and associate it with the parentEl
@@ -624,7 +708,7 @@ class FusedRingBuilder {
 					}
 				}
 				else if (locants.size()>1){
-					throw new PostProcessingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
+					throw new StructureBuildingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
 				}
 			}
 		}
