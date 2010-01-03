@@ -78,7 +78,7 @@ does not define a CFG.
   <regex name="%aminoAcidEndsInIc%" value="ï"/>
   <regex name="%ine%" value="î"/>
   <regex name="%ic%" value="ì"/>
-  <regex name="%higherOrderFusor%" value="Ä"/>
+  <regex name="%multipleFusor%" value="Ä"/>
   <regex name="%benzo%" value="Å"/>
   <!--up to ascii 143 used -->
 
@@ -149,7 +149,7 @@ does not define a CFG.
 
   <!--Complex terms-->
   <regex name="%benzoComponent%" value ="((%optionalOpenBracket%%locantGroup%%optionalCloseBracket%)|%locantGroup%)?%benzo%"/>
-  <regex name="%fusedRingSystem%" value = "((%fusionComponent%%higherOrderFusor%?|%benzoComponent%)*(%fusionComponent%%fusionBracket%?|%benzoComponent%)+%ringGroup%)"/>
+  <regex name="%fusedRingSystem%" value = "((%fusionComponent%%fusionBracket%?|%benzoComponent%|%multiplier%%fusionComponent%%multipleFusor%)+%ringGroup%)"/>
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringSubstituent%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%inlineSuffixGroup%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
