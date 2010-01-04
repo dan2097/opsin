@@ -197,7 +197,7 @@ class FusedRingBuilder {
 
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
 		state.fragManager.removeFragment(parentRing);
-		Fragment fusedRing =state.fragManager.copyAndRelabel(parentRing);//makes sure the IDs are continuous
+		Fragment fusedRing =state.fragManager.copyAndRelabel(parentRing);//makes sure the IDs are continuous (not sure whether this is actually necessary anymore)
 
 		StringBuilder fusedRingName = new StringBuilder();
 		for (Element element : nameComponents) {

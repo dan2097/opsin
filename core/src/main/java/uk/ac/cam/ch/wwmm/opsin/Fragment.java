@@ -681,7 +681,7 @@ class Fragment {
 					}
 				}
 				if (atomToReduceValencyAt==null){
-					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine  else just pick the first atom with SV encountered
+					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine  else just pick the first atom with SV encountered
 						if(a.hasSpareValency()) {
 							if (atomToReduceValencyAt==null){
 								atomToReduceValencyAt=a;
@@ -1045,16 +1045,12 @@ class Fragment {
 	 * Reorders the fragment's internal atomList by the value of the first locant of the atoms
 	 * e.g. 1,2,3,3a,3b,4
 	 * Used for assuring the correct order of atom iteration when performing ring fusion
+	 * @throws StructureBuildingException 
 	 */
-	void sortAtomListByLocant() {
-		LinkedHashMap<Integer, Atom> reorderedIdToAtomMapping = new LinkedHashMap<Integer, Atom>();
+	void sortAtomListByLocant() throws StructureBuildingException {
 		List<Atom> atomList =getAtomList();
 		Collections.sort(atomList, new FragmentTools.SortByLocants());
-		for (Atom atom : atomList) {
-			reorderedIdToAtomMapping.put(atom.getID(),atom);
-		}
-		atomMapFromId = reorderedIdToAtomMapping;
-		atomCollection = atomMapFromId.values();
+		reorderAtomCollection(atomList);
 	}
 }
 
