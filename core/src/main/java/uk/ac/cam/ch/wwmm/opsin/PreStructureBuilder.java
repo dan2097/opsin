@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +39,6 @@ class PreStructureBuilder {
 	private Pattern matchComma =Pattern.compile(",");
 	private Pattern matchSpace =Pattern.compile(" ");
 	private Pattern matchElementSymbol = Pattern.compile("[A-Z].?");
-	private Pattern matchUpperCase = Pattern.compile("[A-Z]");
 	private Pattern matchOrtho =Pattern.compile("[oO]");
 	private Pattern matchMeta =Pattern.compile("[mM]");
 	private Pattern matchPara =Pattern.compile("[pP]");
@@ -875,6 +876,106 @@ class PreStructureBuilder {
 	}
 
 
+	/** Match each locant to the next applicable "feature". Assumes that processLocants
+	 * has done a good job and rejected cases where no match can be made.
+	 * Handles cases where the locant is next to the feature it refers to
+	 *
+	 * @param subOrRoot The substituent/root to look for locants in.
+	 * @throws PostProcessingException
+	 */
+	private void matchLocantsToDirectFeatures(Element subOrRoot) throws PostProcessingException {
+		ArrayList<Element> locants = OpsinTools.elementsToElementArrayList(subOrRoot.getChildElements("locant"));
+	
+		Elements groups = subOrRoot.getChildElements("group");
+		for (int i = 0; i < groups.size(); i++) {
+			Element group = groups.get(i);
+			if (group.getAttributeValue("subType").equals("hantzschWidman")){//handle Hantzch-widman systems
+				if (group.getAttributeValue("valType")!=null && group.getAttributeValue("valType").equals("partunsatring")){//special case for partunsatring
+					//exception for where a locant is supposed to indicate the location of a double bond...
+					Elements deltas = subOrRoot.getChildElements("delta");
+					if (deltas.size()==0){
+						Element delta =new Element("delta");
+						if (locants.size()>0 && subOrRoot.indexOf(locants.get(0))< subOrRoot.indexOf(group)){//locant is in front of group
+							Element locant=locants.get(0);
+							delta.appendChild(locant.getAttributeValue("value"));
+							XOMTools.insertBefore(locant, delta);
+							locant.detach();
+							locants.remove(locant);
+						}
+						else{
+							delta.appendChild("");
+							subOrRoot.insertChild(delta, 0);//no obvious attempt to set double bond position, potentially ambiguous, valency will be used to choose later
+						}
+					}
+					group.getAttribute("valType").setValue("ring");
+				}
+				if (locants.size()>0 ){
+					ArrayList<Element> locantsBeforeHWSystem = new ArrayList<Element>();
+					ArrayList<Element> heteroAtoms = new ArrayList<Element>();
+					int indexOfGroup =subOrRoot.indexOf(group);
+					for (int j = indexOfGroup -1; j >= 0; j--) {
+						String elName=((Element)subOrRoot.getChild(j)).getLocalName();
+						if (elName.equals("locant")){
+							locantsBeforeHWSystem.add((Element)subOrRoot.getChild(j));
+						}
+						else if(elName.equals("heteroatom")){
+							heteroAtoms.add((Element)subOrRoot.getChild(j));
+						}
+						else{
+							break;
+						}
+					}
+					if (locantsBeforeHWSystem.size()!=0){
+						//detect a solitary locant in front of a HW system and prevent it being assigned.
+						//something like 1-aziridin-1-yl never means the N is at position 1 as it is at position 1 by convention
+						//this special case is not applied to pseudo HW like systems e.g. [1]oxacyclotetradecine
+						if (locantsBeforeHWSystem.size() ==1 && Integer.parseInt(group.getAttributeValue("value")) <=10){
+							locants.remove(locantsBeforeHWSystem.get(0));//don't assign this locant
+						}
+						else if (locantsBeforeHWSystem.size() == heteroAtoms.size()){//general case
+							for (int j = 0; j < locantsBeforeHWSystem.size(); j++) {
+								Element locant =locantsBeforeHWSystem.get(j);
+								heteroAtoms.get(j).addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
+								locant.detach();
+								locants.remove(locant);
+							}
+						}
+						else {
+							throw new PostProcessingException("Mismatch between number of locants and HW heteroatoms");
+						}
+					}
+				}
+			}
+		}
+	
+		for (Element locant : locants) {
+			String locantValue =locant.getAttributeValue("value");
+			if (matchElementSymbol.matcher(locantValue).matches()){//element symbol locant
+				continue;
+			}
+			Element referent = (Element)XOMTools.getNextSibling(locant);
+			while(referent.getLocalName().equals("locant") ||
+					referent.getAttribute("locant") != null ) {
+				referent = (Element)XOMTools.getNextSibling(referent);
+			}
+			String refName = referent.getLocalName();
+			//Only assigning locants to elements that are unsaturator, suffix, heteroatom, hydro and were not created by a multiplier
+			if(referent.getAttribute("multiplied") == null && (refName.equals("unsaturator") ||
+					refName.equals("suffix") ||
+					refName.equals("heteroatom") ||
+					refName.equals("hydro"))) {
+	
+				//If a compound Locant e.g. 1(6) is detected add a compound locant attribute
+				if (locant.getAttribute("compoundLocant")!=null){
+					referent.addAttribute(new Attribute("compoundLocant", locant.getAttributeValue("compoundLocant")));
+				}
+				referent.addAttribute(new Attribute("locant", locantValue));
+				locant.detach();
+			}
+		}
+	}
+
+
 	/**
 	 * Handles suffixes, passes them to resolveGroupAddingSuffixes.
 	 * Processes the suffixAppliesTo command which multiplies a suffix and attaches the suffixes to the atoms described by the given IDs
@@ -1374,106 +1475,6 @@ class PreStructureBuilder {
 	}
 
 
-	/** Match each locant to the next applicable "feature". Assumes that processLocants
-	 * has done a good job and rejected cases where no match can be made.
-	 * Handles cases where the locant is next to the feature it refers to
-	 *
-	 * @param subOrRoot The substituent/root to look for locants in.
-	 * @throws PostProcessingException
-	 */
-	private void matchLocantsToDirectFeatures(Element subOrRoot) throws PostProcessingException {
-		ArrayList<Element> locants = OpsinTools.elementsToElementArrayList(subOrRoot.getChildElements("locant"));
-
-		Elements groups = subOrRoot.getChildElements("group");
-		for (int i = 0; i < groups.size(); i++) {
-			Element group = groups.get(i);
-			if (group.getAttributeValue("subType").equals("hantzschWidman")){//handle Hantzch-widman systems
-				if (group.getAttributeValue("valType")!=null && group.getAttributeValue("valType").equals("partunsatring")){//special case for partunsatring
-					//exception for where a locant is supposed to indicate the location of a double bond...
-					Elements deltas = subOrRoot.getChildElements("delta");
-					if (deltas.size()==0){
-						Element delta =new Element("delta");
-						if (locants.size()>0 && subOrRoot.indexOf(locants.get(0))< subOrRoot.indexOf(group)){//locant is in front of group
-							Element locant=locants.get(0);
-							delta.appendChild(locant.getAttributeValue("value"));
-							XOMTools.insertBefore(locant, delta);
-							locant.detach();
-							locants.remove(locant);
-						}
-						else{
-							delta.appendChild("");
-							subOrRoot.insertChild(delta, 0);//no obvious attempt to set double bond position, potentially ambiguous, valency will be used to choose later
-						}
-					}
-					group.getAttribute("valType").setValue("ring");
-				}
-				if (locants.size()>0 ){
-					ArrayList<Element> locantsBeforeHWSystem = new ArrayList<Element>();
-					ArrayList<Element> heteroAtoms = new ArrayList<Element>();
-					int indexOfGroup =subOrRoot.indexOf(group);
-					for (int j = indexOfGroup -1; j >= 0; j--) {
-						String elName=((Element)subOrRoot.getChild(j)).getLocalName();
-						if (elName.equals("locant")){
-							locantsBeforeHWSystem.add((Element)subOrRoot.getChild(j));
-						}
-						else if(elName.equals("heteroatom")){
-							heteroAtoms.add((Element)subOrRoot.getChild(j));
-						}
-						else{
-							break;
-						}
-					}
-					if (locantsBeforeHWSystem.size()!=0){
-						//detect a solitary locant in front of a HW system and prevent it being assigned.
-						//something like 1-aziridin-1-yl never means the N is at position 1 as it is at position 1 by convention
-						//this special case is not applied to pseudo HW like systems e.g. [1]oxacyclotetradecine
-						if (locantsBeforeHWSystem.size() ==1 && Integer.parseInt(group.getAttributeValue("value")) <=10){
-							locants.remove(locantsBeforeHWSystem.get(0));//don't assign this locant
-						}
-						else if (locantsBeforeHWSystem.size() == heteroAtoms.size()){//general case
-							for (int j = 0; j < locantsBeforeHWSystem.size(); j++) {
-								Element locant =locantsBeforeHWSystem.get(j);
-								heteroAtoms.get(j).addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
-								locant.detach();
-								locants.remove(locant);
-							}
-						}
-						else {
-							throw new PostProcessingException("Mismatch between number of locants and HW heteroatoms");
-						}
-					}
-				}
-			}
-		}
-
-		for (Element locant : locants) {
-			String locantValue =locant.getAttributeValue("value");
-			if (matchElementSymbol.matcher(locantValue).matches()){//element symbol locant
-				continue;
-			}
-			Element referent = (Element)XOMTools.getNextSibling(locant);
-			while(referent.getLocalName().equals("locant") ||
-					referent.getAttribute("locant") != null ) {
-				referent = (Element)XOMTools.getNextSibling(referent);
-			}
-			String refName = referent.getLocalName();
-			//Only assigning locants to elements that are unsaturator, suffix, heteroatom, hydro and were not created by a multiplier
-			if(referent.getAttribute("multiplied") == null && (refName.equals("unsaturator") ||
-					refName.equals("suffix") ||
-					refName.equals("heteroatom") ||
-					refName.equals("hydro"))) {
-
-				//If a compound Locant e.g. 1(6) is detected add a compound locant attribute
-				if (locant.getAttribute("compoundLocant")!=null){
-					referent.addAttribute(new Attribute("compoundLocant", locant.getAttributeValue("compoundLocant")));
-				}
-				referent.addAttribute(new Attribute("locant", locantValue));
-				locant.detach();
-			}
-		}
-	}
-
-
 	/**
 	 * Performs funcional replacement e.g. thio in thioacetic acid replaces an O with S
 	 * For heterocyclic rings this should realy be limited to :
@@ -1486,35 +1487,53 @@ class PreStructureBuilder {
 	 */
 	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException {
 		boolean doneSomething =false;
-		for (Element group : groups) {
+		for (int i = groups.size()-1; i >=0; i--) {
+			Element group =groups.get(i);
 			if (matchChalogenReplacment.matcher(group.getValue()).matches()){
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent =(Element) group.getParent();
-				Element firstElInSubstituent=(Element)substituent.getChild(0);
 				Element nextSubOrBracket = (Element) XOMTools.getNextSibling(substituent);
 				if (nextSubOrBracket!=null && (nextSubOrBracket.getLocalName().equals("substituent") ||nextSubOrBracket.getLocalName().equals("root"))){
-					if (nextSubOrBracket.getLocalName().equals("root") && firstElInSubstituent.getLocalName().equals("locant")){
-						continue;//the substituent appears to be a prefix and not a case of functional replacement as it appears to be locanted on this root
+					Element groupToBeModified = nextSubOrBracket.getFirstChildElement("group");
+					if (XOMTools.getPreviousSibling(groupToBeModified)!=null){
+						continue;//not 2,2'-thiodipyran
 					}
-					Element groupToBeModified =(Element) nextSubOrBracket.getChild(0);
-					String nameOfGroupToBeModified =groupToBeModified.getValue();
-					if (XOMTools.getNextSibling(group)!=null || !groupToBeModified.getLocalName().equals("group")){
-						continue;//there should be no gap between the functional replacement and group c.f. not 2,2'-thiodipyran
+					Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(group);
+					List<String> possibleLocants = new ArrayList<String>();//usually empty, contains any locant values
+					List<Element> locantsToRemove =new ArrayList<Element>();//usually empty, contains any locant elements
+					int numberOfAtomsToReplace =1;//the number of atoms to be functionally replaced, modified by a multiplier e.g. dithio
+					if (possibleMultiplier !=null){
+						Element possibleLocant ;
+						if (possibleMultiplier.getLocalName().equals("multiplier")){
+							numberOfAtomsToReplace =Integer.valueOf(possibleMultiplier.getAttributeValue("value"));
+							possibleLocant = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
+						}
+						else{
+							possibleLocant = possibleMultiplier;
+						}
+						while (possibleLocant !=null) {
+							if (possibleLocant.getLocalName().equals("locant") && possibleLocant.getAttribute("type")==null ){
+								possibleLocants.add(possibleLocant.getAttributeValue("value"));
+								locantsToRemove.add(possibleLocant);
+								possibleLocant = (Element) XOMTools.getPreviousSibling(possibleLocant);
+							}
+							else{//unexpected element, assumedly not functional replacement
+								continue;
+							}
+						}
+						if (possibleLocants.size() >0 && possibleLocants.size() !=numberOfAtomsToReplace){//locants and number of replacements disagree
+							if (possibleLocants.size()>1){
+								continue;
+							}
+							possibleLocants.clear();
+							locantsToRemove.clear();
+						}
 					}
-					int numberOfAtomsToReplace =1;
-					if (firstElInSubstituent.getLocalName().equals("multiplier")){
-						numberOfAtomsToReplace =Integer.valueOf(firstElInSubstituent.getAttributeValue("value"));
-					}
-
+					int atomCount = state.xmlFragmentMap.get(group).getAtomList().size();
 					String replacementSMILES = group.getAttributeValue("value");
-					Matcher m =matchUpperCase.matcher(replacementSMILES);
-					int atomCount=0;
-					while(m.find()) {
-						atomCount++;//assumption made that number of upper case letter = number of atoms the SMILES is describing
-					}
 					Fragment frag = state.xmlFragmentMap.get(groupToBeModified);
 					ArrayList<Fragment> suffixes = state.xmlSuffixMap.get(groupToBeModified);
-					ArrayList<Atom> replaceableAtoms =new ArrayList<Atom>();
+					Set<Atom> replaceableAtoms =new LinkedHashSet<Atom>();
 
 					if (atomCount==1){
 						for (Atom atom : frag.getAtomList()) {
@@ -1522,46 +1541,71 @@ class PreStructureBuilder {
 								replaceableAtoms.add(atom);
 							}
 						}
-						//suffixes are ignored in the case of fused ring systems due to suffixes being null and for all suffixes not on acid stems (except phen-->thiophenol)
-						if (suffixes!=null){
-							ArrayList<Fragment> applicableSuffixes = new ArrayList<Fragment>(suffixes);
-							if (!groupToBeModified.getAttributeValue("type").equals("acidStem") && !nameOfGroupToBeModified.equals("phen")){
-								//remove all non acid suffixes
-								for (Fragment fragment : suffixes) {
-									Element suffix = state.xmlFragmentMap.getElement(fragment);
-									if (!suffix.getAttributeValue("value").equals("ic") && !suffix.getAttributeValue("value").equals("ous")){
-										applicableSuffixes.remove(fragment);
-									}
+						if (possibleLocants.size() >0){//locants are used to indicate replacement on trivial groups
+							Set<Atom> atomsToUse =new LinkedHashSet<Atom>();
+							for (Atom atom : replaceableAtoms) {
+								for (String locantVal : possibleLocants) {
+									 if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locantVal) != null){
+										 atomsToUse.add(atom);
+									 }
 								}
 							}
-							boolean endOfSuffixesFound=false;
-							int i=0;
-							while (!endOfSuffixesFound){//makes oxygen atoms alternate between suffixes c.f. dithioterephthalic acid
-								endOfSuffixesFound =true;
-								for (Fragment fragment : applicableSuffixes) {
-									if (i < fragment.getAtomList().size()){
-										Atom a =fragment.getAtomList().get(i);
-										if (a.getElement().equals("O")){
-											replaceableAtoms.add(a);
+							if(atomsToUse.size() != numberOfAtomsToReplace){
+								if (possibleLocants.size()>1){
+									throw new StructureBuildingException("Failed to find the correct number of oxygen using locants:" + possibleLocants);
+								}
+								possibleLocants.clear();
+								locantsToRemove.clear();
+								//e.g. -1-thioureidomethyl
+							}
+							else{
+								replaceableAtoms =atomsToUse;
+							}
+						}
+						if (possibleLocants.size() ==0){
+							//suffixes are ignored in the case of fused ring systems due to suffixes being null and for all suffixes not on acid stems (except phen-->thiophenol)
+							if (suffixes!=null){
+								ArrayList<Fragment> applicableSuffixes = new ArrayList<Fragment>(suffixes);
+								if (!groupToBeModified.getAttributeValue("type").equals("acidStem") && !groupToBeModified.getValue().equals("phen")){
+									//remove all non acid suffixes
+									for (Fragment fragment : suffixes) {
+										Element suffix = state.xmlFragmentMap.getElement(fragment);
+										if (!suffix.getAttributeValue("value").equals("ic") && !suffix.getAttributeValue("value").equals("ous")){
+											applicableSuffixes.remove(fragment);
 										}
-										endOfSuffixesFound=false;
 									}
 								}
-								i++;
+								boolean endOfSuffixesFound=false;
+								int j=0;
+								while (!endOfSuffixesFound){//makes oxygen atoms alternate between suffixes c.f. dithioterephthalic acid
+									endOfSuffixesFound =true;
+									for (Fragment fragment : applicableSuffixes) {
+										if (j < fragment.getAtomList().size()){
+											Atom a =fragment.getAtomList().get(j);
+											if (a.getElement().equals("O")){
+												replaceableAtoms.add(a);
+											}
+											endOfSuffixesFound=false;
+										}
+									}
+									j++;
+								}
 							}
 						}
 					}
 					else{
+						if (possibleLocants.size()>0){
+							continue;//you do not locant peroxy
+						}
 						//only consider ic suffixes when it's not simple atom replacement e.g. peroxy.
 						ArrayList<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, "suffix");
-						for (int i = 0; i < suffixElements.size(); i++) {
-							if (suffixElements.get(i).getAttributeValue("value").equals("ic")||suffixElements.get(i).getAttributeValue("value").equals("ous")){
-								Fragment suffixFrag =suffixes.get(i);
+						for (int j = 0; j < suffixElements.size(); j++) {
+							if (suffixElements.get(j).getAttributeValue("value").equals("ic")||suffixElements.get(j).getAttributeValue("value").equals("ous")){
+								Fragment suffixFrag =suffixes.get(j);
 								List<Atom> atomList =suffixFrag.getAtomList();
 								for (Atom a : atomList) {
 									if (a.getElement().equals("O")){
-								    	int incomingValency =a.getIncomingValency();
-										if (incomingValency==1 || (atomCount==1 && incomingValency==2)){
+										if (a.getIncomingValency()==1){
 											replaceableAtoms.add(a);
 										}
 									}
@@ -1576,17 +1620,23 @@ class PreStructureBuilder {
 							prefixAssignmentAmbiguous=true;
 						}
 
-						for (int i = 0; i < numberOfAtomsToReplace; i++) {
-							Atom a =replaceableAtoms.get(i);
+						int replacementsDone =0;
+						for (Atom atomToReplace : replaceableAtoms) {
+							if (replacementsDone == numberOfAtomsToReplace){
+								break;
+							}
 							if (atomCount>1){//something like peroxy
-								state.fragManager.replaceTerminalAtomWithFragment(a, state.fragManager.buildSMILES(replacementSMILES, "suffix", "none").getFirstAtom());
+								int charge = atomToReplace.getCharge();
+								state.fragManager.replaceTerminalAtomWithFragment(atomToReplace, state.fragManager.buildSMILES(replacementSMILES, "suffix", "none").getFirstAtom());
+								atomToReplace.setCharge(charge);
 							}
 							else{
-								state.fragManager.makeHeteroatom(a, replacementSMILES, false);
+								state.fragManager.makeHeteroatom(atomToReplace, replacementSMILES, false);
 								if (prefixAssignmentAmbiguous){
-									ambiguousElementAtoms.add(a);
+									ambiguousElementAtoms.add(atomToReplace);
 								}
 							}
+							replacementsDone++;
 						}
 
 						if (prefixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl thioacetate
@@ -1607,15 +1657,18 @@ class PreStructureBuilder {
 						state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
 						substituent.removeChild(group);
 						Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
-						for (int i = remainingChildren.size()-1; i>=0; i--){
-							Node child =substituent.getChild(i);
+						for (int j = remainingChildren.size()-1; j>=0; j--){
+							Node child =substituent.getChild(j);
 							child.detach();
 							nextSubOrBracket.appendChild(child);
 						}
 						substituents.remove(substituent);
 						substituent.detach();
-						if (firstElInSubstituent.getLocalName().equals("multiplier")){
-							firstElInSubstituent.detach();
+						if (possibleMultiplier !=null && possibleMultiplier.getLocalName().equals("multiplier")){
+							possibleMultiplier.detach();
+						}
+						for (Element locant : locantsToRemove) {
+							locant.detach();
 						}
 						doneSomething=true;
 					}
