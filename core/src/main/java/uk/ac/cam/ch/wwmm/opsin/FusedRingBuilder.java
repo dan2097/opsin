@@ -235,13 +235,15 @@ class FusedRingBuilder {
 		for(int i= groups.size() -2;i >=0; i--) {
 			if (groups.get(i).getValue().equals("benz") || groups.get(i).getValue().equals("benzo")){
 				Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(i));
-				Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(groups.get(i));
-				if (!possibleFusionbracket.getLocalName().equals("fusion") && (possibleMultiplier==null || !possibleMultiplier.getLocalName().equals("multiplier")) ){
-					//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
-					//and have a special convention for indicating the position of heteroatoms 
-					benzoSpecificFusion(state, groups.get(i), groups.get(i+1));
-					groups.get(i).detach();
-					groups =subOrRoot.getChildElements("group");
+				if (!possibleFusionbracket.getLocalName().equals("fusion")){
+					Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(groups.get(i));
+					if (possibleMultiplier==null || !possibleMultiplier.getLocalName().equals("multiplier")|| possibleMultiplier.getAttributeValue("type").equals("group")){
+						//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
+						//and have a special convention for indicating the position of heteroatoms 
+						benzoSpecificFusion(state, groups.get(i), groups.get(i+1));
+						groups.get(i).detach();
+						groups =subOrRoot.getChildElements("group");
+					}
 				}
 			}
 		}
