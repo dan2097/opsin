@@ -458,8 +458,9 @@ class PostProcessor {
 				}
 			}
 			else if(heteroCount==0 && fusedRingPresent &&
+					XOMTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
 					possibleHeteroatomOrMultiplier!=null && possibleHeteroatomOrMultiplier.getLocalName().equals("group") &&
-					possibleHeteroatomOrMultiplier.getValue().equals("benzo")||possibleHeteroatomOrMultiplier.getValue().equals("benz")){
+					(possibleHeteroatomOrMultiplier.getValue().equals("benzo")||possibleHeteroatomOrMultiplier.getValue().equals("benz"))){
 				benzoFusedRing = true;
 			}
 			List<Element> heteroAtoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom

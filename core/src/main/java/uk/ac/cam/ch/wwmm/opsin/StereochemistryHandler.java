@@ -1,6 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,10 +42,68 @@ class StereochemistryHandler {
 		List<StereoBond> stereoBonds = stereoAnalysis.getStereoBonds();
 		for (StereoBond stereoBond : stereoBonds) {
 			Bond b = uniFrag.findBondOrThrow(chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom(stereoBond.getBond().getAtom0()),chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom( stereoBond.getBond().getAtom1()));
-			bondStereoBondMap.put(b, stereoBond);
+			if (notIn6MemberOrSmallerRing(b)){
+				bondStereoBondMap.put(b, stereoBond);
+			}
 		}
+		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
+		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
+		for (Element stereoChemistryElement : stereoChemistryEls) {
+			if (stereoChemistryElement.getAttributeValue("locant")!=null){
+				locantedStereoChemistryEls.add(stereoChemistryElement);
+			}
+			else{
+				unlocantedStereoChemistryEls.add(stereoChemistryElement);
+			}
+		}
+		//perform locanted before unlocanted to avoid unlocanted elements using the stereocentres a locanted element refers to
+		matchStereochemistryToAtomsAndBonds(state, locantedStereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
+		matchStereochemistryToAtomsAndBonds(state, unlocantedStereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
+	}
 
-		matchStereochemistryToAtomsAndBonds(state, stereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
+
+	/**
+	 * Checks whether a bond is part of a 6 member or smaller ring.
+	 * This is necessary as such double bonds are assumed to not be capable of having E/Z stereochemistry
+	 * @param bond
+	 * @return true unless in a 6 member or smaller rings
+	 * @throws StructureBuildingException 
+	 */
+	private static boolean notIn6MemberOrSmallerRing(Bond bond) throws StructureBuildingException {
+		Atom fromAtom =bond.getFromAtom();
+		Atom toAtom = bond.getToAtom();
+		if (fromAtom.getAtomIsInACycle() && toAtom.getAtomIsInACycle()){//obviously both must be in rings
+			//attempt to get from the fromAtom to the toAtom in 6 or fewer steps.
+			List<Atom> visitedAtoms = new ArrayList<Atom>();
+			LinkedList<Atom> atomsToInvestigate = new LinkedList<Atom>();//A queue is not used as I need to make sure that only up to depth 6 is investigated
+			List<Atom> neighbours =fromAtom.getAtomNeighbours();
+			neighbours.remove(toAtom);
+			for (Atom neighbour : neighbours) {
+				atomsToInvestigate.add(neighbour);
+			}
+			visitedAtoms.add(fromAtom);
+			for (int i = 0; i < 5; i++) {//up to 5 bonds from the neighbours of the fromAtom i.e. up to ring size 6
+				if (atomsToInvestigate.isEmpty()){
+					break;
+				}
+				LinkedList<Atom> atomsToInvestigateNext = new LinkedList<Atom>();
+				while (!atomsToInvestigate.isEmpty()) {
+					Atom currentAtom =atomsToInvestigate.removeFirst();
+					if (currentAtom == toAtom){
+						return false;
+					}
+					visitedAtoms.add(currentAtom);
+					neighbours =currentAtom.getAtomNeighbours();
+					for (Atom neighbour : neighbours) {
+						if (!visitedAtoms.contains(neighbour) && neighbour.getAtomIsInACycle()){
+							atomsToInvestigateNext.add(neighbour);
+						}
+					}
+				}
+				atomsToInvestigate = atomsToInvestigateNext;
+			}
+		}
+		return true;
 	}
 
 
