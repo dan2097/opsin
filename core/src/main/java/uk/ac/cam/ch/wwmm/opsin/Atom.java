@@ -502,8 +502,7 @@ class Atom {
 
 	/**
 	 * Checks if the valency of this atom allows it to have the amount of spare valency that the atom currently has
-	 * May reduce the spare valency on the atom to be consistant with the valency of the atom
-	 * Sets a note if a nitrogen with 3 bonds and a spare valency is encountered e.g. N-methylpyridine
+	 * May reduce the spare valency on the atom to be consistent with the valency of the atom
 	 * Does nothing if the atom has no spare valency
 	 * @param takeIntoAccountExternalBonds
 	 * @throws StructureBuildingException
@@ -531,9 +530,6 @@ class Atom {
 					maxSpareValency =maxValency-frag.getIntraFragmentIncomingValency(this);
 				}
 				if (maxSpareValency < 1){
-					if (element.equals("N")&& charge==0){//special case where a charge has erroneously been omitted e.g. 1-methylpyridine
-						setNote("Possibly Should Be Charged", "1");
-					}
 					setSpareValency(false);
 				}
 			}

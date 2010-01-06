@@ -1206,7 +1206,7 @@ class PostProcessor {
 		}
 
 		//anthrone, phenanthrone and xanthone have the one at position 9 by default
-		if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("xanth")) {
+		if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("xanth")|| groupValue.equals("xanthen")) {
 			Element possibleLocant = (Element) XOMTools.getPreviousSibling(group);
 			if (possibleLocant==null || !possibleLocant.getLocalName().equals("locant")){//only need to give one a locant of 9 if no locant currently present
 				Element possibleOne =(Element) XOMTools.getNextSibling(group);

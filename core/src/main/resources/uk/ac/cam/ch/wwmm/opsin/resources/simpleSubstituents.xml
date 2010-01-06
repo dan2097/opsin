@@ -4,6 +4,7 @@
   <token value="NC(O)=N" labels="1//2/3" valType="SMILES">1-isoureido</token>
   <token value="N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
   <token value="OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
+  <token value="NC(=O)C" labels="none" valType="SMILES">acetamino</token>
   <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
   <token value="OCCCCC" valType="SMILES">amoxy</token>
   <token value="CCCCC" valType="SMILES">amyl</token>
