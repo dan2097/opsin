@@ -598,24 +598,14 @@ class Fragment {
 		/*
 		 * Remove spare valency on atoms which may not form higher order bonds
 		 */
-		List<Atom> atomsThatOnlyBorderATriValentN = new ArrayList<Atom>();
 		atomLoop: for(Atom a : atomCollection) {
 			if(a.hasSpareValency()) {
-				boolean flag=false;
 				for(Atom aa : getAtomNeighbours(a)) {
 					if(aa.hasSpareValency()){
 						continue atomLoop;
 					}
-					if (aa.getNote("Possibly Should Be Charged")!=null){
-						flag=true;
-					}
-				}
-				if (flag){
-					atomsThatOnlyBorderATriValentN.add(a);
-					continue;
 				}
 				a.setSpareValency(false);
-				a.setNote("Possibly Should Be Charged", null);
 			}
 		}
 
@@ -635,32 +625,6 @@ class Fragment {
 			}
 			else{
 				atomToReduceValencyAt=getAtomByID(indicatedHydrogen);
-			}
-		}
-
-		if ((svCount %2) ==1){//look for the special case where a Nitrogen could be charged to maintain aromaticity
-			for(Atom a : atomCollection) {
-				if (a.getNote("Possibly Should Be Charged")!=null){
-					List<Atom> neighbours =getAtomNeighbours(a);
-					int intraFragmentBonds =0;
-					for (Atom aa : neighbours) {
-						if (!aa.getType().equals("suffix")){
-							intraFragmentBonds++;
-						}
-					}
-					if (a.getBonds().size() -intraFragmentBonds>=1){//the atom must have atleast one inter fragment bond (bond to suffix counts)
-						a.setCharge(1);
-						a.setSpareValency(true);
-						svCount++;
-						break;
-					}
-				}
-			}
-			if ((svCount %2) ==1){
-				for (Atom a : atomsThatOnlyBorderATriValentN) {
-					a.setSpareValency(false);
-					svCount--;
-				}
 			}
 		}
 
