@@ -419,7 +419,7 @@ class SMILESFragmentBuilder {
 							lambda += atomString.substring(0,1);
 							atomString = atomString.substring(1);
 						}
-						atom.setValency(Integer.parseInt(lambda));
+						atom.setLambdaConventionValency(Integer.parseInt(lambda));
 					}
 		            else{
 		            	throw new StructureBuildingException("Unexpected character found in square bracket");
@@ -514,7 +514,7 @@ class SMILESFragmentBuilder {
 				}
 				if(stack.peek().atom !=null) {
 					Atom a = stack.peek().atom;
-					a.setValency(Integer.parseInt(lambda));
+					a.setLambdaConventionValency(Integer.parseInt(lambda));
 				}
 				else{
 					throw new StructureBuildingException("| found in SMILES string at unexpected position");

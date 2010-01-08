@@ -42,7 +42,8 @@ class PreStructureBuilder {
 	private Pattern matchOrtho =Pattern.compile("[oO]");
 	private Pattern matchMeta =Pattern.compile("[mM]");
 	private Pattern matchPara =Pattern.compile("[pP]");
-	private Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro|peroxy");
+	private Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro");
 	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
@@ -1489,7 +1490,7 @@ class PreStructureBuilder {
 		boolean doneSomething =false;
 		for (int i = groups.size()-1; i >=0; i--) {
 			Element group =groups.get(i);
-			if (matchChalogenReplacment.matcher(group.getValue()).matches()){
+			if (matchChalogenReplacment.matcher(group.getValue()).matches()|| group.getValue().equals("peroxy")){
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent =(Element) group.getParent();
 				Element nextSubOrBracket = (Element) XOMTools.getNextSibling(substituent);
@@ -1544,10 +1545,24 @@ class PreStructureBuilder {
 						if (possibleLocants.size() >0){//locants are used to indicate replacement on trivial groups
 							Set<Atom> atomsToUse =new LinkedHashSet<Atom>();
 							for (Atom atom : replaceableAtoms) {
-								for (String locantVal : possibleLocants) {
-									 if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locantVal) != null){
-										 atomsToUse.add(atom);
-									 }
+								boolean mainGroupAtom =false;//is the atom part of a chain/ring or like an oxo group of a chain/ring
+								for (String locant  : atom.getLocants()) {
+									if (matchNumericLocant.matcher(locant).matches()){
+										mainGroupAtom =true;
+										for (String locantVal : possibleLocants) {
+											if (locant.equals(locantVal)){
+												 atomsToUse.add(atom);
+											}
+										}
+										break;
+									}
+								}
+								if (!mainGroupAtom){
+									for (String locantVal : possibleLocants) {
+										 if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locantVal) != null){
+											 atomsToUse.add(atom);
+										 }
+									}
 								}
 							}
 							if(atomsToUse.size() != numberOfAtomsToReplace){
@@ -1613,6 +1628,15 @@ class PreStructureBuilder {
 							}
 						}
 					}
+					boolean multiplierUsed = false;
+					if (numberOfAtomsToReplace >1){
+						if (replaceableAtoms.size() >= numberOfAtomsToReplace){
+							multiplierUsed =true;
+						}
+						else{
+							numberOfAtomsToReplace=1;
+						}
+					}
 					if (replaceableAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
 						boolean prefixAssignmentAmbiguous =false;
 						ArrayList<Atom> ambiguousElementAtoms = new ArrayList<Atom>();
@@ -1660,11 +1684,11 @@ class PreStructureBuilder {
 						for (int j = remainingChildren.size()-1; j>=0; j--){
 							Node child =substituent.getChild(j);
 							child.detach();
-							nextSubOrBracket.appendChild(child);
+							nextSubOrBracket.insertChild(child, 0);
 						}
 						substituents.remove(substituent);
 						substituent.detach();
-						if (possibleMultiplier !=null && possibleMultiplier.getLocalName().equals("multiplier")){
+						if (multiplierUsed){
 							possibleMultiplier.detach();
 						}
 						for (Element locant : locantsToRemove) {
@@ -1852,7 +1876,7 @@ class PreStructureBuilder {
 					Atom a =hwRing.getAtomByLocantOrThrow(locant);
 					a.setElement(elementReplacement);
 					if (heteroatom.getAttribute("lambda")!=null){
-						a.setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+						a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
 					}
 					heteroatom.detach();
 					elementsToRemove.add(heteroatom);
@@ -1876,7 +1900,7 @@ class PreStructureBuilder {
 				Atom a =hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant));
 				a.setElement(elementReplacement);
 				if (heteroatom.getAttribute("lambda")!=null){
-					a.setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
 				}
 				heteroatom.detach();
 			}
@@ -2094,13 +2118,13 @@ class PreStructureBuilder {
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement("group"));
 			if (lambdaConventionEl.getAttribute("locant")!=null){
-				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue("locant")).setValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
+				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue("locant")).setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
 			}
 			else{
 				if (frag.getAtomList().size()!=1){
 					throw new StructureBuildingException("Ambiguous use of lambda convention. Fragment has more than 1 atom but no locant was specified for the lambda");
 				}
-				frag.getFirstAtom().setValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
+				frag.getFirstAtom().setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
 			}
 			lambdaConventionEl.detach();
 		}
@@ -2121,7 +2145,7 @@ class PreStructureBuilder {
 		Element group =subOrRoot.getFirstChildElement("group");
 		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		if (groupValue.equals("methylene") || groupValue.equals("thio")){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
+		if (groupValue.equals("methylene") || matchChalogenReplacment.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
 			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals("multiplier") && beforeGroup.getAttributeValue("type").equals("basic") && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue("value"));
@@ -2138,6 +2162,12 @@ class PreStructureBuilder {
 					}
 					else if (groupValue.equals("thio")){
 						group.getAttribute("value").setValue(StringTools.multiplyString("S", multiplierVal));
+					}
+					else if (groupValue.equals("seleno")){
+						group.getAttribute("value").setValue(StringTools.multiplyString("[Se]", multiplierVal));
+					}
+					else if (groupValue.equals("telluro")){
+						group.getAttribute("value").setValue(StringTools.multiplyString("[Te]", multiplierVal));
 					}
 					else{
 						throw new PostProcessingException("unexpected group value");
@@ -2655,7 +2685,7 @@ class PreStructureBuilder {
 			if (idOnParentFragToUse==0 && suffix.getAttribute("locantID")!=null){
 				idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue("locantID"));
 			}
-			if (idOnParentFragToUse==0 && (suffixTypeToUse.equals("acid") || suffixTypeToUse.equals("chalcogenAcidStem"))){//means that e.g. sulfonyl has an explicit outID
+			if (idOnParentFragToUse==0 && (suffixTypeToUse.equals("acidStem") || suffixTypeToUse.equals("chalcogenAcidStem"))){//means that e.g. sulfonyl has an explicit outID
 				idOnParentFragToUse = firstAtomID;
 			}
 
@@ -2717,6 +2747,7 @@ class PreStructureBuilder {
 					state.fragManager.removeBond(bondToSuffix);
 				} else if(suffixRuleTagName.equals("changecharge")) {
 					int chargeChange =Integer.parseInt(suffixRuleTag.getAttributeValue("charge"));
+					int protonChange =Integer.parseInt(suffixRuleTag.getAttributeValue("protons"));
 					if(idOnParentFragToUse==0){
 						//Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
 						//It's extremely rare to want a carbocation so any heteroatom is preferred with preference given to N
@@ -2741,7 +2772,7 @@ class PreStructureBuilder {
 							idOnParentFragToUse =possibleAtom.getID();
 						}
 					}
-					frag.getAtomByIDOrThrow(idOnParentFragToUse).addCharge(chargeChange);
+					frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
 				}else if(suffixRuleTagName.equals("setOutID")) {
 					if(suffixRuleTag.getAttribute("outValency") != null) {
 						if(idOnParentFragToUse!=0){

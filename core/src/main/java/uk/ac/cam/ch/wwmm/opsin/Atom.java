@@ -59,12 +59,15 @@ class Atom {
 	 * e.g. in butan-2-ylidene this would be 2 for the atom at position 2 and 0 for the other 3 */
 	private int outValency = 0;
 
-	/** Hydrogen count in CML, used subsequently to set the atom's valency when it's neighbours are known
+	/** The number of hydrogens bonded to this atom.
 	 * null if hydrogens are implicit*/
 	private Integer explicitHydrogens;
 
-	/** Null by default or set by the lambda convention/deduced from CML hydrogenCount.*/
-	private Integer valency;
+	/** Null by default or set by the lambda convention.*/
+	private Integer lambdaConventionValency;
+	
+	/** This is modified by ium/ide/ylium/uide and is used to choose the appropriate valency for the atom*/
+	private Integer protonsExplicitlyAddedOrRemoved =0;
 
 	/**
 	 * Takes same values as type in Fragment. Useful for discriminating suffix atoms from other atoms when a suffix is incorporated into another fragments
@@ -128,24 +131,39 @@ class Atom {
 		return elem;
 	}
 
+
+	
 	/**
-	 * Uses the default, maximum and current incoming valency of the molecule to determine
-	 * the likely current valency of the atom.
-	 * The structureBuilder will of at this stage already rejected structures that violate the maxValency of an atom
+	 * Uses the lambdaConventionValency or if that is not available
+	 * the current incoming valency modified by protonsExplicitlyAddedOrRemoved checked against
+	 * allowed valencies of the atom to determine the likely current valency of the atom.
+	 * returns null if OPSIN has no idea regarding valency (currently probably only for inorganics)
+	 * 
+	 * if considerOutValency is true, the valency that will be used to form bonds using the outIDs is
+	 * taken into account i.e. if any radicals were used to form bonds
+	 * @param considerOutValency
 	 * @return
 	 */
-	Integer determineValency() {
-		if (valency != null){
-			return valency;
+	Integer determineValency(boolean considerOutValency) {
+		if (lambdaConventionValency != null){
+			return lambdaConventionValency +protonsExplicitlyAddedOrRemoved;
 		}
-		Integer defaultValency =ValencyChecker.getDefaultValency(element, charge);
-		Integer[] possibleValencies =ValencyChecker.getPossibleValencies(element, charge);
+		Integer defaultValency =ValencyChecker.getDefaultValency(element);
 		int currentValency =getIncomingValency();
-
-		if (defaultValency !=null && currentValency <= defaultValency){
-			return defaultValency;
+		if (considerOutValency){
+			currentValency+=outValency;
 		}
+		Integer[] possibleValencies =ValencyChecker.getPossibleValencies(element, charge);
 		if (possibleValencies!=null) {
+			if (defaultValency !=null){
+				for (Integer possibleValency : possibleValencies) {
+					if (possibleValency.equals(defaultValency + protonsExplicitlyAddedOrRemoved) &&
+							currentValency <= defaultValency + protonsExplicitlyAddedOrRemoved){
+						return defaultValency + protonsExplicitlyAddedOrRemoved;
+					}
+					break;
+				}
+			}
 			for (Integer possibleValency : possibleValencies) {
 				if (currentValency <= possibleValency){
 					return possibleValency;
@@ -306,22 +324,23 @@ class Atom {
 		return charge;
 	}
 	
-	/**Modifies the charge of this atom by the amount given. This can be a negative integer
-	 *
-	 * @param c The integer amount to modify the atom's charge by
+	/**Modifies the charge of this atom by the amount given. This can be any integer
+	 * The number of protons changed is noted so as to calculate the correct valency for the atom. This can be any integer.
+	 * For example ide is the loss of a proton so is charge=-1, protons =-1
+	 * @param charge
+	 * @param protons
 	 */
-	void addCharge(int c) {
-		charge +=c;
-		valency=null;//valency will now be non-standard
+	void addChargeAndProtons(int charge, int protons){
+		this.charge += charge;
+		protonsExplicitlyAddedOrRemoved+=protons;
 	}
 
-	/**Sets the formal charge on the atom.
+	 /** Sets the formal charge on the atom.
 	 *
 	 * @param c The formal charge on the atom
 	 */
 	void setCharge(int c) {
 		charge = c;
-		valency=null;//valency will now be non-standard
 	}
 
 	/**Adds a bond to the atom
@@ -358,6 +377,14 @@ class Atom {
 		return v;
 	}
 
+	Integer getProtonsExplicitlyAddedOrRemoved() {
+		return protonsExplicitlyAddedOrRemoved;
+	}
+
+	void setProtonsExplicitlyAddedOrRemoved(Integer protonsExplicitlyAddedOrRemoved) {
+		this.protonsExplicitlyAddedOrRemoved = protonsExplicitlyAddedOrRemoved;
+	}
+	
 	/**Does the atom have spare valency to form double bonds?
 	 *
 	 * @return true if atom has spare valency
@@ -388,17 +415,6 @@ class Atom {
 	 */
 	void addOutValency(int outV) {
 		outValency += outV;
-	}
-
-
-	/**
-	 * Uses the explicitHydrogen attribute and incoming valency of the atom
-	 * to calculate it's current valency
-	 */
-	void calculateValencyFromConnectivity() {
-		if (explicitHydrogens != null){
-			valency =explicitHydrogens + getIncomingValency();
-		}
 	}
 
 	/**
@@ -450,12 +466,12 @@ class Atom {
 		this.explicitHydrogens = explicitHydrogens;
 	}
 
-	Integer getValency() {
-		return valency;
+	Integer getLambdaConventionValency() {
+		return lambdaConventionValency;
 	}
 
-	void setValency(Integer valency) {
-		this.valency = valency;
+	void setLambdaConventionValency(Integer valency) {
+		this.lambdaConventionValency = valency;
 	}
 
 	String getType() {
@@ -510,8 +526,8 @@ class Atom {
 	void ensureSVIsConsistantWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
 		if (spareValency){
 			Integer maxValency;
-			if (valency!=null){
-				maxValency=valency;
+			if (lambdaConventionValency!=null){
+				maxValency=lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 			}
 			else{
 				if (charge==0 && ValencyChecker.getHWValency(element)!=null){

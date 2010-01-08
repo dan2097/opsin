@@ -5,6 +5,7 @@
   <token value="N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
   <token value="OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
   <token value="NC(=O)C" labels="none" valType="SMILES">acetamino</token>
+  <token value="=[N+]([O-])O" labels="none" valType="SMILES">aci-nitro</token>
   <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
   <token value="OCCCCC" valType="SMILES">amoxy</token>
   <token value="CCCCC" valType="SMILES">amyl</token>
@@ -76,9 +77,6 @@
   <token value="C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes">oxalaceto</token>
   <token value="[O-]" labels="none" valType="SMILES">oxido</token>
   <token value="OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes">propoxyl</token>
-  <token value="S1CCNCC1" valType="SMILES" outIDs="4">thiomorpholino</token>
-  <token value="[Se]1CCNCC1" valType="SMILES" outIDs="4">selenomorpholino</token>
-  <token value="[Te]1CCNCC1" valType="SMILES" outIDs="4">telluromorpholino</token>
   <token value="N[N+](=O)([O-])" labels="none" valType="SMILES">nitramido</token>
   <token value="CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
   <token value="c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
@@ -89,6 +87,7 @@
   <token value="[Se](O)" labels="none" valType="SMILES">seleneno</token>
   <token value="[Se](=O)(O)" labels="none" valType="SMILES">selenino</token>
   <token value="[Se](=O)(=O)(O)" labels="none" valType="SMILES">selenono</token>
+  <token value="[Se]" labels="none" valType="SMILES">selenyl</token>
   <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazido</token>
   <token value="[S-]" labels="none" valType="SMILES">sulfido</token>
   <token value="S(=O)(O)" labels="none" valType="SMILES">sulfino</token>
@@ -97,6 +96,7 @@
   <token value="[Te](O)" labels="none" valType="SMILES">tellureno</token>
   <token value="[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
   <token value="[Te](=O)(=O)(O)" labels="none" valType="SMILES">tellurono</token>
+  <token value="[Te]" labels="none" valType="SMILES">telluryl</token>
   <token value="toluene" valType="dbkey" addGroup="N locant4" outIDs="8">toluidino</token>
   <token value="S(=O)(=O)c1ccc(C)cc1" labels="///1/2/3/4//5/6" valType="SMILES">tosyl</token>
   <token value="NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes">ureido</token>
@@ -109,10 +109,10 @@
 
   <token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amino</token>
   <token value="[N+]" labels="none" valType="SMILES" usableAsAJoiner="yes">ammonio</token>
-  <token value="[P+]" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphonio</token>
-  <token value="[As+]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsonio</token>
-  <token value="[Sb+]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibonio</token>
-  <token value="[Bi+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthonio</token>
+  <token value="[P|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphonio</token>
+  <token value="[As|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsonio</token>
+  <token value="[Sb|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibonio</token>
+  <token value="[Bi|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthonio</token>
   <token value="[O+]" labels="none" valType="SMILES" usableAsAJoiner="yes">oxonio</token>
   <token value="[S+]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfonio</token>
   <token value="[Se+]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenonio</token>
@@ -151,8 +151,6 @@
   <token value="OC#N" labels="none" valType="SMILES">cyanato</token>
   <token value="C#N" labels="none" valType="SMILES">cyano</token>
   <token value="O[N+]#[C-]" labels="none" valType="SMILES">fulminato</token>
-  <token value="[Se]C#N" labels="none" valType="SMILES">selenocyanato</token>
-  <token value="SC#N" labels="none" valType="SMILES">thiocyanato</token>
   <token value="N=C=O" labels="none" valType="SMILES">isocyanato</token>
   <token value="[N+]#[C-]" labels="none" valType="SMILES">isocyano</token>
   <token value="N=C=[Se]" labels="none" valType="SMILES">isoselenocyanato</token>
@@ -169,26 +167,33 @@
   <token value="=S" labels="none" valType="SMILES">thioxo</token>
   <token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
   <token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
+
   <token value="P|5(=O)(O)(O)" labels="none" valType="SMILES">phosphono</token>
   <token value="P|5(=O)([O-])([O-])" labels="none" valType="SMILES">phosphonato</token>
   <token value="P|5(=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P|5(=O)(O)O in biochemical nomenclature-->
-  <token value="P|5(=O)" labels="none" valType="SMILES">phosphinoyl</token><!--if generated systematically by OPSIN this wouldn't be explicitly valency 5-->
+  <token value="P|5=N" labels="none" valType="SMILES">phosphinimyl</token>
   <token value="P=O" labels="none" valType="SMILES">phosphoroso</token>
-  <token value="P|3" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
+  <token value="P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
+  <token value="=P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinidene</token>
 
   <token value="[As|5](=O)(O)(O)" labels="none" valType="SMILES">arsono</token>
   <token value="[As|5](=O)([O-])([O-])" labels="none" valType="SMILES">arsonato</token>
   <token value="[As|5](=O)=O" labels="none" valType="SMILES">arso</token>
-  <token value="[As|5](=O)" labels="none" valType="SMILES">arsinoyl</token>
+  <token value="[As|5]=N" labels="none" valType="SMILES">arsinimyl</token>
   <token value="[As]=O" labels="none" valType="SMILES">arsoroso</token>
-  <token value="[As|3]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsino</token>
+  <token value="[As]=O" labels="none" valType="SMILES">arsenoso</token>
+  <token value="[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsino</token>
+  <token value="=[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinidene</token>
 
   <token value="[Sb|5](=O)(O)(O)" labels="none" valType="SMILES">stibono</token>
   <token value="[Sb|5](=O)([O-])([O-])" labels="none" valType="SMILES">stibonato</token>
-  <token value="[Sb|5](=O)" labels="none" valType="SMILES">stibinoyl</token>
-  <token value="[Sb|3]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibino</token>
+  <token value="[Sb|5](=O)=O" labels="none" valType="SMILES">stibo</token>
+  <token value="[Sb]=O" labels="none" valType="SMILES">stiboso</token>
+  <token value="[Sb]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibino</token>
+  <token value="=[Sb]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibylene</token>
 
-  <token value="[Bi|3]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthino</token>
+  <token value="[Bi]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthino</token>
+  <token value="=[Bi]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthylene</token>
 
   <token value="=S(=O)(=O)" labels="none" valType="SMILES">sulfonylidene</token>
   <token value="S(=O)(=O)([O-])" labels="none" valType="SMILES">sulfonato</token>

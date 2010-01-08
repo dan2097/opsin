@@ -25,6 +25,7 @@
   <regexToken name="%allLocantForms%" regex="(%cistrans%?%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>
   <regexToken name="%formsWhereHyphenIsOptional%" regex="(%cistrans%?(%locantTypes%%compoundLocantOrIndicatedHydrogen%|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" />
+  <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" />
 
   <regexToken name = "%lambdaConvention%" regex="(%locantTypes%?lambda(%superScriptedNumber%|\d+))" />
   <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(lambdaConvention-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="Ç" tagname="lambdaConvention" /><!--a set of either locants or lamdas. There must be at least one lambda-->

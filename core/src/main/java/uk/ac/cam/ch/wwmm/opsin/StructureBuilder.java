@@ -681,7 +681,7 @@ class StructureBuilder {
 		for (Fragment fragment : fragments) {
 			List<Atom> atomList =fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
-				Integer valency =parentAtom.determineValency();
+				Integer valency =parentAtom.determineValency(false);
 				int explicitHydrogensToAdd=0;
 				if (valency !=null){
 					explicitHydrogensToAdd=valency-parentAtom.getIncomingValency();

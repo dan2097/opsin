@@ -346,7 +346,7 @@ class StructureBuildingMethods {
 				String atomSMILES = heteroatom.getAttributeValue("value");
 				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
 				if (heteroatom.getAttribute("lambda")!=null){
-					thisFrag.getAtomByLocantOrThrow(locant).setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+					thisFrag.getAtomByLocantOrThrow(locant).setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
 				}
 				heteroatoms.remove(heteroatom);
 				heteroatom.detach();
@@ -493,7 +493,7 @@ class StructureBuildingMethods {
             }
             state.fragManager.makeHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES, true);
             if (heteroatom.getAttribute("lambda") != null) {
-                atomToReplaceWithHeteroAtom.setValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
+                atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
             }
             defaultId++;
             heteroatom.detach();
@@ -1197,28 +1197,8 @@ class StructureBuildingMethods {
 	 * @return
 	 */
 	private static int calculateSubstitutableHydrogenAtoms(Atom atom) {
-		Integer valency = null;
+		Integer valency = atom.determineValency(true);	
 		int currentValency =atom.getIncomingValency() + atom.getOutValency();
-		if (atom.getValency() != null){
-			valency = atom.getValency();
-		}
-		if (valency ==null){
-			Integer defaultValency =ValencyChecker.getDefaultValency(atom.getElement(), atom.getCharge());
-			if (defaultValency !=null && currentValency <= defaultValency){
-				valency = defaultValency;
-			}
-			if (valency ==null){
-				Integer[] possibleValencies =ValencyChecker.getPossibleValencies(atom.getElement(), atom.getCharge());
-				if (possibleValencies!=null) {
-					for (Integer possibleValency : possibleValencies) {
-						if (currentValency <= possibleValency){
-							valency = possibleValency;
-							break;
-						}
-					}
-				}
-			}
-		}
 		if (valency ==null){
 			return 0;
 		}

@@ -25,9 +25,11 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="tellurenic">tellurenic</suffix>
     <suffix value="tellurinic">tellurinic</suffix>
     <suffix value="telluronic">telluronic</suffix>
+    <suffix value="uide">uide</suffix>
     <suffix value="yl">yl</suffix>
     <suffix value="ylidene">ylidene</suffix>
     <suffix value="ylidyne">ylidyne</suffix>
+    <suffix value="ylium">ylium</suffix>
   </groupType>
 
   <groupType type="acidStem"><!--e.g. acet to acetamide -->
@@ -78,9 +80,13 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="tellurenic">tellurenic</suffix>
     <suffix value="tellurinic">tellurinic</suffix>
     <suffix value="telluronic">telluronic</suffix>
+    <suffix value="uide">uide</suffix>
     <suffix value="yl" subType="oylForAcyl">yl</suffix>
     <suffix value="ylidene" subType="oylForAcyl">ylidene</suffix>
     <suffix value="ylidyne" subType="oylForAcyl">ylidyne</suffix>
+    <suffix value="ylidene" subType="ylForAcyl">oxoAndDiYl</suffix>
+    <suffix value="ylidyne" subType="ylForAcyl">oxoAndTriYl</suffix>
+    <suffix value="ylium">ylium</suffix>
   </groupType>
 
   <groupType type="aminoAcid"><!--e.g. glycine -> glycinol -->
@@ -130,9 +136,11 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="tellurenic">tellurenic</suffix>
     <suffix value="tellurinic">tellurinic</suffix>
     <suffix value="telluronic">telluronic</suffix>
+    <suffix value="uide">uide</suffix>
     <suffix value="yl" subType="oylForAcyl">yl</suffix>
     <suffix value="ylidene" subType="oylForAcyl">ylidene</suffix>
-    <suffix value="ylidyne" subType="oylForAcyl">ylidyne</suffix>-->
+    <suffix value="ylidyne" subType="oylForAcyl">ylidyne</suffix>
+    <suffix value="ylium">ylium</suffix>-->
   </groupType>
 
   <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->
@@ -181,6 +189,7 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="imine">imine</suffix>
     <suffix value="iminide">iminide</suffix>
     <suffix value="iminium">iminium</suffix>
+    <suffix value="io">io</suffix>
     <suffix value="ium">ium</suffix>
     <suffix value="ite">ite</suffix>
     <suffix value="nitrile">nitrile</suffix>
@@ -205,6 +214,8 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="tellurinic">tellurinic</suffix>
     <suffix value="telluronic">telluronic</suffix>
     <suffix value="thiolate">thiolate</suffix>
+    <suffix value="uide">uide</suffix>
+    <suffix value="ylium">ylium</suffix>
 
 <!-- INCOMPLETE-->
 
@@ -264,6 +275,7 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="imine">imine</suffix>
     <suffix value="iminide">iminide</suffix>
     <suffix value="iminium">iminium</suffix>
+    <suffix value="io">io</suffix>
     <suffix value="ium">ium</suffix>
     <suffix value="ite">carboxylite</suffix>
     <suffix value="nitrile">carbonitrile</suffix>
@@ -285,6 +297,8 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="tellurinic">tellurinic</suffix>
     <suffix value="telluronic">telluronic</suffix>
     <suffix value="thiolate">thiolate</suffix>
+    <suffix value="uide">uide</suffix>
+    <suffix value="ylium">ylium</suffix>
 
 <!--inline-->
     <suffix value="carbonyl">carbonyl</suffix>
