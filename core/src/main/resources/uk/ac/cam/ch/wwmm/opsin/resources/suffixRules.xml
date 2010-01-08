@@ -136,7 +136,7 @@ sense of this -->
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
   <rule value="ide">
-    <changecharge charge="-1" />
+    <changecharge charge="-1" protons="-1" />
   </rule>
   <rule value="imidamide">
     <addgroup SMILES="N" functionalIDs="1,1"/>
@@ -151,11 +151,15 @@ sense of this -->
   <rule value="iminium">
     <addgroup SMILES="[N+]" bondOrder="2" />
   </rule>
+  <rule value="io">
+    <setOutID />
+    <changecharge charge="1" protons="1"/>
+  </rule>
   <rule value="ite">
     <addgroup SMILES="[O-]" functionalIDs="1" />
   </rule>
   <rule value="ium">
-    <changecharge charge="1" />
+    <changecharge charge="1" protons="1"/>
   </rule>
   <rule value="nitrile">
     <addgroup SMILES="N" bondOrder="3" />
@@ -188,6 +192,17 @@ sense of this -->
   </rule>
   <rule value="oxide">
     <addgroup SMILES="[O-]" />
+  </rule>
+  <rule value="oxoAndDiYl">
+    <addgroup SMILES="O" bondOrder="2" />
+    <setOutID />
+    <setOutID />
+  </rule>
+  <rule value="oxoAndTriYl">
+    <addgroup SMILES="O" bondOrder="2" />
+    <setOutID />
+    <setOutID />
+    <setOutID />
   </rule>
   <rule value="oxy">
     <addgroup SMILES="O" setsOutID="yes" />
@@ -275,6 +290,9 @@ sense of this -->
   <rule value="thiolate">
     <addgroup SMILES="[S-]" />
   </rule>
+  <rule value="uide">
+    <changecharge charge="-1" protons="1" />
+  </rule>
   <rule value="yl">
     <setOutID />
   </rule>
@@ -287,5 +305,8 @@ sense of this -->
   </rule>
   <rule value="ylidyne">
     <setOutID outValency="3" />
+  </rule>
+  <rule value="ylium">
+    <changecharge charge="1" protons="-1" />
   </rule>
 </suffixRulesList>

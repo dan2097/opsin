@@ -167,8 +167,10 @@ class ValencyChecker {
 		possibleStableValencies.get("H").put(1, new Integer[]{0});
 		possibleStableValencies.get("Li").put(1, new Integer[]{0});
 		possibleStableValencies.get("Be").put(2, new Integer[]{0});
-		possibleStableValencies.get("B").put(1, new Integer[]{4});
+		possibleStableValencies.get("B").put(2, new Integer[]{1});
+		possibleStableValencies.get("B").put(1, new Integer[]{2,4});
 		possibleStableValencies.get("B").put(-1, new Integer[]{2,4});
+		possibleStableValencies.get("B").put(-2, new Integer[]{1});
 		possibleStableValencies.get("C").put(1, new Integer[]{3});
 		possibleStableValencies.get("C").put(-1, new Integer[]{3});
 		possibleStableValencies.get("N").put(1, new Integer[]{4});
@@ -184,9 +186,9 @@ class ValencyChecker {
 		possibleStableValencies.get("Na").put(-1, new Integer[]{0});
 		possibleStableValencies.get("Mg").put(2, new Integer[]{0});
 		possibleStableValencies.get("Al").put(3, new Integer[]{0});
-		possibleStableValencies.get("P").put(1, new Integer[]{4});
+		possibleStableValencies.get("P").put(1, new Integer[]{2,4});
 		possibleStableValencies.get("P").put(-1, new Integer[]{2});
-		possibleStableValencies.get("S").put(1, new Integer[]{3});
+		possibleStableValencies.get("S").put(1, new Integer[]{1,3});
 		possibleStableValencies.get("S").put(-1, new Integer[]{1});
 		possibleStableValencies.get("S").put(-2, new Integer[]{0});
 		possibleStableValencies.get("Cl").put(1, new Integer[]{2});
@@ -197,7 +199,8 @@ class ValencyChecker {
 		possibleStableValencies.get("Ga").put(3, new Integer[]{0});
 		possibleStableValencies.get("Ga").put(-1, new Integer[]{2});
 		possibleStableValencies.get("Ge").put(4, new Integer[]{0});
-		possibleStableValencies.get("As").put(1, new Integer[]{4});
+		possibleStableValencies.get("As").put(2, new Integer[]{1});
+		possibleStableValencies.get("As").put(1, new Integer[]{2,4});
 		possibleStableValencies.get("As").put(-1, new Integer[]{2});
 		possibleStableValencies.get("As").put(-2, new Integer[]{1});
 		possibleStableValencies.get("As").put(-3, new Integer[]{0});
@@ -255,8 +258,8 @@ class ValencyChecker {
 	static boolean checkValency(Atom a) {
 		int valency = a.getIncomingValency();
 		Integer maxVal;
-		if (a.getValency()!=null){
-			maxVal=a.getValency();
+		if (a.getLambdaConventionValency()!=null){
+			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
 		}
 		else{
 			String symbol = a.getElement();
@@ -275,8 +278,8 @@ class ValencyChecker {
 	static boolean checkValencyAvailableForBond(Atom a, int bondOrder) {
 		int valency =a.getIncomingValency() +bondOrder;
 		Integer maxVal;
-		if (a.getValency()!=null){
-			maxVal=a.getValency();
+		if (a.getLambdaConventionValency()!=null){
+			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
 		}
 		else{
 			String symbol = a.getElement();
@@ -301,13 +304,11 @@ class ValencyChecker {
 		}
 
 	/**
-	 * Returns the default valency of an element or null if unknown
+	 * Returns the default valency of an element when uncharged or null if unknown
 	 * @param element
-	 * @param charge
 	 * @return
 	 */
-	static Integer getDefaultValency(String element, int charge) {
-		if (charge != 0){return null;}
+	static Integer getDefaultValency(String element) {
 		return expectedDefaultValency.get(element);
 	}
 

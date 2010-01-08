@@ -74,16 +74,12 @@ class CMLFragmentBuilder {
 			if(bondOrder.equalsIgnoreCase("t")) bondOrder = "3";
 			fragManager.createBond(fromAtom, toAtom, Integer.parseInt(bondOrder));
 		}
-		List<Atom> AtomList =currentFrag.getAtomList();
-		for (Atom atom : AtomList) {
-			atom.calculateValencyFromConnectivity();//FIXME nice idea but CML doesn't work like that!
-		}
 		return currentFrag;
 	}
 	
 
 	/**Builds an Atom from a CML Atom tag. Looks at elementType and formalCharge
-	 * attributes, hydrogenCount, and label tags contained within. id attributes are ignored.
+	 * attributes, and label tags contained within. id attributes are ignored.
 	 *
 	 * @param fragManager The current fragment manager
 	 * @param cmlAtom The nu.xom.Element for the Atom in CML
@@ -91,7 +87,11 @@ class CMLFragmentBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	Atom buildAtomFromCML(FragmentManager fragManager, Element cmlAtom, Fragment frag) throws StructureBuildingException {
-		Atom a  =fragManager.createAtom(cmlAtom.getAttributeValue("elementType"), frag);
+		String elementType = cmlAtom.getAttributeValue("elementType");
+		if (elementType.equals("H")){
+			throw new StructureBuildingException("Explicit hydrogens are not yet supported in OPSIN's CML reading implementation");
+		}
+		Atom a  =fragManager.createAtom(elementType, frag);
 		Elements cmlLocants = cmlAtom.getChildElements("label");
 		for(int i=0;i<cmlLocants.size();i++){
 			a.addLocant(cmlLocants.get(0).getAttributeValue("value"));
@@ -102,8 +102,7 @@ class CMLFragmentBuilder {
 		}
 		String hcStr = cmlAtom.getAttributeValue("hydrogenCount");
 		if(hcStr != null) {
-			//Integer.parseInt(hcStr);
-			//TODO implement explicit hydrogen properly
+			throw new StructureBuildingException("Hydrogen count attribute is not yet supported in OPSIN's CML reading implementation");
 		}
 		return a;
 	}

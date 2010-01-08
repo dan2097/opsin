@@ -306,11 +306,12 @@ class FragmentManager {
 			}
 			newAtom.setCharge(atom.getCharge());
 			newAtom.setSpareValency(atom.hasSpareValency());
+			newAtom.setProtonsExplicitlyAddedOrRemoved(atom.getProtonsExplicitlyAddedOrRemoved());
 			if (atom.getAtomParityElement() != null){
 				newAtom.setAtomParityElement(new Element(atom.getAtomParityElement()));
 			}
 			newAtom.setExplicitHydrogens(atom.getExplicitHydrogens());
-			newAtom.setValency(atom.getValency());
+			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());
 			//outValency is derived from the outIDs so is automatically cloned
 			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
 			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix

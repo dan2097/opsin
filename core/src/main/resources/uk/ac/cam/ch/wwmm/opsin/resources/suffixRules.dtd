@@ -17,4 +17,4 @@
 <!ELEMENT setOutID EMPTY>
 <!ATTLIST setOutID outValency CDATA #IMPLIED>
 <!ELEMENT changecharge EMPTY>
-<!ATTLIST changecharge charge CDATA #REQUIRED>
+<!ATTLIST changecharge charge CDATA #REQUIRED protons CDATA #REQUIRED>

@@ -43,6 +43,8 @@
     <token value="20" valType="chain" usableAsAJoiner="yes">icosa</token>
     <token value="21" valType="chain" usableAsAJoiner="yes">henicos</token>
     <token value="21" valType="chain" usableAsAJoiner="yes">henicosa</token>
+    <token value="21" valType="chain" usableAsAJoiner="yes">heneicos</token>
+    <token value="21" valType="chain" usableAsAJoiner="yes">heneicosa</token>
     <token value="22" valType="chain" usableAsAJoiner="yes">docos</token>
     <token value="22" valType="chain" usableAsAJoiner="yes">docosa</token>
     <token value="23" valType="chain" usableAsAJoiner="yes">tricos</token>

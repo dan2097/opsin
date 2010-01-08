@@ -28,6 +28,16 @@
   <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
   <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
 
+  <token value="P|3" labels="none" outIDs="1,1,1" valType="SMILES">phosphinidyne</token>
+  <token value="[As|3]" labels="none" outIDs="1,1,1" valType="SMILES">arsinidyne</token>
+  <token value="[Sb|3]" labels="none" outIDs="1,1,1" valType="SMILES">stibylidyne</token>
+  <token value="[Bi|3]" labels="none" outIDs="1,1,1" valType="SMILES">bismuthylidyne</token>
+  <token value="[P|3+]" labels="none" outIDs="1,1" valType="SMILES">phosphinidenio</token>
+  <token value="[As|3+]" labels="none" outIDs="1,1" valType="SMILES">arsinidenio</token>
+  <token value="P|5(=O)(O)" labels="none" outIDs="1,1" valType="SMILES">phosphinico</token>
+  <token value="[As|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">arsinico</token>
+  <token value="[Sb|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">stibinico</token>
+
   <token value="OO" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">peroxy</token>
 
   <token value="[N+]([O-])" labels="none" outIDs="1,1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">nitroryl</token>
@@ -36,6 +46,10 @@
   <token value="[Sb|5](=O)([O-])" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibinato</token>
 
   <token value="[Si]" labels="none" outIDs="1,1" valType="SMILES">silylene</token>
+  <token value="[Ge]" labels="none" outIDs="1,1" valType="SMILES">germylene</token>
+  <token value="[Sb]" labels="none" outIDs="1,1" valType="SMILES">stannylene</token>
+  <token value="[Pb]" labels="none" outIDs="1,1" valType="SMILES">plumbylene</token>
+  <token value="B" labels="none" outIDs="1,1" valType="SMILES">borylene</token>
 
   <token value="O" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">oxy</token>
   <token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
