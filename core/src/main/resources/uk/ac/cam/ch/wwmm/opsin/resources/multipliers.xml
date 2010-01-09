@@ -47,7 +47,7 @@
     <token value="20">eicosakis</token>
   </tokenList>
 
-  <tokenList tagname="multiplier" type="basic" symbol="R"><!--elided a-->
+  <tokenList tagname="multiplier" type="basic" symbol="r"><!--elided a-->
     <token value="4">tetr</token>
     <token value="5">pent</token>
     <token value="6">hex</token>
