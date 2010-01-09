@@ -77,6 +77,8 @@ class PostProcessor {
 	private Pattern matchComma =Pattern.compile(",");
 	private Pattern matchDot =Pattern.compile("\\.");
 	private Pattern matchNonDigit =Pattern.compile("\\D+");
+	private Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
+	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
 	private TokenManager tokenManager;
 
@@ -99,6 +101,7 @@ class PostProcessor {
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(elem, new String[]{"substituent", "root"});
 
 		for (Element subOrRoot: substituentsAndRoot) {
+			processLocants(subOrRoot);
 			processHeterogenousHydrides(subOrRoot);
 			processIndicatedHydrogens(subOrRoot);
 			processStereochemistry(subOrRoot);
@@ -147,7 +150,7 @@ class PostProcessor {
 				}
 			}
 
-			if (nextEl !=null && nextEl.getLocalName().equals("hydrocarbonFusedRingSystem")&& nextEl.getValue().equals("phen")){
+			if (nextEl !=null && nextEl.getLocalName().equals("hydrocarbonFusedRingSystem")&& nextEl.getValue().equals("phen")){//deals with tetra phen yl vs tetraphen yl
 				Element possibleSuffix = (Element) XOMTools.getNextSibling(nextEl);
 				if (possibleSuffix!=null){//null if not used as substituent
 					String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
@@ -160,6 +163,12 @@ class PostProcessor {
 					}
 				}
 			}
+			if (Integer.parseInt(apparentMultiplier.getAttributeValue("value"))>4 && !apparentMultiplier.getValue().endsWith("a")){//disambiguate pent oxy and the like. Assume it means pentanoxy rather than 5 oxys
+				if (nextEl !=null && nextEl.getLocalName().equals("group")&& matchInlineSuffixesThatAreAlsoGroups.matcher(nextEl.getValue()).matches()){
+					throw new PostProcessingException(apparentMultiplier.getValue() + nextEl.getValue() +" should have been lexed as [alkane stem, inline suffix], not [multiplier, group]!");
+				}
+			}
+		
 		}
 
 		List<Element> fusions = XOMTools.getDescendantElementsWithTagName(elem, "fusion");
@@ -195,6 +204,35 @@ class PostProcessor {
 					}
 				}
 			}
+		}
+	}
+	
+	
+	/**
+	 * Removes hyphens from the end of locants if present
+	 * Looks for locants of the form number-letter and converts them to letternumber
+	 * e.g. 1-N becomes N1. 1-N is the IUPAC 2004 recommendation, N1 is the previous recommendation
+	 * @param subOrRoot
+	 * @throws PostProcessingException 
+	 */
+	private void processLocants(Element subOrRoot) throws PostProcessingException {
+		Elements locants = subOrRoot.getChildElements("locant");
+		for (int i = 0; i < locants.size(); i++) {
+			Element locant =locants.get(i);
+			String[] individualLocantText = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
+			for (int j = 0; j < individualLocantText.length; j++) {
+				String locantText =individualLocantText[j];
+				if (locantText.contains("-")){//this checks should avoid having to do the regex match in all cases as locants shouldn't contain -
+					Matcher m= matchIUPAC2004ElementLocant.matcher(locantText);
+					if (m.matches()){
+						individualLocantText[j] = m.group(2) +m.group(1);
+					}
+					else{
+						throw new PostProcessingException("Unexpected hyphen in locantText");
+					}
+				}
+			}
+			XOMTools.setTextChild(locant, StringTools.arrayToString(individualLocantText, ","));
 		}
 	}
 
@@ -360,7 +398,7 @@ class PostProcessor {
 			else if (stereoChemistryElement.getAttributeValue("type").equals("cisOrTrans")){//assign a locant if one is directly before the cis/trans
 				Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
 				if (possibleLocant !=null && possibleLocant.getLocalName().equals("locant") && matchComma.split(possibleLocant.getValue()).length==1){
-					stereoChemistryElement.addAttribute(new Attribute("locant", StringTools.removeDashIfPresent(possibleLocant.getValue())));
+					stereoChemistryElement.addAttribute(new Attribute("locant", possibleLocant.getValue()));
 					possibleLocant.detach();
 				}
 			}
@@ -1242,7 +1280,7 @@ class PostProcessor {
 				Element possibleLocant =(Element) XOMTools.getPreviousSibling(potentialRing, "locant");
 				if (possibleLocant !=null){
 					if (potentialRing.getAttribute("frontLocantsExpected")!=null){//check whether the group was expecting a locant e.g. 2-furyl
-						String locantValue =StringTools.removeDashIfPresent(possibleLocant.getValue());
+						String locantValue = possibleLocant.getValue();
 						String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue("frontLocantsExpected"));
 						for (String expectedLocant : expectedLocants) {
 							if (locantValue.equals(expectedLocant)){
@@ -1253,7 +1291,7 @@ class PostProcessor {
 					}
 					//check whether the group is a HW system e.g. 1,3-thiazole
 					if (potentialRing.getAttributeValue("subType").equals("hantzschWidman")){
-						String locantValue =StringTools.removeDashIfPresent(possibleLocant.getValue());
+						String locantValue = possibleLocant.getValue();
 						int locants = matchComma.split(locantValue).length;
 						int heteroCount = 0;
 						Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocant);

@@ -148,7 +148,7 @@ class PreStructureBuilder {
 			if (roots.size() ==1) root=roots.get(0);
 
 			for (Element subOrBracketOrRoot : substituentsAndRootAndBrackets) {
-				processLocants(subOrBracketOrRoot);
+				processLocantFeatures(subOrBracketOrRoot);
 			}
 
 			for (Element group : groups) {
@@ -214,7 +214,7 @@ class PreStructureBuilder {
 	 * @param elem The substituent/root/bracket to looks for locants in.
 	 * @throws PostProcessingException
 	 */
-	private void processLocants(Element elem) throws PostProcessingException{
+	private void processLocantFeatures(Element elem) throws PostProcessingException{
 		Elements ompLocants = elem.getChildElements("orthoMetaPara");
 		for(int i=0;i<ompLocants.size();i++) {
 			Element locant = ompLocants.get(i);
@@ -226,13 +226,13 @@ class PreStructureBuilder {
 			locant.addAttribute(new Attribute("type", "orthoMetaPara"));
 			if(afterOmpLocant.getLocalName().equals("multiplier") || (afterOmpLocant.getAttribute("outIDs")!=null && matchComma.split(afterOmpLocant.getAttributeValue("outIDs")).length>1) ) {
 				if (matchOrtho.matcher(locantText).matches()){
-					locant.appendChild("1,2-");
+					locant.appendChild("1,2");
 				}
 				else if (matchMeta.matcher(locantText).matches()){
-					locant.appendChild("1,3-");
+					locant.appendChild("1,3");
 				}
 				else if (matchPara.matcher(locantText).matches()){
-					locant.appendChild("1,4-");
+					locant.appendChild("1,4");
 				}
 				else{
 					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
@@ -240,13 +240,13 @@ class PreStructureBuilder {
 			}
 			else{
 				if (matchOrtho.matcher(locantText).matches()){
-					locant.appendChild("2-");
+					locant.appendChild("2");
 				}
 				else if (matchMeta.matcher(locantText).matches()){
-					locant.appendChild("3-");
+					locant.appendChild("3");
 				}
 				else if (matchPara.matcher(locantText).matches()){
-					locant.appendChild("4-");
+					locant.appendChild("4");
 				}
 				else{
 					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
@@ -257,7 +257,7 @@ class PreStructureBuilder {
 		Elements locants = elem.getChildElements("locant");
 		for(int i=0;i<locants.size();i++) {
 			Element locant = locants.get(i);
-			String locantText = StringTools.removeDashIfPresent(locant.getValue());
+			String locantText = locant.getValue();
 
 			//If the indicatedHydrogen has been specified create a tag for it and remove it from the list of locants
 			//e.g. 1(9H),5,7 -->indicatedHydrogen tag value (9H) and 1,5,7
@@ -647,9 +647,7 @@ class PreStructureBuilder {
 		Element group =subOrBracketOrRoot.getFirstChildElement("group");//will be null if element is a bracket
 		for(int i=0;i<locants.size();i++) {
 			Element locant = locants.get(i);
-			String locantText = StringTools.removeDashIfPresent(locant.getValue());
-
-			String [] locantValues = locantText.split(",");
+			String [] locantValues = matchComma.split(locant.getValue());
 
 			Element afterLocants = (Element)XOMTools.getNextSibling(locant);
 			if(locantValues.length > 1) {
