@@ -157,32 +157,6 @@ class Fragment {
 		return Collections.unmodifiableSet(bondSet);
 	}
 
-	/**Imports all of the atoms and bonds from another fragment into this one.
-	 * Also imports outIDs/inIDs and functionalIDs
-	 *
-	 * @param frag The fragment from which the atoms and bonds are to be imported.
-	 */
-	void importFrag(Fragment frag) {
-		for(Atom atom : frag.getAtomList()) {
-			addAtom(atom);
-		}
-		for(Bond bond : frag.getBondSet()) {
-			addBond(bond);
-		}
-		for (OutID outID: frag.getOutIDs()) {
-			outID.frag =this;
-		}
-		for (InID inID: frag.getInIDs()) {
-			inID.frag =this;
-		}
-		for (FunctionalID functionalID: frag.getFunctionalIDs()) {
-			functionalID.frag =this;
-		}
-		outIDs.addAll(frag.getOutIDs());
-		inIDs.addAll(frag.getInIDs());
-		functionalIDs.addAll(frag.getFunctionalIDs());
-	}
-
 	/**Gets the id of the atom in the fragment with the specified locant.
 	 *
 	 * @param locant The locant to look for
@@ -408,15 +382,6 @@ class Fragment {
 		}
 	}
 
-	/**Adds an outID
-	 * @throws StructureBuildingException */
-	void addOutID(OutID outID) throws StructureBuildingException {
-		outIDs.add(new OutID(outID.id, outID.valency, outID.setExplicitly, outID.frag));
-		if (outID.setExplicitly){
-			getAtomByIDOrThrow(outID.id).addOutValency(outID.valency);
-		}
-	}
-
 	/**Adds a list of outIDs, copies of the given outIDs are not made*/
 	void addOutIDs(List<OutID> outIDs) {
 		this.outIDs.addAll(outIDs);
@@ -466,6 +431,11 @@ class Fragment {
 		inIDs.add(new InID(id, valency, this));
 		getAtomByIDOrThrow(id).addOutValency(valency);
 	}
+	
+	/**Adds a list of inIDs, copies of the given inIDs are not made*/
+	void addInIDs(List<InID> inIDs) {
+		this.inIDs.addAll(inIDs);
+	}
 
 	/**
 	 * Removes the inID at a specific index of the inIDs linkedList
@@ -506,7 +476,7 @@ class Fragment {
 		functionalIDs.add(new FunctionalID(id, this));
 	}
 
-	/**Adds a list of functionalIDs*/
+	/**Adds a list of functionalIDs, copies of the given functionalIDs are not made*/
 	void addFunctionalIDs(List<FunctionalID> functionalIDs) {
 		this.functionalIDs.addAll(functionalIDs);
 	}

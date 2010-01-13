@@ -110,28 +110,64 @@ class FragmentManager {
 	 */
 	Fragment getUnifiedFragment() throws StructureBuildingException {
 		Fragment outFrag = new Fragment();
-		for(Fragment f : fragPile) {
-			outFrag.importFrag(f);
-		}
-		for (Bond interFragmentBond : bondPile) {
-			outFrag.addBond(interFragmentBond);
+		addFragment(outFrag);
+		List<Fragment> fragments = new ArrayList<Fragment>(fragPile);
+		for(Fragment f : fragments) {
+			incorporateFragment(f, outFrag);//merge all fragments into one
 		}
 		return outFrag;
 	}
 
 	/** Incorporates a fragment, usually a suffix, into a parent fragment
+	 * This does:
+	 * Imports all of the atoms and bonds from another fragment into this one.
+	 * Also imports outIDs/inIDs and functionalIDs
+	 * Reassigns inter fragment bonds of the parent fragment as either intra fragment bonds
+	 * of the parent fragment or as inter fragment bonds of the parent fragment
+	 *
+	 * The original fragment still maintains its original atomList/bondList/interFragmentBondList which is necessary for stereochemistry handling
 	 *
 	 * @param childFrag The fragment to be incorporated
 	 * @param parentFrag The parent fragment
 	 */
 	void incorporateFragment(Fragment childFrag, Fragment parentFrag) throws StructureBuildingException {
-		parentFrag.importFrag(childFrag);
-		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {
+		for(Atom atom : childFrag.getAtomList()) {
+			parentFrag.addAtom(atom);
+		}
+		for(Bond bond : childFrag.getBondSet()) {
+			parentFrag.addBond(bond);
+		}
+		for (OutID outID: childFrag.getOutIDs()) {
+			outID.frag =parentFrag;
+		}
+		for (InID inID: childFrag.getInIDs()) {
+			inID.frag =parentFrag;
+		}
+		for (FunctionalID functionalID: childFrag.getFunctionalIDs()) {
+			functionalID.frag =parentFrag;
+		}
+		parentFrag.addOutIDs(childFrag.getOutIDs());
+		parentFrag.addInIDs(childFrag.getInIDs());
+		parentFrag.addFunctionalIDs(childFrag.getFunctionalIDs());
+
+		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {//reassign inter fragment bonds of child
 			if (bond.getFromAtom().getFrag() ==parentFrag || bond.getToAtom().getFrag() ==parentFrag){
-				parentFrag.addBond(bond);//add as an intra fragment bond
+				if (bond.getFromAtom().getFrag() ==parentFrag && bond.getToAtom().getFrag() ==parentFrag){
+					//bond is now enclosed within parentFrag so make it an intra fragment bond
+					//and remove it from the interfragment list of the parentFrag
+					parentFrag.addBond(bond);
+					fragToInterFragmentBond.get(parentFrag).remove(bond);
+				}
+				else{
+					//bond was an interfragment bond between the childFrag and another frag
+					//It is now between the parentFrag and another frag
+					addInterFragmentBond(bond);
+				}
 			}
 		}
-		removeFragment(childFrag);//also removes inter fragment bonds
+		if (!fragPile.remove(childFrag)){
+			throw new StructureBuildingException("Fragment not found in fragPile");
+		}
 	}
 	
 	/** Incorporates a fragment, usually a suffix, into a parent fragment, creating a bond between them.
@@ -240,19 +276,17 @@ class FragmentManager {
 		if (!fragPile.remove(frag)){
 			throw new StructureBuildingException("Fragment not found in fragPile");
 		}
-		if (fragToInterFragmentBond.get(frag) !=null){
-			Set<Bond> interFragmentBondsInvolvingFragment = fragToInterFragmentBond.get(frag);
-			for (Bond bond : interFragmentBondsInvolvingFragment) {
-				if (bond.getFromAtom().getFrag() ==frag){
-					fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
-				}
-				else{
-					fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
-				}
-				bondPile.remove(bond);
+		List<Bond> interFragmentBondsInvolvingFragment = new ArrayList<Bond>(fragToInterFragmentBond.get(frag));
+		for (Bond bond : interFragmentBondsInvolvingFragment) {
+			if (bond.getFromAtom().getFrag() ==frag){
+				fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
 			}
-			fragToInterFragmentBond.remove(frag);
+			else{
+				fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
+			}
+			bondPile.remove(bond);
 		}
+		fragToInterFragmentBond.get(frag).clear();
 	}
 
 	int getOverallCharge() {
@@ -343,7 +377,7 @@ class FragmentManager {
 
 	/**
 	 * Takes an element and produces a copy of it. Groups and suffixes are copied so that the new element
-	 * has it's own group and suffix fragments
+	 * has its own group and suffix fragments
 	 * @param elementToBeCloned
 	 * @param state The current buildstate
 	 * @return
@@ -355,7 +389,7 @@ class FragmentManager {
 
 	/**
 	 * Takes an element and produces a copy of it. Groups and suffixes are copied so that the new element
-	 * has it's own group and suffix fragments
+	 * has its own group and suffix fragments
 	 * @param elementToBeCloned
 	 * @param state The current buildstate
 	 * @param stringToAddToAllLocants A string to append to all locants in the cloned fragments
