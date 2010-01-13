@@ -470,68 +470,96 @@ class FusedRingNumberer {
 		Ring prevRing = findUpperLeftNeighbour(ringMap, iRing);
 		Bond prevBond = findFusionBond(iRing, prevRing);
 		Bond nextBond = null;
-	
+				
 		boolean finished = false;
 		int stNumber;
 		int endNumber;
 		int size;
-		Ring nextRing = null;
-	
-		while (!finished) // or nof rings cannot be, cause one ring can be taken 2 times
-		{
+		int maxLoopCount = 1000;
+		Ring nextRing    = null;
+		prevRing         = null;	// TB: otherwise the test later on would prevent going to this ring for the first time
+		
+		while ( ( ! finished ) && ( maxLoopCount-- > 0 ) ) // or nof rings cannot be, cause one ring can be taken 2 times; avoid endless loops
+		{						
 			size = iRing.size();
-	
+											
 			stNumber = iRing.getBondNumber(prevBond) ;
-	
+		
 			List<Bond> cbonds = iRing.getCyclicBondSet();
 			List<Bond> fbonds = iRing.getFusedBonds();
-			if (!inverseAtoms)
-			{
-				for(int bi=0; bi<size; bi++)
+			
+			// changes by TB (timo.boehme@ontochem.com):
+			// added loop for special case that we have two adjacent
+			// fused bonds between same rings which otherwise would result in endless loop
+			// i.e. with isoquinolino[6,5,4,3-cde] quinoline
+			
+			int bi = -1;	// bond index summand
+			
+			do {
+			
+				nextBond = null;
+				bi++;
+				
+				if (!inverseAtoms)
 				{
-					int i = (stNumber + bi + 1) % size; // +1 cause we start from the bond next to stBond and end with it
-					// if this bond is fused
-					Bond bond = cbonds.get(i);
-					if(fbonds.contains(bond)) {
-						nextBond = bond; break;
+					for(; bi<size; bi++)
+					{
+						int i = (stNumber + bi + 1) % size; // +1 cause we start from the bond next to stBond and end with it
+						// if this bond is fused
+						Bond bond = cbonds.get(i);
+						if(fbonds.contains(bond)) {
+							nextBond = bond; break;
+						}										
 					}
 				}
-			}
-			else
-			{
-				for(int bi=0; bi<size; bi++)
+				else 
 				{
-					int i = (stNumber - bi -1 + size) % size; // -1 cause we start from the bond next to stBond and end with it
-					// if this bond is fused
-					Bond bond = cbonds.get(i);
-					if(fbonds.contains(bond)) {
-						nextBond = bond; break;
+					for(; bi<size; bi++)
+					{
+						int i = (stNumber - bi -1 + size) % size; // -1 cause we start from the bond next to stBond and end with it
+						// if this bond is fused
+						Bond bond = cbonds.get(i);
+						if(fbonds.contains(bond)) {
+							nextBond = bond; break;
+						}										
 					}
 				}
-			}
-	
-			if (nextBond == null) throw new StructureBuildingException();
-			// next ring
-			for (Ring ring : nextBond.getFusedRings()) {
-				if(ring != iRing) { nextRing = ring; break; }
-			}
-	
+				
+				if (nextBond == null) throw new StructureBuildingException();
+				
+				// next ring
+				// TB: we have to test that we don't come back to previous ring
+				// via another bond
+				nextRing = null;
+				for (Ring ring : nextBond.getFusedRings()) {
+					if(ring != iRing &&
+							// test that either we come back to previous ring via same bond
+							// or we go to another ring
+							// maybe we should reduce this test to adjacent bonds ?
+							( ( nextBond == prevBond ) || ( ring != prevRing ) ) ) {
+						nextRing = ring;
+						break;
+					}
+				}
+				
+			} while ( nextRing == null );
+			
 			endNumber = iRing.getBondNumber(nextBond) ;
-	
+			
 			// Add atoms in order, considering inverse or not inverse
 			if (!inverseAtoms)
 			{
 				Atom atom = null;
-	
-				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other), but not fused use another scheme
+				
+				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other), but not fused use another scheme				
 				// we dont add that atom, cause it was added already
 				if ( (endNumber - stNumber + size) % size != 1)
 				{
 					stNumber = (stNumber + 1) % size;
 					endNumber = (endNumber - 1 + size ) % size;
 					if (stNumber > endNumber) endNumber += size;
-	
-					// start from the atom next to fusion
+					
+					// start from the atom next to fusion								
 					for (int j = stNumber; j <= endNumber; j++) // change 4-2
 					{
 						atom = iRing.getCyclicAtomSet().get(j % size);
@@ -539,20 +567,20 @@ class FusedRingNumberer {
 						atomPath.add(atom);
 					}
 				}
-			}
-			else
+			}			
+			else 
 			{
 				Atom atom = null;
-	
-				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other), use another scheme
+				
+				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other), use another scheme				
 				if ( ( stNumber - endNumber + size) % size != 1)
 				{
 					stNumber = (stNumber - 2 + size ) % size;
-					endNumber = endNumber % size;
+					endNumber = endNumber % size;				
 					if (stNumber < endNumber) stNumber += size;
-	
-					for ( int j = stNumber; j >= endNumber; j-- )
-					{
+										
+					for ( int j = stNumber; j >= endNumber; j-- ) 
+					{				
 						atom = iRing.getCyclicAtomSet().get(j % size);
 						if (atomPath.contains(atom)) { finished = true; break;}
 						atomPath.add(atom);
@@ -561,9 +589,12 @@ class FusedRingNumberer {
 			}
 			prevBond = nextBond;
 			prevRing = iRing;
-			iRing = nextRing;
+			iRing = nextRing;			
 		}
-	
+		
+		if ( ! finished )
+			throw new StructureBuildingException( "Endless loop while ordering atoms of fused rings." );
+			
 		return atomPath;
 	}
 
