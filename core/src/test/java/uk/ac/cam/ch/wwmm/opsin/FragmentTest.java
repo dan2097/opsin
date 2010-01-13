@@ -62,18 +62,13 @@ public class FragmentTest {
 
 	@Test
 	public void testImportFrag() throws StructureBuildingException {
-		frag.addAtom(new Atom(1, "C", frag));
-		frag.addAtom(new Atom(2, "C", frag));
-		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
-		Fragment newFrag = new Fragment();
-		newFrag.addAtom(new Atom(3, "C", newFrag));
-		newFrag.addAtom(new Atom(4, "C", newFrag));
-		fm.createBond(newFrag.getAtomByID(3), newFrag.getAtomByID(4), 1);
-		assertEquals("Fragment has two atoms", 2, frag.getAtomList().size());
-		assertEquals("Fragment has one bond", 1, frag.getBondSet().size());
-		frag.importFrag(newFrag);
-		assertEquals("Fragment now has four atoms", 4, frag.getAtomList().size());
-		assertEquals("Fragment now has two bonds", 2, frag.getBondSet().size());
+		Fragment frag1 = fm.buildSMILES("CC");
+		Fragment frag2 = fm.buildSMILES("CC");
+		assertEquals("Fragment has two atoms", 2, frag1.getAtomList().size());
+		assertEquals("Fragment has one bond", 1, frag1.getBondSet().size());
+		fm.incorporateFragment(frag2, frag1);
+		assertEquals("Fragment now has four atoms", 4, frag1.getAtomList().size());
+		assertEquals("Fragment now has two bonds", 2, frag1.getBondSet().size());
 	}
 
 	@Test
