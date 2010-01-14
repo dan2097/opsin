@@ -155,7 +155,8 @@ does not define a CFG.
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringSubstituent%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%inlineSuffixGroup%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
-  <regex name="%ringAssembly%" value = "((%ringAssemblyLocant%|%orthoMetaPara%)?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%))"/>
+  <regex name="%locantForRingAssembly%" value = "(%ringAssemblyLocant%|%orthoMetaPara%|%optionalOpenBracket%%ringAssemblyLocant%%optionalCloseBracket%%hyphen%?)" />
+  <regex name="%ringAssembly%" value = "(%locantForRingAssembly%?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%))"/>
 
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|(%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%)%inlineEndings%|%fusedRingSystem%%inlineEndings%)"/>
   <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
