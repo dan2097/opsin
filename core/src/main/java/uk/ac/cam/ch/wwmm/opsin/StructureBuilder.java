@@ -93,6 +93,14 @@ class StructureBuilder {
 //			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");
 //			state.fragManager.attachFragments(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), moleculeBuildResults.getOutID(i).valency);
 //		}
+//		if(wordRule.equals("polymer")){
+//			List<Atom> atomList = uniFrag.getAtomList();
+//			for (Atom atom : atomList) {
+//				if  (atom.getElement().equals("Fr")){
+//					atom.setElement("R");
+//				}
+//			}
+//		}
 
 		if (uniFrag.getOutIDs().size()>0 || uniFrag.getInIDs().size()>0){
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
@@ -550,10 +558,10 @@ class StructureBuilder {
 		BuildResults polymerBr = new BuildResults(state, polymer);
 		if (polymerBr.getOutIDCount() ==2 && polymerBr.getInIDCount()==0){
 			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-			Fragment rGroup =state.fragManager.buildSMILES("[Xe]");//TODO stop using actual atoms (confuses E/Z!)
+			Fragment rGroup =state.fragManager.buildSMILES("[Fr]");//TODO stop using actual atoms (confuses E/Z!)
 			state.fragManager.createBond(inAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(0).valency);
 			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
-			rGroup =state.fragManager.buildSMILES("[Rn]");
+			rGroup =state.fragManager.buildSMILES("[Fr]");
 			state.fragManager.createBond(outAtom, rGroup.getAtomByIDOrThrow(rGroup.getIdOfFirstAtom()), polymerBr.getOutID(1).valency);
 			polymerBr.removeAllOutIDs();
 		}
