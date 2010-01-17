@@ -1,0 +1,71 @@
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<!-- See the DTD for more details -->
+<tokenLists>
+<!--functional classes typically have hard coded rules in the StructureBuilder detailing their behaviour-->
+  <tokenList tagname="functionalClass" type="functionalClass" symbol="æ">
+    <token value="acid">acid</token>
+    <token value="ester">ester</token>
+    <token value="glycol">glycol</token>
+  </tokenList>
+
+  <tokenList tagname="functionalClass" type="functionalClass" symbol="Æ">
+    <token value="oxime">oxime</token>
+  </tokenList>
+
+  <tokenList tagname="functionalModifier" type="functionalModifier" symbol="ù">
+    <token value="oligo">oligo</token>
+    <token value="poly">poly</token>
+  </tokenList>
+
+<!--The functional groups simply involve connecting said group to a radical on the provided group
+The standalone functionalgroups are alternatively valid as groups in their own right
+For these groups the charge on the first atom will be increased by 1 if they are used as a functional group-->
+  <tokenList tagname="functionalGroup" type="monoValentGroup" symbol="ô">
+    <token value="O" labels="none" valType="SMILES">alcohol</token>
+    <token value="[Se]" labels="none" valType="SMILES">selenol</token>
+    <token value="S" labels="none" valType="SMILES">thiol</token>
+  </tokenList>
+
+  <tokenList tagname="functionalGroup" type="diValentGroup" symbol="ö">
+    <token value="[Se][Se]-" labels="none" valType="SMILES">diselenide</token>
+    <token value="SS-" labels="none" valType="SMILES">disulfide</token>
+    <token value="[Te][Te]-" labels="none" valType="SMILES">ditelluride</token>
+    <token value="O" labels="none" valType="SMILES">ether</token>
+    <token value="C=O" labels="none" valType="SMILES">ketone</token>
+    <token value="O" labels="none" valType="SMILES">oxide</token>
+    <token value="OO-" labels="none" valType="SMILES">peroxide</token>
+    <token value="[Se]" labels="none" valType="SMILES">selenide</token>
+    <token value="[Se](=O)=O" labels="none" valType="SMILES">selenone</token>
+    <token value="[Se]=O" labels="none" valType="SMILES">selenoxide</token>
+    <token value="C=[Se]" labels="none" valType="SMILES">selone</token>
+    <token value="[Se]=O" labels="none" valType="SMILES">selenoketone</token>
+    <token value="S" labels="none" valType="SMILES">sulfide</token>
+    <token value="S(=O)=O" labels="none" valType="SMILES">sulfone</token>
+    <token value="S=O" labels="none" valType="SMILES">sulfoxide</token>
+    <token value="[Te]" labels="none" valType="SMILES">telluride</token>
+    <token value="[Te]=O" labels="none" valType="SMILES">telluroketone</token>
+    <token value="[Te](=O)=O" labels="none" valType="SMILES">tellurone</token>
+    <token value="[Te]=O" labels="none" valType="SMILES">telluroxide</token>
+    <token value="S=O" labels="none" valType="SMILES">thioketone</token>
+  </tokenList>
+
+  <tokenList tagname="functionalGroup" type="monoValentStandaloneGroup" symbol="ò">
+    <token value="[N-]=[N+]=[N-]" labels="none" valType="SMILES">azide</token>
+    <token value="[Br-]" labels="none" valType="SMILES">bromide</token>
+    <token value="[Cl-]" labels="none" valType="SMILES">chloride</token>
+    <token value="[O-]C#N" labels="none" valType="SMILES">cyanate</token>
+    <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
+    <token value="[F-]" labels="none" valType="SMILES">fluoride</token>
+    <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
+    <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
+    <token value="[I-]" labels="none" valType="SMILES">iodide</token>
+    <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
+    <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>
+    <token value="[N-]=C=[Se]" labels="none" valType="SMILES">isoselenocyanate</token>
+    <token value="[N-]=C=[Te]" labels="none" valType="SMILES">isotellurocyanate</token>
+    <token value="[N-]=C=S" labels="none" valType="SMILES">isothiocyanate</token>
+    <token value="[Se-]C#N" labels="none" valType="SMILES">selenocyanate</token>
+    <token value="[Te-]C#N" labels="none" valType="SMILES">tellurocyanate</token>
+    <token value="[S-]C#N" labels="none" valType="SMILES">thiocyanate</token>
+  </tokenList>
+</tokenLists>

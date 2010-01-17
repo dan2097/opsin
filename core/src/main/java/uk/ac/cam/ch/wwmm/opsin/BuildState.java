@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
+
 import nu.xom.Element;
 
 /**
@@ -18,7 +20,7 @@ class BuildState {
 
 	IDManager idManager;
 	FragmentManager fragManager;
-	String wordRule;
+	WordRule currentWordRule = null;
 	BiDirectionalHashMap xmlFragmentMap;
 	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
 	boolean debug = false;
@@ -80,7 +82,6 @@ class BuildState {
 	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
 		idManager = new IDManager();
 		fragManager = new FragmentManager(sBuilder, cmlBuilder, idManager);
-		wordRule = null;
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
 	}

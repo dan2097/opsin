@@ -1,14 +1,17 @@
-<!ELEMENT wordRules (stringReplacement*,wordRule+)>
-
-<!ELEMENT stringReplacement EMPTY>
-<!ATTLIST stringReplacement name   CDATA #REQUIRED
-                   value  CDATA #REQUIRED>
+<!ELEMENT wordRules (wordRule+)>
 
 <!ELEMENT wordRule (word)+>
 <!ATTLIST wordRule name   CDATA #REQUIRED
-                   regex  CDATA #REQUIRED>
+                   type   (full|substituent|functionalTerm|polymer) #REQUIRED
+
+>
 
 <!ELEMENT word EMPTY>
-<!ATTLIST word type (full|substituent|literal) #REQUIRED>
-                
+<!ATTLIST word type (full|substituent|functionalTerm) #REQUIRED
+               value CDATA #IMPLIED
+               endsWithRegex CDATA #IMPLIED
+               functionalGroupType CDATA #IMPLIED
+               endsWithElementValueAtr CDATA #IMPLIED
+>
+
 

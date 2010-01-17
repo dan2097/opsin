@@ -1,106 +1,123 @@
 ﻿<!DOCTYPE wordRules SYSTEM "wordRules.dtd">
-<!-- These say how to split a word into tokens. These interact with the code in a complex way -->
-<!-- The first regex to match the word is used, otherwise binaryOrOther is used -->
-<!--If more words are matched than are described the additional words are assumed to be of type full-->
+<!--These are set of rules indicating what words may be combined and what the rule for combining them is
+These rules are hard coded into the structure builder.
+Rules are checked in the order they are listed in this file so the order is potentially important. Hence also less used word rules appear lower for speed
+The result of this process is that the relevant words are placed with a wordRule element which can be thought of as a word of the type defined
+in the WordRule's type attribute.
+
+If none of these wordRules match a substituent may merge with an adjacent substituent to form a larger substituent
+and a substituent may merge with a full to form a larger full
+Parsing will fail if the end result is not one or more full terms or a polymer.
+-->
+<!--need to be added: hydrazide, lactone, lactam, hydrazone, anhydride, semicarbazone, acetal, hemiacetal, ketal, oxide-->
 <wordRules>
-  <stringReplacement name="%subEnding%" value="(?:yl|o|xy|idene|ylene|ydrogen)"/>
-  <stringReplacement name="%closeBracket%" value="(?:[\]\)\}])"/>
-  <stringReplacement name="%substituent%" value="(?:[^ £]+%subEnding%%closeBracket%*)"/>
-  <stringReplacement name="%multiplier%" value="(?:mono|di|tri|tetra|penta|hexa|hepta|octa|nona|deca)"/>
-  <stringReplacement name="%locant%" value="(?:\d+(?:,\d+)*-?)"/>
-  <stringReplacement name="%monovalentFunctionalGroup%" value="(?:azide|bromide|chloride|cyanate|cyanide|fluoride|fulminate|hydroperoxide|iodide|isocyanate|isocyanide|isoselenocyanate|isothiocyanate|selenocyanate|thiocyanate)"/>
-  <stringReplacement name="%monovalentLiteralFunctionalGroup%" value="(?:alcohol|selenol|thiol)"/>
-  <stringReplacement name="%divalentLiteralFunctionalGroup%" value="(?:ether|ketone|oxide|peroxide|selenide|selenone|selenoxide|selone|selenoketone|sulfide|sulfone|sulfoxide|telluride|telluroketone|tellurone|telluroxide|thioketone)"/>
+  <wordRule name="monovalentFunctionalGroup" type="full">
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="monoValentGroup"/>
+  </wordRule>
 
-  <wordRule name="functionalClassEster" regex="([^ £]+(?:ic|ous))[ ]*(acid)[ ]+(%substituent%)[ \-]*(ester)">
+  <wordRule name="monovalentFunctionalGroup" type="full">
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+  </wordRule>
+
+  <wordRule name="monovalentFunctionalGroup" type="full">
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+  </wordRule>
+
+  <wordRule name="monovalentFunctionalGroup" type="full">
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+  </wordRule>
+
+  <wordRule name="ester" type="full">
+    <word type="substituent" />
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="amide" type="full">
+    <word type="full" endsWithRegex="ic|ous"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithElementValueAtr="[N-]"/>
+  </wordRule>
+
+  <wordRule name="amide" type="full">
+    <word type="full" endsWithRegex="ic|ous"/>
+    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithElementValueAtr="[N-]"/>
+  </wordRule>
+
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+  <wordRule name="multiEster" type="full">
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+  </wordRule>
+  <wordRule name="multiEster" type="full"><!-- e.g. methyl ethyl propyl phosphate-->
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="divalentFunctionalGroup" type="full">
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="functionalTerm" />
+  </wordRule>
+
+  <wordRule name="divalentFunctionalGroup" type="full">
+    <word type="substituent"/>
+    <word type="functionalTerm" functionalGroupType="diValentGroup" />
+  </wordRule>
+
+  <wordRule name="glycol" type="full">
+    <word type="substituent" endsWithRegex="(diyl|ylene)[\]\)\}]*" />
+    <word type="functionalTerm" value="glycol" />
+  </wordRule>
+
+  <wordRule name="oxime" type="full">
     <word type="full" />
-    <word type="literal" />
-    <word type="substituent" />
-    <word type="literal" />
+    <word type="functionalTerm" endsWithRegex="oxime" />
   </wordRule>
 
-  <wordRule name="functionalClassEster" regex="([^ £]+(?:ate|amide))[ ]+(%substituent%)[ \-]*(ester)">
+  <wordRule name="oxime" type="full">
     <word type="full" />
     <word type="substituent" />
-    <word type="literal" />
+    <word type="functionalTerm" value="oxime"/>
   </wordRule>
 
-  <wordRule name="amide" regex="([^ £]+(?:ic|ous))[ ]*(acid)[ ]+(%substituent%)[ \-]*(amide)">
-    <word type="full" />
-    <word type="literal" />
-    <word type="substituent" />
-    <word type="literal" />
-  </wordRule>
-  
-  <wordRule name="amide" regex="([^ £]+(?:ic|ous))[ ]*(acid)[ \-]*(amide)">
-    <word type="full" />
-    <word type="literal" />
-    <word type="literal" />
+  <wordRule name="acid" type="full">
+    <word type="full" endsWithRegex="ic|ous"/>
+    <word type="functionalTerm" value="acid" />
   </wordRule>
 
-  <wordRule name="glycol" regex="([^ £]+(?:diyl|ylene)%closeBracket%*)[ ]*(glycol)">
-    <word type="substituent" />
-    <word type="literal" />
+  <wordRule name="functionGroupAsGroup" type="full">
+    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
-  <wordRule name="oxime" regex="([^ £]+(?&lt;!%subEnding%))[ ]*(%locant%?%multiplier%?oxime)">
-    <word type="full" />
-    <word type="literal" />
+  <wordRule name="polymer" type="polymer">
+    <word type="functionalTerm" value="poly"/>
+    <word type="substituent"/>
   </wordRule>
 
-  <wordRule name="oxime" regex="([^ £]+(?&lt;!%subEnding%))[ ]+(%substituent%)[ ]*(oxime)">
-    <word type="full" />
-    <word type="substituent" />
-    <word type="literal" />
+  <wordRule name="polymer" type="polymer">
+    <word type="functionalTerm" value="oligo"/>
+    <word type="substituent"/>
   </wordRule>
-
-<!-- hydrazide, lactone, lactam, hydrazone, anhydride, semicarbazone, acetal, hemiacetal, ketal -->
-
-  <!--<wordRule name="oxide" regex="([^ £]+)[ ]*(oxide)">
-    <word type="full" />
-    <word type="literal" />
-  </wordRule>-->
-
-  <wordRule name="ester" regex="(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
-    <word type="substituent" />
-    <word type="full" />
-  </wordRule>
-  <wordRule name="multiEster" regex="(%substituent%)[ ]+(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="full" />
-  </wordRule>
-  <wordRule name="multiEster" regex="(%substituent%)[ ]+(%substituent%)[ ]+(%substituent%)[ ]+([^ £]+(?:ate|amide|ite)%closeBracket%*)">
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="full" />
-  </wordRule>
-
-  <wordRule name="acid" regex="([^ £]+(?:ic|ous))[ ]*(acid)">
-    <word type="full" />
-    <word type="literal" />
-  </wordRule>
-
-  <wordRule name="divalentLiteralFunctionalGroup" regex="(%substituent%)[ ]+(%substituent%)[ ]*(%divalentLiteralFunctionalGroup%)">
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="literal" />
-  </wordRule>
-
-  <wordRule name="divalentLiteralFunctionalGroup" regex="(%substituent%)[ ]*(%divalentLiteralFunctionalGroup%)">
-    <word type="substituent" />
-    <word type="literal" />
-  </wordRule>
-
-  <wordRule name="monovalentFunctionalGroup" regex="(%substituent%)[ ]*(%multiplier%?(?&lt;!hydro)%monovalentFunctionalGroup%)+">
-    <word type="substituent" />
-    <word type="full" />
-  </wordRule>
-
-  <wordRule name="monovalentLiteralFunctionalGroup" regex="(%substituent%)[ ]*(%monovalentLiteralFunctionalGroup%)">
-    <word type="substituent" />
-    <word type="literal" />
-  </wordRule>
-
 </wordRules>

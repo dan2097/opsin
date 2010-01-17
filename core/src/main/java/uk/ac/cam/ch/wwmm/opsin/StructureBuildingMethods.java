@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
+
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -27,6 +29,9 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	static void resolveWordOrBracket(BuildState state, Element word) throws StructureBuildingException {
+		if (word.getLocalName().equals("wordRule")){//already been resolved
+			return;
+		}
 		if (!word.getLocalName().equals("word") && !word.getLocalName().equals("bracket")){
 			throw new StructureBuildingException("A word or bracket is the expected input");
 		}
@@ -560,7 +565,7 @@ class StructureBuildingMethods {
 					if (nextFrag!=null){
 						Element nextMultiRadicalGroup = state.xmlFragmentMap.getElement(nextFrag);
 						Element parentSubOrRoot = (Element) nextMultiRadicalGroup.getParent();
-						if (!state.wordRule.equals("polymer")){//imino does not behave like a substituent in polymers only as a linker
+						if (state.currentWordRule != WordRule.polymer){//imino does not behave like a substituent in polymers only as a linker
 							if (nextMultiRadicalGroup.getAttribute("iminoLike")!=null){//imino/methylene can just act as normal substituents, should an additive bond really be made???
 								List<Fragment> alternativeFragments = findAlternativeFragments(state, subBracketOrRoot);
 								if (nextFrag !=alternativeFragments.get(alternativeFragments.size()-1)){//imino is not the absolute next frag
