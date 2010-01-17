@@ -25,7 +25,7 @@
     <token value="20">eicosa</token>
   </tokenList>
 
-  <tokenList tagname="multiplier" type="group" symbol="r"><!--groupMultiplier-->
+  <tokenList tagname="multiplier" type="group" symbol="R"><!--groupMultiplier-->
     <token value="2">bis</token>
     <token value="3">tris</token>
     <token value="4">tetrakis</token>

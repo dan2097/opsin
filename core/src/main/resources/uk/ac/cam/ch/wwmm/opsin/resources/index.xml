@@ -12,7 +12,6 @@
   <tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
   <tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
   <tokenFile>irregularAlkanes.xml</tokenFile>
-  <tokenFile>anions.xml</tokenFile>
   <tokenFile>cations.xml</tokenFile>
   <tokenFile>aminoAcids.xml</tokenFile>
 
@@ -22,6 +21,7 @@
   <tokenFile>acidsOylForAcyl.xml</tokenFile>
   <tokenFile>acidsYlForAcyl.xml</tokenFile>
 
+  <tokenFile>functionalTerms.xml</tokenFile>
   <tokenFile>heteroAtoms.xml</tokenFile>
   <tokenFile>hwHeteroAtoms.xml</tokenFile>
   <tokenFile>hwSuffixes.xml</tokenFile>

@@ -81,11 +81,16 @@ does not define a CFG.
   <regex name="%multipleFusor%" value="Ä"/>
   <regex name="%benzo%" value="Å"/>
   <regex name="%bracketedLocantGroup%" value="É"/>
-  <!--up to ascii 144 used -->
+  <regex name="%basicFunctionalClass%" value="æ"/>
+  <regex name="%multiplyableFunctionalClass%" value="Æ"/>
+  <regex name="%monovalentFunctionalGroup%" value="ô"/>
+  <regex name="%divalentFunctionalGroup%" value="ö"/>
+  <regex name="%standaloneMonovalentFunctionalGroup%" value="ò"/>
+  <regex name="%endOfFunctionalGroup%" value="û"/>
+  <regex name="%functionalModifier%" value="ù"/>
+  <!--up to ascii 151 used -->
 
-<!-- composite regexes
-	Note that %substituent% and %chemical% are reserved words: don't change these.
- -->
+<!-- composite regexes-->
 
 <!-- UsefulTerms-->
   <regex name="%rootSuffix%" value="(%suffix%|%suffixesThatCanHaveEeuphonicO%)"/>
@@ -107,7 +112,7 @@ does not define a CFG.
   <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locantGroup%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
   <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
   <regex name="%infixedSuffix%" value="((%o%?%replacementInfix%((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%))|(%structuralOpenBracket%%multiplier%?%replacementInfix%((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%)%structuralCloseBracket%))"/>
-  <regex name="%unlocantedSuffixGroup%" value="((%multiplier%?(%infixedSuffix%|%rootSuffix%))|(%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%))"/>  
+  <regex name="%unlocantedSuffixGroup%" value="((%multiplier%?(%infixedSuffix%|%rootSuffix%))|(%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%))"/>
   <regex name="%suffixGroup%" value="(%newLocantGroup%?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%openBracket%)"/>
@@ -146,7 +151,7 @@ does not define a CFG.
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiro%%alkaneStem%)"/>
 
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%cycloChain%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|%bracketedLocant%?%trivialRing%)%e%?|%trivialRingSubstituentGroup%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|%bracketedLocant%?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%cycloChain%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%)%inlineEndings%|%bracketedLocant%?%trivialRingSubstituent%%inlineSuffixGroup%)"/>
 
   <!--Complex terms-->
@@ -168,5 +173,11 @@ does not define a CFG.
   <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%))"/>
   <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
 
-  <regex name="%chemical%" value="(%substituent%*%mainGroup%)"/>
+<!-- functional Groups-->
+  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%|%basicFunctionalClass%)"/>
+  <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
+  <regex name="%functionalTerm%" value="(%hyphen%?(%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
+
+  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+|%substituent%*%mainGroup%)%functionalTerm%?|%functionalTerm%)"/>
+<!--Note that the %functionalTerm%? in the term above indicates that a space has technically been omitted!-->
 </regexes>

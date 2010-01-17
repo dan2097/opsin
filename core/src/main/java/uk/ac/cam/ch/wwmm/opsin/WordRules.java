@@ -1,92 +1,155 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dk.brics.automaton.RunAutomaton;
+import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 
-/**The rules by which names are divided into words.
+/**The rules by which words are grouped together (e.g. in functional class nomenclature)
  *
- * @author ptc24
+ * @author dl387
  *
  */
 class WordRules {
 
-	private final static char NON_CHEM_CHAR = '\u00A3';
+	/**
+	 * The currently supported wordRules
+	 * @author dl387
+	 *
+	 */
+	enum WordRule{
+		full,
+		simple,
+		acid,
+		monovalentFunctionalGroup,
+		ester,
+		multiEster,
+		amide,
+		functionalClassEster,
+		divalentFunctionalGroup,
+		glycol,
+		oxime,
+		functionGroupAsGroup,
+		polymer
+	}
+	
+	/**
+	 * Describes a word that a wordRule is looking for
+	 * @author dl387
+	 *
+	 */
+	class WordDescription {
+		/**Whether the word is a full word, substituent word or functionalTerm word*/
+		private final WordType type;
+		
+		/**A case insensitive pattern which attempts to match the end of the String value of the word*/
+		private Pattern endsWithPattern = null;
+		
+		/**The case insensitive String value of the word */
+		private String value = null;
+		
+		/** Only applicable for functionalTerms. The string value of the functionalTerm's type attribute*/
+		private String functionalGroupType = null;
+		
+		/** The value of the value attribute of the last element in the word e.g. maybe a SMILES string*/
+		private String endsWithElementValueAtr = null;
 
-	/**A rule by which names are divided into words.*/
-	class WordRule {
+		WordType getType() {
+			return type;
+		}
 
-		/**The regular expression to recognise the applicability of a wordRule.*/
-		Pattern regex;
-		/**The string used by the automaton to build a regex */
-		String regexForAutomaton;
-		/**The type of each word in the rule.*/
-		List<String> wordTypes;
-		/**The name of the wordRule.*/
-		String name;
-		/**Does this wordRule employ techniques not implemented by automaton e.g. lookbehind.*/
-		boolean hasFeaturesUnsupportedByAutomaton =false;
+		Pattern getEndsWithPattern() {
+			return endsWithPattern;
+		}
 
-		/**Makes a wordRule based on an XML element.
-		 *
-		 * @param elem The XML element containing the information for the wordRule.
-		 * @param id Used to identify this wordRule
-		 * @throws ParsingException
+		void setEndsWithPattern(Pattern endsWithPattern) {
+			this.endsWithPattern = endsWithPattern;
+		}
+
+		String getValue() {
+			return value;
+		}
+
+		void setValue(String value) {
+			this.value = value.toLowerCase();
+		}
+
+		String getFunctionalGroupType() {
+			return functionalGroupType;
+		}
+
+		void setFunctionalGroupType(String functionalGroupType) {
+			this.functionalGroupType = functionalGroupType;
+		}
+		
+		String getEndsWithElementValueAtr() {
+			return endsWithElementValueAtr;
+		}
+
+		void setEndsWithElementValueAtr(String endsWithElementValueAtr) {
+			this.endsWithElementValueAtr = endsWithElementValueAtr;
+		}
+
+		/**
+		 * Makes a description of a word to looks for
+		 * @param wordType
 		 */
-		WordRule(Element elem, int id) throws ParsingException {
-			name = elem.getAttributeValue("name");
-			String rawRegex =elem.getAttributeValue("regex");
-			Matcher m = matchStringReplacement.matcher(rawRegex);
-			String newValue = "";
-			int position = 0;
-			while (m.find()){
-				newValue += rawRegex.substring(position, m.start());
-				if (stringReplacements.get(m.group())==null){
-					throw new ParsingException("Regex entry for: " + m.group() + " missing! Check wordRules.xml");
-				}
-				newValue += stringReplacements.get(m.group());
-				position = m.end();
-			}
-			newValue += rawRegex.substring(position);
-			regex = Pattern.compile(newValue,Pattern.CASE_INSENSITIVE );
+		WordDescription(WordType wordType){
+			type =wordType;
+		}
+	}
+	
+	/**
+	 * A representation of a wordRule element from wordRules.xml
+	 * @author dl387
+	 *
+	 */
+	class WordRuleDescription {
+		private List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
+		private final String ruleName;
+		private final String ruleType;
+		
+		String getRuleName() {
+			return ruleName;
+		}
+		
+		String getRuleType() {
+			return ruleType;
+		}
 
-			/* The \u00A3 is a delimiter which is expected never to occur in chemical names
-			 * The idea of this is that the states after the acceptState of the automaton can be examined and from the characters that
-			 * were accepted to reach these states the id can be retrieved hence allowing the identification of which regex matched
-			 * (the automaton has all word rules fed to it!)
-			 */
-			regexForAutomaton =newValue + "(" + NON_CHEM_CHAR + id +")?";
-			m = matchLookBehind.matcher(regexForAutomaton);
-			if (m.find()){
-				hasFeaturesUnsupportedByAutomaton = true;
-				regexForAutomaton =m.replaceAll("");
-			}
-			regexForAutomaton =matchNonCapturing.matcher(regexForAutomaton).replaceAll("");
-			wordTypes = new ArrayList<String>();
-			Elements wordElems = elem.getChildElements("word");
-			for(int i=0;i<wordElems.size();i++) {
-				wordTypes.add(wordElems.get(i).getAttributeValue("type"));
+		/**
+		 * Creates a wordRule from a wordRule element found in wordRules.xml
+		 * @param wordRuleEl
+		 */
+		WordRuleDescription(Element wordRuleEl) {
+			ruleName =wordRuleEl.getAttributeValue("name");
+			ruleType =wordRuleEl.getAttributeValue("type");
+			Elements words = wordRuleEl.getChildElements();
+			for (int i = 0; i < words.size(); i++) {
+				Element word = words.get(i);
+				WordDescription wd = new WordDescription(WordType.valueOf(word.getAttributeValue("type")));
+				if (word.getAttribute("value")!=null){
+					wd.setValue(word.getAttributeValue("value"));
+				}
+				if (word.getAttribute("functionalGroupType")!=null){
+					wd.setFunctionalGroupType(word.getAttributeValue("functionalGroupType"));
+				}
+				if (word.getAttribute("endsWithRegex")!=null){
+					wd.setEndsWithPattern(Pattern.compile(word.getAttributeValue("endsWithRegex") +"$", Pattern.CASE_INSENSITIVE));
+				}
+				if (word.getAttribute("endsWithElementValueAtr")!=null){
+					wd.setEndsWithElementValueAtr(word.getAttributeValue("endsWithElementValueAtr"));
+				}
+				wordDescriptions.add(wd);
 			}
 		}
 	}
-
-	/**The wordRules themselves.*/
-	private List<WordRule> wordRuleList;
-
-	private HashMap<String, String> stringReplacements;
-	private Pattern matchStringReplacement = Pattern.compile("%.*?%");
-	private Pattern matchNonCapturing = Pattern.compile("\\?:");
-	private Pattern matchLookBehind = Pattern.compile("\\(\\?<!(([^(]+?\\))|(\\([^(]+?\\)\\)))");
-	private RunAutomaton allWordRulesRunAutomaton;
-	private Pattern matchPoly = Pattern.compile("(?:poly|oligo)[\\[\\(\\{](.+)[\\]\\)\\}]", Pattern.CASE_INSENSITIVE );//poly or oligo followed by a bracket name
+	
 
 	/**Initialises the WordRules.
 	 * @param resourceGetter
@@ -95,200 +158,180 @@ class WordRules {
 	 */
 	WordRules(ResourceGetter resourceGetter) throws Exception {
 		Element wordRules =resourceGetter.getXMLDocument("wordRules.xml").getRootElement();
-		Elements stringReplacementEls = wordRules.getChildElements("stringReplacement");
 		Elements rules = wordRules.getChildElements("wordRule");
-		stringReplacements = new HashMap<String, String>();
-		for (int i = 0; i < stringReplacementEls.size(); i++) {
-			String stringReplacement =stringReplacementEls.get(i).getAttributeValue("value");
-			String name =stringReplacementEls.get(i).getAttributeValue("name");
-			Matcher m = matchStringReplacement.matcher(stringReplacement);
-			String newValue = "";
-			int position = 0;
-			while (m.find()){
-				newValue += stringReplacement.substring(position, m.start());
-				if (stringReplacements.get(m.group())==null){
-					throw new ParsingException("Regex entry for: " + m.group() + " missing! Check wordRules.xml");
-				}
-				newValue += stringReplacements.get(m.group());
-				position = m.end();
-			}
-			newValue += stringReplacement.substring(position);
-			stringReplacements.put(name, newValue);
+		for (int i = 0; i < rules.size(); i++) {
+			wordRuleList.add (new WordRuleDescription(rules.get(i)));
 		}
-		wordRuleList = new ArrayList<WordRule>();
-		for(int i=0;i<rules.size();i++) {
-			WordRule wr = new WordRule(rules.get(i), i);
-			wordRuleList.add(wr);
-		}
-		String allWordRulesRegex ="";//given to automaton
-		for (WordRule wr : wordRuleList) {
-			allWordRulesRegex +="(";
-			allWordRulesRegex += wr.regexForAutomaton;
-			allWordRulesRegex +=")|";
-		}
-		allWordRulesRegex = allWordRulesRegex.substring(0, allWordRulesRegex.length()-1);
-		allWordRulesRunAutomaton =AutomatonInitialiser.getAutomaton("wordRules", allWordRulesRegex, resourceGetter);
 	}
 
-	/**Takes a chemical name, breaks it up into words, and works out which
-	 * wordRule should apply to it.
+	/**The wordRules themselves.*/
+	private List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
+
+	/**Takes a parse and groups the parseWords into wordRules. If a space is deemed to be meaningless
+	 * parseWords may be merged
 	 *
-	 * @param p The Parse object containing the name, into which the results will be put.
+	 * @param p The parse object containing the parseWords
 	 * @throws ParsingException
 	 */
-	void parse(Parse p) throws ParsingException {
-		String chemicalName =p.name;
-
-		//TODO do this properly
-		Matcher polyMatcher = matchPoly.matcher(chemicalName);//temporary kludge until wordRules system is rewritten
-		if (polyMatcher.matches()){//Name is a polymer/oligomer name
-			chemicalName = polyMatcher.group(1);//strip off starting poly( and trailing closing bracket
-			String [] wordArray = chemicalName.split("\\s+");
-			if (wordArray.length==1){
-				p.wordRule="polymer";
-				ParseWord pw = new ParseWord();
-				pw.word = wordArray[0];
-				pw.wordType = "substituent";
-				p.words.add(pw);
-				return;
-			}
-			else{
-				throw new ParsingException("Unsupported Polymer name");
+	void groupWordsIntoWordRules(Element moleculeEl) throws ParsingException {
+		List<Element> wordEls = XOMTools.getChildElementsWithTagNames(moleculeEl, new String[]{"word"});
+		//note that multiple words in wordEls may be later replaced by a wordRule element
+		for (int i = 0; i <wordEls.size(); i++) {
+			if (matchWordRule(wordEls, i)){
+				i=-1;//if function did something
 			}
 		}
-		String chemicalNameLowerCase =chemicalName.toLowerCase();
-		char[] chemicalNameArray=chemicalName.toCharArray();
-		List<Integer> parsingStartingPoints =new ArrayList<Integer>();
-		/* Word rules may be applied from the start of the word, and from after any spaces.
-		 * Only at maximum one word rule will be successfully applied
-		 */
-		parsingStartingPoints.add(0);
-		for (int i = 0; i < chemicalNameArray.length -1; i++) {
-			if (chemicalNameArray[i]==' '){
-				parsingStartingPoints.add(i+1);
-			}
-		}
-
-		for (Integer startingPoint : parsingStartingPoints) {
-			int state =allWordRulesRunAutomaton.getInitialState();
-			ArrayList<Integer> acceptStates =new ArrayList<Integer>();//typically will only be one or no accept states
-			for (int i = startingPoint; i < chemicalNameLowerCase.length(); i++) {
-				state = allWordRulesRunAutomaton.step(state, chemicalNameLowerCase.charAt(i));
-				if (state == -1){
-					break;
-				}
-				if (allWordRulesRunAutomaton.isAccept(state)){
-					acceptStates.add(state);
-				}
-			}
-			if (acceptStates.size()==0){
-				continue;
-			}
-			Collections.reverse(acceptStates);//those which describe more of the chemical name will be tried first
-
-			for (Integer acceptState : acceptStates) {
-				state = allWordRulesRunAutomaton.step(acceptState, NON_CHEM_CHAR);
-
-				/*
-				 * Determine which regexes succeeded in matching.
-				 * The regexes with lower ids are more specific and hence the one with the lowest id will be used in preference
-				 */
-				ArrayList<Integer> wordIDs = determineAllWordRulesThatMatched(state, "", new ArrayList<Integer>());
-				Collections.sort(wordIDs);
-				for (Integer idOfWordRule : wordIDs) {//typically there will only be one wordID
-					int wordRule =Integer.valueOf(idOfWordRule);
-
-					WordRule r =wordRuleList.get(wordRule);
-					Matcher m = r.regex.matcher(chemicalNameLowerCase);
-					if(m.find(startingPoint)) {
-						int end =m.end();
-						if (end <chemicalNameLowerCase.length()){
-							if (chemicalNameLowerCase.charAt(end)!=' '){//regex has seen a functional class name in the middle of a word e.g. thiolate
-								continue;
-							}
-						}
-						//System.out.println(r.name);
-						p.wordRule = r.name;
-						for (int i = 1; i <= m.groupCount(); i++) {
-							ParseWord pw = new ParseWord();
-							pw.word = chemicalName.substring(m.start(i), m.end(i));
-							if(i-1 < r.wordTypes.size()){
-								pw.wordType = r.wordTypes.get(i-1);
-							}
-							else{
-								pw.wordType = "full";//extra words are likely to be counter ions or it's a mixture
-							}
-							p.words.add(pw);
-						}
-						int start =m.start();
-						if (start!=0){
-							String [] wordArray = chemicalName.substring(0,start).trim().split("\\s+");
-							for(int i=0;i<wordArray.length;i++) {
-								ParseWord pw = new ParseWord();
-								pw.word = wordArray[i];
-								pw.wordType = "full";//extra words are likely to be counter ions or it's a mixture
-								p.words.add(pw);
-							}
-						}
-
-						if (end!=chemicalName.length()){
-							String [] wordArray = chemicalName.substring(end, chemicalName.length()).trim().split("\\s+");
-							for(int i=0;i<wordArray.length;i++) {
-								ParseWord pw = new ParseWord();
-								pw.word = wordArray[i];
-								pw.wordType = "full";//extra words are likely to be counter ions or it's a mixture
-								p.words.add(pw);
-							}
-						}
-						return;
-					}
-					else if (!r.hasFeaturesUnsupportedByAutomaton){
-						throw new ParsingException("Fault in parser, automaton found a match, but JAVA regex couldn't");
-					}
-				}
-			}
-		}
-		//none of the recognised word rules
-		String [] wordArray = chemicalName.split("\\s+");
-		if (wordArray.length==1){
-			p.wordRule="simple";
-			ParseWord pw = new ParseWord();
-			pw.word = wordArray[0];
-			pw.wordType = "full";
-			p.words.add(pw);
-		}
-		else{
-			p.wordRule="binaryOrOther";
-			for(int i=0;i<wordArray.length;i++) {
-				ParseWord pw = new ParseWord();
-				pw.word = wordArray[i];
-				pw.wordType = "full";
-				p.words.add(pw);
+		Elements wordRuleEls = moleculeEl.getChildElements();
+		for (int i = 0; i < wordRuleEls.size(); i++) {
+			Element wordRuleEl = wordRuleEls.get(i);
+			if (!wordRuleEl.getLocalName().equals("wordRule")){
+				throw new ParsingException("Unable to assign wordRule to: " + wordRuleEl.getValue());
 			}
 		}
 	}
 
-	/**
-	 * Called recursively to populate wordIDs array
-	 * @param state
-	 * @param wordIDSoFar
-	 * @param wordIDs
-	 * @return
-	 */
-	private ArrayList<Integer> determineAllWordRulesThatMatched(int state, String wordIDSoFar, ArrayList<Integer> wordIDs) {
-		char[] stateSymbols = allWordRulesRunAutomaton.getCharIntervals();
-        for (char stateSymbol : stateSymbols) {
-            int potentialNextState = allWordRulesRunAutomaton.step(state, stateSymbol);
-            if (potentialNextState != -1) {
-                int currentState = potentialNextState;
-                wordIDSoFar += stateSymbol;
-                if (allWordRulesRunAutomaton.isAccept(currentState)) {
-                    wordIDs.add(Integer.valueOf(wordIDSoFar));
-                } else {
-                    determineAllWordRulesThatMatched(currentState, wordIDSoFar, wordIDs);
-                }
-            }
-        }
-		return wordIDs;
+	private boolean matchWordRule(List<Element> wordEls, int indexOfFirstWord) throws ParsingException {
+		wordRuleLoop: for (WordRuleDescription wordRule : wordRuleList) {
+			int i =indexOfFirstWord;
+			if (i + wordRule.wordDescriptions.size() -1 < wordEls.size()){//need sufficient words to match the word rule
+				for (int j = 0; j < wordRule.wordDescriptions.size(); j++) {
+					Element wordEl = wordEls.get(i+j);
+					WordDescription wd = wordRule.wordDescriptions.get(j);
+					if (!wd.type.toString().equals(wordEl.getAttributeValue("type"))){
+						continue wordRuleLoop;//type mismatch;
+					}
+					if (wd.getValue() !=null && !wordEl.getAttributeValue("value").toLowerCase().equals(wd.getValue())){//word string contents mismatch
+						continue wordRuleLoop;
+					}
+					if (wd.functionalGroupType !=null){
+						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue("type"))){
+							List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagNames(wordEl, new String[]{"functionalGroup","functionalClass","functionalModifier"});
+							if (functionalGroups.size() !=1){
+								throw new ParsingException("OPSIN Bug: Incorrect number of functional group/classes found");
+							}
+							if (!wd.getFunctionalGroupType().equals(functionalGroups.get(0).getAttributeValue("type"))){
+								continue wordRuleLoop;
+							}
+						}
+					}
+					if (wd.endsWithPattern !=null){
+						if (!wd.endsWithPattern.matcher(wordEl.getAttributeValue("value")).find()){
+							continue wordRuleLoop;
+						}
+					}
+					if (wd.endsWithElementValueAtr !=null){
+						Elements children = wordEl.getChildElements();
+						Element lastChild = (Element) children.get(children.size()-1);
+						while (lastChild.getChildElements().size()!=0){
+							children = lastChild.getChildElements();
+							lastChild = (Element) children.get(children.size()-1);
+						}
+						if (lastChild.getAttribute("value")==null || !lastChild.getAttributeValue("value").equals(wd.endsWithElementValueAtr)){
+							continue wordRuleLoop;
+						}
+					}
+				}
+				//Word Rule matches!
+				Element wordRuleEl = new Element("wordRule");
+				wordRuleEl.addAttribute(new Attribute("type", wordRule.getRuleType()));
+				wordRuleEl.addAttribute(new Attribute("wordRule", wordRule.getRuleName()));
+				if (wordRule.getRuleName().equals(WordRule.functionGroupAsGroup.toString())){//convert the functional term into a full term
+					if (wordRule.wordDescriptions.size()!=1){
+						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup as wordRule");
+					}
+					convertFunctionalGroupIntoGroup(wordEls.get(i));
+					wordRuleEl.getAttribute("wordRule").setValue(WordRule.simple.toString());
+				}
+				List<String> wordValues = new ArrayList<String>();
+				Element parentEl = (Element) wordEls.get(i).getParent();
+				int indexToInsertAt = wordEls.get(i).getParent().indexOf(wordEls.get(i));
+				for (int j = 0; j < wordRule.wordDescriptions.size(); j++) {
+					Element wordEl = wordEls.remove(i);
+					wordEl.detach();
+					wordRuleEl.appendChild(wordEl);
+					wordValues.add(wordEl.getAttributeValue("value"));
+				}
+				wordRuleEl.addAttribute(new Attribute("value", StringTools.stringListToString(wordValues, " ")));//The bare string of all the words under this wordRule
+				parentEl.insertChild(wordRuleEl, indexToInsertAt);
+				wordEls.add(i, wordRuleEl);
+				return true;
+			}
+		}
+		Element firstWord = wordEls.get(indexOfFirstWord);
+		if (firstWord.getLocalName().equals("word") && WordType.full.toString().equals(firstWord.getAttributeValue("type"))){//No wordRule -->wordRule="simple"
+			applySimpleWordRule(wordEls, indexOfFirstWord, firstWord);
+			return false;
+		}
+		else if (WordType.substituent.toString().equals(firstWord.getAttributeValue("type"))){
+			/*
+			 * substituents may join together or to a full e.g. 2-ethyl toluene -->2-ethyltoluene 
+			 * 1-chloro 2-bromo ethane --> 1-chloro-2-bromo ethane then subsequently 1-chloro-2-bromo-ethane
+			 */
+			if (indexOfFirstWord +1 < wordEls.size()){
+				Element wordToPotentiallyCombineWith = wordEls.get(indexOfFirstWord +1);
+				if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue("type")) ||
+				WordType.substituent.toString().equals(wordToPotentiallyCombineWith.getAttributeValue("type"))){
+					joinWords(wordEls, indexOfFirstWord, firstWord, wordToPotentiallyCombineWith);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
+
+	private void applySimpleWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
+		Element parentEl = (Element) firstWord.getParent();
+		int indexToInsertAt = firstWord.getParent().indexOf(firstWord);
+		Element wordRuleEl = new Element("wordRule");
+		wordRuleEl.addAttribute(new Attribute("wordRule", WordRule.simple.toString()));//No wordRule
+		wordRuleEl.addAttribute(new Attribute("type", WordType.full.toString()));
+		wordRuleEl.addAttribute(new Attribute("value", firstWord.getAttributeValue("value")));
+		wordEls.remove(indexOfFirstWord);
+		firstWord.detach();
+		wordRuleEl.appendChild(firstWord);
+		wordEls.add(indexOfFirstWord, wordRuleEl);
+		parentEl.insertChild(wordRuleEl, indexToInsertAt);
+	}
+	
+	private void joinWords(List<Element> wordEls, int indexOfFirstWord,
+			Element firstWord, Element wordToPotentiallyCombineWith)
+			throws ParsingException {
+		wordEls.remove(indexOfFirstWord +1);
+		wordToPotentiallyCombineWith.detach();
+		Element assumedHyphen = new Element("hyphen");
+		assumedHyphen.appendChild("-");
+		Elements substituentEls = firstWord.getChildElements("substituent");
+		if (substituentEls.size()==0){
+			throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
+		}
+		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
+		finalSubstituent.appendChild(assumedHyphen);
+		Elements elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();
+		for (int j =  elementsToMergeIntoSubstituent.size() -1 ; j >=0; j--) {
+			Element el = elementsToMergeIntoSubstituent.get(j);
+			el.detach();
+			XOMTools.insertAfter(finalSubstituent, el);
+		}
+		if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue("type"))){
+			firstWord.getAttribute("type").setValue(WordType.full.toString());
+		}
+		firstWord.getAttribute("value").setValue(firstWord.getAttributeValue("value") + wordToPotentiallyCombineWith.getAttributeValue("value"));
+	}
+	
+	private void convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
+		word.getAttribute("type").setValue(WordType.full.toString());
+		List<Element> functionalTerms = XOMTools.getDescendantElementsWithTagName(word, "functionalTerm");
+		if (functionalTerms.size()!=1){
+			throw new ParsingException("OPSIN Bug: Exactly 1 functionalTerm expected in functionalGroupAsGroup wordRule");
+		}
+		functionalTerms.get(0).setLocalName("root");
+		Elements functionalGroups = functionalTerms.get(0).getChildElements("functionalGroup");
+		if (functionalGroups.size()!=1){
+			throw new ParsingException("OPSIN Bug: Exactly 1 functionalGroup expected in functionalGroupAsGroup wordRule");
+		}
+		functionalGroups.get(0).setLocalName("group");
+		functionalGroups.get(0).getAttribute("type").setValue("simpleGroup");
+		functionalGroups.get(0).addAttribute(new Attribute("subType", "functionalGroupAsGroup"));
+	}
+
 }

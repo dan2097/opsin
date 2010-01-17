@@ -98,19 +98,19 @@ class OpsinTools {
 	}
 
 	/**
-	 * Finds the word element that encloses the given element.
-	 * Returns the word element or throws an exception
+	 * Finds the wordRule element that encloses the given element.
+	 * Returns the wordRule element or throws an exception
 	 * @param Element el
-	 * @return word Element
+	 * @return wordRule Element
 	 * @throws PostProcessingException
 	 */
-	public static Element getParentWord(Element el) throws PostProcessingException {
+	public static Element getParentWordRule(Element el) throws PostProcessingException {
 		Element parent=(Element)el.getParent();
-		while(parent !=null && !parent.getLocalName().equals("word")){
+		while(parent !=null && !parent.getLocalName().equals("wordRule")){
 			parent =(Element)parent.getParent();
 		}
 		if (parent==null){
-			throw new PostProcessingException("Cannot find enclosing word element");
+			throw new PostProcessingException("Cannot find enclosing wordRule element");
 		}
 		else{
 			return parent;

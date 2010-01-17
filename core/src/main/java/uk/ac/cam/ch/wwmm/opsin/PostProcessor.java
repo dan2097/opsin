@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
+
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -88,17 +90,16 @@ class PostProcessor {
 
 	/** The master method, postprocesses a parse result.
 	 *
-	 * @param elem The element to postprocess.
+	 * @param moleculeEl The element to postprocess.
 	 * @param state
 	 * @return
 	 * @throws Exception
 	 */
-	void postProcess(Element elem, BuildState state) throws Exception {
-		state.wordRule=elem.getAttributeValue("wordRule");
+	void postProcess(Element moleculeEl, BuildState state) throws Exception {
 		/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
-		resolveAmbiguities(elem);
+		resolveAmbiguities(moleculeEl);
 
-		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(elem, new String[]{"substituent", "root"});
+		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(moleculeEl, new String[]{"substituent", "root"});
 
 		for (Element subOrRoot: substituentsAndRoot) {
 			processLocants(subOrRoot);
@@ -108,9 +109,9 @@ class PostProcessor {
 			processInfixes(subOrRoot);
 			processLambdaConvention(subOrRoot);
 		}
-		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(elem, "group");
+		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(moleculeEl, "group");
 
-		processHydroCarbonRings(elem);
+		processHydroCarbonRings(moleculeEl);
 		for (Element group : groups) {
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleIrregularities(group, state);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
@@ -124,7 +125,7 @@ class PostProcessor {
 			processHydroSubstituents(group);//this REMOVES hydro substituents and adds hydro elements in front of an appropriate ring
 		}
 
-		addOmittedSpaces(state, elem);//e.g. change ethylmethyl ether to ethyl methyl ether
+		addOmittedSpaces(state, moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
 
 	/**
@@ -1209,7 +1210,7 @@ class PostProcessor {
 			if (previous!=null && previous.getLocalName().equals("multiplier")){
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue("value"));
 				Element possibleRoot =(Element) XOMTools.getNextSibling(group.getParent());
-				if (possibleRoot==null && state.wordRule.equals("glycol")){//e.g. dodecaethylene glycol
+				if (possibleRoot==null && OpsinTools.getParentWordRule(group).getAttributeValue("wordRule").equals("glycol")){//e.g. dodecaethylene glycol
 					String smiles ="CC";
 					for (int i = 1; i < multiplierValue; i++) {
 						smiles+="OCC";
@@ -1431,21 +1432,24 @@ class PostProcessor {
 	 * @param state
 	 * @param elem
 	 */
-	private void addOmittedSpaces(BuildState state, Element elem) {
-		if (state.wordRule.equals("divalentLiteralFunctionalGroup")){
-			List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(elem, "word", "type", "substituent");
-			if (substituentWords.size()==1){//potentially been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
-				Elements children  =substituentWords.get(0).getChildElements();
-				if (children.size()==2){
-					Element firstChildOfFirstSubstituent =(Element)children.get(0).getChild(0);
-					//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
-					if (!firstChildOfFirstSubstituent.getLocalName().equals("locant") && !firstChildOfFirstSubstituent.getLocalName().equals("multiplier")){
-						Element subToMove =children.get(1);
-						subToMove.detach();
-						Element newWord =new Element("word");
-						newWord.addAttribute(new Attribute("type", "substituent"));
-						newWord.appendChild(subToMove);
-						XOMTools.insertAfter(substituentWords.get(0), newWord);
+	private void addOmittedSpaces(BuildState state, Element elem) throws PostProcessingException {
+		List<Element> wordRules = XOMTools.getDescendantElementsWithTagName(elem, "wordRule");
+		for (Element wordRule : wordRules) {
+			if (WordRule.valueOf(wordRule.getAttributeValue("wordRule")) == WordRule.divalentFunctionalGroup){
+				List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(wordRule, "word", "type", "substituent");
+				if (substituentWords.size()==1){//potentially been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
+					Elements children  =substituentWords.get(0).getChildElements();
+					if (children.size()==2){
+						Element firstChildOfFirstSubstituent =(Element)children.get(0).getChild(0);
+						//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
+						if (!firstChildOfFirstSubstituent.getLocalName().equals("locant") && !firstChildOfFirstSubstituent.getLocalName().equals("multiplier")){
+							Element subToMove =children.get(1);
+							subToMove.detach();
+							Element newWord =new Element("word");
+							newWord.addAttribute(new Attribute("type", "substituent"));
+							newWord.appendChild(subToMove);
+							XOMTools.insertAfter(substituentWords.get(0), newWord);
+						}
 					}
 				}
 			}

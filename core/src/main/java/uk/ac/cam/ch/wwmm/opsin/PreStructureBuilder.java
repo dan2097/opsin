@@ -13,6 +13,8 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
+
 
 import nu.xom.Attribute;
 import nu.xom.Document;
@@ -124,14 +126,16 @@ class PreStructureBuilder {
 	 *
 	 * @param elem The element to postprocess.
 	 * @return
-	 * @throws Exception
+	 * @throws PostProcessingException 
+	 * @throws StructureBuildingException 
 	 */
-	void postProcess(BuildState state, Element elem) throws Exception {
-		Elements words =elem.getChildElements("word");
-		for (int i = 0; i < words.size(); i++) {
-			Element word =words.get(i);
-			if (word.getAttributeValue("type").equals("literal")){
-				continue;
+	void postProcess(BuildState state, Element elem) throws PostProcessingException, StructureBuildingException {
+		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, "word");
+		for (Element word : words) {
+			String wordRule = OpsinTools.getParentWordRule(word).getAttributeValue("wordRule");
+			state.currentWordRule = WordRule.valueOf(wordRule);
+			if (word.getAttributeValue("type").equals("functionalTerm")){
+				continue;//functionalTerms are handled on a case by case basis by wordRules
 			}
 
 			List<Element> roots = XOMTools.getDescendantElementsWithTagName(word, "root");
@@ -2199,7 +2203,7 @@ class PreStructureBuilder {
 					throw new PostProcessingException("Invalid use of amine as a substituent!");
 				}
 			}
-			if (state.wordRule.equals("polymer")){
+			if (state.currentWordRule == WordRule.polymer){
 				if (outIDsSize >=3){//In poly mode nothing may have more than 2 outIDs e.g. nitrilo is -N= or =N-
 					int valency =0;
 					for (int i = 2; i < outIDsSize; i++) {
@@ -2525,7 +2529,7 @@ class PreStructureBuilder {
 		}
 		if (locantList.size()>0 && group!=null){
 			boolean allowIndirectLocants =true;
-			if(state.wordRule.equals("multiEster")){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
+			if(state.currentWordRule == WordRule.multiEster){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
 				Element parentEl=(Element) subOrRoot.getParent();
 				if (parentEl.getLocalName().equals("word") && parentEl.getAttributeValue("type").equals("substituent") && parentEl.getChildCount()==1 &&
 						locants.size()==1 && (locants.get(0).getAttribute("type")==null || !locants.get(0).getAttributeValue("type").equals("orthoMetaPara"))){

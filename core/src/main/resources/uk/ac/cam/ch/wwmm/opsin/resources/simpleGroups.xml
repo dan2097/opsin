@@ -59,32 +59,23 @@
   <token value="C(Cl)(Cl)Cl)" labels="none" valType="SMILES">chloroform</token>
   <token value="[O-]C(=O)CC(O)(C(=O)[O-])CC(=O)[O-]" labels="none" valType="SMILES">citrate</token>
   <token value="OC(=O)CC(O)(C(=O)O)CC(=O)O" labels="none" valType="SMILES" functionalIDs="1,9,13">citric</token><!--no clear definition as to what citryl means-->
-  <token value="[O-]C#N" labels="none" valType="SMILES">cyanate</token>
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic</token><!--should this be in this file?-->
-  <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
   <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
   <token value="NCCS" labels="/2,alpha/3,beta//" valType="SMILES">cysteamine</token>
   <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
   <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
   <token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
   <token value="NN=CN=N" valType="SMILES">formazan</token>
-  <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
   <token value="CC(CCC=C(C)C)=CCO" labels="none" valType="SMILES">geraniol</token>
   <token value="C(=O)C(=O)" labels="1//2/" valType="SMILES">glyoxal</token>
-  <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
   <token value="[O-]" labels="none" valType="SMILES">hydroxide</token>
   <token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
   <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazide</token>
-  <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
   <token value="N=C=O" labels="none" valType="SMILES" functionalIDs="1">isocyanic</token>
-  <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>
   <token value="CC([O-])C" labels="none" valType="SMILES">isopropoxide</token>
-  <token value="[N-]=C=[Se]" labels="none" valType="SMILES">isoselenocyanate</token>
   <token value="NC([Se])=N" labels="1//2/3" valType="SMILES">isoselenourea</token>
   <token value="NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazide</token>
-  <token value="[N-]=C=[Te]" labels="none" valType="SMILES">isotellurocyanate</token>
   <token value="NC([Te])=N" labels="1//2/3" valType="SMILES">isotellurourea</token>
-  <token value="[N-]=C=S" labels="none" valType="SMILES">isothiocyanate</token>
   <token value="NC(S)=N" labels="1//2/3" valType="SMILES">isothiourea</token>
   <token value="NC(O)=N" labels="1//2/3" valType="SMILES">isourea</token>
   <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl/" valType="SMILES">methioninamine</token>
@@ -110,7 +101,6 @@
   <token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenite</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenate</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenoate</token>
-  <token value="[Se-]C#N" labels="none" valType="SMILES">selenocyanate</token>
   <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
   <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfite</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
