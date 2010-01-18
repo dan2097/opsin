@@ -1514,15 +1514,10 @@ class PreStructureBuilder {
 						else{
 							possibleLocant = possibleMultiplier;
 						}
-						while (possibleLocant !=null) {
-							if (possibleLocant.getLocalName().equals("locant") && possibleLocant.getAttribute("type")==null ){
-								possibleLocants.add(possibleLocant.getAttributeValue("value"));
-								locantsToRemove.add(possibleLocant);
-								possibleLocant = (Element) XOMTools.getPreviousSibling(possibleLocant);
-							}
-							else{//unexpected element, assumedly not functional replacement
-								continue;
-							}
+						while (possibleLocant !=null && possibleLocant.getLocalName().equals("locant") && possibleLocant.getAttribute("type")==null) {
+							possibleLocants.add(possibleLocant.getAttributeValue("value"));
+							locantsToRemove.add(possibleLocant);
+							possibleLocant = (Element) XOMTools.getPreviousSibling(possibleLocant);
 						}
 						if (possibleLocants.size() >0 && possibleLocants.size() !=numberOfAtomsToReplace){//locants and number of replacements disagree
 							if (possibleLocants.size()>1){
