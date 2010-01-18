@@ -88,7 +88,8 @@ does not define a CFG.
   <regex name="%standaloneMonovalentFunctionalGroup%" value="ò"/>
   <regex name="%endOfFunctionalGroup%" value="û"/>
   <regex name="%functionalModifier%" value="ù"/>
-  <!--up to ascii 151 used -->
+  <regex name="%infixableInlineSuffix%" value="ÿ"/>
+  <!--up to ascii 152 used -->
 
 <!-- composite regexes-->
 
@@ -101,7 +102,7 @@ does not define a CFG.
   <regex name="%newLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%bracketedLocantGroup%%optionalCloseBracket%%hyphen%?)"/>
-  <regex name="%infixedInlineSuffix%" value="(%o%?%replacementInfix%%o%?%inlineSuffix%|%structuralOpenBracket%%multiplier%?%replacementInfix%%o%?%inlineSuffix%%structuralCloseBracket%)"/>
+  <regex name="%infixedInlineSuffix%" value="(%o%?%replacementInfix%%o%?%infixableInlineSuffix%|%structuralOpenBracket%%multiplier%?%replacementInfix%%o%?%infixableInlineSuffix%%structuralCloseBracket%)"/>
   <regex name="%unlocantedInlineSuffixGroup%" value="(%simpleMultiplierGroup%?(%infixedInlineSuffix%|%inlineSuffix%))"/>
   <regex name="%inlineSuffixGroup%" value="(%newLocantGroup%?%unlocantedInlineSuffixGroup%)"/>
   <regex name="%repeatableInlineSuffixGroup%" value="(%newLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
