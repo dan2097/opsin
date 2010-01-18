@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
-
 /**
  * Uses OPSIN's DFA based grammar to break a name in to tokens with associated meanings ("annotations").
  * @author dl387

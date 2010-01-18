@@ -31,6 +31,8 @@
     <token value="yl">yl</token>
     <token value="ylidene">ylidene</token>
     <token value="ylidyne">ylidyne</token>
+    <token value="ylidene">yliden</token>
+    <token value="ylidyne">ylidyn</token>
   </tokenList>
 
   <tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes etc.-->
@@ -39,5 +41,7 @@
     <token value="yl">yl</token>
     <token value="ylidene">ylidene</token>
     <token value="ylidyne">ylidyne</token>
+    <token value="ylidene">yliden</token>
+    <token value="ylidyne">ylidyn</token>
   </tokenList>
 </tokenLists>
