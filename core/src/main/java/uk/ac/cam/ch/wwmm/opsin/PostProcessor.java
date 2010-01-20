@@ -512,7 +512,7 @@ class PostProcessor {
 						if (multiplier!=null){
 							for (int i = 1; i < Integer.parseInt(multiplier.getAttributeValue("value")); i++) {
 								Element newHeteroAtom = new Element(heteroatomOrMultiplier);
-								XOMTools.insertAfter(heteroatomOrMultiplier, newHeteroAtom);
+								XOMTools.insertBefore(heteroatomOrMultiplier, newHeteroAtom);
 								heteroAtoms.add(newHeteroAtom);
 							}
 							multiplier.detach();
