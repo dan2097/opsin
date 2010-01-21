@@ -33,7 +33,7 @@ class WordRules {
 		functionalClassEster,
 		divalentFunctionalGroup,
 		glycol,
-		oxime,
+		carbonylDerivative,
 		functionGroupAsGroup,
 		polymer
 	}
@@ -193,8 +193,9 @@ class WordRules {
 	private boolean matchWordRule(List<Element> wordEls, int indexOfFirstWord) throws ParsingException {
 		wordRuleLoop: for (WordRuleDescription wordRule : wordRuleList) {
 			int i =indexOfFirstWord;
-			if (i + wordRule.wordDescriptions.size() -1 < wordEls.size()){//need sufficient words to match the word rule
-				for (int j = 0; j < wordRule.wordDescriptions.size(); j++) {
+			int wordsInWordRule = wordRule.wordDescriptions.size();
+			if (i + wordsInWordRule -1 < wordEls.size()){//need sufficient words to match the word rule
+				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.get(i+j);
 					WordDescription wd = wordRule.wordDescriptions.get(j);
 					if (!wd.type.toString().equals(wordEl.getAttributeValue("type"))){
@@ -205,11 +206,19 @@ class WordRules {
 					}
 					if (wd.functionalGroupType !=null){
 						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue("type"))){
-							List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagNames(wordEl, new String[]{"functionalGroup","functionalClass","functionalModifier"});
-							if (functionalGroups.size() !=1){
-								throw new ParsingException("OPSIN Bug: Incorrect number of functional group/classes found");
+							Elements children = wordEl.getChildElements();
+							Element lastChild = (Element) children.get(children.size()-1);
+							while (lastChild.getChildElements().size()!=0){
+								children = lastChild.getChildElements();
+								lastChild = (Element) children.get(children.size()-1);
 							}
-							if (!wd.getFunctionalGroupType().equals(functionalGroups.get(0).getAttributeValue("type"))){
+							if (lastChild.getLocalName().equals("closebracket")){
+								lastChild = (Element) XOMTools.getPreviousSibling(lastChild);
+							}
+							if (lastChild==null){
+								throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
+							}
+							if (!wd.getFunctionalGroupType().equals(lastChild.getAttributeValue("type"))){
 								continue wordRuleLoop;
 							}
 						}
@@ -235,17 +244,36 @@ class WordRules {
 				Element wordRuleEl = new Element("wordRule");
 				wordRuleEl.addAttribute(new Attribute("type", wordRule.getRuleType()));
 				wordRuleEl.addAttribute(new Attribute("wordRule", wordRule.getRuleName()));
+				
+				/*
+				 * Some wordRules can not be entirely processed at the structure building stage
+				 */
 				if (wordRule.getRuleName().equals(WordRule.functionGroupAsGroup.toString())){//convert the functional term into a full term
-					if (wordRule.wordDescriptions.size()!=1){
-						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup as wordRule");
+					if (wordsInWordRule!=1){
+						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup wordRule");
 					}
 					convertFunctionalGroupIntoGroup(wordEls.get(i));
 					wordRuleEl.getAttribute("wordRule").setValue(WordRule.simple.toString());
 				}
+				else if (wordRule.getRuleName().equals(WordRule.carbonylDerivative.toString())){//e.g. 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
+					if (wordsInWordRule==3){//substituent present
+						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
+						wordsInWordRule--;
+						List<Element> functionalTerm = XOMTools.getDescendantElementsWithTagName(wordEls.get(i+1), "functionalTerm");//rename functionalTerm element to root
+						if (functionalTerm.size()!=1){
+							throw new ParsingException("OPSIN bug: Problem with carbonylDerivative wordRule");
+						}
+						functionalTerm.get(0).setLocalName("root");
+						wordEls.get(i+1).getAttribute("type").setValue(WordType.full.toString());
+					}
+				}
+				
+				
+				
 				List<String> wordValues = new ArrayList<String>();
 				Element parentEl = (Element) wordEls.get(i).getParent();
-				int indexToInsertAt = wordEls.get(i).getParent().indexOf(wordEls.get(i));
-				for (int j = 0; j < wordRule.wordDescriptions.size(); j++) {
+				int indexToInsertAt = parentEl.indexOf(wordEls.get(i));
+				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.remove(i);
 					wordEl.detach();
 					wordRuleEl.appendChild(wordEl);
@@ -293,9 +321,16 @@ class WordRules {
 		parentEl.insertChild(wordRuleEl, indexToInsertAt);
 	}
 	
-	private void joinWords(List<Element> wordEls, int indexOfFirstWord,
-			Element firstWord, Element wordToPotentiallyCombineWith)
-			throws ParsingException {
+	/**
+	 * Takes the list of wordEls, the indice of a word element, that element and the word element following it
+	 * Merges the latter word element into the former element
+	 * @param wordEls
+	 * @param indexOfFirstWord
+	 * @param firstWord
+	 * @param wordToPotentiallyCombineWith
+	 * @throws ParsingException
+	 */
+	private void joinWords(List<Element> wordEls, int indexOfFirstWord, Element firstWord, Element wordToPotentiallyCombineWith) throws ParsingException {
 		wordEls.remove(indexOfFirstWord +1);
 		wordToPotentiallyCombineWith.detach();
 		Element assumedHyphen = new Element("hyphen");

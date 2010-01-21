@@ -2568,9 +2568,24 @@ class PreStructureBuilder {
 								continue;
 							}
 							for (Fragment suffix : suffixes) {
-								if (suffix.hasLocant(locantValue)){
-									suffix.setDefaultInID(suffix.getAtomByLocantOrThrow(locantValue).getID());
-									locant.detach();
+								if (suffix.hasLocant(locantValue)){//e.g. 2'-Butyronaphthone
+									Atom dummyRAtom =suffix.getFirstAtom();
+									List<Atom> neighbours =dummyRAtom.getAtomNeighbours();
+									Bond b =null;
+									atomLoop: for (Atom atom : neighbours) {
+										List<String> neighbourLocants = atom.getLocants();
+										for (String neighbourLocant : neighbourLocants) {
+											if (matchNumericLocant.matcher(neighbourLocant).matches()){
+												b=suffix.findBondOrThrow(dummyRAtom, atom);
+												break atomLoop;
+											}
+										}
+									}
+									if (b!=null){
+										state.fragManager.removeBond(b);//the current bond between the dummy R and the suffix
+										state.fragManager.createBond(dummyRAtom, suffix.getAtomByLocantOrThrow(locantValue), b.getOrder());
+										locant.detach();
+									}
 								}
 							}
 						}

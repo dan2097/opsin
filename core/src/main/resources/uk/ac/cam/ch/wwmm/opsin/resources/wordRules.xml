@@ -91,15 +91,15 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" value="glycol" />
   </wordRule>
 
-  <wordRule name="oxime" type="full">
-    <word type="full" />
-    <word type="functionalTerm" endsWithRegex="oxime" />
-  </wordRule>
-
-  <wordRule name="oxime" type="full">
+  <wordRule name="carbonylDerivative" type="full">
     <word type="full" />
     <word type="substituent" />
-    <word type="functionalTerm" value="oxime"/>
+    <word type="functionalTerm" endsWithRegex="^(oxime|hydrazone|semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone|imide)[\]\)\}]*" />
+  </wordRule>
+
+  <wordRule name="carbonylDerivative" type="full">
+    <word type="full" />
+    <word type="functionalTerm" endsWithRegex="(oxime|hydrazone|semicarbazone|imide)[\]\)\}]*" />
   </wordRule>
 
   <wordRule name="acid" type="full">
