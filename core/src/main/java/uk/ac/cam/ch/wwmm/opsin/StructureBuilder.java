@@ -21,7 +21,9 @@ import static  uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 
-	private static Pattern matchDigits = Pattern.compile("\\d+");
+	private Pattern matchDigits = Pattern.compile("\\d+");
+	private Pattern matchComma =Pattern.compile(",");
+	private Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
 	/**	Builds a molecule as a Fragment based on preStructurebuilder output.
 	 * @param state
@@ -85,8 +87,8 @@ class StructureBuilder {
 			else if (wordRule == WordRule.glycol){
 				buildGlycol(state, words);//e.g. ethylene glycol
 			}
-			else if(wordRule == WordRule.oxime) {
-				buildOxime(state, words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
+			else if(wordRule == WordRule.carbonylDerivative) {
+				buildCarbonylDerivative(state, words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
 			}
 			else if(wordRule == WordRule.polymer) {
 				buildPolymer(state, words);
@@ -434,33 +436,83 @@ class StructureBuilder {
 		}
 	}
 
-	private void buildOxime(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildCarbonylDerivative(BuildState state, List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));//the group
-		BuildResults moleculeToModify = new BuildResults(state, words.get(0));//the group which the oxime will modify
-		BuildResults substituentBR;
-		if (words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString()) && words.get(1).getValue().equals("oxime")){
-			substituentBR = null;
-		}
-		else if (words.get(1).getAttributeValue("type").equals(WordType.substituent.toString())){
-			resolveWordOrBracket(state, words.get(1));
-			substituentBR = new BuildResults(state, words.get(1));
-			if (!words.get(2).getAttributeValue("type").equals(WordType.functionalTerm.toString()) || !words.get(2).getValue().equals("oxime")){
-				throw new StructureBuildingException("Expected functionalTerm(oxime)");
+		BuildResults moleculeToModify = new BuildResults(state, words.get(0));//the group which will be modified
+		List<Fragment> replacementFragments = new ArrayList<Fragment>();
+		List<String> locantForFunctionalTerm =new ArrayList<String>();//usually not specified
+		if (!words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
+			for (int i = 1; i < words.size(); i++) {
+				Fragment frag = state.xmlFragmentMap.get(findRightMostGroupInBracket(words.get(i)));
+				replacementFragments.add(frag);
+				Elements children =words.get(i).getChildElements();
+				if (children.size()==1 && children.get(0).getLocalName().equals("bracket") && children.get(0).getAttribute("locant")!=null){
+					locantForFunctionalTerm.add(children.get(0).getAttributeValue("locant"));
+				}
+				else if (children.size()==2 && children.get(0).getAttribute("locant")!=null ){
+					String locant =children.get(0).getAttributeValue("locant");
+					if (children.get(1).getLocalName().equals("root") && !frag.hasLocant(locant) && matchNumericLocant.matcher(locant).matches()){
+						locantForFunctionalTerm.add(children.get(0).getAttributeValue("locant"));
+						children.get(0).removeAttribute(children.get(0).getAttribute("locant"));
+					}
+				}
 			}
 		}
-		else{
-			throw new StructureBuildingException("Expected either substituent or functionalTerm(oxime)");//TODO support dioxime, trioxime etc.
+		else{//e.g. butan-2,3-dione dioxime or hexan2,3-dione 2-oxime
+			int numberOfCarbonylReplacements =1;
+			List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(words.get(1),"multiplier");
+			if (multipliers.size() >1){
+				throw new StructureBuildingException("Expected 0 or 1 multiplier found: " + multipliers.size());
+			}
+			if (multipliers.size()==1){
+				numberOfCarbonylReplacements = Integer.parseInt(multipliers.get(0).getAttributeValue("value"));
+				multipliers.get(0).detach();
+			}
+			List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(words.get(1), "group");
+			if (functionalClass.size()!=1){
+				throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
+			}
+			String smilesReplacement = functionalClass.get(0).getAttributeValue("value");
+			String labels =  functionalClass.get(0).getAttributeValue("labels");
+			for (int i = 0; i < numberOfCarbonylReplacements; i++) {
+				replacementFragments.add(state.fragManager.buildSMILES(smilesReplacement, "", labels));
+			}
+			List<Element> locantEls =XOMTools.getDescendantElementsWithTagName(words.get(1), "locant");
+			if (locantEls.size() >1){
+				throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
+			}
+			if (locantEls.size()==1){
+				String[] locants = matchComma.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
+				for (String locant : locants) {
+					locantForFunctionalTerm.add(locant);
+				}
+				locantEls.get(0).detach();
+			}
 		}
-
-		int numberOfOximes =1;
+		if (locantForFunctionalTerm.size()!=0 && locantForFunctionalTerm.size()!=replacementFragments.size()){
+			throw new StructureBuildingException("Mismatch between number of locants and number of carbonyl replacements");
+		}
 		List<Atom> matches = new ArrayList<Atom>();
-		for (Fragment frag : moleculeToModify.getFragments()){//find all carbonyl oxygen
+		List<Fragment> fragmentsInGroupToModify = new ArrayList<Fragment>(moleculeToModify.getFragments());
+		for (int i= fragmentsInGroupToModify.size()-1; i>=0; i-- ){//find all carbonyl oxygen
+			Fragment frag = fragmentsInGroupToModify.get(i);
 			List<Atom> atomList = frag.getAtomList();
 			for (Atom atom : atomList) {
 				if (atom.getElement().equals("O") && atom.getCharge()==0){
 					List<Atom> neighbours =atom.getAtomNeighbours();
 					if (neighbours.size()==1){
 						if (neighbours.get(0).getElement().equals("C")){
+							if (!locantForFunctionalTerm.isEmpty()){
+								boolean matchesLocant = false;
+								for (String locant : locantForFunctionalTerm) {
+									if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locant)!=null){
+										matchesLocant =true;
+									}
+								}
+								if (!matchesLocant){
+									continue;
+								}
+							}
 							Bond b = frag.findBondOrThrow(atom, neighbours.get(0));
 							if (b.getOrder()==2){
 								matches.add(atom);
@@ -470,35 +522,22 @@ class StructureBuilder {
 				}
 			}
 		}
-		if (matches.size() < numberOfOximes){
+		if (matches.size() < replacementFragments.size()){
 			throw new StructureBuildingException("Insufficient carbonyl groups found!");
 		}
-
-		for (int i = 0; i < numberOfOximes; i++) {
+		for (int i = 0; i < replacementFragments.size(); i++) {
 			Atom atomToBeReplaced =matches.get(i);//the oxygen of the carbonyl
-			Fragment parentFrag =atomToBeReplaced.getFrag();
-			atomToBeReplaced.setElement("N");
-			List<Atom> parentFragAtomList =parentFrag.getAtomList();
-			for (Atom atom :parentFragAtomList) {
-				if (atom.hasLocant("O")){
-					atom.removeLocant("O");
-				}
+			Fragment replacementFrag = replacementFragments.get(i);
+			List<Atom> atomList = replacementFrag.getAtomList();
+			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
+			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocantWithinFragment(atomToBeReplaced);
+			if (numericLocantAtomConnectedToCarbonyl!=null){
+				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());
 			}
-			Atom addedHydroxy = state.fragManager.createAtom("O", parentFrag);
-			addedHydroxy.addLocant("O");
-			parentFrag.addAtom(addedHydroxy);
-			state.fragManager.createBond(atomToBeReplaced, addedHydroxy, 1);
-			if (i== 0 && substituentBR !=null){
-				if (substituentBR.getOutIDCount() !=1){
-					throw new StructureBuildingException("Expected outID on substituent before oxime");
-				}
-				String locant = getLocantForSubstituent(words.get(1));
-				if (locant !=null && !locant.startsWith("O")){
-					throw new StructureBuildingException("The only locant expected for a substituent connecting to an oxime is an O. Found: " + locant);
-				}
-				state.fragManager.createBond(addedHydroxy, substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), substituentBR.getOutID(0).valency);
-				substituentBR.removeOutID(0);
+			if (!words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){
+				resolveWordOrBracket(state, words.get(1 +i));
 			}
+			state.fragManager.replaceTerminalAtomWithFragment(atomToBeReplaced, atomToReplaceCarbonylOxygen);
 		}
 	}
 

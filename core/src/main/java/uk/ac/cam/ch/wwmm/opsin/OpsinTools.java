@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 
 import nu.xom.Attribute;
@@ -18,7 +19,7 @@ import nu.xom.Node;
  *
  */
 class OpsinTools {
-
+	private static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	/**
 	 * Returns the next sibling suffix node which is not related to altering charge (ium/ide/id)
 	 * @param group
@@ -162,6 +163,38 @@ class OpsinTools {
 						}
 					}
 					continue;
+				}
+				stack.add(neighbour);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Searches in a depth-first manner for an atom with a numeric locant
+	 * Returns either that atom or null if one cannot be found
+	 * @param startingAtom
+	 * @return the matching atom or null
+	 * @throws StructureBuildingException
+	 */
+	public static Atom depthFirstSearchForAtomWithNumericLocantWithinFragment(Atom startingAtom) throws StructureBuildingException {
+		Fragment frag = startingAtom.getFrag();
+		LinkedList<Atom> stack = new LinkedList<Atom>();
+		stack.add(startingAtom);
+		Set<Atom> atomsVisited =new HashSet<Atom>();
+		while (stack.size() > 0) {
+			Atom currentAtom =stack.removeLast();
+			atomsVisited.add(currentAtom);
+			List<Atom> neighbours = frag.getAtomNeighbours(currentAtom);
+			for (Atom neighbour : neighbours) {
+				if (atomsVisited.contains(neighbour)){//already visited
+					continue;
+				}
+				List<String> locants = neighbour.getLocants();
+				for (String neighbourLocant : locants) {
+					if (matchNumericLocant.matcher(neighbourLocant).matches()){
+						return neighbour;
+					}
 				}
 				stack.add(neighbour);
 			}

@@ -460,12 +460,12 @@ class FragmentManager {
 			terminalAtom.addLocant(locant);
 		}
 
-		incorporateFragment(childFrag, parentFrag);
 		List<Atom> neighbours = atomThatReplacesTerminal.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
 			createBond(terminalAtom, neighbour, childFrag.findBond(atomThatReplacesTerminal, neighbour).getOrder());
 		}
 		removeAtomAndAssociatedBonds(atomThatReplacesTerminal);
+		incorporateFragment(childFrag, parentFrag);
 	}
 
 	/**

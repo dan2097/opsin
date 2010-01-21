@@ -175,7 +175,7 @@ does not define a CFG.
   <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
 
 <!-- functional Groups-->
-  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%|%basicFunctionalClass%)"/>
+  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="(%hyphen%?(%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
 
