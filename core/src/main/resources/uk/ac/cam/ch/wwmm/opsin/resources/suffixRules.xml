@@ -190,9 +190,6 @@ sense of this -->
   <rule value="ous">
     <addgroup SMILES="O" functionalIDs="1"/>
   </rule>
-  <rule value="oxide">
-    <addgroup SMILES="[O-]" />
-  </rule>
   <rule value="oxoAndDiYl">
     <addgroup SMILES="O" bondOrder="2" />
     <setOutID />

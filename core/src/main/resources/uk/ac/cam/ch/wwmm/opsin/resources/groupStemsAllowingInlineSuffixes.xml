@@ -12,10 +12,11 @@
 
   <token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>
 
-  <token value="P|3" valType="SMILES" usableAsAJoiner="yes">phosphine</token>
-  <token value="[As|3]" valType="SMILES" usableAsAJoiner="yes">arsine</token>
-  <token value="[Sb|3]" valType="SMILES" usableAsAJoiner="yes">stibin</token>
-  <token value="[Bi|3]" valType="SMILES" usableAsAJoiner="yes">bismuthin</token>
+<!--These forms imply valency 3-->
+  <token value="P" valType="SMILES" usableAsAJoiner="yes">phosphine</token>
+  <token value="[As]" valType="SMILES" usableAsAJoiner="yes">arsine</token>
+  <token value="[Sb]" valType="SMILES" usableAsAJoiner="yes">stibin</token>
+  <token value="[Bi]" valType="SMILES" usableAsAJoiner="yes">bismuthin</token>
 
 <!-- trivial acid derived ketones -->
   <token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" valType="SMILES" usableAsAJoiner="yes">aceton</token>

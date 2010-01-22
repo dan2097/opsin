@@ -27,7 +27,6 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="ol">ol</token>
     <token value="olate">olate</token>
     <token value="one">one</token>
-    <token value="oxide">oxide</token>
     <token value="thiolate">thiolate</token>
   </tokenList>
 

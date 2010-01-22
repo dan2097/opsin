@@ -200,7 +200,6 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="one">oneOnChain</suffix>
     <suffix value="ophenone">ophenone</suffix>
     <suffix value="ous">ous</suffix>
-    <suffix value="oxide">oxide</suffix>
     <suffix value="selenenic">selenenic</suffix>
     <suffix value="seleninic">seleninic</suffix>
     <suffix value="selenonic">selenonic</suffix>
@@ -283,7 +282,6 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="ol">ol</suffix>
     <suffix value="olate">olate</suffix>
     <suffix value="one">one</suffix>
-    <suffix value="oxide">oxide</suffix>
     <suffix value="selenenic">selenenic</suffix>
     <suffix value="seleninic">seleninic</suffix>
     <suffix value="selenonic">selenonic</suffix>

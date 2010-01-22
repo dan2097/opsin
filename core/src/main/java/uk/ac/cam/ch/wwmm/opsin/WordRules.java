@@ -33,6 +33,7 @@ class WordRules {
 		functionalClassEster,
 		divalentFunctionalGroup,
 		glycol,
+		oxide,
 		carbonylDerivative,
 		functionGroupAsGroup,
 		polymer

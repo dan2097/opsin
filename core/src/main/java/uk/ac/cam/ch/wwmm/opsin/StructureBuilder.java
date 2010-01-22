@@ -87,6 +87,9 @@ class StructureBuilder {
 			else if (wordRule == WordRule.glycol){
 				buildGlycol(state, words);//e.g. ethylene glycol
 			}
+			else if(wordRule == WordRule.oxide) {
+				buildOxide(state, words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
+			}
 			else if(wordRule == WordRule.carbonylDerivative) {
 				buildCarbonylDerivative(state, words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
 			}
@@ -435,6 +438,109 @@ class StructureBuilder {
 			state.fragManager.createBond(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
 		}
 	}
+	
+	private void buildOxide(BuildState state, List<Element> words) throws StructureBuildingException {
+		resolveWordOrBracket(state, words.get(0));//the group
+		List<Fragment> oxideFragments = new ArrayList<Fragment>();
+		List<String> locantsForOxide =new ArrayList<String>();//often not specified
+		int numberOfOxygenToAdd =1;
+		List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(words.get(1),"multiplier");
+		if (multipliers.size() >1){
+			throw new StructureBuildingException("Expected 0 or 1 multiplier found: " + multipliers.size());
+		}
+		if (multipliers.size()==1){
+			numberOfOxygenToAdd = Integer.parseInt(multipliers.get(0).getAttributeValue("value"));
+			multipliers.get(0).detach();
+		}
+		List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(words.get(1), "group");
+		if (functionalClass.size()!=1){
+			throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
+		}
+		String smilesReplacement = functionalClass.get(0).getAttributeValue("value");
+		String labels =  functionalClass.get(0).getAttributeValue("labels");
+		for (int i = 0; i < numberOfOxygenToAdd; i++) {
+			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, "", labels));
+		}
+		List<Element> locantEls =XOMTools.getDescendantElementsWithTagName(words.get(1), "locant");
+		if (locantEls.size() >1){
+			throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
+		}
+		if (locantEls.size()==1){
+			String[] locants = matchComma.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
+			for (String locant : locants) {
+				locantsForOxide.add(locant);
+			}
+			locantEls.get(0).detach();
+		}
+		if (!locantsForOxide.isEmpty() && locantsForOxide.size()!=oxideFragments.size()){
+			throw new StructureBuildingException("Mismatch between number of locants and number of oxides specified");
+		}
+		Element rightMostGroup =findRightMostGroupInBracket(words.get(0));
+		List<Fragment> orderedPossibleFragments = new ArrayList<Fragment>();//In preference suffixes are substituted onto e.g. acetonitrile oxide
+		Elements suffixEls = ((Element)rightMostGroup.getParent()).getChildElements("suffix");
+		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
+			Element suffixEl = suffixEls.get(i);
+			Fragment suffixFrag =state.xmlFragmentMap.get(suffixEl);
+			if (suffixFrag!=null){
+				orderedPossibleFragments.add(suffixFrag);
+			}
+		}
+		Fragment groupToModify = state.xmlFragmentMap.get(rightMostGroup);//all the suffixes are actually part of this fragment already
+		orderedPossibleFragments.add(groupToModify);
+		mainLoop: for (int i = 0; i < oxideFragments.size(); i++) {
+			Atom oxideAtom = oxideFragments.get(i).getFirstAtom();
+			if (!locantsForOxide.isEmpty()){
+				Atom atomToAddOxideTo =groupToModify.getAtomByLocantOrThrow(locantsForOxide.get(i));
+				formAppropriateBondToOxideAndAdjustCharges(state, atomToAddOxideTo, oxideAtom);
+			}
+			else{
+				for (Fragment frag : orderedPossibleFragments) {
+					List<Atom> atomList = frag.getAtomList();
+					for (Atom atom : atomList) {
+						if (!atom.getElement().equals("C")){
+							formAppropriateBondToOxideAndAdjustCharges(state, atom, oxideAtom);
+							continue mainLoop;
+						}
+					}
+				}
+				//No heteroatoms could be found. Perhaps it's supposed to be something like styrene oxide
+				Set<Bond> bondSet = groupToModify.getBondSet();//looking for double bond
+				for (Bond bond : bondSet) {
+					if (bond.getOrder()==2){
+						bond.setOrder(1);
+						state.fragManager.incorporateFragment(oxideFragments.get(i), groupToModify);
+						state.fragManager.createBond(bond.getFromAtom(), oxideAtom, 1);
+						state.fragManager.createBond(bond.getToAtom(), oxideAtom, 1);
+						continue mainLoop;
+					}
+				}
+				throw new StructureBuildingException("Unable to find suitable atom or a double bond to add oxide to");
+			}
+		}
+		
+	}
+	
+	/**
+	 * Decides whether an oxide should double bond e.g. P=O or single bond as a zwitterionic form e.g. [N+]-[O-]
+	 * Forms the bond and incorporates the oxide into the other atom's fragment
+	 * @param state
+	 * @param atomToAddOxideTo
+	 * @param oxideAtom
+	 * @throws StructureBuildingException 
+	 */
+	private void formAppropriateBondToOxideAndAdjustCharges(BuildState state, Atom atomToAddOxideTo, Atom oxideAtom) throws StructureBuildingException {
+		if (ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 2)){
+			state.fragManager.incorporateFragment(oxideAtom.getFrag(), oxideAtom.getID(), atomToAddOxideTo.getFrag(), atomToAddOxideTo.getID(), 2);
+		}
+		else{
+			atomToAddOxideTo.addChargeAndProtons(1, 1);
+			oxideAtom.addChargeAndProtons(-1, -1);
+			if (!ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 1)){
+				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
+			}
+			state.fragManager.incorporateFragment(oxideAtom.getFrag(), oxideAtom.getID(), atomToAddOxideTo.getFrag(), atomToAddOxideTo.getID(), 1);
+		}
+	}
 
 	private void buildCarbonylDerivative(BuildState state, List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));//the group
@@ -489,7 +595,7 @@ class StructureBuilder {
 				locantEls.get(0).detach();
 			}
 		}
-		if (locantForFunctionalTerm.size()!=0 && locantForFunctionalTerm.size()!=replacementFragments.size()){
+		if (!locantForFunctionalTerm.isEmpty() && locantForFunctionalTerm.size()!=replacementFragments.size()){
 			throw new StructureBuildingException("Mismatch between number of locants and number of carbonyl replacements");
 		}
 		List<Atom> matches = new ArrayList<Atom>();
