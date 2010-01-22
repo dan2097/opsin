@@ -1,19 +1,19 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
 <tokenList tagname="group" type="chain" subType="alkaneStem-irregular" symbol="A">
-  <token value="C(C)C" valType="SMILES">isoprop</token>
-  <token value="CC(C)C" valType="SMILES">isobut</token>
-  <token value="C(C)CC" valType="SMILES">secbut</token>
-  <token value="C(C)CC" valType="SMILES">sec-but</token>
-  <token value="C(C)CC" valType="SMILES">s-but</token>
-  <token value="C(C)(C)C" valType="SMILES">tertbut</token>
-  <token value="C(C)(C)C" valType="SMILES">tert-but</token>
-  <token value="C(C)(C)C" valType="SMILES">t-but</token>
-  <token value="CCC(C)C" valType="SMILES">isopent</token>
-  <token value="CC(C)(C)C" valType="SMILES">neopent</token>
-  <token value="C(C)(C)CC" valType="SMILES">tert-pent</token>
-  <token value="C(C)(C)CC" valType="SMILES">t-pent</token>
-  <token value="CCCC(C)C" valType="SMILES">isohex</token>
+  <token value="C(C)C" labels="none" valType="SMILES">isoprop</token>
+  <token value="CC(C)C" labels="none" valType="SMILES">isobut</token>
+  <token value="C(C)CC" labels="none" valType="SMILES">secbut</token>
+  <token value="C(C)CC" labels="none" valType="SMILES">sec-but</token>
+  <token value="C(C)CC" labels="none" valType="SMILES">s-but</token>
+  <token value="C(C)(C)C" labels="none" valType="SMILES">tertbut</token>
+  <token value="C(C)(C)C" labels="none" valType="SMILES">tert-but</token>
+  <token value="C(C)(C)C" labels="none" valType="SMILES">t-but</token>
+  <token value="CCC(C)C" labels="none" valType="SMILES">isopent</token>
+  <token value="CC(C)(C)C" labels="none" valType="SMILES">neopent</token>
+  <token value="C(C)(C)CC" labels="none" valType="SMILES">tert-pent</token>
+  <token value="C(C)(C)CC" labels="none" valType="SMILES">t-pent</token>
+  <token value="CCCC(C)C" labels="none" valType="SMILES">isohex</token>
 
   <token value="C12CC3CC4CC5C1.C24.C35" valType="SMILES" frontLocantsExpected="1,2">adamant</token>
   <token value="C12C3C4C11.C35C2C1C45" valType="SMILES">cub</token>

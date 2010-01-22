@@ -46,6 +46,8 @@
 <!--cyclic structures generally should be under arylGroups unless you want them to not support hydro/dehydro and suffixes-->
   <token value="[C-]#[C-]" labels="none" valType="SMILES">acetylide</token>
   <token value="N[O-]" labels="none" valType="SMILES">aminoxide</token>
+  <token value="[O-]C(=O)N=NC(=O)[O-]" labels="none" valType="SMILES" functionalIDs="1,8">azodicarboxylate</token><!--e.g. in DEAD-->
+  <token value="OC(=O)N=NC(=O)O" labels="none" valType="SMILES" functionalIDs="1,8">azodicarboxylic</token>
   <token value="NC(=N)NC(=N)N" labels="1//2/3//4/5" valType="SMILES">biguanide</token><!--also multiplier guanide should be allowed-->
   <token value="NC(=O)NC(=O)N" labels="1/2//3/4//5" valType="SMILES">biuret</token><!--also multiplier uret should be allowed-->
   <token value="C(Br)(Br)(Br)" labels="none" valType="SMILES">bromoform</token>

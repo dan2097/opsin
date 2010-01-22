@@ -91,6 +91,11 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" value="glycol" />
   </wordRule>
 
+  <wordRule name="oxide" type="full">
+    <word type="full" />
+    <word type="functionalTerm" endsWithRegex="oxide" />
+  </wordRule>
+
   <wordRule name="carbonylDerivative" type="full">
     <word type="full" />
     <word type="substituent" />

@@ -17,6 +17,8 @@
     <token value="NC(=[Se])NN" labels="4/3//2/1" valType="SMILES">selenosemicarbazone</token>
     <token value="NC(=[Te])NN" labels="4/3//2/1" valType="SMILES">tellurosemicarbazone</token>
     <token value="N" labels="none" valType="SMILES">imide</token>
+
+    <token value="O" labels="none" valType="SMILES">oxide</token>
   </tokenList>
 
   <tokenList tagname="functionalModifier" type="functionalModifier" symbol="ù">
