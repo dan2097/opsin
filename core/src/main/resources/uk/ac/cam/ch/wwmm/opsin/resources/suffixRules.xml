@@ -115,10 +115,6 @@ sense of this -->
     <addgroup SMILES="NN" bondOrder="2" />
     <addgroup SMILES="O" functionalIDs="1"/>
   </rule>
-  <rule value="hydrazonoyl">
-    <addgroup SMILES="NN" bondOrder="2"/>
-    <setOutID />
-  </rule>
   <rule value="hydroxamic">
     <addgroup SMILES="NO" functionalIDs="2"/>
     <addgroup SMILES="O" bondOrder="2" />

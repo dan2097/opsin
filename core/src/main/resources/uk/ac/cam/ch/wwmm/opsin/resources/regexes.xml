@@ -89,6 +89,7 @@ does not define a CFG.
   <regex name="%endOfFunctionalGroup%" value="û"/>
   <regex name="%functionalModifier%" value="ù"/>
   <regex name="%infixableInlineSuffix%" value="ÿ"/>
+  <regex name="%monoNuclearNonCarbonAcid%" value="Ö"/>
   <!--up to ascii 152 used -->
 
 <!-- composite regexes-->
@@ -134,8 +135,10 @@ does not define a CFG.
 
   <regex name="%aminoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%|%aminoAcidEndsInIc%%ane%)"/>
   <regex name="%aminoAcidGroup%" value="(%aminoAcid%|%aminoAcid%(%infixedSuffix%|%rootSuffix%))"/>
-  <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%rootSuffix%)|%aminoAcidGroup%)"/>
-  <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
+  <regex name="%nonCarbonAcidGroup%" value="(%monoNuclearNonCarbonAcid%(%infixedSuffix%|%rootSuffix%))"/>
+  <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%))"/>
+  <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%suffix%|%suffixesThatCanHaveEeuphonicO%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
+  <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%nonCarbonAcidSubstituent%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
 

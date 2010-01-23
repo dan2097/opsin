@@ -59,15 +59,4 @@
   <token value="CC(CO)c1ccccc1" labels="////1/2/3/4/5/6" valType="SMILES">trop</token>
   <token value="Cc1cc(OC)c(O)cc1" labels="/1/2/3///4//5/6" valType="SMILES">vanill</token>
   <token value="Cc1cc(OC)c(OC)cc1" labels="/1/2/3///4///5/6" valType="SMILES">veratr</token>
-
-  <!--P-67.1.1 IUPAC 2004 mononuclear acids-->
-	<token value="[As]O" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">arson</token>
-  <token value="[N+]" labels="none" valType="SMILES">azin</token>
-  <token value="[N+]O" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">azon</token>
-  <token value="[N+](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">azor</token>
-  <token value="PO" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">phosphon</token>
-  <token value="[Sb]" labels="none" valType="SMILES">stibin</token>
-  <token value="[Sb]O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibon</token>
-
-
 </tokenList>

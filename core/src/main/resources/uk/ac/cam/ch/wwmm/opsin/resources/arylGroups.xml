@@ -65,6 +65,7 @@
   <token value="cumene" valType="dbkey" addGroup="C locant4">cymen</token>
   <token value="cyclopenta[a]phenanthrene" valType="dbkey">cyclopenta[a]phenanthren</token>
   <token value="N1c(=O)nc(N)cc1" labels="1/2//3/4//5/6" valType="SMILES">cytosin</token>
+  <token value="C1CCCC2CCCCC12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">decalin</token>
   <token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamid</token>
   <token value="NCCc1cc(O)c(O)cc1" labels="///1/2/3//4//5/6" valType="SMILES">dopamin</token>
   <token value="o1c(cc(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES">flavon</token>
@@ -236,6 +237,7 @@
   <token value="[se]1cccc1" valType="SMILES">selenophen</token>
   <token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluranthren</token>
   <token value="[te]1cccc1" valType="SMILES">tellurophen</token>
+  <token value="C1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tetralin</token>
   <token value="N1C(=O)N(C)c2ncN(C)c2C1=O" labels="1/2//3//4/9/8/7//5/6/" valType="SMILES">theobromin</token>
   <token value="N1c(=O)Nc(=O)c(C)c1" labels="1/2//3/4//5//6" valType="SMILES">thymin</token>
   <token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thianthren</token>

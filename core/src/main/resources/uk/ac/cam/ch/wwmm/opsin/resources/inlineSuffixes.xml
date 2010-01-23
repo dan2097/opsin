@@ -11,11 +11,9 @@
     <token value="carbothioyl">carbothioyl</token>
     <token value="carboxamido">carboxamido</token>
     <token value="carboximidoyl">carboximidoyl</token>
-    <token value="hydrazonoyl">hydrazonoyl</token>
     <token value="hydroximoyl">hydroximoyl</token>
     <token value="io">io</token>
     <token value="amido" additionalValue="aldehyde">imido</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="hydrazonoyl">ohydrazonoyl</token>
     <token value="hydroximoyl">ohydroximoyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
@@ -49,7 +47,6 @@
     <token value="amido">amido</token>
     <token value="carbonyl">carbonyl</token>
     <token value="hydroximoyl">hydroximoyl</token>
-    <token value="hydroximoyl">ohydroximoyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
     <token value="selenenyl">selenenyl</token>
