@@ -177,15 +177,14 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 * @throws StructureBuildingException
 	 */
-	public static Atom depthFirstSearchForAtomWithNumericLocantWithinFragment(Atom startingAtom) throws StructureBuildingException {
-		Fragment frag = startingAtom.getFrag();
+	public static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom) throws StructureBuildingException {
 		LinkedList<Atom> stack = new LinkedList<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();
 		while (stack.size() > 0) {
 			Atom currentAtom =stack.removeLast();
 			atomsVisited.add(currentAtom);
-			List<Atom> neighbours = frag.getAtomNeighbours(currentAtom);
+			List<Atom> neighbours = currentAtom.getAtomNeighbours();
 			for (Atom neighbour : neighbours) {
 				if (atomsVisited.contains(neighbour)){//already visited
 					continue;

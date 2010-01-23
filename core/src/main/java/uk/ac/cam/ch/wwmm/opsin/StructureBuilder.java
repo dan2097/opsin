@@ -508,7 +508,6 @@ class StructureBuilder {
 				for (Bond bond : bondSet) {
 					if (bond.getOrder()==2){
 						bond.setOrder(1);
-						state.fragManager.incorporateFragment(oxideFragments.get(i), groupToModify);
 						state.fragManager.createBond(bond.getFromAtom(), oxideAtom, 1);
 						state.fragManager.createBond(bond.getToAtom(), oxideAtom, 1);
 						continue mainLoop;
@@ -517,12 +516,14 @@ class StructureBuilder {
 				throw new StructureBuildingException("Unable to find suitable atom or a double bond to add oxide to");
 			}
 		}
-		
+		for (Fragment oxide : oxideFragments) {
+			state.fragManager.incorporateFragment(oxide, groupToModify);
+		}
 	}
 	
 	/**
 	 * Decides whether an oxide should double bond e.g. P=O or single bond as a zwitterionic form e.g. [N+]-[O-]
-	 * Forms the bond and incorporates the oxide into the other atom's fragment
+	 * Corrects the charges if necessary and forms the bond
 	 * @param state
 	 * @param atomToAddOxideTo
 	 * @param oxideAtom
@@ -530,7 +531,7 @@ class StructureBuilder {
 	 */
 	private void formAppropriateBondToOxideAndAdjustCharges(BuildState state, Atom atomToAddOxideTo, Atom oxideAtom) throws StructureBuildingException {
 		if (ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 2)){
-			state.fragManager.incorporateFragment(oxideAtom.getFrag(), oxideAtom.getID(), atomToAddOxideTo.getFrag(), atomToAddOxideTo.getID(), 2);
+			state.fragManager.createBond(atomToAddOxideTo, oxideAtom, 2);
 		}
 		else{
 			atomToAddOxideTo.addChargeAndProtons(1, 1);
@@ -538,7 +539,7 @@ class StructureBuilder {
 			if (!ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 1)){
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
 			}
-			state.fragManager.incorporateFragment(oxideAtom.getFrag(), oxideAtom.getID(), atomToAddOxideTo.getFrag(), atomToAddOxideTo.getID(), 1);
+			state.fragManager.createBond(atomToAddOxideTo, oxideAtom, 1);
 		}
 	}
 
@@ -609,13 +610,19 @@ class StructureBuilder {
 					if (neighbours.size()==1){
 						if (neighbours.get(0).getElement().equals("C")){
 							if (!locantForFunctionalTerm.isEmpty()){
-								boolean matchesLocant = false;
-								for (String locant : locantForFunctionalTerm) {
-									if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locant)!=null){
-										matchesLocant =true;
+								Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atom);
+								if (numericLocantAtomConnectedToCarbonyl!=null){//could be the carbon of the carbonyl or the ring the carbonyl connects to in say a carbaldehyde
+									boolean matchesLocant = false;
+									for (String locant : locantForFunctionalTerm) {
+										if (numericLocantAtomConnectedToCarbonyl.hasLocant(locant)){
+											matchesLocant =true;
+										}
+									}
+									if (!matchesLocant){
+										continue;
 									}
 								}
-								if (!matchesLocant){
+								else{
 									continue;
 								}
 							}
@@ -636,7 +643,7 @@ class StructureBuilder {
 			Fragment replacementFrag = replacementFragments.get(i);
 			List<Atom> atomList = replacementFrag.getAtomList();
 			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
-			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocantWithinFragment(atomToBeReplaced);
+			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atomToBeReplaced);
 			if (numericLocantAtomConnectedToCarbonyl!=null){
 				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());
 			}
