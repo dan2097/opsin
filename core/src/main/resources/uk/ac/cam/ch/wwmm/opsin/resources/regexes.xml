@@ -102,7 +102,7 @@ does not define a CFG.
   <regex name="%newLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%bracketedLocantGroup%%optionalCloseBracket%%hyphen%?)"/>
-  <regex name="%infixedInlineSuffix%" value="(%o%?%replacementInfix%%o%?%infixableInlineSuffix%|%structuralOpenBracket%%multiplier%?%replacementInfix%%o%?%infixableInlineSuffix%%structuralCloseBracket%)"/>
+  <regex name="%infixedInlineSuffix%" value="(%o%?(%replacementInfix%%o%?)+%infixableInlineSuffix%|%structuralOpenBracket%%multiplier%?(%replacementInfix%%o%?)+%infixableInlineSuffix%%structuralCloseBracket%)"/>
   <regex name="%unlocantedInlineSuffixGroup%" value="(%simpleMultiplierGroup%?(%infixedInlineSuffix%|%inlineSuffix%))"/>
   <regex name="%inlineSuffixGroup%" value="(%newLocantGroup%?%unlocantedInlineSuffixGroup%)"/>
   <regex name="%repeatableInlineSuffixGroup%" value="(%newLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
@@ -112,7 +112,7 @@ does not define a CFG.
   <regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
   <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locantGroup%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
   <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
-  <regex name="%infixedSuffix%" value="((%o%?%replacementInfix%((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%))|(%structuralOpenBracket%%multiplier%?%replacementInfix%((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%)%structuralCloseBracket%))"/>
+  <regex name="%infixedSuffix%" value="((%o%?%replacementInfix%(%o%?%replacementInfix%)*((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%))|(%structuralOpenBracket%%multiplier%?%replacementInfix%(%o%?%replacementInfix%)*((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%)%structuralCloseBracket%))"/>
   <regex name="%unlocantedSuffixGroup%" value="((%multiplier%?(%infixedSuffix%|%rootSuffix%))|(%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%))"/>
   <regex name="%suffixGroup%" value="(%newLocantGroup%?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>

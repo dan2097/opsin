@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -30,6 +31,28 @@ import nu.xom.Node;
 
 class PreStructureBuilder {
 
+	/**
+	 * Sorts infix transformations by the number of acceptable inputs for the transformation.
+	 * e.g. thio ends up towards the end of the list as it accepts both -O or =O whilst say imido only accepts =O
+	 * @author dl387
+	 *
+	 */
+	private class SortInfixTransformations implements Comparator<String> {
+		public int compare(String infixTransformation1, String infixTransformation2) {
+			int allowedInputs1 = matchComma.split(infixTransformation1).length;
+			int allowedInputs2 = matchComma.split(infixTransformation2).length;
+			if (allowedInputs1 < allowedInputs2){//infixTransformation1 preferred
+				return -1;
+			}
+			if (allowedInputs1 > allowedInputs2){//infixTransformation2 preferred
+				return 1;
+			}
+			else{
+				return 0;
+			}
+		}
+	}
+	
 	private FusedRingBuilder fusedRingBuilder;
 
 	private Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
@@ -1288,8 +1311,10 @@ class PreStructureBuilder {
 				if (suffixFrag==null){
 					throw new PostProcessingException("infix has erroneously been assigned to a suffix which does not correspond to a suffix fragment. suffix: " + suffix.getValue());
 				}
-				String infixTransformation = suffix.getAttributeValue("infix");//e.g. =O:S,-O:S (which indicates replacing either a double or single bonded oxygen with S)
-				int infixCount = Integer.parseInt(suffix.getAttributeValue("infixCount"));
+				//e.g. =O:S,-O:S (which indicates replacing either a double or single bonded oxygen with S)
+				//This is semicolon delimited for each infix
+				List<String> infixTransformations = StringTools.arrayToList(matchSemiColon.split(suffix.getAttributeValue("infix")));
+
 				List<Atom> atomList =suffixFrag.getAtomList();
 				LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
 				LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
@@ -1312,106 +1337,67 @@ class PreStructureBuilder {
 				}
 				int oxygenAvailable = singleBondedOxygen.size() +doubleBondedOxygen.size();
 
-				/* This block handles infix multiplication. Unless brackets are provided this is ambiguous without knowledge of the suffix that is being modified
-				 * For example butandithione could be intepreted as butandi(thione) or butan(dithi)one. Obviously the latter is wrong in this case
-				 * but it is the correct interpretation for butandithiate
+				/*
+				 * Modifies suffixes, suffixFragments, suffix and infixTransformations as appropriate
 				 */
-				Element possibleInfix =(Element) XOMTools.getPreviousSibling(suffix);
-				if (possibleInfix.getLocalName().equals("infix")){//the infix is only left when there was ambiguity
-					Element possibleMultiplier =(Element) XOMTools.getPreviousSibling(possibleInfix);
-					if (possibleMultiplier.getLocalName().equals("multiplier")){
-						int multiplierValue =Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
-						if (infixCount*multiplierValue <=oxygenAvailable){//multiplier means multiply the infix e.g. butandithiate
-							infixCount =infixCount*multiplierValue;
-							suffix.getAttribute("infixCount").setValue(Integer.toString(infixCount));
+				disambiguateMultipliedInfixMeaning(state, suffixes, suffixFragments, suffix, suffixFrag, infixTransformations, oxygenAvailable);
+
+				/*
+				 * Sort infixTransformations so more specific transformations are performed first
+				 * e.g. ethanthioimidic acid-->ethanimidthioic acid as imid can only apply to the double bonded oxygen
+				 */
+				Collections.sort(infixTransformations, new SortInfixTransformations());
+
+				for (String infixTransformation : infixTransformations) {
+					String[] transformationArray = matchColon.split(infixTransformation);
+					if (transformationArray.length !=2){
+						throw new StructureBuildingException("Atom to be replaced and replacement not specified correctly in infix: " + infixTransformation);
+					}
+					String[] transformations = matchComma.split(transformationArray[0]);
+					String replacementSMILES = transformationArray[1];
+					boolean acceptDoubleBondedOxygen = false;
+					boolean acceptSingleBondedOxygen = false;
+					for (String transformation : transformations) {
+						if (transformation.startsWith("=")){
+							acceptDoubleBondedOxygen = true;
+						}
+						else if (transformation.startsWith("-")){
+							acceptSingleBondedOxygen = true;
 						}
 						else{
-							LinkedList<Element> locants = new LinkedList<Element>();
-							Element possibleLocant =(Element)XOMTools.getPreviousSibling(possibleMultiplier);
-							while(possibleLocant!=null && possibleLocant.getLocalName().equals("locant")) {
-								locants.add(possibleLocant);
-								possibleLocant = (Element)XOMTools.getPreviousSibling(possibleLocant);
-							}
-							if (locants.size()>0){
-								if (locants.size()!=multiplierValue){
-									throw new PostProcessingException("Multiplier/locant disagreement when multiplying infixed suffix");
-								}
-								Element locant =locants.removeLast();
-							    suffix.addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
-								suffix.addAttribute(new Attribute("multiplied", "multiplied"));
-								locant.detach();
-							}
-							for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
-								Element newSuffix =new Element(suffix);
-								Fragment newSuffixFrag =state.fragManager.copyAndRelabel(suffixFrag);
-								state.xmlFragmentMap.put(newSuffix, newSuffixFrag);
-								suffixFragments.add(newSuffixFrag);
-								XOMTools.insertAfter(suffix, newSuffix);
-								suffixes.add(newSuffix);
-								if (locants.size()>0){
-									Element locant =locants.removeFirst();
-									newSuffix.getAttribute("locant").setValue(locant.getAttributeValue("value"));
-									locant.detach();
-								}
-							}
+							throw new StructureBuildingException("Malformed infix transformation. Expected to start with either - or =. Transformation was: " +transformation);
 						}
-						possibleMultiplier.detach();
-						possibleInfix.detach();
+						if (transformation.length()<2 || transformation.charAt(1)!='O'){
+							throw new StructureBuildingException("Only replacement by oxygen is supported. Check infix defintions");
+						}
 					}
-					else{
-						throw new PostProcessingException("Multiplier expected in front of infix");
+					boolean infixAssignmentAmbiguous =false;
+					if (acceptSingleBondedOxygen && !acceptDoubleBondedOxygen){
+						if (singleBondedOxygen.size() ==0){
+							throw new StructureBuildingException("Cannot find single bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
+						}
+						if (singleBondedOxygen.size() !=1){
+							infixAssignmentAmbiguous=true;
+						}
 					}
-				}
-				String[] transformationArray = matchColon.split(infixTransformation);
-				if (transformationArray.length !=2){
-					throw new StructureBuildingException("Atom to be replaced and replacement not specified correctly in infix: " + infixTransformation);
-				}
-				String[] transformations = matchComma.split(transformationArray[0]);
-				String replacementSMILES = transformationArray[1];
-				boolean acceptDoubleBondedOxygen = false;
-				boolean acceptSingleBondedOxygen = false;
-				for (String transformation : transformations) {
-					if (transformation.startsWith("=")){
-						acceptDoubleBondedOxygen = true;
+					if (!acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
+						if (doubleBondedOxygen.size()==0){
+							throw new StructureBuildingException("Cannot find double bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
+						}
+						if (doubleBondedOxygen.size() != 1){
+							infixAssignmentAmbiguous=true;
+						}
 					}
-					else if (transformation.startsWith("-")){
-						acceptSingleBondedOxygen = true;
+					if (acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
+						if (oxygenAvailable ==0){
+							throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
+						}
+						if (oxygenAvailable !=1){
+							infixAssignmentAmbiguous=true;
+						}
 					}
-					else{
-						throw new StructureBuildingException("Malformed infix transformation. Expected to start with either - or =. Transformation was: " +transformation);
-					}
-					if (transformation.length()<2 || transformation.charAt(1)!='O'){
-						throw new StructureBuildingException("Only replacement by oxygen is supported. Check infix defintions");
-					}
-				}
-				boolean infixAssignmentAmbiguous =false;
-				if (acceptSingleBondedOxygen && !acceptDoubleBondedOxygen){
-					if ( infixCount > singleBondedOxygen.size()){
-						throw new StructureBuildingException("Cannot find single bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
-					}
-					if (infixCount != singleBondedOxygen.size()){
-						infixAssignmentAmbiguous=true;
-					}
-				}
-				if (!acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
-					if (infixCount > doubleBondedOxygen.size()){
-						throw new StructureBuildingException("Cannot find double bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
-					}
-					if (infixCount != doubleBondedOxygen.size()){
-						infixAssignmentAmbiguous=true;
-					}
-				}
-				if (acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
-					if (infixCount > oxygenAvailable){
-						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
-					}
-					if (infixCount != oxygenAvailable){
-						infixAssignmentAmbiguous=true;
-					}
-				}
 
-				ArrayList<Atom> ambiguousElementAtoms = new ArrayList<Atom>();
-				for (int j = 0; j < infixCount; j++) {
+					ArrayList<Atom> ambiguousElementAtoms = new ArrayList<Atom>();
 					Atom atomToUse = null;
 					if (acceptDoubleBondedOxygen && doubleBondedOxygen.size()>0 ){
 						atomToUse = doubleBondedOxygen.removeFirst();
@@ -1455,24 +1441,93 @@ class PreStructureBuilder {
 					if (infixAssignmentAmbiguous){
 						ambiguousElementAtoms.add(atomToUse);
 					}
+					if (infixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl ethanthioate
+						for (Atom a : doubleBondedOxygen) {
+							ambiguousElementAtoms.add(a);
+						}
+						for (Atom a : singleBondedOxygen) {
+							ambiguousElementAtoms.add(a);
+						}
+						String atomIDsString="";
+						for (Atom atom : ambiguousElementAtoms) {
+							atomIDsString+=atom.getID();
+							atomIDsString+=",";
+						}
+						atomIDsString= atomIDsString.substring(0, atomIDsString.length()-1);
+						for (Atom atom : ambiguousElementAtoms) {
+							atom.setNote("ambiguousElementAssignment", atomIDsString);
+						}
+					}
 				}
-				if (infixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl ethanthioate
-					for (Atom a : doubleBondedOxygen) {
-						ambiguousElementAtoms.add(a);
-					}
-					for (Atom a : singleBondedOxygen) {
-						ambiguousElementAtoms.add(a);
-					}
-					String atomIDsString="";
-					for (Atom atom : ambiguousElementAtoms) {
-						atomIDsString+=atom.getID();
-						atomIDsString+=",";
-					}
-					atomIDsString= atomIDsString.substring(0, atomIDsString.length()-1);
-					for (Atom atom : ambiguousElementAtoms) {
-						atom.setNote("ambiguousElementAssignment", atomIDsString);
+			}
+		}
+	}
+
+
+	/**
+	 * This block handles infix multiplication. Unless brackets are provided this is ambiguous without knowledge of the suffix that is being modified
+	 * For example butandithione could be intepreted as butandi(thione) or butan(dithi)one.
+	 * Obviously the latter is wrong in this case but it is the correct interpretation for butandithiate
+	 * @param state
+	 * @param suffixes
+	 * @param suffixFragments
+	 * @param suffix
+	 * @param suffixFrag
+	 * @param infixTransformations
+	 * @param oxygenAvailable
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
+	private void disambiguateMultipliedInfixMeaning(BuildState state,
+			ArrayList<Element> suffixes, ArrayList<Fragment> suffixFragments,
+			Element suffix, Fragment suffixFrag,
+			List<String> infixTransformations, int oxygenAvailable)
+			throws PostProcessingException, StructureBuildingException {
+		Element possibleInfix =(Element) XOMTools.getPreviousSibling(suffix);
+		if (possibleInfix.getLocalName().equals("infix")){//the infix is only left when there was ambiguity
+			Element possibleMultiplier =(Element) XOMTools.getPreviousSibling(possibleInfix);
+			if (possibleMultiplier.getLocalName().equals("multiplier")){
+				int multiplierValue =Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
+				if (infixTransformations.size() + multiplierValue-1 <=oxygenAvailable){//multiplier means multiply the infix e.g. butandithiate
+					for (int j = 1; j < multiplierValue; j++) {
+						infixTransformations.add(0, infixTransformations.get(0));
 					}
 				}
+				else{
+					LinkedList<Element> locants = new LinkedList<Element>();
+					Element possibleLocant =(Element)XOMTools.getPreviousSibling(possibleMultiplier);
+					while(possibleLocant!=null && possibleLocant.getLocalName().equals("locant")) {
+						locants.add(possibleLocant);
+						possibleLocant = (Element)XOMTools.getPreviousSibling(possibleLocant);
+					}
+					if (locants.size()>0){
+						if (locants.size()!=multiplierValue){
+							throw new PostProcessingException("Multiplier/locant disagreement when multiplying infixed suffix");
+						}
+						Element locant =locants.removeLast();
+					    suffix.addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
+						suffix.addAttribute(new Attribute("multiplied", "multiplied"));
+						locant.detach();
+					}
+					for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
+						Element newSuffix =new Element(suffix);
+						Fragment newSuffixFrag =state.fragManager.copyAndRelabel(suffixFrag);
+						state.xmlFragmentMap.put(newSuffix, newSuffixFrag);
+						suffixFragments.add(newSuffixFrag);
+						XOMTools.insertAfter(suffix, newSuffix);
+						suffixes.add(newSuffix);
+						if (locants.size()>0){//assign locants if available
+							Element locant =locants.removeFirst();
+							newSuffix.getAttribute("locant").setValue(locant.getAttributeValue("value"));
+							locant.detach();
+						}
+					}
+				}
+				possibleMultiplier.detach();
+				possibleInfix.detach();
+			}
+			else{
+				throw new PostProcessingException("Multiplier expected in front of ambiguous infix");
 			}
 		}
 	}
