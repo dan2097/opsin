@@ -92,8 +92,8 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="oxide" type="full">
-    <word type="full" />
-    <word type="functionalTerm" endsWithRegex="oxide" />
+    <word type="full" endsWithRegex="(?&lt;!ic|ous)" />
+    <word type="functionalTerm" endsWithRegex="oxide" functionalGroupType="functionalClass" />
   </wordRule>
 
   <wordRule name="carbonylDerivative" type="full">
