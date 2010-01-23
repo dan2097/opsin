@@ -11,7 +11,7 @@
                value CDATA #IMPLIED
                endsWithRegex CDATA #IMPLIED
                functionalGroupType CDATA #IMPLIED
-               endsWithElementValueAtr CDATA #IMPLIED
+               endsWithGroupValueAtr CDATA #IMPLIED
 >
 
 
