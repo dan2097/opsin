@@ -475,7 +475,17 @@ class StructureBuilder {
 		if (!locantsForOxide.isEmpty() && locantsForOxide.size()!=oxideFragments.size()){
 			throw new StructureBuildingException("Mismatch between number of locants and number of oxides specified");
 		}
-		Element rightMostGroup =findRightMostGroupInBracket(words.get(0));
+		Element rightMostGroup;
+		if (words.get(0).getLocalName().equals("wordRule")){//e.g. Nicotinic acid N-oxide
+			List<Element> fullWords = XOMTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), "word", "type", "full");
+			if (fullWords.size()==0){
+				throw new StructureBuildingException("OPSIN is entirely unsure where the oxide goes so has decided not to guess");
+			}
+			rightMostGroup = findRightMostGroupInBracket(fullWords.get(fullWords.size()-1));
+		}
+		else{
+			rightMostGroup = findRightMostGroupInBracket(words.get(0));
+		}
 		List<Fragment> orderedPossibleFragments = new ArrayList<Fragment>();//In preference suffixes are substituted onto e.g. acetonitrile oxide
 		Elements suffixEls = ((Element)rightMostGroup.getParent()).getChildElements("suffix");
 		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
@@ -534,8 +544,11 @@ class StructureBuilder {
 			state.fragManager.createBond(atomToAddOxideTo, oxideAtom, 2);
 		}
 		else{
-			atomToAddOxideTo.addChargeAndProtons(1, 1);
-			oxideAtom.addChargeAndProtons(-1, -1);
+			if (atomToAddOxideTo.getCharge()!=0 || oxideAtom.getCharge()!=0){
+				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
+			}
+			atomToAddOxideTo.setCharge(1);
+			oxideAtom.setCharge(-1);
 			if (!ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 1)){
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
 			}
