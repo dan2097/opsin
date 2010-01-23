@@ -52,7 +52,6 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="carboximidoyl">carboximidoyl</suffix>
     <suffix value="hydrazide">hydrazide</suffix>
     <suffix value="hydrazonic">hydrazonic</suffix>
-    <suffix value="hydrazonoyl">hydrazonoyl</suffix>
     <suffix value="hydroxamic">hydroxamic</suffix>
     <suffix value="hydroximic">hydroximic</suffix>
     <suffix value="hydroximoyl">hydroximoyl</suffix>
@@ -109,7 +108,6 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="carboximidoyl">carboximidoyl</suffix>
     <suffix value="hydrazide">hydrazide</suffix>
     <suffix value="hydrazonic">hydrazonic</suffix>
-    <suffix value="hydrazonoyl">hydrazonoyl</suffix>
     <suffix value="hydroxamic">hydroxamic</suffix>
     <suffix value="hydroximic">hydroximic</suffix>
     <suffix value="hydroximoyl">hydroximoyl</suffix>
@@ -179,7 +177,6 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="diazonium">diazonium</suffix>
     <suffix value="hydrazide">hydrazide</suffix>
     <suffix value="hydrazonic">hydrazonic</suffix>
-    <suffix value="hydrazonoyl">hydrazonoyl</suffix>
     <suffix value="hydroxamic">hydroxamic</suffix>
     <suffix value="hydroximic">hydroximic</suffix>
     <suffix value="hydroximoyl">hydroximoyl</suffix>
@@ -264,7 +261,6 @@ The value is the suffixValue that is in the name (or in some cases produced by O
     <suffix value="diazonium">diazonium</suffix>
     <suffix value="hydrazide">carbohydrazide</suffix>
     <suffix value="hydrazonic">carbohydrazonic</suffix>
-    <suffix value="hydrazonoyl">carbohydrazonoyl</suffix>
     <suffix value="hydroxamic">carbohydroxamic</suffix>
     <suffix value="hydroximic">carbohydroximic</suffix>
     <suffix value="hydroximoyl">carbohydroximoyl</suffix>

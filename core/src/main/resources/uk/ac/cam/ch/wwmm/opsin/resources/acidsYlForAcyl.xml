@@ -27,23 +27,4 @@
   <token value="S(=O)N" labels="//N" valType="SMILES" defaultInID="3" usableAsAJoiner="yes">sulfam</token>
   <token value="CN" labels="/N" valType="SMILES" defaultInID="2" usableAsAJoiner="yes">carbam</token>
   <token value="CO" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
-
-  <!--P-67.1.1 IUPAC 2004 mononuclear acids-->
-  <token value="[As](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsen</token>
-  <token value="[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsin</token>
-  <token value="[As](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsor</token>
-  <token value="Br=O" labels="none" valType="SMILES">brom</token>
-  <token value="Cl=O" labels="none" valType="SMILES">chlor</token>
-  <token value="F=O" labels="none" valType="SMILES">fluor</token>
-  <token value="I=O" labels="none" valType="SMILES">iod</token>
-  <token value="Br(=O)=O" labels="none" valType="SMILES">perbrom</token>
-  <token value="Cl(=O)=O" labels="none" valType="SMILES">perchlor</token>
-  <token value="F(=O)=O" labels="none" valType="SMILES">perfluor</token>
-  <token value="I(=O)=O" labels="none" valType="SMILES">period</token>
-  <token value="P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphin</token>
-  <token value="P(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphor</token>
-  <token value="[Sb](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibor</token>
-  <token value="[Sb](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">antimon</token>
-  <token value="S(=O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfur</token>
-
 </tokenList>

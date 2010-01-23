@@ -42,12 +42,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   <wordRule name="amide" type="full">
     <word type="full" endsWithRegex="ic|ous"/>
     <word type="functionalTerm" value="acid" />
-    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithElementValueAtr="[N-]"/>
+    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[N-]"/>
   </wordRule>
 
   <wordRule name="amide" type="full">
     <word type="full" endsWithRegex="ic|ous"/>
-    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithElementValueAtr="[N-]"/>
+    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[N-]"/>
   </wordRule>
 
   <wordRule name="functionalClassEster" type="full">

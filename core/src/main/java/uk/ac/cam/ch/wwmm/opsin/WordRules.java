@@ -57,8 +57,8 @@ class WordRules {
 		/** Only applicable for functionalTerms. The string value of the functionalTerm's type attribute*/
 		private String functionalGroupType = null;
 		
-		/** The value of the value attribute of the last element in the word e.g. maybe a SMILES string*/
-		private String endsWithElementValueAtr = null;
+		/** The value of the value attribute of the last group element in the word e.g. maybe a SMILES string*/
+		private String endsWithGroupValueAtr = null;
 
 		WordType getType() {
 			return type;
@@ -89,11 +89,11 @@ class WordRules {
 		}
 		
 		String getEndsWithElementValueAtr() {
-			return endsWithElementValueAtr;
+			return endsWithGroupValueAtr;
 		}
 
 		void setEndsWithElementValueAtr(String endsWithElementValueAtr) {
-			this.endsWithElementValueAtr = endsWithElementValueAtr;
+			this.endsWithGroupValueAtr = endsWithElementValueAtr;
 		}
 
 		/**
@@ -143,8 +143,8 @@ class WordRules {
 				if (word.getAttribute("endsWithRegex")!=null){
 					wd.setEndsWithPattern(Pattern.compile(word.getAttributeValue("endsWithRegex") +"$", Pattern.CASE_INSENSITIVE));
 				}
-				if (word.getAttribute("endsWithElementValueAtr")!=null){
-					wd.setEndsWithElementValueAtr(word.getAttributeValue("endsWithElementValueAtr"));
+				if (word.getAttribute("endsWithGroupValueAtr")!=null){
+					wd.setEndsWithElementValueAtr(word.getAttributeValue("endsWithGroupValueAtr"));
 				}
 				wordDescriptions.add(wd);
 			}
@@ -229,14 +229,27 @@ class WordRules {
 							continue wordRuleLoop;
 						}
 					}
-					if (wd.endsWithElementValueAtr !=null){
+					if (wd.endsWithGroupValueAtr !=null){
 						Elements children = wordEl.getChildElements();
 						Element lastChild = (Element) children.get(children.size()-1);
 						while (lastChild.getChildElements().size()!=0){
 							children = lastChild.getChildElements();
 							lastChild = (Element) children.get(children.size()-1);
 						}
-						if (lastChild.getAttribute("value")==null || !lastChild.getAttributeValue("value").equals(wd.endsWithElementValueAtr)){
+						Element groupToExamine;
+						if (lastChild.getLocalName().equals("group")){
+							groupToExamine = lastChild;
+						}
+						else{
+							Elements groups = ((Element)lastChild.getParent()).getChildElements("group");
+							if (groups.size()>0){
+								groupToExamine = groups.get(groups.size()-1);
+							}
+							else{
+								continue wordRuleLoop;
+							}
+						}
+						if (groupToExamine.getAttribute("value")==null || !groupToExamine.getAttributeValue("value").equals(wd.endsWithGroupValueAtr)){
 							continue wordRuleLoop;
 						}
 					}

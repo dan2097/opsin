@@ -386,32 +386,34 @@ class StructureBuilder {
 			}
 		}
 		else if (words.get(wordIndice).getAttributeValue("type").equals(WordType.full.toString())){//substituentamide
-			resolveWordOrBracket(state, words.get(wordIndice));//the substituted amide ([N-]) group
-			List<Element> root = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), "root");
-			if (root.size()!=1){
-				throw new StructureBuildingException("Cannot find root element");
-			}
-			Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement("group"));
-			if (acidBr.getFunctionalIDCount()!=1){
-				throw new StructureBuildingException("Formation of amide is unexpectedly ambiguous!");
-			}
-			Atom functionalAtom = acidBr.getFunctionalAtom(0);
-			if (!functionalAtom.getElement().equals("O")){
-				throw new StructureBuildingException("Expected oxygen functional atom found:" + functionalAtom.getElement());
-			}
-			Atom amideNitrogen = null;
-			for (Atom a : amide.getAtomList()) {
-				if (a.getElement().equals("N")){
-					amideNitrogen = a;
-					break;
+			for (; wordIndice < words.size(); wordIndice++) {
+				resolveWordOrBracket(state, words.get(wordIndice));//the substituted amide ([N-]) group
+				List<Element> root = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), "root");
+				if (root.size()!=1){
+					throw new StructureBuildingException("Cannot find root element");
 				}
+				Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement("group"));
+				if (acidBr.getFunctionalIDCount()==0){
+					throw new StructureBuildingException("Cannot find oxygen to replace wtih nitrogen for amide formation!");
+				}
+				Atom functionalAtom = acidBr.getFunctionalAtom(0);
+				if (!functionalAtom.getElement().equals("O")){
+					throw new StructureBuildingException("Expected oxygen functional atom found:" + functionalAtom.getElement());
+				}
+				Atom amideNitrogen = null;
+				for (Atom a : amide.getAtomList()) {
+					if (a.getElement().equals("N")){
+						amideNitrogen = a;
+						break;
+					}
+				}
+				if (amideNitrogen ==null){
+					throw new StructureBuildingException("Cannot find nitrogen atom in amide!");
+				}
+				acidBr.removeFunctionalID(0);
+				amideNitrogen.setCharge(0);
+				state.fragManager.replaceTerminalAtomWithFragment(functionalAtom, amideNitrogen);
 			}
-			if (amideNitrogen ==null){
-				throw new StructureBuildingException("Cannot find nitrogen atom in amide!");
-			}
-			acidBr.removeFunctionalID(0);
-			amideNitrogen.setCharge(0);
-			state.fragManager.replaceTerminalAtomWithFragment(functionalAtom, amideNitrogen);
 		}
 		if (wordIndice +1 < words.size()){
 			throw new StructureBuildingException("More words than expected when applying amide word rule!");

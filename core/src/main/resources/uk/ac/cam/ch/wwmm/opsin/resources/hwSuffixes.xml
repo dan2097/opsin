@@ -34,7 +34,7 @@
 
       <token value="10" valType="unsatring">ecin</token>
       <token value="10" valType="ring">ecan</token>
-      
+
       <!--Extension for fused rings according to FR-2.2.1(c)-->
       <token value="11" valType="unsatring">cycloundecin</token>
       <token value="12" valType="unsatring">cyclododecin</token>
@@ -57,6 +57,16 @@
       <token value="28" valType="unsatring">cyclooctacosin</token>
       <token value="29" valType="unsatring">cyclononacosin</token>
       <token value="30" valType="unsatring">cyclotriacontin</token>
+      <token value="31" valType="unsatring">cyclohentriacontin</token>
+      <token value="32" valType="unsatring">cyclodotriacontin</token>
+      <token value="33" valType="unsatring">cyclotritriacontin</token>
+      <token value="34" valType="unsatring">cyclotetratriacontin</token>
+      <token value="35" valType="unsatring">cyclopentatriacontin</token>
+      <token value="36" valType="unsatring">cyclohexatriacontin</token>
+      <token value="37" valType="unsatring">cycloheptatriacontin</token>
+      <token value="38" valType="unsatring">cyclooctatriacontin</token>
+      <token value="39" valType="unsatring">cyclononatriacontin</token>
+      <token value="40" valType="unsatring">cyclotetracontin</token>
   </tokenList>
 
   <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="K"><!--the ine suffix -->
