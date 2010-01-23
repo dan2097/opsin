@@ -56,11 +56,13 @@ final class Combinations {
 /**Conducts finite-state parsing on chemical names. Preserves the name itself, just adding XML
  * annotation to the various constituents on the name.
  *
- * @author ptc24/d387
+ * @author ptc24/dl387
  *
  */
 class Parser {
 
+	/**Uses ParseRules to intelligently parse chemical names into substituents/full terms/functional terms*/
+	private Tokeniser tokeniser;
 	/**The rules by which words are grouped together (e.g. in functional class nomenclature)*/
 	private WordRules wordRules;
 	/**Performs finite-state allocation of roles ("annotations") to tokens.*/
@@ -81,6 +83,7 @@ class Parser {
 		this.wordRules =wordRules;
 		this.parseRules = parseRules;
 		this.tokenManager =tokenManager;
+		this.tokeniser = new Tokeniser(parseRules);
 	}
 
 	/**Parses a chemical name to an XML representation of the parse.
@@ -90,8 +93,7 @@ class Parser {
 	 * @throws ParsingException If the name is unparsable.
 	 */
 	List<Element> parse(String name) throws ParsingException {
-		Tokeniser t =new Tokeniser(parseRules);
-		Parse parse = t.tokenize(name);
+		Parse parse = tokeniser.tokenize(name);
 		
 		/* For cases where any of the parse's parseWords contain multiple annotations create a
 		 * parse for each possibility. Hence after this process there may be multiple parse objects and

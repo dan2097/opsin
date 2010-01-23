@@ -77,6 +77,7 @@ class PostProcessor {
 	private Pattern matchEZ = Pattern.compile("[EZez]");
 	private Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
 	private Pattern matchComma =Pattern.compile(",");
+	private Pattern matchSemiColon =Pattern.compile(";");
 	private Pattern matchDot =Pattern.compile("\\.");
 	private Pattern matchNonDigit =Pattern.compile("\\D+");
 	private Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
@@ -407,22 +408,30 @@ class PostProcessor {
 	}
 
 	/**
-	 * Looks for infixes and assigns them to the next suffix
-	 * If the infix/suffix block has been bracketed e.g (dithioate) then the infixCount is set appropriately
+	 * Looks for infixes and assigns them to the next suffix using a semicolon delimited infix attribute
+	 * If the infix/suffix block has been bracketed e.g (dithioate) then the infix is multiplied out
 	 * If this is not the case then it is ambiguous as to whether the multiplier is referring to the infix or the infixed suffix
 	 * This ambiguity is resolved in processInfixFunctionalReplacementNomenclature by looking at the structure of the suffix to be modified
-	 * @param elem
+	 * @param subOrRoot
 	 * @throws PostProcessingException
 	 */
-	private void processInfixes(Element elem) throws PostProcessingException {
-		List<Element> infixes = XOMTools.getDescendantElementsWithTagName(elem, "infix");
+	private void processInfixes(Element subOrRoot) throws PostProcessingException {
+		List<Element> infixes = XOMTools.getDescendantElementsWithTagName(subOrRoot, "infix");
 		for (Element infix : infixes) {
-			Element suffix = (Element) XOMTools.getNextSibling(infix);
+			Element suffix = (Element) XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{"infix"});
 			if (suffix ==null || !suffix.getLocalName().equals("suffix")){
 				throw new PostProcessingException("No suffix found next next to infix: "+ infix.getValue());
 			}
-			suffix.addAttribute(new Attribute("infix", infix.getAttributeValue("value")));
-			suffix.addAttribute(new Attribute("infixCount", "1"));
+			List<String> currentInfixInformation;
+			if (suffix.getAttribute("infix")==null){
+				suffix.addAttribute(new Attribute("infix", ""));
+				currentInfixInformation = new ArrayList<String>();
+			}
+			else{
+				currentInfixInformation = StringTools.arrayToList(matchSemiColon.split(suffix.getAttributeValue("infix")));
+			}
+			String infixValue =infix.getAttributeValue("value");
+			currentInfixInformation.add(infixValue);
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(infix);
 			Element possibleBracket;
 			if (possibleMultiplier.getLocalName().equals("multiplier")){
@@ -439,13 +448,17 @@ class PostProcessor {
 					throw new PostProcessingException("Matching closing bracket not found around infix/suffix block");
 				}
 				if (possibleMultiplier!=null){
-					suffix.getAttribute("infixCount").setValue(possibleMultiplier.getAttributeValue("value"));
+					int multiplierVal = Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
+					for (int i = 1; i < multiplierVal; i++) {
+						currentInfixInformation.add(infixValue);
+					}
 					possibleMultiplier.detach();
 					infix.detach();
 				}
 				possibleBracket.detach();
 				bracket.detach();
 			}
+			suffix.getAttribute("infix").setValue(StringTools.stringListToString(currentInfixInformation, ";"));
 		}
 	}
 
