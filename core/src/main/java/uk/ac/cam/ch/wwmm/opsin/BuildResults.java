@@ -103,12 +103,12 @@ class BuildResults {
 		return outIDs.size();
 	}
 
-	void removeOutID(int i) throws StructureBuildingException{
+	OutID removeOutID(int i) throws StructureBuildingException{
 		OutID outID =outIDs.get(i);
 		if (outID.frag!=null){
 			outID.frag.removeOutID(outID);
 		}
-		outIDs.remove(i);
+		return outIDs.remove(i);
 	}
 
 	void removeAllOutIDs() throws StructureBuildingException{
@@ -128,12 +128,12 @@ class BuildResults {
 		return functionalId.frag.getAtomByIDOrThrow(functionalId.id);
 	}
 
-	void removeFunctionalID(int i) {
+	FunctionalID removeFunctionalID(int i) {
 		FunctionalID functionalID =functionalIDs.get(i);
 		if (functionalID.frag!=null){
 			functionalID.frag.removeFunctionalID(functionalID);
 		}
-		functionalIDs.remove(i);
+		return functionalIDs.remove(i);
 	}
 
 	int getFunctionalIDCount(){

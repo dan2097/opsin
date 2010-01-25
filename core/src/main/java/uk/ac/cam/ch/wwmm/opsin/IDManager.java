@@ -9,6 +9,10 @@ class IDManager {
 	/**the last integer generated, or 0 at first*/
 	private int currentID;
 
+	int getCurrentID() {
+		return currentID;
+	}
+
 	/**Initialises currentID at zero - will give 1 when first called */
 	IDManager() {
 		currentID = 0;

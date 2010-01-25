@@ -23,6 +23,7 @@ class StructureBuilder {
 
 	private Pattern matchDigits = Pattern.compile("\\d+");
 	private Pattern matchComma =Pattern.compile(",");
+	private Pattern matchColon =Pattern.compile(":");
 	private Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
 	/**	Builds a molecule as a Fragment based on preStructurebuilder output.
@@ -703,7 +704,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Expected 0 or 1 anhydrideLocants found: " + anhydrideLocants.size());
 		}
 		if (anhydrideLocants.size()==1){
-			anhydrideLocant = anhydrideLocants.get(0).getAttributeValue("value");
+			anhydrideLocant = anhydrideLocants.get(0).getValue();
 			anhydrideLocants.get(0).detach();
 		}
 		resolveWordOrBracket(state, words.get(0));
@@ -746,13 +747,62 @@ class StructureBuilder {
 			}
 		}
 		else{//symmetric anhydride
-			if (anhydrideLocant!=null || numberOfAnhydrideLinkages!=1 ){
-				throw new StructureBuildingException("Unsupported or invalid anhydride");
-			}
-			if (br1.getFunctionalIDCount()>1){//internal anhydride
-				throw new StructureBuildingException("Unsupported anhydride");
+			if (br1.getFunctionalIDCount()>1){//cyclic anhydride
+				if (br1.getFunctionalIDCount()==2){
+					if (numberOfAnhydrideLinkages!=1 || anhydrideLocant !=null ){
+						throw new StructureBuildingException("Unsupported or invalid anhydride");
+					}
+					formAnhydrideLink(state, anhydrideSmiles, br1, br1);
+				}
+				else{//cyclic anhydride where group has more than 2 acids
+					if (anhydrideLocant ==null){
+						throw new StructureBuildingException("Anhydride formation appears to be ambiguous; More than 2 acids, no locants");
+					}
+					String[] acidLocants =matchColon.split(StringTools.removeDashIfPresent(anhydrideLocant));
+					if (acidLocants.length != numberOfAnhydrideLinkages){
+						throw new StructureBuildingException("Mismatch between number of locants and number of anhydride linkages to form");
+					}
+					if (br1.getFunctionalIDCount() < (numberOfAnhydrideLinkages *2)){
+						throw new StructureBuildingException("Mismatch between number of acid atoms and number of anhydride linkages to form");
+					}
+					List<Atom> functionalAtoms = new ArrayList<Atom>();
+					for (int i = 0; i < br1.getFunctionalIDCount(); i++) {
+						functionalAtoms.add(br1.getFunctionalAtom(i));
+					}
+			
+					for (int i = 0; i < numberOfAnhydrideLinkages; i++) {
+						String[] locants = matchComma.split(acidLocants[i]);
+						Atom oxygen1 =null;
+						for (int j = functionalAtoms.size() -1; j >=0; j--) {
+							Atom functionalAtom = functionalAtoms.get(j);
+							Atom numericLocantAtomConnectedToFunctionalAtom = OpsinTools.depthFirstSearchForAtomWithNumericLocant(functionalAtom);
+							if (numericLocantAtomConnectedToFunctionalAtom.hasLocant(locants[0])){
+								oxygen1=functionalAtom;
+								functionalAtoms.remove(j);
+								break;
+							}
+						}
+						Atom oxygen2 =null;
+						for (int j = functionalAtoms.size() -1; j >=0; j--) {
+							Atom functionalAtom = functionalAtoms.get(j);
+							Atom numericLocantAtomConnectedToFunctionalAtom = OpsinTools.depthFirstSearchForAtomWithNumericLocant(functionalAtom);
+							if (numericLocantAtomConnectedToFunctionalAtom.hasLocant(locants[1])){
+								oxygen2=functionalAtom;
+								functionalAtoms.remove(j);
+								break;
+							}
+						}
+						if (oxygen1 ==null || oxygen2==null){
+							throw new StructureBuildingException("Unable to find locanted atom for anhydride formation");
+						}
+						formAnhydrideLink(state, anhydrideSmiles, oxygen1, oxygen2);
+					}
+				}
 			}
 			else{
+				if (numberOfAnhydrideLinkages!=1 || anhydrideLocant !=null ){
+					throw new StructureBuildingException("Unsupported or invalid anhydride");
+				}
 				Element newAcid = state.fragManager.cloneElement(state, words.get(0));
 				XOMTools.insertAfter(words.get(0), newAcid);
 				BuildResults br2 = new BuildResults(state, newAcid);
@@ -771,9 +821,21 @@ class StructureBuilder {
 	 */
 	private void formAnhydrideLink(BuildState state, String anhydrideSmiles, BuildResults acidBr1, BuildResults acidBr2)throws StructureBuildingException {
 		Atom oxygen1 = acidBr1.getFunctionalAtom(0);
-		Atom oxygen2 = acidBr2.getFunctionalAtom(0);
 		acidBr1.removeFunctionalID(0);
+		Atom oxygen2 = acidBr2.getFunctionalAtom(0);
 		acidBr2.removeFunctionalID(0);
+		formAnhydrideLink(state, anhydrideSmiles, oxygen1, oxygen2);
+	}
+	
+	/**
+	 * Given two atoms and the SMILES of the anhydride forms the anhydride bond
+	 * @param state
+	 * @param anhydrideSmiles
+	 * @param oxygen1
+	 * @param oxygen2
+	 * @throws StructureBuildingException
+	 */
+	private void formAnhydrideLink(BuildState state, String anhydrideSmiles, Atom oxygen1, Atom oxygen2)throws StructureBuildingException {
 		if (!oxygen1.getElement().equals("O")||!oxygen2.getElement().equals("O") || oxygen1.getBonds().size()!=1 ||oxygen2.getBonds().size()!=1) {
 			throw new StructureBuildingException("Problem building anhydride");
 		}
@@ -911,7 +973,6 @@ class StructureBuilder {
 					explicitHydrogensToAdd=valency-parentAtom.getIncomingValency();
 					parentAtom.setExplicitHydrogens(explicitHydrogensToAdd);
 				}
-				int currentId = 0;
 				for (int i = 1; i <= explicitHydrogensToAdd; i++) {
 					Atom a = state.fragManager.createAtom("H", fragment);
 					state.fragManager.createBond(parentAtom, a, 1);
@@ -924,7 +985,7 @@ class StructureBuilder {
 						Element atomParityEl = parentAtom.getAtomParityElement();
 						Attribute atomRefs4Atr = atomParityEl.getAttribute("atomRefs4");
 						String atomRefs4 = atomRefs4Atr.getValue();
-						atomRefs4 = atomRefs4.replaceFirst("a" + parentAtom.getID() +"_H", "a" +currentId);//atom parity was set in SMILES but at this stage the id of the hydrogen was not known, now it is so replace the dummy ID
+						atomRefs4 = atomRefs4.replaceFirst("a" + parentAtom.getID() +"_H", "a" + state.idManager.getCurrentID());//atom parity was set in SMILES but at this stage the id of the hydrogen was not known, now it is so replace the dummy ID
 						atomRefs4Atr.setValue(atomRefs4);
 					}
 				}
