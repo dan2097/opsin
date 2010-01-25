@@ -615,11 +615,8 @@ class Fragment {
 					}
 				}
 				if (atomToReduceValencyAt==null){
-					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine  else just pick the first atom with SV encountered
+					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine
 						if(a.hasSpareValency()) {
-							if (atomToReduceValencyAt==null){
-								atomToReduceValencyAt=a;
-							}
 							List<Atom> neighbours =getAtomNeighbours(a);
 							if (neighbours.size()==2){
 								for(Atom aa : neighbours) {
@@ -629,6 +626,19 @@ class Fragment {
 								}
 								atomToReduceValencyAt=a;
 								break;
+							}
+						}
+					}
+					if (atomToReduceValencyAt==null){//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
+						for(Atom a : atomCollection) {
+							if(a.hasSpareValency()) {
+								if (atomToReduceValencyAt==null){
+									atomToReduceValencyAt=a;//else just go with the first atom with SV encountered
+								}
+								if (!a.getElement().equals("C")){
+									atomToReduceValencyAt=a;
+									break;
+								}
 							}
 						}
 					}
