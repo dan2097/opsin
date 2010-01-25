@@ -23,22 +23,23 @@ class WordRules {
 	 *
 	 */
 	enum WordRule{
-		full,
-		simple,
 		acid,
-		monovalentFunctionalGroup,
-		ester,
-		multiEster,
 		amide,
-		functionalClassEster,
-		divalentFunctionalGroup,
-		glycol,
-		oxide,
+		anhydride,
 		carbonylDerivative,
+		divalentFunctionalGroup,
+		ester,
+		full,
+		functionalClassEster,
 		functionGroupAsGroup,
-		polymer
+		glycol,
+		monovalentFunctionalGroup,
+		multiEster,
+		oxide,
+		polymer,
+		simple
 	}
-	
+
 	/**
 	 * Describes a word that a wordRule is looking for
 	 * @author dl387
@@ -47,16 +48,16 @@ class WordRules {
 	class WordDescription {
 		/**Whether the word is a full word, substituent word or functionalTerm word*/
 		private final WordType type;
-		
+
 		/**A case insensitive pattern which attempts to match the end of the String value of the word*/
 		private Pattern endsWithPattern = null;
-		
+
 		/**The case insensitive String value of the word */
 		private String value = null;
-		
+
 		/** Only applicable for functionalTerms. The string value of the functionalTerm's type attribute*/
 		private String functionalGroupType = null;
-		
+
 		/** The value of the value attribute of the last group element in the word e.g. maybe a SMILES string*/
 		private String endsWithGroupValueAtr = null;
 
@@ -87,7 +88,7 @@ class WordRules {
 		void setFunctionalGroupType(String functionalGroupType) {
 			this.functionalGroupType = functionalGroupType;
 		}
-		
+
 		String getEndsWithElementValueAtr() {
 			return endsWithGroupValueAtr;
 		}
@@ -104,7 +105,7 @@ class WordRules {
 			type =wordType;
 		}
 	}
-	
+
 	/**
 	 * A representation of a wordRule element from wordRules.xml
 	 * @author dl387
@@ -114,11 +115,11 @@ class WordRules {
 		private List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
 		private final String ruleName;
 		private final String ruleType;
-		
+
 		String getRuleName() {
 			return ruleName;
 		}
-		
+
 		String getRuleType() {
 			return ruleType;
 		}
@@ -150,7 +151,7 @@ class WordRules {
 			}
 		}
 	}
-	
+
 
 	/**Initialises the WordRules.
 	 * @param resourceGetter
@@ -258,7 +259,7 @@ class WordRules {
 				Element wordRuleEl = new Element("wordRule");
 				wordRuleEl.addAttribute(new Attribute("type", wordRule.getRuleType()));
 				wordRuleEl.addAttribute(new Attribute("wordRule", wordRule.getRuleName()));
-				
+
 				/*
 				 * Some wordRules can not be entirely processed at the structure building stage
 				 */
@@ -281,9 +282,9 @@ class WordRules {
 						wordEls.get(i+1).getAttribute("type").setValue(WordType.full.toString());
 					}
 				}
-				
-				
-				
+
+
+
 				List<String> wordValues = new ArrayList<String>();
 				Element parentEl = (Element) wordEls.get(i).getParent();
 				int indexToInsertAt = parentEl.indexOf(wordEls.get(i));
@@ -306,7 +307,7 @@ class WordRules {
 		}
 		else if (WordType.substituent.toString().equals(firstWord.getAttributeValue("type"))){
 			/*
-			 * substituents may join together or to a full e.g. 2-ethyl toluene -->2-ethyltoluene 
+			 * substituents may join together or to a full e.g. 2-ethyl toluene -->2-ethyltoluene
 			 * 1-chloro 2-bromo ethane --> 1-chloro-2-bromo ethane then subsequently 1-chloro-2-bromo-ethane
 			 */
 			if (indexOfFirstWord +1 < wordEls.size()){
@@ -334,7 +335,7 @@ class WordRules {
 		wordEls.add(indexOfFirstWord, wordRuleEl);
 		parentEl.insertChild(wordRuleEl, indexToInsertAt);
 	}
-	
+
 	/**
 	 * Takes the list of wordEls, the indice of a word element, that element and the word element following it
 	 * Merges the latter word element into the former element
@@ -366,7 +367,7 @@ class WordRules {
 		}
 		firstWord.getAttribute("value").setValue(firstWord.getAttributeValue("value") + wordToPotentiallyCombineWith.getAttributeValue("value"));
 	}
-	
+
 	private void convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
 		word.getAttribute("type").setValue(WordType.full.toString());
 		List<Element> functionalTerms = XOMTools.getDescendantElementsWithTagName(word, "functionalTerm");

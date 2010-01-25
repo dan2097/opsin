@@ -171,9 +171,6 @@ class PreStructureBuilder {
 			List<Element> substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
 			List<Element> groups =  XOMTools.getDescendantElementsWithTagName(word, "group");
 
-			Element root =null;
-			if (roots.size() ==1) root=roots.get(0);
-
 			for (Element subOrBracketOrRoot : substituentsAndRootAndBrackets) {
 				processLocantFeatures(subOrBracketOrRoot);
 			}
@@ -183,8 +180,17 @@ class PreStructureBuilder {
 				state.xmlFragmentMap.put(group, thisFrag);
 			}
 
-			for (Element e : substituentsAndRootAndBrackets) {
-				checkAndConvertToSingleLocants(state, e, root);
+			Element finalSubOrRootInWord =(Element) word.getChild(word.getChildElements().size()-1);
+			while (!finalSubOrRootInWord.getLocalName().equals("root") && !finalSubOrRootInWord.getLocalName().equals("substituent")){
+				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{"root", "substituent", "bracket"});
+				if (children.size()==0){
+					throw new PostProcessingException("Unable to find finalSubOrRootInWord");
+				}
+				finalSubOrRootInWord = children.get(children.size()-1);
+			}
+		
+			for (Element subOrRootOrBracket : substituentsAndRootAndBrackets) {
+				checkAndConvertToSingleLocants(state, subOrRootOrBracket, finalSubOrRootInWord);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
@@ -664,12 +670,12 @@ class PreStructureBuilder {
 	 * If this fails an exception is thrown.
 	 * @param state
 	 * @param subOrBracketOrRoot The substituent/root/bracket to looks for locants in.
-	 * @param root : used to check if a locant is referring to the root as in multiplicative nomenclature (root can be null for substituents)
+	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclature
 	 * @throws PostProcessingException
 	 * @throws StructureBuildingException
 	 * @throws PostProcessingException If there is a disagreement.
 	 */
-	private void checkAndConvertToSingleLocants(BuildState state, Element subOrBracketOrRoot, Element root) throws StructureBuildingException, PostProcessingException {
+	private void checkAndConvertToSingleLocants(BuildState state, Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, PostProcessingException {
 		Elements locants = subOrBracketOrRoot.getChildElements("locant");
 		Element group =subOrBracketOrRoot.getFirstChildElement("group");//will be null if element is a bracket
 		for(int i=0;i<locants.size();i++) {
@@ -691,7 +697,7 @@ class PreStructureBuilder {
 						if (locantValues[locantValues.length-1].endsWith("'") && group!=null && subOrBracketOrRoot.indexOf(group) > subOrBracketOrRoot.indexOf(locant)){//quite possible that this is referring to a multiplied root
 
 							if (group.getAttribute("outIDs")!=null && matchComma.split(group.getAttributeValue("outIDs")).length>1){
-								locantModified=determineLocantMeaning(state, locant, locantValues, root);
+								locantModified=determineLocantMeaning(state, locant, locantValues, finalSubOrRootInWord);
 							}
 							else{
 								Element afterGroup = (Element)XOMTools.getNextSibling(group);
@@ -708,7 +714,7 @@ class PreStructureBuilder {
 									afterGroup = (Element)XOMTools.getNextSibling(afterGroup);
 								}
 								if (inlineSuffixCount >=2){
-									locantModified=determineLocantMeaning(state, locant, locantValues, root);
+									locantModified=determineLocantMeaning(state, locant, locantValues, finalSubOrRootInWord);
 								}
 							}
 						}
@@ -718,12 +724,12 @@ class PreStructureBuilder {
 							XOMTools.insertBefore(afterLocants, locant);
 						}
 					} else {
-						if(!determineLocantMeaning(state, locant, locantValues, root)) throw new PostProcessingException("Mismatch between locant and multiplier counts (" +
+						if(!determineLocantMeaning(state, locant, locantValues, finalSubOrRootInWord)) throw new PostProcessingException("Mismatch between locant and multiplier counts (" +
 								Integer.toString(locantValues.length) + " and " + afterLocants.getAttributeValue("value") + "):" + locant.toXML());
 					}
 				} else {
 					/* Multiple locants without a multiplier */
-					if(!determineLocantMeaning(state, locant, locantValues, root)) throw new PostProcessingException("Multiple locants without a multiplier: " + locant.toXML());
+					if(!determineLocantMeaning(state, locant, locantValues, finalSubOrRootInWord)) throw new PostProcessingException("Multiple locants without a multiplier: " + locant.toXML());
 				}
 			}
 
@@ -759,11 +765,11 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param locant The element corresponding to the locant group before the HW system.
 	 * @param locantValues The locant values;
-	 * @param root : used to check if a locant is referring to the root as in multiplicative nomenclature (root can be null for substituents)
+	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclatures)
 	 * @return true if there's a HW system, and agreement; or if the locants conform to one of the alternative possibilities, otherwise false.
 	 * @throws StructureBuildingException
 	 */
-	private boolean determineLocantMeaning(BuildState state, Element locant, String[] locantValues, Element root) throws StructureBuildingException {
+	private boolean determineLocantMeaning(BuildState state, Element locant, String[] locantValues, Element finalSubOrRootInWord) throws StructureBuildingException {
 		if (locant.getAttribute("type")!=null && locant.getAttributeValue("type").equals("multiplicativeNomenclature")) return true;//already known function (the locant must have been been previously moved by this method to an element that checkAndConvertToSingleLocants had not yet encountered)
 		int count =locantValues.length;
 		Element currentElem = (Element)XOMTools.getNextSibling(locant);
@@ -814,30 +820,28 @@ class PreStructureBuilder {
 				}
 			}
 		}
-		if (root!=null){
-			Element multiplier =(Element) root.getChild(0);
-			if (!multiplier.getLocalName().equals("multiplier") && ((Element)root.getParent()).getLocalName().equals("bracket")){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
-				multiplier =(Element) root.getParent().getChild(0);
-			}
-			Node commonParent =locant.getParent().getParent();//this should be a common parent of the multiplier in front of the root. If it is not, then this locant is in a different scope
-			Node parentOfMultiplier =multiplier.getParent();
-			while (parentOfMultiplier!=null){
-				if (commonParent.equals(parentOfMultiplier)){
-					if (locantValues[count-1].endsWith("'")  &&
-							multiplier.getLocalName().equals("multiplier") && multiplier.getAttribute("locantsAssigned")==null &&
-							Integer.parseInt(multiplier.getAttributeValue("value")) == count ){//multiplicative nomenclature
-						multiplier.addAttribute(new Attribute ("locantsAssigned",""));
-						locant.detach();
-						for(int i=locantValues.length-1; i>=0; i--) {
-							Element singleLocant = new Element("multiplicativeLocant");
-							singleLocant.addAttribute(new Attribute("value", locantValues[i]));
-							XOMTools.insertAfter(multiplier, singleLocant);
-						}
-						return true;
+		Element multiplier =(Element) finalSubOrRootInWord.getChild(0);
+		if (!multiplier.getLocalName().equals("multiplier") && ((Element)finalSubOrRootInWord.getParent()).getLocalName().equals("bracket")){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
+			multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
+		}
+		Node commonParent =locant.getParent().getParent();//this should be a common parent of the multiplier in front of the root. If it is not, then this locant is in a different scope
+		Node parentOfMultiplier =multiplier.getParent();
+		while (parentOfMultiplier!=null){
+			if (commonParent.equals(parentOfMultiplier)){
+				if (locantValues[count-1].endsWith("'")  &&
+						multiplier.getLocalName().equals("multiplier") && multiplier.getAttribute("locantsAssigned")==null &&
+						Integer.parseInt(multiplier.getAttributeValue("value")) == count ){//multiplicative nomenclature
+					multiplier.addAttribute(new Attribute ("locantsAssigned",""));
+					locant.detach();
+					for(int i=locantValues.length-1; i>=0; i--) {
+						Element singleLocant = new Element("multiplicativeLocant");
+						singleLocant.addAttribute(new Attribute("value", locantValues[i]));
+						XOMTools.insertAfter(multiplier, singleLocant);
 					}
+					return true;
 				}
-				parentOfMultiplier=parentOfMultiplier.getParent();
 			}
+			parentOfMultiplier=parentOfMultiplier.getParent();
 		}
 		return false;
 	}
@@ -1642,20 +1646,19 @@ class PreStructureBuilder {
 										}
 									}
 								}
-								boolean endOfSuffixesFound=false;
-								int j=0;
-								while (!endOfSuffixesFound){//makes oxygen atoms alternate between suffixes c.f. dithioterephthalic acid
-									endOfSuffixesFound =true;
-									for (Fragment fragment : applicableSuffixes) {
-										if (j < fragment.getAtomList().size()){
-											Atom a =fragment.getAtomList().get(j);
-											if (a.getElement().equals("O")){
-												replaceableAtoms.add(a);
-											}
-											endOfSuffixesFound=false;
+								for (Fragment suffixFrag : applicableSuffixes) {
+									for (Atom atom : suffixFrag.getAtomList()) {
+										if (atom.getElement().equals("O") && atom.getBonds().size()==1 && atom.getIncomingValency()==2){
+											replaceableAtoms.add(atom);
 										}
 									}
-									j++;
+								}
+								for (Fragment suffixFrag : applicableSuffixes) {
+									for (Atom atom : suffixFrag.getAtomList()) {
+										if (atom.getElement().equals("O") && atom.getBonds().size()==1 && atom.getIncomingValency()==1){
+											replaceableAtoms.add(atom);
+										}
+									}
 								}
 							}
 						}
