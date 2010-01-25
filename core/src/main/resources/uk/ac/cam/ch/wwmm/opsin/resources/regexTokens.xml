@@ -55,6 +55,7 @@
   <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" />
   <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" />
   <regexToken regex="(rel-)?%openBracket%(%locant%|%elementSymbol%'*)?([EZez]|[RSrs]\*?|RS)(,(%locant%|%elementSymbol%'*)?([EZez]|[RSrs]\*?|RS))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" />
+  <regexToken regex="%locant%(,%locant%)(:%locant%(,%locant%))*" symbol="¢" tagname="anhydrideLocant"/>
 
   <regexToken regex="" symbol="é" tagname="endOfSubstituent" ignoreWhenWritingXML="yes"/>
   <regexToken regex="" symbol="â" tagname="endOfMainGroup" ignoreWhenWritingXML="yes"/>

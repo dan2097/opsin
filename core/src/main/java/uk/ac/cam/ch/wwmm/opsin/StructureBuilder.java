@@ -93,6 +93,9 @@ class StructureBuilder {
 			else if(wordRule == WordRule.carbonylDerivative) {
 				buildCarbonylDerivative(state, words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
 			}
+			else if(wordRule == WordRule.anhydride) {//e.g. acetic anhydride
+				buildAnhydride(state, words);
+			}
 			else if(wordRule == WordRule.polymer) {
 				buildPolymer(state, words);
 			}
@@ -666,6 +669,124 @@ class StructureBuilder {
 				resolveWordOrBracket(state, words.get(1 +i));
 			}
 			state.fragManager.replaceTerminalAtomWithFragment(atomToBeReplaced, atomToReplaceCarbonylOxygen);
+		}
+	}
+
+	private void buildAnhydride(BuildState state, List<Element> words) throws StructureBuildingException {
+		for (int i = words.size() -2; i >=0;  i--) {//ignore acid words. In english they are unnecesary e.g. acetic acid anhydride vs acetic anhydride
+			Element word =words.get(i);
+			if (word.getAttributeValue("type").equals(WordType.functionalTerm.toString()) && word.getValue().equals("acid")){
+				words.remove(i);
+			}
+		}
+		if (words.size()!=2 && words.size()!=3){
+			throw new StructureBuildingException("Unexpected number of words in anhydride. Check wordRules.xml, this is probably a bug");
+		}
+		Element anhydrideWord = words.get(words.size()-1);
+		List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(anhydrideWord, "group");
+		if (functionalClass.size()!=1){
+			throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
+		}
+		String anhydrideSmiles = functionalClass.get(0).getAttributeValue("value");
+		int numberOfAnhydrideLinkages =1;
+		List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(anhydrideWord,"multiplier");
+		if (multipliers.size() >1){
+			throw new StructureBuildingException("Expected 0 or 1 multiplier found: " + multipliers.size());
+		}
+		if (multipliers.size()==1){
+			numberOfAnhydrideLinkages = Integer.parseInt(multipliers.get(0).getAttributeValue("value"));
+			multipliers.get(0).detach();
+		}
+		String anhydrideLocant = null;
+		List<Element> anhydrideLocants =XOMTools.getDescendantElementsWithTagName(anhydrideWord,"anhydrideLocant");
+		if (anhydrideLocants.size() >1){
+			throw new StructureBuildingException("Expected 0 or 1 anhydrideLocants found: " + anhydrideLocants.size());
+		}
+		if (anhydrideLocants.size()==1){
+			anhydrideLocant = anhydrideLocants.get(0).getAttributeValue("value");
+			anhydrideLocants.get(0).detach();
+		}
+		resolveWordOrBracket(state, words.get(0));
+		BuildResults br1 = new BuildResults(state, words.get(0));
+		if (br1.getFunctionalIDCount() ==0){
+			throw new StructureBuildingException("Cannot find functionalID to form anhydride");
+		}
+		if (words.size()==3){//asymmetric anhydride
+			if (anhydrideLocant!=null){
+				throw new StructureBuildingException("Unsupported or invalid anhydride");
+			}
+			resolveWordOrBracket(state, words.get(1));
+			BuildResults br2 = new BuildResults(state, words.get(1));
+			if (br2.getFunctionalIDCount() ==0){
+				throw new StructureBuildingException("Cannot find functionalID to form anhydride");
+			}
+			if (numberOfAnhydrideLinkages>1){
+				for (int i = numberOfAnhydrideLinkages-1; i >=0 ; i--) {
+					if (br2.getFunctionalIDCount()==0){
+						throw new StructureBuildingException("Cannot find functionalID to form anhydride");
+					}
+					BuildResults newAcidBr;
+					if (i!=0){
+						Element newAcid = state.fragManager.cloneElement(state, words.get(0));
+						XOMTools.insertAfter(words.get(0), newAcid);
+						newAcidBr = new BuildResults(state, newAcid);
+					}
+					else{
+						newAcidBr =br1;
+					}
+					formAnhydrideLink(state, anhydrideSmiles, newAcidBr, br2);
+				}
+				
+			}
+			else{
+				if (br1.getFunctionalIDCount()!=1 && br2.getFunctionalIDCount()!=1 ) {
+					throw new StructureBuildingException("Invalid anhydride description");
+				}
+				formAnhydrideLink(state, anhydrideSmiles, br1, br2);
+			}
+		}
+		else{//symmetric anhydride
+			if (anhydrideLocant!=null || numberOfAnhydrideLinkages!=1 ){
+				throw new StructureBuildingException("Unsupported or invalid anhydride");
+			}
+			if (br1.getFunctionalIDCount()>1){//internal anhydride
+				throw new StructureBuildingException("Unsupported anhydride");
+			}
+			else{
+				Element newAcid = state.fragManager.cloneElement(state, words.get(0));
+				XOMTools.insertAfter(words.get(0), newAcid);
+				BuildResults br2 = new BuildResults(state, newAcid);
+				formAnhydrideLink(state, anhydrideSmiles, br1, br2);
+			}
+		}
+	}
+
+	/**
+	 * Given buildResults for both the acids and the SMILES of the anhydride forms the anhydride bond using the first functionalID on each BuildResults
+	 * @param state
+	 * @param anhydrideSmiles
+	 * @param acidBr1
+	 * @param acidBr2
+	 * @throws StructureBuildingException
+	 */
+	private void formAnhydrideLink(BuildState state, String anhydrideSmiles, BuildResults acidBr1, BuildResults acidBr2)throws StructureBuildingException {
+		Atom oxygen1 = acidBr1.getFunctionalAtom(0);
+		Atom oxygen2 = acidBr2.getFunctionalAtom(0);
+		acidBr1.removeFunctionalID(0);
+		acidBr2.removeFunctionalID(0);
+		if (!oxygen1.getElement().equals("O")||!oxygen2.getElement().equals("O") || oxygen1.getBonds().size()!=1 ||oxygen2.getBonds().size()!=1) {
+			throw new StructureBuildingException("Problem building anhydride");
+		}
+		Atom atomOnSecondAcidToConnectTo = oxygen2.getAtomNeighbours().get(0);
+		state.fragManager.removeAtomAndAssociatedBonds(oxygen2);
+		Fragment anhydride = state.fragManager.buildSMILES(anhydrideSmiles, "functionalClass", "none");
+		state.fragManager.replaceTerminalAtomWithFragment(oxygen1, anhydride.getFirstAtom());
+		List<Atom> atomsInAnhydrideLinkage = anhydride.getAtomList();
+		if (atomsInAnhydrideLinkage.size()==0){//e.g. anhydride
+			state.fragManager.createBond(oxygen1, atomOnSecondAcidToConnectTo, 1);
+		}
+		else{//e.g. peroxyanhydride
+			state.fragManager.createBond(atomsInAnhydrideLinkage.get(atomsInAnhydrideLinkage.size()-1), atomOnSecondAcidToConnectTo, 1);
 		}
 	}
 

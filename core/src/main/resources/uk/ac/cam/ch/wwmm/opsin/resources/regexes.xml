@@ -90,7 +90,9 @@ does not define a CFG.
   <regex name="%functionalModifier%" value="ù"/>
   <regex name="%infixableInlineSuffix%" value="ÿ"/>
   <regex name="%monoNuclearNonCarbonAcid%" value="Ö"/>
-  <!--up to ascii 152 used -->
+  <regex name="%anhydride%" value="Ü"/>
+  <regex name="%anhydrideLocant%" value="¢"/>
+  <!--up to ascii 155 used -->
 
 <!-- composite regexes-->
 
@@ -178,7 +180,8 @@ does not define a CFG.
   <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
 
 <!-- functional Groups-->
-  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%basicFunctionalClass%)"/>
+  <regex name="%anhydride%" value="(%anhydrideLocant%?%multiplier%?(%anhydride%|%openBracket%%anhydride%%closeBracket%))"/>
+  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="(%hyphen%?(%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
 

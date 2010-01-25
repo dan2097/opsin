@@ -662,6 +662,9 @@ class StructureBuildingMethods {
 	 */
 	private static boolean hasRootLikeOrMultiRadicalGroup(BuildState state, Element subBracketOrRoot) {
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(subBracketOrRoot, "group");
+		if (subBracketOrRoot.getAttribute("inLocants")!=null){
+			return true;// a terminus with specified inLocants
+		}
 		for (Element group : groups) {
 			Fragment frag =state.xmlFragmentMap.get(group);
 			int outIdCount =frag.getOutIDs().size();

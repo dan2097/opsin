@@ -40,13 +40,13 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="amide" type="full">
-    <word type="full" endsWithRegex="ic|ous"/>
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
     <word type="functionalTerm" value="acid" />
     <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[N-]"/>
   </wordRule>
 
   <wordRule name="amide" type="full">
-    <word type="full" endsWithRegex="ic|ous"/>
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
     <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[N-]"/>
   </wordRule>
 
@@ -107,8 +107,47 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" endsWithRegex="(oxime|hydrazone|semicarbazone|imide)[\]\)\}]*" />
   </wordRule>
 
+  <wordRule name="anhydride" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="anhydride" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="anhydride" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="anhydride" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="anhydride" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" value="acid" />
+    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="anhydride" type="full">
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
+    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+  </wordRule>
+
   <wordRule name="acid" type="full">
-    <word type="full" endsWithRegex="ic|ous"/>
+    <word type="full" endsWithRegex="(ic|ous)[\]\)\}]*"/>
     <word type="functionalTerm" value="acid" />
   </wordRule>
 
