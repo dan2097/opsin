@@ -62,18 +62,14 @@ public class NameToStructure {
 	/**Constructs the CML molecule from the postProcessor results.*/
 	private StructureBuilder structureBuilder;
 
-	private static NameToStructure myInstance;
+	private static NameToStructure NTS_INSTANCE;
 
-	public static void reinitialise() throws Exception {
-		myInstance = null;
-		getInstance();
+	public static synchronized NameToStructure getInstance() throws NameToStructureException {
+		if (NTS_INSTANCE ==null){
+			NTS_INSTANCE = new NameToStructure();
+		}
+		return NTS_INSTANCE;
 	}
-
-	public static NameToStructure getInstance() throws Exception {
-		if(myInstance == null) myInstance = new NameToStructure();
-		return myInstance;
-	}
-
 
 	/**Initialises the name-to-structure converter.
 	 *
@@ -133,7 +129,7 @@ public class NameToStructure {
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return OpsinResult
 	 */
-	public synchronized OpsinResult parseChemicalName(String name, boolean verbose) {
+	public OpsinResult parseChemicalName(String name, boolean verbose) {
 		if (name==null){
 			throw new IllegalArgumentException("String given for name was null");
 		}
