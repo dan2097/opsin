@@ -18,17 +18,16 @@ import nu.xom.Builder;
 import nu.xom.Document;
 
 /**Gets resource files from packages. Useful for including data in JAR files.
- * Cut down version of resourceGetter found in OSCAR
+ * This is derived from the resourceGetter in OSCAR but with any extraneous functionality cut out.
+ * It does NOT use OSCAR3props
  *
- * @author ptc24
+ * @author ptc24/d387
  *
  */
 final class ResourceGetter {
 
 	private String resourcePath;
 	private String workspace;
-	private String resourcePrefix = "none";
-	private boolean skipFiles = false;
 
 	/**
 	 * Sets up a resourceGetter to get resources from a particular path.
@@ -36,42 +35,20 @@ final class ResourceGetter {
 	 *  /uk/ac/cam/ch/wwmm/opsin/resources/
 	 *
 	 * @param resourcePath The /-separated resource path.
+	 * @throws Exception 
 	 */
 	public ResourceGetter(String resourcePath) {
 		if(resourcePath.startsWith("/")) resourcePath = resourcePath.substring(1);
 		this.resourcePath = resourcePath;
-		String currentWorkspace;
 		try {
-			currentWorkspace =new File("").getCanonicalPath();
+			workspace =new File("").getCanonicalPath();
 		} catch (IOException e) {
-			throw new RuntimeException("Unable to determine working directory");
+			System.err.println("Unable to determine working directory");
+			workspace = null;
 		}
-		this.workspace =currentWorkspace;
-	}
-
-
-	/**
-	 * Sets up a resourceGetter to get resources from a particular path.
-	 *  /-separated - e.g. uk.ac.ch.cam.wwmm.opsin.resources should be
-	 *  /uk/ac/cam/ch/wwmm/opsin/resources/
-	 * @param resourcePath The /-separated resource path.
-	 * @param skipFiles Whether or not to skip reading files from the oscar3 workspace
-	 * @param workspace
-	 * @param resourcePrefix
-	 */
-	public ResourceGetter(String resourcePath, boolean skipFiles, String workspace, String resourcePrefix) {
-		if(resourcePath.startsWith("/")) resourcePath = resourcePath.substring(1);
-		this.resourcePath = resourcePath;
-		this.skipFiles = skipFiles;
-		this.workspace = workspace;
-		this.resourcePrefix = resourcePrefix;
-
-		//workspace = (String) c.getField("workspace").get(oscar3Props);
-		//resourcePrefix = (String) c.getField("resourcePrefix").get(oscar3Props);
 	}
 
 	private File getResDir() {
-		if(skipFiles) return null;
 		File resourcesTop = new File(workspace, "resources");
 		return new File(resourcesTop, resourcePath);
 	}
@@ -84,7 +61,6 @@ final class ResourceGetter {
 	}
 
 	private File getFileForWriting(String name) {
-		if(skipFiles) return null;
 		File resourcesTop = new File(workspace, "resources");
 		File resDir = new File(resourcesTop, resourcePath);
 		if(!resDir.exists()) resDir.mkdirs();
@@ -100,7 +76,6 @@ final class ResourceGetter {
 	 * @throws Exception
 	 */
 	public OutputStream getOutputStream(String name) throws Exception {
-		if(skipFiles) return null;
 		File f = getFileForWriting(name);
 		return new FileOutputStream(f);
 	}
@@ -114,42 +89,34 @@ final class ResourceGetter {
 	 */
 	public Document getXMLDocument(String name) throws Exception {
 		try {
-			File f = getFile(name);
-			if(f != null) {
-				return new Builder().build(f);
-			} else {
-				ClassLoader l = getClass().getClassLoader();
-				if(!skipFiles && !"none".equals(resourcePrefix)) {
-					URL url = l.getResource(resourcePrefix + resourcePath + name);
-					try {
-						Document d = new Builder().build(url.toString());
-						if(d != null) return d;
-					} catch (Exception e) {
-						// Squelching the exceptions that come from failing to find a file here
-					}
+			if (workspace != null){
+				File f = getFile(name);
+				if(f != null) {
+					return new Builder().build(f);
 				}
-				XMLReader xmlReader;
-				try{
-					xmlReader = XMLReaderFactory.createXMLReader();
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-					throw new RuntimeException("No XML Reader could be initialised!");
-				}
-				try{
-					xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-					throw new RuntimeException("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?");
-				}
-				Builder xomBuilder = new Builder(xmlReader);
-				URL url = l.getResource(resourcePath + name);
-				if (url == null){
-					throw new Exception();
-				}
-				return xomBuilder.build(url.openStream());
 			}
+			ClassLoader l = getClass().getClassLoader();
+			XMLReader xmlReader;
+			try{
+				xmlReader = XMLReaderFactory.createXMLReader();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("No XML Reader could be initialised!");
+			}
+			try{
+				xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?");
+			}
+			Builder xomBuilder = new Builder(xmlReader);
+			URL url = l.getResource(resourcePath + name);
+			if (url == null){
+				throw new Exception("URL for resource: " + resourcePath + name + " is invalid");
+			}
+			return xomBuilder.build(url.openStream());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Could not get resource file: " + name);
@@ -165,28 +132,18 @@ final class ResourceGetter {
 	public InputStream getStream(String name) throws Exception {
 		if(name == null) name="";
 		try {
-			File f = getFile(name);
-			if(f != null) {
-				return new FileInputStream(f);
-			} else {
-				ClassLoader l = getClass().getClassLoader();
-				if(!skipFiles && !"none".equals(resourcePrefix)) {
-					URL url = l.getResource(resourcePrefix + resourcePath + name);
-					try {
-						if(url != null) {
-							InputStream i = url.openStream();
-							if(i != null) return i;
-						}
-					} catch (Exception e) {
-						// Squelching the exceptions that come from failing to find a file here
-					}
+			if (workspace!=null){
+				File f = getFile(name);
+				if(f != null) {
+					return new FileInputStream(f);
 				}
-				URL url = l.getResource(resourcePath + name);
-				if (url == null){
-					throw new Exception();
-				}
-				return url.openStream();
 			}
+			ClassLoader l = getClass().getClassLoader();
+			URL url = l.getResource(resourcePath + name);
+			if (url == null){
+				throw new Exception("URL for resource: " + resourcePath + name + " is invalid");
+			}
+			return url.openStream();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Could not get resource file: " + name);

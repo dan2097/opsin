@@ -32,7 +32,6 @@
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
   <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">benzidin</token>
   <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">4,4'-benzidin</token>
-  <token value="c1(ccccc1)C(=O)C(=O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
   <token value="benzene" valType="dbkey">benzen</token>
   <token value="c1(ccccc1)C(=O)c2ccccc2" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'" valType="SMILES">benzophenon</token>
   <token value="benzene" valType="dbkey" addGroup="=O locant1;=O locant4">benzoquinon</token>
@@ -205,8 +204,8 @@
   <token value="pyridazine" valType="dbkey">pyridazin</token>
   <token value="pyridine" valType="dbkey">pyridin</token>
   <token value="pyrimidine" valType="dbkey">pyrimidin</token>
-  <token value="n1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">1-Pyrinden</token>
-  <token value="c1nccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">2-Pyrinden</token>
+  <token value="n1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">1-pyrinden</token>
+  <token value="c1nccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">2-pyrinden</token>
   <token value="c1(O)c(O)cccc1" labels="1//2//3/4/5/6" valType="SMILES" defaultInLocant="3">pyrocatechol</token>
   <token value="pyrrole" valType="dbkey">pyrrol</token>
   <token value="c1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrrolizin</token>
@@ -215,7 +214,6 @@
   <token value="N1CCCC1" valType="SMILES" addBond="2 locant2">pyrrolin</token>
   <token value="[O+]1=CC=CC=C1" valType="SMILES">pyrylium</token>
   <token value="quinazoline" valType="dbkey">quinazolin</token>
-  <token value="c1(O)ccc(O)cc1" labels="1//2/3/4//5/6" valType="SMILES">quinol</token>
   <token value="quinoline" valType="dbkey">quinolin</token>
   <token value="c1cccn2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinolizin</token>
   <token value="quinoline" valType="dbkey" addGroup="=O locant2">quinolon</token>

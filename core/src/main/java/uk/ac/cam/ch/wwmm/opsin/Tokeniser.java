@@ -34,7 +34,13 @@ class Tokeniser {
 		
 		for (int i = 0; i < words.size(); i++) {
 			String word = words.get(i);
-			TwoReturnValues<List<ParseTokens>, String> output= parseRules.getParses(word);
+			/*
+			 * Returns
+			 * List of parses where at least some of the name was assigned a role
+			 * Section of name that was uninterpretable (or "" if none was)
+			 * Section of name that was unparsable (or "" if none was). This is always shorter or equal to the above string
+			 */
+			ThreeReturnValues<List<ParseTokens>, String, String> output= parseRules.getParses(word);
 			List<ParseTokens> parseTokens =output.getFirst();
 			String unparseableName = output.getSecond();
 			if (parseTokens.size()>0 && unparseableName.equals("")){//word was fully interpretable

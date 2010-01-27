@@ -119,6 +119,10 @@
   <token value="[N+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
   <token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>
 
+<!--cyclic structures that are misclassified and placed here as they may not have suffixes without having an e to avoid ambiguity-->
+  <token value="c1(O)ccc(O)cc1" labels="1//2/3/4//5/6" valType="SMILES">quinol</token>
+  <token value="c1(ccccc1)C(=O)C(=O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
+
 <!-- Special cases-->
   <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">formamide</token> <!--special case which should be removed -->
   <token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">methanamide</token><!--special case which should be removed -->

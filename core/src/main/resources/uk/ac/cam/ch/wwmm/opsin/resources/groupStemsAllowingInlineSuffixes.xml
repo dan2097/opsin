@@ -20,7 +20,6 @@
 
 <!-- trivial acid derived ketones -->
   <token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" valType="SMILES" usableAsAJoiner="yes">aceton</token>
-  <token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES" usableAsAJoiner="yes">propion</token>
   <token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES" usableAsAJoiner="yes">propionon</token>
   <token value="CCCC(=O)CCC" labels="1/2/3/4//5/6/7" defaultInLocant="7" valType="SMILES" usableAsAJoiner="yes">butyron</token>
   <token value="CCCCC(=O)CCCC" labels="1/2/3/4/5//6/7/8/9" defaultInLocant="9" valType="SMILES" usableAsAJoiner="yes">valeron</token>
