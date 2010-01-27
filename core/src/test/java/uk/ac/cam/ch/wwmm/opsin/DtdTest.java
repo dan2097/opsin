@@ -3,17 +3,21 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import nu.xom.Document;
+import nu.xom.Element;
 import nu.xom.Elements;
 
 import org.junit.Test;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import static junit.framework.Assert.*;
 
 public class DtdTest {
 	private final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
@@ -51,6 +55,33 @@ public class DtdTest {
 	@Test
 	public void testWordRules() throws Exception {
 		validate(getUriForFile("wordRules.xml"));
+	}
+	
+	@Test
+	public void testTokenFilesValueValidity() throws Exception {
+		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
+		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
+		for (int i = 0; i < tokenFiles.size(); i++) {
+			Element rootElement = resourceGetter.getXMLDocument(tokenFiles.get(i).getValue()).getRootElement();
+			List<Element> tokenLists =new ArrayList<Element>();
+			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
+				Elements children =rootElement.getChildElements();
+				for (int j = 0; j <children.size(); j++) {
+					tokenLists.add(children.get(j));
+				}
+			}
+			else{
+				tokenLists.add(rootElement);
+			}
+			for (Element tokenList : tokenLists) {
+				Elements tokenElements = tokenList.getChildElements("token");
+				for(int j=0;j<tokenElements.size();j++) {
+					String tokenString = tokenElements.get(j).getValue();
+					assertTrue("The following token is less than 2 characters long!: " +tokenString, tokenString.length()>=2);
+					assertEquals("The following token contains upper case characters!: " +tokenString,tokenString.toLowerCase(), tokenString);
+				}
+			}
+		}
 	}
 	
 	public static void validate(URI uri) throws Exception {

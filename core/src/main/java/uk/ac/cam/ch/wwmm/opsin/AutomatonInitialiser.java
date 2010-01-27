@@ -14,19 +14,18 @@ import dk.brics.automaton.RunAutomaton;
  *
  */
 class AutomatonInitialiser {
-
+	private static final ResourceGetter resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/serialisedAutomata/");
 	/**
-	 * In preference serialised automata and their hashes will be looked for in a resource folder in your workspace
-	 * If it cannot be found there then these files will be looked for in the general resource folder
+	 * In preference serialised automata and their hashes will be looked for in the in your resource folder in your workspace
+	 * If it cannot be found there then these files will be looked for in the standard resource folder
 	 * (this is actually the standard behaviour of the resourceGetter but I'm reiterating it here as if the stored hash doesn't match
 	 * the current hash then the creation of an updated serialised automaton and hash will occur in the workspace resource folder as the standard
 	 * resource folder will not typically be writable)
 	 * @param automatonName : A name for the automaton so that it can it can be saved/loaded from disk
 	 * @param regex : the regex from which to build the RunAutomaton
-	 * @param resourceGetter
 	 * @return A RunAutomaton, may have been built from scratch or loaded from a file
 	 */
-	static RunAutomaton getAutomaton(String automatonName, String regex, ResourceGetter resourceGetter) {
+	static RunAutomaton getAutomaton(String automatonName, String regex) {
 		String currentRegexHash =Integer.toString(regex.hashCode());
 		try {
 			/*

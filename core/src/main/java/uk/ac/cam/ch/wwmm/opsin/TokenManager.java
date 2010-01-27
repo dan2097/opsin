@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dk.brics.automaton.RunAutomaton;
+
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -27,6 +29,8 @@ class TokenManager {
 	/**A mapping between annotation symbols and the first two letters of token names applicable to
 	 * that annotation symbol which then map to token names (annotation->2 letters of token names ->token names mapping).*/
 	HashMap<Character, HashMap<String, List<String>>> symbolTokenNamesDict;
+	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
+	HashMap<Character, List<RunAutomaton>> symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
 	HashMap<Character, List<Pattern>> symbolRegexesDict;
 
@@ -40,12 +44,13 @@ class TokenManager {
 		reSymbolTokenDict = new HashMap<Character, Token>();
 
 		symbolTokenNamesDict = new HashMap<Character, HashMap<String, List<String>>>();
+		symbolRegexAutomataDict = new HashMap<Character, List<RunAutomaton>>();
 		symbolRegexesDict = new HashMap<Character, List<Pattern>>();
 
 		Document tokenFiles = resourceGetter.getXMLDocument("index.xml");
 		Elements files = tokenFiles.getRootElement().getChildElements("tokenFile");
 		for(int i=0;i<files.size();i++) {
-			Element rootElement = resourceGetter.getXMLDocument(files.get(i).getChild(0).getValue()).getRootElement();
+			Element rootElement = resourceGetter.getXMLDocument(files.get(i).getValue()).getRootElement();
 			List<Element> tokenLists =new ArrayList<Element>();
 			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
 				Elements children =rootElement.getChildElements();
@@ -60,7 +65,7 @@ class TokenManager {
 				char symbol = tokenList.getAttributeValue("symbol").charAt(0);
 				Elements tokenElements = tokenList.getChildElements("token");
 				for(int j=0;j<tokenElements.size();j++) {
-					String t = tokenElements.get(j).getChild(0).getValue();
+					String t = tokenElements.get(j).getValue();
 
 					if(!tokenDict.containsKey(t)) {
 						tokenDict.put(t, new HashMap<Character, Token>());
@@ -79,13 +84,13 @@ class TokenManager {
 		}
 
 		Element reTokenList = resourceGetter.getXMLDocument("regexTokens.xml").getRootElement();
-		Elements reTokens = reTokenList.getChildElements("regexToken");
+		Elements regexEls = reTokenList.getChildElements();
 
 		HashMap<String, String> tempRegexes = new HashMap<String, String>();
 		Pattern p = Pattern.compile("%.*?%");
-		for(int i=0;i<reTokens.size();i++) {
-			Element rt = reTokens.get(i);
-			String re = rt.getAttributeValue("regex");
+		for(int i=0;i<regexEls.size();i++) {
+			Element regexEl = regexEls.get(i);
+			String re = regexEl.getAttributeValue("regex");
 			Matcher m = p.matcher(re);
 			String newValue = "";
 			int position = 0;
@@ -98,21 +103,30 @@ class TokenManager {
 				position = m.end();
 			}
 			newValue += re.substring(position);
-			if (rt.getAttribute("tagname") ==null){
-				if (rt.getAttribute("name")==null){
-					throw new Exception("Entry in regexTokenes.xml has neither a tagname or a name. regex: " + newValue);
+			if (regexEl.getLocalName().equals("regex")){
+				if (regexEl.getAttribute("name")==null){
+					throw new Exception("Regex entry in regexTokenes.xml with no name. regex: " + newValue);
 				}
-				tempRegexes.put(rt.getAttributeValue("name"), newValue);
+				tempRegexes.put(regexEl.getAttributeValue("name"), newValue);
 				continue;
 			}
+			//must be a regexToken
 
-			Character symbol = rt.getAttributeValue("symbol").charAt(0);
-			reSymbolTokenDict.put(symbol, new Token(rt.getAttributeValue("tagname"), rt.getAttributeValue("type"), rt.getAttributeValue("ignoreWhenWritingXML")));
+			Character symbol = regexEl.getAttributeValue("symbol").charAt(0);
+			reSymbolTokenDict.put(symbol, new Token(regexEl.getAttributeValue("tagname"), regexEl.getAttributeValue("type"), regexEl.getAttributeValue("ignoreWhenWritingXML")));
 
-			if(!symbolRegexesDict.containsKey(symbol)) {
-				symbolRegexesDict.put(symbol, new ArrayList<Pattern>());
+			if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
+				if(!symbolRegexAutomataDict.containsKey(symbol)) {
+					symbolRegexAutomataDict.put(symbol, new ArrayList<RunAutomaton>());
+				}
+				symbolRegexAutomataDict.get(symbol).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue));
 			}
-			symbolRegexesDict.get(symbol).add(Pattern.compile(newValue));
+			else{
+				if(!symbolRegexesDict.containsKey(symbol)) {
+					symbolRegexesDict.put(symbol, new ArrayList<Pattern>());
+				}
+				symbolRegexesDict.get(symbol).add(Pattern.compile(newValue));
+			}
 		}
 	}
 

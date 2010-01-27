@@ -1,9 +1,12 @@
-<!ELEMENT regexTokenList (regexToken)+>
+<!ELEMENT regexTokenList (regexToken|regex)+>
 
+<!ELEMENT regex EMPTY>
+<!ATTLIST regex      regex CDATA #REQUIRED
+                     name CDATA #IMPLIED>
 <!ELEMENT regexToken EMPTY>
 <!ATTLIST regexToken regex CDATA #REQUIRED
-                     symbol CDATA #IMPLIED
-                     tagname CDATA #IMPLIED
-                     name CDATA #IMPLIED
+                     symbol CDATA #REQUIRED
+                     tagname CDATA #REQUIRED
                      type CDATA #IMPLIED
+                     determinise CDATA #IMPLIED
                      ignoreWhenWritingXML CDATA #IMPLIED>
