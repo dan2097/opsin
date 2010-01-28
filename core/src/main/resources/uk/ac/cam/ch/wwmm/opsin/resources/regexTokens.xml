@@ -11,7 +11,9 @@
 	symbol == the one-letter code that goes into the grammar in regexes.xml
 	tagname == the type of XML element to turn the token into.
   determinise(optional) == Tells the parse to convert this regex into a DFA for faster execution. Note that only a subset of regular expression syntax is supported by the DFA software. This should be done for any regex which has significant branching
-  type(optional) == Sets the type attribute on the XML element, useful for differentiating related elements
+  type(optional) == Sets the type attribute on the XML element
+  subType(optional)  == Sets the subType attribute on the XML element
+  value(optional)  == Sets the value attribute on the XML element
   ignoreWhenWritingXML(optional) == Tells the parser not to form an XML element out of these. That means that these entries are only syntactic and contain no useful information and are not useful after parsing has completed
  -->
 <regexTokenList>
@@ -63,6 +65,8 @@
   <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" determinise="yes"/>
   <regexToken regex="(rel-)?%openBracket%(%locant%|%elementSymbol%'*)?([EZez]|[RSrs]\*?|RS)(,(%locant%|%elementSymbol%'*)?([EZez]|[RSrs]\*?|RS))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
   <regexToken regex="%locant%(,%locant%)(:%locant%(,%locant%))*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
+  <regexToken regex="" symbol="£" tagname="suffix" value="ic" type="root" subType="terminal"/>
+  <regexToken regex="[oO]" symbol="₧" tagname="suffix" value="yl" type="inline"/>
 
   <regexToken regex="" symbol="é" tagname="endOfSubstituent" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="" symbol="â" tagname="endOfMainGroup" ignoreWhenWritingXML="yes" determinise="yes"/>

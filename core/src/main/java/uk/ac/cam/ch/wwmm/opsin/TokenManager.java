@@ -113,7 +113,7 @@ class TokenManager {
 			//must be a regexToken
 
 			Character symbol = regexEl.getAttributeValue("symbol").charAt(0);
-			reSymbolTokenDict.put(symbol, new Token(regexEl.getAttributeValue("tagname"), regexEl.getAttributeValue("type"), regexEl.getAttributeValue("ignoreWhenWritingXML")));
+			reSymbolTokenDict.put(symbol, new Token(regexEl));
 
 			if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
 				if(!symbolRegexAutomataDict.containsKey(symbol)) {

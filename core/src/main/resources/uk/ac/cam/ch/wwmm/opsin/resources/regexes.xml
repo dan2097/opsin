@@ -77,7 +77,7 @@ does not define a CFG.
   <regex name="%aminoAcidEndsInAn%" value="è"/>
   <regex name="%aminoAcidEndsInIc%" value="ï"/>
   <regex name="%ine%" value="î"/>
-  <regex name="%ic%" value="ì"/>
+
   <regex name="%multipleFusor%" value="Ä"/>
   <regex name="%benzo%" value="Å"/>
   <regex name="%bracketedLocantGroup%" value="É"/>
@@ -92,7 +92,10 @@ does not define a CFG.
   <regex name="%monoNuclearNonCarbonAcid%" value="Ö"/>
   <regex name="%anhydride%" value="Ü"/>
   <regex name="%anhydrideLocant%" value="¢"/>
-  <!--up to ascii 155 used -->
+  <regex name="%implicitIc%" value="£"/>
+  <regex name="%aminoAcidYl%" value="¥"/>
+  <regex name="%oMeaningYl%" value="₧"/>
+  <!--up to ascii 158 used , ì unsued -->
 
 <!-- composite regexes-->
 
@@ -135,12 +138,19 @@ does not define a CFG.
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneChain%%unsaturationBlock%)"/>
   <regex name="%chainSubstituent%" value = "((%chainGroup%|%alkaneChain%)%inlineEndings%)"/>
 
-  <regex name="%aminoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%|%aminoAcidEndsInIc%%ane%)"/>
-  <regex name="%aminoAcidGroup%" value="(%aminoAcid%|%aminoAcid%(%infixedSuffix%|%rootSuffix%))"/>
+  <regex name="%aminoMonoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%)"/>
+  <regex name="%aminoAcidOptionalIne%" value="(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%)"/>
+  <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|%aminoAcidOptionalIne%(%infixedSuffix%|%rootSuffix%))"/>
+
+  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%aminoAcidEndsInIc%%rootSuffix%)%newLocantGroupNoOMP%%aminoAcidYl%)"/>
+  <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
+  <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
+
   <regex name="%nonCarbonAcidGroup%" value="(%monoNuclearNonCarbonAcid%(%infixedSuffix%|%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%))"/>
+
   <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%suffix%|%suffixesThatCanHaveEeuphonicO%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
-  <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%nonCarbonAcidSubstituent%)"/>
+  <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
 
@@ -157,7 +167,7 @@ does not define a CFG.
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiro%%alkaneStem%)"/>
 
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|%bracketedLocant%?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|(%bracketedLocantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%cycloChain%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%)%inlineEndings%|%bracketedLocant%?%trivialRingSubstituent%%inlineSuffixGroup%)"/>
 
   <!--Complex terms-->

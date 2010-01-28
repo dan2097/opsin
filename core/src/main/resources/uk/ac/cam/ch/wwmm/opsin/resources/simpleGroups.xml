@@ -63,8 +63,15 @@
   <token value="OC(=O)CC(O)(C(=O)O)CC(=O)O" labels="none" valType="SMILES" functionalIDs="1,9,13">citric</token><!--no clear definition as to what citryl means-->
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic</token><!--should this be in this file?-->
   <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
-  <token value="NCCS" labels="/2,alpha/3,beta//" valType="SMILES">cysteamine</token>
+  <token value="N[C@@H](CCSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">cystathionine</token>
+  <token value="NCCS" labels="/2,alpha/3,beta/" valType="SMILES">cysteamine</token>
+  <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >cystine</token>
+  <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >l-cystine</token>
+  <token value="C([C@H](C(=O)O)N)SSC[C@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >d-cystine</token>
   <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
+  <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">dopa</token>
+  <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">l-dopa</token>
+  <token value="O=C(O)[C@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">d-dopa</token>
   <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
   <token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
   <token value="NN=CN=N" valType="SMILES">formazan</token>
@@ -80,11 +87,14 @@
   <token value="NC([Te])=N" labels="1//2/3" valType="SMILES">isotellurourea</token>
   <token value="NC(S)=N" labels="1//2/3" valType="SMILES">isothiourea</token>
   <token value="NC(O)=N" labels="1//2/3" valType="SMILES">isourea</token>
-  <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl/" valType="SMILES">methioninamine</token>
+  <token value="N[C@@H](CSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">lanthionine</token>
+  <token value="CS(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">mesilate</token>
+  <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" valType="SMILES">methioninamine</token>
+  <token value="CS(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">mesylate</token>
   <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
   <token value="n1cccc(c1)C2N(C)CCC2" labels="none" valType="SMILES">nicotine</token><!--not to be confused with nicotinic acid-->
   <token value="N[N+](=O)([O-])" labels="none" valType="SMILES" functionalIDs="1,1">nitramide</token>
-  <token value="C(=O)C(=O)" labels="1/2" valType="SMILES">oxaldehyde</token>
+  <token value="C(=O)C=O" labels="1//2/" valType="SMILES">oxaldehyde</token>
   <token value="NC(=O)C(=O)N" labels="none" valType="SMILES" functionalIDs="1,1,6,6">oxamide</token>
   <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performic</token>
   <token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>

@@ -1021,14 +1021,14 @@ class PreStructureBuilder {
 		ArrayList<Element> suffixes =OpsinTools.elementsToElementArrayList(subOrRoot.getChildElements("suffix"));
 
 		boolean imideSpecialCase =false;
-		if (lastGroupElementInSubOrRoot.getAttribute("suffixAppliesTo")!=null){//trivial polyAcid
+		if (lastGroupElementInSubOrRoot.getAttribute("suffixAppliesTo")!=null){//trivial polyAcid or aminoAcid
 			//attribute contains instructions for number/positions of suffix
 			//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 			Element suffix =OpsinTools.getNextNonChargeSuffix(lastGroupElementInSubOrRoot);
 			if (suffix ==null){
 				throw new PostProcessingException("No suffix where suffix was expected");
 			}
-			if (suffixes.size()>1){
+			if (suffixes.size()>1 && !lastGroupElementInSubOrRoot.getAttributeValue("type").equals("aminoAcid")){
 				throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
 			}
 			String suffixInstruction =lastGroupElementInSubOrRoot.getAttributeValue("suffixAppliesTo");

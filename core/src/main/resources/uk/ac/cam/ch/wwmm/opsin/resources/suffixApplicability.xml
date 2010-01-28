@@ -89,56 +89,18 @@ The value is the suffixValue that is in the name (or in some cases produced by O
   </groupType>
 
   <groupType type="aminoAcid"><!--e.g. glycine -> glycinol -->
-    <!--<suffix value="aldehyde">aldehyde</suffix>
+    <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="amide">amide</suffix>
     <suffix value="amidium">amidium</suffix>
     <suffix value="amido">amido</suffix>
     <suffix value="anilide">anilide</suffix>
     <suffix value="ate">ate</suffix>
-    <suffix value="carbohydrazide">carbohydrazide</suffix>
-    <suffix value="carbohydrazonic">carbohydrazonic</suffix>
-    <suffix value="carbohydrazonoyl">carbohydrazonoyl</suffix>
-    <suffix value="carbohydroxamic">carbohydroxamic</suffix>
-    <suffix value="carbohydroximic">carbohydroximic</suffix>
-    <suffix value="carbohydroximoyl">carbohydroximoyl</suffix>
-    <suffix value="carbonate">carbonate</suffix>
-    <suffix value="carbonyl">carbonyl</suffix>
-    <suffix value="carbothioyl">carbothioyl</suffix>
-    <suffix value="carboximidic">carboximidic</suffix>
-    <suffix value="carboximidoyl">carboximidoyl</suffix>
-    <suffix value="hydrazide">hydrazide</suffix>
-    <suffix value="hydrazonic">hydrazonic</suffix>
-    <suffix value="hydroxamic">hydroxamic</suffix>
-    <suffix value="hydroximic">hydroximic</suffix>
-    <suffix value="hydroximoyl">hydroximoyl</suffix>
     <suffix value="ic">ic</suffix>
-    <suffix value="ide">ide</suffix>
-    <suffix value="imidamide">imidamide</suffix>-->
     <suffix value="ium">ium</suffix>
-    <!--<suffix value="ite">ite</suffix>
-    <suffix value="nitrile">nitrile</suffix>
-    <suffix value="nitrilium">nitrilium</suffix>
-    <suffix value="onaphthone">onaphthone</suffix>
-    <suffix value="ophenone">ophenone</suffix>
-    <suffix value="ous">ous</suffix>
-    <suffix value="oxy" subType="ylForAcyl">oxy-ylForAcyl</suffix>
-    <suffix value="oxy" subType="oylForAcyl">oxy</suffix>
+    <suffix value="ol">ol</suffix>
     <suffix value="oyl">oyl</suffix>
-    <suffix value="yl" subType="ylForAcyl">oyl</suffix>
-    <suffix value="selenenic">selenenic</suffix>
-    <suffix value="seleninic">seleninic</suffix>
-    <suffix value="selenonic">selenonic</suffix>
-    <suffix value="sulfenyl">sulfenyl</suffix>
-    <suffix value="sulfinyl">sulfinyl</suffix>
-    <suffix value="sulfonyl">sulfonyl</suffix>
-    <suffix value="tellurenic">tellurenic</suffix>
-    <suffix value="tellurinic">tellurinic</suffix>
-    <suffix value="telluronic">telluronic</suffix>
-    <suffix value="uide">uide</suffix>
-    <suffix value="yl" subType="oylForAcyl">yl</suffix>
-    <suffix value="ylidene" subType="oylForAcyl">ylidene</suffix>
-    <suffix value="ylidyne" subType="oylForAcyl">ylidyne</suffix>
-    <suffix value="ylium">ylium</suffix>-->
+    <suffix value="yl">oyl</suffix>
+    <suffix value="aminoAcidYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->
   </groupType>
 
   <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->

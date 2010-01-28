@@ -8,5 +8,7 @@
                      symbol CDATA #REQUIRED
                      tagname CDATA #REQUIRED
                      type CDATA #IMPLIED
+                     subType CDATA #IMPLIED
+                     value CDATA #IMPLIED
                      determinise CDATA #IMPLIED
                      ignoreWhenWritingXML CDATA #IMPLIED>

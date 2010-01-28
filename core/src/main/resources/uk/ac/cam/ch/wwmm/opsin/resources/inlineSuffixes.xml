@@ -59,4 +59,8 @@
     <token value="tellurinyl">tellurinyl</token>
     <token value="telluronyl">telluronyl</token>
   </tokenList>
+
+  <tokenList tagname="suffix" type="inline" symbol="¥"><!--used for amino acids-->
+    <token value="aminoAcidYl">yl</token>
+  </tokenList>
 </tokenLists>
