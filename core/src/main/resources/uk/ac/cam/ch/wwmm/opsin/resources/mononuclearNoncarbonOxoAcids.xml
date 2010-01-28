@@ -10,11 +10,11 @@
     <token value="[As](O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsor</token>
     <token value="Br=O" labels="none" valType="SMILES">brom</token>
     <token value="Cl=O" labels="none" valType="SMILES">chlor</token>
-    <token value="F=O" labels="none" valType="SMILES">fluor</token>
+    <token value="F|3=O" labels="none" valType="SMILES">fluor</token><!--flouric usually just means HF -->
     <token value="I=O" labels="none" valType="SMILES">iod</token>
     <token value="Br(=O)=O" labels="none" valType="SMILES">perbrom</token>
     <token value="Cl(=O)=O" labels="none" valType="SMILES">perchlor</token>
-    <token value="F(=O)=O" labels="none" valType="SMILES">perfluor</token>
+    <token value="F|5(=O)=O" labels="none" valType="SMILES">perfluor</token><!--perflouric has more likely trivial meaning-->
     <token value="I(=O)=O" labels="none" valType="SMILES">period</token>
     <token value="P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphin</token>
     <token value="P(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphor</token>

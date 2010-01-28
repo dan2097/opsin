@@ -17,22 +17,24 @@ class Token {
 	/**Should this token actually be used. Set to true for meaningless tokens e.g. e, o, endOfSubstituent etc.*/
 	private boolean ignoreWhenWritingXML =false;
 
-	/**Makes a new Token based on tagname, type, and ignoreWhenWritingXML attribute values. To be used for regex tokens.
-	 * Type and ignoreWhenWritingXML may be null
-	 *
-	 * @param tagName
-	 * @param type
-	 * @param ignoreWhenWritingXML
+
+	/**
+	 * Makes a new token using a regexToken Element
+	 * @param regexTokenElement
 	 */
-	public Token(String tagName, String type, String ignoreWhenWritingXML) {
-		elem = new Element(tagName);
-		if (type!=null){
-			elem.addAttribute(new Attribute("type",type));
+	Token(Element regexTokenElement) {
+		elem = new Element(regexTokenElement.getAttributeValue("tagname"));
+		if (regexTokenElement.getAttribute("value")!=null){
+			elem.addAttribute(new Attribute("value",regexTokenElement.getAttributeValue("value")));
 		}
-		if (ignoreWhenWritingXML!=null){
-			if (ignoreWhenWritingXML.equals("yes")){
-				this.ignoreWhenWritingXML=true;
-			}
+		if (regexTokenElement.getAttribute("type")!=null){
+			elem.addAttribute(new Attribute("type",regexTokenElement.getAttributeValue("type")));
+		}
+		if (regexTokenElement.getAttribute("subType")!=null){
+			elem.addAttribute(new Attribute("subType",regexTokenElement.getAttributeValue("subType")));
+		}
+		if (regexTokenElement.getAttribute("ignoreWhenWritingXML")!=null && regexTokenElement.getAttributeValue("ignoreWhenWritingXML").equals("yes")){
+			this.ignoreWhenWritingXML=true;
 		}
 	}
 

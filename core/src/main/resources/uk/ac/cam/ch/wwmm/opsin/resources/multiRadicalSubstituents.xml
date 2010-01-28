@@ -55,6 +55,19 @@
   <token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
   <token value="[Se]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
   <token value="[Te]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
+
+  <token labels="/2,alpha/3,beta/4,gamma//1/" valType="SMILES" value="N[C@@H](CC=O)C=O" outIDs="4,6">aspartoyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma//1/" valType="SMILES" value="N[C@@H](CC=O)C=O" outIDs="4,6">l-aspartoyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma//1/" valType="SMILES" value="N[C@H](CC=O)C=O" outIDs="4,6">d-aspartoyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1/" valType="SMILES" value="N[C@@H](CCC=O)C=O" outIDs="5,7">glutamoyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1/" valType="SMILES" value="N[C@@H](CCC=O)C=O" outIDs="5,7">l-glutamoyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1/" valType="SMILES" value="N[C@@H](CCC=O)C=O" outIDs="5,7">d-glutamoyl</token>
+  <token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" labels="none" valType="SMILES" outIDs="3,10">cystyl</token>
+  <token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" labels="none" valType="SMILES" outIDs="3,10">l-cystyl</token>
+  <token value="C([C@H](C(=O))N)SSC[C@H](C(=O))N" labels="none" valType="SMILES" outIDs="3,10">d-cystyl</token>
+  <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@@H](CS)C=O" outIDs="4,5">half-cystyl</token>
+  <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@@H](CS)C=O" outIDs="4,5">l-half-cystyl</token>
+  <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@H](CS)C=O" outIDs="4,5">d-half-cystyl</token>
 </tokenList>
 
 

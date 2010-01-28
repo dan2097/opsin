@@ -9,6 +9,10 @@
   <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
   <token value="OCCCCC" valType="SMILES">amoxy</token>
   <token value="CCCCC" valType="SMILES">amyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(O)=O)C=O" outIDs="7">aspart-1-yl</token>
+  <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(O)=O)C=O" outIDs="7">alpha-aspartyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC=O)C(=O)O" outIDs="4">aspart-4-yl</token>
+  <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC=O)C(=O)O" outIDs="4">beta-aspartyl</token>
   <token value="OCCC(C)C" valType="SMILES">isoamoxy</token>
   <token value="CCC(C)C" valType="SMILES">isoamyl</token>
   <token value="CC(C)(C)C" valType="SMILES">neoamyl</token>
@@ -59,6 +63,10 @@
   <token value="CC=CC" valType="SMILES">crotyl</token>
   <token value="[N+]#N" labels="none" valType="SMILES">diazonio</token>
   <token value="OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes">ethoxyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(O)=O)C=O" outIDs="8">glutam-1-yl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(O)=O)C=O" outIDs="8">alpha-glutamyl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC=O)C(=O)O" outIDs="5">glutam-5-yl</token>
+  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC=O)C(=O)O" outIDs="5">gamma-glutamyl</token>
   <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
   <token value="C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES">hydantoyl</token>
   <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
@@ -138,12 +146,12 @@
   <token value="Cl" labels="none" valType="SMILES">perchloro</token>
   <token value="I" labels="none" valType="SMILES">periodo</token>-->
 
-  <token value="F=O" labels="none" valType="SMILES">fluorosyl</token>
+  <token value="F|3=O" labels="none" valType="SMILES">fluorosyl</token>
   <token value="Br=O" labels="none" valType="SMILES">bromosyl</token>
   <token value="Cl=O" labels="none" valType="SMILES">chlorosyl</token>
   <token value="I=O" labels="none" valType="SMILES">iodosyl</token>
 
-  <token value="F(=O)(=O)(=O)" labels="none" valType="SMILES">perfluoryl</token>
+  <token value="F|7(=O)(=O)(=O)" labels="none" valType="SMILES">perfluoryl</token>
   <token value="Br(=O)(=O)(=O)" labels="none" valType="SMILES">perbromyl</token>
   <token value="Cl(=O)(=O)(=O)" labels="none" valType="SMILES">perchloryl</token>
   <token value="I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>

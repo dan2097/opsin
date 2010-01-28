@@ -17,7 +17,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	SSSRTest.class,
 	StereochemistryTest.class,
 	StructureBuilderTest.class,
-	TokenizerTest.class
+	TokenizerTest.class,
+	VerifyFragments.class
 })
 public class AllTests {
 
