@@ -384,7 +384,7 @@ class PreStructureBuilder {
 		else if (group.getAttribute("defaultInID")!=null){
 			thisFrag.setDefaultInID(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue("defaultInID")) -1);
 		}
-		else if (group.getAttribute("usableAsAJoiner") != null && group.getAttributeValue("usableAsAJoiner").equals("yes")){//makes linkers by default attach end to end
+		else if (group.getAttribute("usableAsAJoiner") != null && group.getAttributeValue("usableAsAJoiner").equals("yes") && group.getAttribute("suffixAppliesTo")==null){//makes linkers by default attach end to end
 			int chainLength =thisFrag.getChainLength();
 			if (chainLength >1){
 				boolean connectEndToEndWithPreviousSub =true;
@@ -2345,9 +2345,9 @@ class PreStructureBuilder {
 			Element substituentGroup = substituent.getFirstChildElement("group");
 			String theSubstituentSubType = substituentGroup.getAttributeValue("subType");
 			String theSubstituentType = substituentGroup.getAttributeValue("type");
-
-			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent
-			if (substituentGroup.getAttribute("usableAsAJoiner")==null){
+			boolean aminoAcid = substituentGroup.getAttributeValue("type").equals("aminoAcid") ? true : false;
+			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent. AminoAcids always join together
+			if (substituentGroup.getAttribute("usableAsAJoiner")==null && !aminoAcid){
 				continue;
 			}
 			Fragment frag =state.xmlFragmentMap.get(substituentGroup);
@@ -2372,7 +2372,7 @@ class PreStructureBuilder {
 
 			//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
 			Element elementDirectlyBeforeSubstituent = (Element) XOMTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
-			if (elementDirectlyBeforeSubstituent.getLocalName().equals("hyphen")){
+			if (elementDirectlyBeforeSubstituent.getLocalName().equals("hyphen") && !aminoAcid){
 				continue;
 			}
 
