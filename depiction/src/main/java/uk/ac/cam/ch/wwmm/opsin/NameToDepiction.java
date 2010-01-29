@@ -41,7 +41,7 @@ public class NameToDepiction {
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return RenderedImage depiction of molecule
 	 */
-	public RenderedImage convertResultToDepction(OpsinResult result, boolean verbose){
+	public static RenderedImage convertResultToDepction(OpsinResult result, boolean verbose){
 		if (result.getStructure() !=null){
 			RenderedImage depiction = null;
 			try{
@@ -59,7 +59,7 @@ public class NameToDepiction {
 		return null;
 	}
 
-	private RenderedImage opsinFragmentToDepiction(Fragment frag, boolean verbose) {
+	private static RenderedImage opsinFragmentToDepiction(Fragment frag, boolean verbose) {
 		OpsinToChemKitWrapper chemKitWrapper = new OpsinToChemKitWrapper(frag);
 		CMLMolecule mol = chemKitWrapper.getChemKitMolecule();
 		//Make explicit hydrogens a property of the atom to which they are attached for easier to understand depictions

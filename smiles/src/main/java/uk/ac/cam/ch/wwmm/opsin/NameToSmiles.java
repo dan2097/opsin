@@ -34,7 +34,7 @@ public class NameToSmiles {
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return String SMILES
 	 */
-	public String convertResultToSMILES(OpsinResult result, boolean verbose){
+	public static String convertResultToSMILES(OpsinResult result, boolean verbose){
 		if (result.getStructure() !=null){
 			String smiles = null;
 			try{
@@ -53,7 +53,7 @@ public class NameToSmiles {
 		return null;
 	}
 
-	private String opsinFragmentToSmiles(Fragment frag, boolean verbose){
+	private static String opsinFragmentToSmiles(Fragment frag, boolean verbose){
 		OpsinToChemKitWrapper chemKitWrapper = new OpsinToChemKitWrapper(frag);
 		CMLMolecule mol = chemKitWrapper.getChemKitMolecule();
 		CMLAtomArray atoms = mol.getAtomArray();
