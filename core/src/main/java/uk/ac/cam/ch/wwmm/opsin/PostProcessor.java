@@ -1269,6 +1269,14 @@ class PostProcessor {
 				}
 			}
 		}
+		if (groupValue.equals("cyste")){//ambiguity between cysteine and cysteic acid
+			if (group.getAttributeValue("subType").equals("endInIne")){//cysteine
+				Element ine = (Element) XOMTools.getNextSibling(group);
+				if (!ine.getAttributeValue("value").equals("ine")){
+					throw new PostProcessingException("This is a cysteic acid derivative, not a cysteine derivative");
+				}
+			}
+		}
 	}
 
 	/**

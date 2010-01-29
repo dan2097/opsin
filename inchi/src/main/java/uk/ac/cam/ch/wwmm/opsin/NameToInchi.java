@@ -44,7 +44,7 @@ public class NameToInchi {
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return String InChI
 	 */
-	public String convertResultToInChI(OpsinResult result, boolean verbose){
+	public static String convertResultToInChI(OpsinResult result, boolean verbose){
 		if (result.getStructure() !=null){
 			String inchi = null;
 			try{
@@ -63,7 +63,7 @@ public class NameToInchi {
 		return null;
 	}
 
-	private String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{
+	private static String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{
 		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<Integer, JniInchiAtom>();
 		List<INCHI_OPTION> options = new ArrayList<INCHI_OPTION>();
 		options.add(INCHI_OPTION.FixedH);
