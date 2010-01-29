@@ -4,15 +4,15 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TokenizerTest {
 
-	Tokeniser tokenizer;
+	static Tokeniser tokenizer;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void  setUp() throws Exception {
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		tokenizer = new Tokeniser(new ParseRules(new TokenManager(rg),rg));
 	}

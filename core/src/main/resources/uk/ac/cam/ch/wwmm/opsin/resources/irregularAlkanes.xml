@@ -1,47 +1,48 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
-<tokenList tagname="group" type="chain" subType="alkaneStem-irregular" symbol="A">
-  <token value="C(C)C" labels="none" valType="SMILES">isoprop</token>
-  <token value="CC(C)C" labels="none" valType="SMILES">isobut</token>
-  <token value="C(C)CC" labels="none" valType="SMILES">secbut</token>
-  <token value="C(C)CC" labels="none" valType="SMILES">sec-but</token>
-  <token value="C(C)CC" labels="none" valType="SMILES">s-but</token>
-  <token value="C(C)(C)C" labels="none" valType="SMILES">tertbut</token>
-  <token value="C(C)(C)C" labels="none" valType="SMILES">tert-but</token>
-  <token value="C(C)(C)C" labels="none" valType="SMILES">t-but</token>
-  <token value="CCC(C)C" labels="none" valType="SMILES">isopent</token>
-  <token value="CC(C)(C)C" labels="none" valType="SMILES">neopent</token>
-  <token value="C(C)(C)CC" labels="none" valType="SMILES">tert-pent</token>
-  <token value="C(C)(C)CC" labels="none" valType="SMILES">t-pent</token>
-  <token value="CCCC(C)C" labels="none" valType="SMILES">isohex</token>
+<tokenLists>
+  <tokenList tagname="group" type="chain" subType="alkaneStem-irregular" symbol="A">
+    <token value="C12CC3CC4CC5C1.C24.C35" valType="SMILES" frontLocantsExpected="1,2">adamant</token>
+    <token value="C12C3C4C11.C35C2C1C45" valType="SMILES">cub</token>
+    <token value="C12C3C4C1C4C32" valType="SMILES">prism</token>
 
-  <token value="C12CC3CC4CC5C1.C24.C35" valType="SMILES" frontLocantsExpected="1,2">adamant</token>
-  <token value="C12C3C4C11.C35C2C1C45" valType="SMILES">cub</token>
-  <token value="C12C3C4C1C4C32" valType="SMILES">prism</token>
+    <token value="CC=C" valType="SMILES" usableAsAJoiner="yes">all</token>
+    <token value="C=C" valType="SMILES" usableAsAJoiner="yes">vin</token>
+    
+    <!-- terpenes-->
+    <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">born</token>
+      <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">camph</token>
+      <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">bornyl</token>
+    <token value="C12CC3CCC1C2(C)C.C3" valType="SMILES">car</token>
+    <!--it's quicker to write out all forms of this than create a special case for menthane to allow things like 1-p-menthene-->
+    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">p-menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">para-menth</token>
+    <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">m-menth</token>
+    <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">meta-menth</token>
+    <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">o-menth</token>
+    <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">ortho-menth</token>
+    <token value="C12CCC(CC2)C1" valType="SMILES">norborn</token>
+      <token value="C12CCC(CC2)C1" valType="SMILES">norcamph</token>
+      <token value="C12CCC(CC2)C1" valType="SMILES">norbornyl</token>
+    <token value="C12CCCCC2C1" valType="SMILES">norcar</token>
+    <token value="C12CCCC(C2)C1" valType="SMILES">norpin</token>
+    <token value="C12C3CCC4C156.C24.C5.C6.C3" valType="SMILES">pin</token>
+    <token value="C123CCC4C1C2.C3(C)C.C4" valType="SMILES">thuj</token>
+  </tokenList>
 
-  <token value="CC=C" valType="SMILES" usableAsAJoiner="yes">all</token>
-  <token value="C=C" valType="SMILES" usableAsAJoiner="yes">vin</token>
-  
-  <!-- terpenes-->
-  <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">born</token>
-    <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">camph</token>
-    <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">bornyl</token>
-  <token value="C12CC3CCC1C2(C)C.C3" valType="SMILES">car</token>
-  <!--it's quicker to write out all forms of this than create a special case for menthane to allow things like 1-p-menthene-->
-  <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">menth</token>
-  <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">p-menth</token>
-  <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">para-menth</token>
-  <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">m-menth</token>
-  <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">meta-menth</token>
-  <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">o-menth</token>
-  <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">ortho-menth</token>
-  <token value="C12CCC(CC2)C1" valType="SMILES">norborn</token>
-    <token value="C12CCC(CC2)C1" valType="SMILES">norcamph</token>
-    <token value="C12CCC(CC2)C1" valType="SMILES">norbornyl</token>
-  <token value="C12CCCCC2C1" valType="SMILES">norcar</token>
-  <token value="C12CCCC(C2)C1" valType="SMILES">norpin</token>
-  <token value="C12C3CCC4C156.C24.C5.C6.C3" valType="SMILES">pin</token>
-  <token value="C123CCC4C1C2.C3(C)C.C4" valType="SMILES">thuj</token>
-</tokenList>
-
-
+<!--note that n-,i-,s- are case sensitive due to potential confusion with nitrogen/iodine/sulfur respectively and hence are matched by a regex-->
+  <tokenList tagname="alkaneStemModifier" symbol="n">
+    <token value="normal">normal</token>
+    <token value="normal">normal-</token>
+    <token value="tert">tert</token>
+    <token value="tert">tert-</token>
+    <token value="tert">t-</token>
+    <token value="iso">iso</token>
+    <token value="iso">iso-</token>
+    <token value="sec">sec-</token>
+    <token value="sec">sec</token>
+    <token value="neo">neo</token>
+    <token value="neo">neo-</token>
+  </tokenList>
+</tokenLists>
