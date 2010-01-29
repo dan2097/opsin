@@ -9,18 +9,18 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class VerifyFragments {
-	private final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
-	private final ResourceGetter resourceGetter = new ResourceGetter(RESOURCE_LOCATION);
-	private SMILESFragmentBuilder smilesBuilder;
-	private CMLFragmentBuilder cmlBuilder;
-	private FragmentManager fm;
+	private static final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
+	private static final ResourceGetter resourceGetter = new ResourceGetter(RESOURCE_LOCATION);
+	private static SMILESFragmentBuilder smilesBuilder;
+	private static CMLFragmentBuilder cmlBuilder;
+	private static FragmentManager fm;
 	
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 		smilesBuilder = new SMILESFragmentBuilder();
 		cmlBuilder = new CMLFragmentBuilder(resourceGetter);
 		fm = new FragmentManager(smilesBuilder, cmlBuilder, new IDManager());

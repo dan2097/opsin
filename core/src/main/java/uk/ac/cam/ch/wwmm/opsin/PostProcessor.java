@@ -104,7 +104,8 @@ class PostProcessor {
 
 		for (Element subOrRoot: substituentsAndRoot) {
 			processLocants(subOrRoot);
-			processHeterogenousHydrides(subOrRoot);
+			processAlkaneStemModifications(subOrRoot);//e.g. tert-butyl
+			processHeterogenousHydrides(subOrRoot);//e.g. tetraphosphane, disiloxane
 			processIndicatedHydrogens(subOrRoot);
 			processStereochemistry(subOrRoot);
 			processInfixes(subOrRoot);
@@ -235,6 +236,86 @@ class PostProcessor {
 				}
 			}
 			XOMTools.setTextChild(locant, StringTools.arrayToString(individualLocantText, ","));
+		}
+	}
+
+	/**
+	 * Applies the traditional alkane modifiers: iso, tert, sec, neo by modifying the alkane chain's SMILES
+	 * 
+	 * @param subOrRoot
+	 * @throws PostProcessingException 
+	 */
+	private void processAlkaneStemModifications(Element subOrRoot) throws PostProcessingException {
+		Elements alkaneStemModifiers = subOrRoot.getChildElements("alkaneStemModifier");
+		for(int i=0;i<alkaneStemModifiers.size();i++) {
+			Element alkaneStemModifier =alkaneStemModifiers.get(i);
+			Element alkane = (Element) XOMTools.getNextSibling(alkaneStemModifier);
+			if (alkane ==null || alkane.getAttribute("valType")==null || !alkane.getAttributeValue("valType").equals("chain")
+					|| alkane.getAttribute("subType")==null || !alkane.getAttributeValue("subType").equals("alkaneStem")){
+				throw new PostProcessingException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
+			}
+			String type;
+			if (alkaneStemModifier.getAttribute("value")!=null){
+				type = alkaneStemModifier.getAttributeValue("value");//identified by token;
+			}
+			else{
+				if (alkaneStemModifier.getValue().equals("n-")){
+					type="normal";
+				}
+				else if (alkaneStemModifier.getValue().equals("i-")){
+					type="iso";
+				}
+				else if (alkaneStemModifier.getValue().equals("s-")){
+					type="sec";
+				}
+				else{
+					throw new PostProcessingException("Unrecognised alkaneStem modifier");
+				}
+			}
+			alkaneStemModifier.detach();
+			if (type.equals("normal")){
+				continue;//do nothing
+			}
+			int chainLength = Integer.parseInt(alkane.getAttributeValue("value"));
+			boolean suffixPresent = subOrRoot.getChildElements("suffix").size() >0 ? true : false;
+			String smiles;
+			if (type.equals("tert")){
+				if (chainLength <4){
+					throw new PostProcessingException("ChainLength to small for tert modifier, required minLength 4. Found: " +chainLength);
+				}
+				smiles ="C(C)(C)C" + StringTools.multiplyString("C", chainLength-4);
+			}
+			else if (type.equals("iso")){
+				if (chainLength <3){
+					throw new PostProcessingException("ChainLength to small for iso modifier, required minLength 3. Found: " +chainLength);
+				}
+				if (chainLength==3 && !suffixPresent){
+					throw new PostProcessingException("iso has no meaning without a suffix on an alkane chain of length 3");
+				}
+				smiles =StringTools.multiplyString("C", chainLength-3) +"C(C)C";
+			}
+			else if (type.equals("sec")){
+				if (chainLength <3){
+					throw new PostProcessingException("ChainLength to small for sec modifier, required minLength 3. Found: " +chainLength);
+				}
+				if (!suffixPresent){
+					throw new PostProcessingException("sec has no meaning without a suffix on an alkane chain");
+				}
+				smiles ="C(C)C" + StringTools.multiplyString("C", chainLength-3);
+			}
+			else if (type.equals("neo")){
+				if (chainLength <5){
+					throw new PostProcessingException("ChainLength to small for neo modifier, required minLength 5. Found: " +chainLength);
+				}
+				smiles = StringTools.multiplyString("C", chainLength-5) + "CC(C)(C)C";
+			}
+			else{
+				throw new PostProcessingException("Unrecognised alkaneStem modifier");
+			}
+			alkane.getAttribute("valType").setValue("SMILES");
+			alkane.getAttribute("value").setValue(smiles);
+			alkane.removeAttribute(alkane.getAttribute("usableAsAJoiner"));
+			alkane.addAttribute(new Attribute("labels", "none"));
 		}
 	}
 

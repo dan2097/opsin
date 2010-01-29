@@ -14,7 +14,7 @@ does not define a CFG.
 <!-- base level regexes, a mirror of the token files -->
   <regex name="%alkaneStem%" value="a"/>
   <regex name="%irregularAlkaneStem%" value="A"/>
-  <regex name="%alkanen%" value="n"/>
+  <regex name="%alkaneStemModifier%" value="n"/>
   <regex name="%suffix%" value="s"/>
   <regex name="%unsaturator%" value="u"/>
   <regex name="%inlineSuffix%" value="i"/>
@@ -95,7 +95,7 @@ does not define a CFG.
   <regex name="%implicitIc%" value="£"/>
   <regex name="%aminoAcidYl%" value="¥"/>
   <regex name="%oMeaningYl%" value="₧"/>
-  <!--up to ascii 158 used , ì unsued -->
+  <!--up to ascii 158 used , ì unused -->
 
 <!-- composite regexes-->
 
@@ -132,7 +132,7 @@ does not define a CFG.
   <!--acyclic-->
   <regex name="%heteroChain%" value = "((%multiplier%%heteroStem%%unsaturationBlock%)|(%heteroStem%%hyphen%?%ane%))"/>
   <regex name="%alternatingHeteroChain%" value = "(%multiplier%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturationBlock%)"/>
-  <regex name="%alkaneChain%" value = "(%irregularAlkaneStem%|%alkanen%?%alkaneStem%)"/>
+  <regex name="%alkaneChain%" value = "(%irregularAlkaneStem%|%alkaneStemModifier%?%alkaneStem%)"/>
 
   <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%unsaturationBlock%)"/>
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneChain%%unsaturationBlock%)"/>

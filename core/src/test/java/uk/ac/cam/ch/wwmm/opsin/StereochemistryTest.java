@@ -4,7 +4,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sea36.chem.core.CMLAtom;
@@ -19,9 +19,9 @@ import uk.ac.cam.ch.wwmm.opsin.Fragment;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 public class StereochemistryTest {
 
-	NameToStructure n2s;
-	@Before
-	public void setup() throws Exception {
+	private static NameToStructure n2s;
+	@BeforeClass
+	public static void setup() throws Exception {
 		n2s = NameToStructure.getInstance();
 	}
 	

@@ -4,7 +4,7 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sea36.chem.rings.Ring;
@@ -14,9 +14,9 @@ import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 import uk.ac.cam.ch.wwmm.opsin.OpsinToChemKitWrapper;
 
 public class SSSRTest {
-	NameToStructure n2s;
-	@Before
-	public void setup() throws Exception {
+	private static NameToStructure n2s;
+	@BeforeClass
+	public static void setup() throws Exception {
 		n2s = NameToStructure.getInstance();
 	}
 	
