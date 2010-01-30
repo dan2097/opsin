@@ -70,22 +70,21 @@ public final class StringTools {
 		return sb.toString();
 	}
 
-	/**Checks to see whether the brackets in the string are balanced. Note that
-	 * this does not distinguish between normal, square and curly brackets.
-	 * Furthermore, "a)(b" does not count as balanced.
-	 *
+	/**Checks to see if placing one or more close brackets (normal, square or curly) on 
+	 * the end of the string would cause the string to have balanced brackets.
+	 * 
 	 * @param s The string to test.
 	 * @return The result of the test.
 	 */
-	public static boolean bracketsAreBalanced(String s) {
+	public static boolean isLackingCloseBracket(String s) {
 		int bracketLevel = 0;
-		for(int i=0;i<s.length();i++) {
+		for(int i=s.length()-1;i>=0;i--) {
 			char c = s.charAt(i);
-			if(c == '(' || c == '[' || c == '{') bracketLevel++;
-			if(c == ')' || c == ']' || c == '}') bracketLevel--;
-			if(bracketLevel == -1) return false;
+			if(c == '(' || c == '[' || c == '{') bracketLevel--;
+			if(c == ')' || c == ']' || c == '}') bracketLevel++;
+			if(bracketLevel < 0) return true;
 		}
-        return bracketLevel == 0;
+		return false;
 	}
 
 	/**Joins an array of strings into a single string.
