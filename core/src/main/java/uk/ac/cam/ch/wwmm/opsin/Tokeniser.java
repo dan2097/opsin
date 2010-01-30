@@ -34,6 +34,15 @@ class Tokeniser {
 		
 		for (int i = 0; i < words.size(); i++) {
 			String word = words.get(i);
+			
+			if (words.size()!=1 && StringTools.isLackingCloseBracket(word)){//erroneous space!!
+				//something like [(3,4,5-trihydroxy-6-methyl -phenyl..
+				words.set(i, word + words.get(i+1));
+				words.remove(i+1);
+				i--;
+				continue;
+			}
+			
 			/*
 			 * Returns
 			 * List of parses where at least some of the name was assigned a role
@@ -43,6 +52,7 @@ class Tokeniser {
 			ThreeReturnValues<List<ParseTokens>, String, String> output= parseRules.getParses(word);
 			List<ParseTokens> parseTokens =output.getFirst();
 			String unparseableName = output.getSecond();
+
 			if (parseTokens.size()>0 && unparseableName.equals("")){//word was fully interpretable
 				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 				//In cases of properly formed names there will be only one ParseWord
@@ -57,14 +67,6 @@ class Tokeniser {
 			}
 			else{//word is unparsable as is. Try and remove a space and try again
 				//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-				if (i!=0 && !StringTools.bracketsAreBalanced(words.get(i-1))){//join word with the previous if bracketing appears to be bad on the previous word
-					//something like [(3,4,5-trihydroxy-6-methyl -phenyl..
-					words.set(i-1, words.get(i-1) + word);
-					words.remove(i);
-					parse.removeWord(parse.getWords().get(i-1));//remove the parseword for the previous word.
-					i=i-2;
-					continue;
-				}
 				if (i +1 < words.size()){//join word with the next word
 					words.set(i, word + words.get(i +1));
 					words.remove(i+1);
