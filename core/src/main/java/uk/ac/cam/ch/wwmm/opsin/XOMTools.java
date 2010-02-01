@@ -282,6 +282,32 @@ public final class XOMTools {
 		}
 		return next;
 	}
+	
+
+	/**
+	 * Gets the previous sibling element of the given element. If this element's name is within the elementsToIgnore array this is repeated
+	 * If no appropriate element can be found null is returned
+	 * @param startingEl
+	 * @param elementsToIgnore
+	 * @return
+	 */
+	public static Element getPreviousSiblingIgnoringCertainElements(Element startingEl, String[] elementsToIgnore){
+		
+		ParentNode parent = startingEl.getParent();
+		if (parent==null){
+			return null;
+		}
+		int i = parent.indexOf(startingEl);
+		if (i==0) return null;
+		Element previous =(Element)parent.getChild(i-1);
+		String elName =previous.getLocalName();
+		for (String namesToIgnore : elementsToIgnore) {
+			if (elName.equals(namesToIgnore)){
+				return getPreviousSiblingIgnoringCertainElements(previous, elementsToIgnore);
+			}
+		}
+		return previous;
+	}
 
 	/**
 	 * Finds all descendant elements whose localname matches the given elementName

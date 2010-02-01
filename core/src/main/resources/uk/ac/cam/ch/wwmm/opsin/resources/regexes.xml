@@ -70,14 +70,14 @@ does not define a CFG.
   <regex name="%endOfMainGroup%" value="â"/>
   <regex name="%interSubstituentHyphen%" value="ä"/>
   <regex name="%ane%" value="à"/>
-  <regex name="%suffixesThatCanHaveEeuphonicO%" value="å"/>
+  <regex name="%suffixesThatCanBeModifiedByAPrefix%" value="å"/>
   <regex name="%comma%" value="ç"/>
   <regex name="%groupStemAllowingAllSuffixes%" value="ê"/>
   <regex name="%aminoAcidEndsInIne%" value="ë"/>
   <regex name="%aminoAcidEndsInAn%" value="è"/>
   <regex name="%aminoAcidEndsInIc%" value="ï"/>
   <regex name="%ine%" value="î"/>
-
+  <regex name="%suffixPrefix%" value="ì"/>
   <regex name="%multipleFusor%" value="Ä"/>
   <regex name="%benzo%" value="Å"/>
   <regex name="%bracketedLocantGroup%" value="É"/>
@@ -95,12 +95,11 @@ does not define a CFG.
   <regex name="%implicitIc%" value="£"/>
   <regex name="%aminoAcidYl%" value="¥"/>
   <regex name="%oMeaningYl%" value="₧"/>
-  <!--up to ascii 158 used , ì unused -->
+  <!--up to ascii 158 used -->
 
 <!-- composite regexes-->
 
 <!-- UsefulTerms-->
-  <regex name="%rootSuffix%" value="(%suffix%|%suffixesThatCanHaveEeuphonicO%)"/>
   <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
   <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locantGroup%?%cisOrTrans%)(%comma%%locantGroup%?%cisOrTrans%)*)%hyphen%?)"/>
@@ -108,8 +107,10 @@ does not define a CFG.
   <regex name="%newLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%bracketedLocantGroup%%optionalCloseBracket%%hyphen%?)"/>
-  <regex name="%infixedInlineSuffix%" value="(%o%?(%replacementInfix%%o%?)+%infixableInlineSuffix%|%structuralOpenBracket%%multiplier%?(%replacementInfix%%o%?)+%infixableInlineSuffix%%structuralCloseBracket%)"/>
-  <regex name="%unlocantedInlineSuffixGroup%" value="(%simpleMultiplierGroup%?(%infixedInlineSuffix%|%inlineSuffix%))"/>
+  <regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
+  <regex name="%infixedInlineSuffix%" value="(%o%?%infixReplacement%%infixableInlineSuffix%|%structuralOpenBracket%%infixReplacement%%infixableInlineSuffix%%structuralCloseBracket%)"/>
+  <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%infixableInlineSuffix%)" />
+  <regex name="%unlocantedInlineSuffixGroup%" value="(%simpleMultiplierGroup%?(%infixedInlineSuffix%|%inlineSuffix%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%))"/>
   <regex name="%inlineSuffixGroup%" value="(%newLocantGroup%?%unlocantedInlineSuffixGroup%)"/>
   <regex name="%repeatableInlineSuffixGroup%" value="(%newLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
   <regex name="%inlineChargeGroup%" value="(%newLocantGroup%?%multiplier%?%inlineChargeSuffix%)"/>
@@ -118,8 +119,11 @@ does not define a CFG.
   <regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
   <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locantGroup%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
   <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
-  <regex name="%infixedSuffix%" value="((%o%?%replacementInfix%(%o%?%replacementInfix%)*((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%))|(%structuralOpenBracket%%multiplier%?%replacementInfix%(%o%?%replacementInfix%)*((%o%?%suffix%)|%suffixesThatCanHaveEeuphonicO%)%structuralCloseBracket%))"/>
-  <regex name="%unlocantedSuffixGroup%" value="((%multiplier%?(%infixedSuffix%|%rootSuffix%))|(%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%))"/>
+  <regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%suffix%)"/>
+  <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
+  <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)" />
+  <regex name="%rootSuffix%" value= "(%suffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%)" />
+  <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%infixedPrefixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%)|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
   <regex name="%suffixGroup%" value="(%newLocantGroup%?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%openBracket%)"/>
@@ -149,7 +153,7 @@ does not define a CFG.
   <regex name="%nonCarbonAcidGroup%" value="(%monoNuclearNonCarbonAcid%(%infixedSuffix%|%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
-  <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%suffix%|%suffixesThatCanHaveEeuphonicO%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
+  <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
   <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>

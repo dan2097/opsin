@@ -2,24 +2,19 @@
 <!-- See the DTD for more details -->
 <!-- value = a reference to suffixApplicability.xml -->
 <!--Suffix subType is used to indicate those that occur at the end of chains.
-For suffixes that may start with a euphonic o. The instance without the o appears in a seperate list with a different symbol.
-This seperation is neccesary in a couple of places to prevent multiple parses being needlessly generated e.g. thi o ate vs thi oate-->
+See the des-->
 <tokenLists>
+<!--not allowed to be prefixed by carbo(x)/sulfon etc. Can be locanted to any position-->
   <tokenList tagname="suffix" type="root" symbol="s">
     <token value="amine">amine</token>
     <token value="aminide">aminide</token>
     <token value="aminium">aminium</token>
     <token value="carbaldehyde">carbaldehyde</token>
-    <token value="carbohydrazide">carbohydrazide</token>
-    <token value="carbonitrile">carbonitrile</token>
-    <token value="carboxamide">carboxamide</token>
-    <token value="carboxanilide">carboxanilide</token>
-    <token value="carboximidamide">carboximidamide</token>
-    <token value="carboximidamide">carboxamidine</token><!--deprecated-->
-    <token value="carbohydrazonic">carbohydrazonic</token>
     <token value="carbohydroxamic">carbohydroxamic</token>
     <token value="carbohydroximic">carbohydroximic</token>
-    <token value="carboximidic">carboximidic</token>
+    <token value="carboxylate">carboxylate</token>
+    <token value="carboxylic">carboxylic</token>
+    <token value="carboxylite">carboxylite</token>
     <token value="diazonium">diazonium</token>
     <token value="imine">imine</token>
     <token value="iminide">iminide</token>
@@ -27,74 +22,59 @@ This seperation is neccesary in a couple of places to prevent multiple parses be
     <token value="ol">ol</token>
     <token value="olate">olate</token>
     <token value="one">one</token>
-    <token value="thiolate">thiolate</token>
-  </tokenList>
-
-  <tokenList tagname="suffix" type="root" subType="terminal" symbol="s">
-    <token value="al">al</token>
-    <token value="aldehyde">aldehyde</token>
-    <token value="ic" additionalValue="aldehyde">aldehydic</token>
-    <token value="ate" additionalValue="amide">amate</token>
-    <token value="ic" additionalValue="amide">amic</token>
-    <token value="amide">amide</token>
-    <token value="amidium">amidium</token>
-    <token value="ic" additionalValue="anilide">anilic</token>
-    <token value="anilide">anilide</token>
-    <token value="imidamide">amidine</token><!--deprecated-->
-    <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="ite">ite</token>
-    <token value="ate">oate</token>
-    <token value="hydrazide">ohydrazide</token>
-    <token value="hydrazonic">ohydrazonic</token>
-    <token value="hydroxamic">ohydroxamic</token>
-    <token value="hydroximic">ohydroximic</token>
-    <token value="ic">oic</token>
-    <token value="onaphthone">onaphthone</token>
-    <token value="nitrile">onitrile</token>
-    <token value="nitrilium">onitrilium</token>
-    <token value="ophenone">ophenone</token>
-    <token value="ous">ous</token>
     <token value="selone">selone</token>
-    <token value="sulfonate">sulfonate</token>
-    <token value="tellone">tellone</token>
-
-    <token value="sulfenic">sulfenic</token>
-    <token value="sulfinic">sulfinic</token>
-    <token value="sulfonic">sulfonic</token>
     <token value="selenenic">selenenic</token>
-    <token value="seleninic">seleninic</token>
-    <token value="selenonic">selenonic</token>
+    <token value="sulfenoselenoic">sulfenoselenoic</token>
+    <token value="sulfenothioic">sulfenothioic</token>
+    <token value="sulfenamide">sulfenamide</token>
+    <token value="sulfenic">sulfenic</token>
+    <token value="tellone">tellone</token>
     <token value="tellurenic">tellurenic</token>
-    <token value="tellurinic">tellurinic</token>
-    <token value="telluronic">telluronic</token>
+    <token value="thiolate">thiolate</token>
 
+<!--common acids-this method is no longer recommended-->
     <token value="arsonic">arsonic</token>
     <token value="arsonic">arsoric</token>
     <token value="boronic">boronic</token>
     <token value="carbamic">carbamic</token>
-    <token value="carbothioic">carbothioic</token>
-    <token value="carboxylic">carboxylic</token>
-    <token value="hydroxamic">hydroxamic</token>
     <token value="phosphonic">phosphonic</token>
-    <token value="sulfonamide">sulfonamide</token>
 
     <token value="arsonate">arsonate</token>
-    <token value="arsonate">arsorate</token>
+    <token value="arsorate">arsorate</token>
     <token value="boronate">boronate</token>
     <token value="carbamate">carbamate</token>
-    <token value="carbothioate">carbothioate</token>
-    <token value="carboxylate">carboxylate</token>
-    <token value="hydroxamate">hydroxamate</token>
     <token value="phosphonate">phosphonate</token>
   </tokenList>
 
+<!--not allowed to prefixed by carbo(x)/sulfon etc. Implicitly must be at a terminal position-->
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="s">
+    <token value="aldehyde">al</token>
+    <token value="ic" additionalValue="aldehyde">aldehydic</token>
+    <token value="ate" additionalValue="amide">amate</token>
+    <token value="ic" additionalValue="amide">amic</token>
+    <token value="ic" additionalValue="anilide">anilic</token>
+    <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="ite">ite</token>
+    <token value="onaphthone">onaphthone</token>
+    <token value="ophenone">ophenone</token>
+    <token value="ous">ous</token>
+  </tokenList>
+
+<!--allowed to prefixed by carbo(x)/sulfon etc. e.g. carboxamide, sulfonamide etc.-->
+<!--these suffixes may have a euphonic o in front of them-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="å">
+    <token value="aldehyde">aldehyde</token>
+    <token value="amide">amide</token>
+    <token value="amidium">amidium</token>
+    <token value="anilide">anilide</token>
+    <token value="amidine">amidine</token><!--deprecated-->
     <token value="ate">ate</token>
     <token value="hydrazide">hydrazide</token>
-    <token value="hydrazonic">hydrazonic</token>
     <token value="hydroxamic">hydroxamic</token>
     <token value="hydroximic">hydroximic</token>
+    <token value="hydroxamate">hydroxamate</token>
+    <token value="hydroximate">hydroximate</token>
     <token value="ic">ic</token>
     <token value="nitrile">nitrile</token>
     <token value="nitrilium">nitrilium</token>

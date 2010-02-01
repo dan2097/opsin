@@ -1,0 +1,25 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- 
+A limiting list of prefixes that modify the meaning of the following prefixes
+Not all suffixes appear to accept a suffixPrefix
+value is the SMILES for this suffixPrefix
+ -->
+<tokenList tagname="suffixPrefix" symbol="ì">
+  <token value="C">carbo</token>
+  <token value="C">carbox</token>
+
+  <token value="S=O">sulfon</token>
+  <token value="S=O">sulfono</token>
+  <token value="S">sulfin</token>
+  <token value="S">sulfino</token>
+
+  <token value="[Se]=O">selenon</token>
+  <token value="[Se]=O">selenono</token>
+  <token value="[Se]">selenin</token>
+  <token value="[Se]">selenino</token>
+
+  <token value="[Te]=O">telluron</token>
+  <token value="[Te]=O">tellurono</token>
+  <token value="[Te]">tellurin</token>
+  <token value="[Te]">tellurino</token>
+</tokenList>
