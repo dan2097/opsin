@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE suffixRulesList SYSTEM "suffixRules.dtd">
-<!-- See the DTD and the OPSIN code (StructureBuilder.resolveSuffixes) to make
+<!-- See the DTD and the OPSIN code (PreStructureBuilder.resolveGroupAddingSuffixes and PreStructureBuilder.resolveSuffixes) to make
 sense of this -->
 <suffixRulesList>
-  <rule value="al">
-    <addgroup SMILES="O" bondOrder="2" />
-  </rule>
   <rule value="aldehyde">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
   <rule value="amide">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="N" functionalIDs="1,1" />
   </rule>
+  <rule value="amidine">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="N" functionalIDs="1,1"/>
+    <addgroup SMILES="N" bondOrder="2" />
+  </rule>
   <rule value="amidium">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="[N+]" functionalIDs="1,1" />
   </rule>
@@ -27,14 +32,17 @@ sense of this -->
     <addgroup SMILES="[N+]" />
   </rule>
   <rule value="amido">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="N" setsOutID="yes" />
   </rule>
   <rule value="anilide">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="Nc1ccccc1" labels="/1'/2'/3'/4'/5'/6'"/>
   </rule>
   <rule value="ate">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="[O-]" functionalIDs="1" />
   </rule>
@@ -44,56 +52,8 @@ sense of this -->
   <rule value="carbaldehyde">
     <addgroup SMILES="C=O" />
   </rule>
-  <rule value="carbohydrazide">
-    <addgroup SMILES="C(=O)NN" labels="//1',N/2',N'"/>
-  </rule>
-  <rule value="carbohydrazonic">
-    <addgroup SMILES="C(=NN)O" functionalIDs="4"/>
-  </rule>
-  <rule value="carbohydrazonoyl">
-    <addgroup SMILES="C(=NN)" setsOutID="yes"/>
-  </rule>
-  <rule value="carbohydroxamic">
-    <addgroup SMILES="C(=O)NO" functionalIDs="4"/>
-  </rule>
-  <rule value="carbohydroximic">
-    <addgroup SMILES="C(=NO)O" functionalIDs="4"/>
-  </rule>
-  <rule value="carbohydroximoyl">
-    <addgroup SMILES="C(=NO)" setsOutID="yes"/>
-  </rule>
-  <rule value="carbonitrile">
-    <addgroup SMILES="C#N" />
-  </rule>
-  <rule value="carbonitrilium">
-    <addgroup SMILES="C#[N+]" />
-  </rule>
   <rule value="carbonyl">
     <addgroup SMILES="C(=O)" setsOutID="yes"/>
-  </rule>
-  <rule value="carbothioyl">
-    <addgroup SMILES="C(=S)" setsOutID="yes"/>
-  </rule>
-  <rule value="carboxamide">
-    <addgroup SMILES="C(=O)N" functionalIDs="3,3"/>
-  </rule>
-  <rule value="carboxamidium">
-    <addgroup SMILES="C(=O)[N+]" functionalIDs="3,3"/>
-  </rule>
-  <rule value="carboxamido">
-    <addgroup SMILES="C(=O)N-" setsOutID="yes"/>
-  </rule>
-  <rule value="carboxanilide">
-    <addgroup SMILES="C(=O)Nc1ccccc1" labels="///1'/2'/3'/4'/5'/6'"/>
-  </rule>
-  <rule value="carboximidamide">
-    <addgroup SMILES="C(N)=N" functionalIDs="2,2"/>
-  </rule>
-  <rule value="carboximidic">
-    <addgroup SMILES="C(=N)O" functionalIDs="3"/>
-  </rule>
-  <rule value="carboximidoyl">
-    <addgroup SMILES="C=N" setsOutID="yes"/>
   </rule>
   <rule value="carboxylic">
     <addgroup SMILES="C(=O)O" functionalIDs="3"/>
@@ -108,35 +68,37 @@ sense of this -->
     <addgroup SMILES="[N+]#N" />
   </rule>
   <rule value="hydrazide">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="NN" labels="1',N/2',N'"/>
   </rule>
   <rule value="hydrazonic">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="NN" bondOrder="2" />
     <addgroup SMILES="O" functionalIDs="1"/>
   </rule>
   <rule value="hydroxamic">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="NO" functionalIDs="2"/>
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
   <rule value="hydroximic">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="NO" bondOrder="2" />
     <addgroup SMILES="O" functionalIDs="1"/>
   </rule>
   <rule value="hydroximoyl">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="NO" bondOrder="2"/>
     <setOutID />
   </rule>
   <rule value="ic">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" functionalIDs="1"/>
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
   <rule value="ide">
     <changecharge charge="-1" protons="-1" />
-  </rule>
-  <rule value="imidamide">
-    <addgroup SMILES="N" functionalIDs="1,1"/>
-    <addgroup SMILES="N" bondOrder="2" />
   </rule>
   <rule value="imine">
     <addgroup SMILES="N" bondOrder="2" />
@@ -152,15 +114,18 @@ sense of this -->
     <changecharge charge="1" protons="1"/>
   </rule>
   <rule value="ite">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[O-]" functionalIDs="1" />
   </rule>
   <rule value="ium">
     <changecharge charge="1" protons="1"/>
   </rule>
   <rule value="nitrile">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="N" bondOrder="3" />
   </rule>
   <rule value="nitrilium">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[N+]" bondOrder="3" />
   </rule>
   <rule value="ol">
@@ -170,16 +135,15 @@ sense of this -->
     <addgroup SMILES="[O-]" />
   </rule>
   <rule value="onaphthone">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="c1cccc2ccccc12" labels="1'/2'/3'/4'/4a'/5'/6'/7'/8'/8a'" />
   </rule>
-  <rule value="oneOnChain">
+  <rule value="one">
     <addgroup SMILES="O" bondOrder="2" ketoneLocant="yes" />
   </rule>
-  <rule value="one">
-    <addgroup SMILES="O" bondOrder="2" />
-  </rule>
   <rule value="ophenone">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="c1ccccc1" labels="1'/2'/3'/4'/5'/6'" />
   </rule>
@@ -205,6 +169,7 @@ sense of this -->
     <addgroup SMILES="O" setsOutID="yes" />
   </rule>
   <rule value="oyl">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <setOutID />
   </rule>
@@ -226,14 +191,29 @@ sense of this -->
   <rule value="selenonyl">
     <addgroup SMILES="[Se](=O)(=O)" setsOutID="yes"/>
   </rule>
-  <rule value="seloneOnChain">
+  <rule value="selone">
     <addgroup SMILES="[Se]" bondOrder="2" ketoneLocant="yes" />
   </rule>
-  <rule value="selone">
-    <addgroup SMILES="[Se]" bondOrder="2" />
+  <rule value="sulfenamide">
+    <addgroup SMILES="SN" functionalIDs="2"/>
+  </rule>
+  <rule value="sulfenamido">
+    <addgroup SMILES="SN-" setsOutID="yes"/>
   </rule>
   <rule value="sulfenic">
     <addgroup SMILES="SO" functionalIDs="2"/>
+  </rule>
+  <rule value="sulfenoselenoic">
+    <addgroup SMILES="S[Se]" functionalIDs="2"/>
+  </rule>
+  <rule value="sulfenoselenoyl">
+    <addgroup SMILES="S[Se]-" setsOutID="yes"/>
+  </rule>
+  <rule value="sulfenothioic">
+    <addgroup SMILES="SS" functionalIDs="2"/>
+  </rule>
+  <rule value="sulfenothioyl">
+    <addgroup SMILES="SS-" setsOutID="yes"/>
   </rule>
   <rule value="sulfenyl">
     <addgroup SMILES="S" setsOutID="yes"/>
@@ -244,23 +224,14 @@ sense of this -->
   <rule value="sulfinyl">
     <addgroup SMILES="S(=O)" setsOutID="yes"/>
   </rule>
-  <rule value="sulfonamide">
-    <addgroup SMILES="S(=O)(=O)N" functionalIDs="4,4" />
-  </rule>
-  <rule value="sulfonate">
-    <addgroup SMILES="S(=O)(=O)[O-]" functionalIDs="4" />
-  </rule>
   <rule value="sulfonic">
     <addgroup SMILES="S(=O)(=O)O" functionalIDs="4"/>
   </rule>
   <rule value="sulfonyl">
     <addgroup SMILES="S(=O)(=O)" setsOutID="yes"/>
   </rule>
-  <rule value="telloneOnChain">
-    <addgroup SMILES="[Te]" bondOrder="2" ketoneLocant="yes" />
-  </rule>
   <rule value="tellone">
-    <addgroup SMILES="[Te]" bondOrder="2" />
+    <addgroup SMILES="[Te]" bondOrder="2" ketoneLocant="yes" />
   </rule>
   <rule value="tellurenic">
     <addgroup SMILES="[Te]O" functionalIDs="2"/>
