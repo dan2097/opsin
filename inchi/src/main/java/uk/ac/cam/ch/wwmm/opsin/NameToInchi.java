@@ -23,7 +23,7 @@ import nu.xom.Element;
 public class NameToInchi {
 
 	private NameToStructure n2s;
-	public NameToInchi() throws Exception {
+	public NameToInchi() throws NameToStructureException {
 		n2s = NameToStructure.getInstance();
 	}
 
@@ -31,20 +31,22 @@ public class NameToInchi {
 	 *
 	 * @param name The chemical name to parse.
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
-	 * @return An InChI string, containing the parsed molecule, or null if the molecule would not parse.
+	 * @return An InChI string, containing the parsed molecule
+	 * @throws InchiGenerationException Thrown if parsing fails or an InChI could not be generated
 	 */
-	public String parseToInchi(String name, boolean verbose) {
+	public String parseToInchi(String name, boolean verbose) throws InchiGenerationException {
 		OpsinResult result = n2s.parseChemicalName(name, verbose);
 		return convertResultToInChI(result, verbose);
 	}
 	
 	/**
-	 * Converts an OPSIN result to InChI. Null is returned if this conversion fails
+	 * Converts an OPSIN result to InChI. An exception is thrown if the conversion fails
 	 * @param result
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return String InChI
+	 * @throws InchiGenerationException Thrown if conversion failed
 	 */
-	public static String convertResultToInChI(OpsinResult result, boolean verbose){
+	public static String convertResultToInChI(OpsinResult result, boolean verbose) throws InchiGenerationException{
 		if (result.getStructure() !=null){
 			String inchi = null;
 			try{
@@ -54,13 +56,15 @@ public class NameToInchi {
 				if (verbose){
 					e.printStackTrace();
 				}
-				return null;
+				throw new InchiGenerationException("InChI generation failed!", e);
 			}
-			if (inchi ==null){return null;}//inchi generation failed
+			if (inchi ==null){
+				throw new InchiGenerationException("InChI generation failed! This probably indicates a bug as null should not of been returned for the InChI");
+			}
 			if(verbose) System.out.println(inchi);
 			return inchi;
 		}
-		return null;
+		throw new InchiGenerationException(result.getMessage());
 	}
 
 	private static String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{
