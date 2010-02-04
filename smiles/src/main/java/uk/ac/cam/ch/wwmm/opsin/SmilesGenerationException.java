@@ -1,32 +1,30 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-/**Thrown at any time by the package.
+/**Thrown if a problem is encountered when converting a name to SMILES
  *
- * @author ptc24
+ * @author dl387
  *
  */
-public class NameToStructureException extends Exception {
-
+public class SmilesGenerationException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	NameToStructureException() {
+	SmilesGenerationException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	NameToStructureException(String message) {
+	SmilesGenerationException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	NameToStructureException(String message, Throwable cause) {
+	SmilesGenerationException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	NameToStructureException(Throwable cause) {
+	SmilesGenerationException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
-
 }

@@ -20,7 +20,7 @@ import sea36.chem.tools.HydrogenCalculator;
 public class NameToDepiction {
 
 	private NameToStructure n2s;
-	public NameToDepiction() throws Exception {
+	public NameToDepiction() throws NameToStructureException {
 		n2s = NameToStructure.getInstance();
 	}
 
@@ -28,20 +28,22 @@ public class NameToDepiction {
 	 *
 	 * @param name The chemical name to parse.
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
-	 * @return A RenderedImage containing the parsed molecule, or null if the molecule would not parse.
+	 * @return A RenderedImage containing the parsed molecule
+	 * @throws DepictionGenerationException Thrown if parsing fails or a depiction could not be generated
 	 */
-	public RenderedImage parseToDepiction(String name, boolean verbose) {
+	public RenderedImage parseToDepiction(String name, boolean verbose) throws DepictionGenerationException {
 		OpsinResult result = n2s.parseChemicalName(name, verbose);
 		return convertResultToDepction(result, verbose);
 	}
 	
 	/**
-	 * Converts an OPSIN result to a rendered image. Null is returned if this conversion fails
+	 * Converts an OPSIN result to a rendered image. An exception is thrown if the conversion fails
 	 * @param result
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return RenderedImage depiction of molecule
+	 * @throws DepictionGenerationException Thrown if conversion failed
 	 */
-	public static RenderedImage convertResultToDepction(OpsinResult result, boolean verbose){
+	public static RenderedImage convertResultToDepction(OpsinResult result, boolean verbose) throws DepictionGenerationException{
 		if (result.getStructure() !=null){
 			RenderedImage depiction = null;
 			try{
@@ -51,12 +53,14 @@ public class NameToDepiction {
 				if (verbose){
 					e.printStackTrace();
 				}
-				return null;
+				throw new DepictionGenerationException("Depiction generation failed! This is probably a limitation of the depiction library", e);
 			}
-			if (depiction ==null){return null;}//depiction failed
+			if (depiction ==null){
+				throw new DepictionGenerationException("Depiction generation failed! This is probably a limitation of the depiction library");
+			}
 			return depiction;
 		}
-		return null;
+		throw new DepictionGenerationException(result.getMessage());
 	}
 
 	private static RenderedImage opsinFragmentToDepiction(Fragment frag, boolean verbose) {
