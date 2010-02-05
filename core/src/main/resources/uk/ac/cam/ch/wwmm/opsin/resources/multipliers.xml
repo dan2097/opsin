@@ -23,6 +23,18 @@
     <token value="18">octadeca</token>
     <token value="19">nonadeca</token>
     <token value="20">eicosa</token>
+    <token value="20">icosa</token>
+    <token value="21">henicosa</token>
+    <token value="21">heneicosa</token>
+    <token value="22">docosa</token>
+    <token value="23">tricosa</token>
+    <token value="24">tetracosa</token>
+    <token value="25">pentacosa</token>
+    <token value="26">hexacosa</token>
+    <token value="27">heptacosa</token>
+    <token value="28">octacosa</token>
+    <token value="29">nonacosa</token>
+    <token value="30">triaconta</token>
   </tokenList>
 
   <tokenList tagname="multiplier" type="group" symbol="R"><!--groupMultiplier-->
@@ -45,6 +57,18 @@
     <token value="18">octadecakis</token>
     <token value="19">nonadecakis</token>
     <token value="20">eicosakis</token>
+    <token value="20">icosakis</token>
+    <token value="21">henicosakis</token>
+    <token value="21">heneicosakis</token>
+    <token value="22">docosakis</token>
+    <token value="23">tricosakis</token>
+    <token value="24">tetracosakis</token>
+    <token value="25">pentacosakis</token>
+    <token value="26">hexacosakis</token>
+    <token value="27">heptacosakis</token>
+    <token value="28">octacosakis</token>
+    <token value="29">nonacosakis</token>
+    <token value="30">triacontakis</token>
   </tokenList>
 
   <tokenList tagname="multiplier" type="basic" symbol="r"><!--elided a-->
@@ -65,6 +89,18 @@
     <token value="18">octadec</token>
     <token value="19">nonadec</token>
     <token value="20">eicos</token>
+    <token value="20">icos</token>
+    <token value="21">henicos</token>
+    <token value="21">heneicos</token>
+    <token value="22">docos</token>
+    <token value="23">tricos</token>
+    <token value="24">tetracos</token>
+    <token value="25">pentacos</token>
+    <token value="26">hexacos</token>
+    <token value="27">heptacos</token>
+    <token value="28">octacos</token>
+    <token value="29">nonacos</token>
+    <token value="30">triacont</token>
   </tokenList>
 
   <tokenList tagname="multiplier" type="VonBaeyer" symbol="M"><!--VonBaeyer multipliers-->
@@ -99,5 +135,10 @@
     <token value="8">octi</token>
     <token value="9">novi</token>
     <token value="10">deci</token>
+    <token value="11">undeci</token>
+    <token value="12">dodeci</token>
+    <token value="13">trideci</token>
+    <token value="14">tetradeci</token>
+    <token value="15">pentadeci</token>
   </tokenList>
 </tokenLists>
