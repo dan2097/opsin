@@ -22,6 +22,11 @@ sense of this -->
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="[N+]" functionalIDs="1,1" />
   </rule>
+  <rule value="amido">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="O" bondOrder="2" />
+    <addgroup SMILES="N" setsOutID="yes" />
+  </rule>
   <rule value="amine">
     <addgroup SMILES="N" />
   </rule>
@@ -31,10 +36,8 @@ sense of this -->
   <rule value="aminium">
     <addgroup SMILES="[N+]" />
   </rule>
-  <rule value="amido">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="O" bondOrder="2" />
-    <addgroup SMILES="N" setsOutID="yes" />
+  <rule value="amino">
+    <addgroup SMILES="N" setsOutID="yes"/>
   </rule>
   <rule value="anilide">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
@@ -74,10 +77,20 @@ sense of this -->
     <addgroup SMILES="NN" bondOrder="2" />
     <addgroup SMILES="O" functionalIDs="1"/>
   </rule>
+  <rule value="hydroxamate">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="N[O-]" functionalIDs="2"/>
+    <addgroup SMILES="O" bondOrder="2" />
+  </rule>
   <rule value="hydroxamic">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="NO" functionalIDs="2"/>
     <addgroup SMILES="O" bondOrder="2" />
+  </rule>
+  <rule value="hydroximate">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="NO" bondOrder="2" />
+    <addgroup SMILES="[O-]" functionalIDs="1"/>
   </rule>
   <rule value="hydroximic">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
