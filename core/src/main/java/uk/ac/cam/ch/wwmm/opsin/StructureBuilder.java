@@ -153,7 +153,7 @@ class StructureBuilder {
 			resolveWordOrBracket(state, currentWord);
 			BuildResults substituentBr = new BuildResults(state, currentWord);
 			if (substituentBr.getOutIDCount() ==1){//TODO add support for locanted terepthaloyl
-				String locantForSubstituent = getLocantForSubstituent(currentWord);
+				String locantForSubstituent = currentWord.getAttributeValue("locant");
 				if (locantForSubstituent!=null){
 					substituentBr.getFirstOutID().locant=locantForSubstituent;//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
 				}
@@ -340,7 +340,7 @@ class StructureBuilder {
 			resolveWordOrBracket(state, currentWord);
 			BuildResults substituentBr = new BuildResults(state, currentWord);
 			if (substituentBr.getOutIDCount() ==1){
-				String locantForSubstituent = getLocantForSubstituent(currentWord);
+				String locantForSubstituent = currentWord.getAttributeValue("locant");
 				Atom functionalAtom;
 				if (locantForSubstituent!=null){
 					functionalAtom =determineFunctionalAtomToUse(locantForSubstituent, acidBr);
@@ -870,28 +870,6 @@ class StructureBuilder {
 		}
 		else{
 			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outIDs, found: " +polymerBr.getOutIDCount() +" ,expected 0 inIDs, found: " +polymerBr.getInIDCount());
-		}
-	}
-
-	/**
-	 * Return the locant associated with the first child of a word if there is only child
-	 * else returns null
-	 * @param currentWord
-	 * @return locant or null
-	 */
-	private String getLocantForSubstituent(Element currentWord) {
-		Elements children = currentWord.getChildElements();
-		if (children.size()==1){
-			Element child =children.get(0);
-			if (child.getAttribute("locant")!=null){
-				return child.getAttributeValue("locant");
-			}
-			else{
-				return null;
-			}
-		}
-		else{
-			return null;
 		}
 	}
 

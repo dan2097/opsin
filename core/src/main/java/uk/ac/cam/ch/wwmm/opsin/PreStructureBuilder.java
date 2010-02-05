@@ -14,6 +14,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 
 
@@ -235,7 +236,7 @@ class PreStructureBuilder {
 			}
 
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
-				assignLocantsAndMultipliers(subBracketOrRoot);
+				assignLocantsAndMultipliers(state, subBracketOrRoot);
 			}
 			processWordLevelMultiplierIfApplicable(state, word);
 
@@ -2967,16 +2968,18 @@ class PreStructureBuilder {
 	 * WordLevel multipliers are processed e.g. diethyl ethanoate
 	 * Adding a locant to a root or any other group that cannot engage in substitive nomenclature will result in an exception being thrown
 	 * An exception is made for cases where the locant could be referring to a position on another word
+	 * @param state 
 	 * @param subOrBracket
 	 * @throws PostProcessingException
 	 */
-	private void assignLocantsAndMultipliers(Element subOrBracket) throws PostProcessingException {
-		Elements locants =subOrBracket.getChildElements("locant");
+	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws PostProcessingException {
+		List<Element> locants = XOMTools.getChildElementsWithTagNames(subOrBracket, new String[]{"locant"});
 		int multiplier =1;
 		Element possibleMultiplier = subOrBracket.getFirstChildElement("multiplier");
+		Element parentElem =(Element)subOrBracket.getParent();
+		boolean oneBelowWordLevel = parentElem.getLocalName().equals("word") ? true : false;
 		if (possibleMultiplier!=null){
-			Element parentElem =(Element)subOrBracket.getParent();
-			if(parentElem.getLocalName().equals("word") &&
+				if (oneBelowWordLevel &&
 					XOMTools.getNextSibling(subOrBracket) == null &&
 					XOMTools.getPreviousSibling(subOrBracket) == null) {
 				return;//word level multiplier
@@ -2989,8 +2992,20 @@ class PreStructureBuilder {
 			if (subOrBracket.getLocalName().equals("root")){
 				throw new PostProcessingException("Unable to assign all locants");
 			}
+			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
+				if (WordType.valueOf(parentElem.getAttributeValue("type"))==WordType.substituent && (XOMTools.getNextSibling(subOrBracket)==null || locants.size()==2)){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
+					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster){
+						Element locant = locants.remove(0);
+						parentElem.addAttribute(new Attribute("locant", locant.getAttributeValue("value")));
+						locant.detach();
+						if (locants.size()==0){
+							return;
+						}
+					}
+				}
+			}
 			if (multiplier !=locants.size()){
-				throw new PostProcessingException("Multiplier and locant count failed to agree. This is an OPSIN bug as such a check should of been performed earlier!");
+				throw new PostProcessingException("Multiplier and locant count failed to agree; All locants could not be assigned!");
 			}
 
 			Element parent =(Element) subOrBracket.getParent();
@@ -3038,6 +3053,12 @@ class PreStructureBuilder {
 				if (multiVal ==1){return;}
 				Elements locants =subOrBracket.getChildElements("locant");
 				boolean assignLocants =false;
+				boolean wordLevelLocants =false;
+				if (XOMTools.getNextSibling(subOrBracket)==null && WordType.valueOf(word.getAttributeValue("type"))==WordType.substituent){//something like O,S-dimethyl phosphorothioate
+					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster){
+						wordLevelLocants =true;
+					}
+				}
 				if (locants.size()==multiVal){
 					assignLocants=true;
 					for (int i = 0; i < locants.size(); i++) {
@@ -3046,7 +3067,12 @@ class PreStructureBuilder {
 						}
 						locants.get(i).detach();
 					}
-					subOrBracket.addAttribute(new Attribute("locant", locants.get(0).getAttributeValue("value")));
+					if (wordLevelLocants){
+						word.addAttribute(new Attribute("locant", locants.get(0).getAttributeValue("value")));
+					}
+					else{
+						subOrBracket.addAttribute(new Attribute("locant", locants.get(0).getAttributeValue("value")));
+					}
 				}
 				else if (locants.size()!=0){
 					throw new PostProcessingException("Unable to assign all locants");
@@ -3061,7 +3087,12 @@ class PreStructureBuilder {
 				for(int i=multiVal -1; i>=1; i--) {
 					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
-						subOrBracket.addAttribute(new Attribute("locant", locants.get(i).getAttributeValue("value")));
+						if (wordLevelLocants){
+							clone.getAttribute("locant").setValue(locants.get(i).getAttributeValue("value"));
+						}
+						else{
+							((Element) clone.getChild(0)).getAttribute("locant").setValue(locants.get(i).getAttributeValue("value"));
+						}
 					}
 					XOMTools.insertAfter(word, clone);
 				}
