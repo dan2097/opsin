@@ -1127,14 +1127,18 @@ class PreStructureBuilder {
             String suffixValue = suffix.getAttributeValue("value");
 
             boolean cyclic;//needed for addSuffixPrefixIfNonePresentAndCyclic rule
+            Atom atomLikelyToBeUsedBySuffix = null;
             if (suffix.getAttribute("locant") != null) {
-                Atom a = frag.getAtomByLocant(suffix.getAttributeValue("locant"));
-                if (a != null) {
-                    cyclic = a.getAtomIsInACycle();
-                } else {//can happen in the cases of things like fused rings where the final numbering is not available (in which case all the atoms will be cyclic anyway)
-                    cyclic = frag.getAtomByIDOrThrow(frag.getIdOfFirstAtom()).getAtomIsInACycle();
-                }
+            	atomLikelyToBeUsedBySuffix = frag.getAtomByLocant(suffix.getAttributeValue("locant"));
+            }
+            else if (suffix.getAttribute("locantID") != null) {
+            	atomLikelyToBeUsedBySuffix = frag.getAtomByIDOrThrow(Integer.parseInt(suffix.getAttributeValue("locantID")));
+            }
+            if (atomLikelyToBeUsedBySuffix != null) {
+                cyclic = atomLikelyToBeUsedBySuffix.getAtomIsInACycle();
             } else {
+            	//a locant has not been specified
+            	//also can happen in the cases of things like fused rings where the final numbering is not available so lookup by locant fails (in which case all the atoms will be cyclic anyway)
                 cyclic = frag.getAtomByIDOrThrow(frag.getIdOfFirstAtom()).getAtomIsInACycle();
             }
 

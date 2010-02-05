@@ -5,6 +5,7 @@ Not all suffixes appear to accept a suffixPrefix
 value is the SMILES for this suffixPrefix
  -->
 <tokenList tagname="suffixPrefix" symbol="ì">
+  <token value="C">carb</token>
   <token value="C">carbo</token>
   <token value="C">carbox</token>
 

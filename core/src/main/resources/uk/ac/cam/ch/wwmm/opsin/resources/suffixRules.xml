@@ -49,9 +49,6 @@ sense of this -->
   <rule value="boronic">
     <addgroup SMILES="B(O)O" functionalIDs="3"/>
   </rule>
-  <rule value="carbaldehyde">
-    <addgroup SMILES="C=O" />
-  </rule>
   <rule value="carbonyl">
     <addgroup SMILES="C(=O)" setsOutID="yes"/>
   </rule>
