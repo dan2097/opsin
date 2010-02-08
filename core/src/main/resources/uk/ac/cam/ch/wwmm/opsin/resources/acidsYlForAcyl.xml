@@ -23,8 +23,4 @@
   <token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
   <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
   <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
-
-  <token value="S(=O)N" labels="//N" valType="SMILES" defaultInID="3" usableAsAJoiner="yes">sulfam</token>
-  <token value="CN" labels="/N" valType="SMILES" defaultInID="2" usableAsAJoiner="yes">carbam</token>
-  <token value="CO" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
 </tokenList>

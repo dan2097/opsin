@@ -1,6 +1,6 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
-<!--This is the set of trivial acids in which yl is added to denoate a substituent and oyl an acyl-->
+<!--This is the set of trivial acids in which yl is added to denote a substituent and oyl an acyl. Using oyl for acyl is the standard convention-->
 <tokenList tagname="group" type="acidStem" subType="oylForAcyl" symbol="d">
 	<token value="CC(C)(C)C" valType="SMILES">pival</token>
 	<token value="12" valType="chain" usableAsAJoiner="yes">laur</token>

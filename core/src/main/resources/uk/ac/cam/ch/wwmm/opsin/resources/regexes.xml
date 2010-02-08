@@ -95,6 +95,7 @@ does not define a CFG.
   <regex name="%implicitIc%" value="£"/>
   <regex name="%aminoAcidYl%" value="¥"/>
   <regex name="%oMeaningYl%" value="₧"/>
+  <regex name="%monoNuclearNonCarbonAcidNoAcyl%" value="ƒ"/>
   <!--up to ascii 158 used -->
 
 <!-- composite regexes-->
@@ -150,7 +151,7 @@ does not define a CFG.
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
-  <regex name="%nonCarbonAcidGroup%" value="(%monoNuclearNonCarbonAcid%(%infixedSuffix%|%rootSuffix%))"/>
+  <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%monoNuclearNonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
   <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>

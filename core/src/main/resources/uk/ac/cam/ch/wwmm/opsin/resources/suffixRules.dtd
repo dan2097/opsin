@@ -1,6 +1,6 @@
 <!ELEMENT suffixRulesList (rule)+>
 
-<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutID|changecharge)*>
+<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutID|changecharge|addFunctionalIDsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutIDs)*>
 <!ATTLIST rule value CDATA #REQUIRED
                subType CDATA #IMPLIED>
 
@@ -20,3 +20,7 @@
 <!ATTLIST setOutID outValency CDATA #IMPLIED>
 <!ELEMENT changecharge EMPTY>
 <!ATTLIST changecharge charge CDATA #REQUIRED protons CDATA #REQUIRED>
+<!ELEMENT addFunctionalIDsToHydroxyGroups EMPTY>
+<!ELEMENT chargeHydroxyGroups EMPTY>
+<!ELEMENT removeOneDoubleBondedOxygen EMPTY>
+<!ELEMENT convertHydroxyGroupsToOutIDs EMPTY>
