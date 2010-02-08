@@ -44,17 +44,32 @@ sense of this -->
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="Nc1ccccc1" labels="/1'/2'/3'/4'/5'/6'"/>
   </rule>
+  <rule value="arsonous">
+    <addgroup SMILES="As(O)O" functionalIDs="2,3"/>
+  </rule>
   <rule value="ate">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="[O-]" functionalIDs="1" />
   </rule>
+  <rule value="azonate">
+    <addgroup SMILES="[N+][O-]([O-])[O-]" functionalIDs="3,4"/>
+  </rule>
+  <rule value="azonic">
+    <addgroup SMILES="[N+][O-](O)O" functionalIDs="3,4"/>
+  </rule>
+  <rule value="azonous">
+    <addgroup SMILES="N(O)O" functionalIDs="2,3"/>
+  </rule>
   <rule value="ate_nonCarboxylic">
     <addFunctionalIDsToHydroxyGroups />
     <chargeHydroxyGroups />
   </rule>
+  <rule value="boronate">
+    <addgroup SMILES="B([O-])[O-]" functionalIDs="2,3"/>
+  </rule>
   <rule value="boronic">
-    <addgroup SMILES="B(O)O" functionalIDs="3"/>
+    <addgroup SMILES="B(O)O" functionalIDs="2,3"/>
   </rule>
   <rule value="carbonyl">
     <addgroup SMILES="C(=O)" setsOutID="yes"/>
@@ -202,6 +217,9 @@ sense of this -->
   <rule value="oyl_nonCarboxylic">
     <convertHydroxyGroupsToOutIDs />
   </rule>
+  <rule value="phosphonous">
+    <addgroup SMILES="P(O)O" functionalIDs="2,3"/>
+  </rule>
   <rule value="selenenic">
     <addgroup SMILES="[Se]O" functionalIDs="2"/>
   </rule>
@@ -222,6 +240,9 @@ sense of this -->
   </rule>
   <rule value="selone">
     <addgroup SMILES="[Se]" bondOrder="2" ketoneLocant="yes" />
+  </rule>
+  <rule value="stibonous">
+    <addgroup SMILES="[Sb](O)O" functionalIDs="2,3"/>
   </rule>
   <rule value="sulfenamide">
     <addgroup SMILES="SN" functionalIDs="2"/>

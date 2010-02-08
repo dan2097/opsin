@@ -30,17 +30,14 @@ See the des-->
     <token value="thiolate">thiolate</token>
 
 <!--common acids-this method is no longer recommended-->
-    <token value="arsonic">arsonic</token>
-    <token value="arsonic">arsoric</token>
-    <token value="boronic">boronic</token>
-    <token value="carbamic">carbamic</token>
-    <token value="phosphonic">phosphonic</token>
-
-    <token value="arsonate">arsonate</token>
-    <token value="arsorate">arsorate</token>
+    <token value="arsonous">arsonous</token>
+    <token value="azonic">azonic</token>
+    <token value="azonate">azonate</token>
+    <token value="azonous">azonous</token>
     <token value="boronate">boronate</token>
-    <token value="carbamate">carbamate</token>
-    <token value="phosphonate">phosphonate</token>
+    <token value="boronic">boronic</token>
+    <token value="phosphonous">phosphonous</token>
+    <token value="stibonous">stibonous</token>
   </tokenList>
 
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Implicitly must be at a terminal position-->

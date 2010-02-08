@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
  */
 class PreProcessor {
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
+	private static final Pattern MATCH_SULPH = Pattern.compile("sulph");
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
 	private static final String AMIDE = "amide";
@@ -49,7 +50,7 @@ class PreProcessor {
 	 * @return
 	 * @throws PreProcessingException 
 	 */
-	String preProcess(String chemicalName) throws PreProcessingException {
+	static String preProcess(String chemicalName) throws PreProcessingException {
 		chemicalName=chemicalName.trim();//remove leading and trailing whitespace
 		if ("".equals(chemicalName)){
 			throw new PreProcessingException("Input chemical name was blank!");
@@ -71,10 +72,11 @@ class PreProcessor {
 
 		chemicalName = processDollarPrefixedGreeks(chemicalName);
 		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
+		chemicalName = MATCH_SULPH.matcher(chemicalName).replaceAll("sulf");//correct British spelling to the IUPAC spelling
 		return chemicalName;
 	}
 
-	private String processDollarPrefixedGreeks(String chemicalName) {
+	private static String processDollarPrefixedGreeks(String chemicalName) {
 		//StringTools.unicodeToLatin(chemicalName);
 		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
 		while (m.find()){

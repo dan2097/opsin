@@ -41,9 +41,6 @@ public class NameToStructure {
 		}
 	}
 
-	/**Identifies name type and rejects a few special cases.*/
-	private PreProcessor preProcessor;
-
 	/**Does finite-state non-destructive parsing on chemical names.*/
 	private Parser parser;
 
@@ -81,7 +78,6 @@ public class NameToStructure {
 		try {
 			/*Initialise all of OPSIN's classes. Some classes are injected as dependencies into subsequent classes*/
 
-			preProcessor = new PreProcessor();
 			//Allows retrieving of OPSIN resources
 			ResourceGetter resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 			TokenManager tokenManager = new TokenManager(resourceGetter);
@@ -136,7 +132,7 @@ public class NameToStructure {
 		String message = "";
 		try {
 			if(verbose) System.out.println(name);
-			String modifiedName = preProcessor.preProcess(name);
+			String modifiedName = PreProcessor.preProcess(name);
 			List<Element> parses = parser.parse(modifiedName);
 			//if(verbose) for(Element parse : parses) System.out.println(new XOMFormatter().elemToString(parse));
 			Collections.sort(parses, new SortParses());//fewer tokens preferred

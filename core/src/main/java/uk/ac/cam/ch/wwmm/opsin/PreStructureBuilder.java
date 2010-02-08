@@ -1374,6 +1374,10 @@ class PreStructureBuilder {
 		for (Element suffix : suffixes) {
 			if (suffix.getAttribute("suffixPrefix")!=null){
 				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue("suffixPrefix"), "suffix", "suffix" , "none");
+				addFunctionalIDsToHydroxyGroups(suffixPrefixFrag);
+				if (suffix.getValue().endsWith("ate")){
+					chargeHydroxyGroups(suffixPrefixFrag);
+				}
 				Atom firstAtomOfPrefix = suffixPrefixFrag.getFirstAtom();
 				Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
 				state.fragManager.incorporateFragment(suffixPrefixFrag, suffixFrag);

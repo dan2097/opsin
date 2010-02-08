@@ -116,7 +116,13 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="aminide">aminide</suffix>
     <suffix value="aminium">aminium</suffix>
     <suffix value="anilide">anilide</suffix>
+    <suffix value="arsonous">arsonous</suffix>
     <suffix value="ate">ate</suffix>
+    <suffix value="azonic">azonic</suffix>
+    <suffix value="azonate">azonate</suffix>
+    <suffix value="azonous">azonous</suffix>
+    <suffix value="boronate">boronate</suffix>
+    <suffix value="boronic">boronic</suffix>
     <suffix value="carbonyl">carbonyl</suffix>
     <suffix value="carboxylic">carboxylic</suffix>
     <suffix value="carboxylate">carboxylate</suffix>
@@ -147,11 +153,13 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="ous">ous</suffix>
     <suffix value="oxy">oxy</suffix>
     <suffix value="oyl">oyl</suffix>
+    <suffix value="phosphonous">phosphonous</suffix>
     <suffix value="selenenic">selenenic</suffix>
     <suffix value="selenenyl">selenenyl</suffix>
     <suffix value="seleninyl">seleninyl</suffix>
     <suffix value="selenonyl">selenonyl</suffix>
     <suffix value="selone">selone</suffix>
+    <suffix value="stibonous">stibonous</suffix>
     <suffix value="sulfenamide">sulfenamide</suffix>
     <suffix value="sulfenamido">sulfenamido</suffix>
     <suffix value="sulfenic">sulfenic</suffix>
@@ -173,8 +181,5 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="ylidene">ylidene</suffix>
     <suffix value="ylidyne">ylidyne</suffix>
     <suffix value="ylium">ylium</suffix>
-
-<!-- INCOMPLETE-->
-    <suffix value="boronic">boronic</suffix>
   </groupType>
 </suffixApplicability>
