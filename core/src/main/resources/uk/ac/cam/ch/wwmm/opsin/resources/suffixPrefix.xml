@@ -1,5 +1,5 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
-<!-- 
+<!--
 A limiting list of prefixes that modify the meaning of the following prefixes
 Not all suffixes appear to accept a suffixPrefix
 value is the SMILES for this suffixPrefix
@@ -23,4 +23,13 @@ value is the SMILES for this suffixPrefix
   <token value="[Te]=O">tellurono</token>
   <token value="[Te]">tellurin</token>
   <token value="[Te]">tellurino</token>
+
+
+<!--not recommended by IUPAC-->
+  <token value="PO">phosphon</token>
+  <token value="PO">phosphono</token>
+  <token value="[As]O">arson</token>
+  <token value="[As]O">arsono</token>
+  <token value="[Sb]O">stibon</token>
+  <token value="[Sb]O">stibono</token>
 </tokenList>
