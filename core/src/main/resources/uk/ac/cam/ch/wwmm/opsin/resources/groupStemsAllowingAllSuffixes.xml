@@ -4,4 +4,6 @@
 <tokenList tagname="group" type="acyclic" subType="groupStem" symbol="ê">
   <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazin</token>
   <token value="C#C" valType="SMILES" usableAsAJoiner="yes">acetylen</token>
+
+  <token value="NO" labels="N/O" valType="SMILES" usableAsAJoiner="yes">hydroxylamin</token>
 </tokenList>

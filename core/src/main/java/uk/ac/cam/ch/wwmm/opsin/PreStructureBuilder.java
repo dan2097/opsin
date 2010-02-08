@@ -765,7 +765,7 @@ class PreStructureBuilder {
 	 * 	The locants could be intended to indicate the position of outIDs e.g. 1,4-phenylene
 	 * 	The locants could be intended to indicate the attachement points of the root groups in multiplicative nomenclature e.g. 4,4'-methylenedibenzoic acid
 	 * @param state
-	 * @param locant The element corresponding to the locant group before the HW system.
+	 * @param locant The element corresponding to the locant group to be tested
 	 * @param locantValues The locant values;
 	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclatures)
 	 * @return true if there's a HW system, and agreement; or if the locants conform to one of the alternative possibilities, otherwise false.
@@ -982,9 +982,6 @@ class PreStructureBuilder {
 	
 		for (Element locant : locants) {
 			String locantValue =locant.getAttributeValue("value");
-			if (matchElementSymbol.matcher(locantValue).matches()){//element symbol locant
-				continue;
-			}
 			Element referent = (Element)XOMTools.getNextSibling(locant);
 			while(referent.getLocalName().equals("locant") ||
 					referent.getAttribute("locant") != null ) {
@@ -995,7 +992,7 @@ class PreStructureBuilder {
 			if(referent.getAttribute("multiplied") == null && (refName.equals("unsaturator") ||
 					refName.equals("suffix") ||
 					refName.equals("heteroatom") ||
-					refName.equals("hydro"))) {
+					(refName.equals("hydro") && !referent.getValue().startsWith("per") ))) {
 	
 				//If a compound Locant e.g. 1(6) is detected add a compound locant attribute
 				if (locant.getAttribute("compoundLocant")!=null){
