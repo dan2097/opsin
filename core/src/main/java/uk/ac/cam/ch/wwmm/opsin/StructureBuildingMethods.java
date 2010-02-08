@@ -810,7 +810,7 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals("default")){//note that if one entry in inLocantArray is default then they all are "default"
-							frag.addInID(frag.getDefaultInID(), 1);
+							frag.addInID(frag.getAtomByIdOrNextSuitableAtom(frag.getDefaultInID(), 1, true).getID(), 1);
 							inIdAdded=true;
 							inLocants.remove(j);
 							break;

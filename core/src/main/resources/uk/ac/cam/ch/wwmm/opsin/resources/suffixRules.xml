@@ -49,6 +49,10 @@ sense of this -->
     <addgroup SMILES="O" bondOrder="2" />
     <addgroup SMILES="[O-]" functionalIDs="1" />
   </rule>
+  <rule value="ate_nonCarboxylic">
+    <addFunctionalIDsToHydroxyGroups />
+    <chargeHydroxyGroups />
+  </rule>
   <rule value="boronic">
     <addgroup SMILES="B(O)O" functionalIDs="3"/>
   </rule>
@@ -107,6 +111,9 @@ sense of this -->
     <addgroup SMILES="O" functionalIDs="1"/>
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
+  <rule value="ic_nonCarboxylic">
+    <addFunctionalIDsToHydroxyGroups/>
+  </rule>
   <rule value="ide">
     <changecharge charge="-1" protons="-1" />
   </rule>
@@ -126,6 +133,11 @@ sense of this -->
   <rule value="ite">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[O-]" functionalIDs="1" />
+  </rule>
+  <rule value="ite_nonCarboxylic">
+    <removeOneDoubleBondedOxygen />
+    <addFunctionalIDsToHydroxyGroups />
+    <chargeHydroxyGroups />
   </rule>
   <rule value="ium">
     <changecharge charge="1" protons="1"/>
@@ -160,6 +172,10 @@ sense of this -->
   <rule value="ous">
     <addgroup SMILES="O" functionalIDs="1"/>
   </rule>
+  <rule value="ous_nonCarboxylic">
+    <removeOneDoubleBondedOxygen />
+    <addFunctionalIDsToHydroxyGroups/>
+  </rule>
   <rule value="oxoAndDiYl">
     <addgroup SMILES="O" bondOrder="2" />
     <setOutID />
@@ -182,6 +198,9 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
     <setOutID />
+  </rule>
+  <rule value="oyl_nonCarboxylic">
+    <convertHydroxyGroupsToOutIDs />
   </rule>
   <rule value="selenenic">
     <addgroup SMILES="[Se]O" functionalIDs="2"/>

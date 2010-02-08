@@ -2,7 +2,7 @@
 <!DOCTYPE suffixApplicability SYSTEM "suffixApplicability.dtd">
 <!-- This file dictates what suffixes are applicabily to the group types that OPSIN recognises.
 There are currently 3 main types: acidStem, substituent, standardGroup.
-Other types are used under specific conditions e.g. chalcogenAcidStem, aminoAcid
+Other types are used under specific conditions e.g. chalcogenAcidStem, aminoAcid, mononuclearNonCarbonOxoAcid
 If a type in OPSIN corresponds to a group type then it is used:
 Hence acidStem is OPSIN type acidStem
 All other groups are classified as standardGroup
@@ -94,6 +94,15 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="oyl">diyl</suffix>
     <suffix value="yl">diyl</suffix>
     <suffix value="ylidene">ylidene</suffix>
+  </groupType>
+
+  <groupType type="nonCarboxylicAcid"><!--e.g. phosphor to phosphoric/phosphourous/phosphoryl-->
+    <suffix value="ate">ate_nonCarboxylic</suffix>
+    <suffix value="ic">ic_nonCarboxylic</suffix>
+    <suffix value="ite">ite_nonCarboxylic</suffix>
+    <suffix value="ous">ous_nonCarboxylic</suffix>
+    <suffix value="yl" subType="ylForAcyl">oyl_nonCarboxylic</suffix>
+    <suffix value="oyl">oyl_nonCarboxylic</suffix>
   </groupType>
 
   <groupType type="standardGroup"><!--e.g. ethan to ethanimine-->

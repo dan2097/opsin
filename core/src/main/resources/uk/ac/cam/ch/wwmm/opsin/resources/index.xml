@@ -19,8 +19,7 @@
 
   <tokenFile>acidsOylForAcyl.xml</tokenFile>
   <tokenFile>acidsYlForAcyl.xml</tokenFile>
-  <tokenFile>acidsChalcogen.xml</tokenFile>
-  <tokenFile>mononuclearNoncarbonOxoAcids.xml</tokenFile>
+  <tokenFile>acidsNonCarboxylic.xml</tokenFile>
 
   <tokenFile>functionalTerms.xml</tokenFile>
   <tokenFile>heteroAtoms.xml</tokenFile>
