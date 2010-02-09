@@ -2571,31 +2571,23 @@ class PreStructureBuilder {
 
 			//either all locants will be moved, or none
 			Boolean moveLocants = false;
-			boolean foundReasonToMoveLocants = false;
 			for (Element locant : locantElements) {
-				String locantText = StringTools.removePrimesIfPresent(locant.getAttributeValue("value"));
-
-				if (frag.hasLocant("2")){//if only has locant 1 then assume substitution onto it not intended
-					if(!frag.hasLocant(locantText)){
-						foundReasonToMoveLocants = true;
+				String locantText =locant.getAttributeValue("value");
+				if (lastGroupOfElementBeforeSub.getAttribute("frontLocantsExpected")!=null){
+					StringTools.arrayToList(matchComma.split(lastGroupOfElementBeforeSub.getAttributeValue("frontLocantsExpected"))).contains(locantText);
+					continue;
+				}
+				
+				//Check the right fragment in the bracket:
+				//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
+				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbol.matcher(locantText).find()){
+					if (checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
+						moveLocants =true;//locant location is present elsewhere
+					}
+					else if (findElementsMissingIndirectLocants(elementBeforeSubstituent, locant).size()==0 || !state.xmlFragmentMap.get(lastGroupOfElementBeforeSub).hasLocant(locantText)){
+						moveLocants =true;//the fragment adjacent to the locant doesn't have this locant or doesn't need any indirect locants. Assume it will appear elsewhere later
 					}
 				}
-				else{
-					foundReasonToMoveLocants = true;
-				}
-			}
-			if (foundReasonToMoveLocants){// a locant does not appear to refer to this fragment, but does it refer to another?
-				boolean allLocantsFoundOnPotentialRoot = true;
-				for (Element locant : locantElements) {
-					String locantText = StringTools.removePrimesIfPresent(locant.getAttributeValue("value"));
-					if (!checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
-						allLocantsFoundOnPotentialRoot = false;
-						break;
-					}
-				}
-                if (allLocantsFoundOnPotentialRoot){
-                	moveLocants =true;
-                }
 			}
 
 			if (moveLocants && locantElements.size() > 1){
@@ -2722,20 +2714,7 @@ class PreStructureBuilder {
 					if (i >0 || !checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValue)){//the first locant is most likely a locant indicating where this subsituent should be attached. If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
 						if (thisFrag.hasLocant(locantValue)){//locant not available elsewhere and is available on the group associated with this element
 							if (locantAble ==null){
-								//Find elements that can have locants but don't currently
-								Elements childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
-								locantAble=new ArrayList<Element>();
-								for (int j = 0; j < childrenOfSubOrBracketOrRoot.size(); j++) {
-									Element el =childrenOfSubOrBracketOrRoot.get(j);
-									String name =el.getLocalName();
-									if (name.equals("suffix") || name.equals("unsaturator") || name.equals("heteroatom") || name.equals("hydro")){
-										if (el.getAttribute("locant") ==null && (el.getAttribute("multiplied")==null)){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
-											if (subOrRoot.indexOf(el)>subOrRoot.indexOf(locant)){
-												locantAble.add(el);
-											}
-										}
-									}
-								}
+								locantAble = findElementsMissingIndirectLocants(subOrRoot, locant);
 							}
 							if (locantsToAssignToIndirectFeatures.size() < locantAble.size()){
 								locantsToAssignToIndirectFeatures.add(0, locant);//last in first out
@@ -2802,6 +2781,31 @@ class PreStructureBuilder {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Find elements that can have indirect locants but don't currently
+	 * This requirement excludes hydro and heteroatoms as it is assumed that locants for these are always adjacent (or handled by the special HW code in the case of heteroatoms)
+	 * @param subOrRoot The subOrRoot of interest
+	 * @param locantEl the locant, only elements after it will be considered
+	 * @return An arrayList of locantable elements
+	 */
+	private ArrayList<Element> findElementsMissingIndirectLocants(Element subOrRoot,Element locantEl) {
+		ArrayList<Element> locantAble = new ArrayList<Element>();
+		Elements childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
+		for (int j = 0; j < childrenOfSubOrBracketOrRoot.size(); j++) {
+			Element el =childrenOfSubOrBracketOrRoot.get(j);
+			String name =el.getLocalName();
+			if (name.equals("suffix") || name.equals("unsaturator")){
+				if (el.getAttribute("locant") ==null && el.getAttribute("multiplied")==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
+					if (subOrRoot.indexOf(el)>subOrRoot.indexOf(locantEl)){
+						locantAble.add(el);
+					}
+				}
+			}
+		}
+		return locantAble;
 	}
 	
 	/**

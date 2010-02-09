@@ -44,9 +44,6 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="hydrazide">hydrazide</suffix>
     <suffix value="hydroxamate">hydroxamate</suffix>
     <suffix value="hydroxamic">hydroxamic</suffix>
-    <suffix value="hydroximate">hydroximate</suffix>
-    <suffix value="hydroximic">hydroximic</suffix>
-    <suffix value="hydroximoyl">hydroximoyl</suffix>
     <suffix value="ic">ic</suffix>
     <suffix value="ide">ide</suffix>
     <suffix value="ium">ium</suffix>
@@ -132,9 +129,6 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="hydrazonic">hydrazonic</suffix>
     <suffix value="hydroxamate">hydroxamate</suffix>
     <suffix value="hydroxamic">hydroxamic</suffix>
-    <suffix value="hydroximate">hydroximate</suffix>
-    <suffix value="hydroximic">hydroximic</suffix>
-    <suffix value="hydroximoyl">hydroximoyl</suffix>
     <suffix value="ic">ic</suffix>
     <suffix value="ide">ide</suffix>
     <suffix value="imine">imine</suffix>

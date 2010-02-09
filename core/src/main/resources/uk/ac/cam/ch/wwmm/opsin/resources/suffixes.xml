@@ -1,8 +1,7 @@
 ﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <!-- value = a reference to suffixApplicability.xml -->
-<!--Suffix subType is used to indicate those that occur at the end of chains.
-See the des-->
+<!--Suffix subType is used to indicate those that occur at the end of chains.-->
 <tokenLists>
 <!--not allowed to be prefixed by carbo(x)/sulfon etc. Can be locanted to any position-->
   <tokenList tagname="suffix" type="root" symbol="s">
@@ -66,9 +65,7 @@ See the des-->
     <token value="ate">ate</token>
     <token value="hydrazide">hydrazide</token>
     <token value="hydroxamic">hydroxamic</token>
-    <token value="hydroximic">hydroximic</token>
     <token value="hydroxamate">hydroxamate</token>
-    <token value="hydroximate">hydroximate</token>
     <token value="ic">ic</token>
     <token value="nitrile">nitrile</token>
     <token value="nitrilium">nitrilium</token>

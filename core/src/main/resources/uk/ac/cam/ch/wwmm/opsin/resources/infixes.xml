@@ -37,4 +37,6 @@ then the SMILES replacement
   <token value="-O-:[Te][Te]">ditellurooperox</token>
   <!--<token value="-O-:[Se]S">selenothioperoxo</token> is it [Se]S or S[Se]???-->
 
+  <token value="=O:=NO">hydroxim</token><!--not an IUPAC infix-->
+
 </tokenList>

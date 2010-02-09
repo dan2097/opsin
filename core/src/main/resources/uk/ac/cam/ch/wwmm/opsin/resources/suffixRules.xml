@@ -106,21 +106,6 @@ sense of this -->
     <addgroup SMILES="NO" functionalIDs="2"/>
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
-  <rule value="hydroximate">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="NO" bondOrder="2" />
-    <addgroup SMILES="[O-]" functionalIDs="1"/>
-  </rule>
-  <rule value="hydroximic">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="NO" bondOrder="2" />
-    <addgroup SMILES="O" functionalIDs="1"/>
-  </rule>
-  <rule value="hydroximoyl">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="NO" bondOrder="2"/>
-    <setOutID />
-  </rule>
   <rule value="ic">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" functionalIDs="1"/>
