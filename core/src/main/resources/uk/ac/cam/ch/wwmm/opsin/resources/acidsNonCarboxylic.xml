@@ -30,6 +30,7 @@
     <token value="[As](O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arson</token>
     <token value="[N+](O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes">azin</token>
     <token value="[N+](O)(O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">azon</token>
+    <token value="P(O)(=O)=O" labels="none" valType="SMILES">phosphen</token><!--deprecated-->
     <token value="P(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphin</token>
     <token value="P(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphon</token>
     <token value="[Sb](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">stibin</token>
