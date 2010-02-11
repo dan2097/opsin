@@ -32,9 +32,9 @@
         <version>0.5.4-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>net.sf</groupId>
-        <artifactId>jniinchi</artifactId>
-        <version>0.5</version>
+        <groupId>net.sf.jni-inchi</groupId>
+        <artifactId>jni-inchi</artifactId>
+        <version>0.6</version>
       </dependency>
    </dependencies>
 </project>

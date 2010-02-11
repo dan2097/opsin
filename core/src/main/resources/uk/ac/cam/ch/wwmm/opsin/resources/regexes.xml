@@ -96,7 +96,7 @@ does not define a CFG.
   <regex name="%aminoAcidYl%" value="¥"/>
   <regex name="%oMeaningYl%" value="₧"/>
   <regex name="%monoNuclearNonCarbonAcidNoAcyl%" value="ƒ"/>
-  <!--up to ascii 158 used -->
+  <!--up to ascii 159 used -->
 
 <!-- composite regexes-->
 
@@ -176,8 +176,12 @@ does not define a CFG.
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%cycloChain%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%)%inlineEndings%|%bracketedLocant%?%trivialRingSubstituent%%inlineSuffixGroup%)"/>
 
   <!--Complex terms-->
-  <regex name="%benzoComponent%" value ="(%bracketedLocant%|%locantGroup%)%benzo%"/>
-  <regex name="%fusedRingSystem%" value = "((%fusionComponent%%fusionBracket%?%hyphen%?|%benzoComponent%|%multiplier%(%fusionComponent%%multipleFusor%?%hyphen%?|%benzoComponent%))+%ringGroup%)"/>
+  <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locantGroup%)%benzo%)"/>
+  <regex name="%simpleComponent%" value ="(%fusionComponent%%hyphen%?%fusionBracket%?%hyphen%?|%benzoComponent%)" />
+  <regex name="%multipliedComponent%" value ="(%multiplier%(%fusionComponent%%hyphen%?%multipleFusor%?%hyphen%?|%benzoComponent%))" />
+  <regex name="%multipliedParent%" value ="(%fusionComponent%%hyphen%?%multipleFusor%?%hyphen%?%multiplier%)"/>
+
+  <regex name="%fusedRingSystem%" value = "((%simpleComponent%|%multipliedComponent%|%multipliedParent%)+%ringGroup%)"/>
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringSubstituent%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%inlineSuffixGroup%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />

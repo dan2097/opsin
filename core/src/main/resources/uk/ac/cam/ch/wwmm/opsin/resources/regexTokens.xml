@@ -46,8 +46,8 @@
   <regexToken regex="[cC][yY][cC][lL][oO]\[[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+\^?[\(\{]?[0-9]+,[0-9]+[\)\}]?\^?\^?)*\]" symbol="B" tagname="vonBaeyer" determinise="yes"/>
   <regexToken regex="\[[1-9][0-9]*\][aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
-  <regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-[a-z]+)"/><!--Numerical locants may be primed if component is multiplied-->
-  <regex name="%omittedLocantFirstOrderFusion%" regex="([a-z]+)"/>
+  <regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-([a-z]'*)+)"/><!--Numerical locants may be primed if component is multiplied. Primes on letters may occur if parent is multiplied-->
+  <regex name="%omittedLocantFirstOrderFusion%" regex="(([a-z]'*)+)"/>
   <regex name="%omittedLocantAmbiguousOrderFusion%" regex="(%locant%(,%locant%)+)"/><!--note that something like [4,5] can be a first or higher order fusion dependant on context!-->
   <regex name="%higherOrderFusion%" regex="(%locant%(,%locant%)+:%locant%(,%locant%)+)"/>
   <regexToken regex="\[(%firstOrderFusion%|%omittedLocantFirstOrderFusion%|%omittedLocantAmbiguousOrderFusion%|%higherOrderFusion%)\]" symbol="F" tagname="fusion" determinise="yes"/>

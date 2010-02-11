@@ -209,14 +209,20 @@ public final class StringTools {
 	}
 
 	/**
-	 * Any primes at the end of the string are removed
+	 * Counts the number of primes at the end of a locant
 	 * @param locantText
 	 * @return
 	 */
-	public static String removePrimesIfPresent(String locantText){
-		while(locantText.endsWith("'")) {
-			locantText = locantText.substring(0, locantText.length()-1);
+	public static int countTerminalPrimes(String locantText){
+		int numberOfPrimes = 0;
+		for(int k = locantText.length() -1; k>0; k--){
+			if (locantText.charAt(k)=='\''){
+				numberOfPrimes++;
+			}
+			else{
+				break;
+			}
 		}
-		return locantText;
+		return numberOfPrimes;
 	}
 }

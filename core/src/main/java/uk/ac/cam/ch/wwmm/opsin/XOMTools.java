@@ -292,7 +292,6 @@ public final class XOMTools {
 	 * @return
 	 */
 	public static Element getPreviousSiblingIgnoringCertainElements(Element startingEl, String[] elementsToIgnore){
-		
 		ParentNode parent = startingEl.getParent();
 		if (parent==null){
 			return null;
@@ -410,7 +409,7 @@ public final class XOMTools {
 		while (stack.size()>0){
 			Element currentElement =stack.removeLast();
 			if (currentElement.getLocalName().equals(elementName)){
-				if (currentElement.getAttribute(attributeName)!=null && currentElement.getAttributeValue(attributeName).equals(attributeValue)){
+				if (attributeValue.equals(currentElement.getAttributeValue(attributeName))){
 					matchingElements.add(currentElement);
 				}
 			}
@@ -437,7 +436,7 @@ public final class XOMTools {
 		for (int i = 0; i < children.size(); i++) {
 			Element child =children.get(i);
 			if (child.getLocalName().equals(elementName)){
-				if (child.getAttribute(attributeName)!=null && child.getAttributeValue(attributeName).equals(attributeValue)){
+				if (attributeValue.equals(child.getAttributeValue(attributeName))){
 					matchingElements.add(child);
 				}
 			}

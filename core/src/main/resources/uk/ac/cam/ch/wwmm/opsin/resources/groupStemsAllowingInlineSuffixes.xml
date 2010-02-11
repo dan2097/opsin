@@ -4,9 +4,10 @@
 <tokenList tagname="group" type="substituent" subType="groupStem" symbol="g">
   <token value="[N-]" labels="none" valType="SMILES">amid</token>
   <token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amin</token>
-  <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidin</token>
+  <token value="N[C@H](C(=O)O)CCC(=O)N[C@@H](CS)C(=O)NCC(=O)O" labels="none" valType="SMILES">glutathion</token>
   <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerol</token>
   <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerin</token>
+  <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidin</token>
   <token value="C=C=O" labels="none" valType="SMILES">keten</token>
 
   <token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>
