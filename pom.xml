@@ -32,13 +32,13 @@
   </modules>
   <repositories>
     <repository>
-      <id>wwmm</id>
-      <url>http://wwmm.ch.cam.ac.uk/maven2</url>
+      <id>ucc</id>
+      <url>http://maven.ch.cam.ac.uk/m2repo</url>
     </repository>
-    <repository>
+    <!--<repository>
 	    <id>sea36</id>
 	    <url>http://daedal.ch.cam.ac.uk:8080/m2repo</url>
-	  </repository>
+	  </repository>-->
   </repositories>
   <build>
     <plugins>

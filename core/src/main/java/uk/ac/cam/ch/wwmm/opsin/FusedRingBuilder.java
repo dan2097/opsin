@@ -3,8 +3,10 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import nu.xom.Element;
@@ -73,6 +75,26 @@ class FusedRingBuilder {
 		List<Element> nameComponents  = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"fusion","group"});
 		nameComponents.remove(lastGroup);
 		
+
+		Fragment parentRing = state.xmlFragmentMap.get(lastGroup);
+		List<Fragment> componentFragments = new ArrayList<Fragment>();//all the ring fragments (other than the parentRing). These will later be merged into the parentRing
+		Map<Integer,Fragment> fragmentInScopeForEachFusionLevel = new HashMap<Integer,Fragment>();
+		fragmentInScopeForEachFusionLevel.put(0, parentRing);
+		
+		int numberOfParents = 1;
+		Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(lastGroup);
+		if (nameComponents.size()>0 && possibleMultiplier !=null && possibleMultiplier.getLocalName().equals("multiplier")){
+			numberOfParents = Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
+			possibleMultiplier.detach();
+		}
+		List<Fragment> parentFragments = new ArrayList<Fragment>();
+		parentFragments.add(parentRing);
+		for (int j = 1; j < numberOfParents; j++) {
+			Fragment copyOfParentRing =state.fragManager.copyAndRelabel(parentRing);
+			parentFragments.add(copyOfParentRing);
+			componentFragments.add(copyOfParentRing);
+		}
+
 		/*
 		 * The number of primes on the component to be connected. 
 		 * This is initially 0 indicating fusion of unprimed locants with the letter locants of the parentRing
@@ -81,12 +103,9 @@ class FusedRingBuilder {
 		 * Next would be double primed fusing to single primed locants etc.
 		 * 
 		 */
-		Fragment parentRing = state.xmlFragmentMap.get(lastGroup);
-		int fusionLevel = 0;
-		List<Fragment> fragmentInScopeForEachFusionLevel = new ArrayList<Fragment>();
-		fragmentInScopeForEachFusionLevel.add(0, parentRing);//theLast ring fused or parentRing
-		List<Fragment> componentFragments = new ArrayList<Fragment>();
-		for (int i = nameComponents.size()-1; i>=0; i--) {
+		int i = processMultiParentSystem(state, parentFragments, nameComponents, fragmentInScopeForEachFusionLevel, componentFragments);//handle multiparent systems
+		int fusionLevel = (nameComponents.size()-1 -i)/2;
+		for (; i>=0; i--) {
 			Element fusion = null;
 			if (nameComponents.get(i).getLocalName().equals("fusion")){
 				fusion = nameComponents.get(i--);
@@ -152,7 +171,22 @@ class FusedRingBuilder {
 						else{
 							fusionLevel = 0;
 							relabelAccordingToFusionLevel(component, fusionLevel);
-							performSimpleFusion(state, fusionDescriptors[j], component, fragmentInScopeForEachFusionLevel.get(fusionLevel));//e.g. pyrano[3,2-b]imidazo[4,5-e]pyridine where both are level 0 fusions
+							String fusionDescriptor = fusionDescriptors[j];
+							String[] fusionArray = determineNumericalAndLetterComponents(fusionDescriptor);
+							int numberOfPrimes =0;
+							if (!fusionArray[1].equals("")){
+								numberOfPrimes =StringTools.countTerminalPrimes(fusionArray[1]);
+								if (fusionArray[0].equals("")){
+									fusionDescriptor = fusionArray[1].replaceAll("'", "");
+								}
+								else{
+									fusionDescriptor = fusionArray[0]+ "-" +fusionArray[1].replaceAll("'", "");
+								}
+								if (numberOfPrimes >= parentFragments.size()){
+									throw new StructureBuildingException("Unexpected prime in fusion descriptor");
+								}
+							}
+							performSimpleFusion(state, fusionDescriptor, component, parentFragments.get(numberOfPrimes));//e.g. pyrano[3,2-b]imidazo[4,5-e]pyridine where both are level 0 fusions
 						}
 					}
 					else{
@@ -182,15 +216,9 @@ class FusedRingBuilder {
 			}
 			fusionLevel++;
 			if (multiplier ==1){//multiplied components may not be substituted onto
-				if (fragmentInScopeForEachFusionLevel.size() <= fusionLevel){
-					fragmentInScopeForEachFusionLevel.add(fusionLevel, fusionComponents[0]);
-				}
-				else{
-					fragmentInScopeForEachFusionLevel.set(fusionLevel, fusionComponents[0]);
-				}
+				fragmentInScopeForEachFusionLevel.put(fusionLevel, fusionComponents[0]);
 			}
 		}
-
 		for (Fragment ring : componentFragments) {
 			state.fragManager.incorporateFragment(ring, parentRing);
 		}
@@ -219,6 +247,133 @@ class FusedRingBuilder {
 			element.detach();
 		}
 		return fusedRingEl;
+	}
+
+	private int processMultiParentSystem(BuildState state,List<Fragment> parentFragments, List<Element> nameComponents, Map<Integer, Fragment> fragmentInScopeForEachFusionLevel, List<Fragment> componentFragments) throws StructureBuildingException {
+		int i = nameComponents.size()-1;
+		int fusionLevel =0;
+		if (i>=0 && parentFragments.size()>1){
+			List<Fragment> previousFusionLevelFragments = parentFragments;
+			for (; i>=0; i--) {
+				if (previousFusionLevelFragments.size()==1){//completed multi parent system
+					fragmentInScopeForEachFusionLevel.put(fusionLevel, previousFusionLevelFragments.get(0));
+					break;
+				}
+				Element fusion = null;
+				if (nameComponents.get(i).getLocalName().equals("fusion")){
+					fusion = nameComponents.get(i--);
+				}
+				else{
+					throw new StructureBuildingException("Fusion bracket not found where fusion bracket expected");
+				}
+				if (i <0 || !nameComponents.get(i).getLocalName().equals("group")){
+					throw new StructureBuildingException("Group not found where group expected. This is probably a bug");
+				}
+				Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(i));
+				relabelAccordingToFusionLevel(nextComponent, fusionLevel);
+				int multiplier = 1;
+				Element possibleMultiplierEl = (Element) XOMTools.getPreviousSibling(nameComponents.get(i));
+				if (possibleMultiplierEl != null && possibleMultiplierEl.getLocalName().equals("multiplier")){
+					multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue("value"));
+				}
+				if (multiplier >1){
+					possibleMultiplierEl.detach();
+				}
+				List<Fragment> fusionComponents = new ArrayList<Fragment>();
+				for (int j = 0; j < multiplier; j++) {
+					if (j>0){
+						fusionComponents.add(state.fragManager.copyAndRelabel(nextComponent,  StringTools.multiplyString("'", j)));
+					}
+					else{
+						fusionComponents.add(nextComponent);
+					}
+				}
+				fusionLevel+=multiplier;
+				if (multiplier>1 && multiplier != previousFusionLevelFragments.size()){
+					throw new StructureBuildingException("Mismatch between number of components and number of parents in fused ring system");
+				}
+				String fusionDescriptorString = fusion.getValue().substring(1, fusion.getValue().length()-1);
+				String[] fusionDescriptors =null;
+				if (matchSemiColon.split(fusionDescriptorString).length >1){
+					fusionDescriptors = matchSemiColon.split(fusionDescriptorString);
+				}
+				else if (matchColon.split(fusionDescriptorString).length >1){
+					fusionDescriptors = matchColon.split(fusionDescriptorString);
+				}
+				else if (matchComma.split(fusionDescriptorString).length >1){
+					fusionDescriptors = matchComma.split(fusionDescriptorString);
+				}
+				else{
+					throw new StructureBuildingException("Invalid fusion descriptor: " + fusionDescriptorString);
+				}
+				if (fusionDescriptors.length != previousFusionLevelFragments.size()){
+					throw new StructureBuildingException("Invalid fusion descriptor: "+fusionDescriptorString +"(Number of locants disagrees with number of parents)");
+				}
+				for (int j = 0; j < fusionDescriptors.length; j++) {
+					String fusionDescriptor = fusionDescriptors[j];
+					Fragment component = multiplier>1 ? fusionComponents.get(j) : nextComponent;
+					Fragment parentToUse = previousFusionLevelFragments.get(j);
+					boolean simpleFusion;
+					if (matchColon.split(fusionDescriptor).length >1){
+						simpleFusion= false;
+					}
+					else{
+						simpleFusion= true;
+					}
+					if (simpleFusion){
+						String[] fusionArray = determineNumericalAndLetterComponents(fusionDescriptor);
+						if (!fusionArray[1].equals("")){
+							int numberOfPrimes =StringTools.countTerminalPrimes(fusionArray[1]);
+							if (fusionArray[0].equals("")){
+								fusionDescriptor = fusionArray[1].replaceAll("'", "");
+							}
+							else{
+								fusionDescriptor = fusionArray[0]+ "-" +fusionArray[1].replaceAll("'", "");
+							}
+							if (numberOfPrimes !=j){//check the number of primes on the letter part agree with the parent to use e.g.[4,5-bcd:1,2-c']difuran
+								throw new StructureBuildingException("Incorrect number of primes in fusion descriptor: " + fusionDescriptor);
+							}
+						}
+						performSimpleFusion(state, fusionDescriptor, component, parentToUse);
+					}
+					else{
+						performHigherOrderFusion(state, fusionDescriptor, component, parentToUse);
+					}
+				}
+				previousFusionLevelFragments = fusionComponents;
+				componentFragments.addAll(fusionComponents);
+			}
+			if (previousFusionLevelFragments.size()!=1){
+				throw new StructureBuildingException("Invalid fused ring system. Incomplete multiparent system");
+			}
+		}
+		return i;
+	}
+
+	/**
+	 * Splits a first order fusion component into it's numerical and letter parts
+	 * Either one of these can be the blank string as they may have been omitted
+	 * The first entry in the array is the numbers and the second the letters
+	 * @param fusionDescriptor
+	 * @return
+	 */
+	private String[] determineNumericalAndLetterComponents(String fusionDescriptor) {
+		String[] fusionArray = matchDash.split(fusionDescriptor);
+		if (fusionArray.length ==2){
+			return fusionArray;
+		}
+		else{
+			String[] components = new String[2];
+			if (fusionArray[0].contains(",")){//the digit section
+				components[0]=fusionArray[0];
+				components[1]="";
+			}
+			else{
+				components[0]="";
+				components[1]=fusionArray[0];
+			}
+			return components;
+		}
 	}
 
 	/**
@@ -623,7 +778,7 @@ class FusedRingBuilder {
 		List<List<Atom>> neighboursOfToBeReplacedChildAtoms= new ArrayList<List<Atom>>();//this list is in the same order as childAtoms
 		for (Atom atom : childAtoms) {
 			List<Atom> neighboursToBeAttachedToParentRing = new ArrayList<Atom>();
-			List<Atom> neighbours = childRing.getAtomNeighbours(atom);
+			List<Atom> neighbours = atom.getAtomNeighbours();
 			for (Atom neighbour : neighbours) {
 				if (!childAtoms.contains(neighbour)){
 					neighboursToBeAttachedToParentRing.add(neighbour);
@@ -631,9 +786,14 @@ class FusedRingBuilder {
 			}
 			neighboursOfToBeReplacedChildAtoms.add(neighboursToBeAttachedToParentRing);
 		}
-		//remove the childAtoms
-		for (Atom atom : childAtoms) {
-			state.fragManager.removeAtomAndAssociatedBonds(atom);
+		//remove the childAtoms and sync spareValency
+		for (int i = 0; i < childAtoms.size(); i++) {
+			Atom parentAtom = parentAtoms.get(i);
+			Atom childAtom = childAtoms.get(i);
+			if (childAtom.hasSpareValency()){
+				parentAtom.setSpareValency(true);
+			}
+			state.fragManager.removeAtomAndAssociatedBonds(childAtom);
 		}
 
 		for (int i = 0; i < parentAtoms.size(); i++) {
