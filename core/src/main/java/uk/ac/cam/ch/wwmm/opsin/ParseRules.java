@@ -39,7 +39,7 @@ class ParseRules {
 	}
 
 	/** Maps regular expression names to regular expressions. */
-	HashMap<String, String> regexDict;
+	private final HashMap<String, String> regexDict;
 	/** A DFA encompassing the grammar of a chemical word. */
 	private RunAutomaton chemAutomaton;
 	/** The allowed symbols in chemAutomaton */
@@ -49,7 +49,7 @@ class ParseRules {
 	private final static char endOfMainGroup = '\u00e2';
 	private final static char endOfFunctionalTerm = '\u00FB';
 
-	private TokenManager tokenManager;
+	private final TokenManager tokenManager;
 
 	/** Initialises the finite-state parser, reading in the rules from regexes.xml.
 	 * @param tokenManager

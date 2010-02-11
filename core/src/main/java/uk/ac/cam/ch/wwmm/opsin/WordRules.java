@@ -112,7 +112,7 @@ class WordRules {
 	 *
 	 */
 	class WordRuleDescription {
-		private List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
+		private final List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
 		private final String ruleName;
 		private final String ruleType;
 
@@ -167,12 +167,11 @@ class WordRules {
 	}
 
 	/**The wordRules themselves.*/
-	private List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
+	private final List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
 
-	/**Takes a parse and groups the parseWords into wordRules. If a space is deemed to be meaningless
-	 * parseWords may be merged
+	/**Takes a molecule element and places the word elements into wordRule elements
 	 *
-	 * @param p The parse object containing the parseWords
+	 * @param moleculeEl A molecule element with word children
 	 * @throws ParsingException
 	 */
 	void groupWordsIntoWordRules(Element moleculeEl) throws ParsingException {
@@ -209,10 +208,10 @@ class WordRules {
 					if (wd.functionalGroupType !=null){
 						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue("type"))){
 							Elements children = wordEl.getChildElements();
-							Element lastChild = (Element) children.get(children.size()-1);
+							Element lastChild = children.get(children.size()-1);
 							while (lastChild.getChildElements().size()!=0){
 								children = lastChild.getChildElements();
-								lastChild = (Element) children.get(children.size()-1);
+								lastChild = children.get(children.size()-1);
 							}
 							if (lastChild.getLocalName().equals("closebracket")){
 								lastChild = (Element) XOMTools.getPreviousSibling(lastChild);
@@ -232,10 +231,10 @@ class WordRules {
 					}
 					if (wd.endsWithGroupValueAtr !=null){
 						Elements children = wordEl.getChildElements();
-						Element lastChild = (Element) children.get(children.size()-1);
+						Element lastChild = children.get(children.size()-1);
 						while (lastChild.getChildElements().size()!=0){
 							children = lastChild.getChildElements();
-							lastChild = (Element) children.get(children.size()-1);
+							lastChild = children.get(children.size()-1);
 						}
 						Element groupToExamine;
 						if (lastChild.getLocalName().equals("group")){

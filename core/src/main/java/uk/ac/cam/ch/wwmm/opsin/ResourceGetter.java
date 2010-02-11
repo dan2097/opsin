@@ -26,7 +26,7 @@ import nu.xom.Document;
  */
 final class ResourceGetter {
 
-	private String resourcePath;
+	private final String resourcePath;
 	private String workspace;
 
 	/**

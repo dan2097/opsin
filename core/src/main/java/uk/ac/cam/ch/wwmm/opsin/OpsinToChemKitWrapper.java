@@ -18,9 +18,9 @@ import sea36.chem.core.CMLBondStereo.Type;
 
 class OpsinToChemKitWrapper {
 
-	private Map<CMLAtom,Atom> chemKitAtomToOpsinAtomMap = new HashMap<CMLAtom, Atom>();
-	private Map<Atom, CMLAtom> opsinAtomToChemKitAtomMap = new HashMap<Atom, CMLAtom>();
-	private CMLMolecule chemKitMolecule =  new CMLMolecule();
+	private final Map<CMLAtom,Atom> chemKitAtomToOpsinAtomMap = new HashMap<CMLAtom, Atom>();
+	private final Map<Atom, CMLAtom> opsinAtomToChemKitAtomMap = new HashMap<Atom, CMLAtom>();
+	private final CMLMolecule chemKitMolecule =  new CMLMolecule();
 
 	OpsinToChemKitWrapper(Fragment opsinFragment) {
 		List<Atom> atoms = opsinFragment.getAtomList();

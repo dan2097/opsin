@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 class Tokeniser {
 
 
-	private ParseRules parseRules;
-	private Pattern matchWhitespace =Pattern.compile("\\s+");
+	private final ParseRules parseRules;
+	private final Pattern matchWhitespace =Pattern.compile("\\s+");
 	private final static char endOfFunctionalTerm = '\u00FB';
 	
 	Tokeniser(ParseRules parseRules) {

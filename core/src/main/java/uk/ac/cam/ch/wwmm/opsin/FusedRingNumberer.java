@@ -138,7 +138,7 @@ class FusedRingNumberer {
 	    }
 	}
 
-	private static HashMap<String, Integer> heteroAtomValues =new HashMap<String, Integer>();
+	private static final HashMap<String, Integer> heteroAtomValues =new HashMap<String, Integer>();
 	static{
 		//unknown heteroatoms or carbon are given a value of 0
 		heteroAtomValues.put("Hg",2);
@@ -266,10 +266,10 @@ class FusedRingNumberer {
 
 	//*****************************************************************************************************
 	private static class ConnectivityTable {
-		public List<Ring> col1 = new ArrayList<Ring>();
-		public List<Ring> col2 = new ArrayList<Ring>();
-		public List<Integer> col3 = new ArrayList<Integer>();
-		public List<Ring> usedRings = new ArrayList<Ring>();
+		public final List<Ring> col1 = new ArrayList<Ring>();
+		public final List<Ring> col2 = new ArrayList<Ring>();
+		public final List<Integer> col3 = new ArrayList<Integer>();
+		public final List<Ring> usedRings = new ArrayList<Ring>();
 	}
 
 	/**
@@ -1901,7 +1901,7 @@ class FusedRingNumberer {
 
 	/** Employs chemKit to find the smallest set of smallest rings in input fragment
 	 * An exception is thrown if the input fragment has less than 2 rings
-	 * @param Fragment An OPSIN fragment
+	 * @param frag An OPSIN fragment
 	 * @return List<Ring> The smallest set of smallest rings
 	 */
 	static List<Ring> getSetOfSmallestRings(Fragment frag) throws StructureBuildingException {

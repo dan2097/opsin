@@ -12,7 +12,7 @@ import nu.xom.Element;
 class Token {
 
 	/**A reference copy of the XML element to produce*/
-	private Element elem;
+	private final Element elem;
 
 	/**Should this token actually be used. Set to true for meaningless tokens e.g. e, o, endOfSubstituent etc.*/
 	private boolean ignoreWhenWritingXML =false;

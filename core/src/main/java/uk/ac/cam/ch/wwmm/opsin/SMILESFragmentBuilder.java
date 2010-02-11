@@ -71,15 +71,15 @@ class SMILESFragmentBuilder {
 	}
 
 	/**Upper case letters.*/
-	private static String upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static final String upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	/**Lower case letters.*/
-	private static String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
+	private static final String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
 	/**Numerical digits.*/
-	private static String digits = "0123456789";
+	private static final String digits = "0123456789";
 	/**Organic Atoms.*/
-	private static Set<String> organicAtoms = new HashSet<String>();
+	private static final Set<String> organicAtoms = new HashSet<String>();
 	/**Aromatic Atoms.*/
-	private static Set<String> aromaticAtoms = new HashSet<String>();
+	private static final Set<String> aromaticAtoms = new HashSet<String>();
 
 	static {
 		organicAtoms.add("B");
@@ -104,8 +104,8 @@ class SMILESFragmentBuilder {
 		aromaticAtoms.add("te");
 	}
 
-	private static Pattern matchComma =Pattern.compile(",");
-	private static Pattern matchSlash =Pattern.compile("/");
+	private static final Pattern matchComma =Pattern.compile(",");
+	private static final Pattern matchSlash =Pattern.compile("/");
 
 
 	/**Build a Fragment based on a SMILES string, with a null type/subType.

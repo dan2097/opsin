@@ -19,15 +19,15 @@ import nu.xom.Node;
  *
  */
 class OpsinTools {
-	private static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	/**
 	 * Returns the next sibling suffix node which is not related to altering charge (ium/ide/id)
-	 * @param group
+	 * @param currentEl
 	 */
-	public static Element getNextNonChargeSuffix(Element current) {
+	public static Element getNextNonChargeSuffix(Element currentEl) {
 		Element matchedElement =null;
 		while (true) {
-			Element next = (Element) XOMTools.getNextSibling(current);
+			Element next = (Element) XOMTools.getNextSibling(currentEl);
 			if (next != null) {
 				if (next.getLocalName().equals("suffix")){
 					if (next.getAttribute("subType")==null || !next.getAttributeValue("subType").equals("charge")){
@@ -35,7 +35,7 @@ class OpsinTools {
 						break;
 					}
 				}
-				current = next;
+				currentEl = next;
 			} else {
 				break;
 			}

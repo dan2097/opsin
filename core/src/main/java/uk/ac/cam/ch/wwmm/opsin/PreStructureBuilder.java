@@ -54,24 +54,24 @@ class PreStructureBuilder {
 		}
 	}
 	
-	private FusedRingBuilder fusedRingBuilder;
+	private final FusedRingBuilder fusedRingBuilder;
 
-	private Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
-	private Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
-	private Pattern matchBracketedEntryInLocant =Pattern.compile("[\\[\\(\\{].*[\\]\\)\\}]");
-	private Pattern matchCisTransInLocants =Pattern.compile("[rct]-");
-	private Pattern matchColon =Pattern.compile(":");
-	private Pattern matchSemiColon =Pattern.compile(";");
-	private Pattern matchComma =Pattern.compile(",");
-	private Pattern matchSpace =Pattern.compile(" ");
-	private Pattern matchElementSymbol = Pattern.compile("[A-Z].?");
-	private Pattern matchOrtho =Pattern.compile("[oO]");
-	private Pattern matchMeta =Pattern.compile("[mM]");
-	private Pattern matchPara =Pattern.compile("[pP]");
-	private Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
-	private Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
-	private Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro");
-	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
+	private final Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
+	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
+	private final Pattern matchBracketedEntryInLocant =Pattern.compile("[\\[\\(\\{].*[\\]\\)\\}]");
+	private final Pattern matchCisTransInLocants =Pattern.compile("[rct]-");
+	private final Pattern matchColon =Pattern.compile(":");
+	private final Pattern matchSemiColon =Pattern.compile(";");
+	private final Pattern matchComma =Pattern.compile(",");
+	private final Pattern matchSpace =Pattern.compile(" ");
+	private final Pattern matchElementSymbol = Pattern.compile("[A-Z].?");
+	private final Pattern matchOrtho =Pattern.compile("[oO]");
+	private final Pattern matchMeta =Pattern.compile("[mM]");
+	private final Pattern matchPara =Pattern.compile("[pP]");
+	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private final Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
+	private final Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro");
+	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private HashMap<String, String[]> specialHWRings;
@@ -1068,7 +1068,7 @@ class PreStructureBuilder {
 			}
 		}
 
-		ArrayList<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment, lastGroupElementInSubOrRoot);
+		ArrayList<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
 		state.xmlSuffixMap.put(lastGroupElementInSubOrRoot, suffixFragments);
 		boolean suffixesResolved =false;
 		if (lastGroupElementInSubOrRoot.getAttributeValue("type").equals("chalcogenAcidStem")){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacment
@@ -1111,12 +1111,11 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param suffixes The suffix elements for a fragment.
 	 * @param frag The fragment to which the suffix will be applied
-	 * @param group The group in the XML
 	 * @return An arrayList containing the generated fragments
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
 	 * @throws PostProcessingException
 	 */
-	private ArrayList<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag, Element group) throws StructureBuildingException, PostProcessingException {
+	private ArrayList<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag) throws StructureBuildingException, PostProcessingException {
 		ArrayList<Fragment> suffixFragments =new ArrayList<Fragment>();
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
@@ -1364,10 +1363,9 @@ class PreStructureBuilder {
 	 * A suffixPrefix is something like sulfon in sulfonamide. It would in this case take the value S(=O)
 	 * @param state
 	 * @param suffixes
-	 * @throws StructureBuildingException 
-	 * @throws PostProcessingException 
+	 * @throws StructureBuildingException
 	 */
-	private void processSuffixPrefixes(BuildState state, List<Element> suffixes) throws StructureBuildingException, PostProcessingException{
+	private void processSuffixPrefixes(BuildState state, List<Element> suffixes) throws StructureBuildingException{
 		for (Element suffix : suffixes) {
 			if (suffix.getAttribute("suffixPrefix")!=null){
 				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue("suffixPrefix"), "suffix", "suffix" , "none");
@@ -1407,7 +1405,7 @@ class PreStructureBuilder {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute("infix")!=null){
 				Fragment fragToApplyInfixTo = state.xmlFragmentMap.get(suffix);
-				Element possibleAcidGroup = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{"multiplier", "infix"});
+				Element possibleAcidGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{"multiplier", "infix"});
 				if (possibleAcidGroup !=null && possibleAcidGroup.getLocalName().equals("group") && 
 						(possibleAcidGroup.getAttributeValue("type").equals("nonCarboxylicAcid")|| possibleAcidGroup.getAttributeValue("type").equals("chalcogenAcidStem"))){
 					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
@@ -2412,10 +2410,9 @@ class PreStructureBuilder {
 	 * @param group
 	 * @param suffixes
 	 * @return numberOfOutIds that will be added by resolveSuffixes
-	 * @throws StructureBuildingException
 	 * @throws PostProcessingException
 	 */
-	private int calculateOutIdsToBeAddedFromInlineSuffixes(BuildState state, Element group, Elements suffixes) throws StructureBuildingException, PostProcessingException {
+	private int calculateOutIdsToBeAddedFromInlineSuffixes(BuildState state, Element group, Elements suffixes) throws  PostProcessingException {
 		int outIDsThatWillBeAdded = 0;
 		Fragment frag = state.xmlFragmentMap.get(group);
 		String groupType = frag.getType();
@@ -2467,7 +2464,7 @@ class PreStructureBuilder {
 			Element substituentGroup = substituent.getFirstChildElement("group");
 			String theSubstituentSubType = substituentGroup.getAttributeValue("subType");
 			String theSubstituentType = substituentGroup.getAttributeValue("type");
-			boolean aminoAcid = substituentGroup.getAttributeValue("type").equals("aminoAcid") ? true : false;
+			boolean aminoAcid = substituentGroup.getAttributeValue("type").equals("aminoAcid");
 			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent. AminoAcids always join together
 			if (substituentGroup.getAttribute("usableAsAJoiner")==null && !aminoAcid){
 				continue;
@@ -2815,14 +2812,10 @@ class PreStructureBuilder {
 	 * @return
 	 */
 	private boolean isATerminalSuffix(Element suffix){
-		if (
-			suffix.getLocalName().equals("suffix") && 
-			suffix.getAttribute("locant")==null && 
-		   (suffix.getAttributeValue("type").equals("inline") || suffix.getAttribute("subType")!=null && suffix.getAttributeValue("subType").equals("terminal"))){
-			return true;
+        return suffix.getLocalName().equals("suffix") &&
+                suffix.getAttribute("locant") == null &&
+                (suffix.getAttributeValue("type").equals("inline") || suffix.getAttribute("subType") != null && suffix.getAttributeValue("subType").equals("terminal"));
 		}
-		return false;
-	}
 
 	/**Process the effects of suffixes upon a fragment. 
 	 * Unlocanted non-terminal suffixes are not attached yet. All other suffix effects are performed
@@ -3084,7 +3077,7 @@ class PreStructureBuilder {
 		int multiplier =1;
 		Element possibleMultiplier = subOrBracket.getFirstChildElement("multiplier");
 		Element parentElem =(Element)subOrBracket.getParent();
-		boolean oneBelowWordLevel = parentElem.getLocalName().equals("word") ? true : false;
+		boolean oneBelowWordLevel = parentElem.getLocalName().equals("word");
 		if (possibleMultiplier!=null){
 				if (oneBelowWordLevel &&
 					XOMTools.getNextSibling(subOrBracket) == null &&

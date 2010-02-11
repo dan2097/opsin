@@ -28,7 +28,7 @@ final class ThreeReturnValues<F, S, T> {
    public String toString() {
       return "(" + first.toString() + ", " + second.toString() + ", " + third.toString() + ")";
    }
-   private F first;
-   private S second;
-   private T third;
+   private final F first;
+   private final S second;
+   private final T third;
 }

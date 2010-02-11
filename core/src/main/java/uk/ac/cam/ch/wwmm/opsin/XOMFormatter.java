@@ -14,7 +14,7 @@ import nu.xom.Serializer;
  */
 public class XOMFormatter {
 
-	private ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 	private Serializer serializer;
 
 	/**Sets up a new XOMFormatter.

@@ -24,16 +24,16 @@ import nu.xom.Element;
 class Fragment {
 
 	/**A mapping between IDs and the atoms in this fragment, by default is ordered by the order atoms are added to the fragment*/
-	private LinkedHashMap<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
+	private final LinkedHashMap<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
 
 	/**Equivalent to and synced to atomMapFromId.values() */
-	private Collection<Atom> atomCollection = atomMapFromId.values();
+	private final Collection<Atom> atomCollection = atomMapFromId.values();
 
 	/**A mapping between locants and the atoms in this fragment*/
-	private HashMap<String, Atom> atomMapFromLocant = new HashMap<String, Atom>();
+	private final HashMap<String, Atom> atomMapFromLocant = new HashMap<String, Atom>();
 
 	/**The bonds in the fragment*/
-	private Set<Bond> bondSet = new LinkedHashSet<Bond>();
+	private final Set<Bond> bondSet = new LinkedHashSet<Bond>();
 
 	/**The type of the fragment, for the purpose of resolving suffixes*/
 	private String type = "";
@@ -43,15 +43,15 @@ class Fragment {
 
 	/**The IDs of atoms that are used when this fragment is connected to another fragment. Unused outIDs means that the name is a radical or an error has occured
 	 * Initially empty */
-	private LinkedList<OutID> outIDs = new LinkedList<OutID>();
+	private final LinkedList<OutID> outIDs = new LinkedList<OutID>();
 
 	/**The IDs of atoms that are used on this fragment to form things like esters
 	 * Initially empty */
-	private LinkedList<FunctionalID> functionalIDs = new LinkedList<FunctionalID>();
+	private final LinkedList<FunctionalID> functionalIDs = new LinkedList<FunctionalID>();
 
 	/**The IDs of atoms that must be bonded to and the order of the bonds. Currently used in suffixes and in multiplicative nomenclature
 	 * Initially empty */
-	private LinkedList<InID> inIDs = new LinkedList<InID>();
+	private final LinkedList<InID> inIDs = new LinkedList<InID>();
 
 	/**The ID of the atom that fragments connecting to the fragment connect to if a locant has not been specified
 	 * Set by the first atom to be added to the fragment. This is typically the one with locant 1
@@ -62,8 +62,8 @@ class Fragment {
 	 * Defaults to null.*/
 	private Integer indicatedHydrogen;
 
-	private static Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
-	private static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
+	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
 	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Makes an empty Fragment with a given type and subType.
@@ -841,7 +841,7 @@ class Fragment {
 
 	/**
 	 * Checks to see whether a locant is present on this fragment
-	 * @param string
+	 * @param locant
 	 * @return
 	 * @throws StructureBuildingException
 	 */

@@ -20,17 +20,17 @@ import nu.xom.Element;
  */
 class FragmentManager {
 	/** All of the atom-containing fragments in the molecule */
-	private Set<Fragment> fragPile;
+	private final Set<Fragment> fragPile;
 	/** All of the inter-fragment bonds */
-	private Set<Bond> bondPile;
+	private final Set<Bond> bondPile;
 	/** A mapping between fragments and inter fragment bonds */
-	private Map<Fragment,Set<Bond>> fragToInterFragmentBond;
+	private final Map<Fragment,Set<Bond>> fragToInterFragmentBond;
 	/** A builder for fragments specified as SMILES */
-	private SMILESFragmentBuilder sBuilder;
+	private final SMILESFragmentBuilder sBuilder;
 	/** A builder for fragments specified as references to a CML data file */
-	private CMLFragmentBuilder cmlBuilder;
+	private final CMLFragmentBuilder cmlBuilder;
 	/** A source of unique integers */
-	private IDManager idManager;
+	private final IDManager idManager;
 
 	/** Sets up a new Fragment mananger, containing no fragments.
 	 *

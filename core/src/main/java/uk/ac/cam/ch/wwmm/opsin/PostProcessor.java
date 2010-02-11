@@ -68,22 +68,22 @@ class PostProcessor {
 	}
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
-	private Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+[a-z]?(,\\d+[a-z]?)*\\]");
-	private Pattern matchVonBaeyer = Pattern.compile("(\\d+\\^?[\\({]?\\d*,?\\d*[\\)}]?\\^?\\^?)");
-	private Pattern matchAnnulene = Pattern.compile("\\[([1-9]\\d*)\\]annulen");
-	private String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private Pattern matchStereochemistry = Pattern.compile("(.*?)(RS|[RSEZrsez])");
-	private Pattern matchRS = Pattern.compile("[RSrs]");
-	private Pattern matchEZ = Pattern.compile("[EZez]");
-	private Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
-	private Pattern matchComma =Pattern.compile(",");
-	private Pattern matchSemiColon =Pattern.compile(";");
-	private Pattern matchDot =Pattern.compile("\\.");
-	private Pattern matchNonDigit =Pattern.compile("\\D+");
-	private Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
-	private Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
+	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+[a-z]?(,\\d+[a-z]?)*\\]");
+	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+\\^?[\\({]?\\d*,?\\d*[\\)}]?\\^?\\^?)");
+	private final Pattern matchAnnulene = Pattern.compile("\\[([1-9]\\d*)\\]annulen");
+	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
+	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(RS|[RSEZrsez])");
+	private final Pattern matchRS = Pattern.compile("[RSrs]");
+	private final Pattern matchEZ = Pattern.compile("[EZez]");
+	private final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
+	private final Pattern matchComma =Pattern.compile(",");
+	private final Pattern matchSemiColon =Pattern.compile(";");
+	private final Pattern matchDot =Pattern.compile("\\.");
+	private final Pattern matchNonDigit =Pattern.compile("\\D+");
+	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
+	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
-	private TokenManager tokenManager;
+	private final TokenManager tokenManager;
 
 	PostProcessor(TokenManager tokenManager) {
 		this.tokenManager =tokenManager;
@@ -117,7 +117,7 @@ class PostProcessor {
 		processHydroCarbonRings(moleculeEl);
 		for (Element group : groups) {
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
-			handleIrregularities(group, state);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
+			handleIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
 
 		/* Converts open/close bracket elements to bracket elements and
@@ -128,7 +128,7 @@ class PostProcessor {
 			processHydroSubstituents(group);//this REMOVES hydro substituents and adds hydro elements in front of an appropriate ring
 		}
 
-		addOmittedSpaces(state, moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
+		addOmittedSpaces(moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
 
 	/**
@@ -278,7 +278,7 @@ class PostProcessor {
 				continue;//do nothing
 			}
 			int chainLength = Integer.parseInt(alkane.getAttributeValue("value"));
-			boolean suffixPresent = subOrRoot.getChildElements("suffix").size() >0 ? true : false;
+			boolean suffixPresent = subOrRoot.getChildElements("suffix").size() > 0;
 			String smiles;
 			if (type.equals("tert")){
 				if (chainLength <4){
@@ -521,7 +521,7 @@ class PostProcessor {
 	private void processInfixes(Element subOrRoot) throws PostProcessingException {
 		List<Element> infixes = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[] {"infix"});
 		for (Element infix : infixes) {
-			Element suffix = (Element) XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{"infix", "suffixPrefix"});
+			Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{"infix", "suffixPrefix"});
 			if (suffix ==null || !suffix.getLocalName().equals("suffix")){
 				throw new PostProcessingException("No suffix found next next to infix: "+ infix.getValue());
 			}
@@ -1310,10 +1310,9 @@ class PostProcessor {
 
 	/**Handles special cases in IUPAC nomenclature.
 	 * Benzyl etc.
-	 * @param state
 	 * @param group The group to look for irregularities in.
 	 */
-	private void handleIrregularities(Element group, BuildState state) throws PostProcessingException {
+	private void handleIrregularities(Element group) throws PostProcessingException {
 		String groupValue =group.getValue();
 		/* Benzyl, benzyloxy etc. Add a methylene */
 		if(groupValue.equals("benz")) {
@@ -1566,10 +1565,9 @@ class PostProcessor {
 
 	/**
 	 * Moves substituents into new words if it appears that a space was omitted in the input name
-	 * @param state
 	 * @param elem
 	 */
-	private void addOmittedSpaces(BuildState state, Element elem) throws PostProcessingException {
+	private void addOmittedSpaces(Element elem)  {
 		List<Element> wordRules = XOMTools.getDescendantElementsWithTagName(elem, "wordRule");
 		for (Element wordRule : wordRules) {
 			if (WordRule.valueOf(wordRule.getAttributeValue("wordRule")) == WordRule.divalentFunctionalGroup){

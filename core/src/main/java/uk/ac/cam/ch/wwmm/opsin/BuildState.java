@@ -18,19 +18,19 @@ import nu.xom.Element;
  */
 class BuildState {
 
-	IDManager idManager;
-	FragmentManager fragManager;
+	final IDManager idManager;
+	final FragmentManager fragManager;
 	WordRule currentWordRule = null;
-	BiDirectionalHashMap xmlFragmentMap;
-	HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
-	boolean debug = false;
+	final BiDirectionalHashMap xmlFragmentMap;
+	final HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
+	final boolean debug = false;
 
 	/**
 	 * Wrapper class for returning multiple objects
 	 */
 	final static class BiDirectionalHashMap implements Map<Element, Fragment>{
-		HashMap<Element, Fragment> xmlFragmentMap = new HashMap<Element, Fragment>();
-		HashMap<Fragment, Element> fragmentXmlMap = new HashMap<Fragment, Element>();
+		final HashMap<Element, Fragment> xmlFragmentMap = new HashMap<Element, Fragment>();
+		final HashMap<Fragment, Element> fragmentXmlMap = new HashMap<Fragment, Element>();
 		public void clear() {
 			xmlFragmentMap.clear();
 			fragmentXmlMap.clear();

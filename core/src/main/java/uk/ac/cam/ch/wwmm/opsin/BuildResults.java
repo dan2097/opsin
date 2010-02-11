@@ -17,16 +17,16 @@ class BuildResults {
 	 * setExplicitly says whether the outID absolutely definitely refers to that id or not.
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
 	 * These OutIDs are the same objects as are present in the fragments*/
-	private LinkedList<OutID> outIDs;
+	private final LinkedList<OutID> outIDs;
 
 	/**The ID or IDs of the atoms that may be used to from things like esters*/
-	private LinkedList<FunctionalID> functionalIDs;
+	private final LinkedList<FunctionalID> functionalIDs;
 
 	/**The ID or IDs of the atoms that must have bonds formed to them. Rarely used expect in the root of multiplicative names*/
-	private LinkedList<InID> inIDs;
+	private final LinkedList<InID> inIDs;
 
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
-	private LinkedHashSet<Fragment> fragments;
+	private final LinkedHashSet<Fragment> fragments;
 
 	/**A BuildResults is constructed from a list of Fragments.
 	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.*/

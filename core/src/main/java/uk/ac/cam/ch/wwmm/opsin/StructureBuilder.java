@@ -1,9 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
@@ -21,10 +18,10 @@ import static  uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 
-	private Pattern matchDigits = Pattern.compile("\\d+");
-	private Pattern matchComma =Pattern.compile(",");
-	private Pattern matchColon =Pattern.compile(":");
-	private Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private final Pattern matchDigits = Pattern.compile("\\d+");
+	private final Pattern matchComma =Pattern.compile(",");
+	private final Pattern matchColon =Pattern.compile(":");
+	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
 	/**	Builds a molecule as a Fragment based on preStructurebuilder output.
 	 * @param state
@@ -112,7 +109,7 @@ class StructureBuilder {
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
 		List<Element> stereoChemistryEls = XOMTools.getDescendantElementsWithTagName(molecule, "stereoChemistry");
 		if (stereoChemistryEls.size() >0){
-			StereochemistryHandler.processStereochemicalElements(state, molecule, uniFrag, stereoChemistryEls);
+			StereochemistryHandler.processStereochemicalElements(state, uniFrag, stereoChemistryEls);
 		}
 
 		//adds Xe group at all atoms which have unused outIDs
@@ -473,9 +470,7 @@ class StructureBuilder {
 		}
 		if (locantEls.size()==1){
 			String[] locants = matchComma.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
-			for (String locant : locants) {
-				locantsForOxide.add(locant);
-			}
+            locantsForOxide.addAll(Arrays.asList(locants));
 			locantEls.get(0).detach();
 		}
 		if (!locantsForOxide.isEmpty() && locantsForOxide.size()!=oxideFragments.size()){
@@ -609,9 +604,7 @@ class StructureBuilder {
 			}
 			if (locantEls.size()==1){
 				String[] locants = matchComma.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
-				for (String locant : locants) {
-					locantForFunctionalTerm.add(locant);
-				}
+                locantForFunctionalTerm.addAll(Arrays.asList(locants));
 				locantEls.get(0).detach();
 			}
 		}

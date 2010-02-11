@@ -18,13 +18,12 @@ import nu.xom.Elements;
  *
  */
 class FusedRingBuilder {
-	private Pattern matchSemiColon = Pattern.compile(";");
-	private Pattern matchColon = Pattern.compile(":");
-	private Pattern matchComma = Pattern.compile(",");
-	private Pattern matchDash = Pattern.compile("-");
-	private Pattern matchSlash = Pattern.compile("/");
-	private Pattern matchC = Pattern.compile("C");
-	Pattern matchPrime = Pattern.compile("'");
+	private final Pattern matchSemiColon = Pattern.compile(";");
+	private final Pattern matchColon = Pattern.compile(":");
+	private final Pattern matchComma = Pattern.compile(",");
+	private final Pattern matchDash = Pattern.compile("-");
+	private final Pattern matchSlash = Pattern.compile("/");
+	private final Pattern matchC = Pattern.compile("C");
 
 	FusedRingBuilder() {
 	}
@@ -314,12 +313,7 @@ class FusedRingBuilder {
 					Fragment component = multiplier>1 ? fusionComponents.get(j) : nextComponent;
 					Fragment parentToUse = previousFusionLevelFragments.get(j);
 					boolean simpleFusion;
-					if (matchColon.split(fusionDescriptor).length >1){
-						simpleFusion= false;
-					}
-					else{
-						simpleFusion= true;
-					}
+                    simpleFusion = matchColon.split(fusionDescriptor).length <= 1;
 					if (simpleFusion){
 						String[] fusionArray = determineNumericalAndLetterComponents(fusionDescriptor);
 						if (!fusionArray[1].equals("")){
@@ -407,11 +401,10 @@ class FusedRingBuilder {
 
 	/**
 	 * Modifies nextComponent's locants according to the fusionLevel.
-	 * @param nextComponent
+	 * @param component
 	 * @param fusionLevel
-	 * @throws StructureBuildingException
 	 */
-	private void relabelAccordingToFusionLevel(Fragment component, int fusionLevel) throws StructureBuildingException {
+	private void relabelAccordingToFusionLevel(Fragment component, int fusionLevel)  {
 		if (fusionLevel > 0){
 			FragmentTools.relabelLocants(component.getAtomList(), StringTools.multiplyString("'", fusionLevel));
 		}
@@ -438,9 +431,9 @@ class FusedRingBuilder {
 				numericalLocantsOfChild = Arrays.asList(matchComma.split(fusionArray[0]));
 				char[] tempLetterLocantsOfParent = fusionArray[1].toCharArray();
 				letterLocantsOfParent = new ArrayList<String>();
-				for (int i = 0; i < tempLetterLocantsOfParent.length; i++) {
-					letterLocantsOfParent.add(String.valueOf(tempLetterLocantsOfParent[i]));
-				}
+                for (char letterLocantOfParent : tempLetterLocantsOfParent) {
+                    letterLocantsOfParent.add(String.valueOf(letterLocantOfParent));
+                }
 			}
 			else{
 				if (fusionArray[0].contains(",")){//only has digits
@@ -450,9 +443,9 @@ class FusedRingBuilder {
 				else{//only has letters
 					char[] tempLetterLocantsOfParentCharArray = fusionArray[0].toCharArray();
 					letterLocantsOfParent = new ArrayList<String>();
-					for (int i = 0; i < tempLetterLocantsOfParentCharArray.length; i++) {
-						letterLocantsOfParent.add(String.valueOf(tempLetterLocantsOfParentCharArray[i]));
-					}
+                    for (char letterLocantOfParentCharArray : tempLetterLocantsOfParentCharArray) {
+                        letterLocantsOfParent.add(String.valueOf(letterLocantOfParentCharArray));
+                    }
 				}
 			}
 		}
@@ -619,7 +612,7 @@ class FusedRingBuilder {
 		for (int i = 0; i < letterLocantsOfParent.size(); i++) {
 			parentAtoms.add(cyclicListAtomsInParent.getNext());
 		}
-		fuseRings(state, childRing, parentRing, childAtoms, parentAtoms);
+		fuseRings(state, childAtoms, parentAtoms);
 	}
 	
 	/**
@@ -652,7 +645,7 @@ class FusedRingBuilder {
 	 * @param childRing
 	 * @param parentRing
 	 * @param numericalLocantsOfChild
-	 * @param letterLocantsOfParent
+	 * @param numericalLocantsOfParent
 	 * @throws StructureBuildingException
 	 */
 	private void processHigherOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> numericalLocantsOfParent) throws StructureBuildingException {
@@ -758,19 +751,17 @@ class FusedRingBuilder {
 		if (parentAtoms ==null){
 			throw new StructureBuildingException("Malformed fusion bracket!");
 		}
-		fuseRings(state, childRing, parentRing, childAtoms, parentAtoms);
+		fuseRings(state, childAtoms, parentAtoms);
 	}
 
 	/**
 	 * Fuses two rings together returning a fragment containing the fusedRing
 	 * @param state
-	 * @param childRing
-	 * @param parentRing
 	 * @param childAtoms
 	 * @param parentAtoms
 	 * @throws StructureBuildingException
 	 */
-	private void fuseRings(BuildState state, Fragment childRing, Fragment parentRing, List<Atom> childAtoms, List<Atom> parentAtoms) throws StructureBuildingException {
+	private void fuseRings(BuildState state, List<Atom> childAtoms, List<Atom> parentAtoms) throws StructureBuildingException {
 		if (parentAtoms.size()!=childAtoms.size()){
 			throw new StructureBuildingException("Problem with fusion descriptors: Parent atoms specified: " + parentAtoms.size() +" Child atoms specified: " + childAtoms.size() + " These should have been identical!");
 		}

@@ -35,7 +35,7 @@ class Bond {
 	/**
 	 * it the bond is fusion bond it contains the rings that it connects
 	 */
-	private ArrayList<Ring> fusedRings = new ArrayList<Ring>(2);
+	private final ArrayList<Ring> fusedRings = new ArrayList<Ring>(2);
 
 	/** DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Creates a new Bond.
