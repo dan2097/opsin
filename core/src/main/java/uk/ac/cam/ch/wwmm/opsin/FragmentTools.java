@@ -59,8 +59,8 @@ class FragmentTools {
 	 *
 	 */
 	static class SortByLocants implements Comparator<Atom> {
-		static Pattern matchdigits = Pattern.compile("(\\d+).*");
-    	static Pattern matchletters = Pattern.compile(".*([a-z]+)");
+		static final Pattern matchdigits = Pattern.compile("(\\d+).*");
+    	static final Pattern matchletters = Pattern.compile(".*([a-z]+)");
 
 	    public int compare(Atom atoma, Atom atomb){
 	    	String locanta =atoma.getFirstLocant();

@@ -62,13 +62,13 @@ final class Combinations {
 class Parser {
 
 	/**Uses ParseRules to intelligently parse chemical names into substituents/full terms/functional terms*/
-	private Tokeniser tokeniser;
+	private final Tokeniser tokeniser;
 	/**The rules by which words are grouped together (e.g. in functional class nomenclature)*/
-	private WordRules wordRules;
+	private final WordRules wordRules;
 	/**Performs finite-state allocation of roles ("annotations") to tokens.*/
-	private ParseRules parseRules;
+	private final ParseRules parseRules;
 	/**Holds the various tokens used.*/
-	private TokenManager tokenManager;
+	private final TokenManager tokenManager;
 	
 	private final static char endOfSubstituent = '\u00e9';
 	private final static char endOfMainGroup = '\u00e2';

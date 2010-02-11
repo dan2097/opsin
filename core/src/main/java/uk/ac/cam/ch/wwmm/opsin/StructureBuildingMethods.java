@@ -14,7 +14,7 @@ import nu.xom.Element;
 import nu.xom.Elements;
 
 class StructureBuildingMethods {
-	private static Pattern matchComma =Pattern.compile(",");
+	private static final Pattern matchComma =Pattern.compile(",");
 	private StructureBuildingMethods() {}
 
 	/**
@@ -154,7 +154,7 @@ class StructureBuildingMethods {
 		if (frag.getOutIDs().size() >=1 && subBracketOrRoot.getAttribute("locant")!=null){
 			String locantString = subBracketOrRoot.getAttributeValue("locant");
 			if (frag.getOutIDs().size() >1){
-				checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(state, frag);
+				checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(frag);
 			}
 			if (subBracketOrRoot.getAttribute("multiplier")!=null){//e.g. 1,2-diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -195,7 +195,7 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("Substituent has an unused outId and has a locant but locanted susbtitution should already been been performed!");
 			}
 			if (frag.getOutIDs().size() > 1){
-				checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(state, frag);
+				checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(frag);
 			}
 			if (subBracketOrRoot.getAttribute("multiplier")!=null){//e.g. diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -1063,10 +1063,10 @@ class StructureBuildingMethods {
 	}
 
 	/**
-	 * Finds all the groups accessible from the currentElement taking into account brackets
-	 * i.e. those that it is feasible that the group of the currentElement could substitute onto
+	 * Finds all the groups accessible from the startingElement taking into account brackets
+	 * i.e. those that it is feasible that the group of the startingElement could substitute onto
 	 * @param state
-	 * @param currentElement
+	 * @param startingElement
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
 	private static ArrayList<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
@@ -1173,11 +1173,10 @@ class StructureBuildingMethods {
 	 * In cases such as methylenecyclohexane two outIDs are combined to form a single outID with valency
 	 * equal to sum of the valency of the other outIDs.
 	 * This is only allowed on substituents where all the outIDs are on the same atom
-	 * @param state
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
-	private static void checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(BuildState state, Fragment frag) throws StructureBuildingException {
+	private static void checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(Fragment frag) throws StructureBuildingException {
 		int outIdCount = frag.getOutIDs().size();
 		if (outIdCount<=1){
 			return;

@@ -17,7 +17,7 @@ class CyclicAtomList{
 	/**
 	 * Construct a cyclicAtomList from an atomList
 	 * Indice defaults to -1
-	 * @param atomSet
+	 * @param atomList
 	 */
 	CyclicAtomList(List<Atom> atomList) {
 		this.atomList = atomList;
@@ -26,7 +26,7 @@ class CyclicAtomList{
 	/**
 	 * Construct a cyclicAtomList from an atomList
 	 * The second parameter sets the current indice
-	 * @param atomSet
+	 * @param atomList
 	 * @param indice
 	 * @throws StructureBuildingException
 	 */

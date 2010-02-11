@@ -25,7 +25,7 @@ public class NameToStructure {
 	
 	private static final Logger LOG = Logger.getLogger(NameToStructure.class);
 
-	class SortParses implements Comparator<Element>{
+	private class SortParses implements Comparator<Element>{
 		public int compare(Element el1, Element el2){
 			int elementsInEl1 = XOMTools.countDescendantElements(el1);
 			int elementsInEl2 = XOMTools.countDescendantElements(el2);

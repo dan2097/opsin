@@ -25,12 +25,11 @@ class StereochemistryHandler {
 	/**
 	 * Master method for assigning and processing stereochemistry elements
 	 * @param state
-	 * @param molecule
 	 * @param uniFrag
 	 * @param stereoChemistryEls
 	 * @throws StructureBuildingException
 	 */
-	static void processStereochemicalElements(BuildState state, Element molecule, Fragment uniFrag, List<Element> stereoChemistryEls) throws StructureBuildingException {
+	static void processStereochemicalElements(BuildState state, Fragment uniFrag, List<Element> stereoChemistryEls) throws StructureBuildingException {
 		OpsinToChemKitWrapper chemKitMoleculeWrapper = new OpsinToChemKitWrapper(uniFrag);
 		StereoAnalysis stereoAnalysis = new StereoAnalyser().findStereoCentres(chemKitMoleculeWrapper.getChemKitMolecule());
 	    Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<Atom, StereoCentre>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object

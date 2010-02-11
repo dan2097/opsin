@@ -21,18 +21,18 @@ import nu.xom.Elements;
 class TokenManager {
 
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
-	HashMap<String, HashMap<Character, Token>> tokenDict;
+	final HashMap<String, HashMap<Character, Token>> tokenDict;
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
-	HashMap<Character, Token> reSymbolTokenDict;
+	final HashMap<Character, Token> reSymbolTokenDict;
 
 
 	/**A mapping between annotation symbols and the first two letters of token names applicable to
 	 * that annotation symbol which then map to token names (annotation->2 letters of token names ->token names mapping).*/
-	HashMap<Character, HashMap<String, List<String>>> symbolTokenNamesDict;
+	final HashMap<Character, HashMap<String, List<String>>> symbolTokenNamesDict;
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
-	HashMap<Character, List<RunAutomaton>> symbolRegexAutomataDict;
+	final HashMap<Character, List<RunAutomaton>> symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
-	HashMap<Character, List<Pattern>> symbolRegexesDict;
+	final HashMap<Character, List<Pattern>> symbolRegexesDict;
 
 	/**Generates the TokenManager.
 	 * @param resourceGetter
