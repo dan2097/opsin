@@ -30,7 +30,7 @@ class AutomatonInitialiser {
 		try {
 			/*
 			 * This file indicates the hash used to generate the automaton on the disk
-			 * This throws an exception if the file cannot be found (I don't really like this behaviour but I'd prefer not to change the resourceGetter's methods)
+			 * This throws an exception if the file cannot be found 
 			 */
 			String regexHash = resourceGetter.getString(automatonName + "RegexHash.txt");
 			if (regexHash.equals(currentRegexHash)){
@@ -42,7 +42,6 @@ class AutomatonInitialiser {
 			//automaton could not be loaded either because the regex hash could not be loaded, the hashes did not match or the automaton could not be loaded
 		}
 		Automaton a = new RegExp(regex).toAutomaton();
-		a.determinize();
 		RunAutomaton ra = new RunAutomaton(a);
 		try {
 			FileOutputStream regexHashFOS =(FileOutputStream) resourceGetter.getOutputStream(automatonName + "RegexHash.txt");

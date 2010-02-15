@@ -101,14 +101,12 @@ final class ResourceGetter {
 				xmlReader = XMLReaderFactory.createXMLReader();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
 				throw new Exception("No XML Reader could be initialised!");
 			}
 			try{
 				xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
 				throw new Exception("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?");
 			}
 			Builder xomBuilder = new Builder(xmlReader);
@@ -118,7 +116,6 @@ final class ResourceGetter {
 			}
 			return xomBuilder.build(url.openStream());
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new Exception("Could not get resource file: " + name);
 		}
 	}
@@ -145,7 +142,6 @@ final class ResourceGetter {
 			}
 			return url.openStream();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new Exception("Could not get resource file: " + name);
 		}
 	}

@@ -139,6 +139,7 @@
   <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfite</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfoate</token>
+  <token value="NCCS(=O)(=O)O" labels="none" valType="SMILES" defaultInID="1" functionalIDs="7">taurine</token>
   <token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurite</token>
   <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurate</token>
   <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">telluroate</token>

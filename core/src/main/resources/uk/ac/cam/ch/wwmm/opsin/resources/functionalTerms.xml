@@ -32,7 +32,7 @@
     <token value="[Te][Te]" labels="none" valType="SMILES">ditelluroperoxyanhydride</token>
   </tokenList>
 
-  <tokenList tagname="functionalModifier" type="functionalModifier" symbol="ù">
+  <tokenList tagname="functionalModifier" symbol="ù">
     <token value="oligo">oligo</token>
     <token value="poly">poly</token>
   </tokenList>

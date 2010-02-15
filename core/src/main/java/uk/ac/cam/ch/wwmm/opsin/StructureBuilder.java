@@ -9,7 +9,8 @@ import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
-import static  uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
 
 /**Constructs a single OPSIN fragment which describes the molecule from the postprocessor results.
  *
@@ -58,7 +59,7 @@ class StructureBuilder {
 			state.currentWordRule =wordRule;
 			if(wordRule == WordRule.simple) {
 				for (Element word : words) {
-					if (!word.getLocalName().equals("word") || !word.getAttributeValue("type").equals(WordType.full.toString())){
+					if (!word.getLocalName().equals("word") || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'simple' wordRule");
 					}
 					resolveWordOrBracket(state, word);
@@ -136,7 +137,7 @@ class StructureBuilder {
 	}
 
 	private void buildAcid(BuildState state, List<Element> words) throws StructureBuildingException {
-		if (words.size()!=2 || !words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){
+		if (words.size()!=2 || !words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("functionalTerm word acid missing");
 		}
 		resolveWordOrBracket(state, words.get(0));
@@ -146,7 +147,7 @@ class StructureBuilder {
 		int wordIndice = 0;
 		Element currentWord=words.get(wordIndice);
 		BuildResults substituentsBr = new BuildResults();
-		while (currentWord.getAttributeValue("type").equals(WordType.substituent.toString())){
+		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			resolveWordOrBracket(state, currentWord);
 			BuildResults substituentBr = new BuildResults(state, currentWord);
 			if (substituentBr.getOutIDCount() ==1){//TODO add support for locanted terepthaloyl
@@ -162,14 +163,14 @@ class StructureBuilder {
 			currentWord=words.get(++wordIndice);
 		}
 
-		if (wordIndice == words.size() || !words.get(wordIndice).getAttributeValue("type").equals(WordType.full.toString())){
+		if (wordIndice == words.size() || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Full word not found where full word expected: missing ate group in ester");
 		}
 
 		BuildResults ateGroups = new BuildResults();
 		for (; wordIndice < words.size(); wordIndice++) {
 			Element word =words.get(wordIndice);
-			if (word.getAttributeValue("type").equals(WordType.full.toString())){
+			if (word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 				resolveWordOrBracket(state, word);
 				BuildResults ateBR = new BuildResults(state, word);
 				ateGroups.mergeBuildResults(ateBR);
@@ -202,10 +203,10 @@ class StructureBuilder {
 
 	private void buildDiValentFunctionalGroup(BuildState state, List<Element> words) throws StructureBuildingException {
 		int wordIndice = 0;
-		if (!words.get(wordIndice).getAttributeValue("type").equals(WordType.substituent.toString())) {
+		if (!words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())) {
 			throw new StructureBuildingException("word: " +wordIndice +" was expected to be a substituent");
 		}
-		if (words.get(wordIndice +1).getAttributeValue("type").equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
+		if (words.get(wordIndice +1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
 			Element clone = state.fragManager.cloneElement(state, words.get(0));
 			XOMTools.insertAfter(words.get(0), clone);
 			words = OpsinTools.elementsToElementArrayList(((Element)words.get(0).getParent()).getChildElements());
@@ -228,7 +229,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("OutID has unexpected valency. Expected 1. Actual: " + substituent2.getOutID(0).valency);
 		}
 		wordIndice++;
-		if (words.get(wordIndice) ==null || !words.get(wordIndice).getAttributeValue("type").equals(WordType.functionalTerm.toString())) {
+		if (words.get(wordIndice) ==null || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {
 			throw new StructureBuildingException("word: " +wordIndice +" was expected to be a functionalTerm");
 		}
 		List<Element> functionalGroup = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), "functionalGroup");
@@ -278,7 +279,7 @@ class StructureBuilder {
 			}
 			
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue("value"), "simpleGroup", "functionalGroup", "none");
-			if (functionalGroups.get(0).getAttributeValue("type").equals("monoValentStandaloneGroup")){
+			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals("monoValentStandaloneGroup")){
 				Atom ideAtom = monoValentFunctionGroup.getAtomByIDOrThrow(monoValentFunctionGroup.getDefaultInID());
 				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
 			}
@@ -316,12 +317,12 @@ class StructureBuilder {
 	}
 
 	private void buildFunctionalClassEster(BuildState state, List<Element> words) throws StructureBuildingException {
-		if (!words.get(0).getAttributeValue("type").equals(WordType.full.toString())){
+		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
 		resolveWordOrBracket(state, words.get(0));//the group
 		BuildResults acidBr = new BuildResults(state, words.get(0));
-		if (!words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){//acid
+		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//acid
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
 		if (acidBr.getFunctionalIDCount()==0){
@@ -330,7 +331,7 @@ class StructureBuilder {
 
 		int i=2;
 		Element currentWord = words.get(i);
-		while (currentWord.getAttributeValue("type").equals(WordType.substituent.toString())){
+		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			if (acidBr.getFunctionalIDCount()==0){
 				throw new StructureBuildingException("Insufficient functionalIDs on acid");
 			}
@@ -357,13 +358,13 @@ class StructureBuilder {
 			}
 			currentWord=words.get(++i);
 		}
-		if (!words.get(i++).getAttributeValue("type").equals(WordType.functionalTerm.toString())){//ester
+		if (!words.get(i++).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//ester
 			throw new StructureBuildingException("Number of words different to expectations; did not find ester");
 		}
 	}
 
 	private void buildAmide(BuildState state, List<Element> words) throws StructureBuildingException {
-		if (!words.get(0).getAttributeValue("type").equals(WordType.full.toString())){
+		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
 		resolveWordOrBracket(state, words.get(0));//the group
@@ -372,11 +373,11 @@ class StructureBuilder {
 			throw new StructureBuildingException("No functionalIds detected!");
 		}
 		int wordIndice =1;
-		if (words.get(wordIndice).getAttributeValue("type").equals(WordType.functionalTerm.toString())){//"acid"
+		if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//"acid"
 			wordIndice++;
 		}
 		
-		if (words.get(wordIndice).getAttributeValue("type").equals(WordType.functionalTerm.toString())){//"amide"
+		if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//"amide"
 			for (int i =0; i < acidBr.getFunctionalIDCount(); i++) {
 				Atom functionalAtom = acidBr.getFunctionalAtom(i);
 				if (!functionalAtom.getElement().equals("O")){
@@ -386,14 +387,14 @@ class StructureBuilder {
 				functionalAtom.replaceLocant("N" +StringTools.multiplyString("'", i));
 			}
 		}
-		else if (words.get(wordIndice).getAttributeValue("type").equals(WordType.full.toString())){//substituentamide
+		else if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){//substituentamide
 			for (; wordIndice < words.size(); wordIndice++) {
 				resolveWordOrBracket(state, words.get(wordIndice));//the substituted amide ([N-]) group
 				List<Element> root = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), "root");
 				if (root.size()!=1){
 					throw new StructureBuildingException("Cannot find root element");
 				}
-				Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement("group"));
+				Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement(GROUP_EL));
 				if (acidBr.getFunctionalIDCount()==0){
 					throw new StructureBuildingException("Cannot find oxygen to replace wtih nitrogen for amide formation!");
 				}
@@ -428,7 +429,7 @@ class StructureBuilder {
 		if (theDiRadical.getOutIDCount()!=2){
 			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outIDs. Found: " + theDiRadical.getOutIDCount() );
 		}
-		if (wordIndice +1 >= words.size() || !words.get(wordIndice+1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){
+		if (wordIndice +1 >= words.size() || !words.get(wordIndice+1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("Glycol functionalTerm word expected");
 		}
 		for (int i = theDiRadical.getOutIDCount() -1; i >=0 ; i--) {
@@ -562,7 +563,7 @@ class StructureBuilder {
 		BuildResults moleculeToModify = new BuildResults(state, words.get(0));//the group which will be modified
 		List<Fragment> replacementFragments = new ArrayList<Fragment>();
 		List<String> locantForFunctionalTerm =new ArrayList<String>();//usually not specified
-		if (!words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
+		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
 			for (int i = 1; i < words.size(); i++) {
 				Fragment frag = state.xmlFragmentMap.get(findRightMostGroupInBracket(words.get(i)));
 				replacementFragments.add(frag);
@@ -659,7 +660,7 @@ class StructureBuilder {
 			if (numericLocantAtomConnectedToCarbonyl!=null){
 				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());
 			}
-			if (!words.get(1).getAttributeValue("type").equals(WordType.functionalTerm.toString())){
+			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				resolveWordOrBracket(state, words.get(1 +i));
 			}
 			state.fragManager.replaceTerminalAtomWithFragment(atomToBeReplaced, atomToReplaceCarbonylOxygen);
@@ -669,7 +670,7 @@ class StructureBuilder {
 	private void buildAnhydride(BuildState state, List<Element> words) throws StructureBuildingException {
 		for (int i = words.size() -2; i >=0;  i--) {//ignore acid words. In english they are unnecesary e.g. acetic acid anhydride vs acetic anhydride
 			Element word =words.get(i);
-			if (word.getAttributeValue("type").equals(WordType.functionalTerm.toString()) && word.getValue().equals("acid")){
+			if (word.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString()) && word.getValue().equals("acid")){
 				words.remove(i);
 			}
 		}

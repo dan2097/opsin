@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import sea36.chem.core.CMLAtom;
 import sea36.chem.stereo.StereoAnalyser;
 import sea36.chem.stereo.StereoAnalyser.StereoAnalysis;
@@ -126,7 +127,7 @@ class StereochemistryHandler {
 				assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 			}
 			else if (stereoChemistryType.equals("cisOrTrans")){
-				String cisOrTrans = stereoChemistryEl.getAttributeValue("value");
+				String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 				if (cisOrTrans.equalsIgnoreCase("cis")){
 					stereoChemistryEl.getAttribute("value").setValue("Z");
 				}
@@ -158,7 +159,7 @@ class StereochemistryHandler {
 		//generally the LAST group in this list will be the appropriate groups e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
 		List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, "group");
 		String locant = StructureBuildingMethods.getLocant(stereoChemistryEl);
-		String rOrS = stereoChemistryEl.getAttributeValue("value");
+		String rOrS = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (int i = possibleGroups.size()-1; i >=0; i--) {//groups further right in scope preferable
 			Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 			if (locant.equals("0")){//undefined locant
@@ -253,7 +254,7 @@ class StereochemistryHandler {
 		//generally the LAST group in this list will be the appropriate groups e.g. (2Z)-5-ethyl-6-methylhex-2-ene where the hex-2-ene is the appropriate group
 		List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, "group");
 		String locant = StructureBuildingMethods.getLocant(stereoChemistryEl);
-		String eOrZ = stereoChemistryEl.getAttributeValue("value");
+		String eOrZ = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (int i = possibleGroups.size()-1; i >=0; i--) {
 			Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 			if (locant.equals("0")){//undefined locant

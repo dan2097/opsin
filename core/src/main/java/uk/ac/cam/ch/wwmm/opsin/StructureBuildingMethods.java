@@ -7,6 +7,7 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 
 import nu.xom.Attribute;
@@ -145,7 +146,7 @@ class StructureBuildingMethods {
 			group =findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
-			group =subBracketOrRoot.getFirstChildElement("group");
+			group =subBracketOrRoot.getFirstChildElement(GROUP_EL);
 		}
 		if (group.getAttribute("resolved")!=null){
 			return;
@@ -184,7 +185,7 @@ class StructureBuildingMethods {
 			group =findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
-			group =subBracketOrRoot.getFirstChildElement("group");
+			group =subBracketOrRoot.getFirstChildElement(GROUP_EL);
 		}
 		if (group.getAttribute("resolved")!=null){
 			return;
@@ -284,7 +285,7 @@ class StructureBuildingMethods {
 		if (groups.size()!=1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
 		}
-		Element group = subOrRoot.getFirstChildElement("group");
+		Element group = subOrRoot.getFirstChildElement(GROUP_EL);
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
 
 		ArrayList<Element> unsaturators = new ArrayList<Element>();
@@ -327,7 +328,7 @@ class StructureBuildingMethods {
 		for(int i=unsaturators.size() -1;i >= 0;i--) {
 			Element unsaturator = unsaturators.get(i);
 			String locant = getLocant(unsaturator);
-			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue("value"));
+			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
 			if(bondOrder <= 1) {
 				continue;
 			}
@@ -348,7 +349,7 @@ class StructureBuildingMethods {
 			Element heteroatom = heteroatoms.get(i);
 			String locant = getLocant(heteroatom);
 			if(!locant.equals("0")) {
-				String atomSMILES = heteroatom.getAttributeValue("value");
+				String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
 				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
 				if (heteroatom.getAttribute("lambda")!=null){
 					thisFrag.getAtomByLocantOrThrow(locant).setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue("lambda")));
@@ -370,7 +371,7 @@ class StructureBuildingMethods {
 		if (groups.size()!=1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
 		}
-		Element group = subOrRoot.getFirstChildElement("group");
+		Element group = subOrRoot.getFirstChildElement(GROUP_EL);
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
 
 		ArrayList<Element> unsaturators = new ArrayList<Element>();
@@ -457,7 +458,7 @@ class StructureBuildingMethods {
 		int defaultId = idOfFirstAtomInFragment;
 
         for (Element unsaturator : unsaturators) {
-            int bondOrder = Integer.parseInt(unsaturator.getAttributeValue("value"));
+            int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
             if (bondOrder <= 1) {
                 continue;
             }
@@ -486,7 +487,7 @@ class StructureBuildingMethods {
 		defaultId = idOfFirstAtomInFragment;
 
         for (Element heteroatom : heteroatoms) {
-            String atomSMILES = heteroatom.getAttributeValue("value");
+            String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
             //finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
             Atom atomToReplaceWithHeteroAtom = thisFrag.getAtomByIDOrThrow(defaultId);
             while (!ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES)) {
@@ -535,7 +536,7 @@ class StructureBuildingMethods {
 			group =findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
-			group =subBracketOrRoot.getFirstChildElement("group");
+			group =subBracketOrRoot.getFirstChildElement(GROUP_EL);
 		}
 		if (group.getAttribute("resolved")!=null){
 			return;
@@ -717,7 +718,7 @@ class StructureBuildingMethods {
 				group = findRightMostGroupInBracket(currentElement);
 			}
 			else{
-				group = currentElement.getFirstChildElement("group");
+				group = currentElement.getFirstChildElement(GROUP_EL);
 			}
 			Fragment frag = state.xmlFragmentMap.get(group);
 			if (frag.getOutIDs().size() !=1 ){
@@ -787,7 +788,7 @@ class StructureBuildingMethods {
 				}
 			}
 			else{
-				group = currentElement.getFirstChildElement("group");
+				group = currentElement.getFirstChildElement(GROUP_EL);
 			}
 			Fragment frag = state.xmlFragmentMap.get(group);
 			if (inLocants !=null){
@@ -800,7 +801,7 @@ class StructureBuildingMethods {
 						rightMostGroup = findRightMostGroupInBracket(currentElement);//this is the only one that can accept inIDs
 					}
 					else{
-						rightMostGroup = currentElement.getFirstChildElement("group");
+						rightMostGroup = currentElement.getFirstChildElement(GROUP_EL);
 					}
 					rightMostGroup.addAttribute(new Attribute("resolved","yes"));
 				}
@@ -919,7 +920,7 @@ class StructureBuildingMethods {
 				childDescendants.add(child);
 			}
 			for (Element descendantChild : childDescendants) {
-				Element group = descendantChild.getFirstChildElement("group");
+				Element group = descendantChild.getFirstChildElement(GROUP_EL);
 				if (group == null){
 					throw new StructureBuildingException("substituent/root is missing its group");
 				}
@@ -1076,7 +1077,7 @@ class StructureBuildingMethods {
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
 			Element currentElement =s.pop();
-			if (currentElement.getLocalName().equals("group")){
+			if (currentElement.getLocalName().equals(GROUP_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
 				foundFragments.add(groupFrag);
 				continue;
@@ -1095,7 +1096,7 @@ class StructureBuildingMethods {
 					s.push((Element)bracketOrSub.getChild(0));
 				}
 				else{
-					Element group = bracketOrSub.getFirstChildElement("group");
+					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
 					s.push(group);
 				}
 			}
@@ -1120,7 +1121,7 @@ class StructureBuildingMethods {
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
 			Element currentElement =s.pop();
-			if (currentElement.getLocalName().equals("group")){
+			if (currentElement.getLocalName().equals(GROUP_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
 				if (groupFrag.hasLocant(locant)){
 					return groupFrag;
@@ -1141,7 +1142,7 @@ class StructureBuildingMethods {
 					s.push((Element)bracketOrSub.getChild(0));
 				}
 				else{
-					Element group = bracketOrSub.getFirstChildElement("group");
+					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
 					s.push(group);
 				}
 			}
@@ -1155,7 +1156,7 @@ class StructureBuildingMethods {
 		while (subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getLocalName().equals("bracket")){
 			subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1), new String[]{"bracket","substituent","root"});
 		}
-		return subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getFirstChildElement("group");
+		return subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getFirstChildElement(GROUP_EL);
 	}
 
 	private static boolean potentiallyCanSubstitute(Element subBracketOrRoot) {
