@@ -49,7 +49,7 @@
   <!--This is the limiting set of chacolgen acid stems.
   These differ from the  more commonly used chalcogen stems e.g. sulfuric in that they can be used to unambiguously form acyl groups
   However the rules for doing so are subtly different than for normal acids hence the need for a different type-->
-  <tokenList tagname="group" type="chalcogenAcidStem" subType="n/a" symbol="d">
+  <tokenList tagname="group" type="chalcogenAcidStem" subType="none" symbol="d">
     <token value="S(=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfon</token>
     <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfin</token>
     <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thion</token>
