@@ -27,18 +27,12 @@
   <modules>
     <module>core</module>
     <module>inchi</module>
-    <module>smiles</module>
-    <module>depiction</module>
   </modules>
   <repositories>
     <repository>
       <id>ucc</id>
       <url>http://maven.ch.cam.ac.uk/m2repo</url>
     </repository>
-    <!--<repository>
-	    <id>sea36</id>
-	    <url>http://daedal.ch.cam.ac.uk:8080/m2repo</url>
-	  </repository>-->
   </repositories>
   <build>
     <plugins>

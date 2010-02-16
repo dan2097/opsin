@@ -7,17 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
+
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-import sea36.chem.core.CMLAtom;
-import sea36.chem.stereo.StereoAnalyser;
-import sea36.chem.stereo.StereoAnalyser.StereoAnalysis;
-import sea36.chem.stereo.StereoAnalyser.StereoBond;
-import sea36.chem.stereo.StereoAnalyser.StereoCentre;
 
 import nu.xom.Element;
 
 /**
- * Uses ChemKit to identify stereocentres, assigns stereochemistry elements to them and then uses the CIP rules to calculate appropriates atomParity/bondstereo tags
+ * Identifies stereocentres, assigns stereochemistry elements to them and then uses the CIP rules to calculate appropriates atomParity/bondstereo tags
  * @author dl387
  *
  */
@@ -31,17 +29,16 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	static void processStereochemicalElements(BuildState state, Fragment uniFrag, List<Element> stereoChemistryEls) throws StructureBuildingException {
-		OpsinToChemKitWrapper chemKitMoleculeWrapper = new OpsinToChemKitWrapper(uniFrag);
-		StereoAnalysis stereoAnalysis = new StereoAnalyser().findStereoCentres(chemKitMoleculeWrapper.getChemKitMolecule());
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(uniFrag);
 	    Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<Atom, StereoCentre>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object
-		List<StereoCentre> stereoCentres = stereoAnalysis.getStereoCentres();
+		List<StereoCentre> stereoCentres = stereoAnalyser.getStereoCentres();
 		for (StereoCentre stereoCentre : stereoCentres) {
-			atomStereoCentreMap.put(chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom(stereoCentre.getStereoAtom()),stereoCentre);
+			atomStereoCentreMap.put(stereoCentre.getStereoAtom(),stereoCentre);
 		}
 	    Map<Bond, StereoBond> bondStereoBondMap = new HashMap<Bond, StereoBond>();
-		List<StereoBond> stereoBonds = stereoAnalysis.getStereoBonds();
+		List<StereoBond> stereoBonds = stereoAnalyser.getStereoBonds();
 		for (StereoBond stereoBond : stereoBonds) {
-			Bond b = uniFrag.findBondOrThrow(chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom(stereoBond.getBond().getAtom0()),chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom( stereoBond.getBond().getAtom1()));
+			Bond b = stereoBond.getBond();
 			if (notIn6MemberOrSmallerRing(b)){
 				bondStereoBondMap.put(b, stereoBond);
 			}
@@ -222,13 +219,13 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	private static void applyStereoChemistryToStereoCentre(Atom atom, StereoCentre stereoCentre, String rOrS) throws StructureBuildingException {
-		List<CMLAtom> cipOrderedAtoms =stereoCentre.getNeighbours();
+		List<Atom> cipOrderedAtoms =stereoCentre.getCipOrderedAtoms();
 		if (cipOrderedAtoms.size()!=4){
 			throw new StructureBuildingException("Only tetrahedral chirality is currently supported");
 		}
-		String atomRefs4= cipOrderedAtoms.get(cipOrderedAtoms.size()-1).getId();//this is "a" + opsin's atom id
+		String atomRefs4= "a" + cipOrderedAtoms.get(cipOrderedAtoms.size()-1).getID();//this is "a" + opsin's atom id
 		for (int i = 0; i < cipOrderedAtoms.size() -1; i++) {//from highest to lowest (true for S) hence atomParity 1 for S
-			atomRefs4 +=" "+cipOrderedAtoms.get(i).getId();
+			atomRefs4 +=" a"+cipOrderedAtoms.get(i).getID();
 		}
 		if (rOrS.equals("R")){
 			atom.setAtomParityElement(atomRefs4, -1);
@@ -342,12 +339,12 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	private static void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) throws StructureBuildingException {
-		List<CMLAtom> stereoBondAtoms = stereoBond.getStereoAtoms();
+		List<Atom> stereoBondAtoms = stereoBond.getStereoAtoms();
 		//stereoBondAtoms contains the higher priority atom at one end, the two bond atoms and the higher priority atom at the other end
-		String atomRefs4= stereoBondAtoms.get(0).getId();
-		atomRefs4 +=" " + stereoBondAtoms.get(1).getId();
-		atomRefs4 +=" " + stereoBondAtoms.get(2).getId();
-		atomRefs4 +=" " + stereoBondAtoms.get(3).getId();
+		String atomRefs4= "a" + stereoBondAtoms.get(0).getID();
+		atomRefs4 +=" a" + stereoBondAtoms.get(1).getID();
+		atomRefs4 +=" a" + stereoBondAtoms.get(2).getID();
+		atomRefs4 +=" a" + stereoBondAtoms.get(3).getID();
 		if (eOrZ.equals("E")){
 			bond.setBondStereoElement(atomRefs4, "T");
 		}
