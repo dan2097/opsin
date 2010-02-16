@@ -12,7 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	FragmentManagerTest.class,
 	FragmentTest.class,
 	FusedRingBuilderTest.class,
-	NameToStructureTest_FromPapers.class,
+	NameToStructureTest.class,
 	SMILESFragmentBuilderTest.class,
 	SSSRTest.class,
 	StereochemistryTest.class,

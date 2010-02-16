@@ -16,18 +16,24 @@ class Ring {
 	private List<Ring>  neighbours = new ArrayList<Ring>();
 
 	private int nFusedBonds = 0;
-
-	Ring(List<Atom> atomSet) throws StructureBuildingException {
-		this.atomSet = atomSet;
-		List<Bond> orderedBonds = new ArrayList<Bond>();
-		CyclicAtomList ringIteratorFromAtom0 = new CyclicAtomList(atomSet);
-		CyclicAtomList ringIteratorFromAtom1 = new CyclicAtomList(atomSet, 0);
-		for (int i = 0; i < atomSet.size(); i++) {
-			Atom a1 = ringIteratorFromAtom0.getNext();
-			Atom a2 = ringIteratorFromAtom1.getNext();
-			orderedBonds.add(a1.getFrag().findBondOrThrow(a1, a2));
+	
+	Ring(List<Bond> bondSet) throws StructureBuildingException{
+		if (bondSet==null || bondSet.size()<=0) throw new StructureBuildingException("Bond set is empty");
+		this.bondSet = bondSet;			
+		this.atomSet = new ArrayList<Atom>();
+		
+		for(Bond bond: bondSet){
+			Atom atom1 = bond.getFromAtom();				
+			if (!atomSet.contains(atom1)) atomSet.add(atom1);
+				
+			Atom atom2 = bond.getToAtom();
+			if (!atomSet.contains(atom2)) atomSet.add(atom2);
+			
 		}
-		this.bondSet = orderedBonds;
+		
+		if (atomSet.size() != bondSet.size()) {
+			throw new StructureBuildingException("atomSet and bondset different sizes. Ring(bond)");
+		}
 	}
 
 
