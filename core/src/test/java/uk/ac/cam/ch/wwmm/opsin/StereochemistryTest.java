@@ -7,16 +7,11 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import sea36.chem.core.CMLAtom;
-import sea36.chem.core.CMLBond;
-import sea36.chem.stereo.StereoAnalyser;
-import sea36.chem.stereo.StereoAnalyser.StereoAnalysis;
-import sea36.chem.stereo.StereoAnalyser.StereoBond;
-import sea36.chem.stereo.StereoAnalyser.StereoCentre;
 import uk.ac.cam.ch.wwmm.opsin.Atom;
-import uk.ac.cam.ch.wwmm.opsin.OpsinToChemKitWrapper;
 import uk.ac.cam.ch.wwmm.opsin.Fragment;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 public class StereochemistryTest {
 
 	private static NameToStructure n2s;
@@ -26,83 +21,66 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void bromoChloroFluoroMethane() {
+	public void bromoChloroFluoroMethane() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("bromochlorofluoromethane", false).getStructure();
-		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
-		StereoAnalyser stereoAnalyser = new StereoAnalyser();
-		stereoAnalyser.setIgnoreRecursiveStereoCentres(true);
-		StereoAnalysis analysis = stereoAnalyser.findStereoCentres(chemKitWrapper.getChemKitMolecule());
-		Assert.assertEquals(1, analysis.getStereoCentres().size());
-		Assert.assertEquals(0, analysis.getStereoBonds().size());
-		StereoCentre sc = analysis.getStereoCentres().get(0);
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		Assert.assertEquals(1, stereoAnalyser.getStereoCentres().size());
+		Assert.assertEquals(0, stereoAnalyser.getStereoBonds().size());
+		StereoCentre sc = stereoAnalyser.getStereoCentres().get(0);
 		Assert.assertNotNull(sc.getStereoAtom());
-		Assert.assertNotNull(chemKitWrapper.getOpsinAtomFromChemKitAtom(sc.getStereoAtom()));
-		Atom opsinAtom = chemKitWrapper.getOpsinAtomFromChemKitAtom(sc.getStereoAtom());
-		Assert.assertEquals("C", opsinAtom.getElement());
-		Assert.assertEquals(4, opsinAtom.getID());
+		Atom stereoAtom = sc.getStereoAtom();
+		Assert.assertEquals("C", stereoAtom.getElement());
+		Assert.assertEquals(4, stereoAtom.getID());
 	}
 	
 	@Test
 	public void Nacetylleucine() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("N-acetylleucine", false).getStructure();
-		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
-		StereoAnalyser stereoAnalyser = new StereoAnalyser();
-		stereoAnalyser.setIgnoreRecursiveStereoCentres(true);
-		StereoAnalysis analysis = stereoAnalyser.findStereoCentres(chemKitWrapper.getChemKitMolecule());
-		Assert.assertEquals(1, analysis.getStereoCentres().size());
-		Assert.assertEquals(0, analysis.getStereoBonds().size());
-		StereoCentre sc = analysis.getStereoCentres().get(0);
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		Assert.assertEquals(1, stereoAnalyser.getStereoCentres().size());
+		Assert.assertEquals(0, stereoAnalyser.getStereoBonds().size());
+		StereoCentre sc = stereoAnalyser.getStereoCentres().get(0);
 		Assert.assertNotNull(sc.getStereoAtom());
-		Assert.assertNotNull(chemKitWrapper.getOpsinAtomFromChemKitAtom(sc.getStereoAtom()));
-		Atom opsinAtom = chemKitWrapper.getOpsinAtomFromChemKitAtom(sc.getStereoAtom());
-		Assert.assertEquals("C", opsinAtom.getElement());
-		List<Atom> neighbours = opsinAtom.getAtomNeighbours();
-		int hydrogens =0;
-		int carbons =0;
-		int nitrogen =0;
-		for (Atom atom : neighbours) {
-			if (atom.getElement().equals("C")){
-				carbons++;
+		Atom stereoAtom = sc.getStereoAtom();
+		Assert.assertEquals("C", stereoAtom.getElement());
+		List<Atom> neighbours = sc.getCipOrderedAtoms();
+		for (int i = 0; i < neighbours.size(); i++) {
+			Atom a = neighbours.get(i);
+			if (i==0){
+				Assert.assertEquals(a.getElement(), "H");
 			}
-			else if (atom.getElement().equals("N")){
-				nitrogen++;
+			else if (i==1){
+				Assert.assertEquals(a.getElement(), "C");
 			}
-			else if (atom.getElement().equals("H")){
-				hydrogens++;
+			else if (i==2){
+				Assert.assertEquals(a.getElement(), "C");
+			}
+			else if (i==3){
+				Assert.assertEquals(a.getElement(), "N");
 			}
 		}
-		Assert.assertEquals(2, carbons);
-		Assert.assertEquals(1, nitrogen);
-		Assert.assertEquals(1, hydrogens);
 	}
 	
 	@Test
-	public void but2ene() {
+	public void but2ene() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("but-2-ene", false).getStructure();
-		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
-		StereoAnalyser stereoAnalyser = new StereoAnalyser();
-		stereoAnalyser.setIgnoreRecursiveStereoCentres(true);
-		StereoAnalysis analysis = stereoAnalyser.findStereoCentres(chemKitWrapper.getChemKitMolecule());
-		Assert.assertEquals(0, analysis.getStereoCentres().size());
-		Assert.assertEquals(1, analysis.getStereoBonds().size());
-		StereoBond sb = analysis.getStereoBonds().get(0);
-		CMLBond chemKitBond = sb.getBond();
-		Assert.assertNotNull(chemKitBond);
-		CMLAtom atom1 = chemKitBond.getAtom0();
-		CMLAtom atom2 = chemKitBond.getAtom1();
-		Assert.assertNotNull(atom1);
-		Assert.assertNotNull(atom2);
-		Atom opsinAtom1 = chemKitWrapper.getOpsinAtomFromChemKitAtom(atom1);
-		Atom opsinAtom2 = chemKitWrapper.getOpsinAtomFromChemKitAtom(atom2);
-		Assert.assertNotNull(opsinAtom1);
-		Assert.assertNotNull(opsinAtom2);
-		Assert.assertNotSame(opsinAtom1, opsinAtom2);
-		if (opsinAtom1.getID() == 2){
-			Assert.assertEquals(3, opsinAtom2.getID());
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		Assert.assertEquals(0, stereoAnalyser.getStereoCentres().size());
+		Assert.assertEquals(1, stereoAnalyser.getStereoBonds().size());
+		StereoBond sb = stereoAnalyser.getStereoBonds().get(0);
+		Bond stereoBond = sb.getBond();
+		Assert.assertNotNull(stereoBond);
+		Atom stereoAtom1 = stereoBond.getFromAtom();
+		Atom stereoAtom2 = stereoBond.getToAtom();
+		Assert.assertNotNull(stereoAtom1);
+		Assert.assertNotNull(stereoAtom2);
+		Assert.assertNotSame(stereoAtom1, stereoAtom2);
+		if (stereoAtom1.getID() == 2){
+			Assert.assertEquals(3, stereoAtom2.getID());
 		}
 		else{
-			Assert.assertEquals(2, opsinAtom2.getID());
-			Assert.assertEquals(3, opsinAtom1.getID());
+			Assert.assertEquals(2, stereoAtom2.getID());
+			Assert.assertEquals(3, stereoAtom1.getID());
 		}
 	}
 }
