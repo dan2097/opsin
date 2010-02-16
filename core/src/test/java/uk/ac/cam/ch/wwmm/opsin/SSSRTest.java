@@ -7,11 +7,8 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import sea36.chem.rings.Ring;
-import sea36.chem.rings.SSSRFinder;
 import uk.ac.cam.ch.wwmm.opsin.Fragment;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
-import uk.ac.cam.ch.wwmm.opsin.OpsinToChemKitWrapper;
 
 public class SSSRTest {
 	private static NameToStructure n2s;
@@ -21,10 +18,13 @@ public class SSSRTest {
 	}
 	
 	@Test
-	public void testFindSSSR() {
-		Fragment f = n2s.parseChemicalName("ovalene", false).getStructure();
-		OpsinToChemKitWrapper chemKitWrapper  =  new OpsinToChemKitWrapper(f);
-		List<Ring> rings = SSSRFinder.findSSSR(chemKitWrapper.getChemKitMolecule());
-		assertEquals(10, rings.size());
-;	}
+	public void testFindSSSR() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("violanthrene", false).getStructure();
+		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(f);
+		assertEquals(9, rings.size());
+		
+		f = n2s.parseChemicalName("aceanthrene", false).getStructure();
+		rings = SSSRFinder.getSetOfSmallestRings(f);
+		assertEquals(4, rings.size());
+	}
 }

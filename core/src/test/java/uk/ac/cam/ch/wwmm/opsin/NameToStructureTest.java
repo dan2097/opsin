@@ -8,7 +8,7 @@ import nu.xom.Element;
 import org.junit.Test;
 
 
-public class NameToStructureTest_FromPapers {
+public class NameToStructureTest {
 
 	@Test
 	public void testNameToStructure() throws Exception {

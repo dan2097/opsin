@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import sea36.chem.core.CMLAtom;
-import sea36.chem.rings.SSSRFinder;
-
 /**
  * Numbers fusedRings
  * @author aa593
@@ -165,7 +162,7 @@ class FusedRingNumberer {
 	 */
 	static void numberFusedRing(Fragment fusedRing) throws StructureBuildingException {
 	
-		List<Ring> rings = getSetOfSmallestRings(fusedRing);
+		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(fusedRing);
 	
 		List<List<Atom>> atomSequences = new ArrayList<List<Atom>>();
 	
@@ -232,10 +229,17 @@ class FusedRingNumberer {
 			{
 				atomSequences = number6MemberRings(rings);
 	
-				// find missing atoms
-				if(atomSequences.size()<=0) throw new StructureBuildingException("No path found");
+				if(atomSequences.size()<=0){//Error: No path found. This is either a bug in the SSSR or numbering code; assign dummy locants
+					int i=1;
+					for (Atom atom : fusedRing.getAtomList()) {
+						atom.replaceLocant("X" + Integer.toString(i));
+						i++;
+					}
+					return;
+				}
 				List<Atom> takenAtoms = atomSequences.get(0);
 	
+				// find missing atoms
 				List<Atom> missingAtoms = new ArrayList<Atom>();
 				for(Atom atom : fusedRing.getAtomList()) {
 					if(!takenAtoms.contains(atom)) missingAtoms.add(atom);
@@ -1898,29 +1902,4 @@ class FusedRingNumberer {
 	
 		return dir;
 	}
-
-	/** Employs chemKit to find the smallest set of smallest rings in input fragment
-	 * An exception is thrown if the input fragment has less than 2 rings
-	 * @param frag An OPSIN fragment
-	 * @return List<Ring> The smallest set of smallest rings
-	 */
-	static List<Ring> getSetOfSmallestRings(Fragment frag) throws StructureBuildingException {
-		List<Ring> sssr = new ArrayList<Ring>();
-		OpsinToChemKitWrapper chemKitMoleculeWrapper = new OpsinToChemKitWrapper(frag);
-		List<sea36.chem.rings.Ring> chemKitSSSR = SSSRFinder.findSSSR(chemKitMoleculeWrapper.getChemKitMolecule());
-		if (chemKitSSSR.size() > 1) {
-			for (sea36.chem.rings.Ring chemKitRing : chemKitSSSR) {
-				List<Atom> orderedOpsinAtomsInRing = new ArrayList<Atom>();
-				List<CMLAtom> orderedAtoms = chemKitRing.getOrderedAtoms();//in order of going around ring
-				for (CMLAtom atom : orderedAtoms) {
-					orderedOpsinAtomsInRing.add(chemKitMoleculeWrapper.getOpsinAtomFromChemKitAtom(atom));
-				}
-				sssr.add(new Ring(orderedOpsinAtomsInRing));
-			}
-		}
-		else throw new StructureBuildingException("Ring perception system found less than 2 rings within input fragment!");
-	
-		return sssr;
-	}
-
 }
