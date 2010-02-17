@@ -236,6 +236,7 @@ class StereoAnalyser {
 	StereoAnalyser(Fragment molecule) throws StructureBuildingException {
 		this.molecule = molecule;
 		sortByNeighbourColours = new SortByNeighbourColours();
+		addGhostAtoms();
 		List<Atom> atomList = molecule.getAtomList();
 		Collections.sort(atomList, new SortAtomsByAtomicNumber());
 		populateColoursByAtomicNumber(atomList);
@@ -261,7 +262,44 @@ class StereoAnalyser {
 			populateColours(atomList);
 			
 		}
+		removeGhostAtoms();
 	}
+
+	private void addGhostAtoms() throws StructureBuildingException {
+		Set<Bond> bonds = molecule.getBondSet();
+		int ghostIdCounter = -1;
+		for (Bond bond : bonds) {
+			int bondOrder = bond.getOrder();
+			for (int i = bondOrder; i >1; i--) {
+				Atom fromAtom =bond.getFromAtom();
+				Atom toAtom =bond.getToAtom();
+
+				Atom ghost1 = new Atom(ghostIdCounter--, fromAtom.getElement(), molecule);
+				Bond b1 = new Bond(ghost1, toAtom, 1);
+				toAtom.addBond(b1);
+				ghost1.addBond(b1);
+				molecule.addAtom(ghost1);
+				
+				Atom ghost2 = new Atom(ghostIdCounter--, toAtom.getElement(), molecule);
+				Bond b2 = new Bond(ghost2, fromAtom, 1);
+				fromAtom.addBond(b2);
+				ghost2.addBond(b2);
+				molecule.addAtom(ghost2);
+			}
+		}
+	}
+	
+	private void removeGhostAtoms() throws StructureBuildingException {
+		List<Atom> atomList = molecule.getAtomList();
+		for (Atom atom : atomList) {
+			if (atom.getID() < 0){
+				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+				adjacentAtom.removeBond(atom.getFirstBond());
+				molecule.removeAtom(atom);
+			}
+		}
+	}
+
 
 	private void populateColoursByAtomicNumber(List<Atom> atomList) {
 		String lastAtomElement = atomList.get(0).getElement();
@@ -313,13 +351,6 @@ class StereoAnalyser {
 		for (Bond bond : bonds) {
 			Atom otherAtom = bond.getFromAtom() == atom ? bond.getToAtom() : bond.getFromAtom();
 			colourOfAdjacentAtoms.add(mappingToColour.get(otherAtom));
-			/*
-			 * Support for ghost atoms in accordance with CIP guidelines
-			 */
-			int bondOrder = bond.getOrder();
-			for (int i = bondOrder; i >1; i--) {
-				colourOfAdjacentAtoms.add(mappingToColour.get(otherAtom));
-			}
 		} 
 		return colourOfAdjacentAtoms;
 	}
@@ -370,8 +401,8 @@ class StereoAnalyser {
 	private boolean isTetrahedral(Atom atom) throws StructureBuildingException {
 		if (atom.getAtomNeighbours().size()==4){
 			String element = atom.getElement();
-			if (element.equals("C") ||
-					atom.getCharge()==1 && (element.equals("N")|| element.equals("S"))){
+			if (element.equals("C") || element.equals("N")|| element.equals("P") || element.equals("S")
+					|| element.equals("B")|| element.equals("Si") || element.equals("As") || element.equals("Se")){
 				return true;
 			}
 		}
