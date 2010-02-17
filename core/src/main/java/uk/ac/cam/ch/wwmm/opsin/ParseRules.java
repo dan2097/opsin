@@ -90,7 +90,7 @@ class ParseRules {
 	 */
 	RunAutomaton getChemicalAutomaton() {
 		String re = regexDict.get("%chemical%");
-		return AutomatonInitialiser.getAutomaton("chemical", re);
+		return AutomatonInitialiser.getAutomaton("chemical", re, true);
 	}
 
 	/**Determines the possible annotations for a chemical word

@@ -119,7 +119,7 @@ class TokenManager {
 				if(!symbolRegexAutomataDict.containsKey(symbol)) {
 					symbolRegexAutomataDict.put(symbol, new ArrayList<RunAutomaton>());
 				}
-				symbolRegexAutomataDict.get(symbol).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue));
+				symbolRegexAutomataDict.get(symbol).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false));
 			}
 			else{
 				if(!symbolRegexesDict.containsKey(symbol)) {

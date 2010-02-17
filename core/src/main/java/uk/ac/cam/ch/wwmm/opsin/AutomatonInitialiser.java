@@ -23,9 +23,10 @@ class AutomatonInitialiser {
 	 * resource folder will not typically be writable)
 	 * @param automatonName : A name for the automaton so that it can it can be saved/loaded from disk
 	 * @param regex : the regex from which to build the RunAutomaton
+	 * @param tableize: if true, a transition table is created which makes the run method faster in return of a higher memory usage (adds ~256kb)
 	 * @return A RunAutomaton, may have been built from scratch or loaded from a file
 	 */
-	static RunAutomaton getAutomaton(String automatonName, String regex) {
+	static RunAutomaton getAutomaton(String automatonName, String regex, boolean tableize) {
 		String currentRegexHash =Integer.toString(regex.hashCode());
 		try {
 			/*
@@ -42,7 +43,7 @@ class AutomatonInitialiser {
 			//automaton could not be loaded either because the regex hash could not be loaded, the hashes did not match or the automaton could not be loaded
 		}
 		Automaton a = new RegExp(regex).toAutomaton();
-		RunAutomaton ra = new RunAutomaton(a);
+		RunAutomaton ra = new RunAutomaton(a, tableize);
 		try {
 			FileOutputStream regexHashFOS =(FileOutputStream) resourceGetter.getOutputStream(automatonName + "RegexHash.txt");
 			regexHashFOS.write(currentRegexHash.getBytes());
