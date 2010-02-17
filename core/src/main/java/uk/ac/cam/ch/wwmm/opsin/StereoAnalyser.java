@@ -10,9 +10,16 @@ import java.util.Set;
 
 class StereoAnalyser {
 	private static Map<String, Integer> elementToAtomicNumber = new HashMap<String, Integer>();
-	private final Map<Atom, Integer> mappingToColour = new HashMap<Atom, Integer>();
-	private final Map<Atom, List<Integer>> atomNeighbourColours = new HashMap<Atom,List<Integer>>();
+
+	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
+	private final Map<Atom, Integer> mappingToColour;
+
+	/** Maps each atom to a list of of the colours of its neighbours*/
+	private final Map<Atom, List<Integer>> atomNeighbourColours;
+
+	/** The molecule upon which this StereoAnalyser is operating */
 	private final Fragment molecule;
+
 	private final SortByNeighbourColours sortByNeighbourColours;
 	
 	static{
@@ -127,9 +134,20 @@ class StereoAnalyser {
 		elementToAtomicNumber.put("Mt", 109);
 		elementToAtomicNumber.put("Ds", 110);
 	}
+	
+	/**
+	 * Holds information about a tetrahedral stereocentre
+	 * @author dl387
+	 *
+	 */
 	class StereoCentre{
 		private final Atom stereoAtom;
 		private final List<Atom> cipOrderedAtoms;
+		/**
+		 * Creates a stereocentre object from a tetrahedral stereocentre atom and a list of neighbouring atoms in CIP priority (lowest to highest)
+		 * @param stereoAtom
+		 * @param cipOrderedNeighbours
+		 */
 		StereoCentre(Atom stereoAtom, List<Atom> cipOrderedNeighbours) {
 			this.stereoAtom = stereoAtom;
 			this.cipOrderedAtoms = cipOrderedNeighbours;
@@ -142,6 +160,11 @@ class StereoAnalyser {
 		}
 	}
 	
+	/***
+	 * Holds information about a double bond that can possess E/Z stereochemistry
+	 * @author dl387
+	 *
+	 */
 	class StereoBond{
 		private final Bond bond;
 		private final List<Atom> stereoAtoms;
@@ -166,6 +189,12 @@ class StereoAnalyser {
 		}
 	}
 	
+	/**
+	 * Sorts atoms by their colour, low to high
+	 * Higher colour means higher CIP priority
+	 * @author dl387
+	 *
+	 */
 	private class SortByColour implements Comparator<Atom> {
 
 	    public int compare(Atom a, Atom b){
@@ -181,6 +210,11 @@ class StereoAnalyser {
 	    }
 	}
 	
+	/**
+	 * Sorts atoms by their atomic number, low to high
+	 * @author dl387
+	 *
+	 */
 	private static class SortAtomsByAtomicNumber implements Comparator<Atom> {
 
 	    public int compare(Atom a, Atom b){
@@ -196,7 +230,13 @@ class StereoAnalyser {
 	    }
 	}
 	
-	
+	/**
+	 * Initially sorts on the atoms' colour and if these are the same then
+	 * sorts based on the list of colours for neighbouring atoms 
+	 * e.g. [1,2] > [1,1]  [1,1,3] > [2,2,2]  [1,1,3] > [3]  
+	 * @author dl387
+	 *
+	 */
 	private class SortByNeighbourColours implements Comparator<Atom> {
 	    public int compare(Atom a, Atom b){
 	    	int colour1 = mappingToColour.get(a);
@@ -232,39 +272,40 @@ class StereoAnalyser {
 			return 0;
 	    }
 	}
-
+	/**
+	 * Employs a derivative of the InChI algorithm to label which atoms are equivalent.
+	 * These labels can then be used by the findStereo(Atoms/Bonds) functions to find features that
+	 * can possess stereoChemistry
+	 * @param molecule
+	 * @throws StructureBuildingException
+	 */
 	StereoAnalyser(Fragment molecule) throws StructureBuildingException {
 		this.molecule = molecule;
 		sortByNeighbourColours = new SortByNeighbourColours();
 		addGhostAtoms();
 		List<Atom> atomList = molecule.getAtomList();
+		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
+		atomNeighbourColours = new HashMap<Atom,List<Integer>>(atomList.size());
 		Collections.sort(atomList, new SortAtomsByAtomicNumber());
 		populateColoursByAtomicNumber(atomList);
 		
-		while(true){
-//			System.out.println("**********");
-//			for (Atom atom : atomList) {
-//				System.out.println(mappingToColour.get(atom) +"_" + atom.toCMLAtom().toXML());
-//			}
-			boolean changeFound = false;
+		boolean changeFound = true;
+		while(changeFound){
 			for (Atom atom : atomList) {
 				List<Integer> neighbourColours = findColourOfNeighbours(atom);
-				Collections.sort(neighbourColours);//sort such that this goes from low to high
-				if (!changeFound && !neighbourColours.equals(atomNeighbourColours.get(atom))){//null safe comparison
-					changeFound =true;
-				}
 				atomNeighbourColours.put(atom, neighbourColours);
 			}
-			if (!changeFound){
-				break;
-			}
 			Collections.sort(atomList, sortByNeighbourColours);
-			populateColours(atomList);
-			
+			changeFound = populateColoursAndReportIfColoursWereChanged(atomList);
 		}
 		removeGhostAtoms();
 	}
 
+	/**
+	 * Adds "ghost" atoms in accordance with the CIP rules for handling double bonds
+	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
+	 * @throws StructureBuildingException
+	 */
 	private void addGhostAtoms() throws StructureBuildingException {
 		Set<Bond> bonds = molecule.getBondSet();
 		int ghostIdCounter = -1;
@@ -288,7 +329,11 @@ class StereoAnalyser {
 			}
 		}
 	}
-	
+
+	/**
+	 * Removes the ghost atoms added by addGhostAtoms
+	 * @throws StructureBuildingException
+	 */
 	private void removeGhostAtoms() throws StructureBuildingException {
 		List<Atom> atomList = molecule.getAtomList();
 		for (Atom atom : atomList) {
@@ -301,6 +346,11 @@ class StereoAnalyser {
 	}
 
 
+	/**
+	 * Takes a list of atoms sorted by atomicNumber
+	 * and populates the mappingToColour map
+	 * @param atomList
+	 */
 	private void populateColoursByAtomicNumber(List<Atom> atomList) {
 		String lastAtomElement = atomList.get(0).getElement();
 		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
@@ -323,14 +373,25 @@ class StereoAnalyser {
 		}
 	}
 	
-	private void populateColours(List<Atom> atomList) {
+	/**
+	 * Takes a list of atoms sorted by colour/the colour of their neighbours
+	 * and populates the mappingToColour map
+	 * Returns whether mappingToColour was changed
+	 * @param atomList
+	 * @return boolean Whether mappingToColour was changed
+	 */
+	private boolean populateColoursAndReportIfColoursWereChanged(List<Atom> atomList) {
 		Atom previousAtom = atomList.get(0);
 		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
 		int atomsSeen =0;
+		boolean changeFound = false;
 		for (Atom atom : atomList) {
 			if (sortByNeighbourColours.compare(previousAtom, atom)!=0){
-				for (Atom a2 : atomsOfThisColour) {
-					mappingToColour.put(a2, atomsSeen);
+				for (Atom atomOfThisColour : atomsOfThisColour) {
+					if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
+						changeFound =true;
+					}
+					mappingToColour.put(atomOfThisColour, atomsSeen);
 				}
 				previousAtom = atom;
 				atomsOfThisColour = new ArrayList<Atom>();
@@ -339,12 +400,22 @@ class StereoAnalyser {
 			atomsSeen++;
 		}
 		if (!atomsOfThisColour.isEmpty()){
-			for (Atom a2 : atomsOfThisColour) {
-				mappingToColour.put(a2, atomsSeen);
+			for (Atom atomOfThisColour : atomsOfThisColour) {
+				if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
+					changeFound =true;
+				}
+				mappingToColour.put(atomOfThisColour, atomsSeen);
 			}
 		}
+		return changeFound;
 	}
 
+	/**
+	 * Produces a sorted (low to high) list of the colour of the atoms surrounding a given atom
+	 * @param atom
+	 * @return List<Integer> colourOfAdjacentAtoms
+	 * @throws StructureBuildingException
+	 */
 	private List<Integer> findColourOfNeighbours(Atom atom) throws StructureBuildingException {	
 		List<Integer> colourOfAdjacentAtoms = new ArrayList<Integer>();
 		Set<Bond> bonds = atom.getBonds();
@@ -352,16 +423,20 @@ class StereoAnalyser {
 			Atom otherAtom = bond.getFromAtom() == atom ? bond.getToAtom() : bond.getFromAtom();
 			colourOfAdjacentAtoms.add(mappingToColour.get(otherAtom));
 		} 
+		Collections.sort(colourOfAdjacentAtoms);//sort such that this goes from low to high
 		return colourOfAdjacentAtoms;
 	}
 
-	List<StereoCentre> getStereoCentres() throws StructureBuildingException {
+	/**
+	 * Retrieves a list of any tetrahedral stereoCentres
+	 * Internally this is done by checking whether the "colour" of all neighbouring atoms of the tetrahedral atom are different
+	 * @return List<StereoCentre>
+	 * @throws StructureBuildingException
+	 */
+	List<StereoCentre> findStereoCentres() throws StructureBuildingException {
 		List<Atom> atomList = molecule.getAtomList();
 		List<StereoCentre> stereoCentres = new ArrayList<StereoCentre>();
 		for (Atom atom : atomList) {
-//			if (!atom.hasLocant("4b")){
-//				continue;
-//			}
 			List<Atom> neighbours = atom.getAtomNeighbours();
 			if (isTetrahedral(atom)){
 				int[] colours = new int[4];
@@ -380,17 +455,7 @@ class StereoAnalyser {
 					}
 				}
 				if (!foundIdenticalNeighbour){
-					//System.out.println("STEREOCENTRE: " +atom.toCMLAtom().toXML());
 					Collections.sort(neighbours, new SortByColour());
-//					System.out.println("!!!");
-//					for (Atom neighbour : neighbours) {
-//						System.out.println(neighbour.toCMLAtom().toXML());
-//						System.out.println(mappingToColour.get(neighbour));
-//						for (Atom neighbour2 : neighbour.getAtomNeighbours()) {
-//							System.out.println("-"+neighbour2.toCMLAtom().toXML());
-//							System.out.println("-"+mappingToColour.get(neighbour2));
-//						}
-//					}
 					stereoCentres.add(new StereoCentre(atom, neighbours));
 				}
 			}
@@ -398,6 +463,12 @@ class StereoAnalyser {
 		return stereoCentres;
 	}
 	
+	/**
+	 * Crudely determines whether an atom possesses tetrahedral geometry
+	 * @param atom
+	 * @return
+	 * @throws StructureBuildingException
+	 */
 	private boolean isTetrahedral(Atom atom) throws StructureBuildingException {
 		if (atom.getAtomNeighbours().size()==4){
 			String element = atom.getElement();
@@ -410,7 +481,14 @@ class StereoAnalyser {
 	}
 
 
-	List<StereoBond> getStereoBonds() throws StructureBuildingException {
+	/**
+	 *  Retrieves a list of any double bonds possessing the potential to have E/Z stereoChemistry
+	 *  This is done internally by checking the two atoms attached to the ends of the double bond are different
+	 *  As an exception nitrogen's lone pair is treated like a low priority group and so is allowed to only have 1 atom connected to it
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	List<StereoBond> findStereoBonds() throws StructureBuildingException {
 		Set<Bond> bondSet =molecule.getBondSet();
 		List<StereoBond> stereoBonds = new ArrayList<StereoBond>();
 		for (Bond bond : bondSet) {

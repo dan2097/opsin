@@ -24,9 +24,9 @@ public class StereochemistryTest {
 	public void bromoChloroFluoroMethane() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("bromochlorofluoromethane", false).getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
-		Assert.assertEquals(1, stereoAnalyser.getStereoCentres().size());
-		Assert.assertEquals(0, stereoAnalyser.getStereoBonds().size());
-		StereoCentre sc = stereoAnalyser.getStereoCentres().get(0);
+		Assert.assertEquals(1, stereoAnalyser.findStereoCentres().size());
+		Assert.assertEquals(0, stereoAnalyser.findStereoBonds().size());
+		StereoCentre sc = stereoAnalyser.findStereoCentres().get(0);
 		Assert.assertNotNull(sc.getStereoAtom());
 		Atom stereoAtom = sc.getStereoAtom();
 		Assert.assertEquals("C", stereoAtom.getElement());
@@ -37,9 +37,9 @@ public class StereochemistryTest {
 	public void Nacetylleucine() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("N-acetylleucine", false).getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
-		Assert.assertEquals(1, stereoAnalyser.getStereoCentres().size());
-		Assert.assertEquals(0, stereoAnalyser.getStereoBonds().size());
-		StereoCentre sc = stereoAnalyser.getStereoCentres().get(0);
+		Assert.assertEquals(1, stereoAnalyser.findStereoCentres().size());
+		Assert.assertEquals(0, stereoAnalyser.findStereoBonds().size());
+		StereoCentre sc = stereoAnalyser.findStereoCentres().get(0);
 		Assert.assertNotNull(sc.getStereoAtom());
 		Atom stereoAtom = sc.getStereoAtom();
 		Assert.assertEquals("C", stereoAtom.getElement());
@@ -65,9 +65,9 @@ public class StereochemistryTest {
 	public void but2ene() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("but-2-ene", false).getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
-		Assert.assertEquals(0, stereoAnalyser.getStereoCentres().size());
-		Assert.assertEquals(1, stereoAnalyser.getStereoBonds().size());
-		StereoBond sb = stereoAnalyser.getStereoBonds().get(0);
+		Assert.assertEquals(0, stereoAnalyser.findStereoCentres().size());
+		Assert.assertEquals(1, stereoAnalyser.findStereoBonds().size());
+		StereoBond sb = stereoAnalyser.findStereoBonds().get(0);
 		Bond stereoBond = sb.getBond();
 		Assert.assertNotNull(stereoBond);
 		Atom stereoAtom1 = stereoBond.getFromAtom();

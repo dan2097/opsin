@@ -227,7 +227,8 @@ class FusedRingNumberer {
 			}
 			else if(checkRingsAre6Membered(rings))
 			{
-				atomSequences = number6MemberRings(rings);
+				int numberOfAtomsInFusedRing = fusedRing.getAtomList().size();
+				atomSequences = number6MemberRings(rings, numberOfAtomsInFusedRing);
 	
 				if(atomSequences.size()<=0){//Error: No path found. This is either a bug in the SSSR or numbering code; assign dummy locants
 					int i=1;
@@ -279,10 +280,11 @@ class FusedRingNumberer {
 	/**
 	 * Returns possible enumerations of atoms in a 6-member ring system
 	 * @param rings
+	 * @param numberOfAtomsInFusedRing 
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<List<Atom>> number6MemberRings(List<Ring> rings) throws StructureBuildingException
+	private static List<List<Atom>> number6MemberRings(List<Ring> rings, int numberOfAtomsInFusedRing) throws StructureBuildingException
 	{
 		List<Ring> tRings = findTerminalRings(rings);
 		if (tRings == null || tRings.size()<0) throw new StructureBuildingException("Terminal rings not found");
@@ -299,7 +301,7 @@ class FusedRingNumberer {
 		// add all the paths together and return
 		List<List<Atom>> paths = new ArrayList<List<Atom>>();
 		for (Integer dir : dirs) {
-			List<List<Atom>> dirPaths = findPossiblePaths(dir, ct);
+			List<List<Atom>> dirPaths = findPossiblePaths(dir, ct, numberOfAtomsInFusedRing);
 			for (List<Atom> path : dirPaths) {
 				paths.add(path);
 			}
@@ -312,10 +314,11 @@ class FusedRingNumberer {
 	 * Finds possible variants of enumerating atoms in a given direction
 	 * @param newDir
 	 * @param ct
+	 * @param numberOfAtomsInFusedRing 
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<List<Atom>> findPossiblePaths(int newDir, ConnectivityTable ct) throws StructureBuildingException
+	private static List<List<Atom>> findPossiblePaths(int newDir, ConnectivityTable ct, int numberOfAtomsInFusedRing) throws StructureBuildingException
 	{
 		//List<Integer> col3 = new  ArrayList<Integer>(this.col3);
 		if ( ct.col1.size() != ct.col2.size() || ct.col2.size() != ct.col3.size() || ct.col1.size() <= 0) throw new StructureBuildingException("Sizes of arrays are not equal");
@@ -436,7 +439,7 @@ class FusedRingNumberer {
 				Ring[][] qRingMap = transformRingWithQuadrant(ringMap, qr);
 				boolean inverseAtoms = false;
 				if (qr == 1 || qr == 3) inverseAtoms = true;
-				List<Atom> quadrantPath = orderAtoms(qRingMap, midChain, inverseAtoms);
+				List<Atom> quadrantPath = orderAtoms(qRingMap, midChain, inverseAtoms, numberOfAtomsInFusedRing);
 				chainPaths.add(quadrantPath);
 			}
 			for (List<Atom> chainPath : chainPaths) {
@@ -453,10 +456,11 @@ class FusedRingNumberer {
 	 * @param ringMap
 	 * @param midChain
 	 * @param inverseAtoms
+	 * @param numberOfAtomsInFusedRing 
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms) throws StructureBuildingException
+	private static List<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms, int numberOfAtomsInFusedRing) throws StructureBuildingException
 	{
 		int w = ringMap.length;
 		if (w<0 || ringMap[0].length < 0) throw new StructureBuildingException("Mapping results are wrong");
@@ -479,7 +483,7 @@ class FusedRingNumberer {
 		int stNumber;
 		int endNumber;
 		int size;
-		int maxLoopCount = 1000;
+		int maxLoopCount = numberOfAtomsInFusedRing;
 		Ring nextRing    = null;
 		prevRing         = null;	// TB: otherwise the test later on would prevent going to this ring for the first time
 		

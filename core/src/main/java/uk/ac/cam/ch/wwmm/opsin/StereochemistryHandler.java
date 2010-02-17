@@ -31,12 +31,12 @@ class StereochemistryHandler {
 	static void processStereochemicalElements(BuildState state, Fragment uniFrag, List<Element> stereoChemistryEls) throws StructureBuildingException {
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(uniFrag);
 	    Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<Atom, StereoCentre>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object
-		List<StereoCentre> stereoCentres = stereoAnalyser.getStereoCentres();
+		List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
 		for (StereoCentre stereoCentre : stereoCentres) {
 			atomStereoCentreMap.put(stereoCentre.getStereoAtom(),stereoCentre);
 		}
 	    Map<Bond, StereoBond> bondStereoBondMap = new HashMap<Bond, StereoBond>();
-		List<StereoBond> stereoBonds = stereoAnalyser.getStereoBonds();
+		List<StereoBond> stereoBonds = stereoAnalyser.findStereoBonds();
 		for (StereoBond stereoBond : stereoBonds) {
 			Bond b = stereoBond.getBond();
 			if (notIn6MemberOrSmallerRing(b)){
