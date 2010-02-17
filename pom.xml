@@ -3,9 +3,24 @@
 	<groupId>opsin</groupId>
 	<artifactId>opsin</artifactId>
 	<name>OPSIN</name>
-	<version>0.5.4-SNAPSHOT</version>
+	<version>0.6.0</version>
 	<description>Open Parser for Structural IUPAC Nomenclature</description>
-  <packaging>pom</packaging>
+	<licenses>
+		<license>
+			<name>Artistic License 2.0</name>
+			<url> http://www.opensource.org/licenses/artistic-license-2.0.php</url>
+		</license>
+	</licenses>
+    <packaging>pom</packaging>
+    <scm>
+		<connection>
+			scm:hg:https://dan2097@bitbucket.org/dan2097/opsin/
+		</connection>
+		<developerConnection>
+			scm:hg:https://dan2097@bitbucket.org/dan2097/opsin/
+		</developerConnection>
+		<url>http://bitbucket.org/dan2097/opsin/</url>
+	</scm>
 	<contributors>
 		<contributor>
 			<name>Daniel Lowe</name>
@@ -24,47 +39,47 @@
 			<name>Albina Asadulina</name>
 		</contributor>
 	</contributors>
-  <modules>
-    <module>core</module>
-    <module>inchi</module>
-  </modules>
-  <repositories>
-    <repository>
-      <id>ucc</id>
-      <url>http://maven.ch.cam.ac.uk/m2repo</url>
-    </repository>
-  </repositories>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <testFailureIgnore>false</testFailureIgnore>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <inherited>false</inherited>
-        <configuration>
-          <descriptors>
-            <descriptor>fullAssembly.xml</descriptor>
-          </descriptors>
-           <archive>
-              <manifest>
-                 <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToStructure</mainClass>
-              </manifest>
-           </archive>
-       </configuration>
-      </plugin>
-    </plugins>
-  </build>
+	<modules>
+	  <module>core</module>
+	  <module>inchi</module>
+	</modules>
+	<repositories>
+	  <repository>
+	    <id>ucc</id>
+	    <url>http://maven.ch.cam.ac.uk/m2repo</url>
+	  </repository>
+	</repositories>
+	<build>
+	  <plugins>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-compiler-plugin</artifactId>
+	      <configuration>
+	        <source>1.5</source>
+	        <target>1.5</target>
+	      </configuration>
+	    </plugin>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-surefire-plugin</artifactId>
+	      <configuration>
+	        <testFailureIgnore>false</testFailureIgnore>
+	      </configuration>
+	    </plugin>
+	    <plugin>
+	      <artifactId>maven-assembly-plugin</artifactId>
+	      <inherited>false</inherited>
+	      <configuration>
+	        <descriptors>
+	          <descriptor>fullAssembly.xml</descriptor>
+	        </descriptors>
+	         <archive>
+	            <manifest>
+	               <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToStructure</mainClass>
+	            </manifest>
+	         </archive>
+	     </configuration>
+	    </plugin>
+	  </plugins>
+	</build>
 </project>
