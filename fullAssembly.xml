@@ -8,7 +8,6 @@
       <includes>
         <include>opsin:core</include>
         <include>opsin:inchi</include>
-        <include>opsin:smiles</include>
       </includes>
       <binaries>
         <unpack>true</unpack>
