@@ -58,12 +58,12 @@ Indicated hydrogen e.g. 1H-benzoimidazole
 Heteroatom replacement
 Specification of charge e.g. ium/ide
 Multiplicative nomenclature e.g. ethylenediaminetetraacetic acid
-Fused ring systems with some exceptions e.g. imidazo[4,5-d]pyridine
+Fused ring systems e.g. imidazo[4,5-d]pyridine. For a small number of fused ring systems numbering cannot be determined
 Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
-The following functional classes: amide, anhydrides, esters, diesters, glycols, acids, azides, bromides, chlorides, cyanates, cyanides, fluorides, fulminates, hydrazones, hydroperoxides, 
+The following functional classes: amide, anhydrides, esters, diesters, glycols, acids, azides, bromides, chlorides, cyanates, cyanides, fluorides, fulminates, hydrazones, hydroperoxides, imides,
 iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, selenocyanates, thiocyanates, alcohols, selenols, thiols, ethers, ketones, oxides, oximes, peroxides, selenides, 
-selenones, selenoxides, selones, selenoketones, sulfides, sulfones, sulfoxides, tellurides, telluroketones, tellurones, telluroxides and thioketones
+selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
 Greek letters
 Lambda convention
 E/Z/R/S stereochemistry
@@ -75,10 +75,9 @@ Carbohydrates
 Steroids
 Nucleic acids
 Bridged rings 
-Fused ring systems built from more than one fusion or that involve non 6-membered rings AND are not in a chain
+Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 Some conjunctive operations e.g. cyclohexaneethanol
-Some functional replacement nomenclature
-The following functional classes: Hydrazides, lactones, lactams, acetals, hemiacetals, ketals and semicarbazones
+The following functional classes: Hydrazides, lactones, sultams, lactams, sultims, lactims, acetals, hemiacetals and ketals
 
 ##################################################
 
