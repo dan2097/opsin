@@ -1,0 +1,63 @@
+Version 0.60
+OPSIN is now a mavenised project consisting of two modules: core and inchi. Core does name -->CML, inchi depends on core and allows conversion to inchi
+Instead of CML an OpsinResult can be returned which can yield information as to why a name was not interpretable
+Added support for unlocanted R/S/E/Z stereochemistry. Removed limit on number of atoms that stereochemistry code can handle
+Added support for polymers e.g. poly(ethylene)
+Improvements in handling of multiplicative nomenclature
+Improvements to fusion nomenclature handling: multiplied components and multi parent systems are now supported
+Improved support for functional class nomenclature; space detection has been improved and support has been added for anhydride,oxide,oxime,hydrazone,semicarbazone,thiosemicarbazone,selenosemicarbazone,tellurosemicarbazone,imide
+Support for the lambda convention
+Locanted esters
+Improvements in dearomatisation code
+CML output changed to being CML-Lite compliant
+Speed improvements
+Support for greek letters e.g. as alpha or $a or α
+Added more infixes
+Added more suffixes
+Vocabulary improvements
+Systematic handling of amino acid nomenclature
+Added support for perhydro
+Support for ylium/uide
+Support for locants like N-1 (instead of N1)
+Fixed potential infinite loop in fused ring numbering
+Made grammar more lenient in many places e.g. euphonic o, optional sqaure brackets
+Sulph is now treated like sulf as in sulphuric acid
+and many misc fixes and improvements
+
+Version 0.53
+Added support for amic, aldehydic, anilic, anilide, carboxanilide and amoyl suffixes
+Added support for cyclic imides e.g. succinimide/succinimido
+Added support for amide functional class
+Support for locants such as N5 which means a nitrogen that is attached in some way to position 5. Locants of this type may also be used in ester formation.
+Some improvements to functional replacement using prefixes e.g. thioethanoic acid now works
+Disabled stereochemistry in molecules with over 300 atoms as a temporary fix to the problem in 0.52
+Slight improvement in method for deciding which group detachable hydro prefixes apply to.
+Minor vocabulary update
+
+Version 0.52
+Outputting directly to InChI is now supported using the separately available nameToInchi jar (an OPSIN jar is expected in the same location as the nameToInchi jar)
+Fused rings with any number of rings in a chain or formed entirely of 6 membered rings can now be numbered
+Added support for E/Z/R/S where locants are given. Unlocanted cases will be dealt with in a subsequent release. In very large molecules a lack of memory may be encountered, this will be resolved in a subsequent release
+Some Infixes are now supported e.g. ethanthioic acid
+All spiro systems with Von Baeyer brackets are now supported e.g. dispiro[4.2.4.2]tetradecane
+Vocabulary increase (especially: terpenes, ingorganic acids, fused ring components)
+Fixed some problems with components with both acylic and cyclic sections e.g. trityl
+Improved locant assignments e.g. 2-furyl is now also fur-2-yl
+Speed improvements
+Removed dependence on Nux/Saxon
+Misc minor fixes
+
+Version 0.51
+Huge reduction in OPSIN initialisation time (typical ~7 seconds -->800ms)
+Allowed thio/seleno/telluro as divalent linkers and for functional replacement when used as prefixes. Peroxy can now be used for functional replacement
+Better support for semi-trivally named hydrocarbon fused rings e.g. tetracene
+Better handling of carbonic acid derivatives
+Improvements to locant assignment
+Support for names like triethyltetramine and triethylene glycol
+Misc other fixes to prevent OPSIN generating the wrong structure for certain types of names
+
+Version 0.5
+Too many changes to list
+
+Version 0.1
+Initial release

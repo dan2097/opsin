@@ -1,0 +1,9 @@
+The following have contributed to the code and systems here (although some of their code
+may have been partially or wholly refactored out).
+
+Alphabetical order:
+
+Albina Absdulina
+Peter Corbett
+Daniel Lowe (current maintainer)
+Peter Murray-Rust
