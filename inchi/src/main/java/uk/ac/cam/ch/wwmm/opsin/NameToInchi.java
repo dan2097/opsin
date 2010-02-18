@@ -31,22 +31,20 @@ public class NameToInchi {
 	 *
 	 * @param name The chemical name to parse.
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
-	 * @return An InChI string, containing the parsed molecule
-	 * @throws InchiGenerationException Thrown if parsing fails or an InChI could not be generated
+	 * @return An InChI string, containing the parsed molecule, or null if the molecule would not parse.
 	 */
-	public String parseToInchi(String name, boolean verbose) throws InchiGenerationException {
+	public String parseToInchi(String name, boolean verbose) {
 		OpsinResult result = n2s.parseChemicalName(name, verbose);
 		return convertResultToInChI(result, verbose);
 	}
 	
 	/**
-	 * Converts an OPSIN result to InChI. An exception is thrown if the conversion fails
+	 * Converts an OPSIN result to InChI. Null is returned if this conversion fails
 	 * @param result
 	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return String InChI
-	 * @throws InchiGenerationException Thrown if conversion failed
 	 */
-	public static String convertResultToInChI(OpsinResult result, boolean verbose) throws InchiGenerationException{
+	public static String convertResultToInChI(OpsinResult result, boolean verbose){
 		if (result.getStructure() !=null){
 			String inchi = null;
 			try{
@@ -56,15 +54,13 @@ public class NameToInchi {
 				if (verbose){
 					e.printStackTrace();
 				}
-				throw new InchiGenerationException("InChI generation failed!", e);
+				return null;
 			}
-			if (inchi ==null){
-				throw new InchiGenerationException("InChI generation failed! This probably indicates a bug as null should not of been returned for the InChI");
-			}
+			if (inchi ==null){return null;}//inchi generation failed
 			if(verbose) System.out.println(inchi);
 			return inchi;
 		}
-		throw new InchiGenerationException(result.getMessage());
+		return null;
 	}
 
 	private static String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{

@@ -13,7 +13,11 @@ OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 
 The easiest way to use OPSIN is to use the standalone jar available from sourceforge.
 java -jar opsin-0.6.0.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
-opsinToInChI-0.6.0.jar is also available if InChI is your preferred format
+opsin-0.6.0.jar includes InChI and CML output and all dependendencies
+core-0.6.0.jar does not include dependencies and InChI output support
+inchi-0.6.0.jar does not include dependencies, depends on JNI-InChI and core, and adds InChI suppport.
+The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML
+and uk.ac.cam.ch.wwmm.opsin.NameToNameToInchi for InChI
 
 To use OPSIN as a library within Java add opsin-0.6.0.jar to your classpath then:
 
