@@ -14,6 +14,23 @@
       </binaries>
     </moduleSet>
   </moduleSets>
+  <files>
+  	<file>
+  	  <source>Acknowledgments.txt</source>
+  	</file>
+  	<file>
+  	  <source>LICENSE.txt</source>
+  	</file>
+  	<file>
+  	  <source>LICENSE-External.txt</source>
+  	</file>
+  	<file>
+  	  <source>README.txt</source>
+  	</file>
+  	<file>
+  	  <source>ReleaseNotes.txt</source>
+  	</file>
+  </files>
   <includeBaseDirectory>false</includeBaseDirectory>
   <dependencySets>
     <dependencySet>
