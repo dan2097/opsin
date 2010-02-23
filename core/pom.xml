@@ -7,7 +7,7 @@
    </parent>
 	<artifactId>core</artifactId>
 	<name>OPSIN Core</name>
-	<description>Open Parser for Structural IUPAC Nomenclature</description>
+	<description>Core files of OPSIN. Allows conversion of chemical names to CML (Chemical Markup Language)</description>
   <build>
     <plugins>
        <plugin>

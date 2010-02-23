@@ -82,6 +82,7 @@
   <token value="C(Cl)(Cl)Cl)" labels="none" valType="SMILES">chloroform</token>
   <token value="[O-]C(=O)CC(O)(C(=O)[O-])CC(=O)[O-]" labels="none" valType="SMILES">citrate</token>
   <token value="OC(=O)CC(O)(C(=O)O)CC(=O)O" labels="none" valType="SMILES" functionalIDs="1,9,13">citric</token><!--no clear definition as to what citryl means-->
+  <token value="N#CN" labels="none" valType="SMILES" functionalIDs="3">cyanamide</token>
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic</token>
   <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
   <token value="N[C@@H](CCSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">cystathionine</token>
