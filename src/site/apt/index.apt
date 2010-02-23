@@ -1,0 +1,36 @@
+OPSIN: Open Parser for Structural IUPAC Nomenclature
+
+  OPSIN is a library for converting chemical names, especially organic chemical names, into structures. The default output is CML (Chemical Markup Language) with an optional module provided for direct conversion to InChI.
+
+News
+
+*2010-02-23
+
+  OPSIN 0.6.0 has been released. This release brings many improvements, notably in the areas of stereochemistry, fused ring nomenclature and functional class nomenclature (e.g. support for oxides/anhydrides).
+  Check out the {{{https://sourceforge.net/projects/oscar3-chem/files/opsin/0.6.0/ReleaseNotes.txt/download}release notes}} for more information.
+  OPSIN's source no longer resides within OSCAR and instead development is continuing at {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
+  You can grab OPSIN in jar form either from OSCAR3's file section or direct from {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
+  
+  As OPSIN is now MAVENised the ideal way for a MAVEN project to depend on OPSIN is by adding OPSIN to your pom.xml.
+  Released versions of OPSIN are available from {{{http://maven.ch.cam.ac.uk/content/repositories/releases/opsin/} here}}.
+  SNAPSHOT versions are available from {{{http://maven.ch.cam.ac.uk/content/repositories/snapshots/opsin/} here}}.
+
+Attribution
+
+  If you use OPSIN to produce results for publication, then it would be great if you could cite us:
+
+  High-Throughput Identification of Chemistry in Life Science Texts
+  Peter Corbett and Peter Murray-Rust
+  CompLife 2006, LNBI 4216, pp. 107-118, 2006.
+
+  Another paper specifically about OPSIN and which is appropriate to OPSIN's current capabilties is in the works.
+
+Acknowledgements
+
+   Recent performance improvements have been made possible with the use of the excellent YourKit profiling tool.
+
+   YourKit is kindly supporting open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of innovative and intelligent tools for profiling
+Java and .NET applications. Take a look at YourKit's leading software products:
+{{{http://www.yourkit.com/java/profiler/index.jsp}YourKit Java Profiler}} and
+{{{http://www.yourkit.com/.net/profiler/index.jsp}YourKit .NET Profiler}}.
