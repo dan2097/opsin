@@ -21,7 +21,7 @@
   <regex name="%openBracket%" regex="[\[\(\{]"/>
   <regex name="%closeBracket%" regex="[\]\)\}]"/>
   <regex name="%locantNoPrime%" regex="([1-9][0-9]*[a-z]?)"/><!--standard numeric locant with optional letter-->
-  <regex name="%superScriptedNumber%" regex="\^[0-9]+|\^?%openBracket%[0-9]+%closeBracket%"/><!--either ^number of ^(number) of (number) currently-->
+  <regex name="%superScriptedNumber%" regex="(\^[0-9]+(\^\^)?|\^?%openBracket%[0-9]+%closeBracket%|\~[0-9]+\~)"/><!--In cases where a superscript is expected anyway: ^num or ^num^^ or ^(num) or (num) or ~num~ -->
 
 <!--Assembles the rather large regex for detecting all locant variants-->
   <regex name="%cistrans%" regex="([rct]-)"/><!--relative/cis/trans descriptor-->
@@ -36,22 +36,24 @@
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
   <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" determinise="yes" />
 
-  <regex name = "%lambdaConvention%" regex="(%locantTypes%?lambda(%superScriptedNumber%|[0-9]+))" />
+  <regex name="%lambdaConvention%" regex="(%locantTypes%?lambda(%superScriptedNumber%|[0-9]+))" />
   <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(lambdaConvention-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="Ç" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
   <regexToken regex="-" symbol="h" tagname="hyphen" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="-" symbol="ä" tagname="hyphen" determinise="yes"/>
   <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="c" tagname="closebracket" determinise="yes"/>
-  <regexToken regex="[sS][pP][iI][rR][oO]\[([0-9]+(\^[\(\{]?[0-9]+[\)\}]?)?\.)+[0-9]+(\^[\(\{]?[0-9]+[\)\}]?)?\]" symbol="S" tagname="spiro" determinise="yes"/>
-  <regexToken regex="[cC][yY][cC][lL][oO]\[[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+\^?[\(\{]?[0-9]+,[0-9]+[\)\}]?\^?\^?)*\]" symbol="B" tagname="vonBaeyer" determinise="yes"/>
-  <regexToken regex="\[[1-9][0-9]*\][aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
+  <regexToken regex="[sS][pP][iI][rR][oO]%openBracket%([0-9]+(\^[\(\{]?[0-9]+[\)\}]?)?\.)+[0-9]+(\^[\(\{]?[0-9]+[\)\}]?)?%closeBracket%" symbol="S" tagname="spiro" determinise="yes"/>
+
+  <regex name="%superScriptedVonBaeyerDescriptor%" regex="(\.[0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|[0-9]+,[0-9]+))"/>
+  <regexToken regex="[cC][yY][cC][lL][oO]%openBracket%[0-9]+\.[0-9]+\.[0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%" symbol="B" tagname="vonBaeyer" determinise="yes"/>
+  <regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
   <regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-([a-z]'*)+)"/><!--Numerical locants may be primed if component is multiplied. Primes on letters may occur if parent is multiplied-->
   <regex name="%omittedLocantFirstOrderFusion%" regex="(([a-z]'*)+)"/>
   <regex name="%omittedLocantAmbiguousOrderFusion%" regex="(%locant%(,%locant%)+)"/><!--note that something like [4,5] can be a first or higher order fusion dependant on context!-->
   <regex name="%higherOrderFusion%" regex="(%locant%(,%locant%)+:%locant%(,%locant%)+)"/>
-  <regexToken regex="\[(%firstOrderFusion%|%omittedLocantFirstOrderFusion%|%omittedLocantAmbiguousOrderFusion%|%higherOrderFusion%)\]" symbol="F" tagname="fusion" determinise="yes"/>
-  <regexToken regex="\[((%firstOrderFusion%(:%firstOrderFusion%)+)|(%omittedLocantFirstOrderFusion%(,%omittedLocantFirstOrderFusion%)+)|(%higherOrderFusion%(;%higherOrderFusion%)+)|(%omittedLocantAmbiguousOrderFusion%(:%omittedLocantAmbiguousOrderFusion%)+))\]" symbol="Ä" tagname="fusion" determinise="yes"/><!--e.g. dithieno[2',3':3,4;2",3":6,7]-->
+  <regexToken regex="%openBracket%(%firstOrderFusion%|%omittedLocantFirstOrderFusion%|%omittedLocantAmbiguousOrderFusion%|%higherOrderFusion%)%closeBracket%" symbol="F" tagname="fusion" determinise="yes"/>
+  <regexToken regex="%openBracket%((%firstOrderFusion%(:%firstOrderFusion%)+)|(%omittedLocantFirstOrderFusion%(,%omittedLocantFirstOrderFusion%)+)|(%higherOrderFusion%(;%higherOrderFusion%)+)|(%omittedLocantAmbiguousOrderFusion%(:%omittedLocantAmbiguousOrderFusion%)+))%closeBracket%" symbol="Ä" tagname="fusion" determinise="yes"/><!--e.g. dithieno[2',3':3,4;2",3":6,7]-->
   <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-" symbol="e" tagname="hydrogen" determinise="yes"/>
   <regexToken regex="[eE]" symbol="Z" tagname="e" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes" determinise="yes"/>
