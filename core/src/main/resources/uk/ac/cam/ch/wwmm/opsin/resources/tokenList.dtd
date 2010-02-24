@@ -2,7 +2,7 @@
 <!ELEMENT tokenList (token)+>
 <!ATTLIST tokenList tagname (alkaneStemModifier|cyclo|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|suffix|multiplier|ringAssemblyMultiplier|stereoChemistry|suffixPrefix|unsaturator) #REQUIRED
                     type (acidStem|aminoAcid|basic|chain|charge|cisOrTrans|chalcogenAcidStem|diValentGroup|functionalClass|group|inline|monoValentGroup|monoValentStandaloneGroup|nonCarboxylicAcid|ring|simpleGroup|substituent|root|VonBaeyer) #IMPLIED
-                    subType (alkaneStem|alkaneStem-irregular|anhydride|arylGroup|arylSubstituent|cation|endInAn|endInIc|endInIne|functionalClassGroup|groupStem|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|oylForAcyl|simpleSubstituent|substituent|terminal|ylForAcyl) #IMPLIED
+                    subType (alkaneStem|alkaneStem-irregular|anhydride|arylGroup|arylSubstituent|cationicMetal|endInAn|endInIc|endInIne|functionalClassGroup|groupStem|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|oylForAcyl|simpleSubstituent|substituent|terminal|ylForAcyl) #IMPLIED
                     symbol CDATA #REQUIRED>
 
 <!ELEMENT token (#PCDATA)>

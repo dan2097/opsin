@@ -1,9 +1,21 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
-<tokenList tagname="group" type="simpleGroup" subType="cation" symbol="G">
+<tokenList tagname="group" type="simpleGroup" subType="cationicMetal" symbol="G">
   <token value="[Li+]" labels="none" valType="SMILES">lithium</token>
   <token value="[Na+]" labels="none" valType="SMILES">sodium</token>
   <token value="[K+]" labels="none" valType="SMILES">potassium</token>
   <token value="[Rb+]" labels="none" valType="SMILES">rubidium</token>
   <token value="[Cs+]" labels="none" valType="SMILES">caesium</token>
+  <token value="[Fr+]" labels="none" valType="SMILES">francium</token>
+
+  <token value="[Be+2]" labels="none" valType="SMILES">beryllium</token>
+  <token value="[Mg+2]" labels="none" valType="SMILES">magnesium</token>
+  <token value="[Ca+2]" labels="none" valType="SMILES">calcium</token>
+  <token value="[Sr+2]" labels="none" valType="SMILES">strontium</token>
+  <token value="[Ba+2]" labels="none" valType="SMILES">barium</token>
+  <token value="[Ra+2]" labels="none" valType="SMILES">radium</token>
+
+  <token value="[Al+3]" labels="none" valType="SMILES">aluminium</token>
+  <token value="[Al+3]" labels="none" valType="SMILES">aluminum</token>
+  <token value="[Ga+3]" labels="none" valType="SMILES">gallium</token>
 </tokenList>
