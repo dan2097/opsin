@@ -46,14 +46,19 @@
   <token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">periodic</token>
 
   <token value="Br(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">bromate</token>
+  <token value="Br(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">bromite</token>
   <token value="Cl(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">chlorate</token>
+  <token value="Cl(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">chlorite</token>
   <token value="F|5(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">fluorate</token>
+  <token value="F|3(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">fluorite</token>
   <token value="I(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">iodate</token>
+  <token value="I(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">iodite</token>
   <token value="Br[O-]" labels="none" valType="SMILES" functionalIDs="2">hypobromite</token>
   <token value="Cl[O-]" labels="none" valType="SMILES" functionalIDs="2">hypochlorite</token>
   <token value="F[O-]" labels="none" valType="SMILES" functionalIDs="2">hypofluorite</token>
   <token value="I[O-]" labels="none" valType="SMILES" functionalIDs="2">hypoiodite</token>
   <token value="[N+](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3">nitrate</token>
+  <token value="N(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">nitrite</token>
   <token value="[Si]([O-])([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4,5">silicate</token>
   <token value="[Si]([O-])([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4,5">orthosilicate</token>
   <token value="Br(=O)(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">perbromate</token>
