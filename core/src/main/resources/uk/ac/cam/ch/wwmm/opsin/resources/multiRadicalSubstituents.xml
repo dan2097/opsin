@@ -68,6 +68,14 @@
   <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@@H](CS)C=O" outIDs="4,5">half-cystyl</token>
   <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@@H](CS)C=O" outIDs="4,5">l-half-cystyl</token>
   <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@H](CS)C=O" outIDs="4,5">d-half-cystyl</token>
+
+<!--Should be suffixes ONLY according to IUPAC-->
+  <token value="C=S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbothioyl</token><!--alternative to thiocarbonyl-->
+  <token value="C=[Se]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboselenoyl</token>
+  <token value="C=[Te]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbotelluroyl</token>
+  <token value="C=NN" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydrazonoyl</token>
+  <token value="C=N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboimidoyl</token>
+  <token value="C=NO" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydroximoyl</token>
 </tokenList>
 
 

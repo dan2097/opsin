@@ -69,8 +69,8 @@ class PostProcessor {
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
 	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+[a-z]?(,\\d+[a-z]?)*\\]");
-	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+\\^?[\\({]?\\d*,?\\d*[\\)}]?\\^?\\^?)");
-	private final Pattern matchAnnulene = Pattern.compile("\\[([1-9]\\d*)\\]annulen");
+	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+[^\\.,]*\\d*,?\\d*[^\\.,]*)");//the not a period or comma allows some an optional indication that the following comma separated digits are superscripted
+	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
 	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(RS|[RSEZrsez])");
 	private final Pattern matchRS = Pattern.compile("[RSrs]");
@@ -895,11 +895,8 @@ class PostProcessor {
 	 * @param text - string with spiro
 	 * @return array with number of carbons in each group and associated index of spiro atom
 	 */
-	private int[][] getSpiroGroups(String text)
-	{
-		int n1 = text.indexOf('[');
-		int n2 = text.indexOf(']');
-		text = text.substring(n1+1, n2);
+	private int[][] getSpiroGroups(String text) {
+		text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
 		String[] sGroups = matchDot.split(text);
 		int gNum = sGroups.length;
 
@@ -1041,225 +1038,7 @@ class PostProcessor {
 				group.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
 				previous.detach();
 			} else if(previous.getLocalName().equals(VONBAEYER_EL)) {
-				String vonBaeyerBracket = previous.getValue();
-				Element multiplier =(Element)XOMTools.getPreviousSibling(previous);
-				int numberOfRings=Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-				multiplier.detach();
-
-				int alkylChainLength;
-				LinkedList<String> elementSymbolArray = new LinkedList<String>();
-				if (group.getAttributeValue(VALTYPE_ATR).equals(CHAIN_VALTYPE_VAL)){
-					alkylChainLength=Integer.parseInt(group.getAttributeValue(VALUE_ATR));
-					for (int i = 0; i < alkylChainLength; i++) {
-						elementSymbolArray.add("C");
-					}
-				}
-				else if (group.getAttributeValue(VALTYPE_ATR).equals(SMILES_VALTYPE_VAL)){
-					String smiles =group.getAttributeValue(VALUE_ATR);
-					char[] smilesArray =smiles.toCharArray();
-					for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain
-						char currentChar =smilesArray[i];
-						if (currentChar == '['){
-							if ( smilesArray[i +2]==']'){
-								elementSymbolArray.add("[" +String.valueOf(smilesArray[i+1]) +"]");
-								i=i+2;
-							}
-							else{
-								elementSymbolArray.add("[" + String.valueOf(smilesArray[i+1]) +String.valueOf(smilesArray[i+2]) +"]");
-								i=i+3;
-							}
-						}
-						else{
-							elementSymbolArray.add(String.valueOf(currentChar));
-						}
-					}
-					alkylChainLength=elementSymbolArray.size();
-				}
-				else{
-					throw new PostProcessingException("unexpected group valType: " + group.getAttributeValue(VALTYPE_ATR));
-				}
-
-
-				int totalLengthOfBridges=0;
-				int bridgeLabelsUsed=3;//start labelling from 3 upwards
-				//3 and 4 will be the atoms on each end of one secondary bridge, 5 and 6 for the next etc.
-
-				ArrayList<HashMap<String, Integer>> bridges = new ArrayList<HashMap<String, Integer>>();
-				HashMap<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<Integer, ArrayList<Integer>>(alkylChainLength);
-				Matcher m = matchVonBaeyer.matcher(vonBaeyerBracket);
-				while(m.find()) {
-					String[] lengthOfBridgeArray= matchComma.split(m.group(0));
-					HashMap<String, Integer> bridge = new HashMap<String, Integer>();
-					int bridgeLength =0;
-					if (lengthOfBridgeArray.length > 1){//this is a secondary bridge (chain start/end locations have been specified)
-
-						String coordinatesStr1;
-						String coordinatesStr2 =lengthOfBridgeArray[1].replaceAll("\\D", "");
-						String[] tempArray = lengthOfBridgeArray[0].split("\\D+");
-
-						if (tempArray.length ==1){
-							//there is some ambiguity as it has not been made obvious which number/s are supposed superscripted to be the superscripted locant
-							//so we assume that it is more likely that it will be referring to an atom of label >10
-							//rather than a secondary bridge of length > 10
-							char[] tempCharArray = lengthOfBridgeArray[0].toCharArray();
-							if (tempCharArray.length ==2){
-								bridgeLength= Character.getNumericValue(tempCharArray[0]);
-								coordinatesStr1= Character.toString(tempCharArray[1]);
-							}
-							else if (tempCharArray.length ==3){
-								bridgeLength= Character.getNumericValue(tempCharArray[0]);
-								coordinatesStr1=Character.toString(tempCharArray[1]) +Character.toString(tempCharArray[2]);
-							}
-							else if (tempCharArray.length ==4){
-								bridgeLength = Integer.parseInt(Character.toString(tempCharArray[0]) +Character.toString(tempCharArray[1]));
-								coordinatesStr1 = Character.toString(tempCharArray[2]) +Character.toString(tempCharArray[3]);
-							}
-							else{
-								throw new PostProcessingException("Unsupported Von Baeyer locant description: " + m.group(0) );
-							}
-						}
-						else{//bracket or other delimiter detected, no ambiguity!
-							bridgeLength= Integer.parseInt(tempArray[0]);
-							coordinatesStr1= tempArray[1];
-						}
-
-						bridge.put("Bridge Length", bridgeLength );
-						int coordinates1=Integer.parseInt(coordinatesStr1);
-						int coordinates2=Integer.parseInt(coordinatesStr2);
-						if (coordinates1 > alkylChainLength || coordinates2 > alkylChainLength){
-							throw new PostProcessingException("Indicated bridge position is not on chain: " +coordinates1 +"," +coordinates2);
-						}
-						if (coordinates2>coordinates1){//makes sure that bridges are built from highest coord to lowest
-							int swap =coordinates1;
-							coordinates1=coordinates2;
-							coordinates2=swap;
-						}
-						if (bridgeLocations.get(coordinates1)==null){
-							bridgeLocations.put(coordinates1, new ArrayList<Integer>());
-						}
-						if (bridgeLocations.get(coordinates2)==null){
-							bridgeLocations.put(coordinates2, new ArrayList<Integer>());
-						}
-						bridgeLocations.get(coordinates1).add(bridgeLabelsUsed);
-						bridge.put("AtomId_Larger_Label", bridgeLabelsUsed);
-						bridgeLabelsUsed++;
-						if (bridgeLength==0){//0 length bridge, hence want atoms with the same labels so they can join together without a bridge
-							bridgeLocations.get(coordinates2).add(bridgeLabelsUsed -1);
-							bridge.put("AtomId_Smaller_Label", bridgeLabelsUsed -1);
-						}
-						else{
-							bridgeLocations.get(coordinates2).add(bridgeLabelsUsed);
-							bridge.put("AtomId_Smaller_Label", bridgeLabelsUsed);
-						}
-						bridgeLabelsUsed++;
-
-						bridge.put("AtomId_Larger", coordinates1);
-						bridge.put("AtomId_Smaller", coordinates2);
-					}
-					else{
-						bridgeLength= Integer.parseInt(lengthOfBridgeArray[0]);
-						bridge.put("Bridge Length", bridgeLength);
-					}
-					totalLengthOfBridges += bridgeLength;
-					bridges.add(bridge);
-				}
-				if (totalLengthOfBridges + 2 !=alkylChainLength ){
-					throw new PostProcessingException("Disagreement between lengths of bridges and alkyl chain length");
-				}
-				if (numberOfRings +1 != bridges.size()){
-					throw new PostProcessingException("Disagreement between number of rings and number of bridges");
-				}
-
-				String SMILES="";
-				int atomCounter=1;
-				int bridgeCounter=1;
-				//add standard bridges
-				for (HashMap<String, Integer> bridge : bridges) {
-					if (bridgeCounter==1){
-						SMILES += elementSymbolArray.removeFirst() +"1";
-						if (bridgeLocations.get(atomCounter)!=null){
-							for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-								SMILES += ringClosure(bridgeAtomLabel);
-							}
-						}
-						SMILES += "(";
-					}
-					int bridgeLength =bridge.get("Bridge Length");
-
-					for (int i = 0; i < bridgeLength; i++) {
-						atomCounter++;
-						SMILES +=elementSymbolArray.removeFirst();
-						if (bridgeLocations.get(atomCounter)!=null){
-							for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-								SMILES +=ringClosure(bridgeAtomLabel);
-							}
-						}
-					}
-					if (bridgeCounter==1){
-						atomCounter++;
-						SMILES += elementSymbolArray.removeFirst() +"2";
-						if (bridgeLocations.get(atomCounter)!=null){
-							for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-								SMILES +=ringClosure(bridgeAtomLabel);
-							}
-						}
-					}
-					if (bridgeCounter==2){
-						SMILES += "1)";
-					}
-					if (bridgeCounter==3){
-						SMILES += "2";
-					}
-					bridgeCounter++;
-					if (bridgeCounter >3){break;}
-				}
-
-				//create list of secondary bridges that need to be added
-				//0 length bridges and the 3 main bridges are dropped
-				ArrayList<HashMap<String, Integer>> secondaryBridges = new ArrayList<HashMap<String, Integer>>();
-				for (HashMap<String, Integer> bridge : bridges) {
-					if(bridge.get("AtomId_Larger")!=null && bridge.get("Bridge Length")!=0){
-						secondaryBridges.add(bridge);
-					}
-				}
-
-				Comparator<HashMap<String, Integer>> sortBridges= new VonBaeyerSecondaryBridgeSort();
-				Collections.sort(secondaryBridges, sortBridges);
-
-				ArrayList<HashMap<String, Integer>> dependantSecondaryBridges;
-				//add secondary bridges, recursively add dependent secondary bridges
-				do{
-					dependantSecondaryBridges = new ArrayList<HashMap<String, Integer>>();
-					for (HashMap<String, Integer> bridge : secondaryBridges) {
-						int bridgeLength =bridge.get("Bridge Length");
-						if (bridge.get("AtomId_Larger") > atomCounter){
-							dependantSecondaryBridges.add(bridge);
-							continue;
-						}
-						SMILES+=".";
-						for (int i = 0; i < bridgeLength; i++) {
-							atomCounter++;
-							SMILES +=elementSymbolArray.removeFirst();
-							if (i==0){SMILES+=ringClosure(bridge.get("AtomId_Larger_Label"));}
-							if (bridgeLocations.get(atomCounter)!=null){
-								for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-									SMILES += ringClosure(bridgeAtomLabel);
-								}
-							}
-						}
-						SMILES+= ringClosure(bridge.get("AtomId_Smaller_Label"));
-					}
-					if (dependantSecondaryBridges.size() >0 && dependantSecondaryBridges.size()==secondaryBridges.size()){
-						throw new PostProcessingException("Unable to resolve all dependant bridges!!!");
-					}
-					secondaryBridges=dependantSecondaryBridges;
-				}
-				while(dependantSecondaryBridges.size() > 0);
-
-				group.addAttribute(new Attribute(VALUE_ATR, SMILES));
-				group.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
-				group.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
-				previous.detach();
+				processVonBaeyerSystem(group, previous);
 			}
 			else if(previous.getLocalName().equals(CYCLO_EL)) {
 				if (!group.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)){
@@ -1306,6 +1085,238 @@ class PostProcessor {
 				previous.detach();
 			}
 		}
+	}
+
+	/**
+	 * Given an element corresponding to an alkane or other systematic chain and the preceding vonBaeyerBracket element:
+	 * Generates the SMILES of the von baeyer system and assigns this to the chain Element
+	 * Checks are done on the von baeyer multiplier and chain length
+	 * The multiplier and vonBaeyerBracket are detached
+	 * @param chainEl
+	 * @param vonBaeyerBracketEl
+	 * @throws PostProcessingException
+	 */
+	private void processVonBaeyerSystem(Element chainEl, Element vonBaeyerBracketEl) throws PostProcessingException {
+		String vonBaeyerBracket = vonBaeyerBracketEl.getValue();
+		Element multiplier =(Element)XOMTools.getPreviousSibling(vonBaeyerBracketEl);
+		int numberOfRings=Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
+		multiplier.detach();
+
+		int alkylChainLength;
+		LinkedList<String> elementSymbolArray = new LinkedList<String>();
+		if (chainEl.getAttributeValue(VALTYPE_ATR).equals(CHAIN_VALTYPE_VAL)){
+			alkylChainLength=Integer.parseInt(chainEl.getAttributeValue(VALUE_ATR));
+			for (int i = 0; i < alkylChainLength; i++) {
+				elementSymbolArray.add("C");
+			}
+		}
+		else if (chainEl.getAttributeValue(VALTYPE_ATR).equals(SMILES_VALTYPE_VAL)){
+			String smiles =chainEl.getAttributeValue(VALUE_ATR);
+			char[] smilesArray =smiles.toCharArray();
+			for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain
+				char currentChar =smilesArray[i];
+				if (currentChar == '['){
+					if ( smilesArray[i +2]==']'){
+						elementSymbolArray.add("[" +String.valueOf(smilesArray[i+1]) +"]");
+						i=i+2;
+					}
+					else{
+						elementSymbolArray.add("[" + String.valueOf(smilesArray[i+1]) +String.valueOf(smilesArray[i+2]) +"]");
+						i=i+3;
+					}
+				}
+				else{
+					elementSymbolArray.add(String.valueOf(currentChar));
+				}
+			}
+			alkylChainLength=elementSymbolArray.size();
+		}
+		else{
+			throw new PostProcessingException("unexpected group valType: " + chainEl.getAttributeValue(VALTYPE_ATR));
+		}
+
+
+		int totalLengthOfBridges=0;
+		int bridgeLabelsUsed=3;//start labelling from 3 upwards
+		//3 and 4 will be the atoms on each end of one secondary bridge, 5 and 6 for the next etc.
+
+		ArrayList<HashMap<String, Integer>> bridges = new ArrayList<HashMap<String, Integer>>();
+		HashMap<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<Integer, ArrayList<Integer>>(alkylChainLength);
+		vonBaeyerBracket = vonBaeyerBracket.substring(6, vonBaeyerBracket.length()-1);//cut off cyclo[ and terminal ]
+		Matcher m = matchVonBaeyer.matcher(vonBaeyerBracket);
+		while(m.find()) {
+			String[] lengthOfBridgeArray= matchComma.split(m.group(0));
+			HashMap<String, Integer> bridge = new HashMap<String, Integer>();
+			int bridgeLength =0;
+			if (lengthOfBridgeArray.length > 1){//this is a secondary bridge (chain start/end locations have been specified)
+
+				String coordinatesStr1;
+				String coordinatesStr2 =lengthOfBridgeArray[1].replaceAll("\\D", "");
+				String[] tempArray = lengthOfBridgeArray[0].split("\\D+");
+
+				if (tempArray.length ==1){
+					//there is some ambiguity as it has not been made obvious which number/s are supposed superscripted to be the superscripted locant
+					//so we assume that it is more likely that it will be referring to an atom of label >10
+					//rather than a secondary bridge of length > 10
+					char[] tempCharArray = lengthOfBridgeArray[0].toCharArray();
+					if (tempCharArray.length ==2){
+						bridgeLength= Character.getNumericValue(tempCharArray[0]);
+						coordinatesStr1= Character.toString(tempCharArray[1]);
+					}
+					else if (tempCharArray.length ==3){
+						bridgeLength= Character.getNumericValue(tempCharArray[0]);
+						coordinatesStr1=Character.toString(tempCharArray[1]) +Character.toString(tempCharArray[2]);
+					}
+					else if (tempCharArray.length ==4){
+						bridgeLength = Integer.parseInt(Character.toString(tempCharArray[0]) +Character.toString(tempCharArray[1]));
+						coordinatesStr1 = Character.toString(tempCharArray[2]) +Character.toString(tempCharArray[3]);
+					}
+					else{
+						throw new PostProcessingException("Unsupported Von Baeyer locant description: " + m.group(0) );
+					}
+				}
+				else{//bracket or other delimiter detected, no ambiguity!
+					bridgeLength= Integer.parseInt(tempArray[0]);
+					coordinatesStr1= tempArray[1];
+				}
+
+				bridge.put("Bridge Length", bridgeLength );
+				int coordinates1=Integer.parseInt(coordinatesStr1);
+				int coordinates2=Integer.parseInt(coordinatesStr2);
+				if (coordinates1 > alkylChainLength || coordinates2 > alkylChainLength){
+					throw new PostProcessingException("Indicated bridge position is not on chain: " +coordinates1 +"," +coordinates2);
+				}
+				if (coordinates2>coordinates1){//makes sure that bridges are built from highest coord to lowest
+					int swap =coordinates1;
+					coordinates1=coordinates2;
+					coordinates2=swap;
+				}
+				if (bridgeLocations.get(coordinates1)==null){
+					bridgeLocations.put(coordinates1, new ArrayList<Integer>());
+				}
+				if (bridgeLocations.get(coordinates2)==null){
+					bridgeLocations.put(coordinates2, new ArrayList<Integer>());
+				}
+				bridgeLocations.get(coordinates1).add(bridgeLabelsUsed);
+				bridge.put("AtomId_Larger_Label", bridgeLabelsUsed);
+				bridgeLabelsUsed++;
+				if (bridgeLength==0){//0 length bridge, hence want atoms with the same labels so they can join together without a bridge
+					bridgeLocations.get(coordinates2).add(bridgeLabelsUsed -1);
+					bridge.put("AtomId_Smaller_Label", bridgeLabelsUsed -1);
+				}
+				else{
+					bridgeLocations.get(coordinates2).add(bridgeLabelsUsed);
+					bridge.put("AtomId_Smaller_Label", bridgeLabelsUsed);
+				}
+				bridgeLabelsUsed++;
+
+				bridge.put("AtomId_Larger", coordinates1);
+				bridge.put("AtomId_Smaller", coordinates2);
+			}
+			else{
+				bridgeLength= Integer.parseInt(lengthOfBridgeArray[0]);
+				bridge.put("Bridge Length", bridgeLength);
+			}
+			totalLengthOfBridges += bridgeLength;
+			bridges.add(bridge);
+		}
+		if (totalLengthOfBridges + 2 !=alkylChainLength ){
+			throw new PostProcessingException("Disagreement between lengths of bridges and alkyl chain length");
+		}
+		if (numberOfRings +1 != bridges.size()){
+			throw new PostProcessingException("Disagreement between number of rings and number of bridges");
+		}
+
+		String SMILES="";
+		int atomCounter=1;
+		int bridgeCounter=1;
+		//add standard bridges
+		for (HashMap<String, Integer> bridge : bridges) {
+			if (bridgeCounter==1){
+				SMILES += elementSymbolArray.removeFirst() +"1";
+				if (bridgeLocations.get(atomCounter)!=null){
+					for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
+						SMILES += ringClosure(bridgeAtomLabel);
+					}
+				}
+				SMILES += "(";
+			}
+			int bridgeLength =bridge.get("Bridge Length");
+
+			for (int i = 0; i < bridgeLength; i++) {
+				atomCounter++;
+				SMILES +=elementSymbolArray.removeFirst();
+				if (bridgeLocations.get(atomCounter)!=null){
+					for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
+						SMILES +=ringClosure(bridgeAtomLabel);
+					}
+				}
+			}
+			if (bridgeCounter==1){
+				atomCounter++;
+				SMILES += elementSymbolArray.removeFirst() +"2";
+				if (bridgeLocations.get(atomCounter)!=null){
+					for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
+						SMILES +=ringClosure(bridgeAtomLabel);
+					}
+				}
+			}
+			if (bridgeCounter==2){
+				SMILES += "1)";
+			}
+			if (bridgeCounter==3){
+				SMILES += "2";
+			}
+			bridgeCounter++;
+			if (bridgeCounter >3){break;}
+		}
+
+		//create list of secondary bridges that need to be added
+		//0 length bridges and the 3 main bridges are dropped
+		ArrayList<HashMap<String, Integer>> secondaryBridges = new ArrayList<HashMap<String, Integer>>();
+		for (HashMap<String, Integer> bridge : bridges) {
+			if(bridge.get("AtomId_Larger")!=null && bridge.get("Bridge Length")!=0){
+				secondaryBridges.add(bridge);
+			}
+		}
+
+		Comparator<HashMap<String, Integer>> sortBridges= new VonBaeyerSecondaryBridgeSort();
+		Collections.sort(secondaryBridges, sortBridges);
+
+		ArrayList<HashMap<String, Integer>> dependantSecondaryBridges;
+		//add secondary bridges, recursively add dependent secondary bridges
+		do{
+			dependantSecondaryBridges = new ArrayList<HashMap<String, Integer>>();
+			for (HashMap<String, Integer> bridge : secondaryBridges) {
+				int bridgeLength =bridge.get("Bridge Length");
+				if (bridge.get("AtomId_Larger") > atomCounter){
+					dependantSecondaryBridges.add(bridge);
+					continue;
+				}
+				SMILES+=".";
+				for (int i = 0; i < bridgeLength; i++) {
+					atomCounter++;
+					SMILES +=elementSymbolArray.removeFirst();
+					if (i==0){SMILES+=ringClosure(bridge.get("AtomId_Larger_Label"));}
+					if (bridgeLocations.get(atomCounter)!=null){
+						for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
+							SMILES += ringClosure(bridgeAtomLabel);
+						}
+					}
+				}
+				SMILES+= ringClosure(bridge.get("AtomId_Smaller_Label"));
+			}
+			if (dependantSecondaryBridges.size() >0 && dependantSecondaryBridges.size()==secondaryBridges.size()){
+				throw new PostProcessingException("Unable to resolve all dependant bridges!!!");
+			}
+			secondaryBridges=dependantSecondaryBridges;
+		}
+		while(dependantSecondaryBridges.size() > 0);
+
+		chainEl.addAttribute(new Attribute(VALUE_ATR, SMILES));
+		chainEl.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+		chainEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
+		vonBaeyerBracketEl.detach();
 	}
 
 	/**Handles special cases in IUPAC nomenclature.
