@@ -266,7 +266,7 @@ class XmlDeclarations {
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
-	static final String CATION_SUBTYPE_VAL ="cation";
+	static final String CATIONICMETAL_SUBTYPE_VAL ="cationicMetal";
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";

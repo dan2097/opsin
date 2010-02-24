@@ -106,6 +106,11 @@ class StructureBuilder {
 
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
+		int overallCharge = state.fragManager.getOverallCharge();
+		if (overallCharge!=0){//a net charge is present! Could just mean the counterion has not been specified though
+			List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, "word", "type", WordType.full.toString());
+			balanceChargeIfPossible(state, words, overallCharge);
+		}
 		makeHydrogensExplicit(state);
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
@@ -958,6 +963,81 @@ class StructureBuilder {
 						atomRefs4Atr.setValue(atomRefs4);
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * A net charge is present; Given the list of word elements and the overallCharge is there an unambiguous way of 
+	 * multiplying fragments to make the net charge 0
+	 * "cationic metals" e.g. sodium will have their charge set to 0 if a counterion is not present
+	 * @param state
+	 * @param words
+	 * @param overallCharge
+	 * @throws StructureBuildingException
+	 */
+	private void balanceChargeIfPossible(BuildState state, List<Element> words, int overallCharge) throws StructureBuildingException {
+		List<Element> positivelyChargedWords = new ArrayList<Element>();
+		List<Element> negativelyChargedWords = new ArrayList<Element>();
+		HashMap<Element, Integer> wordToChargeMapping = new HashMap<Element, Integer>();
+		for (Element word : words) {
+			BuildResults br = new BuildResults(state, word);
+			int charge = br.getCharge();
+			if (charge>0){
+				positivelyChargedWords.add(word);
+			}
+			else if (charge <0){
+				negativelyChargedWords.add(word);
+			}
+			wordToChargeMapping.put(word, charge);
+		}
+		if (positivelyChargedWords.size()==1 && negativelyChargedWords.size() >=1 || positivelyChargedWords.size()>=1 && negativelyChargedWords.size() ==1 ){
+			Element wordToMultiply;
+			if (overallCharge >0){
+				if (negativelyChargedWords.size() >1){
+					return;//ambiguous as to which to multiply
+				}
+				wordToMultiply = negativelyChargedWords.get(0);
+			}
+			else{
+				if (positivelyChargedWords.size() >1){
+					return;//ambiguous as to which to multiply
+				}
+				wordToMultiply = positivelyChargedWords.get(0);
+			}
+			Element firstChild = (Element) wordToMultiply.getChild(0);
+			while (firstChild.getChildElements().size() !=0){
+				firstChild = (Element) firstChild.getChild(0);
+			}
+			if (firstChild.getLocalName().equals("multiplier")){//e.g. monochloride. Allows specification of explicit stoichiometry
+				return;
+			}
+			int charge = wordToChargeMapping.get(wordToMultiply);
+			if (overallCharge % charge ==0){
+				int timesToDuplicate = Math.abs(overallCharge/charge);
+				for (int i = 0; i < timesToDuplicate; i++) {
+					XOMTools.insertAfter(wordToMultiply, state.fragManager.cloneElement(state, wordToMultiply));
+				}
+			}
+		}
+		else if (negativelyChargedWords.size()==0){
+			setCationicMetalsToNeutral(state, positivelyChargedWords);
+		}
+	}
+
+	/**
+	 * Sets the charge and valency of any cation metals within any of the list of words provided to 0
+	 * @param state
+	 * @param positivelyChargedWords
+	 * @throws StructureBuildingException
+	 */
+	private void setCationicMetalsToNeutral(BuildState state,List<Element> positivelyChargedWords) throws StructureBuildingException {
+		for (Element positiveWord : positivelyChargedWords) {
+			List<Element> cationicMetals = XOMTools.getDescendantElementsWithTagNameAndAttribute(positiveWord, GROUP_EL, SUBTYPE_ATR, CATIONICMETAL_SUBTYPE_VAL);
+			for (Element cationicMetal : cationicMetals) {
+				Atom firstAtom = state.xmlFragmentMap.get(cationicMetal).getFirstAtom();
+				firstAtom.setCharge(0);
+				firstAtom.setLambdaConventionValency(0);
 			}
 		}
 	}

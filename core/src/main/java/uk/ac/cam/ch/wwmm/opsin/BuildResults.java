@@ -173,4 +173,16 @@ class BuildResults {
 		inIDs.addAll(otherBR.inIDs);
 		fragments.addAll(otherBR.fragments);
 	}
+
+	/**
+	 * Returns the sum of the charges of the fragments in the buildResults
+	 * @return
+	 */
+	int getCharge() {
+		int totalCharge=0;
+		for (Fragment frag : fragments) {
+			totalCharge+=frag.getCharge();
+		}
+		return totalCharge;
+	}
 }
