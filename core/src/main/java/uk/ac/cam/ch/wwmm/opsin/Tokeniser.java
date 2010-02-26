@@ -1,10 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Uses OPSIN's DFA based grammar to break a name in to tokens with associated meanings ("annotations").
@@ -15,7 +12,6 @@ class Tokeniser {
 
 
 	private final ParseRules parseRules;
-	private final Pattern matchWhitespace =Pattern.compile("\\s+");
 	private final static char endOfFunctionalTerm = '\u00FB';
 	
 	Tokeniser(ParseRules parseRules) {
@@ -30,54 +26,82 @@ class Tokeniser {
 	 */
 	Parse tokenize(String name) throws ParsingException {
 		Parse parse = new Parse(name);
-		List<String> words = new LinkedList<String>(Arrays.asList(matchWhitespace.split(name)));//initially assume spaces are hard delimiters
-		
-		for (int i = 0; i < words.size(); i++) {
-			String word = words.get(i);
-			
-			if (words.size()!=1 && StringTools.isLackingCloseBracket(word)){//erroneous space!!
-				//something like [(3,4,5-trihydroxy-6-methyl -phenyl..
-				words.set(i, word + words.get(i+1));
-				words.remove(i+1);
-				i--;
-				continue;
-			}
-			
+		String unparsedName = removeWhiteSpaceIfBracketsAreUnbalanced(name);
+		while (unparsedName.length()>0){
 			/*
 			 * Returns
 			 * List of parses where at least some of the name was assigned a role
 			 * Section of name that was uninterpretable (or "" if none was)
 			 * Section of name that was unparsable (or "" if none was). This is always shorter or equal to the above string
 			 */
-			ThreeReturnValues<List<ParseTokens>, String, String> output= parseRules.getParses(word);
+			ThreeReturnValues<List<ParseTokens>, String, String> output= parseRules.getParses(unparsedName);
 			List<ParseTokens> parseTokens =output.getFirst();
 			String unparseableName = output.getSecond();
-
-			if (parseTokens.size()>0 && unparseableName.equals("")){//word was fully interpretable
+			String parsedName = unparsedName.substring(0, unparsedName.length() - unparseableName.length());
+			if (parseTokens.size()>0 && (unparseableName.equals("") || unparseableName.charAt(0) ==' ')){//a word was interpretable
 				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 				//In cases of properly formed names there will be only one ParseWord
 				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
-				List<ParseWord> parseWords = splitIntoParseWords(parseTokens, word);
-				words.remove(i);
+				List<ParseWord> parseWords = splitIntoParseWords(parseTokens, parsedName);
 				for (int j = 0; j < parseWords.size(); j++) {
-					words.add(i +j, parseWords.get(j).getWord());
 					parse.addWord(parseWords.get(j));
 				}
-				i=i+parseWords.size()-1;//move the indice onwards if a word has been split
+				if (!unparseableName.equals("")){
+					unparsedName = unparseableName.substring(1);//remove white space at start of unparseableName
+				}
+				else{
+					unparsedName = unparseableName;
+				}
 			}
 			else{//word is unparsable as is. Try and remove a space and try again
 				//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-				if (i +1 < words.size()){//join word with the next word
-					words.set(i, word + words.get(i +1));
-					words.remove(i+1);
-					i--;
+				int indexOfSpace = unparseableName.indexOf(' ');
+				if (indexOfSpace != -1 ){
+					unparsedName = parsedName + unparseableName.substring(0, indexOfSpace) + unparseableName.substring(indexOfSpace +1);
 				}
 				else{
-					throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + word+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+					if (parsedName.equals("")){
+						throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+					}
+					else {
+						throw new ParsingException(name + " is unparsable. A space was antipicated after: " + parsedName);
+					}
 				}
 			}
 		}
 		return parse;
+	}
+	
+	/**
+	 * Works left to right removing spaces if there are too many opening brackets
+	 * @param name
+	 * @return
+	 * @throws ParsingException If brackets are unbalanced and cannot be balanced by removing whitespace
+	 */
+	private String removeWhiteSpaceIfBracketsAreUnbalanced(String name) throws ParsingException {
+		int bracketLevel = 0;
+		int stringLength  = name.length();
+		for(int i = 0 ; i < stringLength; i++) {
+			char c = name.charAt(i);
+			if(c == '(' || c == '[' || c == '{') {
+				bracketLevel++;
+			}
+			else if(c == ')' || c == ']' || c == '}') {
+				bracketLevel--;
+			}
+			else if(c == ' ' && bracketLevel > 0){//brackets unbalanced and a space has been encountered!
+				name = name.substring(0, i) +name.substring(i +1);
+				stringLength  = name.length();
+				i--;
+			}
+		}
+		if (bracketLevel > 0){
+			throw new ParsingException("Unmatched opening bracket found in :" + name);
+		}
+		else if (bracketLevel < 0){
+			throw new ParsingException("Unmatched closing bracket found in :" + name);
+		}
+		return name;
 	}
 
 	private List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) throws ParsingException {

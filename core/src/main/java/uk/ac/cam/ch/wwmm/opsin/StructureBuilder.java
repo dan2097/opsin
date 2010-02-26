@@ -503,7 +503,7 @@ class StructureBuilder {
 				for (Fragment frag : orderedPossibleFragments) {
 					List<Atom> atomList = frag.getAtomList();
 					for (Atom atom : atomList) {
-						if (!atom.getElement().equals("C")){
+						if (!atom.getElement().equals("C") && !atom.getElement().equals("O")){
 							formAppropriateBondToOxideAndAdjustCharges(state, atom, oxideAtom);
 							continue mainLoop;
 						}
@@ -512,10 +512,23 @@ class StructureBuilder {
 				//No heteroatoms could be found. Perhaps it's supposed to be something like styrene oxide
 				Set<Bond> bondSet = groupToModify.getBondSet();//looking for double bond
 				for (Bond bond : bondSet) {
-					if (bond.getOrder()==2){
+					if (bond.getOrder()==2 && bond.getFromAtom().getElement().equals("C") && bond.getToAtom().getElement().equals("C")){
 						bond.setOrder(1);
 						state.fragManager.createBond(bond.getFromAtom(), oxideAtom, 1);
 						state.fragManager.createBond(bond.getToAtom(), oxideAtom, 1);
+						continue mainLoop;
+					}
+				}
+				
+				//...or maybe something a bit iffy nomenclature wise like benzene oxide :-S
+				for (Bond bond : bondSet) {
+					Atom fromAtom =bond.getFromAtom();
+					Atom toAtom = bond.getToAtom();
+					if (fromAtom.hasSpareValency() && toAtom.hasSpareValency() &&fromAtom.getElement().equals("C") && toAtom.getElement().equals("C")){
+						fromAtom.setSpareValency(false);
+						toAtom.setSpareValency(false);
+						state.fragManager.createBond(fromAtom, oxideAtom, 1);
+						state.fragManager.createBond(toAtom, oxideAtom, 1);
 						continue mainLoop;
 					}
 				}

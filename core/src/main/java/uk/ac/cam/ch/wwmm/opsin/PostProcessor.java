@@ -1526,8 +1526,8 @@ class PostProcessor {
 				}
 			}
 		}
-		if (blevel!=0){
-			throw new PostProcessingException("Matching closing bracket not found!");
+		if (blevel != 0){
+			throw new PostProcessingException("Brackets do not match!");
 		}
 		return false;
 	}

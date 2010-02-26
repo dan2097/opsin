@@ -80,7 +80,7 @@ does not define a CFG.
   <regex name="%suffixPrefix%" value="ì"/>
   <regex name="%multipleFusor%" value="Ä"/>
   <regex name="%benzo%" value="Å"/>
-  <regex name="%bracketedLocantGroup%" value="É"/>
+  <regex name="%locantThatNeedsBrackets%" value="É"/>
   <regex name="%basicFunctionalClass%" value="æ"/>
   <regex name="%multiplyableFunctionalClass%" value="Æ"/>
   <regex name="%monovalentFunctionalGroup%" value="ô"/>
@@ -107,7 +107,7 @@ does not define a CFG.
   <regex name="%newLocantGroupNoOMP%" value="(%hyphen%?%locantGroup%?)"/>
   <regex name="%newLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
-  <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%bracketedLocantGroup%%optionalCloseBracket%%hyphen%?)"/>
+  <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%locantThatNeedsBrackets%%optionalCloseBracket%%hyphen%?)"/>
   <regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
   <regex name="%infixedInlineSuffix%" value="(%o%?%infixReplacement%%infixableInlineSuffix%|%structuralOpenBracket%%infixReplacement%%infixableInlineSuffix%%structuralCloseBracket%)"/>
   <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%infixableInlineSuffix%)" />
@@ -172,7 +172,7 @@ does not define a CFG.
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiro%%alkaneStem%)"/>
 
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|(%bracketedLocantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|(%locantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%cycloChain%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%)%inlineEndings%|%bracketedLocant%?%trivialRingSubstituent%%inlineSuffixGroup%)"/>
 
   <!--Complex terms-->
