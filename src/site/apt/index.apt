@@ -1,4 +1,4 @@
-OPSIN: Open Parser for Structural IUPAC Nomenclature
+OPSIN: Open Parser for Systematic IUPAC Nomenclature
 
   OPSIN is a library for converting chemical names, especially organic chemical names, into structures. The default output is CML (Chemical Markup Language) with an optional module provided for direct conversion to InChI.
 
