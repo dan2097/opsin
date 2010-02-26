@@ -156,6 +156,7 @@
   <token value="CC(=O)N(C(=O)C)C(=O)C" labels="none" valType="SMILES">triacetamide</token>
   <token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
   <token value="[N+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
+  <token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O" labels="none" valType="SMILES">vitamin c</token>
   <token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>
 
 <!--cyclic structures that are misclassified and placed here as they may not have suffixes without having an e to avoid ambiguity-->

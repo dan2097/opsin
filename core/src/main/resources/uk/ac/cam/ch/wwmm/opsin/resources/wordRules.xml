@@ -9,7 +9,7 @@ If none of these wordRules match a substituent may merge with an adjacent substi
 and a substituent may merge with a full to form a larger full
 Parsing will fail if the end result is not one or more full terms or a polymer.
 -->
-<!--need to be added: hydrazide, lactone, lactam, hydrazone, anhydride, semicarbazone, acetal, hemiacetal, ketal, oxide-->
+<!--need to be added: hydrazide, lactone, lactam, acetal, hemiacetal, ketal-->
 <wordRules>
   <wordRule name="monovalentFunctionalGroup" type="full">
     <word type="substituent" />

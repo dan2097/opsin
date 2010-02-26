@@ -70,23 +70,6 @@ public final class StringTools {
 		return sb.toString();
 	}
 
-	/**Checks to see if placing one or more close brackets (normal, square or curly) on 
-	 * the end of the string would cause the string to have balanced brackets.
-	 * 
-	 * @param s The string to test.
-	 * @return The result of the test.
-	 */
-	public static boolean isLackingCloseBracket(String s) {
-		int bracketLevel = 0;
-		for(int i=s.length()-1;i>=0;i--) {
-			char c = s.charAt(i);
-			if(c == '(' || c == '[' || c == '{') bracketLevel--;
-			if(c == ')' || c == ']' || c == '}') bracketLevel++;
-			if(bracketLevel < 0) return true;
-		}
-		return false;
-	}
-
 	/**Joins an array of strings into a single string.
 	 *
 	 * @param stringArray The strings to join together.
