@@ -1,4 +1,4 @@
-OPSIN - Open Parser for Structural IUPAC Nomenclature
+OPSIN - Open Parser for Systematic IUPAC Nomenclature
 version 0.6.0 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust

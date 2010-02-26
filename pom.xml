@@ -4,7 +4,7 @@
 	<artifactId>opsin</artifactId>
 	<name>OPSIN</name>
 	<version>0.6.1-SNAPSHOT</version>
-	<description>Open Parser for Structural IUPAC Nomenclature</description>
+	<description>Open Parser for Systematic IUPAC Nomenclature</description>
 	<licenses>
 		<license>
 			<name>Artistic License 2.0</name>
