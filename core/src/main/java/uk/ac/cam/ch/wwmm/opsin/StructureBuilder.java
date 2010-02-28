@@ -349,7 +349,6 @@ class StructureBuilder {
 		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
-		resolveWordOrBracket(state, words.get(0));//the group
 		BuildResults acidBr = new BuildResults(state, words.get(0));
 		if (acidBr.getFunctionalIDCount()==0){
 			throw new StructureBuildingException("No functionalIds detected!");
@@ -399,6 +398,7 @@ class StructureBuilder {
 		if (wordIndice +1 < words.size()){
 			throw new StructureBuildingException("More words than expected when applying amide word rule!");
 		}
+		resolveWordOrBracket(state, words.get(0));//the group that had amide functionality added
 	}
 
 	private void buildGlycol(BuildState state, List<Element> words) throws StructureBuildingException {
