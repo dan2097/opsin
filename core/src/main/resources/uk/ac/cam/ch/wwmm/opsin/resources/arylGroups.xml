@@ -29,7 +29,6 @@
   <token value="c1ccc[as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">arsinolizin</token>
   <token value="as-indacene" valType="dbkey">as-indacen</token>
   <token value="azulene" valType="dbkey">azulen</token>
-  <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
   <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">benzidin</token>
   <token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">4,4'-benzidin</token>
   <token value="benzene" valType="dbkey">benzen</token>
@@ -144,7 +143,6 @@
   <token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthren</token>
   <token value="N1C(=O)Cc2ccccc12" labels="1/2//3/3a/4/5/6/7/7a" valType="SMILES">oxindol</token>
   <token value="N(C(=O)C)c1ccc(O)cc1" labels="////1/2/3/4//5/6" valType="SMILES">paracetamol</token>
-  <token value="c1ccccc1C(=O)OO" labels="2/3/4/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoic</token>
   <token value="perimidine" valType="dbkey">perimidin</token>
   <token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">perylen</token>
   <token value="phenalene" valType="dbkey">phenalen</token>
@@ -251,7 +249,6 @@
   <token value="C1NCCc2c3ccccc3Nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">tryptolin</token>
   <token value="N1c(=O)Nc(=O)cc1" labels="1/2//3/4//5/6" valType="SMILES">uracil</token>
   <token value="N1NC(=O)NC1=O" labels="1/2/3//4/5/" valType="SMILES">urazol</token>
-  <token value="N1c(=O)Nc2Nc(=O)Nc2c1=O" labels="1/2//3/4/9/8//7/5/6/" valType="SMILES">uric</token>
   <token value="c1cccc2oc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">xanthen</token>
   <token value="c1cccc2sc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thioxanthen</token>
   <token value="c1cccc2[se]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenoxanthen</token>

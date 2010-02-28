@@ -3,7 +3,6 @@
 <tokenLists>
 <!--functional classes typically have hard coded rules in the StructureBuilder detailing their behaviour-->
   <tokenList tagname="functionalClass" type="functionalClass" symbol="æ">
-    <token value="acid">acid</token>
     <token value="ester">ester</token>
     <token value="glycol">glycol</token>
   </tokenList>
