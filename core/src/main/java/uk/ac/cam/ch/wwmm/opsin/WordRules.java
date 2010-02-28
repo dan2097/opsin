@@ -23,7 +23,6 @@ class WordRules {
 	 *
 	 */
 	enum WordRule{
-		acid,
 		amide,
 		anhydride,
 		carbonylDerivative,

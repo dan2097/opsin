@@ -125,4 +125,17 @@ public class TokenizerTest {
 		assertEquals("Third token: end of substituent", "", tokens.get(2));
 	}
 	
+	@Test
+	public void aceticacid() throws Exception {
+		Parse parse = tokenizer.tokenize("acetic acid");
+		assertEquals("One Word", 1, parse.getWords().size());
+		ParseWord w = parse.getWords().get(0);
+		assertEquals("One Parse", 1, w.getParseTokens().size());
+		List<String> tokens = w.getParseTokens().get(0).getTokens();
+		assertEquals("Three tokens", 3, tokens.size());
+		assertEquals("First token: acet", "acet", tokens.get(0));
+		assertEquals("Second token: ic acid", "ic acid", tokens.get(1));
+		assertEquals("Third token: end of main group", "", tokens.get(2));
+	}
+	
 }

@@ -8,6 +8,7 @@
 
   <tokenFile>arylGroups.xml</tokenFile>
   <tokenFile>simpleGroups.xml</tokenFile>
+  <tokenFile>simpleCyclicGroups.xml</tokenFile>
   <tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
   <tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
   <tokenFile>irregularAlkanes.xml</tokenFile>

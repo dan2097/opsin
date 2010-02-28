@@ -66,9 +66,6 @@ class StructureBuilder {
 					resolveWordOrBracket(state, word);
 				}
 			}
-			else if (wordRule == WordRule.acid){
-				buildAcid(state,words);//ethanoic acid
-			}
 			else if(wordRule == WordRule.ester || wordRule == WordRule.multiEster) {
 				buildEster(state, words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
 			}
@@ -128,13 +125,6 @@ class StructureBuilder {
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		return uniFrag;
-	}
-
-	private void buildAcid(BuildState state, List<Element> words) throws StructureBuildingException {
-		if (words.size()!=2 || !words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
-			throw new StructureBuildingException("functionalTerm word acid missing");
-		}
-		resolveWordOrBracket(state, words.get(0));
 	}
 
 	private void buildEster(BuildState state, List<Element> words) throws StructureBuildingException {
@@ -316,14 +306,12 @@ class StructureBuilder {
 		}
 		resolveWordOrBracket(state, words.get(0));//the group
 		BuildResults acidBr = new BuildResults(state, words.get(0));
-		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//acid
-			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
-		}
+
 		if (acidBr.getFunctionalIDCount()==0){
 			throw new StructureBuildingException("No functionalIds detected!");
 		}
 
-		int i=2;
+		int i=1;
 		Element currentWord = words.get(i);
 		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			if (acidBr.getFunctionalIDCount()==0){
@@ -367,9 +355,6 @@ class StructureBuilder {
 			throw new StructureBuildingException("No functionalIds detected!");
 		}
 		int wordIndice =1;
-		if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//"acid"
-			wordIndice++;
-		}
 		
 		if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//"amide"
 			for (int i =0; i < acidBr.getFunctionalIDCount(); i++) {
@@ -686,12 +671,6 @@ class StructureBuilder {
 	}
 
 	private void buildAnhydride(BuildState state, List<Element> words) throws StructureBuildingException {
-		for (int i = words.size() -2; i >=0;  i--) {//ignore acid words. In english they are unnecesary e.g. acetic acid anhydride vs acetic anhydride
-			Element word =words.get(i);
-			if (word.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString()) && word.getValue().equals("acid")){
-				words.remove(i);
-			}
-		}
 		if (words.size()!=2 && words.size()!=3){
 			throw new StructureBuildingException("Unexpected number of words in anhydride. Check wordRules.xml, this is probably a bug");
 		}
