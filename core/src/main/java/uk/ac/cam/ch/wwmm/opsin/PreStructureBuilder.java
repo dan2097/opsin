@@ -2701,16 +2701,19 @@ class PreStructureBuilder {
 					allowIndirectLocants =false;
 				}
 			}
+			Fragment fragmentAfterLocant =state.xmlFragmentMap.get(group);
+			if (group.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && fragmentAfterLocant.getAtomList().size()<=1){
+				allowIndirectLocants =false;//e.g. prevent 1-methyl as meth-1-yl is extremely unlikely to be the intended result
+			}
 
 			ArrayList<Element> locantsToAssignToIndirectFeatures = new ArrayList<Element>();
 			ArrayList<Element> locantAble =null;
 			if (allowIndirectLocants){
-				Fragment thisFrag =state.xmlFragmentMap.get(group);
 				for (int i = locants.size()-1; i >=0 ; i--) {
 					Element locant =locants.get(i);
 					String locantValue =locant.getAttributeValue(VALUE_ATR);
 					if (i >0 || !checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValue)){//the first locant is most likely a locant indicating where this subsituent should be attached. If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
-						if (thisFrag.hasLocant(locantValue)){//locant not available elsewhere and is available on the group associated with this element
+						if (fragmentAfterLocant.hasLocant(locantValue)){//locant not available elsewhere and is available on the group associated with this element
 							if (locantAble ==null){
 								locantAble = findElementsMissingIndirectLocants(subOrRoot, locant);
 							}
