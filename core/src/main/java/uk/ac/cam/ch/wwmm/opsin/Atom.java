@@ -224,6 +224,20 @@ class Atom {
 			}
 		}
 	}
+	
+	/**
+	 * Removes all locants other than elementSymbolLocants (e.g. N, S', Se)
+	 * Hence removes numeric locants and greek locants
+	 */
+	void removeLocantsOtherThanElementSymbolLocants() {
+		for (int i = locants.size()-1; i >=0; i--) {
+			String l =locants.get(i);
+			if (!matchElementSymbolLocant.matcher(l).matches()){
+				frag.removeMappingFromAtomLocantMap(l);
+				locants.remove(i);
+			}
+		}
+	}
 
 	/**Checks if the Atom has a given locant.
 	 *

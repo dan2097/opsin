@@ -74,12 +74,38 @@ class PreStructureBuilder {
 	private final Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 
-	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
-	private HashMap<String, String[]> specialHWRings;
-
 	/*Holds the rules on how suffixes are interpreted. Convenience methods are available to use them*/
 	private HashMap<String, HashMap<String, List<Element>>> suffixApplicability;
 	private HashMap<String, Element> suffixRules;
+	
+	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
+	private static HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
+	static{
+		//The first entry of the array is a special instruction e.g. blocked or saturated. The correct order of the heteroatoms follows
+		//terminal e is ignored from all of the keys as it is optional in the input name
+		specialHWRings.put("oxin", new String[]{"blocked"});
+		specialHWRings.put("azin", new String[]{"blocked"});
+
+		specialHWRings.put("oxazol", new String[]{"","O","C","N","C","C"});
+		specialHWRings.put("thiazol", new String[]{"","S","C","N","C","C"});
+		specialHWRings.put("selenazol", new String[]{"","Se","C","N","C","C"});
+		specialHWRings.put("tellurazol", new String[]{"","Te","C","N","C","C"});
+		specialHWRings.put("oxazolidin", new String[]{"","O","C","N","C","C"});
+		specialHWRings.put("thiazolidin", new String[]{"","S","C","N","C","C"});
+		specialHWRings.put("selenazolidin", new String[]{"","Se","C","N","C","C"});
+		specialHWRings.put("tellurazolidin", new String[]{"","Te","C","N","C","C"});
+		specialHWRings.put("oxazolin", new String[]{"","O","C","N","C","C"});
+		specialHWRings.put("thiazolin", new String[]{"","S","C","N","C","C"});
+		specialHWRings.put("selenazolin", new String[]{"","Se","C","N","C","C"});
+		specialHWRings.put("tellurazolin", new String[]{"","Te","C","N","C","C"});
+
+		specialHWRings.put("oxoxolan", new String[]{"","O","C","O","C","C"});
+		specialHWRings.put("oxoxan", new String[]{"","O","C","C","O","C","C"});
+
+		specialHWRings.put("boroxin", new String[]{"saturated","O","B","O","B","O","B"});
+		specialHWRings.put("borazin", new String[]{"saturated","N","B","N","B","N","B"});
+		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
+	}
 
 	PreStructureBuilder(FusedRingBuilder fusedRingBuilder, ResourceGetter resourceGetter) throws Exception {
 		this.fusedRingBuilder = fusedRingBuilder;
@@ -117,32 +143,6 @@ class PreStructureBuilder {
 			}
 			suffixRules.put(ruleValue, rule);
 		}
-
-
-		//The first entry of the array is a special instruction e.g. blocked or saturated. The correct order of the heteroatoms follows
-		specialHWRings = new HashMap<String, String[]>();//terminal e is ignored
-		specialHWRings.put("oxin", new String[]{"blocked"});
-		specialHWRings.put("azin", new String[]{"blocked"});
-
-		specialHWRings.put("oxazol", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazol", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazol", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazol", new String[]{"","Te","C","N","C","C"});
-		specialHWRings.put("oxazolidin", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazolidin", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazolidin", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazolidin", new String[]{"","Te","C","N","C","C"});
-		specialHWRings.put("oxazolin", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazolin", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazolin", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazolin", new String[]{"","Te","C","N","C","C"});
-
-		specialHWRings.put("oxoxolan", new String[]{"","O","C","O","C","C"});
-		specialHWRings.put("oxoxan", new String[]{"","O","C","C","O","C","C"});
-
-		specialHWRings.put("boroxin", new String[]{"saturated","O","B","O","B","O","B"});
-		specialHWRings.put("borazin", new String[]{"saturated","N","B","N","B","N","B"});
-		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
 

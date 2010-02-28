@@ -566,8 +566,11 @@ class StructureBuilder {
 	}
 
 	private void buildCarbonylDerivative(BuildState state, List<Element> words) throws StructureBuildingException {
-		resolveWordOrBracket(state, words.get(0));//the group
-		BuildResults moleculeToModify = new BuildResults(state, words.get(0));//the group which will be modified
+		if (!WordType.full.toString().equals(words.get(0).getAttributeValue(TYPE_ATR))){
+			throw new StructureBuildingException("OPSIN bug: Wrong word type encountered when applying carbonylDerivative wordRule");
+		}
+		Element rightmostGroup = StructureBuildingMethods.findRightMostGroupInBracket(words.get(0));
+		Fragment rootFragment = state.xmlFragmentMap.get(rightmostGroup);//the group which will be modified
 		List<Fragment> replacementFragments = new ArrayList<Fragment>();
 		List<String> locantForFunctionalTerm =new ArrayList<String>();//usually not specified
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
@@ -580,7 +583,7 @@ class StructureBuilder {
 				}
 				else if (children.size()==2 && children.get(0).getAttribute("locant")!=null ){
 					String locant =children.get(0).getAttributeValue("locant");
-					if (children.get(1).getLocalName().equals("root") && !frag.hasLocant(locant) && matchNumericLocant.matcher(locant).matches()){
+					if (children.get(1).getLocalName().equals("root") && !frag.hasLocant(locant) && matchNumericLocant.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
 						locantForFunctionalTerm.add(children.get(0).getAttributeValue("locant"));
 						children.get(0).removeAttribute(children.get(0).getAttribute("locant"));
 					}
@@ -604,7 +607,15 @@ class StructureBuilder {
 			String smilesReplacement = functionalClass.get(0).getAttributeValue("value");
 			String labels =  functionalClass.get(0).getAttributeValue("labels");
 			for (int i = 0; i < numberOfCarbonylReplacements; i++) {
-				replacementFragments.add(state.fragManager.buildSMILES(smilesReplacement, "", labels));
+				Fragment replacementFragment = state.fragManager.buildSMILES(smilesReplacement, "", labels);
+				if (i >0){
+					FragmentTools.relabelLocants(replacementFragment.getAtomList(), StringTools.multiplyString("'", i));
+				}
+				List<Atom> atomList = replacementFragment.getAtomList();
+				for (Atom atom : atomList) {
+					atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
+				}
+				replacementFragments.add(replacementFragment);
 			}
 			List<Element> locantEls =XOMTools.getDescendantElementsWithTagName(words.get(1), "locant");
 			if (locantEls.size() >1){
@@ -620,36 +631,32 @@ class StructureBuilder {
 			throw new StructureBuildingException("Mismatch between number of locants and number of carbonyl replacements");
 		}
 		List<Atom> matches = new ArrayList<Atom>();
-		List<Fragment> fragmentsInGroupToModify = new ArrayList<Fragment>(moleculeToModify.getFragments());
-		for (int i= fragmentsInGroupToModify.size()-1; i>=0; i-- ){//find all carbonyl oxygen
-			Fragment frag = fragmentsInGroupToModify.get(i);
-			List<Atom> atomList = frag.getAtomList();
-			for (Atom atom : atomList) {
-				if (atom.getElement().equals("O") && atom.getCharge()==0){
-					List<Atom> neighbours =atom.getAtomNeighbours();
-					if (neighbours.size()==1){
-						if (neighbours.get(0).getElement().equals("C")){
-							if (!locantForFunctionalTerm.isEmpty()){
-								Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atom);
-								if (numericLocantAtomConnectedToCarbonyl!=null){//could be the carbon of the carbonyl or the ring the carbonyl connects to in say a carbaldehyde
-									boolean matchesLocant = false;
-									for (String locant : locantForFunctionalTerm) {
-										if (numericLocantAtomConnectedToCarbonyl.hasLocant(locant)){
-											matchesLocant =true;
-										}
-									}
-									if (!matchesLocant){
-										continue;
+		List<Atom> rootFragAtomList = rootFragment.getAtomList();
+		for (Atom atom : rootFragAtomList) {//find all carbonyl oxygen
+			if (atom.getElement().equals("O") && atom.getCharge()==0){
+				List<Atom> neighbours =atom.getAtomNeighbours();
+				if (neighbours.size()==1){
+					if (neighbours.get(0).getElement().equals("C")){
+						if (!locantForFunctionalTerm.isEmpty()){
+							Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atom);
+							if (numericLocantAtomConnectedToCarbonyl!=null){//could be the carbon of the carbonyl or the ring the carbonyl connects to in say a carbaldehyde
+								boolean matchesLocant = false;
+								for (String locant : locantForFunctionalTerm) {
+									if (numericLocantAtomConnectedToCarbonyl.hasLocant(locant)){
+										matchesLocant =true;
 									}
 								}
-								else{
+								if (!matchesLocant){
 									continue;
 								}
 							}
-							Bond b = frag.findBondOrThrow(atom, neighbours.get(0));
-							if (b.getOrder()==2){
-								matches.add(atom);
+							else{
+								continue;
 							}
+						}
+						Bond b = rootFragment.findBondOrThrow(atom, neighbours.get(0));
+						if (b.getOrder()==2){
+							matches.add(atom);
 						}
 					}
 				}
@@ -665,13 +672,17 @@ class StructureBuilder {
 			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
 			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atomToBeReplaced);
 			if (numericLocantAtomConnectedToCarbonyl!=null){
-				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());
+				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
 			}
 			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				resolveWordOrBracket(state, words.get(1 +i));
+				for (Atom atom : atomList) {
+					atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
+				}
 			}
 			state.fragManager.replaceTerminalAtomWithFragment(atomToBeReplaced, atomToReplaceCarbonylOxygen);
 		}
+		resolveWordOrBracket(state, words.get(0));//the group
 	}
 
 	private void buildAnhydride(BuildState state, List<Element> words) throws StructureBuildingException {
