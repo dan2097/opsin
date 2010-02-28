@@ -64,7 +64,7 @@ class Tokeniser {
 						throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
 					}
 					else {
-						throw new ParsingException(name + " is unparsable. A space was antipicated after: " + parsedName);
+						throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
 					}
 				}
 			}

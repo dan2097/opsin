@@ -6,6 +6,7 @@
   <token value="[K+]" labels="none" valType="SMILES">potassium</token>
   <token value="[Rb+]" labels="none" valType="SMILES">rubidium</token>
   <token value="[Cs+]" labels="none" valType="SMILES">caesium</token>
+  <token value="[Cs+]" labels="none" valType="SMILES">cesium</token>
   <token value="[Fr+]" labels="none" valType="SMILES">francium</token>
 
   <token value="[Be+2]" labels="none" valType="SMILES">beryllium</token>
