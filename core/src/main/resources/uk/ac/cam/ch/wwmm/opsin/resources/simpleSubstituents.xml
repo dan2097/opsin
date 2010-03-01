@@ -177,6 +177,9 @@
   <token value="N=C=[Se]" labels="none" valType="SMILES">isoselenocyanato</token>
   <token value="N=C=[Te]" labels="none" valType="SMILES">isotellurocyanato</token>
   <token value="N=C=S" labels="none" valType="SMILES">isothiocyanato</token>
+  <token value="N=C=[Se]" labels="none" valType="SMILES">isoselenocyano</token><!--deprecated-->
+  <token value="N=C=[Te]" labels="none" valType="SMILES">isotellurocyano</token><!--deprecated-->
+  <token value="N=C=S" labels="none" valType="SMILES">isothiocyano</token><!--deprecated-->
   <token value="O" labels="none" valType="SMILES">hydroxy</token>
   <token value="O" labels="none" valType="SMILES">hydroxyl</token>
   <token value="OO" labels="none" valType="SMILES">hydroperoxy</token>
