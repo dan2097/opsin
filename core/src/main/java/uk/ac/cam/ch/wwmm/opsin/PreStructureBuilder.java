@@ -2702,7 +2702,7 @@ class PreStructureBuilder {
 				}
 			}
 			Fragment fragmentAfterLocant =state.xmlFragmentMap.get(group);
-			if (group.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && fragmentAfterLocant.getAtomList().size()<=1){
+			if (fragmentAfterLocant.getAtomList().size()<=1){
 				allowIndirectLocants =false;//e.g. prevent 1-methyl as meth-1-yl is extremely unlikely to be the intended result
 			}
 
