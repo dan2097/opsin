@@ -918,7 +918,6 @@ class PreStructureBuilder {
 	 */
 	private void matchLocantsToDirectFeatures(Element subOrRoot) throws PostProcessingException {
 		ArrayList<Element> locants = OpsinTools.elementsToElementArrayList(subOrRoot.getChildElements("locant"));
-	
 		Elements groups = subOrRoot.getChildElements("group");
 		for (int i = 0; i < groups.size(); i++) {
 			Element group = groups.get(i);
@@ -965,16 +964,22 @@ class PreStructureBuilder {
 						if (locantsBeforeHWSystem.size() ==1 && Integer.parseInt(group.getAttributeValue(VALUE_ATR)) <=10){
 							locants.remove(locantsBeforeHWSystem.get(0));//don't assign this locant
 						}
-						else if (locantsBeforeHWSystem.size() == heteroAtoms.size()){//general case
-							for (int j = 0; j < locantsBeforeHWSystem.size(); j++) {
-								Element locant =locantsBeforeHWSystem.get(j);
-								heteroAtoms.get(j).addAttribute(new Attribute(LOCANT_ATR, locant.getAttributeValue(VALUE_ATR)));
-								locant.detach();
-								locants.remove(locant);
-							}
-						}
 						else {
-							throw new PostProcessingException("Mismatch between number of locants and HW heteroatoms");
+							if (locantsBeforeHWSystem.size() == heteroAtoms.size() +1){// e.g. 6-[1,2,3]triazol
+								Element locantForSubstituent = locantsBeforeHWSystem.remove(locantsBeforeHWSystem.size()-1);
+								locants.remove(locantForSubstituent);
+							}
+							if (locantsBeforeHWSystem.size() == heteroAtoms.size()){//general case
+								for (int j = 0; j < locantsBeforeHWSystem.size(); j++) {
+									Element locant =locantsBeforeHWSystem.get(j);
+									heteroAtoms.get(j).addAttribute(new Attribute(LOCANT_ATR, locant.getAttributeValue(VALUE_ATR)));
+									locant.detach();
+									locants.remove(locant);
+								}
+							}
+							else {
+								throw new PostProcessingException("Mismatch between number of locants and HW heteroatoms");
+							}
 						}
 					}
 				}
