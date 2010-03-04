@@ -48,7 +48,7 @@
 	<repositories>
 	  <repository>
 	    <id>ucc</id>
-	    <url>http://maven.ch.cam.ac.uk/m2repo</url>
+	    <url>https://maven.ch.cam.ac.uk/m2repo</url>
 	  </repository>
 	</repositories>
 	<build>

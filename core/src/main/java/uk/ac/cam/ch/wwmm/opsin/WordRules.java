@@ -23,6 +23,7 @@ class WordRules {
 	 *
 	 */
 	enum WordRule{
+		acetal,
 		amide,
 		anhydride,
 		carbonylDerivative,

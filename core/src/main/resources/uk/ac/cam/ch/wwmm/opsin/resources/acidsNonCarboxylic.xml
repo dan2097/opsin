@@ -14,6 +14,7 @@
     <token value="[N+](O)(O)(O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">azor</token>
     <token value="[N+](O)(O)(O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">nitror</token><!--deprecated-->
     <token value="P(O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphor</token>
+    <token value="P(O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">orthophosphor</token><!--deprecated-->
     <token value="[Sb](O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibor</token>
     <token value="[Sb](O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">antimon</token><!--deprecated-->
     <token value="S(O)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfur</token>

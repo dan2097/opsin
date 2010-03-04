@@ -97,7 +97,9 @@ does not define a CFG.
   <regex name="%oMeaningYl%" value="₧"/>
   <regex name="%monoNuclearNonCarbonAcidNoAcyl%" value="ƒ"/>
   <regex name="%simpleCyclicGroup%" value="á"/>
-  <!--up to ascii 159 used -->
+  <regex name="%acetalClass%" value="í"/>
+  <regex name="%chalcogenReplacement%" value="ó"/>
+  <!--up to ascii 162 used -->
 
 <!-- composite regexes-->
 
@@ -203,7 +205,8 @@ does not define a CFG.
 
 <!-- functional Groups-->
   <regex name="%anhydride%" value="(%anhydrideLocant%?%multiplier%?(%anhydride%|%openBracket%%anhydride%%closeBracket%))"/>
-  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%anhydride%|%basicFunctionalClass%)"/>
+  <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
+  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="(%hyphen%?(%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
 

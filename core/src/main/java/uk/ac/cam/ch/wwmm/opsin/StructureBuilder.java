@@ -93,6 +93,9 @@ class StructureBuilder {
 			else if(wordRule == WordRule.anhydride) {//e.g. acetic anhydride
 				buildAnhydride(state, words);
 			}
+			else if(wordRule == WordRule.acetal) {
+				buildAcetal(state, words);//e.g. propanal diethyl acetal
+			}
 			else if(wordRule == WordRule.polymer) {
 				rGroups.addAll(buildPolymer(state, words));
 			}
@@ -105,13 +108,13 @@ class StructureBuilder {
 		state.fragManager.checkValencies();
 		int overallCharge = state.fragManager.getOverallCharge();
 		if (overallCharge!=0){//a net charge is present! Could just mean the counterion has not been specified though
-			List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, "word", "type", WordType.full.toString());
+			List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, WORD_EL, TYPE_ATR, WordType.full.toString());
 			balanceChargeIfPossible(state, words, overallCharge);
 		}
 		makeHydrogensExplicit(state);
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
-		List<Element> stereoChemistryEls = XOMTools.getDescendantElementsWithTagName(molecule, "stereoChemistry");
+		List<Element> stereoChemistryEls = XOMTools.getDescendantElementsWithTagName(molecule, STEREOCHEMISTRY_EL);
 		if (stereoChemistryEls.size() >0){
 			StereochemistryHandler.processStereochemicalElements(state, uniFrag, stereoChemistryEls);
 		}
@@ -841,6 +844,11 @@ class StructureBuilder {
 		else{//e.g. peroxyanhydride
 			state.fragManager.createBond(atomsInAnhydrideLinkage.get(atomsInAnhydrideLinkage.size()-1), atomOnSecondAcidToConnectTo, 1);
 		}
+	}
+	
+	private void buildAcetal(BuildState state, List<Element> words) throws StructureBuildingException {
+		throw new StructureBuildingException("Not yet Supported");
+		//TODO Add support for acetal/ketal/hemiketal/hemiacetal
 	}
 
 	private List<Fragment> buildPolymer(BuildState state, List<Element> words) throws StructureBuildingException {

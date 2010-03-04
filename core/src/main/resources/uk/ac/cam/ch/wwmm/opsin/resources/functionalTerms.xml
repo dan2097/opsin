@@ -20,6 +20,13 @@
     <token value="O" labels="none" valType="SMILES">oxide</token>
   </tokenList>
 
+  <tokenList tagname="group" type="functionalClass" subType="functionalClassGroup" symbol="í">
+    <token value="O.O" labels="none" valType="SMILES">acetal</token>
+    <token value="O.O" labels="none" valType="SMILES">ketal</token>
+    <token value="O" labels="none" valType="SMILES">hemiacetal</token>
+    <token value="O" labels="none" valType="SMILES">hemiketal</token>
+  </tokenList>
+
   <tokenList tagname="group" type="functionalClass" subType="anhydride" symbol="Ü">
     <token value="O" labels="none" valType="SMILES">anhydride</token>
     <token value="S" labels="none" valType="SMILES">thioanhydride</token>

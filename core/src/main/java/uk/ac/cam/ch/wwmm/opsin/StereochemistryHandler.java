@@ -346,10 +346,10 @@ class StereochemistryHandler {
 		atomRefs4 +=" a" + stereoBondAtoms.get(2).getID();
 		atomRefs4 +=" a" + stereoBondAtoms.get(3).getID();
 		if (eOrZ.equals("E")){
-			bond.setBondStereoElement(atomRefs4, "T");
+			bond.setBondStereoElement(atomRefs4, BondStereo.TRANS);
 		}
 		else if (eOrZ.equals("Z")){
-			bond.setBondStereoElement(atomRefs4, "C");
+			bond.setBondStereoElement(atomRefs4, BondStereo.CIS);
 		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " + eOrZ);

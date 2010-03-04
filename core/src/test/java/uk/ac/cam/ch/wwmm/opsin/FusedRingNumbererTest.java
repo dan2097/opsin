@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author dl387
  *
  */
-public class FusedRingBuilderTest {
+public class FusedRingNumbererTest {
 
 	static FragmentManager fm;
 	@BeforeClass
