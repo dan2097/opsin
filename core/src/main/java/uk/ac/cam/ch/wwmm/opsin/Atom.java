@@ -517,8 +517,8 @@ class Atom {
 	}
 
 	void setAtomParityElement(String atomRefs4, int atomParity) {
-		atomParityElement = new Element("atomParity");
-		atomParityElement.addAttribute(new Attribute("atomRefs4",atomRefs4));
+		atomParityElement = new Element(XmlDeclarations.ATOMPARITY_EL);
+		atomParityElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefs4));
 		atomParityElement.appendChild(Integer.toString(atomParity));
 	}
 

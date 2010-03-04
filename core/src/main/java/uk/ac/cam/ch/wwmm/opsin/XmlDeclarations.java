@@ -291,5 +291,33 @@ class XmlDeclarations {
 
 	/**Requests that labelling be done like a fused ring. It is assumed that the order of the atoms is locant 1 as the first atom*/
 	static final String FUSEDRING_LABELS_VAL ="fusedRing";
+	
+	
+	/**An XML element used to hold atomParity information e.g. 1 or -1 and atomRefs4 */
+	static final String ATOMPARITY_EL = "atomParity";
+	
+	/**An XML element used to hold bondStereo information e.g. C (cis) or T (trans) and atomRefs4 */
+	static final String BONDSTEREO_EL = "bondStereo";
+	/**An attribute holding the ids of the 4 atoms that are needed to define the bondStereo of a double bond: \=/ . Note that the ids are prefixed with an 'a'*/
+	static final String ATOMREFS4_ATR = "atomRefs4";
+	
+	/**
+	 * Possible values for a bondStereo element
+	 * @author dl387
+	 *
+	 */
+	enum BondStereo{
+		CIS("C"),
+		TRANS("T");
 
+		private final String value;  
+		BondStereo(String value){
+			this.value = value;
+		}
+		@Override
+		public String toString() {
+			return value;
+		}
+	}
+	
 }

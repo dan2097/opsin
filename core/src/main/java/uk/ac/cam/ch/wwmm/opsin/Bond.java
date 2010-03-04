@@ -2,6 +2,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
 
+import uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.BondStereo;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 
@@ -159,9 +161,9 @@ class Bond {
 		this.bondStereoElement = bondStereoElement;
 	}
 
-	void setBondStereoElement(String atomRefs4, String CorT) {
-		bondStereoElement = new Element("bondStereo");
-		bondStereoElement.addAttribute(new Attribute("atomRefs4", atomRefs4));
-		bondStereoElement.appendChild(CorT);
+	void setBondStereoElement(String atomRefs4, BondStereo CorT) {
+		bondStereoElement = new Element(XmlDeclarations.BONDSTEREO_EL);
+		bondStereoElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefs4));
+		bondStereoElement.appendChild(CorT.toString());
 	}
 }

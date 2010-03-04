@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 
 import nu.xom.Attribute;
@@ -114,8 +115,8 @@ class SMILESFragmentBuilder {
 	 * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
-	Fragment build(String smiles, FragmentManager fragManaager) throws StructureBuildingException {
-		return build(smiles, "", "", "", fragManaager);
+	Fragment build(String smiles, FragmentManager fragManager) throws StructureBuildingException {
+		return build(smiles, "", "", "", fragManager);
 	}
 
 	/**
@@ -142,7 +143,7 @@ class SMILESFragmentBuilder {
 			throw new StructureBuildingException("labelMapping is null use \"none\" if you do not want any numbering or \"\" if you would like default numbering");
 		}
 		List<String> labelMap = null;
-		if(!labelMapping.equals("none") && !labelMapping.equals("fusedRing") ) {
+		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
 			labelMap = new ArrayList<String>();
 			String [] mappingTmp = matchSlash.split(labelMapping, -1);
             labelMap.addAll(Arrays.asList(mappingTmp));//place slash delimited labels into arrayList
@@ -163,24 +164,26 @@ class SMILESFragmentBuilder {
 		}
 
 		while(tmpString.length() > 0) {
-			String nextChar = tmpString.substring(0, 1);
+			Character nextChar = tmpString.charAt(0);
 			tmpString = tmpString.substring(1);
-			if(nextChar.equals("(")) {
+			if(nextChar == '(') {
 				stack.push(new StackFrame(stack.peek()));
-			} else if(nextChar.equals(")")) {
+			} else if(nextChar == ')') {
 				stack.pop();
-			} else if(nextChar.equals("=")){
+			} else if(nextChar == '-'){
+				stack.peek().bondOrder = 1;
+			} else if(nextChar == '='){
 				stack.peek().bondOrder = 2;
-			} else if(nextChar.equals("#")){
+			} else if(nextChar == '#'){
 				stack.peek().bondOrder = 3;
-			} else if(nextChar.equals("/")){
+			} else if(nextChar == '/'){
 				stack.peek().slash = SMILES_BOND_DIRECTION.RSLASH;
-			} else if(nextChar.equals("\\")){
+			} else if(nextChar == '\\'){
 				stack.peek().slash = SMILES_BOND_DIRECTION.LSLASH;
-			} else if(nextChar.equals(".")){
+			} else if(nextChar == '.'){
 				stack.peek().atom = null;
-			} else if(upperLetters.contains(nextChar) || lowerLetters.contains(nextChar)) {//organic atoms
-		        String elementType = nextChar;
+			} else if(upperLetters.indexOf(nextChar) !=-1 || lowerLetters.indexOf(nextChar)!=-1) {//organic atoms
+		        String elementType = "" +nextChar;
 		        boolean spareValency =false;
 		        if(upperLetters.contains(elementType)) {//normal atoms
 					if(tmpString.length() > 0 && lowerLetters.contains(tmpString.substring(0,1)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
@@ -233,8 +236,8 @@ class SMILESFragmentBuilder {
 				stack.peek().atom = atom;
 				stack.peek().bondOrder = 1;
 				currentNumber += 1;
-			} else if(nextChar.equals("[")) {//square brackets- contain non-organic atoms and are used to unambiguously set charge/chirality etc.
-				int indexOfRightSquareBracket = tmpString.indexOf("]");
+			} else if(nextChar == '[') {//square brackets- contain non-organic atoms and are used to unambiguously set charge/chirality etc.
+				int indexOfRightSquareBracket = tmpString.indexOf(']');
                 if (indexOfRightSquareBracket == -1) {
                     throw new StructureBuildingException("[ without matching \"]\"");
                 }
@@ -252,14 +255,14 @@ class SMILESFragmentBuilder {
 		        }
 
 		        if (atomString.length() > 0){
-		        	nextChar = atomString.substring(0,1);
+		        	nextChar = atomString.charAt(0);
 		        	atomString = atomString.substring(1);
 		        }
 		        else{
 		        	throw new StructureBuildingException("No element found in square brackets");
 		        }
 		// elementType
-		        String elementType = nextChar;
+		        String elementType = "" + nextChar;
 		        boolean spareValency = false;
 		        if(upperLetters.contains(elementType)) {//normal atoms
 					if(atomString.length() > 0 && lowerLetters.contains(atomString.substring(0,1))) {
@@ -327,41 +330,18 @@ class SMILESFragmentBuilder {
 
 		        int hydrogenCount =0;
 		        int charge = 0;
-		        Boolean chiralityClockwise = null;
+		        Boolean chiralitySet = false;
 		        while (atomString.length()>0){
-		        	nextChar = atomString.substring(0,1);
+		        	nextChar = atomString.charAt(0);
 		        	atomString = atomString.substring(1);
-		        	if(nextChar.equals("@")) {// chirality-sets atom parity
-		        		if (chiralityClockwise != null){
+		        	if(nextChar == '@') {// chirality-sets atom parity
+		        		if (chiralitySet){
 		        			throw new StructureBuildingException("Atom parity appeared to be specified twice for an atom in a square bracket!");
 		        		}
-						Element atomParity = new Element("atomParity");
-						atom.setAtomParityElement(atomParity);
-						chiralityClockwise = false;
-						if (atomString.length() > 0 && atomString.substring(0,1).equals("@")){
-							chiralityClockwise = true;
-							atomString = atomString.substring(1);
-						}
-						if (chiralityClockwise){
-							atomParity.appendChild("1");
-						}
-						else{
-							atomParity.appendChild("-1");
-						}
-						String atomRefs4 ="";
-						if (previousAtom !=null){
-							atomRefs4 += "a" +previousAtom.getID();
-						}
-						if (atomString.length() > 0 && atomString.substring(0,1).equals("H")){
-							if (!atomRefs4.equals("")){
-								atomRefs4 += " ";
-							}
-							atomRefs4 += "a" + atom.getID() +"_H";
-							atomString = atomString.substring(1);
-						}
-						atomParity.addAttribute(new Attribute("atomRefs4", atomRefs4));
+		        		atomString = processTetrahedralStereochemistry(atomString, atom, previousAtom);
+						chiralitySet = true;
 		 			}
-		            else if (nextChar.equals("H")){// hydrogenCount
+		            else if (nextChar == 'H'){// hydrogenCount
 		            	if (hydrogenCount != 0){
 		            		throw new StructureBuildingException("Hydrogen count appeared to be specified twice for an atom in a square bracket!");
 		            	}
@@ -378,11 +358,11 @@ class SMILESFragmentBuilder {
     					}
     					throw new StructureBuildingException("Hydrogen count is currently not supported");
 		            }
-		            else if(nextChar.equals("+") || nextChar.equals("-")) {// formalCharge
+		            else if(nextChar == '+' || nextChar == '-') {// formalCharge
 		            	if (charge != 0){
 		            		throw new StructureBuildingException("Charge appeared to be specified twice for an atom in a square bracket!");
 		            	}
-	    				charge = nextChar.equals("+") ? 1 : -1;
+	    				charge = nextChar == '+' ? 1 : -1;
     					String changeChargeStr = "";
     					int changeCharge = 1;
     					while(atomString.length() > 0 && digits.contains(atomString.substring(0,1))) {//e.g. [C+2]
@@ -391,13 +371,13 @@ class SMILESFragmentBuilder {
     					}
     					if (changeChargeStr.equals("")){
     						while(atomString.length() > 0){//e.g. [C++]
-    							nextChar = atomString.substring(0,1);
-    							if (nextChar.equals("+")){
+    							nextChar = atomString.charAt(0);
+    							if (nextChar == '+'){
     								if (charge != 1){
     									throw new StructureBuildingException("Atom has both positive and negative charges specified!");//e.g. [C+-]
     								}
     							}
-    							else if (nextChar.equals("-")){
+    							else if (nextChar == '-'){
     								if (charge != -1){
     									throw new StructureBuildingException("Atom has both negative and positive charges specified!");
     								}
@@ -412,7 +392,7 @@ class SMILESFragmentBuilder {
     					changeCharge = changeChargeStr.equals("") ? changeCharge : Integer.parseInt(changeChargeStr);
     					atom.setCharge(atom.getCharge() + (charge * changeCharge) );
 		            }
-		            else if(nextChar.equals("|")) {
+		            else if(nextChar == '|') {
 						String lambda = "";
 						while(atomString.length() > 0 &&
 								digits.contains(atomString.substring(0,1))) {
@@ -425,100 +405,10 @@ class SMILESFragmentBuilder {
 		            	throw new StructureBuildingException("Unexpected character found in square bracket");
 		            }
 		        }
-			} else if(digits.contains(nextChar) ||
-					nextChar.equals("%")) {
-				if(nextChar.equals("%")) {
-					nextChar = "";
-					if (tmpString.length() >=2 && digits.contains(tmpString.substring(0,1)) && digits.contains(tmpString.substring(1,2))) {
-						nextChar += tmpString.substring(0,2);
-						tmpString = tmpString.substring(2);
-					}
-					else{
-						throw new StructureBuildingException("A ring opening indice after a % must be two digits long");
-					}
-				}
-				if(closures.containsKey(nextChar)) {
-					StackFrame sf = closures.remove(nextChar);
-					int bondOrder = 1;
-					if(sf.bondOrder > 1) {
-						if(stack.peek().bondOrder > 1) {
-							throw new StructureBuildingException("ring closure should not have bond order specified twice!");
-						}
-						bondOrder = sf.bondOrder;
-					} else if(stack.peek().bondOrder > 1) {
-						bondOrder = stack.peek().bondOrder;
-					}
-					Bond b;
-					if (stack.peek().slash ==null){
-						b = fragManager.createBond(sf.atom, stack.peek().atom, bondOrder);
-					}
-					else{
-						b = fragManager.createBond(stack.peek().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
-					}
-					if(sf.slash !=null) {
-						if(stack.peek().slash !=null) {
-							throw new StructureBuildingException("ring closure should not have cis/trans specified twice!");
-						}
-						b.setSmilesStereochemistry(sf.slash);
-					} else if(stack.peek().slash !=null) {
-						b.setSmilesStereochemistry(stack.peek().slash);
-						stack.peek().slash = null;
-					}
-					if (stack.peek().atom.getAtomParityElement()!=null){
-						Element atomParityElement = stack.peek().atom.getAtomParityElement();
-						Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
-						String atomRefs4 = atomRefs4Att.getValue();
-						if (atomRefs4.equals("")){
-							atomRefs4 += "a" + sf.atom.getID();
-						}
-						else{
-							atomRefs4 += " a" + sf.atom.getID();
-						}
-						atomRefs4Att.setValue(atomRefs4);
-					}
-					if (sf.atom.getAtomParityElement()!=null){//replace dummy id with actual id e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy id before being replaced with the id of the F
-						Element atomParityElement = sf.atom.getAtomParityElement();
-						Attribute atomRefs4Atr = atomParityElement.getAttribute("atomRefs4");
-						String atomRefs4 = atomRefs4Atr.getValue();
-						atomRefs4 = atomRefs4.replaceFirst("ringclosure" + nextChar, "a" +stack.peek().atom.getID());
-						atomRefs4Atr.setValue(atomRefs4);
-					}
-					stack.peek().bondOrder = 1;
-				} else {
-					StackFrame sf = new StackFrame(stack.peek());
-					if (stack.peek().slash!=null){
-						sf.slash = stack.peek().slash;
-						stack.peek().slash = null;
-					}
-					if (sf.atom.getAtomParityElement()!=null){//replace ringclosureX with actual reference to id when it is known
-						Element atomParityElement = sf.atom.getAtomParityElement();
-						Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
-						String atomRefs4 = atomRefs4Att.getValue();
-						if (atomRefs4.equals("")){
-							atomRefs4 += "ringclosure" + nextChar;
-						}
-						else{
-							atomRefs4 += " ringclosure" + nextChar;
-						}
-						atomRefs4Att.setValue(atomRefs4);
-					}
-					closures.put(nextChar, sf);
-					stack.peek().bondOrder = 1;
-				}
-			}else if(nextChar.equals("|")) {
-				String lambda = "";
-				while(tmpString.length() > 0 &&
-						digits.contains(tmpString.substring(0,1))) {
-					lambda += tmpString.substring(0,1);
-					tmpString = tmpString.substring(1);
-				}
-				if(stack.peek().atom !=null) {
-					Atom a = stack.peek().atom;
-					a.setLambdaConventionValency(Integer.parseInt(lambda));
-				}
-				else{
-					throw new StructureBuildingException("| found in SMILES string at unexpected position");
-				}
+			} else if(digits.indexOf(nextChar)!= -1 || nextChar == '%') {
+				tmpString = processRingOpeningOrClosure(fragManager, stack, closures, tmpString, nextChar);
+			}else if(nextChar == '|') {
+				tmpString = processLambdaConvention(stack, tmpString);
 			}
 			else{
 				throw new StructureBuildingException(nextChar + " is in an unexpected position. Check this is not a mistake and that this feature of SMILES is supported by OPSIN's SMILES parser");
@@ -527,11 +417,215 @@ class SMILESFragmentBuilder {
 		if (labelMap != null && labelMap.size() >= currentNumber ){
 			throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.size() + ", atoms: " + (currentNumber -1) );
 		}
+		if (!closures.isEmpty()){
+			throw new StructureBuildingException("Unmatched ring opening");
+		}
 
 		if(labelMapping.equals("fusedRing")) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
 			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
 			FragmentTools.relabelFusedRingSystem(currentFrag);
 		}
+		addBondStereoElements(currentFrag);
+
+		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
+			List<Atom> aList =currentFrag.getAtomList();
+			int lastAtomID =aList.get(aList.size()-1).getID();
+			if (subType.equals("inSuffix")){
+				currentFrag.setDefaultInID(lastAtomID);
+			}
+			else{
+				if (lastCharacter == '#'){
+					currentFrag.addOutID(lastAtomID,3, true);
+				}
+				else if (lastCharacter == '='){
+					currentFrag.addOutID(lastAtomID,2, true);
+				}
+				else{
+					currentFrag.addOutID(lastAtomID,1, true);
+				}
+			}
+		}
+
+		if(firstCharacter == '='){
+			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),2, true);
+		}
+		if (firstCharacter == '#'){
+			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),3, true);
+		}
+
+		return currentFrag;
+	}
+
+	/**
+	 * Sets the valency of the previous atom
+	 * @param stack
+	 * @param tmpString
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private String processLambdaConvention(Stack<StackFrame> stack, String tmpString) throws StructureBuildingException {
+		String lambda = "";
+		while(tmpString.length() > 0 &&
+				digits.contains(tmpString.substring(0,1))) {
+			lambda += tmpString.substring(0,1);
+			tmpString = tmpString.substring(1);
+		}
+		if(stack.peek().atom !=null) {
+			Atom a = stack.peek().atom;
+			a.setLambdaConventionValency(Integer.parseInt(lambda));
+		}
+		else{
+			throw new StructureBuildingException("| found in SMILES string at unexpected position");
+		}
+		return tmpString;
+	}
+
+	/**
+	 * Adds an atomParity element to the given atom using the descriptor in atomString
+	 * @param atomString
+	 * @param atom
+	 * @param previousAtom
+	 * @return 
+	 */
+	private String processTetrahedralStereochemistry(String atomString, Atom atom, Atom previousAtom) {
+		Element atomParity = new Element("atomParity");
+		atom.setAtomParityElement(atomParity);
+		Boolean chiralityClockwise = false;
+		if (atomString.length() > 0 && atomString.charAt(0) == '@'){
+			chiralityClockwise = true;
+			atomString = atomString.substring(1);
+		}
+		if (chiralityClockwise){
+			atomParity.appendChild("1");
+		}
+		else{
+			atomParity.appendChild("-1");
+		}
+		String atomRefs4 ="";
+		if (previousAtom !=null){
+			atomRefs4 += "a" +previousAtom.getID();
+		}
+		if (atomString.length() > 0 && atomString.charAt(0) == 'H'){
+			if (!atomRefs4.equals("")){
+				atomRefs4 += " ";
+			}
+			atomRefs4 += "a" + atom.getID() +"_H";
+			atomString = atomString.substring(1);
+		}
+		atomParity.addAttribute(new Attribute("atomRefs4", atomRefs4));
+		return atomString;
+	}
+
+	/**
+	 * Process ring openings and closings e.g. the two 1s in c1ccccc1
+	 * @param fragManager
+	 * @param stack
+	 * @param closures
+	 * @param tmpString
+	 * @param nextChar
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private String processRingOpeningOrClosure(FragmentManager fragManager,
+			Stack<StackFrame> stack, HashMap<String, StackFrame> closures,
+			String tmpString, Character nextChar)
+			throws StructureBuildingException {
+		String closure = "" + nextChar;
+		if(nextChar == '%') {
+			if (tmpString.length() >=2 && digits.contains(tmpString.substring(0,1)) && digits.contains(tmpString.substring(1,2))) {
+				closure = tmpString.substring(0,2);
+				tmpString = tmpString.substring(2);
+			}
+			else{
+				throw new StructureBuildingException("A ring opening indice after a % must be two digits long");
+			}
+		}
+		if(closures.containsKey(closure)) {
+			processRingClosure(fragManager, stack, closures, closure);
+		} else {
+			if (stack.peek().atom==null){
+				throw new StructureBuildingException("A ring opening has appeared before any atom!");
+			}
+			processRingOpening(stack, closures, closure);
+		}
+		return tmpString;
+	}
+
+	private void processRingOpening(Stack<StackFrame> stack,
+			HashMap<String, StackFrame> closures, String closure) {
+		StackFrame sf = new StackFrame(stack.peek());
+		if (stack.peek().slash!=null){
+			sf.slash = stack.peek().slash;
+			stack.peek().slash = null;
+		}
+		if (sf.atom.getAtomParityElement()!=null){//replace ringclosureX with actual reference to id when it is known
+			Element atomParityElement = sf.atom.getAtomParityElement();
+			Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
+			String atomRefs4 = atomRefs4Att.getValue();
+			if (atomRefs4.equals("")){
+				atomRefs4 += "ringclosure" + closure;
+			}
+			else{
+				atomRefs4 += " ringclosure" + closure;
+			}
+			atomRefs4Att.setValue(atomRefs4);
+		}
+		closures.put(closure, sf);
+		stack.peek().bondOrder = 1;
+	}
+
+	private void processRingClosure(FragmentManager fragManager,
+			Stack<StackFrame> stack, HashMap<String, StackFrame> closures,
+			String closure) throws StructureBuildingException {
+		StackFrame sf = closures.remove(closure);
+		int bondOrder = 1;
+		if(sf.bondOrder > 1) {
+			if(stack.peek().bondOrder > 1 && sf.bondOrder != stack.peek().bondOrder){
+				throw new StructureBuildingException("ring closure has two different bond orders specified!");
+			}
+			bondOrder = sf.bondOrder;
+		} else if(stack.peek().bondOrder > 1) {
+			bondOrder = stack.peek().bondOrder;
+		}
+		Bond b;
+		if (stack.peek().slash ==null){
+			b = fragManager.createBond(sf.atom, stack.peek().atom, bondOrder);
+		}
+		else{
+			b = fragManager.createBond(stack.peek().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
+		}
+		if(sf.slash !=null) {
+			if(stack.peek().slash !=null) {
+				throw new StructureBuildingException("ring closure should not have cis/trans specified twice!");
+			}
+			b.setSmilesStereochemistry(sf.slash);
+		} else if(stack.peek().slash !=null) {
+			b.setSmilesStereochemistry(stack.peek().slash);
+			stack.peek().slash = null;
+		}
+		if (stack.peek().atom.getAtomParityElement()!=null){
+			Element atomParityElement = stack.peek().atom.getAtomParityElement();
+			Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
+			String atomRefs4 = atomRefs4Att.getValue();
+			if (atomRefs4.equals("")){
+				atomRefs4 += "a" + sf.atom.getID();
+			}
+			else{
+				atomRefs4 += " a" + sf.atom.getID();
+			}
+			atomRefs4Att.setValue(atomRefs4);
+		}
+		if (sf.atom.getAtomParityElement()!=null){//replace dummy id with actual id e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy id before being replaced with the id of the F
+			Element atomParityElement = sf.atom.getAtomParityElement();
+			Attribute atomRefs4Atr = atomParityElement.getAttribute("atomRefs4");
+			String atomRefs4 = atomRefs4Atr.getValue();
+			atomRefs4 = atomRefs4.replaceFirst("ringclosure" + closure, "a" +stack.peek().atom.getID());
+			atomRefs4Atr.setValue(atomRefs4);
+		}
+		stack.peek().bondOrder = 1;
+	}
+
+	private void addBondStereoElements(Fragment currentFrag) throws StructureBuildingException {
 		Set<Bond> bonds = currentFrag.getBondSet();
 		mainLoop: for (Bond centralBond : bonds) {//identify cases of E/Z stereochemistry and add appropriate bondstereo tags
 			if (centralBond.getOrder()==2){
@@ -569,7 +663,7 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(preceedingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
-
+	
 								Boolean upSecond = null;
 								if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
 									upSecond = followingBond.getFromAtom() != atom3;
@@ -580,7 +674,7 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(followingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
-
+	
 								if (upFirst == upSecond){
 									bondStereoEl.appendChild("C");
 								}
@@ -592,41 +686,12 @@ class SMILESFragmentBuilder {
 							}
 						}
 					}
-
 				}
 			}
 		}
 		for (Bond bond : bonds) {
 			bond.setSmilesStereochemistry(null);
 		}
-
-		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
-			List<Atom> aList =currentFrag.getAtomList();
-			int lastAtomID =aList.get(aList.size()-1).getID();
-			if (subType.equals("inSuffix")){
-				currentFrag.setDefaultInID(lastAtomID);
-			}
-			else{
-				if (lastCharacter == '#'){
-					currentFrag.addOutID(lastAtomID,3, true);
-				}
-				else if (lastCharacter == '='){
-					currentFrag.addOutID(lastAtomID,2, true);
-				}
-				else{
-					currentFrag.addOutID(lastAtomID,1, true);
-				}
-			}
-		}
-
-		if(firstCharacter == '='){
-			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),2, true);
-		}
-		if (firstCharacter == '#'){
-			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),3, true);
-		}
-
-		return currentFrag;
 	}
 
 }

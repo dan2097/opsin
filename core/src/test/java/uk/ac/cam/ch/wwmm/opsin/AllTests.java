@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	DtdTest.class,
 	FragmentManagerTest.class,
 	FragmentTest.class,
-	FusedRingBuilderTest.class,
+	FusedRingNumbererTest.class,
 	NameToStructureTest.class,
 	SMILESFragmentBuilderTest.class,
 	SSSRTest.class,
