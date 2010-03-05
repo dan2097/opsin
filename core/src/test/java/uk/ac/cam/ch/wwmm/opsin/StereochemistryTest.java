@@ -95,7 +95,7 @@ public class StereochemistryTest {
 	 */
 	
 	@Test
-	public void applyStereochemistryLocantedZBut2ene() throws StructureBuildingException {
+	public void applyStereochemistryLocantedZ() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("(2Z)-but-2-ene", false).getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
@@ -111,9 +111,27 @@ public class StereochemistryTest {
 		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
 		Assert.assertEquals(BondStereo.CIS.toString(), bondStereo.getValue());
 	}
+	
+	@Test
+	public void applyStereochemistryLocantedE() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("(2E)-but-2-ene", false).getStructure();
+		Atom atom2 = f.getAtomByLocant("2");
+		Atom atom3 = f.getAtomByLocant("3");
+		Assert.assertNotNull(atom2);
+		Assert.assertNotNull(atom3);
+		Bond chiralBond = f.findBond(atom2, atom3);
+		Assert.assertNotNull(chiralBond);
+		Element bondStereo = chiralBond.getBondStereoElement();
+		Assert.assertNotNull(bondStereo);
+		Assert.assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
+		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
+		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
+		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
+		Assert.assertEquals(BondStereo.TRANS.toString(), bondStereo.getValue());
+	}
 
 	@Test
-	public void applyStereochemistryZBut2ene() throws StructureBuildingException {
+	public void applyStereochemistryUnlocantedZ() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("(Z)-but-2-ene", false).getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
@@ -131,8 +149,8 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void applyStereochemistryTransBut2ene() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("trans-but-2-ene", false).getStructure();
+	public void applyStereochemistryUnlocantedE() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("(E)-but-2-ene", false).getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		Assert.assertNotNull(atom2);
@@ -148,4 +166,39 @@ public class StereochemistryTest {
 		Assert.assertEquals(BondStereo.TRANS.toString(), bondStereo.getValue());
 	}
 	
+	@Test
+	public void applyStereochemistryCis() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("cis-but-2-ene", false).getStructure();
+		Atom atom2 = f.getAtomByLocant("2");
+		Atom atom3 = f.getAtomByLocant("3");
+		Assert.assertNotNull(atom2);
+		Assert.assertNotNull(atom3);
+		Bond chiralBond = f.findBond(atom2, atom3);
+		Assert.assertNotNull(chiralBond);
+		Element bondStereo = chiralBond.getBondStereoElement();
+		Assert.assertNotNull(bondStereo);
+		Assert.assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
+		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
+		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
+		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
+		Assert.assertEquals(BondStereo.CIS.toString(), bondStereo.getValue());
+	}
+	
+	@Test
+	public void applyStereochemistryTrans() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("trans-but-2-ene", false).getStructure();
+		Atom atom2 = f.getAtomByLocant("2");
+		Atom atom3 = f.getAtomByLocant("3");
+		Assert.assertNotNull(atom2);
+		Assert.assertNotNull(atom3);
+		Bond chiralBond = f.findBond(atom2, atom3);
+		Assert.assertNotNull(chiralBond);
+		Element bondStereo = chiralBond.getBondStereoElement();
+		Assert.assertNotNull(bondStereo);
+		Assert.assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
+		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
+		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
+		Assert.assertEquals("a1 a2 a3 a4", atomRefs4);
+		Assert.assertEquals(BondStereo.TRANS.toString(), bondStereo.getValue());
+	}
 }

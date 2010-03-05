@@ -157,6 +157,7 @@ class PreStructureBuilder {
 	 */
 	void postProcess(BuildState state, Element elem) throws PostProcessingException, StructureBuildingException {
 		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, "word");
+		int wordCount =words.size();
 		for (Element word : words) {
 			String wordRule = OpsinTools.getParentWordRule(word).getAttributeValue("wordRule");
 			state.currentWordRule = WordRule.valueOf(wordRule);
@@ -240,7 +241,7 @@ class PreStructureBuilder {
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
 				assignLocantsAndMultipliers(state, subBracketOrRoot);
 			}
-			processWordLevelMultiplierIfApplicable(state, word);
+			processWordLevelMultiplierIfApplicable(state, word, wordCount);
 
 		}
 	}
@@ -3148,12 +3149,14 @@ class PreStructureBuilder {
 
 	/**
 	 * If a word level multiplier is present e.g. diethyl butandioate then this is processed to ethyl ethyl butandioate
+	 * If wordCount is 1 then an exception is thrown if a multiplier is encountered e.g. triphosgene parsed as tri phosgene
 	 * @param state
 	 * @param word
+	 * @param wordCount 
 	 * @throws StructureBuildingException
 	 * @throws PostProcessingException
 	 */
-	private void processWordLevelMultiplierIfApplicable(BuildState state, Element word) throws StructureBuildingException, PostProcessingException {
+	private void processWordLevelMultiplierIfApplicable(BuildState state, Element word, int wordCount) throws StructureBuildingException, PostProcessingException {
 		if (word.getChildCount()==1){
 			Element subOrBracket = (Element) word.getChild(0);
 			Element multiplier = subOrBracket.getFirstChildElement("multiplier");
@@ -3193,6 +3196,9 @@ class PreStructureBuilder {
 					elementsNotToBeMultiplied.add(el);
 				}
 				multiplier.detach();
+				if (wordCount ==1){
+					throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
+				}
 				for(int i=multiVal -1; i>=1; i--) {
 					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
