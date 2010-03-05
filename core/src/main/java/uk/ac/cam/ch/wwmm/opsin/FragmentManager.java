@@ -41,6 +41,9 @@ class FragmentManager {
 	 * @throws Exception If the CML fragment file can't be found or otherwise used
 	 */
 	FragmentManager(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, IDManager idManager) {
+		if (sBuilder == null || cmlBuilder == null || idManager == null ){
+			throw new IllegalArgumentException("FragmentManager was parsed a null object in its constructor!");
+		}
 		this.sBuilder = sBuilder;
 		this.cmlBuilder = cmlBuilder;
 		this.idManager = idManager;

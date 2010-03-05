@@ -1,6 +1,7 @@
-target
-
+relre:src/main/java/dl/*
+relre:target/*
+relre:core/target/*
+relre:inchi/target/*
 .classpath
 .project
 .settings
-
