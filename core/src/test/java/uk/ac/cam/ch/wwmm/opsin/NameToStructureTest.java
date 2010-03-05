@@ -20,7 +20,11 @@ public class NameToStructureTest {
 	public void testParseToCML() throws Exception {
 		NameToStructure nts = NameToStructure.getInstance();
 		Element cml = nts.parseToCML("ethane");
-		assertEquals("Parsed ethane OK", "<cml xmlns=\"http://www.xml-cml.org/schema\" " +
+		// output is syntactically valid (schema, dictRefs)
+		// labels assigned and is correct.
+		// contains a molecule with same connectivity as 'frag of CML'
+
+		assertEquals("Parsing 'ethane'", "<cml xmlns=\"http://www.xml-cml.org/schema\" " +
 				"xmlns:cmlDict=\"http://www.xml-cml.org/dictionary/cml/\" " +
 				"xmlns:nameDict=\"http://www.xml-cml.org/dictionary/cml/name/\" " +
 				"convention=\"cmlDict:cmllite\"><molecule id=\"m1\">" +
