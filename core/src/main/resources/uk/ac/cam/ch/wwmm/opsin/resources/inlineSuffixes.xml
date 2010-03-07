@@ -3,8 +3,10 @@
 <!-- value = a reference to suffixRules.xml -->
 <tokenLists>
   <tokenList tagname="suffix" type="inline" symbol="i">
+    <token value="oyl" additionalValue="aldehyde">aldehydoyl</token>
     <token value="amido">amido</token>
     <token value="oyl" additionalValue="amide">amoyl</token>
+    <token value="oyl" additionalValue="anilide">aniloyl</token>
     <token value="carbonyl">carbonyl</token>
     <token value="io">io</token>
     <token value="amido" additionalValue="aldehyde">imido</token><!--suffixes joined by PreStructureBuilder-->

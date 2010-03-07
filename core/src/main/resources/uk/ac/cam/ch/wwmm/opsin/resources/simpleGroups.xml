@@ -47,6 +47,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">l-dopa</token>
   <token value="O=C(O)[C@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">d-dopa</token>
   <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
+  <token value="C=C" labels="1/2" valType="SMILES">ethylene</token>
   <token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
   <token value="NN=CN=N" valType="SMILES">formazan</token>
   <token value="CC(CCC=C(C)C)=CCO" labels="none" valType="SMILES">geraniol</token>

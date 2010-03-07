@@ -51,7 +51,37 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+  <wordRule name="functionalClassEster" type="full">
     <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="substituent" />
     <word type="substituent" />
     <word type="functionalTerm" value="ester" />
   </wordRule>
@@ -71,7 +101,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   <wordRule name="divalentFunctionalGroup" type="full">
     <word type="substituent" />
     <word type="substituent" />
-    <word type="functionalTerm" />
+    <word type="functionalTerm" functionalGroupType="diValentGroup"/>
   </wordRule>
 
   <wordRule name="divalentFunctionalGroup" type="full">

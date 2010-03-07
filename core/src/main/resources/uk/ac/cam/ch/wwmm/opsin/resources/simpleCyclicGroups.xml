@@ -2,6 +2,7 @@
 <!-- See the DTD for more details -->
 <!--The same as arylGroups except these cannot have suffixes. Or if you like the same as simpleGroups except they can accept hydro-->
 <tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="á">
+  <token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N" labels="none" valType="SMILES">abietamide</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituricacid</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric acid</token>
