@@ -3,15 +3,21 @@
 <tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
   <token value="NC(O)=N" labels="1//2/3" valType="SMILES">1-isoureido</token>
   <token value="N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
+  <token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N-" labels="none" valType="SMILES">abietamido</token>
   <token value="OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
   <token value="NC(=O)C" labels="none" valType="SMILES">acetamino</token>
+  <token value="C#C" labels="none" valType="SMILES">acetenyl</token>
   <token value="=[N+]([O-])O" labels="none" valType="SMILES">aci-nitro</token>
+  <token value="C(=O)C(=O)N" labels="none" valType="SMILES">amidoxalyl</token>
   <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
   <token value="OCCCCC" valType="SMILES">amoxy</token>
   <token value="CCCCC" valType="SMILES">amyl</token>
+  <token value="=CCCCC" valType="SMILES">amylidene</token>
+  <token value="=Cc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="OC locant4">anisal</token>
   <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(O)=O)C=O" outIDs="7">aspart-1-yl</token>
   <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(O)=O)C=O" outIDs="7">alpha-aspartyl</token>
   <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC=O)C(=O)O" outIDs="4">aspart-4-yl</token>
+  <token value="C(C)=C" labels="none" valType="SMILES">beta-allyl</token>
   <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC=O)C(=O)O" outIDs="4">beta-aspartyl</token>
   <token value="OCCC(C)C" valType="SMILES">isoamoxy</token>
   <token value="CCC(C)C" valType="SMILES">isoamyl</token>

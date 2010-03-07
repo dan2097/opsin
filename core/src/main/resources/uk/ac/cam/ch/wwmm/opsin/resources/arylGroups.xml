@@ -9,6 +9,7 @@
   <token value="C1Cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b" valType="SMILES" addGroup="=O locant1;=O locant2">acenaphthoquinon</token>
   <token value="c1ccc2CCc3cc4ccccc4c1c23" labels="1/2/3/3a/4/5/5a/6/6a/7/8/9/10/10a/10b/10c" valType="SMILES">acephenanthren</token>
   <token value="acephenanthrylene" valType="dbkey">acephenanthrylen</token>
+  <token value="c1cccc2Nc3ccccc3Cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridan</token>
   <token value="c1cccc2[as]c3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridarsin</token>
   <token value="c1cccc2nc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridin</token>
   <token value="c1cccc2pc3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridophosphin</token>

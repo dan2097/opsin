@@ -146,6 +146,11 @@ public final class StringTools {
             case '\u2035': return "'";//back primes
             case '\u2036': return "''";
             case '\u2037': return "'''";
+            case '\u00B4': return "'";//accents
+            case '\u02CA': return "'";
+            case '\u0301': return "'";
+            case '\u02DD': return "''";
+            case '\u030B': return "''";
 
             case '\u2010': return "-";//dashes, hyphens and the minus sign
             case '\u2011': return "-";
