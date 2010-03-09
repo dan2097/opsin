@@ -69,6 +69,7 @@ class XmlDeclarations {
 	//TODO remove hydrogen and replaced with indicatedHydrogen elements
 	/**Adds a hydrogen to an unsaturated system (2H not in locant)*/
 	static final String HYDROGEN_EL ="hydrogen";
+	static final String INDICATEDHYDROGEN_EL ="indicatedHydrogen";
 	
 	/**A hyphen between two substituents. Used as hint that the two substituents do not join together*/
 	static final String HYPHEN_EL ="hyphen";
@@ -151,8 +152,23 @@ class XmlDeclarations {
     static final String TYPE_ATR = "type";
     static final String SUBTYPE_ATR = "subType";
     
+	/**Something like the 6 of 1(6). Indicates unsaturation between the atoms with locants 1 and 6 (rather than 1 and 2)*/
+    static final String COMPOUNDLOCANT_ATR = "compoundLocant"; 
+
+	/**Defines the locants for which a radical will connect to another group in multiplicative nomenclature e.g. in 2,2'-methylenedipyridine the 2,2' become inlocants of the pyridine*/
+    static final String INLOCANTS_ATR = "inLocants"; 
+    
+	/**Determined by the prsStructreBuilder. True if a fragment has more than two radical positions e.g. ethan-1,2-diyl not ethanylidene*/
+    static final String ISAMULTIRADICAL_ATR = "isAMultiRadical"; 
+    
 	/**Added to a heteroatom or LAMBDACONVENTION_EL to indicate the desired valency*/
     static final String LAMBDA_ATR = "lambda";
+    
+	/**Indicates how many times a bracket/substituent should be multiplied*/
+	static final String MULTIPLIER_ATR ="multiplier";
+	
+	/**Indicates that a substituent/bracket has been processed by StructureBuildingMethods*/
+	static final String RESOLVED_ATR ="resolved";
     
 	/**Added by the PostProcessor to a suffix*/
     static final String SUFFIXPREFIX_ATR = "suffixPrefix";
@@ -249,6 +265,9 @@ class XmlDeclarations {
 	
 	/**Indicates a group that is a substituent*/
 	static final String SUBSTITUENT_TYPE_VAL ="substituent";
+	
+	/**Indicates a group that is a suffix*/
+	static final String SUFFIX_TYPE_VAL ="suffix";
 	
 	/**A suffix that does not add a radical, hence will be present only on the root group */
 	static final String ROOT_TYPE_VAL ="root";
