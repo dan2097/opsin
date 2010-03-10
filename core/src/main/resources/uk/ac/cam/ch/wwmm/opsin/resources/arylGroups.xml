@@ -50,11 +50,11 @@
   <token value="S1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thiochroman</token>
   <token value="[Se]1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenochroman</token>
   <token value="[Te]1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tellurochroman</token>
-  <token value="chromene" valType="dbkey">chromen</token>
+  <token value="o1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">chromen</token>
   <token value="s1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thiochromen</token>
   <token value="[se]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenochromen</token>
   <token value="[te]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tellurochromen</token>
-  <token value="chromene" valType="dbkey" addGroup="=O locant4">chromon</token>
+  <token value="o1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES" addGroup="=O locant4">chromon</token>
   <token value="chrysene" valType="dbkey">chrysen</token>
   <token value="cinnoline" valType="dbkey">cinnolin</token>
   <token value="o1c(=O)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a" valType="SMILES">coumarin</token>
@@ -72,8 +72,8 @@
   <token value="fluoranthene" valType="dbkey">fluoranthen</token>
   <token value="fluorene" valType="dbkey">fluoren</token>
   <token value="fulvene" valType="dbkey">fulven</token>
-  <token value="furan" valType="dbkey">furan</token>
-  <token value="furazan" valType="dbkey">furazan</token>
+  <token value="o1cccc1" labels="1/2/3/4/5" valType="SMILES">furan</token>
+  <token value="o1nccn1" labels="1/2/3/4/5" valType="SMILES">furazan</token>
   <token value="N1c(N)nc2ncnc2c1=O" labels="1/2//3/4/9/8/7/5/6/" valType="SMILES">guanin</token>
   <token value="c1(C)nCCc2c3ccc(OC)cc3Nc12" labels="1//2/3/4/4a/4b/5/6/7///8/8a/9/9a" valType="SMILES">harmalin</token>
   <token value="c1(C)nCCc2c3ccc(O)cc3Nc12" labels="1//2/3/4/4a/4b/5/6/7//8/8a/9/9a" valType="SMILES">harmalol</token>
@@ -96,7 +96,7 @@
   <token value="N1C(=O)C(=O)c2ccccc12" labels="1/2//3//3a/4/5/6/7/7a" valType="SMILES">isatin</token>
   <token value="c1[as]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isoarsindol</token>
   <token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoarsinolin</token>
-  <token value="isobenzofuran" valType="dbkey">isobenzofuran</token>
+  <token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzofuran</token>
   <token value="isochromane" valType="dbkey">isochroman</token>
   <token value="C1SCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochroman</token>
   <token value="C1[Se]CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochroman</token>
@@ -118,11 +118,11 @@
   <token value="[te]1nccc1" valType="SMILES">isotellurazol</token>
   <token value="[Te]1NCCC1" valType="SMILES">isotellurazolidin</token>
   <token value="[Te]1NCCC1" valType="SMILES" addBond="2 locant2">isotellurazolin</token>
-  <token value="isothiazole" valType="dbkey">isothiazol</token>
+  <token value="s1nccc1" valType="SMILES">isothiazol</token>
   <token value="S1NCCC1" valType="SMILES">isothiazolidin</token>
   <token value="S1NCCC1" valType="SMILES" addBond="2 locant2">isothiazolin</token>
-  <token value="isoxazole" valType="dbkey">isoxazol</token>
-  <token value="isoxazole" valType="dbkey">isooxazol</token>
+  <token value="o1nccc1" valType="SMILES">isoxazol</token>
+  <token value="o1nccc1" valType="SMILES">isooxazol</token>
   <token value="O1NCCC1" valType="SMILES">isoxazolidin</token>
   <token value="O1NCCC1" valType="SMILES">isooxazolidin</token>
   <token value="O1NCCC1" valType="SMILES" addBond="2 locant2">isoxazolin</token>
@@ -193,7 +193,7 @@
   <token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiaden</token>
   <token value="pteridine" valType="dbkey">pteridin</token>
   <token value="n1cnc2ncnc2c1" labels="1/2/3/4/9/8/7/5/6" fusedRingNumbering="1/2/3/3a/4/5/6/6a/7" valType="SMILES">purin</token>
-  <token value="pyran" valType="dbkey">pyran</token>
+  <token value="o1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">pyran</token>
   <token value="s1ccccc1" valType="SMILES">thiopyran</token>
   <token value="[se]1ccccc1" valType="SMILES">selenopyran</token>
   <token value="[te]1ccccc1" valType="SMILES">telluropyran</token>
@@ -242,7 +242,7 @@
   <token value="N1C(=O)N(C)c2ncN(C)c2C1=O" labels="1/2//3//4/9/8/7//5/6/" valType="SMILES">theobromin</token>
   <token value="N1c(=O)Nc(=O)c(C)c1" labels="1/2//3/4//5//6" valType="SMILES">thymin</token>
   <token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thianthren</token>
-  <token value="thiophene" valType="dbkey">thiophen</token>
+  <token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES">thiophen</token>
   <token value="c1c(C)ccc(C(C)C)c1O" labels="none" valType="SMILES">thymol</token>
   <token value="c1(ccccc1)C#Cc2ccccc2" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'" valType="SMILES">tolan</token>
   <token value="toluene" valType="dbkey">toluen</token>
