@@ -27,19 +27,19 @@ the contracted form is allowed for all ring systems-->
   <token value="cumene" valType="dbkey" addGroup="C locant4">cym</token>
   <token value="fluoranthene" valType="dbkey">fluoranth</token>
   <token value="fulvene" valType="dbkey">fulv</token>
-  <token value="furan" valType="dbkey" frontLocantsExpected="2,3">fur</token>
+  <token value="o1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">fur</token>
   <token value="Cc1ccco1" labels="alpha/2/3/4/5/1" valType="SMILES">furfur</token>
   <token value="imidazole" valType="dbkey">imidaz</token>
   <token value="imidazolidine" valType="dbkey">imidazolid</token>
   <token value="indazole" valType="dbkey">indaz</token>
   <token value="indolizine" valType="dbkey">indoliz</token>
-  <token value="isobenzofuran" valType="dbkey">isobenzofur</token>
+  <token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzofur</token>
   <token value="isoquinoline" valType="dbkey" frontLocantsExpected="1,3,4,5,6,7,8">isoquinol</token>
-  <token  value="[se]1nccc1" valType="SMILES">isoselenaz</token>
-  <token  value="[te]1nccc1" valType="SMILES">isotelluraz</token>
-  <token value="isothiazole" valType="dbkey">isothiaz</token>
-  <token value="isoxazole" valType="dbkey">isoxaz</token>
-  <token value="isoxazole" valType="dbkey">isooxaz</token>
+  <token value="[se]1nccc1" valType="SMILES">isoselenaz</token>
+  <token value="[te]1nccc1" valType="SMILES">isotelluraz</token>
+  <token value="s1nccc1" valType="SMILES">isothiaz</token>
+  <token value="o1nccc1" valType="SMILES">isoxaz</token>
+  <token value="o1nccc1" valType="SMILES">isooxaz</token>
   <token value="O1NCCC1" valType="SMILES">isoxazolid</token>
   <token value="mesitylene" valType="dbkey">mesit</token>
   <token value="morpholine" valType="dbkey">morphol</token>
@@ -83,7 +83,7 @@ the contracted form is allowed for all ring systems-->
   <token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiad</token>
   <token value="pteridine" valType="dbkey">pterid</token>
   <token value="n1cnc2ncnc2c1" labels="1/2/3/4/9/8/7/5/6" valType="SMILES">pur</token>
-  <token value="pyran" valType="dbkey">pyr</token>
+  <token value="o1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">pyr</token>
   <token value="s1ccccc1" valType="SMILES">thiopyr</token>
   <token value="[se]1ccccc1" valType="SMILES">selenopyr</token>
   <token value="[te]1ccccc1" valType="SMILES">telluropyr</token>
@@ -111,8 +111,8 @@ the contracted form is allowed for all ring systems-->
   <token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluranthr</token>
   <token value="[te]1cccc1" valType="SMILES">telluroph</token>
   <token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thianthr</token>
-  <token value="thiophene" valType="dbkey">thioph</token>
-  <token value="thiophene" valType="dbkey" frontLocantsExpected="2,3">thien</token>
+  <token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES">thioph</token>
+  <token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">thien</token>
   <token value="toluene" valType="dbkey" frontLocantsExpected="2,3,4">tolu</token>
   <token value="toluene" valType="dbkey" frontLocantsExpected="2,3,4">tol</token>
   <token value="C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trit</token>
