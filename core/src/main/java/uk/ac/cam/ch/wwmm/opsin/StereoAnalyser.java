@@ -456,6 +456,9 @@ class StereoAnalyser {
 				}
 				if (!foundIdenticalNeighbour){
 					Collections.sort(neighbours, new SortByColour());
+					if (neighbours.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
+						neighbours.add(0, atom);
+					}
 					stereoCentres.add(new StereoCentre(atom, neighbours));
 				}
 			}
@@ -470,10 +473,16 @@ class StereoAnalyser {
 	 * @throws StructureBuildingException
 	 */
 	private boolean isTetrahedral(Atom atom) throws StructureBuildingException {
-		if (atom.getAtomNeighbours().size()==4){
-			String element = atom.getElement();
+		int neighbourCount = atom.getAtomNeighbours().size();
+		String element = atom.getElement();
+		if (neighbourCount == 4){
 			if (element.equals("C") || element.equals("N")|| element.equals("P") || element.equals("S")
 					|| element.equals("B")|| element.equals("Si") || element.equals("As") || element.equals("Se")){
+				return true;
+			}
+		}
+		else if (neighbourCount ==3){
+			if ((element.equals("S") || element.equals("Se")) && atom.getIncomingValency()==4){//tetrahedral sulfur - 3 bonds and the lone pair
 				return true;
 			}
 		}
