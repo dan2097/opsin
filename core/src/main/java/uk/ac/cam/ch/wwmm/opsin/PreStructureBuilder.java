@@ -2584,7 +2584,7 @@ class PreStructureBuilder {
 				
 				//Check the right fragment in the bracket:
 				//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
-				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbol.matcher(locantText).find()){
+				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || (!aminoAcid && matchElementSymbol.matcher(locantText).find())){
 					if (checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
 						moveLocants =true;//locant location is present elsewhere
 					}

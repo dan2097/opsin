@@ -1014,13 +1014,18 @@ class StructureBuilder {
 					if (explicitHydrogensToAdd >1){
 						throw new StructureBuildingException("Cannot have tetrahedral chirality and more than 2 hydrogens");
 					}
+					Element atomParityEl = parentAtom.getAtomParityElement();
+					Attribute atomRefs4Atr = atomParityEl.getAttribute("atomRefs4");
+					String atomRefs4 = atomRefs4Atr.getValue();
 					if (explicitHydrogensToAdd ==1){
-						Element atomParityEl = parentAtom.getAtomParityElement();
-						Attribute atomRefs4Atr = atomParityEl.getAttribute("atomRefs4");
-						String atomRefs4 = atomRefs4Atr.getValue();
 						atomRefs4 = atomRefs4.replaceFirst("a" + parentAtom.getID() +"_H", "a" + state.idManager.getCurrentID());//atom parity was set in SMILES but at this stage the id of the hydrogen was not known, now it is so replace the dummy ID
 						atomRefs4Atr.setValue(atomRefs4);
 					}
+					else{
+						List<Atom> neighbours = parentAtom.getAtomNeighbours();
+						atomRefs4 = atomRefs4.replaceFirst("a" + parentAtom.getID() +"_H", "a" + neighbours.get(neighbours.size()-1).getID());//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
+					}
+					atomRefs4Atr.setValue(atomRefs4);
 				}
 			}
 		}

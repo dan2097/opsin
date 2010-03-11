@@ -14,11 +14,7 @@
   <token value="CCCCC" valType="SMILES">amyl</token>
   <token value="=CCCCC" valType="SMILES">amylidene</token>
   <token value="=Cc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="OC locant4">anisal</token>
-  <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(O)=O)C=O" outIDs="7">aspart-1-yl</token>
-  <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(O)=O)C=O" outIDs="7">alpha-aspartyl</token>
-  <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC=O)C(=O)O" outIDs="4">aspart-4-yl</token>
   <token value="C(C)=C" labels="none" valType="SMILES">beta-allyl</token>
-  <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC=O)C(=O)O" outIDs="4">beta-aspartyl</token>
   <token value="OCCC(C)C" valType="SMILES">isoamoxy</token>
   <token value="CCC(C)C" valType="SMILES">isoamyl</token>
   <token value="CC(C)(C)C" valType="SMILES">neoamyl</token>
@@ -70,10 +66,6 @@
   <token value="CC=CC" valType="SMILES">crotyl</token>
   <token value="[N+]#N" labels="none" valType="SMILES">diazonio</token>
   <token value="OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes">ethoxyl</token>
-  <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(O)=O)C=O" outIDs="8">glutam-1-yl</token>
-  <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(O)=O)C=O" outIDs="8">alpha-glutamyl</token>
-  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC=O)C(=O)O" outIDs="5">glutam-5-yl</token>
-  <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC=O)C(=O)O" outIDs="5">gamma-glutamyl</token>
   <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
   <token value="C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES">hydantoyl</token>
   <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
