@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -768,16 +770,15 @@ class FusedRingBuilder {
 			throw new StructureBuildingException("Problem with fusion descriptors: Parent atoms specified: " + parentAtoms.size() +" Child atoms specified: " + childAtoms.size() + " These should have been identical!");
 		}
 		
-		List<List<Atom>> neighboursOfToBeReplacedChildAtoms= new ArrayList<List<Atom>>();//this list is in the same order as childAtoms
+		Fragment childFrag =childAtoms.get(0).getFrag();
+		for (int i = 0; i < childAtoms.size() -1; i++) {
+			Bond bondToBeRemoved = childFrag.findBondOrThrow(childAtoms.get(i), childAtoms.get(i+1));
+			state.fragManager.removeBond(bondToBeRemoved);//the bonds to be merged
+		}
+		
+		Set<Bond> bondsToBeReplaced = new HashSet<Bond>();
 		for (Atom atom : childAtoms) {
-			List<Atom> neighboursToBeAttachedToParentRing = new ArrayList<Atom>();
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			for (Atom neighbour : neighbours) {
-				if (!childAtoms.contains(neighbour)){
-					neighboursToBeAttachedToParentRing.add(neighbour);
-				}
-			}
-			neighboursOfToBeReplacedChildAtoms.add(neighboursToBeAttachedToParentRing);
+			bondsToBeReplaced.addAll(atom.getBonds());
 		}
 		//remove the childAtoms and sync spareValency
 		for (int i = 0; i < childAtoms.size(); i++) {
@@ -787,17 +788,24 @@ class FusedRingBuilder {
 				parentAtom.setSpareValency(true);
 			}
 			state.fragManager.removeAtomAndAssociatedBonds(childAtom);
-		}
-
-		for (int i = 0; i < parentAtoms.size(); i++) {
-			Atom parentAtom = parentAtoms.get(i);
-			if (!parentAtom.getElement().equals(childAtoms.get(i).getElement())){
+			if (!parentAtom.getElement().equals(childAtom.getElement())){
 				throw new StructureBuildingException("Invalid fusion descriptor: Heteroatom placement is ambigous as it is not present in both components of the fusion");
 			}
-			for (Atom atom : neighboursOfToBeReplacedChildAtoms.get(i)) {
-				//System.out.println("Atom ID " + atom.getID() +" bonded to " +  parentAtom.getID());
-				state.fragManager.createBond(parentAtom, atom, 1);
+		}
+
+		for (Bond bond : bondsToBeReplaced) {
+			Atom from = bond.getFromAtom();
+			int indiceInChildAtoms = childAtoms.indexOf(from);
+			if (indiceInChildAtoms !=-1){
+				from = parentAtoms.get(indiceInChildAtoms);
 			}
+			Atom to = bond.getToAtom();
+			indiceInChildAtoms = childAtoms.indexOf(to);
+			if (indiceInChildAtoms !=-1){
+				to = parentAtoms.get(indiceInChildAtoms);
+			}
+			//System.out.println("Atom ID " + atom.getID() +" bonded to " +  parentAtom.getID());
+			state.fragManager.createBond(from, to, 1);
 		}
 	}
 
