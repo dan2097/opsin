@@ -149,6 +149,9 @@ class Atom {
 			return lambdaConventionValency +protonsExplicitlyAddedOrRemoved;
 		}
 		Integer defaultValency =ValencyChecker.getDefaultValency(element);
+		if (defaultValency !=null){
+			defaultValency += protonsExplicitlyAddedOrRemoved;
+		}
 		int currentValency =getIncomingValency();
 		if (considerOutValency){
 			currentValency+=outValency;
@@ -157,11 +160,10 @@ class Atom {
 		if (possibleValencies!=null) {
 			if (defaultValency !=null){
 				for (Integer possibleValency : possibleValencies) {
-					if (possibleValency.equals(defaultValency + protonsExplicitlyAddedOrRemoved) &&
-							currentValency <= defaultValency + protonsExplicitlyAddedOrRemoved){
-						return defaultValency + protonsExplicitlyAddedOrRemoved;
+					if (possibleValency.equals(defaultValency) &&
+							currentValency <= defaultValency){
+						return defaultValency;
 					}
-					break;
 				}
 			}
 			for (Integer possibleValency : possibleValencies) {
@@ -170,7 +172,7 @@ class Atom {
 				}
 			}
 		}
-		return null;
+		return defaultValency;
 	}
 
 	/**Adds a locant to the Atom. Other locants are preserved.

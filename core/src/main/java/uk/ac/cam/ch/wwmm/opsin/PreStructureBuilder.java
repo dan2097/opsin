@@ -1768,6 +1768,7 @@ class PreStructureBuilder {
 						if (possibleLocants.size() ==0){
 							//suffixes are ignored in the case of fused ring systems due to suffixes being null and for all suffixes not on acid stems (except phen-->thiophenol)
 							if (suffixes!=null){
+								Set<Atom> suffixAtomsToUse =new LinkedHashSet<Atom>();
 								ArrayList<Fragment> applicableSuffixes = new ArrayList<Fragment>(suffixes);
 								if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals("acidStem") && !groupToBeModified.getValue().equals("phen")){
 									//remove all non acid suffixes
@@ -1781,17 +1782,19 @@ class PreStructureBuilder {
 								for (Fragment suffixFrag : applicableSuffixes) {
 									for (Atom atom : suffixFrag.getAtomList()) {
 										if (atom.getElement().equals("O") && atom.getBonds().size()==1 && atom.getIncomingValency()==2){
-											replaceableAtoms.add(atom);
+											suffixAtomsToUse.add(atom);
 										}
 									}
 								}
 								for (Fragment suffixFrag : applicableSuffixes) {
 									for (Atom atom : suffixFrag.getAtomList()) {
 										if (atom.getElement().equals("O") && atom.getBonds().size()==1 && atom.getIncomingValency()==1){
-											replaceableAtoms.add(atom);
+											suffixAtomsToUse.add(atom);
 										}
 									}
 								}
+								suffixAtomsToUse.addAll(replaceableAtoms);//suffix atoms are preferable
+								replaceableAtoms = suffixAtomsToUse;
 							}
 						}
 					}

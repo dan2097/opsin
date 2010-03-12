@@ -204,7 +204,7 @@ class ValencyChecker {
 		possibleStableValencies.get("As").put(-1, new Integer[]{2});
 		possibleStableValencies.get("As").put(-2, new Integer[]{1});
 		possibleStableValencies.get("As").put(-3, new Integer[]{0});
-		possibleStableValencies.get("Se").put(1, new Integer[]{3});
+		possibleStableValencies.get("Se").put(1, new Integer[]{1,3});
 		possibleStableValencies.get("Se").put(-1, new Integer[]{1});
 		possibleStableValencies.get("Se").put(-2, new Integer[]{0});
 		possibleStableValencies.get("Br").put(1, new Integer[]{2});
