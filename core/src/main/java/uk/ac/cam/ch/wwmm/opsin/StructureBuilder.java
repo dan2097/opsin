@@ -108,8 +108,7 @@ class StructureBuilder {
 		state.fragManager.checkValencies();
 		int overallCharge = state.fragManager.getOverallCharge();
 		if (overallCharge!=0){//a net charge is present! Could just mean the counterion has not been specified though
-			List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, WORD_EL, TYPE_ATR, WordType.full.toString());
-			balanceChargeIfPossible(state, words, overallCharge);
+			balanceChargeIfPossible(state, molecule, overallCharge);
 		}
 		makeHydrogensExplicit(state);
 
@@ -1032,20 +1031,25 @@ class StructureBuilder {
 	}
 
 	/**
-	 * A net charge is present; Given the list of word elements and the overallCharge is there an unambiguous way of 
+	 * A net charge is present; Given the molecule element the overallCharge is there an unambiguous way of 
 	 * multiplying fragments to make the net charge 0
 	 * "cationic metals" e.g. sodium will have their charge set to 0 if a counterion is not present
+	 * 
+	 * If this fails look for the case where there are multiple molecules and the mixture is only negative due to negatively charged functional Atoms e.g. pyridine acetate and remove the negative charge
 	 * @param state
-	 * @param words
+	 * @param molecule
 	 * @param overallCharge
 	 * @throws StructureBuildingException
 	 */
-	private void balanceChargeIfPossible(BuildState state, List<Element> words, int overallCharge) throws StructureBuildingException {
+	private void balanceChargeIfPossible(BuildState state, Element molecule, int overallCharge) throws StructureBuildingException {
+		List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, WORD_EL, TYPE_ATR, WordType.full.toString());
 		List<Element> positivelyChargedWords = new ArrayList<Element>();
 		List<Element> negativelyChargedWords = new ArrayList<Element>();
 		HashMap<Element, Integer> wordToChargeMapping = new HashMap<Element, Integer>();
+		HashMap<Element, BuildResults> wordToBR = new HashMap<Element, BuildResults>();
 		for (Element word : words) {
 			BuildResults br = new BuildResults(state, word);
+			wordToBR.put(word, br);
 			int charge = br.getCharge();
 			if (charge>0){
 				positivelyChargedWords.add(word);
@@ -1056,37 +1060,77 @@ class StructureBuilder {
 			wordToChargeMapping.put(word, charge);
 		}
 		if (positivelyChargedWords.size()==1 && negativelyChargedWords.size() >=1 || positivelyChargedWords.size()>=1 && negativelyChargedWords.size() ==1 ){
-			Element wordToMultiply;
-			if (overallCharge >0){
-				if (negativelyChargedWords.size() >1){
-					return;//ambiguous as to which to multiply
-				}
-				wordToMultiply = negativelyChargedWords.get(0);
-			}
-			else{
-				if (positivelyChargedWords.size() >1){
-					return;//ambiguous as to which to multiply
-				}
-				wordToMultiply = positivelyChargedWords.get(0);
-			}
-			Element firstChild = (Element) wordToMultiply.getChild(0);
-			while (firstChild.getChildElements().size() !=0){
-				firstChild = (Element) firstChild.getChild(0);
-			}
-			if (firstChild.getLocalName().equals("multiplier")){//e.g. monochloride. Allows specification of explicit stoichiometry
+			boolean success = multiplyChargedWords(state, negativelyChargedWords, positivelyChargedWords, wordToChargeMapping, overallCharge);
+			if (success){
 				return;
-			}
-			int charge = wordToChargeMapping.get(wordToMultiply);
-			if (overallCharge % charge ==0){
-				int timesToDuplicate = Math.abs(overallCharge/charge);
-				for (int i = 0; i < timesToDuplicate; i++) {
-					XOMTools.insertAfter(wordToMultiply, state.fragManager.cloneElement(state, wordToMultiply));
-				}
 			}
 		}
 		else if (negativelyChargedWords.size()==0){
 			setCationicMetalsToNeutral(state, positivelyChargedWords);
+			return;
 		}
+		if (words.size()>1 && overallCharge <0){//neutralise functionalIDs if they are the sole cause of the negative charge and multiple molecules are present
+			int chargeOnFunctionalAtoms = 0;
+			for (Element word : words) {
+				BuildResults br = wordToBR.get(word);
+				int functionalIdCount = br.getFunctionalIDCount();
+				for (int i = functionalIdCount -1; i >=0; i--) {
+					chargeOnFunctionalAtoms += br.getFunctionalAtom(i).getCharge();
+				}
+			}
+			if (chargeOnFunctionalAtoms == overallCharge){
+				for (Element word : words) {
+					BuildResults br = wordToBR.get(word);
+					int functionalIdCount = br.getFunctionalIDCount();
+					for (int i = functionalIdCount -1; i >=0; i--) {
+						br.getFunctionalAtom(i).setCharge(0);
+						br.removeFunctionalID(i);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Multiplies out charged Words to balance charge
+	 * Return true if balancing was possible else false
+	 * @param state
+	 * @param negativelyChargedWords
+	 * @param positivelyChargedWords
+	 * @param wordToChargeMapping
+	 * @param overallCharge
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private boolean multiplyChargedWords(BuildState state, List<Element>negativelyChargedWords,List<Element> positivelyChargedWords,HashMap<Element, Integer> wordToChargeMapping, int overallCharge) throws StructureBuildingException {
+		Element wordToMultiply;
+		if (overallCharge >0){
+			if (negativelyChargedWords.size() >1){
+				return false;//ambiguous as to which to multiply
+			}
+			wordToMultiply = negativelyChargedWords.get(0);
+		}
+		else{
+			if (positivelyChargedWords.size() >1){
+				return false;//ambiguous as to which to multiply
+			}
+			wordToMultiply = positivelyChargedWords.get(0);
+		}
+		Element firstChild = (Element) wordToMultiply.getChild(0);
+		while (firstChild.getChildElements().size() !=0){
+			firstChild = (Element) firstChild.getChild(0);
+		}
+		if (firstChild.getLocalName().equals("multiplier")){//e.g. monochloride. Allows specification of explicit stoichiometry
+			return false;
+		}
+		int charge = wordToChargeMapping.get(wordToMultiply);
+		if (overallCharge % charge ==0){
+			int timesToDuplicate = Math.abs(overallCharge/charge);
+			for (int i = 0; i < timesToDuplicate; i++) {
+				XOMTools.insertAfter(wordToMultiply, state.fragManager.cloneElement(state, wordToMultiply));
+			}
+		}
+		return true;
 	}
 
 	/**

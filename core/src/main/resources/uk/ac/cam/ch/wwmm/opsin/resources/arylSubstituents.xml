@@ -99,7 +99,7 @@ the contracted form is allowed for all ring systems-->
   <token value="quinoline" valType="dbkey" frontLocantsExpected="2,3,4,5,6,7,8">quinol</token>
   <token value="c1cccn2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinoliz</token>
   <token value="quinoxaline" valType="dbkey">quinoxal</token>
-  <token value="quinuclidine" valType="dbkey">quinuclid</token>
+  <token value="N1(CCC2CC1)CC2" labels="1/2/3/4/5/6/7/8" valType="SMILES">quinuclid</token>
   <token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubic</token>
   <token value="s-indacene" valType="dbkey">s-indac</token>
   <token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenanthr</token>

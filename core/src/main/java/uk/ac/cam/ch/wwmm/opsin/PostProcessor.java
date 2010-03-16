@@ -80,6 +80,7 @@ class PostProcessor {
 	private final Pattern matchSemiColon =Pattern.compile(";");
 	private final Pattern matchDot =Pattern.compile("\\.");
 	private final Pattern matchNonDigit =Pattern.compile("\\D+");
+	private final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
@@ -224,6 +225,7 @@ class PostProcessor {
 		Elements locants = subOrRoot.getChildElements(LOCANT_EL);
 		for (int i = 0; i < locants.size(); i++) {
 			Element locant =locants.get(i);
+			
 			String[] individualLocantText = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
 			for (int j = 0; j < individualLocantText.length; j++) {
 				String locantText =individualLocantText[j];
@@ -234,6 +236,12 @@ class PostProcessor {
 					}
 					else{
 						throw new PostProcessingException("Unexpected hyphen in locantText");
+					}
+				}
+				else if (matchNonDigit.matcher(locantText).lookingAt()){
+					Matcher m =  matchSuperscriptedLocant.matcher(locantText);//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
+					if (m.matches()){
+						individualLocantText[j] = m.group(1) +m.group(2);
 					}
 				}
 			}

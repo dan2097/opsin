@@ -22,13 +22,16 @@
   <regex name="%closeBracket%" regex="[\]\)\}]"/>
   <regex name="%locantNoPrime%" regex="([1-9][0-9]*[a-z]?)"/><!--standard numeric locant with optional letter-->
   <regex name="%superScriptedNumber%" regex="(\^[0-9]+(\^\^)?|\^?%openBracket%[0-9]+%closeBracket%|\~[0-9]+\~)"/><!--In cases where a superscript is expected anyway: ^num or ^num^^ or ^(num) or (num) or ~num~ -->
+  <regex name="%locant%" regex="([1-9][0-9]*[a-z]?'*)"/><!--standard numeric locant with optional letter/primes-->
+  <regex name="%locantDoesNotEndInLetter%" regex="([1-9][0-9]*([a-z]'+)?'*)"/><!--as above but doesn't end in a letter-->
+  <regex name="%superScriptedLocant%" regex="(\^%locant%(\^\^)?|\^?%openBracket%%locant%%closeBracket%|\~%locant%\~)"/><!--as superScriptedNumber but locant instead of number -->
 
 <!--Assembles the rather large regex for detecting all locant variants-->
   <regex name="%cistrans%" regex="([rct]-)"/><!--relative/cis/trans descriptor-->
   <regex name="%greek%" regex="([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[gG][aA][mM][mM][aA]|[dD][eE][lL][tT][aA]|[eE][pP][sS][iI][lL][oO][nN]|[zZ][eE][tT][aA]|[eE][tT][aA])"/>
-  <regex name="%locant%" regex="([1-9][0-9]*[a-z]?'*)"/><!--standard numeric locant with optional letter/primes-->
-  <regex name="%locantTypes%" regex="(%locant%(-%elementSymbol%'*)?|%elementSymbol%'*%locant%?|%greek%)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N' etc.-->
-  <regex name="%locantTypesOptionalHyphen%" regex="([1-9][0-9]*([a-z]'+)?'*|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*[1-9][0-9]*([a-z]'+)?'*|%greek%)"/><!--subset that do not end with a letter-->
+
+  <regex name="%locantTypes%" regex="(%locant%(-%elementSymbol%'*)?|%elementSymbol%'*(%locant%|%superScriptedLocant%)?|%greek%)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N' etc.-->
+  <regex name="%locantTypesOptionalHyphen%" regex="(%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%)|%greek%)"/><!--subset that do not end with a letter-->
   <regex name="%indicatedHydrogen%" regex="(%locant%H)"/>
   <regex name="%compoundLocantOrIndicatedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
   <regex name="%allLocantForms%" regex="(%cistrans%?%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>
