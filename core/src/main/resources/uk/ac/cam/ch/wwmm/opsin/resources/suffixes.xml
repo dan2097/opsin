@@ -17,6 +17,7 @@
     <token value="imine">imine</token>
     <token value="iminide">iminide</token>
     <token value="iminium">iminium</token>
+    <token value="one" additionalValue="one">quinone</token><!--special cased to be the same as dione-->
     <token value="ol">ol</token>
     <token value="olate">olate</token>
     <token value="one">one</token>
