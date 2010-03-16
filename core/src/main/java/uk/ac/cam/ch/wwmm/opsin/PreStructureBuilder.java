@@ -156,24 +156,24 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	void postProcess(BuildState state, Element elem) throws PostProcessingException, StructureBuildingException {
-		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, "word");
+		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, WORD_EL);
 		int wordCount =words.size();
 		for (Element word : words) {
-			String wordRule = OpsinTools.getParentWordRule(word).getAttributeValue("wordRule");
+			String wordRule = OpsinTools.getParentWordRule(word).getAttributeValue(WORDRULE_EL);
 			state.currentWordRule = WordRule.valueOf(wordRule);
-			if (word.getAttributeValue(TYPE_ATR).equals("functionalTerm")){
+			if (word.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				continue;//functionalTerms are handled on a case by case basis by wordRules
 			}
 
-			List<Element> roots = XOMTools.getDescendantElementsWithTagName(word, "root");
+			List<Element> roots = XOMTools.getDescendantElementsWithTagName(word, ROOT_EL);
 			if (roots.size() >1){
 				throw new PostProcessingException("Multiple roots, but only 0 or 1 were expected. Found: " +roots.size());
 			}
-			List<Element> substituents = XOMTools.getDescendantElementsWithTagName(word, "substituent");
+			List<Element> substituents = XOMTools.getDescendantElementsWithTagName(word, SUBSTITUENT_EL);
 			List<Element> substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);
-			List<Element> brackets =  XOMTools.getDescendantElementsWithTagName(word, "bracket");
+			List<Element> brackets =  XOMTools.getDescendantElementsWithTagName(word, BRACKET_EL);
 			List<Element> substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
-			List<Element> groups =  XOMTools.getDescendantElementsWithTagName(word, "group");
+			List<Element> groups =  XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
 
 			for (Element subOrBracketOrRoot : substituentsAndRootAndBrackets) {
 				processLocantFeatures(subOrBracketOrRoot);
@@ -185,8 +185,8 @@ class PreStructureBuilder {
 			}
 
 			Element finalSubOrRootInWord =(Element) word.getChild(word.getChildElements().size()-1);
-			while (!finalSubOrRootInWord.getLocalName().equals("root") && !finalSubOrRootInWord.getLocalName().equals("substituent")){
-				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{"root", "substituent", "bracket"});
+			while (!finalSubOrRootInWord.getLocalName().equals(ROOT_EL) && !finalSubOrRootInWord.getLocalName().equals(SUBSTITUENT_EL)){
+				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 				if (children.size()==0){
 					throw new PostProcessingException("Unable to find finalSubOrRootInWord");
 				}
@@ -229,10 +229,10 @@ class PreStructureBuilder {
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				matchLocantsToIndirectFeatures(state, subOrRoot);
-				resolveSuffixes(state, subOrRoot.getFirstChildElement(GROUP_EL), subOrRoot.getChildElements("suffix"));
+				resolveSuffixes(state, subOrRoot.getFirstChildElement(GROUP_EL), subOrRoot.getChildElements(SUFFIX_EL));
 			}
 
-			removePointlessBrackets(brackets, substituentsAndRootAndBrackets);//e.g. (tetramethyl)azanium == tetramethylazanium
+			removeClarifyingBrackets(brackets, substituentsAndRootAndBrackets);//e.g. (tetramethyl)azanium == tetramethylazanium
 
 			if (word.getChildCount()>1){
 				assignLocantsToMultipliedRootIfPresent(state, (Element) word.getChild(word.getChildCount()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
@@ -2825,9 +2825,9 @@ class PreStructureBuilder {
 	 * @return
 	 */
 	private boolean isATerminalSuffix(Element suffix){
-        return suffix.getLocalName().equals("suffix") &&
-                suffix.getAttribute("locant") == null &&
-                (suffix.getAttributeValue(TYPE_ATR).equals("inline") || suffix.getAttribute("subType") != null && suffix.getAttributeValue("subType").equals("terminal"));
+        return suffix.getLocalName().equals(SUFFIX_EL) &&
+                suffix.getAttribute(LOCANT_ATR) == null &&
+                (suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) || TERMINAL_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR)));
 		}
 
 	/**Process the effects of suffixes upon a fragment. 
@@ -3015,13 +3015,25 @@ class PreStructureBuilder {
 	 * @param brackets
 	 * @param substituentsAndRootAndBrackets
 	 */
-	private void removePointlessBrackets(List<Element> brackets, List<Element> substituentsAndRootAndBrackets) {
+	private void removeClarifyingBrackets(List<Element> brackets, List<Element> substituentsAndRootAndBrackets) {
 		for (int i = brackets.size()-1; i >=0; i--) {
 			Element bracket =brackets.get(i);
-			if (bracket.getChildCount()==1){//pointless bracket
-				Element elToBeMoved = (Element) bracket.getChild(0);
-				elToBeMoved.detach();
-				XOMTools.insertAfter(bracket, elToBeMoved);
+			Elements childElements = bracket.getChildElements();
+			boolean hyphenPresent = false;
+			if (childElements.size()==2){
+				for (int j = childElements.size() -1; j >=0; j--) {
+					if (childElements.get(j).getLocalName().equals(HYPHEN_EL)){
+						hyphenPresent=true;
+					}
+				}
+			}
+			if (childElements.size()==1 || hyphenPresent && childElements.size()==2){
+				//this bracket is now unnecesary as implicit brackets have already been added and OPSIN by default substitutes onto the rightmost element
+				for (int j = childElements.size() -1; j >=0; j--) {
+					Element elToBeMoved = childElements.get(j);
+					elToBeMoved.detach();
+					XOMTools.insertAfter(bracket, elToBeMoved);
+				}
 				bracket.detach();
 				brackets.remove(i);
 				substituentsAndRootAndBrackets.remove(bracket);

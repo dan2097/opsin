@@ -117,8 +117,9 @@ class PostProcessor {
 		processHydroCarbonRings(moleculeEl);
 		for (Element group : groups) {
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
-			handleIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
+			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
+		handleSuffixIrregularities(XOMTools.getDescendantElementsWithTagName(moleculeEl, SUFFIX_EL));//handles quinone -->dioxo
 
 		/* Converts open/close bracket elements to bracket elements and
 		 *  places the elements inbetween within the newly created bracket */
@@ -1323,7 +1324,7 @@ class PostProcessor {
 	 * Benzyl etc.
 	 * @param group The group to look for irregularities in.
 	 */
-	private void handleIrregularities(Element group) throws PostProcessingException {
+	private void handleGroupIrregularities(Element group) throws PostProcessingException {
 		String groupValue =group.getValue();
 		/* Benzyl, benzyloxy etc. Add a methylene */
 		if(groupValue.equals("benz")) {
@@ -1334,8 +1335,7 @@ class PostProcessor {
 				group.addAttribute(new Attribute(LABELS_ATR, "alpha/1/2/3/4/5/6"));
 			}
 		}
-
-		if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
+		else if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().equals("ol")){
@@ -1343,8 +1343,7 @@ class PostProcessor {
 				}
 			}
 		}
-
-		if (groupValue.equals("ethylene")) {
+		else if (groupValue.equals("ethylene")) {
 			Element previous = (Element)XOMTools.getPreviousSibling(group);
 			if (previous!=null && previous.getLocalName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
@@ -1384,7 +1383,7 @@ class PostProcessor {
 		}
 
 		//anthrone, phenanthrone and xanthone have the one at position 9 by default
-		if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("xanth")|| groupValue.equals("xanthen")) {
+		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("xanth")|| groupValue.equals("xanthen")) {
 			Element possibleLocant = (Element) XOMTools.getPreviousSibling(group);
 			if (possibleLocant==null || !possibleLocant.getLocalName().equals(LOCANT_EL)){//only need to give one a locant of 9 if no locant currently present
 				Element possibleOne =(Element) XOMTools.getNextSibling(group);
@@ -1395,12 +1394,31 @@ class PostProcessor {
 				}
 			}
 		}
-		if (groupValue.equals("cyste")){//ambiguity between cysteine and cysteic acid
+		else if (groupValue.equals("cyste")){//ambiguity between cysteine and cysteic acid
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDININE_SUBTYPE_VAL)){//cysteine
 				Element ine = (Element) XOMTools.getNextSibling(group);
 				if (!ine.getAttributeValue(VALUE_ATR).equals("ine")){
 					throw new PostProcessingException("This is a cysteic acid derivative, not a cysteine derivative");
 				}
+			}
+		}
+	}
+	
+	/**
+	 * Handles irregular suffixes. Quinone only currently
+	 * @param suffixes
+	 * @throws PostProcessingException 
+	 */
+	private void handleSuffixIrregularities(List<Element> suffixes) throws PostProcessingException {
+		for (Element suffix : suffixes) {
+			// convert quinone to dione
+			if (suffix.getAttributeValue(VALUE_ATR).equals("one") && "one".equals(suffix.getAttributeValue(ADDITIONALVALUE_ATR))){
+				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
+				XOMTools.setTextChild(suffix, "one");
+				Element multiplier = new Element(MULTIPLIER_EL);
+				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
+				multiplier.appendChild("di");
+				XOMTools.insertBefore(suffix, multiplier);
 			}
 		}
 	}
