@@ -221,7 +221,7 @@
   <token value="c1cccn2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinolizin</token>
   <token value="quinoline" valType="dbkey" addGroup="=O locant2">quinolon</token>
   <token value="quinoxaline" valType="dbkey">quinoxalin</token>
-  <token value="quinuclidine" valType="dbkey">quinuclidin</token>
+  <token value="N1(CCC2CC1)CC2" labels="1/2/3/4/5/6/7/8" valType="SMILES">quinuclidin</token>
   <token value="c1(O)cc(O)ccc1" labels="1//2/3//4/5/6" valType="SMILES">resorcinol</token>
   <token value="S1C(=S)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">rhodanin</token>
   <token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubicen</token>

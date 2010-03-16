@@ -1385,45 +1385,6 @@ bond (atomRefs2, order (NB must be an integer))
             <bond atomRefs2="a6 a1" order="1"/>
         </bondArray>
     </molecule>
-    <molecule id="quinuclidine">
-        <atomArray>
-            <atom id="a1" elementType="N">
-                <label value="1"/>
-            </atom>
-            <atom id="a2" elementType="C">
-                <label value="2"/>
-            </atom>
-            <atom id="a3" elementType="C">
-                <label value="3"/>
-            </atom>
-            <atom id="a4" elementType="C">
-                <label value="4"/>
-            </atom>
-            <atom id="a5" elementType="C">
-                <label value="5"/>
-            </atom>
-            <atom id="a6" elementType="C">
-                <label value="6"/>
-            </atom>
-            <atom id="a7" elementType="C">
-                <label value="7"/>
-            </atom>
-            <atom id="a8" elementType="C">
-                <label value="8"/>
-            </atom>
-        </atomArray>
-        <bondArray>
-            <bond atomRefs2="a1 a2" order="1"/>
-            <bond atomRefs2="a2 a3" order="1"/>
-            <bond atomRefs2="a3 a4" order="1"/>
-            <bond atomRefs2="a4 a5" order="1"/>
-            <bond atomRefs2="a5 a6" order="1"/>
-            <bond atomRefs2="a6 a1" order="1"/>
-            <bond atomRefs2="a4 a7" order="1"/>
-            <bond atomRefs2="a7 a8" order="1"/>
-            <bond atomRefs2="a8 a1" order="1"/>
-        </bondArray>
-    </molecule>
     <molecule id="morpholine">
         <atomArray>
             <atom id="a1" elementType="O">
