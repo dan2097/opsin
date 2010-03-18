@@ -207,7 +207,6 @@ class PreStructureBuilder {
 				substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);
 				substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
 			}
-			groups=null;//groups is potentially out of sync with xml at this point
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				processHW(state, subOrRoot);//hantzch-widman rings
@@ -223,6 +222,7 @@ class PreStructureBuilder {
 			}
 
 			//System.out.println(new XOMFormatter().elemToString(elem));
+			addImplicitBracketsToAminoAcids(state, groups, brackets);
 			findAndStructureImplictBrackets(state, substituents, brackets);
 
 			substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);//findAndStructureImplictBrackets may have created new brackets
@@ -1874,6 +1874,7 @@ class PreStructureBuilder {
 
 						state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
 						substituent.removeChild(group);
+						groups.remove(group);
 						Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
 						for (int j = remainingChildren.size()-1; j>=0; j--){
 							Node child =substituent.getChild(j);
@@ -2454,6 +2455,51 @@ class PreStructureBuilder {
 		return outIDsThatWillBeAdded;
 	}
 
+	/**
+	 * Corrects something like L-alanyl-L-glutaminyl-L-arginyl-O-phosphono-L-seryl-L-alanyl-L-proline to:
+	 * ((((L-alanyl-L-glutaminyl)-L-arginyl)-O-phosphono-L-seryl)-L-alanyl)-L-proline
+	 * i.e. substituents go onto the last mentioned amino acid; amino acids chain together to form peptides
+	 * @param state
+	 * @param groups
+	 * @param brackets
+	 */
+	private void addImplicitBracketsToAminoAcids(BuildState state, List<Element> groups, List<Element> brackets) {
+		for (int i = groups.size() -1; i >=0; i--) {
+			Element group = groups.get(i);
+			if (group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
+				Element subOrRoot = (Element) group.getParent();
+				
+				//now find the brackets/substituents before this element
+				Element previous = (Element) XOMTools.getPreviousSibling(subOrRoot);
+				List<Element> previousElements = new ArrayList<Element>();
+				while( previous !=null){
+					if (!previous.getLocalName().equals(SUBSTITUENT_EL) && !previous.getLocalName().equals(BRACKET_EL)){
+						break;
+					}
+					previousElements.add(previous);
+					previous = (Element) XOMTools.getPreviousSibling(previous);
+				}
+				if (previousElements.size()>0){//an implicit bracket is needed
+					Collections.reverse(previousElements);
+					Element bracket = new Element(BRACKET_EL);
+					bracket.addAttribute(new Attribute(TYPE_ATR, "implicit"));
+					Element parent = (Element) subOrRoot.getParent();
+					int indexToInsertAt = parent.indexOf(previousElements.get(0));
+					for (Element element : previousElements) {
+						element.detach();
+						bracket.appendChild(element);
+					}
+
+					subOrRoot.detach();
+					bracket.appendChild(subOrRoot);
+					parent.insertChild(bracket, indexToInsertAt);
+					brackets.add(bracket);
+				}
+			}
+		}
+	}
+
+
 	/**Looks for places where brackets should have been, and does the same
 	 * as findAndStructureBrackets. E.g. dimethylaminobenzene -> (dimethylamino)benzene.
 	 * The bracketting in the above case occurs when the substituent that is being procesed is the amino group
@@ -2474,9 +2520,8 @@ class PreStructureBuilder {
 			Element substituentGroup = substituent.getFirstChildElement(GROUP_EL);
 			String theSubstituentSubType = substituentGroup.getAttributeValue("subType");
 			String theSubstituentType = substituentGroup.getAttributeValue(TYPE_ATR);
-			boolean aminoAcid = substituentGroup.getAttributeValue(TYPE_ATR).equals("aminoAcid");
-			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent. AminoAcids always join together
-			if (substituentGroup.getAttribute("usableAsAJoiner")==null && !aminoAcid){
+			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent.
+			if (substituentGroup.getAttribute("usableAsAJoiner")==null){
 				continue;
 			}
 			Fragment frag =state.xmlFragmentMap.get(substituentGroup);
@@ -2501,7 +2546,7 @@ class PreStructureBuilder {
 
 			//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
 			Element elementDirectlyBeforeSubstituent = (Element) XOMTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
-			if (elementDirectlyBeforeSubstituent.getLocalName().equals("hyphen") && !aminoAcid){
+			if (elementDirectlyBeforeSubstituent.getLocalName().equals("hyphen")){
 				continue;
 			}
 
@@ -2587,7 +2632,7 @@ class PreStructureBuilder {
 				
 				//Check the right fragment in the bracket:
 				//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
-				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || (!aminoAcid && matchElementSymbol.matcher(locantText).find())){
+				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbol.matcher(locantText).find()){
 					if (checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
 						moveLocants =true;//locant location is present elsewhere
 					}

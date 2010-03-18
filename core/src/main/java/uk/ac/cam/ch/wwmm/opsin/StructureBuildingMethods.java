@@ -1048,6 +1048,21 @@ class StructureBuildingMethods {
 			from=from.getFrag().getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
 		}
 		fragToBeJoined.removeOutID(out);
+		if (from.getCharge()==-1 && from.getElement().equals("O") && state.xmlFragmentMap.getElement(fragToBeJoined).getValue().equals("oxido")){
+			//nasty special case to cope with oxido acting like oxide e.g. as O= or even [O-][N+]
+			//This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
+			String element = atomToJoinTo.getElement();
+			if (element.equals("S") && atomToJoinTo.getCharge() ==0 &&
+					(atomToJoinTo.getIncomingValency() +atomToJoinTo.getOutValency())>=2 && ValencyChecker.checkValencyAvailableForBond(atomToJoinTo, 2)){
+				from.setCharge(0);
+				bondOrder =2;
+			}
+			if (element.equals("N")){
+				if (atomToJoinTo.getCharge()==0 && (atomToJoinTo.getIncomingValency() + atomToJoinTo.getOutValency() + (atomToJoinTo.hasSpareValency() ? 1 :0))==3){
+					atomToJoinTo.setCharge(1);
+				}
+			}
+		}
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
 		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}

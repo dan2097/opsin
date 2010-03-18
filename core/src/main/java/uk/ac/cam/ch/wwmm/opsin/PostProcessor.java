@@ -1402,6 +1402,17 @@ class PostProcessor {
 				}
 			}
 		}
+		else if (groupValue.equals("phospho")){//is this the organic meaning (P(=O)=O) or biochemical meaning (P(=O)(O)O)
+			Element substituent = (Element) group.getParent();
+			Element nextSubstituent = (Element) XOMTools.getNextSibling(substituent);
+			if (nextSubstituent !=null){
+				Element nextGroup = nextSubstituent.getFirstChildElement("group");
+				if (nextGroup !=null && nextGroup.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
+					group.getAttribute(VALUE_ATR).setValue("P(=O)(O)O");
+				}
+			}
+			
+		}
 		else if (groupValue.equals("cyste")){//ambiguity between cysteine and cysteic acid
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDININE_SUBTYPE_VAL)){//cysteine
 				Element ine = (Element) XOMTools.getNextSibling(group);
