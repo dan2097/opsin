@@ -3,7 +3,7 @@
    <parent>
       <artifactId>opsin</artifactId>
       <groupId>opsin</groupId>
-      <version>0.6.1-SNAPSHOT</version>
+      <version>0.6.1</version>
    </parent>
 	<artifactId>inchi</artifactId>
 	<name>OPSIN_InChI_Support</name>
@@ -29,12 +29,12 @@
       <dependency>
         <groupId>opsin</groupId>
         <artifactId>core</artifactId>
-        <version>0.6.1-SNAPSHOT</version>
+        <version>0.6.1</version>
       </dependency>
       <dependency>
         <groupId>net.sf.jni-inchi</groupId>
         <artifactId>jni-inchi</artifactId>
-        <version>0.6</version>
+        <version>0.5</version>
       </dependency>
    </dependencies>
 </project>
