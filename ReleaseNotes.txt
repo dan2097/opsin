@@ -1,4 +1,13 @@
-Version 0.60
+Version 0.6.1
+Counter ions are now duplicated such as to lead to if possible a neutral compound
+In names like nitrous amide the atoms modified by the functional replacement can now be substituted
+Allowed ~number~ for specifying superscripts
+Vocabulary improvements
+Added quinone suffix
+Tetrahedral sulfur stereochemistry is now recognised
+Bug fixes to fix incorrect interpretation of some names e.g. triphosgene is now unparseable rather than 3 x phosghene, phospho has different meanings depending on whether it used on an amino acid or another group etc.
+
+Version 0.6.0
 OPSIN is now a mavenised project consisting of two modules: core and inchi. Core does name -->CML, inchi depends on core and allows conversion to inchi
 Instead of CML an OpsinResult can be returned which can yield information as to why a name was not interpretable
 Added support for unlocanted R/S/E/Z stereochemistry. Removed limit on number of atoms that stereochemistry code can handle
@@ -24,7 +33,7 @@ Made grammar more lenient in many places e.g. euphonic o, optional sqaure bracke
 Sulph is now treated like sulf as in sulphuric acid
 and many misc fixes and improvements
 
-Version 0.53
+Version 0.5.3
 Added support for amic, aldehydic, anilic, anilide, carboxanilide and amoyl suffixes
 Added support for cyclic imides e.g. succinimide/succinimido
 Added support for amide functional class
@@ -34,7 +43,7 @@ Disabled stereochemistry in molecules with over 300 atoms as a temporary fix to 
 Slight improvement in method for deciding which group detachable hydro prefixes apply to.
 Minor vocabulary update
 
-Version 0.52
+Version 0.5.2
 Outputting directly to InChI is now supported using the separately available nameToInchi jar (an OPSIN jar is expected in the same location as the nameToInchi jar)
 Fused rings with any number of rings in a chain or formed entirely of 6 membered rings can now be numbered
 Added support for E/Z/R/S where locants are given. Unlocanted cases will be dealt with in a subsequent release. In very large molecules a lack of memory may be encountered, this will be resolved in a subsequent release
@@ -47,7 +56,7 @@ Speed improvements
 Removed dependence on Nux/Saxon
 Misc minor fixes
 
-Version 0.51
+Version 0.5.1
 Huge reduction in OPSIN initialisation time (typical ~7 seconds -->800ms)
 Allowed thio/seleno/telluro as divalent linkers and for functional replacement when used as prefixes. Peroxy can now be used for functional replacement
 Better support for semi-trivally named hydrocarbon fused rings e.g. tetracene

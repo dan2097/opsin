@@ -1,5 +1,5 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
-version 0.6.0 (see ReleaseNotes.txt for what's new in this version)
+version 0.6.1 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 
@@ -12,14 +12,14 @@ OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 ##################################################
 
 The easiest way to use OPSIN is to use the standalone jar available from sourceforge.
-java -jar opsin-0.6.0.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
-opsin-0.6.0.jar includes InChI and CML output and all dependendencies
-core-0.6.0.jar does not include dependencies and InChI output support
-inchi-0.6.0.jar does not include dependencies, depends on JNI-InChI and core, and adds InChI suppport.
+java -jar opsin-0.6.1.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
+opsin-0.6.1.jar includes InChI and CML output and all dependendencies
+core-0.6.1.jar does not include dependencies and InChI output support
+inchi-0.6.1.jar does not include dependencies, depends on JNI-InChI and core, and adds InChI suppport.
 The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML
 and uk.ac.cam.ch.wwmm.opsin.NameToNameToInchi for InChI
 
-To use OPSIN as a library within Java add opsin-0.6.0.jar to your classpath then:
+To use OPSIN as a library within Java add opsin-0.6.1.jar to your classpath then:
 
 1) Learn about XOM (http://xom.nu), the XML processing framework used
    by OPSIN
