@@ -3,7 +3,7 @@
 	<groupId>opsin</groupId>
 	<artifactId>opsin</artifactId>
 	<name>OPSIN</name>
-	<version>0.6.1</version>
+	<version>0.6.2-SNAPSHOT</version>
 	<description>Open Parser for Systematic IUPAC Nomenclature</description>
 	<licenses>
 		<license>

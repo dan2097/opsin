@@ -1430,8 +1430,15 @@ class PostProcessor {
 	 */
 	private void handleSuffixIrregularities(List<Element> suffixes) throws PostProcessingException {
 		for (Element suffix : suffixes) {
+			String suffixValue = suffix.getValue();
+			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
+				Node next = XOMTools.getNext(suffix);
+				if (next == null){
+					throw new PostProcessingException("\"acid\" not found after " +suffixValue);
+				}
+			}
 			// convert quinone to dione
-			if (suffix.getAttributeValue(VALUE_ATR).equals("one") && "one".equals(suffix.getAttributeValue(ADDITIONALVALUE_ATR))){
+			else if (suffixValue.equals("quinone")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				XOMTools.setTextChild(suffix, "one");
 				Element multiplier = new Element(MULTIPLIER_EL);
