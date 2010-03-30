@@ -93,6 +93,9 @@ class StructureBuilder {
 			else if(wordRule == WordRule.anhydride) {//e.g. acetic anhydride
 				buildAnhydride(state, words);
 			}
+			else if(wordRule == WordRule.acidHalideOrPseudoHalide) {//e.g. phosphinimidic chloride
+				buildAcidHalideOrPseudoHalide(state, words);
+			}
 			else if(wordRule == WordRule.acetal) {
 				buildAcetal(state, words);//e.g. propanal diethyl acetal
 			}
@@ -893,6 +896,60 @@ class StructureBuilder {
 		}
 	}
 	
+	private void buildAcidHalideOrPseudoHalide(BuildState state, List<Element> words) throws StructureBuildingException {
+		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
+		}
+		resolveWordOrBracket(state, words.get(0));
+		BuildResults acidBr = new BuildResults(state, words.get(0));
+		int functionalIds =acidBr.getFunctionalIDCount();
+		if (functionalIds==0){
+			throw new StructureBuildingException("No functionalIds detected!");
+		}
+
+		boolean monoMultiplierDetected =false;
+		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
+		for (int i=1; i<words.size(); i++ ) {
+			Element functionalGroupWord =words.get(i);
+			List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalGroupWord,"functionalGroup");
+			if (functionalGroups.size()!=1){
+				throw new StructureBuildingException("Expected exactly 1 functionalGroup. Found " + functionalGroups.size());
+			}
+			
+			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue("value"), "simpleGroup", "functionalGroup", "none");
+			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals("monoValentStandaloneGroup")){
+				Atom ideAtom = monoValentFunctionGroup.getAtomByIDOrThrow(monoValentFunctionGroup.getDefaultInID());
+				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
+			}
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
+			functionalGroupFragments.add(monoValentFunctionGroup);
+			if (possibleMultiplier!=null){
+				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
+				if (multiplierValue==1){
+					monoMultiplierDetected = true;
+				}
+				for (int j = 1; j < multiplierValue; j++) {
+					functionalGroupFragments.add(state.fragManager.copyAndRelabel(monoValentFunctionGroup));
+				}
+				possibleMultiplier.detach();
+			}
+		}
+		int halideCount = functionalGroupFragments.size();
+		if (halideCount > functionalIds || (!monoMultiplierDetected && halideCount <functionalIds)){
+			throw new StructureBuildingException("Mismatch between number of halide/pseudo halide fragments and acidic oxygens");
+		}
+		for (int i = halideCount - 1; i>=0; i--) {
+			Fragment ideFrag =functionalGroupFragments.get(i);
+			Atom ideAtom = ideFrag.getAtomByIDOrThrow(ideFrag.getDefaultInID());
+			Atom acidAtom = acidBr.getFunctionalAtom(i);
+			if (!acidAtom.getElement().equals("O")){
+				throw new StructureBuildingException("Atom type expected to be oxygen but was: " +acidAtom.getElement());
+			}
+			acidBr.removeFunctionalID(i);
+			state.fragManager.replaceTerminalAtomWithFragment(acidAtom, ideAtom);
+		}
+	}
+
 	private void buildAcetal(BuildState state, List<Element> words) throws StructureBuildingException {
 		throw new StructureBuildingException("Not yet Supported");
 		//TODO Add support for acetal/ketal/hemiketal/hemiacetal

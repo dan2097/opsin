@@ -24,6 +24,7 @@ class WordRules {
 	 */
 	enum WordRule{
 		acetal,
+		acidHalideOrPseudoHalide,
 		amide,
 		anhydride,
 		carbonylDerivative,
