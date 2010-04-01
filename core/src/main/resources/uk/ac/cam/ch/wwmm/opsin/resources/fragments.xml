@@ -2302,69 +2302,6 @@ bond (atomRefs2, order (NB must be an integer))
             <bond atomRefs2="a7 a1" order="1"/>
         </bondArray>
     </molecule>
-    <molecule id="stilbene">
-    <atomArray>
-        <atom id="a1" elementType="C">
-            <label value="1"/>
-        </atom>
-        <atom id="a2" elementType="C">
-            <label value="2"/>
-        </atom>
-        <atom id="a3" elementType="C">
-            <label value="3"/>
-        </atom>
-        <atom id="a4" elementType="C">
-            <label value="4"/>
-        </atom>
-        <atom id="a5" elementType="C">
-            <label value="5"/>
-        </atom>
-        <atom id="a6" elementType="C">
-            <label value="6"/>
-        </atom>
-        <atom id="a7" elementType="C">
-            <label value="alpha"/>
-        </atom>
-        <atom id="a8" elementType="C">
-            <label value="beta"/>
-        </atom>
-        <atom id="a9" elementType="C">
-            <label value="1'"/>
-        </atom>
-        <atom id="a10" elementType="C">
-            <label value="2'"/>
-        </atom>
-        <atom id="a11" elementType="C">
-            <label value="3'"/>
-        </atom>
-        <atom id="a12" elementType="C">
-            <label value="4'"/>
-        </atom>
-        <atom id="a13" elementType="C">
-            <label value="5'"/>
-        </atom>
-        <atom id="a14" elementType="C">
-            <label value="6'"/>
-        </atom>
-    </atomArray>
-    <bondArray>
-        <bond atomRefs2="a1 a2" order="1"/>
-        <bond atomRefs2="a2 a3" order="2"/>
-        <bond atomRefs2="a3 a4" order="1"/>
-        <bond atomRefs2="a4 a5" order="2"/>
-        <bond atomRefs2="a5 a6" order="1"/>
-        <bond atomRefs2="a6 a1" order="2"/>
-        <bond atomRefs2="a1 a7" order="1"/>
-        <bond atomRefs2="a7 a8" order="2"/>
-        <bond atomRefs2="a8 a9" order="1"/>
-        <bond atomRefs2="a9 a10" order="2"/>
-        <bond atomRefs2="a10 a11" order="1"/>
-        <bond atomRefs2="a11 a12" order="2"/>
-        <bond atomRefs2="a12 a13" order="1"/>
-        <bond atomRefs2="a13 a14" order="2"/>
-        <bond atomRefs2="a14 a9" order="1"/>
-    </bondArray>
-    </molecule>
     <molecule id="fulvene">
         <atomArray>
             <atom id="a1" elementType="C"/>
