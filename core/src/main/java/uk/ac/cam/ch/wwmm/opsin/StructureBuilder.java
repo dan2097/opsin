@@ -1178,6 +1178,17 @@ class StructureBuilder {
 			firstChild = (Element) firstChild.getChild(0);
 		}
 		if (firstChild.getLocalName().equals("multiplier")){//e.g. monochloride. Allows specification of explicit stoichiometry
+			if (overallCharge >0 && positivelyChargedWords.size()==1){//something like barium monohydroxide -barium is 1+ rather than 2+
+				List<Element> cationicMetals = XOMTools.getDescendantElementsWithTagNameAndAttribute(positivelyChargedWords.get(0), GROUP_EL, SUBTYPE_ATR, CATIONICMETAL_SUBTYPE_VAL);
+				if (cationicMetals.size()==1){
+					Atom firstAtom = state.xmlFragmentMap.get(cationicMetals.get(0)).getFirstAtom();
+					if (firstAtom.getCharge() -overallCharge >0){
+						firstAtom.setCharge(firstAtom.getCharge() -overallCharge);
+						firstAtom.setLambdaConventionValency(0);
+						return true;
+					}
+				}
+			}
 			return false;
 		}
 		int charge = wordToChargeMapping.get(wordToMultiply);

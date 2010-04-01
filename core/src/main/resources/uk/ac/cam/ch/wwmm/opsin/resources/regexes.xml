@@ -148,7 +148,7 @@ does not define a CFG.
 
   <regex name="%aminoMonoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%)"/>
   <regex name="%aminoAcidOptionalIne%" value="(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%)"/>
-  <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|%aminoAcidOptionalIne%(%infixedSuffix%|%rootSuffix%))"/>
+  <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|(%aminoMonoAcid%|%aminoAcidEndsInIc%)(%infixedSuffix%|%rootSuffix%))"/>
 
   <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%aminoAcidEndsInIc%%rootSuffix%)%newLocantGroupNoOMP%%aminoAcidYl%)"/>
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>

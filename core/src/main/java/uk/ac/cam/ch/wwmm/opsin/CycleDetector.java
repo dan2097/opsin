@@ -32,7 +32,16 @@ class CycleDetector {
 			while (atomStack.size()>0){
 				Atom[] nextAtomArray =atomStack.removeLast();//depth first traversal
 				a =nextAtomArray[0];
-				if (atomsVisited.contains(a)){continue;}//parent atom must have been in a ring and this atom already visited another way
+				if (atomsVisited.contains(a)){
+					//parent atom must have been in a ring and this atom already visited another way
+					if (atomStack.size()> 0){
+						Atom atomToBackTrackTo =atomStack.getLast()[1];
+						while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
+							orderAtomsVisited.removeLast();
+						}
+					}
+					continue;
+				}
 				atomsVisited.add(a);
 				orderAtomsVisited.add(a);
 				neighbours =a.getAtomNeighbours();
@@ -52,7 +61,7 @@ class CycleDetector {
 				}
 				if (stackSize==atomStack.size() && stackSize > 0){//stack has not been changed, so you must be at a terminus. If the stack is empty this step is not necessary
 					Atom atomToBackTrackTo =atomStack.getLast()[1];
-					while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms. I believe atoms removed in this way are acyclic atoms
+					while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
 						orderAtomsVisited.removeLast();
 					}
 				}
