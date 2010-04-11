@@ -58,7 +58,7 @@ public class OpsinResult {
 		return cml;
 	}
 
-	enum OPSIN_RESULT_STATUS{
+	public enum OPSIN_RESULT_STATUS{
 		SUCCESS,
 		WARNING,
 		FAILURE

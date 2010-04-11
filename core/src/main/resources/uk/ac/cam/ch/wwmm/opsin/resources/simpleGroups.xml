@@ -111,6 +111,7 @@ If you do not want them to support hydro/dehydro put them here-->
 
   <token value="N" labels="none" valType="SMILES">ammonia</token>
   <token value="O" labels="none" valType="SMILES">water</token>
+  <token value="O" labels="none" valType="SMILES">hydrate</token>
   <token value="[C+]" labels="none" valType="SMILES">carbenium</token>
   <token value="[N+]" labels="none" valType="SMILES">ammonium</token>
   <token value="[P+]" labels="none" valType="SMILES">phosphonium</token>

@@ -32,8 +32,8 @@
   <token value="[As|3]" labels="none" outIDs="1,1,1" valType="SMILES">arsinidyne</token>
   <token value="[Sb|3]" labels="none" outIDs="1,1,1" valType="SMILES">stibylidyne</token>
   <token value="[Bi|3]" labels="none" outIDs="1,1,1" valType="SMILES">bismuthylidyne</token>
-  <token value="[P|3+]" labels="none" outIDs="1,1" valType="SMILES">phosphinidenio</token>
-  <token value="[As|3+]" labels="none" outIDs="1,1" valType="SMILES">arsinidenio</token>
+  <token value="[P|4+]" labels="none" outIDs="1,1" valType="SMILES">phosphinidenio</token>
+  <token value="[As|4+]" labels="none" outIDs="1,1" valType="SMILES">arsinidenio</token>
   <token value="P|5(=O)(O)" labels="none" outIDs="1,1" valType="SMILES">phosphinico</token>
   <token value="[As|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">arsinico</token>
   <token value="[Sb|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">stibinico</token>

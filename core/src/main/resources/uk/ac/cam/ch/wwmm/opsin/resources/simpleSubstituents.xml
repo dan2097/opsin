@@ -163,11 +163,6 @@
   <token value="Cl(=O)(=O)(=O)" labels="none" valType="SMILES">perchloryl</token>
   <token value="I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>
 
-  <token value="F|7(=O)(=O)(=O)" labels="none" valType="SMILES">perfluoryl</token>
-  <token value="Br(=O)(=O)(=O)" labels="none" valType="SMILES">perbromyl</token>
-  <token value="Cl(=O)(=O)(=O)" labels="none" valType="SMILES">perchloryl</token>
-  <token value="I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>
-
   <token value="OC#N" labels="none" valType="SMILES">cyanato</token>
   <token value="C#N" labels="none" valType="SMILES">cyano</token>
   <token value="O[N+]#[C-]" labels="none" valType="SMILES">fulminato</token>
