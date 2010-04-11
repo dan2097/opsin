@@ -1291,13 +1291,16 @@ class PreStructureBuilder {
 		for (Atom atom : atomList) {
 			List<Atom> neighbours = atom.getAtomNeighbours();
 			if (atom.getElement().equals("O") && neighbours.size()==1){
-				Bond b = frag.findBondOrThrow(atom, neighbours.get(0));
+				Atom otherAtom = neighbours.get(0);
+				Bond b = frag.findBondOrThrow(atom, otherAtom);
 				if (b.getOrder()==2 && atom.getCharge()==0){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
+					if (otherAtom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
+						otherAtom.setLambdaConventionValency(otherAtom.getLambdaConventionValency()-2);
+					}
 					return;
 				}
 				else if (atom.getCharge() ==-1 && b.getOrder()==1){
-					Atom otherAtom = b.getFromAtom() == atom ? b.getToAtom() : b.getFromAtom();
 					if (otherAtom.getCharge() ==1 && otherAtom.getElement().equals("N")){
 						state.fragManager.removeAtomAndAssociatedBonds(atom);
 						otherAtom.setCharge(0);
@@ -1647,7 +1650,7 @@ class PreStructureBuilder {
 					}
 					for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
 						Element newSuffix =new Element(suffix);
-						Fragment newSuffixFrag =state.fragManager.copyAndRelabel(suffixFrag);
+						Fragment newSuffixFrag =state.fragManager.copyFragment(suffixFrag);
 						state.xmlFragmentMap.put(newSuffix, newSuffixFrag);
 						suffixFragments.add(newSuffixFrag);
 						XOMTools.insertAfter(suffix, newSuffix);
@@ -2274,7 +2277,7 @@ class PreStructureBuilder {
 
 			ArrayList<Fragment> clonedFragments = new ArrayList<Fragment>();
 			for (int j = 1; j < mvalue; j++) {
-				clonedFragments.add(state.fragManager.copyAndRelabel(fragmentToResolveAndDuplicate, StringTools.multiplyString("'", j)));
+				clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, StringTools.multiplyString("'", j)));
 			}
 			for (int j = 0; j < mvalue-1; j++) {
 				Fragment clone =clonedFragments.get(j);

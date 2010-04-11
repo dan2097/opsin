@@ -307,8 +307,8 @@ class FragmentManager {
 	 * @return the clone of the fragment
 	 * @throws StructureBuildingException
 	 */
-	Fragment copyAndRelabel(Fragment originalFragment) throws StructureBuildingException {
-		return copyAndRelabel(originalFragment, null);
+	Fragment copyFragment(Fragment originalFragment) throws StructureBuildingException {
+		return copyAndRelabelFragment(originalFragment, null);
 	}
 
 
@@ -320,7 +320,7 @@ class FragmentManager {
 	 * @return the clone of the fragment
 	 * @throws StructureBuildingException
 	 */
-	Fragment copyAndRelabel(Fragment originalFragment, String stringToAddToAllLocants) throws StructureBuildingException {
+	Fragment copyAndRelabelFragment(Fragment originalFragment, String stringToAddToAllLocants) throws StructureBuildingException {
 		Fragment newFragment =new Fragment(originalFragment.getType(), originalFragment.getSubType());
 		HashMap<Integer, Integer> idMap = new HashMap<Integer, Integer>();//maps old ID to new ID
 		List<Atom> atomList =originalFragment.getAtomList();
@@ -406,13 +406,13 @@ class FragmentManager {
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
 		for (int i = 0; i < originalGroups.size(); i++) {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
-			Fragment newFragment = copyAndRelabel(originalFragment, stringToAddToAllLocants);
+			Fragment newFragment = copyAndRelabelFragment(originalFragment, stringToAddToAllLocants);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
 			state.xmlFragmentMap.put(clonedGroups.get(i), newFragment);
 			ArrayList<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
 			ArrayList<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {
-				newSuffixFragments.add(state.fragManager.copyAndRelabel(suffix));
+				newSuffixFragments.add(state.fragManager.copyFragment(suffix));
 			}
 			state.xmlSuffixMap.put(clonedGroups.get(i), newSuffixFragments);
 		}

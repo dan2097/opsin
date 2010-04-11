@@ -93,7 +93,7 @@ class FusedRingBuilder {
 		List<Fragment> parentFragments = new ArrayList<Fragment>();
 		parentFragments.add(parentRing);
 		for (int j = 1; j < numberOfParents; j++) {
-			Fragment copyOfParentRing =state.fragManager.copyAndRelabel(parentRing);
+			Fragment copyOfParentRing =state.fragManager.copyFragment(parentRing);
 			parentFragments.add(copyOfParentRing);
 			componentFragments.add(copyOfParentRing);
 		}
@@ -150,7 +150,7 @@ class FusedRingBuilder {
 			Fragment[] fusionComponents = new Fragment[multiplier];
 			for (int j = 0; j < multiplier; j++) {
 				if (j>0){
-					fusionComponents[j] = state.fragManager.copyAndRelabel(nextComponent,  StringTools.multiplyString("'", j));
+					fusionComponents[j] = state.fragManager.copyAndRelabelFragment(nextComponent,  StringTools.multiplyString("'", j));
 				}
 				else{
 					fusionComponents[j] = nextComponent;
@@ -228,7 +228,7 @@ class FusedRingBuilder {
 
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
 		state.fragManager.removeFragment(parentRing);
-		Fragment fusedRing =state.fragManager.copyAndRelabel(parentRing);//makes sure the IDs are continuous (not sure whether this is actually necessary anymore)
+		Fragment fusedRing =state.fragManager.copyFragment(parentRing);//makes sure the IDs are continuous (not sure whether this is actually necessary anymore)
 
 		StringBuilder fusedRingName = new StringBuilder();
 		for (Element element : nameComponents) {
@@ -285,7 +285,7 @@ class FusedRingBuilder {
 				List<Fragment> fusionComponents = new ArrayList<Fragment>();
 				for (int j = 0; j < multiplier; j++) {
 					if (j>0){
-						fusionComponents.add(state.fragManager.copyAndRelabel(nextComponent,  StringTools.multiplyString("'", j)));
+						fusionComponents.add(state.fragManager.copyAndRelabelFragment(nextComponent,  StringTools.multiplyString("'", j)));
 					}
 					else{
 						fusionComponents.add(nextComponent);
@@ -828,7 +828,7 @@ class FusedRingBuilder {
 		state.fragManager.incorporateFragment(benzoRing, parentRing);
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
 		state.fragManager.removeFragment(parentRing);
-		Fragment fusedRing =state.fragManager.copyAndRelabel(parentRing);//makes sure the IDs are continuous
+		Fragment fusedRing =state.fragManager.copyFragment(parentRing);//makes sure the IDs are continuous
 		state.xmlFragmentMap.put(parentEl, fusedRing);
 
 		/*

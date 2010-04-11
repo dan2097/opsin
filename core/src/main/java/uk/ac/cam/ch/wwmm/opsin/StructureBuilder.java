@@ -277,7 +277,7 @@ class StructureBuilder {
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue("value"));
 				for (int j = 1; j < multiplierValue; j++) {
-					functionalGroupFragments.add(state.fragManager.copyAndRelabel(monoValentFunctionGroup));
+					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 				}
 				possibleMultiplier.detach();
 			}
@@ -290,7 +290,7 @@ class StructureBuilder {
 			}
 			Fragment monoValentFunctionGroup = functionalGroupFragments.get(0);
 			for (int j = 1; j < numberOfOutIDs; j++) {
-				functionalGroupFragments.add(state.fragManager.copyAndRelabel(monoValentFunctionGroup));
+				functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 			}
 		}
 		else if (functionalGroupFragments.size() > numberOfOutIDs){
@@ -929,7 +929,7 @@ class StructureBuilder {
 					monoMultiplierDetected = true;
 				}
 				for (int j = 1; j < multiplierValue; j++) {
-					functionalGroupFragments.add(state.fragManager.copyAndRelabel(monoValentFunctionGroup));
+					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 				}
 				possibleMultiplier.detach();
 			}

@@ -27,18 +27,18 @@
 
   <!--This is the set of acids in which oyl denotes an acyl (yl is unparsable)-->
   <tokenList tagname="group" type="nonCarboxylicAcid" subType="oylForAcyl" symbol="Ö">
-    <token value="[As](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsin</token>
+    <token value="[As|5](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsin</token>
     <token value="[As](O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arson</token>
     <token value="[N+](O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes">azin</token>
     <token value="[N+](O)(O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">azon</token>
     <token value="P(O)(=O)=O" labels="none" valType="SMILES">phosphen</token><!--deprecated-->
-    <token value="P(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphin</token>
+    <token value="P|5(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphin</token>
     <token value="P(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphon</token>
-    <token value="[Sb](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">stibin</token>
+    <token value="[Sb|5](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">stibin</token>
     <token value="[Sb](O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibon</token>
   </tokenList>
 
- <!--This is the set of acids whose acyl groups are not names as derivatives of the acid-->
+ <!--This is the set of acids whose acyl groups are not named as derivatives of the acid-->
   <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="ƒ">
     <token value="B(O)(O)O" labels="none" valType="SMILES">bor</token>
     <token value="BO" labels="none" valType="SMILES">borin</token>
