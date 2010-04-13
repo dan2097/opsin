@@ -13,7 +13,7 @@
   <token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>
 
 <!--These forms imply valency 3-->
-  <token value="P" valType="SMILES" usableAsAJoiner="yes">phosphine</token>
+  <token value="P" valType="SMILES" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
   <token value="[As]" valType="SMILES" usableAsAJoiner="yes">arsine</token>
   <token value="[Sb]" valType="SMILES" usableAsAJoiner="yes">stibin</token>
   <token value="[Bi]" valType="SMILES" usableAsAJoiner="yes">bismuthin</token>

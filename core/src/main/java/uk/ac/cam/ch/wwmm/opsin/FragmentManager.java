@@ -124,7 +124,7 @@ class FragmentManager {
 	/** Incorporates a fragment, usually a suffix, into a parent fragment
 	 * This does:
 	 * Imports all of the atoms and bonds from another fragment into this one.
-	 * Also imports outIDs/inIDs and functionalIDs
+	 * Also imports outAtoms/inAtoms and functionalAtoms
 	 * Reassigns inter fragment bonds of the parent fragment as either intra fragment bonds
 	 * of the parent fragment or as inter fragment bonds of the parent fragment
 	 *
@@ -140,18 +140,9 @@ class FragmentManager {
 		for(Bond bond : childFrag.getBondSet()) {
 			parentFrag.addBond(bond);
 		}
-		for (OutID outID: childFrag.getOutIDs()) {
-			outID.frag =parentFrag;
-		}
-		for (InID inID: childFrag.getInIDs()) {
-			inID.frag =parentFrag;
-		}
-		for (FunctionalID functionalID: childFrag.getFunctionalIDs()) {
-			functionalID.frag =parentFrag;
-		}
-		parentFrag.addOutIDs(childFrag.getOutIDs());
-		parentFrag.addInIDs(childFrag.getInIDs());
-		parentFrag.addFunctionalIDs(childFrag.getFunctionalIDs());
+		parentFrag.addOutAtoms(childFrag.getOutAtoms());
+		parentFrag.addInAtoms(childFrag.getInAtoms());
+		parentFrag.addFunctionalAtoms(childFrag.getFunctionalAtoms());
 
 		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {//reassign inter fragment bonds of child
 			if (bond.getFromAtom().getFrag() ==parentFrag || bond.getToAtom().getFrag() ==parentFrag){
@@ -322,13 +313,13 @@ class FragmentManager {
 	 */
 	Fragment copyAndRelabelFragment(Fragment originalFragment, String stringToAddToAllLocants) throws StructureBuildingException {
 		Fragment newFragment =new Fragment(originalFragment.getType(), originalFragment.getSubType());
-		HashMap<Integer, Integer> idMap = new HashMap<Integer, Integer>();//maps old ID to new ID
+		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
 		newFragment.setIndicatedHydrogen(originalFragment.getIndicatedHydrogen());
-		List<OutID> outIDs =originalFragment.getOutIDs();
-		List<FunctionalID> functionalIDs =originalFragment.getFunctionalIDs();
-		List<InID> inIDs =originalFragment.getInIDs();
-		int defaultInId =originalFragment.getDefaultInID();
+		List<OutAtom> outAtoms =originalFragment.getOutAtoms();
+		List<FunctionalAtom> functionalAtoms =originalFragment.getFunctionalAtoms();
+		List<InAtom> inAtoms =originalFragment.getInAtoms();
+		Atom defaultInAtom =originalFragment.getDefaultInAtom();
 		for (Atom atom : atomList) {
 			int id = idManager.getNextID();
 			ArrayList<String> newLocants = new ArrayList<String>(atom.getLocants());
@@ -349,26 +340,26 @@ class FragmentManager {
 			}
 			newAtom.setExplicitHydrogens(atom.getExplicitHydrogens());
 			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());
-			//outValency is derived from the outIDs so is automatically cloned
+			//outValency is derived from the outAtoms so is automatically cloned
 			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
 			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
 			newAtom.setNotes(new HashMap<String, String>(atom.getNotes()));
 			newFragment.addAtom(newAtom);
-			idMap.put(atom.getID(),id);
+			oldToNewAtomMap.put(atom, newAtom);
 		}
-        for (OutID outID : outIDs) {
-            newFragment.addOutID(idMap.get(outID.id), outID.valency, outID.setExplicitly);
+        for (OutAtom outAtom : outAtoms) {
+            newFragment.addOutAtom(oldToNewAtomMap.get(outAtom.getAtom()), outAtom.getValency(), outAtom.isSetExplicitly());
         }
-		for (FunctionalID functionalID : functionalIDs) {
-			newFragment.addFunctionalID(idMap.get(functionalID.id));
+		for (FunctionalAtom functionalAtom : functionalAtoms) {
+			newFragment.addFunctionalAtom(oldToNewAtomMap.get(functionalAtom.getAtom()));
 		}
-        for (InID inID : inIDs) {
-            newFragment.addInID(idMap.get(inID.id), inID.valency);
+        for (InAtom inAtom : inAtoms) {
+            newFragment.addInAtom(oldToNewAtomMap.get(inAtom.getAtom()), inAtom.getValency());
         }
-		newFragment.setDefaultInID(idMap.get(defaultInId));
+		newFragment.setDefaultInAtom(oldToNewAtomMap.get(defaultInAtom));
 		Set<Bond> bondSet =originalFragment.getBondSet();
 		for (Bond bond : bondSet) {
-			Bond newBond = createBond(newFragment.getAtomByIDOrThrow(idMap.get(bond.getFrom())),newFragment.getAtomByIDOrThrow(idMap.get(bond.getTo())), bond.getOrder());
+			Bond newBond = createBond(oldToNewAtomMap.get(bond.getFromAtom()), oldToNewAtomMap.get(bond.getToAtom()), bond.getOrder());
 			newBond.setSmilesStereochemistry(bond.getSmilesStereochemistry());
 			if (bond.getBondStereoElement() != null){
 				newBond.setBondStereoElement(new Element(bond.getBondStereoElement()));

@@ -40,7 +40,7 @@ class StructureBuildingMethods {
 		}
 		recursivelyResolveLocantedFeatures(state, word);
 		recursivelyResolveUnLocantedFeatures(state, word);
-		//TODO check all things that can substitute have outIDs
+		//TODO check all things that can substitute have outAtoms
 		//TOOD think whether you can avoid the need to have a cansubstitute function by only using appropriate group
 		List<Element> subsBracketsAndRoots = XOMTools.getDescendantElementsWithTagNames(word, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
         for (Element subsBracketsAndRoot : subsBracketsAndRoots) {
@@ -125,7 +125,7 @@ class StructureBuildingMethods {
 		boolean foundSomethingToSubstitute = potentiallyCanSubstitute(subOrRoot);
 
 		if (foundSomethingToSubstitute){
-			performAdditiveOperations(state, subOrRoot);//e.g. ethylenediimino, oxyethylene (operations where two outIDs are used to produce the bond and no locant is required as groups)
+			performAdditiveOperations(state, subOrRoot);//e.g. ethylenediimino, oxyethylene (operations where two outAtoms are used to produce the bond and no locant is required as groups)
 			performLocantedSubstitutiveOperations(state, subOrRoot);//e.g. 2-methyltoluene
 		}
 	}
@@ -154,10 +154,10 @@ class StructureBuildingMethods {
 			return;
 		}
 		Fragment frag = state.xmlFragmentMap.get(group);
-		if (frag.getOutIDs().size() >=1 && subBracketOrRoot.getAttribute(LOCANT_ATR)!=null){
+		if (frag.getOutAtoms().size() >=1 && subBracketOrRoot.getAttribute(LOCANT_ATR)!=null){
 			String locantString = subBracketOrRoot.getAttributeValue(LOCANT_ATR);
-			if (frag.getOutIDs().size() >1){
-				checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(frag);
+			if (frag.getOutAtoms().size() >1){
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag);
 			}
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR)!=null){//e.g. 1,2-diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -169,8 +169,8 @@ class StructureBuildingMethods {
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 				Element groupToAttachTo = state.xmlFragmentMap.getElement(parentFrag);
-				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && parentFrag.getOutIDs().size()>0 && groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR)!=null
-						&& parentFrag.getAtomByLocantOrThrow(locantString).getOutValency()>0 && frag.getOutID(0).valency==1){
+				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && parentFrag.getOutAtoms().size()>0 && groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR)!=null
+						&& parentFrag.getAtomByLocantOrThrow(locantString).getOutValency()>0 && frag.getOutAtom(0).getValency()==1){
 					//horrible special case, probably not even technically allowed by the IUPAC rules e.g. C-methylcarbonimidoyl
 					joinFragmentsAdditively(state, frag, parentFrag);
 				}
@@ -193,20 +193,20 @@ class StructureBuildingMethods {
 			return;
 		}
 		Fragment frag = state.xmlFragmentMap.get(group);
-		if (frag.getOutIDs().size() >=1){
+		if (frag.getOutAtoms().size() >=1){
 			if (subBracketOrRoot.getAttribute(LOCANT_ATR)!=null){
-				throw new StructureBuildingException("Substituent has an unused outId and has a locant but locanted susbtitution should already been been performed!");
+				throw new StructureBuildingException("Substituent has an unused outAtom and has a locant but locanted susbtitution should already been been performed!");
 			}
-			if (frag.getOutIDs().size() > 1){
-				checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(frag);
+			if (frag.getOutAtoms().size() > 1){
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag);
 			}
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR)!=null){//e.g. diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
 			}
 			else{
-				Atom atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutID(0).valency);
+				Atom atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutAtom(0).getValency());
 				if (atomToJoinTo ==null){
-					throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutID(0).id + " to!");
+					throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 				joinFragmentsSubstitutively(state, frag, atomToJoinTo);
@@ -508,21 +508,23 @@ class StructureBuildingMethods {
         }
 		defaultId = idOfFirstAtomInFragment;
 
-		if (thisFrag.getOutIDs().size()>0){//assign any outIDs that have not been set to a specific atom to a specific atom
-			for (OutID outID : thisFrag.getOutIDs()) {
-				if (!outID.setExplicitly){
-					defaultId=outID.id;
-					Atom atomToAssociateOutIDWith=thisFrag.getAtomByIDOrThrow(defaultId);
-					while (!ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutIDWith, (atomToAssociateOutIDWith.hasSpareValency() ? 1 : 0) + atomToAssociateOutIDWith.getOutValency() + outID.valency)){
+		if (thisFrag.getOutAtoms().size()>0){//assign any outAtoms that have not been set to a specific atom to a specific atom
+			for (OutAtom outAtom : thisFrag.getOutAtoms()) {
+				if (!outAtom.isSetExplicitly()){
+					defaultId=outAtom.getAtom().getID();
+					Atom atomToAssociateOutAtomWith=thisFrag.getAtomByIDOrThrow(defaultId);
+					while (!ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutAtomWith, (atomToAssociateOutAtomWith.hasSpareValency() ? 1 : 0) + atomToAssociateOutAtomWith.getOutValency() + outAtom.getValency())){
 						defaultId++;
-						atomToAssociateOutIDWith=thisFrag.getAtomByIDOrThrow(defaultId);
-						if (atomToAssociateOutIDWith.getType().equals(SUFFIX_TYPE_VAL)){
+						atomToAssociateOutAtomWith=thisFrag.getAtomByID(defaultId);
+						if (atomToAssociateOutAtomWith == null){
+							throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
+						}
+						if (atomToAssociateOutAtomWith.getType().equals(SUFFIX_TYPE_VAL)){
 							throw new StructureBuildingException("No suitable atom found");
 						}
 					}
-					outID.id=defaultId;
-					outID.setExplicitly=true;
-					atomToAssociateOutIDWith.addOutValency(outID.valency);
+					outAtom.setAtom(atomToAssociateOutAtomWith);
+					outAtom.setSetExplicitly(true);
 					defaultId = idOfFirstAtomInFragment;
 				}
 			}
@@ -544,20 +546,20 @@ class StructureBuildingMethods {
 			return;
 		}
 		Fragment frag = state.xmlFragmentMap.get(group);
-		int outIDCount = frag.getOutIDs().size();
-		if (outIDCount >=1){
+		int outAtomCount = frag.getOutAtoms().size();
+		if (outAtomCount >=1){
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR) ==null){
 				Element nextSiblingEl = (Element) XOMTools.getNextSibling(subBracketOrRoot);
 				if (nextSiblingEl.getAttribute(MULTIPLIER_ATR)!=null &&
-						(outIDCount >= Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR)) || //probably multiplicative nomenclature, should be as many outIds as the multiplier
-						outIDCount==1 && frag.getOutID(0).valency==Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR))) &&
+						(outAtomCount >= Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR)) || //probably multiplicative nomenclature, should be as many outAtoms as the multiplier
+						outAtomCount==1 && frag.getOutAtom(0).getValency()==Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR))) &&
 						hasRootLikeOrMultiRadicalGroup(state, nextSiblingEl)){
-					if (outIDCount==1){//special case e.g. 4,4'-(benzylidene)dianiline
-						OutID out = frag.getOutID(0);
-						for (int i = 1; i < out.valency; i++) {
-							frag.addOutID(out.id, 1, out.setExplicitly);
+					if (outAtomCount==1){//special case e.g. 4,4'-(benzylidene)dianiline
+						OutAtom out = frag.getOutAtom(0);
+						for (int i = 1; i < out.getValency(); i++) {
+							frag.addOutAtom(out.getAtom(), 1, out.isSetExplicitly());
 						}
-						out.valency = 1;
+						out.setValency(1);
 						//special case where something like benzylidene is being used as if it meant benzdiyl for multiplicative nomenclature
 						//this is allowed in the IUPAC 79 recommendations but not recommended in the current recommendations
 					}
@@ -591,8 +593,8 @@ class StructureBuildingMethods {
 					if (siblingFragments.size()>0){
 						Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 						Element nextGroup = state.xmlFragmentMap.getElement(nextFrag);
-						if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextFrag!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutIDs().size()>1|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutIDs().size()>=1 )){
-							Atom toAtom = nextFrag.getAtomByIDOrThrow(nextFrag.getOutID(0).id);
+						if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextFrag!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutAtoms().size()>1|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutAtoms().size()>=1 )){
+							Atom toAtom = nextFrag.getOutAtom(0).getAtom();
 							if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 								group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 								joinFragmentsAdditively(state, frag, nextFrag);//e.g. aminocarbonyl or aminothio
@@ -602,8 +604,8 @@ class StructureBuildingMethods {
 							for (int i = 0; i< siblingFragments.size()-1; i++) {
 								Fragment lastFrag = siblingFragments.get(i);
 								Element lastGroup = state.xmlFragmentMap.getElement(lastFrag);
-								if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastFrag!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (lastFrag.getOutIDs().size()>1|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutIDs().size()>=1 )){
-									Atom toAtom = lastFrag.getAtomByIDOrThrow(lastFrag.getOutID(0).id);
+								if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastFrag!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (lastFrag.getOutAtoms().size()>1|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutAtoms().size()>=1 )){
+									Atom toAtom = lastFrag.getOutAtom(0).getAtom();
 									if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 										group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 										joinFragmentsAdditively(state, frag, lastFrag);//e.g. hydroxy(sulfanyl)phosphoryl
@@ -612,7 +614,7 @@ class StructureBuildingMethods {
 								}
 
 								//loop may continue if lastFrag was in fact completely unsubtitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-								if (lastFrag.getAtomByIdOrNextSuitableAtom(lastFrag.getDefaultInID(), frag.getOutID(outIDCount-1).valency, true)!=null){
+								if (lastFrag.getAtomByIdOrNextSuitableAtom(lastFrag.getDefaultInAtom().getID(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
 									break;
 								}
 							}
@@ -626,8 +628,8 @@ class StructureBuildingMethods {
 					int multiplier = Integer.parseInt(subBracketOrRoot.getAttributeValue(MULTIPLIER_ATR));
 					Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 					Element nextGroup = state.xmlFragmentMap.getElement(nextFrag);
-					if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextFrag!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutIDs().size()>=multiplier|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutIDs().size()>=multiplier +1 )){
-						Atom toAtom = nextFrag.getAtomByIDOrThrow(nextFrag.getOutID(0).id);
+					if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextFrag!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutAtoms().size()>=multiplier|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutAtoms().size()>=multiplier +1 )){
+						Atom toAtom = nextFrag.getOutAtom(0).getAtom();
 						if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 							group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 							multiplyOutAndAdditivelyBond(state, subBracketOrRoot, nextFrag);//e.g.dihydroxyphosphoryl
@@ -637,8 +639,8 @@ class StructureBuildingMethods {
 						for (int i = 0; i< siblingFragments.size()-1; i++) {
 							Fragment lastFrag = siblingFragments.get(i);
 							Element lastGroup = state.xmlFragmentMap.getElement(lastFrag);
-							if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastFrag!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  &&  (lastFrag.getOutIDs().size()>=multiplier|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutIDs().size()>=multiplier +1 )){
-								Atom toAtom = lastFrag.getAtomByIDOrThrow(lastFrag.getOutID(0).id);
+							if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastFrag!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  &&  (lastFrag.getOutAtoms().size()>=multiplier|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutAtoms().size()>=multiplier +1 )){
+								Atom toAtom = lastFrag.getOutAtom(0).getAtom();
 								if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 									group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 									multiplyOutAndAdditivelyBond(state, subBracketOrRoot, lastFrag);//e.g. dihydroxyphosphoryloxy
@@ -647,7 +649,7 @@ class StructureBuildingMethods {
 							}
 
 							//loop may continue if lastFrag was in fact completely unsubtitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-							if (lastFrag.getAtomByIdOrNextSuitableAtom(lastFrag.getDefaultInID(), frag.getOutID(outIDCount-1).valency, true)!=null){
+							if (lastFrag.getAtomByIdOrNextSuitableAtom(lastFrag.getDefaultInAtom().getID(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
 								break;
 							}
 						}
@@ -658,7 +660,7 @@ class StructureBuildingMethods {
 	}
 
 	/**
-	 * Searches the input for something that either is a multiRadical or has no outIDs i.e. not dimethyl
+	 * Searches the input for something that either is a multiRadical or has no outAtoms i.e. not dimethyl
 	 * @param state
 	 * @param subBracketOrRoot
 	 * @return
@@ -670,13 +672,13 @@ class StructureBuildingMethods {
 		}
 		for (Element group : groups) {
 			Fragment frag =state.xmlFragmentMap.get(group);
-			int outIdCount =frag.getOutIDs().size();
+			int outAtomCount =frag.getOutAtoms().size();
 			if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null){
-				if (outIdCount >=1 ){
+				if (outAtomCount >=1 ){
 					return true;//a multi radical
 				}
 			}
-			else if (outIdCount ==0 && group.getAttribute(RESOLVED_ATR)==null){
+			else if (outAtomCount ==0 && group.getAttribute(RESOLVED_ATR)==null){
 				return true;// a terminus
 			}
 		}
@@ -723,8 +725,8 @@ class StructureBuildingMethods {
 				group = currentElement.getFirstChildElement(GROUP_EL);
 			}
 			Fragment frag = state.xmlFragmentMap.get(group);
-			if (frag.getOutIDs().size() !=1 ){
-				throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have one OutId in this case but had: "+ frag.getOutIDs().size());
+			if (frag.getOutAtoms().size() !=1 ){
+				throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have one OutAtom in this case but had: "+ frag.getOutAtoms().size());
 			}
 			joinFragmentsAdditively(state, frag, fragToAdditivelyBondTo);
 		}
@@ -750,8 +752,8 @@ class StructureBuildingMethods {
 
 	private static void performMultiplicativeOperations(BuildState state, BuildResults multiRadicalBR, Element multipliedParent) throws StructureBuildingException {
 		int multiplier = Integer.parseInt(multipliedParent.getAttributeValue(MULTIPLIER_ATR));
-		if (multiplier > multiRadicalBR.getOutIDCount()){
-			throw new StructureBuildingException("Multiplication bond formation failure: number of outIDs disagree with multiplier(multiplier: " + multiplier + ", outIDcount: " + multiRadicalBR.getOutIDCount()+ ") , this is an OPSIN bug");
+		if (multiplier > multiRadicalBR.getOutAtomCount()){
+			throw new StructureBuildingException("Multiplication bond formation failure: number of outAtoms disagree with multiplier(multiplier: " + multiplier + ", outAtom count: " + multiRadicalBR.getOutAtomCount()+ ") , this is an OPSIN bug");
 		}
 		if (state.debug){System.out.println(multiplier +" multiplicative bonds to be formed");}
 		multipliedParent.removeAttribute(multipliedParent.getAttribute(MULTIPLIER_ATR));
@@ -800,7 +802,7 @@ class StructureBuildingMethods {
 					}
 					Element rightMostGroup;
 					if (currentElement.getLocalName().equals(BRACKET_EL)){
-						rightMostGroup = findRightMostGroupInBracket(currentElement);//this is the only one that can accept inIDs
+						rightMostGroup = findRightMostGroupInBracket(currentElement);//this is the only one that can accept inAtoms
 					}
 					else{
 						rightMostGroup = currentElement.getFirstChildElement(GROUP_EL);
@@ -809,47 +811,47 @@ class StructureBuildingMethods {
 				}
 				else{
 					group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
-					boolean inIdAdded =false;
+					boolean inAtomAdded =false;
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals("default")){//note that if one entry in inLocantArray is default then they all are "default"
-							frag.addInID(frag.getAtomByIdOrNextSuitableAtom(frag.getDefaultInID(), 1, true).getID(), 1);
-							inIdAdded=true;
+							frag.addInAtom(frag.getAtomByIdOrNextSuitableAtom(frag.getDefaultInAtom().getID(), 1, true), 1);
+							inAtomAdded=true;
 							inLocants.remove(j);
 							break;
 						}
 						else{
 							Atom inAtom = frag.getAtomByLocant(locant);
 							if (inAtom!=null){
-								frag.addInID(inAtom.getID(), 1);
-								inIdAdded=true;
+								frag.addInAtom(inAtom, 1);
+								inAtomAdded=true;
 								inLocants.remove(j);
 								break;
 							}
 						}
 					}
-					if (!inIdAdded){
-						throw new StructureBuildingException("Locants for inIDs on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
+					if (!inAtomAdded){
+						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 					}
 				}
 			}
-			if (frag.getInIDs().size()!=1 && frag.getOutIDs().size() ==0 ){
+			if (frag.getInAtoms().size()!=1 && frag.getOutAtoms().size() ==0 ){
 				throw new StructureBuildingException("Multiplication bond formation failure: OPSIN bug, input to joinFragmentsMultiplicatively was unexpected");
 			}
 
-			Element multiRadicalGroup =state.xmlFragmentMap.getElement(multiRadicalBR.getOutID(i).frag);
+			Element multiRadicalGroup =state.xmlFragmentMap.getElement(multiRadicalBR.getOutAtom(i).getAtom().getFrag());
 			if (multiRadicalGroup.getAttribute(RESOLVED_ATR)==null){
 				resolveUnLocantedFeatures(state, (Element) multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
 				multiRadicalGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 			}
-			joinFragmentsAdditively(state, multiRadicalBR.getOutID(i).frag, frag);
+			joinFragmentsAdditively(state, multiRadicalBR.getOutAtom(i).getAtom().getFrag(), frag);
 			if (currentElement.getLocalName().equals(BRACKET_EL)){
-				recursivelyResolveUnLocantedFeatures(state, currentElement);//there may be outIDs that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
+				recursivelyResolveUnLocantedFeatures(state, currentElement);//there may be outAtoms that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
 			}
 
 			if (inLocants ==null){
 				//currentElement is not a root element. Need to build up a new BuildResults so as to call performMultiplicativeOperations again
-				//at this stage an outID has been removed from the fragment within currentElement through an additive bond
+				//at this stage an outAtom has been removed from the fragment within currentElement through an additive bond
 				newBr.mergeBuildResults(new BuildResults(state, currentElement));
 			}
 		}
@@ -874,7 +876,7 @@ class StructureBuildingMethods {
 			}
 			else{
 				if (siblings.get(0).getAttribute(MULTIPLIER_ATR)==null){
-					throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
+					throw new StructureBuildingException("Multiplier not found where multiplier was expected for successful multiplicative nomenclature");
 				}
 				performMultiplicativeOperations(state, newBr, siblings.get(0));
 			}
@@ -928,7 +930,7 @@ class StructureBuildingMethods {
 				}
 				Fragment possibleFrag = state.xmlFragmentMap.get(group);
 				if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null &&
-						(possibleFrag.getOutIDs().size() >=2 || (possibleFrag.getOutIDs().size() >=1 && group.getAttribute(RESOLVED_ATR)!=null ))){
+						(possibleFrag.getOutAtoms().size() >=2 || (possibleFrag.getOutAtoms().size() >=1 && group.getAttribute(RESOLVED_ATR)!=null ))){
 					return possibleFrag;
 				}
 			}
@@ -952,7 +954,7 @@ class StructureBuildingMethods {
 		for (Element group : groups) {
 			Fragment possibleFrag = state.xmlFragmentMap.get(group);
 			if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null &&
-					(possibleFrag.getOutIDs().size() >=2 || (possibleFrag.getOutIDs().size() >=1 && group.getAttribute(RESOLVED_ATR)!=null ))){
+					(possibleFrag.getOutAtoms().size() >=2 || (possibleFrag.getOutAtoms().size() >=1 && group.getAttribute(RESOLVED_ATR)!=null ))){
 				return group;
 			}
 		}
@@ -960,54 +962,54 @@ class StructureBuildingMethods {
 	}
 
 	private static void joinFragmentsAdditively(BuildState state, Fragment fragToBeJoined, Fragment parentFrag) throws StructureBuildingException {
-		int outIdCount = fragToBeJoined.getOutIDs().size();
-		if (outIdCount ==0){
-			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutId but had none");
+		int outAtomCount = fragToBeJoined.getOutAtoms().size();
+		if (outAtomCount ==0){
+			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
 		}
 
 		Atom to;
 		int bondOrder;
-		if (parentFrag.getInIDs().size()==1){//special case for the parent of multiplicative nomenclature. This is really substitutive nomenclature
-			InID in = parentFrag.getInID(0);
-			to = parentFrag.getAtomByIDOrThrow(in.id);
-			parentFrag.removeInID(in);
-			bondOrder = fragToBeJoined.getOutID(outIdCount-1).valency;
+		if (parentFrag.getInAtoms().size()==1){//special case for the parent of multiplicative nomenclature. This is really substitutive nomenclature
+			InAtom in = parentFrag.getInAtom(0);
+			to = in.getAtom();
+			parentFrag.removeInAtom(in);
+			bondOrder = fragToBeJoined.getOutAtom(outAtomCount-1).getValency();
 		}
 		else{
-			int outIdCountOnParent = parentFrag.getOutIDs().size();
-			if (outIdCountOnParent ==0){
-				throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutId but had none");
+			int outAtomCountOnParent = parentFrag.getOutAtoms().size();
+			if (outAtomCountOnParent ==0){
+				throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
 			}
-			OutID in = parentFrag.getOutID(0);
-			to = parentFrag.getAtomByIDOrThrow(in.id);
-			bondOrder = in.valency;
-			if (!in.setExplicitly){//not set explicitly so may be an inappropriate atom
-				to = to.getFrag().getAtomByIdOrNextSuitableAtomOrThrow(to.getID(), bondOrder);
+			OutAtom in = parentFrag.getOutAtom(0);
+			to = in.getAtom();
+			bondOrder = in.getValency();
+			if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+				to = to.getFrag().getAtomOrNextSuitableAtomOrThrow(to, bondOrder);
 			}
-			parentFrag.removeOutID(in);
+			parentFrag.removeOutAtom(in);
 		}
 
-		OutID out =null;
+		OutAtom out =null;
 
-		for (int i =outIdCount -1; i>=0; i--) {
-			if (fragToBeJoined.getOutID(i).valency == bondOrder){
-				out = fragToBeJoined.getOutID(i);
+		for (int i =outAtomCount -1; i>=0; i--) {
+			if (fragToBeJoined.getOutAtom(i).getValency() == bondOrder){
+				out = fragToBeJoined.getOutAtom(i);
 				break;
 			}
 		}
 
 		if (out ==null){
-			if (outIdCount >=bondOrder){//handles cases like nitrilo needing to be -N= (remove later outIds first as per usual)
+			if (outAtomCount >=bondOrder){//handles cases like nitrilo needing to be -N= (remove later outAtoms first as per usual)
 				int valency =0;
-				for (int i =outIdCount -1; i >= 0; i--) {
-					OutID nextOutID = fragToBeJoined.getOutID(i);
-					valency += nextOutID.valency;
+				for (int i =outAtomCount -1; i >= 0; i--) {
+					OutAtom nextOutAtom = fragToBeJoined.getOutAtom(i);
+					valency += nextOutAtom.getValency();
 					if (valency==bondOrder){
-						nextOutID.valency=valency;
-						out = nextOutID;
+						nextOutAtom.setValency(valency);
+						out = nextOutAtom;
 						break;
 					}
-					fragToBeJoined.removeOutID(nextOutID);
+					fragToBeJoined.removeOutAtom(nextOutAtom);
 				}
 				if (out==null){
 					throw new StructureBuildingException("Additive bond formation failure: bond order disagreement");
@@ -1018,36 +1020,36 @@ class StructureBuildingMethods {
 			}
 		}
 
-		Atom from = fragToBeJoined.getAtomByIDOrThrow(out.id);
-		if (!out.setExplicitly){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
+		Atom from = out.getAtom();
+		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
 		}
-		fragToBeJoined.removeOutID(out);
+		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, to, bondOrder);
 		if (state.debug){System.out.println("Additively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + to.getID() + " (" +state.xmlFragmentMap.getElement(to.getFrag()).getValue()+")" );}
 	}
 
 	private static void joinFragmentsSubstitutively(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
-		int outIdCount = fragToBeJoined.getOutIDs().size();
-		if (outIdCount >1){
-			throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutId but had: "+ outIdCount);
+		int outAtomCount = fragToBeJoined.getOutAtoms().size();
+		if (outAtomCount >1){
+			throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutAtom but had: "+ outAtomCount);
 		}
-		if (outIdCount ==0 ){
-			throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutId but had none");
+		if (outAtomCount ==0 ){
+			throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutAtom but had none");
 		}
 		if (state.xmlFragmentMap.getElement(fragToBeJoined).getAttribute(IMINOLIKE_ATR)!=null){//special case for methylene/imino
-			if (fragToBeJoined.getOutIDs().size()==1 && fragToBeJoined.getOutID(0).valency==1 ){
-				fragToBeJoined.getOutID(0).valency=2;
+			if (fragToBeJoined.getOutAtoms().size()==1 && fragToBeJoined.getOutAtom(0).getValency()==1 ){
+				fragToBeJoined.getOutAtom(0).setValency(2);
 			}
 		}
-		OutID out = fragToBeJoined.getOutID(0);
-		Atom from = fragToBeJoined.getAtomByIDOrThrow(out.id);
-		int bondOrder = out.valency;
-		if (!out.setExplicitly){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomByIdOrNextSuitableAtomOrThrow(from.getID(), bondOrder);
+		OutAtom out = fragToBeJoined.getOutAtom(0);
+		Atom from = out.getAtom();
+		int bondOrder = out.getValency();
+		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
 		}
-		fragToBeJoined.removeOutID(out);
+		fragToBeJoined.removeOutAtom(out);
 		if (from.getCharge()==-1 && from.getElement().equals("O") && state.xmlFragmentMap.getElement(fragToBeJoined).getValue().equals("oxido")){
 			//nasty special case to cope with oxido acting like oxide e.g. as O= or even [O-][N+]
 			//This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
@@ -1072,7 +1074,7 @@ class StructureBuildingMethods {
 		Atom to =null;
 		ArrayList<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);
 		for (Fragment fragment : possibleParents) {
-			to = fragment.getAtomByIdOrNextSuitableAtom(fragment.getDefaultInID(), bondOrder, true);
+			to = fragment.getAtomByIdOrNextSuitableAtom(fragment.getDefaultInAtom().getID(), bondOrder, true);
 			if (to !=null){
 				break;
 			}
@@ -1188,48 +1190,43 @@ class StructureBuildingMethods {
 	}
 
 	/**
-	 * In cases such as methylenecyclohexane two outIDs are combined to form a single outID with valency
-	 * equal to sum of the valency of the other outIDs.
-	 * This is only allowed on substituents where all the outIDs are on the same atom
+	 * In cases such as methylenecyclohexane two outAtoms are combined to form a single outAtom with valency
+	 * equal to sum of the valency of the other outAtoms.
+	 * This is only allowed on substituents where all the outAtoms are on the same atom
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
-	private static void checkAndApplySpecialCaseWhereOutIdsCanBeCombinedOrThrow(Fragment frag) throws StructureBuildingException {
-		int outIdCount = frag.getOutIDs().size();
-		if (outIdCount<=1){
+	private static void checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(Fragment frag) throws StructureBuildingException {
+		int outAtomCount = frag.getOutAtoms().size();
+		if (outAtomCount<=1){
 			return;
 		}
-		//special case- all outIDs on same atom e.g. methylenecyclohexane
-		int idOfFirstOutId = frag.getOutID(0).id;
-		int valencyOfOutId =0;
-		for (int i = outIdCount -1; i >=0 ; i--) {//remove all outIDs and add one with the total valency of all those that have been removed
-			OutID out = frag.getOutID(i);
-			if (out.id !=idOfFirstOutId){
-				throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutId but had: "+ outIdCount);
+		//special case- all outAtoms on same atom e.g. methylenecyclohexane
+		Atom firstOutAtom = frag.getOutAtom(0).getAtom();
+		int valencyOfOutAtom =0;
+		for (int i = outAtomCount -1; i >=0 ; i--) {//remove all outAtoms and add one with the total valency of all those that have been removed
+			OutAtom out = frag.getOutAtom(i);
+			if (out.getAtom() !=firstOutAtom){
+				throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutAtom but had: "+ outAtomCount);
 			}
-			valencyOfOutId +=out.valency;
-			frag.removeOutID(i);
+			valencyOfOutAtom +=out.getValency();
+			frag.removeOutAtom(i);
 		}
-		frag.addOutID(frag.getIdOfFirstAtom(), valencyOfOutId, true);
+		frag.addOutAtom(frag.getFirstAtom(), valencyOfOutAtom, true);
 	}
 
 	/**
 	 * Calculates the number of substitutable hydrogen by taking into account:
-	 * Specified valency if applicable, outIDs and the lowest valency state that will satisfy these
-	 * e.g. thio has 2 outIds and no bonds hence -->2 outgoing, lowest stable valency = 2 hence no substitutable hydrogen
-	 * e.g. phosphonyl has 2 outIds and one double bond -->4 outgoing, lowest stable valency =5 hence 1 substitutable hydrogen
+	 * Specified valency if applicable, outAtoms and the lowest valency state that will satisfy these
+	 * e.g. thio has 2 outAtoms and no bonds hence -->2 outgoing, lowest stable valency = 2 hence no substitutable hydrogen
+	 * e.g. phosphonyl has 2 outAtoms and one double bond -->4 outgoing, lowest stable valency =5 hence 1 substitutable hydrogen
 	 * @param atom
 	 * @return
 	 */
-	private static int calculateSubstitutableHydrogenAtoms(Atom atom) {
+	static int calculateSubstitutableHydrogenAtoms(Atom atom) {
 		Integer valency = atom.determineValency(true);	
 		int currentValency =atom.getIncomingValency() + atom.getOutValency();
-		if (valency ==null){
-			return 0;
-		}
-		else{
-			return valency-currentValency;
-		}
+		return valency-currentValency;
 	}
 
 	/**

@@ -126,7 +126,7 @@ class StructureBuilder {
 			rAtom.setElement("R");
 		}
 
-		if (uniFrag.getOutIDs().size()>0 || uniFrag.getInIDs().size()>0){
+		if (uniFrag.getOutAtoms().size()>0 || uniFrag.getInAtoms().size()>0){
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		return uniFrag;
@@ -139,14 +139,14 @@ class StructureBuilder {
 		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			resolveWordOrBracket(state, currentWord);
 			BuildResults substituentBr = new BuildResults(state, currentWord);
-			if (substituentBr.getOutIDCount() ==1){//TODO add support for locanted terepthaloyl
+			if (substituentBr.getOutAtomCount() ==1){//TODO add support for locanted terepthaloyl
 				String locantForSubstituent = currentWord.getAttributeValue("locant");
 				if (locantForSubstituent!=null){
-					substituentBr.getFirstOutID().locant=locantForSubstituent;//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
+					substituentBr.getFirstOutAtom().setLocant(locantForSubstituent);//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
 				}
 			}
-			else if (substituentBr.getOutIDCount() ==0){
-				throw new StructureBuildingException("Substituent was expected to have at least one outID");
+			else if (substituentBr.getOutAtomCount() ==0){
+				throw new StructureBuildingException("Substituent was expected to have at least one outAtom");
 			}
 			substituentsBr.mergeBuildResults(substituentBr);
 			currentWord=words.get(++wordIndice);
@@ -168,22 +168,22 @@ class StructureBuilder {
 				throw new StructureBuildingException("Non full word found where only full words were expected");
 			}
 		}
-		int esterIdCount = ateGroups.getFunctionalIDCount();
-		int outIDCount =substituentsBr.getOutIDCount();
-		if (outIDCount > esterIdCount){
-			throw new StructureBuildingException("There are more radicals in the substituents(" + outIDCount +") than there are places to form esters("+esterIdCount+")");
+		int esterIdCount = ateGroups.getFunctionalAtomCount();
+		int outAtomCount =substituentsBr.getOutAtomCount();
+		if (outAtomCount > esterIdCount){
+			throw new StructureBuildingException("There are more radicals in the substituents(" + outAtomCount +") than there are places to form esters("+esterIdCount+")");
 		}
-		for(int i=0; i< outIDCount; i++) {
+		for(int i=0; i< outAtomCount; i++) {
 			Atom ateAtom;
-			if (substituentsBr.getFirstOutID().locant!=null){
-				ateAtom =determineFunctionalAtomToUse(substituentsBr.getFirstOutID().locant, ateGroups);
+			if (substituentsBr.getFirstOutAtom().getLocant()!=null){
+				ateAtom =determineFunctionalAtomToUse(substituentsBr.getFirstOutAtom().getLocant(), ateGroups);
 			}
 			else{
 				ateAtom =ateGroups.getFunctionalAtom(0);
-				ateGroups.removeFunctionalID(0);
+				ateGroups.removeFunctionalAtom(0);
 			}
 			state.fragManager.createBond(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
-			substituentsBr.removeOutID(0);
+			substituentsBr.removeOutAtom(0);
 			ateAtom.setCharge(0);
 		}
 	}
@@ -202,20 +202,20 @@ class StructureBuilder {
 		}
 		resolveWordOrBracket(state, words.get(wordIndice));
 		BuildResults substituent1 =new BuildResults(state, words.get(wordIndice));
-		if (substituent1.getOutIDCount()!=1){
-			throw new StructureBuildingException("Expected one outID. Found " + substituent1.getOutIDCount() );
+		if (substituent1.getOutAtomCount()!=1){
+			throw new StructureBuildingException("Expected one outAtom. Found " + substituent1.getOutAtomCount() );
 		}
-		if (substituent1.getOutID(0).valency !=1){
-			throw new StructureBuildingException("OutID has unexpected valency. Expected 1. Actual: " + substituent1.getOutID(0).valency);
+		if (substituent1.getOutAtom(0).getValency() !=1){
+			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + substituent1.getOutAtom(0).getValency());
 		}
 		wordIndice++;
 		resolveWordOrBracket(state, words.get(wordIndice));
 		BuildResults substituent2 =new BuildResults(state, words.get(wordIndice));
-		if (substituent2.getOutIDCount()!=1){
-			throw new StructureBuildingException("Expected one outID. Found " + substituent2.getOutIDCount() );
+		if (substituent2.getOutAtomCount()!=1){
+			throw new StructureBuildingException("Expected one outAtom. Found " + substituent2.getOutAtomCount() );
 		}
-		if (substituent2.getOutID(0).valency !=1){
-			throw new StructureBuildingException("OutID has unexpected valency. Expected 1. Actual: " + substituent2.getOutID(0).valency);
+		if (substituent2.getOutAtom(0).getValency() !=1){
+			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + substituent2.getOutAtom(0).getValency());
 		}
 		wordIndice++;
 		if (words.get(wordIndice) ==null || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {
@@ -229,31 +229,31 @@ class StructureBuilder {
 		Fragment diValentGroup =state.fragManager.buildSMILES(smilesOfGroup, "simpleGroup", "functionalGroup", "none");
 
 		Atom outAtom =substituent1.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-		substituent1.removeOutID(0);
-		if (diValentGroup.getOutIDs().size()==1){//c.f. peroxide where it is a linker
-			state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getOutID(0).id), 1);
-			diValentGroup.removeOutID(0);
+		substituent1.removeOutAtom(0);
+		if (diValentGroup.getOutAtoms().size()==1){//c.f. peroxide where it is a linker
+			state.fragManager.createBond(outAtom, diValentGroup.getOutAtom(0).getAtom(), 1);
+			diValentGroup.removeOutAtom(0);
 		}
 		else{
 			state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
 		}
 		outAtom = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-		substituent2.removeOutID(0);
+		substituent2.removeOutAtom(0);
 		state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
 	}
 
 	private void buildMonovalentFunctionalGroup(BuildState state, List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(words.get(0), "group");
-		for (Element group : groups) {//replaces outIDs with valency greater than 1 with multiple outIDs; e.g. ylidene -->diyl
+		for (Element group : groups) {//replaces outAtoms with valency greater than 1 with multiple outAtoms; e.g. ylidene -->diyl
 			Fragment frag = state.xmlFragmentMap.get(group);
-			for (int i = frag.getOutIDs().size()-1; i>=0; i--) {
-				OutID outID =frag.getOutID(i);
-				if (outID.valency>1){
-					for (int j = 2; j <= outID.valency; j++) {
-						frag.addOutID(outID.id, 1, outID.setExplicitly);
+			for (int i = frag.getOutAtoms().size()-1; i>=0; i--) {
+				OutAtom outAtom =frag.getOutAtom(i);
+				if (outAtom.getValency()>1){
+					for (int j = 2; j <= outAtom.getValency(); j++) {
+						frag.addOutAtom(outAtom.getAtom(), 1, outAtom.isSetExplicitly());
 					}
-					outID.valency=1;
+					outAtom.setValency(1);
 				}
 			}
 		}
@@ -269,7 +269,7 @@ class StructureBuilder {
 			
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue("value"), "simpleGroup", "functionalGroup", "none");
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals("monoValentStandaloneGroup")){
-				Atom ideAtom = monoValentFunctionGroup.getAtomByIDOrThrow(monoValentFunctionGroup.getDefaultInID());
+				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
@@ -283,25 +283,25 @@ class StructureBuilder {
 			}
 		}
 		
-		int numberOfOutIDs =substituentBR.getOutIDCount();
-		if (numberOfOutIDs > functionalGroupFragments.size()){//something like isophthaloyl chloride (more precisely written isophthaloyl dichloride)
+		int outAtomCount =substituentBR.getOutAtomCount();
+		if (outAtomCount > functionalGroupFragments.size()){//something like isophthaloyl chloride (more precisely written isophthaloyl dichloride)
 			if (functionalGroupFragments.size()!=1){
-				throw new StructureBuildingException("Incorrect number of functional groups found to balance outIDs");
+				throw new StructureBuildingException("Incorrect number of functional groups found to balance outAtoms");
 			}
 			Fragment monoValentFunctionGroup = functionalGroupFragments.get(0);
-			for (int j = 1; j < numberOfOutIDs; j++) {
+			for (int j = 1; j < outAtomCount; j++) {
 				functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 			}
 		}
-		else if (functionalGroupFragments.size() > numberOfOutIDs){
+		else if (functionalGroupFragments.size() > outAtomCount){
 			throw new StructureBuildingException("There are more function groups to attach than there are positions to attach them to!");
 		}
-		for (int i = 0; i < numberOfOutIDs; i++) {
+		for (int i = 0; i < outAtomCount; i++) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
-			Atom ideAtom = ideFrag.getAtomByIDOrThrow(ideFrag.getDefaultInID());
+			Atom ideAtom = ideFrag.getDefaultInAtom();
 			Atom subAtom=substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			state.fragManager.createBond(ideAtom, subAtom, 1);
-			substituentBR.removeOutID(0);
+			substituentBR.removeOutAtom(0);
 		}
 	}
 
@@ -312,19 +312,19 @@ class StructureBuilder {
 		resolveWordOrBracket(state, words.get(0));//the group
 		BuildResults acidBr = new BuildResults(state, words.get(0));
 
-		if (acidBr.getFunctionalIDCount()==0){
-			throw new StructureBuildingException("No functionalIds detected!");
+		if (acidBr.getFunctionalAtomCount()==0){
+			throw new StructureBuildingException("No functionalAtoms detected!");
 		}
 
 		int i=1;
 		Element currentWord = words.get(i);
 		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
-			if (acidBr.getFunctionalIDCount()==0){
-				throw new StructureBuildingException("Insufficient functionalIDs on acid");
+			if (acidBr.getFunctionalAtomCount()==0){
+				throw new StructureBuildingException("Insufficient functionalAtoms on acid");
 			}
 			resolveWordOrBracket(state, currentWord);
 			BuildResults substituentBr = new BuildResults(state, currentWord);
-			if (substituentBr.getOutIDCount() ==1){
+			if (substituentBr.getOutAtomCount() ==1){
 				String locantForSubstituent = currentWord.getAttributeValue("locant");
 				Atom functionalAtom;
 				if (locantForSubstituent!=null){
@@ -332,16 +332,16 @@ class StructureBuilder {
 				}
 				else{
 					functionalAtom =acidBr.getFunctionalAtom(0);
-					acidBr.removeFunctionalID(0);
+					acidBr.removeFunctionalAtom(0);
 				}
-				if (substituentBr.getOutID(0).valency!=1){
+				if (substituentBr.getOutAtom(0).getValency()!=1){
 					throw new StructureBuildingException("Substituent was expected to have only have an outgoing valency of 1");
 				}
 				state.fragManager.createBond(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
-				substituentBr.removeOutID(0);
+				substituentBr.removeOutAtom(0);
 			}
 			else {
-				throw new StructureBuildingException("Substituent was expected to have one outID");
+				throw new StructureBuildingException("Substituent was expected to have one outAtom");
 			}
 			currentWord=words.get(++i);
 		}
@@ -355,13 +355,13 @@ class StructureBuilder {
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
 		BuildResults acidBr = new BuildResults(state, words.get(0));
-		if (acidBr.getFunctionalIDCount()==0){
-			throw new StructureBuildingException("No functionalIds detected!");
+		if (acidBr.getFunctionalAtomCount()==0){
+			throw new StructureBuildingException("No functionalAtoms detected!");
 		}
 		int wordIndice =1;
 		
 		if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//"amide"
-			for (int i =0; i < acidBr.getFunctionalIDCount(); i++) {
+			for (int i =0; i < acidBr.getFunctionalAtomCount(); i++) {
 				Atom functionalAtom = acidBr.getFunctionalAtom(i);
 				if (!functionalAtom.getElement().equals("O")){
 					throw new StructureBuildingException("Expected oxygen functional atom found:" + functionalAtom.getElement());
@@ -378,7 +378,7 @@ class StructureBuilder {
 					throw new StructureBuildingException("Cannot find root element");
 				}
 				Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement(GROUP_EL));
-				if (acidBr.getFunctionalIDCount()==0){
+				if (acidBr.getFunctionalAtomCount()==0){
 					throw new StructureBuildingException("Cannot find oxygen to replace wtih nitrogen for amide formation!");
 				}
 				Atom functionalAtom = acidBr.getFunctionalAtom(0);
@@ -395,7 +395,7 @@ class StructureBuilder {
 				if (amideNitrogen ==null){
 					throw new StructureBuildingException("Cannot find nitrogen atom in amide!");
 				}
-				acidBr.removeFunctionalID(0);
+				acidBr.removeFunctionalAtom(0);
 				amideNitrogen.setCharge(0);
 				state.fragManager.replaceTerminalAtomWithFragment(functionalAtom, amideNitrogen);
 			}
@@ -410,19 +410,19 @@ class StructureBuilder {
 		int wordIndice  = 0;
 		resolveWordOrBracket(state, words.get(wordIndice));//the group
 		BuildResults theDiRadical = new BuildResults(state, words.get(wordIndice));
-		if (theDiRadical.getOutIDCount()!=2){
-			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outIDs. Found: " + theDiRadical.getOutIDCount() );
+		if (theDiRadical.getOutAtomCount()!=2){
+			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outAtoms. Found: " + theDiRadical.getOutAtomCount() );
 		}
 		if (wordIndice +1 >= words.size() || !words.get(wordIndice+1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("Glycol functionalTerm word expected");
 		}
-		for (int i = theDiRadical.getOutIDCount() -1; i >=0 ; i--) {
+		for (int i = theDiRadical.getOutAtomCount() -1; i >=0 ; i--) {
 			Atom outAtom =theDiRadical.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			Fragment glycol =state.fragManager.buildSMILES("O", "glycol", "none");
-			if (theDiRadical.getOutID(0).valency !=1){
-				throw new StructureBuildingException("OutID has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutID(0).valency);
+			if (theDiRadical.getOutAtom(0).getValency() !=1){
+				throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
 			}
-			theDiRadical.removeOutID(0);
+			theDiRadical.removeOutAtom(0);
 			state.fragManager.createBond(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
 		}
 	}
@@ -753,8 +753,8 @@ class StructureBuilder {
 		}
 		resolveWordOrBracket(state, words.get(0));
 		BuildResults br1 = new BuildResults(state, words.get(0));
-		if (br1.getFunctionalIDCount() ==0){
-			throw new StructureBuildingException("Cannot find functionalID to form anhydride");
+		if (br1.getFunctionalAtomCount() ==0){
+			throw new StructureBuildingException("Cannot find functionalAtom to form anhydride");
 		}
 		if (words.size()==3){//asymmetric anhydride
 			if (anhydrideLocant!=null){
@@ -762,13 +762,13 @@ class StructureBuilder {
 			}
 			resolveWordOrBracket(state, words.get(1));
 			BuildResults br2 = new BuildResults(state, words.get(1));
-			if (br2.getFunctionalIDCount() ==0){
-				throw new StructureBuildingException("Cannot find functionalID to form anhydride");
+			if (br2.getFunctionalAtomCount() ==0){
+				throw new StructureBuildingException("Cannot find functionalAtom to form anhydride");
 			}
 			if (numberOfAnhydrideLinkages>1){
 				for (int i = numberOfAnhydrideLinkages-1; i >=0 ; i--) {
-					if (br2.getFunctionalIDCount()==0){
-						throw new StructureBuildingException("Cannot find functionalID to form anhydride");
+					if (br2.getFunctionalAtomCount()==0){
+						throw new StructureBuildingException("Cannot find functionalAtom to form anhydride");
 					}
 					BuildResults newAcidBr;
 					if (i!=0){
@@ -784,15 +784,15 @@ class StructureBuilder {
 				
 			}
 			else{
-				if (br1.getFunctionalIDCount()!=1 && br2.getFunctionalIDCount()!=1 ) {
+				if (br1.getFunctionalAtomCount()!=1 && br2.getFunctionalAtomCount()!=1 ) {
 					throw new StructureBuildingException("Invalid anhydride description");
 				}
 				formAnhydrideLink(state, anhydrideSmiles, br1, br2);
 			}
 		}
 		else{//symmetric anhydride
-			if (br1.getFunctionalIDCount()>1){//cyclic anhydride
-				if (br1.getFunctionalIDCount()==2){
+			if (br1.getFunctionalAtomCount()>1){//cyclic anhydride
+				if (br1.getFunctionalAtomCount()==2){
 					if (numberOfAnhydrideLinkages!=1 || anhydrideLocant !=null ){
 						throw new StructureBuildingException("Unsupported or invalid anhydride");
 					}
@@ -806,11 +806,11 @@ class StructureBuilder {
 					if (acidLocants.length != numberOfAnhydrideLinkages){
 						throw new StructureBuildingException("Mismatch between number of locants and number of anhydride linkages to form");
 					}
-					if (br1.getFunctionalIDCount() < (numberOfAnhydrideLinkages *2)){
+					if (br1.getFunctionalAtomCount() < (numberOfAnhydrideLinkages *2)){
 						throw new StructureBuildingException("Mismatch between number of acid atoms and number of anhydride linkages to form");
 					}
 					List<Atom> functionalAtoms = new ArrayList<Atom>();
-					for (int i = 0; i < br1.getFunctionalIDCount(); i++) {
+					for (int i = 0; i < br1.getFunctionalAtomCount(); i++) {
 						functionalAtoms.add(br1.getFunctionalAtom(i));
 					}
 			
@@ -856,7 +856,7 @@ class StructureBuilder {
 	}
 
 	/**
-	 * Given buildResults for both the acids and the SMILES of the anhydride forms the anhydride bond using the first functionalID on each BuildResults
+	 * Given buildResults for both the acids and the SMILES of the anhydride forms the anhydride bond using the first functionalAtom on each BuildResults
 	 * @param state
 	 * @param anhydrideSmiles
 	 * @param acidBr1
@@ -865,9 +865,9 @@ class StructureBuilder {
 	 */
 	private void formAnhydrideLink(BuildState state, String anhydrideSmiles, BuildResults acidBr1, BuildResults acidBr2)throws StructureBuildingException {
 		Atom oxygen1 = acidBr1.getFunctionalAtom(0);
-		acidBr1.removeFunctionalID(0);
+		acidBr1.removeFunctionalAtom(0);
 		Atom oxygen2 = acidBr2.getFunctionalAtom(0);
-		acidBr2.removeFunctionalID(0);
+		acidBr2.removeFunctionalAtom(0);
 		formAnhydrideLink(state, anhydrideSmiles, oxygen1, oxygen2);
 	}
 	
@@ -902,9 +902,9 @@ class StructureBuilder {
 		}
 		resolveWordOrBracket(state, words.get(0));
 		BuildResults acidBr = new BuildResults(state, words.get(0));
-		int functionalIds =acidBr.getFunctionalIDCount();
-		if (functionalIds==0){
-			throw new StructureBuildingException("No functionalIds detected!");
+		int functionalAtomCount =acidBr.getFunctionalAtomCount();
+		if (functionalAtomCount==0){
+			throw new StructureBuildingException("No functionalAtoms detected!");
 		}
 
 		boolean monoMultiplierDetected =false;
@@ -918,7 +918,7 @@ class StructureBuilder {
 			
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue("value"), "simpleGroup", "functionalGroup", "none");
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals("monoValentStandaloneGroup")){
-				Atom ideAtom = monoValentFunctionGroup.getAtomByIDOrThrow(monoValentFunctionGroup.getDefaultInID());
+				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
@@ -935,17 +935,17 @@ class StructureBuilder {
 			}
 		}
 		int halideCount = functionalGroupFragments.size();
-		if (halideCount > functionalIds || (!monoMultiplierDetected && halideCount <functionalIds)){
+		if (halideCount > functionalAtomCount || (!monoMultiplierDetected && halideCount <functionalAtomCount)){
 			throw new StructureBuildingException("Mismatch between number of halide/pseudo halide fragments and acidic oxygens");
 		}
 		for (int i = halideCount - 1; i>=0; i--) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
-			Atom ideAtom = ideFrag.getAtomByIDOrThrow(ideFrag.getDefaultInID());
+			Atom ideAtom = ideFrag.getDefaultInAtom();
 			Atom acidAtom = acidBr.getFunctionalAtom(i);
 			if (!acidAtom.getElement().equals("O")){
 				throw new StructureBuildingException("Atom type expected to be oxygen but was: " +acidAtom.getElement());
 			}
-			acidBr.removeFunctionalID(i);
+			acidBr.removeFunctionalAtom(i);
 			state.fragManager.replaceTerminalAtomWithFragment(acidAtom, ideAtom);
 		}
 	}
@@ -963,23 +963,23 @@ class StructureBuilder {
 		resolveWordOrBracket(state, polymer);
 		BuildResults polymerBr = new BuildResults(state, polymer);
 		List<Fragment> rGroups = new ArrayList<Fragment>();
-		if (polymerBr.getOutIDCount() ==2 && polymerBr.getInIDCount()==0){
+		if (polymerBr.getOutAtomCount() ==2 && polymerBr.getInAtomCount()==0){
 			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
 			/*
 			 * We assume the polymer repeats so as an approximation we create an R group with the same element as the group at the other end of polymer (with valency equal to the bondorder of the Rgroup so no H added)
 			 */
-			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement() + "|" + polymerBr.getOutID(0).valency + "]");
-			state.fragManager.createBond(inAtom, rGroup1.getFirstAtom(), polymerBr.getOutID(0).valency);
+			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement() + "|" + polymerBr.getOutAtom(0).getValency() + "]");
+			state.fragManager.createBond(inAtom, rGroup1.getFirstAtom(), polymerBr.getOutAtom(0).getValency());
 
-			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement() + "|" + polymerBr.getOutID(1).valency + "]");
-			state.fragManager.createBond(outAtom, rGroup2.getFirstAtom(), polymerBr.getOutID(1).valency);
+			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement() + "|" + polymerBr.getOutAtom(1).getValency() + "]");
+			state.fragManager.createBond(outAtom, rGroup2.getFirstAtom(), polymerBr.getOutAtom(1).getValency());
 			rGroups.add(rGroup1);
 			rGroups.add(rGroup2);
-			polymerBr.removeAllOutIDs();
+			polymerBr.removeAllOutAtoms();
 		}
 		else{
-			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outIDs, found: " +polymerBr.getOutIDCount() +" ,expected 0 inIDs, found: " +polymerBr.getInIDCount());
+			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outAtoms, found: " +polymerBr.getOutAtomCount() +" ,expected 0 inAtoms, found: " +polymerBr.getInAtomCount());
 		}
 		return rGroups;
 	}
@@ -992,26 +992,26 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private Atom determineFunctionalAtomToUse(String locant, BuildResults mainGroupBR) throws StructureBuildingException {
-		for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+		for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 			if (possibleAtom.hasLocant(locant)){
-				mainGroupBR.removeFunctionalID(i);
+				mainGroupBR.removeFunctionalAtom(i);
 				return possibleAtom;
 			}
 		}
 		if (matchDigits.matcher(locant).matches()){
 			//None of the functional atoms had an appropriate locant. Look for the case whether the locant refers to the backbone. e.g. 5-methyl 2-aminopentanedioate
-			for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 				if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAtom, locant)!=null){
-					mainGroupBR.removeFunctionalID(i);
+					mainGroupBR.removeFunctionalAtom(i);
 					return possibleAtom;
 				}
 			}
 		}
 		else{
 			//None of the functional atoms had an appropriate locant. Look for the special case where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
-			for (int i = 0; i < mainGroupBR.getFunctionalIDCount(); i++) {
+			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 				if (possibleAtom.getNote("ambiguousElementAssignment")!=null){
 					String[] atomIDs =possibleAtom.getNote("ambiguousElementAssignment").split(",");
@@ -1032,7 +1032,7 @@ class StructureBuilder {
                             String originalElement = possibleAtom.getElement();
                             possibleAtom.setElement(a.getElement());
                             a.setElement(originalElement);
-                            mainGroupBR.removeFunctionalID(i);
+                            mainGroupBR.removeFunctionalAtom(i);
                             return possibleAtom;
                         }
                     }
@@ -1056,12 +1056,7 @@ class StructureBuilder {
 		for (Fragment fragment : fragments) {
 			List<Atom> atomList =fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
-				Integer valency =parentAtom.determineValency(false);
-				int explicitHydrogensToAdd=0;
-				if (valency !=null){
-					explicitHydrogensToAdd=valency-parentAtom.getIncomingValency();
-					parentAtom.setExplicitHydrogens(explicitHydrogensToAdd);
-				}
+				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
 				for (int i = 1; i <= explicitHydrogensToAdd; i++) {
 					Atom a = state.fragManager.createAtom("H", fragment);
 					state.fragManager.createBond(parentAtom, a, 1);
@@ -1126,22 +1121,22 @@ class StructureBuilder {
 			setCationicMetalsToNeutral(state, positivelyChargedWords);
 			return;
 		}
-		if (words.size()>1 && overallCharge <0){//neutralise functionalIDs if they are the sole cause of the negative charge and multiple molecules are present
+		if (words.size()>1 && overallCharge <0){//neutralise functionalAtoms if they are the sole cause of the negative charge and multiple molecules are present
 			int chargeOnFunctionalAtoms = 0;
 			for (Element word : words) {
 				BuildResults br = wordToBR.get(word);
-				int functionalIdCount = br.getFunctionalIDCount();
-				for (int i = functionalIdCount -1; i >=0; i--) {
+				int functionalAtomCount = br.getFunctionalAtomCount();
+				for (int i = functionalAtomCount -1; i >=0; i--) {
 					chargeOnFunctionalAtoms += br.getFunctionalAtom(i).getCharge();
 				}
 			}
 			if (chargeOnFunctionalAtoms == overallCharge){
 				for (Element word : words) {
 					BuildResults br = wordToBR.get(word);
-					int functionalIdCount = br.getFunctionalIDCount();
-					for (int i = functionalIdCount -1; i >=0; i--) {
+					int functionalAtomCount = br.getFunctionalAtomCount();
+					for (int i = functionalAtomCount -1; i >=0; i--) {
 						br.getFunctionalAtom(i).setCharge(0);
-						br.removeFunctionalID(i);
+						br.removeFunctionalAtom(i);
 					}
 				}
 			}

@@ -41,22 +41,22 @@ class Fragment {
 	/**The subType of the fragment, for the purpose of resolving suffixes*/
 	private String subType = "";
 
-	/**The IDs of atoms that are used when this fragment is connected to another fragment. Unused outIDs means that the name is a radical or an error has occured
+	/**The atoms that are used when this fragment is connected to another fragment. Unused outAtoms means that the fragment is a radical or an error has occurred
 	 * Initially empty */
-	private final LinkedList<OutID> outIDs = new LinkedList<OutID>();
+	private final LinkedList<OutAtom> outAtoms = new LinkedList<OutAtom>();
 
-	/**The IDs of atoms that are used on this fragment to form things like esters
+	/**The atoms that are used on this fragment to form things like esters
 	 * Initially empty */
-	private final LinkedList<FunctionalID> functionalIDs = new LinkedList<FunctionalID>();
+	private final LinkedList<FunctionalAtom> functionalAtoms = new LinkedList<FunctionalAtom>();
 
-	/**The IDs of atoms that must be bonded to and the order of the bonds. Currently used in suffixes and in multiplicative nomenclature
+	/**The atoms that must be bonded to and the order of the bonds. Currently used in suffixes and in multiplicative nomenclature
 	 * Initially empty */
-	private final LinkedList<InID> inIDs = new LinkedList<InID>();
+	private final LinkedList<InAtom> inAtoms = new LinkedList<InAtom>();
 
-	/**The ID of the atom that fragments connecting to the fragment connect to if a locant has not been specified
-	 * Set by the first atom to be added to the fragment. This is typically the one with locant 1
+	/**The atom that fragments connecting to this fragment connect to if a locant has not been specified
+	 * Defaults to the first atom to be added to the fragment. This is typically the one with locant 1
 	 * but allows for fragments with no locants. Can be overridden*/
-	private int defaultInID = 0;
+	private Atom defaultInAtom = null;
 
 	/**The id of the indicated Hydrogen on the fragment.
 	 * Defaults to null.*/
@@ -123,8 +123,8 @@ class Fragment {
 
 	/**Adds an atom to the fragment and associates it with this fragment*/
 	void addAtom(Atom atom) {
-		if (defaultInID==0){//the first atom added becomes the defaultInID
-			defaultInID =atom.getID();
+		if (defaultInAtom == null){//the first atom added becomes the defaultInAtom
+			defaultInAtom = atom;
 		}
 		List<String> locants =atom.getLocants();
 		for (String locant: locants) {
@@ -161,9 +161,10 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The id of the found atom, or 0 if it is not found
+	 * @throws StructureBuildingException 
 	 */
-	int getIDFromLocant(String locant) {
-		Atom a =atomMapFromLocant.get(locant);
+	int getIDFromLocant(String locant) throws StructureBuildingException {
+		Atom a = getAtomByLocant(locant);
 		if (a != null){
 			return a.getID();
 		}
@@ -177,7 +178,9 @@ class Fragment {
 	 */
 	int getIDFromLocantOrThrow(String locant) throws StructureBuildingException {
 		int id = getIDFromLocant(locant);
-		if(id == 0) throw new StructureBuildingException("Couldn't find id from locant " + locant + ".");
+		if(id == 0) {
+			throw new StructureBuildingException("Couldn't find id from locant " + locant + ".");
+		}
 		return id;
 	}
 
@@ -248,7 +251,9 @@ class Fragment {
 	 */
 	Atom getAtomByLocantOrThrow(String locant) throws StructureBuildingException {
 		Atom a = getAtomByLocant(locant);
-		if(a == null) throw new StructureBuildingException("Could not find the atom with locant " + locant + ".");
+		if(a == null) {
+			throw new StructureBuildingException("Could not find the atom with locant " + locant + ".");
+		}
 		return a;
 	}
 
@@ -258,11 +263,7 @@ class Fragment {
 	 * @return The found atom, or null.
 	 */
 	Atom getAtomByID(int id) {
-		Atom a = atomMapFromId.get(id);
-		if (a !=null){
-			return a;
-		}
-		return null;
+		return atomMapFromId.get(id);
 	}
 
 	/**Gets the atom in the fragment with the specified ID, throwing if this fails.
@@ -272,7 +273,9 @@ class Fragment {
 	 */
 	Atom getAtomByIDOrThrow(int id) throws StructureBuildingException {
 		Atom a = getAtomByID(id);
-		if(a == null) throw new StructureBuildingException("Couldn't find atom with id " + id + ".");
+		if(a == null) {
+			throw new StructureBuildingException("Couldn't find atom with id " + id + ".");
+		}
 		return a;
 	}
 
@@ -337,14 +340,22 @@ class Fragment {
 	}
 
 	/**Works out how many atoms there are in the fragment there are
-	 * with consecutive locants, starting from 1;
+	 * with consecutive locants, starting from 1 that are in a chain
 	 *
 	 * @return The number of atoms in the locant chain.
+	 * @throws StructureBuildingException 
 	 */
-	int getChainLength() {
-		int length=0;
-		while(getIDFromLocant(Integer.toString(length+1)) > 0) {
+	int getChainLength() throws StructureBuildingException {
+		int length = 0;
+		Atom next = getAtomByLocant(Integer.toString(length+1));
+		Atom previous = null;
+		while (next !=null){
+			if (previous !=null && findBond(previous, next) == null){
+				break;
+			}
 			length++;
+			previous = next;
+			next = getAtomByLocant(Integer.toString(length+1));
 		}
 		return length;
 	}
@@ -359,142 +370,153 @@ class Fragment {
 		return subType;
 	}
 
-	/**Gets the linkedList of outIDs. This is not modifiable, use the relevant methods in this class to modify it*/
-	List<OutID> getOutIDs() {
-		return Collections.unmodifiableList(outIDs);
+	/**Gets the linkedList of outAtoms. This is not modifiable, use the relevant methods in this class to modify it*/
+	List<OutAtom> getOutAtoms() {
+		return Collections.unmodifiableList(outAtoms);
 	}
 
 	/**
-	 * Gets the outID at a specific index of the outIDs linkedList
+	 * Gets the outAtom at a specific index of the outAtoms linkedList
 	 * @param i
 	 * @return
 	 */
-	OutID getOutID(int i) {
-		return outIDs.get(i);
-	}
-
-	/**Adds an outID
-	 * @throws StructureBuildingException */
-	void addOutID(int id, int valency, Boolean setExplicitly) throws StructureBuildingException {
-		outIDs.add(new OutID(id, valency, setExplicitly, this));
-		if (setExplicitly){
-			getAtomByIDOrThrow(id).addOutValency(valency);
-		}
-	}
-
-	/**Adds a list of outIDs, copies of the given outIDs are not made*/
-	void addOutIDs(List<OutID> outIDs) {
-		this.outIDs.addAll(outIDs);
+	OutAtom getOutAtom(int i) {
+		return outAtoms.get(i);
 	}
 
 	/**
-	 * Removes the outID at a specific index of the outIDs linkedList
-	 * @param i
-	 * @throws StructureBuildingException
+	 * Adds an outAtom
+	 * @param atom
+	 * @param valency
+	 * @param setExplicitly
+	 * @throws StructureBuildingException 
 	 */
-	void removeOutID(int i) throws StructureBuildingException {
-		OutID removedOutID = outIDs.remove(i);
-		if (removedOutID.setExplicitly){
-			getAtomByIDOrThrow(removedOutID.id).addOutValency(-removedOutID.valency);
-		}
-	}
-
-	/**
-	 * Removes the specified outID from the outIDs linkedList
-	 * @param outID
-	 * @throws StructureBuildingException
-	 */
-	void removeOutID(OutID outID) throws StructureBuildingException {
-		outIDs.remove(outID);
-		if (outID.setExplicitly){
-			getAtomByIDOrThrow(outID.id).addOutValency(-outID.valency);
-		}
-	}
-
-	/**Gets the linkedList of inIDs. This is not modifiable, use the relevant methods in this class to modify it*/
-	List<InID> getInIDs() {
-		return Collections.unmodifiableList(inIDs);
-	}
-
-	/**
-	 * Gets the inID at a specific index of the inIDs linkedList
-	 * @param i
-	 * @return
-	 */
-	InID getInID(int i) {
-		return inIDs.get(i);
-	}
-
-	/**Adds an inID
-	 * @throws StructureBuildingException */
-	void addInID(int id, int valency) throws StructureBuildingException {
-		inIDs.add(new InID(id, valency, this));
-		getAtomByIDOrThrow(id).addOutValency(valency);
+	void addOutAtom(int id, int valency, Boolean setExplicitly) throws StructureBuildingException {
+		addOutAtom(getAtomByIDOrThrow(id), valency, setExplicitly);
 	}
 	
-	/**Adds a list of inIDs, copies of the given inIDs are not made*/
-	void addInIDs(List<InID> inIDs) {
-		this.inIDs.addAll(inIDs);
+	/**
+	 * Adds an outAtom
+	 * @param atom
+	 * @param valency
+	 * @param setExplicitly
+	 */
+	void addOutAtom(Atom atom, int valency, Boolean setExplicitly) {
+		outAtoms.add(new OutAtom(atom, valency, setExplicitly));
+	}
+
+	/**Adds a list of outAtoms, copies of the given outAtoms are not made*/
+	void addOutAtoms(List<OutAtom> outAtoms) {
+		this.outAtoms.addAll(outAtoms);
 	}
 
 	/**
-	 * Removes the inID at a specific index of the inIDs linkedList
+	 * Removes the outAtom at a specific index of the outAtom linkedList
 	 * @param i
 	 * @throws StructureBuildingException
 	 */
-	void removeInID(int i) throws StructureBuildingException {
-		InID removedinID = inIDs.remove(i);
-		getAtomByIDOrThrow(removedinID.id).addOutValency(-removedinID.valency);
+	void removeOutAtom(int i) throws StructureBuildingException {
+		OutAtom removedOutAtom = outAtoms.remove(i);
+		if (removedOutAtom.isSetExplicitly()){
+			removedOutAtom.getAtom().addOutValency(-removedOutAtom.getValency());
+		}
 	}
 
 	/**
-	 * Removes the specified inID from the inIDs linkedList
-	 * @param inID
+	 * Removes the specified outAtom from the outAtoms linkedList
+	 * @param outAtom
 	 * @throws StructureBuildingException
 	 */
-	void removeInID(InID inID) throws StructureBuildingException {
-		inIDs.remove(inID);
-		getAtomByIDOrThrow(inID.id).addOutValency(-inID.valency);
+	void removeOutAtom(OutAtom outAtom) throws StructureBuildingException {
+		outAtoms.remove(outAtom);
+		if (outAtom.isSetExplicitly()){
+			outAtom.getAtom().addOutValency(-outAtom.getValency());
+		}
 	}
 
-	/**Gets the linkedList of functionalIDs*/
-	List<FunctionalID> getFunctionalIDs() {
-		return Collections.unmodifiableList(functionalIDs);
+	/**Gets the linkedList of inAtoms. This is not modifiable, use the relevant methods in this class to modify it*/
+	List<InAtom> getInAtoms() {
+		return Collections.unmodifiableList(inAtoms);
 	}
 
 	/**
-	 * Gets the functionalID at a specific index of the functionalIDs linkedList
+	 * Gets the inAtom at a specific index of the inAtoms linkedList
 	 * @param i
 	 * @return
 	 */
-	FunctionalID getFunctionalID(int i) {
-		return functionalIDs.get(i);
+	InAtom getInAtom(int i) {
+		return inAtoms.get(i);
 	}
 
-	/**Adds a functionalID*/
-	void addFunctionalID(int id) {
-		functionalIDs.add(new FunctionalID(id, this));
+	/**Adds an inAtom
+	 * @throws StructureBuildingException */
+	void addInAtom(Atom atom, int valency) throws StructureBuildingException {
+		inAtoms.add(new InAtom(atom, valency));
 	}
-
-	/**Adds a list of functionalIDs, copies of the given functionalIDs are not made*/
-	void addFunctionalIDs(List<FunctionalID> functionalIDs) {
-		this.functionalIDs.addAll(functionalIDs);
+	
+	/**Adds a list of inAtoms, copies of the given inAtoms are not made*/
+	void addInAtoms(List<InAtom> inAtoms) {
+		this.inAtoms.addAll(inAtoms);
 	}
 
 	/**
-	 * Removes the functionalID at a specific index of the functionalIDs linkedList
+	 * Removes the inAtoms at a specific index of the inAtoms linkedList
+	 * @param i
+	 * @throws StructureBuildingException
+	 */
+	void removeInAtoms(int i) throws StructureBuildingException {
+		InAtom removedinAtom = inAtoms.remove(i);
+		removedinAtom.getAtom().addOutValency(-removedinAtom.getValency());
+	}
+
+	/**
+	 * Removes the specified inAtom from the inAtoms linkedList
+	 * @param inAtom
+	 * @throws StructureBuildingException
+	 */
+	void removeInAtom(InAtom inAtom) throws StructureBuildingException {
+		inAtoms.remove(inAtom);
+		inAtom.getAtom().addOutValency(-inAtom.getValency());
+	}
+
+	/**Gets the linkedList of functionalAtoms*/
+	List<FunctionalAtom> getFunctionalAtoms() {
+		return Collections.unmodifiableList(functionalAtoms);
+	}
+
+	/**
+	 * Gets the functionalAtom at a specific index of the functionalAtoms linkedList
+	 * @param i
+	 * @return
+	 */
+	FunctionalAtom getFunctionalAtom(int i) {
+		return functionalAtoms.get(i);
+	}
+	
+	/**Adds a functionalAtom*/
+	void addFunctionalAtom(Atom atom) {
+		functionalAtoms.add(new FunctionalAtom(atom));
+	}
+
+	/**Adds a list of functionalAtoms, copies of the given functionalAtoms are not made*/
+	void addFunctionalAtoms(List<FunctionalAtom> functionalAtoms) {
+		this.functionalAtoms.addAll(functionalAtoms);
+	}
+
+	/**
+	 * Removes the functionalAtom at a specific index of the functionalAtoms linkedList
 	 * @param i
 	 */
-	void removeFunctionalID(int i) {
-		functionalIDs.remove(i);
+	void removeFunctionalAtom(int i) {
+		functionalAtoms.remove(i);
 	}
 
 	/**
-	 * Removes the specified functionalID from the functionalIDs linkedList
-	 * @param functionalID
+	 * Removes the specified functionalAtom from the functionalAtoms linkedList
+	 * @param functionalAtom
 	 */
-	void removeFunctionalID(FunctionalID functionalID) {
-		functionalIDs.remove(functionalID);
+	void removeFunctionalAtom(FunctionalAtom functionalAtom) {
+		functionalAtoms.remove(functionalAtom);
 	}
 
 	/** Looks for the atom that would have had a hydrogen indicated,
@@ -814,12 +836,12 @@ class Fragment {
 		this.type = type;
 	}
 
-	int getDefaultInID() {
-		return defaultInID;
+	Atom getDefaultInAtom() {
+		return defaultInAtom;
 	}
 
-	void setDefaultInID(int defaultInID) {
-		this.defaultInID=defaultInID;
+	void setDefaultInAtom(Atom inAtom) {
+		this.defaultInAtom=inAtom;
 	}
 
 	/**
@@ -858,6 +880,10 @@ class Fragment {
 	}
 
 
+	Atom getAtomOrNextSuitableAtomOrThrow(Atom a, int additionalValencyRequired) throws StructureBuildingException {
+		return getAtomByIdOrNextSuitableAtomOrThrow(a.getID(), additionalValencyRequired);
+	}
+	
 	Atom getAtomByIdOrNextSuitableAtomOrThrow(int id, int additionalValencyRequired) throws StructureBuildingException {
 		Atom a =getAtomByIdOrNextSuitableAtom(id, additionalValencyRequired, false);
 		if (a==null){

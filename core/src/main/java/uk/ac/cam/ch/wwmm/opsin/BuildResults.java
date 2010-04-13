@@ -11,19 +11,19 @@ import nu.xom.Element;
 
 /**A "struct" to hold the results of fragment building.*/
 class BuildResults {
-	/**Holds the ID or IDs of atoms that are currently marked as radicals.
+	/**Holds the atoms that are currently marked as radicals. An atom may be listed twice for say diyl
 	 * Typically these will be utilised by a word rule e.g. the ethyl of ethyl ethanoate has one
 	 * Also holds the order of the bond that will be created when it is used (valency)
-	 * setExplicitly says whether the outID absolutely definitely refers to that id or not.
+	 * setExplicitly says whether the outAtom absolutely definitely refers to that atom or not.
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
-	 * These OutIDs are the same objects as are present in the fragments*/
-	private final LinkedList<OutID> outIDs;
+	 * These OutAtoms are the same objects as are present in the fragments*/
+	private final LinkedList<OutAtom> outAtoms;
 
-	/**The ID or IDs of the atoms that may be used to from things like esters*/
-	private final LinkedList<FunctionalID> functionalIDs;
+	/**The atoms that may be used to from things like esters*/
+	private final LinkedList<FunctionalAtom> functionalAtoms;
 
-	/**The ID or IDs of the atoms that must have bonds formed to them. Rarely used expect in the root of multiplicative names*/
-	private final LinkedList<InID> inIDs;
+	/**The atoms that must have bonds formed to them. Rarely used expect in the root of multiplicative names*/
+	private final LinkedList<InAtom> inAtoms;
 
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
 	private final LinkedHashSet<Fragment> fragments;
@@ -31,17 +31,17 @@ class BuildResults {
 	/**A BuildResults is constructed from a list of Fragments.
 	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.*/
 	BuildResults(BuildState state, Element wordSubOrBracket) {
-		outIDs = new LinkedList<OutID>();
-		functionalIDs = new LinkedList<FunctionalID>();
-		inIDs = new LinkedList<InID>();
+		outAtoms = new LinkedList<OutAtom>();
+		functionalAtoms = new LinkedList<FunctionalAtom>();
+		inAtoms = new LinkedList<InAtom>();
 		fragments = new LinkedHashSet<Fragment>();
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(wordSubOrBracket, "group");
 		for (Element group : groups) {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			fragments.add(frag);
-			outIDs.addAll(frag.getOutIDs());
-			functionalIDs.addAll(frag.getFunctionalIDs());
-			inIDs.addAll(frag.getInIDs());
+			outAtoms.addAll(frag.getOutAtoms());
+			functionalAtoms.addAll(frag.getFunctionalAtoms());
+			inAtoms.addAll(frag.getInAtoms());
 		}
 	}
 
@@ -49,9 +49,9 @@ class BuildResults {
 	 * Construct a blank buildResults
 	 */
 	BuildResults() {
-		outIDs = new LinkedList<OutID>();
-		functionalIDs = new LinkedList<FunctionalID>();
-		inIDs = new LinkedList<InID>();
+		outAtoms = new LinkedList<OutAtom>();
+		functionalAtoms = new LinkedList<FunctionalAtom>();
+		inAtoms = new LinkedList<InAtom>();
 		fragments = new LinkedHashSet<Fragment>();
 	}
 
@@ -68,88 +68,72 @@ class BuildResults {
 	}
 
 	/**
-	 * Returns the atom corresponding to position i in the outID list
-	 * @param i index
-	 * @return atom
-	 * @throws StructureBuildingException
-	 */
-	Atom getOutAtom(int i) throws StructureBuildingException {
-		OutID outID = outIDs.get(i);
-		return outID.frag.getAtomByIDOrThrow(outID.id);
-	}
-
-	/**
-	 * Returns the atom corresponding to position i in the outIDs list
+	 * Returns the atom corresponding to position i in the outAtoms list
 	 * If not set explicitly and atom would violate valency or break aromaticity another is looked for
 	 * @param i index
 	 * @return atom
 	 * @throws StructureBuildingException
 	 */
 	Atom getOutAtomTakingIntoAccountWhetherSetExplicitly(int i) throws StructureBuildingException {
-		OutID outID = outIDs.get(i);
-		if (outID.setExplicitly){
-			return getOutAtom(i);
+		OutAtom outAtom = outAtoms.get(i);
+		if (outAtom.isSetExplicitly()){
+			return outAtom.getAtom();
 		}
 		else{
-			return outID.frag.getAtomByIdOrNextSuitableAtomOrThrow(outID.id, outID.valency);
+			return outAtom.getAtom().getFrag().getAtomOrNextSuitableAtomOrThrow(outAtom.getAtom(), outAtom.getValency());
 		}
 	}
 
-	OutID getOutID(int i){
-		return outIDs.get(i);
+	OutAtom getOutAtom(int i){
+		return outAtoms.get(i);
 	}
 
-	int getOutIDCount(){
-		return outIDs.size();
+	int getOutAtomCount(){
+		return outAtoms.size();
 	}
 
-	OutID removeOutID(int i) throws StructureBuildingException{
-		OutID outID =outIDs.get(i);
-		if (outID.frag!=null){
-			outID.frag.removeOutID(outID);
-		}
-		return outIDs.remove(i);
+	OutAtom removeOutAtom(int i) throws StructureBuildingException{
+		OutAtom outAtom =outAtoms.get(i);
+		outAtom.getAtom().getFrag().removeOutAtom(outAtom);
+		return outAtoms.remove(i);
 	}
 
-	void removeAllOutIDs() throws StructureBuildingException{
-		for (int i = outIDs.size() -1; i >=0 ; i--) {
-			removeOutID(i);
+	void removeAllOutAtoms() throws StructureBuildingException{
+		for (int i = outAtoms.size() -1; i >=0 ; i--) {
+			removeOutAtom(i);
 		}
 	}
 
 	/**
-	 * Returns the atom corresponding to position i in the functionalIDs list
+	 * Returns the atom corresponding to position i in the functionalAtoms list
 	 * @param i index
 	 * @return atom
 	 * @throws StructureBuildingException
 	 */
 	Atom getFunctionalAtom(int i) throws StructureBuildingException {
-		FunctionalID functionalId =functionalIDs.get(i);
-		return functionalId.frag.getAtomByIDOrThrow(functionalId.id);
+		return functionalAtoms.get(i).getAtom();
 	}
 
-	FunctionalID removeFunctionalID(int i) {
-		FunctionalID functionalID =functionalIDs.get(i);
-		if (functionalID.frag!=null){
-			functionalID.frag.removeFunctionalID(functionalID);
-		}
-		return functionalIDs.remove(i);
+	FunctionalAtom removeFunctionalAtom(int i) {
+		FunctionalAtom functionalAtom =functionalAtoms.get(i);
+		functionalAtom.getAtom().getFrag().removeFunctionalAtom(functionalAtom);
+		return functionalAtoms.remove(i);
 	}
 
-	int getFunctionalIDCount(){
-		return functionalIDs.size();
+	int getFunctionalAtomCount(){
+		return functionalAtoms.size();
 	}
 
 	/**
-	 * Returns the first OutId
-	 * @return OutID
+	 * Returns the first OutAtom
+	 * @return OutAtom
 	 */
-	OutID getFirstOutID(){
-		return outIDs.get(0);
+	OutAtom getFirstOutAtom(){
+		return outAtoms.get(0);
 	}
 
-	int getInIDCount(){
-		return inIDs.size();
+	int getInAtomCount(){
+		return inAtoms.size();
 	}
 	/**
 	 * Returns the atom corresponding to the given id assuming the atom the id corresponds to is within the list of fragment in this Buildresults
@@ -168,9 +152,9 @@ class BuildResults {
 	}
 
 	void mergeBuildResults(BuildResults otherBR) {
-		outIDs.addAll(otherBR.outIDs);
-		functionalIDs.addAll(otherBR.functionalIDs);
-		inIDs.addAll(otherBR.inIDs);
+		outAtoms.addAll(otherBR.outAtoms);
+		functionalAtoms.addAll(otherBR.functionalAtoms);
+		inAtoms.addAll(otherBR.inAtoms);
 		fragments.addAll(otherBR.fragments);
 	}
 

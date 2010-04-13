@@ -135,11 +135,12 @@ class Atom {
 	
 	/**
 	 * Uses the lambdaConventionValency or if that is not available
-	 * the current incoming valency modified by protonsExplicitlyAddedOrRemoved checked against
-	 * allowed valencies of the atom to determine the likely current valency of the atom.
-	 * returns null if OPSIN has no idea regarding valency (currently probably only for inorganics)
+	 * the default valency assuming this is >= the current valency
+	 * If not then allowed the chemically sensible valencies of the atom are checked with the one that is closest and >= to the current valency
+	 * being returned. If the valency has still not been determined the current valency i.e. assuming the atom to have 0 implicit hydrogen is returned.
+	 * This is the correct behaviour for inorganics. For p block elements it means that OPSIN does not believe the atom to be in a valid valency (too high)
 	 * 
-	 * if considerOutValency is true, the valency that will be used to form bonds using the outIDs is
+	 * if considerOutValency is true, the valency that will be used to form bonds using the outAtoms is
 	 * taken into account i.e. if any radicals were used to form bonds
 	 * @param considerOutValency
 	 * @return
@@ -148,31 +149,28 @@ class Atom {
 		if (lambdaConventionValency != null){
 			return lambdaConventionValency +protonsExplicitlyAddedOrRemoved;
 		}
-		Integer defaultValency =ValencyChecker.getDefaultValency(element);
-		if (defaultValency !=null){
-			defaultValency += protonsExplicitlyAddedOrRemoved;
-		}
 		int currentValency =getIncomingValency();
 		if (considerOutValency){
 			currentValency+=outValency;
 		}
+		if (charge ==0){
+			Integer defaultValency =ValencyChecker.getDefaultValency(element);
+			if (defaultValency !=null){
+				defaultValency += protonsExplicitlyAddedOrRemoved;
+			}
+			if (defaultValency !=null && currentValency <= defaultValency){
+				return defaultValency;
+			}
+		}
 		Integer[] possibleValencies =ValencyChecker.getPossibleValencies(element, charge);
 		if (possibleValencies!=null) {
-			if (defaultValency !=null){
-				for (Integer possibleValency : possibleValencies) {
-					if (possibleValency.equals(defaultValency) &&
-							currentValency <= defaultValency){
-						return defaultValency;
-					}
-				}
-			}
 			for (Integer possibleValency : possibleValencies) {
 				if (currentValency <= possibleValency){
 					return possibleValency;
 				}
 			}
 		}
-		return defaultValency;
+		return currentValency;
 	}
 
 	/**Adds a locant to the Atom. Other locants are preserved.

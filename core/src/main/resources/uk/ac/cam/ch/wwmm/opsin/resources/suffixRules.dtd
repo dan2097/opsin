@@ -1,6 +1,6 @@
 <!ELEMENT suffixRulesList (rule)+>
 
-<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutID|changecharge|addFunctionalIDsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutIDs)*>
+<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutAtom|changecharge|addFunctionalAtomsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutAtoms)*>
 <!ATTLIST rule value CDATA #REQUIRED
                subType CDATA #IMPLIED>
 
@@ -8,19 +8,19 @@
 <!ATTLIST addgroup SMILES CDATA #REQUIRED
                     bondOrder CDATA #IMPLIED
                     labels CDATA #IMPLIED
-                    setsOutID (yes|no) #IMPLIED
-                    setsDefaultInID (yes|no) #IMPLIED
+                    setsOutAtom (yes|no) #IMPLIED
+                    setsDefaultInAtom (yes|no) #IMPLIED
                     functionalIDs CDATA #IMPLIED
                     outValency CDATA #IMPLIED
                     ketoneLocant (yes|no) #IMPLIED>
 
 <!ELEMENT addSuffixPrefixIfNonePresentAndCyclic EMPTY>
 <!ATTLIST addSuffixPrefixIfNonePresentAndCyclic SMILES CDATA #REQUIRED>
-<!ELEMENT setOutID EMPTY>
-<!ATTLIST setOutID outValency CDATA #IMPLIED>
+<!ELEMENT setOutAtom EMPTY>
+<!ATTLIST setOutAtom outValency CDATA #IMPLIED>
 <!ELEMENT changecharge EMPTY>
 <!ATTLIST changecharge charge CDATA #REQUIRED protons CDATA #REQUIRED>
-<!ELEMENT addFunctionalIDsToHydroxyGroups EMPTY>
+<!ELEMENT addFunctionalAtomsToHydroxyGroups EMPTY>
 <!ELEMENT chargeHydroxyGroups EMPTY>
 <!ELEMENT removeOneDoubleBondedOxygen EMPTY>
-<!ELEMENT convertHydroxyGroupsToOutIDs EMPTY>
+<!ELEMENT convertHydroxyGroupsToOutAtoms EMPTY>

@@ -88,15 +88,15 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
   <token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES">propione</token>
   <token value="CCC[O-]" labels="1/2/3/" valType="SMILES">propoxide</token>
-  <token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenite</token>
+  <token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">selenite</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenate</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenoate</token>
   <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
-  <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfite</token>
+  <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">sulfite</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfoate</token>
   <token value="NCCS(=O)(=O)O" labels="none" valType="SMILES" defaultInID="1" functionalIDs="7">taurine</token>
-  <token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurite</token>
+  <token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">tellurite</token>
   <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurate</token>
   <token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">telluroate</token>
   <token value="CC(C)([O-])C" labels="none" valType="SMILES">tert-butoxide</token>

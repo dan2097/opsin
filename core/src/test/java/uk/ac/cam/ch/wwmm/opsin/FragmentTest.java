@@ -140,11 +140,18 @@ public class FragmentTest {
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		assertEquals("ethane", 2, frag.getChainLength());
 		Atom a3 =new Atom(3, "C", frag);
-		a1.addLocant("3");
+		a3.addLocant("3");
 		frag.addAtom(a3);
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(3), 1);
 		assertEquals("propane", 3, frag.getChainLength());
-
+		Atom a4 =new Atom(4, "C", frag);
+		frag.addAtom(a4);
+		a4.addLocant("4");
+		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(4), 1);
+		assertEquals("isobutane", 3, frag.getChainLength());
+		fm.removeBond(frag.findBond(a2, a4));
+		fm.createBond(a3, a4, 1);
+		assertEquals("butane", 4, frag.getChainLength());
 	}
 
 

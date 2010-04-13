@@ -194,6 +194,9 @@
   <token value="P|5=N" labels="none" valType="SMILES">phosphinimyl</token>
   <token value="P=O" labels="none" valType="SMILES">phosphoroso</token>
   <token value="P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
+  <token value="P|5=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinyl</token>
+  <token value="=P|5=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinylidene</token>
+  <token value="=P|5=S" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinothioylidene</token>
   <token value="=P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinidene</token>
 
   <token value="[As|5](=O)(O)(O)" labels="none" valType="SMILES">arsono</token>
@@ -203,6 +206,9 @@
   <token value="[As]=O" labels="none" valType="SMILES">arsoroso</token>
   <token value="[As]=O" labels="none" valType="SMILES">arsenoso</token>
   <token value="[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsino</token>
+  <token value="[As|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinyl</token>
+  <token value="=[As|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinylidene</token>
+  <token value="=[As|5]=S" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinothioylidene</token>
   <token value="=[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinidene</token>
 
   <token value="[Sb|5](=O)(O)(O)" labels="none" valType="SMILES">stibono</token>
