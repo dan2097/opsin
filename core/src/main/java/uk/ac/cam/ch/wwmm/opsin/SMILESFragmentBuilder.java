@@ -222,7 +222,7 @@ class SMILESFragmentBuilder {
 					}
 					if (stack.peek().atom.getAtomParityElement()!=null){
 						Element atomParityElement = stack.peek().atom.getAtomParityElement();
-						Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
+						Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
 						String atomRefs4 = atomRefs4Att.getValue();
 						if (atomRefs4.equals("")){
 							atomRefs4 += "a" +atom.getID();
@@ -312,7 +312,7 @@ class SMILESFragmentBuilder {
 					}
 					if (stack.peek().atom.getAtomParityElement()!=null){
 						Element atomParityElement = stack.peek().atom.getAtomParityElement();
-						Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
+						Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
 						String atomRefs4 = atomRefs4Att.getValue();
 						if (atomRefs4.equals("")){
 							atomRefs4 += "a" +atom.getID();
@@ -421,7 +421,7 @@ class SMILESFragmentBuilder {
 			throw new StructureBuildingException("Unmatched ring opening");
 		}
 
-		if(labelMapping.equals("fusedRing")) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
+		if(labelMapping.equals(FUSEDRING_LABELS_VAL)) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
 			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
 			FragmentTools.relabelFusedRingSystem(currentFrag);
 		}
@@ -429,28 +429,28 @@ class SMILESFragmentBuilder {
 
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
 			List<Atom> aList =currentFrag.getAtomList();
-			int lastAtomID =aList.get(aList.size()-1).getID();
+			Atom lastAtom =aList.get(aList.size()-1);
 			if (subType.equals("inSuffix")){
-				currentFrag.setDefaultInID(lastAtomID);
+				currentFrag.setDefaultInAtom(lastAtom);
 			}
 			else{
 				if (lastCharacter == '#'){
-					currentFrag.addOutID(lastAtomID,3, true);
+					currentFrag.addOutAtom(lastAtom, 3, true);
 				}
 				else if (lastCharacter == '='){
-					currentFrag.addOutID(lastAtomID,2, true);
+					currentFrag.addOutAtom(lastAtom, 2, true);
 				}
 				else{
-					currentFrag.addOutID(lastAtomID,1, true);
+					currentFrag.addOutAtom(lastAtom, 1, true);
 				}
 			}
 		}
 
 		if(firstCharacter == '='){
-			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),2, true);
+			currentFrag.addOutAtom(currentFrag.getFirstAtom(),2, true);
 		}
 		if (firstCharacter == '#'){
-			currentFrag.addOutID(currentFrag.getIdOfFirstAtom(),3, true);
+			currentFrag.addOutAtom(currentFrag.getFirstAtom(),3, true);
 		}
 
 		return currentFrag;
@@ -488,7 +488,7 @@ class SMILESFragmentBuilder {
 	 * @return 
 	 */
 	private String processTetrahedralStereochemistry(String atomString, Atom atom, Atom previousAtom) {
-		Element atomParity = new Element("atomParity");
+		Element atomParity = new Element(ATOMPARITY_EL);
 		atom.setAtomParityElement(atomParity);
 		Boolean chiralityClockwise = false;
 		if (atomString.length() > 0 && atomString.charAt(0) == '@'){
@@ -512,7 +512,7 @@ class SMILESFragmentBuilder {
 			atomRefs4 += "a" + atom.getID() +"_H";
 			atomString = atomString.substring(1);
 		}
-		atomParity.addAttribute(new Attribute("atomRefs4", atomRefs4));
+		atomParity.addAttribute(new Attribute(ATOMREFS4_ATR, atomRefs4));
 		return atomString;
 	}
 
@@ -560,7 +560,7 @@ class SMILESFragmentBuilder {
 		}
 		if (sf.atom.getAtomParityElement()!=null){//replace ringclosureX with actual reference to id when it is known
 			Element atomParityElement = sf.atom.getAtomParityElement();
-			Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
+			Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
 			String atomRefs4 = atomRefs4Att.getValue();
 			if (atomRefs4.equals("")){
 				atomRefs4 += "ringclosure" + closure;
@@ -605,7 +605,7 @@ class SMILESFragmentBuilder {
 		}
 		if (stack.peek().atom.getAtomParityElement()!=null){
 			Element atomParityElement = stack.peek().atom.getAtomParityElement();
-			Attribute atomRefs4Att = atomParityElement.getAttribute("atomRefs4");
+			Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
 			String atomRefs4 = atomRefs4Att.getValue();
 			if (atomRefs4.equals("")){
 				atomRefs4 += "a" + sf.atom.getID();
@@ -617,7 +617,7 @@ class SMILESFragmentBuilder {
 		}
 		if (sf.atom.getAtomParityElement()!=null){//replace dummy id with actual id e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy id before being replaced with the id of the F
 			Element atomParityElement = sf.atom.getAtomParityElement();
-			Attribute atomRefs4Atr = atomParityElement.getAttribute("atomRefs4");
+			Attribute atomRefs4Atr = atomParityElement.getAttribute(ATOMREFS4_ATR);
 			String atomRefs4 = atomRefs4Atr.getValue();
 			atomRefs4 = atomRefs4.replaceFirst("ringclosure" + closure, "a" +stack.peek().atom.getID());
 			atomRefs4Atr.setValue(atomRefs4);
@@ -635,7 +635,7 @@ class SMILESFragmentBuilder {
 						Set<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
 							if (followingBond.getSmilesStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
-								Element bondStereoEl = new Element("bondStereo");
+								Element bondStereoEl = new Element(BONDSTEREO_EL);
 								Atom atom2 = centralBond.getFromAtom();
 								Atom atom1;
 								if (atom2 == preceedingBond.getToAtom()){
@@ -652,7 +652,7 @@ class SMILESFragmentBuilder {
 								else{
 									atom4 = followingBond.getFromAtom();
 								}
-								bondStereoEl.addAttribute(new Attribute("atomRefs4", "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
+								bondStereoEl.addAttribute(new Attribute(ATOMREFS4_ATR, "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
 								Boolean upFirst;
 								if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
 									upFirst = preceedingBond.getToAtom() == atom2;//in normally constructed SMILES this will be the case but you could write C(/F)=C/F instead of F\C=C/F

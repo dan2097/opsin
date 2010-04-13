@@ -25,7 +25,7 @@ sense of this -->
   <rule value="amido">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
-    <addgroup SMILES="N" setsOutID="yes" />
+    <addgroup SMILES="N" setsOutAtom="yes" />
   </rule>
   <rule value="amine">
     <addgroup SMILES="N" />
@@ -37,7 +37,7 @@ sense of this -->
     <addgroup SMILES="[N+]" />
   </rule>
   <rule value="amino">
-    <addgroup SMILES="N" setsOutID="yes"/>
+    <addgroup SMILES="N" setsOutAtom="yes"/>
   </rule>
   <rule value="anilide">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
@@ -62,7 +62,7 @@ sense of this -->
     <addgroup SMILES="N(O)O" functionalIDs="2,3"/>
   </rule>
   <rule value="ate_nonCarboxylic">
-    <addFunctionalIDsToHydroxyGroups />
+    <addFunctionalAtomsToHydroxyGroups />
     <chargeHydroxyGroups />
   </rule>
   <rule value="boronate">
@@ -72,7 +72,7 @@ sense of this -->
     <addgroup SMILES="B(O)O" functionalIDs="2,3"/>
   </rule>
   <rule value="carbonyl">
-    <addgroup SMILES="C(=O)" setsOutID="yes"/>
+    <addgroup SMILES="C(=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="carboxylic">
     <addgroup SMILES="C(=O)O" functionalIDs="3"/>
@@ -112,7 +112,7 @@ sense of this -->
     <addgroup SMILES="O" bondOrder="2" />
   </rule>
   <rule value="ic_nonCarboxylic">
-    <addFunctionalIDsToHydroxyGroups/>
+    <addFunctionalAtomsToHydroxyGroups/>
   </rule>
   <rule value="ide">
     <changecharge charge="-1" protons="-1" />
@@ -127,7 +127,7 @@ sense of this -->
     <addgroup SMILES="[N+]" bondOrder="2" />
   </rule>
   <rule value="io">
-    <setOutID />
+    <setOutAtom />
     <changecharge charge="1" protons="1"/>
   </rule>
   <rule value="ite">
@@ -136,7 +136,7 @@ sense of this -->
   </rule>
   <rule value="ite_nonCarboxylic">
     <removeOneDoubleBondedOxygen />
-    <addFunctionalIDsToHydroxyGroups />
+    <addFunctionalAtomsToHydroxyGroups />
     <chargeHydroxyGroups />
   </rule>
   <rule value="ium">
@@ -174,33 +174,33 @@ sense of this -->
   </rule>
   <rule value="ous_nonCarboxylic">
     <removeOneDoubleBondedOxygen />
-    <addFunctionalIDsToHydroxyGroups/>
+    <addFunctionalAtomsToHydroxyGroups/>
   </rule>
   <rule value="oxoAndDiYl">
     <addgroup SMILES="O" bondOrder="2" />
-    <setOutID />
-    <setOutID />
+    <setOutAtom />
+    <setOutAtom />
   </rule>
   <rule value="oxoAndTriYl">
     <addgroup SMILES="O" bondOrder="2" />
-    <setOutID />
-    <setOutID />
-    <setOutID />
+    <setOutAtom />
+    <setOutAtom />
+    <setOutAtom />
   </rule>
   <rule value="oxy">
-    <addgroup SMILES="O" setsOutID="yes" />
+    <addgroup SMILES="O" setsOutAtom="yes" />
   </rule>
   <rule value="oxy-ylForAcyl">
     <addgroup SMILES="O" bondOrder="2" />
-    <addgroup SMILES="O" setsOutID="yes" />
+    <addgroup SMILES="O" setsOutAtom="yes" />
   </rule>
   <rule value="oyl">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="O" bondOrder="2" />
-    <setOutID />
+    <setOutAtom />
   </rule>
   <rule value="oyl_nonCarboxylic">
-    <convertHydroxyGroupsToOutIDs />
+    <convertHydroxyGroupsToOutAtoms />
   </rule>
   <rule value="phosphonous">
     <addgroup SMILES="P(O)O" functionalIDs="2,3"/>
@@ -209,19 +209,19 @@ sense of this -->
     <addgroup SMILES="[Se]O" functionalIDs="2"/>
   </rule>
   <rule value="selenenyl">
-    <addgroup SMILES="[Se]" setsOutID="yes"/>
+    <addgroup SMILES="[Se]" setsOutAtom="yes"/>
   </rule>
   <rule value="seleninic">
     <addgroup SMILES="[Se](=O)O" functionalIDs="3"/>
   </rule>
   <rule value="seleninyl">
-    <addgroup SMILES="[Se](=O)" setsOutID="yes"/>
+    <addgroup SMILES="[Se](=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="selenonic">
     <addgroup SMILES="[Se](=O)(=O)O" functionalIDs="4"/>
   </rule>
   <rule value="selenonyl">
-    <addgroup SMILES="[Se](=O)(=O)" setsOutID="yes"/>
+    <addgroup SMILES="[Se](=O)(=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="selone">
     <addgroup SMILES="[Se]" bondOrder="2" ketoneLocant="yes" />
@@ -233,7 +233,7 @@ sense of this -->
     <addgroup SMILES="SN" functionalIDs="2"/>
   </rule>
   <rule value="sulfenamido">
-    <addgroup SMILES="SN-" setsOutID="yes"/>
+    <addgroup SMILES="SN-" setsOutAtom="yes"/>
   </rule>
   <rule value="sulfenic">
     <addgroup SMILES="SO" functionalIDs="2"/>
@@ -242,28 +242,28 @@ sense of this -->
     <addgroup SMILES="S[Se]" functionalIDs="2"/>
   </rule>
   <rule value="sulfenoselenoyl">
-    <addgroup SMILES="S[Se]-" setsOutID="yes"/>
+    <addgroup SMILES="S[Se]-" setsOutAtom="yes"/>
   </rule>
   <rule value="sulfenothioic">
     <addgroup SMILES="SS" functionalIDs="2"/>
   </rule>
   <rule value="sulfenothioyl">
-    <addgroup SMILES="SS-" setsOutID="yes"/>
+    <addgroup SMILES="SS-" setsOutAtom="yes"/>
   </rule>
   <rule value="sulfenyl">
-    <addgroup SMILES="S" setsOutID="yes"/>
+    <addgroup SMILES="S" setsOutAtom="yes"/>
   </rule>
   <rule value="sulfinic">
     <addgroup SMILES="S(=O)O" functionalIDs="3"/>
   </rule>
   <rule value="sulfinyl">
-    <addgroup SMILES="S(=O)" setsOutID="yes"/>
+    <addgroup SMILES="S(=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="sulfonic">
     <addgroup SMILES="S(=O)(=O)O" functionalIDs="4"/>
   </rule>
   <rule value="sulfonyl">
-    <addgroup SMILES="S(=O)(=O)" setsOutID="yes"/>
+    <addgroup SMILES="S(=O)(=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="tellone">
     <addgroup SMILES="[Te]" bondOrder="2" ketoneLocant="yes" />
@@ -272,19 +272,19 @@ sense of this -->
     <addgroup SMILES="[Te]O" functionalIDs="2"/>
   </rule>
   <rule value="tellurenyl">
-    <addgroup SMILES="[Te]" setsOutID="yes"/>
+    <addgroup SMILES="[Te]" setsOutAtom="yes"/>
   </rule>
   <rule value="tellurinic">
     <addgroup SMILES="[Te](=O)O" functionalIDs="3"/>
   </rule>
   <rule value="tellurinyl">
-    <addgroup SMILES="[Te](=O)" setsOutID="yes"/>
+    <addgroup SMILES="[Te](=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="telluronic">
     <addgroup SMILES="[Te](=O)(=O)O" functionalIDs="4"/>
   </rule>
   <rule value="telluronyl">
-    <addgroup SMILES="[Te](=O)(=O)" setsOutID="yes"/>
+    <addgroup SMILES="[Te](=O)(=O)" setsOutAtom="yes"/>
   </rule>
   <rule value="thiolate">
     <addgroup SMILES="[S-]" />
@@ -293,17 +293,17 @@ sense of this -->
     <changecharge charge="-1" protons="1" />
   </rule>
   <rule value="yl">
-    <setOutID />
+    <setOutAtom />
   </rule>
   <rule value="diyl">
-    <setOutID />
-    <setOutID />
+    <setOutAtom />
+    <setOutAtom />
   </rule>
   <rule value="ylidene">
-    <setOutID outValency="2" />
+    <setOutAtom outValency="2" />
   </rule>
   <rule value="ylidyne">
-    <setOutID outValency="3" />
+    <setOutAtom outValency="3" />
   </rule>
   <rule value="ylium">
     <changecharge charge="1" protons="-1" />

@@ -253,8 +253,9 @@ class FragmentTools {
 	 *
 	 * @param fragment The fragment
 	 * @return the appropriate atom indice
+	 * @throws StructureBuildingException 
 	 */
-	static int findKetoneAtomIndice(Fragment fragment, int atomIndice) {
+	static int findKetoneAtomIndice(Fragment fragment, int atomIndice) throws StructureBuildingException {
 		if(fragment.getChainLength() < 3){
 			return atomIndice;
 		}
