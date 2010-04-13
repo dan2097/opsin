@@ -24,7 +24,7 @@ class FragmentManager {
 	/** All of the inter-fragment bonds */
 	private final Set<Bond> bondPile;
 	/** A mapping between fragments and inter fragment bonds */
-	private final Map<Fragment,Set<Bond>> fragToInterFragmentBond;
+	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond;
 	/** A builder for fragments specified as SMILES */
 	private final SMILESFragmentBuilder sBuilder;
 	/** A builder for fragments specified as references to a CML data file */
@@ -49,7 +49,7 @@ class FragmentManager {
 		this.idManager = idManager;
 		fragPile = new LinkedHashSet<Fragment>();
 		bondPile = new LinkedHashSet<Bond>();
-		fragToInterFragmentBond = new HashMap<Fragment, Set<Bond>>();
+		fragToInterFragmentBond = new HashMap<Fragment, LinkedHashSet<Bond>>();
 	}
 
 	/** Builds a fragment, based on a reference to a CML data file
@@ -266,7 +266,7 @@ class FragmentManager {
 	 */
 	private void addFragment(Fragment frag)  {
 		fragPile.add(frag);
-		fragToInterFragmentBond.put(frag, new HashSet<Bond>());
+		fragToInterFragmentBond.put(frag, new LinkedHashSet<Bond>());
 	}
 
 	/**
