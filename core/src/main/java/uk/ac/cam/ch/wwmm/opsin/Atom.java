@@ -153,7 +153,7 @@ class Atom {
 		if (considerOutValency){
 			currentValency+=outValency;
 		}
-		if (charge ==0){
+		if (charge ==0 || protonsExplicitlyAddedOrRemoved !=0){
 			Integer defaultValency =ValencyChecker.getDefaultValency(element);
 			if (defaultValency !=null){
 				defaultValency += protonsExplicitlyAddedOrRemoved;

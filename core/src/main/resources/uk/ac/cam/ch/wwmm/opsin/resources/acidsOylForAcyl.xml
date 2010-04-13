@@ -16,7 +16,7 @@
 
 	<token value="CC=C" valType="SMILES" usableAsAJoiner="yes">acryl</token>
 	<token value="CC#C" valType="SMILES" usableAsAJoiner="yes">propiol</token>
-	<token value="CC(=C)C" valType="SMILES" usableAsAJoiner="yes">methacryl</token>
+	<token value="CC(=C)C" valType="SMILES">methacryl</token>
 	<token value="C/C=C/C" valType="SMILES" usableAsAJoiner="yes">croton</token>
 	<token value="C\C=C/C" valType="SMILES" usableAsAJoiner="yes">isocroton</token>
 	<token value="CCCCCCCC/C=C\CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ole</token>

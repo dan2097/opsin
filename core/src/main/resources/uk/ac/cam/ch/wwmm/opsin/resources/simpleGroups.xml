@@ -112,20 +112,20 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="N" labels="none" valType="SMILES">ammonia</token>
   <token value="O" labels="none" valType="SMILES">water</token>
   <token value="O" labels="none" valType="SMILES">hydrate</token>
-  <token value="[C+]" labels="none" valType="SMILES">carbenium</token>
-  <token value="[N+]" labels="none" valType="SMILES">ammonium</token>
-  <token value="[P+]" labels="none" valType="SMILES">phosphonium</token>
-  <token value="[As+]" labels="none" valType="SMILES">arsonium</token>
-  <token value="[Sb+]" labels="none" valType="SMILES">stibonium</token>
-  <token value="[Bi+]" labels="none" valType="SMILES">bismuthonium</token>
-  <token value="[O+]" labels="none" valType="SMILES">oxonium</token>
-  <token value="[S+]" labels="none" valType="SMILES">sulfonium</token>
-  <token value="[Se+]" labels="none" valType="SMILES">selenonium</token>
-  <token value="[Te+]" labels="none" valType="SMILES">telluronium</token>
-  <token value="[F+]" labels="none" valType="SMILES">fluoronium</token>
-  <token value="[Cl+]" labels="none" valType="SMILES">chloronium</token>
-  <token value="[Br+]" labels="none" valType="SMILES">bromonium</token>
-  <token value="[I+]" labels="none" valType="SMILES">iodonium</token>
+  <token value="[C|3+]" labels="none" valType="SMILES">carbenium</token>
+  <token value="[N|4+]" labels="none" valType="SMILES">ammonium</token>
+  <token value="[P|4+]" labels="none" valType="SMILES">phosphonium</token>
+  <token value="[As|4+]" labels="none" valType="SMILES">arsonium</token>
+  <token value="[Sb|4+]" labels="none" valType="SMILES">stibonium</token>
+  <token value="[Bi|4+]" labels="none" valType="SMILES">bismuthonium</token>
+  <token value="[O|3+]" labels="none" valType="SMILES">oxonium</token>
+  <token value="[S|3+]" labels="none" valType="SMILES">sulfonium</token>
+  <token value="[Se|3+]" labels="none" valType="SMILES">selenonium</token>
+  <token value="[Te|3+]" labels="none" valType="SMILES">telluronium</token>
+  <token value="[F|2+]" labels="none" valType="SMILES">fluoronium</token>
+  <token value="[Cl|2+]" labels="none" valType="SMILES">chloronium</token>
+  <token value="[Br|2+]" labels="none" valType="SMILES">bromonium</token>
+  <token value="[I|2+]" labels="none" valType="SMILES">iodonium</token>
 
   <token value="[H-]" labels="none" valType="SMILES">hydride</token>
 
