@@ -263,8 +263,8 @@ class StereochemistryHandler {
 						return;
 					}
 				}
-				Set<Bond> interFragmentBonds = state.fragManager.getInterFragmentBonds(correspondingFrag);
-				for (Bond potentialBond : interFragmentBonds) {
+				List<Bond> sortedInterFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(correspondingFrag), correspondingFrag);
+				for (Bond potentialBond : sortedInterFragmentBonds) {
 					if (bondStereoBondMap.containsKey(potentialBond)){
 						applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 						bondStereoBondMap.remove(potentialBond);
@@ -302,8 +302,8 @@ class StereochemistryHandler {
 								return;
 							}
 						}
-						Set<Bond> interFragmentBonds = state.fragManager.getInterFragmentBonds(correspondingFrag);
-						for (Bond potentialBond : interFragmentBonds) {
+						List<Bond> sortedInterFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(correspondingFrag), correspondingFrag);
+						for (Bond potentialBond : sortedInterFragmentBonds) {
 							if (bondStereoBondMap.containsKey(potentialBond)){
 								applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 								bondStereoBondMap.remove(potentialBond);
@@ -328,6 +328,26 @@ class StereochemistryHandler {
 			}
 		}
 		throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
+	}
+
+
+	/**
+	 * Sorts bonds such that those originating from the given fragment are preferred
+	 * @param interFragmentBonds A set of interFragment Bonds
+	 * @param preferredOriginatingFragment 
+	 * @return A sorted list
+	 */
+	private static List<Bond> sortInterFragmentBonds(Set<Bond> interFragmentBonds, Fragment preferredOriginatingFragment) {
+		List<Bond> interFragmentBondList = new ArrayList<Bond>();
+		for (Bond bond : interFragmentBonds) {
+			if (bond.getFromAtom().getFrag() ==preferredOriginatingFragment){
+				interFragmentBondList.add(0, bond);
+			}
+			else{
+				interFragmentBondList.add(bond);
+			}
+		}
+		return interFragmentBondList;
 	}
 
 
