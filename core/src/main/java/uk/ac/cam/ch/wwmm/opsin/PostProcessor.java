@@ -344,14 +344,21 @@ class PostProcessor {
 			int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 			Element multipliedElem = (Element)XOMTools.getNextSibling(m);
 
-			Element possiblyALocant = (Element)XOMTools.getPreviousSibling(m);
-			if(possiblyALocant !=null && possiblyALocant.getLocalName().equals(LOCANT_EL)&& mvalue==matchComma.split(possiblyALocant.getValue()).length){
-				continue;//something like 1,2-disulfanylpropane
-			}
-
 			if(multipliedElem.getLocalName().equals(GROUP_EL) &&
 					multipliedElem.getAttribute(SUBTYPE_ATR)!=null &&
 					multipliedElem.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)) {
+				
+				Element possiblyALocant = (Element)XOMTools.getPreviousSibling(m);//detect rare case where multiplier does not mean form a chain of heteroatoms e.g. something like 1,2-disulfanylpropane
+				if(possiblyALocant !=null && possiblyALocant.getLocalName().equals(LOCANT_EL)&& mvalue==matchComma.split(possiblyALocant.getValue()).length){
+					Element suffix =(Element) XOMTools.getNextSibling(multipliedElem, SUFFIX_EL);
+					if (suffix !=null && suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL)){
+						Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(suffix);
+						if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){//NOT something like 3,3'-diselane-1,2-diyl
+							continue;
+						}
+					}
+				}
+				
 				//chain of heteroatoms
 				String smiles=multipliedElem.getAttributeValue(VALUE_ATR);
 				multipliedElem.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString(smiles, mvalue));

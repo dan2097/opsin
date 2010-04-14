@@ -1,0 +1,22 @@
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!-- See the DTD for more details -->
+<tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="G">
+  <token value="[Li]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">lithium</token>
+  <token value="[Na]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">sodium</token>
+  <token value="[K]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">potassium</token>
+  <token value="[Rb]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">rubidium</token>
+  <token value="[Cs]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">caesium</token>
+  <token value="[Cs]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">cesium</token>
+  <token value="[Fr]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">francium</token>
+
+  <token value="[Be]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">beryllium</token>
+  <token value="[Mg]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">magnesium</token>
+  <token value="[Ca]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">calcium</token>
+  <token value="[Sr]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">strontium</token>
+  <token value="[Ba]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">barium</token>
+  <token value="[Ra]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">radium</token>
+
+  <token value="[Al]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">aluminium</token>
+  <token value="[Al]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">aluminum</token>
+  <token value="[Ga]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">gallium</token>
+</tokenList>

@@ -530,6 +530,12 @@ class StructureBuilder {
 							continue mainLoop;
 						}
 					}
+				}	
+				for (Fragment frag : orderedPossibleFragments) {//something like carbon dioxide
+					if (state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR).equals(ELEMENTARYATOM_SUBTYPE_VAL)){
+						formAppropriateBondToOxideAndAdjustCharges(state, frag.getFirstAtom(), oxideAtom);
+						continue mainLoop;
+					}
 				}
 				throw new StructureBuildingException("Unable to find suitable atom or a double bond to add oxide to");
 			}
@@ -1054,6 +1060,9 @@ class StructureBuilder {
 	private void makeHydrogensExplicit(BuildState state) throws StructureBuildingException {
 		Set<Fragment> fragments = state.fragManager.getFragPile();
 		for (Fragment fragment : fragments) {
+			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
+				continue;
+			}
 			List<Atom> atomList =fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
 				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
@@ -1085,7 +1094,7 @@ class StructureBuilder {
 	/**
 	 * A net charge is present; Given the molecule element the overallCharge is there an unambiguous way of 
 	 * multiplying fragments to make the net charge 0
-	 * "cationic metals" e.g. sodium will have their charge set to 0 if a counterion is not present
+	 * metals without specified charge may be given an implicit positive charge
 	 * 
 	 * If this fails look for the case where there are multiple molecules and the mixture is only negative due to negatively charged functional Atoms e.g. pyridine acetate and remove the negative charge
 	 * @param state
@@ -1095,10 +1104,29 @@ class StructureBuilder {
 	 */
 	private void balanceChargeIfPossible(BuildState state, Element molecule, int overallCharge) throws StructureBuildingException {
 		List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, WORD_EL, TYPE_ATR, WordType.full.toString());
+		if (words.size() <2){
+			return;
+		}
 		List<Element> positivelyChargedWords = new ArrayList<Element>();
 		List<Element> negativelyChargedWords = new ArrayList<Element>();
 		HashMap<Element, Integer> wordToChargeMapping = new HashMap<Element, Integer>();
 		HashMap<Element, BuildResults> wordToBR = new HashMap<Element, BuildResults>();
+		
+		List<Element> cationicElements = new ArrayList<Element>();
+		List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+		for (Element elementaryAtom : elementaryAtoms) {
+			if (elementaryAtom.getAttribute(TYPICALANDMAXIMUMCHARGE_ATR)!=null){
+				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
+				int typicalCharge = Integer.parseInt(matchComma.split(elementaryAtom.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[0]);
+				if (typicalCharge > cationicFrag.getFirstAtom().getAtomNeighbours().size()){
+					cationicElements.add(elementaryAtom);
+				}
+			}
+		}
+		overallCharge = setCationicElementsToTypicalCharge(state, cationicElements, overallCharge);
+		if (overallCharge==0){
+			return;
+		}
 		for (Element word : words) {
 			BuildResults br = new BuildResults(state, word);
 			wordToBR.put(word, br);
@@ -1111,17 +1139,19 @@ class StructureBuilder {
 			}
 			wordToChargeMapping.put(word, charge);
 		}
-		if (positivelyChargedWords.size()==1 && negativelyChargedWords.size() >=1 || positivelyChargedWords.size()>=1 && negativelyChargedWords.size() ==1 ){
+		if (positivelyChargedWords.size()==1 && cationicElements.size() ==0 && negativelyChargedWords.size() >=1 || positivelyChargedWords.size()>=1 && negativelyChargedWords.size() ==1 ){
 			boolean success = multiplyChargedWords(state, negativelyChargedWords, positivelyChargedWords, wordToChargeMapping, overallCharge);
 			if (success){
 				return;
 			}
 		}
-		else if (negativelyChargedWords.size()==0){
-			setCationicMetalsToNeutral(state, positivelyChargedWords);
-			return;
+		if (cationicElements.size() ==1){
+			boolean success = setChargeOnCationicElementAppropriately(state, overallCharge, cationicElements.get(0));
+			if (success){
+				return;
+			}
 		}
-		if (words.size()>1 && overallCharge <0){//neutralise functionalAtoms if they are the sole cause of the negative charge and multiple molecules are present
+		if (overallCharge <0){//neutralise functionalAtoms if they are the sole cause of the negative charge and multiple molecules are present
 			int chargeOnFunctionalAtoms = 0;
 			for (Element word : words) {
 				BuildResults br = wordToBR.get(word);
@@ -1141,6 +1171,27 @@ class StructureBuilder {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Sets the cationicElements to their typical charge as specified by the TYPICALANDMAXIMUMCHARGE_ATR
+	 * The number of atoms the cationicElement is connected to is taken into account e.g. phenylmagnesium chloride is [Mg+]
+	 * @param state
+	 * @param cationicElements
+	 * @param overallCharge
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private int setCationicElementsToTypicalCharge(BuildState state, List<Element> cationicElements, int overallCharge) throws StructureBuildingException {
+		for (Element cationicElement : cationicElements) {
+			Fragment cationicFrag = state.xmlFragmentMap.get(cationicElement);
+			int charge = Integer.parseInt(matchComma.split(cationicElement.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[0]);
+			charge -= cationicFrag.getFirstAtom().getAtomNeighbours().size();
+			overallCharge += charge;
+			cationicFrag.getFirstAtom().setCharge(charge);
+		}
+		return overallCharge;
 	}
 
 	/**
@@ -1173,17 +1224,6 @@ class StructureBuilder {
 			firstChild = (Element) firstChild.getChild(0);
 		}
 		if (firstChild.getLocalName().equals("multiplier")){//e.g. monochloride. Allows specification of explicit stoichiometry
-			if (overallCharge >0 && positivelyChargedWords.size()==1){//something like barium monohydroxide -barium is 1+ rather than 2+
-				List<Element> cationicMetals = XOMTools.getDescendantElementsWithTagNameAndAttribute(positivelyChargedWords.get(0), GROUP_EL, SUBTYPE_ATR, CATIONICMETAL_SUBTYPE_VAL);
-				if (cationicMetals.size()==1){
-					Atom firstAtom = state.xmlFragmentMap.get(cationicMetals.get(0)).getFirstAtom();
-					if (firstAtom.getCharge() -overallCharge >0){
-						firstAtom.setCharge(firstAtom.getCharge() -overallCharge);
-						firstAtom.setLambdaConventionValency(0);
-						return true;
-					}
-				}
-			}
 			return false;
 		}
 		int charge = wordToChargeMapping.get(wordToMultiply);
@@ -1195,24 +1235,18 @@ class StructureBuilder {
 		}
 		return true;
 	}
-
-	/**
-	 * Sets the charge and valency of any cation metals within any of the list of words provided to 0
-	 * @param state
-	 * @param positivelyChargedWords
-	 * @throws StructureBuildingException
-	 */
-	private void setCationicMetalsToNeutral(BuildState state,List<Element> positivelyChargedWords) throws StructureBuildingException {
-		for (Element positiveWord : positivelyChargedWords) {
-			List<Element> cationicMetals = XOMTools.getDescendantElementsWithTagNameAndAttribute(positiveWord, GROUP_EL, SUBTYPE_ATR, CATIONICMETAL_SUBTYPE_VAL);
-			for (Element cationicMetal : cationicMetals) {
-				Atom firstAtom = state.xmlFragmentMap.get(cationicMetal).getFirstAtom();
-				firstAtom.setCharge(0);
-				firstAtom.setLambdaConventionValency(0);
-			}
-		}
-	}
 	
+	private boolean setChargeOnCationicElementAppropriately(BuildState state, int overallCharge, Element cationicElement) throws StructureBuildingException {
+		Atom cation = state.xmlFragmentMap.get(cationicElement).getFirstAtom();
+		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
+		int maximumCharge = Integer.parseInt(matchComma.split(cationicElement.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[1]);
+		if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
+			cation.setCharge(chargeOnCationNeeded);
+			return true;
+		}
+		return false;
+	}
+
 	private Element findRightMostGroupInWordOrWordRule(Element wordOrWordRule) throws StructureBuildingException {
 		if (wordOrWordRule.getLocalName().equals(WORDRULE_EL)){
 			List<Element> words = XOMTools.getDescendantElementsWithTagName(wordOrWordRule, WORD_EL);
