@@ -34,11 +34,11 @@ class Tokeniser {
 			 * Section of name that was uninterpretable (or "" if none was)
 			 * Section of name that was unparsable (or "" if none was). This is always shorter or equal to the above string
 			 */
-			ThreeReturnValues<List<ParseTokens>, String, String> output= parseRules.getParses(unparsedName);
-			List<ParseTokens> parseTokens =output.getFirst();
-			String unparseableName = output.getSecond();
-			String parsedName = unparsedName.substring(0, unparsedName.length() - unparseableName.length());
-			if (parseTokens.size()>0 && (unparseableName.equals("") || unparseableName.charAt(0) ==' ')){//a word was interpretable
+			ParseRulesResults results = parseRules.getParses(unparsedName);
+			List<ParseTokens> parseTokens =results.getParseTokensList();
+			String uninterpretableName = results.getUninterpretableName();
+			String parsedName = unparsedName.substring(0, unparsedName.length() - uninterpretableName.length());
+			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(0) ==' ')){//a word was interpretable
 				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 				//In cases of properly formed names there will be only one ParseWord
 				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -46,18 +46,18 @@ class Tokeniser {
 				for (int j = 0; j < parseWords.size(); j++) {
 					parse.addWord(parseWords.get(j));
 				}
-				if (!unparseableName.equals("")){
-					unparsedName = unparseableName.substring(1);//remove white space at start of unparseableName
+				if (!uninterpretableName.equals("")){
+					unparsedName = uninterpretableName.substring(1);//remove white space at start of uninterpretableName
 				}
 				else{
-					unparsedName = unparseableName;
+					unparsedName = uninterpretableName;
 				}
 			}
 			else{//word is unparsable as is. Try and remove a space and try again
 				//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-				int indexOfSpace = unparseableName.indexOf(' ');
+				int indexOfSpace = uninterpretableName.indexOf(' ');
 				if (indexOfSpace != -1 ){
-					unparsedName = parsedName + unparseableName.substring(0, indexOfSpace) + unparseableName.substring(indexOfSpace +1);
+					unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
 				}
 				else{
 					if (parsedName.equals("")){

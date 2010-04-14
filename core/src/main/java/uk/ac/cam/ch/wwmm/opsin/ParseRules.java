@@ -103,7 +103,7 @@ class ParseRules {
 	 * @return
 	 * @throws ParsingException
 	 */
-	ThreeReturnValues<List<ParseTokens>, String, String> getParses(String chemicalWord) throws ParsingException {
+	ParseRulesResults getParses(String chemicalWord) throws ParsingException {
 		AnnotatorState startingAS = new AnnotatorState();
 		startingAS.state = chemAutomaton.getInitialState();
 		startingAS.annot = new ArrayList<Character>();
@@ -225,7 +225,7 @@ class ParseRules {
 				uninterpretableName=as.untokenisedChemicalName;//all acceptable annotator states found should have the same untokenisedName
 			}
 		}
-		return new ThreeReturnValues<List<ParseTokens>, String, String>(outputList, uninterpretableName, unparseableName);
+		return new ParseRulesResults(outputList, uninterpretableName, unparseableName);
 	}
 
 	/**Groups the token annotations for a given word into substituent/s and/or a maingroup and/or functionalTerm by
