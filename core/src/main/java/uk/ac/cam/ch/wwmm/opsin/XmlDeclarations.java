@@ -146,6 +146,7 @@ class XmlDeclarations {
     static final String USABLEASJOINER_ATR = "usableAsAJoiner";
     static final String FRONTLOCANTSEXPECTED_ATR = "frontLocantsExpected";
     static final String SUFFIXAPPLIESTO_ATR = "suffixAppliesTo";
+    static final String TYPICALANDMAXIMUMCHARGE_ATR = "typicalAndMaximumCharge";
     static final String ADDITIONALVALUE_ATR = "additionalValue";
     static final String LOCANT_ATR = "locant";
     
@@ -285,7 +286,7 @@ class XmlDeclarations {
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
-	static final String CATIONICMETAL_SUBTYPE_VAL ="cationicMetal";
+	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";

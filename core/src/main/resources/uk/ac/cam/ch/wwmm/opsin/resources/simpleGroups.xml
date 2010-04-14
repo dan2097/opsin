@@ -91,6 +91,9 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">selenite</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenate</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenoate</token>
+  <token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >selenocystine</token>
+  <token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >l-selenocystine</token>
+  <token value="C([C@H](C(=O)O)N)[Se][Se]C[C@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >d-selenocystine</token>
   <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
   <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">sulfite</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
