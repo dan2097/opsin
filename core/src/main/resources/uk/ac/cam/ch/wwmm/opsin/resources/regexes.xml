@@ -130,7 +130,7 @@ does not define a CFG.
   <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%infixedPrefixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%)|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
   <regex name="%suffixGroup%" value="(%newLocantGroup%?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
-  <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%{0,2}%multiplier%?%openBracket%)"/>
+  <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%{0,2}%multiplier%?%openBracket%%hyphen%?)"/>
   <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="((%heteroReplacement%|%hydroGroup%)*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?))"/><!--bigCapitalH before lambdaConvention is preferred-->
   <regex name="%ringNonDetachableFeatures%" value="(%heteroReplacement%*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes -->
   <regex name="%acyclicNonDetachableFeatures%" value="(%heteroReplacement%*%lambdaConvention%?%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->

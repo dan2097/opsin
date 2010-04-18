@@ -16,13 +16,13 @@ the contracted form is allowed for all ring systems-->
   <token value="as-indacene" valType="dbkey">as-indac</token>
   <token value="azulene" valType="dbkey">azul</token>
   <token value="C(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzhydr</token>
-  <token value="benzene" valType="dbkey">benz</token><!--The fact that benzyl is methylbenzene is handled by the postprocessor-->
+  <token value="Cc1ccccc1" labels="alpha/1/2/3/4/5/6" valType="SMILES">benz</token>
   <token value="benzene" valType="dbkey">phen</token>
   <token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthr</token>
   <token value="chrysene" valType="dbkey">chrys</token>
   <token value="cinnoline" valType="dbkey">cinnol</token>
   <token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coron</token>
-  <token value="cumene" valType="dbkey">cum</token>
+  <token value="C(C)(C)c1ccccc1" labels="///1/2/3/4/5/6" valType="SMILES">cum</token>
   <token value="cyclopenta[a]phenanthrene" valType="dbkey">cyclopenta[a]phenanthr</token>
   <token value="cumene" valType="dbkey" addGroup="C locant4">cym</token>
   <token value="fluoranthene" valType="dbkey">fluoranth</token>

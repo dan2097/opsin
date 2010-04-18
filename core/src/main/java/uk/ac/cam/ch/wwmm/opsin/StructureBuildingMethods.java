@@ -321,7 +321,13 @@ class StructureBuildingMethods {
 			Element hydrogen = hydrogenElements.get(i);
 			String locant = getLocant(hydrogen);
 			if(!locant.equals("0")) {
-				thisFrag.getAtomByLocantOrThrow(locant).setSpareValency(false);
+				Atom a =thisFrag.getAtomByLocantOrThrow(locant);
+				if (a.hasSpareValency()){
+					a.setSpareValency(false);
+				}
+				else{
+					throw new StructureBuildingException("hydrogen addition at locant: " + locant +" was requested, but this atom is not unsaturated");
+				}
 				hydrogenElements.remove(hydrogen);
 				hydrogen.detach();
 			}
