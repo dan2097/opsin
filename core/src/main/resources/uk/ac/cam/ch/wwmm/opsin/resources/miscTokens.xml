@@ -15,7 +15,10 @@
   </tokenList>
 
   <tokenList tagname="hydro" symbol="y">
+    <token value="dehydro">dehydro</token>
     <token value="hydro">hydro</token>
+  </tokenList>
+  <tokenList tagname="hydro" symbol="ú">
     <token value="perhydro">perhydro</token>
   </tokenList>
 

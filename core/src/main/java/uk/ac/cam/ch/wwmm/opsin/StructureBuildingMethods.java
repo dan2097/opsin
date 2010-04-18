@@ -1,8 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -293,6 +295,7 @@ class StructureBuildingMethods {
 		ArrayList<Element> unsaturators = new ArrayList<Element>();
 		ArrayList<Element> heteroatoms = new ArrayList<Element>();
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
+		ArrayList<Element> dehydroElements = new ArrayList<Element>();
 
 		Elements children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
@@ -305,7 +308,12 @@ class StructureBuildingMethods {
 				heteroatoms.add(currentEl);
 			}
 			else if (elName.equals(HYDRO_EL)){
-				hydrogenElements.add(currentEl);
+				if (!currentEl.getValue().equals("dehydro")){
+					hydrogenElements.add(currentEl);
+				}
+				else{
+					dehydroElements.add(currentEl);
+				}
 			}
 			else if (elName.equals(HYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
@@ -332,6 +340,27 @@ class StructureBuildingMethods {
 				hydrogen.detach();
 			}
 		}
+		
+		List<Atom> atomsToFormTripleBondsBetween =new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
+		for(int i=dehydroElements.size() -1;i >= 0;i--) {
+			Element dehydro = dehydroElements.get(i);
+			String locant = getLocant(dehydro);
+			if(!locant.equals("0")) {
+				Atom a =thisFrag.getAtomByLocantOrThrow(locant);
+				if (!a.hasSpareValency()){
+					a.setSpareValency(true);
+				}
+				else{
+					atomsToFormTripleBondsBetween.add(a);
+				}
+				hydrogenElements.remove(dehydro);
+				dehydro.detach();
+			}
+			else{
+				throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
+			}
+		}
+		addDehydroInducedTripleBonds(thisFrag, atomsToFormTripleBondsBetween);
 
 		for(int i=unsaturators.size() -1;i >= 0;i--) {
 			Element unsaturator = unsaturators.get(i);
@@ -369,6 +398,38 @@ class StructureBuildingMethods {
 	}
 
 	/**
+	 * Attempts to form triple bond between the atoms in atomsToFormTripleBondsBetween
+	 * Throws an exception if the list contains duplicates or atoms with no adjacent atom in the list
+	 * @param thisFrag
+	 * @param atomsToFormTripleBondsBetween
+	 * @throws StructureBuildingException
+	 */
+	private static void addDehydroInducedTripleBonds(Fragment thisFrag,List<Atom> atomsToFormTripleBondsBetween) throws StructureBuildingException {
+		if (atomsToFormTripleBondsBetween.size()>0){
+			Set<Atom> atoms = new HashSet<Atom>(atomsToFormTripleBondsBetween);
+			if (atomsToFormTripleBondsBetween.size() != atoms.size()){
+				throw new StructureBuildingException("locants specified for dehydro specify the same atom too many times");
+			}
+			atomLoop: for (int i = atomsToFormTripleBondsBetween.size()-1; i >=0; i = i-2) {//two atoms will have a triple bond formed betwen them
+				Atom a  = atomsToFormTripleBondsBetween.get(i);
+				List<Atom> neighbours = a.getAtomNeighbours();
+				for (Atom neighbour : neighbours) {
+					if (atomsToFormTripleBondsBetween.contains(neighbour)){
+						atomsToFormTripleBondsBetween.remove(i);
+						atomsToFormTripleBondsBetween.remove(neighbour);
+						Bond b = thisFrag.findBondOrThrow(a, neighbour);
+						b.setOrder(3);
+						a.setSpareValency(false);
+						neighbour.setSpareValency(false);
+						continue atomLoop;
+					}
+				}
+				throw new StructureBuildingException("dehydro indicated atom should form a triple bond but no adjacent atoms also had hydrogen removed!");
+			}
+		}
+	}
+
+	/**
 	 * Adds locanted unsaturators, heteroatoms and hydrogen elements to the group within the sub or root
 	 * @param state
 	 * @param subOrRoot
@@ -397,7 +458,9 @@ class StructureBuildingMethods {
 				heteroatoms.add(currentEl);
 			}
 			else if (elName.equals(HYDRO_EL)){
-				hydrogenElements.add(currentEl);
+				if (!currentEl.getValue().equals("dehydro")){
+					hydrogenElements.add(currentEl);
+				}
 			}
 			else if (elName.equals(HYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
