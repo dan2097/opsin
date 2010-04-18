@@ -18,7 +18,7 @@
   <token value="N1C(=O)NC(=O)C(=O)C(=O)1" labels="1/2//3/4//5//6/" valType="SMILES">alloxan</token>
   <token value="NC(C)Cc1ccccc1" labels="////1/2/3/4/5/6" valType="SMILES">amphetamin</token>
   <token value="aniline" valType="dbkey">anilin</token>
-  <token value="c1(ccccc1)OC" labels="1/2/3/4/5/6//" valType="SMILES">anisol</token>
+  <token value="c1(ccccc1)OC" labels="1/2/3/4/5/6//alpha" valType="SMILES">anisol</token>
   <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES">anthracen</token>
   <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES" addGroup="=O locant9;=O locant10">anthraquinon</token>
   <token value="c1cccc2[as]c3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">arsanthren</token>

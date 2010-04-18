@@ -1341,16 +1341,7 @@ class PostProcessor {
 	 */
 	private void handleGroupIrregularities(Element group) throws PostProcessingException {
 		String groupValue =group.getValue();
-		/* Benzyl, benzyloxy etc. Add a methylene */
-		if(groupValue.equals("benz")) {
-			Element possibleSuffix = XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{LOCANT_EL, MULTIPLIER_EL});
-			if (possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
-				group.getAttribute(VALUE_ATR).setValue("Cc1ccccc1");
-				group.getAttribute(VALTYPE_ATR).setValue(SMILES_VALTYPE_VAL);
-				group.addAttribute(new Attribute(LABELS_ATR, "alpha/1/2/3/4/5/6"));
-			}
-		}
-		else if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
+		if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().equals("ol")){

@@ -43,6 +43,12 @@
     <token value="B(O)(O)O" labels="none" valType="SMILES">bor</token>
     <token value="BO" labels="none" valType="SMILES">borin</token>
     <token value="B(O)O" labels="none" valType="SMILES">boron</token>
+    <token value="C(O)(O)O" labels="none" valType="SMILES">orthoform</token>
+    <token value="CC(O)(O)O" labels="none" valType="SMILES">orthoacet</token>
+    <token value="CCC(O)(O)O" labels="none" valType="SMILES">orthopropion</token>
+    <token value="CCCC(O)(O)O" labels="none" valType="SMILES">orthobutyr</token>
+    <token value="CCCCC(O)(O)O" labels="none" valType="SMILES">orthovaler</token>
+    <token value="OC(=O)OC(=O)O" labels="none" valType="SMILES">pyrocarbon</token>
     <token value="[Se](O)(O)(=O)=O" labels="none" valType="SMILES">selen</token>
     <token value="[Te](O)(O)(=O)=O" labels="none" valType="SMILES">tellur</token>
   </tokenList>
