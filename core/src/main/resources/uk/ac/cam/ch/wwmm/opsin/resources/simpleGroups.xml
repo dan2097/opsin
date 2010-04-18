@@ -138,6 +138,17 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="I" labels="none" valType="SMILES">hydroiodide</token>
   <token value="[At]" labels="none" valType="SMILES">hydroastatide</token>
 
+  <token value="F" labels="none" valType="SMILES">hydrofluoricacid</token>
+  <token value="F" labels="none" valType="SMILES">hydrofluoric acid</token>
+  <token value="Cl" labels="none" valType="SMILES">hydrochloricacid</token>
+  <token value="Cl" labels="none" valType="SMILES">hydrochloric acid</token>
+  <token value="Br" labels="none" valType="SMILES">hydrobromicacid</token>
+  <token value="Br" labels="none" valType="SMILES">hydrobromic acid</token>
+  <token value="I" labels="none" valType="SMILES">hydroiodicacide</token>
+  <token value="I" labels="none" valType="SMILES">hydroiodic acide</token>
+  <token value="[At]" labels="none" valType="SMILES">hydroastaticacid</token>
+  <token value="[At]" labels="none" valType="SMILES">hydroastatic acid</token>
+
 <!-- Mononuclear acids that are NOT modified by infixes. They may be modified by prefixes-->
   <token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromic</token>
   <token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromicacid</token>

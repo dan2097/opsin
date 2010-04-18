@@ -99,7 +99,8 @@ does not define a CFG.
   <regex name="%simpleCyclicGroup%" value="á"/>
   <regex name="%acetalClass%" value="í"/>
   <regex name="%chalcogenReplacement%" value="ó"/>
-  <!--up to ascii 162 used -->
+  <regex name="%perhydro%" value="ú"/>
+  <!--up to ascii 163 used -->
 
 <!-- composite regexes-->
 
@@ -122,7 +123,7 @@ does not define a CFG.
   <regex name="%unsaturation%" value="(%newLocantGroupNoOMP%?%multiplier%?%unsaturator%)"/>
   <regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
   <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locantGroup%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
-  <regex name="%hydroGroup%" value="(%locantGroup%?%multiplier%%hydro%%hyphen%?)"/>
+  <regex name="%hydroGroup%" value="((%locantGroup%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/>
   <regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%suffix%)"/>
   <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
   <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)" />
@@ -195,7 +196,7 @@ does not define a CFG.
 
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|(%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%)%inlineEndings%|%fusedRingSystem%%inlineEndings%|%fusedRingSystemFromTrivialRingSubstituent%)"/>
   <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
-  <regex name="%subsituentBody%" value= "(%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%)"/>
+  <regex name="%subsituentBody%" value= "(%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%|%hydroGroup%)"/>
   <regex name="%substituent%" value= "(%locantOpenBracket%*%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%subsituentBody%%closeBracket%*%interSubstituentHyphen%?%endOfSubstituent%)"/>
 
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%|%fusedRingSystem%)%rootEnding%|%simpleCyclicGroup%)"/>

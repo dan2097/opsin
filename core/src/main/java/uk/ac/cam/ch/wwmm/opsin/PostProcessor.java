@@ -126,8 +126,8 @@ class PostProcessor {
 		 *  places the elements inbetween within the newly created bracket */
 		while(findAndStructureBrackets(substituentsAndRoot));
 
-		for (Element group : groups) {
-			processHydroSubstituents(group);//this REMOVES hydro substituents and adds hydro elements in front of an appropriate ring
+		for (int i = substituentsAndRoot.size() -1; i >=0; i--) {
+			removeHydroSubstituents(substituentsAndRoot.get(i), substituentsAndRoot);//this REMOVES substituents just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
 		}
 
 		addOmittedSpaces(moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
@@ -1448,20 +1448,30 @@ class PostProcessor {
 	}
 
 	/**
-	 * Converts hydro substituents to properties of the next group of type ring
-	 * @param group
+	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
+	 * substituentsAndRoot is updated as appropriate
+	 * @param substituent
+	 * @param substituentsAndRoot 
 	 * @throws PostProcessingException
 	 */
-	private void processHydroSubstituents(Element group) throws PostProcessingException {
-		String groupValue = group.getValue();
-		if (groupValue.equals("hydro") || groupValue.equals("perhydro")){
-			if (groupValue.equals("hydro")){
-				Element multiplier = (Element) XOMTools.getPreviousSibling(group);
+	private void removeHydroSubstituents(Element substituent, List<Element> substituentsAndRoot) throws PostProcessingException {
+		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
+		if (hydroElements.size() >0 && substituent.getChildElements(GROUP_EL).size()==0){
+			Element hydroSubstituent = substituent;
+			if (hydroElements.size()!=1){
+				throw new PostProcessingException("Unexpected number of hydro elements found in substituent");
+			}
+			Element hydroElement = hydroElements.get(0);
+			String hydroValue = hydroElement.getValue();
+			if (hydroValue.equals("hydro") || hydroValue.equals("dihydro")){
+				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
 				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
 					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
 				}
+				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
+					throw new PostProcessingException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
+				}
 			}
-			Element hydroSubstituent =(Element) group.getParent();
 			Element targetRing =null;
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
 			//first check adjacent substituent/root. If this is locantless then we can assume the hydro is acting as a nondetachable prefix
@@ -1520,20 +1530,17 @@ class PostProcessor {
 			if (targetRing ==null){
 				throw new PostProcessingException("Cannot find ring for hydro substituent to apply to");
 			}
-			//move the children of the hydro substituent, and change the group tag into a hydro tag
+			//move the children of the hydro substituent
 			Elements children =hydroSubstituent.getChildElements();
 			for (int i = children.size()-1; i >=0 ; i--) {
 				Element child =children.get(i);
 				if (!child.getLocalName().equals(HYPHEN_EL)){
 					child.detach();
-					if (child.getLocalName().equals(GROUP_EL)){
-						child =new Element(HYDRO_EL);
-						child.appendChild(groupValue);
-					}
 					targetRing.getParent().insertChild(child, 0);
 				}
 			}
 			hydroSubstituent.detach();
+			substituentsAndRoot.remove(hydroSubstituent);
 		}
 	}
 
