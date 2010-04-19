@@ -2,6 +2,7 @@
 <!-- See the DTD for more details -->
 <!--These are groups that can be followed by charge modifying suffixes and should be terminated by an e or an inline suffix if used as substituent -->
 <tokenList tagname="group" type="substituent" subType="groupStem" symbol="g">
+  <token value="C=C=C" valType="SMILES" usableAsAJoiner="yes">allen</token>
   <token value="[N-]" labels="none" valType="SMILES">amid</token>
   <token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amin</token>
   <token value="N[C@H](C(=O)O)CCC(=O)N[C@@H](CS)C(=O)NCC(=O)O" labels="none" valType="SMILES">glutathion</token>

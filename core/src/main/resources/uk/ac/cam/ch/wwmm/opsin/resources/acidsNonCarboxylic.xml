@@ -43,6 +43,7 @@
     <token value="B(O)(O)O" labels="none" valType="SMILES">bor</token>
     <token value="BO" labels="none" valType="SMILES">borin</token>
     <token value="B(O)O" labels="none" valType="SMILES">boron</token>
+    <token value="C(O)(O)(O)O" labels="none" valType="SMILES">orthocarbon</token>
     <token value="C(O)(O)O" labels="none" valType="SMILES">orthoform</token>
     <token value="CC(O)(O)O" labels="none" valType="SMILES">orthoacet</token>
     <token value="CCC(O)(O)O" labels="none" valType="SMILES">orthopropion</token>

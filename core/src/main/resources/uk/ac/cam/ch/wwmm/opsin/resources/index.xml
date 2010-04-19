@@ -11,7 +11,7 @@
   <tokenFile>simpleCyclicGroups.xml</tokenFile>
   <tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
   <tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
-  <tokenFile>irregularAlkanes.xml</tokenFile>
+  <tokenFile>cyclicUnsaturableHydrocarbon.xml</tokenFile>
   <tokenFile>elementaryAtoms.xml</tokenFile>
   <tokenFile>aminoAcids.xml</tokenFile>
 

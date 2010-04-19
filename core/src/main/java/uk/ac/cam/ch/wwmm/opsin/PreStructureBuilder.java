@@ -2561,7 +2561,7 @@ class PreStructureBuilder {
 			Element lastGroupOfElementBeforeSub =groupElements.get(groupElements.size()-1);
 			if (lastGroupOfElementBeforeSub==null){throw new PostProcessingException("No group where group was expected");}
 			if (theSubstituentType.equals("chain") && theSubstituentSubType.equals("alkaneStem") &&
-					lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals("chain") && (lastGroupOfElementBeforeSub.getAttributeValue("subType").equals("alkaneStem") || lastGroupOfElementBeforeSub.getAttributeValue("subType").equals("alkaneStem-irregular"))){
+					lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals("chain") && lastGroupOfElementBeforeSub.getAttributeValue("subType").equals("alkaneStem")){
 				boolean placeInImplicitBracket =false;
 
 				Element suffixAfterGroup=(Element)XOMTools.getNextSibling(lastGroupOfElementBeforeSub, "suffix");

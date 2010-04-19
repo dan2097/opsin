@@ -282,10 +282,10 @@ class XmlDeclarations {
 	 * subType is expected to be present at minimum on all group elements
 	 */
 	static final String ALKANESTEM_SUBTYPE_VAL ="alkaneStem";
-	static final String ALKANESTEMIRREGULAR_SUBTYPE_VAL ="alkaneStem-irregular";
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
+	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
 	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";

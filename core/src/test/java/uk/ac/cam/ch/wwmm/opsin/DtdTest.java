@@ -95,6 +95,7 @@ public class DtdTest {
 			b.parse(uri.toString());
 		} catch (SAXException e) {
 			if (h.error != null) {
+				System.out.println(h.error);
 				AssertionError ae = new AssertionError("XML Validation error: "+uri.toString());
 				ae.initCause(h.error);
 				throw ae;
