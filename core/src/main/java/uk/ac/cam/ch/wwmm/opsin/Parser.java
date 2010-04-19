@@ -117,6 +117,9 @@ class Parser {
 			}
 			parses.add(parseCopy);
 		}
+		if (parses.size()==0){
+			throw new ParsingException("No parses could be found for " + name);
+		}
 		if (parses.size()>128){
 			throw new ParsingException("Too many parses generated, the current limit is 128: " + parses.size());
 		}
@@ -159,7 +162,7 @@ class Parser {
 			}
 		}
 		if (results.size()==0){
-			throw new ParsingException("No parses for " + name);
+			throw new ParsingException(name + " could be parsed but OPSIN was unsure of the meaning of the words. This error will occur, by default, if a name is just a substituent");
 		}
 		
 		return results;
