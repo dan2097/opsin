@@ -505,14 +505,14 @@ class StereoAnalyser {
 				Atom a1 = bond.getFromAtom();
 				List<Atom> neighbours1 = a1.getAtomNeighbours();
 				neighbours1.remove(bond.getToAtom());
-				if (neighbours1.size()==2 || neighbours1.size()==1 && a1.getElement().equals("N")){
+				if (neighbours1.size()==2 || (neighbours1.size()==1 && a1.getElement().equals("N") && a1.getIncomingValency()==3 && a1.getCharge()==0)){
 					if (neighbours1.size()==2 && mappingToColour.get(neighbours1.get(0))== mappingToColour.get(neighbours1.get(1))){
 						continue;
 					}
 					Atom a2 = bond.getToAtom();
 					List<Atom> neighbours2 = a2.getAtomNeighbours();
 					neighbours2.remove(bond.getFromAtom());
-					if (neighbours2.size()==2 || neighbours2.size()==1 && a2.getElement().equals("N")){
+					if (neighbours2.size()==2 || (neighbours2.size()==1 && a2.getElement().equals("N") && a2.getIncomingValency()==3 && a2.getCharge()==0)){
 						if (neighbours2.size()==2 && mappingToColour.get(neighbours2.get(0))== mappingToColour.get(neighbours2.get(1))){
 							continue;
 						}
