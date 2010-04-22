@@ -199,8 +199,12 @@ class PreStructureBuilder {
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				processMultipliers(subOrRoot);
+				detectConjunctiveSuffixGroups(state, subOrRoot, groups);
 				matchLocantsToDirectFeatures(subOrRoot);
-				preliminaryProcessSuffixes(state, subOrRoot);
+
+				Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
+				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
+				preliminaryProcessSuffixes(state, lastGroupInSubOrRoot, XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
 
 			if (processPrefixFunctionalReplacementNomenclature(state, groups, substituents)){//true if functional replacement performed, 1 or more substituents will have been removed
@@ -229,7 +233,8 @@ class PreStructureBuilder {
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				matchLocantsToIndirectFeatures(state, subOrRoot);
-				resolveSuffixes(state, subOrRoot.getFirstChildElement(GROUP_EL), subOrRoot.getChildElements(SUFFIX_EL));
+				processConjunctiveNomenclature(state, subOrRoot);
+				resolveSuffixes(state, subOrRoot.getFirstChildElement(GROUP_EL), XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
 
 			removeClarifyingBrackets(brackets, substituentsAndRootAndBrackets);//e.g. (tetramethyl)azanium == tetramethylazanium
@@ -858,22 +863,22 @@ class PreStructureBuilder {
 	 * @param elem The substituent/root to looks for multipliers in.
 	 */
 	private void processMultipliers(Element elem) {
-		Elements multipliers = elem.getChildElements("multiplier");
+		Elements multipliers = elem.getChildElements(MULTIPLIER_EL);
 		for(int i=0;i<multipliers.size();i++) {
 			Element m = multipliers.get(i);
 
 			ArrayList<Element> locants = new ArrayList<Element>();
 			Element possibleLocant =(Element)XOMTools.getPreviousSibling(m);
-			while(possibleLocant!=null && possibleLocant.getLocalName().equals("locant")) {
+			while(possibleLocant!=null && possibleLocant.getLocalName().equals(LOCANT_EL)) {
 				locants.add(possibleLocant);
 				possibleLocant = (Element)XOMTools.getPreviousSibling(possibleLocant);
 			}
 			Element nextElem = (Element)XOMTools.getNextSibling(m);
 			String nextName = nextElem.getLocalName();
-			if(nextName.equals("unsaturator") ||
-					nextName.equals("suffix") ||
-					nextName.equals("heteroatom") ||
-					nextName.equals("hydro")) {
+			if(nextName.equals(UNSATURATOR_EL) ||
+					nextName.equals(SUFFIX_EL) ||
+					nextName.equals(HETEROATOM_EL) ||
+					nextName.equals(HYDRO_EL)) {
 				int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 				for(int j=0;j<mvalue;j++) {
 					Element newElement =null;
@@ -891,8 +896,8 @@ class PreStructureBuilder {
 						Element locant =locants.get(j);
 						String locantValue =locant.getAttributeValue(VALUE_ATR);
 						//If a compound Locant e.g. 1(6) is detected add a compound locant attribute
-						if (locant.getAttribute("compoundLocant")!=null){
-							referent.addAttribute(new Attribute("compoundLocant", locant.getAttributeValue("compoundLocant")));
+						if (locant.getAttribute(COMPOUNDLOCANT_ATR)!=null){
+							referent.addAttribute(new Attribute(COMPOUNDLOCANT_ATR, locant.getAttributeValue(COMPOUNDLOCANT_ATR)));
 						}
 						referent.addAttribute(new Attribute(LOCANT_ATR, locantValue));
 						locant.detach();
@@ -905,6 +910,105 @@ class PreStructureBuilder {
 					}
 				}
 				m.detach();
+			}
+		}
+	}
+
+
+	private void detectConjunctiveSuffixGroups(BuildState state, Element subOrRoot, List<Element> allGroups) throws PostProcessingException, StructureBuildingException {
+		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		if (groups.size()>1){
+			List<Element> conjunctiveGroups = new ArrayList<Element>();
+			Element ringGroup =null;
+			for (int i = groups.size() -1 ; i >=0; i--) {
+				Element group =groups.get(i);
+				if (!group.getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){//e.g. the methanol in benzenemethanol.
+					conjunctiveGroups.add(group);
+				}
+				else{
+					ringGroup =group;
+					break;
+				}
+			}
+			if (conjunctiveGroups.size() ==0){
+				return;
+			}
+			if (ringGroup ==null){
+				throw new PostProcessingException("OPSIN bug: unable to find ring associated with conjunctive suffix group");
+			}
+			if (conjunctiveGroups.size()==2){//e.g. 1,3-benzenebis(ethylamine)
+				Element amineGroup = conjunctiveGroups.get(0);
+				if (!amineGroup.getValue().equals("amine")){
+					throw new PostProcessingException("OPSIN Bug: amine not found where amine expected in conjunctive nomenclature handling routine");
+				}
+				Element alkylGroup =groups.get(1);
+				if (!alkylGroup.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){
+					throw new PostProcessingException("OPSIN Bug: alkyl excepted before amine in conjunctive nomenclature");
+				}
+				Fragment alkylFrag = state.xmlFragmentMap.get(alkylGroup);
+				Fragment amineFrag = state.xmlFragmentMap.get(amineGroup);
+				if (alkylFrag.getOutAtoms().size()!=1){
+					throw new PostProcessingException("OPSIN Bug: alkyl expected to have one outAtom");
+				}
+				OutAtom out =alkylFrag.getOutAtom(0);
+				alkylFrag.removeOutAtom(0);
+				state.fragManager.createBond(out.getAtom(), amineFrag.getFirstAtom(), out.getValency());
+				state.fragManager.incorporateFragment(alkylFrag, amineFrag);
+				conjunctiveGroups.remove(alkylGroup);
+				allGroups.remove(alkylGroup);
+			}
+			if (conjunctiveGroups.size()!=1){
+				throw new PostProcessingException("OPSIN Bug: Two groups exactly should be present at this point when processing conjunctive nomenclature");
+			}
+			Element primaryConjunctiveGroup =conjunctiveGroups.get(0);
+			Fragment primaryConjunctiveFrag = state.xmlFragmentMap.get(primaryConjunctiveGroup);
+			//remove all locants
+			List<Atom> atomList = primaryConjunctiveFrag.getAtomList();
+			for (Atom atom : atomList) {
+				atom.clearLocants();
+			}
+			List<Element> suffixes = new ArrayList<Element>();
+			Element possibleSuffix = (Element) XOMTools.getNextSibling(primaryConjunctiveGroup);
+			while (possibleSuffix !=null){
+				if (possibleSuffix.getLocalName().equals(SUFFIX_EL)){
+					suffixes.add(possibleSuffix);
+				}
+				possibleSuffix = (Element) XOMTools.getNextSibling(possibleSuffix);
+			}
+			preliminaryProcessSuffixes(state, primaryConjunctiveGroup, suffixes);
+			resolveSuffixes(state, primaryConjunctiveGroup, suffixes);
+			for (int i = 0; i < suffixes.size(); i++) {
+				suffixes.get(i).detach();
+			}
+			primaryConjunctiveGroup.setLocalName(CONJUNCTIVESUFFIXGROUP_EL);
+			allGroups.remove(primaryConjunctiveGroup);
+			
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(primaryConjunctiveGroup);
+			ArrayList<Element> locants = new ArrayList<Element>();
+			if (MULTIPLIER_EL.equals(possibleMultiplier.getLocalName())){
+				int multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				for (int i = 1; i < multiplier; i++) {
+					Element conjunctiveSuffixGroup = new Element(primaryConjunctiveGroup);
+					Fragment newFragment = state.fragManager.copyFragment(primaryConjunctiveFrag);
+					state.xmlFragmentMap.put(conjunctiveSuffixGroup, newFragment);
+					conjunctiveGroups.add(conjunctiveSuffixGroup);
+					XOMTools.insertAfter(primaryConjunctiveGroup, conjunctiveSuffixGroup);
+				}
+				Element possibleLocant =(Element)XOMTools.getPreviousSibling(possibleMultiplier);
+				possibleMultiplier.detach();
+				while(LOCANT_EL.equals(possibleLocant.getLocalName())) {
+					locants.add(possibleLocant);
+					possibleLocant = (Element)XOMTools.getPreviousSibling(possibleLocant);
+				}
+				if (locants.size()>0){
+					if (locants.size()!=multiplier){
+						throw new PostProcessingException("mismatch between number of locants and multiplier in conjunctive nomenclature routine");
+					}
+					for (int i = 0; i < locants.size(); i++) {
+						conjunctiveGroups.get(i).addAttribute(new Attribute(LOCANT_ATR, locants.get(i).getAttributeValue(VALUE_ATR)));
+						locants.get(i).detach();
+					}
+				}
 			}
 		}
 	}
@@ -999,6 +1103,7 @@ class PreStructureBuilder {
 			if(referent.getAttribute("multiplied") == null && (refName.equals("unsaturator") ||
 					refName.equals("suffix") ||
 					refName.equals("heteroatom") ||
+					refName.equals(CONJUNCTIVESUFFIXGROUP_EL) ||
 					(refName.equals("hydro") && !referent.getValue().startsWith("per") ))) {
 	
 				//If a compound Locant e.g. 1(6) is detected add a compound locant attribute
@@ -1016,28 +1121,26 @@ class PreStructureBuilder {
 	 * Handles suffixes, passes them to resolveGroupAddingSuffixes.
 	 * Processes the suffixAppliesTo command which multiplies a suffix and attaches the suffixes to the atoms described by the given IDs
 	 * @param state
-	 * @param subOrRoot
+	 * @param group
+	 * @param suffixes 
 	 * @throws PostProcessingException
 	 * @throws StructureBuildingException
 	 */
-	private void preliminaryProcessSuffixes(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
-		Elements groupsOfSubOrRoot = subOrRoot.getChildElements("group");
-		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
-		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
-		List<Element> suffixes = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"suffix"});
+	private void preliminaryProcessSuffixes(BuildState state, Element group, List<Element> suffixes) throws PostProcessingException, StructureBuildingException{
+		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
 
 		boolean imideSpecialCase =false;
-		if (lastGroupElementInSubOrRoot.getAttribute("suffixAppliesTo")!=null){//trivial polyAcid or aminoAcid
+		if (group.getAttribute("suffixAppliesTo")!=null){//trivial polyAcid or aminoAcid
 			//attribute contains instructions for number/positions of suffix
 			//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
-			Element suffix =OpsinTools.getNextNonChargeSuffix(lastGroupElementInSubOrRoot);
+			Element suffix =OpsinTools.getNextNonChargeSuffix(group);
 			if (suffix ==null){
 				throw new PostProcessingException("No suffix where suffix was expected");
 			}
-			if (suffixes.size()>1 && !lastGroupElementInSubOrRoot.getAttributeValue(TYPE_ATR).equals("aminoAcid")){
+			if (suffixes.size()>1 && !group.getAttributeValue(TYPE_ATR).equals("aminoAcid")){
 				throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
 			}
-			String suffixInstruction =lastGroupElementInSubOrRoot.getAttributeValue("suffixAppliesTo");
+			String suffixInstruction =group.getAttributeValue("suffixAppliesTo");
 			String[] suffixInstructions = matchComma.split(suffixInstruction);
 			boolean symmetricSuffixes =true;
 			if (suffix.getAttribute("additionalValue")!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
@@ -1076,10 +1179,10 @@ class PreStructureBuilder {
 		}
 
 		ArrayList<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
-		state.xmlSuffixMap.put(lastGroupElementInSubOrRoot, suffixFragments);
+		state.xmlSuffixMap.put(group, suffixFragments);
 		boolean suffixesResolved =false;
-		if (lastGroupElementInSubOrRoot.getAttributeValue(TYPE_ATR).equals("chalcogenAcidStem")){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacment
-	    	resolveSuffixes(state, lastGroupElementInSubOrRoot, subOrRoot.getChildElements("suffix"));
+		if (group.getAttributeValue(TYPE_ATR).equals("chalcogenAcidStem")){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacment
+	    	resolveSuffixes(state, group, suffixes);
 	    	suffixesResolved =true;
 	    }
 		processSuffixPrefixes(state, suffixes);//e.g. carbox amide
@@ -1102,12 +1205,14 @@ class PreStructureBuilder {
 			if (!carbon.getElement().equals("C")){
 				throw new PostProcessingException("Carbon not found where carbon expected");
 			}
-			resolveSuffixes(state, lastGroupElementInSubOrRoot, subOrRoot.getChildElements("suffix"));
+			resolveSuffixes(state, group, suffixes);
 			suffixesResolved = true;
 			state.fragManager.createBond(nitrogen, carbon, 1);//join the N of the amide to the carbon of the acid to form the cyclic imide
 		}
 		if (suffixesResolved){
-			for (Element suffix : suffixes) {//suffixes have already been resolved so need to be detached to avoid being passed to resolveSuffixes later
+			//suffixes have already been resolved so need to be detached to avoid being passed to resolveSuffixes later
+			for (int i = suffixes.size() -1; i>=0; i--) {
+				Element suffix =suffixes.remove(i);
 				suffix.detach();
 			}
 		}
@@ -2260,7 +2365,7 @@ class PreStructureBuilder {
 				}
 			}
 
-			Elements suffixes =elementToResolve.getChildElements("suffix");
+			List<Element> suffixes = XOMTools.getChildElementsWithTagName(elementToResolve, SUFFIX_EL);
 			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
 			resolveSuffixes(state, group, suffixes);
 			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
@@ -2314,7 +2419,7 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void applyLambdaConvention(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{"lambdaConvention"});
+		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement(GROUP_EL));
 			if (lambdaConventionEl.getAttribute("locant")!=null){
@@ -2442,6 +2547,7 @@ class PreStructureBuilder {
 		}
 
 		List<Fragment> suffixList =state.xmlSuffixMap.get(group);
+
 		for (Fragment suffix : suffixList) {
 			outAtomsThatWillBeAdded += suffix.getOutAtoms().size();
 		}
@@ -2857,7 +2963,7 @@ class PreStructureBuilder {
 		for (int j = 0; j < childrenOfSubOrBracketOrRoot.size(); j++) {
 			Element el =childrenOfSubOrBracketOrRoot.get(j);
 			String name =el.getLocalName();
-			if (name.equals("suffix") || name.equals("unsaturator")){
+			if (name.equals("suffix") || name.equals("unsaturator") || name.equals(CONJUNCTIVESUFFIXGROUP_EL)){
 				if (el.getAttribute("locant") ==null && el.getAttribute("multiplied")==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
 					if (subOrRoot.indexOf(el)>subOrRoot.indexOf(locantEl)){
 						locantAble.add(el);
@@ -2880,6 +2986,79 @@ class PreStructureBuilder {
                 (suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) || TERMINAL_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR)));
 		}
 
+	private void processConjunctiveNomenclature(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
+		List<Element> conjunctiveGroups = XOMTools.getChildElementsWithTagName(subOrRoot, CONJUNCTIVESUFFIXGROUP_EL);
+		if (conjunctiveGroups.size()>0){
+			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
+			Fragment ringFrag = state.xmlFragmentMap.get(ringGroup);
+			if (ringFrag.getOutAtoms().size()!=0 ){
+				throw new PostProcessingException("OPSIN Bug: Ring fragment should have no radicals");
+			}
+			List<Fragment> conjunctiveFragments = new ArrayList<Fragment>();
+			for (Element group : conjunctiveGroups) {
+				Fragment frag = state.xmlFragmentMap.get(group);
+				conjunctiveFragments.add(frag);
+			}
+			if (conjunctiveGroups.size()==1){
+				//label atoms appropriately
+				List<Atom> atomList = conjunctiveFragments.get(0).getAtomList();
+				boolean alphaIsPosition1 = atomList.get(0).getIncomingValency() <3 ? true :false;
+				int counter =0;
+				for (int i = (alphaIsPosition1 ? 0 : 1); i < atomList.size(); i++) {
+					Atom a = atomList.get(i);
+					if (counter==0){
+						a.addLocant("alpha");
+					}
+					else if (counter==1){
+						a.addLocant("beta");
+					}
+					else if (counter==2){
+						a.addLocant("gamma");
+					}
+					else if (counter==3){
+						a.addLocant("delta");
+					}
+					else if (counter==4){
+						a.addLocant("epsilon");
+					}
+					else if (counter==5){
+						a.addLocant("zeta");
+					}
+					else if (counter==6){
+						a.addLocant("eta");
+					}
+					counter++;
+				}
+			}
+			for (int i = 0; i < conjunctiveFragments.size(); i++) {
+				Fragment conjunctiveFragment = conjunctiveFragments.get(i);
+				if (conjunctiveGroups.get(i).getAttribute(LOCANT_ATR)!=null){
+					state.fragManager.createBond(lastNonSuffixAtomWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
+				}
+				else{
+					state.fragManager.createBond(lastNonSuffixAtomWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByIdOrNextSuitableAtomOrThrow(ringFrag.getIdOfFirstAtom(), 1) , 1);
+				}
+				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);
+			}
+		}
+	}
+
+
+	private Atom lastNonSuffixAtomWithSufficientValency(Fragment conjunctiveFragment) throws PostProcessingException {
+		List<Atom> atomList = conjunctiveFragment.getAtomList();
+		for (int i = atomList.size()-1; i >=0; i--) {
+			Atom a = atomList.get(i);
+			if (a.getType().equals(SUFFIX_TYPE_VAL)){
+				continue;
+			}
+			if (ValencyChecker.checkValencyAvailableForBond(a, 1)){
+				return a;
+			}
+		}
+		throw new PostProcessingException("OPSIN Bug: Unable to find non suffix atom with sufficient valency");
+	}
+
+
 	/**Process the effects of suffixes upon a fragment. 
 	 * Unlocanted non-terminal suffixes are not attached yet. All other suffix effects are performed
 	 * @param state
@@ -2888,7 +3067,7 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
 	 * @throws PostProcessingException
 	 */
-	private void resolveSuffixes(BuildState state, Element group, Elements suffixes) throws StructureBuildingException, PostProcessingException {
+	private void resolveSuffixes(BuildState state, Element group, List<Element> suffixes) throws StructureBuildingException, PostProcessingException {
 		Fragment frag = state.xmlFragmentMap.get(group);
 		int firstAtomID = frag.getIdOfFirstAtom();//typically equivalent to locant 1
 		List<Atom> atomList =frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
@@ -3109,7 +3288,7 @@ class PreStructureBuilder {
 			if (XOMTools.getPrevious(multiplier)==null){
 				throw new StructureBuildingException("OPSIN bug: Unacceptable input to function");
 			}
-			List<Element> locants = XOMTools.getChildElementsWithTagNames(rightMostElement, new String[] {"multiplicativeLocant"});
+			List<Element> locants = XOMTools.getChildElementsWithTagName(rightMostElement, "multiplicativeLocant");
 			int multiVal = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 			if (locants.size()==0){
 				rightMostElement.addAttribute(new Attribute("inLocants","default"));
@@ -3148,7 +3327,7 @@ class PreStructureBuilder {
 	 * @throws PostProcessingException
 	 */
 	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws PostProcessingException {
-		List<Element> locants = XOMTools.getChildElementsWithTagNames(subOrBracket, new String[]{"locant"});
+		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracket,LOCANT_EL);
 		int multiplier =1;
 		Element possibleMultiplier = subOrBracket.getFirstChildElement("multiplier");
 		Element parentElem =(Element)subOrBracket.getParent();

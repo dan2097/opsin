@@ -36,6 +36,9 @@ class XmlDeclarations {
 	/**An annulene. Converted to a group by the PostProcessor*/
 	static final String ANNULEN_EL ="annulen";
 
+	/**Created by the PreStructureBuilder. Something like the acetic acid in benzene-1,3,5-triacetic acid*/
+	static final String CONJUNCTIVESUFFIXGROUP_EL ="conjunctiveSuffixGroup";
+	
 	/**Used by the PostProcessor to group elements into bracket elements*/
 	static final String CLOSEBRACKET_EL ="closebracket";
 	

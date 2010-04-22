@@ -72,13 +72,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="N[N+](=O)([O-])" labels="none" valType="SMILES" functionalIDs="1,1">nitramide</token>
   <token value="C(=O)C=O" labels="1//2/" valType="SMILES">oxaldehyde</token>
   <token value="NC(=O)C(=O)N" labels="none" valType="SMILES" functionalIDs="1,1,6,6">oxamide</token>
-  <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performic</token>
-  <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performicacid</token>
-  <token value="C(=O)OO" labels="1///" valType="SMILES" functionalIDs="4">performic acid</token>
   <token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>
-  <token value="CC(=O)OO" labels="2/1///" valType="SMILES" functionalIDs="5">peracetic</token>
-  <token value="CC(=O)OO" labels="2/1///" valType="SMILES" functionalIDs="5">peraceticacid</token>
-  <token value="CC(=O)OO" labels="2/1///" valType="SMILES" functionalIDs="5">peracetic acid</token>
   <token value="C(=O)(Cl)Cl" labels="none" valType="SMILES">phosgene</token>
   <token value="P([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4">phosphite</token>
   <token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphate</token>

@@ -378,7 +378,8 @@ public final class XOMTools {
 	public static List<Element> getChildElementsWithTagNames(Element startingElement, String[] elementNames) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Elements children =startingElement.getChildElements();
-		for (int i = 0; i < children.size(); i++) {
+		int childCount = children.size();
+		for (int i = 0; i < childCount; i++) {
 			Element child =children.get(i);
 			String currentElName=child.getLocalName();
 			for (String targetTagName : elementNames) {
@@ -386,6 +387,28 @@ public final class XOMTools {
 					matchingElements.add(child);
 					break;
 				}
+			}
+		}
+		return matchingElements;
+	}
+	
+	/**
+	 * Finds all child elements whose localname matches one of the strings in elementNames
+	 * Equivalent to an xquery of type ./elementName1 from the startingElement
+	 * This is equivalent to XOM's getChildElements(String) other than returning an arrayList
+	 * @param startingElement
+	 * @param elementNames
+	 * @return
+	 */
+	public static List<Element> getChildElementsWithTagName(Element startingElement, String elementName) {
+		List<Element> matchingElements = new ArrayList<Element>();
+		Elements children =startingElement.getChildElements();
+		int childCount = children.size();
+		for (int i = 0; i < childCount; i++) {
+			Element child =children.get(i);
+			String currentElName=child.getLocalName();
+			if (currentElName.equals(elementName)){
+				matchingElements.add(child);
 			}
 		}
 		return matchingElements;
