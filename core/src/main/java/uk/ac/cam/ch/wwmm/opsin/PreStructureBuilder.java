@@ -936,27 +936,6 @@ class PreStructureBuilder {
 			if (ringGroup ==null){
 				throw new PostProcessingException("OPSIN bug: unable to find ring associated with conjunctive suffix group");
 			}
-			if (conjunctiveGroups.size()==2){//e.g. 1,3-benzenebis(ethylamine)
-				Element amineGroup = conjunctiveGroups.get(0);
-				if (!amineGroup.getValue().equals("amine")){
-					throw new PostProcessingException("OPSIN Bug: amine not found where amine expected in conjunctive nomenclature handling routine");
-				}
-				Element alkylGroup =groups.get(1);
-				if (!alkylGroup.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){
-					throw new PostProcessingException("OPSIN Bug: alkyl excepted before amine in conjunctive nomenclature");
-				}
-				Fragment alkylFrag = state.xmlFragmentMap.get(alkylGroup);
-				Fragment amineFrag = state.xmlFragmentMap.get(amineGroup);
-				if (alkylFrag.getOutAtoms().size()!=1){
-					throw new PostProcessingException("OPSIN Bug: alkyl expected to have one outAtom");
-				}
-				OutAtom out =alkylFrag.getOutAtom(0);
-				alkylFrag.removeOutAtom(0);
-				state.fragManager.createBond(out.getAtom(), amineFrag.getFirstAtom(), out.getValency());
-				state.fragManager.incorporateFragment(alkylFrag, amineFrag);
-				conjunctiveGroups.remove(alkylGroup);
-				allGroups.remove(alkylGroup);
-			}
 			if (conjunctiveGroups.size()!=1){
 				throw new PostProcessingException("OPSIN Bug: Two groups exactly should be present at this point when processing conjunctive nomenclature");
 			}

@@ -37,4 +37,8 @@
     <token value="[Se]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
     <token value="[Te]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
   </tokenList>
+
+  <tokenList tagname="suffix" type="root" symbol="Ñ">
+    <token value="amine">ylamine</token>
+  </tokenList>
 </tokenLists>

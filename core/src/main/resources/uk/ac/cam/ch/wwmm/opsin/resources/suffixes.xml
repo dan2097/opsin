@@ -56,12 +56,18 @@
     <token value="boronic">boronic</token>
     <token value="boronic">boronicacid</token>
     <token value="boronic">boronic acid</token>
+    <token value="carbamic">carbamic</token>
+    <token value="carbamic">carbamicacid</token>
+    <token value="carbamic">carbamic acid</token>
     <token value="phosphonous">phosphonous</token>
     <token value="phosphonous">phosphonousacid</token>
     <token value="phosphonous">phosphonous acid</token>
     <token value="stibonous">stibonous</token>
     <token value="stibonous">stibonousacid</token>
     <token value="stibonous">stibonous acid</token>
+    <token value="sulfamic">sulfamic</token>
+    <token value="sulfamic">sulfamicacid</token>
+    <token value="sulfamic">sulfamic acid</token>
   </tokenList>
 
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Implicitly must be at a terminal position-->

@@ -101,6 +101,7 @@ does not define a CFG.
   <regex name="%chalcogenReplacement%" value="ó"/>
   <regex name="%perhydro%" value="ú"/>
   <regex name="%chalcogenAcid%" value="ñ"/>
+  <regex name="%ylamine%" value="Ñ"/>
   <!--up to ascii 164 used -->
 
 <!-- composite regexes-->
@@ -178,7 +179,7 @@ does not define a CFG.
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiro%%alkaneStem%)"/>
 
-  <regex name="%conjunctiveSideChainRoot%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%alkaneStem%%hyphen%?%ane%%suffixGroup%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/><!--missing support for bracketed alkylamine and for carbamic acid-->
+  <regex name="%conjunctiveSideChainRoot%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/>
   <regex name="%conjunctiveSideChainInline%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/>
 
   <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|(%locantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%)"/>
