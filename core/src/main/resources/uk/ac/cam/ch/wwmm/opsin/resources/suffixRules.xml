@@ -71,6 +71,9 @@ sense of this -->
   <rule value="boronic">
     <addgroup SMILES="B(O)O" functionalIDs="2,3"/>
   </rule>
+  <rule value="carbamic">
+    <addgroup SMILES="NC(=O)O" functionalIDs="4"/>
+  </rule>
   <rule value="carbonyl">
     <addgroup SMILES="C(=O)" setsOutAtom="yes"/>
   </rule>
@@ -228,6 +231,9 @@ sense of this -->
   </rule>
   <rule value="stibonous">
     <addgroup SMILES="[Sb](O)O" functionalIDs="2,3"/>
+  </rule>
+  <rule value="sulfamic">
+    <addgroup SMILES="NS(=O)(=O)O" functionalIDs="5"/>
   </rule>
   <rule value="sulfenamide">
     <addgroup SMILES="SN" functionalIDs="2"/>

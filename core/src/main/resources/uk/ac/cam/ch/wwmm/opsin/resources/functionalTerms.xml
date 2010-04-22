@@ -55,6 +55,10 @@ For these groups the charge on the first atom will be increased by 1 if they are
   <tokenList tagname="functionalGroup" type="diValentGroup" symbol="ö">
     <token value="[Se][Se]-" labels="none" valType="SMILES">diselenide</token>
     <token value="SS-" labels="none" valType="SMILES">disulfide</token>
+    <token value="SSS-" labels="none" valType="SMILES">trisulfide</token>
+    <token value="SSSS-" labels="none" valType="SMILES">tetrasulfide</token>
+    <token value="SSSSS-" labels="none" valType="SMILES">pentasulfide</token>
+    <token value="SSSSSS-" labels="none" valType="SMILES">hexasulfide</token>
     <token value="[Te][Te]-" labels="none" valType="SMILES">ditelluride</token>
     <token value="O" labels="none" valType="SMILES">ether</token>
     <token value="C=O" labels="none" valType="SMILES">ketone</token>

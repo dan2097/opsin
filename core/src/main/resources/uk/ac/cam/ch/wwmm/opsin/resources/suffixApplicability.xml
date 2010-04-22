@@ -120,6 +120,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="azonous">azonous</suffix>
     <suffix value="boronate">boronate</suffix>
     <suffix value="boronic">boronic</suffix>
+    <suffix value="carbamic">carbamic</suffix>
     <suffix value="carbonyl">carbonyl</suffix>
     <suffix value="carboxylic">carboxylic</suffix>
     <suffix value="carboxylate">carboxylate</suffix>
@@ -154,6 +155,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="selenonyl">selenonyl</suffix>
     <suffix value="selone">selone</suffix>
     <suffix value="stibonous">stibonous</suffix>
+    <suffix value="sulfamic">sulfamic</suffix>
     <suffix value="sulfenamide">sulfenamide</suffix>
     <suffix value="sulfenamido">sulfenamido</suffix>
     <suffix value="sulfenic">sulfenic</suffix>
