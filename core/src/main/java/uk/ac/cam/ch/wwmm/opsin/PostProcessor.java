@@ -514,7 +514,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processSuffixPrefixes(Element subOrRoot) throws PostProcessingException {
-		List<Element> suffixPrefixes =  XOMTools.getChildElementsWithTagNames(subOrRoot, new String[] {SUFFIXPREFIX_EL});
+		List<Element> suffixPrefixes =  XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIXPREFIX_EL);
 		for (Element suffixPrefix : suffixPrefixes) {
 			Element suffix = (Element) XOMTools.getNextSibling(suffixPrefix);
 			if (suffix==null || ! suffix.getLocalName().equals(SUFFIX_EL)){
@@ -535,7 +535,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processInfixes(Element subOrRoot) throws PostProcessingException {
-		List<Element> infixes = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[] {INFIX_EL});
+		List<Element> infixes = XOMTools.getChildElementsWithTagName(subOrRoot, INFIX_EL);
 		for (Element infix : infixes) {
 			Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL});
 			if (suffix ==null || !suffix.getLocalName().equals(SUFFIX_EL)){
@@ -607,7 +607,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processLambdaConvention(Element subOrRoot) throws PostProcessingException {
-		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{LAMBDACONVENTION_EL});
+		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
 		boolean fusedRingPresent = false;
 		if (lambdaConventionEls.size()>0){
 			if (subOrRoot.getChildElements(GROUP_EL).size()>1){

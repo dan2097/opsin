@@ -38,26 +38,34 @@
     <token value="[Sb](O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibon</token>
   </tokenList>
 
- <!--This is the set of acids whose acyl groups are not named as derivatives of the acid-->
+ <!--These two sets of acids do not have their acyl groups named as derivatives of the acid-->
   <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="ƒ">
+<!--these form preferred IUPAC names-->
     <token value="B(O)(O)O" labels="none" valType="SMILES">bor</token>
     <token value="BO" labels="none" valType="SMILES">borin</token>
     <token value="B(O)O" labels="none" valType="SMILES">boron</token>
+    <token value="[Se](O)(O)(=O)=O" labels="none" valType="SMILES">selen</token>
+    <token value="[Te](O)(O)(=O)=O" labels="none" valType="SMILES">tellur</token>
+  </tokenList>
+
+  <tokenList tagname="group" type="nonCarboxylicAcid" symbol="ƒ">
+<!--trivial names -->
     <token value="C(O)(O)(O)O" labels="none" valType="SMILES">orthocarbon</token>
     <token value="C(O)(O)O" labels="none" valType="SMILES">orthoform</token>
     <token value="CC(O)(O)O" labels="none" valType="SMILES">orthoacet</token>
     <token value="CCC(O)(O)O" labels="none" valType="SMILES">orthopropion</token>
     <token value="CCCC(O)(O)O" labels="none" valType="SMILES">orthobutyr</token>
     <token value="CCCCC(O)(O)O" labels="none" valType="SMILES">orthovaler</token>
+    <token value="CC(=O)OO" labels="2/1///" valType="SMILES">peracet</token>
+    <token value="C(=O)OO" labels="1///" valType="SMILES">perform</token>
     <token value="OC(=O)OC(=O)O" labels="none" valType="SMILES">pyrocarbon</token>
-    <token value="[Se](O)(O)(=O)=O" labels="none" valType="SMILES">selen</token>
-    <token value="[Te](O)(O)(=O)=O" labels="none" valType="SMILES">tellur</token>
+    <token value="S(=O)(=O)(C(F)(F)F)O" labels="none" valType="SMILES">trifl</token>
   </tokenList>
 
   <!--This is the limiting set of chacolgen acid stems.
   These differ from the  more commonly used chalcogen stems e.g. sulfuric in that they can be used to unambiguously form acyl groups
   However the rules for doing so are subtly different than for normal acids hence the need for a different type-->
-  <tokenList tagname="group" type="chalcogenAcidStem" subType="none" symbol="d">
+  <tokenList tagname="group" type="chalcogenAcidStem" subType="none" symbol="ñ">
     <token value="S(=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfon</token>
     <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfin</token>
     <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thion</token>

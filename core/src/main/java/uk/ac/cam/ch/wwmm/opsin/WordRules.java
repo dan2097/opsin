@@ -176,7 +176,7 @@ class WordRules {
 	 * @throws ParsingException
 	 */
 	void groupWordsIntoWordRules(Element moleculeEl) throws ParsingException {
-		List<Element> wordEls = XOMTools.getChildElementsWithTagNames(moleculeEl, new String[]{"word"});
+		List<Element> wordEls = XOMTools.getChildElementsWithTagName(moleculeEl, "word");
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
 			if (matchWordRule(wordEls, i)){
