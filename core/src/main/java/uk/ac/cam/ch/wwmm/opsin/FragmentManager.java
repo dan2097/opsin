@@ -335,8 +335,20 @@ class FragmentManager {
 			newAtom.setCharge(atom.getCharge());
 			newAtom.setSpareValency(atom.hasSpareValency());
 			newAtom.setProtonsExplicitlyAddedOrRemoved(atom.getProtonsExplicitlyAddedOrRemoved());
-			if (atom.getAtomParityElement() != null){
-				newAtom.setAtomParityElement(new Element(atom.getAtomParityElement()));
+			if (atom.getAtomParity() != null){
+				Atom[] oldAtomRefs4 = atom.getAtomParity().getAtomRefs4();
+				Atom[] newAtomRefs4 = new Atom[4];
+				for (int i = 0; i < oldAtomRefs4.length; i++) {
+					Atom oldAtom = oldAtomRefs4[i];
+					if (oldAtom.equals(AtomParity.hydrogen)){
+						newAtomRefs4[i] = AtomParity.hydrogen;
+					}
+					else{
+						newAtomRefs4[i] = oldToNewAtomMap.get(oldAtom);
+					}
+				}
+				AtomParity newAtomParity =new AtomParity(newAtomRefs4, atom.getAtomParity().getParity());
+				newAtom.setAtomParity(newAtomParity);
 			}
 			newAtom.setExplicitHydrogens(atom.getExplicitHydrogens());
 			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());

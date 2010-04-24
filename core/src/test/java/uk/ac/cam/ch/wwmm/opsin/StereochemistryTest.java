@@ -210,7 +210,7 @@ public class StereochemistryTest {
 		List<Atom> atomList = f.getAtomList();
 		List<Atom> stereoAtoms = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
-			if (atom.getAtomParityElement() != null){
+			if (atom.getAtomParity() != null){
 				stereoAtoms.add(atom);
 			}
 		}

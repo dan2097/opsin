@@ -223,15 +223,16 @@ class StereochemistryHandler {
 		if (cipOrderedAtoms.size()!=4){
 			throw new StructureBuildingException("Only tetrahedral chirality is currently supported");
 		}
-		String atomRefs4= "a" + cipOrderedAtoms.get(cipOrderedAtoms.size()-1).getID();//this is "a" + opsin's atom id
+		Atom[] atomRefs4 = new Atom[4];
+		atomRefs4[0] = cipOrderedAtoms.get(cipOrderedAtoms.size()-1);
 		for (int i = 0; i < cipOrderedAtoms.size() -1; i++) {//from highest to lowest (true for S) hence atomParity 1 for S
-			atomRefs4 +=" a"+cipOrderedAtoms.get(i).getID();
+			atomRefs4[i+1] = cipOrderedAtoms.get(i);
 		}
 		if (rOrS.equals("R")){
-			atom.setAtomParityElement(atomRefs4, -1);
+			atom.setAtomParity(atomRefs4, -1);
 		}
 		else if (rOrS.equals("S")){
-			atom.setAtomParityElement(atomRefs4, 1);
+			atom.setAtomParity(atomRefs4, 1);
 		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " + rOrS);

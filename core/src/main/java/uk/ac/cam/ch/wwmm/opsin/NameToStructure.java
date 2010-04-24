@@ -184,13 +184,10 @@ public class NameToStructure {
 		serializer.setIndent(2);
 		boolean end = false;
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("OPSIN Prealpha: enter chemical name:");
+		System.err.println("OPSIN Prealpha: enter chemical name:");
 		while(!end) {
 			String name = stdinReader.readLine();
-			if(name == null) {
-				System.err.println("Disconnected!");
-				end = true;
-			} else if(name.equals("END")) {
+			if(name == null || name.equals("END")) {
 				end = true;
 			} else {
 				Element output = nts.parseToCML(name);

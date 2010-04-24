@@ -72,7 +72,7 @@ class PostProcessor {
 	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+[^\\.,]*\\d*,?\\d*[^\\.,]*)");//the not a period or comma allows some an optional indication that the following comma separated digits are superscripted
 	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(RS|[RSEZrsez])");
+	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsez])");
 	private final Pattern matchRS = Pattern.compile("[RSrs]");
 	private final Pattern matchEZ = Pattern.compile("[EZez]");
 	private final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
@@ -466,7 +466,7 @@ class PostProcessor {
                         if (stereoChemistryDescriptor.length() > 1) {
                             Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
                             if (m.matches()){
-                            	if (!m.group(2).equals("RS")){
+                            	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
 	                                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
 	                                stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
 	                                stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
@@ -1463,7 +1463,7 @@ class PostProcessor {
 			}
 			Element hydroElement = hydroElements.get(0);
 			String hydroValue = hydroElement.getValue();
-			if (hydroValue.equals("hydro") || hydroValue.equals("dihydro")){
+			if (hydroValue.equals("hydro") || hydroValue.equals("dehydro")){
 				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
 				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
 					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
@@ -1474,42 +1474,49 @@ class PostProcessor {
 			}
 			Element targetRing =null;
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
-			//first check adjacent substituent/root. If this is locantless then we can assume the hydro is acting as a nondetachable prefix
+			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
 			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
 			if (potentialRing!=null && potentialRing.getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
-				Element possibleLocant =(Element) XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
-				if (possibleLocant !=null){
-					if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
-						String locantValue = possibleLocant.getValue();
-						String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
-						for (String expectedLocant : expectedLocants) {
-							if (locantValue.equals(expectedLocant)){
-								targetRing =potentialRing;
-								break;
-							}
-						}
-					}
-					//check whether the group is a HW system e.g. 1,3-thiazole
-					if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
-						String locantValue = possibleLocant.getValue();
-						int locants = matchComma.split(locantValue).length;
-						int heteroCount = 0;
-						Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocant);
-						while(!currentElem.equals(potentialRing)){
-							if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
-								heteroCount++;
-							} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
-								heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
-							}
-							currentElem = (Element)XOMTools.getNextSibling(currentElem);
-						}
-						if (heteroCount==locants){//number of locants must match number
-							targetRing =potentialRing;
-						}
-					}
+				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
+				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && matchComma.split(possibleLocantInFrontOfHydro.getValue()).length==1){
+					//e.g.4-decahydro-1-naphthalenyl
+					targetRing =potentialRing;
 				}
 				else{
-					targetRing =potentialRing;
+					Element possibleLocantInFrontOfRing =(Element) XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
+					if (possibleLocantInFrontOfRing !=null){
+						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
+							String locantValue = possibleLocantInFrontOfRing.getValue();
+							String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
+							for (String expectedLocant : expectedLocants) {
+								if (locantValue.equals(expectedLocant)){
+									targetRing =potentialRing;
+									break;
+								}
+							}
+						}
+						//check whether the group is a HW system e.g. 1,3-thiazole
+						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
+							String locantValue = possibleLocantInFrontOfRing.getValue();
+							int locants = matchComma.split(locantValue).length;
+							int heteroCount = 0;
+							Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocantInFrontOfRing);
+							while(!currentElem.equals(potentialRing)){
+								if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
+									heteroCount++;
+								} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
+									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
+								}
+								currentElem = (Element)XOMTools.getNextSibling(currentElem);
+							}
+							if (heteroCount==locants){//number of locants must match number
+								targetRing =potentialRing;
+							}
+						}
+					}
+					else{
+						targetRing =potentialRing;
+					}
 				}
 			}
 
