@@ -335,6 +335,16 @@ class FragmentManager {
 			newAtom.setCharge(atom.getCharge());
 			newAtom.setSpareValency(atom.hasSpareValency());
 			newAtom.setProtonsExplicitlyAddedOrRemoved(atom.getProtonsExplicitlyAddedOrRemoved());
+			newAtom.setExplicitHydrogens(atom.getExplicitHydrogens());
+			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());
+			//outValency is derived from the outAtoms so is automatically cloned
+			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
+			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
+			newAtom.setNotes(new HashMap<String, String>(atom.getNotes()));
+			newFragment.addAtom(newAtom);
+			oldToNewAtomMap.put(atom, newAtom);
+		}
+		for (Atom atom : atomList) {
 			if (atom.getAtomParity() != null){
 				Atom[] oldAtomRefs4 = atom.getAtomParity().getAtomRefs4();
 				Atom[] newAtomRefs4 = new Atom[4];
@@ -348,16 +358,8 @@ class FragmentManager {
 					}
 				}
 				AtomParity newAtomParity =new AtomParity(newAtomRefs4, atom.getAtomParity().getParity());
-				newAtom.setAtomParity(newAtomParity);
+				oldToNewAtomMap.get(atom).setAtomParity(newAtomParity);
 			}
-			newAtom.setExplicitHydrogens(atom.getExplicitHydrogens());
-			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());
-			//outValency is derived from the outAtoms so is automatically cloned
-			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
-			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
-			newAtom.setNotes(new HashMap<String, String>(atom.getNotes()));
-			newFragment.addAtom(newAtom);
-			oldToNewAtomMap.put(atom, newAtom);
 		}
         for (OutAtom outAtom : outAtoms) {
             newFragment.addOutAtom(oldToNewAtomMap.get(outAtom.getAtom()), outAtom.getValency(), outAtom.isSetExplicitly());
