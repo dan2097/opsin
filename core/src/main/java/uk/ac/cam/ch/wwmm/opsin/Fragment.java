@@ -207,7 +207,8 @@ class Fragment {
 			LinkedList<Atom> stack = new LinkedList<Atom>();
 			stack.add(a);
 			Set<Atom> atomsVisited =new HashSet<Atom>();
-			Atom potentialMatch = null;//if you are looking for N' and you find N if no N can be found the N' will be returned
+			Atom partialLocantMatch = null;//if you are looking for N and you find N' if no N can be found the N' will be returned
+			Atom elementTypeMatch = null;//an appropriate atom with no locans can also be returned if no primes are specified
 			while (stack.size() > 0) {
 				Atom currentAtom =stack.removeLast();
 				atomsVisited.add(currentAtom);
@@ -217,7 +218,7 @@ class Fragment {
 						continue;
 					}
 					List<String> locants = neighbour.getLocants();
-					if (!neighbour.getType().equals("suffix")){
+					if (!neighbour.getType().equals(XmlDeclarations.SUFFIX_TYPE_VAL)){
 						for (String neighbourLocant : locants) {
 							if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
 								continue mainLoop;
@@ -225,20 +226,26 @@ class Fragment {
 						}
 					}
 					for (String neighbourLocant : locants) {
-						if (neighbourLocant.startsWith(elementSymbol)){
+						if (neighbourLocant.startsWith(locant)){
 							if (neighbourLocant.equals(locant)){
 								return neighbour;
 							}
 							else{
-								potentialMatch =neighbour;
+								partialLocantMatch =neighbour;
 							}
 						}
+					}
+					if (m.group(2).equals("") && neighbour.getElement().equals(elementSymbol)){
+						elementTypeMatch = neighbour;
 					}
 					stack.add(neighbour);
 				}
 			}
-			if (potentialMatch != null){
-				return potentialMatch;
+			if (partialLocantMatch != null){
+				return partialLocantMatch;
+			}
+			if (elementTypeMatch != null){
+				return elementTypeMatch;
 			}
 		}
 		return null;
