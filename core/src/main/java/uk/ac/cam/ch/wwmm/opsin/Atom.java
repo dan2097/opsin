@@ -35,10 +35,10 @@ class Atom {
 	private int charge = 0;
 
 	/**
-	 * Holds the atomParity tag to be associated with this atom upon output
+	 * Holds the atomParity object associated with this object
 	 * null by default
 	 */
-	private Element atomParityElement = null;
+	private AtomParity atomParity = null;
 
 	/**The bonds that involve the atom*/
 	private final Set<Bond> bonds = new LinkedHashSet<Bond>();
@@ -84,8 +84,9 @@ class Atom {
 	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
 	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 
-	/** DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	/**
 	 * Builds an Atom from scratch.
+	 * GENERALLY EXCEPT FOR TESTING SHOULD NOT BE CALLED EXCEPT FROM THE FRAGMANAGER
 	 * @param ID The ID number, unique to the atom in the molecule being built
 	 * @param element The atomic symbol of the chemical element
 	 * @param frag the Fragment to contain the Atom
@@ -103,6 +104,14 @@ class Atom {
 		this.element = element;
 		this.type =frag.getType();
 	}
+	
+	/** Used to build a DUMMY atom.
+	 * Does not have an id/frag/type as would be expected for a proper atom
+	 * @param element An identifier for this atom
+	 */
+	Atom(String element){
+		this.element = element;
+	}
 
 	/**Produces a nu.xom.Element for a CML Atom tag, containing
 	 * values for id, elementType and (if appropriate) formalCharge, atomParity and
@@ -119,8 +128,8 @@ class Atom {
 		if (explicitHydrogens!=null && explicitHydrogens==0){//prevent adding of implicit hydrogen
 			elem.addAttribute(new Attribute("hydrogenCount", "0"));
 		}
-		if(atomParityElement != null){
-			elem.appendChild(atomParityElement);
+		if(atomParity != null){
+			elem.appendChild(atomParity.toCML());
 		}
 		for(String l : locants) {
 			Element locant = new Element("label");
@@ -508,18 +517,16 @@ class Atom {
 		this.atomIsInACycle = atomIsInACycle;
 	}
 
-	Element getAtomParityElement() {
-		return atomParityElement;
+	AtomParity getAtomParity() {
+		return atomParity;
 	}
 
-	void setAtomParityElement(Element atomParityElement) {
-		this.atomParityElement =atomParityElement;
+	void setAtomParity(AtomParity atomParity) {
+		this.atomParity = atomParity;
 	}
 
-	void setAtomParityElement(String atomRefs4, int atomParity) {
-		atomParityElement = new Element(XmlDeclarations.ATOMPARITY_EL);
-		atomParityElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefs4));
-		atomParityElement.appendChild(Integer.toString(atomParity));
+	void setAtomParity(Atom[] atomRefs4, int parity) throws StructureBuildingException {
+		atomParity = new AtomParity(atomRefs4, parity);
 	}
 
 	HashMap<String, String> getNotes() {

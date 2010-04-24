@@ -220,17 +220,8 @@ class SMILESFragmentBuilder {
 						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
 					}
-					if (stack.peek().atom.getAtomParityElement()!=null){
-						Element atomParityElement = stack.peek().atom.getAtomParityElement();
-						Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
-						String atomRefs4 = atomRefs4Att.getValue();
-						if (atomRefs4.equals("")){
-							atomRefs4 += "a" +atom.getID();
-						}
-						else{
-							atomRefs4 += " a" +atom.getID();
-						}
-						atomRefs4Att.setValue(atomRefs4);
+					if (stack.peek().atom.getAtomParity()!=null){
+						addAtomToAtomParity(stack.peek().atom.getAtomParity(), atom);
 					}
 				}
 				stack.peek().atom = atom;
@@ -310,17 +301,8 @@ class SMILESFragmentBuilder {
 						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
 					}
-					if (stack.peek().atom.getAtomParityElement()!=null){
-						Element atomParityElement = stack.peek().atom.getAtomParityElement();
-						Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
-						String atomRefs4 = atomRefs4Att.getValue();
-						if (atomRefs4.equals("")){
-							atomRefs4 += "a" +atom.getID();
-						}
-						else{
-							atomRefs4 += " a" +atom.getID();
-						}
-						atomRefs4Att.setValue(atomRefs4);
+					if (stack.peek().atom.getAtomParity()!=null){
+						addAtomToAtomParity(stack.peek().atom.getAtomParity(), atom);
 					}
 				}
 				Atom previousAtom = stack.peek().atom;//needed for setting atomParity elements up
@@ -486,33 +468,32 @@ class SMILESFragmentBuilder {
 	 * @param atom
 	 * @param previousAtom
 	 * @return 
+	 * @throws StructureBuildingException 
 	 */
-	private String processTetrahedralStereochemistry(String atomString, Atom atom, Atom previousAtom) {
-		Element atomParity = new Element(ATOMPARITY_EL);
-		atom.setAtomParityElement(atomParity);
+	private String processTetrahedralStereochemistry(String atomString, Atom atom, Atom previousAtom) throws StructureBuildingException {
 		Boolean chiralityClockwise = false;
 		if (atomString.length() > 0 && atomString.charAt(0) == '@'){
 			chiralityClockwise = true;
 			atomString = atomString.substring(1);
 		}
+		AtomParity atomParity;
 		if (chiralityClockwise){
-			atomParity.appendChild("1");
+			atomParity = new AtomParity(new Atom[4], 1);
 		}
 		else{
-			atomParity.appendChild("-1");
+			atomParity = new AtomParity(new Atom[4], -1);
 		}
-		String atomRefs4 ="";
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		int indice =0;
 		if (previousAtom !=null){
-			atomRefs4 += "a" +previousAtom.getID();
+			atomRefs4[indice] = previousAtom;
+			indice++;
 		}
 		if (atomString.length() > 0 && atomString.charAt(0) == 'H'){
-			if (!atomRefs4.equals("")){
-				atomRefs4 += " ";
-			}
-			atomRefs4 += "a" + atom.getID() +"_H";
+			atomRefs4[indice] = AtomParity.hydrogen;
 			atomString = atomString.substring(1);
 		}
-		atomParity.addAttribute(new Attribute(ATOMREFS4_ATR, atomRefs4));
+		atom.setAtomParity(atomParity);
 		return atomString;
 	}
 
@@ -552,26 +533,33 @@ class SMILESFragmentBuilder {
 	}
 
 	private void processRingOpening(Stack<StackFrame> stack,
-			HashMap<String, StackFrame> closures, String closure) {
+			HashMap<String, StackFrame> closures, String closure) throws StructureBuildingException {
 		StackFrame sf = new StackFrame(stack.peek());
 		if (stack.peek().slash!=null){
 			sf.slash = stack.peek().slash;
 			stack.peek().slash = null;
 		}
-		if (sf.atom.getAtomParityElement()!=null){//replace ringclosureX with actual reference to id when it is known
-			Element atomParityElement = sf.atom.getAtomParityElement();
-			Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
-			String atomRefs4 = atomRefs4Att.getValue();
-			if (atomRefs4.equals("")){
-				atomRefs4 += "ringclosure" + closure;
-			}
-			else{
-				atomRefs4 += " ringclosure" + closure;
-			}
-			atomRefs4Att.setValue(atomRefs4);
+		if (sf.atom.getAtomParity()!=null){//replace ringclosureX with actual reference to id when it is known
+			Atom dummyRingClosureAtom = new Atom(closure);
+			addAtomToAtomParity(sf.atom.getAtomParity(), dummyRingClosureAtom);
 		}
 		closures.put(closure, sf);
 		stack.peek().bondOrder = 1;
+	}
+
+	private void addAtomToAtomParity(AtomParity atomParity, Atom atom) throws StructureBuildingException {
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		boolean setAtom =false;
+		for (int i = 0; i < atomRefs4.length; i++) {
+			if (atomRefs4[i] ==null){
+				atomRefs4[i] = atom;
+				setAtom =true;
+				break;
+			}
+		}
+		if (!setAtom){
+			throw new StructureBuildingException("Tetrahedral stereocentre specified in SMILES appears to involve more than 4 atoms");
+		}
 	}
 
 	private void processRingClosure(FragmentManager fragManager,
@@ -603,24 +591,24 @@ class SMILESFragmentBuilder {
 			b.setSmilesStereochemistry(stack.peek().slash);
 			stack.peek().slash = null;
 		}
-		if (stack.peek().atom.getAtomParityElement()!=null){
-			Element atomParityElement = stack.peek().atom.getAtomParityElement();
-			Attribute atomRefs4Att = atomParityElement.getAttribute(ATOMREFS4_ATR);
-			String atomRefs4 = atomRefs4Att.getValue();
-			if (atomRefs4.equals("")){
-				atomRefs4 += "a" + sf.atom.getID();
-			}
-			else{
-				atomRefs4 += " a" + sf.atom.getID();
-			}
-			atomRefs4Att.setValue(atomRefs4);
+		if (stack.peek().atom.getAtomParity()!=null){
+			AtomParity atomParity = stack.peek().atom.getAtomParity();
+			addAtomToAtomParity(atomParity, sf.atom);
 		}
-		if (sf.atom.getAtomParityElement()!=null){//replace dummy id with actual id e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy id before being replaced with the id of the F
-			Element atomParityElement = sf.atom.getAtomParityElement();
-			Attribute atomRefs4Atr = atomParityElement.getAttribute(ATOMREFS4_ATR);
-			String atomRefs4 = atomRefs4Atr.getValue();
-			atomRefs4 = atomRefs4.replaceFirst("ringclosure" + closure, "a" +stack.peek().atom.getID());
-			atomRefs4Atr.setValue(atomRefs4);
+		if (sf.atom.getAtomParity()!=null){//replace dummy atom with actual atom e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy atom before being replaced with the F atom
+			AtomParity atomParity = sf.atom.getAtomParity();
+			Atom[] atomRefs4 = atomParity.getAtomRefs4();
+			boolean replacedAtom =false;
+			for (int i = 0; i < atomRefs4.length; i++) {
+				if (atomRefs4[i] !=null && atomRefs4[i].getElement().equals(closure)){
+					atomRefs4[i] = stack.peek().atom;
+					replacedAtom =true;
+					break;
+				}
+			}
+			if (!replacedAtom){
+				throw new StructureBuildingException("Unable to find ring closure atom in atomRefs4 of atomparity when building SMILES");
+			}
 		}
 		stack.peek().bondOrder = 1;
 	}

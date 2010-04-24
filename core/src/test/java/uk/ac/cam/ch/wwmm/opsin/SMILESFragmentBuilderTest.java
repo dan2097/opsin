@@ -9,8 +9,6 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import nu.xom.Element;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -257,10 +255,13 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.size());
 		Atom chiralAtom = atomList.get(1);
 		assertEquals(3, chiralAtom.getAtomNeighbours().size());
-		Element atomParity = chiralAtom.getAtomParityElement();
-		String atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a1 a2_H a3 a4", atomRefs4);
-		assertEquals(1, Integer.parseInt(atomParity.getValue()));
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(atomList.get(0), atomRefs4[0]);
+		assertEquals(AtomParity.hydrogen, atomRefs4[1]);
+		assertEquals(atomList.get(2), atomRefs4[2]);
+		assertEquals(atomList.get(3), atomRefs4[3]);
+		assertEquals(1, atomParity.getParity());
 	}
 
 	@Test
@@ -270,10 +271,13 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.size());
 		Atom chiralAtom = atomList.get(1);
 		assertEquals(3, chiralAtom.getAtomNeighbours().size());
-		Element atomParity = chiralAtom.getAtomParityElement();
-		String atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a1 a2_H a3 a4", atomRefs4);
-		assertEquals(-1, Integer.parseInt(atomParity.getValue()));
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(atomList.get(0), atomRefs4[0]);
+		assertEquals(AtomParity.hydrogen, atomRefs4[1]);
+		assertEquals(atomList.get(2), atomRefs4[2]);
+		assertEquals(atomList.get(3), atomRefs4[3]);
+		assertEquals(-1, atomParity.getParity());
 	}
 
 	@Test
@@ -283,10 +287,13 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.size());
 		Atom chiralAtom = atomList.get(3);
 		assertEquals(3, chiralAtom.getAtomNeighbours().size());
-		Element atomParity = chiralAtom.getAtomParityElement();
-		String atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a4_H a1 a3 a2", atomRefs4);
-		assertEquals(1, Integer.parseInt(atomParity.getValue()));
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(AtomParity.hydrogen, atomRefs4[0]);
+		assertEquals(atomList.get(0), atomRefs4[1]);
+		assertEquals(atomList.get(2), atomRefs4[2]);
+		assertEquals(atomList.get(1), atomRefs4[3]);
+		assertEquals(1, atomParity.getParity());
 	}
 
 	@Test
@@ -296,10 +303,13 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.size());
 		Atom chiralAtom = atomList.get(0);
 		assertEquals(3, chiralAtom.getAtomNeighbours().size());
-		Element atomParity = chiralAtom.getAtomParityElement();
-		String atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a1_H a2 a4 a3", atomRefs4);
-		assertEquals(1, Integer.parseInt(atomParity.getValue()));
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(AtomParity.hydrogen, atomRefs4[0]);
+		assertEquals(atomList.get(1), atomRefs4[1]);
+		assertEquals(atomList.get(3), atomRefs4[2]);
+		assertEquals(atomList.get(2), atomRefs4[3]);
+		assertEquals(1, atomParity.getParity());
 	}
 
 	@Test
@@ -309,17 +319,23 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(6, atomList.size());
 		Atom chiralAtom1 = atomList.get(0);
 		assertEquals(3, chiralAtom1.getAtomNeighbours().size());
-		Element atomParity = chiralAtom1.getAtomParityElement();
-		String atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a1_H a2 a6 a3", atomRefs4);
-		assertEquals(1, Integer.parseInt(atomParity.getValue()));
+		AtomParity atomParity  = chiralAtom1.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(AtomParity.hydrogen, atomRefs4[0]);
+		assertEquals(atomList.get(1), atomRefs4[1]);
+		assertEquals(atomList.get(5), atomRefs4[2]);
+		assertEquals(atomList.get(2), atomRefs4[3]);
+		assertEquals(1, atomParity.getParity());
 
 		Atom chiralAtom2 = atomList.get(2);
 		assertEquals(3, chiralAtom2.getAtomNeighbours().size());
-		atomParity = chiralAtom2.getAtomParityElement();
-		atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a1 a3_H a4 a5", atomRefs4);
-		assertEquals(-1, Integer.parseInt(atomParity.getValue()));
+		atomParity  = chiralAtom2.getAtomParity();
+		atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(atomList.get(0), atomRefs4[0]);
+		assertEquals(AtomParity.hydrogen, atomRefs4[1]);
+		assertEquals(atomList.get(3), atomRefs4[2]);
+		assertEquals(atomList.get(4), atomRefs4[3]);
+		assertEquals(-1, atomParity.getParity());
 	}
 
 	@Test
@@ -329,10 +345,13 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(5, atomList.size());
 		Atom chiralAtom = atomList.get(1);
 		assertEquals(4, chiralAtom.getAtomNeighbours().size());
-		Element atomParity = chiralAtom.getAtomParityElement();
-		String atomRefs4 = atomParity.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
-		assertEquals("a1 a3 a4 a5", atomRefs4);
-		assertEquals(1, Integer.parseInt(atomParity.getValue()));
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(atomList.get(0), atomRefs4[0]);
+		assertEquals(atomList.get(2), atomRefs4[1]);
+		assertEquals(atomList.get(3), atomRefs4[2]);
+		assertEquals(atomList.get(4), atomRefs4[3]);
+		assertEquals(1, atomParity.getParity());
 	}
 
 	@Test

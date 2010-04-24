@@ -82,18 +82,18 @@ public class NameToInchi {
 		}
 
 		for (Atom atom : atomList) {//add atomParities
-			Element atomParityEl =atom.getAtomParityElement();
-        	if (atomParityEl != null){
-				String[] atomRefs4 = atomParityEl.getAttributeValue("atomRefs4").split(" ");
+			AtomParity atomParity =atom.getAtomParity();
+        	if (atomParity != null){
+        		Atom[] atomRefs4 = atomParity.getAtomRefs4();
 				int[] atomRefs4AsInt = new int[4];
 				for (int i = 0; i < atomRefs4.length; i++) {
-					atomRefs4AsInt[i] = Integer.parseInt(atomRefs4[i].substring(1));//cut off starting a
+					atomRefs4AsInt[i] = atomRefs4[i].getID();
 				}
 				INCHI_PARITY parity =INCHI_PARITY.UNKNOWN;
-				if (Integer.parseInt(atomParityEl.getValue()) > 0){
+				if (atomParity.getParity() > 0){
 					parity =INCHI_PARITY.EVEN;
 				}
-				else if (Integer.parseInt(atomParityEl.getValue()) < 0){
+				else if (atomParity.getParity() < 0){
 					parity =INCHI_PARITY.ODD;
 				}
 				input.addStereo0D(JniInchiStereo0D.createNewTetrahedralStereo0D(opsinIdAtomMap.get(atom.getID()), opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), parity));
@@ -143,13 +143,10 @@ public class NameToInchi {
 		NameToInchi nti = new NameToInchi();
 		boolean end = false;
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("OPSIN Prealpha: enter chemical name:");
+		System.err.println("OPSIN Prealpha: enter chemical name:");
 		while(!end) {
 			String name = stdinReader.readLine();
-			if(name == null) {
-				System.err.println("Disconnected!");
-				end = true;
-			} else if(name.equals("END")) {
+			if(name == null || name.equals("END")) {
 				end = true;
 			} else {
 				String output = nti.parseToInchi(name, false);

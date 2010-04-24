@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 
-import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -1066,26 +1065,52 @@ class StructureBuilder {
 			List<Atom> atomList =fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
 				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
-				for (int i = 1; i <= explicitHydrogensToAdd; i++) {
-					Atom a = state.fragManager.createAtom("H", fragment);
-					state.fragManager.createBond(parentAtom, a, 1);
+				Atom hydrogen = null;
+				for (int i = 0; i < explicitHydrogensToAdd; i++) {
+					hydrogen = state.fragManager.createAtom("H", fragment);
+					state.fragManager.createBond(parentAtom, hydrogen, 1);
 				}
-				if (parentAtom.getAtomParityElement()!=null){
+				if (parentAtom.getAtomParity()!=null){
 					if (explicitHydrogensToAdd >1){
 						throw new StructureBuildingException("Cannot have tetrahedral chirality and more than 2 hydrogens");
 					}
-					Element atomParityEl = parentAtom.getAtomParityElement();
-					Attribute atomRefs4Atr = atomParityEl.getAttribute("atomRefs4");
-					String atomRefs4 = atomRefs4Atr.getValue();
+					AtomParity atomParity = parentAtom.getAtomParity();
+					Atom[] atomRefs4 = atomParity.getAtomRefs4();
 					if (explicitHydrogensToAdd ==1){
-						atomRefs4 = atomRefs4.replaceFirst("a" + parentAtom.getID() +"_H", "a" + state.idManager.getCurrentID());//atom parity was set in SMILES but at this stage the id of the hydrogen was not known, now it is so replace the dummy ID
-						atomRefs4Atr.setValue(atomRefs4);
+						//atom parity was set in SMILES but at this stage the id of the hydrogen was not known, now it is so replace the dummy atom
+						boolean setAtom =false;
+						for (int i = 0; i < atomRefs4.length; i++) {
+							if (atomRefs4[i].equals(AtomParity.hydrogen)){
+								atomRefs4[i] = hydrogen;
+								setAtom =true;
+								break;
+							}
+						}
+						if (!setAtom){
+							throw new StructureBuildingException("OPSIN Bug: Unable to find implicit hydrogen to replace with explicit hydrogen in atomRefs4");
+						}
 					}
 					else{
+						//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
 						List<Atom> neighbours = parentAtom.getAtomNeighbours();
-						atomRefs4 = atomRefs4.replaceFirst("a" + parentAtom.getID() +"_H", "a" + neighbours.get(neighbours.size()-1).getID());//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
+						for (Atom atom : atomRefs4) {
+							neighbours.remove(atom);
+						}
+						if (neighbours.size()!=1){
+							throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+						}
+						boolean setAtom =false;
+						for (int i = 0; i < atomRefs4.length; i++) {
+							if (atomRefs4[i].equals(AtomParity.hydrogen)){
+								atomRefs4[i] = neighbours.get(0);
+								setAtom =true;
+								break;
+							}
+						}
+						if (!setAtom){
+							throw new StructureBuildingException("OPSIN Bug: Unable to find implicit hydrogen to replace with explicit hydrogen in atomRefs4");
+						}
 					}
-					atomRefs4Atr.setValue(atomRefs4);
 				}
 			}
 		}

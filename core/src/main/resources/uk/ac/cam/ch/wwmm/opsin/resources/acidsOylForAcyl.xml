@@ -12,6 +12,7 @@
 	<token value="7" valType="chain" suffixAppliesTo="1,7">pimel</token>
 	<token value="8" valType="chain" suffixAppliesTo="1,8">suber</token>
 	<token value="9" valType="chain" suffixAppliesTo="1,9">azela</token>
+	<token value="9" valType="chain" suffixAppliesTo="1,9">azel</token>
 	<token value="10" valType="chain" suffixAppliesTo="1,10">sebac</token>
 
 	<token value="CC=C" valType="SMILES" usableAsAJoiner="yes">acryl</token>
