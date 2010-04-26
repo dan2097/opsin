@@ -624,11 +624,7 @@ class StructureBuildingMethods {
 						outAtomCount==1 && frag.getOutAtom(0).getValency()==Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR))) &&
 						hasRootLikeOrMultiRadicalGroup(state, nextSiblingEl)){
 					if (outAtomCount==1){//special case e.g. 4,4'-(benzylidene)dianiline
-						OutAtom out = frag.getOutAtom(0);
-						for (int i = 1; i < out.getValency(); i++) {
-							frag.addOutAtom(out.getAtom(), 1, out.isSetExplicitly());
-						}
-						out.setValency(1);
+						FragmentTools.splitOutAtomIntoValency1OutAtoms(frag.getOutAtom(0));
 						//special case where something like benzylidene is being used as if it meant benzdiyl for multiplicative nomenclature
 						//this is allowed in the IUPAC 79 recommendations but not recommended in the current recommendations
 					}

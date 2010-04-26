@@ -310,4 +310,13 @@ class FragmentTools {
 			atom.replaceLocant(atom.getFirstLocant() + stringToAdd);
 		}
 	}
+
+
+	static void splitOutAtomIntoValency1OutAtoms(OutAtom outAtom) {
+		Fragment frag =outAtom.getAtom().getFrag();
+		for (int i = 1; i < outAtom.getValency(); i++) {
+			frag.addOutAtom(outAtom.getAtom(), 1, outAtom.isSetExplicitly());
+		}
+		outAtom.setValency(1);
+	}
 }
