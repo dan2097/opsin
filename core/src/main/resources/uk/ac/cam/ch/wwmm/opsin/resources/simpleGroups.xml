@@ -70,6 +70,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="CS(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">mesylate</token>
   <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
   <token value="N[N+](=O)([O-])" labels="none" valType="SMILES" functionalIDs="1,1">nitramide</token>
+  <token value="C(C(CO[N+](=O)[O-])O[N+](=O)[O-])O[N+](=O)[O-]" labels="none" valType="SMILES">nitroglycerin</token>
   <token value="C(=O)C=O" labels="1//2/" valType="SMILES">oxaldehyde</token>
   <token value="NC(=O)C(=O)N" labels="none" valType="SMILES" functionalIDs="1,1,6,6">oxamide</token>
   <token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>
@@ -78,7 +79,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphate</token>
   <token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoate</token>
   <token value="P(=O)(N)(N)N" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoramide</token>
-  <token value="CC(CCCC(CCCC(CCCC(C)C)C)C)CCO" labels="none" valType="SMILES">phytol</token>
+  <token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO" labels="none" valType="SMILES">phytol</token>
   <token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
   <token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES">propione</token>
   <token value="CCC[O-]" labels="1/2/3/" valType="SMILES">propoxide</token>
