@@ -1687,13 +1687,14 @@ class PreStructureBuilder {
 					else{
 						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
 					}
+					atomToBeReplaced.setCharge(0);
 				}
 				else{
 					if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
 						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+						atomToBeReplaced.setCharge(0);
 					}
 				}
-				atomToBeReplaced.setCharge(0);
 			}
 		}
 	}
