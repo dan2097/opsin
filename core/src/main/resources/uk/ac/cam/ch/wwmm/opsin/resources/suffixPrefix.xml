@@ -8,6 +8,7 @@ value is the SMILES for this suffixPrefix
   <token value="C">carb</token>
   <token value="C">carbo</token>
   <token value="C">carbox</token>
+  <token value="C">carbono</token>
 
   <token value="S=O">sulfon</token>
   <token value="S=O">sulfono</token>

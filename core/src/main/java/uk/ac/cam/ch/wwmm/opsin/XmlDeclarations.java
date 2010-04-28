@@ -235,7 +235,7 @@ class XmlDeclarations {
 	static final String E_OR_Z_TYPE_VAL ="EorZ";
 	
 	/**This group is a sulfur/selenium/tellurium acid with the acidic hydroxy missing*/
-	static final String CHALCOGENICACIDSTEM_TYPE_VAL ="chalcogenAcidStem";
+	static final String CHALCOGENACIDSTEM_TYPE_VAL ="chalcogenAcidStem";
 	
 	/**A functional group describing a divalent group*/
 	static final String DIVALENTGROUP_TYPE_VAL ="diValentGroup";
