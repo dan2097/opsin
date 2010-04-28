@@ -1160,12 +1160,13 @@ class PreStructureBuilder {
 		ArrayList<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
 		state.xmlSuffixMap.put(group, suffixFragments);
 		boolean suffixesResolved =false;
-		if (group.getAttributeValue(TYPE_ATR).equals("chalcogenAcidStem")){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacment
+		if (group.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL)){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacment
 	    	resolveSuffixes(state, group, suffixes);
 	    	suffixesResolved =true;
 	    }
 		processSuffixPrefixes(state, suffixes);//e.g. carbox amide
 		processInfixFunctionalReplacementNomenclature(state, suffixes, suffixFragments);
+		processConvertHydroxyGroupsToOutAtomsRule(state, suffixes, suffixableFragment);
 
 		if (imideSpecialCase){//Pretty horrible hack to allow cyclic imides
 			if (suffixes.size() !=2){
@@ -1219,14 +1220,13 @@ class PreStructureBuilder {
 			suffixTypeToUse = "standardGroup";
 		}
 
-		//if suffixTypeToUse is still null then it is type cyclic or acyclic as determined by the atom property atomIsInACycle
         for (Element suffix : suffixes) {
             String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 
             boolean cyclic;//needed for addSuffixPrefixIfNonePresentAndCyclic rule
             Atom atomLikelyToBeUsedBySuffix = null;
-            if (suffix.getAttribute("locant") != null) {
-            	atomLikelyToBeUsedBySuffix = frag.getAtomByLocant(suffix.getAttributeValue("locant"));
+            if (suffix.getAttribute(LOCANT_ATR) != null) {
+            	atomLikelyToBeUsedBySuffix = frag.getAtomByLocant(suffix.getAttributeValue(LOCANT_ATR));
             }
             else if (suffix.getAttribute("locantID") != null) {
             	atomLikelyToBeUsedBySuffix = frag.getAtomByIDOrThrow(Integer.parseInt(suffix.getAttributeValue("locantID")));
@@ -1251,7 +1251,7 @@ class PreStructureBuilder {
                     String bondOrderStr = suffixRuleTag.getAttributeValue("bondOrder");
                     int bondOrder = 1;
                     if (bondOrderStr != null) bondOrder = Integer.parseInt(bondOrderStr);
-                    String labels = "none";
+                    String labels = NONE_LABELS_VAL;
                     if (suffixRuleTag.getAttribute("labels") != null) {
                         labels = suffixRuleTag.getAttributeValue("labels");
                     }
@@ -1317,12 +1317,6 @@ class PreStructureBuilder {
 					removeOneDoubleBondedOxygen(state, frag);
 					
 				}
-				else if (suffixRuleTagName.equals("convertHydroxyGroupsToOutAtoms")){
-					if (suffixFrag != null){
-						throw new PostProcessingException("convertHydroxyGroupsToOutAtoms is not currently compatable with the addGroup suffix rule");
-					}
-					convertHydroxyGroupsToOutAtoms(state, frag);
-				}
             }
             if (suffixFrag != null) {
 				suffixFragments.add(suffixFrag);
@@ -1330,6 +1324,39 @@ class PreStructureBuilder {
             }
         }
 		return suffixFragments;
+	}
+	
+	/**Processes any convertHydroxyGroupsToOutAtoms instructions
+	 * This is not handled as part of resolveGroupAddingSuffixes as something like carbonochloridoyl involves infix replacement
+	 * on a hydroxy that would otherwise actually be removed by this rule!
+	 * @param state
+	 * @param suffixes The suffix elements for a fragment.
+	 * @param frag The fragment to which the suffix will be applied
+	 * @return An arrayList containing the generated fragments
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException 
+	 */
+	private void processConvertHydroxyGroupsToOutAtomsRule(BuildState state, List<Element> suffixes, Fragment frag) throws PostProcessingException, StructureBuildingException{
+		String groupType = frag.getType();
+		String subgroupType = frag.getSubType();
+		String suffixTypeToUse =null;
+		if (suffixApplicability.containsKey(groupType)){
+			suffixTypeToUse =groupType;
+		}
+		else{
+			suffixTypeToUse = "standardGroup";
+		}
+        for (Element suffix : suffixes) {
+            String suffixValue = suffix.getAttributeValue(VALUE_ATR);
+            Elements suffixRuleTags = getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+            for (int j = 0; j < suffixRuleTags.size(); j++) {
+                Element suffixRuleTag = suffixRuleTags.get(j);
+                String suffixRuleTagName = suffixRuleTag.getLocalName();
+                if (suffixRuleTagName.equals("convertHydroxyGroupsToOutAtoms")){
+					convertHydroxyGroupsToOutAtoms(state, frag);
+				}
+            }
+        }
 	}
 
 
@@ -3083,7 +3110,7 @@ class PreStructureBuilder {
 			if (idOnParentFragToUse==0 && suffix.getAttribute("locantID")!=null){
 				idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue("locantID"));
 			}
-			if (idOnParentFragToUse==0 && (suffixTypeToUse.equals("acidStem") || suffixTypeToUse.equals("nonCarboxylicAcid")|| suffixTypeToUse.equals("chalcogenAcidStem"))){//means that e.g. sulfonyl has an explicit outAtom
+			if (idOnParentFragToUse==0 && (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL)|| suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL))){//means that e.g. sulfonyl has an explicit outAtom
 				idOnParentFragToUse = firstAtomID;
 			}
 
