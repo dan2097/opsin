@@ -1503,7 +1503,7 @@ class PreStructureBuilder {
 				Fragment fragToApplyInfixTo = state.xmlFragmentMap.get(suffix);
 				Element possibleAcidGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{"multiplier", "infix"});
 				if (possibleAcidGroup !=null && possibleAcidGroup.getLocalName().equals(GROUP_EL) && 
-						(possibleAcidGroup.getAttributeValue(TYPE_ATR).equals("nonCarboxylicAcid")|| possibleAcidGroup.getAttributeValue(TYPE_ATR).equals("chalcogenAcidStem"))){
+						(possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)|| possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL))){
 					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
 				}
 				if (fragToApplyInfixTo ==null){
@@ -1632,7 +1632,7 @@ class PreStructureBuilder {
 							throw new StructureBuildingException("OPSIN bug: Could not find inAtom for unconnected suffix and atom has no neighbours!");
 						}
 					}
-					removeObsoleteFunctionalAtoms(atomToUse, replacementFrag);
+					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);
 					int charge = atomToUse.getCharge();
 					state.fragManager.replaceTerminalAtomWithFragment(atomToUse, replacementFrag.getFirstAtom());
 					atomToUse.setCharge(charge);
@@ -1664,28 +1664,38 @@ class PreStructureBuilder {
 
 	/**
 	 * Given an atom that is to be replaced by a functional replacement fragment
-	 * determines whether this atom is a functional atom and if it is whether it is still meaningful after the functional replacement
-	 * The functionalAtom is removed if the replacement fragment has more than 1 atom or is not O/S/Se/Te
+	 * determines whether this atom is a functional atom and if it is whether it is:
+	 * if the replacement fragment is only 1 atom and is not O/S/Se/Te the functionalAtom is removed
+	 * otherwise a check is done on the last atom in the replacement fragment. e.g. peroxy
+	 * If this is O/S/Se/Te the functionalAtom is moved to that atom otherwise it is still removed
 	 * @param atomToBeReplaced
 	 * @param replacementFrag
-	 * @return Whether a functionalAtom was removed
 	 * @throws StructureBuildingException
 	 */
-	private boolean removeObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag)throws StructureBuildingException {
-		Atom firstAtomOfInfixFrag = replacementFrag.getFirstAtom();
+	private void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag)throws StructureBuildingException {
+		List<Atom> replacementAtomList = replacementFrag.getAtomList();
 		List<FunctionalAtom> functionalAtoms = atomToBeReplaced.getFrag().getFunctionalAtoms();
-		boolean functionalAtomRemoved = false;
 		for (int j = functionalAtoms.size()-1; j >=0; j--) {
 			FunctionalAtom functionalAtom = functionalAtoms.get(j);
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
-				if (!matchChalcogen.matcher(firstAtomOfInfixFrag.getElement()).matches() || replacementFrag.getAtomList().size()>1){
-					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
-					atomToBeReplaced.setCharge(0);
-					functionalAtomRemoved=true;
+				if (replacementFrag.getAtomList().size()>1){
+					Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
+					if (matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
+						functionalAtom.setAtom(terminalAtomOfReplacementFrag);
+						terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
+					}
+					else{
+						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+					}
 				}
+				else{
+					if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
+						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+					}
+				}
+				atomToBeReplaced.setCharge(0);
 			}
 		}
-		return functionalAtomRemoved;
 	}
 
 
@@ -1930,9 +1940,7 @@ class PreStructureBuilder {
 							}
 							if (atomCount>1){//something like peroxy
 								Fragment replacementFrag = state.fragManager.buildSMILES(replacementSMILES, "suffix", "none");
-								if (removeObsoleteFunctionalAtoms(atomToReplace, replacementFrag) && group.getValue().equals("peroxy")){
-									replacementFrag.addFunctionalAtom(replacementFrag.getAtomList().get(1));
-								}
+								removeOrMoveObsoleteFunctionalAtoms(atomToReplace, replacementFrag);
 								int charge = atomToReplace.getCharge();
 								state.fragManager.replaceTerminalAtomWithFragment(atomToReplace, replacementFrag.getFirstAtom());
 								atomToReplace.setCharge(charge);
