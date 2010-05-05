@@ -2,7 +2,7 @@
 <!-- See the DTD for more details -->
 <tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="x">
 <!-- implement ylene =diyl  e.g. neopentylene, vinylene, butylene, naphthylene-->
-  <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">methylene</token>
+  <token value="C" labels="1" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">methylene</token>
   <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">carbene</token>
   <token value="CC" outIDs="1,2" valType="SMILES">ethylene</token>
   <token value="C=C" outIDs="1,2" valType="SMILES">vinylene</token>

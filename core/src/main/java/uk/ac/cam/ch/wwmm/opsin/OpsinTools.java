@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
+
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -19,12 +21,16 @@ import nu.xom.Node;
  *
  */
 class OpsinTools {
-	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private final static char endOfSubstituent = '\u00e9';
+	private final static char endOfMainGroup = '\u00e2';
+	private final static char endOfFunctionalTerm = '\u00FB';
+	
 	/**
 	 * Returns the next sibling suffix node which is not related to altering charge (ium/ide/id)
 	 * @param currentEl
 	 */
-	public static Element getNextNonChargeSuffix(Element currentEl) {
+	static Element getNextNonChargeSuffix(Element currentEl) {
 		Element matchedElement =null;
 		while (true) {
 			Element next = (Element) XOMTools.getNextSibling(currentEl);
@@ -48,7 +54,7 @@ class OpsinTools {
 	 * @param elements
 	 * @return The new arrayList
 	 */
-	public static ArrayList<Element> elementsToElementArrayList(Elements elements) {
+	static ArrayList<Element> elementsToElementArrayList(Elements elements) {
 		ArrayList<Element> elementList =new ArrayList<Element>(elements.size());
 		for (int i = 0, n=elements.size(); i < n; i++) {
 			elementList.add(elements.get(i));
@@ -62,7 +68,7 @@ class OpsinTools {
 	 * @param list2
 	 * @return The new list
 	 */
-	public static ArrayList<Element> combineElementLists(List<Element> list1, List<Element> list2) {
+	static ArrayList<Element> combineElementLists(List<Element> list1, List<Element> list2) {
 		ArrayList<Element> elementList =new ArrayList<Element>(list1);
 		elementList.addAll(list2);
 		return elementList;
@@ -73,7 +79,7 @@ class OpsinTools {
 	 * @param current: starting node
 	 * @return
 	 */
-	public static Node getPreviousGroup(Element current) {
+	static Node getPreviousGroup(Element current) {
 	  if (current.getLocalName().equals("group")){//can start with a group or the sub/root the group is in
 		  current=(Element)current.getParent();
 	  }
@@ -105,7 +111,7 @@ class OpsinTools {
 	 * @return wordRule Element
 	 * @throws PostProcessingException
 	 */
-	public static Element getParentWordRule(Element el) throws PostProcessingException {
+	static Element getParentWordRule(Element el) throws PostProcessingException {
 		Element parent=(Element)el.getParent();
 		while(parent !=null && !parent.getLocalName().equals("wordRule")){
 			parent =(Element)parent.getParent();
@@ -124,7 +130,7 @@ class OpsinTools {
      * @param elem The element to copy.
      * @return The copied element.
      */
-	public static Element shallowCopy(Element elem) {
+	static Element shallowCopy(Element elem) {
 		Element newElem = new Element(elem.getLocalName());
 		for(int i=0;i<elem.getAttributeCount();i++) {
 			newElem.addAttribute((Attribute)elem.getAttribute(i).copy());
@@ -140,7 +146,7 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 * @throws StructureBuildingException
 	 */
-	public static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) throws StructureBuildingException {
+	static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) throws StructureBuildingException {
 		LinkedList<Atom> stack = new LinkedList<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();
@@ -177,7 +183,7 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 * @throws StructureBuildingException
 	 */
-	public static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom) throws StructureBuildingException {
+	static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom) throws StructureBuildingException {
 		LinkedList<Atom> stack = new LinkedList<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();
@@ -199,5 +205,28 @@ class OpsinTools {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Given a list of annotations returns the word type as indicated by the final annotation of the list
+	 * @param annotations
+	 * @return WordType
+	 * @throws ParsingException 
+	 */
+	static WordType determineWordType(List<Character> annotations) throws ParsingException {
+		Character finalAnnotation = annotations.get(annotations.size() -1);
+		if (finalAnnotation.equals(endOfMainGroup)){
+			return WordType.full;
+		}
+		else if (finalAnnotation.equals(endOfSubstituent)){
+			return WordType.substituent;
+		}
+		else if (finalAnnotation.equals(endOfFunctionalTerm)){
+			return WordType.functionalTerm;
+		}
+		else{
+			throw new ParsingException("OPSIN bug: Unable to determine word type!");
+		}
+		
 	}
 }

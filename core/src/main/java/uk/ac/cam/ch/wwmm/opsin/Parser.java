@@ -69,10 +69,6 @@ class Parser {
 	private final ParseRules parseRules;
 	/**Holds the various tokens used.*/
 	private final TokenManager tokenManager;
-	
-	private final static char endOfSubstituent = '\u00e9';
-	private final static char endOfMainGroup = '\u00e2';
-	private final static char endOfFunctionalTerm = '\u00FB';
 
 	/**Initialises the parser.
 	 * @param tokenManager
@@ -93,7 +89,17 @@ class Parser {
 	 * @throws ParsingException If the name is unparsable.
 	 */
 	List<Element> parse(String name) throws ParsingException {
-		Parse parse = tokeniser.tokenize(name);
+		Parse parse = null;
+		if (name.contains(", ")){
+			try{
+				parse = tokeniser.tokenize(tokeniser.uninvertCASName(name), false);
+			}
+			catch (ParsingException e) {
+			}
+		}
+		if (parse == null){
+			parse = tokeniser.tokenize(name, true);
+		}
 		
 		/* For cases where any of the parse's parseWords contain multiple annotations create a
 		 * parse for each possibility. Hence after this process there may be multiple parse objects and
@@ -136,7 +142,7 @@ class Parser {
 					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating addition parses step");
 				}
 				
-				pw.setWordType(determineWordType(pw.getParseTokens().get(0).getAnnotations()));
+				pw.setWordType(OpsinTools.determineWordType(pw.getParseTokens().get(0).getAnnotations()));
 				word.addAttribute(new Attribute("type", pw.getWordType().toString()));
 				if (pw.getWord().startsWith("-")){//we want -acid to be the same as acid
 					word.addAttribute(new Attribute("value", pw.getWord().substring(1)));
@@ -166,30 +172,6 @@ class Parser {
 		}
 		
 		return results;
-	}
-	
-
-	/**
-	 * Given a list of annotations returns the word type as indicated by the final annotation of the list
-	 * @param annotations
-	 * @return WordType
-	 * @throws ParsingException 
-	 */
-	private WordType determineWordType(List<Character> annotations) throws ParsingException {
-		Character finalAnnotation = annotations.get(annotations.size() -1);
-		if (finalAnnotation.equals(endOfMainGroup)){
-			return WordType.full;
-		}
-		else if (finalAnnotation.equals(endOfSubstituent)){
-			return WordType.substituent;
-		}
-		else if (finalAnnotation.equals(endOfFunctionalTerm)){
-			return WordType.functionalTerm;
-		}
-		else{
-			throw new ParsingException("OPSIN bug: Unable to determine word type!");
-		}
-		
 	}
 
 	/**Write the XML corresponding to a particular word in a parse.
