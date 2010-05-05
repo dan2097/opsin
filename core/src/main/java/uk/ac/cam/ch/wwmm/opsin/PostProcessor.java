@@ -341,6 +341,9 @@ class PostProcessor {
 		Elements multipliers = elem.getChildElements(MULTIPLIER_EL);
 		for(int i=0;i<multipliers.size();i++) {
 			Element m = multipliers.get(i);
+			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
+				continue;
+			}
 			int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 			Element multipliedElem = (Element)XOMTools.getNextSibling(m);
 

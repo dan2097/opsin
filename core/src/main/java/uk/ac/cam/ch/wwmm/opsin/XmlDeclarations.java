@@ -294,7 +294,7 @@ class XmlDeclarations {
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";
 	static final String FUNCTIONALCLASSGROUP_SUBTYPE_VAL ="functionalClassGroup";
-	static final String GROUPSTEN_SUBTYPE_VAL ="groupStem";
+	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
 	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
 	static final String HETEROSTEM_SUBTYPE_VAL ="heteroStem";
 	static final String FUSIONRING_SUBTYPE_VAL ="fusionRing";

@@ -1,7 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 
 /**
  * Uses OPSIN's DFA based grammar to break a name in to tokens with associated meanings ("annotations").
@@ -13,6 +17,8 @@ class Tokeniser {
 
 	private final ParseRules parseRules;
 	private final static char endOfFunctionalTerm = '\u00FB';
+	private final Pattern matchCommaSpace = Pattern.compile(", ");
+	private final Pattern matchSpace = Pattern.compile(" ");
 	
 	Tokeniser(ParseRules parseRules) {
 		this.parseRules = parseRules;
@@ -21,12 +27,19 @@ class Tokeniser {
 	/**
 	 * Master method for tokenizing chemical names into words and within words into tokens
 	 * @param name The chemical name.
+	 * @param allowRemovalOfWhiteSpace 
 	 * @return
 	 * @throws ParsingException 
 	 */
-	Parse tokenize(String name) throws ParsingException {
+	Parse tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		Parse parse = new Parse(name);
-		String unparsedName = removeWhiteSpaceIfBracketsAreUnbalanced(name);
+		String unparsedName;
+		if (allowRemovalOfWhiteSpace){
+			unparsedName =  removeWhiteSpaceIfBracketsAreUnbalanced(name);
+		}
+		else{
+			unparsedName = name;
+		}
 		while (unparsedName.length()>0){
 			/*
 			 * Returns
@@ -53,15 +66,26 @@ class Tokeniser {
 					unparsedName = uninterpretableName;
 				}
 			}
-			else{//word is unparsable as is. Try and remove a space and try again
-				//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-				int indexOfSpace = uninterpretableName.indexOf(' ');
-				if (indexOfSpace != -1 ){
-					unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
+			else{//word is unparsable as is.
+				if (allowRemovalOfWhiteSpace){
+					//Try and remove a space and try again
+					//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
+					int indexOfSpace = uninterpretableName.indexOf(' ');
+					if (indexOfSpace != -1 ){
+						unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
+					}
+					else{
+						if (parsedName.equals("")){
+							throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+						}
+						else {
+							throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
+						}
+					}
 				}
 				else{
 					if (parsedName.equals("")){
-						throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+						throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName);
 					}
 					else {
 						throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
@@ -171,5 +195,141 @@ class Tokeniser {
 			}
 		}
 		return parseWords;
+	}
+	
+	/**
+	 * Inverts a CAS name.
+	 * Throws an exception is OPSIN is unable to determine whether something is a substituent or functional term
+	 * or if something unexpected in a CAS name is encountered
+	 * @param name
+	 * @return
+	 * @throws ParsingException
+	 */
+	String uninvertCASName(String name) throws ParsingException {
+		List<String> nameComponents = new ArrayList<String>(Arrays.asList(matchCommaSpace.split(name)));
+		List<String> substituents = new ArrayList<String>();
+		List<String> seperateWordSubstituents = new ArrayList<String>();
+		List<String> functionalTerms = new ArrayList<String>();
+		
+		String parent = nameComponents.get(0);
+		boolean addedBracket = false;
+		boolean esterEncountered = false;
+		for (int i = 1; i < nameComponents.size(); i++) {
+			String[] components = matchSpace.split(nameComponents.get(i));
+			for (String component : components) {
+				if (component.endsWith("-")){
+					if (isCloseBracketMissing(component)){
+						if (addedBracket){
+							throw new ParsingException("Close bracket bracket appears to be missing");
+						}
+						parent += "]";
+						addedBracket =true;
+					}
+					substituents.add(component);
+				}
+				else{
+					ParseRulesResults results = parseRules.getParses(component);
+					List<ParseTokens> parseTokens = results.getParseTokensList();
+					if (parseTokens.size() >0){
+						if (splitIntoParseWords(parseTokens, component).size()>1){
+							throw new ParsingException("Missing space found in name prevents interpetation as CAS index name");
+						}
+						WordType wordType = OpsinTools.determineWordType(parseTokens.get(0).getAnnotations());
+						for (int j = 1; j < parseTokens.size(); j++) {
+							if (!wordType.equals(OpsinTools.determineWordType(parseTokens.get(j).getAnnotations()))){
+								throw new ParsingException(component + "can be interpeted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+							}
+						}
+						if (wordType.equals(WordType.functionalTerm)){
+							if (component.equals("ester")){
+								if (esterEncountered){
+									throw new ParsingException("ester formation was mentioned more than once in CAS name!");
+								}
+								parent = uninvertEster(parent);
+								esterEncountered=true;
+							}
+							else{
+								functionalTerms.add(component);
+							}
+						}
+						else if (wordType.equals(WordType.substituent)){
+							seperateWordSubstituents.add(component);
+						}
+						else if (wordType.equals(WordType.full)){
+							throw new ParsingException("Unable to interpret: " + component +" (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
+						}
+					}
+					else{
+						throw new ParsingException("Unable to interpret: " + component +" (as part of a CAS index name)");
+					}
+				}
+			}
+		}
+		StringBuilder casName = new StringBuilder();
+		for (String prefixFunctionalTerm : seperateWordSubstituents) {
+			casName.append(prefixFunctionalTerm);
+			casName.append(" ");
+		}
+		for (String substituent : substituents) {
+			casName.append(substituent);
+		}
+		casName.append(parent);
+		for (String functionalTerm : functionalTerms) {
+			casName.append(" ");
+			casName.append(functionalTerm);
+		}
+		return casName.toString();
+	}
+
+	/**
+	 * Modifies the name of the parent acid from ic to ate (or ous to ite)
+	 * hence allowing the formation of the uninverted ester
+	 * @param parent
+	 * @return
+	 * @throws ParsingException
+	 */
+	private String uninvertEster(String parent) throws ParsingException {
+		int len = parent.length();
+		if (len <9){
+			throw new ParsingException("Failed to uninvert CAS ester");
+		}
+		char lastChar = parent.charAt(len-1);
+		if (lastChar ==')' || lastChar ==']' || lastChar =='}'){
+			if (parent.substring(parent.length()-8).equalsIgnoreCase("ic acid)")){
+				parent = parent.substring(0, parent.length()-8) + "ate)";
+			}
+			else if (parent.substring(parent.length()-9).equalsIgnoreCase("ous acid)")){
+				parent = parent.substring(0, parent.length()-9) + "ite)";
+			}
+			else{
+				throw new ParsingException("Failed to uninvert CAS ester");
+			}
+		}
+		else{
+			if (parent.substring(parent.length()-7).equalsIgnoreCase("ic acid")){
+				parent = parent.substring(0, parent.length()-7) + "ate";
+			}
+			else if (parent.substring(parent.length()-8).equalsIgnoreCase("ous acid")){
+				parent = parent.substring(0, parent.length()-8) + "ite";
+			}
+			else{
+				throw new ParsingException("Failed to uninvert CAS ester");
+			}
+		}
+		return parent;
+	}
+
+	private boolean isCloseBracketMissing(String component) {
+		char[] characters = component.toCharArray();
+		for (int i = characters.length -1; i >=0; i--) {
+			char character = characters[i];
+			if (character =='(' || character =='[' || character =='{'){
+				return true;
+			}
+			if (character ==')' || character ==']' || character =='}'){
+				return false;
+			}
+		}
+		return false;
 	}
 }
