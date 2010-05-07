@@ -895,88 +895,6 @@ class PostProcessor {
 		}
 	}
 
-	/**
-	 * If the integer given is > 9 return %ringClosure else just returns ringClosure
-	 * @param ringClosure
-	 * @return
-	 */
-	private String ringClosure(int ringClosure) {
-		if (ringClosure >9){
-			return "%" +Integer.toString(ringClosure);
-		}
-		else{
-			return Integer.toString(ringClosure);
-		}
-	}
-
-	/**
-	 * Prepares spiro string for processing
-	 * @param text - string with spiro
-	 * @return array with number of carbons in each group and associated index of spiro atom
-	 */
-	private int[][] getSpiroGroups(String text) {
-		text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
-		String[] sGroups = matchDot.split(text);
-		int gNum = sGroups.length;
-
-		int[][] iGroups = new int[gNum][2]; // array of groups where number of elements and super string present
-
-		for (int i=0; i<sGroups.length; i++)
-		{
-			String[] elements = matchNonDigit.split(sGroups[i]);
-			if (elements.length >1)//a "superscripted" number is present
-			{
-				iGroups[i][0] = Integer.parseInt(elements[0]);
-				iGroups[i][1] = Integer.parseInt(elements[1]);
-			}
-			else
-			{
-				iGroups[i][0] = Integer.parseInt(sGroups[i]);
-				iGroups[i][1] = -1;
-			}
-		}
-
-		return iGroups;
-	}
-
-	/**
-	 * finds atom index in smile string corresponding to atom index in a given structure
-	 * @param smile string to search in
-	 * @param index index of the atom in given structure
-	 * @return correspondent atom index in smile string
-	 */
-	private String findCSmileIndex(String smile, int index)
-	{
-		int cnt = 0;
-		int pos = -1;
-		int i;
-		String sIndex;
-
-		for (i=0; i<smile.length(); i++)
-		{
-			if (smile.charAt(i) == 'C') cnt++;
-			if (cnt==index) { pos=i; break;}
-		}
-
-		pos++;
-
-		if (smile.charAt(pos)=='%')
-		{
-			sIndex = "%";
-			pos++;
-			while (smile.charAt(pos)>='0' && smile.charAt(pos)<='9' && pos<smile.length())
-			{
-				sIndex += smile.charAt(pos);
-				pos++;
-			}
-
-		}
-		else sIndex = "" + smile.charAt(pos); // Can be non integer char
-
-		if (sIndex.equals("0")) sIndex="1"; // as the first ring can have 2 indices, we need the second
-		return sIndex;
-	}
-
 	/**Looks (multiplier)cyclo/spiro/cyclo tags before chain
 	 * and replaces them with a group with appropriate SMILES
 	 * Note that only simple spiro tags are handled at this stage i.e. not dispiro
@@ -987,75 +905,7 @@ class PostProcessor {
 		Element previous = (Element)XOMTools.getPreviousSibling(group);
 		if(previous != null) {
 			if(previous.getLocalName().equals(SPIRO_EL)){
-				String text = previous.getValue();
-				int[][] groups = getSpiroGroups(text);
-				int curIndex = 2;
-
-				Element multiplier =(Element)XOMTools.getPreviousSibling(previous);
-				int numberOfSpiros = 1;
-				if (multiplier != null && multiplier.getLocalName().equals(MULTIPLIER_EL)){
-					numberOfSpiros = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-					multiplier.detach();
-				}
-				int numOfOpenedBrackets = 1;
-
-				String SMILES = "C0" + StringTools.multiplyString("C", groups[0][0]) + "01(";
-
-				// for those molecules where no superstrings compare prefix number with curIndex.
-				for (int i=1; i<groups.length; i++)
-				{
-					if (groups[i][1] >= 0)
-					{
-						String smileIndex = findCSmileIndex( SMILES, groups[i][1] );
-
-						int pos = SMILES.indexOf(smileIndex);
-
-						// we already had this index twice
-						// the molecule has atom connecting more than 1 ring
-						if (SMILES.indexOf(smileIndex, pos+1)>=0)
-						{
-							// insert extra index
-							SMILES = SMILES.substring(0, pos+1) + curIndex + SMILES.substring(pos+1);
-
-							// add ring in a new brackets
-							String stIndex = ""+curIndex;
-							if (curIndex>9) stIndex += "%" + stIndex; // check if is more than 9
-							SMILES += "(" + StringTools.multiplyString("C", groups[i][0]) + stIndex + ")";
-							curIndex++;
-						}
-						else
-						{
-							SMILES += StringTools.multiplyString("C", groups[i][0]) + smileIndex + ")";
-						}
-
-					}
-					else if (numOfOpenedBrackets >= numberOfSpiros)
-					{
-						SMILES += StringTools.multiplyString("C", groups[i][0]);
-
-						// take the number before bracket as index for smile
-						// we can open more brackets, this considered in prev if
-						curIndex--;
-						if (curIndex>9)	SMILES += "%";
-						SMILES += curIndex + ")";
-
-						// from here start to decrease index for the following
-					}
-					else
-					{
-						SMILES += StringTools.multiplyString("C", groups[i][0]);
-
-						if (curIndex>9)
-							SMILES += "C%" + curIndex++ + "(";
-						else
-							SMILES += "C" + curIndex++ + "(";
-						numOfOpenedBrackets++;
-					}
-				}
-				group.addAttribute(new Attribute(VALUE_ATR, SMILES));
-				group.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
-				group.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
-				previous.detach();
+				processSpiroSystem(group, previous);
 			} else if(previous.getLocalName().equals(VONBAEYER_EL)) {
 				processVonBaeyerSystem(group, previous);
 			}
@@ -1104,6 +954,156 @@ class PostProcessor {
 				previous.detach();
 			}
 		}
+	}
+
+	/**
+	 * Processes a spiro descriptor element.
+	 * This modifies the provided chainGroup into the spiro system by replacing the value of the chain group with appropriate SMILES
+	 * @param chainGroup
+	 * @param spiroEl
+	 * @throws PostProcessingException 
+	 * @throws NumberFormatException 
+	 */
+	private void processSpiroSystem(Element chainGroup, Element spiroEl) throws NumberFormatException, PostProcessingException {
+		int[][] spiroDescriptors = getSpiroDescriptors(spiroEl.getValue());
+
+		Element multiplier =(Element)XOMTools.getPreviousSibling(spiroEl);
+		int numberOfSpiros = 1;
+		if (multiplier != null && multiplier.getLocalName().equals(MULTIPLIER_EL)){
+			numberOfSpiros = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
+			multiplier.detach();
+		}
+		int numberOfCarbonInDescriptors =0;
+		for (int[] spiroDescriptor : spiroDescriptors) {
+			numberOfCarbonInDescriptors += spiroDescriptor[0];
+		}
+		numberOfCarbonInDescriptors += numberOfSpiros;
+		if (numberOfCarbonInDescriptors != Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR))){
+			throw new PostProcessingException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR)));
+		}
+
+		int numOfOpenedBrackets = 1;
+		int curIndex = 2;
+		String smiles = "C0" + StringTools.multiplyString("C", spiroDescriptors[0][0]) + "10(";
+
+		// for those molecules where no superstrings compare prefix number with curIndex.
+		for (int i=1; i< spiroDescriptors.length; i++) {
+			if (spiroDescriptors[i][1] >= 0) {
+				int ringOpeningPos = findIndexOfRingOpenings( smiles, spiroDescriptors[i][1] );
+				String ringOpeningLabel = String.valueOf(smiles.charAt(ringOpeningPos));
+				ringOpeningPos++;
+				if (ringOpeningLabel.equals("%")){
+					while (smiles.charAt(ringOpeningPos)>='0' && smiles.charAt(ringOpeningPos)<='9' && ringOpeningPos < smiles.length()) {
+						ringOpeningLabel += smiles.charAt(ringOpeningPos);
+						ringOpeningPos++;
+					}
+				}
+				if (smiles.indexOf("C" + ringOpeningLabel, ringOpeningPos)>=0) {
+					// this ring opening has already been closed
+					// i.e. this atom connects more than one ring in a spiro fusion
+					
+					// insert extra ring opening
+					smiles = smiles.substring(0, ringOpeningPos) + ringClosure(curIndex) + smiles.substring(ringOpeningPos);
+
+					// add ring in new brackets
+					smiles += "(" + StringTools.multiplyString("C", spiroDescriptors[i][0]) + ringClosure(curIndex) + ")";
+					curIndex++;
+				}
+				else {
+					smiles += StringTools.multiplyString("C", spiroDescriptors[i][0]) + ringOpeningLabel + ")";
+				}
+			}
+			else if (numOfOpenedBrackets >= numberOfSpiros) {
+				smiles += StringTools.multiplyString("C", spiroDescriptors[i][0]);
+
+				// take the number before bracket as index for smiles
+				// we can open more brackets, this considered in prev if
+				curIndex--;
+				smiles += ringClosure(curIndex) + ")";
+
+				// from here start to decrease index for the following
+			}
+			else {
+				smiles += StringTools.multiplyString("C", spiroDescriptors[i][0]);
+				smiles += "C" + ringClosure(curIndex++) + "(";
+				numOfOpenedBrackets++;
+			}
+		}
+		chainGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
+		chainGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+		chainGroup.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
+		spiroEl.detach();
+	}
+
+	/**
+	 * If the integer given is > 9 return %ringClosure else just returns ringClosure
+	 * @param ringClosure
+	 * @return
+	 */
+	private String ringClosure(int ringClosure) {
+		if (ringClosure >9){
+			return "%" +Integer.toString(ringClosure);
+		}
+		else{
+			return Integer.toString(ringClosure);
+		}
+	}
+
+	/**
+	 * Prepares spiro string for processing
+	 * @param text - string with spiro e.g. spiro[2.2]
+	 * @return array with number of carbons in each group and associated index of spiro atom
+	 */
+	private int[][] getSpiroDescriptors(String text) {
+		text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
+		String[] spiroDescriptorStrings = matchDot.split(text);
+	
+		int[][] spiroDescriptors = new int[spiroDescriptorStrings.length][2]; // array of descriptors where number of elements and super string present
+	
+		for (int i=0; i < spiroDescriptorStrings.length; i++) {
+			String[] elements = matchNonDigit.split(spiroDescriptorStrings[i]);
+			if (elements.length >1) {//a "superscripted" number is present
+				spiroDescriptors[i][0] = Integer.parseInt(elements[0]);
+				String superScriptedNumber ="";
+				for (int j = 1; j < elements.length; j++){//may be more than one non digit as there are many ways of indicating superscripts
+					superScriptedNumber += elements[j];
+				}
+				spiroDescriptors[i][1] = Integer.parseInt(superScriptedNumber);
+			}
+			else {
+				spiroDescriptors[i][0] = Integer.parseInt(spiroDescriptorStrings[i]);
+				spiroDescriptors[i][1] = -1;
+			}
+		}
+	
+		return spiroDescriptors;
+	}
+
+	/**
+	 * Finds the the carbon atom with the given locant in the provided SMILES
+	 * Returns the next index which is expected to correspond to the atom's ring opening/s
+	 * @param SMILES string to search in
+	 * @param locant locant of the atom in given structure
+	 * @return index of ring openings
+	 * @throws PostProcessingException 
+	 */
+	private Integer findIndexOfRingOpenings(String smiles, int locant) throws PostProcessingException{
+		int count = 0;
+		int pos = -1;
+		for (int i=0; i<smiles.length(); i++){
+			if (smiles.charAt(i) == 'C') {
+				count++;
+			}
+			if (count==locant) {
+				pos=i;
+				break;
+			}
+		}
+		if (pos == -1){
+			throw new PostProcessingException("Unable to find atom corresponding to number indicated by superscript in spiro descriptor");
+		}
+		pos++;
+		return pos;
 	}
 
 	/**

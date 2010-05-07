@@ -182,7 +182,7 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainRoot%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/>
   <regex name="%conjunctiveSideChainInline%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/>
 
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%vonBaeyerSystem%|%spiroSystem%|%hantzschWidmanRing%|%annulen%|(%locantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%|%cyclicUnsaturableHydrocarbon%)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%)"/>
 
   <!--Complex terms-->
