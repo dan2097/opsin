@@ -19,6 +19,7 @@ class Tokeniser {
 	private final static char endOfFunctionalTerm = '\u00FB';
 	private final Pattern matchCommaSpace = Pattern.compile(", ");
 	private final Pattern matchSpace = Pattern.compile(" ");
+	private final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*");
 	
 	Tokeniser(ParseRules parseRules) {
 		this.parseRules = parseRules;
@@ -212,6 +213,12 @@ class Tokeniser {
 		List<String> functionalTerms = new ArrayList<String>();
 		
 		String parent = nameComponents.get(0);
+		String[] parentNameParts = matchSpace.split(parent);
+		if (parentNameParts.length !=1){
+			if (parentNameParts.length >2 || !matchAcid.matcher(parentNameParts[1]).matches()){
+				throw new ParsingException("Invalid CAS name. Parent compound was followed by an unexpected term");
+			}
+		}
 		boolean addedBracket = false;
 		boolean esterEncountered = false;
 		for (int i = 1; i < nameComponents.size(); i++) {
