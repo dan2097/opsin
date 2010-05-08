@@ -2264,7 +2264,7 @@ class PreStructureBuilder {
 	 * @param subOrRoot
 	 */
 	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) {
-		Elements groupsOfSubOrRoot = subOrRoot.getChildElements("group");
+		Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
 		ArrayList<Fragment> suffixFragments =state.xmlSuffixMap.get(lastGroupElementInSubOrRoot);
 		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
