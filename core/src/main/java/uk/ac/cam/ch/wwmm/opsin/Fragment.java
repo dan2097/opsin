@@ -532,14 +532,18 @@ class Fragment {
 	void pickUpIndicatedHydrogen() {
 		int svCount = 0;
 		int dvCount = 0; /* Divalent, like O */
+		int cyclicAtomCount =0;
 		for(Atom a : atomCollection) {
-			svCount += a.hasSpareValency() ? 1 : 0;
-			if(a.getElement().equals("O")) dvCount++;
-			if(a.getElement().equals("S")) dvCount++;
-			if(a.getElement().equals("Se")) dvCount++;
-			if(a.getElement().equals("Te")) dvCount++;
+			if (a.getAtomIsInACycle()){
+				svCount += a.hasSpareValency() ? 1 : 0;
+				String element =a.getElement();
+				if(element.equals("O") || element.equals("S") || element.equals("Se") || element.equals("Te")){
+					dvCount++;
+				}
+				cyclicAtomCount++;
+			}
 		}
-		if(svCount == atomCollection.size() - (1 + dvCount) && svCount > 0) {
+		if(svCount == cyclicAtomCount - (1 + dvCount) && svCount > 0) {
 			// Now we're looking for a trivalent C, or failing that a divalent N/P/As/Sb
 			Atom nCandidate = null;
 			for(Atom a : atomCollection) {
