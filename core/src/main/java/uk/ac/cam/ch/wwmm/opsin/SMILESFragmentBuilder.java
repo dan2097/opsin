@@ -279,6 +279,9 @@ class SMILESFragmentBuilder {
 					}
 					spareValency =true;
 		        }
+		        else if (elementType.equals("*")){
+		        	elementType = "R";
+		        }
 		        else{
 		        	throw new StructureBuildingException(elementType +" is not a valid element type!");
 		        }
@@ -338,7 +341,7 @@ class SMILESFragmentBuilder {
     					else{
     						hydrogenCount = Integer.parseInt(hydrogenCountString);
     					}
-    					throw new StructureBuildingException("Hydrogen count is currently not supported");
+    					//throw new StructureBuildingException("Hydrogen count is currently not supported");
 		            }
 		            else if(nextChar == '+' || nextChar == '-') {// formalCharge
 		            	if (charge != 0){
@@ -412,19 +415,14 @@ class SMILESFragmentBuilder {
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
 			List<Atom> aList =currentFrag.getAtomList();
 			Atom lastAtom =aList.get(aList.size()-1);
-			if (subType.equals("inSuffix")){
-				currentFrag.setDefaultInAtom(lastAtom);
+			if (lastCharacter == '#'){
+				currentFrag.addOutAtom(lastAtom, 3, true);
+			}
+			else if (lastCharacter == '='){
+				currentFrag.addOutAtom(lastAtom, 2, true);
 			}
 			else{
-				if (lastCharacter == '#'){
-					currentFrag.addOutAtom(lastAtom, 3, true);
-				}
-				else if (lastCharacter == '='){
-					currentFrag.addOutAtom(lastAtom, 2, true);
-				}
-				else{
-					currentFrag.addOutAtom(lastAtom, 1, true);
-				}
+				currentFrag.addOutAtom(lastAtom, 1, true);
 			}
 		}
 
