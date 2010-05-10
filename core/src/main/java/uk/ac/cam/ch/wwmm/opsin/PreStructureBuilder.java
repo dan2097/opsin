@@ -1248,48 +1248,31 @@ class PreStructureBuilder {
                 Element suffixRuleTag = suffixRuleTags.get(j);
                 String suffixRuleTagName = suffixRuleTag.getLocalName();
                 if (suffixRuleTagName.equals("addgroup")) {
-                    String bondOrderStr = suffixRuleTag.getAttributeValue("bondOrder");
-                    int bondOrder = 1;
-                    if (bondOrderStr != null) bondOrder = Integer.parseInt(bondOrderStr);
                     String labels = NONE_LABELS_VAL;
                     if (suffixRuleTag.getAttribute("labels") != null) {
                         labels = suffixRuleTag.getAttributeValue("labels");
                     }
-
-                    Fragment tempSuffixFrag = null;
-                    if (suffixRuleTag.getAttribute("setsOutAtom") != null) {
-                        tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "outSuffix", labels);
-                        if (tempSuffixFrag.getOutAtoms().size() == 0) {
-                            if (suffixRuleTag.getAttribute("outValency") != null) {
-                                tempSuffixFrag.addOutAtom(tempSuffixFrag.getFirstAtom(), Integer.parseInt(suffixRuleTag.getAttributeValue("outValency")), true);
-                            } else {
-                                tempSuffixFrag.addOutAtom(tempSuffixFrag.getFirstAtom(), 1, true);
-                            }
-                        }
-                    } else if (suffixRuleTag.getAttribute("setsDefaultInAtom") != null) {
-                        tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "inSuffix", labels);
-                    } else if (suffixRuleTag.getAttribute("functionalIDs") != null) {
-                        tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "functionalSuffix", labels);
+                    suffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "suffix", labels);
+                    List<Atom> atomList = suffixFrag.getAtomList();
+                    if (suffixRuleTag.getAttribute("functionalIDs") != null) {
                         String[] relativeIdsOfFunctionalAtoms = matchComma.split(suffixRuleTag.getAttributeValue("functionalIDs"));
                         for (String relativeId : relativeIdsOfFunctionalAtoms) {
-                        	List<Atom> atomList = tempSuffixFrag.getAtomList();
                         	int atomIndice = Integer.parseInt(relativeId) -1;
                         	if (atomIndice >=atomList.size()){
                         		throw new StructureBuildingException("Check suffixRules.xml: Atom requested to have a functionalAtom was not within the suffix fragment");
                         	}
-                        	tempSuffixFrag.addFunctionalAtom(atomList.get(atomIndice));
+                        	suffixFrag.addFunctionalAtom(atomList.get(atomIndice));
 						}
-                    } else {
-                        tempSuffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue("SMILES"), "suffix", "suffix", labels);
                     }
-
-
-                    if (suffixFrag == null) {
-                    	suffixFrag = state.fragManager.buildSMILES("[R]", "suffix", "suffix" , "none");
-                    }
-                    state.fragManager.incorporateFragment(tempSuffixFrag, tempSuffixFrag.getDefaultInAtom().getID(), suffixFrag, suffixFrag.getIdOfFirstAtom(), bondOrder);
-                    if (suffixRuleTag.getAttribute("setsDefaultInAtom") != null) {
-                        suffixFrag.setDefaultInAtom(tempSuffixFrag.getDefaultInAtom());
+                    if (suffixRuleTag.getAttribute("outIDs") != null) {
+                        String[] relativeIdsOfOutAtoms = matchComma.split(suffixRuleTag.getAttributeValue("outIDs"));
+                        for (String relativeId : relativeIdsOfOutAtoms) {
+                        	int atomIndice = Integer.parseInt(relativeId) -1;
+                        	if (atomIndice >=atomList.size()){
+                        		throw new StructureBuildingException("Check suffixRules.xml: Atom requested to have a outAtom was not within the suffix fragment");
+                        	}
+                        	suffixFrag.addOutAtom(atomList.get(atomIndice), 1 , true);
+						}
                     }
                 }
                 else if (suffixRuleTagName.equals("addSuffixPrefixIfNonePresentAndCyclic")){
@@ -3161,9 +3144,6 @@ class PreStructureBuilder {
 							}
 							Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
 							state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
-							if(suffixRuleTag.getAttribute("setsDefaultInAtom") != null) {
-								frag.setDefaultInAtom(suffixFrag.getDefaultInAtom());
-							}
 							if (suffixValue.equals("one") && groupType.equals("ring")){//special case: one acts in a similar way to the hydro tag c.f. tetrahydrobenzen-1,4-dione
 								parentfragAtom.setNote("OneSuffixAttached", "1");
 							}

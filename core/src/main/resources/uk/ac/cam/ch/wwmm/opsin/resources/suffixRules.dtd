@@ -1,17 +1,14 @@
 <!ELEMENT suffixRulesList (rule)+>
 
-<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutAtom|changecharge|addFunctionalAtomsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutAtoms)*>
+<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutAtom|changecharge|addFunctionalAtomsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutAtoms)+>
 <!ATTLIST rule value CDATA #REQUIRED
                subType CDATA #IMPLIED>
 
 <!ELEMENT addgroup EMPTY>
 <!ATTLIST addgroup SMILES CDATA #REQUIRED
-                    bondOrder CDATA #IMPLIED
                     labels CDATA #IMPLIED
-                    setsOutAtom (yes|no) #IMPLIED
-                    setsDefaultInAtom (yes|no) #IMPLIED
                     functionalIDs CDATA #IMPLIED
-                    outValency CDATA #IMPLIED
+                    outIDs CDATA #IMPLIED
                     ketoneLocant (yes|no) #IMPLIED>
 
 <!ELEMENT addSuffixPrefixIfNonePresentAndCyclic EMPTY>
