@@ -14,7 +14,7 @@
     <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CC(N)=O)C" suffixAppliesTo="7">asparag</token>
     <token labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" value="N[C@@H](CC)C(N)=O" suffixAppliesTo="4">isoasparag</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](CS)C" suffixAppliesTo="5">cyste</token>
-    <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[Se])C" suffixAppliesTo="5">selenocyste</token>
+    <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[SeH])C" suffixAppliesTo="5">selenocyste</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1//" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">isoglutam</token>
     <token labels="/2,alpha/1" valType="SMILES" value="NCC" suffixAppliesTo="3">glyc</token>
@@ -53,7 +53,7 @@
     <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CC(N)=O)C" suffixAppliesTo="7">l-asparag</token>
     <token labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" value="N[C@@H](CC)C(N)=O" suffixAppliesTo="4">l-isoasparag</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](CS)C" suffixAppliesTo="5">l-cyste</token>
-    <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[Se])C" suffixAppliesTo="5">l-selenocyste</token>
+    <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[SeH])C" suffixAppliesTo="5">l-selenocyste</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">l-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1//" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">l-isoglutam</token>
     <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@@H](Cc1cncn1)C" suffixAppliesTo="9">l-histid</token>
@@ -88,7 +88,7 @@
     <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@H](CC(N)=O)C" suffixAppliesTo="7">d-asparag</token>
     <token labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" value="N[C@H](CC)C(N)=O" suffixAppliesTo="4">d-isoasparag</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@H](CS)C" suffixAppliesTo="5">d-cyste</token>
-    <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@H](C[Se])C" suffixAppliesTo="5">d-selenocyste</token>
+    <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@H](C[SeH])C" suffixAppliesTo="5">d-selenocyste</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@H](CCC(N)=O)C" suffixAppliesTo="8">d-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1//" valType="SMILES" value="N[C@H](CCC)C(N)=O" suffixAppliesTo="5">d-isoglutam</token>
     <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@H](Cc1cncn1)C" suffixAppliesTo="9">d-histid</token>

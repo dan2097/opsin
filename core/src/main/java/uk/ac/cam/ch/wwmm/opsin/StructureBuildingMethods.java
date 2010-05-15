@@ -1126,7 +1126,7 @@ class StructureBuildingMethods {
 			}
 			if (element.equals("N")){
 				if (atomToJoinTo.getCharge()==0 && (atomToJoinTo.getIncomingValency() + atomToJoinTo.getOutValency() + (atomToJoinTo.hasSpareValency() ? 1 :0))==3){
-					atomToJoinTo.setCharge(1);
+					atomToJoinTo.addChargeAndProtons(1, 1);
 				}
 			}
 		}
@@ -1289,7 +1289,7 @@ class StructureBuildingMethods {
 	 * @return
 	 */
 	static int calculateSubstitutableHydrogenAtoms(Atom atom) {
-		Integer valency = atom.determineValency(true);	
+		int valency = atom.determineValency(true);	
 		int currentValency =atom.getIncomingValency() + atom.getOutValency();
 		return valency-currentValency;
 	}

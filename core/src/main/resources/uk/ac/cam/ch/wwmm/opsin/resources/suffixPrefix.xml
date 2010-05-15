@@ -15,22 +15,22 @@ value is the SMILES for this suffixPrefix
   <token value="S">sulfin</token>
   <token value="S">sulfino</token>
 
-  <token value="[Se]=O">selenon</token>
-  <token value="[Se]=O">selenono</token>
-  <token value="[Se]">selenin</token>
-  <token value="[Se]">selenino</token>
+  <token value="[SeH?]=O">selenon</token>
+  <token value="[SeH?]=O">selenono</token>
+  <token value="[SeH?]">selenin</token>
+  <token value="[SeH?]">selenino</token>
 
-  <token value="[Te]=O">telluron</token>
-  <token value="[Te]=O">tellurono</token>
-  <token value="[Te]">tellurin</token>
-  <token value="[Te]">tellurino</token>
+  <token value="[TeH?]=O">telluron</token>
+  <token value="[TeH?]=O">tellurono</token>
+  <token value="[TeH?]">tellurin</token>
+  <token value="[TeH?]">tellurino</token>
 
 
 <!--not recommended by IUPAC-->
   <token value="PO">phosphon</token>
   <token value="PO">phosphono</token>
-  <token value="[As]O">arson</token>
-  <token value="[As]O">arsono</token>
-  <token value="[Sb]O">stibon</token>
-  <token value="[Sb]O">stibono</token>
+  <token value="[AsH?]O">arson</token>
+  <token value="[AsH?]O">arsono</token>
+  <token value="[SbH?]O">stibon</token>
+  <token value="[SbH?]O">stibono</token>
 </tokenList>

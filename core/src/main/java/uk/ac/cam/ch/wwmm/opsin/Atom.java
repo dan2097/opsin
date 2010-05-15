@@ -60,14 +60,17 @@ class Atom {
 	private int outValency = 0;
 
 	/** The number of hydrogens bonded to this atom.
-	 * null if hydrogens are implicit*/
-	private Integer explicitHydrogens;
+	 * null until hydrogen are made explicit*/
+	private Integer hydrogenCount;
 
 	/** Null by default or set by the lambda convention.*/
 	private Integer lambdaConventionValency;
 	
+	/** Null by default or set by the CML/SMILES builder*/
+	private Integer minimumValency;
+
 	/** This is modified by ium/ide/ylium/uide and is used to choose the appropriate valency for the atom*/
-	private Integer protonsExplicitlyAddedOrRemoved =0;
+	private int protonsExplicitlyAddedOrRemoved = 0;
 
 	/**
 	 * Takes same values as type in Fragment. Useful for discriminating suffix atoms from other atoms when a suffix is incorporated into another fragments
@@ -125,7 +128,7 @@ class Atom {
 		elem.addAttribute(new Attribute("elementType", element));
 		if(charge != 0)
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
-		if (explicitHydrogens!=null && explicitHydrogens==0){//prevent adding of implicit hydrogen
+		if (hydrogenCount!=null && hydrogenCount==0){//prevent adding of implicit hydrogen
 			elem.addAttribute(new Attribute("hydrogenCount", "0"));
 		}
 		if(atomParity != null){
@@ -154,7 +157,7 @@ class Atom {
 	 * @param considerOutValency
 	 * @return
 	 */
-	Integer determineValency(boolean considerOutValency) {
+	int determineValency(boolean considerOutValency) {
 		if (lambdaConventionValency != null){
 			return lambdaConventionValency +protonsExplicitlyAddedOrRemoved;
 		}
@@ -162,24 +165,36 @@ class Atom {
 		if (considerOutValency){
 			currentValency+=outValency;
 		}
+		Integer calculatedMinValency = minimumValency == null ? null : minimumValency + protonsExplicitlyAddedOrRemoved;
 		if (charge ==0 || protonsExplicitlyAddedOrRemoved !=0){
 			Integer defaultValency =ValencyChecker.getDefaultValency(element);
 			if (defaultValency !=null){
 				defaultValency += protonsExplicitlyAddedOrRemoved;
-			}
-			if (defaultValency !=null && currentValency <= defaultValency){
-				return defaultValency;
+				if (currentValency <= defaultValency && (calculatedMinValency == null || defaultValency >= calculatedMinValency)){
+					return defaultValency;
+				}
 			}
 		}
 		Integer[] possibleValencies =ValencyChecker.getPossibleValencies(element, charge);
 		if (possibleValencies!=null) {
+			if (calculatedMinValency!=null  && calculatedMinValency >= currentValency){
+				return calculatedMinValency;
+			}
 			for (Integer possibleValency : possibleValencies) {
+				if (calculatedMinValency!=null && possibleValency < calculatedMinValency){
+					continue;
+				}
 				if (currentValency <= possibleValency){
 					return possibleValency;
 				}
 			}
 		}
-		return currentValency;
+		if (calculatedMinValency!=null && calculatedMinValency>= currentValency){
+			return calculatedMinValency;
+		}
+		else{
+			return currentValency;
+		}
 	}
 
 	/**Adds a locant to the Atom. Other locants are preserved.
@@ -382,10 +397,6 @@ class Atom {
 		return bonds.remove(b);
 	}
 
-	void checkIncomingValency() throws StructureBuildingException {
-		if(!ValencyChecker.checkValency(this)) throw new StructureBuildingException("Atom is in unphysical valency state! Element: " + getElement() + " valency: " + getIncomingValency());
-	}
-
 	/**Calculates the number of bonds connecting to the atom, excluding bonds to implicit
 	 * hydrogens. Double bonds count as
 	 * two bonds, etc. Eg ethene - both C's have an incoming valency of 2.
@@ -400,11 +411,11 @@ class Atom {
 		return v;
 	}
 
-	Integer getProtonsExplicitlyAddedOrRemoved() {
+	int getProtonsExplicitlyAddedOrRemoved() {
 		return protonsExplicitlyAddedOrRemoved;
 	}
 
-	void setProtonsExplicitlyAddedOrRemoved(Integer protonsExplicitlyAddedOrRemoved) {
+	void setProtonsExplicitlyAddedOrRemoved(int protonsExplicitlyAddedOrRemoved) {
 		this.protonsExplicitlyAddedOrRemoved = protonsExplicitlyAddedOrRemoved;
 	}
 	
@@ -481,12 +492,12 @@ class Atom {
 	}
 
 
-	Integer getExplicitHydrogens() {
-		return explicitHydrogens;
+	Integer getHydrogenCount() {
+		return hydrogenCount;
 	}
 
-	void setExplicitHydrogens(Integer explicitHydrogens) {
-		this.explicitHydrogens = explicitHydrogens;
+	void setHydrogenCount(Integer hydrogenCount) {
+		this.hydrogenCount = hydrogenCount;
 	}
 
 	Integer getLambdaConventionValency() {
@@ -536,6 +547,15 @@ class Atom {
 	void setNotes(HashMap<String, String> notes) {
 		this.notes = notes;
 	}
+	
+	
+	Integer getMinimumValency() {
+		return minimumValency;
+	}
+
+	void setMinimumValency(Integer minimumValency) {
+		this.minimumValency = minimumValency;
+	}
 
 	/**
 	 * Checks if the valency of this atom allows it to have the amount of spare valency that the atom currently has
@@ -551,24 +571,25 @@ class Atom {
 				maxValency=lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 			}
 			else{
-				if (charge==0 && ValencyChecker.getHWValency(element)!=null){
-					maxValency =ValencyChecker.getHWValency(element);
+				if (element.equals("C")){
+					maxValency =4;
 				}
 				else{
-					maxValency= ValencyChecker.getMaximumValency(element, charge);
+					if (ValencyChecker.getHWValency(element)==null){
+						throw new StructureBuildingException(element +" is not expected to be aromatic!");
+					}
+					maxValency = ValencyChecker.getHWValency(element) + Math.abs(charge);
 				}
 			}
-			if (maxValency !=null){
-				int maxSpareValency;
-				if (takeIntoAccountExternalBonds){
-					maxSpareValency =maxValency-getIncomingValency();
-				}
-				else{
-					maxSpareValency =maxValency-frag.getIntraFragmentIncomingValency(this);
-				}
-				if (maxSpareValency < 1){
-					setSpareValency(false);
-				}
+			int maxSpareValency;
+			if (takeIntoAccountExternalBonds){
+				maxSpareValency =maxValency-getIncomingValency();
+			}
+			else{
+				maxSpareValency =maxValency-frag.getIntraFragmentIncomingValency(this);
+			}
+			if (maxSpareValency < 1){
+				setSpareValency(false);
 			}
 		}
 	}

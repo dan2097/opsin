@@ -34,8 +34,8 @@
 
   <tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="ó"><!--chalcogen replacement terms-->
     <token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
-    <token value="[Se]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
-    <token value="[Te]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
+    <token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
+    <token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
   </tokenList>
 
   <tokenList tagname="suffix" type="root" symbol="Ñ">

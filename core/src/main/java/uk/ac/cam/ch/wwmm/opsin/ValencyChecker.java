@@ -49,10 +49,10 @@ class ValencyChecker {
 
 		//in order of priority in the HW system
 		valencyInHW = new HashMap<String, Integer>();
-		valencyInHW.put("F", 3);//IUPAC says 1 for halogens, but this makes no sense as in a ring valency will never be 1
-		valencyInHW.put("Cl", 3);
-		valencyInHW.put("Br", 3);
-		valencyInHW.put("I", 3);
+		valencyInHW.put("F", 1);
+		valencyInHW.put("Cl", 1);
+		valencyInHW.put("Br", 1);
+		valencyInHW.put("I", 1);
 		valencyInHW.put("O", 2);
 		valencyInHW.put("S", 2);
 		valencyInHW.put("Se", 2);
@@ -188,8 +188,8 @@ class ValencyChecker {
 		possibleStableValencies.get("Al").put(3, new Integer[]{0});
 		possibleStableValencies.get("P").put(1, new Integer[]{2,4});
 		possibleStableValencies.get("P").put(-1, new Integer[]{2});
-		possibleStableValencies.get("S").put(1, new Integer[]{1,3});
-		possibleStableValencies.get("S").put(-1, new Integer[]{1});
+		possibleStableValencies.get("S").put(1, new Integer[]{3,5});
+		possibleStableValencies.get("S").put(-1, new Integer[]{1,3,5,7});
 		possibleStableValencies.get("S").put(-2, new Integer[]{0});
 		possibleStableValencies.get("Cl").put(1, new Integer[]{2});
 		possibleStableValencies.get("Cl").put(-1, new Integer[]{0});
@@ -241,7 +241,7 @@ class ValencyChecker {
 	 * @param charge
 	 * @return
 	 */
-	private static Integer getMaxValency(String symbol, int charge) {
+	static Integer getMaximumValency(String symbol, int charge) {
 		if (possibleStableValencies.get(symbol)!=null){
 			if (possibleStableValencies.get(symbol).get(charge)!=null){
 				return possibleStableValencies.get(symbol).get(charge)[possibleStableValencies.get(symbol).get(charge).length-1];
@@ -252,11 +252,12 @@ class ValencyChecker {
 
 	/**
 	 * Checks whether the total incoming valency to an atom exceeds its expected valency
+	 * outValency e.g. on radicals is taken into account
 	 * @param a
 	 * @return
 	 */
 	static boolean checkValency(Atom a) {
-		int valency = a.getIncomingValency();
+		int valency = a.getIncomingValency() + a.getOutValency();
 		Integer maxVal;
 		if (a.getLambdaConventionValency()!=null){
 			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
@@ -264,8 +265,10 @@ class ValencyChecker {
 		else{
 			String symbol = a.getElement();
 			int charge = a.getCharge();
-			maxVal=getMaxValency(symbol, charge);
-			if(maxVal==null) return true;
+			maxVal=getMaximumValency(symbol, charge);
+			if(maxVal==null) {
+				return true;
+			}
 		}
 		return valency <= maxVal;
 	}
@@ -284,8 +287,10 @@ class ValencyChecker {
 		else{
 			String symbol = a.getElement();
 			int charge = a.getCharge();
-			maxVal = getMaxValency(symbol, charge);
-			if(maxVal==null) return true;
+			maxVal = getMaximumValency(symbol, charge);
+			if(maxVal==null) {
+				return true;
+			}
 		}
 		return valency <= maxVal;
 	}
@@ -299,9 +304,9 @@ class ValencyChecker {
 		int valency =a.getIncomingValency();
 		valency +=a.hasSpareValency() ? 1 : 0;
 		valency +=a.getOutValency();
-		Integer maxValOfHeteroAtom = getMaxValency(heteroatom, 0);
+		Integer maxValOfHeteroAtom = getMaximumValency(heteroatom, 0);
         return maxValOfHeteroAtom == null || valency <= maxValOfHeteroAtom;
-		}
+	}
 
 	/**
 	 * Returns the default valency of an element when uncharged or null if unknown
@@ -320,16 +325,6 @@ class ValencyChecker {
 	 */
 	static Integer getHWValency(String element) {
 		return valencyInHW.get(element);
-	}
-
-	/**
-	 * Returns the maximum valency of an element or null if unknown
-	 * @param element
-	 * @param charge
-	 * @return
-	 */
-	static Integer getMaximumValency(String element, int charge) {
-		return getMaxValency(element, charge);
 	}
 
 	/**
