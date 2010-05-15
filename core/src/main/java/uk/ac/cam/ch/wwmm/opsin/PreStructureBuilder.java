@@ -1121,7 +1121,7 @@ class PreStructureBuilder {
 					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
 				symmetricSuffixes = false;
-				if (suffix.getValue().equals("imide")|| suffix.getValue().equals("imido") || suffix.getValue().equals("imidium")){
+				if (suffix.getValue().equals("imide")|| suffix.getValue().equals("imido") || suffix.getValue().equals("imidium")  || suffix.getValue().equals("imidylium")){
 					imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
 				}
 			}

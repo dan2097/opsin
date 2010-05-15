@@ -11,6 +11,10 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)N" functionalIDs="3,3" />
   </rule>
+  <rule value="amidylium">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=O)[NH+]" functionalIDs="3,3" />
+  </rule>
   <rule value="amidine">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=N)N" functionalIDs="3,3"/>
@@ -31,6 +35,9 @@ sense of this -->
   </rule>
   <rule value="aminium">
     <addgroup SMILES="[*][NH3+]" />
+  </rule>
+  <rule value="aminylium">
+    <addgroup SMILES="[*][NH+]" />
   </rule>
   <rule value="amino">
     <addgroup SMILES="[*]N" outIDs="2"/>
@@ -117,6 +124,9 @@ sense of this -->
   </rule>
   <rule value="iminium">
     <addgroup SMILES="[*]=[NH2+]"/>
+  </rule>
+  <rule value="iminylium">
+    <addgroup SMILES="[*]=[N+]"/>
   </rule>
   <rule value="io">
     <setOutAtom />

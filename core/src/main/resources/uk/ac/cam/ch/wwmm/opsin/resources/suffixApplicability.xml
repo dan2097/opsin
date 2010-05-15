@@ -36,6 +36,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   <groupType type="acidStem"><!--e.g. acet to acetamide -->
     <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="amide">amide</suffix>
+    <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidine">amidine</suffix>
     <suffix value="amidium">amidium</suffix>
     <suffix value="amido">amido</suffix>
@@ -71,6 +72,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="al">aldehyde</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="amide">amide</suffix>
+    <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidium">amidium</suffix>
     <suffix value="amido">amido</suffix>
     <suffix value="anilide">anilide</suffix>
@@ -85,6 +87,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 
   <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->
     <suffix value="amide">amine</suffix>
+    <suffix value="amidylium">aminylium</suffix>
     <suffix value="amido">amino</suffix>
     <suffix value="ate">ite</suffix>
     <suffix value="ic">ous</suffix>
@@ -106,12 +109,14 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="al">aldehyde</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="amide">amide</suffix>
+    <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidine">amidine</suffix>
     <suffix value="amidium">amidium</suffix>
     <suffix value="amido">amido</suffix>
     <suffix value="amine">amine</suffix>
     <suffix value="aminide">aminide</suffix>
     <suffix value="aminium">aminium</suffix>
+    <suffix value="aminylium">aminylium</suffix>
     <suffix value="anilide">anilide</suffix>
     <suffix value="arsonous">arsonous</suffix>
     <suffix value="ate">ate</suffix>
@@ -135,6 +140,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="imine">imine</suffix>
     <suffix value="iminide">iminide</suffix>
     <suffix value="iminium">iminium</suffix>
+    <suffix value="iminylium">iminylium</suffix>
     <suffix value="io">io</suffix>
     <suffix value="ium">ium</suffix>
     <suffix value="ite">ite</suffix>

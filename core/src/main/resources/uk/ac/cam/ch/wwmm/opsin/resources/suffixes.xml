@@ -8,6 +8,7 @@
     <token value="amine">amine</token>
     <token value="aminide">aminide</token>
     <token value="aminium">aminium</token>
+    <token value="aminylium">aminylium</token>
     <token value="carboxylate">carboxylate</token>
     <token value="carboxylic">carboxylic</token>
     <token value="carboxylic">carboxylicacid</token>
@@ -17,6 +18,7 @@
     <token value="imine">imine</token>
     <token value="iminide">iminide</token>
     <token value="iminium">iminium</token>
+    <token value="iminylium">iminylium</token>
     <token value="one" additionalValue="one">quinone</token><!--special cased to be the same as dione-->
     <token value="ol">ol</token>
     <token value="olate">olate</token>
@@ -84,6 +86,7 @@
     <token value="ic" additionalValue="anilide">anilicacid</token>
     <token value="ic" additionalValue="anilide">anilic acid</token>
     <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="amidylium" additionalValue="aldehyde">imidylium</token><!--suffixes joined by PreStructureBuilder-->
     <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by PreStructureBuilder-->
     <token value="ite">ite</token>
     <token value="onaphthone">onaphthone</token>
@@ -98,6 +101,7 @@
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="å">
     <token value="aldehyde">aldehyde</token>
     <token value="amide">amide</token>
+    <token value="amidylium">amidylium</token>
     <token value="amidium">amidium</token>
     <token value="anilide">anilide</token>
     <token value="amidine">amidine</token><!--deprecated-->
