@@ -30,12 +30,12 @@
   <tokenList tagname="group" type="functionalClass" subType="anhydride" symbol="Ü">
     <token value="O" labels="none" valType="SMILES">anhydride</token>
     <token value="S" labels="none" valType="SMILES">thioanhydride</token>
-    <token value="[Se]" labels="none" valType="SMILES">selenoanhydride</token>
-    <token value="[Te]" labels="none" valType="SMILES">telluroanhydride</token>
+    <token value="[Se|2]" labels="none" valType="SMILES">selenoanhydride</token>
+    <token value="[Te|2]" labels="none" valType="SMILES">telluroanhydride</token>
     <token value="OO" labels="none" valType="SMILES">peroxyanhydride</token>
     <token value="SS" labels="none" valType="SMILES">dithioperoxyanhydride</token>
-    <token value="[Se][Se]" labels="none" valType="SMILES">diselenoperoxyanhydride</token>
-    <token value="[Te][Te]" labels="none" valType="SMILES">ditelluroperoxyanhydride</token>
+    <token value="[Se|2][Se|2]" labels="none" valType="SMILES">diselenoperoxyanhydride</token>
+    <token value="[Te|2][Te|2]" labels="none" valType="SMILES">ditelluroperoxyanhydride</token>
   </tokenList>
 
   <tokenList tagname="functionalModifier" symbol="ù">
@@ -48,34 +48,34 @@ The standalone functionalgroups are alternatively valid as groups in their own r
 For these groups the charge on the first atom will be increased by 1 if they are used as a functional group-->
   <tokenList tagname="functionalGroup" type="monoValentGroup" symbol="ô">
     <token value="O" labels="none" valType="SMILES">alcohol</token>
-    <token value="[Se]" labels="none" valType="SMILES">selenol</token>
+    <token value="[Se|2]" labels="none" valType="SMILES">selenol</token>
     <token value="S" labels="none" valType="SMILES">thiol</token>
   </tokenList>
 
   <tokenList tagname="functionalGroup" type="diValentGroup" symbol="ö">
-    <token value="[Se][Se]-" labels="none" valType="SMILES">diselenide</token>
+    <token value="[Se|2][Se|2]-" labels="none" valType="SMILES">diselenide</token>
     <token value="SS-" labels="none" valType="SMILES">disulfide</token>
     <token value="SSS-" labels="none" valType="SMILES">trisulfide</token>
     <token value="SSSS-" labels="none" valType="SMILES">tetrasulfide</token>
     <token value="SSSSS-" labels="none" valType="SMILES">pentasulfide</token>
     <token value="SSSSSS-" labels="none" valType="SMILES">hexasulfide</token>
-    <token value="[Te][Te]-" labels="none" valType="SMILES">ditelluride</token>
+    <token value="[Te|2][Te|2]-" labels="none" valType="SMILES">ditelluride</token>
     <token value="O" labels="none" valType="SMILES">ether</token>
     <token value="C=O" labels="none" valType="SMILES">ketone</token>
     <token value="O" labels="none" valType="SMILES">oxide</token>
     <token value="OO-" labels="none" valType="SMILES">peroxide</token>
-    <token value="[Se]" labels="none" valType="SMILES">selenide</token>
-    <token value="[Se](=O)=O" labels="none" valType="SMILES">selenone</token>
-    <token value="[Se]=O" labels="none" valType="SMILES">selenoxide</token>
+    <token value="[Se|2]" labels="none" valType="SMILES">selenide</token>
+    <token value="[Se|6](=O)=O" labels="none" valType="SMILES">selenone</token>
+    <token value="[Se|4]=O" labels="none" valType="SMILES">selenoxide</token>
     <token value="C=[Se]" labels="none" valType="SMILES">selone</token>
-    <token value="[Se]=O" labels="none" valType="SMILES">selenoketone</token>
+    <token value="[Se|4]=O" labels="none" valType="SMILES">selenoketone</token>
     <token value="S" labels="none" valType="SMILES">sulfide</token>
     <token value="S(=O)=O" labels="none" valType="SMILES">sulfone</token>
     <token value="S=O" labels="none" valType="SMILES">sulfoxide</token>
-    <token value="[Te]" labels="none" valType="SMILES">telluride</token>
-    <token value="[Te]=O" labels="none" valType="SMILES">telluroketone</token>
-    <token value="[Te](=O)=O" labels="none" valType="SMILES">tellurone</token>
-    <token value="[Te]=O" labels="none" valType="SMILES">telluroxide</token>
+    <token value="[Te|2]" labels="none" valType="SMILES">telluride</token>
+    <token value="[Te|4]=O" labels="none" valType="SMILES">telluroketone</token>
+    <token value="[Te|6](=O)=O" labels="none" valType="SMILES">tellurone</token>
+    <token value="[Te|4]=O" labels="none" valType="SMILES">telluroxide</token>
     <token value="S=O" labels="none" valType="SMILES">thioketone</token>
   </tokenList>
 

@@ -58,9 +58,8 @@ class Fragment {
 	 * but allows for fragments with no locants. Can be overridden*/
 	private Atom defaultInAtom = null;
 
-	/**The id of the indicated Hydrogen on the fragment.
-	 * Defaults to null.*/
-	private Integer indicatedHydrogen;
+	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES/CML level.*/
+	private List<Atom> indicatedHydrogen = new ArrayList<Atom>();
 
 	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
@@ -527,9 +526,13 @@ class Fragment {
 	}
 
 	/** Looks for the atom that would have had a hydrogen indicated,
-	 * adds a spareValency to that atom, and sets indicatedHydrogen.
+	 * adds a spareValency to that atom, and adds that atom to indicatedHydrogen.
+	 * Does nothing if indicatedHydrogen is not empty
 	 */
 	void pickUpIndicatedHydrogen() {
+		if (indicatedHydrogen.size()>0){
+			return;
+		}
 		int svCount = 0;
 		int dvCount = 0; /* Divalent, like O */
 		int cyclicAtomCount =0;
@@ -550,7 +553,7 @@ class Fragment {
 				if(a.getAtomIsInACycle() && !a.hasSpareValency()) {
 					String element =a.getElement();
 					if (element.equals("C")){
-						indicatedHydrogen = a.getID();
+						indicatedHydrogen.add(a);
 						a.setSpareValency(true);
 						return;
 					} else if(element.equals("N") || element.equals("P") || element.equals("As") || element.equals("Sb")) {
@@ -559,7 +562,7 @@ class Fragment {
 				}
 			}
 			if(nCandidate != null) {
-				indicatedHydrogen = nCandidate.getID();
+				indicatedHydrogen.add(nCandidate);
 				nCandidate.setSpareValency(true);
 			}
 		}
@@ -622,12 +625,9 @@ class Fragment {
 		 pick an atom which definitely does have spare valency to be the indicated hydrogen.
 		*/
 		Atom atomToReduceValencyAt =null;
-		if (indicatedHydrogen!=null){
-			if (getAtomByID(indicatedHydrogen)==null || !getAtomByID(indicatedHydrogen).hasSpareValency()){
-				indicatedHydrogen = null;
-			}
-			else{
-				atomToReduceValencyAt=getAtomByID(indicatedHydrogen);
+		if (indicatedHydrogen.size()>0){
+			if (indicatedHydrogen.get(0).hasSpareValency()){
+				atomToReduceValencyAt= indicatedHydrogen.get(0);
 			}
 		}
 
@@ -813,7 +813,11 @@ class Fragment {
 	 * @throws StructureBuildingException
 	 */
 	void checkValencies() throws StructureBuildingException {
-		for(Atom a : atomCollection) a.checkIncomingValency();
+		for(Atom a : atomCollection) {
+			if(!ValencyChecker.checkValency(a)) {
+				throw new StructureBuildingException("Atom is in unphysical valency state! Element: " + a.getElement() + " valency: " + a.getIncomingValency());
+			}
+		}
 	}
 
 	/**
@@ -882,11 +886,11 @@ class Fragment {
 		return getAtomByLocant(locant)!=null;
 	}
 
-	Integer getIndicatedHydrogen() {
+	List<Atom> getIndicatedHydrogen() {
 		return indicatedHydrogen;
 	}
 
-	void setIndicatedHydrogen(Integer indicatedHydrogen) {
+	void setIndicatedHydrogen(List<Atom> indicatedHydrogen) {
 		this.indicatedHydrogen = indicatedHydrogen;
 	}
 
@@ -1032,6 +1036,10 @@ class Fragment {
 		List<Atom> atomList =getAtomList();
 		Collections.sort(atomList, new FragmentTools.SortByLocants());
 		reorderAtomCollection(atomList);
+	}
+
+	void addIndicatedHydrogen(Atom atom) {
+		indicatedHydrogen.add(atom);
 	}
 }
 

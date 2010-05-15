@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
@@ -246,6 +246,211 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(3, atomList.size());
 		assertEquals(2, atomList.get(0).getAtomNeighbours().size());
+	}
+	
+	@Test
+	public void hydrogenHandling1() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[OH3+]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(3, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling2() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[CH3][CH2][OH]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(3, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+		assertEquals(4, atomList.get(1).determineValency(true));
+		assertEquals(2, atomList.get(2).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling3() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH2]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(2, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling4() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH4]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		int minimumVal =atomList.get(0).getMinimumValency();
+		assertEquals(4, minimumVal);
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling5() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH6]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		int minimumVal =atomList.get(0).getMinimumValency();
+		assertEquals(6, minimumVal);
+		assertEquals(6, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling6() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH3]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		int minimumVal =atomList.get(0).getMinimumValency();
+		assertEquals(3, minimumVal);
+		assertEquals(3, atomList.get(0).determineValency(true));
+	}
+	
+	
+	@Test
+	public void hydrogenHandling7() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH3+]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(3, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling8() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH+]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(1, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling9() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH3-]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(-1, atomList.get(0).getCharge());
+		assertEquals(3, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling10() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH-]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(-1, atomList.get(0).getCharge());
+		assertEquals(1, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling11() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SH5+]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		int minimumVal =atomList.get(0).getMinimumValency();
+		assertEquals(5, minimumVal);
+		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(5, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling12() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[Li+]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(0, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling13() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[NaH]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(2, atomList.size());
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
+		assertEquals(0, atomList.get(0).getCharge());
+		
+		assertEquals(0, atomList.get(1).getProtonsExplicitlyAddedOrRemoved());
+		assertEquals(0, atomList.get(1).getCharge());
+		assertEquals("H", atomList.get(1).getElement());
+	}
+	
+	@Test
+	public void hydrogenHandling14() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("-[SiH3]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling15() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("=[SiH2]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	
+	@Test
+	public void hydrogenHandling16() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("#[SiH]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling17() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SiH3]-");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling18() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SiH2]=");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling19() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[SiH]#");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling20() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("=[Si]=");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+//	@Test
+//	public void indicatedHydrogen1() throws StructureBuildingException {
+//		Fragment fragment = fm.buildSMILES("NC(N1)=NC(N=CN2)=C2C1=O");
+//		List<Atom> atomList = fragment.getAtomList();
+//		assertEquals(11, atomList.size());
+//		fragment.pickUpIndicatedHydrogen();
+//		assertEquals(2, fragment.getIndicatedHydrogen().size());
+//		assertEquals(atomList.get(2), fragment.getIndicatedHydrogen().get(0));
+//		assertEquals(atomList.get(7),  fragment.getIndicatedHydrogen().get(1));
+//	}
+	
+	@Test
+	public void indicatedHydrogen2() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("Nc1[nH]c(=O)c2c(n1)nc[nH]2");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(11, atomList.size());
+		assertEquals(2, fragment.getIndicatedHydrogen().size());
+		assertEquals(atomList.get(2), fragment.getIndicatedHydrogen().get(0));
+		assertEquals(atomList.get(10),  fragment.getIndicatedHydrogen().get(1));
 	}
 
 	@Test

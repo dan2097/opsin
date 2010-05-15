@@ -335,11 +335,12 @@ class FragmentManager {
 			newAtom.setCharge(atom.getCharge());
 			newAtom.setSpareValency(atom.hasSpareValency());
 			newAtom.setProtonsExplicitlyAddedOrRemoved(atom.getProtonsExplicitlyAddedOrRemoved());
-			newAtom.setExplicitHydrogens(atom.getExplicitHydrogens());
+			newAtom.setHydrogenCount(atom.getHydrogenCount());
 			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());
 			//outValency is derived from the outAtoms so is automatically cloned
 			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
 			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
+			newAtom.setMinimumValency(atom.getMinimumValency());
 			newAtom.setNotes(new HashMap<String, String>(atom.getNotes()));
 			newFragment.addAtom(newAtom);
 			oldToNewAtomMap.put(atom, newAtom);

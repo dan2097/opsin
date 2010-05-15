@@ -1,343 +1,343 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
 <tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
-  <token value="NC(O)=N" labels="1//2/3" valType="SMILES">1-isoureido</token>
-  <token value="N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
-  <token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N-" labels="none" valType="SMILES">abietamido</token>
-  <token value="OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
-  <token value="NC(=O)C" labels="none" valType="SMILES">acetamino</token>
-  <token value="C#C" labels="none" valType="SMILES">acetenyl</token>
+  <token value="-NC(O)=N" labels="1//2/3" valType="SMILES">1-isoureido</token>
+  <token value="-N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
+  <token value="-C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N-" labels="none" valType="SMILES">abietamido</token>
+  <token value="-OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
+  <token value="-NC(=O)C" labels="none" valType="SMILES">acetamino</token>
+  <token value="-C#C" labels="none" valType="SMILES">acetenyl</token>
   <token value="=[N+]([O-])O" labels="none" valType="SMILES">aci-nitro</token>
-  <token value="C(=O)C(=O)N" labels="none" valType="SMILES">amidoxalyl</token>
-  <token value="ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
-  <token value="OCCCCC" valType="SMILES">amoxy</token>
-  <token value="CCCCC" valType="SMILES">amyl</token>
+  <token value="-C(=O)C(=O)N" labels="none" valType="SMILES">amidoxalyl</token>
+  <token value="-ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
+  <token value="-OCCCCC" valType="SMILES">amoxy</token>
+  <token value="-CCCCC" valType="SMILES">amyl</token>
   <token value="=CCCCC" valType="SMILES">amylidene</token>
   <token value="=Cc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="OC locant4">anisal</token>
-  <token value="C(C)=C" labels="none" valType="SMILES">beta-allyl</token>
-  <token value="CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
-  <token value="OCCC(C)C" valType="SMILES">isoamoxy</token>
-  <token value="CCC(C)C" valType="SMILES">isoamyl</token>
-  <token value="CC(C)(C)C" valType="SMILES">neoamyl</token>
-  <token value="C(C)(C)CC" labels="none" valType="SMILES">t-amyl</token>
-  <token value="C(C)(C)CC" labels="none" valType="SMILES">tert-amyl</token>
-  <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilino</token>
-  <token value="COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
-  <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
-  <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/"  valType="SMILES">4,4'-benzidino</token>
-  <token value="B(O)O" labels="none" valType="SMILES">borono</token>
-  <token value="OCCCC" labels="/1/2/3/4" valType="SMILES" usableAsAJoiner="yes">butoxyl</token>
-  <token value="NC(=N)N" labels="N//N''/N'" valType="SMILES" usableAsAJoiner="yes">carbamimidamido</token>
-  <token value="NNC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbazono</token>
-  <token value="N=NC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbodiazono</token>
-  <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbonohydrazido</token>
-  <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbohydrazido</token>
-  <token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbazido</token>
-  <token value="C(=O)OC" labels="///1" valType="SMILES" usableAsAJoiner="yes">carbmethoxy</token><!--deprecated alternative to alkaneoxycarbonyl-->
-  <token value="C(=O)OC" labels="///1" valType="SMILES" usableAsAJoiner="yes">carbomethoxy</token>
-  <token value="C(=O)OCC" labels="///1/2" valType="SMILES" usableAsAJoiner="yes">carbethoxy</token>
-  <token value="C(=O)OCC" labels="///1/2" valType="SMILES" usableAsAJoiner="yes">carboethoxy</token>
-  <token value="C(=O)OCCC" labels="///1/2/3" valType="SMILES" usableAsAJoiner="yes">carbopropoxy</token>
-  <token value="C(=O)OCCC" labels="///1/2/3" valType="SMILES" usableAsAJoiner="yes">carbpropoxy</token>
-  <token value="C(=O)OCCCC" labels="///1/2/3/4" valType="SMILES" usableAsAJoiner="yes">carbobutoxy</token>
-  <token value="C(=O)OCCCC" labels="///1/2/3/4" valType="SMILES" usableAsAJoiner="yes">carbbutoxy</token>
-  <token value="C(=O)OCCCCC" labels="///1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">carbopentoxy</token>
-  <token value="C(=O)OCCCCC" labels="///1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">carbpentoxy</token>
-  <token value="C(=O)OCCCCCC" labels="///1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">carbohexoxy</token>
-  <token value="C(=O)OCCCCCC" labels="///1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">carbhexoxy</token>
-  <token value="C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">carboheptoxy</token>
-  <token value="C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">carbheptoxy</token>
-  <token value="C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">carbooctoxy</token>
-  <token value="C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">carboctoxy</token>
-  <token value="C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">carbononoxy</token>
-  <token value="C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">carbnonoxy</token>
-  <token value="C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">carbodecoxy</token>
-  <token value="C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">carbdecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">carboundecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">carbundecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" valType="SMILES" usableAsAJoiner="yes">carbododecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" valType="SMILES" usableAsAJoiner="yes">carbdodecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" valType="SMILES" usableAsAJoiner="yes">carbotridecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" valType="SMILES" usableAsAJoiner="yes">carbtridecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes">carbotetradecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes">carbtetradecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes">carbopentadecoxy</token>
-  <token value="C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes">carbpentadecoxy</token>
-  <token value="C#" valType="SMILES">carbyne</token>
-  <token value="CC=CC" valType="SMILES">crotyl</token>
-  <token value="[N+]#N" labels="none" valType="SMILES">diazonio</token>
-  <token value="OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes">ethoxyl</token>
-  <token value="NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
-  <token value="C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES">hydantoyl</token>
-  <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
+  <token value="-C(C)=C" labels="none" valType="SMILES">beta-allyl</token>
+  <token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
+  <token value="-OCCC(C)C" valType="SMILES">isoamoxy</token>
+  <token value="-CCC(C)C" valType="SMILES">isoamyl</token>
+  <token value="-CC(C)(C)C" valType="SMILES">neoamyl</token>
+  <token value="-C(C)(C)CC" labels="none" valType="SMILES">t-amyl</token>
+  <token value="-C(C)(C)CC" labels="none" valType="SMILES">tert-amyl</token>
+  <token value="-Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilino</token>
+  <token value="-COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
+  <token value="-c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
+  <token value="-c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/"  valType="SMILES">4,4'-benzidino</token>
+  <token value="-B(O)O" labels="none" valType="SMILES">borono</token>
+  <token value="-OCCCC" labels="/1/2/3/4" valType="SMILES" usableAsAJoiner="yes">butoxyl</token>
+  <token value="-NC(=N)N" labels="N//N''/N'" valType="SMILES" usableAsAJoiner="yes">carbamimidamido</token>
+  <token value="-NNC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbazono</token>
+  <token value="-N=NC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbodiazono</token>
+  <token value="-NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbonohydrazido</token>
+  <token value="-NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbohydrazido</token>
+  <token value="-NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbazido</token>
+  <token value="-C(=O)OC" labels="///1" valType="SMILES" usableAsAJoiner="yes">carbmethoxy</token><!--deprecated alternative to alkaneoxycarbonyl-->
+  <token value="-C(=O)OC" labels="///1" valType="SMILES" usableAsAJoiner="yes">carbomethoxy</token>
+  <token value="-C(=O)OCC" labels="///1/2" valType="SMILES" usableAsAJoiner="yes">carbethoxy</token>
+  <token value="-C(=O)OCC" labels="///1/2" valType="SMILES" usableAsAJoiner="yes">carboethoxy</token>
+  <token value="-C(=O)OCCC" labels="///1/2/3" valType="SMILES" usableAsAJoiner="yes">carbopropoxy</token>
+  <token value="-C(=O)OCCC" labels="///1/2/3" valType="SMILES" usableAsAJoiner="yes">carbpropoxy</token>
+  <token value="-C(=O)OCCCC" labels="///1/2/3/4" valType="SMILES" usableAsAJoiner="yes">carbobutoxy</token>
+  <token value="-C(=O)OCCCC" labels="///1/2/3/4" valType="SMILES" usableAsAJoiner="yes">carbbutoxy</token>
+  <token value="-C(=O)OCCCCC" labels="///1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">carbopentoxy</token>
+  <token value="-C(=O)OCCCCC" labels="///1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">carbpentoxy</token>
+  <token value="-C(=O)OCCCCCC" labels="///1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">carbohexoxy</token>
+  <token value="-C(=O)OCCCCCC" labels="///1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">carbhexoxy</token>
+  <token value="-C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">carboheptoxy</token>
+  <token value="-C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">carbheptoxy</token>
+  <token value="-C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">carbooctoxy</token>
+  <token value="-C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">carboctoxy</token>
+  <token value="-C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">carbononoxy</token>
+  <token value="-C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">carbnonoxy</token>
+  <token value="-C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">carbodecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">carbdecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">carboundecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">carbundecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" valType="SMILES" usableAsAJoiner="yes">carbododecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" valType="SMILES" usableAsAJoiner="yes">carbdodecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" valType="SMILES" usableAsAJoiner="yes">carbotridecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" valType="SMILES" usableAsAJoiner="yes">carbtridecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes">carbotetradecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes">carbtetradecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes">carbopentadecoxy</token>
+  <token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes">carbpentadecoxy</token>
+  <token value="#C" valType="SMILES">carbyne</token>
+  <token value="-CC=CC" valType="SMILES">crotyl</token>
+  <token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
+  <token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes">ethoxyl</token>
+  <token value="-NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
+  <token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES">hydantoyl</token>
+  <token value="-NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
   <token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token>
-  <token value="[H]" labels="none" valType="SMILES">hydrogen</token>
-  <token value="[Se]" labels="none" valType="SMILES">hydroseleno</token>
-  <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
-  <token value="NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazido</token>
-  <token value="C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
-  <token value="S(=O)(=O)C" labels="none" valType="SMILES">mesyl</token>
-  <token value="OC" labels="/1" valType="SMILES" usableAsAJoiner="yes">methoxyl</token>
-  <token value="CO" labels="none" valType="SMILES">methylol</token>
+  <token value="-[H]" labels="none" valType="SMILES">hydrogen</token>
+  <token value="-[SeH]" labels="none" valType="SMILES">hydroseleno</token>
+  <token value="-NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
+  <token value="-NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazido</token>
+  <token value="-C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
+  <token value="-S(=O)(=O)C" labels="none" valType="SMILES">mesyl</token>
+  <token value="-OC" labels="/1" valType="SMILES" usableAsAJoiner="yes">methoxyl</token>
+  <token value="-CO" labels="none" valType="SMILES">methylol</token>
   <token value="morpholine" valType="dbkey" outIDs="4">morpholino</token>
-  <token value="C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes">oxalaceto</token>
-  <token value="[O-]" labels="none" valType="SMILES">oxido</token>
-  <token value="OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes">propoxyl</token>
-  <token value="N[N+](=O)([O-])" labels="none" valType="SMILES">nitramido</token>
-  <token value="CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
-  <token value="c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
-  <token value="piperazine" valType="dbkey">piperazino</token>
-  <token value="piperidine" valType="dbkey">piperidino</token>
-  <token value="pyrrolidine" valType="dbkey">pyrrolidino</token>
-  <token value="[Se-]" labels="none" valType="SMILES">selenido</token>
-  <token value="[Se](O)" labels="none" valType="SMILES">seleneno</token>
-  <token value="[Se](=O)(O)" labels="none" valType="SMILES">selenino</token>
-  <token value="[Se](=O)(=O)(O)" labels="none" valType="SMILES">selenono</token>
-  <token value="[Se]" labels="none" valType="SMILES">selenyl</token>
-  <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazido</token>
-  <token value="[S-]" labels="none" valType="SMILES">sulfido</token>
-  <token value="S(=O)(O)" labels="none" valType="SMILES">sulfino</token>
-  <token value="S(=O)(=O)(O)" labels="none" valType="SMILES">sulfo</token>
-  <token value="[Te-]" labels="none" valType="SMILES">tellurido</token>
-  <token value="[Te](O)" labels="none" valType="SMILES">tellureno</token>
-  <token value="[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
-  <token value="[Te](=O)(=O)(O)" labels="none" valType="SMILES">tellurono</token>
-  <token value="[Te]" labels="none" valType="SMILES">telluryl</token>
+  <token value="-C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes">oxalaceto</token>
+  <token value="-[O-]" labels="none" valType="SMILES">oxido</token>
+  <token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes">propoxyl</token>
+  <token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
+  <token value="-CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
+  <token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
+  <token value="piperazine" valType="dbkey" outIDs="1">piperazino</token>
+  <token value="piperidine" valType="dbkey" outIDs="1">piperidino</token>
+  <token value="pyrrolidine" valType="dbkey" outIDs="1">pyrrolidino</token>
+  <token value="-[Se-]" labels="none" valType="SMILES">selenido</token>
+  <token value="-[Se](O)" labels="none" valType="SMILES">seleneno</token>
+  <token value="-[Se](=O)(O)" labels="none" valType="SMILES">selenino</token>
+  <token value="-[Se](=O)(=O)(O)" labels="none" valType="SMILES">selenono</token>
+  <token value="-[SeH]" labels="none" valType="SMILES">selenyl</token>
+  <token value="-NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazido</token>
+  <token value="-[S-]" labels="none" valType="SMILES">sulfido</token>
+  <token value="-S(=O)(O)" labels="none" valType="SMILES">sulfino</token>
+  <token value="-S(=O)(=O)(O)" labels="none" valType="SMILES">sulfo</token>
+  <token value="-[Te-]" labels="none" valType="SMILES">tellurido</token>
+  <token value="-[Te](O)" labels="none" valType="SMILES">tellureno</token>
+  <token value="-[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
+  <token value="-[Te](=O)(=O)(O)" labels="none" valType="SMILES">tellurono</token>
+  <token value="-[TeH]" labels="none" valType="SMILES">telluryl</token>
   <token value="toluene" valType="dbkey" addGroup="N locant4" outIDs="8">toluidino</token>
-  <token value="S(=O)(=O)c1ccc(C)cc1" labels="///1/2/3/4//5/6" valType="SMILES">tosyl</token>
-  <token value="C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trityl</token>
-  <token value="NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes">ureido</token>
-  <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="C locant2;C locant3">xylidino</token>
+  <token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2/3/4//5/6" valType="SMILES">tosyl</token>
+  <token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trityl</token>
+  <token value="-NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes">ureido</token>
+  <token value="-Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="C locant2;C locant3">xylidino</token>
 
 
 
 
 
 
-  <token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amino</token>
-  <token value="[N+]" labels="none" valType="SMILES" usableAsAJoiner="yes">ammonio</token>
-  <token value="[P|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphonio</token>
-  <token value="[As|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsonio</token>
-  <token value="[Sb|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibonio</token>
-  <token value="[Bi|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthonio</token>
-  <token value="[O+]" labels="none" valType="SMILES" usableAsAJoiner="yes">oxonio</token>
-  <token value="[S+]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfonio</token>
-  <token value="[Se+]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenonio</token>
-  <token value="[Te+]" labels="none" valType="SMILES" usableAsAJoiner="yes">telluronio</token>
-  <token value="[F+]" labels="none" valType="SMILES" usableAsAJoiner="yes">fluoronio</token>
-  <token value="[Cl+]" labels="none" valType="SMILES" usableAsAJoiner="yes">chloronio</token>
-  <token value="[Br+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bromonio</token>
-  <token value="[I+]" labels="none" valType="SMILES" usableAsAJoiner="yes">iodonio</token>
+  <token value="-N" labels="none" valType="SMILES" usableAsAJoiner="yes">amino</token>
+  <token value="-[N|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">ammonio</token>
+  <token value="-[P|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphonio</token>
+  <token value="-[As|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsonio</token>
+  <token value="-[Sb|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibonio</token>
+  <token value="-[Bi|4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthonio</token>
+  <token value="-[O|3+]" labels="none" valType="SMILES" usableAsAJoiner="yes">oxonio</token>
+  <token value="-[S|3+]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfonio</token>
+  <token value="-[Se|3+]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenonio</token>
+  <token value="-[Te|3+]" labels="none" valType="SMILES" usableAsAJoiner="yes">telluronio</token>
+  <token value="-[F|2+]" labels="none" valType="SMILES" usableAsAJoiner="yes">fluoronio</token>
+  <token value="-[Cl|2+]" labels="none" valType="SMILES" usableAsAJoiner="yes">chloronio</token>
+  <token value="-[Br|2+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bromonio</token>
+  <token value="-[I|2+]" labels="none" valType="SMILES" usableAsAJoiner="yes">iodonio</token>
 
-  <token value="N=[N+]=[N-]" labels="none" valType="SMILES">azido</token>
+  <token value="-N=[N+]=[N-]" labels="none" valType="SMILES">azido</token>
   <token value="=[N+]=[N-]" labels="none" valType="SMILES">diazo</token>
-  <token value="[N+]([O-])" labels="none" valType="SMILES">azinoyl</token>
-  <token value="[N+](O)(O)([O-])" labels="none" valType="SMILES">azono</token>
-  <token value="[N+](=O)([O-])" labels="none" valType="SMILES">nitro</token>
+  <token value="-[NH2+][O-]" labels="none" valType="SMILES">azinoyl</token>
+  <token value="-[N+](O)(O)[O-]" labels="none" valType="SMILES">azono</token>
+  <token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitro</token>
 
 
-  <token value="F" labels="none" valType="SMILES">fluoro</token>
-  <token value="Br" labels="none" valType="SMILES">bromo</token>
-  <token value="Cl" labels="none" valType="SMILES">chloro</token>
-  <token value="I" labels="none" valType="SMILES">iodo</token>
-  <!--<token value="F" labels="none" valType="SMILES">perfluoro</token>
-  <token value="Br" labels="none" valType="SMILES">perbromo</token>
-  <token value="Cl" labels="none" valType="SMILES">perchloro</token>
-  <token value="I" labels="none" valType="SMILES">periodo</token>-->
+  <token value="-F" labels="none" valType="SMILES">fluoro</token>
+  <token value="-Br" labels="none" valType="SMILES">bromo</token>
+  <token value="-Cl" labels="none" valType="SMILES">chloro</token>
+  <token value="-I" labels="none" valType="SMILES">iodo</token>
+  <!--<token value="-F" labels="none" valType="SMILES">perfluoro</token>
+  <token value="-Br" labels="none" valType="SMILES">perbromo</token>
+  <token value="-Cl" labels="none" valType="SMILES">perchloro</token>
+  <token value="-I" labels="none" valType="SMILES">periodo</token>-->
 
-  <token value="F|3=O" labels="none" valType="SMILES">fluorosyl</token>
-  <token value="Br=O" labels="none" valType="SMILES">bromosyl</token>
-  <token value="Cl=O" labels="none" valType="SMILES">chlorosyl</token>
-  <token value="Cl=O" labels="none" valType="SMILES">chloroso</token><!--deprecated-->
-  <token value="I=O" labels="none" valType="SMILES">iodosyl</token>
+  <token value="-[F|3]=O" labels="none" valType="SMILES">fluorosyl</token>
+  <token value="-Br=O" labels="none" valType="SMILES">bromosyl</token>
+  <token value="-Cl=O" labels="none" valType="SMILES">chlorosyl</token>
+  <token value="-Cl=O" labels="none" valType="SMILES">chloroso</token><!--deprecated-->
+  <token value="-I=O" labels="none" valType="SMILES">iodosyl</token>
 
-  <token value="F|5(=O)(=O)" labels="none" valType="SMILES">fluoryl</token>
-  <token value="Br(=O)(=O)" labels="none" valType="SMILES">bromyl</token>
-  <token value="Cl(=O)(=O)" labels="none" valType="SMILES">chloryl</token>
-  <token value="Cl(=O)(=O)" labels="none" valType="SMILES">chloroxy</token><!--deprecated-->
-  <token value="I(=O)(=O)" labels="none" valType="SMILES">iodyl</token>
+  <token value="-[F|5](=O)(=O)" labels="none" valType="SMILES">fluoryl</token>
+  <token value="-Br(=O)(=O)" labels="none" valType="SMILES">bromyl</token>
+  <token value="-Cl(=O)(=O)" labels="none" valType="SMILES">chloryl</token>
+  <token value="-Cl(=O)(=O)" labels="none" valType="SMILES">chloroxy</token><!--deprecated-->
+  <token value="-I(=O)(=O)" labels="none" valType="SMILES">iodyl</token>
 
-  <token value="F|7(=O)(=O)(=O)" labels="none" valType="SMILES">perfluoryl</token>
-  <token value="Br(=O)(=O)(=O)" labels="none" valType="SMILES">perbromyl</token>
-  <token value="Cl(=O)(=O)(=O)" labels="none" valType="SMILES">perchloryl</token>
-  <token value="I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>
+  <token value="-[F|7](=O)(=O)(=O)" labels="none" valType="SMILES">perfluoryl</token>
+  <token value="-Br(=O)(=O)(=O)" labels="none" valType="SMILES">perbromyl</token>
+  <token value="-Cl(=O)(=O)(=O)" labels="none" valType="SMILES">perchloryl</token>
+  <token value="-I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>
 
-  <token value="OC#N" labels="none" valType="SMILES">cyanato</token>
-  <token value="C#N" labels="none" valType="SMILES">cyano</token>
-  <token value="O[N+]#[C-]" labels="none" valType="SMILES">fulminato</token>
-  <token value="N=C=O" labels="none" valType="SMILES">isocyanato</token>
-  <token value="[N+]#[C-]" labels="none" valType="SMILES">isocyano</token>
-  <token value="N=C=[Se]" labels="none" valType="SMILES">isoselenocyanato</token>
-  <token value="N=C=[Te]" labels="none" valType="SMILES">isotellurocyanato</token>
-  <token value="N=C=S" labels="none" valType="SMILES">isothiocyanato</token>
-  <token value="N=C=[Se]" labels="none" valType="SMILES">isoselenocyano</token><!--deprecated-->
-  <token value="N=C=[Te]" labels="none" valType="SMILES">isotellurocyano</token><!--deprecated-->
-  <token value="N=C=S" labels="none" valType="SMILES">isothiocyano</token><!--deprecated-->
-  <token value="O" labels="none" valType="SMILES">hydroxy</token>
-  <token value="O" labels="none" valType="SMILES">hydroxyl</token>
-  <token value="OO" labels="none" valType="SMILES">hydroperoxy</token>
-  <token value="OO" labels="none" valType="SMILES">hydroperoxyl</token>
-  <token value="OO" labels="none" valType="SMILES" usableAsAJoiner="yes">peroxyl</token>
-  <token value="OO" labels="none" valType="SMILES" usableAsAJoiner="yes">dioxyl</token>
+  <token value="-OC#N" labels="none" valType="SMILES">cyanato</token>
+  <token value="-C#N" labels="none" valType="SMILES">cyano</token>
+  <token value="-O[N+]#[C-]" labels="none" valType="SMILES">fulminato</token>
+  <token value="-N=C=O" labels="none" valType="SMILES">isocyanato</token>
+  <token value="-[N+]#[C-]" labels="none" valType="SMILES">isocyano</token>
+  <token value="-N=C=[Se]" labels="none" valType="SMILES">isoselenocyanato</token>
+  <token value="-N=C=[Te]" labels="none" valType="SMILES">isotellurocyanato</token>
+  <token value="-N=C=S" labels="none" valType="SMILES">isothiocyanato</token>
+  <token value="-N=C=[Se]" labels="none" valType="SMILES">isoselenocyano</token><!--deprecated-->
+  <token value="-N=C=[Te]" labels="none" valType="SMILES">isotellurocyano</token><!--deprecated-->
+  <token value="-N=C=S" labels="none" valType="SMILES">isothiocyano</token><!--deprecated-->
+  <token value="-O" labels="none" valType="SMILES">hydroxy</token>
+  <token value="-O" labels="none" valType="SMILES">hydroxyl</token>
+  <token value="-OO" labels="none" valType="SMILES">hydroperoxy</token>
+  <token value="-OO" labels="none" valType="SMILES">hydroperoxyl</token>
+  <token value="-OO" labels="none" valType="SMILES" usableAsAJoiner="yes">peroxyl</token>
+  <token value="-OO" labels="none" valType="SMILES" usableAsAJoiner="yes">dioxyl</token>
 
   <token value="=O" labels="none" valType="SMILES">oxo</token>
   <token value="=O" labels="none" valType="SMILES">keto</token>
-  <token value="S" labels="none" valType="SMILES" usableAsAJoiner="yes">mercapto</token>
+  <token value="-S" labels="none" valType="SMILES" usableAsAJoiner="yes">mercapto</token>
   <token value="=S" labels="none" valType="SMILES">thioxo</token>
   <token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
   <token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
 
-  <token value="P|5(=O)(O)(O)" labels="none" valType="SMILES">phosphono</token>
-  <token value="P|5(=O)([O-])([O-])" labels="none" valType="SMILES">phosphonato</token>
-  <token value="P|5(=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the PostProcessor-->
-  <token value="P|5=N" labels="none" valType="SMILES">phosphinimyl</token>
-  <token value="P=O" labels="none" valType="SMILES">phosphoroso</token>
-  <token value="P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
-  <token value="P|5=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinyl</token>
-  <token value="=P|5=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinylidene</token>
-  <token value="=P|5=S" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinothioylidene</token>
+  <token value="-[P|5](=O)(O)O" labels="none" valType="SMILES">phosphono</token>
+  <token value="-[P|5](=O)([O-])[O-]" labels="none" valType="SMILES">phosphonato</token>
+  <token value="-[P|5](=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the PostProcessor-->
+  <token value="-[P|5]=N" labels="none" valType="SMILES">phosphinimyl</token>
+  <token value="-P=O" labels="none" valType="SMILES">phosphoroso</token>
+  <token value="-P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
+  <token value="-[P|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinyl</token>
+  <token value="=[P|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinylidene</token>
+  <token value="=[P|5]=S" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinothioylidene</token>
   <token value="=P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinidene</token>
 
-  <token value="[As|5](=O)(O)(O)" labels="none" valType="SMILES">arsono</token>
-  <token value="[As|5](=O)([O-])([O-])" labels="none" valType="SMILES">arsonato</token>
-  <token value="[As|5](=O)=O" labels="none" valType="SMILES">arso</token>
-  <token value="[As|5]=N" labels="none" valType="SMILES">arsinimyl</token>
-  <token value="[As]=O" labels="none" valType="SMILES">arsoroso</token>
-  <token value="[As]=O" labels="none" valType="SMILES">arsenoso</token>
-  <token value="[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsino</token>
-  <token value="[As|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinyl</token>
+  <token value="-[As|5](=O)(O)O" labels="none" valType="SMILES">arsono</token>
+  <token value="-[As|5](=O)([O-])[O-]" labels="none" valType="SMILES">arsonato</token>
+  <token value="-[As|5](=O)=O" labels="none" valType="SMILES">arso</token>
+  <token value="-[As|5]=N" labels="none" valType="SMILES">arsinimyl</token>
+  <token value="-[As]=O" labels="none" valType="SMILES">arsoroso</token>
+  <token value="-[As]=O" labels="none" valType="SMILES">arsenoso</token>
+  <token value="-[AsH2]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsino</token>
+  <token value="-[As|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinyl</token>
   <token value="=[As|5]=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinylidene</token>
   <token value="=[As|5]=S" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinothioylidene</token>
-  <token value="=[As]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinidene</token>
+  <token value="=[AsH]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinidene</token>
 
-  <token value="[Sb|5](=O)(O)(O)" labels="none" valType="SMILES">stibono</token>
-  <token value="[Sb|5](=O)([O-])([O-])" labels="none" valType="SMILES">stibonato</token>
-  <token value="[Sb|5](=O)=O" labels="none" valType="SMILES">stibo</token>
-  <token value="[Sb]=O" labels="none" valType="SMILES">stiboso</token>
-  <token value="[Sb]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibino</token>
-  <token value="=[Sb]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibylene</token>
+  <token value="-[Sb|5](=O)(O)O" labels="none" valType="SMILES">stibono</token>
+  <token value="-[Sb|5](=O)([O-])[O-]" labels="none" valType="SMILES">stibonato</token>
+  <token value="-[Sb|5](=O)=O" labels="none" valType="SMILES">stibo</token>
+  <token value="-[Sb]=O" labels="none" valType="SMILES">stiboso</token>
+  <token value="-[SbH2]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibino</token>
+  <token value="=[SbH]" labels="none" valType="SMILES" usableAsAJoiner="yes">stibylene</token>
 
-  <token value="[Bi]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthino</token>
-  <token value="=[Bi]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthylene</token>
+  <token value="-[BiH2]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthino</token>
+  <token value="=[BiH]" labels="none" valType="SMILES" usableAsAJoiner="yes">bismuthylene</token>
 
-  <token value="=S(=O)(=O)" labels="none" valType="SMILES">sulfonylidene</token>
-  <token value="S(=O)(=O)([O-])" labels="none" valType="SMILES">sulfonato</token>
-  <token value="SO" labels="none" valType="SMILES">sulfeno</token>
+  <token value="=S(=O)=O" labels="none" valType="SMILES">sulfonylidene</token>
+  <token value="-S(=O)(=O)[O-]" labels="none" valType="SMILES">sulfonato</token>
+  <token value="-SO" labels="none" valType="SMILES">sulfeno</token>
 
-  <token value="N=O" labels="none" valType="SMILES">nitroso</token>
-  <token value="C(=O)(O)" labels="none" valType="SMILES">carboxy</token>
-  <token value="C(=O)([O-])" labels="none" valType="SMILES">carboxylato</token>
-  <token value="C(N)=N" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">amidino</token><!--order of Ns determines primes-->
+  <token value="-N=O" labels="none" valType="SMILES">nitroso</token>
+  <token value="-C(=O)O" labels="none" valType="SMILES">carboxy</token>
+  <token value="-C(=O)[O-]" labels="none" valType="SMILES">carboxylato</token>
+  <token value="-C(N)=N" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">amidino</token>
 
-  <token value="C(=O)C(=O)O" labels="none" valType="SMILES">oxalo</token>
-  <token value="C(=O)C(=O)OC" labels="none" valType="SMILES">methoxalyl</token>
-  <token value="C(=O)C(=O)OCC" labels="none" valType="SMILES">ethoxalyl</token>
+  <token value="-C(=O)C(=O)O" labels="none" valType="SMILES">oxalo</token>
+  <token value="-C(=O)C(=O)OC" labels="none" valType="SMILES">methoxalyl</token>
+  <token value="-C(=O)C(=O)OCC" labels="none" valType="SMILES">ethoxalyl</token>
 
-  <token value="[Si](C)(C)C" labels="none" valType="SMILES">tms</token>
+  <token value="-C(=O)OCC1c2ccccc2c3ccccc13" labels="none" valType="SMILES">fmoc</token>
+  <token value="-[Si](C)(C)C" labels="none" valType="SMILES">tms</token>
 
-  <token value="[Ac]" labels="none" valType="SMILES">actinio</token>
-  <token value="[Al]" labels="none" valType="SMILES">aluminio</token>
-  <token value="[Am]" labels="none" valType="SMILES">americio</token>
-  <token value="[Sb]" labels="none" valType="SMILES">antimonio</token>
-  <token value="[Ar]" labels="none" valType="SMILES">argonio</token>
-  <token value="[As]" labels="none" valType="SMILES">arsenio</token>
-  <token value="[At]" labels="none" valType="SMILES">astatio</token>
-  <token value="[Ba]" labels="none" valType="SMILES" usableAsAJoiner="yes">bario</token>
-  <token value="[Bk]" labels="none" valType="SMILES">berkelio</token>
-  <token value="[Be]" labels="none" valType="SMILES" usableAsAJoiner="yes">beryllio</token>
-  <token value="[Bi]" labels="none" valType="SMILES">bismuthio</token>
-  <token value="[B]" labels="none" valType="SMILES">borio</token>
-  <token value="[Br]" labels="none" valType="SMILES">bromio</token>
-  <token value="[Cd]" labels="none" valType="SMILES" usableAsAJoiner="yes">cadmio</token>
-  <token value="[Cs]" labels="none" valType="SMILES">caesio</token>
-  <token value="[Ca]" labels="none" valType="SMILES" usableAsAJoiner="yes">calcio</token>
-  <token value="[Cf]" labels="none" valType="SMILES">californio</token>
-  <token value="[Ce]" labels="none" valType="SMILES">cerio</token>
-  <token value="[Cl]" labels="none" valType="SMILES">chlorio</token>
-  <token value="[Cr]" labels="none" valType="SMILES">chromio</token>
-  <token value="[Co]" labels="none" valType="SMILES">cobaltio</token>
-  <token value="[Cu]" labels="none" valType="SMILES">cuprio</token>
-  <token value="[Cm]" labels="none" valType="SMILES">curio</token>
-  <token value="[Dy]" labels="none" valType="SMILES">dysprosio</token>
-  <token value="[Es]" labels="none" valType="SMILES">einsteinio</token>
-  <token value="[Er]" labels="none" valType="SMILES">erbio</token>
-  <token value="[Eu]" labels="none" valType="SMILES">europio</token>
-  <token value="[Fm]" labels="none" valType="SMILES">fermio</token>
-  <token value="[F]" labels="none" valType="SMILES">fluorio</token>
-  <token value="[Fr]" labels="none" valType="SMILES">francio</token>
-  <token value="[Gd]" labels="none" valType="SMILES">gadolinio</token>
-  <token value="[Ga]" labels="none" valType="SMILES">gallio</token>
-  <token value="[Ge]" labels="none" valType="SMILES">germanio</token>
-  <token value="[Au]" labels="none" valType="SMILES">aurio</token>
-  <token value="[Hf]" labels="none" valType="SMILES">hafnio</token>
-  <token value="[He]" labels="none" valType="SMILES">helio</token>
-  <token value="[Ho]" labels="none" valType="SMILES">holmio</token>
-  <token value="[In]" labels="none" valType="SMILES">indio</token>
-  <token value="[I]" labels="none" valType="SMILES">iodio</token>
-  <token value="[Ir]" labels="none" valType="SMILES">iridio</token>
-  <token value="[Fe]" labels="none" valType="SMILES">ferrio</token>
-  <token value="[Kr]" labels="none" valType="SMILES">kryptonio</token>
-  <token value="[La]" labels="none" valType="SMILES">lanthanio</token>
-  <token value="[Lr]" labels="none" valType="SMILES">lawrencio</token>
-  <token value="[Pb]" labels="none" valType="SMILES">plumbio</token>
-  <token value="[Li]" labels="none" valType="SMILES">lithio</token>
-  <token value="[Lu]" labels="none" valType="SMILES">lutetio</token>
-  <token value="[Mg]" labels="none" valType="SMILES" usableAsAJoiner="yes">magnesio</token>
-  <token value="[Mn]" labels="none" valType="SMILES">manganio</token>
-  <token value="[Md]" labels="none" valType="SMILES">mendelevio</token>
-  <token value="[Hg]" labels="none" valType="SMILES" usableAsAJoiner="yes">mercurio</token>
-  <token value="[Mo]" labels="none" valType="SMILES">molybdenio</token>
-  <token value="[Nd]" labels="none" valType="SMILES">neodymio</token>
-  <token value="[Ne]" labels="none" valType="SMILES">neonio</token>
-  <token value="[Np]" labels="none" valType="SMILES">neptunio</token>
-  <token value="[Ni]" labels="none" valType="SMILES">nickelio</token>
-  <token value="[Nb]" labels="none" valType="SMILES">niobio</token>
-  <token value="[No]" labels="none" valType="SMILES">nobelio</token>
-  <token value="[Os]" labels="none" valType="SMILES">osmio</token>
-  <token value="[Pd]" labels="none" valType="SMILES">palladio</token>
-  <token value="[P]" labels="none" valType="SMILES">phosphorio</token>
-  <token value="[Pt]" labels="none" valType="SMILES">platinio</token>
-  <token value="[Pu]" labels="none" valType="SMILES">plutonio</token>
-  <token value="[Po]" labels="none" valType="SMILES" usableAsAJoiner="yes">polonio</token>
-  <token value="[K]" labels="none" valType="SMILES">potassio</token>
-  <token value="[K]" labels="none" valType="SMILES">kalio</token>
-  <token value="[Pr]" labels="none" valType="SMILES">praseodymio</token>
-  <token value="[Pm]" labels="none" valType="SMILES">promethio</token>
-  <token value="[Pa]" labels="none" valType="SMILES">protactinio</token>
-  <token value="[Ra]" labels="none" valType="SMILES" usableAsAJoiner="yes">radio</token>
-  <token value="[Rn]" labels="none" valType="SMILES">radonio</token>
-  <token value="[Re]" labels="none" valType="SMILES">rhenio</token>
-  <token value="[Rh]" labels="none" valType="SMILES">rhodio</token>
-  <token value="[Rb]" labels="none" valType="SMILES">rubidio</token>
-  <token value="[Ru]" labels="none" valType="SMILES">ruthenio</token>
-  <token value="[Sm]" labels="none" valType="SMILES">samario</token>
-  <token value="[Sc]" labels="none" valType="SMILES">scandio</token>
-  <token value="[Se]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenio</token>
-  <token value="[Si]" labels="none" valType="SMILES">silicio</token>
-  <token value="[Ag]" labels="none" valType="SMILES">argentio</token>
-  <token value="[Na]" labels="none" valType="SMILES">sodio</token>
-  <token value="[Na]" labels="none" valType="SMILES">natrio</token>
-  <token value="[Sr]" labels="none" valType="SMILES" usableAsAJoiner="yes">strontio</token>
-  <token value="[S]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfurio</token>
-  <token value="[Ta]" labels="none" valType="SMILES">tantalio</token>
-  <token value="[Tc]" labels="none" valType="SMILES">technetio</token>
-  <token value="[Te]" labels="none" valType="SMILES" usableAsAJoiner="yes">tellurio</token>
-  <token value="[Tb]" labels="none" valType="SMILES">terbio</token>
-  <token value="[Tl]" labels="none" valType="SMILES">thallio</token>
-  <token value="[Th]" labels="none" valType="SMILES">thorio</token>
-  <token value="[Tm]" labels="none" valType="SMILES">thulio</token>
-  <token value="[Sn]" labels="none" valType="SMILES">stannio</token>
-  <token value="[Ti]" labels="none" valType="SMILES">titanio</token>
-  <token value="[W]" labels="none" valType="SMILES">tungstenio</token>
-  <token value="[W]" labels="none" valType="SMILES">wolframio</token>
-  <token value="[U]" labels="none" valType="SMILES">uranio</token>
-  <token value="[V]" labels="none" valType="SMILES">vanadio</token>
-  <token value="[Xe]" labels="none" valType="SMILES">xenonio</token>
-  <token value="[Yb]" labels="none" valType="SMILES">ytterbio</token>
-  <token value="[Y]" labels="none" valType="SMILES">yttrio</token>
-  <token value="[Zn]" labels="none" valType="SMILES" usableAsAJoiner="yes">zincio</token>
-  <token value="[Zr]" labels="none" valType="SMILES">zirconio</token>
-
+  <token value="-[Ac]" labels="none" valType="SMILES">actinio</token>
+  <token value="-[Al]" labels="none" valType="SMILES">aluminio</token>
+  <token value="-[Am]" labels="none" valType="SMILES">americio</token>
+  <token value="-[Sb]" labels="none" valType="SMILES">antimonio</token>
+  <token value="-[Ar|2]" labels="none" valType="SMILES">argonio</token>
+  <token value="-[As]" labels="none" valType="SMILES">arsenio</token>
+  <token value="-[At]" labels="none" valType="SMILES">astatio</token>
+  <token value="-[Ba]" labels="none" valType="SMILES" usableAsAJoiner="yes">bario</token>
+  <token value="-[Bk]" labels="none" valType="SMILES">berkelio</token>
+  <token value="-[Be]" labels="none" valType="SMILES" usableAsAJoiner="yes">beryllio</token>
+  <token value="-[Bi]" labels="none" valType="SMILES">bismuthio</token>
+  <token value="-[B]" labels="none" valType="SMILES">borio</token>
+  <token value="-[Br]" labels="none" valType="SMILES">bromio</token>
+  <token value="-[Cd]" labels="none" valType="SMILES" usableAsAJoiner="yes">cadmio</token>
+  <token value="-[Cs]" labels="none" valType="SMILES">caesio</token>
+  <token value="-[Ca]" labels="none" valType="SMILES" usableAsAJoiner="yes">calcio</token>
+  <token value="-[Cf]" labels="none" valType="SMILES">californio</token>
+  <token value="-[Ce]" labels="none" valType="SMILES">cerio</token>
+  <token value="-[Cl]" labels="none" valType="SMILES">chlorio</token>
+  <token value="-[Cr]" labels="none" valType="SMILES">chromio</token>
+  <token value="-[Co]" labels="none" valType="SMILES">cobaltio</token>
+  <token value="-[Cu]" labels="none" valType="SMILES">cuprio</token>
+  <token value="-[Cm]" labels="none" valType="SMILES">curio</token>
+  <token value="-[Dy]" labels="none" valType="SMILES">dysprosio</token>
+  <token value="-[Es]" labels="none" valType="SMILES">einsteinio</token>
+  <token value="-[Er]" labels="none" valType="SMILES">erbio</token>
+  <token value="-[Eu]" labels="none" valType="SMILES">europio</token>
+  <token value="-[Fm]" labels="none" valType="SMILES">fermio</token>
+  <token value="-[F]" labels="none" valType="SMILES">fluorio</token>
+  <token value="-[Fr]" labels="none" valType="SMILES">francio</token>
+  <token value="-[Gd]" labels="none" valType="SMILES">gadolinio</token>
+  <token value="-[Ga]" labels="none" valType="SMILES">gallio</token>
+  <token value="-[Ge]" labels="none" valType="SMILES">germanio</token>
+  <token value="-[Au]" labels="none" valType="SMILES">aurio</token>
+  <token value="-[Hf]" labels="none" valType="SMILES">hafnio</token>
+  <token value="-[He|2]" labels="none" valType="SMILES">helio</token>
+  <token value="-[Ho]" labels="none" valType="SMILES">holmio</token>
+  <token value="-[In]" labels="none" valType="SMILES">indio</token>
+  <token value="-[I]" labels="none" valType="SMILES">iodio</token>
+  <token value="-[Ir]" labels="none" valType="SMILES">iridio</token>
+  <token value="-[Fe]" labels="none" valType="SMILES">ferrio</token>
+  <token value="-[Kr]" labels="none" valType="SMILES">kryptonio</token>
+  <token value="-[La]" labels="none" valType="SMILES">lanthanio</token>
+  <token value="-[Lr]" labels="none" valType="SMILES">lawrencio</token>
+  <token value="-[Pb]" labels="none" valType="SMILES">plumbio</token>
+  <token value="-[Li]" labels="none" valType="SMILES">lithio</token>
+  <token value="-[Lu]" labels="none" valType="SMILES">lutetio</token>
+  <token value="-[Mg]" labels="none" valType="SMILES" usableAsAJoiner="yes">magnesio</token>
+  <token value="-[Mn]" labels="none" valType="SMILES">manganio</token>
+  <token value="-[Md]" labels="none" valType="SMILES">mendelevio</token>
+  <token value="-[Hg]" labels="none" valType="SMILES" usableAsAJoiner="yes">mercurio</token>
+  <token value="-[Mo]" labels="none" valType="SMILES">molybdenio</token>
+  <token value="-[Nd]" labels="none" valType="SMILES">neodymio</token>
+  <token value="-[Ne|2]" labels="none" valType="SMILES">neonio</token>
+  <token value="-[Np]" labels="none" valType="SMILES">neptunio</token>
+  <token value="-[Ni]" labels="none" valType="SMILES">nickelio</token>
+  <token value="-[Nb]" labels="none" valType="SMILES">niobio</token>
+  <token value="-[No]" labels="none" valType="SMILES">nobelio</token>
+  <token value="-[Os]" labels="none" valType="SMILES">osmio</token>
+  <token value="-[Pd]" labels="none" valType="SMILES">palladio</token>
+  <token value="-[P]" labels="none" valType="SMILES">phosphorio</token>
+  <token value="-[Pt]" labels="none" valType="SMILES">platinio</token>
+  <token value="-[Pu]" labels="none" valType="SMILES">plutonio</token>
+  <token value="-[Po]" labels="none" valType="SMILES" usableAsAJoiner="yes">polonio</token>
+  <token value="-[K]" labels="none" valType="SMILES">potassio</token>
+  <token value="-[K]" labels="none" valType="SMILES">kalio</token>
+  <token value="-[Pr]" labels="none" valType="SMILES">praseodymio</token>
+  <token value="-[Pm]" labels="none" valType="SMILES">promethio</token>
+  <token value="-[Pa]" labels="none" valType="SMILES">protactinio</token>
+  <token value="-[Ra]" labels="none" valType="SMILES" usableAsAJoiner="yes">radio</token>
+  <token value="-[Rn]" labels="none" valType="SMILES">radonio</token>
+  <token value="-[Re]" labels="none" valType="SMILES">rhenio</token>
+  <token value="-[Rh]" labels="none" valType="SMILES">rhodio</token>
+  <token value="-[Rb]" labels="none" valType="SMILES">rubidio</token>
+  <token value="-[Ru]" labels="none" valType="SMILES">ruthenio</token>
+  <token value="-[Sm]" labels="none" valType="SMILES">samario</token>
+  <token value="-[Sc]" labels="none" valType="SMILES">scandio</token>
+  <token value="-[Se]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenio</token>
+  <token value="-[Si]" labels="none" valType="SMILES">silicio</token>
+  <token value="-[Ag]" labels="none" valType="SMILES">argentio</token>
+  <token value="-[Na]" labels="none" valType="SMILES">sodio</token>
+  <token value="-[Na]" labels="none" valType="SMILES">natrio</token>
+  <token value="-[Sr]" labels="none" valType="SMILES" usableAsAJoiner="yes">strontio</token>
+  <token value="-[S]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfurio</token>
+  <token value="-[Ta]" labels="none" valType="SMILES">tantalio</token>
+  <token value="-[Tc]" labels="none" valType="SMILES">technetio</token>
+  <token value="-[Te]" labels="none" valType="SMILES" usableAsAJoiner="yes">tellurio</token>
+  <token value="-[Tb]" labels="none" valType="SMILES">terbio</token>
+  <token value="-[Tl]" labels="none" valType="SMILES">thallio</token>
+  <token value="-[Th]" labels="none" valType="SMILES">thorio</token>
+  <token value="-[Tm]" labels="none" valType="SMILES">thulio</token>
+  <token value="-[Sn]" labels="none" valType="SMILES">stannio</token>
+  <token value="-[Ti]" labels="none" valType="SMILES">titanio</token>
+  <token value="-[W]" labels="none" valType="SMILES">tungstenio</token>
+  <token value="-[W]" labels="none" valType="SMILES">wolframio</token>
+  <token value="-[U]" labels="none" valType="SMILES">uranio</token>
+  <token value="-[V]" labels="none" valType="SMILES">vanadio</token>
+  <token value="-[Xe]" labels="none" valType="SMILES">xenonio</token>
+  <token value="-[Yb]" labels="none" valType="SMILES">ytterbio</token>
+  <token value="-[Y]" labels="none" valType="SMILES">yttrio</token>
+  <token value="-[Zn]" labels="none" valType="SMILES" usableAsAJoiner="yes">zincio</token>
+  <token value="-[Zr]" labels="none" valType="SMILES">zirconio</token>
 </tokenList>
 
 

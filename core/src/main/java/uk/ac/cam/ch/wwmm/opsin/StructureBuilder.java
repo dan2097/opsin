@@ -570,7 +570,7 @@ class StructureBuilder {
 			if (atomToAddOxideTo.getCharge()!=0 || oxideAtom.getCharge()!=0){
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
 			}
-			atomToAddOxideTo.setCharge(1);
+			atomToAddOxideTo.addChargeAndProtons(1, 1);
 			oxideAtom.setCharge(-1);
 			if (!ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 1)){
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");

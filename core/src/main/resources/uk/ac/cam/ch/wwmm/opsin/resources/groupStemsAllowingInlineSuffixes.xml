@@ -3,7 +3,7 @@
 <!--These are groups that can be followed by charge modifying suffixes and should be terminated by an e or an inline suffix if used as substituent -->
 <tokenList tagname="group" type="substituent" subType="groupStem" symbol="g">
   <token value="C=C=C" valType="SMILES" usableAsAJoiner="yes">allen</token>
-  <token value="[N-]" labels="none" valType="SMILES">amid</token>
+  <token value="[NH2-]" labels="none" valType="SMILES">amid</token>
   <token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amin</token>
   <token value="N[C@H](C(=O)O)CCC(=O)N[C@@H](CS)C(=O)NCC(=O)O" labels="none" valType="SMILES">glutathion</token>
   <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerol</token>
@@ -14,10 +14,10 @@
   <token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>
 
 <!--These forms imply valency 3-->
-  <token value="P" valType="SMILES" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
-  <token value="[As]" valType="SMILES" usableAsAJoiner="yes">arsine</token>
-  <token value="[Sb]" valType="SMILES" usableAsAJoiner="yes">stibin</token>
-  <token value="[Bi]" valType="SMILES" usableAsAJoiner="yes">bismuthin</token>
+  <token value="[PH3]" valType="SMILES" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
+  <token value="[AsH3]" valType="SMILES" usableAsAJoiner="yes">arsine</token>
+  <token value="[SbH3]" valType="SMILES" usableAsAJoiner="yes">stibin</token>
+  <token value="[BiH3]" valType="SMILES" usableAsAJoiner="yes">bismuthin</token>
 
 <!-- trivial acid derived ketones -->
   <token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" valType="SMILES" usableAsAJoiner="yes">aceton</token>

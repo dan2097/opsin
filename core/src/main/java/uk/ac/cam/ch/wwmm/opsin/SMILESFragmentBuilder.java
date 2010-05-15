@@ -9,7 +9,11 @@ import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-/** A builder for fragments specified as SMILES. A custom SMILES dialect is used. With the exception of | to directly set valency and the inclusion of sb/te as being aromatic this is a subset of real SMILES:
+/** A builder for fragments specified as SMILES. A slightly custom SMILES dialect is used.
+ * It includes all common features of SMILES and a few useful extensions:
+ * | is used within a square bracketed element to directly set valency e.g. [P|5]. This is the same as using the lambda convention
+ * sb/te are allowed (aromatic antimony/tellurium):
+ * H? e.g. [SeH?] is used to indicate that the atom should use the default valency. It is equivalent to not using square brackets for organic atoms
  *
  * Allowed:
  * Organic elements B,C,N,O,P,S,F,Cl,Br,I (square brackets not required)
@@ -21,10 +25,10 @@ import nu.xom.Element;
  * 012345679 - ring closures
  * %10 %99 - more ring closures (%100 is ring closure %10 and 0 as in normal SMILES)
  * / and \ to set double bond stereochemistry to cis/trans
- * @ and @@ to set tetrahedral stereochemistry as in SMILES. Note that ONLY in this context is a capital H allowed, in all other cases hydrogen should be implicit
- *
- * |3 |5 etc. can be used to set the valency of an atom e.g. P|5, [Se|2]
- * (| looks slightly like an l as in the lambda convention)
+ * @ and @@ to set tetrahedral stereochemistry as in SMILES.
+ * Hx where x is a digit is used to sort of set the hydrogen. In actuality the valency of the atom is derived and a valency hint added to the atom
+ * This valency hint is the minimum valency that atom may be in. H? as an extension gives you the lowest acceptable valency.
+ * |3 |5 etc. can be used to set the valency of an atom e.g.  [Se|2]
  *
  * Also, an = or # at the start of the string indicates that the group attaches to its parent group via a double or triple bond.
  *
@@ -155,7 +159,7 @@ class SMILESFragmentBuilder {
 		HashMap<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures
 		String tmpString = smiles;
 		char firstCharacter =tmpString.charAt(0);
-		if(firstCharacter == '=' || firstCharacter == '#') {//used by OPSIN to specify the valency with which this fragment connects (1 if not specified)
+		if(firstCharacter == '-' || firstCharacter == '=' || firstCharacter == '#') {//used by OPSIN to specify the valency with which this fragment connects
 			tmpString = tmpString.substring(1);
 		}
 		char lastCharacter =tmpString.charAt(tmpString.length()-1);
@@ -313,7 +317,7 @@ class SMILESFragmentBuilder {
 				stack.peek().bondOrder = 1;
 				currentNumber += 1;
 
-		        int hydrogenCount =0;
+		        Integer hydrogenCount =0;
 		        int charge = 0;
 		        Boolean chiralitySet = false;
 		        while (atomString.length()>0){
@@ -327,21 +331,29 @@ class SMILESFragmentBuilder {
 						chiralitySet = true;
 		 			}
 		            else if (nextChar == 'H'){// hydrogenCount
-		            	if (hydrogenCount != 0){
+		            	if (hydrogenCount ==null || hydrogenCount != 0){
 		            		throw new StructureBuildingException("Hydrogen count appeared to be specified twice for an atom in a square bracket!");
 		            	}
-		            	String hydrogenCountString ="";
-    					while(atomString.length() > 0 && digits.contains(atomString.substring(0,1))) {
-    						hydrogenCountString += atomString.substring(0,1);
-    						atomString = atomString.substring(1);
-    					}
-    					if (hydrogenCountString.equals("")){
-    						hydrogenCount=1;
-    					}
-    					else{
-    						hydrogenCount = Integer.parseInt(hydrogenCountString);
-    					}
-    					//throw new StructureBuildingException("Hydrogen count is currently not supported");
+	            		if (atomString.length() > 0 && atomString.charAt(0)=='?'){
+	            			atomString = atomString.substring(1);
+	            			hydrogenCount=null;
+	            		}
+	            		else{
+			            	String hydrogenCountString ="";
+	    					while(atomString.length() > 0 && digits.contains(atomString.substring(0,1))) {
+	    						hydrogenCountString += atomString.substring(0,1);
+	    						atomString = atomString.substring(1);
+	    					}
+	    					if (hydrogenCountString.equals("")){
+	    						hydrogenCount=1;
+	    					}
+	    					else{
+	    						hydrogenCount = Integer.parseInt(hydrogenCountString);
+	    					}
+	    					if (atom.hasSpareValency()){
+	    						currentFrag.addIndicatedHydrogen(atom);
+	    					}
+	            		}
 		            }
 		            else if(nextChar == '+' || nextChar == '-') {// formalCharge
 		            	if (charge != 0){
@@ -390,10 +402,9 @@ class SMILESFragmentBuilder {
 		            	throw new StructureBuildingException("Unexpected character found in square bracket");
 		            }
 		        }
+				atom.setHydrogenCount(hydrogenCount);
 			} else if(digits.indexOf(nextChar)!= -1 || nextChar == '%') {
 				tmpString = processRingOpeningOrClosure(fragManager, stack, closures, tmpString, nextChar);
-			}else if(nextChar == '|') {
-				tmpString = processLambdaConvention(stack, tmpString);
 			}
 			else{
 				throw new StructureBuildingException(nextChar + " is in an unexpected position. Check this is not a mistake and that this feature of SMILES is supported by OPSIN's SMILES parser");
@@ -411,10 +422,10 @@ class SMILESFragmentBuilder {
 			FragmentTools.relabelFusedRingSystem(currentFrag);
 		}
 		addBondStereoElements(currentFrag);
+		List<Atom> atomList =currentFrag.getAtomList();
 
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
-			List<Atom> aList =currentFrag.getAtomList();
-			Atom lastAtom =aList.get(aList.size()-1);
+			Atom lastAtom =atomList.get(atomList.size()-1);
 			if (lastCharacter == '#'){
 				currentFrag.addOutAtom(lastAtom, 3, true);
 			}
@@ -426,38 +437,24 @@ class SMILESFragmentBuilder {
 			}
 		}
 
-		if(firstCharacter == '='){
+		if(firstCharacter == '-'){
+			currentFrag.addOutAtom(currentFrag.getFirstAtom(),1, true);
+		}
+		else if(firstCharacter == '='){
 			currentFrag.addOutAtom(currentFrag.getFirstAtom(),2, true);
 		}
-		if (firstCharacter == '#'){
+		else if (firstCharacter == '#'){
 			currentFrag.addOutAtom(currentFrag.getFirstAtom(),3, true);
+		}
+		
+		for (Atom atom : atomList) {
+			if (atom.getHydrogenCount()!=null && atom.getLambdaConventionValency() ==null){
+				setupAtomValency(fragManager, atom);
+			}
+			atom.setHydrogenCount(null);
 		}
 
 		return currentFrag;
-	}
-
-	/**
-	 * Sets the valency of the previous atom
-	 * @param stack
-	 * @param tmpString
-	 * @return
-	 * @throws StructureBuildingException
-	 */
-	private String processLambdaConvention(Stack<StackFrame> stack, String tmpString) throws StructureBuildingException {
-		String lambda = "";
-		while(tmpString.length() > 0 &&
-				digits.contains(tmpString.substring(0,1))) {
-			lambda += tmpString.substring(0,1);
-			tmpString = tmpString.substring(1);
-		}
-		if(stack.peek().atom !=null) {
-			Atom a = stack.peek().atom;
-			a.setLambdaConventionValency(Integer.parseInt(lambda));
-		}
-		else{
-			throw new StructureBuildingException("| found in SMILES string at unexpected position");
-		}
-		return tmpString;
 	}
 
 	/**
@@ -489,7 +486,6 @@ class SMILESFragmentBuilder {
 		}
 		if (atomString.length() > 0 && atomString.charAt(0) == 'H'){
 			atomRefs4[indice] = AtomParity.hydrogen;
-			atomString = atomString.substring(1);
 		}
 		atom.setAtomParity(atomParity);
 		return atomString;
@@ -677,6 +673,53 @@ class SMILESFragmentBuilder {
 		}
 		for (Bond bond : bonds) {
 			bond.setSmilesStereochemistry(null);
+		}
+	}
+	
+	/**
+	 * Utilises the atom's hydrogen count as set by the SMILES as well as incoming valency to determine the atom's valency
+	 * If the atom is charged whether protons have been added or removed will also need to be determined
+	 * @param fragManager 
+	 * @param atom
+	 * @throws StructureBuildingException 
+	 */
+	private void setupAtomValency(FragmentManager fragManager, Atom atom) throws StructureBuildingException {
+		int hydrogenCount = atom.getHydrogenCount();
+		int incomingValency = atom.getIncomingValency() + hydrogenCount +atom.getOutValency();
+		int charge = atom.getCharge();
+		int absoluteCharge =Math.abs(charge);
+		String element =atom.getElement();
+		if (atom.hasSpareValency()){
+			Integer hwValency = ValencyChecker.getHWValency(atom.getElement());
+			if (hwValency == null){
+				throw new StructureBuildingException(atom.getElement() +" is not expected to be aromatic!");
+			}
+			if (incomingValency < (hwValency + absoluteCharge)){
+				incomingValency++;
+			}
+		}
+		Integer defaultVal = ValencyChecker.getDefaultValency(element);
+		if (defaultVal !=null){//s or p block element
+			if (defaultVal != incomingValency){
+				if (charge==0){
+					atom.setMinimumValency(incomingValency);
+				}
+				else{
+					Integer[] stableValenciesArray = ValencyChecker.getPossibleValencies(atom.getElement(), charge);
+					if (stableValenciesArray ==null || stableValenciesArray[0]!=incomingValency){
+						atom.setMinimumValency(incomingValency);
+					}
+				}
+			}
+		}
+		else{
+			if (hydrogenCount >0){//make hydrogen explicit
+				Fragment frag =atom.getFrag();
+				for (int i = 0; i < hydrogenCount; i++) {
+					Atom hydrogen = fragManager.createAtom("H", frag);
+					fragManager.createBond(atom, hydrogen, 1);
+				}
+			}
 		}
 	}
 

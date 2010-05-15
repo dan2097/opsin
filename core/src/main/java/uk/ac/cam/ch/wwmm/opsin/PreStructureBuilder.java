@@ -419,12 +419,6 @@ class PreStructureBuilder {
                 thisFrag.addFunctionalAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(functionalID) - 1));
             }
 		}
-
-		if (thisFrag.getOutAtoms().size()==0 && group.getAttribute("outIDs")==null && groupType.equals("substituent") && groupSubType.equals("simpleSubstituent")){
-			//simple substituents implicitly will be given an outAtom assuming the SMILESbuilder hasn't already given them one
-			thisFrag.addOutAtom(thisFrag.getFirstAtom(), 1, true);
-		}
-
 		return thisFrag;
 	}
 
@@ -1391,6 +1385,9 @@ class PreStructureBuilder {
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
 					if (otherAtom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
 						otherAtom.setLambdaConventionValency(otherAtom.getLambdaConventionValency()-2);
+					}
+					if (otherAtom.getMinimumValency()!=null){//corrects valency for phosphin/arsin/stibin
+						otherAtom.setMinimumValency(otherAtom.getMinimumValency()-2);
 					}
 					return;
 				}

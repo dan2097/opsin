@@ -102,7 +102,7 @@ the contracted form is allowed for all ring systems-->
   <token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubic</token>
   <token value="s-indacene" valType="dbkey">s-indac</token>
   <token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenanthr</token>
-  <token value="C1=CC=CC=2[Si]=C3C=CC=CC3=[Si]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthr</token>
+  <token value="C1=CC=CC=2[SiH]=C3C=CC=CC3=[SiH]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthr</token>
   <token value="c1(ccccc1)C=Cc2ccccc2" labels="1/2/3/4/5/6/alpha/beta/1'/2'/3'/4'/5'/6'" valType="SMILES">stilb</token>
   <token value="C=Cc1ccccc1" labels="alpha/beta/1/2/3/4/5/6" valType="SMILES">styr</token>
   <token value="Cc1cccs1" labels="2/alpha/3/4/5/1" valType="SMILES">then</token>
