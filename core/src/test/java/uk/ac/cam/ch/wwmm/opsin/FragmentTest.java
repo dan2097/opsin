@@ -191,7 +191,7 @@ public class FragmentTest {
 		//TODO: this, properly.
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment pyrrole = sBuilder.build("NC=CC=C", fm);
-		pyrrole.pickUpIndicatedHydrogen();
+		FragmentTools.pickUpIndicatedHydrogens(pyrrole);
 		//assertEquals("Pyrrole is 1H", "1", pyrrole.)
 	}
 
@@ -199,8 +199,7 @@ public class FragmentTest {
 	public void testConvertHighOrderBondsToSpareValencies() throws Exception {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
-		CycleDetector.assignWhetherAtomsAreInCycles(naphthalene);
-		naphthalene.convertHighOrderBondsToSpareValencies();
+		FragmentTools.convertHighOrderBondsToSpareValencies(naphthalene);
 		for(Atom a : naphthalene.getAtomList()) {
 			assertEquals("All atoms have sv", true, a.hasSpareValency());
 		}
@@ -213,30 +212,26 @@ public class FragmentTest {
 	public void testConvertSpareValenciesToDoubleBonds() throws Exception {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment dhp = sBuilder.build("C1=CCC=CC1", fm);
-		CycleDetector.assignWhetherAtomsAreInCycles(dhp);
-		dhp.convertHighOrderBondsToSpareValencies();
-		dhp.convertSpareValenciesToDoubleBonds();
+		FragmentTools.convertHighOrderBondsToSpareValencies(dhp);
+		FragmentTools.convertSpareValenciesToDoubleBonds(dhp);
 		for(Atom a : dhp.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
 		Fragment funnydiene = sBuilder.build("C(=C)C=C", fm);
-		CycleDetector.assignWhetherAtomsAreInCycles(funnydiene);
-		funnydiene.convertHighOrderBondsToSpareValencies();
-		funnydiene.convertSpareValenciesToDoubleBonds();
+		FragmentTools.convertHighOrderBondsToSpareValencies(funnydiene);
+		FragmentTools.convertSpareValenciesToDoubleBonds(funnydiene);
 		for(Atom a : funnydiene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
 		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
-		CycleDetector.assignWhetherAtomsAreInCycles(naphthalene);
-		naphthalene.convertHighOrderBondsToSpareValencies();
-		naphthalene.convertSpareValenciesToDoubleBonds();
+		FragmentTools.convertHighOrderBondsToSpareValencies(naphthalene);
+		FragmentTools.convertSpareValenciesToDoubleBonds(naphthalene);
 		for(Atom a : naphthalene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
 		Fragment pentalene = sBuilder.build("C12C(=CC=C1)C=CC=2", fm);
-		CycleDetector.assignWhetherAtomsAreInCycles(pentalene);
-		pentalene.convertHighOrderBondsToSpareValencies();
-		pentalene.convertSpareValenciesToDoubleBonds();
+		FragmentTools.convertHighOrderBondsToSpareValencies(pentalene);
+		FragmentTools.convertSpareValenciesToDoubleBonds(pentalene);
 		for(Atom a : pentalene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
@@ -248,9 +243,9 @@ public class FragmentTest {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
 		assertEquals("Atom 1 has two neighbours",
-				2, naphthalene.getAtomNeighbours(naphthalene.getAtomByID(1)).size());
+				2, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(1)).size());
 		assertEquals("Atom 5 has three neighbours",
-				3, naphthalene.getAtomNeighbours(naphthalene.getAtomByID(5)).size());
+				3, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(5)).size());
 	}
 
 }

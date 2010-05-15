@@ -171,12 +171,12 @@ class FusedRingNumberer {
 			List<Atom> atomList =fusedRing.getAtomList();
 			List<Atom> bridgeheads =new ArrayList<Atom>();
 			for (Atom atom : atomList) {
-				if (fusedRing.getAtomNeighbours(atom).size()==3){
+				if (fusedRing.getIntraFragmentAtomNeighbours(atom).size()==3){
 					bridgeheads.add(atom);
 				}
 			}
 			for (Atom bridgeheadAtom : bridgeheads) {
-				List<Atom>  neighbours =fusedRing.getAtomNeighbours(bridgeheadAtom);
+				List<Atom>  neighbours =fusedRing.getIntraFragmentAtomNeighbours(bridgeheadAtom);
 				for (Atom  neighbour :  neighbours) {
 					if (!bridgeheads.contains(neighbour)){
 						//found starting atom
@@ -186,7 +186,7 @@ class FusedRingNumberer {
 						Atom nextAtom =neighbour;
 						do{
 							atomsVisited.add(nextAtom);
-							List<Atom> possibleNextInRings =fusedRing.getAtomNeighbours( nextAtom);
+							List<Atom> possibleNextInRings =fusedRing.getIntraFragmentAtomNeighbours( nextAtom);
 							nextAtom=null;
 							for (Atom nextInRing:  possibleNextInRings) {
 								if (atomsVisited.contains(nextInRing)){
