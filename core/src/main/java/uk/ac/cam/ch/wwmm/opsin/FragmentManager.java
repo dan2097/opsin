@@ -229,7 +229,7 @@ class FragmentManager {
 	 */
 	void convertSpareValenciesToDoubleBonds() throws StructureBuildingException {
 		for(Fragment f : fragPile) {
-			f.convertSpareValenciesToDoubleBonds();
+			FragmentTools.convertSpareValenciesToDoubleBonds(f);
 		}
 	}
 
@@ -315,7 +315,6 @@ class FragmentManager {
 		Fragment newFragment =new Fragment(originalFragment.getType(), originalFragment.getSubType());
 		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
-		newFragment.setIndicatedHydrogen(originalFragment.getIndicatedHydrogen());
 		List<OutAtom> outAtoms =originalFragment.getOutAtoms();
 		List<FunctionalAtom> functionalAtoms =originalFragment.getFunctionalAtoms();
 		List<InAtom> inAtoms =originalFragment.getInAtoms();
@@ -379,6 +378,10 @@ class FragmentManager {
 			if (bond.getBondStereoElement() != null){
 				newBond.setBondStereoElement(new Element(bond.getBondStereoElement()));
 			}
+		}
+		List<Atom> indicatedHydrogenAtoms = originalFragment.getIndicatedHydrogen();
+		for (Atom atom : indicatedHydrogenAtoms) {
+			newFragment.addIndicatedHydrogen(oldToNewAtomMap.get(atom));
 		}
 		addFragment(newFragment);
 		return newFragment;

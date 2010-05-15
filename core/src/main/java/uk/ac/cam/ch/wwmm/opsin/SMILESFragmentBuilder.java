@@ -453,7 +453,7 @@ class SMILESFragmentBuilder {
 			}
 			atom.setHydrogenCount(null);
 		}
-
+		CycleDetector.assignWhetherAtomsAreInCycles(currentFrag);
 		return currentFrag;
 	}
 

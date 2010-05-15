@@ -432,16 +432,16 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
 	
-//	@Test
-//	public void indicatedHydrogen1() throws StructureBuildingException {
-//		Fragment fragment = fm.buildSMILES("NC(N1)=NC(N=CN2)=C2C1=O");
-//		List<Atom> atomList = fragment.getAtomList();
-//		assertEquals(11, atomList.size());
-//		fragment.pickUpIndicatedHydrogen();
-//		assertEquals(2, fragment.getIndicatedHydrogen().size());
-//		assertEquals(atomList.get(2), fragment.getIndicatedHydrogen().get(0));
-//		assertEquals(atomList.get(7),  fragment.getIndicatedHydrogen().get(1));
-//	}
+	@Test
+	public void indicatedHydrogen1() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("NC(N1)=NC(N=CN2)=C2C1=O");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(11, atomList.size());
+		FragmentTools.convertHighOrderBondsToSpareValencies(fragment);
+		assertEquals(2, fragment.getIndicatedHydrogen().size());
+		assertEquals(atomList.get(2), fragment.getIndicatedHydrogen().get(0));
+		assertEquals(atomList.get(7),  fragment.getIndicatedHydrogen().get(1));
+	}
 	
 	@Test
 	public void indicatedHydrogen2() throws StructureBuildingException {

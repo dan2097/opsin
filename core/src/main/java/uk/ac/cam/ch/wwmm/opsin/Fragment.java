@@ -59,7 +59,7 @@ class Fragment {
 	private Atom defaultInAtom = null;
 
 	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES/CML level.*/
-	private List<Atom> indicatedHydrogen = new ArrayList<Atom>();
+	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
 
 	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
 	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
@@ -525,237 +525,13 @@ class Fragment {
 		functionalAtoms.remove(functionalAtom);
 	}
 
-	/** Looks for the atom that would have had a hydrogen indicated,
-	 * adds a spareValency to that atom, and adds that atom to indicatedHydrogen.
-	 * Does nothing if indicatedHydrogen is not empty
-	 */
-	void pickUpIndicatedHydrogen() {
-		if (indicatedHydrogen.size()>0){
-			return;
-		}
-		int svCount = 0;
-		int dvCount = 0; /* Divalent, like O */
-		int cyclicAtomCount =0;
-		for(Atom a : atomCollection) {
-			if (a.getAtomIsInACycle()){
-				svCount += a.hasSpareValency() ? 1 : 0;
-				String element =a.getElement();
-				if(element.equals("O") || element.equals("S") || element.equals("Se") || element.equals("Te")){
-					dvCount++;
-				}
-				cyclicAtomCount++;
-			}
-		}
-		if(svCount == cyclicAtomCount - (1 + dvCount) && svCount > 0) {
-			// Now we're looking for a trivalent C, or failing that a divalent N/P/As/Sb
-			Atom nCandidate = null;
-			for(Atom a : atomCollection) {
-				if(a.getAtomIsInACycle() && !a.hasSpareValency()) {
-					String element =a.getElement();
-					if (element.equals("C")){
-						indicatedHydrogen.add(a);
-						a.setSpareValency(true);
-						return;
-					} else if(element.equals("N") || element.equals("P") || element.equals("As") || element.equals("Sb")) {
-						nCandidate = a;
-					}
-				}
-			}
-			if(nCandidate != null) {
-				indicatedHydrogen.add(nCandidate);
-				nCandidate.setSpareValency(true);
-			}
-		}
-	}
-
-	/**Looks for double and higher bonds, converts them to single bonds
-	 * and adds corresponding spareValencies to the atoms they join.
-	 */
-	void convertHighOrderBondsToSpareValencies()  {
-		for(Bond b : bondSet) {
-			if(b.getOrder() == 2) {
-				Atom firstAtom =b.getFromAtom();
-				Atom secondAtom =b.getToAtom();
-				if (firstAtom.getAtomIsInACycle() && secondAtom.getAtomIsInACycle()){
-					b.setOrder(1);
-					firstAtom.setSpareValency(true);
-					secondAtom.setSpareValency(true);
-				}
-			}
-		}
-		pickUpIndicatedHydrogen();
-	}
-
-	/**Increases the order of bonds joining atoms with spareValencies,
-	 * and uses up said spareValencies.
-	 * @throws StructureBuildingException If the algorithm can't work out where to put the bonds
-	 */
-	void convertSpareValenciesToDoubleBonds() throws StructureBuildingException {
-		/* pick atom, getAtomNeighbours, decideIfTerminal, resolve */
-
-		/*
-		 * Correct spare valency by looking at valencyState of atom
-		 *
-		 */
-		for(Atom a : atomCollection) {
-			a.ensureSVIsConsistantWithValency(true);
-		}
-
-		/*
-		 * Remove spare valency on atoms which may not form higher order bonds
-		 */
-		atomLoop: for(Atom a : atomCollection) {
-			if(a.hasSpareValency()) {
-				for(Atom aa : getAtomNeighbours(a)) {
-					if(aa.hasSpareValency()){
-						continue atomLoop;
-					}
-				}
-				a.setSpareValency(false);
-			}
-		}
-
-		int svCount = 0;
-		for(Atom a : atomCollection) {
-			svCount += a.hasSpareValency() ? 1 :0;
-		}
-
-		/*
-		 Reduce valency of atoms which cannot possibly have any of their bonds converted to double bonds
-		 pick an atom which definitely does have spare valency to be the indicated hydrogen.
-		*/
-		Atom atomToReduceValencyAt =null;
-		if (indicatedHydrogen.size()>0){
-			if (indicatedHydrogen.get(0).hasSpareValency()){
-				atomToReduceValencyAt= indicatedHydrogen.get(0);
-			}
-		}
-
-		if((svCount % 2) == 1) {
-			if (atomToReduceValencyAt == null){
-				for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
-					if(a.hasSpareValency()) {
-						int atomsWithSV =0;
-						for(Atom aa : getAtomNeighbours(a)) {
-							if(aa.hasSpareValency()) {
-								atomsWithSV++;
-							}
-						}
-						if (atomsWithSV==1){
-							atomToReduceValencyAt=a;
-							break;
-						}
-					}
-				}
-				if (atomToReduceValencyAt==null){
-					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine
-						if(a.hasSpareValency()) {
-							List<Atom> neighbours =getAtomNeighbours(a);
-							if (neighbours.size()==2){
-								for(Atom aa : neighbours) {
-									if(getAtomNeighbours(aa).size() < 3){
-										continue atomLoop;
-									}
-								}
-								atomToReduceValencyAt=a;
-								break;
-							}
-						}
-					}
-					if (atomToReduceValencyAt==null){//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
-						for(Atom a : atomCollection) {
-							if(a.hasSpareValency()) {
-								if (atomToReduceValencyAt==null){
-									atomToReduceValencyAt=a;//else just go with the first atom with SV encountered
-								}
-								if (!a.getElement().equals("C")){
-									atomToReduceValencyAt=a;
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-			atomToReduceValencyAt.setSpareValency(false);
-			svCount--;
-		}
-
-		while(svCount > 0) {
-			boolean foundTerminalFlag = false;
-			boolean foundNonBridgeHeadFlag = false;
-			boolean foundBridgeHeadFlag = false;
-			for(Atom a : atomCollection) {
-				if(a.hasSpareValency()) {
-					int count = 0;
-					for(Atom aa : getAtomNeighbours(a)) {
-						if(aa.hasSpareValency()) {
-							count++;
-						}
-					}
-					if(count == 1) {
-						for(Atom aa : getAtomNeighbours(a)) {
-							if(aa.hasSpareValency()) {
-								foundTerminalFlag = true;
-								a.setSpareValency(false);
-								aa.setSpareValency(false);
-								findBondOrThrow(a, aa).addOrder(1);
-								svCount -= 2;//Two atoms where for one of them this bond is the only double bond it can possible form
-								break;
-							}
-						}
-					}
-				}
-			}
-			if(!foundTerminalFlag) {
-				for(Atom a : atomCollection) {
-					List<Atom> neighbours =getAtomNeighbours(a);
-					if(a.hasSpareValency() && neighbours.size() < 3) {
-						for(Atom aa : neighbours) {
-							if(aa.hasSpareValency()) {
-								foundNonBridgeHeadFlag = true;
-								a.setSpareValency(false);
-								aa.setSpareValency(false);
-								findBondOrThrow(a, aa).addOrder(1);
-								svCount -= 2;//Two atoms where one of them is not a bridge head
-								break;
-							}
-						}
-					}
-					if(foundNonBridgeHeadFlag) break;
-				}
-				if(!foundNonBridgeHeadFlag){
-					for(Atom a : atomCollection) {
-						List<Atom> neighbours =getAtomNeighbours(a);
-						if(a.hasSpareValency()) {
-							for(Atom aa : neighbours) {
-								if(aa.hasSpareValency()) {
-									foundBridgeHeadFlag = true;
-									a.setSpareValency(false);
-									aa.setSpareValency(false);
-									findBondOrThrow(a, aa).addOrder(1);
-									svCount -= 2;//Two atoms where both of them are a bridge head e.g. necessary for something like coronene
-									break;
-								}
-							}
-						}
-						if(foundBridgeHeadFlag) break;
-					}
-					if(!foundBridgeHeadFlag){
-						throw new StructureBuildingException("Could not assign all higher order bonds.");
-					}
-				}
-			}
-		}
-	}
-
 	/**Gets a list of atoms in the fragment that connect to a specified atom
 	 *
 	 * @param atom The reference atom
 	 * @return The list of atoms connected to the atom
 	 * @throws StructureBuildingException
 	 */
-	List<Atom> getAtomNeighbours(Atom atom) throws StructureBuildingException {
+	List<Atom> getIntraFragmentAtomNeighbours(Atom atom) throws StructureBuildingException {
 		List<Atom> results = new ArrayList<Atom>();
 		for(Bond b :  atom.getBonds()) {
 			//recalled atoms will be null if they are not part of this fragment
@@ -889,11 +665,10 @@ class Fragment {
 	List<Atom> getIndicatedHydrogen() {
 		return indicatedHydrogen;
 	}
-
-	void setIndicatedHydrogen(List<Atom> indicatedHydrogen) {
-		this.indicatedHydrogen = indicatedHydrogen;
+	
+	void addIndicatedHydrogen(Atom atom) {
+		indicatedHydrogen.add(atom);
 	}
-
 
 	Atom getAtomOrNextSuitableAtomOrThrow(Atom a, int additionalValencyRequired) throws StructureBuildingException {
 		return getAtomByIdOrNextSuitableAtomOrThrow(a.getID(), additionalValencyRequired);
@@ -1036,10 +811,6 @@ class Fragment {
 		List<Atom> atomList =getAtomList();
 		Collections.sort(atomList, new FragmentTools.SortByLocants());
 		reorderAtomCollection(atomList);
-	}
-
-	void addIndicatedHydrogen(Atom atom) {
-		indicatedHydrogen.add(atom);
 	}
 }
 

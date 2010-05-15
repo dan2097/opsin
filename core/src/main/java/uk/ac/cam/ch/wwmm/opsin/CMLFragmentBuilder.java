@@ -74,6 +74,7 @@ class CMLFragmentBuilder {
 			if(bondOrder.equalsIgnoreCase("t")) bondOrder = "3";
 			fragManager.createBond(fromAtom, toAtom, Integer.parseInt(bondOrder));
 		}
+		CycleDetector.assignWhetherAtomsAreInCycles(currentFrag);
 		return currentFrag;
 	}
 	

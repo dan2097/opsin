@@ -384,8 +384,8 @@ class PreStructureBuilder {
 
 		//processes groups like cymene and xylene whose structure is determined by the presence of a locant in front e.g. p-xylene
 		processXyleneLikeNomenclature(state, group, thisFrag);
-		CycleDetector.assignWhetherAtomsAreInCycles(thisFrag);
-		thisFrag.convertHighOrderBondsToSpareValencies();//only applied to cyclic bonds
+
+		FragmentTools.convertHighOrderBondsToSpareValencies(thisFrag);//only applied to cyclic bonds
 
 		if (group.getAttribute("defaultInLocant")!=null){//sets the atom at which substitution will occur to by default
 			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(group.getAttributeValue("defaultInLocant")));
