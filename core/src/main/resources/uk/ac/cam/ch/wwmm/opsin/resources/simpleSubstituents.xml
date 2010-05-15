@@ -8,6 +8,7 @@
   <token value="-NC(=O)C" labels="none" valType="SMILES">acetamino</token>
   <token value="-C#C" labels="none" valType="SMILES">acetenyl</token>
   <token value="=[N+]([O-])O" labels="none" valType="SMILES">aci-nitro</token>
+	<token value="-C(=O)C=C" labels="1//2/3" valType="SMILES" usableAsAJoiner="yes">acryl</token>
   <token value="-C(=O)C(=O)N" labels="none" valType="SMILES">amidoxalyl</token>
   <token value="-ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
   <token value="-OCCCCC" valType="SMILES">amoxy</token>

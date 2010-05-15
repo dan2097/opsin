@@ -126,8 +126,9 @@ class Atom {
 		Element elem = new Element("atom");
 		elem.addAttribute(new Attribute("id", "a" + Integer.toString(ID)));
 		elem.addAttribute(new Attribute("elementType", element));
-		if(charge != 0)
+		if(charge != 0){
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
+		}
 		if (hydrogenCount!=null && hydrogenCount==0){//prevent adding of implicit hydrogen
 			elem.addAttribute(new Attribute("hydrogenCount", "0"));
 		}
