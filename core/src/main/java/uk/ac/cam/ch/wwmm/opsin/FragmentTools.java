@@ -447,38 +447,33 @@ class FragmentTools {
 			}
 		}
 		if (indicatedHydrogen.size()>0){
-			if (indicatedHydrogen.size()==2){
-				Atom indicatedAtom1 = indicatedHydrogen.get(0);
-				List<Atom> neighbours = indicatedAtom1.getAtomNeighbours();
-				for (Atom neighbour : neighbours) {
-					if (neighbour.hasSpareValency()){
-						List<Atom> neighbours2 = neighbour.getAtomNeighbours();
-						for (Atom secondNeighbour : neighbours2) {
-							if (secondNeighbour==indicatedAtom1){
-								continue;
-							}
-							if (secondNeighbour.hasSpareValency() && secondNeighbour.getElement().equals("N")){
-								indicatedAtom1.setSpareValency(false);
+			if (indicatedHydrogen.size()>1){
+				if (indicatedHydrogen.size()==2){//fix for guanine like purine derivatives
+					for (Atom indicatedAtom : indicatedHydrogen) {
+						if (!indicatedAtom.hasSpareValency()){
+							continue;
+						}
+						List<Atom> neighbours = indicatedAtom.getAtomNeighbours();
+						for (Atom neighbour : neighbours) {
+							if (neighbour.hasSpareValency()){
+								List<Atom> neighbours2 = neighbour.getAtomNeighbours();
+								for (Atom secondNeighbour : neighbours2) {
+									if (secondNeighbour==indicatedAtom){
+										continue;
+									}
+									if (secondNeighbour.hasSpareValency() && secondNeighbour.getElement().equals("N")){
+										indicatedAtom.setSpareValency(false);
+									}
+								}
 							}
 						}
 					}
 				}
-				Atom indicatedAtom2 = indicatedHydrogen.get(1);
-				neighbours = indicatedAtom2.getAtomNeighbours();
-				for (Atom neighbour : neighbours) {
-					if (neighbour.hasSpareValency()){
-						List<Atom> neighbours2 = neighbour.getAtomNeighbours();
-						for (Atom secondNeighbour : neighbours2) {
-							if (secondNeighbour==indicatedAtom2){
-								continue;
-							}
-							if (secondNeighbour.hasSpareValency() && secondNeighbour.getElement().equals("N")){
-								indicatedAtom2.setSpareValency(false);
-							}
-						}
+				else{
+					for (Atom indicatedAtom : indicatedHydrogen) {
+						indicatedAtom.setSpareValency(false);
 					}
 				}
-				indicatedHydrogen.clear();
 			}
 			else{
 				atomToReduceValencyAt = indicatedHydrogen.get(0);
