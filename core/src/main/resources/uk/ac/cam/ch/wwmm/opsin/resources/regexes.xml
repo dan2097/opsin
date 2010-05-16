@@ -102,14 +102,15 @@ does not define a CFG.
   <regex name="%perhydro%" value="ú"/>
   <regex name="%chalcogenAcid%" value="ñ"/>
   <regex name="%ylamine%" value="Ñ"/>
-  <!--up to ascii 164 used -->
+  <regex name="%lightRotation%" value="ª"/>
+  <!--up to ascii 166 used -->
 
 <!-- composite regexes-->
 
 <!-- UsefulTerms-->
   <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
-  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locantGroup%?%cisOrTrans%)(%comma%%locantGroup%?%cisOrTrans%)*)%hyphen%?)"/>
+  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locantGroup%?%cisOrTrans%)(%comma%%locantGroup%?%cisOrTrans%)*|%lightRotation%)%hyphen%?)"/>
   <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locantGroup%?)"/>
   <regex name="%optLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->

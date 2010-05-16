@@ -72,6 +72,7 @@
   <regexToken regex="%locant%(,%locant%)(:%locant%(,%locant%))*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
   <regexToken regex="" symbol="£" tagname="suffix" value="ic" type="root" subType="terminal"/>
   <regexToken regex="[oO]" symbol="₧" tagname="suffix" value="yl" type="inline"/>
+  <regexToken regex="%openBracket%([+\-]|+-|-+)%closeBracket%" symbol="ª" tagname="lightRotation" ignoreWhenWritingXML="yes" determinise="yes"/>
 
   <regexToken regex="" symbol="é" tagname="endOfSubstituent" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="" symbol="â" tagname="endOfMainGroup" ignoreWhenWritingXML="yes" determinise="yes"/>
