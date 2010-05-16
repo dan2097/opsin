@@ -435,19 +435,59 @@ class FragmentTools {
 			}
 		}
 
-		int svCount = 0;
-		for(Atom a : atomCollection) {
-			svCount += a.hasSpareValency() ? 1 :0;
-		}
-
 		/*
 		 Reduce valency of atoms which cannot possibly have any of their bonds converted to double bonds
 		 pick an atom which definitely does have spare valency to be the indicated hydrogen.
 		*/
 		Atom atomToReduceValencyAt =null;
 		List<Atom> indicatedHydrogen = frag.getIndicatedHydrogen();
+		for (int i = indicatedHydrogen.size() -1; i >=0; i--) {
+			if (!indicatedHydrogen.get(i).hasSpareValency()){
+				indicatedHydrogen.remove(i);
+			}
+		}
 		if (indicatedHydrogen.size()>0){
-			atomToReduceValencyAt = indicatedHydrogen.get(0);
+			if (indicatedHydrogen.size()==2){
+				Atom indicatedAtom1 = indicatedHydrogen.get(0);
+				List<Atom> neighbours = indicatedAtom1.getAtomNeighbours();
+				for (Atom neighbour : neighbours) {
+					if (neighbour.hasSpareValency()){
+						List<Atom> neighbours2 = neighbour.getAtomNeighbours();
+						for (Atom secondNeighbour : neighbours2) {
+							if (secondNeighbour==indicatedAtom1){
+								continue;
+							}
+							if (secondNeighbour.hasSpareValency() && secondNeighbour.getElement().equals("N")){
+								indicatedAtom1.setSpareValency(false);
+							}
+						}
+					}
+				}
+				Atom indicatedAtom2 = indicatedHydrogen.get(1);
+				neighbours = indicatedAtom2.getAtomNeighbours();
+				for (Atom neighbour : neighbours) {
+					if (neighbour.hasSpareValency()){
+						List<Atom> neighbours2 = neighbour.getAtomNeighbours();
+						for (Atom secondNeighbour : neighbours2) {
+							if (secondNeighbour==indicatedAtom2){
+								continue;
+							}
+							if (secondNeighbour.hasSpareValency() && secondNeighbour.getElement().equals("N")){
+								indicatedAtom2.setSpareValency(false);
+							}
+						}
+					}
+				}
+				indicatedHydrogen.clear();
+			}
+			else{
+				atomToReduceValencyAt = indicatedHydrogen.get(0);
+			}
+		}
+		
+		int svCount = 0;
+		for(Atom a : atomCollection) {
+			svCount += a.hasSpareValency() ? 1 :0;
 		}
 
 		if((svCount % 2) == 1) {
