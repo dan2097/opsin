@@ -1103,20 +1103,20 @@ class PreStructureBuilder {
 		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
 
 		boolean imideSpecialCase =false;
-		if (group.getAttribute("suffixAppliesTo")!=null){//trivial polyAcid or aminoAcid
+		if (group.getAttribute("suffixAppliesTo")!=null){//typically a trivial polyAcid or aminoAcid
 			//attribute contains instructions for number/positions of suffix
 			//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 			Element suffix =OpsinTools.getNextNonChargeSuffix(group);
 			if (suffix ==null){
 				throw new PostProcessingException("No suffix where suffix was expected");
 			}
-			if (suffixes.size()>1 && !group.getAttributeValue(TYPE_ATR).equals("aminoAcid")){
+			if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
 				throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
 			}
-			String suffixInstruction =group.getAttributeValue("suffixAppliesTo");
+			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
 			String[] suffixInstructions = matchComma.split(suffixInstruction);
 			boolean symmetricSuffixes =true;
-			if (suffix.getAttribute("additionalValue")!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
+			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
 				if (suffixInstructions.length != 2){
 					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
@@ -1127,7 +1127,9 @@ class PreStructureBuilder {
 			}
 
 			int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
-			suffix.addAttribute(new Attribute("locantID", Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
+			if (suffix.getAttribute(LOCANT_ATR)==null){
+				suffix.addAttribute(new Attribute("locantID", Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
+			}
 			for (int i = 1; i < suffixInstructions.length; i++) {
 				Element newSuffix = new Element("suffix");
 				if (symmetricSuffixes){

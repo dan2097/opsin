@@ -14,9 +14,9 @@
       <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">bornyl</token>
     <token value="C12CC3CCC1C2(C)C.C3" valType="SMILES">car</token>
     <!--it's quicker to write out all forms of this than create a special case for menthane to allow things like 1-p-menthene-->
-    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">menth</token>
-    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">p-menth</token>
-    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" defaultInLocant="3">para-menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" suffixAppliesTo="3">menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" suffixAppliesTo="3">p-menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" suffixAppliesTo="3">para-menth</token>
     <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">m-menth</token>
     <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">meta-menth</token>
     <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">o-menth</token>

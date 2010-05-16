@@ -136,6 +136,9 @@ public final class StringTools {
             case '\u03c8': return "psi";
             case '\u03c9': return "omega";
 
+            case '\u00B1': return "+-";//plus minus symbol
+            case '\u2213': return "-+";
+         
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
             case '\u201B': return "'";
