@@ -444,53 +444,53 @@ class FragmentTools {
 		 Reduce valency of atoms which cannot possibly have any of their bonds converted to double bonds
 		 pick an atom which definitely does have spare valency to be the indicated hydrogen.
 		*/
-//		List<Atom> indicatedHydrogen = frag.getIndicatedHydrogen();
-//		for (Atom atom : indicatedHydrogen) {
-//			if (atom.hasSpareValency()){
-//				atom.setSpareValency(false);
-//			}
-//		}
+		Atom atomToReduceValencyAt =null;
+		List<Atom> indicatedHydrogen = frag.getIndicatedHydrogen();
+		if (indicatedHydrogen.size()>0){
+			atomToReduceValencyAt = indicatedHydrogen.get(0);
+		}
 
 		if((svCount % 2) == 1) {
-			Atom atomToReduceValencyAt =null;
-			for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
-				if(a.hasSpareValency()) {
-					int atomsWithSV =0;
-					for(Atom aa : frag.getIntraFragmentAtomNeighbours(a)) {
-						if(aa.hasSpareValency()) {
-							atomsWithSV++;
-						}
-					}
-					if (atomsWithSV==1){
-						atomToReduceValencyAt=a;
-						break;
-					}
-				}
-			}
-			if (atomToReduceValencyAt==null){
-				atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine
+			if (atomToReduceValencyAt ==null){
+				for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
 					if(a.hasSpareValency()) {
-						List<Atom> neighbours =frag.getIntraFragmentAtomNeighbours(a);
-						if (neighbours.size()==2){
-							for(Atom aa : neighbours) {
-								if(frag.getIntraFragmentAtomNeighbours(aa).size() < 3){
-									continue atomLoop;
-								}
+						int atomsWithSV =0;
+						for(Atom aa : frag.getIntraFragmentAtomNeighbours(a)) {
+							if(aa.hasSpareValency()) {
+								atomsWithSV++;
 							}
+						}
+						if (atomsWithSV==1){
 							atomToReduceValencyAt=a;
 							break;
 						}
 					}
 				}
-				if (atomToReduceValencyAt==null){//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
-					for(Atom a : atomCollection) {
+				if (atomToReduceValencyAt==null){
+					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine
 						if(a.hasSpareValency()) {
-							if (atomToReduceValencyAt==null){
-								atomToReduceValencyAt=a;//else just go with the first atom with SV encountered
-							}
-							if (!a.getElement().equals("C")){
+							List<Atom> neighbours =frag.getIntraFragmentAtomNeighbours(a);
+							if (neighbours.size()==2){
+								for(Atom aa : neighbours) {
+									if(frag.getIntraFragmentAtomNeighbours(aa).size() < 3){
+										continue atomLoop;
+									}
+								}
 								atomToReduceValencyAt=a;
 								break;
+							}
+						}
+					}
+					if (atomToReduceValencyAt==null){//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
+						for(Atom a : atomCollection) {
+							if(a.hasSpareValency()) {
+								if (atomToReduceValencyAt==null){
+									atomToReduceValencyAt=a;//else just go with the first atom with SV encountered
+								}
+								if (!a.getElement().equals("C")){
+									atomToReduceValencyAt=a;
+									break;
+								}
 							}
 						}
 					}

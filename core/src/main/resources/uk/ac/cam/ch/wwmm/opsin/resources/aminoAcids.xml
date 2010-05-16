@@ -18,7 +18,7 @@
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1//" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">isoglutam</token>
     <token labels="/2,alpha/1" valType="SMILES" value="NCC" suffixAppliesTo="3">glyc</token>
-    <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@@H](Cc1cncn1)C" suffixAppliesTo="9">histid</token>
+    <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@@H](Cc1c[nH]cn1)C" suffixAppliesTo="9">histid</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H]([C@@H](C)CC)C" suffixAppliesTo="7">isoleuc</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H]([C@H](C)CC)C" suffixAppliesTo="7">alloisoleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma/5',delta'/5,delta/1" valType="SMILES" value="N[C@@H](CC(C)C)C" suffixAppliesTo="7">leuc</token>
@@ -56,7 +56,7 @@
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[SeH])C" suffixAppliesTo="5">l-selenocyste</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">l-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1//" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">l-isoglutam</token>
-    <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@@H](Cc1cncn1)C" suffixAppliesTo="9">l-histid</token>
+    <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@@H](Cc1c[nH]cn1)C" suffixAppliesTo="9">l-histid</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H]([C@@H](C)CC)C" suffixAppliesTo="7">l-isoleuc</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H]([C@H](C)CC)C" suffixAppliesTo="7">l-alloisoleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma/5',delta'/5,delta/1" valType="SMILES" value="N[C@@H](CC(C)C)C" suffixAppliesTo="7">l-leuc</token>
@@ -91,7 +91,7 @@
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@H](C[SeH])C" suffixAppliesTo="5">d-selenocyste</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@H](CCC(N)=O)C" suffixAppliesTo="8">d-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1//" valType="SMILES" value="N[C@H](CCC)C(N)=O" suffixAppliesTo="5">d-isoglutam</token>
-    <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@H](Cc1cncn1)C" suffixAppliesTo="9">d-histid</token>
+    <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@H](Cc1c[nH]cn1)C" suffixAppliesTo="9">d-histid</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@H]([C@H](C)CC)C" suffixAppliesTo="7">d-isoleuc</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@H]([C@@H](C)CC)C" suffixAppliesTo="7">d-alloisoleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma/5',delta'/5,delta/1" valType="SMILES" value="N[C@H](CC(C)C)C" suffixAppliesTo="7">d-leuc</token>
@@ -121,9 +121,9 @@
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="è" ><!--why isn't this tryptophine!!!!-->
-    <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](Cc1cnc2ccccc12)C" suffixAppliesTo="13">tryptoph</token>
-    <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](Cc1cnc2ccccc12)C" suffixAppliesTo="13">l-tryptoph</token>
-    <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@H](Cc1cnc2ccccc12)C" suffixAppliesTo="13">d-tryptoph</token>
+    <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](Cc1c[nH]c2ccccc12)C" suffixAppliesTo="13">tryptoph</token>
+    <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](Cc1c[nH]c2ccccc12)C" suffixAppliesTo="13">l-tryptoph</token>
+    <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@H](Cc1c[nH]c2ccccc12)C" suffixAppliesTo="13">d-tryptoph</token>
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ï" >

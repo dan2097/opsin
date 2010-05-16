@@ -690,9 +690,15 @@ class SMILESFragmentBuilder {
 		int absoluteCharge =Math.abs(charge);
 		String element =atom.getElement();
 		if (atom.hasSpareValency()){
-			Integer hwValency = ValencyChecker.getHWValency(atom.getElement());
-			if (hwValency == null){
-				throw new StructureBuildingException(atom.getElement() +" is not expected to be aromatic!");
+			Integer hwValency;
+			if (element.equals("C")){
+				hwValency =4;
+			}
+			else{
+				hwValency = ValencyChecker.getHWValency(element);
+				if (hwValency == null){
+					throw new StructureBuildingException(element +" is not expected to be aromatic!");
+				}
 			}
 			if (incomingValency < (hwValency + absoluteCharge)){
 				incomingValency++;

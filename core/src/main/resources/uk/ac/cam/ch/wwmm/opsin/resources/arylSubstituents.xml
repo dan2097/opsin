@@ -60,43 +60,43 @@ the contracted form is allowed for all ring systems-->
   <token value="phenarsazine" valType="dbkey">phenarsaz</token>
   <token value="phenazine" valType="dbkey">phenaz</token>
   <token value="CCc1ccccc1" labels="alpha/beta/1/2/3/4/5/6" valType="SMILES">pheneth</token>
-  <token value="c1cccc2oc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaz</token>
-  <token value="c1cccc2sc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiaz</token>
-  <token value="c1cccc2[se]c3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoselenaz</token>
-  <token value="c1cccc2[te]c3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenotelluraz</token>
+  <token value="c1cccc2oc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaz</token>
+  <token value="c1cccc2sc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiaz</token>
+  <token value="c1cccc2[se]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoselenaz</token>
+  <token value="c1cccc2[te]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenotelluraz</token>
   <token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenophosphaz</token>
   <token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoarsaz</token>
-  <token value="c1cccc2nc3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercuraz</token>
-  <token value="c1cccc2nc3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercaz</token>
+  <token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercuraz</token>
+  <token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercaz</token>
   <token value="c1cccc2oc3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaselen</token>
   <token value="c1cccc2oc3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxatellur</token>
-  <token value="c1cccc2oc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaphosph</token>
-  <token value="c1cccc2oc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxars</token>
-  <token value="c1cccc2oc3ccccc3[sb]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxastibin</token>
-  <token value="c1cccc2oc3ccccc3[sb]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxantimon</token>
-  <token value="c1cccc2sc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiars</token>
+  <token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaphosph</token>
+  <token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxars</token>
+  <token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxastibin</token>
+  <token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxantimon</token>
+  <token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiars</token>
   <token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phosphanthr</token>
   <token value="c1cccc2ccc3c4ccc5ccccc5c4ccc3c21" labels="1/2/3/4/4a/5/6/6a/6b/7/8/8a/9/10/11/12/12a/12b/13/14/14a/14b" valType="SMILES">pic</token>
   <token value="piperazine" valType="dbkey">piperaz</token>
   <token value="piperidine" valType="dbkey" frontLocantsExpected="1,2,3,4">piperid</token>
   <token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiad</token>
   <token value="pteridine" valType="dbkey">pterid</token>
-  <token value="n1cnc2ncnc2c1" labels="1/2/3/4/9/8/7/5/6" valType="SMILES">pur</token>
-  <token value="o1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">pyr</token>
-  <token value="s1ccccc1" valType="SMILES">thiopyr</token>
-  <token value="[se]1ccccc1" valType="SMILES">selenopyr</token>
-  <token value="[te]1ccccc1" valType="SMILES">telluropyr</token>
+  <token value="n1cnc2nc[nH]c2c1" labels="1/2/3/4/9/8/7/5/6" valType="SMILES">pur</token>
+  <token value="o1[cH2]cccc1" labels="1/2/3/4/5/6" valType="SMILES">pyr</token>
+  <token value="s1[cH2]cccc1" valType="SMILES">thiopyr</token>
+  <token value="[se]1[cH2]cccc1" valType="SMILES">selenopyr</token>
+  <token value="[te]1[cH2]cccc1" valType="SMILES">telluropyr</token>
   <token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/15b/15c/15d/15e">pyranthr</token>
   <token value="N1NCCC1" valType="SMILES">pyrazolid</token>
   <token value="pyridazine" valType="dbkey">pyridaz</token>
   <token value="pyridine" valType="dbkey" frontLocantsExpected="2,3,4">pyrid</token>
   <token value="pyrimidine" valType="dbkey">pyrimid</token>
   <token value="pyrrole" valType="dbkey">pyrr</token>
-  <token value="c1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrroliz</token>
+  <token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrroliz</token>
   <token value="pyrrolidine" valType="dbkey">pyrrolid</token>
   <token value="quinazoline" valType="dbkey">quinazol</token>
   <token value="quinoline" valType="dbkey" frontLocantsExpected="2,3,4,5,6,7,8">quinol</token>
-  <token value="c1cccn2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinoliz</token>
+  <token value="c1cc[cH2]n2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinoliz</token>
   <token value="quinoxaline" valType="dbkey">quinoxal</token>
   <token value="N1(CCC2CC1)CC2" labels="1/2/3/4/5/6/7/8" valType="SMILES">quinuclid</token>
   <token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubic</token>
@@ -114,9 +114,9 @@ the contracted form is allowed for all ring systems-->
   <token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">thien</token>
   <token value="toluene" valType="dbkey" frontLocantsExpected="2,3,4">tolu</token>
   <token value="toluene" valType="dbkey" frontLocantsExpected="2,3,4">tol</token>
-  <token value="c1cccc2oc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">xanth</token>
-  <token value="c1cccc2sc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">thioxanth</token>
-  <token value="c1cccc2[se]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">selenoxanth</token>
-  <token value="c1cccc2[te]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">telluroxanth</token>
+  <token value="c1cccc2oc3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">xanth</token>
+  <token value="c1cccc2sc3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">thioxanth</token>
+  <token value="c1cccc2[se]c3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">selenoxanth</token>
+  <token value="c1cccc2[te]c3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">telluroxanth</token>
   <token value="benzene" valType="dbkey" addGroup="C locant1;C locant2">xyl</token>
 </tokenList>
