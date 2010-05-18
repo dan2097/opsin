@@ -57,6 +57,7 @@
   <token value="S(=O)c1ccccc1" labels="//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4">sulfanil</token>
   <token value="CC(O)C(O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">tartar</token>
   <token value="CC(O)C" suffixAppliesTo="1,4" labels="none" valType="SMILES">tartron</token>
+  <token value="CCS" labels="1/2/" valType="SMILES">thioglycol</token>
   <token value="CC(CO)c1ccccc1" labels="////1/2/3/4/5/6" valType="SMILES">trop</token>
   <token value="Cc1cc(OC)c(O)cc1" labels="/1/2/3///4//5/6" valType="SMILES">vanill</token>
   <token value="Cc1cc(OC)c(OC)cc1" labels="/1/2/3///4///5/6" valType="SMILES">veratr</token>

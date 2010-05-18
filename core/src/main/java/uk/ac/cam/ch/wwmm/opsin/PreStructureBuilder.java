@@ -101,6 +101,7 @@ class PreStructureBuilder {
 
 		specialHWRings.put("oxoxolan", new String[]{"","O","C","O","C","C"});
 		specialHWRings.put("oxoxan", new String[]{"","O","C","C","O","C","C"});
+		specialHWRings.put("oxoxin", new String[]{"","O","C","C","O","C","C"});
 
 		specialHWRings.put("boroxin", new String[]{"saturated","O","B","O","B","O","B"});
 		specialHWRings.put("borazin", new String[]{"saturated","N","B","N","B","N","B"});
