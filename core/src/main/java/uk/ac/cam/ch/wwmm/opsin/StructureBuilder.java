@@ -168,31 +168,38 @@ class StructureBuilder {
 			throw new StructureBuildingException("Full word not found where full word expected: missing ate group in ester");
 		}
 
-		BuildResults ateGroups = new BuildResults();
+		List<BuildResults> ateGroups = new ArrayList<BuildResults>();
 		for (; wordIndice < words.size(); wordIndice++) {
 			Element word =words.get(wordIndice);
 			if (word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 				resolveWordOrBracket(state, word);
 				BuildResults ateBR = new BuildResults(state, word);
-				ateGroups.mergeBuildResults(ateBR);
+				if (ateBR.getFunctionalAtomCount()<1){
+					throw new StructureBuildingException("bug? ate group did not have any functional atoms!");
+				}
+				ateGroups.add(ateBR);
 			}
 			else{
 				throw new StructureBuildingException("Non full word found where only full words were expected");
 			}
 		}
-		int esterIdCount = ateGroups.getFunctionalAtomCount();
 		int outAtomCount =substituentsBr.getOutAtomCount();
+		int esterIdCount = 0;
+		for (BuildResults br : ateGroups) {
+			esterIdCount += br.getFunctionalAtomCount();
+		}
 		if (outAtomCount > esterIdCount){
 			throw new StructureBuildingException("There are more radicals in the substituents(" + outAtomCount +") than there are places to form esters("+esterIdCount+")");
 		}
 		for(int i=0; i< outAtomCount; i++) {
+			BuildResults ateBr = ateGroups.get(i % ateGroups.size());
 			Atom ateAtom;
 			if (substituentsBr.getFirstOutAtom().getLocant()!=null){
-				ateAtom =determineFunctionalAtomToUse(substituentsBr.getFirstOutAtom().getLocant(), ateGroups);
+				ateAtom =determineFunctionalAtomToUse(substituentsBr.getFirstOutAtom().getLocant(), ateBr);
 			}
 			else{
-				ateAtom =ateGroups.getFunctionalAtom(0);
-				ateGroups.removeFunctionalAtom(0);
+				ateAtom =ateBr.getFunctionalAtom(0);
+				ateBr.removeFunctionalAtom(0);
 			}
 			state.fragManager.createBond(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
 			substituentsBr.removeOutAtom(0);
