@@ -5,55 +5,102 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class FragmentTools {
-	/**
-	 * Sorts a list of atoms such that their order agrees with the order symbolic locants are typically assigned
-	 * @author dl387
-	 *
-	 */
-	static class SortAtomsForElementSymbols implements Comparator<Atom> {
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
-	    public int compare(Atom a, Atom b){
-	    	int compare =a.getElement().compareTo(b.getElement());
-	    	if (compare !=0){//only bother comparing properly if elements are the same
-	    		return compare;
-	    	}
+/**
+ * Sorts a list of atoms such that their order agrees with the order symbolic locants are typically assigned
+ * 
+ * Preferred atoms are sorted to the START of the list
+ * @author dl387
+ *
+ */
+class SortAtomsForElementSymbols implements Comparator<Atom> {
 
-	    	if (a.getBonds().size() >b.getBonds().size()){//less bonds is preferred
-	    		return 1;
-	    	}
-	    	if (a.getBonds().size() <b.getBonds().size()){
-	    		return -1;
-	    	}
-
-	    	int aTotalBondOrder =0;
-	    	for (Bond bonda : a.getBonds()) {
-				aTotalBondOrder +=bonda.getOrder();
-			}
-
-	    	int bTotalBondOrder =0;
-	    	for (Bond bondb : b.getBonds()) {
-				bTotalBondOrder +=bondb.getOrder();
-			}
-
-	    	aTotalBondOrder +=a.getOutValency();//take into account the bond/s which hasn't been added yet which will go to a main fragment
-	    	bTotalBondOrder +=b.getOutValency();//take into account the bond/s which hasn't been added yet which will go to a main fragment
-
-	    	if (aTotalBondOrder >bTotalBondOrder){//lower order bonds are preferred
-	    		return 1;
-	    	}
-	    	if (aTotalBondOrder <bTotalBondOrder){
-	    		return -1;
-	    	}
-
-	    	return 0;
-	    }
+	final Map<Atom, Bond> atomToPreviousBondMap;
+    public SortAtomsForElementSymbols(Map<Atom, Bond> atomToPreviousBondMap) {
+    	this.atomToPreviousBondMap = atomToPreviousBondMap;
 	}
+
+	public int compare(Atom a, Atom b){
+    	int compare =a.getElement().compareTo(b.getElement());
+    	if (compare !=0){//only bother comparing properly if elements are the same
+    		return compare;
+    	}
+
+    	Bond bondA = atomToPreviousBondMap.get(a);
+    	Bond bondB = atomToPreviousBondMap.get(b);
+    	if (bondA.getOrder() > bondB.getOrder()){//lower order bond is preferred
+    		return 1;
+    	}
+    	if (bondA.getOrder() < bondB.getOrder()){
+    		return -1;
+    	}
+    	
+    	if (a.getOutValency() > b.getOutValency()){//prefer atoms with outValency
+    		return -1;
+    	}
+    	if (a.getOutValency() < b.getOutValency()){
+    		return 1;
+    	}
+
+    	int expectedHydrogenA = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a);
+    	int expectedHydrogenB = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(b);
+    	
+    	
+    	if (expectedHydrogenA > expectedHydrogenB){//prefer atoms with more hydrogen
+    		return -1;
+    	}
+    	if (expectedHydrogenA < expectedHydrogenA){
+    		return 1;
+    	}
+    	return 0;
+    }
+}
+
+/**
+ * Performs a very crude sort of atoms such that those that are more likely to be substitued are preferred for low locants
+ * Preferred atoms are sorted to the START of the list
+ * @author dl387
+ *
+ */
+class SortAtomsForMainGroupElementSymbols implements Comparator<Atom> {
+
+    public int compare(Atom a, Atom b){
+    	int compare =a.getElement().compareTo(b.getElement());
+    	if (compare !=0){//only bother comparing properly if elements are the same
+    		return compare;
+    	}
+
+    	int aExpectedHydrogen = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a);
+    	int bExpectedHydrogen =StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(b);
+    	if (aExpectedHydrogen >0 &&  bExpectedHydrogen ==0){//having substitutable hydrogen preferred
+    		return -1;
+    	}
+    	if (aExpectedHydrogen ==0 && bExpectedHydrogen >0){
+    		return 1;
+    	}
+    	List<String> locantsA = a.getLocants();
+    	List<String> locantsB = b.getLocants();
+    	if (locantsA.size() ==0 &&  locantsB.size() >0){//having no locants preferred
+    		return -1;
+    	}
+    	if (locantsA.size() >0 &&  locantsB.size() ==0){
+    		return 1;
+    	}
+    	return 0;
+    }
+}
+
+class FragmentTools {
+	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
+	
 	/**
 	 * Sorts by number, then by letter e.g. 4,3,3b,5,3a,2 -->2,3,3a,3b,4,5
 	 * @author dl387
@@ -127,11 +174,13 @@ class FragmentTools {
 	 * HeteroAtoms in acidStems connected to the first Atom of the fragment are treated as if they were suffix atoms
 	 * @param suffixableFragment
 	 * @param suffixFragments
+	 * @throws StructureBuildingException 
 	 */
-	static void assignElementLocants(Fragment suffixableFragment, ArrayList<Fragment> suffixFragments) {
+	static void assignElementLocants(Fragment suffixableFragment, List<Fragment> suffixFragments) throws StructureBuildingException {
+		
 		HashMap<String,Integer> elementCount =new HashMap<String,Integer>();//keeps track of how many times each element has been seen
-
 		HashSet<Atom> atomsToIgnore = new HashSet<Atom>();//atoms which already have a symbolic locant
+		
 		ArrayList<Fragment> allFragments =new ArrayList<Fragment>(suffixFragments);
 		allFragments.add(suffixableFragment);
 		/*
@@ -154,42 +203,87 @@ class FragmentTools {
 				}
 			}
 		}
-
-		for (Fragment fragment : suffixFragments) {
+		
+		HashSet<String> elementToIgnore = new HashSet<String>();
+		for (String element : elementCount.keySet()) {
+			elementToIgnore.add(element);
+		}
+		for (Fragment fragment : allFragments) {
 			List<Atom> atomList =fragment.getAtomList();
-
-			/*
-			 * Sort them by empirical rules to agree with IUPAC numbering e.g. single bonded atoms are preffered to doubled bonded atoms
-			 */
-			Collections.sort(atomList, new SortAtomsForElementSymbols());
-			for (Atom atom : atomList) {//add the locants
-				if (atomsToIgnore.contains(atom)){continue;}
-				String element =atom.getElement();
-				if (elementCount.get(element)==null){
-					atom.addLocant(element);
-					elementCount.put(element,1);
-				}
-				else{
-					int count =elementCount.get(element);
-					atom.addLocant(element + StringTools.multiplyString("'", count));
-					elementCount.put(element, count +1);
+			for (Atom atom : atomList) {
+				if (elementToIgnore.contains(atom.getElement())){
+					atomsToIgnore.add(atom);
 				}
 			}
 		}
-		HashSet<String> elementToIgnore = new HashSet<String>(elementCount.keySet());
-		elementCount =new HashMap<String,Integer>();
+		
+		
+		String fragType = suffixableFragment.getType();
+		if (fragType.equals(NONCARBOXYLICACID_TYPE_VAL) || fragType.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+			if (suffixFragments.size()!=0){
+				throw new StructureBuildingException("No suffix fragments were expected to be present on non carboxylic acid");
+			}
+			processNonCarboxylicAcidLabelling(suffixableFragment, elementCount, atomsToIgnore);
+		}
+		else{
+			if (suffixFragments.size()>0){
+				processSuffixLabelling(suffixFragments, elementCount, atomsToIgnore);
+				if (elementCount.get("N")!=null &&  elementCount.get("N")>1){//look for special case violation of IUPAC rule, =(N)=(NN) is N//N' in practice rather than N/N'/N''
+					//this method will put both locants on the N with substituable hydrogen
+					detectAndCorrectHydrazoneDerivativeViolation(suffixFragments);
+				}
+			}
+			processMainGroupLabelling(suffixableFragment, elementCount, atomsToIgnore);
+		}
+	}
+
+
+	private static void detectAndCorrectHydrazoneDerivativeViolation(List<Fragment> suffixFragments) throws StructureBuildingException {
+		fragmentLoop: for (Fragment suffixFrag : suffixFragments) {
+			List<Atom> atomList = suffixFrag.getAtomList();
+			for (Atom atom : atomList) {
+				if (atom.getElement().equals("N") && atom.getIncomingValency() ==3 ){
+					List<String> locants =atom.getLocants();
+					if (locants.size()==1 && matchElementSymbolLocant.matcher(locants.get(0)).matches()){
+						List<Atom> neighbours = atom.getAtomNeighbours();
+						for (Atom neighbour : neighbours) {
+							if (neighbour.getElement().equals("N") && neighbour.getIncomingValency()==1){
+								neighbour.addLocant(locants.get(0));
+								atom.clearLocants();
+								continue fragmentLoop;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	private static void processMainGroupLabelling(Fragment suffixableFragment, HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore) {
+		HashSet<String> elementToIgnore = new HashSet<String>();
+		for (String element : elementCount.keySet()) {
+			elementToIgnore.add(element);
+		}
 		List<Atom> atomList =suffixableFragment.getAtomList();
-		Atom atomToAddCLabelTo=null;//only add a C label if there is only one C in the main group
+		Collections.sort(atomList, new SortAtomsForMainGroupElementSymbols());
+		Atom atomToAddCLabelTo = null;//only add a C label if there is only one C in the main group
+		boolean seenMoreThanOneC = false;
 		for (Atom atom : atomList) {
-			if (atomsToIgnore.contains(atom)){continue;}
+			if (atomsToIgnore.contains(atom)){
+				continue;
+			}
 			String element =atom.getElement();
 			if (elementToIgnore.contains(element)){
 				continue;
 			}
 			if (element.equals("C")){
+				if (seenMoreThanOneC){
+					continue;
+				}
 				if (atomToAddCLabelTo !=null){
-					elementToIgnore.add("C");
-					atomToAddCLabelTo=null;
+					atomToAddCLabelTo = null;
+					seenMoreThanOneC =true;
 				}
 				else{
 					atomToAddCLabelTo =atom;
@@ -210,7 +304,84 @@ class FragmentTools {
 			atomToAddCLabelTo.addLocant("C");
 		}
 	}
-	
+
+
+	private static void processSuffixLabelling(List<Fragment> suffixFragments, HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
+		LinkedList<Atom> startingAtoms = new LinkedList<Atom>();
+		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
+		Set<Atom> atomsVisited = new HashSet<Atom>();
+		for (Fragment fragment : suffixFragments) {
+			List<Atom> suffixAtomList =fragment.getAtomList();
+			Atom rAtom = suffixAtomList.get(0);
+			LinkedList<Atom> nextAtoms = new LinkedList<Atom>(rAtom.getAtomNeighbours());
+			for (Atom nextAtom : nextAtoms) {
+				atomsVisited.add(nextAtom);
+				atomPreviousBondMap.put(nextAtom, fragment.findBondOrThrow(rAtom, nextAtom));
+			}
+			startingAtoms.addAll(nextAtoms);
+		}
+		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+
+		while (startingAtoms.size() > 0){
+			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, startingAtoms);
+		}
+	}
+
+
+	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, HashMap<String, Integer> elementCount,HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
+		Set<Atom> atomsVisited = new HashSet<Atom>();
+		List<Atom> atomList =suffixableFragment.getAtomList();
+		Atom firstAtom = atomList.get(0);
+		LinkedList<Atom> nextAtoms = new LinkedList<Atom>(firstAtom.getAtomNeighbours());
+		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
+		for (Atom nextAtom : nextAtoms) {
+			atomPreviousBondMap.put(nextAtom, suffixableFragment.findBondOrThrow(firstAtom, nextAtom));
+		}
+		Collections.sort(nextAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		atomsVisited.add(firstAtom);
+		while (nextAtoms.size() > 0){
+			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, nextAtoms);
+		}
+		if (!atomsToIgnore.contains(firstAtom) && firstAtom.getElement().equals("C") && ValencyChecker.checkValencyAvailableForBond(firstAtom, 1)){//e.g. carbonimidoyl
+			assignLocant(firstAtom, elementCount);
+		}
+	}
+
+
+	private static void assignLocantsAndExploreNeighbours(HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore, Set<Atom> atomsVisited, LinkedList<Atom> nextAtoms) throws StructureBuildingException {
+		Atom atom = nextAtoms.removeFirst();
+		atomsVisited.add(atom);
+		if (!atomsToIgnore.contains(atom)){//assign locant
+			assignLocant(atom, elementCount);
+		}
+		List<Atom> atomNeighbours = atom.getAtomNeighbours();
+		for (int i = atomNeighbours.size() -1; i >=0; i--) {
+			if (atomsVisited.contains(atomNeighbours.get(i))){
+				atomNeighbours.remove(i);
+			}
+		}
+		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
+		for (Atom atomNeighbour : atomNeighbours) {
+			atomPreviousBondMap.put(atomNeighbour, atom.getFrag().findBondOrThrow(atom, atomNeighbour));
+		}
+		Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		nextAtoms.addAll(0, atomNeighbours);
+	}
+
+
+	private static void assignLocant(Atom atom, HashMap<String, Integer> elementCount) {
+		String element =atom.getElement();
+		if (elementCount.get(element)==null){
+			atom.addLocant(element);
+			elementCount.put(element,1);
+		}
+		else{
+			int count =elementCount.get(element);
+			atom.addLocant(element + StringTools.multiplyString("'", count));
+			elementCount.put(element, count +1);
+		}
+	}
+
 
 	/** Adjusts the order of a bond in a fragment.
 	 *

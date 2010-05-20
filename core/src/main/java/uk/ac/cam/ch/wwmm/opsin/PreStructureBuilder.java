@@ -1473,13 +1473,14 @@ class PreStructureBuilder {
 	 */
 	private void processSuffixPrefixes(BuildState state, List<Element> suffixes) throws StructureBuildingException{
 		for (Element suffix : suffixes) {
-			if (suffix.getAttribute("suffixPrefix")!=null){
-				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue("suffixPrefix"), "suffix", "suffix" , "none");
+			if (suffix.getAttribute(SUFFIXPREFIX_ATR)!=null){
+				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue(SUFFIXPREFIX_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 				addFunctionalAtomsToHydroxyGroups(suffixPrefixFrag);
 				if (suffix.getValue().endsWith("ate")){
 					chargeHydroxyGroups(suffixPrefixFrag);
 				}
 				Atom firstAtomOfPrefix = suffixPrefixFrag.getFirstAtom();
+				firstAtomOfPrefix.addLocant("X");
 				Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
 				state.fragManager.incorporateFragment(suffixPrefixFrag, suffixFrag);
 				
@@ -2245,11 +2246,12 @@ class PreStructureBuilder {
 	 * Suffixes have preference.
 	 * @param state
 	 * @param subOrRoot
+	 * @throws StructureBuildingException 
 	 */
-	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) {
+	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) throws StructureBuildingException {
 		Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
-		ArrayList<Fragment> suffixFragments =state.xmlSuffixMap.get(lastGroupElementInSubOrRoot);
+		List<Fragment> suffixFragments =state.xmlSuffixMap.get(lastGroupElementInSubOrRoot);
 		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
 		FragmentTools.assignElementLocants(suffixableFragment, suffixFragments);
 	}

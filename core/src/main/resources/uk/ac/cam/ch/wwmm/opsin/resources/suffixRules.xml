@@ -17,7 +17,7 @@ sense of this -->
   </rule>
   <rule value="amidine">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=N)N" functionalIDs="3,3"/>
+    <addgroup SMILES="[*](=N)N" functionalIDs="3,3" labels="/N2/N1"/>
   </rule>
   <rule value="amidium">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>

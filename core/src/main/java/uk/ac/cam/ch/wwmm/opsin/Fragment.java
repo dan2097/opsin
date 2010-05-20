@@ -200,16 +200,19 @@ class Fragment {
 			if (a==null){
 				return null;
 			}
+			//breadth first search from atom "a" terminating at the first atom with appropriate element symbol locant
+			//a queue is not utilised as a check must be done for partial locant matches at each level of depth
 			String elementSymbol = m.group(1);
-			locant = elementSymbol +m.group(2);//the element symbol +primes
-			//depth first search for the atom with this locant terminating whenever a numeric locant is encountered
-			LinkedList<Atom> stack = new LinkedList<Atom>();
-			stack.add(a);
+			String primes = m.group(2);
+			locant = elementSymbol + primes;//the element symbol +primes
+			LinkedList<Atom> currentLevel = new LinkedList<Atom>();
+			currentLevel.add(a);
+			LinkedList<Atom> nextLevel = new LinkedList<Atom>();
 			Set<Atom> atomsVisited =new HashSet<Atom>();
-			Atom partialLocantMatch = null;//if you are looking for N and you find N' if no N can be found the N' will be returned
-			Atom elementTypeMatch = null;//an appropriate atom with no locans can also be returned if no primes are specified
-			while (stack.size() > 0) {
-				Atom currentAtom =stack.removeLast();
+			Atom elementTypeMatch = null;//an appropriate atom with no locants can also be returned if no primes are specified
+			Atom partialLocantMatch = null;//if you are looking for N and you find N' if no N can be found the N' will be returned (looking for N' will not return N'')
+			while (currentLevel.size() > 0) {
+				Atom currentAtom =currentLevel.removeFirst();
 				atomsVisited.add(currentAtom);
 				List<Atom> neighbours = currentAtom.getAtomNeighbours();
 				mainLoop: for (Atom neighbour : neighbours) {
@@ -229,22 +232,26 @@ class Fragment {
 							if (neighbourLocant.equals(locant)){
 								return neighbour;
 							}
-							else{
+							else if (primes.equals("")){
 								partialLocantMatch =neighbour;
 							}
 						}
 					}
-					if (m.group(2).equals("") && neighbour.getElement().equals(elementSymbol)){
+					if (primes.equals("") && neighbour.getElement().equals(elementSymbol) && neighbour.getElementSymbolLocants().size() ==0){
 						elementTypeMatch = neighbour;
 					}
-					stack.add(neighbour);
+					nextLevel.add(neighbour);
 				}
-			}
-			if (partialLocantMatch != null){
-				return partialLocantMatch;
-			}
-			if (elementTypeMatch != null){
-				return elementTypeMatch;
+				if (currentLevel.size()==0){
+					if (elementTypeMatch != null && ValencyChecker.checkValencyAvailableForBond(elementTypeMatch, 1)){
+						return elementTypeMatch;
+					}
+					if (partialLocantMatch != null && ValencyChecker.checkValencyAvailableForBond(partialLocantMatch, 1)){
+						return partialLocantMatch;
+					}
+					currentLevel = nextLevel;
+					nextLevel = new LinkedList<Atom>();
+				}
 			}
 		}
 		return null;
