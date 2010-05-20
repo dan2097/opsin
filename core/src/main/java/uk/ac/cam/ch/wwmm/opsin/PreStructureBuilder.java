@@ -3033,10 +3033,10 @@ class PreStructureBuilder {
 			for (int i = 0; i < conjunctiveFragments.size(); i++) {
 				Fragment conjunctiveFragment = conjunctiveFragments.get(i);
 				if (conjunctiveGroups.get(i).getAttribute(LOCANT_ATR)!=null){
-					state.fragManager.createBond(lastNonSuffixAtomWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
+					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
 				}
 				else{
-					state.fragManager.createBond(lastNonSuffixAtomWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByIdOrNextSuitableAtomOrThrow(ringFrag.getIdOfFirstAtom(), 1) , 1);
+					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByIdOrNextSuitableAtomOrThrow(ringFrag.getIdOfFirstAtom(), 1) , 1);
 				}
 				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);
 			}
@@ -3044,18 +3044,21 @@ class PreStructureBuilder {
 	}
 
 
-	private Atom lastNonSuffixAtomWithSufficientValency(Fragment conjunctiveFragment) throws PostProcessingException {
+	private Atom lastNonSuffixCarbonWithSufficientValency(Fragment conjunctiveFragment) throws PostProcessingException {
 		List<Atom> atomList = conjunctiveFragment.getAtomList();
 		for (int i = atomList.size()-1; i >=0; i--) {
 			Atom a = atomList.get(i);
 			if (a.getType().equals(SUFFIX_TYPE_VAL)){
 				continue;
 			}
+			if (!a.getElement().equals("C")){
+				continue;
+			}
 			if (ValencyChecker.checkValencyAvailableForBond(a, 1)){
 				return a;
 			}
 		}
-		throw new PostProcessingException("OPSIN Bug: Unable to find non suffix atom with sufficient valency");
+		throw new PostProcessingException("OPSIN Bug: Unable to find non suffix carbon with sufficient valency");
 	}
 
 

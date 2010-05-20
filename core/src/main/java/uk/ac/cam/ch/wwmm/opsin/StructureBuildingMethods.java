@@ -1066,8 +1066,12 @@ class StructureBuildingMethods {
 		if (out ==null){
 			if (outAtomCount >=bondOrder){//handles cases like nitrilo needing to be -N= (remove later outAtoms first as per usual)
 				int valency =0;
+				Atom lastOutAtom = fragToBeJoined.getOutAtom(outAtomCount -1).getAtom();
 				for (int i =outAtomCount -1; i >= 0; i--) {
 					OutAtom nextOutAtom = fragToBeJoined.getOutAtom(i);
+					if (nextOutAtom.getAtom() !=lastOutAtom){
+						throw new StructureBuildingException("Additive bond formation failure: bond order disagreement");
+					}
 					valency += nextOutAtom.getValency();
 					if (valency==bondOrder){
 						nextOutAtom.setValency(valency);
