@@ -65,7 +65,8 @@ class PreStructureBuilder {
 	private final Pattern matchSemiColon =Pattern.compile(";");
 	private final Pattern matchComma =Pattern.compile(",");
 	private final Pattern matchSpace =Pattern.compile(" ");
-	private final Pattern matchElementSymbol = Pattern.compile("[A-Z].?");
+	private final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
+	private final Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
 	private final Pattern matchOrtho =Pattern.compile("[oO]");
 	private final Pattern matchMeta =Pattern.compile("[mM]");
 	private final Pattern matchPara =Pattern.compile("[pP]");
@@ -2174,9 +2175,11 @@ class PreStructureBuilder {
 				if (heteroatom.getAttribute("locant") !=null){
 					String locant =heteroatom.getAttributeValue("locant");
 					String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
-					if (elementReplacement.startsWith("[") && elementReplacement.endsWith("]")){
-						elementReplacement=elementReplacement.substring(1, elementReplacement.length()-1);
+					Matcher m = matchElementSymbol.matcher(elementReplacement);
+					if (!m.find()){
+						throw new PostProcessingException("Failed to extract element from HW heteroatom");
 					}
+					elementReplacement = m.group();
 					Atom a =hwRing.getAtomByLocantOrThrow(locant);
 					a.setElement(elementReplacement);
 					if (heteroatom.getAttribute("lambda")!=null){
@@ -2194,9 +2197,11 @@ class PreStructureBuilder {
 			int defaultLocant=1;
 			for(Element heteroatom : prevs){
 				String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
-				if (elementReplacement.startsWith("[") && elementReplacement.endsWith("]")){
-					elementReplacement=elementReplacement.substring(1, elementReplacement.length()-1);
+				Matcher m = matchElementSymbol.matcher(elementReplacement);
+				if (!m.find()){
+					throw new PostProcessingException("Failed to extract element from HW heteroatom");
 				}
+				elementReplacement = m.group();
 
 				while (!hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant)).getElement().equals("C")){
 					defaultLocant++;
@@ -2743,7 +2748,7 @@ class PreStructureBuilder {
 				
 				//Check the right fragment in the bracket:
 				//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
-				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbol.matcher(locantText).find()){
+				if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()){
 					if (checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
 						moveLocants =true;//locant location is present elsewhere
 					}
@@ -2889,7 +2894,7 @@ class PreStructureBuilder {
 						else{//usually indicates the name will fail unless the suffix has the locant or heteroatom replacement will create the locant
 							List<Fragment> suffixes =state.xmlSuffixMap.get(group);
 							//I do not want to assign element locants as in locants on the suffix as I currently know of no examples where this actually occurs
-							if (matchElementSymbol.matcher(locantValue).matches() || locant.getAttribute("compoundLocant")!=null){
+							if (matchElementSymbolOrAminoAcidLocant.matcher(locantValue).matches() || locant.getAttribute("compoundLocant")!=null){
 								continue;
 							}
 							for (Fragment suffix : suffixes) {
