@@ -109,7 +109,7 @@ class StructureBuilder {
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
 		int overallCharge = state.fragManager.getOverallCharge();
-		if (overallCharge!=0){//a net charge is present! Could just mean the counterion has not been specified though
+		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
 			balanceChargeIfPossible(state, molecule, overallCharge);
 		}
 		makeHydrogensExplicit(state);
