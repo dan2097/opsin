@@ -26,7 +26,7 @@
   </tokenList>
 
   <!--This is the set of acids in which oyl denotes an acyl (yl is unparsable)-->
-  <tokenList tagname="group" type="nonCarboxylicAcid" subType="oylForAcyl" symbol="Ö">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="ylForNothing" symbol="Ö">
     <token value="[AsH2](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsin</token>
     <token value="[AsH](O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arson</token>
     <token value="[NH2+](O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes">azin</token>

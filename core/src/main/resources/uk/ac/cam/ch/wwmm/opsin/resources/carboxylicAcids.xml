@@ -1,0 +1,99 @@
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<!-- See the DTD for more details -->
+<tokenLists>
+  <!--This is the set of trivial acids in which yl is added to denote an acyl. Oyl is not recommended but is unambiguous and so is accepted-->
+  <tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">
+    <token value="1" valType="chain" usableAsAJoiner="yes">form</token>
+    <token value="2" valType="chain" usableAsAJoiner="yes">acet</token>
+    <token value="3" valType="chain" usableAsAJoiner="yes">propion</token>
+    <token value="3" valType="chain" usableAsAJoiner="yes">propi</token>
+    <token value="4" valType="chain" usableAsAJoiner="yes">butyr</token>
+    <token value="CC(C)C" valType="SMILES">isobutyr</token>
+    <token value="5" valType="chain" usableAsAJoiner="yes">valer</token>
+    <token value="CCC(C)C" valType="SMILES">isovaler</token>
+    <token value="2" valType="chain" suffixAppliesTo="1,2">oxal</token>
+    <token value="3" valType="chain" suffixAppliesTo="1,3">malon</token>
+    <token value="4" valType="chain" suffixAppliesTo="1,4">succin</token>
+    <token value="5" valType="chain" suffixAppliesTo="1,5">glutar</token>
+
+    <token value="CCC(=O)C" labels="1/2/3//4" defaultInLocant="4" valType="SMILES" usableAsAJoiner="yes">acetoacet</token>
+    <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
+    <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
+  </tokenList>
+
+  <!--This is the set of trivial acids in which yl is used as above but oyl is recommended-->
+  <tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">
+    <token value="CC(C)(C)C" valType="SMILES">pival</token>
+    <token value="6" valType="chain" suffixAppliesTo="1,6">adip</token>
+    <token value="7" valType="chain" suffixAppliesTo="1,7">pimel</token>
+    <token value="8" valType="chain" suffixAppliesTo="1,8">suber</token>
+    <token value="9" valType="chain" suffixAppliesTo="1,9">azela</token>
+    <token value="9" valType="chain" suffixAppliesTo="1,9">azel</token>
+    <token value="10" valType="chain" suffixAppliesTo="1,10">sebac</token>
+    <token value="CC=C" valType="SMILES" usableAsAJoiner="yes">acryl</token>
+    <token value="CC(=C)C" valType="SMILES">methacryl</token>
+    <token value="C/C=C/C" valType="SMILES" usableAsAJoiner="yes">croton</token>
+    <token value="C\C=C/C" valType="SMILES" usableAsAJoiner="yes">isocroton</token>
+    <token value="C/C=C\C" valType="SMILES" suffixAppliesTo="1,4">male</token>
+    <token value="C\C=C\C" valType="SMILES" suffixAppliesTo="1,4">fumar</token>
+    <token value="C/C(C)=C\C" labels="1/2//3/4" valType="SMILES" suffixAppliesTo="1,5">citracon</token>
+    <token value="C\C(C)=C\C" labels="1/2//3/4" valType="SMILES" suffixAppliesTo="1,5">mesacon</token>
+    <token value="CC1(C)C(C)(C)C(C)CC1" labels="/1//2///3//4/5" valType="SMILES" suffixAppliesTo="1,8">camphor</token>
+
+    <token value="CNC(=O)N" labels="1/2/3//4" valType="SMILES">allophan</token>
+    <token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
+    <token value="CCO" labels="1/2/" valType="SMILES">glycol</token>
+    <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
+    <token value="CCNC(=O)c1ccccc1" labels="/////1/2/3/4/5/6" valType="SMILES">hippur</token>
+    <token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">mal</token>
+    <token value="CC(=O)C" labels="none" valType="SMILES">pyruv</token>
+    <token value="S(=O)c1ccccc1" labels="//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4">sulfanil</token>
+    <token value="CCS" labels="1/2/" valType="SMILES">thioglycol</token>
+  </tokenList>
+
+  <!--This is the set of trivial acids in which yl is added to denote the removal of the carboxylic acid resulting in a radical e.g. Lauryl == dodecyl -->
+  <tokenList tagname="group" type="acidStem" subType="ylForYl" symbol="d">
+    <token value="12" valType="chain" usableAsAJoiner="yes">laur</token>
+    <token value="14" valType="chain" usableAsAJoiner="yes">myrist</token>
+    <token value="16" valType="chain" usableAsAJoiner="yes">palmit</token>
+    <token value="18" valType="chain" usableAsAJoiner="yes">stear</token>
+    <token value="CCCCCCCC/C=C\CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ole</token>
+    <token value="CCCCCCCC\C=C\CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">elaid</token>
+    <token value="CC(C)c1ccccc1" labels="///1/2/3/4/5/6" valType="SMILES">hydratrop</token>
+    <token value="CC(=C)c1ccccc1" labels="///1/2/3/4/5/6" valType="SMILES">atrop</token>
+    <token value="CC=Cc1ccccc1" labels="///1/2/3/4/5/6" valType="SMILES">cinnam</token>
+    <token value="Cc1cnccc1" labels="/3/2/1/6/5/4" valType="SMILES">nicotin</token>
+    <token value="Cc1ccncc1" labels="/4/3/2/1/6/5" valType="SMILES">isonicotin</token>
+
+    <token value="Cc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="OC locant4">anis</token>
+    <token value="CC(O)CO" labels="none" valType="SMILES">glycer</token>
+    <token value="CCc1cc(OC)c(O)cc1" labels="//1/2/3///4//5/6" valType="SMILES">homovanill</token>
+    <token value="CCc1cc(OC)c(OC)cc1" labels="//1/2/3///4///5/6" valType="SMILES">homoveratr</token>
+    <token value="CC(O)C" labels="1/2//3" valType="SMILES">lact</token>
+    <token value="Cc1ccccn1" labels="alpha/2/3/4/5/6/1" valType="SMILES">picolin</token>
+    <token value="Cc1cc(O)c(O)cc1" labels="/1/2/3//4//5/6" valType="SMILES">protocatechu</token>
+    <token value="Cc1cc(OC)c(O)cc1" labels="/1/2/3///4//5/6" valType="SMILES">vanill</token>
+    <token value="Cc1cc(OC)c(OC)cc1" labels="/1/2/3///4///5/6" valType="SMILES">veratr</token>
+  </tokenList>
+
+  <!--This is the set of trivial acids for which common usage for yl is not known or use as both yl and oyl is common!!!-->
+  <tokenList tagname="group" type="acidStem" subType="ylForNothing" symbol="d">
+    <token value="CC#C" valType="SMILES" usableAsAJoiner="yes">propiol</token><!--unknown-->
+    <token value="Cc1c(C)cccc1" labels="/1/2//3/4/5/6" valType="SMILES" suffixAppliesTo="1,4">phthal</token><!--both-->
+    <token value="Cc1cc(C)ccc1" labels="/1/2/3//4/5/6" valType="SMILES" suffixAppliesTo="1,5">isophthal</token><!--both-->
+    <token value="Cc1ccc(C)cc1" labels="/1/2/3/4//5/6" valType="SMILES" suffixAppliesTo="1,6">terephthal</token><!--both-->
+    <token value="Cc1c(N)cccc1" labels="/1/2//3/4/5/6" valType="SMILES">anthranil</token><!--unknown-->
+
+    <token value="CNN" labels="1/2/3" valType="SMILES">carbaz</token><!--unknown-->
+    <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2/3//4//5//6" valType="SMILES">gall</token><!--unknown-->
+    <token value="CCNC(=O)N" labels="1/2/3/4//5" valType="SMILES">hydant</token><!--unknown-->
+    <token value="CC(=O)N" labels="1/2//" valType="SMILES">oxam</token><!--oxamyl is something else?-->
+    <token value="CC(=O)" labels="1/2/" valType="SMILES">oxaldehyd</token><!--unknown-->
+    <token value="Cc1cc2OCOc2cc1" labels="none" valType="SMILES">piperonyl</token><!--unknown-->
+    <token value="Cc1c(O)cccc1" labels="/1/2//3/4/5/6" valType="SMILES" defaultInID="4">salicyl</token><!--c.f. acetylsalicylic acid-->
+    <token value="CC(O)C(O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">tartar</token><!--unknown-->
+    <token value="CC(O)C" suffixAppliesTo="1,4" labels="none" valType="SMILES">tartron</token><!--unknown-->
+    <token value="CC(CO)c1ccccc1" labels="////1/2/3/4/5/6" valType="SMILES">trop</token><!--tropyl is something else?-->
+  </tokenList>
+
+</tokenLists>

@@ -302,11 +302,13 @@ class XmlDeclarations {
 	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
 	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
 	static final String NONE_SUBTYPE_VAL ="none";
-	static final String OYLFORACYL_SUBTYPE_VAL ="oylForAcyl";
 	static final String SIMPLESUBSTITUENT_SUBTYPE_VAL ="simpleSubstituent";
 	static final String SUBSTITUENT_SUBTYPE_VAL ="substituent";
 	static final String TERMINAL_SUBTYPE_VAL ="terminal";
 	static final String YLFORACYL_SUBTYPE_VAL ="ylForAcyl";
+	static final String YLFORNOTHING_SUBTYPE_VAL ="ylForNothing";
+	static final String YLFORYL_SUBTYPE_VAL ="ylForYl";
+
 	//TODO java doc this
 	
 	/**Magic value indicating no labelling should be applied */

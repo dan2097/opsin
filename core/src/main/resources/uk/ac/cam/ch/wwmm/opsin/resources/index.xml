@@ -18,9 +18,8 @@
   <tokenFile>alkanes.xml</tokenFile>
   <tokenFile>atomHydrides.xml</tokenFile>
 
-  <tokenFile>acidsOylForAcyl.xml</tokenFile>
-  <tokenFile>acidsYlForAcyl.xml</tokenFile>
-  <tokenFile>acidsNonCarboxylic.xml</tokenFile>
+  <tokenFile>carboxylicAcids.xml</tokenFile>
+  <tokenFile>nonCarboxylicAcids.xml</tokenFile>
 
   <tokenFile>functionalTerms.xml</tokenFile>
   <tokenFile>heteroAtoms.xml</tokenFile>
