@@ -48,34 +48,31 @@ class FusedRingBuilder {
 		/*
 		 * Apply any nonstandard ring numbering and sort atomOrder by locant
 		 */
-		for(int i=0;i<groups.size();i++) {
-			Element group=groups.get(i);
-			Fragment ring =state.xmlFragmentMap.get(group);
-			if (group == lastGroup){
-				//perform a quick check that every atom in this group is infact cyclic. Fusion components are enumerated and hence all guarenteed to be purely cyclic
-				List<Atom> atomList = ring.getAtomList();
-				for (Atom atom : atomList) {
-					if (!atom.getAtomIsInACycle()){
-						throw new StructureBuildingException("Inappropriate group used in fusion nomenclature. Only groups composed entirely of atoms in cycles may be used. i.e. not: " + group.getValue());
-					}
-				}
-				if (group.getAttribute(FUSEDRINGNUMBERING_ATR)!=null){
-					String[] standardNumbering = matchSlash.split(group.getAttributeValue(FUSEDRINGNUMBERING_ATR),-1);
-					for (int j = 0; j < standardNumbering.length; j++) {
-						atomList.get(j).replaceLocant(standardNumbering[j]);
-					}
-				}
-				else{
-					ring.sortAtomListByLocant();//for those where the order the locants are in is sensible					}
-				}
-				for (Atom atom : atomList) {
-					atom.clearLocants();//the parentRing does not have locants, letters are used to indicate the edges
-				}
-			}
-			else if (group.getAttribute(FUSEDRINGNUMBERING_ATR)==null){
-				ring.sortAtomListByLocant();//for those where the order the locants are in is sensible
-			}
-		}
+        for (Element group : groups) {
+            Fragment ring = state.xmlFragmentMap.get(group);
+            if (group == lastGroup) {
+                //perform a quick check that every atom in this group is infact cyclic. Fusion components are enumerated and hence all guarenteed to be purely cyclic
+                List<Atom> atomList = ring.getAtomList();
+                for (Atom atom : atomList) {
+                    if (!atom.getAtomIsInACycle()) {
+                        throw new StructureBuildingException("Inappropriate group used in fusion nomenclature. Only groups composed entirely of atoms in cycles may be used. i.e. not: " + group.getValue());
+                    }
+                }
+                if (group.getAttribute(FUSEDRINGNUMBERING_ATR) != null) {
+                    String[] standardNumbering = matchSlash.split(group.getAttributeValue(FUSEDRINGNUMBERING_ATR), -1);
+                    for (int j = 0; j < standardNumbering.length; j++) {
+                        atomList.get(j).replaceLocant(standardNumbering[j]);
+                    }
+                } else {
+                    ring.sortAtomListByLocant();//for those where the order the locants are in is sensible					}
+                }
+                for (Atom atom : atomList) {
+                    atom.clearLocants();//the parentRing does not have locants, letters are used to indicate the edges
+                }
+            } else if (group.getAttribute(FUSEDRINGNUMBERING_ATR) == null) {
+                ring.sortAtomListByLocant();//for those where the order the locants are in is sensible
+            }
+        }
 		groups = processBenzoFusions(state, subOrRoot, groups);//FR-2.2.8  e.g. in 2H-[1,3]benzodioxino[6',5',4':10,5,6]anthra[2,3-b]azepine  benzodioxino is one component
 		List<Element> nameComponents  = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{FUSION_EL, GROUP_EL});
 		nameComponents.remove(lastGroup);

@@ -1082,7 +1082,7 @@ class PostProcessor {
 	/**
 	 * Finds the the carbon atom with the given locant in the provided SMILES
 	 * Returns the next index which is expected to correspond to the atom's ring opening/s
-	 * @param SMILES string to search in
+	 * @param smiles string to search in
 	 * @param locant locant of the atom in given structure
 	 * @return index of ring openings
 	 * @throws PostProcessingException 

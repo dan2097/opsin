@@ -43,6 +43,9 @@ public class NameToStructure {
 
 	/**Does finite-state non-destructive parsing on chemical names.*/
 	private Parser parser;
+	
+	/**Applies OPSIN's grammar to tokenise and assign meanings tokens.*/
+	private ParseRules parseRules;
 
 	/**Does destructive procedural parsing on parser results.*/
 	private PostProcessor postProcessor;
@@ -82,7 +85,7 @@ public class NameToStructure {
 			ResourceGetter resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 			TokenManager tokenManager = new TokenManager(resourceGetter);
 			WordRules wordRules = new WordRules(resourceGetter);
-			ParseRules parseRules = new ParseRules(tokenManager, resourceGetter);
+			parseRules = new ParseRules(tokenManager, resourceGetter);
 			parser = new Parser(wordRules, parseRules, tokenManager);
 
 			postProcessor = new PostProcessor(tokenManager);
@@ -171,6 +174,19 @@ public class NameToStructure {
 			if(verbose) e.printStackTrace();
 			return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, message, name);
 		}
+	}
+	
+	/**
+	 * Returns an OPSIN parser
+	 * This can be used to determine whether a word can be interpreted as being part of a chemical name.
+	 * Just because a word can be split into tokens does not mean the word constitutes a valid chemical name
+	 * e.g. ester is interpretable but is not in itself a chemical name
+	 * @return
+	 * @throws NameToStructureException
+	 */
+	public static ParseRules getOpsinParser() throws NameToStructureException{
+		NameToStructure n2s = NameToStructure.getInstance();
+		return n2s.parseRules;
 	}
 
 	/**Run OPSIN as a standalone component.

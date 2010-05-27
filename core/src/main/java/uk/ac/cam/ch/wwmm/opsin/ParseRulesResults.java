@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author dl387
  */
-final class ParseRulesResults {
+public class ParseRulesResults {
    private final List<ParseTokens> parseTokensList;
    private final String uninterpretableName;
    private final String unparseableName;
@@ -24,7 +24,7 @@ final class ParseRulesResults {
     * If none of the name can be interpreted this list will be empty
     * @return
     */
-   List<ParseTokens> getParseTokensList() {
+   public List<ParseTokens> getParseTokensList() {
       return parseTokensList;
    }
 
@@ -33,7 +33,7 @@ final class ParseRulesResults {
     * e.g. in ethyl-2H-fooarene  "2H-fooarene" will be returned
     * @return
     */
-   String getUninterpretableName() {
+   public String getUninterpretableName() {
       return uninterpretableName;
    }
    
@@ -43,12 +43,12 @@ final class ParseRulesResults {
     * e.g. in ethyl-2H-fooarene  "fooarene" will be returned
     * @return
     */
-   String getUnparseableName() {
+   public String getUnparseableName() {
 	   return unparseableName;
    }
 
    public String toString() {
-      return "(" + parseTokensList.toString() + ", " + uninterpretableName.toString() + ", " + unparseableName.toString() + ")";
+      return "(" + parseTokensList.toString() + ", " + uninterpretableName + ", " + unparseableName + ")";
    }
 
 }

@@ -3007,7 +3007,7 @@ class PreStructureBuilder {
 			if (conjunctiveGroups.size()==1){
 				//label atoms appropriately
 				List<Atom> atomList = conjunctiveFragments.get(0).getAtomList();
-				boolean alphaIsPosition1 = atomList.get(0).getIncomingValency() <3 ? true :false;
+				boolean alphaIsPosition1 = atomList.get(0).getIncomingValency() < 3;
 				int counter =0;
 				for (int i = (alphaIsPosition1 ? 0 : 1); i < atomList.size(); i++) {
 					Atom a = atomList.get(i);

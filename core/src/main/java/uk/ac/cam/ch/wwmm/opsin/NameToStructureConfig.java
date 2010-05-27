@@ -1,8 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 /**
- * NameToStructure Config class
- * Currently unused
+ * Currently unused. Will in the future be used to allow OPSIN to be configurable
  * @author dl387
  *
  */

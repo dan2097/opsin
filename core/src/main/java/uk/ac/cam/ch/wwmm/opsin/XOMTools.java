@@ -397,7 +397,7 @@ public final class XOMTools {
 	 * Equivalent to an xquery of type ./elementName1 from the startingElement
 	 * This is equivalent to XOM's getChildElements(String) other than returning an arrayList
 	 * @param startingElement
-	 * @param elementNames
+	 * @param elementName
 	 * @return
 	 */
 	public static List<Element> getChildElementsWithTagName(Element startingElement, String elementName) {

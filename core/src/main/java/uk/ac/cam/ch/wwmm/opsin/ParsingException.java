@@ -5,7 +5,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  * @author ptc24
  *
  */
-class ParsingException extends Exception {
+public class ParsingException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

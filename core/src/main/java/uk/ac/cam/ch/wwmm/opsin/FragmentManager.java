@@ -37,8 +37,6 @@ class FragmentManager {
 	 * @param sBuilder A SMILESFragmentBuilder - dependency injection.
 	 * @param cmlBuilder A CMLFragmentBuilder - dependency injection.
 	 * @param idManager An IDManager.
-	 *
-	 * @throws Exception If the CML fragment file can't be found or otherwise used
 	 */
 	FragmentManager(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, IDManager idManager) {
 		if (sBuilder == null || cmlBuilder == null || idManager == null ){

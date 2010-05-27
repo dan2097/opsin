@@ -7,7 +7,7 @@ import java.util.List;
  * @author ptc24/dl387
  *
  */
-class ParseTokens {
+public class ParseTokens {
 	/**The tokens that the word is made up of.*/
 	private List<String> tokens = new ArrayList<String>();
 
@@ -45,11 +45,11 @@ class ParseTokens {
 		annotations.add(annotationSymbol);
 	}
 
-	List<String> getTokens() {
+	public List<String> getTokens() {
 		return tokens;
 	}
 
-	List<Character> getAnnotations() {
+	public List<Character> getAnnotations() {
 		return annotations;
 	}
 	
