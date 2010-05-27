@@ -11,18 +11,21 @@ import java.util.regex.Pattern;
 import nu.xom.Elements;
 import dk.brics.automaton.RunAutomaton;
 
-/**Performs finite-state allocation of roles ("annotations") to tokens:
+/**
+ * Instantiate via NameToStructure.getOpsinParser()
+ * 
+ * Performs finite-state allocation of roles ("annotations") to tokens:
  * The chemical name is broken down into tokens e.g. ethyl -->eth yl by applying the chemical grammar in regexes.xml
  * The tokens eth and yl are associated with a letter which is referred to here as an annotation which is the role of the token.
  * These letters are defined in regexes.xml and would in this case have the meaning alkaneStem and inlineSuffix
  *
- * The chemical grammer employs the annoatations associated with the tokens when deciding what may follow what has already been seen
+ * The chemical grammer employs the annotations associated with the tokens when deciding what may follow what has already been seen
  * e.g. you cannot start a chemical name with yl and an optional e is valid after an arylGroup
  *
  * @author ptc24/dl387
  *
  */
-class ParseRules {
+public class ParseRules {
 
 	/** A "struct" containing bits of state needed during finite-state parsing. */
 	private class AnnotatorState {
@@ -103,7 +106,7 @@ class ParseRules {
 	 * @return
 	 * @throws ParsingException
 	 */
-	ParseRulesResults getParses(String chemicalWord) throws ParsingException {
+	public ParseRulesResults getParses(String chemicalWord) throws ParsingException {
 		AnnotatorState startingAS = new AnnotatorState();
 		startingAS.state = chemAutomaton.getInitialState();
 		startingAS.annot = new ArrayList<Character>();

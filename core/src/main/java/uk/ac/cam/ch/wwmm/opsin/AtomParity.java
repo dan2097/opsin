@@ -7,7 +7,7 @@ class AtomParity {
 	/**
 	 * A dummy hydrogen atom. Used to represent an implicit hydrogen that is attached to a tetrahedral stereocentre
 	 */
-	static Atom hydrogen = new Atom("H");
+	static final Atom hydrogen = new Atom("H");
 	private Atom[] atomRefs4;
 	private int parity;
 	

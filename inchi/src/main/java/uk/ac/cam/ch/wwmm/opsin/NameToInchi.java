@@ -20,6 +20,12 @@ import net.sf.jniinchi.JniInchiStereo0D;
 import net.sf.jniinchi.JniInchiWrapper;
 import nu.xom.Element;
 
+/**
+ * Allows the conversion of OPSIN's output into InChIs
+ * Also can be used as wrapper to directly convert chemical names to InChIs
+ * @author dl387
+ *
+ */
 public class NameToInchi {
 
 	private NameToStructure n2s;

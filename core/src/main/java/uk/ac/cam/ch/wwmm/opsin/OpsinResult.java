@@ -2,6 +2,12 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import nu.xom.Element;
 
+/**
+ * Holds the structure OPSIN has generated from a name
+ * Additionally holds a status code for whether name interpretation was successful
+ * @author dl387
+ *
+ */
 public class OpsinResult {
 
 	private final Fragment structure;
@@ -58,6 +64,12 @@ public class OpsinResult {
 		return cml;
 	}
 
+	/**
+	 * Whether parsing the chemical name was successful,
+	 * encountered problems or was unsuccessful.
+	 * @author dl387
+	 *
+	 */
 	public enum OPSIN_RESULT_STATUS{
 		SUCCESS,
 		WARNING,

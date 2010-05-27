@@ -19,7 +19,7 @@ class SSSRFinder {
 
 	/** get set of smallest rings.
 	 * In corner cases the list of rings returned will not be the SSSR
-	 * @param update replace current list
+	 * @param frag 
 	 * @return list of rings
 	 */
 	static List<Ring> getSetOfSmallestRings(Fragment frag) throws StructureBuildingException {
@@ -83,7 +83,7 @@ class SSSRFinder {
 	private static List<Atom>  getAncestors(Atom atom, Map<Atom, Atom> atomToParentMap) {
 		List<Atom> newAtomSet = new ArrayList<Atom> ();
 
-		atom = (Atom) atomToParentMap.get(atom);
+		atom = atomToParentMap.get(atom);
 		if (atom != null && !newAtomSet.contains(atom)) {
 			newAtomSet.add(atom);
 		}
@@ -95,7 +95,7 @@ class SSSRFinder {
 		Fragment molecule =atom.getFrag();
 		List<Bond> newBondSet = new ArrayList<Bond>();
 		while (true) {
-			Atom atom1 = (Atom) atomToParentMap.get(atom);
+			Atom atom1 = atomToParentMap.get(atom);
 			if (atom1 == null) {
 				break;
 			}

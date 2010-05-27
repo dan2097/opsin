@@ -107,7 +107,7 @@ class OpsinTools {
 	/**
 	 * Finds the wordRule element that encloses the given element.
 	 * Returns the wordRule element or throws an exception
-	 * @param Element el
+	 * @param el
 	 * @return wordRule Element
 	 * @throws PostProcessingException
 	 */

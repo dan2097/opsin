@@ -399,7 +399,7 @@ class Fragment {
 
 	/**
 	 * Adds an outAtom
-	 * @param atom
+	 * @param id
 	 * @param valency
 	 * @param setExplicitly
 	 * @throws StructureBuildingException 
