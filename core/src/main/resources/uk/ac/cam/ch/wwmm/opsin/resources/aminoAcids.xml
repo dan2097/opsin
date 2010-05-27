@@ -127,16 +127,16 @@
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ï" >
-    <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CC(O)=O)C" suffixAppliesTo="7">aspart</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(O)=O)C" suffixAppliesTo="8">glutam</token>
+    <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5,4">aspart</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6,5">glutam</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CS(=O)(O)=O)C" suffixAppliesTo="8">cyste</token>
 
-    <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CC(O)=O)C" suffixAppliesTo="7">l-aspart</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(O)=O)C" suffixAppliesTo="8">l-glutam</token>
+    <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5,4">l-aspart</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6,5">l-glutam</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CS(=O)(O)=O)C" suffixAppliesTo="8">l-cyste</token>
 
-    <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@H](CC(O)=O)C" suffixAppliesTo="7">d-aspart</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@H](CCC(O)=O)C" suffixAppliesTo="8">d-glutam</token>
+    <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@H](CC)C" suffixAppliesTo="5,4">d-aspart</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@H](CCC)C" suffixAppliesTo="6,5">d-glutam</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@H](CS(=O)(O)=O)C" suffixAppliesTo="8">d-cyste</token>
   </tokenList>
 
@@ -165,5 +165,48 @@
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC=O)C(=O)O" outIDs="5">gamma-glutamyl</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC=O)C(=O)O" outIDs="5">l-gamma-glutamyl</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@H](CCC=O)C(=O)O" outIDs="5">d-gamma-glutamyl</token>
+
+    <token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" labels="none" valType="SMILES" outIDs="3,10">cystyl</token>
+    <token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" labels="none" valType="SMILES" outIDs="3,10">l-cystyl</token>
+    <token value="C([C@H](C(=O))N)SSC[C@H](C(=O))N" labels="none" valType="SMILES" outIDs="3,10">d-cystyl</token>
+    <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@@H](CS)C=O" outIDs="4,5">half-cystyl</token>
+    <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@@H](CS)C=O" outIDs="4,5">l-half-cystyl</token>
+    <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@H](CS)C=O" outIDs="4,5">d-half-cystyl</token>
+  </tokenList>
+
+  <tokenList tagname="group" type="aminoAcid" subType="simpleGroup" symbol="G">
+    <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@@H](CC(=O)[O-])C(=O)[O-]" functionalIDs="6,9">aspartate(2-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@@H](CC(=O)[O-])C(=O)[O-]" functionalIDs="6,9">l-aspartate(2-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@H](CC(=O)[O-])C(=O)[O-]" functionalIDs="6,9">d-aspartate(2-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@@H](CC(=O)O)C(=O)[O-]" functionalIDs="9">aspartate(1-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@@H](CC(=O)O)C(=O)[O-]" functionalIDs="9">l-aspartate(1-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@H](CC(=O)O)C(=O)[O-]" functionalIDs="9">d-aspartate(1-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@@H](CCC(=O)[O-])C(=O)[O-]" functionalIDs="7,10">glutamate(2-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@@H](CCC(=O)[O-])C(=O)[O-]" functionalIDs="7,10">l-glutamate(2-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@H](CCC(=O)[O-])C(=O)[O-]" functionalIDs="7,10">d-glutamate(2-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@@H](CCC(=O)O)C(=O)[O-]" functionalIDs="10">glutamate(1-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@@H](CCC(=O)O)C(=O)[O-]" functionalIDs="10">l-glutamate(1-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@H](CCC(=O)O)C(=O)[O-]" functionalIDs="10">d-glutamate(1-)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@@H](CCCCN)C(=O)O">lysinium(1+)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@@H](CCCCN)C(=O)O">l-lysinium(1+)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@H](CCCCN)C(=O)O">d-lysinium(1+)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@@H](CCCC[NH3+])C(=O)O">lysinium(2+)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@@H](CCCC[NH3+])C(=O)O">l-lysinium(2+)</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@H](CCCC[NH3+])C(=O)O">d-lysinium(2+)</token>
+
+    <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
+    <token value="N[C@@H](CCSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">cystathionine</token>
+    <token value="NCCS" labels="/2,alpha/3,beta/" valType="SMILES">cysteamine</token>
+    <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">cystine</token>
+    <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">l-cystine</token>
+    <token value="C([C@H](C(=O)O)N)SSC[C@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">d-cystine</token>
+    <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">dopa</token>
+    <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">l-dopa</token>
+    <token value="O=C(O)[C@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">d-dopa</token>
+    <token value="N[C@@H](CSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">lanthionine</token>
+    <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" valType="SMILES">methioninamine</token>
+    <token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">selenocystine</token>
+    <token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">l-selenocystine</token>
+    <token value="C([C@H](C(=O)O)N)[Se][Se]C[C@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">d-selenocystine</token>
   </tokenList>
 </tokenLists>
