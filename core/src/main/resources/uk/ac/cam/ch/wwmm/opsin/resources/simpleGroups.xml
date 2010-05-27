@@ -36,16 +36,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic</token>
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanicacid</token>
   <token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic acid</token>
-  <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
-  <token value="N[C@@H](CCSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">cystathionine</token>
-  <token value="NCCS" labels="/2,alpha/3,beta/" valType="SMILES">cysteamine</token>
-  <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >cystine</token>
-  <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >l-cystine</token>
-  <token value="C([C@H](C(=O)O)N)SSC[C@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >d-cystine</token>
   <token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
-  <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">dopa</token>
-  <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">l-dopa</token>
-  <token value="O=C(O)[C@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">d-dopa</token>
   <token value="CC[O-]" labels="1/2/" valType="SMILES">ethoxide</token>
   <token value="C=C" labels="1/2" valType="SMILES">ethylene</token>
   <token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
@@ -64,9 +55,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="NC([TeH])=N" labels="1//2/3" valType="SMILES">isotellurourea</token>
   <token value="NC(S)=N" labels="1//2/3" valType="SMILES">isothiourea</token>
   <token value="NC(O)=N" labels="1//2/3" valType="SMILES">isourea</token>
-  <token value="N[C@@H](CSC[C@@H](C(O)=O)N)C(O)=O" labels="none" valType="SMILES">lanthionine</token>
   <token value="CS(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">mesilate</token>
-  <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" valType="SMILES">methioninamine</token>
   <token value="CS(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">mesylate</token>
   <token value="C[O-]" labels="1/" valType="SMILES">methoxide</token>
   <token value="N[N+](=O)([O-])" labels="none" valType="SMILES" functionalIDs="1,1">nitramide</token>
@@ -86,9 +75,6 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">selenite</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenate</token>
   <token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenoate</token>
-  <token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >selenocystine</token>
-  <token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >l-selenocystine</token>
-  <token value="C([C@H](C(=O)O)N)[Se][Se]C[C@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13" >d-selenocystine</token>
   <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
   <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">sulfite</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
