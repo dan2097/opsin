@@ -18,6 +18,9 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="[BH4-]" labels="none" valType="SMILES">borohydride</token>
   <token value="C(Br)(Br)(Br)" labels="none" valType="SMILES">bromoform</token>
   <token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
+  <token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
+  <token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
+  <token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric acid</token>
   <token value="NNC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbazone</token>
   <token value="N=NC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbodiazone</token>
   <token value="N=C=N" labels="1//3" valType="SMILES">carbodiimide</token>
