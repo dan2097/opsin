@@ -106,7 +106,7 @@
     <token value="31" valType="chain" usableAsAJoiner="yes">henatriacontyl</token><!--clashes with a systematic name-->
     <token value="21" valType="chain" usableAsAJoiner="yes">heneicosyl</token><!--clashes with a systematic name-->
     <token value="27" valType="chain" usableAsAJoiner="yes">heptacosyl</token><!--clashes with a systematic name-->
-    <token value="36" valType="chain" usableAsAJoiner="yes">Hexatriacontyl</token><!--clashes with a systematic name-->
+    <token value="36" valType="chain" usableAsAJoiner="yes">hexatriacontyl</token><!--clashes with a systematic name-->
     <token value="CCNC(=O)N" labels="1/2/3/4//5" valType="SMILES">hydant</token><!--unknown-->
     <token value="19" valType="chain" usableAsAJoiner="yes">nonadecyl</token><!--clashes with a systematic name-->
     <token value="29" valType="chain" usableAsAJoiner="yes">nonacosyl</token><!--clashes with a systematic name-->
