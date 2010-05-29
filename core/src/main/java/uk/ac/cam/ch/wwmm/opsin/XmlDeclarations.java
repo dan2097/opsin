@@ -10,6 +10,12 @@ class XmlDeclarations {
 	/**Define a scope for determining what group a substituent should bond to*/
 	static final String BRACKET_EL ="bracket";
 
+	/**Contains a functional group or class. These terms typically effect the chosen wordRule for the name*/
+	static final String FUNCTIONALTERM_EL ="functionalTerm";
+	
+	/**The top most element in OPSIN's parse tree. As a name can describe multiple molecules the same is confusingly true of this element*/
+	static final String MOLECULE_EL ="molecule";
+	
 	/**Contains a substituent. A substituent will after the PreStructureBuilder contain one group*/
 	static final String SUBSTITUENT_EL = "substituent";
 
@@ -170,6 +176,9 @@ class XmlDeclarations {
     
 	/**Indicates how many times a bracket/substituent should be multiplied*/
 	static final String MULTIPLIER_ATR ="multiplier";
+	
+	/** The name that was inputted into OPSIN's parser. Attribute of molecule */
+    static final String NAME_ATR = "name";
 	
 	/**Indicates that a substituent/bracket has been processed by StructureBuildingMethods*/
 	static final String RESOLVED_ATR ="resolved";

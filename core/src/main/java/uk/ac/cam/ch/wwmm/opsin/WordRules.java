@@ -10,6 +10,8 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+
 /**The rules by which words are grouped together (e.g. in functional class nomenclature)
  *
  * @author dl387
@@ -176,7 +178,7 @@ class WordRules {
 	 * @throws ParsingException
 	 */
 	void groupWordsIntoWordRules(Element moleculeEl) throws ParsingException {
-		List<Element> wordEls = XOMTools.getChildElementsWithTagName(moleculeEl, "word");
+		List<Element> wordEls = XOMTools.getChildElementsWithTagName(moleculeEl, WORD_EL);
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
 			if (matchWordRule(wordEls, i)){
@@ -186,7 +188,7 @@ class WordRules {
 		Elements wordRuleEls = moleculeEl.getChildElements();
 		for (int i = 0; i < wordRuleEls.size(); i++) {
 			Element wordRuleEl = wordRuleEls.get(i);
-			if (!wordRuleEl.getLocalName().equals("wordRule")){
+			if (!wordRuleEl.getLocalName().equals(WORDRULE_EL)){
 				throw new ParsingException("Unable to assign wordRule to: " + wordRuleEl.getValue());
 			}
 		}
@@ -200,33 +202,33 @@ class WordRules {
 				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.get(i+j);
 					WordDescription wd = wordRule.wordDescriptions.get(j);
-					if (!wd.type.toString().equals(wordEl.getAttributeValue("type"))){
+					if (!wd.type.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 						continue wordRuleLoop;//type mismatch;
 					}
-					if (wd.getValue() !=null && !wordEl.getAttributeValue("value").toLowerCase().equals(wd.getValue())){//word string contents mismatch
+					if (wd.getValue() !=null && !wordEl.getAttributeValue(VALUE_ATR).toLowerCase().equals(wd.getValue())){//word string contents mismatch
 						continue wordRuleLoop;
 					}
 					if (wd.functionalGroupType !=null){
-						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue("type"))){
+						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 							Elements children = wordEl.getChildElements();
 							Element lastChild = children.get(children.size()-1);
 							while (lastChild.getChildElements().size()!=0){
 								children = lastChild.getChildElements();
 								lastChild = children.get(children.size()-1);
 							}
-							if (lastChild.getLocalName().equals("closebracket")){
+							if (lastChild.getLocalName().equals(CLOSEBRACKET_EL)){
 								lastChild = (Element) XOMTools.getPreviousSibling(lastChild);
 							}
 							if (lastChild==null){
 								throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
 							}
-							if (!wd.getFunctionalGroupType().equals(lastChild.getAttributeValue("type"))){
+							if (!wd.getFunctionalGroupType().equals(lastChild.getAttributeValue(TYPE_ATR))){
 								continue wordRuleLoop;
 							}
 						}
 					}
 					if (wd.endsWithPattern !=null){
-						if (!wd.endsWithPattern.matcher(wordEl.getAttributeValue("value")).find()){
+						if (!wd.endsWithPattern.matcher(wordEl.getAttributeValue(VALUE_ATR)).find()){
 							continue wordRuleLoop;
 						}
 					}
@@ -238,11 +240,11 @@ class WordRules {
 							lastChild = children.get(children.size()-1);
 						}
 						Element groupToExamine;
-						if (lastChild.getLocalName().equals("group")){
+						if (lastChild.getLocalName().equals(GROUP_EL)){
 							groupToExamine = lastChild;
 						}
 						else{
-							Elements groups = ((Element)lastChild.getParent()).getChildElements("group");
+							Elements groups = ((Element)lastChild.getParent()).getChildElements(GROUP_EL);
 							if (groups.size()>0){
 								groupToExamine = groups.get(groups.size()-1);
 							}
@@ -250,15 +252,15 @@ class WordRules {
 								continue wordRuleLoop;
 							}
 						}
-						if (groupToExamine.getAttribute("value")==null || !groupToExamine.getAttributeValue("value").equals(wd.endsWithGroupValueAtr)){
+						if (!wd.endsWithGroupValueAtr.equals(groupToExamine.getAttributeValue(VALUE_ATR))){
 							continue wordRuleLoop;
 						}
 					}
 				}
 				//Word Rule matches!
-				Element wordRuleEl = new Element("wordRule");
-				wordRuleEl.addAttribute(new Attribute("type", wordRule.getRuleType()));
-				wordRuleEl.addAttribute(new Attribute("wordRule", wordRule.getRuleName()));
+				Element wordRuleEl = new Element(WORDRULE_EL);
+				wordRuleEl.addAttribute(new Attribute(TYPE_ATR, wordRule.getRuleType()));
+				wordRuleEl.addAttribute(new Attribute(WORDRULE_EL, wordRule.getRuleName()));
 
 				/*
 				 * Some wordRules can not be entirely processed at the structure building stage
@@ -268,18 +270,18 @@ class WordRules {
 						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup wordRule");
 					}
 					convertFunctionalGroupIntoGroup(wordEls.get(i));
-					wordRuleEl.getAttribute("wordRule").setValue(WordRule.simple.toString());
+					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
 				}
 				else if (wordRule.getRuleName().equals(WordRule.carbonylDerivative.toString())){//e.g. 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
 					if (wordsInWordRule==3){//substituent present
 						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
 						wordsInWordRule--;
-						List<Element> functionalTerm = XOMTools.getDescendantElementsWithTagName(wordEls.get(i+1), "functionalTerm");//rename functionalTerm element to root
+						List<Element> functionalTerm = XOMTools.getDescendantElementsWithTagName(wordEls.get(i+1), FUNCTIONALTERM_EL);//rename functionalTerm element to root
 						if (functionalTerm.size()!=1){
 							throw new ParsingException("OPSIN bug: Problem with carbonylDerivative wordRule");
 						}
-						functionalTerm.get(0).setLocalName("root");
-						wordEls.get(i+1).getAttribute("type").setValue(WordType.full.toString());
+						functionalTerm.get(0).setLocalName(ROOT_EL);
+						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 					}
 				}
 
@@ -292,28 +294,28 @@ class WordRules {
 					Element wordEl = wordEls.remove(i);
 					wordEl.detach();
 					wordRuleEl.appendChild(wordEl);
-					wordValues.add(wordEl.getAttributeValue("value"));
+					wordValues.add(wordEl.getAttributeValue(VALUE_ATR));
 				}
-				wordRuleEl.addAttribute(new Attribute("value", StringTools.stringListToString(wordValues, " ")));//The bare string of all the words under this wordRule
+				wordRuleEl.addAttribute(new Attribute(VALUE_ATR, StringTools.stringListToString(wordValues, " ")));//The bare string of all the words under this wordRule
 				parentEl.insertChild(wordRuleEl, indexToInsertAt);
 				wordEls.add(i, wordRuleEl);
 				return true;
 			}
 		}
 		Element firstWord = wordEls.get(indexOfFirstWord);
-		if (firstWord.getLocalName().equals("word") && WordType.full.toString().equals(firstWord.getAttributeValue("type"))){//No wordRule -->wordRule="simple"
+		if (firstWord.getLocalName().equals(WORD_EL) && WordType.full.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){//No wordRule -->wordRule="simple"
 			applySimpleWordRule(wordEls, indexOfFirstWord, firstWord);
 			return false;
 		}
-		else if (WordType.substituent.toString().equals(firstWord.getAttributeValue("type"))){
+		else if (WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
 			/*
 			 * substituents may join together or to a full e.g. 2-ethyl toluene -->2-ethyltoluene
 			 * 1-chloro 2-bromo ethane --> 1-chloro-2-bromo ethane then subsequently 1-chloro-2-bromo-ethane
 			 */
 			if (indexOfFirstWord +1 < wordEls.size()){
 				Element wordToPotentiallyCombineWith = wordEls.get(indexOfFirstWord +1);
-				if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue("type")) ||
-				WordType.substituent.toString().equals(wordToPotentiallyCombineWith.getAttributeValue("type"))){
+				if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue(TYPE_ATR)) ||
+				WordType.substituent.toString().equals(wordToPotentiallyCombineWith.getAttributeValue(TYPE_ATR))){
 					joinWords(wordEls, indexOfFirstWord, firstWord, wordToPotentiallyCombineWith);
 					return true;
 				}
@@ -325,10 +327,10 @@ class WordRules {
 	private void applySimpleWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
 		Element parentEl = (Element) firstWord.getParent();
 		int indexToInsertAt = firstWord.getParent().indexOf(firstWord);
-		Element wordRuleEl = new Element("wordRule");
-		wordRuleEl.addAttribute(new Attribute("wordRule", WordRule.simple.toString()));//No wordRule
-		wordRuleEl.addAttribute(new Attribute("type", WordType.full.toString()));
-		wordRuleEl.addAttribute(new Attribute("value", firstWord.getAttributeValue("value")));
+		Element wordRuleEl = new Element(WORDRULE_ATR);
+		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.simple.toString()));//No wordRule
+		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
+		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
 		wordEls.remove(indexOfFirstWord);
 		firstWord.detach();
 		wordRuleEl.appendChild(firstWord);
@@ -348,9 +350,9 @@ class WordRules {
 	private void joinWords(List<Element> wordEls, int indexOfFirstWord, Element firstWord, Element wordToPotentiallyCombineWith) throws ParsingException {
 		wordEls.remove(indexOfFirstWord +1);
 		wordToPotentiallyCombineWith.detach();
-		Element assumedHyphen = new Element("hyphen");
+		Element assumedHyphen = new Element(HYPHEN_EL);
 		assumedHyphen.appendChild("-");
-		Elements substituentEls = firstWord.getChildElements("substituent");
+		Elements substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
 		if (substituentEls.size()==0){
 			throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 		}
@@ -362,26 +364,26 @@ class WordRules {
 			el.detach();
 			XOMTools.insertAfter(finalSubstituent, el);
 		}
-		if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue("type"))){
-			firstWord.getAttribute("type").setValue(WordType.full.toString());
+		if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue(TYPE_ATR))){
+			firstWord.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 		}
-		firstWord.getAttribute("value").setValue(firstWord.getAttributeValue("value") + wordToPotentiallyCombineWith.getAttributeValue("value"));
+		firstWord.getAttribute(VALUE_ATR).setValue(firstWord.getAttributeValue(VALUE_ATR) + wordToPotentiallyCombineWith.getAttributeValue(VALUE_ATR));
 	}
 
 	private void convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
-		word.getAttribute("type").setValue(WordType.full.toString());
-		List<Element> functionalTerms = XOMTools.getDescendantElementsWithTagName(word, "functionalTerm");
+		word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
+		List<Element> functionalTerms = XOMTools.getDescendantElementsWithTagName(word, FUNCTIONALTERM_EL);
 		if (functionalTerms.size()!=1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalTerm expected in functionalGroupAsGroup wordRule");
 		}
-		functionalTerms.get(0).setLocalName("root");
-		Elements functionalGroups = functionalTerms.get(0).getChildElements("functionalGroup");
+		functionalTerms.get(0).setLocalName(ROOT_EL);
+		Elements functionalGroups = functionalTerms.get(0).getChildElements(FUNCTIONALGROUP_EL);
 		if (functionalGroups.size()!=1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalGroup expected in functionalGroupAsGroup wordRule");
 		}
-		functionalGroups.get(0).setLocalName("group");
-		functionalGroups.get(0).getAttribute("type").setValue("simpleGroup");
-		functionalGroups.get(0).addAttribute(new Attribute("subType", "functionalGroupAsGroup"));
+		functionalGroups.get(0).setLocalName(GROUP_EL);
+		functionalGroups.get(0).getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+		functionalGroups.get(0).addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 	}
 
 }

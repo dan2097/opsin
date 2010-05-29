@@ -8,6 +8,8 @@ import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+
 /** For a list of integers, generate all lists of non-negative integers where all
  * of the list members are strictly lower than their corresponding integer in the
  * input list.
@@ -133,22 +135,22 @@ class Parser {
 		
 		List<Element> results = new ArrayList<Element>();
 		for(Parse pp : parses) {
-			Element moleculeEl = new Element("molecule");
-			moleculeEl.addAttribute(new Attribute("name", name));
+			Element moleculeEl = new Element(MOLECULE_EL);
+			moleculeEl.addAttribute(new Attribute(NAME_ATR, name));
 			for(ParseWord pw : pp.getWords()) {
-				Element word = new Element("word");
+				Element word = new Element(WORD_EL);
 				moleculeEl.appendChild(word);
 				if (pw.getParseTokens().size() >1){
 					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating addition parses step");
 				}
 				
 				pw.setWordType(OpsinTools.determineWordType(pw.getParseTokens().get(0).getAnnotations()));
-				word.addAttribute(new Attribute("type", pw.getWordType().toString()));
+				word.addAttribute(new Attribute(TYPE_ATR, pw.getWordType().toString()));
 				if (pw.getWord().startsWith("-")){//we want -acid to be the same as acid
-					word.addAttribute(new Attribute("value", pw.getWord().substring(1)));
+					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord().substring(1)));
 				}
 				else{
-					word.addAttribute(new Attribute("value", pw.getWord()));
+					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
 				}
 				for(ParseTokens pt : pw.getParseTokens()) {
 					writeWordXML(word, pw, pt.getTokens(), parseRules.chunkAnnotations(pt.getAnnotations()));
@@ -185,13 +187,13 @@ class Parser {
 	void writeWordXML(Element wordEl, ParseWord pw, List<String> tokens, List<List<Character>> annotations) throws ParsingException {
 		int annotNumber = 0;
 		int annotPos = 0;
-		Element chunk = new Element("substituent");
+		Element chunk = new Element(SUBSTITUENT_EL);
 		wordEl.appendChild(chunk);
         for (String token : tokens) {
             if (annotPos >= annotations.get(annotNumber).size()) {
                 annotPos = 0;
                 annotNumber++;
-                chunk = new Element("substituent");
+                chunk = new Element(SUBSTITUENT_EL);
                 wordEl.appendChild(chunk);
             }
             Element tokenElement = tokenManager.makeTokenElement(token,
@@ -202,10 +204,10 @@ class Parser {
             annotPos++;
         }
 		if(pw.getWordType() == WordType.full) {
-			chunk.setLocalName("root");
+			chunk.setLocalName(ROOT_EL);
 		}
 		else if(pw.getWordType() == WordType.functionalTerm) {
-			chunk.setLocalName("functionalTerm");
+			chunk.setLocalName(FUNCTIONALTERM_EL);
 		}
 	}
 

@@ -15,6 +15,8 @@ import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Node;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+
 /**
  * A set of useful methods to assist OPSIN
  * @author dl387
@@ -31,22 +33,14 @@ class OpsinTools {
 	 * @param currentEl
 	 */
 	static Element getNextNonChargeSuffix(Element currentEl) {
-		Element matchedElement =null;
-		while (true) {
-			Element next = (Element) XOMTools.getNextSibling(currentEl);
-			if (next != null) {
-				if (next.getLocalName().equals("suffix")){
-					if (next.getAttribute("subType")==null || !next.getAttributeValue("subType").equals("charge")){
-						matchedElement=next;
-						break;
-					}
-				}
-				currentEl = next;
-			} else {
-				break;
+		Element next = (Element) XOMTools.getNextSibling(currentEl);
+		while (next != null) {
+			if (next.getLocalName().equals(SUFFIX_EL) && !CHARGE_TYPE_VAL.equals(next.getAttributeValue(TYPE_ATR))){
+				return next;
 			}
+			next = (Element) XOMTools.getNextSibling(next);
 		}
-		return matchedElement;
+		return null;
 	}
 
 	/**
@@ -80,11 +74,11 @@ class OpsinTools {
 	 * @return
 	 */
 	static Node getPreviousGroup(Element current) {
-	  if (current.getLocalName().equals("group")){//can start with a group or the sub/root the group is in
+	  if (current.getLocalName().equals(GROUP_EL)){//can start with a group or the sub/root the group is in
 		  current=(Element)current.getParent();
 	  }
 	  Element parent = (Element) current.getParent();
-	  if (parent == null || parent.getLocalName().equals("molecule")){
+	  if (parent == null || parent.getLocalName().equals(MOLECULE_EL)){
 		  return null;
 	  }
 	  int index = parent.indexOf(current);
@@ -95,7 +89,7 @@ class OpsinTools {
 		  previous =children.get(children.size()-1);
 		  children =previous.getChildElements();
 	  }
-	  Elements groups =((Element)previous.getParent()).getChildElements("group");
+	  Elements groups =((Element)previous.getParent()).getChildElements(GROUP_EL);
 	  if (groups.size()==0){
 		  return getPreviousGroup(previous);
 	  }
@@ -113,7 +107,7 @@ class OpsinTools {
 	 */
 	static Element getParentWordRule(Element el) throws PostProcessingException {
 		Element parent=(Element)el.getParent();
-		while(parent !=null && !parent.getLocalName().equals("wordRule")){
+		while(parent !=null && !parent.getLocalName().equals(WORDRULE_EL)){
 			parent =(Element)parent.getParent();
 		}
 		if (parent==null){
@@ -162,7 +156,7 @@ class OpsinTools {
 
 				//A main group atom, would expect to only find one except in something strange like succinimide
 				//The locants.size()>0 condition allows things like terephthalate to work which have an atom between the suffixes and main atoms that has no locant
-				if (locants.size()>0 && !neighbour.getType().equals("suffix")){
+				if (locants.size()>0 && !neighbour.getType().equals(SUFFIX_TYPE_VAL)){
 					for (String neighbourLocant : locants) {
 						if (targetLocant.equals(neighbourLocant)){
 							return neighbour;
