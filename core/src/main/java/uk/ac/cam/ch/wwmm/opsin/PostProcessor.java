@@ -142,7 +142,7 @@ class PostProcessor {
 		List<Element> multipliers = XOMTools.getDescendantElementsWithTagName(elem, MULTIPLIER_EL);
 		for (Element apparentMultiplier : multipliers) {
 			Element nextEl = (Element)XOMTools.getNextSibling(apparentMultiplier);
-			if(nextEl !=null && nextEl.getLocalName().equals(GROUP_EL)){//detects ambiguous use of things like tetradeca
+			if(nextEl !=null && nextEl.getLocalName().equals(GROUP_EL) && nextEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){//detects ambiguous use of things like tetradeca
 				String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
 				HashMap<String, HashMap<Character, Token>> tokenDict =tokenManager.tokenDict;
 				HashMap<Character,Token> tokenMap = tokenDict.get(multiplierAndGroup);

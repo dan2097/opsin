@@ -397,7 +397,7 @@ class StructureBuilder {
 				}
 				Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement(GROUP_EL));
 				if (acidBr.getFunctionalAtomCount()==0){
-					throw new StructureBuildingException("Cannot find oxygen to replace wtih nitrogen for amide formation!");
+					throw new StructureBuildingException("Cannot find oxygen to replace with nitrogen for amide formation!");
 				}
 				Atom functionalAtom = acidBr.getFunctionalAtom(0);
 				if (!functionalAtom.getElement().equals("O")){

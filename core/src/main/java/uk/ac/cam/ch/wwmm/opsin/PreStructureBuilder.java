@@ -1105,7 +1105,7 @@ class PreStructureBuilder {
 		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
 
 		boolean imideSpecialCase =false;
-		if (group.getAttribute("suffixAppliesTo")!=null){//typically a trivial polyAcid or aminoAcid
+		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//typically a trivial polyAcid or aminoAcid
 			//attribute contains instructions for number/positions of suffix
 			//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 			Element suffix =OpsinTools.getNextNonChargeSuffix(group);
@@ -1133,14 +1133,17 @@ class PreStructureBuilder {
 				suffix.addAttribute(new Attribute("locantID", Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
 			}
 			for (int i = 1; i < suffixInstructions.length; i++) {
-				Element newSuffix = new Element("suffix");
+				Element newSuffix = new Element(SUFFIX_EL);
 				if (symmetricSuffixes){
-					newSuffix.addAttribute(new Attribute("value", suffix.getAttributeValue(VALUE_ATR)));
-					newSuffix.addAttribute(new Attribute("type",  suffix.getAttributeValue(TYPE_ATR)));
+					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
+					newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
+					if (suffix.getAttribute(SUBTYPE_ATR)!=null){
+						newSuffix.addAttribute(new Attribute(SUBTYPE_ATR,  suffix.getAttributeValue(SUBTYPE_ATR)));
+					}
 				}
 				else{
-					newSuffix.addAttribute(new Attribute("value", suffix.getAttributeValue("additionalValue")));
-					newSuffix.addAttribute(new Attribute("type", "root"));
+					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(ADDITIONALVALUE_ATR)));
+					newSuffix.addAttribute(new Attribute(TYPE_ATR, ROOT_EL));
 				}
 				newSuffix.addAttribute(new Attribute("locantID", Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[i]) -1)));
 				XOMTools.insertAfter(suffix, newSuffix);
@@ -1149,7 +1152,7 @@ class PreStructureBuilder {
 		}
 		else{
 			for (Element suffix : suffixes) {
-				if (suffix.getAttribute("additionalValue")!=null){
+				if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){
 					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
 			}
@@ -1229,13 +1232,12 @@ class PreStructureBuilder {
             else if (suffix.getAttribute("locantID") != null) {
             	atomLikelyToBeUsedBySuffix = frag.getAtomByIDOrThrow(Integer.parseInt(suffix.getAttributeValue("locantID")));
             }
-            if (atomLikelyToBeUsedBySuffix != null) {
-                cyclic = atomLikelyToBeUsedBySuffix.getAtomIsInACycle();
-            } else {
+            if (atomLikelyToBeUsedBySuffix==null){
             	//a locant has not been specified
             	//also can happen in the cases of things like fused rings where the final numbering is not available so lookup by locant fails (in which case all the atoms will be cyclic anyway)
-                cyclic = frag.getAtomByIDOrThrow(frag.getIdOfFirstAtom()).getAtomIsInACycle();
+            	atomLikelyToBeUsedBySuffix = frag.getFirstAtom();
             }
+            cyclic = atomLikelyToBeUsedBySuffix.getAtomIsInACycle();
 
             Elements suffixRuleTags = getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
             Fragment suffixFrag = null;
@@ -1282,21 +1284,20 @@ class PreStructureBuilder {
 					if (suffixFrag != null){
 						throw new PostProcessingException("addFunctionalAtomsToHydroxyGroups is not currently compatable with the addGroup suffix rule");
 					}
-					addFunctionalAtomsToHydroxyGroups(frag);
+					addFunctionalAtomsToHydroxyGroups(atomLikelyToBeUsedBySuffix);
 				}
 				else if (suffixRuleTagName.equals("chargeHydroxyGroups")){
 					if (suffixFrag != null){
 						throw new PostProcessingException("chargeHydroxyGroups is not currently compatable with the addGroup suffix rule");
 					}
-					chargeHydroxyGroups(frag);
+					chargeHydroxyGroups(atomLikelyToBeUsedBySuffix);
 					
 				}
 				else if (suffixRuleTagName.equals("removeOneDoubleBondedOxygen")){
 					if (suffixFrag != null){
 						throw new PostProcessingException("removeOneDoubleBondedOxygen is not currently compatable with the addGroup suffix rule");
 					}
-					removeOneDoubleBondedOxygen(state, frag);
-					
+					removeOneDoubleBondedOxygen(state, atomLikelyToBeUsedBySuffix);
 				}
             }
             if (suffixFrag != null) {
@@ -1342,63 +1343,59 @@ class PreStructureBuilder {
 
 
 	/**
-	 * Finds all hydroxy groups and adds a functionalAtom to each of them
-	 * @param frag
+	 * Finds all hydroxy groups connected to a given atom and adds a functionalAtom to each of them
+	 * @param atom
 	 * @throws StructureBuildingException
 	 */
-	private void addFunctionalAtomsToHydroxyGroups(Fragment frag) throws StructureBuildingException {
-		List<Atom> atomList = frag.getAtomList();
-		for (Atom atom : atomList) {
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			if (atom.getElement().equals("O") && atom.getCharge()==0 && neighbours.size()==1 && frag.findBondOrThrow(atom, neighbours.get(0)).getOrder()==1){
-				frag.addFunctionalAtom(atom);
+	private void addFunctionalAtomsToHydroxyGroups(Atom atom) throws StructureBuildingException {
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getFrag().findBondOrThrow(atom, neighbour).getOrder()==1){
+				neighbour.getFrag().addFunctionalAtom(neighbour);
 			}
 		}
 	}
 
 	/**
-	 * Finds all hydroxy groups and makes them negatively charged
-	 * @param frag
+	 * Finds all hydroxy groups connected to a given atom and makes them negatively charged
+	 * @param atom
 	 * @throws StructureBuildingException
 	 */
-	private void chargeHydroxyGroups(Fragment frag) throws StructureBuildingException {
-		List<Atom> atomList = frag.getAtomList();
-		for (Atom atom : atomList) {
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			if (atom.getElement().equals("O") && atom.getCharge()==0 && neighbours.size()==1 && frag.findBondOrThrow(atom, neighbours.get(0)).getOrder()==1){
-				atom.setCharge(-1);
+	private void chargeHydroxyGroups(Atom atom) throws StructureBuildingException {
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getFrag().findBondOrThrow(atom, neighbour).getOrder()==1){
+				neighbour.setCharge(-1);
 			}
 		}
 	}
 
 	/**
-	 * Removes a double bonded Oxygen from the fragment (an [N+][O-] is treated as N=O)
-	 * An exception is thrown if no double bonded oxygen could be found
+	 * Removes a double bonded Oxygen from the atom (an [N+][O-] is treated as N=O)
+	 * An exception is thrown if no double bonded oxygen could be found connected to the atom
 	 * @param state
-	 * @param frag
+	 * @param atom
 	 * @throws StructureBuildingException
 	 */
-	private void removeOneDoubleBondedOxygen(BuildState state, Fragment frag) throws StructureBuildingException {
-		List<Atom> atomList = frag.getAtomList();
-		for (Atom atom : atomList) {
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			if (atom.getElement().equals("O") && neighbours.size()==1){
-				Atom otherAtom = neighbours.get(0);
-				Bond b = frag.findBondOrThrow(atom, otherAtom);
-				if (b.getOrder()==2 && atom.getCharge()==0){
-					state.fragManager.removeAtomAndAssociatedBonds(atom);
-					if (otherAtom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
-						otherAtom.setLambdaConventionValency(otherAtom.getLambdaConventionValency()-2);
+	private void removeOneDoubleBondedOxygen(BuildState state, Atom atom) throws StructureBuildingException {
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement().equals("O") && neighbour.getAtomNeighbours().size()==1){
+				Bond b = atom.getFrag().findBondOrThrow(atom, neighbour);
+				if (b.getOrder()==2 && neighbour.getCharge()==0){
+					state.fragManager.removeAtomAndAssociatedBonds(neighbour);
+					if (atom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
+						atom.setLambdaConventionValency(atom.getLambdaConventionValency()-2);
 					}
-					if (otherAtom.getMinimumValency()!=null){//corrects valency for phosphin/arsin/stibin
-						otherAtom.setMinimumValency(otherAtom.getMinimumValency()-2);
+					if (atom.getMinimumValency()!=null){//corrects valency for phosphin/arsin/stibin
+						atom.setMinimumValency(atom.getMinimumValency()-2);
 					}
 					return;
 				}
-				else if (atom.getCharge() ==-1 && b.getOrder()==1){
-					if (otherAtom.getCharge() ==1 && otherAtom.getElement().equals("N")){
-						state.fragManager.removeAtomAndAssociatedBonds(atom);
-						otherAtom.setCharge(0);
+				else if (neighbour.getCharge() ==-1 && b.getOrder()==1){
+					if (atom.getCharge() ==1 && atom.getElement().equals("N")){
+						state.fragManager.removeAtomAndAssociatedBonds(neighbour);
+						atom.setCharge(0);
 						return;
 					}
 				}
@@ -1476,9 +1473,9 @@ class PreStructureBuilder {
 		for (Element suffix : suffixes) {
 			if (suffix.getAttribute(SUFFIXPREFIX_ATR)!=null){
 				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue(SUFFIXPREFIX_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-				addFunctionalAtomsToHydroxyGroups(suffixPrefixFrag);
+				addFunctionalAtomsToHydroxyGroups(suffixPrefixFrag.getFirstAtom());
 				if (suffix.getValue().endsWith("ate")){
-					chargeHydroxyGroups(suffixPrefixFrag);
+					chargeHydroxyGroups(suffixPrefixFrag.getFirstAtom());
 				}
 				Atom firstAtomOfPrefix = suffixPrefixFrag.getFirstAtom();
 				firstAtomOfPrefix.addLocant("X");

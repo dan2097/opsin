@@ -46,19 +46,58 @@
     <token value="B(O)O" labels="none" valType="SMILES">boron</token>
     <token value="[Se](O)(O)(=O)=O" labels="none" valType="SMILES">selen</token>
     <token value="[Te](O)(O)(=O)=O" labels="none" valType="SMILES">tellur</token>
+
+    <token value="B(O)(O)OB(O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">dibor</token>
+    <token value="B(O)OBO" labels="1//2/3/" valType="SMILES" suffixAppliesTo="1,4">diboron</token>
+    <token value="P(=O)(O)OP(=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">diphosphon</token>
+    <token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">diphosphor</token>
+    <token value="[As](=O)(O)O[As](=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">diarson</token>
+    <token value="[As](=O)(O)(O)O[As](=O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">diarsor</token>
+    <token value="[Sb](=O)(O)O[Sb](=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">distibon</token>
+    <token value="[Sb](=O)(O)(O)O[Sb](=O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">distibor</token>
+    <token value="[Te](=O)(=O)(O)O[Te](=O)(=O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">ditellur</token>
+    <token value="[Se](=O)(=O)(O)O[Se](=O)(=O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">diselen</token>
+    <token value="S(=O)(=O)(O)OS(=O)(=O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">disulfur</token>
+    <token value="B(O)BO" labels="1//2/" valType="SMILES" suffixAppliesTo="1,3">hypodiboron</token>
+    <token value="P(=O)(O)P(=O)O" labels="1///2//" valType="SMILES" suffixAppliesTo="1,4">hypodiphosphon</token>
+    <token value="P(=O)(O)(O)P(=O)(O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypodiphosphor</token>
+    <token value="[As](=O)(O)[As](=O)O" labels="1///2//" valType="SMILES" suffixAppliesTo="1,4">hypodiarson</token>
+    <token value="[As](=O)(O)(O)[As](=O)(O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypodiarsor</token>
+    <token value="[Sb](=O)(O)[Sb](=O)O" labels="1///2//" valType="SMILES" suffixAppliesTo="1,4">hypodistibon</token>
+    <token value="[Sb](=O)(O)(O)[Sb](=O)(O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypodistibor</token>
+    <token value="S(=O)(=O)(O)S(=O)(=O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypodisulfur</token>
+    <token value="S(=O)(=O)(O)S(=O)(=O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">dithion</token>
+    <token value="[Se](=O)(=O)(O)[Se](=O)(=O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypodiselen</token>
+    <token value="[Te](=O)(=O)(O)[Te](=O)(=O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypoditellur</token>
+    <token value="C(=O)(O)OC(=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">dicarbon</token>
+
+    <token value="P(=O)(O)OP(=O)(O)OP(=O)O" labels="1///2/3///4/5//" valType="SMILES" suffixAppliesTo="1,5,9">triphosphon</token>
+    <token value="P(=O)(O)(O)OP(=O)(O)OP(=O)(O)O" labels="1////2/3///4/5///" valType="SMILES" suffixAppliesTo="1,6,10">triphosphor</token>
+    <token value="[Se](=O)(=O)(O)O[Se](=O)(=O)O[Se](=O)(=O)O" labels="1////2/3///4/5///" valType="SMILES" suffixAppliesTo="1,6,10">triselen</token>
+    <token value="S(=O)(=O)(O)OS(=O)(=O)OS(=O)(=O)O" labels="1////2/3///4/5///" valType="SMILES" suffixAppliesTo="1,6,10">trisulfur</token>
+    <token value="C(=O)(O)OC(=O)OC(=O)O" labels="1///2/3//4/5//" valType="SMILES" suffixAppliesTo="1,5,8">tricarbon</token>
+
+    <token value="P(=O)(O)(O)OP(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="1////2/3///4/5///6/7///" valType="SMILES" suffixAppliesTo="1,6,10,14">tetraphosphor</token>
+    <token value="C(=O)(O)OC(=O)OC(=O)OC(=O)O" labels="1///2/3//4/5//6/7//" valType="SMILES" suffixAppliesTo="1,5,8,11">tetracarbon</token>
+
+    <token value="S(=O)(=O)(O)SS(=O)(=O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">trithion</token>
+    <token value="S(=O)(=O)(O)SSS(=O)(=O)O" labels="1////2/3/4///" valType="SMILES" suffixAppliesTo="1,7">tetrathion</token>
+    <token value="S(=O)(=O)(O)SSSS(=O)(=O)O" labels="1////2/3/4/5///" valType="SMILES" suffixAppliesTo="1,8">pentathion</token>
+
+
   </tokenList>
 
   <tokenList tagname="group" type="nonCarboxylicAcid" symbol="ƒ">
 <!--trivial names -->
     <token value="C(O)(O)(O)O" labels="none" valType="SMILES">orthocarbon</token>
     <token value="C(O)(O)O" labels="none" valType="SMILES">orthoform</token>
-    <token value="CC(O)(O)O" labels="none" valType="SMILES">orthoacet</token>
-    <token value="CCC(O)(O)O" labels="none" valType="SMILES">orthopropion</token>
-    <token value="CCCC(O)(O)O" labels="none" valType="SMILES">orthobutyr</token>
-    <token value="CCCCC(O)(O)O" labels="none" valType="SMILES">orthovaler</token>
-    <token value="CC(=O)OO" labels="2/1///" valType="SMILES">peracet</token>
+    <token value="C(C)(O)(O)O" labels="none" valType="SMILES">orthoacet</token>
+    <token value="C(CC)(O)(O)O" labels="none" valType="SMILES">orthopropion</token>
+    <token value="C(CCC)(O)(O)O" labels="none" valType="SMILES">orthobutyr</token>
+    <token value="C(CCCC)(O)(O)O" labels="none" valType="SMILES">orthovaler</token>
+    <token value="C(C)(=O)OO" labels="2/1///" valType="SMILES">peracet</token>
     <token value="C(=O)OO" labels="1///" valType="SMILES">perform</token>
-    <token value="OC(=O)OC(=O)O" labels="none" valType="SMILES">pyrocarbon</token>
+    <token value="C(O)(=O)OC(=O)O" labels="none" valType="SMILES" suffixAppliesTo="1,5">pyrocarbon</token>
     <token value="S(=O)(=O)(C(F)(F)F)O" labels="none" valType="SMILES">trifl</token>
   </tokenList>
 
