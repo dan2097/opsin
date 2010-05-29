@@ -22,6 +22,8 @@ class StructureBuilder {
 	private final Pattern matchComma =Pattern.compile(",");
 	private final Pattern matchColon =Pattern.compile(":");
 	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	private final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
+	private final Pattern matchElementSymbol =Pattern.compile("[A-Z][a-z]?");
 
 	/**	Builds a molecule as a Fragment based on preStructurebuilder output.
 	 * @param state
@@ -1008,6 +1010,7 @@ class StructureBuilder {
 
 	/**
 	 * Finds a suitable functional atom corresponding to the given locant
+	 * Takes into account situations where function replacement may have resulted in the wrong atoms being functional atoms
 	 * @param locant
 	 * @param mainGroupBR
 	 * @return functionalAtomToUse
@@ -1015,9 +1018,13 @@ class StructureBuilder {
 	 */
 	private Atom determineFunctionalAtomToUse(String locant, BuildResults mainGroupBR) throws StructureBuildingException {
 		for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
+			//look fo exact locant match
 			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 			if (possibleAtom.hasLocant(locant)){
 				mainGroupBR.removeFunctionalAtom(i);
+				if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+					possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT).remove(possibleAtom);
+				}
 				return possibleAtom;
 			}
 		}
@@ -1027,19 +1034,25 @@ class StructureBuilder {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 				if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAtom, locant)!=null){
 					mainGroupBR.removeFunctionalAtom(i);
+					if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+						possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT).remove(possibleAtom);
+					}
 					return possibleAtom;
 				}
 			}
 		}
-		else{
-			//None of the functional atoms had an appropriate locant. Look for the special case where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
+		else if (matchElementSymbolLocant.matcher(locant).matches()){
+			//None of the functional atoms had an appropriate locant. Look for the special cases:
+			//	Where the lack of primes on an element symbol locant should be ignored e.g. O,O-diethyl carbonate
+			//	Where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
+			boolean isElementSymbol = matchElementSymbol.matcher(locant).matches();
 			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
-				if (possibleAtom.getNote("ambiguousElementAssignment")!=null){
-					String[] atomIDs =possibleAtom.getNote("ambiguousElementAssignment").split(",");
-                    for (String atomID : atomIDs) {
-                        Atom a = mainGroupBR.getAtomByIdOrThrow(Integer.parseInt(atomID));
-                        if (a.hasLocant(locant)) {
+				if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+					Set<Atom> atoms =possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+					boolean foundAtom = false;
+                    for (Atom a : atoms) {
+                        if (a.hasLocant(locant) || (isElementSymbol && a.getElement().equals(locant))){
                             //swap locants and element type
                             List<String> tempLocants = new ArrayList<String>(a.getLocants());
                             List<String> tempLocants2 = new ArrayList<String>(possibleAtom.getLocants());
@@ -1055,9 +1068,17 @@ class StructureBuilder {
                             possibleAtom.setElement(a.getElement());
                             a.setElement(originalElement);
                             mainGroupBR.removeFunctionalAtom(i);
-                            return possibleAtom;
+                            foundAtom =true;
+                            break;
                         }
                     }
+                    if (foundAtom){
+                    	atoms.remove(possibleAtom);
+                        return possibleAtom;
+                    }
+				}
+				if (isElementSymbol && possibleAtom.getElement().equals(locant)){
+				    return possibleAtom;
 				}
 			}
 		}

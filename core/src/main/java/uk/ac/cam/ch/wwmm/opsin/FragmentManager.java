@@ -338,7 +338,6 @@ class FragmentManager {
 			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
 			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
 			newAtom.setMinimumValency(atom.getMinimumValency());
-			newAtom.setNotes(new HashMap<String, String>(atom.getNotes()));
 			newFragment.addAtom(newAtom);
 			oldToNewAtomMap.put(atom, newAtom);
 		}
@@ -357,6 +356,17 @@ class FragmentManager {
 				}
 				AtomParity newAtomParity =new AtomParity(newAtomRefs4, atom.getAtomParity().getParity());
 				oldToNewAtomMap.get(atom).setAtomParity(newAtomParity);
+			}
+			if (atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+				Set<Atom> oldAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+				Set<Atom> newAtoms = new HashSet<Atom>();
+				for (Atom oldAtom : oldAtoms) {
+					newAtoms.add(oldToNewAtomMap.get(oldAtom));
+				}
+				oldToNewAtomMap.get(atom).setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, newAtoms);
+			}
+			if (atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.KETONE_SUFFIX_ATTACHED, atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED));
 			}
 		}
         for (OutAtom outAtom : outAtoms) {

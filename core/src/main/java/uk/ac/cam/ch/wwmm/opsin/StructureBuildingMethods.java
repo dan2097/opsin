@@ -485,7 +485,7 @@ class StructureBuildingMethods {
 				}
 				atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
 				if (atom.hasSpareValency()){
-					if (atom.getNote("OneSuffixAttached")!=null){
+					if (atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)!=null && atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)){
 						atomsWhichImplicitlyWillHaveTheirSVRemoved.add(atom);
 					}
 					else{
