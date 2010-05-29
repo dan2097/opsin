@@ -171,6 +171,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithGroupType="aminoAcid"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
   <wordRule name="acetal" type="full">
     <word type="full" />
     <word type="substituent" />

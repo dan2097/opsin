@@ -12,6 +12,7 @@
                endsWithRegex CDATA #IMPLIED
                functionalGroupType CDATA #IMPLIED
                endsWithGroupValueAtr CDATA #IMPLIED
+               endsWithGroupType CDATA #IMPLIED
 >
 
 
