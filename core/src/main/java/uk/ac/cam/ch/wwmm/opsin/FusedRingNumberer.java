@@ -139,21 +139,30 @@ class FusedRingNumberer {
 	static{
 		//unknown heteroatoms or carbon are given a value of 0
 		heteroAtomValues.put("Hg",2);
-		heteroAtomValues.put("B",3);
-		heteroAtomValues.put("Pb",4);
-		heteroAtomValues.put("Sn",5);
-		heteroAtomValues.put("Ge",6);
-		heteroAtomValues.put("Si",7);
-		heteroAtomValues.put("Bi",8);
-		heteroAtomValues.put("Sb",9);
-		heteroAtomValues.put("As",10);
-		heteroAtomValues.put("P",12);
-		heteroAtomValues.put("N",13);
-		heteroAtomValues.put("Te",14);
-		heteroAtomValues.put("Se",15);
-		heteroAtomValues.put("S",16);
-		heteroAtomValues.put("O",17);
+		heteroAtomValues.put("Tl",3);
+		heteroAtomValues.put("In",4);
+		heteroAtomValues.put("Ga",5);
+		heteroAtomValues.put("Al",6);
+		heteroAtomValues.put("B",7);
+		heteroAtomValues.put("Pb",8);
+		heteroAtomValues.put("Sn",9);
+		heteroAtomValues.put("Ge",10);
+		heteroAtomValues.put("Si",11);
+		heteroAtomValues.put("Bi",12);
+		heteroAtomValues.put("Sb",13);
+		heteroAtomValues.put("As",14);
+		heteroAtomValues.put("P",15);
+		heteroAtomValues.put("N",16);
+		heteroAtomValues.put("Te",17);
+		heteroAtomValues.put("Se",18);
+		heteroAtomValues.put("S",19);
+		heteroAtomValues.put("O",20);
+		heteroAtomValues.put("I",21);
+		heteroAtomValues.put("Br",22);
+		heteroAtomValues.put("Cl",23);
+		heteroAtomValues.put("F",24);
 	}
+
 	/**
 	 * Numbers the fused ring
 	 * Currently only works for a very limited selection of rings
