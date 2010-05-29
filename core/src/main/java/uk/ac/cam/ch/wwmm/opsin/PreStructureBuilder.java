@@ -1607,7 +1607,7 @@ class PreStructureBuilder {
 						}
 					}
 
-					ArrayList<Atom> ambiguousElementAtoms = new ArrayList<Atom>();
+					Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
 					Atom atomToUse = null;
 					if (acceptDoubleBondedOxygen && doubleBondedOxygen.size()>0 ){
 						atomToUse = doubleBondedOxygen.removeFirst();
@@ -1651,22 +1651,25 @@ class PreStructureBuilder {
 					
 					if (infixAssignmentAmbiguous){
 						ambiguousElementAtoms.add(atomToUse);
+						if (atomToUse.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+							ambiguousElementAtoms.addAll(atomToUse.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
+						}
 					}
 					if (infixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl ethanthioate
 						for (Atom a : doubleBondedOxygen) {
 							ambiguousElementAtoms.add(a);
+							if (a.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+								ambiguousElementAtoms.addAll(a.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
+							}
 						}
 						for (Atom a : singleBondedOxygen) {
 							ambiguousElementAtoms.add(a);
+							if (a.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+								ambiguousElementAtoms.addAll(a.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
+							}
 						}
-						String atomIDsString="";
 						for (Atom atom : ambiguousElementAtoms) {
-							atomIDsString+=atom.getID();
-							atomIDsString+=",";
-						}
-						atomIDsString= atomIDsString.substring(0, atomIDsString.length()-1);
-						for (Atom atom : ambiguousElementAtoms) {
-							atom.setNote("ambiguousElementAssignment", atomIDsString);
+							atom.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, ambiguousElementAtoms);
 						}
 					}
 				}
@@ -1941,7 +1944,7 @@ class PreStructureBuilder {
 					}
 					if (replaceableAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
 						boolean prefixAssignmentAmbiguous =false;
-						ArrayList<Atom> ambiguousElementAtoms = new ArrayList<Atom>();
+						Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
 						if (replaceableAtoms.size() != numberOfAtomsToReplace){
 							prefixAssignmentAmbiguous=true;
 						}
@@ -1949,7 +1952,8 @@ class PreStructureBuilder {
 						int replacementsDone =0;
 						for (Atom atomToReplace : replaceableAtoms) {
 							if (replacementsDone == numberOfAtomsToReplace){
-								break;
+								ambiguousElementAtoms.add(atomToReplace);
+								continue;
 							}
 							if (atomCount>1){//something like peroxy
 								Fragment replacementFrag = state.fragManager.buildSMILES(replacementSMILES, "suffix", "none");
@@ -1968,17 +1972,8 @@ class PreStructureBuilder {
 						}
 
 						if (prefixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl thioacetate
-							for (Atom a : replaceableAtoms) {
-								ambiguousElementAtoms.add(a);
-							}
-							String atomIDsString="";
 							for (Atom atom : ambiguousElementAtoms) {
-								atomIDsString+=atom.getID();
-								atomIDsString+=",";
-							}
-							atomIDsString= atomIDsString.substring(0, atomIDsString.length()-1);
-							for (Atom atom : ambiguousElementAtoms) {
-								atom.setNote("ambiguousElementAssignment", atomIDsString);
+								atom.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, ambiguousElementAtoms);
 							}
 						}
 
@@ -3155,7 +3150,7 @@ class PreStructureBuilder {
 							Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
 							state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
 							if (suffixValue.equals("one") && groupType.equals("ring")){//special case: one acts in a similar way to the hydro tag c.f. tetrahydrobenzen-1,4-dione
-								parentfragAtom.setNote("OneSuffixAttached", "1");
+								parentfragAtom.setProperty(Atom.KETONE_SUFFIX_ATTACHED, true);
 							}
 							state.fragManager.removeBond(bondToSuffix);
 						}

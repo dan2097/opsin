@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,8 +44,11 @@ class Atom {
 	/**The bonds that involve the atom*/
 	private final Set<Bond> bonds = new LinkedHashSet<Bond>();
 
-	/**A hashmap in which notes can be associated with the atom. */
-	private HashMap<String,String> notes = new HashMap<String, String>();
+	/**A map between PropertyKey s as declared here and useful atom properties, usually relating to some kind of special case. */
+	@SuppressWarnings("unchecked")
+	private Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
+    static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
+    static final PropertyKey<Boolean> KETONE_SUFFIX_ATTACHED = new PropertyKey<Boolean>("ketoneSuffixAttached");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
@@ -452,23 +456,6 @@ class Atom {
 		outValency += outV;
 	}
 
-	/**
-	 * Allows the storage of a string of information associated with this atom in a hash
-	 * @param key
-	 * @param value
-	 */
-	void setNote(String key, String value) {
-		notes.put(key,value);
-	}
-
-	/**
-	 * Allows the retrieval of a string of information associated with this atom from a hash
-	 * @param key
-	 */
-	String getNote(String key) {
-		return notes.get(key);
-	}
-
 	Set<Bond> getBonds() {
 		return Collections.unmodifiableSet(bonds);
 	}
@@ -540,15 +527,6 @@ class Atom {
 	void setAtomParity(Atom[] atomRefs4, int parity) throws StructureBuildingException {
 		atomParity = new AtomParity(atomRefs4, parity);
 	}
-
-	HashMap<String, String> getNotes() {
-		return notes;
-	}
-
-	void setNotes(HashMap<String, String> notes) {
-		this.notes = notes;
-	}
-	
 	
 	Integer getMinimumValency() {
 		return minimumValency;
@@ -556,6 +534,15 @@ class Atom {
 
 	void setMinimumValency(Integer minimumValency) {
 		this.minimumValency = minimumValency;
+	}
+
+    @SuppressWarnings("unchecked")
+	<T> T getProperty(PropertyKey<T> propertyKey) {
+        return (T) properties.get(propertyKey);
+    }
+
+	<T> void setProperty(PropertyKey<T> propertyKey, T value) {
+		properties.put(propertyKey, value);
 	}
 
 	/**
