@@ -1422,6 +1422,11 @@ class PostProcessor {
 				}
 			}
 		}
+		else if (groupValue.equals("hydrogen")){
+			if (XOMTools.getNextSibling(group.getParent())!=null){
+				throw new PostProcessingException("Hydrogen is not meant as a substituent in this context!");
+			}
+		}
 	}
 	
 	/**
