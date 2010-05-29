@@ -3163,6 +3163,9 @@ class PreStructureBuilder {
 						//It's extremely rare to want a carbocation so any heteroatom is preferred with preference given to N
 						Atom possibleAtom =null;
 						for (Atom a : atomList) {
+							if (ValencyChecker.getPossibleValencies(a.getElement(), a.getCharge() + chargeChange)==null){//unstable valency so seems unlikely
+								continue;
+							}
 							String element =a.getElement();
 							if (element.equals("N")){
 								possibleAtom =a;
