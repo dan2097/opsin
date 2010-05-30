@@ -2,35 +2,36 @@
 <!-- See the DTD for more details -->
 <tokenLists>
   <!--For convenience in order of priority-->
+	<!--Specified valencies have been provided for charged p-block elements-->
   <tokenList tagname="heteroatom" symbol="H">
     <token value="F" valType="SMILES">fluora</token>
     <token value="Cl" valType="SMILES">chlora</token>
     <token value="Br" valType="SMILES">broma</token>
     <token value="I" valType="SMILES">ioda</token>
-    <token value="[At|1]" valType="SMILES">astata</token>
+    <token value="[At]" valType="SMILES">astata</token>
     <token value="O" valType="SMILES">oxa</token>
     <token value="S" valType="SMILES">thia</token>
-    <token value="[Se|2]" valType="SMILES">selena</token>
-    <token value="[Te|2]" valType="SMILES">tellura</token>
-    <token value="[Po|2]" valType="SMILES">polona</token>
+    <token value="[Se]" valType="SMILES">selena</token>
+    <token value="[Te]" valType="SMILES">tellura</token>
+    <token value="[Po]" valType="SMILES">polona</token>
     <token value="N" valType="SMILES">aza</token>
     <token value="P" valType="SMILES">phospha</token>
-    <token value="[As|3]" valType="SMILES">arsa</token>
-    <token value="[Sb|3]" valType="SMILES">stiba</token>
-    <token value="[Bi|3]" valType="SMILES">bisma</token>
+    <token value="[As]" valType="SMILES">arsa</token>
+    <token value="[Sb]" valType="SMILES">stiba</token>
+    <token value="[Bi]" valType="SMILES">bisma</token>
     <token value="C" valType="SMILES">carba</token>
-    <token value="[Si|4]" valType="SMILES">sila</token>
-    <token value="[Ge|4]" valType="SMILES">germa</token>
-    <token value="[Sn|4]" valType="SMILES">stanna</token>
-    <token value="[Pb|4]" valType="SMILES">plumba</token>
+    <token value="[Si]" valType="SMILES">sila</token>
+    <token value="[Ge]" valType="SMILES">germa</token>
+    <token value="[Sn]" valType="SMILES">stanna</token>
+    <token value="[Pb]" valType="SMILES">plumba</token>
     <token value="B" valType="SMILES">bora</token>
-    <token value="[Al|3]" valType="SMILES">alumina</token>
-    <token value="[Ga|3]" valType="SMILES">galla</token>
-    <token value="[In|3]" valType="SMILES">inda</token>
-    <token value="[Tl|3]" valType="SMILES">thalla</token>
-    <token value="[Zn|2]" valType="SMILES">zinca</token>
-    <token value="[Cd|2]" valType="SMILES">cadma</token>
-    <token value="[Hg|2]" valType="SMILES">mercura</token>
+    <token value="[Al]" valType="SMILES">alumina</token>
+    <token value="[Ga]" valType="SMILES">galla</token>
+    <token value="[In]" valType="SMILES">inda</token>
+    <token value="[Tl]" valType="SMILES">thalla</token>
+    <token value="[Zn]" valType="SMILES">zinca</token>
+    <token value="[Cd]" valType="SMILES">cadma</token>
+    <token value="[Hg]" valType="SMILES">mercura</token>
     <token value="[Cu]" valType="SMILES">cupra</token>
     <token value="[Ag]" valType="SMILES">argenta</token>
     <token value="[Au]" valType="SMILES">aura</token>
@@ -94,8 +95,8 @@
     <token value="[Md]" valType="SMILES">mendeleva</token>
     <token value="[No]" valType="SMILES">nobela</token>
     <token value="[Lr]" valType="SMILES">lawrenca</token>
-    <token value="[Be|2]" valType="SMILES">berylla</token>
-    <token value="[Mg|2]" valType="SMILES">magnesa</token>
+    <token value="[Be]" valType="SMILES">berylla</token>
+    <token value="[Mg]" valType="SMILES">magnesa</token>
     <token value="[Ca]" valType="SMILES">calca</token>
     <token value="[Sr]" valType="SMILES">stronta</token>
     <token value="[Ba]" valType="SMILES">bara</token>
@@ -113,31 +114,31 @@
     <token value="[Xe]" valType="SMILES">xenona</token>
     <token value="[Rn]" valType="SMILES">radona</token>
 
-    <token value="[F+]" valType="SMILES">fluoronia</token>
-    <token value="[Cl+]" valType="SMILES">chloronia</token>
-    <token value="[Br+]" valType="SMILES">bromonia</token>
-    <token value="[I+]" valType="SMILES">iodonia</token>
-    <token value="[At+]" valType="SMILES">astatonia</token>
-    <token value="[O+]" valType="SMILES">oxonia</token>
-    <token value="[S+]" valType="SMILES">thionia</token>
-    <token value="[Se+]" valType="SMILES">selenonia</token>
-    <token value="[Te+]" valType="SMILES">telluronia</token>
-    <token value="[Po+]" valType="SMILES">polononia</token>
-    <token value="[N+]" valType="SMILES">azonia</token>
-    <token value="[P+]" valType="SMILES">phosphonia</token>
-    <token value="[As+]" valType="SMILES">arsonia</token>
-    <token value="[Sb+]" valType="SMILES">stibonia</token>
-    <token value="[Bi+]" valType="SMILES">bismonia</token>
-    <token value="[C+]" valType="SMILES">carbonia</token>
-    <token value="[Si+]" valType="SMILES">silonia</token>
-    <token value="[Ge+]" valType="SMILES">germonia</token>
-    <token value="[Sn+]" valType="SMILES">stannonia</token>
-    <token value="[Pb+]" valType="SMILES">plumbonia</token>
-    <token value="[B+]" valType="SMILES">boronia</token>
-    <token value="[Al+]" valType="SMILES">aluminonia</token>
-    <token value="[Ga+]" valType="SMILES">gallonia</token>
-    <token value="[In+]" valType="SMILES">indonia</token>
-    <token value="[Tl+]" valType="SMILES">thallonia</token>
+    <token value="[FH2+]" valType="SMILES">fluoronia</token>
+    <token value="[ClH2+]" valType="SMILES">chloronia</token>
+    <token value="[BrH2+]" valType="SMILES">bromonia</token>
+    <token value="[IH2+]" valType="SMILES">iodonia</token>
+    <token value="[AtH2+]" valType="SMILES">astatonia</token>
+    <token value="[OH3+]" valType="SMILES">oxonia</token>
+    <token value="[SH3+]" valType="SMILES">thionia</token>
+    <token value="[SeH3+]" valType="SMILES">selenonia</token>
+    <token value="[TeH3+]" valType="SMILES">telluronia</token>
+    <token value="[PoH3+]" valType="SMILES">polononia</token>
+    <token value="[NH4+]" valType="SMILES">azonia</token>
+    <token value="[PH4+]" valType="SMILES">phosphonia</token>
+    <token value="[AsH4+]" valType="SMILES">arsonia</token>
+    <token value="[SbH4+]" valType="SMILES">stibonia</token>
+    <token value="[BiH4+]" valType="SMILES">bismuthonia</token>
+    <token value="[CH5+]" valType="SMILES">carbonia</token>
+    <token value="[SiH5+]" valType="SMILES">silonia</token>
+    <token value="[GeH5+]" valType="SMILES">germonia</token>
+    <token value="[SnH5+]" valType="SMILES">stannonia</token>
+    <token value="[PbH5+]" valType="SMILES">plumbonia</token>
+    <token value="[BH4+]" valType="SMILES">boronia</token>
+    <token value="[AlH4+]" valType="SMILES">aluminonia</token>
+    <token value="[GaH4+]" valType="SMILES">gallonia</token>
+    <token value="[InH4+]" valType="SMILES">indonia</token>
+    <token value="[TlH4+]" valType="SMILES">thallonia</token>
     <token value="[Zn+]" valType="SMILES">zinconia</token>
     <token value="[Cd+]" valType="SMILES">cadmonia</token>
     <token value="[Hg+]" valType="SMILES">mercuronia</token>
@@ -222,6 +223,84 @@
     <token value="[Kr+]" valType="SMILES">kryptononia</token>
     <token value="[Xe+]" valType="SMILES">xenononia</token>
     <token value="[Rn+]" valType="SMILES">radononia</token>
+
+		<token value="[F+]" valType="SMILES">fluoranylia</token>
+		<token value="[Cl+]" valType="SMILES">chloranylia</token>
+		<token value="[Br+]" valType="SMILES">bromanylia</token>
+		<token value="[I+]" valType="SMILES">iodanylia</token>
+		<token value="[At+]" valType="SMILES">astatanylia</token>
+		<token value="[OH+]" valType="SMILES">oxidanylia</token>
+		<token value="[SH+]" valType="SMILES">sulfanylia</token>
+		<token value="[SeH+]" valType="SMILES">selanylia</token>
+		<token value="[TeH+]" valType="SMILES">tellanylia</token>
+		<token value="[PoH+]" valType="SMILES">polanylia</token>
+		<token value="[NH2+]" valType="SMILES">azanylia</token>
+		<token value="[PH2+]" valType="SMILES">phosphanylia</token>
+		<token value="[AsH2+]" valType="SMILES">arsanylia</token>
+		<token value="[SbH2+]" valType="SMILES">stibanylia</token>
+		<token value="[BiH2+]" valType="SMILES">bismuthanylia</token>
+		<token value="[CH3+]" valType="SMILES">carbanylia</token>
+		<token value="[SiH3+]" valType="SMILES">silanylia</token>
+		<token value="[GeH3+]" valType="SMILES">germanylia</token>
+		<token value="[SnH3+]" valType="SMILES">stannanylia</token>
+		<token value="[PbH3+]" valType="SMILES">plumbanylia</token>
+		<token value="[BH2+]" valType="SMILES">boranylia</token>
+		<token value="[AlH2+]" valType="SMILES">alumanylia</token>
+		<token value="[InH2+]" valType="SMILES">indiganylia</token>
+		<token value="[GaH2+]" valType="SMILES">gallanylia</token>
+		<token value="[TlH2+]" valType="SMILES">thallanylia</token>
+
+		<token value="[F-]" valType="SMILES">fluoranida</token>
+		<token value="[Cl-]" valType="SMILES">chloranida</token>
+		<token value="[Br-]" valType="SMILES">bromanida</token>
+		<token value="[I-]" valType="SMILES">iodanida</token>
+		<token value="[At-]" valType="SMILES">astatanida</token>
+		<token value="[OH-]" valType="SMILES">oxidanida</token>
+		<token value="[SH-]" valType="SMILES">sulfanida</token>
+		<token value="[SeH-]" valType="SMILES">selanida</token>
+		<token value="[TeH-]" valType="SMILES">tellanida</token>
+		<token value="[PoH-]" valType="SMILES">polanida</token>
+		<token value="[NH2-]" valType="SMILES">azanida</token>
+		<token value="[PH2-]" valType="SMILES">phosphanida</token>
+		<token value="[AsH2-]" valType="SMILES">arsanida</token>
+		<token value="[SbH2-]" valType="SMILES">stibanida</token>
+		<token value="[BiH2-]" valType="SMILES">bismuthanida</token>
+		<token value="[CH3-]" valType="SMILES">carbanida</token>
+		<token value="[SiH3-]" valType="SMILES">silanida</token>
+		<token value="[GeH3-]" valType="SMILES">germanida</token>
+		<token value="[SnH3-]" valType="SMILES">stannanida</token>
+		<token value="[PbH3-]" valType="SMILES">plumbanida</token>
+		<token value="[BH2-]" valType="SMILES">boranida</token>
+		<token value="[AlH2-]" valType="SMILES">alumanida</token>
+		<token value="[InH2-]" valType="SMILES">indiganida</token>
+		<token value="[GaH2-]" valType="SMILES">gallanida</token>
+		<token value="[TlH2-]" valType="SMILES">thallanida</token>
+
+		<token value="[FH2-]" valType="SMILES">fluoranuida</token>
+		<token value="[ClH2-]" valType="SMILES">chloranuida</token>
+		<token value="[BrH2-]" valType="SMILES">bromanuida</token>
+		<token value="[IH2-]" valType="SMILES">iodanuida</token>
+		<token value="[AtH2-]" valType="SMILES">astatanuida</token>
+		<token value="[OH3-]" valType="SMILES">oxidanuida</token>
+		<token value="[SH3-]" valType="SMILES">sulfanuida</token>
+		<token value="[SeH3-]" valType="SMILES">selanuida</token>
+		<token value="[TeH3-]" valType="SMILES">tellanuida</token>
+		<token value="[PoH3-]" valType="SMILES">polanuida</token>
+		<token value="[NH4-]" valType="SMILES">azanuida</token>
+		<token value="[PH4-]" valType="SMILES">phosphanuida</token>
+		<token value="[AsH4-]" valType="SMILES">arsanuida</token>
+		<token value="[SbH4-]" valType="SMILES">stibanuida</token>
+		<token value="[BiH4-]" valType="SMILES">bismuthanuida</token>
+		<token value="[CH5-]" valType="SMILES">carbanuida</token>
+		<token value="[SiH5-]" valType="SMILES">silanuida</token>
+		<token value="[GeH5-]" valType="SMILES">germanuida</token>
+		<token value="[SnH5-]" valType="SMILES">stannanuida</token>
+		<token value="[PbH5-]" valType="SMILES">plumbanuida</token>
+		<token value="[BH4-]" valType="SMILES">boranuida</token>
+		<token value="[AlH4-]" valType="SMILES">alumanuida</token>
+		<token value="[InH4-]" valType="SMILES">indiganuida</token>
+		<token value="[GaH4-]" valType="SMILES">gallanuida</token>
+		<token value="[TlH4-]" valType="SMILES">thallanuida</token>
   </tokenList>
 
   <!--heteroatoms without terminal a -->

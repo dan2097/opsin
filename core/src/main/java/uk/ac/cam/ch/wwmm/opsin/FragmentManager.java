@@ -179,21 +179,37 @@ class FragmentManager {
 	 * Charged atoms can also be specified using a SMILES formula eg. [N+]
 	 *
 	 * @param a The atom to change to a heteroatom
-	 * @param atomSymbol The atomic symbol to be used
+	 * @param smiles The SMILES for one atom
 	 * @param assignLocant Whether a locant should be assigned to the heteroatom if the locant is not used elsewhere
 	 * @throws StructureBuildingException if the atom could not be found
 	 */
-	void makeHeteroatom(Atom a, String atomSymbol, boolean assignLocant) throws StructureBuildingException {
-		if(atomSymbol.startsWith("[")) {
-			Fragment f = sBuilder.build(atomSymbol, this);
-			Atom referenceAtom = f.getAtomList().get(0);
-			atomSymbol =referenceAtom.getElement();
-			a.setCharge(referenceAtom.getCharge());
+	void makeHeteroatom(Atom a, String smiles, boolean assignLocant) throws StructureBuildingException {
+		String elementSymbol;
+		if(smiles.startsWith("[")) {
+			Atom heteroAtom = sBuilder.build(smiles, this).getFirstAtom();
+			elementSymbol =heteroAtom.getElement();
+			int charge = heteroAtom.getCharge();
+			if (heteroAtom.getCharge()!=0){
+				Integer defaultValency = ValencyChecker.getDefaultValency(elementSymbol);
+				if (defaultValency !=null){
+					//calculate how many protons have been added/removed as compared to the element's standard valency
+					int specifiedValency =  heteroAtom.getMinimumValency() !=null ?
+							heteroAtom.getMinimumValency() : ValencyChecker.getPossibleValencies(elementSymbol, charge)[0];
+					int hydrogensAdded = specifiedValency - defaultValency;
+					a.addChargeAndProtons(charge , hydrogensAdded);
+				}
+				else{
+					a.addChargeAndProtons(charge , 0);
+				}
+			}
 		}
-		a.setElement(atomSymbol);
+		else{
+			elementSymbol = smiles;
+		}
+		a.setElement(elementSymbol);
 		a.removeElementSymbolLocants();
-		if (assignLocant && a.getFrag().getAtomByLocant(atomSymbol) ==null){//if none of that element currently present add element symbol locant
-			a.addLocant(atomSymbol);
+		if (assignLocant && a.getFrag().getAtomByLocant(elementSymbol) ==null){//if none of that element currently present add element symbol locant
+			a.addLocant(elementSymbol);
 		}
 	}
 

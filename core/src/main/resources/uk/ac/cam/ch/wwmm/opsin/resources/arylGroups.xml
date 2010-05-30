@@ -106,6 +106,7 @@
   <token value="[cH2]1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromen</token>
   <token value="[cH2]1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromen</token>
   <token value="[cH2]1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromen</token>
+  <token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a" valType="SMILES">isocoumarin</token>
   <token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/" valType="SMILES">isoguanin</token>
   <token value="isoindole" valType="dbkey">isoindol</token>
   <token value="isoindoline" valType="dbkey">isoindolin</token>
@@ -153,6 +154,7 @@
   <token value="N(C(=O)C)c1ccc(O)cc1" labels="////1/2/3/4//5/6" valType="SMILES">paracetamol</token>
   <token value="perimidine" valType="dbkey">perimidin</token>
   <token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">perylen</token>
+  <token value="C1(=O)OCc2ccccc12" labels="1//2/3/3a/4/5/6/7/7a" valType="SMILES">phthalid</token>
   <token value="phenalene" valType="dbkey">phenalen</token>
   <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthren</token>
   <token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phenanthridin</token>
