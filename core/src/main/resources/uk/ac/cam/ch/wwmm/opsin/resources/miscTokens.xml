@@ -41,4 +41,9 @@
   <tokenList tagname="suffix" type="root" symbol="Ñ">
     <token value="amine">ylamine</token>
   </tokenList>
+
+  <tokenList tagname="polyCyclicSpiro" symbol="º">
+    <token value="2,identicalComponents">spirobi</token>
+    <token value="3,identicalComponents">spiroter</token>
+  </tokenList>
 </tokenLists>

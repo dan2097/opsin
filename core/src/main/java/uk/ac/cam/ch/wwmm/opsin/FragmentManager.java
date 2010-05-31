@@ -480,7 +480,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	void replaceTerminalAtomWithFragment(Atom terminalAtom, Atom atomThatReplacesTerminal) throws StructureBuildingException {
-		Fragment parentFrag = terminalAtom.getFrag();
+		Fragment parentFrag = terminalAtom.getFrag();//TODO  use replaceAtomWithAnotherAtomPreservingConnectivity instead of this function????
 		Fragment childFrag = atomThatReplacesTerminal.getFrag();
 		if (parentFrag == childFrag){
 			throw new StructureBuildingException("Replacing atom and terminal should be different fragments");
@@ -502,6 +502,29 @@ class FragmentManager {
 		}
 		removeAtomAndAssociatedBonds(atomThatReplacesTerminal);
 		incorporateFragment(childFrag, parentFrag);
+	}
+	
+	/**
+	 * Takes an atom, removes it and bonds everything that was bonded to it to the replacementAtom with the original bond orders.
+	 * Non element symbol locants are copied to the replacement atom
+	 * @param atomToBeReplaced
+	 * @param replacementAtom
+	 * @throws StructureBuildingException
+	 */
+	void replaceAtomWithAnotherAtomPreservingConnectivity(Atom atomToBeReplaced, Atom replacementAtom) throws StructureBuildingException {
+		atomToBeReplaced.removeElementSymbolLocants();
+		List<String> locants = atomToBeReplaced.getLocants();
+		for (int i = locants.size() -1; i >=0; i--) {
+			String locant = locants.get(i);
+			atomToBeReplaced.removeLocant(locant);
+			replacementAtom.addLocant(locant);
+		}
+		Fragment replacedAtomsFragment = atomToBeReplaced.getFrag();
+		List<Atom> neighbours = atomToBeReplaced.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			createBond(replacementAtom, neighbour, replacedAtomsFragment.findBond(atomToBeReplaced, neighbour).getOrder());
+		}
+		removeAtomAndAssociatedBonds(atomToBeReplaced);
 	}
 
 	/**

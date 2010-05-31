@@ -618,7 +618,7 @@ class PostProcessor {
 			}
 		}
 		for (Element lambdaConventionEl : lambdaConventionEls) {
-			boolean benzoFusedRing =false;//Is the lambdaConvention el followed by benz/benzo of a fused ring system (these have front locants which correspond to the final fused rings numbering)
+			boolean frontLocantsExpected =false;//Is the lambdaConvention el followed by benz/benzo of a fused ring system (these have front locants which correspond to the final fused rings numbering) or by a polycylicspiro system
 			String[] lambdaValues = matchComma.split(StringTools.removeDashIfPresent(lambdaConventionEl.getValue()));
 			Element possibleHeteroatomOrMultiplier = (Element) XOMTools.getNextSibling(lambdaConventionEl);
 			int heteroCount = 0;
@@ -644,11 +644,12 @@ class PostProcessor {
 					assignLambdasToHeteroAtoms =true;
 				}
 			}
-			else if(heteroCount==0 && fusedRingPresent &&
-					XOMTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
-					possibleHeteroatomOrMultiplier!=null && possibleHeteroatomOrMultiplier.getLocalName().equals(GROUP_EL) &&
-					(possibleHeteroatomOrMultiplier.getValue().equals("benzo")||possibleHeteroatomOrMultiplier.getValue().equals("benz"))){
-				benzoFusedRing = true;
+			else if(heteroCount==0 && XOMTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
+					 possibleHeteroatomOrMultiplier!=null &&
+						(fusedRingPresent && possibleHeteroatomOrMultiplier.getLocalName().equals(GROUP_EL) &&
+						(possibleHeteroatomOrMultiplier.getValue().equals("benzo") || possibleHeteroatomOrMultiplier.getValue().equals("benz"))) ||
+						(possibleHeteroatomOrMultiplier.getLocalName().equals(POLYCYCLICSPIRO_EL))){
+				frontLocantsExpected = true;
 			}
 			List<Element> heteroAtoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
 			if (assignLambdasToHeteroAtoms){//populate heteroAtoms, multiplied heteroatoms are multiplied out
@@ -690,7 +691,7 @@ class PostProcessor {
 					if (m.group(1)!=null){
 						locantAtr = new Attribute(LOCANT_ATR, m.group(1));
 					}
-					if (benzoFusedRing){
+					if (frontLocantsExpected){
 						if (m.group(1)==null){
 							throw new PostProcessingException("Locant not found for lambda convention before a benzo fused ring system");
 						}
@@ -714,7 +715,7 @@ class PostProcessor {
 				}
 				else{//just a locant e.g 1,3lambda5
 					if (!assignLambdasToHeteroAtoms){
-						if (!benzoFusedRing){
+						if (!frontLocantsExpected){
 							throw new PostProcessingException("Lambda convention not specified for locant: " + lambdaValue);
 						}
 					}
@@ -724,7 +725,7 @@ class PostProcessor {
 					}
 				}
 			}
-			if (!benzoFusedRing){
+			if (!frontLocantsExpected){
 				lambdaConventionEl.detach();
 			}
 			else{
