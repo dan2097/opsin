@@ -487,4 +487,21 @@ public final class XOMTools {
 		}
 		return count;
 	}
+
+	/**
+	 * Find all the later siblings of startingElement with the search terminating at the element with string tagName
+	 * or if there are not more siblings
+	 * @param startingEl
+	 * @param tagName
+	 * @return
+	 */
+	public static List<Element> getSiblingsUpToElementWithTagName(Element startingEl, String tagName) {
+		List<Element> laterSiblings = new ArrayList<Element>();
+		Element nextEl = (Element) XOMTools.getNextSibling(startingEl);
+		while (nextEl !=null && !nextEl.getLocalName().equals(tagName)){
+			laterSiblings.add(nextEl);
+			nextEl = (Element) XOMTools.getNextSibling(nextEl);
+		}
+		return laterSiblings;
+	}
 }

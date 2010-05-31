@@ -100,6 +100,9 @@ class XmlDeclarations {
 
 	/**otho/meta/para Converted to a locant by the PreStructureBuilder*/
 	static final String ORTHOMETAPARA_EL ="orthoMetaPara";
+
+	/**Describes the number of spiro centres in a poly cyclic spiro system*/
+	static final String POLYCYCLICSPIRO_EL ="polyCyclicSpiro";
 	
 	/**A multiplier e.g. indicating multiplication of a heteroatom or substituent*/
 	static final String MULTIPLIER_EL ="multiplier";

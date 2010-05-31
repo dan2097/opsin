@@ -219,7 +219,7 @@ class PreStructureBuilder {
 				fusedRingBuilder.processFusedRings(state, subOrRoot);
 				assignElementSymbolLocants(state, subOrRoot);
 				processRingAssemblies(state, subOrRoot);
-				processComplicatedSpiroNomenclature(state, subOrRoot);
+				processPolyCyclicSpiroNomenclature(state, subOrRoot);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
@@ -775,7 +775,6 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private boolean determineLocantMeaning(BuildState state, Element locant, String[] locantValues, Element finalSubOrRootInWord) throws StructureBuildingException {
-		if (locant.getAttribute("type")!=null && locant.getAttributeValue(TYPE_ATR).equals("multiplicativeNomenclature")) return true;//already known function (the locant must have been been previously moved by this method to an element that checkAndConvertToSingleLocants had not yet encountered)
 		int count =locantValues.length;
 		Element currentElem = (Element)XOMTools.getNextSibling(locant);
 		int heteroCount = 0;
@@ -784,21 +783,24 @@ class PreStructureBuilder {
 			if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
 				heteroCount+=multiplierValue;
 				multiplierValue =1;
-			} else if (currentElem.getLocalName().equals("multiplier")){
+			} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
 				multiplierValue = Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR));
+			}
+			else{
+				break;
 			}
 			currentElem = (Element)XOMTools.getNextSibling(currentElem);
 		}
 		if(currentElem != null && currentElem.getLocalName().equals(GROUP_EL)){
-			if (currentElem.getAttributeValue("subType").equals("hantzschWidman")) {
+			if (currentElem.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)) {
 				if(heteroCount == count) {
 					return true;
 				} else {
 					return false;//there is a case where locants don't apply to heteroatoms in a HW system, but in that case only one locant is expected so this function would not be called
 				}
 			}
-			else if (heteroCount==0 && currentElem.getAttribute("outIDs")!=null ) {//e.g. 1,4-phenylene
-				String[] outIDs = matchComma.split(currentElem.getAttributeValue("outIDs"), -1);
+			else if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
+				String[] outIDs = matchComma.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
 				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
 				if (count ==outIDs.length && groupFragment.getAtomList().size()>1){//things like oxy do not need to have their outIDs specified
 					int idOfFirstAtomInFrag =groupFragment.getIdOfFirstAtom();
@@ -812,21 +814,24 @@ class PreStructureBuilder {
 						outIDs[i]=Integer.toString(a.getID() -idOfFirstAtomInFrag +1);//convert to relative id
 					}
 					if (!foundLocantNotPresentOnFragment){
-						currentElem.getAttribute("outIDs").setValue(StringTools.arrayToString(outIDs, ","));
+						currentElem.getAttribute(OUTIDS_ATR).setValue(StringTools.arrayToString(outIDs, ","));
 						locant.detach();
 						return true;
 					}
 				}
 			}
 			else if(currentElem.getValue().equals("benz") || currentElem.getValue().equals("benzo")){
-				Node potentialGroupAfterBenzo = XOMTools.getNextSibling(currentElem, "group");//need to make sure this isn't benzyl
+				Node potentialGroupAfterBenzo = XOMTools.getNextSibling(currentElem, GROUP_EL);//need to make sure this isn't benzyl
 				if (potentialGroupAfterBenzo!=null){
 					return true;//e.g. 1,2-benzothiazole
 				}
 			}
 		}
+		if(currentElem != null && currentElem.getLocalName().equals(POLYCYCLICSPIRO_EL)){
+			return true;
+		}
 		Element multiplier =(Element) finalSubOrRootInWord.getChild(0);
-		if (!multiplier.getLocalName().equals("multiplier") && ((Element)finalSubOrRootInWord.getParent()).getLocalName().equals("bracket")){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
+		if (!multiplier.getLocalName().equals(MULTIPLIER_EL) && ((Element)finalSubOrRootInWord.getParent()).getLocalName().equals(BRACKET_EL)){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
 			multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
 		}
 		Node commonParent =locant.getParent().getParent();//this should be a common parent of the multiplier in front of the root. If it is not, then this locant is in a different scope
@@ -834,13 +839,13 @@ class PreStructureBuilder {
 		while (parentOfMultiplier!=null){
 			if (commonParent.equals(parentOfMultiplier)){
 				if (locantValues[count-1].endsWith("'")  &&
-						multiplier.getLocalName().equals("multiplier") && multiplier.getAttribute("locantsAssigned")==null &&
+						multiplier.getLocalName().equals(MULTIPLIER_EL) && multiplier.getAttribute("locantsAssigned")==null &&
 						Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) == count ){//multiplicative nomenclature
 					multiplier.addAttribute(new Attribute ("locantsAssigned",""));
 					locant.detach();
 					for(int i=locantValues.length-1; i>=0; i--) {
 						Element singleLocant = new Element("multiplicativeLocant");
-						singleLocant.addAttribute(new Attribute("value", locantValues[i]));
+						singleLocant.addAttribute(new Attribute(VALUE_ATR, locantValues[i]));
 						XOMTools.insertAfter(multiplier, singleLocant);
 					}
 					return true;
@@ -2403,9 +2408,78 @@ class PreStructureBuilder {
 	}
 
 
-	private void processComplicatedSpiroNomenclature(BuildState state, Element subOrRoot) {
-		// TODO Auto-generated method stub
+	private void processPolyCyclicSpiroNomenclature(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
+		List<Element> polyCyclicSpiros = XOMTools.getChildElementsWithTagName(subOrRoot, POLYCYCLICSPIRO_EL);
+		if (polyCyclicSpiros.size()>0){
+			if (polyCyclicSpiros.size()!=1){
+				throw new PostProcessingException("Nested polyspiro systems are not supported");
+			}
+			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
+			String value = polyCyclicSpiroDescriptor.getAttributeValue(VALUE_ATR);
+			String[] tempArray = matchComma.split(value);
+			int spiros = Integer.parseInt(tempArray[0]);
+			boolean identicalComponents = tempArray[1].equals("identicalComponents");
+			if (!identicalComponents){
+				throw new PostProcessingException("Only identical components supported so far");
+			}
+			List<Element> locants = new ArrayList<Element>();
+			Element expectedLocant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+			while (expectedLocant!=null && expectedLocant.getLocalName().equals(LOCANT_EL)){
+				locants.add(expectedLocant);
+				expectedLocant = (Element) XOMTools.getPreviousSibling(expectedLocant);
+			}
+			Collections.reverse(locants);
+			if (locants.size()!=spiros){
+				throw new PostProcessingException("Mismatch between spiro descriptor and number of locants provided");
+			}
+			Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
+			if (group==null){
+				throw new PostProcessingException("Cannot find group to which spiro descriptor applies");
+			}
+			Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
 
+			Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
+			List<Element> elementsToResolve;
+			if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
+				possibleOpenBracket.detach();
+				elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, STRUCTURALCLOSEBRACKET_EL);
+				XOMTools.getNextSibling(elementsToResolve.get(elementsToResolve.size()-1)).detach();//detach close bracket
+			}
+			else{
+				elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, GROUP_EL);
+			}
+			for (Element element : elementsToResolve) {
+				element.detach();
+				substituentToResolve.appendChild(element);
+			}
+			if (substituentToResolve.getChildElements().size()!=0){
+				group.detach();
+				substituentToResolve.appendChild(group);
+				StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
+				StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
+				group.detach();
+				XOMTools.insertAfter(polyCyclicSpiroDescriptor, group);
+			}
+			Fragment fragment = state.xmlFragmentMap.get(group);
+			List<Fragment> clones = new ArrayList<Fragment>();
+			for (int i = 1; i < spiros ; i++) {
+				clones.add(state.fragManager.copyAndRelabelFragment(fragment, StringTools.multiplyString("'", i)));
+			}
+			for (Fragment clone : clones) {
+				state.fragManager.incorporateFragment(clone, fragment);
+			}
+			
+			Atom atomOnOriginalFragment = fragment.getAtomByLocantOrThrow(locants.get(0).getAttributeValue(VALUE_ATR));
+			for (int i = 1; i < spiros ; i++) {
+				Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants.get(i).getAttributeValue(VALUE_ATR));
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnOriginalFragment);
+			}
+			for (Element locant : locants) {
+				locant.detach();
+			}
+			XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
+			polyCyclicSpiroDescriptor.detach();
+		}
 	}
 
 	/**
@@ -2419,14 +2493,14 @@ class PreStructureBuilder {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement(GROUP_EL));
-			if (lambdaConventionEl.getAttribute("locant")!=null){
-				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue("locant")).setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
+			if (lambdaConventionEl.getAttribute(LOCANT_ATR)!=null){
+				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue(LOCANT_ATR)).setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue(LAMBDA_ATR)));
 			}
 			else{
 				if (frag.getAtomList().size()!=1){
 					throw new StructureBuildingException("Ambiguous use of lambda convention. Fragment has more than 1 atom but no locant was specified for the lambda");
 				}
-				frag.getFirstAtom().setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue("lambda")));
+				frag.getFirstAtom().setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue(LAMBDA_ATR)));
 			}
 			lambdaConventionEl.detach();
 		}
