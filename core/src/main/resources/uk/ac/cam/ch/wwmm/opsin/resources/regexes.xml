@@ -104,8 +104,9 @@ does not define a CFG.
   <regex name="%ylamine%" value="Ñ"/>
   <regex name="%lightRotation%" value="ª"/>
   <regex name="%symPolycylicSpiro%" value="º"/>
+  <regex name="%dispiroter%" value="¿"/>
 
-  <!--up to ascii 167 used -->
+  <!--up to ascii 168 used -->
 
 <!-- composite regexes-->
 
@@ -198,7 +199,7 @@ does not define a CFG.
   <regex name="%fusedRingSystemFromTrivialRingSubstituent%" value = "((%simpleComponent%|%multipliedComponent%|%multipliedParent%)+%trivialRingSubstituentSub%)"/>
 
 	<regex name="%vonBaeyerForSpiro%" value="(%structuralOpenBracket%%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%|%multiplier%%heteroStem%)%ane%%structuralCloseBracket%%unsaturation%+)" />
-	<regex name="%polycyclicSpiroGroup%" value ="(%symPolycylicSpiro%((%ringGroup%|%fusedRingSystem%)|%structuralOpenBracket%%ringNonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%structuralCloseBracket%|%vonBaeyerForSpiro%))" />
+	<regex name="%polycyclicSpiroGroup%" value ="((%symPolycylicSpiro%|%dispiroter%)((%ringGroup%|%fusedRingSystem%)|%structuralOpenBracket%%ringNonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%structuralCloseBracket%|%vonBaeyerForSpiro%))" />
 
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%simpleCyclicGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringSubstituent%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%inlineSuffixGroup%))" />

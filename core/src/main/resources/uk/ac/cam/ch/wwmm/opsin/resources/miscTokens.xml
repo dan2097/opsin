@@ -43,7 +43,7 @@
   </tokenList>
 
   <tokenList tagname="polyCyclicSpiro" symbol="º">
-    <token value="2,identicalComponents">spirobi</token>
-    <token value="3,identicalComponents">spiroter</token>
+    <token value="spirobi">spirobi</token>
+    <token value="spiroter">spiroter</token>
   </tokenList>
 </tokenLists>

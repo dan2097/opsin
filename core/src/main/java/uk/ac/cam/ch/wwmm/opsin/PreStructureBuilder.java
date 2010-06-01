@@ -2408,6 +2408,16 @@ class PreStructureBuilder {
 	}
 
 
+	/**
+	 * Proccess any polycyclic spiro systems present in subOrRoot
+	 * It is assumed that at this stage all hantzch widman rings/fused rings have been resolved to single groups allowing them to be simply spiro fused
+	 * 
+	 * http://www.chem.qmul.ac.uk/iupac/spiro/ (SP-2 through SP-6)
+	 * @param state
+	 * @param subOrRoot
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
 	private void processPolyCyclicSpiroNomenclature(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
 		List<Element> polyCyclicSpiros = XOMTools.getChildElementsWithTagName(subOrRoot, POLYCYCLICSPIRO_EL);
 		if (polyCyclicSpiros.size()>0){
@@ -2416,71 +2426,139 @@ class PreStructureBuilder {
 			}
 			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
 			String value = polyCyclicSpiroDescriptor.getAttributeValue(VALUE_ATR);
-			String[] tempArray = matchComma.split(value);
-			int spiros = Integer.parseInt(tempArray[0]);
-			boolean identicalComponents = tempArray[1].equals("identicalComponents");
-			if (!identicalComponents){
-				throw new PostProcessingException("Only identical components supported so far");
+			if (value.equals("spirobi")){
+				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 2);
 			}
-			List<Element> locants = new ArrayList<Element>();
-			Element expectedLocant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
-			while (expectedLocant!=null && expectedLocant.getLocalName().equals(LOCANT_EL)){
-				locants.add(expectedLocant);
-				expectedLocant = (Element) XOMTools.getPreviousSibling(expectedLocant);
+			else if (value.equals("spiroter")){
+				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 3);
 			}
-			Collections.reverse(locants);
-			if (locants.size()!=spiros){
-				throw new PostProcessingException("Mismatch between spiro descriptor and number of locants provided");
-			}
-			Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
-			if (group==null){
-				throw new PostProcessingException("Cannot find group to which spiro descriptor applies");
-			}
-			Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
-
-			Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
-			List<Element> elementsToResolve;
-			if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
-				possibleOpenBracket.detach();
-				elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, STRUCTURALCLOSEBRACKET_EL);
-				XOMTools.getNextSibling(elementsToResolve.get(elementsToResolve.size()-1)).detach();//detach close bracket
+			else if (value.equals("dispiroter")){
+				processDispiroter(state, polyCyclicSpiroDescriptor);
 			}
 			else{
-				elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, GROUP_EL);
+				throw new PostProcessingException("Only identical components supported so far");
 			}
-			for (Element element : elementsToResolve) {
-				element.detach();
-				substituentToResolve.appendChild(element);
-			}
-			if (substituentToResolve.getChildElements().size()!=0){
-				group.detach();
-				substituentToResolve.appendChild(group);
-				StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
-				StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
-				group.detach();
-				XOMTools.insertAfter(polyCyclicSpiroDescriptor, group);
-			}
-			Fragment fragment = state.xmlFragmentMap.get(group);
-			List<Fragment> clones = new ArrayList<Fragment>();
-			for (int i = 1; i < spiros ; i++) {
-				clones.add(state.fragManager.copyAndRelabelFragment(fragment, StringTools.multiplyString("'", i)));
-			}
-			for (Fragment clone : clones) {
-				state.fragManager.incorporateFragment(clone, fragment);
-			}
-			
-			Atom atomOnOriginalFragment = fragment.getAtomByLocantOrThrow(locants.get(0).getAttributeValue(VALUE_ATR));
-			for (int i = 1; i < spiros ; i++) {
-				Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants.get(i).getAttributeValue(VALUE_ATR));
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnOriginalFragment);
-			}
-			for (Element locant : locants) {
-				locant.detach();
-			}
-			XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
-			polyCyclicSpiroDescriptor.detach();
 		}
 	}
+
+	/**
+	 * Two or three copies of the fragment after polyCyclicSpiroDescriptor are spiro fused at one centre
+	 * @param state
+	 * @param polyCyclicSpiroDescriptor
+	 * @param components
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
+	private void processSpiroBiOrTer(BuildState state, Element polyCyclicSpiroDescriptor, int components) throws PostProcessingException, StructureBuildingException {
+		List<Element> locants = new ArrayList<Element>();
+		Element expectedLocant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+		while (expectedLocant!=null && expectedLocant.getLocalName().equals(LOCANT_EL)){
+			locants.add(expectedLocant);
+			expectedLocant = (Element) XOMTools.getPreviousSibling(expectedLocant);
+		}
+		Collections.reverse(locants);
+		if (locants.size()!=components){
+			throw new PostProcessingException("Mismatch between spiro descriptor and number of locants provided");
+		}
+		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
+		if (group==null){
+			throw new PostProcessingException("Cannot find group to which spirobi/ter descriptor applies");
+		}
+
+		resolveFeaturesOfGroup(state, polyCyclicSpiroDescriptor, group);
+		Fragment fragment = state.xmlFragmentMap.get(group);
+		List<Fragment> clones = new ArrayList<Fragment>();
+		for (int i = 1; i < components ; i++) {
+			clones.add(state.fragManager.copyAndRelabelFragment(fragment, StringTools.multiplyString("'", i)));
+		}
+		for (Fragment clone : clones) {
+			state.fragManager.incorporateFragment(clone, fragment);
+		}
+		
+		Atom atomOnOriginalFragment = fragment.getAtomByLocantOrThrow(locants.get(0).getAttributeValue(VALUE_ATR));
+		for (int i = 1; i < components ; i++) {
+			Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants.get(i).getAttributeValue(VALUE_ATR));
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnOriginalFragment);
+		}
+		for (Element locant : locants) {
+			locant.detach();
+		}
+		XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
+		polyCyclicSpiroDescriptor.detach();
+	}
+
+	/**
+	 * Three copies of the fragment after polyCyclicSpiroDescriptor are spiro fused at two centres
+	 * @param state
+	 * @param polyCyclicSpiroDescriptor
+	 * @throws StructureBuildingException
+	 * @throws PostProcessingException
+	 */
+	private void processDispiroter(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, PostProcessingException {
+		String value = polyCyclicSpiroDescriptor.getValue();
+		value = value.substring(0, value.length()-10);//remove dispiroter
+		value = StringTools.removeDashIfPresent(value);
+		String[] locants = matchColon.split(value);
+		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
+		if (group==null){
+			throw new PostProcessingException("Cannot find group to which dispiroter descriptor applies");
+		}
+		resolveFeaturesOfGroup(state, polyCyclicSpiroDescriptor, group);
+		Fragment fragment = state.xmlFragmentMap.get(group);
+		List<Fragment> clones = new ArrayList<Fragment>();
+		for (int i = 1; i < 3 ; i++) {
+			clones.add(state.fragManager.copyAndRelabelFragment(fragment, StringTools.multiplyString("'", i)));
+		}
+		for (Fragment clone : clones) {
+			state.fragManager.incorporateFragment(clone, fragment);
+		}
+		
+		Atom atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(matchComma.split(locants[0])[0]);
+		Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(matchComma.split(locants[0])[1]);
+		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
+		
+		atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(matchComma.split(locants[1])[0]);
+		atomToBeReplaced = fragment.getAtomByLocantOrThrow(matchComma.split(locants[1])[1]);
+		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
+
+		XOMTools.setTextChild(group, "dispiroter" + group.getValue());
+		polyCyclicSpiroDescriptor.detach();
+	}
+
+	/**
+	 * The features between the polyCyclicSpiroDescriptor and group, or beween the STRUCTURALOPENBRACKET_EL and STRUCTURALCLOSEBRACKET_EL
+	 * if these are present are resolved onto the group
+	 * @param state
+	 * @param polyCyclicSpiroDescriptor
+	 * @param group
+	 * @throws StructureBuildingException
+	 */
+	private void resolveFeaturesOfGroup(BuildState state, Element polyCyclicSpiroDescriptor, Element group) throws StructureBuildingException {
+		Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
+		Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
+		List<Element> elementsToResolve;
+		if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
+			possibleOpenBracket.detach();
+			elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, STRUCTURALCLOSEBRACKET_EL);
+			XOMTools.getNextSibling(elementsToResolve.get(elementsToResolve.size()-1)).detach();//detach close bracket
+		}
+		else{
+			elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, GROUP_EL);
+		}
+		for (Element element : elementsToResolve) {
+			element.detach();
+			substituentToResolve.appendChild(element);
+		}
+		if (substituentToResolve.getChildElements().size()!=0){
+			group.detach();
+			substituentToResolve.appendChild(group);
+			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
+			StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
+			group.detach();
+			XOMTools.insertAfter(polyCyclicSpiroDescriptor, group);
+		}
+	}
+
 
 	/**
 	 * Searches for lambdaConvention elements and applies the valency they specify to the atom
