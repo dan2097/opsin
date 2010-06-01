@@ -47,6 +47,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="NN=CN=N" valType="SMILES">formazan</token>
   <token value="CC(CCC=C(C)C)=CCO" labels="none" valType="SMILES">geraniol</token>
   <token value="C(=O)C(=O)" labels="1//2/" valType="SMILES">glyoxal</token>
+  <token value="[P-](F)(F)(F)(F)(F)F" labels="none" valType="SMILES">hexafluorophosphate</token>
   <token value="[OH-]" labels="none" valType="SMILES">hydroxide</token>
   <token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
   <token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazide</token>
@@ -94,6 +95,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="CC(C)([O-])C" labels="none" valType="SMILES">tertbutoxide</token>
   <token value="CC(C)([O-])C" labels="none" valType="SMILES">t-butoxide</token>
   <token value="CC(C)([O-])C" labels="none" valType="SMILES">tbutoxide</token>
+  <token value="[B-](F)(F)(F)F" labels="none" valType="SMILES">tetrafluoroborate</token>
   <token value="NC(=N)NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7//8/9" valType="SMILES">tetraguanide</token>
   <token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////4////" valType="SMILES" functionalIDs="1,3,8,12,16,17">tetraphosphate</token>
   <token value="NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9" valType="SMILES">tetrauret</token>
