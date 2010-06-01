@@ -69,7 +69,8 @@
   <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" determinise="yes"/>
   <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" determinise="yes"/>
   <regexToken regex="(rel-)?%openBracket%%locantTypes%?([EZez]|[RSrs]\*?|RS)(,%locantTypes%?([EZez]|[RSrs]\*?|RS))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
-  <regexToken regex="%locant%(,%locant%)(:%locant%(,%locant%))*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
+  <regexToken regex="%locant%,%locant%(:%locant%,%locant%)*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
+  <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="" symbol="£" tagname="suffix" value="ic" type="root" subType="terminal"/>
   <regexToken regex="[oO]" symbol="₧" tagname="suffix" value="yl" type="inline"/>
   <regexToken regex="%openBracket%([+\-]|+-|-+)%closeBracket%" symbol="ª" tagname="lightRotation" ignoreWhenWritingXML="yes" determinise="yes"/>
