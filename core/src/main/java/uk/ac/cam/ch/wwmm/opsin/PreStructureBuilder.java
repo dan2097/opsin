@@ -853,6 +853,10 @@ class PreStructureBuilder {
 			}
 			parentOfMultiplier=parentOfMultiplier.getParent();
 		}
+		Element possiblePolyCyclicSpiroEl = (Element) XOMTools.getPreviousSibling(locant, POLYCYCLICSPIRO_EL);
+		if (possiblePolyCyclicSpiroEl !=null && possiblePolyCyclicSpiroEl.getAttributeValue(VALUE_ATR).equals("spiro")){//e.g. spiro[cyclopentane-1,1'-indene]
+			return true;
+		}
 		return false;
 	}
 
@@ -2426,7 +2430,10 @@ class PreStructureBuilder {
 			}
 			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
 			String value = polyCyclicSpiroDescriptor.getAttributeValue(VALUE_ATR);
-			if (value.equals("spirobi")){
+			if (value.equals("spiro")){
+				processNonIdenticalPolyCyclicSpiro(state, polyCyclicSpiroDescriptor);
+			}
+			else if (value.equals("spirobi")){
 				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 2);
 			}
 			else if (value.equals("spiroter")){
@@ -2440,6 +2447,49 @@ class PreStructureBuilder {
 			}
 		}
 	}
+
+	private void processNonIdenticalPolyCyclicSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws PostProcessingException, StructureBuildingException {
+		Element subOrRoot = (Element) polyCyclicSpiroDescriptor.getParent();
+		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		if (groups.size()<2){
+			throw new PostProcessingException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
+		}
+		Fragment firstFragment = state.xmlFragmentMap.get(groups.get(0));
+		
+		for (int i = 1; i < groups.size(); i++) {
+			Element nextGroup =groups.get(i);
+			List<Element> locants = XOMTools.getPreviousSiblingsOfType(nextGroup, LOCANT_EL);
+			if (locants.size()!=2){
+				throw new PostProcessingException("Incorrect number of locants found before component of polycyclic spiro system");
+			}
+			Collections.reverse(locants);
+			String[] locantValues = new String[2];
+			for (int j = 0; j < locantValues.length; j++) {
+				locantValues[j] = locants.get(j).getAttributeValue(VALUE_ATR);
+				locants.get(j).detach();
+			}
+			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
+			FragmentTools.relabelLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(nextFragment.getAtomByLocantOrThrow(locantValues[0]), firstFragment.getAtomByLocantOrThrow(locantValues[1]));
+		}
+		Fragment rootFrag = state.xmlFragmentMap.get(groups.get(groups.size()-1));
+		for (int i = 0; i < groups.size() -1; i++) {
+			Element group =groups.get(i);
+			state.fragManager.incorporateFragment(state.xmlFragmentMap.get(group), rootFrag);
+			group.detach();
+		}
+		Element openBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
+		if (openBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
+			XOMTools.getNextSibling(openBracket, STRUCTURALCLOSEBRACKET_EL).detach();
+			openBracket.detach();
+		}
+		
+		
+		//Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+		
+		
+	}
+
 
 	/**
 	 * Two or three copies of the fragment after polyCyclicSpiroDescriptor are spiro fused at one centre

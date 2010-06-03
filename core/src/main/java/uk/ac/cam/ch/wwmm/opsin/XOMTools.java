@@ -243,8 +243,8 @@ public final class XOMTools {
 	 * @param type: the "localname" of the element type desired
 	 * @return
 	 */
-	public static ArrayList<Element> getPreviousSiblingsOfType(Element currentElem, String type) {
-		ArrayList<Element> earlierSiblingElementsOfType= new ArrayList<Element>();
+	public static List<Element> getPreviousSiblingsOfType(Element currentElem, String type) {
+		List<Element> earlierSiblingElementsOfType= new ArrayList<Element>();
 		Element parent =(Element) currentElem.getParent();
 		if (parent==null){
 			return earlierSiblingElementsOfType;
