@@ -33,17 +33,47 @@ class FusedRingBuilder {
 	}
 
 	/**
-	 * Master method for processing fused rings. If 2 groups are present will attempt to fuse them
-	 * Returns the substituent/root with the 2 groups fused together into 1 group
+	 * Master method for processing fused rings. Fuses groups together
 	 * @param state: contains the current id and fragment manager
 	 * @param subOrRoot Element (substituent or root)
 	 * @throws StructureBuildingException
 	 */
-	Element processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
+	void processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size() < 2){
-			return subOrRoot;//nothing to fuse
+			return;//nothing to fuse
 		}
+		List<Element> groupsInFusedRing =new ArrayList<Element>();
+		for (int i = groups.size()-1; i >=0; i--) {//group groups into fused rings
+			Element group =groups.get(i);
+			groupsInFusedRing.add(0, group);
+			if (i!=0){
+				Element startingEl = group;
+				if ((group.getValue().equals("benz") || group.getValue().equals("benzo"))){
+					Element beforeLocants = XOMTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{LOCANT_EL});
+					startingEl = (Element) XOMTools.getNextSibling(beforeLocants);
+				}
+				Element possibleGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{MULTIPLIER_EL, FUSION_EL});
+				if (!groups.get(i-1).equals(possibleGroup)){//end of fused ring system
+					if (groupsInFusedRing.size()>=2){
+						processFusedRing(state, groupsInFusedRing);
+					}
+					groupsInFusedRing.clear();
+				}
+			}
+		}
+		if (groupsInFusedRing.size()>=2){
+			processFusedRing(state, groupsInFusedRing);
+		}
+	}
+
+	/**
+	 * Combined the fragments assoicated with the given groups into a fused ring
+	 * @param state
+	 * @param groups
+	 * @throws StructureBuildingException
+	 */
+	void processFusedRing(BuildState state, List<Element> groups) throws StructureBuildingException{
 		Element lastGroup = groups.get(groups.size()-1);
 		/*
 		 * Apply any nonstandard ring numbering and sort atomOrder by locant
@@ -73,8 +103,15 @@ class FusedRingBuilder {
                 ring.sortAtomListByLocant();//for those where the order the locants are in is sensible
             }
         }
-		groups = processBenzoFusions(state, subOrRoot, groups);//FR-2.2.8  e.g. in 2H-[1,3]benzodioxino[6',5',4':10,5,6]anthra[2,3-b]azepine  benzodioxino is one component
-		List<Element> nameComponents  = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{FUSION_EL, GROUP_EL});
+		groups = processBenzoFusions(state, groups);//FR-2.2.8  e.g. in 2H-[1,3]benzodioxino[6',5',4':10,5,6]anthra[2,3-b]azepine  benzodioxino is one component
+		List<Element> nameComponents  = new ArrayList<Element>();
+		Element currentEl = groups.get(0);
+		while(currentEl != lastGroup){
+			if (currentEl.getLocalName().equals(GROUP_EL) || currentEl.getLocalName().equals(FUSION_EL)){
+				nameComponents.add(currentEl);
+			}
+			currentEl = (Element) XOMTools.getNextSibling(currentEl);
+		}
 		nameComponents.remove(lastGroup);
 		
 
@@ -248,7 +285,6 @@ class FusedRingBuilder {
 		for (Element element : nameComponents) {
 			element.detach();
 		}
-		return fusedRingEl;
 	}
 
 	private int processMultiParentSystem(BuildState state,List<Fragment> parentFragments, List<Element> nameComponents, Map<Integer, Fragment> fragmentInScopeForEachFusionLevel, List<Fragment> componentFragments) throws StructureBuildingException {
@@ -378,12 +414,11 @@ class FusedRingBuilder {
 	 * FR-2.2.8 Heterobicyclic components with a benzene ring
 	 * Returns the the list of group elements This will have been modified if this function has done anything
 	 * @param state
-	 * @param subOrRoot
 	 * @param groups
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private List<Element> processBenzoFusions(BuildState state, Element subOrRoot, List<Element> groups) throws StructureBuildingException {
+	private List<Element> processBenzoFusions(BuildState state, List<Element> groups) throws StructureBuildingException {
 		for(int i= groups.size() -2;i >=0; i--) {
 			if (groups.get(i).getValue().equals("benz") || groups.get(i).getValue().equals("benzo")){
 				Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(i));

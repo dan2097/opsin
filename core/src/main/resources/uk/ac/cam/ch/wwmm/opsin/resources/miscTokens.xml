@@ -46,4 +46,8 @@
     <token value="spirobi">spirobi</token>
     <token value="spiroter">spiroter</token>
   </tokenList>
+
+  <tokenList tagname="polyCyclicSpiro" symbol="⌐">
+    <token value="spiro">spiro</token>
+  </tokenList>
 </tokenLists>
