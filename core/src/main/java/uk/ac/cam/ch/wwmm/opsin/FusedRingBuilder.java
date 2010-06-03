@@ -22,15 +22,12 @@ import nu.xom.Elements;
  *
  */
 class FusedRingBuilder {
-	private final Pattern matchSemiColon = Pattern.compile(";");
-	private final Pattern matchColon = Pattern.compile(":");
-	private final Pattern matchComma = Pattern.compile(",");
-	private final Pattern matchDash = Pattern.compile("-");
-	private final Pattern matchSlash = Pattern.compile("/");
-	private final Pattern matchC = Pattern.compile("C");
-
-	FusedRingBuilder() {
-	}
+	private static final Pattern matchSemiColon = Pattern.compile(";");
+	private static final Pattern matchColon = Pattern.compile(":");
+	private static final Pattern matchComma = Pattern.compile(",");
+	private static final Pattern matchDash = Pattern.compile("-");
+	private static final Pattern matchSlash = Pattern.compile("/");
+	private static final Pattern matchC = Pattern.compile("C");
 
 	/**
 	 * Master method for processing fused rings. Fuses groups together
@@ -38,7 +35,7 @@ class FusedRingBuilder {
 	 * @param subOrRoot Element (substituent or root)
 	 * @throws StructureBuildingException
 	 */
-	void processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
+	static void processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size() < 2){
 			return;//nothing to fuse
@@ -73,7 +70,7 @@ class FusedRingBuilder {
 	 * @param groups
 	 * @throws StructureBuildingException
 	 */
-	void processFusedRing(BuildState state, List<Element> groups) throws StructureBuildingException{
+	static void processFusedRing(BuildState state, List<Element> groups) throws StructureBuildingException{
 		Element lastGroup = groups.get(groups.size()-1);
 		/*
 		 * Apply any nonstandard ring numbering and sort atomOrder by locant
@@ -287,7 +284,7 @@ class FusedRingBuilder {
 		}
 	}
 
-	private int processMultiParentSystem(BuildState state,List<Fragment> parentFragments, List<Element> nameComponents, Map<Integer, Fragment> fragmentInScopeForEachFusionLevel, List<Fragment> componentFragments) throws StructureBuildingException {
+	private static int processMultiParentSystem(BuildState state,List<Fragment> parentFragments, List<Element> nameComponents, Map<Integer, Fragment> fragmentInScopeForEachFusionLevel, List<Fragment> componentFragments) throws StructureBuildingException {
 		int i = nameComponents.size()-1;
 		int fusionLevel =0;
 		if (i>=0 && parentFragments.size()>1){
@@ -390,7 +387,7 @@ class FusedRingBuilder {
 	 * @param fusionDescriptor
 	 * @return
 	 */
-	private String[] determineNumericalAndLetterComponents(String fusionDescriptor) {
+	private static String[] determineNumericalAndLetterComponents(String fusionDescriptor) {
 		String[] fusionArray = matchDash.split(fusionDescriptor);
 		if (fusionArray.length ==2){
 			return fusionArray;
@@ -418,7 +415,7 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private List<Element> processBenzoFusions(BuildState state, List<Element> groups) throws StructureBuildingException {
+	private static List<Element> processBenzoFusions(BuildState state, List<Element> groups) throws StructureBuildingException {
 		for(int i= groups.size() -2;i >=0; i--) {
 			if (groups.get(i).getValue().equals("benz") || groups.get(i).getValue().equals("benzo")){
 				Element possibleFusionbracket = (Element) XOMTools.getNextSibling(groups.get(i));
@@ -442,7 +439,7 @@ class FusedRingBuilder {
 	 * @param component
 	 * @param fusionLevel
 	 */
-	private void relabelAccordingToFusionLevel(Fragment component, int fusionLevel)  {
+	private static void relabelAccordingToFusionLevel(Fragment component, int fusionLevel)  {
 		if (fusionLevel > 0){
 			FragmentTools.relabelLocants(component.getAtomList(), StringTools.multiplyString("'", fusionLevel));
 		}
@@ -460,7 +457,7 @@ class FusedRingBuilder {
 	 * @param parentRing
 	 * @throws StructureBuildingException
 	 */
-	private void performSimpleFusion(BuildState state, String fusionDescriptor, Fragment childRing, Fragment parentRing) throws StructureBuildingException {
+	private static void performSimpleFusion(BuildState state, String fusionDescriptor, Fragment childRing, Fragment parentRing) throws StructureBuildingException {
 		List<String> numericalLocantsOfChild = null;
 		List<String> letterLocantsOfParent = null;
 		if (fusionDescriptor != null){
@@ -521,7 +518,7 @@ class FusedRingBuilder {
 	 * @param edgeLength The number of bonds to be fused along
 	 * @return
 	 */
-	private List<String> findPossibleLetterLocants(Fragment ring, int edgeLength) {
+	private static List<String> findPossibleLetterLocants(Fragment ring, int edgeLength) {
 		List<Atom> atomlist = ring.getAtomList();
 		List<String> letterLocantsOfParent = null;
 		List<Atom> carbonAtoms = new ArrayList<Atom>();
@@ -560,7 +557,7 @@ class FusedRingBuilder {
 	 * @param edgeLength The number of bonds to be fused along
 	 * @return
 	 */
-	private List<String> findPossibleNumericalLocants(Fragment ring, int edgeLength) {
+	private static List<String> findPossibleNumericalLocants(Fragment ring, int edgeLength) {
 		List<Atom> atomlist = ring.getAtomList();
 		List<String> numericalLocantsOfChild = null;
 		List<String> carbonLocants = new ArrayList<String>();
@@ -596,7 +593,7 @@ class FusedRingBuilder {
 	 * @param letterLocantsOfParent
 	 * @throws StructureBuildingException
 	 */
-	private void processFirstOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> letterLocantsOfParent) throws StructureBuildingException {
+	private static void processFirstOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> letterLocantsOfParent) throws StructureBuildingException {
 		List<Atom> childAtomList = childRing.getAtomList();
 		int indexfirst = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(0)));
 		int indexfinal = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(numericalLocantsOfChild.size()-1)));
@@ -663,7 +660,7 @@ class FusedRingBuilder {
 	 * @param fusedRing
 	 * @throws StructureBuildingException 
 	 */
-	private void performHigherOrderFusion(BuildState state, String fusionDescriptor, Fragment nextComponent, Fragment fusedRing) throws StructureBuildingException {
+	private static void performHigherOrderFusion(BuildState state, String fusionDescriptor, Fragment nextComponent, Fragment fusedRing) throws StructureBuildingException {
 		List<String> numericalLocantsOfChild = null;
 		List<String> numericalLocantsOfParent = null;
 		String[] fusionArray = matchColon.split(fusionDescriptor);
@@ -686,7 +683,7 @@ class FusedRingBuilder {
 	 * @param numericalLocantsOfParent
 	 * @throws StructureBuildingException
 	 */
-	private void processHigherOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> numericalLocantsOfParent) throws StructureBuildingException {
+	private static void processHigherOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> numericalLocantsOfParent) throws StructureBuildingException {
 		List<Atom> childAtomList = childRing.getAtomList();
 		int indexfirst = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(0)));
 		int indexfinal = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(numericalLocantsOfChild.size()-1)));
@@ -799,7 +796,7 @@ class FusedRingBuilder {
 	 * @param parentAtoms
 	 * @throws StructureBuildingException
 	 */
-	private void fuseRings(BuildState state, List<Atom> childAtoms, List<Atom> parentAtoms) throws StructureBuildingException {
+	private static void fuseRings(BuildState state, List<Atom> childAtoms, List<Atom> parentAtoms) throws StructureBuildingException {
 		if (parentAtoms.size()!=childAtoms.size()){
 			throw new StructureBuildingException("Problem with fusion descriptors: Parent atoms specified: " + parentAtoms.size() +" Child atoms specified: " + childAtoms.size() + " These should have been identical!");
 		}
@@ -851,7 +848,7 @@ class FusedRingBuilder {
 	 * @param parentEl
 	 * @throws StructureBuildingException
 	 */
-	private void benzoSpecificFusion(BuildState state, Element benzoEl, Element parentEl) throws StructureBuildingException {
+	private static void benzoSpecificFusion(BuildState state, Element benzoEl, Element parentEl) throws StructureBuildingException {
 		
 		/*
 		 * Perform the fusion, number it and associate it with the parentEl
@@ -916,7 +913,7 @@ class FusedRingBuilder {
 	 * @param ring
 	 * @return true if all equivalent, else false
 	 */
-	private boolean  allAtomsAreIdentical(Fragment ring){
+	private static boolean  allAtomsAreIdentical(Fragment ring){
 		List<Atom> atomList = ring.getAtomList();
 		Atom firstAtom = atomList.get(0);
 		String element = firstAtom.getElement();

@@ -94,8 +94,7 @@ public class NameToStructure {
 			cmlBuilder = new CMLFragmentBuilder(resourceGetter);
 			structureBuilder = new StructureBuilder();
 
-			FusedRingBuilder fusedRingBuilder = new FusedRingBuilder();
-			preStructureBuilder = new PreStructureBuilder(fusedRingBuilder, resourceGetter);
+			preStructureBuilder = new PreStructureBuilder(resourceGetter);
 
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);

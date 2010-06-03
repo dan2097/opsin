@@ -54,8 +54,6 @@ class PreStructureBuilder {
 			}
 		}
 	}
-	
-	private final FusedRingBuilder fusedRingBuilder;
 
 	private final Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
@@ -109,21 +107,20 @@ class PreStructureBuilder {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	PreStructureBuilder(FusedRingBuilder fusedRingBuilder, ResourceGetter resourceGetter) throws Exception {
-		this.fusedRingBuilder = fusedRingBuilder;
+	PreStructureBuilder(ResourceGetter resourceGetter) throws Exception {
 		//Populate suffix rules/applicability hashes
 		Document suffixApplicabilityDoc = resourceGetter.getXMLDocument("suffixApplicability.xml");
 		Document suffixRulesDoc = resourceGetter.getXMLDocument("suffixRules.xml");
 		suffixApplicability = new HashMap<String, HashMap<String,List<Element>>>();
 		suffixRules = new HashMap<String, Element>();
-		Elements groupTypes = suffixApplicabilityDoc.getRootElement().getChildElements("groupType");
+		Elements groupTypes = suffixApplicabilityDoc.getRootElement().getChildElements(SUFFIXAPPLCABILITY_GROUPTYPE_EL);
 		for (int i = 0; i < groupTypes.size(); i++) {
 			Element groupType =groupTypes.get(i);
-			Elements suffixes = groupType.getChildElements("suffix");
+			Elements suffixes = groupType.getChildElements(SUFFIXAPPLCABILITY_SUFFIX_EL);
 			HashMap<String, List<Element>> suffixToRuleMap= new HashMap<String, List<Element>>();
 			for (int j = 0; j < suffixes.size(); j++) {
 				Element suffix =suffixes.get(j);
-				String suffixValue= suffix.getAttributeValue(VALUE_ATR);
+				String suffixValue= suffix.getAttributeValue(SUFFIXAPPLCABILITY_VALUE_ATR);
 				if (suffixToRuleMap.get(suffixValue)!=null){//can have multiple entries if subType attribute is set
 					suffixToRuleMap.get(suffixValue).add(suffix);
 				}
@@ -133,13 +130,13 @@ class PreStructureBuilder {
 					suffixToRuleMap.put(suffixValue, suffixList);
 				}
 			}
-			suffixApplicability.put(groupType.getAttributeValue(TYPE_ATR), suffixToRuleMap);
+			suffixApplicability.put(groupType.getAttributeValue(SUFFIXAPPLCABILITY_TYPE_ATR), suffixToRuleMap);
 		}
 
-		Elements rules = suffixRulesDoc.getRootElement().getChildElements("rule");
+		Elements rules = suffixRulesDoc.getRootElement().getChildElements(SUFFIXRULES_RULE_EL);
 		for (int i = 0; i < rules.size(); i++) {
 			Element rule =rules.get(i);
-			String ruleValue=rule.getAttributeValue(VALUE_ATR);
+			String ruleValue=rule.getAttributeValue(SUFFIXRULES_VALUE_ATR);
 			if (suffixRules.get(ruleValue)!=null){
 				throw new Exception("Suffix: " +ruleValue +" appears multiple times in suffixRules.xml");
 			}
@@ -216,7 +213,7 @@ class PreStructureBuilder {
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				processHW(state, subOrRoot);//hantzch-widman rings
-				fusedRingBuilder.processFusedRings(state, subOrRoot);
+				FusedRingBuilder.processFusedRings(state, subOrRoot);
 				assignElementSymbolLocants(state, subOrRoot);
 				processRingAssemblies(state, subOrRoot);
 				processPolyCyclicSpiroNomenclature(state, subOrRoot);
@@ -255,20 +252,20 @@ class PreStructureBuilder {
 
 	/**Handles special features of locants e.g. ortho/meta/para, indicated hydrogen, cis/trans in locant
 	 *
-	 * @param elem The substituent/root/bracket to looks for locants in.
+	 * @param subOrBracketOrRoot The substituent/root/bracket to looks for locants in.
 	 * @throws PostProcessingException
 	 */
-	private void processLocantFeatures(Element elem) throws PostProcessingException{
-		Elements ompLocants = elem.getChildElements("orthoMetaPara");
-		for(int i=0;i<ompLocants.size();i++) {
+	private void processLocantFeatures(Element subOrBracketOrRoot) throws PostProcessingException{
+		Elements ompLocants = subOrBracketOrRoot.getChildElements(ORTHOMETAPARA_EL);
+		for(int i=0; i < ompLocants.size(); i++) {
 			Element locant = ompLocants.get(i);
 			String locantText = locant.getValue();
 			locantText = locantText.substring(0, 1);
 			Element afterOmpLocant = (Element)XOMTools.getNextSibling(locant);
-			locant.setLocalName("locant");
+			locant.setLocalName(LOCANT_EL);
 			locant.removeChildren();
-			locant.addAttribute(new Attribute("type", "orthoMetaPara"));
-			if(afterOmpLocant.getLocalName().equals("multiplier") || (afterOmpLocant.getAttribute("outIDs")!=null && matchComma.split(afterOmpLocant.getAttributeValue("outIDs")).length>1) ) {
+			locant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
+			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) || (afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && matchComma.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
 				if (matchOrtho.matcher(locantText).matches()){
 					locant.appendChild("1,2");
 				}
@@ -298,7 +295,7 @@ class PreStructureBuilder {
 			}
 		}
 
-		Elements locants = elem.getChildElements("locant");
+		Elements locants = subOrBracketOrRoot.getChildElements(LOCANT_EL);
 		for(int i=0;i<locants.size();i++) {
 			Element locant = locants.get(i);
 			String locantText = locant.getValue();
@@ -309,7 +306,7 @@ class PreStructureBuilder {
 			Matcher matches =matchIndicatedHydrogen.matcher(locantText);
 			if (matches.find()){
 				do {
-					Element indicatedHydrogenElement=new Element("indicatedHydrogen");
+					Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
 					indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, matches.group(1)));
 					XOMTools.insertBefore(locant, indicatedHydrogenElement);
 				}
@@ -331,52 +328,52 @@ class PreStructureBuilder {
 			XOMTools.setTextChild(locant, locantText);
 
 			Element afterLocants = (Element)XOMTools.getNextSibling(locant);
-			if(afterLocants == null) throw new PostProcessingException("Nothing after locant tag: " + locant.toXML());
+			if(afterLocants == null){
+				throw new PostProcessingException("Nothing after locant tag: " + locant.toXML());
+			}
 		}
 	}
 
 
-	/**Resolves the contents of a &lt;group&gt; tag.
+	/**Resolves the contents of a group element
 	 *
-	 * @param group The &lt;group&gt; tag.
-	 * @return The fragment specified by the tag.
+	 * @param group The group element
+	 * @return The fragment specified by the group element.
 	 * @throws StructureBuildingException If the group can't be built.
 	 * @throws PostProcessingException
 	 */
 	private Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, PostProcessingException {
 		String groupType = group.getAttributeValue(TYPE_ATR);
-		String groupSubType = group.getAttributeValue("subType");
+		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
 		String groupValue = group.getAttributeValue(VALUE_ATR);
-		String groupValType = group.getAttributeValue("valType");
+		String groupValType = group.getAttributeValue(VALTYPE_ATR);
 		Fragment thisFrag =null;
-		if(groupValType.equals("chain")) {
+		if(groupValType.equals(CHAIN_VALTYPE_VAL)) {
 			int alkaneLength = new Integer(groupValue);
 			String smiles = StringTools.multiplyString("C", alkaneLength);
 			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		} else if(groupValType.equals("ring") || groupValType.equals("partunsatring")) {
+		} else if(groupValType.equals(RING_VALTYPE_VAL) || groupValType.equals(PARTUNSATRING_VALTYPE_VAL)) {
 			int alkaneLength = new Integer(groupValue);
 			String smiles = "C1";
 			smiles += StringTools.multiplyString("C", alkaneLength-1);
 			smiles += "1";
 			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		} else if(groupValType.equals("unsatring")) {
+		} else if(groupValType.equals(UNSATRING_VALTYPE_VAL)) {
 			int alkaneLength = new Integer(groupValue);
 			String smiles = "c1";
 			smiles += StringTools.multiplyString("c", alkaneLength-1);
 			smiles += "1";
 			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		} else if(groupValType.equals("SMILES")) {
-			if (group.getAttribute("labels")!=null){
-				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, group.getAttributeValue("labels"));
+		} else if(groupValType.equals(SMILES_VALTYPE_VAL)) {
+			if (group.getAttribute(LABELS_ATR)!=null){
+				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, group.getAttributeValue(LABELS_ATR));
 			}
 			else{
 				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, "");
 			}
-		} else if(groupValType.equals("dbkey")) {
+		} else if(groupValType.equals(DBKEY_VALTYPE_VAL)) {
 			thisFrag = state.fragManager.buildCML(groupValue, groupType, groupSubType);
-		} else if(groupValType.equals("atom")) {
-			thisFrag = state.fragManager.buildSMILES("[" + groupValue + "]", groupType, groupSubType, "none");
-		}
+		} 
 		else{
 			throw new StructureBuildingException("Group tag has bad or missing valType: " + group.toXML());
 		}
@@ -389,39 +386,61 @@ class PreStructureBuilder {
 
 		FragmentTools.convertHighOrderBondsToSpareValencies(thisFrag);//only applied to cyclic bonds
 
-		if (group.getAttribute("defaultInLocant")!=null){//sets the atom at which substitution will occur to by default
-			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(group.getAttributeValue("defaultInLocant")));
+		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
+		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
+
+		return thisFrag;
+	}
+
+	/**
+	 * Looks for the presence of DEFAULTINLOCANT_ATR and DEFAULTINID_ATR on the group and applies them to the fragment
+	 * Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
+	 * @param thisFrag
+	 * @param group
+	 * @throws StructureBuildingException
+	 */
+	private void setFragmentDefaultInAtomIfSpecified(Fragment thisFrag, Element group) throws StructureBuildingException {
+		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
+		if (group.getAttribute(DEFAULTINLOCANT_ATR)!=null){//sets the atom at which substitution will occur to by default
+			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(group.getAttributeValue(DEFAULTINLOCANT_ATR)));
 		}
-		else if (group.getAttribute("defaultInID")!=null){
-			thisFrag.setDefaultInAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue("defaultInID")) -1));
+		else if (group.getAttribute(DEFAULTINID_ATR)!=null){
+			thisFrag.setDefaultInAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue(DEFAULTINID_ATR)) -1));
 		}
-		else if (group.getAttribute("usableAsAJoiner") != null && group.getAttributeValue("usableAsAJoiner").equals("yes") && group.getAttribute("suffixAppliesTo")==null){//makes linkers by default attach end to end
+		else if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) && group.getAttribute(SUFFIXAPPLIESTO_ATR)==null){//makes linkers by default attach end to end
 			int chainLength =thisFrag.getChainLength();
 			if (chainLength >1){
 				boolean connectEndToEndWithPreviousSub =true;
-				if (groupSubType.equals("alkaneStem")){//don't do this if you the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
+				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if you the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
 					Element previousSubstituent =(Element) XOMTools.getPreviousSibling(group.getParent());
 					if (previousSubstituent!=null){
-						Elements groups = previousSubstituent.getChildElements("group");
-						if (groups.size()==1 && groups.get(0).getAttributeValue("subType").equals("alkaneStem") && !groups.get(0).getAttributeValue(TYPE_ATR).equals("ring")){
+						Elements groups = previousSubstituent.getChildElements(GROUP_EL);
+						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
 							connectEndToEndWithPreviousSub = false;
 						}
 					}
 				}
 				if (connectEndToEndWithPreviousSub){
-					group.addAttribute(new Attribute("defaultInID",Integer.toString(chainLength)));
+					group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
 					thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
 				}
 			}
 		}
-
-		if (group.getAttribute("functionalIDs")!=null){
-			String[] functionalIDs = matchComma.split(group.getAttributeValue("functionalIDs"));
+	}
+	
+	/**
+	 * Looks for the presence of FUNCTIONALIDS_ATR on the group and applies them to the fragment
+	 * @param group
+	 * @param thisFrag
+	 * @throws StructureBuildingException
+	 */
+	private void setFragmentFunctionalAtomsIfSpecified(Element group, Fragment thisFrag) throws StructureBuildingException {
+		if (group.getAttribute(FUNCTIONALIDS_ATR)!=null){
+			String[] functionalIDs = matchComma.split(group.getAttributeValue(FUNCTIONALIDS_ATR));
             for (String functionalID : functionalIDs) {
                 thisFrag.addFunctionalAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(functionalID) - 1));
             }
 		}
-		return thisFrag;
 	}
 
 	/**
@@ -435,8 +454,8 @@ class PreStructureBuilder {
 	 * @throws PostProcessingException
 	 */
 	private void processXyleneLikeNomenclature(BuildState state, Element group, Fragment parentFrag) throws StructureBuildingException, PostProcessingException {
-		if(group.getAttributeValue("addGroup")!=null) {
-			String addGroupInformation=group.getAttributeValue("addGroup");
+		if(group.getAttribute(ADDGROUP_ATR)!=null) {
+			String addGroupInformation=group.getAttributeValue(ADDGROUP_ATR);
 			String[] groupsToBeAdded = matchSemiColon.split(addGroupInformation);//typically only one, but 2 in the case of xylene and quinones
 			ArrayList<HashMap<String, String>> allGroupInformation = new ArrayList<HashMap<String, String>>();
             for (String groupToBeAdded : groupsToBeAdded) {//populate allGroupInformation list
@@ -461,7 +480,7 @@ class PreStructureBuilder {
                 allGroupInformation.add(groupInformation);
             }
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
-			if (previousEl !=null && previousEl.getLocalName().equals("locant")){//has the name got specified locants to override the default ones
+			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
 				boolean assignlocants =true;
 				if (locantValues.size()<groupsToBeAdded.length){
@@ -518,7 +537,7 @@ class PreStructureBuilder {
 					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, parentFrag.getType(), parentFrag.getSubType(), groupInformation.get("labels"));
 				}
 				else{
-					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, parentFrag.getType(), parentFrag.getSubType(), "none");
+					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, parentFrag.getType(), parentFrag.getSubType(), NONE_LABELS_VAL);
 				}
 
 				Atom atomOnParentFrag =null;
@@ -546,8 +565,8 @@ class PreStructureBuilder {
 			}
 		}
 
-		if(group.getAttributeValue("addHeteroAtom")!=null) {
-			String addHeteroAtomInformation=group.getAttributeValue("addHeteroAtom");
+		if(group.getAttributeValue(ADDHETEROATOM_ATR)!=null) {
+			String addHeteroAtomInformation=group.getAttributeValue(ADDHETEROATOM_ATR);
 			String[] heteroAtomsToBeAdded = matchSemiColon.split(addHeteroAtomInformation);
 			ArrayList<HashMap<String, String>> allHeteroAtomInformation = new ArrayList<HashMap<String, String>>();
             for (String heteroAtomToBeAdded : heteroAtomsToBeAdded) {//populate allHeteroAtomInformation list
@@ -569,7 +588,7 @@ class PreStructureBuilder {
                 allHeteroAtomInformation.add(heteroAtomInformation);
             }
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
-			if (previousEl !=null && previousEl.getLocalName().equals("locant")){//has the name got specified locants to override the default ones
+			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
 				if (locantValues.size() >=heteroAtomsToBeAdded.length){
 					for (int i = heteroAtomsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
@@ -611,8 +630,8 @@ class PreStructureBuilder {
 			}
 		}
 
-		if(group.getAttributeValue("addBond")!=null) {
-			String addBondInformation=group.getAttributeValue("addBond");
+		if(group.getAttributeValue(ADDBOND_ATR)!=null) {
+			String addBondInformation=group.getAttributeValue(ADDBOND_ATR);
 			String[] bondsToBeAdded = matchSemiColon.split(addBondInformation);
 			ArrayList<HashMap<String, String>> allBondInformation = new ArrayList<HashMap<String, String>>();
             for (String bondToBeAdded : bondsToBeAdded) {//populate allBondInformation list
@@ -634,7 +653,7 @@ class PreStructureBuilder {
                 allBondInformation.add(bondInformation);
             }
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
-			if (previousEl !=null && previousEl.getLocalName().equals("locant")){//has the name got specified locants to override the default ones
+			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
 				if (locantValues.size() >=bondsToBeAdded.length){
 					for (int i = bondsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used

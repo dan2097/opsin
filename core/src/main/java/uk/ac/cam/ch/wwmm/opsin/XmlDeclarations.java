@@ -205,7 +205,7 @@ class XmlDeclarations {
 	static final String UNSATRING_VALTYPE_VAL = "unsatring";
 	
 	/**A saturated ring of size given by the value attribute that will later be partially unsaturated*/
-	static final String PARSTUNSATRING_VALTYPE_VAL = "partunsatring";//TODO make this a type rather than valtype value??
+	static final String PARTUNSATRING_VALTYPE_VAL = "partunsatring";//TODO make this a type rather than valtype value??
 	
 	static final String ATOM_VALTYPE_VAL = "atom";//TODO remove this
 	
@@ -270,6 +270,9 @@ class XmlDeclarations {
 	/**A non carboxylic acid e.g. phosphoric*/
 	static final String NONCARBOXYLICACID_TYPE_VAL ="nonCarboxylicAcid";
 
+	/**Indicates the locant was made from an ortho/meta/para term*/
+	static final String ORTHOMETAPARA_TYPE_VAL ="orthoMetaPara";
+	
 	/**Indicates the group should be, at least in part, cyclic*/
 	static final String RING_TYPE_VAL ="ring";
 	
@@ -356,5 +359,37 @@ class XmlDeclarations {
 			return value;
 		}
 	}
+
+	/**
+	 * See suffixRules.dtd
+	 */
+	static final String SUFFIXRULES_RULE_EL = "rule";
+	static final String SUFFIXRULES_ADDGROUP_EL = "addgroup";
+	static final String SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL = "addSuffixPrefixIfNonePresentAndCyclic";
+	static final String SUFFIXRULES_SETOUTATOM_EL = "setOutAtom";
+	static final String SUFFIXRULES_CHANGECHARGE_EL = "changecharge";
+	static final String SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL = "addFunctionalAtomsToHydroxyGroups";
+	static final String SUFFIXRULES_CHARGEHYDROXYGROUPS_EL = "chargeHydroxyGroups";
+	static final String SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL = "removeOneDoubleBondedOxygen";
+	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL = "convertHydroxyGroupsToOutAtoms";
+	static final String SUFFIXRULES_VALUE_ATR = "value";
+	static final String SUFFIXRULES_SUBTYPE_ATR = "value";
+	static final String SUFFIXRULES_SMILES_ATR = "SMILES";
+	static final String SUFFIXRULES_LABELS_ATR = "labels";
+	static final String SUFFIXRULES_FUNCTIONALIDS_ATR = "functionalIDs";
+	static final String SUFFIXRULES_OUTIDS_ATR = "outIDs";
+	static final String SUFFIXRULES_KETONELOCANT_ATR = "ketoneLocant";
+	static final String SUFFIXRULES_OUTVALENCY_ATR = "outValency";
+	static final String SUFFIXRULES_CHARGE_ATR = "charge";
+	static final String SUFFIXRULES_PROTONS_ATR = "protons";
+	
+	/**
+	 * See suffixApplicability.dtd
+	 */
+	static final String SUFFIXAPPLCABILITY_GROUPTYPE_EL = "groupType";
+	static final String SUFFIXAPPLCABILITY_SUFFIX_EL = "suffix";
+	static final String SUFFIXAPPLCABILITY_TYPE_ATR = "type";
+	static final String SUFFIXAPPLCABILITY_VALUE_ATR = "value";
+	static final String SUFFIXAPPLCABILITY_SUBTYPE_ATR = "subType";
 	
 }
