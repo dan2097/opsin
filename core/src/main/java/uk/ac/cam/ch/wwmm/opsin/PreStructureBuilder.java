@@ -706,6 +706,7 @@ class PreStructureBuilder {
 			if(locantValues.length > 1) {
 				Element afterLocants = (Element)XOMTools.getNextSibling(locant);
 				int structuralBracketDepth = 0;
+				Element multiplierEl = null;
 				while (afterLocants !=null){
 					String elName = afterLocants.getLocalName();
 					if (elName.equals(STRUCTURALOPENBRACKET_EL)){
@@ -718,13 +719,32 @@ class PreStructureBuilder {
 						afterLocants = (Element)XOMTools.getNextSibling(afterLocants);
 						continue;
 					}
-					if(elName.equals(MULTIPLIER_EL) || elName.equals(LOCANT_EL)) {
+					if(elName.equals(LOCANT_EL)) {
 						break;
+					}
+					else if (elName.equals(MULTIPLIER_EL)){
+						if (locantValues.length == Integer.parseInt(afterLocants.getAttributeValue(VALUE_ATR))){
+							if (afterLocants.equals(XOMTools.getNextSibling(locant))){
+								//direct locant, typical case
+								multiplierEl = afterLocants;
+								break;
+							}
+							else{
+								Element afterMultiplier = (Element) XOMTools.getNextSibling(afterLocants);
+								if (afterMultiplier!=null && (afterMultiplier.getLocalName().equals(SUFFIX_EL) || afterMultiplier.getLocalName().equals(UNSATURATOR_EL) || afterMultiplier.getLocalName().equals(GROUP_EL))){
+									multiplierEl = afterLocants; //indirect locant
+									break;
+								}
+							}
+						}
+						if (multiplierEl ==null){//multiplier looks suspicious - either due to being followed by the wrong thing or due to a locant/multiplier mismatch. The first multiplier found will be returned if no better one can be found
+							multiplierEl = afterLocants;
+						}
 					}
 					afterLocants = (Element)XOMTools.getNextSibling(afterLocants);
 				}
-				if(structuralBracketDepth ==0 && afterLocants != null && afterLocants.getLocalName().equals(MULTIPLIER_EL)) {
-					if(Integer.parseInt(afterLocants.getAttributeValue(VALUE_ATR)) == locantValues.length ) {
+				if(multiplierEl != null) {
+					if(Integer.parseInt(multiplierEl.getAttributeValue(VALUE_ATR)) == locantValues.length ) {
 						// number of locants and multiplier agree
 						boolean locantModified =false;//did determineLocantMeaning do something?
 						if (locantValues[locantValues.length-1].endsWith("'") && group!=null && subOrBracketOrRoot.indexOf(group) > subOrBracketOrRoot.indexOf(locant)){//quite possible that this is referring to a multiplied root
@@ -750,14 +770,14 @@ class PreStructureBuilder {
 								}
 							}
 						}
-						if (!locantModified && !XOMTools.getNextSibling(locant).equals(afterLocants)){//the locants apply indirectly the multiplier e.g. 2,3-butandiol
+						if (!locantModified && !XOMTools.getNextSibling(locant).equals(multiplierEl)){//the locants apply indirectly the multiplier e.g. 2,3-butandiol
 							//move the locant to be next to the multiplier.
 							locant.detach();
-							XOMTools.insertBefore(afterLocants, locant);
+							XOMTools.insertBefore(multiplierEl, locant);
 						}
 					} else {
 						if(!checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord)) {
-							throw new PostProcessingException("Mismatch between locant and multiplier counts (" + Integer.toString(locantValues.length) + " and " + afterLocants.getAttributeValue(VALUE_ATR) + "):" + locant.toXML());
+							throw new PostProcessingException("Mismatch between locant and multiplier counts (" + Integer.toString(locantValues.length) + " and " + multiplierEl.getAttributeValue(VALUE_ATR) + "):" + locant.toXML());
 						}
 					}
 				} else {
@@ -2790,8 +2810,7 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws PostProcessingException, StructureBuildingException {
-
-		substituentLoop: for (Element substituent : substituents) {//will attempt to bracket this substituent with the substituent before it
+		for (Element substituent : substituents) {//will attempt to bracket this substituent with the substituent before it
 			String firstElInSubName =((Element)substituent.getChild(0)).getLocalName();
 			if (firstElInSubName.equals(LOCANT_EL) ||firstElInSubName.equals(MULTIPLIER_EL)){
 				continue;
