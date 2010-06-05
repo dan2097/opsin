@@ -47,8 +47,10 @@ class FusedRingBuilder {
 			if (i!=0){
 				Element startingEl = group;
 				if ((group.getValue().equals("benz") || group.getValue().equals("benzo"))){
-					Element beforeLocants = XOMTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{LOCANT_EL});
-					startingEl = (Element) XOMTools.getNextSibling(beforeLocants);
+					Element beforeBenzo = (Element) XOMTools.getPreviousSibling(group);
+					if (beforeBenzo !=null && beforeBenzo.getLocalName().equals(LOCANT_EL)){
+						startingEl = beforeBenzo;
+					}
 				}
 				Element possibleGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{MULTIPLIER_EL, FUSION_EL});
 				if (!groups.get(i-1).equals(possibleGroup)){//end of fused ring system
@@ -271,9 +273,9 @@ class FusedRingBuilder {
 
 		Element fusedRingEl =groups.get(groups.size()-1);//reuse this element to save having to remap suffixes...
 		fusedRingEl.getAttribute(VALUE_ATR).setValue(fusedRingName.toString());
-		fusedRingEl.getAttribute(VALTYPE_ATR).setValue("generatedFragment");
+		fusedRingEl.removeAttribute(fusedRingEl.getAttribute(VALTYPE_ATR));
 		fusedRingEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
-		fusedRingEl.getAttribute(SUBTYPE_ATR).setValue("fusedRing");
+		fusedRingEl.getAttribute(SUBTYPE_ATR).setValue(FUSEDRING_SUBTYPE_VAL);
 		fusedRingEl.removeChildren();
 		fusedRingEl.appendChild(fusedRingName.toString());
 
@@ -865,13 +867,9 @@ class FusedRingBuilder {
 		/*
 		 * Check for locants and use these to set the heteroatom positions
 		 */
-		Element previous = (Element) XOMTools.getPreviousSibling(benzoEl);
-		LinkedList<Element> locants =new LinkedList<Element>();
-		while(previous != null && previous.getLocalName().equals(LOCANT_EL)) {
-			locants.add(previous);
-			previous=(Element) XOMTools.getPreviousSibling(previous);
-		}
-		if (locants.size() >0){
+		Element locantEl = (Element) XOMTools.getPreviousSibling(benzoEl);
+		if (locantEl != null && locantEl.getLocalName().equals(LOCANT_EL)) {
+			String[] locants = matchComma.split(locantEl.getValue());
 			Elements suffixes=((Element)benzoEl.getParent()).getChildElements(SUFFIX_EL);
 			int suffixesWithoutLocants =0;
 			for (int i = 0; i < suffixes.size(); i++) {
@@ -879,7 +877,7 @@ class FusedRingBuilder {
 					suffixesWithoutLocants++;
 				}
 			}
-			if (locants.size() != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
+			if (locants.length != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
 				List<Atom> atomList =fusedRing.getAtomList();
 				LinkedList<Atom> heteroatoms =new LinkedList<Atom>();
 				LinkedList<String> elementOfHeteroAtom =new LinkedList<String>();
@@ -889,19 +887,18 @@ class FusedRingBuilder {
 						elementOfHeteroAtom.add(atom.getElement());
 					}
 				}
-				if (locants.size() >=heteroatoms.size()){//atleast as many locants as there are heteroatoms to assign
+				if (locants.length == heteroatoms.size()){//as many locants as there are heteroatoms to assign
 					for (Atom atom : heteroatoms) {
 						atom.setElement("C");
 					}
 					FragmentTools.pickUpIndicatedHydrogens(fusedRing);
 					for (int i=0; i< heteroatoms.size(); i ++){
-						String elementSymbol =elementOfHeteroAtom.removeLast();
-						Element locant =locants.removeFirst();
-						fusedRing.getAtomByLocantOrThrow(locant.getAttributeValue(VALUE_ATR)).setElement(elementSymbol);
-						locant.detach();
+						String elementSymbol =elementOfHeteroAtom.get(i);
+						fusedRing.getAtomByLocantOrThrow(locants[i]).setElement(elementSymbol);
 					}
+					locantEl.detach();
 				}
-				else if (locants.size()>1){
+				else if (locants.length > 1){
 					throw new StructureBuildingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
 				}
 			}

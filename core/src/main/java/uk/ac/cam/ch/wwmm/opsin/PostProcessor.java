@@ -457,7 +457,7 @@ class PostProcessor {
 		Elements stereoChemistryElements = elem.getChildElements(STEREOCHEMISTRY_EL);
 		for(int i=0;i<stereoChemistryElements.size();i++) {
 			Element stereoChemistryElement = stereoChemistryElements.get(i);
-			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHMEISTRYBRACKET_TYPE_VAL)){
+			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				String txt = stereoChemistryElement.getValue();
 				if (txt.startsWith("rel-") || txt.contains("*")){
 					//currently unsupported
@@ -545,12 +545,12 @@ class PostProcessor {
 				throw new PostProcessingException("No suffix found next next to infix: "+ infix.getValue());
 			}
 			List<String> currentInfixInformation;
-			if (suffix.getAttribute(INFIX_EL)==null){
-				suffix.addAttribute(new Attribute(INFIX_EL, ""));
+			if (suffix.getAttribute(INFIX_ATR)==null){
+				suffix.addAttribute(new Attribute(INFIX_ATR, ""));
 				currentInfixInformation = new ArrayList<String>();
 			}
 			else{
-				currentInfixInformation = StringTools.arrayToList(matchSemiColon.split(suffix.getAttributeValue(INFIX_EL)));
+				currentInfixInformation = StringTools.arrayToList(matchSemiColon.split(suffix.getAttributeValue(INFIX_ATR)));
 			}
 			String infixValue =infix.getAttributeValue(VALUE_ATR);
 			currentInfixInformation.add(infixValue);
@@ -593,7 +593,7 @@ class PostProcessor {
 				possibleMultiplier.detach();
 				infix.detach();
 			}
-			suffix.getAttribute(INFIX_EL).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
+			suffix.getAttribute(INFIX_ATR).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
 		}
 	}
 

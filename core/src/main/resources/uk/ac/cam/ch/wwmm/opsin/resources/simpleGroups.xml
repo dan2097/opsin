@@ -132,6 +132,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="Cl" labels="none" valType="SMILES">hydrochloride</token>
   <token value="Br" labels="none" valType="SMILES">hydrobromide</token>
   <token value="I" labels="none" valType="SMILES">hydroiodide</token>
+  <token value="I" labels="none" valType="SMILES">hydriodide</token>
   <token value="[AtH]" labels="none" valType="SMILES">hydroastatide</token>
 
   <token value="F" labels="none" valType="SMILES">hydrofluoricacid</token>
@@ -140,10 +141,19 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="Cl" labels="none" valType="SMILES">hydrochloric acid</token>
   <token value="Br" labels="none" valType="SMILES">hydrobromicacid</token>
   <token value="Br" labels="none" valType="SMILES">hydrobromic acid</token>
-  <token value="I" labels="none" valType="SMILES">hydroiodicacide</token>
-  <token value="I" labels="none" valType="SMILES">hydroiodic acide</token>
+  <token value="I" labels="none" valType="SMILES">hydroiodicacid</token>
+  <token value="I" labels="none" valType="SMILES">hydroiodic acid</token>
+  <token value="I" labels="none" valType="SMILES">hydriodicacid</token>
+  <token value="I" labels="none" valType="SMILES">hydriodic acid</token>
   <token value="[AtH]" labels="none" valType="SMILES">hydroastaticacid</token>
   <token value="[AtH]" labels="none" valType="SMILES">hydroastatic acid</token>
+
+  <token value="C#N" labels="none" valType="SMILES">hydrocyanicacid</token>
+  <token value="C#N" labels="none" valType="SMILES">hydrocyanic acid</token>
+  <token value="[NH+]#[C-]" labels="none" valType="SMILES">hydroisocyanicacid</token>
+  <token value="[NH+]#[C-]" labels="none" valType="SMILES">hydroisocyanic acid</token>
+  <token value="N=[N+]=[N-]" labels="none" valType="SMILES">hydrazoicacid</token>
+  <token value="N=[N+]=[N-]" labels="none" valType="SMILES">hydrazoic acid</token>
 
   <token value="B(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">dihydrogenborate</token>
   <token value="B(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">hydrogenborate</token>

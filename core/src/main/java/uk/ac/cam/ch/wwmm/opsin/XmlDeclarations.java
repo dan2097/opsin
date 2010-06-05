@@ -50,6 +50,9 @@ class XmlDeclarations {
 	
 	/**Used by the PostProcessor to modify alkanes into cycloalkanes*/
 	static final String CYCLO_EL ="cyclo";
+	
+	/** A delta used to indicate the position of a double bond in older nomenclature*/
+	static final String DELTA_EL ="delta";
 
 	/**A functional Class such as acid. Does not correspond to a fragment*/
 	static final String FUNCTIONALCLASS_EL ="functionalClass";
@@ -104,6 +107,9 @@ class XmlDeclarations {
 	/**Describes the number of spiro centres in a poly cyclic spiro system*/
 	static final String POLYCYCLICSPIRO_EL ="polyCyclicSpiro";
 	
+	/**A locant indicating through which atoms a multiplied parent in multiplicative nomenclature is connected*/
+	static final String MULTIPLICATIVELOCANT_EL ="multiplicativeLocant";
+	
 	/**A multiplier e.g. indicating multiplication of a heteroatom or substituent*/
 	static final String MULTIPLIER_EL ="multiplier";
 
@@ -151,6 +157,12 @@ class XmlDeclarations {
 	static final String OUTIDS_ATR = "outIDs";
 	static final String ACCEPTSADDITIVEBONDS_ATR = "acceptsAdditiveBonds";
 	static final String IMINOLIKE_ATR = "iminoLike";
+	
+	/**The functional replacement specified by an infix to be performed on the suffix*/
+	static final String INFIX_ATR = "infix";
+
+	/**Indicates that an element has been multiplied. Prevents badly assigning indirect locants*/
+	static final String MULTIPLIED_ATR = "multiplied";
 	static final String FUNCTIONALIDS_ATR = "functionalIDs";
 	static final String ADDGROUP_ATR = "addGroup";
 	static final String ADDHETEROATOM_ATR = "addHeteroAtom";
@@ -161,12 +173,13 @@ class XmlDeclarations {
     static final String TYPICALANDMAXIMUMCHARGE_ATR = "typicalAndMaximumCharge";
     static final String ADDITIONALVALUE_ATR = "additionalValue";
     static final String LOCANT_ATR = "locant";
+
+	/**Works like a locant but refers to the atoms OPSIN id*/
+    static final String LOCANTID_ATR = "locantID";
+    
     
     static final String TYPE_ATR = "type";
     static final String SUBTYPE_ATR = "subType";
-    
-	/**Something like the 6 of 1(6). Indicates unsaturation between the atoms with locants 1 and 6 (rather than 1 and 2)*/
-    static final String COMPOUNDLOCANT_ATR = "compoundLocant"; 
 
 	/**Defines the locants for which a radical will connect to another group in multiplicative nomenclature e.g. in 2,2'-methylenedipyridine the 2,2' become inlocants of the pyridine*/
     static final String INLOCANTS_ATR = "inLocants"; 
@@ -258,6 +271,9 @@ class XmlDeclarations {
 	/**A multiplier for groups of terms e.g. bis*/
 	static final String GROUP_TYPE_VAL ="group";
 	
+	/**An implicit bracket. Implicit brackets are added where a bracket is needed to give the intended meaning*/
+	static final String IMPLICIT_TYPE_VAL ="implicit";
+	
 	/**This suffix adds a radical to the preceding group e.g. yl, oyl*/
 	static final String INLINE_TYPE_VAL ="inline";
 	
@@ -279,8 +295,11 @@ class XmlDeclarations {
 	/**Indicates a group that does not allow suffixes*/
 	static final String SIMPLEGROUP_TYPE_VAL ="simpleGroup";
 	
+	/**Groups that do not have any special rules for suffix handling*/
+	static final String STANDARDGROUP_TYPE_VAL ="standardGroup";
+	
 	/**A bracket containing R/S/E/Z descriptors*/
-	static final String STEREOCHMEISTRYBRACKET_TYPE_VAL ="stereochemistryBracket";
+	static final String STEREOCHEMISTRYBRACKET_TYPE_VAL ="stereochemistryBracket";
 	
 	/**Indicates a group that is a substituent*/
 	static final String SUBSTITUENT_TYPE_VAL ="substituent";
@@ -312,8 +331,10 @@ class XmlDeclarations {
 	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
 	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
 	static final String HETEROSTEM_SUBTYPE_VAL ="heteroStem";
+	static final String FUSEDRING_SUBTYPE_VAL ="fusedRing";
 	static final String FUSIONRING_SUBTYPE_VAL ="fusionRing";
 	static final String SIMPLEGROUP_SUBTYPE_VAL ="simpleGroup";
+	static final String SUFFIX_SUBTYPE_VAL ="suffix";
 	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
 	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
 	static final String NONE_SUBTYPE_VAL ="none";
@@ -359,6 +380,9 @@ class XmlDeclarations {
 			return value;
 		}
 	}
+	
+	/** InLocants have not been specified */
+	static final String INLOCANTS_DEFAULT = "default";
 
 	/**
 	 * See suffixRules.dtd
@@ -386,10 +410,10 @@ class XmlDeclarations {
 	/**
 	 * See suffixApplicability.dtd
 	 */
-	static final String SUFFIXAPPLCABILITY_GROUPTYPE_EL = "groupType";
-	static final String SUFFIXAPPLCABILITY_SUFFIX_EL = "suffix";
-	static final String SUFFIXAPPLCABILITY_TYPE_ATR = "type";
-	static final String SUFFIXAPPLCABILITY_VALUE_ATR = "value";
-	static final String SUFFIXAPPLCABILITY_SUBTYPE_ATR = "subType";
+	static final String SUFFIXAPPLICABILITY_GROUPTYPE_EL = "groupType";
+	static final String SUFFIXAPPLICABILITY_SUFFIX_EL = "suffix";
+	static final String SUFFIXAPPLICABILITY_TYPE_ATR = "type";
+	static final String SUFFIXAPPLICABILITY_VALUE_ATR = "value";
+	static final String SUFFIXAPPLICABILITY_SUBTYPE_ATR = "subType";
 	
 }
