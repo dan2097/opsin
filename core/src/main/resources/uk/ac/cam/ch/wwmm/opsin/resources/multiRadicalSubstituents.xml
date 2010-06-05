@@ -27,6 +27,7 @@
   <token value="[NH4+]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">iminio</token>
   <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
   <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
+  <token value="[NH4+]" labels="none" outIDs="1,1,1" valType="SMILES">nitrilio</token>
 
   <token value="[P|3]" labels="none" outIDs="1,1,1" valType="SMILES">phosphinidyne</token>
   <token value="[As|3]" labels="none" outIDs="1,1,1" valType="SMILES">arsinidyne</token>

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
@@ -17,7 +18,8 @@ import nu.xom.Element;
 import nu.xom.Elements;
 
 class StructureBuildingMethods {
-	private static final Pattern matchComma =Pattern.compile(",");
+	private final static Pattern matchComma =Pattern.compile(",");
+	private final static Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 	private StructureBuildingMethods() {}
 
 	/**
@@ -231,7 +233,7 @@ class StructureBuildingMethods {
 		subOrBracket.removeAttribute(subOrBracket.getAttribute(MULTIPLIER_ATR));
 		String[] locants =null;
 		if (subOrBracket.getAttribute(LOCANT_ATR) !=null){
-			locants = matchComma.split(subOrBracket.getAttributeValue("locant"));
+			locants = matchComma.split(subOrBracket.getAttributeValue(LOCANT_ATR));
 		}
 		Element parentWordOrBracket =(Element) subOrBracket.getParent();
 		int indexOfSubOrBracket = parentWordOrBracket.indexOf(subOrBracket);
@@ -371,13 +373,21 @@ class StructureBuildingMethods {
 			}
 			if(!locant.equals("0")){
 				unsaturators.remove(unsaturator);
-				Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
-				if (unsaturator.getAttribute(COMPOUNDLOCANT_ATR)!=null){
-					FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue(COMPOUNDLOCANT_ATR), bondOrder, thisFrag);
-				}
-				else{
-					FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
-				}
+				/*
+				 * Is the locant a compound locant e.g. 1(6) 
+				 * This would indicated unsaturation between the atoms with locants 1 and 6
+				 */
+	            Matcher matcher = matchCompoundLocant.matcher(locant);
+	            if (matcher.find()) {
+	            	String compoundLocant = matcher.group(1);
+	            	locant = matcher.replaceAll("");
+	            	Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
+	            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, compoundLocant, bondOrder, thisFrag);
+	            }
+	            else{
+	            	Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
+	            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
+	            }
 				unsaturator.detach();
 			}
 		}
@@ -547,11 +557,7 @@ class StructureBuildingMethods {
                 }
             }
             Integer idOfFirstAtomInMultipleBond = currentAtom.getID();
-            if (unsaturator.getAttribute(COMPOUNDLOCANT_ATR) != null) {
-            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, unsaturator.getAttributeValue(COMPOUNDLOCANT_ATR), bondOrder, thisFrag);
-            } else {
-            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
-            }
+            FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
             defaultId = idOfFirstAtomInMultipleBond + 2;
             unsaturator.detach();
         }
@@ -825,10 +831,10 @@ class StructureBuildingMethods {
 		List<String> inLocants = null;
 		if (multipliedParent.getAttribute(INLOCANTS_ATR)!=null){//true for the root of a multiplicative name
 			String inLocantsString = multipliedParent.getAttributeValue(INLOCANTS_ATR);
-			if (inLocantsString.equals("default")){
+			if (inLocantsString.equals(INLOCANTS_DEFAULT)){
 				inLocants = new ArrayList<String>(multiplier);
 				for (int i = 0; i < multiplier; i++) {
-					inLocants.add("default");
+					inLocants.add(INLOCANTS_DEFAULT);
 				}
 			}
 			else{
@@ -862,7 +868,7 @@ class StructureBuildingMethods {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			if (inLocants !=null){
 				if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null){//e.g. methylenedisulfonyl dichloride
-					if (!multipliedParent.getAttributeValue(INLOCANTS_ATR).equals("default")){
+					if (!multipliedParent.getAttributeValue(INLOCANTS_ATR).equals(INLOCANTS_DEFAULT)){
 						throw new StructureBuildingException("inLocants should not be specified for a multiradical parent in multiplicative nomenclature");
 					}
 					Element rightMostGroup;
@@ -879,7 +885,7 @@ class StructureBuildingMethods {
 					boolean inAtomAdded =false;
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
-						if (locant.equals("default")){//note that if one entry in inLocantArray is default then they all are "default"
+						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
 							frag.addInAtom(frag.getAtomByIdOrNextSuitableAtom(frag.getDefaultInAtom().getID(), 1, true), 1);
 							inAtomAdded=true;
 							inLocants.remove(j);
