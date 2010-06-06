@@ -122,6 +122,9 @@ class XmlDeclarations {
 	/**A spiro system. Converted to a group by the PostProcessor*/
 	static final String SPIRO_EL ="spiro";
 	
+	/**A locant that seperates components of a spiro system*/
+	static final String SPIROLOCANT_EL ="spiroLocant";
+	
 	/**Something like R/S/E/Z. Indicates stereochemical configuration*/
 	static final String STEREOCHEMISTRY_EL ="stereoChemistry";
 
