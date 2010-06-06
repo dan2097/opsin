@@ -79,8 +79,11 @@ class FusedRingBuilder {
 		 */
         for (Element group : groups) {
             Fragment ring = state.xmlFragmentMap.get(group);
+            if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+            	aromatiseCyclicAlkane(state, group);
+            }
             if (group == lastGroup) {
-                //perform a quick check that every atom in this group is infact cyclic. Fusion components are enumerated and hence all guarenteed to be purely cyclic
+                //perform a quick check that every atom in this group is infact cyclic. Fusion components are enumerated and hence all guaranteed to be purely cyclic
                 List<Atom> atomList = ring.getAtomList();
                 for (Atom atom : atomList) {
                     if (!atom.getAtomIsInACycle()) {
@@ -283,6 +286,58 @@ class FusedRingBuilder {
 
 		for (Element element : nameComponents) {
 			element.detach();
+		}
+	}
+
+	/**
+	 * Given a cyclicAlkaneGroup determines whether or not it should be aromatised. Unlocanted ene will be detached if it is an aromatisation hint
+	 * No unsaturators -->aromatise
+	 * Just ane -->don't
+	 * More than 1 ene or locants on ene -->don't
+	 * yne --> don't
+	 * @param state 
+	 * @param cyclicAlkaneGroup
+	 */
+	private static void aromatiseCyclicAlkane(BuildState state, Element cyclicAlkaneGroup) {
+		Element next = (Element) XOMTools.getNextSibling(cyclicAlkaneGroup);
+		List<Element> unsaturators = new ArrayList<Element>();
+		while (next!=null && next.getLocalName().equals(UNSATURATOR_EL)){
+			unsaturators.add(next);
+			next = (Element) XOMTools.getNextSibling(next);
+		}
+		boolean conjugate =true;
+		if (unsaturators.size()==1){
+			int value = Integer.parseInt(unsaturators.get(0).getAttributeValue(VALUE_ATR));
+			if (value !=2){
+				conjugate =false;
+			}
+			else if (unsaturators.get(0).getAttribute(LOCANT_ATR)!=null){
+				conjugate =false;
+			}
+		}
+		else if (unsaturators.size()==2){
+			int value1 = Integer.parseInt(unsaturators.get(0).getAttributeValue(VALUE_ATR));
+			if (value1 !=1){
+				conjugate =false;
+			}
+			else{
+				int value2 = Integer.parseInt(unsaturators.get(1).getAttributeValue(VALUE_ATR));
+				if (value2 !=2 || unsaturators.get(1).getAttribute(LOCANT_ATR)!=null){
+					conjugate =false;
+				}
+			}
+		}
+		else if (unsaturators.size() >2){
+			conjugate =false;
+		}
+		if (conjugate){
+			for (Element unsaturator : unsaturators) {
+				unsaturator.detach();
+			}
+			List<Atom> atomList =state.xmlFragmentMap.get(cyclicAlkaneGroup).getAtomList();
+		    for (Atom atom : atomList) {
+		        atom.setSpareValency(true);
+		    }
 		}
 	}
 
