@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -1801,8 +1800,6 @@ class PreStructureBuilder {
 	 */
 	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException {
 		boolean doneSomething =false;
-		
-		//TODO tidy, prioritise double bonds, support replacement on amides
 		for (int i = groups.size()-1; i >=0; i--) {
 			Element group =groups.get(i);
 			if (matchChalogenReplacment.matcher(group.getValue()).matches()|| group.getValue().equals("peroxy")){
@@ -1836,174 +1833,267 @@ class PreStructureBuilder {
 							}
 						}
 					}
-					int atomCount = state.xmlFragmentMap.get(group).getAtomList().size();
-					String replacementSMILES = group.getAttributeValue(VALUE_ATR);
-					Fragment frag = state.xmlFragmentMap.get(groupToBeModified);
-					ArrayList<Fragment> suffixes = state.xmlSuffixMap.get(groupToBeModified);
-					Set<Atom> replaceableAtoms =new LinkedHashSet<Atom>();
-
-					if (atomCount==1){
-						for (Atom atom : frag.getAtomList()) {
-							if (atom.getElement().equals("O")){
-								replaceableAtoms.add(atom);
-							}
+					boolean multiplierUsed = false;
+					if (group.getValue().equals("peroxy")){
+						List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+						if (oxygenAtoms.size()==0){
+							oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
 						}
-						if (locantEl !=null){//locants are used to indicate replacement on trivial groups
-							String[] possibleLocants = matchComma.split(locantEl.getValue());
-							Set<Atom> atomsToUse =new LinkedHashSet<Atom>();
-							for (Atom atom : replaceableAtoms) {
-								boolean mainGroupAtom =false;//is the atom part of a chain/ring or like an oxo group of a chain/ring
-								for (String locant  : atom.getLocants()) {
-									if (matchNumericLocant.matcher(locant).matches()){
-										mainGroupAtom =true;
-										for (String locantVal : possibleLocants) {
-											if (locant.equals(locantVal)){
-												 atomsToUse.add(atom);
-											}
-										}
-										break;
-									}
-								}
-								if (!mainGroupAtom){
-									for (String locantVal : possibleLocants) {
-										 if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locantVal) != null){
-											 atomsToUse.add(atom);
-										 }
-									}
-								}
-							}
-							if(atomsToUse.size() != numberOfAtomsToReplace){
-								if (possibleLocants.length>1){
-									throw new StructureBuildingException("Failed to find the correct number of oxygen using locants:" + possibleLocants);
-								}
+						if (locantEl !=null){
+							List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
+							if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
 								locantEl = null;
-								//e.g. -1-thioureidomethyl
+								numberOfAtomsToReplace =1;
 							}
 							else{
-								replaceableAtoms =atomsToUse;
+								oxygenAtoms = oxygenWithAppropriateLocants;
 							}
 						}
-						if (locantEl == null){
-							//suffixes are ignored in the case of fused ring systems due to suffixes being null and for all suffixes not on acid stems (except phen-->thiophenol)
-							if (suffixes!=null){
-								Set<Atom> suffixAtomsToUse =new LinkedHashSet<Atom>();
-								ArrayList<Fragment> applicableSuffixes = new ArrayList<Fragment>(suffixes);
-								if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) && !groupToBeModified.getValue().equals("phen")){
-									//remove all non acid suffixes
-									for (Fragment fragment : suffixes) {
-										Element suffix = state.xmlFragmentMap.getElement(fragment);
-										if (!suffix.getAttributeValue(VALUE_ATR).equals("ic") && !suffix.getAttributeValue(VALUE_ATR).equals("ous")){
-											applicableSuffixes.remove(fragment);
-										}
-									}
-								}
-								for (Fragment suffixFrag : applicableSuffixes) {
-									for (Atom atom : suffixFrag.getAtomList()) {
-										if (atom.getElement().equals("O") && atom.getBonds().size()==1 && atom.getIncomingValency()==2){
-											suffixAtomsToUse.add(atom);
-										}
-									}
-								}
-								for (Fragment suffixFrag : applicableSuffixes) {
-									for (Atom atom : suffixFrag.getAtomList()) {
-										if (atom.getElement().equals("O") && atom.getBonds().size()==1 && atom.getIncomingValency()==1){
-											suffixAtomsToUse.add(atom);
-										}
-									}
-								}
-								suffixAtomsToUse.addAll(replaceableAtoms);//suffix atoms are preferable
-								replaceableAtoms = suffixAtomsToUse;
+						if (numberOfAtomsToReplace >1){
+							if (oxygenAtoms.size() >= numberOfAtomsToReplace){
+								multiplierUsed =true;
 							}
+							else{
+								numberOfAtomsToReplace=1;
+							}
+						}
+						if (oxygenAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
+							for (int j = 0; j < numberOfAtomsToReplace; j++) {
+								Atom oxygenToReplace = oxygenAtoms.get(j);
+								Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+								replacementFrag.getAtomList().get(1).setCharge(oxygenToReplace.getCharge());
+								removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
+								state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
+								state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
+							}
+						}
+						else{
+							continue;
 						}
 					}
 					else{
-						if (locantEl !=null){
-							continue;//you do not locant peroxy
+						List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+						if (oxygenAtoms.size()==0){
+							oxygenAtoms = findOxygenAtomsInGroup(state, groupToBeModified);
 						}
-						//only consider ic suffixes when it's not simple atom replacement e.g. peroxy.
-						ArrayList<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
-						for (int j = 0; j < suffixElements.size(); j++) {
-							if (suffixElements.get(j).getAttributeValue(VALUE_ATR).equals("ic")||suffixElements.get(j).getAttributeValue(VALUE_ATR).equals("ous")){
-								Fragment suffixFrag =suffixes.get(j);
-								List<Atom> atomList =suffixFrag.getAtomList();
-								for (Atom a : atomList) {
-									if (a.getElement().equals("O")){
-										if (a.getIncomingValency()==1){
-											replaceableAtoms.add(a);
-										}
-									}
-								}
-							}
-						}
-					}
-					boolean multiplierUsed = false;
-					if (numberOfAtomsToReplace >1){
-						if (replaceableAtoms.size() >= numberOfAtomsToReplace){
-							multiplierUsed =true;
-						}
-						else{
-							numberOfAtomsToReplace=1;
-						}
-					}
-					if (replaceableAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
-						boolean prefixAssignmentAmbiguous =false;
-						Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
-						if (replaceableAtoms.size() != numberOfAtomsToReplace){
-							prefixAssignmentAmbiguous=true;
-						}
-
-						int replacementsDone =0;
-						for (Atom atomToReplace : replaceableAtoms) {
-							if (replacementsDone == numberOfAtomsToReplace){
-								ambiguousElementAtoms.add(atomToReplace);
-								continue;
-							}
-							if (atomCount>1){//something like peroxy
-								Fragment replacementFrag = state.fragManager.buildSMILES(replacementSMILES, SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-								removeOrMoveObsoleteFunctionalAtoms(atomToReplace, replacementFrag);
-								int charge = atomToReplace.getCharge();
-								state.fragManager.replaceTerminalAtomWithFragment(atomToReplace, replacementFrag.getFirstAtom());
-								atomToReplace.setCharge(charge);
+						if (locantEl !=null){//locants are used to indicate replacement on trivial groups
+							List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
+							if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+								locantEl = null;
+								numberOfAtomsToReplace =1;
+								//e.g. -1-thioureidomethyl
 							}
 							else{
-								state.fragManager.makeHeteroatom(atomToReplace, replacementSMILES, false);
-								if (prefixAssignmentAmbiguous){
+								oxygenAtoms = oxygenWithAppropriateLocants;
+							}
+						}
+	
+						List<Atom> doubleBondedOxygen = new ArrayList<Atom>();
+						List<Atom> singleBondedOxygen = new ArrayList<Atom>();
+						List<Atom> ethericOxygen = new ArrayList<Atom>();
+						for (Atom oxygen : oxygenAtoms) {
+							int incomingValency = oxygen.getIncomingValency();
+							int bondCount = oxygen.getBonds().size();
+							if (bondCount==1 && incomingValency==2){
+								doubleBondedOxygen.add(oxygen);
+							}
+							else if (bondCount==1 && incomingValency==1){
+								singleBondedOxygen.add(oxygen);
+							}
+							else if (bondCount==2 && incomingValency==2){
+								ethericOxygen.add(oxygen);
+							}
+						}
+						List<Atom> replaceableAtoms = new LinkedList<Atom>();
+						replaceableAtoms.addAll(doubleBondedOxygen);
+						replaceableAtoms.addAll(singleBondedOxygen);
+						replaceableAtoms.addAll(ethericOxygen);
+						int totalOxygen = replaceableAtoms.size();
+						if (numberOfAtomsToReplace >1){
+							if (totalOxygen >= numberOfAtomsToReplace){
+								multiplierUsed =true;
+							}
+							else{
+								numberOfAtomsToReplace=1;
+							}
+						}
+
+						if (totalOxygen >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
+							boolean prefixAssignmentAmbiguous =false;
+							Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
+							if (totalOxygen != numberOfAtomsToReplace){
+								prefixAssignmentAmbiguous=true;
+							}
+
+							int replacementsDone =0;
+							for (Atom atomToReplace : replaceableAtoms) {
+								if (replacementsDone == numberOfAtomsToReplace){
 									ambiguousElementAtoms.add(atomToReplace);
+									continue;
+								}
+								else{
+									state.fragManager.makeHeteroatom(atomToReplace, group.getAttributeValue(VALUE_ATR), false);
+									if (prefixAssignmentAmbiguous){
+										ambiguousElementAtoms.add(atomToReplace);
+									}
+								}
+								replacementsDone++;
+							}
+
+							if (prefixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl thioacetate
+								for (Atom atom : ambiguousElementAtoms) {
+									atom.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, ambiguousElementAtoms);
 								}
 							}
-							replacementsDone++;
 						}
-
-						if (prefixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl thioacetate
-							for (Atom atom : ambiguousElementAtoms) {
-								atom.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, ambiguousElementAtoms);
-							}
+						else{
+							continue;
 						}
-
-						state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
-						substituent.removeChild(group);
-						groups.remove(group);
-						Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
-						for (int j = remainingChildren.size()-1; j>=0; j--){
-							Node child =substituent.getChild(j);
-							child.detach();
-							nextSubOrBracket.insertChild(child, 0);
-						}
-						substituents.remove(substituent);
-						substituent.detach();
-						if (multiplierUsed){
-							possibleMultiplier.detach();
-						}
-						if (locantEl !=null){
-							locantEl.detach();
-						}
-						doneSomething=true;
 					}
+					state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
+					substituent.removeChild(group);
+					groups.remove(group);
+					Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
+					for (int j = remainingChildren.size()-1; j>=0; j--){
+						Node child =substituent.getChild(j);
+						child.detach();
+						nextSubOrBracket.insertChild(child, 0);
+					}
+					substituents.remove(substituent);
+					substituent.detach();
+					if (multiplierUsed){
+						possibleMultiplier.detach();
+					}
+					if (locantEl !=null){
+						locantEl.detach();
+					}
+					doneSomething=true;
 				}
 			}
 		}
 		return doneSomething;
 	}
+
+	/**
+	 * Returns the subset of oxygenAtoms that possess one of the locants in locantEl
+	 * Searches for locant on nearest non suffix atom in case of suffixes
+	 * @param locantEl
+	 * @param oxygenAtoms
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) throws StructureBuildingException {
+		String[] possibleLocants = matchComma.split(locantEl.getValue());
+		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
+		for (Atom atom : oxygenAtoms) {
+			if (atom.getType().equals(SUFFIX_TYPE_VAL)){
+				for (String locantVal : possibleLocants) {
+					 if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locantVal) != null){
+						 oxygenWithAppropriateLocants.add(atom);
+						 break;
+					 }
+				}
+			}
+			else{
+				List<String> atomlocants = atom.getLocants();
+				for (String locantVal : possibleLocants) {
+					if (atomlocants.contains(locantVal)){
+						oxygenWithAppropriateLocants.add(atom);
+						break;
+					}
+				}
+			}
+		}
+		return oxygenWithAppropriateLocants;
+	}
+
+	/**
+	 * Returns oxygen atoms in suffixes with functionalAtoms
+	 * @param state
+	 * @param groupToBeModified
+	 * @return
+	 */
+	private List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
+		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
+		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		for (int j = 0; j < suffixElements.size(); j++) {
+			Element suffix = suffixElements.get(j);
+			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+			if (suffixFrag!=null){//null for non carboxylic acids
+				List<FunctionalAtom> functionalAtoms = suffixFrag.getFunctionalAtoms();
+				for (FunctionalAtom funcA: functionalAtoms) {
+					Atom a = funcA.getAtom();
+					if (a.getElement().equals("O")){
+						oxygenAtoms.add(funcA.getAtom());
+					}
+				}
+			}
+		}
+		return oxygenAtoms;
+	}
+	
+	/**
+	 * Returns functional oxygen atoms in groupToBeModified
+	 * @param state
+	 * @param groupToBeModified
+	 * @return
+	 */
+	private List<Atom> findFunctionalOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
+		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<FunctionalAtom> functionalAtoms = state.xmlFragmentMap.get(groupToBeModified).getFunctionalAtoms();
+		for (FunctionalAtom funcA: functionalAtoms) {
+			Atom a = funcA.getAtom();
+			if (a.getElement().equals("O")){
+				oxygenAtoms.add(funcA.getAtom());
+			}
+		}
+		return oxygenAtoms;
+	}
+	
+	
+	/**
+	 * Returns oxygen atoms in suffixes with functionalAtoms or phenol derivatives or acidStem suffixes
+	 * @param state
+	 * @param groupToBeModified
+	 * @return
+	 */
+	private List<Atom> findOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
+		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
+		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		for (int j = 0; j < suffixElements.size(); j++) {
+			Element suffix = suffixElements.get(j);
+			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+			if (suffixFrag!=null){//null for non carboxylic acids
+				if (suffixFrag.getFunctionalAtoms().size()>0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || groupToBeModified.getValue().equals("phen")){
+					List<Atom> atomList =suffixFrag.getAtomList();
+					for (Atom a : atomList) {
+						if (a.getElement().equals("O")){
+							oxygenAtoms.add(a);
+						}
+					}
+				}
+			}
+		}
+		return oxygenAtoms;
+	}
+	
+	/**
+	 * Returns oxygen atoms in groupToBeModified
+	 * @param state
+	 * @param groupToBeModified
+	 * @return
+	 */
+	private List<Atom> findOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
+		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> atomList = state.xmlFragmentMap.get(groupToBeModified).getAtomList();
+		for (Atom a : atomList) {
+			if (a.getElement().equals("O")){
+				oxygenAtoms.add(a);
+			}
+		}
+		return oxygenAtoms;
+	}
+
 
 	/**
 	 * Checks through the groups accesible from the startingElement taking into account brackets (i.e. those that it is feasible that the group of the startingElement could substitute onto).
