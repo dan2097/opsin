@@ -730,13 +730,14 @@ class PreStructureBuilder {
 							}
 							else{
 								Element afterMultiplier = (Element) XOMTools.getNextSibling(afterLocants);
-								if (afterMultiplier!=null && (afterMultiplier.getLocalName().equals(SUFFIX_EL) || afterMultiplier.getLocalName().equals(UNSATURATOR_EL) || afterMultiplier.getLocalName().equals(GROUP_EL))){
+								if (afterMultiplier!=null && (afterMultiplier.getLocalName().equals(SUFFIX_EL) || afterMultiplier.getLocalName().equals(INFIX_EL)
+										|| afterMultiplier.getLocalName().equals(UNSATURATOR_EL) || afterMultiplier.getLocalName().equals(GROUP_EL))){
 									multiplierEl = afterLocants; //indirect locant
 									break;
 								}
 							}
 						}
-						if (multiplierEl ==null){//multiplier looks suspicious - either due to being followed by the wrong thing or due to a locant/multiplier mismatch. The first multiplier found will be returned if no better one can be found
+						if (afterLocants.equals(XOMTools.getNextSibling(locant))){//if nothing better can be found report this as a locant/multiplier mismatch
 							multiplierEl = afterLocants;
 						}
 					}
@@ -823,7 +824,7 @@ class PreStructureBuilder {
 			if (currentElem.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)) {
 				if(heteroCount == count) {
 					return true;
-				} else {
+				} else if (heteroCount > 1){
 					return false;//there is a case where locants don't apply to heteroatoms in a HW system, but in that case only one locant is expected so this function would not be called
 				}
 			}
@@ -1040,7 +1041,11 @@ class PreStructureBuilder {
 							break;
 						}
 						else if(elName.equals(HETEROATOM_EL)){
-							heteroAtoms.add((Element)subOrRoot.getChild(j));
+							Element heteroAtom = (Element)subOrRoot.getChild(j);
+							heteroAtoms.add(heteroAtom);
+							if (heteroAtom.getAttribute(LOCANT_ATR)!=null){//locants already assigned, assumedly by process multipliers
+								break;
+							}
 						}
 						else{
 							break;
@@ -1064,7 +1069,7 @@ class PreStructureBuilder {
 								locantBeforeHWSystem.detach();
 								locants.remove(locantBeforeHWSystem);
 							}
-							else {
+							else if (heteroAtoms.size()>1){
 								throw new PostProcessingException("Mismatch between number of locants and HW heteroatoms");
 							}
 						}
@@ -2530,6 +2535,7 @@ class PreStructureBuilder {
 			else{
 				throw new PostProcessingException("Only identical components supported so far");
 			}
+			polyCyclicSpiroDescriptor.detach();
 		}
 	}
 
@@ -2539,11 +2545,45 @@ class PreStructureBuilder {
 		if (groups.size()<2){
 			throw new PostProcessingException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
 		}
-		Fragment firstFragment = state.xmlFragmentMap.get(groups.get(0));
+		if (groups.size() >2){
+			throw new PostProcessingException("Spiro system that is not supported yet encountered");
+		}
+		Element openBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
+		if (!openBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
+			throw new PostProcessingException("OPSIN Bug: Open bracket not found where open bracket expeced");
+		}
+		List<Element> spiroBracketElements = XOMTools.getSiblingsUpToElementWithTagName(openBracket, STRUCTURALCLOSEBRACKET_EL);
+		Element closeBracket = (Element) XOMTools.getNextSibling(spiroBracketElements.get(spiroBracketElements.size()-1));
+		if (closeBracket == null || !closeBracket.getLocalName().equals(STRUCTURALCLOSEBRACKET_EL)){
+			throw new PostProcessingException("OPSIN Bug: Open bracket not found where open bracket expeced");
+		}
 		
+		Element firstGroup = groups.get(0);
+		List<Element> firstGroupEls = new ArrayList<Element>();
+		int indexOfOpenBracket = subOrRoot.indexOf(openBracket);
+		int indexOfFirstGroup = subOrRoot.indexOf(firstGroup);
+		for (int i =indexOfOpenBracket +1; i < indexOfFirstGroup; i++) {
+			firstGroupEls.add((Element) subOrRoot.getChild(i));
+		}
+		firstGroupEls.add(firstGroup);
+		firstGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(firstGroup, UNSATURATOR_EL));
+		resolveFeaturesOntoGroup(state, firstGroupEls);
+
+		Fragment firstFragment = state.xmlFragmentMap.get(firstGroup);
 		for (int i = 1; i < groups.size(); i++) {
 			Element nextGroup =groups.get(i);
-			Element locant = (Element) XOMTools.getPreviousSibling(nextGroup, LOCANT_EL);
+			Element locant = (Element) XOMTools.getNextSibling(groups.get(i-1), LOCANT_EL);
+			
+			List<Element> nextGroupEls = new ArrayList<Element>();
+			int indexOfLocant = subOrRoot.indexOf(locant);
+			int indexOfNextGroup = subOrRoot.indexOf(nextGroup);
+			for (int j =indexOfLocant +1; j < indexOfNextGroup; j++) {
+				nextGroupEls.add((Element) subOrRoot.getChild(j));
+			}
+			nextGroupEls.add(nextGroup);
+			nextGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(nextGroup, UNSATURATOR_EL));
+			resolveFeaturesOntoGroup(state, nextGroupEls);
+			
 			if (locant ==null){
 				throw new PostProcessingException("Unable to find locantEl for polycyclic spiro system");
 			}
@@ -2556,22 +2596,18 @@ class PreStructureBuilder {
 			FragmentTools.relabelLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(nextFragment.getAtomByLocantOrThrow(locants[1]), firstFragment.getAtomByLocantOrThrow(locants[0]));
 		}
-		Fragment rootFrag = state.xmlFragmentMap.get(groups.get(groups.size()-1));
+		Element rootGroup = groups.get(groups.size()-1);
+		Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
+		String name = rootGroup.getValue();
 		for (int i = 0; i < groups.size() -1; i++) {
 			Element group =groups.get(i);
 			state.fragManager.incorporateFragment(state.xmlFragmentMap.get(group), rootFrag);
+			name = group.getValue() + name;
 			group.detach();
 		}
-		Element openBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
-		if (openBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
-			XOMTools.getNextSibling(openBracket, STRUCTURALCLOSEBRACKET_EL).detach();
-			openBracket.detach();
-		}
-		
-		
-		//Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
-		
-		
+		XOMTools.setTextChild(rootGroup, polyCyclicSpiroDescriptor.getValue() + name);
+		openBracket.detach();
+		closeBracket.detach();
 	}
 
 
@@ -2597,7 +2633,7 @@ class PreStructureBuilder {
 			throw new PostProcessingException("Cannot find group to which spirobi/ter descriptor applies");
 		}
 
-		resolveFeaturesOfGroup(state, polyCyclicSpiroDescriptor, group);
+		determineFeaturesToResolveInSingleComponentSpiro(state, polyCyclicSpiroDescriptor);
 		Fragment fragment = state.xmlFragmentMap.get(group);
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < components ; i++) {
@@ -2614,7 +2650,6 @@ class PreStructureBuilder {
 		}
 		locant.detach();
 		XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
-		polyCyclicSpiroDescriptor.detach();
 	}
 
 	/**
@@ -2633,7 +2668,7 @@ class PreStructureBuilder {
 		if (group==null){
 			throw new PostProcessingException("Cannot find group to which dispiroter descriptor applies");
 		}
-		resolveFeaturesOfGroup(state, polyCyclicSpiroDescriptor, group);
+		determineFeaturesToResolveInSingleComponentSpiro(state, polyCyclicSpiroDescriptor);
 		Fragment fragment = state.xmlFragmentMap.get(group);
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < 3 ; i++) {
@@ -2652,19 +2687,17 @@ class PreStructureBuilder {
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
 
 		XOMTools.setTextChild(group, "dispiroter" + group.getValue());
-		polyCyclicSpiroDescriptor.detach();
 	}
 
 	/**
-	 * The features between the polyCyclicSpiroDescriptor and group, or beween the STRUCTURALOPENBRACKET_EL and STRUCTURALCLOSEBRACKET_EL
-	 * if these are present are resolved onto the group
+	 * The features between the polyCyclicSpiroDescriptor and the first group element, or beween the STRUCTURALOPENBRACKET_EL and STRUCTURALCLOSEBRACKET_EL
+	 * are found and then passed to resolveFeaturesOntoGroup
 	 * @param state
 	 * @param polyCyclicSpiroDescriptor
-	 * @param group
 	 * @throws StructureBuildingException
+	 * @throws PostProcessingException 
 	 */
-	private void resolveFeaturesOfGroup(BuildState state, Element polyCyclicSpiroDescriptor, Element group) throws StructureBuildingException {
-		Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
+	private void determineFeaturesToResolveInSingleComponentSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, PostProcessingException {
 		Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		List<Element> elementsToResolve;
 		if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
@@ -2675,17 +2708,39 @@ class PreStructureBuilder {
 		else{
 			elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, GROUP_EL);
 		}
+		resolveFeaturesOntoGroup(state, elementsToResolve);
+	}
+	
+	/**
+	 * Given some elements including a group element resolves all locanted and unlocanted features.
+	 * @param state
+	 * @param elementsToResolve
+	 * @throws StructureBuildingException 
+	 * @throws PostProcessingException 
+	 */
+	private void resolveFeaturesOntoGroup(BuildState state, List<Element> elementsToResolve) throws StructureBuildingException, PostProcessingException{
+		if (elementsToResolve.size()==0){
+			return;
+		}
+		Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
+		Element parent = (Element) elementsToResolve.get(0).getParent();
+		int index = parent.indexOf(elementsToResolve.get(0));
+		Element group =null;
 		for (Element element : elementsToResolve) {
+			if (element.getLocalName().equals(GROUP_EL)){
+				group = element;
+			}
 			element.detach();
 			substituentToResolve.appendChild(element);
 		}
+		if (group ==null){
+			throw new PostProcessingException("OPSIN bug: group element should of been given to method");
+		}
 		if (substituentToResolve.getChildElements().size()!=0){
-			group.detach();
-			substituentToResolve.appendChild(group);
 			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
 			group.detach();
-			XOMTools.insertAfter(polyCyclicSpiroDescriptor, group);
+			parent.insertChild(group, index);
 		}
 	}
 

@@ -916,38 +916,24 @@ class PostProcessor {
 					if (chainlen < 3){
 						throw new PostProcessingException("Alkane chain too small to create a cyclo alkane: " + chainlen);
 					}
-					Element next = (Element)XOMTools.getNextSibling(group);
-					int groupCount = ((Element)group.getParent()).getChildElements(GROUP_EL).size();
-					Boolean conjugate =false;
-					if (next!=null && next.getLocalName().equals(UNSATURATOR_EL)){
-						if (groupCount >1 && next.getAttributeValue(VALUE_ATR).equals("2")){
-							conjugate=true;
-							next.detach();
-						}
-					}
-					else if (groupCount >1){
-						conjugate =true;
-					}
-
-					String SMILES;
-					if (conjugate){
-						//will have conjugated double bonds as is dictated by fusion nomenclature
-						SMILES = "c1" + StringTools.multiplyString("c", chainlen -1) + "1";
-					}
-					else{
-						SMILES = "C1" + StringTools.multiplyString("C", chainlen - 1) + "1";
-					}
-					group.addAttribute(new Attribute(VALUE_ATR, SMILES));
+					String smiles = "C1" + StringTools.multiplyString("C", chainlen - 1) + "1";
+					group.addAttribute(new Attribute(VALUE_ATR, smiles));
 					group.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 				}
 				else{
 					String smiles=group.getAttributeValue(VALUE_ATR);
 					smiles+="1";
-					if (Character.isUpperCase(smiles.charAt(1))){//element is 1 letter long
-						smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
+					if (smiles.charAt(0)=='['){
+						int closeBracketIndex = smiles.indexOf(']');
+						smiles= smiles.substring(0, closeBracketIndex +1) +"1" + smiles.substring(closeBracketIndex +1);
 					}
 					else{
-						smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
+						if (Character.isUpperCase(smiles.charAt(1))){//element is 1 letter long
+							smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
+						}
+						else{
+							smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
+						}
 					}
 					group.getAttribute(VALUE_ATR).setValue(smiles);
 				}

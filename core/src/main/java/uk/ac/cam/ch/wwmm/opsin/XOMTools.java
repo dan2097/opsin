@@ -197,8 +197,8 @@ public final class XOMTools {
 	 * @param type: the "localname" of the element type desired
 	 * @return
 	 */
-	public static ArrayList<Element> getNextSiblingsOfType(Element currentElem, String type) {
-		ArrayList<Element> laterSiblingElementsOfType= new ArrayList<Element>();
+	public static List<Element> getNextSiblingsOfType(Element currentElem, String type) {
+		List<Element> laterSiblingElementsOfType= new ArrayList<Element>();
 		Element parent =(Element) currentElem.getParent();
 		if (parent==null){
 			return laterSiblingElementsOfType;
@@ -211,6 +211,27 @@ public final class XOMTools {
 			}
 		}
 		return laterSiblingElementsOfType;
+	}
+	
+	/**
+	 * Returns an arrayList containing sibling elements of the given type after the given element.
+	 * @param currentElem: the element to look for following siblings of
+	 * @param type: the "localname" of the element type desired
+	 * @return
+	 */
+	public static List<Element> getNextAdjacentSiblingsOfType(Element currentElem, String type) {
+		List<Element> siblingElementsOfType= new ArrayList<Element>();
+		Element parent =(Element) currentElem.getParent();
+		if (parent==null){
+			return siblingElementsOfType;
+		}
+		Element nextSibling = (Element) XOMTools.getNextSibling(currentElem);
+		while (nextSibling !=null && nextSibling.getLocalName().equals(type)){
+			siblingElementsOfType.add(nextSibling);
+			nextSibling = (Element) XOMTools.getNextSibling(nextSibling);
+		}
+
+		return siblingElementsOfType;
 	}
 
 	/**
