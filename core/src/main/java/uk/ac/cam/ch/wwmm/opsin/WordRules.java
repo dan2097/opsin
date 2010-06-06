@@ -189,13 +189,14 @@ class WordRules {
 	/**Takes a molecule element and places the word elements into wordRule elements
 	 *
 	 * @param moleculeEl A molecule element with word children
+	 * @param allowSpaceRemoval 
 	 * @throws ParsingException
 	 */
-	void groupWordsIntoWordRules(Element moleculeEl) throws ParsingException {
+	void groupWordsIntoWordRules(Element moleculeEl, boolean allowSpaceRemoval) throws ParsingException {
 		List<Element> wordEls = XOMTools.getChildElementsWithTagName(moleculeEl, WORD_EL);
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
-			if (matchWordRule(wordEls, i)){
+			if (matchWordRule(wordEls, i, allowSpaceRemoval)){
 				i=-1;//if function did something
 			}
 		}
@@ -208,7 +209,7 @@ class WordRules {
 		}
 	}
 
-	private boolean matchWordRule(List<Element> wordEls, int indexOfFirstWord) throws ParsingException {
+	private boolean matchWordRule(List<Element> wordEls, int indexOfFirstWord, boolean allowSpaceRemoval) throws ParsingException {
 		wordRuleLoop: for (WordRuleDescription wordRule : wordRuleList) {
 			int i =indexOfFirstWord;
 			int wordsInWordRule = wordRule.wordDescriptions.size();
@@ -309,7 +310,7 @@ class WordRules {
 			applySimpleWordRule(wordEls, indexOfFirstWord, firstWord);
 			return false;
 		}
-		else if (WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
+		else if (allowSpaceRemoval && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
 			/*
 			 * substituents may join together or to a full e.g. 2-ethyl toluene -->2-ethyltoluene
 			 * 1-chloro 2-bromo ethane --> 1-chloro-2-bromo ethane then subsequently 1-chloro-2-bromo-ethane

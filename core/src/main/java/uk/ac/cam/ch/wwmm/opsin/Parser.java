@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 
@@ -71,6 +72,8 @@ class Parser {
 	private final ParseRules parseRules;
 	/**Holds the various tokens used.*/
 	private final TokenManager tokenManager;
+	
+	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
 
 	/**Initialises the parser.
 	 * @param tokenManager
@@ -99,6 +102,10 @@ class Parser {
 			catch (ParsingException e) {
 			}
 		}
+		else if (name.contains("; ")){//a mixture, spaces are sufficient for OPSIN to treat as a mixture. These spaces for obvious reasons must not be removed
+			parse = tokeniser.tokenize(matchSemiColonSpace.matcher(name).replaceAll(" "), false);
+		}
+		boolean allowSpaceRemoval = parse ==null ? true : false;
 		if (parse == null){
 			parse = tokeniser.tokenize(name, true);
 		}
@@ -162,7 +169,7 @@ class Parser {
 			 * <wr><wr>Carbonyl cyanide</wr> m-chlorophenyl hydrazone </wr>
 			 */
 			try{
-				wordRules.groupWordsIntoWordRules(moleculeEl);
+				wordRules.groupWordsIntoWordRules(moleculeEl, allowSpaceRemoval);
 				results.add(moleculeEl);
 			}
 			catch (ParsingException e) {
