@@ -106,8 +106,8 @@ does not define a CFG.
   <regex name="%symPolycylicSpiro%" value="º"/>
   <regex name="%dispiroter%" value="¿"/>
   <regex name="%spiro%" value="⌐"/>
-
-  <!--up to ascii 169 used -->
+  <regex name="%spiroLocant%" value="½"/>
+  <!--up to ascii 171 used -->
 
 <!-- composite regexes-->
 
@@ -201,7 +201,7 @@ does not define a CFG.
 
 	<regex name="%vonBaeyerForSpiro%" value="(%structuralOpenBracket%%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%|%multiplier%%heteroStem%)%ane%%structuralCloseBracket%%unsaturation%+)" />
 	<regex name="%polycyclicSpiroIdenticalComponents%" value ="((%symPolycylicSpiro%|%dispiroter%)((%ringGroup%|%fusedRingSystem%)|%structuralOpenBracket%%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%structuralCloseBracket%|%vonBaeyerForSpiro%))"/>
-  <regex name="%polycyclicSpiroContents%" value="(%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)(%hyphen%?%locantGroup%%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%))+)" />
+  <regex name="%polycyclicSpiroContents%" value="(%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)(%hyphen%?%spiroLocant%%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%))+)" />
   <regex name="%polycyclicSpiro%" value ="(%spiro%%structuralOpenBracket%%polycyclicSpiroContents%%structuralCloseBracket%)"/>
   <regex name="%polycyclicSpiroGroup%" value ="(%polycyclicSpiroIdenticalComponents%|%polycyclicSpiro%)" />
 

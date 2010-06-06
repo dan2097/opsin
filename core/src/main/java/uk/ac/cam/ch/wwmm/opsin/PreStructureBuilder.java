@@ -878,10 +878,6 @@ class PreStructureBuilder {
 			}
 			parentOfMultiplier=parentOfMultiplier.getParent();
 		}
-		Element possiblePolyCyclicSpiroEl = (Element) XOMTools.getPreviousSibling(locant, POLYCYCLICSPIRO_EL);
-		if (possiblePolyCyclicSpiroEl !=null && possiblePolyCyclicSpiroEl.getAttributeValue(VALUE_ATR).equals("spiro") && XOMTools.getNextSibling(locant, GROUP_EL)!=null){//e.g. spiro[cyclopentane-1,1'-indene]
-			return true;
-		}
 		return false;
 	}
 
@@ -2572,7 +2568,10 @@ class PreStructureBuilder {
 		Fragment firstFragment = state.xmlFragmentMap.get(firstGroup);
 		for (int i = 1; i < groups.size(); i++) {
 			Element nextGroup =groups.get(i);
-			Element locant = (Element) XOMTools.getNextSibling(groups.get(i-1), LOCANT_EL);
+			Element locant = (Element) XOMTools.getNextSibling(groups.get(i-1), SPIROLOCANT_EL);
+			if (locant ==null){
+				throw new PostProcessingException("Unable to find locantEl for polycyclic spiro system");
+			}
 			
 			List<Element> nextGroupEls = new ArrayList<Element>();
 			int indexOfLocant = subOrRoot.indexOf(locant);
@@ -2584,10 +2583,7 @@ class PreStructureBuilder {
 			nextGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(nextGroup, UNSATURATOR_EL));
 			resolveFeaturesOntoGroup(state, nextGroupEls);
 			
-			if (locant ==null){
-				throw new PostProcessingException("Unable to find locantEl for polycyclic spiro system");
-			}
-			String[] locants = matchComma.split(locant.getValue());
+			String[] locants = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
 			if (locants.length!=2){
 				throw new PostProcessingException("Incorrect number of locants found before component of polycyclic spiro system");
 			}
@@ -2739,8 +2735,12 @@ class PreStructureBuilder {
 		if (substituentToResolve.getChildElements().size()!=0){
 			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
-			group.detach();
-			parent.insertChild(group, index);
+			Elements children = substituentToResolve.getChildElements();
+			for (int i = children.size() -1; i>=0; i--) {
+				Element child = children.get(i);
+				child.detach();
+				parent.insertChild(child, index);
+			}
 		}
 	}
 
