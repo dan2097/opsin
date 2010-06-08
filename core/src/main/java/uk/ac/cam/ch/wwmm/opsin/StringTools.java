@@ -104,6 +104,9 @@ public final class StringTools {
 			else if (c ==96){
 				sb.replace(i, i+1, "'");//replace back ticks with apostrophe
 			}
+			else if (c ==34){
+				sb.replace(i, i+1, "''");//replace quotation mark with two primes
+			}
 		}
 		return sb.toString();
 	}
