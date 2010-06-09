@@ -1,25 +1,51 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
-version 0.6.1 (see ReleaseNotes.txt for what's new in this version)
+version 0.7.0 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 
 Contact address: dl387@cam.ac.uk
+Source code: http://bitbucket.org/dan2097/opsin/
 
-This is a library for IUPAC name-to-structure conversion.
+This is a Java library for IUPAC name-to-structure conversion.
 Currently it should be considered to be under development although the interface for using it will remain constant.
 OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 
 ##################################################
 
-The easiest way to use OPSIN is to use the standalone jar available from sourceforge.
-java -jar opsin-0.6.1-jar-with-dependencies.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
-opsin-0.6.1-jar-with-dependencies.jar includes InChI and CML output and all dependendencies
-core-0.6.1.jar does not include dependencies and InChI output support
-inchi-0.6.1.jar does not include dependencies, depends on JNI-InChI and core, and adds InChI suppport.
-The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML
-and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI
+OPSIN is available as a standalone JAR from SourceForge(https://sourceforge.net/projects/oscar3-chem/) or Bitbucket (http://bitbucket.org/dan2097/opsin/)
+It is also available as a dependency for use with Maven.
+java -jar opsin-0.7.0-jar-with-dependencies.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
+opsin-0.7.0-jar-with-dependencies.jar includes InChI and CML output and all dependendencies
+The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI
 
-To use OPSIN as a library within Java add opsin-0.6.1.jar to your classpath then:
+To use OPSIN as a library add opsin-0.7.0-jar-with-dependencies.jar to your classpath.
+
+If you are using Maven then do the following:
+	Add our repository:
+		<repository>
+			<id>ucc-repo</id>
+			<url>https://maven.ch.cam.ac.uk/m2repo</url>
+		</repository>
+
+	Then add:
+		<dependency>
+			 <groupId>opsin</groupId>
+			 <artifactId>core</artifactId>
+			 <version>0.7.0</version>
+		</dependency>
+	If you need just CML output support
+
+	or
+		<dependency>
+			 <groupId>opsin</groupId>
+			 <artifactId>inchi</artifactId>
+			 <version>0.7.0</version>
+		</dependency>
+
+	if you also need InChI output support.
+
+
+Using OPSIN as a library:
 
 1) Learn about XOM (http://xom.nu), the XML processing framework used
    by OPSIN
@@ -55,7 +81,7 @@ alkanes/alkenes/alkynes/heteroatom chains e.g. hexane, hex-1-ene, tetrasiloxane 
 All IUPAC 1993 recommended rings
 Trivial acids
 Hantzsch-Widman e.g. 1,3-oxazole
-Spiro systems (using Von baeyer brackets)
+Spiro systems
 All von Baeyer rings e.g. bicyclo[2.2.2]octane
 Hydro e.g. 2,3-dihydropyridine
 Indicated hydrogen e.g. 1H-benzoimidazole
@@ -67,20 +93,21 @@ Fused ring systems e.g. imidazo[4,5-d]pyridine. For a small number of fused ring
 Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
 The following functional classes: amides, anhydrides, esters, diesters, glycols, acids, azides, bromides, chlorides, cyanates, cyanides, fluorides, fulminates, hydrazones, hydroperoxides, imides,
-iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, selenocyanates, thiocyanates, alcohols, selenols, thiols, ethers, ketones, oxides, oximes, peroxides, selenides, 
+iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, selenocyanates, thiocyanates, alcohols, selenols, thiols, ethers, ketones, oxides, oximes, peroxides, selenides,
 selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
 Greek letters
 Lambda convention
 E/Z/R/S stereochemistry
 Amino Acids and derivatives
 Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)
+Simple CAS names
 
 Currently UNsupported nomenclature includes:
 Other less common stereochemical terms
 Carbohydrates
 Steroids
 Nucleic acids
-Bridged rings 
+Bridge prefixes e.g. epoxy, ethano
 Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 
 The following functional classes: Hydrazides, lactones, sultams, lactams, sultims, lactims, acetals, hemiacetals and ketals

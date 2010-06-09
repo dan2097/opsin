@@ -1,3 +1,20 @@
+Version 0.7.0
+Added full support for conjunctive nomenclature e.g. 1,3,5-benzenetriacetic acid
+Added basic support for CAS names
+Added trivial poly-noncarboxylic acids and more trivial carboxylic acids
+Added support for spirobi/spiroter/dispiroter and the majority of spiro(ring-locant-ring) nomenclature
+Indicators of the direction that a chemical rotates plane polarised light are now detected and ignored
+Fixed many cases of trivial names being interpreted systematically by adding more trivial names and detecting such cases
+Names such as oxalic bromide cyanide where a halide/pseudohalide replaces an oxygen are now supported
+Amino acid ester named from the neutral amino acid are now supported e.g. glycine ethyl ester
+Added more heteroatom replacement terms
+Allowed creation of an OPSIN parse through NameToStructure.getOpsinParser()
+Added support for dehydro - for unsaturating bonds
+Improvements to element symbol locant assignment and retrieving appropriate atoms from locants like N2
+OPSIN's SMILES parser now accept specification of number of hydrogens in cases other than chiral atoms
+Mixtures specified by separating components by semicolonspace are now supported
+Many internal improvements and bug fixes
+
 Version 0.6.1
 Counter ions are now duplicated such as to lead to if possible a neutral compound
 In names like nitrous amide the atoms modified by the functional replacement can now be substituted
