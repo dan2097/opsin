@@ -1,9 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+   <parent>
+      <artifactId>wwmm-parent</artifactId>
+      <groupId>wwmm</groupId>
+      <version>1</version>
+   </parent>
 	<groupId>opsin</groupId>
 	<artifactId>opsin</artifactId>
 	<name>OPSIN</name>
-	<version>0.6.2-SNAPSHOT</version>
+	<version>0.7.0</version>
 	<description>Open Parser for Systematic IUPAC Nomenclature</description>
 	<licenses>
 		<license>
@@ -47,27 +52,12 @@
 	</modules>
 	<repositories>
 	  <repository>
-	    <id>ucc</id>
+	    <id>ucc-repo</id>
 	    <url>https://maven.ch.cam.ac.uk/m2repo</url>
 	  </repository>
 	</repositories>
 	<build>
 	  <plugins>
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-compiler-plugin</artifactId>
-	      <configuration>
-	        <source>1.5</source>
-	        <target>1.5</target>
-	      </configuration>
-	    </plugin>
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-surefire-plugin</artifactId>
-	      <configuration>
-	        <testFailureIgnore>false</testFailureIgnore>
-	      </configuration>
-	    </plugin>
 	    <plugin>
 	      <artifactId>maven-assembly-plugin</artifactId>
 	      <inherited>false</inherited>
