@@ -2590,7 +2590,12 @@ class PreStructureBuilder {
 			locant.detach();
 			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
 			FragmentTools.relabelLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
-			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(nextFragment.getAtomByLocantOrThrow(locants[1]), firstFragment.getAtomByLocantOrThrow(locants[0]));
+			Atom atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1]);
+			Atom atomOnFirstFrag = firstFragment.getAtomByLocantOrThrow(locants[0]);
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnFirstFrag);
+			if (atomToBeReplaced.hasSpareValency()){
+				atomOnFirstFrag.setSpareValency(true);
+			}
 		}
 		Element rootGroup = groups.get(groups.size()-1);
 		Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
@@ -2643,6 +2648,9 @@ class PreStructureBuilder {
 		for (int i = 1; i < components ; i++) {
 			Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants[i]);
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnOriginalFragment);
+			if (atomToBeReplaced.hasSpareValency()){
+				atomOnOriginalFragment.setSpareValency(true);
+			}
 		}
 		locant.detach();
 		XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
@@ -2677,10 +2685,16 @@ class PreStructureBuilder {
 		Atom atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(matchComma.split(locants[0])[0]);
 		Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(matchComma.split(locants[0])[1]);
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
+		if (atomToBeReplaced.hasSpareValency()){
+			atomOnLessPrimedFragment.setSpareValency(true);
+		}
 		
 		atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(matchComma.split(locants[1])[0]);
 		atomToBeReplaced = fragment.getAtomByLocantOrThrow(matchComma.split(locants[1])[1]);
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
+		if (atomToBeReplaced.hasSpareValency()){
+			atomOnLessPrimedFragment.setSpareValency(true);
+		}
 
 		XOMTools.setTextChild(group, "dispiroter" + group.getValue());
 	}
