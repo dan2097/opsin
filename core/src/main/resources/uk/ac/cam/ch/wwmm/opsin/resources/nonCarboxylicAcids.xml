@@ -87,7 +87,7 @@
 
   </tokenList>
 
-  <tokenList tagname="group" type="nonCarboxylicAcid" symbol="ƒ">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="none" symbol="ƒ">
 <!--trivial names -->
     <token value="C(O)(O)(O)O" labels="none" valType="SMILES">orthocarbon</token>
     <token value="C(O)(O)O" labels="none" valType="SMILES">orthoform</token>

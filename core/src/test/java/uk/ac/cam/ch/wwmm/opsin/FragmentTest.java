@@ -348,6 +348,19 @@ public class FragmentTest {
 		}
 		assertEquals("Can't find locant C in frag", 0, frag.getIDFromLocant("C"));
 	}
+	
+	@Test
+	public void testLabelCarboximidohydrazide() throws StructureBuildingException {
+		frag = fm.buildSMILES("c1ccccc1");
+		Fragment suffix = fm.buildSMILES("[R]C(=N)NN", SUFFIX_TYPE_VAL, "/X//1'/2'");
+		List<Fragment> suffixes = new ArrayList<Fragment>();
+		suffixes.add(suffix);
+		FragmentTools.assignElementLocants(frag, suffixes);
+		fm.incorporateFragment(suffix, frag);
+		assertEquals("Can find locant N in frag: ID = 10", 10, frag.getIDFromLocant("N"));
+		assertEquals("Can find locant N' in frag: ID = 11", 11, frag.getIDFromLocant("N'"));
+		assertEquals("Can find locant N'' in frag: ID = 9", 9, frag.getIDFromLocant("N''"));
+	}
 
 	@Test
 	public void testPickUpIndicatedHydrogen() throws StructureBuildingException {

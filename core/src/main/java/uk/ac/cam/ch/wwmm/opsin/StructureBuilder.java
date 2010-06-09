@@ -630,7 +630,7 @@ class StructureBuilder {
 			String smilesReplacement = functionalClass.get(0).getAttributeValue(VALUE_ATR);
 			String labels =  functionalClass.get(0).getAttributeValue(LABELS_ATR);
 			for (int i = 0; i < numberOfCarbonylReplacements; i++) {
-				Fragment replacementFragment = state.fragManager.buildSMILES(smilesReplacement, "", labels);
+				Fragment replacementFragment = state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels);
 				if (i >0){
 					FragmentTools.relabelLocants(replacementFragment.getAtomList(), StringTools.multiplyString("'", i));
 				}
@@ -655,23 +655,7 @@ class StructureBuilder {
 		}
 		List<Atom> carbonylOxygens = findCarbonylOxygens(rootFragment, locantForFunctionalTerm);
 		int functionalReplacementsToPerform = Math.min(replacementFragments.size(), carbonylOxygens.size());
-		for (int i = 0; i < functionalReplacementsToPerform; i++) {
-			Atom atomToBeReplaced =carbonylOxygens.remove(0);//the oxygen of the carbonyl
-			Fragment replacementFrag = replacementFragments.remove(0);
-			List<Atom> atomList = replacementFrag.getAtomList();
-			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
-			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atomToBeReplaced);
-			if (numericLocantAtomConnectedToCarbonyl!=null){
-				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
-			}
-			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
-				resolveWordOrBracket(state, words.get(1 +i));
-				for (Atom atom : atomList) {
-					atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
-				}
-			}
-			state.fragManager.replaceTerminalAtomWithFragment(atomToBeReplaced, atomToReplaceCarbonylOxygen);
-		}
+		replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, functionalReplacementsToPerform);
 		resolveWordOrBracket(state, words.get(0));//the group
 		
 		if (!replacementFragments.isEmpty()){//Look for any more carbonyls that have appeared due to substitution e.g. 4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
@@ -683,23 +667,37 @@ class StructureBuilder {
 				throw new StructureBuildingException("Insufficient carbonyl groups found!");
 			}
 			functionalReplacementsToPerform = replacementFragments.size();
-			for (int i = 0; i < functionalReplacementsToPerform; i++) {
-				Atom atomToBeReplaced =carbonylOxygens.remove(0);//the oxygen of the carbonyl
-				Fragment replacementFrag = replacementFragments.remove(0);
-				List<Atom> atomList = replacementFrag.getAtomList();
-				Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
-				Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atomToBeReplaced);
-				if (numericLocantAtomConnectedToCarbonyl!=null){
-					atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
-				}
-				if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
-					resolveWordOrBracket(state, words.get(1 +i));
-					for (Atom atom : atomList) {
-						atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
+			replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, functionalReplacementsToPerform);
+		}
+	}
+
+	private void replaceCarbonylOxygenWithReplacementFragments(BuildState state, List<Element> words, List<Fragment> replacementFragments, List<Atom> carbonylOxygens, int functionalReplacementsToPerform) throws StructureBuildingException {
+		for (int i = 0; i < functionalReplacementsToPerform; i++) {
+			Atom carbonylOxygen =carbonylOxygens.remove(0);//the oxygen of the carbonyl
+			Fragment carbonylFrag = carbonylOxygen.getFrag();
+			Fragment replacementFrag = replacementFragments.remove(0);
+			List<Atom> atomList = replacementFrag.getAtomList();
+			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
+			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(carbonylOxygen);
+			if (numericLocantAtomConnectedToCarbonyl!=null){
+				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
+			}
+			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+				resolveWordOrBracket(state, words.get(1 +i));
+				for (Atom atom : atomList) {
+					atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
+					List<String> locants =atom.getLocants();
+					for (int j = locants.size() -1; j >=0; j--) {
+						String locant = locants.get(j);
+						if (carbonylFrag.hasLocant(locant)){
+							atom.removeLocant(locant);
+						}
 					}
 				}
-				state.fragManager.replaceTerminalAtomWithFragment(atomToBeReplaced, atomToReplaceCarbonylOxygen);
 			}
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(carbonylOxygen, atomToReplaceCarbonylOxygen);
+			atomToReplaceCarbonylOxygen.setType(carbonylOxygen.getType());//copy the type e.g. if the carbonyl was a suffix this should appear as a suffix
+			state.fragManager.incorporateFragment(replacementFrag, carbonylFrag);
 		}
 	}
 

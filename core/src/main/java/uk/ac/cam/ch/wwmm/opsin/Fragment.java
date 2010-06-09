@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**A fragment of a molecule, holds bonds and atoms.
  *
@@ -220,7 +221,7 @@ class Fragment {
 						continue;
 					}
 					List<String> locants = neighbour.getLocants();
-					if (!neighbour.getType().equals(XmlDeclarations.SUFFIX_TYPE_VAL)){
+					if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
 						for (String neighbourLocant : locants) {
 							if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
 								continue mainLoop;
@@ -575,12 +576,12 @@ class Fragment {
 			//recalled atoms will be null if they are not part of this fragment
 			if(b.getFromAtom() == atom) {
 				Atom a =getAtomByID(b.getTo());
-				if (a!=null && !a.getType().equals("suffix")){
+				if (a!=null && !a.getType().equals(SUFFIX_TYPE_VAL)){
 					v += b.getOrder();
 				}
 			} else if(b.getToAtom() == atom) {
 				Atom a =getAtomByID(b.getFrom());
-				if (a!=null && !a.getType().equals("suffix")){
+				if (a!=null && !a.getType().equals(SUFFIX_TYPE_VAL)){
 					v += b.getOrder();
 				}
 			}
@@ -716,7 +717,7 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if (atomCounter !=1 && currentAtom.getType().equals("suffix")){
+			if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
 				atomListPosition++;
 				continue;
 			}
@@ -746,7 +747,7 @@ class Fragment {
 					atomListPosition -=(atomList.size());
 				}
 				currentAtom=atomList.get(atomListPosition);
-				if (atomCounter !=1 && currentAtom.getType().equals("suffix")){
+				if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
 					atomListPosition++;
 					continue;
 				}
