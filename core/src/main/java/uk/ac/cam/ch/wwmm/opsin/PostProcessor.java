@@ -1042,7 +1042,13 @@ class PostProcessor {
 	 * @return array with number of carbons in each group and associated index of spiro atom
 	 */
 	private int[][] getSpiroDescriptors(String text) {
-		text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
+		if (text.indexOf("-")==5){
+			text= text.substring(7, text.length()-1);//cut off spiro-[ and terminal ]
+		}
+		else{
+			text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
+		}
+		
 		String[] spiroDescriptorStrings = matchDot.split(text);
 	
 		int[][] spiroDescriptors = new int[spiroDescriptorStrings.length][2]; // array of descriptors where number of elements and super string present
@@ -1148,7 +1154,12 @@ class PostProcessor {
 
 		ArrayList<HashMap<String, Integer>> bridges = new ArrayList<HashMap<String, Integer>>();
 		HashMap<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<Integer, ArrayList<Integer>>(alkylChainLength);
-		vonBaeyerBracket = vonBaeyerBracket.substring(6, vonBaeyerBracket.length()-1);//cut off cyclo[ and terminal ]
+		if (vonBaeyerBracket.indexOf("-")==5){
+			vonBaeyerBracket = vonBaeyerBracket.substring(7, vonBaeyerBracket.length()-1);//cut off cyclo-[ and terminal ]
+		}
+		else{
+			vonBaeyerBracket = vonBaeyerBracket.substring(6, vonBaeyerBracket.length()-1);//cut off cyclo[ and terminal ]
+		}
 		Matcher m = matchVonBaeyer.matcher(vonBaeyerBracket);
 		while(m.find()) {
 			String[] lengthOfBridgeArray= matchComma.split(m.group(0));
