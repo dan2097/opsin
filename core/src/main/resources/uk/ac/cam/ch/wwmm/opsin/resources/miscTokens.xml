@@ -12,6 +12,7 @@
   
   <tokenList tagname="cyclo" symbol="C">
     <token value="cyclo">cyclo</token>
+    <token value="cyclo">cyclo-</token>
   </tokenList>
 
   <tokenList tagname="hydro" symbol="y">
@@ -44,10 +45,13 @@
 
   <tokenList tagname="polyCyclicSpiro" symbol="º">
     <token value="spirobi">spirobi</token>
+    <token value="spirobi">spirobi-</token>
     <token value="spiroter">spiroter</token>
+    <token value="spiroter">spiroter-</token>
   </tokenList>
 
   <tokenList tagname="polyCyclicSpiro" symbol="⌐">
     <token value="spiro">spiro</token>
+    <token value="spiro">spiro-</token>
   </tokenList>
 </tokenLists>

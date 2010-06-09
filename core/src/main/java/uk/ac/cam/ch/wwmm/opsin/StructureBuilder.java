@@ -684,14 +684,14 @@ class StructureBuilder {
 			}
 			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				resolveWordOrBracket(state, words.get(1 +i));
-				for (Atom atom : atomList) {
-					atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
-					List<String> locants =atom.getLocants();
-					for (int j = locants.size() -1; j >=0; j--) {
-						String locant = locants.get(j);
-						if (carbonylFrag.hasLocant(locant)){
-							atom.removeLocant(locant);
-						}
+			}
+			for (Atom atom : atomList) {
+				atom.removeLocantsOtherThanElementSymbolLocants();//prevents numeric locant locanted substitution from outside the functional word
+				List<String> locants =atom.getLocants();
+				for (int j = locants.size() -1; j >=0; j--) {
+					String locant = locants.get(j);
+					if (carbonylFrag.hasLocant(locant)){
+						atom.removeLocant(locant);
 					}
 				}
 			}

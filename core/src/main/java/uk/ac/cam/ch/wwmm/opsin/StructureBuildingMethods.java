@@ -369,6 +369,7 @@ class StructureBuildingMethods {
 			String locant = getLocant(unsaturator);
 			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
 			if(bondOrder <= 1) {
+				unsaturator.detach();
 				continue;
 			}
 			if(!locant.equals("0")){
@@ -541,6 +542,7 @@ class StructureBuildingMethods {
         for (Element unsaturator : unsaturators) {
             int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
             if (bondOrder <= 1) {
+            	unsaturator.detach();
                 continue;
             }
             //checks if both atoms can accept an extra bond (if double bond) or two extra bonds (if triple bond)

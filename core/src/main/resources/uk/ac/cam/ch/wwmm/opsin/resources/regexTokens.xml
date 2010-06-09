@@ -45,10 +45,10 @@
   <regexToken regex="-" symbol="ä" tagname="hyphen" determinise="yes"/>
   <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="c" tagname="closebracket" determinise="yes"/>
-  <regexToken regex="[sS][pP][iI][rR][oO]%openBracket%[0-9]+(\.[0-9]+%superScriptedNumber%?)+%closeBracket%" symbol="S" tagname="spiro" determinise="yes"/>
+  <regexToken regex="[sS][pP][iI][rR][oO]-?%openBracket%[0-9]+(\.[0-9]+%superScriptedNumber%?)+%closeBracket%" symbol="S" tagname="spiro" determinise="yes"/>
 
   <regex name="%superScriptedVonBaeyerDescriptor%" regex="(\.[0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|[0-9]+,[0-9]+))"/>
-  <regexToken regex="[cC][yY][cC][lL][oO]%openBracket%[0-9]+\.[0-9]+\.[0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%" symbol="B" tagname="vonBaeyer" determinise="yes"/>
+  <regexToken regex="[cC][yY][cC][lL][oO]-?%openBracket%[0-9]+\.[0-9]+\.[0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%" symbol="B" tagname="vonBaeyer" determinise="yes"/>
   <regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
   <regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-([a-z]'*)+)"/><!--Numerical locants may be primed if component is multiplied. Primes on letters may occur if parent is multiplied-->
@@ -70,7 +70,7 @@
   <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" determinise="yes"/>
   <regexToken regex="(rel-)?%openBracket%%locantTypes%?([EZez]|[RSrs]\*?|RS)(,%locantTypes%?([EZez]|[RSrs]\*?|RS))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
   <regexToken regex="%locant%,%locant%(:%locant%,%locant%)*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
-  <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
+  <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="%locant%,%locant%'+-?" symbol="½" tagname="spiroLocant" determinise="yes"/>
   <regexToken regex="" symbol="£" tagname="suffix" value="ic" type="root" subType="terminal"/>
   <regexToken regex="[oO]" symbol="₧" tagname="suffix" value="yl" type="inline"/>
