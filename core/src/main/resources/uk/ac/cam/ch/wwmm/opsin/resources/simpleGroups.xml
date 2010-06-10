@@ -127,8 +127,6 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="[BrH2+]" labels="none" valType="SMILES">bromonium</token>
   <token value="[IH2+]" labels="none" valType="SMILES">iodonium</token>
 
-  <token value="[H-]" labels="none" valType="SMILES">hydride</token>
-
   <token value="F" labels="none" valType="SMILES">hydrofluoride</token>
   <token value="Cl" labels="none" valType="SMILES">hydrochloride</token>
   <token value="Br" labels="none" valType="SMILES">hydrobromide</token>

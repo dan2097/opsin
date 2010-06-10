@@ -133,15 +133,17 @@ class Atom {
 		if(charge != 0){
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
 		}
-		int hydrogenCount =0;
-		List<Atom> neighbours = this.getAtomNeighbours();
-		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("H")){
-				hydrogenCount++;
+		if (!element.equals("H")){
+			int hydrogenCount =0;
+			List<Atom> neighbours = this.getAtomNeighbours();
+			for (Atom neighbour : neighbours) {
+				if (neighbour.getElement().equals("H")){
+					hydrogenCount++;
+				}
 			}
-		}
-		if (hydrogenCount==0){//prevent adding of implicit hydrogen
-			elem.addAttribute(new Attribute("hydrogenCount", "0"));
+			if (hydrogenCount==0){//prevent adding of implicit hydrogen
+				elem.addAttribute(new Attribute("hydrogenCount", "0"));
+			}
 		}
 		if(atomParity != null){
 			elem.appendChild(atomParity.toCML());
