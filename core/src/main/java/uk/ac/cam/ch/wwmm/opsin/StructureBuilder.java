@@ -97,6 +97,9 @@ class StructureBuilder {
 			else if(wordRule == WordRule.acidHalideOrPseudoHalide) {//e.g. phosphinimidic chloride
 				buildAcidHalideOrPseudoHalide(state, words);
 			}
+			else if(wordRule == WordRule.additionCompound) {//e.g. carbon tetrachloride
+				buildAdditionCompound(state, words);
+			}
 			else if(wordRule == WordRule.acetal) {
 				buildAcetal(state, words);//e.g. propanal diethyl acetal
 			}
@@ -449,6 +452,9 @@ class StructureBuilder {
 		resolveWordOrBracket(state, words.get(0));//the group
 		List<Fragment> oxideFragments = new ArrayList<Fragment>();
 		List<String> locantsForOxide =new ArrayList<String>();//often not specified
+		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+			throw new StructureBuildingException("Oxide functional term not found where expected!");
+		}
 		int numberOfOxygenToAdd =1;
 		List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(words.get(1), MULTIPLIER_EL);
 		if (multipliers.size() >1){
@@ -550,7 +556,8 @@ class StructureBuilder {
 					}
 				}	
 				for (Fragment frag : orderedPossibleFragments) {//something like carbon dioxide
-					if (state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR).equals(ELEMENTARYATOM_SUBTYPE_VAL)){
+					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
+					if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(subTypeVal) || ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(subTypeVal)){
 						formAppropriateBondToOxideAndAdjustCharges(state, frag.getFirstAtom(), oxideAtom);
 						continue mainLoop;
 					}
@@ -971,6 +978,48 @@ class StructureBuilder {
 			state.fragManager.replaceTerminalAtomWithFragment(acidAtom, ideAtom);
 		}
 	}
+	
+	private void buildAdditionCompound(BuildState state, List<Element> words) throws StructureBuildingException {
+		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
+		}
+		resolveWordOrBracket(state, words.get(0));
+		Atom elementaryAtom = state.xmlFragmentMap.get(StructureBuildingMethods.findRightMostGroupInBracket(words.get(0))).getFirstAtom();
+
+		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
+		for (int i=1; i<words.size(); i++ ) {
+			Element functionalGroupWord =words.get(i);
+			List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
+			if (functionalGroups.size()!=1){
+				throw new StructureBuildingException("Expected exactly 1 functionalGroup. Found " + functionalGroups.size());
+			}
+			
+			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
+			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
+				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
+				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
+			}
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
+			functionalGroupFragments.add(monoValentFunctionGroup);
+			if (possibleMultiplier!=null){
+				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				for (int j = 1; j < multiplierValue; j++) {
+					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
+				}
+				possibleMultiplier.detach();
+			}
+		}
+		int halideCount = functionalGroupFragments.size();
+		Integer maximumVal = ValencyChecker.getMaximumValency(elementaryAtom.getElement(), elementaryAtom.getCharge());
+		if (maximumVal!=null && halideCount > maximumVal){
+			throw new StructureBuildingException("Too many halides/psuedo halides addded to " +elementaryAtom.getElement());
+		}
+		for (int i = halideCount - 1; i>=0; i--) {
+			Fragment ideFrag =functionalGroupFragments.get(i);
+			Atom ideAtom = ideFrag.getDefaultInAtom();
+			state.fragManager.createBond(elementaryAtom, ideAtom, 1);
+		}
+	}
 
 	private void buildAcetal(BuildState state, List<Element> words) throws StructureBuildingException {
 		throw new StructureBuildingException("Not yet Supported");
@@ -1095,7 +1144,7 @@ class StructureBuilder {
 	private void makeHydrogensExplicit(BuildState state) throws StructureBuildingException {
 		Set<Fragment> fragments = state.fragManager.getFragPile();
 		for (Fragment fragment : fragments) {
-			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
+			if (fragment.getSubType().equals(ELEMENTARYATOMINORGANIC_SUBTYPE_VAL) || fragment.getSubType().equals(ELEMENTARYATOMORGANIC_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
 				continue;
 			}
 			List<Atom> atomList =fragment.getAtomList();
@@ -1175,8 +1224,8 @@ class StructureBuilder {
 		HashMap<Element, BuildResults> wordToBR = new HashMap<Element, BuildResults>();
 		
 		List<Element> cationicElements = new ArrayList<Element>();
-		List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
-		for (Element elementaryAtom : elementaryAtoms) {
+		List<Element> inorganicElementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOMINORGANIC_SUBTYPE_VAL);
+		for (Element elementaryAtom : inorganicElementaryAtoms) {
 			if (elementaryAtom.getAttribute(TYPICALANDMAXIMUMCHARGE_ATR)!=null){
 				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
 				int typicalCharge = Integer.parseInt(matchComma.split(elementaryAtom.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[0]);

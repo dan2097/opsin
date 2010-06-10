@@ -26,6 +26,7 @@ class WordRules {
 	 */
 	enum WordRule{
 		acetal,
+		additionCompound,
 		acidHalideOrPseudoHalide,
 		amide,
 		anhydride,
@@ -66,6 +67,9 @@ class WordRules {
 		
 		/** The value of the type attribute of the last group element in the word e.g. maybe aminoAcid*/
 		private String endsWithGroupType = null;
+		
+		/** The value of the subType attribute of the last group element in the word e.g. maybe elementaryAtom*/
+		private String endsWithGroupSubType = null;
 
 		WordType getType() {
 			return type;
@@ -109,6 +113,14 @@ class WordRules {
 
 		void setEndsWithGroupType(String endsWithElementType) {
 			this.endsWithGroupType = endsWithElementType;
+		}
+		
+		String getEndsWithGroupSubType() {
+			return endsWithGroupSubType;
+		}
+
+		void setEndsWithGroupSubType(String endsWithElementSubType) {
+			this.endsWithGroupSubType = endsWithElementSubType;
 		}
 
 		/**
@@ -163,6 +175,9 @@ class WordRules {
 				}
 				if (word.getAttribute("endsWithGroupType")!=null){
 					wd.setEndsWithGroupType(word.getAttributeValue("endsWithGroupType"));
+				}
+				if (word.getAttribute("endsWithGroupSubType")!=null){
+					wd.setEndsWithGroupSubType(word.getAttributeValue("endsWithGroupSubType"));
 				}
 				wordDescriptions.add(wd);
 			}
@@ -256,6 +271,12 @@ class WordRules {
 					if (wd.endsWithGroupType !=null){
 						Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
 						if (lastGroupInWordRule==null || !wd.endsWithGroupType.equals(lastGroupInWordRule.getAttributeValue(TYPE_ATR))){
+							continue wordRuleLoop;
+						}
+					}
+					if (wd.endsWithGroupSubType !=null){
+						Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
+						if (lastGroupInWordRule==null || !wd.endsWithGroupSubType.equals(lastGroupInWordRule.getAttributeValue(SUBTYPE_ATR))){
 							continue wordRuleLoop;
 						}
 					}

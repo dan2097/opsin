@@ -18,6 +18,7 @@
     <token value="N" labels="N" valType="SMILES">imide</token>
 
     <token value="O" labels="none" valType="SMILES">oxide</token>
+    <token value="O" labels="none" valType="SMILES">monoxide</token>
   </tokenList>
 
   <tokenList tagname="group" type="functionalClass" subType="functionalClassGroup" symbol="í">

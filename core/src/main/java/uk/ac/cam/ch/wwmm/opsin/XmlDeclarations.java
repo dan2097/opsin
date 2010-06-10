@@ -326,7 +326,8 @@ class XmlDeclarations {
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
-	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
+	static final String ELEMENTARYATOMINORGANIC_SUBTYPE_VAL ="elementaryAtomInorganic";
+	static final String ELEMENTARYATOMORGANIC_SUBTYPE_VAL ="elementaryAtomOrganic";
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";
