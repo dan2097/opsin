@@ -1,22 +1,49 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
-<tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="G">
-  <token value="[Li]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">lithium</token>
-  <token value="[Na]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">sodium</token>
-  <token value="[K]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">potassium</token>
-  <token value="[Rb]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">rubidium</token>
-  <token value="[Cs]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">caesium</token>
-  <token value="[Cs]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">cesium</token>
-  <token value="[Fr]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">francium</token>
+<tokenLists>
+	<tokenList tagname="group" type="simpleGroup" subType="elementaryAtomInorganic" symbol="G">
+		<token value="[Li]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">lithium</token>
+		<token value="[Na]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">sodium</token>
+		<token value="[K]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">potassium</token>
+		<token value="[Rb]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">rubidium</token>
+		<token value="[Cs]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">caesium</token>
+		<token value="[Cs]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">cesium</token>
+		<token value="[Fr]" typicalAndMaximumCharge="1,1" labels="none" valType="SMILES">francium</token>
 
-  <token value="[Be]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">beryllium</token>
-  <token value="[Mg]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">magnesium</token>
-  <token value="[Ca]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">calcium</token>
-  <token value="[Sr]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">strontium</token>
-  <token value="[Ba]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">barium</token>
-  <token value="[Ra]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">radium</token>
+		<token value="[Be]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">beryllium</token>
+		<token value="[Mg]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">magnesium</token>
+		<token value="[Ca]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">calcium</token>
+		<token value="[Sr]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">strontium</token>
+		<token value="[Ba]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">barium</token>
+		<token value="[Ra]" typicalAndMaximumCharge="2,2" labels="none" valType="SMILES">radium</token>
 
-  <token value="[Al]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">aluminium</token>
-  <token value="[Al]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">aluminum</token>
-  <token value="[Ga]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">gallium</token>
-</tokenList>
+		<token value="[Al]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">aluminium</token>
+		<token value="[Al]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">aluminum</token>
+		<token value="[Ga]" typicalAndMaximumCharge="3,3" labels="none" valType="SMILES">gallium</token>
+	</tokenList>
+
+	<tokenList tagname="group" type="simpleGroup" subType="elementaryAtomOrganic" symbol="G">
+		<token value="[B]" labels="none" valType="SMILES">boron</token>
+
+		<token value="[C]" labels="none" valType="SMILES">carbon</token>
+		<token value="[Si]" labels="none" valType="SMILES">silicon</token>
+		<token value="[Ge]" labels="none" valType="SMILES">germanium</token>
+
+		<token value="[N]" labels="none" valType="SMILES">nitrogen</token>
+		<token value="[P]" labels="none" valType="SMILES">phosphorus</token>
+		<token value="[As]" labels="none" valType="SMILES">arsenic</token>
+		<token value="[Sb]" labels="none" valType="SMILES">antimony</token>
+
+		<token value="[O]" labels="none" valType="SMILES">oxygen</token>
+		<token value="[S]" labels="none" valType="SMILES">sulfur</token>
+		<token value="[Se]" labels="none" valType="SMILES">selenium</token>
+		<token value="[Te]" labels="none" valType="SMILES">tellurium</token>
+		<token value="[Po]" labels="none" valType="SMILES">polonium</token>
+
+		<token value="[F]" labels="none" valType="SMILES">fluorine</token>
+		<token value="[Cl]" labels="none" valType="SMILES">chlorine</token>
+		<token value="[Br]" labels="none" valType="SMILES">bromine</token>
+		<token value="[I]" labels="none" valType="SMILES">iodine</token>
+		<token value="[At]" labels="none" valType="SMILES">astatine</token>
+	</tokenList>
+</tokenLists>

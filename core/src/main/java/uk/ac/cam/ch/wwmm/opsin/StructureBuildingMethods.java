@@ -1127,18 +1127,23 @@ class StructureBuildingMethods {
 			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
 		}
 		fragToBeJoined.removeOutAtom(out);
-		if (from.getCharge()==-1 && from.getElement().equals("O") && state.xmlFragmentMap.getElement(fragToBeJoined).getValue().equals("oxido")){
-			//nasty special case to cope with oxido acting like oxide e.g. as O= or even [O-][N+]
-			//This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
-			String element = atomToJoinTo.getElement();
-			if (element.equals("S") && atomToJoinTo.getCharge() ==0 &&
-					(atomToJoinTo.getIncomingValency() +atomToJoinTo.getOutValency())>=2 && ValencyChecker.checkValencyAvailableForBond(atomToJoinTo, 2)){
-				from.setCharge(0);
-				bondOrder =2;
-			}
-			if (element.equals("N")){
-				if (atomToJoinTo.getCharge()==0 && (atomToJoinTo.getIncomingValency() + atomToJoinTo.getOutValency() + (atomToJoinTo.hasSpareValency() ? 1 :0))==3){
-					atomToJoinTo.addChargeAndProtons(1, 1);
+		if (from.getCharge()==-1){
+			String substituentName = state.xmlFragmentMap.getElement(fragToBeJoined).getValue();
+			if (substituentName.equals("oxido") || substituentName.equals("sulfido") || substituentName.equals("selenido") || substituentName.equals("tellurido") ){
+				//nasty special case to cope with oxido and relating groups acting as O= or even [O-][N+]
+				//This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
+				//Acting as O= notably is correct behaviour for inorganics
+				String element = atomToJoinTo.getElement();
+				if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) || ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) ||
+						(element.equals("S") && atomToJoinTo.getCharge() ==0 &&
+						(atomToJoinTo.getIncomingValency() +atomToJoinTo.getOutValency())>=2 && ValencyChecker.checkValencyAvailableForBond(atomToJoinTo, 2))){
+					from.setCharge(0);
+					bondOrder =2;
+				}
+				else if (element.equals("N")){
+					if (atomToJoinTo.getCharge()==0 && (atomToJoinTo.getIncomingValency() + atomToJoinTo.getOutValency() + (atomToJoinTo.hasSpareValency() ? 1 :0))==3){
+						atomToJoinTo.addChargeAndProtons(1, 1);
+					}
 				}
 			}
 		}
