@@ -35,7 +35,7 @@ public class AtomTest {
 		atom.addLocant("1");
 		Element elem = atom.toCMLAtom();
 		assertNotNull("Got XOM Element", elem);
-		assertEquals("Correct XML", "<atom id=\"a10\" elementType=\"C\"><label value=\"1\" dictRef=\"cmlDict:locant\" /></atom>", elem.toXML()); 
+		assertEquals("Correct XML", "<atom id=\"a10\" elementType=\"C\" hydrogenCount=\"0\"><label value=\"1\" dictRef=\"cmlDict:locant\" /></atom>", elem.toXML()); 
 	}
 	
 	@Test
