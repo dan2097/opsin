@@ -11,9 +11,8 @@ class CycleDetector {
 	 * This is necessary for deciding the applicability, and in some cases meaning, of suffixes and to determine what atoms are capable of having spare valency
 	 * Fragments made of disconnected sections are supported
 	 * @param frag
-	 * @throws StructureBuildingException
 	 */
-	static void assignWhetherAtomsAreInCycles(Fragment frag) throws StructureBuildingException{
+	static void assignWhetherAtomsAreInCycles(Fragment frag) {
 		List<Atom> atomList =frag.getAtomList();
 		HashSet<Atom> atomsVisited = new HashSet<Atom>();
 		for (Atom a : atomList) {//as OPSIN does not disallow disconnected sections within a single "fragment" (e.g. in suffixes) for vigorousness this for loop is required

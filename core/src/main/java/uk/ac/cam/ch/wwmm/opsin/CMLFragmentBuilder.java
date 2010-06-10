@@ -49,7 +49,8 @@ class CMLFragmentBuilder {
 	 * @param cmlMol The CML molecule to build.
 	 * @param type The type of the fragment, for the purpose of suffix interpretation.
 	 * @param subType The subType of the fragment, for the purpose of suffix interpretation.
-	 * @return The built fragment.
+	 * @param fragManager
+     * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
 	private Fragment build(Element cmlMol, String type, String subType, FragmentManager fragManager) throws StructureBuildingException {

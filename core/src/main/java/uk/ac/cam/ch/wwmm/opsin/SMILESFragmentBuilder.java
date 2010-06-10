@@ -402,7 +402,7 @@ class SMILESFragmentBuilder {
 		            	throw new StructureBuildingException("Unexpected character found in square bracket");
 		            }
 		        }
-				atom.setHydrogenCount(hydrogenCount);
+				atom.setProperty(Atom.SMILES_HYDROGEN_COUNT, hydrogenCount);
 			} else if(digits.indexOf(nextChar)!= -1 || nextChar == '%') {
 				tmpString = processRingOpeningOrClosure(fragManager, stack, closures, tmpString, nextChar);
 			}
@@ -448,10 +448,9 @@ class SMILESFragmentBuilder {
 		}
 		
 		for (Atom atom : atomList) {
-			if (atom.getHydrogenCount()!=null && atom.getLambdaConventionValency() ==null){
+			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null && atom.getLambdaConventionValency() ==null){
 				setupAtomValency(fragManager, atom);
 			}
-			atom.setHydrogenCount(null);
 		}
 		CycleDetector.assignWhetherAtomsAreInCycles(currentFrag);
 		return currentFrag;
@@ -684,7 +683,7 @@ class SMILESFragmentBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	private void setupAtomValency(FragmentManager fragManager, Atom atom) throws StructureBuildingException {
-		int hydrogenCount = atom.getHydrogenCount();
+		int hydrogenCount = atom.getProperty(Atom.SMILES_HYDROGEN_COUNT);
 		int incomingValency = atom.getIncomingValency() + hydrogenCount +atom.getOutValency();
 		int charge = atom.getCharge();
 		int absoluteCharge =Math.abs(charge);

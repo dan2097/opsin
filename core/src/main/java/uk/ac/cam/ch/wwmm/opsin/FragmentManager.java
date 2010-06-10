@@ -130,6 +130,7 @@ class FragmentManager {
 	 *
 	 * @param childFrag The fragment to be incorporated
 	 * @param parentFrag The parent fragment
+     * @throws StructureBuildingException
 	 */
 	void incorporateFragment(Fragment childFrag, Fragment parentFrag) throws StructureBuildingException {
 		for(Atom atom : childFrag.getAtomList()) {
@@ -169,6 +170,7 @@ class FragmentManager {
 	 * @param parentFrag The parent fragment
 	 * @param toID An id on that fragment
 	 * @param bondOrder The order of the joining bond
+     * @throws StructureBuildingException
 	 */
 	void incorporateFragment(Fragment childFrag, int fromID, Fragment parentFrag, int toID, int bondOrder) throws StructureBuildingException {
 		incorporateFragment(childFrag, parentFrag);
@@ -230,6 +232,7 @@ class FragmentManager {
 	 * Use this if you don't know what fragment the atom is in
 	 * @param id The id of the atom
 	 * @return The atom
+     * @throws StructureBuildingException
 	 */
 	Atom getAtomByIDOrThrow(int id) throws StructureBuildingException {
 		Atom a = getAtomByID(id);
@@ -348,7 +351,6 @@ class FragmentManager {
 			newAtom.setCharge(atom.getCharge());
 			newAtom.setSpareValency(atom.hasSpareValency());
 			newAtom.setProtonsExplicitlyAddedOrRemoved(atom.getProtonsExplicitlyAddedOrRemoved());
-			newAtom.setHydrogenCount(atom.getHydrogenCount());
 			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());
 			//outValency is derived from the outAtoms so is automatically cloned
 			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
@@ -383,6 +385,9 @@ class FragmentManager {
 			}
 			if (atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)!=null){
 				oldToNewAtomMap.get(atom).setProperty(Atom.KETONE_SUFFIX_ATTACHED, atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED));
+			}
+			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.SMILES_HYDROGEN_COUNT, atom.getProperty(Atom.SMILES_HYDROGEN_COUNT));
 			}
 		}
         for (OutAtom outAtom : outAtoms) {
@@ -509,9 +514,8 @@ class FragmentManager {
 	 * Non element symbol locants are copied to the replacement atom
 	 * @param atomToBeReplaced
 	 * @param replacementAtom
-	 * @throws StructureBuildingException
 	 */
-	void replaceAtomWithAnotherAtomPreservingConnectivity(Atom atomToBeReplaced, Atom replacementAtom) throws StructureBuildingException {
+	void replaceAtomWithAnotherAtomPreservingConnectivity(Atom atomToBeReplaced, Atom replacementAtom) {
 		atomToBeReplaced.removeElementSymbolLocants();
 		List<String> locants = atomToBeReplaced.getLocants();
 		for (int i = locants.size() -1; i >=0; i--) {

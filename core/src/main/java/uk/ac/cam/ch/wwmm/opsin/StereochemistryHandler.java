@@ -64,9 +64,8 @@ class StereochemistryHandler {
 	 * This is necessary as such double bonds are assumed to not be capable of having E/Z stereochemistry
 	 * @param bond
 	 * @return true unless in a 6 member or smaller rings
-	 * @throws StructureBuildingException 
 	 */
-	private static boolean notIn6MemberOrSmallerRing(Bond bond) throws StructureBuildingException {
+	private static boolean notIn6MemberOrSmallerRing(Bond bond) {
 		Atom fromAtom =bond.getFromAtom();
 		Atom toAtom = bond.getToAtom();
 		if (fromAtom.getAtomIsInACycle() && toAtom.getAtomIsInACycle()){//obviously both must be in rings

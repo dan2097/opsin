@@ -76,7 +76,7 @@ class PreStructureBuilder {
 	private HashMap<String, Element> suffixRules;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
-	private static HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
+	private static final HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
 	static{
 		//The first entry of the array is a special instruction e.g. blocked or saturated. The correct order of the heteroatoms follows
 		//terminal e is ignored from all of the keys as it is optional in the input name
@@ -147,7 +147,8 @@ class PreStructureBuilder {
 	 * Multiple groups are present in, for example, fusion nomenclature. By the end of this function there will be exactly 1 group
 	 * associated with each substituent/root. Multiplicative nomenclature can result in there being multiple roots
 	 *
-	 * @param elem The element to postprocess.
+	 * @param state
+     * @param elem The element to postprocess.
 	 * @return
 	 * @throws PostProcessingException 
 	 * @throws StructureBuildingException 
@@ -695,7 +696,6 @@ class PreStructureBuilder {
 	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclature
 	 * @throws PostProcessingException
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException If there is a disagreement.
 	 */
 	private void determineLocantMeaning(BuildState state, Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, PostProcessingException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
@@ -962,9 +962,9 @@ class PreStructureBuilder {
 			}
 			preliminaryProcessSuffixes(state, primaryConjunctiveGroup, suffixes);
 			resolveSuffixes(state, primaryConjunctiveGroup, suffixes);
-			for (int i = 0; i < suffixes.size(); i++) {
-				suffixes.get(i).detach();
-			}
+            for (Element suffix : suffixes) {
+                suffix.detach();
+            }
 			primaryConjunctiveGroup.setLocalName(CONJUNCTIVESUFFIXGROUP_EL);
 			allGroups.remove(primaryConjunctiveGroup);
 			
@@ -1981,9 +1981,8 @@ class PreStructureBuilder {
 	 * @param locantEl
 	 * @param oxygenAtoms
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) throws StructureBuildingException {
+	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
 		String[] possibleLocants = matchComma.split(locantEl.getValue());
 		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
 		for (Atom atom : oxygenAtoms) {
@@ -2017,19 +2016,18 @@ class PreStructureBuilder {
 	private List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
 		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-		for (int j = 0; j < suffixElements.size(); j++) {
-			Element suffix = suffixElements.get(j);
-			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
-			if (suffixFrag!=null){//null for non carboxylic acids
-				List<FunctionalAtom> functionalAtoms = suffixFrag.getFunctionalAtoms();
-				for (FunctionalAtom funcA: functionalAtoms) {
-					Atom a = funcA.getAtom();
-					if (a.getElement().equals("O")){
-						oxygenAtoms.add(funcA.getAtom());
-					}
-				}
-			}
-		}
+        for (Element suffix : suffixElements) {
+            Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+            if (suffixFrag != null) {//null for non carboxylic acids
+                List<FunctionalAtom> functionalAtoms = suffixFrag.getFunctionalAtoms();
+                for (FunctionalAtom funcA : functionalAtoms) {
+                    Atom a = funcA.getAtom();
+                    if (a.getElement().equals("O")) {
+                        oxygenAtoms.add(funcA.getAtom());
+                    }
+                }
+            }
+        }
 		return oxygenAtoms;
 	}
 	
@@ -2061,20 +2059,19 @@ class PreStructureBuilder {
 	private List<Atom> findOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
 		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-		for (int j = 0; j < suffixElements.size(); j++) {
-			Element suffix = suffixElements.get(j);
-			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
-			if (suffixFrag!=null){//null for non carboxylic acids
-				if (suffixFrag.getFunctionalAtoms().size()>0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || groupToBeModified.getValue().equals("phen")){
-					List<Atom> atomList =suffixFrag.getAtomList();
-					for (Atom a : atomList) {
-						if (a.getElement().equals("O")){
-							oxygenAtoms.add(a);
-						}
-					}
-				}
-			}
-		}
+        for (Element suffix : suffixElements) {
+            Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+            if (suffixFrag != null) {//null for non carboxylic acids
+                if (suffixFrag.getFunctionalAtoms().size() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || groupToBeModified.getValue().equals("phen")) {
+                    List<Atom> atomList = suffixFrag.getAtomList();
+                    for (Atom a : atomList) {
+                        if (a.getElement().equals("O")) {
+                            oxygenAtoms.add(a);
+                        }
+                    }
+                }
+            }
+        }
 		return oxygenAtoms;
 	}
 	
@@ -2967,6 +2964,7 @@ class PreStructureBuilder {
 	 * @param substituents: An arraylist of substituent elements
 	 * @return Whether the method did something, and so needs to be called again.
 	 * @throws StructureBuildingException
+     * @throws PostProcessingException
 	 */
 	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws PostProcessingException, StructureBuildingException {
 		for (Element substituent : substituents) {//will attempt to bracket this substituent with the substituent before it
@@ -3279,7 +3277,6 @@ class PreStructureBuilder {
 							}
 						}
 					}
-					return;
 				}
 				else{
 					for (int i = 0; i < locantValues.length; i++) {
@@ -3455,155 +3452,142 @@ class PreStructureBuilder {
 		}
 
 		List<Fragment> suffixList = state.xmlSuffixMap.get(group);
-		for(int i=0;i<suffixes.size();i++) {
-			Element suffix = suffixes.get(i);
-			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
+        for (Element suffix : suffixes) {
+            String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 
-			String locant = StructureBuildingMethods.getLocant(suffix);
-			int idOnParentFragToUse=0;
-			if (!locant.equals("0")){
-				idOnParentFragToUse =frag.getIDFromLocantOrThrow(locant);
-			}
-			if (idOnParentFragToUse==0 && suffix.getAttribute(LOCANTID_ATR)!=null){
-				idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR));
-			}
-			if (idOnParentFragToUse==0 && (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL)|| suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL))){//means that e.g. sulfonyl has an explicit outAtom
-				idOnParentFragToUse = firstAtomID;
-			}
+            String locant = StructureBuildingMethods.getLocant(suffix);
+            int idOnParentFragToUse = 0;
+            if (!locant.equals("0")) {
+                idOnParentFragToUse = frag.getIDFromLocantOrThrow(locant);
+            }
+            if (idOnParentFragToUse == 0 && suffix.getAttribute(LOCANTID_ATR) != null) {
+                idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR));
+            }
+            if (idOnParentFragToUse == 0 && (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL))) {//means that e.g. sulfonyl has an explicit outAtom
+                idOnParentFragToUse = firstAtomID;
+            }
 
-			Fragment suffixFrag =null;
-			Elements suffixRuleTags =getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
-			for(int j=0;j<suffixRuleTags.size();j++) {
-				Element suffixRuleTag = suffixRuleTags.get(j);
-				String suffixRuleTagName =suffixRuleTag.getLocalName();
-				if (defaultAtom >= atomList.size()){
-					defaultAtom=0;
-				}
-				if(suffixRuleTagName.equals(SUFFIXRULES_ADDGROUP_EL)) {
-					if (suffixFrag==null){
-						if (suffixList.size() <=0){
-							throw new PostProcessingException("OPSIN Bug: Suffixlist should not be empty");
-						}
-						suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
-						
-						if (suffixFrag.getFirstAtom().getBonds().size() <=0){
-							throw new PostProcessingException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
-						}
-						int bondOrderRequired = suffixFrag.getFirstAtom().getIncomingValency();
-						if(idOnParentFragToUse==0) {
-							if(suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
-								if(defaultAtom == 0) defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
-								idOnParentFragToUse = atomList.get(defaultAtom).getID();
-								defaultAtom++;
-							}
-							else{
-								idOnParentFragToUse =atomList.get(defaultAtom).getID();
-							}
-							idOnParentFragToUse =frag.getAtomByIdOrNextSuitableAtomOrThrow(idOnParentFragToUse, bondOrderRequired).getID();
-						}
-						
-						//create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
-						List<Bond> bonds = new ArrayList<Bond>(suffixFrag.getFirstAtom().getBonds());
-						for (Bond bondToSuffix : bonds) {
-							Atom suffixAtom;
-							if (bondToSuffix.getToAtom().getElement().equals("R")){
-								suffixAtom = bondToSuffix.getFromAtom();
-							}
-							else{
-								suffixAtom = bondToSuffix.getToAtom();
-							}
-							Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
-							state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
-							if (suffixValue.equals("one") && groupType.equals(RING_TYPE_VAL)){//special case: one acts in a similar way to the hydro tag c.f. tetrahydrobenzen-1,4-dione
-								parentfragAtom.setProperty(Atom.KETONE_SUFFIX_ATTACHED, true);
-							}
-							state.fragManager.removeBond(bondToSuffix);
-						}
-					}
-				} else if(suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
-					int chargeChange =Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
-					int protonChange =Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
-					if(idOnParentFragToUse==0){
-						//Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
-						//It's extremely rare to want a carbocation so any heteroatom is preferred with preference given to N
-						Atom possibleAtom =null;
-						for (Atom a : atomList) {
-							if (ValencyChecker.getPossibleValencies(a.getElement(), a.getCharge() + chargeChange)==null){//unstable valency so seems unlikely
-								continue;
-							}
-							String element =a.getElement();
-							if (element.equals("N")){
-								possibleAtom =a;
-								break;
-							}
-							else if (!element.equals("C")){
-								if (possibleAtom == null){
-									possibleAtom =a;
-								}
-							}
-						}
-						if (possibleAtom==null){
-							idOnParentFragToUse =atomList.get(defaultAtom).getID();
-							defaultAtom++;
-						}
-						else{
-							idOnParentFragToUse =possibleAtom.getID();
-						}
-					}
-					frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
-				}else if(suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
-					int outValency = suffixRuleTag.getAttribute(SUFFIXRULES_OUTVALENCY_ATR) != null ? Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR)) : 1;
-					if (suffix.getAttribute(SUFFIXPREFIX_ATR)==null){
-						if(idOnParentFragToUse!=0){
-							frag.addOutAtom(idOnParentFragToUse, outValency, true);
-						}
-						else{
-							frag.addOutAtom(firstAtomID, outValency, false);
-						}
-					}
-					else{//something like oyl on a ring, which means it is now carbonyl and the outAtom is on the suffix and not frag
-						if (suffixFrag ==null){
-							throw new StructureBuildingException("OPSIN bug: ordering of elements in suffixRules.xml wrong; setOutAtom found before addGroup");
-						}
-						Set<Bond> bonds = state.fragManager.getInterFragmentBonds(suffixFrag);
-						if (bonds.size()!=1){
-							throw new StructureBuildingException("OPSIN bug: Wrong number of bonds between suffix and group");
-						}
-						for (Bond bond : bonds) {
-							if (bond.getFromAtom().getFrag()==suffixFrag){
-								suffixFrag.addOutAtom(bond.getFromAtom(), outValency, true);
-							}
-							else{
-								suffixFrag.addOutAtom(bond.getToAtom(), outValency, true);
-							}
-						}
-					}
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL)){
-					//already processed
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL)){
-					//already processed
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_CHARGEHYDROXYGROUPS_EL)){
-					//already processed
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL)){
-					//already processed
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)){
-					//already processed
-				}
-				else{
-					throw new StructureBuildingException("Unknown suffix rule:" + suffixRuleTagName);
-				}
-			}
+            Fragment suffixFrag = null;
+            Elements suffixRuleTags = getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+            for (int j = 0; j < suffixRuleTags.size(); j++) {
+                Element suffixRuleTag = suffixRuleTags.get(j);
+                String suffixRuleTagName = suffixRuleTag.getLocalName();
+                if (defaultAtom >= atomList.size()) {
+                    defaultAtom = 0;
+                }
+                if (suffixRuleTagName.equals(SUFFIXRULES_ADDGROUP_EL)) {
+                    if (suffixFrag == null) {
+                        if (suffixList.size() <= 0) {
+                            throw new PostProcessingException("OPSIN Bug: Suffixlist should not be empty");
+                        }
+                        suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
 
-			if (suffixFrag!=null){//merge suffix frag and parent fragment
-				state.fragManager.removeAtomAndAssociatedBonds(suffixFrag.getFirstAtom());//the dummy R atom
-				state.fragManager.incorporateFragment(suffixFrag, frag);
-			}
-		}
+                        if (suffixFrag.getFirstAtom().getBonds().size() <= 0) {
+                            throw new PostProcessingException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
+                        }
+                        int bondOrderRequired = suffixFrag.getFirstAtom().getIncomingValency();
+                        if (idOnParentFragToUse == 0) {
+                            if (suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
+                                if (defaultAtom == 0)
+                                    defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
+                                idOnParentFragToUse = atomList.get(defaultAtom).getID();
+                                defaultAtom++;
+                            } else {
+                                idOnParentFragToUse = atomList.get(defaultAtom).getID();
+                            }
+                            idOnParentFragToUse = frag.getAtomByIdOrNextSuitableAtomOrThrow(idOnParentFragToUse, bondOrderRequired).getID();
+                        }
+
+                        //create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
+                        List<Bond> bonds = new ArrayList<Bond>(suffixFrag.getFirstAtom().getBonds());
+                        for (Bond bondToSuffix : bonds) {
+                            Atom suffixAtom;
+                            if (bondToSuffix.getToAtom().getElement().equals("R")) {
+                                suffixAtom = bondToSuffix.getFromAtom();
+                            } else {
+                                suffixAtom = bondToSuffix.getToAtom();
+                            }
+                            Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
+                            state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
+                            if (suffixValue.equals("one") && groupType.equals(RING_TYPE_VAL)) {//special case: one acts in a similar way to the hydro tag c.f. tetrahydrobenzen-1,4-dione
+                                parentfragAtom.setProperty(Atom.KETONE_SUFFIX_ATTACHED, true);
+                            }
+                            state.fragManager.removeBond(bondToSuffix);
+                        }
+                    }
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
+                    int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
+                    int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
+                    if (idOnParentFragToUse == 0) {
+                        //Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
+                        //It's extremely rare to want a carbocation so any heteroatom is preferred with preference given to N
+                        Atom possibleAtom = null;
+                        for (Atom a : atomList) {
+                            if (ValencyChecker.getPossibleValencies(a.getElement(), a.getCharge() + chargeChange) == null) {//unstable valency so seems unlikely
+                                continue;
+                            }
+                            String element = a.getElement();
+                            if (element.equals("N")) {
+                                possibleAtom = a;
+                                break;
+                            } else if (!element.equals("C")) {
+                                if (possibleAtom == null) {
+                                    possibleAtom = a;
+                                }
+                            }
+                        }
+                        if (possibleAtom == null) {
+                            idOnParentFragToUse = atomList.get(defaultAtom).getID();
+                            defaultAtom++;
+                        } else {
+                            idOnParentFragToUse = possibleAtom.getID();
+                        }
+                    }
+                    frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
+                    int outValency = suffixRuleTag.getAttribute(SUFFIXRULES_OUTVALENCY_ATR) != null ? Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR)) : 1;
+                    if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
+                        if (idOnParentFragToUse != 0) {
+                            frag.addOutAtom(idOnParentFragToUse, outValency, true);
+                        } else {
+                            frag.addOutAtom(firstAtomID, outValency, false);
+                        }
+                    } else {//something like oyl on a ring, which means it is now carbonyl and the outAtom is on the suffix and not frag
+                        if (suffixFrag == null) {
+                            throw new StructureBuildingException("OPSIN bug: ordering of elements in suffixRules.xml wrong; setOutAtom found before addGroup");
+                        }
+                        Set<Bond> bonds = state.fragManager.getInterFragmentBonds(suffixFrag);
+                        if (bonds.size() != 1) {
+                            throw new StructureBuildingException("OPSIN bug: Wrong number of bonds between suffix and group");
+                        }
+                        for (Bond bond : bonds) {
+                            if (bond.getFromAtom().getFrag() == suffixFrag) {
+                                suffixFrag.addOutAtom(bond.getFromAtom(), outValency, true);
+                            } else {
+                                suffixFrag.addOutAtom(bond.getToAtom(), outValency, true);
+                            }
+                        }
+                    }
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL)) {
+                    //already processed
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL)) {
+                    //already processed
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_CHARGEHYDROXYGROUPS_EL)) {
+                    //already processed
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL)) {
+                    //already processed
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)) {
+                    //already processed
+                } else {
+                    throw new StructureBuildingException("Unknown suffix rule:" + suffixRuleTagName);
+                }
+            }
+
+            if (suffixFrag != null) {//merge suffix frag and parent fragment
+                state.fragManager.removeAtomAndAssociatedBonds(suffixFrag.getFirstAtom());//the dummy R atom
+                state.fragManager.incorporateFragment(suffixFrag, frag);
+            }
+        }
 	}
 
 	/**

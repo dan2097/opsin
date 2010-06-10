@@ -57,9 +57,9 @@ class Tokeniser {
 				//In cases of properly formed names there will be only one ParseWord
 				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
 				List<ParseWord> parseWords = splitIntoParseWords(parseTokens, parsedName);
-				for (int j = 0; j < parseWords.size(); j++) {
-					parse.addWord(parseWords.get(j));
-				}
+                for (ParseWord parseWord : parseWords) {
+                    parse.addWord(parseWord);
+                }
 				if (!uninterpretableName.equals("")){
 					unparsedName = uninterpretableName.substring(1);//remove white space at start of uninterpretableName
 				}
