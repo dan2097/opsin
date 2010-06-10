@@ -238,7 +238,7 @@ class FragmentTools {
 	}
 
 
-	private static void detectAndCorrectHydrazoneDerivativeViolation(List<Fragment> suffixFragments) throws StructureBuildingException {
+	private static void detectAndCorrectHydrazoneDerivativeViolation(List<Fragment> suffixFragments) {
 		fragmentLoop: for (Fragment suffixFrag : suffixFragments) {
 			List<Atom> atomList = suffixFrag.getAtomList();
 			for (Atom atom : atomList) {
@@ -388,10 +388,11 @@ class FragmentTools {
 	 * @param fromAtomID The id of the lower-numbered atom in the bond
 	 * @param bondOrder The new bond order
 	 * @param fragment The fragment
+     * @throws StructureBuildingException
 	 */
 	static void unsaturate(int fromAtomID, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		int toAtomID = fromAtomID + 1;
-		if (fragment.getAtomByID(toAtomID)==null || fragment.getAtomByID(toAtomID).getType().equals("suffix")){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
+		if (fragment.getAtomByID(toAtomID)==null || fragment.getAtomByID(toAtomID).getType().equals(SUFFIX_TYPE_VAL)){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
 			List<Atom> neighbours =fragment.getAtomByIDOrThrow(fromAtomID).getAtomNeighbours();
 			if (neighbours.size() >=2){
 				int firstID =fragment.getIdOfFirstAtom();
@@ -413,6 +414,7 @@ class FragmentTools {
 	 * @param locantTo The locant of the other atom in the bond
 	 * @param bondOrder The new bond order
 	 * @param fragment The fragment
+     * @throws StructureBuildingException
 	 */
 	static void unsaturate(int fromAtomID, String locantTo, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		int toAtomID = fragment.getIDFromLocantOrThrow(locantTo);
@@ -424,7 +426,8 @@ class FragmentTools {
 	 * and higher, else 1. Position 2 is assumed to be 1 higher than the atomIndice given.
 	 *
 	 * @param fragment The fragment
-	 * @return the appropriate atom indice
+	 * @param atomIndice
+     * @return the appropriate atom indice
 	 * @throws StructureBuildingException 
 	 */
 	static int findKetoneAtomIndice(Fragment fragment, int atomIndice) throws StructureBuildingException {
@@ -444,6 +447,7 @@ class FragmentTools {
 	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
 	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
 	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
+     * @param fusedring
 	 */
 	static void relabelFusedRingSystem(Fragment fusedring){
 		relabelFusedRingSystem(fusedring.getAtomList());
@@ -452,6 +456,7 @@ class FragmentTools {
 	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
 	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
 	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
+     * @param atomList
 	 */
 	static void relabelFusedRingSystem(List<Atom> atomList) {
 		int locantVal = 0;
@@ -497,9 +502,8 @@ class FragmentTools {
 	 * Given the starting nitrogen returns the other nitrogen or null if that nitrogen does not appear to be involved in such tautomerism
 	 * @param nitrogen
 	 * @return null or the other nitrogen
-	 * @throws StructureBuildingException
 	 */
-	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) throws StructureBuildingException {
+	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) {
 		if (nitrogen.getElement().equals("N") && nitrogen.getAtomIsInACycle()){
 			List<Atom> neighbours = nitrogen.getAtomNeighbours();
 			for (Atom neighbour : neighbours) {
@@ -519,6 +523,8 @@ class FragmentTools {
 
 	/** Looks for the atom that would have had a hydrogen indicated,
 	 * adds a spareValency to that atom, and sets indicatedHydrogen.
+     * @param frag
+     * @throws StructureBuildingException
 	 */
 	static void pickUpIndicatedHydrogens(Fragment frag) throws StructureBuildingException {
 		if (frag.getIndicatedHydrogen().size()>0){
@@ -558,7 +564,8 @@ class FragmentTools {
 
 	/**Looks for double and higher bonds, converts them to single bonds
 	 * and adds corresponding spareValencies to the atoms they join.
-	 * @throws StructureBuildingException 
+	 * @param frag
+     * @throws StructureBuildingException
 	 */
 	static void convertHighOrderBondsToSpareValencies(Fragment frag) throws StructureBuildingException {
 		Set<Bond> bondSet = frag.getBondSet();
@@ -578,7 +585,8 @@ class FragmentTools {
 
 	/**Increases the order of bonds joining atoms with spareValencies,
 	 * and uses up said spareValencies.
-	 * @throws StructureBuildingException If the algorithm can't work out where to put the bonds
+	 * @param frag
+     * @throws StructureBuildingException If the algorithm can't work out where to put the bonds
 	 */
 	static void convertSpareValenciesToDoubleBonds(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomCollection =frag.getAtomList();

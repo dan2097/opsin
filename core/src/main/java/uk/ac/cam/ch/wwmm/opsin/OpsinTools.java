@@ -138,9 +138,8 @@ class OpsinTools {
 	 * @param startingAtom
 	 * @param targetLocant
 	 * @return the matching atom or null
-	 * @throws StructureBuildingException
 	 */
-	static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) throws StructureBuildingException {
+	static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) {
 		LinkedList<Atom> stack = new LinkedList<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();
@@ -175,9 +174,8 @@ class OpsinTools {
 	 * Returns either that atom or null if one cannot be found
 	 * @param startingAtom
 	 * @return the matching atom or null
-	 * @throws StructureBuildingException
 	 */
-	static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom) throws StructureBuildingException {
+	static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom){
 		LinkedList<Atom> stack = new LinkedList<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();

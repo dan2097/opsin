@@ -1155,7 +1155,6 @@ class StructureBuilder {
 					hydrogen = state.fragManager.createAtom("H", fragment);
 					state.fragManager.createBond(parentAtom, hydrogen, 1);
 				}
-				parentAtom.setHydrogenCount(explicitHydrogensToAdd);
 				if (parentAtom.getAtomParity()!=null){
 					if (explicitHydrogensToAdd >1){
 						throw new StructureBuildingException("Cannot have tetrahedral chirality and more than 2 hydrogens");

@@ -99,7 +99,7 @@ class Parser {
 			try{
 				parse = tokeniser.tokenize(tokeniser.uninvertCASName(name), false);
 			}
-			catch (ParsingException e) {
+			catch (ParsingException ignored) {
 			}
 		}
 		else if (name.contains("; ")){//a mixture, spaces are sufficient for OPSIN to treat as a mixture. These spaces for obvious reasons must not be removed

@@ -147,7 +147,9 @@ class Fragment {
 		bondSet.add(bond);
 	}
 	
-	/**Removes a bond to the fragment if it is present.*/
+	/**Removes a bond to the fragment if it is present.
+    * @param bond
+    * @return*/
 	boolean removeBond(Bond bond) {
 		return bondSet.remove(bond);
 	}
@@ -175,6 +177,7 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The id of the found atom
+     * @throws StructureBuildingException
 	 */
 	int getIDFromLocantOrThrow(String locant) throws StructureBuildingException {
 		int id = getIDFromLocant(locant);
@@ -188,9 +191,8 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The found atom, or null if it is not found
-	 * @throws StructureBuildingException
 	 */
-	Atom getAtomByLocant(String locant) throws StructureBuildingException {
+	Atom getAtomByLocant(String locant) {
 		Atom a =atomMapFromLocant.get(locant);
 		if (a != null){
 			return a;
@@ -284,6 +286,7 @@ class Fragment {
 	 *
 	 * @param id The id of the atom.
 	 * @return The found atom
+     * @throws StructureBuildingException
 	 */
 	Atom getAtomByIDOrThrow(int id) throws StructureBuildingException {
 		Atom a = getAtomByID(id);
@@ -317,6 +320,7 @@ class Fragment {
 	 * @param ID1 The id of one atom
 	 * @param ID2 The id of the other atom
 	 * @return The bond found
+     * @throws StructureBuildingException
 	 */
 	Bond findBondOrThrow(int ID1, int ID2) throws StructureBuildingException {
 		Bond b = findBond(ID1, ID2);
@@ -379,7 +383,8 @@ class Fragment {
 		return type;
 	}
 
-	/**Gets subType.*/
+	/**Gets subType.
+    * @return subType*/
 	String getSubType() {
 		return subType;
 	}
@@ -419,7 +424,8 @@ class Fragment {
 		outAtoms.add(new OutAtom(atom, valency, setExplicitly));
 	}
 
-	/**Adds a list of outAtoms, copies of the given outAtoms are not made*/
+	/**Adds a list of outAtoms, copies of the given outAtoms are not made
+    * @param outAtoms*/
 	void addOutAtoms(List<OutAtom> outAtoms) {
 		this.outAtoms.addAll(outAtoms);
 	}
@@ -448,7 +454,8 @@ class Fragment {
 		}
 	}
 
-	/**Gets the linkedList of inAtoms. This is not modifiable, use the relevant methods in this class to modify it*/
+	/**Gets the linkedList of inAtoms. This is not modifiable, use the relevant methods in this class to modify it
+    * @return*/
 	List<InAtom> getInAtoms() {
 		return Collections.unmodifiableList(inAtoms);
 	}
@@ -463,12 +470,15 @@ class Fragment {
 	}
 
 	/**Adds an inAtom
-	 * @throws StructureBuildingException */
+	 * @param atom
+     * @param valency
+     * @throws StructureBuildingException */
 	void addInAtom(Atom atom, int valency) throws StructureBuildingException {
 		inAtoms.add(new InAtom(atom, valency));
 	}
 	
-	/**Adds a list of inAtoms, copies of the given inAtoms are not made*/
+	/**Adds a list of inAtoms, copies of the given inAtoms are not made
+    * @param inAtoms*/
 	void addInAtoms(List<InAtom> inAtoms) {
 		this.inAtoms.addAll(inAtoms);
 	}
@@ -493,7 +503,8 @@ class Fragment {
 		inAtom.getAtom().addOutValency(-inAtom.getValency());
 	}
 
-	/**Gets the linkedList of functionalAtoms*/
+	/**Gets the linkedList of functionalAtoms
+    * @return*/
 	List<FunctionalAtom> getFunctionalAtoms() {
 		return Collections.unmodifiableList(functionalAtoms);
 	}
@@ -507,12 +518,14 @@ class Fragment {
 		return functionalAtoms.get(i);
 	}
 	
-	/**Adds a functionalAtom*/
+	/**Adds a functionalAtom
+    * @param atom*/
 	void addFunctionalAtom(Atom atom) {
 		functionalAtoms.add(new FunctionalAtom(atom));
 	}
 
-	/**Adds a list of functionalAtoms, copies of the given functionalAtoms are not made*/
+	/**Adds a list of functionalAtoms, copies of the given functionalAtoms are not made
+    * @param functionalAtoms*/
 	void addFunctionalAtoms(List<FunctionalAtom> functionalAtoms) {
 		this.functionalAtoms.addAll(functionalAtoms);
 	}
@@ -567,7 +580,8 @@ class Fragment {
 	 *
 	 * Only bonds to atoms within the fragment are counted. Suffix atoms are excluded
 	 *
-	 * @return Incoming Valency
+	 * @param atom
+     * @return Incoming Valency
 	 * @throws StructureBuildingException
 	 */
 	int getIntraFragmentIncomingValency(Atom atom) throws StructureBuildingException {
@@ -700,7 +714,8 @@ class Fragment {
 	 * atoms belonging to suffixes are never selected unless the original id specified was a suffix atom
 	 * @param id
 	 * @param additionalValencyRequired The increase in valency that will be required on the desired atom
-	 * @return Atom
+	 * @param takeIntoAccountOutValency
+     * @return Atom
 	 * @throws StructureBuildingException
 	 */
 	Atom getAtomByIdOrNextSuitableAtom(int id, int additionalValencyRequired, boolean takeIntoAccountOutValency) throws StructureBuildingException {
@@ -784,7 +799,7 @@ class Fragment {
 
 	/**
 	 * Returns the the first atom that was added to this fragment
-	 * @return
+	 * @return firstAtom
 	 * @throws StructureBuildingException
 	 */
 	Atom getFirstAtom() throws StructureBuildingException {

@@ -46,9 +46,13 @@ class Atom {
 
 	/**A map between PropertyKey s as declared here and useful atom properties, usually relating to some kind of special case. */
 	@SuppressWarnings("unchecked")
-	private Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
+	private final Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
+	/** A set of atoms that were equally plausible to perform functional replacement on */
     static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
+	/** One suffix was applied to this atom */
     static final PropertyKey<Boolean> KETONE_SUFFIX_ATTACHED = new PropertyKey<Boolean>("ketoneSuffixAttached");
+	/** The hydrogen count as set in the SMILES*/
+    static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
@@ -62,10 +66,6 @@ class Atom {
 	/**The total bond order of all bonds that are expected to be used for inter fragment bonding
 	 * e.g. in butan-2-ylidene this would be 2 for the atom at position 2 and 0 for the other 3 */
 	private int outValency = 0;
-
-	/** The number of hydrogens bonded to this atom.
-	 * null until hydrogen are made explicit*/
-	private Integer hydrogenCount;
 
 	/** Null by default or set by the lambda convention.*/
 	private Integer lambdaConventionValency;
@@ -133,7 +133,14 @@ class Atom {
 		if(charge != 0){
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
 		}
-		if (hydrogenCount!=null && hydrogenCount==0){//prevent adding of implicit hydrogen
+		int hydrogenCount =0;
+		List<Atom> neighbours = this.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement().equals("H")){
+				hydrogenCount++;
+			}
+		}
+		if (hydrogenCount==0){//prevent adding of implicit hydrogen
 			elem.addAttribute(new Attribute("hydrogenCount", "0"));
 		}
 		if(atomParity != null){
@@ -272,9 +279,8 @@ class Atom {
 	 *
 	 * @param locant The locant to test for
 	 * @return true if it has, false if not
-	 * @throws StructureBuildingException
 	 */
-	boolean hasLocant(String locant) throws StructureBuildingException {
+	boolean hasLocant(String locant) {
 		for(String l : locants) {
 			if(l.equals(locant))
 				return true;
@@ -397,6 +403,7 @@ class Atom {
 	/**Removes a bond to the atom
 	 *
 	 * @param b The bond to be removed
+     * @return whether bond was present
 	 */
 	boolean removeBond(Bond b) {
 		return bonds.remove(b);
@@ -464,7 +471,7 @@ class Atom {
 	 *
 	 * @return The list of atoms connected to the atom
 	 */
-	List<Atom> getAtomNeighbours() throws StructureBuildingException {
+	List<Atom> getAtomNeighbours(){
 		List<Atom> results = new ArrayList<Atom>();
 		for(Bond b :  bonds) {
 			if(b.getFromAtom() != this) {
@@ -472,20 +479,8 @@ class Atom {
 			} else if(b.getToAtom()!= this) {
 				results.add(b.getToAtom());
 			}
-			else{
-				throw new StructureBuildingException("Bond goes from an atom to the same atom!");
-			}
 		}
 		return results;
-	}
-
-
-	Integer getHydrogenCount() {
-		return hydrogenCount;
-	}
-
-	void setHydrogenCount(Integer hydrogenCount) {
-		this.hydrogenCount = hydrogenCount;
 	}
 
 	Integer getLambdaConventionValency() {

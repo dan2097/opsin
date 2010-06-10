@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 class StereoAnalyser {
-	private static Map<String, Integer> elementToAtomicNumber = new HashMap<String, Integer>();
+	private static final Map<String, Integer> elementToAtomicNumber = new HashMap<String, Integer>();
 
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;
@@ -332,9 +332,8 @@ class StereoAnalyser {
 
 	/**
 	 * Removes the ghost atoms added by addGhostAtoms
-	 * @throws StructureBuildingException
 	 */
-	private void removeGhostAtoms() throws StructureBuildingException {
+	private void removeGhostAtoms() {
 		List<Atom> atomList = molecule.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getID() < 0){
@@ -431,9 +430,8 @@ class StereoAnalyser {
 	 * Retrieves a list of any tetrahedral stereoCentres
 	 * Internally this is done by checking whether the "colour" of all neighbouring atoms of the tetrahedral atom are different
 	 * @return List<StereoCentre>
-	 * @throws StructureBuildingException
 	 */
-	List<StereoCentre> findStereoCentres() throws StructureBuildingException {
+	List<StereoCentre> findStereoCentres() {
 		List<Atom> atomList = molecule.getAtomList();
 		List<StereoCentre> stereoCentres = new ArrayList<StereoCentre>();
 		for (Atom atom : atomList) {
@@ -470,9 +468,8 @@ class StereoAnalyser {
 	 * Crudely determines whether an atom possesses tetrahedral geometry
 	 * @param atom
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private boolean isTetrahedral(Atom atom) throws StructureBuildingException {
+	private boolean isTetrahedral(Atom atom) {
 		int neighbourCount = atom.getAtomNeighbours().size();
 		String element = atom.getElement();
 		if (neighbourCount == 4){
@@ -495,9 +492,8 @@ class StereoAnalyser {
 	 *  This is done internally by checking the two atoms attached to the ends of the double bond are different
 	 *  As an exception nitrogen's lone pair is treated like a low priority group and so is allowed to only have 1 atom connected to it
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	List<StereoBond> findStereoBonds() throws StructureBuildingException {
+	List<StereoBond> findStereoBonds() {
 		Set<Bond> bondSet =molecule.getBondSet();
 		List<StereoBond> stereoBonds = new ArrayList<StereoBond>();
 		for (Bond bond : bondSet) {
@@ -506,14 +502,14 @@ class StereoAnalyser {
 				List<Atom> neighbours1 = a1.getAtomNeighbours();
 				neighbours1.remove(bond.getToAtom());
 				if (neighbours1.size()==2 || (neighbours1.size()==1 && a1.getElement().equals("N") && a1.getIncomingValency()==3 && a1.getCharge()==0)){
-					if (neighbours1.size()==2 && mappingToColour.get(neighbours1.get(0))== mappingToColour.get(neighbours1.get(1))){
+					if (neighbours1.size()==2 && mappingToColour.get(neighbours1.get(0)).equals(mappingToColour.get(neighbours1.get(1)))){
 						continue;
 					}
 					Atom a2 = bond.getToAtom();
 					List<Atom> neighbours2 = a2.getAtomNeighbours();
 					neighbours2.remove(bond.getFromAtom());
 					if (neighbours2.size()==2 || (neighbours2.size()==1 && a2.getElement().equals("N") && a2.getIncomingValency()==3 && a2.getCharge()==0)){
-						if (neighbours2.size()==2 && mappingToColour.get(neighbours2.get(0))== mappingToColour.get(neighbours2.get(1))){
+						if (neighbours2.size()==2 && mappingToColour.get(neighbours2.get(0)).equals(mappingToColour.get(neighbours2.get(1)))){
 							continue;
 						}
 						Collections.sort(neighbours1, new SortByColour());
