@@ -99,8 +99,11 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[N-]=C=[Te]" labels="none" valType="SMILES">isotellurocyanate</token>
     <token value="[N-]=C=S" labels="none" valType="SMILES">isothiocyanate</token>
     <token value="[Se-]C#N" labels="none" valType="SMILES">selenocyanate</token>
+    <token value="[Se-][N+]#[C-]" labels="none" valType="SMILES">selenofulminate</token>
     <token value="[Te-]C#N" labels="none" valType="SMILES">tellurocyanate</token>
+    <token value="[Te-][N+]#[C-]" labels="none" valType="SMILES">tellurofulminate</token>
     <token value="[S-]C#N" labels="none" valType="SMILES">thiocyanate</token>
+    <token value="[S-][N+]#[C-]" labels="none" valType="SMILES">thiofulminate</token>
   </tokenList>
 
 </tokenLists>
