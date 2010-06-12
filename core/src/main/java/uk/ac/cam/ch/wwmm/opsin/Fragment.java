@@ -256,6 +256,9 @@ class Fragment {
 					nextLevel = new LinkedList<Atom>();
 				}
 			}
+			if (primes.equals("") && a.getElement().equals(elementSymbol)){//maybe it meant the starting atom
+				return a;
+			}
 		}
 		return null;
 	}

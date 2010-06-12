@@ -2469,7 +2469,7 @@ class PreStructureBuilder {
 
 
 	/**
-	 * Assigns Element symbols to groups and suffixes.
+	 * Assigns Element symbols to groups, suffixes and conjunctive suffixes.
 	 * Suffixes have preference.
 	 * @param state
 	 * @param subOrRoot
@@ -2478,8 +2478,13 @@ class PreStructureBuilder {
 	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) throws StructureBuildingException {
 		Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
-		List<Fragment> suffixFragments =state.xmlSuffixMap.get(lastGroupElementInSubOrRoot);
+		List<Fragment> suffixFragments = new ArrayList<Fragment>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
 		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
+		//treat conjunctive suffixesas if they were suffixes
+		List<Element> conjunctiveGroups = XOMTools.getChildElementsWithTagName(subOrRoot, CONJUNCTIVESUFFIXGROUP_EL);
+		for (Element group : conjunctiveGroups) {
+			suffixFragments.add(state.xmlFragmentMap.get(group));
+		}
 		FragmentTools.assignElementLocants(suffixableFragment, suffixFragments);
 	}
 

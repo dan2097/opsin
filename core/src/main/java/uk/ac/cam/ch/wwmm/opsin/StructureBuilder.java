@@ -448,6 +448,13 @@ class StructureBuilder {
 		}
 	}
 	
+	/**
+	 * Handles names like thiophene 1,1-dioxide; carbon dioxide; benzene oxide
+	 * Does the same for sulfide/selenide/telluride
+	 * @param state
+	 * @param words
+	 * @throws StructureBuildingException
+	 */
 	private void buildOxide(BuildState state, List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));//the group
 		List<Fragment> oxideFragments = new ArrayList<Fragment>();
@@ -471,7 +478,7 @@ class StructureBuilder {
 		String smilesReplacement = functionalClass.get(0).getAttributeValue(VALUE_ATR);
 		String labels =  functionalClass.get(0).getAttributeValue(LABELS_ATR);
 		for (int i = 0; i < numberOfOxygenToAdd; i++) {
-			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, "", labels));
+			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels));
 		}
 		List<Element> locantEls =XOMTools.getDescendantElementsWithTagName(words.get(1), LOCANT_EL);
 		if (locantEls.size() >1){
@@ -515,11 +522,21 @@ class StructureBuilder {
 			}
 			else{
 				for (Fragment frag : orderedPossibleFragments) {
-					List<Atom> atomList = frag.getAtomList();
-					for (Atom atom : atomList) {
-						if (!atom.getElement().equals("C") && !atom.getElement().equals("O")){
-							formAppropriateBondToOxideAndAdjustCharges(state, atom, oxideAtom);
-							continue mainLoop;
+					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
+					if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(subTypeVal)){
+						throw new StructureBuildingException(words.get(1).getAttributeValue(VALUE_ATR) + " in this context refers to an ion with 2- charge rather than a covalent fragment");
+					}
+					else if (ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(subTypeVal)){
+						formAppropriateBondToOxideAndAdjustCharges(state, frag.getFirstAtom(), oxideAtom);//e.g. carbon dioxide
+						continue mainLoop;
+					}
+					else{
+						List<Atom> atomList = frag.getAtomList();
+						for (Atom atom : atomList) {
+							if (!atom.getElement().equals("C") && !atom.getElement().equals("O")){
+								formAppropriateBondToOxideAndAdjustCharges(state, atom, oxideAtom);
+								continue mainLoop;
+							}
 						}
 					}
 				}
@@ -554,13 +571,6 @@ class StructureBuilder {
 							continue mainLoop;
 						}
 					}
-				}	
-				for (Fragment frag : orderedPossibleFragments) {//something like carbon dioxide
-					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
-					if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(subTypeVal) || ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(subTypeVal)){
-						formAppropriateBondToOxideAndAdjustCharges(state, frag.getFirstAtom(), oxideAtom);
-						continue mainLoop;
-					}
 				}
 				throw new StructureBuildingException("Unable to find suitable atom or a double bond to add oxide to");
 			}
@@ -569,7 +579,7 @@ class StructureBuilder {
 			state.fragManager.incorporateFragment(oxide, groupToModify);
 		}
 	}
-	
+
 	/**
 	 * Decides whether an oxide should double bond e.g. P=O or single bond as a zwitterionic form e.g. [N+]-[O-]
 	 * Corrects the charges if necessary and forms the bond
@@ -580,6 +590,9 @@ class StructureBuilder {
 	 */
 	private void formAppropriateBondToOxideAndAdjustCharges(BuildState state, Atom atomToAddOxideTo, Atom oxideAtom) throws StructureBuildingException {
 		if (ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 2)){
+			if (atomToAddOxideTo.getLambdaConventionValency()==null){
+				atomToAddOxideTo.addChargeAndProtons(0, 2);//this is an additive operation, up the proton count by 2
+			}
 			state.fragManager.createBond(atomToAddOxideTo, oxideAtom, 2);
 		}
 		else{
