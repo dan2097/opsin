@@ -9,6 +9,7 @@
   <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerol</token>
   <token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerin</token>
   <token value="NC(=N)N" labels="1,N//2,N''/3,N'" valType="SMILES">guanidin</token>
+  <token value="[NH2+]=[N-]" labels="none" valType="SMILES">isodiazen</token>
   <token value="C=C=O" labels="none" valType="SMILES">keten</token>
 
   <token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>

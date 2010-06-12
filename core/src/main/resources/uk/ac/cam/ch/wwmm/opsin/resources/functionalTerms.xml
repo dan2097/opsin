@@ -90,6 +90,8 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
 		<token value="[H-]" labels="none" valType="SMILES">hydride</token>
     <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
+		<token value="[S-]S" labels="none" valType="SMILES">hydrodisulfide</token>
+		<token value="[SH-]" labels="none" valType="SMILES">hydrosulfide</token>
     <token value="[I-]" labels="none" valType="SMILES">iodide</token>
     <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
     <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>

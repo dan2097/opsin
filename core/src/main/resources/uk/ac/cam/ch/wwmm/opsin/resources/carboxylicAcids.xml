@@ -47,6 +47,7 @@
 
     <token value="CNC(=O)N" labels="1/2/3//4" valType="SMILES">allophan</token>
     <token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
+    <token value="CNNC" labels="none" valType="SMILES" suffixAppliesTo="1,4">bicarbam</token>
     <token value="CCO" labels="1/2/" valType="SMILES">glycol</token>
     <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
     <token value="CCNC(=O)c1ccccc1" labels="/////1/2/3/4/5/6" valType="SMILES">hippur</token>

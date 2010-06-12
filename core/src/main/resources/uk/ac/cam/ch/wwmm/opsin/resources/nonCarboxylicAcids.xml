@@ -23,6 +23,8 @@
     <token value="C(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">carbam</token>
     <token value="C(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
     <token value="S(N)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfam</token>
+    <token value="S(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfinam</token>
+    <token value="S(N)O" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfenam</token>
   </tokenList>
 
   <!--This is the set of acids in which oyl denotes an acyl (yl is unparsable)-->
@@ -41,16 +43,28 @@
  <!--These two sets of acids do not have their acyl groups named as derivatives of the acid-->
   <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="ƒ">
 <!--these form preferred IUPAC names-->
+    <token value="[As](=O)(=O)O" labels="none" valType="SMILES">arsenen</token><!--CAS only-->
     <token value="B(O)(O)O" labels="none" valType="SMILES">bor</token>
+    <token value="B(O)(O)O" labels="none" valType="SMILES">orthobor</token><!--deprecated-->
     <token value="BO" labels="none" valType="SMILES">borin</token>
     <token value="B(O)O" labels="none" valType="SMILES">boron</token>
     <token value="[Se](O)(O)(=O)=O" labels="none" valType="SMILES">selen</token>
     <token value="[Te](O)(O)(=O)=O" labels="none" valType="SMILES">tellur</token>
 
+    <token value="[Cr](=O)(=O)(O)O" labels="none" valType="SMILES">chrom</token>
+    <token value="[Cr](=O)(=O)(O)O[Cr](=O)(=O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">dichrom</token>
+    <token value="[Mn](=O)(=O)(O)O" labels="none" valType="SMILES">mangan</token>
+    <token value="[Mn](=O)(=O)(=O)O" labels="none" valType="SMILES">permangan</token>
+    <token value="[Tc](=O)(=O)(O)O" labels="none" valType="SMILES">technet</token>
+    <token value="[Tc](=O)(=O)(=O)O" labels="none" valType="SMILES">pertechnet</token>
+    <token value="[Re](=O)(=O)(O)O" labels="none" valType="SMILES">rhen</token>
+    <token value="[Re](=O)(=O)(=O)O" labels="none" valType="SMILES">perrhen</token>
+
     <token value="B(O)(O)OB(O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">dibor</token>
     <token value="B(O)OBO" labels="1//2/3/" valType="SMILES" suffixAppliesTo="1,4">diboron</token>
     <token value="P(=O)(O)OP(=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">diphosphon</token>
     <token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">diphosphor</token>
+    <token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">pyrophosphor</token><!--deprecated-->
     <token value="[As](=O)(O)O[As](=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">diarson</token>
     <token value="[As](=O)(O)(O)O[As](=O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">diarsor</token>
     <token value="[Sb](=O)(O)O[Sb](=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">distibon</token>
@@ -87,17 +101,24 @@
 
   </tokenList>
 
-  <tokenList tagname="group" type="nonCarboxylicAcid" subType="none" symbol="ƒ">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="ƒ">
 <!--trivial names -->
+    <token value="[N+]([O-])(O)=NO" labels="none" valType="SMILES">hyponitr</token>
+		<token value="P(=O)(O)(O)P(=O)(O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypophosphor</token>
+		<token value="P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES" suffixAppliesTo="1,5">isohypophosphor</token>
     <token value="C(O)(O)(O)O" labels="none" valType="SMILES">orthocarbon</token>
     <token value="C(O)(O)O" labels="none" valType="SMILES">orthoform</token>
     <token value="C(C)(O)(O)O" labels="none" valType="SMILES">orthoacet</token>
     <token value="C(CC)(O)(O)O" labels="none" valType="SMILES">orthopropion</token>
     <token value="C(CCC)(O)(O)O" labels="none" valType="SMILES">orthobutyr</token>
     <token value="C(CCCC)(O)(O)O" labels="none" valType="SMILES">orthovaler</token>
+    <token value="[Te](O)(O)(O)(O)(O)O" labels="none" valType="SMILES">orthotellur</token>
+    <token value="B(O)(O)B(O)O" labels="none" valType="SMILES" suffixAppliesTo="1,4">hypobor</token>
     <token value="C(C)(=O)OO" labels="2/1///" valType="SMILES">peracet</token>
     <token value="C(=O)OO" labels="1///" valType="SMILES">perform</token>
     <token value="C(O)(=O)OC(=O)O" labels="none" valType="SMILES" suffixAppliesTo="1,5">pyrocarbon</token>
+    <token value="S(=O)(=O)(N)O" labels="none" valType="SMILES">sulfamid</token>
+    <token value="S(O)(O)" labels="none" valType="SMILES">sulfoxyl</token>
     <token value="S(=O)(=O)(C(F)(F)F)O" labels="none" valType="SMILES">trifl</token>
   </tokenList>
 
