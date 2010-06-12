@@ -2,7 +2,9 @@
 <!-- See the DTD for more details -->
 <tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
   <token value="-NC(O)=N" labels="1//2/3" valType="SMILES">1-isoureido</token>
+  <token value="-NC(S)=N" labels="1//2/3" valType="SMILES">1-isothioureido</token>
   <token value="-N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
+  <token value="-N=C(S)N" labels="3//2/1" valType="SMILES">3-isothioureido</token>
   <token value="-C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N-" labels="none" valType="SMILES">abietamido</token>
   <token value="-OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
   <token value="-NC(=O)C" labels="none" valType="SMILES">acetamino</token>
@@ -85,6 +87,8 @@
   <token value="-[O-]" labels="none" valType="SMILES">oxido</token>
   <token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes">propoxyl</token>
   <token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
+  <token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
+  <token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitryl</token>
   <token value="-CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
   <token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
   <token value="piperazine" valType="dbkey" outIDs="1">piperazino</token>
@@ -178,12 +182,15 @@
   <token value="-O" labels="none" valType="SMILES">hydroxyl</token>
   <token value="-OO" labels="none" valType="SMILES">hydroperoxy</token>
   <token value="-OO" labels="none" valType="SMILES">hydroperoxyl</token>
+  <token value="-OO" labels="none" valType="SMILES">hydrogenperoxyl</token>
+  <token value="-OO" labels="none" valType="SMILES">perhydroxyl</token>
   <token value="-OO" labels="none" valType="SMILES" usableAsAJoiner="yes">peroxyl</token>
   <token value="-OO" labels="none" valType="SMILES" usableAsAJoiner="yes">dioxyl</token>
 
   <token value="=O" labels="none" valType="SMILES">oxo</token>
   <token value="=O" labels="none" valType="SMILES">keto</token>
   <token value="-S" labels="none" valType="SMILES" usableAsAJoiner="yes">mercapto</token>
+  <token value="-S" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfhydryl</token>
   <token value="=S" labels="none" valType="SMILES">thioxo</token>
   <token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
   <token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
@@ -229,6 +236,7 @@
   <token value="-C(=O)O" labels="none" valType="SMILES">carboxy</token>
   <token value="-C(=O)[O-]" labels="none" valType="SMILES">carboxylato</token>
   <token value="-C(N)=N" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">amidino</token>
+  <token value="-C(N)=N" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">guanyl</token>
 
   <token value="-C(=O)C(=O)O" labels="none" valType="SMILES">oxalo</token>
   <token value="-C(=O)C(=O)OC" labels="none" valType="SMILES">methoxalyl</token>
