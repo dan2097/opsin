@@ -68,12 +68,19 @@ class PreStructureBuilder {
 	private final Pattern matchPara =Pattern.compile("[pP]");
 	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	private final Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
-	private final Pattern matchChalogenReplacment= Pattern.compile("thio|seleno|telluro");
+	private final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
+	private final Pattern matchHalogenReplacement= Pattern.compile("fluoro|chloro|bromo|iodo");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 
 	/*Holds the rules on how suffixes are interpreted. Convenience methods are available to use them*/
 	private HashMap<String, HashMap<String, List<Element>>> suffixApplicability;
 	private HashMap<String, Element> suffixRules;
+	
+	enum PREFIX_REPLACEMENT_TYPE{
+		chalcogen,
+		halogen,
+		peroxy
+	}
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private static final HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
@@ -1171,7 +1178,7 @@ class PreStructureBuilder {
 		ArrayList<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
 		state.xmlSuffixMap.put(group, suffixFragments);
 		boolean suffixesResolved =false;
-		if (group.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL)){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacment
+		if (group.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL)){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacement
 	    	resolveSuffixes(state, group, suffixes);
 	    	suffixesResolved =true;
 	    }
@@ -1800,26 +1807,39 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException {
-		boolean doneSomething =false;
-		for (int i = groups.size()-1; i >=0; i--) {
+		int originalNumberOfGroups = groups.size();
+		for (int i = originalNumberOfGroups-1; i >=0; i--) {
 			Element group =groups.get(i);
-			if (matchChalogenReplacment.matcher(group.getValue()).matches()|| group.getValue().equals("peroxy")){
+			String groupValue = group.getValue();
+			PREFIX_REPLACEMENT_TYPE replacementType = null;
+			if (matchChalcogenReplacement.matcher(groupValue).matches()){
+				replacementType =PREFIX_REPLACEMENT_TYPE.chalcogen;
+			}
+			if (matchHalogenReplacement.matcher(groupValue).matches()){
+				replacementType =PREFIX_REPLACEMENT_TYPE.halogen;
+			}
+			else if (group.getValue().equals("peroxy")){
+				replacementType =PREFIX_REPLACEMENT_TYPE.peroxy;
+			}
+			if (replacementType!=null){
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent =(Element) group.getParent();
 				Element nextSubOrBracket = (Element) XOMTools.getNextSibling(substituent);
-				if (nextSubOrBracket!=null && (nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL) ||nextSubOrBracket.getLocalName().equals(ROOT_EL))){
+				if (nextSubOrBracket!=null && ((nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL) && replacementType == PREFIX_REPLACEMENT_TYPE.chalcogen) ||nextSubOrBracket.getLocalName().equals(ROOT_EL))){
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
 					if (XOMTools.getPreviousSibling(groupToBeModified)!=null){
 						continue;//not 2,2'-thiodipyran
 					}
-					Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(group);
 					Element locantEl =null;//null unless a locant that agrees with the multiplier is present
+					Element multiplierEl =null;
 					int numberOfAtomsToReplace =1;//the number of atoms to be functionally replaced, modified by a multiplier e.g. dithio
+					Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(group);
 					if (possibleMultiplier !=null){
 						Element possibleLocant;
 						if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
 							numberOfAtomsToReplace =Integer.valueOf(possibleMultiplier.getAttributeValue(VALUE_ATR));
 							possibleLocant = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
+							multiplierEl = possibleMultiplier;
 						}
 						else{
 							possibleLocant = possibleMultiplier;
@@ -1834,146 +1854,263 @@ class PreStructureBuilder {
 							}
 						}
 					}
-					boolean multiplierUsed = false;
-					if (group.getValue().equals("peroxy")){
-						List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
-						if (oxygenAtoms.size()==0){
-							oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
-						}
-						if (locantEl !=null){
-							List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-							if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
-								locantEl = null;
-								numberOfAtomsToReplace =1;
-							}
-							else{
-								oxygenAtoms = oxygenWithAppropriateLocants;
-							}
-						}
-						if (numberOfAtomsToReplace >1){
-							if (oxygenAtoms.size() >= numberOfAtomsToReplace){
-								multiplierUsed =true;
-							}
-							else{
-								numberOfAtomsToReplace=1;
-							}
-						}
-						if (oxygenAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
-							for (int j = 0; j < numberOfAtomsToReplace; j++) {
-								Atom oxygenToReplace = oxygenAtoms.get(j);
-								Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-								replacementFrag.getAtomList().get(1).setCharge(oxygenToReplace.getCharge());
-								removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
-								state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
-								state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
-							}
-						}
-						else{
+					if (replacementType  == PREFIX_REPLACEMENT_TYPE.halogen){
+						boolean appropriate = checkGroupToBeModifiedIsAppropriateForHalogenReplacement(state, groupToBeModified);
+						if (!appropriate){
 							continue;
 						}
+					}
+
+					int oxygenReplaced;
+					if (replacementType == PREFIX_REPLACEMENT_TYPE.chalcogen){
+						oxygenReplaced = performChalcogenFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+					}
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.peroxy){
+						oxygenReplaced = performPeroxyFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
+					}
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.halogen){
+						oxygenReplaced = performHalogenFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else{
-						List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
-						if (oxygenAtoms.size()==0){
-							oxygenAtoms = findOxygenAtomsInGroup(state, groupToBeModified);
+						throw new StructureBuildingException("OPSIN bug: Unexpected prefix replacement type");
+					}
+					if (oxygenReplaced>0){
+						state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
+						substituent.removeChild(group);
+						groups.remove(group);
+						Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
+						for (int j = remainingChildren.size()-1; j>=0; j--){
+							Node child =substituent.getChild(j);
+							child.detach();
+							nextSubOrBracket.insertChild(child, 0);
 						}
-						if (locantEl !=null){//locants are used to indicate replacement on trivial groups
-							List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-							if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
-								locantEl = null;
-								numberOfAtomsToReplace =1;
-								//e.g. -1-thioureidomethyl
-							}
-							else{
-								oxygenAtoms = oxygenWithAppropriateLocants;
-							}
-						}
-	
-						List<Atom> doubleBondedOxygen = new ArrayList<Atom>();
-						List<Atom> singleBondedOxygen = new ArrayList<Atom>();
-						List<Atom> ethericOxygen = new ArrayList<Atom>();
-						for (Atom oxygen : oxygenAtoms) {
-							int incomingValency = oxygen.getIncomingValency();
-							int bondCount = oxygen.getBonds().size();
-							if (bondCount==1 && incomingValency==2){
-								doubleBondedOxygen.add(oxygen);
-							}
-							else if (bondCount==1 && incomingValency==1){
-								singleBondedOxygen.add(oxygen);
-							}
-							else if (bondCount==2 && incomingValency==2){
-								ethericOxygen.add(oxygen);
-							}
-						}
-						List<Atom> replaceableAtoms = new LinkedList<Atom>();
-						replaceableAtoms.addAll(doubleBondedOxygen);
-						replaceableAtoms.addAll(singleBondedOxygen);
-						replaceableAtoms.addAll(ethericOxygen);
-						int totalOxygen = replaceableAtoms.size();
-						if (numberOfAtomsToReplace >1){
-							if (totalOxygen >= numberOfAtomsToReplace){
-								multiplierUsed =true;
-							}
-							else{
-								numberOfAtomsToReplace=1;
-							}
-						}
-
-						if (totalOxygen >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
-							boolean prefixAssignmentAmbiguous =false;
-							Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
-							if (totalOxygen != numberOfAtomsToReplace){
-								prefixAssignmentAmbiguous=true;
-							}
-
-							int replacementsDone =0;
-							for (Atom atomToReplace : replaceableAtoms) {
-								if (replacementsDone == numberOfAtomsToReplace){
-									ambiguousElementAtoms.add(atomToReplace);
-									continue;
-								}
-								else{
-									state.fragManager.makeHeteroatom(atomToReplace, group.getAttributeValue(VALUE_ATR), false);
-									if (prefixAssignmentAmbiguous){
-										ambiguousElementAtoms.add(atomToReplace);
-									}
-								}
-								replacementsDone++;
-							}
-
-							if (prefixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl thioacetate
-								for (Atom atom : ambiguousElementAtoms) {
-									atom.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, ambiguousElementAtoms);
-								}
-							}
-						}
-						else{
-							continue;
+						substituents.remove(substituent);
+						substituent.detach();
+						if (oxygenReplaced>1){
+							multiplierEl.detach();
 						}
 					}
-					state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
-					substituent.removeChild(group);
-					groups.remove(group);
-					Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
-					for (int j = remainingChildren.size()-1; j>=0; j--){
-						Node child =substituent.getChild(j);
-						child.detach();
-						nextSubOrBracket.insertChild(child, 0);
-					}
-					substituents.remove(substituent);
-					substituent.detach();
-					if (multiplierUsed){
-						possibleMultiplier.detach();
-					}
-					if (locantEl !=null){
-						locantEl.detach();
-					}
-					doneSomething=true;
 				}
 			}
 		}
-		return doneSomething;
+		return groups.size() != originalNumberOfGroups;
 	}
+
+	private boolean checkGroupToBeModifiedIsAppropriateForHalogenReplacement(BuildState state, Element groupToBeModified) throws StructureBuildingException {
+		if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
+			return false;//halogen replacement only applies to non carboxylic acids e.g. chlorochromate
+		}
+		Fragment fragToBeModified = state.xmlFragmentMap.get(groupToBeModified);//the acid centres must not have substitutable hydrogen
+		if (groupToBeModified.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
+			String[] atomIndices = matchComma.split(groupToBeModified.getAttributeValue(SUFFIXAPPLIESTO_ATR));
+			List<Atom> atomList = fragToBeModified.getAtomList();
+			for (String atomIndice : atomIndices) {
+				if (StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atomList.get(Integer.parseInt(atomIndice)-1))!=0){
+					return false;
+				}
+			}
+		}
+		else{
+			if (StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(fragToBeModified.getFirstAtom())!=0){
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	/**
+	 * Performs replacement of oxygen atoms by chalogen atoms
+	 * If this is ambiguous e.g. thioacetate then Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT is populated
+	 * @param state
+	 * @param groupToBeModified
+	 * @param locantEl
+	 * @param numberOfAtomsToReplace
+	 * @param replacementSmiles
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private int performChalcogenFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
+		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+		if (oxygenAtoms.size()==0){
+			oxygenAtoms = findOxygenAtomsInGroup(state, groupToBeModified);
+		}
+		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
+			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
+			if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+				numberOfAtomsToReplace =1;
+				//e.g. -1-thioureidomethyl
+			}
+			else{
+				locantEl.detach();
+				oxygenAtoms = oxygenWithAppropriateLocants;
+			}
+		}
+
+		List<Atom> doubleBondedOxygen = new ArrayList<Atom>();
+		List<Atom> singleBondedOxygen = new ArrayList<Atom>();
+		List<Atom> ethericOxygen = new ArrayList<Atom>();
+		for (Atom oxygen : oxygenAtoms) {
+			int incomingValency = oxygen.getIncomingValency();
+			int bondCount = oxygen.getBonds().size();
+			if (bondCount==1 && incomingValency==2){
+				doubleBondedOxygen.add(oxygen);
+			}
+			else if (bondCount==1 && incomingValency==1){
+				singleBondedOxygen.add(oxygen);
+			}
+			else if (bondCount==2 && incomingValency==2){
+				ethericOxygen.add(oxygen);
+			}
+		}
+		List<Atom> replaceableAtoms = new LinkedList<Atom>();
+		replaceableAtoms.addAll(doubleBondedOxygen);
+		replaceableAtoms.addAll(singleBondedOxygen);
+		replaceableAtoms.addAll(ethericOxygen);
+		int totalOxygen = replaceableAtoms.size();
+		if (numberOfAtomsToReplace >1){
+			if (totalOxygen < numberOfAtomsToReplace){
+				numberOfAtomsToReplace=1;
+			}
+		}
+
+		int atomsReplaced =0;
+		if (totalOxygen >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
+			boolean prefixAssignmentAmbiguous =false;
+			Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
+			if (totalOxygen != numberOfAtomsToReplace){
+				prefixAssignmentAmbiguous=true;
+			}
+
+			for (Atom atomToReplace : replaceableAtoms) {
+				if (atomsReplaced == numberOfAtomsToReplace){
+					ambiguousElementAtoms.add(atomToReplace);
+					continue;
+				}
+				else{
+					state.fragManager.makeHeteroatom(atomToReplace, replacementSmiles, false);
+					if (prefixAssignmentAmbiguous){
+						ambiguousElementAtoms.add(atomToReplace);
+					}
+				}
+				atomsReplaced++;
+			}
+
+			if (prefixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl thioacetate
+				for (Atom atom : ambiguousElementAtoms) {
+					atom.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, ambiguousElementAtoms);
+				}
+			}
+		}
+		return atomsReplaced;
+	}
+
+
+	/**
+	 * Converts functional oxygen to peroxy e.g. peroxybenzoic acid
+	 * Currently does not find find anhydride oxygen e.g. in say diphosphoric acid so peroxydiphosphoric acid is "wrong"
+	 * Returns the number of oxygen replaced
+	 * @param state
+	 * @param groupToBeModified
+	 * @param locantEl
+	 * @param numberOfAtomsToReplace
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private int performPeroxyFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace) throws StructureBuildingException {
+		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+		if (oxygenAtoms.size()==0){
+			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+		}
+		if (locantEl !=null){
+			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
+			if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+				numberOfAtomsToReplace =1;
+			}
+			else{
+				locantEl.detach();
+				oxygenAtoms = oxygenWithAppropriateLocants;
+			}
+		}
+		if (numberOfAtomsToReplace >1){
+			if (oxygenAtoms.size() < numberOfAtomsToReplace){
+				numberOfAtomsToReplace=1;
+			}
+		}
+		int atomsReplaced = 0;
+		if (oxygenAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
+			atomsReplaced = numberOfAtomsToReplace;
+			for (int j = 0; j < numberOfAtomsToReplace; j++) {
+				Atom oxygenToReplace = oxygenAtoms.get(j);
+				Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+				replacementFrag.getAtomList().get(1).setCharge(oxygenToReplace.getCharge());
+				removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
+				state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
+			}
+		}
+		return atomsReplaced;
+	}
+	
+	/**
+	 * Performs replacement of hydroxy by halogens
+	 * @param state
+	 * @param groupToBeModified
+	 * @param locantEl
+	 * @param numberOfAtomsToReplace
+	 * @param replacementSmiles
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private int performHalogenFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
+		if (replacementSmiles.charAt(0) =='-'){//e.g. -Cl
+			replacementSmiles = replacementSmiles.substring(1);
+		}
+		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+		if (oxygenAtoms.size()==0){
+			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+		}
+		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
+			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
+			if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+				numberOfAtomsToReplace =1;
+				//e.g. -1-thioureidomethyl
+			}
+			else{
+				locantEl.detach();
+				oxygenAtoms = oxygenWithAppropriateLocants;
+			}
+		}
+		if (numberOfAtomsToReplace >1){
+			if (oxygenAtoms.size() < numberOfAtomsToReplace){
+				numberOfAtomsToReplace=1;
+			}
+		}
+
+		int atomsReplaced =0;
+		if (oxygenAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
+			for (Atom atomToReplace : oxygenAtoms) {
+				if (atomsReplaced == numberOfAtomsToReplace){
+					continue;
+				}
+				else{
+					state.fragManager.makeHeteroatom(atomToReplace, replacementSmiles, false);
+					atomToReplace.setCharge(0);
+					//the halogen is no longer a functionalAtom so correct this
+					List<FunctionalAtom> functionalAtoms = atomToReplace.getFrag().getFunctionalAtoms();
+					for (int j = functionalAtoms.size()-1; j >=0; j--) {
+						FunctionalAtom functionalAtom = functionalAtoms.get(j);
+						if (atomToReplace.equals(functionalAtom.getAtom())){
+							atomToReplace.getFrag().removeFunctionalAtom(j);
+						}
+					}
+				}
+				atomsReplaced++;
+			}
+		}
+		return atomsReplaced;
+	}
+
 
 	/**
 	 * Returns the subset of oxygenAtoms that possess one of the locants in locantEl
@@ -2795,7 +2932,7 @@ class PreStructureBuilder {
 		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		if (groupValue.equals("methylene") || matchChalogenReplacment.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
+		if (groupValue.equals("methylene") || matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
 			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
