@@ -1389,6 +1389,28 @@ class PostProcessor {
 				}
 			}
 		}
+		else if (groupValue.equals("propylene")) {
+			Element previous = (Element)XOMTools.getPreviousSibling(group);
+			if (previous!=null && previous.getLocalName().equals(MULTIPLIER_EL)){
+				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
+				Element possibleRoot =(Element) XOMTools.getNextSibling(group.getParent());
+				if (possibleRoot==null && OpsinTools.getParentWordRule(group).getAttributeValue(WORDRULE_ATR).equals(WordRule.glycol.toString())){//e.g. dodecaethylene glycol
+					String smiles ="CCC";
+					for (int i = 1; i < multiplierValue; i++) {
+						smiles+="OC(C)C";
+					}
+					group.getAttribute(OUTIDS_ATR).setValue("2," +Integer.toString(4*(multiplierValue-1) +3));
+					group.getAttribute(VALUE_ATR).setValue(smiles);
+					if (group.getAttribute(LABELS_ATR)!=null){
+						group.getAttribute(LABELS_ATR).setValue(NONE_LABELS_VAL);
+					}
+					else{
+						group.addAttribute(new Attribute(LABELS_ATR, NONE_LABELS_VAL));
+					}
+					previous.detach();
+				}
+			}
+		}
 
 		//anthrone, phenanthrone and xanthone have the one at position 9 by default
 		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("xanth")|| groupValue.equals("xanthen")) {
