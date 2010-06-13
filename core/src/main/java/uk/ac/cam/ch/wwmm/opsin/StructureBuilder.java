@@ -82,9 +82,6 @@ class StructureBuilder {
 			else if (wordRule == WordRule.amide){
 				buildAmide(state, words);//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide, ethanoic acid amide
 			}
-			else if (wordRule == WordRule.glycol){
-				buildGlycol(state, words);//e.g. ethylene glycol
-			}
 			else if(wordRule == WordRule.oxide) {
 				buildOxide(state, words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
 			}
@@ -99,6 +96,12 @@ class StructureBuilder {
 			}
 			else if(wordRule == WordRule.additionCompound) {//e.g. carbon tetrachloride
 				buildAdditionCompound(state, words);
+			}
+			else if (wordRule == WordRule.glycol){
+				buildGlycol(state, words);//e.g. ethylene glycol
+			}
+			else if (wordRule == WordRule.glycolEther){
+				buildGlycolEther(state, words);//e.g. octaethyleneglycol monododecyl ether
 			}
 			else if(wordRule == WordRule.acetal) {
 				buildAcetal(state, words);//e.g. propanal diethyl acetal
@@ -425,27 +428,6 @@ class StructureBuilder {
 			throw new StructureBuildingException("More words than expected when applying amide word rule!");
 		}
 		resolveWordOrBracket(state, words.get(0));//the group that had amide functionality added
-	}
-
-	private void buildGlycol(BuildState state, List<Element> words) throws StructureBuildingException {
-		int wordIndice  = 0;
-		resolveWordOrBracket(state, words.get(wordIndice));//the group
-		BuildResults theDiRadical = new BuildResults(state, words.get(wordIndice));
-		if (theDiRadical.getOutAtomCount()!=2){
-			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outAtoms. Found: " + theDiRadical.getOutAtomCount() );
-		}
-		if (wordIndice +1 >= words.size() || !words.get(wordIndice+1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
-			throw new StructureBuildingException("Glycol functionalTerm word expected");
-		}
-		for (int i = theDiRadical.getOutAtomCount() -1; i >=0 ; i--) {
-			Atom outAtom =theDiRadical.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-			Fragment glycol =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
-			if (theDiRadical.getOutAtom(0).getValency() !=1){
-				throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
-			}
-			theDiRadical.removeOutAtom(0);
-			state.fragManager.createBond(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
-		}
 	}
 	
 	/**
@@ -1031,6 +1013,81 @@ class StructureBuilder {
 			Fragment ideFrag =functionalGroupFragments.get(i);
 			Atom ideAtom = ideFrag.getDefaultInAtom();
 			state.fragManager.createBond(elementaryAtom, ideAtom, 1);
+		}
+	}
+	
+
+	private void buildGlycol(BuildState state, List<Element> words) throws StructureBuildingException {
+		int wordIndice  = 0;
+		resolveWordOrBracket(state, words.get(wordIndice));//the group
+		Element finalGroup = findRightMostGroupInWordOrWordRule(words.get(wordIndice));
+		Fragment theDiRadical = state.xmlFragmentMap.get(finalGroup);
+		if (theDiRadical.getOutAtoms().size()!=2){
+			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outAtoms. Found: " + theDiRadical.getOutAtoms() );
+		}
+		wordIndice++;
+		if (wordIndice >= words.size() || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+			throw new StructureBuildingException("Glycol functionalTerm word expected");
+		}
+		for (int i = theDiRadical.getOutAtoms().size() -1; i >=0 ; i--) {
+			Atom outAtom = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(0).getAtom(), theDiRadical.getOutAtom(0).getValency());
+			Fragment glycol =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
+			if (theDiRadical.getOutAtom(0).getValency() !=1){
+				throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
+			}
+			theDiRadical.removeOutAtom(0);
+			state.fragManager.createBond(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
+			state.fragManager.incorporateFragment(glycol, theDiRadical);
+		}
+	}
+	
+
+	private void buildGlycolEther(BuildState state, List<Element> words) throws StructureBuildingException {
+		List<Element> substituents = new ArrayList<Element>();
+		Element glycol =null;
+		for (Element wordOrWordRule : words) {
+			if (wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
+				substituents.add(wordOrWordRule);
+			}
+			else if (wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+				if (glycol !=null){
+					throw new StructureBuildingException("Unexpected wordType encountered when applying glycol ether word rule " + wordOrWordRule.getAttributeValue(TYPE_ATR));
+				}
+				glycol = wordOrWordRule;
+			}
+			//ether ignored
+		}
+		if (glycol ==null){
+			throw new StructureBuildingException("OPSIN Bug: Cannot find glycol word!");
+		}
+		if (substituents.size() !=1 && substituents.size() !=2 ){
+			throw new StructureBuildingException("Unexpected number of substituents for glycol ether. Expected 1 or 2 found: " +substituents.size());
+		}
+		Element finalGroup = findRightMostGroupInWordOrWordRule(glycol);
+		Fragment theDiRadical = state.xmlFragmentMap.get(finalGroup);
+		List<Atom> atomList = theDiRadical.getAtomList();
+		List<Atom> glycolAtoms = new ArrayList<Atom>();
+		for (Atom atom : atomList) {
+			if (atom.getElement().equals("O")&& atom.getType().equals(FUNCTIONALCLASS_TYPE_VAL)){
+				glycolAtoms.add(atom);
+			}
+		}
+		if (glycolAtoms.size()!=2){
+			throw new StructureBuildingException("OPSIN bug: unable to find the two glycol oxygens");
+		}
+		BuildResults br1 = new BuildResults(state, substituents.get(0));
+		if (br1.getOutAtomCount() ==0){
+			throw new StructureBuildingException("Substituent had no outAtom to form glycol ether");
+		}
+		state.fragManager.createBond(glycolAtoms.get(0), br1.getOutAtom(0).getAtom(), 1);
+		br1.removeOutAtom(0);
+		if (substituents.size()==2){
+			BuildResults br2 = new BuildResults(state, substituents.get(1));
+			if (br2.getOutAtomCount() ==0){
+				throw new StructureBuildingException("Substituent had no outAtom to form glycol ether");
+			}
+			state.fragManager.createBond(glycolAtoms.get(1), br2.getOutAtom(0).getAtom(), 1);
+			br2.removeOutAtom(0);
 		}
 	}
 

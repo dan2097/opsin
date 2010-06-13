@@ -37,6 +37,7 @@ class WordRules {
 		functionalClassEster,
 		functionGroupAsGroup,
 		glycol,
+		glycolEther,
 		monovalentFunctionalGroup,
 		multiEster,
 		oxide,

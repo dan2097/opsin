@@ -114,6 +114,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" value="glycol" />
   </wordRule>
 
+  <wordRule name="glycolEther" type="full">
+    <word type="full" endsWithRegex="glycol"/>
+    <word type="substituent"/>
+    <word type="functionalTerm" value="ether" />
+  </wordRule>
+
   <wordRule name="oxide" type="full">
     <word type="full" endsWithRegex="(?&lt;!ic|ous)" />
     <word type="functionalTerm" endsWithRegex="(oxide|sulfide|selenide|telluride)" functionalGroupType="functionalClass" />
