@@ -699,10 +699,25 @@ class FusedRingBuilder {
 
 		List<Atom> parentAtoms = new ArrayList<Atom>();
 		List<Atom> parentAtomList = parentRing.getAtomList();
-		CyclicAtomList cyclicListAtomsInParent = new CyclicAtomList(parentAtomList, (int)letterLocantsOfParent.get(0).charAt(0) -97);//convert from lower case character through ascii to 0-23
-		parentAtoms.add(cyclicListAtomsInParent.getCurrent());
+		//find the indice of the last atom on the surface of the ring. This obviously connects to the first atom. The objective is to exclude any interior atoms.
+		List<Atom> neighbours = parentAtomList.get(0).getAtomNeighbours();
+		int indice = Integer.MAX_VALUE;
+		for (Atom atom : neighbours) {
+			int indexOfAtom =parentAtomList.indexOf(atom);
+			if (indexOfAtom ==1){//not the next atom
+				continue;
+			}
+			else if (indexOfAtom ==-1){//not in parentRing
+				continue;
+			}
+			if (parentAtomList.indexOf(atom)< indice){
+				indice = indexOfAtom;
+			}
+		}
+		CyclicAtomList cyclicListAtomsOnSurfaceOfParent = new CyclicAtomList(parentAtomList.subList(0, indice +1), (int)letterLocantsOfParent.get(0).charAt(0) -97);//convert from lower case character through ascii to 0-23
+		parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getCurrent());
 		for (int i = 0; i < letterLocantsOfParent.size(); i++) {
-			parentAtoms.add(cyclicListAtomsInParent.getNext());
+			parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getNext());
 		}
 		fuseRings(state, childAtoms, parentAtoms);
 	}
