@@ -93,7 +93,7 @@ class FusedRingBuilder {
                 if (group.getAttribute(FUSEDRINGNUMBERING_ATR) != null) {
                     String[] standardNumbering = matchSlash.split(group.getAttributeValue(FUSEDRINGNUMBERING_ATR), -1);
                     for (int j = 0; j < standardNumbering.length; j++) {
-                        atomList.get(j).replaceLocant(standardNumbering[j]);
+                        atomList.get(j).replaceLocants(standardNumbering[j]);
                     }
                 } else {
                     ring.sortAtomListByLocant();//for those where the order the locants are in is sensible					}
@@ -498,7 +498,7 @@ class FusedRingBuilder {
 	 */
 	private static void relabelAccordingToFusionLevel(Fragment component, int fusionLevel)  {
 		if (fusionLevel > 0){
-			FragmentTools.relabelLocants(component.getAtomList(), StringTools.multiplyString("'", fusionLevel));
+			FragmentTools.relabelNumericLocants(component.getAtomList(), StringTools.multiplyString("'", fusionLevel));
 		}
 	}
 

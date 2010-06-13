@@ -242,7 +242,7 @@ class FusedRingNumberer {
 				if(atomSequences.size()<=0){//Error: No path found. This is either a bug in the SSSR or numbering code; assign dummy locants
 					int i=1;
 					for (Atom atom : fusedRing.getAtomList()) {
-						atom.replaceLocant("X" + Integer.toString(i));
+						atom.replaceLocants("X" + Integer.toString(i));
 						i++;
 					}
 					return;
@@ -264,7 +264,7 @@ class FusedRingNumberer {
 			else {
 				int i=1;
 				for (Atom atom : fusedRing.getAtomList()) {
-					atom.replaceLocant("X" + Integer.toString(i));
+					atom.replaceLocants("X" + Integer.toString(i));
 					i++;
 				}
 				return;

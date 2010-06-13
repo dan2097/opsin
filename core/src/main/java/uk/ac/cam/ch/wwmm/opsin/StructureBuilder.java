@@ -391,7 +391,7 @@ class StructureBuilder {
 					throw new StructureBuildingException("Expected oxygen functional atom found:" + functionalAtom.getElement());
 				}
 				functionalAtom.setElement("N");
-				functionalAtom.replaceLocant("N" +StringTools.multiplyString("'", i));
+				functionalAtom.replaceLocants("N" +StringTools.multiplyString("'", i));
 			}
 		}
 		else if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){//substituentamide

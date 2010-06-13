@@ -225,7 +225,7 @@ class Atom {
 	 *
 	 * @param locant The new locant
 	 */
-	void replaceLocant(String locant) {
+	void replaceLocants(String locant) {
 		clearLocants();
 		addLocant(locant);
 	}
