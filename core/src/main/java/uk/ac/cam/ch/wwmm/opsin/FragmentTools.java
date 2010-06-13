@@ -473,14 +473,34 @@ class FragmentTools {
 	}
 	
 	/**
-	 * Adds the given string to all the first locants of the atoms.
-	 * Other locants are removed
+	 * Adds the given string to all the locants of the atoms.
 	 * @param atomList
 	 * @param stringToAdd
 	 */
 	static void relabelLocants(List<Atom> atomList, String stringToAdd) {
 		for (Atom atom : atomList) {
-			atom.replaceLocant(atom.getFirstLocant() + stringToAdd);
+			List<String> locants = new ArrayList<String>(atom.getLocants());
+			atom.clearLocants();
+			for (String locant : locants) {
+				atom.addLocant(locant + stringToAdd);
+			}
+		}
+	}
+	
+	/**
+	 * Adds the given string to all the numeric locants of the atoms.
+	 * @param atomList
+	 * @param stringToAdd
+	 */
+	static void relabelNumericLocants(List<Atom> atomList, String stringToAdd) {
+		for (Atom atom : atomList) {
+			List<String> locants = new ArrayList<String>(atom.getLocants());
+			for (String locant : locants) {
+				if (matchNumericLocant.matcher(locant).matches()){
+					atom.removeLocant(locant);
+					atom.addLocant(locant + stringToAdd);
+				}
+			}
 		}
 	}
 

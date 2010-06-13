@@ -2476,8 +2476,8 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
-		Element lastGroupElementInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
+		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		Element lastGroupElementInSubOrRoot =groups.get(groups.size()-1);
 		List<Fragment> suffixFragments = new ArrayList<Fragment>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
 		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
 		//treat conjunctive suffixesas if they were suffixes
@@ -2486,6 +2486,9 @@ class PreStructureBuilder {
 			suffixFragments.add(state.xmlFragmentMap.get(group));
 		}
 		FragmentTools.assignElementLocants(suffixableFragment, suffixFragments);
+		for (int i = groups.size()-2; i>=0; i--) {
+			FragmentTools.assignElementLocants(state.xmlFragmentMap.get(groups.get(i)), new ArrayList<Fragment>());
+		}
 	}
 
 
@@ -2728,7 +2731,7 @@ class PreStructureBuilder {
 			}
 			locant.detach();
 			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
-			FragmentTools.relabelLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
+			FragmentTools.relabelNumericLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
 			Atom atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1]);
 			Atom atomOnFirstFrag = firstFragment.getAtomByLocantOrThrow(locants[0]);
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnFirstFrag);
