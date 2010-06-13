@@ -29,11 +29,6 @@ class SortAtomsForElementSymbols implements Comparator<Atom> {
 	}
 
 	public int compare(Atom a, Atom b){
-    	int compare =a.getElement().compareTo(b.getElement());
-    	if (compare !=0){//only bother comparing properly if elements are the same
-    		return compare;
-    	}
-
     	Bond bondA = atomToPreviousBondMap.get(a);
     	Bond bondB = atomToPreviousBondMap.get(b);
     	if (bondA.getOrder() > bondB.getOrder()){//lower order bond is preferred
@@ -100,6 +95,7 @@ class SortAtomsForMainGroupElementSymbols implements Comparator<Atom> {
 
 class FragmentTools {
 	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
+	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	
 	/**
 	 * Sorts by number, then by letter e.g. 4,3,3b,5,3a,2 -->2,3,3a,3b,4,5
@@ -780,5 +776,91 @@ class FragmentTools {
 				}
 			}
 		}
+	}
+
+
+	static Atom getAtomByAminoAcidStyleLocant(Atom backboneAtom, String elementSymbol, String primes) throws StructureBuildingException {
+		//Search for appropriate atom by using the same algorithm as is used to assign locants initially
+		Fragment frag = backboneAtom.getFrag();
+
+		LinkedList<Atom> nextAtoms = new LinkedList<Atom>();
+		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
+		Set<Atom> atomsVisited = new HashSet<Atom>();
+		List<Atom> neighbours = backboneAtom.getAtomNeighbours();
+		mainLoop: for (Atom neighbour : neighbours) {
+			atomsVisited.add(neighbour);
+			if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
+				for (String neighbourLocant : neighbour.getLocants()) {
+					if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
+						continue mainLoop;
+					}
+				}
+			}
+			nextAtoms.add(neighbour);
+			atomPreviousBondMap.put(neighbour, frag.findBondOrThrow(backboneAtom, neighbour));
+		}
+
+		Collections.sort(nextAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		HashMap<String,Integer> elementCount =new HashMap<String,Integer>();//keeps track of how many times each element has been seen
+	
+		boolean hydrazoneSpecialCase =false;//look for special case violation of IUPAC rule where the locant of the =N- atom is skipped. This flag is set when =N- is encountered
+		while (nextAtoms.size() > 0){
+			Atom atom = nextAtoms.removeFirst();
+			atomsVisited.add(atom);
+			int primesOnPossibleAtom =0;
+			String element =atom.getElement();
+			if (elementCount.get(element)==null){
+				elementCount.put(element,1);
+			}
+			else{
+				int count =elementCount.get(element);
+				primesOnPossibleAtom =count;
+				elementCount.put(element, count +1);
+			}
+			if (hydrazoneSpecialCase){
+				if (element.equals(elementSymbol) && primes.length() == primesOnPossibleAtom -1){
+					return atom;
+				}
+				hydrazoneSpecialCase =false;
+			}
+
+			List<Atom> atomNeighbours = atom.getAtomNeighbours();
+			for (int i = atomNeighbours.size() -1; i >=0; i--) {
+				Atom neighbour = atomNeighbours.get(i);
+				if (atomsVisited.contains(neighbour)){
+					atomNeighbours.remove(i);
+				}
+				if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
+					for (String neighbourLocant : neighbour.getLocants()) {
+						if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
+							atomNeighbours.remove(i);
+							break;
+						}
+					}
+				}
+			}
+			if (atom.getElement().equals("N") && atom.getIncomingValency() ==3 && atom.getCharge()==0 
+					&& atomNeighbours.size()==1 && atomNeighbours.get(0).getElement().equals("N")){
+				hydrazoneSpecialCase =true;
+			}
+			else{
+				if (element.equals(elementSymbol)){
+					if (primes.length() == primesOnPossibleAtom){
+						return atom;
+					}
+				}
+			}
+			atomPreviousBondMap = new HashMap<Atom, Bond>();
+			for (Atom atomNeighbour : atomNeighbours) {
+				atomPreviousBondMap.put(atomNeighbour, frag.findBondOrThrow(atom, atomNeighbour));
+			}
+			Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
+			nextAtoms.addAll(0, atomNeighbours);
+		}
+
+		if (primes.equals("") && backboneAtom.getElement().equals(elementSymbol)){//maybe it meant the starting atom
+			return backboneAtom;
+		}
+		return null;
 	}
 }

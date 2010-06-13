@@ -138,7 +138,7 @@ public final class XOMTools {
 	 */
 	public static Node getNext(Node node) {
 		Element parent = (Element) node.getParent();
-		if (parent == null || parent.getLocalName().equals("molecule")){
+		if (parent == null || parent.getLocalName().equals(XmlDeclarations.MOLECULE_EL)){
 			return null;
 		}
 		int index = parent.indexOf(node);
@@ -159,7 +159,7 @@ public final class XOMTools {
 	 */
 	public static Node getPrevious(Node node) {
 		Element parent = (Element) node.getParent();
-		if (parent == null || parent.getLocalName().equals("molecule")){
+		if (parent == null || parent.getLocalName().equals(XmlDeclarations.MOLECULE_EL)){
 			return null;
 		}
 		int index = parent.indexOf(node);
