@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -63,7 +62,6 @@ class Fragment {
 	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
 
 	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
-	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 
 	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Makes an empty Fragment with a given type and subType.
@@ -191,72 +189,21 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The found atom, or null if it is not found
+	 * @throws StructureBuildingException 
 	 */
-	Atom getAtomByLocant(String locant) {
+	Atom getAtomByLocant(String locant) throws StructureBuildingException {
 		Atom a =atomMapFromLocant.get(locant);
 		if (a != null){
 			return a;
 		}
 		Matcher m =matchAminoAcidStyleLocant.matcher(locant);
 		if (m.matches()){//e.g. N5
-			a =atomMapFromLocant.get(m.group(3));//the atom corresponding to the numeric component
-			if (a==null){
+			Atom backboneAtom =atomMapFromLocant.get(m.group(3));//the atom corresponding to the numeric component
+			if (backboneAtom==null){
 				return null;
 			}
-			//breadth first search from atom "a" terminating at the first atom with appropriate element symbol locant
-			//a queue is not utilised as a check must be done for partial locant matches at each level of depth
-			String elementSymbol = m.group(1);
-			String primes = m.group(2);
-			locant = elementSymbol + primes;//the element symbol +primes
-			LinkedList<Atom> currentLevel = new LinkedList<Atom>();
-			currentLevel.add(a);
-			LinkedList<Atom> nextLevel = new LinkedList<Atom>();
-			Set<Atom> atomsVisited =new HashSet<Atom>();
-			Atom elementTypeMatch = null;//an appropriate atom with no locants can also be returned if no primes are specified
-			Atom partialLocantMatch = null;//if you are looking for N and you find N' if no N can be found the N' will be returned (looking for N' will not return N'')
-			while (currentLevel.size() > 0) {
-				Atom currentAtom =currentLevel.removeFirst();
-				atomsVisited.add(currentAtom);
-				List<Atom> neighbours = currentAtom.getAtomNeighbours();
-				mainLoop: for (Atom neighbour : neighbours) {
-					if (atomsVisited.contains(neighbour)){//already visited
-						continue;
-					}
-					List<String> locants = neighbour.getLocants();
-					if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
-						for (String neighbourLocant : locants) {
-							if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
-								continue mainLoop;
-							}
-						}
-					}
-					for (String neighbourLocant : locants) {
-						if (neighbourLocant.startsWith(locant)){
-							if (neighbourLocant.equals(locant)){
-								return neighbour;
-							}
-							else if (primes.equals("")){
-								partialLocantMatch =neighbour;
-							}
-						}
-					}
-					if (primes.equals("") && neighbour.getElement().equals(elementSymbol) && neighbour.getElementSymbolLocants().size() ==0){
-						elementTypeMatch = neighbour;
-					}
-					nextLevel.add(neighbour);
-				}
-				if (currentLevel.size()==0){
-					if (elementTypeMatch != null && ValencyChecker.checkValencyAvailableForBond(elementTypeMatch, 1)){
-						return elementTypeMatch;
-					}
-					if (partialLocantMatch != null && ValencyChecker.checkValencyAvailableForBond(partialLocantMatch, 1)){
-						return partialLocantMatch;
-					}
-					currentLevel = nextLevel;
-					nextLevel = new LinkedList<Atom>();
-				}
-			}
-			if (primes.equals("") && a.getElement().equals(elementSymbol)){//maybe it meant the starting atom
+			a = FragmentTools.getAtomByAminoAcidStyleLocant(backboneAtom,  m.group(1), m.group(2));
+			if (a != null){
 				return a;
 			}
 		}

@@ -92,7 +92,7 @@ sense of this -->
   </rule>
   <rule value="hydrazide">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)NN" labels="//1',N/2',N'"/>
+    <addgroup SMILES="[*](=O)NN" labels="//1'/2'"/>
   </rule>
   <rule value="hydrazonic">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
