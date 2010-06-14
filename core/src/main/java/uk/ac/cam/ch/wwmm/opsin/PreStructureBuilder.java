@@ -855,6 +855,9 @@ class PreStructureBuilder {
 						return true;
 					}
 				}
+				else if (count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
+					return true;
+				}
 			}
 			else if(currentElem.getValue().equals("benz") || currentElem.getValue().equals("benzo")){
 				Node potentialGroupAfterBenzo = XOMTools.getNextSibling(currentElem, GROUP_EL);//need to make sure this isn't benzyl
@@ -3005,6 +3008,18 @@ class PreStructureBuilder {
 						thisFrag.removeOutAtom(nextOutAtom);
 					}
 					thisFrag.getOutAtom(1).setValency(thisFrag.getOutAtom(1).getValency() + valency);
+				}
+			}
+		}
+		
+		if (outAtomCount ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			Element possibleLocant =(Element) XOMTools.getPreviousSibling(group);
+			if (possibleLocant !=null){
+				String[] locantValues = matchComma.split(possibleLocant.getValue());
+				if (locantValues.length==2){
+					thisFrag.getOutAtom(0).setLocant(locantValues[0]);
+					thisFrag.getOutAtom(1).setLocant(locantValues[1]);
+					possibleLocant.detach();
 				}
 			}
 		}

@@ -1,69 +1,76 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
-<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="x">
-<!-- implement ylene =diyl  e.g. neopentylene, vinylene, butylene, naphthylene-->
-  <token value="C" labels="1" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">methylene</token>
-  <token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">carbene</token>
-  <token value="CC" outIDs="1,2" valType="SMILES">ethylene</token>
-  <token value="C=C" outIDs="1,2" valType="SMILES">vinylene</token>
-  <token value="C#C" outIDs="1,2" valType="SMILES">ethynylene</token>
+<tokenLists>
+	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="x">
+	<!-- implement ylene =diyl  e.g. neopentylene, vinylene, butylene, naphthylene-->
+		<token value="C" labels="1" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">methylene</token>
+		<token value="C" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">carbene</token>
+		<token value="CC" outIDs="1,2" valType="SMILES">ethylene</token>
+		<token value="C=C" outIDs="1,2" valType="SMILES">vinylene</token>
+		<token value="C#C" outIDs="1,2" valType="SMILES">ethynylene</token>
 
-  <token value="c1ccccc1" outIDs="1,2" valType="SMILES">phenylene</token>
-  <token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1" valType="SMILES">semicarbazono</token>
-  <token value="[SiH3]O" outIDs="1,2" valType="SMILES">siloxane</token>
-  <token value="NC(=O)N" labels="3/2//1" outIDs="1,4" valType="SMILES">ureylene</token>
-  <token value="c1ccccc1" labels="1/2/3/4/5/6" outIDs="7,8" valType="SMILES" addGroup="C locant1;C locant2">xylylene</token>
+		<token value="c1ccccc1" outIDs="1,2" valType="SMILES">phenylene</token>
+		<token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1" valType="SMILES">semicarbazono</token>
+		<token value="[SiH3]O" outIDs="1,2" valType="SMILES">siloxane</token>
+		<token value="NC(=O)N" labels="3/2//1" outIDs="1,4" valType="SMILES">ureylene</token>
+		<token value="c1ccccc1" labels="1/2/3/4/5/6" outIDs="7,8" valType="SMILES" addGroup="C locant1;C locant2">xylylene</token>
 
 
-  <token value="CCC" outIDs="1,2" valType="SMILES">propylene</token>
+		<token value="CCC" outIDs="1,2" valType="SMILES">propylene</token>
 
-  <token value="NN" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">hydrazo</token>
-  <!--<token value="NN" labels="none" outIDs="1,1,2,2" valType="SMILES">azino</token>-->
-  <token value="N=N" labels="none" outIDs="1,2" valType="SMILES" acceptsAdditiveBonds="yes">azo</token><!--rule C-911 needs to be implemented to use this properly-->
-  <token value="N=[NH+]O" labels="none" outIDs="1,2" valType="SMILES">azoxy</token><!--rule C-911 needs to be implemented to use this properly-->
-  <token value="N" labels="none" outIDs="1,1" valType="SMILES">nitrene</token>
-  <token value="N" labels="none" outIDs="1,1" valType="SMILES">aminylene</token>
-  <token value="N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">imino</token>
-  <token value="[NH4+]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">iminio</token>
-  <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
-  <token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
-  <token value="[NH4+]" labels="none" outIDs="1,1,1" valType="SMILES">nitrilio</token>
+		<token value="NN" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">hydrazo</token>
+		<!--<token value="NN" labels="none" outIDs="1,1,2,2" valType="SMILES">azino</token>-->
+		<token value="N=N" labels="none" outIDs="1,2" valType="SMILES" acceptsAdditiveBonds="yes">azo</token><!--rule C-911 needs to be implemented to use this properly-->
+		<token value="N=[NH+]O" labels="none" outIDs="1,2" valType="SMILES">azoxy</token><!--rule C-911 needs to be implemented to use this properly-->
+		<token value="N" labels="none" outIDs="1,1" valType="SMILES">nitrene</token>
+		<token value="N" labels="none" outIDs="1,1" valType="SMILES">aminylene</token>
+		<token value="N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">imino</token>
+		<token value="[NH4+]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">iminio</token>
+		<token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
+		<token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
+		<token value="[NH4+]" labels="none" outIDs="1,1,1" valType="SMILES">nitrilio</token>
 
-  <token value="[P|3]" labels="none" outIDs="1,1,1" valType="SMILES">phosphinidyne</token>
-  <token value="[As|3]" labels="none" outIDs="1,1,1" valType="SMILES">arsinidyne</token>
-  <token value="[Sb|3]" labels="none" outIDs="1,1,1" valType="SMILES">stibylidyne</token>
-  <token value="[Bi|3]" labels="none" outIDs="1,1,1" valType="SMILES">bismuthylidyne</token>
-  <token value="[P|4+]" labels="none" outIDs="1,1" valType="SMILES">phosphinidenio</token>
-  <token value="[As|4+]" labels="none" outIDs="1,1" valType="SMILES">arsinidenio</token>
-  <token value="[P|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">phosphinico</token>
-  <token value="[As|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">arsinico</token>
-  <token value="[Sb|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">stibinico</token>
+		<token value="[P|3]" labels="none" outIDs="1,1,1" valType="SMILES">phosphinidyne</token>
+		<token value="[As|3]" labels="none" outIDs="1,1,1" valType="SMILES">arsinidyne</token>
+		<token value="[Sb|3]" labels="none" outIDs="1,1,1" valType="SMILES">stibylidyne</token>
+		<token value="[Bi|3]" labels="none" outIDs="1,1,1" valType="SMILES">bismuthylidyne</token>
+		<token value="[P|4+]" labels="none" outIDs="1,1" valType="SMILES">phosphinidenio</token>
+		<token value="[As|4+]" labels="none" outIDs="1,1" valType="SMILES">arsinidenio</token>
+		<token value="[P|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">phosphinico</token>
+		<token value="[As|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">arsinico</token>
+		<token value="[Sb|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">stibinico</token>
 
-  <token value="OO" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">peroxy</token>
+		<token value="OO" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">peroxy</token>
 
-  <token value="[NH3+][O-]" labels="none" outIDs="1,1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">nitroryl</token>
-  <token value="[P|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphinato</token>
-  <token value="[As|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsinato</token>
-  <token value="[Sb|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibinato</token>
+		<token value="[NH3+][O-]" labels="none" outIDs="1,1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">nitroryl</token>
+		<token value="[P|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphinato</token>
+		<token value="[As|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsinato</token>
+		<token value="[Sb|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibinato</token>
 
-  <token value="[SiH4]" labels="none" outIDs="1,1" valType="SMILES">silylene</token>
-  <token value="[GeH4]" labels="none" outIDs="1,1" valType="SMILES">germylene</token>
-  <token value="[SnH4]" labels="none" outIDs="1,1" valType="SMILES">stannylene</token>
-  <token value="[PbH4]" labels="none" outIDs="1,1" valType="SMILES">plumbylene</token>
-  <token value="B" labels="none" outIDs="1,1" valType="SMILES">borylene</token>
+		<token value="[SiH4]" labels="none" outIDs="1,1" valType="SMILES">silylene</token>
+		<token value="[GeH4]" labels="none" outIDs="1,1" valType="SMILES">germylene</token>
+		<token value="[SnH4]" labels="none" outIDs="1,1" valType="SMILES">stannylene</token>
+		<token value="[PbH4]" labels="none" outIDs="1,1" valType="SMILES">plumbylene</token>
+		<token value="B" labels="none" outIDs="1,1" valType="SMILES">borylene</token>
 
-  <token value="O" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">oxy</token>
-  <token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
-  <token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
-  <token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
+		<token value="O" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">oxy</token>
+		<token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
+		<token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
+		<token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
 
-<!--Should be suffixes ONLY according to IUPAC-->
-  <token value="C=S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbothioyl</token><!--alternative to thiocarbonyl-->
-  <token value="C=[Se]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboselenoyl</token>
-  <token value="C=[Te]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbotelluroyl</token>
-  <token value="C=NN" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydrazonoyl</token>
-  <token value="C=N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboimidoyl</token>
-  <token value="C=NO" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydroximoyl</token>
-</tokenList>
-
+	<!--Should be suffixes ONLY according to IUPAC-->
+		<token value="C=S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbothioyl</token><!--alternative to thiocarbonyl-->
+		<token value="C=[Se]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboselenoyl</token>
+		<token value="C=[Te]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbotelluroyl</token>
+		<token value="C=NN" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydrazonoyl</token>
+		<token value="C=N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboimidoyl</token>
+		<token value="C=NO" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydroximoyl</token>
+	</tokenList>
+	<tokenList tagname="group" type="substituent" subType="epoxyLike" symbol="x">
+		<token value="O" labels="none" outIDs="1,1" valType="SMILES">epoxy</token>
+		<token value="S" labels="none" outIDs="1,1" valType="SMILES">epithio</token>
+		<token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES">episeleno</token>
+		<token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES">epitelluro</token>
+	</tokenList>
+</tokenLists>
 
