@@ -211,6 +211,7 @@ class PreStructureBuilder {
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
 				preliminaryProcessSuffixes(state, lastGroupInSubOrRoot, XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
+			processAmideOrHydrazideFunctionalClassNomenclature(state, finalSubOrRootInWord, word);
 
 			if (processPrefixFunctionalReplacementNomenclature(state, groups, substituents)){//true if functional replacement performed, 1 or more substituents will have been removed
 				substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);
@@ -892,6 +893,77 @@ class PreStructureBuilder {
 	}
 
 
+	/**
+	 * Applies the effects of amide of hydrazide functional class nomenclature
+	 * This must be done here so that prefix/infix funcional replacement is performed correctly
+	 * and so that element symbol locants are assigned appropriately
+	 * @param state 
+	 * @param finalSubOrRootInWord
+	 * @param word
+	 * @throws PostProcessingException 
+	 * @throws StructureBuildingException 
+	 */
+	private void processAmideOrHydrazideFunctionalClassNomenclature(BuildState state, Element finalSubOrRootInWord, Element word) throws PostProcessingException, StructureBuildingException {
+		Element wordRule = OpsinTools.getParentWordRule(word);
+		WordRule wr = WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR));
+		if (wr == WordRule.hydrazide){
+			Element nextWord = (Element) XOMTools.getNextSibling(word);
+			if (nextWord !=null && nextWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+				Element functionalTerm = nextWord.getFirstChildElement(FUNCTIONALTERM_EL);
+				if (functionalTerm ==null){
+					throw new PostProcessingException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
+				}
+				Element hydrazideGroup = functionalTerm.getFirstChildElement(GROUP_EL);
+				Fragment hydrazide = resolveGroup(state, hydrazideGroup);
+				Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(hydrazideGroup);
+				int hydrazides =1;
+				if (possibleMultiplier!=null){
+					if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+						throw new PostProcessingException("OPSIN bug: non multiplier found where only a multiplier was expected in hydrazide wordRule");
+					}
+					hydrazides = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+					possibleMultiplier.detach();
+				}
+				if (functionalTerm.getChildElements().size()!=1){
+					throw new PostProcessingException("Unexpected qualifier to hydrazide functionalTerm");
+				}
+				
+				Element groupToBeModified = finalSubOrRootInWord.getFirstChildElement(GROUP_EL);
+				List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+				if (oxygenAtoms.size()==0){
+					oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+				}
+				if (oxygenAtoms.size()==0){
+					List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
+					for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
+						oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
+					}
+				}
+				if (hydrazides > oxygenAtoms.size()){
+					throw new PostProcessingException("Insufficient oxygen to replace with hydrazides in " + finalSubOrRootInWord.getFirstChildElement(GROUP_EL).getValue());
+				}
+				
+				Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
+				if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of hydrazide
+					for (Atom atom : hydrazide.getAtomList()) {
+						atom.clearLocants();
+					}
+				}
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), hydrazide.getFirstAtom());
+				for (int i = 1; i < hydrazides; i++) {
+					Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, StringTools.multiplyString("'", i));
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(i), clonedHydrazide.getFirstAtom());
+					state.fragManager.incorporateFragment(clonedHydrazide, oxygenAtoms.get(i).getFrag());
+				}
+				state.fragManager.incorporateFragment(hydrazide, oxygenAtoms.get(0).getFrag());
+				for (Atom oxygen : oxygenAtoms) {
+					removeAssociatedFunctionalAtom(oxygen);
+				}
+			}
+		}		
+	}
+
+
 	/** Look for multipliers, and multiply out suffixes/unsaturators/heteroatoms/hydros.
 	 * Locants are assigned if the number of locants matches the multiplier
 	 * associated with them. Eg. triol - > ololol.
@@ -931,6 +1003,15 @@ class PreStructureBuilder {
 	}
 
 
+	/**
+	 * Converts group elements that are identified as being conjunctive suffixes to CONJUNCTIVESUFFIXGROUP_EL
+	 * and labels them appropriately. Any suffixes that the conjunctive suffix may have are resolved onto it
+	 * @param state
+	 * @param subOrRoot
+	 * @param allGroups
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
 	private void detectConjunctiveSuffixGroups(BuildState state, Element subOrRoot, List<Element> allGroups) throws PostProcessingException, StructureBuildingException {
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size()>1){
@@ -1808,8 +1889,9 @@ class PreStructureBuilder {
 	 * @param substituents
 	 * @return boolean: has any functional replacement occured
 	 * @throws StructureBuildingException
+	 * @throws PostProcessingException 
 	 */
-	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException {
+	private boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException, PostProcessingException {
 		int originalNumberOfGroups = groups.size();
 		for (int i = originalNumberOfGroups-1; i >=0; i--) {
 			Element group =groups.get(i);
@@ -2064,8 +2146,9 @@ class PreStructureBuilder {
 	 * @param replacementSmiles
 	 * @return
 	 * @throws StructureBuildingException
+	 * @throws PostProcessingException 
 	 */
-	private int performHalogenFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
+	private int performHalogenFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException, PostProcessingException {
 		if (replacementSmiles.charAt(0) =='-'){//e.g. -Cl
 			replacementSmiles = replacementSmiles.substring(1);
 		}
@@ -2100,18 +2183,25 @@ class PreStructureBuilder {
 					state.fragManager.makeHeteroatom(atomToReplace, replacementSmiles, false);
 					atomToReplace.setCharge(0);
 					//the halogen is no longer a functionalAtom so correct this
-					List<FunctionalAtom> functionalAtoms = atomToReplace.getFrag().getFunctionalAtoms();
-					for (int j = functionalAtoms.size()-1; j >=0; j--) {
-						FunctionalAtom functionalAtom = functionalAtoms.get(j);
-						if (atomToReplace.equals(functionalAtom.getAtom())){
-							atomToReplace.getFrag().removeFunctionalAtom(j);
-						}
-					}
+					removeAssociatedFunctionalAtom(atomToReplace);
 				}
 				atomsReplaced++;
 			}
 		}
 		return atomsReplaced;
+	}
+
+
+	private void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws PostProcessingException {
+		List<FunctionalAtom> functionalAtoms = atomWithFunctionalAtom.getFrag().getFunctionalAtoms();
+		for (int j = functionalAtoms.size()-1; j >=0; j--) {
+			FunctionalAtom functionalAtom = functionalAtoms.get(j);
+			if (atomWithFunctionalAtom.equals(functionalAtom.getAtom())){
+				atomWithFunctionalAtom.getFrag().removeFunctionalAtom(j);
+				return;
+			}
+		}
+		throw new PostProcessingException("OPSIN bug: Unable to find associated functionalAtom");
 	}
 
 

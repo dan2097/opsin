@@ -38,6 +38,7 @@ class WordRules {
 		functionGroupAsGroup,
 		glycol,
 		glycolEther,
+		hydrazide,
 		monovalentFunctionalGroup,
 		multiEster,
 		oxide,

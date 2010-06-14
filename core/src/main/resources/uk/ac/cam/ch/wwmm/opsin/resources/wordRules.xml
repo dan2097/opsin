@@ -125,6 +125,11 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" endsWithRegex="(oxide|sulfide|selenide|telluride)" functionalGroupType="functionalClass" />
   </wordRule>
 
+  <wordRule name="hydrazide" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*" />
+    <word type="functionalTerm" endsWithRegex="(hydrazide)"/>
+  </wordRule>
+
   <wordRule name="carbonylDerivative" type="full">
     <word type="full" />
     <word type="substituent" />

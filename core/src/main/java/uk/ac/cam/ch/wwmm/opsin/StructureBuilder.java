@@ -109,6 +109,12 @@ class StructureBuilder {
 			else if(wordRule == WordRule.polymer) {
 				rGroups.addAll(buildPolymer(state, words));
 			}
+			else if(wordRule == WordRule.hydrazide) {
+				//already processed by PreStructureBuilder
+				for (Element word : words) {
+					resolveWordOrBracket(state, word);
+				}
+			}
 			else{
 				throw new StructureBuildingException("Unknown Word Rule");
 			}

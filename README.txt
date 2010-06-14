@@ -83,17 +83,17 @@ Trivial acids
 Hantzsch-Widman e.g. 1,3-oxazole
 Spiro systems
 All von Baeyer rings e.g. bicyclo[2.2.2]octane
-Hydro e.g. 2,3-dihydropyridine
+Hydro/dehydro e.g. 2,3-dihydropyridine
 Indicated hydrogen e.g. 1H-benzoimidazole
 Heteroatom replacement
-Specification of charge e.g. ium/ide
+Specification of charge e.g. ium/ide/ylium/uide
 Multiplicative nomenclature e.g. ethylenediaminetetraacetic acid
 Conjunctive nomenclature e.g. cyclohexaneethanol
 Fused ring systems e.g. imidazo[4,5-d]pyridine. For a small number of fused ring systems numbering cannot be determined
 Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
-The following functional classes: amides, anhydrides, esters, diesters, glycols, acids, azides, bromides, chlorides, cyanates, cyanides, fluorides, fulminates, hydrazones, hydroperoxides, imides,
-iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, selenocyanates, thiocyanates, alcohols, selenols, thiols, ethers, ketones, oxides, oximes, peroxides, selenides,
+The following functional classes: amides, anhydrides, esters, di/tri/tetra esters, glycols, acids, azides, bromides, chlorides, cyanates, cyanides, fluorides, fulminates, hydrazones, hydroperoxides, hydrazides, imides,
+iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, selenocyanates, thiocyanates, alcohols, selenols, thiols, ethers, glycol ethers, ketones, oxides, oximes, peroxides, selenides,
 selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
 Greek letters
 Lambda convention
@@ -107,10 +107,10 @@ Other less common stereochemical terms
 Carbohydrates
 Steroids
 Nucleic acids
-Bridge prefixes e.g. epoxy, ethano
+Non detachable bridge prefixes e.g. epoxymethano, ethano
 Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 
-The following functional classes: Hydrazides, lactones, sultams, lactams, sultims, lactims, acetals, hemiacetals and ketals
+The following functional classes: Lactones, sultams, lactams, sultims, lactims, acetals, hemiacetals and ketals
 
 ##################################################
 
