@@ -161,7 +161,7 @@ class StructureBuildingMethods {
 		if (frag.getOutAtoms().size() >=1 && subBracketOrRoot.getAttribute(LOCANT_ATR)!=null){
 			String locantString = subBracketOrRoot.getAttributeValue(LOCANT_ATR);
 			if (frag.getOutAtoms().size() >1){
-				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag);
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group.getAttributeValue(SUBTYPE_ATR));
 			}
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR)!=null){//e.g. 1,2-diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -202,7 +202,7 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("Substituent has an unused outAtom and has a locant but locanted susbtitution should already been been performed!");
 			}
 			if (frag.getOutAtoms().size() > 1){
-				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag);
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group.getAttributeValue(SUBTYPE_ATR));
 			}
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR)!=null){//e.g. diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -930,7 +930,7 @@ class StructureBuildingMethods {
 		}
 
 		if (newBr.getFragmentCount()==1){
-			throw new StructureBuildingException("Multiplicative nomenclarture cannot yield only one temporary terminal fragment");
+			throw new StructureBuildingException("Multiplicative nomenclature cannot yield only one temporary terminal fragment");
 		}
 		if (newBr.getFragmentCount()>=2){
 			List<Element> siblings = XOMTools.getNextSiblingsOfTypes(multipliedParent, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
@@ -1035,6 +1035,10 @@ class StructureBuildingMethods {
 	}
 
 	private static void joinFragmentsAdditively(BuildState state, Fragment fragToBeJoined, Fragment parentFrag) throws StructureBuildingException {
+		Element elOfFragToBeJoined = state.xmlFragmentMap.getElement(fragToBeJoined);
+		if (EPOXYLIKE_SUBTYPE_VAL.equals(elOfFragToBeJoined.getAttributeValue(SUBTYPE_ATR))){
+			throw new StructureBuildingException("Inappropriate use of " + elOfFragToBeJoined.getValue());
+		}
 		int outAtomCount = fragToBeJoined.getOutAtoms().size();
 		if (outAtomCount ==0){
 			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
@@ -1108,6 +1112,11 @@ class StructureBuildingMethods {
 	}
 
 	private static void joinFragmentsSubstitutively(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
+		Element elOfFragToBeJoined = state.xmlFragmentMap.getElement(fragToBeJoined);
+		if (EPOXYLIKE_SUBTYPE_VAL.equals(elOfFragToBeJoined.getAttributeValue(SUBTYPE_ATR))){
+			formEpoxide(state, fragToBeJoined, atomToJoinTo);
+			return;
+		}
 		int outAtomCount = fragToBeJoined.getOutAtoms().size();
 		if (outAtomCount >1){
 			throw new StructureBuildingException("Substitutive bond formation failure: Fragment expected to have one OutAtom but had: "+ outAtomCount);
@@ -1127,11 +1136,42 @@ class StructureBuildingMethods {
 			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
 		}
 		fragToBeJoined.removeOutAtom(out);
-		Element elOfFragToBeJoined = state.xmlFragmentMap.getElement(fragToBeJoined);
+
 
 		bondOrder = checkForOxidoSpecialCase(elOfFragToBeJoined.getValue(), atomToJoinTo, from, bondOrder);
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
 		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
+	}
+
+	private static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
+		Fragment fragToJoinTo = atomToJoinTo.getFrag();
+		List<Atom> atomList = fragToJoinTo.getAtomList();
+		Atom firstAtomToJoinTo;
+		if (fragToBeJoined.getOutAtom(0).getLocant()!=null){
+			firstAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(fragToBeJoined.getOutAtom(0).getLocant());
+		}
+		else{
+			firstAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(0), 1);
+		}
+		fragToBeJoined.removeOutAtom(0);
+		Atom secondAtomToJoinTo;
+		if (fragToBeJoined.getOutAtom(0).getLocant()!=null){
+			secondAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(fragToBeJoined.getOutAtom(0).getLocant());
+		}
+		else{
+			int index = atomList.indexOf(firstAtomToJoinTo);
+			if (index +1 >= atomList.size()){
+				throw new StructureBuildingException("Unable to find second suitable atom to form epoxide");
+			}
+			secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1);
+		}
+		fragToBeJoined.removeOutAtom(0);
+		if (firstAtomToJoinTo == secondAtomToJoinTo){
+			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
+		}
+		Atom chalcogen = fragToBeJoined.getFirstAtom();
+		state.fragManager.createBond(chalcogen, firstAtomToJoinTo, 1);
+		state.fragManager.createBond(chalcogen, secondAtomToJoinTo, 1);
 	}
 
 	/**
@@ -1290,11 +1330,15 @@ class StructureBuildingMethods {
 	 * equal to sum of the valency of the other outAtoms.
 	 * This is only allowed on substituents where all the outAtoms are on the same atom
 	 * @param frag
+	 * @param subType 
 	 * @throws StructureBuildingException
 	 */
-	private static void checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(Fragment frag) throws StructureBuildingException {
+	private static void checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(Fragment frag, String subType) throws StructureBuildingException {
 		int outAtomCount = frag.getOutAtoms().size();
 		if (outAtomCount<=1){
+			return;
+		}
+		if (EPOXYLIKE_SUBTYPE_VAL.equals(subType)){
 			return;
 		}
 		//special case- all outAtoms on same atom e.g. methylenecyclohexane

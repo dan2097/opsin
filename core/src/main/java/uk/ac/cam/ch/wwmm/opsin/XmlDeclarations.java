@@ -331,6 +331,7 @@ class XmlDeclarations {
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";
+	static final String EPOXYLIKE_SUBTYPE_VAL ="epoxyLike";
 	static final String FUNCTIONALCLASSGROUP_SUBTYPE_VAL ="functionalClassGroup";
 	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
 	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
