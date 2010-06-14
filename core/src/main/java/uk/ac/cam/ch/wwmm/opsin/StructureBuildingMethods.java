@@ -175,7 +175,7 @@ class StructureBuildingMethods {
 				Element groupToAttachTo = state.xmlFragmentMap.getElement(parentFrag);
 				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && parentFrag.getOutAtoms().size()>0 && groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR)!=null
 						&& parentFrag.getAtomByLocantOrThrow(locantString).getOutValency()>0 && frag.getOutAtom(0).getValency()==1){
-					//horrible special case, probably not even technically allowed by the IUPAC rules e.g. C-methylcarbonimidoyl
+					//horrible special case to allow C-methylcarbonimidoyl
 					joinFragmentsAdditively(state, frag, parentFrag);
 				}
 				else{
@@ -1127,12 +1127,27 @@ class StructureBuildingMethods {
 			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
 		}
 		fragToBeJoined.removeOutAtom(out);
+		Element elOfFragToBeJoined = state.xmlFragmentMap.getElement(fragToBeJoined);
+
+		bondOrder = checkForOxidoSpecialCase(elOfFragToBeJoined.getValue(), atomToJoinTo, from, bondOrder);
+		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
+		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
+	}
+
+	/**
+	 * Nasty special case to cope with oxido and relating groups acting as O= or even [O-][N+]
+	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
+	 * Acting as O= notably is correct behaviour for inorganics
+	 * @param substituentName
+	 * @param atomToJoinTo
+	 * @param from
+	 * @param bondOrder
+	 * @return
+	 */
+	private static int checkForOxidoSpecialCase(String substituentName, Atom atomToJoinTo, Atom from, int bondOrder) {
 		if (from.getCharge()==-1){
-			String substituentName = state.xmlFragmentMap.getElement(fragToBeJoined).getValue();
 			if (substituentName.equals("oxido") || substituentName.equals("sulfido") || substituentName.equals("selenido") || substituentName.equals("tellurido") ){
-				//nasty special case to cope with oxido and relating groups acting as O= or even [O-][N+]
-				//This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
-				//Acting as O= notably is correct behaviour for inorganics
+
 				String element = atomToJoinTo.getElement();
 				if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) || ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) ||
 						(element.equals("S") && atomToJoinTo.getCharge() ==0 &&
@@ -1147,8 +1162,7 @@ class StructureBuildingMethods {
 				}
 			}
 		}
-		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
-		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
+		return bondOrder;
 	}
 
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder) throws StructureBuildingException {

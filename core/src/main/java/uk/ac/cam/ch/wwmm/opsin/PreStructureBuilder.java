@@ -3231,8 +3231,7 @@ class PreStructureBuilder {
 			Boolean moveLocants = false;
 			if (locantValues!=null){
 				for (String locantText : locantValues) {
-					if (lastGroupOfElementBeforeSub.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){
-						StringTools.arrayToList(matchComma.split(lastGroupOfElementBeforeSub.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText);
+					if (lastGroupOfElementBeforeSub.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(matchComma.split(lastGroupOfElementBeforeSub.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
 						continue;
 					}
 					
@@ -3258,6 +3257,9 @@ class PreStructureBuilder {
 								(matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 								|| shouldBeAMultiplierNode.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
 							locantRelatedElements.add(shouldBeAMultiplierNode);
+						}
+						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
+							XOMTools.setTextChild(locantRelatedElements.get(0), locantValues[1]);
 						}
 						else{//don't bracket other complex multiplied substituents (name hasn't given enough hints if indeed bracketing was expected)
 							continue;
