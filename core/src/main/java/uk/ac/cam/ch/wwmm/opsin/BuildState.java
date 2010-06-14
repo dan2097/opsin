@@ -74,7 +74,7 @@ class BuildState {
 		public Collection<Fragment> values() {
 			return xmlFragmentMap.values();
 		}
-		public Element getElement(Object key) {
+		public Element getElement(Fragment key) {
 			return fragmentXmlMap.get(key);
 		}
 	}
