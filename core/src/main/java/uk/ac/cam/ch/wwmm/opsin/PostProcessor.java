@@ -1542,6 +1542,12 @@ class PostProcessor {
 								targetRing =potentialRing;
 							}
 						}
+						//check whether the group is a benzofused ring e.g. 1,4-benzodioxin
+						if (FUSIONRING_SUBTYPE_VAL.equals(potentialRing.getAttributeValue(SUBTYPE_ATR)) && 
+								(potentialRing.getValue().equals("benzo")|| potentialRing.getValue().equals("benz")) &&
+								!((Element)XOMTools.getNextSibling(potentialRing)).getLocalName().equals(FUSION_EL)){
+							targetRing =potentialRing;
+						}
 					}
 					else{
 						targetRing =potentialRing;
