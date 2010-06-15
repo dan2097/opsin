@@ -3,11 +3,18 @@
 <!--The same as arylGroups except these cannot have suffixes. Or if you like the same as simpleGroups except they can accept hydro-->
 <tokenList tagname="group" type="ring" subType="simpleGroup" symbol="á">
   <token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N" labels="none" valType="SMILES">abietamide</token>
+  <token value="c1(=O)c(=O)ccc2cc3ccccc3cc12" labels="1//2//3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">anthra-1,2-quinone</token>
+  <token value="c1(=O)ccc(=O)c2cc3ccccc3cc12" labels="1//2/3/4//4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">anthra-1,4-quinone</token>
+  <token value="c1cccc2c(=O)c3ccccc3c(=O)c12" labels="1/2/3/4/4a/10//10a/5/6/7/8/8a/9//9a" valType="SMILES">anthra-9,10-quinone</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituricacid</token>
   <token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric acid</token>
   <token value="c1(ccccc1)C(=O)C(=O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
+  <token value="c1(=O)c(=O)cccc1" labels="1//2//3/4/5/6" valType="SMILES">benzo-1,2-quinone</token>
+  <token value="c1(=O)ccc(=O)cc1" labels="1//2/3/4//5/6" valType="SMILES">benzo-1,4-quinone</token>
   <token value="c1(O)ccc(O)cc1" labels="1//2/3/4//5/6" valType="SMILES">quinol</token>
+  <token value="c1(=O)c(=O)ccc2ccccc12" labels="1//2//3/4/4a/5/6/7/8/8a" valType="SMILES">naphtho-1,2-quinone</token>
+  <token value="c1(=O)ccc(=O)c2ccccc12" labels="1//2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphtho-1,4-quinone</token>
   <token value="n1cccc(c1)C2N(C)CCC2" labels="none" valType="SMILES">nicotine</token><!--not to be confused with nicotinic acid-->
   <token value="c1ccccc1C(=O)OO" labels="2/3/4/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoic</token>
   <token value="c1ccccc1C(=O)OO" labels="2/3/4/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoicacid</token>
