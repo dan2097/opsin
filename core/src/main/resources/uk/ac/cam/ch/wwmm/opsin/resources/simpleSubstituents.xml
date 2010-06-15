@@ -85,10 +85,13 @@
   <token value="morpholine" valType="dbkey" outIDs="4">morpholino</token>
   <token value="-C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes">oxalaceto</token>
   <token value="-[O-]" labels="none" valType="SMILES">oxido</token>
+  <token value="-NO" labels="none" valType="SMILES">hydroxamino</token>
+  <token value="=NO" labels="none" valType="SMILES">hydroximino</token>
   <token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes">propoxyl</token>
   <token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
   <token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
   <token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitryl</token>
+  <token value="=NO" labels="none" valType="SMILES">oximino</token>
   <token value="-CCOc1ccccc1" labels="beta/alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
   <token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
   <token value="piperazine" valType="dbkey" outIDs="1">piperazino</token>
