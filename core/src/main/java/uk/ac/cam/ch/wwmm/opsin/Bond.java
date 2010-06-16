@@ -85,7 +85,7 @@ class Bond {
 			elem.addAttribute(new Attribute("order", "unknown"));
 		}
 		if (bondStereoElement!=null){
-			bondStereoElement.addAttribute(new Attribute("convention","cmlDict:cistrans"));
+			//bondStereoElement.addAttribute(new Attribute("convention","cmlDict:cistrans"));
 			elem.appendChild(bondStereoElement);
 		}
 		return elem;
