@@ -929,11 +929,11 @@ class PostProcessor {
 						smiles= smiles.substring(0, closeBracketIndex +1) +"1" + smiles.substring(closeBracketIndex +1);
 					}
 					else{
-						if (Character.isUpperCase(smiles.charAt(1))){//element is 1 letter long
-							smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
+						if (Character.getType(smiles.charAt(1)) == Character.LOWERCASE_LETTER){//element is 2 letters long
+							smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
 						}
 						else{
-							smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
+							smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
 						}
 					}
 					group.getAttribute(VALUE_ATR).setValue(smiles);

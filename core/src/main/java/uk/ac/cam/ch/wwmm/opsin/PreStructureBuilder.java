@@ -1482,6 +1482,7 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void removeOneDoubleBondedOxygen(BuildState state, Atom atom) throws StructureBuildingException {
+		//TODO prioritise [N+][O-]
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("O") && neighbour.getAtomNeighbours().size()==1){
