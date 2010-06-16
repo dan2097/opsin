@@ -164,6 +164,7 @@
   <token value="phenarsazine" valType="dbkey">phenarsazin</token>
   <token value="phenazine" valType="dbkey">phenazin</token>
   <token value="[O-]c1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">phenoxid</token>
+  <token value="[O+]c1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">phenoxylium</token>
   <token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenomercurin</token>
   <token value="c1cccc2oc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxazin</token>
   <token value="c1cccc2sc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiazin</token>

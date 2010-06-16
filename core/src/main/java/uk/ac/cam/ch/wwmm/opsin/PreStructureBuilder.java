@@ -1211,47 +1211,51 @@ class PreStructureBuilder {
 			//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 			Element suffix =OpsinTools.getNextNonChargeSuffix(group);
 			if (suffix ==null){
-				throw new PostProcessingException("No suffix where suffix was expected");
-			}
-			if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
-				throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
-			}
-			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-			String[] suffixInstructions = matchComma.split(suffixInstruction);
-			boolean symmetricSuffixes =true;
-			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
-				if (suffixInstructions.length != 2){
-					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
-				}
-				symmetricSuffixes = false;
-				if (suffix.getValue().equals("imide")|| suffix.getValue().equals("imido") || suffix.getValue().equals("imidium")  || suffix.getValue().equals("imidylium")){
-					imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
+				if (group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || group.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL) || group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
+					throw new PostProcessingException("No suffix where suffix was expected");
 				}
 			}
-
-			int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
-			if (suffix.getAttribute(LOCANT_ATR)==null){
-				suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
-			}
-			for (int i = 1; i < suffixInstructions.length; i++) {
-				Element newSuffix = new Element(SUFFIX_EL);
-				if (symmetricSuffixes){
-					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
-					newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
-					if (suffix.getAttribute(SUBTYPE_ATR)!=null){
-						newSuffix.addAttribute(new Attribute(SUBTYPE_ATR,  suffix.getAttributeValue(SUBTYPE_ATR)));
+			else{
+				if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
+					throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
+				}
+				String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
+				String[] suffixInstructions = matchComma.split(suffixInstruction);
+				boolean symmetricSuffixes =true;
+				if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
+					if (suffixInstructions.length != 2){
+						throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 					}
-					if (suffix.getAttribute(INFIX_ATR)!=null && suffix.getAttributeValue(INFIX_ATR).startsWith("=")){//clone infixes that effect double bonds but not single bonds e.g. maleamidate still should have one functional atom
-						newSuffix.addAttribute(new Attribute(INFIX_ATR,  suffix.getAttributeValue(INFIX_ATR)));
+					symmetricSuffixes = false;
+					if (suffix.getValue().equals("imide")|| suffix.getValue().equals("imido") || suffix.getValue().equals("imidium")  || suffix.getValue().equals("imidylium")){
+						imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
 					}
 				}
-				else{
-					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(ADDITIONALVALUE_ATR)));
-					newSuffix.addAttribute(new Attribute(TYPE_ATR, ROOT_EL));
+	
+				int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
+				if (suffix.getAttribute(LOCANT_ATR)==null){
+					suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
 				}
-				newSuffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[i]) -1)));
-				XOMTools.insertAfter(suffix, newSuffix);
-				suffixes.add(newSuffix);
+				for (int i = 1; i < suffixInstructions.length; i++) {
+					Element newSuffix = new Element(SUFFIX_EL);
+					if (symmetricSuffixes){
+						newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
+						newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
+						if (suffix.getAttribute(SUBTYPE_ATR)!=null){
+							newSuffix.addAttribute(new Attribute(SUBTYPE_ATR,  suffix.getAttributeValue(SUBTYPE_ATR)));
+						}
+						if (suffix.getAttribute(INFIX_ATR)!=null && suffix.getAttributeValue(INFIX_ATR).startsWith("=")){//clone infixes that effect double bonds but not single bonds e.g. maleamidate still should have one functional atom
+							newSuffix.addAttribute(new Attribute(INFIX_ATR,  suffix.getAttributeValue(INFIX_ATR)));
+						}
+					}
+					else{
+						newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(ADDITIONALVALUE_ATR)));
+						newSuffix.addAttribute(new Attribute(TYPE_ATR, ROOT_EL));
+					}
+					newSuffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[i]) -1)));
+					XOMTools.insertAfter(suffix, newSuffix);
+					suffixes.add(newSuffix);
+				}
 			}
 		}
 		else{
