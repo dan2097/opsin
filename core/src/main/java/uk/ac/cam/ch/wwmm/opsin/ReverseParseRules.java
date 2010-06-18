@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -23,7 +24,7 @@ import dk.brics.automaton.RunAutomaton;
  * @author ptc24/dl387
  *
  */
-public class ParseRules {
+public class ReverseParseRules {
 
 	/** A "struct" containing bits of state needed during finite-state parsing. */
 	private class AnnotatorState {
@@ -51,9 +52,10 @@ public class ParseRules {
 	 *
 	 * @throws Exception If the rules file can't be read properly.
 	 */
-	ParseRules(ResourceManager resourceManager) throws Exception {
+	ReverseParseRules(ResourceManager resourceManager) throws Exception {
 		this.resourceManager = resourceManager;
-		chemAutomaton = resourceManager.chemicalAutomaton;
+		resourceManager.populatedReverseTokenMappings();
+		chemAutomaton = resourceManager.reverseChemicalAutomaton;
 		stateSymbols = chemAutomaton.getCharIntervals();
 	}
 
@@ -92,9 +94,9 @@ public class ParseRules {
 			String untokenisedChemicalNameLowerCase = as.untokenisedChemicalNameLowerCase;
 			String untokenisedChemicalName = as.untokenisedChemicalName;
 			int wordLength = untokenisedChemicalNameLowerCase.length();
-			String firstTwoLetters =null;
+			String lastTwoLetters =null;
 			if (wordLength >=2){
-				firstTwoLetters = untokenisedChemicalNameLowerCase.substring(0,2);
+				lastTwoLetters = untokenisedChemicalNameLowerCase.substring(wordLength-2);
 			}
 	        if (chemAutomaton.isAccept(as.state)){
 	        	if (wordLength <= wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is worthy of consideration
@@ -117,18 +119,18 @@ public class ParseRules {
 	        for (char annotationCharacter : stateSymbols) {
 	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict.get(annotationCharacter);
+	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict_TokensByLastTwoLetters.get(annotationCharacter);
 	                if (possibleTokenisationsMap != null) {
 	                    List<String> possibleTokenisations = null;
-	                    if (firstTwoLetters != null) {
-	                        possibleTokenisations = possibleTokenisationsMap.get(firstTwoLetters);
+	                    if (lastTwoLetters != null) {
+	                        possibleTokenisations = possibleTokenisationsMap.get(lastTwoLetters);
 	                    }
 	                    if (possibleTokenisations != null) {//next could be a token
 	                        for (String possibleTokenisation : possibleTokenisations) {
-	                            if (untokenisedChemicalNameLowerCase.startsWith(possibleTokenisation)) {
+	                            if (untokenisedChemicalNameLowerCase.endsWith(possibleTokenisation)) {
 	                                AnnotatorState newAs = new AnnotatorState();
-	                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(possibleTokenisation.length());
-	                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(possibleTokenisation.length());
+	                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(0, wordLength - possibleTokenisation.length());
+	                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(0, wordLength - possibleTokenisation.length());
 	                                newAs.tokens = new ArrayList<String>(as.tokens);
 	                                newAs.tokens.add(possibleTokenisation);
 	                                newAs.annot = new ArrayList<Character>(as.annot);
@@ -140,16 +142,16 @@ public class ParseRules {
 	                        }
 	                    }
 	                }
-	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDict.get(annotationCharacter);
+	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDictReversed.get(annotationCharacter);
 	                if (possibleAutomata != null) {//next could be a regex
 	                    for (RunAutomaton automaton : possibleAutomata) {
-	                        int matchLength = automaton.run(untokenisedChemicalName, 0);
+	                        int matchLength = runInReverse(automaton, untokenisedChemicalName);
 	                    	if (matchLength != -1){//matchLength = -1 means it did not match at the start of the string.
 	                            AnnotatorState newAs = new AnnotatorState();
-	                            newAs.untokenisedChemicalName =  untokenisedChemicalName.substring(matchLength);
-	                            newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(matchLength);
+	                            newAs.untokenisedChemicalName =  untokenisedChemicalName.substring(0, wordLength - matchLength);
+	                            newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(0, wordLength - matchLength);
 	                            newAs.tokens = new ArrayList<String>(as.tokens);
-	                            newAs.tokens.add(untokenisedChemicalName.substring(0, matchLength));
+	                            newAs.tokens.add(untokenisedChemicalName.substring(wordLength - matchLength));
 	                            newAs.annot = new ArrayList<Character>(as.annot);
 	                            newAs.annot.add(annotationCharacter);
 	                            newAs.state = potentialNextState;
@@ -158,14 +160,14 @@ public class ParseRules {
 	                        }
 	                    }
 	                }
-	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDict.get(annotationCharacter);
+	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDictReversed.get(annotationCharacter);
 	                if (possibleRegexes != null) {//next could be a regex
 	                    for (Pattern pattern : possibleRegexes) {
 	                        Matcher mat = pattern.matcher(untokenisedChemicalName);
-	                        if (mat.lookingAt()) {//match at start
+	                        if (mat.find()) {//matches at end
 	                            AnnotatorState newAs = new AnnotatorState();
-	                            newAs.untokenisedChemicalName =  untokenisedChemicalName.substring(mat.group(0).length());
-	                            newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(mat.group(0).length());
+	                            newAs.untokenisedChemicalName =  untokenisedChemicalName.substring(0, wordLength - mat.group(0).length());
+	                            newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(0, wordLength - mat.group(0).length());
 	                            newAs.tokens = new ArrayList<String>(as.tokens);
 	                            newAs.tokens.add(mat.group(0));
 	                            newAs.annot = new ArrayList<Character>(as.annot);
@@ -189,6 +191,40 @@ public class ParseRules {
 				uninterpretableName=as.untokenisedChemicalName;//all acceptable annotator states found should have the same untokenisedName
 			}
 		}
+		inverseParseTokens(outputList);
 		return new ParseRulesResults(outputList, uninterpretableName, unparseableName);
+	}
+
+	/**
+	 * Returns the length of the longest accepted run of the given string
+	 * starting at the end of the string.
+	 * @param automaton 
+	 * @param s the string
+	 * @return length of the longest accepted run, -1 if no run is accepted
+	 */
+	private int runInReverse(RunAutomaton automaton, String s) {
+		int state = automaton.getInitialState();
+		int l = s.length();
+		int max = -1;
+		for (int pos = l -1; ; pos--) {
+			if (automaton.isAccept(state)){
+				max = l -1 - pos;
+			}
+			if (pos == -1){
+				break;
+			}
+			state = automaton.step(state, s.charAt(pos));
+			if (state == -1){
+				break;
+			}
+		}
+		return max;
+	}
+
+	private void inverseParseTokens(List<ParseTokens> outputList) {
+		for (ParseTokens parseTokens : outputList) {
+			Collections.reverse(parseTokens.getAnnotations());
+			Collections.reverse(parseTokens.getTokens());
+		}
 	}
 }

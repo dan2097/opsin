@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
@@ -23,10 +24,14 @@ class AutomatonInitialiser {
 	 * resource folder will not typically be writable)
 	 * @param automatonName : A name for the automaton so that it can it can be saved/loaded from disk
 	 * @param regex : the regex from which to build the RunAutomaton
+	 * @param reverseAutomaton : should the automaton be reversed
 	 * @param tableize: if true, a transition table is created which makes the run method faster in return of a higher memory usage (adds ~256kb)
 	 * @return A RunAutomaton, may have been built from scratch or loaded from a file
 	 */
-	static RunAutomaton getAutomaton(String automatonName, String regex, boolean tableize) {
+	static RunAutomaton getAutomaton(String automatonName, String regex, boolean tableize, boolean reverseAutomaton) {
+		if (reverseAutomaton){
+			automatonName+="_reversed_";
+		}
 		String currentRegexHash =Integer.toString(regex.hashCode());
 		try {
 			/*
@@ -43,6 +48,19 @@ class AutomatonInitialiser {
 			//automaton could not be loaded either because the regex hash could not be loaded, the hashes did not match or the automaton could not be loaded
 		}
 		Automaton a = new RegExp(regex).toAutomaton();
+		if (reverseAutomaton){
+		    try {
+		    	@SuppressWarnings("unchecked")
+				Class specialOperations = Class.forName("dk.brics.automaton.SpecialOperations");
+		    	@SuppressWarnings("unchecked")
+				Method reverse =  specialOperations.getDeclaredMethod("reverse", new Class[]{Automaton.class});
+				reverse.setAccessible(true);
+				reverse.invoke(specialOperations, a);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				throw new RuntimeException("Unable to reverse automaton due to a reflection failure");
+			}
+		}
 		RunAutomaton ra = new RunAutomaton(a, tableize);
 		try {
 			FileOutputStream regexHashFOS =(FileOutputStream) resourceGetter.getOutputStream(automatonName + "RegexHash.txt");

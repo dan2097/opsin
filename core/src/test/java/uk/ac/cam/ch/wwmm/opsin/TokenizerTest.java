@@ -14,7 +14,7 @@ public class TokenizerTest {
 	@BeforeClass
 	public static void  setUp() throws Exception {
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
-		tokenizer = new Tokeniser(new ParseRules(new TokenManager(rg),rg));
+		tokenizer = new Tokeniser(new ParseRules(new ResourceManager(rg)));
 	}
 	
 	@Test
