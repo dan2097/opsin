@@ -68,23 +68,20 @@ class Parser {
 	private final Tokeniser tokeniser;
 	/**The rules by which words are grouped together (e.g. in functional class nomenclature)*/
 	private final WordRules wordRules;
-	/**Performs finite-state allocation of roles ("annotations") to tokens.*/
-	private final ParseRules parseRules;
 	/**Holds the various tokens used.*/
-	private final TokenManager tokenManager;
+	private final ResourceManager resourceManager;
 	
 	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
 
 	/**Initialises the parser.
-	 * @param tokenManager
-	 * @param parseRules
+	 * @param resourceManager
+	 * @param tokeniser
 	 * @param wordRules
 	 */
-	Parser(WordRules wordRules, ParseRules parseRules, TokenManager tokenManager) {
+	Parser(WordRules wordRules, Tokeniser tokeniser, ResourceManager resourceManager) {
 		this.wordRules =wordRules;
-		this.parseRules = parseRules;
-		this.tokenManager =tokenManager;
-		this.tokeniser = new Tokeniser(parseRules);
+		this.resourceManager = resourceManager;
+		this.tokeniser = tokeniser;
 	}
 
 	/**Parses a chemical name to an XML representation of the parse.
@@ -107,7 +104,7 @@ class Parser {
 		}
 		boolean allowSpaceRemoval = parse ==null ? true : false;
 		if (parse == null){
-			parse = tokeniser.tokenize(name, true);
+			parse = tokeniser.tokenize(name , true);
 		}
 		
 		/* For cases where any of the parse's parseWords contain multiple annotations create a
@@ -160,7 +157,7 @@ class Parser {
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
 				}
 				for(ParseTokens pt : pw.getParseTokens()) {
-					writeWordXML(word, pw, pt.getTokens(), parseRules.chunkAnnotations(pt.getAnnotations()));
+					writeWordXML(word, pw, pt.getTokens(), tokeniser.chunkAnnotations(pt.getAnnotations()));
 				}
 			}
 			/* All words are placed into a wordRule.
@@ -203,7 +200,7 @@ class Parser {
                 chunk = new Element(SUBSTITUENT_EL);
                 wordEl.appendChild(chunk);
             }
-            Element tokenElement = tokenManager.makeTokenElement(token,
+            Element tokenElement = resourceManager.makeTokenElement(token,
                     annotations.get(annotNumber).get(annotPos));
             if (tokenElement != null) {//null for tokens that have ignoreWhenWritingXML set
                 chunk.appendChild(tokenElement);

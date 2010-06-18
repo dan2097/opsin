@@ -1,4 +1,5 @@
 relre:src/main/java/dl/*
+relre:resources/*
 relre:target/*
 relre:core/target/*
 relre:inchi/target/*

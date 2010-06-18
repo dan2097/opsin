@@ -83,12 +83,13 @@ public class NameToStructure {
 
 			//Allows retrieving of OPSIN resources
 			ResourceGetter resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
-			TokenManager tokenManager = new TokenManager(resourceGetter);
+			ResourceManager resourceManager = new ResourceManager(resourceGetter);
 			WordRules wordRules = new WordRules(resourceGetter);
-			parseRules = new ParseRules(tokenManager, resourceGetter);
-			parser = new Parser(wordRules, parseRules, tokenManager);
+			parseRules = new ParseRules(resourceManager);
+			Tokeniser tokeniser = new Tokeniser(parseRules);
+			parser = new Parser(wordRules, tokeniser, resourceManager);
 
-			postProcessor = new PostProcessor(tokenManager);
+			postProcessor = new PostProcessor(resourceManager);
 
 			sBuilder = new SMILESFragmentBuilder();
 			cmlBuilder = new CMLFragmentBuilder(resourceGetter);

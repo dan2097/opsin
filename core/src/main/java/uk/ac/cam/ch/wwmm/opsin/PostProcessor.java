@@ -84,10 +84,10 @@ class PostProcessor {
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
-	private final TokenManager tokenManager;
+	private final ResourceManager resourceManager;
 
-	PostProcessor(TokenManager tokenManager) {
-		this.tokenManager =tokenManager;
+	PostProcessor(ResourceManager resourceManager) {
+		this.resourceManager = resourceManager;
 	}
 
 	/** The master method, postprocesses a parse result.
@@ -144,7 +144,7 @@ class PostProcessor {
 			Element nextEl = (Element)XOMTools.getNextSibling(apparentMultiplier);
 			if(nextEl !=null && nextEl.getLocalName().equals(GROUP_EL) && nextEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){//detects ambiguous use of things like tetradeca
 				String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
-				HashMap<String, HashMap<Character, Token>> tokenDict =tokenManager.tokenDict;
+				HashMap<String, HashMap<Character, Token>> tokenDict =resourceManager.tokenDict;
 				HashMap<Character,Token> tokenMap = tokenDict.get(multiplierAndGroup);
 				if (tokenMap !=null){
 					Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
