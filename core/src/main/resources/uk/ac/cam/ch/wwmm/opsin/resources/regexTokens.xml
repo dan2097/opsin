@@ -27,15 +27,14 @@
   <regex name="%superScriptedLocant%" regex="(\^%locant%(\^\^)?|\^?%openBracket%%locant%%closeBracket%|\~%locant%\~)"/><!--as superScriptedNumber but locant instead of number -->
 
 <!--Assembles the rather large regex for detecting all locant variants-->
-  <regex name="%cistrans%" regex="([rct]-)"/><!--relative/cis/trans descriptor-->
   <regex name="%greek%" regex="([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[gG][aA][mM][mM][aA]|[dD][eE][lL][tT][aA]|[eE][pP][sS][iI][lL][oO][nN]|[zZ][eE][tT][aA]|[eE][tT][aA]|[oO][mM][eE][gG][aA]'?)"/>
 
   <regex name="%locantTypes%" regex="(%locant%(-%elementSymbol%'*)?|%elementSymbol%'*(%locant%|%superScriptedLocant%)?|%greek%)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N' etc.-->
   <regex name="%locantTypesOptionalHyphen%" regex="(%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%)|%greek%)"/><!--subset that do not end with a letter-->
   <regex name="%indicatedHydrogen%" regex="(%locant%H)"/>
   <regex name="%compoundLocantOrIndicatedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
-  <regex name="%allLocantForms%" regex="(%cistrans%?%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>
-  <regex name="%formsWhereHyphenIsOptional%" regex="(%cistrans%?(%locantTypes%%compoundLocantOrIndicatedHydrogen%|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
+  <regex name="%allLocantForms%" regex="(%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>
+  <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%%compoundLocantOrIndicatedHydrogen%|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
   <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" determinise="yes" />
 
@@ -68,7 +67,8 @@
   <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" determinise="yes"/>
   <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" determinise="yes"/>
-  <regexToken regex="(rel-)?%openBracket%%locantTypes%?([EZez]|[RSrs]\*?|RS)(,%locantTypes%?([EZez]|[RSrs]\*?|RS))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
+  <regexToken regex="(rel-|rac-)?%openBracket%%locantTypes%?([EZez]|[RSrs]\*?|RS|SR)(,%locantTypes%?([EZez]|[RSrs]\*?|RS|SR))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
+  <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="¼" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
   <regexToken regex="%locant%,%locant%(:%locant%,%locant%)*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
   <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="%locant%,%locant%'+-?" symbol="½" tagname="spiroLocant" determinise="yes"/>

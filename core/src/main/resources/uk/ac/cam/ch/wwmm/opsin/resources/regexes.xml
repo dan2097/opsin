@@ -107,7 +107,8 @@ does not define a CFG.
   <regex name="%dispiroter%" value="¿"/>
   <regex name="%spiro%" value="⌐"/>
   <regex name="%spiroLocant%" value="½"/>
-  <!--up to ascii 171 used -->
+  <regex name="%relativeCisTrans%" value="¼"/>
+  <!--up to ascii 172 used -->
 
 <!-- composite regexes-->
 
@@ -136,7 +137,7 @@ does not define a CFG.
   <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)" />
   <regex name="%rootSuffix%" value= "(%suffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%)" />
   <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%infixedPrefixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%)|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
-  <regex name="%suffixGroup%" value="(%optLocantGroup%?%unlocantedSuffixGroup%)"/>
+  <regex name="%suffixGroup%" value="((%relativeCisTrans%|%optLocantGroup%)?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%{0,2}%multiplier%?%openBracket%%hyphen%?)"/>
   <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="((%heteroReplacement%|%hydroGroup%)*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%heteroReplacement%*)"/><!--bigCapitalH before lambdaConvention is preferred. Heteroatomreplacement should not really be after indicated hydrogen-->
@@ -214,7 +215,7 @@ does not define a CFG.
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|((%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%)|%fusedRingSystem%|%polycyclicSpiroGroup%)(%inlineEndings%|%conjunctiveSideChainInline%)|%fusedRingSystemFromTrivialRingSubstituent%)"/>
   <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
   <regex name="%subsituentBody%" value= "(%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%|%hydroGroup%)"/>
-  <regex name="%substituent%" value= "(%locantOpenBracket%*%stereochemistry%*%newLocantGroupNoStartingHyphen%?%multiplier%?%subsituentBody%%closeBracket%*%interSubstituentHyphen%?%endOfSubstituent%)"/>
+  <regex name="%substituent%" value= "(%locantOpenBracket%*%stereochemistry%*(%relativeCisTrans%|%newLocantGroupNoStartingHyphen%)?%multiplier%?%subsituentBody%%closeBracket%*%interSubstituentHyphen%?%endOfSubstituent%)"/>
 
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>

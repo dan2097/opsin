@@ -292,6 +292,9 @@ class XmlDeclarations {
 	/**Indicates the locant was made from an ortho/meta/para term*/
 	static final String ORTHOMETAPARA_TYPE_VAL ="orthoMetaPara";
 	
+	/**This stereochemistry element conveys relative cis/trans stereochemisty e.g. r-1, c-2, t-3*/
+	static final String RELATIVECISTRANS_TYPE_VAL ="relativeCisTrans";
+	
 	/**Indicates the group should be, at least in part, cyclic*/
 	static final String RING_TYPE_VAL ="ring";
 	

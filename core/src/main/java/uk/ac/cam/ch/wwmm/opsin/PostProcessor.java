@@ -460,9 +460,9 @@ class PostProcessor {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				String txt = stereoChemistryElement.getValue();
 				if (txt.startsWith("rel-") || txt.contains("*")){
-					//currently unsupported
+					throw new PostProcessingException("Relative stereochemistry is not yet supported");
 				}
-				else{
+				if (!txt.startsWith("rac-")){
 					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
 					String[] stereoChemistryDescriptors = matchComma.split(txt);
                     for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
