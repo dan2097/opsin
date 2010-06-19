@@ -56,7 +56,6 @@ class PreStructureBuilder {
 
 	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
 	private final Pattern matchBracketedEntryInLocant =Pattern.compile("[\\[\\(\\{].*[\\]\\)\\}]");
-	private final Pattern matchCisTransInLocants =Pattern.compile("[rct]-");
 	private final Pattern matchColon =Pattern.compile(":");
 	private final Pattern matchSemiColon =Pattern.compile(";");
 	private final Pattern matchComma =Pattern.compile(",");
@@ -318,18 +317,6 @@ class PreStructureBuilder {
 				}
 				while (matches.find());
 				locantText =matchBracketedEntryInLocant.matcher(locantText).replaceAll("");
-			}
-			
-			/*
-			 * Strip out cis/trans information built into locant - currently unhandled
-			 */
-			matches =matchCisTransInLocants.matcher(locantText);
-			if (matches.find()){
-				do {
-					//currently do nothing
-				}
-				while (matches.find());
-				locantText =matches.replaceAll("");
 			}
 			XOMTools.setTextChild(locant, locantText);
 
