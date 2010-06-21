@@ -3946,7 +3946,7 @@ class PreStructureBuilder {
 			}
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
 				if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent && (XOMTools.getNextSibling(subOrBracket)==null || locants.size()>=2)){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
-					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster){
+					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
 						Element locant = locants.remove(0);
 						if (matchComma.split(locant.getValue()).length!=1){
 							throw new PostProcessingException("Multiplier and locant count failed to agree; All locants could not be assigned!");
@@ -4008,7 +4008,7 @@ class PreStructureBuilder {
 				boolean assignLocants =false;
 				boolean wordLevelLocants =false;
 				if (XOMTools.getNextSibling(subOrBracket)==null && WordType.valueOf(word.getAttributeValue(TYPE_ATR))==WordType.substituent){//something like O,S-dimethyl phosphorothioate
-					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster){
+					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
 						wordLevelLocants =true;
 					}
 				}

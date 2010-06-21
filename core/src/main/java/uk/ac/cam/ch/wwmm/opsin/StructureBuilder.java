@@ -1109,9 +1109,169 @@ class StructureBuilder {
 		}
 	}
 
+	/**
+	 * Builds acetals/ketals/hemiacetals/hemiketals and chalcogen analogues
+	 * The distinction between acetals and ketals is not enforced (ketals are a subset of acetals)
+	 * @param state
+	 * @param words
+	 * @throws StructureBuildingException
+	 */
 	private void buildAcetal(BuildState state, List<Element> words) throws StructureBuildingException {
-		throw new StructureBuildingException("Not yet Supported");
-		//TODO Add support for acetal/ketal/hemiketal/hemiacetal
+		for (int i = 0; i < words.size()-1; i++) {
+			resolveWordOrBracket(state, words.get(i));
+		}
+		BuildResults substituentsBr = new BuildResults();
+		for (int i = 1; i < words.size()-1; i++) {
+			Element currentWord = words.get(i);
+			BuildResults substituentBr = new BuildResults(state, currentWord);
+			int outAtomCount = substituentBr.getOutAtomCount();
+			if (outAtomCount ==1){
+				String locantForSubstituent = currentWord.getAttributeValue(LOCANT_ATR);
+				if (locantForSubstituent!=null){
+					substituentBr.getFirstOutAtom().setLocant(locantForSubstituent);
+				}
+			}
+			else if (outAtomCount ==0){
+				throw new StructureBuildingException("Substituent was expected to have at least one outAtom");
+			}
+			substituentsBr.mergeBuildResults(substituentBr);
+		}	
+		Element rightMostGroup = findRightMostGroupInWordOrWordRule(words.get(0));
+		Fragment rootFragment = state.xmlFragmentMap.get(rightMostGroup);//the group which will be modified
+		List<Atom> carbonylOxygen= findCarbonylOxygens(rootFragment, new ArrayList<String>());
+		Element functionalWord = words.get(words.size()-1);
+		List<Element> functionalClasses = XOMTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALCLASS_EL);
+		if (functionalClasses.size()!=1){
+			throw new StructureBuildingException("OPSIN bug: unable to find acetal functionalClass");
+		}
+		Element functionalClassEl = functionalClasses.get(0);
+		String functionalClass = functionalClassEl.getValue();
+		Element beforeAcetal = (Element) XOMTools.getPreviousSibling(functionalClassEl);
+		int numberOfAcetals =1;
+		List<String> elements = null;
+		if (beforeAcetal!=null){
+			if (beforeAcetal.getLocalName().equals(MULTIPLIER_EL)){
+				numberOfAcetals = Integer.parseInt(beforeAcetal.getAttributeValue(VALUE_ATR));
+			}
+			else{
+				elements = determineChalcogenReplacementOfAcetal(functionalClassEl);
+				if (elements.size()>2){
+					throw new StructureBuildingException(functionalClass + " only has two oxygen");
+				}
+				if (elements.size()==1){
+					elements.add("O");
+				}
+			}
+		}
+		if (elements==null){
+			elements = new ArrayList<String>();
+			elements.add("O");
+			elements.add("O");
+		}
+
+		if (carbonylOxygen.size() < numberOfAcetals){
+			throw new StructureBuildingException("Insufficient carbonyls to form " + numberOfAcetals +" " + functionalClass );
+		}
+		boolean hemiacetal = functionalClass.contains("hemi");
+		List<Fragment> acetalFrags = new ArrayList<Fragment>();
+		for (int i = 0; i < numberOfAcetals; i++) {
+			acetalFrags.add(formAcetal(state, carbonylOxygen, elements));
+		}
+		int bondsToForm = hemiacetal ? numberOfAcetals : 2*numberOfAcetals;
+		if (substituentsBr.getOutAtomCount()!=bondsToForm){
+			throw new StructureBuildingException("incorrect number of susbtituents when forming " + functionalClass);
+		}
+		connectSubstituentsToAcetal(state, acetalFrags, substituentsBr, hemiacetal);
+	}
+
+	private List<String> determineChalcogenReplacementOfAcetal(Element functionalClassEl) throws StructureBuildingException {
+		Element currentEl = (Element) functionalClassEl.getParent().getChild(0);
+		int multiplier =1;
+		List<String> elements = new ArrayList<String>();
+		while(currentEl !=functionalClassEl){
+			if (currentEl.getLocalName().equals(MULTIPLIER_EL)){
+				multiplier = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
+			}
+			else if (currentEl.getLocalName().equals(GROUP_EL)){
+				for (int i = 0; i < multiplier; i++) {
+					elements.add(currentEl.getAttributeValue(VALUE_ATR));
+				}
+			}
+			else{
+				throw new StructureBuildingException("Unexpected element before acetal");
+			}
+			currentEl =(Element) XOMTools.getNextSibling(currentEl);
+		}
+		return elements;
+	}
+
+	private Fragment formAcetal(BuildState state, List<Atom> carbonylOxygen, List<String> elements) throws StructureBuildingException {
+		Atom neighbouringCarbon = carbonylOxygen.get(0).getAtomNeighbours().get(0);
+		state.fragManager.removeAtomAndAssociatedBonds(carbonylOxygen.get(0));
+		carbonylOxygen.remove(0);
+		Fragment acetalFrag = state.fragManager.buildSMILES(StringTools.stringListToString(elements, "."));
+		FragmentTools.assignElementLocants(acetalFrag, new ArrayList<Fragment>());
+		List<Atom> acetalAtomList = acetalFrag.getAtomList();
+		Atom atom1 = acetalAtomList.get(0);
+		state.fragManager.createBond(neighbouringCarbon, atom1, 1);
+		Atom atom2 = acetalAtomList.get(1);
+		state.fragManager.createBond(neighbouringCarbon, atom2, 1);
+		return acetalFrag;
+	}
+
+	private void connectSubstituentsToAcetal(BuildState state, List<Fragment> acetalFrags, BuildResults subBr, boolean hemiacetal) throws StructureBuildingException {
+		Map<Fragment,Integer> usageMap= new HashMap<Fragment, Integer>();
+		for (int i = subBr.getOutAtomCount() -1; i>=0; i--) {
+			OutAtom out = subBr.getOutAtom(i);
+			subBr.removeOutAtom(i);
+			Atom atomToUse = null;
+			if (out.getLocant()!=null){
+				boolean numericLocant = matchNumericLocant.matcher(out.getLocant()).matches();
+				for (Fragment possibleAcetalFrag : acetalFrags) {
+					if (numericLocant){
+						Atom a  =OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAcetalFrag.getFirstAtom(), out.getLocant());
+						if (a!=null){
+							List<Atom> atomList =  possibleAcetalFrag.getAtomList();
+							if (atomList.get(0).getBonds().size()==1){
+								atomToUse = atomList.get(0);
+								break;
+							}
+							else if (atomList.get(1).getBonds().size()==1){
+								atomToUse = atomList.get(1);
+								break;
+							}
+						}
+					}
+					else if (possibleAcetalFrag.hasLocant(out.getLocant())){
+						atomToUse = possibleAcetalFrag.getAtomByLocantOrThrow(out.getLocant());
+						break;
+					}
+				}
+				if (atomToUse==null){
+					throw new StructureBuildingException("Unable to find suitable acetalFrag");
+				}
+			}
+			else{
+				List<Atom> atomList =  acetalFrags.get(0).getAtomList();
+				if (atomList.get(0).getBonds().size()==1){
+					atomToUse = atomList.get(0);
+				}
+				else if (atomList.get(1).getBonds().size()==1){
+					atomToUse = atomList.get(1);
+				}
+				else{
+					throw new StructureBuildingException("OPSIN bug: unable to find acetal atom");
+				}
+			}
+			Fragment acetalFrag = atomToUse.getFrag();
+			int usage = usageMap.get(acetalFrag) !=null ? usageMap.get(acetalFrag) : 0;
+			state.fragManager.createBond(out.getAtom(), atomToUse, out.getValency());
+			usage++;
+			if (usage >=2 || hemiacetal){
+				acetalFrags.remove(acetalFrag);
+			}
+			usageMap.put(acetalFrag, usage);
+		}
 	}
 
 	private List<Fragment> buildPolymer(BuildState state, List<Element> words) throws StructureBuildingException {

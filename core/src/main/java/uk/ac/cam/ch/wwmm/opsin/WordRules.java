@@ -33,7 +33,6 @@ class WordRules {
 		carbonylDerivative,
 		divalentFunctionalGroup,
 		ester,
-		full,
 		functionalClassEster,
 		functionGroupAsGroup,
 		glycol,
