@@ -31,11 +31,11 @@
     <token value="[Te|2]" labels="none" valType="SMILES">telluride</token>
   </tokenList>
 
-  <tokenList tagname="group" type="functionalClass" subType="functionalClassGroup" symbol="í">
-    <token value="O.O" labels="none" valType="SMILES">acetal</token>
-    <token value="O.O" labels="none" valType="SMILES">ketal</token>
-    <token value="O" labels="none" valType="SMILES">hemiacetal</token>
-    <token value="O" labels="none" valType="SMILES">hemiketal</token>
+  <tokenList tagname="functionalClass" type="functionalClass"  symbol="í">
+    <token value="acetal">acetal</token>
+    <token value="ketal">ketal</token>
+    <token value="hemiacetal">hemiacetal</token>
+    <token value="hemiketal">hemiketal</token>
   </tokenList>
 
   <tokenList tagname="group" type="functionalClass" subType="anhydride" symbol="Ü">
