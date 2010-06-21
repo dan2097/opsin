@@ -111,7 +111,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
   <wordRule name="glycol" type="full">
     <word type="substituent" endsWithRegex="(diyl|ylene)[\]\)\}]*" />
-    <word type="functionalTerm" value="glycol" />
+    <word type="functionalTerm" endsWithRegex="(glycol|fluorohydrin|chlorohydrin|bromohydrin|iodohydrin|cyanohydrin)" functionalGroupType="functionalClass" />
   </wordRule>
 
   <wordRule name="glycolEther" type="full">

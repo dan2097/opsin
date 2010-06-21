@@ -4,7 +4,12 @@
 <!--functional classes typically have hard coded rules in the StructureBuilder detailing their behaviour-->
   <tokenList tagname="functionalClass" type="functionalClass" symbol="æ">
     <token value="ester">ester</token>
-    <token value="glycol">glycol</token>
+    <token value="O">glycol</token>
+    <token value="F">fluorohydrin</token>
+    <token value="Cl">chlorohydrin</token>
+    <token value="Br">bromohydrin</token>
+    <token value="I">iodohydrin</token>
+    <token value="C#N">cyanohydrin</token>
   </tokenList>
 
   <tokenList tagname="group" type="functionalClass" subType="functionalClassGroup" symbol="Æ">
