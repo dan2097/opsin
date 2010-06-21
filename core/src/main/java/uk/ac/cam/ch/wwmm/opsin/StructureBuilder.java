@@ -1035,16 +1035,28 @@ class StructureBuilder {
 		if (wordIndice >= words.size() || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("Glycol functionalTerm word expected");
 		}
-		for (int i = theDiRadical.getOutAtoms().size() -1; i >=0 ; i--) {
-			Atom outAtom = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(0).getAtom(), theDiRadical.getOutAtom(0).getValency());
-			Fragment glycol =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
-			if (theDiRadical.getOutAtom(0).getValency() !=1){
-				throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
-			}
-			theDiRadical.removeOutAtom(0);
-			state.fragManager.createBond(outAtom, glycol.getAtomByIDOrThrow(glycol.getIdOfFirstAtom()), 1);
-			state.fragManager.incorporateFragment(glycol, theDiRadical);
+		List<Element> functionalClassEls = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), FUNCTIONALCLASS_EL);
+		if (functionalClassEls.size()!=1){
+			throw new StructureBuildingException("Glycol functional class not found where expected");
 		}
+		
+		Atom outAtom1 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(0).getAtom(), theDiRadical.getOutAtom(0).getValency());
+		Fragment functionalFrag =state.fragManager.buildSMILES(functionalClassEls.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
+		if (theDiRadical.getOutAtom(0).getValency() !=1){
+			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
+		}
+		state.fragManager.createBond(outAtom1, functionalFrag.getAtomByIDOrThrow(functionalFrag.getIdOfFirstAtom()), 1);
+		state.fragManager.incorporateFragment(functionalFrag, theDiRadical);
+		
+		Atom outAtom2 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(1).getAtom(), theDiRadical.getOutAtom(1).getValency());
+		Fragment hydroxy =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
+		if (theDiRadical.getOutAtom(1).getValency() !=1){
+			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(1).getValency());
+		}
+		state.fragManager.createBond(outAtom2, hydroxy.getAtomByIDOrThrow(hydroxy.getIdOfFirstAtom()), 1);
+		state.fragManager.incorporateFragment(hydroxy, theDiRadical);
+		theDiRadical.removeOutAtom(1);
+		theDiRadical.removeOutAtom(0);
 	}
 	
 
