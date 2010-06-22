@@ -953,7 +953,7 @@ class PostProcessor {
 	 * @throws NumberFormatException 
 	 */
 	private void processSpiroSystem(Element chainGroup, Element spiroEl) throws NumberFormatException, PostProcessingException {
-		int[][] spiroDescriptors = getSpiroDescriptors(spiroEl.getValue());
+		int[][] spiroDescriptors = getSpiroDescriptors(StringTools.removeDashIfPresent(spiroEl.getValue()));
 
 		Element multiplier =(Element)XOMTools.getPreviousSibling(spiroEl);
 		int numberOfSpiros = 1;
@@ -1110,7 +1110,7 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processVonBaeyerSystem(Element chainEl, Element vonBaeyerBracketEl) throws PostProcessingException {
-		String vonBaeyerBracket = vonBaeyerBracketEl.getValue();
+		String vonBaeyerBracket = StringTools.removeDashIfPresent(vonBaeyerBracketEl.getValue());
 		Element multiplier =(Element)XOMTools.getPreviousSibling(vonBaeyerBracketEl);
 		int numberOfRings=Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 		multiplier.detach();

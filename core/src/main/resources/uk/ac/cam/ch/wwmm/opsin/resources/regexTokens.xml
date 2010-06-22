@@ -44,10 +44,10 @@
   <regexToken regex="-" symbol="ä" tagname="hyphen" determinise="yes"/>
   <regexToken regex="%openBracket%" symbol="o" tagname="openbracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="c" tagname="closebracket" determinise="yes"/>
-  <regexToken regex="[sS][pP][iI][rR][oO]-?%openBracket%[0-9]+(\.[0-9]+%superScriptedNumber%?)+%closeBracket%" symbol="S" tagname="spiro" determinise="yes"/>
+  <regexToken regex="[sS][pP][iI][rR][oO]-?%openBracket%[0-9]+(\.[0-9]+%superScriptedNumber%?)+%closeBracket%-?" symbol="S" tagname="spiro" determinise="yes"/>
 
   <regex name="%superScriptedVonBaeyerDescriptor%" regex="(\.[0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|[0-9]+,[0-9]+))"/>
-  <regexToken regex="[cC][yY][cC][lL][oO]-?%openBracket%[0-9]+\.[0-9]+\.[0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%" symbol="B" tagname="vonBaeyer" determinise="yes"/>
+  <regexToken regex="[cC][yY][cC][lL][oO]-?%openBracket%[0-9]+\.[0-9]+\.[0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%-?" symbol="B" tagname="vonBaeyer" determinise="yes"/>
   <regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
   <regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-([a-z]'*)+)"/><!--Numerical locants may be primed if component is multiplied. Primes on letters may occur if parent is multiplied-->
