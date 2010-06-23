@@ -56,12 +56,6 @@
 	    <url>https://maven.ch.cam.ac.uk/m2repo</url>
 	  </repository>
 	</repositories>
-	<distributionManagement>
-	  <site>
-	    <id>apidoc</id>
-	    <url>scp://apidoc.ch.cam.ac.uk/opsin/</url>
-	  </site>
-	</distributionManagement>
 	<build>
 	  <plugins>
 	    <plugin>
