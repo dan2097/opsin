@@ -56,6 +56,12 @@
 	    <url>https://maven.ch.cam.ac.uk/m2repo</url>
 	  </repository>
 	</repositories>
+	<distributionManagement>
+	  <site>
+	    <id>apidoc</id>
+	    <url>scp://apidoc.ch.cam.ac.uk/opsin/</url>
+	  </site>
+	</distributionManagement>
 	<build>
 	  <plugins>
 	    <plugin>
@@ -114,6 +120,9 @@
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>2.1.1</version>
+				<configuration>
+					<stagingDirectory>target/staging/opsin</stagingDirectory>
+				</configuration>
 			</plugin>
 	  </plugins>
 	</build>
