@@ -2,18 +2,14 @@ OPSIN: Open Parser for Systematic IUPAC Nomenclature
 
   OPSIN is a library for converting chemical names, especially organic chemical names, into structures. The default output is CML (Chemical Markup Language) with an optional module provided for direct conversion to InChI.
 
-News
-
-*2010-02-23
-
-  OPSIN 0.6.0 has been released. This release brings many improvements, notably in the areas of stereochemistry, fused ring nomenclature and functional class nomenclature (e.g. support for oxides/anhydrides).
-  Check out the {{{https://sourceforge.net/projects/oscar3-chem/files/opsin/0.6.0/ReleaseNotes.txt/download}release notes}} for more information.
   OPSIN's source no longer resides within OSCAR and instead development is continuing at {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
-  You can grab OPSIN in jar form either from OSCAR3's file section or direct from {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
+  You can grab the latest released version of OPSIN in jar form either from OSCAR3's file section or direct from {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
   
   As OPSIN is now MAVENised the ideal way for a MAVEN project to depend on OPSIN is by adding OPSIN to your pom.xml.
   Released versions of OPSIN are available from {{{http://maven.ch.cam.ac.uk/content/repositories/releases/opsin/} here}}.
   SNAPSHOT versions are available from {{{http://maven.ch.cam.ac.uk/content/repositories/snapshots/opsin/} here}}.
+  
+  OPSIN is available as a web service for demonstration purposes and for light batch processing {{{http://opsin.ch.cam.ac.uk} here}}.
 
 Attribution
 
