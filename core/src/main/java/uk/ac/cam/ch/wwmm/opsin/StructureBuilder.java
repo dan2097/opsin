@@ -80,7 +80,11 @@ class StructureBuilder {
 				buildFunctionalClassEster(state, words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
 			}
 			else if (wordRule == WordRule.amide){
-				buildAmide(state, words);//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide, ethanoic acid amide
+				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide, ethanoic acid amide
+				//already processed by PreStructureBuilder
+				for (Element word : words) {
+					resolveWordOrBracket(state, word);
+				}
 			}
 			else if(wordRule == WordRule.oxide) {
 				buildOxide(state, words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
@@ -110,6 +114,7 @@ class StructureBuilder {
 				rGroups.addAll(buildPolymer(state, words));
 			}
 			else if(wordRule == WordRule.hydrazide) {
+				//e.g. carbonic dihydrazide
 				//already processed by PreStructureBuilder
 				for (Element word : words) {
 					resolveWordOrBracket(state, word);
@@ -378,62 +383,6 @@ class StructureBuilder {
 		if (!words.get(i++).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//ester
 			throw new StructureBuildingException("Number of words different to expectations; did not find ester");
 		}
-	}
-
-	private void buildAmide(BuildState state, List<Element> words) throws StructureBuildingException {
-		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
-			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
-		}
-		BuildResults acidBr = new BuildResults(state, words.get(0));
-		if (acidBr.getFunctionalAtomCount()==0){
-			throw new StructureBuildingException("No functionalAtoms detected!");
-		}
-		int wordIndice =1;
-		
-		if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//"amide"
-			for (int i =0; i < acidBr.getFunctionalAtomCount(); i++) {
-				Atom functionalAtom = acidBr.getFunctionalAtom(i);
-				if (!functionalAtom.getElement().equals("O")){
-					throw new StructureBuildingException("Expected oxygen functional atom found:" + functionalAtom.getElement());
-				}
-				functionalAtom.setElement("N");
-				functionalAtom.replaceLocants("N" +StringTools.multiplyString("'", i));
-			}
-		}
-		else if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){//substituentamide
-			for (; wordIndice < words.size(); wordIndice++) {
-				resolveWordOrBracket(state, words.get(wordIndice));//the substituted amide ([N-]) group
-				List<Element> root = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), ROOT_EL);
-				if (root.size()!=1){
-					throw new StructureBuildingException("Cannot find root element");
-				}
-				Fragment amide = state.xmlFragmentMap.get(root.get(0).getFirstChildElement(GROUP_EL));
-				if (acidBr.getFunctionalAtomCount()==0){
-					throw new StructureBuildingException("Cannot find oxygen to replace with nitrogen for amide formation!");
-				}
-				Atom functionalAtom = acidBr.getFunctionalAtom(0);
-				if (!functionalAtom.getElement().equals("O")){
-					throw new StructureBuildingException("Expected oxygen functional atom found:" + functionalAtom.getElement());
-				}
-				Atom amideNitrogen = null;
-				for (Atom a : amide.getAtomList()) {
-					if (a.getElement().equals("N")){
-						amideNitrogen = a;
-						break;
-					}
-				}
-				if (amideNitrogen ==null){
-					throw new StructureBuildingException("Cannot find nitrogen atom in amide!");
-				}
-				acidBr.removeFunctionalAtom(0);
-				amideNitrogen.setCharge(0);
-				state.fragManager.replaceTerminalAtomWithFragment(functionalAtom, amideNitrogen);
-			}
-		}
-		if (wordIndice +1 < words.size()){
-			throw new StructureBuildingException("More words than expected when applying amide word rule!");
-		}
-		resolveWordOrBracket(state, words.get(0));//the group that had amide functionality added
 	}
 	
 	/**

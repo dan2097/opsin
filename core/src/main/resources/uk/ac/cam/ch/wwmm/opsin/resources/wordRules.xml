@@ -36,11 +36,17 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
   <wordRule name="ester" type="full">
     <word type="substituent" />
-    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S(ate|amide|ite)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="amide" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[NH2-]"/>
+  </wordRule>
+  
+  <wordRule name="amide" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+	<word type="substituent" />
     <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[NH2-]"/>
   </wordRule>
 

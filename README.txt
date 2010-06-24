@@ -92,9 +92,11 @@ Conjunctive nomenclature e.g. cyclohexaneethanol
 Fused ring systems e.g. imidazo[4,5-d]pyridine. For a small number of fused ring systems numbering cannot be determined
 Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
-The following functional classes: amides, anhydrides, esters, di/tri/tetra esters, glycols, acids, azides, bromides, chlorides, cyanates, cyanides, fluorides, fulminates, hydrazones, hydroperoxides, hydrazides, imides,
-iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, selenocyanates, thiocyanates, alcohols, selenols, thiols, ethers, glycol ethers, ketones, oxides, oximes, peroxides, selenides,
-selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
+The following functional classes: acids, acetals, alcohols, amides, anhydrides, azides, bromides, chlorides, cyanates, cyanides, esters, di/tri/tetra esters
+ethers, fluorides, fulminates, glycols, glycol ethers, hemiacetals, hemiketal, hydrazones, hydroperoxides, hydrazides, imides, iodides, isocyanates,
+isocyanides, isoselenocyanates, isothiocyanates, ketals, ketones, selenocyanates, thiocyanates, selenols, thiols, oxides, oximes, peroxides, selenides,
+selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones,
+tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
 Greek letters
 Lambda convention
 E/Z/R/S stereochemistry
@@ -110,7 +112,7 @@ Nucleic acids
 Non detachable bridge prefixes e.g. epoxymethano, ethano
 Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 
-The following functional classes: Lactones, sultams, lactams, sultims, lactims, acetals, hemiacetals and ketals
+The following functional classes: Lactones, sultams, lactams, sultims and lactims
 
 ##################################################
 
