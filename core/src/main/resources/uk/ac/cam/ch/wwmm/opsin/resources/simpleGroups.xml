@@ -159,7 +159,7 @@ If you do not want them to support hydro/dehydro put them here-->
   <token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
   <token value="S(=O)(=O)(N)N" labels="none" valType="SMILES" functionalIDs="4,5">sulfamide</token>
   <token value="[SH2]=N" labels="none" valType="SMILES">sulfilimine</token>
-  <token value="N=S(O)(O)" labels="none" valType="SMILES">sulfimide</token>
+  <token value="N=S" labels="none" valType="SMILES">sulfimide</token>
   <token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">sulfite</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
   <token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfoate</token>

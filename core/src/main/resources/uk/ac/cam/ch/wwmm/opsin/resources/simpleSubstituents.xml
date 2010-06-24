@@ -7,7 +7,7 @@
   <token value="-N=C(O)N" labels="3//2/1" valType="SMILES">3-isoureido</token>
   <token value="-N=C(S)N" labels="3//2/1" valType="SMILES">3-isothioureido</token>
   <token value="-NN=CN=N" labels="5/4/3/2/1" valType="SMILES">5-formazano</token>
-  <token value="-C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N-" labels="none" valType="SMILES">abietamido</token>
+  <token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N-" labels="none" valType="SMILES">abietamido</token>
   <token value="-OC(=O)C" labels="/1//2" valType="SMILES">acetoxyl</token>
   <token value="-NC(=O)C" labels="none" valType="SMILES">acetamino</token>
   <token value="-C#C" labels="none" valType="SMILES">acetenyl</token>
@@ -28,8 +28,8 @@
   <token value="-C(C)(C)CC" labels="none" valType="SMILES">tert-amyl</token>
   <token value="-Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilino</token>
   <token value="-COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
-  <token value="-c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
-  <token value="-c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/"  valType="SMILES">4,4'-benzidino</token>
+  <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
+  <token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/"  valType="SMILES">4,4'-benzidino</token>
   <token value="-B(O)O" labels="none" valType="SMILES">borono</token>
   <token value="-OCCCC" labels="/1/2/3/4" valType="SMILES" usableAsAJoiner="yes">butoxyl</token>
   <token value="-[As](C)C" labels="none" valType="SMILES">cacodyl</token>
