@@ -162,7 +162,8 @@ class PreStructureBuilder {
 	void postProcess(BuildState state, Element elem) throws PostProcessingException, StructureBuildingException {
 		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, WORD_EL);
 		int wordCount =words.size();
-		for (Element word : words) {
+		for (int i = wordCount -1; i>=0; i--) {
+			Element word =words.get(i);
 			String wordRule = OpsinTools.getParentWordRule(word).getAttributeValue(WORDRULE_EL);
 			state.currentWordRule = WordRule.valueOf(wordRule);
 			if (word.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
@@ -894,60 +895,130 @@ class PreStructureBuilder {
 		Element wordRule = OpsinTools.getParentWordRule(word);
 		WordRule wr = WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR));
 		if (wr == WordRule.hydrazide){
-			Element nextWord = (Element) XOMTools.getNextSibling(word);
-			if (nextWord !=null && nextWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
-				Element functionalTerm = nextWord.getFirstChildElement(FUNCTIONALTERM_EL);
-				if (functionalTerm ==null){
-					throw new PostProcessingException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
-				}
-				Element hydrazideGroup = functionalTerm.getFirstChildElement(GROUP_EL);
-				Fragment hydrazide = resolveGroup(state, hydrazideGroup);
-				Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(hydrazideGroup);
-				int hydrazides =1;
-				if (possibleMultiplier!=null){
-					if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
-						throw new PostProcessingException("OPSIN bug: non multiplier found where only a multiplier was expected in hydrazide wordRule");
-					}
-					hydrazides = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
-					possibleMultiplier.detach();
-				}
-				if (functionalTerm.getChildElements().size()!=1){
-					throw new PostProcessingException("Unexpected qualifier to hydrazide functionalTerm");
-				}
-				
-				Element groupToBeModified = finalSubOrRootInWord.getFirstChildElement(GROUP_EL);
-				List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
-				if (oxygenAtoms.size()==0){
-					oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
-				}
-				if (oxygenAtoms.size()==0){
-					List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
-					for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
-						oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
-					}
-				}
-				if (hydrazides > oxygenAtoms.size()){
-					throw new PostProcessingException("Insufficient oxygen to replace with hydrazides in " + finalSubOrRootInWord.getFirstChildElement(GROUP_EL).getValue());
-				}
-				
-				Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
-				if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of hydrazide
-					for (Atom atom : hydrazide.getAtomList()) {
-						atom.clearLocants();
-					}
-				}
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), hydrazide.getFirstAtom());
-				for (int i = 1; i < hydrazides; i++) {
-					Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, StringTools.multiplyString("'", i));
-					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(i), clonedHydrazide.getFirstAtom());
-					state.fragManager.incorporateFragment(clonedHydrazide, oxygenAtoms.get(i).getFrag());
-				}
-				state.fragManager.incorporateFragment(hydrazide, oxygenAtoms.get(0).getFrag());
-				for (Atom oxygen : oxygenAtoms) {
-					removeAssociatedFunctionalAtom(oxygen);
+			processHydrazideFunctionalClassNomenclature(state, finalSubOrRootInWord, ((Element) XOMTools.getNextSibling(word)));
+		}
+		else if (wr == WordRule.amide){
+			Element parentWordRule = (Element) word.getParent();
+			if (parentWordRule.indexOf(word)==0){
+				List<Element> amideWords = XOMTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
+				amideWords.remove(word);
+				for (Element amideWord : amideWords) {
+					processAmideFunctionalClassNomenclature(state, finalSubOrRootInWord, amideWord);
 				}
 			}
-		}		
+			else if (word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){//merge substituent in with an amide e.g. ethanoic acid ethyl amide --> ethanoic acid ethylamide
+				Element amideWord = parentWordRule.getChildElements().get(parentWordRule.getChildElements().size()-1);
+				Elements children = amideWord.getChildElements();
+				for (int j = children.size()-1; j >=0; j--) {
+					Element child = children.get(j);
+					child.detach();
+					word.appendChild(child);
+				}
+				amideWord.detach();
+				word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
+			}
+		}
+	}
+
+
+	/**
+	 * Replaces the appropriate number of functional oxygen atoms with hydrazide fragments
+	 * @param state
+	 * @param acidContainingRoot
+	 * @param word
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
+	private void processHydrazideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element functionalWord) throws PostProcessingException, StructureBuildingException {
+		if (functionalWord !=null && functionalWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+			Element functionalTerm = functionalWord.getFirstChildElement(FUNCTIONALTERM_EL);
+			if (functionalTerm ==null){
+				throw new PostProcessingException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
+			}
+			Element hydrazideGroup = functionalTerm.getFirstChildElement(GROUP_EL);
+			Fragment hydrazide = resolveGroup(state, hydrazideGroup);
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(hydrazideGroup);
+			int hydrazides =1;
+			if (possibleMultiplier!=null){
+				if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+					throw new PostProcessingException("OPSIN bug: non multiplier found where only a multiplier was expected in hydrazide wordRule");
+				}
+				hydrazides = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				possibleMultiplier.detach();
+			}
+			if (functionalTerm.getChildElements().size()!=1){
+				throw new PostProcessingException("Unexpected qualifier to hydrazide functionalTerm");
+			}
+			
+			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
+			List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+			if (oxygenAtoms.size()==0){
+				oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+			}
+			if (oxygenAtoms.size()==0){
+				List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
+				for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
+					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
+				}
+			}
+			if (hydrazides > oxygenAtoms.size()){
+				throw new PostProcessingException("Insufficient oxygen to replace with hydrazides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
+			}
+			
+			Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
+			if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of hydrazide
+				for (Atom atom : hydrazide.getAtomList()) {
+					atom.clearLocants();
+				}
+			}
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), hydrazide.getFirstAtom());
+			removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
+			for (int i = 1; i < hydrazides; i++) {
+				Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, StringTools.multiplyString("'", i));
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(i), clonedHydrazide.getFirstAtom());
+				state.fragManager.incorporateFragment(clonedHydrazide, oxygenAtoms.get(i).getFrag());
+				removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
+			}
+			state.fragManager.incorporateFragment(hydrazide, oxygenAtoms.get(0).getFrag());
+		}
+		else{
+			throw new PostProcessingException("hydrazide word not found where expected, bug?");
+		}
+	}
+	
+	private void processAmideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element amideWord) throws PostProcessingException, StructureBuildingException {
+		Element amideGroup = StructureBuildingMethods.findRightMostGroupInBracket(amideWord);
+		if (amideGroup ==null){
+			throw new PostProcessingException("OPSIN bug: amide group not found where one was expected for amide wordRule");
+		}
+		Fragment amide = state.xmlFragmentMap.get(amideGroup);
+		if (((Element)amideGroup.getParent()).getChildElements().size()!=1){
+			throw new PostProcessingException("Unexpected qualifier to amide");
+		}
+		
+		Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
+		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+		if (oxygenAtoms.size()==0){
+			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+		}
+		if (oxygenAtoms.size()==0){
+			List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
+			for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
+				oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
+			}
+		}
+		if (oxygenAtoms.size()<1){
+			throw new PostProcessingException("Insufficient oxygen to replace with amides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
+		}
+		if (amide.getAtomList().size()!=1){
+			throw new PostProcessingException("OPSIN bug: amide not found where expected");
+		}
+		Atom amideNitrogen = amide.getFirstAtom();
+		amideNitrogen.setCharge(0);
+		amideNitrogen.clearLocants();
+		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), amide.getFirstAtom());
+		state.fragManager.incorporateFragment(amide, oxygenAtoms.get(0).getFrag());
+		removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
 	}
 
 
@@ -3032,14 +3103,7 @@ class PreStructureBuilder {
 			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
-				Element afterGroup = (Element) XOMTools.getNext(group);
-				if (((afterGroup !=null && afterGroup.getLocalName().equals(MULTIPLIER_EL)&& Integer.parseInt(afterGroup.getAttributeValue(VALUE_ATR)) == multiplierVal) || afterGroup==null) &&
-						OpsinTools.getPreviousGroup(group)!=null && ((Element)OpsinTools.getPreviousGroup(group)).getAttribute(ISAMULTIRADICAL_ATR)!=null &&
-						!((Element)XOMTools.getPrevious(beforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
-					//Something like nitrilotrithiotriacetic acid or oxetane-3,3-diyldimethylene:
-					//preceeded by a multiplier that is equal to the multiplier that follows it (or nothing follows it) and the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
-				}
-				else{
+				if (!unsuitableForFormingChainMultiradical(group, beforeGroup)){
 					if (groupValue.equals("methylene")){
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", multiplierVal));
 					}
@@ -3114,6 +3178,28 @@ class PreStructureBuilder {
 			group.addAttribute(new Attribute (ISAMULTIRADICAL_ATR, Integer.toString(totalOutAtoms)));
 		}
 	}
+
+	/**
+	 * Checks for cases where multiplier(methylene) or multiplier(thio) and the like should not be interpreted as one fragment
+	 * Something like nitrilotrithiotriacetic acid or oxetane-3,3-diyldimethylene
+	 * @param group
+	 * @param multiplierBeforeGroup 
+	 * @return
+	 */
+	private boolean unsuitableForFormingChainMultiradical(Element group, Element multiplierBeforeGroup) {
+		Element previousGroup = (Element) OpsinTools.getPreviousGroup(group);
+		if (previousGroup!=null && previousGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null){
+			if (previousGroup.getAttributeValue(ACCEPTSADDITIVEBONDS_ATR)!=null && XOMTools.getPreviousSibling(previousGroup.getParent())!=null){
+				return false;
+			}
+			//the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
+			if (!((Element)XOMTools.getPrevious(multiplierBeforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	/**
 	 * Calculates number of OutAtoms that the resolveSuffixes method will add.
