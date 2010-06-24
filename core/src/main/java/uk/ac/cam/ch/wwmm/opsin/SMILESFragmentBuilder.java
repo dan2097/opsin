@@ -422,10 +422,9 @@ class SMILESFragmentBuilder {
 			FragmentTools.relabelFusedRingSystem(currentFrag);
 		}
 		addBondStereoElements(currentFrag);
-		List<Atom> atomList =currentFrag.getAtomList();
 
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
-			Atom lastAtom =atomList.get(atomList.size()-1);
+			Atom lastAtom = stack.peek().atom;//note that in something like C(=O)- this would be the carbon not the oxygen
 			if (lastCharacter == '#'){
 				currentFrag.addOutAtom(lastAtom, 3, true);
 			}
@@ -447,6 +446,7 @@ class SMILESFragmentBuilder {
 			currentFrag.addOutAtom(currentFrag.getFirstAtom(),3, true);
 		}
 		
+		List<Atom> atomList =currentFrag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null && atom.getLambdaConventionValency() ==null){
 				setupAtomValency(fragManager, atom);
