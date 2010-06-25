@@ -5,7 +5,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  *
  * @param <T>
  */
-public class PropertyKey<T> {
+class PropertyKey<T> {
     private final String name;
 
     public PropertyKey(String name) {

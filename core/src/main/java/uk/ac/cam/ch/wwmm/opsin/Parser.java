@@ -85,12 +85,13 @@ class Parser {
 	}
 
 	/**Parses a chemical name to an XML representation of the parse.
+	 * @param n2sConfig 
 	 *
 	 * @param name The name to parse.
 	 * @return The parse.
 	 * @throws ParsingException If the name is unparsable.
 	 */
-	List<Element> parse(String name) throws ParsingException {
+	List<Element> parse(NameToStructureConfig n2sConfig, String name) throws ParsingException {
 		Parse parse = null;
 		if (name.contains(", ")){
 			try{
@@ -166,7 +167,7 @@ class Parser {
 			 * <wr><wr>Carbonyl cyanide</wr> m-chlorophenyl hydrazone </wr>
 			 */
 			try{
-				wordRules.groupWordsIntoWordRules(moleculeEl, allowSpaceRemoval);
+				wordRules.groupWordsIntoWordRules(n2sConfig, moleculeEl, allowSpaceRemoval);
 				results.add(moleculeEl);
 			}
 			catch (ParsingException e) {

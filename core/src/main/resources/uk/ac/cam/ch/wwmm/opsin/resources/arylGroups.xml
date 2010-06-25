@@ -17,7 +17,7 @@
   <token value="CNCC(O)c1cc(O)c(O)cc1" labels="/////1/2/3//4//5/6" valType="SMILES">adrenalin</token>
   <token value="N1C(=O)NC(=O)C(=O)C(=O)1" labels="1/2//3/4//5//6/" valType="SMILES">alloxan</token>
   <token value="NC(C)Cc1ccccc1" labels="////1/2/3/4/5/6" valType="SMILES">amphetamin</token>
-  <token value="aniline" valType="dbkey">anilin</token>
+  <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilin</token>
   <token value="c1(ccccc1)OC" labels="1/2/3/4/5/6//alpha" valType="SMILES">anisol</token>
   <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10" valType="SMILES">anthracen</token>
   <token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES" addGroup="=O locant9;=O locant10">anthraquinon</token>
@@ -256,7 +256,7 @@
   <token value="c1c(C)ccc(C(C)C)c1O" labels="none" valType="SMILES">thymol</token>
   <token value="c1(ccccc1)C#Cc2ccccc2" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'" valType="SMILES">tolan</token>
   <token value="toluene" valType="dbkey">toluen</token>
-  <token value="aniline" valType="dbkey" addGroup="C locant2">toluidin</token>
+  <token value="Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="C locant2">toluidin</token>
   <token value="[O-]S(=O)(=O)c1ccc(C)cc1" labels="////1/2/3/4//5/6" valType="SMILES" functionalIDs="1">tosylat</token>
   <token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none" valType="SMILES">tribenzamid</token>
   <token value="[cH2]1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b" valType="SMILES">trinden</token>

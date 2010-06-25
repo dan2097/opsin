@@ -61,7 +61,7 @@ class StructureBuilder {
 			state.currentWordRule =wordRule;
 			if(wordRule == WordRule.simple) {
 				for (Element word : words) {
-					if (!word.getLocalName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+					if (!word.getLocalName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && (!state.n2sConfig.isAllowRadicals() || !word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString()))){
 						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'simple' wordRule");
 					}
 					resolveWordOrBracket(state, word);
@@ -144,7 +144,10 @@ class StructureBuilder {
 			rAtom.setElement("R");
 		}
 
-		if (uniFrag.getOutAtoms().size()>0 || uniFrag.getInAtoms().size()>0){
+		if (uniFrag.getInAtoms().size()>0){
+			throw new StructureBuildingException("In atoms as used in multiplicative nomenclature were never used, maybe the name is malformed");
+		}
+		if (uniFrag.getOutAtoms().size()>0 && !state.n2sConfig.isAllowRadicals()){
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		return uniFrag;

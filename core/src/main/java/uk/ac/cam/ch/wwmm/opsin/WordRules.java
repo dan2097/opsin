@@ -203,16 +203,17 @@ class WordRules {
 	private final List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
 
 	/**Takes a molecule element and places the word elements into wordRule elements
+	 * @param n2sConfig 
 	 *
 	 * @param moleculeEl A molecule element with word children
 	 * @param allowSpaceRemoval 
 	 * @throws ParsingException
 	 */
-	void groupWordsIntoWordRules(Element moleculeEl, boolean allowSpaceRemoval) throws ParsingException {
+	void groupWordsIntoWordRules(NameToStructureConfig n2sConfig, Element moleculeEl, boolean allowSpaceRemoval) throws ParsingException {
 		List<Element> wordEls = XOMTools.getChildElementsWithTagName(moleculeEl, WORD_EL);
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
-			if (matchWordRule(wordEls, i, allowSpaceRemoval)){
+			if (matchWordRule(n2sConfig, wordEls, i, allowSpaceRemoval)){
 				i=-1;//if function did something
 			}
 		}
@@ -225,7 +226,7 @@ class WordRules {
 		}
 	}
 
-	private boolean matchWordRule(List<Element> wordEls, int indexOfFirstWord, boolean allowSpaceRemoval) throws ParsingException {
+	private boolean matchWordRule(NameToStructureConfig n2sConfig, List<Element> wordEls, int indexOfFirstWord, boolean allowSpaceRemoval) throws ParsingException {
 		wordRuleLoop: for (WordRuleDescription wordRule : wordRuleList) {
 			int i =indexOfFirstWord;
 			int wordsInWordRule = wordRule.wordDescriptions.size();
@@ -345,6 +346,9 @@ class WordRules {
 					return true;
 				}
 			}
+		}
+		if (n2sConfig.isAllowRadicals() && wordEls.size()==1 && indexOfFirstWord==0 && firstWord.getLocalName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
+			applySimpleWordRule(wordEls, indexOfFirstWord, firstWord);
 		}
 		return false;
 	}

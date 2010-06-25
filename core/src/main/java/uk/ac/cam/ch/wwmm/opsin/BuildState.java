@@ -23,6 +23,7 @@ class BuildState {
 	WordRule currentWordRule = null;
 	final BiDirectionalHashMap xmlFragmentMap;
 	final HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
+	final NameToStructureConfig n2sConfig;
 	final boolean debug = false;
 
 	/**
@@ -79,7 +80,8 @@ class BuildState {
 		}
 	}
 
-	BuildState(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
+	BuildState(NameToStructureConfig n2sConfig, SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
+		this.n2sConfig = n2sConfig;
 		idManager = new IDManager();
 		fragManager = new FragmentManager(sBuilder, cmlBuilder, idManager);
 		xmlFragmentMap = new BiDirectionalHashMap();
