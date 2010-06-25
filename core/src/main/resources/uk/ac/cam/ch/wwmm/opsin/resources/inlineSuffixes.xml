@@ -5,11 +5,15 @@
   <tokenList tagname="suffix" type="inline" symbol="i">
     <token value="oyl" additionalValue="aldehyde">aldehydoyl</token>
     <token value="amido">amido</token>
+    <token value="amido">amidyl</token>
+    <token value="aminyl">aminyl</token>
     <token value="oyl" additionalValue="amide">amoyl</token>
     <token value="oyl" additionalValue="anilide">aniloyl</token>
     <token value="carbonyl">carbonyl</token>
     <token value="io">io</token>
     <token value="amido" additionalValue="aldehyde">imido</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="amido" additionalValue="aldehyde">imidyl</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="iminyl">iminyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
     <token value="selenenyl">selenenyl</token>
@@ -43,6 +47,7 @@
 
   <tokenList tagname="suffix" type="inline" symbol="ÿ"><!--inline suffixes allowing infixes etc.-->
     <token value="amido">amido</token>
+    <token value="amido">amidyl</token>
     <token value="carbonyl">carbonyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
