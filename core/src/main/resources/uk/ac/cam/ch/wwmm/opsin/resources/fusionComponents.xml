@@ -7,6 +7,11 @@
     <token value="benzene" valType="dbkey">benzo</token>
     <token value="benzene" valType="dbkey">benz</token>
   </tokenList>
+  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="¡">
+  <!-- may have front locants-->
+		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8">naphthyridino</token>
+		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7">phenanthrolino</token>
+  </tokenList>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="f">
     <token value="aceanthrylene" valType="dbkey">aceanthryleno</token>
     <token value="acenaphthylene" valType="dbkey">acenaphthyleno</token>
@@ -71,7 +76,6 @@
     <token value="naphthalene" valType="dbkey">naphthaleno</token>
     <token value="naphthalene" valType="dbkey">naphth</token>
     <token value="naphthalene" valType="dbkey">naphtho</token>
-    <token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8">naphthyridino</token>
     <token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k" valType="SMILES">ovaleno</token>
     <token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthreno</token>
     <token value="perimidine" valType="dbkey">perimidino</token>
@@ -81,7 +85,6 @@
     <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthreno</token>
     <token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phenanthridino</token>
     <token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES">phenanthro</token>
-    <token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7">phenanthrolino</token>
     <token value="phenazine" valType="dbkey">phenazino</token>
     <token value="c1cccc2oc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxazino</token>
     <token value="c1cccc2sc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiazino</token>
