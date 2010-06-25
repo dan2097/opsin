@@ -25,8 +25,6 @@
     <token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">arsinolino</token>
     <token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">arsinolizino</token>
     <token value="azulene" valType="dbkey">azuleno</token>
-    <token value="benzene" valType="dbkey">benzo</token>
-    <token value="benzene" valType="dbkey">benz</token>
     <token value="benzene" valType="dbkey">benzeno</token>
     <token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">betacarbolino</token>
     <token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">beta-carbolino</token>
