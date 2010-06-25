@@ -20,7 +20,7 @@ public class CMLFragmentBuilderTest {
 	@Before
 	public void setUp() throws Exception {
 		cmlBuilder = new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/"));
-		state = new BuildState(mock(SMILESFragmentBuilder.class), cmlBuilder);
+		state = new BuildState(mock(NameToStructureConfig.class), mock(SMILESFragmentBuilder.class), cmlBuilder);
 	}
 
 	@Test

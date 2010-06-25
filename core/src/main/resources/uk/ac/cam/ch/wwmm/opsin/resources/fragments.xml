@@ -2232,42 +2232,7 @@ bond (atomRefs2, order (NB must be an integer))
             <bond atomRefs2="a286 a282" order="1"/>
         </bondArray>
     </molecule>
-    <molecule id="aniline">
-        <atomArray>
-            <atom id="a1" elementType="C">
-                <label value="1"/>
-            </atom>
-            <atom id="a2" elementType="C">
-                <label value="2"/>
-            </atom>
-            <atom id="a3" elementType="C">
-                <label value="3"/>
-            </atom>
-            <atom id="a4" elementType="C">
-                <label value="4"/>
-            </atom>
-            <atom id="a5" elementType="C">
-                <label value="5"/>
-            </atom>
-            <atom id="a6" elementType="C">
-                <label value="6"/>
-            </atom>
-            <atom id="a7" elementType="N">
-                <label value="N"/>
-            </atom>
-        </atomArray>
-        <bondArray>
-            <bond atomRefs2="a1 a2" order="2"/>
-            <bond atomRefs2="a2 a3" order="1"/>
-            <bond atomRefs2="a3 a4" order="2"/>
-            <bond atomRefs2="a4 a5" order="1"/>
-            <bond atomRefs2="a5 a6" order="2"/>
-            <bond atomRefs2="a6 a1" order="1"/>
-            <bond atomRefs2="a7 a1" order="1"/>
-        </bondArray>
-    </molecule>
-    
-    <!-- Added by Daniel-->
+
     <molecule id="toluene">
         <atomArray>
             <atom id="a1" elementType="C">

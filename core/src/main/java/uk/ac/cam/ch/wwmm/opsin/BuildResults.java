@@ -35,7 +35,7 @@ class BuildResults {
 		functionalAtoms = new LinkedList<FunctionalAtom>();
 		inAtoms = new LinkedList<InAtom>();
 		fragments = new LinkedHashSet<Fragment>();
-		List<Element> groups = XOMTools.getDescendantElementsWithTagName(wordSubOrBracket, "group");
+		List<Element> groups = XOMTools.getDescendantElementsWithTagName(wordSubOrBracket, XmlDeclarations.GROUP_EL);
 		for (Element group : groups) {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			fragments.add(frag);

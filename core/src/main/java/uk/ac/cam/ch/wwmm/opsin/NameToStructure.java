@@ -120,7 +120,7 @@ public class NameToStructure {
 	}
 
 	/**Parses a chemical name, returning an OpsinResult which represents the molecule.
-	 * This object contains in the status whether the name was parsed succesfully
+	 * This object contains in the status whether the name was parsed successfully
 	 * A message which may contain additional information if the status was warning/failure
 	 * A CML representation of the structure
 	 *
@@ -129,14 +129,31 @@ public class NameToStructure {
 	 * @return OpsinResult
 	 */
 	public OpsinResult parseChemicalName(String name, boolean verbose) {
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setVerbose(verbose);
+		return parseChemicalName(name, n2sConfig);
+	}
+
+	/**Parses a chemical name, returning an OpsinResult which represents the molecule.
+	 * This object contains in the status whether the name was parsed successfully
+	 * A message which may contain additional information if the status was warning/failure
+	 * A CML representation of the structure
+	 *
+	 * @param name The chemical name to parse.
+	 * @param n2sConfig Options to control how OPSIN interprets the name.
+	 * @return OpsinResult
+	 */
+	public OpsinResult parseChemicalName(String name, NameToStructureConfig n2sConfig) {
+		n2sConfig =  n2sConfig.clone();//avoid n2sconfig being modified mid name processing
 		if (name==null){
 			throw new IllegalArgumentException("String given for name was null");
 		}
+		boolean verbose = n2sConfig.isVerbose();
 		String message = "";
 		try {
 			if(verbose) System.out.println(name);
 			String modifiedName = PreProcessor.preProcess(name);
-			List<Element> parses = parser.parse(modifiedName);
+			List<Element> parses = parser.parse(n2sConfig, modifiedName);
 			//if(verbose) for(Element parse : parses) System.out.println(new XOMFormatter().elemToString(parse));
 			Collections.sort(parses, new SortParses());//fewer tokens preferred
 			Fragment frag = null;
@@ -145,7 +162,7 @@ public class NameToStructure {
 					if (verbose && LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					BuildState state = new BuildState(sBuilder, cmlBuilder);
+					BuildState state = new BuildState(n2sConfig, sBuilder, cmlBuilder);
 					postProcessor.postProcess(parse, state);
 					if (verbose && LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));

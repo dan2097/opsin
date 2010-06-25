@@ -1,0 +1,12 @@
+methyl	InChI=1S/CH3/h1H3
+methylidene	InChI=1S/CH2/h1H2
+methylidyne	InChI=1/CH/h1H
+prop-1-yl	InChI=1S/C3H7/c1-3-2/h1,3H2,2H3
+propyl	InChI=1S/C3H7/c1-3-2/h1,3H2,2H3
+prop-2-yl	InChI=1S/C3H7/c1-3-2/h3H,1-2H3
+phenyl	InChI=1S/C6H5/c1-2-4-6-5-3-1/h1-5H
+terephthaloyl	InChI=1S/C8H4O2/c9-5-7-1-2-8(6-10)4-3-7/h1-4H
+nitrilo	InChI=1S/N
+hexanedioylbis(azanylidene)	InChI=1S/C6H8N2O2/c7-5(9)3-1-2-4-6(8)10/h1-4H2
+acetylazanidyl	InChI=1S/C2H3NO/c1-2(3)4/h1H3/q-1
+aniliniumyl	InChI=1S/C6H7N/c7-6-4-2-1-3-5-6/h1-5H,7H2/q+1
