@@ -114,6 +114,7 @@ does not define a CFG.
 
 <!-- UsefulTerms-->
   <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
+  <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
   <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locantGroup%?%cisOrTrans%)(%comma%%locantGroup%?%cisOrTrans%)*|%lightRotation%)%hyphen%?)"/>
   <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locantGroup%?)"/>
@@ -122,8 +123,8 @@ does not define a CFG.
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%locantThatNeedsBrackets%%optionalCloseBracket%%hyphen%?)"/>
   <regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
   <regex name="%infixedInlineSuffix%" value="(%o%?%infixReplacement%%infixableInlineSuffix%|%structuralOpenBracket%%infixReplacement%%infixableInlineSuffix%%structuralCloseBracket%)"/>
-  <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%infixableInlineSuffix%)" />
-  <regex name="%unlocantedInlineSuffixGroup%" value="(%simpleMultiplierGroup%?(%infixedInlineSuffix%|%inlineSuffix%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%))"/>
+  <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%infixableInlineSuffix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%infixableInlineSuffix%%optionalCloseBracket%)" />
+  <regex name="%unlocantedInlineSuffixGroup%" value="(%multiplierNoElidedA%?(%infixedInlineSuffix%|%inlineSuffix%|%optionalOpenBracket%%inlineSuffix%%optionalCloseBracket%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%|%optionalOpenBracket%(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%%optionalCloseBracket%))"/>
   <regex name="%inlineSuffixGroup%" value="(%optLocantGroup%?%unlocantedInlineSuffixGroup%)"/>
   <regex name="%repeatableInlineSuffixGroup%" value="(%optLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
   <regex name="%inlineChargeGroup%" value="(%optLocantGroup%?%multiplier%?%inlineChargeSuffix%)"/>
