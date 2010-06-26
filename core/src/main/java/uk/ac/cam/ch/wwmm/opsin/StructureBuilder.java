@@ -281,6 +281,8 @@ class StructureBuilder {
 		outAtom = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 		substituent2.removeOutAtom(0);
 		state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+		state.xmlFragmentMap.put(functionalGroup.get(0), diValentGroup);//allow this fragment to be referenced by other word rules
+		functionalGroup.get(0).setLocalName(GROUP_EL);
 	}
 
 	private void buildMonovalentFunctionalGroup(BuildState state, List<Element> words) throws StructureBuildingException {
