@@ -9,26 +9,28 @@ import java.util.List;
  *
  */
 class Ring {
-	private List<Atom>  atomSet;
-	private List<Bond>  bondSet;
-	private List<Atom>  cyclicAtomSet;
-	private List<Bond>  cyclicBondSet;
-	private List<Ring>  neighbours = new ArrayList<Ring>();
+	private List<Atom> atomSet = new ArrayList<Atom>();
+	private List<Bond> bondSet;
+	private List<Atom> cyclicAtomSet;
+	private List<Bond> cyclicBondSet;
+	private List<Ring> neighbours = new ArrayList<Ring>();
 
 	private int nFusedBonds = 0;
 	
 	Ring(List<Bond> bondSet) throws StructureBuildingException{
 		if (bondSet==null || bondSet.size()<=0) throw new StructureBuildingException("Bond set is empty");
-		this.bondSet = bondSet;			
-		this.atomSet = new ArrayList<Atom>();
-		
+		this.bondSet = bondSet;
+
 		for(Bond bond: bondSet){
 			Atom atom1 = bond.getFromAtom();				
-			if (!atomSet.contains(atom1)) atomSet.add(atom1);
+			if (!atomSet.contains(atom1)) {
+				atomSet.add(atom1);
+			}
 				
 			Atom atom2 = bond.getToAtom();
-			if (!atomSet.contains(atom2)) atomSet.add(atom2);
-			
+			if (!atomSet.contains(atom2)) {
+				atomSet.add(atom2);
+			}
 		}
 		
 		if (atomSet.size() != bondSet.size()) {
@@ -58,7 +60,7 @@ class Ring {
 	}
 
 	void incrementNumberOfFusedBonds() {
-		this.nFusedBonds++;
+		nFusedBonds++;
 	}
 
 	/**
@@ -66,10 +68,12 @@ class Ring {
 	 * @return List<Bond>
 	 */
 	List<Bond> getFusedBonds(){
-		ArrayList<Bond> bonds = new ArrayList<Bond>();
+		List<Bond> bonds = new ArrayList<Bond>();
 
 		for (Bond bond : bondSet) {
-			if (bond.getFusedRings().size()>0) bonds.add(bond);
+			if (bond.getFusedRings().size()>0) {
+				bonds.add(bond);
+			}
 		}
 		return bonds;
 	}
@@ -91,7 +95,7 @@ class Ring {
 	}
 
 	void addNeighbour(Ring ring) {
-		this.neighbours.add(ring);
+		neighbours.add(ring);
 	}
 
 	/**
@@ -110,7 +114,9 @@ class Ring {
 
 			for (int i=0; i<size()-1; i++){
 				for(Bond bond2 : bondSet){
-					if (cyclicBondSet.contains(bond2)) continue;
+					if (cyclicBondSet.contains(bond2)){
+						continue;
+					}
 					if (bond2.getFromAtom() == atom){
 						cyclicBondSet.add(bond2);
 						atom = bond2.getToAtom();

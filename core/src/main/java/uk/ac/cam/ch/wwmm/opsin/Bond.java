@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.BondStereo;
 
@@ -35,9 +36,9 @@ class Bond {
 	private Element bondStereoElement = null;
 
 	/**
-	 * it the bond is fusion bond it contains the rings that it connects
+	 * If the bond is a fusion bond this will in the fused ring numberer be populated with the rings that it connects
 	 */
-	private final ArrayList<Ring> fusedRings = new ArrayList<Ring>(2);
+	private final List<Ring> fusedRings = new ArrayList<Ring>(2);
 
 	/** DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Creates a new Bond.
@@ -52,12 +53,14 @@ class Bond {
 		this.order = order;
 	}
 
-	ArrayList<Ring> getFusedRings() {
+	List<Ring> getFusedRings() {
 		return fusedRings;
 	}
 
 	void  addFusedRing(Ring ring) {
-		if (fusedRings.size()<2) fusedRings.add(ring);
+		if (fusedRings.size()<2) {
+			fusedRings.add(ring);
+		}
 	}
 
 
