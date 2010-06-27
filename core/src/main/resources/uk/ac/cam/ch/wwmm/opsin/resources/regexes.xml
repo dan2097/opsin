@@ -29,7 +29,7 @@ does not define a CFG.
   <regex name="%openBracket%" value="o"/>
   <regex name="%closeBracket%" value="c"/>
   <regex name="%acidStem%" value="d"/>
-  <regex name="%trivialRingSubstituent%" value="b"/>
+  <regex name="%trivialRingSubstituentInlineOnly%" value="b"/>
   <regex name="%cyclo%" value="C"/>
   <regex name="%vonBaeyer%" value="B"/>
   <regex name="%spiroDescriptor%" value="S"/>
@@ -109,7 +109,8 @@ does not define a CFG.
   <regex name="%spiroLocant%" value="½"/>
   <regex name="%relativeCisTrans%" value="¼"/>
   <regex name="%fusionRingAcceptsFrontLocants%" value="¡"/>
-  <!--up to ascii 173 used -->
+  <regex name="%trivialRingSubstituentAnySuffix%" value="«"/>
+  <!--up to ascii 174 used -->
 
 <!-- composite regexes-->
 
@@ -181,8 +182,8 @@ does not define a CFG.
   <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
   <regex name="%fusionComponent%" value = "(%fusionRing%|(%locantThatNeedsBrackets%|%bracketedLocant%)?%fusionRingAcceptsFrontLocants%|%benzo%|%cycloChainSubstituent%|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
   <regex name="%cyclicUnsaturableHydrocarbonGroup%" value = "(%cyclicUnsaturableHydrocarbon%%unsaturationBlock%)" />
-  <regex name="%trivialRingSubstituentGroup%" value = "(%bracketedLocant%?%trivialRingSubstituent%%unlocantedSuffixGroup%)" /><!-- possibly this term should be replaced by special cases-->
-  <regex name="%trivialRingSubstituentSub%" value = "(%bracketedLocant%?%trivialRingSubstituent%%inlineSuffixGroup%)" />
+  <regex name="%trivialRingSubstituentGroup%" value = "(%bracketedLocant%?%trivialRingSubstituentAnySuffix%%unlocantedSuffixGroup%)" />
+  <regex name="%trivialRingSubstituentSub%" value = "(%bracketedLocant%?(%trivialRingSubstituentAnySuffix%|%trivialRingSubstituentInlineOnly%)%inlineSuffixGroup%)" />
 <!-- allows abbreviated alkanes e.g. bicyclo[2.2.2]octyl instead of bicyclo[2.2.2]octanyl-->
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%)"/>
