@@ -531,8 +531,9 @@ class StructureBuilder {
 	 * @throws StructureBuildingException 
 	 */
 	private void formAppropriateBondToOxideAndAdjustCharges(BuildState state, Atom atomToAddOxideTo, Atom oxideAtom) throws StructureBuildingException {
-		if (ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 2)){
-			if (atomToAddOxideTo.getLambdaConventionValency()==null){
+		Integer maxVal = ValencyChecker.getMaximumValency(atomToAddOxideTo.getElement(), atomToAddOxideTo.getCharge());
+		if (maxVal ==null || (atomToAddOxideTo.getIncomingValency() + atomToAddOxideTo.getOutValency() +2) <= maxVal){
+			if (atomToAddOxideTo.getLambdaConventionValency()==null || !ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 2)){//probably in well formed names 2 protons should always be added but some names use the lambdaConvention to specify the valency after oxide has been applied
 				atomToAddOxideTo.addChargeAndProtons(0, 2);//this is an additive operation, up the proton count by 2
 			}
 			state.fragManager.createBond(atomToAddOxideTo, oxideAtom, 2);
@@ -543,7 +544,8 @@ class StructureBuilder {
 			}
 			atomToAddOxideTo.addChargeAndProtons(1, 1);
 			oxideAtom.setCharge(-1);
-			if (!ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 1)){
+			maxVal = ValencyChecker.getMaximumValency(atomToAddOxideTo.getElement(), atomToAddOxideTo.getCharge());
+			if (maxVal !=null && (atomToAddOxideTo.getIncomingValency() + atomToAddOxideTo.getOutValency() +1) > maxVal){
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
 			}
 			state.fragManager.createBond(atomToAddOxideTo, oxideAtom, 1);
