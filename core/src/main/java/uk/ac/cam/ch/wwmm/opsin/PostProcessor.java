@@ -126,10 +126,6 @@ class PostProcessor {
 		 *  places the elements inbetween within the newly created bracket */
 		while(findAndStructureBrackets(substituentsAndRoot));
 
-		for (int i = substituentsAndRoot.size() -1; i >=0; i--) {
-			removeHydroSubstituents(substituentsAndRoot.get(i), substituentsAndRoot);//this REMOVES substituents just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
-		}
-
 		addOmittedSpaces(moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
 
@@ -1346,8 +1342,8 @@ class PostProcessor {
 		if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
-				if (possibleSuffix.getValue().equals("ol")){
-					throw new PostProcessingException("thiophenol has been incorrectly interpreted as thiophen, ol instead of thio, phen, ol");
+				if (possibleSuffix.getValue().startsWith("ol")){
+					throw new PostProcessingException("thiophenol has been incorrectly interpreted as thiophen, ol instead of thio, phenol");
 				}
 			}
 		}
@@ -1473,116 +1469,6 @@ class PostProcessor {
 				multiplier.appendChild("di");
 				XOMTools.insertBefore(suffix, multiplier);
 			}
-		}
-	}
-
-	/**
-	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
-	 * substituentsAndRoot is updated as appropriate
-	 * @param substituent
-	 * @param substituentsAndRoot 
-	 * @throws PostProcessingException
-	 */
-	private void removeHydroSubstituents(Element substituent, List<Element> substituentsAndRoot) throws PostProcessingException {
-		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
-		if (hydroElements.size() >0 && substituent.getChildElements(GROUP_EL).size()==0){
-			Element hydroSubstituent = substituent;
-			if (hydroElements.size()!=1){
-				throw new PostProcessingException("Unexpected number of hydro elements found in substituent");
-			}
-			Element hydroElement = hydroElements.get(0);
-			String hydroValue = hydroElement.getValue();
-			if (hydroValue.equals("hydro") || hydroValue.equals("dehydro")){
-				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
-				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
-					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
-				}
-				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
-					throw new PostProcessingException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
-				}
-			}
-			Element targetRing =null;
-			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
-			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
-			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
-			if (potentialRing!=null && potentialRing.getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
-				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
-				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && matchComma.split(possibleLocantInFrontOfHydro.getValue()).length==1){
-					//e.g.4-decahydro-1-naphthalenyl
-					targetRing =potentialRing;
-				}
-				else{
-					Element possibleLocantInFrontOfRing =(Element) XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
-					if (possibleLocantInFrontOfRing !=null){
-						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
-							String locantValue = possibleLocantInFrontOfRing.getValue();
-							String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
-							for (String expectedLocant : expectedLocants) {
-								if (locantValue.equals(expectedLocant)){
-									targetRing =potentialRing;
-									break;
-								}
-							}
-						}
-						//check whether the group is a HW system e.g. 1,3-thiazole
-						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
-							String locantValue = possibleLocantInFrontOfRing.getValue();
-							int locants = matchComma.split(locantValue).length;
-							int heteroCount = 0;
-							Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocantInFrontOfRing);
-							while(!currentElem.equals(potentialRing)){
-								if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
-									heteroCount++;
-								} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
-									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
-								}
-								currentElem = (Element)XOMTools.getNextSibling(currentElem);
-							}
-							if (heteroCount==locants){//number of locants must match number
-								targetRing =potentialRing;
-							}
-						}
-						//check whether the group is a benzofused ring e.g. 1,4-benzodioxin
-						if (FUSIONRING_SUBTYPE_VAL.equals(potentialRing.getAttributeValue(SUBTYPE_ATR)) && 
-								(potentialRing.getValue().equals("benzo")|| potentialRing.getValue().equals("benz")) &&
-								!((Element)XOMTools.getNextSibling(potentialRing)).getLocalName().equals(FUSION_EL)){
-							targetRing =potentialRing;
-						}
-					}
-					else{
-						targetRing =potentialRing;
-					}
-				}
-			}
-
-			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
-			if (targetRing ==null){
-				Element nextSubOrRootOrBracketfromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
-				while (!nextSubOrRootOrBracketfromLast.equals(hydroSubstituent)){
-					potentialRing = nextSubOrRootOrBracketfromLast.getFirstChildElement(GROUP_EL);
-					if (potentialRing!=null && potentialRing.getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
-						targetRing =potentialRing;
-						break;
-					}
-					else{
-						nextSubOrRootOrBracketfromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketfromLast);
-					}
-				}
-			}
-			if (targetRing ==null){
-				throw new PostProcessingException("Cannot find ring for hydro substituent to apply to");
-			}
-			//move the children of the hydro substituent
-			Elements children =hydroSubstituent.getChildElements();
-			for (int i = children.size()-1; i >=0 ; i--) {
-				Element child =children.get(i);
-				if (!child.getLocalName().equals(HYPHEN_EL)){
-					child.detach();
-					targetRing.getParent().insertChild(child, 0);
-				}
-			}
-			hydroSubstituent.detach();
-			substituentsAndRoot.remove(hydroSubstituent);
 		}
 	}
 
