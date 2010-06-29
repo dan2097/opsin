@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 
@@ -46,7 +47,7 @@ class StereochemistryHandler {
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
 		for (Element stereoChemistryElement : stereoChemistryEls) {
-			if (stereoChemistryElement.getAttributeValue("locant")!=null){
+			if (stereoChemistryElement.getAttributeValue(LOCANT_ATR)!=null){
 				locantedStereoChemistryEls.add(stereoChemistryElement);
 			}
 			else{
@@ -115,20 +116,20 @@ class StereochemistryHandler {
 	private static void matchStereochemistryToAtomsAndBonds(BuildState state, List<Element> stereoChemistryEls, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) throws StructureBuildingException {
 		for (int i = stereoChemistryEls.size()-1; i >=0 ; i--) {
 			Element stereoChemistryEl = stereoChemistryEls.get(i);
-			String stereoChemistryType =stereoChemistryEl.getAttributeValue("type");
-			if (stereoChemistryType.equals("RorS")){
+			String stereoChemistryType =stereoChemistryEl.getAttributeValue(TYPE_ATR);
+			if (stereoChemistryType.equals(R_OR_S_TYPE_VAL)){
 				assignStereoCentre(state, stereoChemistryEl, atomStereoCentreMap);
 			}
-			else if (stereoChemistryType.equals("EorZ")){
+			else if (stereoChemistryType.equals(E_OR_Z_TYPE_VAL)){
 				assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 			}
-			else if (stereoChemistryType.equals("cisOrTrans")){
+			else if (stereoChemistryType.equals(CISORTRANS_TYPE_VAL)){
 				String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 				if (cisOrTrans.equalsIgnoreCase("cis")){
-					stereoChemistryEl.getAttribute("value").setValue("Z");
+					stereoChemistryEl.getAttribute(VALUE_ATR).setValue("Z");
 				}
 				else if (cisOrTrans.equalsIgnoreCase("trans")){
-					stereoChemistryEl.getAttribute("value").setValue("E");
+					stereoChemistryEl.getAttribute(VALUE_ATR).setValue("E");
 				}
 				else{
 					throw new StructureBuildingException("Unexpected cis/trans stereochemistry type: " +cisOrTrans);
@@ -153,7 +154,7 @@ class StereochemistryHandler {
 	private static void assignStereoCentre(BuildState state,Element stereoChemistryEl, Map<Atom, StereoCentre> atomStereoCentreMap) throws StructureBuildingException {
 		Element parent = (Element) stereoChemistryEl.getParent().getParent();//want to iterate at the level above the containing substituent or bracket
 		//generally the LAST group in this list will be the appropriate groups e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
-		List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, "group");
+		List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, GROUP_EL);
 		String locant = StructureBuildingMethods.getLocant(stereoChemistryEl);
 		String rOrS = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (int i = possibleGroups.size()-1; i >=0; i--) {//groups further right in scope preferable
@@ -177,12 +178,12 @@ class StereochemistryHandler {
 				}
 			}
 		}
-		if (parent.getLocalName().equals("word") && parent.getAttributeValue("type").equals("substituent")){
+		if (parent.getLocalName().equals(WORD_EL) && parent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			//something like (3R,4R,5R)-ethyl 4-acetamido-5-amino-3-(pentan-3-yloxy)cyclohex-1-enecarboxylate
 			//I think this is a violation of the IUPAC rules...but anyway...
-			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), "word", "type", "full");
+			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), WORD_EL, TYPE_ATR, WordType.full.toString());
 			for (Element word : words) {
-				possibleGroups = XOMTools.getDescendantElementsWithTagName(word, "group");
+				possibleGroups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 					if (locant.equals("0")){//undefined locant
@@ -249,7 +250,7 @@ class StereochemistryHandler {
 	private static void assignStereoBond(BuildState state, Element stereoChemistryEl, Map<Bond, StereoBond> bondStereoBondMap) throws StructureBuildingException {
 		Element parent = (Element) stereoChemistryEl.getParent().getParent();//want to iterate at the level above the containing substituent or bracket
 		//generally the LAST group in this list will be the appropriate groups e.g. (2Z)-5-ethyl-6-methylhex-2-ene where the hex-2-ene is the appropriate group
-		List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, "group");
+		List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(parent, GROUP_EL);
 		String locant = StructureBuildingMethods.getLocant(stereoChemistryEl);
 		String eOrZ = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (int i = possibleGroups.size()-1; i >=0; i--) {
@@ -286,11 +287,11 @@ class StereochemistryHandler {
 				}
 			}
 		}
-		if (parent.getLocalName().equals("word") && parent.getAttributeValue("type").equals("substituent")){
+		if (parent.getLocalName().equals(WORD_EL) && parent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			//the element is in front of a substituent and may refer to the full group
-			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), "word", "type", "full");
+			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(((Element)parent.getParent()), WORD_EL, TYPE_ATR, WordType.full.toString());
 			for (Element word : words) {
-				possibleGroups = XOMTools.getDescendantElementsWithTagName(word, "group");
+				possibleGroups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 					if (locant.equals("0")){//undefined locant
@@ -359,7 +360,7 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	private static void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) throws StructureBuildingException {
-		List<Atom> stereoBondAtoms = stereoBond.getStereoAtoms();
+		List<Atom> stereoBondAtoms = stereoBond.getOrderedStereoAtoms();
 		//stereoBondAtoms contains the higher priority atom at one end, the two bond atoms and the higher priority atom at the other end
 		String atomRefs4= "a" + stereoBondAtoms.get(0).getID();
 		atomRefs4 +=" a" + stereoBondAtoms.get(1).getID();
