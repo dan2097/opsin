@@ -30,6 +30,7 @@
   <token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2////3////4/5/6" valType="SMILES" functionalIDs="5,9">quinolinicacid</token>
   <token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2////3////4/5/6" valType="SMILES" functionalIDs="5,9">quinolinic acid</token>
   <token value="c1(O)cc(O)ccc1" labels="1//2/3//4/5/6" valType="SMILES">resorcin</token>
+	<token value="O1[N-][NH+]=CC1(=O)" labels="1/2/3/4/5/" valType="SMILES">sydnone</token>
 	<token value="c1(ccccc1)C" labels="1/2/3/4/5/6/alpha" valType="SMILES">toluol</token>
   <token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/" valType="SMILES">uric</token>
   <token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/" valType="SMILES">uricacid</token>
