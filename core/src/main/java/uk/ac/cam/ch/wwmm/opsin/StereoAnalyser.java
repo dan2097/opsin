@@ -149,20 +149,21 @@ class StereoAnalyser {
 	 */
 	class StereoCentre{
 		private final Atom stereoAtom;
-		private final List<Atom> cipOrderedAtoms;
 		/**
-		 * Creates a stereocentre object from a tetrahedral stereocentre atom and a list of neighbouring atoms in CIP priority (lowest to highest)
+		 * Creates a stereocentre object from a tetrahedral stereocentre atom
 		 * @param stereoAtom
-		 * @param cipOrderedNeighbours
 		 */
-		StereoCentre(Atom stereoAtom, List<Atom> cipOrderedNeighbours) {
+		StereoCentre(Atom stereoAtom) {
 			this.stereoAtom = stereoAtom;
-			this.cipOrderedAtoms = cipOrderedNeighbours;
 		}
-		public Atom getStereoAtom() {
+		Atom getStereoAtom() {
 			return stereoAtom;
 		}
-		public List<Atom> getCipOrderedAtoms() {
+		List<Atom> getCipOrderedAtoms() throws StructureBuildingException {
+			List<Atom> cipOrderedAtoms = getNeighbouringAtomsInCIPOrder(stereoAtom);
+			if (cipOrderedAtoms.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
+				cipOrderedAtoms.add(0, stereoAtom);
+			}
 			return cipOrderedAtoms;
 		}
 	}
@@ -174,10 +175,8 @@ class StereoAnalyser {
 	 */
 	class StereoBond{
 		private final Bond bond;
-		private final List<Atom> stereoAtoms;
-		StereoBond(Bond bond, List<Atom> stereoAtoms) {
+		StereoBond(Bond bond) {
 			this.bond = bond;
-			this.stereoAtoms = stereoAtoms;
 		}
 		Bond getBond() {
 			return bond;
@@ -190,8 +189,20 @@ class StereoAnalyser {
 		 * other atom in bond
 		 * Highest CIP atom on other side
 		 * @return
+		 * @throws StructureBuildingException 
 		 */
-		List<Atom> getStereoAtoms() {
+		List<Atom> getOrderedStereoAtoms() throws StructureBuildingException {
+			Atom a1 = bond.getFromAtom();
+			Atom a2 = bond.getToAtom();
+			List<Atom> cipOrderedNeighbours1 = getNeighbouringAtomsInCIPOrder(a1);
+			List<Atom> cipOrderedNeighbours2 = getNeighbouringAtomsInCIPOrder(a2);
+			cipOrderedNeighbours1.remove(a2);
+			cipOrderedNeighbours2.remove(a1);
+			List<Atom> stereoAtoms = new ArrayList<Atom>();
+			stereoAtoms.add(cipOrderedNeighbours1.get(cipOrderedNeighbours1.size()-1));//highest CIP adjacent to a1
+			stereoAtoms.add(a1);
+			stereoAtoms.add(a2);
+			stereoAtoms.add(cipOrderedNeighbours2.get(cipOrderedNeighbours2.size()-1));//highest CIP adjacent to a2
 			return stereoAtoms;
 		}
 	}
@@ -439,16 +450,7 @@ class StereoAnalyser {
 					}
 				}
 				if (!foundIdenticalNeighbour){
-					neighbours = getNeighbouringAtomsInCIPOrder(atom);
-					if (neighbours.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
-						neighbours.add(0, atom);
-					}
-//					System.out.println("CIP ordered");
-//					for (Atom neighbour  : neighbours) {
-//						System.out.println(neighbour.toCMLAtom().toXML());
-//						System.out.println(mappingToColour.get(neighbour));
-//					}
-					stereoCentres.add(new StereoCentre(atom, neighbours));
+					stereoCentres.add(new StereoCentre(atom));
 				}
 			}
 		}
@@ -504,16 +506,7 @@ class StereoAnalyser {
 						if (neighbours2.size()==2 && mappingToColour.get(neighbours2.get(0)).equals(mappingToColour.get(neighbours2.get(1)))){
 							continue;
 						}
-						neighbours1 = getNeighbouringAtomsInCIPOrder(a1);
-						neighbours2 = getNeighbouringAtomsInCIPOrder(a2);
-						neighbours1.remove(bond.getToAtom());
-						neighbours2.remove(bond.getFromAtom());
-						List<Atom> stereoAtoms = new ArrayList<Atom>();
-						stereoAtoms.add(neighbours1.get(neighbours1.size()-1));//highest CIP adjacent to a1
-						stereoAtoms.add(a1);
-						stereoAtoms.add(a2);
-						stereoAtoms.add(neighbours2.get(neighbours2.size()-1));//highest CIP adjacent to a2
-						stereoBonds.add(new StereoBond(bond, stereoAtoms));
+						stereoBonds.add(new StereoBond(bond));
 					}
 				}
 			}
@@ -523,10 +516,40 @@ class StereoAnalyser {
 	
 	List<Atom> getNeighbouringAtomsInCIPOrder(Atom chiralAtom) throws StructureBuildingException{
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
-		addGhostAtoms();
+		addGhostAtomsForCIPAssignment(chiralAtom);
 		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
 		removeGhostAtoms();
 		return neighbours;
+	}
+	
+	/**
+	 * Adds "ghost" atoms in accordance with the CIP rules for handling double bonds
+	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
+	 * Higher order bonds connected to the chiral atom are not converted in accordance with P-91.1.4.2.4 (IUPAC 2004 guidelines)
+	 * @param chiralAtom Higher order bonds connected to this atom are not touched
+	 * @throws StructureBuildingException
+	 */
+	private void addGhostAtomsForCIPAssignment(Atom chiralAtom) throws StructureBuildingException {
+		Set<Bond> bonds = molecule.getBondSet();
+		for (Bond bond : bonds) {
+			int bondOrder = bond.getOrder();
+			for (int i = bondOrder; i >1; i--) {
+				Atom fromAtom =bond.getFromAtom();
+				Atom toAtom =bond.getToAtom();
+				if (!fromAtom.equals(chiralAtom) && !toAtom.equals(chiralAtom)){
+					Atom ghost1 = new Atom(ghostIdCounter--, fromAtom.getElement(), molecule);
+					Bond b1 = new Bond(ghost1, toAtom, 1);
+					toAtom.addBond(b1);
+					ghost1.addBond(b1);
+					molecule.addAtom(ghost1);
+					Atom ghost2 = new Atom(ghostIdCounter--, toAtom.getElement(), molecule);
+					Bond b2 = new Bond(ghost2, fromAtom, 1);
+					fromAtom.addBond(b2);
+					ghost2.addBond(b2);
+					molecule.addAtom(ghost2);
+				}
+			}
+		}
 	}
 	
 	/**
