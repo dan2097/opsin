@@ -254,7 +254,7 @@ class PreStructureBuilder {
 				resolveSuffixes(state, subOrRoot.getFirstChildElement(GROUP_EL), XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
 
-			removeClarifyingBrackets(brackets, substituentsAndRootAndBrackets);//e.g. (tetramethyl)azanium == tetramethylazanium
+			moveErroneouslyPositionedLocantsAndMultipliers(brackets);//e.g. (tetramethyl)azanium == tetra(methyl)azanium
 			if (word.getChildCount()>1){
 				assignLocantsToMultipliedRootIfPresent(state, (Element) word.getChild(word.getChildCount()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
 			}
@@ -4058,33 +4058,52 @@ class PreStructureBuilder {
 	}
 
 	/**
-	 * Removes brackets that only contain one element.
-	 * Removed brackets are reflected in brackets and substituentsAndRootAndBrackets
+	 * Moves a multiplier out of a bracket if the bracket contains only one substituent
+	 * e.g. (trimethyl) --> tri(methyl).
+	 * The multiplier may have locants e.g. [N,N-bis(2-hydroxyethyl)]
+	 * This is done because OPSIN has no idea what to do with (trimethyl) as there is nothing within the scope to substitute onto!
 	 * @param brackets
-	 * @param substituentsAndRootAndBrackets
 	 */
-	private void removeClarifyingBrackets(List<Element> brackets, List<Element> substituentsAndRootAndBrackets) {
+	private void moveErroneouslyPositionedLocantsAndMultipliers(List<Element> brackets) {
 		for (int i = brackets.size()-1; i >=0; i--) {
 			Element bracket =brackets.get(i);
 			Elements childElements = bracket.getChildElements();
 			boolean hyphenPresent = false;
-			if (childElements.size()==2){
-				for (int j = childElements.size() -1; j >=0; j--) {
+			int childCount = childElements.size();
+			if (childCount==2){
+				for (int j = childCount -1; j >=0; j--) {
 					if (childElements.get(j).getLocalName().equals(HYPHEN_EL)){
 						hyphenPresent=true;
 					}
 				}
 			}
-			if (childElements.size()==1 || hyphenPresent && childElements.size()==2){
-				//this bracket is now unnecesary as implicit brackets have already been added and OPSIN by default substitutes onto the rightmost element
-				for (int j = childElements.size() -1; j >=0; j--) {
-					Element elToBeMoved = childElements.get(j);
-					elToBeMoved.detach();
-					XOMTools.insertAfter(bracket, elToBeMoved);
+			if (childCount==1 || hyphenPresent && childCount==2){
+				Elements substituentContent = childElements.get(0).getChildElements();
+				if (substituentContent.size()>=2){
+					Element locant =null;
+					Element multiplier =null;
+					Element possibleMultiplier = substituentContent.get(0);
+					if (substituentContent.get(0).getLocalName().equals(LOCANT_EL)){//probably erroneous locant
+						locant = substituentContent.get(0);
+						possibleMultiplier = substituentContent.get(1);
+					}
+					if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){//erroneously placed multiplier present
+						multiplier = possibleMultiplier;
+					}
+					if (locant!=null){
+						if (multiplier==null || matchComma.split(locant.getValue()).length == Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR))){
+							locant.detach();
+							XOMTools.insertBefore(childElements.get(0), locant);
+						}
+						else{
+							continue;
+						}
+					}
+					if (multiplier !=null){
+						multiplier.detach();
+						XOMTools.insertBefore(childElements.get(0), multiplier);
+					}
 				}
-				bracket.detach();
-				brackets.remove(i);
-				substituentsAndRootAndBrackets.remove(bracket);
 			}
 		}
 	}
