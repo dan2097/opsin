@@ -23,7 +23,10 @@ class StereoAnalyser {
 	/** The molecule upon which this StereoAnalyser is operating */
 	private final Fragment molecule;
 
-	private final SortByNeighbourColours sortByNeighbourColours;
+	private final AtomColourThenNeighbouringColoursComparator atomColourThenNeighbouringColoursComparator;
+	private final AtomicNumberComparator atomicNumberComparator;
+	private final AtomListCIPComparator atomListCIPComparator;
+	private final ListOfAtomListsCIPComparator listOfAtomListsCIPComparator;
 	
 	/** The id of the next ghost to create*/
 	private int ghostIdCounter = -1;
@@ -212,7 +215,7 @@ class StereoAnalyser {
 	 * @author dl387
 	 *
 	 */
-	private static class SortAtomsByAtomicNumber implements Comparator<Atom> {
+	private class AtomicNumberComparator implements Comparator<Atom> {
 
 	    public int compare(Atom a, Atom b){
 	    	int atomicNumber1 = elementToAtomicNumber.get(a.getElement());
@@ -234,7 +237,7 @@ class StereoAnalyser {
 	 * @author dl387
 	 *
 	 */
-	private class SortByNeighbourColours implements Comparator<Atom> {
+	private class AtomColourThenNeighbouringColoursComparator implements Comparator<Atom> {
 	    public int compare(Atom a, Atom b){
 	    	int colour1 = mappingToColour.get(a);
 	    	int colour2 = mappingToColour.get(b);
@@ -278,12 +281,15 @@ class StereoAnalyser {
 	 */
 	StereoAnalyser(Fragment molecule) throws StructureBuildingException {
 		this.molecule = molecule;
-		sortByNeighbourColours = new SortByNeighbourColours();
+		atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
+		atomicNumberComparator = new AtomicNumberComparator();
+		atomListCIPComparator = new AtomListCIPComparator();
+		listOfAtomListsCIPComparator = new ListOfAtomListsCIPComparator();
 		addGhostAtoms();
 		List<Atom> atomList = molecule.getAtomList();
 		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
 		atomNeighbourColours = new HashMap<Atom,List<Integer>>(atomList.size());
-		Collections.sort(atomList, new SortAtomsByAtomicNumber());
+		Collections.sort(atomList, atomicNumberComparator);
 		populateColoursByAtomicNumber(atomList);
 		
 		boolean changeFound = true;
@@ -292,7 +298,7 @@ class StereoAnalyser {
 				List<Integer> neighbourColours = findColourOfNeighbours(atom);
 				atomNeighbourColours.put(atom, neighbourColours);
 			}
-			Collections.sort(atomList, sortByNeighbourColours);
+			Collections.sort(atomList, atomColourThenNeighbouringColoursComparator);
 			changeFound = populateColoursAndReportIfColoursWereChanged(atomList);
 		}
 		removeGhostAtoms();
@@ -381,7 +387,7 @@ class StereoAnalyser {
 		int atomsSeen =0;
 		boolean changeFound = false;
 		for (Atom atom : atomList) {
-			if (sortByNeighbourColours.compare(previousAtom, atom)!=0){
+			if (atomColourThenNeighbouringColoursComparator.compare(previousAtom, atom)!=0){
 				for (Atom atomOfThisColour : atomsOfThisColour) {
 					if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
 						changeFound =true;
@@ -514,6 +520,12 @@ class StereoAnalyser {
 		return stereoBonds;
 	}
 	
+	/**
+	 * Returns the given atoms neighbours in CIP order from lowest priority to highest priority
+	 * @param chiralAtom
+	 * @return
+	 * @throws StructureBuildingException
+	 */
 	List<Atom> getNeighbouringAtomsInCIPOrder(Atom chiralAtom) throws StructureBuildingException{
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		addGhostAtomsForCIPAssignment(chiralAtom);
@@ -536,7 +548,7 @@ class StereoAnalyser {
 			for (int i = bondOrder; i >1; i--) {
 				Atom fromAtom =bond.getFromAtom();
 				Atom toAtom =bond.getToAtom();
-				if (!fromAtom.equals(chiralAtom) && !toAtom.equals(chiralAtom)){
+				if (!fromAtom.equals(chiralAtom) && !toAtom.equals(chiralAtom)){//P-91.1.4.2.4
 					Atom ghost1 = new Atom(ghostIdCounter--, fromAtom.getElement(), molecule);
 					Bond b1 = new Bond(ghost1, toAtom, 1);
 					toAtom.addBond(b1);
@@ -564,8 +576,8 @@ class StereoAnalyser {
 		}
 
 		public int compare(Atom a, Atom b){
-	    	int atomicNumber1 = elementToAtomicNumber.get(a.getElement());
-	    	int atomicNumber2 = elementToAtomicNumber.get(b.getElement());
+			int atomicNumber1 = elementToAtomicNumber.get(a.getElement());
+			int atomicNumber2 = elementToAtomicNumber.get(b.getElement());
 	    	if (atomicNumber1 > atomicNumber2){
 	    		return 1;
 	    	}
@@ -573,6 +585,30 @@ class StereoAnalyser {
 	    		return -1;
 	    	}
 	    	int currentGhostId = ghostIdCounter; 
+			CipState startingState = prepareInitialCIPState(a, b);
+	    	Queue<CipState> cipStateQueue = new LinkedList<CipState>();
+	    	cipStateQueue.add(startingState);
+	    	/* Go through CIP states in a breadth-first manner:
+	    	 * Neighbours of the given atom/s (if multiple atoms this is because so far the two paths leading to them have been equivalent) are evaluated for both a and b
+	    	 * Neighbours are sorted by CIP priority
+	    	 * Comparisons performed between neighbours of a and neighbours of b (will break if compare!=0)
+	    	 * Degenerate neighbours grouped together
+	    	 * CIP state formed for each list of neighbours and added to queue in order of priority
+	    	 *
+	    	 */
+	    	int compare =0;
+	    	while(!cipStateQueue.isEmpty()){
+	    		CipState currentState = cipStateQueue.remove();
+	    		compare = compareAtNextLevel(currentState, cipStateQueue);
+	    		if (compare!=0){
+	    			break;
+	    		}
+	    	}
+	    	removeAnyGhostAtomsAddedAndCorrectGhostIdCounter(currentGhostId);
+	    	return compare;
+	    }
+
+		private CipState prepareInitialCIPState(Atom a, Atom b) {
 			Set<Atom> visitedAtoms1 = new HashSet<Atom>();
 			visitedAtoms1.add(chiralAtom);
 			Set<Atom> visitedAtoms2 = new HashSet<Atom>();
@@ -594,23 +630,16 @@ class StereoAnalyser {
 			previousAtomToVisitedAtoms1.put(chiralAtom, atomsVisted);
 			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms2 = new HashMap<Atom, Set<Atom>>();
 			previousAtomToVisitedAtoms2.put(chiralAtom, new HashSet<Atom>(atomsVisted));
-
-	    	Queue<CipState> queue = new LinkedList<CipState>();
 	    	CipState startingState = new CipState(previousAtomToVisitedAtoms1, previousAtomToVisitedAtoms2, previousAtoms1, previousAtoms2, nextAtoms1, nextAtoms2);
-	    	queue.add(startingState);
-	    	int compare =0;
-	    	while(!queue.isEmpty()){
-	    		CipState currentState = queue.remove();
-	    		compare = compareAtNextLevel(currentState, queue);
-	    		if (compare!=0){
-	    			break;
-	    		}
-	    	}
-	    	removeAnyGhostAtomsAddedAndCorrectGhostIdCounter(currentGhostId);
-	    	//System.out.println(compare +"___" + a.toCMLAtom().toXML() + "__" +b.toCMLAtom().toXML());
-	    	return compare;
-	    }
+			return startingState;
+		}
 	}
+	
+	/**
+	 * Holds information about what atoms to try next next, how those atoms are reached (to prevent immediate back tracking and to detect cycles)
+	 * @author dl387
+	 *
+	 */
 	private class CipState{
 		CipState(Map<Atom, Set<Atom>> previousAtomToVisitedAtoms1, Map<Atom, Set<Atom>> previousAtomToVisitedAtoms2, 
 				List<Atom> previousAtoms1, List<Atom> previousAtoms2, List<Atom> nextAtoms1, List<Atom> nextAtoms2) {
@@ -629,7 +658,14 @@ class StereoAnalyser {
 		final List<Atom> nextAtoms2;
 	}
 	
-	
+	/**
+	 * Compares the neighbours of the atoms specified in nextAtom1/2 in cipstate.
+	 * Returns the result of the comparison between these neighbours
+	 * If the comparison returned 0 adds new cipstates to the queue
+	 * @param cipState
+	 * @param queue
+	 * @return
+	 */
 	private int compareAtNextLevel(CipState cipState, Queue<CipState> queue) {
 		Map<Atom, Atom> currentToPrevious1 = new HashMap<Atom, Atom>();
 		List<List<List<Atom>>> newNeighbours1 = getNextLevelNeighbours(cipState.previousAtomToVisitedAtoms1, cipState.previousAtoms1, cipState.nextAtoms1, currentToPrevious1);
@@ -643,29 +679,7 @@ class StereoAnalyser {
 
     	List<List<List<Atom>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
     	List<List<List<Atom>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
-//		System.out.println("###############################################");
-//		System.out.println("ONE");
-//		for (List<List<Atom>> list : prioritisedNeighbours1) {
-//			for (List<Atom> list2 : list) {
-//				for (Atom a : list2) {
-//					System.out.println(a.toCMLAtom().toXML());
-//				}
-//				System.out.println("endOfList");
-//			}
-//			System.out.println("endOfListOFLists");
-//		}
-//		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//		System.out.println("TWO");
-//		for (List<List<Atom>> list : prioritisedNeighbours2) {
-//			for (List<Atom> list2 : list) {
-//				for (Atom a : list2) {
-//					System.out.println(a.toCMLAtom().toXML());
-//				}
-//				System.out.println("endOfList");
-//			}
-//			System.out.println("endOfListOFLists");
-//		}
-//		System.out.println("###############################################");
+
     	for (int i = 1; i <= prioritisedNeighbours1.size(); i++) {
     		List<List<Atom>> nextNeighbourLists1 = prioritisedNeighbours1.get(prioritisedNeighbours1.size() -i);
     		List<List<Atom>> nextNeighbourLists2 = prioritisedNeighbours2.get(prioritisedNeighbours2.size() -i);
@@ -688,13 +702,12 @@ class StereoAnalyser {
 	}
 	
 	private int compareNeighboursByCIPpriorityRules(List<List<List<Atom>>> neighbours1, List<List<List<Atom>>> neighbours2){
-		SortNestedLists nestedListComparator = new SortNestedLists();
     	int neighbours1Size = neighbours1.size();
     	int neighbours2Size = neighbours2.size();
     	int differenceInSize = neighbours1Size - neighbours2Size;
     	int maxCommonSize = neighbours1Size > neighbours2Size ? neighbours2Size : neighbours1Size;
     	for (int i = 1; i <= maxCommonSize; i++) {
-			int difference = nestedListComparator.compare(neighbours1.get(neighbours1Size -i), neighbours2.get(neighbours2Size -i));
+			int difference = listOfAtomListsCIPComparator.compare(neighbours1.get(neighbours1Size -i), neighbours2.get(neighbours2Size -i));
 			if (difference >0){
 				return 1;
 			}
@@ -714,9 +727,9 @@ class StereoAnalyser {
 	private List<List<List<Atom>>> getNextLevelNeighbours(Map<Atom,Set<Atom>> previousAtomToVisitedAtoms, List<Atom> previousAtoms, List<Atom> nextAtoms, Map<Atom, Atom> currentToPrevious ) {
 		List<List<List<Atom>>> neighbours = getNextAtomsConvertingRevisitedToGhosts(nextAtoms, previousAtomToVisitedAtoms, previousAtoms, currentToPrevious);
 		for (List<List<Atom>> list : neighbours) {
-			Collections.sort(list, new PrioritiseSortedAtomListComparator());
+			Collections.sort(list, atomListCIPComparator);
 		}
-		Collections.sort(neighbours, new SortNestedLists());
+		Collections.sort(neighbours, listOfAtomListsCIPComparator);
 		return neighbours;
 	}
 	
@@ -730,7 +743,6 @@ class StereoAnalyser {
 	 * @param neighbours
 	 */
 	private List<List<List<Atom>>> formListsWithSamePriority(List<List<List<Atom>>> neighbours) {
-		PrioritiseSortedAtomListComparator prioritiseAtomListComparator = new PrioritiseSortedAtomListComparator();
 		List<List<List<Atom>>> updatedNeighbours  = new LinkedList<List<List<Atom>>>();
 		List<List<Atom>> listsToRemove  = new ArrayList<List<Atom>>();
 		for (List<List<Atom>> neighbourLists : neighbours) {
@@ -739,7 +751,7 @@ class StereoAnalyser {
 				List<List<Atom>> neighbourListsToCombine = new ArrayList<List<Atom>>();
 				List<Atom> primaryAtomList = neighbourLists.get(i);
 				for (int j = i +1; j < neighbourLists.size(); j++) {
-					if (prioritiseAtomListComparator.compare(neighbourLists.get(i), neighbourLists.get(j))==0){
+					if (atomListCIPComparator.compare(neighbourLists.get(i), neighbourLists.get(j))==0){
 						neighbourListsToCombine.add(neighbourLists.get(j));
 					}
 				}
@@ -754,7 +766,7 @@ class StereoAnalyser {
 			//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
 			for (int i = neighbourLists.size()-1; i >=0; i--) {
 				List<Atom> neighbourList = neighbourLists.get(i);
-				Collections.sort(neighbourList, new SortAtomsByAtomicNumber());
+				Collections.sort(neighbourList, atomicNumberComparator);
 				int lastAtomicNumber = Integer.MAX_VALUE;
 				List<Atom> currentAtomList = new ArrayList<Atom>();
 				for (int j = neighbourList.size() -1; j >=0; j--) {
@@ -787,7 +799,7 @@ class StereoAnalyser {
 	 * @author dl387
 	 *
 	 */
-	private class PrioritiseSortedAtomListComparator implements Comparator<List<Atom>> {
+	private class AtomListCIPComparator implements Comparator<List<Atom>> {
 		public int compare(List<Atom> a, List<Atom> b){
 	    	int aSize = a.size();
 	    	int bSize = b.size();
@@ -817,7 +829,7 @@ class StereoAnalyser {
 	 * @author dl387
 	 *
 	 */
-	private class SortNestedLists implements Comparator<List<List<Atom>>> {
+	private class ListOfAtomListsCIPComparator implements Comparator<List<List<Atom>>> {
 		public int compare(List<List<Atom>> a, List<List<Atom>> b){
 	    	int aSize = a.size();
 	    	int bSize = b.size();
@@ -831,7 +843,6 @@ class StereoAnalyser {
 		    	int differenceInSizeprime = aprimeSize - bprimeSize;
 		    	int maxCommonSizeprime = aprimeSize > bprimeSize ? bprimeSize : aprimeSize;
 		    	for (int j = 1; j <= maxCommonSizeprime; j++) {
-		    		//System.out.println(aprime.get(aprimeSize -j).toCMLAtom().toXML() +"___" + bprime.get(bprimeSize -j).toCMLAtom().toXML() );
 		    		int difference = compareByAtomicNumber(aprime.get(aprimeSize -j), bprime.get(bprimeSize -j));
 					if (difference >0){
 						return 1;
@@ -869,7 +880,7 @@ class StereoAnalyser {
 			replaceRevisitedAtomsWithGhosts(neighbours, previousAtomToVisitedAtoms.get(previousAtom), atom);
 			previousAtomToVisitedAtoms.put(atom, new HashSet<Atom>(previousAtomToVisitedAtoms.get(previousAtom)));
 			previousAtomToVisitedAtoms.get(atom).add(atom);
-			Collections.sort(neighbours, new SortAtomsByAtomicNumber());
+			Collections.sort(neighbours, atomicNumberComparator);
 			if (lastPreviousAtom==null){
 				lastPreviousAtom = previousAtom;
 			}
@@ -893,7 +904,7 @@ class StereoAnalyser {
 			Atom neighbour = atoms.get(i);
 			if (visitedAtoms.contains(neighbour)){//cycle detected
 				atoms.remove(i);
-				if (neighbour.getID()>0){
+				if (neighbour.getID()>0){//make sure not to ghost ghosts
 					atoms.add(i, createGhostAtomFromAtom(neighbour, previousAtom));
 				}
 			}
