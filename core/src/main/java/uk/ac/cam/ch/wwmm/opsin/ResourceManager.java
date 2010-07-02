@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,22 +34,22 @@ class ResourceManager {
 
 	/**A mapping between annotation symbols and the first two letters of token names applicable to
 	 * that annotation symbol which then map to token names (annotation->first two letters of token names ->token names mapping).*/
-	final HashMap<Character, HashMap<String, List<String>>> symbolTokenNamesDict = new HashMap<Character, HashMap<String, List<String>>>();
+	final List<HashMap<String, List<String>>> symbolTokenNamesDict = new ArrayList<HashMap<String, List<String>>>(200);
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
-	final HashMap<Character, List<RunAutomaton>> symbolRegexAutomataDict = new HashMap<Character, List<RunAutomaton>>();
+	final List<List<RunAutomaton>> symbolRegexAutomataDict = new ArrayList<List<RunAutomaton>>();
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
-	final HashMap<Character, List<Pattern>> symbolRegexesDict = new HashMap<Character, List<Pattern>>();
+	final List<List<Pattern>> symbolRegexesDict = new ArrayList<List<Pattern>>();
 	
 	/**The automaton which describes the grammar of a chemical name from left to right*/
 	final RunAutomaton chemicalAutomaton;
 	
 	
 	/**As symbolTokenNamesDict but use the last two letters of token names to map to the token names.*/
-	HashMap<Character, HashMap<String, List<String>>> symbolTokenNamesDict_TokensByLastTwoLetters;
+	List<HashMap<String, List<String>>> symbolTokenNamesDict_TokensByLastTwoLetters;
 	/**As symbolRegexAutomataDict but automata are reversed */
-	HashMap<Character, List<RunAutomaton>> symbolRegexAutomataDictReversed;
+	List<List<RunAutomaton>> symbolRegexAutomataDictReversed;
 	/**As symbolRegexesDict but regexes match the end of string */
-	HashMap<Character, List<Pattern>> symbolRegexesDictReversed;
+	List<List<Pattern>> symbolRegexesDictReversed;
 	
 	/**The automaton which describes the grammar of a chemical name from right to left*/
 	RunAutomaton reverseChemicalAutomaton;
@@ -60,9 +61,15 @@ class ResourceManager {
 	 */
 	ResourceManager(ResourceGetter resourceGetter) throws Exception {
 		this.resourceGetter = resourceGetter;
+		chemicalAutomaton = processChemicalGrammar(false);
+		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
+		for (int i = 0; i < grammarSymbolsSize; i++) {//initialise arrayLists
+			symbolTokenNamesDict.add(null);
+			symbolRegexAutomataDict.add(null);
+			symbolRegexesDict.add(null);
+		}
 		processTokenFiles(false);
 		processRegexTokenFiles(false);
-		chemicalAutomaton = processChemicalGrammar(false);
 	}
 
 	/**
@@ -86,6 +93,10 @@ class ResourceManager {
 			for (Element tokenList : tokenLists) {
 				char symbol = tokenList.getAttributeValue("symbol").charAt(0);
 				List<Element> tokenElements = XOMTools.getChildElementsWithTagName(tokenList, "token");
+				int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
+				if (index < 0){
+					throw new Exception(symbol +" is associated with a tokenList of tagname " + tokenList.getAttributeValue("tagname") +" however it is not actually used in OPSIN's grammar!!!");
+				}
 				for (Element tokenElement : tokenElements) {
 					String t = tokenElement.getValue();
 
@@ -93,24 +104,23 @@ class ResourceManager {
 						tokenDict.put(t, new HashMap<Character, Token>());
 					}
 					tokenDict.get(t).put(symbol, new Token(tokenElement, tokenList));
-
 					if (!reversed){
-						if(!symbolTokenNamesDict.containsKey(symbol)) {
-							symbolTokenNamesDict.put(symbol, new HashMap<String, List<String>>());
+						if(symbolTokenNamesDict.get(index)==null) {
+							symbolTokenNamesDict.set(index, new HashMap<String, List<String>>());
 						}
-						if(!symbolTokenNamesDict.get(symbol).containsKey(t.substring(0, 2))) {
-							symbolTokenNamesDict.get(symbol).put(t.substring(0, 2), new ArrayList<String>());
+						if(!symbolTokenNamesDict.get(index).containsKey(t.substring(0, 2))) {
+							symbolTokenNamesDict.get(index).put(t.substring(0, 2), new ArrayList<String>());
 						}
-						symbolTokenNamesDict.get(symbol).get(t.substring(0, 2)).add(t);
+						symbolTokenNamesDict.get(index).get(t.substring(0, 2)).add(t);
 					}
 					else{
-						if(!symbolTokenNamesDict_TokensByLastTwoLetters.containsKey(symbol)) {
-							symbolTokenNamesDict_TokensByLastTwoLetters.put(symbol, new HashMap<String, List<String>>());
+						if(symbolTokenNamesDict_TokensByLastTwoLetters.get(index)==null) {
+							symbolTokenNamesDict_TokensByLastTwoLetters.set(index, new HashMap<String, List<String>>());
 						}
-						if(!symbolTokenNamesDict_TokensByLastTwoLetters.get(symbol).containsKey(t.substring(t.length()-2))) {
-							symbolTokenNamesDict_TokensByLastTwoLetters.get(symbol).put(t.substring(t.length()-2), new ArrayList<String>());
+						if(!symbolTokenNamesDict_TokensByLastTwoLetters.get(index).containsKey(t.substring(t.length()-2))) {
+							symbolTokenNamesDict_TokensByLastTwoLetters.get(index).put(t.substring(t.length()-2), new ArrayList<String>());
 						}
-						symbolTokenNamesDict_TokensByLastTwoLetters.get(symbol).get(t.substring(t.length()-2)).add(t);
+						symbolTokenNamesDict_TokensByLastTwoLetters.get(index).get(t.substring(t.length()-2)).add(t);
 					}
 				}
 			}
@@ -132,7 +142,7 @@ class ResourceManager {
 			while(m.find()) {//replace sections enclosed in %..% with the appropriate regex
 				newValue += re.substring(position, m.start());
 				if (tempRegexes.get(m.group())==null){
-					throw new ParsingException("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
+					throw new Exception("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
 				}
 				newValue += tempRegexes.get(m.group());
 				position = m.end();
@@ -150,32 +160,36 @@ class ResourceManager {
 			Character symbol = regexEl.getAttributeValue("symbol").charAt(0);
 			reSymbolTokenDict.put(symbol, new Token(regexEl));
 	
+			int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
+			if (index < 0){
+				throw new Exception(symbol +" is associated with the regex " + newValue +" however it is not actually used in OPSIN's grammar!!!");
+			}
 			if (!reversed){
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					if(!symbolRegexAutomataDict.containsKey(symbol)) {
-						symbolRegexAutomataDict.put(symbol, new ArrayList<RunAutomaton>());
+					if(symbolRegexAutomataDict.get(index)==null) {
+						symbolRegexAutomataDict.set(index, new ArrayList<RunAutomaton>());
 					}
-					symbolRegexAutomataDict.get(symbol).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, false));
+					symbolRegexAutomataDict.get(index).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, false));
 				}
 				else{
-					if(!symbolRegexesDict.containsKey(symbol)) {
-						symbolRegexesDict.put(symbol, new ArrayList<Pattern>());
+					if(symbolRegexesDict.get(index)==null) {
+						symbolRegexesDict.set(index, new ArrayList<Pattern>());
 					}
-					symbolRegexesDict.get(symbol).add(Pattern.compile(newValue));
+					symbolRegexesDict.get(index).add(Pattern.compile(newValue));
 				}
 			}
 			else{
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					if(!symbolRegexAutomataDictReversed.containsKey(symbol)) {
-						symbolRegexAutomataDictReversed.put(symbol, new ArrayList<RunAutomaton>());
+					if(symbolRegexAutomataDictReversed.get(index)==null) {
+						symbolRegexAutomataDictReversed.set(index, new ArrayList<RunAutomaton>());
 					}
-					symbolRegexAutomataDictReversed.get(symbol).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, true));
+					symbolRegexAutomataDictReversed.get(index).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, true));
 				}
 				else{
-					if(!symbolRegexesDictReversed.containsKey(symbol)) {
-						symbolRegexesDictReversed.put(symbol, new ArrayList<Pattern>());
+					if(symbolRegexesDictReversed.get(index)==null) {
+						symbolRegexesDictReversed.set(index, new ArrayList<Pattern>());
 					}
-					symbolRegexesDictReversed.get(symbol).add(Pattern.compile(newValue +"$"));
+					symbolRegexesDictReversed.get(index).add(Pattern.compile(newValue +"$"));
 				}
 			}
 		}
@@ -194,7 +208,7 @@ class ResourceManager {
 			while(m.find()) {
 				newValue += value.substring(position, m.start());
 				if (regexDict.get(m.group())==null){
-					throw new ParsingException("Regex entry for: " + m.group() + " missing! Check regexes.xml");
+					throw new Exception("Regex entry for: " + m.group() + " missing! Check regexes.xml");
 				}
 				newValue += regexDict.get(m.group());
 				position = m.end();
@@ -212,17 +226,25 @@ class ResourceManager {
 	}
 
 	synchronized void populatedReverseTokenMappings() throws Exception{
+		if (reverseChemicalAutomaton ==null){
+			reverseChemicalAutomaton = processChemicalGrammar(true);
+		}
+		int grammarSymbolsSize = reverseChemicalAutomaton.getCharIntervals().length;
 		if (symbolTokenNamesDict_TokensByLastTwoLetters ==null){
-			symbolTokenNamesDict_TokensByLastTwoLetters = new HashMap<Character, HashMap<String,List<String>>>();
+			symbolTokenNamesDict_TokensByLastTwoLetters = new ArrayList<HashMap<String,List<String>>>();
+			for (int i = 0; i < grammarSymbolsSize; i++) {
+				symbolTokenNamesDict_TokensByLastTwoLetters.add(null);
+			}
 			processTokenFiles(true);
 		}
 		if (symbolRegexAutomataDictReversed ==null && symbolRegexesDictReversed==null){
-			symbolRegexAutomataDictReversed = new HashMap<Character, List<RunAutomaton>>();
-			symbolRegexesDictReversed = new HashMap<Character, List<Pattern>>();
+			symbolRegexAutomataDictReversed = new ArrayList<List<RunAutomaton>>();
+			symbolRegexesDictReversed = new ArrayList<List<Pattern>>();
+			for (int i = 0; i < grammarSymbolsSize; i++) {
+				symbolRegexAutomataDictReversed.add(null);
+				symbolRegexesDictReversed.add(null);
+			}
 			processRegexTokenFiles(true);
-		}
-		if (reverseChemicalAutomaton ==null){
-			reverseChemicalAutomaton = processChemicalGrammar(true);
 		}
 	}
 
