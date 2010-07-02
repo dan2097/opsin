@@ -489,24 +489,31 @@ public final class XOMTools {
 	}
 
 	/**
-	 * Finds and returns the count of descendant elements
-	 * Equivalent to the size of the nodes array returned from the xquery .//* from the startingElement
+	 * Finds and returns the number of elements and the number of elements with no children, that are descendants of the startingElement
+	 * The 0th position of the returned array is the total number of elements
+	 * The 1st position is the number of child less elements
 	 * @param startingElement
 	 * @return
 	 */
-	public static int countDescendantElements(Element startingElement) {
-		int count =0;
+	public static int[] countNumberOfElementsAndNumberOfChildLessElements(Element startingElement) {
+		int[] counts = new int[2];
 		LinkedList<Element> stack = new LinkedList<Element>();
 		stack.add(startingElement);
 		while (stack.size()>0){
 			Element currentElement =stack.removeLast();
 			Elements children =currentElement.getChildElements();
-			for (int i = 0; i < children.size(); i++) {
-				count++;
-				stack.add(children.get(i));
+			int childCount = children.size();
+			if (childCount==0){
+				counts[1]++;
+			}
+			else{
+				for (int i = 0; i < childCount; i++) {
+					counts[0]++;
+					stack.add(children.get(i));
+				}
 			}
 		}
-		return count;
+		return counts;
 	}
 
 	/**

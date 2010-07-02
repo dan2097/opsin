@@ -25,10 +25,25 @@ public class NameToStructure {
 	
 	private static final Logger LOG = Logger.getLogger(NameToStructure.class);
 
+	/**
+	 * Prefer less childless elements e.g. benzal beats benz al
+	 * Prefer less elements e.g. <acryl(acidStem)amide(suffix)> beats <acryl(substituent)><amide(group)>
+	 */
 	private class SortParses implements Comparator<Element>{
 		public int compare(Element el1, Element el2){
-			int elementsInEl1 = XOMTools.countDescendantElements(el1);
-			int elementsInEl2 = XOMTools.countDescendantElements(el2);
+			int[] counts1 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el1);
+			int[] counts2 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el2);
+			int childLessElementsInEl1 = counts1[1];
+			int childLessElementsInEl2 = counts2[1];
+			if ( childLessElementsInEl1> childLessElementsInEl2){
+				return 1;
+			}
+			else if (childLessElementsInEl1 < childLessElementsInEl2){
+				return -1;
+			}
+
+			int elementsInEl1 = counts1[0];
+			int elementsInEl2  = counts2[0];
 			if ( elementsInEl1> elementsInEl2){
 				return 1;
 			}

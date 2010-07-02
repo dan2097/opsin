@@ -86,7 +86,7 @@ public class ParseRules {
 		longestAnnotation.tokens = new ArrayList<String>();
 		longestAnnotation.untokenisedChemicalName = chemicalWord;
 		longestAnnotation.untokenisedChemicalNameLowerCase = chemicalWord.toLowerCase();
-
+		int stateSymbolsSize = stateSymbols.length;
 		while (!asStack.isEmpty()) {
 			AnnotatorState as = asStack.pop();
 			String untokenisedChemicalNameLowerCase = as.untokenisedChemicalNameLowerCase;
@@ -114,10 +114,11 @@ public class ParseRules {
         		longestAnnotation =as;
         	}
 
-	        for (char annotationCharacter : stateSymbols) {
+	        for (int i = 0; i < stateSymbolsSize; i++) {
+				char annotationCharacter = stateSymbols[i];
 	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict.get(annotationCharacter);
+	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict.get(i);
 	                if (possibleTokenisationsMap != null) {
 	                    List<String> possibleTokenisations = null;
 	                    if (firstTwoLetters != null) {
@@ -140,7 +141,7 @@ public class ParseRules {
 	                        }
 	                    }
 	                }
-	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDict.get(annotationCharacter);
+	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDict.get(i);
 	                if (possibleAutomata != null) {//next could be a regex
 	                    for (RunAutomaton automaton : possibleAutomata) {
 	                        int matchLength = automaton.run(untokenisedChemicalName, 0);
@@ -158,7 +159,7 @@ public class ParseRules {
 	                        }
 	                    }
 	                }
-	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDict.get(annotationCharacter);
+	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDict.get(i);
 	                if (possibleRegexes != null) {//next could be a regex
 	                    for (Pattern pattern : possibleRegexes) {
 	                        Matcher mat = pattern.matcher(untokenisedChemicalName);
