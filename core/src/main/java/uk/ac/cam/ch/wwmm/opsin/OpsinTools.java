@@ -119,15 +119,16 @@ class OpsinTools {
 	}
 
 	/**Makes a shallow copy of an element, copying the element
-     * and the attribute, but no other child nodes.
+     * and the attributes, but no other child nodes.
      *
      * @param elem The element to copy.
      * @return The copied element.
      */
 	static Element shallowCopy(Element elem) {
 		Element newElem = new Element(elem.getLocalName());
-		for(int i=0;i<elem.getAttributeCount();i++) {
-			newElem.addAttribute((Attribute)elem.getAttribute(i).copy());
+		int attributeCount = elem.getAttributeCount();
+		for(int i=0; i < attributeCount;i++) {
+			newElem.addAttribute(new Attribute(elem.getAttribute(i)));
 		}
 		return newElem;
 	}

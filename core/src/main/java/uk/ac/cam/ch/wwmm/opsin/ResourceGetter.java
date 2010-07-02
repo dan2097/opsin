@@ -24,7 +24,7 @@ import nu.xom.Document;
  * @author ptc24/d387
  *
  */
-final class ResourceGetter {
+class ResourceGetter {
 
 	private final String resourcePath;
 	private String workspace;
@@ -55,15 +55,21 @@ final class ResourceGetter {
 
 	private File getFile(String name) {
 		File f = new File(getResDir(), name);
-		if(f.isDirectory()) return null;
-		if(f.exists()) return f;
+		if(f.isDirectory()){
+			return null;
+		}
+		if(f.exists()){
+			return f;
+		}
 		return null;
 	}
 
 	private File getFileForWriting(String name) {
 		File resourcesTop = new File(workspace, "resources");
 		File resDir = new File(resourcesTop, resourcePath);
-		if(!resDir.exists()) resDir.mkdirs();
+		if(!resDir.exists()){
+			resDir.mkdirs();
+		}
 		return new File(resDir, name);
 	}
 
@@ -116,7 +122,7 @@ final class ResourceGetter {
 			}
 			return xomBuilder.build(url.openStream());
 		} catch (Exception e) {
-			throw new Exception("Could not get resource file: " + name);
+			throw new Exception("Could not get resource file: " + name, e);
 		}
 	}
 
@@ -127,7 +133,9 @@ final class ResourceGetter {
 	 * @throws Exception If the resource file couldn't be found.
 	 */
 	public InputStream getStream(String name) throws Exception {
-		if(name == null) name="";
+		if(name == null){
+			name="";
+		}
 		try {
 			if (workspace!=null){
 				File f = getFile(name);
@@ -142,7 +150,7 @@ final class ResourceGetter {
 			}
 			return url.openStream();
 		} catch (Exception e) {
-			throw new Exception("Could not get resource file: " + name);
+			throw new Exception("Could not get resource file: " + name, e);
 		}
 	}
 
@@ -166,7 +174,9 @@ final class ResourceGetter {
 	public String readText(Reader r) throws Exception {
 		BufferedReader br = new BufferedReader(r);
 		StringBuffer sb = new StringBuffer();
-		while(br.ready()) sb.append((char)br.read());
+		while(br.ready()){
+			sb.append((char)br.read());
+		}
 		br.close();
 		return sb.toString();
 	}
