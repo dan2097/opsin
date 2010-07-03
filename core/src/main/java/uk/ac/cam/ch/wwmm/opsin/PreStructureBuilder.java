@@ -2305,7 +2305,8 @@ class PreStructureBuilder {
 	private int performPeroxyFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace) throws StructureBuildingException {
 		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
 		if (oxygenAtoms.size()==0){
-			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+			oxygenAtoms = findEthericOxygenAtomsInGroup(state, groupToBeModified);
+			oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, groupToBeModified));
 		}
 		if (locantEl !=null){
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
@@ -2327,11 +2328,22 @@ class PreStructureBuilder {
 			atomsReplaced = numberOfAtomsToReplace;
 			for (int j = 0; j < numberOfAtomsToReplace; j++) {
 				Atom oxygenToReplace = oxygenAtoms.get(j);
-				Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-				replacementFrag.getAtomList().get(1).setCharge(oxygenToReplace.getCharge());
-				removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
-				state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
+				if (oxygenToReplace.getBonds().size()==2){//etheric oxygen
+					Fragment newOxygen = state.fragManager.buildSMILES("O", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+					Bond bondToRemove = oxygenToReplace.getFirstBond();
+					Atom atomToAttachTo = bondToRemove.getFromAtom() == oxygenToReplace ?  bondToRemove.getToAtom() :  bondToRemove.getFromAtom();
+					state.fragManager.createBond(atomToAttachTo, newOxygen.getFirstAtom(), 1);
+					state.fragManager.createBond(newOxygen.getFirstAtom(), oxygenToReplace, 1);
+					state.fragManager.removeBond(bondToRemove);
+					state.fragManager.incorporateFragment(newOxygen, state.xmlFragmentMap.get(groupToBeModified));
+				}
+				else{
+					Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+					replacementFrag.getAtomList().get(1).setCharge(oxygenToReplace.getCharge());
+					removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
+					state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
+				}
 			}
 		}
 		return atomsReplaced;
@@ -2416,20 +2428,24 @@ class PreStructureBuilder {
 		String[] possibleLocants = matchComma.split(locantEl.getValue());
 		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
 		for (Atom atom : oxygenAtoms) {
-			if (atom.getType().equals(SUFFIX_TYPE_VAL)){
+			List<String> atomlocants = atom.getLocants();
+			if (atomlocants.size()>0){
 				for (String locantVal : possibleLocants) {
-					 if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(atom, locantVal) != null){
+					if (atomlocants.contains(locantVal)){
 						 oxygenWithAppropriateLocants.add(atom);
 						 break;
-					 }
+					}
 				}
 			}
 			else{
-				List<String> atomlocants = atom.getLocants();
-				for (String locantVal : possibleLocants) {
-					if (atomlocants.contains(locantVal)){
-						oxygenWithAppropriateLocants.add(atom);
-						break;
+				Atom atomWithNumericLocant = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atom);
+				if (atomWithNumericLocant!=null){
+					List<String> atomWithNumericLocantLocants = atomWithNumericLocant.getLocants();
+					for (String locantVal : possibleLocants) {
+						if (atomWithNumericLocantLocants.contains(locantVal)){
+							 oxygenWithAppropriateLocants.add(atom);
+							 break;
+						}
 					}
 				}
 			}
@@ -2474,6 +2490,24 @@ class PreStructureBuilder {
 			Atom a = funcA.getAtom();
 			if (a.getElement().equals("O")){
 				oxygenAtoms.add(funcA.getAtom());
+			}
+		}
+		return oxygenAtoms;
+	}
+	
+	
+	/**
+	 * Returns etheric oxygen atoms in groupToBeModified
+	 * @param state
+	 * @param groupToBeModified
+	 * @return
+	 */
+	private List<Atom> findEthericOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
+		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> atomList = state.xmlFragmentMap.get(groupToBeModified).getAtomList();
+		for (Atom a: atomList) {
+			if (a.getElement().equals("O") && a.getBonds().size()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
+				oxygenAtoms.add(a);
 			}
 		}
 		return oxygenAtoms;
