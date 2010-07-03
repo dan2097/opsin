@@ -86,6 +86,7 @@
     <token value="[Se](=O)(=O)(O)[Se](=O)(=O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypodiselen</token>
     <token value="[Te](=O)(=O)(O)[Te](=O)(=O)O" labels="1////2///" valType="SMILES" suffixAppliesTo="1,5">hypoditellur</token>
     <token value="C(=O)(O)OC(=O)O" labels="1///2/3//" valType="SMILES" suffixAppliesTo="1,5">dicarbon</token>
+    <token value="[Si](O)(O)(O)O[Si](O)(O)O" labels="1////2/3///" valType="SMILES" suffixAppliesTo="1,6">disilic</token>
 
     <token value="P(=O)(O)OP(=O)(O)OP(=O)O" labels="1///2/3///4/5//" valType="SMILES" suffixAppliesTo="1,5,9">triphosphon</token>
     <token value="P(=O)(O)(O)OP(=O)(O)OP(=O)(O)O" labels="1////2/3///4/5///" valType="SMILES" suffixAppliesTo="1,6,10">triphosphor</token>
