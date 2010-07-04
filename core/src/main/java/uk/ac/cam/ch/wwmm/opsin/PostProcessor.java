@@ -1424,9 +1424,10 @@ class PostProcessor {
 			Element substituent = (Element) group.getParent();
 			Element nextSubstituent = (Element) XOMTools.getNextSibling(substituent);
 			if (nextSubstituent !=null){
-				Element nextGroup = nextSubstituent.getFirstChildElement("group");
-				if (nextGroup !=null && nextGroup.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
-					group.getAttribute(VALUE_ATR).setValue("P(=O)(O)O");
+				Element nextGroup = nextSubstituent.getFirstChildElement(GROUP_EL);
+				if (nextGroup !=null && (nextGroup.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)||BIOCHEMICAL_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR)))){
+					group.getAttribute(VALUE_ATR).setValue("-P(=O)(O)O");
+					group.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
 				}
 			}
 			

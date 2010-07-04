@@ -328,6 +328,7 @@ class XmlDeclarations {
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
+	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
 	static final String ELEMENTARYATOMINORGANIC_SUBTYPE_VAL ="elementaryAtomInorganic";
 	static final String ELEMENTARYATOMORGANIC_SUBTYPE_VAL ="elementaryAtomOrganic";
