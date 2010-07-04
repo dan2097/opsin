@@ -80,7 +80,7 @@ class BuildResults {
 			return outAtom.getAtom();
 		}
 		else{
-			return outAtom.getAtom().getFrag().getAtomOrNextSuitableAtomOrThrow(outAtom.getAtom(), outAtom.getValency());
+			return outAtom.getAtom().getFrag().getAtomOrNextSuitableAtomOrThrow(outAtom.getAtom(), outAtom.getValency(), false);
 		}
 	}
 

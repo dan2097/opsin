@@ -687,7 +687,7 @@ class StructureBuildingMethods {
 								}
 
 								//loop may continue if lastFrag was in fact completely unsubtitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-								if (lastFrag.getAtomByIdOrNextSuitableAtom(lastFrag.getDefaultInAtom().getID(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
+								if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
 									break;
 								}
 							}
@@ -722,7 +722,7 @@ class StructureBuildingMethods {
 							}
 
 							//loop may continue if lastFrag was in fact completely unsubtitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-							if (lastFrag.getAtomByIdOrNextSuitableAtom(lastFrag.getDefaultInAtom().getID(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
+							if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
 								break;
 							}
 						}
@@ -888,7 +888,7 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							frag.addInAtom(frag.getAtomByIdOrNextSuitableAtom(frag.getDefaultInAtom().getID(), 1, true), 1);
+							frag.addInAtom(frag.getAtomOrNextSuitableAtom(frag.getDefaultInAtom(), 1, true), 1);
 							inAtomAdded=true;
 							inLocants.remove(j);
 							break;
@@ -1061,7 +1061,7 @@ class StructureBuildingMethods {
 			to = in.getAtom();
 			bondOrder = in.getValency();
 			if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-				to = to.getFrag().getAtomOrNextSuitableAtomOrThrow(to, bondOrder);
+				to = to.getFrag().getAtomOrNextSuitableAtomOrThrow(to, bondOrder, false);
 			}
 			parentFrag.removeOutAtom(in);
 		}
@@ -1103,7 +1103,7 @@ class StructureBuildingMethods {
 
 		Atom from = out.getAtom();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
+			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder, false);
 		}
 		fragToBeJoined.removeOutAtom(out);
 
@@ -1133,7 +1133,7 @@ class StructureBuildingMethods {
 		Atom from = out.getAtom();
 		int bondOrder = out.getValency();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder);
+			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder, false);
 		}
 		fragToBeJoined.removeOutAtom(out);
 
@@ -1151,7 +1151,7 @@ class StructureBuildingMethods {
 			firstAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(fragToBeJoined.getOutAtom(0).getLocant());
 		}
 		else{
-			firstAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(0), 1);
+			firstAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(0), 1, true);
 		}
 		fragToBeJoined.removeOutAtom(0);
 		Atom secondAtomToJoinTo;
@@ -1163,7 +1163,7 @@ class StructureBuildingMethods {
 			if (index +1 >= atomList.size()){
 				throw new StructureBuildingException("Unable to find second suitable atom to form epoxide");
 			}
-			secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1);
+			secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1, true);
 		}
 		fragToBeJoined.removeOutAtom(0);
 		if (firstAtomToJoinTo == secondAtomToJoinTo){
@@ -1210,7 +1210,7 @@ class StructureBuildingMethods {
 		Atom to =null;
 		ArrayList<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);
 		for (Fragment fragment : possibleParents) {
-			to = fragment.getAtomByIdOrNextSuitableAtom(fragment.getDefaultInAtom().getID(), bondOrder, true);
+			to = fragment.getAtomOrNextSuitableAtom(fragment.getDefaultInAtom(), bondOrder, true);
 			if (to !=null){
 				break;
 			}

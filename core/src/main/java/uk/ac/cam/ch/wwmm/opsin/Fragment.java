@@ -642,12 +642,9 @@ class Fragment {
 		indicatedHydrogen.add(atom);
 	}
 
-	Atom getAtomOrNextSuitableAtomOrThrow(Atom a, int additionalValencyRequired) throws StructureBuildingException {
-		return getAtomByIdOrNextSuitableAtomOrThrow(a.getID(), additionalValencyRequired);
-	}
-	
-	Atom getAtomByIdOrNextSuitableAtomOrThrow(int id, int additionalValencyRequired) throws StructureBuildingException {
-		Atom a =getAtomByIdOrNextSuitableAtom(id, additionalValencyRequired, false);
+
+	Atom getAtomOrNextSuitableAtomOrThrow(Atom startingAtom, int additionalValencyRequired, boolean takeIntoAccountOutValency) throws StructureBuildingException {
+		Atom a =getAtomOrNextSuitableAtom(startingAtom, additionalValencyRequired, takeIntoAccountOutValency);
 		if (a==null){
 			throw new StructureBuildingException("No suitable atom found");
 		}
@@ -668,13 +665,41 @@ class Fragment {
      * @return Atom
 	 * @throws StructureBuildingException
 	 */
-	Atom getAtomByIdOrNextSuitableAtom(int id, int additionalValencyRequired, boolean takeIntoAccountOutValency) throws StructureBuildingException {
+	Atom getAtomOrNextSuitableAtom(Atom startingAtom, int additionalValencyRequired, boolean takeIntoAccountOutValency) throws StructureBuildingException {
 		List<Atom> atomList =getAtomList();
-		int flag =0;
-		Atom currentAtom=getAtomByIDOrThrow(id);
+		Atom currentAtom = startingAtom;
 		int atomCounter=0;
 		int atomListPosition=atomList.indexOf(currentAtom);
 		int startingIndex =atomListPosition;
+
+		do {//aromaticity preserved and standard valency assumed
+			atomCounter++;
+			if (atomListPosition >= atomList.size()){
+				atomListPosition -=(atomList.size());
+			}
+			currentAtom=atomList.get(atomListPosition);
+			if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
+				atomListPosition++;
+				continue;
+			}
+			
+			int currentExpectedValency = currentAtom.determineValency(takeIntoAccountOutValency);
+			if (takeIntoAccountOutValency){
+				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
+					return currentAtom;
+				}
+			}
+			else{
+				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
+					return currentAtom;
+				}
+			}
+			atomListPosition++;
+		}
+		while(atomCounter < atomList.size());
+
+		atomListPosition =startingIndex;
+		atomCounter=0;
 
 		do {//aromaticity preserved
 			atomCounter++;
@@ -688,14 +713,12 @@ class Fragment {
 			}
 			if (takeIntoAccountOutValency){
 				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
-					flag=1;
-					break;
+					return currentAtom;
 				}
 			}
 			else{
 				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
-					flag=1;
-					break;
+					return currentAtom;
 				}
 			}
 			atomListPosition++;
@@ -704,38 +727,30 @@ class Fragment {
 
 		atomListPosition =startingIndex;
 		atomCounter=0;
-		if (flag==0){
-
-			do {//aromaticity dropped
-				atomCounter++;
-				if (atomListPosition >= atomList.size()){
-					atomListPosition -=(atomList.size());
-				}
-				currentAtom=atomList.get(atomListPosition);
-				if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
-					atomListPosition++;
-					continue;
-				}
-				if (takeIntoAccountOutValency){
-					if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getOutValency())){
-						flag=1;
-						break;
-					}
-				}
-				else{
-					if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired)){
-						flag=1;
-						break;
-					}
-				}
-				atomListPosition++;
+		do {//aromaticity dropped
+			atomCounter++;
+			if (atomListPosition >= atomList.size()){
+				atomListPosition -=(atomList.size());
 			}
-			while(atomCounter < atomList.size());
+			currentAtom=atomList.get(atomListPosition);
+			if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
+				atomListPosition++;
+				continue;
+			}
+			if (takeIntoAccountOutValency){
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getOutValency())){
+					return currentAtom;
+				}
+			}
+			else{
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired)){
+					return currentAtom;
+				}
+			}
+			atomListPosition++;
 		}
-		if (flag==0){
-			currentAtom=null;
-		}
-		return currentAtom;
+		while(atomCounter < atomList.size());
+		return null;
 	}
 
 	/**

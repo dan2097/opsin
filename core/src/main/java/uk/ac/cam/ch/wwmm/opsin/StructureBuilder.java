@@ -996,7 +996,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Glycol functional class not found where expected");
 		}
 		
-		Atom outAtom1 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(0).getAtom(), theDiRadical.getOutAtom(0).getValency());
+		Atom outAtom1 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(0).getAtom(), theDiRadical.getOutAtom(0).getValency(), false);
 		Fragment functionalFrag =state.fragManager.buildSMILES(functionalClassEls.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 		if (theDiRadical.getOutAtom(0).getValency() !=1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
@@ -1004,7 +1004,7 @@ class StructureBuilder {
 		state.fragManager.createBond(outAtom1, functionalFrag.getAtomByIDOrThrow(functionalFrag.getIdOfFirstAtom()), 1);
 		state.fragManager.incorporateFragment(functionalFrag, theDiRadical);
 		
-		Atom outAtom2 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(1).getAtom(), theDiRadical.getOutAtom(1).getValency());
+		Atom outAtom2 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(1).getAtom(), theDiRadical.getOutAtom(1).getValency(), false);
 		Fragment hydroxy =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 		if (theDiRadical.getOutAtom(1).getValency() !=1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(1).getValency());
