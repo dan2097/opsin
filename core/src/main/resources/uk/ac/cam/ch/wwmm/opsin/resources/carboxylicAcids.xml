@@ -45,10 +45,13 @@
     <token value="C\C(C)=C\C" labels="1/2//3/4" valType="SMILES" suffixAppliesTo="1,5">mesacon</token>
     <token value="CC1(C)C(C)(C)C(C)CC1" labels="/1//2///3//4/5" valType="SMILES" suffixAppliesTo="1,8">camphor</token>
 
+
+    <token value="CCNC(=O)C" labels="none" valType="SMILES">acetur</token>
     <token value="CNC(=O)N" labels="1/2/3//4" valType="SMILES">allophan</token>
     <token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
     <token value="CNNC" labels="none" valType="SMILES" suffixAppliesTo="1,4">bicarbam</token>
     <token value="CCO" labels="1/2/" valType="SMILES">glycol</token>
+    <token value="CCOCC" labels="none" valType="SMILES" suffixAppliesTo="1,5">diglycol</token>
     <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
     <token value="CCNC(=O)c1ccccc1" labels="/////1/2/3/4/5/6" valType="SMILES">hippur</token>
     <token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">mal</token>
@@ -102,7 +105,9 @@
     <token value="Cc1ccc(C)cc1" labels="/1/2/3/4//5/6" valType="SMILES" suffixAppliesTo="1,6">terephthal</token><!--both-->
     <token value="Cc1c(N)cccc1" labels="/1/2//3/4/5/6" valType="SMILES">anthranil</token><!--unknown-->
 
+    <token value="CC(NC(=O)N)NC(=O)N" labels="none" valType="SMILES">allant</token><!--unknown-->
     <token value="CNN" labels="1/2/3" valType="SMILES">carbaz</token><!--unknown-->
+    <token value="C(N(CC)CC)CN(CC)CC" labels="none" valType="SMILES" suffixAppliesTo="4,6,10,12">edet</token><!--unknown-->
     <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2/3//4//5//6" valType="SMILES">gall</token><!--unknown-->
     <token value="31" valType="chain" usableAsAJoiner="yes">henatriacontyl</token><!--clashes with a systematic name-->
     <token value="21" valType="chain" usableAsAJoiner="yes">heneicosyl</token><!--clashes with a systematic name-->
@@ -113,6 +118,7 @@
     <token value="29" valType="chain" usableAsAJoiner="yes">nonacosyl</token><!--clashes with a systematic name-->
     <token value="CC(=O)N" labels="1/2//" valType="SMILES">oxam</token><!--oxamyl is something else?-->
     <token value="CC(=O)" labels="1/2/" valType="SMILES">oxaldehyd</token><!--unknown-->
+    <token value="CC(=O)NC(=O)N" labels="none" valType="SMILES">oxalur</token><!--unknown-->
     <token value="15" valType="chain" usableAsAJoiner="yes">pentadecyl</token><!--clashes with a systematic name-->
     <token value="25" valType="chain" usableAsAJoiner="yes">pentacosyl</token><!--clashes with a systematic name-->
     <token value="Cc1cc2OCOc2cc1" labels="none" valType="SMILES">piperonyl</token><!--unknown-->
