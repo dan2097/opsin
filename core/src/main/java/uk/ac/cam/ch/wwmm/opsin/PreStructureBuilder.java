@@ -2956,8 +2956,8 @@ class PreStructureBuilder {
 					atomOnLatestClone = clone.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(1));
 				}
 				else{
-					atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtom(), bondOrder);
-					atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder);
+					atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtom(), bondOrder, true);
+					atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder, true);
 				}
 				state.fragManager.incorporateFragment(clone, atomOnLatestClone.getID(), fragmentToResolveAndDuplicate, atomOnParent.getID(), bondOrder);
 			}
@@ -3903,7 +3903,7 @@ class PreStructureBuilder {
 					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
 				}
 				else{
-					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByIdOrNextSuitableAtomOrThrow(ringFrag.getIdOfFirstAtom(), 1) , 1);
+					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getFirstAtom(), 1, true) , 1);
 				}
 				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);
 			}
@@ -3996,7 +3996,7 @@ class PreStructureBuilder {
                             } else {
                                 idOnParentFragToUse = atomList.get(defaultAtom).getID();
                             }
-                            idOnParentFragToUse = frag.getAtomByIdOrNextSuitableAtomOrThrow(idOnParentFragToUse, bondOrderRequired).getID();
+                            idOnParentFragToUse = frag.getAtomOrNextSuitableAtomOrThrow(frag.getAtomByIDOrThrow(idOnParentFragToUse), bondOrderRequired, true).getID();
                         }
 
                         //create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
