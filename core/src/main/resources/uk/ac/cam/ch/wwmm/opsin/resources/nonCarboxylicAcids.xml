@@ -129,6 +129,146 @@
     <token value="S(O)(O)" labels="none" valType="SMILES">sulfoxyl</token>
   </tokenList>
 
+<!-- a few entirely trivial acid/salts that can be modified by prefixes-->
+	<tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="G">
+		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious</token>
+		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arseniousacid</token>
+		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious acid</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])[O-]" labels="////2////" valType="SMILES" functionalIDs="1,3,8,9">diphosphate</token>
+		<token value="[Se](=O)(O)O[Se](=O)O" labels="1///2/3//" valType="SMILES" functionalIDs="4,7">diselenious</token>
+		<token value="[Se](=O)(O)O[Se](=O)O" labels="1///2/3//" valType="SMILES" functionalIDs="4,7">diseleniousacid</token>
+		<token value="[Se](=O)(O)O[Se](=O)O" labels="1///2/3//" valType="SMILES" functionalIDs="4,7">diselenious acid</token>
+		<token value="S(=O)(=O)([O-])OS(=O)(=O)[O-]" labels="1////2/3///" valType="SMILES" functionalIDs="4,9">disulfate</token>
+		<token value="S(=O)([O-])OS(=O)[O-]" labels="1///2/3//" valType="SMILES" functionalIDs="3,7">disulfite</token>
+		<token value="P(=O)([O-])([O-])P(=O)([O-])[O-]" labels="1////2///" valType="SMILES" functionalIDs="3,4,7,8">hypophosphate</token>
+		<token value="P(=O)([O-])OP(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,7,8">isohypophosphate</token> 
+		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">orthophosphate</token> 
+		<token value="P([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4">phosphite</token>
+		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphate</token>
+		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])[O-]" labels="////2////" valType="SMILES" functionalIDs="1,3,8,9">pyrophosphate</token>
+		<token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">selenious</token>
+		<token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">seleniousacid</token>
+		<token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">selenious acid</token>
+		<token value="[Se](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">selenite</token>
+		<token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenate</token>
+		<token value="[Se](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">selenoate</token>
+		<token value="S(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">sulfite</token>
+		<token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfate</token>
+		<token value="S(=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">sulfoate</token>
+		<token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">tellurite</token>
+		<token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurate</token>
+		<token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">telluroate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////4////" valType="SMILES" functionalIDs="1,3,8,12,16,17">tetraphosphate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////" valType="SMILES" functionalIDs="1,3,8,12,13">triphosphate</token>
+
+		<token value="B(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">dihydrogenborate</token>
+		<token value="B(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">hydrogenborate</token>
+		<token value="S(=O)(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">hydrogensulfate</token>
+		<token value="[Se](=O)(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">hydrogenselenate</token>
+		<token value="[Te](=O)(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">hydrogentellurate</token>
+		<token value="C(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogencarbonate</token>
+		<token value="P(=O)(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">dihydrogenphosphate</token>
+		<token value="P(=O)(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">hydrogenphosphate</token>
+		<token value="[PH](=O)(O)([O-])" labels="none" valType="SMILES" functionalIDs="4">hydrogenphosphonate</token>
+		<token value="P(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">dihydrogenphosphite</token>
+		<token value="P(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">hydrogenphosphite</token>
+		<token value="S(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogensulfite</token>
+		<token value="[Se](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogenselenite</token>
+		<token value="[Te](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogentellurite</token>
+
+	<!-- Mononuclear acids that are NOT modified by infixes. They may be modified by prefixes-->
+		<token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromic</token>
+		<token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromicacid</token>
+		<token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromic acid</token>
+		<token value="Br(=O)O" labels="none" valType="SMILES" functionalIDs="3">bromous</token>
+		<token value="Br(=O)O" labels="none" valType="SMILES" functionalIDs="3">bromousacid</token>
+		<token value="Br(=O)O" labels="none" valType="SMILES" functionalIDs="3">bromous acid</token>
+		<token value="Cl(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">chloric</token>
+		<token value="Cl(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">chloricacid</token>
+		<token value="Cl(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">chloric acid</token>
+		<token value="Cl(=O)O" labels="none" valType="SMILES" functionalIDs="3">chlorous</token>
+		<token value="Cl(=O)O" labels="none" valType="SMILES" functionalIDs="3">chlorousacid</token>
+		<token value="Cl(=O)O" labels="none" valType="SMILES" functionalIDs="3">chlorous acid</token>
+		<token value="[F|5](=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">fluoric</token>
+		<token value="[F|5](=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">fluoricacid</token>
+		<token value="[F|5](=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">fluoric acid</token>
+		<token value="[F|3](=O)O" labels="none" valType="SMILES" functionalIDs="3">fluorous</token>
+		<token value="[F|3](=O)O" labels="none" valType="SMILES" functionalIDs="3">fluorousacid</token>
+		<token value="[F|3](=O)O" labels="none" valType="SMILES" functionalIDs="3">fluorous acid</token>
+		<token value="I(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">iodic</token>
+		<token value="I(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">iodicacid</token>
+		<token value="I(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">iodic acid</token>
+		<token value="I(=O)O" labels="none" valType="SMILES" functionalIDs="3">iodous</token>
+		<token value="I(=O)O" labels="none" valType="SMILES" functionalIDs="3">iodousacid</token>
+		<token value="I(=O)O" labels="none" valType="SMILES" functionalIDs="3">iodous acid</token>
+		<token value="BrO" labels="none" valType="SMILES" functionalIDs="2">hypobromous</token>
+		<token value="BrO" labels="none" valType="SMILES" functionalIDs="2">hypobromousacid</token>
+		<token value="BrO" labels="none" valType="SMILES" functionalIDs="2">hypobromous acid</token>
+		<token value="ClO" labels="none" valType="SMILES" functionalIDs="2">hypochlorous</token>
+		<token value="ClO" labels="none" valType="SMILES" functionalIDs="2">hypochlorousacid</token>
+		<token value="ClO" labels="none" valType="SMILES" functionalIDs="2">hypochlorous acid</token>
+		<token value="FO" labels="none" valType="SMILES" functionalIDs="2">hypofluorous</token>
+		<token value="FO" labels="none" valType="SMILES" functionalIDs="2">hypofluorousacid</token>
+		<token value="FO" labels="none" valType="SMILES" functionalIDs="2">hypofluorous acid</token>
+		<token value="IO" labels="none" valType="SMILES" functionalIDs="2">hypoiodous</token>
+		<token value="IO" labels="none" valType="SMILES" functionalIDs="2">hypoiodousacid</token>
+		<token value="IO" labels="none" valType="SMILES" functionalIDs="2">hypoiodous acid</token>
+		<token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">metaperiodic</token>
+		<token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">metaperiodicacid</token>
+		<token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">metaperiodic acid</token>
+		<token value="[N+](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="3">nitric</token>
+		<token value="[N+](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="3">nitricacid</token>
+		<token value="[N+](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="3">nitric acid</token>
+		<token value="N(=O)O" labels="none" valType="SMILES" functionalIDs="3">nitrous</token>
+		<token value="N(=O)O" labels="none" valType="SMILES" functionalIDs="3">nitrousacid</token>
+		<token value="N(=O)O" labels="none" valType="SMILES" functionalIDs="3">nitrous acid</token>
+		<token value="I(=O)(O)(O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4,5,6,7">orthoperiodic</token>
+		<token value="I(=O)(O)(O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4,5,6,7">orthoperiodicacid</token>
+		<token value="I(=O)(O)(O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4,5,6,7">orthoperiodic acid</token>
+		<token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">silicic</token>
+		<token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">silicicacid</token>
+		<token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">silicic acid</token>
+		<token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">orthosilicic</token>
+		<token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">orthosilicicacid</token>
+		<token value="[Si](O)(O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4,5">orthosilicic acid</token>
+		<token value="Br(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perbromic</token>
+		<token value="Br(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perbromicacid</token>
+		<token value="Br(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perbromic acid</token>
+		<token value="Cl(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perchloric</token>
+		<token value="Cl(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perchloricacid</token>
+		<token value="Cl(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perchloric acid</token>
+		<token value="[F|7](=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perfluoric</token>
+		<token value="[F|7](=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perfluoricacid</token>
+		<token value="[F|7](=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">perfluoric acid</token>
+		<token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">periodic</token>
+		<token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">periodicacid</token>
+		<token value="I(=O)(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">periodic acid</token>
+
+		<token value="Br(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">bromate</token>
+		<token value="Br(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">bromite</token>
+		<token value="Cl(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">chlorate</token>
+		<token value="Cl(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">chlorite</token>
+		<token value="[F|5](=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">fluorate</token>
+		<token value="[F|3](=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">fluorite</token>
+		<token value="I(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="4">iodate</token>
+		<token value="I(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">iodite</token>
+		<token value="Br[O-]" labels="none" valType="SMILES" functionalIDs="2">hypobromite</token>
+		<token value="Cl[O-]" labels="none" valType="SMILES" functionalIDs="2">hypochlorite</token>
+		<token value="F[O-]" labels="none" valType="SMILES" functionalIDs="2">hypofluorite</token>
+		<token value="I[O-]" labels="none" valType="SMILES" functionalIDs="2">hypoiodite</token>
+		<token value="I(=O)(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">metaperiodate</token>
+		<token value="[N+](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3">nitrate</token>
+		<token value="N(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">nitrite</token>
+		<token value="I(=O)([O-])([O-])([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5,6,7">orthoperiodate</token>
+		<token value="[Si]([O-])([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4,5">silicate</token>
+		<token value="[Si]([O-])([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4,5">orthosilicate</token>
+		<token value="Br(=O)(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">perbromate</token>
+		<token value="Cl(=O)(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">perchlorate</token>
+		<token value="[F|7](=O)(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">perfluorate</token>
+		<token value="I(=O)(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">periodate</token>
+	</tokenList>
+
   <!--This is the limiting set of chacolgen acid stems.
   These differ from the  more commonly used chalcogen stems e.g. sulfuric in that they can be used to unambiguously form acyl groups
   However the rules for doing so are subtly different than for normal acids hence the need for a different type-->

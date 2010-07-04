@@ -21,6 +21,7 @@ class PreProcessor {
 	private static final String AMINE = "amine";
 	private static final String THIOL = "thiol";
 	private static final String CARBOXYLIC_ACID = "carboxylic acid";
+	private static final String CARBOXYLATE = "carboxylate";
 
 	static {
 		GREEK_MAP.put("a", "alpha");
@@ -67,6 +68,9 @@ class PreProcessor {
 		}
 		if(CARBOXYLIC_ACID.equalsIgnoreCase(chemicalName)) {
 			throw new PreProcessingException("Carboxylic acid is a generic term rather than a specific chemical");//genericmethanoic acid
+		}
+		if(CARBOXYLATE.equalsIgnoreCase(chemicalName)) {
+			throw new PreProcessingException("Carboxylate is a generic term rather than a specific chemical");//genericmethanoate
 		}
 		//Alcohol Aldehyde Alkane Alkene Alkyne Amide Amine Azo compound Benzene derivative Carboxylic acid Cyanate Disulfide Ester Ether Haloalkane Hydrazone Imine Isocyanide Isocyanate Ketone Oxime Nitrile Nitro compound Nitroso compound Peroxide Phosphoric acid Pyridine derivative Sulfone Sulfonic acid Sulfoxide Thioester Thioether Thiol
 
