@@ -397,129 +397,6 @@ class PreStructureBuilder {
 	}
 	
 	/**
-	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
-	 * @param state
-	 * @param substituent
-	 * @return true is the substituent was a hydro substituent and hence was removed
-	 * @throws PostProcessingException
-	 */
-	private boolean removeHydroSubstituents(BuildState state, Element substituent) throws PostProcessingException {
-		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
-		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size()==0){
-			Element hydroSubstituent = substituent;
-			if (hydroElements.size()!=1){
-				throw new PostProcessingException("Unexpected number of hydro elements found in substituent");
-			}
-			Element hydroElement = hydroElements.get(0);
-			String hydroValue = hydroElement.getValue();
-			if (hydroValue.equals("hydro") || hydroValue.equals("dehydro")){
-				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
-				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
-					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
-				}
-				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
-					throw new PostProcessingException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
-				}
-			}
-			Element targetRing =null;
-			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
-			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
-			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
-			if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
-				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
-				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && matchComma.split(possibleLocantInFrontOfHydro.getValue()).length==1){
-					//e.g.4-decahydro-1-naphthalenyl
-					targetRing =potentialRing;
-				}
-				else{
-					Element possibleLocantInFrontOfRing =(Element) XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
-					if (possibleLocantInFrontOfRing !=null){
-						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
-							String locantValue = possibleLocantInFrontOfRing.getValue();
-							String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
-							for (String expectedLocant : expectedLocants) {
-								if (locantValue.equals(expectedLocant)){
-									targetRing =potentialRing;
-									break;
-								}
-							}
-						}
-						//check whether the group is a HW system e.g. 1,3-thiazole
-						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
-							String locantValue = possibleLocantInFrontOfRing.getValue();
-							int locants = matchComma.split(locantValue).length;
-							int heteroCount = 0;
-							Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocantInFrontOfRing);
-							while(!currentElem.equals(potentialRing)){
-								if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
-									heteroCount++;
-								} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
-									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
-								}
-								currentElem = (Element)XOMTools.getNextSibling(currentElem);
-							}
-							if (heteroCount==locants){//number of locants must match number
-								targetRing =potentialRing;
-							}
-						}
-						//check whether the group is a benzofused ring e.g. 1,4-benzodioxin
-						if (FUSIONRING_SUBTYPE_VAL.equals(potentialRing.getAttributeValue(SUBTYPE_ATR)) && 
-								(potentialRing.getValue().equals("benzo")|| potentialRing.getValue().equals("benz")) &&
-								!((Element)XOMTools.getNextSibling(potentialRing)).getLocalName().equals(FUSION_EL)){
-							targetRing =potentialRing;
-						}
-					}
-					else{
-						targetRing =potentialRing;
-					}
-				}
-			}
-
-			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
-			if (targetRing ==null){
-				Element nextSubOrRootOrBracketfromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
-				while (!nextSubOrRootOrBracketfromLast.equals(hydroSubstituent)){
-					potentialRing = nextSubOrRootOrBracketfromLast.getFirstChildElement(GROUP_EL);
-					if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
-						targetRing =potentialRing;
-						break;
-					}
-					else{
-						nextSubOrRootOrBracketfromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketfromLast);
-					}
-				}
-			}
-			if (targetRing ==null){
-				throw new PostProcessingException("Cannot find ring for hydro substituent to apply to");
-			}
-			//move the children of the hydro substituent
-			Elements children =hydroSubstituent.getChildElements();
-			for (int i = children.size()-1; i >=0 ; i--) {
-				Element child =children.get(i);
-				if (!child.getLocalName().equals(HYPHEN_EL)){
-					child.detach();
-					targetRing.getParent().insertChild(child, 0);
-				}
-			}
-			hydroSubstituent.detach();
-			return true;
-		}
-		return false;
-	}
-
-	private boolean containsCyclicAtoms(BuildState state, Element potentialRing) {
-		Fragment potentialRingFrag = state.xmlFragmentMap.get(potentialRing);
-		List<Atom> atomList = potentialRingFrag.getAtomList();
-		for (Atom atom : atomList) {
-			if (atom.getAtomIsInACycle()){
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-	/**
 	 * Looks for the presence of DEFAULTINLOCANT_ATR and DEFAULTINID_ATR on the group and applies them to the fragment
 	 * Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
 	 * @param thisFrag
@@ -815,6 +692,129 @@ class PreStructureBuilder {
 		}
 	}
 
+
+	/**
+	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
+	 * @param state
+	 * @param substituent
+	 * @return true is the substituent was a hydro substituent and hence was removed
+	 * @throws PostProcessingException
+	 */
+	private boolean removeHydroSubstituents(BuildState state, Element substituent) throws PostProcessingException {
+		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
+		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size()==0){
+			Element hydroSubstituent = substituent;
+			if (hydroElements.size()!=1){
+				throw new PostProcessingException("Unexpected number of hydro elements found in substituent");
+			}
+			Element hydroElement = hydroElements.get(0);
+			String hydroValue = hydroElement.getValue();
+			if (hydroValue.equals("hydro") || hydroValue.equals("dehydro")){
+				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
+				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
+					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
+				}
+				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
+					throw new PostProcessingException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
+				}
+			}
+			Element targetRing =null;
+			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
+			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
+			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
+			if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
+				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
+				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && matchComma.split(possibleLocantInFrontOfHydro.getValue()).length==1){
+					//e.g.4-decahydro-1-naphthalenyl
+					targetRing =potentialRing;
+				}
+				else{
+					Element possibleLocantInFrontOfRing =(Element) XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
+					if (possibleLocantInFrontOfRing !=null){
+						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
+							String locantValue = possibleLocantInFrontOfRing.getValue();
+							String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
+							for (String expectedLocant : expectedLocants) {
+								if (locantValue.equals(expectedLocant)){
+									targetRing =potentialRing;
+									break;
+								}
+							}
+						}
+						//check whether the group is a HW system e.g. 1,3-thiazole
+						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
+							String locantValue = possibleLocantInFrontOfRing.getValue();
+							int locants = matchComma.split(locantValue).length;
+							int heteroCount = 0;
+							Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocantInFrontOfRing);
+							while(!currentElem.equals(potentialRing)){
+								if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
+									heteroCount++;
+								} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
+									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
+								}
+								currentElem = (Element)XOMTools.getNextSibling(currentElem);
+							}
+							if (heteroCount==locants){//number of locants must match number
+								targetRing =potentialRing;
+							}
+						}
+						//check whether the group is a benzofused ring e.g. 1,4-benzodioxin
+						if (FUSIONRING_SUBTYPE_VAL.equals(potentialRing.getAttributeValue(SUBTYPE_ATR)) && 
+								(potentialRing.getValue().equals("benzo")|| potentialRing.getValue().equals("benz")) &&
+								!((Element)XOMTools.getNextSibling(potentialRing)).getLocalName().equals(FUSION_EL)){
+							targetRing =potentialRing;
+						}
+					}
+					else{
+						targetRing =potentialRing;
+					}
+				}
+			}
+	
+			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
+			if (targetRing ==null){
+				Element nextSubOrRootOrBracketfromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
+				while (!nextSubOrRootOrBracketfromLast.equals(hydroSubstituent)){
+					potentialRing = nextSubOrRootOrBracketfromLast.getFirstChildElement(GROUP_EL);
+					if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
+						targetRing =potentialRing;
+						break;
+					}
+					else{
+						nextSubOrRootOrBracketfromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketfromLast);
+					}
+				}
+			}
+			if (targetRing ==null){
+				throw new PostProcessingException("Cannot find ring for hydro substituent to apply to");
+			}
+			//move the children of the hydro substituent
+			Elements children =hydroSubstituent.getChildElements();
+			for (int i = children.size()-1; i >=0 ; i--) {
+				Element child =children.get(i);
+				if (!child.getLocalName().equals(HYPHEN_EL)){
+					child.detach();
+					targetRing.getParent().insertChild(child, 0);
+				}
+			}
+			hydroSubstituent.detach();
+			return true;
+		}
+		return false;
+	}
+
+
+	private boolean containsCyclicAtoms(BuildState state, Element potentialRing) {
+		Fragment potentialRingFrag = state.xmlFragmentMap.get(potentialRing);
+		List<Atom> atomList = potentialRingFrag.getAtomList();
+		for (Atom atom : atomList) {
+			if (atom.getAtomIsInACycle()){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Checks for agreement between the number of locants and multipliers.
@@ -1398,57 +1398,7 @@ class PreStructureBuilder {
 
 		boolean imideSpecialCase =false;
 		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//typically a trivial polyAcid or aminoAcid
-			//attribute contains instructions for number/positions of suffix
-			//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
-			Element suffix =OpsinTools.getNextNonChargeSuffix(group);
-			if (suffix ==null){
-				if (group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || group.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL) || group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
-					throw new PostProcessingException("No suffix where suffix was expected");
-				}
-			}
-			else{
-				if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
-					throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
-				}
-				String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-				String[] suffixInstructions = matchComma.split(suffixInstruction);
-				boolean symmetricSuffixes =true;
-				if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
-					if (suffixInstructions.length != 2){
-						throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
-					}
-					symmetricSuffixes = false;
-					String suffixValue = suffix.getValue();
-					if (suffixValue.equals("imide")|| suffixValue.equals("imido") || suffixValue.equals("imidyl")|| suffixValue.equals("imidium")  || suffixValue.equals("imidylium")){
-						imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
-					}
-				}
-	
-				int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
-				if (suffix.getAttribute(LOCANT_ATR)==null){
-					suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
-				}
-				for (int i = 1; i < suffixInstructions.length; i++) {
-					Element newSuffix = new Element(SUFFIX_EL);
-					if (symmetricSuffixes){
-						newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
-						newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
-						if (suffix.getAttribute(SUBTYPE_ATR)!=null){
-							newSuffix.addAttribute(new Attribute(SUBTYPE_ATR,  suffix.getAttributeValue(SUBTYPE_ATR)));
-						}
-						if (suffix.getAttribute(INFIX_ATR)!=null && suffix.getAttributeValue(INFIX_ATR).startsWith("=")){//clone infixes that effect double bonds but not single bonds e.g. maleamidate still should have one functional atom
-							newSuffix.addAttribute(new Attribute(INFIX_ATR,  suffix.getAttributeValue(INFIX_ATR)));
-						}
-					}
-					else{
-						newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(ADDITIONALVALUE_ATR)));
-						newSuffix.addAttribute(new Attribute(TYPE_ATR, ROOT_EL));
-					}
-					newSuffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[i]) -1)));
-					XOMTools.insertAfter(suffix, newSuffix);
-					suffixes.add(newSuffix);
-				}
-			}
+			imideSpecialCase = processSuffixAppliesTo(group, suffixes,suffixableFragment);
 		}
 		else{
 			for (Element suffix : suffixes) {
@@ -1457,8 +1407,10 @@ class PreStructureBuilder {
 				}
 			}
 		}
-
-		ArrayList<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
+		if (group.getAttribute(SUFFIXAPPLIESTOBYDEFAULT_ATR)!=null){
+			applyDefaultLocantToSuffixIfPresent(group.getAttributeValue(SUFFIXAPPLIESTOBYDEFAULT_ATR), group, suffixableFragment);
+		}
+		List<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
 		state.xmlSuffixMap.put(group, suffixFragments);
 		boolean suffixesResolved =false;
 		if (group.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL)){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacement
@@ -1500,6 +1452,79 @@ class PreStructureBuilder {
 	}
 
 
+	private void applyDefaultLocantToSuffixIfPresent(String attributeValue, Element group, Fragment suffixableFragment) throws StructureBuildingException {
+		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
+		if (suffix !=null){
+			suffix.addAttribute(new Attribute(DEFAULTLOCANTID_ATR, Integer.toString(suffixableFragment.getIdOfFirstAtom() + Integer.parseInt(attributeValue) -1)));
+		}
+	}
+
+
+	/**
+	 * Processes the effects of the suffixAppliesTo attribute
+	 * Returns true if an imide is detected
+	 * @param group
+	 * @param suffixes
+	 * @param suffixableFragment
+	 * @return
+	 * @throws PostProcessingException
+	 * @throws StructureBuildingException
+	 */
+	private boolean processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws PostProcessingException, StructureBuildingException {
+		boolean imideSpecialCase =false;
+		//suffixAppliesTo attribute contains instructions for number/positions of suffix
+		//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
+		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
+		if (suffix ==null){
+			throw new PostProcessingException("No suffix where suffix was expected");
+		}
+		else{
+			if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
+				throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
+			}
+			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
+			String[] suffixInstructions = matchComma.split(suffixInstruction);
+			boolean symmetricSuffixes =true;
+			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
+				if (suffixInstructions.length != 2){
+					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
+				}
+				symmetricSuffixes = false;
+				String suffixValue = suffix.getValue();
+				if (suffixValue.equals("imide")|| suffixValue.equals("imido") || suffixValue.equals("imidyl")|| suffixValue.equals("imidium")  || suffixValue.equals("imidylium")){
+					imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
+				}
+			}
+
+			int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
+			if (suffix.getAttribute(LOCANT_ATR)==null){
+				suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
+			}
+			for (int i = 1; i < suffixInstructions.length; i++) {
+				Element newSuffix = new Element(SUFFIX_EL);
+				if (symmetricSuffixes){
+					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
+					newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
+					if (suffix.getAttribute(SUBTYPE_ATR)!=null){
+						newSuffix.addAttribute(new Attribute(SUBTYPE_ATR,  suffix.getAttributeValue(SUBTYPE_ATR)));
+					}
+					if (suffix.getAttribute(INFIX_ATR)!=null && suffix.getAttributeValue(INFIX_ATR).startsWith("=")){//clone infixes that effect double bonds but not single bonds e.g. maleamidate still should have one functional atom
+						newSuffix.addAttribute(new Attribute(INFIX_ATR,  suffix.getAttributeValue(INFIX_ATR)));
+					}
+				}
+				else{
+					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(ADDITIONALVALUE_ATR)));
+					newSuffix.addAttribute(new Attribute(TYPE_ATR, ROOT_EL));
+				}
+				newSuffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[i]) -1)));
+				XOMTools.insertAfter(suffix, newSuffix);
+				suffixes.add(newSuffix);
+			}
+		}
+		return imideSpecialCase;
+	}
+
+
 	/**Processes a suffix and returns any fragment the suffix intends to add to the molecule
 	 * @param state
 	 * @param suffixes The suffix elements for a fragment.
@@ -1508,8 +1533,8 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
 	 * @throws PostProcessingException
 	 */
-	private ArrayList<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag) throws StructureBuildingException, PostProcessingException {
-		ArrayList<Fragment> suffixFragments =new ArrayList<Fragment>();
+	private List<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag) throws StructureBuildingException, PostProcessingException {
+		List<Fragment> suffixFragments =new ArrayList<Fragment>();
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 
@@ -1806,7 +1831,7 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 * @throws PostProcessingException
 	 */
-	private void processInfixFunctionalReplacementNomenclature(BuildState state, List<Element> suffixes, ArrayList<Fragment> suffixFragments) throws StructureBuildingException, PostProcessingException {
+	private void processInfixFunctionalReplacementNomenclature(BuildState state, List<Element> suffixes, List<Fragment> suffixFragments) throws StructureBuildingException, PostProcessingException {
 		for (int i = 0; i < suffixes.size(); i++) {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute(INFIX_ATR)!=null){
@@ -2027,10 +2052,8 @@ class PreStructureBuilder {
 	 * @throws PostProcessingException
 	 * @throws StructureBuildingException
 	 */
-	private void disambiguateMultipliedInfixMeaning(BuildState state,
-			List<Element> suffixes, ArrayList<Fragment> suffixFragments,
-			Element suffix, Fragment suffixFrag,
-			List<String> infixTransformations, int oxygenAvailable)
+	private void disambiguateMultipliedInfixMeaning(BuildState state,List<Element> suffixes,
+			List<Fragment> suffixFragments,Element suffix, Fragment suffixFrag, List<String> infixTransformations, int oxygenAvailable)
 			throws PostProcessingException, StructureBuildingException {
 		Element possibleInfix =(Element) XOMTools.getPreviousSibling(suffix);
 		if (possibleInfix.getLocalName().equals(INFIX_EL)){//the infix is only left when there was ambiguity
@@ -2593,7 +2616,7 @@ class PreStructureBuilder {
 					if (groupFrag.hasLocant(locant)){
 						return true;
 					}
-					ArrayList<Fragment> suffixes =state.xmlSuffixMap.get(group);
+					List<Fragment> suffixes =state.xmlSuffixMap.get(group);
 					if (suffixes!=null){
 						for (Fragment suffix : suffixes) {
 							if (suffix.hasLocant(locant)){
@@ -2630,7 +2653,7 @@ class PreStructureBuilder {
 						if (groupFrag.hasLocant(locant)){
 							return true;
 						}
-						ArrayList<Fragment> suffixes =state.xmlSuffixMap.get(group);
+						List<Fragment> suffixes =state.xmlSuffixMap.get(group);
 						if (suffixes!=null){
 							for (Fragment suffix : suffixes) {
 								if (suffix.hasLocant(locant)){
@@ -3805,7 +3828,7 @@ class PreStructureBuilder {
 			Element el =childrenOfSubOrBracketOrRoot.get(j);
 			String name =el.getLocalName();
 			if (name.equals(SUFFIX_EL) || name.equals(UNSATURATOR_EL) || name.equals(CONJUNCTIVESUFFIXGROUP_EL)){
-				if (el.getAttribute(LOCANT_ATR) ==null && el.getAttribute(MULTIPLIED_ATR)==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
+				if (el.getAttribute(LOCANT_ATR) ==null && el.getAttribute(LOCANTID_ATR) ==null && el.getAttribute(MULTIPLIED_ATR)==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
 					if (subOrRoot.indexOf(el)>subOrRoot.indexOf(locantEl)){
 						locantAble.add(el);
 					}
@@ -3823,17 +3846,18 @@ class PreStructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void assignImplicitLocantsToDiTerminalSuffixes(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		Elements suffixEls = subOrRoot.getChildElements(SUFFIX_EL);
-		for (int i = 0; i < suffixEls.size()-1; i++) {
-			Element terminalSuffix1 = suffixEls.get(i);
+		Element terminalSuffix1 = subOrRoot.getFirstChildElement(SUFFIX_EL);
+		if (terminalSuffix1!=null){
 			if (isATerminalSuffix(terminalSuffix1) && XOMTools.getNextSibling(terminalSuffix1) != null){
 				Element terminalSuffix2 =(Element)XOMTools.getNextSibling(terminalSuffix1);
 				if (isATerminalSuffix(terminalSuffix2)){
 					Element hopefullyAChain = (Element) XOMTools.getPreviousSibling((Element)terminalSuffix1, GROUP_EL);
 					if (hopefullyAChain != null && hopefullyAChain.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){
-						terminalSuffix1.addAttribute(new Attribute(LOCANT_ATR, "1"));
-						terminalSuffix2.addAttribute(new Attribute(LOCANT_ATR, Integer.toString(state.xmlFragmentMap.get(hopefullyAChain).getChainLength())));
-						break;
+						int chainLength = state.xmlFragmentMap.get(hopefullyAChain).getChainLength();
+						if (chainLength >=2){
+							terminalSuffix1.addAttribute(new Attribute(LOCANT_ATR, "1"));
+							terminalSuffix2.addAttribute(new Attribute(LOCANT_ATR, Integer.toString(chainLength)));
+						}
 					}
 				}
 			}
@@ -3963,6 +3987,9 @@ class PreStructureBuilder {
             }
             if (idOnParentFragToUse == 0 && suffix.getAttribute(LOCANTID_ATR) != null) {
                 idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR));
+            }
+            if (idOnParentFragToUse == 0 && suffix.getAttribute(DEFAULTLOCANTID_ATR) != null) {
+                idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(DEFAULTLOCANTID_ATR));
             }
             if (idOnParentFragToUse == 0 && (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL))) {//means that e.g. sulfonyl has an explicit outAtom
                 idOnParentFragToUse = firstAtomID;

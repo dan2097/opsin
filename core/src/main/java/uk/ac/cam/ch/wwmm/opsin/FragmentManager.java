@@ -447,8 +447,8 @@ class FragmentManager {
 			Fragment newFragment = copyAndRelabelFragment(originalFragment, stringToAddToAllLocants);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
 			state.xmlFragmentMap.put(clonedGroups.get(i), newFragment);
-			ArrayList<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
-			ArrayList<Fragment> newSuffixFragments =new ArrayList<Fragment>();
+			List<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
+			List<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {
 				newSuffixFragments.add(state.fragManager.copyFragment(suffix));
 			}

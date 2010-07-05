@@ -29,6 +29,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
         usableAsAJoiner CDATA #IMPLIED
         frontLocantsExpected CDATA #IMPLIED
         suffixAppliesTo CDATA #IMPLIED
+        suffixAppliesToByDefault CDATA #IMPLIED
         additionalValue CDATA #IMPLIED
         typicalAndMaximumCharge CDATA #IMPLIED
         locant CDATA #IMPLIED>
@@ -56,6 +57,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
   usableAsAJoiner == "no" or missing. If no then make sure not to use it as such when assigning implicit brackets
   frontLocantsExpected == comma seperated list of locants indicating what locants are expected in front of this group. If one of these locants are found it will preferentially be assigned to the suffix of the group. The group should correspond to a retained name. (codified in P-29.6 of IUPAC 2004 rules)
   suffixAppliesTo == comma seperated ids indicating where the suffix following a group should be applied. Currently used to direct the formation of trivial di-acids. IDs are relative to this particular fragment
+  suffixAppliesToByDefault == same as suffixAppliesTo but can be overriden by given locants
   additionalValue == Another value that the token takes. Currently only used for suffixes that mean the addition of two discrete suffixes
   typicalAndMaximumCharge == For elements the maximum and typical charge are comma seperated specified. e.g. for aluminium 3 is typical. For manganese 7 is possible but atypical.
   locant == used for an/ane to prevent a locant being given

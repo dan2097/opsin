@@ -1,8 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +22,7 @@ class BuildState {
 	final FragmentManager fragManager;
 	WordRule currentWordRule = null;
 	final BiDirectionalHashMap xmlFragmentMap;
-	final HashMap<Element, ArrayList<Fragment>> xmlSuffixMap;
+	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
 	final boolean debug = false;
 
@@ -85,6 +85,6 @@ class BuildState {
 		idManager = new IDManager();
 		fragManager = new FragmentManager(sBuilder, cmlBuilder, idManager);
 		xmlFragmentMap = new BiDirectionalHashMap();
-		xmlSuffixMap = new HashMap<Element, ArrayList<Fragment>>();
+		xmlSuffixMap = new HashMap<Element, List<Fragment>>();
 	}
 }

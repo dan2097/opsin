@@ -16,7 +16,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="CCc1ccccc1" labels="alpha/beta/1/2/3/4/5/6" valType="SMILES">pheneth</token>
 		<token value="pyrrole" valType="dbkey">pyrr</token>
 		<token value="toluene" valType="dbkey" frontLocantsExpected="2,3,4">tol</token>
-		<token value="benzene" valType="dbkey" addGroup="C locant1;C locant2">xyl</token>
+		<token value="benzene" valType="dbkey" addGroup="C locant1 alpha;C locant2 alpha'">xyl</token>
 	</tokenList>
 
 	<!--Contracted form allows all suffixes -->
