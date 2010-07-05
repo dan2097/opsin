@@ -20,12 +20,12 @@
     <token value="S(O)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfur</token>
 
 <!--carbonic acid and some contractions-->
-    <token value="C(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">carbam</token>
+    <token value="C(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">carbam</token>
     <token value="C(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
 		<token value="CS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">mesyl</token>
-    <token value="S(N)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfam</token>
-    <token value="S(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfinam</token>
-    <token value="S(N)O" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfenam</token>
+    <token value="S(N)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">sulfam</token>
+    <token value="S(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">sulfinam</token>
+    <token value="S(N)O" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">sulfenam</token>
     <token value="S(=O)(=O)(C(F)(F)F)O" labels="none" valType="SMILES">trifl</token>
   </tokenList>
 
