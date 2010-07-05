@@ -159,6 +159,10 @@ class XmlDeclarations {
 	static final String DEFAULTINID_ATR = "defaultInID";
 	static final String OUTIDS_ATR = "outIDs";
 	static final String ACCEPTSADDITIVEBONDS_ATR = "acceptsAdditiveBonds";
+	
+	/**Works like a locant but refers to the atoms OPSIN id. Will be overridden by the locant/locantId attribute*/
+    static final String DEFAULTLOCANTID_ATR = "defaultLocantID";
+
 	static final String IMINOLIKE_ATR = "iminoLike";
 	
 	/**The functional replacement specified by an infix to be performed on the suffix*/
@@ -173,6 +177,7 @@ class XmlDeclarations {
     static final String USABLEASJOINER_ATR = "usableAsAJoiner";
     static final String FRONTLOCANTSEXPECTED_ATR = "frontLocantsExpected";
     static final String SUFFIXAPPLIESTO_ATR = "suffixAppliesTo";
+    static final String SUFFIXAPPLIESTOBYDEFAULT_ATR = "suffixAppliesToByDefault";
     static final String TYPICALANDMAXIMUMCHARGE_ATR = "typicalAndMaximumCharge";
     static final String ADDITIONALVALUE_ATR = "additionalValue";
     static final String LOCANT_ATR = "locant";

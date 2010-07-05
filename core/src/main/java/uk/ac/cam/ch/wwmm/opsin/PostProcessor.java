@@ -239,6 +239,9 @@ class PostProcessor {
 					if (m.matches()){
 						individualLocantText[j] = m.group(1) +m.group(2);
 					}
+					else if (locantText.length()>=3 && Character.isLetter(locantText.charAt(1)) && Character.isLetter(locantText.charAt(2))){//convert greeks to lower case
+						individualLocantText[j] = locantText.toLowerCase();
+					}
 				}
 			}
 			XOMTools.setTextChild(locant, StringTools.arrayToString(individualLocantText, ","));

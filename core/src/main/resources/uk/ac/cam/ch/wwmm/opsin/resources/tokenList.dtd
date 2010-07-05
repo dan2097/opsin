@@ -22,6 +22,7 @@
         usableAsAJoiner CDATA #IMPLIED
         frontLocantsExpected CDATA #IMPLIED
         suffixAppliesTo CDATA #IMPLIED
+        suffixAppliesToByDefault CDATA #IMPLIED
         additionalValue CDATA #IMPLIED
         typicalAndMaximumCharge CDATA #IMPLIED
         locant CDATA #IMPLIED>

@@ -272,5 +272,5 @@
   <token value="N1c(=O)[nH]c2nc[nH]c2c1=O" labels="1/2//3/4/9/8/7/5/6/" valType="SMILES">xanthin</token>
   <token value="c1cccc2[o+]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">xanthylium</token>
   <token value="c1cccc2Cc3ccc4c5ccc6Cc7ccccc7c8ccc9c%10ccc%11c12.c3%11c4%10.c59c68" labels="1/2/3/4/4a/5/5a/6/7/7a/7b/8/9/9a/10/10a/11/12/13/14/14a/14b/15/16/16a/16b/17/18/18a/18b/18c/18d/18e/18f" valType="SMILES">violanthren</token>
-  <token value="benzene" valType="dbkey" addGroup="C locant1;C locant2">xylen</token>
+  <token value="benzene" valType="dbkey" addGroup="C locant1 alpha;C locant2 alpha'">xylen</token>
 </tokenList>

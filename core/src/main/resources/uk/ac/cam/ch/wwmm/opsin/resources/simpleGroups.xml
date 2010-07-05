@@ -25,6 +25,7 @@
 		<token value="C(Br)(Br)(Br)" labels="none" valType="SMILES">bromoform</token>
 		<token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
 		<token value="CCCC[O+]" labels="1/2/3/4/" valType="SMILES">butoxylium</token>
+		<token value="[O-]C(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
 		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
 		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
 		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric acid</token>
@@ -138,6 +139,7 @@
 		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES">propione</token>
 		<token value="CCC[O-]" labels="1/2/3/" valType="SMILES">propoxide</token>
 		<token value="CCC[O+]" labels="1/2/3/" valType="SMILES">propoxylium</token>
+		<token value="C=CC" labels="1/2/3" valType="SMILES">propylene</token>
 		<token value="S=C(N)C(N)=S" labels="none" valType="SMILES">rubeanic acid</token>
 		<token value="[SeH2]=N" labels="none" valType="SMILES">selenilimine</token>
 		<token value="[SeH2](=O)=N" labels="none" valType="SMILES">selenoximide</token>
@@ -174,6 +176,7 @@
 		<token value="NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7" valType="SMILES">triuret</token>
 		<token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
+		<token value="C#C" labels="1/2" valType="SMILES">vinylene</token>
 		<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>
 
 		<token value="N" labels="none" valType="SMILES">ammonia</token>
