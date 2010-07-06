@@ -50,6 +50,8 @@
     <token value="[In]" valType="SMILES">indig</token>
     <token value="[Tl]" valType="SMILES">thall</token>
     <token value="[Hg]" valType="SMILES">mercur</token>
+
+    <token value="P" valType="SMILES">phosphor</token>
   </tokenList>
 
   <tokenList tagname="heteroatom" symbol="J"><!--hetero atoms that are compatable with an ine HWsuffix-->
@@ -76,6 +78,10 @@
     <token value="[Sn]" valType="SMILES">stann</token>
     <token value="[Pb]" valType="SMILES">plumb</token>
     <token value="[Hg]" valType="SMILES">mercur</token>
+
+    <token value="P" valType="SMILES">phosphor</token>
+    <token value="[As]" valType="SMILES">arsen</token>
+    <token value="[Sb]" valType="SMILES">antimon</token>
   </tokenList>
 
   <tokenList tagname="heteroatom" symbol="j"><!--hetero atoms that are compatable with an ane HWsuffix-->
@@ -92,5 +98,7 @@
     <token value="[Te]" valType="SMILES">tellur</token>
     <token value="[Bi]" valType="SMILES">bism</token>
     <token value="[Hg]" valType="SMILES">mercur</token>
+
+    <token value="[As]" valType="SMILES">arsen</token>
   </tokenList>
 </tokenLists>
