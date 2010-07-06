@@ -2,11 +2,11 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import dk.brics.automaton.SpecialOperations;
 
 /**
  * Handles storing and retrieving automata to/from files
@@ -49,17 +49,7 @@ class AutomatonInitialiser {
 		}
 		Automaton a = new RegExp(regex).toAutomaton();
 		if (reverseAutomaton){
-		    try {
-		    	@SuppressWarnings("unchecked")
-				Class specialOperations = Class.forName("dk.brics.automaton.SpecialOperations");
-		    	@SuppressWarnings("unchecked")
-				Method reverse =  specialOperations.getDeclaredMethod("reverse", new Class[]{Automaton.class});
-				reverse.setAccessible(true);
-				reverse.invoke(specialOperations, a);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				throw new RuntimeException("Unable to reverse automaton due to a reflection failure");
-			}
+			SpecialOperations.reverse(a);
 		}
 		RunAutomaton ra = new RunAutomaton(a, tableize);
 		try {
