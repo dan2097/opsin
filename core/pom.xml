@@ -29,7 +29,7 @@
       <dependency>
          <groupId>dk.brics</groupId>
          <artifactId>automaton</artifactId>
-         <version>1.11</version>
+         <version>1.11-3</version>
       </dependency>
       <dependency>
       	<groupId>xom</groupId>
