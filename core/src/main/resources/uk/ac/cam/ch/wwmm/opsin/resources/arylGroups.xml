@@ -193,7 +193,6 @@
   <token value="c1ccp2ccccc12" labels="1/2/3/4/5/6/7/8/8a" valType="SMILES">phosphindolizin</token>
   <token value="p1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">phosphinolin</token>
   <token value="c1cc[cH2]p2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">phosphinolizin</token>
-  <token value="P1=CC=CC=C1" valType="SMILES">phosphorin</token>
   <token value="phthalazine" valType="dbkey">phthalazin</token>
   <token value="C1NCCc2c3cc(OC)ccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6///7/8/8a/9/9a" valType="SMILES">pinolin</token>
   <token value="piperazine" valType="dbkey">piperazin</token>
