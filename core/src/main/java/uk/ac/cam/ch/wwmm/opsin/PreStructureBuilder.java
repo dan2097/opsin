@@ -3383,9 +3383,15 @@ class PreStructureBuilder {
 			if (previousGroup.getAttributeValue(ACCEPTSADDITIVEBONDS_ATR)!=null && XOMTools.getPreviousSibling(previousGroup.getParent())!=null){
 				return false;
 			}
-			//the initial multiplier is not proceded by another multiplier e.g. bis(dithio)
-			if (!((Element)XOMTools.getPrevious(multiplierBeforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
-				return true;
+			//the initial multiplier is proceded by another multiplier e.g. bis(dithio)
+			if (((Element)XOMTools.getPrevious(multiplierBeforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
+				return false;
+			}
+			if (previousGroup.getAttributeValue(ISAMULTIRADICAL_ATR).equals(multiplierBeforeGroup.getAttributeValue(VALUE_ATR))){
+				return true;//probably multiplicative
+			}
+			else{
+				return false;
 			}
 		}
 		return false;
