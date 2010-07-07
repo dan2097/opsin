@@ -115,16 +115,17 @@ class PostProcessor {
 		}
 		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(moleculeEl, GROUP_EL);
 
+		
+		/* Converts open/close bracket elements to bracket elements and
+		 *  places the elements inbetween within the newly created bracket */
+		while(findAndStructureBrackets(substituentsAndRoot));
+		
 		processHydroCarbonRings(moleculeEl);
 		for (Element group : groups) {
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
 		handleSuffixIrregularities(XOMTools.getDescendantElementsWithTagName(moleculeEl, SUFFIX_EL));//handles quinone -->dioxo
-
-		/* Converts open/close bracket elements to bracket elements and
-		 *  places the elements inbetween within the newly created bracket */
-		while(findAndStructureBrackets(substituentsAndRoot));
 
 		addOmittedSpaces(moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
@@ -733,6 +734,85 @@ class PostProcessor {
 				XOMTools.setTextChild(lambdaConventionEl, StringTools.arrayToString(lambdaValues, ","));
 			}
 		}
+	}
+
+	/**Finds matching open and close brackets, and places the
+	 * elements contained within in a big &lt;bracket&gt; element.
+	 *
+	 * @param substituentsAndRoot: The substituent/root elements at the current level of the tree
+	 * @return Whether the method did something, and so needs to be called again.
+	 * @throws PostProcessingException
+	 */
+	private boolean findAndStructureBrackets(List<Element> substituentsAndRoot) throws PostProcessingException {
+		int blevel = 0;
+		Element openBracket = null;
+		Element closeBracket = null;
+		for (Element sub : substituentsAndRoot) {
+			Elements children = sub.getChildElements();
+			for(int i=0; i<children.size(); i++) {
+				Element child = children.get(i);
+				if(child.getLocalName().equals(OPENBRACKET_EL)) {
+					if(openBracket == null) {
+						openBracket = child;
+					}
+					blevel++;
+				} else if (child.getLocalName().equals(CLOSEBRACKET_EL)) {
+					blevel--;
+					if(blevel == 0) {
+						closeBracket = child;
+						Element bracket = structureBrackets(openBracket, closeBracket);
+						while(findAndStructureBrackets(XOMTools.getDescendantElementsWithTagName(bracket, SUBSTITUENT_EL)));
+						return true;
+					}
+				}
+			}
+		}
+		if (blevel != 0){
+			throw new PostProcessingException("Brackets do not match!");
+		}
+		return false;
+	}
+
+	/**Places the elements in substituents containing/between an open and close bracket
+	 * in a &lt;bracket&gt; tag.
+	 *
+	 * @param openBracket The open bracket element
+	 * @param closeBracket The close bracket element
+	 * @return The bracket element thus created.
+	 */
+	private Element structureBrackets(Element openBracket, Element closeBracket) {
+		Element bracket = new Element(BRACKET_EL);
+		XOMTools.insertBefore(openBracket.getParent(), bracket);
+		/* Pick up everything in the substituent before the bracket*/
+		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
+			Node n = openBracket.getParent().getChild(0);
+			n.detach();
+			bracket.appendChild(n);
+		}
+		/* Pick up all nodes from the one with the open bracket,
+		 * to the one with the close bracket, inclusive.
+		 */
+		Node currentNode = openBracket.getParent();
+		while(!currentNode.equals(closeBracket.getParent())) {
+			Node nextNode = XOMTools.getNextSibling(currentNode);
+			currentNode.detach();
+			bracket.appendChild(currentNode);
+			currentNode = nextNode;
+		}
+		currentNode.detach();
+		bracket.appendChild(currentNode);
+		/* Pick up nodes after the close bracket */
+		currentNode = XOMTools.getNextSibling(closeBracket);
+		while(currentNode != null) {
+			Node nextNode = XOMTools.getNextSibling(currentNode);
+			currentNode.detach();
+			bracket.appendChild(currentNode);
+			currentNode = nextNode;
+		}
+		openBracket.detach();
+		closeBracket.detach();
+	
+		return bracket;
 	}
 
 	/**Looks for annulen/polyacene/polyaphene/polyalene/polyphenylene/polynaphthylene/polyhelicene tags and replaces them with a group with appropriate SMILES.
@@ -1448,6 +1528,19 @@ class PostProcessor {
 				throw new PostProcessingException("Hydrogen is not meant as a substituent in this context!");
 			}
 		}
+		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy")){
+			Element next = (Element) XOMTools.getNextSibling(group.getParent());
+			if (next!=null && next.getLocalName().equals(ROOT_EL)){
+				if (!(((Element)next.getChild(0)).getLocalName().equals(MULTIPLIER_EL))){
+					List<Element> suffixes = XOMTools.getChildElementsWithTagName(next, SUFFIX_EL);
+					if (suffixes.size()==0){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
+						Element newMultiplier = new Element(MULTIPLIER_EL);
+						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
+						next.insertChild(newMultiplier, 0);
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -1474,85 +1567,6 @@ class PostProcessor {
 				XOMTools.insertBefore(suffix, multiplier);
 			}
 		}
-	}
-
-	/**Finds matching open and close brackets, and places the
-	 * elements contained within in a big &lt;bracket&gt; element.
-	 *
-	 * @param substituentsAndRoot: The substituent/root elements at the current level of the tree
-	 * @return Whether the method did something, and so needs to be called again.
-	 * @throws PostProcessingException
-	 */
-	private boolean findAndStructureBrackets(List<Element> substituentsAndRoot) throws PostProcessingException {
-		int blevel = 0;
-		Element openBracket = null;
-		Element closeBracket = null;
-		for (Element sub : substituentsAndRoot) {
-			Elements children = sub.getChildElements();
-			for(int i=0; i<children.size(); i++) {
-				Element child = children.get(i);
-				if(child.getLocalName().equals(OPENBRACKET_EL)) {
-					if(openBracket == null) {
-						openBracket = child;
-					}
-					blevel++;
-				} else if (child.getLocalName().equals(CLOSEBRACKET_EL)) {
-					blevel--;
-					if(blevel == 0) {
-						closeBracket = child;
-						Element bracket = structureBrackets(openBracket, closeBracket);
-						while(findAndStructureBrackets(XOMTools.getDescendantElementsWithTagName(bracket, SUBSTITUENT_EL)));
-						return true;
-					}
-				}
-			}
-		}
-		if (blevel != 0){
-			throw new PostProcessingException("Brackets do not match!");
-		}
-		return false;
-	}
-
-	/**Places the elements in substituents containing/between an open and close bracket
-	 * in a &lt;bracket&gt; tag.
-	 *
-	 * @param openBracket The open bracket element
-	 * @param closeBracket The close bracket element
-	 * @return The bracket element thus created.
-	 */
-	private Element structureBrackets(Element openBracket, Element closeBracket) {
-		Element bracket = new Element(BRACKET_EL);
-		XOMTools.insertBefore(openBracket.getParent(), bracket);
-		/* Pick up everything in the substituent before the bracket*/
-		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
-			Node n = openBracket.getParent().getChild(0);
-			n.detach();
-			bracket.appendChild(n);
-		}
-		/* Pick up all nodes from the one with the open bracket,
-		 * to the one with the close bracket, inclusive.
-		 */
-		Node currentNode = openBracket.getParent();
-		while(!currentNode.equals(closeBracket.getParent())) {
-			Node nextNode = XOMTools.getNextSibling(currentNode);
-			currentNode.detach();
-			bracket.appendChild(currentNode);
-			currentNode = nextNode;
-		}
-		currentNode.detach();
-		bracket.appendChild(currentNode);
-		/* Pick up nodes after the close bracket */
-		currentNode = XOMTools.getNextSibling(closeBracket);
-		while(currentNode != null) {
-			Node nextNode = XOMTools.getNextSibling(currentNode);
-			currentNode.detach();
-			bracket.appendChild(currentNode);
-			currentNode = nextNode;
-		}
-		openBracket.detach();
-		closeBracket.detach();
-
-		return bracket;
 	}
 
 	/**
