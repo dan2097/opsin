@@ -75,6 +75,7 @@
 		<token value="#C" valType="SMILES">carbyne</token>
 		<token value="-[CH2+]" labels="none" valType="SMILES">carbynium</token>
 		<token value="-CC=CC" valType="SMILES">crotyl</token>
+		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
 		<token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES" defaultInLocant="5">hydantoyl</token>
@@ -119,6 +120,7 @@
 		<token value="-[TeH]" labels="none" valType="SMILES">telluryl</token>
 		<token value="toluene" valType="dbkey" addGroup="N locant4" outIDs="8">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2/3/4//5/6" valType="SMILES">tosyl</token>
+		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">triphospho</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>
 		<token value="-Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES" addGroup="C locant2;C locant3">xylidino</token>

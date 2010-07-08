@@ -83,6 +83,8 @@
   <token value="c1(C(=O)N)nccc2c3ccc(OC)cc3[nH]c12" labels="1////2/3/4/4a/4b/5/6/7///8/8a/9/9a" valType="SMILES">harmanamid</token>
   <token value="c1(C)nccc2c3ccc(OC)cc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7///8/8a/9/9a" valType="SMILES">harmin</token>
   <token value="NCCc1c[nH]cn1" labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi" valType="SMILES">histamin</token>
+  <token value="N1CCNCCC1" labels="1/2/3/4/5/6/7" valType="SMILES">homopiperazin</token>
+  <token value="N1CCCCCC1" labels="1/2/3/4/5/6/7" valType="SMILES">homopiperidin</token>
   <token value="N1C(=O)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">hydantoin</token>
   <token value="c1(O)ccc(O)cc1" labels="1//2/3/4//5/6" valType="SMILES" defaultInLocant="2">hydroquinon</token>
   <token value="[nH]1cnc2nc[nH]c2c1=O" labels="1/2/3/4/9/8/7/5/6/" valType="SMILES">hypoxanthin</token>
