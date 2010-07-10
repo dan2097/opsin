@@ -83,10 +83,14 @@
 		<token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token>
 		<token value="-[H]" labels="none" valType="SMILES">hydrogen</token>
 		<token value="-[SeH]" labels="none" valType="SMILES">hydroseleno</token>
+		<token value="-OCC(C)C" labels="none" valType="SMILES">isobutoxyl</token>
+		<token value="-C=C(C)C" labels="none" valType="SMILES">isocrotyl</token>
 		<token value="-NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
+		<token value="-CCC(=C)C" labels="none" valType="SMILES">isopentenyl</token><!--used in prenol nomenclature - overrides standard intepretation-->
 		<token value="-NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazido</token>
 		<token value="-C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
 		<token value="-S(=O)(=O)C" labels="none" valType="SMILES">mesyl</token>
+		<token value="-CC(C)=C" labels="none" valType="SMILES">methallyl</token>
 		<token value="-OC" labels="/1" valType="SMILES" usableAsAJoiner="yes">methoxyl</token>
 		<token value="-CO" labels="none" valType="SMILES">methylol</token>
 		<token value="morpholine" valType="dbkey" outIDs="4">morpholino</token>
@@ -94,6 +98,7 @@
 		<token value="-[O-]" labels="none" valType="SMILES">oxido</token>
 		<token value="-NO" labels="none" valType="SMILES">hydroxamino</token>
 		<token value="=NO" labels="none" valType="SMILES">hydroximino</token>
+		<token value="-OC(C)C" labels="none" valType="SMILES">isopropoxyl</token>
 		<token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">propoxyl</token>
 		<token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
 		<token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
@@ -103,7 +108,10 @@
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
 		<token value="piperazine" valType="dbkey" outIDs="1">piperazino</token>
 		<token value="piperidine" valType="dbkey" outIDs="1">piperidino</token>
+		<token value="-CC#C"  labels="none" valType="SMILES">propargyl</token>
 		<token value="pyrrolidine" valType="dbkey" outIDs="1">pyrrolidino</token>
+		<token value="-OC(C)CC" labels="none" valType="SMILES">sec-butoxyl</token>
+		<token value="-OC(C)CC" labels="none" valType="SMILES">secbutoxyl</token>
 		<token value="-[Se-]" labels="none" valType="SMILES">selenido</token>
 		<token value="-[Se](O)" labels="none" valType="SMILES">seleneno</token>
 		<token value="-[Se](=O)(O)" labels="none" valType="SMILES">selenino</token>
@@ -118,6 +126,10 @@
 		<token value="-[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
 		<token value="-[Te](=O)(=O)(O)" labels="none" valType="SMILES">tellurono</token>
 		<token value="-[TeH]" labels="none" valType="SMILES">telluryl</token>
+		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tert-butoxyl</token>
+		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tertbutoxyl</token>
+		<token value="-OC(C)(C)C" labels="none" valType="SMILES">t-butoxyl</token>
+		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tbutoxyl</token>
 		<token value="toluene" valType="dbkey" addGroup="N locant4" outIDs="8">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2/3/4//5/6" valType="SMILES">tosyl</token>
 		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">triphospho</token>

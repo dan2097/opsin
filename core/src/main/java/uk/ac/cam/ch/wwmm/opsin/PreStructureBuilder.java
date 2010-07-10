@@ -4050,34 +4050,14 @@ class PreStructureBuilder {
                         }
                     }
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
-                    int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
-                    int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
-                    if (idOnParentFragToUse == 0) {
-                        //Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
-                        //It's extremely rare to want a carbocation so any heteroatom is preferred with preference given to N
-                        Atom possibleAtom = null;
-                        for (Atom a : atomList) {
-                            if (ValencyChecker.getPossibleValencies(a.getElement(), a.getCharge() + chargeChange) == null) {//unstable valency so seems unlikely
-                                continue;
-                            }
-                            String element = a.getElement();
-                            if (element.equals("N")) {
-                                possibleAtom = a;
-                                break;
-                            } else if (!element.equals("C")) {
-                                if (possibleAtom == null) {
-                                    possibleAtom = a;
-                                }
-                            }
-                        }
-                        if (possibleAtom == null) {
-                            idOnParentFragToUse = atomList.get(defaultAtom).getID();
-                            defaultAtom++;
-                        } else {
-                            idOnParentFragToUse = possibleAtom.getID();
-                        }
-                    }
-                    frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
+            		if (idOnParentFragToUse != 0) {
+            			int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
+            			int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
+                		frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
+            		}
+            		else{
+                        applyUnlocantedChargeModification(atomList, suffixRuleTag);
+            		}
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
                     int outValency = suffixRuleTag.getAttribute(SUFFIXRULES_OUTVALENCY_ATR) != null ? Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR)) : 1;
                     if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
@@ -4122,6 +4102,73 @@ class PreStructureBuilder {
                 state.fragManager.incorporateFragment(suffixFrag, frag);
             }
         }
+	}
+
+
+	/**
+	 * Preference is given to mono cation/anions as they are expected to be more likely
+	 * Additionally, Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
+	 * Hence preference is given to nitrogen atoms and then to non carbon atoms
+	 * @param atomList
+	 * @param suffixRuleTag
+	 * @throws StructureBuildingException
+	 */
+	private void applyUnlocantedChargeModification(List<Atom> atomList, Element suffixRuleTag) throws StructureBuildingException {
+		int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
+		int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
+
+	    Atom likelyAtom = null;
+	    Atom possibleHeteroatom = null;
+	    Atom possibleCarbonAtom = null;
+	    Atom possibleDiOrHigherIon = null;
+	    for (Atom a : atomList) {
+	    	Integer[] stableValencies = ValencyChecker.getPossibleValencies(a.getElement(), a.getCharge() + chargeChange);
+	        if (stableValencies == null) {//unstable valency so seems unlikely
+	            continue;
+	        }
+	        String element = a.getElement();
+	        int resultantExpectedValency = (a.getLambdaConventionValency() ==null ? ValencyChecker.getDefaultValency(element) :  a.getLambdaConventionValency()) + a.getProtonsExplicitlyAddedOrRemoved() + protonChange;
+	        boolean matched = false;
+	        for (Integer stableValency : stableValencies) {
+				if (stableValency ==resultantExpectedValency){
+					matched =true;
+					break;
+				}
+			}
+        	if (!matched){//unstable valency so seems unlikely
+        		continue;
+        	}
+        	if (Math.abs(a.getCharge())==0){
+        		if (element.equals("N")){
+        			likelyAtom = a;
+        			break;
+        		}
+        		else if (possibleHeteroatom ==null && !element.equals("C")){
+        			possibleHeteroatom= a;
+        		}
+        		else if (possibleCarbonAtom ==null){
+	        		possibleCarbonAtom = a;
+        		}
+        	}
+        	else if (possibleDiOrHigherIon ==null){
+        		possibleDiOrHigherIon = a;
+        	}
+	    }
+	    if (likelyAtom == null) {
+	    	if (possibleHeteroatom !=null){
+	    		likelyAtom = possibleHeteroatom;
+	    	}
+	    	else if (possibleCarbonAtom !=null){
+	    		likelyAtom = possibleCarbonAtom;
+	    	}
+	    	else if (possibleDiOrHigherIon !=null){
+	    		likelyAtom = possibleDiOrHigherIon;
+	    	}
+	    	else{
+	    		likelyAtom = atomList.get(0);
+	    	}
+	    }
+	    likelyAtom.addChargeAndProtons(chargeChange, protonChange);
 	}
 
 	/**

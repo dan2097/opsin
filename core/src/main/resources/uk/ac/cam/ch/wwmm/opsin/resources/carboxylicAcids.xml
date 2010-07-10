@@ -21,9 +21,11 @@
     <token value="6" valType="chain" usableAsAJoiner="yes">capro</token>
     <token value="8" valType="chain" usableAsAJoiner="yes">capryl</token>
     <token value="7" valType="chain" usableAsAJoiner="yes">enanth</token>
+    <token value="CC(C)C" labels="none" valType="SMILES" suffixAppliesTo="1,4">isosuccin</token>
     <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
     <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
     <token value="9" valType="chain" usableAsAJoiner="yes">pelargon</token>
+    <token value="CC#CC" labels="1/2/3/4" valType="SMILES">tetrol</token>
   </tokenList>
 
   <!--This is the set of trivial acids in which yl is used as above but oyl is recommended-->
@@ -54,6 +56,7 @@
     <token value="CCOCC" labels="none" valType="SMILES" suffixAppliesTo="1,5">diglycol</token>
     <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
     <token value="CCNC(=O)c1ccccc1" labels="/////1/2/3/4/5/6" valType="SMILES">hippur</token>
+    <token value="CCCO" valType="SMILES">hydracryl</token>
     <token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">mal</token>
     <token value="CC(=O)C" labels="none" valType="SMILES">pyruv</token>
     <token value="S(=O)c1ccccc1" labels="//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4">sulfanil</token>
@@ -114,6 +117,9 @@
     <token value="27" valType="chain" usableAsAJoiner="yes">heptacosyl</token><!--clashes with a systematic name-->
     <token value="36" valType="chain" usableAsAJoiner="yes">hexatriacontyl</token><!--clashes with a systematic name-->
     <token value="CCNC(=O)N" labels="1/2/3/4//5" valType="SMILES">hydant</token><!--unknown-->
+		<token value="C/C=C\C(NC(N)=O)=O" labels="none" valType="SMILES">maleur</token><!--unknown-->
+		<token value="CC(/Br)=C(/Br)C=O" labels="none" valType="SMILES">mucobrom</token><!--unknown-->
+		<token value="CC(/Cl)=C(/Cl)C=O" labels="none" valType="SMILES">mucochlor</token><!--unknown-->
     <token value="19" valType="chain" usableAsAJoiner="yes">nonadecyl</token><!--clashes with a systematic name-->
     <token value="29" valType="chain" usableAsAJoiner="yes">nonacosyl</token><!--clashes with a systematic name-->
     <token value="CC(=O)N" labels="1/2//" valType="SMILES">oxam</token><!--oxamyl is something else?-->
