@@ -32,6 +32,7 @@
 		<token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
 		<token value="CCCC[O+]" labels="1/2/3/4/" valType="SMILES">butoxylium</token>
 		<token value="CCCC=NO" labels="none" valType="SMILES">butyraldoxime</token>
+		<token value="NCCCCCN" labels="/1/2/3/4/5/" valType="SMILES">cadaverine</token>
 		<token value="[O-]C(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
 		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
 		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
@@ -121,6 +122,7 @@
 		<token value="NC([TeH])=N" labels="1//2/3" valType="SMILES">isotellurourea</token>
 		<token value="NC(S)=N" labels="1//2/3" valType="SMILES">isothiourea</token>
 		<token value="NC(O)=N" labels="1//2/3" valType="SMILES">isourea</token>
+    <token value="C(=O)([O-])C(CO)(O)CC(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3,11">itatartrate</token>
 		<token value="CS(=O)(=O)[O-]" labels="none" valType="SMILES" functionalIDs="5">mesilate</token>
 		<token value="O=CC(C)=C" labels="none" valType="SMILES">methacrolein</token>
 		<token value="O=P(SC)(N)OC" labels="none" valType="SMILES">methamidophos</token>
@@ -129,6 +131,7 @@
 		<token value="COCOC" labels="none" valType="SMILES">methylal</token>
 		<token value="C(O)CN" labels="none" valType="SMILES">monoethanolamine</token>
 		<token value="C(OC)COC" labels="1///2//" valType="SMILES">monoglyme</token>
+		<token value="OCC(C)(CO)C" labels="none" valType="SMILES">neopentyl glycol</token>
 		<token value="C=C[N+](C)(C)C.[OH-]" labels="none" valType="SMILES">neurine</token>
 		<token value="N[N+](=O)([O-])" labels="none" valType="SMILES" functionalIDs="1,1">nitramide</token>
 		<token value="[NH2+]" labels="none" valType="SMILES">nitrenium</token>
@@ -144,6 +147,8 @@
 		<token value="O=[O+][O-]" labels="none" valType="SMILES">ozone</token>
 		<token value="OO[O-]" labels="none" valType="SMILES" outIDs="1">ozonide</token>
 		<token value="OCC(CO)(CO)CO" labels="none" valType="SMILES">pentaerythritol</token>
+		<token value="OCC(CO)(COCC(CO)(CO)CO)CO" labels="none" valType="SMILES">dipentaerythritol</token>
+		<token value="OCC(CO)(COCC(CO)(COCC(CO)(CO)CO)CO)CO" labels="none" valType="SMILES">tripentaerythritol</token>
 		<token value="NC(=N)NC(=N)NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7//8/9//10/11" valType="SMILES">pentaguanide</token>
 		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////4////5////" valType="SMILES" functionalIDs="1,3,8,12,16,20,21">pentaphosphate</token>
 		<token value="NC(=O)NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9/10//11" valType="SMILES">pentauret</token>
@@ -152,6 +157,7 @@
 		<token value="P(=O)(N)(N)N" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoramide</token>
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO" labels="none" valType="SMILES">phytol</token>
 		<token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
+		<token value="C=CC=CC" labels="1/2/3/4/5" valType="SMILES">piperylene</token>
 		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES">propione</token>
 		<token value="CCC[O-]" labels="1/2/3/" valType="SMILES">propoxide</token>
 		<token value="CCC[O+]" labels="1/2/3/" valType="SMILES">propoxylium</token>
@@ -175,6 +181,7 @@
 		<token value="[SH2](=O)=N" labels="none" valType="SMILES">sulfoximine</token>
 		<token value="[SH3+]=O" labels="none" valType="SMILES">sulfoxonium</token>
 		<token value="O=P(C#N)(N(C)C)OCC" labels="none" valType="SMILES">tabun</token>
+    <token value="C(=O)([O-])C(O)C(O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">tartrate</token>
 		<token value="[TeH2]=N" labels="none" valType="SMILES">tellurilimine</token>
 		<token value="[TeH2](=O)=N" labels="none" valType="SMILES">telluroximide</token>
 		<token value="[TeH2](=O)=N" labels="none" valType="SMILES">telluroximine</token>
