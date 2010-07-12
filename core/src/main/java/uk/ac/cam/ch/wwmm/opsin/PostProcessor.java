@@ -73,6 +73,7 @@ class PostProcessor {
 	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
 	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsez])");
+	private final Pattern matchStar = Pattern.compile("\\*");
 	private final Pattern matchRS = Pattern.compile("[RSrs]");
 	private final Pattern matchEZ = Pattern.compile("[EZez]");
 	private final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
@@ -459,9 +460,11 @@ class PostProcessor {
 			Element stereoChemistryElement = stereoChemistryElements.get(i);
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				String txt = stereoChemistryElement.getValue();
-				if (txt.startsWith("rel-") || txt.contains("*")){
-					throw new PostProcessingException("Relative stereochemistry is not yet supported");
+				if (txt.startsWith("rel-")){
+					txt = txt.substring(4);
 				}
+				Matcher starMatcher = matchStar.matcher(txt);
+				txt = starMatcher.replaceAll("");
 				if (!txt.startsWith("rac-")){
 					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
 					String[] stereoChemistryDescriptors = matchComma.split(txt);
