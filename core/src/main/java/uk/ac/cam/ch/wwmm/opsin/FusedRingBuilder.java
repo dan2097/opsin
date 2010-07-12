@@ -162,7 +162,7 @@ class FusedRingBuilder {
 			}
 			String[] fusionDescriptors =null;
 			if (fusion !=null){
-				String fusionDescriptorString = fusion.getValue().substring(1, fusion.getValue().length()-1);
+				String fusionDescriptorString = fusion.getValue().toLowerCase().substring(1, fusion.getValue().length()-1);
 				if (multiplier ==1){
 					fusionDescriptors = new String[]{fusionDescriptorString};
 				}
@@ -384,7 +384,7 @@ class FusedRingBuilder {
 				if (multiplier>1 && multiplier != previousFusionLevelFragments.size()){
 					throw new StructureBuildingException("Mismatch between number of components and number of parents in fused ring system");
 				}
-				String fusionDescriptorString = fusion.getValue().substring(1, fusion.getValue().length()-1);
+				String fusionDescriptorString = fusion.getValue().toLowerCase().substring(1, fusion.getValue().length()-1);
 				String[] fusionDescriptors =null;
 				if (matchSemiColon.split(fusionDescriptorString).length >1){
 					fusionDescriptors = matchSemiColon.split(fusionDescriptorString);
