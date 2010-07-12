@@ -4138,6 +4138,9 @@ class PreStructureBuilder {
         	if (!matched){//unstable valency so seems unlikely
         		continue;
         	}
+        	if (protonChange <0 && StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a)<=0){
+        		continue;
+        	}
         	if (Math.abs(a.getCharge())==0){
         		if (element.equals("N")){
         			likelyAtom = a;
