@@ -244,6 +244,32 @@
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@@H](CCCC[NH3+])C(=O)O">l-lysinium(2+)</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1//" valType="SMILES" value="[NH3+][C@H](CCCC[NH3+])C(=O)O">d-lysinium(2+)</token>
 
+    <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(=O)O)C=O" functionalIDs="6">aspart-1-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(=O)O)C=O" functionalIDs="6">l-aspart-1-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@H](CC(=O)O)C=O" functionalIDs="6">d-aspart-1-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC(=O))C(=O)O" functionalIDs="8">aspart-4-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC(=O))C(=O)O" functionalIDs="8">l-aspart-4-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@H](CC(=O))C(=O)O" functionalIDs="8">d-aspart-4-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(=O)O)CO" functionalIDs="6">aspart-1-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@@H](CC(=O)O)CO" functionalIDs="6">l-aspart-1-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1/" valType="SMILES" value="N[C@H](CC(=O)O)CO" functionalIDs="6">d-aspart-1-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC(O))C(=O)O" functionalIDs="8">aspart-4-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@@H](CC(O))C(=O)O" functionalIDs="8">l-aspart-4-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1//" valType="SMILES" value="N[C@H](CC(O))C(=O)O" functionalIDs="8">d-aspart-4-ol</token>
+
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(=O)O)C=O" functionalIDs="7">glutam-1-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(=O)O)C=O" functionalIDs="7">l-glutam-1-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@H](CCC(=O)O)C=O" functionalIDs="7">d-glutam-1-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC(=O))C(=O)O" functionalIDs="9">glutam-4-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC(=O))C(=O)O" functionalIDs="9">l-glutam-4-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@H](CCC(=O))C(=O)O" functionalIDs="9">d-glutam-4-al</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(=O)O)CO" functionalIDs="7">glutam-1-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(=O)O)CO" functionalIDs="7">l-glutam-1-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@H](CCC(=O)O)CO" functionalIDs="7">d-glutam-1-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC(O))C(=O)O" functionalIDs="9">glutam-4-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC(O))C(=O)O" functionalIDs="9">l-glutam-4-ol</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@H](CCC(O))C(=O)O" functionalIDs="9">d-glutam-4-ol</token>
+
     <token value="N(C(C)C(=O)O)C(C)C(=O)O" valType="SMILES" labels="none" functionalIDs="6,11">alanopine</token>
     <token value="N(C(C)C(=O)O)CCC(=O)O" valType="SMILES" labels="none" functionalIDs="6,11">beta-alanopine</token>
     <token value="NC(CC)C(=O)O" labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" functionalIDs="7">butyrine</token>

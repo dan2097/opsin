@@ -69,7 +69,8 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="aminoAcid"><!--e.g. glycine -> glycinol -->
-    <suffix value="al">aldehyde</suffix>
+    <suffix value="al" subType="endInIne">aldehyde</suffix>
+    <suffix value="al" subType="endInAn">aldehyde</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="amide">amide</suffix>
     <suffix value="amidylium">amidylium</suffix>
@@ -79,7 +80,8 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="ate">ate</suffix>
     <suffix value="ic">ic</suffix>
     <suffix value="ium">ium</suffix>
-    <suffix value="ol">ol</suffix>
+    <suffix value="ol" subType="endInIne">ol</suffix>
+    <suffix value="ol" subType="endInAn">ol</suffix>
     <suffix value="oyl">oyl</suffix>
     <suffix value="yl">oyl</suffix>
     <suffix value="aminoAcidO">yl</suffix><!--e.g. glycino-->
