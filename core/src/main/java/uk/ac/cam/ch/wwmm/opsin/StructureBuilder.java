@@ -1380,24 +1380,23 @@ class StructureBuilder {
 						}
 					}
 					else{
-						//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
-						List<Atom> neighbours = parentAtom.getAtomNeighbours();
-						for (Atom atom : atomRefs4) {
-							neighbours.remove(atom);
-						}
-						if (neighbours.size()!=1){
-							throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
-						}
-						boolean setAtom =false;
+						Integer positionOfImplicitHydrogen = null;
 						for (int i = 0; i < atomRefs4.length; i++) {
 							if (atomRefs4[i].equals(AtomParity.hydrogen)){
-								atomRefs4[i] = neighbours.get(0);
-								setAtom =true;
+								positionOfImplicitHydrogen = i;
 								break;
 							}
 						}
-						if (!setAtom){
-							throw new StructureBuildingException("OPSIN Bug: Unable to find implicit hydrogen to replace with explicit hydrogen in atomRefs4");
+						if (positionOfImplicitHydrogen !=null){
+							//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
+							List<Atom> neighbours = parentAtom.getAtomNeighbours();
+							for (Atom atom : atomRefs4) {
+								neighbours.remove(atom);
+							}
+							if (neighbours.size()!=1){
+								throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+							}
+							atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
 						}
 					}
 				}

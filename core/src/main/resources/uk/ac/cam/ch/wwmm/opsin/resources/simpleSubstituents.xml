@@ -14,6 +14,8 @@
 		<token value="-C#C" labels="none" valType="SMILES">acetenyl</token>
 		<token value="=[N+]([O-])O" labels="none" valType="SMILES">aci-nitro</token>
 		<token value="-C(=O)C=C" labels="1//2/3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">acryl</token>
+		<token value="-CC(C)CC" labels="none" valType="SMILES">active-amyl</token>
+		<token value="-CC(C)CC" labels="none" valType="SMILES">activeamyl</token>
 		<token value="-C(=O)C(=O)N" labels="none" valType="SMILES">amidoxalyl</token>
 		<token value="-ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
 		<token value="-OCCCCC" valType="SMILES">amoxy</token>
@@ -26,9 +28,11 @@
 		<token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
 		<token value="-OCCC(C)C" valType="SMILES">isoamoxy</token>
 		<token value="-CCC(C)C" valType="SMILES">isoamyl</token>
+		<token value="=CCC(C)C" valType="SMILES">isoamylidene</token>
 		<token value="-CC(C)(C)C" valType="SMILES">neoamyl</token>
 		<token value="-C(C)(C)CC" labels="none" valType="SMILES">t-amyl</token>
 		<token value="-C(C)(C)CC" labels="none" valType="SMILES">tert-amyl</token>
+		<token value="-C(C)(C)CC" labels="none" valType="SMILES">tertamyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">anilino</token>
 		<token value="-COc1ccccc1" labels="alpha//1/2/3/4/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
@@ -108,8 +112,11 @@
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2////3/4////5/6///" valType="SMILES">picryl</token>
 		<token value="piperazine" valType="dbkey" outIDs="1">piperazino</token>
 		<token value="piperidine" valType="dbkey" outIDs="1">piperidino</token>
+		<token value="-CC=C(C)C" labels="none" valType="SMILES">prenyl</token>
 		<token value="-CC#C"  labels="none" valType="SMILES">propargyl</token>
 		<token value="pyrrolidine" valType="dbkey" outIDs="1">pyrrolidino</token>
+		<token value="-C(C)C(C)C" labels="none" valType="SMILES">sec-isoamyl</token>
+		<token value="-C(C)C(C)C" labels="none" valType="SMILES">secisoamyl</token>
 		<token value="-OC(C)CC" labels="none" valType="SMILES">sec-butoxyl</token>
 		<token value="-OC(C)CC" labels="none" valType="SMILES">secbutoxyl</token>
 		<token value="-[Se-]" labels="none" valType="SMILES">selenido</token>
@@ -118,6 +125,7 @@
 		<token value="-[Se](=O)(=O)(O)" labels="none" valType="SMILES">selenono</token>
 		<token value="-[SeH]" labels="none" valType="SMILES">selenyl</token>
 		<token value="-NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazido</token>
+		<token value="-C(C)C(C)C" labels="none" valType="SMILES">siamyl</token>
 		<token value="-[S-]" labels="none" valType="SMILES">sulfido</token>
 		<token value="-S(=O)(O)" labels="none" valType="SMILES">sulfino</token>
 		<token value="-S(=O)(=O)(O)" labels="none" valType="SMILES">sulfo</token>

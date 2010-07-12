@@ -50,6 +50,7 @@
 
     <token value="CCNC(=O)C" labels="none" valType="SMILES">acetur</token>
     <token value="CNC(=O)N" labels="1/2/3//4" valType="SMILES">allophan</token>
+		<token value="C/C(C)=C\C" labels="none" valType="SMILES">angel</token>
     <token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
     <token value="CNNC" labels="none" valType="SMILES" suffixAppliesTo="1,4">bicarbam</token>
     <token value="CCO" labels="1/2/" valType="SMILES">glycol</token>
@@ -110,13 +111,20 @@
 
     <token value="CC(NC(=O)N)NC(=O)N" labels="none" valType="SMILES">allant</token><!--unknown-->
     <token value="CNN" labels="1/2/3" valType="SMILES">carbaz</token><!--unknown-->
+    <token value="CC(C)(O)CC" labels="none" valType="SMILES" suffixAppliesTo="1,6">citramal</token><!--coA yl only-->
     <token value="C(N(CC)CC)CN(CC)CC" labels="none" valType="SMILES" suffixAppliesTo="4,6,10,12">edet</token><!--unknown-->
     <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2/3//4//5//6" valType="SMILES">gall</token><!--unknown-->
+    <token value="CC=CCC" labels="none" valType="SMILES" suffixAppliesTo="1,5">glutacon</token><!--coA yl only-->
     <token value="31" valType="chain" usableAsAJoiner="yes">henatriacontyl</token><!--clashes with a systematic name-->
     <token value="21" valType="chain" usableAsAJoiner="yes">heneicosyl</token><!--clashes with a systematic name-->
     <token value="27" valType="chain" usableAsAJoiner="yes">heptacosyl</token><!--clashes with a systematic name-->
     <token value="36" valType="chain" usableAsAJoiner="yes">hexatriacontyl</token><!--clashes with a systematic name-->
     <token value="CCNC(=O)N" labels="1/2/3/4//5" valType="SMILES">hydant</token><!--unknown-->
+    <token value="CC(C)CC" labels="none" valType="SMILES">hydrangel</token><!--unknown-->
+    <token value="CC(=C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">itacon</token><!--coA yl only-->
+    <token value="CC(CO)CC" labels="none" valType="SMILES" suffixAppliesTo="1,6">itamal</token><!--unknown-->
+    <token value="CC(CO)(O)CC" labels="none" valType="SMILES" suffixAppliesTo="1,7">itatartar</token><!--unknown-->
+    <token value="CCCC(=O)C" labels="none" valType="SMILES">levulin</token><!--unknown-->
 		<token value="C/C=C\C(NC(N)=O)=O" labels="none" valType="SMILES">maleur</token><!--unknown-->
 		<token value="CC(/Br)=C(/Br)C=O" labels="none" valType="SMILES">mucobrom</token><!--unknown-->
 		<token value="CC(/Cl)=C(/Cl)C=O" labels="none" valType="SMILES">mucochlor</token><!--unknown-->
@@ -128,9 +136,12 @@
     <token value="15" valType="chain" usableAsAJoiner="yes">pentadecyl</token><!--clashes with a systematic name-->
     <token value="25" valType="chain" usableAsAJoiner="yes">pentacosyl</token><!--clashes with a systematic name-->
     <token value="Cc1cc2OCOc2cc1" labels="none" valType="SMILES">piperonyl</token><!--unknown-->
+    <token value="CC(C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">pyrotartar</token><!--unknown-->
     <token value="Cc1c(O)cccc1" labels="/1/2//3/4/5/6" valType="SMILES" defaultInID="4">salicyl</token><!--c.f. acetylsalicylic acid-->
+    <token value="CC=C(C)C" labels="none" valType="SMILES">seneci</token><!--unknown-->
     <token value="CC(O)C(O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">tartar</token><!--unknown-->
     <token value="CC(O)C" suffixAppliesTo="1,4" labels="none" valType="SMILES">tartron</token><!--unknown-->
+		<token value="C\C(C)=C\C" labels="none" valType="SMILES">tigl</token><!--both-->
     <token value="23" valType="chain" usableAsAJoiner="yes">tricosyl</token><!--clashes with a systematic name-->
     <token value="13" valType="chain" usableAsAJoiner="yes">tridecyl</token><!--clashes with a systematic name-->
     <token value="CC(CO)c1ccccc1" labels="////1/2/3/4/5/6" valType="SMILES">trop</token><!--tropyl is something else?-->
