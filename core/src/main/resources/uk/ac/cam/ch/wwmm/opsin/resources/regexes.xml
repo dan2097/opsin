@@ -110,7 +110,7 @@ does not define a CFG.
   <regex name="%relativeCisTrans%" value="¼"/>
   <regex name="%fusionRingAcceptsFrontLocants%" value="¡"/>
   <regex name="%trivialRingSubstituentAnySuffix%" value="«"/>
-  <!--up to ascii 174 used -->
+  <!--up to ascii 174 used, 170 unused -->
 
 <!-- composite regexes-->
 

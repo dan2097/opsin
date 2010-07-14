@@ -1,5 +1,5 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
-version 0.7.0 (see ReleaseNotes.txt for what's new in this version)
+version 0.8.0 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 
@@ -14,11 +14,11 @@ OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 
 OPSIN is available as a standalone JAR from SourceForge(https://sourceforge.net/projects/oscar3-chem/) or Bitbucket (http://bitbucket.org/dan2097/opsin/)
 It is also available as a dependency for use with Maven.
-java -jar opsin-0.7.0-jar-with-dependencies.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
-opsin-0.7.0-jar-with-dependencies.jar includes InChI and CML output and all dependendencies
+java -jar opsin-0.8.0-jar-with-dependencies.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
+opsin-0.8.0-jar-with-dependencies.jar includes InChI and CML output and all dependendencies
 The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI
 
-To use OPSIN as a library add opsin-0.7.0-jar-with-dependencies.jar to your classpath.
+To use OPSIN as a library add opsin-0.8.0-jar-with-dependencies.jar to your classpath.
 
 If you are using Maven then do the following:
 	Add our repository:
@@ -31,7 +31,7 @@ If you are using Maven then do the following:
 		<dependency>
 			 <groupId>opsin</groupId>
 			 <artifactId>core</artifactId>
-			 <version>0.7.0</version>
+			 <version>0.8.0</version>
 		</dependency>
 	If you need just CML output support
 
@@ -39,7 +39,7 @@ If you are using Maven then do the following:
 		<dependency>
 			 <groupId>opsin</groupId>
 			 <artifactId>inchi</artifactId>
-			 <version>0.7.0</version>
+			 <version>0.8.0</version>
 		</dependency>
 
 	if you also need InChI output support.
