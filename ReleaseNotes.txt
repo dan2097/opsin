@@ -1,3 +1,16 @@
+Version 0.8.0
+NameToStructureConfig can now be used to configure whether radicals e.g. ethyl are output or not.
+Names like carbon tetrachloride are now supported
+glycol ethers e.g. ethylene glycol ethyl ether are now supported
+Prefix functional replacement support now includes halogens e.g. chlorophosphate
+Added support for epoxy/epithio/episeleno/epitelluro
+Added suport for hydrazides/fluorohydrins/chlorohydrins/bromohydrins/iodohydrins/cyanohydrins/acetals/ketals/hemiacetals/hemiketals/diketones/disulfones named using functional class nomenclature
+Improvements to algorithm for assigning and finding atoms corresponding to element symbol locants
+Added experimental right to left parser (ReverseParseRules.java)
+Vocabulary improvements
+Parsing is now even faster
+Various bug fixes and name intepretation fixes
+
 Version 0.7.0
 Added full support for conjunctive nomenclature e.g. 1,3,5-benzenetriacetic acid
 Added basic support for CAS names
