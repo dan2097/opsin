@@ -338,8 +338,22 @@ class FragmentTools {
 		while (nextAtoms.size() > 0){
 			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, nextAtoms);
 		}
-		if (!atomsToIgnore.contains(firstAtom) && firstAtom.getElement().equals("C") && ValencyChecker.checkValencyAvailableForBond(firstAtom, 1)){//e.g. carbonimidoyl
-			assignLocant(firstAtom, elementCount);
+		if (!atomsToIgnore.contains(firstAtom)){
+			//e.g. carbonimidoyl the carbon has locant C
+			Integer[] stableValencies = ValencyChecker.getPossibleValencies(firstAtom.getElement(), firstAtom.getCharge());
+			int incomingValency = firstAtom.getIncomingValency();
+			boolean substitutable = true;
+			if (stableValencies !=null){
+				for (Integer stableValency : stableValencies) {
+					if (stableValency == incomingValency){
+						substitutable =false;
+						break;
+					}
+				}
+			}
+			if (substitutable){
+				assignLocant(firstAtom, elementCount);
+			}
 		}
 	}
 

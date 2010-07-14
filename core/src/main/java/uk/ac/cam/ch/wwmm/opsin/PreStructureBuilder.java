@@ -4325,7 +4325,8 @@ class PreStructureBuilder {
 			}
 
 			Element parent =(Element) subOrBracket.getParent();
-			if (!parent.getLocalName().equals(WORD_EL)){//attempt to find cases where locant will not be utilised. This if statement allows the use of locants for ester formation
+			//attempt to find cases where locant will not be utilised. This if statement allows the use of locants for ester formation
+			if (!parent.getLocalName().equals(WORD_EL) || (parent.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && !state.currentWordRule.equals(WordRule.carbonylDerivative))){
 				Elements children =parent.getChildElements();
 				boolean foundSomethingToSubstitute =false;
 				for (int i = parent.indexOf(subOrBracket) +1 ; i < children.size(); i++) {
