@@ -35,11 +35,11 @@
     <token labels="/2,alpha/3,beta/O/4,gamma/1" valType="SMILES" value="N[C@@H]([C@@H](O)C)C" suffixAppliesTo="6">allothreon</token>
     <token labels="/alpha/beta/1/2/3/4/5/6/O/" valType="SMILES" value="N[C@@H](Cc1ccc(cc1)O)C" suffixAppliesTo="11">tyros</token>
     <token labels="/2,alpha/3,beta/4',gamma'/4,gamma/1" valType="SMILES" value="N[C@@H](C(C)C)C" suffixAppliesTo="6">val</token>
-    <token labels="/2,alpha/3,beta/4,gamma/O/" valType="SMILES" value="N[C@@H](CCO)C" suffixAppliesTo="6">homoser</token>
-    <token labels="/2,alpha/3,beta/4,gamma//" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">homocyste</token>
-		<token labels="/2,alpha/3,beta/4,gamma//" valType="SMILES" value="N[C@@H](CC[Se])C" suffixAppliesTo="6">selenohomocyste</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6">norval</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" valType="SMILES" value="N[C@@H](CCCC)C" suffixAppliesTo="7">norleuc</token>
+    <token labels="/2,alpha/3,beta/4,gamma/O/1" valType="SMILES" value="N[C@@H](CCO)C" suffixAppliesTo="6">homoser</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">homocyste</token>
+		<token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CC[Se])C" suffixAppliesTo="6">selenohomocyste</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6">norval</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" valType="SMILES" value="N[C@@H](CCCC)C" suffixAppliesTo="7">norleuc</token>
     <token labels="/3,beta/2,alpha/1" valType="SMILES" value="NCCC" suffixAppliesTo="4">beta-alan</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1" valType="SMILES" value="N[C@@H](CCCC=O)C" suffixAppliesTo="8">allys</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/////1" valType="SMILES" value="N[C@@H](CCCNC(=O)N)C" suffixAppliesTo="10">citrull</token>
@@ -95,11 +95,11 @@
     <token labels="/2,alpha/3,beta/O/4,gamma/1" valType="SMILES" value="N[C@@H]([C@@H](O)C)C" suffixAppliesTo="6">l-allothreon</token>
     <token labels="/alpha/beta/1/2/3/4/5/6/O/" valType="SMILES" value="N[C@@H](Cc1ccc(cc1)O)C" suffixAppliesTo="11">l-tyros</token>
     <token labels="/2,alpha/3,beta/4',gamma'/4,gamma/1" valType="SMILES" value="N[C@@H](C(C)C)C" suffixAppliesTo="6">l-val</token>
-    <token labels="/2,alpha/3,beta/4,gamma/O/" valType="SMILES" value="N[C@@H](CCO)C" suffixAppliesTo="6">l-homoser</token>
-    <token labels="/2,alpha/3,beta/4,gamma//" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">l-homocyste</token>
-		<token labels="/2,alpha/3,beta/4,gamma//" valType="SMILES" value="N[C@@H](CC[Se])C" suffixAppliesTo="6">l-selenohomocyste</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6">l-norval</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" valType="SMILES" value="N[C@@H](CCCC)C" suffixAppliesTo="7">l-norleuc</token>
+    <token labels="/2,alpha/3,beta/4,gamma/O/1" valType="SMILES" value="N[C@@H](CCO)C" suffixAppliesTo="6">l-homoser</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">l-homocyste</token>
+		<token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CC[Se])C" suffixAppliesTo="6">l-selenohomocyste</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6">l-norval</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" valType="SMILES" value="N[C@@H](CCCC)C" suffixAppliesTo="7">l-norleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1" valType="SMILES" value="N[C@@H](CCCC=O)C" suffixAppliesTo="8">l-allys</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/////1" valType="SMILES" value="N[C@@H](CCCNC(=O)N)C" suffixAppliesTo="10">l-citrull</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1" valType="SMILES" value="N[C@@H](CCCN)C" suffixAppliesTo="7">l-ornith</token>
@@ -150,11 +150,11 @@
     <token labels="/2,alpha/3,beta/O/4,gamma/1" valType="SMILES" value="N[C@H]([C@H](O)C)C" suffixAppliesTo="6">d-allothreon</token>
     <token labels="/alpha/beta/1/2/3/4/5/6/O/" valType="SMILES" value="N[C@H](Cc1ccc(cc1)O)C" suffixAppliesTo="11">d-tyros</token>
     <token labels="/2,alpha/3,beta/4',gamma'/4,gamma/1" valType="SMILES" value="N[C@H](C(C)C)C" suffixAppliesTo="6">d-val</token>
-    <token labels="/2,alpha/3,beta/4,gamma/O/" valType="SMILES" value="N[C@H](CCO)C" suffixAppliesTo="6">d-homoser</token>
-    <token labels="/2,alpha/3,beta/4,gamma//" valType="SMILES" value="N[C@H](CCS)C" suffixAppliesTo="6">d-homocyste</token>
-		<token labels="/2,alpha/3,beta/4,gamma//" valType="SMILES" value="N[C@H](CC[Se])C" suffixAppliesTo="6">d-selenohomocyste</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/" valType="SMILES" value="N[C@H](CCC)C" suffixAppliesTo="6">d-norval</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" valType="SMILES" value="N[C@H](CCCC)C" suffixAppliesTo="7">d-norleuc</token>
+    <token labels="/2,alpha/3,beta/4,gamma/O/1" valType="SMILES" value="N[C@H](CCO)C" suffixAppliesTo="6">d-homoser</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@H](CCS)C" suffixAppliesTo="6">d-homocyste</token>
+		<token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@H](CC[Se])C" suffixAppliesTo="6">d-selenohomocyste</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@H](CCC)C" suffixAppliesTo="6">d-norval</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" valType="SMILES" value="N[C@H](CCCC)C" suffixAppliesTo="7">d-norleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1" valType="SMILES" value="N[C@H](CCCC=O)C" suffixAppliesTo="8">d-allys</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/////1" valType="SMILES" value="N[C@H](CCCNC(=O)N)C" suffixAppliesTo="10">d-citrull</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1" valType="SMILES" value="N[C@H](CCCN)C" suffixAppliesTo="7">d-ornith</token>
