@@ -12,7 +12,7 @@ import nu.xom.Elements;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class VerifyFragments {
+public class VerifyFragmentsTest {
 	private static final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
 	private static final ResourceGetter resourceGetter = new ResourceGetter(RESOURCE_LOCATION);
 	private static SMILESFragmentBuilder smilesBuilder;

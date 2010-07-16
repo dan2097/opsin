@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
-public class NameToStructureConfigurations {
+public class NameToStructureConfigurationsTest {
 
 		NameToStructure n2s;
 		@Before
