@@ -3,7 +3,7 @@
    <parent>
       <artifactId>opsin</artifactId>
       <groupId>opsin</groupId>
-      <version>1.0-SNAPSHOT</version>
+      <version>0.8</version>
    </parent>
 	<artifactId>core</artifactId>
 	<name>OPSIN Core</name>
