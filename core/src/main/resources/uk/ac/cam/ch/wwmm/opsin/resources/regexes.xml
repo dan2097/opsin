@@ -95,7 +95,7 @@ does not define a CFG.
   <regex name="%implicitIc%" value="£"/>
   <regex name="%aminoAcidYl%" value="¥"/>
   <regex name="%oMeaningYl%" value="₧"/>
-  <regex name="%monoNuclearNonCarbonAcidNoAcyl%" value="ƒ"/>
+  <regex name="%nonCarbonAcidNoAcyl%" value="ƒ"/>
   <regex name="%simpleCyclicGroup%" value="á"/>
   <regex name="%acetalClass%" value="í"/>
   <regex name="%chalcogenReplacement%" value="ó"/>
@@ -165,7 +165,7 @@ does not define a CFG.
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
-  <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%monoNuclearNonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%)|%chalcogenAcid%(%infixedSuffix%|%o%?%rootSuffix%))"/>
+  <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%)|%chalcogenAcid%(%infixedSuffix%|%o%?%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%)|%chalcogenAcid%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%))"/>
 
   <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
