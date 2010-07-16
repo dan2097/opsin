@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NomenclatureIntegrationTests {
+public class NomenclatureIntegrationTest {
 	NameToStructure n2s;
 	@Before
 	public void setUp() throws NameToStructureException {

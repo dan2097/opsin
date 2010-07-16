@@ -13,13 +13,14 @@ import org.junit.runners.Suite.SuiteClasses;
 	FragmentTest.class,
 	FusedRingNumbererTest.class,
 	HeteroAtomReplacementTest.class,
+	NameToStructureConfigurationsTest.class,
 	NameToStructureTest.class,
 	SMILESFragmentBuilderTest.class,
 	SSSRTest.class,
 	StereochemistryTest.class,
 	StructureBuilderTest.class,
 	TokenizerTest.class,
-	VerifyFragments.class
+	VerifyFragmentsTest.class
 })
 public class AllTests {
 
