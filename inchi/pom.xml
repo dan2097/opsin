@@ -34,7 +34,7 @@
       <dependency>
         <groupId>net.sf.jni-inchi</groupId>
         <artifactId>jni-inchi</artifactId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.6</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
