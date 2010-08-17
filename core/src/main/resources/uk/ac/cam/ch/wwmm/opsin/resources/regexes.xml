@@ -230,8 +230,8 @@ does not define a CFG.
   <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
   <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
-  <regex name="%functionalTerm%" value="(%hyphen%?(%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
+  <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
 
-  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+|%substituent%*%mainGroup%)%functionalTerm%?|%functionalTerm%)"/>
+  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+%functionalTerm%?|%substituent%*%mainGroup%(%hyphen%?%functionalTerm%)?)|%hyphen%?%functionalTerm%)"/>
 <!--Note that the %functionalTerm%? in the term above indicates that a space has technically been omitted!-->
 </regexes>

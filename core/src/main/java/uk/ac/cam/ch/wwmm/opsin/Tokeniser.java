@@ -214,6 +214,8 @@ class Tokeniser {
 		List<List<ParseTokens>> omittedWordParseTokensList = new ArrayList<List<ParseTokens>>();//these are grouped into words e.g. ethylchloride will have a list of parseTokens for the ethyl and chloride
 		omittedWordParseTokensList.add(new ArrayList<ParseTokens>());
 		omittedWordParseTokensList.add(new ArrayList<ParseTokens>());//only 1 space is allowed to be omitted
+		int longestFunctionalTermEncountered =0;//we want the longest functional term
+		int shortestNonFunctionalTermEncountered = Integer.MAX_VALUE;//and the shortest non functional term
 		for (ParseTokens parseTokens : parseTokensList) {
 			List<Character> annotations = parseTokens.getAnnotations();
 			List<List<Character>> chunkedAnnotations = chunkAnnotations(annotations);//chunked into mainGroup/substituent/functionalTerm
@@ -228,10 +230,19 @@ class Tokeniser {
 					if (annotationList.get(annotationList.size()-1).equals(endOfFunctionalTerm)){
 						functionalTermNext=true;
 						if (newAnnotations.size()>0){//create a new parseTokens, unless nothing has been read yet e.g. in the case of poly
+							ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
 							if (wordCounter >=2){
 								throw new ParsingException("Name appears to have 2 or more omitted spaces!");
 							}
-							omittedWordParseTokensList.get(wordCounter++).add(new ParseTokens(newTokens, newAnnotations));
+							int currentNonFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
+							if (currentNonFunctionalTermLength <= shortestNonFunctionalTermEncountered  && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)){
+								if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered){
+									omittedWordParseTokensList.get(wordCounter).clear();
+									shortestNonFunctionalTermEncountered =currentNonFunctionalTermLength;
+								}
+								omittedWordParseTokensList.get(wordCounter).add(newParseTokens);
+							}
+							wordCounter++;
 							newAnnotations = new ArrayList<Character>();
 							newTokens = new ArrayList<String>();
 						}
@@ -242,24 +253,37 @@ class Tokeniser {
 						annotPos++;
 					}
 					if (functionalTermNext){
+						ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
 						if (wordCounter >=2){
 							throw new ParsingException("Name appears to have 2 or more omitted spaces!");
 						}
-						if (omittedWordParseTokensList.get(wordCounter).size()==0){//only want one parse for functionTerm as functional terms do not generate multiple interpretations (and more to the point this is the simplest way of achieving that!)
-							omittedWordParseTokensList.get(wordCounter++).add(new ParseTokens(newTokens, newAnnotations));
+						int currentFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
+						if (currentFunctionalTermLength >= longestFunctionalTermEncountered && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)){
+							if (currentFunctionalTermLength > longestFunctionalTermEncountered){
+								omittedWordParseTokensList.get(wordCounter).clear();
+								longestFunctionalTermEncountered =currentFunctionalTermLength;
+							}
+							omittedWordParseTokensList.get(wordCounter).add(newParseTokens);
 						}
-						else{
-							wordCounter++;
-						}
+						wordCounter++;
 						newAnnotations = new ArrayList<Character>();
 						newTokens = new ArrayList<String>();
 					}
 				}
 				if (newAnnotations.size()>0){
+					ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
 					if (wordCounter >=2){
 						throw new ParsingException("Name appears to have 2 or more omitted spaces!");
 					}
-					omittedWordParseTokensList.get(wordCounter++).add(new ParseTokens(newTokens, newAnnotations));
+					int currentNonFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
+					if (currentNonFunctionalTermLength <= shortestNonFunctionalTermEncountered  && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)){
+						if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered){
+							omittedWordParseTokensList.get(wordCounter).clear();
+							shortestNonFunctionalTermEncountered =currentNonFunctionalTermLength;
+						}
+						omittedWordParseTokensList.get(wordCounter).add(newParseTokens);
+					}
+					wordCounter++;
 				}
 			}
 			else{
