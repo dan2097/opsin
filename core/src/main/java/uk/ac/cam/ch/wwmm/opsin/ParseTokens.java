@@ -56,5 +56,21 @@ public class ParseTokens {
 	public String toString() {
 		return "[" + tokens + ", " + annotations + "]";
 	}
-
+	
+	@Override
+	public boolean equals(Object other) {
+		if ( this == other ) {
+			return true;
+		}
+		if ( !(other instanceof ParseTokens) ){
+			return false;
+		}
+		ParseTokens otherPT = (ParseTokens) other;
+		return this.tokens.equals(otherPT.tokens) && this.annotations.equals(otherPT.annotations);
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.tokens.hashCode() +  this.annotations.hashCode();
+	}
 }
