@@ -80,6 +80,7 @@ class PostProcessor {
 	private final Pattern matchComma =Pattern.compile(",");
 	private final Pattern matchSemiColon =Pattern.compile(";");
 	private final Pattern matchDot =Pattern.compile("\\.");
+	private final Pattern matchHdigit =Pattern.compile("H\\d");
 	private final Pattern matchNonDigit =Pattern.compile("\\D+");
 	private final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
@@ -388,7 +389,6 @@ class PostProcessor {
 							if (possiblyARingFormingEl!=null && (possiblyARingFormingEl.getLocalName().equals(CYCLO_EL) || possiblyARingFormingEl.getLocalName().equals(VONBAEYER_EL) || possiblyARingFormingEl.getLocalName().equals(SPIRO_EL))){
 								heteroatomChainWillFormARing=true;
 								//will be cyclised later.
-								//FIXME sort based on order in HW system (also add check to HW stuff that the heteroatoms in that are in the correct order so that incorrectly ordered systems may be rejected.
 								for (int j = 0; j < mvalue; j++) {
 									smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
 									smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
@@ -401,6 +401,7 @@ class PostProcessor {
 								}
 								smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
 							}
+							smiles = matchHdigit.matcher(smiles).replaceAll("H?");//hydrogen count will be determined by standard valency
 							multipliedElem.detach();
 
 							Element addedGroup=new Element(GROUP_EL);
@@ -988,40 +989,14 @@ class PostProcessor {
 	private void processRings(Element group) throws PostProcessingException {
 		Element previous = (Element)XOMTools.getPreviousSibling(group);
 		if(previous != null) {
-			if(previous.getLocalName().equals(SPIRO_EL)){
+			String previousElType = previous.getLocalName();
+			if(previousElType.equals(SPIRO_EL)){
 				processSpiroSystem(group, previous);
-			} else if(previous.getLocalName().equals(VONBAEYER_EL)) {
+			} else if(previousElType.equals(VONBAEYER_EL)) {
 				processVonBaeyerSystem(group, previous);
 			}
-			else if(previous.getLocalName().equals(CYCLO_EL)) {
-				if (!group.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)){
-					int chainlen = Integer.parseInt(group.getAttributeValue(VALUE_ATR));
-					if (chainlen < 3){
-						throw new PostProcessingException("Alkane chain too small to create a cyclo alkane: " + chainlen);
-					}
-					String smiles = "C1" + StringTools.multiplyString("C", chainlen - 1) + "1";
-					group.addAttribute(new Attribute(VALUE_ATR, smiles));
-					group.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
-				}
-				else{
-					String smiles=group.getAttributeValue(VALUE_ATR);
-					smiles+="1";
-					if (smiles.charAt(0)=='['){
-						int closeBracketIndex = smiles.indexOf(']');
-						smiles= smiles.substring(0, closeBracketIndex +1) +"1" + smiles.substring(closeBracketIndex +1);
-					}
-					else{
-						if (Character.getType(smiles.charAt(1)) == Character.LOWERCASE_LETTER){//element is 2 letters long
-							smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
-						}
-						else{
-							smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
-						}
-					}
-					group.getAttribute(VALUE_ATR).setValue(smiles);
-				}
-				group.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
-				previous.detach();
+			else if(previousElType.equals(CYCLO_EL)) {
+				processCyclisedChain(group, previous);
 			}
 		}
 	}
@@ -1102,6 +1077,9 @@ class PostProcessor {
 		chainGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
 		chainGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 		chainGroup.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
+		if (chainGroup.getAttribute(USABLEASJOINER_ATR) !=null){
+			chainGroup.removeAttribute(chainGroup.getAttribute(USABLEASJOINER_ATR));
+		}
 		spiroEl.detach();
 	}
 
@@ -1416,7 +1394,60 @@ class PostProcessor {
 		chainEl.addAttribute(new Attribute(VALUE_ATR, SMILES));
 		chainEl.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 		chainEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
+		if (chainEl.getAttribute(USABLEASJOINER_ATR) !=null){
+			chainEl.removeAttribute(chainEl.getAttribute(USABLEASJOINER_ATR));
+		}
 		vonBaeyerBracketEl.detach();
+	}
+
+	/**
+	 * Converts a chain group into a ring.
+	 * The chain group can either be an alkane or heteroatom chain
+	 * @param chainGroup
+	 * @param cycloEl
+	 * @throws PostProcessingException
+	 */
+	private void processCyclisedChain(Element chainGroup, Element cycloEl) throws PostProcessingException {
+		if (!chainGroup.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)){
+			int chainlen = Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR));
+			if (chainlen < 3){
+				throw new PostProcessingException("Alkane chain too small to create a cyclo alkane: " + chainlen);
+			}
+			String smiles = "C1" + StringTools.multiplyString("C", chainlen - 1) + "1";
+			chainGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
+			chainGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+		}
+		else{
+			String smiles=chainGroup.getAttributeValue(VALUE_ATR);
+			int chainlen =0;
+			for (int i = smiles.length() -1 ; i >=0; i--) {
+				if (Character.isUpperCase(smiles.charAt(i))){
+					chainlen++;
+				}
+		    }
+			if (chainlen < 3){
+				throw new PostProcessingException("Heteroatom chain too small to create a ring: " + chainlen);
+			}
+			smiles+="1";
+			if (smiles.charAt(0)=='['){
+				int closeBracketIndex = smiles.indexOf(']');
+				smiles= smiles.substring(0, closeBracketIndex +1) +"1" + smiles.substring(closeBracketIndex +1);
+			}
+			else{
+				if (Character.getType(smiles.charAt(1)) == Character.LOWERCASE_LETTER){//element is 2 letters long
+					smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
+				}
+				else{
+					smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
+				}
+			}
+			chainGroup.getAttribute(VALUE_ATR).setValue(smiles);
+		}
+		chainGroup.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
+		if (chainGroup.getAttribute(USABLEASJOINER_ATR) !=null){
+			chainGroup.removeAttribute(chainGroup.getAttribute(USABLEASJOINER_ATR));
+		}
+		cycloEl.detach();
 	}
 
 	/**Handles special cases in IUPAC nomenclature.
