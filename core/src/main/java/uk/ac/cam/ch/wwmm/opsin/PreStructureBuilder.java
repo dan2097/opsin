@@ -957,6 +957,9 @@ class PreStructureBuilder {
 					return false;//there is a case where locants don't apply to heteroatoms in a HW system, but in that case only one locant is expected so this function would not be called
 				}
 			}
+			if (count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR)) && !locantValues[count-1].endsWith("'")){
+				return true;
+			}
 			else if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
 				String[] outIDs = matchComma.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
 				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
@@ -977,9 +980,6 @@ class PreStructureBuilder {
 						return true;
 					}
 				}
-				else if (count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
-					return true;
-				}
 			}
 			else if(currentElem.getValue().equals("benz") || currentElem.getValue().equals("benzo")){
 				Node potentialGroupAfterBenzo = XOMTools.getNextSibling(currentElem, GROUP_EL);//need to make sure this isn't benzyl
@@ -991,6 +991,37 @@ class PreStructureBuilder {
 		if(currentElem != null && currentElem.getLocalName().equals(POLYCYCLICSPIRO_EL)){
 			return true;
 		}
+		boolean detectedMultiplicativeNomenclature = detectMultiplicativeNomenclature(locant, locantValues, finalSubOrRootInWord);
+		if (detectedMultiplicativeNomenclature){
+			return true;
+		}
+		Element parentElem = (Element) locant.getParent();
+		if (count==2 && parentElem.getLocalName().equals(BRACKET_EL)){//e.g. 3,4-(dichloromethylenedioxy) this is changed to (dichloro3,4-methylenedioxy)
+			List<Element> substituents = XOMTools.getChildElementsWithTagName(parentElem, SUBSTITUENT_EL);
+			if (substituents.size()>0){
+				Element finalSub  = substituents.get(substituents.size()-1);
+				Element group = finalSub.getFirstChildElement(GROUP_EL);
+				if (EPOXYLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+					locant.detach();
+					XOMTools.insertBefore(group, locant);
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+
+	/**
+	 * Detects multiplicative nomenclature. If it does then the locant will be moved, changed to a multiplicative locant and true will be returned
+	 * @param locant
+	 * @param locantValues
+	 * @param finalSubOrRootInWord
+	 * @return
+	 */
+	private boolean detectMultiplicativeNomenclature(Element locant, String[] locantValues, Element finalSubOrRootInWord) {
+		int count =locantValues.length;
 		Element multiplier =(Element) finalSubOrRootInWord.getChild(0);
 		if (!multiplier.getLocalName().equals(MULTIPLIER_EL) && ((Element)finalSubOrRootInWord.getParent()).getLocalName().equals(BRACKET_EL)){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
 			multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);

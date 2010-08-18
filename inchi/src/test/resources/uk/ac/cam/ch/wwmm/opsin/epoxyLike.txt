@@ -1,0 +1,8 @@
+2,3-methylenedioxynaphthalene	InChI=1S/C11H8O2/c1-2-4-9-6-11-10(12-7-13-11)5-8(9)3-1/h1-6H,7H2
+3,4-(dichloromethylenedioxy)-benzenesulfonic acid	InChI=1S/C7H4Cl2O5S/c8-7(9)13-5-2-1-4(15(10,11)12)3-6(5)14-7/h1-3H,(H,10,11,12)
+(3,4-methylenedioxyphenyl)methane	InChI=1S/C8H8O2/c1-6-2-3-7-8(4-6)10-5-9-7/h2-4H,5H2,1H3
+epoxybenzene	InChI=1S/C6H4O/c1-2-4-6-5(3-1)7-6/h1-4H
+3,4-epoxybutanol	InChI=1S/C4H8O2/c5-2-1-4-3-6-4/h4-5H,1-3H2
+2,3-epoxypyridine	InChI=1S/C5H3NO/c1-2-4-5(7-4)6-3-1/h1-3H
+methylenedioxydibenzene	InChI=1S/C13H12O2/c1-3-7-12(8-4-1)14-11-15-13-9-5-2-6-10-13/h1-10H,11H2
+3,4'-methylenedioxydipyridine	InChI=1S/C11H10N2O2/c1-2-11(8-13-5-1)15-9-14-10-3-6-12-7-4-10/h1-8H,9H2

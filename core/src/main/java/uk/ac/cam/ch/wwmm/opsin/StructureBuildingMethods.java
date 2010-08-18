@@ -1037,7 +1037,12 @@ class StructureBuildingMethods {
 	private static void joinFragmentsAdditively(BuildState state, Fragment fragToBeJoined, Fragment parentFrag) throws StructureBuildingException {
 		Element elOfFragToBeJoined = state.xmlFragmentMap.getElement(fragToBeJoined);
 		if (EPOXYLIKE_SUBTYPE_VAL.equals(elOfFragToBeJoined.getAttributeValue(SUBTYPE_ATR))){
-			throw new StructureBuildingException("Inappropriate use of " + elOfFragToBeJoined.getValue());
+			List<OutAtom> outAtoms = fragToBeJoined.getOutAtoms();
+			for (OutAtom outAtom : outAtoms) {
+				if (outAtom.getLocant()!=null){
+					throw new StructureBuildingException("Inappropriate use of " + elOfFragToBeJoined.getValue());
+				}
+			}
 		}
 		int outAtomCount = fragToBeJoined.getOutAtoms().size();
 		if (outAtomCount ==0){
@@ -1153,6 +1158,7 @@ class StructureBuildingMethods {
 		else{
 			firstAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(0), 1, true);
 		}
+		Atom chalcogenAtom1 = fragToBeJoined.getOutAtom(0).getAtom();
 		fragToBeJoined.removeOutAtom(0);
 		Atom secondAtomToJoinTo;
 		if (fragToBeJoined.getOutAtom(0).getLocant()!=null){
@@ -1165,13 +1171,14 @@ class StructureBuildingMethods {
 			}
 			secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1, true);
 		}
+		Atom chalcogenAtom2 = fragToBeJoined.getOutAtom(0).getAtom();
 		fragToBeJoined.removeOutAtom(0);
 		if (firstAtomToJoinTo == secondAtomToJoinTo){
 			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
 		}
-		Atom chalcogen = fragToBeJoined.getFirstAtom();
-		state.fragManager.createBond(chalcogen, firstAtomToJoinTo, 1);
-		state.fragManager.createBond(chalcogen, secondAtomToJoinTo, 1);
+		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
+		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
+		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
 	}
 
 	/**

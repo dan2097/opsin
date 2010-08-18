@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 /**A "struct" containing data a possible tokenisation of a word in a chemical name.
  *
@@ -9,40 +10,23 @@ import java.util.List;
  */
 public class ParseTokens {
 	/**The tokens that the word is made up of.*/
-	private List<String> tokens = new ArrayList<String>();
+	private final List<String> tokens;
 
 	/**A list of possible annotations of that token.*/
-	private List<Character> annotations = new ArrayList<Character>();
+	private final List<Character> annotations;
 
-	ParseTokens deepCopy() {
-		ParseTokens pt = new ParseTokens();
-		pt.tokens = new ArrayList<String>(tokens);
-		pt.annotations = new ArrayList<Character>(annotations);
-		return pt;
-	}
-	
-	/**
-	 * Creates an empty parseTokens
-	 */
-	ParseTokens() {
-	}
 	
 	/**
 	 * Creates a parseTokens from an existing list of tokens and annotations
 	 * The lists should be of identical lengths otherwise an exception is thrown
 	 * @throws ParsingException 
 	 */
-	ParseTokens(List<String> tokens, List<Character> annotations ) throws ParsingException {
+	ParseTokens(List<String> tokens, List<Character> annotations ){
 		if (tokens.size() != annotations.size()){
-			throw new ParsingException("OPSIN bug: mismatch between the sizes of tokens list and annotation list");
+			throw new IllegalArgumentException("OPSIN bug: mismatch between the sizes of tokens list and annotation list");
 		}
-		this.tokens = tokens;
-		this.annotations = annotations;
-	}
-	
-	void addToken(String tokenString, char annotationSymbol){
-		tokens.add(tokenString);
-		annotations.add(annotationSymbol);
+		this.tokens = Collections.unmodifiableList(new ArrayList<String>(tokens));
+		this.annotations = Collections.unmodifiableList(new ArrayList<Character>(annotations));
 	}
 
 	public List<String> getTokens() {
@@ -59,18 +43,18 @@ public class ParseTokens {
 	
 	@Override
 	public boolean equals(Object other) {
-		if ( this == other ) {
+		if (this == other) {
 			return true;
 		}
-		if ( !(other instanceof ParseTokens) ){
-			return false;
+		if (other instanceof ParseTokens) {
+			ParseTokens otherPT = (ParseTokens) other;
+			return this.tokens.equals(otherPT.tokens) && this.annotations.equals(otherPT.annotations);
 		}
-		ParseTokens otherPT = (ParseTokens) other;
-		return this.tokens.equals(otherPT.tokens) && this.annotations.equals(otherPT.annotations);
+		return false;
 	}
 	
 	@Override
-	public int hashCode() {
-		return this.tokens.hashCode() +  this.annotations.hashCode();
+	public int hashCode() {		
+		return (3 * this.tokens.hashCode()) * (7 * this.annotations.hashCode());
 	}
 }
