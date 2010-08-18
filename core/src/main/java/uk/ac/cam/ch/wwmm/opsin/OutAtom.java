@@ -7,7 +7,7 @@ class OutAtom {
 	 * 
 	 * Also holds the order of the bond that will be created when it is used (valency) e.g.  Eg. chloro 1, oxo 2
 	 *
-	 * Optionally a locant may be specified for what the outAtom should connect to if it is convenient to store such information. This is used in ester formation
+	 * Optionally a locant may be specified for what the outAtom should connect to if it is convenient to store such information. This is used in ester formation and epoxy fomation
 	 */
 	private Atom atom;
 	private int valency;

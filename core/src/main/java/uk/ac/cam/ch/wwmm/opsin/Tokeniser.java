@@ -219,16 +219,16 @@ class Tokeniser {
 		for (ParseTokens parseTokens : parseTokensList) {
 			List<Character> annotations = parseTokens.getAnnotations();
 			List<List<Character>> chunkedAnnotations = chunkAnnotations(annotations);//chunked into mainGroup/substituent/functionalTerm
-			if (chunkedAnnotations.size()>1 && annotations.contains(endOfFunctionalTerm)){//must be an omitted space as not allowed to have a functionalTerm and anything else
+			if (chunkedAnnotations.size()>1 && annotations.contains(endOfFunctionalTerm)) {//must be an omitted space as not allowed to have a functionalTerm and anything else
 				List<String> tokens = parseTokens.getTokens();
 				List<Character> newAnnotations = new ArrayList<Character>();
 				List<String> newTokens = new ArrayList<String>();
-				int annotPos =0;
-				int wordCounter=0;
+				int annotPos = 0;
+				int wordCounter = 0;
 				for (List<Character> annotationList : chunkedAnnotations) {
-					boolean functionalTermNext =false;
-					if (annotationList.get(annotationList.size()-1).equals(endOfFunctionalTerm)){
-						functionalTermNext=true;
+					boolean functionalTermNext = false;
+					if (annotationList.get(annotationList.size()-1).equals(endOfFunctionalTerm)) {
+						functionalTermNext = true;
 						if (newAnnotations.size()>0){//create a new parseTokens, unless nothing has been read yet e.g. in the case of poly
 							ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
 							if (wordCounter >=2){
@@ -236,7 +236,7 @@ class Tokeniser {
 							}
 							int currentNonFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
 							if (currentNonFunctionalTermLength <= shortestNonFunctionalTermEncountered  && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)){
-								if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered){
+								if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered) {
 									omittedWordParseTokensList.get(wordCounter).clear();
 									shortestNonFunctionalTermEncountered =currentNonFunctionalTermLength;
 								}
@@ -259,7 +259,7 @@ class Tokeniser {
 						}
 						int currentFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
 						if (currentFunctionalTermLength >= longestFunctionalTermEncountered && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)){
-							if (currentFunctionalTermLength > longestFunctionalTermEncountered){
+							if (currentFunctionalTermLength > longestFunctionalTermEncountered) {
 								omittedWordParseTokensList.get(wordCounter).clear();
 								longestFunctionalTermEncountered =currentFunctionalTermLength;
 							}
@@ -270,14 +270,14 @@ class Tokeniser {
 						newTokens = new ArrayList<String>();
 					}
 				}
-				if (newAnnotations.size()>0){
+				if (!newAnnotations.isEmpty()) {
 					ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
-					if (wordCounter >=2){
+					if (wordCounter >= 2){
 						throw new ParsingException("Name appears to have 2 or more omitted spaces!");
 					}
 					int currentNonFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
 					if (currentNonFunctionalTermLength <= shortestNonFunctionalTermEncountered  && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)){
-						if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered){
+						if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered) {
 							omittedWordParseTokensList.get(wordCounter).clear();
 							shortestNonFunctionalTermEncountered =currentNonFunctionalTermLength;
 						}
@@ -291,7 +291,7 @@ class Tokeniser {
 			}
 		}
 		List<ParseWord> parseWords = new ArrayList<ParseWord>();
-		if (wellFormedParseTokens.size()>0){
+		if (!wellFormedParseTokens.isEmpty()) {
 			parseWords.add(new ParseWord(chemicalName, wellFormedParseTokens));
 		}
 		else{
