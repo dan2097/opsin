@@ -236,51 +236,68 @@ class StructureBuilder {
 		if (!words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())) {
 			throw new StructureBuildingException("word: " +wordIndice +" was expected to be a substituent");
 		}
-		if (words.get(wordIndice +1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
-			Element clone = state.fragManager.cloneElement(state, words.get(0));
-			XOMTools.insertAfter(words.get(0), clone);
-			words = OpsinTools.elementsToElementArrayList(((Element)words.get(0).getParent()).getChildElements());
-		}
 		resolveWordOrBracket(state, words.get(wordIndice));
 		BuildResults substituent1 =new BuildResults(state, words.get(wordIndice));
-		if (substituent1.getOutAtomCount()!=1){
-			throw new StructureBuildingException("Expected one outAtom. Found " + substituent1.getOutAtomCount() );
-		}
 		if (substituent1.getOutAtom(0).getValency() !=1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + substituent1.getOutAtom(0).getValency());
 		}
-		wordIndice++;
-		resolveWordOrBracket(state, words.get(wordIndice));
-		BuildResults substituent2 =new BuildResults(state, words.get(wordIndice));
-		if (substituent2.getOutAtomCount()!=1){
-			throw new StructureBuildingException("Expected one outAtom. Found " + substituent2.getOutAtomCount() );
+		BuildResults substituent2;
+		if (substituent1.getOutAtomCount()==2){// e.g. tetramethylene sulfone
+			if (substituent1.getOutAtom(1).getValency() !=1){
+				throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + substituent1.getOutAtom(1).getValency());
+			}
+			substituent2 = substituent1;
 		}
-		if (substituent2.getOutAtom(0).getValency() !=1){
-			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + substituent2.getOutAtom(0).getValency());
+		else{
+			if (substituent1.getOutAtomCount()!=1){
+				throw new StructureBuildingException("Expected one outAtom. Found " + substituent1.getOutAtomCount() );
+			}
+			wordIndice++;
+			if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
+				Element clone = state.fragManager.cloneElement(state, words.get(0));
+				XOMTools.insertAfter(words.get(0), clone);
+				words = OpsinTools.elementsToElementArrayList(((Element)words.get(0).getParent()).getChildElements());
+			}
+			else{
+				resolveWordOrBracket(state, words.get(wordIndice));
+			}
+			substituent2 =new BuildResults(state, words.get(wordIndice));
+			if (substituent2.getOutAtomCount()!=1){
+				throw new StructureBuildingException("Expected one outAtom. Found " + substituent2.getOutAtomCount() );
+			}
+			if (substituent2.getOutAtom(0).getValency() !=1){
+				throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + substituent2.getOutAtom(0).getValency());
+			}
 		}
 		wordIndice++;
 		if (words.get(wordIndice) ==null || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {
-			throw new StructureBuildingException("word: " +wordIndice +" was expected to be a functionalTerm");
+			throw new StructureBuildingException(words.get(wordIndice).getValue()+" was expected to be a functionalTerm");
 		}
-		List<Element> functionalGroup = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), "functionalGroup");
+		List<Element> functionalGroup = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), FUNCTIONALGROUP_EL);
 		if (functionalGroup.size()!=1){
 			throw new StructureBuildingException("Unexpected number of functionalGroups found, could be a bug in OPSIN's grammar");
 		}
 		String smilesOfGroup = functionalGroup.get(0).getAttributeValue(VALUE_ATR);
 		Fragment diValentGroup =state.fragManager.buildSMILES(smilesOfGroup, FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 
-		Atom outAtom =substituent1.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+		Atom outAtom1 =substituent1.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 		substituent1.removeOutAtom(0);
+		Atom outAtom2 = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+		substituent2.removeOutAtom(0);
 		if (diValentGroup.getOutAtoms().size()==1){//c.f. peroxide where it is a linker
-			state.fragManager.createBond(outAtom, diValentGroup.getOutAtom(0).getAtom(), 1);
+			state.fragManager.createBond(outAtom1, diValentGroup.getOutAtom(0).getAtom(), 1);
 			diValentGroup.removeOutAtom(0);
+			state.fragManager.createBond(outAtom2, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
 		}
 		else{
-			state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+			if (outAtom1 != outAtom2){//general case
+				state.fragManager.createBond(outAtom1, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+				state.fragManager.createBond(outAtom2, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+			}
+			else{//e.g. carbonyl sulfide
+				state.fragManager.createBond(outAtom1, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 2);
+			}
 		}
-		outAtom = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-		substituent2.removeOutAtom(0);
-		state.fragManager.createBond(outAtom, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
 		state.xmlFragmentMap.put(functionalGroup.get(0), diValentGroup);//allow this fragment to be referenced by other word rules
 		functionalGroup.get(0).setLocalName(GROUP_EL);
 	}
