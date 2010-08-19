@@ -2049,7 +2049,7 @@ class PreStructureBuilder {
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
 				if (replacementFrag.getAtomList().size()>1){
 					Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
-					if (matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
+					if (terminalAtomOfReplacementFrag.getIncomingValency() ==1 && matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
 						functionalAtom.setAtom(terminalAtomOfReplacementFrag);
 						terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
 					}
@@ -2058,11 +2058,9 @@ class PreStructureBuilder {
 					}
 					atomToBeReplaced.setCharge(0);
 				}
-				else{
-					if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
-						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
-						atomToBeReplaced.setCharge(0);
-					}
+				else if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
+					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+					atomToBeReplaced.setCharge(0);
 				}
 			}
 		}
