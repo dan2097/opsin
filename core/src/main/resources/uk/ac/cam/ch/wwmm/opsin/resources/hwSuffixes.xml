@@ -3,77 +3,77 @@
 <!--HW rings; the ane and ine suffix are included seperately as there are limitations as to what heteroatoms they can be used with-->
 <tokenLists>
   <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="W">
-      <token value="3" valType="unsatring">iren</token>
-      <token value="3" valType="ring">iran</token>
-      <token value="3" valType="unsatring">irin</token>
-      <token value="3" valType="ring">iridin</token>
+      <token value="c1cc1" valType="SMILES">iren</token>
+      <token value="C1CC1" valType="SMILES">iran</token>
+      <token value="c1cc1" valType="SMILES">irin</token>
+      <token value="C1CC1" valType="SMILES">iridin</token>
 
-      <token value="4" valType="unsatring">et</token>
-      <token value="4" valType="ring">etan</token>
-      <token value="4" valType="ring">etidin</token>
-      <token value="4" valType="partunsatring">etin</token>
-      <token value="4" valType="partunsatring">eten</token>
+      <token value="c1ccc1" valType="SMILES">et</token>
+      <token value="C1CCC1" valType="SMILES">etan</token>
+      <token value="C1CCC1" valType="SMILES">etidin</token>
+      <token value="C1CCC1" valType="SMILES" addBond="2">etin</token>
+      <token value="C1CCC1" valType="SMILES" addBond="2">eten</token>
 
-      <token value="5" valType="unsatring">ol</token>
-      <token value="5" valType="ring">olan</token>
-      <token value="5" valType="ring">olidin</token>
-      <token value="5" valType="partunsatring">olin</token>
-      <token value="5" valType="partunsatring">olen</token>
+      <token value="c1cccc1" valType="SMILES">ol</token>
+      <token value="C1CCCC1" valType="SMILES">olan</token>
+      <token value="C1CCCC1" valType="SMILES">olidin</token>
+      <token value="C1CCCC1" valType="SMILES" addBond="2">olin</token>
+      <token value="C1CCCC1" valType="SMILES" addBond="2">olen</token>
 
-      <token value="6" valType="ring">inan</token>
-      <token value="6" valType="unsatring">inin</token>
+      <token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">inan</token>
+      <token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">inin</token>
 
-      <token value="7" valType="unsatring">epin</token>
-      <token value="7" valType="ring">epan</token>
+      <token value="c1cccccc1" valType="SMILES">epin</token>
+      <token value="C1CCCCCC1" valType="SMILES">epan</token>
 
-      <token value="8" valType="unsatring">ocin</token>
-      <token value="8" valType="ring">ocan</token>
+      <token value="c1ccccccc1" valType="SMILES">ocin</token>
+      <token value="C1CCCCCCC1" valType="SMILES">ocan</token>
 
-      <token value="9" valType="unsatring">onin</token>
-      <token value="9" valType="ring">onan</token>
+      <token value="c1cccccccc1" valType="SMILES">onin</token>
+      <token value="C1CCCCCCCC1" valType="SMILES">onan</token>
 
-      <token value="10" valType="unsatring">ecin</token>
-      <token value="10" valType="ring">ecan</token>
+      <token value="c1ccccccccc1" valType="SMILES">ecin</token>
+      <token value="C1CCCCCCCCC1" valType="SMILES">ecan</token>
 
       <!--Extension for fused rings according to FR-2.2.1(c)-->
-      <token value="11" valType="unsatring">cycloundecin</token>
-      <token value="12" valType="unsatring">cyclododecin</token>
-      <token value="13" valType="unsatring">cyclotridecin</token>
-      <token value="14" valType="unsatring">cyclotetradecin</token>
-      <token value="15" valType="unsatring">cyclopentadecin</token>
-      <token value="16" valType="unsatring">cyclohexadecin</token>
-      <token value="17" valType="unsatring">cycloheptadecin</token>
-      <token value="18" valType="unsatring">cyclooctadecin</token>
-      <token value="19" valType="unsatring">cyclononadecin</token>
-      <token value="20" valType="unsatring">cycloeicosin</token>
-      <token value="20" valType="unsatring">cycloicosin</token>
-      <token value="21" valType="unsatring">cyclohenicosin</token>
-      <token value="22" valType="unsatring">cyclodocosin</token>
-      <token value="23" valType="unsatring">cyclotricosin</token>
-      <token value="24" valType="unsatring">cyclotetracosin</token>
-      <token value="25" valType="unsatring">cyclopentacosin</token>
-      <token value="26" valType="unsatring">cyclohexacosin</token>
-      <token value="27" valType="unsatring">cycloheptacosin</token>
-      <token value="28" valType="unsatring">cyclooctacosin</token>
-      <token value="29" valType="unsatring">cyclononacosin</token>
-      <token value="30" valType="unsatring">cyclotriacontin</token>
-      <token value="31" valType="unsatring">cyclohentriacontin</token>
-      <token value="32" valType="unsatring">cyclodotriacontin</token>
-      <token value="33" valType="unsatring">cyclotritriacontin</token>
-      <token value="34" valType="unsatring">cyclotetratriacontin</token>
-      <token value="35" valType="unsatring">cyclopentatriacontin</token>
-      <token value="36" valType="unsatring">cyclohexatriacontin</token>
-      <token value="37" valType="unsatring">cycloheptatriacontin</token>
-      <token value="38" valType="unsatring">cyclooctatriacontin</token>
-      <token value="39" valType="unsatring">cyclononatriacontin</token>
-      <token value="40" valType="unsatring">cyclotetracontin</token>
+      <token value="c1cccccccccc1" valType="SMILES">cycloundecin</token>
+      <token value="c1ccccccccccc1" valType="SMILES">cyclododecin</token>
+      <token value="c1cccccccccccc1" valType="SMILES">cyclotridecin</token>
+      <token value="c1ccccccccccccc1" valType="SMILES">cyclotetradecin</token>
+      <token value="c1cccccccccccccc1" valType="SMILES">cyclopentadecin</token>
+      <token value="c1ccccccccccccccc1" valType="SMILES">cyclohexadecin</token>
+      <token value="c1cccccccccccccccc1" valType="SMILES">cycloheptadecin</token>
+      <token value="c1ccccccccccccccccc1" valType="SMILES">cyclooctadecin</token>
+      <token value="c1cccccccccccccccccc1" valType="SMILES">cyclononadecin</token>
+      <token value="c1ccccccccccccccccccc1" valType="SMILES">cycloeicosin</token>
+      <token value="c1ccccccccccccccccccc1" valType="SMILES">cycloicosin</token>
+      <token value="c1cccccccccccccccccccc1" valType="SMILES">cyclohenicosin</token>
+      <token value="c1ccccccccccccccccccccc1"  valType="SMILES">cyclodocosin</token>
+      <token value="c1cccccccccccccccccccccc1"  valType="SMILES">cyclotricosin</token>
+      <token value="c1ccccccccccccccccccccccc1"  valType="SMILES">cyclotetracosin</token>
+      <token value="c1cccccccccccccccccccccccc1"  valType="SMILES">cyclopentacosin</token>
+      <token value="c1ccccccccccccccccccccccccc1"  valType="SMILES">cyclohexacosin</token>
+      <token value="c1cccccccccccccccccccccccccc1"  valType="SMILES">cycloheptacosin</token>
+      <token value="c1ccccccccccccccccccccccccccc1"  valType="SMILES">cyclooctacosin</token>
+      <token value="c1cccccccccccccccccccccccccccc1"  valType="SMILES">cyclononacosin</token>
+      <token value="c1ccccccccccccccccccccccccccccc1"  valType="SMILES">cyclotriacontin</token>
+      <token value="c1cccccccccccccccccccccccccccccc1"  valType="SMILES">cyclohentriacontin</token>
+      <token value="c1ccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclodotriacontin</token>
+      <token value="c1cccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclotritriacontin</token>
+      <token value="c1ccccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclotetratriacontin</token>
+      <token value="c1cccccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclopentatriacontin</token>
+      <token value="c1ccccccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclohexatriacontin</token>
+      <token value="c1cccccccccccccccccccccccccccccccccccc1"  valType="SMILES">cycloheptatriacontin</token>
+      <token value="c1ccccccccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclooctatriacontin</token>
+      <token value="c1cccccccccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclononatriacontin</token>
+      <token value="c1ccccccccccccccccccccccccccccccccccccccc1"  valType="SMILES">cyclotetracontin</token>
   </tokenList>
 
   <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="K"><!--the ine suffix -->
-    <token value="6" valType="unsatring">in</token>
+    <token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">in</token>
   </tokenList>
 
   <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="k"><!--the ane suffix -->
-    <token value="6" valType="ring">an</token>
+    <token value="C1CCCCC1" valType="SMILES">an</token>
   </tokenList>
 </tokenLists>

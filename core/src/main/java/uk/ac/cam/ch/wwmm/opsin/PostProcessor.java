@@ -68,7 +68,7 @@ class PostProcessor {
 	}
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
-	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+[a-z]?(,\\d+[a-z]?)*\\]");
+	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
 	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+[^\\.,]*\\d*,?\\d*[^\\.,]*)");//the not a period or comma allows some an optional indication that the following comma separated digits are superscripted
 	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
@@ -180,11 +180,10 @@ class PostProcessor {
 		for (Element fusion : fusions) {
 			String fusionText = fusion.getValue();
 			if (matchNumberLocantsOnlyFusionBracket.matcher(fusionText).matches()){
-				Element nextGroup =(Element) XOMTools.getNextSibling(fusion, GROUP_EL);
-				if (nextGroup !=null && nextGroup.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
+				Element possibleHWRing =(Element) XOMTools.getNextSiblingIgnoringCertainElements(fusion, new String[]{MULTIPLIER_EL, HETEROATOM_EL});
+				if (possibleHWRing !=null && HANTZSCHWIDMAN_SUBTYPE_VAL.equals(possibleHWRing.getAttributeValue(SUBTYPE_ATR))){
 					int heteroCount = 0;
 					int multiplierValue = 1;
-					int hwRingSize = Integer.parseInt(nextGroup.getAttributeValue(VALUE_ATR));
 					Element currentElem = (Element) XOMTools.getNextSibling(fusion);
 					while(currentElem != null && !currentElem.getLocalName().equals(GROUP_EL)){
 						if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
@@ -199,12 +198,12 @@ class PostProcessor {
 					if (locants.length == heteroCount){
 						boolean foundLocantNotInHwSystem =false;
 						for (String locant : locants) {
-							if (hwRingSize > Integer.parseInt(locant.substring(0,1))){
+							if (Integer.parseInt(locant) > (possibleHWRing.getAttributeValue(VALUE_ATR).length()-2)){
 								foundLocantNotInHwSystem =true;
 							}
 						}
 						if (!foundLocantNotInHwSystem){
-						throw new PostProcessingException("This fusion bracket is in fact more likely to be a description of the locants of a HW ring");
+							throw new PostProcessingException("This fusion bracket is in fact more likely to be a description of the locants of a HW ring");
 						}
 					}
 				}

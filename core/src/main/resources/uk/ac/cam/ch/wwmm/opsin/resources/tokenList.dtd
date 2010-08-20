@@ -7,7 +7,7 @@
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
-        valType (chain|ring|unsatring|partunsatring|atom|SMILES|dbkey) #IMPLIED
+        valType (SMILES|dbkey|chain) #IMPLIED
         labels CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
         defaultInLocant CDATA #IMPLIED

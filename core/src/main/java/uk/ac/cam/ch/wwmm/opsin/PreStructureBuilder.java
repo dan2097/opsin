@@ -215,7 +215,7 @@ class PreStructureBuilder {
 			for (Element subOrRoot : substituentsAndRoot) {
 				processMultipliers(subOrRoot);
 				detectConjunctiveSuffixGroups(state, subOrRoot, groups);
-				matchLocantsToDirectFeatures(subOrRoot);
+				matchLocantsToDirectFeatures(state, subOrRoot);
 
 				Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
@@ -352,23 +352,7 @@ class PreStructureBuilder {
 		String groupValue = group.getAttributeValue(VALUE_ATR);
 		String groupValType = group.getAttributeValue(VALTYPE_ATR);
 		Fragment thisFrag =null;
-		if(groupValType.equals(CHAIN_VALTYPE_VAL)) {
-			int alkaneLength = new Integer(groupValue);
-			String smiles = StringTools.multiplyString("C", alkaneLength);
-			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		} else if(groupValType.equals(RING_VALTYPE_VAL) || groupValType.equals(PARTUNSATRING_VALTYPE_VAL)) {
-			int alkaneLength = new Integer(groupValue);
-			String smiles = "C1";
-			smiles += StringTools.multiplyString("C", alkaneLength-1);
-			smiles += "1";
-			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		} else if(groupValType.equals(UNSATRING_VALTYPE_VAL)) {
-			int alkaneLength = new Integer(groupValue);
-			String smiles = "c1";
-			smiles += StringTools.multiplyString("c", alkaneLength-1);
-			smiles += "1";
-			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		} else if(groupValType.equals(SMILES_VALTYPE_VAL)) {
+		if(groupValType.equals(SMILES_VALTYPE_VAL)) {
 			if (group.getAttribute(LABELS_ATR)!=null){
 				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, group.getAttributeValue(LABELS_ATR));
 			}
@@ -377,7 +361,12 @@ class PreStructureBuilder {
 			}
 		} else if(groupValType.equals(DBKEY_VALTYPE_VAL)) {
 			thisFrag = state.fragManager.buildCML(groupValue, groupType, groupSubType);
-		} 
+		}
+		else if(groupValType.equals(CHAIN_VALTYPE_VAL)) {
+			int alkaneLength = new Integer(groupValue);
+			String smiles = StringTools.multiplyString("C", alkaneLength);
+			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
+		}
 		else{
 			throw new StructureBuildingException("Group tag has bad or missing valType: " + group.toXML());
 		}
@@ -486,12 +475,10 @@ class PreStructureBuilder {
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
-				boolean assignlocants =true;
-				if (locantValues.size()<groupsToBeAdded.length){
-					if (locantValues.size() +1 <groupsToBeAdded.length ){//only one locant can be implicit
-						assignlocants=false;
-					}
-					else {//check that the firstGroup by default will be added to the atom with locant 1. If this is not the case then as many locants as there were groups should of been specified
+				if (locantValues.size()==groupsToBeAdded.length || locantValues.size() +1 ==groupsToBeAdded.length){//one locant can be implicit in some cases
+					boolean assignlocants =true;
+					if (locantValues.size()!=groupsToBeAdded.length){
+						//check that the firstGroup by default will be added to the atom with locant 1. If this is not the case then as many locants as there were groups should of been specified
 						//or no locants should have been specified, which is what will be assumed (i.e. the locants will be left unassigned)
 						HashMap<String, String> groupInformation =allGroupInformation.get(0);
 						String locant;
@@ -508,27 +495,21 @@ class PreStructureBuilder {
 							assignlocants=false;
 						}
 					}
-
-				}
-				if (assignlocants){
-					for (int i = groupsToBeAdded.length -1; i >=0 ; i--) {
-						//if less locants than expected are specified the locants of only the later groups will be changed
-						//e.g. 4-xylene will transform 1,2-xylene to 1,4-xylene
-						HashMap<String, String> groupInformation =allGroupInformation.get(i);
-						if (locantValues.size() >0){
-							groupInformation.put("atomReferenceType", "locant");
-							groupInformation.put("atomReference", locantValues.get(locantValues.size()-1));
-							locantValues.remove(locantValues.size()-1);
+					if (assignlocants){
+						for (int i = groupsToBeAdded.length -1; i >=0 ; i--) {
+							//if less locants than expected are specified the locants of only the later groups will be changed
+							//e.g. 4-xylene will transform 1,2-xylene to 1,4-xylene
+							HashMap<String, String> groupInformation =allGroupInformation.get(i);
+							if (locantValues.size() >0){
+								groupInformation.put("atomReferenceType", "locant");
+								groupInformation.put("atomReference", locantValues.get(locantValues.size()-1));
+								locantValues.remove(locantValues.size()-1);
+							}
+							else{
+								break;
+							}
 						}
-						else{
-							break;
-						}
-					}
-					if (locantValues.size() ==0){
 						previousEl.detach();
-					}
-					else{
-						XOMTools.setTextChild(previousEl, StringTools.stringListToString(locantValues, ","));
 					}
 				}
 			}
@@ -594,19 +575,14 @@ class PreStructureBuilder {
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
-				if (locantValues.size() >=heteroAtomsToBeAdded.length){
+				if (locantValues.size() ==heteroAtomsToBeAdded.length){
 					for (int i = heteroAtomsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
 						HashMap<String, String> groupInformation =allHeteroAtomInformation.get(i);
 						groupInformation.put("atomReferenceType", "locant");
 						groupInformation.put("atomReference", locantValues.get(locantValues.size()-1));
 						locantValues.remove(locantValues.size()-1);
 					}
-					if (locantValues.size() ==0){
-						previousEl.detach();
-					}
-					else{
-						XOMTools.setTextChild(previousEl, StringTools.stringListToString(locantValues, ","));
-					}
+					previousEl.detach();
 				}
 			}
 
@@ -634,7 +610,7 @@ class PreStructureBuilder {
 			}
 		}
 
-		if(group.getAttributeValue(ADDBOND_ATR)!=null) {
+		if(group.getAttributeValue(ADDBOND_ATR)!=null && !HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {//HW add bond is handled later
 			String addBondInformation=group.getAttributeValue(ADDBOND_ATR);
 			String[] bondsToBeAdded = matchSemiColon.split(addBondInformation);
 			ArrayList<HashMap<String, String>> allBondInformation = new ArrayList<HashMap<String, String>>();
@@ -659,19 +635,14 @@ class PreStructureBuilder {
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
-				if (locantValues.size() >=bondsToBeAdded.length){
-					for (int i = bondsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
+				if (locantValues.size() ==bondsToBeAdded.length){
+					for (int i = bondsToBeAdded.length -1; i >=0 ; i--) {//all bond order changes must have a locant or default locants will be used
 						HashMap<String, String> bondInformation =allBondInformation.get(i);
 						bondInformation.put("atomReferenceType", "locant");
 						bondInformation.put("atomReference", locantValues.get(locantValues.size()-1));
 						locantValues.remove(locantValues.size()-1);
 					}
-					if (locantValues.size() ==0){
-						previousEl.detach();
-					}
-					else{
-						XOMTools.setTextChild(previousEl, StringTools.stringListToString(locantValues, ","));
-					}
+					previousEl.detach();
 				}
 			}
 
@@ -691,7 +662,6 @@ class PreStructureBuilder {
 			}
 		}
 	}
-
 
 	/**
 	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
@@ -1311,37 +1281,37 @@ class PreStructureBuilder {
 	/** Match each locant to the next applicable "feature". Assumes that processLocants
 	 * has done a good job and rejected cases where no match can be made.
 	 * Handles cases where the locant is next to the feature it refers to
+	 * @param state 
 	 *
 	 * @param subOrRoot The substituent/root to look for locants in.
 	 * @throws PostProcessingException
 	 */
-	private void matchLocantsToDirectFeatures(Element subOrRoot) throws PostProcessingException {
+	private void matchLocantsToDirectFeatures(BuildState state, Element subOrRoot) throws PostProcessingException {
 		List<Element> locants =  XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		for (Element group : groups) {
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){//handle Hantzch-widman systems
-				if (PARTUNSATRING_VALTYPE_VAL.equals(group.getAttributeValue(VALTYPE_ATR))){//special case for partunsatring
+				if (group.getAttribute(ADDBOND_ATR)!=null){//special case for partunsatring
 					//exception for where a locant is supposed to indicate the location of a double bond...
 					Elements deltas = subOrRoot.getChildElements(DELTA_EL);
 					if (deltas.size()==0){
 						Element delta =new Element(DELTA_EL);
-						if (locants.size()>0 && subOrRoot.indexOf(locants.get(0))< subOrRoot.indexOf(group) && matchComma.split(locants.get(0).getValue()).length == 1){//locant is in front of group
-							Element locant=locants.get(0);
-							delta.appendChild(locant.getValue());
-							XOMTools.insertBefore(locant, delta);
-							locant.detach();
-							locants.remove(locant);
+						Element appropriateLocant = XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{HETEROATOM_EL, MULTIPLIER_EL});
+						if (appropriateLocant !=null && appropriateLocant.getLocalName().equals(LOCANT_EL) && matchComma.split(appropriateLocant.getValue()).length == 1){
+							delta.appendChild(appropriateLocant.getValue());
+							XOMTools.insertBefore(appropriateLocant, delta);
+							appropriateLocant.detach();
+							locants.remove(appropriateLocant);
 						}
 						else{
 							delta.appendChild("");
 							subOrRoot.insertChild(delta, 0);//no obvious attempt to set double bond position, potentially ambiguous, valency will be used to choose later
 						}
 					}
-					group.getAttribute(VALTYPE_ATR).setValue(RING_VALTYPE_VAL);
 				}
 				if (locants.size()>0 ){
 					Element locantBeforeHWSystem = null;
-					ArrayList<Element> heteroAtoms = new ArrayList<Element>();
+					List<Element> heteroAtoms = new ArrayList<Element>();
 					int indexOfGroup =subOrRoot.indexOf(group);
 					for (int j = indexOfGroup -1; j >= 0; j--) {
 						String elName=((Element)subOrRoot.getChild(j)).getLocalName();
@@ -1366,7 +1336,7 @@ class PreStructureBuilder {
 						//detect a solitary locant in front of a HW system and prevent it being assigned.
 						//something like 1-aziridin-1-yl never means the N is at position 1 as it is at position 1 by convention
 						//this special case is not applied to pseudo HW like systems e.g. [1]oxacyclotetradecine
-						if (locantValues.length ==1 && Integer.parseInt(group.getAttributeValue(VALUE_ATR)) <=10){
+						if (locantValues.length ==1 && state.xmlFragmentMap.get(group).getAtomList().size() <=10){
 							locants.remove(locantBeforeHWSystem);//don't assign this locant
 						}
 						else {
@@ -2707,13 +2677,10 @@ class PreStructureBuilder {
 	 * @throws PostProcessingException
 	 */
 	private void processHW(BuildState state, Element subOrRoot) throws StructureBuildingException, PostProcessingException{
-		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
-		for (Element group : groups) {
-			if (!group.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
-				continue;
-			}
-			String ringType =group.getAttributeValue(VALTYPE_ATR);
-			int ringSize = Integer.parseInt(group.getAttributeValue(VALUE_ATR));
+		List<Element> hwGroups = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, SUBTYPE_ATR, HANTZSCHWIDMAN_SUBTYPE_VAL);
+		for (Element group : hwGroups) {
+			Fragment hwRing =state.xmlFragmentMap.get(group);
+			List<Atom> atomList =hwRing.getAtomList();
 			Element prev = (Element) XOMTools.getPreviousSibling(group);
 			ArrayList<Element> prevs = new ArrayList<Element>();
 			boolean noLocants = true;
@@ -2724,32 +2691,41 @@ class PreStructureBuilder {
 				}
 				prev = (Element) XOMTools.getPreviousSibling(prev);
 			}
-			boolean hasNitrogen = false;
-			boolean hasSiorGeorSborPb=false;
-			for(Element heteroatom : prevs){
-				String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
-				if (heteroAtomElement.startsWith("[") && heteroAtomElement.endsWith("]")){
-					heteroAtomElement=heteroAtomElement.substring(1, heteroAtomElement.length()-1);
+			if (atomList.size() == 6 && group.getValue().equals("an")){
+				boolean hasNitrogen = false;
+				boolean hasSiorGeorSborPb=false;
+				boolean saturatedRing =true;
+				for(Element heteroatom : prevs){
+					String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
+					Matcher m = matchElementSymbol.matcher(heteroAtomElement);
+					if (!m.find()){
+						throw new PostProcessingException("Failed to extract element from HW heteroatom");
+					}
+					heteroAtomElement = m.group();
+					if (heteroAtomElement.equals("N")){
+						hasNitrogen=true;
+					}
+					if (heteroAtomElement.equals("Si") ||
+						heteroAtomElement.equals("Ge") ||
+						heteroAtomElement.equals("Sb") ||
+						heteroAtomElement.equals("Pb") ){
+						hasSiorGeorSborPb =true;
+					}
 				}
-				if (heteroAtomElement.equals("N")){
-					hasNitrogen=true;
+				for (Atom a: atomList) {
+					if (a.hasSpareValency()){
+						saturatedRing =false;
+					}
 				}
-				if (heteroAtomElement.equals("Si") ||
-					heteroAtomElement.equals("Ge") ||
-					heteroAtomElement.equals("Sb") ||
-					heteroAtomElement.equals("Pb") ){
-					hasSiorGeorSborPb =true;
+				if (saturatedRing && !hasNitrogen && hasSiorGeorSborPb){
+					throw new PostProcessingException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sb/Pb)");
 				}
-			}
-			if (ringSize == 6 && ringType.equals(RING_VALTYPE_VAL) && !hasNitrogen && hasSiorGeorSborPb && (group.getValue().equals("in") ||group.getValue().equals("an"))){
-				throw new PostProcessingException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sb/Pb)");
 			}
 			String name = "";
 			Collections.reverse(prevs);
 			for(Element heteroatom : prevs) name += heteroatom.getValue();
 			name += group.getValue();
 			name = name.toLowerCase();
-			Fragment hwRing =state.xmlFragmentMap.get(group);
 			if(noLocants && prevs.size() > 0) {
 				if(specialHWRings.containsKey(name)) {
 					String[] specialRingInformation =specialHWRings.get(name);

@@ -216,25 +216,15 @@ class XmlDeclarations {
 	/*
 	 * The values the valType attribute can take
 	 */
-	/**A chain of carbon atoms of length given by the value attribute*/
-	static final String CHAIN_VALTYPE_VAL = "chain";
-
-	/**An aromatic ring of size given by the value attribute*/
-	static final String RING_VALTYPE_VAL = "ring";
-	
-	/**A saturated ring of size given by the value attribute*/
-	static final String UNSATRING_VALTYPE_VAL = "unsatring";
-	
-	/**A saturated ring of size given by the value attribute that will later be partially unsaturated*/
-	static final String PARTUNSATRING_VALTYPE_VAL = "partunsatring";//TODO make this a type rather than valtype value??
-	
-	static final String ATOM_VALTYPE_VAL = "atom";//TODO remove this
 	
 	/**A SMILES string is the value attribute. The SMILES parser of OPSIN is not entirely complete and additional supports a few things that are not supported by standard SMILES*/
 	static final String SMILES_VALTYPE_VAL = "SMILES";
 	
 	/**A reference to CML in fragments.xml is the value attribute*/
 	static final String DBKEY_VALTYPE_VAL = "dbkey";
+	
+	/**A chain of carbon atoms of length given by the value attribute*/
+	static final String CHAIN_VALTYPE_VAL = "chain";
     
 	/*
 	 * The values the type attribute can take
