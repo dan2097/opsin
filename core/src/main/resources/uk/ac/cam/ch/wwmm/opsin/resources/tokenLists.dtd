@@ -14,7 +14,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
-        valType (chain|ring|unsatring|partunsatring|atom|SMILES|dbkey) #IMPLIED
+        valType (SMILES|dbkey|chain) #IMPLIED
         labels CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
         defaultInLocant CDATA #IMPLIED
@@ -36,13 +36,10 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
 <!--
   (the #PCDATA inside the tag) = the string to match
   value == depends on valType, or see the file itself
-   valType = chain => aliphatic chain of $VALUE carbons
-   valType = ring => aliphatic chain of $VALUE carbons
-   valType = unsatring => conjugated chain of $VALUE carbons
-   valType = partunsatring => aliphatic chain of $VALUE carbons which will later have at least one bond unsaturated
-   valType = atom => single atom of the given symbol
-   valType = dbkey => a key to fragments.xml
    valType = SMILES => see the SMILESFragmentBuilder class
+   valType = dbkey => a key to fragments.xml
+   valType = chain => aliphatic chain of $VALUE carbons
+
   labels == What the locants are for this group. See the SMILESFragmentBuilder class
   fusedRingNumbering ==same as above but for some rings with non standard numbering. This numbering is used to decide which sides correspond to the letters employed in fusing rings. It is neccesary where non standard numbering does not precess regularly around the edge of the fused ring system c.f. purine
   defaultInLocant == The locant of the atom which by default an incoming fragment should connect to. Typically used on groups
