@@ -75,12 +75,6 @@ class SMILESFragmentBuilder {
 		}
 	}
 
-	/**Upper case letters.*/
-	private static final String upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	/**Lower case letters.*/
-	private static final String lowerLetters = "abcdefghijklmnopqrstuvwxyz";
-	/**Numerical digits.*/
-	private static final String digits = "0123456789";
 	/**Organic Atoms.*/
 	private static final Set<String> organicAtoms = new HashSet<String>();
 	/**Aromatic Atoms.*/
@@ -186,11 +180,11 @@ class SMILESFragmentBuilder {
 				stack.peek().slash = SMILES_BOND_DIRECTION.LSLASH;
 			} else if(nextChar == '.'){
 				stack.peek().atom = null;
-			} else if(upperLetters.indexOf(nextChar) !=-1 || lowerLetters.indexOf(nextChar)!=-1) {//organic atoms
+			} else if(Character.isLetter(nextChar)) {//organic atoms
 		        String elementType = "" +nextChar;
 		        boolean spareValency =false;
-		        if(upperLetters.contains(elementType)) {//normal atoms
-					if(tmpString.length() > 0 && lowerLetters.contains(tmpString.substring(0,1)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
+		        if(Character.isUpperCase(nextChar)) {//normal atoms
+					if(tmpString.length() > 0 && Character.isLowerCase(tmpString.charAt(0)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
 						elementType += tmpString.substring(0,1);
 						tmpString = tmpString.substring(1);
 					}
@@ -198,7 +192,7 @@ class SMILESFragmentBuilder {
 						throw new StructureBuildingException(elementType +" is not an organic Element. If it is actually an element it should be in square brackets");
 					}
 		        }
-		        else if(lowerLetters.contains(elementType)) {//aromatic atoms
+		        else if(Character.isLowerCase(nextChar)) {//aromatic atoms
 					if (!aromaticAtoms.contains(elementType)){
 						throw new StructureBuildingException(elementType +" is not an aromatic Element. If it is actually an element it should not be in lower case");
 					}
@@ -240,8 +234,7 @@ class SMILESFragmentBuilder {
                 tmpString = tmpString.substring(indexOfRightSquareBracket +1);
              // isotope
                 String isotope = "";
-				while(atomString.length() > 0 &&
-						digits.contains(atomString.substring(0,1))) {
+				while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
 					isotope += atomString.substring(0,1);
 					atomString = atomString.substring(1);
 				}
@@ -259,14 +252,14 @@ class SMILESFragmentBuilder {
 		// elementType
 		        String elementType = "" + nextChar;
 		        boolean spareValency = false;
-		        if(upperLetters.contains(elementType)) {//normal atoms
-					if(atomString.length() > 0 && lowerLetters.contains(atomString.substring(0,1))) {
+		        if(Character.isUpperCase(nextChar)) {//normal atoms
+					if(atomString.length() > 0 && Character.isLowerCase(atomString.charAt(0))) {
 						elementType += atomString.substring(0,1);
 						atomString = atomString.substring(1);
 					}
 		        }
-		        else if(lowerLetters.contains(elementType)) {//aromatic atoms
-					if(atomString.length() > 0 && lowerLetters.contains(atomString.substring(0,1))) {
+		        else if(Character.isLowerCase(nextChar)) {//aromatic atoms
+					if(atomString.length() > 0 && Character.isLowerCase(atomString.charAt(0))) {
 						if (aromaticAtoms.contains(elementType + atomString.substring(0,1))){
 							elementType = elementType.toUpperCase() + atomString.substring(0,1);
 							atomString = atomString.substring(1);
@@ -340,7 +333,7 @@ class SMILESFragmentBuilder {
 	            		}
 	            		else{
 			            	String hydrogenCountString ="";
-	    					while(atomString.length() > 0 && digits.contains(atomString.substring(0,1))) {
+	    					while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
 	    						hydrogenCountString += atomString.substring(0,1);
 	    						atomString = atomString.substring(1);
 	    					}
@@ -362,7 +355,7 @@ class SMILESFragmentBuilder {
 	    				charge = nextChar == '+' ? 1 : -1;
     					String changeChargeStr = "";
     					int changeCharge = 1;
-    					while(atomString.length() > 0 && digits.contains(atomString.substring(0,1))) {//e.g. [C+2]
+    					while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {//e.g. [C+2]
     						changeChargeStr+= atomString.substring(0,1);
     						atomString = atomString.substring(1);
     					}
@@ -391,8 +384,7 @@ class SMILESFragmentBuilder {
 		            }
 		            else if(nextChar == '|') {
 						String lambda = "";
-						while(atomString.length() > 0 &&
-								digits.contains(atomString.substring(0,1))) {
+						while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
 							lambda += atomString.substring(0,1);
 							atomString = atomString.substring(1);
 						}
@@ -403,7 +395,7 @@ class SMILESFragmentBuilder {
 		            }
 		        }
 				atom.setProperty(Atom.SMILES_HYDROGEN_COUNT, hydrogenCount);
-			} else if(digits.indexOf(nextChar)!= -1 || nextChar == '%') {
+			} else if(Character.isDigit(nextChar)|| nextChar == '%') {
 				tmpString = processRingOpeningOrClosure(fragManager, stack, closures, tmpString, nextChar);
 			}
 			else{
@@ -506,7 +498,7 @@ class SMILESFragmentBuilder {
 			throws StructureBuildingException {
 		String closure = "" + nextChar;
 		if(nextChar == '%') {
-			if (tmpString.length() >=2 && digits.contains(tmpString.substring(0,1)) && digits.contains(tmpString.substring(1,2))) {
+			if (tmpString.length() >=2 && Character.isDigit(tmpString.charAt(0)) && Character.isDigit(tmpString.charAt(1))) {
 				closure = tmpString.substring(0,2);
 				tmpString = tmpString.substring(2);
 			}

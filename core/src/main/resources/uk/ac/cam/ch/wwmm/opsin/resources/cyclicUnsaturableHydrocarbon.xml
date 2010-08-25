@@ -14,13 +14,13 @@
       <token value="C123CCC4CC1.C24(C)C.C3" valType="SMILES">bornyl</token>
     <token value="C12CC3CCC1C2(C)C.C3" valType="SMILES">car</token>
     <!--it's quicker to write out all forms of this than create a special case for menthane to allow things like 1-p-menthene-->
-    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" suffixAppliesToByDefault="3">menth</token>
-    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" suffixAppliesToByDefault="3">p-menth</token>
-    <token value="C12CCC3CC1.C2.C3(C)C" valType="SMILES" suffixAppliesToByDefault="3">para-menth</token>
-    <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">m-menth</token>
-    <token value="C12CC3CCC1.C2.C3(C)C" valType="SMILES">meta-menth</token>
-    <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">o-menth</token>
-    <token value="C12C3CCCC1.C2.C3(C)C" valType="SMILES">ortho-menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES" suffixAppliesToByDefault="3">menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES" suffixAppliesToByDefault="3">p-menth</token>
+    <token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES" suffixAppliesToByDefault="3">para-menth</token>
+    <token value="C12CC3CCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES">m-menth</token>
+    <token value="C12CC3CCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES">meta-menth</token>
+    <token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES">o-menth</token>
+    <token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" valType="SMILES">ortho-menth</token>
     <token value="C12CCC(CC2)C1" valType="SMILES">norborn</token>
       <token value="C12CCC(CC2)C1" valType="SMILES">norcamph</token>
       <token value="C12CCC(CC2)C1" valType="SMILES">norbornyl</token>
