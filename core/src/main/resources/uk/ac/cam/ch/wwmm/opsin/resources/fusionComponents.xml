@@ -4,8 +4,8 @@
 <tokenLists>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="Å">
   <!-- benzo is special as fused rings formed from benzo are treated as components and a locant in front of a benzo assigns locants for this component-->
-    <token value="benzene" valType="dbkey">benzo</token>
-    <token value="benzene" valType="dbkey">benz</token>
+    <token value="c1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">benzo</token>
+    <token value="c1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">benz</token>
   </tokenList>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="¡">
   <!-- may have front locants-->
@@ -30,7 +30,7 @@
     <token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">arsinolino</token>
     <token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">arsinolizino</token>
     <token value="azulene" valType="dbkey">azuleno</token>
-    <token value="benzene" valType="dbkey">benzeno</token>
+    <token value="c1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">benzeno</token>
     <token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">betacarbolino</token>
     <token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">beta-carbolino</token>
     <token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthreno</token>
@@ -124,12 +124,12 @@
     <token value="[se]1[cH2]cccc1" valType="SMILES">selenopyrano</token>
     <token value="[te]1[cH2]cccc1" valType="SMILES">telluropyrano</token>
     <token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/16a/15b/15c/15d/15e" valType="SMILES">pyranthreno</token>
-    <token value="pyrazine" valType="dbkey">pyrazino</token>
+    <token value="n1ccncc1" labels="1/2/3/4/5/6" valType="SMILES">pyrazino</token>
     <token value="pyrazole" valType="dbkey">pyrazolo</token>
     <token value="pyrene" valType="dbkey">pyreno</token>
     <token value="pyridazine" valType="dbkey">pyridazino</token>
-    <token value="pyridine" valType="dbkey">pyridino</token>
-    <token value="pyridine" valType="dbkey">pyrido</token>
+    <token value="n1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">pyridino</token>
+    <token value="n1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">pyrido</token>
     <token value="pyrimidine" valType="dbkey">pyrimidino</token>
     <token value="pyrimidine" valType="dbkey">pyrimido</token>
     <token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrrolizino</token>
