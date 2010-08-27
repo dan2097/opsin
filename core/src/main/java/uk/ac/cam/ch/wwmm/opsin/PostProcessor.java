@@ -69,6 +69,8 @@ class PostProcessor {
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
 	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
+	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
+	private final Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{][^\\[\\(\\{]*H[\\]\\)\\}]");
 	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+[^\\.,]*\\d*,?\\d*[^\\.,]*)");//the not a period or comma allows some an optional indication that the following comma separated digits are superscripted
 	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
@@ -107,6 +109,7 @@ class PostProcessor {
 
 		for (Element subOrRoot: substituentsAndRoot) {
 			processLocants(subOrRoot);
+			convertOrthoMetaParaToLocants(subOrRoot);
 			processAlkaneStemModifications(subOrRoot);//e.g. tert-butyl
 			processHeterogenousHydrides(subOrRoot);//e.g. tetraphosphane, disiloxane
 			processIndicatedHydrogens(subOrRoot);
@@ -216,37 +219,102 @@ class PostProcessor {
 	 * Removes hyphens from the end of locants if present
 	 * Looks for locants of the form number-letter and converts them to letternumber
 	 * e.g. 1-N becomes N1. 1-N is the IUPAC 2004 recommendation, N1 is the previous recommendation
+	 * Strips indicated hydrogen out of locants
+	 * 
 	 * @param subOrRoot
 	 * @throws PostProcessingException 
 	 */
 	private void processLocants(Element subOrRoot) throws PostProcessingException {
-		Elements locants = subOrRoot.getChildElements(LOCANT_EL);
-		for (int i = 0; i < locants.size(); i++) {
-			Element locant =locants.get(i);
-			
+		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
+		for (Element locant : locants) {
 			String[] individualLocantText = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
-			for (int j = 0; j < individualLocantText.length; j++) {
-				String locantText =individualLocantText[j];
+			for (int i = 0; i < individualLocantText.length; i++) {
+				String locantText =individualLocantText[i];
 				if (locantText.contains("-")){//this checks should avoid having to do the regex match in all cases as locants shouldn't contain -
 					Matcher m= matchIUPAC2004ElementLocant.matcher(locantText);
 					if (m.matches()){
-						individualLocantText[j] = m.group(2) +m.group(1);
+						individualLocantText[i] = m.group(2) +m.group(1);
 					}
 					else{
 						throw new PostProcessingException("Unexpected hyphen in locantText");
 					}
 				}
-				else if (matchNonDigit.matcher(locantText).lookingAt()){
+				else if (Character.isLetter(locantText.charAt(0))){
 					Matcher m =  matchSuperscriptedLocant.matcher(locantText);//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
 					if (m.matches()){
-						individualLocantText[j] = m.group(1) +m.group(2);
+						individualLocantText[i] = m.group(1) +m.group(2);
 					}
 					else if (locantText.length()>=3 && Character.isLetter(locantText.charAt(1)) && Character.isLetter(locantText.charAt(2))){//convert greeks to lower case
-						individualLocantText[j] = locantText.toLowerCase();
+						individualLocantText[i] = locantText.toLowerCase();
 					}
 				}
 			}
-			XOMTools.setTextChild(locant, StringTools.arrayToString(individualLocantText, ","));
+			String locantText = StringTools.arrayToString(individualLocantText, ",");
+			//If the indicatedHydrogen has been specified create a tag for it and remove it from the list of locants
+			//e.g. 1(9H),5,7 -->indicatedHydrogen tag value (9H) and 1,5,7
+			//can get as complicated as 1,2(2H,7H)
+			Matcher matches =matchIndicatedHydrogen.matcher(locantText);
+			if (matches.find()){
+				do {
+					Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
+					indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, matches.group(1)));
+					XOMTools.insertBefore(locant, indicatedHydrogenElement);
+				}
+				while (matches.find());
+				locantText =matchIndicatedHydrogenBracket.matcher(locantText).replaceAll("");
+			}
+			XOMTools.setTextChild(locant, locantText);
+
+			Element afterLocants = (Element)XOMTools.getNextSibling(locant);
+			if(afterLocants == null){
+				throw new PostProcessingException("Nothing after locant tag: " + locant.toXML());
+			}
+		}
+	}
+
+	/**Converts ortho/meta/para into locants
+	 * Depending on context para, for example, will either become para or 1,para
+	 *
+	 * @param subOrRoot
+	 * @throws PostProcessingException
+	 */
+	private void convertOrthoMetaParaToLocants(Element subOrRoot) throws PostProcessingException{
+		List<Element> ompLocants = XOMTools.getChildElementsWithTagName(subOrRoot, ORTHOMETAPARA_EL);
+		for (Element ompLocant : ompLocants) {
+			String locantText = ompLocant.getValue();
+			String firstChar = locantText.substring(0, 1);
+			Element afterOmpLocant = (Element)XOMTools.getNextSibling(ompLocant);
+			ompLocant.setLocalName(LOCANT_EL);
+			ompLocant.removeChildren();
+			ompLocant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
+			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) || (afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && matchComma.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
+				if ("o".equalsIgnoreCase(firstChar)){
+					ompLocant.appendChild("1,ortho");
+				}
+				else if ("m".equalsIgnoreCase(firstChar)){
+					ompLocant.appendChild("1,meta");
+				}
+				else if ("p".equalsIgnoreCase(firstChar)){
+					ompLocant.appendChild("1,para");
+				}
+				else{
+					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
+				}
+			}
+			else{
+				if ("o".equalsIgnoreCase(firstChar)){
+					ompLocant.appendChild("ortho");
+				}
+				else if ("m".equalsIgnoreCase(firstChar)){
+					ompLocant.appendChild("meta");
+				}
+				else if ("p".equalsIgnoreCase(firstChar)){
+					ompLocant.appendChild("para");
+				}
+				else{
+					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
+				}
+			}
 		}
 	}
 
@@ -1407,8 +1475,9 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processCyclisedChain(Element chainGroup, Element cycloEl) throws PostProcessingException {
+		int chainlen;
 		if (!chainGroup.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)){
-			int chainlen = Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR));
+			chainlen = Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR));
 			if (chainlen < 3){
 				throw new PostProcessingException("Alkane chain too small to create a cyclo alkane: " + chainlen);
 			}
@@ -1418,9 +1487,9 @@ class PostProcessor {
 		}
 		else{
 			String smiles=chainGroup.getAttributeValue(VALUE_ATR);
-			int chainlen =0;
+			chainlen =0;
 			for (int i = smiles.length() -1 ; i >=0; i--) {
-				if (Character.isUpperCase(smiles.charAt(i))){
+				if (Character.isUpperCase(smiles.charAt(i)) && smiles.charAt(i) !='H'){
 					chainlen++;
 				}
 		    }
@@ -1441,6 +1510,14 @@ class PostProcessor {
 				}
 			}
 			chainGroup.getAttribute(VALUE_ATR).setValue(smiles);
+		}
+		if (chainlen==6){//6 membered rings have ortho/meta/para positions
+			if (chainGroup.getAttribute(LABELS_ATR)!=null){
+				chainGroup.getAttribute(LABELS_ATR).setValue("1/2,ortho/3,meta/4,para/5/6");
+			}
+			else{
+				chainGroup.addAttribute(new Attribute(LABELS_ATR, "1/2,ortho/3,meta/4,para/5/6"));
+			}
 		}
 		chainGroup.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
 		if (chainGroup.getAttribute(USABLEASJOINER_ATR) !=null){
@@ -1555,9 +1632,13 @@ class PostProcessor {
 			if (possibleLocant==null || !possibleLocant.getLocalName().equals(LOCANT_EL)){//only need to give one a locant of 9 if no locant currently present
 				Element possibleOne =(Element) XOMTools.getNextSibling(group);
 				if (possibleOne!=null && possibleOne.getValue().equals("one")){
+					//Rule C-315.2
 					Element newLocant =new Element(LOCANT_EL);
-					newLocant.appendChild("9(10H)");//Rule C-315.2
+					newLocant.appendChild("9");
 					XOMTools.insertBefore(possibleOne, newLocant);
+					Element newIindicatedHydrogen = new Element(INDICATEDHYDROGEN_EL);
+					newIindicatedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));
+					XOMTools.insertBefore(newLocant, newIindicatedHydrogen);
 				}
 			}
 		}
