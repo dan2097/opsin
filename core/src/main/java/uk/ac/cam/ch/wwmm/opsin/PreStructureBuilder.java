@@ -54,17 +54,12 @@ class PreStructureBuilder {
 		}
 	}
 
-	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
-	private final Pattern matchBracketedEntryInLocant =Pattern.compile("[\\[\\(\\{].*[\\]\\)\\}]");
 	private final Pattern matchColon =Pattern.compile(":");
 	private final Pattern matchSemiColon =Pattern.compile(";");
 	private final Pattern matchComma =Pattern.compile(",");
 	private final Pattern matchSpace =Pattern.compile(" ");
 	private final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
 	private final Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
-	private final Pattern matchOrtho =Pattern.compile("[oO]");
-	private final Pattern matchMeta =Pattern.compile("[mM]");
-	private final Pattern matchPara =Pattern.compile("[pP]");
 	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	private final Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
 	private final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
@@ -180,10 +175,6 @@ class PreStructureBuilder {
 			List<Element> substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
 			List<Element> groups =  XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
 
-			for (Element subOrBracketOrRoot : substituentsAndRootAndBrackets) {
-				processLocantFeatures(subOrBracketOrRoot);
-			}
-
 			for (Element group : groups) {
 				Fragment thisFrag = resolveGroup(state, group);
 				state.xmlFragmentMap.put(group, thisFrag);
@@ -266,78 +257,6 @@ class PreStructureBuilder {
 
 		}
 	}
-
-	/**Handles special features of locants e.g. ortho/meta/para, indicated hydrogen, cis/trans in locant
-	 *
-	 * @param subOrBracketOrRoot The substituent/root/bracket to looks for locants in.
-	 * @throws PostProcessingException
-	 */
-	private void processLocantFeatures(Element subOrBracketOrRoot) throws PostProcessingException{
-		Elements ompLocants = subOrBracketOrRoot.getChildElements(ORTHOMETAPARA_EL);
-		for(int i=0; i < ompLocants.size(); i++) {
-			Element locant = ompLocants.get(i);
-			String locantText = locant.getValue();
-			locantText = locantText.substring(0, 1);
-			Element afterOmpLocant = (Element)XOMTools.getNextSibling(locant);
-			locant.setLocalName(LOCANT_EL);
-			locant.removeChildren();
-			locant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
-			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) || (afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && matchComma.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
-				if (matchOrtho.matcher(locantText).matches()){
-					locant.appendChild("1,2");
-				}
-				else if (matchMeta.matcher(locantText).matches()){
-					locant.appendChild("1,3");
-				}
-				else if (matchPara.matcher(locantText).matches()){
-					locant.appendChild("1,4");
-				}
-				else{
-					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
-				}
-			}
-			else{
-				if (matchOrtho.matcher(locantText).matches()){
-					locant.appendChild("2");
-				}
-				else if (matchMeta.matcher(locantText).matches()){
-					locant.appendChild("3");
-				}
-				else if (matchPara.matcher(locantText).matches()){
-					locant.appendChild("4");
-				}
-				else{
-					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
-				}
-			}
-		}
-
-		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
-		for (Element locant : locants) {
-			String locantText = locant.getValue();
-
-			//If the indicatedHydrogen has been specified create a tag for it and remove it from the list of locants
-			//e.g. 1(9H),5,7 -->indicatedHydrogen tag value (9H) and 1,5,7
-			//can get as complicated as 1,2(2H,7H)
-			Matcher matches =matchIndicatedHydrogen.matcher(locantText);
-			if (matches.find()){
-				do {
-					Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
-					indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, matches.group(1)));
-					XOMTools.insertBefore(locant, indicatedHydrogenElement);
-				}
-				while (matches.find());
-				locantText =matchBracketedEntryInLocant.matcher(locantText).replaceAll("");
-			}
-			XOMTools.setTextChild(locant, locantText);
-
-			Element afterLocants = (Element)XOMTools.getNextSibling(locant);
-			if(afterLocants == null){
-				throw new PostProcessingException("Nothing after locant tag: " + locant.toXML());
-			}
-		}
-	}
-
 
 	/**Resolves the contents of a group element
 	 *
