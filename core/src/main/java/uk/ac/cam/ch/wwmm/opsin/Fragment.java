@@ -633,6 +633,15 @@ class Fragment {
 	boolean hasLocant(String locant) throws StructureBuildingException {
 		return getAtomByLocant(locant)!=null;
 	}
+	
+
+	/**
+	 * Returns an unmodifiable list of the locants asssociated with this fragment
+	 * @return
+	 */
+	Set<String> getLocants() {
+		return Collections.unmodifiableSet(atomMapFromLocant.keySet());
+	}
 
 	List<Atom> getIndicatedHydrogen() {
 		return indicatedHydrogen;

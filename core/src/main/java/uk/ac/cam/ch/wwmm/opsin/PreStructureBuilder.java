@@ -4023,6 +4023,14 @@ class PreStructureBuilder {
 
             if (suffixFrag != null) {//merge suffix frag and parent fragment
                 state.fragManager.removeAtomAndAssociatedBonds(suffixFrag.getFirstAtom());//the dummy R atom
+                Set<String> suffixLocants = new HashSet<String>(suffixFrag.getLocants());
+                for (String suffixLocant : suffixLocants) {
+					if (Character.isDigit(suffixLocant.charAt(0))){//check that numeric locants do not conflict with the parent fragment e.g. hydrazide 2' with biphenyl 2'
+						if (frag.hasLocant(suffixLocant)){
+							suffixFrag.getAtomByLocant(suffixLocant).removeLocant(suffixLocant);
+						}
+					}
+				}
                 state.fragManager.incorporateFragment(suffixFrag, frag);
             }
         }
