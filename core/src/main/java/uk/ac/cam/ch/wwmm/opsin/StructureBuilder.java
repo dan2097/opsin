@@ -1033,26 +1033,33 @@ class StructureBuilder {
 	}
 	
 
+	/**
+	 * Handles Glcyol ethers nomenclature e.g.
+	 * triethylene glycol n-butyl ether
+	 * tripropylene glycol methyl ether
+	 * dipropylene glycol methyl ether acetate
+	 * @param state
+	 * @param words
+	 * @throws StructureBuildingException
+	 */
 	private void buildGlycolEther(BuildState state, List<Element> words) throws StructureBuildingException {
-		List<Element> substituents = new ArrayList<Element>();
-		Element glycol =null;
-		for (Element wordOrWordRule : words) {
-			if (wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
-				substituents.add(wordOrWordRule);
-			}
-			else if (wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
-				if (glycol !=null){
-					throw new StructureBuildingException("Unexpected wordType encountered when applying glycol ether word rule " + wordOrWordRule.getAttributeValue(TYPE_ATR));
-				}
-				glycol = wordOrWordRule;
-			}
-			//ether ignored
-		}
-		if (glycol ==null){
+		List<Element> wordsToAttachToGlcyol = new ArrayList<Element>();
+		Element glycol =words.get(0);
+		if (!glycol.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("OPSIN Bug: Cannot find glycol word!");
 		}
-		if (substituents.size() !=1 && substituents.size() !=2 ){
-			throw new StructureBuildingException("Unexpected number of substituents for glycol ether. Expected 1 or 2 found: " +substituents.size());
+		for (int i = 1; i < words.size(); i++) {
+			Element wordOrWordRule =words.get(i);
+			//ether ignored
+			if (!wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+				wordsToAttachToGlcyol.add(wordOrWordRule);
+			}
+			else if (!wordOrWordRule.getAttributeValue(VALUE_ATR).equals("ether")){
+				throw new StructureBuildingException("Unexpected word encountered when applying glycol ether word rule " + wordOrWordRule.getAttributeValue(VALUE_ATR));
+			}
+		}
+		if (wordsToAttachToGlcyol.size() !=1 && wordsToAttachToGlcyol.size() !=2 ){
+			throw new StructureBuildingException("Unexpected number of substituents for glycol ether. Expected 1 or 2 found: " +wordsToAttachToGlcyol.size());
 		}
 		Element finalGroup = findRightMostGroupInWordOrWordRule(glycol);
 		Fragment theDiRadical = state.xmlFragmentMap.get(finalGroup);
@@ -1066,19 +1073,27 @@ class StructureBuilder {
 		if (glycolAtoms.size()!=2){
 			throw new StructureBuildingException("OPSIN bug: unable to find the two glycol oxygens");
 		}
-		BuildResults br1 = new BuildResults(state, substituents.get(0));
+		BuildResults br1 = new BuildResults(state, wordsToAttachToGlcyol.get(0));
 		if (br1.getOutAtomCount() ==0){
 			throw new StructureBuildingException("Substituent had no outAtom to form glycol ether");
 		}
 		state.fragManager.createBond(glycolAtoms.get(0), br1.getOutAtom(0).getAtom(), 1);
 		br1.removeOutAtom(0);
-		if (substituents.size()==2){
-			BuildResults br2 = new BuildResults(state, substituents.get(1));
-			if (br2.getOutAtomCount() ==0){
-				throw new StructureBuildingException("Substituent had no outAtom to form glycol ether");
+		if (wordsToAttachToGlcyol.size()==2){
+			BuildResults br2 = new BuildResults(state, wordsToAttachToGlcyol.get(1));
+			if (br2.getOutAtomCount() >0){//form ether
+				state.fragManager.createBond(glycolAtoms.get(1), br2.getOutAtom(0).getAtom(), 1);
+				br2.removeOutAtom(0);
 			}
-			state.fragManager.createBond(glycolAtoms.get(1), br2.getOutAtom(0).getAtom(), 1);
-			br2.removeOutAtom(0);
+			else if (br2.getFunctionalAtomCount() >0){//form ester
+				Atom ateAtom = br2.getFunctionalAtom(0);
+				ateAtom.setCharge(0);
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(glycolAtoms.get(1), br2.getFunctionalAtom(0));
+				br2.removeFunctionalAtom(0);
+			}
+			else{
+				throw new StructureBuildingException("Word had neither an outAtom or a functionalAtom! hence neither and ether or ester could be formed : " + wordsToAttachToGlcyol.get(1).getAttributeValue(VALUE_ATR));
+			}
 		}
 	}
 
