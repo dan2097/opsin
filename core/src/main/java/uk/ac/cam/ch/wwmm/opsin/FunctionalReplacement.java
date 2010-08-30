@@ -49,17 +49,16 @@ class FunctionalReplacement {
 	}
 	private final static Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
 	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
-	private static final Pattern matchHalogenReplacement= Pattern.compile("fluoro|chloro|bromo|iodo");
 	private static final Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchColon =Pattern.compile(":");
 	
 	enum PREFIX_REPLACEMENT_TYPE{
-		chalcogen,
-		halogen,
-		hydrazono,//ambiguity exists between prefix and functional replacement
-		hydrazidoOrImidoOrAmido,//no ambiguity exists
-		peroxy
+		chalcogen,//ambiguous
+		halideOrPseudoHalide,//only mean functional replacement when applied to non carboxylic acids
+		dedicatedFunctionalReplacementPrefix,//no ambiguity exists
+		hydrazono,//ambiguous, only applies to non carboxylic acid
+		peroxy//ambiguous, also applies to etheric oxygen
 	}
 
 	/**
@@ -128,22 +127,28 @@ class FunctionalReplacement {
 			if (matchChalcogenReplacement.matcher(groupValue).matches()){
 				replacementType =PREFIX_REPLACEMENT_TYPE.chalcogen;
 			}
-			if (matchHalogenReplacement.matcher(groupValue).matches()){
-				replacementType =PREFIX_REPLACEMENT_TYPE.halogen;
+			else if (HALIDEORPSEUDOHALIDE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+				replacementType =PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide;
 			}
-			else if (group.getValue().equals("peroxy")){
-				replacementType =PREFIX_REPLACEMENT_TYPE.peroxy;
+			else if (DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+				replacementType =PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix;
 			}
-			else if (group.getValue().equals("hydrazono")){
+			else if (groupValue.equals("hydrazono")){
 				replacementType =PREFIX_REPLACEMENT_TYPE.hydrazono;
+			}
+			else if (groupValue.equals("peroxy")){
+				replacementType =PREFIX_REPLACEMENT_TYPE.peroxy;
 			}
 			if (replacementType!=null){
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent =(Element) group.getParent();
 				Element nextSubOrBracket = (Element) XOMTools.getNextSibling(substituent);
-				if (nextSubOrBracket!=null && ((nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL) && replacementType == PREFIX_REPLACEMENT_TYPE.chalcogen) ||nextSubOrBracket.getLocalName().equals(ROOT_EL))){
+				if (nextSubOrBracket!=null && (nextSubOrBracket.getLocalName().equals(ROOT_EL) || nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL))){
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
 					if (XOMTools.getPreviousSibling(groupToBeModified)!=null){
+						if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
+							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+						}
 						continue;//not 2,2'-thiodipyran
 					}
 					Element locantEl =null;//null unless a locant that agrees with the multiplier is present
@@ -166,20 +171,11 @@ class FunctionalReplacement {
 								locantEl = possibleLocant;
 							}
 							else if (numberOfAtomsToReplace >1){//doesn't look like prefix functional replacement
+								if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
+									throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+								}
 								continue;
 							}
-						}
-					}
-					if (replacementType  == PREFIX_REPLACEMENT_TYPE.halogen){
-						boolean appropriate = checkGroupToBeModifiedIsAppropriateForHalogenReplacement(state, groupToBeModified);
-						if (!appropriate){
-							continue;
-						}
-					}
-					if (replacementType  == PREFIX_REPLACEMENT_TYPE.hydrazono){
-						boolean appropriate = checkGroupToBeModifiedIsAppropriateForHydrazonoReplacement(state, groupToBeModified);
-						if (!appropriate){
-							continue;
 						}
 					}
 
@@ -188,13 +184,34 @@ class FunctionalReplacement {
 						oxygenReplaced = performChalcogenFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.peroxy){
+						if (nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL)){
+							continue;
+						}
 						oxygenReplaced = performPeroxyFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
 					}
-					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono){
-						oxygenReplaced = performHydrazonoFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
+						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, state.xmlFragmentMap.get(group).getOutAtom(0).getValency());
+						if (!appropriate){
+							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+						}
+						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+						if (oxygenReplaced==0){
+							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+						}
 					}
-					else if (replacementType == PREFIX_REPLACEMENT_TYPE.halogen){
-						oxygenReplaced = performHalogenFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono){
+						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, 2);
+						if (!appropriate){
+							continue;
+						}
+						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+					}
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide){
+						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, 1);
+						if (!appropriate){
+							continue;
+						}
+						oxygenReplaced = performHalideOrPseudoHalideFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else{
 						throw new StructureBuildingException("OPSIN bug: Unexpected prefix replacement type");
@@ -215,6 +232,9 @@ class FunctionalReplacement {
 							multiplierEl.detach();
 						}
 					}
+				}
+				else if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
+					throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 				}
 			}
 		}
@@ -254,23 +274,7 @@ class FunctionalReplacement {
 				List<Atom> atomList =fragToApplyInfixTo.getAtomList();
 				LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
 				LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
-				for (Atom a : atomList) {
-					if (a.getElement().equals("O")){//find terminal oxygens
-						if (a.getBonds().size()==1){
-							int incomingValency = a.getIncomingValency();
-							if (incomingValency ==2){
-								doubleBondedOxygen.add(a);
-							}
-							else if (incomingValency ==1){
-								singleBondedOxygen.add(a);
-							}
-							else{
-								throw new StructureBuildingException("Unexpected bond order to oxygen; excepted 1 or 2 found: " +incomingValency);
-							}
-
-						}
-					}
-				}
+				populateTerminalSingleAndDoubleBondedOxygen(atomList, singleBondedOxygen, doubleBondedOxygen);
 				int oxygenAvailable = singleBondedOxygen.size() +doubleBondedOxygen.size();
 
 				/*
@@ -293,12 +297,16 @@ class FunctionalReplacement {
 					String replacementSMILES = transformationArray[1];
 					boolean acceptDoubleBondedOxygen = false;
 					boolean acceptSingleBondedOxygen = false;
+					boolean nitrido =false;
 					for (String transformation : transformations) {
 						if (transformation.startsWith("=")){
 							acceptDoubleBondedOxygen = true;
 						}
 						else if (transformation.startsWith("-")){
 							acceptSingleBondedOxygen = true;
+						}
+						else if (transformation.startsWith("#")){
+							nitrido =true;
 						}
 						else{
 							throw new StructureBuildingException("Malformed infix transformation. Expected to start with either - or =. Transformation was: " +transformation);
@@ -308,7 +316,7 @@ class FunctionalReplacement {
 						}
 					}
 					boolean infixAssignmentAmbiguous =false;
-					if (acceptSingleBondedOxygen && !acceptDoubleBondedOxygen){
+					if ((acceptSingleBondedOxygen ||nitrido)  && !acceptDoubleBondedOxygen){
 						if (singleBondedOxygen.size() ==0){
 							throw new StructureBuildingException("Cannot find single bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
 						}
@@ -316,7 +324,7 @@ class FunctionalReplacement {
 							infixAssignmentAmbiguous=true;
 						}
 					}
-					if (!acceptSingleBondedOxygen && acceptDoubleBondedOxygen){
+					if (!acceptSingleBondedOxygen && (acceptDoubleBondedOxygen | nitrido)){
 						if (doubleBondedOxygen.size()==0){
 							throw new StructureBuildingException("Cannot find double bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
 						}
@@ -335,7 +343,7 @@ class FunctionalReplacement {
 
 					Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
 					Atom atomToUse = null;
-					if (acceptDoubleBondedOxygen && doubleBondedOxygen.size()>0 ){
+					if ((acceptDoubleBondedOxygen || nitrido) && doubleBondedOxygen.size()>0 ){
 						atomToUse = doubleBondedOxygen.removeFirst();
 					}
 					else if (acceptSingleBondedOxygen && singleBondedOxygen.size()>0 ){
@@ -345,36 +353,15 @@ class FunctionalReplacement {
 						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");//this would be a bug
 					}
 					Fragment replacementFrag =state.fragManager.buildSMILES(replacementSMILES, SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-					int bondOrder =0;
 					if (replacementFrag.getOutAtoms().size()>0){
-						bondOrder = replacementFrag.getOutAtom(0).getValency();
 						replacementFrag.removeOutAtom(0);
-						//e.g. in nitrido the replacement is #N so need to set bond order to Oxygen appropriately
-						if (atomToUse.getAtomNeighbours().size() >0){
-							atomToUse.getFrag().findBondOrThrow(atomToUse.getAtomNeighbours().get(0),atomToUse).setOrder(bondOrder);
-						}
-						else if (atomToUse.getFrag().getInAtoms().size()>0){
-							boolean flag = false;
-							for (InAtom inAtom : atomToUse.getFrag().getInAtoms()){
-								if (inAtom.getAtom().equals(atomToUse)){
-									inAtom.setValency(bondOrder);
-									flag =true;
-									break;
-								}
-							}
-							if (!flag){
-								throw new StructureBuildingException("Cannot find inAtom associated with atom in suffix");
-							}
-						}
-						else{
-							throw new StructureBuildingException("OPSIN bug: Could not find inAtom for unconnected suffix and atom has no neighbours!");
-						}
 					}
-					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);
-					int charge = atomToUse.getCharge();
+					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);//also will copy charge to a chalcogen replacement
+					if (nitrido){
+						atomToUse.getFirstBond().setOrder(3);
+						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
+					}
 					state.fragManager.replaceTerminalAtomWithFragment(atomToUse, replacementFrag.getFirstAtom());
-					atomToUse.setCharge(charge);
-					
 					if (infixAssignmentAmbiguous){
 						ambiguousElementAtoms.add(atomToUse);
 						if (atomToUse.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
@@ -512,18 +499,12 @@ class FunctionalReplacement {
 	 * Prefix functional replacement nomenclature
 	 */
 
-	private static boolean checkGroupToBeModifiedIsAppropriateForHalogenReplacement(BuildState state, Element groupToBeModified) throws StructureBuildingException {
-		if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
-			return false;//halogen replacement only applies to non carboxylic acids e.g. chlorochromate
-		}
-		return calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(state, groupToBeModified) <=0;
-	}
 	
-	private static boolean checkGroupToBeModifiedIsAppropriateForHydrazonoReplacement(BuildState state, Element groupToBeModified) throws StructureBuildingException {
+	private static boolean checkGroupIsAnAppropriateNonCarboxylicAcid(BuildState state, Element groupToBeModified, int maxSubstitutableHydrogenOnOneAtom) throws StructureBuildingException {
 		if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
 			return false;//hydrazono replacement only applies to non carboxylic acids e.g. hydrazonooxalic acid
 		}
-		return calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(state, groupToBeModified) <=1;
+		return calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(state, groupToBeModified) < maxSubstitutableHydrogenOnOneAtom;
 	}
 	
 	private static int calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(BuildState state, Element group) throws StructureBuildingException{
@@ -651,7 +632,7 @@ class FunctionalReplacement {
 		}
 		if (locantEl !=null){
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+			if(oxygenWithAppropriateLocants.size() < numberOfAtomsToReplace){
 				numberOfAtomsToReplace =1;
 			}
 			else{
@@ -659,10 +640,8 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-		if (numberOfAtomsToReplace >1){
-			if (oxygenAtoms.size() < numberOfAtomsToReplace){
-				numberOfAtomsToReplace=1;
-			}
+		if (numberOfAtomsToReplace >1 && oxygenAtoms.size() < numberOfAtomsToReplace){
+			numberOfAtomsToReplace=1;
 		}
 		int atomsReplaced = 0;
 		if (oxygenAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
@@ -680,7 +659,6 @@ class FunctionalReplacement {
 				}
 				else{
 					Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-					replacementFrag.getAtomList().get(1).setCharge(oxygenToReplace.getCharge());
 					removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
 					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
 					state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
@@ -691,8 +669,9 @@ class FunctionalReplacement {
 	}
 	
 	/**
-	 * Replaces double bonded oxygen by hydrazinylidene e.g. hydrazonooxalic acid
-	 * Only performed on non carboxylic acids with less than 2 substitutable hydrogen
+	 * Replaces double bonded oxygen and/or single bonded oxygen depending on the input SMILES
+	 * SMILES with a valency 1 outAtom replace -O, SMILES with a valency 2 outAtom replace =O
+	 * SMILES with a valency 3 outAtom replace -O and =O (nitrido)
 	 * Returns the number of oxygen replaced
 	 * @param state
 	 * @param groupToBeModified
@@ -701,20 +680,37 @@ class FunctionalReplacement {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static int performHydrazonoFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace) throws StructureBuildingException {
+	private static int performFunctionalReplacementOnAcid(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
+		int outValency;
+		if (replacementSmiles.startsWith("-")){
+			outValency =1;
+		}
+		else if (replacementSmiles.startsWith("=")){
+			outValency =2;
+		}
+		else if (replacementSmiles.startsWith("#")){
+			outValency =3;
+		}
+		else{
+			throw new StructureBuildingException("OPSIN bug: Unexpected valency on fragment for prefix functional replacement");
+		}
+		replacementSmiles = replacementSmiles.substring(1);
 		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
 		if (oxygenAtoms.size()==0){
 			oxygenAtoms = findOxygenAtomsInGroup(state, groupToBeModified);
 		}
-		for (int i = oxygenAtoms.size()-1; i >=0; i--) {
-			Atom oxygenAtom = oxygenAtoms.get(i);
-			if (oxygenAtom.getBonds().size()!=1 || oxygenAtom.getIncomingValency() !=2 ){
-				oxygenAtoms.remove(i);
-			}
-		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+			LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
+			LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
+			populateTerminalSingleAndDoubleBondedOxygen(oxygenWithAppropriateLocants, singleBondedOxygen, doubleBondedOxygen);
+			if (outValency ==1){
+				oxygenWithAppropriateLocants.removeAll(doubleBondedOxygen);
+			}
+			else if (outValency ==2){
+				oxygenWithAppropriateLocants.removeAll(singleBondedOxygen);
+			}
+			if(oxygenWithAppropriateLocants.size() < numberOfAtomsToReplace){
 				numberOfAtomsToReplace =1;
 				//e.g. -1-thioureidomethyl
 			}
@@ -723,10 +719,23 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-		if (numberOfAtomsToReplace >1){
-			if (oxygenAtoms.size() < numberOfAtomsToReplace){
-				numberOfAtomsToReplace=1;
+		LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
+		LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
+		populateTerminalSingleAndDoubleBondedOxygen(oxygenAtoms, singleBondedOxygen, doubleBondedOxygen);
+		if (outValency ==1){
+			oxygenAtoms.removeAll(doubleBondedOxygen);
+		}
+		else if (outValency ==2){
+			oxygenAtoms.removeAll(singleBondedOxygen);
+		}
+		else {
+			if (singleBondedOxygen.size()==0 || doubleBondedOxygen.size()==0){
+				throw new StructureBuildingException("Both a -OH and =O are required for nitrido prefix functional replacement");
 			}
+			oxygenAtoms.removeAll(singleBondedOxygen);
+		}
+		if (numberOfAtomsToReplace >1 && oxygenAtoms.size() < numberOfAtomsToReplace){
+			numberOfAtomsToReplace=1;
 		}
 
 		int atomsReplaced =0;
@@ -736,8 +745,13 @@ class FunctionalReplacement {
 					continue;
 				}
 				else{
-					Fragment hydrazono = state.fragManager.buildSMILES("NN", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToReplace, hydrazono.getFirstAtom());
+					Fragment replacementFrag = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getType(), NONE_LABELS_VAL);
+					if (outValency ==3){//special case for nitrido
+						atomToReplace.getFirstBond().setOrder(3);
+						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
+					}
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToReplace, replacementFrag.getFirstAtom());
+					state.fragManager.incorporateFragment(replacementFrag, atomToReplace.getFrag());
 				}
 				atomsReplaced++;
 			}
@@ -746,7 +760,7 @@ class FunctionalReplacement {
 	}
 	
 	/**
-	 * Performs replacement of hydroxy by halogens
+	 * Performs replacement of hydroxy by halogens or pseudohalides
 	 * @param state
 	 * @param groupToBeModified
 	 * @param locantEl
@@ -756,7 +770,7 @@ class FunctionalReplacement {
 	 * @throws StructureBuildingException
 	 * @throws PostProcessingException 
 	 */
-	private static int performHalogenFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException, PostProcessingException {
+	private static int performHalideOrPseudoHalideFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException, PostProcessingException {
 		if (replacementSmiles.charAt(0) =='-'){//e.g. -Cl
 			replacementSmiles = replacementSmiles.substring(1);
 		}
@@ -766,7 +780,7 @@ class FunctionalReplacement {
 		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			if(oxygenWithAppropriateLocants.size() != numberOfAtomsToReplace){
+			if(oxygenWithAppropriateLocants.size() < numberOfAtomsToReplace){
 				numberOfAtomsToReplace =1;
 				//e.g. -1-thioureidomethyl
 			}
@@ -775,10 +789,8 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-		if (numberOfAtomsToReplace >1){
-			if (oxygenAtoms.size() < numberOfAtomsToReplace){
-				numberOfAtomsToReplace=1;
-			}
+		if (numberOfAtomsToReplace >1 && oxygenAtoms.size() < numberOfAtomsToReplace){
+			numberOfAtomsToReplace=1;
 		}
 
 		int atomsReplaced =0;
@@ -788,10 +800,12 @@ class FunctionalReplacement {
 					continue;
 				}
 				else{
-					state.fragManager.makeHeteroatom(atomToReplace, replacementSmiles, false);
+					Fragment halideOrPsuedoHalide = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getType(), NONE_LABELS_VAL);
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToReplace, halideOrPsuedoHalide.getFirstAtom());
 					atomToReplace.setCharge(0);
 					//the halogen is no longer a functionalAtom so correct this
 					removeAssociatedFunctionalAtom(atomToReplace);
+					state.fragManager.incorporateFragment(halideOrPsuedoHalide, atomToReplace.getFrag());
 				}
 				atomsReplaced++;
 			}
@@ -888,19 +902,22 @@ class FunctionalReplacement {
 			FunctionalAtom functionalAtom = functionalAtoms.get(j);
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
 				if (replacementFrag.getAtomList().size()>1){
+					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
 					Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
 					if (terminalAtomOfReplacementFrag.getIncomingValency() ==1 && matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
-						functionalAtom.setAtom(terminalAtomOfReplacementFrag);
+						replacementFrag.addFunctionalAtom(terminalAtomOfReplacementFrag);
 						terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
-					}
-					else{
-						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
 					}
 					atomToBeReplaced.setCharge(0);
 				}
-				else if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
-					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
-					atomToBeReplaced.setCharge(0);
+				else {
+					if (matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
+						replacementAtomList.get(0).setCharge(atomToBeReplaced.getCharge());
+					}
+					else{
+						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+						atomToBeReplaced.setCharge(0);
+					}
 				}
 			}
 		}
@@ -1056,5 +1073,26 @@ class FunctionalReplacement {
 			}
 		}
 		return oxygenAtoms;
+	}
+	
+
+	private static void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, LinkedList<Atom> singleBondedOxygen,LinkedList<Atom> doubleBondedOxygen) throws StructureBuildingException {
+		for (Atom a : atomList) {
+			if (a.getElement().equals("O")){//find terminal oxygens
+				if (a.getBonds().size()==1){
+					int incomingValency = a.getIncomingValency();
+					if (incomingValency ==2){
+						doubleBondedOxygen.add(a);
+					}
+					else if (incomingValency ==1){
+						singleBondedOxygen.add(a);
+					}
+					else{
+						throw new StructureBuildingException("Unexpected bond order to oxygen; excepted 1 or 2 found: " +incomingValency);
+					}
+
+				}
+			}
+		}
 	}
 }

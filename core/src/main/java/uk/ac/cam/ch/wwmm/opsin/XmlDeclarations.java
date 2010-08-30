@@ -325,6 +325,8 @@ class XmlDeclarations {
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
+	/**amido/hydrazido/imido/nitrido*/
+	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
 	static final String ELEMENTARYATOMINORGANIC_SUBTYPE_VAL ="elementaryAtomInorganic";
 	static final String ELEMENTARYATOMORGANIC_SUBTYPE_VAL ="elementaryAtomOrganic";
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
@@ -333,6 +335,7 @@ class XmlDeclarations {
 	static final String EPOXYLIKE_SUBTYPE_VAL ="epoxyLike";
 	static final String FUNCTIONALCLASSGROUP_SUBTYPE_VAL ="functionalClassGroup";
 	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
+	static final String HALIDEORPSEUDOHALIDE_SUBTYPE_VAL = "halideOrPseudoHalide";
 	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
 	static final String HETEROSTEM_SUBTYPE_VAL ="heteroStem";
 	static final String FUSEDRING_SUBTYPE_VAL ="fusedRing";

@@ -1169,6 +1169,7 @@ class PreStructureBuilder {
 		if (group.getValue().equals("oxal")){//oxalic acid is treated as a non carboxylic acid for the purposes of functional replacment. See P-65.2.3
 			resolveSuffixes(state, group, suffixes);
 	    	group.getAttribute(TYPE_ATR).setValue(NONCARBOXYLICACID_TYPE_VAL);
+	    	suffixableFragment.setType(NONCARBOXYLICACID_TYPE_VAL);
 	    	suffixesResolved =true;
 	    }
 		if (imideSpecialCase){//Pretty horrible hack to allow cyclic imides

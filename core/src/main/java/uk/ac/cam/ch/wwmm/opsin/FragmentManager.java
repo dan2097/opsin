@@ -466,7 +466,7 @@ class FragmentManager {
 			Fragment originalFragment1 = originalFromAtom.getFrag();
 			Fragment originalFragment2 = originalToAtom.getFrag();
 			if (!oldNewFragmentMapping.containsKey(originalFragment1) || (!oldNewFragmentMapping.containsKey(originalFragment2))){
-				throw new StructureBuildingException("An element that was clone contained a bond that went outside the scope of the cloning");
+				throw new StructureBuildingException("An element that was a clone contained a bond that went outside the scope of the cloning");
 			}
 			Fragment newFragment1 = oldNewFragmentMapping.get(originalFragment1);
 			Fragment newFragment2 = oldNewFragmentMapping.get(originalFragment2);

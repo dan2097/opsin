@@ -43,7 +43,7 @@
 		<token value="[As|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">arsinico</token>
 		<token value="[Sb|5](=O)(O)" labels="none" outIDs="1,1" valType="SMILES">stibinico</token>
 
-		<token value="OO" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">peroxy</token>
+		<token value="OO" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">peroxy</token><!--Also used in functional replacement-->
 
 		<token value="[NH3+][O-]" labels="none" outIDs="1,1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">nitroryl</token>
 		<token value="[P|5](=O)[O-]" labels="none" valType="SMILES" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">phosphinato</token>
@@ -57,9 +57,9 @@
 		<token value="B" labels="none" outIDs="1,1" valType="SMILES">borylene</token>
 
 		<token value="O" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">oxy</token>
-		<token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
-		<token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
-		<token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
+		<token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token><!--Also used in functional replacement-->
+		<token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token><!--Also used in functional replacement-->
+		<token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token><!--Also used in functional replacement-->
 
 	<!--Should be suffixes ONLY according to IUPAC-->
 		<token value="C=S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbothioyl</token><!--alternative to thiocarbonyl-->

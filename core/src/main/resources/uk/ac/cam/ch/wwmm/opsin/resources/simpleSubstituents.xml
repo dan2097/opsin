@@ -84,7 +84,7 @@
 		<token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES" defaultInLocant="5">hydantoyl</token>
 		<token value="-NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
-		<token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token>
+		<token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token><!--Also used in functional replacement-->
 		<token value="-[H]" labels="none" valType="SMILES">hydrogen</token>
 		<token value="-[SeH]" labels="none" valType="SMILES">hydroseleno</token>
 		<token value="-OCC(C)C" labels="none" valType="SMILES">isobutoxyl</token>
@@ -165,17 +165,11 @@
 		<token value="-[Br|2+]" labels="none" valType="SMILES" usableAsAJoiner="yes">bromonio</token>
 		<token value="-[I|2+]" labels="none" valType="SMILES" usableAsAJoiner="yes">iodonio</token>
 
-		<token value="-N=[N+]=[N-]" labels="none" valType="SMILES">azido</token>
 		<token value="=[N+]=[N-]" labels="none" valType="SMILES">diazo</token>
 		<token value="-[NH2+][O-]" labels="none" valType="SMILES">azinoyl</token>
 		<token value="-[N+](O)(O)[O-]" labels="none" valType="SMILES">azono</token>
 		<token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitro</token>
 
-
-		<token value="-F" labels="none" valType="SMILES">fluoro</token>
-		<token value="-Br" labels="none" valType="SMILES">bromo</token>
-		<token value="-Cl" labels="none" valType="SMILES">chloro</token>
-		<token value="-I" labels="none" valType="SMILES">iodo</token>
 		<!--<token value="-F" labels="none" valType="SMILES">perfluoro</token>
 		<token value="-Br" labels="none" valType="SMILES">perbromo</token>
 		<token value="-Cl" labels="none" valType="SMILES">perchloro</token>
@@ -198,14 +192,7 @@
 		<token value="-Cl(=O)(=O)(=O)" labels="none" valType="SMILES">perchloryl</token>
 		<token value="-I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>
 
-		<token value="-OC#N" labels="none" valType="SMILES">cyanato</token>
-		<token value="-C#N" labels="none" valType="SMILES">cyano</token>
 		<token value="-O[N+]#[C-]" labels="none" valType="SMILES">fulminato</token>
-		<token value="-N=C=O" labels="none" valType="SMILES">isocyanato</token>
-		<token value="-[N+]#[C-]" labels="none" valType="SMILES">isocyano</token>
-		<token value="-N=C=[Se]" labels="none" valType="SMILES">isoselenocyanato</token>
-		<token value="-N=C=[Te]" labels="none" valType="SMILES">isotellurocyanato</token>
-		<token value="-N=C=S" labels="none" valType="SMILES">isothiocyanato</token>
 		<token value="-N=C=[Se]" labels="none" valType="SMILES">isoselenocyano</token><!--deprecated-->
 		<token value="-N=C=[Te]" labels="none" valType="SMILES">isotellurocyano</token><!--deprecated-->
 		<token value="-N=C=S" labels="none" valType="SMILES">isothiocyano</token><!--deprecated-->
@@ -379,8 +366,33 @@
 		<token value="-[Zn]" labels="none" valType="SMILES" usableAsAJoiner="yes">zincio</token>
 		<token value="-[Zr]" labels="none" valType="SMILES">zirconio</token>
 	</tokenList>
+
 	<tokenList tagname="group" type="substituent" subType="biochemical" symbol="x">
 		<token value="-NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
 		<token value="-S(=O)(=O)CCN" labels="none" valType="SMILES">tauryl</token>
+	</tokenList>
+
+<!--Used as prefixes and for functional replacement of some acids-->
+	<tokenList tagname="group" type="substituent" subType="halideOrPseudoHalide" symbol="x">
+		<token value="-N=[N+]=[N-]" labels="none" valType="SMILES">azido</token>
+		<token value="-Br" labels="none" valType="SMILES">bromo</token>
+		<token value="-Cl" labels="none" valType="SMILES">chloro</token>
+		<token value="-OC#N" labels="none" valType="SMILES">cyanato</token>
+		<token value="-C#N" labels="none" valType="SMILES">cyano</token>
+		<token value="-F" labels="none" valType="SMILES">fluoro</token>
+		<token value="-I" labels="none" valType="SMILES">iodo</token>
+		<token value="-N=C=O" labels="none" valType="SMILES">isocyanato</token>
+		<token value="-[N+]#[C-]" labels="none" valType="SMILES">isocyano</token>
+		<token value="-N=C=[Se]" labels="none" valType="SMILES">isoselenocyanato</token>
+		<token value="-N=C=[Te]" labels="none" valType="SMILES">isotellurocyanato</token>
+		<token value="-N=C=S" labels="none" valType="SMILES">isothiocyanato</token>
+	</tokenList>
+
+<!--Prefixes that MUST be used to perform functional replacement-->
+	<tokenList tagname="group" type="substituent" subType="dedicatedFunctionalReplacementPrefix" symbol="x">
+		<token value="-N" labels="none" valType="SMILES">amido</token>
+		<token value="-NN" labels="none" valType="SMILES">hydrazido</token>
+		<token value="=N" labels="none" valType="SMILES">imido</token>
+		<token value="#N" labels="none" valType="SMILES">nitrido</token>
 	</tokenList>
 </tokenLists>
