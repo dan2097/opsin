@@ -2612,8 +2612,9 @@ class PreStructureBuilder {
 			//either all locants will be moved, or none
 			Boolean moveLocants = false;
 			if (locantValues!=null){
+				Element elAfterLocant = (Element) XOMTools.getNextSibling(locantRelatedElements.get(0));
 				for (String locantText : locantValues) {
-					if (lastGroupOfElementBeforeSub.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(matchComma.split(lastGroupOfElementBeforeSub.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
+					if (elAfterLocant.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(matchComma.split(elAfterLocant.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
 						continue;
 					}
 					
