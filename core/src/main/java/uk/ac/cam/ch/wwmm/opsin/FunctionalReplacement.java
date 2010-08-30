@@ -199,19 +199,12 @@ class FunctionalReplacement {
 							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 					}
-					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono){
-						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, 2);
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono || replacementType == PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide){
+						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, state.xmlFragmentMap.get(group).getOutAtom(0).getValency());
 						if (!appropriate){
 							continue;
 						}
 						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
-					}
-					else if (replacementType == PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide){
-						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, 1);
-						if (!appropriate){
-							continue;
-						}
-						oxygenReplaced = performHalideOrPseudoHalideFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else{
 						throw new StructureBuildingException("OPSIN bug: Unexpected prefix replacement type");
@@ -751,61 +744,10 @@ class FunctionalReplacement {
 						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
 					}
 					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToReplace, replacementFrag.getFirstAtom());
+					if (outValency ==1){
+						removeOrMoveObsoleteFunctionalAtoms(atomToReplace, replacementFrag);
+					}
 					state.fragManager.incorporateFragment(replacementFrag, atomToReplace.getFrag());
-				}
-				atomsReplaced++;
-			}
-		}
-		return atomsReplaced;
-	}
-	
-	/**
-	 * Performs replacement of hydroxy by halogens or pseudohalides
-	 * @param state
-	 * @param groupToBeModified
-	 * @param locantEl
-	 * @param numberOfAtomsToReplace
-	 * @param replacementSmiles
-	 * @return
-	 * @throws StructureBuildingException
-	 * @throws PostProcessingException 
-	 */
-	private static int performHalideOrPseudoHalideFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException, PostProcessingException {
-		if (replacementSmiles.charAt(0) =='-'){//e.g. -Cl
-			replacementSmiles = replacementSmiles.substring(1);
-		}
-		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
-		if (oxygenAtoms.size()==0){
-			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
-		}
-		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
-			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			if(oxygenWithAppropriateLocants.size() < numberOfAtomsToReplace){
-				numberOfAtomsToReplace =1;
-				//e.g. -1-thioureidomethyl
-			}
-			else{
-				locantEl.detach();
-				oxygenAtoms = oxygenWithAppropriateLocants;
-			}
-		}
-		if (numberOfAtomsToReplace >1 && oxygenAtoms.size() < numberOfAtomsToReplace){
-			numberOfAtomsToReplace=1;
-		}
-
-		int atomsReplaced =0;
-		if (oxygenAtoms.size() >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
-			for (Atom atomToReplace : oxygenAtoms) {
-				if (atomsReplaced == numberOfAtomsToReplace){
-					continue;
-				}
-				else{
-					Fragment halideOrPsuedoHalide = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getType(), NONE_LABELS_VAL);
-					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToReplace, halideOrPsuedoHalide.getFirstAtom());
-					atomToReplace.setCharge(0);
-					//the halogen is no longer a functionalAtom so correct this
-					removeAssociatedFunctionalAtom(atomToReplace);
-					state.fragManager.incorporateFragment(halideOrPsuedoHalide, atomToReplace.getFrag());
 				}
 				atomsReplaced++;
 			}
