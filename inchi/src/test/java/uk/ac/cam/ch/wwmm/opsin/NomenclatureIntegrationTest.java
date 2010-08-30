@@ -31,6 +31,14 @@ public class NomenclatureIntegrationTest {
 		String file = "epoxyLike.txt";
 		checkNamesAgainstInChIs(file, n2sConfig);
 	}
+	
+	@Test
+	public void testFunctionalReplacement() throws Exception {
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "functionalReplacement.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
 
 	private void checkNamesAgainstInChIs(String file, NameToStructureConfig n2sConfig) throws IOException{
 		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));

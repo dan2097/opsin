@@ -1301,7 +1301,7 @@ class StructureBuilder {
 	 */
 	private Atom determineFunctionalAtomToUse(String locant, BuildResults mainGroupBR) throws StructureBuildingException {
 		for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
-			//look fo exact locant match
+			//look for exact locant match
 			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 			if (possibleAtom.hasLocant(locant)){
 				mainGroupBR.removeFunctionalAtom(i);

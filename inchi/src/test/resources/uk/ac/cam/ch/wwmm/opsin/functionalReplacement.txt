@@ -1,0 +1,8 @@
+peroxyacetic acid	InChI=1S/C2H4O3/c1-2(3)5-4/h4H,1H3
+peroxyacetate	InChI=1S/C2H4O3/c1-2(3)5-4/h4H,1H3/p-1
+acetperoxoic acid	InChI=1S/C2H4O3/c1-2(3)5-4/h4H,1H3
+acetperoxoate	InChI=1S/C2H4O3/c1-2(3)5-4/h4H,1H3/p-1
+phosphoronitridic acid	InChI=1S/H2NO2P/c1-4(2)3/h2-3H
+nitridophosphoric acid	InChI=1S/H2NO2P/c1-4(2)3/h2-3H
+ethandithioate	InChI=1S/C2H4S2/c1-2(3)4/h1H3,(H,3,4)/p-1
+dithioethanoic acid	InChI=1S/C2H4S2/c1-2(3)4/h1H3,(H,3,4)/p-1
