@@ -190,8 +190,7 @@ class FunctionalReplacement {
 						oxygenReplaced = performPeroxyFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
-						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, state.xmlFragmentMap.get(group).getOutAtom(0).getValency());
-						if (!appropriate){
+						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
 							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
@@ -252,7 +251,7 @@ class FunctionalReplacement {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute(INFIX_ATR)!=null){
 				Fragment fragToApplyInfixTo = state.xmlFragmentMap.get(suffix);
-				Element possibleAcidGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL});
+				Element possibleAcidGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL, SUFFIX_EL});
 				if (possibleAcidGroup !=null && possibleAcidGroup.getLocalName().equals(GROUP_EL) && 
 						(possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)|| possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL))){
 					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
