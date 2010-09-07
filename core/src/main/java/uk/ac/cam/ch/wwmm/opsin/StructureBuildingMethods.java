@@ -1196,7 +1196,7 @@ class StructureBuildingMethods {
 			if (substituentName.equals("oxido") || substituentName.equals("sulfido") || substituentName.equals("selenido") || substituentName.equals("tellurido") ){
 
 				String element = atomToJoinTo.getElement();
-				if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) || ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) ||
+				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) ||
 						(element.equals("S") && atomToJoinTo.getCharge() ==0 &&
 						(atomToJoinTo.getIncomingValency() +atomToJoinTo.getOutValency())>=2 && ValencyChecker.checkValencyAvailableForBond(atomToJoinTo, 2))){
 					from.setCharge(0);

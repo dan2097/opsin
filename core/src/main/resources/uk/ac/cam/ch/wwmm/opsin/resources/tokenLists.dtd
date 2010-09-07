@@ -5,7 +5,7 @@
 <!ELEMENT tokenList (token)+>
 <!ATTLIST tokenList tagname (alkaneStemModifier|cyclo|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|suffix|multiplier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|suffixPrefix|unsaturator) #REQUIRED
                     type (acidStem|aminoAcid|basic|chain|charge|cisOrTrans|chalcogenAcidStem|diValentGroup|functionalClass|group|inline|monoValentGroup|monoValentStandaloneGroup|nonCarboxylicAcid|ring|simpleGroup|substituent|root|VonBaeyer) #IMPLIED
-                    subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtomInorganic|elementaryAtomOrganic|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
+                    subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
                     symbol CDATA #REQUIRED>
 <!-- tagname == the name of the XML element that tokens in this file will be translated to
 type == the type attribute on the XML element (for example indicates that a group is an aminoAcid)
@@ -31,7 +31,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
         suffixAppliesTo CDATA #IMPLIED
         suffixAppliesToByDefault CDATA #IMPLIED
         additionalValue CDATA #IMPLIED
-        typicalAndMaximumCharge CDATA #IMPLIED
+        commonOxidationStatesAndMax CDATA #IMPLIED
         locant CDATA #IMPLIED>
 <!--
   (the #PCDATA inside the tag) = the string to match
@@ -56,6 +56,6 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
   suffixAppliesTo == comma seperated ids indicating where the suffix following a group should be applied. Currently used to direct the formation of trivial di-acids. IDs are relative to this particular fragment
   suffixAppliesToByDefault == same as suffixAppliesTo but can be overriden by given locants
   additionalValue == Another value that the token takes. Currently only used for suffixes that mean the addition of two discrete suffixes
-  typicalAndMaximumCharge == For elements the maximum and typical charge are comma seperated specified. e.g. for aluminium 3 is typical. For manganese 7 is possible but atypical.
+  commonOxidationStatesAndMax == For elements, the typical oxidation states (comma seperated) then a colon and the maximum oxidation station. e.g. for iron "2,3:6" as 2 and 3 are typical. 6 is possible but atypical.
   locant == used for an/ane to prevent a locant being given
   -->

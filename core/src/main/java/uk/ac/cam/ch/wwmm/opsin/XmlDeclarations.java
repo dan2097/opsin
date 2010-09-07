@@ -178,7 +178,7 @@ class XmlDeclarations {
     static final String FRONTLOCANTSEXPECTED_ATR = "frontLocantsExpected";
     static final String SUFFIXAPPLIESTO_ATR = "suffixAppliesTo";
     static final String SUFFIXAPPLIESTOBYDEFAULT_ATR = "suffixAppliesToByDefault";
-    static final String TYPICALANDMAXIMUMCHARGE_ATR = "typicalAndMaximumCharge";
+    static final String COMMONOXIDATIONSTATESANDMAX_ATR = "commonOxidationStatesAndMax";
     static final String ADDITIONALVALUE_ATR = "additionalValue";
     static final String LOCANT_ATR = "locant";
 
@@ -327,8 +327,7 @@ class XmlDeclarations {
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
 	/**amido/hydrazido/imido/nitrido*/
 	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
-	static final String ELEMENTARYATOMINORGANIC_SUBTYPE_VAL ="elementaryAtomInorganic";
-	static final String ELEMENTARYATOMORGANIC_SUBTYPE_VAL ="elementaryAtomOrganic";
+	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";

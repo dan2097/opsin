@@ -291,14 +291,15 @@ class WordRules {
 				/*
 				 * Some wordRules can not be entirely processed at the structure building stage
 				 */
-				if (wordRule.getRuleName().equals(WordRule.functionGroupAsGroup.toString())){//convert the functional term into a full term
+				String wordRuleName = wordRule.getRuleName();
+				if (wordRuleName.equals(WordRule.functionGroupAsGroup.toString())){//convert the functional term into a full term
 					if (wordsInWordRule!=1){
 						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup wordRule");
 					}
 					convertFunctionalGroupIntoGroup(wordEls.get(i));
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
 				}
-				else if (wordRule.getRuleName().equals(WordRule.carbonylDerivative.toString())){//e.g. 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
+				else if (wordRuleName.equals(WordRule.carbonylDerivative.toString())){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
 					if (wordsInWordRule==3){//substituent present
 						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
 						wordsInWordRule--;
@@ -308,6 +309,17 @@ class WordRules {
 						}
 						functionalTerm.get(0).setLocalName(ROOT_EL);
 						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
+					}
+				}
+				else if (wordRuleName.equals(WordRule.additionCompound.toString()) || wordRuleName.equals(WordRule.oxide.toString())){//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
+					Element possibleElementaryAtom = wordEls.get(i);
+					List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtom, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+					if (elementaryAtoms.size()==1){
+						for (int j = 1; j < wordsInWordRule; j++) {
+							if (bondWillBeIonic(elementaryAtoms.get(0), wordEls.get(i+j))){//use separate word rules for ionic components
+								continue wordRuleLoop;
+							}
+						}
 					}
 				}
 
@@ -434,4 +446,34 @@ class WordRules {
 		functionalGroups.get(0).addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 	}
 
+	
+	/**
+	 * Checks whether the bond that will be formed will be ionic by inspection of the SMILES
+	 * @param elementaryAtomEl
+	 * @param functionalWord
+	 * @return
+	 * @throws ParsingException 
+	 */
+	private boolean bondWillBeIonic(Element elementaryAtomEl, Element functionalWord) throws ParsingException {
+		String element1 = elementaryAtomEl.getAttributeValue(VALUE_ATR);
+		if (element1.startsWith("[")){
+			element1 = element1.substring(1, element1.length()-1);
+		}
+		List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagNames(functionalWord, new String[]{FUNCTIONALGROUP_EL, GROUP_EL});
+		if (functionalGroups.size()!=1){
+			throw new ParsingException("OPSIN bug: Unable to find functional group in oxide or addition compound rule");
+		}
+		String smiles = functionalGroups.get(0).getAttributeValue(VALUE_ATR);
+		String element2 ="";
+		for (int i = 0; i <smiles.length(); i++) {
+			if (Character.isUpperCase(smiles.charAt(i))){
+				element2 += smiles.charAt(i);
+				if (i+1 <smiles.length() && Character.isLowerCase(smiles.charAt(i +1))){
+					element2 += smiles.charAt(i +1);
+				}
+				break;
+			}
+		}
+		return !FragmentTools.isCovalent(element1, element2);
+	}
 }
