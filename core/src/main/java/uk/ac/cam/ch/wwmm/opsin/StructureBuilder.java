@@ -482,10 +482,7 @@ class StructureBuilder {
 			else{
 				for (Fragment frag : orderedPossibleFragments) {
 					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
-					if (ELEMENTARYATOMINORGANIC_SUBTYPE_VAL.equals(subTypeVal)){
-						throw new StructureBuildingException(words.get(1).getAttributeValue(VALUE_ATR) + " in this context refers to an ion with 2- charge rather than a covalent fragment");
-					}
-					else if (ELEMENTARYATOMORGANIC_SUBTYPE_VAL.equals(subTypeVal)){
+					if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
 						formAppropriateBondToOxideAndAdjustCharges(state, frag.getFirstAtom(), oxideAtom);//e.g. carbon dioxide
 						continue mainLoop;
 					}
@@ -958,7 +955,8 @@ class StructureBuilder {
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
 		resolveWordOrBracket(state, words.get(0));
-		Atom elementaryAtom = state.xmlFragmentMap.get(StructureBuildingMethods.findRightMostGroupInBracket(words.get(0))).getFirstAtom();
+		Element elementaryAtomEl = StructureBuildingMethods.findRightMostGroupInBracket(words.get(0));
+		Atom elementaryAtom = state.xmlFragmentMap.get(elementaryAtomEl).getFirstAtom();
 
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
 		for (int i=1; i<words.size(); i++ ) {
@@ -981,6 +979,21 @@ class StructureBuilder {
 					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 				}
 				possibleMultiplier.detach();
+			}
+			else if (words.size()==2){//silicon chloride -->silicon tetrachloride
+				int incomingBondOrder =elementaryAtom.getIncomingValency();
+				int expectedValency;
+				if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
+					String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+					expectedValency = Integer.parseInt(typicalOxidationStates[0]);
+				}
+				else{
+					expectedValency = ValencyChecker.getPossibleValencies(elementaryAtom.getElement(), elementaryAtom.getCharge())[0];
+				}
+				int implicitMultiplier = expectedValency -incomingBondOrder >1 ? expectedValency -incomingBondOrder : 1;
+				for (int j = 1; j < implicitMultiplier; j++) {
+					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
+				}
 			}
 		}
 		int halideCount = functionalGroupFragments.size();
@@ -1380,7 +1393,7 @@ class StructureBuilder {
 	static void makeHydrogensExplicit(BuildState state) throws StructureBuildingException {
 		Set<Fragment> fragments = state.fragManager.getFragPile();
 		for (Fragment fragment : fragments) {
-			if (fragment.getSubType().equals(ELEMENTARYATOMINORGANIC_SUBTYPE_VAL) || fragment.getSubType().equals(ELEMENTARYATOMORGANIC_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
+			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
 				continue;
 			}
 			List<Atom> atomList =fragment.getAtomList();
@@ -1458,11 +1471,12 @@ class StructureBuilder {
 		HashMap<Element, BuildResults> wordToBR = new HashMap<Element, BuildResults>();
 		
 		List<Element> cationicElements = new ArrayList<Element>();
-		List<Element> inorganicElementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOMINORGANIC_SUBTYPE_VAL);
-		for (Element elementaryAtom : inorganicElementaryAtoms) {
-			if (elementaryAtom.getAttribute(TYPICALANDMAXIMUMCHARGE_ATR)!=null){
+		List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+		for (Element elementaryAtom : elementaryAtoms) {
+			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
 				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
-				int typicalCharge = Integer.parseInt(matchComma.split(elementaryAtom.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[0]);
+				String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+				int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
 				if (typicalCharge > cationicFrag.getFirstAtom().getAtomNeighbours().size()){
 					cationicElements.add(elementaryAtom);
 				}
@@ -1520,8 +1534,8 @@ class StructureBuilder {
 
 
 	/**
-	 * Sets the cationicElements to their typical charge as specified by the TYPICALANDMAXIMUMCHARGE_ATR
-	 * The number of atoms the cationicElement is connected to is taken into account e.g. phenylmagnesium chloride is [Mg+]
+	 * Sets the cationicElements to the lowest typical charge as specified by the COMMONOXIDATIONSTATESANDMAX_ATR that is >= incoming valency
+	 * The valency incoming to the cationicElement is taken into account e.g. phenylmagnesium chloride is [Mg+]
 	 * @param state
 	 * @param cationicElements
 	 * @param overallCharge
@@ -1531,10 +1545,17 @@ class StructureBuilder {
 	private int setCationicElementsToTypicalCharge(BuildState state, List<Element> cationicElements, int overallCharge) throws StructureBuildingException {
 		for (Element cationicElement : cationicElements) {
 			Fragment cationicFrag = state.xmlFragmentMap.get(cationicElement);
-			int charge = Integer.parseInt(matchComma.split(cationicElement.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[0]);
-			charge -= cationicFrag.getFirstAtom().getAtomNeighbours().size();
-			overallCharge += charge;
-			cationicFrag.getFirstAtom().setCharge(charge);
+			String[] typicalOxidationStates = matchComma.split(matchColon.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+			int incomingValency = cationicFrag.getFirstAtom().getIncomingValency();
+			for (String typicalOxidationState : typicalOxidationStates) {
+				int charge = Integer.parseInt(typicalOxidationState);
+				if (charge>= incomingValency){
+					charge -= incomingValency;
+					overallCharge += charge;
+					cationicFrag.getFirstAtom().setCharge(charge);
+					break;
+				}
+			}
 		}
 		return overallCharge;
 	}
@@ -1584,7 +1605,7 @@ class StructureBuilder {
 	private boolean setChargeOnCationicElementAppropriately(BuildState state, int overallCharge, Element cationicElement) throws StructureBuildingException {
 		Atom cation = state.xmlFragmentMap.get(cationicElement).getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
-		int maximumCharge = Integer.parseInt(matchComma.split(cationicElement.getAttributeValue(TYPICALANDMAXIMUMCHARGE_ATR))[1]);
+		int maximumCharge = Integer.parseInt(matchColon.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
 		if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
 			cation.setCharge(chargeOnCationNeeded);
 			return true;

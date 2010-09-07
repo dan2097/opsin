@@ -12,8 +12,6 @@ import java.util.Queue;
 import java.util.Set;
 
 class StereoAnalyser {
-	private static final Map<String, Integer> elementToAtomicNumber = new HashMap<String, Integer>();
-
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;
 
@@ -31,119 +29,7 @@ class StereoAnalyser {
 	/** The id of the next ghost to create*/
 	private int ghostIdCounter = -1;
 	
-	static{
-		//phantom atoms are not added as I believe that the results of the program will still be the same even in their absence as everything beats a phantom and comparing phantoms to phantoms achieves nothing
-		elementToAtomicNumber.put("H", 1);
-		elementToAtomicNumber.put("He", 2);
-		elementToAtomicNumber.put("Li", 3);
-		elementToAtomicNumber.put("Be", 4);
-		elementToAtomicNumber.put("B", 5);
-		elementToAtomicNumber.put("C", 6);
-		elementToAtomicNumber.put("N", 7);
-		elementToAtomicNumber.put("O", 8);
-		elementToAtomicNumber.put("F", 9);
-		elementToAtomicNumber.put("Ne", 10);
-		elementToAtomicNumber.put("Na", 11);
-		elementToAtomicNumber.put("Mg", 12);
-		elementToAtomicNumber.put("Al", 13);
-		elementToAtomicNumber.put("Si", 14);
-		elementToAtomicNumber.put("P", 15);
-		elementToAtomicNumber.put("S", 16);
-		elementToAtomicNumber.put("Cl", 17);
-		elementToAtomicNumber.put("Ar", 18);
-		elementToAtomicNumber.put("K", 19);
-		elementToAtomicNumber.put("Ca", 20);
-		elementToAtomicNumber.put("Sc", 21);
-		elementToAtomicNumber.put("Ti", 22);
-		elementToAtomicNumber.put("V", 23);
-		elementToAtomicNumber.put("Cr", 24);
-		elementToAtomicNumber.put("Mn", 25);
-		elementToAtomicNumber.put("Fe", 26);
-		elementToAtomicNumber.put("Co", 27);
-		elementToAtomicNumber.put("Ni", 28);
-		elementToAtomicNumber.put("Cu", 29);
-		elementToAtomicNumber.put("Zn", 30);
-		elementToAtomicNumber.put("Ga", 31);
-		elementToAtomicNumber.put("Ge", 32);
-		elementToAtomicNumber.put("As", 33);
-		elementToAtomicNumber.put("Se", 34);
-		elementToAtomicNumber.put("Br", 35);
-		elementToAtomicNumber.put("Kr", 36);
-		elementToAtomicNumber.put("Rb", 37);
-		elementToAtomicNumber.put("Sr", 38);
-		elementToAtomicNumber.put("Y", 39);
-		elementToAtomicNumber.put("Zr", 40);
-		elementToAtomicNumber.put("Nb", 41);
-		elementToAtomicNumber.put("Mo", 42);
-		elementToAtomicNumber.put("Tc", 43);
-		elementToAtomicNumber.put("Ru", 44);
-		elementToAtomicNumber.put("Rh", 45);
-		elementToAtomicNumber.put("Pd", 46);
-		elementToAtomicNumber.put("Ag", 47);
-		elementToAtomicNumber.put("Cd", 48);
-		elementToAtomicNumber.put("In", 49);
-		elementToAtomicNumber.put("Sn", 50);
-		elementToAtomicNumber.put("Sb", 51);
-		elementToAtomicNumber.put("Te", 52);
-		elementToAtomicNumber.put("I", 53);
-		elementToAtomicNumber.put("Xe", 54);
-		elementToAtomicNumber.put("Cs", 55);
-		elementToAtomicNumber.put("Ba", 56);
-		elementToAtomicNumber.put("La", 57);
-		elementToAtomicNumber.put("Ce", 58);
-		elementToAtomicNumber.put("Pr", 59);
-		elementToAtomicNumber.put("Nd", 60);
-		elementToAtomicNumber.put("Pm", 61);
-		elementToAtomicNumber.put("Sm", 62);
-		elementToAtomicNumber.put("Eu", 63);
-		elementToAtomicNumber.put("Gd", 64);
-		elementToAtomicNumber.put("Tb", 65);
-		elementToAtomicNumber.put("Dy", 66);
-		elementToAtomicNumber.put("Ho", 67);
-		elementToAtomicNumber.put("Er", 68);
-		elementToAtomicNumber.put("Tm", 69);
-		elementToAtomicNumber.put("Yb", 70);
-		elementToAtomicNumber.put("Lu", 71);
-		elementToAtomicNumber.put("Hf", 72);
-		elementToAtomicNumber.put("Ta", 73);
-		elementToAtomicNumber.put("W", 74);
-		elementToAtomicNumber.put("Re", 75);
-		elementToAtomicNumber.put("Os", 76);
-		elementToAtomicNumber.put("Ir", 77);
-		elementToAtomicNumber.put("Pt", 78);
-		elementToAtomicNumber.put("Au", 79);
-		elementToAtomicNumber.put("Hg", 80);
-		elementToAtomicNumber.put("Tl", 81);
-		elementToAtomicNumber.put("Pb", 82);
-		elementToAtomicNumber.put("Bi", 83);
-		elementToAtomicNumber.put("Po", 84);
-		elementToAtomicNumber.put("At", 85);
-		elementToAtomicNumber.put("Rn", 86);
-		elementToAtomicNumber.put("Fr", 87);
-		elementToAtomicNumber.put("Ra", 88);
-		elementToAtomicNumber.put("Ac", 89);
-		elementToAtomicNumber.put("Th", 90);
-		elementToAtomicNumber.put("Pa", 91);
-		elementToAtomicNumber.put("U", 92);
-		elementToAtomicNumber.put("Np", 93);
-		elementToAtomicNumber.put("Pu", 94);
-		elementToAtomicNumber.put("Am", 95);
-		elementToAtomicNumber.put("Cm", 96);
-		elementToAtomicNumber.put("Bk", 97);
-		elementToAtomicNumber.put("Cf", 98);
-		elementToAtomicNumber.put("Es", 99);
-		elementToAtomicNumber.put("Fm", 100);
-		elementToAtomicNumber.put("Md", 101);
-		elementToAtomicNumber.put("No", 102);
-		elementToAtomicNumber.put("Lr", 103);
-		elementToAtomicNumber.put("Rf", 104);
-		elementToAtomicNumber.put("Db", 105);
-		elementToAtomicNumber.put("Sg", 106);
-		elementToAtomicNumber.put("Bh", 107);
-		elementToAtomicNumber.put("Hs", 108);
-		elementToAtomicNumber.put("Mt", 109);
-		elementToAtomicNumber.put("Ds", 110);
-	}
+	//phantom atoms are not added as I believe that the results of the program will still be the same even in their absence as everything beats a phantom and comparing phantoms to phantoms achieves nothing
 	
 	/**
 	 * Holds information about a tetrahedral stereocentre
@@ -218,8 +104,8 @@ class StereoAnalyser {
 	private class AtomicNumberComparator implements Comparator<Atom> {
 
 	    public int compare(Atom a, Atom b){
-	    	int atomicNumber1 = elementToAtomicNumber.get(a.getElement());
-	    	int atomicNumber2 = elementToAtomicNumber.get(b.getElement());
+	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
+	    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
 	    	if (atomicNumber1 > atomicNumber2){
 	    		return 1;
 	    	}
@@ -576,8 +462,8 @@ class StereoAnalyser {
 		}
 
 		public int compare(Atom a, Atom b){
-			int atomicNumber1 = elementToAtomicNumber.get(a.getElement());
-			int atomicNumber2 = elementToAtomicNumber.get(b.getElement());
+			int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
+			int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
 	    	if (atomicNumber1 > atomicNumber2){
 	    		return 1;
 	    	}
@@ -771,7 +657,7 @@ class StereoAnalyser {
 				List<Atom> currentAtomList = new ArrayList<Atom>();
 				for (int j = neighbourList.size() -1; j >=0; j--) {
 					Atom a = neighbourList.get(j);
-					int atomicNumber = elementToAtomicNumber.get(a.getElement());
+					int atomicNumber = AtomProperties.elementToAtomicNumber.get(a.getElement());
 					if (atomicNumber < lastAtomicNumber){
 						if (!currentAtomList.isEmpty()){
 							updatedNeighbourLists.add(0, currentAtomList);
@@ -931,8 +817,8 @@ class StereoAnalyser {
 	 * @return
 	 */
     private int compareByAtomicNumber(Atom a, Atom b){
-    	int atomicNumber1 = elementToAtomicNumber.get(a.getElement());
-    	int atomicNumber2 = elementToAtomicNumber.get(b.getElement());
+    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
+    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
     	if (atomicNumber1 > atomicNumber2){
     		return 1;
     	}

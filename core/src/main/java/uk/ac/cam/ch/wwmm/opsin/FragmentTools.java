@@ -884,4 +884,29 @@ class FragmentTools {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * Determines whether the bond between two elements is likely to be covalent
+	 * This is crudely determined based on whether the combination of elements fall outside the ionic and
+	 * metallic sections of a van Arkel diagram
+	 * @param element1
+	 * @param element2
+	 * @return
+	 */
+	static boolean isCovalent(String element1, String element2) {
+		Double atom1Electrongegativity = AtomProperties.elementToPaulingElectronegativity.get(element1);
+		Double atom2Electrongegativity = AtomProperties.elementToPaulingElectronegativity.get(element2);
+		if (atom1Electrongegativity!=null && atom2Electrongegativity !=null){
+			double halfSum = (atom1Electrongegativity + atom2Electrongegativity)/2;
+			double difference = Math.abs(atom1Electrongegativity - atom2Electrongegativity);
+			if (halfSum < 1.6){
+				return false;//probably metallic
+			}
+			if (difference < 1.39* halfSum -2.2){
+				return true;
+			}			
+		}
+		return false;
+	}
 }

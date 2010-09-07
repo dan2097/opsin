@@ -202,7 +202,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtomOrganic"/>
+    <word type="full" endsWithGroupSubType="elementaryAtom"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
@@ -210,20 +210,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtomOrganic"/>
+    <word type="full" endsWithGroupSubType="elementaryAtom"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
   <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtomOrganic"/>
+    <word type="full" endsWithGroupSubType="elementaryAtom"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
   <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtomOrganic"/>
+    <word type="full" endsWithGroupSubType="elementaryAtom"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
