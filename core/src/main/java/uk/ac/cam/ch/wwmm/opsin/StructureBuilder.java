@@ -430,12 +430,12 @@ class StructureBuilder {
 			numberOfOxygenToAdd = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
 			multipliers.get(0).detach();
 		}
-		List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(words.get(1), GROUP_EL);
-		if (functionalClass.size()!=1){
-			throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
+		List<Element> functionalGroup =XOMTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
+		if (functionalGroup.size()!=1){
+			throw new StructureBuildingException("Expected 1 group element found: " + functionalGroup.size());
 		}
-		String smilesReplacement = functionalClass.get(0).getAttributeValue(VALUE_ATR);
-		String labels =  functionalClass.get(0).getAttributeValue(LABELS_ATR);
+		String smilesReplacement = functionalGroup.get(0).getAttributeValue(VALUE_ATR);
+		String labels =  functionalGroup.get(0).getAttributeValue(LABELS_ATR);
 		for (int i = 0; i < numberOfOxygenToAdd; i++) {
 			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels));
 		}
@@ -601,12 +601,12 @@ class StructureBuilder {
 				numberOfCarbonylReplacements = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
 				multipliers.get(0).detach();
 			}
-			List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(words.get(1), GROUP_EL);
-			if (functionalClass.size()!=1){
-				throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
+			List<Element> functionalGroup =XOMTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
+			if (functionalGroup.size()!=1){
+				throw new StructureBuildingException("Expected 1 functionalGroup element found: " + functionalGroup.size());
 			}
-			String smilesReplacement = functionalClass.get(0).getAttributeValue(VALUE_ATR);
-			String labels =  functionalClass.get(0).getAttributeValue(LABELS_ATR);
+			String smilesReplacement = functionalGroup.get(0).getAttributeValue(VALUE_ATR);
+			String labels =  functionalGroup.get(0).getAttributeValue(LABELS_ATR);
 			for (int i = 0; i < numberOfCarbonylReplacements; i++) {
 				Fragment replacementFragment = state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels);
 				if (i >0){
@@ -1484,7 +1484,7 @@ class StructureBuilder {
 		if (overallCharge==0){
 			return;
 		}
-		if (cationicElements.size() ==1){
+		if (cationicElements.size() ==1 && overallCharge <0){//e.g. nickel tetrachloride [Ni2+]-->[Ni4+]
 			boolean success = setChargeOnCationicElementAppropriately(state, overallCharge, cationicElements.get(0));
 			if (success){
 				return;
@@ -1504,6 +1504,12 @@ class StructureBuilder {
 		}
 		if (positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 ){
 			boolean success = multiplyChargedComponents(state, negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
+			if (success){
+				return;
+			}
+		}
+		if (cationicElements.size() ==1){//e.g. magnesium monochloride [Mg2+]-->[Mg+]
+			boolean success = setChargeOnCationicElementAppropriately(state, overallCharge, cationicElements.get(0));
 			if (success){
 				return;
 			}
