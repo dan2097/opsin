@@ -1857,7 +1857,7 @@ class PreStructureBuilder {
 			 * Populate locants with locants. Two locants are required for every pair of rings to be joined.
 			 * e.g. bi requires 2, ter requires 4 etc.
 			 */
-			ArrayList<List<String>> ringJoiningLocants =new ArrayList<List<String>>();
+			List<List<String>> ringJoiningLocants =new ArrayList<List<String>>();
 			Element previousEl =(Element)XOMTools.getPreviousSibling(multiplier);
 			Element group =(Element)XOMTools.getNextSibling(multiplier, GROUP_EL);
 			if (previousEl!=null && previousEl.getLocalName().equals(RINGASSEMBLYLOCANT_EL)){//a locant appears to have provided to indicate how to connect the rings of the ringAssembly
@@ -1865,13 +1865,7 @@ class PreStructureBuilder {
 				//special cases where often locants are meant to apply to suffixes rather than being a description of where the rings connect to each other
 				if (group.getValue().equals("phen") || group.getValue().equals("hex") || group.getValue().equals("benz")){
 					//Find elements that can have locants but don't currently
-					List<Element> locantAble = XOMTools.getChildElementsWithTagNames(subOrRoot, new String[]{SUFFIX_EL, UNSATURATOR_EL});
-					int locantAbleElements=locantAble.size();
-					for(int j=locantAbleElements -1;j >= 0;j--) {
-						if ((locantAble.get(j)).getAttribute(LOCANT_EL) !=null){
-							locantAble.remove(j);
-						}
-					}
+					List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, previousEl);
 					if(2 <= locantAble.size()) {
 						throw new PostProcessingException("Most likely the ringAssemblyLocant: " + previousEl.getValue() + " is actually a normal locant that is supposed to apply to elements after the ring assembly");
 					}
@@ -1910,7 +1904,7 @@ class PreStructureBuilder {
 
 			Element elementToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is duplicated
 			Element nextEl =(Element) XOMTools.getNextSibling(multiplier);
-			if (nextEl.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached
+			if (nextEl.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
 				Element currentEl =nextEl;
 				nextEl = (Element) XOMTools.getNextSibling(currentEl);
 				currentEl.detach();
@@ -1925,13 +1919,13 @@ class PreStructureBuilder {
 				}
 			}
 			else{
-				int groupFound = 0;
-				int inlineSuffixSeen = 0;
+				boolean groupFound = false;
+				boolean inlineSuffixSeen = false;
 				while (nextEl !=null){
 					Element currentEl =nextEl;
 					nextEl = (Element) XOMTools.getNextSibling(currentEl);
-					if (groupFound==0 ||
-							(inlineSuffixSeen == 0 && currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttribute(LOCANT_ATR)==null)||
+					if (!groupFound ||
+							(!inlineSuffixSeen && currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttribute(LOCANT_ATR)==null)||
 							(currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL))){
 						currentEl.detach();
 						elementToResolve.appendChild(currentEl);
@@ -1940,10 +1934,10 @@ class PreStructureBuilder {
 						break;
 					}
 					if (currentEl.getLocalName().equals(GROUP_EL)){
-						groupFound = 1;
+						groupFound = true;
 					}
 					if ((currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL))){
-						inlineSuffixSeen = 1;
+						inlineSuffixSeen = true;
 					}
 				}
 			}
@@ -1965,7 +1959,7 @@ class PreStructureBuilder {
 				throw new StructureBuildingException("Ring assembly fragment should have one or no OutAtoms; not more than one!");
 			}
 
-			ArrayList<Fragment> clonedFragments = new ArrayList<Fragment>();
+			List<Fragment> clonedFragments = new ArrayList<Fragment>();
 			for (int j = 1; j < mvalue; j++) {
 				clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, StringTools.multiplyString("'", j)));
 			}
@@ -1984,6 +1978,12 @@ class PreStructureBuilder {
 				state.fragManager.incorporateFragment(clone, atomOnLatestClone.getID(), fragmentToResolveAndDuplicate, atomOnParent.getID(), bondOrder);
 			}
 			XOMTools.setTextChild(group, multiplier.getValue() +group.getValue());
+			Element possibleOpenStructuralBracket = (Element) XOMTools.getPreviousSibling(multiplier);
+			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
+				//To emphasise there can actually be two sets of structural brackets e.g. [1,1'-bi(cyclohexyl)]
+				XOMTools.getNextSibling(possibleOpenStructuralBracket, STRUCTURALCLOSEBRACKET_EL).detach();
+				possibleOpenStructuralBracket.detach();
+			}
 			multiplier.detach();
 		}
 	}
