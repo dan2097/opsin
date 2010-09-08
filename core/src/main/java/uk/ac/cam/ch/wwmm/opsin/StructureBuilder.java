@@ -728,7 +728,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Unexpected number of words in anhydride. Check wordRules.xml, this is probably a bug");
 		}
 		Element anhydrideWord = words.get(words.size()-1);
-		List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(anhydrideWord, GROUP_EL);
+		List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(anhydrideWord, FUNCTIONALGROUP_EL);
 		if (functionalClass.size()!=1){
 			throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
 		}
@@ -1461,14 +1461,12 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void balanceChargeIfPossible(BuildState state, Element molecule, int overallCharge) throws StructureBuildingException {
-		List<Element> words = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, WORD_EL, TYPE_ATR, WordType.full.toString());
-		if (words.size() <2){
-			return;
-		}
-		List<Element> positivelyChargedWords = new ArrayList<Element>();
-		List<Element> negativelyChargedWords = new ArrayList<Element>();
-		HashMap<Element, Integer> wordToChargeMapping = new HashMap<Element, Integer>();
-		HashMap<Element, BuildResults> wordToBR = new HashMap<Element, BuildResults>();
+		List<Element> wordRules = XOMTools.getChildElementsWithTagName(molecule, WORDRULE_ATR);
+
+		List<Element> positivelyChargedComponents = new ArrayList<Element>();
+		List<Element> negativelyChargedComponents = new ArrayList<Element>();
+		HashMap<Element, Integer> componentToChargeMapping = new HashMap<Element, Integer>();
+		HashMap<Element, BuildResults> componentToBR = new HashMap<Element, BuildResults>();
 		
 		List<Element> cationicElements = new ArrayList<Element>();
 		List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
@@ -1486,42 +1484,42 @@ class StructureBuilder {
 		if (overallCharge==0){
 			return;
 		}
-		for (Element word : words) {
-			BuildResults br = new BuildResults(state, word);
-			wordToBR.put(word, br);
-			int charge = br.getCharge();
-			if (charge>0){
-				positivelyChargedWords.add(word);
-			}
-			else if (charge <0){
-				negativelyChargedWords.add(word);
-			}
-			wordToChargeMapping.put(word, charge);
-		}
-		if (positivelyChargedWords.size()==1 && cationicElements.size() ==0 && negativelyChargedWords.size() >=1 || positivelyChargedWords.size()>=1 && negativelyChargedWords.size() ==1 ){
-			boolean success = multiplyChargedWords(state, negativelyChargedWords, positivelyChargedWords, wordToChargeMapping, overallCharge);
-			if (success){
-				return;
-			}
-		}
 		if (cationicElements.size() ==1){
 			boolean success = setChargeOnCationicElementAppropriately(state, overallCharge, cationicElements.get(0));
 			if (success){
 				return;
 			}
 		}
+		for (Element wordRule : wordRules) {
+			BuildResults br = new BuildResults(state, wordRule);
+			componentToBR.put(wordRule, br);
+			int charge = br.getCharge();
+			if (charge>0){
+				positivelyChargedComponents.add(wordRule);
+			}
+			else if (charge <0){
+				negativelyChargedComponents.add(wordRule);
+			}
+			componentToChargeMapping.put(wordRule, charge);
+		}
+		if (positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 ){
+			boolean success = multiplyChargedComponents(state, negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
+			if (success){
+				return;
+			}
+		}
 		if (overallCharge <0){//neutralise functionalAtoms if they are the sole cause of the negative charge and multiple molecules are present
 			int chargeOnFunctionalAtoms = 0;
-			for (Element word : words) {
-				BuildResults br = wordToBR.get(word);
+			for (Element wordRule : wordRules) {
+				BuildResults br = componentToBR.get(wordRule);
 				int functionalAtomCount = br.getFunctionalAtomCount();
 				for (int i = functionalAtomCount -1; i >=0; i--) {
 					chargeOnFunctionalAtoms += br.getFunctionalAtom(i).getCharge();
 				}
 			}
 			if (chargeOnFunctionalAtoms == overallCharge){
-				for (Element word : words) {
-					BuildResults br = wordToBR.get(word);
+				for (Element wordRule : wordRules) {
+					BuildResults br = componentToBR.get(wordRule);
 					int functionalAtomCount = br.getFunctionalAtomCount();
 					for (int i = functionalAtomCount -1; i >=0; i--) {
 						br.getFunctionalAtom(i).setCharge(0);
@@ -1561,43 +1559,49 @@ class StructureBuilder {
 	}
 
 	/**
-	 * Multiplies out charged Words to balance charge
+	 * Multiplies out charged word rules to balance charge
 	 * Return true if balancing was possible else false
 	 * @param state
-	 * @param negativelyChargedWords
-	 * @param positivelyChargedWords
-	 * @param wordToChargeMapping
+	 * @param negativelyChargedComponents
+	 * @param positivelyChargedComponents
+	 * @param componentToChargeMapping
 	 * @param overallCharge
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private boolean multiplyChargedWords(BuildState state, List<Element>negativelyChargedWords,List<Element> positivelyChargedWords,HashMap<Element, Integer> wordToChargeMapping, int overallCharge) throws StructureBuildingException {
-		Element wordToMultiply;
+	private boolean multiplyChargedComponents(BuildState state, List<Element>negativelyChargedComponents,List<Element> positivelyChargedComponents,HashMap<Element, Integer> componentToChargeMapping, int overallCharge) throws StructureBuildingException {
+		Element componentToMultiply;
 		if (overallCharge >0){
-			if (negativelyChargedWords.size() >1){
+			if (negativelyChargedComponents.size() >1){
 				return false;//ambiguous as to which to multiply
 			}
-			wordToMultiply = negativelyChargedWords.get(0);
+			componentToMultiply = negativelyChargedComponents.get(0);
 		}
 		else{
-			if (positivelyChargedWords.size() >1){
+			if (positivelyChargedComponents.size() >1){
 				return false;//ambiguous as to which to multiply
 			}
-			wordToMultiply = positivelyChargedWords.get(0);
+			componentToMultiply = positivelyChargedComponents.get(0);
 		}
-		Element firstChild = (Element) wordToMultiply.getChild(0);
+		if (componentToMultiply.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString()) && XOMTools.getChildElementsWithTagNameAndAttribute(componentToMultiply, WORD_EL, TYPE_ATR, WordType.full.toString()).size()>1){
+			return false;//already has been multiplied e.g. dichloride
+		}
+		Element firstChild = (Element) componentToMultiply.getChild(0);
 		while (firstChild.getChildElements().size() !=0){
 			firstChild = (Element) firstChild.getChild(0);
 		}
 		if (firstChild.getLocalName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
 			return false;
 		}
-		int charge = wordToChargeMapping.get(wordToMultiply);
+		int charge = componentToChargeMapping.get(componentToMultiply);
 		if (overallCharge % charge ==0){
 			int timesToDuplicate = Math.abs(overallCharge/charge);
 			for (int i = 0; i < timesToDuplicate; i++) {
-				XOMTools.insertAfter(wordToMultiply, state.fragManager.cloneElement(state, wordToMultiply));
+				XOMTools.insertAfter(componentToMultiply, state.fragManager.cloneElement(state, componentToMultiply));
 			}
+		}
+		else{
+			return false;
 		}
 		return true;
 	}
