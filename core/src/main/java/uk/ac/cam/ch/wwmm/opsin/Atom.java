@@ -326,7 +326,7 @@ class Atom {
 	 * @return The list of locants (may be empty)
 	 */
 	List<String> getElementSymbolLocants() {
-		ArrayList<String> elementSymbolLocants =new ArrayList<String>();
+		List<String> elementSymbolLocants =new ArrayList<String>();
         for (String l : locants) {
             if (matchElementSymbolLocant.matcher(l).matches()) {
                 elementSymbolLocants.add(l);

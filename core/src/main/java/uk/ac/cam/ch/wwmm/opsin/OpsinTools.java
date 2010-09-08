@@ -134,7 +134,7 @@ class OpsinTools {
 	}
 
 	/**
-	 * Searches in a depth-first manner for a non-suffix atom that has the target locant
+	 * Searches in a depth-first manner for a non-suffix atom that has the target non element symbol locant
 	 * Returns either that atom or null if one cannot be found
 	 * @param startingAtom
 	 * @param targetLocant
@@ -152,7 +152,8 @@ class OpsinTools {
 				if (atomsVisited.contains(neighbour)){//already visited
 					continue;
 				}
-				List<String> locants = neighbour.getLocants();
+				List<String> locants = new ArrayList<String>(neighbour.getLocants());
+				locants.removeAll(neighbour.getElementSymbolLocants());
 
 				//A main group atom, would expect to only find one except in something strange like succinimide
 				//The locants.size()>0 condition allows things like terephthalate to work which have an atom between the suffixes and main atoms that has no locant

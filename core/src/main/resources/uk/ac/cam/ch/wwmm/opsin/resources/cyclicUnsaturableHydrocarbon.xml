@@ -2,9 +2,9 @@
 <!-- See the DTD for more details -->
 <tokenLists>
   <tokenList tagname="group" type="ring" subType="cyclicUnsaturableHydrocarbon" symbol="A">
-    <token value="C12CC3CC4CC5C1.C24.C35" valType="SMILES" frontLocantsExpected="1,2">adamant</token>
-    <token value="C12C3C4C11.C35C2C1C45" valType="SMILES">cub</token>
-    <token value="C12C3C4C1C4C32" valType="SMILES">prism</token>
+    <token value="C12CC3CC4CC5C1.C24.C35" labels="1/2/3/4/5/6/7/8/9/10" valType="SMILES" frontLocantsExpected="1,2">adamant</token>
+    <token value="C12C3C4C5C3C1C5C24" labels="1/2/3/4/5/6/7/8" valType="SMILES">cub</token>
+    <token value="C12C3C4C1C4C32" labels="1/2/3/4/5/6" valType="SMILES">prism</token>
   </tokenList>
 
   <tokenList tagname="group" type="ring" subType="cyclicUnsaturableHydrocarbon" symbol="A">
