@@ -215,12 +215,12 @@ does not define a CFG.
   <regex name="%locantForRingAssembly%" value = "(%ringAssemblyLocant%|%orthoMetaPara%|%optionalOpenBracket%%ringAssemblyLocant%%optionalCloseBracket%%hyphen%?)" />
   <regex name="%ringAssembly%" value = "(%locantForRingAssembly%?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%))"/>
 
-  <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|((%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%)|%fusedRingSystem%|%polycyclicSpiroGroup%)(%inlineEndings%|%conjunctiveSideChainInline%)|%fusedRingSystemFromTrivialRingSubstituent%)"/>
+  <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|((%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%)|%fusedRingSystem%|%polycyclicSpiroGroup%)(%inlineEndings%|%conjunctiveSideChainInline%)|%fusedRingSystemFromTrivialRingSubstituent%)"/>
   <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
   <regex name="%subsituentBody%" value= "(%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%)"/>
   <regex name="%substituent%" value= "(%locantOpenBracket%*%stereochemistry%*(%relativeCisTrans%|%newLocantGroupNoStartingHyphen%)?%multiplier%?(%subsituentBody%%closeBracket%*%interSubstituentHyphen%?|%hydroGroup%)%endOfSubstituent%)"/>
 
-  <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%optionalOpenBracket%%ringAssembly%%optionalCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
+  <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
   <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%))"/>
   <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
