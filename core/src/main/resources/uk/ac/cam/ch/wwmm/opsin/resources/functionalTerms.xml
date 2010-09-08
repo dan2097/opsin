@@ -38,7 +38,7 @@
     <token value="hemiketal">hemiketal</token>
   </tokenList>
 
-  <tokenList tagname="group" type="functionalClass" subType="anhydride" symbol="Ü">
+  <tokenList tagname="functionalGroup" type="functionalClass" subType="anhydride" symbol="Ü">
     <token value="O" labels="none" valType="SMILES">anhydride</token>
     <token value="S" labels="none" valType="SMILES">thioanhydride</token>
     <token value="[Se|2]" labels="none" valType="SMILES">selenoanhydride</token>
