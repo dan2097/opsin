@@ -2827,8 +2827,8 @@ class PreStructureBuilder {
 	 * @param locantEl the locant, only elements after it will be considered
 	 * @return An arrayList of locantable elements
 	 */
-	private ArrayList<Element> findElementsMissingIndirectLocants(Element subOrRoot,Element locantEl) {
-		ArrayList<Element> locantAble = new ArrayList<Element>();
+	private List<Element> findElementsMissingIndirectLocants(Element subOrRoot,Element locantEl) {
+		List<Element> locantAble = new ArrayList<Element>();
 		Elements childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
 		for (int j = 0; j < childrenOfSubOrBracketOrRoot.size(); j++) {
 			Element el =childrenOfSubOrBracketOrRoot.get(j);
@@ -2836,6 +2836,13 @@ class PreStructureBuilder {
 			if (name.equals(SUFFIX_EL) || name.equals(UNSATURATOR_EL) || name.equals(CONJUNCTIVESUFFIXGROUP_EL)){
 				if (el.getAttribute(LOCANT_ATR) ==null && el.getAttribute(LOCANTID_ATR) ==null && el.getAttribute(MULTIPLIED_ATR)==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
 					if (subOrRoot.indexOf(el)>subOrRoot.indexOf(locantEl)){
+						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
+							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
+							String type = group.getAttributeValue(TYPE_ATR);
+							if (group.getValue().equals("phen")|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+								continue;
+							}
+						}
 						locantAble.add(el);
 					}
 				}
