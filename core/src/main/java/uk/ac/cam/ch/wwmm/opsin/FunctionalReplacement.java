@@ -400,7 +400,7 @@ class FunctionalReplacement {
 			if (functionalTerm ==null){
 				throw new PostProcessingException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
 			}
-			Element hydrazideGroup = functionalTerm.getFirstChildElement(GROUP_EL);
+			Element hydrazideGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
 			Fragment hydrazide = PreStructureBuilder.resolveGroup(state, hydrazideGroup);
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(hydrazideGroup);
 			int hydrazides =1;

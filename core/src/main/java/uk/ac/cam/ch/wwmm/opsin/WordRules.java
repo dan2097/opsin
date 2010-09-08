@@ -308,6 +308,11 @@ class WordRules {
 							throw new ParsingException("OPSIN bug: Problem with carbonylDerivative wordRule");
 						}
 						functionalTerm.get(0).setLocalName(ROOT_EL);
+						List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
+						if (functionalGroups.size()!=1){
+							throw new ParsingException("OPSIN bug: Problem with carbonylDerivative wordRule");
+						}
+						functionalGroups.get(0).setLocalName(GROUP_EL);
 						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 					}
 				}
@@ -459,7 +464,7 @@ class WordRules {
 		if (element1.startsWith("[")){
 			element1 = element1.substring(1, element1.length()-1);
 		}
-		List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagNames(functionalWord, new String[]{FUNCTIONALGROUP_EL, GROUP_EL});
+		List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALGROUP_EL);
 		if (functionalGroups.size()!=1){
 			throw new ParsingException("OPSIN bug: Unable to find functional group in oxide or addition compound rule");
 		}

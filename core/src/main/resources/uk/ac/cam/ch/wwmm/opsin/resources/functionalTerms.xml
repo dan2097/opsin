@@ -12,7 +12,7 @@
     <token value="C#N">cyanohydrin</token>
   </tokenList>
 
-  <tokenList tagname="group" type="functionalClass" subType="functionalClassGroup" symbol="Æ">
+  <tokenList tagname="functionalGroup" type="functionalClass" subType="functionalClassGroup" symbol="Æ">
 <!--The atom that replaces the carbonyl oxygen is the last atom in the SMILES so that the first is where unlocanted substitution occurs)-->
     <token value="ON" labels="O/" valType="SMILES">oxime</token>
     <token value="NN" labels="1,N/" valType="SMILES">hydrazone</token>
