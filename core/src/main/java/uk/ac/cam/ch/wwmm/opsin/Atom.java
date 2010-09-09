@@ -49,8 +49,6 @@ class Atom {
 	private final Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
 	/** A set of atoms that were equally plausible to perform functional replacement on */
     static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
-	/** One suffix was applied to this atom */
-    static final PropertyKey<Boolean> KETONE_SUFFIX_ATTACHED = new PropertyKey<Boolean>("ketoneSuffixAttached");
 	/** The hydrogen count as set in the SMILES*/
     static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
 

@@ -496,7 +496,7 @@ class StructureBuildingMethods {
 				}
 				atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
 				if (atom.hasSpareValency()){
-					if (atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)!=null && atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)){
+					if (atomWillHaveSVImplicitlyRemoved(atom)){
 						atomsWhichImplicitlyWillHaveTheirSVRemoved.add(atom);
 					}
 					else{
@@ -606,6 +606,27 @@ class StructureBuildingMethods {
 				}
 			}
 		}
+	}
+
+	private static boolean atomWillHaveSVImplicitlyRemoved(Atom atom) throws StructureBuildingException {
+		boolean canFormDoubleBond =false;
+		for(Atom aa : atom.getFrag().getIntraFragmentAtomNeighbours(atom)) {
+			if(aa.hasSpareValency()){
+				canFormDoubleBond=true;
+			}
+		}
+		if (!canFormDoubleBond){
+			return true;
+		}
+		
+		if (atom.hasSpareValency()){
+			atom.ensureSVIsConsistantWithValency(true);
+			if (!atom.hasSpareValency()){
+				atom.setSpareValency(true);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static void performAdditiveOperations(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {
