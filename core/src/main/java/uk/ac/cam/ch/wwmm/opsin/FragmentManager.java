@@ -383,9 +383,6 @@ class FragmentManager {
 				}
 				oldToNewAtomMap.get(atom).setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, newAtoms);
 			}
-			if (atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED)!=null){
-				oldToNewAtomMap.get(atom).setProperty(Atom.KETONE_SUFFIX_ATTACHED, atom.getProperty(Atom.KETONE_SUFFIX_ATTACHED));
-			}
 			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null){
 				oldToNewAtomMap.get(atom).setProperty(Atom.SMILES_HYDROGEN_COUNT, atom.getProperty(Atom.SMILES_HYDROGEN_COUNT));
 			}

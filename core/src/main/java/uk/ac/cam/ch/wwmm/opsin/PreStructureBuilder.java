@@ -2359,6 +2359,7 @@ class PreStructureBuilder {
 					thisFrag.getOutAtom(0).setLocant(locantValues[0]);
 					thisFrag.getOutAtom(1).setLocant(locantValues[1]);
 					possibleLocant.detach();
+					subOrRoot.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
 				}
 			}
 		}
@@ -3050,9 +3051,6 @@ class PreStructureBuilder {
                             }
                             Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
                             state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
-                            if (suffixValue.equals("one") && groupType.equals(RING_TYPE_VAL)) {//special case: one acts in a similar way to the hydro tag c.f. tetrahydrobenzen-1,4-dione
-                                parentfragAtom.setProperty(Atom.KETONE_SUFFIX_ATTACHED, true);
-                            }
                             state.fragManager.removeBond(bondToSuffix);
                         }
                     }
