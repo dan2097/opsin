@@ -214,6 +214,9 @@ class ResourceManager {
 				position = m.end();
 			}
 			newValue += value.substring(position);
+			if (regexDict.get(name)!=null){
+				throw new Exception("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
+			}
 			regexDict.put(name, newValue);
 		}
 		String re = regexDict.get("%chemical%");
