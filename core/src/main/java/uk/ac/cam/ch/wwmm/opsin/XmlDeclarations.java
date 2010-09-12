@@ -344,6 +344,8 @@ class XmlDeclarations {
 	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
 	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
 	static final String NONE_SUBTYPE_VAL ="none";
+	/**oxido/sulfido/selenido/tellurido*/
+	static final String OXIDOLIKE_SUBTYPE_VAL ="oxidoLike";
 	static final String SIMPLESUBSTITUENT_SUBTYPE_VAL ="simpleSubstituent";
 	static final String SUBSTITUENT_SUBTYPE_VAL ="substituent";
 	static final String TERMINAL_SUBTYPE_VAL ="terminal";

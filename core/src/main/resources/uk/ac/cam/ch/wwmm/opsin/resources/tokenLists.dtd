@@ -5,7 +5,7 @@
 <!ELEMENT tokenList (token)+>
 <!ATTLIST tokenList tagname (alkaneStemModifier|cyclo|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|suffix|multiplier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|suffixPrefix|unsaturator) #REQUIRED
                     type (acidStem|aminoAcid|basic|chain|charge|cisOrTrans|chalcogenAcidStem|diValentGroup|functionalClass|group|inline|monoValentGroup|monoValentStandaloneGroup|nonCarboxylicAcid|ring|simpleGroup|substituent|root|VonBaeyer) #IMPLIED
-                    subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
+                    subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|oxidoLike|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
                     symbol CDATA #REQUIRED>
 <!-- tagname == the name of the XML element that tokens in this file will be translated to
 type == the type attribute on the XML element (for example indicates that a group is an aminoAcid)

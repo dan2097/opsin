@@ -125,6 +125,7 @@ class StructureBuilder {
 			}
 		}
 
+		processOxidoSpecialCase(state, molecule);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
 		int overallCharge = state.fragManager.getOverallCharge();
@@ -1642,5 +1643,70 @@ class StructureBuilder {
 		else{
 			throw new StructureBuildingException("OPSIN bug: expected word or wordRule");
 		}
+	}
+
+	/**
+	 * Nasty special case to cope with oxido and related groups acting as O= or even [O-][N+]
+	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
+	 * Acting as O= notably is often correct behaviour for inorganics
+	 * @param state
+	 * @param molecule
+	 * @throws StructureBuildingException 
+	 */
+	private void processOxidoSpecialCase(BuildState state, Element molecule) throws StructureBuildingException {
+		List<Element> oxidoElements = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, OXIDOLIKE_SUBTYPE_VAL);
+		for (Element oxidoElement : oxidoElements) {
+			Atom oxidoAtom = state.xmlFragmentMap.get(oxidoElement).getFirstAtom();
+			Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
+			String element = connectedAtom.getElement();
+			if (checkForConnectedOxo(state, connectedAtom)){//e.g. not oxido(trioxo)ruthenium
+				continue;
+			}
+			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
+					((element.equals("S") || element.equals("P")) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
+				oxidoAtom.setCharge(0);
+				oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
+				oxidoAtom.getFirstBond().setOrder(2);
+			}
+			else if (element.equals("N") && connectedAtom.getCharge()==0){
+				int incomingValency = connectedAtom.getIncomingValency();
+				if ((incomingValency + connectedAtom.getOutValency()) ==3 && connectedAtom.hasSpareValency()){
+					connectedAtom.addChargeAndProtons(1, 1);//e.g. N-oxidopyridine
+				}
+				else if ((incomingValency + connectedAtom.getOutValency()) ==4){
+					if (connectedAtom.getLambdaConventionValency()!=null && connectedAtom.getLambdaConventionValency()==5){
+						oxidoAtom.setCharge(0);
+						oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
+						oxidoAtom.getFirstBond().setOrder(2);
+					}
+					else{
+						connectedAtom.addChargeAndProtons(1, 1);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Is the atom connected to an atom whose fragment has an xml entry called "oxo"
+	 * @param atom
+	 * @return
+	 */
+	private boolean checkForConnectedOxo(BuildState state, Atom atom) {
+		Set<Bond> bonds = atom.getBonds();
+		for (Bond bond : bonds) {
+			Atom connectedAtom;
+			if (bond.getFromAtom() == atom){
+				connectedAtom = bond.getToAtom();
+			}
+			else{
+				connectedAtom = bond.getFromAtom();
+			}
+			Element correspondingEl = state.xmlFragmentMap.getElement(connectedAtom.getFrag());
+			if (correspondingEl.getValue().equals("oxo")){
+				return true;
+			}
+		}
+		return false;
 	}
 }

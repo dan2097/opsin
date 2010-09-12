@@ -436,8 +436,8 @@ class FragmentManager {
 	 */
 	Element cloneElement(BuildState state, Element elementToBeCloned, String stringToAddToAllLocants) throws StructureBuildingException {
 		Element clone = new Element(elementToBeCloned);
-		List<Element> originalGroups = XOMTools.getDescendantElementsWithTagName(elementToBeCloned, "group");
-		List<Element> clonedGroups = XOMTools.getDescendantElementsWithTagName(clone, "group");
+		List<Element> originalGroups = XOMTools.getDescendantElementsWithTagName(elementToBeCloned, XmlDeclarations.GROUP_EL);
+		List<Element> clonedGroups = XOMTools.getDescendantElementsWithTagName(clone,  XmlDeclarations.GROUP_EL);
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
 		for (int i = 0; i < originalGroups.size(); i++) {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
