@@ -1163,8 +1163,6 @@ class StructureBuildingMethods {
 		}
 		fragToBeJoined.removeOutAtom(out);
 
-
-		bondOrder = checkForOxidoSpecialCase(elOfFragToBeJoined.getValue(), atomToJoinTo, from, bondOrder);
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
 		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}
@@ -1200,37 +1198,6 @@ class StructureBuildingMethods {
 		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
 		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
 		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
-	}
-
-	/**
-	 * Nasty special case to cope with oxido and relating groups acting as O= or even [O-][N+]
-	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
-	 * Acting as O= notably is correct behaviour for inorganics
-	 * @param substituentName
-	 * @param atomToJoinTo
-	 * @param from
-	 * @param bondOrder
-	 * @return
-	 */
-	private static int checkForOxidoSpecialCase(String substituentName, Atom atomToJoinTo, Atom from, int bondOrder) {
-		if (from.getCharge()==-1){
-			if (substituentName.equals("oxido") || substituentName.equals("sulfido") || substituentName.equals("selenido") || substituentName.equals("tellurido") ){
-
-				String element = atomToJoinTo.getElement();
-				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(atomToJoinTo.getFrag().getSubType()) ||
-						(element.equals("S") && atomToJoinTo.getCharge() ==0 &&
-						(atomToJoinTo.getIncomingValency() +atomToJoinTo.getOutValency())>=2 && ValencyChecker.checkValencyAvailableForBond(atomToJoinTo, 2))){
-					from.setCharge(0);
-					bondOrder =2;
-				}
-				else if (element.equals("N")){
-					if (atomToJoinTo.getCharge()==0 && (atomToJoinTo.getIncomingValency() + atomToJoinTo.getOutValency() + (atomToJoinTo.hasSpareValency() ? 1 :0))==3){
-						atomToJoinTo.addChargeAndProtons(1, 1);
-					}
-				}
-			}
-		}
-		return bondOrder;
 	}
 
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder) throws StructureBuildingException {

@@ -99,7 +99,6 @@
 		<token value="-CO" labels="none" valType="SMILES">methylol</token>
 		<token value="O1CCNCC1" labels="1/2/3/4/5/6" valType="SMILES" outIDs="4">morpholino</token>
 		<token value="-C(=O)CC(=O)C(=O)O" labels="1//2/3//4//" valType="SMILES" usableAsAJoiner="yes" defaultInID="8">oxalaceto</token>
-		<token value="-[O-]" labels="none" valType="SMILES">oxido</token>
 		<token value="-NO" labels="none" valType="SMILES">hydroxamino</token>
 		<token value="=NO" labels="none" valType="SMILES">hydroximino</token>
 		<token value="-OC(C)C" labels="none" valType="SMILES">isopropoxyl</token>
@@ -119,17 +118,14 @@
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">secisoamyl</token>
 		<token value="-OC(C)CC" labels="none" valType="SMILES">sec-butoxyl</token>
 		<token value="-OC(C)CC" labels="none" valType="SMILES">secbutoxyl</token>
-		<token value="-[Se-]" labels="none" valType="SMILES">selenido</token>
 		<token value="-[Se](O)" labels="none" valType="SMILES">seleneno</token>
 		<token value="-[Se](=O)(O)" labels="none" valType="SMILES">selenino</token>
 		<token value="-[Se](=O)(=O)(O)" labels="none" valType="SMILES">selenono</token>
 		<token value="-[SeH]" labels="none" valType="SMILES">selenyl</token>
 		<token value="-NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazido</token>
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">siamyl</token>
-		<token value="-[S-]" labels="none" valType="SMILES">sulfido</token>
 		<token value="-S(=O)(O)" labels="none" valType="SMILES">sulfino</token>
 		<token value="-S(=O)(=O)(O)" labels="none" valType="SMILES">sulfo</token>
-		<token value="-[Te-]" labels="none" valType="SMILES">tellurido</token>
 		<token value="-[Te](O)" labels="none" valType="SMILES">tellureno</token>
 		<token value="-[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
 		<token value="-[Te](=O)(=O)(O)" labels="none" valType="SMILES">tellurono</token>
@@ -394,5 +390,13 @@
 		<token value="-NN" labels="none" valType="SMILES">hydrazido</token>
 		<token value="=N" labels="none" valType="SMILES">imido</token>
 		<token value="#N" labels="none" valType="SMILES">nitrido</token>
+	</tokenList>
+
+<!--Oxido acts as -[O-] or =O depending on the valency available on the atom to connect to. IUPAC organic recommends -[O-] -->
+	<tokenList tagname="group" type="substituent" subType="oxidoLike" symbol="x">
+		<token value="-[O-]" labels="none" valType="SMILES">oxido</token>
+		<token value="-[S-]" labels="none" valType="SMILES">sulfido</token>
+		<token value="-[Se-]" labels="none" valType="SMILES">selenido</token>
+		<token value="-[Te-]" labels="none" valType="SMILES">tellurido</token>
 	</tokenList>
 </tokenLists>
