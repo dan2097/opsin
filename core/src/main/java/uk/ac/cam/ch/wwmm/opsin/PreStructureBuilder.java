@@ -2637,10 +2637,9 @@ class PreStructureBuilder {
 				if (shouldBeAMultiplierNode !=null && shouldBeAMultiplierNode.getLocalName().equals(MULTIPLIER_EL)){
 					Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSibling(shouldBeAMultiplierNode);
 					if (shouldBeAGroupOrSubOrBracket !=null){
-						if (shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && 
-								(matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches()//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
-								|| shouldBeAMultiplierNode.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-							locantRelatedElements.add(shouldBeAMultiplierNode);
+						if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && shouldBeAMultiplierNode.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
+								|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
+							locantRelatedElements.add(shouldBeAMultiplierNode);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
 						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
 							XOMTools.setTextChild(locantRelatedElements.get(0), locantValues[1]);
