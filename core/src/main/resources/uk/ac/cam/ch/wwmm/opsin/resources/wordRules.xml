@@ -104,6 +104,14 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
   </wordRule>
 
+  <wordRule name="multiEster" type="full">
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="substituent" />
+    <word type="full" endsWithRegex="(ate|amide|ite)[\]\)\}]*"/>
+  </wordRule>
+
   <wordRule name="divalentFunctionalGroup" type="full">
     <word type="substituent" />
     <word type="substituent" />
