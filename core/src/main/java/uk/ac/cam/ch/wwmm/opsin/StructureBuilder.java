@@ -18,7 +18,6 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 
-	private final Pattern matchDigits = Pattern.compile("\\d+");
 	private final Pattern matchComma =Pattern.compile(",");
 	private final Pattern matchColon =Pattern.compile(":");
 	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
@@ -1325,7 +1324,7 @@ class StructureBuilder {
 				return possibleAtom;
 			}
 		}
-		if (matchDigits.matcher(locant).matches()){
+		if (matchNumericLocant.matcher(locant).matches()){
 			//None of the functional atoms had an appropriate locant. Look for the case whether the locant refers to the backbone. e.g. 5-methyl 2-aminopentanedioate
 			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
