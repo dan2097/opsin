@@ -2527,6 +2527,15 @@ class PreStructureBuilder {
 					!elementBeforeSubstituent.getLocalName().equals(BRACKET_EL)){
 				continue;
 			}
+			
+			//Not preceded and succeded by a bracket e.g. Not (benzyl)methyl(phenyl)amine	c.f. P-16.4.1.3 (draft 2004)
+			if (elementBeforeSubstituent.getLocalName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getLocalName().equals(BRACKET_EL)){
+				Element firstChildElementOfElementAfterSubstituent = (Element) elementAftersubstituent.getChild(0);
+				if ((firstChildElementOfElementAfterSubstituent.getLocalName().equals(SUBSTITUENT_EL) || firstChildElementOfElementAfterSubstituent.getLocalName().equals(BRACKET_EL))
+					&& !((Element)XOMTools.getPrevious(firstChildElementOfElementAfterSubstituent)).getLocalName().equals(HYPHEN_EL)){
+					continue;
+				}
+			}
 
 			//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
 			Element elementDirectlyBeforeSubstituent = (Element) XOMTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
