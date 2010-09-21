@@ -566,7 +566,7 @@ class Atom {
 			}
 			int maxSpareValency;
 			if (takeIntoAccountExternalBonds){
-				maxSpareValency =maxValency-getIncomingValency();
+				maxSpareValency =maxValency-getIncomingValency() -outValency;
 			}
 			else{
 				maxSpareValency =maxValency-frag.getIntraFragmentIncomingValency(this);

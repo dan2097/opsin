@@ -635,7 +635,7 @@ class StructureBuilder {
 		int functionalReplacementsToPerform = Math.min(replacementFragments.size(), carbonylOxygens.size());
 		replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, functionalReplacementsToPerform);
 		resolveWordOrBracket(state, words.get(0));//the group
-		
+		//TOOD always resolved first?
 		if (!replacementFragments.isEmpty()){//Look for any more carbonyls that have appeared due to substitution e.g. 4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
 			BuildResults br = new BuildResults(state, words.get(0));
 			for (Fragment f : br.getFragments()) {
