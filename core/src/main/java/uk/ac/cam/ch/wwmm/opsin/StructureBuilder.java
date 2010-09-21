@@ -570,8 +570,6 @@ class StructureBuilder {
 		if (!WordType.full.toString().equals(words.get(0).getAttributeValue(TYPE_ATR))){
 			throw new StructureBuildingException("OPSIN bug: Wrong word type encountered when applying carbonylDerivative wordRule");
 		}
-		Element rightmostGroup = findRightMostGroupInWordOrWordRule(words.get(0));
-		Fragment rootFragment = state.xmlFragmentMap.get(rightmostGroup);//the group which will be modified
 		List<Fragment> replacementFragments = new ArrayList<Fragment>();
 		List<String> locantForFunctionalTerm =new ArrayList<String>();//usually not specified
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
@@ -631,22 +629,19 @@ class StructureBuilder {
 		if (!locantForFunctionalTerm.isEmpty() && locantForFunctionalTerm.size()!=replacementFragments.size()){
 			throw new StructureBuildingException("Mismatch between number of locants and number of carbonyl replacements");
 		}
-		List<Atom> carbonylOxygens = findCarbonylOxygens(rootFragment, locantForFunctionalTerm);
-		int functionalReplacementsToPerform = Math.min(replacementFragments.size(), carbonylOxygens.size());
-		replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, functionalReplacementsToPerform);
-		resolveWordOrBracket(state, words.get(0));//the group
-		//TOOD always resolved first?
-		if (!replacementFragments.isEmpty()){//Look for any more carbonyls that have appeared due to substitution e.g. 4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
-			BuildResults br = new BuildResults(state, words.get(0));
-			for (Fragment f : br.getFragments()) {
-				carbonylOxygens.addAll(findCarbonylOxygens(f, locantForFunctionalTerm));
-			}
-			if (carbonylOxygens.size() < replacementFragments.size()){
-				throw new StructureBuildingException("Insufficient carbonyl groups found!");
-			}
-			functionalReplacementsToPerform = replacementFragments.size();
-			replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, functionalReplacementsToPerform);
+		resolveWordOrBracket(state, words.get(0));//the component
+		//Note that the right most group may be multiplied e.g. 3,3'-methylenebis(2,4,6-trimethylbenzaldehyde) disemicarbazone
+		//or the carbonyl may not even be on the right most group e.g.  4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
+		BuildResults br = new BuildResults(state, words.get(0));
+		List<Atom> carbonylOxygens = new ArrayList<Atom>();
+		List<Fragment> fragments = new ArrayList<Fragment>(br.getFragments());
+		for (ListIterator<Fragment> iterator = fragments.listIterator(fragments.size()); iterator.hasPrevious();) {//iterate in reverse order - right most groups preferred
+			carbonylOxygens.addAll(findCarbonylOxygens(iterator.previous(), locantForFunctionalTerm));
 		}
+		if (carbonylOxygens.size() < replacementFragments.size()){
+			throw new StructureBuildingException("Insufficient carbonyl groups found!");
+		}
+		replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, replacementFragments.size());
 	}
 
 	private void replaceCarbonylOxygenWithReplacementFragments(BuildState state, List<Element> words, List<Fragment> replacementFragments, List<Atom> carbonylOxygens, int functionalReplacementsToPerform) throws StructureBuildingException {
