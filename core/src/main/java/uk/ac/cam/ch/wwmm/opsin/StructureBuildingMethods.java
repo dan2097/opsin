@@ -1203,7 +1203,7 @@ class StructureBuildingMethods {
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder) throws StructureBuildingException {
 		//case where you should actually be substituting onto the previous element e.g. 5-(4-methylphenylcarbonyl)pentane
 		Atom to =null;
-		ArrayList<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);
+		List<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);
 		for (Fragment fragment : possibleParents) {
 			to = fragment.getAtomOrNextSuitableAtom(fragment.getDefaultInAtom(), bondOrder, true);
 			if (to !=null){
@@ -1220,36 +1220,42 @@ class StructureBuildingMethods {
 	 * @param startingElement
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
-	private static ArrayList<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
-		Stack<Element> s = new Stack<Element>();
-		s.add(startingElement);
-		ArrayList<Fragment> foundFragments =new ArrayList<Fragment>();
+	private static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
+		Stack<Element> stack = new Stack<Element>();
+		stack.add((Element) startingElement.getParent());
+		List<Fragment> foundFragments =new ArrayList<Fragment>();
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
-		while (s.size()>0){
-			Element currentElement =s.pop();
+		while (stack.size()>0){
+			Element currentElement =stack.pop();
 			if (currentElement.getLocalName().equals(GROUP_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
 				foundFragments.add(groupFrag);
 				continue;
 			}
-			Element parent = (Element)currentElement.getParent();
-			List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
+			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			for (Element bracketOrSub : siblings) {
-				if (bracketOrSub.getAttribute(MULTIPLIER_ATR)!=null){
+			Stack<Element> bracketted = new Stack<Element>();
+			for (Element bracketOrSubOrRoot : siblings) {
+				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot)<=currentElement.indexOf(startingElement)){
 					continue;
 				}
-				if (!doneFirstIteration && parent.indexOf(bracketOrSub )<=parent.indexOf(currentElement)){
+				if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
 					continue;
 				}
-				if (bracketOrSub.getLocalName().equals(BRACKET_EL)){
-					s.push((Element)bracketOrSub.getChild(0));
+				if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+					if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
+						stack.add(bracketOrSubOrRoot);
+					}
+					else{
+						bracketted.add(bracketOrSubOrRoot);
+					}
 				}
 				else{
-					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
-					s.push(group);
+					Element group = bracketOrSubOrRoot.getFirstChildElement(GROUP_EL);
+					stack.add(group);
 				}
 			}
+			stack.addAll(0, bracketted);//locanting into brackets is rarely the desired answer so place at the bottom of the stack
 			doneFirstIteration =true;
 		}
 		return foundFragments;
