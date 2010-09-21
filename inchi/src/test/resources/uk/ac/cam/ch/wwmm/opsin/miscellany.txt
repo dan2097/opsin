@@ -1,0 +1,1 @@
+heptamethylbenzenesulfonamide	InChI=1S/C13H21NO2S/c1-8-9(2)11(4)13(12(5)10(8)3)17(15,16)14(6)7/h1-7H3

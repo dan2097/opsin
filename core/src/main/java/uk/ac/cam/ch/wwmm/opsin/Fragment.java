@@ -733,6 +733,29 @@ class Fragment {
 			atomListPosition++;
 		}
 		while(atomCounter < atomList.size());
+		
+		atomListPosition =startingIndex;
+		atomCounter=0;
+
+		do {//aromaticity preserved, suffixes substitutable
+			atomCounter++;
+			if (atomListPosition >= atomList.size()){
+				atomListPosition -=(atomList.size());
+			}
+			currentAtom=atomList.get(atomListPosition);
+			if (takeIntoAccountOutValency){
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
+					return currentAtom;
+				}
+			}
+			else{
+				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
+					return currentAtom;
+				}
+			}
+			atomListPosition++;
+		}
+		while(atomCounter < atomList.size());
 
 		atomListPosition =startingIndex;
 		atomCounter=0;
@@ -742,10 +765,6 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
-				atomListPosition++;
-				continue;
-			}
 			if (takeIntoAccountOutValency){
 				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getOutValency())){
 					return currentAtom;
