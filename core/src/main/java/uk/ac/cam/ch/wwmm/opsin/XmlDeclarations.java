@@ -305,6 +305,9 @@ class XmlDeclarations {
 	/**Indicates a group that is a substituent*/
 	static final String SUBSTITUENT_TYPE_VAL ="substituent";
 	
+	/**A locant that also indicated the addition of hydrogen e.g.2(1H); not used to locant onto another group*/
+	static final String ADDEDHYDROGENLOCANT_TYPE_VAL ="addedHydrogenLocant";
+	
 	/**Indicates a group that is a suffix*/
 	static final String SUFFIX_TYPE_VAL ="suffix";
 	
