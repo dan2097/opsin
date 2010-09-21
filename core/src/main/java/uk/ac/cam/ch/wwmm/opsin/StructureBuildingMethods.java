@@ -220,7 +220,7 @@ class StructureBuildingMethods {
 
 	/**
 	 * Multiplies out groups/brakets and substitutes them. The attribute "locant" is checked for locants
-	 * If it is present it should contain a comma seperated list of locants
+	 * If it is present it should contain a comma separated list of locants
 	 * The strategy employed is to clone subOrBracket and its associated fragments as many times as the multiplier attribute
 	 * perform(Un)LocantedSubstitutiveOperations is then called with on each call a different clone (or the original element) being in position
 	 * Hence bonding between the clones is impossible
@@ -1265,12 +1265,11 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static Fragment findFragmentWithLocant(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
-		Stack<Element> s = new Stack<Element>();
-		s.add(startingElement);
-
+		Stack<Element> stack = new Stack<Element>();
+		stack.add((Element) startingElement.getParent());
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
-		while (s.size()>0){
-			Element currentElement =s.pop();
+		while (stack.size()>0){
+			Element currentElement =stack.pop();
 			if (currentElement.getLocalName().equals(GROUP_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
 				if (groupFrag.hasLocant(locant)){
@@ -1278,24 +1277,30 @@ class StructureBuildingMethods {
 				}
 				continue;
 			}
-			Element parent = (Element)currentElement.getParent();
-			List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
+			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			for (Element bracketOrSub : siblings) {
-				if (bracketOrSub.getAttribute(MULTIPLIER_ATR)!=null){
+			Stack<Element> bracketted = new Stack<Element>();
+			for (Element bracketOrSubOrRoot : siblings) {
+				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot)<=currentElement.indexOf(startingElement)){
 					continue;
 				}
-				if (!doneFirstIteration && parent.indexOf(bracketOrSub )<=parent.indexOf(currentElement)){
+				if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
 					continue;
 				}
-				if (bracketOrSub.getLocalName().equals(BRACKET_EL)){
-					s.push((Element)bracketOrSub.getChild(0));
+				if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+					if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
+						stack.add(bracketOrSubOrRoot);
+					}
+					else{
+						bracketted.add(bracketOrSubOrRoot);
+					}
 				}
 				else{
-					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
-					s.push(group);
+					Element group = bracketOrSubOrRoot.getFirstChildElement(GROUP_EL);
+					stack.add(group);
 				}
 			}
+			stack.addAll(0, bracketted);//locanting into brackets is rarely the desired answer so place at the bottom of the stack
 			doneFirstIteration =true;
 		}
 		return null;
