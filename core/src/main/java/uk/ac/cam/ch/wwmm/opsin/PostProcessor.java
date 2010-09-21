@@ -261,6 +261,7 @@ class PostProcessor {
 					XOMTools.insertBefore(locant, indicatedHydrogenElement);
 				}
 				while (matches.find());
+				locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
 				locantText =matchIndicatedHydrogenBracket.matcher(locantText).replaceAll("");
 			}
 			XOMTools.setTextChild(locant, locantText);

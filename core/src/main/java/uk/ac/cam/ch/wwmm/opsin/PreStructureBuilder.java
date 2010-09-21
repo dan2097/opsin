@@ -1885,7 +1885,7 @@ class PreStructureBuilder {
 				previousEl.detach();
 			}
 			else if (previousEl!=null && previousEl.getLocalName().equals(LOCANT_EL)){
-				if (previousEl.getAttribute(TYPE_ATR)!=null && previousEl.getAttributeValue(TYPE_ATR).equals(ORTHOMETAPARA_EL)){//an OMP locant appears to have provided to indicate how to connect the rings of the ringAssembly
+				if (previousEl.getAttribute(TYPE_ATR)!=null && previousEl.getAttributeValue(TYPE_ATR).equals(ORTHOMETAPARA_TYPE_VAL)){//an OMP locant appears to have provided to indicate how to connect the rings of the ringAssembly
 					String locant2 =previousEl.getValue();
 					String locant1 ="1";
 					ArrayList<String> locantArrayList =new ArrayList<String>();
@@ -2755,7 +2755,7 @@ class PreStructureBuilder {
 				}
 			}
 			boolean allowIndirectLocants =true;
-			if(state.currentWordRule == WordRule.multiEster){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
+			if(state.currentWordRule == WordRule.multiEster && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
 				Element parentEl=(Element) subOrRoot.getParent();
 				if (parentEl.getLocalName().equals(WORD_EL) && parentEl.getAttributeValue(TYPE_ATR).equals(SUBSTITUENT_EL) && parentEl.getChildCount()==1 &&
 						locantValues.length==1 && !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){
@@ -2771,7 +2771,8 @@ class PreStructureBuilder {
 				/* The first locant is most likely a locant indicating where this subsituent should be attached.
 				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
 				 */
-				if (locantEls.size() ==1 && locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && XOMTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
+				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 &&
+						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && XOMTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
 					return;
 				}
 				boolean assignableToIndirectFeatures =true;
