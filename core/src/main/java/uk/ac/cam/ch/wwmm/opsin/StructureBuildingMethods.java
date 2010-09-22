@@ -1068,8 +1068,8 @@ class StructureBuildingMethods {
 				}
 			}
 		}
-		int outAtomCount = fragToBeJoined.getOutAtoms().size();
-		if (outAtomCount ==0){
+		int outAtomCountOnFragToBeJoined = fragToBeJoined.getOutAtoms().size();
+		if (outAtomCountOnFragToBeJoined ==0){
 			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
 		}
 
@@ -1079,14 +1079,69 @@ class StructureBuildingMethods {
 			InAtom in = parentFrag.getInAtom(0);
 			to = in.getAtom();
 			parentFrag.removeInAtom(in);
-			bondOrder = fragToBeJoined.getOutAtom(outAtomCount-1).getValency();
+			bondOrder = fragToBeJoined.getOutAtom(outAtomCountOnFragToBeJoined-1).getValency();
 		}
 		else{
-			int outAtomCountOnParent = parentFrag.getOutAtoms().size();
-			if (outAtomCountOnParent ==0){
+			List<OutAtom> outAtomsOnParent = parentFrag.getOutAtoms();
+			if (outAtomsOnParent.size() ==0){
 				throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
 			}
-			OutAtom in = parentFrag.getOutAtom(0);
+			OutAtom in = null;
+			if (outAtomsOnParent.size() >1){
+				int firstOutAtomOrder = outAtomsOnParent.get(0).getValency();
+				boolean unresolvedAmbiguity =false;
+				for (OutAtom outAtom : outAtomsOnParent) {
+					if (outAtom.getValency()!=firstOutAtomOrder){
+						unresolvedAmbiguity =true;
+					}
+				}
+				if (unresolvedAmbiguity){//not all outAtoms on parent equivalent
+					List<OutAtom> outAtomsOnfragToBeJoined = fragToBeJoined.getOutAtoms();
+					firstOutAtomOrder = outAtomsOnfragToBeJoined.get(0).getValency();
+					unresolvedAmbiguity =false;
+					for (OutAtom outAtom : outAtomsOnfragToBeJoined) {
+						if (outAtom.getValency()!=firstOutAtomOrder){
+							unresolvedAmbiguity =true;
+						}
+					}
+					if (unresolvedAmbiguity && outAtomsOnfragToBeJoined.size()==2){//not all outAtoms on frag to be joined are equivalent either!
+						//Solves the specific case of 2,2'-[ethane-1,2-diylbis(azanylylidenemethanylylidene)]diphenol vs 2,2'-[ethane-1,2-diylidenebis(azanylylidenemethanylylidene)]bis(cyclohexan-1-ol)
+						//but does not solve the general case as only a single look behind is performed.
+						Element previousGroup = (Element) OpsinTools.getPreviousGroup(elOfFragToBeJoined);
+						if (previousGroup!=null){
+							List<OutAtom> previousOutAtoms =  state.xmlFragmentMap.get(previousGroup).getOutAtoms();
+							if (previousOutAtoms.size()>1){
+								int previousGroupFirstOutAtomOrder = previousOutAtoms.get(0).getValency();
+								unresolvedAmbiguity =false;
+								for (OutAtom outAtom : previousOutAtoms) {
+									if (outAtom.getValency()!=previousGroupFirstOutAtomOrder){
+										unresolvedAmbiguity =true;
+									}
+								}
+								if (!unresolvedAmbiguity && previousGroupFirstOutAtomOrder==outAtomsOnParent.get(0).getValency()){
+									for (OutAtom outAtom : outAtomsOnParent) {
+										if (outAtom.getValency()!=previousGroupFirstOutAtomOrder){
+											in = outAtom;
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+					else{
+						for (OutAtom outAtom : outAtomsOnParent) {
+							if (outAtom.getValency()==firstOutAtomOrder){
+								in = outAtom;
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (in==null){
+				in = parentFrag.getOutAtom(0);
+			}
 			to = in.getAtom();
 			bondOrder = in.getValency();
 			if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
@@ -1097,7 +1152,7 @@ class StructureBuildingMethods {
 
 		OutAtom out =null;
 
-		for (int i =outAtomCount -1; i>=0; i--) {
+		for (int i =outAtomCountOnFragToBeJoined -1; i>=0; i--) {
 			if (fragToBeJoined.getOutAtom(i).getValency() == bondOrder){
 				out = fragToBeJoined.getOutAtom(i);
 				break;
@@ -1105,10 +1160,10 @@ class StructureBuildingMethods {
 		}
 
 		if (out ==null){
-			if (outAtomCount >=bondOrder){//handles cases like nitrilo needing to be -N= (remove later outAtoms first as per usual)
+			if (outAtomCountOnFragToBeJoined >=bondOrder){//handles cases like nitrilo needing to be -N= (remove later outAtoms first as per usual)
 				int valency =0;
-				Atom lastOutAtom = fragToBeJoined.getOutAtom(outAtomCount -1).getAtom();
-				for (int i =outAtomCount -1; i >= 0; i--) {
+				Atom lastOutAtom = fragToBeJoined.getOutAtom(outAtomCountOnFragToBeJoined -1).getAtom();
+				for (int i =outAtomCountOnFragToBeJoined -1; i >= 0; i--) {
 					OutAtom nextOutAtom = fragToBeJoined.getOutAtom(i);
 					if (nextOutAtom.getAtom() !=lastOutAtom){
 						throw new StructureBuildingException("Additive bond formation failure: bond order disagreement");
