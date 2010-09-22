@@ -97,6 +97,36 @@ class OpsinTools {
 		  return groups.get(groups.size()-1);//return last group if multiple exist e.g. fused ring
 	  }
 	}
+	
+	/**
+	 * Returns the next group. This group element need not be a sibling
+	 * @param current: starting node
+	 * @return
+	 */
+	static Node getNextGroup(Element current) {
+	  if (current.getLocalName().equals(GROUP_EL)){//can start with a group or the sub/root the group is in
+		  current=(Element)current.getParent();
+	  }
+	  Element parent = (Element) current.getParent();
+	  if (parent == null || parent.getLocalName().equals(MOLECULE_EL)){
+		  return null;
+	  }
+	  int index = parent.indexOf(current);
+	  if (index ==parent.getChildElements().size()-1) return getNextGroup(parent);//no group found
+	  Element next =(Element) parent.getChild(index +1);
+	  Elements children =next.getChildElements();
+	  while (children.size()!=0){
+		  next =children.get(0);
+		  children =next.getChildElements();
+	  }
+	  Elements groups =((Element)next.getParent()).getChildElements(GROUP_EL);
+	  if (groups.size()==0){
+		  return getNextGroup(next);
+	  }
+	  else{
+		  return groups.get(0);//return first group if multiple exist e.g. fused ring
+	  }
+	}
 
 	/**
 	 * Finds the wordRule element that encloses the given element.
