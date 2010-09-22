@@ -41,6 +41,14 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
+	public void testMultiplicativeNomenclature() throws Exception {
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "multiplicativeNomenclature.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+
+	@Test
 	public void testMiscellany() throws Exception {
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
@@ -53,6 +61,9 @@ public class NomenclatureIntegrationTest {
 		try {
 			String line = null;
 			while ((line = input.readLine()) != null) {
+				if(line.startsWith("//")){
+					continue;
+				}
 				String[] lineArray = line.split("\t");
 				String inchi = NameToInchi.convertResultToInChI(n2s.parseChemicalName(lineArray[0], n2sConfig), false);
 				if (inchi!=null){

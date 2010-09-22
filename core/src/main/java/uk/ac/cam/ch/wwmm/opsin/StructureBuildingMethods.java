@@ -666,13 +666,16 @@ class StructureBuildingMethods {
 						Element parentSubOrRoot = (Element) nextMultiRadicalGroup.getParent();
 						if (state.currentWordRule != WordRule.polymer){//imino does not behave like a substituent in polymers only as a linker
 							if (nextMultiRadicalGroup.getAttribute(IMINOLIKE_ATR)!=null){//imino/methylene can just act as normal substituents, should an additive bond really be made???
-								List<Fragment> alternativeFragments = findAlternativeFragments(state, subBracketOrRoot);
-								if (nextFrag !=alternativeFragments.get(alternativeFragments.size()-1)){//imino is not the absolute next frag
-									return;
+								Fragment adjacentFrag =state.xmlFragmentMap.get(OpsinTools.getNextGroup(subBracketOrRoot));
+								
+								if (nextFrag !=adjacentFrag){//imino is not the absolute next frag
+									if (potentiallyCanSubstitute((Element) nextMultiRadicalGroup.getParent()) || potentiallyCanSubstitute((Element) nextMultiRadicalGroup.getParent().getParent())){
+										return;
+									}
 								}
 							}
-							if (group.getAttribute(IMINOLIKE_ATR)!=null &&  (XOMTools.getNextSibling(group.getParent())==null || XOMTools.getNextSibling(subBracketOrRoot)!=parentSubOrRoot)){
-								return;//they are at different levels or again not adjacent e.g. ((chloroimino)ethylene)dibenzene
+							if (group.getAttribute(IMINOLIKE_ATR)!=null && levelsToWordEl(group) > levelsToWordEl(nextMultiRadicalGroup)){
+								return;//e.g. imino substitutes ((chloroimino)ethylene)dibenzene
 							}
 						}
 						if (parentSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
@@ -1389,6 +1392,24 @@ class StructureBuildingMethods {
 				stereoChemistryElement.getAttribute(LOCANT_ATR).setValue(getLocant(stereoChemistryElement) + primesString);
 			}
 		}
+	}
+
+	/**
+	 * Calculates the number of times getParent() must be called to reach a word element
+	 * Returns null if element does not have an enclosing word element.
+	 * @param element
+	 * @return
+	 */
+	private static Integer levelsToWordEl(Element element) {
+		int count =0;
+		while (!element.getLocalName().equals(WORD_EL)){
+			element =(Element) element.getParent();
+			if (element==null){
+				return null;
+			}
+			count++;
+		}	
+		return count;
 	}
 
 	/**Gets the locant from a group/suffix tag, defaulting to "0"
