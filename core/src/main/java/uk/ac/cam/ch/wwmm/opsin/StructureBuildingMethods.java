@@ -876,6 +876,7 @@ class StructureBuildingMethods {
 			Element currentElement;
 			if (i!=0){
 				currentElement = state.fragManager.cloneElement(state, multipliedParent, StringTools.multiplyString("'", i));
+				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
 				clonedElements.add(currentElement);
 			}
 			else{

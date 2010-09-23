@@ -59,6 +59,7 @@
   <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-" symbol="e" tagname="hydrogen" determinise="yes"/>
   <regexToken regex="[eE]" symbol="Z" tagname="e" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes" determinise="yes"/>
+  <regexToken regex="[aA]" symbol="¬" tagname="a" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="," symbol="ç" tagname="comma" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[isn]-" symbol="n" tagname="alkaneStemModifier" determinise="yes"/><!--case sensitive so must be a regex-->
   <regexToken regex="(([oO][rR][tT][hH][oO]|[mM][eE][tT][aA]|[pP][aA][rR][aA])|o|[mM]|[p])-" symbol="O" tagname="orthoMetaPara" determinise="yes"/><!-- O- and P- means oxygen and phosphorus locant-->
