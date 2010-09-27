@@ -1669,7 +1669,11 @@ class PostProcessor {
 			}
 		}
 		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy")){
-			Element next = (Element) XOMTools.getNextSibling(group.getParent());
+			Element enclosingSub = (Element) group.getParent();
+			Element next = (Element) XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
+			if (next==null && XOMTools.getPreviousSibling(enclosingSub)==null){//e.g. [(E)-NNO-azoxy]benzene
+				next = (Element) XOMTools.getNextSiblingIgnoringCertainElements((Element) enclosingSub.getParent(), new String[]{HYPHEN_EL});
+			}
 			if (next!=null && next.getLocalName().equals(ROOT_EL)){
 				if (!(((Element)next.getChild(0)).getLocalName().equals(MULTIPLIER_EL))){
 					List<Element> suffixes = XOMTools.getChildElementsWithTagName(next, SUFFIX_EL);
