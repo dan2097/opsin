@@ -174,7 +174,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="(ic|ous)"/>
+    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
@@ -182,20 +182,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="(ic|ous)"/>
+    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
   <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="(ic|ous)"/>
+    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
   <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="(ic|ous)"/>
+    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
     <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
   </wordRule>
 
