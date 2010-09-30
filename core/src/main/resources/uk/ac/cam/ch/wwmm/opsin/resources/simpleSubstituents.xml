@@ -30,7 +30,7 @@
 		<token value="-C(C)(C)CC" labels="none" valType="SMILES">tert-amyl</token>
 		<token value="-C(C)(C)CC" labels="none" valType="SMILES">tertamyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">anilino</token>
-		<token value="-COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
+		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="9">anisidino</token>
 		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzal</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" valType="SMILES">benzidino</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/"  valType="SMILES">4,4'-benzidino</token>
@@ -107,7 +107,7 @@
 		<token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
 		<token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitryl</token>
 		<token value="=NO" labels="none" valType="SMILES">oximino</token>
-		<token value="-CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
+		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2,ortho////3,meta/4,para////5/6///" valType="SMILES">picryl</token>
 		<token value="-N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperazino</token>
 		<token value="-N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperidino</token>
