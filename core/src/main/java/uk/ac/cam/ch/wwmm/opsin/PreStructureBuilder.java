@@ -144,6 +144,7 @@ class PreStructureBuilder {
 
 			for (Element group : groups) {
 				Fragment thisFrag = resolveGroup(state, group);
+				processChargeSpecification(group, thisFrag);//e.g. mercury(2+)
 				state.xmlFragmentMap.put(group, thisFrag);
 			}
 			
@@ -548,6 +549,15 @@ class PreStructureBuilder {
 			}
 		}
 	}
+
+	private void processChargeSpecification(Element group, Fragment frag) throws StructureBuildingException {
+		Element nextEl = (Element) XOMTools.getNextSibling(group);
+		if (nextEl!=null && nextEl.getLocalName().equals(CHARGESPECIFIER_EL)){
+			frag.getFirstAtom().setCharge(Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR)));
+			nextEl.detach();
+		}
+	}
+
 
 	/**
 	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring

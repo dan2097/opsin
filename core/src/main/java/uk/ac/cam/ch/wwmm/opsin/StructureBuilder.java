@@ -421,6 +421,18 @@ class StructureBuilder {
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("Oxide functional term not found where expected!");
 		}
+		Element rightMostGroup;
+		if (words.get(0).getLocalName().equals(WORDRULE_EL)){//e.g. Nicotinic acid N-oxide
+			List<Element> fullWords = XOMTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), WORD_EL, TYPE_ATR, WordType.full.toString());
+			if (fullWords.size()==0){
+				throw new StructureBuildingException("OPSIN is entirely unsure where the oxide goes so has decided not to guess");
+			}
+			rightMostGroup = findRightMostGroupInBracket(fullWords.get(fullWords.size()-1));
+		}
+		else{
+			rightMostGroup = findRightMostGroupInBracket(words.get(0));
+		}
+		
 		int numberOfOxygenToAdd =1;
 		List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(words.get(1), MULTIPLIER_EL);
 		if (multipliers.size() >1){
@@ -429,6 +441,15 @@ class StructureBuilder {
 		if (multipliers.size()==1){
 			numberOfOxygenToAdd = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
 			multipliers.get(0).detach();
+		}
+		else{
+			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(rightMostGroup.getAttributeValue(SUBTYPE_ATR))){
+				Atom elementaryAtom = state.xmlFragmentMap.get(rightMostGroup).getFirstAtom();
+				int charge = elementaryAtom.getCharge();
+				if (charge >0 && charge %2 ==0){
+					numberOfOxygenToAdd = charge/2;
+				}
+			}
 		}
 		List<Element> functionalGroup =XOMTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
 		if (functionalGroup.size()!=1){
@@ -451,17 +472,6 @@ class StructureBuilder {
 		if (!locantsForOxide.isEmpty() && locantsForOxide.size()!=oxideFragments.size()){
 			throw new StructureBuildingException("Mismatch between number of locants and number of oxides specified");
 		}
-		Element rightMostGroup;
-		if (words.get(0).getLocalName().equals(WORDRULE_EL)){//e.g. Nicotinic acid N-oxide
-			List<Element> fullWords = XOMTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), WORD_EL, TYPE_ATR, WordType.full.toString());
-			if (fullWords.size()==0){
-				throw new StructureBuildingException("OPSIN is entirely unsure where the oxide goes so has decided not to guess");
-			}
-			rightMostGroup = findRightMostGroupInBracket(fullWords.get(fullWords.size()-1));
-		}
-		else{
-			rightMostGroup = findRightMostGroupInBracket(words.get(0));
-		}
 		List<Fragment> orderedPossibleFragments = new ArrayList<Fragment>();//In preference suffixes are substituted onto e.g. acetonitrile oxide
 		Elements suffixEls = ((Element)rightMostGroup.getParent()).getChildElements(SUFFIX_EL);
 		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
@@ -483,7 +493,12 @@ class StructureBuilder {
 				for (Fragment frag : orderedPossibleFragments) {
 					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
 					if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
-						formAppropriateBondToOxideAndAdjustCharges(state, frag.getFirstAtom(), oxideAtom);//e.g. carbon dioxide
+						Atom elementaryAtom= frag.getFirstAtom();
+						formAppropriateBondToOxideAndAdjustCharges(state, elementaryAtom, oxideAtom);//e.g. carbon dioxide
+						int chargeOnAtom =elementaryAtom.getCharge();
+						if (chargeOnAtom>=2){
+							elementaryAtom.setCharge(chargeOnAtom-2);
+						}
 						continue mainLoop;
 					}
 					else{
@@ -952,7 +967,7 @@ class StructureBuilder {
 		resolveWordOrBracket(state, words.get(0));
 		Element elementaryAtomEl = StructureBuildingMethods.findRightMostGroupInBracket(words.get(0));
 		Atom elementaryAtom = state.xmlFragmentMap.get(elementaryAtomEl).getFirstAtom();
-
+		int charge = elementaryAtom.getCharge();
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
 		for (int i=1; i<words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
@@ -978,12 +993,17 @@ class StructureBuilder {
 			else if (words.size()==2){//silicon chloride -->silicon tetrachloride
 				int incomingBondOrder =elementaryAtom.getIncomingValency();
 				int expectedValency;
-				if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
-					String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
-					expectedValency = Integer.parseInt(typicalOxidationStates[0]);
+				if (charge > 0){
+					expectedValency = incomingBondOrder + charge;
 				}
 				else{
-					expectedValency = ValencyChecker.getPossibleValencies(elementaryAtom.getElement(), elementaryAtom.getCharge())[0];
+					if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
+						String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+						expectedValency = Integer.parseInt(typicalOxidationStates[0]);
+					}
+					else{
+						expectedValency = ValencyChecker.getPossibleValencies(elementaryAtom.getElement(), charge)[0];
+					}
 				}
 				int implicitMultiplier = expectedValency -incomingBondOrder >1 ? expectedValency -incomingBondOrder : 1;
 				for (int j = 1; j < implicitMultiplier; j++) {
@@ -992,6 +1012,9 @@ class StructureBuilder {
 			}
 		}
 		int halideCount = functionalGroupFragments.size();
+		if (charge>0){
+			elementaryAtom.setCharge(charge - halideCount);
+		}
 		Integer maximumVal = ValencyChecker.getMaximumValency(elementaryAtom.getElement(), elementaryAtom.getCharge());
 		if (maximumVal!=null && halideCount > maximumVal){
 			throw new StructureBuildingException("Too many halides/psuedo halides addded to " +elementaryAtom.getElement());
@@ -1468,10 +1491,12 @@ class StructureBuilder {
 		for (Element elementaryAtom : elementaryAtoms) {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
 				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
-				String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
-				int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
-				if (typicalCharge > cationicFrag.getFirstAtom().getAtomNeighbours().size()){
-					cationicElements.add(elementaryAtom);
+				if (cationicFrag.getFirstAtom().getCharge()==0){//if not 0 charge cannot be implicitly modified
+					String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
+					if (typicalCharge > cationicFrag.getFirstAtom().getAtomNeighbours().size()){
+						cationicElements.add(elementaryAtom);
+					}
 				}
 			}
 		}
@@ -1584,6 +1609,38 @@ class StructureBuilder {
 			}
 			componentToMultiply = positivelyChargedComponents.get(0);
 		}
+
+		int charge = componentToChargeMapping.get(componentToMultiply);
+		if (overallCharge % charge ==0){//e.g. magnesium chloride
+			if (!componentCanBeMultiplied(componentToMultiply)){
+				return false;
+			}
+			int timesToDuplicate = Math.abs(overallCharge/charge);
+			for (int i = 0; i < timesToDuplicate; i++) {
+				XOMTools.insertAfter(componentToMultiply, state.fragManager.cloneElement(state, componentToMultiply));
+			}
+		}
+		else{//e.g. iron(3+) sulfate -->2:3 mixture
+			if (positivelyChargedComponents.size() >1 || !componentCanBeMultiplied(positivelyChargedComponents.get(0))){
+				return false;
+			}
+			if (negativelyChargedComponents.size() >1 || !componentCanBeMultiplied(negativelyChargedComponents.get(0))){
+				return false;
+			}
+			int positiveCharge = componentToChargeMapping.get(positivelyChargedComponents.get(0));
+			int negativeCharge = Math.abs(componentToChargeMapping.get(negativelyChargedComponents.get(0)));
+			int targetTotalAbsoluteCharge = positiveCharge * negativeCharge;
+			for (int i = (targetTotalAbsoluteCharge/negativeCharge); i >1; i--) {
+				XOMTools.insertAfter(negativelyChargedComponents.get(0), state.fragManager.cloneElement(state, negativelyChargedComponents.get(0)));
+			}
+			for (int i = (targetTotalAbsoluteCharge/positiveCharge); i >1; i--) {
+				XOMTools.insertAfter(positivelyChargedComponents.get(0), state.fragManager.cloneElement(state, positivelyChargedComponents.get(0)));
+			}
+		}
+		return true;
+	}
+
+	private boolean componentCanBeMultiplied(Element componentToMultiply) {
 		if (componentToMultiply.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString()) && XOMTools.getChildElementsWithTagNameAndAttribute(componentToMultiply, WORD_EL, TYPE_ATR, WordType.full.toString()).size()>1){
 			return false;//already has been multiplied e.g. dichloride
 		}
@@ -1592,16 +1649,6 @@ class StructureBuilder {
 			firstChild = (Element) firstChild.getChild(0);
 		}
 		if (firstChild.getLocalName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
-			return false;
-		}
-		int charge = componentToChargeMapping.get(componentToMultiply);
-		if (overallCharge % charge ==0){
-			int timesToDuplicate = Math.abs(overallCharge/charge);
-			for (int i = 0; i < timesToDuplicate; i++) {
-				XOMTools.insertAfter(componentToMultiply, state.fragManager.cloneElement(state, componentToMultiply));
-			}
-		}
-		else{
 			return false;
 		}
 		return true;
