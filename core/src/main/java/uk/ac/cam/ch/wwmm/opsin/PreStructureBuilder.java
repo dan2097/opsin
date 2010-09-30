@@ -214,10 +214,13 @@ class PreStructureBuilder {
 			}
 
 			moveErroneouslyPositionedLocantsAndMultipliers(brackets);//e.g. (tetramethyl)azanium == tetra(methyl)azanium
-			if (word.getChildCount()>1){
-				assignLocantsToMultipliedRootIfPresent(state, (Element) word.getChild(word.getChildCount()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
+			List<Element> children = XOMTools.getChildElementsWithTagNames(word, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
+			while (children.size()==1){
+				children = XOMTools.getChildElementsWithTagNames(children.get(0), new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 			}
-
+			if (children.size()>0){
+				assignLocantsToMultipliedRootIfPresent(state, children.get(children.size()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
+			}
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
 				assignLocantsAndMultipliers(state, subBracketOrRoot);
 			}
@@ -3294,10 +3297,9 @@ class PreStructureBuilder {
 					throw new PostProcessingException("Mismatch between number of locants and number of roots");
 				}
 			}
-			Element word =(Element) rightMostElement.getParent();
-			if(!word.getLocalName().equals(WORD_EL)){
-				throw new StructureBuildingException("OPSIN bug: Expected input to function was the child of a word");
-			}
+		}
+		else if (rightMostElement.getLocalName().equals(BRACKET_EL)){
+			assignLocantsToMultipliedRootIfPresent(state, ((Element) rightMostElement.getChild(rightMostElement.getChildCount()-1)));
 		}
 	}
 
