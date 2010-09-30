@@ -42,6 +42,9 @@ class XmlDeclarations {
 	/**An annulene. Converted to a group by the PostProcessor*/
 	static final String ANNULEN_EL ="annulen";
 
+	/**A charge specifier e.g. (2+). Value is the charge to set something to*/
+	static final String CHARGESPECIFIER_EL ="chargeSpecifier";
+	
 	/**Created by the PreStructureBuilder. Something like the acetic acid in benzene-1,3,5-triacetic acid*/
 	static final String CONJUNCTIVESUFFIXGROUP_EL ="conjunctiveSuffixGroup";
 	
