@@ -2701,7 +2701,8 @@ class PreStructureBuilder {
 				Element possibleMultiplier =childrenOfElementBeforeSubstituent.get(0);
 				if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL) && (
 						matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches() || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
-					if (childrenOfElementBeforeSubstituent.get(1).getLocalName().equals(GROUP_EL)){
+					Element desiredGroup = XOMTools.getNextSiblingIgnoringCertainElements(possibleMultiplier, new String[]{MULTIPLIER_EL});
+					if (desiredGroup !=null && desiredGroup.getLocalName().equals(GROUP_EL)){
 						childrenOfElementBeforeSubstituent.get(0).detach();
 						bracket.appendChild(childrenOfElementBeforeSubstituent.get(0));
 					}
@@ -3317,17 +3318,20 @@ class PreStructureBuilder {
 	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws PostProcessingException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracket, LOCANT_EL);
 		int multiplier =1;
-		Element possibleMultiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
+		List<Element> multipliers =  XOMTools.getChildElementsWithTagName(subOrBracket, MULTIPLIER_EL);
 		Element parentElem =(Element)subOrBracket.getParent();
 		boolean oneBelowWordLevel = parentElem.getLocalName().equals(WORD_EL);
-		if (possibleMultiplier!=null){
-				if (oneBelowWordLevel &&
+		if (multipliers.size()>0){
+			if (multipliers.size()>1){
+				throw new PostProcessingException(subOrBracket.getLocalName() +" has multiple multipliers, unable to determine meaning!");
+			}
+			if (oneBelowWordLevel &&
 					XOMTools.getNextSibling(subOrBracket) == null &&
 					XOMTools.getPreviousSibling(subOrBracket) == null) {
 				return;//word level multiplier
 			}
-			multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
-			subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, possibleMultiplier.getAttributeValue(VALUE_ATR)));
+			multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
+			subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
 			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
 		}
 		if(locants.size() > 0) {
