@@ -51,6 +51,8 @@ class Atom {
     static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
 	/** The hydrogen count as set in the SMILES*/
     static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
+	/** The oxidation number as specified by Roman numerals in the name*/
+    static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;

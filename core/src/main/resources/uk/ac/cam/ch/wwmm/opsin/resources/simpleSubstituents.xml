@@ -85,7 +85,8 @@
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES" defaultInLocant="5">hydantoyl</token>
 		<token value="-NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
 		<token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token><!--Also used in functional replacement-->
-		<token value="-[H]" labels="none" valType="SMILES">hydrogen</token>
+		<token value="-[H]" labels="none" valType="SMILES">hydrido</token><!--for inorganic contexts-->
+		<token value="-[H]" labels="none" valType="SMILES">hydrogen</token><!--only used in functional class nomenclature-->
 		<token value="-[SeH]" labels="none" valType="SMILES">hydroseleno</token>
 		<token value="-OCC(C)C" labels="none" valType="SMILES">isobutoxyl</token>
 		<token value="-C=C(C)C" labels="none" valType="SMILES">isocrotyl</token>

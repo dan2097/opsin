@@ -386,6 +386,9 @@ class FragmentManager {
 			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null){
 				oldToNewAtomMap.get(atom).setProperty(Atom.SMILES_HYDROGEN_COUNT, atom.getProperty(Atom.SMILES_HYDROGEN_COUNT));
 			}
+			if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.OXIDATION_NUMBER, atom.getProperty(Atom.OXIDATION_NUMBER));
+			}
 		}
         for (OutAtom outAtom : outAtoms) {
             newFragment.addOutAtom(oldToNewAtomMap.get(outAtom.getAtom()), outAtom.getValency(), outAtom.isSetExplicitly());

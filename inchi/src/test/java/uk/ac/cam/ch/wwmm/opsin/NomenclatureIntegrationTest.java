@@ -47,6 +47,14 @@ public class NomenclatureIntegrationTest {
 		String file = "multiplicativeNomenclature.txt";
 		checkNamesAgainstInChIs(file, n2sConfig);
 	}
+	
+	@Test
+	public void testOrganoMetallics() throws Exception {
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "organometallics.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
 
 	@Test
 	public void testMiscellany() throws Exception {

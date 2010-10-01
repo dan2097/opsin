@@ -21,7 +21,7 @@
   <tokenFile>carboxylicAcids.xml</tokenFile>
   <tokenFile>nonCarboxylicAcids.xml</tokenFile>
 
-  <tokenFile>chargeAndOxidationStateSpecifiers.xml</tokenFile>
+  <tokenFile>chargeAndOxidationNumberSpecifiers.xml</tokenFile>
   <tokenFile>functionalTerms.xml</tokenFile>
   <tokenFile>heteroAtoms.xml</tokenFile>
   <tokenFile>hwHeteroAtoms.xml</tokenFile>

@@ -123,8 +123,10 @@ class StructureBuilder {
 				throw new StructureBuildingException("Unknown Word Rule");
 			}
 		}
-
-		processOxidoSpecialCase(state, molecule);
+		
+		List<Element> groupElements = XOMTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
+		processOxidoSpecialCase(state, groupElements);
+		processOxidationNumbers(state, groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
 		int overallCharge = state.fragManager.getOverallCharge();
@@ -448,6 +450,12 @@ class StructureBuilder {
 				int charge = elementaryAtom.getCharge();
 				if (charge >0 && charge %2 ==0){
 					numberOfOxygenToAdd = charge/2;
+				}
+				else if (elementaryAtom.getProperty(Atom.OXIDATION_NUMBER)!=null){
+					int valency = elementaryAtom.getProperty(Atom.OXIDATION_NUMBER) - elementaryAtom.getIncomingValency();
+					if (valency >0 && valency %2 ==0){
+						numberOfOxygenToAdd = valency/2;
+					}
 				}
 			}
 		}
@@ -997,12 +1005,17 @@ class StructureBuilder {
 					expectedValency = incomingBondOrder + charge;
 				}
 				else{
-					if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
-						String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
-						expectedValency = Integer.parseInt(typicalOxidationStates[0]);
+					if (elementaryAtom.getProperty(Atom.OXIDATION_NUMBER)!=null){
+						expectedValency = elementaryAtom.getProperty(Atom.OXIDATION_NUMBER);
 					}
 					else{
-						expectedValency = ValencyChecker.getPossibleValencies(elementaryAtom.getElement(), charge)[0];
+						if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
+							String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+							expectedValency = Integer.parseInt(typicalOxidationStates[0]);
+						}
+						else{
+							expectedValency = ValencyChecker.getPossibleValencies(elementaryAtom.getElement(), charge)[0];
+						}
 					}
 				}
 				int implicitMultiplier = expectedValency -incomingBondOrder >1 ? expectedValency -incomingBondOrder : 1;
@@ -1694,34 +1707,35 @@ class StructureBuilder {
 	 * @param molecule
 	 * @throws StructureBuildingException 
 	 */
-	private void processOxidoSpecialCase(BuildState state, Element molecule) throws StructureBuildingException {
-		List<Element> oxidoElements = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, OXIDOLIKE_SUBTYPE_VAL);
-		for (Element oxidoElement : oxidoElements) {
-			Atom oxidoAtom = state.xmlFragmentMap.get(oxidoElement).getFirstAtom();
-			Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
-			String element = connectedAtom.getElement();
-			if (checkForConnectedOxo(state, connectedAtom)){//e.g. not oxido(trioxo)ruthenium
-				continue;
-			}
-			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
-					((element.equals("S") || element.equals("P")) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
-				oxidoAtom.setCharge(0);
-				oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
-				oxidoAtom.getFirstBond().setOrder(2);
-			}
-			else if (element.equals("N") && connectedAtom.getCharge()==0){
-				int incomingValency = connectedAtom.getIncomingValency();
-				if ((incomingValency + connectedAtom.getOutValency()) ==3 && connectedAtom.hasSpareValency()){
-					connectedAtom.addChargeAndProtons(1, 1);//e.g. N-oxidopyridine
+	private void processOxidoSpecialCase(BuildState state, List<Element> groups) throws StructureBuildingException {
+		for (Element group : groups) {
+			if (OXIDOLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+				Atom oxidoAtom = state.xmlFragmentMap.get(group).getFirstAtom();
+				Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
+				String element = connectedAtom.getElement();
+				if (checkForConnectedOxo(state, connectedAtom)){//e.g. not oxido(trioxo)ruthenium
+					continue;
 				}
-				else if ((incomingValency + connectedAtom.getOutValency()) ==4){
-					if (connectedAtom.getLambdaConventionValency()!=null && connectedAtom.getLambdaConventionValency()==5){
-						oxidoAtom.setCharge(0);
-						oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
-						oxidoAtom.getFirstBond().setOrder(2);
+				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
+						((element.equals("S") || element.equals("P")) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
+					oxidoAtom.setCharge(0);
+					oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
+					oxidoAtom.getFirstBond().setOrder(2);
+				}
+				else if (element.equals("N") && connectedAtom.getCharge()==0){
+					int incomingValency = connectedAtom.getIncomingValency();
+					if ((incomingValency + connectedAtom.getOutValency()) ==3 && connectedAtom.hasSpareValency()){
+						connectedAtom.addChargeAndProtons(1, 1);//e.g. N-oxidopyridine
 					}
-					else{
-						connectedAtom.addChargeAndProtons(1, 1);
+					else if ((incomingValency + connectedAtom.getOutValency()) ==4){
+						if (connectedAtom.getLambdaConventionValency()!=null && connectedAtom.getLambdaConventionValency()==5){
+							oxidoAtom.setCharge(0);
+							oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
+							oxidoAtom.getFirstBond().setOrder(2);
+						}
+						else{
+							connectedAtom.addChargeAndProtons(1, 1);
+						}
 					}
 				}
 			}
@@ -1749,5 +1763,17 @@ class StructureBuilder {
 			}
 		}
 		return false;
+	}
+	
+
+	private void processOxidationNumbers(BuildState state, List<Element> groups) throws StructureBuildingException {
+		for (Element group : groups) {
+			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+				Atom atom = state.xmlFragmentMap.get(group).getFirstAtom();
+				if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
+					atom.setCharge(atom.getProperty(Atom.OXIDATION_NUMBER)-atom.getIncomingValency());
+				}
+			}
+		}
 	}
 }
