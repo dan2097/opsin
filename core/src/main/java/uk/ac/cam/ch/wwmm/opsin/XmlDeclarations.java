@@ -115,6 +115,9 @@ class XmlDeclarations {
 	
 	/**A multiplier e.g. indicating multiplication of a heteroatom or substituent*/
 	static final String MULTIPLIER_EL ="multiplier";
+	
+	/**e.g. (III), Specifies the oxidation number of an atom. Value is the oxidation number to set something to*/
+	static final String OXIDATIONNUMBERSPECIFIER_EL ="oxidationNumberSpecifier";
 
 	/**Used to indicate how the rings of a ring assembly should be assembled*/
 	static final String RINGASSEMBLYLOCANT_EL ="ringAssemblyLocant";

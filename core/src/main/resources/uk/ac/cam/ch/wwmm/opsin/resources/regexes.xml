@@ -112,7 +112,7 @@ does not define a CFG.
   <regex name="%fusionRingAcceptsFrontLocants%" value="¡"/>
   <regex name="%trivialRingSubstituentAnySuffix%" value="«"/>
   <regex name="%elementaryAtom%" value="»"/>
-  <regex name="%chargeSpecifier%" value="░"/>
+  <regex name="%chargeOrOxidationNumberSpecifier%" value="░"/>
   <!--up to ascii 176 used-->
 
 <!-- composite regexes-->
@@ -225,7 +225,7 @@ does not define a CFG.
 
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
-  <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%|%elementaryAtom%%chargeSpecifier%?))"/>
+  <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%|%elementaryAtom%%chargeOrOxidationNumberSpecifier%?))"/>
   <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
 
 <!-- functional Groups-->

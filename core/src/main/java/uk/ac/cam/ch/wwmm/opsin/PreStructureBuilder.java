@@ -144,7 +144,7 @@ class PreStructureBuilder {
 
 			for (Element group : groups) {
 				Fragment thisFrag = resolveGroup(state, group);
-				processChargeSpecification(group, thisFrag);//e.g. mercury(2+)
+				processChargeAndOxidationNumberSpecification(group, thisFrag);//e.g. mercury(2+) or mercury(II)
 				state.xmlFragmentMap.put(group, thisFrag);
 			}
 			
@@ -553,11 +553,17 @@ class PreStructureBuilder {
 		}
 	}
 
-	private void processChargeSpecification(Element group, Fragment frag) throws StructureBuildingException {
+	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag) throws StructureBuildingException {
 		Element nextEl = (Element) XOMTools.getNextSibling(group);
-		if (nextEl!=null && nextEl.getLocalName().equals(CHARGESPECIFIER_EL)){
-			frag.getFirstAtom().setCharge(Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR)));
-			nextEl.detach();
+		if (nextEl!=null){
+			if(nextEl.getLocalName().equals(CHARGESPECIFIER_EL)){
+				frag.getFirstAtom().setCharge(Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR)));
+				nextEl.detach();
+			}
+			if(nextEl.getLocalName().equals(OXIDATIONNUMBERSPECIFIER_EL)){
+				frag.getFirstAtom().setProperty(Atom.OXIDATION_NUMBER, Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR)));
+				nextEl.detach();
+			}
 		}
 	}
 

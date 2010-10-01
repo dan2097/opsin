@@ -20,4 +20,15 @@
     <token value="-8">(-8)</token>
     <token value="-9">(-9)</token>
   </tokenList>
+  <tokenList tagname="oxidationNumberSpecifier" symbol="░">
+    <token value="1">(i)</token>
+    <token value="2">(ii)</token>
+    <token value="3">(iii)</token>
+    <token value="4">(iv)</token>
+    <token value="5">(v)</token>
+    <token value="6">(vi)</token>
+    <token value="7">(vii)</token>
+    <token value="8">(viii)</token>
+    <token value="9">(ix)</token>
+  </tokenList>
 </tokenLists>
