@@ -221,7 +221,7 @@ does not define a CFG.
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|((%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%)|%fusedRingSystem%|%polycyclicSpiroGroup%)(%inlineEndings%|%conjunctiveSideChainInline%)|%fusedRingSystemFromTrivialRingSubstituent%)"/>
   <regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
   <regex name="%subsituentBody%" value= "(%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%)"/>
-  <regex name="%substituent%" value= "(%locantOpenBracket%*%newLocantGroupNoStartingHyphen%?%stereochemistry%*(%relativeCisTrans%|%newLocantGroupNoStartingHyphen%)?%multiplier%?(%subsituentBody%%closeBracket%*%interSubstituentHyphen%?|%hydroGroup%)%endOfSubstituent%)"/>
+  <regex name="%substituent%" value= "(%locantOpenBracket%*%newLocantGroupNoStartingHyphen%?%stereochemistry%*(%relativeCisTrans%|%newLocantGroupNoStartingHyphen%)?(%multiplier%|%groupMultiplier%%simpleMultiplier%)?(%subsituentBody%%closeBracket%*%interSubstituentHyphen%?|%hydroGroup%)%endOfSubstituent%)"/>
 
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
