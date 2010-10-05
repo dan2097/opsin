@@ -3,7 +3,7 @@
 <!-- A list of tokens -->
 <!ELEMENT tokenLists (tokenList)+>
 <!ELEMENT tokenList (token)+>
-<!ATTLIST tokenList tagname (alkaneStemModifier|chargeSpecifier|cyclo|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|multiplier|oxidationNumberSpecifier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|suffix|suffixPrefix|unsaturator) #REQUIRED
+<!ATTLIST tokenList tagname (alkaneStemComponent|alkaneStemModifier|chargeSpecifier|cyclo|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|multiplier|oxidationNumberSpecifier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|suffix|suffixPrefix|unsaturator) #REQUIRED
                     type (acidStem|aminoAcid|basic|chain|charge|cisOrTrans|chalcogenAcidStem|diValentGroup|functionalClass|group|inline|monoValentGroup|monoValentStandaloneGroup|nonCarboxylicAcid|ring|simpleGroup|substituent|root|VonBaeyer) #IMPLIED
                     subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|oxidoLike|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
                     symbol CDATA #REQUIRED>
@@ -14,7 +14,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
-        valType (SMILES|dbkey|chain) #IMPLIED
+        valType (SMILES|dbkey) #IMPLIED
         labels CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
         defaultInLocant CDATA #IMPLIED
@@ -38,7 +38,6 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
   value == depends on valType, or see the file itself
    valType = SMILES => see the SMILESFragmentBuilder class
    valType = dbkey => a key to fragments.xml
-   valType = chain => aliphatic chain of $VALUE carbons
 
   labels == What the locants are for this group. See the SMILESFragmentBuilder class
   fusedRingNumbering ==same as above but for some rings with non standard numbering. This numbering is used to decide which sides correspond to the letters employed in fusing rings. It is neccesary where non standard numbering does not precess regularly around the edge of the fused ring system c.f. purine
