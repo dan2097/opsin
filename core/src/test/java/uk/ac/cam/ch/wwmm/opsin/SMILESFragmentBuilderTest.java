@@ -211,6 +211,32 @@ public class SMILESFragmentBuilderTest {
 		Assert.fail("Should throw exception for bad smiles");
 	}
 
+    @Test(expected=StructureBuildingException.class)
+    public void badlyFormedSMILE4() throws StructureBuildingException {
+        fm.buildSMILES("C=#C");
+        Assert.fail("Should throw exception for bad smiles: is it a double or triple bond?");
+    }
+    
+    @Test(expected=StructureBuildingException.class)
+    public void badlyFormedSMILE5() throws StructureBuildingException {
+        fm.buildSMILES("C#=C");
+        Assert.fail("Should throw exception for bad smiles: is it a double or triple bond?");
+    }
+    
+    @Test(expected=StructureBuildingException.class)
+    public void badlyFormedSMILE6() throws StructureBuildingException {
+        fm.buildSMILES("F//C=C/F");
+        Assert.fail("Should throw exception for bad smiles: bond configuration specified twice");
+    }
+
+	
+    @Test(expected=StructureBuildingException.class)
+    public void badlyFormedSMILE7() throws StructureBuildingException {
+        fm.buildSMILES("F/C=C/\\F");
+        Assert.fail("Should throw exception for bad smiles: bond configuration specified twice");
+    }
+
+
 	@Test
 	public void ringClosureHandling1() throws StructureBuildingException {
 		Fragment fragment = fm.buildSMILES("C=1CN1");
@@ -611,7 +637,7 @@ public class SMILESFragmentBuilderTest {
     }
 
     @Test
-    public void testDoubleBondMulitStereo1() throws StructureBuildingException {
+    public void testDoubleBondMultiStereo1() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C/C=C/C");
         Bond b =fragment.findBond(2, 3);
         assertEquals("T", b.getBondStereoElement().getValue());
@@ -620,7 +646,7 @@ public class SMILESFragmentBuilderTest {
     }
 
     @Test
-    public void testDoubleBondMulitStereo2() throws StructureBuildingException {
+    public void testDoubleBondMultiStereo2() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C\\C=C/C");
         Bond b =fragment.findBond(2, 3);
         assertEquals("C", b.getBondStereoElement().getValue());
@@ -629,7 +655,7 @@ public class SMILESFragmentBuilderTest {
     }
 
     @Test
-    public void testDoubleBondMulitStereo3() throws StructureBuildingException {
+    public void testDoubleBondMultiStereo3() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C\\C=C\\C");
         Bond b =fragment.findBond(2, 3);
         assertEquals("C", b.getBondStereoElement().getValue());
@@ -638,11 +664,90 @@ public class SMILESFragmentBuilderTest {
     }
 
     @Test
-    public void testDoubleBondMulitStereo4() throws StructureBuildingException {
+    public void testDoubleBondMultiStereo4() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C\\C=CC");
         Bond b =fragment.findBond(2, 3);
         assertEquals("C", b.getBondStereoElement().getValue());
         b =fragment.findBond(4, 5);
         assertEquals(null, b.getBondStereoElement());
+    }
+    
+    //From http://baoilleach.blogspot.com/2010/09/are-you-on-my-side-or-not-its-ez-part.html
+    @Test
+    public void testDoubleBondNoela() throws StructureBuildingException {
+        Fragment fragment = fm.buildSMILES("C/C=C\\1/NC1");
+        Bond b =fragment.findBond(2, 3);
+        if ("T".equals( b.getBondStereoElement().getValue())){
+            assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        }
+        else{
+        	assertEquals("a1 a2 a3 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        }
+    }
+    
+    @Test
+    public void testDoubleBondNoelb() throws StructureBuildingException {
+        Fragment fragment = fm.buildSMILES("C/C=C1/NC1");
+        Bond b =fragment.findBond(2, 3);
+        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+    }
+    
+    @Test
+    public void testDoubleBondNoelc() throws StructureBuildingException {
+        Fragment fragment = fm.buildSMILES("C/C=C\\1/NC/1");
+        Bond b =fragment.findBond(2, 3);
+        if ("T".equals( b.getBondStereoElement().getValue())){
+            assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        }
+        else{
+        	assertEquals("a1 a2 a3 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        }
+    }
+    
+    @Test
+    public void testDoubleBondNoeld() throws StructureBuildingException {
+        Fragment fragment = fm.buildSMILES("C/C=C1/NC/1");
+        Bond b =fragment.findBond(2, 3);
+        if ("T".equals( b.getBondStereoElement().getValue())){
+            assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        }
+        else{
+        	assertEquals("a1 a2 a3 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        }
+    }
+    
+    @Test(expected=StructureBuildingException.class)
+    public void testDoubleBondNoele() throws StructureBuildingException {
+        fm.buildSMILES("C/C=C\\1\\NC1");
+        Assert.fail("Should throw exception for bad smiles: contradictory double bond configuration");
+    }
+
+    @Test(expected=StructureBuildingException.class)
+    public void testDoubleBondNoelf() throws StructureBuildingException {
+        fm.buildSMILES("C/C=C\1NC\1");
+        Assert.fail("Should throw exception for bad smiles: contradictory double bond configuration");
+    }
+    
+    @Test(expected=StructureBuildingException.class)
+    public void testDoubleBondNoelg() throws StructureBuildingException {
+        fm.buildSMILES("C/C=C\1/NC\1");
+        Assert.fail("Should throw exception for bad smiles: contradictory double bond configuration");
+    }
+    
+    @Test
+    public void testDoubleBondNoelLike1() throws StructureBuildingException {
+        Fragment fragment = fm.buildSMILES("C\\1NC1=C/C");
+        Bond b =fragment.findBond(3, 4);
+        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals("a1 a3 a4 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+    }
+    
+    @Test
+    public void testDoubleBondNoelLike2() throws StructureBuildingException {
+        Fragment fragment = fm.buildSMILES("C1NC/1=C/C");
+        Bond b =fragment.findBond(3, 4);
+        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals("a1 a3 a4 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
     }
 }

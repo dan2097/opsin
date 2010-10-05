@@ -171,12 +171,24 @@ class SMILESFragmentBuilder {
 			} else if(nextChar == '-'){
 				stack.peek().bondOrder = 1;
 			} else if(nextChar == '='){
+				if (stack.peek().bondOrder!=1){
+					throw new StructureBuildingException("= in unexpected position: bond order already defined!");
+				}
 				stack.peek().bondOrder = 2;
 			} else if(nextChar == '#'){
+				if (stack.peek().bondOrder!=1){
+					throw new StructureBuildingException("# in unexpected position: bond order already defined!");
+				}
 				stack.peek().bondOrder = 3;
 			} else if(nextChar == '/'){
+				if (stack.peek().slash!=null){
+					throw new StructureBuildingException("/ in unexpected position: bond configuration already defined!");
+				}
 				stack.peek().slash = SMILES_BOND_DIRECTION.RSLASH;
 			} else if(nextChar == '\\'){
+				if (stack.peek().slash!=null){
+					throw new StructureBuildingException("\\ in unexpected position: bond configuration already defined!");
+				}
 				stack.peek().slash = SMILES_BOND_DIRECTION.LSLASH;
 			} else if(nextChar == '.'){
 				stack.peek().atom = null;
@@ -569,9 +581,13 @@ class SMILESFragmentBuilder {
 		}
 		if(sf.slash !=null) {
 			if(stack.peek().slash !=null) {
-				throw new StructureBuildingException("ring closure should not have cis/trans specified twice!");
+				if (sf.slash.equals(stack.peek().slash)){
+					throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
+				}
 			}
-			b.setSmilesStereochemistry(sf.slash);
+			else{
+				b.setSmilesStereochemistry(sf.slash);
+			}
 		} else if(stack.peek().slash !=null) {
 			b.setSmilesStereochemistry(stack.peek().slash);
 			stack.peek().slash = null;
@@ -600,15 +616,17 @@ class SMILESFragmentBuilder {
 
 	private void addBondStereoElements(Fragment currentFrag) throws StructureBuildingException {
 		Set<Bond> bonds = currentFrag.getBondSet();
-		mainLoop: for (Bond centralBond : bonds) {//identify cases of E/Z stereochemistry and add appropriate bondstereo tags
+		for (Bond centralBond : bonds) {//identify cases of E/Z stereochemistry and add appropriate bondstereo tags
 			if (centralBond.getOrder()==2){
+
 				Set<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
 				for (Bond preceedingBond : fromAtomBonds) {
 					if (preceedingBond.getSmilesStereochemistry()!=null){
 						Set<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
 							if (followingBond.getSmilesStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
-								Element bondStereoEl = new Element(BONDSTEREO_EL);
+								Boolean upFirst;
+								Boolean upSecond;
 								Atom atom2 = centralBond.getFromAtom();
 								Atom atom1;
 								if (atom2 == preceedingBond.getToAtom()){
@@ -625,8 +643,6 @@ class SMILESFragmentBuilder {
 								else{
 									atom4 = followingBond.getFromAtom();
 								}
-								bondStereoEl.addAttribute(new Attribute(ATOMREFS4_ATR, "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
-								Boolean upFirst;
 								if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
 									upFirst = preceedingBond.getToAtom() == atom2;//in normally constructed SMILES this will be the case but you could write C(/F)=C/F instead of F\C=C/F
 								}
@@ -636,8 +652,7 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(preceedingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
-	
-								Boolean upSecond = null;
+
 								if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
 									upSecond = followingBond.getFromAtom() != atom3;
 								}
@@ -647,15 +662,27 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(followingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
-	
-								if (upFirst == upSecond){
-									bondStereoEl.appendChild("C");
+								String cisTrans = upFirst == upSecond ? "C" : "T";
+								if (centralBond.getBondStereoElement()!=null){
+									//double bond has redundant specification e.g. C/C=C\\1/NC1 hence need to check it is consistent
+									String[] atomRefs4 = centralBond.getBondStereoElement().getAttributeValue(ATOMREFS4_ATR).split(" ");
+									if (atomRefs4[0].equals("a" + atom1.getID()) || atomRefs4[3].equals("a" + atom4.getID())){
+										if (centralBond.getBondStereoElement().getValue().equals(cisTrans)){
+											throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
+										}
+									}
+									else{
+										if (!centralBond.getBondStereoElement().getValue().equals(cisTrans)){
+											throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
+										}
+									}
 								}
 								else{
-									bondStereoEl.appendChild("T");
+									Element bondStereoEl = new Element(BONDSTEREO_EL);
+									bondStereoEl.addAttribute(new Attribute(ATOMREFS4_ATR, "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
+									bondStereoEl.appendChild(cisTrans);
+									centralBond.setBondStereoElement(bondStereoEl);
 								}
-								centralBond.setBondStereoElement(bondStereoEl);
-								continue mainLoop;
 							}
 						}
 					}
