@@ -110,6 +110,7 @@ class PostProcessor {
 		for (Element subOrRoot: substituentsAndRoot) {
 			processLocants(subOrRoot);
 			convertOrthoMetaParaToLocants(subOrRoot);
+			formAlkaneStemsFromComponents(subOrRoot);
 			processAlkaneStemModifications(subOrRoot);//e.g. tert-butyl
 			processHeterogenousHydrides(subOrRoot);//e.g. tetraphosphane, disiloxane
 			processIndicatedHydrogens(subOrRoot);
@@ -318,7 +319,47 @@ class PostProcessor {
 			}
 		}
 	}
-
+	
+	/**
+	 * Processes adjacent alkane stem component elements into a single alkaneStem group element with the appropriate SMILES
+	 * e.g. dodecane would be "do" value=2 and "dec" value=10 -->alkaneStem with 12 carbons
+	 * 
+	 * @param subOrRoot
+	 * @throws PostProcessingException 
+	 */
+	private void formAlkaneStemsFromComponents(Element subOrRoot) throws PostProcessingException {
+		LinkedList<Element> alkaneStemComponents =new LinkedList<Element>(XOMTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
+		while(!alkaneStemComponents.isEmpty()){
+			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
+			int alkaneChainLength =0;
+			StringBuilder alkaneName = new StringBuilder();
+			alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
+			alkaneName.append(alkaneStemComponent.getValue());
+			while (!alkaneStemComponents.isEmpty() && XOMTools.getNextSibling(alkaneStemComponent)==alkaneStemComponents.get(0)) {
+				alkaneStemComponent.detach();
+				alkaneStemComponent = alkaneStemComponents.removeFirst();
+				alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
+				alkaneName.append(alkaneStemComponent.getValue());
+			}
+			Element alkaneStem = new Element(GROUP_EL);
+			alkaneStem.appendChild(alkaneName.toString());
+			alkaneStem.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
+			alkaneStem.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
+			alkaneStem.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+			alkaneStem.addAttribute(new Attribute(VALUE_ATR, StringTools.multiplyString("C", alkaneChainLength)));
+			alkaneStem.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
+			StringBuilder labels = new StringBuilder();
+			for (int i=1; i<alkaneChainLength; i++) {
+				labels.append(i);
+				labels.append("/");
+			}
+			labels.append(alkaneChainLength);
+			alkaneStem.addAttribute(new Attribute(LABELS_ATR, labels.toString()));
+			XOMTools.insertAfter(alkaneStemComponent, alkaneStem);
+			alkaneStemComponent.detach();
+		}
+	}
+	
 	/**
 	 * Applies the traditional alkane modifiers: iso, tert, sec, neo by modifying the alkane chain's SMILES
 	 * 
@@ -330,8 +371,8 @@ class PostProcessor {
 		for(int i=0;i<alkaneStemModifiers.size();i++) {
 			Element alkaneStemModifier =alkaneStemModifiers.get(i);
 			Element alkane = (Element) XOMTools.getNextSibling(alkaneStemModifier);
-			if (alkane ==null || alkane.getAttribute(VALTYPE_ATR)==null || !alkane.getAttributeValue(VALTYPE_ATR).equals(CHAIN_VALTYPE_VAL)
-					|| alkane.getAttribute(SUBTYPE_ATR)==null || !alkane.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL)){
+			if (alkane ==null || !CHAIN_TYPE_VAL.equals(alkane.getAttributeValue(TYPE_ATR))
+					|| !ALKANESTEM_SUBTYPE_VAL.equals(alkane.getAttributeValue(SUBTYPE_ATR))){
 				throw new PostProcessingException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
 			}
 			String type;
@@ -356,7 +397,7 @@ class PostProcessor {
 			if (type.equals("normal")){
 				continue;//do nothing
 			}
-			int chainLength = Integer.parseInt(alkane.getAttributeValue(VALUE_ATR));
+			int chainLength = alkane.getAttributeValue(VALUE_ATR).length();
 			boolean suffixPresent = subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
 			String smiles;
 			if (type.equals("tert")){
@@ -395,10 +436,9 @@ class PostProcessor {
 			else{
 				throw new PostProcessingException("Unrecognised alkaneStem modifier");
 			}
-			alkane.getAttribute(VALTYPE_ATR).setValue(SMILES_VALTYPE_VAL);
 			alkane.getAttribute(VALUE_ATR).setValue(smiles);
 			alkane.removeAttribute(alkane.getAttribute(USABLEASJOINER_ATR));
-			alkane.addAttribute(new Attribute(LABELS_ATR, NONE_LABELS_VAL));
+			alkane.getAttribute(LABELS_ATR).setValue(NONE_LABELS_VAL);
 		}
 	}
 
@@ -475,7 +515,7 @@ class PostProcessor {
 							Element addedGroup=new Element(GROUP_EL);
 							addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
 							addedGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
-							addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_VALTYPE_VAL));
+							addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 							addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
 							if (!heteroatomChainWillFormARing){
 								addedGroup.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
@@ -1091,7 +1131,7 @@ class PostProcessor {
 			numberOfCarbonInDescriptors += spiroDescriptor[0];
 		}
 		numberOfCarbonInDescriptors += numberOfSpiros;
-		if (numberOfCarbonInDescriptors != Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR))){
+		if (numberOfCarbonInDescriptors != chainGroup.getAttributeValue(VALUE_ATR).length()){
 			throw new PostProcessingException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR)));
 		}
 
@@ -1142,8 +1182,7 @@ class PostProcessor {
 				numOfOpenedBrackets++;
 			}
 		}
-		chainGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
-		chainGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+		chainGroup.getAttribute(VALUE_ATR).setValue(smiles);
 		chainGroup.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
 		if (chainGroup.getAttribute(USABLEASJOINER_ATR) !=null){
 			chainGroup.removeAttribute(chainGroup.getAttribute(USABLEASJOINER_ATR));
@@ -1245,13 +1284,7 @@ class PostProcessor {
 
 		int alkylChainLength;
 		LinkedList<String> elementSymbolArray = new LinkedList<String>();
-		if (chainEl.getAttributeValue(VALTYPE_ATR).equals(CHAIN_VALTYPE_VAL)){
-			alkylChainLength=Integer.parseInt(chainEl.getAttributeValue(VALUE_ATR));
-			for (int i = 0; i < alkylChainLength; i++) {
-				elementSymbolArray.add("C");
-			}
-		}
-		else if (chainEl.getAttributeValue(VALTYPE_ATR).equals(SMILES_VALTYPE_VAL)){
+		if (chainEl.getAttributeValue(VALTYPE_ATR).equals(SMILES_VALTYPE_VAL)){
 			String smiles =chainEl.getAttributeValue(VALUE_ATR);
 			char[] smilesArray =smiles.toCharArray();
 			for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain
@@ -1459,8 +1492,7 @@ class PostProcessor {
 		}
 		while(dependantSecondaryBridges.size() > 0);
 
-		chainEl.addAttribute(new Attribute(VALUE_ATR, SMILES));
-		chainEl.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+		chainEl.getAttribute(VALUE_ATR).setValue(SMILES);
 		chainEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
 		if (chainEl.getAttribute(USABLEASJOINER_ATR) !=null){
 			chainEl.removeAttribute(chainEl.getAttribute(USABLEASJOINER_ATR));
@@ -1476,42 +1508,30 @@ class PostProcessor {
 	 * @throws PostProcessingException
 	 */
 	private void processCyclisedChain(Element chainGroup, Element cycloEl) throws PostProcessingException {
-		int chainlen;
-		if (!chainGroup.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)){
-			chainlen = Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR));
-			if (chainlen < 3){
-				throw new PostProcessingException("Alkane chain too small to create a cyclo alkane: " + chainlen);
+		String smiles=chainGroup.getAttributeValue(VALUE_ATR);
+		int chainlen =0;
+		for (int i = smiles.length() -1 ; i >=0; i--) {
+			if (Character.isUpperCase(smiles.charAt(i)) && smiles.charAt(i) !='H'){
+				chainlen++;
 			}
-			String smiles = "C1" + StringTools.multiplyString("C", chainlen - 1) + "1";
-			chainGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
-			chainGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+	    }
+		if (chainlen < 3){
+			throw new PostProcessingException("Heteroatom chain too small to create a ring: " + chainlen);
+		}
+		smiles+="1";
+		if (smiles.charAt(0)=='['){
+			int closeBracketIndex = smiles.indexOf(']');
+			smiles= smiles.substring(0, closeBracketIndex +1) +"1" + smiles.substring(closeBracketIndex +1);
 		}
 		else{
-			String smiles=chainGroup.getAttributeValue(VALUE_ATR);
-			chainlen =0;
-			for (int i = smiles.length() -1 ; i >=0; i--) {
-				if (Character.isUpperCase(smiles.charAt(i)) && smiles.charAt(i) !='H'){
-					chainlen++;
-				}
-		    }
-			if (chainlen < 3){
-				throw new PostProcessingException("Heteroatom chain too small to create a ring: " + chainlen);
-			}
-			smiles+="1";
-			if (smiles.charAt(0)=='['){
-				int closeBracketIndex = smiles.indexOf(']');
-				smiles= smiles.substring(0, closeBracketIndex +1) +"1" + smiles.substring(closeBracketIndex +1);
+			if (Character.getType(smiles.charAt(1)) == Character.LOWERCASE_LETTER){//element is 2 letters long
+				smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
 			}
 			else{
-				if (Character.getType(smiles.charAt(1)) == Character.LOWERCASE_LETTER){//element is 2 letters long
-					smiles= smiles.substring(0,2) +"1" + smiles.substring(2);
-				}
-				else{
-					smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
-				}
+				smiles= smiles.substring(0,1) +"1" + smiles.substring(1);
 			}
-			chainGroup.getAttribute(VALUE_ATR).setValue(smiles);
 		}
+		chainGroup.getAttribute(VALUE_ATR).setValue(smiles);
 		if (chainlen==6){//6 membered rings have ortho/meta/para positions
 			if (chainGroup.getAttribute(LABELS_ATR)!=null){
 				chainGroup.getAttribute(LABELS_ATR).setValue("1/2,ortho/3,meta/4,para/5/6");

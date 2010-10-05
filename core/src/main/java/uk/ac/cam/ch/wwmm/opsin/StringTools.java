@@ -64,7 +64,7 @@ public final class StringTools {
 	 */
 	public static String multiplyString(String s, int n) {
 		StringBuffer sb = new StringBuffer();
-		for(int i=0;i<n;i++) {
+		for(int i=n-1;i>=0;i--) {
 			sb.append(s);
 		}
 		return sb.toString();

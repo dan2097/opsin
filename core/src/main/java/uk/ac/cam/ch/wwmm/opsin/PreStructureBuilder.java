@@ -252,11 +252,6 @@ class PreStructureBuilder {
 		} else if(groupValType.equals(DBKEY_VALTYPE_VAL)) {
 			thisFrag = state.fragManager.buildCML(groupValue, groupType, groupSubType);
 		}
-		else if(groupValType.equals(CHAIN_VALTYPE_VAL)) {
-			int alkaneLength = new Integer(groupValue);
-			String smiles = StringTools.multiplyString("C", alkaneLength);
-			thisFrag = state.fragManager.buildSMILES(smiles, groupType, groupSubType, "");
-		}
 		else{
 			throw new StructureBuildingException("Group tag has bad or missing valType: " + group.toXML());
 		}

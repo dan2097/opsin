@@ -12,7 +12,7 @@ does not define a CFG.
  -->
 
 <!-- base level regexes, a mirror of the token files -->
-  <regex name="%alkaneStem%" value="a"/>
+  <regex name="%alkaneStemTrivial%" value="a"/>
   <regex name="%cyclicUnsaturableHydrocarbon%" value="A"/>
   <regex name="%alkaneStemModifier%" value="n"/>
   <regex name="%suffix%" value="s"/>
@@ -24,7 +24,7 @@ does not define a CFG.
   <regex name="%groupMultiplier%" value="R"/>
   <regex name="%groupStemAllowingInlineSuffixes%" value="g"/>
   <regex name="%simpleGroup%" value="G"/>
-  <regex name="%locantGroup%" value="l"/>
+  <regex name="%locant%" value="l"/>
   <regex name="%hyphen%" value="h"/>
   <regex name="%openBracket%" value="o"/>
   <regex name="%closeBracket%" value="c"/>
@@ -113,7 +113,11 @@ does not define a CFG.
   <regex name="%trivialRingSubstituentAnySuffix%" value="«"/>
   <regex name="%elementaryAtom%" value="»"/>
   <regex name="%chargeOrOxidationNumberSpecifier%" value="░"/>
-  <!--up to ascii 176 used-->
+  <regex name="%alkaneStemUnits%" value="▒"/>
+  <regex name="%alkaneStemTens%" value="▓"/>
+  <regex name="%alkaneStemHundreds%" value="│"/>
+  <regex name="%alkaneStemThousands%" value="┤"/>
+  <!--up to ascii 180 used-->
 
 <!-- composite regexes-->
 
@@ -121,23 +125,24 @@ does not define a CFG.
   <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
-  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locantGroup%?%cisOrTrans%)(%comma%%locantGroup%?%cisOrTrans%)*|%lightRotation%)%hyphen%?)"/>
-  <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locantGroup%?)"/>
-  <regex name="%optLocantGroup%" value="(%hyphen%?(%locantGroup%|%orthoMetaPara%)?)"/>
-  <regex name="%newLocantGroupNoStartingHyphen%" value="(%locantGroup%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
+  <regex name="%stereochemistry%" value="((%stereochemistryBracket%|(%locant%?%cisOrTrans%)(%comma%%locant%?%cisOrTrans%)*|%lightRotation%)%hyphen%?)"/>
+  <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locant%?)"/>
+  <regex name="%optLocantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%)?)"/>
+  <regex name="%locantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%))"/>
+  <regex name="%newLocantGroupNoStartingHyphen%" value="(%locant%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%locantThatNeedsBrackets%%optionalCloseBracket%%hyphen%?)"/>
   <regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
   <regex name="%infixedInlineSuffix%" value="(%o%?%infixReplacement%%infixableInlineSuffix%|%structuralOpenBracket%%infixReplacement%%infixableInlineSuffix%%structuralCloseBracket%)"/>
   <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%infixableInlineSuffix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%infixableInlineSuffix%%optionalCloseBracket%)" />
   <regex name="%unlocantedInlineSuffixGroup%" value="(%multiplierNoElidedA%?(%infixedInlineSuffix%|%inlineSuffix%|%optionalOpenBracket%%inlineSuffix%%optionalCloseBracket%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%|%optionalOpenBracket%(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%%optionalCloseBracket%))"/>
-  <regex name="%inlineSuffixGroup%" value="(%optLocantGroup%?%unlocantedInlineSuffixGroup%)"/>
-  <regex name="%repeatableInlineSuffixGroup%" value="(%optLocantGroup%?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
-  <regex name="%inlineChargeGroup%" value="(%optLocantGroup%?%multiplier%?%inlineChargeSuffix%)"/>
+  <regex name="%inlineSuffixGroup%" value="(%optLocantGroup%%unlocantedInlineSuffixGroup%)"/>
+  <regex name="%repeatableInlineSuffixGroup%" value="(%optLocantGroup%%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
+  <regex name="%inlineChargeGroup%" value="(%optLocantGroup%%multiplier%?%inlineChargeSuffix%)"/>
   <regex name="%inlineEndings%" value="(%inlineChargeGroup%*%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
   <regex name="%unsaturation%" value="(%optLocantGroupNoOMP%?%multiplier%?%unsaturator%)"/>
   <regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
-  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locantGroup%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
-  <regex name="%hydroGroup%" value="((%locantGroup%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/>
+  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locant%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
+  <regex name="%hydroGroup%" value="((%locant%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/>
   <regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%suffix%)"/>
   <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
   <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)" />
@@ -153,18 +158,20 @@ does not define a CFG.
 
 <!-- groups-->
   <!--acyclic-->
+  <regex name="%alkaneStem%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%|%alkaneStemTrivial%)"/>
+
   <regex name="%heteroChain%" value = "((%multiplier%%heteroStem%%unsaturationBlock%)|(%heteroStem%%hyphen%?%ane%))"/>
   <regex name="%alternatingHeteroChain%" value = "(%multiplier%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturationBlock%)"/>
 
-  <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%unsaturationBlock%)"/>
-  <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%unsaturationBlock%)"/>
-  <regex name="%chainSubstituent%" value = "((%chainGroup%|%alkaneStemModifier%?%alkaneStem%)%inlineEndings%)"/>
+  <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%a%?%unsaturationBlock%)"/>
+  <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%a%?%unsaturationBlock%)"/>
+  <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
 
   <regex name="%aminoMonoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%)"/>
   <regex name="%aminoAcidOptionalIne%" value="(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%)"/>
   <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|(%aminoMonoAcid%|%aminoAcidEndsInIc%)(%infixedSuffix%|%rootSuffix%))"/>
 
-  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locantGroup%%aminoAcidYl%)"/>
+  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locant%%aminoAcidYl%)"/>
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
@@ -178,12 +185,12 @@ does not define a CFG.
 
   <!--cyclic-->
   <regex name="%semiTrivialFusedRing%" value = "(%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)"/>
-  <regex name="%vonBaeyerSystem%" value = "(%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%%unsaturationBlock%|%heteroChain%))"/><!--support for alternating heteroChain missing-->
+  <regex name="%vonBaeyerSystem%" value = "(%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%%a%?%unsaturationBlock%|%heteroChain%))"/><!--support for alternating heteroChain missing-->
   <regex name="%cycloChain%" value = "(%cyclo%%straightChainGroups%)"/>
   <regex name="%cycloChainSubstituent%" value = "(%cyclo%%alkaneStem%)"/>
-  <regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
+  <regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%%a%?%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
   <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
-  <regex name="%fusionComponent%" value = "(%fusionRing%|(%locantThatNeedsBrackets%|%bracketedLocant%)?%fusionRingAcceptsFrontLocants%|%benzo%|%cycloChainSubstituent%|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
+  <regex name="%fusionComponent%" value = "(%fusionRing%|(%locantThatNeedsBrackets%|%bracketedLocant%)?%fusionRingAcceptsFrontLocants%|%benzo%|%cycloChainSubstituent%%a%?|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
   <regex name="%cyclicUnsaturableHydrocarbonGroup%" value = "(%cyclicUnsaturableHydrocarbon%%a%?%unsaturationBlock%)" />
   <regex name="%trivialRingSubstituentGroup%" value = "(%bracketedLocant%?%trivialRingSubstituentAnySuffix%%suffixGroup%)" />
   <regex name="%trivialRingSubstituentSub%" value = "(%bracketedLocant%?(%trivialRingSubstituentAnySuffix%|%trivialRingSubstituentInlineOnly%)%inlineSuffixGroup%)" />
@@ -194,11 +201,11 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainRoot%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/>
   <regex name="%conjunctiveSideChainInline%" value ="(%optLocantGroupNoOMP%?%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/>
 
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locantGroup%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locant%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%|%cyclicUnsaturableHydrocarbon%%a%?)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%)"/>
 
   <!--Complex terms-->
-  <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locantGroup%)%benzo%)"/>
+  <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locant%)%benzo%)"/>
   <regex name="%simpleComponent%" value ="(%fusionComponent%%hyphen%?%fusionBracket%?%hyphen%?|%benzoComponent%)" />
   <regex name="%multipliedComponent%" value ="(%multiplier%(%fusionComponent%%hyphen%?%multipleFusor%?%hyphen%?|%benzoComponent%))" />
   <regex name="%multipliedParent%" value ="(%fusionComponent%%hyphen%?%multipleFusor%?%hyphen%?%multiplier%)"/>
@@ -231,7 +238,7 @@ does not define a CFG.
 <!-- functional Groups-->
   <regex name="%anhydride%" value="(%anhydrideLocant%?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
   <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
-  <regex name="%functionalClass%" value ="(%locantGroup%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
+  <regex name="%functionalClass%" value ="(%locant%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
 

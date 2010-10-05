@@ -33,6 +33,10 @@ class XmlDeclarations {
 	 * The token XML elements. These are generally produced by the parser from the tokenised chemical name
 	 * Some are produced by OPSIN in the PostProcessor/PreStructureBuilder
 	 */
+	
+	/**A component of an alkaneStem e.g. [octa][hexaconta][tetract]ane will have three alkaneStemComponents*/
+	static final String ALKANESTEMCOMPONENT ="alkaneStemComponent";
+	
 	/**Something like tert/iso/sec Modifies an alkaneStem in the PostProcessor*/
 	static final String ALKANESTEMMODIFIER_EL ="alkaneStemModifier";
 	
@@ -228,9 +232,6 @@ class XmlDeclarations {
 	
 	/**A reference to CML in fragments.xml is the value attribute*/
 	static final String DBKEY_VALTYPE_VAL = "dbkey";
-	
-	/**A chain of carbon atoms of length given by the value attribute*/
-	static final String CHAIN_VALTYPE_VAL = "chain";
     
 	/*
 	 * The values the type attribute can take
