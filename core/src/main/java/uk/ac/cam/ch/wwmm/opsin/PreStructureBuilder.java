@@ -190,6 +190,7 @@ class PreStructureBuilder {
 			for (Element subOrRoot : substituentsAndRoot) {
 				processHW(state, subOrRoot);//hantzch-widman rings
 				FusedRingBuilder.processFusedRings(state, subOrRoot);
+				processFusedRingBridges(state, subOrRoot);
 				assignElementSymbolLocants(state, subOrRoot);
 				processRingAssemblies(state, subOrRoot);
 				processPolyCyclicSpiroNomenclature(state, subOrRoot);
@@ -859,6 +860,9 @@ class PreStructureBuilder {
 			}
 		}
 		if(currentElem != null && currentElem.getLocalName().equals(POLYCYCLICSPIRO_EL)){
+			return true;
+		}
+		if(currentElem != null && count==2 && currentElem.getLocalName().equals(FUSEDRINGBRIDGE_EL)){
 			return true;
 		}
 		boolean detectedMultiplicativeNomenclature = detectMultiplicativeNomenclature(locant, locantValues, finalSubOrRootInWord);
@@ -2260,6 +2264,38 @@ class PreStructureBuilder {
 				child.detach();
 				parent.insertChild(child, index);
 			}
+		}
+	}
+
+
+	/**
+	 * Processes bridges e.g. 4,7-methanoindene
+	 * Resolves and attaches said bridges to the adjacent ring fragment
+	 * @param state
+	 * @param subOrRoot
+	 * @throws StructureBuildingException 
+	 */
+	private void processFusedRingBridges(BuildState state, Element subOrRoot) throws StructureBuildingException {
+		List<Element> bridges = XOMTools.getChildElementsWithTagName(subOrRoot, FUSEDRINGBRIDGE_EL);
+		for (Element bridge : bridges) {
+			Fragment ringFrag = state.xmlFragmentMap.get(XOMTools.getNextSibling(bridge, GROUP_EL));
+			Fragment bridgeFrag =state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), ringFrag.getType(), ringFrag.getSubType(), NONE_LABELS_VAL);//TODO label bridges
+
+			List<Atom> bridgeAtomList =bridgeFrag.getAtomList();
+			bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
+			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size()-1), 1, true);
+			Element possibleLocant = (Element) XOMTools.getPreviousSibling(bridge);
+			if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL)){
+				String[] locantArray = matchComma.split(possibleLocant.getValue());
+				if (locantArray.length==2){
+					bridgeFrag.getOutAtom(0).setLocant(locantArray[0]);
+					bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
+					possibleLocant.detach();
+				}
+			}
+			StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtom());
+			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
+			bridge.detach();
 		}
 	}
 
