@@ -1226,7 +1226,7 @@ class StructureBuildingMethods {
 		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}
 
-	private static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
+	static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
 		Fragment fragToJoinTo = atomToJoinTo.getFrag();
 		List<Atom> atomList = fragToJoinTo.getAtomList();
 		Atom firstAtomToJoinTo;

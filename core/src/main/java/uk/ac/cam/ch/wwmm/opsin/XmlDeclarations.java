@@ -45,6 +45,12 @@ class XmlDeclarations {
 
 	/**An annulene. Converted to a group by the PostProcessor*/
 	static final String ANNULEN_EL ="annulen";
+	
+	/**A bridge described in SMILES for used on rings*/
+	static final String FUSEDRINGBRIDGE_EL ="fusedRingBridge";
+	
+	/**An O that indicates that the preceding alkaneStem is in fact a bridge*/
+	static final String BRIDGEFORMINGO_EL ="bridgeFormingO";
 
 	/**A charge specifier e.g. (2+). Value is the charge to set something to*/
 	static final String CHARGESPECIFIER_EL ="chargeSpecifier";

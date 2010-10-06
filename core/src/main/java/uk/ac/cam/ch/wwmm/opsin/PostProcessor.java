@@ -128,6 +128,7 @@ class PostProcessor {
 		
 		processHydroCarbonRings(moleculeEl);
 		for (Element group : groups) {
+			detectAlkaneFusedRingBridges(group);
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
@@ -1084,6 +1085,20 @@ class PostProcessor {
 			}
 			else{
 				throw new PostProcessingException("Invalid semi-trivially named hydrocarbon fused ring system");
+			}
+		}
+	}
+	
+	/**
+	 * Looks for alkaneStems followed by a bridge forming 'o' and makes them fused ring bridge elements
+	 * @param group
+	 */
+	private void detectAlkaneFusedRingBridges(Element group) {
+		if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			Element possibleBridgeFormer = (Element) XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
+			if(possibleBridgeFormer!=null && possibleBridgeFormer.getLocalName().equals(BRIDGEFORMINGO_EL)){
+				possibleBridgeFormer.detach();
+				group.setLocalName(FUSEDRINGBRIDGE_EL);
 			}
 		}
 	}

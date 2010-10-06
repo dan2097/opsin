@@ -103,6 +103,7 @@
 		<token value="-NO" labels="none" valType="SMILES">hydroxamino</token>
 		<token value="=NO" labels="none" valType="SMILES">hydroximino</token>
 		<token value="-OC(C)C" labels="none" valType="SMILES">isopropoxyl</token>
+		<token value="-C(C)(C=C)CCC=C(C)C" labels="none" valType="SMILES">linalyl</token>
 		<token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">propoxyl</token>
 		<token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
 		<token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
