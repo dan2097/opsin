@@ -897,8 +897,17 @@ class PreStructureBuilder {
 	private boolean detectMultiplicativeNomenclature(Element locant, String[] locantValues, Element finalSubOrRootInWord) {
 		int count =locantValues.length;
 		Element multiplier =(Element) finalSubOrRootInWord.getChild(0);
-		if (!multiplier.getLocalName().equals(MULTIPLIER_EL) && ((Element)finalSubOrRootInWord.getParent()).getLocalName().equals(BRACKET_EL)){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
-			multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
+		if (((Element)finalSubOrRootInWord.getParent()).getLocalName().equals(BRACKET_EL)){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
+			if (!multiplier.getLocalName().equals(MULTIPLIER_EL)){
+				multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
+			}
+			else{
+				Element elAfterMultiplier = (Element) XOMTools.getNextSibling(multiplier);
+				String elName = elAfterMultiplier.getLocalName();
+				if (elName.equals(HETEROATOM_EL) || (elName.equals(HYDRO_EL) && !elAfterMultiplier.getValue().startsWith("per"))|| elName.equals(FUSEDRINGBRIDGE_EL)) {
+					multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
+				}
+			}
 		}
 		Node commonParent =locant.getParent().getParent();//this should be a common parent of the multiplier in front of the root. If it is not, then this locant is in a different scope
 		Node parentOfMultiplier =multiplier.getParent();
