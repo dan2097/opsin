@@ -88,12 +88,6 @@ class PostProcessor {
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
-	private final ResourceManager resourceManager;
-
-	PostProcessor(ResourceManager resourceManager) {
-		this.resourceManager = resourceManager;
-	}
-
 	/** The master method, postprocesses a parse result.
 	 *
 	 * @param moleculeEl The element to postprocess.
@@ -102,12 +96,12 @@ class PostProcessor {
 	 * @throws Exception
 	 */
 	void postProcess(Element moleculeEl, BuildState state) throws Exception {
-		/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
-		resolveAmbiguities(moleculeEl);
-
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(moleculeEl, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {
+			/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
+			resolveAmbiguities(subOrRoot);
+
 			processLocants(subOrRoot);
 			convertOrthoMetaParaToLocants(subOrRoot);
 			formAlkaneStemsFromComponents(subOrRoot);
@@ -126,41 +120,49 @@ class PostProcessor {
 		 *  places the elements inbetween within the newly created bracket */
 		while(findAndStructureBrackets(substituentsAndRoot));
 		
-		processHydroCarbonRings(moleculeEl);
+		for (Element subOrRoot: substituentsAndRoot) {
+			processHydroCarbonRings(subOrRoot);
+			handleSuffixIrregularities(subOrRoot);//handles quinone -->dioxo
+		}
 		for (Element group : groups) {
 			detectAlkaneFusedRingBridges(group);
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
-		handleSuffixIrregularities(XOMTools.getDescendantElementsWithTagName(moleculeEl, SUFFIX_EL));//handles quinone -->dioxo
 
 		addOmittedSpaces(moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
 
 	/**
 	 * Resolves common ambiguities e.g. tetradeca being 4x10carbon chain rather than 14carbon chain
-	 * @param elem
+	 * @param subOrRoot
 	 * @throws PostProcessingException
 	 */
-	private void resolveAmbiguities(Element elem) throws PostProcessingException {
-		List<Element> multipliers = XOMTools.getDescendantElementsWithTagName(elem, MULTIPLIER_EL);
+	private void resolveAmbiguities(Element subOrRoot) throws PostProcessingException {
+		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (Element apparentMultiplier : multipliers) {
+			if (!BASIC_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR)) && !VONBAEYER_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR))){
+				continue;
+			}
+			int multiplierNum = Integer.parseInt(apparentMultiplier.getAttributeValue(VALUE_ATR));
 			Element nextEl = (Element)XOMTools.getNextSibling(apparentMultiplier);
-			if(nextEl !=null && nextEl.getLocalName().equals(GROUP_EL) && nextEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){//detects ambiguous use of things like tetradeca
-				String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
-				HashMap<String, HashMap<Character, Token>> tokenDict =resourceManager.tokenDict;
-				HashMap<Character,Token> tokenMap = tokenDict.get(multiplierAndGroup);
-				if (tokenMap !=null){
-					Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
-					if (isThisALocant == null ||
-							!isThisALocant.getLocalName().equals(LOCANT_EL) ||
-							matchComma.split(isThisALocant.getValue()).length != Integer.parseInt(apparentMultiplier.getAttributeValue(VALUE_ATR))){
-						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as two tokens!");
+			if (multiplierNum >=3){//detects ambiguous use of things like tetradeca
+				if(nextEl !=null){
+					if (nextEl.getLocalName().equals(ALKANESTEMCOMPONENT)){//can ignore the trivial alkanes as ambiguity does not exist for them
+						int alkaneChainLength = Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR));
+						if (alkaneChainLength >=10 && alkaneChainLength > multiplierNum){
+							Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
+							if (isThisALocant == null ||
+									!isThisALocant.getLocalName().equals(LOCANT_EL) ||
+									matchComma.split(isThisALocant.getValue()).length != multiplierNum){
+								throw new PostProcessingException(apparentMultiplier.getValue() + nextEl.getValue() +" should not have been lexed as two tokens!");
+							}
+						}
 					}
 				}
 			}
 
-			if (nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL)&& nextEl.getValue().equals("phen")){//deals with tetra phen yl vs tetraphen yl
+			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL)&& nextEl.getValue().equals("phen")){//deals with tetra phen yl vs tetraphen yl
 				Element possibleSuffix = (Element) XOMTools.getNextSibling(nextEl);
 				if (possibleSuffix!=null){//null if not used as substituent
 					String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
@@ -168,20 +170,19 @@ class PostProcessor {
 						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as one token!");
 					}
 					Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
-					if (isThisALocant != null && isThisALocant.getLocalName().equals("locant") && matchComma.split(isThisALocant.getValue()).length == Integer.parseInt(apparentMultiplier.getAttributeValue(VALUE_ATR))){
+					if (isThisALocant != null && isThisALocant.getLocalName().equals(LOCANT_EL) && matchComma.split(isThisALocant.getValue()).length == multiplierNum){
 						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as one token!");
 					}
 				}
 			}
-			if (Integer.parseInt(apparentMultiplier.getAttributeValue(VALUE_ATR))>4 && !apparentMultiplier.getValue().endsWith("a")){//disambiguate pent oxy and the like. Assume it means pentanoxy rather than 5 oxys
+			if (multiplierNum > 4 && !apparentMultiplier.getValue().endsWith("a")){//disambiguate pent oxy and the like. Assume it means pentanoxy rather than 5 oxys
 				if (nextEl !=null && nextEl.getLocalName().equals(GROUP_EL)&& matchInlineSuffixesThatAreAlsoGroups.matcher(nextEl.getValue()).matches()){
 					throw new PostProcessingException(apparentMultiplier.getValue() + nextEl.getValue() +" should have been lexed as [alkane stem, inline suffix], not [multiplier, group]!");
 				}
 			}
-		
 		}
 
-		List<Element> fusions = XOMTools.getDescendantElementsWithTagName(elem, FUSION_EL);
+		List<Element> fusions = XOMTools.getChildElementsWithTagName(subOrRoot, FUSION_EL);
 		for (Element fusion : fusions) {
 			String fusionText = fusion.getValue();
 			if (matchNumberLocantsOnlyFusionBracket.matcher(fusionText).matches()){
@@ -929,11 +930,11 @@ class PostProcessor {
 	}
 
 	/**Looks for annulen/polyacene/polyaphene/polyalene/polyphenylene/polynaphthylene/polyhelicene tags and replaces them with a group with appropriate SMILES.
-	 * @param elem The element to look for tags in
+	 * @param subOrRoot The subOrRoot to look for tags in
 	 * @throws PostProcessingException
 	 */
-	private void processHydroCarbonRings(Element elem) throws PostProcessingException {
-		List<Element> annulens = XOMTools.getDescendantElementsWithTagName(elem, ANNULEN_EL);
+	private void processHydroCarbonRings(Element subOrRoot) throws PostProcessingException {
+		List<Element> annulens = XOMTools.getChildElementsWithTagName(subOrRoot, ANNULEN_EL);
 		for (Element annulen : annulens) {
 			String annulenValue =annulen.getValue();
 	        Matcher match = matchAnnulene.matcher(annulenValue);
@@ -960,7 +961,7 @@ class PostProcessor {
 			annulen.getParent().replaceChild(annulen, group);
 		}
 
-		List<Element> hydrocarbonFRSystems = XOMTools.getDescendantElementsWithTagName(elem, HYDROCARBONFUSEDRINGSYSTEM_EL);
+		List<Element> hydrocarbonFRSystems = XOMTools.getChildElementsWithTagName(subOrRoot, HYDROCARBONFUSEDRINGSYSTEM_EL);
 		for (Element hydrocarbonFRSystem : hydrocarbonFRSystems) {
 			Element multiplier = (Element)XOMTools.getPreviousSibling(hydrocarbonFRSystem);
 			if(multiplier != null && multiplier.getLocalName().equals(MULTIPLIER_EL)) {
@@ -1089,6 +1090,33 @@ class PostProcessor {
 		}
 	}
 	
+	/**
+	 * Handles irregular suffixes. Quinone only currently
+	 * @param suffixes
+	 * @throws PostProcessingException 
+	 */
+	private void handleSuffixIrregularities(Element subOrRoot) throws PostProcessingException {
+		List<Element> suffixes = XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL);
+		for (Element suffix : suffixes) {
+			String suffixValue = suffix.getValue();
+			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
+				Node next = XOMTools.getNext(suffix);
+				if (next == null){
+					throw new PostProcessingException("\"acid\" not found after " +suffixValue);
+				}
+			}
+			// convert quinone to dione
+			else if (suffixValue.equals("quinone")){
+				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
+				XOMTools.setTextChild(suffix, "one");
+				Element multiplier = new Element(MULTIPLIER_EL);
+				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
+				multiplier.appendChild("di");
+				XOMTools.insertBefore(suffix, multiplier);
+			}
+		}
+	}
+
 	/**
 	 * Looks for alkaneStems followed by a bridge forming 'o' and makes them fused ring bridge elements
 	 * @param group
@@ -1703,6 +1731,14 @@ class PostProcessor {
 				throw new PostProcessingException("Hydrogen is not meant as a substituent in this context!");
 			}
 		}
+		else if (groupValue.equals("acryl")){
+			if (SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+				Element nextEl = (Element) XOMTools.getNext(group);
+				if (nextEl!=null && nextEl.getValue().equals("amid")){
+					throw new PostProcessingException("amide in acrylamide is not [NH2-]");
+				}
+			}
+		}
 		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy")){
 			Element enclosingSub = (Element) group.getParent();
 			Element next = (Element) XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
@@ -1722,32 +1758,6 @@ class PostProcessor {
 		}
 	}
 	
-	/**
-	 * Handles irregular suffixes. Quinone only currently
-	 * @param suffixes
-	 * @throws PostProcessingException 
-	 */
-	private void handleSuffixIrregularities(List<Element> suffixes) throws PostProcessingException {
-		for (Element suffix : suffixes) {
-			String suffixValue = suffix.getValue();
-			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
-				Node next = XOMTools.getNext(suffix);
-				if (next == null){
-					throw new PostProcessingException("\"acid\" not found after " +suffixValue);
-				}
-			}
-			// convert quinone to dione
-			else if (suffixValue.equals("quinone")){
-				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
-				XOMTools.setTextChild(suffix, "one");
-				Element multiplier = new Element(MULTIPLIER_EL);
-				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
-				multiplier.appendChild("di");
-				XOMTools.insertBefore(suffix, multiplier);
-			}
-		}
-	}
-
 	/**
 	 * Moves substituents into new words if it appears that a space was omitted in the input name
 	 * @param elem

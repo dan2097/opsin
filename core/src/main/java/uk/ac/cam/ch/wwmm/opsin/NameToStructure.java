@@ -104,7 +104,7 @@ public class NameToStructure {
 			Tokeniser tokeniser = new Tokeniser(parseRules);
 			parser = new Parser(wordRules, tokeniser, resourceManager);
 
-			postProcessor = new PostProcessor(resourceManager);
+			postProcessor = new PostProcessor();
 
 			sBuilder = new SMILESFragmentBuilder();
 			cmlBuilder = new CMLFragmentBuilder(resourceGetter);
