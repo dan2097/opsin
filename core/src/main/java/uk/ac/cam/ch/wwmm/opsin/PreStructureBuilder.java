@@ -1714,7 +1714,7 @@ class PreStructureBuilder {
 			}
 			if (atomList.size() == 6 && group.getValue().equals("an")){
 				boolean hasNitrogen = false;
-				boolean hasSiorGeorSborPb=false;
+				boolean hasSiorGeorSnorPb=false;
 				boolean saturatedRing =true;
 				for(Element heteroatom : prevs){
 					String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
@@ -1728,9 +1728,9 @@ class PreStructureBuilder {
 					}
 					if (heteroAtomElement.equals("Si") ||
 						heteroAtomElement.equals("Ge") ||
-						heteroAtomElement.equals("Sb") ||
+						heteroAtomElement.equals("Sn") ||
 						heteroAtomElement.equals("Pb") ){
-						hasSiorGeorSborPb =true;
+						hasSiorGeorSnorPb =true;
 					}
 				}
 				for (Atom a: atomList) {
@@ -1738,8 +1738,8 @@ class PreStructureBuilder {
 						saturatedRing =false;
 					}
 				}
-				if (saturatedRing && !hasNitrogen && hasSiorGeorSborPb){
-					throw new PostProcessingException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sb/Pb)");
+				if (saturatedRing && !hasNitrogen && hasSiorGeorSnorPb){
+					throw new PostProcessingException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sn/Pb)");
 				}
 			}
 			String name = "";

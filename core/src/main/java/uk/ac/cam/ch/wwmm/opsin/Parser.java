@@ -194,17 +194,28 @@ class Parser {
 		int annotPos = 0;
 		Element chunk = new Element(SUBSTITUENT_EL);
 		wordEl.appendChild(chunk);
+		Element lastTokenElement = null;
         for (String token : tokens) {
             if (annotPos >= annotations.get(annotNumber).size()) {
                 annotPos = 0;
                 annotNumber++;
                 chunk = new Element(SUBSTITUENT_EL);
                 wordEl.appendChild(chunk);
+                lastTokenElement = null;
             }
             Element tokenElement = resourceManager.makeTokenElement(token,
                     annotations.get(annotNumber).get(annotPos));
             if (tokenElement != null) {//null for tokens that have ignoreWhenWritingXML set
                 chunk.appendChild(tokenElement);
+                lastTokenElement=tokenElement;
+            }
+            else if (lastTokenElement!=null && !token.equals("")){
+            	if (lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)!=null){
+            		lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL).setValue(lastTokenElement.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL) + token);
+            	}
+            	else{
+            		lastTokenElement.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_EL, token));
+            	}
             }
             annotPos++;
         }

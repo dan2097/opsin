@@ -348,7 +348,10 @@ class FunctionalReplacement {
 					if (replacementFrag.getOutAtoms().size()>0){
 						replacementFrag.removeOutAtom(0);
 					}
-					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);//also will copy charge to a chalcogen replacement
+					if (replacementFrag.getAtomList().size()==1 && matchChalcogen.matcher(replacementFrag.getFirstAtom().getElement()).matches()){
+						replacementFrag.getFirstAtom().setCharge(atomToUse.getCharge());
+					}
+					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);//also will move charge if necessary
 					if (nitrido){
 						atomToUse.getFirstBond().setOrder(3);
 						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
@@ -851,14 +854,9 @@ class FunctionalReplacement {
 					}
 					atomToBeReplaced.setCharge(0);
 				}
-				else {
-					if (matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
-						replacementAtomList.get(0).setCharge(atomToBeReplaced.getCharge());
-					}
-					else{
-						atomToBeReplaced.getFrag().removeFunctionalAtom(j);
-						atomToBeReplaced.setCharge(0);
-					}
+				else if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
+					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+					atomToBeReplaced.setCharge(0);
 				}
 			}
 		}
