@@ -41,7 +41,6 @@
     <token value="tellurenic">tellurenic</token>
     <token value="tellurenic">tellurenicacid</token>
     <token value="tellurenic">tellurenic acid</token>
-    <token value="thiolate">thiolate</token>
 
 <!--common acids-this method is no longer recommended-->
     <token value="arsonous">arsonous</token>

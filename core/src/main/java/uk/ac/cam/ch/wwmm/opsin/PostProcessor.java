@@ -86,6 +86,7 @@ class PostProcessor {
 	private final Pattern matchNonDigit =Pattern.compile("\\D+");
 	private final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
+	private final Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
 	/** The master method, postprocesses a parse result.
@@ -446,12 +447,13 @@ class PostProcessor {
 
 	/**Form heterogeneous hydrides/substituents
 	 * These are chains of one heteroatom or alternating heteroatoms and are expressed using SMILES
-	 * They are typically treated in an analagous way to alkanes
-	 * @param elem The root/substituents
+	 * They are typically treated in an analogous way to alkanes
+	 * @param subOrRoot The root/substituents
+	 * @throws PostProcessingException 
 	 */
-	private void processHeterogenousHydrides(Element elem)  {
-		Elements multipliers = elem.getChildElements(MULTIPLIER_EL);
-		for(int i=0;i<multipliers.size();i++) {
+	private void processHeterogenousHydrides(Element subOrRoot) throws PostProcessingException  {
+		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
+		for (int i = 0; i < multipliers.size(); i++) {
 			Element m = multipliers.get(i);
 			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
 				continue;
@@ -478,59 +480,82 @@ class PostProcessor {
 				String smiles=multipliedElem.getAttributeValue(VALUE_ATR);
 				multipliedElem.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString(smiles, mvalue));
 				m.detach();
+				multipliers.remove(i--);
 			}
 		}
-		Elements groups = elem.getChildElements(GROUP_EL);
-
-		if (groups.size()==0){
-			for(int i=0;i<multipliers.size();i++) {
-				Element m = multipliers.get(i);
-				Element multipliedElem = (Element)XOMTools.getNextSibling(m);
-				if(multipliedElem.getLocalName().equals(HETEROATOM_EL)){
-					Element possiblyAnotherHeteroAtom = (Element)XOMTools.getNextSibling(multipliedElem);
-					if (possiblyAnotherHeteroAtom !=null && possiblyAnotherHeteroAtom.getLocalName().equals(HETEROATOM_EL)){
-						Element possiblyAnUnsaturator = XOMTools.getNextSiblingIgnoringCertainElements(possiblyAnotherHeteroAtom, new String[]{LOCANT_EL, MULTIPLIER_EL});//typically ane but can be ene or yne e.g. triphosphaza-1,3-diene
-						if (possiblyAnUnsaturator !=null && possiblyAnUnsaturator.getLocalName().equals(UNSATURATOR_EL)){
-							//chain of alternating heteroatoms
-							int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
-							String smiles="";
-							Element possiblyARingFormingEl = (Element)XOMTools.getPreviousSibling(m);
-							boolean heteroatomChainWillFormARing =false;
-							if (possiblyARingFormingEl!=null && (possiblyARingFormingEl.getLocalName().equals(CYCLO_EL) || possiblyARingFormingEl.getLocalName().equals(VONBAEYER_EL) || possiblyARingFormingEl.getLocalName().equals(SPIRO_EL))){
-								heteroatomChainWillFormARing=true;
-								//will be cyclised later.
-								for (int j = 0; j < mvalue; j++) {
-									smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
-									smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
-								}
-							}
-							else{
-								for (int j = 0; j < mvalue -1; j++) {
-									smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
-									smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
-								}
+		for (Element m : multipliers) {
+			Element multipliedElem = (Element)XOMTools.getNextSibling(m);
+			if(multipliedElem.getLocalName().equals(HETEROATOM_EL)){
+				Element possiblyAnotherHeteroAtom = (Element)XOMTools.getNextSibling(multipliedElem);
+				if (possiblyAnotherHeteroAtom !=null && possiblyAnotherHeteroAtom.getLocalName().equals(HETEROATOM_EL)){
+					Element possiblyAnUnsaturator = XOMTools.getNextSiblingIgnoringCertainElements(possiblyAnotherHeteroAtom, new String[]{LOCANT_EL, MULTIPLIER_EL});//typically ane but can be ene or yne e.g. triphosphaza-1,3-diene
+					if (possiblyAnUnsaturator !=null && possiblyAnUnsaturator.getLocalName().equals(UNSATURATOR_EL)){
+						//chain of alternating heteroatoms
+						if (possiblyAnUnsaturator.getAttributeValue(VALUE_ATR).equals("1")){
+							checkForAmbiguityWithHWring(multipliedElem.getAttributeValue(VALUE_ATR), possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR));
+						}
+						int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
+						String smiles="";
+						Element possiblyARingFormingEl = (Element)XOMTools.getPreviousSibling(m);
+						boolean heteroatomChainWillFormARing =false;
+						if (possiblyARingFormingEl!=null && (possiblyARingFormingEl.getLocalName().equals(CYCLO_EL) || possiblyARingFormingEl.getLocalName().equals(VONBAEYER_EL) || possiblyARingFormingEl.getLocalName().equals(SPIRO_EL))){
+							heteroatomChainWillFormARing=true;
+							//will be cyclised later.
+							for (int j = 0; j < mvalue; j++) {
+								smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
 								smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
 							}
-							smiles = matchHdigit.matcher(smiles).replaceAll("H?");//hydrogen count will be determined by standard valency
-							multipliedElem.detach();
-
-							Element addedGroup=new Element(GROUP_EL);
-							addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
-							addedGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
-							addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
-							addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
-							if (!heteroatomChainWillFormARing){
-								addedGroup.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
-							}
-							addedGroup.appendChild(smiles);
-							XOMTools.insertAfter(possiblyAnotherHeteroAtom, addedGroup);
-
-							possiblyAnotherHeteroAtom.detach();
-							m.detach();
 						}
+						else{
+							for (int j = 0; j < mvalue -1; j++) {
+								smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
+								smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
+							}
+							smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
+						}
+						smiles = matchHdigit.matcher(smiles).replaceAll("H?");//hydrogen count will be determined by standard valency
+						multipliedElem.detach();
+
+						Element addedGroup=new Element(GROUP_EL);
+						addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
+						addedGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
+						addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
+						addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
+						if (!heteroatomChainWillFormARing){
+							addedGroup.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
+						}
+						addedGroup.appendChild(smiles);
+						XOMTools.insertAfter(possiblyAnotherHeteroAtom, addedGroup);
+
+						possiblyAnotherHeteroAtom.detach();
+						m.detach();
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Checks that the first heteroatom is lower priority than the second
+	 * If it is higher priority than the second then the ordering is that which is expected for a Hantzch-widman ring
+	 * @param firstHeteroatom
+	 * @param secondHeteroatom
+	 * @throws PostProcessingException 
+	 */
+	private void checkForAmbiguityWithHWring(String firstHeteroAtomSMILES, String secondHeteroAtomSMILES) throws PostProcessingException {
+		Matcher m = matchElementSymbol.matcher(firstHeteroAtomSMILES);
+		if (!m.find()){
+			throw new PostProcessingException("Failed to extract element from heteroatom");
+		}
+		String atom1Element = m.group();
+		
+		m = matchElementSymbol.matcher(secondHeteroAtomSMILES);
+		if (!m.find()){
+			throw new PostProcessingException("Failed to extract element from heteroatom");
+		}
+		String atom2Element = m.group();
+		if (AtomProperties.elementToHwPriority.get(atom1Element)> AtomProperties.elementToHwPriority.get(atom2Element)){
+			throw new PostProcessingException("Hantzch-widman ring misparsed as a heterogeneous hydride with alternating atoms");
 		}
 	}
 
@@ -1598,7 +1623,7 @@ class PostProcessor {
 		String groupValue =group.getValue();
 		if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
-			if (possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
+			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
 					throw new PostProcessingException("thiophenol has been incorrectly interpreted as thiophen, ol instead of thio, phenol");
 				}

@@ -11,6 +11,11 @@ class AtomProperties {
 	
 	static final Map<String, Integer> elementToAtomicNumber = new HashMap<String, Integer>();
 	
+	/**
+	 * Maps element symbol to the priority of that atom in Hantzch-Widman system. A higher value indicates a higher priority.
+	 */
+	static final Map<String, Integer> elementToHwPriority = new HashMap<String, Integer>();
+	
 	static{
 		elementToPaulingElectronegativity.put("H", 2.20);
 		elementToPaulingElectronegativity.put("Li", 0.98);
@@ -223,5 +228,29 @@ class AtomProperties {
 		elementToAtomicNumber.put("Hs", 108);
 		elementToAtomicNumber.put("Mt", 109);
 		elementToAtomicNumber.put("Ds", 110);
+
+		elementToHwPriority.put("F", 23);
+		elementToHwPriority.put("Cl", 22);
+		elementToHwPriority.put("Br", 21);
+		elementToHwPriority.put("I", 20);
+		elementToHwPriority.put("O", 19);
+		elementToHwPriority.put("S", 18);
+		elementToHwPriority.put("Se", 17);
+		elementToHwPriority.put("Te", 16);
+		elementToHwPriority.put("N", 15);
+		elementToHwPriority.put("P", 14);
+		elementToHwPriority.put("As", 13);
+		elementToHwPriority.put("Sb", 12);
+		elementToHwPriority.put("Bi", 11);
+		elementToHwPriority.put("Si", 10);
+		elementToHwPriority.put("Ge", 9);
+		elementToHwPriority.put("Sn", 8);
+		elementToHwPriority.put("Pb", 7);
+		elementToHwPriority.put("B", 6);
+		elementToHwPriority.put("Al", 5);
+		elementToHwPriority.put("Ga", 4);
+		elementToHwPriority.put("In", 3);
+		elementToHwPriority.put("Tl", 2);
+		elementToHwPriority.put("Hg", 1);
 	}
 }
