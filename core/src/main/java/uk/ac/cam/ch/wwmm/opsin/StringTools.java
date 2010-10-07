@@ -141,7 +141,21 @@ public final class StringTools {
 
             case '\u00B1': return "+-";//plus minus symbol
             case '\u2213': return "-+";
-         
+            
+            case '\u00C6': return "ae";//common ligatures
+            case '\u00E6': return "ae";
+            case '\u0152': return "oe";
+            case '\u0153': return "oe";
+            case '\u0132': return "ij";
+            case '\u0133': return "ij";
+            case '\u1D6B': return "ue";
+            case '\uFB00': return "ff";
+            case '\uFB01': return "fi";
+            case '\uFB02': return "fl";
+            case '\uFB03': return "ffi";
+            case '\uFB04': return "ffl";
+            case '\uFB06': return "st";
+            
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
             case '\u201B': return "'";
