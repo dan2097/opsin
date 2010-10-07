@@ -687,7 +687,8 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
+			if ((atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL))
+					|| currentAtom.getProperty(Atom.ISALDEHYDE)!=null && currentAtom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
 				atomListPosition++;
 				continue;
 			}
@@ -716,10 +717,12 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if (atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL)){
+			if ((atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL))
+					|| currentAtom.getProperty(Atom.ISALDEHYDE)!=null && currentAtom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
 				atomListPosition++;
 				continue;
 			}
+			
 			if (takeIntoAccountOutValency){
 				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					return currentAtom;

@@ -389,6 +389,9 @@ class FragmentManager {
 			if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
 				oldToNewAtomMap.get(atom).setProperty(Atom.OXIDATION_NUMBER, atom.getProperty(Atom.OXIDATION_NUMBER));
 			}
+			if (atom.getProperty(Atom.ISALDEHYDE)!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.ISALDEHYDE, atom.getProperty(Atom.ISALDEHYDE));
+			}
 		}
         for (OutAtom outAtom : outAtoms) {
             newFragment.addOutAtom(oldToNewAtomMap.get(outAtom.getAtom()), outAtom.getValency(), outAtom.isSetExplicitly());
