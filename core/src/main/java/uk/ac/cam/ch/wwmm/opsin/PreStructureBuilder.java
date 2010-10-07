@@ -3121,6 +3121,14 @@ class PreStructureBuilder {
                             Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
                             state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
                             state.fragManager.removeBond(bondToSuffix);
+                            if (suffixValue.equals("aldehyde") || suffixValue.equals("al")){
+                            	if("X".equals(suffixAtom.getFirstLocant())){//carbaldehyde
+                            		suffixAtom.setProperty(Atom.ISALDEHYDE, true);
+                            	}
+                            	else{
+                            		parentfragAtom.setProperty(Atom.ISALDEHYDE, true);
+                            	}
+                            }
                         }
                     }
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
