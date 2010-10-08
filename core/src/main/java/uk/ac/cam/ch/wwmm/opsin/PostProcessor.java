@@ -1781,6 +1781,27 @@ class PostProcessor {
 				}
 			}
 		}
+		else if (groupValue.equals("coenzyme a") || groupValue.equals("coa")){
+			Element enclosingSubOrRoot = (Element) group.getParent();
+			Element previous = (Element) XOMTools.getPreviousSibling(enclosingSubOrRoot);
+			if (previous!=null){
+				List<Element> groups = XOMTools.getDescendantElementsWithTagName(previous, GROUP_EL);
+				if (groups.size()>0){
+					Element possibleDiAcid = groups.get(groups.size()-1);
+					if (possibleDiAcid.getAttribute(SUFFIXAPPLIESTO_ATR)!=null && ACIDSTEM_TYPE_VAL.equals(possibleDiAcid.getAttributeValue(TYPE_ATR))){
+						Element suffix = (Element) XOMTools.getNextSibling(possibleDiAcid, SUFFIX_EL);
+						if (suffix.getAttribute(ADDITIONALVALUE_ATR)==null){
+							suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+						}
+					}
+				}
+			}
+			//locanted substitution onto Coenzyme A is rarely intended, so put it in a bracket to disfavour it
+			Element newBracket = new Element(BRACKET_EL);
+			XOMTools.insertAfter(enclosingSubOrRoot, newBracket);
+			enclosingSubOrRoot.detach();
+			newBracket.appendChild(enclosingSubOrRoot);
+		}
 	}
 	
 	/**
