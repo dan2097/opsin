@@ -118,7 +118,7 @@ does not define a CFG.
   <regex name="%alkaneStemHundreds%" value="│"/>
   <regex name="%alkaneStemThousands%" value="┤"/>
   <regex name="%bridgeFormingO%" value="╡"/>
-  <!--up to ascii 180 used-->
+  <!--up to ascii 181 used-->
 
 <!-- composite regexes-->
 
