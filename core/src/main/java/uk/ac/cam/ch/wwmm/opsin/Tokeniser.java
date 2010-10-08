@@ -24,6 +24,7 @@ class Tokeniser {
 	private final Pattern matchCommaSpace = Pattern.compile(", ");
 	private final Pattern matchSpace = Pattern.compile(" ");
 	private final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*");
+	private final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+", Pattern.CASE_INSENSITIVE );
 	
 	Tokeniser(ParseRules parseRules) {
 		this.parseRules = parseRules;
@@ -72,28 +73,33 @@ class Tokeniser {
 				}
 			}
 			else{//word is unparsable as is.
-				if (allowRemovalOfWhiteSpace){
-					//Try and remove a space and try again
-					//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-					int indexOfSpace = uninterpretableName.indexOf(' ');
-					if (indexOfSpace != -1 ){
-						unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
+				if (matchCasCollectiveIndex.matcher(uninterpretableName).matches()){//CAS collective index description should be ignored
+					unparsedName = parsedName;
+				}
+				else{
+					if (allowRemovalOfWhiteSpace){
+						//Try and remove a space and try again
+						//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
+						int indexOfSpace = uninterpretableName.indexOf(' ');
+						if (indexOfSpace != -1 ){
+							unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
+						}
+						else{
+							if (parsedName.equals("")){
+								throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+							}
+							else {
+								throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
+							}
+						}
 					}
 					else{
 						if (parsedName.equals("")){
-							throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+							throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName);
 						}
 						else {
 							throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
 						}
-					}
-				}
-				else{
-					if (parsedName.equals("")){
-						throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName);
-					}
-					else {
-						throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
 					}
 				}
 			}
@@ -319,7 +325,14 @@ class Tokeniser {
 		String parent = nameComponents.get(0);
 		String[] parentNameParts = matchSpace.split(parent);
 		if (parentNameParts.length !=1){
-			if (parentNameParts.length >2 || !matchAcid.matcher(parentNameParts[1]).matches()){
+			if (matchCasCollectiveIndex.matcher(parentNameParts[parentNameParts.length-1]).matches()){//CAS collective index description should be ignored
+				parent = "";
+				for (int i = 0; i < parentNameParts.length-1; i++) {
+					parent += parentNameParts[i];
+				}
+				parentNameParts = matchSpace.split(parent);
+			}
+			if (parentNameParts.length >2 || parentNameParts.length==2 && !matchAcid.matcher(parentNameParts[1]).matches()){
 				throw new ParsingException("Invalid CAS name. Parent compound was followed by an unexpected term");
 			}
 		}
@@ -371,7 +384,9 @@ class Tokeniser {
 						}
 					}
 					else{
-						throw new ParsingException("Unable to interpret: " + component +" (as part of a CAS index name)");
+						if (!matchCasCollectiveIndex.matcher(component).matches()){//CAS collective index description should be ignored
+							throw new ParsingException("Unable to interpret: " + component +" (as part of a CAS index name)");
+						}
 					}
 				}
 			}
