@@ -694,6 +694,19 @@ class Fragment {
 			}
 			
 			int currentExpectedValency = currentAtom.determineValency(takeIntoAccountOutValency);
+			if (currentExpectedValency==2){//chalcogen functional atoms should not typically be attached to via unlocanted substitution
+				boolean isFunctionalAtom =false;
+				for (FunctionalAtom funcAtom : functionalAtoms) {
+					if (currentAtom.equals(funcAtom.getAtom())){
+						isFunctionalAtom =true;
+						break;
+					}
+				}
+				if (isFunctionalAtom){
+					atomListPosition++;
+					continue;
+				}
+			}
 			if (takeIntoAccountOutValency){
 				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					return currentAtom;
