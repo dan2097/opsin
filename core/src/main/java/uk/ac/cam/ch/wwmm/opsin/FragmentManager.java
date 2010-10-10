@@ -210,8 +210,12 @@ class FragmentManager {
 		}
 		a.setElement(elementSymbol);
 		a.removeElementSymbolLocants();
-		if (assignLocant && a.getFrag().getAtomByLocant(elementSymbol) ==null){//if none of that element currently present add element symbol locant
-			a.addLocant(elementSymbol);
+		if (assignLocant){
+			String primes ="";
+			while (a.getFrag().getAtomByLocant(elementSymbol+primes)!=null){//if element symbol already assigned, add a prime and try again
+				primes+="'";
+			}
+			a.addLocant(elementSymbol +primes);
 		}
 	}
 
