@@ -1279,7 +1279,7 @@ class StructureBuildingMethods {
 	 * @param startingElement
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
-	private static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
+	static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
 		Stack<Element> stack = new Stack<Element>();
 		stack.add((Element) startingElement.getParent());
 		List<Fragment> foundFragments =new ArrayList<Fragment>();
