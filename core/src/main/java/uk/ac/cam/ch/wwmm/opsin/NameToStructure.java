@@ -63,10 +63,10 @@ public class NameToStructure {
 	private ParseRules parseRules;
 
 	/**Does destructive procedural parsing on parser results.*/
-	private PostProcessor postProcessor;
+	private ComponentGenerator componentGenerator;
 
 	/**Does structure-aware destructive procedural parsing on parser results.*/
-	private PreStructureBuilder preStructureBuilder;
+	private ComponentProcessor componentProcessor;
 
 	/** A builder for fragments specified as SMILES */
 	private SMILESFragmentBuilder sBuilder;
@@ -74,7 +74,7 @@ public class NameToStructure {
 	/** A builder for fragments specified as references to a CML data file */
 	private CMLFragmentBuilder cmlBuilder;
 
-	/**Constructs the CML molecule from the postProcessor results.*/
+	/**Constructs a single fragment from the result of the component generation and processing stages.*/
 	private StructureBuilder structureBuilder;
 
 	private static NameToStructure NTS_INSTANCE;
@@ -104,13 +104,13 @@ public class NameToStructure {
 			Tokeniser tokeniser = new Tokeniser(parseRules);
 			parser = new Parser(wordRules, tokeniser, resourceManager);
 
-			postProcessor = new PostProcessor();
+			componentGenerator = new ComponentGenerator();
 
 			sBuilder = new SMILESFragmentBuilder();
 			cmlBuilder = new CMLFragmentBuilder(resourceGetter);
 			structureBuilder = new StructureBuilder();
 
-			preStructureBuilder = new PreStructureBuilder(resourceGetter);
+			componentProcessor = new ComponentProcessor(resourceGetter);
 
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
@@ -178,11 +178,11 @@ public class NameToStructure {
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
 					BuildState state = new BuildState(n2sConfig, sBuilder, cmlBuilder);
-					postProcessor.postProcess(parse, state);
+					componentGenerator.process(parse, state);
 					if (verbose && LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					preStructureBuilder.postProcess(state, parse);
+					componentProcessor.process(state, parse);
 					if (verbose && LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}

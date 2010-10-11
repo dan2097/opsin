@@ -213,7 +213,7 @@
 
 		<token value="-[P|5](=O)(O)O" labels="none" valType="SMILES">phosphono</token>
 		<token value="-[P|5](=O)([O-])[O-]" labels="none" valType="SMILES">phosphonato</token>
-		<token value="-[P|5](=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the PostProcessor-->
+		<token value="-[P|5](=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the ComponentGenerator-->
 		<token value="-[P|5]=N" labels="none" valType="SMILES">phosphinimyl</token>
 		<token value="-P=O" labels="none" valType="SMILES">phosphoroso</token>
 		<token value="-P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>

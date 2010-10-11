@@ -84,9 +84,9 @@
     <token value="ic" additionalValue="anilide">anilic</token>
     <token value="ic" additionalValue="anilide">anilicacid</token>
     <token value="ic" additionalValue="anilide">anilic acid</token>
-    <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="amidylium" additionalValue="aldehyde">imidylium</token><!--suffixes joined by PreStructureBuilder-->
-    <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by PreStructureBuilder-->
+    <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by ComponentProcessor-->
+    <token value="amidylium" additionalValue="aldehyde">imidylium</token><!--suffixes joined by ComponentProcessor-->
+    <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by ComponentProcessor-->
     <token value="ite">ite</token>
     <token value="onaphthone">onaphthone</token>
     <token value="ophenone">ophenone</token>

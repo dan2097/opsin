@@ -22,7 +22,7 @@ import nu.xom.Node;
  * @author ptc24/dl387
  *
  */
-class PostProcessor {
+class ComponentGenerator {
 
 	/**
 	 * Sort bridges such as the highest priority secondary bridges come first
@@ -96,7 +96,7 @@ class PostProcessor {
 	 * @return
 	 * @throws Exception
 	 */
-	void postProcess(Element moleculeEl, BuildState state) throws Exception {
+	void process(Element moleculeEl, BuildState state) throws Exception {
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(moleculeEl, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {
@@ -137,9 +137,9 @@ class PostProcessor {
 	/**
 	 * Resolves common ambiguities e.g. tetradeca being 4x10carbon chain rather than 14carbon chain
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void resolveAmbiguities(Element subOrRoot) throws PostProcessingException {
+	private void resolveAmbiguities(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (Element apparentMultiplier : multipliers) {
 			if (!BASIC_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR)) && !VONBAEYER_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR))){
@@ -156,7 +156,7 @@ class PostProcessor {
 							if (isThisALocant == null ||
 									!isThisALocant.getLocalName().equals(LOCANT_EL) ||
 									matchComma.split(isThisALocant.getValue()).length != multiplierNum){
-								throw new PostProcessingException(apparentMultiplier.getValue() + nextEl.getValue() +" should not have been lexed as two tokens!");
+								throw new ComponentGenerationException(apparentMultiplier.getValue() + nextEl.getValue() +" should not have been lexed as two tokens!");
 							}
 						}
 					}
@@ -168,17 +168,17 @@ class PostProcessor {
 				if (possibleSuffix!=null){//null if not used as substituent
 					String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
 					if (possibleSuffix.getValue().equals("yl")){
-						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as one token!");
+						throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
 					}
 					Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
 					if (isThisALocant != null && isThisALocant.getLocalName().equals(LOCANT_EL) && matchComma.split(isThisALocant.getValue()).length == multiplierNum){
-						throw new PostProcessingException(multiplierAndGroup +" should not have been lexed as one token!");
+						throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
 					}
 				}
 			}
 			if (multiplierNum > 4 && !apparentMultiplier.getValue().endsWith("a")){//disambiguate pent oxy and the like. Assume it means pentanoxy rather than 5 oxys
 				if (nextEl !=null && nextEl.getLocalName().equals(GROUP_EL)&& matchInlineSuffixesThatAreAlsoGroups.matcher(nextEl.getValue()).matches()){
-					throw new PostProcessingException(apparentMultiplier.getValue() + nextEl.getValue() +" should have been lexed as [alkane stem, inline suffix], not [multiplier, group]!");
+					throw new ComponentGenerationException(apparentMultiplier.getValue() + nextEl.getValue() +" should have been lexed as [alkane stem, inline suffix], not [multiplier, group]!");
 				}
 			}
 		}
@@ -210,7 +210,7 @@ class PostProcessor {
 							}
 						}
 						if (!foundLocantNotInHwSystem){
-							throw new PostProcessingException("This fusion bracket is in fact more likely to be a description of the locants of a HW ring");
+							throw new ComponentGenerationException("This fusion bracket is in fact more likely to be a description of the locants of a HW ring");
 						}
 					}
 				}
@@ -226,9 +226,9 @@ class PostProcessor {
 	 * Strips indicated hydrogen out of locants
 	 * 
 	 * @param subOrRoot
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void processLocants(Element subOrRoot) throws PostProcessingException {
+	private void processLocants(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
 		for (Element locant : locants) {
 			String[] individualLocantText = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
@@ -240,7 +240,7 @@ class PostProcessor {
 						individualLocantText[i] = m.group(2) +m.group(1);
 					}
 					else{
-						throw new PostProcessingException("Unexpected hyphen in locantText");
+						throw new ComponentGenerationException("Unexpected hyphen in locantText");
 					}
 				}
 				else if (Character.isLetter(locantText.charAt(0))){
@@ -272,7 +272,7 @@ class PostProcessor {
 
 			Element afterLocants = (Element)XOMTools.getNextSibling(locant);
 			if(afterLocants == null){
-				throw new PostProcessingException("Nothing after locant tag: " + locant.toXML());
+				throw new ComponentGenerationException("Nothing after locant tag: " + locant.toXML());
 			}
 		}
 	}
@@ -281,9 +281,9 @@ class PostProcessor {
 	 * Depending on context para, for example, will either become para or 1,para
 	 *
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void convertOrthoMetaParaToLocants(Element subOrRoot) throws PostProcessingException{
+	private void convertOrthoMetaParaToLocants(Element subOrRoot) throws ComponentGenerationException{
 		List<Element> ompLocants = XOMTools.getChildElementsWithTagName(subOrRoot, ORTHOMETAPARA_EL);
 		for (Element ompLocant : ompLocants) {
 			String locantText = ompLocant.getValue();
@@ -303,7 +303,7 @@ class PostProcessor {
 					ompLocant.appendChild("1,para");
 				}
 				else{
-					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
+					throw new ComponentGenerationException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
 				}
 			}
 			else{
@@ -317,7 +317,7 @@ class PostProcessor {
 					ompLocant.appendChild("para");
 				}
 				else{
-					throw new PostProcessingException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
+					throw new ComponentGenerationException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
 				}
 			}
 		}
@@ -328,9 +328,9 @@ class PostProcessor {
 	 * e.g. dodecane would be "do" value=2 and "dec" value=10 -->alkaneStem with 12 carbons
 	 * 
 	 * @param subOrRoot
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void formAlkaneStemsFromComponents(Element subOrRoot) throws PostProcessingException {
+	private void formAlkaneStemsFromComponents(Element subOrRoot) throws ComponentGenerationException {
 		LinkedList<Element> alkaneStemComponents =new LinkedList<Element>(XOMTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
 		while(!alkaneStemComponents.isEmpty()){
 			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
@@ -367,16 +367,16 @@ class PostProcessor {
 	 * Applies the traditional alkane modifiers: iso, tert, sec, neo by modifying the alkane chain's SMILES
 	 * 
 	 * @param subOrRoot
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void processAlkaneStemModifications(Element subOrRoot) throws PostProcessingException {
+	private void processAlkaneStemModifications(Element subOrRoot) throws ComponentGenerationException {
 		Elements alkaneStemModifiers = subOrRoot.getChildElements(ALKANESTEMMODIFIER_EL);
 		for(int i=0;i<alkaneStemModifiers.size();i++) {
 			Element alkaneStemModifier =alkaneStemModifiers.get(i);
 			Element alkane = (Element) XOMTools.getNextSibling(alkaneStemModifier);
 			if (alkane ==null || !CHAIN_TYPE_VAL.equals(alkane.getAttributeValue(TYPE_ATR))
 					|| !ALKANESTEM_SUBTYPE_VAL.equals(alkane.getAttributeValue(SUBTYPE_ATR))){
-				throw new PostProcessingException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
+				throw new ComponentGenerationException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
 			}
 			String type;
 			if (alkaneStemModifier.getAttribute(VALUE_ATR)!=null){
@@ -393,7 +393,7 @@ class PostProcessor {
 					type="sec";
 				}
 				else{
-					throw new PostProcessingException("Unrecognised alkaneStem modifier");
+					throw new ComponentGenerationException("Unrecognised alkaneStem modifier");
 				}
 			}
 			alkaneStemModifier.detach();
@@ -405,39 +405,39 @@ class PostProcessor {
 			String smiles;
 			if (type.equals("tert")){
 				if (chainLength <4){
-					throw new PostProcessingException("ChainLength to small for tert modifier, required minLength 4. Found: " +chainLength);
+					throw new ComponentGenerationException("ChainLength to small for tert modifier, required minLength 4. Found: " +chainLength);
 				}
 				if (chainLength >=8){
-					throw new PostProcessingException("Interpretation of tert on an alkane chain of length: " + chainLength +" is ambiguous");
+					throw new ComponentGenerationException("Interpretation of tert on an alkane chain of length: " + chainLength +" is ambiguous");
 				}
 				smiles ="C(C)(C)C" + StringTools.multiplyString("C", chainLength-4);
 			}
 			else if (type.equals("iso")){
 				if (chainLength <3){
-					throw new PostProcessingException("ChainLength to small for iso modifier, required minLength 3. Found: " +chainLength);
+					throw new ComponentGenerationException("ChainLength to small for iso modifier, required minLength 3. Found: " +chainLength);
 				}
 				if (chainLength==3 && !suffixPresent){
-					throw new PostProcessingException("iso has no meaning without a suffix on an alkane chain of length 3");
+					throw new ComponentGenerationException("iso has no meaning without a suffix on an alkane chain of length 3");
 				}
 				smiles =StringTools.multiplyString("C", chainLength-3) +"C(C)C";
 			}
 			else if (type.equals("sec")){
 				if (chainLength <3){
-					throw new PostProcessingException("ChainLength to small for sec modifier, required minLength 3. Found: " +chainLength);
+					throw new ComponentGenerationException("ChainLength to small for sec modifier, required minLength 3. Found: " +chainLength);
 				}
 				if (!suffixPresent){
-					throw new PostProcessingException("sec has no meaning without a suffix on an alkane chain");
+					throw new ComponentGenerationException("sec has no meaning without a suffix on an alkane chain");
 				}
 				smiles ="C(C)C" + StringTools.multiplyString("C", chainLength-3);
 			}
 			else if (type.equals("neo")){
 				if (chainLength <5){
-					throw new PostProcessingException("ChainLength to small for neo modifier, required minLength 5. Found: " +chainLength);
+					throw new ComponentGenerationException("ChainLength to small for neo modifier, required minLength 5. Found: " +chainLength);
 				}
 				smiles = StringTools.multiplyString("C", chainLength-5) + "CC(C)(C)C";
 			}
 			else{
-				throw new PostProcessingException("Unrecognised alkaneStem modifier");
+				throw new ComponentGenerationException("Unrecognised alkaneStem modifier");
 			}
 			alkane.getAttribute(VALUE_ATR).setValue(smiles);
 			alkane.removeAttribute(alkane.getAttribute(USABLEASJOINER_ATR));
@@ -449,9 +449,9 @@ class PostProcessor {
 	 * These are chains of one heteroatom or alternating heteroatoms and are expressed using SMILES
 	 * They are typically treated in an analogous way to alkanes
 	 * @param subOrRoot The root/substituents
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void processHeterogenousHydrides(Element subOrRoot) throws PostProcessingException  {
+	private void processHeterogenousHydrides(Element subOrRoot) throws ComponentGenerationException  {
 		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (int i = 0; i < multipliers.size(); i++) {
 			Element m = multipliers.get(i);
@@ -540,22 +540,22 @@ class PostProcessor {
 	 * If it is higher priority than the second then the ordering is that which is expected for a Hantzch-widman ring
 	 * @param firstHeteroatom
 	 * @param secondHeteroatom
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void checkForAmbiguityWithHWring(String firstHeteroAtomSMILES, String secondHeteroAtomSMILES) throws PostProcessingException {
+	private void checkForAmbiguityWithHWring(String firstHeteroAtomSMILES, String secondHeteroAtomSMILES) throws ComponentGenerationException {
 		Matcher m = matchElementSymbol.matcher(firstHeteroAtomSMILES);
 		if (!m.find()){
-			throw new PostProcessingException("Failed to extract element from heteroatom");
+			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
 		String atom1Element = m.group();
 		
 		m = matchElementSymbol.matcher(secondHeteroAtomSMILES);
 		if (!m.find()){
-			throw new PostProcessingException("Failed to extract element from heteroatom");
+			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
 		String atom2Element = m.group();
 		if (AtomProperties.elementToHwPriority.get(atom1Element)> AtomProperties.elementToHwPriority.get(atom2Element)){
-			throw new PostProcessingException("Hantzch-widman ring misparsed as a heterogeneous hydride with alternating atoms");
+			throw new ComponentGenerationException("Hantzch-widman ring misparsed as a heterogeneous hydride with alternating atoms");
 		}
 	}
 
@@ -588,9 +588,9 @@ class PostProcessor {
 	 *  Will assign a locant to a stereoChemistry element if one was specified/available
 	 *
 	 * @param elem The substituent/root to looks for stereoChemistry in.
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processStereochemistry(Element elem) throws PostProcessingException {
+	private void processStereochemistry(Element elem) throws ComponentGenerationException {
 		Elements stereoChemistryElements = elem.getChildElements(STEREOCHEMISTRY_EL);
 		for(int i=0;i<stereoChemistryElements.size();i++) {
 			Element stereoChemistryElement = stereoChemistryElements.get(i);
@@ -621,7 +621,7 @@ class PostProcessor {
 	                                }
                             	}
                             } else {
-                                throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+                                throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
                             }
                         } else {
                             Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
@@ -633,7 +633,7 @@ class PostProcessor {
                             } else if (matchEZ.matcher(stereoChemistryDescriptor).matches()) {
                                 stereoChemEl.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
                             } else {
-                                throw new PostProcessingException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+                                throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
                             }
                         }
                     }
@@ -653,14 +653,14 @@ class PostProcessor {
 	/**
 	 * Looks for "suffixPrefix" and assigns their value them as an attribute of an adjacent suffix
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processSuffixPrefixes(Element subOrRoot) throws PostProcessingException {
+	private void processSuffixPrefixes(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> suffixPrefixes =  XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIXPREFIX_EL);
 		for (Element suffixPrefix : suffixPrefixes) {
 			Element suffix = (Element) XOMTools.getNextSibling(suffixPrefix);
 			if (suffix==null || ! suffix.getLocalName().equals(SUFFIX_EL)){
-				throw new PostProcessingException("OPSIN bug: suffix not found after suffixPrefix: " + suffixPrefix.getValue());
+				throw new ComponentGenerationException("OPSIN bug: suffix not found after suffixPrefix: " + suffixPrefix.getValue());
 			}
 			suffix.addAttribute(new Attribute(SUFFIXPREFIX_ATR, suffixPrefix.getAttributeValue(VALUE_ATR)));
 			suffixPrefix.detach();
@@ -674,14 +674,14 @@ class PostProcessor {
 	 * If a multiplier is present and neither of these cases are met then it is ambiguous as to whether the multiplier is referring to the infix or the infixed suffix
 	 * This ambiguity is resolved in processInfixFunctionalReplacementNomenclature by looking at the structure of the suffix to be modified
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processInfixes(Element subOrRoot) throws PostProcessingException {
+	private void processInfixes(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> infixes = XOMTools.getChildElementsWithTagName(subOrRoot, INFIX_EL);
 		for (Element infix : infixes) {
 			Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL});
 			if (suffix ==null || !suffix.getLocalName().equals(SUFFIX_EL)){
-				throw new PostProcessingException("No suffix found next next to infix: "+ infix.getValue());
+				throw new ComponentGenerationException("No suffix found next next to infix: "+ infix.getValue());
 			}
 			List<String> currentInfixInformation;
 			if (suffix.getAttribute(INFIX_ATR)==null){
@@ -711,7 +711,7 @@ class PostProcessor {
 			if (possibleBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
 				Element bracket = (Element) XOMTools.getNextSibling(suffix);
 				if (!bracket.getLocalName().equals(STRUCTURALCLOSEBRACKET_EL)){
-					throw new PostProcessingException("Matching closing bracket not found around infix/suffix block");
+					throw new ComponentGenerationException("Matching closing bracket not found around infix/suffix block");
 				}
 				if (possibleMultiplier!=null){
 					int multiplierVal = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -746,9 +746,9 @@ class PostProcessor {
 	 * 2H-5lambda^5-phosphinino[3,2-b]pyran --> 2H 5lambda^5 phosphinino[3,2-b]pyran  BUT
 	 * 1lambda^4,5-Benzodithiepin  --> 1lambda^4 1,5-Benzodithiepin
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processLambdaConvention(Element subOrRoot) throws PostProcessingException {
+	private void processLambdaConvention(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
 		boolean fusedRingPresent = false;
 		if (lambdaConventionEls.size()>0){
@@ -833,7 +833,7 @@ class PostProcessor {
 					}
 					if (frontLocantsExpected){
 						if (m.group(1)==null){
-							throw new PostProcessingException("Locant not found for lambda convention before a benzo fused ring system");
+							throw new ComponentGenerationException("Locant not found for lambda convention before a benzo fused ring system");
 						}
 						lambdaValues[i] = m.group(1);
 					}
@@ -856,7 +856,7 @@ class PostProcessor {
 				else{//just a locant e.g 1,3lambda5
 					if (!assignLambdasToHeteroAtoms){
 						if (!frontLocantsExpected){
-							throw new PostProcessingException("Lambda convention not specified for locant: " + lambdaValue);
+							throw new ComponentGenerationException("Lambda convention not specified for locant: " + lambdaValue);
 						}
 					}
 					else{
@@ -880,9 +880,9 @@ class PostProcessor {
 	 *
 	 * @param substituentsAndRoot: The substituent/root elements at the current level of the tree
 	 * @return Whether the method did something, and so needs to be called again.
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private boolean findAndStructureBrackets(List<Element> substituentsAndRoot) throws PostProcessingException {
+	private boolean findAndStructureBrackets(List<Element> substituentsAndRoot) throws ComponentGenerationException {
 		int blevel = 0;
 		Element openBracket = null;
 		Element closeBracket = null;
@@ -907,7 +907,7 @@ class PostProcessor {
 			}
 		}
 		if (blevel != 0){
-			throw new PostProcessingException("Brackets do not match!");
+			throw new ComponentGenerationException("Brackets do not match!");
 		}
 		return false;
 	}
@@ -956,21 +956,21 @@ class PostProcessor {
 
 	/**Looks for annulen/polyacene/polyaphene/polyalene/polyphenylene/polynaphthylene/polyhelicene tags and replaces them with a group with appropriate SMILES.
 	 * @param subOrRoot The subOrRoot to look for tags in
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processHydroCarbonRings(Element subOrRoot) throws PostProcessingException {
+	private void processHydroCarbonRings(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> annulens = XOMTools.getChildElementsWithTagName(subOrRoot, ANNULEN_EL);
 		for (Element annulen : annulens) {
 			String annulenValue =annulen.getValue();
 	        Matcher match = matchAnnulene.matcher(annulenValue);
 	        match.matches();
 	        if (match.groupCount() !=1){
-	        	throw new PostProcessingException("Invalid annulen tag");
+	        	throw new ComponentGenerationException("Invalid annulen tag");
 	        }
 
 	        int annulenSize=Integer.valueOf(match.group(1));
 	        if (annulenSize <3){
-	        	throw new PostProcessingException("Invalid annulen tag");
+	        	throw new ComponentGenerationException("Invalid annulen tag");
 	        }
 
 			//build [annulenSize]annulene ring as SMILES
@@ -996,7 +996,7 @@ class PostProcessor {
 				String SMILES="";
 				if (classOfHydrocarbonFRSystem.equals("polyacene")){
 					if (multiplierValue <=3){
-						throw new PostProcessingException("Invalid polyacene");
+						throw new ComponentGenerationException("Invalid polyacene");
 					}
 					SMILES= "c1ccc";
 					for (int j = 2; j <= multiplierValue; j++) {
@@ -1011,7 +1011,7 @@ class PostProcessor {
 					SMILES+="c12";
 				}else if (classOfHydrocarbonFRSystem.equals("polyaphene")){
 					if (multiplierValue <=3){
-						throw new PostProcessingException("Invalid polyaphene");
+						throw new ComponentGenerationException("Invalid polyaphene");
 					}
 					SMILES= "c1ccc";
 
@@ -1050,7 +1050,7 @@ class PostProcessor {
 					SMILES+="c12";
 				} else if (classOfHydrocarbonFRSystem.equals("polyalene")){
 					if (multiplierValue <5){
-						throw new PostProcessingException("Invalid polyalene");
+						throw new ComponentGenerationException("Invalid polyalene");
 					}
 					SMILES= "c1";
 					for (int j = 3; j < multiplierValue; j++) {
@@ -1063,7 +1063,7 @@ class PostProcessor {
 					SMILES+="c12";
 				} else if (classOfHydrocarbonFRSystem.equals("polyphenylene")){
 					if (multiplierValue <2){
-						throw new PostProcessingException("Invalid polyphenylene");
+						throw new ComponentGenerationException("Invalid polyphenylene");
 					}
 					SMILES= "c1cccc2";
 					for (int j = 1; j < multiplierValue; j++) {
@@ -1072,7 +1072,7 @@ class PostProcessor {
 					SMILES+= "c12";
 				} else if (classOfHydrocarbonFRSystem.equals("polynaphthylene")){
 					if (multiplierValue <3){
-						throw new PostProcessingException("Invalid polynaphthylene");
+						throw new ComponentGenerationException("Invalid polynaphthylene");
 					}
 					SMILES= "c1cccc2cc3";
 					for (int j = 1; j < multiplierValue; j++) {
@@ -1081,7 +1081,7 @@ class PostProcessor {
 					SMILES+= "c3cc12";
 				} else if (classOfHydrocarbonFRSystem.equals("polyhelicene")){
 					if (multiplierValue <6){
-						throw new PostProcessingException("Invalid polyhelicene");
+						throw new ComponentGenerationException("Invalid polyhelicene");
 					}
 					SMILES= "c1c";
 					int ringOpeningCounter=2;
@@ -1097,7 +1097,7 @@ class PostProcessor {
 				}
 
 				else{
-					throw new PostProcessingException("Unknown semi-trivially named hydrocarbon fused ring system");
+					throw new ComponentGenerationException("Unknown semi-trivially named hydrocarbon fused ring system");
 				}
 
 				newGroup.addAttribute(new Attribute(VALUE_ATR, SMILES));
@@ -1110,7 +1110,7 @@ class PostProcessor {
 				multiplier.detach();
 			}
 			else{
-				throw new PostProcessingException("Invalid semi-trivially named hydrocarbon fused ring system");
+				throw new ComponentGenerationException("Invalid semi-trivially named hydrocarbon fused ring system");
 			}
 		}
 	}
@@ -1118,16 +1118,16 @@ class PostProcessor {
 	/**
 	 * Handles irregular suffixes. Quinone only currently
 	 * @param suffixes
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void handleSuffixIrregularities(Element subOrRoot) throws PostProcessingException {
+	private void handleSuffixIrregularities(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> suffixes = XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL);
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getValue();
 			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
 				Node next = XOMTools.getNext(suffix);
 				if (next == null){
-					throw new PostProcessingException("\"acid\" not found after " +suffixValue);
+					throw new ComponentGenerationException("\"acid\" not found after " +suffixValue);
 				}
 			}
 			// convert quinone to dione
@@ -1160,9 +1160,9 @@ class PostProcessor {
 	 * and replaces them with a group with appropriate SMILES
 	 * Note that only simple spiro tags are handled at this stage i.e. not dispiro
 	 * @param group A group which is potentially a chain
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processRings(Element group) throws PostProcessingException {
+	private void processRings(Element group) throws ComponentGenerationException {
 		Element previous = (Element)XOMTools.getPreviousSibling(group);
 		if(previous != null) {
 			String previousElType = previous.getLocalName();
@@ -1182,10 +1182,10 @@ class PostProcessor {
 	 * This modifies the provided chainGroup into the spiro system by replacing the value of the chain group with appropriate SMILES
 	 * @param chainGroup
 	 * @param spiroEl
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 * @throws NumberFormatException 
 	 */
-	private void processSpiroSystem(Element chainGroup, Element spiroEl) throws NumberFormatException, PostProcessingException {
+	private void processSpiroSystem(Element chainGroup, Element spiroEl) throws NumberFormatException, ComponentGenerationException {
 		int[][] spiroDescriptors = getSpiroDescriptors(StringTools.removeDashIfPresent(spiroEl.getValue()));
 
 		Element multiplier =(Element)XOMTools.getPreviousSibling(spiroEl);
@@ -1200,7 +1200,7 @@ class PostProcessor {
 		}
 		numberOfCarbonInDescriptors += numberOfSpiros;
 		if (numberOfCarbonInDescriptors != chainGroup.getAttributeValue(VALUE_ATR).length()){
-			throw new PostProcessingException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR)));
+			throw new ComponentGenerationException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR)));
 		}
 
 		int numOfOpenedBrackets = 1;
@@ -1314,9 +1314,9 @@ class PostProcessor {
 	 * @param smiles string to search in
 	 * @param locant locant of the atom in given structure
 	 * @return index of ring openings
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private Integer findIndexOfRingOpenings(String smiles, int locant) throws PostProcessingException{
+	private Integer findIndexOfRingOpenings(String smiles, int locant) throws ComponentGenerationException{
 		int count = 0;
 		int pos = -1;
 		for (int i=0; i<smiles.length(); i++){
@@ -1329,7 +1329,7 @@ class PostProcessor {
 			}
 		}
 		if (pos == -1){
-			throw new PostProcessingException("Unable to find atom corresponding to number indicated by superscript in spiro descriptor");
+			throw new ComponentGenerationException("Unable to find atom corresponding to number indicated by superscript in spiro descriptor");
 		}
 		pos++;
 		return pos;
@@ -1342,9 +1342,9 @@ class PostProcessor {
 	 * The multiplier and vonBaeyerBracket are detached
 	 * @param chainEl
 	 * @param vonBaeyerBracketEl
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processVonBaeyerSystem(Element chainEl, Element vonBaeyerBracketEl) throws PostProcessingException {
+	private void processVonBaeyerSystem(Element chainEl, Element vonBaeyerBracketEl) throws ComponentGenerationException {
 		String vonBaeyerBracket = StringTools.removeDashIfPresent(vonBaeyerBracketEl.getValue());
 		Element multiplier =(Element)XOMTools.getPreviousSibling(vonBaeyerBracketEl);
 		int numberOfRings=Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
@@ -1374,7 +1374,7 @@ class PostProcessor {
 			alkylChainLength=elementSymbolArray.size();
 		}
 		else{
-			throw new PostProcessingException("unexpected group valType: " + chainEl.getAttributeValue(VALTYPE_ATR));
+			throw new ComponentGenerationException("unexpected group valType: " + chainEl.getAttributeValue(VALTYPE_ATR));
 		}
 
 
@@ -1419,7 +1419,7 @@ class PostProcessor {
 						coordinatesStr1 = Character.toString(tempCharArray[2]) +Character.toString(tempCharArray[3]);
 					}
 					else{
-						throw new PostProcessingException("Unsupported Von Baeyer locant description: " + m.group(0) );
+						throw new ComponentGenerationException("Unsupported Von Baeyer locant description: " + m.group(0) );
 					}
 				}
 				else{//bracket or other delimiter detected, no ambiguity!
@@ -1431,7 +1431,7 @@ class PostProcessor {
 				int coordinates1=Integer.parseInt(coordinatesStr1);
 				int coordinates2=Integer.parseInt(coordinatesStr2);
 				if (coordinates1 > alkylChainLength || coordinates2 > alkylChainLength){
-					throw new PostProcessingException("Indicated bridge position is not on chain: " +coordinates1 +"," +coordinates2);
+					throw new ComponentGenerationException("Indicated bridge position is not on chain: " +coordinates1 +"," +coordinates2);
 				}
 				if (coordinates2>coordinates1){//makes sure that bridges are built from highest coord to lowest
 					int swap =coordinates1;
@@ -1468,10 +1468,10 @@ class PostProcessor {
 			bridges.add(bridge);
 		}
 		if (totalLengthOfBridges + 2 !=alkylChainLength ){
-			throw new PostProcessingException("Disagreement between lengths of bridges and alkyl chain length");
+			throw new ComponentGenerationException("Disagreement between lengths of bridges and alkyl chain length");
 		}
 		if (numberOfRings +1 != bridges.size()){
-			throw new PostProcessingException("Disagreement between number of rings and number of bridges");
+			throw new ComponentGenerationException("Disagreement between number of rings and number of bridges");
 		}
 
 		String SMILES="";
@@ -1554,7 +1554,7 @@ class PostProcessor {
 				SMILES+= ringClosure(bridge.get("AtomId_Smaller_Label"));
 			}
 			if (dependantSecondaryBridges.size() >0 && dependantSecondaryBridges.size()==secondaryBridges.size()){
-				throw new PostProcessingException("Unable to resolve all dependant bridges!!!");
+				throw new ComponentGenerationException("Unable to resolve all dependant bridges!!!");
 			}
 			secondaryBridges=dependantSecondaryBridges;
 		}
@@ -1573,9 +1573,9 @@ class PostProcessor {
 	 * The chain group can either be an alkane or heteroatom chain
 	 * @param chainGroup
 	 * @param cycloEl
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processCyclisedChain(Element chainGroup, Element cycloEl) throws PostProcessingException {
+	private void processCyclisedChain(Element chainGroup, Element cycloEl) throws ComponentGenerationException {
 		String smiles=chainGroup.getAttributeValue(VALUE_ATR);
 		int chainlen =0;
 		for (int i = smiles.length() -1 ; i >=0; i--) {
@@ -1584,7 +1584,7 @@ class PostProcessor {
 			}
 	    }
 		if (chainlen < 3){
-			throw new PostProcessingException("Heteroatom chain too small to create a ring: " + chainlen);
+			throw new ComponentGenerationException("Heteroatom chain too small to create a ring: " + chainlen);
 		}
 		smiles+="1";
 		if (smiles.charAt(0)=='['){
@@ -1619,13 +1619,13 @@ class PostProcessor {
 	 * Benzyl etc.
 	 * @param group The group to look for irregularities in.
 	 */
-	private void handleGroupIrregularities(Element group) throws PostProcessingException {
+	private void handleGroupIrregularities(Element group) throws ComponentGenerationException {
 		String groupValue =group.getValue();
 		if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
-					throw new PostProcessingException("thiophenol has been incorrectly interpreted as thiophen, ol instead of thio, phenol");
+					throw new ComponentGenerationException("thiophenol has been incorrectly interpreted as thiophen, ol instead of thio, phenol");
 				}
 			}
 		}
@@ -1675,7 +1675,7 @@ class PostProcessor {
 						Element amine =children.get(1);
 						if (amineMultiplier.getLocalName().equals(MULTIPLIER_EL) && amine.getValue().equals("amin")){//e.g. Triethylenetetramine
 							if (Integer.parseInt(amineMultiplier.getAttributeValue(VALUE_ATR))!=multiplierValue +1){
-								throw new PostProcessingException("Invalid polyethylene amine!");
+								throw new ComponentGenerationException("Invalid polyethylene amine!");
 							}
 							String smiles ="";
 							for (int i = 0; i < multiplierValue; i++) {
@@ -1747,20 +1747,20 @@ class PostProcessor {
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDININE_SUBTYPE_VAL)){//cysteine
 				Element ine = (Element) XOMTools.getNextSibling(group);
 				if (!ine.getAttributeValue(VALUE_ATR).equals("ine")){
-					throw new PostProcessingException("This is a cysteic acid derivative, not a cysteine derivative");
+					throw new ComponentGenerationException("This is a cysteic acid derivative, not a cysteine derivative");
 				}
 			}
 		}
 		else if (groupValue.equals("hydrogen")){
 			if (XOMTools.getNextSibling(group.getParent())!=null){
-				throw new PostProcessingException("Hydrogen is not meant as a substituent in this context!");
+				throw new ComponentGenerationException("Hydrogen is not meant as a substituent in this context!");
 			}
 		}
 		else if (groupValue.equals("acryl")){
 			if (SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Element nextEl = (Element) XOMTools.getNext(group);
 				if (nextEl!=null && nextEl.getValue().equals("amid")){
-					throw new PostProcessingException("amide in acrylamide is not [NH2-]");
+					throw new ComponentGenerationException("amide in acrylamide is not [NH2-]");
 				}
 			}
 		}
