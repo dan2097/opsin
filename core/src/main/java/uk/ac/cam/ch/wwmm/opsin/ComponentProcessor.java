@@ -28,7 +28,7 @@ import nu.xom.Node;
 *
 */
 
-class PreStructureBuilder {
+class ComponentProcessor {
 	private final static Pattern matchColon =Pattern.compile(":");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchComma =Pattern.compile(",");
@@ -73,7 +73,7 @@ class PreStructureBuilder {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	PreStructureBuilder(ResourceGetter resourceGetter) throws Exception {
+	ComponentProcessor(ResourceGetter resourceGetter) throws Exception {
 		//Populate suffix rules/applicability hashes
 		Document suffixApplicabilityDoc = resourceGetter.getXMLDocument("suffixApplicability.xml");
 		Document suffixRulesDoc = resourceGetter.getXMLDocument("suffixRules.xml");
@@ -118,10 +118,10 @@ class PreStructureBuilder {
 	 * @param state
      * @param elem The element to postprocess.
 	 * @return
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 * @throws StructureBuildingException 
 	 */
-	void postProcess(BuildState state, Element elem) throws PostProcessingException, StructureBuildingException {
+	void process(BuildState state, Element elem) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, WORD_EL);
 		int wordCount =words.size();
 		for (int i = wordCount -1; i>=0; i--) {
@@ -134,7 +134,7 @@ class PreStructureBuilder {
 
 			List<Element> roots = XOMTools.getDescendantElementsWithTagName(word, ROOT_EL);
 			if (roots.size() >1){
-				throw new PostProcessingException("Multiple roots, but only 0 or 1 were expected. Found: " +roots.size());
+				throw new ComponentGenerationException("Multiple roots, but only 0 or 1 were expected. Found: " +roots.size());
 			}
 			List<Element> substituents = XOMTools.getDescendantElementsWithTagName(word, SUBSTITUENT_EL);
 			List<Element> substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);
@@ -162,7 +162,7 @@ class PreStructureBuilder {
 			while (!finalSubOrRootInWord.getLocalName().equals(ROOT_EL) && !finalSubOrRootInWord.getLocalName().equals(SUBSTITUENT_EL)){
 				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 				if (children.size()==0){
-					throw new PostProcessingException("Unable to find finalSubOrRootInWord");
+					throw new ComponentGenerationException("Unable to find finalSubOrRootInWord");
 				}
 				finalSubOrRootInWord = children.get(children.size()-1);
 			}
@@ -235,9 +235,9 @@ class PreStructureBuilder {
 	 * @param group The group element
 	 * @return The fragment specified by the group element.
 	 * @throws StructureBuildingException If the group can't be built.
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, PostProcessingException {
+	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
 		String groupType = group.getAttributeValue(TYPE_ATR);
 		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
 		String groupValue = group.getAttributeValue(VALUE_ATR);
@@ -330,9 +330,9 @@ class PreStructureBuilder {
 	 * @param group: The group element
 	 * @param parentFrag: The fragment that has been generated from the group element
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private static void processXyleneLikeNomenclature(BuildState state, Element group, Fragment parentFrag) throws StructureBuildingException, PostProcessingException {
+	private static void processXyleneLikeNomenclature(BuildState state, Element group, Fragment parentFrag) throws StructureBuildingException, ComponentGenerationException {
 		if(group.getAttribute(ADDGROUP_ATR)!=null) {
 			String addGroupInformation=group.getAttributeValue(ADDGROUP_ATR);
 			String[] groupsToBeAdded = matchSemiColon.split(addGroupInformation);//typically only one, but 2 in the case of xylene and quinones
@@ -341,7 +341,7 @@ class PreStructureBuilder {
                 String[] tempArray = matchSpace.split(groupToBeAdded);
                 HashMap<String, String> groupInformation = new HashMap<String, String>();
                 if (tempArray.length != 2 && tempArray.length != 3) {
-                    throw new PostProcessingException("malformed addGroup tag");
+                    throw new ComponentGenerationException("malformed addGroup tag");
                 }
                 groupInformation.put("SMILES", tempArray[0]);
                 if (tempArray[1].startsWith("id")) {
@@ -351,7 +351,7 @@ class PreStructureBuilder {
                     groupInformation.put("atomReferenceType", "locant");
                     groupInformation.put("atomReference", tempArray[1].substring(6));
                 } else {
-                    throw new PostProcessingException("malformed addGroup tag");
+                    throw new ComponentGenerationException("malformed addGroup tag");
                 }
                 if (tempArray.length == 3) {//labels may optionally be specified for the group to be added
                     groupInformation.put("labels", tempArray[2]);
@@ -375,7 +375,7 @@ class PreStructureBuilder {
 							locant =parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.get("atomReference")) -1 ).getFirstLocant();
 						}
 						else{
-							throw new PostProcessingException("malformed addGroup tag");
+							throw new ComponentGenerationException("malformed addGroup tag");
 						}
 						if (locant ==null || !locant.equals("1")){
 							assignlocants=false;
@@ -419,10 +419,10 @@ class PreStructureBuilder {
 					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.get("atomReference")) -1);
 				}
 				else{
-					throw new PostProcessingException("malformed addGroup tag");
+					throw new ComponentGenerationException("malformed addGroup tag");
 				}
 				if (newFrag.getOutAtoms().size() >1){
-					throw new PostProcessingException("too many outAtoms on group to be added");
+					throw new ComponentGenerationException("too many outAtoms on group to be added");
 				}
 				if (newFrag.getOutAtoms().size() ==1) {
 					OutAtom newFragOutAtom = newFrag.getOutAtom(0);
@@ -444,7 +444,7 @@ class PreStructureBuilder {
                 String[] tempArray = matchSpace.split(heteroAtomToBeAdded);
                 HashMap<String, String> heteroAtomInformation = new HashMap<String, String>();
                 if (tempArray.length != 2) {
-                    throw new PostProcessingException("malformed addHeteroAtom tag");
+                    throw new ComponentGenerationException("malformed addHeteroAtom tag");
                 }
                 heteroAtomInformation.put("SMILES", tempArray[0]);
                 if (tempArray[1].startsWith("id")) {
@@ -454,7 +454,7 @@ class PreStructureBuilder {
                     heteroAtomInformation.put("atomReferenceType", "locant");
                     heteroAtomInformation.put("atomReference", tempArray[1].substring(6));
                 } else {
-                    throw new PostProcessingException("malformed addHeteroAtom tag");
+                    throw new ComponentGenerationException("malformed addHeteroAtom tag");
                 }
                 allHeteroAtomInformation.add(heteroAtomInformation);
             }
@@ -482,7 +482,7 @@ class PreStructureBuilder {
 					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(heteroAtomInformation.get("atomReference")) -1);
 				}
 				else{
-					throw new PostProcessingException("malformed addHeteroAtom tag");
+					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
 				String atomSymbol = heteroAtomInformation.get("SMILES");
 				if(atomSymbol.startsWith("[")) {
@@ -504,7 +504,7 @@ class PreStructureBuilder {
                 String[] tempArray = matchSpace.split(bondToBeAdded);
                 HashMap<String, String> bondInformation = new HashMap<String, String>();
                 if (tempArray.length != 2) {
-                    throw new PostProcessingException("malformed addBond tag");
+                    throw new ComponentGenerationException("malformed addBond tag");
                 }
                 bondInformation.put("bondOrder", tempArray[0]);
                 if (tempArray[1].startsWith("id")) {
@@ -514,7 +514,7 @@ class PreStructureBuilder {
                     bondInformation.put("atomReferenceType", "locant");
                     bondInformation.put("atomReference", tempArray[1].substring(6));
                 } else {
-                    throw new PostProcessingException("malformed addBond tag");
+                    throw new ComponentGenerationException("malformed addBond tag");
                 }
                 allBondInformation.add(bondInformation);
             }
@@ -542,7 +542,7 @@ class PreStructureBuilder {
 					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(bondInformation.get("atomReference")) -1);
 				}
 				else{
-					throw new PostProcessingException("malformed addBond tag");
+					throw new ComponentGenerationException("malformed addBond tag");
 				}
 				FragmentTools.unsaturate(atomOnParentFrag.getID(), Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
 			}
@@ -569,24 +569,24 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param substituent
 	 * @return true is the substituent was a hydro substituent and hence was removed
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private boolean removeHydroSubstituents(BuildState state, Element substituent) throws PostProcessingException {
+	private boolean removeHydroSubstituents(BuildState state, Element substituent) throws ComponentGenerationException {
 		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
 		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size()==0){
 			Element hydroSubstituent = substituent;
 			if (hydroElements.size()!=1){
-				throw new PostProcessingException("Unexpected number of hydro elements found in substituent");
+				throw new ComponentGenerationException("Unexpected number of hydro elements found in substituent");
 			}
 			Element hydroElement = hydroElements.get(0);
 			String hydroValue = hydroElement.getValue();
 			if (hydroValue.equals("hydro") || hydroValue.equals("dehydro")){
 				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
 				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
-					throw new PostProcessingException("Multiplier expected but not found before hydro subsituent");
+					throw new ComponentGenerationException("Multiplier expected but not found before hydro subsituent");
 				}
 				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
-					throw new PostProcessingException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
+					throw new ComponentGenerationException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
 				}
 			}
 			Element targetRing =null;
@@ -658,7 +658,7 @@ class PreStructureBuilder {
 				}
 			}
 			if (targetRing ==null){
-				throw new PostProcessingException("Cannot find ring for hydro substituent to apply to");
+				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
 			}
 			//move the children of the hydro substituent
 			Elements children =hydroSubstituent.getChildElements();
@@ -694,10 +694,10 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param subOrBracketOrRoot The substituent/root/bracket to looks for locants in.
 	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclature
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void determineLocantMeaning(BuildState state, Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, PostProcessingException {
+	private void determineLocantMeaning(BuildState state, Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, ComponentGenerationException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
 		Element group =subOrBracketOrRoot.getFirstChildElement(GROUP_EL);//will be null if element is a bracket
 		for (Element locant : locants) {
@@ -777,13 +777,13 @@ class PreStructureBuilder {
 						}
 					} else {
 						if(!checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord)) {
-							throw new PostProcessingException("Mismatch between locant and multiplier counts (" + Integer.toString(locantValues.length) + " and " + multiplierEl.getAttributeValue(VALUE_ATR) + "):" + locant.toXML());
+							throw new ComponentGenerationException("Mismatch between locant and multiplier counts (" + Integer.toString(locantValues.length) + " and " + multiplierEl.getAttributeValue(VALUE_ATR) + "):" + locant.toXML());
 						}
 					}
 				} else {
 					/* Multiple locants without a multiplier */
 					if(!checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord)) {
-						throw new PostProcessingException("Multiple locants without a multiplier: " + locant.toXML());
+						throw new ComponentGenerationException("Multiple locants without a multiplier: " + locant.toXML());
 					}
 				}
 			}
@@ -972,10 +972,10 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param subOrRoot
 	 * @param allGroups
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void detectConjunctiveSuffixGroups(BuildState state, Element subOrRoot, List<Element> allGroups) throws PostProcessingException, StructureBuildingException {
+	private void detectConjunctiveSuffixGroups(BuildState state, Element subOrRoot, List<Element> allGroups) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size()>1){
 			List<Element> conjunctiveGroups = new ArrayList<Element>();
@@ -994,10 +994,10 @@ class PreStructureBuilder {
 				return;
 			}
 			if (ringGroup ==null){
-				throw new PostProcessingException("OPSIN bug: unable to find ring associated with conjunctive suffix group");
+				throw new ComponentGenerationException("OPSIN bug: unable to find ring associated with conjunctive suffix group");
 			}
 			if (conjunctiveGroups.size()!=1){
-				throw new PostProcessingException("OPSIN Bug: Two groups exactly should be present at this point when processing conjunctive nomenclature");
+				throw new ComponentGenerationException("OPSIN Bug: Two groups exactly should be present at this point when processing conjunctive nomenclature");
 			}
 			Element primaryConjunctiveGroup =conjunctiveGroups.get(0);
 			Fragment primaryConjunctiveFrag = state.xmlFragmentMap.get(primaryConjunctiveGroup);
@@ -1037,7 +1037,7 @@ class PreStructureBuilder {
 				if (possibleLocant.getLocalName().equals(LOCANT_EL)){
 					String[] locants = matchComma.split(possibleLocant.getValue());
 					if (locants.length!=multiplier){
-						throw new PostProcessingException("mismatch between number of locants and multiplier in conjunctive nomenclature routine");
+						throw new ComponentGenerationException("mismatch between number of locants and multiplier in conjunctive nomenclature routine");
 					}
 					for (int i = 0; i < locants.length; i++) {
 						conjunctiveGroups.get(i).addAttribute(new Attribute(LOCANT_ATR, locants[i]));
@@ -1055,9 +1055,9 @@ class PreStructureBuilder {
 	 * @param state 
 	 *
 	 * @param subOrRoot The substituent/root to look for locants in.
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void matchLocantsToDirectFeatures(BuildState state, Element subOrRoot) throws PostProcessingException {
+	private void matchLocantsToDirectFeatures(BuildState state, Element subOrRoot) throws ComponentGenerationException {
 		List<Element> locants =  XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		for (Element group : groups) {
@@ -1120,7 +1120,7 @@ class PreStructureBuilder {
 								locants.remove(locantBeforeHWSystem);
 							}
 							else if (heteroAtoms.size()>1){
-								throw new PostProcessingException("Mismatch between number of locants and HW heteroatoms");
+								throw new ComponentGenerationException("Mismatch between number of locants and HW heteroatoms");
 							}
 						}
 					}
@@ -1162,10 +1162,10 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param group
 	 * @param suffixes 
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void preliminaryProcessSuffixes(BuildState state, Element group, List<Element> suffixes) throws PostProcessingException, StructureBuildingException{
+	private void preliminaryProcessSuffixes(BuildState state, Element group, List<Element> suffixes) throws ComponentGenerationException, StructureBuildingException{
 		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
 
 		boolean imideSpecialCase =false;
@@ -1175,7 +1175,7 @@ class PreStructureBuilder {
 		else{
 			for (Element suffix : suffixes) {
 				if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){
-					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
+					throw new ComponentGenerationException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
 			}
 		}
@@ -1201,7 +1201,7 @@ class PreStructureBuilder {
 	    }
 		if (imideSpecialCase){//Pretty horrible hack to allow cyclic imides
 			if (suffixes.size() !=2){
-				throw new PostProcessingException("Expected two suffixes fragments for cyclic imide");
+				throw new ComponentGenerationException("Expected two suffixes fragments for cyclic imide");
 			}
 			Atom nitrogen =null;
 			for (Atom a : suffixFragments.get(0).getAtomList()) {
@@ -1210,11 +1210,11 @@ class PreStructureBuilder {
 				}
 			}
 			if (nitrogen ==null){
-				throw new PostProcessingException("Nitrogen not found where nitrogen expected");
+				throw new ComponentGenerationException("Nitrogen not found where nitrogen expected");
 			}
 			Atom carbon = suffixableFragment.getAtomByIDOrThrow(Integer.parseInt(suffixes.get(1).getAttributeValue(LOCANTID_ATR)));
 			if (!carbon.getElement().equals("C")){
-				throw new PostProcessingException("Carbon not found where carbon expected");
+				throw new ComponentGenerationException("Carbon not found where carbon expected");
 			}
 			resolveSuffixes(state, group, suffixes);
 			suffixesResolved = true;
@@ -1245,27 +1245,27 @@ class PreStructureBuilder {
 	 * @param suffixes
 	 * @param suffixableFragment
 	 * @return
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private boolean processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws PostProcessingException, StructureBuildingException {
+	private boolean processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws ComponentGenerationException, StructureBuildingException {
 		boolean imideSpecialCase =false;
 		//suffixAppliesTo attribute contains instructions for number/positions of suffix
 		//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
 		if (suffix ==null){
-			throw new PostProcessingException("No suffix where suffix was expected");
+			throw new ComponentGenerationException("No suffix where suffix was expected");
 		}
 		else{
 			if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
-				throw new PostProcessingException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
+				throw new ComponentGenerationException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
 			}
 			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
 			String[] suffixInstructions = matchComma.split(suffixInstruction);
 			boolean symmetricSuffixes =true;
 			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
 				if (suffixInstructions.length != 2){
-					throw new PostProcessingException("suffix: " + suffix.getValue() + " used on an inappropriate group");
+					throw new ComponentGenerationException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
 				symmetricSuffixes = false;
 				String suffixValue = suffix.getValue();
@@ -1309,9 +1309,9 @@ class PreStructureBuilder {
 	 * @param frag The fragment to which the suffix will be applied
 	 * @return An arrayList containing the generated fragments
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private List<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag) throws StructureBuildingException, PostProcessingException {
+	private List<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag) throws StructureBuildingException, ComponentGenerationException {
 		List<Fragment> suffixFragments =new ArrayList<Fragment>();
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
@@ -1385,20 +1385,20 @@ class PreStructureBuilder {
                 }
 				else if (suffixRuleTagName.equals(SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL)){
 					if (suffixFrag != null){
-						throw new PostProcessingException("addFunctionalAtomsToHydroxyGroups is not currently compatable with the addGroup suffix rule");
+						throw new ComponentGenerationException("addFunctionalAtomsToHydroxyGroups is not currently compatable with the addGroup suffix rule");
 					}
 					addFunctionalAtomsToHydroxyGroups(atomLikelyToBeUsedBySuffix);
 				}
 				else if (suffixRuleTagName.equals(SUFFIXRULES_CHARGEHYDROXYGROUPS_EL)){
 					if (suffixFrag != null){
-						throw new PostProcessingException("chargeHydroxyGroups is not currently compatable with the addGroup suffix rule");
+						throw new ComponentGenerationException("chargeHydroxyGroups is not currently compatable with the addGroup suffix rule");
 					}
 					chargeHydroxyGroups(atomLikelyToBeUsedBySuffix);
 					
 				}
 				else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL)){
 					if (suffixFrag != null){
-						throw new PostProcessingException("removeOneDoubleBondedOxygen is not currently compatable with the addGroup suffix rule");
+						throw new ComponentGenerationException("removeOneDoubleBondedOxygen is not currently compatable with the addGroup suffix rule");
 					}
 					removeOneDoubleBondedOxygen(state, atomLikelyToBeUsedBySuffix);
 				}
@@ -1418,10 +1418,10 @@ class PreStructureBuilder {
 	 * @param suffixes The suffix elements for a fragment.
 	 * @param frag The fragment to which the suffix will be applied
 	 * @return An arrayList containing the generated fragments
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException 
 	 */
-	private void processConvertHydroxyGroupsToOutAtomsRule(BuildState state, List<Element> suffixes, Fragment frag) throws PostProcessingException, StructureBuildingException{
+	private void processConvertHydroxyGroupsToOutAtomsRule(BuildState state, List<Element> suffixes, Fragment frag) throws ComponentGenerationException, StructureBuildingException{
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
@@ -1532,16 +1532,16 @@ class PreStructureBuilder {
 	 * @param suffixValue
 	 * @param subgroupType
 	 * @return
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private Elements getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws PostProcessingException {
+	private Elements getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws ComponentGenerationException {
 		HashMap<String, List<Element>> groupToSuffixMap = suffixApplicability.get(suffixTypeToUse);
 		if (groupToSuffixMap==null){
-			throw new PostProcessingException("Suffix Type: "+ suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
+			throw new ComponentGenerationException("Suffix Type: "+ suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
 		}
 		List<Element> potentiallyApplicableSuffixes =groupToSuffixMap.get(suffixValue);
 		if(potentiallyApplicableSuffixes==null || potentiallyApplicableSuffixes.size()==0 ) {
-			throw new PostProcessingException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")according to suffixApplicability.xml");
+			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")according to suffixApplicability.xml");
 		}
 		Element chosenSuffix=null;
         for (Element suffix : potentiallyApplicableSuffixes) {
@@ -1551,16 +1551,16 @@ class PreStructureBuilder {
                 }
             }
             if (chosenSuffix != null) {
-                throw new PostProcessingException("Suffix: " + suffixValue + " appears multiple times in suffixApplicability.xml");
+                throw new ComponentGenerationException("Suffix: " + suffixValue + " appears multiple times in suffixApplicability.xml");
             }
             chosenSuffix = suffix;
         }
 		if (chosenSuffix==null){
-			throw new PostProcessingException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
+			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
 		}
 		Element rule =suffixRules.get(chosenSuffix.getValue());
 		if(rule ==null) {
-			throw new PostProcessingException("Suffix: " +chosenSuffix.getValue() +" does not have a rule associated with it in suffixRules.xml");
+			throw new ComponentGenerationException("Suffix: " +chosenSuffix.getValue() +" does not have a rule associated with it in suffixRules.xml");
 		}
 		return rule.getChildElements();
 	}
@@ -1695,9 +1695,9 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processHW(BuildState state, Element subOrRoot) throws StructureBuildingException, PostProcessingException{
+	private void processHW(BuildState state, Element subOrRoot) throws StructureBuildingException, ComponentGenerationException{
 		List<Element> hwGroups = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, SUBTYPE_ATR, HANTZSCHWIDMAN_SUBTYPE_VAL);
 		for (Element group : hwGroups) {
 			Fragment hwRing =state.xmlFragmentMap.get(group);
@@ -1720,7 +1720,7 @@ class PreStructureBuilder {
 					String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
 					Matcher m = matchElementSymbol.matcher(heteroAtomElement);
 					if (!m.find()){
-						throw new PostProcessingException("Failed to extract element from HW heteroatom");
+						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
 					}
 					heteroAtomElement = m.group();
 					if (heteroAtomElement.equals("N")){
@@ -1739,7 +1739,7 @@ class PreStructureBuilder {
 					}
 				}
 				if (saturatedRing && !hasNitrogen && hasSiorGeorSnorPb){
-					throw new PostProcessingException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sn/Pb)");
+					throw new ComponentGenerationException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sn/Pb)");
 				}
 			}
 			String name = "";
@@ -1751,7 +1751,7 @@ class PreStructureBuilder {
 				if(specialHWRings.containsKey(name)) {
 					String[] specialRingInformation =specialHWRings.get(name);
 					if (specialRingInformation[0].equals("blocked")){
-						throw new PostProcessingException("Blocked HW system");
+						throw new ComponentGenerationException("Blocked HW system");
 					}
 					else if (specialRingInformation[0].equals("saturated")){
 						for (Atom a: hwRing.getAtomList()) {
@@ -1775,7 +1775,7 @@ class PreStructureBuilder {
 					String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
 					Matcher m = matchElementSymbol.matcher(elementReplacement);
 					if (!m.find()){
-						throw new PostProcessingException("Failed to extract element from HW heteroatom");
+						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
 					}
 					elementReplacement = m.group();
 					Atom a =hwRing.getAtomByLocantOrThrow(locant);
@@ -1797,7 +1797,7 @@ class PreStructureBuilder {
 				String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
 				Matcher m = matchElementSymbol.matcher(elementReplacement);
 				if (!m.find()){
-					throw new PostProcessingException("Failed to extract element from HW heteroatom");
+					throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
 				}
 				elementReplacement = m.group();
 
@@ -1872,10 +1872,10 @@ class PreStructureBuilder {
 	 * Processes constructs such as biphenyl, 1,1':4',1''-Terphenyl, 2,2'-Bipyridylium, m-Quaterphenyl
 	 * @param state
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processRingAssemblies(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
+	private void processRingAssemblies(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> ringAssemblyMultipliers = XOMTools.getChildElementsWithTagName(subOrRoot, RINGASSEMBLYMULTIPLIER_EL);
 		for (Element multiplier : ringAssemblyMultipliers) {
 			int mvalue = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
@@ -1894,18 +1894,18 @@ class PreStructureBuilder {
 					//Find elements that can have locants but don't currently
 					List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, previousEl);
 					if(2 <= locantAble.size()) {
-						throw new PostProcessingException("Most likely the ringAssemblyLocant: " + previousEl.getValue() + " is actually a normal locant that is supposed to apply to elements after the ring assembly");
+						throw new ComponentGenerationException("Most likely the ringAssemblyLocant: " + previousEl.getValue() + " is actually a normal locant that is supposed to apply to elements after the ring assembly");
 					}
 				}
 				//locantText might be something like 1,1':3',1''
 				String[] perRingLocantArray =matchColon.split(locantText);
 				if (perRingLocantArray.length !=(mvalue -1)){
-					throw new PostProcessingException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
+					throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
 				}
 				for (int j = 0; j < perRingLocantArray.length; j++) {
 					String[] locantArray = matchComma.split(perRingLocantArray[j]);
 					if (locantArray.length !=2){
-						throw new PostProcessingException("missing locant, expected 2 locants: " + perRingLocantArray[j]);
+						throw new ComponentGenerationException("missing locant, expected 2 locants: " + perRingLocantArray[j]);
 					}
 					ringJoiningLocants.add(Arrays.asList(locantArray));
 				}
@@ -2023,14 +2023,14 @@ class PreStructureBuilder {
 	 * http://www.chem.qmul.ac.uk/iupac/spiro/ (SP-2 through SP-6)
 	 * @param state
 	 * @param subOrRoot
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processPolyCyclicSpiroNomenclature(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
+	private void processPolyCyclicSpiroNomenclature(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> polyCyclicSpiros = XOMTools.getChildElementsWithTagName(subOrRoot, POLYCYCLICSPIRO_EL);
 		if (polyCyclicSpiros.size()>0){
 			if (polyCyclicSpiros.size()!=1){
-				throw new PostProcessingException("Nested polyspiro systems are not supported");
+				throw new ComponentGenerationException("Nested polyspiro systems are not supported");
 			}
 			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
 			String value = polyCyclicSpiroDescriptor.getAttributeValue(VALUE_ATR);
@@ -2047,29 +2047,29 @@ class PreStructureBuilder {
 				processDispiroter(state, polyCyclicSpiroDescriptor);
 			}
 			else{
-				throw new PostProcessingException("Only identical components supported so far");
+				throw new ComponentGenerationException("Only identical components supported so far");
 			}
 			polyCyclicSpiroDescriptor.detach();
 		}
 	}
 
-	private void processNonIdenticalPolyCyclicSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws PostProcessingException, StructureBuildingException {
+	private void processNonIdenticalPolyCyclicSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws ComponentGenerationException, StructureBuildingException {
 		Element subOrRoot = (Element) polyCyclicSpiroDescriptor.getParent();
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size()<2){
-			throw new PostProcessingException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
+			throw new ComponentGenerationException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
 		}
 		if (groups.size() >2){
-			throw new PostProcessingException("Spiro system that is not supported yet encountered");
+			throw new ComponentGenerationException("Spiro system that is not supported yet encountered");
 		}
 		Element openBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		if (!openBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
-			throw new PostProcessingException("OPSIN Bug: Open bracket not found where open bracket expeced");
+			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
 		}
 		List<Element> spiroBracketElements = XOMTools.getSiblingsUpToElementWithTagName(openBracket, STRUCTURALCLOSEBRACKET_EL);
 		Element closeBracket = (Element) XOMTools.getNextSibling(spiroBracketElements.get(spiroBracketElements.size()-1));
 		if (closeBracket == null || !closeBracket.getLocalName().equals(STRUCTURALCLOSEBRACKET_EL)){
-			throw new PostProcessingException("OPSIN Bug: Open bracket not found where open bracket expeced");
+			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
 		}
 		
 		Element firstGroup = groups.get(0);
@@ -2088,7 +2088,7 @@ class PreStructureBuilder {
 			Element nextGroup =groups.get(i);
 			Element locant = (Element) XOMTools.getNextSibling(groups.get(i-1), SPIROLOCANT_EL);
 			if (locant ==null){
-				throw new PostProcessingException("Unable to find locantEl for polycyclic spiro system");
+				throw new ComponentGenerationException("Unable to find locantEl for polycyclic spiro system");
 			}
 			
 			List<Element> nextGroupEls = new ArrayList<Element>();
@@ -2103,7 +2103,7 @@ class PreStructureBuilder {
 			
 			String[] locants = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
 			if (locants.length!=2){
-				throw new PostProcessingException("Incorrect number of locants found before component of polycyclic spiro system");
+				throw new ComponentGenerationException("Incorrect number of locants found before component of polycyclic spiro system");
 			}
 			locant.detach();
 			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
@@ -2135,21 +2135,21 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param polyCyclicSpiroDescriptor
 	 * @param components
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processSpiroBiOrTer(BuildState state, Element polyCyclicSpiroDescriptor, int components) throws PostProcessingException, StructureBuildingException {
+	private void processSpiroBiOrTer(BuildState state, Element polyCyclicSpiroDescriptor, int components) throws ComponentGenerationException, StructureBuildingException {
 		Element locant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
 		if (locant ==null || !locant.getLocalName().equals(LOCANT_EL)){
-			throw new PostProcessingException("Unable to find locantEl for polycyclic spiro system");
+			throw new ComponentGenerationException("Unable to find locantEl for polycyclic spiro system");
 		}
 		String[] locants = matchComma.split(locant.getValue());
 		if (locants.length!=components){
-			throw new PostProcessingException("Mismatch between spiro descriptor and number of locants provided");
+			throw new ComponentGenerationException("Mismatch between spiro descriptor and number of locants provided");
 		}
 		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
 		if (group==null){
-			throw new PostProcessingException("Cannot find group to which spirobi/ter descriptor applies");
+			throw new ComponentGenerationException("Cannot find group to which spirobi/ter descriptor applies");
 		}
 
 		determineFeaturesToResolveInSingleComponentSpiro(state, polyCyclicSpiroDescriptor);
@@ -2179,16 +2179,16 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param polyCyclicSpiroDescriptor
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processDispiroter(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, PostProcessingException {
+	private void processDispiroter(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
 		String value = polyCyclicSpiroDescriptor.getValue();
 		value = value.substring(0, value.length()-10);//remove dispiroter
 		value = StringTools.removeDashIfPresent(value);
 		String[] locants = matchColon.split(value);
 		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
 		if (group==null){
-			throw new PostProcessingException("Cannot find group to which dispiroter descriptor applies");
+			throw new ComponentGenerationException("Cannot find group to which dispiroter descriptor applies");
 		}
 		determineFeaturesToResolveInSingleComponentSpiro(state, polyCyclicSpiroDescriptor);
 		Fragment fragment = state.xmlFragmentMap.get(group);
@@ -2223,9 +2223,9 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param polyCyclicSpiroDescriptor
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void determineFeaturesToResolveInSingleComponentSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, PostProcessingException {
+	private void determineFeaturesToResolveInSingleComponentSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
 		Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		List<Element> elementsToResolve;
 		if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
@@ -2244,9 +2244,9 @@ class PreStructureBuilder {
 	 * @param state
 	 * @param elementsToResolve
 	 * @throws StructureBuildingException 
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	private void resolveFeaturesOntoGroup(BuildState state, List<Element> elementsToResolve) throws StructureBuildingException, PostProcessingException{
+	private void resolveFeaturesOntoGroup(BuildState state, List<Element> elementsToResolve) throws StructureBuildingException, ComponentGenerationException{
 		if (elementsToResolve.size()==0){
 			return;
 		}
@@ -2262,7 +2262,7 @@ class PreStructureBuilder {
 			substituentToResolve.appendChild(element);
 		}
 		if (group ==null){
-			throw new PostProcessingException("OPSIN bug: group element should of been given to method");
+			throw new ComponentGenerationException("OPSIN bug: group element should of been given to method");
 		}
 		if (substituentToResolve.getChildElements().size()!=0){
 			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
@@ -2341,10 +2341,10 @@ class PreStructureBuilder {
 	 * section of the name from that point onwards in a left to right manner rather than right to left
 	 * @param state
 	 * @param subOrRoot: The sub/root to look in
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void handleMultiRadicals(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException{
+	private void handleMultiRadicals(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException{
 		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
@@ -2366,7 +2366,7 @@ class PreStructureBuilder {
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("[TeH?]", multiplierVal));
 					}
 					else{
-						throw new PostProcessingException("unexpected group value");
+						throw new ComponentGenerationException("unexpected group value");
 					}
 					group.getAttribute(OUTIDS_ATR).setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR)));
 					XOMTools.setTextChild(group, beforeGroup.getValue() + groupValue);
@@ -2394,7 +2394,7 @@ class PreStructureBuilder {
 			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
 				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
 				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtoms().size() < 2){//must be preceded by a multi radical
-					throw new PostProcessingException("Invalid use of amine as a substituent!");
+					throw new ComponentGenerationException("Invalid use of amine as a substituent!");
 				}
 			}
 			if (state.currentWordRule == WordRule.polymer){
@@ -2463,9 +2463,9 @@ class PreStructureBuilder {
 	 * @param group
 	 * @param suffixes
 	 * @return numberOfOutAtoms that will be added by resolveSuffixes
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private int calculateOutAtomsToBeAddedFromInlineSuffixes(BuildState state, Element group, Elements suffixes) throws  PostProcessingException {
+	private int calculateOutAtomsToBeAddedFromInlineSuffixes(BuildState state, Element group, Elements suffixes) throws  ComponentGenerationException {
 		int outAtomsThatWillBeAdded = 0;
 		Fragment frag = state.xmlFragmentMap.get(group);
 		String groupType = frag.getType();
@@ -2551,9 +2551,9 @@ class PreStructureBuilder {
 	 * @param substituents: An arraylist of substituent elements
 	 * @return Whether the method did something, and so needs to be called again.
 	 * @throws StructureBuildingException
-     * @throws PostProcessingException
+     * @throws ComponentGenerationException
 	 */
-	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws PostProcessingException, StructureBuildingException {
+	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws ComponentGenerationException, StructureBuildingException {
 		for (Element substituent : substituents) {//will attempt to bracket this substituent with the substituent before it
 			String firstElInSubName =((Element)substituent.getChild(0)).getLocalName();
 			if (firstElInSubName.equals(LOCANT_EL) ||firstElInSubName.equals(MULTIPLIER_EL)){
@@ -2606,7 +2606,7 @@ class PreStructureBuilder {
 			//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
 			List<Element> groupElements  = XOMTools.getDescendantElementsWithTagName(elementBeforeSubstituent, GROUP_EL);//one for a substituent, possibly more for a bracket
 			Element lastGroupOfElementBeforeSub =groupElements.get(groupElements.size()-1);
-			if (lastGroupOfElementBeforeSub==null){throw new PostProcessingException("No group where group was expected");}
+			if (lastGroupOfElementBeforeSub==null){throw new ComponentGenerationException("No group where group was expected");}
 			if (theSubstituentType.equals(CHAIN_TYPE_VAL) && theSubstituentSubType.equals(ALKANESTEM_SUBTYPE_VAL) &&
 					lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL)){
 				boolean placeInImplicitBracket =false;
@@ -2960,13 +2960,13 @@ class PreStructureBuilder {
                 (suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) || TERMINAL_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR)));
 		}
 
-	private void processConjunctiveNomenclature(BuildState state, Element subOrRoot) throws PostProcessingException, StructureBuildingException {
+	private void processConjunctiveNomenclature(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> conjunctiveGroups = XOMTools.getChildElementsWithTagName(subOrRoot, CONJUNCTIVESUFFIXGROUP_EL);
 		if (conjunctiveGroups.size()>0){
 			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
 			Fragment ringFrag = state.xmlFragmentMap.get(ringGroup);
 			if (ringFrag.getOutAtoms().size()!=0 ){
-				throw new PostProcessingException("OPSIN Bug: Ring fragment should have no radicals");
+				throw new ComponentGenerationException("OPSIN Bug: Ring fragment should have no radicals");
 			}
 			List<Fragment> conjunctiveFragments = new ArrayList<Fragment>();
 			for (Element group : conjunctiveGroups) {
@@ -3018,7 +3018,7 @@ class PreStructureBuilder {
 	}
 
 
-	private Atom lastNonSuffixCarbonWithSufficientValency(Fragment conjunctiveFragment) throws PostProcessingException {
+	private Atom lastNonSuffixCarbonWithSufficientValency(Fragment conjunctiveFragment) throws ComponentGenerationException {
 		List<Atom> atomList = conjunctiveFragment.getAtomList();
 		for (int i = atomList.size()-1; i >=0; i--) {
 			Atom a = atomList.get(i);
@@ -3032,7 +3032,7 @@ class PreStructureBuilder {
 				return a;
 			}
 		}
-		throw new PostProcessingException("OPSIN Bug: Unable to find non suffix carbon with sufficient valency");
+		throw new ComponentGenerationException("OPSIN Bug: Unable to find non suffix carbon with sufficient valency");
 	}
 
 
@@ -3042,9 +3042,9 @@ class PreStructureBuilder {
 	 * @param group The group element for the fragment to which the suffixes will be added
 	 * @param suffixes The suffix elements for a fragment.
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void resolveSuffixes(BuildState state, Element group, List<Element> suffixes) throws StructureBuildingException, PostProcessingException {
+	private void resolveSuffixes(BuildState state, Element group, List<Element> suffixes) throws StructureBuildingException, ComponentGenerationException {
 		Fragment frag = state.xmlFragmentMap.get(group);
 		int firstAtomID = frag.getIdOfFirstAtom();//typically equivalent to locant 1
 		List<Atom> atomList =frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
@@ -3089,12 +3089,12 @@ class PreStructureBuilder {
                 if (suffixRuleTagName.equals(SUFFIXRULES_ADDGROUP_EL)) {
                     if (suffixFrag == null) {
                         if (suffixList.size() <= 0) {
-                            throw new PostProcessingException("OPSIN Bug: Suffixlist should not be empty");
+                            throw new ComponentGenerationException("OPSIN Bug: Suffixlist should not be empty");
                         }
                         suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
 
                         if (suffixFrag.getFirstAtom().getBonds().size() <= 0) {
-                            throw new PostProcessingException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
+                            throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
                         }
                         int bondOrderRequired = suffixFrag.getFirstAtom().getIncomingValency();
                         if (idOnParentFragToUse == 0) {
@@ -3323,10 +3323,10 @@ class PreStructureBuilder {
 	 * An attribute called inLocants is then added that is either INLOCANTS_DEFAULT or a comma seperated list of locants
 	 * @param state
 	 * @param rightMostElement
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void assignLocantsToMultipliedRootIfPresent(BuildState state, Element rightMostElement) throws PostProcessingException, StructureBuildingException {
+	private void assignLocantsToMultipliedRootIfPresent(BuildState state, Element rightMostElement) throws ComponentGenerationException, StructureBuildingException {
 		Elements multipliers = rightMostElement.getChildElements(MULTIPLIER_EL);
 		if(multipliers.size() == 1) {
 			Element multiplier =multipliers.get(0);
@@ -3335,7 +3335,7 @@ class PreStructureBuilder {
 			}
 			List<Element> locants = XOMTools.getChildElementsWithTagName(rightMostElement, MULTIPLICATIVELOCANT_EL);
 			if (locants.size()>1){
-				throw new PostProcessingException("OPSIN bug: Only none or one multiplicative locant expected");
+				throw new ComponentGenerationException("OPSIN bug: Only none or one multiplicative locant expected");
 			}
 			int multiVal = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 			if (locants.size()==0){
@@ -3349,7 +3349,7 @@ class PreStructureBuilder {
 					locantEl.detach();
 				}
 				else{
-					throw new PostProcessingException("Mismatch between number of locants and number of roots");
+					throw new ComponentGenerationException("Mismatch between number of locants and number of roots");
 				}
 			}
 		}
@@ -3367,9 +3367,9 @@ class PreStructureBuilder {
 	 * An exception is made for cases where the locant could be referring to a position on another word
 	 * @param state 
 	 * @param subOrBracket
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws PostProcessingException {
+	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws ComponentGenerationException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracket, LOCANT_EL);
 		int multiplier =1;
 		List<Element> multipliers =  XOMTools.getChildElementsWithTagName(subOrBracket, MULTIPLIER_EL);
@@ -3377,7 +3377,7 @@ class PreStructureBuilder {
 		boolean oneBelowWordLevel = parentElem.getLocalName().equals(WORD_EL);
 		if (multipliers.size()>0){
 			if (multipliers.size()>1){
-				throw new PostProcessingException(subOrBracket.getLocalName() +" has multiple multipliers, unable to determine meaning!");
+				throw new ComponentGenerationException(subOrBracket.getLocalName() +" has multiple multipliers, unable to determine meaning!");
 			}
 			if (oneBelowWordLevel &&
 					XOMTools.getNextSibling(subOrBracket) == null &&
@@ -3390,14 +3390,14 @@ class PreStructureBuilder {
 		}
 		if(locants.size() > 0) {
 			if (subOrBracket.getLocalName().equals(ROOT_EL)){
-				throw new PostProcessingException("Unable to assign all locants");
+				throw new ComponentGenerationException("Unable to assign all locants");
 			}
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
 				if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent && (XOMTools.getNextSibling(subOrBracket)==null || locants.size()>=2)){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
 						Element locant = locants.remove(0);
 						if (matchComma.split(locant.getValue()).length!=1){
-							throw new PostProcessingException("Multiplier and locant count failed to agree; All locants could not be assigned!");
+							throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
 						}
 						parentElem.addAttribute(new Attribute(LOCANT_ATR, locant.getValue()));
 						locant.detach();
@@ -3408,12 +3408,12 @@ class PreStructureBuilder {
 				}
 			}
 			if (locants.size()!=1){
-				throw new PostProcessingException("Unable to assign all locants");
+				throw new ComponentGenerationException("Unable to assign all locants");
 			}
 			Element locantEl = locants.get(0);
 			String[] locantValues = matchComma.split(locantEl.getValue());
 			if (multiplier != locantValues.length){
-				throw new PostProcessingException("Multiplier and locant count failed to agree; All locants could not be assigned!");
+				throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
 			}
 
 			Element parent =(Element) subOrBracket.getParent();
@@ -3427,7 +3427,7 @@ class PreStructureBuilder {
 					}
 				}
 				if (!foundSomethingToSubstitute){
-					throw new PostProcessingException("Unable to assign all locants");
+					throw new ComponentGenerationException("Unable to assign all locants");
 				}
 			}
 			subOrBracket.addAttribute(new Attribute(LOCANT_ATR, locantEl.getValue()));
@@ -3442,9 +3442,9 @@ class PreStructureBuilder {
 	 * @param word
 	 * @param wordCount 
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	private void processWordLevelMultiplierIfApplicable(BuildState state, Element word, int wordCount) throws StructureBuildingException, PostProcessingException {
+	private void processWordLevelMultiplierIfApplicable(BuildState state, Element word, int wordCount) throws StructureBuildingException, ComponentGenerationException {
 		if (word.getChildCount()==1){
 			Element subOrBracket = (Element) word.getChild(0);
 			Element multiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
@@ -3462,7 +3462,7 @@ class PreStructureBuilder {
 					}
 				}
 				if (locants.size()>1){
-					throw new PostProcessingException("Unable to assign all locants");
+					throw new ComponentGenerationException("Unable to assign all locants");
 				}
 				String[] locantValues = null;
 				if (locants.size()==1){
@@ -3478,7 +3478,7 @@ class PreStructureBuilder {
 						}
 					}
 					else{
-						throw new PostProcessingException("Unable to assign all locants");
+						throw new ComponentGenerationException("Unable to assign all locants");
 					}
 				}
 				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier

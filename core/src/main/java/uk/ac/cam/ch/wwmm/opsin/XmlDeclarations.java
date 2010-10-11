@@ -16,10 +16,10 @@ class XmlDeclarations {
 	/**The top most element in OPSIN's parse tree. As a name can describe multiple molecules the same is confusingly true of this element*/
 	static final String MOLECULE_EL ="molecule";
 	
-	/**Contains a substituent. A substituent will after the PreStructureBuilder contain one group*/
+	/**Contains a substituent. A substituent will after the ComponentProcessor contain one group*/
 	static final String SUBSTITUENT_EL = "substituent";
 
-	/**Contains a root group(the rightmost in a word). A root will after the PreStructureBuilder contain one group*/
+	/**Contains a root group(the rightmost in a word). A root will after the ComponentProcessor contain one group*/
 	static final String ROOT_EL ="root";
 
 	/**Contains brackets/substituents/root. Generally these correspond to words in the original chemical name (unless erroneous/omitted spaces were present)*/
@@ -31,19 +31,19 @@ class XmlDeclarations {
 
 	/*
 	 * The token XML elements. These are generally produced by the parser from the tokenised chemical name
-	 * Some are produced by OPSIN in the PostProcessor/PreStructureBuilder
+	 * Some are produced by OPSIN in the ComponentGenerator/ComponentProcessor
 	 */
 	
 	/**A component of an alkaneStem e.g. [octa][hexaconta][tetract]ane will have three alkaneStemComponents*/
 	static final String ALKANESTEMCOMPONENT ="alkaneStemComponent";
 	
-	/**Something like tert/iso/sec Modifies an alkaneStem in the PostProcessor*/
+	/**Something like tert/iso/sec Modifies an alkaneStem in the ComponentGenerator*/
 	static final String ALKANESTEMMODIFIER_EL ="alkaneStemModifier";
 	
 	/**Indicates which acids should form the anhydride linkage*/
 	static final String ANHYDRIDELOCANT_EL ="anhydrideLocant";
 
-	/**An annulene. Converted to a group by the PostProcessor*/
+	/**An annulene. Converted to a group by the ComponentGenerator*/
 	static final String ANNULEN_EL ="annulen";
 	
 	/**A bridge described in SMILES for used on rings*/
@@ -55,13 +55,13 @@ class XmlDeclarations {
 	/**A charge specifier e.g. (2+). Value is the charge to set something to*/
 	static final String CHARGESPECIFIER_EL ="chargeSpecifier";
 	
-	/**Created by the PreStructureBuilder. Something like the acetic acid in benzene-1,3,5-triacetic acid*/
+	/**Created by the ComponentProcessor. Something like the acetic acid in benzene-1,3,5-triacetic acid*/
 	static final String CONJUNCTIVESUFFIXGROUP_EL ="conjunctiveSuffixGroup";
 	
-	/**Used by the PostProcessor to group elements into bracket elements*/
+	/**Used by the ComponentGenerator to group elements into bracket elements*/
 	static final String CLOSEBRACKET_EL ="closebracket";
 	
-	/**Used by the PostProcessor to modify alkanes into cycloalkanes*/
+	/**Used by the ComponentGenerator to modify alkanes into cycloalkanes*/
 	static final String CYCLO_EL ="cyclo";
 	
 	/** A delta used to indicate the position of a double bond in older nomenclature*/
@@ -88,7 +88,7 @@ class XmlDeclarations {
 	/**Adds a hydrogen to an unsaturated system (hydro/perhydro)*/
 	static final String HYDRO_EL ="hydro";
 	
-	/**One of the systematic hydrocarbon fused ring series e.g. tetralene, pentalene. Converted to a group by the PostProcessor*/
+	/**One of the systematic hydrocarbon fused ring series e.g. tetralene, pentalene. Converted to a group by the ComponentGenerator*/
 	static final String HYDROCARBONFUSEDRINGSYSTEM_EL ="hydrocarbonFusedRingSystem";
 	
 	//TODO remove hydrogen and replaced with indicatedHydrogen elements
@@ -111,10 +111,10 @@ class XmlDeclarations {
 	/**A locant e.g. where a substituent should attach*/
 	static final String LOCANT_EL ="locant";
 	
-	/**Used by the PostProcessor to group elements into bracket elements*/
+	/**Used by the ComponentGenerator to group elements into bracket elements*/
 	static final String OPENBRACKET_EL ="openbracket";
 
-	/**otho/meta/para Converted to a locant by the PreStructureBuilder*/
+	/**otho/meta/para Converted to a locant by the ComponentProcessor*/
 	static final String ORTHOMETAPARA_EL ="orthoMetaPara";
 
 	/**Describes the number of spiro centres in a poly cyclic spiro system*/
@@ -135,7 +135,7 @@ class XmlDeclarations {
 	/**Used to indicate how many rings are in a ring assembly*/
 	static final String RINGASSEMBLYMULTIPLIER_EL ="ringAssemblyMultiplier";
 	
-	/**A spiro system. Converted to a group by the PostProcessor*/
+	/**A spiro system. Converted to a group by the ComponentGenerator*/
 	static final String SPIRO_EL ="spiro";
 	
 	/**A locant that seperates components of a spiro system*/
@@ -162,12 +162,12 @@ class XmlDeclarations {
 	/**ene/yne, indicated that a double/triple bond should be formed at a saturated location*/
 	static final String UNSATURATOR_EL ="unsaturator";
 	
-	/**A vonBaeyer system. Converted to a group by the PostProcessor*/
+	/**A vonBaeyer system. Converted to a group by the ComponentGenerator*/
 	static final String VONBAEYER_EL ="vonBaeyer";
 
 	/*
 	 * The token XML attributes. These are generally produced by the parser from the tokenised chemical name
-	 * Some are produced by OPSIN in the PostProcessor/PreStructureBuilder
+	 * Some are produced by OPSIN in the ComponentGenerator/ComponentProcessor
 	 */
 
 	static final String VALUE_ATR ="value";
@@ -226,7 +226,7 @@ class XmlDeclarations {
 	/**Indicates that a substituent/bracket has been processed by StructureBuildingMethods*/
 	static final String RESOLVED_ATR ="resolved";
     
-	/**Added by the PostProcessor to a suffix*/
+	/**Added by the ComponentGenerator to a suffix*/
     static final String SUFFIXPREFIX_ATR = "suffixPrefix";
     
 	/**The wordRule that a wordRule element corresponds to*/

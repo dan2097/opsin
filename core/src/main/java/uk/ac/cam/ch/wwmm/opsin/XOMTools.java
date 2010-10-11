@@ -178,15 +178,15 @@ public final class XOMTools {
 	 * Throws an exception if the first child is not a Text node
 	 * @param group
 	 * @param newName
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	public static void setTextChild(Element group, String newName) throws PostProcessingException {
+	public static void setTextChild(Element group, String newName) throws ComponentGenerationException {
 		Node textNode =group.getChild(0);
 		if (textNode instanceof Text){
 			((Text)textNode).setValue(newName);
 		}
 		else{
-			throw new PostProcessingException("No Text Child Found!");
+			throw new ComponentGenerationException("No Text Child Found!");
 		}
 	}
 

@@ -11,7 +11,7 @@ import nu.xom.Elements;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
 
-/**Constructs a single OPSIN fragment which describes the molecule from the postprocessor results.
+/**Constructs a single OPSIN fragment which describes the molecule from the ComponentGenerator/ComponentProcessor results.
  *
  * @author ptc24/dl387
  *
@@ -24,9 +24,9 @@ class StructureBuilder {
 	private final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
 	private final Pattern matchElementSymbol =Pattern.compile("[A-Z][a-z]?");
 
-	/**	Builds a molecule as a Fragment based on preStructurebuilder output.
+	/**	Builds a molecule as a Fragment based on ComponentProcessor output.
 	 * @param state
-	 * @param molecule The preStructurebuilderr output.
+	 * @param molecule The ComponentProcessor output.
 	 * @return A single Fragment - the built molecule.
 	 * @throws StructureBuildingException If the molecule won't build - there may be many reasons.
 	 */
@@ -80,7 +80,7 @@ class StructureBuilder {
 			}
 			else if (wordRule == WordRule.amide){
 				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide, ethanoic acid amide
-				//already processed by PreStructureBuilder
+				//already processed by the ComponentProcessor
 				for (Element word : words) {
 					resolveWordOrBracket(state, word);
 				}
@@ -114,7 +114,7 @@ class StructureBuilder {
 			}
 			else if(wordRule == WordRule.hydrazide) {
 				//e.g. carbonic dihydrazide
-				//already processed by PreStructureBuilder
+				//already processed by the ComponentProcessor
 				for (Element word : words) {
 					resolveWordOrBracket(state, word);
 				}

@@ -68,10 +68,10 @@ class FunctionalReplacement {
 	 * @param state 
 	 * @param finalSubOrRootInWord
 	 * @param word
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 * @throws StructureBuildingException 
 	 */
-	static void processAmideOrHydrazideFunctionalClassNomenclature(BuildState state, Element finalSubOrRootInWord, Element word) throws PostProcessingException, StructureBuildingException {
+	static void processAmideOrHydrazideFunctionalClassNomenclature(BuildState state, Element finalSubOrRootInWord, Element word) throws ComponentGenerationException, StructureBuildingException {
 		Element wordRule = OpsinTools.getParentWordRule(word);
 		WordRule wr = WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR));
 		if (wr == WordRule.hydrazide){
@@ -116,9 +116,9 @@ class FunctionalReplacement {
 	 * @param substituents
 	 * @return boolean: has any functional replacement occurred
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException 
+	 * @throws ComponentGenerationException 
 	 */
-	static boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException, PostProcessingException {
+	static boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException, ComponentGenerationException {
 		int originalNumberOfGroups = groups.size();
 		for (int i = originalNumberOfGroups-1; i >=0; i--) {
 			Element group =groups.get(i);
@@ -147,7 +147,7 @@ class FunctionalReplacement {
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
 					if (XOMTools.getPreviousSibling(groupToBeModified)!=null){
 						if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
-							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 						continue;//not 2,2'-thiodipyran
 					}
@@ -172,7 +172,7 @@ class FunctionalReplacement {
 							}
 							else if (numberOfAtomsToReplace >1){//doesn't look like prefix functional replacement
 								if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
-									throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+									throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 								}
 								continue;
 							}
@@ -191,11 +191,11 @@ class FunctionalReplacement {
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
 						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
-							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 						if (oxygenReplaced==0){
-							throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono || replacementType == PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide){
@@ -226,7 +226,7 @@ class FunctionalReplacement {
 					}
 				}
 				else if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
-					throw new PostProcessingException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
+					throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 				}
 			}
 		}
@@ -244,9 +244,9 @@ class FunctionalReplacement {
 	 * @param suffixFragments May be modified if a multiplier is determined to mean multiplication of a suffix, usually untouched
 	 * @param suffixes The suffix elements  May be modified if a multiplier is determined to mean multiplication of a suffix, usually untouched
 	 * @throws StructureBuildingException
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 */
-	static void processInfixFunctionalReplacementNomenclature(BuildState state, List<Element> suffixes, List<Fragment> suffixFragments) throws StructureBuildingException, PostProcessingException {
+	static void processInfixFunctionalReplacementNomenclature(BuildState state, List<Element> suffixes, List<Fragment> suffixFragments) throws StructureBuildingException, ComponentGenerationException {
 		for (int i = 0; i < suffixes.size(); i++) {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute(INFIX_ATR)!=null){
@@ -257,7 +257,7 @@ class FunctionalReplacement {
 					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
 				}
 				if (fragToApplyInfixTo ==null){
-					throw new PostProcessingException("infix has erroneously been assigned to a suffix which does not correspond to a suffix fragment. suffix: " + suffix.getValue());
+					throw new ComponentGenerationException("infix has erroneously been assigned to a suffix which does not correspond to a suffix fragment. suffix: " + suffix.getValue());
 				}
 				//e.g. =O:S,-O:S (which indicates replacing either a double or single bonded oxygen with S)
 				//This is semicolon delimited for each infix
@@ -394,28 +394,28 @@ class FunctionalReplacement {
 	 * @param state
 	 * @param acidContainingRoot
 	 * @param word
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private static void processHydrazideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element functionalWord) throws PostProcessingException, StructureBuildingException {
+	private static void processHydrazideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
 		if (functionalWord !=null && functionalWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			Element functionalTerm = functionalWord.getFirstChildElement(FUNCTIONALTERM_EL);
 			if (functionalTerm ==null){
-				throw new PostProcessingException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
+				throw new ComponentGenerationException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
 			}
 			Element hydrazideGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
-			Fragment hydrazide = PreStructureBuilder.resolveGroup(state, hydrazideGroup);
+			Fragment hydrazide = ComponentProcessor.resolveGroup(state, hydrazideGroup);
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(hydrazideGroup);
 			int hydrazides =1;
 			if (possibleMultiplier!=null){
 				if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
-					throw new PostProcessingException("OPSIN bug: non multiplier found where only a multiplier was expected in hydrazide wordRule");
+					throw new ComponentGenerationException("OPSIN bug: non multiplier found where only a multiplier was expected in hydrazide wordRule");
 				}
 				hydrazides = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				possibleMultiplier.detach();
 			}
 			if (functionalTerm.getChildElements().size()!=1){
-				throw new PostProcessingException("Unexpected qualifier to hydrazide functionalTerm");
+				throw new ComponentGenerationException("Unexpected qualifier to hydrazide functionalTerm");
 			}
 			
 			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
@@ -430,7 +430,7 @@ class FunctionalReplacement {
 				}
 			}
 			if (hydrazides > oxygenAtoms.size()){
-				throw new PostProcessingException("Insufficient oxygen to replace with hydrazides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
+				throw new ComponentGenerationException("Insufficient oxygen to replace with hydrazides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
 			}
 			
 			Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
@@ -450,18 +450,18 @@ class FunctionalReplacement {
 			state.fragManager.incorporateFragment(hydrazide, oxygenAtoms.get(0).getFrag());
 		}
 		else{
-			throw new PostProcessingException("hydrazide word not found where expected, bug?");
+			throw new ComponentGenerationException("hydrazide word not found where expected, bug?");
 		}
 	}
 	
-	private static void processAmideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element amideWord) throws PostProcessingException, StructureBuildingException {
+	private static void processAmideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element amideWord) throws ComponentGenerationException, StructureBuildingException {
 		Element amideGroup = StructureBuildingMethods.findRightMostGroupInBracket(amideWord);
 		if (amideGroup ==null){
-			throw new PostProcessingException("OPSIN bug: amide group not found where one was expected for amide wordRule");
+			throw new ComponentGenerationException("OPSIN bug: amide group not found where one was expected for amide wordRule");
 		}
 		Fragment amide = state.xmlFragmentMap.get(amideGroup);
 		if (((Element)amideGroup.getParent()).getChildElements().size()!=1){
-			throw new PostProcessingException("Unexpected qualifier to amide");
+			throw new ComponentGenerationException("Unexpected qualifier to amide");
 		}
 		
 		Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
@@ -476,10 +476,10 @@ class FunctionalReplacement {
 			}
 		}
 		if (oxygenAtoms.size()<1){
-			throw new PostProcessingException("Insufficient oxygen to replace with amides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
+			throw new ComponentGenerationException("Insufficient oxygen to replace with amides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
 		}
 		if (amide.getAtomList().size()!=1){
-			throw new PostProcessingException("OPSIN bug: amide not found where expected");
+			throw new ComponentGenerationException("OPSIN bug: amide not found where expected");
 		}
 		Atom amideNitrogen = amide.getFirstAtom();
 		amideNitrogen.setCharge(0);
@@ -772,12 +772,12 @@ class FunctionalReplacement {
 	 * @param suffixFrag
 	 * @param infixTransformations
 	 * @param oxygenAvailable
-	 * @throws PostProcessingException
+	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
 	private static void disambiguateMultipliedInfixMeaning(BuildState state,List<Element> suffixes,
 			List<Fragment> suffixFragments,Element suffix, Fragment suffixFrag, List<String> infixTransformations, int oxygenAvailable)
-			throws PostProcessingException, StructureBuildingException {
+			throws ComponentGenerationException, StructureBuildingException {
 		Element possibleInfix =(Element) XOMTools.getPreviousSibling(suffix);
 		if (possibleInfix.getLocalName().equals(INFIX_EL)){//the infix is only left when there was ambiguity
 			Element possibleMultiplier =(Element) XOMTools.getPreviousSibling(possibleInfix);
@@ -796,7 +796,7 @@ class FunctionalReplacement {
 					}
 					if (locants !=null){
 						if (locants.length!=multiplierValue){
-							throw new PostProcessingException("Multiplier/locant disagreement when multiplying infixed suffix");
+							throw new ComponentGenerationException("Multiplier/locant disagreement when multiplying infixed suffix");
 						}
 					    suffix.addAttribute(new Attribute(LOCANT_ATR, locants[0]));
 						suffix.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
@@ -820,7 +820,7 @@ class FunctionalReplacement {
 				possibleInfix.detach();
 			}
 			else{
-				throw new PostProcessingException("Multiplier expected in front of ambiguous infix");
+				throw new ComponentGenerationException("Multiplier expected in front of ambiguous infix");
 			}
 		}
 	}
@@ -862,7 +862,7 @@ class FunctionalReplacement {
 		}
 	}
 	
-	private static void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws PostProcessingException {
+	private static void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws ComponentGenerationException {
 		List<FunctionalAtom> functionalAtoms = atomWithFunctionalAtom.getFrag().getFunctionalAtoms();
 		for (int j = functionalAtoms.size()-1; j >=0; j--) {
 			FunctionalAtom functionalAtom = functionalAtoms.get(j);
@@ -871,7 +871,7 @@ class FunctionalReplacement {
 				return;
 			}
 		}
-		throw new PostProcessingException("OPSIN bug: Unable to find associated functionalAtom");
+		throw new ComponentGenerationException("OPSIN bug: Unable to find associated functionalAtom");
 	}
 	
 

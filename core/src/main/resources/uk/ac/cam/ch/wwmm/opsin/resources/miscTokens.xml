@@ -4,7 +4,7 @@
   <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V"><!--the a is part of the multiplier and the e is assumed to be optional -->
     <token value="polyacene">cen</token>
     <token value="polyalene">len</token>
-    <token value="polyaphene">phen</token><!--ambiguity between this and multiplier phenyl e.g. hexaphenylbenzene is resolved in the postprocessor generally in favour of phenyl-->
+    <token value="polyaphene">phen</token><!--ambiguity between this and multiplier phenyl e.g. hexaphenylbenzene is resolved in the ComponentGenerator generally in favour of phenyl-->
     <token value="polyphenylene">phenylen</token>
     <token value="polynaphthylene">naphthylen</token>
     <token value="polyhelicene">helicen</token>
