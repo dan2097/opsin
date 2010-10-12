@@ -46,7 +46,12 @@ class Tokeniser {
 		else{
 			unparsedName = name;
 		}
+		int i=0;
 		while (unparsedName.length()>0){
+			i++;
+			if (i==1000){
+				System.exit(1);
+			}
 			/*
 			 * Returns
 			 * List of parses where at least some of the name was assigned a role
@@ -78,18 +83,43 @@ class Tokeniser {
 				}
 				else{
 					if (allowRemovalOfWhiteSpace){
-						//Try and remove a space and try again
 						//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-						int indexOfSpace = uninterpretableName.indexOf(' ');
-						if (indexOfSpace != -1 ){
-							unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
-						}
-						else{
-							if (parsedName.equals("")){
-								throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+						List<ParseWord> parsedWords = parse.getWords();
+						boolean reverseSpaceRemovalSuccesful = false;
+						if (parsedWords.size()>0){//first see whether the space before the unparseable word is erroneous
+							ParseWord pw = parsedWords.get(parsedWords.size()-1);
+							ParseRulesResults backResults = parseRules.getParses(pw.getWord() + unparsedName);
+							List<ParseTokens> backParseTokens =backResults.getParseTokensList();
+							String backUninterpretableName = backResults.getUninterpretableName();
+							String backParsedName = pw.getWord() + unparsedName.substring(0, unparsedName.length() - backUninterpretableName.length());
+							if (backParsedName.length() > pw.getWord().length() && backParseTokens.size()>0 && (backUninterpretableName.equals("") || backUninterpretableName.charAt(0) ==' ')){//a word was interpretable
+								parse.removeWord(pw);
+								List<ParseWord> parseWords = splitIntoParseWords(backParseTokens, backParsedName);
+				                for (ParseWord parseWord : parseWords) {
+				                    parse.addWord(parseWord);
+				                }
+								if (!backUninterpretableName.equals("")){
+									unparsedName = backUninterpretableName.substring(1);//remove white space at start of uninterpretableName
+								}
+								else{
+									unparsedName = backUninterpretableName;
+								}
+								reverseSpaceRemovalSuccesful =true;
 							}
-							else {
-								throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
+						}
+						if (!reverseSpaceRemovalSuccesful){
+							//Try and remove a space from the right and try again
+							int indexOfSpace = uninterpretableName.indexOf(' ');
+							if (indexOfSpace != -1 ){
+								unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
+							}
+							else{
+								if (parsedName.equals("")){
+									throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
+								}
+								else {
+									throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
+								}
 							}
 						}
 					}
