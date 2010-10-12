@@ -12,6 +12,7 @@ Improved algorithm for assigning unlocanted hydro terms
 Improved heuristic for determing meaning of oxido
 Improved charge balancing e.g. ionic substance of an implicit ratio 2:3 can now be handled rather than being represented as a net charged 1:1 mixture
 Grammar is a bit more lenient of placement of stereochemistry and multipliers
+Vocabulary improvements especially in the area of nucleosides and nucleotides
 Many minor improvements and bug fixes
 
 Version 0.8.0
