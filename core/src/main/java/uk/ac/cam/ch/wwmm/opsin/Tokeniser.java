@@ -24,7 +24,7 @@ class Tokeniser {
 	private final Pattern matchCommaSpace = Pattern.compile(", ");
 	private final Pattern matchSpace = Pattern.compile(" ");
 	private final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*");
-	private final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+", Pattern.CASE_INSENSITIVE );
+	private final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE );
 	
 	Tokeniser(ParseRules parseRules) {
 		this.parseRules = parseRules;
