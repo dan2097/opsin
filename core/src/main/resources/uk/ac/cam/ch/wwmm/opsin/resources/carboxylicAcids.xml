@@ -53,11 +53,14 @@
 		<token value="C/C(C)=C\C" labels="none" valType="SMILES">angel</token>
     <token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzil</token>
     <token value="CNNC" labels="none" valType="SMILES" suffixAppliesTo="1,4">bicarbam</token>
+    <token value="CCC(C)(O)C" labels="1/2/3///4" valType="SMILES" suffixAppliesTo="1,6">citramal</token><!--coA yl only-->
+    <token value="CC=CCC" labels="1/2/3/4/5" valType="SMILES" suffixAppliesTo="1,5">glutacon</token><!--coA yl only-->
     <token value="CCO" labels="1/2/" valType="SMILES">glycol</token>
     <token value="CCOCC" labels="none" valType="SMILES" suffixAppliesTo="1,5">diglycol</token>
     <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
     <token value="CCNC(=O)c1ccccc1" labels="/////1/2,ortho/3,meta/4,para/5/6" valType="SMILES">hippur</token>
     <token value="CCCO" valType="SMILES">hydracryl</token>
+    <token value="CC(=C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">itacon</token>
     <token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">mal</token>
     <token value="CC(=O)C" labels="none" valType="SMILES">pyruv</token>
     <token value="S(=O)c1ccccc1" labels="//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4">sulfanil</token>
@@ -111,17 +114,14 @@
 
     <token value="CC(NC(=O)N)NC(=O)N" labels="none" valType="SMILES">allant</token><!--unknown-->
     <token value="CNN" labels="1/2/3" valType="SMILES">carbaz</token><!--unknown-->
-    <token value="CC(C)(O)CC" labels="none" valType="SMILES" suffixAppliesTo="1,6">citramal</token><!--coA yl only-->
     <token value="C(N(CC)CC)CN(CC)CC" labels="none" valType="SMILES" suffixAppliesTo="4,6,10,12">edet</token><!--unknown-->
     <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2,ortho/3,meta//4,para//5//6" valType="SMILES">gall</token><!--unknown-->
-    <token value="CC=CCC" labels="none" valType="SMILES" suffixAppliesTo="1,5">glutacon</token><!--coA yl only-->
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">henatriacontyl</token><!--clashes with a systematic name-->
     <token value="CCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">heneicosyl</token><!--clashes with a systematic name-->
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">heptacosyl</token><!--clashes with a systematic name-->
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">hexatriacontyl</token><!--clashes with a systematic name-->
     <token value="CCNC(=O)N" labels="1/2/3/4//5" valType="SMILES">hydant</token><!--unknown-->
     <token value="CC(C)CC" labels="none" valType="SMILES">hydrangel</token><!--unknown-->
-    <token value="CC(=C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">itacon</token><!--coA yl only-->
     <token value="CC(CO)CC" labels="none" valType="SMILES" suffixAppliesTo="1,6">itamal</token><!--unknown-->
     <token value="CC(CO)(O)CC" labels="none" valType="SMILES" suffixAppliesTo="1,7">itatartar</token><!--unknown-->
     <token value="CCCC(=O)C" labels="none" valType="SMILES">levulin</token><!--unknown-->
