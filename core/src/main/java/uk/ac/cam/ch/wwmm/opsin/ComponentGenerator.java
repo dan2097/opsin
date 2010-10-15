@@ -88,7 +88,6 @@ class ComponentGenerator {
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
 	private final Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
-
 	/** The master method, postprocesses a parse result.
 	 *
 	 * @param moleculeEl The element to postprocess.
@@ -918,8 +917,9 @@ class ComponentGenerator {
 	 * @param openBracket The open bracket element
 	 * @param closeBracket The close bracket element
 	 * @return The bracket element thus created.
+	 * @throws ComponentGenerationException 
 	 */
-	private Element structureBrackets(Element openBracket, Element closeBracket) {
+	private Element structureBrackets(Element openBracket, Element closeBracket) throws ComponentGenerationException {
 		Element bracket = new Element(BRACKET_EL);
 		XOMTools.insertBefore(openBracket.getParent(), bracket);
 		/* Pick up everything in the substituent before the bracket*/
@@ -937,6 +937,9 @@ class ComponentGenerator {
 			currentNode.detach();
 			bracket.appendChild(currentNode);
 			currentNode = nextNode;
+			if (currentNode==null){
+				throw new ComponentGenerationException("Brackets within a word do not match!");
+			}
 		}
 		currentNode.detach();
 		bracket.appendChild(currentNode);
@@ -1752,8 +1755,27 @@ class ComponentGenerator {
 			}
 		}
 		else if (groupValue.equals("hydrogen")){
-			if (XOMTools.getNextSibling(group.getParent())!=null){
-				throw new ComponentGenerationException("Hydrogen is not meant as a substituent in this context!");
+			Element hydrogenParentEl = (Element) group.getParent();
+			Element nextSubOrRoot = (Element) XOMTools.getNextSibling(hydrogenParentEl);
+			if (nextSubOrRoot!=null){
+				Element possibleSuitableAteGroup = (Element) nextSubOrRoot.getChild(0);
+				if (!possibleSuitableAteGroup.getLocalName().equals(GROUP_EL) || !NONCARBOXYLICACID_TYPE_VAL.equals(possibleSuitableAteGroup.getAttributeValue(TYPE_ATR))){
+					throw new ComponentGenerationException("Hydrogen is not meant as a substituent in this context!");
+				}
+				Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(group);
+				String multiplier = "1";
+				if (possibleMultiplier!=null && possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+					multiplier = possibleMultiplier.getAttributeValue(VALUE_ATR);
+					possibleMultiplier.detach();
+				}
+				possibleSuitableAteGroup.addAttribute(new Attribute("numberOfFunctionalAtomsToRemove", multiplier));
+				group.detach();
+				Elements childrenToMove = hydrogenParentEl.getChildElements();
+				for (int i = childrenToMove.size() -1 ; i >=0; i--) {
+					childrenToMove.get(i).detach();
+					nextSubOrRoot.insertChild(childrenToMove.get(i), 0);
+				}
+				hydrogenParentEl.detach();
 			}
 		}
 		else if (groupValue.equals("acryl")){

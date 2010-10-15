@@ -483,9 +483,10 @@ class Fragment {
 	/**
 	 * Removes the functionalAtom at a specific index of the functionalAtoms linkedList
 	 * @param i
+	 * @return 
 	 */
-	void removeFunctionalAtom(int i) {
-		functionalAtoms.remove(i);
+	FunctionalAtom removeFunctionalAtom(int i) {
+		return functionalAtoms.remove(i);
 	}
 
 	/**

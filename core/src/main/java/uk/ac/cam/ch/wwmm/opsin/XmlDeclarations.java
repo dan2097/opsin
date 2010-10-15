@@ -195,6 +195,8 @@ class XmlDeclarations {
 	static final String ADDBOND_ATR = "addBond";
     static final String USABLEASJOINER_ATR = "usableAsAJoiner";
     static final String FRONTLOCANTSEXPECTED_ATR = "frontLocantsExpected";
+    /** Used as a fudge for some hydrogen esters e.g. dihydrogenphosphate*/
+    static final String NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR = "numberOfFunctionalAtomsToRemove";
     static final String SUFFIXAPPLIESTO_ATR = "suffixAppliesTo";
     static final String SUFFIXAPPLIESTOBYDEFAULT_ATR = "suffixAppliesToByDefault";
     static final String COMMONOXIDATIONSTATESANDMAX_ATR = "commonOxidationStatesAndMax";

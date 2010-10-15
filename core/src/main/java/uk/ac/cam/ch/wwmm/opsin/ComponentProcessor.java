@@ -1227,6 +1227,16 @@ class ComponentProcessor {
 				suffix.detach();
 			}
 		}
+		if (group.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)!=null){
+			int numberToRemove = Integer.parseInt(group.getAttributeValue(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR));
+			if (numberToRemove > suffixableFragment.getFunctionalAtoms().size()){
+				throw new ComponentGenerationException("Too many hydrogen for the number of positions on non carboxylic acid");
+			}
+			for (int i = 0; i< numberToRemove; i++) {
+				Atom functionalAtom = suffixableFragment.removeFunctionalAtom(0).getAtom();
+				functionalAtom.setCharge(0);
+			}		
+		}
 	}
 
 
@@ -3393,17 +3403,15 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("Unable to assign all locants");
 			}
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
-				if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent && (XOMTools.getNextSibling(subOrBracket)==null || locants.size()>=2)){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
-					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
-						Element locant = locants.remove(0);
-						if (matchComma.split(locant.getValue()).length!=1){
-							throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
-						}
-						parentElem.addAttribute(new Attribute(LOCANT_ATR, locant.getValue()));
-						locant.detach();
-						if (locants.size()==0){
-							return;
-						}
+				if (wordLevelLocantsAllowed(state, subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
+					Element locant = locants.remove(0);
+					if (matchComma.split(locant.getValue()).length!=1){
+						throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
+					}
+					parentElem.addAttribute(new Attribute(LOCANT_ATR, locant.getValue()));
+					locant.detach();
+					if (locants.size()==0){
+						return;
 					}
 				}
 			}
@@ -3434,6 +3442,27 @@ class ComponentProcessor {
 			locantEl.detach();
 		}
 	}
+
+	private boolean wordLevelLocantsAllowed(BuildState state, Element subOrBracket, int numberOflocants) {
+		Element parentElem =(Element)subOrBracket.getParent();
+		if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent
+				&& (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)){
+			if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
+				return true;
+			}
+		}
+		if (state.currentWordRule == WordRule.biochemicalEster && parentElem.getLocalName().equals(WORD_EL)){
+			Element wordRule = (Element) parentElem.getParent();
+			Elements words = wordRule.getChildElements(WORD_EL);
+			Element ateWord = words.get(words.size()-1);
+			if (parentElem==ateWord){
+				return true;
+			}
+		}
+			
+		return false;
+	}
+
 
 	/**
 	 * If a word level multiplier is present e.g. diethyl butandioate then this is processed to ethyl ethyl butandioate

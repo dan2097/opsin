@@ -30,6 +30,7 @@ class WordRules {
 		acidHalideOrPseudoHalide,
 		amide,
 		anhydride,
+		biochemicalEster,
 		carbonylDerivative,
 		divalentFunctionalGroup,
 		ester,
