@@ -134,19 +134,20 @@
 		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious</token>
 		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arseniousacid</token>
 		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious acid</token>
-		<token value="[O-]P([O-])(=O)OP(=O)([O-])[O-]" labels="////2////" valType="SMILES" functionalIDs="1,3,8,9">diphosphate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])[O-]" labels="/1///2/3///" valType="SMILES" functionalIDs="1,3,8,9">diphosphate</token>
 		<token value="[Se](=O)(O)O[Se](=O)O" labels="1///2/3//" valType="SMILES" functionalIDs="4,7">diselenious</token>
 		<token value="[Se](=O)(O)O[Se](=O)O" labels="1///2/3//" valType="SMILES" functionalIDs="4,7">diseleniousacid</token>
 		<token value="[Se](=O)(O)O[Se](=O)O" labels="1///2/3//" valType="SMILES" functionalIDs="4,7">diselenious acid</token>
 		<token value="S(=O)(=O)([O-])OS(=O)(=O)[O-]" labels="1////2/3///" valType="SMILES" functionalIDs="4,9">disulfate</token>
 		<token value="S(=O)([O-])OS(=O)[O-]" labels="1///2/3//" valType="SMILES" functionalIDs="3,7">disulfite</token>
 		<token value="P(=O)([O-])([O-])P(=O)([O-])[O-]" labels="1////2///" valType="SMILES" functionalIDs="3,4,7,8">hypophosphate</token>
-		<token value="P(=O)([O-])OP(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,7,8">isohypophosphate</token> 
-		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">orthophosphate</token> 
+		<token value="P(=O)([O-])OP(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,7,8">isohypophosphate</token>
+		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">orthophosphate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="/1///2/3///4/5///6/7///8/9///" valType="SMILES" functionalIDs="1,3,8,12,16,20,21">pentaphosphate</token>
 		<token value="P([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="2,3,4">phosphite</token>
 		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphate</token>
 		<token value="P(=O)([O-])([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoate</token>
-		<token value="[O-]P([O-])(=O)OP(=O)([O-])[O-]" labels="////2////" valType="SMILES" functionalIDs="1,3,8,9">pyrophosphate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])[O-]" labels="/1///2/3///" valType="SMILES" functionalIDs="1,3,8,9">pyrophosphate</token>
 		<token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">selenious</token>
 		<token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">seleniousacid</token>
 		<token value="[Se](=O)(O)O" labels="none" valType="SMILES" functionalIDs="3,4">selenious acid</token>
@@ -159,8 +160,8 @@
 		<token value="[Te](=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">tellurite</token>
 		<token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">tellurate</token>
 		<token value="[Te](=O)(=O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">telluroate</token>
-		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////4////" valType="SMILES" functionalIDs="1,3,8,12,16,17">tetraphosphate</token>
-		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////" valType="SMILES" functionalIDs="1,3,8,12,13">triphosphate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="/1///2/3///4/5///6/7///" valType="SMILES" functionalIDs="1,3,8,12,16,17">tetraphosphate</token>
+		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])[O-]" labels="/1///2/3///4/5///" valType="SMILES" functionalIDs="1,3,8,12,13">triphosphate</token>
 
 	<!-- Mononuclear acids that are NOT modified by infixes. They may be modified by prefixes-->
 		<token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromic</token>
