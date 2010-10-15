@@ -162,21 +162,6 @@
 		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////4////" valType="SMILES" functionalIDs="1,3,8,12,16,17">tetraphosphate</token>
 		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])[O-]" labels="////2////3////" valType="SMILES" functionalIDs="1,3,8,12,13">triphosphate</token>
 
-		<token value="B(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">dihydrogenborate</token>
-		<token value="B(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">hydrogenborate</token>
-		<token value="S(=O)(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">hydrogensulfate</token>
-		<token value="[Se](=O)(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">hydrogenselenate</token>
-		<token value="[Te](=O)(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">hydrogentellurate</token>
-		<token value="C(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogencarbonate</token>
-		<token value="P(=O)(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="5">dihydrogenphosphate</token>
-		<token value="P(=O)(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="4,5">hydrogenphosphate</token>
-		<token value="[PH](=O)(O)([O-])" labels="none" valType="SMILES" functionalIDs="4">hydrogenphosphonate</token>
-		<token value="P(O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">dihydrogenphosphite</token>
-		<token value="P(O)([O-])[O-]" labels="none" valType="SMILES" functionalIDs="3,4">hydrogenphosphite</token>
-		<token value="S(=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogensulfite</token>
-		<token value="[Se](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogenselenite</token>
-		<token value="[Te](=O)(O)[O-]" labels="none" valType="SMILES" functionalIDs="4">hydrogentellurite</token>
-
 	<!-- Mononuclear acids that are NOT modified by infixes. They may be modified by prefixes-->
 		<token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromic</token>
 		<token value="Br(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="4">bromicacid</token>
