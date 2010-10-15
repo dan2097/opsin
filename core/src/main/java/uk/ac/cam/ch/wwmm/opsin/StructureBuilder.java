@@ -1292,7 +1292,7 @@ class StructureBuilder {
 				(atomOnBiochemicalFragment.getBonds().size()!=1 && !element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
 			throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
 		}
-		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomOnBiochemicalFragment, functionalAtom);
+		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
 	}
 
 	private void connectSubstituentsToAcetal(BuildState state, List<Fragment> acetalFrags, BuildResults subBr, boolean hemiacetal) throws StructureBuildingException {
