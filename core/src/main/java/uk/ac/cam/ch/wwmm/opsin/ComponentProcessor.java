@@ -111,12 +111,13 @@ class ComponentProcessor {
 	}
 
 
-	/** The master method, postprocesses a parse result. At this stage one can except all substituents/roots to have at least 1 group.
+	/** The master method, processes a parse result that has already gone through the ComponentGenerator.
+	 * At this stage one can except all substituents/roots to have at least 1 group.
 	 * Multiple groups are present in, for example, fusion nomenclature. By the end of this function there will be exactly 1 group
 	 * associated with each substituent/root. Multiplicative nomenclature can result in there being multiple roots
 	 *
 	 * @param state
-     * @param elem The element to postprocess.
+     * @param elem The element to process.
 	 * @return
 	 * @throws ComponentGenerationException 
 	 * @throws StructureBuildingException 

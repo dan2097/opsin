@@ -71,7 +71,7 @@ class ComponentGenerator {
 	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
 	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
 	private final Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{][^\\[\\(\\{]*H[\\]\\)\\}]");
-	private final Pattern matchVonBaeyer = Pattern.compile("(\\d+[^\\.,]*\\d*,?\\d*[^\\.,]*)");//the not a period or comma allows some an optional indication that the following comma separated digits are superscripted
+	private final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
 	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsez])");
@@ -81,16 +81,16 @@ class ComponentGenerator {
 	private final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
 	private final Pattern matchComma =Pattern.compile(",");
 	private final Pattern matchSemiColon =Pattern.compile(";");
-	private final Pattern matchDot =Pattern.compile("\\.");
 	private final Pattern matchHdigit =Pattern.compile("H\\d");
 	private final Pattern matchNonDigit =Pattern.compile("\\D+");
 	private final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
 	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
 	private final Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
 	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
-	/** The master method, postprocesses a parse result.
+
+	/** The master method, processes a parse result destructively adding semantic information by processing the various micro syntaxes .
 	 *
-	 * @param moleculeEl The element to postprocess.
+	 * @param moleculeEl The element to process.
 	 * @param state
 	 * @return
 	 * @throws Exception
@@ -1203,7 +1203,7 @@ class ComponentGenerator {
 		}
 		numberOfCarbonInDescriptors += numberOfSpiros;
 		if (numberOfCarbonInDescriptors != chainGroup.getAttributeValue(VALUE_ATR).length()){
-			throw new ComponentGenerationException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + Integer.parseInt(chainGroup.getAttributeValue(VALUE_ATR)));
+			throw new ComponentGenerationException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + chainGroup.getAttributeValue(VALUE_ATR).length());
 		}
 
 		int numOfOpenedBrackets = 1;
@@ -1288,7 +1288,7 @@ class ComponentGenerator {
 			text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
 		}
 		
-		String[] spiroDescriptorStrings = matchDot.split(text);
+		String[] spiroDescriptorStrings = matchCommaOrDot.split(text);
 	
 		int[][] spiroDescriptors = new int[spiroDescriptorStrings.length][2]; // array of descriptors where number of elements and super string present
 	
@@ -1393,22 +1393,23 @@ class ComponentGenerator {
 		else{
 			vonBaeyerBracket = vonBaeyerBracket.substring(6, vonBaeyerBracket.length()-1);//cut off cyclo[ and terminal ]
 		}
-		Matcher m = matchVonBaeyer.matcher(vonBaeyerBracket);
-		while(m.find()) {
-			String[] lengthOfBridgeArray= matchComma.split(m.group(0));
+		String[] bridgeDescriptors = matchCommaOrDot.split(vonBaeyerBracket);//the bridgelengths and positions for secondary bridges
+		//all bridges from past the first 3 are secondary bridges and require specification of bridge position which will be partially in the subsequent position in the array
+		for (int i = 0; i < bridgeDescriptors.length; i++) {
+			String bridgeDescriptor = bridgeDescriptors[i];
 			HashMap<String, Integer> bridge = new HashMap<String, Integer>();
 			int bridgeLength =0;
-			if (lengthOfBridgeArray.length > 1){//this is a secondary bridge (chain start/end locations have been specified)
-
+			if (i > 2){//this is a secondary bridge (chain start/end locations should have been specified)
+				i++;
 				String coordinatesStr1;
-				String coordinatesStr2 =lengthOfBridgeArray[1].replaceAll("\\D", "");
-				String[] tempArray = lengthOfBridgeArray[0].split("\\D+");
+				String coordinatesStr2 = bridgeDescriptors[i].replaceAll("\\D", "");
+				String[] tempArray = bridgeDescriptor.split("\\D+");
 
 				if (tempArray.length ==1){
-					//there is some ambiguity as it has not been made obvious which number/s are supposed superscripted to be the superscripted locant
+					//there is some ambiguity as it has not been made obvious which number/s are supposed to be the superscripted locant
 					//so we assume that it is more likely that it will be referring to an atom of label >10
 					//rather than a secondary bridge of length > 10
-					char[] tempCharArray = lengthOfBridgeArray[0].toCharArray();
+					char[] tempCharArray = bridgeDescriptor.toCharArray();
 					if (tempCharArray.length ==2){
 						bridgeLength= Character.getNumericValue(tempCharArray[0]);
 						coordinatesStr1= Character.toString(tempCharArray[1]);
@@ -1422,7 +1423,7 @@ class ComponentGenerator {
 						coordinatesStr1 = Character.toString(tempCharArray[2]) +Character.toString(tempCharArray[3]);
 					}
 					else{
-						throw new ComponentGenerationException("Unsupported Von Baeyer locant description: " + m.group(0) );
+						throw new ComponentGenerationException("Unsupported Von Baeyer locant description: " + bridgeDescriptor );
 					}
 				}
 				else{//bracket or other delimiter detected, no ambiguity!
@@ -1464,7 +1465,7 @@ class ComponentGenerator {
 				bridge.put("AtomId_Smaller", coordinates2);
 			}
 			else{
-				bridgeLength= Integer.parseInt(lengthOfBridgeArray[0]);
+				bridgeLength= Integer.parseInt(bridgeDescriptor);
 				bridge.put("Bridge Length", bridgeLength);
 			}
 			totalLengthOfBridges += bridgeLength;
