@@ -3400,9 +3400,6 @@ class ComponentProcessor {
 			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
 		}
 		if(locants.size() > 0) {
-			if (subOrBracket.getLocalName().equals(ROOT_EL)){
-				throw new ComponentGenerationException("Unable to assign all locants");
-			}
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
 				if (wordLevelLocantsAllowed(state, subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					Element locant = locants.remove(0);
@@ -3415,6 +3412,9 @@ class ComponentProcessor {
 						return;
 					}
 				}
+			}
+			if (subOrBracket.getLocalName().equals(ROOT_EL)){
+				throw new ComponentGenerationException("Unable to assign all locants");
 			}
 			if (locants.size()!=1){
 				throw new ComponentGenerationException("Unable to assign all locants");
