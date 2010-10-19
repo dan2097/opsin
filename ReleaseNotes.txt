@@ -2,7 +2,7 @@ Version 0.9.0
 Added transition metals/f-block elements and nobel gases
 Added support for specifying the charge or oxidation number on elements
 A van Arkel diagram is now used to determine whether functional bonds to metals should be treated as ionic or covalent
-Improved support for prefix functional repalcement e.g. hydrazono/amido/imido/hydrazido/nitrido/pseudohalides can now be used for functional replacement on appropriate acids
+Improved support for prefix functional replacement e.g. hydrazono/amido/imido/hydrazido/nitrido/pseudohalides can now be used for functional replacement on appropriate acids
 Ortho/meta/para handling improved - can now only apply to six membered rings
 Added support for methylenedioxy
 Added support for simple bridge prefixes e.g. methano as in 2,3-methanoindene
@@ -13,6 +13,7 @@ Improved heuristic for determing meaning of oxido
 Improved charge balancing e.g. ionic substance of an implicit ratio 2:3 can now be handled rather than being represented as a net charged 1:1 mixture
 Grammar is a bit more lenient of placement of stereochemistry and multipliers
 Vocabulary improvements especially in the area of nucleosides and nucleotides
+Esters of biochemical compounds e.g. triphosphates are now supported
 Many minor improvements and bug fixes
 
 Version 0.8.0
