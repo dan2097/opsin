@@ -265,8 +265,6 @@ class FusedRingBuilder {
 		}
 
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
-		state.fragManager.removeFragment(parentRing);
-		Fragment fusedRing =state.fragManager.copyFragment(parentRing);//makes sure the IDs are continuous (not sure whether this is actually necessary anymore)
 
 		StringBuilder fusedRingName = new StringBuilder();
 		for (Element element : nameComponents) {
@@ -281,8 +279,6 @@ class FusedRingBuilder {
 		fusedRingEl.getAttribute(SUBTYPE_ATR).setValue(FUSEDRING_SUBTYPE_VAL);
 		fusedRingEl.removeChildren();
 		fusedRingEl.appendChild(fusedRingName.toString());
-
-		state.xmlFragmentMap.put(fusedRingEl, fusedRing);
 
 		for (Element element : nameComponents) {
 			element.detach();
@@ -930,9 +926,7 @@ class FusedRingBuilder {
 		performSimpleFusion(state, null, benzoRing , parentRing);
 		state.fragManager.incorporateFragment(benzoRing, parentRing);
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
-		state.fragManager.removeFragment(parentRing);
-		Fragment fusedRing =state.fragManager.copyFragment(parentRing);//makes sure the IDs are continuous
-		state.xmlFragmentMap.put(parentEl, fusedRing);
+		Fragment fusedRing =parentRing;
 
 		/*
 		 * Check for locants and use these to set the heteroatom positions

@@ -69,7 +69,7 @@
 		<token value="C1CCCC2CCCCC12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">decalin</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamid</token>
 		<token value="NCCc1cc(O)c(O)cc1" labels="///1/2/3//4//5/6" valType="SMILES">dopamin</token>
-		<token value="o1c(cc(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES">flavon</token>
+		<token value="o1c(cc(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES" suffixAppliesToByDefault="3">flavon</token>
 		<token value="[o+]1c(ccc2ccccc12)c3ccccc3" labels="1/2/3/4/4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES">flavylium</token>
 		<token value="fluoranthene" valType="dbkey">fluoranthen</token>
 		<token value="fluorene" valType="dbkey">fluoren</token>

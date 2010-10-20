@@ -363,6 +363,7 @@ class XmlDeclarations {
 	static final String SIMPLEGROUP_SUBTYPE_VAL ="simpleGroup";
 	static final String SUFFIX_SUBTYPE_VAL ="suffix";
 	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
+	static final String NATURALPRODUCT_SUBTYPE_VAL ="naturalProduct";
 	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
 	static final String NONE_SUBTYPE_VAL ="none";
 	/**oxido/sulfido/selenido/tellurido*/

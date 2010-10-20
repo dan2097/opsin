@@ -292,15 +292,15 @@ class StructureBuilder {
 		if (diValentGroup.getOutAtoms().size()==1){//c.f. peroxide where it is a linker
 			state.fragManager.createBond(outAtom1, diValentGroup.getOutAtom(0).getAtom(), 1);
 			diValentGroup.removeOutAtom(0);
-			state.fragManager.createBond(outAtom2, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+			state.fragManager.createBond(outAtom2, diValentGroup.getFirstAtom(), 1);
 		}
 		else{
 			if (outAtom1 != outAtom2){//general case
-				state.fragManager.createBond(outAtom1, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
-				state.fragManager.createBond(outAtom2, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 1);
+				state.fragManager.createBond(outAtom1, diValentGroup.getFirstAtom(), 1);
+				state.fragManager.createBond(outAtom2, diValentGroup.getFirstAtom(), 1);
 			}
 			else{//e.g. carbonyl sulfide
-				state.fragManager.createBond(outAtom1, diValentGroup.getAtomByIDOrThrow(diValentGroup.getIdOfFirstAtom()), 2);
+				state.fragManager.createBond(outAtom1, diValentGroup.getFirstAtom(), 2);
 			}
 		}
 		state.xmlFragmentMap.put(functionalGroup.get(0), diValentGroup);//allow this fragment to be referenced by other word rules
@@ -1065,7 +1065,7 @@ class StructureBuilder {
 		if (theDiRadical.getOutAtom(0).getValency() !=1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
 		}
-		state.fragManager.createBond(outAtom1, functionalFrag.getAtomByIDOrThrow(functionalFrag.getIdOfFirstAtom()), 1);
+		state.fragManager.createBond(outAtom1, functionalFrag.getFirstAtom(), 1);
 		state.fragManager.incorporateFragment(functionalFrag, theDiRadical);
 		
 		Atom outAtom2 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(1).getAtom(), theDiRadical.getOutAtom(1).getValency(), false);
@@ -1073,7 +1073,7 @@ class StructureBuilder {
 		if (theDiRadical.getOutAtom(1).getValency() !=1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(1).getValency());
 		}
-		state.fragManager.createBond(outAtom2, hydroxy.getAtomByIDOrThrow(hydroxy.getIdOfFirstAtom()), 1);
+		state.fragManager.createBond(outAtom2, hydroxy.getFirstAtom(), 1);
 		state.fragManager.incorporateFragment(hydroxy, theDiRadical);
 		theDiRadical.removeOutAtom(1);
 		theDiRadical.removeOutAtom(0);
