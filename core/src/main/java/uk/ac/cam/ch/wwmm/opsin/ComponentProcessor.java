@@ -227,7 +227,9 @@ class ComponentProcessor {
 				assignLocantsAndMultipliers(state, subBracketOrRoot);
 			}
 			processWordLevelMultiplierIfApplicable(state, word, wordCount);
-
+			for (Element group : groups) {
+				state.xmlFragmentMap.get(group).sortAtomListByLocant();
+			}
 		}
 	}
 
@@ -297,6 +299,18 @@ class ComponentProcessor {
 						Elements groups = previousSubstituent.getChildElements(GROUP_EL);
 						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
 							connectEndToEndWithPreviousSub = false;
+						}
+					}
+				}
+				if (connectEndToEndWithPreviousSub){
+					Element parent =(Element) group.getParent();
+					while (parent.getLocalName().equals(BRACKET_EL)){
+						parent = (Element) parent.getParent();
+					}
+					if (parent.getLocalName().equals(ROOT_EL)){
+						Element previous = (Element) XOMTools.getPrevious(group);
+						if (previous==null || !previous.getLocalName().equals(MULTIPLIER_EL)){
+							connectEndToEndWithPreviousSub=false;
 						}
 					}
 				}
@@ -2312,8 +2326,11 @@ class ComponentProcessor {
 					bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
 					possibleLocant.detach();
 				}
+				StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtom());
 			}
-			StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtom());
+			else{
+				StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getDefaultInAtom(), 1, true));
+			}
 			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
 			bridge.detach();
 		}

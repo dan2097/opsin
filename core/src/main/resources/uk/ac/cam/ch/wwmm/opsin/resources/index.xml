@@ -14,6 +14,7 @@
   <tokenFile>cyclicUnsaturableHydrocarbon.xml</tokenFile>
   <tokenFile>elementaryAtoms.xml</tokenFile>
   <tokenFile>aminoAcids.xml</tokenFile>
+  <tokenFile>naturalProducts.xml</tokenFile>
 
   <tokenFile>alkanes.xml</tokenFile>
   <tokenFile>atomHydrides.xml</tokenFile>

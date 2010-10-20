@@ -1663,6 +1663,11 @@ class FusedRingNumberer {
 	private static void setFusedRings(List<Ring> rings)
 	{
 		for (Ring curRing : rings) {
+			for(Bond bond : curRing.getBondSet()) { 	
+				bond.getFusedRings().clear();
+			}
+		}
+		for (Ring curRing : rings) {
 			for(Bond bond : curRing.getBondSet()) { 			// go through all the bonds for the current ring
 				if (bond.getFusedRings().size()>=2) continue; 	// it means this bond we already analysed and skip it
 	

@@ -103,62 +103,47 @@ class FragmentTools {
 	 *
 	 */
 	static class SortByLocants implements Comparator<Atom> {
-		static final Pattern matchdigits = Pattern.compile("(\\d+).*");
-    	static final Pattern matchletters = Pattern.compile(".*([a-z]+)");
+      	static final Pattern locantSegmenter =Pattern.compile("(\\d+)([a-z]?)('*)");
 
 	    public int compare(Atom atoma, Atom atomb){
 	    	String locanta =atoma.getFirstLocant();
 	    	String locantb =atomb.getFirstLocant();
-
-	    	Matcher m1  =matchdigits.matcher(locanta);
-	    	int locantaNumber=0;
-	    	if (m1.matches()){
-	    		locantaNumber=Integer.parseInt(m1.group(1));
-	    	}
-	    	else{
-	    		return 0;//invalid locant (could be intentionally invalid)
+	    	if (locanta==null|| locantb==null){
+	    		return 0;
 	    	}
 
-	    	Matcher m2  =matchdigits.matcher(locantb);
-	    	int locantbNumber=0;
-	    	if (m2.matches()){
-	    		locantbNumber=Integer.parseInt(m2.group(1));
+	    	Matcher m1  =locantSegmenter.matcher(locanta);
+	    	Matcher m2  =locantSegmenter.matcher(locantb);
+	    	if (!m1.matches()|| !m2.matches()){//inappropriate locant
+	    		return 0;
 	    	}
-	    	else{
-	    		return 0;//invalid locant (could be intentionally invalid)
-	    	}
-
-	        if (locantaNumber >locantbNumber) {
-	            return 1;//e.g. 3 vs 2 or 3a vs 2
-	        } else if (locantbNumber >locantaNumber) {
-	            return -1;//e.g. 2 vs 3 or 2 vs 3a
-	        }
-	        else{
-	        	m1  =matchletters.matcher(locanta);
-	        	String locantaLetter="";
-	        	if (m1.matches()){
-	        		locantaLetter=m1.group(1);
-	        	}
-	        	else{
-	        		return -1;// e.g. 1 vs 1a
-	        	}
-
-	        	m2  =matchletters.matcher(locantb);
-	        	String locantbLetter="";
-	        	if (m2.matches()){
-	        		locantbLetter=m2.group(1);
-	        	}
-	        	else{
-	        		return 1;//e.g. 1a vs 1
-	        	}
-
-	            if (locantaLetter.compareTo(locantbLetter)>=1) {
-	                return 1;//e.g. 1b vs 1a
-	            } else if (locantbLetter.compareTo(locantaLetter)>=1) {
-	                return -1;//e.g. 1a vs 1b
-	            }
-	            return 0;
-	        }
+        	String locantaPrimes = m1.group(3);
+        	String locantbPrimes = m2.group(3);
+            if (locantaPrimes.compareTo(locantbPrimes)>=1) {
+                return 1;//e.g. 1'' vs 1'
+            } else if (locantbPrimes.compareTo(locantaPrimes)>=1) {
+                return -1;//e.g. 1' vs 1''
+            }
+            else{
+		    	int locantaNumber = Integer.parseInt(m1.group(1));
+		    	int locantbNumber = Integer.parseInt(m2.group(1));
+	
+		        if (locantaNumber >locantbNumber) {
+		            return 1;//e.g. 3 vs 2 or 3a vs 2
+		        } else if (locantbNumber >locantaNumber) {
+		            return -1;//e.g. 2 vs 3 or 2 vs 3a
+		        }
+		        else{
+		        	String locantaLetter = m1.group(2);
+		        	String locantbLetter = m2.group(2);
+		            if (locantaLetter.compareTo(locantbLetter)>=1) {
+		                return 1;//e.g. 1b vs 1a
+		            } else if (locantbLetter.compareTo(locantaLetter)>=1) {
+		                return -1;//e.g. 1a vs 1b
+		            }
+			        return 0;
+		        }
+            }
 	    }
 	}
 	
@@ -388,20 +373,26 @@ class FragmentTools {
      * @throws StructureBuildingException
 	 */
 	static void unsaturate(int fromAtomID, int bondOrder, Fragment fragment) throws StructureBuildingException {
-		int toAtomID = fromAtomID + 1;
-		if (fragment.getAtomByID(toAtomID)==null || fragment.getAtomByID(toAtomID).getType().equals(SUFFIX_TYPE_VAL)){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
-			List<Atom> neighbours =fragment.getAtomByIDOrThrow(fromAtomID).getAtomNeighbours();
+		List<Atom> atomList = fragment.getAtomList();
+		Atom fromAtom = fragment.getAtomByIDOrThrow(fromAtomID);
+		Atom toAtom = null;
+		int initialIndice = atomList.indexOf(fromAtom);
+		if (initialIndice +1 < atomList.size()){
+			toAtom = atomList.get(initialIndice +1);
+		}
+		if (toAtom==null || toAtom.getType().equals(SUFFIX_TYPE_VAL)){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
+			List<Atom> neighbours = fromAtom.getAtomNeighbours();
 			if (neighbours.size() >=2){
-				int firstID =fragment.getIdOfFirstAtom();
+				Atom firstAtomInFrag = atomList.get(0);
 				for (Atom a : neighbours) {
-					if (a.getID() ==firstID){
-						toAtomID=firstID;
+					if (a ==firstAtomInFrag){
+						toAtom = a;
 						break;
 					}
 				}
 			}
 		}
-		Bond b = fragment.findBondOrThrow(fromAtomID, toAtomID);
+		Bond b = fragment.findBondOrThrow(fromAtom, toAtom);
 		b.setOrder(bondOrder);
 	}
 

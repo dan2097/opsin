@@ -1229,12 +1229,15 @@ class StructureBuildingMethods {
 	static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
 		Fragment fragToJoinTo = atomToJoinTo.getFrag();
 		List<Atom> atomList = fragToJoinTo.getAtomList();
+		if (atomList.size()==1){
+			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
+		}
 		Atom firstAtomToJoinTo;
 		if (fragToBeJoined.getOutAtom(0).getLocant()!=null){
 			firstAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(fragToBeJoined.getOutAtom(0).getLocant());
 		}
 		else{
-			firstAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(0), 1, true);
+			firstAtomToJoinTo = atomToJoinTo;
 		}
 		Atom chalcogenAtom1 = fragToBeJoined.getOutAtom(0).getAtom();
 		fragToBeJoined.removeOutAtom(0);
@@ -1245,9 +1248,11 @@ class StructureBuildingMethods {
 		else{
 			int index = atomList.indexOf(firstAtomToJoinTo);
 			if (index +1 >= atomList.size()){
-				throw new StructureBuildingException("Unable to find second suitable atom to form epoxide");
+				secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index-1), 1, true);
 			}
-			secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1, true);
+			else{
+				secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1, true);
+			}
 		}
 		Atom chalcogenAtom2 = fragToBeJoined.getOutAtom(0).getAtom();
 		fragToBeJoined.removeOutAtom(0);
