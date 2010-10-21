@@ -215,19 +215,6 @@
 		<token value="O" labels="none" valType="SMILES">water</token>
 		<token value="O" labels="none" valType="SMILES">hydrate</token>
 		<token value="[CH3+]" labels="none" valType="SMILES">carbenium</token>
-		<token value="[NH4+]" labels="none" valType="SMILES">ammonium</token>
-		<token value="[PH4+]" labels="none" valType="SMILES">phosphonium</token>
-		<token value="[AsH4+]" labels="none" valType="SMILES">arsonium</token>
-		<token value="[SbH4+]" labels="none" valType="SMILES">stibonium</token>
-		<token value="[BiH4+]" labels="none" valType="SMILES">bismuthonium</token>
-		<token value="[OH3+]" labels="none" valType="SMILES">oxonium</token>
-		<token value="[SH3+]" labels="none" valType="SMILES">sulfonium</token>
-		<token value="[SeH3+]" labels="none" valType="SMILES">selenonium</token>
-		<token value="[TeH3+]" labels="none" valType="SMILES">telluronium</token>
-		<token value="[FH2+]" labels="none" valType="SMILES">fluoronium</token>
-		<token value="[ClH2+]" labels="none" valType="SMILES">chloronium</token>
-		<token value="[BrH2+]" labels="none" valType="SMILES">bromonium</token>
-		<token value="[IH2+]" labels="none" valType="SMILES">iodonium</token>
 
 		<token value="F" labels="none" valType="SMILES">hydrofluoride</token>
 		<token value="Cl" labels="none" valType="SMILES">hydrochloride</token>
