@@ -15,6 +15,21 @@
 
 		<token value="C=CC(C)=C" labels="none" valType="SMILES">isopren</token>
 
+<!--RC-82.1.1.1-->
+		<token value="[NH4+]" labels="none" valType="SMILES">ammonium</token>
+		<token value="[PH4+]" labels="none" valType="SMILES">phosphonium</token>
+		<token value="[AsH4+]" labels="none" valType="SMILES">arsonium</token>
+		<token value="[SbH4+]" labels="none" valType="SMILES">stibonium</token>
+		<token value="[BiH4+]" labels="none" valType="SMILES">bismuthonium</token>
+		<token value="[OH3+]" labels="none" valType="SMILES">oxonium</token>
+		<token value="[SH3+]" labels="none" valType="SMILES">sulfonium</token>
+		<token value="[SeH3+]" labels="none" valType="SMILES">selenonium</token>
+		<token value="[TeH3+]" labels="none" valType="SMILES">telluronium</token>
+		<token value="[FH2+]" labels="none" valType="SMILES">fluoronium</token>
+		<token value="[ClH2+]" labels="none" valType="SMILES">chloronium</token>
+		<token value="[BrH2+]" labels="none" valType="SMILES">bromonium</token>
+		<token value="[IH2+]" labels="none" valType="SMILES">iodonium</token>
+
 	<!--These forms imply valency 3-->
 		<token value="[PH3]" valType="SMILES" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
 		<token value="[AsH3]" valType="SMILES" usableAsAJoiner="yes">arsine</token>

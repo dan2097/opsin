@@ -22,6 +22,7 @@
 		<token value="-CCCCC" valType="SMILES">amyl</token>
 		<token value="=CCCCC" valType="SMILES">amylidene</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="OC locant4">anisal</token>
+		<token value="-N=[N+]=[N-]" labels="none" valType="SMILES">azidyl</token>
 		<token value="-OCCC(C)C" valType="SMILES">isoamoxy</token>
 		<token value="-CCC(C)C" valType="SMILES">isoamyl</token>
 		<token value="=CCC(C)C" valType="SMILES">isoamylidene</token>
@@ -79,6 +80,7 @@
 		<token value="-[CH2+]" labels="none" valType="SMILES">carbynium</token>
 		<token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
 		<token value="-CC=CC" valType="SMILES">crotyl</token>
+		<token value="-C#N" labels="none" valType="SMILES">cyanyl</token>
 		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
 		<token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
@@ -91,6 +93,7 @@
 		<token value="-OCC(C)C" labels="none" valType="SMILES">isobutoxyl</token>
 		<token value="-C=C(C)C" labels="none" valType="SMILES">isocrotyl</token>
 		<token value="-NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
+		<token value="-[N+]#[C-]" labels="none" valType="SMILES">isocyanyl</token>
 		<token value="-CCC(=C)C" labels="none" valType="SMILES">isopentenyl</token><!--used in prenol nomenclature - overrides standard intepretation-->
 		<token value="-NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazido</token>
 		<token value="-C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
@@ -104,6 +107,7 @@
 		<token value="=NO" labels="none" valType="SMILES">hydroximino</token>
 		<token value="-OC(C)C" labels="none" valType="SMILES">isopropoxyl</token>
 		<token value="-C(C)(C=C)CCC=C(C)C" labels="none" valType="SMILES">linalyl</token>
+		<token value="-Oc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">phenoxyl</token>
 		<token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">propoxyl</token>
 		<token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
 		<token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
@@ -136,6 +140,7 @@
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tertbutoxyl</token>
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">t-butoxyl</token>
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tbutoxyl</token>
+		<token value="-S" labels="none" valType="SMILES">thiyl</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" addGroup="N locant4" outIDs="8">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6" valType="SMILES">tosyl</token>
 		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">triphospho</token>
@@ -200,6 +205,7 @@
 		<token value="-OO" labels="none" valType="SMILES">hydroperoxyl</token>
 		<token value="-OO" labels="none" valType="SMILES">hydrogenperoxyl</token>
 		<token value="-OO" labels="none" valType="SMILES">perhydroxyl</token>
+		<token value="-O" labels="none" valType="SMILES" usableAsAJoiner="yes">oxyl</token>
 		<token value="-OO" labels="none" valType="SMILES" usableAsAJoiner="yes">peroxyl</token>
 		<token value="-OO" labels="none" valType="SMILES" usableAsAJoiner="yes">dioxyl</token>
 
@@ -246,6 +252,7 @@
 
 		<token value="=S(=O)=O" labels="none" valType="SMILES">sulfonylidene</token>
 		<token value="-S(=O)(=O)[O-]" labels="none" valType="SMILES">sulfonato</token>
+		<token value="-S(=O)[O-]" labels="none" valType="SMILES">sulfinato</token>
 		<token value="-SO" labels="none" valType="SMILES">sulfeno</token>
 
 		<token value="-N=O" labels="none" valType="SMILES">nitroso</token>
