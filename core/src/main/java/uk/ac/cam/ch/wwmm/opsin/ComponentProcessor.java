@@ -2086,9 +2086,6 @@ class ComponentProcessor {
 		if (groups.size()<2){
 			throw new ComponentGenerationException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
 		}
-		if (groups.size() >2){
-			throw new ComponentGenerationException("Spiro system that is not supported yet encountered");
-		}
 		Element openBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		if (!openBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
 			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
@@ -2109,8 +2106,7 @@ class ComponentProcessor {
 		firstGroupEls.add(firstGroup);
 		firstGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(firstGroup, UNSATURATOR_EL));
 		resolveFeaturesOntoGroup(state, firstGroupEls);
-
-		Fragment firstFragment = state.xmlFragmentMap.get(firstGroup);
+		Set<Atom> spiroAtoms = new HashSet<Atom>();
 		for (int i = 1; i < groups.size(); i++) {
 			Element nextGroup =groups.get(i);
 			Element locant = (Element) XOMTools.getNextSibling(groups.get(i-1), SPIROLOCANT_EL);
@@ -2136,10 +2132,26 @@ class ComponentProcessor {
 			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
 			FragmentTools.relabelNumericLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
 			Atom atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1]);
-			Atom atomOnFirstFrag = firstFragment.getAtomByLocantOrThrow(locants[0]);
-			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnFirstFrag);
+			Atom atomOnParentFrag = null;
+			for (int j = 0; j < i; j++) {
+				atomOnParentFrag = state.xmlFragmentMap.get(groups.get(j)).getAtomByLocant(locants[0]);
+				if (atomOnParentFrag!=null){
+					break;
+				}
+			}
+			if (atomOnParentFrag==null){
+				throw new ComponentGenerationException("Could not find the atom with locant " + locants[0] +" for use in polycyclic spiro system");
+			}
+			spiroAtoms.add(atomOnParentFrag);
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnParentFrag);
 			if (atomToBeReplaced.hasSpareValency()){
-				atomOnFirstFrag.setSpareValency(true);
+				atomOnParentFrag.setSpareValency(true);
+			}
+		}
+		if (spiroAtoms.size()>1){
+			Element expectedMultiplier = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+			if (expectedMultiplier!=null && expectedMultiplier.getLocalName().equals(MULTIPLIER_EL) && Integer.parseInt(expectedMultiplier.getAttributeValue(VALUE_ATR))==spiroAtoms.size()){
+				expectedMultiplier.detach();
 			}
 		}
 		Element rootGroup = groups.get(groups.size()-1);
