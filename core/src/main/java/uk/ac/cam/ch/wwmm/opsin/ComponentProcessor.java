@@ -559,7 +559,7 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("malformed addBond tag");
 				}
-				FragmentTools.unsaturate(atomOnParentFrag.getID(), Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
+				FragmentTools.unsaturate(atomOnParentFrag, Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
 			}
 		}
 	}
@@ -1542,10 +1542,12 @@ class ComponentProcessor {
 	private void convertHydroxyGroupsToOutAtoms(BuildState state, Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			if (atom.getElement().equals("O") && atom.getCharge()==0 && neighbours.size()==1 && frag.findBondOrThrow(atom, neighbours.get(0)).getOrder()==1){
-				state.fragManager.removeAtomAndAssociatedBonds(atom);
-				frag.addOutAtom(neighbours.get(0), 1, true);
+			if (atom.getElement().equals("O") && atom.getCharge()==0){
+				List<Atom> neighbours = atom.getAtomNeighbours();
+				if (neighbours.size()==1 && frag.findBondOrThrow(atom, neighbours.get(0)).getOrder()==1){
+					state.fragManager.removeAtomAndAssociatedBonds(atom);
+					frag.addOutAtom(neighbours.get(0), 1, true);
+				}
 			}
 		}
 	}

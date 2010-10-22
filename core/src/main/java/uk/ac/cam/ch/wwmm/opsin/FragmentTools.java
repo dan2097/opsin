@@ -106,6 +106,13 @@ class FragmentTools {
       	static final Pattern locantSegmenter =Pattern.compile("(\\d+)([a-z]?)('*)");
 
 	    public int compare(Atom atoma, Atom atomb){
+	    	if (atoma.getType().equals(SUFFIX_TYPE_VAL) && !atomb.getType().equals(SUFFIX_TYPE_VAL)){//suffix atoms go to the back
+	    		return 1;
+	    	}
+	    	if (atomb.getType().equals(SUFFIX_TYPE_VAL) && !atoma.getType().equals(SUFFIX_TYPE_VAL)){
+	    		return -1;
+	    	}
+
 	    	String locanta =atoma.getFirstLocant();
 	    	String locantb =atomb.getFirstLocant();
 	    	if (locanta==null|| locantb==null){
@@ -367,14 +374,13 @@ class FragmentTools {
 
 	/** Adjusts the order of a bond in a fragment.
 	 *
-	 * @param fromAtomID The id of the lower-numbered atom in the bond
+	 * @param fromAtom The lower-numbered atom in the bond
 	 * @param bondOrder The new bond order
 	 * @param fragment The fragment
      * @throws StructureBuildingException
 	 */
-	static void unsaturate(int fromAtomID, int bondOrder, Fragment fragment) throws StructureBuildingException {
+	static void unsaturate(Atom fromAtom, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		List<Atom> atomList = fragment.getAtomList();
-		Atom fromAtom = fragment.getAtomByIDOrThrow(fromAtomID);
 		Atom toAtom = null;
 		int initialIndice = atomList.indexOf(fromAtom);
 		if (initialIndice +1 < atomList.size()){
@@ -398,15 +404,15 @@ class FragmentTools {
 
 	/** Adjusts the order of a bond in a fragment.
 	 *
-	 * @param fromAtomID The id of the first atom in the bond
+	 * @param fromAtom The first atom in the bond
 	 * @param locantTo The locant of the other atom in the bond
 	 * @param bondOrder The new bond order
 	 * @param fragment The fragment
      * @throws StructureBuildingException
 	 */
-	static void unsaturate(int fromAtomID, String locantTo, int bondOrder, Fragment fragment) throws StructureBuildingException {
-		int toAtomID = fragment.getIDFromLocantOrThrow(locantTo);
-		Bond b = fragment.findBondOrThrow(fromAtomID, toAtomID);
+	static void unsaturate(Atom fromAtom, String locantTo, int bondOrder, Fragment fragment) throws StructureBuildingException {
+		Atom toAtom = fragment.getAtomByLocantOrThrow(locantTo);
+		Bond b = fragment.findBondOrThrow(fromAtom, toAtom);
 		b.setOrder(bondOrder);
 	}
 	

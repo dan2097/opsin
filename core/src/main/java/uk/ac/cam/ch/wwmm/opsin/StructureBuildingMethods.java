@@ -382,12 +382,10 @@ class StructureBuildingMethods {
 	            if (matcher.find()) {
 	            	String compoundLocant = matcher.group(1);
 	            	locant = matcher.replaceAll("");
-	            	Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
-	            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, compoundLocant, bondOrder, thisFrag);
+	            	FragmentTools.unsaturate(thisFrag.getAtomByLocantOrThrow(locant), compoundLocant, bondOrder, thisFrag);
 	            }
 	            else{
-	            	Integer idOfFirstAtomInMultipleBond=thisFrag.getIDFromLocantOrThrow(locant);
-	            	FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
+	            	FragmentTools.unsaturate(thisFrag.getAtomByLocantOrThrow(locant), bondOrder, thisFrag);
 	            }
 				unsaturator.detach();
 			}
@@ -453,6 +451,7 @@ class StructureBuildingMethods {
 		}
 		Element group = groups.get(0);
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
+		List<Atom> atomList =thisFrag.getAtomList();
 
 		ArrayList<Element> unsaturators = new ArrayList<Element>();
 		ArrayList<Element> heteroatoms = new ArrayList<Element>();
@@ -489,7 +488,6 @@ class StructureBuildingMethods {
 			 */
 			LinkedList<Atom> atomsWithSV = new LinkedList<Atom>();
 			LinkedList<Atom> atomsWhichImplicitlyWillHaveTheirSVRemoved = new LinkedList<Atom>();
-			List<Atom> atomList =thisFrag.getAtomList();
 			for (Atom atom : atomList) {
 				if (atom.getType().equals(SUFFIX_TYPE_VAL)){
 					break;
@@ -533,11 +531,7 @@ class StructureBuildingMethods {
 			}
 		}
 
-		int idOfFirstAtomInFragment= thisFrag.getIdOfFirstAtom();
-		//defaultId corresponds to an id on thisFrag; whenever it is used it is incremented
-		//all non-suffix atoms in the fragment are eventually checked if the defaultId does not correspond to a suitable atom
-		//e.g. if the id was 3 in a 5 atom fragment which had ids 1-5, atoms would be checked for suitability in the order 3,4,5,1,2
-		int defaultId = idOfFirstAtomInFragment;
+		int atomIndice =0;
 
         for (Element unsaturator : unsaturators) {
             int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
@@ -546,63 +540,70 @@ class StructureBuildingMethods {
                 continue;
             }
             //checks if both atoms can accept an extra bond (if double bond) or two extra bonds (if triple bond)
-
-            Atom currentAtom = thisFrag.getAtomByIDOrThrow(defaultId);
-            Atom nextAtom = thisFrag.getAtomByIDOrThrow(defaultId + 1);
+            if (atomIndice+1 >=atomList.size()){
+            	throw new StructureBuildingException("Cannot find two atom suitable atoms to unsaturate");
+            }
+            Atom currentAtom = atomList.get(atomIndice);
+            Atom nextAtom = atomList.get(atomIndice +1);
             while (currentAtom.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(currentAtom, bondOrder - 1 + currentAtom.getOutValency()) ||
                     nextAtom.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(nextAtom, bondOrder - 1 + nextAtom.getOutValency())) {
-                defaultId++;
-                currentAtom = thisFrag.getAtomByIDOrThrow(defaultId);
-                nextAtom = thisFrag.getAtomByIDOrThrow(defaultId + 1);
+            	atomIndice++;
+                if (atomIndice+1 >=atomList.size()){
+                	throw new StructureBuildingException("Cannot find two atom suitable atoms to unsaturate");
+                }
+                currentAtom = atomList.get(atomIndice);
+                nextAtom = atomList.get(atomIndice +1);
                 if (currentAtom.getType().equals(SUFFIX_TYPE_VAL) || nextAtom.getType().equals(SUFFIX_TYPE_VAL)) {
-                    throw new StructureBuildingException("No suitable atom found");
+                	throw new StructureBuildingException("Cannot find two atom suitable atoms to unsaturate");
                 }
             }
-            Integer idOfFirstAtomInMultipleBond = currentAtom.getID();
-            FragmentTools.unsaturate(idOfFirstAtomInMultipleBond, bondOrder, thisFrag);
-            defaultId = idOfFirstAtomInMultipleBond + 2;
+            FragmentTools.unsaturate(currentAtom, bondOrder, thisFrag);
+            atomIndice = atomIndice + 2;
             unsaturator.detach();
         }
-		defaultId = idOfFirstAtomInFragment;
+        atomIndice =0;
 
         for (Element heteroatom : heteroatoms) {
             String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
             //finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
-            Atom atomToReplaceWithHeteroAtom = thisFrag.getAtomByIDOrThrow(defaultId);
+            if (atomIndice >=atomList.size()){
+            	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
+            }
+            Atom atomToReplaceWithHeteroAtom = atomList.get(atomIndice);
             while (!ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES)) {
-                defaultId++;
-                atomToReplaceWithHeteroAtom = thisFrag.getAtomByIDOrThrow(defaultId);
+            	atomIndice++;
+                if (atomIndice >=atomList.size()){
+                	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
+                }
+                atomToReplaceWithHeteroAtom = atomList.get(atomIndice);
                 if (atomToReplaceWithHeteroAtom.getType().equals(SUFFIX_TYPE_VAL)) {
-                    throw new StructureBuildingException("No suitable atom found");
+                	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
                 }
             }
             state.fragManager.makeHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES, true);
-            if (heteroatom.getAttribute(LABELS_ATR) != null) {
-                atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LABELS_ATR)));
+            if (heteroatom.getAttribute(LAMBDA_ATR) != null) {
+                atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
             }
-            defaultId++;
+            atomIndice++;
             heteroatom.detach();
         }
-		defaultId = idOfFirstAtomInFragment;
-
 		if (thisFrag.getOutAtoms().size()>0){//assign any outAtoms that have not been set to a specific atom to a specific atom
 			for (OutAtom outAtom : thisFrag.getOutAtoms()) {
 				if (!outAtom.isSetExplicitly()){
-					defaultId=outAtom.getAtom().getID();
-					Atom atomToAssociateOutAtomWith=thisFrag.getAtomByIDOrThrow(defaultId);
+					Atom atomToAssociateOutAtomWith = outAtom.getAtom();
+					atomIndice =atomList.indexOf(atomToAssociateOutAtomWith);
 					while (!ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutAtomWith, (atomToAssociateOutAtomWith.hasSpareValency() ? 1 : 0) + atomToAssociateOutAtomWith.getOutValency() + outAtom.getValency())){
-						defaultId++;
-						atomToAssociateOutAtomWith=thisFrag.getAtomByID(defaultId);
-						if (atomToAssociateOutAtomWith == null){
-							throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
-						}
+						atomIndice++;
+			            if (atomIndice >=atomList.size()){
+			            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
+		                }
+						atomToAssociateOutAtomWith= atomList.get(atomIndice);
 						if (atomToAssociateOutAtomWith.getType().equals(SUFFIX_TYPE_VAL)){
-							throw new StructureBuildingException("No suitable atom found");
+			            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 						}
 					}
 					outAtom.setAtom(atomToAssociateOutAtomWith);
 					outAtom.setSetExplicitly(true);
-					defaultId = idOfFirstAtomInFragment;
 				}
 			}
 		}
