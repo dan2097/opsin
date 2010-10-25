@@ -110,7 +110,7 @@ class StructureBuilder {
 				buildAcetal(state, words);//e.g. propanal diethyl acetal
 			}
 			else if(wordRule == WordRule.biochemicalEster) {
-				buildBiochemicalEster(state, words);//e.g. uridine 5'-(tetrahydrogen triphosphate)l
+				buildBiochemicalEster(state, words, wordRules.size());//e.g. uridine 5'-(tetrahydrogen triphosphate)
 			}
 			else if(wordRule == WordRule.polymer) {
 				rGroups.addAll(buildPolymer(state, words));
@@ -1254,7 +1254,7 @@ class StructureBuilder {
 		return acetalFrag;
 	}
 	
-	private void buildBiochemicalEster(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildBiochemicalEster(BuildState state, List<Element> words, int numberOfWordRules) throws StructureBuildingException {
 		if (words.size()!=2){
 			throw new StructureBuildingException("Bug or unsupported biochemical ester");
 		}
@@ -1281,8 +1281,19 @@ class StructureBuilder {
 			if (atomOnBiochemicalFragment==null){
 				List<Atom> atoms = biochemicalFragment.getAtomList();
 				for (Atom atom : atoms) {
-					if (atom.getElement().equals("O") && atom.getBonds().size()==1){
-						atomOnBiochemicalFragment= atom;//find a hydroxy
+					if (atom.getElement().equals("O") && atom.getBonds().size()==1  && atom.getFirstBond().getOrder()==1){
+						Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+						List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
+						if (adjacentAtom.getElement().equals("C") && neighbours.size()==3){
+							neighbours.remove(atom);
+							if (neighbours.get(0).getElement().equals("O") && biochemicalFragment.findBond(adjacentAtom, neighbours.get(0)).getOrder()==2){
+								continue;
+							}
+							if (neighbours.get(1).getElement().equals("O") && biochemicalFragment.findBond(adjacentAtom, neighbours.get(1)).getOrder()==2){
+								continue;
+							}
+						}
+						atomOnBiochemicalFragment= atom;//find a hydroxy - not a carboxylic acid
 					}
 				}
 			}
@@ -1293,6 +1304,15 @@ class StructureBuilder {
 			throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
 		}
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
+		Element ateGroup = findRightMostGroupInWordOrWordRule(words.get(1));
+		if (ateGroup.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)==null && numberOfWordRules==1){
+			//by convention [O-] are implicitly converted to [OH] to balance charge
+			for (int i = br.getFunctionalAtomCount() -1; i>=0; i--) {
+				Atom atomToDefunctionalise =br.getFunctionalAtom(i);
+				br.removeFunctionalAtom(i);
+				atomToDefunctionalise.setCharge(0);
+			}
+		}
 	}
 
 	private void connectSubstituentsToAcetal(BuildState state, List<Fragment> acetalFrags, BuildResults subBr, boolean hemiacetal) throws StructureBuildingException {
@@ -1600,11 +1620,15 @@ class StructureBuilder {
 					chargeOnFunctionalAtoms += br.getFunctionalAtom(i).getCharge();
 				}
 			}
-			if (chargeOnFunctionalAtoms == overallCharge){
+			if (chargeOnFunctionalAtoms <= overallCharge){
 				for (Element wordRule : wordRules) {
 					BuildResults br = componentToBR.get(wordRule);
 					int functionalAtomCount = br.getFunctionalAtomCount();
 					for (int i = functionalAtomCount -1; i >=0; i--) {
+						if (overallCharge==0){
+							return;
+						}
+						overallCharge-=br.getFunctionalAtom(i).getCharge();
 						br.getFunctionalAtom(i).setCharge(0);
 						br.removeFunctionalAtom(i);
 					}
