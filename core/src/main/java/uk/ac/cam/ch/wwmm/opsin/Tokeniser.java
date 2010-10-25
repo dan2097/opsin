@@ -62,7 +62,7 @@ class Tokeniser {
 			List<ParseTokens> parseTokens =results.getParseTokensList();
 			String uninterpretableName = results.getUninterpretableName();
 			String parsedName = unparsedName.substring(0, unparsedName.length() - uninterpretableName.length());
-			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(0) ==' ')){//a word was interpretable
+			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(0) ==' ' || uninterpretableName.charAt(0) =='-')){//a word was interpretable
 				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 				//In cases of properly formed names there will be only one ParseWord
 				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -71,7 +71,7 @@ class Tokeniser {
                     parse.addWord(parseWord);
                 }
 				if (!uninterpretableName.equals("")){
-					unparsedName = uninterpretableName.substring(1);//remove white space at start of uninterpretableName
+					unparsedName = uninterpretableName.substring(1);//remove white space or hyphen at start of uninterpretableName
 				}
 				else{
 					unparsedName = uninterpretableName;
@@ -166,7 +166,7 @@ class Tokeniser {
 			List<ParseTokens> parseTokens =results.getParseTokensList();
 			String uninterpretableName = results.getUninterpretableName();
 			String parsedName = unparsedName.substring(uninterpretableName.length());
-			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(uninterpretableName.length()-1)==' ')){//a word was interpretable
+			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(uninterpretableName.length()-1)==' ') || uninterpretableName.charAt(uninterpretableName.length()-1) =='-'){//a word was interpretable
 				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 				//In cases of properly formed names there will be only one ParseWord
 				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -176,7 +176,7 @@ class Tokeniser {
                     parse.addWord(parseWord);
                 }
 				if (!uninterpretableName.equals("")){
-					unparsedName = uninterpretableName.substring(0, uninterpretableName.length()-1);//remove white space at end of uninterpretableName
+					unparsedName = uninterpretableName.substring(0, uninterpretableName.length()-1);//remove white space or hyphen at end of uninterpretableName
 				}
 				else{
 					unparsedName = uninterpretableName;
