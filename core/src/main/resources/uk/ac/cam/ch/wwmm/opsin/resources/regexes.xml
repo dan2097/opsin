@@ -154,7 +154,7 @@ does not define a CFG.
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%{0,2}%stereochemistry%*%multiplier%?%openBracket%%hyphen%?)"/>
   <regex name="%alkaneStem%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%|%alkaneStemTrivial%)"/>
-  <regex name="%fusedRingBridges%" value ="(%newLocantGroupNoStartingHyphen%?%alkaneStem%%ane%%bridgeFormingO%)"/>
+  <regex name="%fusedRingBridges%" value ="(%newLocantGroupNoStartingHyphen%?%alkaneStem%%ane%%bridgeFormingO%%hyphen%?)"/>
   <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="((%heteroReplacement%|%hydroGroup%)*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%heteroReplacement%*%fusedRingBridges%?)"/><!--bigCapitalH before lambdaConvention is preferred. Heteroatomreplacement should not really be after indicated hydrogen-->
   <regex name="%ringNonDetachableFeatures%" value="(%heteroReplacement%*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%heteroReplacement%*%newLocantGroupNoStartingHyphen%?%fusedRingBridges%?)"/><!--last locant is an indirect locant for suffixes -->
   <regex name="%acyclicNonDetachableFeatures%" value="(%heteroReplacement%*%lambdaConvention%?%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->
