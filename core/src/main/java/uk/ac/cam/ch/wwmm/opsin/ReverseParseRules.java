@@ -120,7 +120,7 @@ public class ReverseParseRules {
 				char annotationCharacter = stateSymbols[i];
 	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict_TokensByLastTwoLetters.get(i);
+	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict_TokensByLastTwoLetters[i];
 	                if (possibleTokenisationsMap != null) {
 	                    List<String> possibleTokenisations = null;
 	                    if (lastTwoLetters != null) {
@@ -143,7 +143,7 @@ public class ReverseParseRules {
 	                        }
 	                    }
 	                }
-	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDictReversed.get(i);
+	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDictReversed[i];
 	                if (possibleAutomata != null) {//next could be a regex
 	                    for (RunAutomaton automaton : possibleAutomata) {
 	                        int matchLength = runInReverse(automaton, untokenisedChemicalName);
@@ -161,7 +161,7 @@ public class ReverseParseRules {
 	                        }
 	                    }
 	                }
-	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDictReversed.get(i);
+	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDictReversed[i];
 	                if (possibleRegexes != null) {//next could be a regex
 	                    for (Pattern pattern : possibleRegexes) {
 	                        Matcher mat = pattern.matcher(untokenisedChemicalName);

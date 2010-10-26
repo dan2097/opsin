@@ -34,22 +34,22 @@ class ResourceManager {
 
 	/**A mapping between annotation symbols and the first two letters of token names applicable to
 	 * that annotation symbol which then map to token names (annotation->first two letters of token names ->token names mapping).*/
-	final List<HashMap<String, List<String>>> symbolTokenNamesDict = new ArrayList<HashMap<String, List<String>>>(200);
+	final HashMap<String, List<String>>[] symbolTokenNamesDict;
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
-	final List<List<RunAutomaton>> symbolRegexAutomataDict = new ArrayList<List<RunAutomaton>>();
+	final List<RunAutomaton>[] symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
-	final List<List<Pattern>> symbolRegexesDict = new ArrayList<List<Pattern>>();
+	final List<Pattern>[] symbolRegexesDict;
 	
 	/**The automaton which describes the grammar of a chemical name from left to right*/
 	final RunAutomaton chemicalAutomaton;
 	
 	
 	/**As symbolTokenNamesDict but use the last two letters of token names to map to the token names.*/
-	List<HashMap<String, List<String>>> symbolTokenNamesDict_TokensByLastTwoLetters;
+	HashMap<String, List<String>>[] symbolTokenNamesDict_TokensByLastTwoLetters;
 	/**As symbolRegexAutomataDict but automata are reversed */
-	List<List<RunAutomaton>> symbolRegexAutomataDictReversed;
+	List<RunAutomaton>[] symbolRegexAutomataDictReversed;
 	/**As symbolRegexesDict but regexes match the end of string */
-	List<List<Pattern>> symbolRegexesDictReversed;
+	List<Pattern>[] symbolRegexesDictReversed;
 	
 	/**The automaton which describes the grammar of a chemical name from right to left*/
 	RunAutomaton reverseChemicalAutomaton;
@@ -59,15 +59,14 @@ class ResourceManager {
 	 *
 	 * @throws Exception If the XML token and regex files can't be read in properly.
 	 */
+	@SuppressWarnings("unchecked")
 	ResourceManager(ResourceGetter resourceGetter) throws Exception {
 		this.resourceGetter = resourceGetter;
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
-		for (int i = 0; i < grammarSymbolsSize; i++) {//initialise arrayLists
-			symbolTokenNamesDict.add(null);
-			symbolRegexAutomataDict.add(null);
-			symbolRegexesDict.add(null);
-		}
+		symbolTokenNamesDict = new HashMap[grammarSymbolsSize];
+		symbolRegexAutomataDict = new List[grammarSymbolsSize];
+		symbolRegexesDict = new List[grammarSymbolsSize];
 		processTokenFiles(false);
 		processRegexTokenFiles(false);
 	}
@@ -105,22 +104,22 @@ class ResourceManager {
 					}
 					tokenDict.get(t).put(symbol, new Token(tokenElement, tokenList));
 					if (!reversed){
-						if(symbolTokenNamesDict.get(index)==null) {
-							symbolTokenNamesDict.set(index, new HashMap<String, List<String>>());
+						if(symbolTokenNamesDict[index]==null) {
+							symbolTokenNamesDict[index] = new HashMap<String, List<String>>();
 						}
-						if(!symbolTokenNamesDict.get(index).containsKey(t.substring(0, 2))) {
-							symbolTokenNamesDict.get(index).put(t.substring(0, 2), new ArrayList<String>());
+						if(!symbolTokenNamesDict[index].containsKey(t.substring(0, 2))) {
+							symbolTokenNamesDict[index].put(t.substring(0, 2), new ArrayList<String>());
 						}
-						symbolTokenNamesDict.get(index).get(t.substring(0, 2)).add(t);
+						symbolTokenNamesDict[index].get(t.substring(0, 2)).add(t);
 					}
 					else{
-						if(symbolTokenNamesDict_TokensByLastTwoLetters.get(index)==null) {
-							symbolTokenNamesDict_TokensByLastTwoLetters.set(index, new HashMap<String, List<String>>());
+						if(symbolTokenNamesDict_TokensByLastTwoLetters[index]==null) {
+							symbolTokenNamesDict_TokensByLastTwoLetters[index] = new HashMap<String, List<String>>();
 						}
-						if(!symbolTokenNamesDict_TokensByLastTwoLetters.get(index).containsKey(t.substring(t.length()-2))) {
-							symbolTokenNamesDict_TokensByLastTwoLetters.get(index).put(t.substring(t.length()-2), new ArrayList<String>());
+						if(!symbolTokenNamesDict_TokensByLastTwoLetters[index].containsKey(t.substring(t.length()-2))) {
+							symbolTokenNamesDict_TokensByLastTwoLetters[index].put(t.substring(t.length()-2), new ArrayList<String>());
 						}
-						symbolTokenNamesDict_TokensByLastTwoLetters.get(index).get(t.substring(t.length()-2)).add(t);
+						symbolTokenNamesDict_TokensByLastTwoLetters[index].get(t.substring(t.length()-2)).add(t);
 					}
 				}
 			}
@@ -166,30 +165,30 @@ class ResourceManager {
 			}
 			if (!reversed){
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					if(symbolRegexAutomataDict.get(index)==null) {
-						symbolRegexAutomataDict.set(index, new ArrayList<RunAutomaton>());
+					if(symbolRegexAutomataDict[index]==null) {
+						symbolRegexAutomataDict[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDict.get(index).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, false));
+					symbolRegexAutomataDict[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, false));
 				}
 				else{
-					if(symbolRegexesDict.get(index)==null) {
-						symbolRegexesDict.set(index, new ArrayList<Pattern>());
+					if(symbolRegexesDict[index]==null) {
+						symbolRegexesDict[index] = new ArrayList<Pattern>();
 					}
-					symbolRegexesDict.get(index).add(Pattern.compile(newValue));
+					symbolRegexesDict[index].add(Pattern.compile(newValue));
 				}
 			}
 			else{
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					if(symbolRegexAutomataDictReversed.get(index)==null) {
-						symbolRegexAutomataDictReversed.set(index, new ArrayList<RunAutomaton>());
+					if(symbolRegexAutomataDictReversed[index]==null) {
+						symbolRegexAutomataDictReversed[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDictReversed.get(index).add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, true));
+					symbolRegexAutomataDictReversed[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, true));
 				}
 				else{
-					if(symbolRegexesDictReversed.get(index)==null) {
-						symbolRegexesDictReversed.set(index, new ArrayList<Pattern>());
+					if(symbolRegexesDictReversed[index]==null) {
+						symbolRegexesDictReversed[index] = new ArrayList<Pattern>();
 					}
-					symbolRegexesDictReversed.get(index).add(Pattern.compile(newValue +"$"));
+					symbolRegexesDictReversed[index].add(Pattern.compile(newValue +"$"));
 				}
 			}
 		}
@@ -228,25 +227,19 @@ class ResourceManager {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	synchronized void populatedReverseTokenMappings() throws Exception{
 		if (reverseChemicalAutomaton ==null){
 			reverseChemicalAutomaton = processChemicalGrammar(true);
 		}
 		int grammarSymbolsSize = reverseChemicalAutomaton.getCharIntervals().length;
 		if (symbolTokenNamesDict_TokensByLastTwoLetters ==null){
-			symbolTokenNamesDict_TokensByLastTwoLetters = new ArrayList<HashMap<String,List<String>>>();
-			for (int i = 0; i < grammarSymbolsSize; i++) {
-				symbolTokenNamesDict_TokensByLastTwoLetters.add(null);
-			}
+			symbolTokenNamesDict_TokensByLastTwoLetters  = new HashMap[grammarSymbolsSize];
 			processTokenFiles(true);
 		}
 		if (symbolRegexAutomataDictReversed ==null && symbolRegexesDictReversed==null){
-			symbolRegexAutomataDictReversed = new ArrayList<List<RunAutomaton>>();
-			symbolRegexesDictReversed = new ArrayList<List<Pattern>>();
-			for (int i = 0; i < grammarSymbolsSize; i++) {
-				symbolRegexAutomataDictReversed.add(null);
-				symbolRegexesDictReversed.add(null);
-			}
+			symbolRegexAutomataDictReversed = new List[grammarSymbolsSize];
+			symbolRegexesDictReversed = new List[grammarSymbolsSize];
 			processRegexTokenFiles(true);
 		}
 	}
