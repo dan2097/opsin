@@ -115,6 +115,7 @@
 		<token value="=NO" labels="none" valType="SMILES">oximino</token>
 		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="10">phenetidino</token>
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2,ortho////3,meta/4,para////5/6///" valType="SMILES">picryl</token>
+		<token value="-C(C)C(C)(C)C" labels="none" valType="SMILES">pinacolyl</token>
 		<token value="-N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperazino</token>
 		<token value="-N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperidino</token>
 		<token value="-CC=C(C)C" labels="none" valType="SMILES">prenyl</token>
@@ -140,6 +141,7 @@
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tertbutoxyl</token>
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">t-butoxyl</token>
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tbutoxyl</token>
+		<token value="-C(C)(C)C(C)C" labels="none" valType="SMILES">thexyl</token>
 		<token value="-S" labels="none" valType="SMILES">thiyl</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" addGroup="N locant4" outIDs="8">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6" valType="SMILES">tosyl</token>

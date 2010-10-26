@@ -400,6 +400,9 @@ class StructureBuilder {
 					throw new StructureBuildingException("Substituent was expected to have only have an outgoing valency of 1");
 				}
 				state.fragManager.createBond(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
+				if (functionalAtom.getCharge()==-1){
+					functionalAtom.setCharge(0);
+				}
 				substituentBr.removeOutAtom(0);
 			}
 			else {
