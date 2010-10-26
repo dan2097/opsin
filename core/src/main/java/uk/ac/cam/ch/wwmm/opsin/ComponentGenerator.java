@@ -406,10 +406,15 @@ class ComponentGenerator {
 				if (chainLength <4){
 					throw new ComponentGenerationException("ChainLength to small for tert modifier, required minLength 4. Found: " +chainLength);
 				}
-				if (chainLength >=8){
+				if (chainLength >8){
 					throw new ComponentGenerationException("Interpretation of tert on an alkane chain of length: " + chainLength +" is ambiguous");
 				}
-				smiles ="C(C)(C)C" + StringTools.multiplyString("C", chainLength-4);
+				if (chainLength ==8){
+					smiles = "C(C)(C)CC(C)(C)C";
+				}
+				else{
+					smiles ="C(C)(C)C" + StringTools.multiplyString("C", chainLength-4);
+				}
 			}
 			else if (type.equals("iso")){
 				if (chainLength <3){

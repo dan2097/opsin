@@ -9,7 +9,7 @@ If none of these wordRules match a substituent may merge with an adjacent substi
 and a substituent may merge with a full to form a larger full
 Parsing will fail if the end result is not one or more full terms or a polymer.
 -->
-<!--need to be added: hydrazide, acid (multiplier)?monoValentStandaloneGroup, lactone, lactam, lactims, sultams and sultims-->
+<!--need to be added: lactone, lactam, lactims, sultams and sultims-->
 <wordRules>
   <wordRule name="monovalentFunctionalGroup" type="full">
     <word type="substituent" />
@@ -46,7 +46,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   
   <wordRule name="amide" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-	<word type="substituent" />
+    <word type="substituent" />
     <word type="full" endsWithRegex="amide[\]\)\}]*" endsWithGroupValueAtr="[NH2-]"/>
   </wordRule>
 

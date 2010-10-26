@@ -31,7 +31,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="as-indacene" valType="dbkey">as-indac</token>
 		<token value="azulene" valType="dbkey">azul</token>
 		<token value="Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benz</token><!--benzal/benzol overriden by trivial names-->
-		<token value="C(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzhydr</token>
+		<token value="C(c1ccccc1)c1ccccc1" labels="alpha/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzhydr</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthr</token>
 		<token value="chrysene" valType="dbkey">chrys</token>
 		<token value="cinnoline" valType="dbkey">cinnol</token>
