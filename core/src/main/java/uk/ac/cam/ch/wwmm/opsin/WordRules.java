@@ -392,15 +392,14 @@ class WordRules {
 
 	private void applySimpleWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
 		Element parentEl = (Element) firstWord.getParent();
-		int indexToInsertAt = firstWord.getParent().indexOf(firstWord);
+		int indexToInsertAt = parentEl.indexOf(firstWord);
 		Element wordRuleEl = new Element(WORDRULE_ATR);
 		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.simple.toString()));//No wordRule
 		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
 		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
-		wordEls.remove(indexOfFirstWord);
 		firstWord.detach();
 		wordRuleEl.appendChild(firstWord);
-		wordEls.add(indexOfFirstWord, wordRuleEl);
+		wordEls.set(indexOfFirstWord, wordRuleEl);
 		parentEl.insertChild(wordRuleEl, indexToInsertAt);
 	}
 
