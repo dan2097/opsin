@@ -175,11 +175,6 @@
 		<token value="-[N+](O)(O)[O-]" labels="none" valType="SMILES">azono</token>
 		<token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitro</token>
 
-		<!--<token value="-F" labels="none" valType="SMILES">perfluoro</token>
-		<token value="-Br" labels="none" valType="SMILES">perbromo</token>
-		<token value="-Cl" labels="none" valType="SMILES">perchloro</token>
-		<token value="-I" labels="none" valType="SMILES">periodo</token>-->
-
 		<token value="-[F|3]=O" labels="none" valType="SMILES">fluorosyl</token>
 		<token value="-Br=O" labels="none" valType="SMILES">bromosyl</token>
 		<token value="-Cl=O" labels="none" valType="SMILES">chlorosyl</token>
@@ -418,5 +413,12 @@
 		<token value="-[S-]" labels="none" valType="SMILES">sulfido</token>
 		<token value="-[Se-]" labels="none" valType="SMILES">selenido</token>
 		<token value="-[Te-]" labels="none" valType="SMILES">tellurido</token>
+	</tokenList>
+
+	<tokenList tagname="group" type="substituent" subType="perhalogeno" symbol="x">
+		<token value="-F" labels="none" valType="SMILES">perfluoro</token>
+		<token value="-Br" labels="none" valType="SMILES">perbromo</token>
+		<token value="-Cl" labels="none" valType="SMILES">perchloro</token>
+		<token value="-I" labels="none" valType="SMILES">periodo</token>
 	</tokenList>
 </tokenLists>
