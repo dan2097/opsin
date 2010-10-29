@@ -208,13 +208,59 @@ class StructureBuildingMethods {
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
 			}
 			else{
-				Atom atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutAtom(0).getValency());
-				if (atomToJoinTo ==null){
-					throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
+				if (PERHALOGENO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+					performPerHalogenoSubstitution(state, frag, subBracketOrRoot);
+				}
+				else{
+					Atom atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutAtom(0).getValency());
+					if (atomToJoinTo ==null){
+						throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
+					}
+					joinFragmentsSubstitutively(state, frag, atomToJoinTo);
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
-				joinFragmentsSubstitutively(state, frag, atomToJoinTo);
 			}
+		}
+	}
+
+	/**
+	 * Clones the perhalogenFrag sufficiently to replace all in scope hydrogen with halogens.
+	 * The cloned fragments are merged into the perhalogenFrag
+	 * @param state
+	 * @param perhalogenFrag
+	 * @param subBracketOrRoot
+	 * @throws StructureBuildingException
+	 */
+	private static void performPerHalogenoSubstitution(BuildState state, Fragment perhalogenFrag, Element subBracketOrRoot) throws StructureBuildingException {
+		List<Fragment> fragmentsToAttachTo = findAlternativeFragments(state, subBracketOrRoot);
+		List<Atom> atomsToHalogenate = new ArrayList<Atom>();
+		for (Fragment fragment : fragmentsToAttachTo) {
+			for (Atom atom : fragment.getAtomList()) {
+				int substitutableHydrogen = calculateSubstitutableHydrogenAtoms(atom);
+				if (substitutableHydrogen >0 && atom.hasSpareValency()){
+					substitutableHydrogen--;
+				}
+				if (substitutableHydrogen > 0  && FragmentTools.isCharacteristicAtom(atom)){
+					continue;
+				}
+				for (int i = 0; i < substitutableHydrogen; i++) {
+					atomsToHalogenate.add(atom);
+				}
+			}
+		}
+		List<Fragment> halogens = new ArrayList<Fragment>();
+		halogens.add(perhalogenFrag);
+		for (int i = 0; i < atomsToHalogenate.size()-1; i++) {
+			halogens.add(state.fragManager.copyFragment(perhalogenFrag));
+		}
+		for (int i = 0; i < atomsToHalogenate.size(); i++) {
+			Fragment halogen =halogens.get(i);
+			Atom from = halogen.getOutAtom(0).getAtom();
+			halogen.removeOutAtom(0);
+			state.fragManager.createBond(from, atomsToHalogenate.get(i), 1);
+		}
+		for (int i = 1; i < atomsToHalogenate.size(); i++) {
+			state.fragManager.incorporateFragment(halogens.get(i), perhalogenFrag);
 		}
 	}
 

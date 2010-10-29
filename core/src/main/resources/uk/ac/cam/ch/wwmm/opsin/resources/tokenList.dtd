@@ -2,7 +2,7 @@
 <!ELEMENT tokenList (token)+>
 <!ATTLIST tokenList tagname (alkaneStemComponent|alkaneStemModifier|chargeSpecifier|cyclo|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|multiplier|oxidationNumberSpecifier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|suffix|suffixPrefix|unsaturator) #REQUIRED
                     type (acidStem|aminoAcid|basic|chain|charge|cisOrTrans|chalcogenAcidStem|diValentGroup|functionalClass|group|inline|monoValentGroup|monoValentStandaloneGroup|nonCarboxylicAcid|ring|simpleGroup|substituent|root|VonBaeyer) #IMPLIED
-                    subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|naturalProduct|noAcyl|none|oxidoLike|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
+                    subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|naturalProduct|noAcyl|none|oxidoLike|perhalogeno|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
                     symbol CDATA #REQUIRED>
 
 <!ELEMENT token (#PCDATA)>

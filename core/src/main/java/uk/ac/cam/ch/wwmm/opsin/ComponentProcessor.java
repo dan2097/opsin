@@ -2693,6 +2693,10 @@ class ComponentProcessor {
 			if (lastGroupOfElementBeforeSub.getAttribute(ISAMULTIRADICAL_ATR)!=null && lastGroupOfElementBeforeSub.getAttribute(ACCEPTSADDITIVEBONDS_ATR)==null){
 				continue;
 			}
+			//prevent bracketting perhalogeno terms 
+			if (PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR))){
+				continue;
+			}
 
 			/*
 			 * locant may need to be moved. This occurs when the group in elementBeforeSubstituent is not supposed to be locanted onto
@@ -3410,13 +3414,15 @@ class ComponentProcessor {
 	 * @param state 
 	 * @param subOrBracket
 	 * @throws ComponentGenerationException
+	 * @throws StructureBuildingException 
 	 */
-	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws ComponentGenerationException {
+	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracket, LOCANT_EL);
 		int multiplier =1;
 		List<Element> multipliers =  XOMTools.getChildElementsWithTagName(subOrBracket, MULTIPLIER_EL);
 		Element parentElem =(Element)subOrBracket.getParent();
 		boolean oneBelowWordLevel = parentElem.getLocalName().equals(WORD_EL);
+		Element groupIfPresent = subOrBracket.getFirstChildElement(GROUP_EL);
 		if (multipliers.size()>0){
 			if (multipliers.size()>1){
 				throw new ComponentGenerationException(subOrBracket.getLocalName() +" has multiple multipliers, unable to determine meaning!");
@@ -3429,6 +3435,9 @@ class ComponentProcessor {
 			multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
 			subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
 			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
+			if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
+				throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be multiplied");
+			}
 		}
 		if(locants.size() > 0) {
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
@@ -3469,6 +3478,9 @@ class ComponentProcessor {
 				if (!foundSomethingToSubstitute){
 					throw new ComponentGenerationException("Unable to assign all locants");
 				}
+			}
+			if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
+				throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be locanted");
 			}
 			subOrBracket.addAttribute(new Attribute(LOCANT_ATR, locantEl.getValue()));
 			locantEl.detach();

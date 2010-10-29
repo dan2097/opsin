@@ -688,26 +688,11 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if ((atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL))
-					|| currentAtom.getProperty(Atom.ISALDEHYDE)!=null && currentAtom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
+			if (FragmentTools.isCharacteristicAtom(currentAtom)){
 				atomListPosition++;
 				continue;
 			}
-			
 			int currentExpectedValency = currentAtom.determineValency(takeIntoAccountOutValency);
-			if (currentExpectedValency==2){//chalcogen functional atoms should not typically be attached to via unlocanted substitution
-				boolean isFunctionalAtom =false;
-				for (FunctionalAtom funcAtom : functionalAtoms) {
-					if (currentAtom.equals(funcAtom.getAtom())){
-						isFunctionalAtom =true;
-						break;
-					}
-				}
-				if (isFunctionalAtom){
-					atomListPosition++;
-					continue;
-				}
-			}
 			if (takeIntoAccountOutValency){
 				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					return currentAtom;
@@ -731,12 +716,10 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if ((atomCounter !=1 && currentAtom.getType().equals(SUFFIX_TYPE_VAL))
-					|| currentAtom.getProperty(Atom.ISALDEHYDE)!=null && currentAtom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
+			if (FragmentTools.isCharacteristicAtom(currentAtom)){
 				atomListPosition++;
 				continue;
 			}
-			
 			if (takeIntoAccountOutValency){
 				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					return currentAtom;
