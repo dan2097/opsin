@@ -718,11 +718,11 @@ class ComponentProcessor {
 		for (Element locant : locants) {
 			String [] locantValues = matchComma.split(locant.getValue());
 			if(locantValues.length > 1) {
-				Element afterLocants = (Element)XOMTools.getNextSibling(locant);
+				Element afterLocant = (Element)XOMTools.getNextSibling(locant);
 				int structuralBracketDepth = 0;
 				Element multiplierEl = null;
-				while (afterLocants !=null){
-					String elName = afterLocants.getLocalName();
+				while (afterLocant !=null){
+					String elName = afterLocant.getLocalName();
 					if (elName.equals(STRUCTURALOPENBRACKET_EL)){
 						structuralBracketDepth++;
 					}
@@ -730,33 +730,33 @@ class ComponentProcessor {
 						structuralBracketDepth--;
 					}
 					if (structuralBracketDepth!=0){
-						afterLocants = (Element)XOMTools.getNextSibling(afterLocants);
+						afterLocant = (Element)XOMTools.getNextSibling(afterLocant);
 						continue;
 					}
 					if(elName.equals(LOCANT_EL)) {
 						break;
 					}
 					else if (elName.equals(MULTIPLIER_EL)){
-						if (locantValues.length == Integer.parseInt(afterLocants.getAttributeValue(VALUE_ATR))){
-							if (afterLocants.equals(XOMTools.getNextSibling(locant))){
-								//direct locant, typical case
-								multiplierEl = afterLocants;
+						if (locantValues.length == Integer.parseInt(afterLocant.getAttributeValue(VALUE_ATR))){
+							if (afterLocant.equals(XOMTools.getNextSiblingIgnoringCertainElements(locant, new String[]{HYDROGEN_EL}))){
+								//direct locant, typical case. An exception is made for indicated hydrogen e.g. 1,2,4-1H-triazole
+								multiplierEl = afterLocant;
 								break;
 							}
 							else{
-								Element afterMultiplier = (Element) XOMTools.getNextSibling(afterLocants);
+								Element afterMultiplier = (Element) XOMTools.getNextSibling(afterLocant);
 								if (afterMultiplier!=null && (afterMultiplier.getLocalName().equals(SUFFIX_EL) || afterMultiplier.getLocalName().equals(INFIX_EL)
 										|| afterMultiplier.getLocalName().equals(UNSATURATOR_EL) || afterMultiplier.getLocalName().equals(GROUP_EL))){
-									multiplierEl = afterLocants; //indirect locant
+									multiplierEl = afterLocant; //indirect locant
 									break;
 								}
 							}
 						}
-						if (afterLocants.equals(XOMTools.getNextSibling(locant))){//if nothing better can be found report this as a locant/multiplier mismatch
-							multiplierEl = afterLocants;
+						if (afterLocant.equals(XOMTools.getNextSibling(locant))){//if nothing better can be found report this as a locant/multiplier mismatch
+							multiplierEl = afterLocant;
 						}
 					}
-					afterLocants = (Element)XOMTools.getNextSibling(afterLocants);
+					afterLocant = (Element)XOMTools.getNextSibling(afterLocant);
 				}
 				if(multiplierEl != null) {
 					if(Integer.parseInt(multiplierEl.getAttributeValue(VALUE_ATR)) == locantValues.length ) {
