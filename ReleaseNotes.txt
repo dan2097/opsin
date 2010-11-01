@@ -1,11 +1,12 @@
 Version 0.9.0
 Added transition metals/f-block elements and nobel gases
-Added support for specifying the charge or oxidation number on elements
-A van Arkel diagram is now used to determine whether functional bonds to metals should be treated as ionic or covalent
+Added support for specifying the charge or oxidation number on elements e.g. aluminium(3+), iron(II)
+Calculations based off a van Arkel diagram are now used to determine whether functional bonds to metals should be treated as ionic or covalent
 Improved support for prefix functional replacement e.g. hydrazono/amido/imido/hydrazido/nitrido/pseudohalides can now be used for functional replacement on appropriate acids
 Ortho/meta/para handling improved - can now only apply to six membered rings
 Added support for methylenedioxy
 Added support for simple bridge prefixes e.g. methano as in 2,3-methanoindene
+Added support for perfluoro/perchloro/perbromo/periodo
 Generalised alkane support to allow alkanes of lengths up to 9999 to be described without enumeration
 Updated dependency on JNI-InChI to 0.7, hence InChI 1.03 is now used.
 Improved algorithm for assigning unlocanted hydro terms

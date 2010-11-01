@@ -12,10 +12,9 @@ OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 
 ##################################################
 
-OPSIN is available as a standalone JAR from SourceForge(https://sourceforge.net/projects/oscar3-chem/) or Bitbucket (http://bitbucket.org/dan2097/opsin/)
+OPSIN is available as a standalone JAR from Bitbucket (http://bitbucket.org/dan2097/opsin/) or SourceForge(https://sourceforge.net/projects/oscar3-chem/)
 It is also available as a dependency for use with Maven.
-java -jar opsin-0.9.0-jar-with-dependencies.jar will give you a command line interface to convert names to CML (Chemical Markup Language)
-opsin-0.9.0-jar-with-dependencies.jar includes InChI and CML output and all dependendencies
+opsin-0.9.0-jar-with-dependencies.jar includes CML (Chemical Markup Language) and InChI (IUPAC International Chemical Identifier) output and all dependendencies
 The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI
 
 To use OPSIN as a library add opsin-0.9.0-jar-with-dependencies.jar to your classpath.
@@ -44,6 +43,11 @@ If you are using Maven then do the following:
 
 	if you also need InChI output support.
 
+##################################################
+
+Using OPSIN as a commandline utility:
+	java -jar opsin-0.9.0-jar-with-dependencies.jar will give you a command line interface to convert names to CML
+	java -cp opsin-0.9.0-jar-with-dependencies.jar uk.ac.cam.ch.wwmm.opsin.NameToInchi will give you a command line interface to convert names to InChI
 
 Using OPSIN as a library:
 
@@ -66,6 +70,19 @@ parseToCML will typically take 5-10ms to convert a name to CML making OPSIN suit
 CML can, if desired, be converted to other format such as SD, SMILES, InChI etc. by toolkits such as CDK, OpenBabel and JUMBO.
 (NOTE: if you want InChI the most efficient way to generate it is to use the InChI module and the corresponding parseToInChI method)
 
+OPSIN's API also support limited configurability and a mechanism to return the reason for failure e.g.:
+	NameToStructure nts = NameToStructure.getInstance();
+	NameToStructureConfig n2sconfig = new NameToStructureConfig();
+	n2sconfig.setAllowRadicals(true);
+	OpsinResult result = nts.parseChemicalName("acetonitrile", n2sconfig);
+	if (result.getStatus() != OpsinResult.OPSIN_RESULT_STATUS.FAILURE){
+		Element cml = result.getCml();
+		String inchi = NameToInchi.convertResultToInChI(result, false);
+	}
+	else{
+		System.out.println(result.getMessage());
+	}
+
 ##################################################
 
 The workings of OPSIN are more fully described in:
@@ -73,6 +90,8 @@ The workings of OPSIN are more fully described in:
 Peter Corbett, Peter Murray-Rust High-throughput identification of
 chemistry in life science texts. Proceedings of Computational Life
 Sciences (CompLife) 2006, Cambridge, UK, pp. 107-118.
+
+A paper describing the current operation of OPSIN is currently being reviewed.
 
 The following list broadly summarises what OPSIN can currently do and what will be worked on in the future.
 
@@ -103,14 +122,17 @@ E/Z/R/S stereochemistry
 Amino Acids and derivatives
 Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)
 Simple bridge prefixes e.g. methano
+Nucleosides, nucleotides and their esters
+Specification of oxidation numbers and charge on elements
+Perhalogeno terms
 Simple CAS names
 
 Currently UNsupported nomenclature includes:
 Other less common stereochemical terms
 Carbohydrates
 Natural Products
-Steroids
-Nucleic acids
+Specification of stereochemistry on steroids
+Subtractive nomenclature
 Composite and multiplied bridge prefixes e.g. epoxymethano
 Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 
@@ -119,4 +141,4 @@ The following functional classes: Lactones, sultams, lactams, sultims and lactim
 ##################################################
 
 Good Luck and let us know if you have problems, comments or suggestions!
-You can contact us by posting a message on SourceForge or you can email me directly (dl387@cam.ac.uk)
+You can contact us by posting a message on Bitbucket or you can email me directly (dl387@cam.ac.uk)
