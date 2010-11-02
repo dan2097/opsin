@@ -1806,6 +1806,10 @@ class ComponentGenerator {
 						Element newMultiplier = new Element(MULTIPLIER_EL);
 						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 						next.insertChild(newMultiplier, 0);
+						Element interSubstituentHyphen = (Element) XOMTools.getPrevious(group);
+						if (interSubstituentHyphen!=null && !interSubstituentHyphen.getLocalName().equals(HYPHEN_EL)){//prevent implicit bracketting
+							XOMTools.insertAfter(interSubstituentHyphen, new Element(HYPHEN_EL));
+						}
 					}
 				}
 			}
