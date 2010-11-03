@@ -2082,22 +2082,4 @@ bond (atomRefs2, order (NB must be an integer))
             <bond atomRefs2="a286 a282" order="1"/>
         </bondArray>
     </molecule>
-    <molecule id="fulvene">
-        <atomArray>
-            <atom id="a1" elementType="C"/>
-            <atom id="a2" elementType="C"/>
-            <atom id="a3" elementType="C"/>
-            <atom id="a4" elementType="C"/>
-            <atom id="a5" elementType="C"/>
-            <atom id="a6" elementType="C"/>
-        </atomArray>
-        <bondArray>
-            <bond atomRefs2="a1 a2" order="2"/>
-            <bond atomRefs2="a2 a3" order="1"/>
-            <bond atomRefs2="a3 a4" order="2"/>
-            <bond atomRefs2="a4 a5" order="1"/>
-            <bond atomRefs2="a5 a6" order="2"/>
-            <bond atomRefs2="a6 a2" order="1"/>
-        </bondArray>
-    </molecule>
 </cml>

@@ -73,7 +73,7 @@
 		<token value="[o+]1c(ccc2ccccc12)c3ccccc3" labels="1/2/3/4/4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES">flavylium</token>
 		<token value="fluoranthene" valType="dbkey">fluoranthen</token>
 		<token value="fluorene" valType="dbkey">fluoren</token>
-		<token value="fulvene" valType="dbkey">fulven</token>
+		<token value="C1=CC=CC1=C" labels="1/2/3/4/5/6" valType="SMILES">fulven</token>
 		<token value="o1cccc1" labels="1/2/3/4/5" valType="SMILES">furan</token>
 		<token value="o1nccn1" labels="1/2/3/4/5" valType="SMILES">furazan</token>
 		<token value="c1(C)nCCc2c3ccc(OC)cc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7///8/8a/9/9a" valType="SMILES">harmalin</token>
