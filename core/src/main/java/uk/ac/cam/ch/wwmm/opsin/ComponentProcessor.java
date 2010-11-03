@@ -843,7 +843,7 @@ class ComponentProcessor {
 					return false;//there is a case where locants don't apply to heteroatoms in a HW system, but in that case only one locant is expected so this function would not be called
 				}
 			}
-			if (count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR)) && !locantValues[count-1].endsWith("'")){
+			if (count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
 				return true;
 			}
 			else if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
@@ -2390,13 +2390,16 @@ class ComponentProcessor {
 		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
-		if (groupValue.equals("methylene") || matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
+		if (groupValue.equals("methylene") || groupValue.equals("oxy")|| matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
 			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
 				if (!unsuitableForFormingChainMultiradical(group, beforeGroup)){
 					if (groupValue.equals("methylene")){
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", multiplierVal));
+					}
+					else if (groupValue.equals("oxy")){
+						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("O", multiplierVal));
 					}
 					else if (groupValue.equals("thio")){
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("S", multiplierVal));

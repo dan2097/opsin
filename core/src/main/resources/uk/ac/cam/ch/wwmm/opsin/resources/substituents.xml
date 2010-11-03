@@ -13,6 +13,7 @@
   <token value="C/C=C(C)/CCC[C@H](C)CCC[C@H](C)CCCC(C)C" labels="none" valType="SMILES">phyt</token>
   <token value="CC(=O)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">phenac</token>
   <token value="Cc1cc2OCOc2cc1" labels="none" valType="SMILES">piperon</token>
+  <token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES" defaultInID="4">salic</token>
   <token value="CC=C" valType="SMILES" usableAsAJoiner="yes">all</token>
   <token value="CC=C" valType="SMILES" usableAsAJoiner="yes">allan</token>
   <token value="C=C" valType="SMILES" usableAsAJoiner="yes">vin</token>
