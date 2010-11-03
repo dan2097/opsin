@@ -362,8 +362,14 @@ class Tokeniser {
 				}
 				parentNameParts = matchSpace.split(parent);
 			}
-			if (parentNameParts.length >2 || parentNameParts.length==2 && !matchAcid.matcher(parentNameParts[1]).matches()){
-				throw new ParsingException("Invalid CAS name. Parent compound was followed by an unexpected term");
+			for (int i = 1; i < parentNameParts.length; i++) {
+				if (!matchAcid.matcher(parentNameParts[i]).matches()){
+					ParseRulesResults results = parseRules.getParses(parentNameParts[i]);
+					List<ParseTokens> parseTokens = results.getParseTokensList();
+					if (parseTokens.size() ==0){
+						throw new ParsingException("Invalid CAS name. Parent compound was followed by an unexpected term");
+					}
+				}
 			}
 		}
 		boolean addedBracket = false;
@@ -410,7 +416,13 @@ class Tokeniser {
 							seperateWordSubstituents.add(component);
 						}
 						else if (wordType.equals(WordType.full)){
-							throw new ParsingException("Unable to interpret: " + component +" (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
+							if (component.endsWith("ate")||component.endsWith("ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
+									|| component.equals("hydrofluoride") || component.equals("hydrochloride") || component.equals("hydrobromide") || component.equals("hydroiodide")){
+								functionalTerms.add(component);
+							}
+							else{
+								throw new ParsingException("Unable to interpret: " + component +" (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
+							}
 						}
 					}
 					else{

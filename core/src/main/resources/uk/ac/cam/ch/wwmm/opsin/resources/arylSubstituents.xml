@@ -40,7 +40,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="cyclopenta[a]phenanthrene" valType="dbkey">cyclopenta[a]phenanthr</token>
 		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///" valType="SMILES" addGroup="C locant4">cym</token>
 		<token value="fluoranthene" valType="dbkey">fluoranth</token>
-		<token value="fulvene" valType="dbkey">fulv</token>
+		<token value="C1=CC=CC1=C" labels="1/2/3/4/5/6" valType="SMILES">fulv</token>
 		<token value="o1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">fur</token>
 		<token value="Cc1ccco1" labels="alpha/2/3/4/5/1" valType="SMILES">furfur</token>
 		<token value="imidazolidine" valType="dbkey">imidazolid</token>

@@ -228,6 +228,18 @@ public class TokenizerTest {
 		assertEquals("ethyl methyl peroxide", name);
 	}
 	
+	@Test
+	public void cas16() throws Exception {
+		String name = tokenizer.uninvertCASName("Phosphonic diamide, P-phenyl- (8CI9CI)");
+		assertEquals("P-phenyl-Phosphonic diamide", name);
+	}
+	
+	@Test
+	public void cas17() throws Exception {
+		String name = tokenizer.uninvertCASName("piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride");
+		assertEquals("1,1-dimethyl-piperazinium 2,2,2-trifluoroacetate hydrochloride", name);
+	}
+	
 	@Test(expected=ParsingException.class)
 	public void notCas1() throws Exception {
 		tokenizer.uninvertCASName("hexanamine, hexylamine");
