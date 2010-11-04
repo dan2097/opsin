@@ -38,6 +38,7 @@ class ComponentProcessor {
 	private final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
+	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 
 	/*Holds the rules on how suffixes are interpreted. Convenience methods are available to use them*/
 	private HashMap<String, HashMap<String, List<Element>>> suffixApplicability;
@@ -270,10 +271,10 @@ class ComponentProcessor {
 
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
-
+		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag);
 		return thisFrag;
 	}
-	
+
 	/**
 	 * Looks for the presence of DEFAULTINLOCANT_ATR and DEFAULTINID_ATR on the group and applies them to the fragment
 	 * Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
@@ -334,6 +335,66 @@ class ComponentProcessor {
             for (String functionalID : functionalIDs) {
                 thisFrag.addFunctionalAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(functionalID) - 1));
             }
+		}
+	}
+	
+	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag) throws StructureBuildingException {
+		String groupType  = group.getAttributeValue(TYPE_ATR);
+		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
+			List<Atom> atomList = thisFrag.getAtomList();
+			Atom startingAtom = thisFrag.getFirstAtom();
+			if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
+				String suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
+				String suffixAppliesToArr[] = matchComma.split(suffixAppliesTo);
+				if (suffixAppliesToArr.length!=1){
+					return;
+				}
+				startingAtom = atomList.get(Integer.parseInt(suffixAppliesToArr[0])-1);
+			}
+			List<Atom> neighbours = startingAtom.getAtomNeighbours();
+			int counter =-1;
+			Atom previousAtom = startingAtom;
+			while (neighbours.size()==1){
+				counter++;
+				if (counter>5){
+					break;
+				}
+				Atom nextAtom = neighbours.get(0);
+				if (nextAtom.getAtomIsInACycle()){
+					break;
+				}
+				nextAtom.addLocant(traditionalAlkanePositionNames[counter]);
+				neighbours = nextAtom.getAtomNeighbours();
+				neighbours.remove(previousAtom);
+				previousAtom = nextAtom;
+			}
+		}
+		else if (groupType.equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			List<Atom> atomList = thisFrag.getAtomList();
+			if (atomList.size()==1){
+				return;
+			}
+			Element possibleSuffix = (Element) XOMTools.getNextSibling(group, SUFFIX_EL);
+			Boolean terminalSuffixWithNoSuffixPrefixPresent =false;
+			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR)==null){
+				terminalSuffixWithNoSuffixPrefixPresent =true;
+			}
+			for (Atom atom : atomList) {
+				String firstLocant = atom.getFirstLocant();
+				if (!atom.getAtomIsInACycle() && firstLocant!=null && firstLocant.length()==1 && Character.isDigit(firstLocant.charAt(0))){
+					int locantNumber = Integer.parseInt(firstLocant);
+					if (terminalSuffixWithNoSuffixPrefixPresent){
+						if (locantNumber>1 && locantNumber<=7){
+							atom.addLocant(traditionalAlkanePositionNames[locantNumber-2]);
+						}
+					}
+					else{
+						if (locantNumber>0 && locantNumber<=6){
+							atom.addLocant(traditionalAlkanePositionNames[locantNumber-1]);
+						}
+					}
+				}
+			}
 		}
 	}
 
