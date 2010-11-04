@@ -843,10 +843,7 @@ class ComponentProcessor {
 					return false;//there is a case where locants don't apply to heteroatoms in a HW system, but in that case only one locant is expected so this function would not be called
 				}
 			}
-			if (count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
-				return true;
-			}
-			else if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
+			if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
 				String[] outIDs = matchComma.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
 				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
 				if (count ==outIDs.length && groupFragment.getAtomList().size()>1){//things like oxy do not need to have their outIDs specified
@@ -882,6 +879,9 @@ class ComponentProcessor {
 		}
 		boolean detectedMultiplicativeNomenclature = detectMultiplicativeNomenclature(locant, locantValues, finalSubOrRootInWord);
 		if (detectedMultiplicativeNomenclature){
+			return true;
+		}
+		if (currentElem != null && currentElem.getLocalName().equals(GROUP_EL) && count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
 			return true;
 		}
 		Element parentElem = (Element) locant.getParent();
