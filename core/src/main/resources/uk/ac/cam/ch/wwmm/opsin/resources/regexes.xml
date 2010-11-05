@@ -119,7 +119,8 @@ does not define a CFG.
   <regex name="%alkaneStemThousands%" value="┤"/>
   <regex name="%bridgeFormingO%" value="╡"/>
   <regex name="%naturalProductRequiresUnsaturator%" value="╢"/>
-  <!--up to ascii 182 used-->
+  <regex name="%mono%" value="╖"/>
+  <!--up to ascii 183 used-->
 
 <!-- composite regexes-->
 
@@ -237,7 +238,7 @@ does not define a CFG.
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
   <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%|%elementaryAtom%%chargeOrOxidationNumberSpecifier%?))"/>
-  <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*%newLocantGroupNoStartingHyphen%?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
+  <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*(%newLocantGroupNoStartingHyphen%%mono%?)?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
 
 <!-- functional Groups-->
   <regex name="%anhydride%" value="(%anhydrideLocant%?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>

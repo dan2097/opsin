@@ -29,8 +29,8 @@ public class NameToStructureTest {
 				"xmlns:nameDict=\"http://www.xml-cml.org/dictionary/cml/name/\" " +
 				"convention=\"cmlDict:cmllite\"><molecule id=\"m1\">" +
 				"<name dictRef=\"nameDict:unknown\">ethane</name><atomArray>" +
-				"<atom id=\"a1\" elementType=\"C\"><label value=\"1\" dictRef=\"cmlDict:locant\" /></atom>" +
-				"<atom id=\"a2\" elementType=\"C\"><label value=\"2\" dictRef=\"cmlDict:locant\" /></atom>" +
+				"<atom id=\"a1\" elementType=\"C\"><label value=\"1\" dictRef=\"cmlDict:locant\" /><label value=\"alpha\" dictRef=\"cmlDict:locant\" /></atom>" +
+				"<atom id=\"a2\" elementType=\"C\"><label value=\"2\" dictRef=\"cmlDict:locant\" /><label value=\"beta\" dictRef=\"cmlDict:locant\" /></atom>" +
 				"<atom id=\"a3\" elementType=\"H\" />" +
 				"<atom id=\"a4\" elementType=\"H\" />" +
 				"<atom id=\"a5\" elementType=\"H\" />" +

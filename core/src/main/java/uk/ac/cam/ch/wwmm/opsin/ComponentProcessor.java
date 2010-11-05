@@ -3491,17 +3491,19 @@ class ComponentProcessor {
 			if (multipliers.size()>1){
 				throw new ComponentGenerationException(subOrBracket.getLocalName() +" has multiple multipliers, unable to determine meaning!");
 			}
-			if (oneBelowWordLevel &&
-					XOMTools.getNextSibling(subOrBracket) == null &&
-					XOMTools.getPreviousSibling(subOrBracket) == null) {
-				return;//word level multiplier
-			}
-			multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
-			subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
-			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
-			if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
-				throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be multiplied");
-			}
+			//if (!multipliers.get(0).getAttributeValue(VALUE_ATR).equals("1")){//still want to assign locants if 0
+				if (oneBelowWordLevel &&
+						XOMTools.getNextSibling(subOrBracket) == null &&
+						XOMTools.getPreviousSibling(subOrBracket) == null) {
+					return;//word level multiplier
+				}
+				multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
+				subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
+				//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
+				if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
+					throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be multiplied");
+				}
+			//}
 		}
 		if(locants.size() > 0) {
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
@@ -3587,17 +3589,9 @@ class ComponentProcessor {
 			Element multiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
 			if (multiplier !=null){
 				int multiVal =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-				if (multiVal ==1){//mono
-					return;
-				}
 				Elements locants =subOrBracket.getChildElements(LOCANT_EL);
 				boolean assignLocants =false;
-				boolean wordLevelLocants =false;
-				if (XOMTools.getNextSibling(subOrBracket)==null && WordType.valueOf(word.getAttributeValue(TYPE_ATR))==WordType.substituent){//something like O,S-dimethyl phosphorothioate
-					if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
-						wordLevelLocants =true;
-					}
-				}
+				boolean wordLevelLocants = wordLevelLocantsAllowed(state, subOrBracket, locants.size());//something like O,S-dimethyl phosphorothioate
 				if (locants.size()>1){
 					throw new ComponentGenerationException("Unable to assign all locants");
 				}
@@ -3617,6 +3611,9 @@ class ComponentProcessor {
 					else{
 						throw new ComponentGenerationException("Unable to assign all locants");
 					}
+				}
+				if (multiVal ==1){//mono
+					return;
 				}
 				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
 				for (int i = subOrBracket.indexOf(multiplier) -1 ; i >=0 ; i--) {

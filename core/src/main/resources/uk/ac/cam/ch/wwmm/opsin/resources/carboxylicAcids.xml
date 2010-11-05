@@ -118,7 +118,7 @@
     <token value="CC=C(C)CC" suffixAppliesTo="1,4,6" labels="none" valType="SMILES">aconit</token><!--unknown-->
     <token value="CC(NC(=O)N)NC(=O)N" labels="none" valType="SMILES">allant</token><!--unknown-->
     <token value="CNN" labels="1/2/3" valType="SMILES">carbaz</token><!--unknown-->
-		<token value="CCC(O)(C)CC" suffixAppliesTo="1,5,7" labels="none" valType="SMILES">citr</token><!--no clear definition as to what citryl means-->
+		<token value="CCC(O)(C)CC" suffixAppliesTo="1,5,7" labels="1/2/3///4/5" valType="SMILES">citr</token><!--no clear definition as to what citryl means-->
     <token value="C(N(CC)CC)CN(CC)CC" labels="none" valType="SMILES" suffixAppliesTo="4,6,10,12">edet</token><!--unknown-->
     <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2,ortho/3,meta//4,para//5//6" valType="SMILES">gall</token><!--unknown-->
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">henatriacontyl</token><!--clashes with a systematic name-->
