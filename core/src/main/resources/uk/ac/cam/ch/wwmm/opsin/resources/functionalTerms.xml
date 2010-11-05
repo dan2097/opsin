@@ -77,8 +77,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[Se|6](=O)(=O)[Se|6](=O)(=O)-" labels="none" valType="SMILES">diselenone</token>
     <token value="[Se|4]=O" labels="none" valType="SMILES">selenoxide</token>
     <token value="[Se|4](=O)[Se|4](=O)-" labels="none" valType="SMILES">diselenoxide</token>
-    <token value="C=[Se]" labels="none" valType="SMILES">selone</token>
-    <token value="[Se|4]=O" labels="none" valType="SMILES">selenoketone</token>
+    <token value="C=[Se]" labels="none" valType="SMILES">selenoketone</token>
     <token value="S" labels="none" valType="SMILES">sulfide</token>
     <token value="SS-" labels="none" valType="SMILES">disulfide</token>
     <token value="SSS-" labels="none" valType="SMILES">trisulfide</token>
@@ -91,12 +90,12 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="S(=O)S(=O)-" labels="none" valType="SMILES">disulfoxide</token>
     <token value="[Te|2]" labels="none" valType="SMILES">telluride</token>
     <token value="[Te|2][Te|2]-" labels="none" valType="SMILES">ditelluride</token>
-    <token value="[Te|4]=O" labels="none" valType="SMILES">telluroketone</token>
+    <token value="C=[Te]" labels="none" valType="SMILES">telluroketone</token>
     <token value="[Te|6](=O)=O" labels="none" valType="SMILES">tellurone</token>
     <token value="[Te|6](=O)(=O)[Te|6](=O)(=O)-" labels="none" valType="SMILES">ditellurone</token>
     <token value="[Te|4]=O" labels="none" valType="SMILES">telluroxide</token>
     <token value="[Te|4](=O)[Te|4](=O)-" labels="none" valType="SMILES">ditelluroxide</token>
-    <token value="S=O" labels="none" valType="SMILES">thioketone</token>
+    <token value="C=S" labels="none" valType="SMILES">thioketone</token>
   </tokenList>
 
   <tokenList tagname="functionalGroup" type="monoValentStandaloneGroup" symbol="ò">

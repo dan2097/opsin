@@ -150,7 +150,7 @@ does not define a CFG.
   <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
   <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)" />
   <regex name="%rootSuffix%" value= "(%suffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%)" />
-  <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%infixedPrefixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%)|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
+  <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?(%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%|%infixedPrefixedSuffix%))|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
   <regex name="%suffixGroup%" value="((%relativeCisTrans%|%optLocantGroup%)?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%{0,2}%stereochemistry%*%multiplier%?%openBracket%%hyphen%?)"/>

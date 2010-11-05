@@ -973,7 +973,7 @@ class FunctionalReplacement {
 	
 	
 	/**
-	 * Returns oxygen atoms in suffixes with functionalAtoms or acidStem suffixes
+	 * Returns oxygen atoms in suffixes with functionalAtoms or acidStem suffixes or aldehyde suffixes (1979 C-531)
 	 * @param state
 	 * @param groupToBeModified
 	 * @return
@@ -984,7 +984,7 @@ class FunctionalReplacement {
         for (Element suffix : suffixElements) {
             Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
             if (suffixFrag != null) {//null for non carboxylic acids
-                if (suffixFrag.getFunctionalAtoms().size() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)) {
+                if (suffixFrag.getFunctionalAtoms().size() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || suffix.getAttributeValue(VALUE_ATR).equals("aldehyde")) {
                     List<Atom> atomList = suffixFrag.getAtomList();
                     for (Atom a : atomList) {
                         if (a.getElement().equals("O")) {
