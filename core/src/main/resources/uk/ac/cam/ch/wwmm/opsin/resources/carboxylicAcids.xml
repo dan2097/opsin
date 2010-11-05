@@ -24,6 +24,7 @@
     <token value="CCCC(C)C" labels="none" valType="SMILES">isocapro</token>
     <token value="CC(C)C" labels="none" valType="SMILES" suffixAppliesTo="1,4">isosuccin</token>
     <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
+    <token value="S(=O)c1ccc(N)c2ccccc12" labels="//1/2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphthion</token>
     <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
     <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelargon</token>
     <token value="CC#CC" labels="1/2/3/4" valType="SMILES">tetrol</token>
