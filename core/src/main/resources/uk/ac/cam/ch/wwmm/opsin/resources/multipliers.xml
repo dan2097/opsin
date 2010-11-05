@@ -1,4 +1,4 @@
-<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <!-- value = the obvious -->
 <tokenLists>
@@ -140,5 +140,9 @@
     <token value="13">trideci</token>
     <token value="14">tetradeci</token>
     <token value="15">pentadeci</token>
+  </tokenList>
+
+  <tokenList tagname="multiplier" type="basic" symbol="╖"><!--mono for monophosphate-->
+		<token value="1">mono</token>
   </tokenList>
 </tokenLists>
