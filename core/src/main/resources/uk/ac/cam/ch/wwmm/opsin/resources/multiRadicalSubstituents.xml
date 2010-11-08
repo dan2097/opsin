@@ -19,7 +19,7 @@
 		<token value="CCC" outIDs="1,2" valType="SMILES">propylene</token>
 
 		<token value="NN" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">hydrazo</token>
-		<!--<token value="NN" labels="none" outIDs="1,1,2,2" valType="SMILES">azino</token>-->
+		<token value="=NN=" labels="none" valType="SMILES">azino</token>
 		<token value="N=N" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">azo</token><!--rule C-911 needs to be implemented to use this properly-->
 		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" valType="SMILES" usableAsAJoiner="yes" defaultInID="2" acceptsAdditiveBonds="yes">azoxy</token><!--rule C-911 needs to be implemented to use this properly-->
 		<token value="N=[NH+][O-]" labels="none" outIDs="1,2" valType="SMILES" usableAsAJoiner="yes" defaultInID="2" acceptsAdditiveBonds="yes">nno-azoxy</token>
