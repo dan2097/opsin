@@ -62,9 +62,14 @@
     <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
     <token value="CCNC(=O)c1ccccc1" labels="/////1/2,ortho/3,meta/4,para/5/6" valType="SMILES">hippur</token>
     <token value="CCCO" valType="SMILES">hydracryl</token>
+    <token value="N1CCC(C)CC1" labels="1/2/3/4//5/6" valType="SMILES" suffixAppliesTo="5">isonipecot</token>
+    <token value="n1c(C)ccc(C)c1" labels="1/2//3/4/5//6" valType="SMILES" suffixAppliesTo="3,7">isocinchomeron</token>
     <token value="CC(=C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">itacon</token>
     <token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">mal</token>
 		<token value="C/C=C/C=C/C" suffixAppliesTo="1,6" labels="1/2/3/4/5/6" valType="SMILES">mucon</token>
+    <token value="N1CC(C)CCC1" labels="1/2/3//4/5/6" valType="SMILES" suffixAppliesTo="4">nipecot</token>
+    <token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" valType="SMILES" suffixAppliesTo="3">pipecolin</token>
+    <token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" valType="SMILES" suffixAppliesTo="3">pipecol</token>
     <token value="CC(=O)C" labels="none" valType="SMILES">pyruv</token>
     <token value="S(=O)c1ccccc1" labels="//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4">sulfanil</token>
     <token value="CCS" labels="1/2/" valType="SMILES">thioglycol</token>
@@ -119,6 +124,7 @@
     <token value="CC=C(C)CC" suffixAppliesTo="1,4,6" labels="none" valType="SMILES">aconit</token><!--unknown-->
     <token value="CC(NC(=O)N)NC(=O)N" labels="none" valType="SMILES">allant</token><!--unknown-->
     <token value="CNN" labels="1/2/3" valType="SMILES">carbaz</token><!--unknown-->
+    <token value="n1ccc(C)c2ccccc12" labels="1/2/3/4//4a/5/6/7/8/8a" valType="SMILES" suffixAppliesTo="5">cinchonin</token><!--cinchonine is an alkaloid-->
 		<token value="CCC(O)(C)CC" suffixAppliesTo="1,5,7" labels="1/2/3///4/5" valType="SMILES">citr</token><!--no clear definition as to what citryl means-->
     <token value="C(N(CC)CC)CN(CC)CC" labels="none" valType="SMILES" suffixAppliesTo="4,6,10,12">edet</token><!--unknown-->
     <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2,ortho/3,meta//4,para//5//6" valType="SMILES">gall</token><!--unknown-->
