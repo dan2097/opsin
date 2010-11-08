@@ -4,7 +4,7 @@
   <!--This is the set of trivial acids in which yl is added to denote an acyl. Oyl is not recommended but is unambiguous and so is accepted-->
   <tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">
     <token value="C" valType="SMILES" usableAsAJoiner="yes">form</token>
-    <token value="CC" valType="SMILES" usableAsAJoiner="yes">acet</token>
+    <token value="CC" labels="1/2,omega" valType="SMILES" usableAsAJoiner="yes">acet</token>
     <token value="CCC" valType="SMILES" usableAsAJoiner="yes">propion</token>
     <token value="CCC" valType="SMILES" usableAsAJoiner="yes">propi</token>
     <token value="CCCC" valType="SMILES" usableAsAJoiner="yes">butyr</token>
