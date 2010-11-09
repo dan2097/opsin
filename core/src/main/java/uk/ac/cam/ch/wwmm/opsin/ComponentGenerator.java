@@ -1793,7 +1793,7 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy") || groupValue.equals("diazoamino")){
+		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy") || groupValue.equals("diazoamino") || groupValue.equals("hydrazo") ){
 			Element enclosingSub = (Element) group.getParent();
 			Element next = (Element) XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
 			if (next==null && XOMTools.getPreviousSibling(enclosingSub)==null){//e.g. [(E)-NNO-azoxy]benzene
