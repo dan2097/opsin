@@ -84,7 +84,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="ol" subType="endInAn">ol</suffix>
     <suffix value="oyl">oyl</suffix>
     <suffix value="yl">oyl</suffix>
-    <suffix value="aminoAcidO">yl</suffix><!--e.g. glycino-->
+    <suffix value="oMeaningYl">yl</suffix><!--e.g. glycino-->
     <suffix value="aminoAcidYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->
   </groupType>
 
@@ -153,6 +153,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="nitrilium">nitrilium</suffix>
     <suffix value="ol">ol</suffix>
     <suffix value="olate">olate</suffix>
+    <suffix value="oMeaningYl">yl</suffix><!--e.g. tetrazano-->
     <suffix value="onaphthone">onaphthone</suffix>
     <suffix value="one">one</suffix>
     <suffix value="ophenone">ophenone</suffix>

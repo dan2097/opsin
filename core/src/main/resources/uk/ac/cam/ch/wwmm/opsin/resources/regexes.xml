@@ -120,7 +120,8 @@ does not define a CFG.
   <regex name="%bridgeFormingO%" value="╡"/>
   <regex name="%naturalProductRequiresUnsaturator%" value="╢"/>
   <regex name="%mono%" value="╖"/>
-  <!--up to ascii 183 used-->
+  <regex name="%nitrogenHeteroStem%" value="╕"/>
+  <!--up to ascii 184 used-->
 
 <!-- composite regexes-->
 
@@ -169,7 +170,8 @@ does not define a CFG.
 
   <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%a%?%unsaturationBlock%)"/>
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%a%?%unsaturationBlock%)"/>
-  <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
+  <regex name="%nitrogenChainSubstituent%" value = "(((%multiplier%%nitrogenHeteroStem%%unsaturationBlock%)|(%nitrogenHeteroStem%%hyphen%?%ane%))%oMeaningYl%)"/>
+  <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%)"/>
 
   <regex name="%aminoMonoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%)"/>
   <regex name="%aminoAcidOptionalIne%" value="(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%)"/>
