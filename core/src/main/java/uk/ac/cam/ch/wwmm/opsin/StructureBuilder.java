@@ -658,22 +658,40 @@ class StructureBuilder {
 		if (!locantForFunctionalTerm.isEmpty() && locantForFunctionalTerm.size()!=replacementFragments.size()){
 			throw new StructureBuildingException("Mismatch between number of locants and number of carbonyl replacements");
 		}
+
+		Element rightMostGroup = findRightMostGroupInWordOrWordRule(words.get(0));
+		Element parent = (Element) rightMostGroup.getParent();
+		boolean multiplied =false;
+		while (!parent.equals(words.get(0))){
+			if (parent.getAttribute(MULTIPLIER_ATR)!=null){
+				multiplied =true;
+			}
+			parent =(Element) parent.getParent();
+		}
+		if (!multiplied){
+			List<Atom> carbonylOxygens = findCarbonylOxygens(state.xmlFragmentMap.get(rightMostGroup), locantForFunctionalTerm);
+			int replacementsToPerform = Math.min(replacementFragments.size(), carbonylOxygens.size());
+			replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, replacementsToPerform);
+		}
+
 		resolveWordOrBracket(state, words.get(0));//the component
-		//Note that the right most group may be multiplied e.g. 3,3'-methylenebis(2,4,6-trimethylbenzaldehyde) disemicarbazone
-		//or the carbonyl may not even be on the right most group e.g.  4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
-		BuildResults br = new BuildResults(state, words.get(0));
-		List<Atom> carbonylOxygens = new ArrayList<Atom>();
-		List<Fragment> fragments = new ArrayList<Fragment>(br.getFragments());
-		for (ListIterator<Fragment> iterator = fragments.listIterator(fragments.size()); iterator.hasPrevious();) {//iterate in reverse order - right most groups preferred
-			carbonylOxygens.addAll(findCarbonylOxygens(iterator.previous(), locantForFunctionalTerm));
+		if (replacementFragments.size() >0){
+			//Note that the right most group may be multiplied e.g. 3,3'-methylenebis(2,4,6-trimethylbenzaldehyde) disemicarbazone
+			//or the carbonyl may not even be on the right most group e.g.  4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
+			BuildResults br = new BuildResults(state, words.get(0));
+			List<Atom> carbonylOxygens = new ArrayList<Atom>();
+			List<Fragment> fragments = new ArrayList<Fragment>(br.getFragments());
+			for (ListIterator<Fragment> iterator = fragments.listIterator(fragments.size()); iterator.hasPrevious();) {//iterate in reverse order - right most groups preferred
+				carbonylOxygens.addAll(findCarbonylOxygens(iterator.previous(), locantForFunctionalTerm));
+			}
+			replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, replacementFragments.size());
 		}
-		if (carbonylOxygens.size() < replacementFragments.size()){
-			throw new StructureBuildingException("Insufficient carbonyl groups found!");
-		}
-		replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, replacementFragments.size());
 	}
 
 	private void replaceCarbonylOxygenWithReplacementFragments(BuildState state, List<Element> words, List<Fragment> replacementFragments, List<Atom> carbonylOxygens, int functionalReplacementsToPerform) throws StructureBuildingException {
+		if (functionalReplacementsToPerform > carbonylOxygens.size()){
+			throw new StructureBuildingException("Insufficient carbonyl groups found!");
+		}
 		for (int i = 0; i < functionalReplacementsToPerform; i++) {
 			Atom carbonylOxygen =carbonylOxygens.remove(0);//the oxygen of the carbonyl
 			Fragment carbonylFrag = carbonylOxygen.getFrag();
