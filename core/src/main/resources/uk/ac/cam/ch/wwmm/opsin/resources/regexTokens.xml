@@ -75,7 +75,7 @@
   <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="%locant%,%locant%'+-?" symbol="½" tagname="spiroLocant" determinise="yes"/>
   <regexToken regex="" symbol="£" tagname="suffix" value="ic" type="root" subType="terminal"/>
-  <regexToken regex="[oO]" symbol="₧" tagname="suffix" value="aminoAcidO" type="inline"/>
+  <regexToken regex="[oO]" symbol="₧" tagname="suffix" value="oMeaningYl" type="inline"/>
   <regexToken regex="%openBracket%([+\-]|+-|-+)%closeBracket%" symbol="ª" tagname="lightRotation" ignoreWhenWritingXML="yes" determinise="yes"/>
 
   <regexToken regex="" symbol="é" tagname="endOfSubstituent" ignoreWhenWritingXML="yes" determinise="yes"/>

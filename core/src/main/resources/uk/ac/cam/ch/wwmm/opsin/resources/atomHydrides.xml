@@ -1,37 +1,42 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <!-- add ane to get the atomHydride-->
-<tokenList tagname="group" type="chain" subType="heteroStem" symbol="p">
-  <token value="B" valType="SMILES" usableAsAJoiner="yes">bor</token>
-  <token value="[AlH?]" valType="SMILES" usableAsAJoiner="yes">alum</token>
-  <token value="[InH?]" valType="SMILES" usableAsAJoiner="yes">indig</token>
-  <token value="[GaH?]" valType="SMILES" usableAsAJoiner="yes">gall</token>
-  <token value="[TlH?]" valType="SMILES" usableAsAJoiner="yes">thall</token>
+<tokenLists>
+	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="p">
+		<token value="B" valType="SMILES" usableAsAJoiner="yes">bor</token>
+		<token value="[AlH?]" valType="SMILES" usableAsAJoiner="yes">alum</token>
+		<token value="[InH?]" valType="SMILES" usableAsAJoiner="yes">indig</token>
+		<token value="[GaH?]" valType="SMILES" usableAsAJoiner="yes">gall</token>
+		<token value="[TlH?]" valType="SMILES" usableAsAJoiner="yes">thall</token>
 
-  <token value="C" valType="SMILES" usableAsAJoiner="yes">carb</token>
-  <token value="[SiH?]" valType="SMILES" usableAsAJoiner="yes">sil</token>
-  <token value="[GeH?]" valType="SMILES" usableAsAJoiner="yes">germ</token>
-  <token value="[SnH?]" valType="SMILES" usableAsAJoiner="yes">stann</token>
-  <token value="[PbH?]" valType="SMILES" usableAsAJoiner="yes">plumb</token>
+		<token value="C" valType="SMILES" usableAsAJoiner="yes">carb</token>
+		<token value="[SiH?]" valType="SMILES" usableAsAJoiner="yes">sil</token>
+		<token value="[GeH?]" valType="SMILES" usableAsAJoiner="yes">germ</token>
+		<token value="[SnH?]" valType="SMILES" usableAsAJoiner="yes">stann</token>
+		<token value="[PbH?]" valType="SMILES" usableAsAJoiner="yes">plumb</token>
 
-  <token value="N" valType="SMILES" usableAsAJoiner="yes">az</token>
-  <token value="P" valType="SMILES" usableAsAJoiner="yes">phosph</token>
-  <token value="[P|5]" valType="SMILES" usableAsAJoiner="yes">phosphor</token>
-  <token value="[AsH?]" valType="SMILES" usableAsAJoiner="yes">ars</token>
-  <token value="[As|5]" valType="SMILES" usableAsAJoiner="yes">arsor</token>
-  <token value="[SbH?]" valType="SMILES" usableAsAJoiner="yes">stib</token>
-  <token value="[Sb|5]" valType="SMILES" usableAsAJoiner="yes">stibor</token>
-  <token value="[BiH?]" valType="SMILES" usableAsAJoiner="yes">bismuth</token>
+		<token value="N" valType="SMILES" usableAsAJoiner="yes">az</token>
+		<token value="P" valType="SMILES" usableAsAJoiner="yes">phosph</token>
+		<token value="[P|5]" valType="SMILES" usableAsAJoiner="yes">phosphor</token>
+		<token value="[AsH?]" valType="SMILES" usableAsAJoiner="yes">ars</token>
+		<token value="[As|5]" valType="SMILES" usableAsAJoiner="yes">arsor</token>
+		<token value="[SbH?]" valType="SMILES" usableAsAJoiner="yes">stib</token>
+		<token value="[Sb|5]" valType="SMILES" usableAsAJoiner="yes">stibor</token>
+		<token value="[BiH?]" valType="SMILES" usableAsAJoiner="yes">bismuth</token>
 
-  <token value="O" valType="SMILES" usableAsAJoiner="yes">oxid</token>
-  <token value="S" valType="SMILES" usableAsAJoiner="yes">sulf</token>
-  <token value="[SeH?]" valType="SMILES" usableAsAJoiner="yes">sel</token>
-  <token value="[TeH?]" valType="SMILES" usableAsAJoiner="yes">tell</token>
-  <token value="[PoH?]" valType="SMILES" usableAsAJoiner="yes">pol</token>
+		<token value="O" valType="SMILES" usableAsAJoiner="yes">oxid</token>
+		<token value="S" valType="SMILES" usableAsAJoiner="yes">sulf</token>
+		<token value="[SeH?]" valType="SMILES" usableAsAJoiner="yes">sel</token>
+		<token value="[TeH?]" valType="SMILES" usableAsAJoiner="yes">tell</token>
+		<token value="[PoH?]" valType="SMILES" usableAsAJoiner="yes">pol</token>
 
-  <token value="F" valType="SMILES" usableAsAJoiner="yes">fluor</token>
-  <token value="Cl" valType="SMILES" usableAsAJoiner="yes">chlor</token>
-  <token value="Br" valType="SMILES" usableAsAJoiner="yes">brom</token>
-  <token value="I" valType="SMILES" usableAsAJoiner="yes">iod</token>
-  <token value="[AtH?]" valType="SMILES" usableAsAJoiner="yes">astat</token>
-</tokenList>
+		<token value="F" valType="SMILES" usableAsAJoiner="yes">fluor</token>
+		<token value="Cl" valType="SMILES" usableAsAJoiner="yes">chlor</token>
+		<token value="Br" valType="SMILES" usableAsAJoiner="yes">brom</token>
+		<token value="I" valType="SMILES" usableAsAJoiner="yes">iod</token>
+		<token value="[AtH?]" valType="SMILES" usableAsAJoiner="yes">astat</token>
+	</tokenList>
+	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="╕">
+		<token value="N" valType="SMILES" usableAsAJoiner="yes">az</token>
+	</tokenList>
+</tokenLists>
