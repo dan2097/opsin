@@ -227,6 +227,9 @@ class XmlDeclarations {
 	
 	/**Indicates that a substituent/bracket has been processed by StructureBuildingMethods*/
 	static final String RESOLVED_ATR ="resolved";
+	
+	/**Placed on a word rule if explicit stoichometry has been provided. Value is always an integer */
+    static final String STOICHOMETRY_ATR = "stoichometry";
     
 	/**Added by the ComponentGenerator to a suffix*/
     static final String SUFFIXPREFIX_ATR = "suffixPrefix";

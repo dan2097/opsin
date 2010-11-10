@@ -132,9 +132,11 @@ class StructureBuilder {
 		processOxidationNumbers(state, groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
+		
+		boolean explicitStoichometryPresent = applyExplicitStoichometryIfProvided(state, wordRules);
 		int overallCharge = state.fragManager.getOverallCharge();
 		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
-			balanceChargeIfPossible(state, molecule, overallCharge);
+			balanceChargeIfPossible(state, molecule, overallCharge, explicitStoichometryPresent);
 		}
 		makeHydrogensExplicit(state);
 
@@ -364,6 +366,7 @@ class StructureBuilder {
 			Atom subAtom=substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			state.fragManager.createBond(ideAtom, subAtom, 1);
 			substituentBR.removeOutAtom(0);
+			state.fragManager.incorporateFragment(ideFrag, subAtom.getFrag());
 		}
 	}
 
@@ -1565,6 +1568,23 @@ class StructureBuilder {
 		}
 	}
 
+	private boolean applyExplicitStoichometryIfProvided(BuildState state, Elements wordRules) throws StructureBuildingException {
+		boolean explicitStoichometryPresent =false;
+		for (int i = 0; i < wordRules.size(); i++) {
+			Element wordRule = wordRules.get(i);
+			if (wordRule.getAttribute(STOICHOMETRY_ATR)!=null){
+				int stoichometry = Integer.parseInt(wordRule.getAttributeValue(STOICHOMETRY_ATR));
+				wordRule.removeAttribute(wordRule.getAttribute(STOICHOMETRY_ATR));
+				for (int j = 1; j < stoichometry; j++) {
+					Element clone = state.fragManager.cloneElement(state, wordRule);
+					XOMTools.insertAfter(wordRule, clone);
+				}
+				explicitStoichometryPresent =true;
+			}
+		}
+		return explicitStoichometryPresent;
+	}
+
 	/**
 	 * A net charge is present; Given the molecule element the overallCharge is there an unambiguous way of 
 	 * multiplying fragments to make the net charge 0
@@ -1573,10 +1593,11 @@ class StructureBuilder {
 	 * If this fails look for the case where there are multiple molecules and the mixture is only negative due to negatively charged functional Atoms e.g. pyridine acetate and remove the negative charge
 	 * @param state
 	 * @param molecule
+	 * @param explicitStoichometryPresent 
 	 * @param overallCharge
 	 * @throws StructureBuildingException
 	 */
-	private void balanceChargeIfPossible(BuildState state, Element molecule, int overallCharge) throws StructureBuildingException {
+	private void balanceChargeIfPossible(BuildState state, Element molecule, int overallCharge, boolean explicitStoichometryPresent) throws StructureBuildingException {
 		List<Element> wordRules = XOMTools.getChildElementsWithTagName(molecule, WORDRULE_ATR);
 
 		List<Element> positivelyChargedComponents = new ArrayList<Element>();
@@ -1620,7 +1641,8 @@ class StructureBuilder {
 			}
 			componentToChargeMapping.put(wordRule, charge);
 		}
-		if (positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 ){
+		if (!explicitStoichometryPresent &&
+				(positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 )){
 			boolean success = multiplyChargedComponents(state, negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
 			if (success){
 				return;

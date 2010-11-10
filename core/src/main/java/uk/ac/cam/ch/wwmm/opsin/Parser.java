@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
@@ -72,6 +73,9 @@ class Parser {
 	private final ResourceManager resourceManager;
 	
 	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
+	private final static Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
+	private final static Pattern matchColon = Pattern.compile(":");
+	private final static Pattern matchForwardSlash = Pattern.compile("/");
 
 	/**Initialises the parser.
 	 * @param resourceManager
@@ -92,6 +96,14 @@ class Parser {
 	 * @throws ParsingException If the name is unparsable.
 	 */
 	List<Element> parse(NameToStructureConfig n2sConfig, String name) throws ParsingException {
+		Integer[] componentRatios = null;
+		if (name.endsWith(")") || name.endsWith("]") || name.endsWith("}")){
+			Matcher m = matchStoichiometryIndication.matcher(name);
+			if (m.find()){
+				componentRatios = processStoichometryIndication(m.group());
+				name = m.replaceAll("");
+			}
+		}
 		Parse parse = null;
 		if (name.contains(", ")){
 			try{
@@ -168,6 +180,9 @@ class Parser {
 			 */
 			try{
 				wordRules.groupWordsIntoWordRules(n2sConfig, moleculeEl, allowSpaceRemoval);
+				if (componentRatios!=null){
+					applyStoichometryIndicationToWordRules(moleculeEl, componentRatios);
+				}
 				results.add(moleculeEl);
 			}
 			catch (ParsingException e) {
@@ -179,6 +194,29 @@ class Parser {
 		}
 		
 		return results;
+	}
+
+	static Integer[] processStoichometryIndication(String ratioString) throws ParsingException {
+		ratioString = ratioString.trim();
+		ratioString = ratioString.substring(1, ratioString.length()-1);
+		String[] ratioStrings = matchColon.split(ratioString);
+		if (ratioStrings.length ==1){
+			ratioStrings = matchForwardSlash.split(ratioString);
+		}
+		Integer[] componentRatios = new Integer[ratioStrings.length];
+		for (int i = 0; i < ratioStrings.length; i++) {
+			String currentRatio = ratioStrings[i];
+			if (currentRatio.contains("/")){
+				throw new ParsingException("Unexpected / in component ratio declaration");
+			}
+			if (currentRatio.equals("?")){
+				componentRatios[i]=1;
+			}
+			else{
+				componentRatios[i]=Integer.parseInt(currentRatio);
+			}
+		}
+		return componentRatios;
 	}
 
 	/**Write the XML corresponding to a particular word in a parse.
@@ -224,6 +262,23 @@ class Parser {
 		}
 		else if(pw.getWordType() == WordType.functionalTerm) {
 			chunk.setLocalName(FUNCTIONALTERM_EL);
+		}
+	}
+	
+	/**
+	 * Assigns an indication of stoichometry to each child word rule of the moleculeEl.
+	 * Throws an exception if there is a mismatch between the number of word rules and ratio.
+	 * @param moleculeEl
+	 * @param componentRatios
+	 * @throws ParsingException
+	 */
+	private void applyStoichometryIndicationToWordRules(Element moleculeEl,Integer[] componentRatios) throws ParsingException {
+		List<Element> wordRules = XOMTools.getChildElementsWithTagName(moleculeEl, WORDRULE_EL);
+		if (wordRules.size()!=componentRatios.length){
+			throw new ParsingException("Component and stoichometry indication indication mismatch. OPSIN believes there to be " +wordRules.size() +" components but " + componentRatios.length +" ratios were given!");
+		}
+		for (int i = 0; i < componentRatios.length; i++) {
+			wordRules.get(i).addAttribute(new Attribute(STOICHOMETRY_ATR,String.valueOf(componentRatios[i])));
 		}
 	}
 

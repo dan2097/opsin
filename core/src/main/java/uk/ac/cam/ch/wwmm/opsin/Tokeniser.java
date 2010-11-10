@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
@@ -25,7 +26,8 @@ class Tokeniser {
 	private final Pattern matchSpace = Pattern.compile(" ");
 	private final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*");
 	private final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE );
-	
+	private final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE );
+
 	Tokeniser(ParseRules parseRules) {
 		this.parseRules = parseRules;
 	}
@@ -46,12 +48,7 @@ class Tokeniser {
 		else{
 			unparsedName = name;
 		}
-		int i=0;
 		while (unparsedName.length()>0){
-			i++;
-			if (i==1000){
-				System.exit(1);
-			}
 			/*
 			 * Returns
 			 * List of parses where at least some of the name was assigned a role
@@ -78,7 +75,11 @@ class Tokeniser {
 				}
 			}
 			else{//word is unparsable as is.
-				if (matchCasCollectiveIndex.matcher(uninterpretableName).matches()){//CAS collective index description should be ignored
+				Matcher m = matchCompoundWithPhrase.matcher(uninterpretableName);
+				if (m.lookingAt()){
+					unparsedName = parsedName + uninterpretableName.substring(m.group().length());
+				}
+				else if (matchCasCollectiveIndex.matcher(uninterpretableName).matches()){
 					unparsedName = parsedName;
 				}
 				else{
@@ -375,8 +376,19 @@ class Tokeniser {
 		boolean addedBracket = false;
 		boolean esterEncountered = false;
 		for (int i = 1; i < nameComponents.size(); i++) {
+			String nameComponent = nameComponents.get(i);
+			Matcher m = matchCompoundWithPhrase.matcher(nameComponent);
+			boolean compoundWithcomponent =false;
+			if (m.lookingAt()){
+				nameComponent = nameComponent.substring(m.group().length());
+				compoundWithcomponent =true;
+			}
 			String[] components = matchSpace.split(nameComponents.get(i));
 			for (String component : components) {
+				if (compoundWithcomponent){
+					functionalTerms.add(component);
+					continue;
+				}
 				if (component.endsWith("-")){
 					if (isCloseBracketMissing(component)){
 						if (addedBracket){

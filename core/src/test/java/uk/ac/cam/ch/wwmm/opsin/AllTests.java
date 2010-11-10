@@ -15,6 +15,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	HeteroAtomReplacementTest.class,
 	NameToStructureConfigurationsTest.class,
 	NameToStructureTest.class,
+	ParserTest.class,
 	SMILESFragmentBuilderTest.class,
 	SSSRTest.class,
 	StereochemistryTest.class,
