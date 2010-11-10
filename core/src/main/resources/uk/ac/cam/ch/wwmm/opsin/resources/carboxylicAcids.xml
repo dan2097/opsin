@@ -90,18 +90,30 @@
     <token value="Cc1ccncc1" labels="/4,para/3,meta/2,ortho/1/6/5" valType="SMILES">isonicotin</token>
 
     <token value="Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="OC locant4">anis</token>
-    <token value="CCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">arachidyl</token>
+		<token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">arachid</token>
+    <token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">arachidyl</token>
+		<token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">arach</token>
+		<token value="CCCC/C=C\C/C=C\C/C=C\C/C=C\CCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">arachidon</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">behen</token>
+		<token value="CCCCCCCCCCCCC#CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">behenol</token>
+		<token value="CCCCCCCCCCCC/C=C/CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">brassid</token>
+		<token value="CC(O)CCCCCCC=CCCCCCCCCCCCCCC" labels="1/2//3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24" valType="SMILES" usableAsAJoiner="yes">cerebron</token>
+    <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ceromeliss</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ceroplast</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">cerot</token>
+		<token value="CCCCCC/C=C\C/C=C\C/C=C\C/C=C\C/C=C\CC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">clupanodon</token>
+		<token value="CCCCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">eruc</token>
+    <token value="CCCCCCCC/C=C\CCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">gadole</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">gedd</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ghedd</token>
     <token value="CC(O)CO" labels="none" valType="SMILES">glycer</token>
+    <token value="CCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">gondo</token>
     <token value="CCc1cc(OC)c(O)cc1" labels="//1/2,ortho/3,meta///4,para//5/6" valType="SMILES">homovanill</token>
     <token value="CCc1cc(OC)c(OC)cc1" labels="//1/2,ortho/3,meta///4,para///5/6" valType="SMILES">homoveratr</token>
-    <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">laccer</token>
+    <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24/25/26/27/28/29/30/31/32" valType="SMILES" usableAsAJoiner="yes">laccer</token>
     <token value="CC(O)C" labels="1/2//3" valType="SMILES">lact</token>
-    <token value="CCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">lignocer</token>
+    <token value="CCCCCCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24" valType="SMILES" usableAsAJoiner="yes">lignocer</token>
+		<token value="CCCCCCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24" valType="SMILES" usableAsAJoiner="yes">nervon</token>
     <token value="CCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">margar</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">meliss</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">montan</token>
