@@ -6,4 +6,5 @@
   <token value="C#C" valType="SMILES" usableAsAJoiner="yes">acetylen</token>
 
   <token value="NO" labels="N/O" valType="SMILES" usableAsAJoiner="yes">hydroxylamin</token>
+	<token value="CCC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="1/2/3/////////////////" valType="SMILES" suffixAppliesTo="1">phytan</token>
 </tokenList>

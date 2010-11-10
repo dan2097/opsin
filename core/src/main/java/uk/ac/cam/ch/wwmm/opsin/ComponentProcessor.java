@@ -3491,19 +3491,17 @@ class ComponentProcessor {
 			if (multipliers.size()>1){
 				throw new ComponentGenerationException(subOrBracket.getLocalName() +" has multiple multipliers, unable to determine meaning!");
 			}
-			//if (!multipliers.get(0).getAttributeValue(VALUE_ATR).equals("1")){//still want to assign locants if 0
-				if (oneBelowWordLevel &&
-						XOMTools.getNextSibling(subOrBracket) == null &&
-						XOMTools.getPreviousSibling(subOrBracket) == null) {
-					return;//word level multiplier
-				}
-				multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
-				subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
-				//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
-				if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
-					throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be multiplied");
-				}
-			//}
+			if (oneBelowWordLevel &&
+					XOMTools.getNextSibling(subOrBracket) == null &&
+					XOMTools.getPreviousSibling(subOrBracket) == null) {
+				return;//word level multiplier
+			}
+			multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
+			subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
+			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
+			if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
+				throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be multiplied");
+			}
 		}
 		if(locants.size() > 0) {
 			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
@@ -3532,8 +3530,8 @@ class ComponentProcessor {
 			}
 
 			Element parent =(Element) subOrBracket.getParent();
-			//attempt to find cases where locant will not be utilised. This if statement allows the use of locants for ester formation
-			if (!parent.getLocalName().equals(WORD_EL) || (parent.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && !state.currentWordRule.equals(WordRule.carbonylDerivative))){
+			//attempt to find cases where locant will not be utilised. A special case is made for carbonyl derivatives //e.g. 1H-2-benzopyran-1,3,4-trione 4-[N-(4-chlorophenyl)hydrazone]
+			if (!parent.getLocalName().equals(WORD_EL) || !parent.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) || !state.currentWordRule.equals(WordRule.carbonylDerivative)){
 				Elements children =parent.getChildElements();
 				boolean foundSomethingToSubstitute =false;
 				for (int i = parent.indexOf(subOrBracket) +1 ; i < children.size(); i++) {
