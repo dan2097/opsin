@@ -2040,8 +2040,8 @@ class ComponentProcessor {
 					Element currentEl =nextEl;
 					nextEl = (Element) XOMTools.getNextSibling(currentEl);
 					if (!groupFound ||
-							(!inlineSuffixSeen && currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttribute(LOCANT_ATR)==null)||
-							(currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL))){
+							(!inlineSuffixSeen && currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttribute(LOCANT_ATR)==null && state.xmlFragmentMap.get(currentEl)==null)||
+							(currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL))|| currentEl.getLocalName().equals(UNSATURATOR_EL)){
 						currentEl.detach();
 						elementToResolve.appendChild(currentEl);
 					}
