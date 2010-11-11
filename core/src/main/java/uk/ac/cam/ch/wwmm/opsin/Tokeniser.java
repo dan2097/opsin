@@ -413,7 +413,7 @@ class Tokeniser {
 							}
 						}
 						if (wordType.equals(WordType.functionalTerm)){
-							if (component.equals("ester")){
+							if (component.equalsIgnoreCase("ester")){
 								if (esterEncountered){
 									throw new ParsingException("ester formation was mentioned more than once in CAS name!");
 								}
@@ -428,8 +428,8 @@ class Tokeniser {
 							seperateWordSubstituents.add(component);
 						}
 						else if (wordType.equals(WordType.full)){
-							if (component.endsWith("ate")||component.endsWith("ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
-									|| component.equals("hydrofluoride") || component.equals("hydrochloride") || component.equals("hydrobromide") || component.equals("hydroiodide")){
+							if (StringTools.endsWithCaseInsensitive(component, "ate") || StringTools.endsWithCaseInsensitive(component, "ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
+									|| component.equalsIgnoreCase("hydrofluoride") || component.equalsIgnoreCase("hydrochloride") || component.equalsIgnoreCase("hydrobromide") || component.equalsIgnoreCase("hydroiodide")){
 								functionalTerms.add(component);
 							}
 							else{
