@@ -15,7 +15,7 @@ import nu.xom.Element;
 /** Holds the Fragments during the construction of the molecule,
  * handles the building of new fragments and handles the creation/deletion of atoms/bonds
  *
- * @author ptc24
+ * @author ptc24/dl387
  *
  */
 class FragmentManager {
@@ -102,9 +102,11 @@ class FragmentManager {
 	}
 
 	/**Creates a new fragment, containing all of the atoms and bonds
-	 * of all of the other fragments - ie the whole molecule. This is non-destructive,
-	 * and does not update which fragment the Atoms think they are in. Atoms and Bonds
-	 * are not copied.
+	 * of all of the other fragments - i.e. the whole molecule. This updates
+	 * which fragments the atoms think they are in to the new super fragment
+	 * but does not remove change the contents of the original fragments.
+	 * Hence the original fragments remain associated with their atoms
+	 * Atoms and Bonds are not copied.
 	 *
 	 * @return The unified fragment
 	 * @throws StructureBuildingException 
@@ -166,15 +168,21 @@ class FragmentManager {
 	/** Incorporates a fragment, usually a suffix, into a parent fragment, creating a bond between them.
 	 *
 	 * @param childFrag The fragment to be incorporated
-	 * @param fromID An id on that fragment
+	 * @param fromAtom An atom on that fragment
 	 * @param parentFrag The parent fragment
-	 * @param toID An id on that fragment
+	 * @param toAtom An atom on that fragment
 	 * @param bondOrder The order of the joining bond
      * @throws StructureBuildingException
 	 */
-	void incorporateFragment(Fragment childFrag, int fromID, Fragment parentFrag, int toID, int bondOrder) throws StructureBuildingException {
+	void incorporateFragment(Fragment childFrag, Atom fromAtom, Fragment parentFrag, Atom toAtom, int bondOrder) throws StructureBuildingException {
+		if (!fromAtom.getFrag().equals(childFrag)){
+			throw new StructureBuildingException("OPSIN Bug: fromAtom was not associated with childFrag!");
+		}
+		if (!toAtom.getFrag().equals(parentFrag)){
+			throw new StructureBuildingException("OPSIN Bug: toAtom was not associated with parentFrag!");
+		}
 		incorporateFragment(childFrag, parentFrag);
-		createBond(parentFrag.getAtomByIDOrThrow(fromID), parentFrag.getAtomByIDOrThrow(toID), bondOrder);
+		createBond(fromAtom, toAtom, bondOrder);
 	}
 
 	/** Converts an atom in a fragment to a different atomic symbol.
