@@ -503,11 +503,11 @@ class ComponentProcessor {
 				if (newFrag.getOutAtoms().size() ==1) {
 					OutAtom newFragOutAtom = newFrag.getOutAtom(0);
 					newFrag.removeOutAtom(newFragOutAtom);
-					state.fragManager.incorporateFragment(newFrag, newFragOutAtom.getAtom().getID(), parentFrag, atomOnParentFrag.getID(), newFragOutAtom.getValency());
+					state.fragManager.incorporateFragment(newFrag, newFragOutAtom.getAtom(), parentFrag, atomOnParentFrag, newFragOutAtom.getValency());
 				}
 				else{
 					Atom atomOnNewFrag = newFrag.getDefaultInAtom();
-					state.fragManager.incorporateFragment(newFrag, atomOnNewFrag.getID(), parentFrag, atomOnParentFrag.getID(), 1);
+					state.fragManager.incorporateFragment(newFrag, atomOnNewFrag, parentFrag, atomOnParentFrag, 1);
 				}
 			}
 		}
@@ -560,15 +560,7 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
-				String atomSymbol = heteroAtomInformation.get("SMILES");
-				if(atomSymbol.startsWith("[")) {
-					Fragment f = state.fragManager.buildSMILES(atomSymbol);
-					Atom referenceAtom = f.getAtomList().get(0);
-					atomSymbol =referenceAtom.getElement();
-					atomOnParentFrag.setCharge(referenceAtom.getCharge());
-					state.fragManager.removeFragment(f);
-				}
-				atomOnParentFrag.setElement(atomSymbol);
+				state.fragManager.makeHeteroatom(atomOnParentFrag, heteroAtomInformation.get("SMILES"), false);
 			}
 		}
 
@@ -2090,7 +2082,7 @@ class ComponentProcessor {
 					atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtom(), bondOrder, true);
 					atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder, true);
 				}
-				state.fragManager.incorporateFragment(clone, atomOnLatestClone.getID(), fragmentToResolveAndDuplicate, atomOnParent.getID(), bondOrder);
+				state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
 			}
 			XOMTools.setTextChild(group, multiplier.getValue() +group.getValue());
 			Element possibleOpenStructuralBracket = (Element) XOMTools.getPreviousSibling(multiplier);
