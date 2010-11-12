@@ -305,8 +305,7 @@ class StructureBuilder {
 				state.fragManager.createBond(outAtom1, diValentGroup.getFirstAtom(), 2);
 			}
 		}
-		state.xmlFragmentMap.put(functionalGroup.get(0), diValentGroup);//allow this fragment to be referenced by other word rules
-		functionalGroup.get(0).setLocalName(GROUP_EL);
+		state.fragManager.incorporateFragment(diValentGroup, outAtom1.getFrag());
 	}
 
 	private void buildMonovalentFunctionalGroup(BuildState state, List<Element> words) throws StructureBuildingException {
@@ -720,7 +719,9 @@ class StructureBuilder {
 			}
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(carbonylOxygen, atomToReplaceCarbonylOxygen);
 			atomToReplaceCarbonylOxygen.setType(carbonylOxygen.getType());//copy the type e.g. if the carbonyl was a suffix this should appear as a suffix
-			state.fragManager.incorporateFragment(replacementFrag, carbonylFrag);
+			if (state.xmlFragmentMap.getElement(replacementFrag)==null){//incorporate only for the case that replacementFrag came from a functional class element
+				state.fragManager.incorporateFragment(replacementFrag, carbonylFrag);
+			}
 		}
 	}
 
@@ -931,14 +932,11 @@ class StructureBuilder {
 		Atom atomOnSecondAcidToConnectTo = oxygen2.getAtomNeighbours().get(0);
 		state.fragManager.removeAtomAndAssociatedBonds(oxygen2);
 		Fragment anhydride = state.fragManager.buildSMILES(anhydrideSmiles, FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
-		state.fragManager.replaceTerminalAtomWithFragment(oxygen1, anhydride.getFirstAtom());
+		Fragment acidFragment1 = oxygen1.getFrag();
+		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygen1, anhydride.getFirstAtom());
 		List<Atom> atomsInAnhydrideLinkage = anhydride.getAtomList();
-		if (atomsInAnhydrideLinkage.size()==0){//e.g. anhydride
-			state.fragManager.createBond(oxygen1, atomOnSecondAcidToConnectTo, 1);
-		}
-		else{//e.g. peroxyanhydride
-			state.fragManager.createBond(atomsInAnhydrideLinkage.get(atomsInAnhydrideLinkage.size()-1), atomOnSecondAcidToConnectTo, 1);
-		}
+		state.fragManager.createBond(atomsInAnhydrideLinkage.get(atomsInAnhydrideLinkage.size()-1), atomOnSecondAcidToConnectTo, 1);
+		state.fragManager.incorporateFragment(anhydride, acidFragment1);
 	}
 	
 	private void buildAcidHalideOrPseudoHalide(BuildState state, List<Element> words) throws StructureBuildingException {
@@ -991,7 +989,9 @@ class StructureBuilder {
 				throw new StructureBuildingException("Atom type expected to be oxygen but was: " +acidAtom.getElement());
 			}
 			acidBr.removeFunctionalAtom(i);
-			state.fragManager.replaceTerminalAtomWithFragment(acidAtom, ideAtom);
+			Fragment acidFragment =acidAtom.getFrag();
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(acidAtom, ideAtom);
+			state.fragManager.incorporateFragment(ideFrag, acidFragment);
 		}
 	}
 	
@@ -1001,7 +1001,8 @@ class StructureBuilder {
 		}
 		resolveWordOrBracket(state, words.get(0));
 		Element elementaryAtomEl = StructureBuildingMethods.findRightMostGroupInBracket(words.get(0));
-		Atom elementaryAtom = state.xmlFragmentMap.get(elementaryAtomEl).getFirstAtom();
+		Fragment elementaryAtomFrag = state.xmlFragmentMap.get(elementaryAtomEl);
+		Atom elementaryAtom = elementaryAtomFrag.getFirstAtom();
 		int charge = elementaryAtom.getCharge();
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
 		for (int i=1; i<words.size(); i++ ) {
@@ -1062,7 +1063,7 @@ class StructureBuilder {
 		for (int i = halideCount - 1; i>=0; i--) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
 			Atom ideAtom = ideFrag.getDefaultInAtom();
-			state.fragManager.createBond(elementaryAtom, ideAtom, 1);
+			state.fragManager.incorporateFragment(ideFrag, ideAtom, elementaryAtomFrag, elementaryAtom, 1);
 		}
 	}
 	
@@ -1275,6 +1276,7 @@ class StructureBuilder {
 		state.fragManager.createBond(neighbouringCarbon, atom1, 1);
 		Atom atom2 = acetalAtomList.get(1);
 		state.fragManager.createBond(neighbouringCarbon, atom2, 1);
+		state.fragManager.incorporateFragment(acetalFrag, neighbouringCarbon.getFrag());
 		return acetalFrag;
 	}
 	
