@@ -80,6 +80,7 @@
 		<token value="-[CH2+]" labels="none" valType="SMILES">carbynium</token>
 		<token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
 		<token value="-CC=CC" valType="SMILES">crotyl</token>
+		<token value="-NC#N" labels="none" valType="SMILES">cyanamido</token>
 		<token value="-C#N" labels="none" valType="SMILES">cyanyl</token>
 		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
