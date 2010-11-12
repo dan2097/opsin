@@ -149,7 +149,7 @@ does not define a CFG.
   <regex name="%hydroGroup%" value="((%locant%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/>
   <regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%suffix%)"/>
   <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
-  <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)" />
+  <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%%optionalCloseBracket%)" />
   <regex name="%rootSuffix%" value= "(%suffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%)" />
   <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?(%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%|%infixedPrefixedSuffix%))|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
   <regex name="%suffixGroup%" value="((%relativeCisTrans%|%optLocantGroup%)?%unlocantedSuffixGroup%)"/>
