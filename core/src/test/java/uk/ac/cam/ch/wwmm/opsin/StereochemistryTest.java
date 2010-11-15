@@ -575,4 +575,31 @@ public class StereochemistryTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testAtomParityEquivalence1() throws StructureBuildingException {
+		Atom a1= new Atom(1, "C", mock(Fragment.class));
+		Atom a2= new Atom(2, "C", mock(Fragment.class));
+		Atom a3= new Atom(3, "C", mock(Fragment.class));
+		Atom a4= new Atom(4, "C", mock(Fragment.class));
+		Atom[] atomRefs1 = new Atom[]{a1,a2,a3,a4};
+		Atom[] atomRefs2 = new Atom[]{a3,a4,a1,a2};
+		//2 swaps (4 by bubble sort)
+		assertEquals(true, StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(atomRefs1, 1, atomRefs2, 1));
+		assertEquals(false, StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(atomRefs1, 1, atomRefs2, -1));
+	}
+	
+	@Test
+	public void testAtomParityEquivalence2() throws StructureBuildingException {
+		Atom a1= new Atom(1, "C", mock(Fragment.class));
+		Atom a2= new Atom(2, "C", mock(Fragment.class));
+		Atom a3= new Atom(3, "C", mock(Fragment.class));
+		Atom a4= new Atom(4, "C", mock(Fragment.class));
+		Atom[] atomRefs1 = new Atom[]{a1,a2,a3,a4};
+		Atom[] atomRefs2 = new Atom[]{a2,a4,a1,a3};
+		//3 swaps
+		assertEquals(false, StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(atomRefs1, 1, atomRefs2, 1));
+		assertEquals(true, StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(atomRefs1, 1, atomRefs2, -1));
+	}
+	
 }
