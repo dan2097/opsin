@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,5 +67,49 @@ class CycleDetector {
 				}
 			}
 		}
+	}
+	
+	static List<List<Atom>> getIntraFragmentPathsBetweenAtoms(Atom a1, Atom a2, Fragment fragment) throws StructureBuildingException {
+		List<List<Atom>> paths = new ArrayList<List<Atom>>();
+		HashSet<Atom> atomsVisited = new HashSet<Atom>();
+		LinkedList<Atom> orderAtomsVisited = new LinkedList<Atom>();
+		LinkedList<Atom[]> atomStack =new LinkedList<Atom[]>();
+
+		atomStack.add(new Atom[]{a1, null});
+
+		while (atomStack.size()>0){
+			Atom[] nextAtomArray =atomStack.removeLast();//depth first traversal
+			Atom nextAtom =nextAtomArray[0];
+			if (atomsVisited.contains(nextAtom)){
+				//parent atom must have been in a ring and this atom already visited another way
+				if (atomStack.size()> 0){
+					Atom atomToBackTrackTo =atomStack.getLast()[1];
+					while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
+						orderAtomsVisited.removeLast();
+					}
+				}
+				continue;
+			}
+			atomsVisited.add(nextAtom);
+			orderAtomsVisited.add(nextAtom);
+			List<Atom> neighbours = fragment.getIntraFragmentAtomNeighbours(nextAtom);
+			int stackSize =atomStack.size();
+			for (Atom neighbour : neighbours) {
+				if (neighbour.equals(nextAtomArray[1])){continue;}//the neighbour is the parent of the atom e.g. in CCC you went you went from the first C then tried to go to the first as it is a neighbour
+				if (neighbour ==a2 ){//atom has already been visited, this must be because a ring has been formed
+					paths.add(new ArrayList<Atom>(orderAtomsVisited.subList(1, orderAtomsVisited.size())));
+				}
+				else{//add atom to stack, its neighbours will be recursively investigated shortly
+					atomStack.add(new Atom[]{neighbour, nextAtom});
+				}
+			}
+			if (stackSize==atomStack.size() && stackSize > 0){//stack has not been changed, so you must be at a terminus. If the stack is empty this step is not necessary
+				Atom atomToBackTrackTo =atomStack.getLast()[1];
+				while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
+					orderAtomsVisited.removeLast();
+				}
+			}
+		}
+		return paths;
 	}
 }

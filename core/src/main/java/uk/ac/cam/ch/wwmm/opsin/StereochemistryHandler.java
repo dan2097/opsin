@@ -124,17 +124,19 @@ class StereochemistryHandler {
 				assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 			}
 			else if (stereoChemistryType.equals(CISORTRANS_TYPE_VAL)){
-				String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
-				if (cisOrTrans.equalsIgnoreCase("cis")){
-					stereoChemistryEl.getAttribute(VALUE_ATR).setValue("Z");
+				if (!assignCisTransOnRing(state, stereoChemistryEl, atomStereoCentreMap)){
+					String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+					if (cisOrTrans.equalsIgnoreCase("cis")){
+						stereoChemistryEl.getAttribute(VALUE_ATR).setValue("Z");
+					}
+					else if (cisOrTrans.equalsIgnoreCase("trans")){
+						stereoChemistryEl.getAttribute(VALUE_ATR).setValue("E");
+					}
+					else{
+						throw new StructureBuildingException("Unexpected cis/trans stereochemistry type: " +cisOrTrans);
+					}
+					assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 				}
-				else if (cisOrTrans.equalsIgnoreCase("trans")){
-					stereoChemistryEl.getAttribute(VALUE_ATR).setValue("E");
-				}
-				else{
-					throw new StructureBuildingException("Unexpected cis/trans stereochemistry type: " +cisOrTrans);
-				}
-				assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 			}
 			else{
 				throw new StructureBuildingException("Unsupported stereochemistry type: " +stereoChemistryType);
@@ -386,5 +388,184 @@ class StereochemistryHandler {
 			throw new StructureBuildingException("Unexpected stereochemistry type: " + eOrZ);
 		}
 	}
+	
+	/**
+	 * Searches for instances of two tetrahedral stereocentres/psuedo-stereocentres
+	 * then sets their configuration such that the substituents at these centres are cis or trans to each other
+	 * @param state
+	 * @param stereoChemistryEl
+	 * @param atomStereoCentreMap
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private static boolean assignCisTransOnRing(BuildState state, Element stereoChemistryEl, Map<Atom, StereoCentre> atomStereoCentreMap) throws StructureBuildingException {
+		if (stereoChemistryEl.getAttribute(LOCANT_ATR)!=null){
+			return false;
+		}
+		Element parentSubBracketOrRoot = (Element) stereoChemistryEl.getParent();
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
+		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
+		}
+		for (Fragment fragment : possibleFragments) {
+			List<Atom> atomList = fragment.getAtomList();
+			List<Atom> stereoAtoms = new ArrayList<Atom>();
+			for (Atom potentialStereoAtom : atomList) {
+				if (potentialStereoAtom.getAtomIsInACycle()){
+					List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
+					if (neighbours.size()==4){
+						int hydrogenCount =0;
+						int acylicOrNotInFrag =0;
+						for (Atom neighbour : neighbours) {
+							if (neighbour.getElement().equals("H")){
+								hydrogenCount++;
+							}
+							if (!neighbour.getAtomIsInACycle() || !atomList.contains(neighbour)){
+								acylicOrNotInFrag++;
+							}
+						}
+						if (hydrogenCount==1 || (hydrogenCount==0 && acylicOrNotInFrag ==1) ){
+							stereoAtoms.add(potentialStereoAtom);
+						}
+					}
+				}
+			}
+			if (stereoAtoms.size()==2){
+				Atom a1 = stereoAtoms.get(0);
+				Atom a2 = stereoAtoms.get(1);
+				
+				List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(a1, a2, fragment);
+				if (paths.size()!=2 && paths.size()!=3){
+					return false;
+				}
+				if (a1.getAtomParity()!=null && a2.getAtomParity()!=null){//one can have defined stereochemistry but not both
+					return false;
+				}
+				applyStereoChemistryToCisTransOnRing(a1, a2, paths, stereoChemistryEl.getAttributeValue(VALUE_ATR));
+				atomStereoCentreMap.remove(stereoAtoms.get(0));
+				atomStereoCentreMap.remove(stereoAtoms.get(1));
+				return true;
+			}
+		}
+		return false;
+	}
 
+
+	private static void applyStereoChemistryToCisTransOnRing(Atom a1, Atom a2, List<List<Atom>> paths, String cisOrTrans) throws StructureBuildingException {
+		List<Atom> a1Neighbours = a1.getAtomNeighbours();
+		Atom[] atomRefs4a1 = new Atom[4];
+		Atom firstPathAtom = paths.get(0).size()>0 ? paths.get(0).get(0) : a2;
+		atomRefs4a1[2] = firstPathAtom;
+		Atom secondPathAtom = paths.get(1).size()>0 ? paths.get(1).get(0) : a2;
+		atomRefs4a1[3] = secondPathAtom;
+		a1Neighbours.remove(firstPathAtom);
+		a1Neighbours.remove(secondPathAtom);
+		if (paths.size()==3){
+			atomRefs4a1[1] = paths.get(2).size()>0 ? paths.get(2).get(0) : a2;
+		}
+		else{
+			for (Atom atom : a1Neighbours) {
+				if (atom.getElement().equals("H")){
+					atomRefs4a1[1] = atom;
+					break;
+				}
+			}
+		}
+		a1Neighbours.remove(atomRefs4a1[1]);
+		atomRefs4a1[0] = a1Neighbours.get(0);
+		
+		
+		List<Atom> a2Neighbours = a2.getAtomNeighbours();
+		Atom[] atomRefs4a2 = new Atom[4];
+		firstPathAtom = paths.get(0).size()>0 ? paths.get(0).get(paths.get(0).size()-1) : a1;
+		atomRefs4a2[2] = firstPathAtom;
+		secondPathAtom = paths.get(1).size()>0 ? paths.get(1).get(paths.get(1).size()-1) : a1;
+		atomRefs4a2[3] = secondPathAtom;
+		a2Neighbours.remove(firstPathAtom);
+		a2Neighbours.remove(secondPathAtom);
+		if (paths.size()==3){
+			atomRefs4a2[1] = paths.get(2).size()>0 ? paths.get(2).get(paths.get(2).size()-1) : a1;
+		}
+		else{
+			for (Atom atom : a2Neighbours) {
+				if (atom.getElement().equals("H")){
+					atomRefs4a2[1] = atom;
+					break;
+				}
+			}
+		}
+		a2Neighbours.remove(atomRefs4a2[1]);
+		atomRefs4a2[0] = a2Neighbours.get(0);
+		boolean enantiomer =false;
+		if (a1.getAtomParity()!=null){
+			if (!checkEquivalencyOfAtomsRefs4AndParity(atomRefs4a1, 1, a1.getAtomParity().getAtomRefs4(), a1.getAtomParity().getParity())){
+				enantiomer=true;
+			}
+		}
+		else if (a2.getAtomParity()!=null){
+			if (cisOrTrans.equals("cis")){
+				if (!checkEquivalencyOfAtomsRefs4AndParity(atomRefs4a2, -1, a2.getAtomParity().getAtomRefs4(), a2.getAtomParity().getParity())){
+					enantiomer=true;
+				}
+			}
+			else if (cisOrTrans.equals("trans")){
+				if (!checkEquivalencyOfAtomsRefs4AndParity(atomRefs4a2, 1, a2.getAtomParity().getAtomRefs4(), a2.getAtomParity().getParity())){
+					enantiomer=true;
+				}
+			}
+		}
+		if (enantiomer){
+			if (cisOrTrans.equals("cis")){
+				a1.setAtomParity(atomRefs4a1, -1);
+				a2.setAtomParity(atomRefs4a2, 1);
+			}
+			else if (cisOrTrans.equals("trans")){
+				a1.setAtomParity(atomRefs4a1, -1);
+				a2.setAtomParity(atomRefs4a2, -1);
+			}
+		}
+		else{
+			if (cisOrTrans.equals("cis")){
+				a1.setAtomParity(atomRefs4a1, 1);
+				a2.setAtomParity(atomRefs4a2, -1);
+			}
+			else if (cisOrTrans.equals("trans")){
+				a1.setAtomParity(atomRefs4a1, 1);
+				a2.setAtomParity(atomRefs4a2, 1);
+			}
+		}
+	}
+	
+	static int swapsRequiredToSort(Atom[] atomRefs4){
+	  Atom[] atomRefs4Copy = atomRefs4.clone();
+	  int swapsPerformed = 0;
+	  int i,j;
+
+	  for (i=atomRefs4Copy.length; --i >=0;) {
+		boolean swapped = false;
+		for (j=0; j<i;j++) {
+			if (atomRefs4Copy[j].getID() > atomRefs4Copy[j+1].getID()){
+				Atom temp = atomRefs4Copy[j+1];
+				atomRefs4Copy[j+1] = atomRefs4Copy[j];
+				atomRefs4Copy[j] = temp;
+				swapsPerformed++;
+				swapped=true;
+			}
+		}
+		if (!swapped){
+			return swapsPerformed;
+		}
+	  }
+	  return swapsPerformed;
+	}
+	
+	static boolean checkEquivalencyOfAtomsRefs4AndParity(Atom[] atomRefs1, int atomParity1, Atom[] atomRefs2, int atomParity2){
+		int swaps1 =swapsRequiredToSort(atomRefs1);
+		int swaps2 =swapsRequiredToSort(atomRefs2);
+		if (atomParity1<0 && atomParity2>0 || atomParity1>0 && atomParity2<0){
+			 swaps1++;
+		}
+		return swaps1 %2 == swaps2 %2;
+	}
 }
