@@ -122,7 +122,7 @@ class SMILESFragmentBuilder {
 	 * @param smiles The SMILES string to build from.
 	 * @param type The type of fragment being built.
 	 * @param subType The subtype of fragment being built.
-	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "" for default numbering or "none"
+	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none". A value of "" is treated as synonymous to numeric
 	 * @param fragManager
 	 * @return Fragment The built fragment.
 	 * @throws StructureBuildingException
@@ -138,9 +138,12 @@ class SMILESFragmentBuilder {
 			throw new StructureBuildingException("subType specified is null, use \"\" if a subType is not desired ");
 		}
 		if (labelMapping==null){
-			throw new StructureBuildingException("labelMapping is null use \"none\" if you do not want any numbering or \"\" if you would like default numbering");
+			throw new StructureBuildingException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
 		}
 		List<String> labelMap = null;
+		if (labelMapping.equals("")){
+			labelMapping = NUMERIC_LABELS_VAL;
+		}
 		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
 			labelMap = new ArrayList<String>();
 			String [] mappingTmp = matchSlash.split(labelMapping, -1);
@@ -213,7 +216,7 @@ class SMILESFragmentBuilder {
 		        }
 				Atom atom = fragManager.createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
-				if(labelMapping.equals("")) {
+				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
 					String labels[] = matchComma.split(labelMap.get(currentNumber-1));
@@ -296,7 +299,7 @@ class SMILESFragmentBuilder {
 		        }
 				Atom atom = fragManager.createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
-				if(labelMapping.equals("")) {
+				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
 					String labels[] = matchComma.split(labelMap.get(currentNumber-1));

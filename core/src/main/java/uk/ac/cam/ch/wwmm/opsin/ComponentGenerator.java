@@ -1125,7 +1125,7 @@ class ComponentGenerator {
 	}
 	
 	/**
-	 * Handles irregular suffixes. Quinone only currently
+	 * Handles irregular suffixes. e.g. Quinone and ylene
 	 * @param suffixes
 	 * @throws ComponentGenerationException 
 	 */
@@ -1143,6 +1143,21 @@ class ComponentGenerator {
 			else if (suffixValue.equals("quinone")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				XOMTools.setTextChild(suffix, "one");
+				Element multiplier = new Element(MULTIPLIER_EL);
+				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
+				multiplier.appendChild("di");
+				XOMTools.insertBefore(suffix, multiplier);
+			}
+			else if (suffixValue.equals("ylene")||suffixValue.equals("ylen")){
+				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
+				XOMTools.setTextChild(suffix, "yl");
+				Element alk = (Element) XOMTools.getPreviousSibling(suffix, GROUP_EL);
+				if (alk.getValue().equals("meth")){
+					alk.addAttribute(new Attribute(IMINOLIKE_ATR, "yes"));
+				}
+				else if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
+					alk.getAttribute(USABLEASJOINER_ATR).detach();
+				}
 				Element multiplier = new Element(MULTIPLIER_EL);
 				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 				multiplier.appendChild("di");
@@ -1677,6 +1692,12 @@ class ComponentGenerator {
 					group.getAttribute(OUTIDS_ATR).setValue("1," +Integer.toString(3*(multiplierValue-1) +2));
 					group.getAttribute(VALUE_ATR).setValue(smiles);
 					previous.detach();
+					if (group.getAttribute(LABELS_ATR)!=null){//use numeric numbering
+						group.getAttribute(LABELS_ATR).setValue(NUMERIC_LABELS_VAL);
+					}
+					else{
+						group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
+					}
 				}
 				else if (possibleRoot!=null && possibleRoot.getLocalName().equals(ROOT_EL)){
 					Elements children = possibleRoot.getChildElements();
@@ -1697,6 +1718,12 @@ class ComponentGenerator {
 							previous.detach();
 							possibleRoot.detach();
 							((Element)group.getParent()).setLocalName(ROOT_EL);
+							if (group.getAttribute(LABELS_ATR)!=null){//use numeric numbering
+								group.getAttribute(LABELS_ATR).setValue(NUMERIC_LABELS_VAL);
+							}
+							else{
+								group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
+							}
 						}
 					}
 				}

@@ -227,7 +227,7 @@ public class NameToStructure {
 	 * @throws Exception
 	 */
 	public static void main(String [] args) throws Exception {
-		NameToStructure nts = new NameToStructure();
+		NameToStructure nts = NameToStructure.getInstance();
 		Serializer serializer = new Serializer(System.out);
 		serializer.setIndent(2);
 		boolean end = false;
@@ -238,9 +238,11 @@ public class NameToStructure {
 			if(name == null || name.equals("END")) {
 				end = true;
 			} else {
-				Element output = nts.parseToCML(name);
+				OpsinResult result = nts.parseChemicalName(name, false);
+				Element output = result.getCml();
 				if(output == null) {
-					System.out.println("Did not parse.");
+					System.err.println(result.getMessage());
+					System.out.println("");
 					System.out.flush();
 				} else {
 					serializer.write(new Document(output));

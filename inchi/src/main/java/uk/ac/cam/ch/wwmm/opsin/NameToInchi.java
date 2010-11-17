@@ -146,7 +146,7 @@ public class NameToInchi {
 	 * @throws Exception
 	 */
 	public static void main(String [] args) throws Exception {
-		NameToInchi nti = new NameToInchi();
+		NameToStructure nts = NameToStructure.getInstance();
 		boolean end = false;
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
 		System.err.println("OPSIN Prealpha: enter chemical name:");
@@ -155,9 +155,11 @@ public class NameToInchi {
 			if(name == null || name.equals("END")) {
 				end = true;
 			} else {
-				String output = nti.parseToInchi(name, false);
+				OpsinResult result = nts.parseChemicalName(name, false);
+				String output = NameToInchi.convertResultToInChI(result, false);
 				if(output == null) {
-					System.out.println("Did not parse.");
+					System.err.println(result.getMessage());
+					System.out.println("");
 					System.out.flush();
 				} else {
 					System.out.println(output);

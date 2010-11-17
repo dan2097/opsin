@@ -294,7 +294,7 @@ class ComponentProcessor {
 			int chainLength =thisFrag.getChainLength();
 			if (chainLength >1){
 				boolean connectEndToEndWithPreviousSub =true;
-				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if you the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
+				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
 					Element previousSubstituent =(Element) XOMTools.getPreviousSibling(group.getParent());
 					if (previousSubstituent!=null){
 						Elements groups = previousSubstituent.getChildElements(GROUP_EL);
@@ -2469,8 +2469,11 @@ class ComponentProcessor {
 					group.getAttribute(OUTIDS_ATR).setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR)));
 					XOMTools.setTextChild(group, beforeGroup.getValue() + groupValue);
 					beforeGroup.detach();
-					if (group.getAttribute(LABELS_ATR)!=null){//use standard numbering
-						group.getAttribute(LABELS_ATR).detach();
+					if (group.getAttribute(LABELS_ATR)!=null){//use numeric numbering
+						group.getAttribute(LABELS_ATR).setValue(NUMERIC_LABELS_VAL);
+					}
+					else{
+						group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 					}
 					state.fragManager.removeFragment(thisFrag);
 					thisFrag =resolveGroup(state, group);
@@ -2746,9 +2749,16 @@ class ComponentProcessor {
 			}
 
 			//prevent bracketing to multi radicals unless through substitution they are likely to cease being multiradicals
-			if (lastGroupOfElementBeforeSub.getAttribute(ISAMULTIRADICAL_ATR)!=null && lastGroupOfElementBeforeSub.getAttribute(ACCEPTSADDITIVEBONDS_ATR)==null){
+			if (lastGroupOfElementBeforeSub.getAttribute(ISAMULTIRADICAL_ATR)!=null && lastGroupOfElementBeforeSub.getAttribute(ACCEPTSADDITIVEBONDS_ATR)==null && lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR)==null){
 				continue;
 			}
+			if (substituentGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null && substituentGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)==null && substituentGroup.getAttribute(IMINOLIKE_ATR)==null){
+				continue;
+			}
+			if (lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR)!=null && substituentGroup.getAttribute(IMINOLIKE_ATR)!=null){
+				continue;//possibly a multiplicative additive operation
+			}
+			
 			//prevent bracketting perhalogeno terms 
 			if (PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR))){
 				continue;
@@ -2933,7 +2943,7 @@ class ComponentProcessor {
 				/* The first locant is most likely a locant indicating where this subsituent should be attached.
 				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
 				 */
-				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 &&
+				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
 						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && XOMTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
 					return;
 				}
