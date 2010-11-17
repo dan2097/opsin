@@ -56,4 +56,10 @@
   <tokenList tagname="suffix" type="inline" symbol="¥"><!--used for amino acids-->
     <token value="aminoAcidYl">yl</token>
   </tokenList>
+
+  <tokenList tagname="suffix" type="inline" symbol="╣"><!--ylene-->
+<!--special cased to be the same as diyl-->
+    <token value="yl" additionalValue="yl">ylene</token>
+    <token value="yl" additionalValue="yl">ylen</token>
+  </tokenList>
 </tokenLists>

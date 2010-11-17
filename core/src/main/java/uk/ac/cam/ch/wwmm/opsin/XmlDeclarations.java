@@ -381,11 +381,14 @@ class XmlDeclarations {
 
 	//TODO java doc this
 	
-	/**Magic value indicating no labelling should be applied */
-	static final String NONE_LABELS_VAL ="none";//TODO no labels attribute should probably mean no labelling with "default labelling" required a labels attribute
+	/**Requests that no labelling should be applied */
+	static final String NONE_LABELS_VAL ="none";//TODO no labels attribute should probably mean no labelling
 
 	/**Requests that labelling be done like a fused ring. It is assumed that the order of the atoms is locant 1 as the first atom*/
 	static final String FUSEDRING_LABELS_VAL ="fusedRing";
+	
+	/**Requests that labelling be 1, 2, 3 etc. It is assumed that the order of the atoms is locant 1 as the first atom*/
+	static final String NUMERIC_LABELS_VAL ="numeric";
 	
 	
 	/**An XML element used to hold atomParity information e.g. 1 or -1 and atomRefs4 */

@@ -8,7 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({AtomTest.class,
 	BondTest.class,
 	CMLFragmentBuilderTest.class,
-	CycleDetector.class,
+	CycleDetectorTest.class,
 	DtdTest.class,
 	FragmentManagerTest.class,
 	FragmentTest.class,
