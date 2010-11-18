@@ -933,7 +933,27 @@ class StructureBuildingMethods {
 			if (currentElement.getLocalName().equals(BRACKET_EL)){
 				group =getFirstMultiValentGroup(state, currentElement);
 				if (group == null){//root will not have a multivalent group
-					group = findRightMostGroupInBracket(currentElement);
+					List<Element> groups = XOMTools.getDescendantElementsWithTagName(currentElement, GROUP_EL);
+					if (inLocants==null){
+						throw new StructureBuildingException("OPSIN Bug? in locants must be specified for a multiplied root in multiplicative nomenclature");
+					}
+					if (inLocants.get(0).equals(INLOCANTS_DEFAULT)){
+						group = groups.get(groups.size()-1);
+					}
+					else{
+						groupLoop: for (int j = groups.size()-1; j >=0; j--) {
+							Fragment possibleFrag = state.xmlFragmentMap.get(groups.get(j));
+							for (String locant : inLocants) {
+								if (possibleFrag.hasLocant(locant)){
+									group =groups.get(j);
+									break groupLoop;
+								}
+							}
+						}
+					}
+					if (group==null){
+						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
+					}
 				}
 			}
 			else{
@@ -941,21 +961,20 @@ class StructureBuildingMethods {
 			}
 			Fragment frag = state.xmlFragmentMap.get(group);
 			if (inLocants !=null){
+				Element rightMostGroup;
+				if (currentElement.getLocalName().equals(BRACKET_EL)){
+					rightMostGroup = findRightMostGroupInBracket(currentElement);
+				}
+				else{
+					rightMostGroup = currentElement.getFirstChildElement(GROUP_EL);
+				}
+				rightMostGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));//this group will not be used further within this word but can in principle be a substituent e.g. methylenedisulfonyl dichloride
 				if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null){//e.g. methylenedisulfonyl dichloride
 					if (!multipliedParent.getAttributeValue(INLOCANTS_ATR).equals(INLOCANTS_DEFAULT)){
 						throw new StructureBuildingException("inLocants should not be specified for a multiradical parent in multiplicative nomenclature");
 					}
-					Element rightMostGroup;
-					if (currentElement.getLocalName().equals(BRACKET_EL)){
-						rightMostGroup = findRightMostGroupInBracket(currentElement);//this is the only one that can accept inAtoms
-					}
-					else{
-						rightMostGroup = currentElement.getFirstChildElement(GROUP_EL);
-					}
-					rightMostGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 				}
 				else{
-					group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 					boolean inAtomAdded =false;
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
