@@ -96,7 +96,7 @@ class CMLFragmentBuilder {
 		Atom a  =fragManager.createAtom(elementType, frag);
 		Elements cmlLocants = cmlAtom.getChildElements("label");
 		for(int i=0;i<cmlLocants.size();i++){
-			a.addLocant(cmlLocants.get(0).getAttributeValue("value"));
+			a.addLocant(cmlLocants.get(i).getAttributeValue("value"));
 		}
 		String chargeStr = cmlAtom.getAttributeValue("formalCharge");
 		if(chargeStr != null){

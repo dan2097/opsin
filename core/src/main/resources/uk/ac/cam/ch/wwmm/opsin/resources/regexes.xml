@@ -159,8 +159,8 @@ does not define a CFG.
   <regex name="%alkaneStemSystematic%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%)"/>
   <regex name="%alkaneStem%" value="(%alkaneStemSystematic%|%alkaneStemTrivial%)"/>
   <regex name="%fusedRingBridges%" value ="(%newLocantGroupNoStartingHyphen%?%alkaneStem%%ane%%bridgeFormingO%%hyphen%?)"/>
-  <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="((%heteroReplacement%|%hydroGroup%)*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%heteroReplacement%*%fusedRingBridges%?)"/><!--bigCapitalH before lambdaConvention is preferred. Heteroatomreplacement should not really be after indicated hydrogen-->
-  <regex name="%ringNonDetachableFeatures%" value="(%heteroReplacement%*(%bigCapitalH%?%lambdaConvention%?|%lambdaConvention%?%bigCapitalH%?)%heteroReplacement%*%newLocantGroupNoStartingHyphen%?%fusedRingBridges%?)"/><!--last locant is an indirect locant for suffixes -->
+  <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="(%hydroGroup%*(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%fusedRingBridges%)*)"/><!--bigCapitalH before lambdaConvention is preferred. Expected ordering often varies between IUPAC/CAS/Beilstein so be lenient-->
+  <regex name="%ringNonDetachableFeatures%" value="((%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%fusedRingBridges%)*%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes -->
   <regex name="%acyclicNonDetachableFeatures%" value="(%heteroReplacement%*%lambdaConvention%?%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->
 
 

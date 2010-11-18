@@ -532,9 +532,8 @@ class FragmentManager {
 	 */
 	void replaceAtomWithAnotherAtomPreservingConnectivity(Atom atomToBeReplaced, Atom replacementAtom) {
 		atomToBeReplaced.removeElementSymbolLocants();
-		List<String> locants = atomToBeReplaced.getLocants();
-		for (int i = locants.size() -1; i >=0; i--) {
-			String locant = locants.get(i);
+		List<String> locants = new ArrayList<String>(atomToBeReplaced.getLocants());
+		for (String locant : locants) {
 			atomToBeReplaced.removeLocant(locant);
 			replacementAtom.addLocant(locant);
 		}

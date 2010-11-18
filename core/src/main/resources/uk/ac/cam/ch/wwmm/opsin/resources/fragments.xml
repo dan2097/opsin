@@ -88,9 +88,11 @@ bond (atomRefs2, order (NB must be an integer))
         <atomArray>
             <atom id="a18" elementType="C">
                 <label value="1"/>
+                <label value="alpha"/>
             </atom>
             <atom id="a19" elementType="C">
                 <label value="2"/>
+								<label value="beta"/>
             </atom>
             <atom id="a20" elementType="C">
                 <label value="3"/>
