@@ -53,7 +53,7 @@ class Atom {
     static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
 	/** The oxidation number as specified by Roman numerals in the name*/
     static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
-	/** Is this atom the carbon of an aldehyde?*/
+	/** Is this atom the carbon of an aldehyde? (however NOT formaldehyde)*/
     static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
 
 	/**The fragment to which the atom belongs.*/
