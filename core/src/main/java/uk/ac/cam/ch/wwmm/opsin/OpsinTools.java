@@ -78,7 +78,7 @@ class OpsinTools {
 		  current=(Element)current.getParent();
 	  }
 	  Element parent = (Element) current.getParent();
-	  if (parent == null || parent.getLocalName().equals(MOLECULE_EL)){
+	  if (parent == null || parent.getLocalName().equals(WORDRULE_EL)){
 		  return null;
 	  }
 	  int index = parent.indexOf(current);

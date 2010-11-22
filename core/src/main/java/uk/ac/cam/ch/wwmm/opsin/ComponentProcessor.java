@@ -2490,7 +2490,7 @@ class ComponentProcessor {
 			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
-				if (!unsuitableForFormingChainMultiradical(group, beforeGroup)){
+				if (!unsuitableForFormingChainMultiradical(state, group, beforeGroup)){
 					if (groupValue.equals("methylene")){
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", multiplierVal));
 					}
@@ -2576,25 +2576,48 @@ class ComponentProcessor {
 	/**
 	 * Checks for cases where multiplier(methylene) or multiplier(thio) and the like should not be interpreted as one fragment
 	 * Something like nitrilotrithiotriacetic acid or oxetane-3,3-diyldimethylene
+	 * @param state 
 	 * @param group
 	 * @param multiplierBeforeGroup 
 	 * @return
 	 */
-	private boolean unsuitableForFormingChainMultiradical(Element group, Element multiplierBeforeGroup) {
+	private boolean unsuitableForFormingChainMultiradical(BuildState state, Element group, Element multiplierBeforeGroup) {
 		Element previousGroup = (Element) OpsinTools.getPreviousGroup(group);
-		if (previousGroup!=null && previousGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null){
-			if (previousGroup.getAttributeValue(ACCEPTSADDITIVEBONDS_ATR)!=null && XOMTools.getPreviousSibling(previousGroup.getParent())!=null){
-				return false;
+		if (previousGroup!=null){
+			if (previousGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null){
+				if (previousGroup.getAttributeValue(ACCEPTSADDITIVEBONDS_ATR)!=null && XOMTools.getPreviousSibling(previousGroup.getParent())!=null){
+					return false;
+				}
+				//the initial multiplier is proceded by another multiplier e.g. bis(dithio)
+				if (((Element)XOMTools.getPrevious(multiplierBeforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
+					return false;
+				}
+				if (previousGroup.getAttributeValue(ISAMULTIRADICAL_ATR).equals(multiplierBeforeGroup.getAttributeValue(VALUE_ATR))){
+					return true;//probably multiplicative
+				}
+				else{
+					return false;
+				}
 			}
-			//the initial multiplier is proceded by another multiplier e.g. bis(dithio)
-			if (((Element)XOMTools.getPrevious(multiplierBeforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
-				return false;
-			}
-			if (previousGroup.getAttributeValue(ISAMULTIRADICAL_ATR).equals(multiplierBeforeGroup.getAttributeValue(VALUE_ATR))){
-				return true;//probably multiplicative
-			}
-			else{
-				return false;
+			else if (XOMTools.getPreviousSibling(previousGroup, MULTIPLIER_EL)==null){
+				//This is a 99% solution to the detection of cases such as ethylidenedioxy == ethan-1,1-diyldioxy
+				Fragment previousGroupFrag =state.xmlFragmentMap.get(previousGroup);
+				int outAtomValency =0;
+				if (previousGroupFrag.getOutAtoms().size()==1){
+					outAtomValency = previousGroupFrag.getOutAtom(0).getValency();
+				}
+				else{
+					Element suffix = (Element) XOMTools.getNextSibling(previousGroup, SUFFIX_EL);
+					if (suffix!=null && suffix.getAttributeValue(VALUE_ATR).equals("ylidene")){
+						outAtomValency =2;
+					}
+					if (suffix!=null && suffix.getAttributeValue(VALUE_ATR).equals("ylidyne")){
+						outAtomValency =3;
+					}
+				}
+				if (outAtomValency==Integer.parseInt(multiplierBeforeGroup.getAttributeValue(VALUE_ATR))){
+					return true;
+				}
 			}
 		}
 		return false;
