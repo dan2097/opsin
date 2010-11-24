@@ -2872,7 +2872,12 @@ class ComponentProcessor {
 							moveLocants =true;//locant location is present elsewhere
 						}
 						else if (findElementsMissingIndirectLocants(elementBeforeSubstituent, locantRelatedElements.get(0)).size()==0 || !state.xmlFragmentMap.get(lastGroupOfElementBeforeSub).hasLocant(locantText)){
-							moveLocants =true;//the fragment adjacent to the locant doesn't have this locant or doesn't need any indirect locants. Assume it will appear elsewhere later
+							if( frag.getAtomList().size()==1 && frag.hasLocant(locantText)){
+								//1 locant was intended to locant onto fragment with 1 atom
+							}
+							else{
+								moveLocants =true;//the fragment adjacent to the locant doesn't have this locant or doesn't need any indirect locants. Assume it will appear elsewhere later
+							}
 						}
 					}
 				}
