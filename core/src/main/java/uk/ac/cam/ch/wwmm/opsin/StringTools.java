@@ -159,6 +159,8 @@ public final class StringTools {
             case '\uFB04': return "ffl";
             case '\uFB06': return "st";
             
+            case '\u00E9': return "e";//diacritics
+            
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
             case '\u201B': return "'";
