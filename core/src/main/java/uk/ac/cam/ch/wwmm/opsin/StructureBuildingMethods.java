@@ -1404,14 +1404,28 @@ class StructureBuildingMethods {
 		Stack<Element> stack = new Stack<Element>();
 		stack.add((Element) startingElement.getParent());
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
+		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
 		while (stack.size()>0){
 			Element currentElement =stack.pop();
-			if (currentElement.getLocalName().equals(GROUP_EL)){
-				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
+			if (currentElement.getLocalName().equals(SUBSTITUENT_EL)|| currentElement.getLocalName().equals(ROOT_EL)){
+				Fragment groupFrag =state.xmlFragmentMap.get(currentElement.getFirstChildElement(GROUP_EL));
+				if (monoNuclearHydride!=null && currentElement.getAttribute(LOCANT_ATR)!=null){//It looks like all groups are locanting onto the monoNuclearHydride e.g. 1-oxo-1-phenyl-sulfanylidene
+					return monoNuclearHydride;
+				}
 				if (groupFrag.hasLocant(locant)){
-					return groupFrag;
+					if (locant.equals("1") && groupFrag.getAtomList().size()==1){
+						if (monoNuclearHydride ==null){
+							monoNuclearHydride= groupFrag;
+						}
+					}
+					else{
+						return groupFrag;
+					}
 				}
 				continue;
+			}
+			else if (monoNuclearHydride!=null){
+				return monoNuclearHydride;
 			}
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
@@ -1432,14 +1446,13 @@ class StructureBuildingMethods {
 					}
 				}
 				else{
-					Element group = bracketOrSubOrRoot.getFirstChildElement(GROUP_EL);
-					stack.add(group);
+					stack.add(bracketOrSubOrRoot);
 				}
 			}
 			stack.addAll(0, bracketted);//locanting into brackets is rarely the desired answer so place at the bottom of the stack
 			doneFirstIteration =true;
 		}
-		return null;
+		return monoNuclearHydride;
 	}
 
 	static Element findRightMostGroupInBracket(Element bracket) {
