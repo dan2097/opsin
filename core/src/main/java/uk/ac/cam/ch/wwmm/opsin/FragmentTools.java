@@ -236,8 +236,9 @@ class FragmentTools {
 						List<Atom> neighbours = atom.getAtomNeighbours();
 						for (Atom neighbour : neighbours) {
 							if (neighbour.getElement().equals("N") && neighbour.getIncomingValency()==1){
-								neighbour.addLocant(locants.get(0));
+								String locantToAdd = locants.get(0);
 								atom.clearLocants();
+								neighbour.addLocant(locantToAdd);
 								continue fragmentLoop;
 							}
 						}
