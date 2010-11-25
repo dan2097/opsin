@@ -1,3 +1,10 @@
+Version ?.?.?
+Added traditional locants to carboxylic acids and alkanes e.g. beta-hydroxybutyric acid
+Added support for cis/trans indicating the relative stereochemistry of two substituents on rings and fused rings sytems
+Added support for stoichiometry ratios and mixture indicators
+Improvements to CAS index name uninversion algorithm
+Many Minor improvements and bug fixes
+
 Version 0.9.0
 Added transition metals/f-block elements and nobel gases
 Added support for specifying the charge or oxidation number on elements e.g. aluminium(3+), iron(II)

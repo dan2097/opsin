@@ -13,9 +13,9 @@ OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 ##################################################
 
 OPSIN is available as a standalone JAR from Bitbucket (http://bitbucket.org/dan2097/opsin/) or SourceForge(https://sourceforge.net/projects/oscar3-chem/)
-It is also available as a dependency for use with Maven.
+It is also available as a dependency for use with Apache Maven.
 opsin-0.9.0-jar-with-dependencies.jar includes CML (Chemical Markup Language) and InChI (IUPAC International Chemical Identifier) output and all dependendencies
-The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI
+The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI.
 
 To use OPSIN as a library add opsin-0.9.0-jar-with-dependencies.jar to your classpath.
 
@@ -45,14 +45,16 @@ If you are using Maven then do the following:
 
 ##################################################
 
-Using OPSIN as a commandline utility:
-	java -jar opsin-0.9.0-jar-with-dependencies.jar will give you a command line interface to convert names to CML
-	java -cp opsin-0.9.0-jar-with-dependencies.jar uk.ac.cam.ch.wwmm.opsin.NameToInchi will give you a command line interface to convert names to InChI
+Using OPSIN as a command-line utility:
+	java -jar opsin-0.9.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
+	java -cp opsin-0.9.0-jar-with-dependencies.jar uk.ac.cam.ch.wwmm.opsin.NameToInchi will give you a command-line interface to convert names to InChI
+
+As well as interactive input on the command-line these command-line interfaces will accept a piped input of newline seperated chemical names.
+e.g. java -jar opsin-0.9.0-jar-with-dependencies.jar < input.name > output.cml
 
 Using OPSIN as a library:
 
-1) Learn about XOM (http://xom.nu), the XML processing framework used
-   by OPSIN
+1) Learn about XOM (http://xom.nu), the XML processing framework used by OPSIN
 2) Create an OPSIN instance, by calling the following static method
 
 NameToStructure nameToStructure = NameToStructure.getInstance();
@@ -65,7 +67,7 @@ Element cmlElement = nameToStructure.parseToCML("acetonitrile");
 
 System.out.println(cmlElement.toXML());
 
-parseToCML will typically take 5-10ms to convert a name to CML making OPSIN suitable for use on a large number of names.
+parseToCML will typically take 5-10ms to convert a name to CML making OPSIN suitable for use on large sets of names.
 
 CML can, if desired, be converted to other format such as SD, SMILES, InChI etc. by toolkits such as CDK, OpenBabel and JUMBO.
 (NOTE: if you want InChI the most efficient way to generate it is to use the InChI module and the corresponding parseToInChI method)
@@ -119,6 +121,7 @@ tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazo
 Greek letters
 Lambda convention
 E/Z/R/S stereochemistry
+cis/trans indicating relative stereochemistry on rings
 Amino Acids and derivatives
 Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)
 Simple bridge prefixes e.g. methano
