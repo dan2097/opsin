@@ -11,10 +11,8 @@ import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
-
-import nu.xom.Document;
+import nu.xom.Attribute;
 import nu.xom.Element;
-import nu.xom.Serializer;
 
 /** The "master" class, to turn a name into a structure.
  *
@@ -228,11 +226,19 @@ public class NameToStructure {
 	 */
 	public static void main(String [] args) throws Exception {
 		NameToStructure nts = NameToStructure.getInstance();
-		Serializer serializer = new Serializer(System.out);
+		StreamSerializer serializer = new StreamSerializer(System.out);
 		serializer.setIndent(2);
 		boolean end = false;
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
 		System.err.println("OPSIN Prealpha: enter chemical name:");
+		serializer.writeXMLDeclaration();
+		Element cml = new Element("cml");
+		cml.addAttribute(new Attribute("convention","cmlDict:cmllite"));
+		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
+		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
+		cml.setNamespaceURI("http://www.xml-cml.org/schema");
+		serializer.writeStartTag(cml);
+		int id =1;
 		while(!end) {
 			String name = stdinReader.readLine();
 			if(name == null || name.equals("END")) {
@@ -242,13 +248,24 @@ public class NameToStructure {
 				Element output = result.getCml();
 				if(output == null) {
 					System.err.println(result.getMessage());
-					System.out.println("");
-					System.out.flush();
+					Element uninterpretableMolecule = new Element("molecule");
+					uninterpretableMolecule.addAttribute(new Attribute("id", "m" + id++));
+					Element nameEl = new Element("name");
+					nameEl.appendChild(name);
+					nameEl.addAttribute(new Attribute("dictRef", "nameDict:unknown"));
+					uninterpretableMolecule.appendChild(nameEl);
+					XOMTools.setNamespaceURIRecursively(uninterpretableMolecule, "http://www.xml-cml.org/schema");
+					serializer.write(uninterpretableMolecule);
+					serializer.flush();
 				} else {
-					serializer.write(new Document(output));
-					System.out.flush();
+					Element molecule = XOMTools.getChildElementsWithTagName(output, "molecule").get(0);
+					molecule.getAttribute("id").setValue("m" + id++);
+					serializer.write(molecule);
+					serializer.flush();
 				}
 			}
 		}
+		serializer.writeEndTag(cml);
+		serializer.flush();
 	}
 }
