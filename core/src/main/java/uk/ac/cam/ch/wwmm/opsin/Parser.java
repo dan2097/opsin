@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
+import uk.ac.cam.ch.wwmm.opsin.Tokeniser.TokenizationResult;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -107,41 +108,37 @@ class Parser {
 		Parse parse = null;
 		if (name.contains(", ")){
 			try{
-				parse = tokeniser.tokenize(tokeniser.uninvertCASName(name), false);
+				TokenizationResult tokenizationResult = tokeniser.tokenize(tokeniser.uninvertCASName(name), false);
+				if (tokenizationResult.isSuccessfullyTokenized()){
+					parse = tokenizationResult.getParse();
+				}
 			}
 			catch (ParsingException ignored) {
 			}
 		}
 		else if (name.contains("; ")){//a mixture, spaces are sufficient for OPSIN to treat as a mixture. These spaces for obvious reasons must not be removed
-			parse = tokeniser.tokenize(matchSemiColonSpace.matcher(name).replaceAll(" "), false);
+			TokenizationResult tokenizationResult = tokeniser.tokenize(matchSemiColonSpace.matcher(name).replaceAll(" "), false);
+			if (tokenizationResult.isSuccessfullyTokenized()){
+				parse = tokenizationResult.getParse();
+			}
 		}
 		boolean allowSpaceRemoval = parse ==null ? true : false;
 		if (parse == null){
-			parse = tokeniser.tokenize(name , true);
-		}
-		
-		/* For cases where any of the parse's parseWords contain multiple annotations create a
-		 * parse for each possibility. Hence after this process there may be multiple parse objects and
-		 * the parseWords they contain will each only have one parseTokens object.
-		 */
-		List<Integer> parseCounts = new ArrayList<Integer>();
-		for (ParseWord pw : parse.getWords()) {
-			parseCounts.add(pw.getParseTokens().size());
-		}
-		List<List<Integer>> combinations = Combinations.makeCombinations(parseCounts);
-		List<Parse> parses = new ArrayList<Parse>();
-		for(List<Integer> c : combinations) {
-			Parse parseCopy = parse.deepCopy();
-			for(int i=0; i<c.size(); i++) {
-				if(parseCounts.get(i) > 1) {
-					ParseWord pw = parseCopy.getWord(i);
-					List<ParseTokens> ptl = new ArrayList<ParseTokens>();
-					ptl.add(pw.getParseTokens().get(c.get(i)));
-					pw.setParseTokens(ptl);
+			TokenizationResult tokenizationResult = tokeniser.tokenize(name , true);
+			if (tokenizationResult.isSuccessfullyTokenized()){
+				parse = tokenizationResult.getParse();
+			}
+			else{
+				if (n2sConfig.isDetailedFailureAnalysis()){
+					generateExactParseFailureReason(tokenizationResult, name);
+				}
+				else{
+					throw new ParsingException(name + " is unparsable due to the following word being unparseable: " + tokenizationResult.getUnparsableName());
 				}
 			}
-			parses.add(parseCopy);
 		}
+		
+		List<Parse> parses = generateParseCombinations(parse);
 		if (parses.size()==0){
 			throw new ParsingException("No parses could be found for " + name);
 		}
@@ -217,6 +214,55 @@ class Parser {
 			}
 		}
 		return componentRatios;
+	}
+
+	private void generateExactParseFailureReason(TokenizationResult tokenizationResult, String name) throws ParsingException {
+		ReverseParseRules reverseParseRules;
+		try {
+			reverseParseRules = new ReverseParseRules(resourceManager);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		String uninterpretableLR = tokenizationResult.getUninterpretableName();
+		String unparseableLR = tokenizationResult.getUnparsableName();
+		TokenizationResult reverseTokenizationResult = tokeniser.tokenizeRightToLeft(reverseParseRules, uninterpretableLR, true);
+		String uninterpretableRL = reverseTokenizationResult.getUninterpretableName();
+		String unparseableRL = reverseTokenizationResult.getUnparsableName();
+		int indiceToTruncateUpTo =  uninterpretableLR.length()-unparseableLR.length();
+		String message = name + " was uninterpretable due to the following section of the name: "+uninterpretableRL;
+		if (indiceToTruncateUpTo <= unparseableRL.length()){
+			message+="\nThe following was not understandable in the context it was used: "+unparseableRL.substring(indiceToTruncateUpTo);
+		}
+		throw new ParsingException(message);
+	}
+
+	/**
+	 * For cases where any of the parse's parseWords contain multiple annotations create a
+	 * parse for each possibility. Hence after this process there may be multiple parse objects and
+	 * the parseWords they contain will each only have one parseTokens object.
+	 * @param parse
+	 * @return
+	 */
+	private List<Parse> generateParseCombinations(Parse parse) {
+		List<Integer> parseCounts = new ArrayList<Integer>();
+		for (ParseWord pw : parse.getWords()) {
+			parseCounts.add(pw.getParseTokens().size());
+		}
+		List<List<Integer>> combinations = Combinations.makeCombinations(parseCounts);
+		List<Parse> parses = new ArrayList<Parse>();
+		for(List<Integer> c : combinations) {
+			Parse parseCopy = parse.deepCopy();
+			for(int i=0; i<c.size(); i++) {
+				if(parseCounts.get(i) > 1) {
+					ParseWord pw = parseCopy.getWord(i);
+					List<ParseTokens> ptl = new ArrayList<ParseTokens>();
+					ptl.add(pw.getParseTokens().get(c.get(i)));
+					pw.setParseTokens(ptl);
+				}
+			}
+			parses.add(parseCopy);
+		}
+		return parses;
 	}
 
 	/**Write the XML corresponding to a particular word in a parse.

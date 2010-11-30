@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import uk.ac.cam.ch.wwmm.opsin.Tokeniser.TokenizationResult;
+
 public class TokenizerTest {
 
 	static Tokeniser tokenizer;
@@ -19,7 +21,7 @@ public class TokenizerTest {
 	
 	@Test
 	public void ethylChloride() throws Exception {
-		Parse parse = tokenizer.tokenize("ethyl chloride", true);
+		Parse parse = tokenizer.tokenize("ethyl chloride", true).getParse();
 		assertEquals("Two Words", 2, parse.getWords().size());
 		ParseWord w = parse.getWord(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -36,7 +38,7 @@ public class TokenizerTest {
 		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
 
 
-		parse = tokenizer.tokenize("ethylchloride", true);//missing space
+		parse = tokenizer.tokenize("ethylchloride", true).getParse();//missing space
 		assertEquals("Two Words", 2, parse.getWords().size());
 		w = parse.getWord(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -55,7 +57,7 @@ public class TokenizerTest {
 	
 	@Test
 	public void hexane() throws Exception {
-		Parse parse = tokenizer.tokenize("hexane", true);
+		Parse parse = tokenizer.tokenize("hexane", true).getParse();
 		assertEquals("One Word", 1, parse.getWords().size());
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -68,7 +70,7 @@ public class TokenizerTest {
 	
 	@Test
 	public void hexachlorohexane() throws Exception {
-		Parse parse = tokenizer.tokenize("hexachlorohexane", true);
+		Parse parse = tokenizer.tokenize("hexachlorohexane", true).getParse();
 		assertEquals("One Word", 1, parse.getWords().size());
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -83,20 +85,13 @@ public class TokenizerTest {
 	}
 	@Test
 	public void hexachlorohexaneeeeeee() throws Exception {
-		boolean failed;
-		try{
-			tokenizer.tokenize("hexachlorohexaneeeeeee", true);
-			failed = false;
-		}
-		catch (ParsingException e){
-			failed = true;
-		}
-		assertEquals("Unparsable", true, failed);
+		TokenizationResult result = tokenizer.tokenize("hexachlorohexaneeeeeee", true);
+		assertEquals("Unparsable", false, result.isSuccessfullyTokenized());
 	}
 
 	@Test
 	public void bracketedHexachlorohexane() throws Exception {
-		Parse parse = tokenizer.tokenize("(hexachloro)hexane", true);
+		Parse parse = tokenizer.tokenize("(hexachloro)hexane", true).getParse();
 		assertEquals("One Word", 1, parse.getWords().size());
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -114,7 +109,7 @@ public class TokenizerTest {
 	
 	@Test
 	public void methyl() throws Exception {
-		Parse parse = tokenizer.tokenize("methyl", true);
+		Parse parse = tokenizer.tokenize("methyl", true).getParse();
 		assertEquals("One Word", 1, parse.getWords().size());
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -127,7 +122,7 @@ public class TokenizerTest {
 	
 	@Test
 	public void aceticacid() throws Exception {
-		Parse parse = tokenizer.tokenize("acetic acid", true);
+		Parse parse = tokenizer.tokenize("acetic acid", true).getParse();
 		assertEquals("One Word", 1, parse.getWords().size());
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());

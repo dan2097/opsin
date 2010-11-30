@@ -17,6 +17,31 @@ import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
  */
 class Tokeniser {
 
+	class TokenizationResult {
+		final boolean successfullyTokenized;
+		final Parse parse;
+		final String uninterpretableName;
+		final String unparsableName;
+		boolean isSuccessfullyTokenized() {
+			return successfullyTokenized;
+		}
+		Parse getParse() {
+			return parse;
+		}
+		String getUninterpretableName() {
+			return uninterpretableName;
+		}
+		String getUnparsableName() {
+			return unparsableName;
+		}
+		
+		public TokenizationResult(boolean successfullyTokenized, Parse parse, String uninterpretableName, String unparsableName) {
+			this.successfullyTokenized = successfullyTokenized;
+			this.parse = parse;
+			this.uninterpretableName = uninterpretableName;
+			this.unparsableName = unparsableName;
+		}
+	}
 
 	private final ParseRules parseRules;
 	private final static char endOfSubstituent = '\u00e9';
@@ -39,7 +64,7 @@ class Tokeniser {
 	 * @return
 	 * @throws ParsingException 
 	 */
-	Parse tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
+	TokenizationResult tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		Parse parse = new Parse(name);
 		String unparsedName;
 		if (allowRemovalOfWhiteSpace){
@@ -115,27 +140,17 @@ class Tokeniser {
 								unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
 							}
 							else{
-								if (parsedName.equals("")){
-									throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
-								}
-								else {
-									throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
-								}
+								return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
 							}
 						}
 					}
 					else{
-						if (parsedName.equals("")){
-							throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName);
-						}
-						else {
-							throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
-						}
+						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
 					}
 				}
 			}
 		}
-		return parse;
+		return new TokenizationResult(true, parse, "", "");
 	}
 	
 	/**
@@ -147,15 +162,11 @@ class Tokeniser {
 	 * @return
 	 * @throws ParsingException 
 	 */
-	Parse tokenizeRightToLeft(ReverseParseRules reverseParseRules, String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
+	TokenizationResult tokenizeRightToLeft(ReverseParseRules reverseParseRules, String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		Parse parse = new Parse(name);
-		String unparsedName;
-		if (allowRemovalOfWhiteSpace){
-			unparsedName =  removeWhiteSpaceIfBracketsAreUnbalanced(name);
-		}
-		else{
-			unparsedName = name;
-		}
+		String unparsedName =name;
+		//bracket matching is not currently being performed as this the input to this function from the parser will often be what the LR tokenizer couldn't handle, which may not have matching brackets
+	
 		while (unparsedName.length()>0){
 			/*
 			 * Returns
@@ -167,7 +178,7 @@ class Tokeniser {
 			List<ParseTokens> parseTokens =results.getParseTokensList();
 			String uninterpretableName = results.getUninterpretableName();
 			String parsedName = unparsedName.substring(uninterpretableName.length());
-			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(uninterpretableName.length()-1)==' ') || uninterpretableName.charAt(uninterpretableName.length()-1) =='-'){//a word was interpretable
+			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(uninterpretableName.length()-1)==' ' || uninterpretableName.charAt(uninterpretableName.length()-1) =='-')){//a word was interpretable
 				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 				//In cases of properly formed names there will be only one ParseWord
 				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -192,26 +203,16 @@ class Tokeniser {
 						unparsedName = uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1) + parsedName;
 					}
 					else{
-						if (parsedName.equals("")){
-							throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName+ " (spaces will have been removed as they are assumed to be erroneous if parsing fails with them there)");
-						}
-						else {
-							throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
-						}
+						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
 					}
 				}
 				else{
-					if (parsedName.equals("")){
-						throw new ParsingException(name + " is unparsable due to the following word being unparsable: " + unparsedName);
-					}
-					else {
-						throw new ParsingException(name + " is unparsable. This part of the name was interpretable: " + parsedName);
-					}
+					return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
 				}
 			}
 		}
 		Collections.reverse(parse.getWords());
-		return parse;
+		return new TokenizationResult(true, parse, "", "");
 	}
 	
 	/**

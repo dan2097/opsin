@@ -192,7 +192,7 @@ public class ReverseParseRules {
 				uninterpretableName=as.untokenisedChemicalName;//all acceptable annotator states found should have the same untokenisedName
 			}
 		}
-		inverseParseTokens(outputList);
+		outputList = inverseParseTokens(outputList);
 		return new ParseRulesResults(outputList, uninterpretableName, unparseableName);
 	}
 
@@ -222,10 +222,15 @@ public class ReverseParseRules {
 		return max;
 	}
 
-	private void inverseParseTokens(List<ParseTokens> outputList) {
+	private List<ParseTokens> inverseParseTokens(List<ParseTokens> outputList) {
+		List<ParseTokens> inversedParseTokens = new ArrayList<ParseTokens>();
 		for (ParseTokens parseTokens : outputList) {
-			Collections.reverse(parseTokens.getAnnotations());
-			Collections.reverse(parseTokens.getTokens());
+			List<Character> annotations = new ArrayList<Character>(parseTokens.getAnnotations());
+			List<String> tokens = new ArrayList<String>(parseTokens.getTokens());
+			Collections.reverse(annotations);
+			Collections.reverse(tokens);
+			inversedParseTokens.add(new ParseTokens(tokens, annotations));
 		}
+		return inversedParseTokens;
 	}
 }
