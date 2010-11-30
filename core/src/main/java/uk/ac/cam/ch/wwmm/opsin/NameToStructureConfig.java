@@ -15,12 +15,13 @@ public class NameToStructureConfig implements Cloneable {
 	// Fields set with default values
 	private boolean allowRadicals = false;
 	private boolean verbose = false;
+	private boolean detailedFailureAnalysis = false;
 //	private boolean slackSpaceHandling;
 //	private boolean substituentAbbreviations;
 //	private boolean ignoreStereochemistry;
 //	private boolean ignoreCurrentlyUninterpretableStereochemistry;
 	
-	
+
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
 	 * allowRadicals = false
@@ -29,20 +30,53 @@ public class NameToStructureConfig implements Cloneable {
 	public NameToStructureConfig() {
 	}
 
+
+	/**
+	 * Are radicals allowed?  e.g. should fragments such as phenyl be interpretable
+	 * @return
+	 */
 	public boolean isAllowRadicals() {
 		return allowRadicals;
 	}
 
+	/**
+	 * Sets whether radicals allowed? e.g. should fragments such as phenyl be interpretable
+	 * @return
+	 */
 	public void setAllowRadicals(boolean allowRadicals) {
 		this.allowRadicals = allowRadicals;
 	}
 	
+	/**
+	 * Should debug information be written to stderr
+	 * @return
+	 */
 	public boolean isVerbose() {
 		return verbose;
 	}
 
+	/**
+	 * Sets whether debug information be written to stderr
+	 * @return
+	 */
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+	}
+	
+	/**
+	 * Should OPSIN attempt reverse parsing to more accurately determine why parsing failed
+	 * @return
+	 */
+	public boolean isDetailedFailureAnalysis() {
+		return detailedFailureAnalysis;
+	}
+
+	/**
+	 * Sets whether OPSIN should attempt reverse parsing to more accurately determine why parsing failed
+	 * @return
+	 */
+	public void setDetailedFailureAnalysis(boolean detailedFailureAnalysis) {
+		this.detailedFailureAnalysis = detailedFailureAnalysis;
 	}
 
 //	boolean isSlackSpaceHandling() {
