@@ -231,7 +231,7 @@ class Parser {
 		int indiceToTruncateUpTo =  uninterpretableLR.length()-unparseableLR.length();
 		String message = name + " was uninterpretable due to the following section of the name: "+uninterpretableRL;
 		if (indiceToTruncateUpTo <= unparseableRL.length()){
-			message+="\nThe following was not understandable in the context it was used: "+unparseableRL.substring(indiceToTruncateUpTo);
+			message+=" ; The following was not understandable in the context it was used: "+unparseableRL.substring(indiceToTruncateUpTo);
 		}
 		throw new ParsingException(message);
 	}
