@@ -47,10 +47,6 @@
 		<token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbonohydrazide</token>
 		<token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbohydrazide</token>
 		<token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbazide</token>
-		<token value="C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">carboxylate</token>
-		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
-		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>
-		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic acid</token>
 		<token value="O=CC(Cl)(Cl)Cl" labels="none" valType="SMILES">chloral</token>
 		<token value="NCl" labels="none" valType="SMILES">chloramine</token>
 		<token value="NCl" labels="none" valType="SMILES">chloramide</token>
@@ -275,5 +271,13 @@
 		<token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O" labels="none" valType="SMILES">vitamin c</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" valType="SMILES" defaultInID="37">>coenzyme a</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" valType="SMILES" defaultInID="37">coa</token>
+	</tokenList>
+
+	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="║">
+	<!--amide and amine should really also be here but doing so is problematic where spaces are omitted due to the alternative meanings of these groups-->
+		<token value="C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">carboxylate</token>
+		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
+		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>
+		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic acid</token>
 	</tokenList>
 </tokenLists>

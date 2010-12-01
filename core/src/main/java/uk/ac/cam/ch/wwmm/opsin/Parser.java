@@ -133,7 +133,7 @@ class Parser {
 					generateExactParseFailureReason(tokenizationResult, name);
 				}
 				else{
-					throw new ParsingException(name + " is unparsable due to the following word being unparseable: " + tokenizationResult.getUnparsableName());
+					throw new ParsingException(name + " is unparsable due to the following being unparseable: " + tokenizationResult.getUnparsedName());
 				}
 			}
 		}

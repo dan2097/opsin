@@ -122,6 +122,7 @@ does not define a CFG.
   <regex name="%mono%" value="╖"/>
   <regex name="%nitrogenHeteroStem%" value="╕"/>
   <regex name="%ylene%" value="╣"/>
+  <regex name="%simpleGroupClass%" value="║"/>
   <!--up to ascii 185 used-->
 
 <!-- composite regexes-->
@@ -184,7 +185,9 @@ does not define a CFG.
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
-  <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%)|%chalcogenAcid%(%infixedSuffix%|%o%?%rootSuffix%))"/>
+  <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%))"/>
+  <!--chalcogenAcidGroups must be substituted otherwise they are generic terms-->
+  <regex name="%chalcogenAcidGroup%" value="(%chalcogenAcid%(%infixedSuffix%|%o%?%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%)|%chalcogenAcid%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%))"/>
 
   <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
@@ -245,7 +248,10 @@ does not define a CFG.
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
   <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%|%elementaryAtom%%chargeOrOxidationNumberSpecifier%?))"/>
-  <regex name="%mainGroup%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*(%newLocantGroupNoStartingHyphen%%mono%?)?%mainGroupBody%%closeBracket%*%endOfMainGroup%)"/>
+  <regex name="%mainGroupHead%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*(%newLocantGroupNoStartingHyphen%%mono%?)?)" />
+  <regex name="%mainGroupTail%"	value="(%closeBracket%*%endOfMainGroup%)" />
+	<regex name="%mainGroup%" value="(%mainGroupHead%%mainGroupBody%%mainGroupTail%)"/>
+	<regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%(%chalcogenAcidGroup%|%simpleGroupClass%)%mainGroupTail%)"/>
 
 <!-- functional Groups-->
   <regex name="%anhydride%" value="(%anhydrideLocant%?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
@@ -254,6 +260,6 @@ does not define a CFG.
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
 
-  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+%functionalTerm%?|%substituent%*%mainGroup%(%hyphen%?%functionalTerm%)?)|%hyphen%?%functionalTerm%)"/>
+  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+%functionalTerm%?|(%substituent%*%mainGroup%|%substituent%+%mainGroupThatRequiresSubstituent%)(%hyphen%?%functionalTerm%)?)|%hyphen%?%functionalTerm%)"/>
 <!--Note that the %functionalTerm%? in the term above indicates that a space has technically been omitted!-->
 </regexes>

@@ -22,6 +22,7 @@ class Tokeniser {
 		final Parse parse;
 		final String uninterpretableName;
 		final String unparsableName;
+		final String unparsedName;
 		boolean isSuccessfullyTokenized() {
 			return successfullyTokenized;
 		}
@@ -34,12 +35,16 @@ class Tokeniser {
 		String getUnparsableName() {
 			return unparsableName;
 		}
+		String getUnparsedName() {
+			return unparsedName;
+		}
 		
-		public TokenizationResult(boolean successfullyTokenized, Parse parse, String uninterpretableName, String unparsableName) {
+		public TokenizationResult(boolean successfullyTokenized, Parse parse, String uninterpretableName, String unparsableName, String unparsedName) {
 			this.successfullyTokenized = successfullyTokenized;
 			this.parse = parse;
 			this.uninterpretableName = uninterpretableName;
 			this.unparsableName = unparsableName;
+			this.unparsedName = unparsedName;
 		}
 	}
 
@@ -140,17 +145,17 @@ class Tokeniser {
 								unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
 							}
 							else{
-								return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
+								return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
 							}
 						}
 					}
 					else{
-						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
+						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
 					}
 				}
 			}
 		}
-		return new TokenizationResult(true, parse, "", "");
+		return new TokenizationResult(true, parse, "", "", "");
 	}
 	
 	/**
@@ -203,16 +208,16 @@ class Tokeniser {
 						unparsedName = uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1) + parsedName;
 					}
 					else{
-						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
+						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
 					}
 				}
 				else{
-					return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName());
+					return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
 				}
 			}
 		}
 		Collections.reverse(parse.getWords());
-		return new TokenizationResult(true, parse, "", "");
+		return new TokenizationResult(true, parse, "", "", "");
 	}
 	
 	/**
