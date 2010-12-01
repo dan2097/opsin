@@ -51,6 +51,9 @@ class ComponentProcessor {
 		//terminal e is ignored from all of the keys as it is optional in the input name
 		specialHWRings.put("oxin", new String[]{"blocked"});
 		specialHWRings.put("azin", new String[]{"blocked"});
+		
+		specialHWRings.put("selenin", new String[]{"noticacid", "Se","C","C","C","C","C"});
+		specialHWRings.put("tellurin", new String[]{"noticacid", "Te","C","C","C","C","C"});
 
 		specialHWRings.put("oxazol", new String[]{"","O","C","N","C","C"});
 		specialHWRings.put("thiazol", new String[]{"","S","C","N","C","C"});
@@ -1873,14 +1876,29 @@ class ComponentProcessor {
 			if(noLocants && prevs.size() > 0) {
 				if(specialHWRings.containsKey(name)) {
 					String[] specialRingInformation =specialHWRings.get(name);
-					if (specialRingInformation[0].equals("blocked")){
-						throw new ComponentGenerationException("Blocked HW system");
-					}
-					else if (specialRingInformation[0].equals("saturated")){
-						for (Atom a: hwRing.getAtomList()) {
-							a.setSpareValency(false);
+					String specialInstruction =specialRingInformation[0];
+					if (!specialInstruction.equals("")){
+						if (specialInstruction.equals("blocked")){
+							throw new ComponentGenerationException("Blocked HW system");
 						}
-					}//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
+						else if (specialInstruction.equals("saturated")){
+							for (Atom a: hwRing.getAtomList()) {
+								a.setSpareValency(false);
+							}
+						}
+						else if (specialInstruction.equals("noticacid")){
+							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)==null){
+								Element nextEl = (Element) XOMTools.getNextSibling(group);
+								if (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
+									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a HW ring");
+								}
+							}
+						}
+						else{
+							throw new ComponentGenerationException("OPSIN Bug: Unrecognised special HW ring instruction");
+						}
+					}
+					//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
 					for (int j = 1; j < specialRingInformation.length; j++) {
 						Atom a =hwRing.getAtomByLocantOrThrow(Integer.toString(j));
 						a.setElement(specialRingInformation[j]);
