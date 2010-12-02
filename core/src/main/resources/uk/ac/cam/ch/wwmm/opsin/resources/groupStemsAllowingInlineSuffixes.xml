@@ -5,7 +5,6 @@
 	<tokenList tagname="group" type="substituent" subType="groupStem" symbol="g">
 		<token value="C=C=C" valType="SMILES" usableAsAJoiner="yes">allen</token>
 		<token value="[NH2-]" labels="none" valType="SMILES">amid</token>
-		<token value="N" labels="none" valType="SMILES" usableAsAJoiner="yes">amin</token>
 		<token value="N=NC=NN" labels="1/2/3/4/5" valType="SMILES" suffixAppliesToByDefault="3">formazan</token>
 		<token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerol</token>
 		<token value="OCC(O)CO" labels="1///2//3" valType="SMILES">glycerin</token>

@@ -37,7 +37,6 @@
 		<token value="N" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">imino</token>
 		<token value="[NH4+]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" iminoLike="yes">iminio</token>
 		<token value="N" labels="none" outIDs="1,1,1" valType="SMILES">nitrilo</token>
-		<token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
 		<token value="[NH4+]" labels="none" outIDs="1,1,1" valType="SMILES">nitrilio</token>
 
 		<token value="[P|3]" labels="none" outIDs="1,1,1" valType="SMILES">phosphinidyne</token>
@@ -81,6 +80,9 @@
 		<token value="S" labels="none" outIDs="1,1" valType="SMILES">epithio</token>
 		<token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES">episeleno</token>
 		<token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES">epitelluro</token>
+	</tokenList>
+	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="╗">
+		<token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
 	</tokenList>
 </tokenLists>
 

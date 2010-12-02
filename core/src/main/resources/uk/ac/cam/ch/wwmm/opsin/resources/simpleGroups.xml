@@ -274,7 +274,11 @@
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="║">
-	<!--amide and amine should really also be here but doing so is problematic where spaces are omitted due to the alternative meanings of these groups-->
+	<!--amide should really also be here but doing so is problematic due to the way it has been implemented in functional class nomenclature-->
+		<token value="N" labels="none" valType="SMILES">amin</token>
+		<token value="N" labels="none" valType="SMILES">amine</token>
+		<token value="[NH4+]" labels="none" valType="SMILES">aminium</token>
+		<token value="[NH2-]" labels="none" valType="SMILES">aminide</token>
 		<token value="C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">carboxylate</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>
