@@ -1704,7 +1704,7 @@ class ComponentGenerator {
 					if (children.size()==2){
 						Element amineMultiplier =children.get(0);
 						Element amine =children.get(1);
-						if (amineMultiplier.getLocalName().equals(MULTIPLIER_EL) && amine.getValue().equals("amin")){//e.g. Triethylenetetramine
+						if (amineMultiplier.getLocalName().equals(MULTIPLIER_EL) && (amine.getValue().equals("amine") || amine.getValue().equals("amin"))){//e.g. Triethylenetetramine
 							if (Integer.parseInt(amineMultiplier.getAttributeValue(VALUE_ATR))!=multiplierValue +1){
 								throw new ComponentGenerationException("Invalid polyethylene amine!");
 							}

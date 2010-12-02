@@ -18,6 +18,9 @@
 		<token value="-CC(C)CC" labels="none" valType="SMILES">activeamyl</token>
 		<token value="-C(=O)C(=O)N" labels="none" valType="SMILES">amidoxalyl</token>
 		<token value="-ON" labels="none" valType="SMILES" usableAsAJoiner="yes">aminoxyl</token>
+		<token value="-N" labels="none" valType="SMILES" usableAsAJoiner="yes">aminyl</token>
+		<token value="=N" labels="none" valType="SMILES" usableAsAJoiner="yes">aminylidene</token>
+		<token value="#N" labels="none" valType="SMILES">aminylidyne</token>
 		<token value="-OCCCCC" valType="SMILES">amoxy</token>
 		<token value="-CCCCC" valType="SMILES">amyl</token>
 		<token value="=CCCCC" valType="SMILES">amylidene</token>
