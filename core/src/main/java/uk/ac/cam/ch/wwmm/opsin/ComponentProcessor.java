@@ -2188,7 +2188,7 @@ class ComponentProcessor {
 				processDispiroter(state, polyCyclicSpiroDescriptor);
 			}
 			else{
-				throw new ComponentGenerationException("Only identical components supported so far");
+				throw new ComponentGenerationException("Unsupported spiro system encountered");
 			}
 			polyCyclicSpiroDescriptor.detach();
 		}
@@ -2293,10 +2293,20 @@ class ComponentProcessor {
 	 */
 	private void processSpiroBiOrTer(BuildState state, Element polyCyclicSpiroDescriptor, int components) throws ComponentGenerationException, StructureBuildingException {
 		Element locant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+		String locantText;
 		if (locant ==null || !locant.getLocalName().equals(LOCANT_EL)){
-			throw new ComponentGenerationException("Unable to find locantEl for polycyclic spiro system");
+			if (components==2){
+				locantText ="1,1'";
+			}
+			else{
+				throw new ComponentGenerationException("Unable to find locant indicating atoms to form polycyclic spiro system!");
+			}
 		}
-		String[] locants = matchComma.split(locant.getValue());
+		else{
+			locantText = locant.getValue();
+			locant.detach();
+		}
+		String[] locants = matchComma.split(locantText);
 		if (locants.length!=components){
 			throw new ComponentGenerationException("Mismatch between spiro descriptor and number of locants provided");
 		}
@@ -2323,7 +2333,6 @@ class ComponentProcessor {
 				atomOnOriginalFragment.setSpareValency(true);
 			}
 		}
-		locant.detach();
 		XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
 	}
 
