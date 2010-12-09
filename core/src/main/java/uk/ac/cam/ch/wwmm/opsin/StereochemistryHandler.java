@@ -1,7 +1,9 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -436,7 +438,7 @@ class StereochemistryHandler {
 				Atom a2 = stereoAtoms.get(1);
 				
 				List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(a1, a2, fragment);
-				paths =removeUnnecessaryPaths(paths);
+				paths =findNonOverlappingPaths(paths);
 				if (paths.size()!=2 && paths.size()!=3){
 					return false;
 				}
@@ -453,22 +455,63 @@ class StereochemistryHandler {
 	}
 
 
-	private static List<List<Atom>> removeUnnecessaryPaths(List<List<Atom>> paths) {
-		List<Atom> startingAtoms = new ArrayList<Atom>();
-		List<Atom> endingAtoms = new ArrayList<Atom>();
-		for (int i = paths.size()-1; i >=0; i--) {
-			List<Atom> path = paths.get(i);
+	/**
+	 * Tries to find the paths that do not overlap.
+	 * At least one path for each starting atom must be picked.
+	 * If this is not possible no paths are returned
+	 * @param paths
+	 * @return
+	 */
+	private static List<List<Atom>> findNonOverlappingPaths(List<List<Atom>> paths) {
+		Map<Atom, List<List<Atom>>> sameStartingAtom = new LinkedHashMap<Atom, List<List<Atom>>>();
+		List<List<Atom>> zeroLengthPaths = new ArrayList<List<Atom>>();
+		for (List<Atom> path : paths) {
 			if (path.size()>0){
-				if (startingAtoms.contains(path.get(0))||endingAtoms.contains(path.get(path.size()-1))){
-					paths.remove(i);
+				Atom firstAtom =path.get(0);
+				if (sameStartingAtom.get(firstAtom)==null){
+					sameStartingAtom.put(firstAtom, new ArrayList<List<Atom>>());
 				}
-				else{
-					startingAtoms.add(path.get(0));
-					endingAtoms.add(path.get(path.size()-1));
-				}
+				sameStartingAtom.get(firstAtom).add(path);
+			}
+			else{
+				zeroLengthPaths.add(path);
 			}
 		}
-		return paths;
+		Atom firstKey =sameStartingAtom.keySet().iterator().next();
+		List<List<Atom>> possiblePaths = sameStartingAtom.get(firstKey);
+		sameStartingAtom.remove(firstKey);
+		for (List<Atom> possiblePath : possiblePaths) {
+			List<List<Atom>> nonOverlappingPaths = new LinkedList<List<Atom>>();
+			nonOverlappingPaths.add(possiblePath);
+			for (Atom otherStartingAtom : sameStartingAtom.keySet()) {
+				List<List<Atom>> otherPaths = sameStartingAtom.get(otherStartingAtom);
+				boolean nonOverlappingPathFound =false;
+				for (List<Atom> otherPath : otherPaths) {
+					boolean match =false;
+					ListLoop: for (List<Atom> nonOverlappingPath : nonOverlappingPaths) {
+						for (Atom atom : nonOverlappingPath) {
+							if (otherPath.contains(atom)){
+								match =true;
+								break ListLoop;
+							}
+						}
+					}
+					if (!match){
+						nonOverlappingPathFound=true;
+						nonOverlappingPaths.add(otherPath);
+						break;
+					}
+				}
+				if (!nonOverlappingPathFound){
+					break;
+				}
+			}
+			if (nonOverlappingPaths.size()==sameStartingAtom.keySet().size()+1){
+				nonOverlappingPaths.addAll(0, zeroLengthPaths);
+				return nonOverlappingPaths;
+			}
+		}
+		return Collections.emptyList();
 	}
 
 
