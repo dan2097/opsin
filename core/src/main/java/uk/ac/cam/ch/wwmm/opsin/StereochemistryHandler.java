@@ -436,6 +436,7 @@ class StereochemistryHandler {
 				Atom a2 = stereoAtoms.get(1);
 				
 				List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(a1, a2, fragment);
+				paths =removeUnnecessaryPaths(paths);
 				if (paths.size()!=2 && paths.size()!=3){
 					return false;
 				}
@@ -449,6 +450,25 @@ class StereochemistryHandler {
 			}
 		}
 		return false;
+	}
+
+
+	private static List<List<Atom>> removeUnnecessaryPaths(List<List<Atom>> paths) {
+		List<Atom> startingAtoms = new ArrayList<Atom>();
+		List<Atom> endingAtoms = new ArrayList<Atom>();
+		for (int i = paths.size()-1; i >=0; i--) {
+			List<Atom> path = paths.get(i);
+			if (path.size()>0){
+				if (startingAtoms.contains(path.get(0))||endingAtoms.contains(path.get(path.size()-1))){
+					paths.remove(i);
+				}
+				else{
+					startingAtoms.add(path.get(0));
+					endingAtoms.add(path.get(path.size()-1));
+				}
+			}
+		}
+		return paths;
 	}
 
 
@@ -569,3 +589,4 @@ class StereochemistryHandler {
 		return swaps1 %2 == swaps2 %2;
 	}
 }
+

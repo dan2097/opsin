@@ -69,44 +69,40 @@ class CycleDetector {
 		}
 	}
 	
+	private static class IntraFragmentPathSearchState{
+		final Atom currentAtom;
+		final LinkedList<Atom> orderAtomsVisited;
+		public IntraFragmentPathSearchState(Atom currentAtom, LinkedList<Atom> orderAtomsVisited ) {
+			this.currentAtom = currentAtom;
+			this.orderAtomsVisited = orderAtomsVisited;
+		}
+		Atom getCurrentAtom() {
+			return currentAtom;
+		}
+		LinkedList<Atom> getOrderAtomsVisited() {
+			return orderAtomsVisited;
+		}
+	}
+	
 	static List<List<Atom>> getIntraFragmentPathsBetweenAtoms(Atom a1, Atom a2, Fragment fragment) throws StructureBuildingException {
 		List<List<Atom>> paths = new ArrayList<List<Atom>>();
-		HashSet<Atom> atomsVisited = new HashSet<Atom>();
-		LinkedList<Atom> orderAtomsVisited = new LinkedList<Atom>();
-		LinkedList<Atom[]> atomStack =new LinkedList<Atom[]>();
-
-		atomStack.add(new Atom[]{a1, null});
-
-		while (atomStack.size()>0){
-			Atom[] nextAtomArray =atomStack.removeLast();//depth first traversal
-			Atom nextAtom =nextAtomArray[0];
-			if (atomsVisited.contains(nextAtom)){
-				//parent atom must have been in a ring and this atom already visited another way
-				if (atomStack.size()> 0){
-					Atom atomToBackTrackTo =atomStack.getLast()[1];
-					while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
-						orderAtomsVisited.removeLast();
-					}
-				}
-				continue;
-			}
-			atomsVisited.add(nextAtom);
+		LinkedList<IntraFragmentPathSearchState> stateStack = new LinkedList<IntraFragmentPathSearchState>();
+		stateStack.add(new IntraFragmentPathSearchState(a1, new LinkedList<Atom>()));
+		while (stateStack.size()>0){
+			IntraFragmentPathSearchState state  =stateStack.removeLast();//depth first traversal
+			LinkedList<Atom> orderAtomsVisited = state.getOrderAtomsVisited();
+			Atom nextAtom = state.getCurrentAtom();
 			orderAtomsVisited.add(nextAtom);
 			List<Atom> neighbours = fragment.getIntraFragmentAtomNeighbours(nextAtom);
-			int stackSize =atomStack.size();
 			for (Atom neighbour : neighbours) {
-				if (neighbour.equals(nextAtomArray[1])){continue;}//the neighbour is the parent of the atom e.g. in CCC you went you went from the first C then tried to go to the first as it is a neighbour
-				if (neighbour ==a2 ){//atom has already been visited, this must be because a ring has been formed
+				if (orderAtomsVisited.contains(neighbour)){//atom already visited by this path
+					continue;
+				}
+				if (neighbour ==a2 ){//target atom found
 					paths.add(new ArrayList<Atom>(orderAtomsVisited.subList(1, orderAtomsVisited.size())));
 				}
 				else{//add atom to stack, its neighbours will be recursively investigated shortly
-					atomStack.add(new Atom[]{neighbour, nextAtom});
-				}
-			}
-			if (stackSize==atomStack.size() && stackSize > 0){//stack has not been changed, so you must be at a terminus. If the stack is empty this step is not necessary
-				Atom atomToBackTrackTo =atomStack.getLast()[1];
-				while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
-					orderAtomsVisited.removeLast();
+					stateStack.add(new IntraFragmentPathSearchState(neighbour, new LinkedList<Atom>(orderAtomsVisited)));
 				}
 			}
 		}
