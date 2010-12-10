@@ -29,7 +29,9 @@ class BuildResults {
 	private final LinkedHashSet<Fragment> fragments;
 
 	/**A BuildResults is constructed from a list of Fragments.
-	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.*/
+	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.
+     * @param state
+     * @param wordSubOrBracket*/
 	BuildResults(BuildState state, Element wordSubOrBracket) {
 		outAtoms = new LinkedList<OutAtom>();
 		functionalAtoms = new LinkedList<FunctionalAtom>();
@@ -92,13 +94,13 @@ class BuildResults {
 		return outAtoms.size();
 	}
 
-	OutAtom removeOutAtom(int i) throws StructureBuildingException{
+	OutAtom removeOutAtom(int i) {
 		OutAtom outAtom =outAtoms.get(i);
 		outAtom.getAtom().getFrag().removeOutAtom(outAtom);
 		return outAtoms.remove(i);
 	}
 
-	void removeAllOutAtoms() throws StructureBuildingException{
+	void removeAllOutAtoms() {
 		for (int i = outAtoms.size() -1; i >=0 ; i--) {
 			removeOutAtom(i);
 		}
@@ -108,9 +110,8 @@ class BuildResults {
 	 * Returns the atom corresponding to position i in the functionalAtoms list
 	 * @param i index
 	 * @return atom
-	 * @throws StructureBuildingException
 	 */
-	Atom getFunctionalAtom(int i) throws StructureBuildingException {
+	Atom getFunctionalAtom(int i){
 		return functionalAtoms.get(i).getAtom();
 	}
 

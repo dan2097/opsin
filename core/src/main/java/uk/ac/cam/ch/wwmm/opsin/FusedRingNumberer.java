@@ -289,7 +289,7 @@ class FusedRingNumberer {
 	/**
 	 * Returns possible enumerations of atoms in a 6-member ring system
 	 * @param rings
-	 * @param numberOfAtomsInFusedRing 
+	 * @param numberOfAtomsInFusedRing
 	 * @return
 	 * @throws StructureBuildingException
 	 */
@@ -1767,7 +1767,8 @@ class FusedRingNumberer {
 	 * @param rings
 	 * @param startBond
 	 * @param tRing
-	 * @return
+	 * @param orderedRings
+     * @return
 	 * @throws StructureBuildingException
 	 */
 	private static int[] getDirectionsPath(List<Ring> rings, Bond startBond, Ring tRing, List<Ring> orderedRings) throws StructureBuildingException

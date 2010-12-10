@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -214,6 +215,7 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The found atom
+	 * @throws StructureBuildingException
 	 */
 	Atom getAtomByLocantOrThrow(String locant) throws StructureBuildingException {
 		Atom a = getAtomByLocant(locant);
@@ -383,9 +385,8 @@ class Fragment {
 	/**
 	 * Removes the outAtom at a specific index of the outAtom linkedList
 	 * @param i
-	 * @throws StructureBuildingException
 	 */
-	void removeOutAtom(int i) throws StructureBuildingException {
+	void removeOutAtom(int i) {
 		OutAtom removedOutAtom = outAtoms.remove(i);
 		if (removedOutAtom.isSetExplicitly()){
 			removedOutAtom.getAtom().addOutValency(-removedOutAtom.getValency());
@@ -395,9 +396,8 @@ class Fragment {
 	/**
 	 * Removes the specified outAtom from the outAtoms linkedList
 	 * @param outAtom
-	 * @throws StructureBuildingException
 	 */
-	void removeOutAtom(OutAtom outAtom) throws StructureBuildingException {
+	void removeOutAtom(OutAtom outAtom) {
 		outAtoms.remove(outAtom);
 		if (outAtom.isSetExplicitly()){
 			outAtom.getAtom().addOutValency(-outAtom.getValency());
@@ -422,8 +422,8 @@ class Fragment {
 	/**Adds an inAtom
 	 * @param atom
      * @param valency
-     * @throws StructureBuildingException */
-	void addInAtom(Atom atom, int valency) throws StructureBuildingException {
+     */
+	void addInAtom(Atom atom, int valency) {
 		inAtoms.add(new InAtom(atom, valency));
 	}
 	
@@ -436,9 +436,8 @@ class Fragment {
 	/**
 	 * Removes the inAtoms at a specific index of the inAtoms linkedList
 	 * @param i
-	 * @throws StructureBuildingException
 	 */
-	void removeInAtoms(int i) throws StructureBuildingException {
+	void removeInAtoms(int i) {
 		InAtom removedinAtom = inAtoms.remove(i);
 		removedinAtom.getAtom().addOutValency(-removedinAtom.getValency());
 	}
@@ -446,9 +445,8 @@ class Fragment {
 	/**
 	 * Removes the specified inAtom from the inAtoms linkedList
 	 * @param inAtom
-	 * @throws StructureBuildingException
 	 */
-	void removeInAtom(InAtom inAtom) throws StructureBuildingException {
+	void removeInAtom(InAtom inAtom) {
 		inAtoms.remove(inAtom);
 		inAtom.getAtom().addOutValency(-inAtom.getValency());
 	}
@@ -669,13 +667,12 @@ class Fragment {
 	 * If this is impossible to accomplish dearomatisation is done
 	 * If an atom is still not found an exception is thrown
 	 * atoms belonging to suffixes are never selected unless the original id specified was a suffix atom
-	 * @param id
+	 * @param startingAtom
 	 * @param additionalValencyRequired The increase in valency that will be required on the desired atom
 	 * @param takeIntoAccountOutValency
      * @return Atom
-	 * @throws StructureBuildingException
 	 */
-	Atom getAtomOrNextSuitableAtom(Atom startingAtom, int additionalValencyRequired, boolean takeIntoAccountOutValency) throws StructureBuildingException {
+	Atom getAtomOrNextSuitableAtom(Atom startingAtom, int additionalValencyRequired, boolean takeIntoAccountOutValency) {
 		List<Atom> atomList =getAtomList();
 		Atom currentAtom = startingAtom;
 		int atomCounter=0;
@@ -782,24 +779,25 @@ class Fragment {
 	}
 
 	/**
-	 * Returns the id of the first atom that was added to this fragment
+	 * Returns the id of the first atom in the fragment
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	int getIdOfFirstAtom() throws StructureBuildingException {
+	int getIdOfFirstAtom() {
 		return getFirstAtom().getID();
 	}
 
 	/**
-	 * Returns the the first atom that was added to this fragment
+	 * Returns the the first atom in the fragment or null if it has no atoms
+	 * Typically the first atom will be the first atom that was added to the fragment
 	 * @return firstAtom
-	 * @throws StructureBuildingException
 	 */
-	Atom getFirstAtom() throws StructureBuildingException {
-		for (Atom a: atomCollection) {
-			return a;
+	Atom getFirstAtom(){
+		Iterator<Atom> atomIterator =atomCollection.iterator();
+		if (atomIterator.hasNext()){
+			return atomIterator.next();
 		}
-		throw new StructureBuildingException("Fragment is empty");
+		return null;
 	}
 
 	/**

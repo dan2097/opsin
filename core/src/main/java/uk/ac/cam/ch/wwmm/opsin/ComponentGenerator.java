@@ -186,7 +186,7 @@ class ComponentGenerator {
 		for (Element fusion : fusions) {
 			String fusionText = fusion.getValue();
 			if (matchNumberLocantsOnlyFusionBracket.matcher(fusionText).matches()){
-				Element possibleHWRing =(Element) XOMTools.getNextSiblingIgnoringCertainElements(fusion, new String[]{MULTIPLIER_EL, HETEROATOM_EL});
+				Element possibleHWRing = XOMTools.getNextSiblingIgnoringCertainElements(fusion, new String[]{MULTIPLIER_EL, HETEROATOM_EL});
 				if (possibleHWRing !=null && HANTZSCHWIDMAN_SUBTYPE_VAL.equals(possibleHWRing.getAttributeValue(SUBTYPE_ATR))){
 					int heteroCount = 0;
 					int multiplierValue = 1;
@@ -327,9 +327,8 @@ class ComponentGenerator {
 	 * e.g. dodecane would be "do" value=2 and "dec" value=10 -->alkaneStem with 12 carbons
 	 * 
 	 * @param subOrRoot
-	 * @throws ComponentGenerationException 
 	 */
-	private void formAlkaneStemsFromComponents(Element subOrRoot) throws ComponentGenerationException {
+	private void formAlkaneStemsFromComponents(Element subOrRoot) {
 		LinkedList<Element> alkaneStemComponents =new LinkedList<Element>(XOMTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
 		while(!alkaneStemComponents.isEmpty()){
 			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
@@ -542,8 +541,8 @@ class ComponentGenerator {
 	/**
 	 * Checks that the first heteroatom is lower priority than the second
 	 * If it is higher priority than the second then the ordering is that which is expected for a Hantzch-widman ring
-	 * @param firstHeteroatom
-	 * @param secondHeteroatom
+	 * @param firstHeteroAtomSMILES
+	 * @param secondHeteroAtomSMILES
 	 * @throws ComponentGenerationException 
 	 */
 	private void checkForAmbiguityWithHWring(String firstHeteroAtomSMILES, String secondHeteroAtomSMILES) throws ComponentGenerationException {
@@ -1126,7 +1125,7 @@ class ComponentGenerator {
 	
 	/**
 	 * Handles irregular suffixes. e.g. Quinone and ylene
-	 * @param suffixes
+	 * @param subOrRoot
 	 * @throws ComponentGenerationException 
 	 */
 	private void handleSuffixIrregularities(Element subOrRoot) throws ComponentGenerationException {
@@ -1172,7 +1171,7 @@ class ComponentGenerator {
 	 */
 	private void detectAlkaneFusedRingBridges(Element group) {
 		if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			Element possibleBridgeFormer = (Element) XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
+			Element possibleBridgeFormer = XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
 			if(possibleBridgeFormer!=null && possibleBridgeFormer.getLocalName().equals(BRIDGEFORMINGO_EL)){
 				possibleBridgeFormer.detach();
 				group.setLocalName(FUSEDRINGBRIDGE_EL);
@@ -1643,6 +1642,7 @@ class ComponentGenerator {
 	/**Handles special cases in IUPAC nomenclature.
 	 * Benzyl etc.
 	 * @param group The group to look for irregularities in.
+     * @throws ComponentGenerationException
 	 */
 	private void handleGroupIrregularities(Element group) throws ComponentGenerationException {
 		String groupValue =group.getValue();
@@ -1822,9 +1822,9 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy") || groupValue.equals("diazoamino") || groupValue.equals("hydrazo") ){
 			Element enclosingSub = (Element) group.getParent();
-			Element next = (Element) XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
+			Element next = XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
 			if (next==null && XOMTools.getPreviousSibling(enclosingSub)==null){//e.g. [(E)-NNO-azoxy]benzene
-				next = (Element) XOMTools.getNextSiblingIgnoringCertainElements((Element) enclosingSub.getParent(), new String[]{HYPHEN_EL});
+				next = XOMTools.getNextSiblingIgnoringCertainElements((Element) enclosingSub.getParent(), new String[]{HYPHEN_EL});
 			}
 			if (next!=null && next.getLocalName().equals(ROOT_EL)){
 				if (!(((Element)next.getChild(0)).getLocalName().equals(MULTIPLIER_EL))){

@@ -110,7 +110,8 @@ class SMILESFragmentBuilder {
 	/**Build a Fragment based on a SMILES string, with a null type/subType.
 	 *
 	 * @param smiles The SMILES string to build from.
-	 * @return The built fragment.
+	 * @param fragManager
+     * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles, FragmentManager fragManager) throws StructureBuildingException {

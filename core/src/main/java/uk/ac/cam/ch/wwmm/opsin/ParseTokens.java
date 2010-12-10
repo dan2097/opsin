@@ -19,7 +19,8 @@ public class ParseTokens {
 	/**
 	 * Creates a parseTokens from an existing list of tokens and annotations
 	 * The lists should be of identical lengths otherwise an exception is thrown
-	 * @throws ParsingException 
+     * @param tokens
+     * @param annotations
 	 */
 	ParseTokens(List<String> tokens, List<Character> annotations ){
 		if (tokens.size() != annotations.size()){

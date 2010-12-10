@@ -325,6 +325,7 @@ class ValencyChecker {
 	 * spareValency and outValency are not taken into account.
 	 * @param a atom you are interested in
 	 * @param bondOrder order of bond required
+     * @return
 	 */
 	static boolean checkValencyAvailableForBond(Atom a, int bondOrder) {
 		int valency =a.getIncomingValency() +bondOrder;
@@ -347,6 +348,7 @@ class ValencyChecker {
 	 * spareValency and outValency is taken into account
 	 * @param a atom you are interested in
 	 * @param heteroatom element symbol of heteroatom
+     * @return
 	 */
 	static boolean checkValencyAvailableForReplacementByHeteroatom(Atom a, String heteroatom) {
 		int valency =a.getIncomingValency();

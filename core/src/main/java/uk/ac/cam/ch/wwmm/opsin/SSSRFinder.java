@@ -21,6 +21,7 @@ class SSSRFinder {
 	 * In corner cases the list of rings returned will not be the SSSR
 	 * @param frag 
 	 * @return list of rings
+     * @throws StructureBuildingException
 	 */
 	static List<Ring> getSetOfSmallestRings(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomSet = frag.getAtomList();
@@ -43,7 +44,8 @@ class SSSRFinder {
 
 	/** get list of rings.
 	 * not necessarily SSSR
-	 * @return list of rings
+	 * @param atomSet
+     * @return list of rings
 	 * @throws StructureBuildingException 
 	 */
 	private static List<Ring> getRings(List<Atom> atomSet ) throws StructureBuildingException {
@@ -135,7 +137,9 @@ class SSSRFinder {
 	
 	/**
 	 * @param ring
-	 * @throws StructureBuildingException 
+	 * @param newList
+     * @throws StructureBuildingException
+     * @return
 	 */
 	private static boolean reduceRingSizes(Ring ring, List<Ring> newList) throws StructureBuildingException {
 		boolean change = false;

@@ -86,7 +86,8 @@ class CMLFragmentBuilder {
 	 * @param fragManager The current fragment manager
 	 * @param cmlAtom The nu.xom.Element for the Atom in CML
 	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
+     * @return
 	 */
 	Atom buildAtomFromCML(FragmentManager fragManager, Element cmlAtom, Fragment frag) throws StructureBuildingException {
 		String elementType = cmlAtom.getAttributeValue("elementType");

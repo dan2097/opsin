@@ -539,9 +539,8 @@ class FragmentTools {
 	/** Looks for the atom that would have had a hydrogen indicated,
 	 * adds a spareValency to that atom, and sets indicatedHydrogen.
      * @param frag
-     * @throws StructureBuildingException
 	 */
-	static void pickUpIndicatedHydrogens(Fragment frag) throws StructureBuildingException {
+	static void pickUpIndicatedHydrogens(Fragment frag) {
 		if (frag.getIndicatedHydrogen().size()>0){
 			return;
 		}
@@ -580,9 +579,8 @@ class FragmentTools {
 	/**Looks for double and higher bonds, converts them to single bonds
 	 * and adds corresponding spareValencies to the atoms they join.
 	 * @param frag
-     * @throws StructureBuildingException
 	 */
-	static void convertHighOrderBondsToSpareValencies(Fragment frag) throws StructureBuildingException {
+	static void convertHighOrderBondsToSpareValencies(Fragment frag)  {
 		Set<Bond> bondSet = frag.getBondSet();
 		for(Bond b : bondSet) {
 			if(b.getOrder() == 2) {
