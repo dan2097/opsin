@@ -54,4 +54,9 @@
     <token value="spiro">spiro</token>
     <token value="spiro">spiro-</token>
   </tokenList>
+
+  <tokenList tagname="polyCyclicSpiro" symbol="╝">
+    <token value="spiroOldMethod">spiro</token>
+    <token value="spiroOldMethod">spiro-</token>
+  </tokenList>
 </tokenLists>

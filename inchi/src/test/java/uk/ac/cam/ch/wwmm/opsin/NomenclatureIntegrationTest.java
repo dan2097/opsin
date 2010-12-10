@@ -57,6 +57,14 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
+	public void testSpiroNomenclature() throws Exception {
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "spiro.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+	
+	@Test
 	public void testOrganoMetallics() throws Exception {
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);

@@ -29,6 +29,7 @@ import nu.xom.Node;
 */
 
 class ComponentProcessor {
+	private final static Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
 	private final static Pattern matchColon =Pattern.compile(":");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchComma =Pattern.compile(",");
@@ -2170,21 +2171,33 @@ class ComponentProcessor {
 	private void processPolyCyclicSpiroNomenclature(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> polyCyclicSpiros = XOMTools.getChildElementsWithTagName(subOrRoot, POLYCYCLICSPIRO_EL);
 		if (polyCyclicSpiros.size()>0){
-			if (polyCyclicSpiros.size()!=1){
-				throw new ComponentGenerationException("Nested polyspiro systems are not supported");
-			}
 			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
 			String value = polyCyclicSpiroDescriptor.getAttributeValue(VALUE_ATR);
 			if (value.equals("spiro")){
+				if (polyCyclicSpiros.size()!=1){
+					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
+				}
 				processNonIdenticalPolyCyclicSpiro(state, polyCyclicSpiroDescriptor);
 			}
+			else if (value.equals("spiroOldMethod")){
+				processOldMethodPolyCyclicSpiro(state, polyCyclicSpiros);
+			}
 			else if (value.equals("spirobi")){
+				if (polyCyclicSpiros.size()!=1){
+					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
+				}
 				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 2);
 			}
 			else if (value.equals("spiroter")){
+				if (polyCyclicSpiros.size()!=1){
+					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
+				}
 				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 3);
 			}
 			else if (value.equals("dispiroter")){
+				if (polyCyclicSpiros.size()!=1){
+					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
+				}
 				processDispiroter(state, polyCyclicSpiroDescriptor);
 			}
 			else{
@@ -2242,6 +2255,17 @@ class ComponentProcessor {
 			if (locants.length!=2){
 				throw new ComponentGenerationException("Incorrect number of locants found before component of polycyclic spiro system");
 			}
+			for (int j = 0; j < locants.length; j++) {
+				String locantText= locants[j];
+				Matcher m = matchIndicatedHydrogenBracket.matcher(locantText);
+				if (m.find()){
+					Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
+					indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
+					XOMTools.insertBefore(locant, indicatedHydrogenElement);
+					locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
+					locants[j] = m.replaceAll("");
+				}
+			}
 			locant.detach();
 			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
 			FragmentTools.relabelNumericLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
@@ -2280,6 +2304,88 @@ class ComponentProcessor {
 		XOMTools.setTextChild(rootGroup, polyCyclicSpiroDescriptor.getValue() + name);
 		openBracket.detach();
 		closeBracket.detach();
+	}
+	
+
+	/**
+	 * Processes spiro systems described using the now deprectated method described in the 1979 guidelines Rule A-42
+	 * @param state
+	 * @param spiroElements
+	 * @throws ComponentGenerationException
+	 * @throws StructureBuildingException
+	 */
+	private void processOldMethodPolyCyclicSpiro(BuildState state, List<Element> spiroElements) throws ComponentGenerationException, StructureBuildingException {
+		Element firstSpiro =spiroElements.get(0);
+		Element subOrRoot = (Element) firstSpiro.getParent();
+		Element firstEl = (Element) subOrRoot.getChild(0);
+		List<Element> elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(firstEl, POLYCYCLICSPIRO_EL);
+		elementsToResolve.add(0, firstEl);
+		resolveFeaturesOntoGroup(state, elementsToResolve);
+		
+		for (int i = 0; i < spiroElements.size(); i++) {
+			Element currentSpiro = spiroElements.get(i);
+			Element previousGroup = (Element) XOMTools.getPreviousSibling(currentSpiro, GROUP_EL);
+			if (previousGroup==null){
+				throw new ComponentGenerationException("OPSIN bug: unable to locate group before polycylic spiro descriptor");
+			}
+			Element nextGroup = (Element) XOMTools.getNextSibling(currentSpiro, GROUP_EL);
+			if (nextGroup==null){
+				throw new ComponentGenerationException("OPSIN bug: unable to locate group after polycylic spiro descriptor");
+			}
+			Fragment parentFrag = state.xmlFragmentMap.get(nextGroup);
+			Fragment previousFrag = state.xmlFragmentMap.get(previousGroup);
+			FragmentTools.relabelNumericLocants(parentFrag.getAtomList(), StringTools.multiplyString("'",i+1));
+			elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(currentSpiro, POLYCYCLICSPIRO_EL);
+			resolveFeaturesOntoGroup(state, elementsToResolve);
+			
+			String locant1 =null;
+			Element possibleFirstLocant = (Element) XOMTools.getPreviousSibling(currentSpiro);
+			if (possibleFirstLocant !=null && possibleFirstLocant.getLocalName().equals(LOCANT_EL)){
+				if (matchComma.split(possibleFirstLocant.getValue()).length==1){
+					locant1 = possibleFirstLocant.getValue();
+					possibleFirstLocant.detach();
+				}
+				else{
+					throw new ComponentGenerationException("Malformed locant before polycyclic spiro descriptor");
+				}
+			}
+			Atom atomToBeReplaced;
+			if (locant1 != null){
+				atomToBeReplaced = previousFrag.getAtomByLocantOrThrow(locant1);
+			}
+			else{
+				atomToBeReplaced = previousFrag.getAtomOrNextSuitableAtomOrThrow(previousFrag.getFirstAtom(), 2, true);
+			}
+			Atom atomOnParentFrag;
+			String locant2 =null;
+			Element possibleSecondLocant = (Element) XOMTools.getNextSibling(currentSpiro);
+			if (possibleSecondLocant !=null && possibleSecondLocant.getLocalName().equals(LOCANT_EL)){
+				if (matchComma.split(possibleSecondLocant.getValue()).length==1){
+					locant2 = possibleSecondLocant.getValue();
+					possibleSecondLocant.detach();
+				}
+				else{
+					throw new ComponentGenerationException("Malformed locant after polycyclic spiro descriptor");
+				}
+			}
+			if (locant2!=null){
+				atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(locant2);
+			}
+			else{
+				atomOnParentFrag = parentFrag.getAtomOrNextSuitableAtomOrThrow(parentFrag.getFirstAtom(), 2, true);
+			}
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnParentFrag);
+			if (atomToBeReplaced.hasSpareValency()){
+				atomOnParentFrag.setSpareValency(true);
+			}
+			if (atomToBeReplaced.getCharge()!=0 && atomOnParentFrag.getCharge()==0){
+				atomOnParentFrag.setCharge(atomToBeReplaced.getCharge());
+				atomOnParentFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
+			}
+			state.fragManager.incorporateFragment(previousFrag, parentFrag);
+			XOMTools.setTextChild(nextGroup, previousGroup.getValue() + currentSpiro.getValue() + nextGroup.getValue());
+			previousGroup.detach();
+		}
 	}
 
 
@@ -2403,6 +2509,7 @@ class ComponentProcessor {
 	
 	/**
 	 * Given some elements including a group element resolves all locanted and unlocanted features.
+	 * If suffixes are present these are resolved and detached
 	 * @param state
 	 * @param elementsToResolve
 	 * @throws StructureBuildingException 
@@ -2416,15 +2523,41 @@ class ComponentProcessor {
 		Element parent = (Element) elementsToResolve.get(0).getParent();
 		int index = parent.indexOf(elementsToResolve.get(0));
 		Element group =null;
+		List<Element> suffixes = new ArrayList<Element>();
+		Element locant =null;
 		for (Element element : elementsToResolve) {
-			if (element.getLocalName().equals(GROUP_EL)){
+			String elName =element.getLocalName();
+			if (elName.equals(GROUP_EL)){
 				group = element;
+			}
+			else if (elName.equals(SUFFIX_EL)){
+				suffixes.add(element);
+			}
+			else if (elName.equals(LOCANT_EL) && group==null){
+				locant = element;
 			}
 			element.detach();
 			substituentToResolve.appendChild(element);
 		}
 		if (group ==null){
 			throw new ComponentGenerationException("OPSIN bug: group element should of been given to method");
+		}
+		if (locant !=null){//locant is probably an indirect locant, try and assign it
+			List<Element> locantAble = findElementsMissingIndirectLocants(substituentToResolve, locant);
+			String[] locantValues = matchComma.split(locant.getValue());
+			if (locantAble.size() >= locantValues.length){
+				for (int i = 0; i < locantValues.length; i++) {
+					String locantValue = locantValues[i];
+					locantAble.get(i).addAttribute(new Attribute(LOCANT_ATR, locantValue));
+				}
+				locant.detach();
+			}
+		}
+		if (!suffixes.isEmpty()){
+			resolveSuffixes(state, group, suffixes);
+			for (Element suffix : suffixes) {
+				suffix.detach();
+			}
 		}
 		if (substituentToResolve.getChildElements().size()!=0){
 			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
