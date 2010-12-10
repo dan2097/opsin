@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -586,8 +587,9 @@ class Atom {
 	 * @return
 	 */
 	Bond getFirstBond() {
-		for (Bond b: bonds) {
-			return b;
+		Iterator<Bond> bondIterator = bonds.iterator();
+		if (bondIterator.hasNext()){
+			return bondIterator.next();
 		}
 		return null;
 	}

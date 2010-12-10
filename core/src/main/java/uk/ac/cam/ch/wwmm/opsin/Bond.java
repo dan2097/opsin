@@ -110,14 +110,16 @@ class Bond {
 		return to.getID();
 	}
 
-	/**Gets order.*/
+	/**Gets order.
+    * @return*/
 	int getOrder() {
 		return order;
 	}
 
-	/**Sets order.*/
-	void setOrder(int o) {
-		order = o;
+	/**Sets order.
+    * @param order*/
+	void setOrder(int order) {
+		this.order = order;
 	}
 
 	/**

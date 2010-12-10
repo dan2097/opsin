@@ -55,9 +55,11 @@ class ResourceManager {
 	RunAutomaton reverseChemicalAutomaton;
 
 	/**Generates the ResourceManager.
+	 * This involves reading in the token files, the regexToken file (regexTokens.xml) and the grammar file (regexes.xml).
+	 * DFA are built or retrieved for the regexTokens and the chemical grammar.
 	 * @param resourceGetter
 	 *
-	 * @throws Exception If the XML token and regex files can't be read in properly.
+	 * @throws Exception If the XML token and regex files can't be read in properly or the grammar cannot be built.
 	 */
 	@SuppressWarnings("unchecked")
 	ResourceManager(ResourceGetter resourceGetter) throws Exception {

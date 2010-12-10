@@ -1330,7 +1330,7 @@ class StructureBuildingMethods {
 		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
 	}
 
-	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder) throws StructureBuildingException {
+	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder)  {
 		//case where you should actually be substituting onto the previous element e.g. 5-(4-methylphenylcarbonyl)pentane
 		Atom to =null;
 		List<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);

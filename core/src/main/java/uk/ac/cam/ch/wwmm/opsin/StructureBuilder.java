@@ -1324,7 +1324,7 @@ class StructureBuilder {
 				}
 			}
 		}
-		String element = atomOnBiochemicalFragment.getElement();
+		String element = atomOnBiochemicalFragment !=null ? atomOnBiochemicalFragment.getElement() : null;
 		if (atomOnBiochemicalFragment ==null || 
 				(atomOnBiochemicalFragment.getBonds().size()!=1 && !element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
 			throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
@@ -1690,9 +1690,8 @@ class StructureBuilder {
 	 * @param cationicElements
 	 * @param overallCharge
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private int setCationicElementsToTypicalCharge(BuildState state, List<Element> cationicElements, int overallCharge) throws StructureBuildingException {
+	private int setCationicElementsToTypicalCharge(BuildState state, List<Element> cationicElements, int overallCharge)  {
 		for (Element cationicElement : cationicElements) {
 			Fragment cationicFrag = state.xmlFragmentMap.get(cationicElement);
 			String[] typicalOxidationStates = matchComma.split(matchColon.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
@@ -1780,7 +1779,7 @@ class StructureBuilder {
 		return true;
 	}
 	
-	private boolean setChargeOnCationicElementAppropriately(BuildState state, int overallCharge, Element cationicElement) throws StructureBuildingException {
+	private boolean setChargeOnCationicElementAppropriately(BuildState state, int overallCharge, Element cationicElement)  {
 		Atom cation = state.xmlFragmentMap.get(cationicElement).getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
 		int maximumCharge = Integer.parseInt(matchColon.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
@@ -1817,10 +1816,9 @@ class StructureBuilder {
 	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
 	 * Acting as O= notably is often correct behaviour for inorganics
 	 * @param state
-	 * @param molecule
-	 * @throws StructureBuildingException 
+	 * @param groups
 	 */
-	private void processOxidoSpecialCase(BuildState state, List<Element> groups) throws StructureBuildingException {
+	private void processOxidoSpecialCase(BuildState state, List<Element> groups)  {
 		for (Element group : groups) {
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Atom oxidoAtom = state.xmlFragmentMap.get(group).getFirstAtom();
@@ -1879,7 +1877,7 @@ class StructureBuilder {
 	}
 	
 
-	private void processOxidationNumbers(BuildState state, List<Element> groups) throws StructureBuildingException {
+	private void processOxidationNumbers(BuildState state, List<Element> groups)  {
 		for (Element group : groups) {
 			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Atom atom = state.xmlFragmentMap.get(group).getFirstAtom();

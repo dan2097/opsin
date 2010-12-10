@@ -301,9 +301,8 @@ class StereoAnalyser {
 	 * Produces a sorted (low to high) list of the colour of the atoms surrounding a given atom
 	 * @param atom
 	 * @return List<Integer> colourOfAdjacentAtoms
-	 * @throws StructureBuildingException
 	 */
-	private List<Integer> findColourOfNeighbours(Atom atom) throws StructureBuildingException {	
+	private List<Integer> findColourOfNeighbours(Atom atom) {	
 		List<Integer> colourOfAdjacentAtoms = new ArrayList<Integer>();
 		Set<Bond> bonds = atom.getBonds();
 		for (Bond bond : bonds) {
@@ -318,9 +317,8 @@ class StereoAnalyser {
 	 * Retrieves a list of any tetrahedral stereoCentres
 	 * Internally this is done by checking whether the "colour" of all neighbouring atoms of the tetrahedral atom are different
 	 * @return List<StereoCentre>
-	 * @throws StructureBuildingException 
 	 */
-	List<StereoCentre> findStereoCentres() throws StructureBuildingException {
+	List<StereoCentre> findStereoCentres(){
 		List<Atom> atomList = molecule.getAtomList();
 		List<StereoCentre> stereoCentres = new ArrayList<StereoCentre>();
 		for (Atom atom : atomList) {
@@ -377,9 +375,8 @@ class StereoAnalyser {
 	 *  This is done internally by checking the two atoms attached to the ends of the double bond are different
 	 *  As an exception nitrogen's lone pair is treated like a low priority group and so is allowed to only have 1 atom connected to it
 	 * @return
-	 * @throws StructureBuildingException 
 	 */
-	List<StereoBond> findStereoBonds() throws StructureBuildingException {
+	List<StereoBond> findStereoBonds() {
 		Set<Bond> bondSet =molecule.getBondSet();
 		List<StereoBond> stereoBonds = new ArrayList<StereoBond>();
 		for (Bond bond : bondSet) {
@@ -494,12 +491,7 @@ class StereoAnalyser {
 	    	return compare;
 	    }
 
-		private CipState prepareInitialCIPState(Atom a, Atom b) {
-			Set<Atom> visitedAtoms1 = new HashSet<Atom>();
-			visitedAtoms1.add(chiralAtom);
-			Set<Atom> visitedAtoms2 = new HashSet<Atom>();
-			visitedAtoms2.add(chiralAtom);
-			
+		private CipState prepareInitialCIPState(Atom a, Atom b) {	
 			List<Atom> nextAtoms1 = new ArrayList<Atom>();
 			nextAtoms1.add(a);
 			List<Atom> nextAtoms2 = new ArrayList<Atom>();

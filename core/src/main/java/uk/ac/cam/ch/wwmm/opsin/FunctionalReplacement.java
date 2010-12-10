@@ -393,7 +393,7 @@ class FunctionalReplacement {
 	 * Replaces the appropriate number of functional oxygen atoms with hydrazide fragments
 	 * @param state
 	 * @param acidContainingRoot
-	 * @param word
+	 * @param functionalWord
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
@@ -503,7 +503,7 @@ class FunctionalReplacement {
 		return calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(state, groupToBeModified) < maxSubstitutableHydrogenOnOneAtom;
 	}
 	
-	private static int calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(BuildState state, Element group) throws StructureBuildingException{
+	private static int calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(BuildState state, Element group) {
 		Fragment fragToBeModified = state.xmlFragmentMap.get(group);
 		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
 			int maxSubstitutableHydrogen =0;
@@ -673,7 +673,8 @@ class FunctionalReplacement {
 	 * @param groupToBeModified
 	 * @param locantEl
 	 * @param numberOfAtomsToReplace
-	 * @return
+	 * @param replacementSmiles
+     * @return
 	 * @throws StructureBuildingException
 	 */
 	private static int performFunctionalReplacementOnAcid(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
@@ -838,9 +839,8 @@ class FunctionalReplacement {
 	 * If this is O/S/Se/Te the functionalAtom is moved to that atom otherwise it is still removed
 	 * @param atomToBeReplaced
 	 * @param replacementFrag
-	 * @throws StructureBuildingException
 	 */
-	private static void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag)throws StructureBuildingException {
+	private static void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
 		List<Atom> replacementAtomList = replacementFrag.getAtomList();
 		List<FunctionalAtom> functionalAtoms = atomToBeReplaced.getFrag().getFunctionalAtoms();
 		for (int j = functionalAtoms.size()-1; j >=0; j--) {

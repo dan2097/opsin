@@ -86,7 +86,7 @@ public class NameToStructure {
 
 	/**Initialises the name-to-structure converter.
 	 *
-	 * @throws Exception If the converter cannot be initialised, most likely due to bad or missing data files.
+	 * @throws NameToStructureException If the converter cannot be initialised, most likely due to bad or missing data files.
 	 */
 	private NameToStructure() throws NameToStructureException {
 		LOG.setLevel(Level.ALL);//FIXME remove this

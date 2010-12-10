@@ -208,7 +208,7 @@ class ComponentProcessor {
 			}
 
 			//System.out.println(new XOMFormatter().elemToString(elem));
-			addImplicitBracketsToAminoAcids(state, groups, brackets);
+			addImplicitBracketsToAminoAcids(groups, brackets);
 			findAndStructureImplictBrackets(state, substituents, brackets);
 
 			substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);//findAndStructureImplictBrackets may have created new brackets
@@ -342,7 +342,7 @@ class ComponentProcessor {
 		}
 	}
 	
-	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag) throws StructureBuildingException {
+	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag)  {
 		String groupType  = group.getAttributeValue(TYPE_ATR);
 		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
 			List<Atom> atomList = thisFrag.getAtomList();
@@ -621,7 +621,7 @@ class ComponentProcessor {
 		}
 	}
 
-	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag) throws StructureBuildingException {
+	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
 		Element nextEl = (Element) XOMTools.getNextSibling(group);
 		if (nextEl!=null){
 			if(nextEl.getLocalName().equals(CHARGESPECIFIER_EL)){
@@ -1343,7 +1343,7 @@ class ComponentProcessor {
 	}
 
 
-	private void applyDefaultLocantToSuffixIfPresent(String attributeValue, Element group, Fragment suffixableFragment) throws StructureBuildingException {
+	private void applyDefaultLocantToSuffixIfPresent(String attributeValue, Element group, Fragment suffixableFragment)  {
 		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
 		if (suffix !=null){
 			suffix.addAttribute(new Attribute(DEFAULTLOCANTID_ATR, Integer.toString(suffixableFragment.getIdOfFirstAtom() + Integer.parseInt(attributeValue) -1)));
@@ -1359,9 +1359,8 @@ class ComponentProcessor {
 	 * @param suffixableFragment
 	 * @return
 	 * @throws ComponentGenerationException
-	 * @throws StructureBuildingException
 	 */
-	private boolean processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws ComponentGenerationException, StructureBuildingException {
+	private boolean processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws ComponentGenerationException {
 		boolean imideSpecialCase =false;
 		//suffixAppliesTo attribute contains instructions for number/positions of suffix
 		//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
@@ -2829,11 +2828,10 @@ class ComponentProcessor {
 	 * Corrects something like L-alanyl-L-glutaminyl-L-arginyl-O-phosphono-L-seryl-L-alanyl-L-proline to:
 	 * ((((L-alanyl-L-glutaminyl)-L-arginyl)-O-phosphono-L-seryl)-L-alanyl)-L-proline
 	 * i.e. substituents go onto the last mentioned amino acid; amino acids chain together to form peptides
-	 * @param state
 	 * @param groups
 	 * @param brackets
 	 */
-	private void addImplicitBracketsToAminoAcids(BuildState state, List<Element> groups, List<Element> brackets) {
+	private void addImplicitBracketsToAminoAcids(List<Element> groups, List<Element> brackets) {
 		for (int i = groups.size() -1; i >=0; i--) {
 			Element group = groups.get(i);
 			if (group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
@@ -3513,9 +3511,8 @@ class ComponentProcessor {
 	 * Hence preference is given to nitrogen atoms and then to non carbon atoms
 	 * @param atomList
 	 * @param suffixRuleTag
-	 * @throws StructureBuildingException
 	 */
-	private void applyUnlocantedChargeModification(List<Atom> atomList, Element suffixRuleTag) throws StructureBuildingException {
+	private void applyUnlocantedChargeModification(List<Atom> atomList, Element suffixRuleTag) {
 		int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
 		int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
 

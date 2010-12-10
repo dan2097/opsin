@@ -35,7 +35,6 @@ class ResourceGetter {
 	 *  /uk/ac/cam/ch/wwmm/opsin/resources/
 	 *
 	 * @param resourcePath The /-separated resource path.
-	 * @throws Exception 
 	 */
 	public ResourceGetter(String resourcePath) {
 		if(resourcePath.startsWith("/")) resourcePath = resourcePath.substring(1);

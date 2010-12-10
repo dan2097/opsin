@@ -18,7 +18,7 @@ import dk.brics.automaton.RunAutomaton;
  * The tokens eth and yl are associated with a letter which is referred to here as an annotation which is the role of the token.
  * These letters are defined in regexes.xml and would in this case have the meaning alkaneStem and inlineSuffix
  *
- * The chemical grammer employs the annotations associated with the tokens when deciding what may follow what has already been seen
+ * The chemical grammar employs the annotations associated with the tokens when deciding what may follow what has already been seen
  * e.g. you cannot start a chemical name with yl and an optional e is valid after an arylGroup
  *
  * @author ptc24/dl387
@@ -47,10 +47,11 @@ public class ReverseParseRules {
 
 	private final ResourceManager resourceManager;
 
-	/** Initialises the finite-state parser, reading in the rules from regexes.xml.
+	/** 
+	 * Creates a right to left parser that can parse a substituent/full/functional word
 	 * @param resourceManager
 	 *
-	 * @throws Exception If the rules file can't be read properly.
+	 * @throws Exception If the reversed automata cannot be retrieved/built
 	 */
 	ReverseParseRules(ResourceManager resourceManager) throws Exception {
 		this.resourceManager = resourceManager;
