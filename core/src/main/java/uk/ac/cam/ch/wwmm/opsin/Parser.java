@@ -133,7 +133,8 @@ class Parser {
 					generateExactParseFailureReason(tokenizationResult, name);
 				}
 				else{
-					throw new ParsingException(name + " is unparsable due to the following being unparseable: " + tokenizationResult.getUnparsedName());
+					throw new ParsingException(name + " is unparsable due to the following being uninterpretable: " + tokenizationResult.getUninterpretableName()
+							+ " The following was not parseable: " +tokenizationResult.getUnparsableName());
 				}
 			}
 		}
@@ -229,11 +230,27 @@ class Parser {
 		String uninterpretableRL = reverseTokenizationResult.getUninterpretableName();
 		String unparseableRL = reverseTokenizationResult.getUnparsableName();
 		int indiceToTruncateUpTo =  uninterpretableLR.length()-unparseableLR.length();
-		String message = name + " was uninterpretable due to the following section of the name: "+uninterpretableRL;
-		if (indiceToTruncateUpTo <= unparseableRL.length()){
-			message+="  The following was not understandable in the context it was used: "+unparseableRL.substring(indiceToTruncateUpTo);
+		StringBuilder message = new StringBuilder();
+		message.append(name);
+		if (!uninterpretableRL.equals("")){
+			message.append(" was uninterpretable due to the following section of the name: ");
+			message.append(uninterpretableRL);
+			if (indiceToTruncateUpTo <= unparseableRL.length()){
+				String uninterpretableInContext = unparseableRL.substring(indiceToTruncateUpTo);
+				if (!uninterpretableInContext.equals("")){
+					message.append("  The following was not understandable in the context it was used: ");
+					message.append(uninterpretableInContext);
+				}
+			}
 		}
-		throw new ParsingException(message);
+		else{
+			message.append(" has no tokens unknown to OPSIN but does not conform to its grammar. ");
+			message.append("From left to right it is unparsable due to the following being uninterpretable:");
+			message.append(uninterpretableLR);
+			message.append(" The following or which was not parseable: ");
+			message.append(unparseableLR);
+		}
+		throw new ParsingException(message.toString());
 	}
 
 	/**
