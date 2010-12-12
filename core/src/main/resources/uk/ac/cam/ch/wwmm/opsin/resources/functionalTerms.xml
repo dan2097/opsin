@@ -61,6 +61,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
   <tokenList tagname="functionalGroup" type="monoValentGroup" symbol="ô">
     <token value="O" labels="none" valType="SMILES">alcohol</token>
     <token value="[O-]" labels="none" valType="SMILES">alcoholate</token>
+    <token value="S" labels="none" valType="SMILES">mercaptan</token>
     <token value="[Se|2]" labels="none" valType="SMILES">selenol</token>
     <token value="S" labels="none" valType="SMILES">thiol</token>
   </tokenList>

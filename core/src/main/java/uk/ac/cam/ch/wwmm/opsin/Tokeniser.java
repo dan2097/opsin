@@ -78,6 +78,9 @@ class Tokeniser {
 		else{
 			unparsedName = name;
 		}
+		String uninterpretableNamePreSpaceRemoval = null;
+		String unparseableNamePreSpaceRemoval = null;
+		String unparsedNamePreSpaceRemoval = null;
 		while (unparsedName.length()>0){
 			/*
 			 * Returns
@@ -103,6 +106,11 @@ class Tokeniser {
 				else{
 					unparsedName = uninterpretableName;
 				}
+				if (uninterpretableNamePreSpaceRemoval!=null){
+					uninterpretableNamePreSpaceRemoval = null;
+					unparseableNamePreSpaceRemoval = null;
+					unparsedNamePreSpaceRemoval = null;
+				}
 			}
 			else{//word is unparsable as is.
 				Matcher m = matchCompoundWithPhrase.matcher(uninterpretableName);
@@ -114,6 +122,11 @@ class Tokeniser {
 				}
 				else{
 					if (allowRemovalOfWhiteSpace){
+						if (uninterpretableNamePreSpaceRemoval==null){
+							uninterpretableNamePreSpaceRemoval = uninterpretableName;
+							unparseableNamePreSpaceRemoval = results.getUnparseableName();
+							unparsedNamePreSpaceRemoval = unparsedName;
+						}
 						//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
 						List<ParseWord> parsedWords = parse.getWords();
 						boolean reverseSpaceRemovalSuccesful = false;
@@ -145,7 +158,7 @@ class Tokeniser {
 								unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
 							}
 							else{
-								return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
+								return new TokenizationResult(false, parse, uninterpretableNamePreSpaceRemoval, unparseableNamePreSpaceRemoval, unparsedNamePreSpaceRemoval);
 							}
 						}
 					}
@@ -172,6 +185,9 @@ class Tokeniser {
 		String unparsedName =name;
 		//bracket matching is not currently being performed as this the input to this function from the parser will often be what the LR tokenizer couldn't handle, which may not have matching brackets
 	
+		String uninterpretableNamePreSpaceRemoval = null;
+		String unparseableNamePreSpaceRemoval = null;
+		String unparsedNamePreSpaceRemoval = null;
 		while (unparsedName.length()>0){
 			/*
 			 * Returns
@@ -198,9 +214,19 @@ class Tokeniser {
 				else{
 					unparsedName = uninterpretableName;
 				}
+				if (uninterpretableNamePreSpaceRemoval!=null){
+					uninterpretableNamePreSpaceRemoval = null;
+					unparseableNamePreSpaceRemoval = null;
+					unparsedNamePreSpaceRemoval = null;
+				}
 			}
 			else{//word is unparsable as is.
 				if (allowRemovalOfWhiteSpace){
+					if (uninterpretableNamePreSpaceRemoval==null){
+						uninterpretableNamePreSpaceRemoval = uninterpretableName;
+						unparseableNamePreSpaceRemoval = results.getUnparseableName();
+						unparsedNamePreSpaceRemoval = unparsedName;
+					}
 					//Try and remove a space and try again
 					//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
 					int indexOfSpace = uninterpretableName.lastIndexOf(' ');
@@ -208,7 +234,7 @@ class Tokeniser {
 						unparsedName = uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1) + parsedName;
 					}
 					else{
-						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
+						return new TokenizationResult(false, parse, uninterpretableNamePreSpaceRemoval, unparseableNamePreSpaceRemoval, unparsedNamePreSpaceRemoval);
 					}
 				}
 				else{
