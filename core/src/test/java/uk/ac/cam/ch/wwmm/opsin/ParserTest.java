@@ -10,47 +10,47 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ParserTest {
-  private Parser parser;
-  private NameToStructureConfig config;
+	private Parser parser;
+	private NameToStructureConfig config;
 
-  @Before
+	@Before
 	public void setUp() throws Exception {
 		parser = new Parser();
-    config = NameToStructureConfig.getDefaultConfigInstance();
-  }
+		config = NameToStructureConfig.getDefaultConfigInstance();
+	}
 
-  @Test
-  public void testParseThrowsWhenNameIsUninterpretable() {
-    try {
-      parser.parse(config, "chunky bacon");
-      fail("Should throw ParsingException");
-    } catch (ParsingException e) {
-      // no-op
-    }
-  }
+	@Test
+	public void testParseThrowsWhenNameIsUninterpretable() {
+		try {
+			parser.parse(config, "chunky bacon");
+			fail("Should throw ParsingException");
+		} catch (ParsingException e) {
+			// no-op
+		}
+	}
 
-  @Test
-  public void testParseUninvertsCASNomenclature() throws ParsingException {
-    List<Element> parse = parser.parse(config, "Piperidine, 1-(1-oxopropyl)-");
+	@Test
+	public void testParseUninvertsCASNomenclature() throws ParsingException {
+		List<Element> parse = parser.parse(config, "Piperidine, 1-(1-oxopropyl)-");
 
-    assertFalse(parse.isEmpty());
-  }
+		assertFalse(parse.isEmpty());
+	}
 
-  @Test
-  public void testParseReturnsOneWordRulesForEachMixtureComponent() throws ParsingException {
-    List<Element> parse = parser.parse(config, "benzene; ethane");
+	@Test
+	public void testParseReturnsOneWordRulesForEachMixtureComponent() throws ParsingException {
+		List<Element> parse = parser.parse(config, "benzene; ethane");
 
-    assertEquals(2, parse.get(0).getChildElements("wordRule").size());
-  }
+		assertEquals(2, parse.get(0).getChildElements("wordRule").size());
+	}
 
-  @Test
-  public void testParseThrowsWhenNameIsSubstituentOnly() {
-    try {
-      parser.parse(config, "chloro");
-    } catch (ParsingException e) {
-      // no-op
-    }
-  }
+	@Test
+	public void testParseThrowsWhenNameIsSubstituentOnly() {
+		try {
+			parser.parse(config, "chloro");
+		} catch (ParsingException e) {
+			// no-op
+		}
+	}
 
 	@Test
 	public void testConvertStringToComponentRatios1() throws ParsingException {
