@@ -78,6 +78,18 @@ class Parser {
 	private final static Pattern matchColon = Pattern.compile(":");
 	private final static Pattern matchForwardSlash = Pattern.compile("/");
 
+  /**
+   * No-argument constructor. Uses ResouceGetter found at
+   * uk/ac/cam/ch/wwmm/opsin/resources/
+   */
+  Parser() throws Exception {
+    ResourceGetter resources = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
+    this.wordRules = new WordRules(resources);
+    this.resourceManager = new ResourceManager(resources);
+    ParseRules parseRules = new ParseRules(this.resourceManager);
+    this.tokeniser = new Tokeniser(parseRules);
+  }
+
 	/**Initialises the parser.
 	 * @param resourceManager
 	 * @param tokeniser
