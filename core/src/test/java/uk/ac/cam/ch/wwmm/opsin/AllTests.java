@@ -17,6 +17,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	NameToStructureConfigurationsTest.class,
 	NameToStructureTest.class,
 	ParserTest.class,
+  PreProcessorTest.class,
 	SMILESFragmentBuilderTest.class,
 	SSSRTest.class,
 	StereochemistryTest.class,
