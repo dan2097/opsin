@@ -813,6 +813,12 @@ class ComponentProcessor {
 							multiplierEl = afterLocant;
 						}
 					}
+					else if (elName.equals(RINGASSEMBLYMULTIPLIER_EL)&& afterLocant.equals(XOMTools.getNextSibling(locant))){//e.g. 1,1'-biphenyl
+						multiplierEl = afterLocant;
+						if (!FragmentTools.allAtomsInRingAreIdentical(state.xmlFragmentMap.get(group)) && !group.getValue().equals("benz")){//if all atoms are identical and not bibenzyl then the locant may refer to suffixes
+							break;
+						}
+					}
 					afterLocant = (Element)XOMTools.getNextSibling(afterLocant);
 				}
 				if(multiplierEl != null) {
@@ -2026,35 +2032,11 @@ class ComponentProcessor {
 			 * e.g. bi requires 2, ter requires 4 etc.
 			 */
 			List<List<String>> ringJoiningLocants =new ArrayList<List<String>>();
-			Element previousEl =(Element)XOMTools.getPreviousSibling(multiplier);
+			Element potentialLocant =(Element)XOMTools.getPreviousSibling(multiplier);
 			Element group =(Element)XOMTools.getNextSibling(multiplier, GROUP_EL);
-			if (previousEl!=null && previousEl.getLocalName().equals(RINGASSEMBLYLOCANT_EL)){//a locant appears to have provided to indicate how to connect the rings of the ringAssembly
-				String locantText =StringTools.removeDashIfPresent(previousEl.getValue());
-				//special cases where often locants are meant to apply to suffixes rather than being a description of where the rings connect to each other
-				if (group.getValue().equals("phen") || group.getValue().equals("hex") || group.getValue().equals("benz")){
-					//Find elements that can have locants but don't currently
-					List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, previousEl);
-					if(2 <= locantAble.size()) {
-						throw new ComponentGenerationException("Most likely the ringAssemblyLocant: " + previousEl.getValue() + " is actually a normal locant that is supposed to apply to elements after the ring assembly");
-					}
-				}
-				//locantText might be something like 1,1':3',1''
-				String[] perRingLocantArray =matchColon.split(locantText);
-				if (perRingLocantArray.length !=(mvalue -1)){
-					throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
-				}
-				for (int j = 0; j < perRingLocantArray.length; j++) {
-					String[] locantArray = matchComma.split(perRingLocantArray[j]);
-					if (locantArray.length !=2){
-						throw new ComponentGenerationException("missing locant, expected 2 locants: " + perRingLocantArray[j]);
-					}
-					ringJoiningLocants.add(Arrays.asList(locantArray));
-				}
-				previousEl.detach();
-			}
-			else if (previousEl!=null && previousEl.getLocalName().equals(LOCANT_EL)){
-				if (previousEl.getAttribute(TYPE_ATR)!=null && previousEl.getAttributeValue(TYPE_ATR).equals(ORTHOMETAPARA_TYPE_VAL)){//an OMP locant appears to have provided to indicate how to connect the rings of the ringAssembly
-					String locant2 =previousEl.getValue();
+			if (potentialLocant!=null && (potentialLocant.getLocalName().equals(COLONSEPERATEDLOCANT_EL)||potentialLocant.getLocalName().equals(LOCANT_EL)) ){//a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
+				if (ORTHOMETAPARA_TYPE_VAL.equals(potentialLocant.getAttributeValue(TYPE_ATR))){//an OMP locant has been provided to indicate how to connect the rings of the ringAssembly
+					String locant2 =potentialLocant.getValue();
 					String locant1 ="1";
 					ArrayList<String> locantArrayList =new ArrayList<String>();
 					locantArrayList.add("1");
@@ -2066,7 +2048,25 @@ class ComponentProcessor {
 						locantArrayList.add(locant1 + StringTools.multiplyString("'", j+1));
 						ringJoiningLocants.add(locantArrayList);
 					}
-					previousEl.detach();
+					potentialLocant.detach();
+				}
+				else{
+					String locantText =StringTools.removeDashIfPresent(potentialLocant.getValue());
+					//locantText might be something like 1,1':3',1''
+					String[] perRingLocantArray =matchColon.split(locantText);
+					if (perRingLocantArray.length !=(mvalue -1)){
+						throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
+					}
+					if (perRingLocantArray.length!=1 || matchComma.split(perRingLocantArray[0]).length!=1){//not for the case of a single locant
+						for (int j = 0; j < perRingLocantArray.length; j++) {
+							String[] locantArray = matchComma.split(perRingLocantArray[j]);
+							if (locantArray.length !=2){
+								throw new ComponentGenerationException("missing locant, expected 2 locants: " + perRingLocantArray[j]);
+							}
+							ringJoiningLocants.add(Arrays.asList(locantArray));
+						}
+						potentialLocant.detach();
+					}
 				}
 			}
 
@@ -2155,7 +2155,6 @@ class ComponentProcessor {
 			multiplier.detach();
 		}
 	}
-
 
 	/**
 	 * Proccess any polycyclic spiro systems present in subOrRoot
@@ -3250,7 +3249,7 @@ class ComponentProcessor {
 						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
 							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
 							String type = group.getAttributeValue(TYPE_ATR);
-							if (group.getValue().equals("phen")|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+							if ((group.getValue().equals("phen")&& ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)))|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
 								continue;
 							}
 						}

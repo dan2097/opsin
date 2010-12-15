@@ -960,4 +960,29 @@ class FragmentTools {
 		}
 		return false;
 	}
+	
+	/**
+	 * Checks that all atoms in a ring appear to be equivalent
+	 * @param ring
+	 * @return true if all equivalent, else false
+	 */
+	static boolean  allAtomsInRingAreIdentical(Fragment ring){
+		List<Atom> atomList = ring.getAtomList();
+		Atom firstAtom = atomList.get(0);
+		String element = firstAtom.getElement();
+		int valency = firstAtom.getIncomingValency();
+		boolean spareValency = firstAtom.hasSpareValency();
+		for (Atom atom : atomList) {
+			if (!atom.getElement().equals(element)){
+				return false;
+			}
+			if (atom.getIncomingValency() != valency){
+				return false;
+			}
+			if (atom.hasSpareValency() != spareValency){
+				return false;
+			}
+		}
+		return true;
+	}
 }

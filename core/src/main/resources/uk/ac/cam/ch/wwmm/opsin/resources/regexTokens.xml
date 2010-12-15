@@ -68,10 +68,9 @@
   <regexToken regex="%closeBracket%" symbol="U" tagname="optionalCloseBracket" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" determinise="yes"/>
-  <regexToken regex="(%locantNoPrime%|%elementSymbol%)(,(%locantNoPrime%|%elementSymbol%)'*)(:(%locantNoPrime%|%elementSymbol%)'*(,(%locantNoPrime%|%elementSymbol%)'*))*-?" symbol="L" tagname="ringAssemblyLocant" determinise="yes"/>
+  <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
   <regexToken regex="(rel-|rac-)?%openBracket%%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR)(,%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
   <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="¼" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
-  <regexToken regex="%locant%,%locant%(:%locant%,%locant%)*-?" symbol="¢" tagname="anhydrideLocant" determinise="yes"/>
   <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%'+(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="½" tagname="spiroLocant" determinise="yes"/>
   <regexToken regex="" symbol="£" tagname="suffix" value="ic" type="root" subType="terminal"/>

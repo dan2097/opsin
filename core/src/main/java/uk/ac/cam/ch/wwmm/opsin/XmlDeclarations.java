@@ -39,9 +39,6 @@ class XmlDeclarations {
 	
 	/**Something like tert/iso/sec Modifies an alkaneStem in the ComponentGenerator*/
 	static final String ALKANESTEMMODIFIER_EL ="alkaneStemModifier";
-	
-	/**Indicates which acids should form the anhydride linkage*/
-	static final String ANHYDRIDELOCANT_EL ="anhydrideLocant";
 
 	/**An annulene. Converted to a group by the ComponentGenerator*/
 	static final String ANNULEN_EL ="annulen";
@@ -129,8 +126,8 @@ class XmlDeclarations {
 	/**e.g. (III), Specifies the oxidation number of an atom. Value is the oxidation number to set something to*/
 	static final String OXIDATIONNUMBERSPECIFIER_EL ="oxidationNumberSpecifier";
 
-	/**Used to indicate how the rings of a ring assembly should be assembled*/
-	static final String RINGASSEMBLYLOCANT_EL ="ringAssemblyLocant";
+	/**Used amongst other things to indicate how the rings of a ring assembly should be assembled*/
+	static final String COLONSEPERATEDLOCANT_EL ="colonSeperatedLocant";
 
 	/**Used to indicate how many rings are in a ring assembly*/
 	static final String RINGASSEMBLYMULTIPLIER_EL ="ringAssemblyMultiplier";
