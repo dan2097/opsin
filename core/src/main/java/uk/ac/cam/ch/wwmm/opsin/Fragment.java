@@ -707,23 +707,24 @@ class Fragment {
 		atomListPosition =startingIndex;
 		atomCounter=0;
 
-		do {//aromaticity preserved
+		do {//aromaticity preserved, standard valency assumed, non functional suffixes substitutable
 			atomCounter++;
 			if (atomListPosition >= atomList.size()){
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if (FragmentTools.isCharacteristicAtom(currentAtom)){
+			if (FragmentTools.isFunctionalAtomOrAldehyde(currentAtom)){
 				atomListPosition++;
 				continue;
 			}
+			int currentExpectedValency = currentAtom.determineValency(takeIntoAccountOutValency);
 			if (takeIntoAccountOutValency){
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
+				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					return currentAtom;
 				}
 			}
 			else{
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
+				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
 					return currentAtom;
 				}
 			}
@@ -734,12 +735,13 @@ class Fragment {
 		atomListPosition =startingIndex;
 		atomCounter=0;
 
-		do {//aromaticity preserved, suffixes substitutable
+		do {//aromaticity preserved any suffix substitutable
 			atomCounter++;
 			if (atomListPosition >= atomList.size()){
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
+
 			if (takeIntoAccountOutValency){
 				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
 					return currentAtom;
@@ -756,7 +758,7 @@ class Fragment {
 
 		atomListPosition =startingIndex;
 		atomCounter=0;
-		do {//aromaticity dropped
+		do {//aromaticity dropped, anything substitutable
 			atomCounter++;
 			if (atomListPosition >= atomList.size()){
 				atomListPosition -=(atomList.size());
