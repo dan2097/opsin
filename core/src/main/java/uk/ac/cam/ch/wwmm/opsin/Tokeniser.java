@@ -16,38 +16,6 @@ import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
  *
  */
 class Tokeniser {
-
-	class TokenizationResult {
-		final boolean successfullyTokenized;
-		final Parse parse;
-		final String uninterpretableName;
-		final String unparsableName;
-		final String unparsedName;
-		boolean isSuccessfullyTokenized() {
-			return successfullyTokenized;
-		}
-		Parse getParse() {
-			return parse;
-		}
-		String getUninterpretableName() {
-			return uninterpretableName;
-		}
-		String getUnparsableName() {
-			return unparsableName;
-		}
-		String getUnparsedName() {
-			return unparsedName;
-		}
-		
-		public TokenizationResult(boolean successfullyTokenized, Parse parse, String uninterpretableName, String unparsableName, String unparsedName) {
-			this.successfullyTokenized = successfullyTokenized;
-			this.parse = parse;
-			this.uninterpretableName = uninterpretableName;
-			this.unparsableName = unparsableName;
-			this.unparsedName = unparsedName;
-		}
-	}
-
 	private final ParseRules parseRules;
 	private final static char endOfSubstituent = '\u00e9';
 	private final static char endOfMainGroup = '\u00e2';
@@ -70,105 +38,23 @@ class Tokeniser {
 	 * @throws ParsingException 
 	 */
 	TokenizationResult tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
-		Parse parse = new Parse(name);
-		String unparsedName;
-		if (allowRemovalOfWhiteSpace){
-			unparsedName =  removeWhiteSpaceIfBracketsAreUnbalanced(name);
-		}
-		else{
-			unparsedName = name;
-		}
-		String uninterpretableNamePreSpaceRemoval = null;
-		String unparseableNamePreSpaceRemoval = null;
-		String unparsedNamePreSpaceRemoval = null;
-		while (unparsedName.length()>0){
-			/*
-			 * Returns
-			 * List of parses where at least some of the name was assigned a role
-			 * Section of name that was uninterpretable (or "" if none was)
-			 * Section of name that was unparsable (or "" if none was). This is always shorter or equal to the above string
-			 */
-			ParseRulesResults results = parseRules.getParses(unparsedName);
-			List<ParseTokens> parseTokens =results.getParseTokensList();
-			String uninterpretableName = results.getUninterpretableName();
-			String parsedName = unparsedName.substring(0, unparsedName.length() - uninterpretableName.length());
-			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(0) ==' ' || uninterpretableName.charAt(0) =='-')){//a word was interpretable
-				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
-				//In cases of properly formed names there will be only one ParseWord
-				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
-				List<ParseWord> parseWords = splitIntoParseWords(parseTokens, parsedName);
-                for (ParseWord parseWord : parseWords) {
-                    parse.addWord(parseWord);
-                }
-				if (!uninterpretableName.equals("")){
-					unparsedName = uninterpretableName.substring(1);//remove white space or hyphen at start of uninterpretableName
-				}
-				else{
-					unparsedName = uninterpretableName;
-				}
-				if (uninterpretableNamePreSpaceRemoval!=null){
-					uninterpretableNamePreSpaceRemoval = null;
-					unparseableNamePreSpaceRemoval = null;
-					unparsedNamePreSpaceRemoval = null;
-				}
+		TokenizationResult result = new TokenizationResult(name, allowRemovalOfWhiteSpace);
+
+		while (!result.isSuccessfullyTokenized()){
+			ParseRulesResults results = parseRules.getParses(result.getUnparsedName());
+			List<ParseTokens> parseTokens = results.getParseTokensList();
+			result.setUninterpretableName(results.getUninterpretableName());
+			String parsedName = result.getParsedName();
+
+			if (isWordParsable(parseTokens, result)){
+				parseWord(result, parseTokens, parsedName, false);
 			}
-			else{//word is unparsable as is.
-				Matcher m = matchCompoundWithPhrase.matcher(uninterpretableName);
-				if (m.lookingAt()){
-					unparsedName = parsedName + uninterpretableName.substring(m.group().length());
-				}
-				else if (matchCasCollectiveIndex.matcher(uninterpretableName).matches()){
-					unparsedName = parsedName;
-				}
-				else{
-					if (allowRemovalOfWhiteSpace){
-						if (uninterpretableNamePreSpaceRemoval==null){
-							uninterpretableNamePreSpaceRemoval = uninterpretableName;
-							unparseableNamePreSpaceRemoval = results.getUnparseableName();
-							unparsedNamePreSpaceRemoval = unparsedName;
-						}
-						//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-						List<ParseWord> parsedWords = parse.getWords();
-						boolean reverseSpaceRemovalSuccesful = false;
-						if (parsedWords.size()>0){//first see whether the space before the unparseable word is erroneous
-							ParseWord pw = parsedWords.get(parsedWords.size()-1);
-							ParseRulesResults backResults = parseRules.getParses(pw.getWord() + unparsedName);
-							List<ParseTokens> backParseTokens =backResults.getParseTokensList();
-							String backUninterpretableName = backResults.getUninterpretableName();
-							String backParsedName = pw.getWord() + unparsedName.substring(0, unparsedName.length() - backUninterpretableName.length());
-							if (backParsedName.length() > pw.getWord().length() && backParseTokens.size()>0 && (backUninterpretableName.equals("") || backUninterpretableName.charAt(0) ==' ')){//a word was interpretable
-								parse.removeWord(pw);
-								List<ParseWord> parseWords = splitIntoParseWords(backParseTokens, backParsedName);
-				                for (ParseWord parseWord : parseWords) {
-				                    parse.addWord(parseWord);
-				                }
-								if (!backUninterpretableName.equals("")){
-									unparsedName = backUninterpretableName.substring(1);//remove white space at start of uninterpretableName
-								}
-								else{
-									unparsedName = backUninterpretableName;
-								}
-								reverseSpaceRemovalSuccesful =true;
-							}
-						}
-						if (!reverseSpaceRemovalSuccesful){
-							//Try and remove a space from the right and try again
-							int indexOfSpace = uninterpretableName.indexOf(' ');
-							if (indexOfSpace != -1 ){
-								unparsedName = parsedName + uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1);
-							}
-							else{
-								return new TokenizationResult(false, parse, uninterpretableNamePreSpaceRemoval, unparseableNamePreSpaceRemoval, unparsedNamePreSpaceRemoval);
-							}
-						}
-					}
-					else{
-						return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
-					}
-				}
+			else if (!fixWord(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+				break;
 			}
 		}
-		return new TokenizationResult(true, parse, "", "", "");
+
+		return result;
 	}
 	
 	/**
@@ -181,101 +67,133 @@ class Tokeniser {
 	 * @throws ParsingException 
 	 */
 	TokenizationResult tokenizeRightToLeft(ReverseParseRules reverseParseRules, String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
-		Parse parse = new Parse(name);
-		String unparsedName =name;
+		TokenizationResult result = new TokenizationResult(name, allowRemovalOfWhiteSpace);
+
 		//bracket matching is not currently being performed as this the input to this function from the parser will often be what the LR tokenizer couldn't handle, which may not have matching brackets
 	
-		String uninterpretableNamePreSpaceRemoval = null;
-		String unparseableNamePreSpaceRemoval = null;
-		String unparsedNamePreSpaceRemoval = null;
-		while (unparsedName.length()>0){
-			/*
-			 * Returns
-			 * List of parses where at least some of the name was assigned a role
-			 * Section of name that was uninterpretable (or "" if none was)
-			 * Section of name that was unparsable (or "" if none was). This is always shorter or equal to the above string
-			 */
-			ParseRulesResults results = reverseParseRules.getParses(unparsedName);
+		while (!result.isSuccessfullyTokenized()){
+			ParseRulesResults results = reverseParseRules.getParses(result.getUnparsedName());
 			List<ParseTokens> parseTokens =results.getParseTokensList();
-			String uninterpretableName = results.getUninterpretableName();
-			String parsedName = unparsedName.substring(uninterpretableName.length());
-			if (parseTokens.size()>0 && (uninterpretableName.equals("") || uninterpretableName.charAt(uninterpretableName.length()-1)==' ' || uninterpretableName.charAt(uninterpretableName.length()-1) =='-')){//a word was interpretable
-				//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
-				//In cases of properly formed names there will be only one ParseWord
-				//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
-				List<ParseWord> parseWords = splitIntoParseWords(parseTokens, parsedName);
-				Collections.reverse(parseWords);//make this set of words back to front as well
-                for (ParseWord parseWord : parseWords) {
-                    parse.addWord(parseWord);
-                }
-				if (!uninterpretableName.equals("")){
-					unparsedName = uninterpretableName.substring(0, uninterpretableName.length()-1);//remove white space or hyphen at end of uninterpretableName
-				}
-				else{
-					unparsedName = uninterpretableName;
-				}
-				if (uninterpretableNamePreSpaceRemoval!=null){
-					uninterpretableNamePreSpaceRemoval = null;
-					unparseableNamePreSpaceRemoval = null;
-					unparsedNamePreSpaceRemoval = null;
-				}
+			result.setUninterpretableName(results.getUninterpretableName());
+			String parsedName = result.getUnparsedName().substring(result.getUninterpretableName().length());
+
+			if (isWordParsableInReverse(parseTokens, result)) {
+				parseWord(result, parseTokens, parsedName, true);
 			}
-			else{//word is unparsable as is.
-				if (allowRemovalOfWhiteSpace){
-					if (uninterpretableNamePreSpaceRemoval==null){
-						uninterpretableNamePreSpaceRemoval = uninterpretableName;
-						unparseableNamePreSpaceRemoval = results.getUnparseableName();
-						unparsedNamePreSpaceRemoval = unparsedName;
-					}
-					//Try and remove a space and try again
-					//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-					int indexOfSpace = uninterpretableName.lastIndexOf(' ');
-					if (indexOfSpace != -1 ){
-						unparsedName = uninterpretableName.substring(0, indexOfSpace) + uninterpretableName.substring(indexOfSpace +1) + parsedName;
-					}
-					else{
-						return new TokenizationResult(false, parse, uninterpretableNamePreSpaceRemoval, unparseableNamePreSpaceRemoval, unparsedNamePreSpaceRemoval);
-					}
-				}
-				else{
-					return new TokenizationResult(false, parse, uninterpretableName, results.getUnparseableName(), unparsedName);
-				}
+			else if (!fixWordInReverse(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+				break;
 			}
 		}
-		Collections.reverse(parse.getWords());
-		return new TokenizationResult(true, parse, "", "", "");
+		
+		Collections.reverse(result.getParse().getWords());
+
+		return result;
+	}
+
+
+	private boolean isWordParsableInReverse(List<ParseTokens> parseTokens, TokenizationResult result) {
+		return parseTokens.size()>0 && (result.hasUninterpretableName() || result.getUninterpretableName().charAt(result.getUninterpretableName().length()-1)==' ' || result.getUninterpretableName().charAt(result.getUninterpretableName().length()-1) =='-');
+	}
+
+	private boolean isWordParsable(List<ParseTokens> parseTokens, TokenizationResult result) {
+		return parseTokens.size()>0 && (result.hasUninterpretableName() || result.getUninterpretableName().charAt(0) ==' ' || result.getUninterpretableName().charAt(0) =='-');
 	}
 	
-	/**
-	 * Works left to right removing spaces if there are too many opening brackets
-	 * @param name
-	 * @return
-	 * @throws ParsingException If brackets are unbalanced and cannot be balanced by removing whitespace
-	 */
-	private String removeWhiteSpaceIfBracketsAreUnbalanced(String name) throws ParsingException {
-		int bracketLevel = 0;
-		int stringLength  = name.length();
-		for(int i = 0 ; i < stringLength; i++) {
-			char c = name.charAt(i);
-			if(c == '(' || c == '[' || c == '{') {
-				bracketLevel++;
-			}
-			else if(c == ')' || c == ']' || c == '}') {
-				bracketLevel--;
-			}
-			else if(c == ' ' && bracketLevel > 0){//brackets unbalanced and a space has been encountered!
-				name = name.substring(0, i) +name.substring(i +1);
-				stringLength  = name.length();
-				i--;
+	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) throws ParsingException {
+		//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
+		//In cases of properly formed names there will be only one ParseWord
+		//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
+		addParseWords(parseTokens, parsedName, result.getParse(), reverse);
+
+		if (result.hasUninterpretableName()) {
+			result.setUnparsedName(result.getUninterpretableName());
+		} else {
+			String name = reverse ? result.getUninterpretableName().substring(0, result.getUninterpretableName().length() - 1) : result.getUninterpretableName().substring(1);
+			result.setUnparsedName(name);
+		}
+	}
+
+	private boolean reverseSpaceRemoval(List<ParseWord> parsedWords, TokenizationResult result) throws ParsingException {
+		boolean successful = false;
+
+		if (!parsedWords.isEmpty()) {//first see whether the space before the unparseable word is erroneous
+			ParseWord pw = parsedWords.get(parsedWords.size() - 1);
+			ParseRulesResults backResults = parseRules.getParses(pw.getWord() + result.getUnparsedName());
+			List<ParseTokens> backParseTokens = backResults.getParseTokensList();
+			String backUninterpretableName = backResults.getUninterpretableName();
+			String backParsedName = pw.getWord() + result.getUnparsedName().substring(0, result.getUnparsedName().length() - backUninterpretableName.length());
+			if (backParsedName.length() > pw.getWord().length() && backParseTokens.size() > 0 && (backUninterpretableName.equals("") || backUninterpretableName.charAt(0) == ' ')) {//a word was interpretable
+				result.getParse().removeWord(pw);
+				List<ParseWord> parseWords = splitIntoParseWords(backParseTokens, backParsedName);
+				for (ParseWord parseWord : parseWords) {
+					result.getParse().addWord(parseWord);
+				}
+				if (!backUninterpretableName.equals("")) {
+					result.setUnparsedName(backUninterpretableName.substring(1));//remove white space at start of uninterpretableName
+				} else {
+					result.setUnparsedName(backUninterpretableName);
+				}
+				successful = true;
 			}
 		}
-		if (bracketLevel > 0){
-			throw new ParsingException("Unmatched opening bracket found in :" + name);
+
+		return successful;
+	}
+
+	private void addParseWords(List<ParseTokens> parseTokens, String parsedName, Parse parse, boolean reverse) throws ParsingException {
+		List<ParseWord> parseWords = splitIntoParseWords(parseTokens, parsedName);
+
+		if (reverse) {
+			Collections.reverse(parseWords);//make this set of words back to front as well
 		}
-		else if (bracketLevel < 0){
-			throw new ParsingException("Unmatched closing bracket found in :" + name);
+
+		for (ParseWord parseWord : parseWords) {
+			parse.addWord(parseWord);
 		}
-		return name;
+	}
+
+	private boolean fixWord(TokenizationResult result, String parsedName, ParseRulesResults results, boolean allowRemovalOfWhiteSpace) throws ParsingException {
+		Matcher m = matchCompoundWithPhrase.matcher(result.getUninterpretableName());
+		if (m.lookingAt()) {
+			result.setUnparsedName(parsedName + result.getUninterpretableName().substring(m.group().length()));
+		} else if (matchCasCollectiveIndex.matcher(result.getUninterpretableName()).matches()) {
+			result.setUnparsedName(parsedName);
+		} else {
+			if (allowRemovalOfWhiteSpace) {
+				//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
+				List<ParseWord> parsedWords = result.getParse().getWords();
+				if (!reverseSpaceRemoval(parsedWords, result)) {
+					//Try and remove a space from the right and try again
+					int indexOfSpace = result.getUninterpretableName().indexOf(' ');
+					if (indexOfSpace != -1) {
+						result.setUnparsedName( parsedName + result.getUninterpretableName().substring(0, indexOfSpace) + result.getUninterpretableName().substring(indexOfSpace + 1));
+					} else {
+						return false;
+					}
+				}
+			} else {
+				result.setUnparsableName(results.getUnparseableName());
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean fixWordInReverse(TokenizationResult result, String parsedName, ParseRulesResults results, boolean allowRemovalOfWhiteSpace) {
+		if (allowRemovalOfWhiteSpace) {
+			//Try and remove a space and try again
+			//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
+			int indexOfSpace = result.getUninterpretableName().lastIndexOf(' ');
+			if (indexOfSpace != -1) {
+				result.setUnparsedName( result.getUninterpretableName().substring(0, indexOfSpace) + result.getUninterpretableName().substring(indexOfSpace + 1) + parsedName);
+			} else {
+				return false;
+			}
+		} else {
+			result.setUnparsableName(results.getUnparseableName());
+			return false;
+		}
+		return true;
 	}
 
 	private List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) throws ParsingException {
@@ -399,7 +317,7 @@ class Tokeniser {
 				if (!matchAcid.matcher(parentNameParts[i]).matches()){
 					ParseRulesResults results = parseRules.getParses(parentNameParts[i]);
 					List<ParseTokens> parseTokens = results.getParseTokensList();
-					if (parseTokens.size() ==0){
+					if (parseTokens.isEmpty()){
 						throw new ParsingException("Invalid CAS name. Parent compound was followed by an unexpected term");
 					}
 				}
