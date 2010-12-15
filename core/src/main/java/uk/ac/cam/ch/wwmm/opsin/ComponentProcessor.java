@@ -1337,7 +1337,7 @@ class ComponentProcessor {
 			}
 			for (int i = 0; i< numberToRemove; i++) {
 				Atom functionalAtom = suffixableFragment.removeFunctionalAtom(0).getAtom();
-				functionalAtom.setCharge(0);
+				functionalAtom.neutraliseCharge();
 			}		
 		}
 	}
@@ -1580,7 +1580,7 @@ class ComponentProcessor {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getFrag().findBondOrThrow(atom, neighbour).getOrder()==1){
-				neighbour.setCharge(-1);
+				neighbour.addChargeAndProtons(-1, -1);
 			}
 		}
 	}
@@ -1611,7 +1611,7 @@ class ComponentProcessor {
 				else if (neighbour.getCharge() ==-1 && b.getOrder()==1){
 					if (atom.getCharge() ==1 && atom.getElement().equals("N")){
 						state.fragManager.removeAtomAndAssociatedBonds(neighbour);
-						atom.setCharge(0);
+						atom.neutraliseCharge();
 						return;
 					}
 				}
@@ -3407,6 +3407,7 @@ class ComponentProcessor {
                             throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
                         }
                         int bondOrderRequired = suffixFrag.getFirstAtom().getIncomingValency();
+                        Atom parentfragAtom;
                         if (idOnParentFragToUse == 0) {
                             if (suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
                                 if (defaultAtom == 0)
@@ -3417,6 +3418,13 @@ class ComponentProcessor {
                                 idOnParentFragToUse = atomList.get(defaultAtom).getID();
                             }
                             idOnParentFragToUse = frag.getAtomOrNextSuitableAtomOrThrow(frag.getAtomByIDOrThrow(idOnParentFragToUse), bondOrderRequired, true).getID();
+                            parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
+                            if (FragmentTools.isCharacteristicAtom(parentfragAtom)){
+                            	throw new StructureBuildingException("No suitable atom found to attach suffix");
+                            }
+                        }
+                        else{
+                        	parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
                         }
 
                         //create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
@@ -3428,7 +3436,6 @@ class ComponentProcessor {
                             } else {
                                 suffixAtom = bondToSuffix.getToAtom();
                             }
-                            Atom parentfragAtom = frag.getAtomByIDOrThrow(idOnParentFragToUse);
                             state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
                             state.fragManager.removeBond(bondToSuffix);
                             if (parentfragAtom.getIncomingValency()>2 && (suffixValue.equals("aldehyde") || suffixValue.equals("al"))){//formaldehyde/methanal are excluded as they are substitutable

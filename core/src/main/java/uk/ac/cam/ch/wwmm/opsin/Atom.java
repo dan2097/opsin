@@ -389,12 +389,21 @@ class Atom {
 		protonsExplicitlyAddedOrRemoved+=protons;
 	}
 
-	 /** Sets the formal charge on the atom.
-	 *
+	/**Sets the formal charge on the atom.
+	 * NOTE: make sure to update protonsExplicitlyAddedOrRemoved if necessary
+	 * 
 	 * @param c The formal charge on the atom
 	 */
 	void setCharge(int c) {
 		charge = c;
+	}
+	
+	 /** 
+	 * Sets the formal charge and number of protonsExplicitlyAddedOrRemoved to 0
+	 */
+	void neutraliseCharge() {
+		charge = 0;
+		protonsExplicitlyAddedOrRemoved = 0;
 	}
 
 	/**Adds a bond to the atom
@@ -566,7 +575,7 @@ class Atom {
 					if (ValencyChecker.getHWValency(element)==null){
 						throw new StructureBuildingException(element +" is not expected to be aromatic!");
 					}
-					maxValency = ValencyChecker.getHWValency(element) + Math.abs(charge);
+					maxValency = ValencyChecker.getHWValency(element) + protonsExplicitlyAddedOrRemoved;
 				}
 			}
 			int maxSpareValency;
