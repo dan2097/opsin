@@ -58,7 +58,7 @@ does not define a CFG.
   <regex name="%hwAne%" value="k"/>
   <regex name="%hwIne%" value="K"/>
   <regex name="%ringAssemblyMultiplier%" value="P"/>
-  <regex name="%ringAssemblyLocant%" value="L"/>
+  <regex name="%colonSeperatedLocant%" value="L"/>
   <regex name="%vonBaeyerMultiplier%" value="M"/>
   <regex name="%structuralOpenBracket%" value="q"/>
   <regex name="%structuralCloseBracket%" value="Q"/>
@@ -91,7 +91,6 @@ does not define a CFG.
   <regex name="%infixableInlineSuffix%" value="ÿ"/>
   <regex name="%monoNuclearNonCarbonAcid%" value="Ö"/>
   <regex name="%anhydrideFunctionalGroup%" value="Ü"/>
-  <regex name="%anhydrideLocant%" value="¢"/>
   <regex name="%implicitIc%" value="£"/>
   <regex name="%aminoAcidYl%" value="¥"/>
   <regex name="%oMeaningYl%" value="₧"/>
@@ -125,7 +124,7 @@ does not define a CFG.
   <regex name="%simpleGroupClass%" value="║"/>
   <regex name="%amineMeaningNitrilo%" value="╗"/>
   <regex name="%spiroOldMethod%" value="╝"/>
-  <!--up to ascii 188 used-->
+  <!--155 unused, up to ascii 188 used-->
 
 <!-- composite regexes-->
 
@@ -240,7 +239,7 @@ does not define a CFG.
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%simpleCyclicGroup%|%fusedRingSystem%)%rootEnding%)" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%irregularRingSubstituentStem%%optLocantGroupNoOMP%%repeatableInlineSuffix%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%optLocantGroupNoOMP%%repeatableInlineSuffix%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
-  <regex name="%locantForRingAssembly%" value = "(%ringAssemblyLocant%|%orthoMetaPara%|%optionalOpenBracket%%ringAssemblyLocant%%optionalCloseBracket%%hyphen%?)" />
+  <regex name="%locantForRingAssembly%" value = "(%colonSeperatedLocant%|%newLocantGroupNoStartingHyphen%|%optionalOpenBracket%(%colonSeperatedLocant%|%locant%)%optionalCloseBracket%%hyphen%?)" />
   <regex name="%ringAssembly%" value = "(%locantForRingAssembly%?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%))"/>
 
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|((%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%)|%fusedRingSystem%|%polycyclicSpiroGroup%)(%inlineEndings%|%conjunctiveSideChainInline%))"/>
@@ -258,7 +257,7 @@ does not define a CFG.
 	<regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%(%chalcogenAcidGroup%|%simpleGroupClass%)%mainGroupTail%)"/>
 
 <!-- functional Groups-->
-  <regex name="%anhydride%" value="(%anhydrideLocant%?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
+  <regex name="%anhydride%" value="((%locant%|%colonSeperatedLocant%)?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
   <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
   <regex name="%functionalClass%" value ="(%locant%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>

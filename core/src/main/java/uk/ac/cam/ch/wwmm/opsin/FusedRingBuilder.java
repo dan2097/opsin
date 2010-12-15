@@ -203,7 +203,7 @@ class FusedRingBuilder {
 						//check for case of omitted locant from a higher order fusion bracket e.g. cyclopenta[4,5]pyrrolo[2,3-c]pyridine
 						if (matchDash.split(fusionDescriptors[j]).length==1 && 
 								matchComma.split(fusionDescriptors[j]).length >1 &&
-								allAtomsAreIdentical(component)){
+								FragmentTools.allAtomsInRingAreIdentical(component)){
 							relabelAccordingToFusionLevel(component, fusionLevel);
 							List<String> numericalLocantsOfParent = Arrays.asList(matchComma.split(fusionDescriptors[j]));
 							List<String> numericalLocantsOfChild = findPossibleNumericalLocants(component, numericalLocantsOfParent.size()-1);
@@ -967,30 +967,5 @@ class FusedRingBuilder {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Checks that all atoms in a ring appear to be equivalent
-	 * @param ring
-	 * @return true if all equivalent, else false
-	 */
-	private static boolean  allAtomsAreIdentical(Fragment ring){
-		List<Atom> atomList = ring.getAtomList();
-		Atom firstAtom = atomList.get(0);
-		String element = firstAtom.getElement();
-		int valency = firstAtom.getIncomingValency();
-		boolean spareValency = firstAtom.hasSpareValency();
-		for (Atom atom : atomList) {
-			if (!atom.getElement().equals(element)){
-				return false;
-			}
-			if (atom.getIncomingValency() != valency){
-				return false;
-			}
-			if (atom.hasSpareValency() != spareValency){
-				return false;
-			}
-		}
-		return true;
 	}
 }

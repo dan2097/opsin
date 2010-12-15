@@ -789,7 +789,7 @@ class StructureBuilder {
 			multipliers.get(0).detach();
 		}
 		String anhydrideLocant = null;
-		List<Element> anhydrideLocants =XOMTools.getDescendantElementsWithTagName(anhydrideWord, ANHYDRIDELOCANT_EL);
+		List<Element> anhydrideLocants =XOMTools.getDescendantElementsWithTagNames(anhydrideWord, new String[]{LOCANT_EL, COLONSEPERATEDLOCANT_EL});
 		if (anhydrideLocants.size() >1){
 			throw new StructureBuildingException("Expected 0 or 1 anhydrideLocants found: " + anhydrideLocants.size());
 		}
