@@ -348,19 +348,22 @@ class FunctionalReplacement {
 					if (replacementFrag.getOutAtoms().size()>0){
 						replacementFrag.removeOutAtom(0);
 					}
-					if (replacementFrag.getAtomList().size()==1 && matchChalcogen.matcher(replacementFrag.getFirstAtom().getElement()).matches()){
-						replacementFrag.getFirstAtom().setCharge(atomToUse.getCharge());
+					Atom atomThatWillReplaceOxyen =replacementFrag.getFirstAtom();
+					if (replacementFrag.getAtomList().size()==1 && matchChalcogen.matcher(atomThatWillReplaceOxyen.getElement()).matches()){
+						atomThatWillReplaceOxyen.setCharge(atomToUse.getCharge());
+						atomThatWillReplaceOxyen.setProtonsExplicitlyAddedOrRemoved(atomToUse.getProtonsExplicitlyAddedOrRemoved());
 					}
 					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);//also will move charge if necessary
 					if (nitrido){
 						atomToUse.getFirstBond().setOrder(3);
 						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
 					}
-					state.fragManager.replaceTerminalAtomWithFragment(atomToUse, replacementFrag.getFirstAtom());
+					state.fragManager.incorporateFragment(replacementFrag, atomToUse.getFrag());
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToUse, atomThatWillReplaceOxyen);
 					if (infixAssignmentAmbiguous){
-						ambiguousElementAtoms.add(atomToUse);
-						if (atomToUse.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
-							ambiguousElementAtoms.addAll(atomToUse.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
+						ambiguousElementAtoms.add(atomThatWillReplaceOxyen);
+						if (atomThatWillReplaceOxyen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+							ambiguousElementAtoms.addAll(atomThatWillReplaceOxyen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
 						}
 					}
 					if (infixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl ethanthioate
@@ -482,7 +485,7 @@ class FunctionalReplacement {
 			throw new ComponentGenerationException("OPSIN bug: amide not found where expected");
 		}
 		Atom amideNitrogen = amide.getFirstAtom();
-		amideNitrogen.setCharge(0);
+		amideNitrogen.neutraliseCharge();
 		amideNitrogen.clearLocants();
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), amide.getFirstAtom());
 		state.fragManager.incorporateFragment(amide, oxygenAtoms.get(0).getFrag());
@@ -833,10 +836,9 @@ class FunctionalReplacement {
 	
 	/**
 	 * Given an atom that is to be replaced by a functional replacement fragment
-	 * determines whether this atom is a functional atom and if it is performs the following processes:
-	 * if the replacement fragment is only 1 atom and is not O/S/Se/Te the functionalAtom is removed
-	 * otherwise a check is done on the last atom in the replacement fragment. e.g. peroxy
-	 * If this is O/S/Se/Te the functionalAtom is moved to that atom otherwise it is still removed
+	 * determines whether this atom is a functional atom and, if it is, performs the following processes:
+	 * The functionalAtom is removed. If the the replacement fragment is an atom of O/S/Se/Te or the
+	 * the terminal atom of the fragment is a single bonded O/S/Se/Te a functionAom is added to this atom.
 	 * @param atomToBeReplaced
 	 * @param replacementFrag
 	 */
@@ -846,19 +848,14 @@ class FunctionalReplacement {
 		for (int j = functionalAtoms.size()-1; j >=0; j--) {
 			FunctionalAtom functionalAtom = functionalAtoms.get(j);
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
-				if (replacementFrag.getAtomList().size()>1){
-					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
-					Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
-					if (terminalAtomOfReplacementFrag.getIncomingValency() ==1 && matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
-						replacementFrag.addFunctionalAtom(terminalAtomOfReplacementFrag);
-						terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
-					}
-					atomToBeReplaced.setCharge(0);
+				atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+				Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
+				if ((terminalAtomOfReplacementFrag.getIncomingValency() ==1 || replacementAtomList.size()==1)&& matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
+					replacementFrag.addFunctionalAtom(terminalAtomOfReplacementFrag);
+					terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
+					terminalAtomOfReplacementFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
 				}
-				else if (!matchChalcogen.matcher(replacementAtomList.get(0).getElement()).matches()){
-					atomToBeReplaced.getFrag().removeFunctionalAtom(j);
-					atomToBeReplaced.setCharge(0);
-				}
+				atomToBeReplaced.neutraliseCharge();
 			}
 		}
 	}

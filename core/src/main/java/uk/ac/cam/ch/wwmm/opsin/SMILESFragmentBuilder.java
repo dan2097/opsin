@@ -728,15 +728,21 @@ class SMILESFragmentBuilder {
 		}
 		Integer defaultVal = ValencyChecker.getDefaultValency(element);
 		if (defaultVal !=null){//s or p block element
-			if (defaultVal != incomingValency){
-				if (charge==0){
-					atom.setMinimumValency(incomingValency);
-				}
-				else{
-					Integer[] stableValenciesArray = ValencyChecker.getPossibleValencies(atom.getElement(), charge);
-					if (stableValenciesArray ==null || stableValenciesArray[0]!=incomingValency){
-						atom.setMinimumValency(incomingValency);
+			if (defaultVal != incomingValency || charge !=0){
+				Integer[] unchargedStableValencies = ValencyChecker.getPossibleValencies(element, 0);
+				boolean hasPlausibleValency =false;
+				for (Integer unchargedStableValency : unchargedStableValencies) {
+					if (Math.abs(incomingValency - unchargedStableValency)==Math.abs(charge)){
+						atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - unchargedStableValency);
+						if (unchargedStableValency!=defaultVal){
+							atom.setMinimumValency(unchargedStableValency);
+						}
+						hasPlausibleValency=true;
+						break;
 					}
+				}
+				if (!hasPlausibleValency){//could be something like [Sn] which would be expected to be attached to later
+					atom.setMinimumValency(incomingValency);
 				}
 			}
 		}

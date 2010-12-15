@@ -281,6 +281,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
 	
@@ -290,8 +291,11 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(3, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(4, atomList.get(1).determineValency(true));
+		assertEquals(0, atomList.get(1).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(2, atomList.get(2).determineValency(true));
+		assertEquals(0, atomList.get(2).getProtonsExplicitlyAddedOrRemoved());
 	}
 	
 	@Test
@@ -300,6 +304,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(2, atomList.get(0).determineValency(true));
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
 	
 	@Test
@@ -310,6 +315,7 @@ public class SMILESFragmentBuilderTest {
 		int minimumVal =atomList.get(0).getMinimumValency();
 		assertEquals(4, minimumVal);
 		assertEquals(4, atomList.get(0).determineValency(true));
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
 	
 	@Test
@@ -320,6 +326,7 @@ public class SMILESFragmentBuilderTest {
 		int minimumVal =atomList.get(0).getMinimumValency();
 		assertEquals(6, minimumVal);
 		assertEquals(6, atomList.get(0).determineValency(true));
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
 	
 	@Test
@@ -339,6 +346,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
 	
@@ -348,6 +356,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(-1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(1, atomList.get(0).determineValency(true));
 	}
 	
@@ -357,6 +366,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(-1, atomList.get(0).getCharge());
+		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
 	
@@ -366,6 +376,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(-1, atomList.get(0).getCharge());
+		assertEquals(-1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(1, atomList.get(0).determineValency(true));
 	}
 	
@@ -375,8 +386,9 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		int minimumVal =atomList.get(0).getMinimumValency();
-		assertEquals(5, minimumVal);
+		assertEquals(4, minimumVal);
 		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(5, atomList.get(0).determineValency(true));
 	}
 	
@@ -386,6 +398,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(1, atomList.get(0).getCharge());
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(0, atomList.get(0).determineValency(true));
 	}
 	
@@ -408,6 +421,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
+		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
 	
 	@Test
@@ -457,6 +471,19 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
+	}
+	
+	@Test
+	public void hydrogenHandling21() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[o+]1ccccc1");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(6, atomList.size());
+		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
+		assertEquals(true, atomList.get(0).hasSpareValency());
+		assertEquals(3, atomList.get(0).determineValency(true));
+		assertEquals(0, atomList.get(1).getProtonsExplicitlyAddedOrRemoved());
+		assertEquals(4, atomList.get(1).determineValency(true));
+		assertEquals(true, atomList.get(1).hasSpareValency());
 	}
 	
 	@Test

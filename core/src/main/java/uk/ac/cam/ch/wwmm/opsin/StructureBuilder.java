@@ -232,7 +232,7 @@ class StructureBuilder {
 			}
 			state.fragManager.createBond(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
 			substituentsBr.removeOutAtom(0);
-			ateAtom.setCharge(0);
+			ateAtom.neutraliseCharge();
 		}
 	}
 
@@ -333,7 +333,7 @@ class StructureBuilder {
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
-				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
+				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
@@ -403,7 +403,7 @@ class StructureBuilder {
 				}
 				state.fragManager.createBond(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
 				if (functionalAtom.getCharge()==-1){
-					functionalAtom.setCharge(0);
+					functionalAtom.neutraliseCharge();
 				}
 				substituentBr.removeOutAtom(0);
 			}
@@ -588,7 +588,7 @@ class StructureBuilder {
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
 			}
 			atomToAddOxideTo.addChargeAndProtons(1, 1);
-			oxideAtom.setCharge(-1);
+			oxideAtom.addChargeAndProtons(-1, -1);
 			maxVal = ValencyChecker.getMaximumValency(atomToAddOxideTo.getElement(), atomToAddOxideTo.getCharge());
 			if (maxVal !=null && (atomToAddOxideTo.getIncomingValency() + atomToAddOxideTo.getOutValency() +1) > maxVal){
 				throw new StructureBuildingException("Oxide appeared to refer to an atom that has insufficent valency to accept the addition of oxygen");
@@ -962,7 +962,7 @@ class StructureBuilder {
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
-				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
+				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
@@ -1015,7 +1015,7 @@ class StructureBuilder {
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
-				ideAtom.setCharge(ideAtom.getCharge()+1);//e.g. make cyanide charge netural
+				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
@@ -1159,7 +1159,7 @@ class StructureBuilder {
 			}
 			else if (br2.getFunctionalAtomCount() >0){//form ester
 				Atom ateAtom = br2.getFunctionalAtom(0);
-				ateAtom.setCharge(0);
+				ateAtom.neutraliseCharge();
 				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(glycolAtoms.get(1), br2.getFunctionalAtom(0));
 				br2.removeFunctionalAtom(0);
 			}
@@ -1294,7 +1294,7 @@ class StructureBuilder {
 		Atom functionalAtom =br.getFunctionalAtom(0);
 		br.removeFunctionalAtom(0);
 		Atom atomOnBiochemicalFragment;
-		functionalAtom.setCharge(0);
+		functionalAtom.neutraliseCharge();
 		Fragment biochemicalFragment = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(0)));
 		if (locant!=null){
 			atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow(locant);
@@ -1336,7 +1336,7 @@ class StructureBuilder {
 			for (int i = br.getFunctionalAtomCount() -1; i>=0; i--) {
 				Atom atomToDefunctionalise =br.getFunctionalAtom(i);
 				br.removeFunctionalAtom(i);
-				atomToDefunctionalise.setCharge(0);
+				atomToDefunctionalise.neutraliseCharge();
 			}
 		}
 	}
@@ -1674,7 +1674,7 @@ class StructureBuilder {
 							return;
 						}
 						overallCharge-=br.getFunctionalAtom(i).getCharge();
-						br.getFunctionalAtom(i).setCharge(0);
+						br.getFunctionalAtom(i).neutraliseCharge();
 						br.removeFunctionalAtom(i);
 					}
 				}
@@ -1829,8 +1829,7 @@ class StructureBuilder {
 				}
 				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
 						((element.equals("S") || element.equals("P")) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
-					oxidoAtom.setCharge(0);
-					oxidoAtom.setProtonsExplicitlyAddedOrRemoved(0);
+					oxidoAtom.neutraliseCharge();
 					oxidoAtom.getFirstBond().setOrder(2);
 				}
 				else if (element.equals("N") && connectedAtom.getCharge()==0){

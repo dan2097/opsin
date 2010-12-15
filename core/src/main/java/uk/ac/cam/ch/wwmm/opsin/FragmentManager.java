@@ -186,7 +186,7 @@ class FragmentManager {
 	}
 
 	/** Converts an atom in a fragment to a different atomic symbol.
-	 * Charged atoms can also be specified using a SMILES formula eg. [N+]
+	 * Charged atoms can also be specified using a SMILES formula eg. [NH4+]
 	 *
 	 * @param a The atom to change to a heteroatom
 	 * @param smiles The SMILES for one atom
@@ -198,18 +198,16 @@ class FragmentManager {
 		if(smiles.startsWith("[")) {
 			Atom heteroAtom = sBuilder.build(smiles, this).getFirstAtom();
 			elementSymbol =heteroAtom.getElement();
-			int charge = heteroAtom.getCharge();
-			if (heteroAtom.getCharge()!=0){
-				Integer defaultValency = ValencyChecker.getDefaultValency(elementSymbol);
-				if (defaultValency !=null){
-					//calculate how many protons have been added/removed as compared to the element's standard valency
-					int specifiedValency =  heteroAtom.getMinimumValency() !=null ?
-							heteroAtom.getMinimumValency() : ValencyChecker.getPossibleValencies(elementSymbol, charge)[0];
-					int hydrogensAdded = specifiedValency - defaultValency;
-					a.addChargeAndProtons(charge , hydrogensAdded);
+			int replacementCharge =heteroAtom.getCharge();
+			if (replacementCharge!=0){
+				if (a.getCharge()==0){
+					a.addChargeAndProtons(replacementCharge, heteroAtom.getProtonsExplicitlyAddedOrRemoved());
+				}
+				else if (a.getCharge()==replacementCharge){
+					a.setProtonsExplicitlyAddedOrRemoved(heteroAtom.getProtonsExplicitlyAddedOrRemoved());
 				}
 				else{
-					a.addChargeAndProtons(charge , 0);
+					throw new StructureBuildingException("Charge conflict between replacement term and atom to be replaced");
 				}
 			}
 		}
@@ -490,38 +488,6 @@ class FragmentManager {
 			createBond(fromAtom, toAtom, bond.getOrder());
 		}
 		return clone;
-	}
-
-	/**
-	 * Takes a terminalAtom on one atom and an atom on another fragment. The properties (charge/element) of the second atom and all of its neighbours are
-	 * moved onto the terminalAtom
-	 * @param terminalAtom
-	 * @param atomThatReplacesTerminal
-	 * @throws StructureBuildingException
-	 */
-	void replaceTerminalAtomWithFragment(Atom terminalAtom, Atom atomThatReplacesTerminal) throws StructureBuildingException {
-		Fragment parentFrag = terminalAtom.getFrag();//TODO  use replaceAtomWithAnotherAtomPreservingConnectivity instead of this function????
-		Fragment childFrag = atomThatReplacesTerminal.getFrag();
-		if (parentFrag == childFrag){
-			throw new StructureBuildingException("Replacing atom and terminal should be different fragments");
-		}
-		List<Atom> atomNeighbours = terminalAtom.getAtomNeighbours();
-		if (atomNeighbours.size() > 1){
-			throw new StructureBuildingException("Atom to be attached to fragment should only have one bond");
-		}
-		terminalAtom.setElement(atomThatReplacesTerminal.getElement());
-		terminalAtom.setCharge(atomThatReplacesTerminal.getCharge());
-		terminalAtom.clearLocants();
-		for (String locant : atomThatReplacesTerminal.getLocants()) {
-			terminalAtom.addLocant(locant);
-		}
-
-		List<Atom> neighbours = atomThatReplacesTerminal.getAtomNeighbours();
-		for (Atom neighbour : neighbours) {
-			createBond(terminalAtom, neighbour, childFrag.findBond(atomThatReplacesTerminal, neighbour).getOrder());
-		}
-		removeAtomAndAssociatedBonds(atomThatReplacesTerminal);
-		incorporateFragment(childFrag, parentFrag);
 	}
 	
 	/**
