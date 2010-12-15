@@ -3,7 +3,6 @@ import java.util.List;
 import nu.xom.Element;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 
 
@@ -19,14 +18,9 @@ public class ParserTest {
 		config = NameToStructureConfig.getDefaultConfigInstance();
 	}
 
-	@Test
-	public void testParseThrowsWhenNameIsUninterpretable() {
-		try {
-			parser.parse(config, "chunky bacon");
-			fail("Should throw ParsingException");
-		} catch (ParsingException e) {
-			// no-op
-		}
+	@Test(expected=ParsingException.class)
+	public void testParseThrowsWhenNameIsUninterpretable() throws ParsingException {
+		parser.parse(config, "chunky bacon");
 	}
 
 	@Test
@@ -43,13 +37,9 @@ public class ParserTest {
 		assertEquals(2, parse.get(0).getChildElements("wordRule").size());
 	}
 
-	@Test
-	public void testParseThrowsWhenNameIsSubstituentOnly() {
-		try {
-			parser.parse(config, "chloro");
-		} catch (ParsingException e) {
-			// no-op
-		}
+	@Test(expected=ParsingException.class)
+	public void testParseThrowsWhenNameIsSubstituentOnly() throws ParsingException {
+		parser.parse(config, "chloro");
 	}
 
 	@Test

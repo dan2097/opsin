@@ -1,38 +1,23 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class PreProcessorTest {
 
-	@Test
-	public void testPreProcessBlankThrows() {
-		try {
-			PreProcessor.preProcess("");
-		} catch (PreProcessingException e) {
-			// no-op
-		}
+	@Test(expected=PreProcessingException.class)
+	public void testPreProcessBlankThrows() throws PreProcessingException {
+		PreProcessor.preProcess("");
 	}
 
-	@Test
-	public void testPreProcessAmideThrows() {
-		try {
-			PreProcessor.preProcess("amide");
-			fail("\"amide\" should throw PreProcessingException");
-		} catch (PreProcessingException e) {
-			// no-op
-		}
+	@Test(expected=PreProcessingException.class)
+	public void testPreProcessAmideThrows() throws PreProcessingException{
+		PreProcessor.preProcess("amide");
 	}
 
-	@Test
-	public void testPreProcessThiolThrows() {
-		try {
-			PreProcessor.preProcess("thiol");
-			fail("\"thiol\" should throw PreProcessingException");
-		} catch (PreProcessingException e) {
-			// no-op
-		}
+	@Test(expected=PreProcessingException.class)
+	public void testPreProcessThiolThrows() throws PreProcessingException{
+		PreProcessor.preProcess("thiol");
 	}
 
 	@Test
