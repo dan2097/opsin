@@ -934,4 +934,30 @@ class FragmentTools {
 		}
 		return false;
 	}
+	
+	/**
+	 * Is the atom an aldehyde atom or a chalcogen functional atom
+	 * @param atom
+	 * @return
+	 */
+	static boolean isFunctionalAtomOrAldehyde(Atom atom) {
+		if (atom.getProperty(Atom.ISALDEHYDE)!=null && atom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
+			return true;
+		}
+		
+		String element =atom.getElement();
+		if (element.equals("O")|| element.equals("S") || element.equals("Se") || element.equals("Te")){//potential chalcogen functional atom
+			boolean isFunctionalAtom =false;
+			for (FunctionalAtom funcAtom : atom.getFrag().getFunctionalAtoms()) {
+				if (atom.equals(funcAtom.getAtom())){
+					isFunctionalAtom =true;
+					break;
+				}
+			}
+			if (isFunctionalAtom){
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -55,4 +55,30 @@ public class HeteroAtomReplacementTest {
 		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
 	}
+	
+	@Test
+	public void replaceNeutralWithCharged() throws StructureBuildingException{
+		Atom a = new Atom(0, "C", mock(Fragment.class));
+		fragManager.makeHeteroatom(a, "[NH4+]", false);
+		assertEquals(1, a.getCharge());
+		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
+		assertEquals(4, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
+	}
+	
+	@Test
+	public void replaceChargedWithEquallyCharged() throws StructureBuildingException{
+		Atom a = new Atom(0, "C", mock(Fragment.class));
+		a.addChargeAndProtons(1, -1);
+		fragManager.makeHeteroatom(a, "[NH4+]", false);
+		assertEquals(1, a.getCharge());
+		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
+		assertEquals(4, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
+	}
+	
+    @Test(expected=StructureBuildingException.class)
+	public void replaceChargedWithUnEquallyCharged() throws StructureBuildingException{
+		Atom a = new Atom(0, "C", mock(Fragment.class));
+		a.addChargeAndProtons(1, -1);
+		fragManager.makeHeteroatom(a, "[NH2-]", false);
+	}
 }
