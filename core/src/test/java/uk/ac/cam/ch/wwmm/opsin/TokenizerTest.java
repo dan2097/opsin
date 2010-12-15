@@ -7,8 +7,6 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.cam.ch.wwmm.opsin.Tokeniser.TokenizationResult;
-
 public class TokenizerTest {
 
 	static Tokeniser tokenizer;
