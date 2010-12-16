@@ -3,17 +3,17 @@ import java.util.List;
 import nu.xom.Element;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import org.junit.Before;
+import org.junit.BeforeClass;
 
 
 import org.junit.Test;
 
 public class ParserTest {
-	private Parser parser;
-	private NameToStructureConfig config;
+	private static Parser parser;
+	private static NameToStructureConfig config;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 		parser = new Parser();
 		config = NameToStructureConfig.getDefaultConfigInstance();
 	}
@@ -31,10 +31,10 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testParseReturnsOneWordRulesForEachMixtureComponent() throws ParsingException {
+	public void testParseReturnsOneWordRuleForEachMixtureComponent() throws ParsingException {
 		List<Element> parse = parser.parse(config, "benzene; ethane");
 
-		assertEquals(2, parse.get(0).getChildElements("wordRule").size());
+		assertEquals(2, parse.get(0).getChildElements(XmlDeclarations.WORDRULE_EL).size());
 	}
 
 	@Test(expected=ParsingException.class)
