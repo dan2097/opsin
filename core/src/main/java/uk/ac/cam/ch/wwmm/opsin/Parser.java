@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
-import uk.ac.cam.ch.wwmm.opsin.Tokeniser.TokenizationResult;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -72,11 +71,24 @@ class Parser {
 	private final WordRules wordRules;
 	/**Holds the various tokens used.*/
 	private final ResourceManager resourceManager;
+	private final ParseRules parseRules;
 	
 	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
 	private final static Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
 	private final static Pattern matchColon = Pattern.compile(":");
 	private final static Pattern matchForwardSlash = Pattern.compile("/");
+
+	/**
+	 * No-argument constructor. Uses ResouceGetter found at
+	 * uk/ac/cam/ch/wwmm/opsin/resources/
+	 */
+	Parser() throws Exception {
+		ResourceGetter resources = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
+		this.wordRules = new WordRules(resources);
+		this.resourceManager = new ResourceManager(resources);
+		this.parseRules = new ParseRules(this.resourceManager);
+		this.tokeniser = new Tokeniser(parseRules);
+	}
 
 	/**Initialises the parser.
 	 * @param resourceManager
@@ -87,6 +99,7 @@ class Parser {
 		this.wordRules =wordRules;
 		this.resourceManager = resourceManager;
 		this.tokeniser = tokeniser;
+		this.parseRules = tokeniser.getParseRules();
 	}
 
 	/**Parses a chemical name to an XML representation of the parse.
@@ -108,7 +121,7 @@ class Parser {
 		Parse parse = null;
 		if (name.contains(", ")){
 			try{
-				TokenizationResult tokenizationResult = tokeniser.tokenize(tokeniser.uninvertCASName(name), false);
+				TokenizationResult tokenizationResult = tokeniser.tokenize(CASTools.uninvertCASName(name, parseRules), false);
 				if (tokenizationResult.isSuccessfullyTokenized()){
 					parse = tokenizationResult.getParse();
 				}
@@ -168,7 +181,7 @@ class Parser {
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
 				}
 				for(ParseTokens pt : pw.getParseTokens()) {
-					writeWordXML(word, pw, pt.getTokens(), tokeniser.chunkAnnotations(pt.getAnnotations()));
+					writeWordXML(word, pw, pt.getTokens(), WordTools.chunkAnnotations(pt.getAnnotations()));
 				}
 			}
 			/* All words are placed into a wordRule.

@@ -7,8 +7,6 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.cam.ch.wwmm.opsin.Tokeniser.TokenizationResult;
-
 public class TokenizerTest {
 
 	static Tokeniser tokenizer;
@@ -131,117 +129,5 @@ public class TokenizerTest {
 		assertEquals("First token: acet", "acet", tokens.get(0));
 		assertEquals("Second token: ic acid", "ic acid", tokens.get(1));
 		assertEquals("Third token: end of main group", "", tokens.get(2));
-	}
-
-	@Test
-	public void cas1() throws Exception {
-		String name = tokenizer.uninvertCASName("Silane, chloromethyl-");
-		assertEquals("chloromethyl-Silane", name);
-	}
-	
-	@Test
-	public void cas2() throws Exception {
-		String name = tokenizer.uninvertCASName("Acetic acid, 2-ethoxy-2-thioxo-");
-		assertEquals("2-ethoxy-2-thioxo-Acetic acid", name);
-	}
-
-	@Test
-	public void cas3() throws Exception {
-		String name = tokenizer.uninvertCASName("Silanol, 1,1'-methylenebis-");
-		assertEquals("1,1'-methylenebis-Silanol", name);
-	}
-	
-	@Test
-	public void cas4() throws Exception {
-		String name = tokenizer.uninvertCASName("Phosphonic acid, P,P'-(8-methylene-3,7,10,14-tetraoxo-4,6,11,13-tetraazahexadecane-1,16-diyl)-bis-, P,P,P',P'-tetramethyl ester");
-		assertEquals("P,P,P',P'-tetramethyl P,P'-(8-methylene-3,7,10,14-tetraoxo-4,6,11,13-tetraazahexadecane-1,16-diyl)-bis-Phosphonate", name);
-	}
-
-	@Test
-	public void cas5() throws Exception {
-		String name = tokenizer.uninvertCASName("Benzenamine, 3,3',3''-(1-ethenyl-2-ylidene)tris[6-methyl-");
-		assertEquals("3,3',3''-(1-ethenyl-2-ylidene)tris[6-methyl-Benzenamine]", name);
-	}
-	
-	@Test
-	public void cas6() throws Exception {
-		String name = tokenizer.uninvertCASName("Pyridine, 3,3'-thiobis[6-chloro-");
-		assertEquals("3,3'-thiobis[6-chloro-Pyridine]", name);
-	}
-	
-	@Test
-	public void cas7() throws Exception {
-		String name = tokenizer.uninvertCASName("1-Butanesulfonic acid, 2,4-diamino-3-chloro- 1-ethyl ester");
-		assertEquals("1-ethyl 2,4-diamino-3-chloro-1-Butanesulfonate", name);
-	}
-	
-	@Test
-	public void cas8() throws Exception {
-		String name = tokenizer.uninvertCASName("Benzenecarboximidamide, N'-(1E)-1-propen-1-yl-N-(1Z)-1-propen-1-yl-");
-		assertEquals("N'-(1E)-1-propen-1-yl-N-(1Z)-1-propen-1-yl-Benzenecarboximidamide", name);
-	}
-	
-	@Test
-	public void cas9() throws Exception {
-		String name = tokenizer.uninvertCASName("Phosphoric acid, ethyl dimethyl ester");
-		assertEquals("ethyl dimethyl Phosphorate", name);
-	}
-	
-	@Test
-	public void cas10() throws Exception {
-		String name = tokenizer.uninvertCASName("2-Propanone, oxime");
-		assertEquals("2-Propanone oxime", name);
-	}
-	
-	@Test
-	public void cas11() throws Exception {
-		String name = tokenizer.uninvertCASName("Disulfide, bis(2-chloroethyl)");
-		assertEquals("bis(2-chloroethyl) Disulfide", name);
-	}
-
-	@Test
-	public void cas12() throws Exception {
-		String name = tokenizer.uninvertCASName("Ethanimidic acid, N-nitro-, (1Z)-");
-		assertEquals("N-nitro-(1Z)-Ethanimidic acid", name);
-	}
-	
-	@Test
-	public void cas13() throws Exception {
-		String name = tokenizer.uninvertCASName("2(1H)-Pyridinone, hydrazone, (2E)-");
-		assertEquals("(2E)-2(1H)-Pyridinone hydrazone", name);
-	}
-	
-	@Test
-	public void cas14() throws Exception {
-		String name = tokenizer.uninvertCASName("benzoic acid, 4,4'-methylenebis[2-chloro-");
-		assertEquals("4,4'-methylenebis[2-chloro-benzoic acid]", name);
-	}
-	
-	@Test
-	public void cas15() throws Exception {
-		String name = tokenizer.uninvertCASName("peroxide, ethyl methyl");
-		assertEquals("ethyl methyl peroxide", name);
-	}
-	
-	@Test
-	public void cas16() throws Exception {
-		String name = tokenizer.uninvertCASName("Phosphonic diamide, P-phenyl- (8CI9CI)");
-		assertEquals("P-phenyl-Phosphonic diamide", name);
-	}
-	
-	@Test
-	public void cas17() throws Exception {
-		String name = tokenizer.uninvertCASName("piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride");
-		assertEquals("1,1-dimethyl-piperazinium 2,2,2-trifluoroacetate hydrochloride", name);
-	}
-	
-	@Test(expected=ParsingException.class)
-	public void notCas1() throws Exception {
-		tokenizer.uninvertCASName("hexanamine, hexylamine");
-	}
-	
-	@Test(expected=ParsingException.class)
-	public void notCas2() throws Exception {
-		tokenizer.uninvertCASName("cyclopropane-1,2-diyldicarbonyl diisocyanate, cyclopropane-1,2-diylbis(carbonyl)bisisocyanate");
 	}
 }

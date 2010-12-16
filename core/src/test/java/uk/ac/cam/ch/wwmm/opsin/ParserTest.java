@@ -1,10 +1,46 @@
 package uk.ac.cam.ch.wwmm.opsin;
+import java.util.List;
+import nu.xom.Element;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import org.junit.Before;
 
 
 import org.junit.Test;
 
 public class ParserTest {
+	private Parser parser;
+	private NameToStructureConfig config;
+
+	@Before
+	public void setUp() throws Exception {
+		parser = new Parser();
+		config = NameToStructureConfig.getDefaultConfigInstance();
+	}
+
+	@Test(expected=ParsingException.class)
+	public void testParseThrowsWhenNameIsUninterpretable() throws ParsingException {
+		parser.parse(config, "chunky bacon");
+	}
+
+	@Test
+	public void testParseUninvertsCASNomenclature() throws ParsingException {
+		List<Element> parse = parser.parse(config, "Piperidine, 1-(1-oxopropyl)-");
+
+		assertFalse(parse.isEmpty());
+	}
+
+	@Test
+	public void testParseReturnsOneWordRulesForEachMixtureComponent() throws ParsingException {
+		List<Element> parse = parser.parse(config, "benzene; ethane");
+
+		assertEquals(2, parse.get(0).getChildElements("wordRule").size());
+	}
+
+	@Test(expected=ParsingException.class)
+	public void testParseThrowsWhenNameIsSubstituentOnly() throws ParsingException {
+		parser.parse(config, "chloro");
+	}
 
 	@Test
 	public void testConvertStringToComponentRatios1() throws ParsingException {
