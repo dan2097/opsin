@@ -71,6 +71,7 @@ class Parser {
 	private final WordRules wordRules;
 	/**Holds the various tokens used.*/
 	private final ResourceManager resourceManager;
+	private final ParseRules parseRules;
 	
 	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
 	private final static Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
@@ -85,7 +86,7 @@ class Parser {
 		ResourceGetter resources = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		this.wordRules = new WordRules(resources);
 		this.resourceManager = new ResourceManager(resources);
-		ParseRules parseRules = new ParseRules(this.resourceManager);
+		this.parseRules = new ParseRules(this.resourceManager);
 		this.tokeniser = new Tokeniser(parseRules);
 	}
 
@@ -98,6 +99,7 @@ class Parser {
 		this.wordRules =wordRules;
 		this.resourceManager = resourceManager;
 		this.tokeniser = tokeniser;
+		this.parseRules = tokeniser.getParseRules();
 	}
 
 	/**Parses a chemical name to an XML representation of the parse.
@@ -119,7 +121,7 @@ class Parser {
 		Parse parse = null;
 		if (name.contains(", ")){
 			try{
-				TokenizationResult tokenizationResult = tokeniser.tokenize(tokeniser.uninvertCASName(name), false);
+				TokenizationResult tokenizationResult = tokeniser.tokenize(CASTools.uninvertCASName(name, parseRules), false);
 				if (tokenizationResult.isSuccessfullyTokenized()){
 					parse = tokenizationResult.getParse();
 				}
@@ -179,7 +181,7 @@ class Parser {
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
 				}
 				for(ParseTokens pt : pw.getParseTokens()) {
-					writeWordXML(word, pw, pt.getTokens(), tokeniser.chunkAnnotations(pt.getAnnotations()));
+					writeWordXML(word, pw, pt.getTokens(), WordTools.chunkAnnotations(pt.getAnnotations()));
 				}
 			}
 			/* All words are placed into a wordRule.
