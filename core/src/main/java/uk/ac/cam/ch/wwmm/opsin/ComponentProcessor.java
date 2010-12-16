@@ -1026,7 +1026,9 @@ class ComponentProcessor {
 					nextName.equals(HETEROATOM_EL) ||
 					nextName.equals(HYDRO_EL)) {
 				int mvalue = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-				featureToMultiply.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
+				if (mvalue>1){
+					featureToMultiply.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
+				}
 				for(int i= mvalue -1; i >=1; i--) {
 					Element newElement = new Element(featureToMultiply);
 					if (locants !=null && locants.length==mvalue){

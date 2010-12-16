@@ -804,8 +804,8 @@ class FunctionalReplacement {
 							throw new ComponentGenerationException("Multiplier/locant disagreement when multiplying infixed suffix");
 						}
 					    suffix.addAttribute(new Attribute(LOCANT_ATR, locants[0]));
-						suffix.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
 					}
+					suffix.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
 					for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
 						Element newSuffix =new Element(suffix);
 						Fragment newSuffixFrag =state.fragManager.copyFragment(suffixFrag);
