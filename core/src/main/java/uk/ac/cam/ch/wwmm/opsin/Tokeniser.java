@@ -43,6 +43,7 @@ class Tokeniser {
 				parseWord(result, parseTokens, parsedName, false);
 			}
 			else if (!fixWord(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+				result.setUnparsableName(results.getUnparseableName());
 				break;
 			}
 		}
@@ -73,6 +74,7 @@ class Tokeniser {
 				parseWord(result, parseTokens, parsedName, true);
 			}
 			else if (!fixWordInReverse(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+				result.setUnparsableName(results.getUnparseableName());
 				break;
 			}
 		}
@@ -137,7 +139,6 @@ class Tokeniser {
 					}
 				}
 			} else {
-				result.setUnparsableName(results.getUnparseableName());
 				return false;
 			}
 		}
@@ -155,7 +156,6 @@ class Tokeniser {
 				return false;
 			}
 		} else {
-			result.setUnparsableName(results.getUnparseableName());
 			return false;
 		}
 		return true;
