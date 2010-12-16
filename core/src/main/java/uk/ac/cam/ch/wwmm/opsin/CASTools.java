@@ -10,7 +10,7 @@ import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 /**
  * Tools for converting CAS nomenclature into IUPAC nomenclature.
  */
-public class CASTools {
+class CASTools {
 
 	private static final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchSpace = Pattern.compile(" ");
@@ -26,7 +26,7 @@ public class CASTools {
 	 * @return
 	 * @throws ParsingException
 	 */
-	public static String uninvertCASName(String name, ParseRules parseRules) throws ParsingException {
+	static String uninvertCASName(String name, ParseRules parseRules) throws ParsingException {
 		List<String> nameComponents = new ArrayList<String>(Arrays.asList(matchCommaSpace.split(name)));
 		List<String> substituents = new ArrayList<String>();
 		List<String> seperateWordSubstituents = new ArrayList<String>();

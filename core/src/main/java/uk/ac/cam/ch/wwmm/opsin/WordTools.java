@@ -13,6 +13,17 @@ public class WordTools {
 	private final static char endOfSubstituent = '\u00e9';
 	private final static char endOfMainGroup = '\u00e2';
 
+	/**
+	 * Splits cases where the parseTokensList describes a functionalTerm in addition to another mainGroup/substituent into two parseWords
+	 * This occurs if the name is formally missing a space e.g. ethylthiocyanide.
+	 * If multiple parses are present then it may be possible to disambiguate between them:
+	 * 	parses with omitted spaces are discarded if a parse without omitted space is found
+	 * 	parses with shorter functional terms are discarded e.g. ethylthiocyanide is [ethyl] [thiocyanide] not [ethylthio] [cyanide]
+	 * @param parseTokensList
+	 * @param chemicalName
+	 * @return
+	 * @throws ParsingException
+	 */
 	static List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) throws ParsingException {
 		List<ParseTokens> wellFormedParseTokens = new ArrayList<ParseTokens>();//these are all in the same word as would be expected
 		List<List<ParseTokens>> omittedWordParseTokensList = new ArrayList<List<ParseTokens>>();//these are grouped into words e.g. ethylchloride will have a list of parseTokens for the ethyl and chloride
@@ -110,7 +121,7 @@ public class WordTools {
 	 * @param annots The annotations for a word.
 	 * @return A List of lists of annotations, each list corresponds to a substituent/maingroup/functionalTerm
 	 */
-	public static List<List<Character>> chunkAnnotations(List<Character> annots) {
+	static List<List<Character>> chunkAnnotations(List<Character> annots) {
 		LinkedList<List<Character>> chunkList = new LinkedList<List<Character>>();
 		List<Character> currentTerm = new ArrayList<Character>();
 		for (Character annot : annots) {
@@ -121,5 +132,34 @@ public class WordTools {
 			}
 		}
 		return chunkList;
+	}
+	
+	/**
+	 * Works left to right removing spaces if there are too many opening brackets
+	 * @param name
+	 * @return
+	 * @throws ParsingException If brackets are unbalanced and cannot be balanced by removing whitespace
+	 */
+	static String removeWhiteSpaceIfBracketsAreUnbalanced(String name) throws ParsingException {
+		int bracketLevel = 0;
+		int stringLength = name.length();
+		for (int i = 0; i < stringLength; i++) {
+			char c = name.charAt(i);
+			if (c == '(' || c == '[' || c == '{') {
+				bracketLevel++;
+			} else if (c == ')' || c == ']' || c == '}') {
+				bracketLevel--;
+			} else if (c == ' ' && bracketLevel > 0) {//brackets unbalanced and a space has been encountered!
+				name = name.substring(0, i) + name.substring(i + 1);
+				stringLength = name.length();
+				i--;
+			}
+		}
+		if (bracketLevel > 0) {
+			throw new ParsingException("Unmatched opening bracket found in :" + name);
+		} else if (bracketLevel < 0) {
+			throw new ParsingException("Unmatched closing bracket found in :" + name);
+		}
+		return name;
 	}
 }
