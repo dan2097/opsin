@@ -381,22 +381,38 @@ class FragmentTools {
      * @throws StructureBuildingException
 	 */
 	static void unsaturate(Atom fromAtom, int bondOrder, Fragment fragment) throws StructureBuildingException {
-		List<Atom> atomList = fragment.getAtomList();
 		Atom toAtom = null;
-		int initialIndice = atomList.indexOf(fromAtom);
-		if (initialIndice +1 < atomList.size()){
-			toAtom = atomList.get(initialIndice +1);
-		}
-		if (toAtom==null || toAtom.getType().equals(SUFFIX_TYPE_VAL)){//allows something like cyclohexan-6-ene, something like butan-4-ene will still fail
-			List<Atom> neighbours = fromAtom.getAtomNeighbours();
-			if (neighbours.size() >=2){
-				Atom firstAtomInFrag = atomList.get(0);
-				for (Atom a : neighbours) {
-					if (a ==firstAtomInFrag){
-						toAtom = a;
-						break;
-					}
+		Integer locant = null;
+		try{
+			String primes ="";
+			String locantStr = fromAtom.getFirstLocant();
+			int numberOfPrimes = StringTools.countTerminalPrimes(locantStr);
+			locant = Integer.parseInt(locantStr.substring(0, locantStr.length()-numberOfPrimes));
+			primes = StringTools.multiplyString("'", numberOfPrimes);
+			Atom possibleToAtom = fragment.getAtomByLocant(String.valueOf(locant +1)+primes);
+			if (possibleToAtom !=null && fragment.findBond(fromAtom, possibleToAtom)!=null){
+				toAtom = possibleToAtom;
+			}
+			else if (possibleToAtom ==null && fromAtom.getAtomIsInACycle()){//allow something like cyclohexan-6-ene, something like butan-4-ene will still fail
+				possibleToAtom = fragment.getAtomByLocant("1" + primes);
+				if (possibleToAtom !=null && fragment.findBond(fromAtom, possibleToAtom)!=null){
+					toAtom =possibleToAtom;
 				}
+			}
+		}
+		catch (Exception e) {
+			List<Atom> atomList = fragment.getAtomList();
+			int initialIndice = atomList.indexOf(fromAtom);
+			if (initialIndice +1 < atomList.size() && fragment.findBond(fromAtom, atomList.get(initialIndice +1))!=null){
+				toAtom = atomList.get(initialIndice +1);
+			}
+		}
+		if (toAtom==null){
+			if (locant!=null){
+				throw new StructureBuildingException("Could not find bond to unsaturate starting from the atom with locant: " +locant);
+			}
+			else{
+				throw new StructureBuildingException("Could not find bond to unsaturate");
 			}
 		}
 		Bond b = fragment.findBondOrThrow(fromAtom, toAtom);
