@@ -232,9 +232,6 @@ class ComponentProcessor {
 				assignLocantsAndMultipliers(state, subBracketOrRoot);
 			}
 			processWordLevelMultiplierIfApplicable(state, word, wordCount);
-			for (Element group : groups) {
-				state.xmlFragmentMap.get(group).sortAtomListByLocant();
-			}
 		}
 	}
 
