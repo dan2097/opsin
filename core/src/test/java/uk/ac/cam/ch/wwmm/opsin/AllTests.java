@@ -23,7 +23,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	StereochemistryTest.class,
 	StructureBuilderTest.class,
 	TokenizerTest.class,
-	VerifyFragmentsTest.class
+	VerifyFragmentsTest.class,
+	CASToolsTest.class
 })
 public class AllTests {
 
