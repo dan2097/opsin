@@ -10,6 +10,8 @@ This is a Java library for IUPAC name-to-structure conversion.
 Currently it should be considered to be under development although the interface for using it will remain constant.
 OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 
+OPSIN can be run through a dedicated Web interface at: http://opsin.ch.cam.ac.uk/
+
 ##################################################
 
 OPSIN is available as a standalone JAR from Bitbucket (http://bitbucket.org/dan2097/opsin/) or SourceForge(https://sourceforge.net/projects/oscar3-chem/)
