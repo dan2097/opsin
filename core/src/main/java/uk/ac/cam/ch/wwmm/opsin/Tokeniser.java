@@ -32,13 +32,12 @@ class Tokeniser {
 	 */
 	TokenizationResult tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		TokenizationResult result = allowRemovalOfWhiteSpace ? new TokenizationResult(WordTools.removeWhiteSpaceIfBracketsAreUnbalanced(name)) :new TokenizationResult(name);
-		String unparsedNamePreFix = null;
+		TokenizationResult copy = null;
 
 		while (!result.isSuccessfullyTokenized()){
 			ParseRulesResults results = parseRules.getParses(result.getUnparsedName());
 			List<ParseTokens> parseTokens = results.getParseTokensList();
 
-			result.setUninterpretableName(result.getWorkingName());
 			result.setWorkingName(results.getUninterpretableName());
 			
 			String parsedName = result.getParsedName();
@@ -46,23 +45,17 @@ class Tokeniser {
 			if (isWordParsable(parseTokens, result)) {
 				parseWord(result, parseTokens, parsedName, false);
 			} else {
-				result.setUnparsableName(results.getUnparseableName());
-
-				if (unparsedNamePreFix == null) {
-					unparsedNamePreFix = result.getUnparsedName();
+				if (copy == null) {
+					copy = new TokenizationResult(name);
+					copy.setErrorFields(result.getUnparsedName(), result.getWorkingName(), results.getUnparseableName());
 				}
 
 				if (!fixWord(result, parsedName, results, allowRemovalOfWhiteSpace)) {
-					result.setUnparsedName(unparsedNamePreFix);
+					result.setErrorFields(copy.getUnparsedName(), copy.getUninterpretableName(), copy.getUnparsableName());
+
 					break;
 				}
 			}
-		}
-
-		if (result.isSuccessfullyTokenized()) {
-			result.setUninterpretableName("");
-		} else if ("".equals(result.getUninterpretableName())) {
-			result.setUninterpretableName(result.getWorkingName());
 		}
 
 		return result;
