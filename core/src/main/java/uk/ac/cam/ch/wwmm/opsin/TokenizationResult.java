@@ -7,7 +7,7 @@ class TokenizationResult {
 	private String unparsableName;
 	private String unparsedName;
 	private String uninterpretableName;
-	public String foo;
+
 
 	TokenizationResult(String name) {
 		this.parse = new Parse(name);
