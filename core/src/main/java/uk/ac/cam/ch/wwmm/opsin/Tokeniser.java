@@ -32,20 +32,37 @@ class Tokeniser {
 	 */
 	TokenizationResult tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		TokenizationResult result = allowRemovalOfWhiteSpace ? new TokenizationResult(WordTools.removeWhiteSpaceIfBracketsAreUnbalanced(name)) :new TokenizationResult(name);
+		String unparsedNamePreFix = null;
 
 		while (!result.isSuccessfullyTokenized()){
 			ParseRulesResults results = parseRules.getParses(result.getUnparsedName());
 			List<ParseTokens> parseTokens = results.getParseTokensList();
-			result.setUninterpretableName(results.getUninterpretableName());
+
+			result.setUninterpretableName(result.getWorkingName());
+			result.setWorkingName(results.getUninterpretableName());
+			
 			String parsedName = result.getParsedName();
 
-			if (isWordParsable(parseTokens, result)){
+			if (isWordParsable(parseTokens, result)) {
 				parseWord(result, parseTokens, parsedName, false);
-			}
-			else if (!fixWord(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+			} else {
 				result.setUnparsableName(results.getUnparseableName());
-				break;
+
+				if (unparsedNamePreFix == null) {
+					unparsedNamePreFix = result.getUnparsedName();
+				}
+
+				if (!fixWord(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+					result.setUnparsedName(unparsedNamePreFix);
+					break;
+				}
 			}
+		}
+
+		if (result.isSuccessfullyTokenized()) {
+			result.setUninterpretableName("");
+		} else if ("".equals(result.getUninterpretableName())) {
+			result.setUninterpretableName(result.getWorkingName());
 		}
 
 		return result;
@@ -67,8 +84,9 @@ class Tokeniser {
 		while (!result.isSuccessfullyTokenized()){
 			ParseRulesResults results = reverseParseRules.getParses(result.getUnparsedName());
 			List<ParseTokens> parseTokens =results.getParseTokensList();
-			result.setUninterpretableName(results.getUninterpretableName());
-			String parsedName = result.getUnparsedName().substring(result.getUninterpretableName().length());
+			result.setUninterpretableName(result.getWorkingName());
+			result.setWorkingName(results.getUninterpretableName());
+			String parsedName = result.getUnparsedName().substring(result.getWorkingName().length());
 
 			if (isWordParsableInReverse(parseTokens, result)) {
 				parseWord(result, parseTokens, parsedName, true);
@@ -81,16 +99,22 @@ class Tokeniser {
 		
 		Collections.reverse(result.getParse().getWords());
 
+		if (result.isSuccessfullyTokenized()) {
+			result.setUninterpretableName("");
+		} else  {
+			result.setUninterpretableName(result.getWorkingName());
+		}
+
 		return result;
 	}
 
 
 	private boolean isWordParsableInReverse(List<ParseTokens> parseTokens, TokenizationResult result) {
-		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getUninterpretableName().charAt(result.getUninterpretableName().length()-1)==' ' || result.getUninterpretableName().charAt(result.getUninterpretableName().length()-1) =='-');
+		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getWorkingName().charAt(result.getWorkingName().length()-1)==' ' || result.getWorkingName().charAt(result.getWorkingName().length()-1) =='-');
 	}
 
 	private boolean isWordParsable(List<ParseTokens> parseTokens, TokenizationResult result) {
-		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getUninterpretableName().charAt(0) ==' ' || result.getUninterpretableName().charAt(0) =='-');
+		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getWorkingName().charAt(0) ==' ' || result.getWorkingName().charAt(0) =='-');
 	}
 	
 	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) throws ParsingException {
@@ -100,9 +124,9 @@ class Tokeniser {
 		addParseWords(parseTokens, parsedName, result.getParse(), reverse);
 
 		if (result.isFullyInterpretable()) {
-			result.setUnparsedName(result.getUninterpretableName());
+			result.setUnparsedName(result.getWorkingName());
 		} else {
-			String name = reverse ? result.getUninterpretableName().substring(0, result.getUninterpretableName().length() - 1) : result.getUninterpretableName().substring(1);
+			String name = reverse ? result.getWorkingName().substring(0, result.getWorkingName().length() - 1) : result.getWorkingName().substring(1);
 			result.setUnparsedName(name);
 		}
 	}
@@ -120,10 +144,10 @@ class Tokeniser {
 	}
 
 	private boolean fixWord(TokenizationResult result, String parsedName, ParseRulesResults results, boolean allowRemovalOfWhiteSpace) throws ParsingException {
-		Matcher m = matchCompoundWithPhrase.matcher(result.getUninterpretableName());
+		Matcher m = matchCompoundWithPhrase.matcher(result.getWorkingName());
 		if (m.lookingAt()) {
-			result.setUnparsedName(parsedName + result.getUninterpretableName().substring(m.group().length()));
-		} else if (matchCasCollectiveIndex.matcher(result.getUninterpretableName()).matches()) {
+			result.setUnparsedName(parsedName + result.getWorkingName().substring(m.group().length()));
+		} else if (matchCasCollectiveIndex.matcher(result.getWorkingName()).matches()) {
 			result.setUnparsedName(parsedName);
 		} else {
 			if (allowRemovalOfWhiteSpace) {
@@ -131,9 +155,9 @@ class Tokeniser {
 				List<ParseWord> parsedWords = result.getParse().getWords();
 				if (!reverseSpaceRemoval(parsedWords, result)) {
 					//Try and remove a space from the right and try again
-					int indexOfSpace = result.getUninterpretableName().indexOf(' ');
+					int indexOfSpace = result.getWorkingName().indexOf(' ');
 					if (indexOfSpace != -1) {
-						result.setUnparsedName( parsedName + result.getUninterpretableName().substring(0, indexOfSpace) + result.getUninterpretableName().substring(indexOfSpace + 1));
+						result.setUnparsedName( parsedName + result.getWorkingName().substring(0, indexOfSpace) + result.getWorkingName().substring(indexOfSpace + 1));
 					} else {
 						return false;
 					}
@@ -149,9 +173,9 @@ class Tokeniser {
 		if (allowRemovalOfWhiteSpace) {
 			//Try and remove a space and try again
 			//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
-			int indexOfSpace = result.getUninterpretableName().lastIndexOf(' ');
+			int indexOfSpace = result.getWorkingName().lastIndexOf(' ');
 			if (indexOfSpace != -1) {
-				result.setUnparsedName( result.getUninterpretableName().substring(0, indexOfSpace) + result.getUninterpretableName().substring(indexOfSpace + 1) + parsedName);
+				result.setUnparsedName( result.getWorkingName().substring(0, indexOfSpace) + result.getWorkingName().substring(indexOfSpace + 1) + parsedName);
 			} else {
 				return false;
 			}

@@ -241,16 +241,6 @@ public class TokenizerTest {
 	}
 	
 	@Test
-	@Ignore
-	public void partiallyInterpretatableLRWithSpaces() throws Exception {
-		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
-		assertEquals("phen|foo toluene", result.getUninterpretableName());
-		assertEquals("|foo toluene", result.getUnparsableName());
-		assertEquals("phen|foo toluene", result.getUnparsedName());
-	}
-	
-	@Test
 	public void partiallyInterpretatableRL1() throws Exception {
 		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl-2H-foo|ene", true);
 		assertEquals(false, result.isSuccessfullyTokenized());
@@ -268,6 +258,30 @@ public class TokenizerTest {
 		assertEquals("fooyl", result.getUninterpretableName());
 		assertEquals("f", result.getUnparsableName());//o as in the end of thio then oyl
 		assertEquals("fooylpyridine", result.getUnparsedName());
+	}
+
+	@Test
+	public void tokenizeDoesNotTokenizeUnTokenizableName() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
+		assertEquals(false, result.isSuccessfullyTokenized());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUninterpretableName() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
+		assertEquals("phen|foo toluene", result.getUninterpretableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsableName() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
+		assertEquals("|foo toluene", result.getUnparsableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsedName() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
+		assertEquals("phen|foo toluene", result.getUnparsedName());
 	}
 	
 	@Test

@@ -3,15 +3,18 @@ package uk.ac.cam.ch.wwmm.opsin;
 class TokenizationResult {
 
 	private Parse parse;
-	private String uninterpretableName;
+	private String workingName;
 	private String unparsableName;
 	private String unparsedName;
+	private String uninterpretableName;
+	public String foo;
 
-	TokenizationResult(String name){
+	TokenizationResult(String name) {
 		this.parse = new Parse(name);
-		this.uninterpretableName = "";
+		this.workingName = "";
 		this.unparsableName = "";
 		this.unparsedName = name;
+		this.uninterpretableName = "";
 	}
 
 	boolean isSuccessfullyTokenized() {
@@ -22,16 +25,24 @@ class TokenizationResult {
 		return parse;
 	}
 
+	void setUninterpretableName(String name) {
+		this.uninterpretableName = name;
+	}
+
 	String getUninterpretableName() {
-		return uninterpretableName;
+		return this.uninterpretableName;
+	}
+
+	String getWorkingName() {
+		return workingName;
+	}
+
+	public void setWorkingName(String name) {
+		this.workingName = name;
 	}
 
 	boolean isFullyInterpretable() {
-		return "".equals(uninterpretableName);
-	}
-
-	public void setUninterpretableName(String name) {
-		this.uninterpretableName = name;
+		return "".equals(workingName);
 	}
 
 	String getUnparsableName() {
@@ -39,7 +50,13 @@ class TokenizationResult {
 	}
 
 	void setUnparsableName(String name) {
-		this.unparsableName = name;
+		if (!"".equals(this.unparsableName)) {
+			if (!this.unparsableName.replace(" ", "").equals(name)) {
+						this.unparsableName = name;
+			}
+		} else {
+			this.unparsableName = name;
+		}
 	}
 
 	String getUnparsedName() {
@@ -47,7 +64,7 @@ class TokenizationResult {
 	}
 
 	String getParsedName() {
-		return unparsedName.substring(0, unparsedName.length() - uninterpretableName.length());
+		return unparsedName.substring(0, unparsedName.length() - workingName.length());
 	}
 
 	void setUnparsedName(String name) {
