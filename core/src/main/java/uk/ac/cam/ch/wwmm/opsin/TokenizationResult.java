@@ -50,13 +50,7 @@ class TokenizationResult {
 	}
 
 	void setUnparsableName(String name) {
-		if (!"".equals(this.unparsableName)) {
-			if (!this.unparsableName.replace(" ", "").equals(name)) {
-						this.unparsableName = name;
-			}
-		} else {
-			this.unparsableName = name;
-		}
+		this.unparsableName = name;
 	}
 
 	String getUnparsedName() {
@@ -69,5 +63,11 @@ class TokenizationResult {
 
 	void setUnparsedName(String name) {
 		this.unparsedName = name;
+	}
+
+	void setErrorFields(String unparsedName, String uninterpretableName, String unparsableName) {
+		this.unparsedName = unparsedName;
+		this.uninterpretableName = uninterpretableName;
+		this.unparsableName = unparsableName;
 	}
 }
