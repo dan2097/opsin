@@ -285,6 +285,24 @@ public class TokenizerTest {
 	}
 	
 	@Test
+	public void tokenizePreservesSpacesInUninterpretableName2() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("eth yl |foo arene", true);
+		assertEquals("|foo arene", result.getUninterpretableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsableName2() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("eth yl |foo arene", true);
+		assertEquals("|foo arene", result.getUnparsableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsedName2() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("eth yl |foo arene", true);
+		assertEquals("|foo arene", result.getUnparsedName());
+	}
+	
+	@Test
 	@Ignore
 	public void partiallyInterpretatableRLWithSpaces() throws Exception {
 		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl toluene", true);

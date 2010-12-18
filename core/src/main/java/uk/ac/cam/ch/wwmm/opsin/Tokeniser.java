@@ -40,10 +40,11 @@ class Tokeniser {
 
 			result.setWorkingName(results.getUninterpretableName());
 			
-			String parsedName = result.getParsedName();
+			String parsedName = result.getUnparsedName().substring(0, result.getUnparsedName().length() - result.getWorkingName().length());
 
 			if (isWordParsable(parseTokens, result)) {
 				parseWord(result, parseTokens, parsedName, false);
+				copy =null;
 			} else {
 				if (copy == null) {
 					copy = new TokenizationResult(name);
@@ -72,7 +73,7 @@ class Tokeniser {
 	 */
 	TokenizationResult tokenizeRightToLeft(ReverseParseRules reverseParseRules, String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		TokenizationResult result = new TokenizationResult(name);
-		//removeWhiteSpaceIfBracketsAreUnbalanced is not currently employed as this the input to this function from the parser will often be what the LR tokenizer couldn't handle, which may not have matching brackets
+		//removeWhiteSpaceIfBracketsAreUnbalanced is not currently employed as the input to this function from the parser will often be what the LR tokenizer couldn't handle, which may not have matching brackets
 	
 		while (!result.isSuccessfullyTokenized()){
 			ParseRulesResults results = reverseParseRules.getParses(result.getUnparsedName());
