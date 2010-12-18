@@ -57,10 +57,6 @@ class TokenizationResult {
 		return unparsedName;
 	}
 
-	String getParsedName() {
-		return unparsedName.substring(0, unparsedName.length() - workingName.length());
-	}
-
 	void setUnparsedName(String name) {
 		this.unparsedName = name;
 	}
