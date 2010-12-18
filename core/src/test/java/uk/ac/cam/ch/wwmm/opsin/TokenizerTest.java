@@ -5,7 +5,6 @@ import static junit.framework.Assert.assertEquals;
 import java.util.List;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TokenizerTest {
@@ -267,48 +266,74 @@ public class TokenizerTest {
 	}
 
 	@Test
-	public void tokenizePreservesSpacesInUninterpretableName() throws Exception {
+	public void tokenizePreservesSpacesInUninterpretableNameLR1() throws Exception {
 		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
 		assertEquals("phen|foo toluene", result.getUninterpretableName());
 	}
 
 	@Test
-	public void tokenizePreservesSpacesInUnparsableName() throws Exception {
+	public void tokenizePreservesSpacesInUnparsableNameLR1() throws Exception {
 		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
 		assertEquals("|foo toluene", result.getUnparsableName());
 	}
 
 	@Test
-	public void tokenizePreservesSpacesInUnparsedName() throws Exception {
+	public void tokenizePreservesSpacesInUnparsedNameLR1() throws Exception {
 		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
 		assertEquals("phen|foo toluene", result.getUnparsedName());
 	}
 	
 	@Test
-	public void tokenizePreservesSpacesInUninterpretableName2() throws Exception {
-		TokenizationResult result =tokenizer.tokenize("eth yl |foo arene", true);
-		assertEquals("|foo arene", result.getUninterpretableName());
+	public void tokenizePreservesSpacesInUninterpretableNameLR2() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("eth yl phen|foo toluene", true);
+		assertEquals("phen|foo toluene", result.getUninterpretableName());
 	}
 
 	@Test
-	public void tokenizePreservesSpacesInUnparsableName2() throws Exception {
-		TokenizationResult result =tokenizer.tokenize("eth yl |foo arene", true);
-		assertEquals("|foo arene", result.getUnparsableName());
+	public void tokenizePreservesSpacesInUnparsableNameLR2() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("eth yl phen|foo toluene", true);
+		assertEquals("|foo toluene", result.getUnparsableName());
 	}
 
 	@Test
-	public void tokenizePreservesSpacesInUnparsedName2() throws Exception {
-		TokenizationResult result =tokenizer.tokenize("eth yl |foo arene", true);
-		assertEquals("|foo arene", result.getUnparsedName());
+	public void tokenizePreservesSpacesInUnparsedNameLR2() throws Exception {
+		TokenizationResult result =tokenizer.tokenize("eth yl phen|foo toluene", true);
+		assertEquals("phen|foo toluene", result.getUnparsedName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUninterpretableNameRL1() throws Exception {
+		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl toluene", true);
+		assertEquals("ethyl foo|yl", result.getUninterpretableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsableNameRL1() throws Exception {
+		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl toluene", true);
+		assertEquals("ethyl foo|", result.getUnparsableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsedNameRL1() throws Exception {
+		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl toluene", true);
+		assertEquals("ethyl foo|yl", result.getUnparsedName());
 	}
 	
 	@Test
-	@Ignore
-	public void partiallyInterpretatableRLWithSpaces() throws Exception {
-		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl toluene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
+	public void tokenizePreservesSpacesInUninterpretableNameRL2() throws Exception {
+		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl tolu ene", true);
 		assertEquals("ethyl foo|yl", result.getUninterpretableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsableNameRL2() throws Exception {
+		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl tolu ene", true);
 		assertEquals("ethyl foo|", result.getUnparsableName());
+	}
+
+	@Test
+	public void tokenizePreservesSpacesInUnparsedNameRL2() throws Exception {
+		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl foo|yl tolu ene", true);
 		assertEquals("ethyl foo|yl", result.getUnparsedName());
 	}
 }
