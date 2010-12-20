@@ -18,7 +18,7 @@ class TokenizationResult {
 	}
 
 	boolean isSuccessfullyTokenized() {
-		return unparsedName.isEmpty();
+		return unparsedName.length()==0;
 	}
 
 	Parse getParse() {
