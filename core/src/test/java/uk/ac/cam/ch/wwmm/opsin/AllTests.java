@@ -9,6 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	BondTest.class,
 	CASToolsTest.class,
 	CMLFragmentBuilderTest.class,
+	ComponentGeneration_StereochemistryTest.class,
 	CycleDetectorTest.class,
 	DtdTest.class,
 	FragmentManagerTest.class,

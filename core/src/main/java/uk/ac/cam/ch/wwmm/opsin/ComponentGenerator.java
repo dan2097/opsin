@@ -68,25 +68,25 @@ class ComponentGenerator {
 	}
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
-	private final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
-	private final Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
-	private final Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{][^\\[\\(\\{]*H[\\]\\)\\}]");
-	private final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
-	private final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
-	private final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsez])");
-	private final Pattern matchStar = Pattern.compile("\\^?\\*");
-	private final Pattern matchRS = Pattern.compile("[RSrs]");
-	private final Pattern matchEZ = Pattern.compile("[EZez]");
-	private final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
-	private final Pattern matchComma =Pattern.compile(",");
-	private final Pattern matchSemiColon =Pattern.compile(";");
-	private final Pattern matchHdigit =Pattern.compile("H\\d");
-	private final Pattern matchNonDigit =Pattern.compile("\\D+");
-	private final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
-	private final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
-	private final Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
-	private final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
+	private final static  Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
+	private final static Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
+	private final static Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{][^\\[\\(\\{]*H[\\]\\)\\}]");
+	private final static Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
+	private final static Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
+	private final static String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
+	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsez])");
+	private final static Pattern matchStar = Pattern.compile("\\^?\\*");
+	private final static Pattern matchRS = Pattern.compile("[RSrs]");
+	private final static Pattern matchEZ = Pattern.compile("[EZez]");
+	private final static Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
+	private final static Pattern matchComma =Pattern.compile(",");
+	private final static Pattern matchSemiColon =Pattern.compile(";");
+	private final static Pattern matchHdigit =Pattern.compile("H\\d");
+	private final static Pattern matchNonDigit =Pattern.compile("\\D+");
+	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
+	private final static Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
+	private final static Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
+	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
 	/** The master method, processes a parse result destructively adding semantic information by processing the various micro syntaxes .
 	 *
@@ -587,14 +587,14 @@ class ComponentGenerator {
 		}
 	}
 
-	/** Handles stereoChemistry (R/Z/E/Z/cis/trans)
+	/** Handles stereoChemistry in brackets: R/Z/E/Z and cis/trans
 	 *  Will assign a locant to a stereoChemistry element if one was specified/available
 	 *
-	 * @param elem The substituent/root to looks for stereoChemistry in.
+	 * @param subOrRoot The substituent/root to looks for stereoChemistry in.
 	 * @throws ComponentGenerationException
 	 */
-	private void processStereochemistry(Element elem) throws ComponentGenerationException {
-		Elements stereoChemistryElements = elem.getChildElements(STEREOCHEMISTRY_EL);
+	static void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
+		Elements stereoChemistryElements = subOrRoot.getChildElements(STEREOCHEMISTRY_EL);
 		for(int i=0;i<stereoChemistryElements.size();i++) {
 			Element stereoChemistryElement = stereoChemistryElements.get(i);
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
@@ -616,7 +616,7 @@ class ComponentGenerator {
 	                                stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
 	                                stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
 	                                stereoChemEl.appendChild(stereoChemistryDescriptor);
-	                                XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
+	                                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
 	                                if (matchRS.matcher(m.group(2)).matches()) {
 	                                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
 	                                } else {
@@ -630,7 +630,7 @@ class ComponentGenerator {
                             Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
                             stereoChemEl.addAttribute(new Attribute(VALUE_ATR, stereoChemistryDescriptor.toUpperCase()));
                             stereoChemEl.appendChild(stereoChemistryDescriptor);
-                            XOMTools.insertAfter(stereoChemistryElement, stereoChemEl);
+                            XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
                             if (matchRS.matcher(stereoChemistryDescriptor).matches()) {
                                 stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
                             } else if (matchEZ.matcher(stereoChemistryDescriptor).matches()) {
