@@ -6,7 +6,7 @@ Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 Contact address: dl387@cam.ac.uk
 Source code: http://bitbucket.org/dan2097/opsin/
 
-This is a Java library for IUPAC name-to-structure conversion.
+This is a Java(1.5+) library for IUPAC name-to-structure conversion.
 Currently it should be considered to be under development although the interface for using it will remain constant.
 OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
 
