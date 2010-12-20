@@ -79,6 +79,10 @@ public class NameToInchi {
 		for (Atom atom : atomList) {
 			JniInchiAtom jAtom = input.addAtom(new JniInchiAtom(0.0, 0.0, 0.0, atom.getElement()));
 			jAtom.setCharge(atom.getCharge());
+			Integer isotope = atom.getIsotope();
+			if (isotope !=null){
+				jAtom.setIsotopicMass(isotope);
+			}
 			jAtom.setImplicitH(0);
 			opsinIdAtomMap.put(atom.getID(), jAtom);
 		}

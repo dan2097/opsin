@@ -251,12 +251,9 @@ class SMILESFragmentBuilder {
              // isotope
                 String isotope = "";
 				while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
-					isotope += atomString.substring(0,1);
+					isotope += atomString.charAt(0);
 					atomString = atomString.substring(1);
 				}
-		        if (!isotope.equals("")){
-		        	throw new StructureBuildingException("Isotopically labelled atoms in SMILES are not yet supported");
-		        }
 
 		        if (atomString.length() > 0){
 		        	nextChar = atomString.charAt(0);
@@ -300,6 +297,9 @@ class SMILESFragmentBuilder {
 		        }
 				Atom atom = fragManager.createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
+		        if (!isotope.equals("")){
+		        	atom.setIsotope(Integer.parseInt(isotope));
+		        }
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
