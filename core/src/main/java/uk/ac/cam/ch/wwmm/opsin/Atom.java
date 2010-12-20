@@ -35,6 +35,9 @@ class Atom {
 
 	/**The formal charge on the atom.*/
 	private int charge = 0;
+	
+	/**The isotope of the atom. Null if not defined explicitly.*/
+	private Integer isotope = null;
 
 	/**
 	 * Holds the atomParity object associated with this object
@@ -135,6 +138,9 @@ class Atom {
 		elem.addAttribute(new Attribute("elementType", element));
 		if(charge != 0){
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
+		}
+		if(isotope != null){
+			elem.addAttribute(new Attribute("isotopeNumber", Integer.toString(isotope)));
 		}
 		if (!element.equals("H")){
 			int hydrogenCount =0;
@@ -404,6 +410,24 @@ class Atom {
 	void neutraliseCharge() {
 		charge = 0;
 		protonsExplicitlyAddedOrRemoved = 0;
+	}
+	
+
+	/**
+	 * Gets the mass number of the atom or null if not explicitly defined
+	 * e.g. 3 for tritium
+	 * @return
+	 */
+	Integer getIsotope() {
+		return isotope;
+	}
+
+	/**
+	 * Sets the mass number of the atom explicitly
+	 * @param isotope
+	 */
+	void setIsotope(Integer isotope) {
+		this.isotope = isotope;
 	}
 
 	/**Adds a bond to the atom

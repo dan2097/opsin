@@ -359,6 +359,7 @@ class FragmentManager {
 				newAtom.addLocant(newLocant);
 			}
 			newAtom.setCharge(atom.getCharge());
+			newAtom.setIsotope(atom.getIsotope());
 			newAtom.setSpareValency(atom.hasSpareValency());
 			newAtom.setProtonsExplicitlyAddedOrRemoved(atom.getProtonsExplicitlyAddedOrRemoved());
 			newAtom.setLambdaConventionValency(atom.getLambdaConventionValency());

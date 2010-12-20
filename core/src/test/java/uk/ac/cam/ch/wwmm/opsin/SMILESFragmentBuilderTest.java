@@ -192,6 +192,24 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(-2, atomList.get(0).getCharge());
 	}
+	
+	@Test
+	public void noIsotopeSpecified() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[NH3]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertEquals(null, atomList.get(0).getIsotope());
+	}
+	
+	@Test
+	public void isotopeSpecified() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[15NH3]");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(1, atomList.size());
+		assertNotNull("Isotope should not be null", atomList.get(0).getIsotope());
+		int isotope = atomList.get(0).getIsotope();
+		assertEquals(15, isotope);
+	}
 
 	@Test(expected=StructureBuildingException.class)
 	public void badlyFormedSMILE1() throws StructureBuildingException {
