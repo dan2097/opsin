@@ -141,7 +141,7 @@ class StructureBuilder {
 		makeHydrogensExplicit(state);
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
-		List<Element> stereoChemistryEls = XOMTools.getDescendantElementsWithTagName(molecule, STEREOCHEMISTRY_EL);
+		List<Element> stereoChemistryEls = findStereochemistryElsInProcessingOrder(molecule);
 		if (stereoChemistryEls.size() >0){
 			StereochemistryHandler.processStereochemicalElements(state, uniFrag, stereoChemistryEls);
 		}
@@ -1885,5 +1885,29 @@ class StructureBuilder {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Finds stereochemistry els in a recursive right to left manner.
+	 * Within the same scope though stereochemistry els are found left to right
+	 * @param molecule
+	 * @return
+	 */
+	private List<Element> findStereochemistryElsInProcessingOrder(Element parentEl) {
+		List<Element> matchingElements = new ArrayList<Element>();
+		Elements children =parentEl.getChildElements();
+		List<Element> stereochemistryElsAtThisLevel = new ArrayList<Element>();
+		for (int i = children.size()-1; i >=0; i--) {
+			Element child = children.get(i);
+			if (child.getLocalName().equals(STEREOCHEMISTRY_EL)){
+				stereochemistryElsAtThisLevel.add(child);
+			}
+			else{
+				matchingElements.addAll(findStereochemistryElsInProcessingOrder(child));
+			}
+		}
+		Collections.reverse(stereochemistryElsAtThisLevel);
+		matchingElements.addAll(stereochemistryElsAtThisLevel);
+		return matchingElements;
 	}
 }
