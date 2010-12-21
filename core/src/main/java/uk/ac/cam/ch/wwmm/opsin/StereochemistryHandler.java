@@ -116,8 +116,7 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	private static void matchStereochemistryToAtomsAndBonds(BuildState state, List<Element> stereoChemistryEls, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) throws StructureBuildingException {
-		for (int i = stereoChemistryEls.size()-1; i >=0 ; i--) {
-			Element stereoChemistryEl = stereoChemistryEls.get(i);
+		for (Element stereoChemistryEl : stereoChemistryEls) {
 			String stereoChemistryType =stereoChemistryEl.getAttributeValue(TYPE_ATR);
 			if (stereoChemistryType.equals(R_OR_S_TYPE_VAL)){
 				assignStereoCentre(state, stereoChemistryEl, atomStereoCentreMap);
