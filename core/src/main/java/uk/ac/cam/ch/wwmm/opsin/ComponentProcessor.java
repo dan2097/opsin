@@ -3722,10 +3722,11 @@ class ComponentProcessor {
 				}
 			}
 			if (subOrBracket.getLocalName().equals(ROOT_EL)){
-				throw new ComponentGenerationException("Unable to assign all locants");
+				locantsToDebugString(locants);
+				throw new ComponentGenerationException(locantsToDebugString(locants));
 			}
 			if (locants.size()!=1){
-				throw new ComponentGenerationException("Unable to assign all locants");
+				throw new ComponentGenerationException(locantsToDebugString(locants));
 			}
 			Element locantEl = locants.get(0);
 			String[] locantValues = matchComma.split(locantEl.getValue());
@@ -3744,7 +3745,7 @@ class ComponentProcessor {
 					}
 				}
 				if (!foundSomethingToSubstitute){
-					throw new ComponentGenerationException("Unable to assign all locants");
+					throw new ComponentGenerationException(locantsToDebugString(locants));
 				}
 			}
 			if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
@@ -3754,6 +3755,20 @@ class ComponentProcessor {
 			locantEl.detach();
 		}
 	}
+	
+    private String locantsToDebugString(List<Element> locants) {
+    	String message = "Unable to assign all locants. ";
+    	message+= (locants.size() > 1) ? "These locants " : "This locant ";
+    	message+= (locants.size() > 1) ? "were " : "was ";
+    	message+= "not assigned: ";
+		for(Element locant : locants) {
+			message +=locant.getValue();
+			message+=" ";
+		}
+		return message;
+	}
+
+
 
 	private boolean wordLevelLocantsAllowed(BuildState state, Element subOrBracket, int numberOflocants) {
 		Element parentElem =(Element)subOrBracket.getParent();
