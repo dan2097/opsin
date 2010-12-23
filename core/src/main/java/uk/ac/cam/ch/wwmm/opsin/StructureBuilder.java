@@ -1546,23 +1546,29 @@ class StructureBuilder {
 						}
 					}
 					else{
-						Integer positionOfImplicitHydrogen = null;
-						for (int i = 0; i < atomRefs4.length; i++) {
-							if (atomRefs4[i].equals(AtomParity.hydrogen)){
-								positionOfImplicitHydrogen = i;
-								break;
-							}
+						if (!StereoAnalyser.isTetrahedral(parentAtom)){
+							//no longer a stereoCentre e.g. due to unsaturation
+							parentAtom.setAtomParity(null);
 						}
-						if (positionOfImplicitHydrogen !=null){
-							//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
-							List<Atom> neighbours = parentAtom.getAtomNeighbours();
-							for (Atom atom : atomRefs4) {
-								neighbours.remove(atom);
+						else{
+							Integer positionOfImplicitHydrogen = null;
+							for (int i = 0; i < atomRefs4.length; i++) {
+								if (atomRefs4[i].equals(AtomParity.hydrogen)){
+									positionOfImplicitHydrogen = i;
+									break;
+								}
 							}
-							if (neighbours.size()!=1){
-								throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+							if (positionOfImplicitHydrogen !=null){
+								//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
+								List<Atom> neighbours = parentAtom.getAtomNeighbours();
+								for (Atom atom : atomRefs4) {
+									neighbours.remove(atom);
+								}
+								if (neighbours.size()!=1){
+									throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+								}
+								atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
 							}
-							atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
 						}
 					}
 				}

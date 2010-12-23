@@ -352,7 +352,7 @@ class StereoAnalyser {
 	 * @param atom
 	 * @return
 	 */
-	private boolean isTetrahedral(Atom atom) {
+	static boolean isTetrahedral(Atom atom) {
 		int neighbourCount = atom.getAtomNeighbours().size();
 		String element = atom.getElement();
 		if (neighbourCount == 4){
