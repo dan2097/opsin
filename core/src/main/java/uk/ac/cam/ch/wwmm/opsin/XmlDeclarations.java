@@ -174,6 +174,8 @@ class XmlDeclarations {
 	static final String DEFAULTINLOCANT_ATR = "defaultInLocant";
 	static final String DEFAULTINID_ATR = "defaultInID";
 	static final String OUTIDS_ATR = "outIDs";
+	
+	static final String ALPHABETACLOCKWISEATOMORDERING_ATR="alphaBetaClockWiseAtomOrdering";	
 	static final String ACCEPTSADDITIVEBONDS_ATR = "acceptsAdditiveBonds";
 	
 	/**Works like a locant but refers to the atoms OPSIN id. Will be overridden by the locant/locantId attribute*/
@@ -250,6 +252,9 @@ class XmlDeclarations {
 	 */
 	/**A trivial carboxylic acid. These by default do not have their acid groups which are then added on using suffixes*/
 	static final String ACIDSTEM_TYPE_VAL ="acidStem";
+	
+	/**This stereochemistry element conveys alpha/beta stereochemisty*/
+	static final String ALPHA_OR_BETA_TYPE_VAL ="alphaOrBeta";
 	
 	/**An aminoAcid. These by default do not have their acid groups which are then added on using suffixes. Notably these suffixes do NOT correspond to tokens in the input chemical name!*/
 	static final String AMINOACID_TYPE_VAL ="aminoAcid";

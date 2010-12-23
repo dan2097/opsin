@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
@@ -24,6 +25,8 @@ import nu.xom.Element;
  */
 class StereochemistryHandler {
 
+	private final static Pattern matchSlash = Pattern.compile("/");
+	
 	/**
 	 * Master method for assigning and processing stereochemistry elements
 	 * @param state
@@ -138,6 +141,9 @@ class StereochemistryHandler {
 					}
 					assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 				}
+			}
+			else if (stereoChemistryType.equals(ALPHA_OR_BETA_TYPE_VAL)){
+				assignAlphaBetaStereochem(state, stereoChemistryEl, atomStereoCentreMap);
 			}
 			else{
 				throw new StructureBuildingException("Unsupported stereochemistry type: " +stereoChemistryType);
@@ -599,6 +605,104 @@ class StereochemistryHandler {
 		}
 	}
 	
+	/**
+	 * Handles assignment of alpha and beta stereochemistry to appropriate ring systems
+	 * Currently these are only assignable to natural products
+	 * @param state
+	 * @param stereoChemistryEl
+	 * @param atomStereoCentreMap
+	 * @throws StructureBuildingException
+	 */
+	private static void assignAlphaBetaStereochem(BuildState state,Element stereoChemistryEl, Map<Atom, StereoCentre> atomStereoCentreMap) throws StructureBuildingException {
+		Element parentSubBracketOrRoot = (Element) stereoChemistryEl.getParent();
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
+		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
+		}
+		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
+		String alphaOrBets = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+		for (Fragment fragment : possibleFragments) {
+			Atom potentialStereoAtom = fragment.getAtomByLocant(locant);
+			if (potentialStereoAtom !=null && atomStereoCentreMap.containsKey(potentialStereoAtom)){
+				String alphaBetaClockWiseAtomOrdering = state.xmlFragmentMap.getElement(fragment).getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR);
+				if (alphaBetaClockWiseAtomOrdering==null){
+					throw new StructureBuildingException("Identified fragment is not known to be able to support alpha/beta stereochemistry");
+				}
+				applyAlphaBetaStereochemistryToStereoCentre(potentialStereoAtom, fragment, alphaBetaClockWiseAtomOrdering, alphaOrBets);
+				atomStereoCentreMap.remove(potentialStereoAtom);
+				return;
+			}
+		}
+		throw new StructureBuildingException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
+	}
+
+
+	/**
+	 * Converts the alpha/beta descriptor into an atomRefs4 and parity.
+	 * The ordering of atoms in the atomsRefs4 is determined by using the two adjacent atoms along the rings edge as defined by ALPHABETACLOCKWISEATOMORDERING_ATR.
+	 * by what atom is also part of the ring or is a hydrogen
+	 * and by the substituent atom
+	 * @param stereoAtom
+	 * @param fragment
+	 * @param alphaBetaClockWiseAtomOrdering
+	 * @param alphaOrBeta
+	 * @throws StructureBuildingException
+	 */
+	private static void applyAlphaBetaStereochemistryToStereoCentre(Atom stereoAtom, Fragment fragment, String alphaBetaClockWiseAtomOrdering, String alphaOrBeta) throws StructureBuildingException {
+		List<String> ringOrder = StringTools.arrayToList(matchSlash.split(alphaBetaClockWiseAtomOrdering));
+		int positionInList = ringOrder.indexOf(stereoAtom.getFirstLocant());
+		if (stereoAtom.getAtomIsInACycle() && positionInList!=-1){
+			Atom[] atomRefs4 = new Atom[4];
+			List<Atom> neighbours = stereoAtom.getAtomNeighbours();
+			if (neighbours.size()==4){
+				int previousIndice = positionInList==0 ? ringOrder.size()-1: positionInList -1;
+				int nextindice = positionInList==ringOrder.size()-1? 0: positionInList +1;
+				atomRefs4[0] = fragment.getAtomByLocantOrThrow(ringOrder.get(previousIndice));
+				atomRefs4[3] = fragment.getAtomByLocantOrThrow(ringOrder.get(nextindice));
+				neighbours.remove(atomRefs4[0]);
+				neighbours.remove(atomRefs4[3]);
+				Atom a1 =neighbours.get(0);
+				Atom a2 =neighbours.get(1);
+				if ((fragment.getAtomList().contains(a1)&& ringOrder.contains(a1.getFirstLocant()))){
+					atomRefs4[1]=a1;
+					atomRefs4[2]=a2;
+				}
+				else if ((fragment.getAtomList().contains(a2)&& ringOrder.contains(a2.getFirstLocant()))){
+					atomRefs4[1]=a2;
+					atomRefs4[2]=a1;
+				}
+				else if (a1.getElement().equals("H") && !a2.getElement().equals("H")){
+					atomRefs4[1]=a2;
+					atomRefs4[2]=a1;
+				}
+				else if (a2.getElement().equals("H") && !a1.getElement().equals("H")){
+					atomRefs4[1]=a1;
+					atomRefs4[2]=a2;
+				}
+				else{
+					throw new StructureBuildingException("alpha/beta stereochemistry application is ambiguous at this position");
+				}
+				if (alphaOrBeta.equals("alpha")){
+					stereoAtom.setAtomParity(atomRefs4, 1);
+				}
+				else if (alphaOrBeta.equals("beta")){
+					stereoAtom.setAtomParity(atomRefs4, -1);
+				}
+				else{
+					throw new StructureBuildingException("OPSIN Bug: malformed alpha/beta stereochemistry value");
+				}
+			}
+			else{
+				throw new StructureBuildingException("Unsupported stereocentre type for alpha/beta stereochemistry");
+			}
+		}
+		else{
+			throw new StructureBuildingException("Unsupported stereocentre type for alpha/beta stereochemistry");
+		}
+	}
+
+
 	static int swapsRequiredToSort(Atom[] atomRefs4){
 	  Atom[] atomRefs4Copy = atomRefs4.clone();
 	  int swapsPerformed = 0;
