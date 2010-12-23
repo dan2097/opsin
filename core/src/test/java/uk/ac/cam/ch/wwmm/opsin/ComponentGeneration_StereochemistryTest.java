@@ -205,6 +205,42 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(CISORTRANS_TYPE_VAL, modifiedStereochemistryEl2.getAttributeValue(TYPE_ATR));
 	}
 	
+	@Test
+	public void testAlphaBeta() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("(1a,2b,3bEtA,4alpha)");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(4, children.size());
+		Element newStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("1", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("alpha", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		newStereochemistryEl = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("2", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("beta", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		newStereochemistryEl = children.get(2);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("3", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("beta", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		newStereochemistryEl = children.get(3);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("4", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("alpha", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
 	//relative stereochemistry is currently treated the same as absolute stereochemistry
 	@Test
 	public void testRelativeStereoChemistry1() throws ComponentGenerationException {

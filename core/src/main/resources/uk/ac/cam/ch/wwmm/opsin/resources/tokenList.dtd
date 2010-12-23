@@ -25,4 +25,5 @@
         suffixAppliesToByDefault CDATA #IMPLIED
         additionalValue CDATA #IMPLIED
         commonOxidationStatesAndMax CDATA #IMPLIED
+        alphaBetaClockWiseAtomOrdering CDATA #IMPLIED
         locant CDATA #IMPLIED>

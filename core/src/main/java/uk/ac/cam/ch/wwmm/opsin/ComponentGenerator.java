@@ -74,10 +74,11 @@ class ComponentGenerator {
 	private final static Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private final static Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final static String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsez])");
+	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsezab]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA])");
 	private final static Pattern matchStar = Pattern.compile("\\^?\\*");
 	private final static Pattern matchRS = Pattern.compile("[RSrs]");
 	private final static Pattern matchEZ = Pattern.compile("[EZez]");
+	private final static Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]");
 	private final static Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
 	private final static Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
@@ -587,7 +588,7 @@ class ComponentGenerator {
 		}
 	}
 
-	/** Handles stereoChemistry in brackets: R/Z/E/Z and cis/trans
+	/** Handles stereoChemistry in brackets: R/Z/E/Z/a/alpha/b/beta and cis/trans
 	 *  Will assign a locant to a stereoChemistry element if one was specified/available
 	 *
 	 * @param subOrRoot The substituent/root to looks for stereoChemistry in.
@@ -614,14 +615,29 @@ class ComponentGenerator {
                             	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
 	                                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
 	                                stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
-	                                stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
 	                                stereoChemEl.appendChild(stereoChemistryDescriptor);
 	                                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
 	                                if (matchRS.matcher(m.group(2)).matches()) {
 	                                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
-	                                } else {
+	                                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
+	                                } else if (matchEZ.matcher(m.group(2)).matches()) {
 	                                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-	                                }
+	                                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
+	                                } else if (matchAlphaBetaStereochem.matcher(m.group(2)).matches()){
+	                                	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
+	                                	if (Character.toLowerCase(m.group(2).charAt(0)) == 'a'){
+		                                	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
+	                                	}
+	                                	else if (Character.toLowerCase(m.group(2).charAt(0)) == 'b'){
+		                                	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "beta"));
+	                                	}
+	                                	else{
+	                                		throw new ComponentGenerationException("Malformed alpha/beta stereochemistry element: " + stereoChemistryElement.getValue());
+	                                	}
+                            	 	} else {
+                                        throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+                                    }
+                            	 		
                             	}
                             } else {
                                 throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
