@@ -69,7 +69,7 @@
   <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" determinise="yes"/>
   <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
-  <regexToken regex="(rel-|rac-)?%openBracket%%locantTypes%?([EZezab]|[RSrs](\^?\*)?|RS|SR|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA])(,%locantTypes%?([EZezab]|[RSrs](\^?\*)?|RS|SR|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
+  <regexToken regex="(rel-|rac-)?%openBracket%%locantTypes%?([EZezabx]|[RSrs](\^?\*)?|RS|SR|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI])(,%locantTypes%?([EZezabx]|[RSrs](\^?\*)?|RS|SR|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))*%closeBracket%" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
   <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="¼" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
   <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%'+(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="½" tagname="spiroLocant" determinise="yes"/>
