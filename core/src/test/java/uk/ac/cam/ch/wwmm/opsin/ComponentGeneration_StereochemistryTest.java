@@ -211,11 +211,11 @@ public class ComponentGeneration_StereochemistryTest {
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
-		stereochem.appendChild("(1a,2b,3bEtA,4alpha)");
+		stereochem.appendChild("(1a,2b,3bEtA,4alpha,5xi)");
 		ComponentGenerator.processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
-		assertEquals(4, children.size());
+		assertEquals(5, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
 		assertEquals("1", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
@@ -238,6 +238,12 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
 		assertEquals("4", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("alpha", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		newStereochemistryEl = children.get(4);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("5", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("xi", newStereochemistryEl.getAttributeValue(VALUE_ATR));
 		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 	

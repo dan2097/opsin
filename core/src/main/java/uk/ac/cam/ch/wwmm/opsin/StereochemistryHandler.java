@@ -689,6 +689,9 @@ class StereochemistryHandler {
 				else if (alphaOrBeta.equals("beta")){
 					stereoAtom.setAtomParity(atomRefs4, -1);
 				}
+				else if (alphaOrBeta.equals("xi")){
+					stereoAtom.setAtomParity(null);
+				}
 				else{
 					throw new StructureBuildingException("OPSIN Bug: malformed alpha/beta stereochemistry value");
 				}
