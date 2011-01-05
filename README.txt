@@ -117,7 +117,7 @@ Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
 The following functional classes: acids, acetals, alcohols, amides, anhydrides, azides, bromides, chlorides, cyanates, cyanides, esters, di/tri/tetra esters
 ethers, fluorides, fulminates, glycols, glycol ethers, hemiacetals, hemiketal, hydrazones, hydroperoxides, hydrazides, imides, iodides, isocyanates,
-isocyanides, isoselenocyanates, isothiocyanates, ketals, ketones, selenocyanates, thiocyanates, selenols, thiols, oxides, oximes, peroxides, selenides,
+isocyanides, isoselenocyanates, isothiocyanates, ketals, ketones, selenocyanates, thiocyanates, selenols, thiols, mercaptans, oxides, oximes, peroxides, selenides,
 selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones,
 tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
 Greek letters
