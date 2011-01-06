@@ -96,7 +96,8 @@ class Fragment {
 	 */
 	Element toCMLMolecule(String chemicalName) {
 		Element cml = new Element("cml");
-		cml.addAttribute(new Attribute("convention","cmlDict:cmllite"));
+		cml.addAttribute(new Attribute("convention","conventions:molecular"));
+		cml.addNamespaceDeclaration("conventions", "http://www.xml-cml.org/convention/");
 		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
 		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
 		Element molecule = new Element("molecule");
