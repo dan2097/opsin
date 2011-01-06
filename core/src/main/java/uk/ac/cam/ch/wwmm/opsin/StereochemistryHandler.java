@@ -539,6 +539,9 @@ class StereochemistryHandler {
 					break;
 				}
 			}
+			if (atomRefs4a1[1] ==null){
+				throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
+			}
 		}
 		a1Neighbours.remove(atomRefs4a1[1]);
 		atomRefs4a1[0] = a1Neighbours.get(0);
@@ -561,6 +564,9 @@ class StereochemistryHandler {
 					atomRefs4a2[1] = atom;
 					break;
 				}
+			}
+			if (atomRefs4a1[1] ==null){
+				throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 			}
 		}
 		a2Neighbours.remove(atomRefs4a2[1]);
