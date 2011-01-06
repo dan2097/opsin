@@ -816,6 +816,9 @@ class ComponentProcessor {
 							break;
 						}
 					}
+					else if (elName.equals(FUSEDRINGBRIDGE_EL)&& locantValues.length ==2 && afterLocant.equals(XOMTools.getNextSibling(locant))){//e.g. 1,8-methano
+						break;
+					}
 					afterLocant = (Element)XOMTools.getNextSibling(afterLocant);
 				}
 				if(multiplierEl != null) {
