@@ -25,9 +25,10 @@ public class NameToStructureTest {
 		// contains a molecule with same connectivity as 'frag of CML'
 
 		assertEquals("Parsing 'ethane'", "<cml xmlns=\"http://www.xml-cml.org/schema\" " +
+				"xmlns:conventions=\"http://www.xml-cml.org/convention/\" " +
 				"xmlns:cmlDict=\"http://www.xml-cml.org/dictionary/cml/\" " +
 				"xmlns:nameDict=\"http://www.xml-cml.org/dictionary/cml/name/\" " +
-				"convention=\"cmlDict:cmllite\"><molecule id=\"m1\">" +
+				"convention=\"conventions:molecular\"><molecule id=\"m1\">" +
 				"<name dictRef=\"nameDict:unknown\">ethane</name><atomArray>" +
 				"<atom id=\"a1\" elementType=\"C\"><label value=\"1\" dictRef=\"cmlDict:locant\" /><label value=\"alpha\" dictRef=\"cmlDict:locant\" /></atom>" +
 				"<atom id=\"a2\" elementType=\"C\"><label value=\"2\" dictRef=\"cmlDict:locant\" /><label value=\"beta\" dictRef=\"cmlDict:locant\" /></atom>" +
