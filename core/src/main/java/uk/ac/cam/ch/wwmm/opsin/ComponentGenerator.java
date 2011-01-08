@@ -599,7 +599,7 @@ class ComponentGenerator {
 		for(int i=0;i<stereoChemistryElements.size();i++) {
 			Element stereoChemistryElement = stereoChemistryElements.get(i);
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
-				String txt = stereoChemistryElement.getValue();
+				String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
 				if (txt.startsWith("rel-")){
 					txt = txt.substring(4);
 				}
@@ -666,8 +666,8 @@ class ComponentGenerator {
                             }
                         }
                     }
-                  	if (!bracketed && subOrRoot.getLocalName().equals(SUBSTITUENT_EL)){
-                		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+                  	if (!bracketed){
+                		List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
                 		boolean foundNaturalProduct =false;
                 		for (Element group : groups) {
                 			if (NATURALPRODUCT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
