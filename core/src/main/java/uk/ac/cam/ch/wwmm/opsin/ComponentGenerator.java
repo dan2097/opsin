@@ -606,8 +606,14 @@ class ComponentGenerator {
 				Matcher starMatcher = matchStar.matcher(txt);
 				txt = starMatcher.replaceAll("");
 				if (!txt.startsWith("rac-")){
-					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
+					char firstChar = txt.charAt(0);
+					boolean bracketed =false;
+					if (firstChar =='(' || firstChar =='[' || firstChar =='{'){
+						txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
+						bracketed =true;
+					}
 					String[] stereoChemistryDescriptors = matchComma.split(txt);
+					List<String> locants = new ArrayList<String>();
                     for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
                         if (stereoChemistryDescriptor.length() > 1) {
                             Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
@@ -615,6 +621,7 @@ class ComponentGenerator {
                             	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
 	                                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
 	                                stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
+	                                locants.add(m.group(1));
 	                                stereoChemEl.appendChild(stereoChemistryDescriptor);
 	                                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
 	                                if (matchRS.matcher(m.group(2)).matches()) {
@@ -659,6 +666,20 @@ class ComponentGenerator {
                             }
                         }
                     }
+                  	if (!bracketed && subOrRoot.getLocalName().equals(SUBSTITUENT_EL)){
+                		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+                		boolean foundNaturalProduct =false;
+                		for (Element group : groups) {
+                			if (NATURALPRODUCT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+                				foundNaturalProduct=true;
+                			}
+    					}
+                		if (!foundNaturalProduct){
+                			Element newLocantEl = new Element(LOCANT_EL);
+                			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
+                			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
+                		}
+                	}
 				}
 				stereoChemistryElement.detach();
 			}
