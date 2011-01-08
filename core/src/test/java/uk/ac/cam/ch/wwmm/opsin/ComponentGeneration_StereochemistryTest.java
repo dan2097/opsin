@@ -279,7 +279,7 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
-	public void testAlphaBetaNotNextToANaturalProduct1() throws ComponentGenerationException {
+	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct1() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
@@ -307,7 +307,7 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
-	public void testAlphaBetaNotNextToANaturalProduct2() throws ComponentGenerationException {
+	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct2() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
@@ -328,6 +328,37 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals("5", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("alpha", newStereochemistryEl.getAttributeValue(VALUE_ATR));
 		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct3() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element naturalProduct = new Element(GROUP_EL);
+		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, NATURALPRODUCT_SUBTYPE_VAL));
+		substituent.appendChild(naturalProduct);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("3beta,5alpha");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(4, children.size());
+		Element newStereochemistryEl = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("3", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("beta", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		newStereochemistryEl = children.get(2);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("5", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("alpha", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		Element newLocantEl = children.get(3);
+		assertEquals(LOCANT_EL, newLocantEl.getLocalName());
+		assertEquals("3,5", newLocantEl.getValue());
 	}
 	
 	//relative stereochemistry is currently treated the same as absolute stereochemistry
