@@ -129,16 +129,6 @@ class StereochemistryHandler {
 			}
 			else if (stereoChemistryType.equals(CISORTRANS_TYPE_VAL)){
 				if (!assignCisTransOnRing(state, stereoChemistryEl, atomStereoCentreMap)){
-					String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
-					if (cisOrTrans.equalsIgnoreCase("cis")){
-						stereoChemistryEl.getAttribute(VALUE_ATR).setValue("Z");
-					}
-					else if (cisOrTrans.equalsIgnoreCase("trans")){
-						stereoChemistryEl.getAttribute(VALUE_ATR).setValue("E");
-					}
-					else{
-						throw new StructureBuildingException("Unexpected cis/trans stereochemistry type: " +cisOrTrans);
-					}
 					assignStereoBond(state, stereoChemistryEl, bondStereoBondMap);
 				}
 			}
@@ -169,10 +159,10 @@ class StereochemistryHandler {
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
 		}
-		String locant = StructureBuildingMethods.getLocant(stereoChemistryEl);
+		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String rOrS = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (Fragment fragment : possibleFragments) {
-			if (locant.equals("0")){//undefined locant
+			if (locant ==null){//undefined locant
 				List<Atom> atomList = fragment.getAtomList();
 				for (Atom potentialStereoAtom : atomList) {
 					if (atomStereoCentreMap.containsKey(potentialStereoAtom)){
@@ -200,7 +190,7 @@ class StereochemistryHandler {
 				List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
-					if (locant.equals("0")){//undefined locant
+					if (locant == null){//undefined locant
 						List<Atom> atomList = correspondingFrag.getAtomList();
 						for (Atom potentialStereoAtom : atomList) {
 							if (atomStereoCentreMap.containsKey(potentialStereoAtom)){
@@ -210,7 +200,7 @@ class StereochemistryHandler {
 							}
 						}
 					}
-						else{
+					else{
 						Atom potentialStereoAtom = correspondingFrag.getAtomByLocant(locant);
 						if (potentialStereoAtom !=null && atomStereoCentreMap.containsKey(potentialStereoAtom)){
 							applyStereoChemistryToStereoCentre(potentialStereoAtom, atomStereoCentreMap.get(potentialStereoAtom), rOrS);
@@ -255,7 +245,7 @@ class StereochemistryHandler {
 
 
 	/**
-	 * Handles E/Z stereochemistry
+	 * Handles E/Z stereochemistry and cis/trans in cases where cis/trans unambiguously corresponds to E/Z
 	 * @param state
 	 * @param stereoChemistryEl
 	 * @param bondStereoBondMap
@@ -270,13 +260,27 @@ class StereochemistryHandler {
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
 		}
-		String locant = StructureBuildingMethods.getLocant(stereoChemistryEl);
+		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String eOrZ = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+		boolean isCisTrans =false;
+		if (stereoChemistryEl.getAttributeValue(TYPE_ATR).equals(CISORTRANS_TYPE_VAL)){
+			isCisTrans =true;
+			String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+			if (cisOrTrans.equalsIgnoreCase("cis")){
+				eOrZ = "Z";
+			}
+			else if (cisOrTrans.equalsIgnoreCase("trans")){
+				eOrZ = "E";
+			}
+			else{
+				throw new StructureBuildingException("Unexpected cis/trans stereochemistry type: " +cisOrTrans);
+			}
+		}
 		for (Fragment fragment : possibleFragments) {
-			if (locant.equals("0")){//undefined locant
+			if (locant == null){//undefined locant
 				Set<Bond> bondSet = fragment.getBondSet();
 				for (Bond potentialBond : bondSet) {
-					if (bondStereoBondMap.containsKey(potentialBond)){
+					if (bondStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTranUnambiguousOnBond(potentialBond))){
 						applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 						bondStereoBondMap.remove(potentialBond);
 						return;
@@ -284,7 +288,7 @@ class StereochemistryHandler {
 				}
 				List<Bond> sortedInterFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(fragment), fragment);
 				for (Bond potentialBond : sortedInterFragmentBonds) {
-					if (bondStereoBondMap.containsKey(potentialBond)){
+					if (bondStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTranUnambiguousOnBond(potentialBond))){
 						applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 						bondStereoBondMap.remove(potentialBond);
 						return;
@@ -296,7 +300,7 @@ class StereochemistryHandler {
 				if (firstAtomInBond !=null){
 					Set<Bond> bonds = firstAtomInBond.getBonds();
 					for (Bond potentialBond : bonds) {
-						if (bondStereoBondMap.containsKey(potentialBond)){
+						if (bondStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTranUnambiguousOnBond(potentialBond))){
 							applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 							bondStereoBondMap.remove(potentialBond);
 							return;
@@ -313,10 +317,10 @@ class StereochemistryHandler {
 				List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
-					if (locant.equals("0")){//undefined locant
+					if (locant == null){//undefined locant
 						Set<Bond> bondSet = correspondingFrag.getBondSet();
 						for (Bond potentialBond : bondSet) {
-							if (bondStereoBondMap.containsKey(potentialBond)){
+							if (bondStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTranUnambiguousOnBond(potentialBond))){
 								applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 								bondStereoBondMap.remove(potentialBond);
 								return;
@@ -324,7 +328,7 @@ class StereochemistryHandler {
 						}
 						List<Bond> sortedInterFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(correspondingFrag), correspondingFrag);
 						for (Bond potentialBond : sortedInterFragmentBonds) {
-							if (bondStereoBondMap.containsKey(potentialBond)){
+							if (bondStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTranUnambiguousOnBond(potentialBond))){
 								applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 								bondStereoBondMap.remove(potentialBond);
 								return;
@@ -336,7 +340,7 @@ class StereochemistryHandler {
 						if (firstAtomInBond !=null){
 							Set<Bond> bonds = firstAtomInBond.getBonds();
 							for (Bond potentialBond : bonds) {
-								if (bondStereoBondMap.containsKey(potentialBond)){
+								if (bondStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTranUnambiguousOnBond(potentialBond))){
 									applyStereoChemistryToStereoBond(potentialBond, bondStereoBondMap.get(potentialBond), eOrZ);
 									bondStereoBondMap.remove(potentialBond);
 									return;
@@ -347,7 +351,38 @@ class StereochemistryHandler {
 				}
 			}
 		}
-		throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
+		if (isCisTrans){
+			throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " could refer unambiguously to");
+		}
+		else{
+			throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
+		}
+	}
+
+
+	/**
+	 * Does the stereoBond have a hydrogen connected to both ends of it.
+	 * If not it is ambiguous when used in conjunction with cis/trans and E/Z should be used.
+	 * @param potentialBond
+	 * @return
+	 */
+	static boolean cisTranUnambiguousOnBond(Bond potentialBond) {
+		List<Atom> neighbours1 = potentialBond.getFromAtom().getAtomNeighbours();
+		boolean foundHydrogen1 =false;
+		for (Atom neighbour : neighbours1) {
+			if (neighbour.getElement().equals("H")){
+				foundHydrogen1 =true;
+			}
+		}
+		
+		List<Atom> neighbours2 = potentialBond.getToAtom().getAtomNeighbours();
+		boolean foundHydrogen2 =false;
+		for (Atom neighbour : neighbours2) {
+			if (neighbour.getElement().equals("H")){
+				foundHydrogen2 =true;
+			}
+		}
+		return (foundHydrogen1 && foundHydrogen2);
 	}
 
 
