@@ -36,6 +36,7 @@
 		<token value="70">heptacont</token>
 		<token value="80">octacont</token>
 		<token value="90">nonacont</token>
+		<token value="100">decacont</token><!--hect preferred-->
   </tokenList>
   <tokenList tagname="alkaneStemComponent" symbol="│"><!--hundreds-->
 		<token value="100">hect</token>

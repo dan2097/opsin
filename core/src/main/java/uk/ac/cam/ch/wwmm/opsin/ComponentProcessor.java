@@ -3711,7 +3711,7 @@ class ComponentProcessor {
 			}
 		}
 		if(locants.size() > 0) {
-			if (multiplier==1 && oneBelowWordLevel){//locant might be word Level locant
+			if (multiplier==1 && oneBelowWordLevel && XOMTools.getPreviousSibling(subOrBracket)==null){//locant might be word Level locant
 				if (wordLevelLocantsAllowed(state, subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					Element locant = locants.remove(0);
 					if (matchComma.split(locant.getValue()).length!=1){
