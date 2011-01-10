@@ -375,8 +375,8 @@ class StructureBuildingMethods {
 		 */
 		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
 			Element hydrogen = hydrogenElements.get(i);
-			String locant = getLocant(hydrogen);
-			if(!locant.equals("0")) {
+			String locant = hydrogen.getAttributeValue(LOCANT_ATR);
+			if(locant!=null) {
 				Atom a =thisFrag.getAtomByLocantOrThrow(locant);
 				if (a.hasSpareValency()){
 					a.setSpareValency(false);
@@ -392,8 +392,8 @@ class StructureBuildingMethods {
 		List<Atom> atomsToFormTripleBondsBetween =new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
 		for(int i=dehydroElements.size() -1;i >= 0;i--) {
 			Element dehydro = dehydroElements.get(i);
-			String locant = getLocant(dehydro);
-			if(!locant.equals("0")) {
+			String locant = dehydro.getAttributeValue(LOCANT_ATR);
+			if(locant!=null) {
 				Atom a =thisFrag.getAtomByLocantOrThrow(locant);
 				if (!a.hasSpareValency()){
 					a.setSpareValency(true);
@@ -412,13 +412,13 @@ class StructureBuildingMethods {
 
 		for(int i=unsaturators.size() -1;i >= 0;i--) {
 			Element unsaturator = unsaturators.get(i);
-			String locant = getLocant(unsaturator);
+			String locant = unsaturator.getAttributeValue(LOCANT_ATR);
 			int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
 			if(bondOrder <= 1) {
 				unsaturator.detach();
 				continue;
 			}
-			if(!locant.equals("0")){
+			if(locant!=null) {
 				unsaturators.remove(unsaturator);
 				/*
 				 * Is the locant a compound locant e.g. 1(6) 
@@ -439,8 +439,8 @@ class StructureBuildingMethods {
 
 		for(int i=heteroatoms.size() -1;i >= 0;i--) {
 			Element heteroatom = heteroatoms.get(i);
-			String locant = getLocant(heteroatom);
-			if(!locant.equals("0")) {
+			String locant = heteroatom.getAttributeValue(LOCANT_ATR);
+			if(locant!=null) {
 				String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
 				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
 				if (heteroatom.getAttribute(LAMBDA_ATR)!=null){
@@ -1528,8 +1528,8 @@ class StructureBuildingMethods {
 	private static void addPrimesToLocantedStereochemistryElements(Element subOrBracket, String primesString) {
 		List<Element> stereoChemistryElements =XOMTools.getDescendantElementsWithTagName(subOrBracket, STEREOCHEMISTRY_EL);
 		for (Element stereoChemistryElement : stereoChemistryElements) {
-			if (!getLocant(stereoChemistryElement).equals("0")){
-				stereoChemistryElement.getAttribute(LOCANT_ATR).setValue(getLocant(stereoChemistryElement) + primesString);
+			if (stereoChemistryElement.getAttribute(LOCANT_ATR)!=null){
+				stereoChemistryElement.getAttribute(LOCANT_ATR).setValue(stereoChemistryElement.getAttributeValue(LOCANT_ATR) + primesString);
 			}
 		}
 	}
@@ -1550,16 +1550,5 @@ class StructureBuildingMethods {
 			count++;
 		}	
 		return count;
-	}
-
-	/**Gets the locant from a group/suffix tag, defaulting to "0"
-	 *
-	 * @param element
-	 * @return The locant on the group/suffix tag.
-	 */
-	static String getLocant(Element element) {
-		String locantStr = element.getAttributeValue(LOCANT_ATR);
-		if(locantStr == null) return "0";
-		return locantStr;
 	}
 }

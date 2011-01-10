@@ -3374,9 +3374,9 @@ class ComponentProcessor {
         for (Element suffix : suffixes) {
             String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 
-            String locant = StructureBuildingMethods.getLocant(suffix);
+            String locant = suffix.getAttributeValue(LOCANT_ATR);
             int idOnParentFragToUse = 0;
-            if (!locant.equals("0")) {
+            if (locant != null) {
                 idOnParentFragToUse = frag.getIDFromLocantOrThrow(locant);
             }
             if (idOnParentFragToUse == 0 && suffix.getAttribute(LOCANTID_ATR) != null) {
