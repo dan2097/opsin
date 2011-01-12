@@ -25,6 +25,7 @@
 		<token value="c1(=O)c(=O)ccc2ccccc12" labels="1//2//3/4/4a/5/6/7/8/8a" valType="SMILES">naphtho-1,2-quinone</token>
 		<token value="c1(=O)ccc(=O)c2ccccc12" labels="1//2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphtho-1,4-quinone</token>
 		<token value="n1cccc(c1)C2N(C)CCC2" labels="none" valType="SMILES">nicotine</token><!--not to be confused with nicotinic acid-->
+		<token value="c1ccccc1C(=O)O[O-]" labels="2,ortho/3,meta/4,para/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoate</token>
 		<token value="c1ccccc1C(=O)OO" labels="2,ortho/3,meta/4,para/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoic</token>
 		<token value="c1ccccc1C(=O)OO" labels="2,ortho/3,meta/4,para/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoicacid</token>
 		<token value="c1ccccc1C(=O)OO" labels="2,ortho/3,meta/4,para/5/6/1////" valType="SMILES" functionalIDs="10">perbenzoic acid</token>
