@@ -59,6 +59,10 @@
 		<token value="s1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thiochromen</token>
 		<token value="[se]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenochromen</token>
 		<token value="[te]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tellurochromen</token>
+		<token value="[o+]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">chromenylium</token>
+		<token value="[s+]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">thiochromenylium</token>
+		<token value="[se+]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">selenochromenylium</token>
+		<token value="[te+]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">tellurochromenylium</token>
 		<token value="o1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES" addGroup="=O locant4">chromon</token>
 		<token value="chrysene" valType="dbkey">chrysen</token>
 		<token value="cinnoline" valType="dbkey">cinnolin</token>
@@ -111,6 +115,10 @@
 		<token value="[cH2]1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromen</token>
 		<token value="[cH2]1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromen</token>
 		<token value="[cH2]1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromen</token>
+		<token value="c1[o+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isochromenylium</token>
+		<token value="c1[s+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromenylium</token>
+		<token value="c1[se+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromenylium</token>
+		<token value="c1[te+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromenylium</token>
 		<token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a" valType="SMILES">isocoumarin</token>
 		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/" valType="SMILES">isoguanin</token>
 		<token value="isoindole" valType="dbkey">isoindol</token>
