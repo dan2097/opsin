@@ -15,6 +15,7 @@ public class OpsinResult {
 	private final String message;
 	private final String chemicalName;
 	private Element cml = null;
+	private String smiles = null;
 
 	Fragment getStructure() {
 		return structure;
@@ -81,6 +82,23 @@ public class OpsinResult {
 		this.status = status;
 		this.message = message;
 		this.chemicalName = chemicalName;
+	}
+
+	/**
+	 * Lazily evaluates and returns the SMILES corresponding to the molecule described by the name
+	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
+	 * @return String smiles
+	 */
+	public synchronized String getSmiles() {
+		if (smiles ==null && structure!=null){
+			try{
+				smiles = new SMILESWriter(structure).generateSmiles();
+			}
+			catch (Exception e) {
+				smiles = null;
+			}
+		}
+		return smiles;
 	}
 	
 	
