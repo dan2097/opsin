@@ -56,7 +56,7 @@
   <regex name="%higherOrderFusion%" regex="(%locant%(,%locant%)+:%locant%(,%locant%)+)"/>
   <regexToken regex="%openBracket%(%firstOrderFusion%|%omittedLocantFirstOrderFusion%|%omittedLocantAmbiguousOrderFusion%|%higherOrderFusion%)%closeBracket%" symbol="F" tagname="fusion" determinise="yes"/>
   <regexToken regex="%openBracket%((%firstOrderFusion%(:%firstOrderFusion%)+)|(%omittedLocantFirstOrderFusion%(,%omittedLocantFirstOrderFusion%)+)|(%higherOrderFusion%(;%higherOrderFusion%)+)|(%omittedLocantAmbiguousOrderFusion%(:%omittedLocantAmbiguousOrderFusion%)+))%closeBracket%" symbol="Ä" tagname="fusion" determinise="yes"/><!--e.g. dithieno[2',3':3,4;2",3":6,7]-->
-  <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-" symbol="e" tagname="hydrogen" determinise="yes"/>
+  <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-|%openBracket%%indicatedHydrogen%(,%indicatedHydrogen%)*%closeBracket%-?" symbol="e" tagname="hydrogen" determinise="yes"/>
   <regexToken regex="[eE]" symbol="Z" tagname="e" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[oO]" symbol="╡" tagname="bridgeFormingO" determinise="yes"/>

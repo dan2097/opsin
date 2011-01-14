@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 class PreProcessor {
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
-	private static final Pattern MATCH_SULPH = Pattern.compile("sulph");
+	private static final Pattern MATCH_SULPH = Pattern.compile("sulph", Pattern.CASE_INSENSITIVE);
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
 	private static final String AMIDE = "amide";

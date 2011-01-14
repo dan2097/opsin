@@ -79,6 +79,8 @@
 		<token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="14">carbtetradecoxy</token>
 		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="15">carbopentadecoxy</token>
 		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="15">carbpentadecoxy</token>
+		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">carbobenzyloxy</token>
+		<token value="-C(=O)OCc1ccccc1" labels="none" valType="SMILES">cbz</token>
 		<token value="#C" valType="SMILES">carbyne</token>
 		<token value="-[CH2+]" labels="none" valType="SMILES">carbynium</token>
 		<token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>

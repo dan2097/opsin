@@ -566,22 +566,25 @@ class ComponentGenerator {
 	/** Handle 1H- in 1H-pyrrole etc.
 	 *
 	 * @param elem The substituent/root to looks for indicated hydrogens in.
+	 * @throws ComponentGenerationException 
 	 */
-	private void processIndicatedHydrogens(Element elem) {
+	private void processIndicatedHydrogens(Element elem) throws ComponentGenerationException {
 		Elements hydrogens = elem.getChildElements(HYDROGEN_EL);
 		for(int i=0;i<hydrogens.size();i++) {
 			Element hydrogen = hydrogens.get(i);
-			String txt = hydrogen.getValue();
+			String txt = StringTools.removeDashIfPresent(hydrogen.getValue());
+			if (!txt.endsWith("H")){//remove brackets
+				txt = txt.substring(1, txt.length()-1);
+			}
 			String[] hydrogenLocants =matchComma.split(txt);
-            for (String hydrogenLocant : hydrogenLocants) {//TODO this should have an else throw exception clause? maybe should employ removedashifpresent
-                if (hydrogenLocant.endsWith("H-")) {
-                    Element newHydrogenElement = new Element(HYDROGEN_EL);
-                    newHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 2)));
-                    XOMTools.insertAfter(hydrogen, newHydrogenElement);
-                } else if (hydrogenLocant.endsWith("H")) {
+            for (String hydrogenLocant : hydrogenLocants) {
+                if (hydrogenLocant.endsWith("H")) {
                     Element newHydrogenElement = new Element(HYDROGEN_EL);
                     newHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
-                    XOMTools.insertAfter(hydrogen, newHydrogenElement);
+                    XOMTools.insertBefore(hydrogen, newHydrogenElement);
+                }
+                else{
+                	throw new ComponentGenerationException("OPSIN Bug: malformed indicated hydrogen element!");
                 }
             }
 			hydrogen.detach();
