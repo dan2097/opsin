@@ -118,6 +118,12 @@ public class CASToolsTest {
 		String name = CASTools.uninvertCASName("piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride", parseRules);
 		assertEquals("1,1-dimethyl-piperazinium 2,2,2-trifluoroacetate hydrochloride", name);
 	}
+	
+	@Test
+	public void cas18() throws Exception {
+		String name = CASTools.uninvertCASName("Acetamide, ethylenebis(((ethyl)amino)-", parseRules);
+		assertEquals("ethylenebis(((ethyl)amino)-Acetamide)", name);
+	}
 
 	@Test(expected=ParsingException.class)
 	public void notCas1() throws Exception {

@@ -69,11 +69,12 @@ class CASTools {
 					continue;
 				}
 				if (component.endsWith("-")) {
-					if (isCloseBracketMissing(component)) {
+					Character missingCloseBracket = missingCloseBracketCharIfApplicable(component);
+					if (missingCloseBracket !=null) {
 						if (addedBracket) {
-							throw new ParsingException("Close bracket bracket appears to be missing");
+							throw new ParsingException("Close bracket appears to be missing");
 						}
-						parent += "]";
+						parent += missingCloseBracket;
 						addedBracket = true;
 					}
 					substituents.add(component);
@@ -134,18 +135,37 @@ class CASTools {
 		return casName.toString();
 	}
 
-	private static boolean isCloseBracketMissing(String component) {
+	private static Character missingCloseBracketCharIfApplicable(String component) {
 		char[] characters = component.toCharArray();
-		for (int i = characters.length - 1; i >= 0; i--) {
+		int bracketLevel =0;
+		Character missingCloseBracket =null;
+		for (int i = 0; i < characters.length; i++) {
 			char character = characters[i];
 			if (character == '(' || character == '[' || character == '{') {
-				return true;
+				bracketLevel++;
+				if (bracketLevel ==1){
+					missingCloseBracket = character;
+				}
 			}
 			if (character == ')' || character == ']' || character == '}') {
-				return false;
+				bracketLevel--;
+				if (bracketLevel<0){
+					return null;
+				}
 			}
 		}
-		return false;
+		if (bracketLevel == 1){
+			if (missingCloseBracket == '('){
+				return ')';
+			}
+			if (missingCloseBracket == '['){
+				return ']';
+			}
+			if (missingCloseBracket == '{'){
+				return '}';
+			}
+		}
+		return null;
 	}
 
 	/**
