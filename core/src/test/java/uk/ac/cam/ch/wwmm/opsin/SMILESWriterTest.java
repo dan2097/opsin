@@ -99,28 +99,28 @@ public class SMILESWriterTest {
 	public void testOrganic6() throws StructureBuildingException {
 		Fragment f = state.fragManager.buildSMILES("S(F)(F)(F)F");
 		String smiles = new SMILESWriter(f).generateSmiles();
-		assertEquals("S123F.F1.F2.F3", smiles);
+		assertEquals("S(F)(F)(F)F", smiles);
 	}
 	
 	@Test
 	public void testOrganic7() throws StructureBuildingException {
 		Fragment f = state.fragManager.buildSMILES("S([H])(F)(F)(F)(F)F");
 		String smiles = new SMILESWriter(f).generateSmiles();
-		assertEquals("S1234F.F1.F2.F3.F4", smiles);
+		assertEquals("S(F)(F)(F)(F)F", smiles);
 	}
 	
 	@Test
 	public void testOrganic8() throws StructureBuildingException {
 		Fragment f = state.fragManager.buildSMILES("S([H])([H])(F)(F)(F)F");
 		String smiles = new SMILESWriter(f).generateSmiles();
-		assertEquals("[SH2]123F.F1.F2.F3", smiles);
+		assertEquals("[SH2](F)(F)(F)F", smiles);
 	}
 	
 	@Test
 	public void testOrganic9() throws StructureBuildingException {
 		Fragment f = state.fragManager.buildSMILES("S(F)(F)(F)(F)(F)(F)F");
 		String smiles = new SMILESWriter(f).generateSmiles();
-		assertEquals("S123456F.F1.F2.F3.F4.F5.F6", smiles);
+		assertEquals("S(F)(F)(F)(F)(F)(F)F", smiles);
 	}
 	
 	@Test
