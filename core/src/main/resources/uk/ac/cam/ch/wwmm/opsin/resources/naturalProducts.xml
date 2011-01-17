@@ -19,5 +19,8 @@
 	<tokenList tagname="group" type="ring" subType="naturalProduct" symbol="G">
 		<token value="[CH3][C@]12[CH2][CH2][C@H]3[C@@H]([CH2][CH2][CH]4[CH2][CH2][CH2][CH2][C@]34[CH3])[C@H]1[CH2][CH2][C@@H]2[C@H]1[CH2][CH2][C](=[O])[O][CH2]1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/22/23/24///21" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">bufanolide</token>
 		<token value="[CH3][C@]12[CH2][CH2][C@H]3[C@@H]([CH2][CH2][CH]4[CH2][CH2][CH2][CH2][C@]34[CH3])[C@H]1[CH2][CH2][C@@H]2[C@@H]1[CH2][O][C](=[O])[CH2]1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/21//23//22" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cardanolide</token>
+
+	<!--not retained-->
+	<token value="[CH3][CH]([CH3])[CH2][CH2][CH2][C@@H]([CH3])[C@H]1[CH2][CH2][C@H]2[C@@H]3[CH2][CH]=C4[CH2][C@@H](O)[CH2][CH2][C@]4([CH3])[C@H]3[CH2][CH2][C@]12[CH3]" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholesterol</token>
 	</tokenList>
 </tokenLists>

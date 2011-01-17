@@ -4,7 +4,6 @@
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="G">
 	<!--cyclic structures generally should be under arylGroups if they accept multiple suffixes or under simpleCyclicGroups if trivial
 	If you do not want them to support indicated hydrogen put them here-->
-		<token value="CC=NO" labels="none" valType="SMILES">acetaldoxime</token>
 		<token value="OC(C(C)=O)C" labels="none" valType="SMILES">acetoin</token>
 		<token value="CC(C)=NO" labels="none" valType="SMILES">acetoxime</token>
 		<token value="CC(=O)[O+]" labels="2/1//" valType="SMILES">acetoxylium</token>
@@ -33,7 +32,6 @@
 		<token value="O=S(OCCCCOS(=O)(C)=O)(C)=O" labels="none" valType="SMILES">busulfan</token>
 		<token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
 		<token value="CCCC[O+]" labels="1/2/3/4/" valType="SMILES">butoxylium</token>
-		<token value="CCCC=NO" labels="none" valType="SMILES">butyraldoxime</token>
 		<token value="NCCCCCN" labels="/1/2/3/4/5/" valType="SMILES">cadaverine</token>
 		<token value="[O-]C(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
 		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
@@ -79,7 +77,6 @@
 		<token value="N(F)F" labels="none" valType="SMILES">difluoramine</token>
 		<token value="N(F)F" labels="none" valType="SMILES">fluorimide</token>
 		<token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
-		<token value="C=NO" labels="none" valType="SMILES">formaldoxime</token>
 		<token value="O[N+]#[C-]" labels="none" valType="SMILES" functionalIDs="1">fulminic</token>
 		<token value="O[N+]#[C-]" labels="none" valType="SMILES" functionalIDs="1">fulminicacid</token>
 		<token value="O[N+]#[C-]" labels="none" valType="SMILES" functionalIDs="1">fulminic acid</token>
@@ -98,7 +95,6 @@
 		<token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
 		<token value="CC(C)C[O-]" labels="none" valType="SMILES">isobutoxide</token>
 		<token value="CC(C)=C" labels="none" valType="SMILES">isobutylene</token>
-		<token value="CC(C)C=NO" labels="none" valType="SMILES">isobutyraldoxime</token>
 		<token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazide</token>
 		<token value="N=C=O" labels="none" valType="SMILES" functionalIDs="1">isocyanic</token>
 		<token value="N=C=O" labels="none" valType="SMILES" functionalIDs="1">isocyanicacid</token>

@@ -59,6 +59,8 @@ class Atom {
     static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
 	/** Is this atom the carbon of an aldehyde? (however NOT formaldehyde)*/
     static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
+	/** Transient integer used to indicate traversal of fragments*/
+    static final PropertyKey<Integer> VISITED = new PropertyKey<Integer>("visited");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
@@ -512,11 +514,7 @@ class Atom {
 	List<Atom> getAtomNeighbours(){
 		List<Atom> results = new ArrayList<Atom>();
 		for(Bond b :  bonds) {
-			if(b.getFromAtom() != this) {
-				results.add(b.getFromAtom());
-			} else if(b.getToAtom()!= this) {
-				results.add(b.getToAtom());
-			}
+			results.add(b.getOtherAtom(this));
 		}
 		return results;
 	}

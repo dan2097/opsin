@@ -35,6 +35,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 
   <groupType type="acidStem"><!--e.g. acet to acetamide -->
     <suffix value="aldehyde">aldehyde</suffix>
+    <suffix value="aldoxime">aldoxime</suffix>
     <suffix value="amide">amide</suffix>
     <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidine">amidine</suffix>
@@ -72,6 +73,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="al" subType="endInIne">aldehyde</suffix>
     <suffix value="al" subType="endInAn">aldehyde</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
+    <suffix value="aldoxime">aldoxime</suffix>
     <suffix value="amide">amide</suffix>
     <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidium">amidium</suffix>
@@ -111,6 +113,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   <groupType type="standardGroup"><!--e.g. ethan to ethanimine-->
     <suffix value="al">aldehyde</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
+    <suffix value="aldoxime">aldoxime</suffix>
     <suffix value="amide">amide</suffix>
     <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidine">amidine</suffix>

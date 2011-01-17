@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,60 +14,41 @@ class CycleDetector {
 	 */
 	static void assignWhetherAtomsAreInCycles(Fragment frag) {
 		List<Atom> atomList =frag.getAtomList();
-		HashSet<Atom> atomsVisited = new HashSet<Atom>();
+		for (Atom atom : atomList) {
+			atom.setAtomIsInACycle(false);
+			atom.setProperty(Atom.VISITED, null);
+		}
 		for (Atom a : atomList) {//as OPSIN does not disallow disconnected sections within a single "fragment" (e.g. in suffixes) for vigorousness this for loop is required
-			if (atomsVisited.contains(a)){continue;}//typically for all but the first atom this will be true
-			LinkedList<Atom> orderAtomsVisited = new LinkedList<Atom>();
-			LinkedList<Atom[]> atomStack =new LinkedList<Atom[]>();
-
-			//Start from the first atom in the atomList and add neighbours to the relevant lists
-			List<Atom> neighbours =a.getAtomNeighbours();
-			atomsVisited.add(a);
-			orderAtomsVisited.add(a);
-			for (Atom neighbour : neighbours) {
-				atomStack.add(new Atom[]{neighbour,a});//record both the atom and the atom from which you came from
-			}
-
-			while (atomStack.size()>0){
-				Atom[] nextAtomArray =atomStack.removeLast();//depth first traversal
-				a =nextAtomArray[0];
-				if (atomsVisited.contains(a)){
-					//parent atom must have been in a ring and this atom already visited another way
-					if (atomStack.size()> 0){
-						Atom atomToBackTrackTo =atomStack.getLast()[1];
-						while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
-							orderAtomsVisited.removeLast();
-						}
-					}
-					continue;
-				}
-				atomsVisited.add(a);
-				orderAtomsVisited.add(a);
-				neighbours =a.getAtomNeighbours();
-				int stackSize =atomStack.size();
-				for (Atom neighbour : neighbours) {
-					if (neighbour.equals(nextAtomArray[1])){continue;}//the neighbour is the parent of the atom e.g. in CCC you went you went from the first C then tried to go to the first as it is a neighbour
-					if (atomsVisited.contains(neighbour)){//atom has already been visited, this must be because a ring has been formed
-						int i =orderAtomsVisited.indexOf(neighbour);
-						for (; i < orderAtomsVisited.size(); i++) {//go through atoms in orderAtomsVisited from the previously visited neighbour up to the end of the list and mark all these atoms as being in a ring
-							Atom ringAtom = orderAtomsVisited.get(i);
-							ringAtom.setAtomIsInACycle(true);
-						}
-					}
-					else{//add atom to stack, its neighbours will be recursively investigated shortly
-						atomStack.add(new Atom[]{neighbour, a});
-					}
-				}
-				if (stackSize==atomStack.size() && stackSize > 0){//stack has not been changed, so you must be at a terminus. If the stack is empty this step is not necessary
-					Atom atomToBackTrackTo =atomStack.getLast()[1];
-					while (!atomToBackTrackTo.equals(orderAtomsVisited.getLast())){//remove atoms until you get back to the point from which you are investigating atoms.
-						orderAtomsVisited.removeLast();
-					}
-				}
+			if(a.getProperty(Atom.VISITED)==null){//typically for all but the first atom this will be true
+				traverseRings(a, null, 0);
 			}
 		}
 	}
 	
+	private static int traverseRings(Atom currentAtom, Atom previousAtom, int depth){
+		int temp, result;
+		if(currentAtom.getProperty(Atom.VISITED)!=null){
+			return currentAtom.getProperty(Atom.VISITED);
+		}
+		currentAtom.setProperty(Atom.VISITED, depth);
+		result = depth+1;
+		List<Atom> neighbours = currentAtom.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			if (neighbour.equals(previousAtom)){
+				continue;
+			}
+			temp = traverseRings(neighbour, currentAtom, depth+1);
+			if( temp <= depth) {
+				result = Math.min(result,temp);
+			}
+		}
+		if( result <= depth ){
+			currentAtom.setAtomIsInACycle(true);
+		}
+		return result;
+
+	}
+
 	private static class IntraFragmentPathSearchState{
 		final Atom currentAtom;
 		final LinkedList<Atom> orderAtomsVisited;

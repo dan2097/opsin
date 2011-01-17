@@ -170,4 +170,21 @@ class Bond {
 		bondStereoElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefs4));
 		bondStereoElement.appendChild(CorT.toString());
 	}
+
+	/**
+	 * Returns the atom at the other end of the bond to given atom
+	 * @param atom
+	 * @return
+	 */
+	Atom getOtherAtom(Atom atom) {
+		if (from ==atom){
+			return to;
+		}
+		else if (to ==atom){
+			return from;
+		}
+		else{
+			return null;
+		}
+	}
 }

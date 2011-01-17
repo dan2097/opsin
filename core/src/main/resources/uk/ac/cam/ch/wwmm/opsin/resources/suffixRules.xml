@@ -7,6 +7,10 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*]=O"/>
   </rule>
+  <rule value="aldoxime">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*]=NO"/>
+  </rule>
   <rule value="amide">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)N" functionalIDs="3,3" />

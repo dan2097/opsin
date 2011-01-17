@@ -77,6 +77,7 @@
     <token value="ic" additionalValue="aldehyde">aldehydic</token>
     <token value="ic" additionalValue="aldehyde">aldehydicacid</token>
     <token value="ic" additionalValue="aldehyde">aldehydic acid</token>
+    <token value="aldoxime">aldoxime</token>
     <token value="ate" additionalValue="amide">amate</token>
     <token value="ic" additionalValue="amide">amic</token>
     <token value="ic" additionalValue="amide">amicacid</token>
