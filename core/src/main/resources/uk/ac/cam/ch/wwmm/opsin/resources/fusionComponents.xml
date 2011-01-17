@@ -57,6 +57,7 @@
     <token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isoarsindolo</token>
     <token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoarsinolino</token>
     <token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzofurano</token>
+    <token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzofuro</token>
     <token value="[cH2]1occc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isochromeno</token>
     <token value="[cH2]1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochromeno</token>
     <token value="[cH2]1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromeno</token>

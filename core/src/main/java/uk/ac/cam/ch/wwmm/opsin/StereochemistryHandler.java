@@ -722,7 +722,7 @@ class StereochemistryHandler {
 					atomRefs4[2]=a2;
 				}
 				else{
-					throw new StructureBuildingException("alpha/beta stereochemistry application is ambiguous at this position");
+					throw new StructureBuildingException("alpha/beta stereochemistry application is ambiguous at position " +stereoAtom.getFirstLocant());
 				}
 				if (alphaOrBeta.equals("alpha")){
 					stereoAtom.setAtomParity(atomRefs4, 1);
