@@ -86,6 +86,7 @@ class ComponentGenerator {
 	private final static Pattern matchNonDigit =Pattern.compile("\\D+");
 	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
 	private final static Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
+	private final static Pattern matchStereoChemAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{]([RS])[\\]\\)\\}]$");
 	private final static Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
@@ -234,6 +235,16 @@ class ComponentGenerator {
 			String[] individualLocantText = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
 			for (int i = 0; i < individualLocantText.length; i++) {
 				String locantText =individualLocantText[i];
+				Matcher matchStereoChem= matchStereoChemAtEndOfLocant.matcher(locantText);
+				if (matchStereoChem.find()){
+					String rs = matchStereoChem.group(1);
+					individualLocantText[i] = matchStereoChem.replaceAll("");
+					locantText =individualLocantText[i];
+					Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL);
+					newStereoChemEl.appendChild("(" + locantText +rs+")");
+					newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+					XOMTools.insertBefore(locant, newStereoChemEl);
+				}
 				if (locantText.contains("-")){//this checks should avoid having to do the regex match in all cases as locants shouldn't contain -
 					Matcher m= matchIUPAC2004ElementLocant.matcher(locantText);
 					if (m.matches()){
