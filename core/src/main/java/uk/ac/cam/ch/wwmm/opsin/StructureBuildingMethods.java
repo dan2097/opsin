@@ -636,18 +636,10 @@ class StructureBuildingMethods {
 		if (thisFrag.getOutAtoms().size()>0){//assign any outAtoms that have not been set to a specific atom to a specific atom
 			for (OutAtom outAtom : thisFrag.getOutAtoms()) {
 				if (!outAtom.isSetExplicitly()){
-					Atom atomToAssociateOutAtomWith = outAtom.getAtom();
-					atomIndice =atomList.indexOf(atomToAssociateOutAtomWith);
-					while (!ValencyChecker.checkValencyAvailableForBond(atomToAssociateOutAtomWith, (atomToAssociateOutAtomWith.hasSpareValency() ? 1 : 0) + atomToAssociateOutAtomWith.getOutValency() + outAtom.getValency())){
-						atomIndice++;
-			            if (atomIndice >=atomList.size()){
-			            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
-		                }
-						atomToAssociateOutAtomWith= atomList.get(atomIndice);
-						if (atomToAssociateOutAtomWith.getType().equals(SUFFIX_TYPE_VAL)){
-			            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
-						}
-					}
+					Atom atomToAssociateOutAtomWith = thisFrag.getAtomOrNextSuitableAtom(outAtom.getAtom(), outAtom.getValency(), true);
+		            if (atomToAssociateOutAtomWith==null){
+		            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
+	                }
 					outAtom.setAtom(atomToAssociateOutAtomWith);
 					outAtom.setSetExplicitly(true);
 				}
