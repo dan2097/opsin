@@ -2072,9 +2072,10 @@ class ComponentProcessor {
 				}
 			}
 
-			Element elementToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is duplicated
+			Element elementToResolve;//temporary element containing elements that should be resolved before the ring is duplicated
 			Element nextEl =(Element) XOMTools.getNextSibling(multiplier);
 			if (nextEl.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
+				elementToResolve = new Element(SUBSTITUENT_EL);
 				Element currentEl =nextEl;
 				nextEl = (Element) XOMTools.getNextSibling(currentEl);
 				currentEl.detach();
@@ -2089,27 +2090,7 @@ class ComponentProcessor {
 				}
 			}
 			else{
-				boolean groupFound = false;
-				boolean inlineSuffixSeen = false;
-				while (nextEl !=null){
-					Element currentEl =nextEl;
-					nextEl = (Element) XOMTools.getNextSibling(currentEl);
-					if (!groupFound ||
-							(!inlineSuffixSeen && currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttribute(LOCANT_ATR)==null && state.xmlFragmentMap.get(currentEl)==null)||
-							(currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL))|| currentEl.getLocalName().equals(UNSATURATOR_EL)){
-						currentEl.detach();
-						elementToResolve.appendChild(currentEl);
-					}
-					else{
-						break;
-					}
-					if (currentEl.getLocalName().equals(GROUP_EL)){
-						groupFound = true;
-					}
-					if ((currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL))){
-						inlineSuffixSeen = true;
-					}
-				}
+				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants, state);
 			}
 
 			List<Element> suffixes = XOMTools.getChildElementsWithTagName(elementToResolve, SUFFIX_EL);
@@ -2123,9 +2104,8 @@ class ComponentProcessor {
 			int bondOrder = 1;
 			if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0){//e.g. bicyclohexanylidene
 				bondOrder =fragmentToResolveAndDuplicate.getOutAtom(0).getValency();
-				fragmentToResolveAndDuplicate.removeOutAtom(0);
 			}
-			if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0){
+			if (fragmentToResolveAndDuplicate.getOutAtoms().size()>1){
 				throw new StructureBuildingException("Ring assembly fragment should have one or no OutAtoms; not more than one!");
 			}
 
@@ -2142,10 +2122,23 @@ class ComponentProcessor {
 					atomOnLatestClone = clone.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(1));
 				}
 				else{
-					atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtom(), bondOrder, true);
-					atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder, true);
+					if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0 && mvalue==2){
+						atomOnParent = fragmentToResolveAndDuplicate.getOutAtom(0).getAtom();
+						atomOnLatestClone = clone.getOutAtom(0).getAtom();
+					}
+					else{
+						atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtom(), bondOrder, true);
+						atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder, true);
+					}
+				}
+				if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0){
+					fragmentToResolveAndDuplicate.removeOutAtom(0);
+				}
+				if (clone.getOutAtoms().size()>0){
+					clone.removeOutAtom(0);
 				}
 				state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
+				fragmentToResolveAndDuplicate.setDefaultInAtom(clone.getDefaultInAtom());
 			}
 			XOMTools.setTextChild(group, multiplier.getValue() +group.getValue());
 			Element possibleOpenStructuralBracket = (Element) XOMTools.getPreviousSibling(multiplier);
@@ -2157,6 +2150,53 @@ class ComponentProcessor {
 			multiplier.detach();
 		}
 	}
+
+	/**
+	 * Given the element after the ring assembly multiplier determines which siblings should be resolved by adding them to elementToResolve
+	 * @param ringJoiningLocants 
+	 * @param elementAfterMultiplier
+	 * @param elementToResolve
+	 * @return 
+	 * @throws ComponentGenerationException 
+	 */
+	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, List<List<String>> ringJoiningLocants, BuildState state) throws ComponentGenerationException {
+		Element elementToResolve = new Element(SUBSTITUENT_EL);
+		boolean groupFound = false;
+		boolean inlineSuffixSeen = false;
+		Element currentEl = (Element) XOMTools.getNextSibling(multiplier);
+		while (currentEl !=null){
+			Element nextEl = (Element) XOMTools.getNextSibling(currentEl);
+			if (!groupFound || currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL)|| currentEl.getLocalName().equals(UNSATURATOR_EL)){
+				currentEl.detach();
+				elementToResolve.appendChild(currentEl);
+			}
+			else if (currentEl.getLocalName().equals(SUFFIX_EL)){
+				state.xmlFragmentMap.get(currentEl);
+				if (!inlineSuffixSeen && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) ==null
+						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants.size()==0)) && state.xmlFragmentMap.get(currentEl)==null){
+					inlineSuffixSeen = true;
+					currentEl.detach();
+					elementToResolve.appendChild(currentEl);
+				}
+				else{
+					break;
+				}
+			}
+			else{
+				break;
+			}
+			if (currentEl.getLocalName().equals(GROUP_EL)){
+				groupFound = true;
+			}
+			currentEl = nextEl;
+		}
+		Element parent = (Element) multiplier.getParent();
+		if (!parent.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getChildElementsWithTagNameAndAttribute(parent, SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL).size()!=0){
+			throw new ComponentGenerationException("Unexpected radical adding suffix on ring assembly");			
+		}
+		return elementToResolve;
+	}
+
 
 	/**
 	 * Proccess any polycyclic spiro systems present in subOrRoot
@@ -2697,7 +2737,8 @@ class ComponentProcessor {
 		if (outAtomCount >=2){
 			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
 				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
-				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtoms().size() < 2){//must be preceded by a multi radical
+				Element nextGroup =(Element) OpsinTools.getNextGroup(group);
+				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtoms().size() < 2 || nextGroup==null){//must be preceded by a multi radical
 					throw new ComponentGenerationException("Invalid use of amine as a substituent!");
 				}
 			}

@@ -43,7 +43,8 @@ class WordRules {
 		multiEster,
 		oxide,
 		polymer,
-		simple
+		simple,
+		substituent
 	}
 
 	/**
@@ -366,7 +367,7 @@ class WordRules {
 			}
 		}
 		if (n2sConfig.isAllowRadicals() && wordEls.size()==1 && indexOfFirstWord==0 && firstWord.getLocalName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
-			applySimpleWordRule(wordEls, indexOfFirstWord, firstWord);
+			applySubstituentWordRule(wordEls, indexOfFirstWord, firstWord);
 		}
 		return false;
 	}
@@ -395,6 +396,20 @@ class WordRules {
 		int indexToInsertAt = parentEl.indexOf(firstWord);
 		Element wordRuleEl = new Element(WORDRULE_ATR);
 		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.simple.toString()));//No wordRule
+		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
+		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
+		firstWord.detach();
+		wordRuleEl.appendChild(firstWord);
+		wordEls.set(indexOfFirstWord, wordRuleEl);
+		parentEl.insertChild(wordRuleEl, indexToInsertAt);
+	}
+	
+
+	private void applySubstituentWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
+		Element parentEl = (Element) firstWord.getParent();
+		int indexToInsertAt = parentEl.indexOf(firstWord);
+		Element wordRuleEl = new Element(WORDRULE_ATR);
+		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.substituent.toString()));
 		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
 		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
 		firstWord.detach();

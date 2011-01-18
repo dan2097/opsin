@@ -58,7 +58,7 @@ class StructureBuilder {
 			WordRule wordRule = WordRule.valueOf(currentWordRuleEl.getAttributeValue(WORDRULE_ATR));
 			List<Element> words = XOMTools.getChildElementsWithTagNames(currentWordRuleEl, new String[]{WORD_EL, WORDRULE_EL});
 			state.currentWordRule =wordRule;
-			if(wordRule == WordRule.simple) {
+			if(wordRule == WordRule.simple || wordRule == WordRule.substituent) {
 				for (Element word : words) {
 					if (!word.getLocalName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && (!state.n2sConfig.isAllowRadicals() || !word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString()))){
 						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'simple' wordRule");

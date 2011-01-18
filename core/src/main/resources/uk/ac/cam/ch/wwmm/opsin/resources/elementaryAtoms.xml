@@ -95,28 +95,28 @@
 	<!--non metals-->
 	<!--hydrogen is currently excluded as it is already present as a substituent anyway allowing names like hydrogen chloride -->
 
-	<token value="[B]" labels="none" valType="SMILES">boron</token>
+	<token value="[B]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">boron</token>
 
-	<token value="[C]" labels="none" valType="SMILES">carbon</token>
-	<token value="[Si]" labels="none" valType="SMILES">silicon</token>
-	<token value="[Ge]" labels="none" valType="SMILES">germanium</token>
+	<token value="[C]" commonOxidationStatesAndMax="4:4" labels="none" valType="SMILES">carbon</token>
+	<token value="[Si]" commonOxidationStatesAndMax="4:4" labels="none" valType="SMILES">silicon</token>
+	<token value="[Ge]" commonOxidationStatesAndMax="2,4:4" labels="none" valType="SMILES">germanium</token>
 
-	<token value="[N]" labels="none" valType="SMILES">nitrogen</token>
-	<token value="[P]" labels="none" valType="SMILES">phosphorus</token>
-	<token value="[As]" labels="none" valType="SMILES">arsenic</token>
-	<token value="[Sb]" labels="none" valType="SMILES">antimony</token>
+	<token value="[N]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">nitrogen</token>
+	<token value="[P]" commonOxidationStatesAndMax="3,5:5" labels="none" valType="SMILES">phosphorus</token>
+	<token value="[As]" commonOxidationStatesAndMax="3,5:5" labels="none" valType="SMILES">arsenic</token>
+	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5" labels="none" valType="SMILES">antimony</token>
 
-	<token value="[O]" labels="none" valType="SMILES">oxygen</token>
-	<token value="[S]" labels="none" valType="SMILES">sulfur</token>
-	<token value="[Se]" labels="none" valType="SMILES">selenium</token>
-	<token value="[Te]" labels="none" valType="SMILES">tellurium</token>
-	<token value="[Po]" labels="none" valType="SMILES">polonium</token>
+	<token value="[O]" commonOxidationStatesAndMax="2:2" labels="none" valType="SMILES">oxygen</token>
+	<token value="[S]" commonOxidationStatesAndMax="2,4,6:6" labels="none" valType="SMILES">sulfur</token>
+	<token value="[Se]" commonOxidationStatesAndMax="2,4,6:6" labels="none" valType="SMILES">selenium</token>
+	<token value="[Te]" commonOxidationStatesAndMax="2,4,6:6" labels="none" valType="SMILES">tellurium</token>
+	<token value="[Po]" commonOxidationStatesAndMax="2,4:6" labels="none" valType="SMILES">polonium</token>
 
 	<token value="[F]" labels="none" valType="SMILES">fluorine</token>
-	<token value="[Cl]" labels="none" valType="SMILES">chlorine</token>
-	<token value="[Br]" labels="none" valType="SMILES">bromine</token>
-	<token value="[I]" labels="none" valType="SMILES">iodine</token>
-	<token value="[At]" labels="none" valType="SMILES">astatine</token>
+	<token value="[Cl]" commonOxidationStatesAndMax="1,3,5,7:7" labels="none" valType="SMILES">chlorine</token>
+	<token value="[Br]" commonOxidationStatesAndMax="1,3,5,7:7" labels="none" valType="SMILES">bromine</token>
+	<token value="[I]" commonOxidationStatesAndMax="1,3,5,7:7" labels="none" valType="SMILES">iodine</token>
+	<token value="[At]" commonOxidationStatesAndMax="1:5" labels="none" valType="SMILES">astatine</token>
 
 	<token value="[He]" labels="none" valType="SMILES">helium</token>
 	<token value="[Ne]" labels="none" valType="SMILES">neon</token>

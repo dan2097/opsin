@@ -10,6 +10,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
+import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -29,6 +31,15 @@ public class NameToStructure {
 	 */
 	private class SortParses implements Comparator<Element>{
 		public int compare(Element el1, Element el2){
+			boolean isSubstituent1 = WordRule.substituent.toString().equals(el1.getFirstChildElement(WORDRULE_EL).getAttributeValue(WORDRULE_ATR));
+			boolean isSubstituent2 = WordRule.substituent.toString().equals(el2.getFirstChildElement(WORDRULE_EL).getAttributeValue(WORDRULE_ATR));
+			if (isSubstituent1 && !isSubstituent2){
+				return 1;
+			}
+			if (!isSubstituent1 && isSubstituent2){
+				return -1;
+			}
+			
 			int[] counts1 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el1);
 			int[] counts2 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el2);
 			int childLessElementsInEl1 = counts1[1];
