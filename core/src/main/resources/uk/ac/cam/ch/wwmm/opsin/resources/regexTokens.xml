@@ -33,8 +33,9 @@
   <regex name="%locantTypesOptionalHyphen%" regex="(%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%)|%greek%'*)"/><!--subset that do not end with a letter-->
   <regex name="%indicatedHydrogen%" regex="(%locant%H)"/>
   <regex name="%compoundLocantOrIndicatedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
-  <regex name="%allLocantForms%" regex="(%locantTypes%%compoundLocantOrIndicatedHydrogen%?)"/>
-  <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%%compoundLocantOrIndicatedHydrogen%|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
+  <regex name="%RSstereochemAfterLocant%" regex="(-?%openBracket%[RS]%closeBracket%)"/><!--e.g. 2-(S) or 2(R),3(R),4(R),5-->
+  <regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrIndicatedHydrogen%|%RSstereochemAfterLocant%)?)"/>
+  <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrIndicatedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
   <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" determinise="yes" />
 
