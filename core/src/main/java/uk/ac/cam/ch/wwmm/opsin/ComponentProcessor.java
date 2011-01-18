@@ -3292,7 +3292,7 @@ class ComponentProcessor {
 						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
 							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
 							String type = group.getAttributeValue(TYPE_ATR);
-							if ((group.getValue().equals("phen")&& ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)))|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+							if (((group.getValue().equals("phen")|| (group.getValue().equals("benz")&& !locantEl.getValue().equals("alpha")))&& ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)))|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
 								continue;
 							}
 						}
