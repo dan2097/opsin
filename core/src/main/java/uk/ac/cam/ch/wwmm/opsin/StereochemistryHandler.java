@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
@@ -416,15 +417,16 @@ class StereochemistryHandler {
 	private static void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) throws StructureBuildingException {
 		List<Atom> stereoBondAtoms = stereoBond.getOrderedStereoAtoms();
 		//stereoBondAtoms contains the higher priority atom at one end, the two bond atoms and the higher priority atom at the other end
-		String atomRefs4= "a" + stereoBondAtoms.get(0).getID();
-		atomRefs4 +=" a" + stereoBondAtoms.get(1).getID();
-		atomRefs4 +=" a" + stereoBondAtoms.get(2).getID();
-		atomRefs4 +=" a" + stereoBondAtoms.get(3).getID();
+		Atom[] atomRefs4 = new Atom[4];
+		atomRefs4[0] = stereoBondAtoms.get(0);
+		atomRefs4[1] = stereoBondAtoms.get(1);
+		atomRefs4[2] = stereoBondAtoms.get(2);
+		atomRefs4[3] = stereoBondAtoms.get(3);
 		if (eOrZ.equals("E")){
-			bond.setBondStereoElement(atomRefs4, BondStereo.TRANS);
+			bond.setBondStereoElement(atomRefs4, BondStereoValue.TRANS);
 		}
 		else if (eOrZ.equals("Z")){
-			bond.setBondStereoElement(atomRefs4, BondStereo.CIS);
+			bond.setBondStereoElement(atomRefs4, BondStereoValue.CIS);
 		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " + eOrZ);

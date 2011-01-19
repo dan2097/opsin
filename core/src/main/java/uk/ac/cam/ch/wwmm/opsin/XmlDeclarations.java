@@ -400,26 +400,7 @@ class XmlDeclarations {
 	static final String BONDSTEREO_EL = "bondStereo";
 	/**An attribute holding the ids of the 4 atoms that are needed to define the bondStereo of a double bond: \=/ . Note that the ids are prefixed with an 'a'*/
 	static final String ATOMREFS4_ATR = "atomRefs4";
-	
-	/**
-	 * Possible values for a bondStereo element
-	 * @author dl387
-	 *
-	 */
-	enum BondStereo{
-		CIS("C"),
-		TRANS("T");
 
-		private final String value;  
-		BondStereo(String value){
-			this.value = value;
-		}
-		@Override
-		public String toString() {
-			return value;
-		}
-	}
-	
 	/** InLocants have not been specified */
 	static final String INLOCANTS_DEFAULT = "default";
 

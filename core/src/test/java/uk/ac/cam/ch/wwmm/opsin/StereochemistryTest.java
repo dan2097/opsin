@@ -14,9 +14,10 @@ import static org.mockito.Mockito.mock;
 import uk.ac.cam.ch.wwmm.opsin.Atom;
 import uk.ac.cam.ch.wwmm.opsin.Fragment;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
-import uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.BondStereo;
+
 public class StereochemistryTest {
 
 	private static NameToStructure n2s;
@@ -107,13 +108,13 @@ public class StereochemistryTest {
 		assertNotNull(atom3);
 		Bond chiralBond = f.findBond(atom2, atom3);
 		assertNotNull(chiralBond);
-		Element bondStereo = chiralBond.getBondStereoElement();
+		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals(BondStereo.CIS.toString(), bondStereo.getValue());
+		assertEquals(BondStereoValue.CIS.toString(), bondStereo.getValue());
 	}
 	
 	@Test
@@ -125,13 +126,13 @@ public class StereochemistryTest {
 		assertNotNull(atom3);
 		Bond chiralBond = f.findBond(atom2, atom3);
 		assertNotNull(chiralBond);
-		Element bondStereo = chiralBond.getBondStereoElement();
+		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals(BondStereo.TRANS.toString(), bondStereo.getValue());
+		assertEquals(BondStereoValue.TRANS.toString(), bondStereo.getValue());
 	}
 
 	@Test
@@ -143,13 +144,13 @@ public class StereochemistryTest {
 		assertNotNull(atom3);
 		Bond chiralBond = f.findBond(atom2, atom3);
 		assertNotNull(chiralBond);
-		Element bondStereo = chiralBond.getBondStereoElement();
+		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals(BondStereo.CIS.toString(), bondStereo.getValue());
+		assertEquals(BondStereoValue.CIS.toString(), bondStereo.getValue());
 	}
 	
 	@Test
@@ -161,13 +162,13 @@ public class StereochemistryTest {
 		assertNotNull(atom3);
 		Bond chiralBond = f.findBond(atom2, atom3);
 		assertNotNull(chiralBond);
-		Element bondStereo = chiralBond.getBondStereoElement();
+		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals(BondStereo.TRANS.toString(), bondStereo.getValue());
+		assertEquals(BondStereoValue.TRANS.toString(), bondStereo.getValue());
 	}
 	
 	@Test
@@ -179,13 +180,13 @@ public class StereochemistryTest {
 		assertNotNull(atom3);
 		Bond chiralBond = f.findBond(atom2, atom3);
 		assertNotNull(chiralBond);
-		Element bondStereo = chiralBond.getBondStereoElement();
+		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals(BondStereo.CIS.toString(), bondStereo.getValue());
+		assertEquals(BondStereoValue.CIS.toString(), bondStereo.getValue());
 	}
 	
 	@Test
@@ -197,13 +198,13 @@ public class StereochemistryTest {
 		assertNotNull(atom3);
 		Bond chiralBond = f.findBond(atom2, atom3);
 		assertNotNull(chiralBond);
-		Element bondStereo = chiralBond.getBondStereoElement();
+		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals(BondStereo.TRANS.toString(), bondStereo.getValue());
+		assertEquals(BondStereoValue.TRANS.toString(), bondStereo.getValue());
 	}
 	
 	

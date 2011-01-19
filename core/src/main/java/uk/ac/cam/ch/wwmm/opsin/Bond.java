@@ -3,7 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.BondStereo;
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -30,10 +30,10 @@ class Bond {
 	private SMILES_BOND_DIRECTION smilesBondDirection = null;
 
 	/**
-	 * Holds the bondStereo tag to be associated with this bond upon output
+	 * Holds the bondStereo object associated with this bond
 	 * null by default
 	 */
-	private Element bondStereoElement = null;
+	private BondStereo bondStereo= null;
 
 	/**
 	 * If the bond is a fusion bond this will in the fused ring numberer be populated with the rings that it connects
@@ -87,8 +87,8 @@ class Bond {
 		else{
 			elem.addAttribute(new Attribute("order", "unknown"));
 		}
-		if (bondStereoElement!=null){
-			elem.appendChild(bondStereoElement);
+		if (bondStereo!=null){
+			elem.appendChild(bondStereo.toCML());
 		}
 		return elem;
 	}
@@ -157,18 +157,16 @@ class Bond {
 		this.smilesBondDirection = bondDirection;
 	}
 
-	Element getBondStereoElement() {
-		return bondStereoElement;
+	BondStereo getBondStereo() {
+		return bondStereo;
 	}
 
-	void setBondStereoElement(Element bondStereoElement) {
-		this.bondStereoElement = bondStereoElement;
+	void setBondStereo(BondStereo bondStereo) {
+		this.bondStereo = bondStereo;
 	}
 
-	void setBondStereoElement(String atomRefs4, BondStereo CorT) {
-		bondStereoElement = new Element(XmlDeclarations.BONDSTEREO_EL);
-		bondStereoElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefs4));
-		bondStereoElement.appendChild(CorT.toString());
+	void setBondStereoElement(Atom[] atomRefs4, BondStereoValue cOrT) {
+		bondStereo = new BondStereo(atomRefs4, cOrT);
 	}
 
 	/**

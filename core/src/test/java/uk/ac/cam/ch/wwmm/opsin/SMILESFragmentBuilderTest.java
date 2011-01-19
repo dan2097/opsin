@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
+
 public class SMILESFragmentBuilderTest {
 
 	private FragmentManager fm;
@@ -636,85 +638,85 @@ public class SMILESFragmentBuilderTest {
     public void testDoubleBondStereo1() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C/F");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondStereo2() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F\\C=C/F");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondStereo3() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C(/F)=C/F");
         Bond b =fragment.findBond(1, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondStereo4() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C(\\F)=C/F");
         Bond b =fragment.findBond(1, 3);
-        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondStereo5a() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("CC1=C/F.O\\1");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondStereo5b() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("CC/1=C/F.O1");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondStereo6() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("CC1=C/F.O/1");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondMultiStereo1() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C/C=C/C");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
         b =fragment.findBond(4, 5);
-        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondMultiStereo2() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C\\C=C/C");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
         b =fragment.findBond(4, 5);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondMultiStereo3() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C\\C=C\\C");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
         b =fragment.findBond(4, 5);
-        assertEquals("T", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
     }
 
     @Test
     public void testDoubleBondMultiStereo4() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("F/C=C\\C=CC");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("C", b.getBondStereoElement().getValue());
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
         b =fragment.findBond(4, 5);
-        assertEquals(null, b.getBondStereoElement());
+        assertEquals(null, b.getBondStereo());
     }
     
     //From http://baoilleach.blogspot.com/2010/09/are-you-on-my-side-or-not-its-ez-part.html
@@ -722,11 +724,11 @@ public class SMILESFragmentBuilderTest {
     public void testDoubleBondNoela() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C/C=C\\1/NC1");
         Bond b =fragment.findBond(2, 3);
-        if ("T".equals( b.getBondStereoElement().getValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
+            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
         }
         else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
         }
     }
     
@@ -734,19 +736,19 @@ public class SMILESFragmentBuilderTest {
     public void testDoubleBondNoelb() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C/C=C1/NC1");
         Bond b =fragment.findBond(2, 3);
-        assertEquals("T", b.getBondStereoElement().getValue());
-        assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+        assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
     }
     
     @Test
     public void testDoubleBondNoelc() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C/C=C\\1/NC/1");
         Bond b =fragment.findBond(2, 3);
-        if ("T".equals( b.getBondStereoElement().getValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
+            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
         }
         else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
         }
     }
     
@@ -754,11 +756,11 @@ public class SMILESFragmentBuilderTest {
     public void testDoubleBondNoeld() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C/C=C1/NC/1");
         Bond b =fragment.findBond(2, 3);
-        if ("T".equals( b.getBondStereoElement().getValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
+            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
         }
         else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
         }
     }
     
@@ -784,15 +786,15 @@ public class SMILESFragmentBuilderTest {
     public void testDoubleBondNoelLike1() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C\\1NC1=C/C");
         Bond b =fragment.findBond(3, 4);
-        assertEquals("C", b.getBondStereoElement().getValue());
-        assertEquals("a1 a3 a4 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
     }
     
     @Test
     public void testDoubleBondNoelLike2() throws StructureBuildingException {
         Fragment fragment = fm.buildSMILES("C1NC/1=C/C");
         Bond b =fragment.findBond(3, 4);
-        assertEquals("C", b.getBondStereoElement().getValue());
-        assertEquals("a1 a3 a4 a5", b.getBondStereoElement().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
     }
 }

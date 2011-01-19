@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
+
 import net.sf.jniinchi.INCHI_BOND_TYPE;
 import net.sf.jniinchi.INCHI_OPTION;
 import net.sf.jniinchi.INCHI_PARITY;
@@ -18,7 +20,6 @@ import net.sf.jniinchi.JniInchiInput;
 import net.sf.jniinchi.JniInchiOutput;
 import net.sf.jniinchi.JniInchiStereo0D;
 import net.sf.jniinchi.JniInchiWrapper;
-import nu.xom.Element;
 
 /**
  * Allows the conversion of OPSIN's output into InChIs
@@ -111,18 +112,18 @@ public class NameToInchi {
         }
 
 		for (Bond bond : bondList) {//add bondStereos
-			Element bondStereoEl =bond.getBondStereoElement();
-			if (bondStereoEl != null){
-				String[] atomRefs4 = bondStereoEl.getAttributeValue("atomRefs4").split(" ");
-				int[] atomRefs4AsInt = new int[4];
+			BondStereo bondStereo =bond.getBondStereo();
+			if (bondStereo != null){
+				Atom[] atomRefs4 = bondStereo.getAtomRefs4();
+				int[] atomRefs4Ids = new int[4];
 				for (int i = 0; i < atomRefs4.length; i++) {
-					atomRefs4AsInt[i] = Integer.parseInt(atomRefs4[i].substring(1));//cut off starting a
+					atomRefs4Ids[i] = atomRefs4[i].getID();
 				}
-				if ("C".equals(bondStereoEl.getValue())){
-					input.addStereo0D(JniInchiStereo0D.createNewDoublebondStereo0D(opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), INCHI_PARITY.ODD));
+				if (BondStereoValue.CIS.equals(bondStereo.getBondStereoValue())){
+					input.addStereo0D(JniInchiStereo0D.createNewDoublebondStereo0D(opsinIdAtomMap.get(atomRefs4Ids[0]), opsinIdAtomMap.get(atomRefs4Ids[1]), opsinIdAtomMap.get(atomRefs4Ids[2]), opsinIdAtomMap.get(atomRefs4Ids[3]), INCHI_PARITY.ODD));
 				}
-				else if ("T".equals(bondStereoEl.getValue())){
-					input.addStereo0D(JniInchiStereo0D.createNewDoublebondStereo0D(opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), INCHI_PARITY.EVEN));
+				else if (BondStereoValue.TRANS.equals(bondStereo.getBondStereoValue())){
+					input.addStereo0D(JniInchiStereo0D.createNewDoublebondStereo0D(opsinIdAtomMap.get(atomRefs4Ids[0]), opsinIdAtomMap.get(atomRefs4Ids[1]), opsinIdAtomMap.get(atomRefs4Ids[2]), opsinIdAtomMap.get(atomRefs4Ids[3]), INCHI_PARITY.EVEN));
 				}
 			}
         }
