@@ -418,8 +418,13 @@ class FragmentManager {
 		for (Bond bond : bondSet) {
 			Bond newBond = createBond(oldToNewAtomMap.get(bond.getFromAtom()), oldToNewAtomMap.get(bond.getToAtom()), bond.getOrder());
 			newBond.setSmilesStereochemistry(bond.getSmilesStereochemistry());
-			if (bond.getBondStereoElement() != null){
-				newBond.setBondStereoElement(new Element(bond.getBondStereoElement()));
+			if (bond.getBondStereo() != null){
+				Atom[] oldAtomRefs4 = bond.getBondStereo().getAtomRefs4();
+				Atom[] newAtomRefs4 = new Atom[4];
+				for (int i = 0; i < oldAtomRefs4.length; i++) {
+					newAtomRefs4[i] = oldToNewAtomMap.get(oldAtomRefs4[i]);
+				}
+				newBond.setBondStereoElement(newAtomRefs4, bond.getBondStereo().getBondStereoValue());
 			}
 		}
 		List<Atom> indicatedHydrogenAtoms = originalFragment.getIndicatedHydrogen();

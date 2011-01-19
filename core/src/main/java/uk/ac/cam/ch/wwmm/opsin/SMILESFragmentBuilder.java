@@ -5,9 +5,7 @@ import java.util.regex.Pattern;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
-
-import nu.xom.Attribute;
-import nu.xom.Element;
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
 /** A builder for fragments specified as SMILES. A slightly custom SMILES dialect is used.
  * It includes all common features of SMILES and a few useful extensions:
@@ -666,26 +664,28 @@ class SMILESFragmentBuilder {
 								else{
 									throw new StructureBuildingException(followingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
-								String cisTrans = upFirst == upSecond ? "C" : "T";
-								if (centralBond.getBondStereoElement()!=null){
+								BondStereoValue cisTrans = upFirst == upSecond ? BondStereoValue.CIS : BondStereoValue.TRANS;
+								if (centralBond.getBondStereo()!=null){
 									//double bond has redundant specification e.g. C/C=C\\1/NC1 hence need to check it is consistent
-									String[] atomRefs4 = centralBond.getBondStereoElement().getAttributeValue(ATOMREFS4_ATR).split(" ");
-									if (atomRefs4[0].equals("a" + atom1.getID()) || atomRefs4[3].equals("a" + atom4.getID())){
-										if (centralBond.getBondStereoElement().getValue().equals(cisTrans)){
+									Atom[] atomRefs4 = centralBond.getBondStereo().getAtomRefs4();
+									if (atomRefs4[0].equals(atom1) || atomRefs4[3].equals(atom4)){
+										if (centralBond.getBondStereo().getBondStereoValue().equals(cisTrans)){
 											throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
 										}
 									}
 									else{
-										if (!centralBond.getBondStereoElement().getValue().equals(cisTrans)){
+										if (!centralBond.getBondStereo().getBondStereoValue().equals(cisTrans)){
 											throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
 										}
 									}
 								}
 								else{
-									Element bondStereoEl = new Element(BONDSTEREO_EL);
-									bondStereoEl.addAttribute(new Attribute(ATOMREFS4_ATR, "a" + atom1.getID() +" " + "a" + atom2.getID() + " " + "a" + atom3.getID() +" " + "a" + atom4.getID()));
-									bondStereoEl.appendChild(cisTrans);
-									centralBond.setBondStereoElement(bondStereoEl);
+									Atom[] atomRefs4= new Atom[4];
+									atomRefs4[0] =atom1;
+									atomRefs4[1] =atom2;
+									atomRefs4[2] =atom3;
+									atomRefs4[3] =atom4;
+									centralBond.setBondStereoElement(atomRefs4, cisTrans);
 								}
 							}
 						}
