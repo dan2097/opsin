@@ -8,18 +8,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
+
 class SMILESWriter {
-	
-	/**The organic atoms and their allowed implicit valencies in SMILES */
+
+	/**The organic atoms and their allowed implicit valences in SMILES */
 	private static final Map<String,Integer[]> organicAtomsToStandardValencies = new HashMap<String, Integer[]>();
+
 	/**Closures 1-9, %10-99, 0 */
 	private static final  LinkedList<String> closureSymbols = new LinkedList<String>();
-	
+
+
 	/**The available ring closure symbols, ordered from start to end in the preferred order for use.*/
 	private final LinkedList<String> availableClosureSymbols = new LinkedList<String>(closureSymbols);
+
 	/**Maps between bonds and the ring closure to use when the atom that ends the bond is encountered.*/
 	private final HashMap<Bond, String> bondToClosureSymbolMap = new HashMap<Bond, String>();
+
+	/**Maps between bonds and the atom that this bond will go to in the SMILES */
+	private final HashMap<Bond, Atom> bondToNextAtomMap= new HashMap<Bond, Atom>();
+
+	/**The structure to be converted to SMILES*/
 	private final Fragment structure;
+
+	/**Holds the SMILES string which is under construction*/
 	private final StringBuilder smilesBuilder = new StringBuilder();
 
 	static {
@@ -42,7 +55,7 @@ class SMILESWriter {
 		}
 		closureSymbols.add("0");
 	}
-	
+
 	/**
 	 * Creates a SMILES writer for the given fragment
 	 * @param structure
@@ -50,24 +63,22 @@ class SMILESWriter {
 	SMILESWriter(Fragment structure) {
 		this.structure =structure;
 	}
-	
+
 	/**
-	 * Generates SMILES from the fragment the SMILESWriter was created with (currently achiral)
+	 * Generates SMILES from the fragment the SMILESWriter was created with
 	 * The following assumptions are currently made:
 	 * 	The fragment contains no bonds to atoms outside the fragment
 	 * 	Hydrogens are all explicit
-	 * 	Spare valency has been converted to double bonds.
-	 * 
-	 * The following is guaranteed:
-	 * 	Hydrogens are all treated as being implicit or as properties of a non hydrogen atom
+	 * 	Spare valency has been converted to double bonds
 	 * @return
 	 */
 	String generateSmiles() {
 		List<Atom> atomList = structure.getAtomList();
 		List<Atom> nonProtonAtomList = createNonProtonAtomList(atomList);
 		int nonProtonCount = nonProtonAtomList.size();
-		
+
 		assignSmilesOrder();
+		assignDoubleBondStereochemistrySlashes();
 		boolean isEmpty =true;
 		for (int i = 0; i < nonProtonCount; i++) {
 			Atom currentAtom = nonProtonAtomList.get(i);
@@ -79,7 +90,7 @@ class SMILESWriter {
 				isEmpty =false;
 			}
 		}
-		
+
 		return smilesBuilder.toString();
 	}
 
@@ -92,7 +103,7 @@ class SMILESWriter {
 		}
 		return nonProtonAtomList;
 	}
-	
+
 	private boolean isSmilesImplicitProton(Atom atom) {
 		if (!atom.getElement().equals("H") || (atom.getIsotope()!=null && atom.getIsotope()!=1) ){
 			return false;
@@ -111,6 +122,146 @@ class SMILESWriter {
 			}
 		}
 		return true;
+	}
+
+	private void assignSmilesOrder() {
+		List<Atom> atomList =structure.getAtomList();
+		for (Atom atom : atomList) {
+			atom.setProperty(Atom.VISITED, null);
+		}
+		for (Atom a : atomList) {
+			if(a.getProperty(Atom.VISITED)==null && !isSmilesImplicitProton(a)){//typically for all but the first atom this will be true
+				traverseRings(a, null, 0);
+			}
+		}
+	}
+
+	private int traverseRings(Atom currentAtom, Atom previousAtom, int depth){
+		int temp, result;
+		if(currentAtom.getProperty(Atom.VISITED)!=null){
+			return currentAtom.getProperty(Atom.VISITED);
+		}
+		currentAtom.setProperty(Atom.VISITED, depth);
+		result = depth+1;
+		Set<Bond> bonds = currentAtom.getBonds();
+		for (Bond bond : bonds) {
+			Atom neighbour = bond.getOtherAtom(currentAtom);
+			if (isSmilesImplicitProton(neighbour)){
+				continue;
+			}
+			if (neighbour.equals(previousAtom)){
+				continue;
+			}
+			bondToNextAtomMap.put(bond, neighbour);
+			temp = traverseRings(neighbour, currentAtom, depth+1);
+			if( temp <= depth) {
+				result = Math.min(result,temp);
+			}
+		}
+		if( result <= depth ){
+			currentAtom.setAtomIsInACycle(true);
+		}
+		return result;
+	
+	}
+
+	/**
+	 * Goes through the bonds that do not go to implicit protons identifying those with bond stereo.
+	 * For these cases the bondStereo is used in combination with the directionality of the bonds to determine whether
+	 * two of the adjacent bonds should be represented by / or \ in the SMILES
+	 */
+	private void assignDoubleBondStereochemistrySlashes() {
+		Set<Bond> bonds = bondToNextAtomMap.keySet();
+		for (Bond bond : bonds) {
+			BondStereo bondStereo =bond.getBondStereo();
+			if (bondStereo!=null){
+				Atom[] atomRefs4 = bondStereo.getAtomRefs4();
+				Bond bond1 = atomRefs4[0].getFrag().findBond(atomRefs4[0], atomRefs4[1]);
+				Bond bond2 = atomRefs4[0].getFrag().findBond(atomRefs4[2], atomRefs4[3]);
+				Atom bond1ToAtom = bondToNextAtomMap.get(bond1);
+				Atom bond2ToAtom = bondToNextAtomMap.get(bond2);
+				if (bondStereo.getBondStereoValue().equals(BondStereoValue.CIS)){
+					if (bond1ToAtom.equals(atomRefs4[1])){
+						bond1.setSmilesStereochemistry(SMILES_BOND_DIRECTION.LSLASH);
+					}
+					else{
+						bond1.setSmilesStereochemistry(SMILES_BOND_DIRECTION.RSLASH);
+					}
+	
+					if (bond2ToAtom.equals(atomRefs4[3])){
+						bond2.setSmilesStereochemistry(SMILES_BOND_DIRECTION.RSLASH);
+					}
+					else{
+						bond2.setSmilesStereochemistry(SMILES_BOND_DIRECTION.LSLASH);
+					}
+				}
+				else{
+					if (bond1ToAtom.equals(atomRefs4[1])){
+						bond1.setSmilesStereochemistry(SMILES_BOND_DIRECTION.LSLASH);
+					}
+					else{
+						bond1.setSmilesStereochemistry(SMILES_BOND_DIRECTION.RSLASH);
+					}
+	
+					if (bond2ToAtom.equals(atomRefs4[3])){
+						bond2.setSmilesStereochemistry(SMILES_BOND_DIRECTION.LSLASH);
+					}
+					else{
+						bond2.setSmilesStereochemistry(SMILES_BOND_DIRECTION.RSLASH);
+					}
+				}
+			}
+		}
+	}
+
+	private void traverseSmiles(Atom currentAtom, Atom previousAtom, int depth){
+		smilesBuilder.append(atomToSmiles(currentAtom, depth, previousAtom));
+		Set<Bond> bonds = currentAtom.getBonds();
+		for (Bond bond : bonds) {
+			Atom neighbour = bond.getOtherAtom(currentAtom);
+			Integer nDepth = neighbour.getProperty(Atom.VISITED);
+			if ( nDepth!=null && nDepth<=depth && !neighbour.equals(previousAtom)){
+				String closure = bondToClosureSymbolMap.get(bond);
+				availableClosureSymbols.addFirst(closure);
+				smilesBuilder.append(closure);
+			}
+		}
+		for (Bond bond : bonds) {
+			Atom neighbour = bond.getOtherAtom(currentAtom);
+			Integer nDepth = neighbour.getProperty(Atom.VISITED);
+			if (nDepth!=null && nDepth> (depth +1)){
+				String closure = availableClosureSymbols.removeFirst();
+				bondToClosureSymbolMap.put(bond, closure);
+				smilesBuilder.append(bondToSmiles(bond));
+				smilesBuilder.append(closure);
+			}
+	
+		}
+		// count outgoing edges
+		int count = 0;
+		for (Bond bond : bonds) {
+			Atom neighbour = bond.getOtherAtom(currentAtom);
+			Integer nDepth = neighbour.getProperty(Atom.VISITED);
+			if (nDepth!=null && nDepth==depth+1){
+				count++;
+			}
+		}
+	
+		for (Bond bond : bonds) {
+			Atom neighbour = bond.getOtherAtom(currentAtom);
+			Integer nDepth = neighbour.getProperty(Atom.VISITED);
+			if (nDepth!=null && nDepth==depth+1){
+				if (count > 1){
+				  smilesBuilder.append('(');
+				}
+				smilesBuilder.append(bondToSmiles(bond));
+				traverseSmiles(neighbour,currentAtom,depth+1);
+				if (count > 1){
+					smilesBuilder.append(')');
+					count--;
+				}
+			}
+		}
 	}
 
 	private String atomToSmiles(Atom atom, int depth, Atom previousAtom) {
@@ -162,6 +313,55 @@ class SMILESWriter {
 		return atomSmiles.toString();
 	}
 
+	private int calculateNumberOfBondedExplicitHydrogen(Atom atom) {
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		int count =0;
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getProperty(Atom.VISITED)==null){
+				count++;
+			}
+		}
+		return count;
+	}
+
+	private boolean determineWhetherAtomNeedsSquareBrackets(Atom atom, int hydrogenCount) {
+		if (!organicAtomsToStandardValencies.containsKey(atom.getElement())){
+			return true;
+		}
+		if (atom.getCharge()!=0){
+			return true;
+		}
+		if (atom.getIsotope()!=null){
+			return true;
+		}
+		if (atom.getAtomParity()!=null){
+			return true;
+		}
+	
+		List<Integer> expectedValencies = Arrays.asList(organicAtomsToStandardValencies.get(atom.getElement()));
+		int valency = atom.getIncomingValency();
+		boolean valencyCanBeDescribedImplicitly = expectedValencies.contains(valency);
+		int targetImplicitValency =valency;
+		if (valency > expectedValencies.get(expectedValencies.size()-1)){
+			valencyCanBeDescribedImplicitly =true;
+		}
+		if (!valencyCanBeDescribedImplicitly){
+			return true;
+		}
+	
+		int nonHydrogenValency = valency -hydrogenCount;
+		int implicitValencyThatWouldBeGenerated = nonHydrogenValency;
+		for (int i = expectedValencies.size()-1; i>=0; i--) {
+			if (expectedValencies.get(i) >= nonHydrogenValency){
+				implicitValencyThatWouldBeGenerated =expectedValencies.get(i);
+			}
+		}
+		if (targetImplicitValency != implicitValencyThatWouldBeGenerated){
+			return true;
+		}
+		return false;
+	}
+
 	private String atomParityToSmiles(Atom currentAtom, int hydrogen, int depth, Atom previousAtom) {
 		AtomParity atomParity = currentAtom.getAtomParity();
 		StringBuilder tetrahedralStereoChem = new StringBuilder();
@@ -169,7 +369,7 @@ class SMILESWriter {
 
 		List<Atom> atomrefs4Current = new ArrayList<Atom>();
 		//TODO support sulfones
-		
+
 		Set<Bond> bonds = currentAtom.getBonds();
 		for (Bond bond : bonds) {//previous atom
 			Atom neighbour = bond.getOtherAtom(currentAtom);
@@ -197,11 +397,11 @@ class SMILESWriter {
 			if (isSmilesImplicitProton(neighbour)){
 				continue;
 			}
-			
+
 			if (neighbour.getProperty(Atom.VISITED)> (depth +1)){
 				atomrefs4Current.add(neighbour);
 			}
-			
+
 		}
 		for (Bond bond : bonds) {//next atom/s
 			Atom neighbour = bond.getOtherAtom(currentAtom);
@@ -235,55 +435,6 @@ class SMILESWriter {
 		return tetrahedralStereoChem.toString();
 	}
 
-	private boolean determineWhetherAtomNeedsSquareBrackets(Atom atom, int hydrogenCount) {
-		if (!organicAtomsToStandardValencies.containsKey(atom.getElement())){
-			return true;
-		}
-		if (atom.getCharge()!=0){
-			return true;
-		}
-		if (atom.getIsotope()!=null){
-			return true;
-		}
-		if (atom.getAtomParity()!=null){
-			return true;
-		}
-		
-		List<Integer> expectedValencies = Arrays.asList(organicAtomsToStandardValencies.get(atom.getElement()));
-		int valency = atom.getIncomingValency();
-		boolean valencyCanBeDescribedImplicitly = expectedValencies.contains(valency);
-		int targetImplicitValency =valency;
-		if (valency > expectedValencies.get(expectedValencies.size()-1)){
-			valencyCanBeDescribedImplicitly =true;
-		}
-		if (!valencyCanBeDescribedImplicitly){
-			return true;
-		}
-		
-		int nonHydrogenValency = valency -hydrogenCount;
-		int implicitValencyThatWouldBeGenerated = nonHydrogenValency;
-		for (int i = expectedValencies.size()-1; i>=0; i--) {
-			if (expectedValencies.get(i) >= nonHydrogenValency){
-				implicitValencyThatWouldBeGenerated =expectedValencies.get(i);
-			}
-		}
-		if (targetImplicitValency != implicitValencyThatWouldBeGenerated){
-			return true;
-		}		
-		return false;
-	}
-
-	private int calculateNumberOfBondedExplicitHydrogen(Atom atom) {
-		List<Atom> neighbours = atom.getAtomNeighbours();
-		int count =0;
-		for (Atom neighbour : neighbours) {
-			if (neighbour.getProperty(Atom.VISITED)==null){
-				count++;
-			}
-		}
-		return count;
-	}
-
 	private String bondToSmiles(Bond bond){
 		String bondSmiles ="";
 		if (bond.getOrder()==2){
@@ -292,105 +443,14 @@ class SMILESWriter {
 		else if (bond.getOrder()==3){
 			bondSmiles ="#";
 		}
-//TODO implement double bond stereochemistry
-//		else if (bond.getSmilesStereochemistry()!=null){
-//			if (bond.getSmilesStereochemistry()==SMILES_BOND_DIRECTION.RSLASH){
-//				bondSmiles ="/";
-//			}
-//			else{
-//				bondSmiles ="\\";
-//			}
-//		}
+		else if (bond.getSmilesStereochemistry()!=null){
+			if (bond.getSmilesStereochemistry()==SMILES_BOND_DIRECTION.RSLASH){
+				bondSmiles ="/";
+			}
+			else{
+				bondSmiles ="\\";
+			}
+		}
 		return bondSmiles;
-	}
-	
-	private void traverseSmiles(Atom currentAtom, Atom previousAtom, int depth){
-		smilesBuilder.append(atomToSmiles(currentAtom, depth, previousAtom));
-		Set<Bond> bonds = currentAtom.getBonds();
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if ( nDepth!=null && nDepth<=depth && !neighbour.equals(previousAtom)){
-				String closure = bondToClosureSymbolMap.get(bond);
-				availableClosureSymbols.addFirst(closure);
-				smilesBuilder.append(closure);
-			}
-		}
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth> (depth +1)){
-				String closure = availableClosureSymbols.removeFirst();
-				bondToClosureSymbolMap.put(bond, closure);
-				smilesBuilder.append(bondToSmiles(bond));
-				smilesBuilder.append(closure);
-			}
-			
-		}
-		// count outgoing edges
-		int count = 0;
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth==depth+1){
-				count++;
-			}
-		}
-		
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth==depth+1){
-				if (count > 1){
-				  smilesBuilder.append('(');
-				}
-				smilesBuilder.append(bondToSmiles(bond));
-				traverseSmiles(neighbour,currentAtom,depth+1);
-				if (count > 1){
-					smilesBuilder.append(')');
-					count--;
-				}
-			}
-		}
-	}
-	
-	private void assignSmilesOrder() {
-		List<Atom> atomList =structure.getAtomList();
-		for (Atom atom : atomList) {
-			atom.setProperty(Atom.VISITED, null);
-		}
-		for (Atom a : atomList) {
-			if(a.getProperty(Atom.VISITED)==null && !isSmilesImplicitProton(a)){//typically for all but the first atom this will be true
-				traverseRings(a, null, 0);
-			}
-		}
-	}
-	
-	private int traverseRings(Atom currentAtom, Atom previousAtom, int depth){
-		int temp, result;
-		if(currentAtom.getProperty(Atom.VISITED)!=null){
-			return currentAtom.getProperty(Atom.VISITED);
-		}
-		currentAtom.setProperty(Atom.VISITED, depth);
-		result = depth+1;
-		Set<Bond> bonds = currentAtom.getBonds();
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			if (isSmilesImplicitProton(neighbour)){
-				continue;
-			}
-			if (neighbour.equals(previousAtom)){
-				continue;
-			}
-			temp = traverseRings(neighbour, currentAtom, depth+1);
-			if( temp <= depth) {
-				result = Math.min(result,temp);
-			}
-		}
-		if( result <= depth ){
-			currentAtom.setAtomIsInACycle(true);
-		}
-		return result;
-
 	}
 }
