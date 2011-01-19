@@ -555,7 +555,7 @@ class Atom {
 		this.atomParity = atomParity;
 	}
 
-	void setAtomParity(Atom[] atomRefs4, int parity) throws StructureBuildingException {
+	void setAtomParity(Atom[] atomRefs4, int parity) {
 		atomParity = new AtomParity(atomRefs4, parity);
 	}
 	
