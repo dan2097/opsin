@@ -139,14 +139,12 @@ class SMILESFragmentBuilder {
 		if (labelMapping==null){
 			throw new StructureBuildingException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
 		}
-		List<String> labelMap = null;
+		String[] labelMap = null;
 		if (labelMapping.equals("")){
 			labelMapping = NUMERIC_LABELS_VAL;
 		}
 		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
-			labelMap = new ArrayList<String>();
-			String [] mappingTmp = matchSlash.split(labelMapping, -1);
-            labelMap.addAll(Arrays.asList(mappingTmp));//place slash delimited labels into arrayList
+			labelMap = matchSlash.split(labelMapping, -1);//place slash delimited labels into an array
 		}
 		int currentNumber = 1;
 		Fragment currentFrag = new Fragment(type, subType);
@@ -218,7 +216,7 @@ class SMILESFragmentBuilder {
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
-					String labels[] = matchComma.split(labelMap.get(currentNumber-1));
+					String labels[] = matchComma.split(labelMap[currentNumber-1]);
                     for (String label : labels) {
                         if (!label.equals("")) {
                             atom.addLocant(label);
@@ -238,7 +236,7 @@ class SMILESFragmentBuilder {
 				}
 				stack.peek().atom = atom;
 				stack.peek().bondOrder = 1;
-				currentNumber += 1;
+				currentNumber++;
 			} else if(nextChar == '[') {//square brackets- contain non-organic atoms and are used to unambiguously set charge/chirality etc.
 				int indexOfRightSquareBracket = tmpString.indexOf(']');
                 if (indexOfRightSquareBracket == -1) {
@@ -301,7 +299,7 @@ class SMILESFragmentBuilder {
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
-					String labels[] = matchComma.split(labelMap.get(currentNumber-1));
+					String labels[] = matchComma.split(labelMap[currentNumber-1]);
                     for (String label : labels) {
                         if (!label.equals("")) {
                             atom.addLocant(label);
@@ -322,7 +320,7 @@ class SMILESFragmentBuilder {
 				Atom previousAtom = stack.peek().atom;//needed for setting atomParity elements up
 				stack.peek().atom = atom;
 				stack.peek().bondOrder = 1;
-				currentNumber += 1;
+				currentNumber++;
 
 		        Integer hydrogenCount =0;
 		        int charge = 0;
@@ -416,8 +414,8 @@ class SMILESFragmentBuilder {
 				throw new StructureBuildingException(nextChar + " is in an unexpected position. Check this is not a mistake and that this feature of SMILES is supported by OPSIN's SMILES parser");
 			}
 		}
-		if (labelMap != null && labelMap.size() >= currentNumber ){
-			throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.size() + ", atoms: " + (currentNumber -1) );
+		if (labelMap != null && labelMap.length >= currentNumber ){
+			throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.length + ", atoms: " + (currentNumber -1) );
 		}
 		if (!closures.isEmpty()){
 			throw new StructureBuildingException("Unmatched ring opening");
