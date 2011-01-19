@@ -15,11 +15,10 @@ class AtomParity {
 	 * Create an atomParity from an array of 4 atoms and the parity of the chiral determinant
 	 * @param atomRefs4
 	 * @param parity
-	 * @throws StructureBuildingException
 	 */
-	AtomParity(Atom[] atomRefs4, int parity) throws StructureBuildingException {
+	AtomParity(Atom[] atomRefs4, int parity){
 		if (atomRefs4.length !=4){
-			throw new StructureBuildingException("atomRefs4 must contain references to 4 atoms");
+			throw new IllegalArgumentException("atomRefs4 must contain references to 4 atoms");
 		}
 		this.atomRefs4 = atomRefs4;
 		this.parity = parity;
@@ -31,16 +30,15 @@ class AtomParity {
 	 */
 	Element toCML() {
 		Element atomParityElement = new Element(XmlDeclarations.ATOMPARITY_EL);
-		String atomRefsString ="";
-		for (Atom atom : atomRefs4) {
-			if (atomRefsString.equals("")){
-				atomRefsString += "a" + atom.getID();
-			}
-			else{
-				atomRefsString += " a" + atom.getID();
-			}
+		StringBuilder atomRefsSb = new StringBuilder();
+		for(int i=0; i<atomRefs4.length-1; i++) {
+			atomRefsSb.append('a');
+			atomRefsSb.append(atomRefs4[i].getID());
+			atomRefsSb.append(' ');
 		}
-		atomParityElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefsString));
+		atomRefsSb.append('a');
+		atomRefsSb.append(atomRefs4[atomRefs4.length-1].getID());
+		atomParityElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefsSb.toString()));
 		atomParityElement.appendChild(Integer.toString(parity));
 		return atomParityElement;
 	}

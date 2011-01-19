@@ -468,9 +468,8 @@ class SMILESFragmentBuilder {
 	 * @param atom
 	 * @param previousAtom
 	 * @return 
-	 * @throws StructureBuildingException 
 	 */
-	private String processTetrahedralStereochemistry(String atomString, Atom atom, Atom previousAtom) throws StructureBuildingException {
+	private String processTetrahedralStereochemistry(String atomString, Atom atom, Atom previousAtom){
 		Boolean chiralityClockwise = false;
 		if (atomString.length() > 0 && atomString.charAt(0) == '@'){
 			chiralityClockwise = true;
