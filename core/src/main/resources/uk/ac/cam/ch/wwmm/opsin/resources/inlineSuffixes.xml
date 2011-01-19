@@ -35,7 +35,7 @@
     <token value="ylidyne">ylidyn</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes etc.-->
+  <tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes-->
     <token value="amido">amido</token>
     <token value="oyl">oyl</token>
     <token value="yl">yl</token>
@@ -45,11 +45,17 @@
     <token value="ylidyne">ylidyn</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="ÿ"><!--inline suffixes allowing infixes etc.-->
+  <tokenList tagname="suffix" type="inline" symbol="ÿ"><!--inline suffixes allowing infixes -->
     <token value="amido">amido</token>
     <token value="amido">amidyl</token>
     <token value="carbonyl">carbonyl</token>
     <token value="oxy">oxy</token>
+    <token value="oyl">oyl</token>
+  </tokenList>
+
+  <tokenList tagname="suffix" type="inline" symbol="╜"><!--inline suffixes allowing infixes and suffix prefixes-->
+    <token value="amido">amido</token>
+    <token value="amido">amidyl</token>
     <token value="oyl">oyl</token>
   </tokenList>
 

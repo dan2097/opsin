@@ -125,7 +125,8 @@ does not define a CFG.
   <regex name="%simpleGroupClass%" value="║"/>
   <regex name="%amineMeaningNitrilo%" value="╗"/>
   <regex name="%spiroOldMethod%" value="╝"/>
-  <!--up to ascii 188 used-->
+  <regex name="%inlineSuffixAllowingPrefixes%" value="╜"/>
+  <!--up to ascii 189 used-->
 
 <!-- composite regexes-->
 
@@ -141,8 +142,8 @@ does not define a CFG.
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%locantThatNeedsBrackets%%optionalCloseBracket%%hyphen%?)"/>
   <regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
   <regex name="%infixedInlineSuffix%" value="(%o%?%infixReplacement%%infixableInlineSuffix%|%structuralOpenBracket%%infixReplacement%%infixableInlineSuffix%%structuralCloseBracket%)"/>
-  <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%infixableInlineSuffix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%infixableInlineSuffix%%optionalCloseBracket%)" />
-  <regex name="%unlocantedInlineSuffixGroup%" value="(%multiplierNoElidedA%?(%infixedInlineSuffix%|%inlineSuffix%|%optionalOpenBracket%%inlineSuffix%%optionalCloseBracket%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%|%optionalOpenBracket%(%o%?%infixReplacement%)?%suffixPrefix%%infixableInlineSuffix%%optionalCloseBracket%))"/>
+  <regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%inlineSuffixAllowingPrefixes%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%inlineSuffixAllowingPrefixes%%optionalCloseBracket%)" />
+  <regex name="%unlocantedInlineSuffixGroup%" value="(%multiplierNoElidedA%?(%infixedInlineSuffix%|%inlineSuffix%|%optionalOpenBracket%%inlineSuffix%%optionalCloseBracket%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%inlineSuffixAllowingPrefixes%|%optionalOpenBracket%(%o%?%infixReplacement%)?%suffixPrefix%%inlineSuffixAllowingPrefixes%%optionalCloseBracket%))"/>
   <regex name="%inlineSuffixGroup%" value="(%hyphen%?(%newLocantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%unlocantedInlineSuffixGroup%)"/>
   <regex name="%repeatableInlineSuffixGroup%" value="(%hyphen%?(%newLocantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
   <regex name="%inlineChargeGroup%" value="(%optLocantGroup%%multiplier%?%inlineChargeSuffix%)"/>
