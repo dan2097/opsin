@@ -256,6 +256,11 @@ public class SMILESFragmentBuilderTest {
         Assert.fail("Should throw exception for bad smiles: bond configuration specified twice");
     }
 
+    @Test(expected=StructureBuildingException.class)
+    public void badlyFormedSMILE8() throws StructureBuildingException {
+        fm.buildSMILES("F[C@@](Cl)Br");
+        Assert.fail("Should throw exception for invalid atom parity, not enough atoms in atom parity");
+    }
 
 	@Test
 	public void ringClosureHandling1() throws StructureBuildingException {
@@ -632,6 +637,38 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(atomList.get(3), atomRefs4[2]);
 		assertEquals(atomList.get(4), atomRefs4[3]);
 		assertEquals(1, atomParity.getParity());
+	}
+
+	@Test
+	public void chiralityTest7() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("C[S@](N)=O");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(4, atomList.size());
+		Atom chiralAtom = atomList.get(1);
+		assertEquals(3, chiralAtom.getAtomNeighbours().size());
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(atomList.get(0), atomRefs4[0]);
+		assertEquals(atomList.get(1), atomRefs4[1]);
+		assertEquals(atomList.get(2), atomRefs4[2]);
+		assertEquals(atomList.get(3), atomRefs4[3]);
+		assertEquals(-1, atomParity.getParity());
+	}
+	
+	@Test
+	public void chiralityTest8() throws StructureBuildingException {
+		Fragment fragment = fm.buildSMILES("[S@](C)(N)=O");
+		List<Atom> atomList = fragment.getAtomList();
+		assertEquals(4, atomList.size());
+		Atom chiralAtom = atomList.get(0);
+		assertEquals(3, chiralAtom.getAtomNeighbours().size());
+		AtomParity atomParity  = chiralAtom.getAtomParity();
+		Atom[] atomRefs4 = atomParity.getAtomRefs4();
+		assertEquals(atomList.get(0), atomRefs4[0]);
+		assertEquals(atomList.get(1), atomRefs4[1]);
+		assertEquals(atomList.get(2), atomRefs4[2]);
+		assertEquals(atomList.get(3), atomRefs4[3]);
+		assertEquals(-1, atomParity.getParity());
 	}
 
 	@Test

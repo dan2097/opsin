@@ -366,13 +366,17 @@ class SMILESWriter {
 		Atom[] atomRefs4 = atomParity.getAtomRefs4().clone();
 
 		List<Atom> atomrefs4Current = new ArrayList<Atom>();
-		//TODO support sulfones
 
 		Set<Bond> bonds = currentAtom.getBonds();
 		for (Bond bond : bonds) {//previous atom
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			if (!isSmilesImplicitProton(neighbour) && neighbour.equals(previousAtom) ){
 				atomrefs4Current.add(neighbour);
+			}
+		}
+		for (Atom atom : atomRefs4) {//lone pair as in tetrahedral sulfones
+			if (atom.equals(currentAtom)){
+				atomrefs4Current.add(currentAtom);
 			}
 		}
 		for (Bond bond : bonds) {//implicit hydrogen
