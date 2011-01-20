@@ -1,6 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 import static org.mockito.Mockito.mock;
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -156,6 +156,39 @@ public class SMILESWriterTest {
 		Fragment f = state.fragManager.buildSMILES("[H]B1[H]B([H])[H]1");
 		String smiles = new SMILESWriter(f).generateSmiles();
 		assertEquals("B1[H]B[H]1", smiles);
+	}
+	
+	
+	@Test
+	public void testDoubleBondSupport1() throws StructureBuildingException {
+		Fragment f = state.fragManager.buildSMILES("C/C=C/C");
+		StructureBuilder.makeHydrogensExplicit(state);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		if (!smiles.equals("C/C=C/C") && !smiles.equals("C\\C=C\\C")){
+			fail(smiles +" did not correspond to one of the expected SMILES strings");
+		}
+	}
+	
+	
+	@Test
+	public void testDoubleBondSupport2() throws StructureBuildingException {
+		Fragment f = state.fragManager.buildSMILES("C/C=C\\C");
+		StructureBuilder.makeHydrogensExplicit(state);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		if (!smiles.equals("C/C=C\\C") && !smiles.equals("C\\C=C/C")){
+			fail(smiles +" did not correspond to one of the expected SMILES strings");
+		}
+	}
+	
+	
+	@Test
+	public void testDoubleBondSupport() throws StructureBuildingException {
+		Fragment f = state.fragManager.buildSMILES("C/C=C\\C=C/C");
+		StructureBuilder.makeHydrogensExplicit(state);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		if (!smiles.equals("C/C=C\\C=C/C") && !smiles.equals("C\\C=C/C=C\\C")){
+			fail(smiles +" did not correspond to one of the expected SMILES strings");
+		}
 	}
 	
 	
