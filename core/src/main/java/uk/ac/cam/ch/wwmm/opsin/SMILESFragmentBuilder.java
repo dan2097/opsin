@@ -425,6 +425,8 @@ class SMILESFragmentBuilder {
 			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
 			FragmentTools.relabelFusedRingSystem(currentFrag);
 		}
+		List<Atom> atomList =currentFrag.getAtomList();
+		verifyAndTakeIntoAccountLonePairsInAtomParities(atomList);
 		addBondStereoElements(currentFrag);
 
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
@@ -449,8 +451,7 @@ class SMILESFragmentBuilder {
 		else if (firstCharacter == '#'){
 			currentFrag.addOutAtom(currentFrag.getFirstAtom(),3, true);
 		}
-		
-		List<Atom> atomList =currentFrag.getAtomList();
+
 		for (Atom atom : atomList) {
 			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null && atom.getLambdaConventionValency() ==null){
 				setupAtomValency(fragManager, atom);
@@ -611,6 +612,43 @@ class SMILESFragmentBuilder {
 			}
 		}
 		stack.peek().bondOrder = 1;
+	}
+
+	private void verifyAndTakeIntoAccountLonePairsInAtomParities(List<Atom> atomList) throws StructureBuildingException {
+		for (Atom atom : atomList) {
+			AtomParity atomParity =atom.getAtomParity();
+			if (atomParity!=null){
+				Atom[] atomRefs4 = atomParity.getAtomRefs4();
+				int nullAtoms =0;
+				int hydrogen =0;
+				for (Atom atomRefs4Atom : atomRefs4) {
+					if (atomRefs4Atom ==null){
+						nullAtoms++;
+					}
+					else if (atomRefs4Atom.equals(AtomParity.hydrogen)){
+						hydrogen++;
+					}
+				}
+				if (nullAtoms!=0){
+					if (nullAtoms ==1 && hydrogen==0 && (atom.getElement().equals("S") || atom.getElement().equals("Se"))){//special case where lone pair is part of the tetrahedron
+						if (atomList.indexOf(atomRefs4[0]) < atomList.indexOf(atom)){//is there an atom in the SMILES in front of the stereocentre?
+							atomRefs4[3] = atomRefs4[2];
+							atomRefs4[2] = atomRefs4[1];
+							atomRefs4[1] = atom;
+						}
+						else{
+							atomRefs4[3] = atomRefs4[2];
+							atomRefs4[2] = atomRefs4[1];
+							atomRefs4[1] = atomRefs4[0];
+							atomRefs4[0] = atom;
+						}
+					}
+					else{
+						throw new StructureBuildingException("SMILES is malformed. Tetrahedral stereochemistry defined on a non tetrahedral centre");
+					}
+				}
+			}
+		}
 	}
 
 	private void addBondStereoElements(Fragment currentFrag) throws StructureBuildingException {
