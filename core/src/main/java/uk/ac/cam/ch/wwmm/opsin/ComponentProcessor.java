@@ -1023,7 +1023,7 @@ class ComponentProcessor {
 			String nextName = featureToMultiply.getLocalName();
 			if(nextName.equals(UNSATURATOR_EL) ||
 					nextName.equals(SUFFIX_EL) ||
-					nextName.equals(HETEROATOM_EL) ||
+					(nextName.equals(HETEROATOM_EL) && !GROUP_TYPE_VAL.equals(multiplier.getAttributeValue(TYPE_ATR))) ||
 					nextName.equals(HYDRO_EL)) {
 				int mvalue = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 				if (mvalue>1){

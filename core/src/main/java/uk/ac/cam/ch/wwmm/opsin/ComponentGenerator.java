@@ -499,6 +499,9 @@ class ComponentGenerator {
 			}
 		}
 		for (Element m : multipliers) {
+			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
+				continue;
+			}
 			Element multipliedElem = (Element)XOMTools.getNextSibling(m);
 			if(multipliedElem.getLocalName().equals(HETEROATOM_EL)){
 				Element possiblyAnotherHeteroAtom = (Element)XOMTools.getNextSibling(multipliedElem);
@@ -1704,7 +1707,7 @@ class ComponentGenerator {
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
-					throw new ComponentGenerationException("thiophenol has been incorrectly interpreted as thiophen, ol instead of thio, phenol");
+					throw new ComponentGenerationException(groupValue + "ol has been incorrectly interpreted as "+ groupValue+", ol instead of phenol with the oxgen replaced");
 				}
 			}
 		}
