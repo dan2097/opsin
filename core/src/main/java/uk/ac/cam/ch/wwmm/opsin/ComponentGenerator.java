@@ -1700,7 +1700,7 @@ class ComponentGenerator {
 	 */
 	private void handleGroupIrregularities(Element group) throws ComponentGenerationException {
 		String groupValue =group.getValue();
-		if(groupValue.equals("thiophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
+		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
