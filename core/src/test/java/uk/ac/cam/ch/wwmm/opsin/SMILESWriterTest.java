@@ -361,7 +361,7 @@ public class SMILESWriterTest {
 		f.findBond(2, 6).setBondStereoElement(new Atom[]{f.getAtomByID(1), f.getAtomByID(2), f.getAtomByID(6), f.getAtomByID(7)}, BondStereoValue.TRANS);
 		f.findBond(7, 8).setBondStereoElement(new Atom[]{f.getAtomByID(12), f.getAtomByID(7), f.getAtomByID(8), f.getAtomByID(9)}, BondStereoValue.TRANS);
 		String smiles = new SMILESWriter(f).generateSmiles();
-		if (!smiles.equals("Cl\\C(C(=O)[O-])=C\\C(=C/C(=O)[O-])\\Cl") && !smiles.equals("Cl/C(C(=O)[O-])=C/C(=C\\C(=O)[O-])/Cl")){
+		if (!smiles.equals("Cl\\C(\\C(=O)[O-])=C\\C(=C/C(=O)[O-])\\Cl") && !smiles.equals("Cl/C(/C(=O)[O-])=C/C(=C\\C(=O)[O-])/Cl")){
 			fail(smiles +" did not correspond to one of the expected SMILES strings");
 		}
 	}
@@ -381,7 +381,19 @@ public class SMILESWriterTest {
 		Fragment f = state.fragManager.buildSMILES("O=C(/C=C(C(O)=O)\\C=C/C(O)=O)O");
 		StructureBuilder.makeHydrogensExplicit(state);
 		String smiles = new SMILESWriter(f).generateSmiles();
-		if (!smiles.equals("O=C(/C=C(C(O)=O)\\C=C/C(O)=O)O") && !smiles.equals("O=C(\\C=C(C(O)=O)/C=C\\C(O)=O)O")){
+		if (!smiles.equals("O=C(/C=C(/C(O)=O)\\C=C/C(O)=O)O") && !smiles.equals("O=C(\\C=C(\\C(O)=O)/C=C\\C(O)=O)O")){
+			fail(smiles +" did not correspond to one of the expected SMILES strings");
+		}
+	}
+	
+	@Test
+	public void testDoubleBondSupport7() throws StructureBuildingException {
+		Fragment f = state.fragManager.buildSMILES("C(=C(C=CC(=O)O)C(=O)O)C(=O)O");
+		StructureBuilder.makeHydrogensExplicit(state);
+		f.findBond(1, 2).setBondStereoElement(new Atom[]{f.getAtomByID(11), f.getAtomByID(1), f.getAtomByID(2), f.getAtomByID(8)}, BondStereoValue.TRANS);
+		f.findBond(3, 4).setBondStereoElement(new Atom[]{f.getAtomByID(2), f.getAtomByID(3), f.getAtomByID(4), f.getAtomByID(5)}, BondStereoValue.TRANS);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		if (!smiles.equals("C(=C(/C=C/C(=O)O)\\C(=O)O)/C(=O)O") && !smiles.equals("C(=C(\\C=C\\C(=O)O)/C(=O)O)\\C(=O)O")){
 			fail(smiles +" did not correspond to one of the expected SMILES strings");
 		}
 	}
