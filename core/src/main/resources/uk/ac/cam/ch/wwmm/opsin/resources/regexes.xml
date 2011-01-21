@@ -132,6 +132,7 @@ does not define a CFG.
 
 <!-- UsefulTerms-->
   <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
+  <regex name="%multiplierNotGroup%" value="((%simpleMultiplier%|%elidedAMultiplier%)%hyphen%?)"/>
   <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
   <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%cisOrTrans%(%comma%%locant%?%cisOrTrans%)*%hyphen%?|%lightRotation%)"/>
@@ -150,7 +151,7 @@ does not define a CFG.
   <regex name="%inlineEndings%" value="(%inlineChargeGroup%*%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
   <regex name="%unsaturation%" value="(%optLocantGroupNoOMP%?%multiplier%?%unsaturator%)"/>
   <regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
-  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplier%|(%locant%?|%lambdaConvention%)%multiplier%?)%heteroAtom%%hyphen%?)"/>
+  <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplierNotGroup%|(%locant%?|%lambdaConvention%)%multiplierNotGroup%?)%heteroAtom%%hyphen%?)"/>
   <regex name="%hydroGroup%" value="((%locant%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/>
   <regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%suffix%)"/>
   <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
@@ -171,12 +172,12 @@ does not define a CFG.
 <!-- groups-->
   <!--acyclic-->
 
-  <regex name="%heteroChain%" value = "((%multiplier%%heteroStem%%unsaturationBlock%)|(%heteroStem%%hyphen%?%ane%))"/>
-  <regex name="%alternatingHeteroChain%" value = "(%multiplier%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturationBlock%)"/>
+  <regex name="%heteroChain%" value = "((%multiplierNotGroup%%heteroStem%%unsaturationBlock%)|(%heteroStem%%hyphen%?%ane%))"/>
+  <regex name="%alternatingHeteroChain%" value = "(%multiplierNotGroup%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturationBlock%)"/>
 
   <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%a%?%unsaturationBlock%)"/>
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%a%?%unsaturationBlock%)"/>
-  <regex name="%nitrogenChainSubstituent%" value = "(((%multiplier%%nitrogenHeteroStem%%unsaturationBlock%)|(%nitrogenHeteroStem%%hyphen%?%ane%))%oMeaningYl%)"/>
+  <regex name="%nitrogenChainSubstituent%" value = "(((%multiplierNotGroup%%nitrogenHeteroStem%%unsaturationBlock%)|(%nitrogenHeteroStem%%hyphen%?%ane%))%oMeaningYl%)"/>
   <regex name="%alkYlene%" value = "((%alkaneStemSystematic%%unsaturationBlock%?|%alkaneStemTrivial%%unsaturationBlock%)%optLocantGroupNoOMP%%ylene%)"/>
   <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
 
@@ -204,7 +205,7 @@ does not define a CFG.
   <regex name="%cycloChain%" value = "(%cyclo%%straightChainGroups%)"/>
   <regex name="%cycloChainSubstituent%" value = "(%cyclo%%alkaneStem%)"/>
   <regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%%a%?%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
-  <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplier%?%hwHeteroAtom%)*((%multiplier%?%hwAneCompatible%)%hwAne%)|((%multiplier%?%hwHeteroAtom%)*(%multiplier%?%hwIneCompatible%)%hwIne%)|((%multiplier%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
+  <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplierNotGroup%?%hwHeteroAtom%)*((%multiplierNotGroup%?%hwAneCompatible%)%hwAne%)|((%multiplierNotGroup%?%hwHeteroAtom%)*(%multiplierNotGroup%?%hwIneCompatible%)%hwIne%)|((%multiplierNotGroup%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
   <regex name="%fusionComponent%" value = "(%fusionRing%|(%locantThatNeedsBrackets%|%bracketedLocant%)?%fusionRingAcceptsFrontLocants%|%benzo%|%cycloChainSubstituent%%a%?|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
   <regex name="%cyclicUnsaturableHydrocarbonGroup%" value = "(%cyclicUnsaturableHydrocarbon%%a%?%unsaturationBlock%)" />
   <regex name="%naturalProductGroup%" value = "(%naturalProductRequiresUnsaturator%%a%?%unsaturationBlock%)" />
