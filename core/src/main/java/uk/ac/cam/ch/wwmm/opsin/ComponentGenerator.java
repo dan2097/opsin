@@ -1919,6 +1919,18 @@ class ComponentGenerator {
 			enclosingSubOrRoot.detach();
 			newBracket.appendChild(enclosingSubOrRoot);
 		}
+		else if (groupValue.equals("sel")){
+			//check that it is not "selenium"
+			if (HETEROSTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL) ==null){
+				Element unsaturator = (Element) XOMTools.getNextSibling(group);
+				if (unsaturator !=null && unsaturator.getLocalName().equals(UNSATURATOR_EL) && unsaturator.getValue().equals("en") && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL) ==null){
+					Element ium = (Element) XOMTools.getNextSibling(unsaturator);
+					if (ium !=null && ium.getLocalName().equals(SUFFIX_EL) && ium.getValue().equals("ium")){
+						throw new ComponentGenerationException("<multiplier>selenium does not indicate a chain of selenium atoms with a double bond and a positive charge");
+					}
+				}
+			}
+		}
 	}
 	
 	/**
