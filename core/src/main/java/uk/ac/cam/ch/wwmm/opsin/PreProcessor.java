@@ -18,7 +18,6 @@ class PreProcessor {
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
 	private static final String AMIDE = "amide";
-	private static final String THIOL = "thiol";
 
 	static {
 		GREEK_MAP.put("a", "alpha");
@@ -56,9 +55,6 @@ class PreProcessor {
 
 		if(AMIDE.equalsIgnoreCase(chemicalName)) {
 			throw new PreProcessingException("Amide is a generic term rather than a specific chemical");//amide
-		}
-		if(THIOL.equalsIgnoreCase(chemicalName)) {
-			throw new PreProcessingException("Thiol is a generic term rather than a specific chemical");//genericsulfane
 		}
 		chemicalName = processDollarPrefixedGreeks(chemicalName);
 		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
