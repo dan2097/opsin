@@ -53,9 +53,13 @@ class ComponentProcessor {
 		specialHWRings.put("oxin", new String[]{"blocked"});
 		specialHWRings.put("azin", new String[]{"blocked"});
 		
-		specialHWRings.put("selenin", new String[]{"noticacid", "Se","C","C","C","C","C"});
-		specialHWRings.put("tellurin", new String[]{"noticacid", "Te","C","C","C","C","C"});
+		specialHWRings.put("selenin", new String[]{"not_icacid", "Se","C","C","C","C","C"});
+		specialHWRings.put("tellurin", new String[]{"not_icacid", "Te","C","C","C","C","C"});
 
+		specialHWRings.put("thiol", new String[]{"not_nothingOrOlate", "S","C","C","C","C"});
+		specialHWRings.put("selenol", new String[]{"not_nothingOrOlate", "Se","C","C","C","C"});
+		specialHWRings.put("tellurol", new String[]{"not_nothingOrOlate", "Te","C","C","C","C"});
+		
 		specialHWRings.put("oxazol", new String[]{"","O","C","N","C","C"});
 		specialHWRings.put("thiazol", new String[]{"","S","C","N","C","C"});
 		specialHWRings.put("selenazol", new String[]{"","Se","C","N","C","C"});
@@ -1894,11 +1898,19 @@ class ComponentProcessor {
 								a.setSpareValency(false);
 							}
 						}
-						else if (specialInstruction.equals("noticacid")){
+						else if (specialInstruction.equals("not_icacid")){
 							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)==null){
 								Element nextEl = (Element) XOMTools.getNextSibling(group);
 								if (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
 									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a HW ring");
+								}
+							}
+						}
+						else if (specialInstruction.equals("not_nothingOrOlate")){
+							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)==null){
+								Element nextEl = (Element) XOMTools.getNextSibling(group);
+								if (nextEl==null || (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ate"))){
+									throw new ComponentGenerationException(name +" has the syntax for a HW ring but probably does not mean that in this context");
 								}
 							}
 						}

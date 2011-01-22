@@ -69,8 +69,6 @@ class ComponentGenerator {
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
 	private final static  Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
-	private final static Pattern matchIndicatedHydrogen =Pattern.compile("(\\d+[a-z]?'*)H");
-	private final static Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{][^\\[\\(\\{]*H[\\]\\)\\}]");
 	private final static Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private final static Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final static String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
@@ -83,11 +81,13 @@ class ComponentGenerator {
 	private final static Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchHdigit =Pattern.compile("H\\d");
+	private final static Pattern matchDigit =Pattern.compile("\\d+");
 	private final static Pattern matchNonDigit =Pattern.compile("\\D+");
-	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*(\\d+[a-z]?'*).*");
-	private final static Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)");
-	private final static Pattern matchStereoChemAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{]([RS])[\\]\\)\\}]$");
+	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*?(\\d+[a-z]?'*)[^\\[\\(\\{]*");
+	private final static Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
+	private final static Pattern matchBracketAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{](.*)[\\]\\)\\}]$");
 	private final static Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
+	private final static Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
 	/** The master method, processes a parse result destructively adding semantic information by processing the various micro syntaxes .
@@ -224,68 +224,124 @@ class ComponentGenerator {
 	 * Removes hyphens from the end of locants if present
 	 * Looks for locants of the form number-letter and converts them to letternumber
 	 * e.g. 1-N becomes N1. 1-N is the IUPAC 2004 recommendation, N1 is the previous recommendation
+	 * Strips indication of superscript
 	 * Strips indicated hydrogen out of locants
+	 * Strips stereochemistry out of locants
+	 * Normalises case on greeks to lower case
 	 * 
 	 * @param subOrRoot
 	 * @throws ComponentGenerationException 
 	 */
-	private void processLocants(Element subOrRoot) throws ComponentGenerationException {
+	static void processLocants(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
 		for (Element locant : locants) {
-			String[] individualLocantText = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
-			for (int i = 0; i < individualLocantText.length; i++) {
-				String locantText =individualLocantText[i];
-				Matcher matchStereoChem= matchStereoChemAtEndOfLocant.matcher(locantText);
-				if (matchStereoChem.find()){
-					String rs = matchStereoChem.group(1);
-					individualLocantText[i] = matchStereoChem.replaceAll("");
-					locantText =individualLocantText[i];
-					Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL);
-					newStereoChemEl.appendChild("(" + locantText +rs+")");
-					newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-					XOMTools.insertBefore(locant, newStereoChemEl);
-				}
-				if (locantText.contains("-")){//this checks should avoid having to do the regex match in all cases as locants shouldn't contain -
+			List<String> individualLocants = splitIntoIndividualLocants(StringTools.removeDashIfPresent(locant.getValue()));
+			for (int i = 0; i < individualLocants.size(); i++) {
+				String locantText =individualLocants.get(i);
+				
+				if (locantText.contains("-")){//avoids this regex being invoked typically
+					//rearranges locant to the older equivalent form
 					Matcher m= matchIUPAC2004ElementLocant.matcher(locantText);
 					if (m.matches()){
-						individualLocantText[i] = m.group(2) +m.group(1);
+						locantText = m.group(2) + m.group(1) + m.group(3);
+					}
+				}
+				
+				if (Character.isLetter(locantText.charAt(0))){
+					//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
+					Matcher m =  matchSuperscriptedLocant.matcher(locantText);
+					if (m.lookingAt()){
+						String replacementString = m.group(1) +m.group(2);
+						locantText = m.replaceFirst(replacementString);
+					}
+					if (locantText.length()>=3){
+						//convert greeks to lower case
+						m =  matchGreek.matcher(locantText);
+						while (m.find()) {
+							locantText = locantText.substring(0, m.start()) + m.group().toLowerCase() + locantText.substring(m.end());
+						}
+					}
+				}
+				char lastChar = locantText.charAt(locantText.length()-1);
+				if(lastChar == ')' || lastChar == ']' || lastChar == '}') {				
+					//stereochemistry or indicated hydrogen that result from the application of this locant as a locant for a substituent may be included in brackets after the locant
+					
+					Matcher m = matchBracketAtEndOfLocant.matcher(locantText);
+					if (m.find()){
+						String brackettedText = m.group(1);
+						if (brackettedText.endsWith("H")){
+							locantText = m.replaceFirst("");//strip the bracket from the locantText
+							//create individual tags for indicated hydrogen. Examples of bracketed text include "9H" or "2H,7H"
+							String[] indicatedHydrogens = matchComma.split(brackettedText);
+							for (String indicatedHydrogen : indicatedHydrogens) {
+								Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
+								indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, indicatedHydrogen.substring(0, indicatedHydrogen.length()-1)));
+								XOMTools.insertBefore(locant, indicatedHydrogenElement);
+							}
+							if (locant.getAttribute(TYPE_ATR)==null){
+								locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
+							}
+						}
+						else if ((brackettedText.endsWith("R") || brackettedText.endsWith("S"))){
+							locantText = m.replaceFirst("");//strip the bracket from the locantText
+							String rs = brackettedText;
+							Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL);
+							newStereoChemEl.appendChild("(" + locantText +rs+")");
+							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+							XOMTools.insertBefore(locant, newStereoChemEl);
+						}
+						else if (matchDigit.matcher(brackettedText).matches()){
+							//compounds locant e.g. 1(10). Leave as is, it will be handled by the function that handles unsaturation
+						}
+						else{
+							throw new ComponentGenerationException("OPSIN bug: malformed locant text");
+						}
 					}
 					else{
-						throw new ComponentGenerationException("Unexpected hyphen in locantText");
+						throw new ComponentGenerationException("OPSIN bug: malformed locant text");
 					}
+
 				}
-				else if (Character.isLetter(locantText.charAt(0))){
-					Matcher m =  matchSuperscriptedLocant.matcher(locantText);//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
-					if (m.matches()){
-						individualLocantText[i] = m.group(1) +m.group(2);
-					}
-					else if (locantText.length()>=3 && Character.isLetter(locantText.charAt(1)) && Character.isLetter(locantText.charAt(2))){//convert greeks to lower case
-						individualLocantText[i] = locantText.toLowerCase();
-					}
-				}
+				individualLocants.set(i, locantText);
 			}
-			String locantText = StringTools.arrayToString(individualLocantText, ",");
-			//If the indicatedHydrogen has been specified create a tag for it and remove it from the list of locants
-			//e.g. 1(9H),5,7 -->indicatedHydrogen tag value (9H) and 1,5,7
-			//can get as complicated as 1,2(2H,7H)
-			Matcher matches =matchIndicatedHydrogen.matcher(locantText);
-			if (matches.find()){
-				do {
-					Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
-					indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, matches.group(1)));
-					XOMTools.insertBefore(locant, indicatedHydrogenElement);
-				}
-				while (matches.find());
-				locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
-				locantText =matchIndicatedHydrogenBracket.matcher(locantText).replaceAll("");
-			}
-			XOMTools.setTextChild(locant, locantText);
+
+			XOMTools.setTextChild(locant, StringTools.stringListToString(individualLocants, ","));
 
 			Element afterLocants = (Element)XOMTools.getNextSibling(locant);
 			if(afterLocants == null){
 				throw new ComponentGenerationException("Nothing after locant tag: " + locant.toXML());
 			}
 		}
+	}
+
+	/**
+	 * Takes a string of locants and splits on commas, but taking into account brackets
+	 * e.g. 1,2(1H,2H),3 becomes [1][2(1H,2H)][3]
+	 * @param locantString
+	 * @return
+	 */
+	private static List<String> splitIntoIndividualLocants(String locantString) {
+		List<String> individualLocants = new ArrayList<String>();
+		char[] charArray = locantString.toCharArray();
+		boolean inBracket =false;
+		int indiceOfLastMatch =0;
+		for (int i = 0; i < charArray.length; i++) {
+			char c = charArray[i];
+			if (c==','){
+				if (!inBracket){
+					individualLocants.add(locantString.substring(indiceOfLastMatch, i));
+					indiceOfLastMatch = i+1;
+				}
+			}
+			else if (c == '(' || c == '[' || c == '{') {
+				inBracket =true;
+			}
+			else if(c == ')' || c == ']' || c == '}') {
+				inBracket =false;
+			}
+		}
+		individualLocants.add(locantString.substring(indiceOfLastMatch, charArray.length));
+		return individualLocants;
 	}
 
 	/**Converts ortho/meta/para into locants
