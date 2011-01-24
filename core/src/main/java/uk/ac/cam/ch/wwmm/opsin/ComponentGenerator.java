@@ -83,7 +83,7 @@ class ComponentGenerator {
 	private final static Pattern matchHdigit =Pattern.compile("H\\d");
 	private final static Pattern matchDigit =Pattern.compile("\\d+");
 	private final static Pattern matchNonDigit =Pattern.compile("\\D+");
-	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*).*?(\\d+[a-z]?'*)[^\\[\\(\\{]*");
+	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~]*([^\\^\\[\\(\\{~\\]\\)\\}]+)[^\\[\\(\\{]*");
 	private final static Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
 	private final static Pattern matchBracketAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{](.*)[\\]\\)\\}]$");
 	private final static Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");

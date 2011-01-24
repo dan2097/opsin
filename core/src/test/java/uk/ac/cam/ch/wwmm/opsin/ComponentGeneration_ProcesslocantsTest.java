@@ -114,6 +114,20 @@ public class ComponentGeneration_ProcesslocantsTest {
 	}
 	
 	@Test
+	public void testSuperscript5() throws ComponentGenerationException {
+		locant.appendChild("N(alpha)");
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("Nalpha", locant.getValue());
+	}
+	
+	@Test
+	public void testSuperscript6() throws ComponentGenerationException {
+		locant.appendChild("N^alpha");
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("Nalpha", locant.getValue());
+	}
+	
+	@Test
 	public void testIndicatedHydrogen() throws ComponentGenerationException {
 		locant.appendChild("3(5'H)");
 		ComponentGenerator.processLocants(substituent);
