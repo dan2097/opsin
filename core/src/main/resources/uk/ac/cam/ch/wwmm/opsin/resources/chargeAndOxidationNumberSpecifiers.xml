@@ -10,6 +10,15 @@
     <token value="7">(7+)</token>
     <token value="8">(8+)</token>
     <token value="9">(9+)</token>
+    <token value="1">(+1)</token>
+    <token value="2">(+2)</token>
+    <token value="3">(+3)</token>
+    <token value="4">(+4)</token>
+    <token value="5">(+5)</token>
+    <token value="6">(+6)</token>
+    <token value="7">(+7)</token>
+    <token value="8">(+8)</token>
+    <token value="9">(+9)</token>
     <token value="-1">(-1)</token>
     <token value="-2">(-2)</token>
     <token value="-3">(-3)</token>
@@ -19,6 +28,15 @@
     <token value="-7">(-7)</token>
     <token value="-8">(-8)</token>
     <token value="-9">(-9)</token>
+    <token value="-1">(1-)</token>
+    <token value="-2">(2-)</token>
+    <token value="-3">(3-)</token>
+    <token value="-4">(4-)</token>
+    <token value="-5">(5-)</token>
+    <token value="-6">(6-)</token>
+    <token value="-7">(7-)</token>
+    <token value="-8">(8-)</token>
+    <token value="-9">(9-)</token>
   </tokenList>
   <tokenList tagname="oxidationNumberSpecifier" symbol="░">
     <token value="1">(i)</token>
