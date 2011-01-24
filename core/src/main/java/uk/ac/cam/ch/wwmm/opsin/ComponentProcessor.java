@@ -359,6 +359,11 @@ class ComponentProcessor {
 			List<Atom> neighbours = startingAtom.getAtomNeighbours();
 			int counter =-1;
 			Atom previousAtom = startingAtom;
+			for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
+				if (!neighbours.get(i).getElement().equals("C")){
+					neighbours.remove(i);
+				}
+			}
 			while (neighbours.size()==1){
 				counter++;
 				if (counter>5){
@@ -371,6 +376,11 @@ class ComponentProcessor {
 				nextAtom.addLocant(traditionalAlkanePositionNames[counter]);
 				neighbours = nextAtom.getAtomNeighbours();
 				neighbours.remove(previousAtom);
+				for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
+					if (!neighbours.get(i).getElement().equals("C")){
+						neighbours.remove(i);
+					}
+				}
 				previousAtom = nextAtom;
 			}
 		}
