@@ -97,7 +97,7 @@ class Atom {
 	private boolean atomIsInACycle =false;
 
 	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
-	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)(\\d+[a-z]?'*)");
+	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
 
 	/**
 	 * Builds an Atom from scratch.
