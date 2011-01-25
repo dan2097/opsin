@@ -307,7 +307,7 @@ class FragmentManager {
 			}
 			bondPile.remove(bond);
 		}
-		fragToInterFragmentBond.get(frag).clear();
+		fragToInterFragmentBond.remove(frag);
 	}
 
 	int getOverallCharge() {

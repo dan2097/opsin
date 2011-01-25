@@ -22,6 +22,7 @@ public class StereochemistryTest {
 
 	private static NameToStructure n2s;
 	private static SMILESFragmentBuilder sBuilder;
+
 	@BeforeClass
 	public static void setup() throws Exception {
 		n2s = NameToStructure.getInstance();
