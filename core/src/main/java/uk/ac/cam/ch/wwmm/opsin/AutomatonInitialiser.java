@@ -40,7 +40,7 @@ class AutomatonInitialiser {
 			 */
 			String regexHash = resourceGetter.getString(automatonName + "RegexHash.txt");
 			if (regexHash.equals(currentRegexHash)){
-				InputStream automatonInput= resourceGetter.getStream(automatonName +"SerialisedAutomaton.txt");
+				InputStream automatonInput= resourceGetter.getStream(automatonName +"SerialisedAutomaton.aut");
 				return RunAutomaton.load(automatonInput);
 			}
 		}
@@ -55,7 +55,7 @@ class AutomatonInitialiser {
 		try {
 			FileOutputStream regexHashFOS =(FileOutputStream) resourceGetter.getOutputStream(automatonName + "RegexHash.txt");
 			regexHashFOS.write(currentRegexHash.getBytes());
-			ra.store(resourceGetter.getOutputStream(automatonName + "SerialisedAutomaton.txt"));
+			ra.store(resourceGetter.getOutputStream(automatonName + "SerialisedAutomaton.aut"));
 		} catch (Exception e) {
 			System.err.println("WARNING: Could not serialize one of OPSIN's automata to disk. This will not prevent OPSIN from working but is unexpected!");
 		}
