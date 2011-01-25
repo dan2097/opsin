@@ -1,4 +1,5 @@
-Version ?.?.?
+Version 1.0.0
+Added native isomeric SMILES output
 Added traditional locants to carboxylic acids and alkanes e.g. beta-hydroxybutyric acid
 Added support for cis/trans indicating the relative stereochemistry of two substituents on rings and fused rings sytems
 Added support for stoichiometry ratios and mixture indicators
@@ -7,7 +8,9 @@ Added support for the method for naming spiro systems described in the 1979 reco
 Added detailedFailureAnalysis option to detect the part of a chemical name that fails to parse
 Improvements to CAS index name uninversion algorithm
 Added support for isotopes into the program allowing deuterio/tritio
-Many Minor improvements and bug fixes
+Added support for R/S stereochemistry indicated by a locant which is also used to indicate the point of substitution for a substituent
+Improved usability of batch commandline CML output
+Many minor improvements and bug fixes
 
 Version 0.9.0
 Added transition metals/f-block elements and nobel gases

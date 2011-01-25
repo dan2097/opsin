@@ -624,4 +624,24 @@ public class StereochemistryTest {
 		Fragment f = sBuilder.build("[H]C([H])([H])C(Cl)=C([H])C([H])([H])[H]", fm);
 		assertEquals(false, StereochemistryHandler.cisTranUnambiguousOnBond(f.findBond(5, 7)));
 	}
+	
+	@Test
+	public void testChiralAtomWhichBecomesAchiral() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("alpha-amino-alanine", false).getStructure();
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		assertEquals(0, stereoAnalyser.findStereoCentres().size());
+		assertEquals(0, stereoAnalyser.findStereoBonds().size());
+		Atom formerChiralCentre = f.getAtomByLocantOrThrow("alpha");
+		assertNull("This atom is no longer a chiral centre and hence should not have an associated atom parity", formerChiralCentre.getAtomParity());
+	}
+	
+	@Test
+	public void testChiralBondWhichBecomesAchiral() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("3-methylcrotonic acid", false).getStructure();
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		assertEquals(0, stereoAnalyser.findStereoCentres().size());
+		assertEquals(0, stereoAnalyser.findStereoBonds().size());
+		Bond formerChiralBond = f.findBondOrThrow(f.getAtomByLocantOrThrow("2"), f.getAtomByLocantOrThrow("3"));
+		assertNull("This Bond is no longer a chiral centre and hence should not have an associated bond stereo", formerChiralBond.getBondStereo());
+	}
 }
