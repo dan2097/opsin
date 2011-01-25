@@ -3,6 +3,8 @@ import java.util.List;
 import nu.xom.Element;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 
@@ -16,6 +18,12 @@ public class ParserTest {
 	public static void setUp() throws Exception {
 		parser = new Parser();
 		config = NameToStructureConfig.getDefaultConfigInstance();
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		parser = null;
+		config = null;
 	}
 
 	@Test(expected=ParsingException.class)

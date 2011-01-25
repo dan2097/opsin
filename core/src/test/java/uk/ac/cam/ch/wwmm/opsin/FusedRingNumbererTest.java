@@ -4,6 +4,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,6 +23,11 @@ public class FusedRingNumbererTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		fm = null;
 	}
 
 	@Test

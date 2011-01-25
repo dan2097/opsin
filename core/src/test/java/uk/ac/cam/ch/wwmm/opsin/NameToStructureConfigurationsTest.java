@@ -2,17 +2,24 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static org.junit.Assert.*;
 
 
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
 public class NameToStructureConfigurationsTest {
 
-		NameToStructure n2s;
-		@Before
-		public void setUp() throws NameToStructureException {
+		private static NameToStructure n2s;
+
+		@BeforeClass
+		public static void setUp() throws NameToStructureException {
 			n2s = NameToStructure.getInstance();
+		}
+		
+		@AfterClass
+		public static void cleanUp() {
+			n2s = null;
 		}
 		
 		@Test
