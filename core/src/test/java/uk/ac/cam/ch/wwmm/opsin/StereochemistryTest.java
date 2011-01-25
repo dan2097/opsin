@@ -8,6 +8,7 @@ import static junit.framework.Assert.*;
 
 import nu.xom.Element;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
@@ -27,6 +28,12 @@ public class StereochemistryTest {
 	public static void setup() throws Exception {
 		n2s = NameToStructure.getInstance();
 		sBuilder = new SMILESFragmentBuilder();
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		n2s = null;
+		sBuilder =null;
 	}
 	
 	/*

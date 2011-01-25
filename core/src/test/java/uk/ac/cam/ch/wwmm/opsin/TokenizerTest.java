@@ -4,6 +4,7 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,6 +19,12 @@ public class TokenizerTest {
 		ResourceManager rm = new ResourceManager(rg);
 		tokenizer = new Tokeniser(new ParseRules(rm));
 		reverseParseRules = new ReverseParseRules(rm);
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		tokenizer = null;
+		reverseParseRules = null;
 	}
 	
 	@Test

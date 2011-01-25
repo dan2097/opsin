@@ -7,20 +7,30 @@ import static org.mockito.Mockito.mock;
 import nu.xom.Builder;
 import nu.xom.Element;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 public class CMLFragmentBuilderTest {
 
 	private BuildState state;
-	private CMLFragmentBuilder cmlBuilder;
-	private Builder builder = new Builder();
+	private static CMLFragmentBuilder cmlBuilder;
+
+	@BeforeClass
+	public static void setUp() throws Exception {
+		cmlBuilder = new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/"));
+	}
 
 	@Before
-	public void setUp() throws Exception {
-		cmlBuilder = new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/"));
+	public void setUpInstance() throws Exception {
 		state = new BuildState(mock(NameToStructureConfig.class), mock(SMILESFragmentBuilder.class), cmlBuilder);
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		cmlBuilder = null;
 	}
 
 	@Test
@@ -64,7 +74,7 @@ public class CMLFragmentBuilderTest {
 	
 	@Test
 	public void testAtom() throws Exception {
-		Element cmlAtom = builder.build("<atom id=\"a10\" elementType=\"C\" formalCharge=\"-1\">" +
+		Element cmlAtom = new Builder().build("<atom id=\"a10\" elementType=\"C\" formalCharge=\"-1\">" +
 				"<label value=\"1\" /></atom>", "/localhost").getRootElement();
 		Atom atom = cmlBuilder.buildAtomFromCML(new FragmentManager(mock(SMILESFragmentBuilder.class), cmlBuilder, new IDManager()), cmlAtom, mock(Fragment.class));
 		assertNotNull("Got atom", atom);
