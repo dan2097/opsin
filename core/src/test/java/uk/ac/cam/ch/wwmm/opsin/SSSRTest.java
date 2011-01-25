@@ -4,21 +4,16 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.Fragment;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 
 public class SSSRTest {
-	private static NameToStructure n2s;
-	@BeforeClass
-	public static void setup() throws Exception {
-		n2s = NameToStructure.getInstance();
-	}
 	
 	@Test
-	public void testFindSSSR() throws StructureBuildingException {
+	public void testFindSSSR() throws Exception {
+		NameToStructure n2s = NameToStructure.getInstance();
 		Fragment f = n2s.parseChemicalName("violanthrene", false).getStructure();
 		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(f);
 		assertEquals(9, rings.size());

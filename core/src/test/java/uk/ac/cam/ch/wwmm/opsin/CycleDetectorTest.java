@@ -6,16 +6,17 @@ import static org.mockito.Mockito.mock;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.Fragment;
 
 //Cycle detection is performed as part of fragment creation so we can just check the output of fragment creation
 public class CycleDetectorTest {
-	private static FragmentManager fm;
-	@BeforeClass
-	public static void setup() throws Exception {
+	private FragmentManager fm;
+
+	@Before
+	public void setup() throws Exception {
 		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 	}
 	

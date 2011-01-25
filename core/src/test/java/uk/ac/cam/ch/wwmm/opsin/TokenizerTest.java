@@ -9,11 +9,11 @@ import org.junit.Test;
 
 public class TokenizerTest {
 
-	static Tokeniser tokenizer;
-	static ReverseParseRules reverseParseRules;
+	private static Tokeniser tokenizer;
+	private static ReverseParseRules reverseParseRules;
 
 	@BeforeClass
-	public static void  setUp() throws Exception {
+	public static void setUp() throws Exception {
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		ResourceManager rm = new ResourceManager(rg);
 		tokenizer = new Tokeniser(new ParseRules(rm));

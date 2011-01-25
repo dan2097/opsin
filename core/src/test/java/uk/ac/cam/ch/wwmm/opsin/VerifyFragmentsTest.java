@@ -9,25 +9,17 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class VerifyFragmentsTest {
 	private static final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
 	private static final ResourceGetter resourceGetter = new ResourceGetter(RESOURCE_LOCATION);
-	private static SMILESFragmentBuilder smilesBuilder;
-	private static CMLFragmentBuilder cmlBuilder;
-	private static FragmentManager fm;
-	
-	@BeforeClass
-	public static void setUp() throws Exception {
-		smilesBuilder = new SMILESFragmentBuilder();
-		cmlBuilder = new CMLFragmentBuilder(resourceGetter);
-		fm = new FragmentManager(smilesBuilder, cmlBuilder, new IDManager());
-	}
 	
 	@Test
 	public void verifySMILES() throws Exception {
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
 		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
 		for (int i = 0; i < tokenFiles.size(); i++) {
@@ -46,14 +38,14 @@ public class VerifyFragmentsTest {
 				Elements tokenElements = tokenList.getChildElements("token");
 				for(int j=0;j<tokenElements.size();j++) {
 					Element token = tokenElements.get(j);
-					if (token.getAttribute("valType")!=null && token.getAttributeValue("valType").equals("SMILES")){
+					if (SMILES_VALTYPE_VAL.equals(token.getAttributeValue(VALTYPE_ATR))){
 						Fragment mol =null;
 						try{
-							String smiles = token.getAttributeValue("value");
-							String type = token.getAttribute("type") !=null ?  token.getAttributeValue("type") : "";
-							String subType = token.getAttribute("subType") !=null ?  token.getAttributeValue("subType") : "";
+							String smiles = token.getAttributeValue(VALUE_ATR);
+							String type = token.getAttribute(TYPE_ATR) !=null ?  token.getAttributeValue(TYPE_ATR) : "";
+							String subType = token.getAttribute(SUBTYPE_ATR) !=null ?  token.getAttributeValue(SUBTYPE_ATR) : "";
 	
-							String labels = token.getAttribute("labels") !=null ?  token.getAttributeValue("labels") : "";
+							String labels = token.getAttribute(LABELS_ATR) !=null ?  token.getAttributeValue(LABELS_ATR) : "";
 							mol = fm.buildSMILES(smiles, type, subType, labels);
 						}
 						catch (Exception e) {
@@ -75,6 +67,7 @@ public class VerifyFragmentsTest {
 	
 	@Test
 	public void verifyCML() throws Exception {
+		FragmentManager fm = new FragmentManager(mock(SMILESFragmentBuilder.class), new CMLFragmentBuilder(resourceGetter), new IDManager());
 		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
 		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
 		for (int i = 0; i < tokenFiles.size(); i++) {
@@ -93,12 +86,12 @@ public class VerifyFragmentsTest {
 				Elements tokenElements = tokenList.getChildElements("token");
 				for(int j=0;j<tokenElements.size();j++) {
 					Element token = tokenElements.get(j);
-					if (token.getAttribute("valType")!=null && token.getAttributeValue("valType").equals("dbkey")){
+					if (DBKEY_VALTYPE_VAL.equals(token.getAttributeValue(VALTYPE_ATR))){
 						Fragment mol =null;
 						try{
-							String idStr = token.getAttributeValue("value");
-							String type = token.getAttribute("type") !=null ?  token.getAttributeValue("type") : "";
-							String subType = token.getAttribute("subType") !=null ?  token.getAttributeValue("subType") : "";
+							String idStr = token.getAttributeValue(VALUE_ATR);
+							String type = token.getAttribute(TYPE_ATR) !=null ?  token.getAttributeValue(TYPE_ATR) : "";
+							String subType = token.getAttribute(SUBTYPE_ATR) !=null ?  token.getAttributeValue(SUBTYPE_ATR) : "";
 							mol = fm.buildCML(idStr, type, subType);
 						}
 						catch (Exception e) {
