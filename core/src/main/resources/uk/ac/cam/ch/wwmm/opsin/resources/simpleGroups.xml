@@ -183,7 +183,7 @@
 		<token value="NCCCCNCCCN" labels="none" valType="SMILES">spermidine</token>
 		<token value="NCCCNCCCCNCCCN" labels="none" valType="SMILES">spermine</token>
 		<token value="CC(C)CCCC(C)CCCC(C)CCCCC(C)CCCC(C)CCCC(C)C" labels="none" valType="SMILES">squalane</token>
-		<token value="C/C(C)=C\CC/C(C)=C/CC/C(C)=C/CC/C=C(C)/CC/C=C(C)/CC/C=C(C)\C" labels="none" valType="SMILES">squalene</token>
+		<token value="CC(C)=CCC\C(C)=C\CC\C(C)=C\CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">squalene</token>
 		<token value="S(=O)(=O)(N)N" labels="none" valType="SMILES" functionalIDs="4,5">sulfamide</token>
 		<token value="[SH2]=N" labels="none" valType="SMILES">sulfilimine</token>
 		<token value="N=S" labels="none" valType="SMILES">sulfimide</token>
@@ -223,7 +223,7 @@
 		<token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
 		<token value="C#C" labels="1/2" valType="SMILES">vinylene</token>
-		<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>
+		<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>-->
 
 		<token value="N" labels="none" valType="SMILES">ammonia</token>
 		<token value="O" labels="none" valType="SMILES">water</token>

@@ -30,12 +30,15 @@ class StereochemistryHandler {
 	
 	/**
 	 * Master method for assigning and processing stereochemistry elements
+	 * Also checks whether given bonds/atoms with predefined stereo configuration are still relevant i.e. has substitution removed the stereocentre
 	 * @param state
 	 * @param uniFrag
 	 * @param stereoChemistryEls
+	 * @param bondsWithPreDefinedBondStereo 
+	 * @param atomsWithPreDefinedAtomParity 
 	 * @throws StructureBuildingException
 	 */
-	static void processStereochemicalElements(BuildState state, Fragment uniFrag, List<Element> stereoChemistryEls) throws StructureBuildingException {
+	static void processStereochemicalElements(BuildState state, Fragment uniFrag, List<Element> stereoChemistryEls, List<Atom> atomsWithPreDefinedAtomParity, List<Bond> bondsWithPreDefinedBondStereo) throws StructureBuildingException {
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(uniFrag);
 	    Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<Atom, StereoCentre>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object
 		List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
@@ -50,6 +53,7 @@ class StereochemistryHandler {
 				bondStereoBondMap.put(b, stereoBond);
 			}
 		}
+		checkPredefinedStereochemistryIsStillRelevant(atomStereoCentreMap, bondStereoBondMap, atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
 		for (Element stereoChemistryElement : stereoChemistryEls) {
@@ -63,6 +67,29 @@ class StereochemistryHandler {
 		//perform locanted before unlocanted to avoid unlocanted elements using the stereocentres a locanted element refers to
 		matchStereochemistryToAtomsAndBonds(state, locantedStereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
 		matchStereochemistryToAtomsAndBonds(state, unlocantedStereoChemistryEls, atomStereoCentreMap, bondStereoBondMap);
+	}
+
+
+	/**
+	 * Checks that all atomParity and bondStereo elements correspond to identified stereocentres.
+	 * If they do not, they have assumedly been removed by substitution and hence the atomPaity/bondStereo is removed
+	 * @param atomStereoCentreMap
+	 * @param bondStereoBondMap
+	 * @param atomsWithPreDefinedAtomParity
+	 * @param bondsWithPreDefinedBondStereo
+	 */
+	private static void checkPredefinedStereochemistryIsStillRelevant(Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap, 
+			List<Atom> atomsWithPreDefinedAtomParity, List<Bond> bondsWithPreDefinedBondStereo) {
+		for (Atom atom : atomsWithPreDefinedAtomParity) {
+			if (!atomStereoCentreMap.containsKey(atom)){
+				atom.setAtomParity(null);
+			}
+		}
+		for (Bond bond : bondsWithPreDefinedBondStereo) {
+			if (!bondStereoBondMap.containsKey(bond)){
+				bond.setBondStereo(null);
+			}
+		}
 	}
 
 

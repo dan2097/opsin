@@ -141,10 +141,7 @@ class StructureBuilder {
 		makeHydrogensExplicit(state);
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
-		List<Element> stereoChemistryEls = findStereochemistryElsInProcessingOrder(molecule);
-		if (stereoChemistryEls.size() >0){
-			StereochemistryHandler.processStereochemicalElements(state, uniFrag, stereoChemistryEls);
-		}
+		processStereochemistry(state, molecule, uniFrag);
 
 		for (Fragment rGroup : rGroups) {
 			Atom rAtom = rGroup.getFirstAtom();
@@ -1890,6 +1887,35 @@ class StructureBuilder {
 					atom.setCharge(atom.getProperty(Atom.OXIDATION_NUMBER)-atom.getIncomingValency());
 				}
 			}
+		}
+	}
+
+	/**
+	 * Handles the application of stereochemistry and checking
+	 * existing stereochemical specification is still relevant.
+	 * @param state
+	 * @param molecule
+	 * @param uniFrag
+	 * @throws StructureBuildingException
+	 */
+	private void processStereochemistry(BuildState state, Element molecule, Fragment uniFrag) throws StructureBuildingException {
+		List<Element> stereoChemistryEls = findStereochemistryElsInProcessingOrder(molecule);
+		List<Atom> atomList = uniFrag.getAtomList();
+		List<Atom> atomsWithPreDefinedAtomParity = new ArrayList<Atom>();
+		for (Atom atom : atomList) {
+			if (atom.getAtomParity()!=null){
+				atomsWithPreDefinedAtomParity.add(atom);
+			}
+		}
+		Set<Bond> bonds = uniFrag.getBondSet();
+		List<Bond> bondsWithPreDefinedBondStereo = new ArrayList<Bond>();
+		for (Bond bond : bonds) {
+			if (bond.getBondStereo()!=null){
+				bondsWithPreDefinedBondStereo.add(bond);
+			}
+		}
+		if (stereoChemistryEls.size() >0 || atomsWithPreDefinedAtomParity.size() >0 || bondsWithPreDefinedBondStereo.size() >0){
+			StereochemistryHandler.processStereochemicalElements(state, uniFrag, stereoChemistryEls, atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		}
 	}
 
