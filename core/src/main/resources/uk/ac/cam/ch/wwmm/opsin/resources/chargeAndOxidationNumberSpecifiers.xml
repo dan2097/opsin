@@ -39,6 +39,7 @@
     <token value="-9">(9-)</token>
   </tokenList>
   <tokenList tagname="oxidationNumberSpecifier" symbol="░">
+    <token value="0">(0)</token>
     <token value="1">(i)</token>
     <token value="2">(ii)</token>
     <token value="3">(iii)</token>
