@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import dk.brics.automaton.RunAutomaton;
 
 /**
- * Instantiate via NameToStructure.getOpsinParser()
+ * The same as ParseRules but works from right to left
  * 
  * Performs finite-state allocation of roles ("annotations") to tokens:
  * The chemical name is broken down into tokens e.g. ethyl -->eth yl by applying the chemical grammar in regexes.xml
@@ -24,7 +24,7 @@ import dk.brics.automaton.RunAutomaton;
  * @author ptc24/dl387
  *
  */
-public class ReverseParseRules {
+class ReverseParseRules {
 
 	/** A "struct" containing bits of state needed during finite-state parsing. */
 	private class AnnotatorState {
