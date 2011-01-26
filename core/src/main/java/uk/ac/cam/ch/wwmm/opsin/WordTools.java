@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Tools for dealing uniformly with unusually-formed words.
  */
-public class WordTools {
+class WordTools {
 
 	private final static char endOfFunctionalTerm = '\u00FB';
 	private final static char endOfSubstituent = '\u00e9';

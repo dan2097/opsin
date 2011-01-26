@@ -1,25 +1,27 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
-version 0.9.0 (see ReleaseNotes.txt for what's new in this version)
+version 1.0.0 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
+We are thankful for contributions from Albina Asadulina and Rich Apodaca
 
 Contact address: dl387@cam.ac.uk
 Source code: http://bitbucket.org/dan2097/opsin/
+Web interface and informational site: http://opsin.ch.cam.ac.uk/
+JavaDoc is available via OPSIN's generated web site: http://apidoc.ch.cam.ac.uk/opsin/
 
-This is a Java(1.5+) library for IUPAC name-to-structure conversion.
+This is a Java(1.5+) library for IUPAC name-to-structure conversion offering high recall and precision on general organic nomenclature.
+
 Currently it should be considered to be under development although the interface for using it will remain constant.
 OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
-
-OPSIN can be run through a dedicated Web interface at: http://opsin.ch.cam.ac.uk/
 
 ##################################################
 
 OPSIN is available as a standalone JAR from Bitbucket (http://bitbucket.org/dan2097/opsin/) or SourceForge(https://sourceforge.net/projects/oscar3-chem/)
 It is also available as a dependency for use with Apache Maven.
-opsin-0.9.0-jar-with-dependencies.jar includes CML (Chemical Markup Language) and InChI (IUPAC International Chemical Identifier) output and all dependendencies
-The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI.
+opsin-1.0.0-jar-with-dependencies.jar includes CML (Chemical Markup Language), SMILES, and InChI (IUPAC International Chemical Identifier) output and all dependendencies
+The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and SMILES and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI.
 
-To use OPSIN as a library add opsin-0.9.0-jar-with-dependencies.jar to your classpath.
+To use OPSIN as a library add opsin-1.0.0-jar-with-dependencies.jar to your classpath.
 
 If you are using Maven then do the following:
 	Add our repository:
@@ -32,15 +34,15 @@ If you are using Maven then do the following:
 		<dependency>
 			 <groupId>opsin</groupId>
 			 <artifactId>core</artifactId>
-			 <version>0.9.0</version>
+			 <version>1.0.0</version>
 		</dependency>
-	If you need just CML output support
+	If you need just CML or SMILES output support
 
 	or
 		<dependency>
 			 <groupId>opsin</groupId>
 			 <artifactId>inchi</artifactId>
-			 <version>0.9.0</version>
+			 <version>1.0.0</version>
 		</dependency>
 
 	if you also need InChI output support.
@@ -48,44 +50,34 @@ If you are using Maven then do the following:
 ##################################################
 
 Using OPSIN as a command-line utility:
-	java -jar opsin-0.9.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
-	java -cp opsin-0.9.0-jar-with-dependencies.jar uk.ac.cam.ch.wwmm.opsin.NameToInchi will give you a command-line interface to convert names to InChI
+	java -jar opsin-1.0.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
+	java -cp opsin-1.0.0-jar-with-dependencies.jar uk.ac.cam.ch.wwmm.opsin.NameToInchi will give you a command-line interface to convert names to InChI
 
 As well as interactive input on the command-line these command-line interfaces will accept a piped input of newline seperated chemical names.
-e.g. java -jar opsin-0.9.0-jar-with-dependencies.jar < input.name > output.cml
+e.g. java -jar opsin-1.0.0-jar-with-dependencies.jar < input.name > output.cml
 
 Using OPSIN as a library:
 
-1) Learn about XOM (http://xom.nu), the XML processing framework used by OPSIN
-2) Create an OPSIN instance, by calling the following static method
+1) Create an OPSIN instance, by calling the following static method
 
-NameToStructure nameToStructure = NameToStructure.getInstance();
+NameToStructure n2s = NameToStructure.getInstance();
 
-3) Get CML (as XOM Elements):
+2) (Optional) create a NameToStructureConfig (this can be set to, for example, allow radicals to convert to structures)
+NameToStructureConfig n2sconfig = new NameToStructureConfig();
 
-Element cmlElement = nameToStructure.parseToCML("acetonitrile");
+3) Give OPSIN a name and recieve an OpsinResult
+OpsinResult result = n2s.parseChemicalName("acetonitrile", n2sconfig);
 
-4) Whatever you like. Maybe print it out, thus:
+4) Check whether conversion was successful by checking result.getStatus()
 
-System.out.println(cmlElement.toXML());
+5) Retrieve the structure as CML/SMILES/InChI:
+Element cml = result.getCml();
+String smiles = result.getSmiles();
+String inchi = NameToInchi.convertResultToInChI(result, false);
 
-parseToCML will typically take 5-10ms to convert a name to CML making OPSIN suitable for use on large sets of names.
+Convenience methods exist to convert directly from names to CML and InChI
 
-CML can, if desired, be converted to other format such as SD, SMILES, InChI etc. by toolkits such as CDK, OpenBabel and JUMBO.
-(NOTE: if you want InChI the most efficient way to generate it is to use the InChI module and the corresponding parseToInChI method)
-
-OPSIN's API also support limited configurability and a mechanism to return the reason for failure e.g.:
-	NameToStructure nts = NameToStructure.getInstance();
-	NameToStructureConfig n2sconfig = new NameToStructureConfig();
-	n2sconfig.setAllowRadicals(true);
-	OpsinResult result = nts.parseChemicalName("acetonitrile", n2sconfig);
-	if (result.getStatus() != OpsinResult.OPSIN_RESULT_STATUS.FAILURE){
-		Element cml = result.getCml();
-		String inchi = NameToInchi.convertResultToInChI(result, false);
-	}
-	else{
-		System.out.println(result.getMessage());
-	}
+Converting a name to a structure will typically take of the order of 5-10ms making OPSIN suitable for batch processing of large sets of names.
 
 ##################################################
 
@@ -123,21 +115,23 @@ tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazo
 Greek letters
 Lambda convention
 E/Z/R/S stereochemistry
-cis/trans indicating relative stereochemistry on rings
+cis/trans indicating relative stereochemistry on rings and as a synonym of E/Z
 Amino Acids and derivatives
 Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)
 Simple bridge prefixes e.g. methano
 Nucleosides, nucleotides and their esters
+Steroids including alpha/beta stereochemistry
 Specification of oxidation numbers and charge on elements
 Perhalogeno terms
-Simple CAS names
+Stoichiometry ratios and mixture indicators
+Simple CAS names including inverted CAS names
 
 Currently UNsupported nomenclature includes:
 Other less common stereochemical terms
 Carbohydrates
-Natural Products
-Specification of stereochemistry on steroids
-Subtractive nomenclature
+Natural Products other than steroids
+Natural product specific nomenclature operations
+Subtractive nomenclature e.g. deoxy
 Composite and multiplied bridge prefixes e.g. epoxymethano
 Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 

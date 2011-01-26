@@ -342,7 +342,7 @@
 		<token value="-[Pr]" labels="none" valType="SMILES">praseodymio</token>
 		<token value="-[Pm]" labels="none" valType="SMILES">promethio</token>
 		<token value="-[Pa]" labels="none" valType="SMILES">protactinio</token>
-		<token value="-[Ra]" labels="none" valType="SMILES" usableAsAJoiner="yes">radio</token>
+		<!--<token value="-[Ra]" labels="none" valType="SMILES" usableAsAJoiner="yes">radio</token>Causes confusion e.g. radiocarbon-->
 		<token value="-[Rn]" labels="none" valType="SMILES">radonio</token>
 		<token value="-[Re]" labels="none" valType="SMILES">rhenio</token>
 		<token value="-[Rh]" labels="none" valType="SMILES">rhodio</token>
