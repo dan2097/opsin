@@ -1879,12 +1879,30 @@ class StructureBuilder {
 	}
 	
 
-	private void processOxidationNumbers(BuildState state, List<Element> groups)  {
+	/**
+	 * Sets the charge according to the oxidation number if the oxidation number atom property has been set
+	 * @param state
+	 * @param groups
+	 * @throws StructureBuildingException 
+	 */
+	private void processOxidationNumbers(BuildState state, List<Element> groups) throws StructureBuildingException  {
 		for (Element group : groups) {
 			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Atom atom = state.xmlFragmentMap.get(group).getFirstAtom();
 				if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
-					atom.setCharge(atom.getProperty(Atom.OXIDATION_NUMBER)-atom.getIncomingValency());
+					List<Atom> neighbours = atom.getAtomNeighbours();
+					int chargeThatWouldFormIfLigandsWereRemoved =0;
+					for (Atom neighbour : neighbours) {
+						Element neighbourEl = state.xmlFragmentMap.getElement(neighbour.getFrag());
+						Bond b = neighbour.getFrag().findBondOrThrow(atom, neighbour);
+						//carbonyl and nitrosyl are neutral ligands
+						if (!((neighbourEl.getValue().equals("carbon") && NONCARBOXYLICACID_TYPE_VAL.equals(neighbourEl.getAttributeValue(TYPE_ATR)))
+								|| neighbourEl.getValue().equals("nitrosyl"))){
+							chargeThatWouldFormIfLigandsWereRemoved+=b.getOrder();
+						}
+					}
+					
+					atom.setCharge(atom.getProperty(Atom.OXIDATION_NUMBER)-chargeThatWouldFormIfLigandsWereRemoved);
 				}
 			}
 		}
