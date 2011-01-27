@@ -84,20 +84,54 @@ public class NameToStructure {
 		LOG.info("OPSIN initialised");
 	}
 
+	/**
+	 * Convenience method for converting a name to CML with OPSIN's default options
+	 * @param name The chemical name to parse.
+	 * @return A CML element, containing the parsed molecule, or null if the name was uninterpretable.
+	 */
 	public Element parseToCML(String name) {
 		return parseToCML(name, false);
 	}
-
-	/**Parses a chemical name, returning an unambiguous CML representation of the molecule.
-	 *
+	
+	/**
+	 * Convenience method for converting a name to CML with OPSIN's default options
+	 * If verbose is set to true, debug information will be output
 	 * @param name The chemical name to parse.
-	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
-	 * @return A CML element, containing the parsed molecule, or null if the molecule would not parse.
+	 * @param verbose Whether to print lots of debugging information or not
+	 * @return A CML element, containing the parsed molecule, or null if the name was uninterpretable.
 	 */
 	public Element parseToCML(String name, boolean verbose) {
 		OpsinResult result = parseChemicalName(name, verbose);
-		if(result.getCml() != null && verbose) System.out.println(new XOMFormatter().elemToString(result.getCml()));
-		return result.getCml();
+		Element cml = result.getCml();
+		if(cml != null && verbose){
+			System.out.println(new XOMFormatter().elemToString(result.getCml()));
+		}
+		return cml;
+	}
+
+	/**
+	 * Convenience method for converting a name to SMILES with OPSIN's default options
+	 * @param name The chemical name to parse.
+	 * @return A SMILES string describing the parsed molecule, or null if the name was uninterpretable.
+	 */
+	public String parseToSmiles(String name) {
+		return parseToSmiles(name, false);
+	}
+	
+	/**
+	 * Convenience method for converting a name to SMILES with OPSIN's default options
+	 * If verbose is set to true, debug information will be output
+	 * @param name The chemical name to parse.
+	 * @param verbose Whether to print lots of debugging information or not
+	 * @return A SMILES string describing the parsed molecule, or null if the name was uninterpretable.
+	 */
+	public String parseToSmiles(String name, boolean verbose) {
+		OpsinResult result = parseChemicalName(name, verbose);
+		String smiles = result.getSmiles();
+		if(verbose){
+			System.out.println(smiles);
+		}
+		return smiles;
 	}
 
 	/**Parses a chemical name, returning an OpsinResult which represents the molecule.
@@ -132,7 +166,9 @@ public class NameToStructure {
 		boolean verbose = n2sConfig.isVerbose();
 		String message = "";
 		try {
-			if(verbose) System.out.println(name);
+			if(verbose){
+				System.out.println(name);
+			}
 			String modifiedName = PreProcessor.preProcess(name);
 			List<Element> parses = parser.parse(n2sConfig, modifiedName);
 			//if(verbose) for(Element parse : parses) System.out.println(new XOMFormatter().elemToString(parse));
@@ -169,7 +205,9 @@ public class NameToStructure {
 			return new OpsinResult(frag, frag != null ? OPSIN_RESULT_STATUS.SUCCESS : OPSIN_RESULT_STATUS.FAILURE, message, name);
 		} catch (Exception e) {
 			message += e.getMessage();
-			if(verbose) e.printStackTrace();
+			if(verbose) {
+				e.printStackTrace();
+			}
 			return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, message, name);
 		}
 	}
