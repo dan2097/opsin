@@ -19,11 +19,10 @@ class CMLFragmentBuilder {
 	private Document fragmentDoc;
 
 	/**Initialises the builder.
+	 * Throws an exception if the fragments file can't be found, or the document can't be built.
 	 * @param resourceGetter
-	 *
-	 * @throws Exception If the fragments file can't be found, or the document can't be built.
 	 */
-	CMLFragmentBuilder(ResourceGetter resourceGetter) throws Exception {
+	CMLFragmentBuilder(ResourceGetter resourceGetter) {
 		fragmentDoc = resourceGetter.getXMLDocument("fragments.xml");
 	}
 

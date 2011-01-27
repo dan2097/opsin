@@ -21,7 +21,7 @@ public class FusedRingNumbererTest {
 	private static FragmentManager fm;
 
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void setUp(){
 		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 	}
 	

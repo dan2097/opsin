@@ -15,7 +15,7 @@ public class ParserTest {
 	private static NameToStructureConfig config;
 
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void setUp(){
 		parser = new Parser();
 		config = NameToStructureConfig.getDefaultConfigInstance();
 	}

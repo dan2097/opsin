@@ -19,12 +19,12 @@ public class CMLFragmentBuilderTest {
 	private static CMLFragmentBuilder cmlBuilder;
 
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void setUp(){
 		cmlBuilder = new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/"));
 	}
 
 	@Before
-	public void setUpInstance() throws Exception {
+	public void setUpInstance(){
 		state = new BuildState(mock(NameToStructureConfig.class), mock(SMILESFragmentBuilder.class), cmlBuilder);
 	}
 	
@@ -34,7 +34,7 @@ public class CMLFragmentBuilderTest {
 	}
 
 	@Test
-	public void testBuildStringString() throws Exception {
+	public void testBuildStringString() throws StructureBuildingException {
 		Fragment benzene = state.fragManager.buildCML("benzene", "null", "null");
 		StructureBuilder.makeHydrogensExplicit(state);
 		assertNotNull("Got benzene", benzene);

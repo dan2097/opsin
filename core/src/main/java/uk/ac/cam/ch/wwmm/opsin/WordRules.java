@@ -190,10 +190,8 @@ class WordRules {
 
 	/**Initialises the WordRules.
 	 * @param resourceGetter
-	 *
-	 * @throws Exception If the data file can't be read properly.
 	 */
-	WordRules(ResourceGetter resourceGetter) throws Exception {
+	WordRules(ResourceGetter resourceGetter){
 		Element wordRules =resourceGetter.getXMLDocument("wordRules.xml").getRootElement();
 		Elements rules = wordRules.getChildElements("wordRule");
 		for (int i = 0; i < rules.size(); i++) {

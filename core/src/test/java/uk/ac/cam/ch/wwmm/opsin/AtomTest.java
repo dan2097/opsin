@@ -17,7 +17,7 @@ public class AtomTest {
 	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		frag = new Fragment();
 	}
 	

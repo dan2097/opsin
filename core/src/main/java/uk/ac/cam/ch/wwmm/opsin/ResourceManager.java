@@ -57,12 +57,12 @@ class ResourceManager {
 	/**Generates the ResourceManager.
 	 * This involves reading in the token files, the regexToken file (regexTokens.xml) and the grammar file (regexes.xml).
 	 * DFA are built or retrieved for the regexTokens and the chemical grammar.
+	 * 
+	 * Throws an exception if the XML token and regex files can't be read in properly or the grammar cannot be built.
 	 * @param resourceGetter
-	 *
-	 * @throws Exception If the XML token and regex files can't be read in properly or the grammar cannot be built.
 	 */
 	@SuppressWarnings("unchecked")
-	ResourceManager(ResourceGetter resourceGetter) throws Exception {
+	ResourceManager(ResourceGetter resourceGetter){
 		this.resourceGetter = resourceGetter;
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
@@ -76,9 +76,8 @@ class ResourceManager {
 	/**
 	 * Processes tokenFiles
 	 * @param reversed Should the hashing of
-	 * @throws Exception
 	 */
-	private void processTokenFiles(boolean reversed) throws Exception{
+	private void processTokenFiles(boolean reversed){
 		Document tokenFiles = resourceGetter.getXMLDocument("index.xml");
 		Elements files = tokenFiles.getRootElement().getChildElements("tokenFile");
 		for(int i=0;i<files.size();i++) {
@@ -96,7 +95,7 @@ class ResourceManager {
 				List<Element> tokenElements = XOMTools.getChildElementsWithTagName(tokenList, "token");
 				int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
 				if (index < 0){
-					throw new Exception(symbol +" is associated with a tokenList of tagname " + tokenList.getAttributeValue("tagname") +" however it is not actually used in OPSIN's grammar!!!");
+					throw new RuntimeException(symbol +" is associated with a tokenList of tagname " + tokenList.getAttributeValue("tagname") +" however it is not actually used in OPSIN's grammar!!!");
 				}
 				for (Element tokenElement : tokenElements) {
 					String t = tokenElement.getValue();
@@ -128,7 +127,7 @@ class ResourceManager {
 		}
 	}
 
-	private void processRegexTokenFiles(boolean reversed) throws Exception {
+	private void processRegexTokenFiles(boolean reversed){
 		Element reTokenList = resourceGetter.getXMLDocument("regexTokens.xml").getRootElement();
 		Elements regexEls = reTokenList.getChildElements();
 	
@@ -143,7 +142,7 @@ class ResourceManager {
 			while(m.find()) {//replace sections enclosed in %..% with the appropriate regex
 				newValueSB.append(re.substring(position, m.start()));
 				if (tempRegexes.get(m.group())==null){
-					throw new Exception("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
+					throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
 				}
 				newValueSB.append(tempRegexes.get(m.group()));
 				position = m.end();
@@ -151,7 +150,7 @@ class ResourceManager {
 			newValueSB.append(re.substring(position));
 			if (regexEl.getLocalName().equals("regex")){
 				if (regexEl.getAttribute("name")==null){
-					throw new Exception("Regex entry in regexTokenes.xml with no name. regex: " + newValueSB.toString());
+					throw new RuntimeException("Regex entry in regexTokenes.xml with no name. regex: " + newValueSB.toString());
 				}
 				tempRegexes.put(regexEl.getAttributeValue("name"), newValueSB.toString());
 				continue;
@@ -163,7 +162,7 @@ class ResourceManager {
 	
 			int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
 			if (index < 0){
-				throw new Exception(symbol +" is associated with the regex " + newValueSB.toString() +" however it is not actually used in OPSIN's grammar!!!");
+				throw new RuntimeException(symbol +" is associated with the regex " + newValueSB.toString() +" however it is not actually used in OPSIN's grammar!!!");
 			}
 			if (!reversed){
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
@@ -196,7 +195,7 @@ class ResourceManager {
 		}
 	}
 	
-	private RunAutomaton processChemicalGrammar(boolean reversed) throws Exception {
+	private RunAutomaton processChemicalGrammar(boolean reversed){
 		Map<String, String> regexDict = new HashMap<String, String>();
 		Elements regexes = resourceGetter.getXMLDocument("regexes.xml").getRootElement().getChildElements("regex");
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
@@ -209,14 +208,14 @@ class ResourceManager {
 			while(m.find()) {
 				newValueSB.append(value.substring(position, m.start()));
 				if (regexDict.get(m.group())==null){
-					throw new Exception("Regex entry for: " + m.group() + " missing! Check regexes.xml");
+					throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexes.xml");
 				}
 				newValueSB.append(regexDict.get(m.group()));
 				position = m.end();
 			}
 			newValueSB.append(value.substring(position));
 			if (regexDict.get(name)!=null){
-				throw new Exception("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
+				throw new RuntimeException("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
 			}
 			regexDict.put(name, newValueSB.toString());
 		}
@@ -230,7 +229,7 @@ class ResourceManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	synchronized void populatedReverseTokenMappings() throws Exception{
+	synchronized void populatedReverseTokenMappings(){
 		if (reverseChemicalAutomaton ==null){
 			reverseChemicalAutomaton = processChemicalGrammar(true);
 		}

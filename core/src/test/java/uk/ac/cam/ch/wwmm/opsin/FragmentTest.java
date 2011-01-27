@@ -16,7 +16,7 @@ public class FragmentTest {
 	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		frag = new Fragment();
 	}
 
@@ -373,7 +373,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testConvertHighOrderBondsToSpareValencies() throws Exception {
+	public void testConvertHighOrderBondsToSpareValencies() throws StructureBuildingException{
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
 		FragmentTools.convertHighOrderBondsToSpareValencies(naphthalene);
@@ -386,7 +386,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testConvertSpareValenciesToDoubleBonds() throws Exception {
+	public void testConvertSpareValenciesToDoubleBonds() throws StructureBuildingException{
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment dhp = sBuilder.build("C1=CCC=CC1", fm);
 		FragmentTools.convertHighOrderBondsToSpareValencies(dhp);
@@ -416,7 +416,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testGetAtomNeighbours() throws Exception {
+	public void testGetAtomNeighbours() throws StructureBuildingException{
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
 		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
 		assertEquals("Atom 1 has two neighbours",

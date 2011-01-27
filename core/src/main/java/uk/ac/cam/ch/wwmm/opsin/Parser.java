@@ -82,7 +82,7 @@ class Parser {
 	 * No-argument constructor. Uses ResouceGetter found at
 	 * uk/ac/cam/ch/wwmm/opsin/resources/
 	 */
-	Parser() throws Exception {
+	Parser(){
 		ResourceGetter resources = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		this.wordRules = new WordRules(resources);
 		this.resourceManager = new ResourceManager(resources);
