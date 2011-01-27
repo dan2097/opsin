@@ -29,7 +29,7 @@ public class NameToStructure {
 	 * Prefer less childless elements e.g. benzal beats benz al
 	 * Prefer less elements e.g. <acryl(acidStem)amide(suffix)> beats <acryl(substituent)><amide(group)>
 	 */
-	private class SortParses implements Comparator<Element>{
+	private static class SortParses implements Comparator<Element>{
 		public int compare(Element el1, Element el2){
 			boolean isSubstituent1 = WordRule.substituent.toString().equals(el1.getFirstChildElement(WORDRULE_EL).getAttributeValue(WORDRULE_ATR));
 			boolean isSubstituent2 = WordRule.substituent.toString().equals(el2.getFirstChildElement(WORDRULE_EL).getAttributeValue(WORDRULE_ATR));

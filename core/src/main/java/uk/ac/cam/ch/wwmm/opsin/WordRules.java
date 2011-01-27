@@ -52,7 +52,7 @@ class WordRules {
 	 * @author dl387
 	 *
 	 */
-	class WordDescription {
+	static class WordDescription {
 		/**Whether the word is a full word, substituent word or functionalTerm word*/
 		private final WordType type;
 
@@ -140,7 +140,7 @@ class WordRules {
 	 * @author dl387
 	 *
 	 */
-	class WordRuleDescription {
+	static class WordRuleDescription {
 		private final List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
 		private final String ruleName;
 		private final String ruleType;

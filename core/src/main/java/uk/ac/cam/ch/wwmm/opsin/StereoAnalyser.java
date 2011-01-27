@@ -101,7 +101,7 @@ class StereoAnalyser {
 	 * @author dl387
 	 *
 	 */
-	private class AtomicNumberComparator implements Comparator<Atom> {
+	private static class AtomicNumberComparator implements Comparator<Atom> {
 
 	    public int compare(Atom a, Atom b){
 	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
@@ -518,7 +518,7 @@ class StereoAnalyser {
 	 * @author dl387
 	 *
 	 */
-	private class CipState{
+	private static class CipState{
 		CipState(Map<Atom, Set<Atom>> previousAtomToVisitedAtoms1, Map<Atom, Set<Atom>> previousAtomToVisitedAtoms2, 
 				List<Atom> previousAtoms1, List<Atom> previousAtoms2, List<Atom> nextAtoms1, List<Atom> nextAtoms2) {
 			this.previousAtomToVisitedAtoms1 = previousAtomToVisitedAtoms1;

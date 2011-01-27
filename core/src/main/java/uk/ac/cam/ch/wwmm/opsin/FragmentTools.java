@@ -52,7 +52,7 @@ class SortAtomsForElementSymbols implements Comparator<Atom> {
     	if (expectedHydrogenA > expectedHydrogenB){//prefer atoms with more hydrogen
     		return -1;
     	}
-    	if (expectedHydrogenA < expectedHydrogenA){
+    	if (expectedHydrogenA < expectedHydrogenB){
     		return 1;
     	}
     	return 0;

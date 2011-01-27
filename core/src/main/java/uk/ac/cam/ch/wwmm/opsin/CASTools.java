@@ -36,10 +36,11 @@ class CASTools {
 		String[] parentNameParts = matchSpace.split(parent);
 		if (parentNameParts.length != 1) {
 			if (matchCasCollectiveIndex.matcher(parentNameParts[parentNameParts.length - 1]).matches()) {//CAS collective index description should be ignored
-				parent = "";
+				StringBuilder parentSB = new StringBuilder();
 				for (int i = 0; i < parentNameParts.length - 1; i++) {
-					parent += parentNameParts[i];
+					parentSB.append(parentNameParts[i]);
 				}
+				parent = parentSB.toString();
 				parentNameParts = matchSpace.split(parent);
 			}
 			for (int i = 1; i < parentNameParts.length; i++) {
