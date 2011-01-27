@@ -21,7 +21,7 @@ import dk.brics.automaton.RunAutomaton;
  * The chemical grammar employs the annotations associated with the tokens when deciding what may follow what has already been seen
  * e.g. you cannot start a chemical name with yl and an optional e is valid after an arylGroup
  *
- * @author ptc24/dl387
+ * @author dl387
  *
  */
 class ReverseParseRules {

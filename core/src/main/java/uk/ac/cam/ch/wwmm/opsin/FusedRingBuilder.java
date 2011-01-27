@@ -17,7 +17,7 @@ import nu.xom.Element;
 import nu.xom.Elements;
 
 /**
- *
+ * Assembles fused rings named using fusion nomenclature
  * @author dl387
  *
  */

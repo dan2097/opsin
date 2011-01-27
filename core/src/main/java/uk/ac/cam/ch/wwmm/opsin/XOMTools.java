@@ -12,9 +12,9 @@ import nu.xom.Text;
 
 /**
  * Accessory functions for the manipulation of XOM Nodes/Elements
- * Only those that are neccesary for OPSIN's execution
- * @author dl387
+ * Only those that are necessary for OPSIN's execution
  * @author ptc24
+ * @author dl387
  */
 public final class XOMTools {
 

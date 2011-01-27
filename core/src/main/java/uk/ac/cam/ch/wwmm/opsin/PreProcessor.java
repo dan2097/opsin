@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * Takes a name:
  * strips leading/trailing white space
  * rejects a few special cases
- * Identifies polymer names
+ * Normalises representation of greeks and some other characters
  * @author dl387
  *
  */

@@ -3,67 +3,24 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
-import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
 
 /** The "master" class, to turn a name into a structure.
  *
- * @author dl387
  * @author ptc24
+ * @author dl387
  */
 public class NameToStructure {
 	
 	private static final Logger LOG = Logger.getLogger(NameToStructure.class);
-
-	/**
-	 * Prefer less childless elements e.g. benzal beats benz al
-	 * Prefer less elements e.g. <acryl(acidStem)amide(suffix)> beats <acryl(substituent)><amide(group)>
-	 */
-	private static class SortParses implements Comparator<Element>{
-		public int compare(Element el1, Element el2){
-			boolean isSubstituent1 = WordRule.substituent.toString().equals(el1.getFirstChildElement(WORDRULE_EL).getAttributeValue(WORDRULE_ATR));
-			boolean isSubstituent2 = WordRule.substituent.toString().equals(el2.getFirstChildElement(WORDRULE_EL).getAttributeValue(WORDRULE_ATR));
-			if (isSubstituent1 && !isSubstituent2){
-				return 1;
-			}
-			if (!isSubstituent1 && isSubstituent2){
-				return -1;
-			}
-			
-			int[] counts1 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el1);
-			int[] counts2 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el2);
-			int childLessElementsInEl1 = counts1[1];
-			int childLessElementsInEl2 = counts2[1];
-			if ( childLessElementsInEl1> childLessElementsInEl2){
-				return 1;
-			}
-			else if (childLessElementsInEl1 < childLessElementsInEl2){
-				return -1;
-			}
-
-			int elementsInEl1 = counts1[0];
-			int elementsInEl2  = counts2[0];
-			if ( elementsInEl1> elementsInEl2){
-				return 1;
-			}
-			else if (elementsInEl1 < elementsInEl2){
-				return -1;
-			}
-			else{
-				return 0;
-			}
-		}
-	}
 
 	/**Does finite-state non-destructive parsing on chemical names.*/
 	private Parser parser;

@@ -5,7 +5,8 @@ import java.util.List;
 
 /**A "struct" containing data on the parsing of a chemical name.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class Parse {

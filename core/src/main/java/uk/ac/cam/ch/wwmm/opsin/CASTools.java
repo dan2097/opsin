@@ -9,6 +9,7 @@ import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 
 /**
  * Tools for converting CAS nomenclature into IUPAC nomenclature.
+ * @author dl387
  */
 class CASTools {
 

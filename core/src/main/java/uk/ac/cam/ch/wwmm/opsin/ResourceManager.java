@@ -18,7 +18,8 @@ import nu.xom.Elements;
  * Holds all automata
  * Generates XML Elements for tokens.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class ResourceManager {

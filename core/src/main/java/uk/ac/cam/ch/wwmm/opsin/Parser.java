@@ -17,6 +17,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  * input list.
  *
  * @author ptc24
+ * @author dl387
  *
  */
 final class Combinations {

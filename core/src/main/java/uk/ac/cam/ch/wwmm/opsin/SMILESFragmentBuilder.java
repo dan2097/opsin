@@ -34,7 +34,8 @@ import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
  * *it* via the atom at the end of the string, not at the start of the string with -,=,# meaning single,double or triple bond
  * This behaviour is overridden for certain suffixes to give different meanings to the atom the -,=,# is referring to
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class SMILESFragmentBuilder {

@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * Identifies stereocentres and determines the CIP order of connected atoms
+ * @author dl387
+ *
+ */
 class StereoAnalyser {
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;

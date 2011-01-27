@@ -1,5 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+/**
+ * Contains static final strings corresponding to XML element names and attributes employed by OPSIN
+ * @author dl387
+ *
+ */
 class XmlDeclarations {
 	
 	//TODO are all these types and subtypes actually a good idea considering the vast majority are never used?

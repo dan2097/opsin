@@ -17,6 +17,12 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 
+/**
+ * Methods for processing the substitutive and additive operations that connect all the fragments together
+ * as well as indicated hydrogen/unsaturation/heteroatom replacement
+ * @author dl387
+ *
+ */
 class StructureBuildingMethods {
 	private final static Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");

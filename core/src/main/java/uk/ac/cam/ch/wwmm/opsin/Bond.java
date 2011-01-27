@@ -10,7 +10,8 @@ import nu.xom.Element;
 
 /**A bond, between two atoms.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class Bond {

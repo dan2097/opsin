@@ -1,6 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-/**Thrown at any time by the package.
+/**Thrown if OPSIN failed to initialise
  *
  * @author ptc24
  *

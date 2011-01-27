@@ -1,9 +1,15 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+/**
+ * Struct for an InAtom. As expected holds the atom.
+ * valency gives the order of the bond to be created when connected.
+ * Used in cases where a bond must be created to an atom e.g. for the parent fragment in multiplicative nomenclature
+ *
+ * @author dl387
+ *
+ */
 class InAtom {
-	/** Struct for an InAtom. As expected holds the atom.
-	 * valency gives the order of the bond to be created when connected. Important for suffixes
-	 */
+
 	private Atom atom;
 	private int valency;
 	

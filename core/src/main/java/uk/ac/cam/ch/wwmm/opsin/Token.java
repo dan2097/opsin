@@ -2,11 +2,13 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**A token in a chemical name. hex, yl, ane, chloro etc.
  * Stores information about the XML element that will be produced for the token.
  *
  * @author ptc24
+ * @author dl387
  *
  */
 class Token {
@@ -25,13 +27,13 @@ class Token {
 	Token(Element regexTokenElement) {
 		elem = new Element(regexTokenElement.getAttributeValue("tagname"));
 		if (regexTokenElement.getAttribute("value")!=null){
-			elem.addAttribute(new Attribute("value",regexTokenElement.getAttributeValue("value")));
+			elem.addAttribute(new Attribute(VALUE_ATR, regexTokenElement.getAttributeValue("value")));
 		}
 		if (regexTokenElement.getAttribute("type")!=null){
-			elem.addAttribute(new Attribute("type",regexTokenElement.getAttributeValue("type")));
+			elem.addAttribute(new Attribute(TYPE_ATR, regexTokenElement.getAttributeValue("type")));
 		}
 		if (regexTokenElement.getAttribute("subType")!=null){
-			elem.addAttribute(new Attribute("subType",regexTokenElement.getAttributeValue("subType")));
+			elem.addAttribute(new Attribute(SUBTYPE_ATR, regexTokenElement.getAttributeValue("subType")));
 		}
 		if (regexTokenElement.getAttribute("ignoreWhenWritingXML")!=null && regexTokenElement.getAttributeValue("ignoreWhenWritingXML").equals("yes")){
 			this.ignoreWhenWritingXML=true;
@@ -47,10 +49,10 @@ class Token {
 		elem = OpsinTools.shallowCopy(tokenElement);
 		elem.setLocalName(tokenList.getAttributeValue("tagname"));
 		if(tokenList.getAttribute("type") != null) {
-			elem.addAttribute(new Attribute("type", tokenList.getAttributeValue("type")));
+			elem.addAttribute(new Attribute(TYPE_ATR, tokenList.getAttributeValue("type")));
 		}
 		if(tokenList.getAttribute("subType") != null) {
-			elem.addAttribute(new Attribute("subType", tokenList.getAttributeValue("subType")));
+			elem.addAttribute(new Attribute(SUBTYPE_ATR, tokenList.getAttributeValue("subType")));
 		}
 	}
 
