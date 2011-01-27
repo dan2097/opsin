@@ -49,4 +49,11 @@ public class NameToStructureTest {
 				"</bondArray></molecule></cml>", cml.toXML());
 		assertNull("Won't parse helloworld", nts.parseToCML("helloworld"));
 	}
+	
+	@Test
+	public void testParseToSmiles() throws NameToStructureException {
+		NameToStructure nts = NameToStructure.getInstance();
+		String smiles = nts.parseToSmiles("ethane");
+		assertEquals("CC", smiles);
+	}
 }

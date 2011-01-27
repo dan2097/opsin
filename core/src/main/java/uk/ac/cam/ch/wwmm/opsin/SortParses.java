@@ -9,7 +9,8 @@ import nu.xom.Element;
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 
 /**
- * Prefer less childless elements e.g. benzal beats benz al
+ * Prefer non-substituent word rules to substituent word rule e.g. ethylene is C=C not -CC-
+ * Prefer the parse with the least elements that have 0 children e.g. benzal beats benz al (1 childless element vs 2 childless elements)
  * Prefer less elements e.g. <acryl(acidStem)amide(suffix)> beats <acryl(substituent)><amide(group)>
  */
 class SortParses implements Comparator<Element>{
