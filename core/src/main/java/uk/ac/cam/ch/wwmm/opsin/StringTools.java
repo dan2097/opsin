@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 /**Static routines for string manipulation.
  * This is a specially tailored version of StringTools as found in OSCAR for use in OPSIN
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 public final class StringTools {

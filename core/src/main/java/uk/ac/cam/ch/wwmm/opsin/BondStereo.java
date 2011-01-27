@@ -3,6 +3,11 @@ package uk.ac.cam.ch.wwmm.opsin;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+/**
+ * Holds information about the positions of 2 atoms relative to a double bond allowing the specification of cis/trans stereochemistry
+ * @author dl387
+ *
+ */
 class BondStereo {
 
 	private Atom[] atomRefs4;

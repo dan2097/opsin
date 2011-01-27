@@ -8,8 +8,11 @@ import java.util.Set;
 
 import nu.xom.Element;
 
-
-/**A "struct" to hold the results of fragment building.*/
+/**
+ * A "struct" to hold the results of fragment building.
+ * @author dl387
+ *
+ */
 class BuildResults {
 	/**Holds the atoms that are currently marked as radicals. An atom may be listed twice for say diyl
 	 * Typically these will be utilised by a word rule e.g. the ethyl of ethyl ethanoate has one

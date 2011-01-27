@@ -10,7 +10,8 @@ import java.util.Map;
  * Also used to perform a final check on the output of OPSIN, to reject interpretations
  * that result in hypervalent structures due to incorrect names or misinterpreted names
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class ValencyChecker {

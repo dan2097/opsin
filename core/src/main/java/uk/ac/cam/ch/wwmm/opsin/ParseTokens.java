@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.List;
 /**A "struct" containing data a possible tokenisation of a word in a chemical name.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 public class ParseTokens {

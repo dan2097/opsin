@@ -12,6 +12,11 @@ import java.util.Set;
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
+/**
+ * Writes an isomeric SMILES serialisation of an OPSIN fragment
+ * @author dl387
+ *
+ */
 class SMILESWriter {
 
 	/**The organic atoms and their allowed implicit valences in SMILES */

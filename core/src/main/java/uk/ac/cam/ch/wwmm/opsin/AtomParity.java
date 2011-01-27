@@ -3,6 +3,11 @@ package uk.ac.cam.ch.wwmm.opsin;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+/**
+ * Hold information about 4 atoms and their chiral determinant allowing the description of tetrahedral stereochemistry
+ * @author dl387
+ *
+ */
 class AtomParity {
 	/**
 	 * A dummy hydrogen atom. Used to represent an implicit hydrogen that is attached to a tetrahedral stereocentre

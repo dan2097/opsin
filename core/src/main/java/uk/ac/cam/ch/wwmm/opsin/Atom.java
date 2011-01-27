@@ -17,9 +17,10 @@ import nu.xom.Element;
 /**
  * An atom. Carries information about which fragment it is in, and an ID
  * number and a list of bonds that it is involved. It may also have other information such as
- * whether it has "spare valencies" due to unsaturation, its' charge, locant labels, stereochemistry and notes
+ * whether it has "spare valencies" due to unsaturation, its charge, locant labels, stereochemistry and notes
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class Atom {

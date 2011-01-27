@@ -19,7 +19,8 @@ import nu.xom.Node;
 
 /**Does destructive procedural parsing on parser results.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class ComponentGenerator {

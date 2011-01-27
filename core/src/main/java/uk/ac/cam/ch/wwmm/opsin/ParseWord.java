@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 /**A "struct" containing data on the parsing of a word in a chemical name.
  *
- * @author ptc24/d387
+ * @author ptc24
+ * @author dl387
  *
  */
 class ParseWord {

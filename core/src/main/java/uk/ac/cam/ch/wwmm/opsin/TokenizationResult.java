@@ -1,5 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+/**
+ * 
+ * @author dl387
+ *
+ */
 class TokenizationResult {
 
 	private Parse parse;
@@ -37,7 +42,7 @@ class TokenizationResult {
 		return workingName;
 	}
 
-	public void setWorkingName(String name) {
+	void setWorkingName(String name) {
 		this.workingName = name;
 	}
 

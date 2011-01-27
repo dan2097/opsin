@@ -12,7 +12,8 @@ import java.util.Set;
  * Class for finding SSSR
  * The algorithm employed does not work in some corner cases
  * 
- * @author dl387/pm286
+ * @author pm286
+ * @author dl387
  *
  */
 class SSSRFinder {

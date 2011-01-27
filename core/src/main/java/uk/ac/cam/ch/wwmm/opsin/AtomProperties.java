@@ -3,6 +3,11 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Holds useful atomic properties
+ * @author dl387
+ *
+ */
 class AtomProperties {
 	/**
 	 * Useful to give an indication of whether a bond is like to be ionic (diff >1.8), polar or covalent (diff < 1.2)

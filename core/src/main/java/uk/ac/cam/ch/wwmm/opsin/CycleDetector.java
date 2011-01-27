@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Assigns whether atoms are in rings or not
+ * @author dl387
+ *
+ */
 class CycleDetector {
 
 	/**

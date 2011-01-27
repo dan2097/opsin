@@ -19,7 +19,8 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**A fragment of a molecule, holds bonds and atoms.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class Fragment {
