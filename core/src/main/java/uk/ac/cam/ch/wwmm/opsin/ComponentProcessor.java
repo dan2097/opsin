@@ -3900,6 +3900,9 @@ class ComponentProcessor {
 				if (multiVal ==1){//mono
 					return;
 				}
+				if (multiplier.getValue().equals("non")){
+					throw new StructureBuildingException("\"non\" probably means \"not\". If a multiplier of value 9 was intended \"nona\" should be used");
+				}
 				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
 				for (int i = subOrBracket.indexOf(multiplier) -1 ; i >=0 ; i--) {
 					Element el = (Element) subOrBracket.getChild(i);
