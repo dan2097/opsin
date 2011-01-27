@@ -20,7 +20,7 @@ public class SMILESFragmentBuilderTest {
 	private FragmentManager fm;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 	}
 

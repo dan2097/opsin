@@ -11,12 +11,12 @@ public class FragmentManagerTest {
 	FragmentManager fragManager;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/")), new IDManager());
 	}
 
 	@Test
-	public void testGetUnifiedFrags() throws Exception {
+	public void testGetUnifiedFrags() throws StructureBuildingException {
 		Fragment frag1 = fragManager.buildSMILES("CC");
 		Fragment frag2 = fragManager.buildSMILES("CNC");
 

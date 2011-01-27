@@ -13,7 +13,8 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
 
 /**Constructs a single OPSIN fragment which describes the molecule from the ComponentGenerator/ComponentProcessor results.
  *
- * @author ptc24/dl387
+ * @author ptc24
+ * @author dl387
  *
  */
 class StructureBuilder {

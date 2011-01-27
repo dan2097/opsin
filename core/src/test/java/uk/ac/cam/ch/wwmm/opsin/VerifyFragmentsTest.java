@@ -66,7 +66,7 @@ public class VerifyFragmentsTest {
 	}
 	
 	@Test
-	public void verifyCML() throws Exception {
+	public void verifyCML() throws Exception{
 		FragmentManager fm = new FragmentManager(mock(SMILESFragmentBuilder.class), new CMLFragmentBuilder(resourceGetter), new IDManager());
 		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
 		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();

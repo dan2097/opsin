@@ -17,7 +17,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testRadicals() throws Exception {
+	public void testRadicals() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "radicals.txt";
@@ -25,7 +25,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testEpoxyLike() throws Exception {
+	public void testEpoxyLike() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "epoxyLike.txt";
@@ -33,7 +33,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testFunctionalReplacement() throws Exception {
+	public void testFunctionalReplacement() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "functionalReplacement.txt";
@@ -41,7 +41,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testMultiplicativeNomenclature() throws Exception {
+	public void testMultiplicativeNomenclature() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "multiplicativeNomenclature.txt";
@@ -49,7 +49,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testFunctionalClassNomenclature() throws Exception {
+	public void testFunctionalClassNomenclature() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "functionalClasses.txt";
@@ -57,7 +57,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testSpiroNomenclature() throws Exception {
+	public void testSpiroNomenclature() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "spiro.txt";
@@ -65,7 +65,7 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
-	public void testOrganoMetallics() throws Exception {
+	public void testOrganoMetallics() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "organometallics.txt";
@@ -73,7 +73,7 @@ public class NomenclatureIntegrationTest {
 	}
 
 	@Test
-	public void testMiscellany() throws Exception {
+	public void testMiscellany() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
 		String file = "miscellany.txt";

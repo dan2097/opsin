@@ -82,7 +82,7 @@ class ComponentProcessor {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	ComponentProcessor(ResourceGetter resourceGetter) throws Exception {
+	ComponentProcessor(ResourceGetter resourceGetter){
 		//Populate suffix rules/applicability hashes
 		Document suffixApplicabilityDoc = resourceGetter.getXMLDocument("suffixApplicability.xml");
 		Document suffixRulesDoc = resourceGetter.getXMLDocument("suffixRules.xml");
@@ -113,7 +113,7 @@ class ComponentProcessor {
 			Element rule =rules.get(i);
 			String ruleValue=rule.getAttributeValue(SUFFIXRULES_VALUE_ATR);
 			if (suffixRules.get(ruleValue)!=null){
-				throw new Exception("Suffix: " +ruleValue +" appears multiple times in suffixRules.xml");
+				throw new RuntimeException("Suffix: " +ruleValue +" appears multiple times in suffixRules.xml");
 			}
 			suffixRules.put(ruleValue, rule);
 		}

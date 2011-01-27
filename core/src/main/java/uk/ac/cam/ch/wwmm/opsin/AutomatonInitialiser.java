@@ -57,6 +57,7 @@ class AutomatonInitialiser {
 			regexHashFOS.write(currentRegexHash.getBytes());
 			ra.store(resourceGetter.getOutputStream(automatonName + "SerialisedAutomaton.aut"));
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.err.println("WARNING: Could not serialize one of OPSIN's automata to disk. This will not prevent OPSIN from working but is unexpected!");
 		}
 

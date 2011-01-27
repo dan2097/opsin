@@ -58,7 +58,7 @@ public class DtdTest {
 	}
 	
 	@Test
-	public void testTokenFilesValueValidity() throws Exception {
+	public void testTokenFilesValueValidity() {
 		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
 		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
 		for (int i = 0; i < tokenFiles.size(); i++) {

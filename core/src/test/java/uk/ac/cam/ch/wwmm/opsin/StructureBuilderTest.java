@@ -12,7 +12,7 @@ public class StructureBuilderTest {
 	//TODO how can this be unit tested in any meaningful way?
 	
 	@Test
-	public void testBuilderFromName() throws Exception {
+	public void testBuilderFromName() {
 		new StructureBuilder();
 	}
 }

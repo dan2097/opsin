@@ -16,7 +16,7 @@ public class CycleDetectorTest {
 	private FragmentManager fm;
 
 	@Before
-	public void setup() throws Exception {
+	public void setup(){
 		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 	}
 	

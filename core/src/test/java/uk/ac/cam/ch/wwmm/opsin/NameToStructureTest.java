@@ -11,13 +11,13 @@ import org.junit.Test;
 public class NameToStructureTest {
 
 	@Test
-	public void testNameToStructure() throws Exception {
+	public void testNameToStructure() throws NameToStructureException {
 		NameToStructure nts = NameToStructure.getInstance();
 		assertNotNull("Got a name to structure convertor", nts);
 	}
 
 	@Test
-	public void testParseToCML() throws Exception {
+	public void testParseToCML() throws NameToStructureException {
 		NameToStructure nts = NameToStructure.getInstance();
 		Element cml = nts.parseToCML("ethane");
 		// output is syntactically valid (schema, dictRefs)

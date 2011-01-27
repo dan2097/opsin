@@ -50,10 +50,8 @@ class ReverseParseRules {
 	/** 
 	 * Creates a right to left parser that can parse a substituent/full/functional word
 	 * @param resourceManager
-	 *
-	 * @throws Exception If the reversed automata cannot be retrieved/built
 	 */
-	ReverseParseRules(ResourceManager resourceManager) throws Exception {
+	ReverseParseRules(ResourceManager resourceManager){
 		this.resourceManager = resourceManager;
 		resourceManager.populatedReverseTokenMappings();
 		chemAutomaton = resourceManager.reverseChemicalAutomaton;
