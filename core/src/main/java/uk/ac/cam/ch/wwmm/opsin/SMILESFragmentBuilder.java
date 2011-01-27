@@ -44,7 +44,7 @@ class SMILESFragmentBuilder {
 	 * @author ptc24
 	 *
 	 */
-	private class StackFrame {
+	private static class StackFrame {
 		/**The Atom currently under consideration.*/
 		Atom atom;
 		/**The order of the bond about to be formed.*/
@@ -662,8 +662,8 @@ class SMILESFragmentBuilder {
 						Set<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
 							if (followingBond.getSmilesStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
-								Boolean upFirst;
-								Boolean upSecond;
+								boolean upFirst;
+								boolean upSecond;
 								Atom atom2 = centralBond.getFromAtom();
 								Atom atom1;
 								if (atom2 == preceedingBond.getToAtom()){
@@ -769,7 +769,7 @@ class SMILESFragmentBuilder {
 				for (Integer unchargedStableValency : unchargedStableValencies) {
 					if (Math.abs(incomingValency - unchargedStableValency)==Math.abs(charge)){
 						atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - unchargedStableValency);
-						if (unchargedStableValency!=defaultVal){
+						if (!unchargedStableValency.equals(defaultVal)){
 							atom.setMinimumValency(unchargedStableValency);
 						}
 						hasPlausibleValency=true;

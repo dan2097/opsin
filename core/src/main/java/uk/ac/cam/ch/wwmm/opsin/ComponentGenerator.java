@@ -31,7 +31,7 @@ class ComponentGenerator {
 	 * @author dl387
 	 *
 	 */
-	private class VonBaeyerSecondaryBridgeSort implements Comparator<HashMap<String, Integer>> {
+	private static class VonBaeyerSecondaryBridgeSort implements Comparator<HashMap<String, Integer>> {
 
 	    public int compare(HashMap<String, Integer> bridge1, HashMap<String, Integer> bridge2){
 	    	//first we compare the larger coordinate, due to an earlier potential swapping of coordinates this is always in  "AtomId_Larger"
@@ -569,24 +569,25 @@ class ComponentGenerator {
 							checkForAmbiguityWithHWring(multipliedElem.getAttributeValue(VALUE_ATR), possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR));
 						}
 						int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
-						String smiles="";
+						StringBuilder smilesSB= new StringBuilder();
 						Element possiblyARingFormingEl = (Element)XOMTools.getPreviousSibling(m);
 						boolean heteroatomChainWillFormARing =false;
 						if (possiblyARingFormingEl!=null && (possiblyARingFormingEl.getLocalName().equals(CYCLO_EL) || possiblyARingFormingEl.getLocalName().equals(VONBAEYER_EL) || possiblyARingFormingEl.getLocalName().equals(SPIRO_EL))){
 							heteroatomChainWillFormARing=true;
 							//will be cyclised later.
 							for (int j = 0; j < mvalue; j++) {
-								smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
-								smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
+								smilesSB.append(possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR));
+								smilesSB.append(multipliedElem.getAttributeValue(VALUE_ATR));
 							}
 						}
 						else{
 							for (int j = 0; j < mvalue -1; j++) {
-								smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
-								smiles+=possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR);
+								smilesSB.append(multipliedElem.getAttributeValue(VALUE_ATR));
+								smilesSB.append(possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR));
 							}
-							smiles+=multipliedElem.getAttributeValue(VALUE_ATR);
+							smilesSB.append(multipliedElem.getAttributeValue(VALUE_ATR));
 						}
+						String smiles =smilesSB.toString();
 						smiles = matchHdigit.matcher(smiles).replaceAll("H?");//hydrogen count will be determined by standard valency
 						multipliedElem.detach();
 
@@ -1114,27 +1115,29 @@ class ComponentGenerator {
 				int multiplierValue =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 				String classOfHydrocarbonFRSystem =hydrocarbonFRSystem.getAttributeValue(VALUE_ATR);
 				Element newGroup =new Element(GROUP_EL);
-				String SMILES="";
+				StringBuilder smilesSB= new StringBuilder();
 				if (classOfHydrocarbonFRSystem.equals("polyacene")){
 					if (multiplierValue <=3){
 						throw new ComponentGenerationException("Invalid polyacene");
 					}
-					SMILES= "c1ccc";
+					smilesSB.append("c1ccc");
 					for (int j = 2; j <= multiplierValue; j++) {
-						SMILES+="c"+ringClosure(j);
-						SMILES+="c";
+						smilesSB.append("c");
+						smilesSB.append(ringClosure(j));
+						smilesSB.append("c");
 					}
-					SMILES+= "ccc";
+					smilesSB.append("ccc");
 					for (int j = multiplierValue; j >2; j--) {
-						SMILES+="c"+ringClosure(j);
-						SMILES+="c";
+						smilesSB.append("c");
+						smilesSB.append(ringClosure(j));
+						smilesSB.append("c");
 					}
-					SMILES+="c12";
+					smilesSB.append("c12");
 				}else if (classOfHydrocarbonFRSystem.equals("polyaphene")){
 					if (multiplierValue <=3){
 						throw new ComponentGenerationException("Invalid polyaphene");
 					}
-					SMILES= "c1ccc";
+					smilesSB.append("c1ccc");
 
 					int ringsAbovePlane;
 					int ringsOnPlane;
@@ -1149,79 +1152,83 @@ class ComponentGenerator {
 					}
 
 					for (int j = 1; j <= ringsAbovePlane; j++) {
-						SMILES+="c"+ringClosure(ringOpeningCounter++);
-						SMILES+="c";
+						smilesSB.append("c");
+						smilesSB.append(ringClosure(ringOpeningCounter++));
+						smilesSB.append("c");
 					}
 
 					for (int j = 1; j <= ringsOnPlane; j++) {
-						SMILES+="c";
-						SMILES+="c"+ringClosure(ringOpeningCounter++);
+						smilesSB.append("cc");
+						smilesSB.append(ringClosure(ringOpeningCounter++));
 					}
-					SMILES+="ccc";
+					smilesSB.append("ccc");
 					ringOpeningCounter--;
 					for (int j = 1; j <= ringsOnPlane; j++) {
-						SMILES+="c";
-						SMILES+="c"+ringClosure(ringOpeningCounter--);
+						smilesSB.append("cc");
+						smilesSB.append(ringClosure(ringOpeningCounter--));
 					}
 					for (int j = 1; j < ringsAbovePlane; j++) {
-						SMILES+="c"+ringClosure(ringOpeningCounter--);
-						SMILES+="c";
+						smilesSB.append("c");
+						smilesSB.append(ringClosure(ringOpeningCounter--));
+						smilesSB.append("c");
 					}
 
-					SMILES+="c12";
+					smilesSB.append("c12");
 				} else if (classOfHydrocarbonFRSystem.equals("polyalene")){
 					if (multiplierValue <5){
 						throw new ComponentGenerationException("Invalid polyalene");
 					}
-					SMILES= "c1";
+					smilesSB.append("c1");
 					for (int j = 3; j < multiplierValue; j++) {
-						SMILES+="c";
+						smilesSB.append("c");
 					}
-					SMILES+= "c2";
+					smilesSB.append("c2");
 					for (int j = 3; j <= multiplierValue; j++) {
-						SMILES+="c";
+						smilesSB.append("c");
 					}
-					SMILES+="c12";
+					smilesSB.append("c12");
 				} else if (classOfHydrocarbonFRSystem.equals("polyphenylene")){
 					if (multiplierValue <2){
 						throw new ComponentGenerationException("Invalid polyphenylene");
 					}
-					SMILES= "c1cccc2";
+					smilesSB.append("c1cccc2");
 					for (int j = 1; j < multiplierValue; j++) {
-						SMILES+="c3ccccc3";
+						smilesSB.append("c3ccccc3");
 					}
-					SMILES+= "c12";
+					smilesSB.append("c12");
 				} else if (classOfHydrocarbonFRSystem.equals("polynaphthylene")){
 					if (multiplierValue <3){
 						throw new ComponentGenerationException("Invalid polynaphthylene");
 					}
-					SMILES= "c1cccc2cc3";
+					smilesSB.append("c1cccc2cc3");
 					for (int j = 1; j < multiplierValue; j++) {
-						SMILES+="c4cc5ccccc5cc4";
+						smilesSB.append("c4cc5ccccc5cc4");
 					}
-					SMILES+= "c3cc12";
+					smilesSB.append("c3cc12");
 				} else if (classOfHydrocarbonFRSystem.equals("polyhelicene")){
 					if (multiplierValue <6){
 						throw new ComponentGenerationException("Invalid polyhelicene");
 					}
-					SMILES= "c1c";
+					smilesSB.append("c1c");
 					int ringOpeningCounter=2;
 					for (int j = 1; j < multiplierValue; j++) {
-						SMILES+="ccc" + ringClosure(ringOpeningCounter++);
+						smilesSB.append("ccc");
+						smilesSB.append(ringClosure(ringOpeningCounter++));
 					}
-					SMILES+= "cccc";
+					smilesSB.append("cccc");
 					ringOpeningCounter--;
 					for (int j = 2; j < multiplierValue; j++) {
-						SMILES+="c" + ringClosure(ringOpeningCounter--);
+						smilesSB.append("c");
+						smilesSB.append(ringClosure(ringOpeningCounter--));
 					}
-					SMILES+= "c12";
+					smilesSB.append("c12");
 				}
 
 				else{
 					throw new ComponentGenerationException("Unknown semi-trivially named hydrocarbon fused ring system");
 				}
 
-				newGroup.addAttribute(new Attribute(VALUE_ATR, SMILES));
+				newGroup.addAttribute(new Attribute(VALUE_ATR, smilesSB.toString()));
 				newGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 				newGroup.addAttribute(new Attribute(LABELS_ATR, FUSEDRING_LABELS_VAL));
 				newGroup.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
@@ -1429,11 +1436,11 @@ class ComponentGenerator {
 			String[] elements = matchNonDigit.split(spiroDescriptorStrings[i]);
 			if (elements.length >1) {//a "superscripted" number is present
 				spiroDescriptors[i][0] = Integer.parseInt(elements[0]);
-				String superScriptedNumber ="";
+				StringBuilder superScriptedNumber = new StringBuilder();
 				for (int j = 1; j < elements.length; j++){//may be more than one non digit as there are many ways of indicating superscripts
-					superScriptedNumber += elements[j];
+					superScriptedNumber.append(elements[j]);
 				}
-				spiroDescriptors[i][1] = Integer.parseInt(superScriptedNumber);
+				spiroDescriptors[i][1] = Integer.parseInt(superScriptedNumber.toString());
 			}
 			else {
 				spiroDescriptors[i][0] = Integer.parseInt(spiroDescriptorStrings[i]);
@@ -1611,45 +1618,47 @@ class ComponentGenerator {
 			throw new ComponentGenerationException("Disagreement between number of rings and number of bridges");
 		}
 
-		String SMILES="";
+		StringBuilder smilesSB = new StringBuilder();
 		int atomCounter=1;
 		int bridgeCounter=1;
 		//add standard bridges
 		for (HashMap<String, Integer> bridge : bridges) {
 			if (bridgeCounter==1){
-				SMILES += elementSymbolArray.removeFirst() +"1";
+				smilesSB.append(elementSymbolArray.removeFirst());
+				smilesSB.append("1");
 				if (bridgeLocations.get(atomCounter)!=null){
 					for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-						SMILES += ringClosure(bridgeAtomLabel);
+						smilesSB.append(ringClosure(bridgeAtomLabel));
 					}
 				}
-				SMILES += "(";
+				smilesSB.append("(");
 			}
 			int bridgeLength =bridge.get("Bridge Length");
 
 			for (int i = 0; i < bridgeLength; i++) {
 				atomCounter++;
-				SMILES +=elementSymbolArray.removeFirst();
+				smilesSB.append(elementSymbolArray.removeFirst());
 				if (bridgeLocations.get(atomCounter)!=null){
 					for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-						SMILES +=ringClosure(bridgeAtomLabel);
+						smilesSB.append(ringClosure(bridgeAtomLabel));
 					}
 				}
 			}
 			if (bridgeCounter==1){
 				atomCounter++;
-				SMILES += elementSymbolArray.removeFirst() +"2";
+				smilesSB.append(elementSymbolArray.removeFirst());
+				smilesSB.append("2");
 				if (bridgeLocations.get(atomCounter)!=null){
 					for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-						SMILES +=ringClosure(bridgeAtomLabel);
+						smilesSB.append(ringClosure(bridgeAtomLabel));
 					}
 				}
 			}
 			if (bridgeCounter==2){
-				SMILES += "1)";
+				smilesSB.append("1)");
 			}
 			if (bridgeCounter==3){
-				SMILES += "2";
+				smilesSB.append("2");
 			}
 			bridgeCounter++;
 			if (bridgeCounter >3){break;}
@@ -1677,18 +1686,20 @@ class ComponentGenerator {
 					dependantSecondaryBridges.add(bridge);
 					continue;
 				}
-				SMILES+=".";
+				smilesSB.append(".");
 				for (int i = 0; i < bridgeLength; i++) {
 					atomCounter++;
-					SMILES +=elementSymbolArray.removeFirst();
-					if (i==0){SMILES+=ringClosure(bridge.get("AtomId_Larger_Label"));}
+					smilesSB.append(elementSymbolArray.removeFirst());
+					if (i==0){
+						smilesSB.append(ringClosure(bridge.get("AtomId_Larger_Label")));
+					}
 					if (bridgeLocations.get(atomCounter)!=null){
 						for (Integer bridgeAtomLabel : bridgeLocations.get(atomCounter)) {
-							SMILES += ringClosure(bridgeAtomLabel);
+							smilesSB.append(ringClosure(bridgeAtomLabel));
 						}
 					}
 				}
-				SMILES+= ringClosure(bridge.get("AtomId_Smaller_Label"));
+				smilesSB.append(ringClosure(bridge.get("AtomId_Smaller_Label")));
 			}
 			if (dependantSecondaryBridges.size() >0 && dependantSecondaryBridges.size()==secondaryBridges.size()){
 				throw new ComponentGenerationException("Unable to resolve all dependant bridges!!!");
@@ -1697,7 +1708,7 @@ class ComponentGenerator {
 		}
 		while(dependantSecondaryBridges.size() > 0);
 
-		chainEl.getAttribute(VALUE_ATR).setValue(SMILES);
+		chainEl.getAttribute(VALUE_ATR).setValue(smilesSB.toString());
 		chainEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
 		if (chainEl.getAttribute(USABLEASJOINER_ATR) !=null){
 			chainEl.removeAttribute(chainEl.getAttribute(USABLEASJOINER_ATR));
@@ -1798,12 +1809,12 @@ class ComponentGenerator {
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
 				Element possibleRoot =(Element) XOMTools.getNextSibling(group.getParent());
 				if (possibleRoot==null && OpsinTools.getParentWordRule(group).getAttributeValue(WORDRULE_ATR).equals(WordRule.glycol.toString())){//e.g. dodecaethylene glycol
-					String smiles ="CC";
+					StringBuilder smiles = new StringBuilder("CC");
 					for (int i = 1; i < multiplierValue; i++) {
-						smiles+="OCC";
+						smiles.append("OCC");
 					}
 					group.getAttribute(OUTIDS_ATR).setValue("1," +Integer.toString(3*(multiplierValue-1) +2));
-					group.getAttribute(VALUE_ATR).setValue(smiles);
+					group.getAttribute(VALUE_ATR).setValue(smiles.toString());
 					previous.detach();
 					if (group.getAttribute(LABELS_ATR)!=null){//use numeric numbering
 						group.getAttribute(LABELS_ATR).setValue(NUMERIC_LABELS_VAL);
@@ -1821,13 +1832,13 @@ class ComponentGenerator {
 							if (Integer.parseInt(amineMultiplier.getAttributeValue(VALUE_ATR))!=multiplierValue +1){
 								throw new ComponentGenerationException("Invalid polyethylene amine!");
 							}
-							String smiles ="";
+							StringBuilder smiles = new StringBuilder();
 							for (int i = 0; i < multiplierValue; i++) {
-								smiles+="NCC";
+								smiles.append("NCC");
 							}
-							smiles+="N";
+							smiles.append("N");
 							group.removeAttribute(group.getAttribute(OUTIDS_ATR));
-							group.getAttribute(VALUE_ATR).setValue(smiles);
+							group.getAttribute(VALUE_ATR).setValue(smiles.toString());
 							previous.detach();
 							possibleRoot.detach();
 							((Element)group.getParent()).setLocalName(ROOT_EL);

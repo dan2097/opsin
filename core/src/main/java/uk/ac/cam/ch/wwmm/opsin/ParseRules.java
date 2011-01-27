@@ -26,7 +26,7 @@ import dk.brics.automaton.RunAutomaton;
 public class ParseRules {
 
 	/** A "struct" containing bits of state needed during finite-state parsing. */
-	private class AnnotatorState {
+	private static class AnnotatorState {
 		/** The current state of the DFA. */
 		int state;
 		/** The annotation so far. */

@@ -1890,11 +1890,13 @@ class ComponentProcessor {
 					throw new ComponentGenerationException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sn/Pb)");
 				}
 			}
-			String name = "";
+			StringBuilder nameSB = new StringBuilder();
 			Collections.reverse(prevs);
-			for(Element heteroatom : prevs) name += heteroatom.getValue();
-			name += group.getValue();
-			name = name.toLowerCase();
+			for(Element heteroatom : prevs){
+				nameSB.append(heteroatom.getValue());
+			}
+			nameSB.append(group.getValue());
+			String name = nameSB.toString().toLowerCase();
 			if(noLocants && prevs.size() > 0) {
 				if(specialHWRings.containsKey(name)) {
 					String[] specialRingInformation =specialHWRings.get(name);
@@ -3823,15 +3825,15 @@ class ComponentProcessor {
 	}
 	
     private String locantsToDebugString(List<Element> locants) {
-    	String message = "Unable to assign all locants. ";
-    	message+= (locants.size() > 1) ? "These locants " : "This locant ";
-    	message+= (locants.size() > 1) ? "were " : "was ";
-    	message+= "not assigned: ";
+    	StringBuilder message = new StringBuilder("Unable to assign all locants. ");
+    	message.append((locants.size() > 1) ? "These locants " : "This locant ");
+    	message.append((locants.size() > 1) ? "were " : "was ");
+    	message.append("not assigned: ");
 		for(Element locant : locants) {
-			message +=locant.getValue();
-			message+=" ";
+			message.append(locant.getValue());
+			message.append(" ");
 		}
-		return message;
+		return message.toString();
 	}
 
 

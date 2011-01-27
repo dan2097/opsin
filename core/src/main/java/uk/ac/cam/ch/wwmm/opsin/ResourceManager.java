@@ -138,22 +138,22 @@ class ResourceManager {
 			Element regexEl = regexEls.get(i);
 			String re = regexEl.getAttributeValue("regex");
 			Matcher m = matchRegexReplacement.matcher(re);
-			String newValue = "";
+			StringBuilder newValueSB = new StringBuilder();
 			int position = 0;
 			while(m.find()) {//replace sections enclosed in %..% with the appropriate regex
-				newValue += re.substring(position, m.start());
+				newValueSB.append(re.substring(position, m.start()));
 				if (tempRegexes.get(m.group())==null){
 					throw new Exception("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
 				}
-				newValue += tempRegexes.get(m.group());
+				newValueSB.append(tempRegexes.get(m.group()));
 				position = m.end();
 			}
-			newValue += re.substring(position);
+			newValueSB.append(re.substring(position));
 			if (regexEl.getLocalName().equals("regex")){
 				if (regexEl.getAttribute("name")==null){
-					throw new Exception("Regex entry in regexTokenes.xml with no name. regex: " + newValue);
+					throw new Exception("Regex entry in regexTokenes.xml with no name. regex: " + newValueSB.toString());
 				}
-				tempRegexes.put(regexEl.getAttributeValue("name"), newValue);
+				tempRegexes.put(regexEl.getAttributeValue("name"), newValueSB.toString());
 				continue;
 			}
 			//must be a regexToken
@@ -163,20 +163,20 @@ class ResourceManager {
 	
 			int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
 			if (index < 0){
-				throw new Exception(symbol +" is associated with the regex " + newValue +" however it is not actually used in OPSIN's grammar!!!");
+				throw new Exception(symbol +" is associated with the regex " + newValueSB.toString() +" however it is not actually used in OPSIN's grammar!!!");
 			}
 			if (!reversed){
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
 					if(symbolRegexAutomataDict[index]==null) {
 						symbolRegexAutomataDict[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDict[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, false));
+					symbolRegexAutomataDict[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false));
 				}
 				else{
 					if(symbolRegexesDict[index]==null) {
 						symbolRegexesDict[index] = new ArrayList<Pattern>();
 					}
-					symbolRegexesDict[index].add(Pattern.compile(newValue));
+					symbolRegexesDict[index].add(Pattern.compile(newValueSB.toString()));
 				}
 			}
 			else{
@@ -184,13 +184,13 @@ class ResourceManager {
 					if(symbolRegexAutomataDictReversed[index]==null) {
 						symbolRegexAutomataDictReversed[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDictReversed[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValue, false, true));
+					symbolRegexAutomataDictReversed[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true));
 				}
 				else{
 					if(symbolRegexesDictReversed[index]==null) {
 						symbolRegexesDictReversed[index] = new ArrayList<Pattern>();
 					}
-					symbolRegexesDictReversed[index].add(Pattern.compile(newValue +"$"));
+					symbolRegexesDictReversed[index].add(Pattern.compile(newValueSB.toString() +"$"));
 				}
 			}
 		}
@@ -204,21 +204,21 @@ class ResourceManager {
 			String name = regexes.get(i).getAttributeValue("name");
 			String value = regexes.get(i).getAttributeValue("value");
 			Matcher m = matchRegexReplacement.matcher(value);
-			String newValue = "";
+			StringBuilder newValueSB = new StringBuilder();
 			int position = 0;
 			while(m.find()) {
-				newValue += value.substring(position, m.start());
+				newValueSB.append(value.substring(position, m.start()));
 				if (regexDict.get(m.group())==null){
 					throw new Exception("Regex entry for: " + m.group() + " missing! Check regexes.xml");
 				}
-				newValue += regexDict.get(m.group());
+				newValueSB.append(regexDict.get(m.group()));
 				position = m.end();
 			}
-			newValue += value.substring(position);
+			newValueSB.append(value.substring(position));
 			if (regexDict.get(name)!=null){
 				throw new Exception("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
 			}
-			regexDict.put(name, newValue);
+			regexDict.put(name, newValueSB.toString());
 		}
 		String re = regexDict.get("%chemical%");
 		if (!reversed){

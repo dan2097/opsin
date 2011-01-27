@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -552,8 +553,8 @@ class StereochemistryHandler {
 		for (List<Atom> possiblePath : possiblePaths) {
 			List<List<Atom>> nonOverlappingPaths = new LinkedList<List<Atom>>();
 			nonOverlappingPaths.add(possiblePath);
-			for (Atom otherStartingAtom : sameStartingAtom.keySet()) {
-				List<List<Atom>> otherPaths = sameStartingAtom.get(otherStartingAtom);
+			for (Entry<Atom, List<List<Atom>>> entry : sameStartingAtom.entrySet()) {
+				List<List<Atom>> otherPaths = entry.getValue();
 				boolean nonOverlappingPathFound =false;
 				for (List<Atom> otherPath : otherPaths) {
 					boolean match =false;
