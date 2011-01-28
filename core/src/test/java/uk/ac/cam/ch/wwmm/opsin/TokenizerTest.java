@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -14,7 +15,7 @@ public class TokenizerTest {
 	private static ReverseParseRules reverseParseRules;
 
 	@BeforeClass
-	public static void setUp(){
+	public static void setUp() throws IOException{
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		ResourceManager rm = new ResourceManager(rg);
 		tokenizer = new Tokeniser(new ParseRules(rm));

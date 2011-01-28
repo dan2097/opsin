@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,7 +83,7 @@ class ComponentProcessor {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	ComponentProcessor(ResourceGetter resourceGetter){
+	ComponentProcessor(ResourceGetter resourceGetter) throws IOException{
 		//Populate suffix rules/applicability hashes
 		Document suffixApplicabilityDoc = resourceGetter.getXMLDocument("suffixApplicability.xml");
 		Document suffixRulesDoc = resourceGetter.getXMLDocument("suffixRules.xml");

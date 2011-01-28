@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,10 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -20,6 +19,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import nu.xom.Builder;
 import nu.xom.Document;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 
 /**
  * Handles I/O:
@@ -43,13 +44,13 @@ class ResourceGetter {
 	 *
 	 * @param resourcePath The /-separated resource path.
 	 */
-	public ResourceGetter(String resourcePath) {
+	ResourceGetter(String resourcePath) {
 		if(resourcePath.startsWith("/")) {
 			resourcePath = resourcePath.substring(1);
 		}
 		this.resourcePath = resourcePath;
 		try {
-			workingDirectory =new File("").getCanonicalPath();
+			workingDirectory =new File(".").getCanonicalPath();//works on linux unlike using the system property
 		} catch (IOException e) {
 			//Automata will not be serialisable
 			workingDirectory = null;
@@ -61,8 +62,12 @@ class ResourceGetter {
 	 *
 	 * @param name The name of the file to parse.
 	 * @return The parsed document.
+	 * @throws IOException 
 	 */
-	public Document getXMLDocument(String name) {
+	Document getXMLDocument(String name) throws IOException {
+		if(name == null){
+			throw new IllegalArgumentException("Input to function was null");
+		}
 		try {
 			if (workingDirectory != null){
 				File f = getFile(name);
@@ -89,11 +94,17 @@ class ResourceGetter {
 			Builder xomBuilder = new Builder(xmlReader);
 			URL url = l.getResource(resourcePath + name);
 			if (url == null){
-				throw new RuntimeException("URL for resource: " + resourcePath + name + " is invalid");
+				throw new IOException("URL for resource: " + resourcePath + name + " is invalid");
 			}
-			return xomBuilder.build(url.openStream());
-		} catch (Exception e) {
-			throw new RuntimeException("Could not get resource file: " + name, e);
+		return xomBuilder.build(url.openStream());
+		} catch (ValidityException e) {
+			IOException ioe = new IOException("Validity exception occurred while reading the XML file with name:" +name);
+			ioe.initCause(e);
+			throw ioe;
+		} catch (ParsingException e) {
+			IOException ioe = new IOException("Parsing exception occurred while reading the XML file with name:" +name);
+			ioe.initCause(e);
+			throw ioe;
 		}
 	}
 
@@ -117,76 +128,66 @@ class ResourceGetter {
 	 * as a string.
 	 *
 	 * @param name The file to fetch.
-	 * @return The string.
+	 * @return The contents of the file as a string or "" if an IOException occurred
 	 */
-	public String getString(String name){
+	String getFileContentsAsString(String name){
+		if(name == null){
+			throw new IllegalArgumentException("Input to function was null");
+		}
+		InputStreamReader is = null;
 		try {
-			return readText(new InputStreamReader(getStream(name), "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Java VM is broken; UTF-8 should be supported");
+			try {
+				is = new InputStreamReader(getInputstreamFromFileName(name), "UTF-8");
+				return IOUtils.toString(is);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException("Java VM is broken; UTF-8 should be supported", e);
+			}
+			finally{
+				IOUtils.closeQuietly(is);
+			}
 		} catch (IOException e) {
-			throw new RuntimeException("Error reading stream from:" + name);
+			return "";
 		}
 	}
 
-	/**Fetches a data file from resourcePath as an InputStream.
+	/**Fetches a data file from the working directory or resourcePath as an InputStream.
 	 *
 	 * @param name The name of the file to get an InputStream of.
 	 * @return An InputStream corresponding to the file.
-	 */
-	public InputStream getStream(String name) {
-		if(name == null){
-			name="";
-		}
-		try {
-			if (workingDirectory!=null){
-				File f = getFile(name);
-				if(f != null) {
-					return new FileInputStream(f);
-				}
-			}
-			ClassLoader l = getClass().getClassLoader();
-			URL url = l.getResource(resourcePath + name);
-			if (url == null){
-				throw new RuntimeException("URL for resource: " + resourcePath + name + " is invalid");
-			}
-			return url.openStream();
-		} catch (Exception e) {
-			throw new RuntimeException("Could not get resource file: " + name, e);
-		}
-	}
-
-	/**Reads a text file into a single string.
-	 *
-	 * @param r The Reader to read the text file.
-	 * @return The string.
 	 * @throws IOException 
 	 */
-	private String readText(Reader r) throws IOException {
-		BufferedReader br = new BufferedReader(r);
-		StringBuffer sb = new StringBuffer();
-		while(br.ready()){
-			sb.append((char)br.read());
+	InputStream getInputstreamFromFileName(String name) throws IOException {
+		if(name == null){
+			throw new IllegalArgumentException("Input to function was null");
 		}
-		br.close();
-		return sb.toString();
+		if (workingDirectory!=null){
+			File f = getFile(name);
+			if(f != null) {
+				return new FileInputStream(f);
+			}
+		}
+		ClassLoader l = getClass().getClassLoader();
+		URL url = l.getResource(resourcePath + name);
+		if (url == null){
+			throw new IOException("URL for resource: " + resourcePath + name + " is invalid");
+		}
+		return url.openStream();
 	}
 
 	/**Sets up an output stream to which a resource file can be written; this
 	 * resource file will be in a subdirectory of the resources directory in
-	 * the workspace.
+	 * the working directory.
 	 *
 	 * @param name The name of the file to write.
 	 * @return The output stream.
+	 * @throws IOException 
 	 */
-	public OutputStream getOutputStream(String name) {
-		try{
-			File f = getFileForWriting(name);
-			return new FileOutputStream(f);
+	OutputStream getOutputStream(String name) throws IOException {
+		if(name == null){
+			throw new IllegalArgumentException("Input to function was null");
 		}
-		catch (Exception e) {
-			throw new RuntimeException("Failed to create outputstream", e);
-		}
+		File f = getFileForWriting(name);
+		return new FileOutputStream(f);
 	}
 
 	private File getFileForWriting(String name) throws IOException {

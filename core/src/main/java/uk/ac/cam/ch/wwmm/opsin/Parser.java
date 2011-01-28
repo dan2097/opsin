@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -82,8 +83,9 @@ class Parser {
 	/**
 	 * No-argument constructor. Uses ResouceGetter found at
 	 * uk/ac/cam/ch/wwmm/opsin/resources/
+	 * @throws IOException 
 	 */
-	Parser(){
+	Parser() throws IOException{
 		ResourceGetter resources = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		this.wordRules = new WordRules(resources);
 		this.resourceManager = new ResourceManager(resources);
@@ -235,8 +237,8 @@ class Parser {
 		ReverseParseRules reverseParseRules;
 		try {
 			reverseParseRules = new ReverseParseRules(resourceManager);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to load resources for parsing names from right to left!",e);
 		}
 		String uninterpretableLR = tokenizationResult.getUninterpretableName();
 		String unparseableLR = tokenizationResult.getUnparsableName();
