@@ -35,6 +35,10 @@
         <artifactId>xom</artifactId>
       </dependency>
       <dependency>
+      	<groupId>commons-io</groupId>
+      	<artifactId>commons-io</artifactId>
+      </dependency>
+      <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
       </dependency>
