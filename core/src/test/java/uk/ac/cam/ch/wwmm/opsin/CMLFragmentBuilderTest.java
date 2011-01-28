@@ -4,6 +4,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
+import java.io.IOException;
+
 import nu.xom.Builder;
 import nu.xom.Element;
 
@@ -19,7 +21,7 @@ public class CMLFragmentBuilderTest {
 	private static CMLFragmentBuilder cmlBuilder;
 
 	@BeforeClass
-	public static void setUp(){
+	public static void setUp() throws IOException{
 		cmlBuilder = new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/"));
 	}
 

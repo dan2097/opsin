@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -58,7 +59,7 @@ public class DtdTest {
 	}
 	
 	@Test
-	public void testTokenFilesValueValidity() {
+	public void testTokenFilesValueValidity() throws IOException {
 		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
 		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
 		for (int i = 0; i < tokenFiles.size(); i++) {

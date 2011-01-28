@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -13,7 +14,7 @@ public class FragmentManagerTest {
 	FragmentManager fragManager;
 
 	@Before
-	public void setUp(){
+	public void setUp() throws IOException{
 		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/")), new IDManager());
 	}
 

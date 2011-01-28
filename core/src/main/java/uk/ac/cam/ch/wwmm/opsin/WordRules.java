@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -190,8 +191,9 @@ class WordRules {
 
 	/**Initialises the WordRules.
 	 * @param resourceGetter
+	 * @throws IOException 
 	 */
-	WordRules(ResourceGetter resourceGetter){
+	WordRules(ResourceGetter resourceGetter) throws IOException{
 		Element wordRules =resourceGetter.getXMLDocument("wordRules.xml").getRootElement();
 		Elements rules = wordRules.getChildElements("wordRule");
 		for (int i = 0; i < rules.size(); i++) {

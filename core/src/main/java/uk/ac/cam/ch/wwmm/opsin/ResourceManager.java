@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,9 +62,10 @@ class ResourceManager {
 	 * 
 	 * Throws an exception if the XML token and regex files can't be read in properly or the grammar cannot be built.
 	 * @param resourceGetter
+	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	ResourceManager(ResourceGetter resourceGetter){
+	ResourceManager(ResourceGetter resourceGetter) throws IOException{
 		this.resourceGetter = resourceGetter;
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
@@ -77,8 +79,9 @@ class ResourceManager {
 	/**
 	 * Processes tokenFiles
 	 * @param reversed Should the hashing of
+	 * @throws IOException 
 	 */
-	private void processTokenFiles(boolean reversed){
+	private void processTokenFiles(boolean reversed) throws IOException{
 		Document tokenFiles = resourceGetter.getXMLDocument("index.xml");
 		Elements files = tokenFiles.getRootElement().getChildElements("tokenFile");
 		for(int i=0;i<files.size();i++) {
@@ -128,7 +131,7 @@ class ResourceManager {
 		}
 	}
 
-	private void processRegexTokenFiles(boolean reversed){
+	private void processRegexTokenFiles(boolean reversed) throws IOException{
 		Element reTokenList = resourceGetter.getXMLDocument("regexTokens.xml").getRootElement();
 		Elements regexEls = reTokenList.getChildElements();
 	
@@ -170,7 +173,7 @@ class ResourceManager {
 					if(symbolRegexAutomataDict[index]==null) {
 						symbolRegexAutomataDict[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDict[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false));
+					symbolRegexAutomataDict[index].add(AutomatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false));
 				}
 				else{
 					if(symbolRegexesDict[index]==null) {
@@ -184,7 +187,7 @@ class ResourceManager {
 					if(symbolRegexAutomataDictReversed[index]==null) {
 						symbolRegexAutomataDictReversed[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDictReversed[index].add(AutomatonInitialiser.getAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true));
+					symbolRegexAutomataDictReversed[index].add(AutomatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true));
 				}
 				else{
 					if(symbolRegexesDictReversed[index]==null) {
@@ -196,7 +199,7 @@ class ResourceManager {
 		}
 	}
 	
-	private RunAutomaton processChemicalGrammar(boolean reversed){
+	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException{
 		Map<String, String> regexDict = new HashMap<String, String>();
 		Elements regexes = resourceGetter.getXMLDocument("regexes.xml").getRootElement().getChildElements("regex");
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
@@ -222,15 +225,15 @@ class ResourceManager {
 		}
 		String re = regexDict.get("%chemical%");
 		if (!reversed){
-			return AutomatonInitialiser.getAutomaton("chemical", re, true, false);
+			return AutomatonInitialiser.loadAutomaton("chemical", re, true, false);
 		}
 		else{
-			return AutomatonInitialiser.getAutomaton("chemical", re, true, true);
+			return AutomatonInitialiser.loadAutomaton("chemical", re, true, true);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	synchronized void populatedReverseTokenMappings(){
+	synchronized void populatedReverseTokenMappings() throws IOException{
 		if (reverseChemicalAutomaton ==null){
 			reverseChemicalAutomaton = processChemicalGrammar(true);
 		}

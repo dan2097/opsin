@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,9 @@ class CMLFragmentBuilder {
 	/**Initialises the builder.
 	 * Throws an exception if the fragments file can't be found, or the document can't be built.
 	 * @param resourceGetter
+	 * @throws IOException 
 	 */
-	CMLFragmentBuilder(ResourceGetter resourceGetter) {
+	CMLFragmentBuilder(ResourceGetter resourceGetter) throws IOException {
 		fragmentDoc = resourceGetter.getXMLDocument("fragments.xml");
 	}
 

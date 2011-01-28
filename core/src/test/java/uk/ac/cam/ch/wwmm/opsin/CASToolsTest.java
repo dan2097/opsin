@@ -2,6 +2,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +15,7 @@ public class CASToolsTest {
 	private static ParseRules parseRules;
 
 	@BeforeClass
-	public static void setUp(){
+	public static void setUp() throws IOException{
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		parseRules = new ParseRules(new ResourceManager(rg));
 	}

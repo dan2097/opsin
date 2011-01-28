@@ -1,4 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
+import java.io.IOException;
 import java.util.List;
 import nu.xom.Element;
 import static junit.framework.Assert.assertEquals;
@@ -15,7 +16,7 @@ public class ParserTest {
 	private static NameToStructureConfig config;
 
 	@BeforeClass
-	public static void setUp(){
+	public static void setUp() throws IOException{
 		parser = new Parser();
 		config = NameToStructureConfig.getDefaultConfigInstance();
 	}

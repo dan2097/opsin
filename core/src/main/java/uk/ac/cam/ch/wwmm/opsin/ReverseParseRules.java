@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,8 +51,9 @@ class ReverseParseRules {
 	/** 
 	 * Creates a right to left parser that can parse a substituent/full/functional word
 	 * @param resourceManager
+	 * @throws IOException 
 	 */
-	ReverseParseRules(ResourceManager resourceManager){
+	ReverseParseRules(ResourceManager resourceManager) throws IOException{
 		this.resourceManager = resourceManager;
 		resourceManager.populatedReverseTokenMappings();
 		chemAutomaton = resourceManager.reverseChemicalAutomaton;
