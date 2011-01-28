@@ -3188,21 +3188,7 @@ class ComponentProcessor {
 		/* Root fragments (or the root in a bracket) can have prefix-locants
 		 * that work on suffixes - (2-furyl), 2-propanol, (2-propylmethyl), (2-propyloxy), 2'-Butyronaphthone.
 		 */
-		Elements children = subOrRoot.getChildElements();
-		List<Element> locantEls = new ArrayList<Element>();
-		for (int i = 0; i < children.size(); i++) {
-			Element el = children.get(i);
-			if (el.getLocalName().equals(LOCANT_EL)){
-				Element afterLocant =(Element) XOMTools.getNextSibling(el);
-				if (afterLocant!=null && afterLocant.getLocalName().equals(MULTIPLIER_EL)){//locant should not be followed by a multiplier. c.f. 1,2,3-tributyl 2-acetyloxypropane-1,2,3-tricarboxylate
-					continue;
-				}
-				locantEls.add(el);
-			}
-			else if (el.getLocalName().equals(GROUP_EL)){
-				break;
-			}
-		}
+		List<Element> locantEls = findLocantsThatCouldBeIndirectLocants(subOrRoot);
 
 		if (locantEls.size()>0){
 			Element group =subOrRoot.getFirstChildElement(GROUP_EL);
@@ -3295,6 +3281,31 @@ class ComponentProcessor {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Finds locants that are before a group element and not immediately followed by a multiplier
+	 * @param subOrRoot
+	 * @return
+	 */
+	private List<Element> findLocantsThatCouldBeIndirectLocants(Element subOrRoot) {
+		Elements children = subOrRoot.getChildElements();
+		List<Element> locantEls = new ArrayList<Element>();
+		for (int i = 0; i < children.size(); i++) {
+			Element el = children.get(i);
+			if (el.getLocalName().equals(LOCANT_EL)){
+				Element afterLocant =(Element) XOMTools.getNextSibling(el);
+				if (afterLocant!=null && afterLocant.getLocalName().equals(MULTIPLIER_EL)){//locant should not be followed by a multiplier. c.f. 1,2,3-tributyl 2-acetyloxypropane-1,2,3-tricarboxylate
+					continue;
+				}
+				locantEls.add(el);
+			}
+			else if (el.getLocalName().equals(GROUP_EL)){
+				break;
+			}
+		}
+		return locantEls;
 	}
 
 
