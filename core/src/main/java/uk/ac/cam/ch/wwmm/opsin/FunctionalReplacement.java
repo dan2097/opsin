@@ -445,7 +445,7 @@ class FunctionalReplacement {
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), hydrazide.getFirstAtom());
 			removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
 			for (int i = 1; i < hydrazides; i++) {
-				Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, StringTools.multiplyString("'", i));
+				Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, i);
 				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(i), clonedHydrazide.getFirstAtom());
 				state.fragManager.incorporateFragment(clonedHydrazide, oxygenAtoms.get(i).getFrag());
 				removeAssociatedFunctionalAtom(oxygenAtoms.get(i));

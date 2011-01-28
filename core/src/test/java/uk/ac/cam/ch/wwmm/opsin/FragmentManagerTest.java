@@ -1,6 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +30,7 @@ public class FragmentManagerTest {
 
 	@Test
 	public void testRelabelFusedRingSystem() throws StructureBuildingException {
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fragManager);
+		Fragment naphthalene = fragManager.buildSMILES("C1=CC=CC2=CC=CC=C12");
 		FragmentTools.relabelFusedRingSystem(naphthalene);
 		assertEquals("Locant 1 = atom 1", 1, naphthalene.getIDFromLocant("1"));
 		assertEquals("Locant 4a = atom 5", 5, naphthalene.getIDFromLocant("4a"));
@@ -37,5 +38,21 @@ public class FragmentManagerTest {
 		assertEquals("Locant 8a = atom 10", 10, naphthalene.getIDFromLocant("8a"));
 		assertEquals("No locant 9", 0, naphthalene.getIDFromLocant(""));
 	}
-
+	
+	@Test
+	public void testCloneFragment() throws StructureBuildingException {
+		Fragment urea = fragManager.buildSMILES("NC(=O)N");
+		FragmentTools.assignElementLocants(urea, new ArrayList<Fragment>());
+		assertNotNull(urea.getAtomByLocant("N"));
+		assertNotNull(urea.getAtomByLocant("N'"));
+		assertNull(urea.getAtomByLocant("N''"));
+		assertNull(urea.getAtomByLocant("N'''"));
+		
+		Fragment primedCopy = fragManager.copyAndRelabelFragment(urea, 1);
+		assertEquals(4, primedCopy.getAtomList().size());
+		assertNull(primedCopy.getAtomByLocant("N"));
+		assertNull(primedCopy.getAtomByLocant("N'"));
+		assertNotNull(primedCopy.getAtomByLocant("N''"));
+		assertNotNull(primedCopy.getAtomByLocant("N'''"));
+	}
 }

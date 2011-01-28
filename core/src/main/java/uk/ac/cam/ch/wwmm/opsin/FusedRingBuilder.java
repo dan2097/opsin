@@ -188,7 +188,7 @@ class FusedRingBuilder {
 			Fragment[] fusionComponents = new Fragment[multiplier];
 			for (int j = 0; j < multiplier; j++) {
 				if (j>0){
-					fusionComponents[j] = state.fragManager.copyAndRelabelFragment(nextComponent,  StringTools.multiplyString("'", j));
+					fusionComponents[j] = state.fragManager.copyAndRelabelFragment(nextComponent,  j);
 				}
 				else{
 					fusionComponents[j] = nextComponent;
@@ -370,7 +370,7 @@ class FusedRingBuilder {
 				List<Fragment> fusionComponents = new ArrayList<Fragment>();
 				for (int j = 0; j < multiplier; j++) {
 					if (j>0){
-						fusionComponents.add(state.fragManager.copyAndRelabelFragment(nextComponent,  StringTools.multiplyString("'", j)));
+						fusionComponents.add(state.fragManager.copyAndRelabelFragment(nextComponent,  j));
 					}
 					else{
 						fusionComponents.add(nextComponent);

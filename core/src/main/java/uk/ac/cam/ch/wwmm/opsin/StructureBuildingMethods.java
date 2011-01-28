@@ -307,7 +307,7 @@ class StructureBuildingMethods {
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
-				currentElement = state.fragManager.cloneElement(state, subOrBracket, StringTools.multiplyString("'", i));
+				currentElement = state.fragManager.cloneElement(state, subOrBracket, i);
 				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
 			}
 			else{
@@ -842,7 +842,7 @@ class StructureBuildingMethods {
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
-				currentElement = state.fragManager.cloneElement(state, subOrBracket, StringTools.multiplyString("'", i));
+				currentElement = state.fragManager.cloneElement(state, subOrBracket, i);
 				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
 				clonedElements.add(currentElement);
 			}
@@ -920,7 +920,7 @@ class StructureBuildingMethods {
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i!=0){
-				currentElement = state.fragManager.cloneElement(state, multipliedParent, StringTools.multiplyString("'", i));
+				currentElement = state.fragManager.cloneElement(state, multipliedParent, i);
 				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
 				clonedElements.add(currentElement);
 			}
