@@ -36,6 +36,7 @@ class ResourceGetter {
 
 	private final String resourcePath;
 	private String workingDirectory;
+	private final Builder xomBuilder;
 
 	/**
 	 * Sets up a resourceGetter to get resources from a particular path.
@@ -55,6 +56,23 @@ class ResourceGetter {
 			//Automata will not be serialisable
 			workingDirectory = null;
 		}
+		
+		XMLReader xmlReader;
+		try{
+			xmlReader = XMLReaderFactory.createXMLReader();
+		}
+		catch (SAXException e) {
+			throw new RuntimeException("No XML Reader could be initialised!", e);
+		}
+		try{
+			xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		}
+		catch (SAXNotSupportedException e) {
+			throw new RuntimeException("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?", e);
+		} catch (SAXNotRecognizedException e) {
+			throw new RuntimeException("Your system's default XML Reader has not recognised the DTD loading feature! Maybe try updating your version of java?", e);
+		}
+		xomBuilder = new Builder(xmlReader);
 	}
 
 	/**Fetches a data file from resourcePath,
@@ -72,31 +90,15 @@ class ResourceGetter {
 			if (workingDirectory != null){
 				File f = getFile(name);
 				if(f != null) {
-					return new Builder().build(f);
+					return xomBuilder.build(f);
 				}
 			}
 			ClassLoader l = getClass().getClassLoader();
-			XMLReader xmlReader;
-			try{
-				xmlReader = XMLReaderFactory.createXMLReader();
-			}
-			catch (SAXException e) {
-				throw new RuntimeException("No XML Reader could be initialised!", e);
-			}
-			try{
-				xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-			}
-			catch (SAXNotSupportedException e) {
-				throw new RuntimeException("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?", e);
-			} catch (SAXNotRecognizedException e) {
-				throw new RuntimeException("Your system's default XML Reader has not recognised the DTD loading feature! Maybe try updating your version of java?", e);
-			}
-			Builder xomBuilder = new Builder(xmlReader);
 			URL url = l.getResource(resourcePath + name);
 			if (url == null){
 				throw new IOException("URL for resource: " + resourcePath + name + " is invalid");
 			}
-		return xomBuilder.build(url.openStream());
+			return xomBuilder.build(url.openStream());
 		} catch (ValidityException e) {
 			IOException ioe = new IOException("Validity exception occurred while reading the XML file with name:" +name);
 			ioe.initCause(e);
