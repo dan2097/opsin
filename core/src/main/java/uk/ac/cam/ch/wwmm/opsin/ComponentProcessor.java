@@ -2135,7 +2135,7 @@ class ComponentProcessor {
 
 			List<Fragment> clonedFragments = new ArrayList<Fragment>();
 			for (int j = 1; j < mvalue; j++) {
-				clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, StringTools.multiplyString("'", j)));
+				clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, j));
 			}
 			for (int j = 0; j < mvalue-1; j++) {
 				Fragment clone =clonedFragments.get(j);
@@ -2489,7 +2489,7 @@ class ComponentProcessor {
 		Fragment fragment = state.xmlFragmentMap.get(group);
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < components ; i++) {
-			clones.add(state.fragManager.copyAndRelabelFragment(fragment, StringTools.multiplyString("'", i)));
+			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
 		}
 		for (Fragment clone : clones) {
 			state.fragManager.incorporateFragment(clone, fragment);
@@ -2526,7 +2526,7 @@ class ComponentProcessor {
 		Fragment fragment = state.xmlFragmentMap.get(group);
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < 3 ; i++) {
-			clones.add(state.fragManager.copyAndRelabelFragment(fragment, StringTools.multiplyString("'", i)));
+			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
 		}
 		for (Fragment clone : clones) {
 			state.fragManager.incorporateFragment(clone, fragment);

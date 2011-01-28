@@ -327,7 +327,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Fragment copyFragment(Fragment originalFragment) throws StructureBuildingException {
-		return copyAndRelabelFragment(originalFragment, null);
+		return copyAndRelabelFragment(originalFragment, 0);
 	}
 
 
@@ -335,11 +335,11 @@ class FragmentManager {
 	 * Creates a copy of a fragment by copying data
 	 * labels the atoms using new ids from the idManager
 	 * @param originalFragment
-	 * @param stringToAddToAllLocants: typically used to append primes to all locants, can be null
+	 * @param primesToAdd: The minimum number of primes to add to the cloned atoms. More primes will be added if necessary to keep the locants unique e.g. N in the presence of N' becomes N'' when this is 1
 	 * @return the clone of the fragment
 	 * @throws StructureBuildingException
 	 */
-	Fragment copyAndRelabelFragment(Fragment originalFragment, String stringToAddToAllLocants) throws StructureBuildingException {
+	Fragment copyAndRelabelFragment(Fragment originalFragment, int primesToAdd) throws StructureBuildingException {
 		Fragment newFragment =new Fragment(originalFragment.getType(), originalFragment.getSubType());
 		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
@@ -350,9 +350,16 @@ class FragmentManager {
 		for (Atom atom : atomList) {
 			int id = idManager.getNextID();
 			ArrayList<String> newLocants = new ArrayList<String>(atom.getLocants());
-			if (stringToAddToAllLocants !=null){
+			if (primesToAdd !=0){
 				for (int i = 0; i < newLocants.size(); i++) {
-					newLocants.set(i, newLocants.get(i) + stringToAddToAllLocants);
+					String currentLocant = newLocants.get(i);
+					int currentPrimes = StringTools.countTerminalPrimes(currentLocant);
+					String locantSansPrimes = currentLocant.substring(0, currentLocant.length()-currentPrimes);
+					int highestNumberOfPrimesWithThisLocant = currentPrimes;
+					while (originalFragment.getAtomByLocant(locantSansPrimes + StringTools.multiplyString("'", highestNumberOfPrimesWithThisLocant +1 ))!=null){
+						highestNumberOfPrimesWithThisLocant++;
+					}
+					newLocants.set(i, locantSansPrimes + StringTools.multiplyString("'", ((highestNumberOfPrimesWithThisLocant +1)*primesToAdd) + currentPrimes));
 				}
 			}
 			Atom newAtom =new Atom(id, atom.getElement(), newFragment);
@@ -445,7 +452,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Element cloneElement(BuildState state, Element elementToBeCloned) throws StructureBuildingException {
-		return cloneElement(state, elementToBeCloned, "");
+		return cloneElement(state, elementToBeCloned, 0);
 	}
 
 	/**
@@ -453,18 +460,18 @@ class FragmentManager {
 	 * has its own group and suffix fragments
 	 * @param elementToBeCloned
 	 * @param state The current buildstate
-	 * @param stringToAddToAllLocants A string to append to all locants in the cloned fragments
+	 * @param primesToAdd: The minimum number of primes to add to the cloned atoms. More primes will be added if necessary to keep the locants unique e.g. N in the presence of N' becomes N'' when this is 1
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	Element cloneElement(BuildState state, Element elementToBeCloned, String stringToAddToAllLocants) throws StructureBuildingException {
+	Element cloneElement(BuildState state, Element elementToBeCloned, int primesToAdd) throws StructureBuildingException {
 		Element clone = new Element(elementToBeCloned);
 		List<Element> originalGroups = XOMTools.getDescendantElementsWithTagName(elementToBeCloned, XmlDeclarations.GROUP_EL);
 		List<Element> clonedGroups = XOMTools.getDescendantElementsWithTagName(clone,  XmlDeclarations.GROUP_EL);
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
 		for (int i = 0; i < originalGroups.size(); i++) {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
-			Fragment newFragment = copyAndRelabelFragment(originalFragment, stringToAddToAllLocants);
+			Fragment newFragment = copyAndRelabelFragment(originalFragment, primesToAdd);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
 			state.xmlFragmentMap.put(clonedGroups.get(i), newFragment);
 			List<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
