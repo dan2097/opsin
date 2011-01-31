@@ -21,7 +21,7 @@ import org.xml.sax.SAXParseException;
 import static junit.framework.Assert.*;
 
 public class DtdTest {
-	private final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
+	private final static String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
 	private final ResourceGetter resourceGetter = new ResourceGetter(RESOURCE_LOCATION);
 
 	@Test
