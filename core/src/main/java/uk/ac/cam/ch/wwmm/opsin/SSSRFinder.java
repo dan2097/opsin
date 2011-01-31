@@ -150,7 +150,7 @@ class SSSRFinder {
 				continue;
 			}
 			
-			List<Bond> newBondSet = symmetricDifference ( target.getBondSet(), ring.getBondSet() ) ;
+			List<Bond> newBondSet = symmetricDifference ( target.getBondList(), ring.getBondList() ) ;
 			if (newBondSet.size() < target.size()) {
 				Ring newRing = new Ring(newBondSet);
 				newList.set(i, newRing);

@@ -298,7 +298,7 @@ class FusedRingNumberer {
 		List<Ring> tRings = findTerminalRings(rings);
 		if (tRings == null || tRings.size()<0) throw new StructureBuildingException("Terminal rings not found");
 		Ring tRing = tRings.get(0);
-		Bond b1 = getNonFusedBond(tRing.getBondSet());
+		Bond b1 = getNonFusedBond(tRing.getBondList());
 		if(b1 == null) throw new StructureBuildingException("Non-fused bond at termial ring not found");
 		// order first bring
 	
@@ -500,9 +500,9 @@ class FusedRingNumberer {
 		{						
 			size = iRing.size();
 											
-			stNumber = iRing.getBondNumber(prevBond) ;
+			stNumber = iRing.getBondIndex(prevBond) ;
 		
-			List<Bond> cbonds = iRing.getCyclicBondSet();
+			List<Bond> cbonds = iRing.getCyclicBondList();
 			List<Bond> fbonds = iRing.getFusedBonds();
 			
 			// changes by TB (timo.boehme@ontochem.com):
@@ -561,7 +561,7 @@ class FusedRingNumberer {
 				
 			} while ( nextRing == null );
 			
-			endNumber = iRing.getBondNumber(nextBond) ;
+			endNumber = iRing.getBondIndex(nextBond) ;
 			
 			// Add atoms in order, considering inverse or not inverse
 			if (!inverseAtoms)
@@ -579,7 +579,7 @@ class FusedRingNumberer {
 					// start from the atom next to fusion								
 					for (int j = stNumber; j <= endNumber; j++) // change 4-2
 					{
-						atom = iRing.getCyclicAtomSet().get(j % size);
+						atom = iRing.getCyclicAtomList().get(j % size);
 						if (atomPath.contains(atom)) { finished = true; break; }
 						atomPath.add(atom);
 					}
@@ -598,7 +598,7 @@ class FusedRingNumberer {
 										
 					for ( int j = stNumber; j >= endNumber; j-- ) 
 					{				
-						atom = iRing.getCyclicAtomSet().get(j % size);
+						atom = iRing.getCyclicAtomList().get(j % size);
 						if (atomPath.contains(atom)) { finished = true; break;}
 						atomPath.add(atom);
 					}
@@ -878,7 +878,7 @@ class FusedRingNumberer {
 	
 	
 		// order atoms and bonds in the ring
-		iRing.makeCyclicSets(prevBond, atom);
+		iRing.makeCyclicLists(prevBond, atom);
 		ct.usedRings.add(iRing);
 	
 		for (Ring ring : iRing.getNeighbours())
@@ -950,14 +950,14 @@ class FusedRingNumberer {
 	 */
 	private static Atom getAtomFromBond(Ring ring, Bond curBond) throws StructureBuildingException
 	{
-		if (ring.getCyclicBondSet() == null) throw new StructureBuildingException("Atoms in the ring are not ordered");
+		if (ring.getCyclicBondList() == null) throw new StructureBuildingException("Atoms in the ring are not ordered");
 		int i=0;
-		for (Bond bond : ring.getCyclicBondSet())	{
+		for (Bond bond : ring.getCyclicBondList())	{
 			if (bond == curBond) break;
 			i++;
 		}
 		int ai = ( i - 1 + ring.size() ) % ring.size();
-		return ring.getCyclicAtomSet().get(ai);
+		return ring.getCyclicAtomList().get(ai);
 	}
 
 	/**
@@ -968,8 +968,8 @@ class FusedRingNumberer {
 	 */
 	private static Bond findFusionBond (Ring r1, Ring r2)
 	{
-		List<Bond> b2 = r2.getBondSet();
-		for(Bond bond : r1.getBondSet())
+		List<Bond> b2 = r2.getBondList();
+		for(Bond bond : r1.getBondList())
 			if (b2.contains(bond)) return bond;
 	
 		return null;
@@ -987,13 +987,13 @@ class FusedRingNumberer {
 	private static int calculateRingDirection(Ring ring, Bond prevBond, Bond curBond, int history) throws StructureBuildingException
 	{
 		// take the ring fused to one from the previous loop step
-		if ( ring.getCyclicBondSet() == null ) throw new StructureBuildingException();
+		if ( ring.getCyclicBondList() == null ) throw new StructureBuildingException();
 		int size = ring.size();
 	
 		int i1 = -1;
 		int i2 = -1;
 		int cnt = 0;
-		for(Bond bond :ring.getCyclicBondSet())
+		for(Bond bond :ring.getCyclicBondList())
 		{
 			if (bond == prevBond) i1=cnt;
 			if (bond == curBond) i2=cnt;
@@ -1432,8 +1432,8 @@ class FusedRingNumberer {
 	
 			int size = ring.size();
 	
-			int stNumber = ring.getBondNumber(prevFusedBond) ;
-			int endNumber = ring.getBondNumber(curFusedBond) ;
+			int stNumber = ring.getBondIndex(prevFusedBond) ;
+			int endNumber = ring.getBondIndex(curFusedBond) ;
 	
 			if (!inverseAtoms)
 			{
@@ -1450,7 +1450,7 @@ class FusedRingNumberer {
 					// start from the atom next to fusion
 					for (int j = stNumber; j <= endNumber; j++) // change 4-2
 					{
-						atom = ring.getCyclicAtomSet().get(j % size);
+						atom = ring.getCyclicAtomList().get(j % size);
 						if (atomPath.contains(atom)) { finished = true;  break; }
 						atomPath.add(atom);
 					}
@@ -1469,7 +1469,7 @@ class FusedRingNumberer {
 	
 					for ( int j = stNumber; j >= endNumber; j-- )
 					{
-						atom = ring.getCyclicAtomSet().get(j % size);
+						atom = ring.getCyclicAtomList().get(j % size);
 						if (atomPath.contains(atom)) { finished = true; break; }
 						atomPath.add(atom);
 	
@@ -1663,17 +1663,17 @@ class FusedRingNumberer {
 	private static void setFusedRings(List<Ring> rings)
 	{
 		for (Ring curRing : rings) {
-			for(Bond bond : curRing.getBondSet()) { 	
+			for(Bond bond : curRing.getBondList()) { 	
 				bond.getFusedRings().clear();
 			}
 		}
 		for (Ring curRing : rings) {
-			for(Bond bond : curRing.getBondSet()) { 			// go through all the bonds for the current ring
+			for(Bond bond : curRing.getBondList()) { 			// go through all the bonds for the current ring
 				if (bond.getFusedRings().size()>=2) continue; 	// it means this bond we already analysed and skip it
 	
 				for (Ring ring : rings) {  						// check if this bond belongs to any other ring
 					if (curRing != ring) {
-						if (ring.getBondSet().contains(bond)) {
+						if (ring.getBondList().contains(bond)) {
 							bond.addFusedRing(ring);			// if so, then add the rings into fusedRing array in the bond
 							bond.addFusedRing(curRing);			// and decrease number of free bonds for both rings
 	
@@ -1726,12 +1726,12 @@ class FusedRingNumberer {
 		if (rings == null || rings.size()<=0) throw new StructureBuildingException();
 	
 		Ring iRing = tRing;
-		Bond stBond = tRing.getBondSet().get(0);
+		Bond stBond = tRing.getBondList().get(0);
 		Atom stAtom = stBond.getToAtom();
 	
 		for (int i=0; i<rings.size(); i++)
 		{
-			iRing.makeCyclicSets(stBond, stAtom);
+			iRing.makeCyclicLists(stBond, stAtom);
 	
 			if (i==rings.size()-1) break;
 	
@@ -1743,11 +1743,11 @@ class FusedRingNumberer {
 			}
 	
 			int cnt = 0;
-			for (Bond bond : iRing.getCyclicBondSet()) {
+			for (Bond bond : iRing.getCyclicBondList()) {
 				if (bond == stBond)	{
 					cnt--;
 					if (cnt<0) cnt = iRing.size()-1;
-					stAtom = iRing.getCyclicAtomSet().get(cnt); // so that the enumeration go the same direction we give the previous atom
+					stAtom = iRing.getCyclicAtomList().get(cnt); // so that the enumeration go the same direction we give the previous atom
 					break;
 				}
 				cnt++;
@@ -1805,7 +1805,7 @@ class FusedRingNumberer {
 			int i1 = -1;
 			int i2 = -1;
 			int cnt = 0;
-			for(Bond bond :iRing.getCyclicBondSet())
+			for(Bond bond :iRing.getCyclicBondList())
 			{
 				if (bond == stBond) i1=cnt;
 				if (bond == nextBond) i2=cnt;
