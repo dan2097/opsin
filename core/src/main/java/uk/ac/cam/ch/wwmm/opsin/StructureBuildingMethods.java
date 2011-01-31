@@ -897,7 +897,7 @@ class StructureBuildingMethods {
 		if (multiplier > multiRadicalBR.getOutAtomCount()){
 			throw new StructureBuildingException("Multiplication bond formation failure: number of outAtoms disagree with multiplier(multiplier: " + multiplier + ", outAtom count: " + multiRadicalBR.getOutAtomCount()+ ") , this is an OPSIN bug");
 		}
-		if (state.debug){System.out.println(multiplier +" multiplicative bonds to be formed");}
+		if (BuildState.debug){System.out.println(multiplier +" multiplicative bonds to be formed");}
 		multipliedParent.removeAttribute(multipliedParent.getAttribute(MULTIPLIER_ATR));
 		List<String> inLocants = null;
 		if (multipliedParent.getAttribute(INLOCANTS_ATR)!=null){//true for the root of a multiplicative name
@@ -1257,7 +1257,7 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, to, bondOrder);
-		if (state.debug){System.out.println("Additively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + to.getID() + " (" +state.xmlFragmentMap.getElement(to.getFrag()).getValue()+")" );}
+		if (BuildState.debug){System.out.println("Additively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + to.getID() + " (" +state.xmlFragmentMap.getElement(to.getFrag()).getValue()+")" );}
 	}
 
 	private static void joinFragmentsSubstitutively(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
@@ -1287,7 +1287,7 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
-		if (state.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
+		if (BuildState.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}
 
 	static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
