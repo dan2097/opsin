@@ -9,42 +9,44 @@ import java.util.List;
  *
  */
 class Ring {
-	private List<Atom> atomSet = new ArrayList<Atom>();
-	private List<Bond> bondSet;
-	private List<Atom> cyclicAtomSet;
-	private List<Bond> cyclicBondSet;
+	private List<Atom> atomList = new ArrayList<Atom>();
+	private List<Bond> bondList;
+	private List<Atom> cyclicAtomList;
+	private List<Bond> cyclicBondList;
 	private List<Ring> neighbours = new ArrayList<Ring>();
 
 	private int nFusedBonds = 0;
 	
-	Ring(List<Bond> bondSet) throws StructureBuildingException{
-		if (bondSet==null || bondSet.size()<=0) throw new StructureBuildingException("Bond set is empty");
-		this.bondSet = bondSet;
+	Ring(List<Bond> bondList) throws StructureBuildingException{
+		if (bondList==null || bondList.size()<=0){
+			throw new StructureBuildingException("Bond list is empty");
+		}
+		this.bondList = bondList;
 
-		for(Bond bond: bondSet){
+		for(Bond bond: bondList){
 			Atom atom1 = bond.getFromAtom();				
-			if (!atomSet.contains(atom1)) {
-				atomSet.add(atom1);
+			if (!atomList.contains(atom1)) {
+				atomList.add(atom1);
 			}
 				
 			Atom atom2 = bond.getToAtom();
-			if (!atomSet.contains(atom2)) {
-				atomSet.add(atom2);
+			if (!atomList.contains(atom2)) {
+				atomList.add(atom2);
 			}
 		}
 		
-		if (atomSet.size() != bondSet.size()) {
-			throw new StructureBuildingException("atomSet and bondset different sizes. Ring(bond)");
+		if (atomList.size() != bondList.size()) {
+			throw new StructureBuildingException("atomList and bondList different sizes. Ring(bond)");
 		}
 	}
 
 
-	List<Bond>  getBondSet() {
-		return bondSet;
+	List<Bond>  getBondList() {
+		return bondList;
 	}
 
-	List<Atom>  getAtomSet() {
-		return atomSet;
+	List<Atom>  getAtomList() {
+		return atomList;
 	}
 
 	/**
@@ -52,7 +54,7 @@ class Ring {
 	 * @return
 	 */
 	int size() {
-		return atomSet.size();
+		return atomList.size();
 	}
 
 	int getNumberOfFusedBonds() {
@@ -70,7 +72,7 @@ class Ring {
 	List<Bond> getFusedBonds(){
 		List<Bond> bonds = new ArrayList<Bond>();
 
-		for (Bond bond : bondSet) {
+		for (Bond bond : bondList) {
 			if (bond.getFusedRings().size()>0) {
 				bonds.add(bond);
 			}
@@ -78,16 +80,16 @@ class Ring {
 		return bonds;
 	}
 
-	int getBondNumber(Bond bond){
-		return cyclicBondSet.indexOf(bond);
+	int getBondIndex(Bond bond){
+		return cyclicBondList.indexOf(bond);
 	}
 
-	List<Bond> getCyclicBondSet(){
-		return cyclicBondSet;
+	List<Bond> getCyclicBondList(){
+		return cyclicBondList;
 	}
 
-	List<Atom> getCyclicAtomSet(){
-		return cyclicAtomSet;
+	List<Atom> getCyclicAtomList(){
+		return cyclicAtomList;
 	}
 
 	List<Ring> getNeighbours() {
@@ -103,29 +105,29 @@ class Ring {
 	 * @param stBond - the first bond
 	 * @param stAtom - the atom defining in which direction to go
 	 */
-	void makeCyclicSets(Bond stBond, Atom stAtom){
-		if (cyclicBondSet==null){
-			cyclicBondSet = new ArrayList<Bond>();
-			cyclicAtomSet = new ArrayList<Atom>();
+	void makeCyclicLists(Bond stBond, Atom stAtom){
+		if (cyclicBondList==null){
+			cyclicBondList = new ArrayList<Bond>();
+			cyclicAtomList = new ArrayList<Atom>();
 
 			Atom atom = stAtom;
-			cyclicBondSet.add(stBond);
-			cyclicAtomSet.add(atom);
+			cyclicBondList.add(stBond);
+			cyclicAtomList.add(atom);
 
 			for (int i=0; i<size()-1; i++){
-				for(Bond bond2 : bondSet){
-					if (cyclicBondSet.contains(bond2)){
+				for(Bond bond2 : bondList){
+					if (cyclicBondList.contains(bond2)){
 						continue;
 					}
 					if (bond2.getFromAtom() == atom){
-						cyclicBondSet.add(bond2);
+						cyclicBondList.add(bond2);
 						atom = bond2.getToAtom();
-						cyclicAtomSet.add(atom);
+						cyclicAtomList.add(atom);
 					}
 					else if (bond2.getToAtom() == atom){
-						cyclicBondSet.add(bond2);
+						cyclicBondList.add(bond2);
 						atom = bond2.getFromAtom();
-						cyclicAtomSet.add(atom);
+						cyclicAtomList.add(atom);
 					}
 				}
 			}
@@ -136,11 +138,11 @@ class Ring {
 		String st = "";
 		List<Atom> toPrint;
 
-		if (cyclicAtomSet != null) {
-			toPrint = cyclicAtomSet;
+		if (cyclicAtomList != null) {
+			toPrint = cyclicAtomList;
 		}
 		else {
-			toPrint = atomSet;
+			toPrint = atomList;
 		}
 		for (Atom atom : toPrint){
 			st+=atom.getID() + " ";
