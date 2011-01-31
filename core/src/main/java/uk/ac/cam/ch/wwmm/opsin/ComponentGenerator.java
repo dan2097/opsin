@@ -1860,12 +1860,12 @@ class ComponentGenerator {
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
 				Element possibleRoot =(Element) XOMTools.getNextSibling(group.getParent());
 				if (possibleRoot==null && OpsinTools.getParentWordRule(group).getAttributeValue(WORDRULE_ATR).equals(WordRule.glycol.toString())){//e.g. dodecaethylene glycol
-					String smiles ="CCC";
+					StringBuilder smiles =new StringBuilder("CCC");
 					for (int i = 1; i < multiplierValue; i++) {
-						smiles+="OC(C)C";
+						smiles.append("OC(C)C");
 					}
 					group.getAttribute(OUTIDS_ATR).setValue("2," +Integer.toString(4*(multiplierValue-1) +3));
-					group.getAttribute(VALUE_ATR).setValue(smiles);
+					group.getAttribute(VALUE_ATR).setValue(smiles.toString());
 					if (group.getAttribute(LABELS_ATR)!=null){
 						group.getAttribute(LABELS_ATR).setValue(NONE_LABELS_VAL);
 					}

@@ -24,7 +24,7 @@ class BuildState {
 	final BiDirectionalHashMap xmlFragmentMap;
 	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
-	final boolean debug = false;
+	final static boolean debug = false;
 
 	/**
 	 * Wrapper class for returning multiple objects
