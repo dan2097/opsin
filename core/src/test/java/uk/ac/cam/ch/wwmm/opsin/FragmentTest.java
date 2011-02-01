@@ -150,7 +150,7 @@ public class FragmentTest {
 		a4.addLocant("4");
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(4), 1);
 		assertEquals("isobutane", 3, frag.getChainLength());
-		fm.removeBond(frag.findBond(a2, a4));
+		fm.removeBond(a2.getBondToAtom(a4));
 		fm.createBond(a3, a4, 1);
 		assertEquals("butane", 4, frag.getChainLength());
 	}

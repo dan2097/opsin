@@ -305,7 +305,7 @@ class FragmentTools {
 			LinkedList<Atom> nextAtoms = new LinkedList<Atom>(rAtom.getAtomNeighbours());
 			for (Atom nextAtom : nextAtoms) {
 				atomsVisited.add(nextAtom);
-				atomPreviousBondMap.put(nextAtom, fragment.findBondOrThrow(rAtom, nextAtom));
+				atomPreviousBondMap.put(nextAtom, rAtom.getBondToAtomOrThrow(nextAtom));
 			}
 			startingAtoms.addAll(nextAtoms);
 		}
@@ -324,7 +324,7 @@ class FragmentTools {
 		LinkedList<Atom> nextAtoms = new LinkedList<Atom>(firstAtom.getAtomNeighbours());
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		for (Atom nextAtom : nextAtoms) {
-			atomPreviousBondMap.put(nextAtom, suffixableFragment.findBondOrThrow(firstAtom, nextAtom));
+			atomPreviousBondMap.put(nextAtom, firstAtom.getBondToAtomOrThrow(nextAtom));
 		}
 		Collections.sort(nextAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
 		atomsVisited.add(firstAtom);
@@ -352,7 +352,7 @@ class FragmentTools {
 		}
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		for (Atom atomNeighbour : atomNeighbours) {
-			atomPreviousBondMap.put(atomNeighbour, atom.getFrag().findBondOrThrow(atom, atomNeighbour));
+			atomPreviousBondMap.put(atomNeighbour, atom.getBondToAtomOrThrow(atomNeighbour));
 		}
 		Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
 		nextAtoms.addAll(0, atomNeighbours);
@@ -390,12 +390,12 @@ class FragmentTools {
 			locant = Integer.parseInt(locantStr.substring(0, locantStr.length()-numberOfPrimes));
 			primes = StringTools.multiplyString("'", numberOfPrimes);
 			Atom possibleToAtom = fragment.getAtomByLocant(String.valueOf(locant +1)+primes);
-			if (possibleToAtom !=null && fragment.findBond(fromAtom, possibleToAtom)!=null){
+			if (possibleToAtom !=null && fromAtom.getBondToAtom(possibleToAtom)!=null){
 				toAtom = possibleToAtom;
 			}
 			else if (possibleToAtom ==null && fromAtom.getAtomIsInACycle()){//allow something like cyclohexan-6-ene, something like butan-4-ene will still fail
 				possibleToAtom = fragment.getAtomByLocant("1" + primes);
-				if (possibleToAtom !=null && fragment.findBond(fromAtom, possibleToAtom)!=null){
+				if (possibleToAtom !=null && fromAtom.getBondToAtom(possibleToAtom)!=null){
 					toAtom =possibleToAtom;
 				}
 			}
@@ -403,7 +403,7 @@ class FragmentTools {
 		catch (Exception e) {
 			List<Atom> atomList = fragment.getAtomList();
 			int initialIndice = atomList.indexOf(fromAtom);
-			if (initialIndice +1 < atomList.size() && fragment.findBond(fromAtom, atomList.get(initialIndice +1))!=null){
+			if (initialIndice +1 < atomList.size() && fromAtom.getBondToAtom(atomList.get(initialIndice +1))!=null){
 				toAtom = atomList.get(initialIndice +1);
 			}
 		}
@@ -415,7 +415,7 @@ class FragmentTools {
 				throw new StructureBuildingException("Could not find bond to unsaturate");
 			}
 		}
-		Bond b = fragment.findBondOrThrow(fromAtom, toAtom);
+		Bond b = fromAtom.getBondToAtomOrThrow(toAtom);
 		b.setOrder(bondOrder);
 	}
 
@@ -429,7 +429,7 @@ class FragmentTools {
 	 */
 	static void unsaturate(Atom fromAtom, String locantTo, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		Atom toAtom = fragment.getAtomByLocantOrThrow(locantTo);
-		Bond b = fragment.findBondOrThrow(fromAtom, toAtom);
+		Bond b = fromAtom.getBondToAtomOrThrow(toAtom);
 		b.setOrder(bondOrder);
 	}
 	
@@ -761,7 +761,7 @@ class FragmentTools {
 								foundTerminalFlag = true;
 								a.setSpareValency(false);
 								aa.setSpareValency(false);
-								frag.findBondOrThrow(a, aa).addOrder(1);
+								a.getBondToAtomOrThrow(aa).addOrder(1);
 								svCount -= 2;//Two atoms where for one of them this bond is the only double bond it can possible form
 								break;
 							}
@@ -778,7 +778,7 @@ class FragmentTools {
 								foundNonBridgeHeadFlag = true;
 								a.setSpareValency(false);
 								aa.setSpareValency(false);
-								frag.findBondOrThrow(a, aa).addOrder(1);
+								a.getBondToAtomOrThrow(aa).addOrder(1);
 								svCount -= 2;//Two atoms where one of them is not a bridge head
 								break;
 							}
@@ -795,7 +795,7 @@ class FragmentTools {
 									foundBridgeHeadFlag = true;
 									a.setSpareValency(false);
 									aa.setSpareValency(false);
-									frag.findBondOrThrow(a, aa).addOrder(1);
+									a.getBondToAtomOrThrow(aa).addOrder(1);
 									svCount -= 2;//Two atoms where both of them are a bridge head e.g. necessary for something like coronene
 									break;
 								}
@@ -814,7 +814,6 @@ class FragmentTools {
 
 	static Atom getAtomByAminoAcidStyleLocant(Atom backboneAtom, String elementSymbol, String primes) throws StructureBuildingException {
 		//Search for appropriate atom by using the same algorithm as is used to assign locants initially
-		Fragment frag = backboneAtom.getFrag();
 
 		LinkedList<Atom> nextAtoms = new LinkedList<Atom>();
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
@@ -830,7 +829,7 @@ class FragmentTools {
 				}
 			}
 			nextAtoms.add(neighbour);
-			atomPreviousBondMap.put(neighbour, frag.findBondOrThrow(backboneAtom, neighbour));
+			atomPreviousBondMap.put(neighbour, backboneAtom.getBondToAtomOrThrow(neighbour));
 		}
 
 		Collections.sort(nextAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
@@ -885,7 +884,7 @@ class FragmentTools {
 			}
 			atomPreviousBondMap = new HashMap<Atom, Bond>();
 			for (Atom atomNeighbour : atomNeighbours) {
-				atomPreviousBondMap.put(atomNeighbour, frag.findBondOrThrow(atom, atomNeighbour));
+				atomPreviousBondMap.put(atomNeighbour, atom.getBondToAtomOrThrow(atomNeighbour));
 			}
 			Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
 			nextAtoms.addAll(0, atomNeighbours);

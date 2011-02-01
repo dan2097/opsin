@@ -756,7 +756,7 @@ class StructureBuilder {
 								continue;
 							}
 						}
-						Bond b = fragment.findBondOrThrow(atom, neighbours.get(0));
+						Bond b = atom.getBondToAtomOrThrow(neighbours.get(0));
 						if (b.getOrder()==2){
 							matches.add(atom);
 						}
@@ -1310,10 +1310,10 @@ class StructureBuilder {
 						List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
 						if (adjacentAtom.getElement().equals("C") && neighbours.size()==3){
 							neighbours.remove(atom);
-							if (neighbours.get(0).getElement().equals("O") && biochemicalFragment.findBond(adjacentAtom, neighbours.get(0)).getOrder()==2){
+							if (neighbours.get(0).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
 								continue;
 							}
-							if (neighbours.get(1).getElement().equals("O") && biochemicalFragment.findBond(adjacentAtom, neighbours.get(1)).getOrder()==2){
+							if (neighbours.get(1).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
 								continue;
 							}
 						}
@@ -1895,7 +1895,7 @@ class StructureBuilder {
 					int chargeThatWouldFormIfLigandsWereRemoved =0;
 					for (Atom neighbour : neighbours) {
 						Element neighbourEl = state.xmlFragmentMap.getElement(neighbour.getFrag());
-						Bond b = neighbour.getFrag().findBondOrThrow(atom, neighbour);
+						Bond b = atom.getBondToAtomOrThrow(neighbour);
 						//carbonyl and nitrosyl are neutral ligands
 						if (!((neighbourEl.getValue().equals("carbon") && NONCARBOXYLICACID_TYPE_VAL.equals(neighbourEl.getAttributeValue(TYPE_ATR)))
 								|| neighbourEl.getValue().equals("nitrosyl"))){

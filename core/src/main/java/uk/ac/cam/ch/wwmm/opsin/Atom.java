@@ -625,4 +625,32 @@ class Atom {
 		}
 		return null;
 	}
+	
+	/**Gets the bond between this atom and a given atom
+	 *
+	 * @param a The atom to find a bond to
+	 * @return The bond, or null if there is no bond
+	 */
+	Bond getBondToAtom(Atom a) {
+		for (Bond b : bonds) {
+			if(b.getOtherAtom(this) == a){
+				return b;
+			}
+		}
+		return null;
+	}
+
+	/**Gets the bond between this atom and a given atom, throwing if fails.
+	 *
+	 * @param a The atom to find a bond to
+	 * @return The bond found
+	 * @throws StructureBuildingException
+	 */
+	Bond getBondToAtomOrThrow(Atom a) throws StructureBuildingException {
+		Bond b = getBondToAtom(a);
+		if(b == null){
+			throw new StructureBuildingException("Couldn't find specified bond");
+		}
+		return b;
+	}
 }

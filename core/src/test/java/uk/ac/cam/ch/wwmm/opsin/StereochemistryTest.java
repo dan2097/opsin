@@ -114,7 +114,7 @@ public class StereochemistryTest {
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
 		assertNotNull(atom3);
-		Bond chiralBond = f.findBond(atom2, atom3);
+		Bond chiralBond = atom2.getBondToAtom(atom3);
 		assertNotNull(chiralBond);
 		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
@@ -132,7 +132,7 @@ public class StereochemistryTest {
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
 		assertNotNull(atom3);
-		Bond chiralBond = f.findBond(atom2, atom3);
+		Bond chiralBond = atom2.getBondToAtom(atom3);
 		assertNotNull(chiralBond);
 		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
@@ -150,7 +150,7 @@ public class StereochemistryTest {
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
 		assertNotNull(atom3);
-		Bond chiralBond = f.findBond(atom2, atom3);
+		Bond chiralBond = atom2.getBondToAtom(atom3);
 		assertNotNull(chiralBond);
 		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
@@ -168,7 +168,7 @@ public class StereochemistryTest {
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
 		assertNotNull(atom3);
-		Bond chiralBond = f.findBond(atom2, atom3);
+		Bond chiralBond = atom2.getBondToAtom(atom3);
 		assertNotNull(chiralBond);
 		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
@@ -186,7 +186,7 @@ public class StereochemistryTest {
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
 		assertNotNull(atom3);
-		Bond chiralBond = f.findBond(atom2, atom3);
+		Bond chiralBond = atom2.getBondToAtom(atom3);
 		assertNotNull(chiralBond);
 		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
@@ -204,7 +204,7 @@ public class StereochemistryTest {
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
 		assertNotNull(atom3);
-		Bond chiralBond = f.findBond(atom2, atom3);
+		Bond chiralBond = atom2.getBondToAtom(atom3);
 		assertNotNull(chiralBond);
 		Element bondStereo = chiralBond.getBondStereo().toCML();
 		assertNotNull(bondStereo);
@@ -641,7 +641,7 @@ public class StereochemistryTest {
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());
-		Bond formerChiralBond = f.findBondOrThrow(f.getAtomByLocantOrThrow("2"), f.getAtomByLocantOrThrow("3"));
+		Bond formerChiralBond = f.getAtomByLocantOrThrow("2").getBondToAtomOrThrow(f.getAtomByLocantOrThrow("3"));
 		assertNull("This Bond is no longer a chiral centre and hence should not have an associated bond stereo", formerChiralBond.getBondStereo());
 	}
 }

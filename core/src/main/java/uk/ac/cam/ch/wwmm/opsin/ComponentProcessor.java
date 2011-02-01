@@ -1588,7 +1588,7 @@ class ComponentProcessor {
 	private void addFunctionalAtomsToHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getFrag().findBondOrThrow(atom, neighbour).getOrder()==1){
+			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
 				neighbour.getFrag().addFunctionalAtom(neighbour);
 			}
 		}
@@ -1602,7 +1602,7 @@ class ComponentProcessor {
 	private void chargeHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getFrag().findBondOrThrow(atom, neighbour).getOrder()==1){
+			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
 				neighbour.addChargeAndProtons(-1, -1);
 			}
 		}
@@ -1620,7 +1620,7 @@ class ComponentProcessor {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("O") && neighbour.getAtomNeighbours().size()==1){
-				Bond b = atom.getFrag().findBondOrThrow(atom, neighbour);
+				Bond b = atom.getBondToAtomOrThrow(neighbour);
 				if (b.getOrder()==2 && neighbour.getCharge()==0){
 					state.fragManager.removeAtomAndAssociatedBonds(neighbour);
 					if (atom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
@@ -1654,7 +1654,7 @@ class ComponentProcessor {
 		for (Atom atom : atomList) {
 			if (atom.getElement().equals("O") && atom.getCharge()==0){
 				List<Atom> neighbours = atom.getAtomNeighbours();
-				if (neighbours.size()==1 && frag.findBondOrThrow(atom, neighbours.get(0)).getOrder()==1){
+				if (neighbours.size()==1 && atom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==1){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
 					frag.addOutAtom(neighbours.get(0), 1, true);
 				}
@@ -1728,7 +1728,7 @@ class ComponentProcessor {
 				Atom theR = suffixFrag.getFirstAtom();
 				List<Atom> neighbours = theR.getAtomNeighbours();
 				for (Atom neighbour : neighbours) {
-					Bond b = suffixFrag.findBondOrThrow(theR, neighbour);
+					Bond b = theR.getBondToAtomOrThrow(neighbour);
 					state.fragManager.removeBond(b);
 					state.fragManager.createBond(neighbour, firstAtomOfPrefix, b.getOrder());
 				}
@@ -2009,7 +2009,7 @@ class ComponentProcessor {
 					firstInDoubleBond = hwRing.getAtomByLocantOrThrow(locantOfDoubleBond);
 					secondInDoubleBond = hwRing.getAtomByIDOrThrow(firstInDoubleBond.getID() +1);
 				}
-				Bond b =hwRing.findBond(firstInDoubleBond, secondInDoubleBond);
+				Bond b = firstInDoubleBond.getBondToAtomOrThrow(secondInDoubleBond);
 				b.setOrder(2);
 				deltas.get(j).detach();
 			}
@@ -3258,7 +3258,7 @@ class ComponentProcessor {
 									List<String> neighbourLocants = atom.getLocants();
 									for (String neighbourLocant : neighbourLocants) {
 										if (matchNumericLocant.matcher(neighbourLocant).matches()){
-											b=suffix.findBondOrThrow(dummyRAtom, atom);
+											b = dummyRAtom.getBondToAtomOrThrow(atom);
 											break atomLoop;
 										}
 									}
