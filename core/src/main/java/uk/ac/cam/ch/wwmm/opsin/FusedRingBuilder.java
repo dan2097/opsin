@@ -206,7 +206,7 @@ class FusedRingBuilder {
 								FragmentTools.allAtomsInRingAreIdentical(component)){
 							relabelAccordingToFusionLevel(component, fusionLevel);
 							List<String> numericalLocantsOfParent = Arrays.asList(matchComma.split(fusionDescriptors[j]));
-							List<String> numericalLocantsOfChild = findPossibleNumericalLocants(component, numericalLocantsOfParent.size()-1);
+							List<String> numericalLocantsOfChild = findPossibleNumericalLocants(component, determineAtomsToFuse(fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfParent, null).size()-1);
 							processHigherOrderFusionDescriptors(state, component, fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfChild, numericalLocantsOfParent);
 						}
 						else{
@@ -647,48 +647,7 @@ class FusedRingBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private static void processFirstOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> letterLocantsOfParent) throws StructureBuildingException {
-		List<Atom> childAtomList = childRing.getAtomList();
-		int indexfirst = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(0)));
-		int indexfinal = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(numericalLocantsOfChild.size()-1)));
-		CyclicAtomList cyclicListAtomsInChild = new CyclicAtomList(childAtomList, indexfirst);
-		List<Atom> childAtoms = null;
-		
-		List<Atom> possibleChildAtoms = new ArrayList<Atom>();
-		possibleChildAtoms.add(cyclicListAtomsInChild.getCurrent());
-		while (cyclicListAtomsInChild.getIndice() != indexfinal){//assume numbers are ascending
-			possibleChildAtoms.add(cyclicListAtomsInChild.getNext());
-		}
-		if (letterLocantsOfParent.size() +1 == possibleChildAtoms.size()){
-			boolean notInPossibleChildAtoms =false;
-			for (int i =1; i < numericalLocantsOfChild.size()-1 ; i ++){
-				if (!possibleChildAtoms.contains(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(i)))){
-					notInPossibleChildAtoms =true;
-				}
-			}
-			if (!notInPossibleChildAtoms){
-				childAtoms = possibleChildAtoms;
-			}
-		}
-		
-		if (childAtoms ==null){//that didn't work, so try assuming the numbers are descending
-			cyclicListAtomsInChild.setIndice(indexfirst);
-			possibleChildAtoms.clear();
-			possibleChildAtoms.add(cyclicListAtomsInChild.getCurrent());
-			while (cyclicListAtomsInChild.getIndice() != indexfinal){//assume numbers are descending
-				possibleChildAtoms.add(cyclicListAtomsInChild.getPrevious());
-			}
-			if (letterLocantsOfParent.size() +1 == possibleChildAtoms.size()){
-				boolean notInPossibleChildAtoms =false;
-				for (int i =1; i < numericalLocantsOfChild.size()-1 ; i ++){
-					if (!possibleChildAtoms.contains(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(i)))){
-						notInPossibleChildAtoms =true;
-					}
-				}
-				if (!notInPossibleChildAtoms){
-					childAtoms = possibleChildAtoms;
-				}
-			}
-		}
+		List<Atom> childAtoms = determineAtomsToFuse(childRing, numericalLocantsOfChild, letterLocantsOfParent.size() +1);
 		if (childAtoms ==null){
 			throw new StructureBuildingException("Malformed fusion bracket!");
 		}
@@ -752,109 +711,80 @@ class FusedRingBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private static void processHigherOrderFusionDescriptors(BuildState state, Fragment childRing, Fragment parentRing, List<String> numericalLocantsOfChild, List<String> numericalLocantsOfParent) throws StructureBuildingException {
-		List<Atom> childAtomList = childRing.getAtomList();
-		int indexfirst = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(0)));
-		int indexfinal = childAtomList.indexOf(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(numericalLocantsOfChild.size()-1)));
-		CyclicAtomList cyclicListAtomsInChild = new CyclicAtomList(childAtomList, indexfirst);
-		List<Atom> childAtoms = null;
-		
-		//need to determine whether locants are ascending or descending...locants may be omitted!
-		List<Atom> potentialChildAtomsAscending = new ArrayList<Atom>();
-		potentialChildAtomsAscending.add(cyclicListAtomsInChild.getCurrent());
-		while (cyclicListAtomsInChild.getIndice() != indexfinal){//assume numbers are ascending
-			potentialChildAtomsAscending.add(cyclicListAtomsInChild.getNext());
-		}
-		boolean notInPotentialChildAtoms =false;
-		for (int i =1; i < numericalLocantsOfChild.size()-1 ; i ++){
-			if (!potentialChildAtomsAscending.contains(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(i)))){
-				notInPotentialChildAtoms =true;
-			}
-		}
-		if (notInPotentialChildAtoms){
-			potentialChildAtomsAscending  = null;
-		}
-		
-		//and again for descending
-		cyclicListAtomsInChild.setIndice(indexfirst);
-		List<Atom> potentialChildAtomsDescending = new ArrayList<Atom>();
-		potentialChildAtomsDescending.add(cyclicListAtomsInChild.getCurrent());
-		while (cyclicListAtomsInChild.getIndice() != indexfinal){//assume numbers are descending
-			potentialChildAtomsDescending.add(cyclicListAtomsInChild.getPrevious());
-		}
-		notInPotentialChildAtoms =false;
-		for (int i =1; i < numericalLocantsOfChild.size()-1 ; i ++){
-			if (!potentialChildAtomsDescending.contains(childRing.getAtomByLocantOrThrow(numericalLocantsOfChild.get(i)))){
-				notInPotentialChildAtoms =true;
-			}
-		}
-		if (notInPotentialChildAtoms){
-			potentialChildAtomsDescending = null;
-		}
-		if (potentialChildAtomsAscending ==null){
-			childAtoms = potentialChildAtomsDescending;
-		}
-		else if (potentialChildAtomsDescending ==null){
-			childAtoms = potentialChildAtomsAscending;
-		}
-		else{
-			if (potentialChildAtomsDescending.size() < potentialChildAtomsAscending.size() ){
-				childAtoms = potentialChildAtomsDescending;
-			}
-			else{
-				childAtoms = potentialChildAtomsAscending;
-			}
-		}
-		
+		List<Atom> childAtoms =determineAtomsToFuse(childRing, numericalLocantsOfChild, null);
 		if (childAtoms ==null){
 			throw new StructureBuildingException("Malformed fusion bracket!");
 		}
 
-		List<Atom> parentAtomList = parentRing.getAtomList();
-		indexfirst = parentAtomList.indexOf(parentRing.getAtomByLocantOrThrow(numericalLocantsOfParent.get(0)));
-		indexfinal = parentAtomList.indexOf(parentRing.getAtomByLocantOrThrow(numericalLocantsOfParent.get(numericalLocantsOfParent.size()-1)));
-		CyclicAtomList cyclicListAtomsInParent = new CyclicAtomList(parentAtomList, indexfirst);
-		List<Atom> parentAtoms = null;
-		
-		List<Atom> potentialParentAtoms = new ArrayList<Atom>();
-		potentialParentAtoms.add(cyclicListAtomsInParent.getCurrent());
-		while (cyclicListAtomsInParent.getIndice() != indexfinal){//assume numbers are ascending
-			potentialParentAtoms.add(cyclicListAtomsInParent.getNext());
-		}
-		if (childAtoms.size() == potentialParentAtoms.size()){
-			boolean notInPotentialParentAtoms =false;
-			for (int i =1; i < numericalLocantsOfParent.size()-1 ; i ++){
-				if (!potentialParentAtoms.contains(parentRing.getAtomByLocantOrThrow(numericalLocantsOfParent.get(i)))){
-					notInPotentialParentAtoms =true;
-				}
-			}
-			if (!notInPotentialParentAtoms){
-				parentAtoms = potentialParentAtoms;
-			}
-		}
-		
-		if (parentAtoms ==null){//that didn't work, so try assuming the numbers are descending
-			cyclicListAtomsInParent.setIndice(indexfirst);
-			potentialParentAtoms.clear();
-			potentialParentAtoms.add(cyclicListAtomsInParent.getCurrent());
-			while (cyclicListAtomsInParent.getIndice() != indexfinal){//assume numbers are ascending
-				potentialParentAtoms.add(cyclicListAtomsInParent.getPrevious());
-			}
-			if (childAtoms.size() == potentialParentAtoms.size()){
-				boolean notInPotentialParentAtoms =false;
-				for (int i =1; i < numericalLocantsOfParent.size()-1 ; i ++){
-					if (!potentialParentAtoms.contains(parentRing.getAtomByLocantOrThrow(numericalLocantsOfParent.get(i)))){
-						notInPotentialParentAtoms =true;
-					}
-				}
-				if (!notInPotentialParentAtoms){
-					parentAtoms = potentialParentAtoms;
-				}
-			}
-		}
+		List<Atom> parentAtoms = determineAtomsToFuse(parentRing, numericalLocantsOfParent, childAtoms.size());
 		if (parentAtoms ==null){
 			throw new StructureBuildingException("Malformed fusion bracket!");
 		}
 		fuseRings(state, childAtoms, parentAtoms);
+	}
+
+	/**
+	 * Determines which atoms on a ring should be used for fusion given a set of numerical locants.
+	 * If from the other ring involved in the fusion it is known how many atoms are expected to be found this should be provided
+	 * If this is not known it should be set to null and the smallest number of fusion atoms will be returned.
+	 * @param ring
+	 * @param numericalLocantsOnRing
+	 * @param expectedNumberOfAtomsToBeUsedForFusion
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private static List<Atom> determineAtomsToFuse(Fragment ring, List<String> numericalLocantsOnRing, Integer expectedNumberOfAtomsToBeUsedForFusion) throws StructureBuildingException {
+		List<Atom> parentAtomList = ring.getAtomList();
+		int indexfirst = parentAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(0)));
+		int indexfinal = parentAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(numericalLocantsOnRing.size()-1)));
+		CyclicAtomList cyclicRingAtomList = new CyclicAtomList(parentAtomList, indexfirst);
+		List<Atom> fusionAtoms = null;
+		
+		List<Atom> potentialFusionAtomsAscending = new ArrayList<Atom>();
+		potentialFusionAtomsAscending.add(cyclicRingAtomList.getCurrent());
+		while (cyclicRingAtomList.getIndice() != indexfinal){//assume numbers are ascending
+			potentialFusionAtomsAscending.add(cyclicRingAtomList.getNext());
+		}
+		if (expectedNumberOfAtomsToBeUsedForFusion ==null ||expectedNumberOfAtomsToBeUsedForFusion == potentialFusionAtomsAscending.size()){
+			boolean notInPotentialParentAtoms =false;
+			for (int i =1; i < numericalLocantsOnRing.size()-1 ; i ++){
+				if (!potentialFusionAtomsAscending.contains(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(i)))){
+					notInPotentialParentAtoms =true;
+				}
+			}
+			if (!notInPotentialParentAtoms){
+				fusionAtoms = potentialFusionAtomsAscending;
+			}
+		}
+		
+		if (fusionAtoms ==null || expectedNumberOfAtomsToBeUsedForFusion ==null){//that didn't work, so try assuming the numbers are descending
+			cyclicRingAtomList.setIndice(indexfirst);
+			List<Atom> potentialFusionAtomsDescending = new ArrayList<Atom>();
+			potentialFusionAtomsDescending.add(cyclicRingAtomList.getCurrent());
+			while (cyclicRingAtomList.getIndice() != indexfinal){//assume numbers are descending
+				potentialFusionAtomsDescending.add(cyclicRingAtomList.getPrevious());
+			}
+			if (expectedNumberOfAtomsToBeUsedForFusion ==null || expectedNumberOfAtomsToBeUsedForFusion == potentialFusionAtomsDescending.size()){
+				boolean notInPotentialParentAtoms =false;
+				for (int i =1; i < numericalLocantsOnRing.size()-1 ; i ++){
+					if (!potentialFusionAtomsDescending.contains(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(i)))){
+						notInPotentialParentAtoms =true;
+					}
+				}
+				if (!notInPotentialParentAtoms){
+					if (fusionAtoms!=null && expectedNumberOfAtomsToBeUsedForFusion ==null){
+						//prefer less fusion atoms
+						if (potentialFusionAtomsDescending.size()< fusionAtoms.size()){
+							fusionAtoms = potentialFusionAtomsDescending;
+						}
+					}
+					else{
+						fusionAtoms = potentialFusionAtomsDescending;
+					}
+				}
+			}
+		}
+		return fusionAtoms;
 	}
 
 	/**
