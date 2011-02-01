@@ -414,7 +414,7 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
 			}
 		}
-		addDehydroInducedTripleBonds(thisFrag, atomsToFormTripleBondsBetween);
+		addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
 
 		for(int i=unsaturators.size() -1;i >= 0;i--) {
 			Element unsaturator = unsaturators.get(i);
@@ -461,11 +461,10 @@ class StructureBuildingMethods {
 	/**
 	 * Attempts to form triple bond between the atoms in atomsToFormTripleBondsBetween
 	 * Throws an exception if the list contains duplicates or atoms with no adjacent atom in the list
-	 * @param thisFrag
 	 * @param atomsToFormTripleBondsBetween
 	 * @throws StructureBuildingException
 	 */
-	private static void addDehydroInducedTripleBonds(Fragment thisFrag,List<Atom> atomsToFormTripleBondsBetween) throws StructureBuildingException {
+	private static void addDehydroInducedTripleBonds(List<Atom> atomsToFormTripleBondsBetween) throws StructureBuildingException {
 		if (atomsToFormTripleBondsBetween.size()>0){
 			Set<Atom> atoms = new HashSet<Atom>(atomsToFormTripleBondsBetween);
 			if (atomsToFormTripleBondsBetween.size() != atoms.size()){
@@ -478,7 +477,7 @@ class StructureBuildingMethods {
 					if (atomsToFormTripleBondsBetween.contains(neighbour)){
 						atomsToFormTripleBondsBetween.remove(i);
 						atomsToFormTripleBondsBetween.remove(neighbour);
-						Bond b = thisFrag.findBondOrThrow(a, neighbour);
+						Bond b = a.getBondToAtomOrThrow(neighbour);
 						b.setOrder(3);
 						a.setSpareValency(false);
 						neighbour.setSpareValency(false);

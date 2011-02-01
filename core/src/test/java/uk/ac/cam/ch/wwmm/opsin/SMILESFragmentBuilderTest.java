@@ -92,7 +92,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(atomList.get(0), neighbours.get(0));
 		assertEquals(atomList.get(2), neighbours.get(1));
 		assertEquals(atomList.get(3), neighbours.get(2));
-		assertEquals(2, fragment.findBondOrThrow(carbon, atomList.get(2)).getOrder());
+		assertEquals(2, carbon.getBondToAtomOrThrow(atomList.get(2)).getOrder());
 	}
 
 	@Test
@@ -267,7 +267,7 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = fm.buildSMILES("C=1CN1");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(3, atomList.size());
-		assertEquals(2, fragment.findBond(atomList.get(0), atomList.get(2)).getOrder());
+		assertEquals(2, atomList.get(0).getBondToAtomOrThrow(atomList.get(2)).getOrder());
 	}
 
 	@Test
@@ -275,7 +275,7 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = fm.buildSMILES("C1CN=1");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(3, atomList.size());
-		assertEquals(2, fragment.findBond(atomList.get(0), atomList.get(2)).getOrder());
+		assertEquals(2, atomList.get(0).getBondToAtomOrThrow(atomList.get(2)).getOrder());
 	}
 
 	@Test(expected=StructureBuildingException.class)
@@ -289,7 +289,7 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = fm.buildSMILES("C=1CN=1");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(3, atomList.size());
-		assertEquals(2, fragment.findBond(atomList.get(0), atomList.get(2)).getOrder());
+		assertEquals(2, atomList.get(0).getBondToAtomOrThrow(atomList.get(2)).getOrder());
 	}
 
 	@Test

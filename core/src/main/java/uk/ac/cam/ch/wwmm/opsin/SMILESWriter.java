@@ -179,8 +179,11 @@ class SMILESWriter {
 			BondStereo bondStereo =bond.getBondStereo();
 			if (bondStereo!=null){
 				Atom[] atomRefs4 = bondStereo.getAtomRefs4();
-				Bond bond1 = atomRefs4[0].getFrag().findBond(atomRefs4[0], atomRefs4[1]);
-				Bond bond2 = atomRefs4[0].getFrag().findBond(atomRefs4[2], atomRefs4[3]);
+				Bond bond1 = atomRefs4[0].getBondToAtom(atomRefs4[1]);
+				Bond bond2 = atomRefs4[2].getBondToAtom(atomRefs4[3]);
+				if (bond1 ==null || bond2==null){
+					throw new RuntimeException("Bondstereo described atoms that are not bonded:" +bondStereo.toCML().toXML());
+				}
 				Atom bond1ToAtom = bondToNextAtomMap.get(bond1);
 				Atom bond2ToAtom = bondToNextAtomMap.get(bond2);
 				SMILES_BOND_DIRECTION bond1Slash = bond1.getSmilesStereochemistry();//null except in conjugated systems

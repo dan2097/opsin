@@ -868,10 +868,9 @@ class FusedRingBuilder {
 		if (parentAtoms.size()!=childAtoms.size()){
 			throw new StructureBuildingException("Problem with fusion descriptors: Parent atoms specified: " + parentAtoms.size() +" Child atoms specified: " + childAtoms.size() + " These should have been identical!");
 		}
-		
-		Fragment childFrag =childAtoms.get(0).getFrag();
+
 		for (int i = 0; i < childAtoms.size() -1; i++) {
-			Bond bondToBeRemoved = childFrag.findBondOrThrow(childAtoms.get(i), childAtoms.get(i+1));
+			Bond bondToBeRemoved = childAtoms.get(i).getBondToAtomOrThrow(childAtoms.get(i+1));
 			state.fragManager.removeBond(bondToBeRemoved);//the bonds to be merged
 		}
 		

@@ -95,14 +95,13 @@ class SSSRFinder {
 	}
 	
 	private static List<Bond>  getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap, List<Atom> atomSet) throws StructureBuildingException {
-		Fragment molecule =atom.getFrag();
 		List<Bond> newBondSet = new ArrayList<Bond>();
 		while (true) {
 			Atom atom1 = atomToParentMap.get(atom);
 			if (atom1 == null) {
 				break;
 			}
-			Bond bond = molecule.findBondOrThrow(atom, atom1);
+			Bond bond = atom.getBondToAtomOrThrow(atom1);
 			if (newBondSet.contains(bond)) {
 				break;
 			}
@@ -119,14 +118,13 @@ class SSSRFinder {
 		usedAtoms.add(atom);
 		atomToParentMap.put(atom, parentAtom);
 		List<Atom> ligandAtomList = atom.getAtomNeighbours();
-		Fragment fragment = atom.getFrag();
 				
 		for (int i = 0; i < ligandAtomList.size(); i++) {
 			Atom ligandAtom = ligandAtomList.get(i);
 			if (ligandAtom.equals(parentAtom)) {
 				// skip existing bond
 			} else if (usedAtoms.contains(ligandAtom)) {
-				Bond linkBond = fragment.findBondOrThrow(atom, ligandAtom);
+				Bond linkBond = atom.getBondToAtomOrThrow(ligandAtom);
 				linkBondSet.add(linkBond);
 				// already treated
 			} else {

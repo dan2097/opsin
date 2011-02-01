@@ -517,10 +517,9 @@ class FragmentManager {
 			atomToBeReplaced.removeLocant(locant);
 			replacementAtom.addLocant(locant);
 		}
-		Fragment replacedAtomsFragment = atomToBeReplaced.getFrag();
-		List<Atom> neighbours = atomToBeReplaced.getAtomNeighbours();
-		for (Atom neighbour : neighbours) {
-			createBond(replacementAtom, neighbour, replacedAtomsFragment.findBond(atomToBeReplaced, neighbour).getOrder());
+		Set<Bond> bonds = atomToBeReplaced.getBonds();
+		for (Bond bond : bonds) {
+			createBond(replacementAtom, bond.getOtherAtom(atomToBeReplaced), bond.getOrder());
 		}
 		removeAtomAndAssociatedBonds(atomToBeReplaced);
 	}

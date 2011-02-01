@@ -250,7 +250,7 @@ class Fragment {
 		return a;
 	}
 
-	/**Finds a bond between two specified atoms within the fragment.
+	/**Finds a bond between two specified atoms the first of which must be within the fragment
 	 *
 	 * @param ID1 The id of one atom
 	 * @param ID2 The id of the other atom
@@ -269,7 +269,7 @@ class Fragment {
 		return null;
 	}
 
-	/**Finds a bond between two specified atoms within the fragment, throwing if fails.
+	/**Finds a bond between two specified atoms the first of which must be within the fragment, throwing if it fails.
 	 *
 	 * @param ID1 The id of one atom
 	 * @param ID2 The id of the other atom
@@ -278,36 +278,9 @@ class Fragment {
 	 */
 	Bond findBondOrThrow(int ID1, int ID2) throws StructureBuildingException {
 		Bond b = findBond(ID1, ID2);
-		if(b == null) throw new StructureBuildingException("Couldn't find specified bond");
-		return b;
-	}
-
-	/**Finds a bond between two specified atoms within the fragment.
-	 *
-	 * @param a1 An atom
-	 * @param a2 Another atom
-	 * @return The bond found, or null
-	 */
-	Bond findBond(Atom a1, Atom a2) {
-		for (Bond b : a1.getBonds()) {
-			if((b.getFromAtom() == a1 && b.getToAtom() == a2) ||
-					(b.getToAtom() == a1 && b.getFromAtom() == a2)) {
-				return b;
-			}
+		if(b == null) {
+			throw new StructureBuildingException("Couldn't find specified bond");
 		}
-		return null;
-	}
-
-	/**Finds a bond between two specified atoms within the fragment, throwing if fails.
-	 *
-	 * @param a1 An atom
-	 * @param a2 Another atom
-	 * @return The bond found
-	 * @throws StructureBuildingException
-	 */
-	Bond findBondOrThrow(Atom a1, Atom a2) throws StructureBuildingException {
-		Bond b = findBond(a1, a2);
-		if(b == null) throw new StructureBuildingException("Couldn't find specified bond");
 		return b;
 	}
 
@@ -322,7 +295,7 @@ class Fragment {
 		Atom next = getAtomByLocant(Integer.toString(length+1));
 		Atom previous = null;
 		while (next !=null){
-			if (previous !=null && findBond(previous, next) == null){
+			if (previous !=null && previous.getBondToAtom(next) == null){
 				break;
 			}
 			length++;
