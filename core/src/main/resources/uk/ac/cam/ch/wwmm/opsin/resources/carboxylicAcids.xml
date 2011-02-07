@@ -117,7 +117,8 @@
     <token value="CCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">margar</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">meliss</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">montan</token>
-    <token value="Cc1ccccn1" labels="alpha/2,ortho/3,meta/4,para/5/6/1" valType="SMILES">picolin</token>
+    <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7">picolin</token>
+    <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7">picol</token><!--contraction-->
     <token value="Cc1cc(O)c(O)cc1" labels="/1/2,ortho/3,meta//4,para//5/6" valType="SMILES">protocatechu</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">psyll</token>
 		<token value="C/C=C/C=C/C" labels="1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">sorb</token>
