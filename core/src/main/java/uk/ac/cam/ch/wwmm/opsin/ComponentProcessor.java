@@ -453,7 +453,7 @@ class ComponentProcessor {
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
-				if (locantValues.size()==groupsToBeAdded.length || locantValues.size() +1 ==groupsToBeAdded.length){//one locant can be implicit in some cases
+				if ((locantValues.size()==groupsToBeAdded.length || locantValues.size() +1 ==groupsToBeAdded.length) && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){//one locant can be implicit in some cases
 					boolean assignlocants =true;
 					if (locantValues.size()!=groupsToBeAdded.length){
 						//check that the firstGroup by default will be added to the atom with locant 1. If this is not the case then as many locants as there were groups should of been specified
@@ -487,6 +487,7 @@ class ComponentProcessor {
 								break;
 							}
 						}
+						group.removeAttribute(group.getAttribute(FRONTLOCANTSEXPECTED_ATR));
 						previousEl.detach();
 					}
 				}
@@ -553,13 +554,14 @@ class ComponentProcessor {
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
-				if (locantValues.size() ==heteroAtomsToBeAdded.length){
+				if (locantValues.size() ==heteroAtomsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
 					for (int i = heteroAtomsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
 						HashMap<String, String> groupInformation =allHeteroAtomInformation.get(i);
 						groupInformation.put("atomReferenceType", "locant");
 						groupInformation.put("atomReference", locantValues.get(locantValues.size()-1));
 						locantValues.remove(locantValues.size()-1);
 					}
+					group.removeAttribute(group.getAttribute(FRONTLOCANTSEXPECTED_ATR));
 					previousEl.detach();
 				}
 			}
@@ -605,13 +607,14 @@ class ComponentProcessor {
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
-				if (locantValues.size() ==bondsToBeAdded.length){
+				if (locantValues.size() ==bondsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
 					for (int i = bondsToBeAdded.length -1; i >=0 ; i--) {//all bond order changes must have a locant or default locants will be used
 						HashMap<String, String> bondInformation =allBondInformation.get(i);
 						bondInformation.put("atomReferenceType", "locant");
 						bondInformation.put("atomReference", locantValues.get(locantValues.size()-1));
 						locantValues.remove(locantValues.size()-1);
 					}
+					group.removeAttribute(group.getAttribute(FRONTLOCANTSEXPECTED_ATR));
 					previousEl.detach();
 				}
 			}
@@ -632,6 +635,26 @@ class ComponentProcessor {
 			}
 		}
 	}
+
+	/**
+	 * Checks that all locants are present within the front locants expected attribute of the group
+	 * @param locantValues
+	 * @param group
+	 * @return
+	 */
+	private static boolean locantAreAcceptableForXyleneLikeNomenclatures(List<String> locantValues, Element group) {
+		if (group.getAttribute(FRONTLOCANTSEXPECTED_ATR)==null){
+			throw new IllegalArgumentException("Group must have frontLocantsExpected to implement xylene-like nomenclature");
+		}
+		List<String> allowedLocants = Arrays.asList(matchComma.split(group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR)));
+		for (String locant : locantValues) {
+			if (!allowedLocants.contains(locant)){
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
 		Element nextEl = (Element) XOMTools.getNextSibling(group);

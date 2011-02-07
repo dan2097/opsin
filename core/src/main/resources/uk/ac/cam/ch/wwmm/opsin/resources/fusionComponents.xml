@@ -9,8 +9,8 @@
   </tokenList>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="¡">
   <!-- may have front locants-->
-		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8">naphthyridino</token>
-		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7">phenanthrolino</token>
+		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridino</token>
+		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrolino</token>
   </tokenList>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="f">
     <token value="aceanthrylene" valType="dbkey">aceanthryleno</token>

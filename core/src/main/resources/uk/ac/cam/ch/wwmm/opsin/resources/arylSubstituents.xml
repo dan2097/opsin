@@ -16,7 +16,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="CCc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">pheneth</token>
 		<token value="pyrrole" valType="dbkey">pyrr</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" frontLocantsExpected="2,3,4">tol</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant1 alpha;C locant2 alpha'">xyl</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant1 alpha;C locant2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xyl</token>
 	</tokenList>
 
 	<!--Contracted form allows all suffixes -->
@@ -38,7 +38,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coron</token>
 		<token value="C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cum</token>
 		<token value="cyclopenta[a]phenanthrene" valType="dbkey">cyclopenta[a]phenanthr</token>
-		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///" valType="SMILES" addGroup="C locant4">cym</token>
+		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///" valType="SMILES" addGroup="C locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cym</token>
 		<token value="fluoranthene" valType="dbkey">fluoranth</token>
 		<token value="C1=CC=CC1=C" labels="1/2/3/4/5/6" valType="SMILES">fulv</token>
 		<token value="o1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">fur</token>
@@ -58,14 +58,14 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="naphthacene" valType="dbkey">naphthac</token>
 		<token value="naphthalene" valType="dbkey">naphthal</token>
 		<token value="naphthalene" valType="dbkey" frontLocantsExpected="1,2">naphth</token>
-		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8">naphthyrid</token>
+		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyrid</token>
 		<token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k" valType="SMILES">oval</token>
 		<token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthr</token>
 		<token value="perimidine" valType="dbkey">perimid</token>
 		<token value="phenalene" valType="dbkey">phenal</token>
 		<token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES" frontLocantsExpected="1,2,3,4,9">phenanthr</token>
 		<token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phenanthrid</token>
-		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7">phenanthrol</token>
+		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrol</token>
 		<token value="phenarsazine" valType="dbkey">phenarsaz</token>
 		<token value="phenazine" valType="dbkey">phenaz</token>
 		<token value="c1cccc2oc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaz</token>
