@@ -50,7 +50,7 @@ class Tokeniser {
 					resultFromBeforeWhitespaceRemoval.setErrorFields(result.getUnparsedName(), result.getWorkingName(), results.getUnparseableName());
 				}
 
-				if (!fixWord(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+				if (!fixWord(result, parsedName, allowRemovalOfWhiteSpace)) {
 					result.setErrorFields(resultFromBeforeWhitespaceRemoval.getUnparsedName(), resultFromBeforeWhitespaceRemoval.getUninterpretableName(), resultFromBeforeWhitespaceRemoval.getUnparsableName());
 					break;
 				}
@@ -90,7 +90,7 @@ class Tokeniser {
 					resultFromBeforeWhitespaceRemoval = new TokenizationResult(name);
 					resultFromBeforeWhitespaceRemoval.setErrorFields(result.getUnparsedName(), result.getWorkingName(), results.getUnparseableName());
 				}
-				if (!fixWordInReverse(result, parsedName, results, allowRemovalOfWhiteSpace)) {
+				if (!fixWordInReverse(result, parsedName, allowRemovalOfWhiteSpace)) {
 					result.setErrorFields(resultFromBeforeWhitespaceRemoval.getUnparsedName(), resultFromBeforeWhitespaceRemoval.getUninterpretableName(), resultFromBeforeWhitespaceRemoval.getUnparsableName());
 					break;
 				}
@@ -136,7 +136,7 @@ class Tokeniser {
 		}
 	}
 
-	private boolean fixWord(TokenizationResult result, String parsedName, ParseRulesResults results, boolean allowRemovalOfWhiteSpace) throws ParsingException {
+	private boolean fixWord(TokenizationResult result, String parsedName, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		Matcher m = matchCompoundWithPhrase.matcher(result.getWorkingName());
 		if (m.lookingAt()) {
 			result.setUnparsedName(parsedName + result.getWorkingName().substring(m.group().length()));
@@ -162,7 +162,7 @@ class Tokeniser {
 		return true;
 	}
 
-	private boolean fixWordInReverse(TokenizationResult result, String parsedName, ParseRulesResults results, boolean allowRemovalOfWhiteSpace) {
+	private boolean fixWordInReverse(TokenizationResult result, String parsedName, boolean allowRemovalOfWhiteSpace) {
 		if (allowRemovalOfWhiteSpace) {
 			//Try and remove a space and try again
 			//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD

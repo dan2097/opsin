@@ -375,7 +375,7 @@ class SMILESWriter {
 			atomSmiles.append(atom.getElement());
 		}
 		if (atom.getAtomParity()!=null){
-			atomSmiles.append(atomParityToSmiles(atom, hydrogen, depth, previousAtom));
+			atomSmiles.append(atomParityToSmiles(atom, depth, previousAtom));
 		}
 		if (hydrogen !=0 && needsSquareBrackets && !atom.getElement().equals("H")){
 			atomSmiles.append('H');
@@ -454,7 +454,7 @@ class SMILESWriter {
 		return false;
 	}
 
-	private String atomParityToSmiles(Atom currentAtom, int hydrogen, int depth, Atom previousAtom) {
+	private String atomParityToSmiles(Atom currentAtom, int depth, Atom previousAtom) {
 		AtomParity atomParity = currentAtom.getAtomParity();
 		StringBuilder tetrahedralStereoChem = new StringBuilder();
 		Atom[] atomRefs4 = atomParity.getAtomRefs4().clone();

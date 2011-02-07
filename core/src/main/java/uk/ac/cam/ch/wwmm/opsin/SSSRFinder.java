@@ -71,10 +71,8 @@ class SSSRFinder {
 	private static Ring getRing(Bond bond, Map<Atom, Atom> atomToParentMap) throws StructureBuildingException { 
 		Atom atomFrom =  bond.getFromAtom() ;
 		Atom atomTo = bond.getToAtom(); 
-		List<Atom>  atomSet0 = getAncestors(atomFrom, atomToParentMap);
-		List<Atom>  atomSet1 = getAncestors(atomTo, atomToParentMap);
-		List<Bond>  bondSet0 = getAncestors1(atomFrom, atomToParentMap, atomSet1);
-		List<Bond>  bondSet1 = getAncestors1(atomTo, atomToParentMap, atomSet0);
+		List<Bond>  bondSet0 = getAncestors1(atomFrom, atomToParentMap);
+		List<Bond>  bondSet1 = getAncestors1(atomTo, atomToParentMap);
 		List<Bond>  mergedBondSet = symmetricDifference (bondSet0, bondSet1); 
 		
 		mergedBondSet.add(bond);
@@ -82,19 +80,7 @@ class SSSRFinder {
 		return ring;
 	}
 	
-	
-	private static List<Atom>  getAncestors(Atom atom, Map<Atom, Atom> atomToParentMap) {
-		List<Atom> newAtomSet = new ArrayList<Atom> ();
-
-		atom = atomToParentMap.get(atom);
-		if (atom != null && !newAtomSet.contains(atom)) {
-			newAtomSet.add(atom);
-		}
-
-		return newAtomSet;
-	}
-	
-	private static List<Bond>  getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap, List<Atom> atomSet) throws StructureBuildingException {
+	private static List<Bond> getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap) throws StructureBuildingException {
 		List<Bond> newBondSet = new ArrayList<Bond>();
 		while (true) {
 			Atom atom1 = atomToParentMap.get(atom);

@@ -48,7 +48,7 @@ class AutomatonInitialiser {
 		catch (IOException e) {
 			LOG.warn("Error loading cached automaton: "+automatonName, e);
 		}
-		RunAutomaton automaton = createAutomaton(automatonName, regex, tableize, reverseAutomaton);
+		RunAutomaton automaton = createAutomaton(regex, tableize, reverseAutomaton);
 		cacheAutomaton(automatonName, automaton, regex);
 		return automaton;
 	}
@@ -81,7 +81,7 @@ class AutomatonInitialiser {
 		}
 	}
 	
-	private static RunAutomaton createAutomaton(String automatonName, String regex, boolean tableize, boolean reverseAutomaton) {
+	private static RunAutomaton createAutomaton(String regex, boolean tableize, boolean reverseAutomaton) {
 		Automaton a = new RegExp(regex).toAutomaton();
 		if (reverseAutomaton){
 			SpecialOperations.reverse(a);
