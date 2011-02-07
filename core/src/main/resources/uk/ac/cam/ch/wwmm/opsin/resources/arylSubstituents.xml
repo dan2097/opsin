@@ -84,7 +84,6 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxantimon</token>
 		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiars</token>
 		<token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phosphanthr</token>
-		<token value="c1cccc2ccc3c4ccc5ccccc5c4ccc3c21" labels="1/2/3/4/4a/5/6/6a/6b/7/8/8a/9/10/11/12/12a/12b/13/14/14a/14b" valType="SMILES">pic</token>
 		<token value="N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperaz</token>
 		<token value="N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" frontLocantsExpected="1,2,3,4">piperid</token>
 		<token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiad</token>
