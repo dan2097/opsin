@@ -227,6 +227,13 @@ public class SMILESWriterTest {
 		assertEquals("[15NH3]", smiles);
 	}
 	
+	@Test
+	public void testRGroup() throws StructureBuildingException {
+		Fragment f = state.fragManager.buildSMILES("[R]CC[R]");
+		StructureBuilder.makeHydrogensExplicit(state);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		assertEquals("[*]CC[*]", smiles);
+	}
 	
 	@Test
 	public void testRingOpeningsGreaterThan10() throws StructureBuildingException {
