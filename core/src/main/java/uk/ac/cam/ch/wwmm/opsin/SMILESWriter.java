@@ -368,16 +368,22 @@ class SMILESWriter {
 		if (atom.getIsotope()!=null){
 			atomSmiles.append(atom.getIsotope());
 		}
+		String elementSymbol =atom.getElement();
 		if (atom.hasSpareValency()){//spare valency corresponds directly to lower case SMILES in OPSIN's SMILES reader
-			atomSmiles.append(atom.getElement().toLowerCase());
+			atomSmiles.append(elementSymbol.toLowerCase());
 		}
 		else{
-			atomSmiles.append(atom.getElement());
+			if (elementSymbol.equals("R")){//used for polymers
+				atomSmiles.append('*');
+			}
+			else{
+				atomSmiles.append(elementSymbol);
+			}
 		}
 		if (atom.getAtomParity()!=null){
 			atomSmiles.append(atomParityToSmiles(atom, depth, previousAtom));
 		}
-		if (hydrogen !=0 && needsSquareBrackets && !atom.getElement().equals("H")){
+		if (hydrogen !=0 && needsSquareBrackets && !elementSymbol.equals("H")){
 			atomSmiles.append('H');
 			if (hydrogen !=1){
 				atomSmiles.append(String.valueOf(hydrogen));
