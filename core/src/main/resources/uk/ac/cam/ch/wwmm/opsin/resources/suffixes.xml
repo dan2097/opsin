@@ -6,24 +6,34 @@
 <!--not allowed to be prefixed by carbo(x)/sulfon etc. Can be locanted to any position-->
   <tokenList tagname="suffix" type="root" symbol="s">
     <token value="amine">amine</token>
+    <token value="amine">amin</token>
     <token value="aminide">aminide</token>
+    <token value="aminide">aminid</token>
     <token value="aminium">aminium</token>
     <token value="aminylium">aminylium</token>
     <token value="carboxylate">carboxylate</token>
+    <token value="carboxylate">carboxylat</token>
     <token value="carboxylic">carboxylic</token>
     <token value="carboxylic">carboxylicacid</token>
     <token value="carboxylic">carboxylic acid</token>
     <token value="carboxylite">carboxylite</token>
+    <token value="carboxylite">carboxylit</token>
     <token value="diazonium">diazonium</token>
     <token value="imine">imine</token>
+    <token value="imine">imin</token>
     <token value="iminide">iminide</token>
+    <token value="iminide">iminid</token>
     <token value="iminium">iminium</token>
     <token value="iminylium">iminylium</token>
     <token value="one" additionalValue="one">quinone</token><!--special cased to be the same as dione-->
+    <token value="one" additionalValue="one">quinon</token>
     <token value="ol">ol</token>
     <token value="olate">olate</token>
+    <token value="olate">olat</token>
     <token value="one">one</token>
+    <token value="one">on</token>
     <token value="selone">selone</token>
+    <token value="selone">selon</token>
     <token value="selenenic">selenenic</token>
     <token value="selenenic">selenenicacid</token>
     <token value="selenenic">selenenic acid</token>
@@ -34,10 +44,12 @@
     <token value="sulfenothioic">sulfenothioicacid</token>
     <token value="sulfenothioic">sulfenothioic acid</token>
     <token value="sulfenamide">sulfenamide</token>
+    <token value="sulfenamide">sulfenamid</token>
     <token value="sulfenic">sulfenic</token>
     <token value="sulfenic">sulfenicacid</token>
     <token value="sulfenic">sulfenic acid</token>
     <token value="tellone">tellone</token>
+    <token value="tellone">tellon</token>
     <token value="tellurenic">tellurenic</token>
     <token value="tellurenic">tellurenicacid</token>
     <token value="tellurenic">tellurenic acid</token>
@@ -50,10 +62,12 @@
     <token value="azonic">azonicacid</token>
     <token value="azonic">azonic acid</token>
     <token value="azonate">azonate</token>
+    <token value="azonate">azonat</token>
     <token value="azonous">azonous</token>
     <token value="azonous">azonousacid</token>
     <token value="azonous">azonous acid</token>
     <token value="boronate">boronate</token>
+    <token value="boronate">boronat</token>
     <token value="boronic">boronic</token>
     <token value="boronic">boronicacid</token>
     <token value="boronic">boronic acid</token>
@@ -78,7 +92,9 @@
     <token value="ic" additionalValue="aldehyde">aldehydicacid</token>
     <token value="ic" additionalValue="aldehyde">aldehydic acid</token>
     <token value="aldoxime">aldoxime</token>
+    <token value="aldoxime">aldoxim</token>
     <token value="ate" additionalValue="amide">amate</token>
+    <token value="ate" additionalValue="amide">amat</token>
     <token value="ic" additionalValue="amide">amic</token>
     <token value="ic" additionalValue="amide">amicacid</token>
     <token value="ic" additionalValue="amide">amic acid</token>
@@ -86,11 +102,15 @@
     <token value="ic" additionalValue="anilide">anilicacid</token>
     <token value="ic" additionalValue="anilide">anilic acid</token>
     <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by ComponentProcessor-->
+    <token value="amide" additionalValue="aldehyde">imid</token><!--suffixes joined by ComponentProcessor-->
     <token value="amidylium" additionalValue="aldehyde">imidylium</token><!--suffixes joined by ComponentProcessor-->
     <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by ComponentProcessor-->
     <token value="ite">ite</token>
+    <token value="ite">it</token>
     <token value="onaphthone">onaphthone</token>
+    <token value="onaphthone">onaphthon</token>
     <token value="ophenone">ophenone</token>
+    <token value="ophenone">ophenon</token>
     <token value="ous">ous</token>
     <token value="ous">ousacid</token>
     <token value="ous">ous acid</token>
@@ -100,21 +120,29 @@
 <!--these suffixes may have a euphonic o in front of them-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="å">
     <token value="aldehyde">aldehyde</token>
+    <token value="aldehyde">aldehyd</token>
     <token value="amide">amide</token>
+    <token value="amide">amid</token>
     <token value="amidylium">amidylium</token>
     <token value="amidium">amidium</token>
     <token value="anilide">anilide</token>
+    <token value="anilide">anilid</token>
     <token value="amidine">amidine</token><!--deprecated-->
+    <token value="amidine">amidin</token><!--deprecated-->
     <token value="ate">ate</token>
+    <token value="ate">at</token>
     <token value="hydrazide">hydrazide</token>
+    <token value="hydrazide">hydrazid</token>
     <token value="hydroxamic">hydroxamic</token>
     <token value="hydroxamic">hydroxamicacid</token>
     <token value="hydroxamic">hydroxamic acid</token>
     <token value="hydroxamate">hydroxamate</token>
+    <token value="hydroxamate">hydroxamat</token>
     <token value="ic">ic</token>
     <token value="ic">icacid</token>
     <token value="ic">ic acid</token>
     <token value="nitrile">nitrile</token>
+    <token value="nitrile">nitril</token>
     <token value="nitrilium">nitrilium</token>
   </tokenList>
 </tokenLists>

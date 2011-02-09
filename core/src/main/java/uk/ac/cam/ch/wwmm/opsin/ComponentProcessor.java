@@ -1427,7 +1427,7 @@ class ComponentProcessor {
 				}
 				symmetricSuffixes = false;
 				String suffixValue = suffix.getValue();
-				if (suffixValue.equals("imide")|| suffixValue.equals("imido") || suffixValue.equals("imidyl")|| suffixValue.equals("imidium")  || suffixValue.equals("imidylium")){
+				if (suffixValue.equals("imide") || suffixValue.equals("imid")|| suffixValue.equals("imido") || suffixValue.equals("imidyl")|| suffixValue.equals("imidium")  || suffixValue.equals("imidylium")){
 					imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
 				}
 			}
@@ -1738,7 +1738,7 @@ class ComponentProcessor {
 			if (suffix.getAttribute(SUFFIXPREFIX_ATR)!=null){
 				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue(SUFFIXPREFIX_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 				addFunctionalAtomsToHydroxyGroups(suffixPrefixFrag.getFirstAtom());
-				if (suffix.getValue().endsWith("ate")){
+				if (suffix.getValue().endsWith("ate") || suffix.getValue().endsWith("at")){
 					chargeHydroxyGroups(suffixPrefixFrag.getFirstAtom());
 				}
 				Atom firstAtomOfPrefix = suffixPrefixFrag.getFirstAtom();
