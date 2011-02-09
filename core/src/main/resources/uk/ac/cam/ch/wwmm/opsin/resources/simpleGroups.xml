@@ -261,6 +261,7 @@
 	<!--Maybe this idea should be rethought as this way of special casing things is a bit tacky -->
 		<token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">formamide</token>
 		<token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">methanamide</token>
+		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinon</token><!--preferred to systematic interpretation-->
 		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">dihydromethanophenazine</token><!--preferred to systematic interpretation-->
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
 		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">methanophenazine</token><!--preferred to systematic interpretation-->
