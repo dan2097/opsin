@@ -1260,7 +1260,7 @@ class ComponentGenerator {
 				}
 			}
 			// convert quinone to dione
-			else if (suffixValue.equals("quinone")){
+			else if (suffixValue.equals("quinone") || suffixValue.equals("quinon")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				XOMTools.setTextChild(suffix, "one");
 				Element multiplier = new Element(MULTIPLIER_EL);
@@ -1268,7 +1268,7 @@ class ComponentGenerator {
 				multiplier.appendChild("di");
 				XOMTools.insertBefore(suffix, multiplier);
 			}
-			else if (suffixValue.equals("ylene")||suffixValue.equals("ylen")){
+			else if (suffixValue.equals("ylene") || suffixValue.equals("ylen")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				XOMTools.setTextChild(suffix, "yl");
 				Element alk = (Element) XOMTools.getPreviousSibling(suffix, GROUP_EL);
