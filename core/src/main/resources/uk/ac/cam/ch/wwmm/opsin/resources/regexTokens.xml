@@ -31,10 +31,10 @@
   <regex name="%locantTypes%" regex="(%locant%(-%elementSymbol%'*)?|%elementSymbol%'*(%locant%|%superScriptedLocant%|%greek%'*)?|%greek%'*)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N' etc.-->
   <regex name="%locantTypesOptionalHyphen%" regex="(%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%|%greek%'*)|%greek%'*)"/><!--subset that do not end with a letter-->
   <regex name="%indicatedHydrogen%" regex="(%locant%H)"/>
-  <regex name="%compoundLocantOrIndicatedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
+  <regex name="%compoundLocantOrAddedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
   <regex name="%RSstereochemAfterLocant%" regex="(-?%openBracket%[RS]%closeBracket%)"/><!--e.g. 2-(S) or 2(R),3(R),4(R),5-->
-  <regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrIndicatedHydrogen%|%RSstereochemAfterLocant%)?)"/>
-  <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrIndicatedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
+  <regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)?)"/>
+  <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
   <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" determinise="yes" />
 
@@ -56,7 +56,7 @@
   <regex name="%higherOrderFusion%" regex="(%locant%(,%locant%)+:%locant%(,%locant%)+)"/>
   <regexToken regex="%openBracket%(%firstOrderFusion%|%omittedLocantFirstOrderFusion%|%omittedLocantAmbiguousOrderFusion%|%higherOrderFusion%)%closeBracket%" symbol="F" tagname="fusion" determinise="yes"/>
   <regexToken regex="%openBracket%((%firstOrderFusion%(:%firstOrderFusion%)+)|(%omittedLocantFirstOrderFusion%(,%omittedLocantFirstOrderFusion%)+)|(%higherOrderFusion%(;%higherOrderFusion%)+)|(%omittedLocantAmbiguousOrderFusion%(:%omittedLocantAmbiguousOrderFusion%)+))%closeBracket%" symbol="Ä" tagname="fusion" determinise="yes"/><!--e.g. dithieno[2',3':3,4;2",3":6,7]-->
-  <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-|%openBracket%%indicatedHydrogen%(,%indicatedHydrogen%)*%closeBracket%-?" symbol="e" tagname="hydrogen" determinise="yes"/>
+  <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-|%openBracket%%indicatedHydrogen%(,%indicatedHydrogen%)*%closeBracket%-?" symbol="e" tagname="indicatedHydrogen" determinise="yes"/>
   <regexToken regex="[eE]" symbol="Z" tagname="e" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[oO]" symbol="Y" tagname="o" ignoreWhenWritingXML="yes" determinise="yes"/>
   <regexToken regex="[oO]" symbol="╡" tagname="bridgeFormingO" determinise="yes"/>

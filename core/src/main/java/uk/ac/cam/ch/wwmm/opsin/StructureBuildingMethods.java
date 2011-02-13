@@ -369,10 +369,10 @@ class StructureBuildingMethods {
 					dehydroElements.add(currentEl);
 				}
 			}
-			else if (elName.equals(HYDROGEN_EL)){
+			else if (elName.equals(INDICATEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
 			}
-			else if (elName.equals(INDICATEDHYDROGEN_EL)){
+			else if (elName.equals(ADDEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
 			}
 		}
@@ -428,7 +428,7 @@ class StructureBuildingMethods {
 				unsaturators.remove(unsaturator);
 				/*
 				 * Is the locant a compound locant e.g. 1(6) 
-				 * This would indicated unsaturation between the atoms with locants 1 and 6
+				 * This would indicate unsaturation between the atoms with locants 1 and 6
 				 */
 	            Matcher matcher = matchCompoundLocant.matcher(locant);
 	            if (matcher.find()) {
@@ -523,10 +523,10 @@ class StructureBuildingMethods {
 					hydrogenElements.add(currentEl);
 				}
 			}
-			else if (elName.equals(HYDROGEN_EL)){
+			else if (elName.equals(INDICATEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
 			}
-			else if (elName.equals(INDICATEDHYDROGEN_EL)){
+			else if (elName.equals(ADDEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
 			}
 		}

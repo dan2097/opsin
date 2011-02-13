@@ -226,7 +226,7 @@ class ComponentGenerator {
 	 * Looks for locants of the form number-letter and converts them to letternumber
 	 * e.g. 1-N becomes N1. 1-N is the IUPAC 2004 recommendation, N1 is the previous recommendation
 	 * Strips indication of superscript
-	 * Strips indicated hydrogen out of locants
+	 * Strips added hydrogen out of locants
 	 * Strips stereochemistry out of locants
 	 * Normalises case on greeks to lower case
 	 * 
@@ -265,19 +265,19 @@ class ComponentGenerator {
 				}
 				char lastChar = locantText.charAt(locantText.length()-1);
 				if(lastChar == ')' || lastChar == ']' || lastChar == '}') {				
-					//stereochemistry or indicated hydrogen that result from the application of this locant as a locant for a substituent may be included in brackets after the locant
+					//stereochemistry or added hydrogen that result from the application of this locant as a locant for a substituent may be included in brackets after the locant
 					
 					Matcher m = matchBracketAtEndOfLocant.matcher(locantText);
 					if (m.find()){
 						String brackettedText = m.group(1);
 						if (brackettedText.endsWith("H")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
-							//create individual tags for indicated hydrogen. Examples of bracketed text include "9H" or "2H,7H"
-							String[] indicatedHydrogens = matchComma.split(brackettedText);
-							for (String indicatedHydrogen : indicatedHydrogens) {
-								Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
-								indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, indicatedHydrogen.substring(0, indicatedHydrogen.length()-1)));
-								XOMTools.insertBefore(locant, indicatedHydrogenElement);
+							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
+							String[] addedHydrogens = matchComma.split(brackettedText);
+							for (String addedHydrogen : addedHydrogens) {
+								Element addedHydrogenElement=new Element(ADDEDHYDROGEN_EL);
+								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length()-1)));
+								XOMTools.insertBefore(locant, addedHydrogenElement);
 							}
 							if (locant.getAttribute(TYPE_ATR)==null){
 								locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
@@ -641,7 +641,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void processIndicatedHydrogens(Element elem) throws ComponentGenerationException {
-		Elements hydrogens = elem.getChildElements(HYDROGEN_EL);
+		Elements hydrogens = elem.getChildElements(INDICATEDHYDROGEN_EL);
 		for(int i=0;i<hydrogens.size();i++) {
 			Element hydrogen = hydrogens.get(i);
 			String txt = StringTools.removeDashIfPresent(hydrogen.getValue());
@@ -651,7 +651,7 @@ class ComponentGenerator {
 			String[] hydrogenLocants =matchComma.split(txt);
             for (String hydrogenLocant : hydrogenLocants) {
                 if (hydrogenLocant.endsWith("H")) {
-                    Element newHydrogenElement = new Element(HYDROGEN_EL);
+                    Element newHydrogenElement = new Element(INDICATEDHYDROGEN_EL);
                     newHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
                     XOMTools.insertBefore(hydrogen, newHydrogenElement);
                 }
@@ -1887,9 +1887,9 @@ class ComponentGenerator {
 					Element newLocant =new Element(LOCANT_EL);
 					newLocant.appendChild("9");
 					XOMTools.insertBefore(possibleOne, newLocant);
-					Element newIindicatedHydrogen = new Element(INDICATEDHYDROGEN_EL);
-					newIindicatedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));
-					XOMTools.insertBefore(newLocant, newIindicatedHydrogen);
+					Element newAddedHydrogen = new Element(ADDEDHYDROGEN_EL);
+					newAddedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));
+					XOMTools.insertBefore(newLocant, newAddedHydrogen);
 				}
 			}
 		}

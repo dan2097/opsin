@@ -30,7 +30,7 @@ import nu.xom.Node;
 */
 
 class ComponentProcessor {
-	private final static Pattern matchIndicatedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
+	private final static Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
 	private final static Pattern matchColon =Pattern.compile(":");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchComma =Pattern.compile(",");
@@ -834,7 +834,7 @@ class ComponentProcessor {
 					}
 					else if (elName.equals(MULTIPLIER_EL)){
 						if (locantValues.length == Integer.parseInt(afterLocant.getAttributeValue(VALUE_ATR))){
-							if (afterLocant.equals(XOMTools.getNextSiblingIgnoringCertainElements(locant, new String[]{HYDROGEN_EL}))){
+							if (afterLocant.equals(XOMTools.getNextSiblingIgnoringCertainElements(locant, new String[]{INDICATEDHYDROGEN_EL}))){
 								//direct locant, typical case. An exception is made for indicated hydrogen e.g. 1,2,4-1H-triazole
 								multiplierEl = afterLocant;
 								break;
@@ -1875,7 +1875,7 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = XOMTools.getChildElementsWithTagName((Element) group.getParent(), HYDROGEN_EL);
+				List<Element> hydrogenAddingEls = XOMTools.getChildElementsWithTagName((Element) group.getParent(), INDICATEDHYDROGEN_EL);
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
@@ -2378,11 +2378,11 @@ class ComponentProcessor {
 			}
 			for (int j = 0; j < locants.length; j++) {
 				String locantText= locants[j];
-				Matcher m = matchIndicatedHydrogenBracket.matcher(locantText);
+				Matcher m = matchAddedHydrogenBracket.matcher(locantText);
 				if (m.find()){
-					Element indicatedHydrogenElement=new Element(INDICATEDHYDROGEN_EL);
-					indicatedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
-					XOMTools.insertBefore(locant, indicatedHydrogenElement);
+					Element addedHydrogenElement=new Element(ADDEDHYDROGEN_EL);
+					addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
+					XOMTools.insertBefore(locant, addedHydrogenElement);
 					locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
 					locants[j] = m.replaceAll("");
 				}

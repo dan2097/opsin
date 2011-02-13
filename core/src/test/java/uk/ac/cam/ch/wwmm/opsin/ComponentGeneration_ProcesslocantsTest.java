@@ -128,31 +128,31 @@ public class ComponentGeneration_ProcesslocantsTest {
 	}
 	
 	@Test
-	public void testIndicatedHydrogen() throws ComponentGenerationException {
+	public void testAddedHydrogen() throws ComponentGenerationException {
 		locant.appendChild("3(5'H)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("3", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
-		Element indicatedHydrogen = (Element) XOMTools.getPreviousSibling(locant);
-		assertNotNull(indicatedHydrogen);
-		assertEquals(INDICATEDHYDROGEN_EL, indicatedHydrogen.getLocalName());
-		assertEquals("5'", indicatedHydrogen.getAttributeValue(LOCANT_ATR));
+		Element addedHydrogen = (Element) XOMTools.getPreviousSibling(locant);
+		assertNotNull(addedHydrogen);
+		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen.getLocalName());
+		assertEquals("5'", addedHydrogen.getAttributeValue(LOCANT_ATR));
 	}
 	
 	@Test
-	public void testIndicatedHydrogen2() throws ComponentGenerationException {
+	public void testAddedHydrogen2() throws ComponentGenerationException {
 		locant.appendChild("1,2(2H,7H)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("1,2", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
-		Element indicatedHydrogen1 = (Element) XOMTools.getPreviousSibling(locant);
-		assertNotNull(indicatedHydrogen1);
-		assertEquals(INDICATEDHYDROGEN_EL, indicatedHydrogen1.getLocalName());
-		assertEquals("7", indicatedHydrogen1.getAttributeValue(LOCANT_ATR));
-		Element indicatedHydrogen2 = (Element) XOMTools.getPreviousSibling(indicatedHydrogen1);
-		assertNotNull(indicatedHydrogen2);
-		assertEquals(INDICATEDHYDROGEN_EL, indicatedHydrogen2.getLocalName());
-		assertEquals("2", indicatedHydrogen2.getAttributeValue(LOCANT_ATR));
+		Element addedHydrogen1 = (Element) XOMTools.getPreviousSibling(locant);
+		assertNotNull(addedHydrogen1);
+		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen1.getLocalName());
+		assertEquals("7", addedHydrogen1.getAttributeValue(LOCANT_ATR));
+		Element addedHydrogen2 = (Element) XOMTools.getPreviousSibling(addedHydrogen1);
+		assertNotNull(addedHydrogen2);
+		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen2.getLocalName());
+		assertEquals("2", addedHydrogen2.getAttributeValue(LOCANT_ATR));
 	}
 
 	@Test
@@ -209,9 +209,9 @@ public class ComponentGeneration_ProcesslocantsTest {
 		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getLocalName());
 		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
 		assertEquals("(N3S)", stereochemistry.getValue());
-		Element indicatedHydrogen = (Element) XOMTools.getPreviousSibling(stereochemistry);
-		assertNotNull(indicatedHydrogen);
-		assertEquals(INDICATEDHYDROGEN_EL, indicatedHydrogen.getLocalName());
-		assertEquals("5", indicatedHydrogen.getAttributeValue(LOCANT_ATR));
+		Element addedHydrogen = (Element) XOMTools.getPreviousSibling(stereochemistry);
+		assertNotNull(addedHydrogen);
+		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen.getLocalName());
+		assertEquals("5", addedHydrogen.getAttributeValue(LOCANT_ATR));
 	}
 }

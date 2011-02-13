@@ -92,11 +92,12 @@ class XmlDeclarations {
 	
 	/**One of the systematic hydrocarbon fused ring series e.g. tetralene, pentalene. Converted to a group by the ComponentGenerator*/
 	static final String HYDROCARBONFUSEDRINGSYSTEM_EL ="hydrocarbonFusedRingSystem";
-	
-	//TODO remove hydrogen and replaced with indicatedHydrogen elements
-	/**Adds a hydrogen to an unsaturated system (2H not in locant)*/
-	static final String HYDROGEN_EL ="hydrogen";
+
+	/**Adds a hydrogen to an unsaturated system to indicate what atoms are saturated in a system where not all atoms with spare valency can form double bonds e.g.  e.g. 2H-pyran*/
 	static final String INDICATEDHYDROGEN_EL ="indicatedHydrogen";
+	
+	/**Adds a hydrogen to an unsaturated system, this is hydrogen that is added due to a suffix and is expressed in a locant e.g. 1(2H) */
+	static final String ADDEDHYDROGEN_EL ="addedHydrogen";
 	
 	/**A hyphen between two substituents. Used as hint that the two substituents do not join together*/
 	static final String HYPHEN_EL ="hyphen";
