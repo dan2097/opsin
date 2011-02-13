@@ -197,6 +197,8 @@ class ComponentProcessor {
 				substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);
 				substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
 			}
+			
+			handleGroupIrregularities(state, groups);
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				processHW(state, subOrRoot);//hantzch-widman rings
@@ -279,139 +281,6 @@ class ComponentProcessor {
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
 		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag);
 		return thisFrag;
-	}
-
-	/**
-	 * Looks for the presence of DEFAULTINLOCANT_ATR and DEFAULTINID_ATR on the group and applies them to the fragment
-	 * Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
-	 * @param thisFrag
-	 * @param group
-	 * @throws StructureBuildingException
-	 */
-	private static void setFragmentDefaultInAtomIfSpecified(Fragment thisFrag, Element group) throws StructureBuildingException {
-		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
-		if (group.getAttribute(DEFAULTINLOCANT_ATR)!=null){//sets the atom at which substitution will occur to by default
-			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(group.getAttributeValue(DEFAULTINLOCANT_ATR)));
-		}
-		else if (group.getAttribute(DEFAULTINID_ATR)!=null){
-			thisFrag.setDefaultInAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue(DEFAULTINID_ATR)) -1));
-		}
-		else if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) && group.getAttribute(SUFFIXAPPLIESTO_ATR)==null){//makes linkers by default attach end to end
-			int chainLength =thisFrag.getChainLength();
-			if (chainLength >1){
-				boolean connectEndToEndWithPreviousSub =true;
-				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
-					Element previousSubstituent =(Element) XOMTools.getPreviousSibling(group.getParent());
-					if (previousSubstituent!=null){
-						Elements groups = previousSubstituent.getChildElements(GROUP_EL);
-						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
-							connectEndToEndWithPreviousSub = false;
-						}
-					}
-				}
-				if (connectEndToEndWithPreviousSub){
-					Element parent =(Element) group.getParent();
-					while (parent.getLocalName().equals(BRACKET_EL)){
-						parent = (Element) parent.getParent();
-					}
-					if (parent.getLocalName().equals(ROOT_EL)){
-						Element previous = (Element) XOMTools.getPrevious(group);
-						if (previous==null || !previous.getLocalName().equals(MULTIPLIER_EL)){
-							connectEndToEndWithPreviousSub=false;
-						}
-					}
-				}
-				if (connectEndToEndWithPreviousSub){
-					group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
-					thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Looks for the presence of FUNCTIONALIDS_ATR on the group and applies them to the fragment
-	 * @param group
-	 * @param thisFrag
-	 * @throws StructureBuildingException
-	 */
-	private static void setFragmentFunctionalAtomsIfSpecified(Element group, Fragment thisFrag) throws StructureBuildingException {
-		if (group.getAttribute(FUNCTIONALIDS_ATR)!=null){
-			String[] functionalIDs = matchComma.split(group.getAttributeValue(FUNCTIONALIDS_ATR));
-            for (String functionalID : functionalIDs) {
-                thisFrag.addFunctionalAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(functionalID) - 1));
-            }
-		}
-	}
-	
-	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag)  {
-		String groupType  = group.getAttributeValue(TYPE_ATR);
-		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
-			List<Atom> atomList = thisFrag.getAtomList();
-			Atom startingAtom = thisFrag.getFirstAtom();
-			if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
-				String suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-				String suffixAppliesToArr[] = matchComma.split(suffixAppliesTo);
-				if (suffixAppliesToArr.length!=1){
-					return;
-				}
-				startingAtom = atomList.get(Integer.parseInt(suffixAppliesToArr[0])-1);
-			}
-			List<Atom> neighbours = startingAtom.getAtomNeighbours();
-			int counter =-1;
-			Atom previousAtom = startingAtom;
-			for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
-				if (!neighbours.get(i).getElement().equals("C")){
-					neighbours.remove(i);
-				}
-			}
-			while (neighbours.size()==1){
-				counter++;
-				if (counter>5){
-					break;
-				}
-				Atom nextAtom = neighbours.get(0);
-				if (nextAtom.getAtomIsInACycle()){
-					break;
-				}
-				nextAtom.addLocant(traditionalAlkanePositionNames[counter]);
-				neighbours = nextAtom.getAtomNeighbours();
-				neighbours.remove(previousAtom);
-				for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
-					if (!neighbours.get(i).getElement().equals("C")){
-						neighbours.remove(i);
-					}
-				}
-				previousAtom = nextAtom;
-			}
-		}
-		else if (groupType.equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			List<Atom> atomList = thisFrag.getAtomList();
-			if (atomList.size()==1){
-				return;
-			}
-			Element possibleSuffix = (Element) XOMTools.getNextSibling(group, SUFFIX_EL);
-			Boolean terminalSuffixWithNoSuffixPrefixPresent =false;
-			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR)==null){
-				terminalSuffixWithNoSuffixPrefixPresent =true;
-			}
-			for (Atom atom : atomList) {
-				String firstLocant = atom.getFirstLocant();
-				if (!atom.getAtomIsInACycle() && firstLocant!=null && firstLocant.length()==1 && Character.isDigit(firstLocant.charAt(0))){
-					int locantNumber = Integer.parseInt(firstLocant);
-					if (terminalSuffixWithNoSuffixPrefixPresent){
-						if (locantNumber>1 && locantNumber<=7){
-							atom.addLocant(traditionalAlkanePositionNames[locantNumber-2]);
-						}
-					}
-					else{
-						if (locantNumber>0 && locantNumber<=6){
-							atom.addLocant(traditionalAlkanePositionNames[locantNumber-1]);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -655,6 +524,141 @@ class ComponentProcessor {
 		return true;
 	}
 
+
+	/**
+	 * Looks for the presence of DEFAULTINLOCANT_ATR and DEFAULTINID_ATR on the group and applies them to the fragment
+	 * Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
+	 * @param thisFrag
+	 * @param group
+	 * @throws StructureBuildingException
+	 */
+	private static void setFragmentDefaultInAtomIfSpecified(Fragment thisFrag, Element group) throws StructureBuildingException {
+		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
+		if (group.getAttribute(DEFAULTINLOCANT_ATR)!=null){//sets the atom at which substitution will occur to by default
+			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(group.getAttributeValue(DEFAULTINLOCANT_ATR)));
+		}
+		else if (group.getAttribute(DEFAULTINID_ATR)!=null){
+			thisFrag.setDefaultInAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue(DEFAULTINID_ATR)) -1));
+		}
+		else if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) && group.getAttribute(SUFFIXAPPLIESTO_ATR)==null){//makes linkers by default attach end to end
+			int chainLength =thisFrag.getChainLength();
+			if (chainLength >1){
+				boolean connectEndToEndWithPreviousSub =true;
+				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
+					Element previousSubstituent =(Element) XOMTools.getPreviousSibling(group.getParent());
+					if (previousSubstituent!=null){
+						Elements groups = previousSubstituent.getChildElements(GROUP_EL);
+						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
+							connectEndToEndWithPreviousSub = false;
+						}
+					}
+				}
+				if (connectEndToEndWithPreviousSub){
+					Element parent =(Element) group.getParent();
+					while (parent.getLocalName().equals(BRACKET_EL)){
+						parent = (Element) parent.getParent();
+					}
+					if (parent.getLocalName().equals(ROOT_EL)){
+						Element previous = (Element) XOMTools.getPrevious(group);
+						if (previous==null || !previous.getLocalName().equals(MULTIPLIER_EL)){
+							connectEndToEndWithPreviousSub=false;
+						}
+					}
+				}
+				if (connectEndToEndWithPreviousSub){
+					group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
+					thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Looks for the presence of FUNCTIONALIDS_ATR on the group and applies them to the fragment
+	 * @param group
+	 * @param thisFrag
+	 * @throws StructureBuildingException
+	 */
+	private static void setFragmentFunctionalAtomsIfSpecified(Element group, Fragment thisFrag) throws StructureBuildingException {
+		if (group.getAttribute(FUNCTIONALIDS_ATR)!=null){
+			String[] functionalIDs = matchComma.split(group.getAttributeValue(FUNCTIONALIDS_ATR));
+	        for (String functionalID : functionalIDs) {
+	            thisFrag.addFunctionalAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(functionalID) - 1));
+	        }
+		}
+	}
+
+
+	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag)  {
+		String groupType  = group.getAttributeValue(TYPE_ATR);
+		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
+			List<Atom> atomList = thisFrag.getAtomList();
+			Atom startingAtom = thisFrag.getFirstAtom();
+			if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
+				String suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
+				String suffixAppliesToArr[] = matchComma.split(suffixAppliesTo);
+				if (suffixAppliesToArr.length!=1){
+					return;
+				}
+				startingAtom = atomList.get(Integer.parseInt(suffixAppliesToArr[0])-1);
+			}
+			List<Atom> neighbours = startingAtom.getAtomNeighbours();
+			int counter =-1;
+			Atom previousAtom = startingAtom;
+			for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
+				if (!neighbours.get(i).getElement().equals("C")){
+					neighbours.remove(i);
+				}
+			}
+			while (neighbours.size()==1){
+				counter++;
+				if (counter>5){
+					break;
+				}
+				Atom nextAtom = neighbours.get(0);
+				if (nextAtom.getAtomIsInACycle()){
+					break;
+				}
+				nextAtom.addLocant(traditionalAlkanePositionNames[counter]);
+				neighbours = nextAtom.getAtomNeighbours();
+				neighbours.remove(previousAtom);
+				for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
+					if (!neighbours.get(i).getElement().equals("C")){
+						neighbours.remove(i);
+					}
+				}
+				previousAtom = nextAtom;
+			}
+		}
+		else if (groupType.equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			List<Atom> atomList = thisFrag.getAtomList();
+			if (atomList.size()==1){
+				return;
+			}
+			Element possibleSuffix = (Element) XOMTools.getNextSibling(group, SUFFIX_EL);
+			Boolean terminalSuffixWithNoSuffixPrefixPresent =false;
+			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR)==null){
+				terminalSuffixWithNoSuffixPrefixPresent =true;
+			}
+			for (Atom atom : atomList) {
+				String firstLocant = atom.getFirstLocant();
+				if (!atom.getAtomIsInACycle() && firstLocant!=null && firstLocant.length()==1 && Character.isDigit(firstLocant.charAt(0))){
+					int locantNumber = Integer.parseInt(firstLocant);
+					if (terminalSuffixWithNoSuffixPrefixPresent){
+						if (locantNumber>1 && locantNumber<=7){
+							atom.addLocant(traditionalAlkanePositionNames[locantNumber-2]);
+						}
+					}
+					else{
+						if (locantNumber>0 && locantNumber<=6){
+							atom.addLocant(traditionalAlkanePositionNames[locantNumber-1]);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
 		Element nextEl = (Element) XOMTools.getNextSibling(group);
@@ -1861,6 +1865,35 @@ class ComponentProcessor {
 
 		return false;
 	}
+
+	/** Handles special cases in IUPAC nomenclature that are most elegantly solved by modification of the fragment
+	 * @param state
+	 * @param groups
+	 * @throws StructureBuildingException
+	 */
+	private static void handleGroupIrregularities(BuildState state, List<Element> groups) throws StructureBuildingException{
+		for (Element group : groups) {
+			String groupValue =group.getValue();
+			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
+				List<Element> hydrogenAddingEls = XOMTools.getChildElementsWithTagName((Element) group.getParent(), HYDROGEN_EL);
+				boolean implicitHydrogenExplicitlySet =false;
+				for (Element hydrogenAddingEl : hydrogenAddingEls) {
+					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
+					if (locant !=null && (locant.equals("21") || locant.equals("22") || locant.equals("23") || locant.equals("24"))){
+						implicitHydrogenExplicitlySet =true;
+					}	
+				}
+				if (!implicitHydrogenExplicitlySet){
+					//porphyrins implicitly have indicated hydrogen at the 21/23 positions
+					//directly modify the fragment to avoid problems with locants in for example ring assemblies
+					Fragment frag =state.xmlFragmentMap.get(group);
+					frag.getAtomByLocantOrThrow("21").setSpareValency(false);
+					frag.getAtomByLocantOrThrow("23").setSpareValency(false);
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Handles Hantzsch-Widman rings. Adds SMILES to the group corresponding to the ring's structure
@@ -3892,7 +3925,6 @@ class ComponentProcessor {
 			
 		return false;
 	}
-
 
 	/**
 	 * If a word level multiplier is present e.g. diethyl butandioate then this is processed to ethyl ethyl butandioate

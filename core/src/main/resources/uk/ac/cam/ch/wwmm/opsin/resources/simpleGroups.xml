@@ -140,6 +140,8 @@
 		<token value="C(C(CO[N+](=O)[O-])O[N+](=O)[O-])O[N+](=O)[O-]" labels="none" valType="SMILES">nitroglycerin</token>
 		<token value="C=[NH+][O-]" labels="none" valType="SMILES">nitrone</token>
 		<token value="NN=O" labels="none" valType="SMILES">nitrosamide</token>
+		<token value="N#[N+][O-]" labels="none" valType="SMILES">nitrous oxide</token>
+		<token value="N#[N+][O-]" labels="none" valType="SMILES">nitrousoxide</token>
 		<token value="ON" labels="none" valType="SMILES" outIDs="1">nitroxide</token>
 		<token value="N=O" labels="none" valType="SMILES">nitroxyl</token>
 		<token value="C(=O)C=O" labels="1//2/" valType="SMILES">oxaldehyde</token>
