@@ -645,7 +645,7 @@ class ComponentGenerator {
 		for(int i=0;i<hydrogens.size();i++) {
 			Element hydrogen = hydrogens.get(i);
 			String txt = StringTools.removeDashIfPresent(hydrogen.getValue());
-			if (!txt.endsWith("H")){//remove brackets
+			if (!txt.endsWith("H")){//remove brackets if they are present
 				txt = txt.substring(1, txt.length()-1);
 			}
 			String[] hydrogenLocants =matchComma.split(txt);
