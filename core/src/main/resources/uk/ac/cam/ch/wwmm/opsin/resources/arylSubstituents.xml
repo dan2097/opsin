@@ -36,7 +36,6 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="chrysene" valType="dbkey">chrys</token>
 		<token value="cinnoline" valType="dbkey">cinnol</token>
 		<token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coron</token>
-		<token value="C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cum</token>
 		<token value="cyclopenta[a]phenanthrene" valType="dbkey">cyclopenta[a]phenanthr</token>
 		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///" valType="SMILES" addGroup="C locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cym</token>
 		<token value="fluoranthene" valType="dbkey">fluoranth</token>
