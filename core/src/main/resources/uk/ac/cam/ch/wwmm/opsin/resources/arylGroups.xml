@@ -75,6 +75,7 @@
 		<token value="C1CCCC2CCCCC12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">decalin</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamid</token>
 		<token value="NCCc1cc(O)c(O)cc1" labels="///1/2/3//4//5/6" valType="SMILES">dopamin</token>
+		<token value="c1(C)c(C)cc(C)c(C)c1" labels="1//2//3/4//5//6" valType="SMILES">duren</token>
 		<token value="c1(c(O)ccc(CC=C)c1)OC" labels="1/2,ortho//3,meta/4,para/5////6//alpha" valType="SMILES">eugenol</token>
 		<token value="[o+]1c(ccc2ccccc12)c3ccccc3" labels="1/2/3/4/4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES">flavylium</token>
 		<token value="fluoranthene" valType="dbkey">fluoranthen</token>
@@ -88,6 +89,7 @@
 		<token value="c1(C)nCCc2c3ccccc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">harman</token>
 		<token value="c1(C(=O)N)nccc2c3ccc(OC)cc3[nH]c12" labels="1////2/3/4/4a/4b/5/6/7///8/8a/9/9a" valType="SMILES">harmanamid</token>
 		<token value="c1(C)nccc2c3ccc(OC)cc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7///8/8a/9/9a" valType="SMILES">harmin</token>
+		<token value="c1(C)c(C)c(C)ccc1" labels="1//2//3//4/5/6" valType="SMILES">hemimelliten</token>
 		<token value="NCCc1c[nH]cn1" labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi" valType="SMILES">histamin</token>
 		<token value="N1CCNCCC1" labels="1/2/3/4/5/6/7" valType="SMILES">homopiperazin</token>
 		<token value="N1CCCCCC1" labels="1/2/3/4/5/6/7" valType="SMILES">homopiperidin</token>
@@ -119,6 +121,7 @@
 		<token value="c1[se+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochromenylium</token>
 		<token value="c1[te+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isotellurochromenylium</token>
 		<token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a" valType="SMILES">isocoumarin</token>
+		<token value="c1(C)c(C)c(C)cc(C)c1" labels="1//2//3//4/5//6" valType="SMILES">isoduren</token>
 		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/" valType="SMILES">isoguanin</token>
 		<token value="isoindole" valType="dbkey">isoindol</token>
 		<token value="isoindoline" valType="dbkey">isoindolin</token>
@@ -149,6 +152,7 @@
 		<token value="C12CC3C4CC1.C2.C4(C)C.O3" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10/" valType="SMILES">menthol</token>
 		<token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">mercuranthren</token>
 		<token value="c12cc3cc4c1.C2.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6///" valType="SMILES">mesitylen</token>
+		<token value="c1(C)c(C)c(C)c(C)c(C)c1C" labels="1//2//3//4//5//6/" valType="SMILES">melliten</token>
 		<token value="O1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">morpholin</token>
 		<token value="S1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">thiomorpholin</token>
 		<token value="[Se]1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">selenomorpholin</token>
@@ -214,6 +218,8 @@
 		<token value="N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperidin</token>
 		<token value="c1cccc2ccc3c4ccc5ccccc5c4ccc3c21" labels="1/2/3/4/4a/5/6/6a/6b/7/8/8a/9/10/11/12/12a/12b/13/14/14a/14b" valType="SMILES">picen</token>
 		<token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiaden</token>
+		<token value="c1(C)c(C)c(C)c(C)cc1" labels="1//2//3//4//5/6" valType="SMILES">prehniten</token>
+		<token value="c1(C)c(C)cc(C)cc1" labels="1//2//3/4//5/6" valType="SMILES">pseudocumen</token>
 		<token value="pteridine" valType="dbkey">pteridin</token>
 		<token value="n1cnc2nc[nH]c2c1" labels="1/2/3/4/9/8/7/5/6" fusedRingNumbering="1/2/3/3a/4/5/6/6a/7" valType="SMILES">purin</token>
 		<token value="o1[cH2]cccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">pyran</token>
@@ -275,6 +281,7 @@
 		<token value="[O-]S(=O)(=O)c1ccc(C)cc1" labels="////1/2,ortho/3,meta/4,para//5/6" valType="SMILES" functionalIDs="1">tosylat</token>
 		<token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none" valType="SMILES">tribenzamid</token>
 		<token value="[cH2]1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b" valType="SMILES">trinden</token>
+		<token value="C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">tritan</token>
 		<token value="NCCc1ccc(cc1)O" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">tyramin</token>
 		<token value="NCCc1c[nH]c2ccccc12" labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a" valType="SMILES">tryptamin</token>
 		<token value="C1NCCc2c3ccccc3Nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">tryptolin</token>
