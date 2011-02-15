@@ -28,7 +28,14 @@
 		<token value="C=C" outIDs="1,2" valType="SMILES">vinylene</token>
 		<token value="CC(C)(C)C" labels="none" outIDs="1,3" valType="SMILES">neopentylene</token>
 
+		<token value="c1c(C)c(C)cc(C)c1C" labels="none" outIDs="1,6" valType="SMILES">durylene</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="1,2" valType="SMILES">phenylene</token>
+		<token value="=Cc1c2cccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">phthalylidene</token>
+		<token value="=Cc1c2cccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">phthalal</token>
+		<token value="=Cc1cc2ccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">isophthalylidene</token>
+		<token value="=Cc1cc2ccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">isophthalal</token>
+		<token value="=Cc1ccc2cc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">terephthalylidene</token>
+		<token value="=Cc1ccc2cc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">terephthalal</token>
 		<token value="Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" outIDs="3,5" valType="SMILES">tolylene</token>
 		<token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1" valType="SMILES">semicarbazono</token>
 		<token value="[SiH3]O" outIDs="1,2" valType="SMILES">siloxane</token>

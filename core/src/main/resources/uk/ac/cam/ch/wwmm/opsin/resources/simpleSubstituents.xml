@@ -25,6 +25,7 @@
 		<token value="-CCCCC" valType="SMILES">amyl</token>
 		<token value="=CCCCC" valType="SMILES">amylidene</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="OC locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
+    <token value="-c1c(OC)cc(OC)c(OC)c1" labels="none" valType="SMILES">asaryl</token>
 		<token value="-N=[N+]=[N-]" labels="none" valType="SMILES">azidyl</token>
 		<token value="-OCCC(C)C" valType="SMILES">isoamoxy</token>
 		<token value="-CCC(C)C" valType="SMILES">isoamyl</token>
@@ -83,13 +84,22 @@
 		<token value="-C(=O)OCc1ccccc1" labels="none" valType="SMILES">cbz</token>
 		<token value="#C" valType="SMILES">carbyne</token>
 		<token value="-[CH2+]" labels="none" valType="SMILES">carbynium</token>
+		<token value="-c1cc(C(C)C)ccc1C" labels="none" valType="SMILES">carvacryl</token>
 		<token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
+    <token value="=CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cinnamal</token>
+		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
 		<token value="-CC=CC" valType="SMILES">crotyl</token>
+		<token value="-Cc1ccc(C(C)C)cc1" labels="none" valType="SMILES">cuminyl</token>
+		<token value="=Cc1ccc(C(C)C)cc1" labels="none" valType="SMILES">cuminylidene</token>
+		<token value="=Cc1ccc(C(C)C)cc1" labels="none" valType="SMILES">cumal</token>
+		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cumyl</token>
+		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">alpha-cumyl</token>
 		<token value="-NC#N" labels="none" valType="SMILES">cyanamido</token>
 		<token value="-C#N" labels="none" valType="SMILES">cyanyl</token>
 		<token value="-[2H]" valType="SMILES">deuterio</token>
 		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
+		<token value="-c1c(C)c(C)cc(C)c1C" labels="none" valType="SMILES">duryl</token>
 		<token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES" defaultInLocant="5">hydantoyl</token>
 		<token value="-NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
@@ -114,20 +124,26 @@
 		<token value="=NO" labels="none" valType="SMILES">hydroximino</token>
 		<token value="-OC(C)C" labels="none" valType="SMILES">isopropoxyl</token>
 		<token value="-C(C)(C=C)CCC=C(C)C" labels="none" valType="SMILES">linalyl</token>
-		<token value="-Oc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">phenoxyl</token>
-		<token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">propoxyl</token>
+		<token value="-CC(C)(C)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6" valType="SMILES">neophyl</token>
 		<token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
 		<token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
 		<token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitryl</token>
 		<token value="=NO" labels="none" valType="SMILES">oximino</token>
 		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="10" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetidino</token>
+		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="OCC locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetyl</token>
+		<token value="-Oc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">phenoxyl</token>
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2,ortho////3,meta/4,para////5/6///" valType="SMILES">picryl</token>
 		<token value="-C(C)C(C)(C)C" labels="none" valType="SMILES">pinacolyl</token>
 		<token value="-N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperazino</token>
 		<token value="-N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperidino</token>
 		<token value="-CC=C(C)C" labels="none" valType="SMILES">prenyl</token>
 		<token value="-CC#C"  labels="none" valType="SMILES">propargyl</token>
+		<token value="-OCCC" labels="/1/2/3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">propoxyl</token>
+		<token value="-c1c(C)c(C)cc(C)c1" labels="none" valType="SMILES">as-pseudocumyl</token>
+		<token value="-c1c(C)c(C)ccc1C" labels="none" valType="SMILES">v-pseudocumyl</token>
+		<token value="-c1c(C)cc(C)c(C)c1" labels="none" valType="SMILES">s-pseudocumyl</token>
 		<token value="pyrrolidine" valType="dbkey" outIDs="1">pyrrolidino</token>
+    <token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES">salicylal</token>
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">sec-isoamyl</token>
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">secisoamyl</token>
 		<token value="-OC(C)CC" labels="none" valType="SMILES">sec-butoxyl</token>
@@ -150,12 +166,17 @@
 		<token value="-OC(C)(C)C" labels="none" valType="SMILES">tbutoxyl</token>
 		<token value="-C(C)(C)C(C)C" labels="none" valType="SMILES">thexyl</token>
 		<token value="-S" labels="none" valType="SMILES">thiyl</token>
+		<token value="-c1cc(C)ccc1C(C)C" labels="none" valType="SMILES">thymyl</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" addGroup="N locant4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6" valType="SMILES">tosyl</token>
 		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">triphospho</token>
 		<token value="-[3H]" valType="SMILES">tritio</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>
+    <token value="=Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6" valType="SMILES">vanillal</token>
+    <token value="=Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6" valType="SMILES">veratral</token>
+    <token value="-Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6" valType="SMILES">o-veratryl</token>
+		<token value="-c1ccc(cc1)-c2ccccc2" labels="4/3/2/1/2/3/1'/2'/3'/4'/5'/6'" valType="SMILES">xenyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant2;C locant3" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">xylidino</token>
 
 
