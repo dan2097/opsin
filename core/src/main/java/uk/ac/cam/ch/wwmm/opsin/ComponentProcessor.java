@@ -1426,7 +1426,7 @@ class ComponentProcessor {
 			String[] suffixInstructions = matchComma.split(suffixInstruction);
 			boolean symmetricSuffixes =true;
 			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
-				if (suffixInstructions.length != 2){
+				if (suffixInstructions.length < 2){
 					throw new ComponentGenerationException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
 				symmetricSuffixes = false;
