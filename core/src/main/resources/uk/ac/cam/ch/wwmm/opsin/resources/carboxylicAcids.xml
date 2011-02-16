@@ -101,10 +101,12 @@
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ceromeliss</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ceroplast</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">cerot</token>
+    <token value="C/C=C/c1cc(OC)c(O)cc1" labels="none" valType="SMILES">conifer</token>
 		<token value="CCCCCC/C=C\C/C=C\C/C=C\C/C=C\C/C=C\CC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">clupanodon</token>
 		<token value="CCCCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">eruc</token>
     <token value="CCCCCCCC/C=C\CCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">gadole</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">gedd</token>
+    <token value="Cc1c(O)ccc(O)c1" labels="/1/2//3/4/5//6" valType="SMILES">gentis</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ghedd</token>
     <token value="CC(O)CO" labels="none" valType="SMILES">glycer</token>
     <token value="CCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">gondo</token>
@@ -122,6 +124,7 @@
     <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">picol</token><!--contraction-->
     <token value="Cc1cc(O)c(O)cc1" labels="/1/2,ortho/3,meta//4,para//5/6" valType="SMILES">protocatechu</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">psyll</token>
+    <token value="C/C=C/c1cc(OC)c(O)c(OC)c1" labels="none" valType="SMILES">sinap</token>
 		<token value="C/C=C/C=C/C" labels="1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">sorb</token>
     <token value="Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6" valType="SMILES">vanill</token>
     <token value="Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6" valType="SMILES">veratr</token>

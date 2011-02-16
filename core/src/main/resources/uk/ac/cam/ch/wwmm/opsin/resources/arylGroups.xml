@@ -36,6 +36,7 @@
 		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">benzidin</token>
 		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">4,4'-benzidin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzen</token>
+		<token value="c1(ccccc1)C(=O)C(O)c2ccccc2" labels="1/2/3/4/5/6///alpha//1'/2'/3'/4'/5'/6'" valType="SMILES">benzoin</token>
 		<token value="c1(ccccc1)C(=O)c2ccccc2" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'" valType="SMILES">benzophenon</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="=O locant1;=O locant4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzoquinon</token>
 		<token value="C1#CC=CC=C1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzyn</token>
@@ -92,6 +93,7 @@
 		<token value="N1CCNCCC1" labels="1/2/3/4/5/6/7" valType="SMILES">homopiperazin</token>
 		<token value="N1CCCCCC1" labels="1/2/3/4/5/6/7" valType="SMILES">homopiperidin</token>
 		<token value="N1C(=O)NC(=O)C1" labels="1/2//3/4//5" valType="SMILES">hydantoin</token>
+		<token value="c1(ccccc1)C(O)C(O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'" valType="SMILES">hydrobenzoin</token>
 		<token value="c1(O)ccc(O)cc1" labels="1//2,ortho/3,meta/4,para//5/6" valType="SMILES" defaultInLocant="2">hydroquinon</token>
 		<token value="imidazole" valType="dbkey">imidazol</token>
 		<token value="imidazolidine" valType="dbkey">imidazolidin</token>
