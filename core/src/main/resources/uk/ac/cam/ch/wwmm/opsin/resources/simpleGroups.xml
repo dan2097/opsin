@@ -225,7 +225,6 @@
 		<token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
 		<token value="C#C" labels="1/2" valType="SMILES">vinylene</token>
-		<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token>-->
 
 		<token value="N" labels="none" valType="SMILES">ammonia</token>
 		<token value="O" labels="none" valType="SMILES">water</token>
