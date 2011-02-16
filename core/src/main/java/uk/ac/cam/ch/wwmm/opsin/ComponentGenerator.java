@@ -1972,11 +1972,17 @@ class ComponentGenerator {
 			if (previous!=null){
 				List<Element> groups = XOMTools.getDescendantElementsWithTagName(previous, GROUP_EL);
 				if (groups.size()>0){
-					Element possibleDiAcid = groups.get(groups.size()-1);
-					if (possibleDiAcid.getAttribute(SUFFIXAPPLIESTO_ATR)!=null && ACIDSTEM_TYPE_VAL.equals(possibleDiAcid.getAttributeValue(TYPE_ATR))){
-						Element suffix = (Element) XOMTools.getNextSibling(possibleDiAcid, SUFFIX_EL);
-						if (suffix.getAttribute(ADDITIONALVALUE_ATR)==null){
-							suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+					Element possibleAcid = groups.get(groups.size()-1);
+					if (ACIDSTEM_TYPE_VAL.equals(possibleAcid.getAttributeValue(TYPE_ATR))){
+						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//multi acid. yl should be one oyl and the rest carboxylic acids
+							Element suffix = (Element) XOMTools.getNextSibling(possibleAcid, SUFFIX_EL);
+							if (suffix.getAttribute(ADDITIONALVALUE_ATR)==null){
+								suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+							}
+						}
+						String subType = possibleAcid.getAttributeValue(SUBTYPE_ATR);
+						if (subType.equals(YLFORYL_SUBTYPE_VAL) || subType.equals(YLFORNOTHING_SUBTYPE_VAL)){
+							possibleAcid.getAttribute(SUBTYPE_ATR).setValue(YLFORACYL_SUBTYPE_VAL);//yl always  means an acyl when next to coenzyme A
 						}
 					}
 				}
