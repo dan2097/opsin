@@ -8,7 +8,7 @@ import org.junit.Test;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-public class ComponentGeneration_AmbiguitiesAndIrregularities {
+public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	
 	@Test
 	public void testCorrectlyTokenisedAlkane(){
