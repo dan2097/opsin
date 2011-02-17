@@ -141,7 +141,7 @@ class ComponentGenerator {
 	 * @param subOrRoot
 	 * @throws ComponentGenerationException
 	 */
-	private void resolveAmbiguities(Element subOrRoot) throws ComponentGenerationException {
+	static void resolveAmbiguities(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (Element apparentMultiplier : multipliers) {
 			if (!BASIC_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR)) && !VONBAEYER_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR))){
@@ -165,16 +165,15 @@ class ComponentGenerator {
 				}
 			}
 
-			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL)&& nextEl.getValue().equals("phen")){//deals with tetra phen yl vs tetraphen yl
-				Element possibleSuffix = (Element) XOMTools.getNextSibling(nextEl);
-				if (possibleSuffix!=null){//null if not used as substituent
-					String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
-					if (possibleSuffix.getValue().equals("yl")){
-						throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
-					}
-					Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
-					if (isThisALocant != null && isThisALocant.getLocalName().equals(LOCANT_EL) && matchComma.split(isThisALocant.getValue()).length == multiplierNum){
-						throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
+			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL) && nextEl.getValue().equals("phen") && !"e".equals(nextEl.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL))){//deals with tetra phen yl vs tetraphen yl
+				Element possibleLocantOrMultiplierOrSuffix = (Element) XOMTools.getNextSibling(nextEl);
+				if (possibleLocantOrMultiplierOrSuffix!=null){//null if not used as substituent
+					if (possibleLocantOrMultiplierOrSuffix.getLocalName().equals(SUFFIX_EL)){//for phen the aryl substituent, expect an adjacent suffix e.g. phenyl, phenoxy
+						Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
+						if (isThisALocant == null || !isThisALocant.getLocalName().equals(LOCANT_EL) || matchComma.split(isThisALocant.getValue()).length != 1){
+							String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
+							throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
+						}
 					}
 				}
 			}
