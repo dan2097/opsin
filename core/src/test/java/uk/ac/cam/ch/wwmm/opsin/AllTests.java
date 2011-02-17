@@ -9,7 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	BondTest.class,
 	CASToolsTest.class,
 	CMLFragmentBuilderTest.class,
-	ComponentGeneration_AmbiguitiesAndIrregularities.class,
+	ComponentGeneration_AmbiguitiesAndIrregularitiesTest.class,
 	ComponentGeneration_ProcesslocantsTest.class,
 	ComponentGeneration_StereochemistryTest.class,
 	CycleDetectorTest.class,
