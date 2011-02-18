@@ -126,6 +126,7 @@
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">psyll</token>
     <token value="C/C=C/c1cc(OC)c(O)c(OC)c1" labels="none" valType="SMILES">sinap</token>
 		<token value="C/C=C/C=C/C" labels="1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">sorb</token>
+    <token value="Cc1cc(OC)c(O)c(OC)c1" labels="/1/2/3///4//5///6" valType="SMILES">syring</token>
     <token value="Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6" valType="SMILES">vanill</token>
     <token value="Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6" valType="SMILES">veratr</token>
   </tokenList>
