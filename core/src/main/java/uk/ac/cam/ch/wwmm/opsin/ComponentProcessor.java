@@ -2045,28 +2045,17 @@ class ComponentProcessor {
 			Elements deltas = subOrRoot.getChildElements(DELTA_EL);//add specified double bonds
 			for (int j = 0; j < deltas.size(); j++) {
 				String locantOfDoubleBond = deltas.get(j).getValue();
-				Atom firstInDoubleBond;
-				Atom secondInDoubleBond;
 				if (locantOfDoubleBond.equals("")){
-					int defaultId=hwRing.getIdOfFirstAtom();
-					firstInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId);
-					secondInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId +1);
-					while (firstInDoubleBond.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(firstInDoubleBond, 1) ||
-							secondInDoubleBond.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(secondInDoubleBond, 1)){
-						defaultId++;
-						firstInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId);
-						secondInDoubleBond =hwRing.getAtomByIDOrThrow(defaultId +1);
-						if (firstInDoubleBond.getType().equals(SUFFIX_TYPE_VAL) || secondInDoubleBond.getType().equals(SUFFIX_TYPE_VAL)){
-							throw new StructureBuildingException("No suitable atom found");
-						}
-					}
+					Element newUnsaturator = new Element(UNSATURATOR_EL);
+					newUnsaturator.addAttribute(new Attribute(VALUE_ATR, "2"));
+					XOMTools.insertAfter(group, newUnsaturator);
 				}
 				else{
-					firstInDoubleBond = hwRing.getAtomByLocantOrThrow(locantOfDoubleBond);
-					secondInDoubleBond = hwRing.getAtomByIDOrThrow(firstInDoubleBond.getID() +1);
+					Atom firstInDoubleBond = hwRing.getAtomByLocantOrThrow(locantOfDoubleBond);
+					Atom secondInDoubleBond = hwRing.getAtomByIDOrThrow(firstInDoubleBond.getID() +1);
+					Bond b = firstInDoubleBond.getBondToAtomOrThrow(secondInDoubleBond);
+					b.setOrder(2);
 				}
-				Bond b = firstInDoubleBond.getBondToAtomOrThrow(secondInDoubleBond);
-				b.setOrder(2);
 				deltas.get(j).detach();
 			}
 			XOMTools.setTextChild(group, name);
