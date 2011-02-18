@@ -9,11 +9,17 @@
 		<token value="o1cccc1C(=O)C(=O)c2ccco2" labels="1/2/3/4/5/////2'/3'/4'/5'/1'" valType="SMILES">2,2'-furil</token>
 		<token value="o1cccc1C(=O)C(O)c2ccco2" labels="1/2/3/4/5///alpha//2'/3'/4'/5'/1'" valType="SMILES">2,2'-furoin</token>
 		<token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N" labels="none" valType="SMILES">abietamide</token>
+		<token value="CC(=O)c1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6" valType="SMILES">acetovanillone</token>
 		<token value="OCc1ccc(OC)cc1" labels="none" valType="SMILES">anise alcohol</token>
+		<token value="c1(ccc(OC)cc1)C(=O)C(=O)c2ccc(OC)cc2" labels="1/2/3/4///5/6/////1'/2'/3'/4'///5'/6'" valType="SMILES">anisil</token>
+		<token value="c1(ccc(OC)cc1)C(=O)C(=O)c2ccc(OC)cc2" labels="1/2/3/4///5/6/////1'/2'/3'/4'///5'/6'" valType="SMILES">p-anisil</token>
+		<token value="c1(ccc(OC)cc1)C(=O)C(O)c2ccc(OC)cc2" labels="1/2/3/4///5/6///alpha//1'/2'/3'/4'///5'/6'" valType="SMILES">anisoin</token>
+		<token value="c1(ccc(OC)cc1)C(=O)C(O)c2ccc(OC)cc2" labels="1/2/3/4///5/6///alpha//1'/2'/3'/4'///5'/6'" valType="SMILES">p-anisoin</token>
 		<token value="c1(ccc(C=CC)cc1)O" labels="none" valType="SMILES">anol</token>
 		<token value="c1(=O)c(=O)ccc2cc3ccccc3cc12" labels="1//2//3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">anthra-1,2-quinone</token>
 		<token value="c1(=O)ccc(=O)c2cc3ccccc3cc12" labels="1//2/3/4//4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">anthra-1,4-quinone</token>
 		<token value="c1cccc2c(=O)c3ccccc3c(=O)c12" labels="1/2/3/4/4a/10//10a/5/6/7/8/8a/9//9a" valType="SMILES">anthra-9,10-quinone</token>
+		<token value="CC(=O)c1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6" valType="SMILES">apocynin</token>
 		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric</token>
 		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituricacid</token>
 		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbituric acid</token>
@@ -22,23 +28,36 @@
 		<token value="c1(=O)ccc(=O)cc1" labels="1//2,ortho/3,meta/4,para//5/6" valType="SMILES">benzo-1,4-quinone</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzol</token>
 		<token value="c1(ccccc1)C(O)(c2ccccc2)C(O)(c3ccccc3)c4ccccc4" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'///1''/2''/3''/4''/5''/6''/1'''/2'''/3'''/4'''/5'''/6'''" valType="SMILES">benzopinacol</token>
+		<token value="c1(ccccc1)C(c2ccccc2)(c3ccccc3)C(=O)c4ccccc4" labels="none" valType="SMILES">benzopinacolone</token>
 		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O" labels="none" valType="SMILES">bisphenol a</token>
+		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6" valType="SMILES">bourbonal</token>
 		<token value="c1c(O)c(C)ccc1C(C)C" labels="none" valType="SMILES">carvacrol</token>
 		<token value="c1(ccc(CC=C)cc1)O" labels="none" valType="SMILES">chavicol</token>
     <token value="OC/C=C/c1cc(OC)c(O)cc1" labels="none" valType="SMILES">coniferol</token>
 		<token value="c1(c(OC)cc(C)cc1)O" labels="none" valType="SMILES">creosol</token>
-		<token value="OCc1ccc(C(C)C)cc1" labels="none" valType="SMILES">cuminol</token>
+		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cumaldehyde</token>
+		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminal</token>
+		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminaldehyde</token>
+		<token value="OCc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminol</token>
+		<token value="COc1cc(ccc1O)\C=C\C(=O)CC(=O)\C=C\c1ccc(O)c(OC)c1" labels="none" valType="SMILES">curcumin</token>
 		<token value="C1(=O)CCCCO1" labels="1//2/3/4/5/" valType="SMILES">delta-valerolactone</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamid</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamide</token>
 		<token value="c1(c(C)c(C)c(O)c(C)c1C)O" labels="none" valType="SMILES">durohydroquinone</token>
+		<token value="CC(c1ccccc1)=CC(c2ccccc2)=O" labels="none" valType="SMILES">dypnone</token>
 		<token value="COc1c(OC)c(OC)cc(CC=C)c1" labels="none" valType="SMILES">elemicin</token>
 		<token value="c1(ccc(CC=C)cc1)OC" labels="none" valType="SMILES">estragole</token>
+		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6" valType="SMILES">ethyl vanillin</token>
+		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6" valType="SMILES">ethylvanillin</token>
 		<token value="C1(=O)CCCO1" labels="1//2/3/4/" valType="SMILES">gamma-butyrolactone</token>
 		<token value="C1(=O)CCC(C)O1" labels="1//2/3/4/5/" valType="SMILES">gamma-valerolactone</token>
+		<token value="O=CCc1cc(O)c(OC)cc1" labels="///1/2/3//4///5/6" valType="SMILES">homoisovanillin</token>
+		<token value="O=CCc1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6" valType="SMILES">homovanillin</token>
+		<token value="O=CCc1c(O)c(OC)ccc1" labels="///1/2//3///4/5/6" valType="SMILES">o-homovanillin</token>
 		<token value="COc1c(OC)c(OC)cc(C=CC)c1" labels="none" valType="SMILES">isoelemicin</token>
 		<token value="c1(c(O)ccc(C=CC)c1)OC" labels="1/2,ortho//3,meta/4,para/5////6//alpha" valType="SMILES">isoeugenol</token>
     <token value="OCc1cc(CO)ccc1" labels="//1/2,ortho/3,meta///4,para/5/6" valType="SMILES">isophthalyl alcohol</token>
+		<token value="O=Cc1cc(O)c(OC)cc1" labels="//1/2/3//4///5/6" valType="SMILES">isovanillin</token>
 		<token value="c1(O)ccc(O)cc1" labels="1//2,ortho/3,meta/4,para//5/6" valType="SMILES">quinol</token>
 		<token value="c1(=O)c(=O)ccc2ccccc12" labels="1//2//3/4/4a/5/6/7/8/8a" valType="SMILES">naphtho-1,2-quinone</token>
 		<token value="c1(=O)ccc(=O)c2ccccc12" labels="1//2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphtho-1,4-quinone</token>
@@ -52,6 +71,7 @@
     <token value="OCc1c(CO)cccc1" labels="//1/2,ortho///3,meta/4,para/5/6" valType="SMILES">phthalyl alcohol</token>
 		<token value="c1(ccccc1)O" labels="1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">phenol</token>
 		<token value="c1(ccccc1)[O-]" labels="1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">phenolate</token>
+		<token value="Oc1ccc(CCC(=O)c2c(O)cc(O)cc2O)cc1" labels="none" valType="SMILES">phloretin</token>
 		<token value="c1(c(CC)cccc1)O" labels="none" valType="SMILES">phlorol</token>
 		<token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1[O-]" labels="2,ortho////3,meta/4,para////5/6////1/" valType="SMILES" functionalIDs="16">picrate</token>
 		<token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta/4,para////5/6////1/" valType="SMILES" functionalIDs="16">picric</token>
@@ -79,12 +99,15 @@
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/" valType="SMILES">uric</token>
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/" valType="SMILES">uricacid</token>
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/" valType="SMILES">uric acid</token>
+		<token value="O=Cc1cc(OC)c(O)cc1" labels="//1/2/3///4//5/6" valType="SMILES">vanillin</token>
+		<token value="O=Cc1c(O)c(OC)ccc1" labels="//1/2//3///4/5/6" valType="SMILES">o-vanillin</token>
 		<token value="c1(c(C)c(C)c(O)cc1)O" labels="none" valType="SMILES">o-xylohydroquinone</token>
 		<token value="c1(c(C)c(C)c(O)cc1)O" labels="none" valType="SMILES">ortho-xylohydroquinone</token>
 		<token value="c1(c(C)cc(O)cc1C)O" labels="none" valType="SMILES">m-xylohydroquinone</token>
 		<token value="c1(c(C)cc(O)cc1C)O" labels="none" valType="SMILES">meta-xylohydroquinone</token>
 		<token value="c1(c(C)cc(O)c(C)c1)O" labels="none" valType="SMILES">p-xylohydroquinone</token>
 		<token value="c1(c(C)cc(O)c(C)c1)O" labels="none" valType="SMILES">para-xylohydroquinone</token>
+		<token value="O=C(C)CCc1cc(OC)c(O)cc1" labels="none" valType="SMILES">zingerone</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="á">

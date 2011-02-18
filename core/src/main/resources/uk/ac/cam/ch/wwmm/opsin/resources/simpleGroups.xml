@@ -33,10 +33,11 @@
 		<token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
 		<token value="CCCC[O+]" labels="1/2/3/4/" valType="SMILES">butoxylium</token>
 		<token value="NCCCCCN" labels="/1/2/3/4/5/" valType="SMILES">cadaverine</token>
-		<token value="[O-]C(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
-		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
-		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
-		<token value="OC(=O)CCCCCCCCC" labels="//1/2/3/4/5/6/7/8/9/10" valType="SMILES" functionalIDs="1">capric acid</token>
+		<token value="[O-]C(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
+		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
+		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
+		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capric acid</token>
+		<token value="c1(ccccc1)C(=O)CCCCCCCCC" labels="1'/2'/3'/4'/5'/6'/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capriphenone</token>
 		<token value="NNC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbazone</token>
 		<token value="CO" labels="none" valType="SMILES">carbinol</token>
 		<token value="OC(C[N+](C)(C)C)CC([O-])=O" labels="none" valType="SMILES">carnitine</token>

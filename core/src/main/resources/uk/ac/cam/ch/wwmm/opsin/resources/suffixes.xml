@@ -109,8 +109,12 @@
     <token value="ite">it</token>
     <token value="onaphthone">onaphthone</token>
     <token value="onaphthone">onaphthon</token>
+    <token value="onaphthone">naphthone</token>
+    <token value="onaphthone">naphthon</token>
     <token value="ophenone">ophenone</token>
     <token value="ophenone">ophenon</token>
+    <token value="ophenone">phenone</token>
+    <token value="ophenone">phenon</token>
     <token value="ous">ous</token>
     <token value="ous">ousacid</token>
     <token value="ous">ous acid</token>
