@@ -161,7 +161,10 @@ class ComponentProcessor {
 			
 			for (int j = substituents.size() -1; j >=0; j--) {
 				Element substituent = substituents.get(j);
-				boolean removed = removeHydroSubstituents(state, substituent);//this REMOVES substituents just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
+				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(state, substituent);//this REMOVES a substituent just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
+				if (!removed){
+					removed = removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+				}
 				if (removed){
 					substituents.remove(j);
 					substituentsAndRoot.remove(substituent);
@@ -682,7 +685,7 @@ class ComponentProcessor {
 	 * @return true is the substituent was a hydro substituent and hence was removed
 	 * @throws ComponentGenerationException
 	 */
-	private boolean removeHydroSubstituents(BuildState state, Element substituent) throws ComponentGenerationException {
+	private boolean removeAndMoveToAppropriateGroupIfHydroSubstituent(BuildState state, Element substituent) throws ComponentGenerationException {
 		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
 		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size()==0){
 			Element hydroSubstituent = substituent;
@@ -756,15 +759,15 @@ class ComponentProcessor {
 	
 			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
 			if (targetRing ==null){
-				Element nextSubOrRootOrBracketfromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
-				while (!nextSubOrRootOrBracketfromLast.equals(hydroSubstituent)){
-					potentialRing = nextSubOrRootOrBracketfromLast.getFirstChildElement(GROUP_EL);
+				Element nextSubOrRootOrBracketFromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
+				while (!nextSubOrRootOrBracketFromLast.equals(hydroSubstituent)){
+					potentialRing = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
 					if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
 						targetRing =potentialRing;
 						break;
 					}
 					else{
-						nextSubOrRootOrBracketfromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketfromLast);
+						nextSubOrRootOrBracketFromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketFromLast);
 					}
 				}
 			}
@@ -781,6 +784,68 @@ class ComponentProcessor {
 				}
 			}
 			hydroSubstituent.detach();
+			return true;
+		}
+		return false;
+	}
+	
+
+	/**
+	 * Removes substituents which are just a substractivePrefix element e.g. deoxy and moves their contents to be in front of the next in scope biochemical fragment (or failing that group)
+	 * @param state
+	 * @param substituent
+	 * @return true is the substituent was a subtractivePrefix substituent and hence was removed
+	 * @throws ComponentGenerationException
+	 */
+	static boolean removeAndMoveToAppropriateGroupIfSubstractivePrefix(Element substituent) throws ComponentGenerationException {
+		Elements subtractivePrefixes = substituent.getChildElements(SUBTRACTIVEPREFIX_EL);
+		if (subtractivePrefixes.size() > 0){
+			if (subtractivePrefixes.size()!=1){
+				throw new RuntimeException("Unexpected number of suffixPrefixes found in substituent");
+			}
+			
+			Element biochemicalGroup =null;//preferred
+			Element standardGroup =null;
+			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(substituent);
+			if (nextSubOrRootOrBracket == null){
+				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefixes.get(0).getValue() +" to apply to!");
+			}
+			//first check adjacent substituent/root. If this is a biochemical group treat as a non detachable prefix
+			Element potentialBiochemicalGroup =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
+			if (potentialBiochemicalGroup!=null && BIOCHEMICAL_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR))){
+				biochemicalGroup = potentialBiochemicalGroup;
+			}
+
+			if (biochemicalGroup==null){
+				Element nextSubOrRootOrBracketFromLast = (Element) substituent.getParent().getChild(substituent.getParent().getChildCount()-1);//the last sibling
+				while (!nextSubOrRootOrBracketFromLast.equals(substituent)){
+					Element groupToConsider = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
+					if (groupToConsider!=null){
+						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || NATURALPRODUCT_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR))){
+							biochemicalGroup = groupToConsider;
+							break;
+						}
+						else {
+							standardGroup = groupToConsider;
+						}
+					}
+					nextSubOrRootOrBracketFromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketFromLast);
+				}
+			}
+			Element targetGroup = biochemicalGroup!=null ? biochemicalGroup : standardGroup;
+			if (targetGroup == null){
+				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefixes.get(0).getValue() +" to apply to!");
+			}
+			//move the children of the subtractivePrefix substituent
+			Elements children =substituent.getChildElements();
+			for (int i = children.size()-1; i >=0 ; i--) {
+				Element child =children.get(i);
+				if (!child.getLocalName().equals(HYPHEN_EL)){
+					child.detach();
+					targetGroup.getParent().insertChild(child, 0);
+				}
+			}
+			substituent.detach();
 			return true;
 		}
 		return false;
@@ -1024,7 +1089,7 @@ class ComponentProcessor {
 			else{
 				Element elAfterMultiplier = (Element) XOMTools.getNextSibling(multiplier);
 				String elName = elAfterMultiplier.getLocalName();
-				if (elName.equals(HETEROATOM_EL) || (elName.equals(HYDRO_EL) && !elAfterMultiplier.getValue().startsWith("per"))|| elName.equals(FUSEDRINGBRIDGE_EL)) {
+				if (elName.equals(HETEROATOM_EL) || elName.equals(SUBTRACTIVEPREFIX_EL)|| (elName.equals(HYDRO_EL) && !elAfterMultiplier.getValue().startsWith("per"))|| elName.equals(FUSEDRINGBRIDGE_EL)) {
 					multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
 				}
 			}
@@ -1065,6 +1130,7 @@ class ComponentProcessor {
 			String nextName = featureToMultiply.getLocalName();
 			if(nextName.equals(UNSATURATOR_EL) ||
 					nextName.equals(SUFFIX_EL) ||
+					nextName.equals(SUBTRACTIVEPREFIX_EL) ||
 					(nextName.equals(HETEROATOM_EL) && !GROUP_TYPE_VAL.equals(multiplier.getAttributeValue(TYPE_ATR))) ||
 					nextName.equals(HYDRO_EL)) {
 				int mvalue = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
@@ -1300,6 +1366,7 @@ class ComponentProcessor {
 						refName.equals(SUFFIX_EL) ||
 						refName.equals(HETEROATOM_EL) ||
 						refName.equals(CONJUNCTIVESUFFIXGROUP_EL) ||
+						refName.equals(SUBTRACTIVEPREFIX_EL) ||
 						(refName.equals(HYDRO_EL) && !referent.getValue().startsWith("per") ))) {//not perhydro
 					referent.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
 					locant.detach();

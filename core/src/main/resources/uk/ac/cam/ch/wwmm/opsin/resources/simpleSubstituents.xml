@@ -451,4 +451,9 @@
 		<token value="-Cl" labels="none" valType="SMILES">perchloro</token>
 		<token value="-I" labels="none" valType="SMILES">periodo</token>
 	</tokenList>
+
+	<tokenList tagname="subtractivePrefix" symbol="x">
+		<token value="O">deoxy</token>
+		<token value="O">desoxy</token><!--older variant spelling-->
+	</tokenList>
 </tokenLists>

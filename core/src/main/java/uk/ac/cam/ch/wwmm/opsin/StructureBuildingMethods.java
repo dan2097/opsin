@@ -350,6 +350,7 @@ class StructureBuildingMethods {
 		ArrayList<Element> heteroatoms = new ArrayList<Element>();
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
 		ArrayList<Element> dehydroElements = new ArrayList<Element>();
+		ArrayList<Element> substractivePrefixElements = new ArrayList<Element>();
 
 		Elements children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
@@ -360,6 +361,9 @@ class StructureBuildingMethods {
 			}
 			else if (elName.equals(HETEROATOM_EL)){
 				heteroatoms.add(currentEl);
+			}
+			else if (elName.equals(SUBTRACTIVEPREFIX_EL)){
+				substractivePrefixElements.add(currentEl);
 			}
 			else if (elName.equals(HYDRO_EL)){
 				if (!currentEl.getValue().equals("dehydro")){
@@ -379,6 +383,16 @@ class StructureBuildingMethods {
 		/*
 		 * Add locanted functionality
 		 */
+		
+		for(int i=substractivePrefixElements.size() -1;i >= 0;i--) {
+			Element substractivePrefix = substractivePrefixElements.get(i);
+			//locant can be null but locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
+			String locant = substractivePrefix.getAttributeValue(LOCANT_ATR);
+			String element = substractivePrefix.getAttributeValue(VALUE_ATR);
+			FragmentTools.removeTerminalAtom(state, thisFrag, element, locant);
+			substractivePrefix.detach();
+		}
+		
 		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
 			Element hydrogen = hydrogenElements.get(i);
 			String locant = hydrogen.getAttributeValue(LOCANT_ATR);

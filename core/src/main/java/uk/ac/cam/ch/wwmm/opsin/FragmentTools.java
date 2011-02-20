@@ -1000,4 +1000,61 @@ class FragmentTools {
 		}
 		return true;
 	}
+
+
+	/**
+	 * Removes a terminal atom of a particular element e.g. oxygen
+	 * A locant may be specified to indicate what atom is adjacent to the atom to be removed
+	 * Formally the atom is replaced by hydrogen, hence stereochemistry is intentionally preserved
+	 * @param state 
+	 * @param fragment
+	 * @param element The symbol of the element
+	 * @param locant A locant or null
+	 * @throws StructureBuildingException 
+	 */
+	static void removeTerminalAtom(BuildState state, Fragment fragment, String element, String locant) throws StructureBuildingException {
+		List<Atom> applicableTerminalAtoms;
+		if (locant!=null){
+			Atom adjacentAtom = fragment.getAtomByLocantOrThrow(locant);
+			applicableTerminalAtoms = findTerminalAtoms(adjacentAtom.getAtomNeighbours(), element);
+			if (applicableTerminalAtoms.isEmpty()){
+				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " at locant "+ locant +" for substractive nomenclature");
+			}
+		}
+		else{
+			applicableTerminalAtoms = findTerminalAtoms(fragment.getAtomList(), element);
+			if (applicableTerminalAtoms.isEmpty()){
+				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for substractive nomenclature");
+			}
+		}
+		Atom atomToRemove = applicableTerminalAtoms.get(0);
+		AtomParity atomParity =  atomToRemove.getAtomNeighbours().get(0).getAtomParity();
+		if (atomParity!=null){//replace reference to atom with reference to implicit hydrogen
+			Atom[] atomRefs4= atomParity.getAtomRefs4();
+			for (int i = 0; i < atomRefs4.length; i++) {
+				if (atomRefs4[i]==atomToRemove){
+					atomRefs4[i] = AtomParity.deoxyHydrogen;
+					break;
+				}
+			}
+		}
+		state.fragManager.removeAtomAndAssociatedBonds(atomToRemove);
+	}
+
+
+	/**
+	 * Finds terminal atoms of the given element type from the list given
+	 * @param atoms
+	 * @param element
+	 * @return 
+	 */
+	private static List<Atom> findTerminalAtoms(List<Atom> atoms, String element) {
+		List<Atom> matches =new ArrayList<Atom>();
+		for (Atom atom : atoms) {
+			if (atom.getElement().equals(element) && atom.getIncomingValency()==1){
+				matches.add(atom);
+			}
+		}
+		return matches;
+	}
 }
