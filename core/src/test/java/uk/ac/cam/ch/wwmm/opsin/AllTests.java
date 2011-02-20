@@ -12,6 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	ComponentGeneration_AmbiguitiesAndIrregularitiesTest.class,
 	ComponentGeneration_ProcesslocantsTest.class,
 	ComponentGeneration_StereochemistryTest.class,
+	ComponentProcessorTest.class,
 	CycleDetectorTest.class,
 	DtdTest.class,
 	FragmentManagerTest.class,

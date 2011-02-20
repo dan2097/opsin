@@ -13,6 +13,10 @@ class AtomParity {
 	 * A dummy hydrogen atom. Used to represent an implicit hydrogen that is attached to a tetrahedral stereocentre
 	 */
 	static final Atom hydrogen = new Atom("H");
+	/**
+	 * A dummy hydrogen atom. Used to represent the hydrogen that replaced a hydroxy at a tetrahedral stereocentre
+	 */
+	static final Atom deoxyHydrogen = new Atom("H");
 	private Atom[] atomRefs4;
 	private int parity;
 	

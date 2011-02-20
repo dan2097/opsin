@@ -1518,57 +1518,66 @@ class StructureBuilder {
 			List<Atom> atomList =fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
 				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
-				Atom hydrogen = null;
 				for (int i = 0; i < explicitHydrogensToAdd; i++) {
-					hydrogen = state.fragManager.createAtom("H", fragment);
+					Atom hydrogen = state.fragManager.createAtom("H", fragment);
 					state.fragManager.createBond(parentAtom, hydrogen, 1);
 				}
 				if (parentAtom.getAtomParity()!=null){
 					if (explicitHydrogensToAdd >1){
-						throw new StructureBuildingException("Cannot have tetrahedral chirality and more than 2 hydrogens");
-					}
-					AtomParity atomParity = parentAtom.getAtomParity();
-					Atom[] atomRefs4 = atomParity.getAtomRefs4();
-					if (explicitHydrogensToAdd ==1){
-						//atom parity was set in SMILES but at this stage the id of the hydrogen was not known, now it is so replace the dummy atom
-						boolean setAtom =false;
-						for (int i = 0; i < atomRefs4.length; i++) {
-							if (atomRefs4[i].equals(AtomParity.hydrogen)){
-								atomRefs4[i] = hydrogen;
-								setAtom =true;
-								break;
-							}
-						}
-						if (!setAtom){
-							throw new StructureBuildingException("OPSIN Bug: Unable to find implicit hydrogen to replace with explicit hydrogen in atomRefs4");
-						}
+						//Cannot have tetrahedral chirality and more than 2 hydrogens
+						parentAtom.setAtomParity(null);//probably caused by deoxy
 					}
 					else{
-						if (!StereoAnalyser.isTetrahedral(parentAtom)){
-							//no longer a stereoCentre e.g. due to unsaturation
-							parentAtom.setAtomParity(null);
-						}
-						else{
-							Integer positionOfImplicitHydrogen = null;
-							for (int i = 0; i < atomRefs4.length; i++) {
-								if (atomRefs4[i].equals(AtomParity.hydrogen)){
-									positionOfImplicitHydrogen = i;
-									break;
-								}
-							}
-							if (positionOfImplicitHydrogen !=null){
-								//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
-								List<Atom> neighbours = parentAtom.getAtomNeighbours();
-								for (Atom atom : atomRefs4) {
-									neighbours.remove(atom);
-								}
-								if (neighbours.size()!=1){
-									throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
-								}
-								atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
-							}
-						}
+						modifyAtomParityToTakeIntoAccountExplicitHydrogen(parentAtom);
 					}
+				}
+			}
+		}
+	}
+
+	private static void modifyAtomParityToTakeIntoAccountExplicitHydrogen(Atom atom) throws StructureBuildingException {
+		AtomParity atomParity = atom.getAtomParity();
+		if (!StereoAnalyser.isTetrahedral(atom)){
+			//no longer a stereoCentre e.g. due to unsaturation
+			atom.setAtomParity(null);
+		}
+		else{
+			Atom[] atomRefs4 = atomParity.getAtomRefs4();
+			Integer positionOfImplicitHydrogen = null;
+			Integer positionOfDeoxyHydrogen = null;
+			for (int i = 0; i < atomRefs4.length; i++) {
+				if (atomRefs4[i].equals(AtomParity.hydrogen)){
+					positionOfImplicitHydrogen = i;
+				}
+				else if (atomRefs4[i].equals(AtomParity.deoxyHydrogen)){
+					positionOfDeoxyHydrogen = i;
+				}
+			}
+			if (positionOfImplicitHydrogen !=null || positionOfDeoxyHydrogen !=null){
+				//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
+				List<Atom> neighbours = atom.getAtomNeighbours();
+				for (Atom atomRef : atomRefs4) {
+					neighbours.remove(atomRef);
+				}
+				if (neighbours.size()==0){
+					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+				}
+				else if (neighbours.size()==1 && positionOfDeoxyHydrogen!=null){
+					atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
+					if (positionOfImplicitHydrogen != null){
+						throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+					}
+				}
+				else if (neighbours.size()==1 && positionOfImplicitHydrogen!=null){
+					atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
+				}
+				else if (neighbours.size()==2 && positionOfDeoxyHydrogen!=null && positionOfImplicitHydrogen!=null){
+					//TODO get CIP priority of neighbours. Refactor stereoanalyzer into two classes so that get CIP priority is decoupled from symmetry analysis
+					atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
+					atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
+				}
+				else{
+					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
 				}
 			}
 		}
