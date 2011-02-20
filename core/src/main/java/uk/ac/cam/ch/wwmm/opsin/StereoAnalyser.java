@@ -361,13 +361,15 @@ class StereoAnalyser {
 		int neighbourCount = atom.getAtomNeighbours().size();
 		String element = atom.getElement();
 		if (neighbourCount == 4){
-			if (element.equals("C") || element.equals("N")|| element.equals("P") || element.equals("S")
-					|| element.equals("B")|| element.equals("Si") || element.equals("As") || element.equals("Se")){
+			if (element.equals("B") || element.equals("C") || element.equals("Si") || element.equals("Ge") ||
+					element.equals("N")|| element.equals("P") || element.equals("S") ||
+					  element.equals("As") || element.equals("Se")){
 				return true;
 			}
 		}
 		else if (neighbourCount ==3){
-			if ((element.equals("S") || element.equals("Se")) && atom.getIncomingValency()==4){//tetrahedral sulfur - 3 bonds and the lone pair
+			if ((element.equals("S") || element.equals("Se")) && (atom.getIncomingValency()==4 || (atom.getCharge() ==1 && atom.getIncomingValency()==3))){
+				//tetrahedral sulfur/selenium - 3 bonds and the lone pair
 				return true;
 			}
 		}
