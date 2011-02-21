@@ -7,24 +7,25 @@
   </parent>
   <groupId>opsin</groupId>
   <artifactId>opsin</artifactId>
-  <name>OPSIN</name>
   <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>OPSIN</name>
   <description>Open Parser for Systematic IUPAC Nomenclature</description>
+  <url>http://opsin.ch.cam.ac.uk</url>
   <licenses>
     <license>
       <name>Artistic License 2.0</name>
-      <url> http://www.opensource.org/licenses/artistic-license-2.0.php</url>
+      <url>http://www.opensource.org/licenses/artistic-license-2.0.php</url>
     </license>
   </licenses>
-    <packaging>pom</packaging>
-    <scm>
+  <scm>
+    <url>http://bitbucket.org/dan2097/opsin/</url>
     <connection>
       scm:hg:https://dan2097@bitbucket.org/dan2097/opsin/
     </connection>
     <developerConnection>
       scm:hg:https://dan2097@bitbucket.org/dan2097/opsin/
     </developerConnection>
-    <url>http://bitbucket.org/dan2097/opsin/</url>
   </scm>
   <developers>
     <developer>
@@ -44,6 +45,9 @@
     </contributor>
     <contributor>
       <name>Albina Asadulina</name>
+    </contributor>
+    <contributor>
+      <name>Rich Apodaca</name>
     </contributor>
   </contributors>
   <modules>
