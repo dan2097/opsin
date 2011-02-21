@@ -9,27 +9,35 @@
         <include>opsin:core</include>
         <include>opsin:inchi</include>
       </includes>
+      <sources>
+        <includeModuleDirectory>false</includeModuleDirectory>
+        <fileSets>
+          <fileSet>
+            <directory>src/main/java</directory>
+          </fileSet>
+        </fileSets>
+      </sources>
       <binaries>
         <unpack>true</unpack>
       </binaries>
     </moduleSet>
   </moduleSets>
   <files>
-  	<file>
-  	  <source>Acknowledgments.txt</source>
-  	</file>
-  	<file>
-  	  <source>LICENSE.txt</source>
-  	</file>
-  	<file>
-  	  <source>LICENSE-External.txt</source>
-  	</file>
-  	<file>
-  	  <source>README.txt</source>
-  	</file>
-  	<file>
-  	  <source>ReleaseNotes.txt</source>
-  	</file>
+    <file>
+      <source>Acknowledgments.txt</source>
+    </file>
+    <file>
+      <source>LICENSE.txt</source>
+    </file>
+    <file>
+      <source>LICENSE-External.txt</source>
+    </file>
+    <file>
+      <source>README.txt</source>
+    </file>
+    <file>
+      <source>ReleaseNotes.txt</source>
+    </file>
   </files>
   <includeBaseDirectory>false</includeBaseDirectory>
   <dependencySets>
