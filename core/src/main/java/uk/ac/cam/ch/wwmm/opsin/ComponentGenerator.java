@@ -311,6 +311,50 @@ class ComponentGenerator {
 			if(afterLocants == null){
 				throw new ComponentGenerationException("Nothing after locant tag: " + locant.toXML());
 			}
+			
+			if (individualLocants.size()==1){
+				ifCarbohydrateLocantConvertToAminoAcidStyleLocant(locant);
+			}
+		}
+	}
+
+	/**
+	 * Looks for locants of the form (<anotherLocant>)?<multiplier><locant>
+	 * and converts them to <modifiedlocant><multiplier>
+	 * e.g. 2,4,6 tri O- -->O2,O4,O6 tri
+	 * @param locant
+	 */
+	private static void ifCarbohydrateLocantConvertToAminoAcidStyleLocant(Element locant) {
+		if (matchElementSymbol.matcher(locant.getValue()).matches()){
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(locant);
+			if (possibleMultiplier!=null && possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				Element possibleOtherLocant = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
+				if (possibleOtherLocant!=null){
+					String[] locantValues = matchComma.split(possibleOtherLocant.getValue());
+					if (locantValues.length == Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR))){
+						for (int i = 0; i < locantValues.length; i++) {
+							locantValues[i] = locant.getValue() + locantValues[i];
+						}
+						XOMTools.setTextChild(possibleOtherLocant, StringTools.arrayToString(locantValues, ","));
+						locant.detach();
+					}
+				}
+				else{
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < multiplierValue-1; i++) {
+						sb.append(locant.getValue());
+						sb.append(StringTools.multiplyString("'", i));
+						sb.append(',');
+					}
+					sb.append(locant.getValue());
+					sb.append(StringTools.multiplyString("'", multiplierValue-1));
+					Element newLocant = new Element(LOCANT_EL);
+					newLocant.appendChild(sb.toString());
+					XOMTools.insertBefore(possibleMultiplier, newLocant);
+					locant.detach();
+				}
+			}
 		}
 	}
 
