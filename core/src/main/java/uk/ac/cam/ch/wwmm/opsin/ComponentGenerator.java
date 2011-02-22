@@ -165,7 +165,7 @@ class ComponentGenerator {
 				}
 			}
 
-			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL) && nextEl.getValue().equals("phen") && !"e".equals(nextEl.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL))){//deals with tetra phen yl vs tetraphen yl
+			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL) && nextEl.getValue().equals("phen") && !"e".equals(nextEl.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR))){//deals with tetra phen yl vs tetraphen yl
 				Element possibleLocantOrMultiplierOrSuffix = (Element) XOMTools.getNextSibling(nextEl);
 				if (possibleLocantOrMultiplierOrSuffix!=null){//null if not used as substituent
 					if (possibleLocantOrMultiplierOrSuffix.getLocalName().equals(SUFFIX_EL)){//for phen the aryl substituent, expect an adjacent suffix e.g. phenyl, phenoxy
@@ -1772,7 +1772,7 @@ class ComponentGenerator {
 		String groupValue =group.getValue();
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
-			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
+			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
 					throw new ComponentGenerationException(groupValue + "ol has been incorrectly interpreted as "+ groupValue+", ol instead of phenol with the oxgen replaced");
 				}
@@ -1994,9 +1994,9 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("sel")){
 			//check that it is not "selenium"
-			if (HETEROSTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL) ==null){
+			if (HETEROSTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
 				Element unsaturator = (Element) XOMTools.getNextSibling(group);
-				if (unsaturator !=null && unsaturator.getLocalName().equals(UNSATURATOR_EL) && unsaturator.getValue().equals("en") && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL) ==null){
+				if (unsaturator !=null && unsaturator.getLocalName().equals(UNSATURATOR_EL) && unsaturator.getValue().equals("en") && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
 					Element ium = (Element) XOMTools.getNextSibling(unsaturator);
 					if (ium !=null && ium.getLocalName().equals(SUFFIX_EL) && ium.getValue().equals("ium")){
 						throw new ComponentGenerationException("<multiplier>selenium does not indicate a chain of selenium atoms with a double bond and a positive charge");

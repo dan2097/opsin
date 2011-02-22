@@ -154,7 +154,7 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new Element(HYDROCARBONFUSEDRINGSYSTEM_EL);
-		phen.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_EL, "e"));
+		phen.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_ATR, "e"));
 		phen.appendChild("phen");
 		Element yl = new Element(SUFFIX_EL);
 		yl.appendChild("yl");

@@ -123,6 +123,7 @@ Nucleosides, nucleotides and their esters
 Steroids including alpha/beta stereochemistry
 Specification of oxidation numbers and charge on elements
 Perhalogeno terms
+Deoxy
 Stoichiometry ratios and mixture indicators
 Simple CAS names including inverted CAS names
 
@@ -131,7 +132,6 @@ Other less common stereochemical terms
 Carbohydrates
 Natural Products other than steroids
 Natural product specific nomenclature operations
-Subtractive nomenclature e.g. deoxy
 Composite and multiplied bridge prefixes e.g. epoxymethano
 Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
 

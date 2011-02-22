@@ -2035,7 +2035,7 @@ class ComponentProcessor {
 							}
 						}
 						else if (specialInstruction.equals("not_icacid")){
-							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)==null){
+							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR)==null){
 								Element nextEl = (Element) XOMTools.getNextSibling(group);
 								if (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
 									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a HW ring");
@@ -2043,7 +2043,7 @@ class ComponentProcessor {
 							}
 						}
 						else if (specialInstruction.equals("not_nothingOrOlate")){
-							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)==null){
+							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR)==null){
 								Element nextEl = (Element) XOMTools.getNextSibling(group);
 								if (nextEl==null || (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ate"))){
 									throw new ComponentGenerationException(name +" has the syntax for a HW ring but probably does not mean that in this context");
