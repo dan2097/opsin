@@ -327,11 +327,11 @@ class Parser {
                 lastTokenElement=tokenElement;
             }
             else if (lastTokenElement!=null && !token.equals("")){
-            	if (lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL)!=null){
-            		lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_EL).setValue(lastTokenElement.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_EL) + token);
+            	if (lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR)!=null){
+            		lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR).setValue(lastTokenElement.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR) + token);
             	}
             	else{
-            		lastTokenElement.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_EL, token));
+            		lastTokenElement.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_ATR, token));
             	}
             }
             annotPos++;
