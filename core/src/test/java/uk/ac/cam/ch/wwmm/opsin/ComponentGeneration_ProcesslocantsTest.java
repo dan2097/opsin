@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static junit.framework.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
 
 import org.junit.Before;
@@ -213,5 +214,57 @@ public class ComponentGeneration_ProcesslocantsTest {
 		assertNotNull(addedHydrogen);
 		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen.getLocalName());
 		assertEquals("5", addedHydrogen.getAttributeValue(LOCANT_ATR));
+	}
+	
+	@Test
+	public void testCarbohydrateStyleLocants() throws ComponentGenerationException {
+		//2,4,6-tri-O
+		locant.appendChild("O");
+		Element multiplier = new Element(MULTIPLIER_EL);
+		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
+		XOMTools.insertBefore(locant, multiplier);
+		Element numericLocant = new Element(LOCANT_EL);
+		numericLocant.appendChild("2,4,6");
+		XOMTools.insertBefore(multiplier, numericLocant);
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("O2,O4,O6", numericLocant.getValue());
+		Element group = (Element) XOMTools.getNextSibling(multiplier);
+		assertNotNull(group);
+		assertEquals(group.getLocalName(), GROUP_EL);
+	}
+	
+	@Test
+	public void testCarbohydrateStyleLocantsNoNumericComponent() throws ComponentGenerationException {
+		//tri-O
+		locant.appendChild("O");
+		Element multiplier = new Element(MULTIPLIER_EL);
+		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
+		XOMTools.insertBefore(locant, multiplier);
+		ComponentGenerator.processLocants(substituent);
+		Element elBeforeMultiplier = (Element) XOMTools.getPreviousSibling(multiplier);
+		assertNotNull("A locant should not be in front of the multiplier", elBeforeMultiplier);
+		assertEquals(LOCANT_EL, elBeforeMultiplier.getLocalName());
+		assertEquals("O,O',O''", elBeforeMultiplier.getValue());
+		Element group = (Element) XOMTools.getNextSibling(multiplier);
+		assertNotNull(group);
+		assertEquals(group.getLocalName(), GROUP_EL);
+	}
+	
+	@Test
+	public void testCarbohydrateStyleLocantsCounterExample() throws ComponentGenerationException {
+		//2,4,6-tri-2 (this is not a carbohydrate style locant)
+		locant.appendChild("2");
+		Element multiplier = new Element(MULTIPLIER_EL);
+		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
+		XOMTools.insertBefore(locant, multiplier);
+		Element numericLocant = new Element(LOCANT_EL);
+		numericLocant.appendChild("2,4,6");
+		XOMTools.insertBefore(multiplier, numericLocant);
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("2,4,6", numericLocant.getValue());
+		Element unmodifiedLocant = (Element) XOMTools.getNextSibling(multiplier);
+		assertNotNull(unmodifiedLocant);
+		assertEquals(unmodifiedLocant.getLocalName(), LOCANT_EL);
+		assertEquals("2", unmodifiedLocant.getValue());
 	}
 }
