@@ -126,7 +126,8 @@ does not define a CFG.
   <regex name="%amineMeaningNitrilo%" value="╗"/>
   <regex name="%spiroOldMethod%" value="╝"/>
   <regex name="%inlineSuffixAllowingPrefixes%" value="╜"/>
-  <!--up to ascii 189 used-->
+  <regex name="%dlStereochemistry%" value="╛"/>
+  <!--up to ascii 190 used-->
 
 <!-- composite regexes-->
 
@@ -163,6 +164,8 @@ does not define a CFG.
   <regex name="%locantOpenBracket%" value="(%stereochemistry%*%newLocantGroupNoStartingHyphen%{0,2}%stereochemistry%*%multiplier%?%openBracket%%hyphen%?)"/>
   <regex name="%alkaneStemSystematic%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%)"/>
   <regex name="%alkaneStem%" value="(%alkaneStemSystematic%|%alkaneStemTrivial%)"/>
+  <regex name="%dlStereochemistryPrefix%" value="(%dlStereochemistry%%lightRotation%?)"/>
+
   <regex name="%fusedRingBridges%" value ="(%newLocantGroupNoStartingHyphen%?%alkaneStem%%ane%%bridgeFormingO%%hyphen%?)"/>
   <regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="(%hydroGroup%*(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%fusedRingBridges%)*)"/><!--bigCapitalH before lambdaConvention is preferred. Expected ordering often varies between IUPAC/CAS/Beilstein so be lenient-->
   <regex name="%ringNonDetachableFeatures%" value="((%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%fusedRingBridges%)*%newLocantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes -->
@@ -181,12 +184,12 @@ does not define a CFG.
   <regex name="%alkYlene%" value = "((%alkaneStemSystematic%%unsaturationBlock%?|%alkaneStemTrivial%%unsaturationBlock%)%optLocantGroupNoOMP%%ylene%)"/>
   <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
 
-  <regex name="%aminoMonoAcid%" value="(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%)"/>
-  <regex name="%aminoAcidOptionalIne%" value="(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%)"/>
-  <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|(%aminoMonoAcid%|%aminoAcidEndsInIc%)(%infixedSuffix%|%rootSuffix%))"/>
+  <regex name="%aminoMonoAcid%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%))"/>
+  <regex name="%aminoAcidOptionalIne%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%))"/>
+  <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|(%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)(%infixedSuffix%|%rootSuffix%))"/>
 
-  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locant%%aminoAcidYl%)"/>
-  <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
+  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locant%%aminoAcidYl%)"/>
+  <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
   <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%))"/>

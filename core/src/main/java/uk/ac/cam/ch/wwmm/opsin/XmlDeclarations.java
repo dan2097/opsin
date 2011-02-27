@@ -68,6 +68,9 @@ class XmlDeclarations {
 	
 	/** A delta used to indicate the position of a double bond in older nomenclature*/
 	static final String DELTA_EL ="delta";
+	
+	/** Used in amino acid and carbohydrate nomenclature to indicate stereochemistry*/
+	static final String DLSTEREOCHEISTRY_EL ="dlStereochemistry";
 
 	/**A functional Class such as acid. Does not correspond to a fragment*/
 	static final String FUNCTIONALCLASS_EL ="functionalClass";

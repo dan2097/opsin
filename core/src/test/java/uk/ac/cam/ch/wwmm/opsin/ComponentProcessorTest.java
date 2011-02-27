@@ -4,6 +4,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static junit.framework.Assert.*;
 import nu.xom.Attribute;
 import nu.xom.Element;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
@@ -110,5 +111,52 @@ public class ComponentProcessorTest {
 		assertEquals(locant, root.getChildElements().get(0));
 		assertEquals(multiplier, root.getChildElements().get(1));
 		assertEquals(substractivePrefix, root.getChildElements().get(2));
+	}
+	
+	
+	@Test
+	public void testDLStereochemistryLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		dlStereo.addAttribute(new Attribute(VALUE_ATR, "l"));
+		substituent.appendChild(dlStereo);
+		Element group = new Element(GROUP_EL);
+		group.addAttribute(new Attribute(TYPE_ATR, AMINOACID_TYPE_VAL));
+		substituent.appendChild(group);
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		Fragment f = fm.buildSMILES("N[C@@H](C)C");
+		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
+		ComponentProcessor.applyDLPrefixesIfPresent(group, f);
+		assertEquals(parityBefore, f.getAtomByID(2).getAtomParity().getParity());
+	}
+	
+	@Test
+	public void testDLStereochemistryDOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		dlStereo.addAttribute(new Attribute(VALUE_ATR, "d"));
+		substituent.appendChild(dlStereo);
+		Element group = new Element(GROUP_EL);
+		group.addAttribute(new Attribute(TYPE_ATR, AMINOACID_TYPE_VAL));
+		substituent.appendChild(group);
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		Fragment f = fm.buildSMILES("N[C@@H](C)C");
+		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
+		ComponentProcessor.applyDLPrefixesIfPresent(group, f);
+		assertEquals(parityBefore, -f.getAtomByID(2).getAtomParity().getParity());
+	}
+	
+	@Test(expected=ComponentGenerationException.class)
+	public void testDLStereochemistryDOnAchiralAminoAcid() throws ComponentGenerationException, StructureBuildingException{
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		dlStereo.addAttribute(new Attribute(VALUE_ATR, "d"));
+		substituent.appendChild(dlStereo);
+		Element group = new Element(GROUP_EL);
+		group.addAttribute(new Attribute(TYPE_ATR, AMINOACID_TYPE_VAL));
+		substituent.appendChild(group);
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		Fragment f = fm.buildSMILES("NC(C)C");
+		ComponentProcessor.applyDLPrefixesIfPresent(group, f);
 	}
 }
