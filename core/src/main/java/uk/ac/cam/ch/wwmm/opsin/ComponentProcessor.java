@@ -283,6 +283,7 @@ class ComponentProcessor {
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
 		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag);
+		applyDLPrefixesIfPresent(group, thisFrag);
 		return thisFrag;
 	}
 
@@ -662,6 +663,42 @@ class ComponentProcessor {
 			}
 		}
 	}
+	
+	static void applyDLPrefixesIfPresent(Element group, Fragment frag) throws ComponentGenerationException {
+		if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))){
+			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
+			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEISTRY_EL)){
+				String value = possibleDl.getAttributeValue(VALUE_ATR);
+				List<Atom> atomList = frag.getAtomList();
+				List<Atom> atomsWithParities = new ArrayList<Atom>();
+				for (Atom atom : atomList) {
+					if (atom.getAtomParity()!=null){
+						atomsWithParities.add(atom);
+					}
+				}
+				if (atomsWithParities.isEmpty()){
+					throw new ComponentGenerationException("D/L stereochemistry :" +value + " found before achiral amino acid");
+				}
+				if (value.equals("l") || value.equals("ls")){
+					//do nothing, L- is implicit
+				}
+				else if (value.equals("d") || value.equals("ds")){
+					for (Atom atom : atomsWithParities) {
+						atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+					}
+				}
+				else  if (value.equals("dl")){
+					for (Atom atom : atomsWithParities) {
+						atom.setAtomParity(null);
+					}
+				}
+				else{
+					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + value );
+				}
+			}
+		}
+	}
+
 
 	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
 		Element nextEl = (Element) XOMTools.getNextSibling(group);
