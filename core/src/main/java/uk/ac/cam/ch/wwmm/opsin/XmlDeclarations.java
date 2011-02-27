@@ -372,7 +372,11 @@ class XmlDeclarations {
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
+	/**Nucleotides/nucleosides/natural products*/
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
+	
+	/**Groups formed in accordance with carbohydrate nomenclature */
+	static final String CARBOHYDRATE_SUBTYPE_VAL ="carbohydrate";
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
 	/**amido/hydrazido/imido/nitrido*/
 	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
@@ -391,7 +395,6 @@ class XmlDeclarations {
 	static final String SIMPLEGROUP_SUBTYPE_VAL ="simpleGroup";
 	static final String SUFFIX_SUBTYPE_VAL ="suffix";
 	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
-	static final String NATURALPRODUCT_SUBTYPE_VAL ="naturalProduct";
 	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
 	static final String NONE_SUBTYPE_VAL ="none";
 	/**oxido/sulfido/selenido/tellurido*/

@@ -858,7 +858,7 @@ class ComponentProcessor {
 				while (!nextSubOrRootOrBracketFromLast.equals(substituent)){
 					Element groupToConsider = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
 					if (groupToConsider!=null){
-						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || NATURALPRODUCT_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR))){
+						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR))){
 							biochemicalGroup = groupToConsider;
 							break;
 						}

@@ -786,13 +786,13 @@ class ComponentGenerator {
                     }
                   	if (!bracketed){
                 		List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
-                		boolean foundNaturalProduct =false;
+                		boolean foundAlphaBetaNaturalProduct =false;
                 		for (Element group : groups) {
-                			if (NATURALPRODUCT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-                				foundNaturalProduct=true;
+                			if (group.getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR)!=null){
+                				foundAlphaBetaNaturalProduct=true;
                 			}
     					}
-                		if (!foundNaturalProduct){
+                		if (!foundAlphaBetaNaturalProduct){
                 			Element newLocantEl = new Element(LOCANT_EL);
                 			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
                 			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);

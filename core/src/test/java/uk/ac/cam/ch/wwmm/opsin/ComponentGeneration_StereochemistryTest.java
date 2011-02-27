@@ -213,7 +213,8 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(1a,2b,3bEtA,4alpha,5xi)");
 		Element naturalProduct = new Element(GROUP_EL);
-		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, NATURALPRODUCT_SUBTYPE_VAL));
+		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
+		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
 		ComponentGenerator.processStereochemistry(substituent);
 
@@ -259,7 +260,8 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,5alpha");
 		Element naturalProduct = new Element(GROUP_EL);
-		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, NATURALPRODUCT_SUBTYPE_VAL));
+		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
+		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
 		ComponentGenerator.processStereochemistry(substituent);
 
@@ -334,7 +336,8 @@ public class ComponentGeneration_StereochemistryTest {
 	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct3() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element naturalProduct = new Element(GROUP_EL);
-		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, NATURALPRODUCT_SUBTYPE_VAL));
+		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
+		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
