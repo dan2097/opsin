@@ -1,4 +1,4 @@
-<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
 	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="└">
