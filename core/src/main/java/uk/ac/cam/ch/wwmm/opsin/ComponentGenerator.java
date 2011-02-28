@@ -2048,6 +2048,28 @@ class ComponentGenerator {
 				}
 			}
 		}
+		else if (groupValue.equals("keto") && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			//check for case where this is specifying the open chain form of a ketose
+			
+			//Currently all carbohydrates are treated as being the chain form, but this may need to be reconsidered later
+			Element parentSubstituent = (Element) group.getParent();
+			Element nextSubOrRoot = (Element) XOMTools.getNextSibling(parentSubstituent);
+			if (nextSubOrRoot!=null){
+				Element possibleCarbohydrate = nextSubOrRoot.getFirstChildElement(GROUP_EL);
+				if (possibleCarbohydrate !=null && CARBOHYDRATE_SUBTYPE_VAL.equals(possibleCarbohydrate.getAttributeValue(SUBTYPE_ATR))){
+					group.detach();
+					Elements childrenToMove = parentSubstituent.getChildElements();
+					for (int i = childrenToMove.size() -1 ; i >=0; i--) {
+						Element el = childrenToMove.get(i);
+						if (!el.getLocalName().equals(HYPHEN_EL)){
+							el.detach();
+							nextSubOrRoot.insertChild(el, 0);
+						}
+					}
+					parentSubstituent.detach();
+				}
+			}
+		}
 	}
 	
 	/**
