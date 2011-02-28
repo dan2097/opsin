@@ -695,8 +695,8 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + value );
 				}
+				possibleDl.detach();
 			}
-			possibleDl.detach();
 		}
 		else if (CARBOHYDRATE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
@@ -728,8 +728,8 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + value );
 				}
+				possibleDl.detach();
 			}
-			possibleDl.detach();
 		}
 	}
 
