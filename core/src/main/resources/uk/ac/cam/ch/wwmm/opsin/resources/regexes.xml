@@ -128,7 +128,8 @@ does not define a CFG.
   <regex name="%inlineSuffixAllowingPrefixes%" value="╜"/>
   <regex name="%dlStereochemistry%" value="╛"/>
   <regex name="%subtractivePrefix%" value="┐"/>
-  <!--up to ascii 191 used-->
+  <regex name="%canBeDlPRefixedSimpleGroup%" value="└"/>
+  <!--up to ascii 192 used-->
 
 <!-- composite regexes-->
 
@@ -203,6 +204,8 @@ does not define a CFG.
   <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
+  <regex name="%simpleGroups%" value = "(%simpleGroup%|%dlStereochemistryPrefix%?%canBeDlPRefixedSimpleGroup%)"/>
+
 
   <!--cyclic-->
   <regex name="%semiTrivialFusedRing%" value = "(%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)"/>
@@ -258,7 +261,7 @@ does not define a CFG.
 
   <regex name="%allRingGroups%" value = "((%ringGroup%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%fusedRingSystem%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%simpleCyclicGroup%%conjunctiveSideChainRoot%?)"/>
   <regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%*)"/>
-  <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroup%|%elementaryAtom%%chargeOrOxidationNumberSpecifier%?))"/>
+  <regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroups%|%elementaryAtom%%chargeOrOxidationNumberSpecifier%?))"/>
   <regex name="%mainGroupHead%" value="(%openBracket%?%multiplier%?%openBracket%?%stereochemistry%*(%newLocantGroupNoStartingHyphen%%mono%?)?)" />
   <regex name="%mainGroupTail%"	value="(%closeBracket%*%endOfMainGroup%)" />
 	<regex name="%mainGroup%" value="(%mainGroupHead%%mainGroupBody%%mainGroupTail%)"/>

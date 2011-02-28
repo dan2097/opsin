@@ -696,6 +696,40 @@ class ComponentProcessor {
 					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + value );
 				}
 			}
+			possibleDl.detach();
+		}
+		else if (CARBOHYDRATE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
+			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEISTRY_EL)){
+				String value = possibleDl.getAttributeValue(VALUE_ATR);
+				List<Atom> atomList = frag.getAtomList();
+				List<Atom> atomsWithParities = new ArrayList<Atom>();
+				for (Atom atom : atomList) {
+					if (atom.getAtomParity()!=null){
+						atomsWithParities.add(atom);
+					}
+				}
+				if (atomsWithParities.isEmpty()){
+					throw new ComponentGenerationException("D/L stereochemistry :" +value + " found before achiral carbohydrate");//sounds like a vocab bug...
+				}
+				if (value.equals("d") || value.equals("dg")){
+					//do nothing, D- is implicit
+				}
+				else if (value.equals("l") || value.equals("lg")){
+					for (Atom atom : atomsWithParities) {
+						atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+					}
+				}
+				else  if (value.equals("dl")){
+					for (Atom atom : atomsWithParities) {
+						atom.setAtomParity(null);
+					}
+				}
+				else{
+					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + value );
+				}
+			}
+			possibleDl.detach();
 		}
 	}
 
