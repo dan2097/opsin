@@ -849,7 +849,8 @@ class ComponentProcessor {
 			}
 			//first check adjacent substituent/root. If this is a biochemical group treat as a non detachable prefix
 			Element potentialBiochemicalGroup =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
-			if (potentialBiochemicalGroup!=null && BIOCHEMICAL_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR))){
+			if (potentialBiochemicalGroup!=null && (BIOCHEMICAL_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR))|| 
+					CARBOHYDRATE_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR)))){
 				biochemicalGroup = potentialBiochemicalGroup;
 			}
 
@@ -858,7 +859,7 @@ class ComponentProcessor {
 				while (!nextSubOrRootOrBracketFromLast.equals(substituent)){
 					Element groupToConsider = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
 					if (groupToConsider!=null){
-						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR))){
+						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || CARBOHYDRATE_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR))){
 							biochemicalGroup = groupToConsider;
 							break;
 						}

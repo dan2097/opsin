@@ -269,7 +269,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="biochemicalEster" type="full">
-    <word type="full" endsWithGroupType="carbohydrate"/>
+    <word type="full" endsWithGroupSubType="carbohydrate"/>
     <word type="full" endsWithRegex="\S((?&lt;!hydr)at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
   </wordRule>
 
