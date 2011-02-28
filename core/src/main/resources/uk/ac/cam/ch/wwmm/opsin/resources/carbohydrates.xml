@@ -1,11 +1,55 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
+<!--most SMILES have been written such that @ indicates the group is on the right and @@ on the left in a fischer projection-->
 	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="└">
+<!--aldoses-->
+			<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrose</token>
+			<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">threose</token>
+
+			<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribose</token>
+			<token value="O=C[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">arabinose</token>
+			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylose</token>
+			<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">lyxose</token>
+
+			<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">allose</token>
+			<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">altrose</token>
 			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucose</token>
+			<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannose</token>
+			<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">gulose</token>
+			<token value="O=C[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">idose</token>
+			<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactose</token>
+			<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">talose</token>
+
+<!--ketoses-->
+			<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrulose</token>
+
+			<token value="OCC(=O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribulose</token>
+			<token value="OCC(=O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylulose</token>
+
+			<token value="OCC(=O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">psicose</token>
+			<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">fructose</token>
+			<token value="OCC(=O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbose</token>
+			<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">tagatose</token>
+
+			<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">sedoheptulose</token>
+			<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">mannoheptulose</token>
+
+<!--trivial; should these be depicted in ring form?-->
+			<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
+			<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
+			<token value="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
+			<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">fucosamine</token>
+			<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">quinovosamine</token>
 	</tokenList>
 	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="G">
+			<token value="O=CC(O)CO" labels="/1/2//3/" valType="SMILES">glyceraldehyde</token>
+			<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">D-glyceraldehyde</token>
+			<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">L-glyceraldehyde</token>
+
 			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
-			<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token> rejected due to currently undetectable stereocentre-->
+<!--add Neuraminic acid-->
+<!--add Muramic acid-->
+			<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token> rejected due to currently undetectable stereocentre, also is systematically related to xylose-->
 	</tokenList>
 </tokenLists>
