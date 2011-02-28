@@ -387,6 +387,9 @@ class FragmentManager {
 					if (oldAtom.equals(AtomParity.hydrogen)){
 						newAtomRefs4[i] = AtomParity.hydrogen;
 					}
+					else if (oldAtom.equals(AtomParity.deoxyHydrogen)){
+						newAtomRefs4[i] = AtomParity.deoxyHydrogen;
+					}
 					else{
 						newAtomRefs4[i] = oldToNewAtomMap.get(oldAtom);
 					}
