@@ -1279,62 +1279,66 @@ class StructureBuilder {
 	}
 	
 	private void buildBiochemicalEster(BuildState state, List<Element> words, int numberOfWordRules) throws StructureBuildingException {
-		if (words.size()!=2){
-			throw new StructureBuildingException("Bug or unsupported biochemical ester");
-		}
-		resolveWordOrBracket(state, words.get(0));
-		resolveWordOrBracket(state, words.get(1));
-		BuildResults br = new BuildResults(state, words.get(1));
-		String locant = words.get(1).getAttributeValue(LOCANT_ATR);
-		if (br.getFunctionalAtomCount()==0){
-			throw new StructureBuildingException("Unable to find functional atom to form biochemical ester");
-		}
-		Atom functionalAtom =br.getFunctionalAtom(0);
-		br.removeFunctionalAtom(0);
-		Atom atomOnBiochemicalFragment;
-		functionalAtom.neutraliseCharge();
-		Fragment biochemicalFragment = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(0)));
-		if (locant!=null){
-			atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow(locant);
-			if (atomOnBiochemicalFragment.getBonds().size()!=1){
-				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow("O" + locant);
+		for (Element word : words) {
+			if (!WordType.full.toString().equals(word.getAttributeValue(TYPE_ATR))){
+				throw new StructureBuildingException("Bug in word rule for biochemicalEster");
 			}
+			resolveWordOrBracket(state, word);
 		}
-		else{
-			atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocant("O5'");//take a guess at it being 5' ;-)
-			if (atomOnBiochemicalFragment==null){
-				List<Atom> atoms = biochemicalFragment.getAtomList();
-				for (Atom atom : atoms) {
-					if (atom.getElement().equals("O") && atom.getBonds().size()==1  && atom.getFirstBond().getOrder()==1){
-						Atom adjacentAtom = atom.getAtomNeighbours().get(0);
-						List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
-						if (adjacentAtom.getElement().equals("C") && neighbours.size()==3){
-							neighbours.remove(atom);
-							if (neighbours.get(0).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
-								continue;
+		for (int i = 1; i < words.size(); i++) {
+			Element ateWord = words.get(i);
+			BuildResults br = new BuildResults(state, ateWord);
+			String locant = ateWord.getAttributeValue(LOCANT_ATR);
+			if (br.getFunctionalAtomCount()==0){
+				throw new StructureBuildingException("Unable to find functional atom to form biochemical ester");
+			}
+			Atom functionalAtom =br.getFunctionalAtom(0);
+			br.removeFunctionalAtom(0);
+			Atom atomOnBiochemicalFragment;
+			functionalAtom.neutraliseCharge();
+			Fragment biochemicalFragment = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(0)));
+			if (locant!=null){
+				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow(locant);
+				if (atomOnBiochemicalFragment.getBonds().size()!=1){
+					atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow("O" + locant);
+				}
+			}
+			else{
+				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocant("O5'");//take a guess at it being 5' ;-)
+				if (atomOnBiochemicalFragment==null){
+					List<Atom> atoms = biochemicalFragment.getAtomList();
+					for (Atom atom : atoms) {
+						if (atom.getElement().equals("O") && atom.getBonds().size()==1  && atom.getFirstBond().getOrder()==1){
+							Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+							List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
+							if (adjacentAtom.getElement().equals("C") && neighbours.size()==3){
+								neighbours.remove(atom);
+								if (neighbours.get(0).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
+									continue;
+								}
+								if (neighbours.get(1).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
+									continue;
+								}
 							}
-							if (neighbours.get(1).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
-								continue;
-							}
+							atomOnBiochemicalFragment= atom;//find a hydroxy - not a carboxylic acid
 						}
-						atomOnBiochemicalFragment= atom;//find a hydroxy - not a carboxylic acid
 					}
 				}
 			}
-		}
-		String element = atomOnBiochemicalFragment !=null ? atomOnBiochemicalFragment.getElement() : null;
-		if (atomOnBiochemicalFragment ==null || 
-				(atomOnBiochemicalFragment.getBonds().size()!=1 && !element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
-			throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
-		}
-		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
-		Element ateGroup = findRightMostGroupInWordOrWordRule(words.get(1));
-		if (ateGroup.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)==null && numberOfWordRules==1){
-			//by convention [O-] are implicitly converted to [OH] to balance charge
-			for (int i = br.getFunctionalAtomCount() -1; i>=0; i--) {
-				Atom atomToDefunctionalise =br.getFunctionalAtom(i);
-				br.removeFunctionalAtom(i);
-				atomToDefunctionalise.neutraliseCharge();
+			String element = atomOnBiochemicalFragment !=null ? atomOnBiochemicalFragment.getElement() : null;
+			if (atomOnBiochemicalFragment ==null || 
+					(atomOnBiochemicalFragment.getBonds().size()!=1 && !element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
+				throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
+			}
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
+			Element ateGroup = findRightMostGroupInWordOrWordRule(ateWord);
+			if (ateGroup.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)==null && numberOfWordRules==1){
+				//by convention [O-] are implicitly converted to [OH] to balance charge
+				for (int j = br.getFunctionalAtomCount() -1; j>=0; j--) {
+					Atom atomToDefunctionalise =br.getFunctionalAtom(j);
+					br.removeFunctionalAtom(j);
+					atomToDefunctionalise.neutraliseCharge();
+				}
 			}
 		}
 	}
