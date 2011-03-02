@@ -224,7 +224,7 @@ does not define a CFG.
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%)"/>
 
   <regex name="%conjunctiveSideChainRoot%" value ="(%hyphen%?(%locant%|%alphaBetaStereochemLocant%)?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/>
-  <regex name="%conjunctiveSideChainInline%" value ="(%hyphen%?(%locant%|%alphaBetaStereochemLocant%)?%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/>
+  <regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
 
   <!--Fused ring terms-->
   <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locant%)%benzo%)"/>
