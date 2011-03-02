@@ -125,6 +125,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[I-]" labels="none" valType="SMILES">iodide</token>
     <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
     <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>
+    <token value="N#[C-]" labels="none" valType="SMILES">isonitrile</token>
     <token value="[N-]=C=[Se]" labels="none" valType="SMILES">isoselenocyanate</token>
     <token value="[N-]=C=[Te]" labels="none" valType="SMILES">isotellurocyanate</token>
     <token value="[N-]=C=S" labels="none" valType="SMILES">isothiocyanate</token>
