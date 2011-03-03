@@ -32,16 +32,16 @@ If you are using Maven then do the following:
 
 	Then add:
 		<dependency>
-			 <groupId>opsin</groupId>
-			 <artifactId>core</artifactId>
+			 <groupId>uk.ac.cam.ch.opsin</groupId>
+			 <artifactId>opsin-core</artifactId>
 			 <version>1.0.0</version>
 		</dependency>
 	If you need just CML or SMILES output support
 
 	or
 		<dependency>
-			 <groupId>opsin</groupId>
-			 <artifactId>inchi</artifactId>
+			 <groupId>uk.ac.cam.ch.opsin</groupId>
+			 <artifactId>opsin-inchi</artifactId>
 			 <version>1.0.0</version>
 		</dependency>
 
@@ -51,10 +51,11 @@ If you are using Maven then do the following:
 
 Using OPSIN as a command-line utility:
 	java -jar opsin-1.0.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
-	java -cp opsin-1.0.0-jar-with-dependencies.jar uk.ac.cam.ch.wwmm.opsin.NameToInchi will give you a command-line interface to convert names to InChI
+	java -jar opsin-1.0.0-jar-with-dependencies.jar -h will give you information on more advanced usage
 
 As well as interactive input on the command-line these command-line interfaces will accept a piped input of newline seperated chemical names.
 e.g. java -jar opsin-1.0.0-jar-with-dependencies.jar < input.name > output.cml
+e.g. java -jar opsin-1.0.0-jar-with-dependencies.jar -osmi < input.name > output.smiles
 
 Using OPSIN as a library:
 
@@ -75,7 +76,7 @@ Element cml = result.getCml();
 String smiles = result.getSmiles();
 String inchi = NameToInchi.convertResultToInChI(result, false);
 
-Convenience methods exist to convert directly from names to CML and InChI
+Convenience methods exist to convert directly from names to CML, SMILES and InChI
 
 Converting a name to a structure will typically take of the order of 5-10ms making OPSIN suitable for batch processing of large sets of names.
 
@@ -124,12 +125,13 @@ Steroids including alpha/beta stereochemistry
 Specification of oxidation numbers and charge on elements
 Perhalogeno terms
 Deoxy
+Open-chain saccharides
 Stoichiometry ratios and mixture indicators
 Simple CAS names including inverted CAS names
 
 Currently UNsupported nomenclature includes:
 Other less common stereochemical terms
-Carbohydrates
+Carbohydrate specific nomenclature
 Natural Products other than steroids
 Natural product specific nomenclature operations
 Composite and multiplied bridge prefixes e.g. epoxymethano

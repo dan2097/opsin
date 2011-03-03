@@ -6,8 +6,8 @@
   <moduleSets>
     <moduleSet>
       <includes>
-        <include>opsin:core</include>
-        <include>opsin:inchi</include>
+        <include>uk.ac.cam.ch.opsin:opsin-core</include>
+        <include>uk.ac.cam.ch.opsin:opsin-inchi</include>
       </includes>
       <sources>
         <includeModuleDirectory>false</includeModuleDirectory>
