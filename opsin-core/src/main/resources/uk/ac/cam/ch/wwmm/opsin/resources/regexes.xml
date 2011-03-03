@@ -138,7 +138,7 @@ does not define a CFG.
   <regex name="%multiplierNotGroup%" value="((%simpleMultiplier%|%elidedAMultiplier%)%hyphen%?)"/>
   <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
-  <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%cisOrTrans%(%comma%%locant%?%cisOrTrans%)*%hyphen%?|%lightRotation%)"/>
+  <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%cisOrTrans%(%comma%%locant%?%cisOrTrans%)*%hyphen%?|%lightRotation%|%alphaBetaStereochemLocant%)"/>
   <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locant%?)"/>
   <regex name="%optLocantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%)?)"/>
   <regex name="%locantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%))"/>

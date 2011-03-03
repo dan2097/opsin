@@ -206,7 +206,7 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
-	public void testAlphaBeta() throws ComponentGenerationException {
+	public void testBrackettedAlphaBeta() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
@@ -253,10 +253,10 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	
 	@Test
-	public void testUnbracketedAlphaBeta() throws ComponentGenerationException {
+	public void testAlphaBeta() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
-		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,5alpha");
 		Element naturalProduct = new Element(GROUP_EL);
@@ -284,7 +284,7 @@ public class ComponentGeneration_StereochemistryTest {
 	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct1() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
-		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,5alpha");
 		ComponentGenerator.processStereochemistry(substituent);
@@ -340,7 +340,7 @@ public class ComponentGeneration_StereochemistryTest {
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
-		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,5alpha");
 		ComponentGenerator.processStereochemistry(substituent);
@@ -362,6 +362,34 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newLocantEl = children.get(3);
 		assertEquals(LOCANT_EL, newLocantEl.getLocalName());
 		assertEquals("3,5", newLocantEl.getValue());
+	}
+	
+	@Test
+	public void testAlphaBetaStereoMixedWithNormalLocants() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("3beta,4,10,12alpha");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(3, children.size());
+		Element newStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("3", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("beta", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		newStereochemistryEl = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals("12", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("alpha", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ALPHA_OR_BETA_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+		
+		Element newLocantEl = children.get(2);
+		assertEquals(LOCANT_EL, newLocantEl.getLocalName());
+		assertEquals("3,4,10,12", newLocantEl.getValue());
 	}
 	
 	//relative stereochemistry is currently treated the same as absolute stereochemistry

@@ -69,10 +69,10 @@
   <regexToken regex="%openBracket%" symbol="q" tagname="structuralOpenBracket" determinise="yes"/>
   <regexToken regex="%closeBracket%" symbol="Q" tagname="structuralCloseBracket" determinise="yes"/>
   <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
-  <regex name="%ommittedBracketStereochemistryBracket%" regex="([1-9][0-9]?([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI])(,[1-9][0-9]?([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))*)"/>
-  <regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR)|[1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
-  <regexToken regex="((rel-|rac-)?%openBracket%%stereochemPossibilities%(,%stereochemPossibilities%)*%closeBracket%|%ommittedBracketStereochemistryBracket%)-?" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
-  <regexToken regex="%ommittedBracketStereochemistryBracket%-?" symbol="¢" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
+  <regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
+  <regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¢" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
+  <regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR)|%alphaBetaLocant%)"/>
+  <regexToken regex="(rel-|rac-)?%openBracket%%stereochemPossibilities%(,%stereochemPossibilities%)*%closeBracket%-?" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
   <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="¼" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
   <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
   <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%'+(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="½" tagname="spiroLocant" determinise="yes"/>
