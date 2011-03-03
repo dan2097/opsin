@@ -5,7 +5,7 @@
     <groupId>wwmm</groupId>
     <version>1</version>
   </parent>
-  <groupId>opsin</groupId>
+  <groupId>uk.ac.cam.ch.opsin</groupId>
   <artifactId>opsin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -51,8 +51,8 @@
     </contributor>
   </contributors>
   <modules>
-    <module>core</module>
-    <module>inchi</module>
+    <module>opsin-core</module>
+    <module>opsin-inchi</module>
   </modules>
   <repositories>
     <repository>
@@ -208,8 +208,8 @@
         <version>1.8.2</version> 
       </dependency>
       <dependency>
-        <groupId>opsin</groupId>
-        <artifactId>core</artifactId>
+        <groupId>uk.ac.cam.ch.opsin</groupId>
+        <artifactId>opsin-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

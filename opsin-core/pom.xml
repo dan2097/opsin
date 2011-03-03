@@ -2,12 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
    <parent>
       <artifactId>opsin</artifactId>
-      <groupId>opsin</groupId>
+      <groupId>uk.ac.cam.ch.opsin</groupId>
       <version>1.0-SNAPSHOT</version>
    </parent>
-  <artifactId>inchi</artifactId>
-  <name>OPSIN_InChI_Support</name>
-  <description>Adds NameToInchi class for converting names directly to InChIs</description>
+  <artifactId>opsin-core</artifactId>
+  <name>OPSIN Core</name>
+  <description>Core files of OPSIN. Allows conversion of chemical names to CML (Chemical Markup Language)</description>
   <build>
     <plugins>
        <plugin>
@@ -18,7 +18,7 @@
           </descriptorRefs>
            <archive>
               <manifest>
-                 <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToInchi</mainClass>
+                 <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToStructure</mainClass>
               </manifest>
            </archive>
          </configuration>
@@ -27,16 +27,33 @@
   </build>
    <dependencies>
       <dependency>
-        <groupId>opsin</groupId>
-        <artifactId>core</artifactId>
+        <groupId>dk.brics</groupId>
+        <artifactId>automaton</artifactId>
       </dependency>
       <dependency>
-        <groupId>net.sf.jni-inchi</groupId>
-        <artifactId>jni-inchi</artifactId>
+        <groupId>xom</groupId>
+        <artifactId>xom</artifactId>
+      </dependency>
+      <dependency>
+      	<groupId>commons-io</groupId>
+      	<artifactId>commons-io</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
         <scope>test</scope>
       </dependency>
    </dependencies>

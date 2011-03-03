@@ -12,6 +12,12 @@ XOM (http://www.xom.nu) - content licensed under the GNU Lesser General Public L
 log4j (http://logging.apache.org/log4j/) - content licenced under the The Apache Software License, Version 2.0
 (see below)
 
+Commons IO (http://commons.apache.org/io/) - content licenced under the The Apache Software License, Version 2.0
+(see below)
+
+Commons CLI (http://commons.apache.org/cli/) - content licenced under the The Apache Software License, Version 2.0
+(see below)
+
 For Testing only:
 JUnit (http://junit.org) - content licenced under the Common Public Licence version 1.0
 (see below)
