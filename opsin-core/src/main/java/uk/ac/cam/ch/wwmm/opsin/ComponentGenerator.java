@@ -724,12 +724,7 @@ class ComponentGenerator {
 				Matcher starMatcher = matchStar.matcher(txt);
 				txt = starMatcher.replaceAll("");
 				if (!txt.startsWith("rac-")){
-					char firstChar = txt.charAt(0);
-					boolean bracketed =false;
-					if (firstChar =='(' || firstChar =='[' || firstChar =='{'){
-						txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
-						bracketed =true;
-					}
+					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
 					String[] stereoChemistryDescriptors = matchComma.split(txt);
 					List<String> locants = new ArrayList<String>();
                     for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
@@ -784,20 +779,6 @@ class ComponentGenerator {
                             }
                         }
                     }
-                  	if (!bracketed){
-                		List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
-                		boolean foundAlphaBetaNaturalProduct =false;
-                		for (Element group : groups) {
-                			if (group.getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR)!=null){
-                				foundAlphaBetaNaturalProduct=true;
-                			}
-    					}
-                		if (!foundAlphaBetaNaturalProduct){
-                			Element newLocantEl = new Element(LOCANT_EL);
-                			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
-                			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
-                		}
-                	}
 				}
 				stereoChemistryElement.detach();
 			}
@@ -807,6 +788,61 @@ class ComponentGenerator {
 					stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 					possibleLocant.detach();
 				}
+			}
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
+				String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
+				String[] stereoChemistryDescriptors = matchComma.split(txt);
+				List<String> locants = new ArrayList<String>();
+	      		boolean createLocantsEl =false;
+                for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
+                	Matcher digitMatcher  = matchDigit.matcher(stereoChemistryDescriptor);
+                	if (digitMatcher.lookingAt()){
+                		String locant = digitMatcher.group();
+                		String possibleAlphaBeta = digitMatcher.replaceAll("");
+                        locants.add(locant);
+                		Matcher alphaBetaMatcher = matchAlphaBetaStereochem.matcher(possibleAlphaBeta);
+                		if (alphaBetaMatcher.matches()){
+                            Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
+                            stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, locant));
+                            stereoChemEl.appendChild(stereoChemistryDescriptor);
+                            XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
+	                       	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
+	                    	if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'a'){
+	                        	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
+	                    	}
+	                    	else if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'b'){
+	                        	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "beta"));
+	                    	}
+	                     	else if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'x'){
+	                        	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "xi"));
+	                    	}
+	                    	else{
+	                    		throw new ComponentGenerationException("Malformed alpha/beta stereochemistry element: " + stereoChemistryElement.getValue());
+	                    	}
+                        }
+                		else{
+                			createLocantsEl =true;
+                		}
+                	}
+                }
+        		if (!createLocantsEl){
+        			//create locants unless a group supporting alpha/beta stereochem is within this substituent/root
+        			createLocantsEl =true;
+            		List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
+	        		for (Element group : groups) {
+	        			if (group.getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR)!=null){
+	        				createLocantsEl=false;
+	        				break;
+	        			}
+					}
+        		}
+        		
+        		if (createLocantsEl){
+        			Element newLocantEl = new Element(LOCANT_EL);
+        			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
+        			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
+        		}
+				stereoChemistryElement.detach();
 			}
 		}
 	}
