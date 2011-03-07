@@ -118,19 +118,6 @@ public final class XOMTools {
 		parent.insertChild(newNode, i+1);
 	}
 
-	/**Sets the namespace URI of an Element, and all child elements,
-	 * recursively.
-	 *
-	 *@param elem The element to move into the namespace.
-	 *@param nameSpace The namespace URI.
-	 */
-	public static void setNamespaceURIRecursively(Element elem, String nameSpace) {
-		elem.setNamespaceURI(nameSpace);
-		Elements children =elem.getChildElements();
-		for(int i=0, n=children.size();i<n;i++)
-			setNamespaceURIRecursively(children.get(i), nameSpace);
-	}
-
 	/**
 	 * Gets the next node. This element need not be a sibling
 	 * @param node: starting node
@@ -330,7 +317,7 @@ public final class XOMTools {
 
 	/**
 	 * Finds all descendant elements whose localname matches the given elementName
-	 * Equivalent to an xquery of type .//elementName from the startingElement
+	 * Equivalent to an xpath of type .//*[local-name() = 'elementName'] from the startingElement
 	 * @param startingElement
 	 * @param elementName
 	 * @return
@@ -358,7 +345,7 @@ public final class XOMTools {
 
 	/**
 	 * Finds all descendant elements whose localname matches one of the strings in elementNames
-	 * Equivalent to an xquery of type .//elementName1|.//elementName2|.//elementName3 from the startingElement
+	 * Equivalent to an xpath of type .//*[local-name() = 'elementName1']|.//*[local-name() = 'elementName2']|.//*[local-name() = 'elementName3'] from the startingElement
 	 * @param startingElement
 	 * @param elementNames
 	 * @return
@@ -390,7 +377,7 @@ public final class XOMTools {
 
 	/**
 	 * Finds all child elements whose localname matches one of the strings in elementNames
-	 * Equivalent to an xquery of type ./elementName1|./elementName2|./elementName3 from the startingElement
+	 * Equivalent to an xpath of type ./*[local-name() = 'elementName1']|./*[local-name() = 'elementName2']|./*[local-name() = 'elementName3'] from the startingElement
 	 * @param startingElement
 	 * @param elementNames
 	 * @return
@@ -414,7 +401,7 @@ public final class XOMTools {
 	
 	/**
 	 * Finds all child elements whose localname matches one of the strings in elementNames
-	 * Equivalent to an xquery of type ./elementName1 from the startingElement
+	 * Equivalent to an xpath of type ./*[local-name() = 'elementName'] from the startingElement
 	 * This is equivalent to XOM's getChildElements(String) other than returning an arrayList
 	 * @param startingElement
 	 * @param elementName
@@ -437,7 +424,7 @@ public final class XOMTools {
 	/**
 	 * Finds all descendant elements whose localname matches the given elementName
 	 * Additionally the element must have the specified attribute and the value of the attribute must be as specified
-	 * Equivalent to an xquery of type .//elementName[@attribute="attributevalue"] from the startingElement
+	 * Equivalent to an xpath of type .//*[local-name() = 'elementName'][@attribute="attributevalue"] from the startingElement
 	 * @param startingElement
 	 * @param elementName
 	 * @return
@@ -468,7 +455,7 @@ public final class XOMTools {
 	/**
 	 * Finds all child elements whose localname matches the given elementName
 	 * Additionally the element must have the specified attribute and the value of the attribute must be as specified
-	 * Equivalent to an xquery of type ./elementName[@attribute="attributevalue"] from the startingElement
+	 * Equivalent to an xpath of type ./*[local-name() = 'elementName'][@attribute="attributevalue"] from the startingElement
 	 * @param startingElement
 	 * @param elementName
 	 * @return

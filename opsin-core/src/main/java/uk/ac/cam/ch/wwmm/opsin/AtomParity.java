@@ -38,7 +38,7 @@ class AtomParity {
 	 * @return
 	 */
 	Element toCML() {
-		Element atomParityElement = new Element(XmlDeclarations.ATOMPARITY_EL);
+		Element atomParityElement = new Element(XmlDeclarations.CML_ATOMPARITY_EL, XmlDeclarations.CML_NAMESPACE);
 		StringBuilder atomRefsSb = new StringBuilder();
 		for(int i=0; i<atomRefs4.length-1; i++) {
 			atomRefsSb.append('a');
@@ -47,7 +47,7 @@ class AtomParity {
 		}
 		atomRefsSb.append('a');
 		atomRefsSb.append(atomRefs4[atomRefs4.length-1].getID());
-		atomParityElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefsSb.toString()));
+		atomParityElement.addAttribute(new Attribute(XmlDeclarations.CML_ATOMREFS4_ATR, atomRefsSb.toString()));
 		atomParityElement.appendChild(Integer.toString(parity));
 		return atomParityElement;
 	}

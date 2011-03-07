@@ -71,7 +71,7 @@ class Bond {
 	 * @return The CML element.
 	 */
 	Element toCMLBond() {
-		Element elem = new Element("bond");
+		Element elem = new Element("bond", XmlDeclarations.CML_NAMESPACE);
 		elem.addAttribute(new Attribute("id", "a" + Integer.toString(from.getID())
 				+ "_a" + Integer.toString(to.getID())));
 		elem.addAttribute(new Attribute("atomRefs2", "a" + Integer.toString(from.getID())

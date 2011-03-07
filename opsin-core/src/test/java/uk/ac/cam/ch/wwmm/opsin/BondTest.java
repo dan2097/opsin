@@ -33,7 +33,7 @@ public class BondTest {
 		Bond bond = new Bond(a1, a2, 1);
 		Element elem = bond.toCMLBond();
 		assertNotNull("Got XOM Element", elem);
-		assertEquals("Correct XML", "<bond id=\"a1_a2\" atomRefs2=\"a1 a2\" order=\"S\" />", elem.toXML());
+		assertEquals("Correct XML", "<bond xmlns=\"http://www.xml-cml.org/schema\" id=\"a1_a2\" atomRefs2=\"a1 a2\" order=\"S\" />", elem.toXML());
 	}
 	
 }

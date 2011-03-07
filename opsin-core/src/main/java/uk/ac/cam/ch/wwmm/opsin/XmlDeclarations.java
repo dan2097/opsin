@@ -417,15 +417,6 @@ class XmlDeclarations {
 	
 	/**Requests that labelling be 1, 2, 3 etc. It is assumed that the order of the atoms is locant 1 as the first atom*/
 	static final String NUMERIC_LABELS_VAL ="numeric";
-	
-	
-	/**An XML element used to hold atomParity information e.g. 1 or -1 and atomRefs4 */
-	static final String ATOMPARITY_EL = "atomParity";
-	
-	/**An XML element used to hold bondStereo information e.g. C (cis) or T (trans) and atomRefs4 */
-	static final String BONDSTEREO_EL = "bondStereo";
-	/**An attribute holding the ids of the 4 atoms that are needed to define the bondStereo of a double bond: \=/ . Note that the ids are prefixed with an 'a'*/
-	static final String ATOMREFS4_ATR = "atomRefs4";
 
 	/** InLocants have not been specified */
 	static final String INLOCANTS_DEFAULT = "default";
@@ -462,4 +453,18 @@ class XmlDeclarations {
 	static final String SUFFIXAPPLICABILITY_VALUE_ATR = "value";
 	static final String SUFFIXAPPLICABILITY_SUBTYPE_ATR = "subType";
 	
+	/**
+	 * CML Elements/Attributes/NameSpace
+	 */
+	static final String CML_NAMESPACE = "http://www.xml-cml.org/schema";
+
+	/**A CML element used to hold atomParity information e.g. 1 or -1 and atomRefs4 */
+	static final String CML_ATOMPARITY_EL = "atomParity";
+	
+	/**A CML element used to hold bondStereo information e.g. C (cis) or T (trans) and atomRefs4 */
+	static final String CML_BONDSTEREO_EL = "bondStereo";
+
+	/**An attribute holding the ids of the 4 atoms that are needed to define a bondStereo of a double bond or an atom parity.
+	 * Note that the ids are prefixed with an 'a'*/
+	static final String CML_ATOMREFS4_ATR = "atomRefs4";
 }

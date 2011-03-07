@@ -762,10 +762,10 @@ public class SMILESFragmentBuilderTest {
         Fragment fragment = fm.buildSMILES("C/C=C\\1/NC1");
         Bond b =fragment.findBond(2, 3);
         if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
         }
         else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
         }
     }
     
@@ -774,7 +774,7 @@ public class SMILESFragmentBuilderTest {
         Fragment fragment = fm.buildSMILES("C/C=C1/NC1");
         Bond b =fragment.findBond(2, 3);
         assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-        assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
     }
     
     @Test
@@ -782,10 +782,10 @@ public class SMILESFragmentBuilderTest {
         Fragment fragment = fm.buildSMILES("C/C=C\\1/NC/1");
         Bond b =fragment.findBond(2, 3);
         if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
         }
         else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
         }
     }
     
@@ -794,10 +794,10 @@ public class SMILESFragmentBuilderTest {
         Fragment fragment = fm.buildSMILES("C/C=C1/NC/1");
         Bond b =fragment.findBond(2, 3);
         if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
         }
         else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
         }
     }
     
@@ -824,7 +824,7 @@ public class SMILESFragmentBuilderTest {
         Fragment fragment = fm.buildSMILES("C\\1NC1=C/C");
         Bond b =fragment.findBond(3, 4);
         assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
     }
     
     @Test
@@ -832,6 +832,6 @@ public class SMILESFragmentBuilderTest {
         Fragment fragment = fm.buildSMILES("C1NC/1=C/C");
         Bond b =fragment.findBond(3, 4);
         assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.ATOMREFS4_ATR));
+        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
     }
 }
