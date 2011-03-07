@@ -316,11 +316,11 @@ public class NameToStructure {
 		StreamSerializer serializer = new StreamSerializer(System.out);
 		serializer.setIndent(2);
 		serializer.writeXMLDeclaration();
-		Element cml = new Element("cml");
-		cml.addAttribute(new Attribute("convention","cmlDict:cmllite"));
+		Element cml = new Element("cml", XmlDeclarations.CML_NAMESPACE);
+		cml.addAttribute(new Attribute("convention","conventions:molecular"));
+		cml.addNamespaceDeclaration("conventions", "http://www.xml-cml.org/convention/");
 		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
 		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
-		cml.setNamespaceURI("http://www.xml-cml.org/schema");
 		serializer.writeStartTag(cml);
 		int id =1;
 		String name = stdinReader.readLine();
@@ -329,13 +329,12 @@ public class NameToStructure {
 			Element output = result.getCml();
 			if(output == null) {
 				System.err.println(result.getMessage());
-				Element uninterpretableMolecule = new Element("molecule");
+				Element uninterpretableMolecule = new Element("molecule", XmlDeclarations.CML_NAMESPACE);
 				uninterpretableMolecule.addAttribute(new Attribute("id", "m" + id++));
-				Element nameEl = new Element("name");
+				Element nameEl = new Element("name", XmlDeclarations.CML_NAMESPACE);
 				nameEl.appendChild(name);
 				nameEl.addAttribute(new Attribute("dictRef", "nameDict:unknown"));
 				uninterpretableMolecule.appendChild(nameEl);
-				XOMTools.setNamespaceURIRecursively(uninterpretableMolecule, "http://www.xml-cml.org/schema");
 				serializer.write(uninterpretableMolecule);
 				serializer.flush();
 			} else {

@@ -52,7 +52,7 @@ class BondStereo {
 	 * @return
 	 */
 	Element toCML() {
-		Element bondStereoElement = new Element(XmlDeclarations.BONDSTEREO_EL);
+		Element bondStereoElement = new Element(XmlDeclarations.CML_BONDSTEREO_EL, XmlDeclarations.CML_NAMESPACE);
 		StringBuilder atomRefsSb = new StringBuilder();
 		for(int i=0; i<atomRefs4.length-1; i++) {
 			atomRefsSb.append('a');
@@ -62,7 +62,7 @@ class BondStereo {
 		atomRefsSb.append('a');
 		atomRefsSb.append(atomRefs4[atomRefs4.length-1].getID());
 
-		bondStereoElement.addAttribute(new Attribute(XmlDeclarations.ATOMREFS4_ATR, atomRefsSb.toString()));
+		bondStereoElement.addAttribute(new Attribute(XmlDeclarations.CML_ATOMREFS4_ATR, atomRefsSb.toString()));
 		bondStereoElement.appendChild(bondStereoValue.toString());
 		return bondStereoElement;
 	}

@@ -130,13 +130,13 @@ class Atom {
 	}
 
 	/**Produces a nu.xom.Element for a CML Atom tag, containing
-	 * values for id, elementType and (if appropriate) formalCharge, atomParity and
-	 * embedded label tags.
+	 * attributes for id, elementType and (if appropriate) formalCharge, isotopeNumber.
+	 * Where applicable child elements are created for atomParity and locant labels
 	 *
 	 * @return nu.xom.Element for a CML Atom tag
 	 */
 	Element toCMLAtom() {
-		Element elem = new Element("atom");
+		Element elem = new Element("atom", XmlDeclarations.CML_NAMESPACE);
 		elem.addAttribute(new Attribute("id", "a" + Integer.toString(ID)));
 		elem.addAttribute(new Attribute("elementType", element));
 		if(charge != 0){
@@ -161,7 +161,7 @@ class Atom {
 			elem.appendChild(atomParity.toCML());
 		}
 		for(String l : locants) {
-			Element locant = new Element("label");
+			Element locant = new Element("label", XmlDeclarations.CML_NAMESPACE);
 			locant.addAttribute(new Attribute("value", l));
 			locant.addAttribute(new Attribute("dictRef", "cmlDict:locant" ));
 			elem.appendChild(locant);

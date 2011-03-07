@@ -96,29 +96,28 @@ class Fragment {
 	 * @see Bond
 	 */
 	Element toCMLMolecule(String chemicalName) {
-		Element cml = new Element("cml");
+		Element cml = new Element("cml", CML_NAMESPACE);
 		cml.addAttribute(new Attribute("convention","conventions:molecular"));
 		cml.addNamespaceDeclaration("conventions", "http://www.xml-cml.org/convention/");
 		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
 		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
-		Element molecule = new Element("molecule");
-		Element name = new Element("name");
+		Element molecule = new Element("molecule", CML_NAMESPACE);
+		Element name = new Element("name", CML_NAMESPACE);
 		name.appendChild(chemicalName);
 		name.addAttribute(new Attribute("dictRef","nameDict:unknown"));
 		molecule.appendChild(name);
 		molecule.addAttribute(new Attribute("id", "m1"));
-		Element atomArray = new Element("atomArray");
+		Element atomArray = new Element("atomArray", CML_NAMESPACE);
 		for(Atom atom : atomCollection) {
 			atomArray.appendChild(atom.toCMLAtom());
 		}
-		Element bondArray = new Element("bondArray");
+		Element bondArray = new Element("bondArray", CML_NAMESPACE);
 		for(Bond bond : bondSet) {
 			bondArray.appendChild(bond.toCMLBond());
 		}
 		molecule.appendChild(atomArray);
 		molecule.appendChild(bondArray);
 		cml.appendChild(molecule);
-		XOMTools.setNamespaceURIRecursively(cml, "http://www.xml-cml.org/schema");
 		return cml;
 	}
 
