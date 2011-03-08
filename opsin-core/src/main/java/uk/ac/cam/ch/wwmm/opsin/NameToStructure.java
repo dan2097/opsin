@@ -240,7 +240,10 @@ public class NameToStructure {
 			System.exit(0);
 		}
 		NameToStructure nts = NameToStructure.getInstance();
-		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(nts, cmd);
+		if(cmd.hasOption("v")){
+			nts.setLogLevel(Level.DEBUG);
+		}
+		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(cmd);
 
 		System.err.println("Welcome to OPSIN 1.0, use -h for help. Enter a chemical name:");
 		String outputType = cmd.getOptionValue("o", "cml");
@@ -280,15 +283,11 @@ public class NameToStructure {
 	
 	/**
 	 * Uses the command line parameters to configure a new NameToStructureConfig
-	 * @param nts 
 	 * @param cmd
 	 * @return
 	 */
-	private static NameToStructureConfig generateOpsinConfigObjectFromCmd(NameToStructure nts, CommandLine cmd) {
+	private static NameToStructureConfig generateOpsinConfigObjectFromCmd(CommandLine cmd) {
 		NameToStructureConfig n2sconfig = new NameToStructureConfig();
-		if(cmd.hasOption("v")){
-			nts.setLogLevel(Level.DEBUG);
-		}
 		n2sconfig.setDetailedFailureAnalysis(cmd.hasOption("f"));
 		n2sconfig.setAllowRadicals(cmd.hasOption("r"));
 		return n2sconfig;
