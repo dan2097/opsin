@@ -9,6 +9,8 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
@@ -24,6 +26,7 @@ import nu.xom.Elements;
  *
  */
 class StructureBuildingMethods {
+	private static final Logger LOG = Logger.getLogger(StructureBuildingMethods.class);
 	private final static Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 	private StructureBuildingMethods() {}
@@ -910,7 +913,7 @@ class StructureBuildingMethods {
 		if (multiplier > multiRadicalBR.getOutAtomCount()){
 			throw new StructureBuildingException("Multiplication bond formation failure: number of outAtoms disagree with multiplier(multiplier: " + multiplier + ", outAtom count: " + multiRadicalBR.getOutAtomCount()+ ") , this is an OPSIN bug");
 		}
-		if (BuildState.debug){System.out.println(multiplier +" multiplicative bonds to be formed");}
+		if (LOG.isTraceEnabled()){LOG.trace(multiplier +" multiplicative bonds to be formed");}
 		multipliedParent.removeAttribute(multipliedParent.getAttribute(MULTIPLIER_ATR));
 		List<String> inLocants = null;
 		if (multipliedParent.getAttribute(INLOCANTS_ATR)!=null){//true for the root of a multiplicative name
@@ -1270,7 +1273,7 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, to, bondOrder);
-		if (BuildState.debug){System.out.println("Additively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + to.getID() + " (" +state.xmlFragmentMap.getElement(to.getFrag()).getValue()+")" );}
+		if (LOG.isTraceEnabled()){LOG.trace("Additively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + to.getID() + " (" +state.xmlFragmentMap.getElement(to.getFrag()).getValue()+")" );}
 	}
 
 	private static void joinFragmentsSubstitutively(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
@@ -1300,7 +1303,7 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
-		if (BuildState.debug){System.out.println("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
+		if (LOG.isTraceEnabled()){LOG.trace("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}
 
 	static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {

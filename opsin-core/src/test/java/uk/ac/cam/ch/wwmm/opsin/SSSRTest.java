@@ -14,11 +14,11 @@ public class SSSRTest {
 	@Test
 	public void testFindSSSR() throws Exception {
 		NameToStructure n2s = NameToStructure.getInstance();
-		Fragment f = n2s.parseChemicalName("violanthrene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("violanthrene").getStructure();
 		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(f);
 		assertEquals(9, rings.size());
 		
-		f = n2s.parseChemicalName("aceanthrene", false).getStructure();
+		f = n2s.parseChemicalName("aceanthrene").getStructure();
 		rings = SSSRFinder.getSetOfSmallestRings(f);
 		assertEquals(4, rings.size());
 	}

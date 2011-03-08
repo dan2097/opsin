@@ -89,7 +89,7 @@ public class NomenclatureIntegrationTest {
 					continue;
 				}
 				String[] lineArray = line.split("\t");
-				String inchi = NameToInchi.convertResultToInChI(n2s.parseChemicalName(lineArray[0], n2sConfig), false);
+				String inchi = NameToInchi.convertResultToInChI(n2s.parseChemicalName(lineArray[0], n2sConfig));
 				if (inchi!=null){
 					String opsinInchi = InchiPruner.mainChargeAndStereochemistryLayers(inchi);
 					String referenceInchi = InchiPruner.mainChargeAndStereochemistryLayers(lineArray[1]);

@@ -1,6 +1,7 @@
 Version 1.0.0
 Added native isomeric SMILES output
 Improved command-line interface. The desired format i.e. CML/SMILES/InChI as well as options such as allowing radicals can now all be specified via flags
+Debugging is now performed using log4j rather than by passing a verbose flag
 Added traditional locants to carboxylic acids and alkanes e.g. beta-hydroxybutyric acid
 Added support for cis/trans indicating the relative stereochemistry of two substituents on rings and fused rings sytems
 Added support for stoichiometry ratios and mixture indicators

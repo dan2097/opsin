@@ -1,11 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
@@ -29,6 +29,7 @@ import net.sf.jniinchi.JniInchiWrapper;
  */
 public class NameToInchi {
 
+	private static final Logger LOG = Logger.getLogger(NameToInchi.class);
 	private NameToStructure n2s;
 	public NameToInchi() throws NameToStructureException {
 		n2s = NameToStructure.getInstance();
@@ -37,40 +38,43 @@ public class NameToInchi {
 	/**Parses a chemical name, returning an unambiguous InChI representation of the molecule.
 	 *
 	 * @param name The chemical name to parse.
-	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return An InChI string, containing the parsed molecule, or null if the molecule would not parse.
 	 */
-	public String parseToInchi(String name, boolean verbose) {
-		OpsinResult result = n2s.parseChemicalName(name, verbose);
-		return convertResultToInChI(result, verbose);
+	public String parseToInchi(String name) {
+		OpsinResult result = n2s.parseChemicalName(name);
+		return convertResultToInChI(result);
 	}
 	
 	/**
 	 * Converts an OPSIN result to InChI. Null is returned if this conversion fails
 	 * @param result
-	 * @param verbose Whether to print lots of debugging information to stdin and stderr or not.
 	 * @return String InChI
 	 */
-	public static String convertResultToInChI(OpsinResult result, boolean verbose){
+	public static String convertResultToInChI(OpsinResult result){
 		if (result.getStructure() !=null){
 			String inchi = null;
 			try{
-				inchi = opsinFragmentToInchi(result.getStructure(), verbose);
+				inchi = opsinFragmentToInchi(result.getStructure());
 			}
 			catch (Exception e) {
-				if (verbose){
-					e.printStackTrace();
+				if (LOG.isDebugEnabled()){
+					LOG.debug(e.getMessage(), e);
 				}
 				return null;
 			}
-			if (inchi ==null){return null;}//inchi generation failed
-			if(verbose) System.out.println(inchi);
+			if (inchi ==null){
+				//inchi generation failed
+				return null;
+			}
+			if(LOG.isDebugEnabled()){
+				LOG.debug(inchi);
+			}
 			return inchi;
 		}
 		return null;
 	}
 
-	private static String opsinFragmentToInchi(Fragment frag, boolean verbose) throws JniInchiException{
+	private static String opsinFragmentToInchi(Fragment frag) throws JniInchiException{
 		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<Integer, JniInchiAtom>();
 		List<INCHI_OPTION> options = new ArrayList<INCHI_OPTION>();
 		options.add(INCHI_OPTION.FixedH);
@@ -132,45 +136,15 @@ public class NameToInchi {
 			return null;
 		}
     	INCHI_RET ret = output.getReturnStatus();
-    	if (verbose){
-    		System.out.println("Inchi generation status: " + ret);
+    	if (LOG.isDebugEnabled()){
+    		LOG.debug("Inchi generation status: " + ret);
     		if (!INCHI_RET.OKAY.equals(ret)){
-    			System.out.println(output.getMessage());
+    			LOG.debug(output.getMessage());
     		}
     	}
     	if (!INCHI_RET.OKAY.equals(ret) && !INCHI_RET.WARNING.equals(ret)){
     		return null;
     	}
     	return output.getInchi();
-	}
-
-
-	/**Run OPSIN as a standalone component for Inchi generation
-	 *
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String [] args) throws Exception {
-		NameToStructure nts = NameToStructure.getInstance();
-		boolean end = false;
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
-		System.err.println("OPSIN Prealpha: enter chemical name:");
-		while(!end) {
-			String name = stdinReader.readLine();
-			if(name == null || name.equals("END")) {
-				end = true;
-			} else {
-				OpsinResult result = nts.parseChemicalName(name, false);
-				String output = NameToInchi.convertResultToInChI(result, false);
-				if(output == null) {
-					System.err.println(result.getMessage());
-					System.out.println("");
-					System.out.flush();
-				} else {
-					System.out.println(output);
-					System.out.flush();
-				}
-			}
-		}
 	}
 }
