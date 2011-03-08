@@ -74,7 +74,7 @@ OpsinResult result = n2s.parseChemicalName("acetonitrile", n2sconfig);
 5) Retrieve the structure as CML/SMILES/InChI:
 Element cml = result.getCml();
 String smiles = result.getSmiles();
-String inchi = NameToInchi.convertResultToInChI(result, false);
+String inchi = NameToInchi.convertResultToInChI(result);
 
 Convenience methods exist to convert directly from names to CML, SMILES and InChI
 

@@ -1,5 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import org.apache.log4j.Logger;
+
 import nu.xom.Element;
 
 /**
@@ -9,13 +11,32 @@ import nu.xom.Element;
  *
  */
 public class OpsinResult {
-
+	private static final Logger LOG = Logger.getLogger(OpsinResult.class);
 	private final Fragment structure;
 	private final OPSIN_RESULT_STATUS status;
 	private final String message;
 	private final String chemicalName;
 	private Element cml = null;
 	private String smiles = null;
+
+	/**
+	 * Whether parsing the chemical name was successful,
+	 * encountered problems or was unsuccessful.
+	 * @author dl387
+	 *
+	 */
+	public enum OPSIN_RESULT_STATUS{
+		SUCCESS,
+		WARNING,
+		FAILURE
+	}
+
+	OpsinResult(Fragment frag, OPSIN_RESULT_STATUS status, String message, String chemicalName){
+		this.structure = frag;
+		this.status = status;
+		this.message = message;
+		this.chemicalName = chemicalName;
+	}
 
 	Fragment getStructure() {
 		return structure;
@@ -58,30 +79,11 @@ public class OpsinResult {
 				cml = structure.toCMLMolecule(chemicalName);
 			}
 			catch (Exception e) {
-				//e.printStackTrace();//TODO use log4j
+				LOG.debug("CML generation failed", e);
 				cml = null;
 			}
 		}
 		return cml;
-	}
-
-	/**
-	 * Whether parsing the chemical name was successful,
-	 * encountered problems or was unsuccessful.
-	 * @author dl387
-	 *
-	 */
-	public enum OPSIN_RESULT_STATUS{
-		SUCCESS,
-		WARNING,
-		FAILURE
-	}
-	
-	OpsinResult(Fragment frag, OPSIN_RESULT_STATUS status, String message, String chemicalName){
-		this.structure = frag;
-		this.status = status;
-		this.message = message;
-		this.chemicalName = chemicalName;
 	}
 
 	/**
@@ -95,6 +97,7 @@ public class OpsinResult {
 				smiles = new SMILESWriter(structure).generateSmiles();
 			}
 			catch (Exception e) {
+				LOG.debug("SMILES generation failed", e);
 				smiles = null;
 			}
 		}

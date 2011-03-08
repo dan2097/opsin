@@ -41,7 +41,7 @@ public class StereochemistryTest {
 	 */
 	@Test
 	public void findStereoCentresBromoChloroFluoroMethane() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("bromochlorofluoromethane", false).getStructure();
+		Fragment f = n2s.parseChemicalName("bromochlorofluoromethane").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(1, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());
@@ -54,7 +54,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void findStereoCentresNacetylleucine() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("N-acetylleucine", false).getStructure();
+		Fragment f = n2s.parseChemicalName("N-acetylleucine").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(1, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());
@@ -82,7 +82,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void findStereoCentresBut2ene() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("but-2-ene").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
 		assertEquals(1, stereoAnalyser.findStereoBonds().size());
@@ -109,7 +109,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void applyStereochemistryLocantedZ() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("(2Z)-but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("(2Z)-but-2-ene").getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
@@ -127,7 +127,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void applyStereochemistryLocantedE() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("(2E)-but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("(2E)-but-2-ene").getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
@@ -145,7 +145,7 @@ public class StereochemistryTest {
 
 	@Test
 	public void applyStereochemistryUnlocantedZ() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("(Z)-but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("(Z)-but-2-ene").getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
@@ -163,7 +163,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void applyStereochemistryUnlocantedE() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("(E)-but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("(E)-but-2-ene").getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
@@ -181,7 +181,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void applyStereochemistryCis() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("cis-but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("cis-but-2-ene").getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
@@ -199,7 +199,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void applyStereochemistryTrans() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("trans-but-2-ene", false).getStructure();
+		Fragment f = n2s.parseChemicalName("trans-but-2-ene").getStructure();
 		Atom atom2 = f.getAtomByLocant("2");
 		Atom atom3 = f.getAtomByLocant("3");
 		assertNotNull(atom2);
@@ -218,7 +218,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void applyStereochemistryLocantedRS() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("(1S,2R)-2-(methylamino)-1-phenylpropan-1-ol", false).getStructure();
+		Fragment f = n2s.parseChemicalName("(1S,2R)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
 		List<Atom> atomList = f.getAtomList();
 		List<Atom> stereoAtoms = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
@@ -403,7 +403,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority8() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("(6aR)-6-phenyl-6,6a-dihydroisoindolo[2,1-a]quinazoline-5,11-dione", false).getStructure();
+		Fragment f = n2s.parseChemicalName("(6aR)-6-phenyl-6,6a-dihydroisoindolo[2,1-a]quinazoline-5,11-dione").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		List<Atom> cipOrdered = stereoAnalyser.getNeighbouringAtomsInCIPOrder(f.getAtomByLocant("6a"));
 		for (int i = 0; i < cipOrdered.size(); i++) {
@@ -627,7 +627,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testChiralAtomWhichBecomesAchiral() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("alpha-amino-alanine", false).getStructure();
+		Fragment f = n2s.parseChemicalName("alpha-amino-alanine").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());
@@ -637,7 +637,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testChiralBondWhichBecomesAchiral() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("3-methylcrotonic acid", false).getStructure();
+		Fragment f = n2s.parseChemicalName("3-methylcrotonic acid").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());

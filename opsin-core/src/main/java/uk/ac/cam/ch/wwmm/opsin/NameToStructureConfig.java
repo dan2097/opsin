@@ -14,7 +14,6 @@ public class NameToStructureConfig implements Cloneable {
 	
 	// Fields set with default values
 	private boolean allowRadicals = false;
-	private boolean verbose = false;
 	private boolean detailedFailureAnalysis = false;
 //	private boolean slackSpaceHandling;
 //	private boolean substituentAbbreviations;
@@ -25,7 +24,7 @@ public class NameToStructureConfig implements Cloneable {
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
 	 * allowRadicals = false
-	 * verbose = false
+	 * detailedFailureAnalysis = false
 	 */
 	public NameToStructureConfig() {
 	}
@@ -46,23 +45,7 @@ public class NameToStructureConfig implements Cloneable {
 	public void setAllowRadicals(boolean allowRadicals) {
 		this.allowRadicals = allowRadicals;
 	}
-	
-	/**
-	 * Should debug information be written to stderr
-	 * @return
-	 */
-	public boolean isVerbose() {
-		return verbose;
-	}
 
-	/**
-	 * Sets whether debug information be written to stderr
-	 * @return
-	 */
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-	}
-	
 	/**
 	 * Should OPSIN attempt reverse parsing to more accurately determine why parsing failed
 	 * @return
@@ -114,7 +97,7 @@ public class NameToStructureConfig implements Cloneable {
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
 	 * allowRadicals = false
-	 * verbose = false
+	 * detailedFailureAnalysis = false
 	 */
 	public static NameToStructureConfig getDefaultConfigInstance() {
 		return new NameToStructureConfig();
