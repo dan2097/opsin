@@ -92,15 +92,6 @@ public class NameToStructure {
 		}
 		LOG.info("OPSIN initialised");
 	}
-	
-	/**
-	 * Sets the log level for the OPSIN package.
-	 * e.g. set to Level.DEBUG for lots of debug information
-	 * @param logLevel
-	 */
-	public void setLogLevel(Level logLevel){
-		Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(logLevel);
-	}
 
 	/**
 	 * Convenience method for converting a name to CML with OPSIN's default options
@@ -239,10 +230,10 @@ public class NameToStructure {
 					"java -jar opsin.jar -osmi < inputFile.name > outputFile.smiles", options);
 			System.exit(0);
 		}
-		NameToStructure nts = NameToStructure.getInstance();
 		if(cmd.hasOption("v")){
-			nts.setLogLevel(Level.DEBUG);
+			Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);
 		}
+		NameToStructure nts = NameToStructure.getInstance();
 		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(cmd);
 
 		System.err.println("Welcome to OPSIN 1.0, use -h for help. Enter a chemical name:");
@@ -310,7 +301,7 @@ public class NameToStructure {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			Element output = result.getCml();
 			if(output == null) {
-				LOG.info(result.getMessage());
+				System.err.println(result.getMessage());
 				Element uninterpretableMolecule = new Element("molecule", XmlDeclarations.CML_NAMESPACE);
 				uninterpretableMolecule.addAttribute(new Attribute("id", "m" + id++));
 				Element nameEl = new Element("name", XmlDeclarations.CML_NAMESPACE);
@@ -338,7 +329,7 @@ public class NameToStructure {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = result.getSmiles();
 			if(output == null) {
-				LOG.info(result.getMessage());
+				System.err.println(result.getMessage());
 				System.out.println("");
 				System.out.flush();
 			} else {
@@ -356,7 +347,7 @@ public class NameToStructure {
 		try {
 			c = Class.forName("uk.ac.cam.ch.wwmm.opsin.NameToInchi");
 		} catch (ClassNotFoundException e) {
-			LOG.fatal("Could not initialise NameToInChI module. Is it on your classpath?");
+			System.err.println("Could not initialise NameToInChI module. Is it on your classpath?");
 			throw new RuntimeException(e);
 		}
 		Method m = c.getMethod("convertResultToInChI", new Class[]{OpsinResult.class});
@@ -366,7 +357,7 @@ public class NameToStructure {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = (String) m.invoke(null, new Object[]{result});
 			if(output == null) {
-				LOG.info(result.getMessage());
+				System.err.println(result.getMessage());
 				System.out.println("");
 				System.out.flush();
 			} else {
