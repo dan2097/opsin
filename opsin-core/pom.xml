@@ -3,7 +3,7 @@
    <parent>
       <artifactId>opsin</artifactId>
       <groupId>uk.ac.cam.ch.opsin</groupId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0</version>
    </parent>
   <artifactId>opsin-core</artifactId>
   <name>OPSIN Core</name>
