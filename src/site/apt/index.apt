@@ -1,13 +1,13 @@
 OPSIN: Open Parser for Systematic IUPAC Nomenclature
 
-  OPSIN is a library for converting chemical names, especially organic chemical names, into structures. The default output is CML (Chemical Markup Language) with an optional module provided for direct conversion to InChI.
+  OPSIN is a library for converting chemical names, especially organic chemical names, into structures. OPSIN can output to CML (Chemical Markup Language), SMILES or to InChI.
 
-  OPSIN's source no longer resides within OSCAR and instead development is continuing at {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
-  You can grab the latest released version of OPSIN in jar form either from OSCAR3's file section or direct from {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
+  You can grab the latest released version of OPSIN in jar form from {{{http://bitbucket.org/dan2097/opsin/downloads}bitbucket}}.
+  OPSIN is open source under the {{{http://www.opensource.org/licenses/artistic-license-2.0.php}artistic license 2.0}}. To see or contribute to the codebase please go to {{{http://bitbucket.org/dan2097/opsin/}bitbucket}}.
   
-  As OPSIN is now MAVENised the ideal way for a MAVEN project to depend on OPSIN is by adding OPSIN to your pom.xml.
-  Released versions of OPSIN are available from {{{http://maven.ch.cam.ac.uk/content/repositories/releases/opsin/} here}}.
-  SNAPSHOT versions are available from {{{http://maven.ch.cam.ac.uk/content/repositories/snapshots/opsin/} here}}.
+  OPSIN uses MAVEN for dependency management, hence the easiest way to depend on OPSIN is by adding OPSIN to your pom.xml. See OPSIN's documentation for more information.
+  Released versions of OPSIN are available from {{{https://maven.ch.cam.ac.uk/content/repositories/releases/uk/ac/cam/ch/opsin/} here}}.
+  SNAPSHOT versions are available from {{{https://maven.ch.cam.ac.uk/content/repositories/snapshots/uk/ac/cam/ch/opsin/} here}}.
   
   OPSIN is available as a web service for demonstration purposes and for light batch processing {{{http://opsin.ch.cam.ac.uk} here}}.
 
@@ -15,11 +15,9 @@ Attribution
 
   If you use OPSIN to produce results for publication, then it would be great if you could cite us:
 
-  High-Throughput Identification of Chemistry in Life Science Texts
-  Peter Corbett and Peter Murray-Rust
-  CompLife 2006, LNBI 4216, pp. 107-118, 2006.
-
-  Another paper specifically about OPSIN and which is appropriate to OPSIN's current capabilties is in the works.
+    Chemical Name to Structure: OPSIN, an Open Source Solution
+    Daniel M. Lowe, Peter T. Corbett, Peter Murray-Rust, Robert C. Glen
+    Journal of Chemical Information and Modeling Article ASAP
 
 Acknowledgements
 
