@@ -599,37 +599,25 @@ class StructureBuildingMethods {
 			}
 		}
 
-		int atomIndice =0;
-
         for (Element unsaturator : unsaturators) {
             int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
             if (bondOrder <= 1) {
             	unsaturator.detach();
                 continue;
             }
+
             //checks if both atoms can accept an extra bond (if double bond) or two extra bonds (if triple bond)
-            if (atomIndice+1 >=atomList.size()){
-            	throw new StructureBuildingException("Cannot find two atom suitable atoms to unsaturate");
+            Bond bondToUnsaturate = findBondToUnSaturate(atomList, bondOrder, false);
+            if (bondToUnsaturate ==null){
+            	bondToUnsaturate = findBondToUnSaturate(atomList, bondOrder, true);
             }
-            Atom currentAtom = atomList.get(atomIndice);
-            Atom nextAtom = atomList.get(atomIndice +1);
-            while (currentAtom.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(currentAtom, bondOrder - 1 + currentAtom.getOutValency()) ||
-                    nextAtom.hasSpareValency() || !ValencyChecker.checkValencyAvailableForBond(nextAtom, bondOrder - 1 + nextAtom.getOutValency())) {
-            	atomIndice++;
-                if (atomIndice+1 >=atomList.size()){
-                	throw new StructureBuildingException("Cannot find two atom suitable atoms to unsaturate");
-                }
-                currentAtom = atomList.get(atomIndice);
-                nextAtom = atomList.get(atomIndice +1);
-                if (currentAtom.getType().equals(SUFFIX_TYPE_VAL) || nextAtom.getType().equals(SUFFIX_TYPE_VAL)) {
-                	throw new StructureBuildingException("Cannot find two atom suitable atoms to unsaturate");
-                }
+            if (bondToUnsaturate ==null){
+            	throw new StructureBuildingException("Cannot find bond to unsaturate using unsaturator: " +unsaturator.getValue());
             }
-            FragmentTools.unsaturate(currentAtom, bondOrder, thisFrag);
-            atomIndice = atomIndice + 2;
+            bondToUnsaturate.setOrder(bondOrder);
             unsaturator.detach();
         }
-        atomIndice =0;
+        int atomIndice =0;
 
         for (Element heteroatom : heteroatoms) {
             String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
@@ -667,6 +655,48 @@ class StructureBuildingMethods {
 				}
 			}
 		}
+	}
+
+	
+	/**
+	 * Attempts to find a bond that can have its bondOrder increased to the specified bond order
+	 * Depending on the value of allowAdjacentUnsaturatedBonds adjacent higher bonds are prevented
+	 * @param atomList
+	 * @param bondOrder
+	 * @param allowAdjacentUnsaturatedBonds
+	 * @return
+	 */
+	private static Bond findBondToUnSaturate(List<Atom> atomList, int bondOrder, boolean allowAdjacentUnsaturatedBonds) {
+		Bond bondToUnsaturate =null;
+		mainLoop: for (Atom atom1 : atomList) {
+			Set<Bond> bonds = atom1.getBonds();
+			if (!allowAdjacentUnsaturatedBonds){
+				for (Bond bond : bonds) {
+					if (bond.getOrder()!=1){//don't place implicitly unsaturated bonds next to each other
+						continue mainLoop;
+					}
+				}
+			}
+			bondLoop: for (Bond bond : bonds) {
+				if (bond.getOrder()==1 && !atom1.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom1.getType()) && atom1.getProperty(Atom.ISALDEHYDE) ==null
+						&& ValencyChecker.checkValencyAvailableForBond(atom1, bondOrder - 1 + atom1.getOutValency())){
+					Atom atom2 = bond.getOtherAtom(atom1);
+					if (!allowAdjacentUnsaturatedBonds){
+			         	for (Bond bond2 : atom2.getBonds()) {
+			        		if (bond2.getOrder()!=1){//don't place implicitly unsaturated bonds next to each other
+			        			continue bondLoop;
+			        		}
+			        	}
+					}
+					if (!atom2.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom2.getType()) && atom2.getProperty(Atom.ISALDEHYDE) ==null 
+							&& ValencyChecker.checkValencyAvailableForBond(atom2, bondOrder - 1 + atom2.getOutValency())){
+						bondToUnsaturate = bond;
+						break mainLoop;
+					}
+				}
+			}
+		}
+		return bondToUnsaturate;
 	}
 
 	private static boolean atomWillHaveSVImplicitlyRemoved(Atom atom) throws StructureBuildingException {
@@ -1306,24 +1336,33 @@ class StructureBuildingMethods {
 		if (LOG.isTraceEnabled()){LOG.trace("Substitutively bonded " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
 	}
 
-	static void formEpoxide(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
+	/**
+	 * Forms a bridge using the given fragment.
+	 * The bridgingFragment's outAtoms locants or a combination of the atomToJoinTo and a suitable atom
+	 * are used to decide what atoms to form the bridge between
+	 * @param state
+	 * @param bridgingFragment
+	 * @param atomToJoinTo
+	 * @throws StructureBuildingException
+	 */
+	static void formEpoxide(BuildState state, Fragment bridgingFragment, Atom atomToJoinTo) throws StructureBuildingException {
 		Fragment fragToJoinTo = atomToJoinTo.getFrag();
 		List<Atom> atomList = fragToJoinTo.getAtomList();
 		if (atomList.size()==1){
 			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
 		}
 		Atom firstAtomToJoinTo;
-		if (fragToBeJoined.getOutAtom(0).getLocant()!=null){
-			firstAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(fragToBeJoined.getOutAtom(0).getLocant());
+		if (bridgingFragment.getOutAtom(0).getLocant()!=null){
+			firstAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(bridgingFragment.getOutAtom(0).getLocant());
 		}
 		else{
 			firstAtomToJoinTo = atomToJoinTo;
 		}
-		Atom chalcogenAtom1 = fragToBeJoined.getOutAtom(0).getAtom();
-		fragToBeJoined.removeOutAtom(0);
+		Atom chalcogenAtom1 = bridgingFragment.getOutAtom(0).getAtom();
+		bridgingFragment.removeOutAtom(0);
 		Atom secondAtomToJoinTo;
-		if (fragToBeJoined.getOutAtom(0).getLocant()!=null){
-			secondAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(fragToBeJoined.getOutAtom(0).getLocant());
+		if (bridgingFragment.getOutAtom(0).getLocant()!=null){
+			secondAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(bridgingFragment.getOutAtom(0).getLocant());
 		}
 		else{
 			int index = atomList.indexOf(firstAtomToJoinTo);
@@ -1334,14 +1373,15 @@ class StructureBuildingMethods {
 				secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1, true);
 			}
 		}
-		Atom chalcogenAtom2 = fragToBeJoined.getOutAtom(0).getAtom();
-		fragToBeJoined.removeOutAtom(0);
+		Atom chalcogenAtom2 = bridgingFragment.getOutAtom(0).getAtom();
+		bridgingFragment.removeOutAtom(0);
 		if (firstAtomToJoinTo == secondAtomToJoinTo){
 			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
 		}
 		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
 		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
 		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
+		CycleDetector.assignWhetherAtomsAreInCycles(bridgingFragment);
 	}
 
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder)  {
