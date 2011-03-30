@@ -3,7 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -95,10 +94,6 @@ class ReverseParseRules {
 			String untokenisedChemicalNameLowerCase = as.untokenisedChemicalNameLowerCase;
 			String untokenisedChemicalName = as.untokenisedChemicalName;
 			int wordLength = untokenisedChemicalNameLowerCase.length();
-			String lastTwoLetters =null;
-			if (wordLength >=2){
-				lastTwoLetters = untokenisedChemicalNameLowerCase.substring(wordLength-2);
-			}
 	        if (chemAutomaton.isAccept(as.state)){
 	        	if (wordLength <= wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is worthy of consideration
 		        	if (wordLength < wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is longer than any previously found annotation
@@ -121,26 +116,22 @@ class ReverseParseRules {
 				char annotationCharacter = stateSymbols[i];
 	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict_TokensByLastTwoLetters[i];
-	                if (possibleTokenisationsMap != null) {
-	                    List<String> possibleTokenisations = null;
-	                    if (lastTwoLetters != null) {
-	                        possibleTokenisations = possibleTokenisationsMap.get(lastTwoLetters);
-	                    }
+	            	OpsinTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDictReversed[i];
+	            	if (possibleTokenisationsTrie != null) {
+	                    List<Integer> possibleTokenisations = possibleTokenisationsTrie.findLengthsOfMatchesReadingStringRightToLeft(untokenisedChemicalNameLowerCase, wordLength);
 	                    if (possibleTokenisations != null) {//next could be a token
-	                        for (String possibleTokenisation : possibleTokenisations) {
-	                            if (untokenisedChemicalNameLowerCase.endsWith(possibleTokenisation)) {
-	                                AnnotatorState newAs = new AnnotatorState();
-	                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(0, wordLength - possibleTokenisation.length());
-	                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(0, wordLength - possibleTokenisation.length());
-	                                newAs.tokens = new ArrayList<String>(as.tokens);
-	                                newAs.tokens.add(possibleTokenisation);
-	                                newAs.annot = new ArrayList<Character>(as.annot);
-	                                newAs.annot.add(annotationCharacter);
-	                                newAs.state = potentialNextState;
-	                                //System.out.println("tokened " + newAs.untokenisedChemicalName);
-	                                asStack.add(newAs);
-	                            }
+	                        for (int tokenizationLength : possibleTokenisations) {
+                                AnnotatorState newAs = new AnnotatorState();
+                                int splitIndice = wordLength - tokenizationLength;
+                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(0, splitIndice);
+                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(0, splitIndice);
+                                newAs.tokens = new ArrayList<String>(as.tokens);
+                                newAs.tokens.add(untokenisedChemicalNameLowerCase.substring(splitIndice));
+                                newAs.annot = new ArrayList<Character>(as.annot);
+                                newAs.annot.add(annotationCharacter);
+                                newAs.state = potentialNextState;
+                                //System.out.println("tokened " + newAs.untokenisedChemicalName);
+                                asStack.add(newAs);
 	                        }
 	                    }
 	                }

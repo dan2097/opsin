@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -92,10 +91,6 @@ public class ParseRules {
 			String untokenisedChemicalNameLowerCase = as.untokenisedChemicalNameLowerCase;
 			String untokenisedChemicalName = as.untokenisedChemicalName;
 			int wordLength = untokenisedChemicalNameLowerCase.length();
-			String firstTwoLetters =null;
-			if (wordLength >=2){
-				firstTwoLetters = untokenisedChemicalNameLowerCase.substring(0,2);
-			}
 	        if (chemAutomaton.isAccept(as.state)){
 	        	if (wordLength <= wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is worthy of consideration
 		        	if (wordLength < wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is longer than any previously found annotation
@@ -118,26 +113,21 @@ public class ParseRules {
 				char annotationCharacter = stateSymbols[i];
 	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                HashMap<String, List<String>> possibleTokenisationsMap = resourceManager.symbolTokenNamesDict[i];
-	                if (possibleTokenisationsMap != null) {
-	                    List<String> possibleTokenisations = null;
-	                    if (firstTwoLetters != null) {
-	                        possibleTokenisations = possibleTokenisationsMap.get(firstTwoLetters);
-	                    }
+	                OpsinTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDict[i];
+	                if (possibleTokenisationsTrie != null) {
+	                    List<Integer> possibleTokenisations = possibleTokenisationsTrie.findLengthsOfMatches(untokenisedChemicalNameLowerCase, wordLength);
 	                    if (possibleTokenisations != null) {//next could be a token
-	                        for (String possibleTokenisation : possibleTokenisations) {
-	                            if (untokenisedChemicalNameLowerCase.startsWith(possibleTokenisation)) {
-	                                AnnotatorState newAs = new AnnotatorState();
-	                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(possibleTokenisation.length());
-	                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(possibleTokenisation.length());
-	                                newAs.tokens = new ArrayList<String>(as.tokens);
-	                                newAs.tokens.add(possibleTokenisation);
-	                                newAs.annot = new ArrayList<Character>(as.annot);
-	                                newAs.annot.add(annotationCharacter);
-	                                newAs.state = potentialNextState;
-	                                //System.out.println("tokened " + newAs.untokenisedChemicalName);
-	                                asStack.add(newAs);
-	                            }
+	                        for (int tokenizationLength : possibleTokenisations) {
+                                AnnotatorState newAs = new AnnotatorState();
+                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(tokenizationLength);
+                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(tokenizationLength);
+                                newAs.tokens = new ArrayList<String>(as.tokens);
+                                newAs.tokens.add(untokenisedChemicalNameLowerCase.substring(0,tokenizationLength));
+                                newAs.annot = new ArrayList<Character>(as.annot);
+                                newAs.annot.add(annotationCharacter);
+                                newAs.state = potentialNextState;
+                                //System.out.println("tokened " + newAs.untokenisedChemicalName);
+                                asStack.add(newAs);
 	                        }
 	                    }
 	                }
