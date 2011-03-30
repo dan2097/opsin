@@ -34,9 +34,8 @@ class ResourceManager {
 	final HashMap<Character, Token> reSymbolTokenDict = new HashMap<Character, Token>();
 
 
-	/**A mapping between annotation symbols and the first two letters of token names applicable to
-	 * that annotation symbol which then map to token names (annotation->first two letters of token names ->token names mapping).*/
-	final HashMap<String, List<String>>[] symbolTokenNamesDict;
+	/**A mapping between annotation symbols and a trie of tokens.*/
+	final OpsinTrie[] symbolTokenNamesDict;
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
 	final List<RunAutomaton>[] symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
@@ -46,8 +45,8 @@ class ResourceManager {
 	final RunAutomaton chemicalAutomaton;
 	
 	
-	/**As symbolTokenNamesDict but use the last two letters of token names to map to the token names.*/
-	HashMap<String, List<String>>[] symbolTokenNamesDict_TokensByLastTwoLetters;
+	/**As symbolTokenNamesDict but the tokens are reversed*/
+	OpsinTrie[] symbolTokenNamesDictReversed;
 	/**As symbolRegexAutomataDict but automata are reversed */
 	List<RunAutomaton>[] symbolRegexAutomataDictReversed;
 	/**As symbolRegexesDict but regexes match the end of string */
@@ -69,7 +68,7 @@ class ResourceManager {
 		this.resourceGetter = resourceGetter;
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
-		symbolTokenNamesDict = new HashMap[grammarSymbolsSize];
+		symbolTokenNamesDict = new OpsinTrie[grammarSymbolsSize];
 		symbolRegexAutomataDict = new List[grammarSymbolsSize];
 		symbolRegexesDict = new List[grammarSymbolsSize];
 		processTokenFiles(false);
@@ -110,21 +109,15 @@ class ResourceManager {
 					tokenDict.get(t).put(symbol, new Token(tokenElement, tokenList));
 					if (!reversed){
 						if(symbolTokenNamesDict[index]==null) {
-							symbolTokenNamesDict[index] = new HashMap<String, List<String>>();
+							symbolTokenNamesDict[index] = new OpsinTrie();
 						}
-						if(!symbolTokenNamesDict[index].containsKey(t.substring(0, 2))) {
-							symbolTokenNamesDict[index].put(t.substring(0, 2), new ArrayList<String>());
-						}
-						symbolTokenNamesDict[index].get(t.substring(0, 2)).add(t);
+						symbolTokenNamesDict[index].addToken(t);
 					}
 					else{
-						if(symbolTokenNamesDict_TokensByLastTwoLetters[index]==null) {
-							symbolTokenNamesDict_TokensByLastTwoLetters[index] = new HashMap<String, List<String>>();
+						if(symbolTokenNamesDictReversed[index]==null) {
+							symbolTokenNamesDictReversed[index] = new OpsinTrie();
 						}
-						if(!symbolTokenNamesDict_TokensByLastTwoLetters[index].containsKey(t.substring(t.length()-2))) {
-							symbolTokenNamesDict_TokensByLastTwoLetters[index].put(t.substring(t.length()-2), new ArrayList<String>());
-						}
-						symbolTokenNamesDict_TokensByLastTwoLetters[index].get(t.substring(t.length()-2)).add(t);
+						symbolTokenNamesDictReversed[index].addToken(new StringBuffer(t).reverse().toString());
 					}
 				}
 			}
@@ -238,8 +231,8 @@ class ResourceManager {
 			reverseChemicalAutomaton = processChemicalGrammar(true);
 		}
 		int grammarSymbolsSize = reverseChemicalAutomaton.getCharIntervals().length;
-		if (symbolTokenNamesDict_TokensByLastTwoLetters ==null){
-			symbolTokenNamesDict_TokensByLastTwoLetters  = new HashMap[grammarSymbolsSize];
+		if (symbolTokenNamesDictReversed ==null){
+			symbolTokenNamesDictReversed  = new OpsinTrie[grammarSymbolsSize];
 			processTokenFiles(true);
 		}
 		if (symbolRegexAutomataDictReversed ==null && symbolRegexesDictReversed==null){
