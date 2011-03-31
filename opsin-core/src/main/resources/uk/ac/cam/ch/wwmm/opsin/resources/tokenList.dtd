@@ -26,4 +26,5 @@
         additionalValue CDATA #IMPLIED
         commonOxidationStatesAndMax CDATA #IMPLIED
         alphaBetaClockWiseAtomOrdering CDATA #IMPLIED
+		ignoreWhenWritingXML CDATA #IMPLIED
         locant CDATA #IMPLIED>

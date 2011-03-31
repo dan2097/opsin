@@ -35,8 +35,8 @@ class Token {
 		if (regexTokenElement.getAttribute("subType")!=null){
 			elem.addAttribute(new Attribute(SUBTYPE_ATR, regexTokenElement.getAttributeValue("subType")));
 		}
-		if (regexTokenElement.getAttribute("ignoreWhenWritingXML")!=null && regexTokenElement.getAttributeValue("ignoreWhenWritingXML").equals("yes")){
-			this.ignoreWhenWritingXML=true;
+		if ("yes".equals(regexTokenElement.getAttributeValue("ignoreWhenWritingXML"))){
+			ignoreWhenWritingXML=true;
 		}
 	}
 
@@ -53,6 +53,9 @@ class Token {
 		}
 		if(tokenList.getAttribute("subType") != null) {
 			elem.addAttribute(new Attribute(SUBTYPE_ATR, tokenList.getAttributeValue("subType")));
+		}
+		if ("yes".equals(tokenElement.getAttributeValue("ignoreWhenWritingXML"))){
+			ignoreWhenWritingXML=true;
 		}
 	}
 

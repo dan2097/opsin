@@ -33,6 +33,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
         additionalValue CDATA #IMPLIED
         commonOxidationStatesAndMax CDATA #IMPLIED
         alphaBetaClockWiseAtomOrdering CDATA #IMPLIED
+		ignoreWhenWritingXML CDATA #IMPLIED
         locant CDATA #IMPLIED>
 <!--
   (the #PCDATA inside the tag) = the string to match
@@ -57,6 +58,7 @@ symbol == the one-letter code for the token, used by the grammar in regexes.xml 
   suffixAppliesToByDefault == same as suffixAppliesTo but can be overriden by given locants
   additionalValue == Another value that the token takes. Currently only used for suffixes that mean the addition of two discrete suffixes
   commonOxidationStatesAndMax == For elements, the typical oxidation states (comma seperated) then a colon and the maximum oxidation station. e.g. for iron "2,3:6" as 2 and 3 are typical. 6 is possible but atypical.
-  alphaBetaClockWiseAtomOrdering == Listed in a clockwiese order, the locants of the atoms that define a pseudo 2D plane for alpha/beta stereochemistry. 
+  alphaBetaClockWiseAtomOrdering == Listed in a clockwiese order, the locants of the atoms that define a pseudo 2D plane for alpha/beta stereochemistry.
+  ignoreWhenWritingXML == Tells the parser not to form an XML element out of these tokens. That means that these token are only syntactic and contain no useful information and are not useful after parsing has completed
   locant == used for an/ane to prevent a locant being given
   -->

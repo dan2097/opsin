@@ -13,7 +13,7 @@ public class ParseRulesResults {
    private final String uninterpretableName;
    private final String unparseableName;
 	
-   ParseRulesResults(List<ParseTokens> parseTokensList, String uninterpretableName, String unparseableName) {
+   public ParseRulesResults(List<ParseTokens> parseTokensList, String uninterpretableName, String unparseableName) {
 	  this.parseTokensList = parseTokensList;
 	  this.uninterpretableName = uninterpretableName;
 	  this.unparseableName = unparseableName;
