@@ -17,6 +17,11 @@ class OpsinRadixTrie {
 		rootNode = new OpsinTrieNode("", false);
 	}
 
+	/**
+	 * Adds a string to the Trie.
+	 * This string should not contain any non ASCII characters
+	 * @param token
+	 */
 	void addToken(String token) {
 		int tokenLength =token.length();
 		String remaingStr =token;
@@ -30,7 +35,15 @@ class OpsinRadixTrie {
 		currentNode.setIsEndPoint(true);
 	}
 
-	List<Integer> findLengthsOfMatches(String untokenisedChemicalName, int untokenisedChemicalNameLength) {
+	/**
+	 * Returns all possible runs of the input string that reached end point nodes in the trie
+	 * e.g. ylidene might return 2 ("yl"), 6 ("yliden") and 7 ("ylidene")
+	 * Returns null if no runs were possible
+	 * @param untokenisedChemicalName
+	 * @return
+	 */
+	List<Integer> findLengthsOfMatches(String untokenisedChemicalName) {
+		int untokenisedChemicalNameLength = untokenisedChemicalName.length();
 		List<Integer> lengths = null;
 		if (rootNode.isEndPoint()){
 			lengths = new ArrayList<Integer>();
@@ -61,7 +74,13 @@ class OpsinRadixTrie {
 		return lengths;
 	}
 
-	List<Integer> findLengthsOfMatchesReadingStringRightToLeft(String untokenisedChemicalName, int untokenisedChemicalNameLength) {
+	/**
+	 * Same as findLengthsOfMatches but the trie has been populated by reversed tokens
+	 * @param untokenisedChemicalName
+	 * @return
+	 */
+	List<Integer> findLengthsOfMatchesReadingStringRightToLeft(String untokenisedChemicalName) {
+		int untokenisedChemicalNameLength = untokenisedChemicalName.length();
 		List<Integer> lengths = null;
 		if (rootNode.isEndPoint()){
 			lengths = new ArrayList<Integer>();

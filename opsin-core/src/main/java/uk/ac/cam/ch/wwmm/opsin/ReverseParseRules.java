@@ -118,7 +118,7 @@ class ReverseParseRules {
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
 	            	OpsinRadixTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDictReversed[i];
 	            	if (possibleTokenisationsTrie != null) {
-	                    List<Integer> possibleTokenisations = possibleTokenisationsTrie.findLengthsOfMatchesReadingStringRightToLeft(untokenisedChemicalNameLowerCase, wordLength);
+	                    List<Integer> possibleTokenisations = possibleTokenisationsTrie.findLengthsOfMatchesReadingStringRightToLeft(untokenisedChemicalNameLowerCase);
 	                    if (possibleTokenisations != null) {//next could be a token
 	                        for (int tokenizationLength : possibleTokenisations) {
                                 AnnotatorState newAs = new AnnotatorState();
