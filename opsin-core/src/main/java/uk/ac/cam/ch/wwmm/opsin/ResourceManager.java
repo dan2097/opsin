@@ -35,7 +35,7 @@ class ResourceManager {
 
 
 	/**A mapping between annotation symbols and a trie of tokens.*/
-	final OpsinTrie[] symbolTokenNamesDict;
+	final OpsinRadixTrie[] symbolTokenNamesDict;
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
 	final List<RunAutomaton>[] symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
@@ -46,7 +46,7 @@ class ResourceManager {
 	
 	
 	/**As symbolTokenNamesDict but the tokens are reversed*/
-	OpsinTrie[] symbolTokenNamesDictReversed;
+	OpsinRadixTrie[] symbolTokenNamesDictReversed;
 	/**As symbolRegexAutomataDict but automata are reversed */
 	List<RunAutomaton>[] symbolRegexAutomataDictReversed;
 	/**As symbolRegexesDict but regexes match the end of string */
@@ -68,7 +68,7 @@ class ResourceManager {
 		this.resourceGetter = resourceGetter;
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
-		symbolTokenNamesDict = new OpsinTrie[grammarSymbolsSize];
+		symbolTokenNamesDict = new OpsinRadixTrie[grammarSymbolsSize];
 		symbolRegexAutomataDict = new List[grammarSymbolsSize];
 		symbolRegexesDict = new List[grammarSymbolsSize];
 		processTokenFiles(false);
@@ -109,13 +109,13 @@ class ResourceManager {
 					tokenDict.get(t).put(symbol, new Token(tokenElement, tokenList));
 					if (!reversed){
 						if(symbolTokenNamesDict[index]==null) {
-							symbolTokenNamesDict[index] = new OpsinTrie();
+							symbolTokenNamesDict[index] = new OpsinRadixTrie();
 						}
 						symbolTokenNamesDict[index].addToken(t);
 					}
 					else{
 						if(symbolTokenNamesDictReversed[index]==null) {
-							symbolTokenNamesDictReversed[index] = new OpsinTrie();
+							symbolTokenNamesDictReversed[index] = new OpsinRadixTrie();
 						}
 						symbolTokenNamesDictReversed[index].addToken(new StringBuffer(t).reverse().toString());
 					}
@@ -232,7 +232,7 @@ class ResourceManager {
 		}
 		int grammarSymbolsSize = reverseChemicalAutomaton.getCharIntervals().length;
 		if (symbolTokenNamesDictReversed ==null){
-			symbolTokenNamesDictReversed  = new OpsinTrie[grammarSymbolsSize];
+			symbolTokenNamesDictReversed  = new OpsinRadixTrie[grammarSymbolsSize];
 			processTokenFiles(true);
 		}
 		if (symbolRegexAutomataDictReversed ==null && symbolRegexesDictReversed==null){

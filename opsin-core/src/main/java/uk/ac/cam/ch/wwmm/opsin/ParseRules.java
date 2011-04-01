@@ -113,7 +113,7 @@ public class ParseRules {
 				char annotationCharacter = stateSymbols[i];
 	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
 	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                OpsinTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDict[i];
+	                OpsinRadixTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDict[i];
 	                if (possibleTokenisationsTrie != null) {
 	                    List<Integer> possibleTokenisations = possibleTokenisationsTrie.findLengthsOfMatches(untokenisedChemicalNameLowerCase, wordLength);
 	                    if (possibleTokenisations != null) {//next could be a token
