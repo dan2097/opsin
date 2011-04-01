@@ -11,7 +11,7 @@ public class RadixTrieTest {
 	public void testSimpleAddSimpleGet(){
 		OpsinRadixTrie trie = new OpsinRadixTrie();
 		trie.addToken("benzene");
-		List<Integer> matches= trie.findLengthsOfMatches("benzene", 7);
+		List<Integer> matches= trie.findLengthsOfMatches("benzene");
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 		assertEquals(7, matches.get(0).intValue());
@@ -21,7 +21,7 @@ public class RadixTrieTest {
 	public void testSimpleAddFindPrefix(){
 		OpsinRadixTrie trie = new OpsinRadixTrie();
 		trie.addToken("phenyl");
-		List<Integer> matches= trie.findLengthsOfMatches("phenylbenzene", 13);
+		List<Integer> matches= trie.findLengthsOfMatches("phenylbenzene");
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 		assertEquals(6, matches.get(0).intValue());
@@ -32,7 +32,7 @@ public class RadixTrieTest {
 		OpsinRadixTrie trie = new OpsinRadixTrie();
 		trie.addToken("pyridinyl");
 		trie.addToken("phenyl");
-		List<Integer> matches= trie.findLengthsOfMatches("phenylbenzene", 13);
+		List<Integer> matches= trie.findLengthsOfMatches("phenylbenzene");
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 		assertEquals(6, matches.get(0).intValue());
@@ -42,7 +42,7 @@ public class RadixTrieTest {
 	public void testZeroLengthToken(){
 		OpsinRadixTrie trie = new OpsinRadixTrie();
 		trie.addToken("");//e.g. end of substituent
-		List<Integer> matches= trie.findLengthsOfMatches("phenylbenzene", 13);
+		List<Integer> matches= trie.findLengthsOfMatches("phenylbenzene");
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 		assertEquals(0, matches.get(0).intValue());
@@ -53,7 +53,7 @@ public class RadixTrieTest {
 		OpsinRadixTrie trie = new OpsinRadixTrie();
 		trie.addToken("methyl");
 		trie.addToken("methylidene");
-		List<Integer> matches= trie.findLengthsOfMatches("methylidene", 11);
+		List<Integer> matches= trie.findLengthsOfMatches("methylidene");
 		assertNotNull(matches);
 		assertEquals(2, matches.size());
 		assertEquals(6, matches.get(0).intValue());
@@ -69,7 +69,7 @@ public class RadixTrieTest {
 		trie.addToken("acd");
 		trie.addToken("ab");
 		trie.addToken("abcf");
-		List<Integer> matches= trie.findLengthsOfMatches("abc", 3);
+		List<Integer> matches= trie.findLengthsOfMatches("abc");
 		assertNotNull(matches);
 		assertEquals(3, matches.size());
 		assertEquals(0, matches.get(0).intValue());
@@ -86,7 +86,7 @@ public class RadixTrieTest {
 		trie.addToken("");
 		trie.addToken("ly");
 		trie.addToken("lyhtem");
-		List<Integer> matches= trie.findLengthsOfMatchesReadingStringRightToLeft("ethyl", 5);
+		List<Integer> matches= trie.findLengthsOfMatchesReadingStringRightToLeft("ethyl");
 		assertNotNull(matches);
 		assertEquals(3, matches.size());
 		assertEquals(0, matches.get(0).intValue());
