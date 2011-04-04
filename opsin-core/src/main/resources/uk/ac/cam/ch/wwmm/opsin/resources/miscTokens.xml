@@ -72,14 +72,99 @@
   </tokenList>
 
 <!--As a purely non-detachable prefixe-->
-	<tokenList tagname="subtractivePrefix" symbol="┐">
-		<token value="O">deoxy</token>
-		<token value="O">desoxy</token><!--older variant spelling-->
-	</tokenList>
+  <tokenList tagname="subtractivePrefix" symbol="┐">
+    <token value="O">deoxy</token>
+    <token value="O">desoxy</token><!--older variant spelling-->
+  </tokenList>
 
 <!--As a detachable prefix (which could itself have non-detachable prefixes in the case where it is being treated as a non-detachable prefix)-->
-	<tokenList tagname="subtractivePrefix" symbol="x">
-		<token value="O">deoxy</token>
-		<token value="O">desoxy</token><!--older variant spelling-->
-	</tokenList>
+  <tokenList tagname="subtractivePrefix" symbol="x">
+    <token value="O">deoxy</token>
+    <token value="O">desoxy</token><!--older variant spelling-->
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="h" ignoreWhenWritingXML="yes"><!--an optional hyphen-->
+    <token value="-">-</token>
+  </tokenList>
+  
+  <tokenList tagname="hyphen" symbol="ä"><!--an intersubstituent seperator-->
+    <token value="-">-</token>
+    <token value=",">,</token>
+  </tokenList>
+  
+  <tokenList tagname="openbracket" symbol="o"><!--an open bracket-->
+    <token value="(">(</token>
+    <token value="[">[</token>
+    <token value="{">{</token>
+  </tokenList>
+  
+  <tokenList tagname="closebracket" symbol="c"><!--a close bracket-->
+    <token value=")">)</token>
+    <token value="]">]</token>
+    <token value="}">}</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="T" ignoreWhenWritingXML="yes"><!--an open bracket that forms a pair of optional brackets-->
+    <token value="(">(</token>
+    <token value="[">[</token>
+    <token value="{">{</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="U" ignoreWhenWritingXML="yes"><!--a close bracket that forms a pair of optional brackets-->
+    <token value=")">)</token>
+    <token value="]">]</token>
+    <token value="}">}</token>
+  </tokenList>
+  
+  <tokenList tagname="structuralOpenBracket" symbol="q"><!--an open bracket that disambiguates a specific type of nomenclature e.g. ring assembly-->
+    <token value="(">(</token>
+    <token value="[">[</token>
+    <token value="{">{</token>
+  </tokenList>
+  
+  <tokenList tagname="structuralCloseBracket" symbol="Q"><!--a close bracket that disambiguates a specific type of nomenclature e.g. ring assembly-->
+    <token value=")">)</token>
+    <token value="]">]</token>
+    <token value="}">}</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="¬" ignoreWhenWritingXML="yes"><!--an optional a-->
+    <token value="a">a</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="Z" ignoreWhenWritingXML="yes"><!--an optional e-->
+    <token value="e">e</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="Y" ignoreWhenWritingXML="yes"><!--an optional o-->
+    <token value="o">o</token>
+  </tokenList>
+  
+  <tokenList tagname="bridgeFormingO" symbol="╡"><!--an o used to indicate a prefix is a bridge e.g. the o in ethano-->
+    <token value="o">o</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="ç" ignoreWhenWritingXML="yes"><!--a comma used as a delimiter-->
+    <token value=",">,</token>
+  </tokenList>
+
+  <tokenList tagname="suffix" symbol="£" type="root" subType="terminal"><!--an implicit ic-->
+    <token value="ic"></token>
+  </tokenList>
+  
+  <tokenList tagname="suffix" symbol="₧" type="inline"><!--an o meaning yl e.g. glycino-->
+    <token value="oMeaningYl">o</token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="é" ignoreWhenWritingXML="yes"><!--endOfSubstituent-->
+    <token value="endOfSubstituent"></token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="â" ignoreWhenWritingXML="yes"><!--endOfMainGroup-->
+    <token value="endOfMainGroup"></token>
+  </tokenList>
+  
+  <tokenList tagname="NA" symbol="û" ignoreWhenWritingXML="yes"><!--endOfFunctionalGroup-->
+    <token value="endOfFunctionalGroup"></token>
+  </tokenList>
 </tokenLists>
