@@ -21,7 +21,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	HeteroAtomReplacementTest.class,
 	NameToStructureConfigurationsTest.class,
 	NameToStructureTest.class,
-	OpsinRadixTrie.class,
+	RadixTrieTest.class,
 	ParserTest.class,
 	PreProcessorTest.class,
 	SMILESFragmentBuilderTest.class,

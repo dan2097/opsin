@@ -54,7 +54,7 @@ class Token {
 		if(tokenList.getAttribute("subType") != null) {
 			elem.addAttribute(new Attribute(SUBTYPE_ATR, tokenList.getAttributeValue("subType")));
 		}
-		if ("yes".equals(tokenElement.getAttributeValue("ignoreWhenWritingXML"))){
+		if ("yes".equals(tokenList.getAttributeValue("ignoreWhenWritingXML"))){
 			ignoreWhenWritingXML=true;
 		}
 	}

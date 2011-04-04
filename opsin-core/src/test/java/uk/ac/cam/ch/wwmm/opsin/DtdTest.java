@@ -78,7 +78,6 @@ public class DtdTest {
 				Elements tokenElements = tokenList.getChildElements("token");
 				for(int j=0;j<tokenElements.size();j++) {
 					String tokenString = tokenElements.get(j).getValue();
-					assertTrue("The following token is less than 2 characters long!: " +tokenString, tokenString.length()>=2);
 					assertEquals("The following token contains upper case characters!: " +tokenString,tokenString.toLowerCase(), tokenString);
 				}
 			}

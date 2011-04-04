@@ -1,9 +1,10 @@
 <!-- See tokenLists.dtd for further explanation of these terms -->
 <!ELEMENT tokenList (token)+>
-<!ATTLIST tokenList tagname (alkaneStemComponent|alkaneStemModifier|chargeSpecifier|cyclo|dlStereochemistry|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|ine|infix|hydrocarbonFusedRingSystem|multiplier|oxidationNumberSpecifier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|subtractivePrefix|suffix|suffixPrefix|unsaturator) #REQUIRED
+<!ATTLIST tokenList tagname (alkaneStemComponent|alkaneStemModifier|bridgeFormingO|chargeSpecifier|closebracket|cyclo|dlStereochemistry|functionalClass|functionalGroup|functionalModifier|group|heteroatom|hydro|hyphen|ine|infix|hydrocarbonFusedRingSystem|multiplier|NA|openbracket|oxidationNumberSpecifier|polyCyclicSpiro|ringAssemblyMultiplier|stereoChemistry|structuralCloseBracket|structuralOpenBracket|subtractivePrefix|suffix|suffixPrefix|unsaturator) #REQUIRED
                     type (acidStem|aminoAcid|basic|chain|charge|cisOrTrans|chalcogenAcidStem|diValentGroup|functionalClass|group|inline|monoValentGroup|monoValentStandaloneGroup|nonCarboxylicAcid|ring|simpleGroup|substituent|root|VonBaeyer) #IMPLIED
                     subType (alkaneStem|anhydride|arylGroup|arylSubstituent|biochemical|carbohydrate|cyclicUnsaturableHydrocarbon|dedicatedFunctionalReplacementPrefix|elementaryAtom|endInAn|endInIc|endInIne|epoxyLike|functionalClassGroup|groupStem|halideOrPseudoHalide|hantzschWidman|heteroStem|fusionRing|simpleGroup|multiRadicalSubstituent|noAcyl|none|oxidoLike|perhalogeno|simpleSubstituent|substituent|terminal|ylForAcyl|ylForNothing|ylForYl) #IMPLIED
-                    symbol CDATA #REQUIRED>
+                    symbol CDATA #REQUIRED
+                    ignoreWhenWritingXML (yes) #IMPLIED>
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
@@ -26,5 +27,4 @@
         additionalValue CDATA #IMPLIED
         commonOxidationStatesAndMax CDATA #IMPLIED
         alphaBetaClockWiseAtomOrdering CDATA #IMPLIED
-		ignoreWhenWritingXML CDATA #IMPLIED
         locant CDATA #IMPLIED>
