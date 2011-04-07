@@ -266,6 +266,7 @@
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinon</token><!--preferred to systematic interpretation-->
 		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">dihydromethanophenazine</token><!--preferred to systematic interpretation-->
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
+		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none" valType="SMILES">oxybenzone</token>
 		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">methanophenazine</token><!--preferred to systematic interpretation-->
 	</tokenList>
 
