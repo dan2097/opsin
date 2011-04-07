@@ -281,12 +281,14 @@
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" valType="SMILES" defaultInID="37">coa</token>
 	</tokenList>
 
+  <!--groups that must be substituted-->
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="║">
 	<!--amide should really also be here but doing so is problematic due to the way it has been implemented in functional class nomenclature-->
 		<token value="N" labels="none" valType="SMILES">amin</token>
 		<token value="N" labels="none" valType="SMILES">amine</token>
 		<token value="[NH4+]" labels="none" valType="SMILES">aminium</token>
 		<token value="[NH2-]" labels="none" valType="SMILES">aminide</token>
+		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbiturate</token>
 		<token value="C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">carboxylate</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>
