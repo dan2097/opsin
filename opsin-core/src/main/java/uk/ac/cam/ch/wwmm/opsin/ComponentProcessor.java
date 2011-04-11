@@ -4042,7 +4042,9 @@ class ComponentProcessor {
 				return true;
 			}
 		}
-		if (state.currentWordRule == WordRule.biochemicalEster && parentElem.getLocalName().equals(WORD_EL)){
+		if ((state.currentWordRule == WordRule.biochemicalEster || 
+				(state.currentWordRule == WordRule.ester &&  (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)))
+				&& parentElem.getLocalName().equals(WORD_EL)){
 			Element wordRule = (Element) parentElem.getParent();
 			Elements words = wordRule.getChildElements(WORD_EL);
 			Element ateWord = words.get(words.size()-1);
@@ -4085,7 +4087,7 @@ class ComponentProcessor {
 							word.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
 						}
 						else{
-							subOrBracket.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
+							throw new ComponentGenerationException(locantsToDebugString(OpsinTools.elementsToElementArrayList(locants)));
 						}
 					}
 					else{
@@ -4111,12 +4113,7 @@ class ComponentProcessor {
 				for(int i=multiVal -1; i>=1; i--) {
 					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
-						if (wordLevelLocants){
-							clone.getAttribute(LOCANT_ATR).setValue(locantValues[i]);
-						}
-						else{
-							((Element) clone.getChild(0)).getAttribute(LOCANT_ATR).setValue(locantValues[i]);
-						}
+						clone.getAttribute(LOCANT_ATR).setValue(locantValues[i]);
 					}
 					XOMTools.insertAfter(word, clone);
 				}
