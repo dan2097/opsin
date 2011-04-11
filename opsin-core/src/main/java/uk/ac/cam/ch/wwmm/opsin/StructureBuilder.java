@@ -196,15 +196,18 @@ class StructureBuilder {
 		}
 
 		List<BuildResults> ateGroups = new ArrayList<BuildResults>();
+		Map<BuildResults, String> buildResultsToLocant = new HashMap<BuildResults, String>();//typically locant will be null
 		for (; wordIndice < words.size(); wordIndice++) {
 			Element word =words.get(wordIndice);
 			if (word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+				String locant = word.getAttributeValue(LOCANT_ATR);//specifying a locant for an ateWord is very unusual as this information is typically redundant c.f. dodecamethylene 1,12-bis(chloroformate)
 				resolveWordOrBracket(state, word);
 				BuildResults ateBR = new BuildResults(state, word);
 				if (ateBR.getFunctionalAtomCount()<1){
 					throw new StructureBuildingException("bug? ate group did not have any functional atoms!");
 				}
 				ateGroups.add(ateBR);
+				buildResultsToLocant.put(ateBR, locant);
 			}
 			else{
 				throw new StructureBuildingException("Non full word found where only full words were expected");
@@ -228,8 +231,27 @@ class StructureBuilder {
 				ateAtom =ateBr.getFunctionalAtom(0);
 				ateBr.removeFunctionalAtom(0);
 			}
-			state.fragManager.createBond(ateAtom,substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
-			substituentsBr.removeOutAtom(0);
+			String locant = buildResultsToLocant.get(ateBr);
+			if (locant ==null){//typical case
+				Atom atomOnSubstituentToUse =substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+				state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
+				substituentsBr.removeOutAtom(0);
+			}
+			else{
+				Integer outAtomPosition =null;
+				for (int j = 0; j < substituentsBr.getOutAtomCount(); j++) {
+					if (substituentsBr.getOutAtom(j).getAtom().hasLocant(locant)){
+						outAtomPosition = j;
+						break;
+					}
+				}
+				if (outAtomPosition ==null){
+					throw new StructureBuildingException("Unable to find substituent with locant: " + locant + " to form ester!");
+				}
+				Atom atomOnSubstituentToUse = substituentsBr.getOutAtom(outAtomPosition).getAtom();
+				state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
+				substituentsBr.removeOutAtom(outAtomPosition);
+			}
 			ateAtom.neutraliseCharge();
 		}
 	}

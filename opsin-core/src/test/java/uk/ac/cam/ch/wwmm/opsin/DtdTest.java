@@ -78,6 +78,10 @@ public class DtdTest {
 				Elements tokenElements = tokenList.getChildElements("token");
 				for(int j=0;j<tokenElements.size();j++) {
 					String tokenString = tokenElements.get(j).getValue();
+					char[] characters = tokenString.toCharArray();
+					for (char c : characters) {
+						assertTrue("Non ascii character found in token: " + tokenString +" , an ASCII replacement should be used!" ,(int)c < 128);
+					}
 					assertEquals("The following token contains upper case characters!: " +tokenString,tokenString.toLowerCase(), tokenString);
 				}
 			}

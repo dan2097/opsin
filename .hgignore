@@ -3,3 +3,5 @@ relre:target/*
 .classpath
 .project
 .settings
+opsin-core/src/main/java/uk/ac/cam/ch/wwmm/opsin/FusedRingNumbererRewrite.java
+opsin-core/src/test/java/uk/ac/cam/ch/wwmm/opsin/FusedRingNumbererFunctionsTest.java
