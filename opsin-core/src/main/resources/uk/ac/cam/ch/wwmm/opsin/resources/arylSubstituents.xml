@@ -15,6 +15,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">phen</token>
 		<token value="CCc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">pheneth</token>
 		<token value="pyrrole" valType="dbkey">pyrr</token>
+		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">styr</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" frontLocantsExpected="2,3,4">tol</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant1 alpha;C locant2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xyl</token>
 	</tokenList>
@@ -110,7 +111,6 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="[se]1cccc1" valType="SMILES">selenoph</token>
 		<token value="C1=CC=CC=2[SiH]=C3C=CC=CC3=[SiH]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthr</token>
 		<token value="c1(ccccc1)C=Cc2ccccc2" labels="1/2/3/4/5/6/alpha/beta/1'/2'/3'/4'/5'/6'" valType="SMILES">stilb</token>
-		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">styr</token>
 		<token value="Cc1cccs1" labels="2/alpha/3/4/5/1" valType="SMILES">then</token>
 		<token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">telluranthr</token>
 		<token value="[te]1cccc1" valType="SMILES">telluroph</token>
