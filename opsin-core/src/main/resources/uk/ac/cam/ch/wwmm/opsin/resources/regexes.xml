@@ -213,7 +213,7 @@ does not define a CFG.
   <regex name="%cycloChain%" value = "(%cyclo%%straightChainGroups%)"/>
   <regex name="%cycloChainSubstituent%" value = "(%cyclo%%alkaneStem%)"/>
   <regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%%a%?%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
-  <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplierNotGroup%?%hwHeteroAtom%)*((%multiplierNotGroup%?%hwAneCompatible%)%hwAne%)|((%multiplierNotGroup%?%hwHeteroAtom%)*(%multiplierNotGroup%?%hwIneCompatible%)%hwIne%)|((%multiplierNotGroup%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
+  <regex name="%hantzschWidmanRing%" value = "((%newLocantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplierNotGroup%?%hwHeteroAtom%)*((%multiplierNotGroup%?%hwAneCompatible%)%hwAne%)|(((%multiplierNotGroup%?%hwHeteroAtom%)*(%multiplierNotGroup%?%hwIneCompatible%)|(%multiplierNotGroup%?%hwHeteroAtom%){2,})%hwIne%)|((%multiplierNotGroup%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
   <regex name="%fusionComponent%" value = "(%fusionRing%|(%locantThatNeedsBrackets%|%bracketedLocant%)?%fusionRingAcceptsFrontLocants%|%benzo%|%cycloChainSubstituent%%a%?|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
   <regex name="%cyclicUnsaturableHydrocarbonGroup%" value = "(%cyclicUnsaturableHydrocarbon%%a%?%unsaturationBlock%)" />
   <regex name="%naturalProductGroup%" value = "(%naturalProductRequiresUnsaturator%%a%?%unsaturationBlock%)" />

@@ -451,7 +451,7 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
-				state.fragManager.makeHeteroatom(atomOnParentFrag, heteroAtomInformation.get("SMILES"), false);
+				state.fragManager.replaceAtomWithSmiles(atomOnParentFrag, heteroAtomInformation.get("SMILES"));
 			}
 		}
 

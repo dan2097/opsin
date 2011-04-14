@@ -461,16 +461,20 @@ class StructureBuildingMethods {
 		}
 
 		for(int i=heteroatoms.size() -1;i >= 0;i--) {
-			Element heteroatom = heteroatoms.get(i);
-			String locant = heteroatom.getAttributeValue(LOCANT_ATR);
+			Element heteroatomEl = heteroatoms.get(i);
+			String locant = heteroatomEl.getAttributeValue(LOCANT_ATR);
 			if(locant!=null) {
-				String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
-				state.fragManager.makeHeteroatom(thisFrag.getAtomByLocantOrThrow(locant), atomSMILES, true);
-				if (heteroatom.getAttribute(LAMBDA_ATR)!=null){
-					thisFrag.getAtomByLocantOrThrow(locant).setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
+				Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
+				Atom atomToBeReplaced =thisFrag.getAtomByLocantOrThrow(locant);
+				if (heteroatom.getElement().equals(atomToBeReplaced.getElement()) && heteroatom.getCharge() == atomToBeReplaced.getCharge()){
+					throw new StructureBuildingException("The replacement term " +heteroatomEl.getValue() +" was used on an atom that already is a " + heteroatom.getElement());
 				}
-				heteroatoms.remove(heteroatom);
-				heteroatom.detach();
+				state.fragManager.replaceAtomWithAtom(thisFrag.getAtomByLocantOrThrow(locant), heteroatom, true);
+				if (heteroatomEl.getAttribute(LAMBDA_ATR)!=null){
+					thisFrag.getAtomByLocantOrThrow(locant).setLambdaConventionValency(Integer.parseInt(heteroatomEl.getAttributeValue(LAMBDA_ATR)));
+				}
+				heteroatoms.remove(heteroatomEl);
+				heteroatomEl.detach();
 			}
 		}
 	}
@@ -619,29 +623,43 @@ class StructureBuildingMethods {
         }
         int atomIndice =0;
 
-        for (Element heteroatom : heteroatoms) {
-            String atomSMILES = heteroatom.getAttributeValue(VALUE_ATR);
+        for (Element heteroatomEl : heteroatoms) {
+			Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
+			String heteroatomSymbol = heteroatom.getElement();
             //finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
-            if (atomIndice >=atomList.size()){
+            Atom atomToReplaceWithHeteroAtom =null;
+            for (; atomIndice < atomList.size(); atomIndice++) {
+            	Atom possibleAtom  = atomList.get(atomIndice);
+                if (possibleAtom.getType().equals(SUFFIX_TYPE_VAL)) {
+                	continue;
+                }
+                if ((heteroatomSymbol.equals(possibleAtom.getElement()) && heteroatom.getCharge() == possibleAtom.getCharge())){
+                	continue;//replacement would do nothing
+                }
+    			if(!possibleAtom.getElement().equals("C") && !heteroatomSymbol.equals("C")){
+    				if (possibleAtom.getElement().equals("O") && (heteroatomSymbol.equals("S") || heteroatomSymbol.equals("Se") || heteroatomSymbol.equals("Te"))){
+    					//special case for replacement of oxygen by chalcogen
+    				}
+    				else{
+    					//replacement of heteroatom by another heteroatom
+	    				continue;
+    				}
+    			}
+                if (ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(possibleAtom, heteroatom)) {
+                	atomToReplaceWithHeteroAtom = possibleAtom;
+                	break;
+                }
+			}
+            if (atomToReplaceWithHeteroAtom == null){
             	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
             }
-            Atom atomToReplaceWithHeteroAtom = atomList.get(atomIndice);
-            while (!ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES)) {
-            	atomIndice++;
-                if (atomIndice >=atomList.size()){
-                	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
-                }
-                atomToReplaceWithHeteroAtom = atomList.get(atomIndice);
-                if (atomToReplaceWithHeteroAtom.getType().equals(SUFFIX_TYPE_VAL)) {
-                	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
-                }
-            }
-            state.fragManager.makeHeteroatom(atomToReplaceWithHeteroAtom, atomSMILES, true);
-            if (heteroatom.getAttribute(LAMBDA_ATR) != null) {
-                atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
+            
+            state.fragManager.replaceAtomWithAtom(atomToReplaceWithHeteroAtom, heteroatom, true);
+            if (heteroatomEl.getAttribute(LAMBDA_ATR) != null) {
+                atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatomEl.getAttributeValue(LAMBDA_ATR)));
             }
             atomIndice++;
-            heteroatom.detach();
+            heteroatomEl.detach();
         }
 		if (thisFrag.getOutAtoms().size()>0){//assign any outAtoms that have not been set to a specific atom to a specific atom
 			for (OutAtom outAtom : thisFrag.getOutAtoms()) {

@@ -348,14 +348,14 @@ class ValencyChecker {
 	/** Check whether changing to a heteroatom will result in valency being exceeded
 	 * spareValency and outValency is taken into account
 	 * @param a atom you are interested in
-	 * @param heteroatom element symbol of heteroatom
+	 * @param the heteroatom atom which will be replacing it
      * @return
 	 */
-	static boolean checkValencyAvailableForReplacementByHeteroatom(Atom a, String heteroatom) {
+	static boolean checkValencyAvailableForReplacementByHeteroatom(Atom a, Atom heteroatom) {
 		int valency =a.getIncomingValency();
 		valency +=a.hasSpareValency() ? 1 : 0;
 		valency +=a.getOutValency();
-		Integer maxValOfHeteroAtom = getMaximumValency(heteroatom, 0);
+		Integer maxValOfHeteroAtom = getMaximumValency(heteroatom.getElement(), heteroatom.getCharge());
         return maxValOfHeteroAtom == null || valency <= maxValOfHeteroAtom;
 	}
 

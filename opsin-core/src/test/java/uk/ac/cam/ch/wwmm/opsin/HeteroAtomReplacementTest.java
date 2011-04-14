@@ -18,7 +18,7 @@ public class HeteroAtomReplacementTest {
 	
 	@Test
 	public void thia() throws StructureBuildingException{
-		fragManager.makeHeteroatom(a, "S", false);
+		fragManager.replaceAtomWithSmiles(a, "S");
 		assertEquals(0, a.getCharge());
 		assertEquals(0, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(2, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -26,7 +26,7 @@ public class HeteroAtomReplacementTest {
 
 	@Test
 	public void thionia() throws StructureBuildingException{
-		fragManager.makeHeteroatom(a, "[SH3+]", false);
+		fragManager.replaceAtomWithSmiles(a, "[SH3+]");
 		assertEquals(1, a.getCharge());
 		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -34,7 +34,7 @@ public class HeteroAtomReplacementTest {
 	
 	@Test
 	public void sulfanylia() throws StructureBuildingException{
-		fragManager.makeHeteroatom(a, "[SH+]", false);
+		fragManager.replaceAtomWithSmiles(a, "[SH+]");
 		assertEquals(1, a.getCharge());
 		assertEquals(-1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(1, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -42,7 +42,7 @@ public class HeteroAtomReplacementTest {
 	
 	@Test
 	public void sulfanida() throws StructureBuildingException{
-		fragManager.makeHeteroatom(a, "[SH-]", false);
+		fragManager.replaceAtomWithSmiles(a, "[SH-]");
 		assertEquals(-1, a.getCharge());
 		assertEquals(-1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(1, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -50,7 +50,7 @@ public class HeteroAtomReplacementTest {
 	
 	@Test
 	public void sulfanuida() throws StructureBuildingException{
-		fragManager.makeHeteroatom(a, "[SH3-]", false);
+		fragManager.replaceAtomWithSmiles(a, "[SH3-]");
 		assertEquals(-1, a.getCharge());
 		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -59,7 +59,7 @@ public class HeteroAtomReplacementTest {
 	@Test
 	public void replaceNeutralWithCharged() throws StructureBuildingException{
 		Atom a = new Atom(0, "C", mock(Fragment.class));
-		fragManager.makeHeteroatom(a, "[NH4+]", false);
+		fragManager.replaceAtomWithSmiles(a, "[NH4+]");
 		assertEquals(1, a.getCharge());
 		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(4, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -69,7 +69,7 @@ public class HeteroAtomReplacementTest {
 	public void replaceChargedWithEquallyCharged() throws StructureBuildingException{
 		Atom a = new Atom(0, "C", mock(Fragment.class));
 		a.addChargeAndProtons(1, -1);
-		fragManager.makeHeteroatom(a, "[NH4+]", false);
+		fragManager.replaceAtomWithSmiles(a, "[NH4+]");
 		assertEquals(1, a.getCharge());
 		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(4, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
@@ -79,6 +79,6 @@ public class HeteroAtomReplacementTest {
 	public void replaceChargedWithUnEquallyCharged() throws StructureBuildingException{
 		Atom a = new Atom(0, "C", mock(Fragment.class));
 		a.addChargeAndProtons(1, -1);
-		fragManager.makeHeteroatom(a, "[NH2-]", false);
+		fragManager.replaceAtomWithSmiles(a, "[NH2-]");
 	}
 }
