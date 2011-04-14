@@ -595,7 +595,7 @@ class FunctionalReplacement {
 					continue;
 				}
 				else{
-					state.fragManager.makeHeteroatom(atomToReplace, replacementSmiles, false);
+					state.fragManager.replaceAtomWithSmiles(atomToReplace, replacementSmiles);
 					if (prefixAssignmentAmbiguous){
 						ambiguousElementAtoms.add(atomToReplace);
 					}

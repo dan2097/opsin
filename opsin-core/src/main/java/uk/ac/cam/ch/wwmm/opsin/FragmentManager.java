@@ -186,34 +186,53 @@ class FragmentManager {
 		createBond(fromAtom, toAtom, bondOrder);
 	}
 
-	/** Converts an atom in a fragment to a different atomic symbol.
-	 * Charged atoms can also be specified using a SMILES formula eg. [NH4+]
+	/** Converts an atom in a fragment to a different atomic symbol described by a SMILES string
+	 * Charged atoms can also be specified eg. [NH4+]
 	 *
 	 * @param a The atom to change to a heteroatom
 	 * @param smiles The SMILES for one atom
-	 * @param assignLocant Whether a locant should be assigned to the heteroatom if the locant is not used elsewhere
-	 * @throws StructureBuildingException if the atom could not be found
+	 * @throws StructureBuildingException
 	 */
-	void makeHeteroatom(Atom a, String smiles, boolean assignLocant) throws StructureBuildingException {
-		String elementSymbol;
-		if(smiles.startsWith("[")) {
-			Atom heteroAtom = sBuilder.build(smiles, this).getFirstAtom();
-			elementSymbol =heteroAtom.getElement();
-			int replacementCharge =heteroAtom.getCharge();
-			if (replacementCharge!=0){
-				if (a.getCharge()==0){
-					a.addChargeAndProtons(replacementCharge, heteroAtom.getProtonsExplicitlyAddedOrRemoved());
-				}
-				else if (a.getCharge()==replacementCharge){
-					a.setProtonsExplicitlyAddedOrRemoved(heteroAtom.getProtonsExplicitlyAddedOrRemoved());
-				}
-				else{
-					throw new StructureBuildingException("Charge conflict between replacement term and atom to be replaced");
-				}
-			}
+	void replaceAtomWithSmiles(Atom a, String smiles) throws StructureBuildingException {
+		replaceAtomWithAtom(a, getHeteroatom(smiles), false);
+	}
+
+	/**
+	 * Converts the smiles for a heteroatom to an atom
+	 * @param smiles
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	Atom getHeteroatom(String smiles) throws StructureBuildingException {
+		Fragment heteroAtomFrag = sBuilder.build(smiles, this);
+		List<Atom> atomList = heteroAtomFrag.getAtomList();
+		if (atomList.size()!=1){
+			throw new StructureBuildingException("Heteroatom smiles described a fragment with multiple SMILES!");
 		}
-		else{
-			elementSymbol = smiles;
+		return atomList.get(0);
+	}
+	
+	/** Uses the information given in the given heteroatom to change the atomic symbol
+	 * and charge of the given atom
+	 *
+	 * @param a The atom to change to a heteroatom
+	 * @param heteroAtom The atom to copy element/charge properties from
+	 * @param assignLocant Whether a locant should be assigned to the heteroatom if the locant is not used elsewhere
+	 * @throws StructureBuildingException if a charge disagreement occurs
+	 */
+	void replaceAtomWithAtom(Atom a, Atom heteroAtom, boolean assignLocant) throws StructureBuildingException {
+		String elementSymbol =heteroAtom.getElement();
+		int replacementCharge =heteroAtom.getCharge();
+		if (replacementCharge!=0){
+			if (a.getCharge()==0){
+				a.addChargeAndProtons(replacementCharge, heteroAtom.getProtonsExplicitlyAddedOrRemoved());
+			}
+			else if (a.getCharge()==replacementCharge){
+				a.setProtonsExplicitlyAddedOrRemoved(heteroAtom.getProtonsExplicitlyAddedOrRemoved());
+			}
+			else{
+				throw new StructureBuildingException("Charge conflict between replacement term and atom to be replaced");
+			}
 		}
 		a.setElement(elementSymbol);
 		a.removeElementSymbolLocants();

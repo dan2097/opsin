@@ -194,7 +194,7 @@ class SMILESFragmentBuilder {
 			} else if(nextChar == '.'){
 				stack.peek().atom = null;
 			} else if(Character.isLetter(nextChar)) {//organic atoms
-		        String elementType = "" +nextChar;
+		        String elementType = String.valueOf(nextChar);
 		        boolean spareValency =false;
 		        if(Character.isUpperCase(nextChar)) {//normal atoms
 					if(tmpString.length() > 0 && Character.isLowerCase(tmpString.charAt(0)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
@@ -260,7 +260,7 @@ class SMILESFragmentBuilder {
 		        	throw new StructureBuildingException("No element found in square brackets");
 		        }
 		// elementType
-		        String elementType = "" + nextChar;
+		        String elementType = String.valueOf(nextChar);
 		        boolean spareValency = false;
 		        if(Character.isUpperCase(nextChar)) {//normal atoms
 					if(atomString.length() > 0 && Character.isLowerCase(atomString.charAt(0))) {
@@ -509,7 +509,7 @@ class SMILESFragmentBuilder {
 			Stack<StackFrame> stack, HashMap<String, StackFrame> closures,
 			String tmpString, Character nextChar)
 			throws StructureBuildingException {
-		String closure = "" + nextChar;
+		String closure = String.valueOf(nextChar);
 		if(nextChar == '%') {
 			if (tmpString.length() >=2 && Character.isDigit(tmpString.charAt(0)) && Character.isDigit(tmpString.charAt(1))) {
 				closure = tmpString.substring(0,2);
