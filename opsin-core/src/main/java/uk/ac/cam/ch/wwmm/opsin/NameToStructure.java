@@ -225,7 +225,7 @@ public class NameToStructure {
 		if (cmd.hasOption("h")){
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options]\n" +
-					"OPSIN accepts new line delimited names either interactively or in batch and can output CML, SMILES or InChI\n" +
+					"OPSIN accepts new line delimited names either interactively or in batch and can output CML, SMILES or InChI/StdInChI\n" +
 					"For batch use direct a new line seperated list of names to the program and direct the stdout to an output files e.g. " +
 					"java -jar opsin.jar -osmi < inputFile.name > outputFile.smiles", options);
 			System.exit(0);
@@ -245,11 +245,14 @@ public class NameToStructure {
 			interactiveSmilesOutput(nts, n2sconfig);
 		}
 		else if (outputType.equalsIgnoreCase("inchi")){
-			interactiveInchiOutput(nts, n2sconfig);
+			interactiveInchiOutput(nts, n2sconfig, false);
+		}
+		else if (outputType.equalsIgnoreCase("stdinchi")){
+			interactiveInchiOutput(nts, n2sconfig, true);
 		}
 		else{
 			System.err.println("Unrecognised output format: " + outputType);
-			System.err.println("Expected output types are \"cml\", \"smi\" and \"inchi\"");
+			System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\" and \"stdinchi\"");
 			System.exit(1);
 		}
 	}
@@ -263,7 +266,8 @@ public class NameToStructure {
 				"Allowed values are:\n" +
 				"cml for Chemical Markup Language\n" +
 				"smi for SMILES\n" +
-				"inchi for InChI");
+				"inchi for InChI\n" +
+				"stdinchi for StdInChI");
 		options.addOption(OptionBuilder.create("o"));
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
@@ -341,7 +345,7 @@ public class NameToStructure {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static void interactiveInchiOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws Exception {
+	private static void interactiveInchiOutput(NameToStructure nts, NameToStructureConfig n2sconfig, boolean produceStdInChI) throws Exception {
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
 		Class c;
 		try {
@@ -350,7 +354,13 @@ public class NameToStructure {
 			System.err.println("Could not initialise NameToInChI module. Is it on your classpath?");
 			throw new RuntimeException(e);
 		}
-		Method m = c.getMethod("convertResultToInChI", new Class[]{OpsinResult.class});
+		Method m;
+		if (produceStdInChI){
+			m = c.getMethod("convertResultToStdInChI", new Class[]{OpsinResult.class});
+		}
+		else{
+			m = c.getMethod("convertResultToInChI", new Class[]{OpsinResult.class});
+		}
 
 		String name = stdinReader.readLine();
 		while(name !=null) {
