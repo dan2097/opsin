@@ -22,8 +22,8 @@ import net.sf.jniinchi.JniInchiStereo0D;
 import net.sf.jniinchi.JniInchiWrapper;
 
 /**
- * Allows the conversion of OPSIN's output into InChIs
- * Also can be used as wrapper to directly convert chemical names to InChIs
+ * Allows the conversion of OPSIN's output into (Std)InChIs
+ * Also can be used as wrapper to directly convert chemical names to (Std)InChIs
  * @author dl387
  *
  */
@@ -35,7 +35,7 @@ public class NameToInchi {
 		n2s = NameToStructure.getInstance();
 	}
 
-	/**Parses a chemical name, returning an unambiguous InChI representation of the molecule.
+	/**Parses a chemical name, returning an InChI representation of the molecule.
 	 *
 	 * @param name The chemical name to parse.
 	 * @return An InChI string, containing the parsed molecule, or null if the molecule would not parse.
@@ -45,16 +45,43 @@ public class NameToInchi {
 		return convertResultToInChI(result);
 	}
 	
+	/**Parses a chemical name, returning a StdInChI representation of the molecule.
+	 * Note that chemical names typically specify an exact tautomer which is not representable in StdInChI
+	 * Use {@link #parseToInchi(String)} if you want to represent the exact tautomer using a fixed hydrogen layer
+	 *
+	 * @param name The chemical name to parse.
+	 * @return A StdInChI string, containing the parsed molecule, or null if the molecule would not parse.
+	 */
+	public String parseToStdInchi(String name) {
+		OpsinResult result = n2s.parseChemicalName(name);
+		return convertResultToStdInChI(result);
+	}
+	
 	/**
 	 * Converts an OPSIN result to InChI. Null is returned if this conversion fails
 	 * @param result
 	 * @return String InChI
 	 */
 	public static String convertResultToInChI(OpsinResult result){
+		return convertResultToInChI(result, false);
+	}
+	
+	/**
+	 * Converts an OPSIN result to StdInChI. Null is returned if this conversion fails
+	 * Note that chemical names typically specify an exact tautomer which is not representable in StdInChI
+	 * Use {@link #convertResultToInChI(OpsinResult)} if you want to represent the exact tautomer using a fixed hydrogen layer
+	 * @param result
+	 * @return String InChI
+	 */
+	public static String convertResultToStdInChI(OpsinResult result){
+		return convertResultToInChI(result, true);
+	}
+	
+	private static String convertResultToInChI(OpsinResult result, boolean produceStdInChI){
 		if (result.getStructure() !=null){
 			String inchi = null;
 			try{
-				inchi = opsinFragmentToInchi(result.getStructure());
+				inchi = opsinFragmentToInchi(result.getStructure(), produceStdInChI);
 			}
 			catch (Exception e) {
 				if (LOG.isDebugEnabled()){
@@ -74,11 +101,18 @@ public class NameToInchi {
 		return null;
 	}
 
-	private static String opsinFragmentToInchi(Fragment frag) throws JniInchiException{
+	private static String opsinFragmentToInchi(Fragment frag, boolean produceStdInChI) throws JniInchiException{
 		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<Integer, JniInchiAtom>();
-		List<INCHI_OPTION> options = new ArrayList<INCHI_OPTION>();
-		options.add(INCHI_OPTION.FixedH);
-		JniInchiInput input = new JniInchiInput(options);
+		JniInchiInput input;
+		if (produceStdInChI){
+			input = new JniInchiInput();
+		}
+		else{
+			List<INCHI_OPTION> options = new ArrayList<INCHI_OPTION>();
+			options.add(INCHI_OPTION.FixedH);
+			input = new JniInchiInput(options);
+		}
+
 		List<Atom> atomList =frag.getAtomList();
 		// Generate atoms
 		for (Atom atom : atomList) {
