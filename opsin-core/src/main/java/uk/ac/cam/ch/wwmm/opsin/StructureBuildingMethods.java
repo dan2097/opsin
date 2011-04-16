@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 
 import nu.xom.Attribute;
@@ -1502,27 +1503,60 @@ class StructureBuildingMethods {
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
 			Stack<Element> bracketted = new Stack<Element>();
-			for (Element bracketOrSubOrRoot : siblings) {
-				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot)<=currentElement.indexOf(startingElement)){
-					continue;
-				}
-				if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
-					continue;
-				}
-				if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
-					if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
-						stack.add(bracketOrSubOrRoot);
+			if (!doneFirstIteration){//on the first iteration, ignore elements before the starting element and favour the element directly after the starting element (conditions apply)
+				int indexOfStartingEl = currentElement.indexOf(startingElement);
+				Element substituentToTryFirst =null;
+				for (Element bracketOrSubOrRoot : siblings) {
+					int indexOfCurrentEl = currentElement.indexOf(bracketOrSubOrRoot);
+					if (indexOfCurrentEl <= indexOfStartingEl){
+						continue;
+					}
+					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
+						continue;
+					}
+					if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
+							stack.add(bracketOrSubOrRoot);
+						}
+						else{
+							bracketted.add(bracketOrSubOrRoot);
+						}
 					}
 					else{
-						bracketted.add(bracketOrSubOrRoot);
+						if ((indexOfCurrentEl == indexOfStartingEl +1) && bracketOrSubOrRoot.getAttribute(LOCANT_EL)==null &&
+								matchNumericLocant.matcher(locant).matches() &&
+								!((Element)XOMTools.getPrevious(bracketOrSubOrRoot)).getLocalName().equals(HYPHEN_EL)){
+							substituentToTryFirst = bracketOrSubOrRoot;
+						}
+						else {
+							stack.add(bracketOrSubOrRoot);
+						}
 					}
 				}
-				else{
-					stack.add(bracketOrSubOrRoot);
+				if (substituentToTryFirst !=null){
+					stack.add(substituentToTryFirst);
+				}
+				doneFirstIteration =true;
+			}
+			else {
+				for (Element bracketOrSubOrRoot : siblings) {
+					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
+						continue;
+					}
+					if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
+							stack.add(bracketOrSubOrRoot);
+						}
+						else{
+							bracketted.add(bracketOrSubOrRoot);
+						}
+					}
+					else{
+						stack.add(bracketOrSubOrRoot);
+					}
 				}
 			}
 			stack.addAll(0, bracketted);//locanting into brackets is rarely the desired answer so place at the bottom of the stack
-			doneFirstIteration =true;
 		}
 		return monoNuclearHydride;
 	}

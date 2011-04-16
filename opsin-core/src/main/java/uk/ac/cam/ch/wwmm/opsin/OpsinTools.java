@@ -23,7 +23,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  *
  */
 class OpsinTools {
-	private final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	private final static char endOfSubstituent = '\u00e9';
 	private final static char endOfMainGroup = '\u00e2';
 	private final static char endOfFunctionalTerm = '\u00FB';
