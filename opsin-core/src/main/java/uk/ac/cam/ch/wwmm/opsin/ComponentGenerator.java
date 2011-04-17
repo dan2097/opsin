@@ -165,7 +165,7 @@ class ComponentGenerator {
 				}
 			}
 
-			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL) && nextEl.getValue().equals("phen") && !"e".equals(nextEl.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR))){//deals with tetra phen yl vs tetraphen yl
+			if (multiplierNum >=4 && nextEl !=null && nextEl.getLocalName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL) && nextEl.getValue().equals("phen") && !"e".equals(nextEl.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR))){//deals with tetra phenyl vs tetraphen yl
 				Element possibleLocantOrMultiplierOrSuffix = (Element) XOMTools.getNextSibling(nextEl);
 				if (possibleLocantOrMultiplierOrSuffix!=null){//null if not used as substituent
 					if (possibleLocantOrMultiplierOrSuffix.getLocalName().equals(SUFFIX_EL)){//for phen the aryl substituent, expect an adjacent suffix e.g. phenyl, phenoxy

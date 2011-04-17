@@ -2281,6 +2281,7 @@ class ComponentProcessor {
 				}
 			}
 
+			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
 			Element elementToResolve;//temporary element containing elements that should be resolved before the ring is duplicated
 			Element nextEl =(Element) XOMTools.getNextSibling(multiplier);
 			if (nextEl.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
@@ -2299,11 +2300,10 @@ class ComponentProcessor {
 				}
 			}
 			else{
-				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants, state);
+				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants.size(), fragmentToResolveAndDuplicate.getOutAtoms().size(),  state);
 			}
 
 			List<Element> suffixes = XOMTools.getChildElementsWithTagName(elementToResolve, SUFFIX_EL);
-			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
 			resolveSuffixes(state, group, suffixes);
 			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
@@ -2368,10 +2368,10 @@ class ComponentProcessor {
 	 * @return 
 	 * @throws ComponentGenerationException 
 	 */
-	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, List<List<String>> ringJoiningLocants, BuildState state) throws ComponentGenerationException {
+	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, int ringJoiningLocants, int outAtomCount,  BuildState state) throws ComponentGenerationException {
 		Element elementToResolve = new Element(SUBSTITUENT_EL);
 		boolean groupFound = false;
-		boolean inlineSuffixSeen = false;
+		boolean inlineSuffixSeen = outAtomCount > 0;
 		Element currentEl = (Element) XOMTools.getNextSibling(multiplier);
 		while (currentEl !=null){
 			Element nextEl = (Element) XOMTools.getNextSibling(currentEl);
@@ -2382,7 +2382,7 @@ class ComponentProcessor {
 			else if (currentEl.getLocalName().equals(SUFFIX_EL)){
 				state.xmlFragmentMap.get(currentEl);
 				if (!inlineSuffixSeen && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) ==null
-						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants.size()==0)) && state.xmlFragmentMap.get(currentEl)==null){
+						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants==0)) && state.xmlFragmentMap.get(currentEl)==null){
 					inlineSuffixSeen = true;
 					currentEl.detach();
 					elementToResolve.appendChild(currentEl);
@@ -3512,7 +3512,7 @@ class ComponentProcessor {
 						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
 							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
 							String type = group.getAttributeValue(TYPE_ATR);
-							if (((group.getValue().equals("phen")|| (group.getValue().equals("benz")&& !locantEl.getValue().equals("alpha")))&& ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)))|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+							if ((group.getValue().equals("benz")&& !locantEl.getValue().equals("alpha")&& ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)))|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
 								continue;
 							}
 						}
