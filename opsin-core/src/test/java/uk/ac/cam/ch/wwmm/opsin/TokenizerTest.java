@@ -177,13 +177,12 @@ public class TokenizerTest {
 		w = parse.getWords().get(2);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Six tokens", 6, tokens.size());
+		assertEquals("Five tokens", 5, tokens.size());
 		assertEquals("First token: m-", "m-", tokens.get(0));
 		assertEquals("Second token: chloro", "chloro", tokens.get(1));
 		assertEquals("Third token: end of  substituent", "", tokens.get(2));
-		assertEquals("Fourth token: phen", "phen", tokens.get(3));
-		assertEquals("Fifth token: yl", "yl", tokens.get(4));
-		assertEquals("Sixth token: end of  substituent", "", tokens.get(5));
+		assertEquals("Fourth token: phenyl", "phenyl", tokens.get(3));
+		assertEquals("Fifth token: end of  substituent", "", tokens.get(4));
 		
 		w = parse.getWords().get(3);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -221,13 +220,12 @@ public class TokenizerTest {
 		w = parse.getWords().get(2);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Six tokens", 6, tokens.size());
+		assertEquals("Five tokens", 5, tokens.size());
 		assertEquals("First token: m-", "m-", tokens.get(0));
 		assertEquals("Second token: chloro", "chloro", tokens.get(1));
 		assertEquals("Third token: end of  substituent", "", tokens.get(2));
-		assertEquals("Fourth token: phen", "phen", tokens.get(3));
-		assertEquals("Fifth token: yl", "yl", tokens.get(4));
-		assertEquals("Sixth token: end of  substituent", "", tokens.get(5));
+		assertEquals("Fourth token: phenyl", "phenyl", tokens.get(3));
+		assertEquals("Fifth token: end of  substituent", "", tokens.get(4));
 		
 		w = parse.getWords().get(3);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
@@ -269,44 +267,44 @@ public class TokenizerTest {
 
 	@Test
 	public void tokenizeDoesNotTokenizeUnTokenizableName() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
+		TokenizationResult result =tokenizer.tokenize("ethyl acet|foo toluene", true);
 		assertEquals(false, result.isSuccessfullyTokenized());
 	}
 
 	@Test
 	public void tokenizePreservesSpacesInUninterpretableNameLR1() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
-		assertEquals("phen|foo toluene", result.getUninterpretableName());
+		TokenizationResult result =tokenizer.tokenize("ethyl acet|foo toluene", true);
+		assertEquals("acet|foo toluene", result.getUninterpretableName());
 	}
 
 	@Test
 	public void tokenizePreservesSpacesInUnparsableNameLR1() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
+		TokenizationResult result =tokenizer.tokenize("ethyl acet|foo toluene", true);
 		assertEquals("|foo toluene", result.getUnparsableName());
 	}
 
 	@Test
 	public void tokenizePreservesSpacesInUnparsedNameLR1() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("ethyl phen|foo toluene", true);
-		assertEquals("phen|foo toluene", result.getUnparsedName());
+		TokenizationResult result =tokenizer.tokenize("ethyl acet|foo toluene", true);
+		assertEquals("acet|foo toluene", result.getUnparsedName());
 	}
 	
 	@Test
 	public void tokenizePreservesSpacesInUninterpretableNameLR2() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("eth yl phen|foo toluene", true);
-		assertEquals("phen|foo toluene", result.getUninterpretableName());
+		TokenizationResult result =tokenizer.tokenize("eth yl acet|foo toluene", true);
+		assertEquals("acet|foo toluene", result.getUninterpretableName());
 	}
 
 	@Test
 	public void tokenizePreservesSpacesInUnparsableNameLR2() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("eth yl phen|foo toluene", true);
+		TokenizationResult result =tokenizer.tokenize("eth yl acet|foo toluene", true);
 		assertEquals("|foo toluene", result.getUnparsableName());
 	}
 
 	@Test
 	public void tokenizePreservesSpacesInUnparsedNameLR2() throws ParsingException{
-		TokenizationResult result =tokenizer.tokenize("eth yl phen|foo toluene", true);
-		assertEquals("phen|foo toluene", result.getUnparsedName());
+		TokenizationResult result =tokenizer.tokenize("eth yl acet|foo toluene", true);
+		assertEquals("acet|foo toluene", result.getUnparsedName());
 	}
 
 	@Test

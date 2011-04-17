@@ -129,7 +129,8 @@ does not define a CFG.
   <regex name="%dlStereochemistry%" value="╛"/>
   <regex name="%subtractivePrefix%" value="┐"/>
   <regex name="%canBeDlPRefixedSimpleGroup%" value="└"/>
-  <!--up to ascii 192 used-->
+	<regex name="%trivialRingSubstituent%" value="┴"/>
+  <!--up to ascii 193 used-->
 
 <!-- composite regexes-->
 
@@ -218,7 +219,7 @@ does not define a CFG.
   <regex name="%cyclicUnsaturableHydrocarbonGroup%" value = "(%cyclicUnsaturableHydrocarbon%%a%?%unsaturationBlock%)" />
   <regex name="%naturalProductGroup%" value = "(%naturalProductRequiresUnsaturator%%a%?%unsaturationBlock%)" />
   <regex name="%trivialRingSubstituentGroup%" value = "(%bracketedLocant%?%trivialRingSubstituentAnySuffix%%suffixGroup%)" />
-  <regex name="%trivialRingSubstituentSub%" value = "(%bracketedLocant%?(%trivialRingSubstituentAnySuffix%|%trivialRingSubstituentInlineOnly%)%inlineSuffixGroup%)" />
+  <regex name="%trivialRingSubstituentSub%" value = "(%bracketedLocant%?(%trivialRingSubstituentAnySuffix%|%trivialRingSubstituentInlineOnly%)%inlineSuffixGroup%|%trivialRingSubstituent%)" />
 <!-- allows abbreviated alkanes e.g. bicyclo[2.2.2]octyl instead of bicyclo[2.2.2]octanyl-->
   <regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
   <regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%)"/>

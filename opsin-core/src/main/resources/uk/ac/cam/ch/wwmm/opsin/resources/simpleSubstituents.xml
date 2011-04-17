@@ -132,7 +132,8 @@
 		<token value="=NO" labels="none" valType="SMILES">oximino</token>
 		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="N locant4" outIDs="10" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetidino</token>
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="OCC locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetyl</token>
-		<token value="-Oc1ccccc1" labels="/1/2/3/4/5/6" valType="SMILES">phenoxyl</token>
+		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">phenoxy</token>
+		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">phenoxyl</token>
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2,ortho////3,meta/4,para////5/6///" valType="SMILES">picryl</token>
 		<token value="-C(C)C(C)(C)C" labels="none" valType="SMILES">pinacolyl</token>
 		<token value="-N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperazino</token>
