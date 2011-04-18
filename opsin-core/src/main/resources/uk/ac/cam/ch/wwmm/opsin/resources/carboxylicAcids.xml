@@ -83,6 +83,7 @@
     <token value="CCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">stear</token>
     <token value="CCCCCCCC/C=C\CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ole</token>
     <token value="CCCCCCCC\C=C\CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">elaid</token>
+		<token value="Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benz</token><!--benzal/benzol are trivial names-->
     <token value="CC(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">hydratrop</token>
     <token value="CC(=C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">atrop</token>
     <token value="CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cinnam</token>

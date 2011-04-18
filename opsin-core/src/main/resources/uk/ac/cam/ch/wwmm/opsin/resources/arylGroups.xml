@@ -45,6 +45,7 @@
 		<token value="C1#CC=CC=C1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzyn</token>
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">betacarbolin</token>
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">beta-carbolin</token>
+		<token value="c1(ccccc1)CCc2ccccc2" labels="1/2/3/4/5/6/alpha/alpha'/1'/2'/3'/4'/5'/6'" valType="SMILES">bibenzyl</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthren</token>
 		<token value="C123C4CC5CC1.C25(C)C.C3.O4" labels="1/2/3/4/5/6/7/8/9/10/" valType="SMILES">borneol</token>
 		<token value="N1(C)c(=O)N(C)c2ncN(C)c2c1=O" labels="1//2//3//4/9/8/7//5/6/" valType="SMILES">caffein</token>
