@@ -991,7 +991,7 @@ class ComponentProcessor {
 					}
 					else if (elName.equals(RINGASSEMBLYMULTIPLIER_EL)&& afterLocant.equals(XOMTools.getNextSibling(locant))){//e.g. 1,1'-biphenyl
 						multiplierEl = afterLocant;
-						if (!FragmentTools.allAtomsInRingAreIdentical(state.xmlFragmentMap.get(group)) && !group.getValue().equals("benz")){//if all atoms are identical and not bibenzyl then the locant may refer to suffixes
+						if (!FragmentTools.allAtomsInRingAreIdentical(state.xmlFragmentMap.get(group))){//if all atoms are identical then the locant may refer to suffixes
 							break;
 						}
 					}
@@ -3512,7 +3512,7 @@ class ComponentProcessor {
 						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
 							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
 							String type = group.getAttributeValue(TYPE_ATR);
-							if ((group.getValue().equals("benz")&& !locantEl.getValue().equals("alpha")&& ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)))|| type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+							if (type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
 								continue;
 							}
 						}
