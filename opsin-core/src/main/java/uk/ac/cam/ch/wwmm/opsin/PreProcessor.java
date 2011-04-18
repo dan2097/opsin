@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 class PreProcessor {
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
 	private static final Pattern MATCH_SULPH = Pattern.compile("sulph", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MATCH_DOT_GREEK_DOT = Pattern.compile("\\.(alpha|beta|gamma|delta|epsilon|zeta|eta|omega)\\.", Pattern.CASE_INSENSITIVE);
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
 	private static final String AMIDE = "amide";
@@ -57,13 +58,13 @@ class PreProcessor {
 			throw new PreProcessingException("Amide is a generic term rather than a specific chemical");//amide
 		}
 		chemicalName = processDollarPrefixedGreeks(chemicalName);
+		chemicalName = processDotSurroundedGreeks(chemicalName);
 		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
 		chemicalName = MATCH_SULPH.matcher(chemicalName).replaceAll("sulf");//correct British spelling to the IUPAC spelling
 		return chemicalName;
 	}
 
 	private static String processDollarPrefixedGreeks(String chemicalName) {
-		//StringTools.unicodeToLatin(chemicalName);
 		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
 		while (m.find()){
 			if (chemicalName.length()>m.end()){
@@ -73,6 +74,20 @@ class PreProcessor {
 					m = MATCH_DOLLAR.matcher(chemicalName);
 				}
 			}
+		}
+		return chemicalName;
+	}
+	
+	/**
+	 * Removes dots around greek letters e.g. .alpha. -->alpha
+	 * @param chemicalName
+	 * @return
+	 */
+	private static String processDotSurroundedGreeks(String chemicalName) {
+		Matcher m = MATCH_DOT_GREEK_DOT.matcher(chemicalName);
+		while (m.find()){
+			chemicalName = chemicalName.substring(0, m.start()) + m.group(1) + chemicalName.substring(m.end());
+			m = MATCH_DOT_GREEK_DOT.matcher(chemicalName);
 		}
 		return chemicalName;
 	}
