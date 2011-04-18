@@ -54,4 +54,14 @@ public class PreProcessorTest {
 	public void testPreProcessConvertsSulphToSulf() throws PreProcessingException {
 		assertEquals("Converts 'sulph' to 'sulph'", "sulfur dioxide", PreProcessor.preProcess("sulphur dioxide"));
 	}
+	
+	@Test
+	public void testRemovalOfDotsFromGreekWords1() throws PreProcessingException {
+		assertEquals("Converts '.alpha.' to 'alpha'", "alpha-methyl-toluene", PreProcessor.preProcess(".alpha.-methyl-toluene"));
+	}
+	
+	@Test
+	public void testRemovalOfDotsFromGreekWords2() throws PreProcessingException {
+		assertEquals("alphabetaeta", PreProcessor.preProcess(".alpha..beta..eta."));
+	}
 }
