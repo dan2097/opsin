@@ -169,6 +169,36 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
+	public void testDashInsteadOfComma() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("(NZ,2E-R)");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(3, children.size());
+		Element newStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
+		assertEquals("N", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("Z", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		
+		Element newStereochemistryEl2 = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getLocalName());
+		assertEquals("2", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
+		assertEquals("E", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
+		
+		Element newStereochemistryEl3 = children.get(2);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl3.getLocalName());
+		assertEquals(null, newStereochemistryEl3.getAttributeValue(LOCANT_ATR));
+		assertEquals("R", newStereochemistryEl3.getAttributeValue(VALUE_ATR));
+		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl3.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
 	public void testLocantedCisTrans() throws ComponentGenerationException {
 		//XML for 3-cis,5-trans:
 		Element substituent = new Element(SUBSTITUENT_EL);
