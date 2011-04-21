@@ -199,6 +199,54 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
+	public void testBracketedLocantedCisTrans() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("(3cis,5trans)");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(2, children.size());
+		Element newStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
+		assertEquals("3", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("cis", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(CISORTRANS_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		
+		Element newStereochemistryEl2 = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getLocalName());
+		assertEquals("5", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
+		assertEquals("trans", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(CISORTRANS_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testBracketedUnlocantedCisTrans() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("(5S-trans)");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(2, children.size());
+		Element newStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
+		assertEquals("5", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("S", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		
+		Element newStereochemistryEl2 = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getLocalName());
+		assertEquals(null, newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
+		assertEquals("trans", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(CISORTRANS_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
 	public void testLocantedCisTrans() throws ComponentGenerationException {
 		//XML for 3-cis,5-trans:
 		Element substituent = new Element(SUBSTITUENT_EL);
