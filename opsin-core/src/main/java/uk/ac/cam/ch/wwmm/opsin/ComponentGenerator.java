@@ -80,6 +80,7 @@ class ComponentGenerator {
 	private final static Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private final static Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
 	private final static Pattern matchComma =Pattern.compile(",");
+	private final static Pattern matchCommaOrDash =Pattern.compile("[,-]");
 	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchHdigit =Pattern.compile("H\\d");
 	private final static Pattern matchDigit =Pattern.compile("\\d+");
@@ -725,7 +726,7 @@ class ComponentGenerator {
 				txt = starMatcher.replaceAll("");
 				if (!txt.startsWith("rac-")){
 					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
-					String[] stereoChemistryDescriptors = matchComma.split(txt);
+					String[] stereoChemistryDescriptors = matchCommaOrDash.split(txt);
 					List<String> locants = new ArrayList<String>();
                     for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
                         if (stereoChemistryDescriptor.length() > 1) {
