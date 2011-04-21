@@ -1283,12 +1283,39 @@ class ComponentProcessor {
 			allGroups.remove(primaryConjunctiveGroup);
 			
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(primaryConjunctiveGroup);
-			int multiplier =1;
+			//label atoms appropriately
+			boolean alphaIsPosition1 = atomList.get(0).getIncomingValency() < 3;
+			int counter =0;
+			for (int i = (alphaIsPosition1 ? 0 : 1); i < atomList.size(); i++) {
+				Atom a = atomList.get(i);
+				if (counter==0){
+					a.addLocant("alpha");
+				}
+				else if (counter==1){
+					a.addLocant("beta");
+				}
+				else if (counter==2){
+					a.addLocant("gamma");
+				}
+				else if (counter==3){
+					a.addLocant("delta");
+				}
+				else if (counter==4){
+					a.addLocant("epsilon");
+				}
+				else if (counter==5){
+					a.addLocant("zeta");
+				}
+				else if (counter==6){
+					a.addLocant("eta");
+				}
+				counter++;
+			}
 			if (MULTIPLIER_EL.equals(possibleMultiplier.getLocalName())){
-				multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				int multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				for (int i = 1; i < multiplier; i++) {
 					Element conjunctiveSuffixGroup = new Element(primaryConjunctiveGroup);
-					Fragment newFragment = state.fragManager.copyFragment(primaryConjunctiveFrag);
+					Fragment newFragment = state.fragManager.copyAndRelabelFragment(primaryConjunctiveFrag, i);
 					state.xmlFragmentMap.put(conjunctiveSuffixGroup, newFragment);
 					conjunctiveGroups.add(conjunctiveSuffixGroup);
 					XOMTools.insertAfter(primaryConjunctiveGroup, conjunctiveSuffixGroup);
@@ -1304,36 +1331,6 @@ class ComponentProcessor {
 						conjunctiveGroups.get(i).addAttribute(new Attribute(LOCANT_ATR, locants[i]));
 					}
 					possibleLocant.detach();
-				}
-			}
-			if (multiplier==1){
-				//label atoms appropriately
-				boolean alphaIsPosition1 = atomList.get(0).getIncomingValency() < 3;
-				int counter =0;
-				for (int i = (alphaIsPosition1 ? 0 : 1); i < atomList.size(); i++) {
-					Atom a = atomList.get(i);
-					if (counter==0){
-						a.addLocant("alpha");
-					}
-					else if (counter==1){
-						a.addLocant("beta");
-					}
-					else if (counter==2){
-						a.addLocant("gamma");
-					}
-					else if (counter==3){
-						a.addLocant("delta");
-					}
-					else if (counter==4){
-						a.addLocant("epsilon");
-					}
-					else if (counter==5){
-						a.addLocant("zeta");
-					}
-					else if (counter==6){
-						a.addLocant("eta");
-					}
-					counter++;
 				}
 			}
 		}
