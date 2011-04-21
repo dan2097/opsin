@@ -40,7 +40,6 @@
 		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">4,4'-benzidin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzen</token>
 		<token value="c1(ccccc1)C(=O)C(O)c2ccccc2" labels="1/2/3/4/5/6///alpha//1'/2'/3'/4'/5'/6'" valType="SMILES">benzoin</token>
-		<token value="c1(ccccc1)C(=O)c2ccccc2" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'" valType="SMILES">benzophenon</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="=O locant1;=O locant4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzoquinon</token>
 		<token value="C1#CC=CC=C1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzyn</token>
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">betacarbolin</token>
@@ -70,6 +69,7 @@
 		<token value="o1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES" addGroup="=O locant4" frontLocantsExpected="2,3,4,5,6,7,8">chromon</token>
 		<token value="chrysene" valType="dbkey">chrysen</token>
 		<token value="cinnoline" valType="dbkey">cinnolin</token>
+		<token value="n1ccccc1" labels="1/2/3/4/5/6" valType="SMILES" addGroup="C locant2;C locant4;C locant6" frontLocantsExpected="2,3,4,5,6">collidin</token>
 		<token value="o1c(=O)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a" valType="SMILES">coumarin</token>
 		<token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coronen</token>
 		<token value="c1ccccc1O" labels="2,ortho/3,meta/4,para/5/6/1/" valType="SMILES" addGroup="C locant2 alpha" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresol</token>

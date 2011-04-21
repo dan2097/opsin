@@ -67,7 +67,7 @@ class FusedRingBuilder {
 	}
 
 	/**
-	 * Combined the fragments assoicated with the given groups into a fused ring
+	 * Combined the fragments associated with the given groups into a fused ring
 	 * @param state
 	 * @param groups
 	 * @throws StructureBuildingException
