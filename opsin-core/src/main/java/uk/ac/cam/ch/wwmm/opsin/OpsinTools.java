@@ -24,6 +24,11 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  */
 class OpsinTools {
 	final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
+	static final Pattern matchSemiColon = Pattern.compile(";");
+	static final Pattern matchColon = Pattern.compile(":");
+	static final Pattern matchComma = Pattern.compile(",");
+	static final Pattern matchDash = Pattern.compile("-");
+	static final Pattern matchSlash = Pattern.compile("/");
 	private final static char endOfSubstituent = '\u00e9';
 	private final static char endOfMainGroup = '\u00e2';
 	private final static char endOfFunctionalTerm = '\u00FB';
