@@ -62,6 +62,14 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
+	public void testFusedRingNomenclature() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "fusedRings.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+	
+	@Test
 	public void testSpiroNomenclature() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
