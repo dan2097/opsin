@@ -1,0 +1,1 @@
+cyclopenta[1,2-b:5,1-b']bis[1,4]oxathiine	InChI=1S/C9H6O2S2/c1-2-8-9(11-4-5-12-8)7(1)10-3-6-13-9/h1-6H
