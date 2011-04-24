@@ -1,8 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -102,10 +102,6 @@ class SMILESFragmentBuilder {
 		aromaticAtoms.add("te");
 	}
 
-	private static final Pattern matchComma =Pattern.compile(",");
-	private static final Pattern matchSlash =Pattern.compile("/");
-
-
 	/**Build a Fragment based on a SMILES string, with a null type/subType.
 	 *
 	 * @param smiles The SMILES string to build from.
@@ -145,7 +141,7 @@ class SMILESFragmentBuilder {
 			labelMapping = NUMERIC_LABELS_VAL;
 		}
 		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
-			labelMap = matchSlash.split(labelMapping, -1);//place slash delimited labels into an array
+			labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
 		}
 		int currentNumber = 1;
 		Fragment currentFrag = new Fragment(type, subType);
@@ -217,7 +213,7 @@ class SMILESFragmentBuilder {
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
-					String labels[] = matchComma.split(labelMap[currentNumber-1]);
+					String labels[] = MATCH_COMMA.split(labelMap[currentNumber-1]);
                     for (String label : labels) {
                         if (!label.equals("")) {
                             atom.addLocant(label);
@@ -300,7 +296,7 @@ class SMILESFragmentBuilder {
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
-					String labels[] = matchComma.split(labelMap[currentNumber-1]);
+					String labels[] = MATCH_COMMA.split(labelMap[currentNumber-1]);
                     for (String label : labels) {
                         if (!label.equals("")) {
                             atom.addLocant(label);

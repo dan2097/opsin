@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import nu.xom.Element;
@@ -26,8 +26,6 @@ import nu.xom.Element;
  *
  */
 class StereochemistryHandler {
-
-	private final static Pattern matchSlash = Pattern.compile("/");
 	
 	/**
 	 * Master method for assigning and processing stereochemistry elements
@@ -721,7 +719,7 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	private static void applyAlphaBetaStereochemistryToStereoCentre(Atom stereoAtom, Fragment fragment, String alphaBetaClockWiseAtomOrdering, String alphaOrBeta) throws StructureBuildingException {
-		List<String> ringOrder = StringTools.arrayToList(matchSlash.split(alphaBetaClockWiseAtomOrdering));
+		List<String> ringOrder = StringTools.arrayToList(MATCH_SLASH.split(alphaBetaClockWiseAtomOrdering));
 		int positionInList = ringOrder.indexOf(stereoAtom.getFirstLocant());
 		if (stereoAtom.getAtomIsInACycle() && positionInList!=-1){
 			Atom[] atomRefs4 = new Atom[4];

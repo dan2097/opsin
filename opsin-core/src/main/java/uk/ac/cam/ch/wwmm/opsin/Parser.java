@@ -12,6 +12,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /** For a list of integers, generate all lists of non-negative integers where all
  * of the list members are strictly lower than their corresponding integer in the
@@ -77,8 +78,6 @@ class Parser {
 	
 	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
 	private final static Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
-	private final static Pattern matchColon = Pattern.compile(":");
-	private final static Pattern matchForwardSlash = Pattern.compile("/");
 
 	/**
 	 * No-argument constructor. Uses ResouceGetter found at
@@ -213,9 +212,9 @@ class Parser {
 	static Integer[] processStoichometryIndication(String ratioString) throws ParsingException {
 		ratioString = ratioString.trim();
 		ratioString = ratioString.substring(1, ratioString.length()-1);
-		String[] ratioStrings = matchColon.split(ratioString);
+		String[] ratioStrings = MATCH_COLON.split(ratioString);
 		if (ratioStrings.length ==1){
-			ratioStrings = matchForwardSlash.split(ratioString);
+			ratioStrings = MATCH_SLASH.split(ratioString);
 		}
 		Integer[] componentRatios = new Integer[ratioStrings.length];
 		for (int i = 0; i < ratioStrings.length; i++) {

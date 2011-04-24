@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**
  * Tools for converting CAS nomenclature into IUPAC nomenclature.
@@ -14,7 +15,6 @@ import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 class CASTools {
 
 	private static final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchSpace = Pattern.compile(" ");
 	private static final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*");
 	private static final Pattern matchCommaSpace = Pattern.compile(", ");
 	private static final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE);
@@ -34,7 +34,7 @@ class CASTools {
 		List<String> functionalTerms = new ArrayList<String>();
 
 		String parent = nameComponents.get(0);
-		String[] parentNameParts = matchSpace.split(parent);
+		String[] parentNameParts = MATCH_SPACE.split(parent);
 		if (parentNameParts.length != 1) {
 			if (matchCasCollectiveIndex.matcher(parentNameParts[parentNameParts.length - 1]).matches()) {//CAS collective index description should be ignored
 				StringBuilder parentSB = new StringBuilder();
@@ -42,7 +42,7 @@ class CASTools {
 					parentSB.append(parentNameParts[i]);
 				}
 				parent = parentSB.toString();
-				parentNameParts = matchSpace.split(parent);
+				parentNameParts = MATCH_SPACE.split(parent);
 			}
 			for (int i = 1; i < parentNameParts.length; i++) {
 				if (!matchAcid.matcher(parentNameParts[i]).matches()) {
@@ -64,7 +64,7 @@ class CASTools {
 				nameComponent = nameComponent.substring(m.group().length());
 				compoundWithcomponent = true;
 			}
-			String[] components = matchSpace.split(nameComponents.get(i));
+			String[] components = MATCH_SPACE.split(nameComponents.get(i));
 			for (String component : components) {
 				if (compoundWithcomponent) {
 					functionalTerms.add(component);
