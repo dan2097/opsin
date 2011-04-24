@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +35,8 @@ class FunctionalReplacement {
 	 */
 	private static class SortInfixTransformations implements Comparator<String> {
 		public int compare(String infixTransformation1, String infixTransformation2) {
-			int allowedInputs1 = matchComma.split(infixTransformation1).length;
-			int allowedInputs2 = matchComma.split(infixTransformation2).length;
+			int allowedInputs1 = MATCH_COMMA.split(infixTransformation1).length;
+			int allowedInputs2 = MATCH_COMMA.split(infixTransformation2).length;
 			if (allowedInputs1 < allowedInputs2){//infixTransformation1 preferred
 				return -1;
 			}
@@ -49,9 +50,6 @@ class FunctionalReplacement {
 	}
 	private final static Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
 	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
-	private static final Pattern matchComma =Pattern.compile(",");
-	private final static Pattern matchSemiColon =Pattern.compile(";");
-	private final static Pattern matchColon =Pattern.compile(":");
 	
 	enum PREFIX_REPLACEMENT_TYPE{
 		chalcogen,//ambiguous
@@ -166,7 +164,7 @@ class FunctionalReplacement {
 							possibleLocant = possibleMultiplier;
 						}
 						if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && possibleLocant.getAttribute(TYPE_ATR)==null) {
-							int numberOfLocants = matchComma.split(possibleLocant.getValue()).length;
+							int numberOfLocants = MATCH_COMMA.split(possibleLocant.getValue()).length;
 							if (numberOfLocants == numberOfAtomsToReplace){//locants and number of replacements agree
 								locantEl = possibleLocant;
 							}
@@ -261,7 +259,7 @@ class FunctionalReplacement {
 				}
 				//e.g. =O:S,-O:S (which indicates replacing either a double or single bonded oxygen with S)
 				//This is semicolon delimited for each infix
-				List<String> infixTransformations = StringTools.arrayToList(matchSemiColon.split(suffix.getAttributeValue(INFIX_ATR)));
+				List<String> infixTransformations = StringTools.arrayToList(MATCH_SEMICOLON.split(suffix.getAttributeValue(INFIX_ATR)));
 
 				List<Atom> atomList =fragToApplyInfixTo.getAtomList();
 				LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
@@ -281,11 +279,11 @@ class FunctionalReplacement {
 				Collections.sort(infixTransformations, new SortInfixTransformations());
 
 				for (String infixTransformation : infixTransformations) {
-					String[] transformationArray = matchColon.split(infixTransformation);
+					String[] transformationArray = MATCH_COLON.split(infixTransformation);
 					if (transformationArray.length !=2){
 						throw new StructureBuildingException("Atom to be replaced and replacement not specified correctly in infix: " + infixTransformation);
 					}
-					String[] transformations = matchComma.split(transformationArray[0]);
+					String[] transformations = MATCH_COMMA.split(transformationArray[0]);
 					String replacementSMILES = transformationArray[1];
 					boolean acceptDoubleBondedOxygen = false;
 					boolean acceptSingleBondedOxygen = false;
@@ -510,7 +508,7 @@ class FunctionalReplacement {
 		Fragment fragToBeModified = state.xmlFragmentMap.get(group);
 		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
 			int maxSubstitutableHydrogen =0;
-			String[] atomIndices = matchComma.split(group.getAttributeValue(SUFFIXAPPLIESTO_ATR));
+			String[] atomIndices = MATCH_COMMA.split(group.getAttributeValue(SUFFIXAPPLIESTO_ATR));
 			List<Atom> atomList = fragToBeModified.getAtomList();
 			for (String atomIndice : atomIndices) {
 				int substitutableHydrogen = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atomList.get(Integer.parseInt(atomIndice)-1));
@@ -797,7 +795,7 @@ class FunctionalReplacement {
 					Element possibleLocant =(Element)XOMTools.getPreviousSibling(possibleMultiplier);
 					String[] locants = null;
 					if (possibleLocant.getLocalName().equals(LOCANT_EL)) {
-						locants = matchComma.split(possibleLocant.getValue());
+						locants = MATCH_COMMA.split(possibleLocant.getValue());
 					}
 					if (locants !=null){
 						if (locants.length!=multiplierValue){
@@ -881,7 +879,7 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private static List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
-		String[] possibleLocants = matchComma.split(locantEl.getValue());
+		String[] possibleLocants = MATCH_COMMA.split(locantEl.getValue());
 		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
 		for (Atom atom : oxygenAtoms) {
 			List<String> atomlocants = atom.getLocants();

@@ -3,7 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**Static routines for string manipulation.
  * This is a specially tailored version of StringTools as found in OSCAR for use in OPSIN
@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
  *
  */
 public final class StringTools {
-
-	private static final Pattern MATCH_WHITESPACE = Pattern.compile("\\s+");
 
 	/**Converts a list of characters into a string.
 	 *

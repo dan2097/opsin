@@ -18,20 +18,26 @@ import nu.xom.Node;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**
- * A set of useful methods to assist OPSIN
+ * A set of useful methods and constants to assist OPSIN
  * @author dl387
  *
  */
 class OpsinTools {
-	final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
-	static final Pattern matchSemiColon = Pattern.compile(";");
-	static final Pattern matchColon = Pattern.compile(":");
-	static final Pattern matchComma = Pattern.compile(",");
-	static final Pattern matchDash = Pattern.compile("-");
-	static final Pattern matchSlash = Pattern.compile("/");
-	private final static char endOfSubstituent = '\u00e9';
-	private final static char endOfMainGroup = '\u00e2';
-	private final static char endOfFunctionalTerm = '\u00FB';
+	static final Pattern MATCH_COLON = Pattern.compile(":");
+	static final Pattern MATCH_COMMA = Pattern.compile(",");
+	static final Pattern MATCH_DASH = Pattern.compile("-");
+	static final Pattern MATCH_SEMICOLON = Pattern.compile(";");
+	static final Pattern MATCH_SLASH = Pattern.compile("/");
+	static final Pattern MATCH_SPACE =Pattern.compile(" ");
+	static final Pattern MATCH_WHITESPACE = Pattern.compile("\\s+");
+	
+	static final Pattern MATCH_AMINOACID_STYLE_LOCANT =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
+	static final Pattern MATCH_ELEMENT_SYMBOL =Pattern.compile("[A-Z][a-z]?");
+	static final Pattern MATCH_ELEMENT_SYMBOL_LOCANT =Pattern.compile("[A-Z][a-z]?'*");
+	static final Pattern MATCH_NUMERIC_LOCANT =Pattern.compile("\\d+[a-z]?'*");
+	static final char END_OF_SUBSTITUENT = '\u00e9';
+	static final char END_OF_MAINGROUP = '\u00e2';
+	static final char END_OF_FUNCTIONALTERM = '\u00FB';
 	
 	/**
 	 * Returns the next sibling suffix node which is not related to altering charge (ium/ide/id)
@@ -226,7 +232,7 @@ class OpsinTools {
 				}
 				List<String> locants = neighbour.getLocants();
 				for (String neighbourLocant : locants) {
-					if (matchNumericLocant.matcher(neighbourLocant).matches()){
+					if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){
 						return neighbour;
 					}
 				}
@@ -244,13 +250,13 @@ class OpsinTools {
 	 */
 	static WordType determineWordType(List<Character> annotations) throws ParsingException {
 		Character finalAnnotation = annotations.get(annotations.size() -1);
-		if (finalAnnotation.equals(endOfMainGroup)){
+		if (finalAnnotation.equals(END_OF_MAINGROUP)){
 			return WordType.full;
 		}
-		else if (finalAnnotation.equals(endOfSubstituent)){
+		else if (finalAnnotation.equals(END_OF_SUBSTITUENT)){
 			return WordType.substituent;
 		}
-		else if (finalAnnotation.equals(endOfFunctionalTerm)){
+		else if (finalAnnotation.equals(END_OF_FUNCTIONALTERM)){
 			return WordType.functionalTerm;
 		}
 		else{

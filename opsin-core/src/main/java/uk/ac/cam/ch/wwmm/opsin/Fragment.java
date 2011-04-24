@@ -11,10 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**A fragment of a molecule, holds bonds and atoms.
@@ -62,8 +62,6 @@ class Fragment {
 
 	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES/CML level.*/
 	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
-
-	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
 
 	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Makes an empty Fragment with a given type and subType.
@@ -198,7 +196,7 @@ class Fragment {
 		if (a != null){
 			return a;
 		}
-		Matcher m =matchAminoAcidStyleLocant.matcher(locant);
+		Matcher m =MATCH_AMINOACID_STYLE_LOCANT.matcher(locant);
 		if (m.matches()){//e.g. N5
 			Atom backboneAtom =atomMapFromLocant.get(m.group(3));//the atom corresponding to the numeric or greek component
 			if (backboneAtom==null){

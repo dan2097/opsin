@@ -138,14 +138,14 @@ class FusedRingBuilder {
 					fusionDescriptors = new String[]{fusionDescriptorString};
 				}
 				else{
-					if (matchSemiColon.split(fusionDescriptorString).length >1){
-						fusionDescriptors = matchSemiColon.split(fusionDescriptorString);
+					if (MATCH_SEMICOLON.split(fusionDescriptorString).length >1){
+						fusionDescriptors = MATCH_SEMICOLON.split(fusionDescriptorString);
 					}
-					else if (matchColon.split(fusionDescriptorString).length >1){
-						fusionDescriptors = matchColon.split(fusionDescriptorString);
+					else if (MATCH_COLON.split(fusionDescriptorString).length >1){
+						fusionDescriptors = MATCH_COLON.split(fusionDescriptorString);
 					}
-					else if (matchComma.split(fusionDescriptorString).length >1){
-						fusionDescriptors = matchComma.split(fusionDescriptorString);
+					else if (MATCH_COMMA.split(fusionDescriptorString).length >1){
+						fusionDescriptors = MATCH_COMMA.split(fusionDescriptorString);
 					}
 					else{//multiplier does not appear to mean multiplied component. Could be indicating multiplication of the whole fused ring system
 						if (ncIndice!=0){
@@ -173,13 +173,13 @@ class FusedRingBuilder {
 				Fragment component = fusionComponents[j];
 				componentFragments.add(component);
 				if (fusion !=null){
-					if (matchColon.split(fusionDescriptors[j]).length==1){//A fusion bracket without a colon is used when applying to the parent component (except in a special case where locants are ommitted)
+					if (MATCH_COLON.split(fusionDescriptors[j]).length==1){//A fusion bracket without a colon is used when applying to the parent component (except in a special case where locants are ommitted)
 						//check for case of omitted locant from a higher order fusion bracket e.g. cyclopenta[4,5]pyrrolo[2,3-c]pyridine
-						if (matchDash.split(fusionDescriptors[j]).length==1 && 
-								matchComma.split(fusionDescriptors[j]).length >1 &&
+						if (MATCH_DASH.split(fusionDescriptors[j]).length==1 && 
+								MATCH_COMMA.split(fusionDescriptors[j]).length >1 &&
 								FragmentTools.allAtomsInRingAreIdentical(component)){
 							relabelAccordingToFusionLevel(component, fusionLevel);
-							List<String> numericalLocantsOfParent = Arrays.asList(matchComma.split(fusionDescriptors[j]));
+							List<String> numericalLocantsOfParent = Arrays.asList(MATCH_COMMA.split(fusionDescriptors[j]));
 							List<String> numericalLocantsOfChild = findPossibleNumericalLocants(component, determineAtomsToFuse(fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfParent, null).size()-1);
 							processHigherOrderFusionDescriptors(component, fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfChild, numericalLocantsOfParent);
 						}
@@ -205,7 +205,7 @@ class FusedRingBuilder {
 						}
 					}
 					else{
-						String firstLocant = matchComma.split(fusionDescriptors[j])[0];
+						String firstLocant = MATCH_COMMA.split(fusionDescriptors[j])[0];
 						int numberOfPrimes = -j;//determine number of primes in fusor and hence determine fusion level
 						for(int k = firstLocant.length() -1; k>0; k--){
 							if (firstLocant.charAt(k)=='\''){
@@ -297,7 +297,7 @@ class FusedRingBuilder {
                     }
                 }
                 if (group.getAttribute(FUSEDRINGNUMBERING_ATR) != null) {
-                    String[] standardNumbering = matchSlash.split(group.getAttributeValue(FUSEDRINGNUMBERING_ATR), -1);
+                    String[] standardNumbering = MATCH_SLASH.split(group.getAttributeValue(FUSEDRINGNUMBERING_ATR), -1);
                     for (int j = 0; j < standardNumbering.length; j++) {
                         atomList.get(j).replaceLocants(standardNumbering[j]);
                     }
@@ -407,14 +407,14 @@ class FusedRingBuilder {
 				}
 				String fusionDescriptorString = fusion.getValue().toLowerCase().substring(1, fusion.getValue().length()-1);
 				String[] fusionDescriptors =null;
-				if (matchSemiColon.split(fusionDescriptorString).length >1){
-					fusionDescriptors = matchSemiColon.split(fusionDescriptorString);
+				if (MATCH_SEMICOLON.split(fusionDescriptorString).length >1){
+					fusionDescriptors = MATCH_SEMICOLON.split(fusionDescriptorString);
 				}
-				else if (matchColon.split(fusionDescriptorString).length >1){
-					fusionDescriptors = matchColon.split(fusionDescriptorString);
+				else if (MATCH_COLON.split(fusionDescriptorString).length >1){
+					fusionDescriptors = MATCH_COLON.split(fusionDescriptorString);
 				}
-				else if (matchComma.split(fusionDescriptorString).length >1){
-					fusionDescriptors = matchComma.split(fusionDescriptorString);
+				else if (MATCH_COMMA.split(fusionDescriptorString).length >1){
+					fusionDescriptors = MATCH_COMMA.split(fusionDescriptorString);
 				}
 				else{
 					throw new StructureBuildingException("Invalid fusion descriptor: " + fusionDescriptorString);
@@ -426,7 +426,7 @@ class FusedRingBuilder {
 					String fusionDescriptor = fusionDescriptors[j];
 					Fragment component = multiplier>1 ? fusionComponents.get(j) : nextComponent;
 					Fragment parentToUse = previousFusionLevelFragments.get(j);
-					boolean simpleFusion = matchColon.split(fusionDescriptor).length <= 1;
+					boolean simpleFusion = MATCH_COLON.split(fusionDescriptor).length <= 1;
 					if (simpleFusion){
 						String[] fusionArray = determineNumericalAndLetterComponents(fusionDescriptor);
 						if (!fusionArray[1].isEmpty()){
@@ -465,7 +465,7 @@ class FusedRingBuilder {
 	 * @return
 	 */
 	private static String[] determineNumericalAndLetterComponents(String fusionDescriptor) {
-		String[] fusionArray = matchDash.split(fusionDescriptor);
+		String[] fusionArray = MATCH_DASH.split(fusionDescriptor);
 		if (fusionArray.length ==2){
 			return fusionArray;
 		}
@@ -532,9 +532,9 @@ class FusedRingBuilder {
 		List<String> numericalLocantsOfChild = null;
 		List<String> letterLocantsOfParent = null;
 		if (fusionDescriptor != null){
-			String[] fusionArray = matchDash.split(fusionDescriptor);
+			String[] fusionArray = MATCH_DASH.split(fusionDescriptor);
 			if (fusionArray.length ==2){
-				numericalLocantsOfChild = Arrays.asList(matchComma.split(fusionArray[0]));
+				numericalLocantsOfChild = Arrays.asList(MATCH_COMMA.split(fusionArray[0]));
 				char[] tempLetterLocantsOfParent = fusionArray[1].toCharArray();
 				letterLocantsOfParent = new ArrayList<String>();
                 for (char letterLocantOfParent : tempLetterLocantsOfParent) {
@@ -543,7 +543,7 @@ class FusedRingBuilder {
 			}
 			else{
 				if (fusionArray[0].contains(",")){//only has digits
-					String[] numericalLocantsOfChildTemp = matchComma.split(fusionArray[0]);
+					String[] numericalLocantsOfChildTemp = MATCH_COMMA.split(fusionArray[0]);
 					numericalLocantsOfChild = Arrays.asList(numericalLocantsOfChildTemp);
 				}
 				else{//only has letters
@@ -706,10 +706,10 @@ class FusedRingBuilder {
 	private void performHigherOrderFusion(String fusionDescriptor, Fragment nextComponent, Fragment fusedRing) throws StructureBuildingException {
 		List<String> numericalLocantsOfChild = null;
 		List<String> numericalLocantsOfParent = null;
-		String[] fusionArray = matchColon.split(fusionDescriptor);
+		String[] fusionArray = MATCH_COLON.split(fusionDescriptor);
 		if (fusionArray.length ==2){
-			numericalLocantsOfChild = Arrays.asList(matchComma.split(fusionArray[0]));
-			numericalLocantsOfParent = Arrays.asList(matchComma.split(fusionArray[1]));
+			numericalLocantsOfChild = Arrays.asList(MATCH_COMMA.split(fusionArray[0]));
+			numericalLocantsOfParent = Arrays.asList(MATCH_COMMA.split(fusionArray[1]));
 		}
 		else{
 			throw new StructureBuildingException("Malformed fusion bracket: This is an OPSIN bug, check regexTokens.xml");
@@ -921,7 +921,7 @@ class FusedRingBuilder {
 		 */
 		Element locantEl = (Element) XOMTools.getPreviousSibling(benzoEl);
 		if (locantEl != null && locantEl.getLocalName().equals(LOCANT_EL)) {
-			String[] locants = matchComma.split(locantEl.getValue());
+			String[] locants = MATCH_COMMA.split(locantEl.getValue());
 			Elements suffixes=((Element)benzoEl.getParent()).getChildElements(SUFFIX_EL);
 			int suffixesWithoutLocants =0;
 			for (int i = 0; i < suffixes.size(); i++) {

@@ -3,16 +3,12 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**
  * Tools for dealing uniformly with unusually-formed words.
  */
 class WordTools {
-
-	private final static char endOfFunctionalTerm = '\u00FB';
-	private final static char endOfSubstituent = '\u00e9';
-	private final static char endOfMainGroup = '\u00e2';
-
 	/**
 	 * Splits cases where the parseTokensList describes a functionalTerm in addition to another mainGroup/substituent into two parseWords
 	 * This occurs if the name is formally missing a space e.g. ethylthiocyanide.
@@ -34,7 +30,7 @@ class WordTools {
 		for (ParseTokens parseTokens : parseTokensList) {
 			List<Character> annotations = parseTokens.getAnnotations();
 			List<List<Character>> chunkedAnnotations = chunkAnnotations(annotations);//chunked into mainGroup/substituent/functionalTerm
-			if (chunkedAnnotations.size() > 1 && annotations.contains(endOfFunctionalTerm)) {//must be an omitted space as not allowed to have a functionalTerm and anything else
+			if (chunkedAnnotations.size() > 1 && annotations.contains(END_OF_FUNCTIONALTERM)) {//must be an omitted space as not allowed to have a functionalTerm and anything else
 				List<String> tokens = parseTokens.getTokens();
 				List<Character> newAnnotations = new ArrayList<Character>();
 				List<String> newTokens = new ArrayList<String>();
@@ -42,7 +38,7 @@ class WordTools {
 				int wordCounter = 0;
 				for (List<Character> annotationList : chunkedAnnotations) {
 					boolean functionalTermNext = false;
-					if (annotationList.get(annotationList.size() - 1).equals(endOfFunctionalTerm)) {
+					if (annotationList.get(annotationList.size() - 1).equals(END_OF_FUNCTIONALTERM)) {
 						functionalTermNext = true;
 						if (newAnnotations.size() > 0) {//create a new parseTokens, unless nothing has been read yet e.g. in the case of poly
 							ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
@@ -126,7 +122,7 @@ class WordTools {
 		List<Character> currentTerm = new ArrayList<Character>();
 		for (Character annot : annots) {
 			currentTerm.add(annot);
-			if (annot.equals(endOfSubstituent) || annot.equals(endOfMainGroup) || annot.equals(endOfFunctionalTerm)) {
+			if (annot.equals(END_OF_SUBSTITUENT) || annot.equals(END_OF_MAINGROUP) || annot.equals(END_OF_FUNCTIONALTERM)) {
 				chunkList.add(currentTerm);
 				currentTerm = new ArrayList<Character>();
 			}

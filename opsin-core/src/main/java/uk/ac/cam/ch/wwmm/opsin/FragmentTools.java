@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**
@@ -94,9 +95,6 @@ class SortAtomsForMainGroupElementSymbols implements Comparator<Atom> {
 }
 
 class FragmentTools {
-	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
-	private static final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
-	
 	/**
 	 * Sorts by number, then by letter e.g. 4,3,3b,5,3a,2 -->2,3,3a,3b,4,5
 	 * @author dl387
@@ -232,7 +230,7 @@ class FragmentTools {
 			for (Atom atom : atomList) {
 				if (atom.getElement().equals("N") && atom.getIncomingValency() ==3 ){
 					List<String> locants =atom.getLocants();
-					if (locants.size()==1 && matchElementSymbolLocant.matcher(locants.get(0)).matches()){
+					if (locants.size()==1 && MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locants.get(0)).matches()){
 						List<Atom> neighbours = atom.getAtomNeighbours();
 						for (Atom neighbour : neighbours) {
 							if (neighbour.getElement().equals("N") && neighbour.getIncomingValency()==1){
@@ -511,7 +509,7 @@ class FragmentTools {
 		for (Atom atom : atomList) {
 			List<String> locants = new ArrayList<String>(atom.getLocants());
 			for (String locant : locants) {
-				if (matchNumericLocant.matcher(locant).matches()){
+				if (MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
 					atom.removeLocant(locant);
 					atom.addLocant(locant + stringToAdd);
 				}
@@ -823,7 +821,7 @@ class FragmentTools {
 			atomsVisited.add(neighbour);
 			if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
 				for (String neighbourLocant : neighbour.getLocants()) {
-					if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
+					if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
 						continue mainLoop;
 					}
 				}
@@ -864,7 +862,7 @@ class FragmentTools {
 				}
 				if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
 					for (String neighbourLocant : neighbour.getLocants()) {
-						if (matchNumericLocant.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
+						if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
 							atomNeighbours.remove(i);
 							break;
 						}

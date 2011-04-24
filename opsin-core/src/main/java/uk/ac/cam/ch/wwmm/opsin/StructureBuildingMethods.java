@@ -28,7 +28,6 @@ import nu.xom.Elements;
  */
 class StructureBuildingMethods {
 	private static final Logger LOG = Logger.getLogger(StructureBuildingMethods.class);
-	private final static Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 	private StructureBuildingMethods() {}
 
@@ -289,7 +288,7 @@ class StructureBuildingMethods {
 		subOrBracket.removeAttribute(subOrBracket.getAttribute(MULTIPLIER_ATR));
 		String[] locants =null;
 		if (subOrBracket.getAttribute(LOCANT_ATR) !=null){
-			locants = matchComma.split(subOrBracket.getAttributeValue(LOCANT_ATR));
+			locants = MATCH_COMMA.split(subOrBracket.getAttributeValue(LOCANT_ATR));
 		}
 		Element parentWordOrBracket =(Element) subOrBracket.getParent();
 		int indexOfSubOrBracket = parentWordOrBracket.indexOf(subOrBracket);
@@ -974,7 +973,7 @@ class StructureBuildingMethods {
 				}
 			}
 			else{
-				inLocants = StringTools.arrayToList(matchComma.split(inLocantsString));
+				inLocants = StringTools.arrayToList(MATCH_COMMA.split(inLocantsString));
 				if (inLocants.size() != multiplier){
 					throw new StructureBuildingException("Mismatch between multiplier and number inLocants in multiplicative nomenclature");
 				}
@@ -1524,7 +1523,7 @@ class StructureBuildingMethods {
 					}
 					else{
 						if ((indexOfCurrentEl == indexOfStartingEl +1) && bracketOrSubOrRoot.getAttribute(LOCANT_EL)==null &&
-								matchNumericLocant.matcher(locant).matches() &&
+								MATCH_NUMERIC_LOCANT.matcher(locant).matches() &&
 								!((Element)XOMTools.getPrevious(bracketOrSubOrRoot)).getLocalName().equals(HYPHEN_EL)){
 							substituentToTryFirst = bracketOrSubOrRoot;
 						}

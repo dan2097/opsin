@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**
  * An atom. Carries information about which fragment it is in, and an ID
@@ -96,9 +97,6 @@ class Atom {
 	 * Some suffixes have different meanings if an atom is part of a ring or not c.g. cyclohexanal vs ethanal
 	 */
 	private boolean atomIsInACycle =false;
-
-	private static final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
-	private static final Pattern matchAminoAcidStyleLocant =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
 
 	/**
 	 * Builds an Atom from scratch.
@@ -268,7 +266,7 @@ class Atom {
 	void removeElementSymbolLocants() {
 		for (int i = locants.size()-1; i >=0; i--) {
 			String l =locants.get(i);
-			if (matchElementSymbolLocant.matcher(l).matches()){
+			if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(l).matches()){
 				frag.removeMappingFromAtomLocantMap(l);
 				locants.remove(i);
 			}
@@ -282,7 +280,7 @@ class Atom {
 	void removeLocantsOtherThanElementSymbolLocants() {
 		for (int i = locants.size()-1; i >=0; i--) {
 			String l =locants.get(i);
-			if (!matchElementSymbolLocant.matcher(l).matches()){
+			if (!MATCH_ELEMENT_SYMBOL_LOCANT.matcher(l).matches()){
 				frag.removeMappingFromAtomLocantMap(l);
 				locants.remove(i);
 			}
@@ -299,7 +297,7 @@ class Atom {
 			if(l.equals(locant))
 				return true;
 		}
-		Matcher m = matchAminoAcidStyleLocant.matcher(locant);
+		Matcher m = MATCH_AMINOACID_STYLE_LOCANT.matcher(locant);
 		if (m.matches()){//e.g. N'5
 			if (element.equals(m.group(1))){//element symbol
 				if (!m.group(2).equals("") && (!hasLocant(m.group(1) +m.group(2)))){//has primes
@@ -340,7 +338,7 @@ class Atom {
 	List<String> getElementSymbolLocants() {
 		List<String> elementSymbolLocants =new ArrayList<String>();
         for (String l : locants) {
-            if (matchElementSymbolLocant.matcher(l).matches()) {
+            if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(l).matches()) {
                 elementSymbolLocants.add(l);
             }
         }

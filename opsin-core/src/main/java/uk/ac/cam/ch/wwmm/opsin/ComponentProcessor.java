@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 import nu.xom.Attribute;
 import nu.xom.Document;
@@ -31,13 +31,7 @@ import nu.xom.Node;
 
 class ComponentProcessor {
 	private final static Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
-	private final static Pattern matchColon =Pattern.compile(":");
-	private final static Pattern matchSemiColon =Pattern.compile(";");
-	private final static Pattern matchComma =Pattern.compile(",");
-	private final static Pattern matchSpace =Pattern.compile(" ");
 	private final static Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
-	private final static Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
-	private final static Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
 	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
@@ -300,10 +294,10 @@ class ComponentProcessor {
 	private static void processXyleneLikeNomenclature(BuildState state, Element group, Fragment parentFrag) throws StructureBuildingException, ComponentGenerationException {
 		if(group.getAttribute(ADDGROUP_ATR)!=null) {
 			String addGroupInformation=group.getAttributeValue(ADDGROUP_ATR);
-			String[] groupsToBeAdded = matchSemiColon.split(addGroupInformation);//typically only one, but 2 in the case of xylene and quinones
+			String[] groupsToBeAdded = MATCH_SEMICOLON.split(addGroupInformation);//typically only one, but 2 in the case of xylene and quinones
 			ArrayList<HashMap<String, String>> allGroupInformation = new ArrayList<HashMap<String, String>>();
             for (String groupToBeAdded : groupsToBeAdded) {//populate allGroupInformation list
-                String[] tempArray = matchSpace.split(groupToBeAdded);
+                String[] tempArray = MATCH_SPACE.split(groupToBeAdded);
                 HashMap<String, String> groupInformation = new HashMap<String, String>();
                 if (tempArray.length != 2 && tempArray.length != 3) {
                     throw new ComponentGenerationException("malformed addGroup tag");
@@ -325,7 +319,7 @@ class ComponentProcessor {
             }
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
-				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
+				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
 				if ((locantValues.size()==groupsToBeAdded.length || locantValues.size() +1 ==groupsToBeAdded.length) && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){//one locant can be implicit in some cases
 					boolean assignlocants =true;
 					if (locantValues.size()!=groupsToBeAdded.length){
@@ -404,10 +398,10 @@ class ComponentProcessor {
 
 		if(group.getAttributeValue(ADDHETEROATOM_ATR)!=null) {
 			String addHeteroAtomInformation=group.getAttributeValue(ADDHETEROATOM_ATR);
-			String[] heteroAtomsToBeAdded = matchSemiColon.split(addHeteroAtomInformation);
+			String[] heteroAtomsToBeAdded = MATCH_SEMICOLON.split(addHeteroAtomInformation);
 			ArrayList<HashMap<String, String>> allHeteroAtomInformation = new ArrayList<HashMap<String, String>>();
             for (String heteroAtomToBeAdded : heteroAtomsToBeAdded) {//populate allHeteroAtomInformation list
-                String[] tempArray = matchSpace.split(heteroAtomToBeAdded);
+                String[] tempArray = MATCH_SPACE.split(heteroAtomToBeAdded);
                 HashMap<String, String> heteroAtomInformation = new HashMap<String, String>();
                 if (tempArray.length != 2) {
                     throw new ComponentGenerationException("malformed addHeteroAtom tag");
@@ -426,7 +420,7 @@ class ComponentProcessor {
             }
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
-				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
+				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
 				if (locantValues.size() ==heteroAtomsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
 					for (int i = heteroAtomsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
 						HashMap<String, String> groupInformation =allHeteroAtomInformation.get(i);
@@ -457,10 +451,10 @@ class ComponentProcessor {
 
 		if(group.getAttributeValue(ADDBOND_ATR)!=null && !HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {//HW add bond is handled later
 			String addBondInformation=group.getAttributeValue(ADDBOND_ATR);
-			String[] bondsToBeAdded = matchSemiColon.split(addBondInformation);
+			String[] bondsToBeAdded = MATCH_SEMICOLON.split(addBondInformation);
 			ArrayList<HashMap<String, String>> allBondInformation = new ArrayList<HashMap<String, String>>();
             for (String bondToBeAdded : bondsToBeAdded) {//populate allBondInformation list
-                String[] tempArray = matchSpace.split(bondToBeAdded);
+                String[] tempArray = MATCH_SPACE.split(bondToBeAdded);
                 HashMap<String, String> bondInformation = new HashMap<String, String>();
                 if (tempArray.length != 2) {
                     throw new ComponentGenerationException("malformed addBond tag");
@@ -479,7 +473,7 @@ class ComponentProcessor {
             }
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
-				List<String> locantValues =StringTools.arrayToList(matchComma.split(previousEl.getValue()));
+				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
 				if (locantValues.size() ==bondsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
 					for (int i = bondsToBeAdded.length -1; i >=0 ; i--) {//all bond order changes must have a locant or default locants will be used
 						HashMap<String, String> bondInformation =allBondInformation.get(i);
@@ -519,7 +513,7 @@ class ComponentProcessor {
 		if (group.getAttribute(FRONTLOCANTSEXPECTED_ATR)==null){
 			throw new IllegalArgumentException("Group must have frontLocantsExpected to implement xylene-like nomenclature");
 		}
-		List<String> allowedLocants = Arrays.asList(matchComma.split(group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR)));
+		List<String> allowedLocants = Arrays.asList(MATCH_COMMA.split(group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR)));
 		for (String locant : locantValues) {
 			if (!allowedLocants.contains(locant)){
 				return false;
@@ -586,7 +580,7 @@ class ComponentProcessor {
 	 */
 	private static void setFragmentFunctionalAtomsIfSpecified(Element group, Fragment thisFrag) throws StructureBuildingException {
 		if (group.getAttribute(FUNCTIONALIDS_ATR)!=null){
-			String[] functionalIDs = matchComma.split(group.getAttributeValue(FUNCTIONALIDS_ATR));
+			String[] functionalIDs = MATCH_COMMA.split(group.getAttributeValue(FUNCTIONALIDS_ATR));
 	        for (String functionalID : functionalIDs) {
 	            thisFrag.addFunctionalAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(functionalID) - 1));
 	        }
@@ -601,7 +595,7 @@ class ComponentProcessor {
 			Atom startingAtom = thisFrag.getFirstAtom();
 			if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
 				String suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-				String suffixAppliesToArr[] = matchComma.split(suffixAppliesTo);
+				String suffixAppliesToArr[] = MATCH_COMMA.split(suffixAppliesTo);
 				if (suffixAppliesToArr.length!=1){
 					return;
 				}
@@ -780,7 +774,7 @@ class ComponentProcessor {
 			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
 			if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
 				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
-				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && matchComma.split(possibleLocantInFrontOfHydro.getValue()).length==1){
+				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocantInFrontOfHydro.getValue()).length==1){
 					//e.g.4-decahydro-1-naphthalenyl
 					targetRing =potentialRing;
 				}
@@ -789,7 +783,7 @@ class ComponentProcessor {
 					if (possibleLocantInFrontOfRing !=null){
 						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
 							String locantValue = possibleLocantInFrontOfRing.getValue();
-							String[] expectedLocants = matchComma.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
+							String[] expectedLocants = MATCH_COMMA.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
 							for (String expectedLocant : expectedLocants) {
 								if (locantValue.equals(expectedLocant)){
 									targetRing =potentialRing;
@@ -800,7 +794,7 @@ class ComponentProcessor {
 						//check whether the group is a HW system e.g. 1,3-thiazole
 						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
 							String locantValue = possibleLocantInFrontOfRing.getValue();
-							int locants = matchComma.split(locantValue).length;
+							int locants = MATCH_COMMA.split(locantValue).length;
 							int heteroCount = 0;
 							Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocantInFrontOfRing);
 							while(!currentElem.equals(potentialRing)){
@@ -949,7 +943,7 @@ class ComponentProcessor {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
 		Element group =subOrBracketOrRoot.getFirstChildElement(GROUP_EL);//will be null if element is a bracket
 		for (Element locant : locants) {
-			String [] locantValues = matchComma.split(locant.getValue());
+			String [] locantValues = MATCH_COMMA.split(locant.getValue());
 			if(locantValues.length > 1) {
 				Element afterLocant = (Element)XOMTools.getNextSibling(locant);
 				int structuralBracketDepth = 0;
@@ -1005,7 +999,7 @@ class ComponentProcessor {
 						// number of locants and multiplier agree
 						boolean locantModified =false;//did determineLocantMeaning do something?
 						if (locantValues[locantValues.length-1].endsWith("'") && group!=null && subOrBracketOrRoot.indexOf(group) > subOrBracketOrRoot.indexOf(locant)){//quite possible that this is referring to a multiplied root
-							if (group.getAttribute(OUTIDS_ATR)!=null && matchComma.split(group.getAttributeValue(OUTIDS_ATR)).length>1){
+							if (group.getAttribute(OUTIDS_ATR)!=null && MATCH_COMMA.split(group.getAttributeValue(OUTIDS_ATR)).length>1){
 								locantModified = checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord);
 							}
 							else{
@@ -1086,7 +1080,7 @@ class ComponentProcessor {
 				}
 			}
 			if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
-				String[] outIDs = matchComma.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
+				String[] outIDs = MATCH_COMMA.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
 				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
 				if (count ==outIDs.length && groupFragment.getAtomList().size()>1){//things like oxy do not need to have their outIDs specified
 					int idOfFirstAtomInFrag =groupFragment.getIdOfFirstAtom();
@@ -1196,7 +1190,7 @@ class ComponentProcessor {
 			Element possibleLocant =(Element)XOMTools.getPreviousSibling(multiplier);
 			String[] locants = null;
 			if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL)){
-				locants = matchComma.split(possibleLocant.getValue());
+				locants = MATCH_COMMA.split(possibleLocant.getValue());
 			}
 			Element featureToMultiply = (Element)XOMTools.getNextSibling(multiplier);
 			String nextName = featureToMultiply.getLocalName();
@@ -1323,7 +1317,7 @@ class ComponentProcessor {
 				Element possibleLocant =(Element)XOMTools.getPreviousSibling(possibleMultiplier);
 				possibleMultiplier.detach();
 				if (possibleLocant.getLocalName().equals(LOCANT_EL)){
-					String[] locants = matchComma.split(possibleLocant.getValue());
+					String[] locants = MATCH_COMMA.split(possibleLocant.getValue());
 					if (locants.length!=multiplier){
 						throw new ComponentGenerationException("mismatch between number of locants and multiplier in conjunctive nomenclature routine");
 					}
@@ -1356,7 +1350,7 @@ class ComponentProcessor {
 					if (deltas.size()==0){
 						Element delta =new Element(DELTA_EL);
 						Element appropriateLocant = XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{HETEROATOM_EL, MULTIPLIER_EL});
-						if (appropriateLocant !=null && appropriateLocant.getLocalName().equals(LOCANT_EL) && matchComma.split(appropriateLocant.getValue()).length == 1){
+						if (appropriateLocant !=null && appropriateLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(appropriateLocant.getValue()).length == 1){
 							delta.appendChild(appropriateLocant.getValue());
 							XOMTools.insertBefore(appropriateLocant, delta);
 							appropriateLocant.detach();
@@ -1391,7 +1385,7 @@ class ComponentProcessor {
 					}
 					Collections.reverse(heteroAtoms);
 					if (locantBeforeHWSystem !=null){
-						String[] locantValues = matchComma.split(locantBeforeHWSystem.getValue());
+						String[] locantValues = MATCH_COMMA.split(locantBeforeHWSystem.getValue());
 						//detect a solitary locant in front of a HW system and prevent it being assigned.
 						//something like 1-aziridin-1-yl never means the N is at position 1 as it is at position 1 by convention
 						//this special case is not applied to pseudo HW like systems e.g. [1]oxacyclotetradecine
@@ -1426,7 +1420,7 @@ class ComponentProcessor {
 	 */
 	private void assignSingleLocantsToAdjacentFeatures(List<Element> locants) {
 		for (Element locant : locants) {
-			String[] locantValues = matchComma.split(locant.getValue());
+			String[] locantValues = MATCH_COMMA.split(locant.getValue());
 			Element referent = (Element)XOMTools.getNextSibling(locant);
 			if (referent!=null && locantValues.length==1){
 				String refName = referent.getLocalName();
@@ -1559,7 +1553,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
 			}
 			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-			String[] suffixInstructions = matchComma.split(suffixInstruction);
+			String[] suffixInstructions = MATCH_COMMA.split(suffixInstruction);
 			boolean symmetricSuffixes =true;
 			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
 				if (suffixInstructions.length < 2){
@@ -1656,7 +1650,7 @@ class ComponentProcessor {
                     suffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, SUFFIX_SUBTYPE_VAL, labels);
                     List<Atom> atomList = suffixFrag.getAtomList();
                     if (suffixRuleTag.getAttribute(SUFFIXRULES_FUNCTIONALIDS_ATR) != null) {
-                        String[] relativeIdsOfFunctionalAtoms = matchComma.split(suffixRuleTag.getAttributeValue(SUFFIXRULES_FUNCTIONALIDS_ATR));
+                        String[] relativeIdsOfFunctionalAtoms = MATCH_COMMA.split(suffixRuleTag.getAttributeValue(SUFFIXRULES_FUNCTIONALIDS_ATR));
                         for (String relativeId : relativeIdsOfFunctionalAtoms) {
                         	int atomIndice = Integer.parseInt(relativeId) -1;
                         	if (atomIndice >=atomList.size()){
@@ -1666,7 +1660,7 @@ class ComponentProcessor {
 						}
                     }
                     if (suffixRuleTag.getAttribute(SUFFIXRULES_OUTIDS_ATR) != null) {
-                        String[] relativeIdsOfOutAtoms = matchComma.split(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTIDS_ATR));
+                        String[] relativeIdsOfOutAtoms = MATCH_COMMA.split(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTIDS_ATR));
                         for (String relativeId : relativeIdsOfOutAtoms) {
                         	int atomIndice = Integer.parseInt(relativeId) -1;
                         	if (atomIndice >=atomList.size()){
@@ -2059,7 +2053,7 @@ class ComponentProcessor {
 				boolean saturatedRing =true;
 				for(Element heteroatom : prevs){
 					String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
-					Matcher m = matchElementSymbol.matcher(heteroAtomElement);
+					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(heteroAtomElement);
 					if (!m.find()){
 						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
 					}
@@ -2139,7 +2133,7 @@ class ComponentProcessor {
 				if (heteroatom.getAttribute(LOCANT_ATR) !=null){
 					String locant =heteroatom.getAttributeValue(LOCANT_ATR);
 					String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
-					Matcher m = matchElementSymbol.matcher(elementReplacement);
+					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
 					if (!m.find()){
 						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
 					}
@@ -2161,7 +2155,7 @@ class ComponentProcessor {
 			int defaultLocant=1;
 			for(Element heteroatom : prevs){
 				String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
-				Matcher m = matchElementSymbol.matcher(elementReplacement);
+				Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
 				if (!m.find()){
 					throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
 				}
@@ -2261,13 +2255,13 @@ class ComponentProcessor {
 				else{
 					String locantText =StringTools.removeDashIfPresent(potentialLocant.getValue());
 					//locantText might be something like 1,1':3',1''
-					String[] perRingLocantArray =matchColon.split(locantText);
+					String[] perRingLocantArray =MATCH_COLON.split(locantText);
 					if (perRingLocantArray.length !=(mvalue -1)){
 						throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
 					}
-					if (perRingLocantArray.length!=1 || matchComma.split(perRingLocantArray[0]).length!=1){//not for the case of a single locant
+					if (perRingLocantArray.length!=1 || MATCH_COMMA.split(perRingLocantArray[0]).length!=1){//not for the case of a single locant
 						for (int j = 0; j < perRingLocantArray.length; j++) {
-							String[] locantArray = matchComma.split(perRingLocantArray[j]);
+							String[] locantArray = MATCH_COMMA.split(perRingLocantArray[j]);
 							if (locantArray.length !=2){
 								throw new ComponentGenerationException("missing locant, expected 2 locants: " + perRingLocantArray[j]);
 							}
@@ -2497,7 +2491,7 @@ class ComponentProcessor {
 			nextGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(nextGroup, UNSATURATOR_EL));
 			resolveFeaturesOntoGroup(state, nextGroupEls);
 			
-			String[] locants = matchComma.split(StringTools.removeDashIfPresent(locant.getValue()));
+			String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locant.getValue()));
 			if (locants.length!=2){
 				throw new ComponentGenerationException("Incorrect number of locants found before component of polycyclic spiro system");
 			}
@@ -2587,7 +2581,7 @@ class ComponentProcessor {
 			String locant1 =null;
 			Element possibleFirstLocant = (Element) XOMTools.getPreviousSibling(currentSpiro);
 			if (possibleFirstLocant !=null && possibleFirstLocant.getLocalName().equals(LOCANT_EL)){
-				if (matchComma.split(possibleFirstLocant.getValue()).length==1){
+				if (MATCH_COMMA.split(possibleFirstLocant.getValue()).length==1){
 					locant1 = possibleFirstLocant.getValue();
 					possibleFirstLocant.detach();
 				}
@@ -2606,7 +2600,7 @@ class ComponentProcessor {
 			String locant2 =null;
 			Element possibleSecondLocant = (Element) XOMTools.getNextSibling(currentSpiro);
 			if (possibleSecondLocant !=null && possibleSecondLocant.getLocalName().equals(LOCANT_EL)){
-				if (matchComma.split(possibleSecondLocant.getValue()).length==1){
+				if (MATCH_COMMA.split(possibleSecondLocant.getValue()).length==1){
 					locant2 = possibleSecondLocant.getValue();
 					possibleSecondLocant.detach();
 				}
@@ -2658,7 +2652,7 @@ class ComponentProcessor {
 			locantText = locant.getValue();
 			locant.detach();
 		}
-		String[] locants = matchComma.split(locantText);
+		String[] locants = MATCH_COMMA.split(locantText);
 		if (locants.length!=components){
 			throw new ComponentGenerationException("Mismatch between spiro descriptor and number of locants provided");
 		}
@@ -2699,7 +2693,7 @@ class ComponentProcessor {
 		String value = polyCyclicSpiroDescriptor.getValue();
 		value = value.substring(0, value.length()-10);//remove dispiroter
 		value = StringTools.removeDashIfPresent(value);
-		String[] locants = matchColon.split(value);
+		String[] locants = MATCH_COLON.split(value);
 		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
 		if (group==null){
 			throw new ComponentGenerationException("Cannot find group to which dispiroter descriptor applies");
@@ -2714,15 +2708,15 @@ class ComponentProcessor {
 			state.fragManager.incorporateFragment(clone, fragment);
 		}
 		
-		Atom atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(matchComma.split(locants[0])[0]);
-		Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(matchComma.split(locants[0])[1]);
+		Atom atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(MATCH_COMMA.split(locants[0])[0]);
+		Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(MATCH_COMMA.split(locants[0])[1]);
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
 		if (atomToBeReplaced.hasSpareValency()){
 			atomOnLessPrimedFragment.setSpareValency(true);
 		}
 		
-		atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(matchComma.split(locants[1])[0]);
-		atomToBeReplaced = fragment.getAtomByLocantOrThrow(matchComma.split(locants[1])[1]);
+		atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(MATCH_COMMA.split(locants[1])[0]);
+		atomToBeReplaced = fragment.getAtomByLocantOrThrow(MATCH_COMMA.split(locants[1])[1]);
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
 		if (atomToBeReplaced.hasSpareValency()){
 			atomOnLessPrimedFragment.setSpareValency(true);
@@ -2790,7 +2784,7 @@ class ComponentProcessor {
 		}
 		if (locant !=null){//locant is probably an indirect locant, try and assign it
 			List<Element> locantAble = findElementsMissingIndirectLocants(substituentToResolve, locant);
-			String[] locantValues = matchComma.split(locant.getValue());
+			String[] locantValues = MATCH_COMMA.split(locant.getValue());
 			if (locantAble.size() >= locantValues.length){
 				for (int i = 0; i < locantValues.length; i++) {
 					String locantValue = locantValues[i];
@@ -2836,7 +2830,7 @@ class ComponentProcessor {
 			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size()-1), 1, true);
 			Element possibleLocant = (Element) XOMTools.getPreviousSibling(bridge);
 			if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL)){
-				String[] locantArray = matchComma.split(possibleLocant.getValue());
+				String[] locantArray = MATCH_COMMA.split(possibleLocant.getValue());
 				if (locantArray.length==2){
 					bridgeFrag.getOutAtom(0).setLocant(locantArray[0]);
 					bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
@@ -2933,7 +2927,7 @@ class ComponentProcessor {
 		}
 
 		if (group.getAttribute(OUTIDS_ATR)!=null){//adds outIDs at the specified atoms
-			String[] radicalPositions = matchComma.split(group.getAttributeValue(OUTIDS_ATR));
+			String[] radicalPositions = MATCH_COMMA.split(group.getAttributeValue(OUTIDS_ATR));
 			int firstIdInFrag =thisFrag.getIdOfFirstAtom();
             for (String radicalID : radicalPositions) {
                 thisFrag.addOutAtom(firstIdInFrag + Integer.parseInt(radicalID) - 1, 1, true);
@@ -2964,7 +2958,7 @@ class ComponentProcessor {
 		if (outAtomCount ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 			Element possibleLocant =(Element) XOMTools.getPreviousSibling(group);
 			if (possibleLocant !=null){
-				String[] locantValues = matchComma.split(possibleLocant.getValue());
+				String[] locantValues = MATCH_COMMA.split(possibleLocant.getValue());
 				if (locantValues.length==2){
 					thisFrag.getOutAtom(0).setLocant(locantValues[0]);
 					thisFrag.getOutAtom(1).setLocant(locantValues[1]);
@@ -3255,7 +3249,7 @@ class ComponentProcessor {
 						break;
 					}
 					locantRelatedElements.add(childrenOfElementBeforeSubstituent.get(i));
-					locantValues = matchComma.split(childrenOfElementBeforeSubstituent.get(i).getValue());
+					locantValues = MATCH_COMMA.split(childrenOfElementBeforeSubstituent.get(i).getValue());
 				}
 				else{
 					break;
@@ -3267,7 +3261,7 @@ class ComponentProcessor {
 			if (locantValues!=null){
 				Element elAfterLocant = (Element) XOMTools.getNextSibling(locantRelatedElements.get(0));
 				for (String locantText : locantValues) {
-					if (elAfterLocant.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(matchComma.split(elAfterLocant.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
+					if (elAfterLocant.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(MATCH_COMMA.split(elAfterLocant.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
 						continue;
 					}
 					
@@ -3374,9 +3368,9 @@ class ComponentProcessor {
 		if (locantEls.size()>0){
 			Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 			Element lastLocant = locantEls.get(locantEls.size()-1);//the locant that may apply to an unsaturator/suffix
-			String[] locantValues = matchComma.split(lastLocant.getValue());
+			String[] locantValues = MATCH_COMMA.split(lastLocant.getValue());
 			if (locantValues.length==1 && group.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//some trivial retained names like 2-furyl expect locants to be in front of them. For these the indirect intepretation will always be used rather than checking whether 2-(furyl) even makes sense
-				String[] allowedLocants = matchComma.split(group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
+				String[] allowedLocants = MATCH_COMMA.split(group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
 				for (String allowedLocant : allowedLocants) {
 					if (locantValues[0].equals(allowedLocant)){
 						Element expectedSuffix =(Element) XOMTools.getNextSibling(group);
@@ -3438,7 +3432,7 @@ class ComponentProcessor {
 								atomLoop: for (Atom atom : neighbours) {
 									List<String> neighbourLocants = atom.getLocants();
 									for (String neighbourLocant : neighbourLocants) {
-										if (matchNumericLocant.matcher(neighbourLocant).matches()){
+										if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){
 											b = dummyRAtom.getBondToAtomOrThrow(atom);
 											break atomLoop;
 										}
@@ -3873,7 +3867,7 @@ class ComponentProcessor {
 						multiplier = possibleMultiplier;
 					}
 					if (locant!=null){
-						if (multiplier==null || matchComma.split(locant.getValue()).length == Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR))){
+						if (multiplier==null || MATCH_COMMA.split(locant.getValue()).length == Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR))){
 							locant.detach();
 							XOMTools.insertBefore(childElements.get(0), locant);
 						}
@@ -3918,7 +3912,7 @@ class ComponentProcessor {
 			}
 			else{
 				Element locantEl = locants.get(0);
-				String[] locantValues = matchComma.split(locantEl.getValue());
+				String[] locantValues = MATCH_COMMA.split(locantEl.getValue());
 				if (locantValues.length == multiVal){
 					rightMostElement.addAttribute(new Attribute(INLOCANTS_ATR, locantEl.getValue()));
 					locantEl.detach();
@@ -3972,7 +3966,7 @@ class ComponentProcessor {
 			if (multiplier==1 && oneBelowWordLevel && XOMTools.getPreviousSibling(subOrBracket)==null){//locant might be word Level locant
 				if (wordLevelLocantsAllowed(state, subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					Element locant = locants.remove(0);
-					if (matchComma.split(locant.getValue()).length!=1){
+					if (MATCH_COMMA.split(locant.getValue()).length!=1){
 						throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
 					}
 					parentElem.addAttribute(new Attribute(LOCANT_ATR, locant.getValue()));
@@ -3990,7 +3984,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException(locantsToDebugString(locants));
 			}
 			Element locantEl = locants.get(0);
-			String[] locantValues = matchComma.split(locantEl.getValue());
+			String[] locantValues = MATCH_COMMA.split(locantEl.getValue());
 			if (multiplier != locantValues.length){
 				throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
 			}
@@ -4076,7 +4070,7 @@ class ComponentProcessor {
 				}
 				String[] locantValues = null;
 				if (locants.size()==1){
-					locantValues = matchComma.split(locants.get(0).getValue());
+					locantValues = MATCH_COMMA.split(locants.get(0).getValue());
 					if (locantValues.length == multiVal){
 						assignLocants=true;
 						locants.get(0).detach();

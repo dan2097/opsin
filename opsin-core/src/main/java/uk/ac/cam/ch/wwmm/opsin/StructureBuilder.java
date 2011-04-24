@@ -1,7 +1,14 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
@@ -9,6 +16,7 @@ import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 import nu.xom.Element;
 import nu.xom.Elements;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
 
 /**Constructs a single OPSIN fragment which describes the molecule from the ComponentGenerator/ComponentProcessor results.
@@ -18,13 +26,6 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  *
  */
 class StructureBuilder {
-
-	private final Pattern matchComma =Pattern.compile(",");
-	private final Pattern matchColon =Pattern.compile(":");
-	private final Pattern matchNumericLocant =Pattern.compile("\\d+[a-z]?'*");
-	private final Pattern matchElementSymbolLocant =Pattern.compile("[A-Z][a-z]?'*");
-	private final Pattern matchElementSymbol =Pattern.compile("[A-Z][a-z]?");
-
 	/**	Builds a molecule as a Fragment based on ComponentProcessor output.
 	 * @param state
 	 * @param molecule The ComponentProcessor output.
@@ -501,7 +502,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
 		}
 		if (locantEls.size()==1){
-			String[] locants = matchComma.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
+			String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
             locantsForOxide.addAll(Arrays.asList(locants));
 			locantEls.get(0).detach();
 		}
@@ -633,7 +634,7 @@ class StructureBuilder {
 				}
 				else if (children.size()==2 && children.get(0).getAttribute(LOCANT_ATR)!=null ){
 					String locant =children.get(0).getAttributeValue(LOCANT_ATR);
-					if (children.get(1).getLocalName().equals(ROOT_EL) && !frag.hasLocant(locant) && matchNumericLocant.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
+					if (children.get(1).getLocalName().equals(ROOT_EL) && !frag.hasLocant(locant) && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
 						locantForFunctionalTerm.add(children.get(0).getAttributeValue(LOCANT_ATR));
 						children.get(0).removeAttribute(children.get(0).getAttribute(LOCANT_ATR));
 					}
@@ -672,7 +673,7 @@ class StructureBuilder {
 				throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
 			}
 			if (locantEls.size()==1){
-				String[] locants = matchComma.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
+				String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
                 locantForFunctionalTerm.addAll(Arrays.asList(locants));
 				locantEls.get(0).detach();
 			}
@@ -868,7 +869,7 @@ class StructureBuilder {
 					if (anhydrideLocant ==null){
 						throw new StructureBuildingException("Anhydride formation appears to be ambiguous; More than 2 acids, no locants");
 					}
-					String[] acidLocants =matchColon.split(StringTools.removeDashIfPresent(anhydrideLocant));
+					String[] acidLocants =MATCH_COLON.split(StringTools.removeDashIfPresent(anhydrideLocant));
 					if (acidLocants.length != numberOfAnhydrideLinkages){
 						throw new StructureBuildingException("Mismatch between number of locants and number of anhydride linkages to form");
 					}
@@ -881,7 +882,7 @@ class StructureBuilder {
 					}
 			
 					for (int i = 0; i < numberOfAnhydrideLinkages; i++) {
-						String[] locants = matchComma.split(acidLocants[i]);
+						String[] locants = MATCH_COMMA.split(acidLocants[i]);
 						Atom oxygen1 =null;
 						for (int j = functionalAtoms.size() -1; j >=0; j--) {
 							Atom functionalAtom = functionalAtoms.get(j);
@@ -1058,7 +1059,7 @@ class StructureBuilder {
 					}
 					else{
 						if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
-							String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+							String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 							expectedValency = Integer.parseInt(typicalOxidationStates[0]);
 						}
 						else{
@@ -1372,7 +1373,7 @@ class StructureBuilder {
 			subBr.removeOutAtom(i);
 			Atom atomToUse = null;
 			if (out.getLocant()!=null){
-				boolean numericLocant = matchNumericLocant.matcher(out.getLocant()).matches();
+				boolean numericLocant = MATCH_NUMERIC_LOCANT.matcher(out.getLocant()).matches();
 				for (Fragment possibleAcetalFrag : acetalFrags) {
 					if (numericLocant){
 						Atom a  =OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAcetalFrag.getFirstAtom(), out.getLocant());
@@ -1469,7 +1470,7 @@ class StructureBuilder {
 				return possibleAtom;
 			}
 		}
-		if (matchNumericLocant.matcher(locant).matches()){
+		if (MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
 			//None of the functional atoms had an appropriate locant. Look for the case whether the locant refers to the backbone. e.g. 5-methyl 2-aminopentanedioate
 			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
@@ -1482,11 +1483,11 @@ class StructureBuilder {
 				}
 			}
 		}
-		else if (matchElementSymbolLocant.matcher(locant).matches()){
+		else if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locant).matches()){
 			//None of the functional atoms had an appropriate locant. Look for the special cases:
 			//	Where the lack of primes on an element symbol locant should be ignored e.g. O,O-diethyl carbonate
 			//	Where the locant is used to decide on the ester configuration c.f. O-methyl ..thioate and S-methyl ..thioate
-			boolean isElementSymbol = matchElementSymbol.matcher(locant).matches();
+			boolean isElementSymbol = MATCH_ELEMENT_SYMBOL.matcher(locant).matches();
 			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 				if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
@@ -1652,7 +1653,7 @@ class StructureBuilder {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
 				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
 				if (cationicFrag.getFirstAtom().getCharge()==0){//if not 0 charge cannot be implicitly modified
-					String[] typicalOxidationStates = matchComma.split(matchColon.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+					String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
 					if (typicalCharge > cationicFrag.getFirstAtom().getAtomNeighbours().size()){
 						cationicElements.add(elementaryAtom);
@@ -1733,7 +1734,7 @@ class StructureBuilder {
 	private int setCationicElementsToTypicalCharge(BuildState state, List<Element> cationicElements, int overallCharge)  {
 		for (Element cationicElement : cationicElements) {
 			Fragment cationicFrag = state.xmlFragmentMap.get(cationicElement);
-			String[] typicalOxidationStates = matchComma.split(matchColon.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+			String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 			int incomingValency = cationicFrag.getFirstAtom().getIncomingValency();
 			for (String typicalOxidationState : typicalOxidationStates) {
 				int charge = Integer.parseInt(typicalOxidationState);
@@ -1821,7 +1822,7 @@ class StructureBuilder {
 	private boolean setChargeOnCationicElementAppropriately(BuildState state, int overallCharge, Element cationicElement)  {
 		Atom cation = state.xmlFragmentMap.get(cationicElement).getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
-		int maximumCharge = Integer.parseInt(matchColon.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
+		int maximumCharge = Integer.parseInt(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
 		if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
 			cation.setCharge(chargeOnCationNeeded);
 			return true;

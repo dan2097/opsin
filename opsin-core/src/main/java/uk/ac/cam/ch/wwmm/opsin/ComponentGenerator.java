@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -80,16 +81,13 @@ class ComponentGenerator {
 	private final static Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private final static Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
 	private final static Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*");
-	private final static Pattern matchComma =Pattern.compile(",");
 	private final static Pattern matchCommaOrDash =Pattern.compile("[,-]");
-	private final static Pattern matchSemiColon =Pattern.compile(";");
 	private final static Pattern matchHdigit =Pattern.compile("H\\d");
 	private final static Pattern matchDigit =Pattern.compile("\\d+");
 	private final static Pattern matchNonDigit =Pattern.compile("\\D+");
 	private final static Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~]*([^\\^\\[\\(\\{~\\]\\)\\}]+)[^\\[\\(\\{]*");
 	private final static Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
 	private final static Pattern matchBracketAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{](.*)[\\]\\)\\}]$");
-	private final static Pattern matchElementSymbol = Pattern.compile("[A-Z][a-z]?");
 	private final static Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
@@ -159,7 +157,7 @@ class ComponentGenerator {
 							Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
 							if (isThisALocant == null ||
 									!isThisALocant.getLocalName().equals(LOCANT_EL) ||
-									matchComma.split(isThisALocant.getValue()).length != multiplierNum){
+									MATCH_COMMA.split(isThisALocant.getValue()).length != multiplierNum){
 								throw new ComponentGenerationException(apparentMultiplier.getValue() + nextEl.getValue() +" should not have been lexed as two tokens!");
 							}
 						}
@@ -172,7 +170,7 @@ class ComponentGenerator {
 				if (possibleLocantOrMultiplierOrSuffix!=null){//null if not used as substituent
 					if (possibleLocantOrMultiplierOrSuffix.getLocalName().equals(SUFFIX_EL)){//for phen the aryl substituent, expect an adjacent suffix e.g. phenyl, phenoxy
 						Element isThisALocant =(Element)XOMTools.getPreviousSibling(apparentMultiplier);
-						if (isThisALocant == null || !isThisALocant.getLocalName().equals(LOCANT_EL) || matchComma.split(isThisALocant.getValue()).length != 1){
+						if (isThisALocant == null || !isThisALocant.getLocalName().equals(LOCANT_EL) || MATCH_COMMA.split(isThisALocant.getValue()).length != 1){
 							String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
 							throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
 						}
@@ -204,7 +202,7 @@ class ComponentGenerator {
 						}
 						currentElem = (Element)XOMTools.getNextSibling(currentElem);
 					}
-					String[] locants = matchComma.split(fusionText.substring(1, fusionText.length()-1));
+					String[] locants = MATCH_COMMA.split(fusionText.substring(1, fusionText.length()-1));
 					if (locants.length == heteroCount){
 						boolean foundLocantNotInHwSystem =false;
 						for (String locant : locants) {
@@ -274,7 +272,7 @@ class ComponentGenerator {
 						if (brackettedText.endsWith("H")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
-							String[] addedHydrogens = matchComma.split(brackettedText);
+							String[] addedHydrogens = MATCH_COMMA.split(brackettedText);
 							for (String addedHydrogen : addedHydrogens) {
 								Element addedHydrogenElement=new Element(ADDEDHYDROGEN_EL);
 								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length()-1)));
@@ -327,13 +325,13 @@ class ComponentGenerator {
 	 * @param locant
 	 */
 	private static void ifCarbohydrateLocantConvertToAminoAcidStyleLocant(Element locant) {
-		if (matchElementSymbol.matcher(locant.getValue()).matches()){
+		if (MATCH_ELEMENT_SYMBOL.matcher(locant.getValue()).matches()){
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(locant);
 			if (possibleMultiplier!=null && possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				Element possibleOtherLocant = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
 				if (possibleOtherLocant!=null){
-					String[] locantValues = matchComma.split(possibleOtherLocant.getValue());
+					String[] locantValues = MATCH_COMMA.split(possibleOtherLocant.getValue());
 					if (locantValues.length == Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR))){
 						for (int i = 0; i < locantValues.length; i++) {
 							locantValues[i] = locant.getValue() + locantValues[i];
@@ -405,7 +403,7 @@ class ComponentGenerator {
 			ompLocant.setLocalName(LOCANT_EL);
 			ompLocant.removeChildren();
 			ompLocant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
-			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) || (afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && matchComma.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
+			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) || (afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && MATCH_COMMA.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
 				if ("o".equalsIgnoreCase(firstChar)){
 					ompLocant.appendChild("1,ortho");
 				}
@@ -583,7 +581,7 @@ class ComponentGenerator {
 					multipliedElem.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)) {
 				
 				Element possiblyALocant = (Element)XOMTools.getPreviousSibling(m);//detect rare case where multiplier does not mean form a chain of heteroatoms e.g. something like 1,2-disulfanylpropane
-				if(possiblyALocant !=null && possiblyALocant.getLocalName().equals(LOCANT_EL)&& mvalue==matchComma.split(possiblyALocant.getValue()).length){
+				if(possiblyALocant !=null && possiblyALocant.getLocalName().equals(LOCANT_EL)&& mvalue==MATCH_COMMA.split(possiblyALocant.getValue()).length){
 					Element suffix =(Element) XOMTools.getNextSibling(multipliedElem, SUFFIX_EL);
 					if (suffix !=null && suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL)){
 						Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(suffix);
@@ -664,13 +662,13 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void checkForAmbiguityWithHWring(String firstHeteroAtomSMILES, String secondHeteroAtomSMILES) throws ComponentGenerationException {
-		Matcher m = matchElementSymbol.matcher(firstHeteroAtomSMILES);
+		Matcher m = MATCH_ELEMENT_SYMBOL.matcher(firstHeteroAtomSMILES);
 		if (!m.find()){
 			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
 		String atom1Element = m.group();
 		
-		m = matchElementSymbol.matcher(secondHeteroAtomSMILES);
+		m = MATCH_ELEMENT_SYMBOL.matcher(secondHeteroAtomSMILES);
 		if (!m.find()){
 			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
@@ -693,7 +691,7 @@ class ComponentGenerator {
 			if (!StringTools.endsWithCaseInsensitive(txt, "h")){//remove brackets if they are present
 				txt = txt.substring(1, txt.length()-1);
 			}
-			String[] hydrogenLocants =matchComma.split(txt);
+			String[] hydrogenLocants =MATCH_COMMA.split(txt);
             for (String hydrogenLocant : hydrogenLocants) {
                 if (StringTools.endsWithCaseInsensitive(hydrogenLocant, "h")) {
                     Element newHydrogenElement = new Element(INDICATEDHYDROGEN_EL);
@@ -777,14 +775,14 @@ class ComponentGenerator {
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(CISORTRANS_TYPE_VAL)){//assign a locant if one is directly before the cis/trans
 				Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
-				if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && matchComma.split(possibleLocant.getValue()).length==1){
+				if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
 					stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 					possibleLocant.detach();
 				}
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
 				String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
-				String[] stereoChemistryDescriptors = matchComma.split(txt);
+				String[] stereoChemistryDescriptors = MATCH_COMMA.split(txt);
 				List<String> locants = new ArrayList<String>();
 	      		boolean createLocantsEl =false;
                 for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
@@ -879,7 +877,7 @@ class ComponentGenerator {
 				currentInfixInformation = new ArrayList<String>();
 			}
 			else{
-				currentInfixInformation = StringTools.arrayToList(matchSemiColon.split(suffix.getAttributeValue(INFIX_ATR)));
+				currentInfixInformation = StringTools.arrayToList(MATCH_SEMICOLON.split(suffix.getAttributeValue(INFIX_ATR)));
 			}
 			String infixValue =infix.getAttributeValue(VALUE_ATR);
 			currentInfixInformation.add(infixValue);
@@ -948,7 +946,7 @@ class ComponentGenerator {
 		}
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			boolean frontLocantsExpected =false;//Is the lambdaConvention el followed by benz/benzo of a fused ring system (these have front locants which correspond to the final fused rings numbering) or by a polycylicspiro system
-			String[] lambdaValues = matchComma.split(StringTools.removeDashIfPresent(lambdaConventionEl.getValue()));
+			String[] lambdaValues = MATCH_COMMA.split(StringTools.removeDashIfPresent(lambdaConventionEl.getValue()));
 			Element possibleHeteroatomOrMultiplier = (Element) XOMTools.getNextSibling(lambdaConventionEl);
 			int heteroCount = 0;
 			int multiplierValue = 1;
