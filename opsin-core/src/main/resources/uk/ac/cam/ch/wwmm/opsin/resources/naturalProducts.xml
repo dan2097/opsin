@@ -3,7 +3,9 @@
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="╢">
 <!--alkaloids-->
+		<token value="C1[C@@H]2C[C@@H]3[C@H]1[C@H](CC2)[C@H]1C[C@@H]2[C@H]4CCC[C@@]32[C@@H]1NC4" labels="14/13/12/10/9/8/15/16/7/6/5/4/3/2/1/11/17/18/19" valType="SMILES" alphaBetaClockWiseAtomOrdering="10/9/8/7/6/5/4/3/2/1/11">aconit</token>
 		<token value="c1cccc2[C@@]34CCCC[C@H]3[C@@H](Cc12)NCC4" labels="1/2/3/4/12/13/5/6/7/8/14/9/10/11/17/16/15" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2">morphin</token>
+		<token value="[C@H]12CCC[C@@H]3CC1.N23C" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/6/7">trop</token>
 <!--steroids-->
 		<token value="[CH3][C@@]12[CH2][CH2][CH2][C@H]1[C@@H]1[CH2][CH2][CH]3[CH2][CH2][CH2][CH2][C@]3([CH3])[C@H]1[CH2][CH2]2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androst</token>
 		<token value="[CH3][CH]([CH3])[C@H]([CH3])[CH2][CH2][C@@H]([CH3])[C@H]1[CH2][CH2][C@H]2[C@@H]3[CH2][CH2][CH]4[CH2][CH2][CH2][CH2][C@]4([CH3])[C@H]3[CH2][CH2][C@]12[CH3]" labels="26/25/27/24/28/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">campest</token>
@@ -33,6 +35,10 @@
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="z">
+<!--alkaloids-->
+		<token value="c1ccc2CCN(C)C3Cc4ccccc4c1c23" labels="1/2/3/3a/4/5/6/12/6a/7/7a/8/9/10/11/11a/11b/11c" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/11b">aporphin</token>
+		<token value="c1cccc2CCN3Cc4ccccc4CC3c12" labels="1/2/3/4/4a/5/6/7/8/8a/9/10/11/12/12a/13/13a/13b" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/4a/5/6/7/8/8a/9/10/11/12/12a/13/13a/13b">berbin</token>
+		<token value="C1CN[C@@H]2Cc3c[nH]c4cccc([C@H]2C1)c34" labels="8/7/6/5/4/3/2/1/15/14/13/12/11/10/9/16" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2">ergolin</token>
 <!--misc-->
 		<token value="S1CCCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">cepham</token>
 		<token value="S1CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">penam</token>
