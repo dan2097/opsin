@@ -732,7 +732,7 @@ class ComponentGenerator {
                         if (m.matches()){
                         	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
                                 Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
-                                if (!m.group(1).isEmpty()){
+                                if (m.group(1).length()!=0){
 	                                stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
 	                                locants.add(m.group(1));
                                 }

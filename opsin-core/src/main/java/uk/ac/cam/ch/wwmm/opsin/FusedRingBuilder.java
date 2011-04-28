@@ -429,9 +429,9 @@ class FusedRingBuilder {
 					boolean simpleFusion = MATCH_COLON.split(fusionDescriptor).length <= 1;
 					if (simpleFusion){
 						String[] fusionArray = determineNumericalAndLetterComponents(fusionDescriptor);
-						if (!fusionArray[1].isEmpty()){
+						if (fusionArray[1].length() != 0){
 							int numberOfPrimes =StringTools.countTerminalPrimes(fusionArray[1]);
-							if (fusionArray[0].isEmpty()){
+							if (fusionArray[0].length() == 0){
 								fusionDescriptor = fusionArray[1].replaceAll("'", "");
 							}
 							else{
