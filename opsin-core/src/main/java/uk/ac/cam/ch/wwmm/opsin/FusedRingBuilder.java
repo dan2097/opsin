@@ -288,6 +288,7 @@ class FusedRingBuilder {
             if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
             	aromatiseCyclicAlkane(group);
             }
+            processPartiallyUnsaturatedHWSystems(group, ring);
             if (group == lastGroup) {
                 //perform a quick check that every atom in this group is infact cyclic. Fusion components are enumerated and hence all guaranteed to be purely cyclic
                 List<Atom> atomList = ring.getAtomList();
@@ -311,6 +312,28 @@ class FusedRingBuilder {
                 ring.sortAtomListByLocant();//for those where the order the locants are in is sensible
             }
         }
+	}
+
+	/**
+	 * Interprets the unlocanted unsaturator after a partially unsaturated HW Rings as indication of spare valency and detaches it
+     * This is necessary as this unsaturator can only refer to the HW ring and for names like 2-Benzoxazolinone to avoid confusion as to what the 2 refers to.
+	 * @param group
+	 * @param ring
+	 * @throws StructureBuildingException
+	 */
+	private void processPartiallyUnsaturatedHWSystems(Element group, Fragment ring) throws StructureBuildingException {
+		if (HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(ADDBOND_ATR)!=null){
+			List<Element> unsaturators = XOMTools.getNextAdjacentSiblingsOfType(group, UNSATURATOR_EL);
+			if (unsaturators.size()>0){
+				Element unsaturator = unsaturators.get(0);
+				if (unsaturator.getAttribute(LOCANT_ATR)==null && unsaturator.getAttributeValue(VALUE_ATR).equals("2")){
+					unsaturator.detach();
+					Bond bondToUnsaturate = StructureBuildingMethods.findBondToUnSaturate(ring.getAtomList(), 2, true);
+					bondToUnsaturate.getFromAtom().setSpareValency(true);
+					bondToUnsaturate.getToAtom().setSpareValency(true);
+				}
+			}
+		}		
 	}
 
 	/**
