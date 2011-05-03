@@ -173,7 +173,7 @@
 		<token value="-Cc1ccsc1" labels="alpha/3/4/5/1/2" valType="SMILES">then-3-yl</token>
 		<token value="=Cc1ccsc1" labels="alpha/3/4/5/1/2" valType="SMILES">then-3-ylidene</token>
 		<token value="#Cc1ccsc1" labels="alpha/3/4/5/1/2" valType="SMILES">then-3-ylidyne</token>
-		<token value="-C(=O)c1ccsc1" labels="alpha/3/4/5/1/2" valType="SMILES">then-3-oyl</token>
+		<token value="-C(=O)c1ccsc1" labels="alpha//3/4/5/1/2" valType="SMILES">then-3-oyl</token>
 		<token value="-C(C)(C)C(C)C" labels="none" valType="SMILES">thexyl</token>
 		<token value="-S" labels="none" valType="SMILES">thiyl</token>
 		<token value="-c1cc(C)ccc1C(C)C" labels="none" valType="SMILES">thymyl</token>
