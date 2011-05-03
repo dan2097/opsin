@@ -16,6 +16,7 @@
 		<token value="N[O+]" labels="none" valType="SMILES">aminoxylium</token>
 		<!--<token value="[O-]C(C[N+](C)(C)C)=O" labels="none" valType="SMILES">betaine</token> also is a modifier of other amino acids-->
 		<token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'" valType="SMILES">biacetyl</token>
+    <token value="[O-]C(=O)C(O)C(O)C(=O)O" labels="none" valType="SMILES" functionalIDs="1">bitartrate</token>
 		<token value="O=C(CN(CCO)CCO)O" labels="none" valType="SMILES">bicine</token>
 		<token value="C=C(C(C)=C)C" labels="none" valType="SMILES">biisopropenyl</token>
 		<token value="CC(C(C)C)C" labels="none" valType="SMILES">biisopropyl</token>
@@ -41,6 +42,8 @@
 		<token value="NNC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbazone</token>
 		<token value="CO" labels="none" valType="SMILES">carbinol</token>
 		<token value="OC(C[N+](C)(C)C)CC([O-])=O" labels="none" valType="SMILES">carnitine</token>
+		<token value="O[C@@H](C[N+](C)(C)C)CC([O-])=O" labels="none" valType="SMILES">l-carnitine</token>
+		<token value="O[C@H](C[N+](C)(C)C)CC([O-])=O" labels="none" valType="SMILES">d-carnitine</token>
 		<token value="N=NC(=O)N=N" labels="1/2/3//4/5" valType="SMILES">carbodiazone</token>
 		<token value="N=C=N" labels="1//3" valType="SMILES">carbodiimide</token>
 		<token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbonohydrazide</token>
