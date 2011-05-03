@@ -89,6 +89,7 @@
     <token value="CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cinnam</token>
     <token value="Cc1cnccc1" labels="/3,meta/2,ortho/1/6/5/4,para" valType="SMILES">nicotin</token>
     <token value="Cc1ccncc1" labels="/4,para/3,meta/2,ortho/1/6/5" valType="SMILES">isonicotin</token>
+		<token value="c1cccs1" labels="2/3/4/5/1" valType="SMILES" addGroup="C locant2 alpha" frontLocantsExpected="2,3" suffixAppliesTo="6">then</token>
 
     <token value="Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="OC locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anis</token>
 		<token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">arachid</token>
