@@ -178,6 +178,11 @@
     <token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES" defaultInID="4">salicyl</token><!--c.f. acetylsalicylic acid-->
     <token value="CC=C(C)C" labels="none" valType="SMILES">seneci</token><!--unknown-->
     <token value="CC(O)C(O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">tartar</token><!--unknown-->
+    <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">l-tartar</token><!--unknown-->
+    <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">levotartar</token><!--unknown-->
+    <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">d-tartar</token><!--unknown-->
+    <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">dextrotartar</token><!--unknown-->
+    <token value="C[C@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">mesotartar</token><!--unknown-->
     <token value="CC(O)C" suffixAppliesTo="1,4" labels="none" valType="SMILES">tartron</token><!--unknown-->
 		<token value="C\C(C)=C\C" labels="none" valType="SMILES">tigl</token><!--both-->
     <token value="CCC(C)CC" suffixAppliesTo="1,4,6" labels="none" valType="SMILES">tricarballyl</token><!--unknown-->
