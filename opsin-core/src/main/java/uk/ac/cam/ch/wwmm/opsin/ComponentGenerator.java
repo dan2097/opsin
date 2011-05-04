@@ -1849,13 +1849,13 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (groupValue.equals("methylene")) {//e.g. 3,4-methylenedioxyphenyl
+		else if (groupValue.equals("methylene") || groupValue.equals("methylen")) {//e.g. 3,4-methylenedioxyphenyl
 			Element nextSub = (Element) XOMTools.getNextSibling(group.getParent());
 			if (nextSub !=null && nextSub.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null 
 					&& (XOMTools.getPreviousSibling(group)==null || !((Element)XOMTools.getPreviousSibling(group)).getLocalName().equals(MULTIPLIER_EL))){//not trimethylenedioxy
 				Elements children = nextSub.getChildElements();
 				if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
-					XOMTools.setTextChild(group, "methylenedioxy");
+					XOMTools.setTextChild(group, groupValue + "dioxy");
 					group.getAttribute(VALUE_ATR).setValue("C(O)O");
 					group.getAttribute(VALTYPE_ATR).setValue(SMILES_VALTYPE_VAL);
 					group.getAttribute(OUTIDS_ATR).setValue("2,3");
@@ -1874,7 +1874,7 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (groupValue.equals("ethylene")) {
+		else if (groupValue.equals("ethylene") || groupValue.equals("ethylen")) {
 			Element previous = (Element)XOMTools.getPreviousSibling(group);
 			if (previous!=null && previous.getLocalName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
@@ -1923,8 +1923,32 @@ class ComponentGenerator {
 					}
 				}
 			}
+			else{
+				Element nextSub = (Element) XOMTools.getNextSibling(group.getParent());
+				if (nextSub !=null && nextSub.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null){
+					Elements children = nextSub.getChildElements();
+					if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
+						XOMTools.setTextChild(group, groupValue + "dioxy");
+						group.getAttribute(VALUE_ATR).setValue("C(O)CO");
+						group.getAttribute(VALTYPE_ATR).setValue(SMILES_VALTYPE_VAL);
+						group.getAttribute(OUTIDS_ATR).setValue("2,4");
+						group.getAttribute(SUBTYPE_ATR).setValue(EPOXYLIKE_SUBTYPE_VAL);
+						if (group.getAttribute(LABELS_ATR)!=null){
+							group.getAttribute(LABELS_ATR).setValue(NONE_LABELS_VAL);
+						}
+						else{
+							group.addAttribute(new Attribute(LABELS_ATR, NONE_SUBTYPE_VAL));
+						}
+						nextSub.detach();
+						for (int i = children.size() -1 ; i >=2; i--) {
+							children.get(i).detach();
+							XOMTools.insertAfter(group, children.get(i));
+						}
+					}
+				}
+			}
 		}
-		else if (groupValue.equals("propylene")) {
+		else if (groupValue.equals("propylene") || groupValue.equals("propylen")) {
 			Element previous = (Element)XOMTools.getPreviousSibling(group);
 			if (previous!=null && previous.getLocalName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
