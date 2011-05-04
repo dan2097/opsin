@@ -269,7 +269,7 @@ class ComponentGenerator {
 					Matcher m = matchBracketAtEndOfLocant.matcher(locantText);
 					if (m.find()){
 						String brackettedText = m.group(1);
-						if (brackettedText.endsWith("H")){
+						if (StringTools.endsWithCaseInsensitive(brackettedText, "H")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
 							String[] addedHydrogens = MATCH_COMMA.split(brackettedText);
