@@ -15,6 +15,9 @@
   <tokenList tagname="functionalGroup" type="functionalClass" subType="functionalClassGroup" symbol="Æ">
 <!--The atom that replaces the carbonyl oxygen is the last atom in the SMILES so that the first is where unlocanted substitution occurs)-->
     <token value="ON" labels="O/" valType="SMILES">oxime</token>
+    <token value="SN" labels="S/" valType="SMILES">thioxime</token>
+    <token value="[Se|2]N" labels="Se/" valType="SMILES">selenoxime</token>
+    <token value="[Te|2]N" labels="Te/" valType="SMILES">telluroxime</token>
     <token value="NN" labels="1,N/" valType="SMILES">hydrazone</token>
     <token value="NC(=O)NN" labels="4/3//2/1" valType="SMILES">semicarbazone</token>
     <token value="NC(=S)NN" labels="4/3//2/1" valType="SMILES">thiosemicarbazone</token>
