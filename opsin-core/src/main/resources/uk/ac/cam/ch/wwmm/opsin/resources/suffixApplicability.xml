@@ -40,6 +40,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="amide">amide</suffix>
     <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidine">amidine</suffix>
+    <suffix value="amidinium">amidinium</suffix>
     <suffix value="amidium">amidium</suffix>
     <suffix value="amido">amido</suffix>
     <suffix value="anilide">anilide</suffix>
@@ -121,6 +122,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="amide">amide</suffix>
     <suffix value="amidylium">amidylium</suffix>
     <suffix value="amidine">amidine</suffix>
+    <suffix value="amidinium">amidinium</suffix>
     <suffix value="amidium">amidium</suffix>
     <suffix value="amido">amido</suffix>
     <suffix value="amine">amine</suffix>

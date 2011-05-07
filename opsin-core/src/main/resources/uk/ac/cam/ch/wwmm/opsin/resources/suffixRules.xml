@@ -31,6 +31,10 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=N)N" functionalIDs="3,3" labels="/N2/N1"/>
   </rule>
+  <rule value="amidinium">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=[NH2+])N" functionalIDs="3,3" labels="/N2/N1"/>
+  </rule>
   <rule value="amidium">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)[NH3+]" functionalIDs="3,3" />

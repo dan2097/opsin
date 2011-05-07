@@ -14,6 +14,7 @@
 		<token value="[NH2]" labels="none" valType="SMILES" outIDs="1">amidogen</token>
 		<token value="N[O-]" labels="none" valType="SMILES">aminoxide</token>
 		<token value="N[O+]" labels="none" valType="SMILES">aminoxylium</token>
+		<token value="[NH2+]" labels="none" valType="SMILES">aminylium</token>
 		<!--<token value="[O-]C(C[N+](C)(C)C)=O" labels="none" valType="SMILES">betaine</token> also is a modifier of other amino acids-->
 		<token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'" valType="SMILES">biacetyl</token>
     <token value="[O-]C(=O)C(O)C(O)C(=O)O" labels="none" valType="SMILES" functionalIDs="1">bitartrate</token>
