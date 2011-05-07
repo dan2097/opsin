@@ -433,6 +433,7 @@ class XmlDeclarations {
 	static final String SUFFIXRULES_CHARGEHYDROXYGROUPS_EL = "chargeHydroxyGroups";
 	static final String SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL = "removeOneDoubleBondedOxygen";
 	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL = "convertHydroxyGroupsToOutAtoms";
+	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL = "convertHydroxyGroupsToPositiveCharge";
 	static final String SUFFIXRULES_VALUE_ATR = "value";
 	static final String SUFFIXRULES_SUBTYPE_ATR = "value";
 	static final String SUFFIXRULES_SMILES_ATR = "SMILES";

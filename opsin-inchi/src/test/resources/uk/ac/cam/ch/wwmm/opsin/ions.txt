@@ -1,0 +1,9 @@
+//P-73.2.3.1
+acetylium	InChI=1/C2H3O/c1-2-3/h1H3/q+1
+cyclohexanecarbonylium	InChI=1/C7H11O/c8-6-7-4-2-1-3-5-7/h7H,1-5H2/q+1
+pentanthioylium	InChI=1/C5H9S/c1-2-3-4-5-6/h2-4H2,1H3/q+1
+pentanoylium	InChI=1/C5H9O/c1-2-3-4-5-6/h2-4H2,1H3/q+1
+pentanylium	InChI=1/C5H11/c1-3-5-4-2/h1,3-5H2,2H3/q+1
+ethenesulfinylium	InChI=1/C2H3OS/c1-2-4-3/h2H,1H2/q+1
+dimethylphosphinoylium	InChI=1/C2H6OP/c1-4(2)3/h1-2H3/q+1
+methylphosphonoylium	InChI=1/CH3OP/c1-3-2/h1H3/q+2

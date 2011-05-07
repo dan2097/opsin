@@ -1,6 +1,6 @@
 <!ELEMENT suffixRulesList (rule)+>
 
-<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutAtom|changecharge|addFunctionalAtomsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutAtoms)+>
+<!ELEMENT rule (addgroup|addSuffixPrefixIfNonePresentAndCyclic|setOutAtom|changecharge|addFunctionalAtomsToHydroxyGroups|chargeHydroxyGroups|removeOneDoubleBondedOxygen|convertHydroxyGroupsToOutAtoms|convertHydroxyGroupsToPositiveCharge)+>
 <!ATTLIST rule value CDATA #REQUIRED
                subType CDATA #IMPLIED>
 
@@ -21,3 +21,4 @@
 <!ELEMENT chargeHydroxyGroups EMPTY>
 <!ELEMENT removeOneDoubleBondedOxygen EMPTY>
 <!ELEMENT convertHydroxyGroupsToOutAtoms EMPTY>
+<!ELEMENT convertHydroxyGroupsToPositiveCharge EMPTY>

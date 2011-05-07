@@ -3,6 +3,14 @@
 <!-- See the DTD and the OPSIN code (ComponentProcessor.resolveGroupAddingSuffixes and ComponentProcessor.resolveSuffixes) to make
 sense of this -->
 <suffixRulesList>
+  <rule value="acylium">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*]=O"/>
+    <changecharge charge="1" protons="-1" />
+  </rule>
+  <rule value="acylium_nonCarboxylic">
+    <convertHydroxyGroupsToPositiveCharge />
+  </rule>
   <rule value="aldehyde">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*]=O"/>
@@ -81,6 +89,9 @@ sense of this -->
   </rule>
   <rule value="carbonyl">
     <addgroup SMILES="[*]C(=O)" outIDs="2"/>
+  </rule>
+  <rule value="carbonylium">
+    <addgroup SMILES="[*][C+]=O"/>
   </rule>
   <rule value="carboxylic">
     <addgroup SMILES="[*]C(=O)O" functionalIDs="4"/>
