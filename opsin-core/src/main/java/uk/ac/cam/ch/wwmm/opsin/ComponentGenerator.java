@@ -1364,7 +1364,15 @@ class ComponentGenerator {
 					Element beforeSuffix = (Element) XOMTools.getPreviousSibling(suffix);
 					String o = beforeSuffix.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR);
 					if (o ==null || !StringTools.endsWithCaseInsensitive(o, "o")){
-						throw new ComponentGenerationException("ylium is intended to be the removal of H- in this context not the formation of an acylium ion");
+						if (group!=null && ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+							//contracted form for removal of hydride e.g. 9-Anthrylium
+							suffix.getAttribute(VALUE_ATR).setValue("ylium");
+							suffix.getAttribute(TYPE_ATR).setValue(CHARGE_TYPE_VAL);
+							suffix.removeAttribute(suffix.getAttribute(SUBTYPE_ATR));
+						}
+						else{
+							throw new ComponentGenerationException("ylium is intended to be the removal of H- in this context not the formation of an acylium ion");
+						}
 					}
 				}
 			}

@@ -134,6 +134,7 @@
     <token value="anilide">anilid</token>
     <token value="amidine">amidine</token><!--deprecated-->
     <token value="amidine">amidin</token><!--deprecated-->
+    <token value="amidinium">amidinium</token><!--deprecated-->
     <token value="ate">ate</token>
     <token value="ate">at</token>
     <token value="hydrazide">hydrazide</token>
