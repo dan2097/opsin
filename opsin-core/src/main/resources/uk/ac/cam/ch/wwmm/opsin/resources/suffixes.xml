@@ -11,6 +11,7 @@
     <token value="aminide">aminid</token>
     <token value="aminium">aminium</token>
     <token value="aminylium">aminylium</token>
+    <token value="carbonylium">carbonylium</token>
     <token value="carboxylate">carboxylate</token>
     <token value="carboxylate">carboxylat</token>
     <token value="carboxylic">carboxylic</token>
@@ -148,5 +149,6 @@
     <token value="nitrile">nitrile</token>
     <token value="nitrile">nitril</token>
     <token value="nitrilium">nitrilium</token>
+    <token value="acylium">ylium</token>
   </tokenList>
 </tokenLists>

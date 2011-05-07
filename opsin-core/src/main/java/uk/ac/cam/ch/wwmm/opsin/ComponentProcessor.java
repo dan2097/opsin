@@ -1474,7 +1474,7 @@ class ComponentProcessor {
 	    }
 		processSuffixPrefixes(state, suffixes);//e.g. carbox amide
 		FunctionalReplacement.processInfixFunctionalReplacementNomenclature(state, suffixes, suffixFragments);
-		processConvertHydroxyGroupsToOutAtomsRule(state, suffixes, suffixableFragment);
+		processRemovalOfHydroxyGroupsRules(state, suffixes, suffixableFragment);
 
 		if (group.getValue().equals("oxal")){//oxalic acid is treated as a non carboxylic acid for the purposes of functional replacment. See P-65.2.3
 			resolveSuffixes(state, group, suffixes);
@@ -1703,17 +1703,16 @@ class ComponentProcessor {
 		return suffixFragments;
 	}
 	
-	/**Processes any convertHydroxyGroupsToOutAtoms instructions
+	/**Processes any convertHydroxyGroupsToOutAtoms and convertHydroxyGroupsToPositiveCharge instructions
 	 * This is not handled as part of resolveGroupAddingSuffixes as something like carbonochloridoyl involves infix replacement
 	 * on a hydroxy that would otherwise actually be removed by this rule!
 	 * @param state
 	 * @param suffixes The suffix elements for a fragment.
 	 * @param frag The fragment to which the suffix will be applied
-	 * @return An arrayList containing the generated fragments
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException 
 	 */
-	private void processConvertHydroxyGroupsToOutAtomsRule(BuildState state, List<Element> suffixes, Fragment frag) throws ComponentGenerationException, StructureBuildingException{
+	private void processRemovalOfHydroxyGroupsRules(BuildState state, List<Element> suffixes, Fragment frag) throws ComponentGenerationException, StructureBuildingException{
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
@@ -1731,6 +1730,9 @@ class ComponentProcessor {
                 String suffixRuleTagName = suffixRuleTag.getLocalName();
                 if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)){
 					convertHydroxyGroupsToOutAtoms(state, frag);
+				}
+                else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL)){
+					convertHydroxyGroupsToPositiveCharge(state, frag);
 				}
             }
         }
@@ -1801,7 +1803,7 @@ class ComponentProcessor {
 	}
 	
 	/**
-	 * 
+	 * Given a fragment removes all hydroxy groups and adds a valency 1 outAtom to the adjacent atom for each hydroxy group
 	 * @param state
 	 * @param frag
 	 * @throws StructureBuildingException
@@ -1814,6 +1816,25 @@ class ComponentProcessor {
 				if (neighbours.size()==1 && atom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==1){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
 					frag.addOutAtom(neighbours.get(0), 1, true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Given a fragment removes all hydroxy groups and applies ylium to the adjacent atom (+1 charge -1 proton)
+	 * @param state
+	 * @param frag
+	 * @throws StructureBuildingException
+	 */
+	private void convertHydroxyGroupsToPositiveCharge(BuildState state, Fragment frag) throws StructureBuildingException {
+		List<Atom> atomList = frag.getAtomList();
+		for (Atom atom : atomList) {
+			if (atom.getElement().equals("O") && atom.getCharge()==0){
+				List<Atom> neighbours = atom.getAtomNeighbours();
+				if (neighbours.size()==1 && atom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==1){
+					state.fragManager.removeAtomAndAssociatedBonds(atom);
+					neighbours.get(0).addChargeAndProtons(1, -1);
 				}
 			}
 		}
@@ -3702,14 +3723,32 @@ class ComponentProcessor {
                         }
                     }
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
-            		if (idOnParentFragToUse != 0) {
-            			int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
-            			int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
-                		frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
-            		}
-            		else{
-                        applyUnlocantedChargeModification(atomList, suffixRuleTag);
-            		}
+        			int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
+        			int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
+                	if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
+	            		if (idOnParentFragToUse != 0) {
+	                		frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
+	            		}
+	            		else{
+	                        applyUnlocantedChargeModification(atomList, chargeChange, protonChange);
+	            		}
+                	}
+                	else {//a suffix prefixed acylium suffix
+                        if (suffixFrag == null) {
+                            throw new StructureBuildingException("OPSIN bug: ordering of elements in suffixRules.xml wrong; changeCharge found before addGroup");
+                        }
+                        Set<Bond> bonds = state.fragManager.getInterFragmentBonds(suffixFrag);
+                        if (bonds.size() != 1) {
+                            throw new StructureBuildingException("OPSIN bug: Wrong number of bonds between suffix and group");
+                        }
+                        for (Bond bond : bonds) {
+                            if (bond.getFromAtom().getFrag() == suffixFrag) {
+                            	bond.getFromAtom().addChargeAndProtons(chargeChange, protonChange);
+                            } else {
+                            	bond.getToAtom().addChargeAndProtons(chargeChange, protonChange);
+                            }
+                        }
+                    }
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
                     int outValency = suffixRuleTag.getAttribute(SUFFIXRULES_OUTVALENCY_ATR) != null ? Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR)) : 1;
                     if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
@@ -3744,6 +3783,8 @@ class ComponentProcessor {
                     //already processed
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)) {
                     //already processed
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL)) {
+                    //already processed
                 } else {
                     throw new StructureBuildingException("Unknown suffix rule:" + suffixRuleTagName);
                 }
@@ -3770,12 +3811,10 @@ class ComponentProcessor {
 	 * Additionally, Typically if a locant has not been specified then it was intended to refer to a nitrogen even if the nitrogen is not at locant 1 e.g. isoquinolinium
 	 * Hence preference is given to nitrogen atoms and then to non carbon atoms
 	 * @param atomList
-	 * @param suffixRuleTag
+	 * @param chargeChange
+	 * @param protonChange
 	 */
-	private void applyUnlocantedChargeModification(List<Atom> atomList, Element suffixRuleTag) {
-		int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
-		int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
-
+	private void applyUnlocantedChargeModification(List<Atom> atomList, int chargeChange, int protonChange) {
 	    Atom likelyAtom = null;
 	    Atom possibleHeteroatom = null;
 	    Atom possibleCarbonAtom = null;

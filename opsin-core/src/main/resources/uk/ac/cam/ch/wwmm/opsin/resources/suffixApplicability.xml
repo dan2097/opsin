@@ -34,6 +34,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="acidStem"><!--e.g. acet to acetamide -->
+    <suffix value="acylium">acylium</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="aldoxime">aldoxime</suffix>
     <suffix value="amide">amide</suffix>
@@ -91,6 +92,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->
+    <suffix value="acylium">ylium</suffix>
     <suffix value="amide">amine</suffix>
     <suffix value="amidylium">aminylium</suffix>
     <suffix value="amido">amino</suffix>
@@ -102,6 +104,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="nonCarboxylicAcid"><!--e.g. phosphor to phosphoric/phosphourous/phosphoryl-->
+    <suffix value="acylium">acylium_nonCarboxylic</suffix>
     <suffix value="ate">ate_nonCarboxylic</suffix>
     <suffix value="ic">ic_nonCarboxylic</suffix>
     <suffix value="ite">ite_nonCarboxylic</suffix>
@@ -111,6 +114,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="standardGroup"><!--e.g. ethan to ethanimine-->
+    <suffix value="acylium">acylium</suffix>
     <suffix value="al">aldehyde</suffix>
     <suffix value="aldehyde">aldehyde</suffix>
     <suffix value="aldoxime">aldoxime</suffix>
@@ -134,6 +138,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="boronic">boronic</suffix>
     <suffix value="carbamic">carbamic</suffix>
     <suffix value="carbonyl">carbonyl</suffix>
+    <suffix value="carbonylium">carbonylium</suffix>
     <suffix value="carboxylic">carboxylic</suffix>
     <suffix value="carboxylate">carboxylate</suffix>
     <suffix value="carboxylite">carboxylite</suffix>

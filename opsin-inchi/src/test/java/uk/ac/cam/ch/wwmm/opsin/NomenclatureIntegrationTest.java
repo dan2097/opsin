@@ -70,6 +70,14 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
+	public void testIonNomenclature() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "ions.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+	
+	@Test
 	public void testSpiroNomenclature() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);

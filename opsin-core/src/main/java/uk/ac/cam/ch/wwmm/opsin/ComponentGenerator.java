@@ -1353,6 +1353,21 @@ class ComponentGenerator {
 				multiplier.appendChild("di");
 				XOMTools.insertBefore(suffix, multiplier);
 			}
+			else if (suffixValue.equals("ylium") &&//disambiguate between ylium the charge modifying suffix and ylium the acylium suffix
+					"acylium".equals(suffix.getAttributeValue(VALUE_ATR)) &&
+					suffix.getAttribute(SUFFIXPREFIX_ATR)==null &&
+					suffix.getAttribute(INFIX_ATR)==null){
+				Element group = (Element) XOMTools.getPreviousSibling(suffix, GROUP_EL);
+				if (group==null || (!ACIDSTEM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)) &&
+						!CHALCOGENACIDSTEM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)) &&
+								!NONCARBOXYLICACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)))){
+					Element beforeSuffix = (Element) XOMTools.getPreviousSibling(suffix);
+					String o = beforeSuffix.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR);
+					if (o ==null || !StringTools.endsWithCaseInsensitive(o, "o")){
+						throw new ComponentGenerationException("ylium is intended to be the removal of H- in this context not the formation of an acylium ion");
+					}
+				}
+			}
 		}
 	}
 
