@@ -78,22 +78,20 @@ class FunctionalReplacement {
 		else if (wr == WordRule.amide){
 			Element parentWordRule = (Element) word.getParent();
 			if (parentWordRule.indexOf(word)==0){
-				List<Element> amideWords = XOMTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
-				amideWords.remove(word);
-				for (Element amideWord : amideWords) {
-					processAmideFunctionalClassNomenclature(state, finalSubOrRootInWord, amideWord);
+				List<Element> amideFullWords = XOMTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
+				amideFullWords.remove(word);
+				if (amideFullWords.size()>0){
+					//as words are processed from right to left in cases like phosphoric acid tri(ethylamide) this will be phosphoric acid ethylamide ethylamide ethylamide
+					for (Element amideWord : amideFullWords) {
+						processAmideFunctionalClassNomenclatureFullWord(state, finalSubOrRootInWord, amideWord);
+					}
 				}
-			}
-			else if (word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){//merge substituent in with an amide e.g. ethanoic acid ethyl amide --> ethanoic acid ethylamide
-				Element amideWord = parentWordRule.getChildElements().get(parentWordRule.getChildElements().size()-1);
-				Elements children = amideWord.getChildElements();
-				for (int j = children.size()-1; j >=0; j--) {
-					Element child = children.get(j);
-					child.detach();
-					word.appendChild(child);
+				else if (parentWordRule.getChildElements().size()==2) {
+					processAmideFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, ((Element) XOMTools.getNextSibling(word)));
 				}
-				amideWord.detach();
-				word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
+				else{
+					throw new ComponentGenerationException("OPSIN bug: problem with amide word rule");
+				}
 			}
 		}
 	}
@@ -455,7 +453,7 @@ class FunctionalReplacement {
 		}
 	}
 	
-	private static void processAmideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element amideWord) throws ComponentGenerationException, StructureBuildingException {
+	private static void processAmideFunctionalClassNomenclatureFullWord(BuildState state, Element acidContainingRoot, Element amideWord) throws ComponentGenerationException, StructureBuildingException {
 		Element amideGroup = StructureBuildingMethods.findRightMostGroupInBracket(amideWord);
 		if (amideGroup ==null){
 			throw new ComponentGenerationException("OPSIN bug: amide group not found where one was expected for amide wordRule");
@@ -487,8 +485,59 @@ class FunctionalReplacement {
 		amideNitrogen.clearLocants();
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), amide.getFirstAtom());
 		state.fragManager.incorporateFragment(amide, oxygenAtoms.get(0).getFrag());
-		amide.addMappingToAtomLocantMap("N", amideNitrogen);
 		removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
+	}
+
+	/**
+	 * Replaces the appropriate number of functional oxygen atoms with nitrogen atoms
+	 * @param state
+	 * @param acidContainingRoot
+	 * @param functionalWord
+	 * @throws ComponentGenerationException
+	 * @throws StructureBuildingException
+	 */
+	private static void processAmideFunctionalClassNomenclatureFunctionalWord(BuildState state, Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
+		if (functionalWord !=null && functionalWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+			Element functionalTerm = functionalWord.getFirstChildElement(FUNCTIONALTERM_EL);
+			if (functionalTerm ==null){
+				throw new ComponentGenerationException("OPSIN bug: functionalTerm word not found where one was expected for amide wordRule");
+			}
+			Element amideGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(amideGroup);
+			int numbrOfAmidesToForm =1;
+			if (possibleMultiplier!=null){
+				if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+					throw new ComponentGenerationException("OPSIN bug: non multiplier found where only a multiplier was expected in amide wordRule");
+				}
+				numbrOfAmidesToForm = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				possibleMultiplier.detach();
+			}
+			if (functionalTerm.getChildElements().size()!=1){
+				throw new ComponentGenerationException("Unexpected qualifier to amide functionalTerm");
+			}
+			
+			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
+			List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+			if (oxygenAtoms.size()==0){
+				oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+			}
+			if (oxygenAtoms.size()==0){
+				List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
+				for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
+					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
+				}
+			}
+			if (numbrOfAmidesToForm > oxygenAtoms.size()){
+				throw new ComponentGenerationException("Insufficient oxygen to replace with nitrogen in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
+			}
+			for (int i = 0; i < numbrOfAmidesToForm; i++) {
+				oxygenAtoms.get(i).setElement("N");
+				removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
+			}
+		}
+		else{
+			throw new ComponentGenerationException("amide word not found where expected, bug?");
+		}
 	}
 	
 

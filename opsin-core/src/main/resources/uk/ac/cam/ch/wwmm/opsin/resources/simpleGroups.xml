@@ -166,6 +166,8 @@
 		<token value="O[O+]" labels="none" valType="SMILES">peroxylium</token>
 		<token value="C(=O)(Cl)Cl" labels="none" valType="SMILES">phosgene</token>
 		<token value="P(=O)(N)(N)N" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoramide</token>
+		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorus oxychloride</token>
+		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorusoxychloride</token>
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO" labels="none" valType="SMILES">phytol</token>
 		<token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
 		<token value="CC(C(C)(C)C)=O" labels="none" valType="SMILES">pinacolone</token>
@@ -288,7 +290,6 @@
 
   <!--groups that must be substituted-->
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="║">
-	<!--amide should really also be here but doing so is problematic due to the way it has been implemented in functional class nomenclature-->
 		<token value="N" labels="none" valType="SMILES">amin</token>
 		<token value="N" labels="none" valType="SMILES">amine</token>
 		<token value="[NH4+]" labels="none" valType="SMILES">aminium</token>

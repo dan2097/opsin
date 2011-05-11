@@ -18,8 +18,6 @@ class PreProcessor {
 	private static final Pattern MATCH_DOT_GREEK_DOT = Pattern.compile("\\.(alpha|beta|gamma|delta|epsilon|zeta|eta|omega)\\.", Pattern.CASE_INSENSITIVE);
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
-	private static final String AMIDE = "amide";
-
 	static {
 		GREEK_MAP.put("a", "alpha");
 		GREEK_MAP.put("b", "beta");
@@ -52,10 +50,6 @@ class PreProcessor {
 		chemicalName=chemicalName.trim();//remove leading and trailing whitespace
 		if ("".equals(chemicalName)){
 			throw new PreProcessingException("Input chemical name was blank!");
-		}
-
-		if(AMIDE.equalsIgnoreCase(chemicalName)) {
-			throw new PreProcessingException("Amide is a generic term rather than a specific chemical");//amide
 		}
 		chemicalName = processDollarPrefixedGreeks(chemicalName);
 		chemicalName = processDotSurroundedGreeks(chemicalName);

@@ -295,24 +295,29 @@ class WordRules {
 				 */
 				String wordRuleName = wordRule.getRuleName();
 				if (wordRuleName.equals(WordRule.functionGroupAsGroup.toString())){//convert the functional term into a full term
-					if (wordsInWordRule!=1){
+					Element functionalWord = wordEls.get(i + wordsInWordRule -1);
+					if (!functionalWord.getAttributeValue(TYPE_ATR).equals(FUNCTIONALTERM_EL) || wordsInWordRule>2){
 						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup wordRule");
 					}
-					convertFunctionalGroupIntoGroup(wordEls.get(i));
+					convertFunctionalGroupIntoGroup(functionalWord);
+					if (wordsInWordRule==2){
+						joinWords(wordEls, i, wordEls.get(i), functionalWord);
+						wordsInWordRule =1;
+					}
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
 				}
-				else if (wordRuleName.equals(WordRule.carbonylDerivative.toString())){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
+				else if (wordRuleName.equals(WordRule.carbonylDerivative.toString()) || wordRuleName.equals(WordRule.amide.toString())){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
 					if (wordsInWordRule==3){//substituent present
 						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
 						wordsInWordRule--;
 						List<Element> functionalTerm = XOMTools.getDescendantElementsWithTagName(wordEls.get(i+1), FUNCTIONALTERM_EL);//rename functionalTerm element to root
 						if (functionalTerm.size()!=1){
-							throw new ParsingException("OPSIN bug: Problem with carbonylDerivative wordRule");
+							throw new ParsingException("OPSIN bug: Problem with "+ wordRuleName +" wordRule");
 						}
 						functionalTerm.get(0).setLocalName(ROOT_EL);
 						List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
 						if (functionalGroups.size()!=1){
-							throw new ParsingException("OPSIN bug: Problem with carbonylDerivative wordRule");
+							throw new ParsingException("OPSIN bug: Problem with "+ wordRuleName +" wordRule");
 						}
 						functionalGroups.get(0).setLocalName(GROUP_EL);
 						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
