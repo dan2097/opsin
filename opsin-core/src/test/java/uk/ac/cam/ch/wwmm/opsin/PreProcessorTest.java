@@ -10,11 +10,6 @@ public class PreProcessorTest {
 		PreProcessor.preProcess("");
 	}
 
-	@Test(expected=PreProcessingException.class)
-	public void testPreProcessAmideThrows() throws PreProcessingException{
-		PreProcessor.preProcess("amide");
-	}
-
 	@Test
 	public void testPreProcessConvertsDollarA() throws PreProcessingException {
 		assertEquals("Convert dollar-a", "alpha-bromo", PreProcessor.preProcess("$a-bromo"));

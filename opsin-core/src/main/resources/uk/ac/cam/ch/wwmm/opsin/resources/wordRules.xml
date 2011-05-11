@@ -36,18 +36,23 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
   <wordRule name="ester" type="full">
     <word type="substituent" />
-    <word type="full" endsWithRegex="\S(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="amide" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="full" endsWithRegex="amid(e)?[\]\)\}]*" endsWithGroupValueAtr="[NH2-]"/>
+    <word type="functionalTerm" endsWithRegex="amid[e]?[\]\)\}]*"/>
   </wordRule>
   
   <wordRule name="amide" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
     <word type="substituent" />
-    <word type="full" endsWithRegex="amid(e)?[\]\)\}]*" endsWithGroupValueAtr="[NH2-]"/>
+    <word type="functionalTerm" endsWithRegex="^amid[e]?[\]\)\}]*"/>
+  </wordRule>
+
+  <wordRule name="functionGroupAsGroup" type="full">
+    <word type="substituent" />
+    <word type="functionalTerm" endsWithRegex="amid[e]?[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="functionalClassEster" type="full">
@@ -72,20 +77,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="functionalClassEster" type="full">
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
     <word type="substituent" />
     <word type="functionalTerm" value="ester" />
   </wordRule>
 
   <wordRule name="functionalClassEster" type="full">
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
     <word type="substituent" />
     <word type="substituent" />
     <word type="functionalTerm" value="ester" />
   </wordRule>
 
   <wordRule name="functionalClassEster" type="full">
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
     <word type="substituent" />
     <word type="substituent" />
     <word type="substituent" />
@@ -95,13 +100,13 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   <wordRule name="multiEster" type="full">
     <word type="substituent" />
     <word type="substituent" />
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
   <wordRule name="multiEster" type="full"><!-- e.g. methyl ethyl propyl phosphate-->
     <word type="substituent" />
     <word type="substituent" />
     <word type="substituent" />
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="multiEster" type="full">
@@ -109,7 +114,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="substituent" />
     <word type="substituent" />
     <word type="substituent" />
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="divalentFunctionalGroup" type="full">
@@ -124,7 +129,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="glycol" type="full">
-    <word type="substituent" endsWithRegex="(diyl|ylen(e)?)[\]\)\}]*" />
+    <word type="substituent" endsWithRegex="(diyl|ylen[e]?)[\]\)\}]*" />
     <word type="functionalTerm" endsWithRegex="(glycol|fluorohydrin|chlorohydrin|bromohydrin|iodohydrin|cyanohydrin)" functionalGroupType="functionalClass" />
   </wordRule>
 
@@ -132,7 +137,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="full" endsWithRegex="glycol"/>
     <word type="substituent"/>
     <word type="functionalTerm" value="ether" />
-    <word type="full" endsWithRegex="(at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="glycolEther" type="full">
@@ -163,7 +168,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   </wordRule>
 
   <wordRule name="carbonylDerivative" type="full">
-    <word type="full" endsWithRegex="quinon(e)?[\]\)\}]*" />
+    <word type="full" endsWithRegex="quinon[e]?[\]\)\}]*" />
     <word type="functionalTerm" endsWithRegex="imine[\]\)\}]*" />
   </wordRule>
 
@@ -260,17 +265,17 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
   <wordRule name="biochemicalEster" type="full">
     <word type="full" endsWithGroupSubType="biochemical"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="biochemicalEster" type="full">
     <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="biochemicalEster" type="full">
     <word type="full" endsWithGroupSubType="carbohydrate"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at(e)?|amid(e)?|it(e)?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="polymer" type="polymer">
