@@ -1342,10 +1342,7 @@ class ComponentGenerator {
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				XOMTools.setTextChild(suffix, "yl");
 				Element alk = (Element) XOMTools.getPreviousSibling(suffix, GROUP_EL);
-				if (alk.getValue().equals("meth")){
-					alk.addAttribute(new Attribute(IMINOLIKE_ATR, "yes"));
-				}
-				else if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
+				if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
 					alk.getAttribute(USABLEASJOINER_ATR).detach();
 				}
 				Element multiplier = new Element(MULTIPLIER_EL);

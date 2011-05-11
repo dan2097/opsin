@@ -170,7 +170,7 @@ class StructureBuildingMethods {
 		if (frag.getOutAtoms().size() >=1 && subBracketOrRoot.getAttribute(LOCANT_ATR)!=null){
 			String locantString = subBracketOrRoot.getAttributeValue(LOCANT_ATR);
 			if (frag.getOutAtoms().size() >1){
-				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group.getAttributeValue(SUBTYPE_ATR));
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
 			}
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR)!=null){//e.g. 1,2-diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -211,7 +211,7 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("Substituent has an unused outAtom and has a locant but locanted susbtitution should already been been performed!");
 			}
 			if (frag.getOutAtoms().size() > 1){
-				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group.getAttributeValue(SUBTYPE_ATR));
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
 			}
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR)!=null){//e.g. diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
@@ -1584,15 +1584,19 @@ class StructureBuildingMethods {
 	 * equal to sum of the valency of the other outAtoms.
 	 * This is only allowed on substituents where all the outAtoms are on the same atom
 	 * @param frag
-	 * @param subType 
+	 * @param group 
 	 * @throws StructureBuildingException
 	 */
-	private static void checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(Fragment frag, String subType) throws StructureBuildingException {
+	private static void checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(Fragment frag, Element group) throws StructureBuildingException {
 		int outAtomCount = frag.getOutAtoms().size();
 		if (outAtomCount<=1){
 			return;
 		}
-		if (EPOXYLIKE_SUBTYPE_VAL.equals(subType)){
+		if (EPOXYLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			return;
+		}
+		String groupValue = group.getValue();
+		if (groupValue.equals("oxy") || groupValue.equals("thio") || groupValue.equals("seleno") || groupValue.equals("telluro")){//always bivalent
 			return;
 		}
 		//special case- all outAtoms on same atom e.g. methylenecyclohexane
