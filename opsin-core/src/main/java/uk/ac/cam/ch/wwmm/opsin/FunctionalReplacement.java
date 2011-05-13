@@ -749,10 +749,10 @@ class FunctionalReplacement {
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
 			LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
-			LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
-			populateTerminalSingleAndDoubleBondedOxygen(oxygenWithAppropriateLocants, singleBondedOxygen, doubleBondedOxygen);
+			LinkedList<Atom> terminalDoubleBondedOxygen =new LinkedList<Atom>();
+			populateTerminalSingleAndDoubleBondedOxygen(oxygenWithAppropriateLocants, singleBondedOxygen, terminalDoubleBondedOxygen);
 			if (outValency ==1){
-				oxygenWithAppropriateLocants.removeAll(doubleBondedOxygen);
+				oxygenWithAppropriateLocants.removeAll(terminalDoubleBondedOxygen);
 			}
 			else if (outValency ==2){
 				oxygenWithAppropriateLocants.removeAll(singleBondedOxygen);
@@ -767,16 +767,19 @@ class FunctionalReplacement {
 			}
 		}
 		LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
-		LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
-		populateTerminalSingleAndDoubleBondedOxygen(oxygenAtoms, singleBondedOxygen, doubleBondedOxygen);
+		LinkedList<Atom> terminalDoubleBondedOxygen =new LinkedList<Atom>();
+		populateTerminalSingleAndDoubleBondedOxygen(oxygenAtoms, singleBondedOxygen, terminalDoubleBondedOxygen);
 		if (outValency ==1){
-			oxygenAtoms.removeAll(doubleBondedOxygen);
+			oxygenAtoms.removeAll(terminalDoubleBondedOxygen);
 		}
 		else if (outValency ==2){
 			oxygenAtoms.removeAll(singleBondedOxygen);
+			//favour bridging oxygen over double bonded oxygen c.f. imidodicarbonate
+			oxygenAtoms.removeAll(terminalDoubleBondedOxygen);
+			oxygenAtoms.addAll(terminalDoubleBondedOxygen);
 		}
 		else {
-			if (singleBondedOxygen.size()==0 || doubleBondedOxygen.size()==0){
+			if (singleBondedOxygen.size()==0 || terminalDoubleBondedOxygen.size()==0){
 				throw new StructureBuildingException("Both a -OH and =O are required for nitrido prefix functional replacement");
 			}
 			oxygenAtoms.removeAll(singleBondedOxygen);
