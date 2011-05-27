@@ -52,6 +52,8 @@
     <token value="[Hg]" valType="SMILES">mercur</token>
 
     <token value="P" valType="SMILES">phosphor</token>
+    <token value="[As]" valType="SMILES">arsen</token>
+    <token value="[Sb]" valType="SMILES">antimon</token>
   </tokenList>
 
   <tokenList tagname="heteroatom" symbol="J"><!--hetero atoms that are compatable with an ine HWsuffix-->
