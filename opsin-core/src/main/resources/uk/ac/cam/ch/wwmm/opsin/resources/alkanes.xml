@@ -30,6 +30,7 @@
 		<token value="20">icos</token>
 		<token value="20">eicos</token>
 		<token value="30">triacont</token>
+		<token value="30">tricont</token><!--triacont preferred-->
 		<token value="40">tetracont</token>
 		<token value="50">pentacont</token>
 		<token value="60">hexacont</token>
