@@ -178,6 +178,16 @@ class FusedRingBuilder {
 						if (MATCH_DASH.split(fusionDescriptors[j]).length==1 && 
 								MATCH_COMMA.split(fusionDescriptors[j]).length >1 &&
 								FragmentTools.allAtomsInRingAreIdentical(component)){
+							int numberOfPrimes = -j + StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0]);
+							//note that this is the number of primes on the parent ring. So would expect the child ring and hence the fusionLevel to be 1 higher
+							if (numberOfPrimes + 1 != fusionLevel){
+								if (numberOfPrimes + 2 == fusionLevel){//ring could be in previous fusion level e.g. the benzo in benzo[10,11]phenanthro[2',3',4',5',6':4,5,6,7]chryseno[1,2,3-bc]coronene
+									fusionLevel--;
+								}
+								else{
+									throw new StructureBuildingException("Incorrect number of primes in fusion bracket: " +fusionDescriptors[j]);
+								}
+							}
 							relabelAccordingToFusionLevel(component, fusionLevel);
 							List<String> numericalLocantsOfParent = Arrays.asList(MATCH_COMMA.split(fusionDescriptors[j]));
 							List<String> numericalLocantsOfChild = findPossibleNumericalLocants(component, determineAtomsToFuse(fragmentInScopeForEachFusionLevel.get(fusionLevel), numericalLocantsOfParent, null).size()-1);
@@ -205,16 +215,11 @@ class FusedRingBuilder {
 						}
 					}
 					else{
-						String firstLocant = MATCH_COMMA.split(fusionDescriptors[j])[0];
-						int numberOfPrimes = -j;//determine number of primes in fusor and hence determine fusion level
-						for(int k = firstLocant.length() -1; k>0; k--){
-							if (firstLocant.charAt(k)=='\''){
-								numberOfPrimes++;
-							}
-						}
+						//determine number of primes in fusor and hence determine fusion level
+						int numberOfPrimes = -j + StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0]);
 						if (numberOfPrimes != fusionLevel){
 							if (fusionLevel == numberOfPrimes +1){
-								fusionLevel = numberOfPrimes;
+								fusionLevel--;
 							}
 							else{
 								throw new StructureBuildingException("Incorrect number of primes in fusion bracket: " +fusionDescriptors[j]);
