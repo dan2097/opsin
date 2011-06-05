@@ -1522,8 +1522,7 @@ class StructureBuildingMethods {
 						}
 					}
 					else{
-						if ((indexOfCurrentEl == indexOfStartingEl +1) && bracketOrSubOrRoot.getAttribute(LOCANT_EL)==null &&
-								MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
+						if (substituentToTryFirst ==null && bracketOrSubOrRoot.getAttribute(LOCANT_EL)==null && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
 							substituentToTryFirst = bracketOrSubOrRoot;
 						}
 						else {
