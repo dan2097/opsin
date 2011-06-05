@@ -483,6 +483,7 @@ class FunctionalReplacement {
 		Atom amideNitrogen = amide.getFirstAtom();
 		amideNitrogen.neutraliseCharge();
 		amideNitrogen.clearLocants();
+		amide.addMappingToAtomLocantMap("N", amideNitrogen);
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), amide.getFirstAtom());
 		state.fragManager.incorporateFragment(amide, oxygenAtoms.get(0).getFrag());
 		removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
