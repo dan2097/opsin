@@ -94,6 +94,14 @@ public class NomenclatureIntegrationTest {
 	}
 
 	@Test
+	public void testImplicitBracketting() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "implicitBracketting.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+
+	@Test
 	public void testMiscellany() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);
