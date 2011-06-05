@@ -94,11 +94,10 @@ class ComponentGenerator {
 	/** The master method, processes a parse result destructively adding semantic information by processing the various micro syntaxes .
 	 *
 	 * @param moleculeEl The element to process.
-	 * @param state
 	 * @return
 	 * @throws Exception
 	 */
-	void process(Element moleculeEl, BuildState state) throws Exception {
+	void process(Element moleculeEl) throws Exception {
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(moleculeEl, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {

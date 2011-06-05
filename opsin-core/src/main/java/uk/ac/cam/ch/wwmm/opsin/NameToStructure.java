@@ -161,7 +161,7 @@ public class NameToStructure {
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
 					BuildState state = new BuildState(n2sConfig, sBuilder, cmlBuilder);
-					componentGenerator.process(parse, state);
+					componentGenerator.process(parse);
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
