@@ -84,6 +84,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[Se|6](=O)(=O)[Se|6](=O)(=O)-" labels="none" valType="SMILES">diselenone</token>
     <token value="[Se|4]=O" labels="none" valType="SMILES">selenoxide</token>
     <token value="[Se|4](=O)[Se|4](=O)-" labels="none" valType="SMILES">diselenoxide</token>
+    <token value="[Se|2]" labels="none" valType="SMILES">selenoether</token>
     <token value="C=[Se]" labels="none" valType="SMILES">selenoketone</token>
     <token value="S" labels="none" valType="SMILES">sulfide</token>
     <token value="SS-" labels="none" valType="SMILES">disulfide</token>
@@ -98,11 +99,13 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[Te|2]" labels="none" valType="SMILES">telluride</token>
     <token value="[Te|2][Te|2]-" labels="none" valType="SMILES">ditelluride</token>
     <token value="[Te|2][Te|2][Te|2]-" labels="none" valType="SMILES">tritelluride</token>
+    <token value="[Te|2]" labels="none" valType="SMILES">telluroether</token>
     <token value="C=[Te]" labels="none" valType="SMILES">telluroketone</token>
     <token value="[Te|6](=O)=O" labels="none" valType="SMILES">tellurone</token>
     <token value="[Te|6](=O)(=O)[Te|6](=O)(=O)-" labels="none" valType="SMILES">ditellurone</token>
     <token value="[Te|4]=O" labels="none" valType="SMILES">telluroxide</token>
     <token value="[Te|4](=O)[Te|4](=O)-" labels="none" valType="SMILES">ditelluroxide</token>
+    <token value="S" labels="none" valType="SMILES">thioether</token>
     <token value="C=S" labels="none" valType="SMILES">thioketone</token>
   </tokenList>
 
@@ -114,18 +117,18 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
     <token value="[F-]" labels="none" valType="SMILES">fluoride</token>
     <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
-		<token value="[H-]" labels="none" valType="SMILES">hydride</token>
+    <token value="[H-]" labels="none" valType="SMILES">hydride</token>
     <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
-		<token value="[SeH-]" labels="none" valType="SMILES">hydroselenide</token>
-		<token value="[Se-][SeH]" labels="none" valType="SMILES">hydrodiselenide</token>
-		<token value="[Se-][Se][SeH]" labels="none" valType="SMILES">hydrotriselenide</token>
-		<token value="[SH-]" labels="none" valType="SMILES">hydrosulfide</token>
-		<token value="[S-]S" labels="none" valType="SMILES">hydrodisulfide</token>
-		<token value="[S-]SS" labels="none" valType="SMILES">hydrotrisulfide</token>
-		<token value="[S-]SSS" labels="none" valType="SMILES">hydrotetrasulfide</token>
-		<token value="[TeH-]" labels="none" valType="SMILES">hydrotelluride</token>
-		<token value="[Te-][TeH]" labels="none" valType="SMILES">hydroditelluride</token>
-		<token value="[Te-][Te][TeH]" labels="none" valType="SMILES">hydrotritelluride</token>
+    <token value="[SeH-]" labels="none" valType="SMILES">hydroselenide</token>
+    <token value="[Se-][SeH]" labels="none" valType="SMILES">hydrodiselenide</token>
+    <token value="[Se-][Se][SeH]" labels="none" valType="SMILES">hydrotriselenide</token>
+    <token value="[SH-]" labels="none" valType="SMILES">hydrosulfide</token>
+    <token value="[S-]S" labels="none" valType="SMILES">hydrodisulfide</token>
+    <token value="[S-]SS" labels="none" valType="SMILES">hydrotrisulfide</token>
+    <token value="[S-]SSS" labels="none" valType="SMILES">hydrotetrasulfide</token>
+    <token value="[TeH-]" labels="none" valType="SMILES">hydrotelluride</token>
+    <token value="[Te-][TeH]" labels="none" valType="SMILES">hydroditelluride</token>
+    <token value="[Te-][Te][TeH]" labels="none" valType="SMILES">hydrotritelluride</token>
     <token value="[I-]" labels="none" valType="SMILES">iodide</token>
     <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
     <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>
