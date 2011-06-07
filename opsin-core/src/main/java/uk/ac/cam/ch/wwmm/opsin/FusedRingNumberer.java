@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -367,7 +366,6 @@ class FusedRingNumberer {
 		 * If it has to be done it should be done as few times as possible and to as small rings as possible
 		 */
 		removeCTsWithDistortedRingShapes(cts);
-		//removeCTsWithMostFusionToElongatedBonds(cts);
 		//TODO apply FR 5.1.3
 		//TODO apply FR 5.1.4
 		//TODO apply FR 5.1.5
@@ -774,68 +772,6 @@ class FusedRingNumberer {
 	}
 
 	/**
-	 * Removes cts with the most elongated bonds or in cases of a tie those with elongated bonds on the larger ring
-	 * Currently only 5 membered rings are expected to have elongated sides
-	 * @param cts
-	 */
-	private static void removeCTsWithMostFusionToElongatedBonds(List<RingConnectivityTable> cts) {
-		Map<RingConnectivityTable, List<Integer>> ctToRingSizeOfElongatedFusionBond = new HashMap<RingConnectivityTable, List<Integer>>();
-		for (RingConnectivityTable ct : cts) {
-			List<Integer> ringSizes = new ArrayList<Integer>();
-			ctToRingSizeOfElongatedFusionBond.put(ct, ringSizes);
-			Set<RingShape> seenRingshapes = new HashSet<RingShape>();
-			for (int i = 0; i < ct.ringShapes.size(); i++) {
-				RingShape ringShape = ct.ringShapes.get(i);
-				if (seenRingshapes.contains(ringShape)){
-					continue;
-				}
-				if (ringShape.getShape().equals(FusionRingShape.enterFromLeftHouse) && usesElongatedBondOnFiveMemberedRing(ct, FusionRingShape.enterFromLeftHouse, i)){
-					ringSizes.add(5);
-				}
-				else if (ringShape.getShape().equals(FusionRingShape.enterFromRightHouse) && usesElongatedBondOnFiveMemberedRing(ct, FusionRingShape.enterFromRightHouse, i)){
-					ringSizes.add(5);
-				}
-				seenRingshapes.add(ringShape);
-			}
-		}
-		int minimum = Integer.MAX_VALUE;
-		for (List<Integer> ringSizeOfElongatedFusionBond  : ctToRingSizeOfElongatedFusionBond.values()) {
-			if (ringSizeOfElongatedFusionBond.size() < minimum){
-				minimum = ringSizeOfElongatedFusionBond.size();
-			}
-		}
-		for (int i = cts.size() -1; i >= 0; i--) {
-			if (ctToRingSizeOfElongatedFusionBond.get(cts.get(i)).size() >minimum){
-				cts.remove(i);
-			}
-		}
-	}
-
-	private static boolean usesElongatedBondOnFiveMemberedRing(RingConnectivityTable ct, FusionRingShape houseShape, int indiceOfRing) {
-		if (ct.directionFromRingToNeighbouringRing.get(indiceOfRing) == -2 && houseShape.equals(FusionRingShape.enterFromLeftHouse)){
-			return true;
-		}
-		if (ct.directionFromRingToNeighbouringRing.get(indiceOfRing) == 2 && houseShape.equals(FusionRingShape.enterFromRightHouse)) {
-			return true;
-		}
-		RingShape shape = ct.ringShapes.get(indiceOfRing);
-		int firstUseOfRingAsNeighbour = ct.neighbouringRings.indexOf(shape.getRing());
-		int rightAngleDirection =ct.directionFromRingToNeighbouringRing.get(firstUseOfRingAsNeighbour) + (houseShape.equals(FusionRingShape.enterFromRightHouse) ? 2 : -2) ;
-		if (Math.abs(rightAngleDirection)>4) {
-			rightAngleDirection = (8 - Math.abs(rightAngleDirection)) *  Integer.signum(rightAngleDirection) * -1;
-		}
-		if (rightAngleDirection==-4){
-			rightAngleDirection =4;
-		}
-		for (int i = indiceOfRing; i < ct.ringShapes.size(); i++) {
-			if (ct.ringShapes.get(i).equals(shape) && ct.directionFromRingToNeighbouringRing.get(i) == rightAngleDirection){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Given a list of cts find the longest chain of rings in a line. This can be used a possible horizontal row
 	 * The output is a map between the connection tables and the directions which give the longest chains
 	 * Some cts may have no directions that give a chain of rings of this length
@@ -951,6 +887,9 @@ class FusedRingNumberer {
 		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
 		List<Chain> correspondingChain = new ArrayList<Chain>();
 		for (Ring[][] ringMap : ringMaps) {
+			if (LOG.isTraceEnabled()){
+				debugRingMap(ringMap);
+			}
 			List<Chain> chains = findChains(ringMap);
 			// For each chain count the number of rings in each quadrant
 			for (Chain chain : chains) {
@@ -984,9 +923,6 @@ class FusedRingNumberer {
 
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
-				if (LOG.isTraceEnabled()){
-					debugRingMap(qRingMap);
-				}
 				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
 				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms, atomCountOfFusedRingSystem);
 				paths.add(peripheralAtomPath);
