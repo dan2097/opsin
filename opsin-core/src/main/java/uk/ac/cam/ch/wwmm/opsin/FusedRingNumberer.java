@@ -507,6 +507,7 @@ class FusedRingNumberer {
 				else if (!distances.contains(2)){
 					allowedRingShapes.add(FusionRingShape.enterFromTopRightHouse);
 				}
+				allowedRingShapes = removeDegenerateRingShapes(allowedRingShapes, distances);
 			}
 			else if (fusedBondCount==5){
 				allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
@@ -518,6 +519,35 @@ class FusedRingNumberer {
 		else{
 			allowedRingShapes.add(FusionRingShape.standard);
 		}
+		return allowedRingShapes;
+	}
+
+	/**
+	 * Removes the ring shapes that for given distances have identical properties
+	 * @param allowedRingShapes
+	 * @param distances
+	 */
+	private static List<FusionRingShape> removeDegenerateRingShapes(List<FusionRingShape> allowedRingShapes, List<Integer> distances) {
+		distances = new ArrayList<Integer>(distances);
+		distances.remove((Integer)0);//remove distance 0 if present, this invariably comes from the starting bond and is not of interest (and breaks getDirectionFromDist) 
+		for (int i = allowedRingShapes.size() - 1; i >=0; i--) {
+			FusionRingShape shapeToConsiderRemoving = allowedRingShapes.get(i);
+			for (int j = i - 1; j >=0; j--) {
+				FusionRingShape shapeToCompareWith = allowedRingShapes.get(j);
+				boolean foundDifference = false;
+				for (Integer distance : distances) {
+					if (getDirectionFromDist(shapeToConsiderRemoving, 5, distance) != getDirectionFromDist(shapeToCompareWith, 5, distance)){
+						foundDifference = true;
+						break;
+					}
+				}
+				if (!foundDifference){
+					allowedRingShapes.remove(i);
+					break;
+				}
+			}
+		}
+		
 		return allowedRingShapes;
 	}
 
@@ -543,7 +573,8 @@ class FusedRingNumberer {
 			throw new RuntimeException("OPSIN bug: Distance between bonds is equal to 0");
 		}
 	
-		return getDirectionFromDist(ringShape.getShape(), ring.size(), dist, previousDir);
+		int relativeDir = getDirectionFromDist(ringShape.getShape(), ring.size(), dist);
+		return determineAbsoluteDirectionUsingPreviousDirection(ringShape.getShape(), ring.size(), relativeDir, previousDir);
 	}
 
 	/**
@@ -567,15 +598,13 @@ class FusedRingNumberer {
 
 	/**
 	 * Uses the ring size, the ring shape and distance between the incoming and outgoing fused bond to determine
-	 * the relative direction then takes into account the previousDirection to determine the absolute direction.
+	 * the relative direction between the entry point on the ring and the exit point
 	 * @param fusionRingShape
 	 * @param ringShape
 	 * @param dist
-	 * @param previousDir
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private static int getDirectionFromDist(FusionRingShape fusionRingShape, int ringSize, int dist, int previousDir) throws StructureBuildingException {
+	private static int getDirectionFromDist(FusionRingShape fusionRingShape, int ringSize, int dist) {
 		int dir=0;	
 		if (ringSize == 3) { // 3 member ring
 			if (dist == 1) {
@@ -698,11 +727,7 @@ class FusedRingNumberer {
 				throw new RuntimeException("OPSIN Bug: Unable to determine direction between odd number of atoms ring and next ring");
 			}
 		}
-		//System.out.println("ringsize " + ringSize +" bond dist " + dist +" yielded " + dir);
-		dir =determineAbsoluteDirectionUsingPreviousDirection(fusionRingShape, ringSize, dir, previousDir);
-		//System.out.println(dir);
 		return dir;
-	
 	}
 
 	private static void removeCTsWithDistortedRingShapes(List<RingConnectivityTable> cts) {
