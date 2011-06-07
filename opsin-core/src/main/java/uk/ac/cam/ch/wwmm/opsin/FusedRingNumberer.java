@@ -369,6 +369,11 @@ class FusedRingNumberer {
 		//TODO apply FR 5.1.4
 		//TODO apply FR 5.1.5
 
+//		RingConnectivityTable ct =cts.get(0);
+//		for (int i=0; i< ct.ringShapes.size(); i++){
+//			System.out.println(ct.ringShapes.get(i).shape);
+//			System.out.println(ct.ringShapes.get(i).ring +" to " +ct.neighbouringRings.get(i) + " dir: " + ct.directionFromRingToNeighbouringRing.get(i) );
+//		}
 		/*
 		 * FR-5.2a. Maximum number of rings in a horizontal row
 		 */
@@ -848,7 +853,7 @@ class FusedRingNumberer {
 				Ring neighbour = ct.neighbouringRings.get(i);
 				int curChain = 1;
 				int curDir = ct.directionFromRingToNeighbouringRing.get(i);
-		
+
 				nextRingInChainLoop: for (int k = 0; k <= ct.usedRings.size(); k++) {//<= rather than < so buggy behaviour can be caught
 					int indexOfNeighbour = indexOfCorrespondingRingshape(ct.ringShapes, neighbour);
 		
@@ -910,7 +915,6 @@ class FusedRingNumberer {
 	 * @throws StructureBuildingException 
 	 */
 	private static List<List<Atom>> findPossiblePaths(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
-		
 		List<Double[]> chainQs = new ArrayList<Double[]>();
 		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
 		List<Chain> correspondingChain = new ArrayList<Chain>();
@@ -927,9 +931,9 @@ class FusedRingNumberer {
 					RingShape ringShape = ct.ringShapes.get(i);
 					directionFromRingToNeighbouringRing[i] = determineAbsoluteDirectionUsingPreviousDirection(ringShape.getShape(), ringShape.getRing().size(), ct.directionFromRingToNeighbouringRing.get(i), -horizonalRowDirection);
 				}
-//TODO write a rotation function that operates on the ringMap
+
 				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing);
-				debugRingMap(ringMap);
+				//debugRingMap(ringMap);
 //				System.out.println("next: " + horizonalRowDirection);
 //				for (int i=0; i< ct.ringShapes.size(); i++){
 //					System.out.println(directionFromRingToNeighbouringRing[i]);
@@ -1691,10 +1695,9 @@ class FusedRingNumberer {
 		if (Math.abs(interimDirection)>4) {// Added
 			interimDirection = (8 - Math.abs(interimDirection)) *  Integer.signum(interimDirection) * -1;
 		}
-
-		//TODO is this block actually correct or even required??
+//TODO investigate this function
 		// 6 member ring and other larger even numbered rings do not have direction 2
-		if (Math.abs(interimDirection) == 2 && (ringSize >= 6 && ringSize % 2 ==0)) {
+		if (Math.abs(interimDirection) == 2 && ((ringSize >= 6 && ringSize % 2 ==0) || ringSize==5)) {
 			// if (one of them equal to 1 and another is equal to 3, we decrease absolute value and conserve the sign)
 			if (Math.abs(relativeDirection)==1 && Math.abs(previousDir)==3  ||  Math.abs(relativeDirection)==3 && Math.abs(previousDir)==1) {
 				interimDirection = 1 * Integer.signum(interimDirection);
