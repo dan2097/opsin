@@ -25,7 +25,7 @@ class FusedRingNumberer {
 		final List<Ring> neighbouringRings = new ArrayList<Ring>();
 		final List<Integer> directionFromRingToNeighbouringRing = new ArrayList<Integer>();
 		final List<Ring> usedRings = new ArrayList<Ring>();
-		
+
 		RingConnectivityTable copy(){
 			RingConnectivityTable copy = new RingConnectivityTable();
 			copy.ringShapes.addAll(ringShapes);
@@ -35,7 +35,7 @@ class FusedRingNumberer {
 			return copy;
 		}
 	}
-	
+
 	/**
 	 * Wrapper for a ring of a fused ring system with the shape that ring is currently being treated as having
 	 * @author dl387
@@ -55,7 +55,7 @@ class FusedRingNumberer {
 			return shape;
 		}
 	}
-	
+
 	enum FusionRingShape{
 		enterFromLeftHouse,
 		enterFromTopLeftHouse,
@@ -63,7 +63,7 @@ class FusedRingNumberer {
 		enterFromRightHouse,
 		standard
 	}
-	
+
 	private static class Chain {
 		private final int length;
 		private final int startingX;
@@ -74,7 +74,7 @@ class FusedRingNumberer {
 			this.startingX = startingX;
 			this.y = y;
 		}
-		
+
 		int getLength() {
 			return length;
 		}
@@ -85,7 +85,7 @@ class FusedRingNumberer {
 			return y;
 		}
 	}
-	
+
 	/**
 	 * Sorts by atomSequences by the IUPAC rules for determining the preferred labelling
 	 * The most preferred will be sorted to the back (0th position)
@@ -244,7 +244,7 @@ class FusedRingNumberer {
 	 *      / | \
 	 *   -3   v  -1
 	 *       -2
-	 * 
+	 *
 	 * They indicate the relative directions between rings
 	 * Possibly enums should be used...
 	 */
@@ -265,7 +265,7 @@ class FusedRingNumberer {
 			}
 			return;
 		}
-		List<List<Atom>> atomSequences = determinePossiblePeripheryAtomOrders(rings);
+		List<List<Atom>> atomSequences = determinePossiblePeripheryAtomOrders(rings, atomList.size());
 		if (atomSequences.size()==0){
 			for (Atom atom : atomList) {
 				atom.clearLocants();
@@ -295,7 +295,7 @@ class FusedRingNumberer {
 	 */
 	private static void setupAdjacentFusedRingProperties(List<Ring> rings){
 		for (Ring curRing : rings) {
-			for(Bond bond : curRing.getBondList()) { 	
+			for(Bond bond : curRing.getBondList()) {
 				bond.getFusedRings().clear();
 			}
 		}
@@ -309,11 +309,11 @@ class FusedRingNumberer {
 					if (curRing != ring) {
 						if (ring.getBondList().contains(bond)) {
 							bond.addFusedRing(ring);				// if so, then add the rings into fusedRing array in the bond
-							bond.addFusedRing(curRing);				
-	
+							bond.addFusedRing(curRing);
+
 							ring.incrementNumberOfFusedBonds();		// and increment the number of fused bonds the ring is involved in
 							curRing.incrementNumberOfFusedBonds();
-	
+
 							ring.addNeighbour(curRing);				// and note that the rings are neighbours of each other
 							curRing.addNeighbour(ring);
 						}
@@ -322,9 +322,9 @@ class FusedRingNumberer {
 			}
 		}
 	}
-	
+
 	/**
-	 * Checks if the ring is sizes 2,3,4,5,6 or is involved in 2 or fewer bonds 
+	 * Checks if the ring is sizes 2,3,4,5,6 or is involved in 2 or fewer bonds
 	 * @param rings
 	 * @return
 	 */
@@ -342,10 +342,11 @@ class FusedRingNumberer {
 	 * These enumerations will be compliant with rules FR5.1-FR5.3 of the fused ring nomenclature guidelines
 	 * http://www.chem.qmul.ac.uk/iupac/fusedring/FR51.html
 	 * @param rings
+	 * @param atomCountOfFusedRingSystem 
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<List<Atom>> determinePossiblePeripheryAtomOrders(List<Ring> rings) throws StructureBuildingException {
+	private static List<List<Atom>> determinePossiblePeripheryAtomOrders(List<Ring> rings, int atomCountOfFusedRingSystem) throws StructureBuildingException {
 		List<Ring> tRings = findTerminalRings(rings);
 		if (tRings.size()<1) {
 			throw new RuntimeException("OPSIN bug: Unable to find a terminal ring in fused ring system");
@@ -380,7 +381,8 @@ class FusedRingNumberer {
 		 * FR-5.2a. Maximum number of rings in a horizontal row
 		 */
 		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = findLongestChainDirections(cts);
-		return findPossiblePaths(horizonalRowDirections);
+		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenhorizonalRowDirections(horizonalRowDirections);
+		return findPossiblePaths(ringMaps, atomCountOfFusedRingSystem);
 	}
 
 	/**
@@ -390,14 +392,14 @@ class FusedRingNumberer {
 	 */
 	private static List<Ring> findTerminalRings(List<Ring> rings) {
 		List<Ring> tRings = new ArrayList<Ring>();
-	
+
 		int minFusedBonds = Integer.MAX_VALUE;
 		for (Ring ring : rings){
 			if (ring.getNumberOfFusedBonds() < minFusedBonds) {
 				minFusedBonds = ring.getNumberOfFusedBonds();
 			}
 		}
-	
+
 		for  (Ring ring : rings){
 			if (ring.getNumberOfFusedBonds() == minFusedBonds) {
 				tRings.add(ring);
@@ -413,9 +415,9 @@ class FusedRingNumberer {
 	 * @param previousDir
 	 * @param previousBond
 	 * @param atom
-	 * @param ct 
+	 * @param ct
 	 * @param cts
-	 * @return 
+	 * @return
 	 * @throws StructureBuildingException
 	 */
 	private static List<RingConnectivityTable> buildRingConnectionTables(Ring currentRing, Ring previousRing, int previousDir, Bond previousBond, Atom atom, RingConnectivityTable ct, List<RingConnectivityTable> cts) throws StructureBuildingException {
@@ -444,10 +446,10 @@ class FusedRingNumberer {
 			for (Ring neighbourRing : currentRing.getNeighbours()){
 				//find the directions between the current ring and all neighbouring rings including the previous ring
 				// this means that the direction to the previous ring will then be known in both directions
-		
+
 				// find direction
 				Bond currentBond = findFusionBond(currentRing, neighbourRing);
-		
+
 				int dir = 0;
 				if (neighbourRing == previousRing) {
 					dir = getOppositeDirection(previousDir);
@@ -456,7 +458,7 @@ class FusedRingNumberer {
 					dir = calculateRingDirection(ringShape, previousBond, currentBond, previousDir);
 				}
 				//System.out.println(currentRing +"|" +neighbourRing +"|" +dir +"|" +(neighbourRing==previousRing));
-	
+
 				// place into connectivity table, like graph, rings and their connection
 				for (RingConnectivityTable ctToExpand : ctsToExpand) {
 					ctToExpand.ringShapes.add(ringShape);
@@ -484,7 +486,7 @@ class FusedRingNumberer {
 	 * Currently only 5 membered rings are considered in multiple orientations but the same
 	 * is probably required for 7+ member rings
 	 * @param ring
-	 * @param startingBond 
+	 * @param startingBond
 	 * @return
 	 */
 	private static List<FusionRingShape> getAllowedShapesForRing(Ring ring, Bond startingBond) {
@@ -536,7 +538,7 @@ class FusedRingNumberer {
 	 */
 	private static List<FusionRingShape> removeDegenerateRingShapes(List<FusionRingShape> allowedRingShapes, List<Integer> distances) {
 		distances = new ArrayList<Integer>(distances);
-		distances.remove((Integer)0);//remove distance 0 if present, this invariably comes from the starting bond and is not of interest (and breaks getDirectionFromDist) 
+		distances.remove((Integer)0);//remove distance 0 if present, this invariably comes from the starting bond and is not of interest (and breaks getDirectionFromDist)
 		for (int i = allowedRingShapes.size() - 1; i >=0; i--) {
 			FusionRingShape shapeToConsiderRemoving = allowedRingShapes.get(i);
 			for (int j = i - 1; j >=0; j--) {
@@ -554,7 +556,7 @@ class FusedRingNumberer {
 				}
 			}
 		}
-		
+
 		return allowedRingShapes;
 	}
 
@@ -565,7 +567,7 @@ class FusedRingNumberer {
 	 * @param currentBond
 	 * @param previousDir
 	 * @return
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
 	private static int calculateRingDirection(RingShape ringShape, Bond previousBond, Bond currentBond, int previousDir) throws StructureBuildingException{
 		// take the ring fused to one from the previous loop step
@@ -573,13 +575,13 @@ class FusedRingNumberer {
 		if (ring.getCyclicBondList() == null ) {
 			throw new RuntimeException("OPSIN bug: cyclic bond set should have already been populated");
 		}
-	
+
 		int dist = calculateDistanceBetweenBonds(previousBond, currentBond, ring);
-	
+
 		if (dist == 0) {
 			throw new RuntimeException("OPSIN bug: Distance between bonds is equal to 0");
 		}
-	
+
 		int relativeDir = getDirectionFromDist(ringShape.getShape(), ring.size(), dist);
 		return determineAbsoluteDirectionUsingPreviousDirection(ringShape.getShape(), ring.size(), relativeDir, previousDir);
 	}
@@ -612,7 +614,7 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static int getDirectionFromDist(FusionRingShape fusionRingShape, int ringSize, int dist) {
-		int dir=0;	
+		int dir=0;
 		if (ringSize == 3) { // 3 member ring
 			if (dist == 1) {
 				dir = -1;
@@ -837,7 +839,7 @@ class FusedRingNumberer {
 	 * Given a list of cts find the longest chain of rings in a line. This can be used a possible horizontal row
 	 * The output is a map between the connection tables and the directions which give the longest chains
 	 * Some cts may have no directions that give a chain of rings of this length
-	 * 
+	 *
 	 * @param cts
 	 * @return
 	 */
@@ -858,7 +860,7 @@ class FusedRingNumberer {
 
 				nextRingInChainLoop: for (int k = 0; k <= ct.usedRings.size(); k++) {//<= rather than < so buggy behaviour can be caught
 					int indexOfNeighbour = indexOfCorrespondingRingshape(ct.ringShapes, neighbour);
-		
+
 					if (indexOfNeighbour >= 0) {
 						for (int j=indexOfNeighbour; j < ctEntriesSize; j++)	{
 							if (ct.ringShapes.get(j).getRing() == neighbour && ct.directionFromRingToNeighbouringRing.get(j) == curDir) {
@@ -909,17 +911,16 @@ class FusedRingNumberer {
 		}
 		return -1;
 	}
-
+	
+	
 	/**
-	 * Finds possible atom paths from the connection tables and their given horizonalRowDirections
+	 * For each RingConnectivityTable and for each horizontal row direction creates a ringMap aligned along the given horizontal row direction
 	 * @param horizonalRowDirectionsMap
 	 * @return
-	 * @throws StructureBuildingException 
+	 * @throws StructureBuildingException
 	 */
-	private static List<List<Atom>> findPossiblePaths(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
-		List<Double[]> chainQs = new ArrayList<Double[]>();
-		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
-		List<Chain> correspondingChain = new ArrayList<Chain>();
+	private static List<Ring[][]> createRingMapsAlignedAlongGivenhorizonalRowDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
+		List<Ring[][]> ringMaps = new ArrayList<Ring[][]>();
 		for (Entry<RingConnectivityTable, List<Integer>> entry : horizonalRowDirectionsMap.entrySet()) {
 			RingConnectivityTable ct = entry.getKey();
 			if ( ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size() || ct.ringShapes.size() <= 0) {
@@ -933,60 +934,65 @@ class FusedRingNumberer {
 					RingShape ringShape = ct.ringShapes.get(i);
 					directionFromRingToNeighbouringRing[i] = determineAbsoluteDirectionUsingPreviousDirection(ringShape.getShape(), ringShape.getRing().size(), ct.directionFromRingToNeighbouringRing.get(i), -horizonalRowDirection);
 				}
+				ringMaps.add(generateRingMap(ct, directionFromRingToNeighbouringRing));
+			}
+		}
+		return ringMaps;
+	}
 
-				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing);
-				if (LOG.isTraceEnabled()){
-					debugRingMap(ringMap);
-				}
-//				System.out.println("next: " + horizonalRowDirection);
-//				for (int i=0; i< ct.ringShapes.size(); i++){
-//					System.out.println(directionFromRingToNeighbouringRing[i]);
-//					System.out.println(ct.ringShapes.get(i).ring +" to " +ct.neighbouringRings.get(i) + " dir: " + ct.directionFromRingToNeighbouringRing.get(i) );
-//				}
+	/**
+	 * Applies FR5.2 B, C and D to determine the preferred orientation and returns lists of potential peripheral atom orderings
+	 * @param ringMaps
+	 * @param atomCountOfFusedRingSystem 
+	 * @return
+	 */
+	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem){
+		List<Double[]> chainQs = new ArrayList<Double[]>();
+		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
+		List<Chain> correspondingChain = new ArrayList<Chain>();
+		for (Ring[][] ringMap : ringMaps) {
+			List<Chain> chains = findChains(ringMap);
+			// For each chain count the number of rings in each quadrant
+			for (Chain chain : chains) {
+				int midChainXcoord = chain.getLength() + chain.getStartingX() - 1;//Remember the X axis is measured in 1/2s so don't need to 1/2 length
 
-				List<Chain> chains = findChains(ringMap);
-			
-				// find candidates for different directions and different quadrants
-			
-				// here we make array of quadrants for each chain
-				for (Chain chain : chains) {
-					int midChainXcoord = chain.getLength() + chain.getStartingX() - 1;//Remember the X axis is measured in 1/2s so don't need to 1/2 length
-			
-					Double[] qs = countQuadrants(ringMap, midChainXcoord, chain.getY());
-					chainQs.add(qs);
-					correspondingRingMap.add(ringMap);
-					correspondingChain.add(chain);
-				}
+				Double[] qs = countQuadrants(ringMap, midChainXcoord, chain.getY());
+				chainQs.add(qs);
+				correspondingRingMap.add(ringMap);
+				correspondingChain.add(chain);
 			}
 		}
 
 		/*
 		 * The quadrant numbers are as follows:
-		 * 
+		 *
 		 *  1  |  0
 		 * ----+----
 		 *  2  |  3
-		 *  
+		 *
 		 *  But at this stage it is not known what the mapping between these numbers and the/a preferred orientation of the structure is
 		 */
 		//  order for each right corner candidates for each chain
 		List<List<Integer>> allowedUpperRightQuadrantsForEachChain =rulesBCD(chainQs);
-		
+
 		List<List<Atom>> paths = new ArrayList<List<Atom>> ();
 		for (int c=0; c < chainQs.size(); c++) {
 			Ring[][] ringMap = correspondingRingMap.get(c);
 			Chain chain = correspondingChain.get(c);
 			List<Integer> allowedUpperRightQuadrants = allowedUpperRightQuadrantsForEachChain.get(c);
 			int midChainXcoord = chain.getLength() + chain.getStartingX() - 1;
-	
+
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
+				if (LOG.isTraceEnabled()){
+					debugRingMap(qRingMap);
+				}
 				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
-				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms);
+				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms, atomCountOfFusedRingSystem);
 				paths.add(peripheralAtomPath);
 			}
 		}
-	
+
 		return paths;
 	}
 
@@ -1002,10 +1008,10 @@ class FusedRingNumberer {
 		int minX = 0;
 		int maxY = 0;
 		int minY = 0;
-	
+
 		takenRings[takenRingsCnt++] = ct.ringShapes.get(0).getRing();
 		coordinates[0] = new int[]{0,0};
-	
+
 		// Go through the rings in a system
 		// Find the rings connected to them and assign coordinates according to the direction
 		// Each time we go to the ring, whose coordinates were already identified.
@@ -1018,7 +1024,7 @@ class FusedRingNumberer {
 			int indexOfCurrentRing = indexOfCorrespondingRingshape(ct.ringShapes, currentRing);
 
 			int xy[] = coordinates[tr]; // find the correspondent coordinates for the ring
-	
+
 			if (indexOfCurrentRing >= 0) {
 				for (int j=indexOfCurrentRing; j< ctEntriesSize; j++) {
 					if (ct.ringShapes.get(j).getRing() == currentRing) {
@@ -1026,18 +1032,18 @@ class FusedRingNumberer {
 						if (arrayContains(takenRings, neighbour)) {
 							continue;
 						}
-	
+
 						int[] newXY = new int[2];
 						newXY[0] = xy[0] + Math.round(2 * countDX(directionFromRingToNeighbouringRing[j]));
 						newXY[1] = xy[1] + countDY(directionFromRingToNeighbouringRing[j]);
-	
+
 						if(takenRingsCnt > takenRings.length) {
 							throw new RuntimeException("OPSIN Bug: Fused ring numbering bug");
 						}
 						takenRings[takenRingsCnt] = neighbour;
 						coordinates[takenRingsCnt] = newXY;
 						takenRingsCnt++;
-	
+
 						if (newXY[0] > maxX){
 							maxX = newXY[0];
 						}
@@ -1061,11 +1067,11 @@ class FusedRingNumberer {
 		// the height and the width of the map
 		int h = maxY - minY + 1;
 		int w = maxX - minX + 1;
-	
+
 		Ring[][] ringMap = new Ring[w][h];
-	
+
 		// Map rings using coordinates calculated in the previous step, and transform them according to found minX and minY
-	
+
 		int ix = -minX;
 		int iy = -minY;
 		if (ix >= w || iy >= h) {
@@ -1097,12 +1103,12 @@ class FusedRingNumberer {
 	private static List<Chain> findChains(Ring[][] ringMap){
 		int w = ringMap.length;
 		int h = ringMap[0].length;
-	
+
 		List<Chain> chains = new ArrayList<Chain>();
-	
+
 		int maxChain = 0;
 		int chain = 0;
-	
+
 		// Find the longest chain
 		for (int j=0; j<h; j++)	{
 			for (int i=0; i<w; i++)	 {
@@ -1147,7 +1153,7 @@ class FusedRingNumberer {
 				if (ringMap[x][y] == null) {
 					continue;
 				}
-	
+
 				if (x == midChainXcoord || y == yChain ) {// if the ring is on the axis
 					if( x == midChainXcoord && y > yChain ) {
 						qs[0]+=0.5;
@@ -1186,7 +1192,7 @@ class FusedRingNumberer {
 				}
 			}
 		}
-	
+
 		return qs;
 	}
 
@@ -1195,18 +1201,17 @@ class FusedRingNumberer {
 	 * Return a list of possible upper right quadrants for each chain given. A chain may have multiple possible upper right quadrants (due to symmetry)
 	 * or none if other chains can be shown to be preferable by application of the rules
 	 * @param chainQs - array with number of ring in each quadrant for each chain.
-	 * @throws StructureBuildingException
 	 */
-	private static List<List<Integer>> rulesBCD(List<Double[]> chainQs) throws StructureBuildingException {
+	private static List<List<Integer>> rulesBCD(List<Double[]> chainQs) {
 		List<List<Integer>> possibleUpperRightQuadrantsForEachChain = new ArrayList<List<Integer>>();
 		int nChains = chainQs.size();
 		if (nChains==0){
 			throw new RuntimeException("OPSIN Bug: Fused ring numbering, no chains found?");
 		}
-	
+
 		// Rule B: Maximum number of rings in upper right quadrant. Upper right corner candidates (it is not at this stage known which quadrant is the upper right one)
 		double qmax = 0;
-	
+
 		for (int c = 0; c < nChains; c++) {
 			for (int j = 0; j < 4; j++)	{
 				if(chainQs.get(c)[j] > qmax) {
@@ -1214,17 +1219,17 @@ class FusedRingNumberer {
 				}
 			}
 		}
-	
+
 		for (int c = 0; c < nChains; c++) {
 			List<Integer> allowedUpperRightQuadrants = new ArrayList<Integer>();
 			for (int j = 0; j < 4; j++){
-				if (chainQs.get(c)[j] == qmax) { 
+				if (chainQs.get(c)[j] == qmax) {
 					allowedUpperRightQuadrants.add(j);
 				}
 			}
 			possibleUpperRightQuadrantsForEachChain.add(allowedUpperRightQuadrants);
 		}
-	
+
 		// Rule C: Minimum number of rings in lower left quadrant
 		double qmin = Double.MAX_VALUE;
 
@@ -1248,7 +1253,7 @@ class FusedRingNumberer {
 			}
 			possibleUpperRightQuadrantsForEachChain.set(c, allowedUpperRightQuadrants);
 		}
-	
+
 		// Rule D: Maximum number of rings above the horizontal row
 		double rMax = 0;
 		for (int c = 0; c < nChains; c++) {
@@ -1294,13 +1299,13 @@ class FusedRingNumberer {
 	 * @param ringMap
 	 * @param midChain
 	 * @param inverseAtoms The direction in which the periphery atoms should be enumerated. Anticlockwise by default
+	 * @param atomCountOfFusedRingSystem 
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private static List<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms) throws StructureBuildingException {
+	private static List<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms, int atomCountOfFusedRingSystem){
 		int w = ringMap.length;
 		int h = ringMap[0].length;
-	
+
 		// find upper right ring
 		Ring upperRightRing = null;
 		for (int i=w-1; i>=0; i--) {
@@ -1315,7 +1320,7 @@ class FusedRingNumberer {
 		while (isEntirelyFusionAtoms(upperRightRing)){//c.f cyclopropa[de]anthracene
 			upperRightRing = findClockwiseRingFromUpperRightRing(ringMap,upperRightRing);
 		}
-	
+
 		Ring prevRing = findUpperLeftNeighbourOfUpperRightRing(ringMap, upperRightRing);
 		Bond prevBond = findFusionBond(upperRightRing, prevRing);
 		Bond nextBond = null;
@@ -1323,13 +1328,12 @@ class FusedRingNumberer {
 		Ring currentRing = upperRightRing;
 		Ring nextRing = null;
 		List<Atom> atomPath = new ArrayList<Atom>();
-		int currentAtomPathSize =0;
-		mainLoop: do{
-			currentAtomPathSize =atomPath.size();
+		int count = 0;
+		mainLoop: for (; count <= atomCountOfFusedRingSystem; count++) {
 			int ringSize = currentRing.size();
-											
+
 			int startingBondIndex = currentRing.getBondIndex(prevBond) ;
-		
+
 			List<Bond> cyclicBonds = currentRing.getCyclicBondList();
 			List<Bond> fusedBonds = currentRing.getFusedBonds();
 			if (!inverseAtoms) {
@@ -1351,25 +1355,25 @@ class FusedRingNumberer {
 					if(fusedBonds.contains(bond)) {
 						nextBond = bond;
 						break;
-					}										
+					}
 				}
 			}
 			if (nextBond == null) {
 				throw new RuntimeException("OPSIN Bug: None of the bonds from this ring were fused, but this is not possible ");
 			}
 
-			// next ring			
+			// next ring
 			for (Ring ring : nextBond.getFusedRings()) {
 				if(ring != currentRing) {
 					nextRing = ring;
 					break;
 				}
 			}
-			
+
 			int endNumber = currentRing.getBondIndex(nextBond) ;
-			
+
 			// Add atoms in order, considering inverse or not inverse
-			if (!inverseAtoms) {			
+			if (!inverseAtoms) {
 				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other) i.e. come under interior atom numbering
 				// we don't add that atom, cause it was added already
 				if ( (endNumber - startingBondIndex + ringSize) % ringSize != 1) {
@@ -1378,8 +1382,8 @@ class FusedRingNumberer {
 					if (startingBondIndex > endNumber) {
 						endNumber += ringSize;
 					}
-					
-					// start from the atom next to fusion								
+
+					// start from the atom next to fusion
 					for (int j = startingBondIndex; j <= endNumber; j++) {
 						Atom atom = currentRing.getCyclicAtomList().get(j % ringSize);
 						if (atomPath.contains(atom)) {
@@ -1388,16 +1392,16 @@ class FusedRingNumberer {
 						atomPath.add(atom);
 					}
 				}
-			}			
+			}
 			else {
 				if ( ( startingBondIndex - endNumber + ringSize) % ringSize != 1) {
 					startingBondIndex = (startingBondIndex - 2 + ringSize ) % ringSize;
-					endNumber = endNumber % ringSize;				
+					endNumber = endNumber % ringSize;
 					if (startingBondIndex < endNumber) {
 						startingBondIndex += ringSize;
 					}
-										
-					for (int j = startingBondIndex; j >= endNumber; j-- ) {				
+
+					for (int j = startingBondIndex; j >= endNumber; j-- ) {
 						Atom atom = currentRing.getCyclicAtomList().get(j % ringSize);
 						if (atomPath.contains(atom)) {
 							break mainLoop;
@@ -1408,12 +1412,14 @@ class FusedRingNumberer {
 			}
 			prevBond = nextBond;
 			prevRing = currentRing;
-			currentRing = nextRing;			
+			currentRing = nextRing;
 		}
-		while (currentAtomPathSize !=atomPath.size());
+		if (count ==atomCountOfFusedRingSystem){
+			throw new RuntimeException("OPSIN Bug: Fused ring numbering may have been stuck in an infinite loop while enumerating peripheral numbering");
+		}
 		return atomPath;
 	}
-	
+
 	private static boolean isEntirelyFusionAtoms(Ring upperRightRing) {
 		List<Atom> atomList = upperRightRing.getAtomList();
 		for (Atom atom : atomList) {
@@ -1434,7 +1440,7 @@ class FusedRingNumberer {
 		Ring clockwiseRing = null;
 		int maxX = 0;
 		int maxY = 0;
-	
+
 		for (Ring ring : upperRightRing.getNeighbours()) {
 			int xy[] = findRingPosition(ringMap, ring);
 			if (xy==null) {
@@ -1460,7 +1466,7 @@ class FusedRingNumberer {
 		Ring nRing = null;
 		int minX = Integer.MAX_VALUE;
 		int maxY = 0;
-	
+
 		for (Ring ring : upperRightRing.getNeighbours()) {
 			// upper left would be previous ring
 			int xy[] = findRingPosition(ringMap, ring);
@@ -1486,7 +1492,7 @@ class FusedRingNumberer {
 	private static int[] findRingPosition(Ring[][] ringMap, Ring ring) {
 		int w = ringMap.length;
 		int h = ringMap[0].length;
-	
+
 		for(int i=0; i<w; i++) {
 			for(int j=0; j<h; j++) {
 				if (ringMap[i][j] == ring) {
@@ -1506,7 +1512,7 @@ class FusedRingNumberer {
 	private static Ring[][] transformQuadrantToUpperRightOfRingMap(Ring[][] ringMap, int upperRightQuadrant){
 		int w = ringMap.length;
 		int h = ringMap[0].length;
-	
+
 		Ring[][] rearrangedMap = new Ring[w][h];
 		for (int i=0; i < w; i++) {
 			for (int j=0; j < h; j++) {
@@ -1524,7 +1530,7 @@ class FusedRingNumberer {
 				}
 			}
 		}
-	
+
 		return rearrangedMap;
 	}
 
@@ -1655,7 +1661,7 @@ class FusedRingNumberer {
 	 * @param val
 	 * @return
 	 */
-	
+
 	private static int countDY (int val) {
 		int dY = 0;
 		if (Math.abs(val) != 4) {
@@ -1692,7 +1698,7 @@ class FusedRingNumberer {
 		else {
 			interimDirection = relativeDirection + previousDir;
 		}
-	
+
 		if (Math.abs(interimDirection)>4) {// Added
 			interimDirection = (8 - Math.abs(interimDirection)) *  Integer.signum(interimDirection) * -1;
 		}
@@ -1713,14 +1719,14 @@ class FusedRingNumberer {
 			}
 			// else it is correctly 2 // else throw new StructureBuildingException();
 		}
-	
+
 		if (interimDirection == -4) {
 			interimDirection = 4;
 		}
-	
+
 		return interimDirection;
 	}
-	
+
 	private static void debugRingMap(Ring[][] ringMap) {
 		Ring[][] yxOrdered = new Ring[ringMap[0].length][ringMap.length];
 		for (int x = 0; x < ringMap.length; x++) {
@@ -1756,6 +1762,6 @@ class FusedRingNumberer {
 			System.out.println("");
 		}
 		System.out.println("#########");
-		
+
 	}
 }
