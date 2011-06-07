@@ -360,26 +360,16 @@ class FusedRingNumberer {
 		RingConnectivityTable startingCT = new RingConnectivityTable();
 		cts.add(startingCT);
 		buildRingConnectionTables(tRing, null, 0, b1, b1.getFromAtom(), startingCT, cts);
-		/*
-		 * Apply FR 5.1.2 and FR 5.1.6
-		 * Fusion to elongated bonds is typically not allowed
-		 * If it has to be done it should be done as few times as possible and to as small rings as possible
-		 */
+		//The preference against fusion to elongated edges is built into the construction of the ring table
+		
+		/* FR 5.1.1/FR 5.1.2 Preferred shapes preferred to distorted shapes */
 		removeCTsWithDistortedRingShapes(cts);
-		//TODO apply FR 5.1.3
-		//TODO apply FR 5.1.4
-		//TODO apply FR 5.1.5
+		//TODO better implement the corner cases of FR 5.1.3-5.1.5
 
-//		RingConnectivityTable ct =cts.get(0);
-//		for (int i=0; i< ct.ringShapes.size(); i++){
-//			System.out.println(ct.ringShapes.get(i).shape);
-//			System.out.println(ct.ringShapes.get(i).ring +" to " +ct.neighbouringRings.get(i) + " dir: " + ct.directionFromRingToNeighbouringRing.get(i) );
-//		}
-		/*
-		 * FR-5.2a. Maximum number of rings in a horizontal row
-		 */
+		/* FR-5.2a. Maximum number of rings in a horizontal row */
 		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = findLongestChainDirections(cts);
 		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenhorizonalRowDirections(horizonalRowDirections);
+		/* FR-5.2b-d */
 		return findPossiblePaths(ringMaps, atomCountOfFusedRingSystem);
 	}
 
@@ -754,9 +744,7 @@ class FusedRingNumberer {
 						}
 					}
 				}
-				//System.out.println(ct.ringShapes.get(i).ring +" to " +ct.neighbouringRings.get(i) + " dir: " + ct.directionFromRingToNeighbouringRing.get(i) );
 			}
-			//System.out.println("distorted" + distortedRingSizes.size());
 		}
 		int minDistortedRings = Integer.MAX_VALUE;//find the minimum number of distorted rings
 		for (List<Integer> distortedRingSizes : ctToDistortedRings.values()) {
@@ -893,10 +881,7 @@ class FusedRingNumberer {
 		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
 		List<Chain> correspondingChain = new ArrayList<Chain>();
 		for (Ring[][] ringMap : ringMaps) {
-			if (LOG.isTraceEnabled()){
-				debugRingMap(ringMap);
-			}
-			List<Chain> chains = findChains(ringMap);
+			List<Chain> chains = findChainsOfMaximumLengthInHorizontalDir(ringMap);
 			// For each chain count the number of rings in each quadrant
 			for (Chain chain : chains) {
 				int midChainXcoord = chain.getLength() + chain.getStartingX() - 1;//Remember the X axis is measured in 1/2s so don't need to 1/2 length
@@ -929,7 +914,9 @@ class FusedRingNumberer {
 
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
-	
+				if (LOG.isTraceEnabled()){
+					debugRingMap(ringMap);
+				}
 				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
 				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms, atomCountOfFusedRingSystem);
 				paths.add(peripheralAtomPath);
@@ -1043,7 +1030,7 @@ class FusedRingNumberer {
 	 * @param ringMap
 	 * @return
 	 */
-	private static List<Chain> findChains(Ring[][] ringMap){
+	private static List<Chain> findChainsOfMaximumLengthInHorizontalDir(Ring[][] ringMap){
 		int w = ringMap.length;
 		int h = ringMap[0].length;
 
