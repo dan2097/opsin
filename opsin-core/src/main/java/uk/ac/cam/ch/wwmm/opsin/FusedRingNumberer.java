@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
 /**
  * Numbers fusedRings
  * @author aa593
@@ -17,7 +19,7 @@ import java.util.Map.Entry;
  *
  */
 class FusedRingNumberer {
-
+	private static final Logger LOG = Logger.getLogger(FusedRingNumberer.class);
 	private static class RingConnectivityTable {
 		final List<RingShape> ringShapes = new ArrayList<RingShape>();
 		final List<Ring> neighbouringRings = new ArrayList<Ring>();
@@ -499,17 +501,17 @@ class FusedRingNumberer {
 				for (Bond fusedBond : fusedBonds) {
 					distances.add(calculateDistanceBetweenBonds(startingBond, fusedBond, ring));
 				}
-				if (!distances.contains(4)){
+				if (!distances.contains(1)){
 					allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
 				}
-				if (!distances.contains(2)){
-					allowedRingShapes.add(FusionRingShape.enterFromTopRightHouse);
+				if (!distances.contains(4)){
+					allowedRingShapes.add(FusionRingShape.enterFromRightHouse);
 				}
 
-				if (!distances.contains(3)){
+				if (!distances.contains(2)){
 					allowedRingShapes.add(FusionRingShape.enterFromTopLeftHouse);
 				}
-				else if (!distances.contains(2)){
+				else if (!distances.contains(3)){
 					allowedRingShapes.add(FusionRingShape.enterFromTopRightHouse);
 				}
 				allowedRingShapes = removeDegenerateRingShapes(allowedRingShapes, distances);
@@ -613,10 +615,10 @@ class FusedRingNumberer {
 		int dir=0;	
 		if (ringSize == 3) { // 3 member ring
 			if (dist == 1) {
-				dir = 1;
+				dir = -1;
 			}
 			else if (dist == 2) {
-				dir = -1;
+				dir = 1;
 			}
 			else throw new RuntimeException("Impossible distance between bonds for a 3 membered ring");
 		}
@@ -625,71 +627,71 @@ class FusedRingNumberer {
 				dir = 0;
 			}
 			else if (dist ==1) {
-				dir = 2;
+				dir = -2;
 			}
 			else if (dist ==3) {
-				dir = -2;
+				dir = 2;
 			}
 			else throw new RuntimeException("Impossible distance between bonds for a 4 membered ring");
 		}
 		else if (ringSize == 5) { // 5 member ring
 			if (fusionRingShape == FusionRingShape.enterFromLeftHouse){
 				if (dist ==1){
-					dir = 3;
+					dir = -2;//fusion to an elongated bond
 				}
 				else if (dist ==2){
-					dir = 1;
-				}
-				else if (dist ==3){
 					dir = 0;
 				}
+				else if (dist ==3){
+					dir = 1;
+				}
 				else if (dist ==4){
-					dir = -2;//fusion to an elongated bond
+					dir = 3;
 				}
 				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
 			}
 			else if (fusionRingShape == FusionRingShape.enterFromTopLeftHouse){
 				if (dist ==1){
-					dir = 3;
+					dir = -3;
 				}
 				else if (dist ==2){
-					dir = 1;
-				}
-				else if (dist ==3){
 					dir = -1;//fusion to an elongated bond
 				}
+				else if (dist ==3){
+					dir = 1;
+				}
 				else if (dist ==4){
-					dir = -3;
+					dir = 3;
 				}
 				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
 			}
 			else if (fusionRingShape == FusionRingShape.enterFromTopRightHouse){
 				if (dist ==1){
-					dir = 3;
+					dir = -3;
 				}
 				else if (dist ==2){
-					dir = 1;//fusion to an elongated bond
-				}
-				else if (dist ==3){
 					dir = -1;
 				}
+				else if (dist ==3){
+					dir = 1;//fusion to an elongated bond
+				}
 				else if (dist ==4){
-					dir = -3;
+					dir = 3;
 				}
 				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
 			}
 			else if (fusionRingShape == FusionRingShape.enterFromRightHouse){
 				if (dist ==1){
-					dir = 2;//fusion to an elongated bond
+					dir = -3;
 				}
 				else if (dist ==2){
-					dir = 0;
-				}
-				else if (dist ==3){
 					dir = -1;
 				}
+				else if (dist ==3){
+					dir = 0;
+				}
 				else if (dist ==4){
-					dir = -3;
+					dir = 2;//fusion to an elongated bond
 				}
 				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
 			}
@@ -699,34 +701,34 @@ class FusedRingNumberer {
 		}
 		else if (ringSize % 2 == 0) {//general case even number of atoms ring (a 6 membered ring or distortion of)
 			if (dist == 1) {
-				dir = 3;
-			}
-			else if (dist == ringSize-1) {
 				dir = -3;
 			}
+			else if (dist == ringSize-1) {
+				dir = 3;
+			}
 			else {
-				dir = ringSize/2 - dist;
+				dir = dist - ringSize/2;
 				if (Math.abs(dir) > 2 && ringSize >= 8){// 8 and more neighbours
-					dir = 2 * Integer.signum(dir);
+					dir = -2 * Integer.signum(dir);
 				}
 			}
 		}
 		else {// general case odd number of atoms ring (distortion of an even numbered ring by insertion of one atom).
 			//NOTE that the plurality of ways of depicting these rings is currently ignored due to the checkRingApplicability function filtering out difficult cases
 			if (dist == 1) {
-				dir = 3;
+				dir = -3;
 			}
 			else if (dist == ringSize/2 || dist == ringSize/2 + 1) {//0 in both cases as effectively we are using a different depiction of the ring system. See FR-5.1.1 (this is done to give the longest horizontal row)
 				dir = 0;
 			}
 			else if (dist == ringSize-1) {
-				dir = -3;
+				dir = 3;
 			}
 			else if(dist < ringSize/2) {//TODO explicitly consider different ring shapes e.g. this could be +-1 under some circumstances
-				dir = 2;
+				dir = -2;
 			}
 			else if(dist > ringSize/2+1) {
-				dir = -2;
+				dir = 2;
 			}
 			else{
 				throw new RuntimeException("OPSIN Bug: Unable to determine direction between odd number of atoms ring and next ring");
@@ -933,7 +935,9 @@ class FusedRingNumberer {
 				}
 
 				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing);
-				//debugRingMap(ringMap);
+				if (LOG.isTraceEnabled()){
+					debugRingMap(ringMap);
+				}
 //				System.out.println("next: " + horizonalRowDirection);
 //				for (int i=0; i< ct.ringShapes.size(); i++){
 //					System.out.println(directionFromRingToNeighbouringRing[i]);
@@ -955,7 +959,7 @@ class FusedRingNumberer {
 				}
 			}
 		}
-		
+
 		/*
 		 * The quadrant numbers are as follows:
 		 * 
@@ -978,7 +982,6 @@ class FusedRingNumberer {
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
 				boolean inverseAtoms = (upperRightQuadrant == 1 || upperRightQuadrant == 3);
-				//debugRingMap(qRingMap);
 				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms);
 				paths.add(peripheralAtomPath);
 			}
@@ -1351,7 +1354,6 @@ class FusedRingNumberer {
 					}										
 				}
 			}
-			
 			if (nextBond == null) {
 				throw new RuntimeException("OPSIN Bug: None of the bonds from this ring were fused, but this is not possible ");
 			}
@@ -1378,7 +1380,7 @@ class FusedRingNumberer {
 					}
 					
 					// start from the atom next to fusion								
-					for (int j = startingBondIndex; j <= endNumber; j++) {// change 4-2
+					for (int j = startingBondIndex; j <= endNumber; j++) {
 						Atom atom = currentRing.getCyclicAtomList().get(j % ringSize);
 						if (atomPath.contains(atom)) {
 							break mainLoop;
@@ -1416,7 +1418,7 @@ class FusedRingNumberer {
 	private static boolean isEntirelyFusionAtoms(Ring upperRightRing) {
 		List<Atom> atomList = upperRightRing.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getIncomingValency() < 3){
+			if (atom.getBonds().size() < 3){
 				return false;
 			}
 		}
@@ -1735,13 +1737,13 @@ class FusedRingNumberer {
 					int size = ring.size();
 					if (size>9){
 						if (size==10){
-							System.out.println("0");
+							System.out.print("0");
 						}
 						else if (size % 2 ==0){
-							System.out.println("2");
+							System.out.print("2");
 						}
 						else{
-							System.out.println("1");
+							System.out.print("1");
 						}
 					}
 					else{
