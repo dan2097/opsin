@@ -55,8 +55,10 @@ class FusedRingNumberer {
 	}
 	
 	enum FusionRingShape{
-		houseup,
-		housedown,
+		enterFromLeftHouse,
+		enterFromTopLeftHouse,
+		enterFromTopRightHouse,
+		enterFromRightHouse,
 		standard
 	}
 	
@@ -362,15 +364,11 @@ class FusedRingNumberer {
 		 * If it has to be done it should be done as few times as possible and to as small rings as possible
 		 */
 		removeCTsWithDistortedRingShapes(cts);
-		removeCTsWithMostFusionToElongatedBonds(cts);
+		//removeCTsWithMostFusionToElongatedBonds(cts);
 		//TODO apply FR 5.1.3
 		//TODO apply FR 5.1.4
 		//TODO apply FR 5.1.5
-		
-		cts.remove(0);
-		cts.remove(0);
-		cts.remove(0);
-	
+
 		/*
 		 * FR-5.2a. Maximum number of rings in a horizontal row
 		 */
@@ -417,7 +415,7 @@ class FusedRingNumberer {
 		// order atoms and bonds in the ring
 		currentRing.makeCyclicLists(previousBond, atom);
 		List<RingConnectivityTable> generatedCts = new ArrayList<RingConnectivityTable>();
-		List<FusionRingShape> allowedShapes = getAllowedShapesForRing(currentRing);
+		List<FusionRingShape> allowedShapes = getAllowedShapesForRing(currentRing, previousBond);
 		if (allowedShapes.size()==0){
 			throw new RuntimeException("OPSIN limitation, unsupported ring size in fused ring numbering");
 		}
@@ -474,24 +472,51 @@ class FusedRingNumberer {
 	}
 
 	/**
-	 * Returns the allowed shapes for the given ring
-	 * In the special case where the ring is only fused to one other ring only one shape is returned as in this case all shapes will be equivalent
-	 * @param currentRing
+	 * Returns the allowed shapes for the given ring.
+	 * The starting bond is required to assured that elongated bonds do not unnecesarily correspond to fusions
+	 * Currently only 5 membered rings are considered in multiple orientations but the same
+	 * is probably required for 7+ member rings
+	 * @param ring
+	 * @param startingBond 
 	 * @return
 	 */
-	private static List<FusionRingShape> getAllowedShapesForRing(Ring currentRing) {
+	private static List<FusionRingShape> getAllowedShapesForRing(Ring ring, Bond startingBond) {
 		List<FusionRingShape> allowedRingShapes = new ArrayList<FusionRingShape>();
-		int size = currentRing.size();
+		int size = ring.size();
 		if (size==5){
-			allowedRingShapes.add(FusionRingShape.houseup);
-			allowedRingShapes.add(FusionRingShape.housedown);
+			List<Bond> fusedBonds = ring.getFusedBonds();
+			int fusedBondCount = fusedBonds.size();
+			if (fusedBondCount==1){
+				allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
+			}
+			else if (fusedBondCount==2 || fusedBondCount==3 || fusedBondCount==4){
+				List<Integer> distances = new ArrayList<Integer>();//one distance is likely to be 0
+				for (Bond fusedBond : fusedBonds) {
+					distances.add(calculateDistanceBetweenBonds(startingBond, fusedBond, ring));
+				}
+				if (!distances.contains(4)){
+					allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
+				}
+				if (!distances.contains(2)){
+					allowedRingShapes.add(FusionRingShape.enterFromTopRightHouse);
+				}
+
+				if (!distances.contains(3)){
+					allowedRingShapes.add(FusionRingShape.enterFromTopLeftHouse);
+				}
+				else if (!distances.contains(2)){
+					allowedRingShapes.add(FusionRingShape.enterFromTopRightHouse);
+				}
+			}
+			else if (fusedBondCount==5){
+				allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
+				allowedRingShapes.add(FusionRingShape.enterFromRightHouse);
+				//top left and top right are the same other than position of the elongated bond which will invariably be used anyway
+				allowedRingShapes.add(FusionRingShape.enterFromTopLeftHouse);
+			}
 		}
 		else{
 			allowedRingShapes.add(FusionRingShape.standard);
-		}
-		
-		if (allowedRingShapes.size()>1 && currentRing.getFusedBonds().size()==1){
-			return allowedRingShapes.subList(0, 1);
 		}
 		return allowedRingShapes;
 	}
@@ -511,22 +536,33 @@ class FusedRingNumberer {
 		if (ring.getCyclicBondList() == null ) {
 			throw new RuntimeException("OPSIN bug: cyclic bond set should have already been populated");
 		}
-		int ringSize = ring.size();
 	
-		List<Bond> cyclicBondList =ring.getCyclicBondList();
-		int previousBondIndice = cyclicBondList.indexOf(previousBond);
-		int currentBondIndice = cyclicBondList.indexOf(currentBond);
-		if (previousBondIndice==-1 || currentBondIndice==-1){
-			throw new RuntimeException("OPSIN bug: previous and current bond were not present in the cyclic bond list of the current ring");
-		}
-	
-		int dist = (ringSize + currentBondIndice - previousBondIndice) % ringSize;
+		int dist = calculateDistanceBetweenBonds(previousBond, currentBond, ring);
 	
 		if (dist == 0) {
 			throw new RuntimeException("OPSIN bug: Distance between bonds is equal to 0");
 		}
 	
-		return getDirectionFromDist(ringShape.getShape(), ringSize, dist, previousDir);
+		return getDirectionFromDist(ringShape.getShape(), ring.size(), dist, previousDir);
+	}
+
+	/**
+	 * Given two bonds on a ring returns the distance (in bonds) between them
+	 * @param bond1
+	 * @param bond2
+	 * @param ring
+	 * @return
+	 */
+	private static int calculateDistanceBetweenBonds(Bond bond1, Bond bond2, Ring ring) {
+		List<Bond> cyclicBondList =ring.getCyclicBondList();
+		int previousBondIndice = cyclicBondList.indexOf(bond1);
+		int currentBondIndice = cyclicBondList.indexOf(bond2);
+		if (previousBondIndice==-1 || currentBondIndice==-1){
+			throw new RuntimeException("OPSIN bug: previous and current bond were not present in the cyclic bond list of the current ring");
+		}
+		int ringSize =ring.size();
+		int dist = (ringSize + currentBondIndice - previousBondIndice) % ringSize;
+		return dist;
 	}
 
 	/**
@@ -563,7 +599,7 @@ class FusedRingNumberer {
 			else throw new RuntimeException("Impossible distance between bonds for a 4 membered ring");
 		}
 		else if (ringSize == 5) { // 5 member ring
-			if (fusionRingShape == FusionRingShape.houseup){
+			if (fusionRingShape == FusionRingShape.enterFromLeftHouse){
 				if (dist ==1){
 					dir = 3;
 				}
@@ -578,7 +614,37 @@ class FusedRingNumberer {
 				}
 				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
 			}
-			else if (fusionRingShape == FusionRingShape.housedown){
+			else if (fusionRingShape == FusionRingShape.enterFromTopLeftHouse){
+				if (dist ==1){
+					dir = 3;
+				}
+				else if (dist ==2){
+					dir = 1;
+				}
+				else if (dist ==3){
+					dir = -1;//fusion to an elongated bond
+				}
+				else if (dist ==4){
+					dir = -3;
+				}
+				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
+			}
+			else if (fusionRingShape == FusionRingShape.enterFromTopRightHouse){
+				if (dist ==1){
+					dir = 3;
+				}
+				else if (dist ==2){
+					dir = 1;//fusion to an elongated bond
+				}
+				else if (dist ==3){
+					dir = -1;
+				}
+				else if (dist ==4){
+					dir = -3;
+				}
+				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
+			}
+			else if (fusionRingShape == FusionRingShape.enterFromRightHouse){
 				if (dist ==1){
 					dir = 2;//fusion to an elongated bond
 				}
@@ -689,10 +755,10 @@ class FusedRingNumberer {
 				if (seenRingshapes.contains(ringShape)){
 					continue;
 				}
-				if (ringShape.getShape().equals(FusionRingShape.houseup) && usesElongatedBondOnFiveMemberedRing(ct, FusionRingShape.houseup, i)){
+				if (ringShape.getShape().equals(FusionRingShape.enterFromLeftHouse) && usesElongatedBondOnFiveMemberedRing(ct, FusionRingShape.enterFromLeftHouse, i)){
 					ringSizes.add(5);
 				}
-				else if (ringShape.getShape().equals(FusionRingShape.housedown) && usesElongatedBondOnFiveMemberedRing(ct, FusionRingShape.housedown, i)){
+				else if (ringShape.getShape().equals(FusionRingShape.enterFromRightHouse) && usesElongatedBondOnFiveMemberedRing(ct, FusionRingShape.enterFromRightHouse, i)){
 					ringSizes.add(5);
 				}
 				seenRingshapes.add(ringShape);
@@ -712,15 +778,15 @@ class FusedRingNumberer {
 	}
 
 	private static boolean usesElongatedBondOnFiveMemberedRing(RingConnectivityTable ct, FusionRingShape houseShape, int indiceOfRing) {
-		if (ct.directionFromRingToNeighbouringRing.get(indiceOfRing) == -2 && houseShape.equals(FusionRingShape.houseup)){
+		if (ct.directionFromRingToNeighbouringRing.get(indiceOfRing) == -2 && houseShape.equals(FusionRingShape.enterFromLeftHouse)){
 			return true;
 		}
-		if (ct.directionFromRingToNeighbouringRing.get(indiceOfRing) == 2 && houseShape.equals(FusionRingShape.housedown)) {
+		if (ct.directionFromRingToNeighbouringRing.get(indiceOfRing) == 2 && houseShape.equals(FusionRingShape.enterFromRightHouse)) {
 			return true;
 		}
 		RingShape shape = ct.ringShapes.get(indiceOfRing);
 		int firstUseOfRingAsNeighbour = ct.neighbouringRings.indexOf(shape.getRing());
-		int rightAngleDirection =ct.directionFromRingToNeighbouringRing.get(firstUseOfRingAsNeighbour) + (houseShape.equals(FusionRingShape.housedown) ? 2 : -2) ;
+		int rightAngleDirection =ct.directionFromRingToNeighbouringRing.get(firstUseOfRingAsNeighbour) + (houseShape.equals(FusionRingShape.enterFromRightHouse) ? 2 : -2) ;
 		if (Math.abs(rightAngleDirection)>4) {
 			rightAngleDirection = (8 - Math.abs(rightAngleDirection)) *  Integer.signum(rightAngleDirection) * -1;
 		}
@@ -839,11 +905,11 @@ class FusedRingNumberer {
 //TODO write a rotation function that operates on the ringMap
 				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing);
 				debugRingMap(ringMap);
-				System.out.println("next: " + horizonalRowDirection);
-				for (int i=0; i< ct.ringShapes.size(); i++){
-					System.out.println(directionFromRingToNeighbouringRing[i]);
-					System.out.println(ct.ringShapes.get(i).ring +" to " +ct.neighbouringRings.get(i) + " dir: " + ct.directionFromRingToNeighbouringRing.get(i) );
-				}
+//				System.out.println("next: " + horizonalRowDirection);
+//				for (int i=0; i< ct.ringShapes.size(); i++){
+//					System.out.println(directionFromRingToNeighbouringRing[i]);
+//					System.out.println(ct.ringShapes.get(i).ring +" to " +ct.neighbouringRings.get(i) + " dir: " + ct.directionFromRingToNeighbouringRing.get(i) );
+//				}
 
 				List<Chain> chains = findChains(ringMap);
 			
