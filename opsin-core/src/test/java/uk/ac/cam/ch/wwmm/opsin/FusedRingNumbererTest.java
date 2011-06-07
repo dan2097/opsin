@@ -414,9 +414,8 @@ public class FusedRingNumbererTest {
 	}
 	
 	@Test
-	@Ignore //IUPAC guidelines appear to have a genuine ambiguity as to how this ring system should be layed out!!!
 	public void difficultChain2() throws StructureBuildingException {
-		compareNumbering("C1CCCC2C3C4C5C6CCC7C8CCCCC8C7CCC56C4CCC3CC12", "1/2/3/4/4a/4b/4c/4d/4e/5/6/6a/6b/7/8/9/10/10a/10b/11/12/12a/12b/13/14/14a/15/15a");
+		compareNumbering("C1C2CCCCC2C3C4C5C6CCC7C8CCCCC8C7CCC56C4CCC13", "1/1a/2/3/4/5/5a/5b/5c/5d/5e/6/7/7a/7b/8/9/10/11/11a/11b/12/13/13a/13b/14/15/15a");
 	}
 	
 	@Test

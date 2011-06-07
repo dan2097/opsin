@@ -893,6 +893,9 @@ class FusedRingNumberer {
 		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
 		List<Chain> correspondingChain = new ArrayList<Chain>();
 		for (Ring[][] ringMap : ringMaps) {
+			if (LOG.isTraceEnabled()){
+				debugRingMap(ringMap);
+			}
 			List<Chain> chains = findChains(ringMap);
 			// For each chain count the number of rings in each quadrant
 			for (Chain chain : chains) {
@@ -926,9 +929,7 @@ class FusedRingNumberer {
 
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
-				if (LOG.isTraceEnabled()){
-					debugRingMap(qRingMap);
-				}
+	
 				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
 				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms, atomCountOfFusedRingSystem);
 				paths.add(peripheralAtomPath);
