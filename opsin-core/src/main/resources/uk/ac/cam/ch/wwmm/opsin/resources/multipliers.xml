@@ -35,6 +35,26 @@
     <token value="28">octacosa</token>
     <token value="29">nonacosa</token>
     <token value="30">triaconta</token>
+    <token value="31">hentriconta</token>
+    <token value="32">dotriconta</token>
+    <token value="33">tritriconta</token>
+    <token value="34">tetratriconta</token>
+    <token value="35">pentatriconta</token>
+    <token value="36">hexatriconta</token>
+    <token value="37">heptatriconta</token>
+    <token value="38">octatriconta</token>
+    <token value="39">nonatriconta</token>
+    <token value="40">tetraconta</token>
+    <token value="41">hentetraconta</token>
+    <token value="42">dotetraconta</token>
+    <token value="43">tritetraconta</token>
+    <token value="44">tetratetraconta</token>
+    <token value="45">pentatetraconta</token>
+    <token value="46">hexatetraconta</token>
+    <token value="47">heptatetraconta</token>
+    <token value="48">octatetraconta</token>
+    <token value="49">nonatetraconta</token>
+    <token value="50">pentaconta</token>
   </tokenList>
 
   <tokenList tagname="multiplier" type="group" symbol="R"><!--groupMultiplier-->
