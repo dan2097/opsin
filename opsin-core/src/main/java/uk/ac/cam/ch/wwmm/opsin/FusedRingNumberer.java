@@ -870,8 +870,14 @@ class FusedRingNumberer {
 					RingShape ringShape = ct.ringShapes.get(i);
 					directionFromRingToNeighbouringRing[i] = determineAbsoluteDirectionUsingPreviousDirection(ringShape.getShape(), ringShape.getRing().size(), ct.directionFromRingToNeighbouringRing.get(i), -horizonalRowDirection);
 				}
-				ringMaps.add(generateRingMap(ct, directionFromRingToNeighbouringRing));
+				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing);
+				if (ringMap !=null){//null if overlapping bonds rings present
+					ringMaps.add(ringMap);
+				}
 			}
+		}
+		if (ringMaps.size()==0){
+			throw new StructureBuildingException("Fused ring systems with overlapping rings such as in helices cannot currently be numbered");
 		}
 		return ringMaps;
 	}
@@ -1024,7 +1030,7 @@ class FusedRingNumberer {
 				throw new RuntimeException("OPSIN Bug: Fused ring numbering bug, Coordinates have been calculated wrongly");
 			}
 			if (ringMap[curX][curY] != null){
-				throw new StructureBuildingException("Fused ring systems with overlapping rings such as in helices cannot currently be numbered");
+				return null;
 			}
 			ringMap[curX][curY] = takenRings[ti];
 		}
