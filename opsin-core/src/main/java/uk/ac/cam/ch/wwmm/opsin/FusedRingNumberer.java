@@ -981,7 +981,7 @@ class FusedRingNumberer {
 	
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
-				boolean inverseAtoms = (upperRightQuadrant == 1 || upperRightQuadrant == 3);
+				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
 				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms);
 				paths.add(peripheralAtomPath);
 			}
@@ -1370,7 +1370,7 @@ class FusedRingNumberer {
 			
 			// Add atoms in order, considering inverse or not inverse
 			if (!inverseAtoms) {			
-				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other), but not fused use another scheme				
+				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other) i.e. come under interior atom numbering
 				// we don't add that atom, cause it was added already
 				if ( (endNumber - startingBondIndex + ringSize) % ringSize != 1) {
 					startingBondIndex = (startingBondIndex + 1) % ringSize;
@@ -1390,7 +1390,6 @@ class FusedRingNumberer {
 				}
 			}			
 			else {
-				// if distance between prev bond and cur bond = 1 (it means that fused bonds are next to each other), use another scheme	
 				if ( ( startingBondIndex - endNumber + ringSize) % ringSize != 1) {
 					startingBondIndex = (startingBondIndex - 2 + ringSize ) % ringSize;
 					endNumber = endNumber % ringSize;				
