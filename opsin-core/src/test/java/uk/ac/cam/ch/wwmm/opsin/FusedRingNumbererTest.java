@@ -31,19 +31,16 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //5 membered ring
 	public void aceanthrene() throws StructureBuildingException {
 		compareNumbering("C1Cc2cccc3cc4ccccc4c1c23", "1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c");
 	}
 
 	@Test
-	@Ignore //5 membered ring
 	public void acenaphthene() throws StructureBuildingException {
 		compareNumbering("C1Cc2cccc3cccc1c23", "1/2/2a/3/4/5/5a/6/7/8/8a/8b");
 	}
 
 	@Test
-	@Ignore //5 membered ring
 	public void acephenanthrene() throws StructureBuildingException {
 		compareNumbering("c1ccc2CCc3cc4ccccc4c1c23", "1/2/3/3a/4/5/5a/6/6a/7/8/9/10/10a/10b/10c");
 	}
@@ -79,7 +76,6 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //5 membered ring
 	public void cholanthrene() throws StructureBuildingException {
 		compareNumbering("C1Cc2cccc3cc4c5ccccc5ccc4c1c23", "1/2/2a/3/4/5/5a/6/6a/6b/7/8/9/10/10a/11/12/12a/12b/12c");
 	}
@@ -341,7 +337,7 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //5 membered ring
+	@Ignore //7 membered ring not yet supported
 	public void pleiadene() throws StructureBuildingException {
 		compareNumbering("c1ccc2cccc3cc4ccccc4cc51.c235", "1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b");
 	}
@@ -362,7 +358,6 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //5 membered ring
 	public void rubicene() throws StructureBuildingException {
 		compareNumbering("c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456", "1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e");
 	}
@@ -389,7 +384,6 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //5 membered ring
 	public void trindene() throws StructureBuildingException {
 		compareNumbering("c1ccc2c3cccc3c4cccc4c12", "1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b");
 	}
@@ -399,8 +393,6 @@ public class FusedRingNumbererTest {
 		compareNumbering("c1cccc2Cc3ccc4c5ccc6Cc7ccccc7c8ccc9c%10ccc%11c12.c3%11c4%10.c59c68", "1/2/3/4/4a/5/5a/6/7/7a/7b/8/9/9a/10/10a/11/12/13/14/14a/14b/15/16/16a/16b/17/18/18a/18b////");
 	}
 
-
-	
 	@Test
 	public void naphthotetraphene() throws StructureBuildingException {
 		compareNumbering("c1cc2ccc3ccc4cc5ccccc5cc4c3c2c6ccccc16", "1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b/12c/12d/13/14/15/16/16a");
@@ -422,6 +414,7 @@ public class FusedRingNumbererTest {
 	}
 	
 	@Test
+	@Ignore //IUPAC guidelines appear to have a genuine ambiguity as to how this ring system should be layed out!!!
 	public void difficultChain2() throws StructureBuildingException {
 		compareNumbering("C1CCCC2C3C4C5C6CCC7C8CCCCC8C7CCC56C4CCC3CC12", "1/2/3/4/4a/4b/4c/4d/4e/5/6/6a/6b/7/8/9/10/10a/10b/11/12/12a/12b/13/14/14a/15/15a");
 	}
