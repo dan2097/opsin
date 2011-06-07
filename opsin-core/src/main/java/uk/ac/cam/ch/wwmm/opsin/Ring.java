@@ -135,19 +135,12 @@ class Ring {
 	}
 
 	public String toString() {
-		String st = "";
-		List<Atom> toPrint;
-
-		if (cyclicAtomList != null) {
-			toPrint = cyclicAtomList;
+		StringBuilder sb = new StringBuilder();
+		for (Atom atom : atomList){
+			sb.append(atom.getID());
+			sb.append(" ");
 		}
-		else {
-			toPrint = atomList;
-		}
-		for (Atom atom : toPrint){
-			st+=atom.getID() + " ";
-		}
-		return st;
+		return sb.toString();
 	}
 
 }
