@@ -915,7 +915,7 @@ class FusedRingNumberer {
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
 				if (LOG.isTraceEnabled()){
-					debugRingMap(ringMap);
+					debugRingMap(qRingMap);
 				}
 				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
 				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms, atomCountOfFusedRingSystem);

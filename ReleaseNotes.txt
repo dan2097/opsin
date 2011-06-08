@@ -1,3 +1,12 @@
+Version 1.1.0
+Significant improvements to fused ring numbering code, specifically 3/4/5 member rings are no longer only allowed in chains of rings
+Added support for outputting to StdInChI
+Small improvements to fused ring building code
+Improvements to heuristics for disambiguating what group is being referred to by a locant
+Lower case indicated hydrogen is now recognised
+Improvements to parsing speed
+Many minor improvements and bug fixes
+
 Version 1.0.0
 Added native isomeric SMILES output
 Improved command-line interface. The desired format i.e. CML/SMILES/InChI as well as options such as allowing radicals can now all be specified via flags
