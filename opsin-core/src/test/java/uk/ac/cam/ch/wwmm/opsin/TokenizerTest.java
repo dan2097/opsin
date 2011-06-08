@@ -148,6 +148,21 @@ public class TokenizerTest {
 		assertEquals("Second token: ic acid", "ic acid", tokens.get(1));
 		assertEquals("Third token: end of main group", "", tokens.get(2));
 	}
+
+	@Test
+	public void acceptableInterWordBreaks() throws ParsingException{
+		assertEquals(true, tokenizer.tokenize("methane ethane", false).isSuccessfullyTokenized());
+		assertEquals(true, tokenizer.tokenize("methane-ethane", false).isSuccessfullyTokenized());
+		assertEquals(true, tokenizer.tokenize("methane - ethane", false).isSuccessfullyTokenized());
+		assertEquals(false, tokenizer.tokenize("methane -ethane", false).isSuccessfullyTokenized());
+		assertEquals(false, tokenizer.tokenize("methane - ", false).isSuccessfullyTokenized());
+		
+		assertEquals(true, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane ethane", false).isSuccessfullyTokenized());
+		assertEquals(true, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane-ethane", false).isSuccessfullyTokenized());
+		assertEquals(true, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane - ethane", false).isSuccessfullyTokenized());
+		assertEquals(false, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane -ethane", false).isSuccessfullyTokenized());
+		assertEquals(false, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane - ", false).isSuccessfullyTokenized());
+	}
 	
 	@Test
 	public void CCCP() throws ParsingException{
