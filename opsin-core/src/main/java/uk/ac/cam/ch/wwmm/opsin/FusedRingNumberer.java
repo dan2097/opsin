@@ -1676,8 +1676,6 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	static int determineAbsoluteDirectionUsingPreviousDirection(FusionRingShape fusionRingShape, int ringSize, int relativeDirection, int previousDir){
-		//System.out.println(relativeDirection +"|" + previousDir +"|"+ ringSize);
-		//TODO generalise support for other ring sizes and unit test
 		int interimDirection;
 		if (Math.abs(previousDir) == 4) {
 			if (relativeDirection == 0) {
@@ -1694,7 +1692,7 @@ class FusedRingNumberer {
 		if (Math.abs(interimDirection)>4) {// Added
 			interimDirection = (8 - Math.abs(interimDirection)) *  Integer.signum(interimDirection) * -1;
 		}
-//TODO investigate this function
+		//TODO investigate this function and unit test
 		// 6 member ring and other larger even numbered rings do not have direction 2
 		if (Math.abs(interimDirection) == 2 && ((ringSize >= 6 && ringSize % 2 ==0) || ringSize==5)) {
 			// if (one of them equal to 1 and another is equal to 3, we decrease absolute value and conserve the sign)
@@ -1709,7 +1707,7 @@ class FusedRingNumberer {
 			else if(Math.abs(relativeDirection)==3 && Math.abs(previousDir)==3 ) {
 				interimDirection = 3 * Integer.signum(interimDirection);
 			}
-			// else it is correctly 2 // else throw new StructureBuildingException();
+			// else it is correctly 2
 		}
 
 		if (interimDirection == -4) {
@@ -1729,31 +1727,32 @@ class FusedRingNumberer {
 		}
 		for (int y = yxOrdered.length-1; y >=0 ; y--) {
 			Ring[] xRings = yxOrdered[y];
+			StringBuilder sb = new StringBuilder();
 			for (Ring ring : xRings) {
 				if (ring!=null){
 					int size = ring.size();
 					if (size>9){
 						if (size==10){
-							System.out.print("0");
+							sb.append("0");
 						}
 						else if (size % 2 ==0){
-							System.out.print("2");
+							sb.append("2");
 						}
 						else{
-							System.out.print("1");
+							sb.append("1");
 						}
 					}
 					else{
-						System.out.print(size);
+						sb.append(size);
 					}
 				}
 				else{
-					System.out.print(" ");
+					sb.append(" ");
 				}
 			}
-			System.out.println("");
+			LOG.trace(sb.toString());
 		}
-		System.out.println("#########");
+		LOG.trace("#########");
 
 	}
 }
