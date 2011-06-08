@@ -118,6 +118,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">thianthr</token>
 		<token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES">thioph</token>
 		<token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">thien</token>
+		<token value="s1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">thiene</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" frontLocantsExpected="2,3,4">tolu</token>
 		<token value="c1cccc2oc3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">xanth</token>
 		<token value="c1cccc2sc3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">thioxanth</token>
