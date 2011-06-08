@@ -119,8 +119,24 @@ class Tokeniser {
 		if (result.isFullyInterpretable()) {
 			result.setUnparsedName(result.getWorkingName());
 		} else {
-			String name = reverse ? result.getWorkingName().substring(0, result.getWorkingName().length() - 1) : result.getWorkingName().substring(1);
-			result.setUnparsedName(name);
+			String remainingName =result.getWorkingName();
+			if (reverse){
+				if (remainingName.length() > 3 && remainingName.endsWith(" - ")){
+					remainingName = remainingName.substring(0, remainingName.length() - 3);
+				}
+				else{
+					remainingName = remainingName.substring(0, remainingName.length() - 1);
+				}
+			}
+			else{
+				if (remainingName.length() > 3 && remainingName.startsWith(" - ")){//this is a way of of indicating a mixture
+					remainingName = remainingName.substring(3);
+				}
+				else{
+					remainingName = remainingName.substring(1);
+				}
+			}
+			result.setUnparsedName(remainingName);
 		}
 	}
 
