@@ -337,7 +337,6 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //7 membered ring not yet supported
 	public void pleiadene() throws StructureBuildingException {
 		compareNumbering("c1ccc2cccc3cc4ccccc4cc51.c235", "1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b");
 	}
