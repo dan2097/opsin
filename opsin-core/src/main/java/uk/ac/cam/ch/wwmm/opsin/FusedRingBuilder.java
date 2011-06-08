@@ -492,7 +492,7 @@ class FusedRingBuilder {
 	 * @param fusionDescriptor
 	 * @return
 	 */
-	private static String[] determineNumericalAndLetterComponents(String fusionDescriptor) {
+	private String[] determineNumericalAndLetterComponents(String fusionDescriptor) {
 		String[] fusionArray = MATCH_DASH.split(fusionDescriptor);
 		if (fusionArray.length ==2){
 			return fusionArray;
@@ -617,7 +617,7 @@ class FusedRingBuilder {
 	 * @param edgeLength The number of bonds to be fused along
 	 * @return
 	 */
-	private static List<String> findPossibleLetterLocants(Fragment ring, int edgeLength) {
+	private List<String> findPossibleLetterLocants(Fragment ring, int edgeLength) {
 		List<Atom> atomlist = ring.getAtomList();
 		List<String> letterLocantsOfParent = null;
 		List<Atom> carbonAtoms = new ArrayList<Atom>();
@@ -656,7 +656,7 @@ class FusedRingBuilder {
 	 * @param edgeLength The number of bonds to be fused along
 	 * @return
 	 */
-	private static List<String> findPossibleNumericalLocants(Fragment ring, int edgeLength) {
+	private List<String> findPossibleNumericalLocants(Fragment ring, int edgeLength) {
 		List<Atom> atomlist = ring.getAtomList();
 		List<String> numericalLocantsOfChild = null;
 		List<String> carbonLocants = new ArrayList<String>();
@@ -698,23 +698,8 @@ class FusedRingBuilder {
 		}
 
 		List<Atom> parentAtoms = new ArrayList<Atom>();
-		List<Atom> parentAtomList = parentRing.getAtomList();
-		//find the indice of the last atom on the surface of the ring. This obviously connects to the first atom. The objective is to exclude any interior atoms.
-		List<Atom> neighbours = parentAtomList.get(0).getAtomNeighbours();
-		int indice = Integer.MAX_VALUE;
-		for (Atom atom : neighbours) {
-			int indexOfAtom =parentAtomList.indexOf(atom);
-			if (indexOfAtom ==1){//not the next atom
-				continue;
-			}
-			else if (indexOfAtom ==-1){//not in parentRing
-				continue;
-			}
-			if (parentAtomList.indexOf(atom)< indice){
-				indice = indexOfAtom;
-			}
-		}
-		CyclicAtomList cyclicListAtomsOnSurfaceOfParent = new CyclicAtomList(parentAtomList.subList(0, indice +1), (int)letterLocantsOfParent.get(0).charAt(0) -97);//convert from lower case character through ascii to 0-23
+		List<Atom> parentPeripheralAtomList = getPeripheralAtoms(parentRing.getAtomList());
+		CyclicAtomList cyclicListAtomsOnSurfaceOfParent = new CyclicAtomList(parentPeripheralAtomList, (int)letterLocantsOfParent.get(0).charAt(0) -97);//convert from lower case character through ascii to 0-23
 		parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getCurrent());
 		for (int i = 0; i < letterLocantsOfParent.size(); i++) {
 			parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getNext());
@@ -722,6 +707,30 @@ class FusedRingBuilder {
 		fuseRings(childAtoms, parentAtoms);
 	}
 	
+	/**
+	 * Returns the sublist of the given atoms that are peripheral atoms given that the list is ordered such that the interior atoms are at the end of the list
+	 * @param atomList
+	 * @return
+	 */
+	private List<Atom> getPeripheralAtoms(List<Atom> atomList) {
+		//find the indice of the last atom on the surface of the ring. This obviously connects to the first atom. The objective is to exclude any interior atoms.
+		List<Atom> neighbours = atomList.get(0).getAtomNeighbours();
+		int indice = Integer.MAX_VALUE;
+		for (Atom atom : neighbours) {
+			int indexOfAtom =atomList.indexOf(atom);
+			if (indexOfAtom ==1){//not the next atom
+				continue;
+			}
+			else if (indexOfAtom ==-1){//not in parentRing
+				continue;
+			}
+			if (atomList.indexOf(atom)< indice){
+				indice = indexOfAtom;
+			}
+		}
+		return atomList.subList(0, indice +1);
+	}
+
 	/**
 	 * Handles fusion between components where the fusion descriptor is of the form:
 	 * comma separated locants colon comma separated locants
@@ -776,11 +785,11 @@ class FusedRingBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<Atom> determineAtomsToFuse(Fragment ring, List<String> numericalLocantsOnRing, Integer expectedNumberOfAtomsToBeUsedForFusion) throws StructureBuildingException {
-		List<Atom> parentAtomList = ring.getAtomList();
-		int indexfirst = parentAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(0)));
-		int indexfinal = parentAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(numericalLocantsOnRing.size()-1)));
-		CyclicAtomList cyclicRingAtomList = new CyclicAtomList(parentAtomList, indexfirst);
+	private List<Atom> determineAtomsToFuse(Fragment ring, List<String> numericalLocantsOnRing, Integer expectedNumberOfAtomsToBeUsedForFusion) throws StructureBuildingException {
+		List<Atom> parentPeripheralAtomList = getPeripheralAtoms(ring.getAtomList());
+		int indexfirst = parentPeripheralAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(0)));
+		int indexfinal = parentPeripheralAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(numericalLocantsOnRing.size()-1)));
+		CyclicAtomList cyclicRingAtomList = new CyclicAtomList(parentPeripheralAtomList, indexfirst);
 		List<Atom> fusionAtoms = null;
 		
 		List<Atom> potentialFusionAtomsAscending = new ArrayList<Atom>();
