@@ -134,8 +134,7 @@ Other less common stereochemical terms
 Carbohydrate specific nomenclature
 Natural Products other than steroids
 Natural product specific nomenclature operations
-Composite and multiplied bridge prefixes e.g. epoxymethano
-Fused ring systems involving non 6-membered rings which are not in a "chain" cannot be numbered e.g. indeno[2,1-c]pyridine can be numbered, benzo[cd]indole cannot
+Multiplied, unsaturated or composite bridge prefixes e.g. epoxymethano
 
 The following functional classes: Lactones, sultams, lactams, sultims and lactims
 
