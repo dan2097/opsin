@@ -56,10 +56,12 @@ class FusedRingNumberer {
 	}
 
 	enum FusionRingShape{
-		enterFromLeftHouse,
-		enterFromTopLeftHouse,
-		enterFromTopRightHouse,
-		enterFromRightHouse,
+		enterFromLeftHouse,//5 membered ring
+		enterFromTopLeftHouse,//5 membered ring
+		enterFromTopRightHouse,//5 membered ring
+		enterFromRightHouse,//5 membered ring
+		enterFromLeftSevenMembered,//7 membered ring, modified from 6 membered at bottom
+		enterFromRightSevenMembered,//7 membered ring, modified from 6 membered at top
 		standard
 	}
 
@@ -323,13 +325,16 @@ class FusedRingNumberer {
 	}
 
 	/**
-	 * Checks if the ring is sizes 2,3,4,5,6 or is involved in 2 or fewer bonds
+	 * Checks that all the rings are of sizes 3-8 or if larger than 8 are involved in 2 or fewer fused bonds
 	 * @param rings
 	 * @return
 	 */
 	private static boolean checkRingApplicability(List<Ring> rings) {
 		for (Ring ring : rings) {
-			if (ring.size() >6 && ring.getNumberOfFusedBonds() > 2){
+			if (ring.size() <=2){
+				throw new RuntimeException("Invalid ring size: " +ring.size());
+			}
+			if (ring.size() >8 && ring.getNumberOfFusedBonds() > 2){
 				return false;
 			}
 		}
@@ -513,6 +518,17 @@ class FusedRingNumberer {
 				allowedRingShapes.add(FusionRingShape.enterFromTopLeftHouse);
 			}
 		}
+		else if (size==7){
+			List<Bond> fusedBonds = ring.getFusedBonds();
+			int fusedBondCount = fusedBonds.size();
+			if (fusedBondCount==1){
+				allowedRingShapes.add(FusionRingShape.enterFromLeftSevenMembered);
+			}
+			else{
+				allowedRingShapes.add(FusionRingShape.enterFromLeftSevenMembered);
+				allowedRingShapes.add(FusionRingShape.enterFromRightSevenMembered);
+			}
+		}
 		else{
 			allowedRingShapes.add(FusionRingShape.standard);
 		}
@@ -689,6 +705,53 @@ class FusedRingNumberer {
 				throw new RuntimeException("OPSIN Bug: Unrecognised fusion ring shape for 5 membered ring");
 			}
 		}
+		else if (ringSize == 7) { // 7 member ring
+			if (fusionRingShape == FusionRingShape.enterFromLeftSevenMembered){
+				if (dist ==1){
+					dir = -3;//fusion to an abnormally angled bond
+				}
+				else if (dist ==2){
+					dir = -2;
+				}
+				else if (dist ==3){
+					dir = -1;//fusion to an abnormally angled bond
+				}
+				else if (dist ==4){
+					dir = 0;
+				}
+				else if (dist ==5){
+					dir = 1;
+				}
+				else if (dist ==6){
+					dir = 3;
+				}
+				else throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+			}
+			else if (fusionRingShape == FusionRingShape.enterFromRightSevenMembered){
+				if (dist ==1){
+					dir = -3;
+				}
+				else if (dist ==2){
+					dir = -1;
+				}
+				else if (dist ==3){
+					dir = 0;
+				}
+				else if (dist ==4){
+					dir = 1;//fusion to an abnormally angled bond
+				}
+				else if (dist ==5){
+					dir = 2;
+				}
+				else if (dist ==6){
+					dir = 3;//fusion to an abnormally angled bond
+				}
+				else throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+			}
+			else{
+				throw new RuntimeException("OPSIN Bug: Unrecognised fusion ring shape for 7 membered ring");
+			}
+		}
 		else if (ringSize % 2 == 0) {//general case even number of atoms ring (a 6 membered ring or distortion of)
 			if (dist == 1) {
 				dir = -3;
@@ -704,7 +767,6 @@ class FusedRingNumberer {
 			}
 		}
 		else {// general case odd number of atoms ring (distortion of an even numbered ring by insertion of one atom).
-			//NOTE that the plurality of ways of depicting these rings is currently ignored due to the checkRingApplicability function filtering out difficult cases
 			if (dist == 1) {
 				dir = -3;
 			}
@@ -714,7 +776,7 @@ class FusedRingNumberer {
 			else if (dist == ringSize-1) {
 				dir = 3;
 			}
-			else if(dist < ringSize/2) {//TODO explicitly consider different ring shapes e.g. this could be +-1 under some circumstances
+			else if(dist < ringSize/2) {
 				dir = -2;
 			}
 			else if(dist > ringSize/2+1) {
