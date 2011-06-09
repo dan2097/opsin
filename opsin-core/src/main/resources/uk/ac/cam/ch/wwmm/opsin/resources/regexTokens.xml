@@ -56,6 +56,7 @@
   <regexToken regex="[isn]-" symbol="n" tagname="alkaneStemModifier" determinise="yes"/><!--case sensitive so must be a regex-->
   <regexToken regex="(([oO][rR][tT][hH][oO]|[mM][eE][tT][aA]|[pP][aA][rR][aA])|o|[mM]|[p])-" symbol="O" tagname="orthoMetaPara" determinise="yes"/><!-- O- and P- means oxygen and phosphorus locant-->
   <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
+  <regexToken regex="[EZ]" symbol="t" type="EorZ" tagname="stereoChemistry" determinise="yes" /><!--unbracketted E or Z for stereochemistry-->
   <regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
   <regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¢" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
   <regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR|[cC][iI][sS]|[tT][rR][aA][nN][sS])|%alphaBetaLocant%)"/>

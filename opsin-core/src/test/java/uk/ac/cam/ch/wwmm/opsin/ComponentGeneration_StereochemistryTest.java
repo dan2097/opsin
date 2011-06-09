@@ -284,6 +284,89 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
+	public void testCis() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
+		stereochem.appendChild("cis");
+		substituent.appendChild(stereochem);
+		ComponentGenerator.processStereochemistry(substituent);
+	
+		Elements children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
+		assertEquals(null, modifiedStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("cis", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(CISORTRANS_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+	}
+
+	@Test
+	public void testZUnbracketted() throws ComponentGenerationException {//note that IUPAC mandates brackets
+		//XML for Z,Z:
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		stereochem.appendChild("Z");
+		substituent.appendChild(stereochem);
+		stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		stereochem.appendChild("Z");
+		substituent.appendChild(stereochem);
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(2, children.size());
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
+		assertEquals(null, modifiedStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("Z", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		
+		Element modifiedStereochemistryEl2 = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl2.getLocalName());
+		assertEquals(null, modifiedStereochemistryEl2.getAttributeValue(LOCANT_ATR));
+		assertEquals("Z", modifiedStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl2.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testEandZUnbrackettedLocanted() throws ComponentGenerationException {//note that IUPAC mandates brackets
+		//XML for 2E,4Z:
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element locant = new Element(LOCANT_ATR);
+		locant.appendChild("2");
+		substituent.appendChild(locant);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		stereochem.appendChild("E");
+		substituent.appendChild(stereochem);
+		locant = new Element(LOCANT_ATR);
+		locant.appendChild("4");
+		substituent.appendChild(locant);
+		stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		stereochem.appendChild("Z");
+		substituent.appendChild(stereochem);
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(2, children.size());
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
+		assertEquals("2", modifiedStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("E", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		
+		Element modifiedStereochemistryEl2 = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl2.getLocalName());
+		assertEquals("4", modifiedStereochemistryEl2.getAttributeValue(LOCANT_ATR));
+		assertEquals("Z", modifiedStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl2.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
 	public void testBrackettedAlphaBeta() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);

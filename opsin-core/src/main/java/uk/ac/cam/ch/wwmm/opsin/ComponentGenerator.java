@@ -779,6 +779,14 @@ class ComponentGenerator {
 					possibleLocant.detach();
 				}
 			}
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(E_OR_Z_TYPE_VAL)){//assign a locant if one is directly before the E/Z
+				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue()));
+				Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
+				if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
+					stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
+					possibleLocant.detach();
+				}
+			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
 				String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
 				String[] stereoChemistryDescriptors = MATCH_COMMA.split(txt);
