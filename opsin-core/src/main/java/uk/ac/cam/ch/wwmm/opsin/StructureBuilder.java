@@ -1564,7 +1564,7 @@ class StructureBuilder {
 
 	private static void modifyAtomParityToTakeIntoAccountExplicitHydrogen(Atom atom) throws StructureBuildingException {
 		AtomParity atomParity = atom.getAtomParity();
-		if (!StereoAnalyser.isTetrahedral(atom)){
+		if (!StereoAnalyser.isPossiblyStereogenic(atom)){
 			//no longer a stereoCentre e.g. due to unsaturation
 			atom.setAtomParity(null);
 		}

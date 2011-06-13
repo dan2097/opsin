@@ -644,4 +644,48 @@ public class StereochemistryTest {
 		Bond formerChiralBond = f.getAtomByLocantOrThrow("2").getBondToAtomOrThrow(f.getAtomByLocantOrThrow("3"));
 		assertNull("This Bond is no longer a chiral centre and hence should not have an associated bond stereo", formerChiralBond.getBondStereo());
 	}
+	
+	@Test
+	public void testIsTetrahedral() throws StructureBuildingException {
+		FragmentManager fm = new FragmentManager(sBuilder, mock(CMLFragmentBuilder.class), new IDManager());
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("C(N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Si](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Ge](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[N+](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[P+](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[As+](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[B-](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Sn](N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[N](=N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[P](=N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[S](=N)(=O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[S+](=N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[S](=O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[S+](O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("N1(C)(OS1)").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Se](=N)(=O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Se+](=N)(O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Se](=O)(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isKnownPotentiallyStereogenic(fm.buildSMILES("[Se+](O)(Cl)Br").getFirstAtom()));
+	}
+	
+	@Test
+	public void testAchiralDueToResonance() throws StructureBuildingException {
+		FragmentManager fm = new FragmentManager(sBuilder, mock(CMLFragmentBuilder.class), new IDManager());
+		assertEquals(true, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("[S](=N)(=O)([O-])Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("[S](=O)([O-])Br").getFirstAtom()));
+		assertEquals(false, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("[S](=S)([O-])Br").getFirstAtom()));
+		assertEquals(false, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("C(N)([O-])(Cl)Br").getFirstAtom()));
+	}
+	
+	@Test
+	public void testAchiralDueToTautomerism() throws StructureBuildingException {
+		FragmentManager fm = new FragmentManager(sBuilder, mock(CMLFragmentBuilder.class), new IDManager());
+		assertEquals(true, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("[S](=N)(=O)([OH])Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("[S](=O)([OH])Br").getFirstAtom()));
+		assertEquals(false, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("[S](=S)([OH])Br").getFirstAtom()));
+		assertEquals(false, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("C(N)([OH])(Cl)Br").getFirstAtom()));
+		assertEquals(true, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("N([H])(CC)(C)").getFirstAtom()));
+		assertEquals(false, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("N1(C)(OS1)").getFirstAtom()));
+	}
 }
