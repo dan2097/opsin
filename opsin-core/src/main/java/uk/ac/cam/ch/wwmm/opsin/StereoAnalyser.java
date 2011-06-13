@@ -328,7 +328,7 @@ class StereoAnalyser {
 		List<StereoCentre> stereoCentres = new ArrayList<StereoCentre>();
 		for (Atom atom : atomList) {
 			List<Atom> neighbours = atom.getAtomNeighbours();
-			if (isTetrahedral(atom)){
+			if (isPossiblyStereogenic(atom)){
 				int[] colours = new int[4];
 				for (int i = neighbours.size() -1 ; i >=0; i--) {
 					colours[i] = mappingToColour.get(neighbours.get(i));
@@ -353,29 +353,93 @@ class StereoAnalyser {
 	}
 	
 	/**
-	 * Crudely determines whether an atom possesses tetrahedral geometry
+	 * Checks whether an atom could be a tetrahedral stereocentre by checking that it is both tetrahedral
+	 * and does not have neighbours that are identical due to resonance/tautomerism
 	 * @param atom
 	 * @return
 	 */
-	static boolean isTetrahedral(Atom atom) {
-		int neighbourCount = atom.getAtomNeighbours().size();
+	static boolean isPossiblyStereogenic(Atom atom){
+		return isKnownPotentiallyStereogenic(atom) && !isAchiralDueToResonanceOrTautomerism(atom);
+	}
+
+	/**
+	 * Roughly corresponds to the list of atoms in table 8 of the InChI manual
+	 * Essentially does a crude check for whether an atom is known to be able to possess tetrahedral geometry
+	 * and whether it is currently tetrahedral. Atoms that are tetrahedral but not typically considered chiral
+	 * like tertiary amines are not recognised
+	 * @param atom
+	 * @return
+	 */
+	static boolean isKnownPotentiallyStereogenic(Atom atom) {
+		List<Atom> neighbours = atom.getAtomNeighbours();
 		String element = atom.getElement();
-		if (neighbourCount == 4){
+		if (neighbours.size() == 4){
 			if (element.equals("B") || element.equals("C") || element.equals("Si") || element.equals("Ge") ||
-					element.equals("N")|| element.equals("P") || element.equals("S") ||
-					  element.equals("As") || element.equals("Se")){
+					element.equals("Sn") || element.equals("N")|| element.equals("P") || element.equals("As") ||
+					  element.equals("S") || element.equals("Se")){
 				return true;
 			}
 		}
-		else if (neighbourCount ==3){
+		else if (neighbours.size() ==3){
 			if ((element.equals("S") || element.equals("Se")) && (atom.getIncomingValency()==4 || (atom.getCharge() ==1 && atom.getIncomingValency()==3))){
 				//tetrahedral sulfur/selenium - 3 bonds and the lone pair
 				return true;
+			}
+			if (element.equals("N") && atom.getCharge() ==0 && atom.getIncomingValency()==3 && atomsContainABondBetweenThemselves(neighbours)){
+				return true;
+				//nitrogen where two attached atoms are connected together
+			}
+		}
+		return false;
+	}
+	
+	private static boolean atomsContainABondBetweenThemselves(List<Atom> atoms) {
+		for (Atom atom : atoms) {
+			for (Atom neighbour : atom.getAtomNeighbours()) {
+				if (atoms.contains(neighbour)){
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
+	static boolean isAchiralDueToResonanceOrTautomerism(Atom atom) {
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		Set<String> elementOfFoundResonanceOrTautomerismCapableAtom = new HashSet<String>();
+		for (Atom neighbour : neighbours) {
+			String element = neighbour.getElement();
+			if ((element.equals("O") || element.equals("S") || element.equals("Se") 
+					|| element.equals("Te") || element.equals("N") || element.equals("H"))
+					&& isOnlyBondedToHydrogensOtherThanGivenAtom(neighbour, atom)){
+				if (elementOfFoundResonanceOrTautomerismCapableAtom.contains(element)){
+					return true;
+				}
+				elementOfFoundResonanceOrTautomerismCapableAtom.add(element);
+			}
+		}
+		if (elementOfFoundResonanceOrTautomerismCapableAtom.contains("H") 
+				&& (atom.getElement().equals("N") || 
+				atom.getElement().equals("P") ||
+				atom.getElement().equals("As") ||
+				atom.getElement().equals("S") ||
+				atom.getElement().equals("Se"))){
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean isOnlyBondedToHydrogensOtherThanGivenAtom(Atom atom, Atom attachedNonHydrogen) {
+		for (Atom neighbour: atom.getAtomNeighbours()) {
+			if (neighbour.equals(attachedNonHydrogen)){
+				continue;
+			}
+			if (!neighbour.getElement().equals("H")){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 *  Retrieves a list of any double bonds possessing the potential to have E/Z stereoChemistry
