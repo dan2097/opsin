@@ -1309,8 +1309,14 @@ class FusedRingNumberer {
 		if (upperRightRing == null) {
 			throw new RuntimeException("OPSIN Bug: Upper right ring not found when performing fused ring numbering");
 		}
+		List<Ring> visitedRings = new ArrayList<Ring>();
+		visitedRings.add(upperRightRing);
 		while (isEntirelyFusionAtoms(upperRightRing)){//c.f cyclopropa[de]anthracene
-			upperRightRing = findClockwiseRingFromUpperRightRing(ringMap,upperRightRing);
+			upperRightRing = findClockwiseRingFromUpperRightRing(ringMap, upperRightRing, visitedRings);
+			if (upperRightRing==null){
+				throw new RuntimeException("OPSIN Bug: Unabled to find clockwise ring without fusion atoms");
+			}
+			visitedRings.add(upperRightRing);
 		}
 
 		Ring prevRing = findUpperLeftNeighbourOfUpperRightRing(ringMap, upperRightRing);
@@ -1426,14 +1432,18 @@ class FusedRingNumberer {
 	 * Finds the neighbour ring, which is the clockwise of the given ring.
 	 * @param ringMap
 	 * @param upperRightRing
+	 * @param visitedRings 
 	 * @return
 	 */
-	private static Ring findClockwiseRingFromUpperRightRing (Ring[][] ringMap, Ring upperRightRing){
+	private static Ring findClockwiseRingFromUpperRightRing (Ring[][] ringMap, Ring upperRightRing, List<Ring> visitedRings){
 		Ring clockwiseRing = null;
 		int maxX = 0;
 		int maxY = 0;
 
 		for (Ring ring : upperRightRing.getNeighbours()) {
+			if (visitedRings.contains(ring)){
+				continue;
+			}
 			int xy[] = findRingPosition(ringMap, ring);
 			if (xy==null) {
 				throw new RuntimeException("OPSIN Bug: Ring not found in ringMap when performing fused ring numbering");
