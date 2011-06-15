@@ -1,5 +1,5 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
-version 1.0.0 (see ReleaseNotes.txt for what's new in this version)
+version 1.1.0 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 We are thankful for contributions from Albina Asadulina and Rich Apodaca
@@ -11,17 +11,14 @@ JavaDoc is available via OPSIN's generated web site: http://apidoc.ch.cam.ac.uk/
 
 This is a Java(1.5+) library for IUPAC name-to-structure conversion offering high recall and precision on general organic nomenclature.
 
-Currently it should be considered to be under development although the interface for using it will remain constant.
-OPSIN was formerly a component of OSCAR3 but is now a wholly standalone library.
-
 ##################################################
 
-OPSIN is available as a standalone JAR from Bitbucket (http://bitbucket.org/dan2097/opsin/) or SourceForge(https://sourceforge.net/projects/oscar3-chem/)
+OPSIN is available as a standalone JAR from Bitbucket, http://bitbucket.org/dan2097/opsin/downloads
 It is also available as a dependency for use with Apache Maven.
-opsin-1.0.0-jar-with-dependencies.jar includes CML (Chemical Markup Language), SMILES, and InChI (IUPAC International Chemical Identifier) output and all dependendencies
+opsin-1.1.0-jar-with-dependencies.jar includes CML (Chemical Markup Language), SMILES, and InChI (IUPAC International Chemical Identifier) output and all dependendencies
 The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and SMILES and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI.
 
-To use OPSIN as a library add opsin-1.0.0-jar-with-dependencies.jar to your classpath.
+To use OPSIN as a library add opsin-1.1.0-jar-with-dependencies.jar to your classpath.
 
 If you are using Maven then do the following:
 	Add our repository:
@@ -34,7 +31,7 @@ If you are using Maven then do the following:
 		<dependency>
 			 <groupId>uk.ac.cam.ch.opsin</groupId>
 			 <artifactId>opsin-core</artifactId>
-			 <version>1.0.0</version>
+			 <version>1.1.0</version>
 		</dependency>
 	If you need just CML or SMILES output support
 
@@ -42,7 +39,7 @@ If you are using Maven then do the following:
 		<dependency>
 			 <groupId>uk.ac.cam.ch.opsin</groupId>
 			 <artifactId>opsin-inchi</artifactId>
-			 <version>1.0.0</version>
+			 <version>1.1.0</version>
 		</dependency>
 
 	if you also need InChI output support.
@@ -50,12 +47,12 @@ If you are using Maven then do the following:
 ##################################################
 
 Using OPSIN as a command-line utility:
-	java -jar opsin-1.0.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
-	java -jar opsin-1.0.0-jar-with-dependencies.jar -h will give you information on more advanced usage
+	java -jar opsin-1.1.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
+	java -jar opsin-1.1.0-jar-with-dependencies.jar -h will give you information on more advanced usage
 
-As well as interactive input on the command-line these command-line interfaces will accept a piped input of newline seperated chemical names.
-e.g. java -jar opsin-1.0.0-jar-with-dependencies.jar < input.name > output.cml
-e.g. java -jar opsin-1.0.0-jar-with-dependencies.jar -osmi < input.name > output.smiles
+As well as interactive input on the command-line the command-line interface will accept a piped input of newline seperated chemical names.
+e.g. java -jar opsin-1.1.0-jar-with-dependencies.jar < input.name > output.cml
+e.g. java -jar opsin-1.1.0-jar-with-dependencies.jar -osmi < input.name > output.smiles
 
 Using OPSIN as a library:
 
@@ -84,11 +81,11 @@ Converting a name to a structure will typically take of the order of 5-10ms maki
 
 The workings of OPSIN are more fully described in:
 
-Peter Corbett, Peter Murray-Rust High-throughput identification of
-chemistry in life science texts. Proceedings of Computational Life
-Sciences (CompLife) 2006, Cambridge, UK, pp. 107-118.
+Chemical Name to Structure: OPSIN, an Open Source Solution
+Daniel M. Lowe, Peter T. Corbett, Peter Murray-Rust, Robert C. Glen
+Journal of Chemical Information and Modeling 2011 51 (3), 739-753
 
-A paper describing the current operation of OPSIN is currently being reviewed.
+If you use OPSIN to produce results for publication, then it would be great if you could cite us.
 
 The following list broadly summarises what OPSIN can currently do and what will be worked on in the future.
 
@@ -105,7 +102,7 @@ Heteroatom replacement
 Specification of charge e.g. ium/ide/ylium/uide
 Multiplicative nomenclature e.g. ethylenediaminetetraacetic acid
 Conjunctive nomenclature e.g. cyclohexaneethanol
-Fused ring systems e.g. imidazo[4,5-d]pyridine. For a small number of fused ring systems numbering cannot be determined
+Fused ring systems e.g. imidazo[4,5-d]pyridine
 Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
 The following functional classes: acids, acetals, alcohols, amides, anhydrides, azides, bromides, chlorides, cyanates, cyanides, esters, di/tri/tetra esters
@@ -132,7 +129,7 @@ Simple CAS names including inverted CAS names
 Currently UNsupported nomenclature includes:
 Other less common stereochemical terms
 Carbohydrate specific nomenclature
-Natural Products other than steroids
+Most natural Products other than steroids
 Natural product specific nomenclature operations
 Multiplied, unsaturated or composite bridge prefixes e.g. epoxymethano
 

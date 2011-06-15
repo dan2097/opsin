@@ -1,5 +1,5 @@
 Version 1.1.0
-Significant improvements to fused ring numbering code, specifically 3/4/5 member rings are no longer only allowed in chains of rings
+Significant improvements to fused ring numbering code, specifically 3/4/5/7/8 member rings are no longer only allowed in chains of rings
 Added support for outputting to StdInChI
 Small improvements to fused ring building code
 Improvements to heuristics for disambiguating what group is being referred to by a locant
