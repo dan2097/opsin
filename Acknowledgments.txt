@@ -8,3 +8,5 @@ Rich Apodaca
 Peter Corbett
 Daniel Lowe (current maintainer)
 Peter Murray-Rust
+
+Thanks also goes to the many users who have contributed through suggestions and bug reporting.
