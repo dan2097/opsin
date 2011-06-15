@@ -114,8 +114,8 @@ class FragmentManager {
 	 */
 	Fragment getUnifiedFragment() throws StructureBuildingException {
 		Fragment outFrag = new Fragment();
-		addFragment(outFrag);
 		List<Fragment> fragments = new ArrayList<Fragment>(fragPile);
+		addFragment(outFrag);
 		for(Fragment f : fragments) {
 			incorporateFragment(f, outFrag);//merge all fragments into one
 		}
