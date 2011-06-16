@@ -236,7 +236,7 @@ public class NameToStructure {
 		NameToStructure nts = NameToStructure.getInstance();
 		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(cmd);
 
-		System.err.println("Welcome to OPSIN 1.0, use -h for help. Enter a chemical name:");
+		System.err.println("Welcome to OPSIN; run the jar using the -h flag for help. Enter a chemical name:");
 		String outputType = cmd.getOptionValue("o", "cml");
 		if (outputType.equalsIgnoreCase("cml")){
 			interactiveCmlOutput(nts, n2sconfig);
