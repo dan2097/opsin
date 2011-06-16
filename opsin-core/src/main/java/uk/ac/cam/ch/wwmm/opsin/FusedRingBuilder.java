@@ -177,7 +177,8 @@ class FusedRingBuilder {
 						//check for case of omitted locant from a higher order fusion bracket e.g. cyclopenta[4,5]pyrrolo[2,3-c]pyridine
 						if (MATCH_DASH.split(fusionDescriptors[j]).length==1 && 
 								MATCH_COMMA.split(fusionDescriptors[j]).length >1 &&
-								FragmentTools.allAtomsInRingAreIdentical(component)){
+								FragmentTools.allAtomsInRingAreIdentical(component)
+								&& ((-j + StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0])) != fusionLevel) ){//Could be like cyclopenta[3,4]cyclobuta[1,2]benzene where the first fusion to occur has parent locants omitted not child locants
 							int numberOfPrimes = -j + StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0]);
 							//note that this is the number of primes on the parent ring. So would expect the child ring and hence the fusionLevel to be 1 higher
 							if (numberOfPrimes + 1 != fusionLevel){
