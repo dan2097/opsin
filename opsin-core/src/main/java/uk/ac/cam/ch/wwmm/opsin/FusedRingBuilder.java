@@ -424,7 +424,9 @@ class FusedRingBuilder {
 				List<Fragment> fusionComponents = new ArrayList<Fragment>();
 				for (int j = 0; j < multiplier; j++) {
 					if (j>0){
-						fusionComponents.add(state.fragManager.copyAndRelabelFragment(nextComponent,  j));
+						Fragment clonedFrag = state.fragManager.copyFragment(nextComponent);
+						relabelAccordingToFusionLevel(clonedFrag, j);//fusionLevels worth of primes already added
+						fusionComponents.add(clonedFrag);
 					}
 					else{
 						fusionComponents.add(nextComponent);
