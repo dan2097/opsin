@@ -1703,8 +1703,10 @@ class FusedRingNumberer {
 			interimDirection = (8 - Math.abs(interimDirection)) *  Integer.signum(interimDirection) * -1;
 		}
 		//TODO investigate this function and unit test
-		// 6 member ring and other larger even numbered rings do not have direction 2
-		if (Math.abs(interimDirection) == 2 && ((ringSize >= 6 && ringSize % 2 ==0) || ringSize==5)) {
+		 /* Even numbered rings when angled do not have direction 2.
+		 * Almost true for 5 member except for corner case where fusion to elongated bond occurs
+		 */
+		if (Math.abs(interimDirection) == 2 && ((ringSize % 2 ==0) || ringSize==5)) {
 			// if (one of them equal to 1 and another is equal to 3, we decrease absolute value and conserve the sign)
 			if (Math.abs(relativeDirection)==1 && Math.abs(previousDir)==3  ||  Math.abs(relativeDirection)==3 && Math.abs(previousDir)==1) {
 				interimDirection = 1 * Integer.signum(interimDirection);
