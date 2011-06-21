@@ -81,6 +81,8 @@
     <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5">homoalan</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C)CC" suffixAppliesTo="5">beta-homoalan</token>
     <token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CCN=[N+]=[N-])C" suffixAppliesTo="8">azidohomoalan</token>
+    <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertleuc</token>
+    <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert-leuc</token>
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="è" ><!--why isn't this tryptophine!!!!-->
