@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 
 import nu.xom.Element;
 

@@ -13,13 +13,6 @@ class ParseWord {
 	private final String word;
 	/**All of the possible tokenisations of the word.*/
 	private List<ParseTokens> parseTokens;
-
-	static enum WordType{
-		full,
-		substituent,
-		functionalTerm,
-	}
-
 	/**The type of word - full, substituent or functionalGroup*/
 	private WordType wordType = null;
 
