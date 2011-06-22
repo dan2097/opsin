@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +15,6 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 import nu.xom.Attribute;
-import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Node;
@@ -33,10 +31,7 @@ class ComponentProcessor {
 	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
-
-	/*Holds the rules on how suffixes are interpreted. Convenience methods are available to use them*/
-	private HashMap<String, HashMap<String, List<Element>>> suffixApplicability;
-	private HashMap<String, Element> suffixRules;
+	private final SuffixRules suffixRules;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private static final HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
@@ -75,43 +70,9 @@ class ComponentProcessor {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	ComponentProcessor(ResourceGetter resourceGetter) throws IOException{
-		//Populate suffix rules/applicability hashes
-		Document suffixApplicabilityDoc = resourceGetter.getXMLDocument("suffixApplicability.xml");
-		Document suffixRulesDoc = resourceGetter.getXMLDocument("suffixRules.xml");
-		suffixApplicability = new HashMap<String, HashMap<String,List<Element>>>();
-		suffixRules = new HashMap<String, Element>();
-		Elements groupTypes = suffixApplicabilityDoc.getRootElement().getChildElements(SUFFIXAPPLICABILITY_GROUPTYPE_EL);
-		for (int i = 0; i < groupTypes.size(); i++) {
-			Element groupType =groupTypes.get(i);
-			Elements suffixes = groupType.getChildElements(SUFFIXAPPLICABILITY_SUFFIX_EL);
-			HashMap<String, List<Element>> suffixToRuleMap= new HashMap<String, List<Element>>();
-			for (int j = 0; j < suffixes.size(); j++) {
-				Element suffix =suffixes.get(j);
-				String suffixValue= suffix.getAttributeValue(SUFFIXAPPLICABILITY_VALUE_ATR);
-				if (suffixToRuleMap.get(suffixValue)!=null){//can have multiple entries if subType attribute is set
-					suffixToRuleMap.get(suffixValue).add(suffix);
-				}
-				else{
-					ArrayList<Element> suffixList =new ArrayList<Element>();
-					suffixList.add(suffix);
-					suffixToRuleMap.put(suffixValue, suffixList);
-				}
-			}
-			suffixApplicability.put(groupType.getAttributeValue(SUFFIXAPPLICABILITY_TYPE_ATR), suffixToRuleMap);
-		}
-
-		Elements rules = suffixRulesDoc.getRootElement().getChildElements(SUFFIXRULES_RULE_EL);
-		for (int i = 0; i < rules.size(); i++) {
-			Element rule =rules.get(i);
-			String ruleValue=rule.getAttributeValue(SUFFIXRULES_VALUE_ATR);
-			if (suffixRules.get(ruleValue)!=null){
-				throw new RuntimeException("Suffix: " +ruleValue +" appears multiple times in suffixRules.xml");
-			}
-			suffixRules.put(ruleValue, rule);
-		}
+	public ComponentProcessor(SuffixRules suffixRules) {
+		this.suffixRules = suffixRules;
 	}
-
 
 	/** The master method, processes a parse result that has already gone through the ComponentGenerator.
 	 * At this stage one can except all substituents/roots to have at least 1 group.
@@ -1607,7 +1568,7 @@ class ComponentProcessor {
 		String subgroupType = frag.getSubType();
 
 		String suffixTypeToUse =null;
-		if (suffixApplicability.containsKey(groupType)){
+		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -1632,7 +1593,7 @@ class ComponentProcessor {
             }
             cyclic = atomLikelyToBeUsedBySuffix.getAtomIsInACycle();
 
-            Elements suffixRuleTags = getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+            Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
             Fragment suffixFrag = null;
             /*
              * Temp fragments are build for each addGroup rule and then merged into suffixFrag
@@ -1714,7 +1675,7 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
-		if (suffixApplicability.containsKey(groupType)){
+		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -1722,7 +1683,7 @@ class ComponentProcessor {
 		}
         for (Element suffix : suffixes) {
             String suffixValue = suffix.getAttributeValue(VALUE_ATR);
-            Elements suffixRuleTags = getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+            Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
             for (int j = 0; j < suffixRuleTags.size(); j++) {
                 Element suffixRuleTag = suffixRuleTags.get(j);
                 String suffixRuleTagName = suffixRuleTag.getLocalName();
@@ -1837,47 +1798,6 @@ class ComponentProcessor {
 			}
 		}
 	}
-
-	/**
-	 * Returns the appropriate suffixRule tags for the given arguements.
-	 * The suffix rule tags are the children of the appropriate rule in suffixRules.xml
-	 * @param suffixTypeToUse
-	 * @param suffixValue
-	 * @param subgroupType
-	 * @return
-	 * @throws ComponentGenerationException
-	 */
-	private Elements getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws ComponentGenerationException {
-		HashMap<String, List<Element>> groupToSuffixMap = suffixApplicability.get(suffixTypeToUse);
-		if (groupToSuffixMap==null){
-			throw new ComponentGenerationException("Suffix Type: "+ suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
-		}
-		List<Element> potentiallyApplicableSuffixes =groupToSuffixMap.get(suffixValue);
-		if(potentiallyApplicableSuffixes==null || potentiallyApplicableSuffixes.size()==0 ) {
-			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")according to suffixApplicability.xml");
-		}
-		Element chosenSuffix=null;
-        for (Element suffix : potentiallyApplicableSuffixes) {
-            if (suffix.getAttribute(SUFFIXAPPLICABILITY_SUBTYPE_ATR) != null) {
-                if (!suffix.getAttributeValue(SUFFIXAPPLICABILITY_SUBTYPE_ATR).equals(subgroupType)) {
-                    continue;
-                }
-            }
-            if (chosenSuffix != null) {
-                throw new ComponentGenerationException("Suffix: " + suffixValue + " appears multiple times in suffixApplicability.xml");
-            }
-            chosenSuffix = suffix;
-        }
-		if (chosenSuffix==null){
-			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
-		}
-		Element rule =suffixRules.get(chosenSuffix.getValue());
-		if(rule ==null) {
-			throw new ComponentGenerationException("Suffix: " +chosenSuffix.getValue() +" does not have a rule associated with it in suffixRules.xml");
-		}
-		return rule.getChildElements();
-	}
-
 
 	/**
 	 * Searches for suffix elements with the suffixPrefix attribute set
@@ -3058,7 +2978,7 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
-		if (suffixApplicability.containsKey(groupType)){
+		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -3073,7 +2993,7 @@ class ComponentProcessor {
 		for(int i=0;i<suffixes.size();i++) {
 			Element suffix = suffixes.get(i);
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
-			Elements suffixRuleTags =getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
 			for(int j=0;j<suffixRuleTags.size();j++) {
 				Element suffixRuleTag = suffixRuleTags.get(j);
 				String suffixRuleTagName =suffixRuleTag.getLocalName();
@@ -3635,7 +3555,7 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
-		if (suffixApplicability.containsKey(groupType)){
+		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -3662,7 +3582,7 @@ class ComponentProcessor {
             }
 
             Fragment suffixFrag = null;
-            Elements suffixRuleTags = getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+            Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
             for (int j = 0; j < suffixRuleTags.size(); j++) {
                 Element suffixRuleTag = suffixRuleTags.get(j);
                 String suffixRuleTagName = suffixRuleTag.getLocalName();
