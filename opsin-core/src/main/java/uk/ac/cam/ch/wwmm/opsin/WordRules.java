@@ -406,14 +406,17 @@ class WordRules {
 	private void joinWords(List<Element> wordEls, int indexOfFirstWord, Element firstWord, Element wordToPotentiallyCombineWith) throws ParsingException {
 		wordEls.remove(indexOfFirstWord +1);
 		wordToPotentiallyCombineWith.detach();
-		Element assumedHyphen = new Element(HYPHEN_EL);
-		assumedHyphen.appendChild("-");
 		Elements substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
 		if (substituentEls.size()==0){
 			throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 		}
 		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
-		finalSubstituent.appendChild(assumedHyphen);
+		Elements finalSubstituentChildren = finalSubstituent.getChildElements();
+		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getLocalName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
+			Element implicitHyphen = new Element(HYPHEN_EL);
+			implicitHyphen.appendChild("-");
+			finalSubstituent.appendChild(implicitHyphen);
+		}
 		Elements elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();
 		for (int j =  elementsToMergeIntoSubstituent.size() -1 ; j >=0; j--) {
 			Element el = elementsToMergeIntoSubstituent.get(j);
