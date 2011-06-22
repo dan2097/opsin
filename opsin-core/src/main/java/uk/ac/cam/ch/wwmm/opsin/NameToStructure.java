@@ -85,7 +85,7 @@ public class NameToStructure {
 			cmlBuilder = new CMLFragmentBuilder(resourceGetter);
 			structureBuilder = new StructureBuilder();
 
-			componentProcessor = new ComponentProcessor(resourceGetter);
+			componentProcessor = new ComponentProcessor(new SuffixRules(resourceGetter));
 
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
