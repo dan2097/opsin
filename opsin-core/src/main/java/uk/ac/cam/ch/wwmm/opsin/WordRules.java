@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -19,34 +18,6 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  *
  */
 class WordRules {
-
-	/**
-	 * The currently supported wordRules
-	 * @author dl387
-	 *
-	 */
-	enum WordRule{
-		acetal,
-		additionCompound,
-		acidHalideOrPseudoHalide,
-		amide,
-		anhydride,
-		biochemicalEster,
-		carbonylDerivative,
-		divalentFunctionalGroup,
-		ester,
-		functionalClassEster,
-		functionGroupAsGroup,
-		glycol,
-		glycolEther,
-		hydrazide,
-		monovalentFunctionalGroup,
-		multiEster,
-		oxide,
-		polymer,
-		simple,
-		substituent
-	}
 
 	/**
 	 * Describes a word that a wordRule is looking for

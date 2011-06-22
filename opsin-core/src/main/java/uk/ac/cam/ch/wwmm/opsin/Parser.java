@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 
 import nu.xom.Attribute;
 import nu.xom.Element;

@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
-import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 

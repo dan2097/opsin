@@ -6,7 +6,6 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.WORDRULE_EL;
 import java.util.Comparator;
 
 import nu.xom.Element;
-import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 
 /**
  * Prefer non-substituent word rules to substituent word rule e.g. ethylene is C=C not -CC-

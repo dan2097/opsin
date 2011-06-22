@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import uk.ac.cam.ch.wwmm.opsin.ParseWord.WordType;
-import uk.ac.cam.ch.wwmm.opsin.WordRules.WordRule;
 
 import nu.xom.Element;
 import nu.xom.Elements;
