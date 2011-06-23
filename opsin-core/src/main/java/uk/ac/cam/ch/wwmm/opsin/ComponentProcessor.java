@@ -174,8 +174,6 @@ class ComponentProcessor {
 			addImplicitBracketsToAminoAcids(groups, brackets);
 			findAndStructureImplictBrackets(state, substituents, brackets);
 
-			substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);//findAndStructureImplictBrackets may have created new brackets
-
 			for (Element subOrRoot : substituentsAndRoot) {
 				matchLocantsToIndirectFeatures(state, subOrRoot);
 				assignImplicitLocantsToDiTerminalSuffixes(state, subOrRoot);
@@ -191,6 +189,8 @@ class ComponentProcessor {
 			if (children.size()>0){
 				assignLocantsToMultipliedRootIfPresent(state, children.get(children.size()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
 			}
+			addImplicitBracketsInCaseWhereSubstituentHasTwoLocants(substituents, brackets);
+			substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);//implicit brackets may have been created
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
 				assignLocantsAndMultipliers(state, subBracketOrRoot);
 			}
@@ -620,7 +620,7 @@ class ComponentProcessor {
 	static void applyDLPrefixesIfPresent(Element group, Fragment frag) throws ComponentGenerationException {
 		if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))){
 			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
-			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEISTRY_EL)){
+			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEMISTRY_EL)){
 				String value = possibleDl.getAttributeValue(VALUE_ATR);
 				List<Atom> atomList = frag.getAtomList();
 				List<Atom> atomsWithParities = new ArrayList<Atom>();
@@ -653,7 +653,7 @@ class ComponentProcessor {
 		}
 		else if (CARBOHYDRATE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
-			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEISTRY_EL)){
+			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEMISTRY_EL)){
 				String value = possibleDl.getAttributeValue(VALUE_ATR);
 				List<Atom> atomList = frag.getAtomList();
 				List<Atom> atomsWithParities = new ArrayList<Atom>();
@@ -1940,7 +1940,7 @@ class ComponentProcessor {
 	 * @param groups
 	 * @throws StructureBuildingException
 	 */
-	private static void handleGroupIrregularities(BuildState state, List<Element> groups) throws StructureBuildingException{
+	private void handleGroupIrregularities(BuildState state, List<Element> groups) throws StructureBuildingException{
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
@@ -3048,7 +3048,6 @@ class ComponentProcessor {
 		}
 	}
 
-
 	/**Looks for places where brackets should have been, and does the same
 	 * as findAndStructureBrackets. E.g. dimethylaminobenzene -> (dimethylamino)benzene.
 	 * The bracketting in the above case occurs when the substituent that is being procesed is the amino group
@@ -3885,6 +3884,78 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * Adds an implicit bracket in the case where two locants have been given.
+	 * One for the locanting of substituent on to the next substituent and one
+	 * for the locanting of this combined substituent onto a parent group
+	 * @param substituents
+	 * @param brackets
+	 */
+	private void addImplicitBracketsInCaseWhereSubstituentHasTwoLocants(List<Element> substituents, List<Element> brackets) {
+		for (Element substituent : substituents) {
+			Element siblingSubstituent = (Element) XOMTools.getNextSibling(substituent);
+			if (siblingSubstituent !=null && siblingSubstituent.getLocalName().equals(SUBSTITUENT_EL)){
+				List<Element> locants = getLocantsAtStartOfSubstituent(substituent);
+				if (locants.size() ==2 && locantsAreSingular(locants)
+						&& getLocantsAtStartOfSubstituent(siblingSubstituent).size()==0){//e.g. 5-p-hydroxyphenyl-1,2-dithiole-3-thione
+					Element bracket = new Element(BRACKET_EL);
+					bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
+					Element parent = (Element) substituent.getParent();
+					int indexToInsertAt = parent.indexOf(substituent);
+					int elementsToMove = substituent.indexOf(locants.get(0))+1;
+					for (int i = 0; i < elementsToMove; i++) {
+						Element locantOrStereoToMove =(Element) substituent.getChild(0);
+						locantOrStereoToMove.detach();
+						bracket.appendChild(locantOrStereoToMove);
+					}
+					substituent.detach();
+					siblingSubstituent.detach();
+					bracket.appendChild(substituent);
+					bracket.appendChild(siblingSubstituent);
+					parent.insertChild(bracket, indexToInsertAt);
+					brackets.add(bracket);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Retrieves the first elements of a substituent which are locants skipping over stereochemistry elements
+	 * @param substituent
+	 * @return
+	 */
+	private List<Element> getLocantsAtStartOfSubstituent(Element substituent) {
+		List<Element> locants = new ArrayList<Element>();
+		Elements children = substituent.getChildElements();
+		for (int i = 0; i < children.size(); i++) {
+			String currentElementName = children.get(i).getLocalName();
+			if (currentElementName.equals(LOCANT_EL)){
+				locants.add(children.get(i));
+			}
+			else if (currentElementName.equals(STEREOCHEMISTRY_EL)){
+				//ignore
+			}
+			else{
+				break;
+			}
+		}
+		return locants;
+	}
+
+	/**
+	 * Checks that none of the locants contain commas
+	 * @param locants
+	 * @return
+	 */
+	private boolean locantsAreSingular(List<Element> locants) {
+		for (Element locant : locants) {
+			if (MATCH_COMMA.split(locant.getValue()).length > 1){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * Assigns locants and multipliers to substituents/brackets

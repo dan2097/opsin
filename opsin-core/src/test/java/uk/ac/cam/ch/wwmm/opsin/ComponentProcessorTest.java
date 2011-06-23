@@ -116,7 +116,7 @@ public class ComponentProcessorTest {
 	@Test
 	public void testDLStereochemistryLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		Element dlStereo = new Element(DLSTEREOCHEMISTRY_EL);
 		dlStereo.addAttribute(new Attribute(VALUE_ATR, "l"));
 		substituent.appendChild(dlStereo);
 		Element group = new Element(GROUP_EL);
@@ -132,7 +132,7 @@ public class ComponentProcessorTest {
 	@Test
 	public void testDLStereochemistryDOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		Element dlStereo = new Element(DLSTEREOCHEMISTRY_EL);
 		dlStereo.addAttribute(new Attribute(VALUE_ATR, "d"));
 		substituent.appendChild(dlStereo);
 		Element group = new Element(GROUP_EL);
@@ -148,7 +148,7 @@ public class ComponentProcessorTest {
 	@Test
 	public void testDLStereochemistryDLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		Element dlStereo = new Element(DLSTEREOCHEMISTRY_EL);
 		dlStereo.addAttribute(new Attribute(VALUE_ATR, "dl"));
 		substituent.appendChild(dlStereo);
 		Element group = new Element(GROUP_EL);
@@ -163,7 +163,7 @@ public class ComponentProcessorTest {
 	@Test(expected=ComponentGenerationException.class)
 	public void testDLStereochemistryDOnAchiralAminoAcid() throws ComponentGenerationException, StructureBuildingException{
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		Element dlStereo = new Element(DLSTEREOCHEMISTRY_EL);
 		dlStereo.addAttribute(new Attribute(VALUE_ATR, "d"));
 		substituent.appendChild(dlStereo);
 		Element group = new Element(GROUP_EL);
@@ -178,7 +178,7 @@ public class ComponentProcessorTest {
 	@Test
 	public void testDLStereochemistryLOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		Element dlStereo = new Element(DLSTEREOCHEMISTRY_EL);
 		dlStereo.addAttribute(new Attribute(VALUE_ATR, "l"));
 		substituent.appendChild(dlStereo);
 		Element group = new Element(GROUP_EL);
@@ -194,7 +194,7 @@ public class ComponentProcessorTest {
 	@Test
 	public void testDLStereochemistryDOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element dlStereo = new Element(DLSTEREOCHEISTRY_EL);
+		Element dlStereo = new Element(DLSTEREOCHEMISTRY_EL);
 		dlStereo.addAttribute(new Attribute(VALUE_ATR, "d"));
 		substituent.appendChild(dlStereo);
 		Element group = new Element(GROUP_EL);
