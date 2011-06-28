@@ -36,6 +36,7 @@
 		<token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">arsinolizin</token>
 		<token value="as-indacene" valType="dbkey">as-indacen</token>
 		<token value="azulene" valType="dbkey">azulen</token>
+		<token value="c1ccc2cccc3c(=O)c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/7//7a/8/9/10/11/11a/11b/11c" valType="SMILES">benzanthron</token>
 		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">benzidin</token>
 		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'" valType="SMILES">4,4'-benzidin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzen</token>
