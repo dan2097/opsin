@@ -128,9 +128,11 @@ does not define a CFG.
   <regex name="%inlineSuffixAllowingPrefixes%" value="╜"/>
   <regex name="%dlStereochemistry%" value="╛"/>
   <regex name="%subtractivePrefix%" value="┐"/>
-  <regex name="%canBeDlPRefixedSimpleGroup%" value="└"/>
+  <regex name="%canBeDlPrefixedSimpleGroup%" value="└"/>
 	<regex name="%trivialRingSubstituent%" value="┴"/>
-  <!--up to ascii 193 used-->
+  <regex name="%carbohydrateConfigurationalPrefix%" value="┬"/>
+	<regex name="%carbohydrateRingSize%" value="├"/>
+  <!--up to ascii 195 used-->
 
 <!-- composite regexes-->
 
@@ -205,7 +207,7 @@ does not define a CFG.
   <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
-  <regex name="%simpleGroups%" value = "(%simpleGroup%|%dlStereochemistryPrefix%?%canBeDlPRefixedSimpleGroup%)"/>
+  <regex name="%simpleGroups%" value = "(%simpleGroup%|%dlStereochemistryPrefix%?%canBeDlPrefixedSimpleGroup%)"/>
 
 
   <!--cyclic-->
@@ -227,6 +229,8 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainRoot%" value ="(%hyphen%?(%locant%|%alphaBetaStereochemLocant%)?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/>
   <regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
 
+  <regex name="%cyclicSugar%" value="(%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%carbohydrateRingSize%)"/>
+
   <!--Fused ring terms-->
   <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locant%)%benzo%)"/>
   <regex name="%simpleComponent%" value ="(%fusionComponent%%hyphen%?%fusionBracket%?%hyphen%?|%benzoComponent%)" />
@@ -235,7 +239,7 @@ does not define a CFG.
   <regex name="%fusedRingSystemFromTrivialRingSubstituent%" value = "((%simpleComponent%|%multipliedComponent%|%multipliedParent%)+%trivialRingSubstituentSub%)"/>
 
   <!--Complex terms-->
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locant%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%|%naturalProductGroup%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locant%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%|%naturalProductGroup%|%cyclicSugar%)"/>
   <regex name="%irregularRingSubstituentStem%" value="(%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%|%cyclicUnsaturableHydrocarbon%%a%?)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%irregularRingSubstituentStem%)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%)"/>
 

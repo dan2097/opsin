@@ -109,6 +109,7 @@ class ComponentProcessor {
 			for (Element group : groups) {
 				Fragment thisFrag = resolveGroup(state, group);
 				processChargeAndOxidationNumberSpecification(group, thisFrag);//e.g. mercury(2+) or mercury(II)
+				cycliseCarbohydrates(state, group, thisFrag);//e.g. glucopyranose
 				state.xmlFragmentMap.put(group, thisFrag);
 			}
 			
@@ -701,6 +702,108 @@ class ComponentProcessor {
 		}
 	}
 
+
+	private void cycliseCarbohydrates(BuildState state, Element group, Fragment frag) throws StructureBuildingException {
+		if (CARBOHYDRATECONFIGURATIONALPREFIX_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))){
+			Element ringSize = (Element) XOMTools.getNextSibling(group);
+			if (ringSize==null || !ringSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
+				throw new RuntimeException("OPSIN bug: carbohydrate size indicator not found where expected");
+			}
+			Atom carbonylCarbon = getCarbonylCarbon(frag);
+			if (carbonylCarbon ==null){
+				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
+			}
+			for (Bond b: carbonylCarbon.getBonds()) {
+				if (b.getOrder()==2){
+					b.setOrder(1);
+					break;
+				}
+			}
+			int locantOfCarbonyl;
+			try{
+				locantOfCarbonyl = Integer.parseInt(carbonylCarbon.getFirstLocant());
+			}
+			catch (Exception e) {
+				throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
+			}
+			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSize.getAttributeValue(VALUE_ATR)) -2);
+			Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
+			if (atomToJoinWith ==null){
+				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
+			}
+			state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
+			ringSize.detach();
+			applyAnomerStereochemistryIfPresent(group, frag);
+		}
+	}
+
+	private Atom getCarbonylCarbon(Fragment frag) {
+		Set<Bond> bonds = frag.getBondSet();
+		for (Bond bond : bonds) {
+			if (bond.getOrder() ==2){
+				if (bond.getFromAtom().getElement().equals("C") && bond.getToAtom().getElement().equals("O")){
+					return bond.getFromAtom();
+				}
+				if (bond.getFromAtom().getElement().equals("O") && bond.getToAtom().getElement().equals("C")){
+					return bond.getToAtom();
+				}
+			}
+		}
+		return null;
+	}
+
+	private void applyAnomerStereochemistryIfPresent(Element firstElInCarbohydrate, Fragment carbohydrate) throws StructureBuildingException {
+		Element alphaOrBeta = (Element) XOMTools.getPreviousSibling(firstElInCarbohydrate);
+		if (alphaOrBeta !=null && alphaOrBeta.getLocalName().equals(LOCANT_EL)){
+			String value = alphaOrBeta.getValue().toLowerCase();
+			if (value.equals("alpha") || value.equals("beta")){
+				//TODO implement this correctly
+//				Atom ketonalAtom = carbohydrate.getAtomByLocantOrThrow("1");
+//				List<Atom> neighbours = ketonalAtom.getAtomNeighbours();
+//				if (neighbours.size()!=3){
+//					throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric atom of carbohydrate");
+//				}
+//				Atom[] atomRefs4 = new Atom[4];
+//				for (Atom neighbour : neighbours) {
+//					if (neighbour.getElement().equals("C")){
+//						atomRefs4[0] = neighbour;
+//					}
+//					else if (neighbour.getElement().equals("O")){
+//						int incomingVal =neighbour.getIncomingValency();
+//						if (incomingVal ==1){
+//							atomRefs4[1] = neighbour;
+//						}
+//						else if (incomingVal ==2){
+//							atomRefs4[2] = neighbour;
+//						}
+//						else{
+//							throw new RuntimeException("OPSIN bug: Unexpected valency on oxygen in carbohydrate");
+//						}
+//					}
+//					else{
+//						throw new RuntimeException("OPSIN bug: Unexpected atom element type connected to anomeric atom of carbohydrate");
+//					}
+//				}
+//				atomRefs4[3] = AtomParity.hydrogen;
+//				for (Atom atom : atomRefs4) {
+//					if (atom ==null){
+//						throw new RuntimeException("OPSIN bug: Unable to assign anomeric carbon stereochemistry on carbohydrate");
+//					}
+//				}
+//				if (value.equals("alpha")){
+//					ketonalAtom.setAtomParity(atomRefs4, 1);
+//				}
+//				else{
+//					ketonalAtom.setAtomParity(atomRefs4, -1);
+//				}
+//				alphaOrBeta.detach();
+			}
+			else if (value.equals("alpha,beta") || value.equals("beta,alpha")){
+				//unspecified stereochemistry
+				alphaOrBeta.detach();
+			}
+		}
+	}
 
 	/**
 	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring

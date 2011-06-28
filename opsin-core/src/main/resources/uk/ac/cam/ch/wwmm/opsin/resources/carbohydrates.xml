@@ -52,4 +52,50 @@
 <!--add Muramic acid-->
 			<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token> rejected due to currently undetectable stereocentre, also is systematically related to xylose-->
 	</tokenList>
+	
+<!--TODO make "ose" a systematic ending which modifies a carbohydrateConfigurationalPrefix-->
+	<tokenList tagname="group" type="carbohydrateConfigurationalPrefix" subType="carbohydrate" symbol="┬">
+<!--aldoses-->
+		<token value="OC[C@H](O)CO" labels="/1/2//3/" valType="SMILES">glycero</token>
+
+		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythro</token>
+		<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">threo</token>
+
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribo</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">arabino</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylo</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">lyxo</token>
+
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">allo</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">altro</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">gluco</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">manno</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">gulo</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">ido</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galacto</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">talo</token>
+
+<!--ketoses-->
+		<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrulo</token>
+
+		<token value="OCC(=O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribulo</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylulo</token>
+
+		<token value="OCC(=O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">psico</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">fructo</token>
+		<token value="OCC(=O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbo</token>
+		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">tagato</token>
+
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">sedoheptulo</token>
+		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">mannoheptulo</token>
+	</tokenList>
+
+	<tokenList tagname="carbohydrateRingSize" symbol="├">
+		<token value="3">oxirose</token>
+		<token value="4">oxetose</token>
+		<token value="5">furanose</token>
+		<token value="6">pyranose</token>
+		<token value="7">septanose</token>
+		<token value="8">octanose</token>
+	</tokenList>
 </tokenLists>
