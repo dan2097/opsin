@@ -54,6 +54,9 @@ class XmlDeclarations {
 	/**An O that indicates that the preceding alkaneStem is in fact a bridge*/
 	static final String BRIDGEFORMINGO_EL ="bridgeFormingO";
 
+	/**Indicates the size of the ring in a carbohydrate e.g. furanose = 5*/
+	static final String CARBOHYDRATERINGSIZE_EL ="carbohydrateRingSize";
+
 	/**A charge specifier e.g. (2+). Value is the charge to set something to*/
 	static final String CHARGESPECIFIER_EL ="chargeSpecifier";
 	
@@ -287,6 +290,9 @@ class XmlDeclarations {
 	
 	/**A locant enclosed in square brackets e.g. [5]*/
 	static final String BRACKETEDLOCANT_TYPE_VAL ="bracketedLocant";
+	
+	/**Indicates stereochemistry of a carbohydrate e.g. gluco*/
+	static final String CARBOHYDRATECONFIGURATIONALPREFIX_TYPE_VAL ="carbohydrateConfigurationalPrefix";
 	
 	/**Indicates the group should be acyclic*/
 	static final String CHAIN_TYPE_VAL ="chain";
