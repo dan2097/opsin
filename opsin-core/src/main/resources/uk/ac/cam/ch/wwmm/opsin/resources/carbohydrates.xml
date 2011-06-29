@@ -56,7 +56,7 @@
 <!--TODO make "ose" a systematic ending which modifies a carbohydrateConfigurationalPrefix-->
 	<tokenList tagname="group" type="carbohydrateConfigurationalPrefix" subType="carbohydrate" symbol="┬">
 <!--aldoses-->
-		<token value="OC[C@H](O)CO" labels="/1/2//3/" valType="SMILES">glycero</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">glycero</token>
 
 		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythro</token>
 		<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">threo</token>
