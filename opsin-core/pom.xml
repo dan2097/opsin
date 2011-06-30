@@ -27,7 +27,7 @@
   </build>
    <dependencies>
       <dependency>
-        <groupId>dk.brics</groupId>
+        <groupId>dk.brics.automaton</groupId>
         <artifactId>automaton</artifactId>
       </dependency>
       <dependency>

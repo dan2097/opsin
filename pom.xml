@@ -186,9 +186,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>dk.brics</groupId>
+        <groupId>dk.brics.automaton</groupId>
         <artifactId>automaton</artifactId>
-        <version>1.11-3</version>
+        <version>1.11-4</version>
       </dependency>
       <dependency>
         <groupId>xom</groupId>
