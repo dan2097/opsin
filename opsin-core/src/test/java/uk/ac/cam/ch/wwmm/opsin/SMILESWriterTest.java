@@ -404,4 +404,15 @@ public class SMILESWriterTest {
 			fail(smiles +" did not correspond to one of the expected SMILES strings");
 		}
 	}
+	
+	@Test
+	public void testDoubleBondSupport8() throws StructureBuildingException {
+		//hydrogen on the nitrogen must be explicit!
+		Fragment f = state.fragManager.buildSMILES("[H]/N=C(\\N)/O");
+		StructureBuilder.makeHydrogensExplicit(state);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		if (!smiles.equals("[H]/N=C(\\N)/O") && !smiles.equals("[H]\\N=C(/N)\\O")){
+			fail(smiles +" did not correspond to one of the expected SMILES strings");
+		}
+	}
 }
