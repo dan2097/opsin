@@ -148,16 +148,32 @@ class SMILESWriter {
 			return false;
 		}
 		else{
-			//special case where hydrogen is a counter ion or only connects to other hydrogen
 			List<Atom> neighbours = atom.getAtomNeighbours();
+			//special case where hydrogen is bridging
+			if (neighbours.size() > 1){
+				return false;
+			}
+			//special case where hydrogen is a counter ion or only connects to other hydrogen
 			boolean foundNonHydrogenNeighbour =false;
 			for (Atom neighbour : neighbours) {
 				if (!neighbour.getElement().equals("H")){
 					foundNonHydrogenNeighbour =true;
 				}
 			}
-			if (!foundNonHydrogenNeighbour || neighbours.size()>1){
+			if (!foundNonHydrogenNeighbour){
 				return false;
+			}
+			
+			//special case where hydrogen is connected to a nitrogen with imine double bond stereochemistry
+			if (neighbours.get(0).getElement().equals("N")){
+				Set<Bond> bondsFromNitrogen = neighbours.get(0).getBonds();
+				if (bondsFromNitrogen.size()==2){
+					for (Bond bond : bondsFromNitrogen) {
+						if (bond.getBondStereo()!=null){
+							return false;
+						}
+					}
+				}
 			}
 		}
 		return true;
