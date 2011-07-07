@@ -615,14 +615,14 @@ public class StereochemistryTest {
 	public void testCisTransUnambiguous() throws StructureBuildingException {
 		FragmentManager fm = new FragmentManager(sBuilder, mock(CMLFragmentBuilder.class), new IDManager());
 		Fragment f = sBuilder.build("[H]C([H])([H])C([H])=C([H])C([H])([H])[H]", fm);
-		assertEquals(true, StereochemistryHandler.cisTranUnambiguousOnBond(f.findBond(5, 7)));
+		assertEquals(true, StereochemistryHandler.cisTransUnambiguousOnBond(f.findBond(5, 7)));
 	}
 	
 	@Test
 	public void testCisTransAmbiguous() throws StructureBuildingException {
 		FragmentManager fm = new FragmentManager(sBuilder, mock(CMLFragmentBuilder.class), new IDManager());
 		Fragment f = sBuilder.build("[H]C([H])([H])C(Cl)=C([H])C([H])([H])[H]", fm);
-		assertEquals(false, StereochemistryHandler.cisTranUnambiguousOnBond(f.findBond(5, 7)));
+		assertEquals(false, StereochemistryHandler.cisTransUnambiguousOnBond(f.findBond(5, 7)));
 	}
 	
 	@Test

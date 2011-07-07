@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
+
 
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -1968,7 +1971,23 @@ class StructureBuilder {
 			}
 		}
 		if (stereoChemistryEls.size() >0 || atomsWithPreDefinedAtomParity.size() >0 || bondsWithPreDefinedBondStereo.size() >0){
-			StereochemistryHandler.processStereochemicalElements(state, uniFrag, stereoChemistryEls, atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
+			StereoAnalyser stereoAnalyser = new StereoAnalyser(uniFrag);
+			Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<Atom, StereoCentre>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object
+			List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
+			for (StereoCentre stereoCentre : stereoCentres) {
+				atomStereoCentreMap.put(stereoCentre.getStereoAtom(),stereoCentre);
+			}
+			Map<Bond, StereoBond> bondStereoBondMap = new HashMap<Bond, StereoBond>();
+			List<StereoBond> stereoBonds = stereoAnalyser.findStereoBonds();
+			for (StereoBond stereoBond : stereoBonds) {
+				Bond b = stereoBond.getBond();
+				if (FragmentTools.notIn6MemberOrSmallerRing(b)){
+					bondStereoBondMap.put(b, stereoBond);
+				}
+			}
+			StereochemistryHandler stereoChemistryHandler = new StereochemistryHandler(state, atomStereoCentreMap, bondStereoBondMap);
+			stereoChemistryHandler.applyStereochemicalElements(stereoChemistryEls);
+			stereoChemistryHandler.removeRedundantStereoCentres(atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		}
 	}
 
