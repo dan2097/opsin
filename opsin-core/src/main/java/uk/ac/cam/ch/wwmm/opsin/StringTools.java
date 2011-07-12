@@ -140,6 +140,9 @@ public final class StringTools {
             case '\u03c7': return "chi";
             case '\u03c8': return "psi";
             case '\u03c9': return "omega";
+            
+            case '\u1D05': return "D";//small capitals
+            case '\u029F': return "L";
 
             case '\u00B1': return "+-";//plus minus symbol
             case '\u2213': return "-+";
