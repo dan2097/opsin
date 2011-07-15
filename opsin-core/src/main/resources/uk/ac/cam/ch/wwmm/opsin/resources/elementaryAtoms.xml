@@ -62,7 +62,7 @@
 	<token value="[Nd]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">neodymium</token>
 	<token value="[Pm]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">promethium</token>
 	<token value="[Sm]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">samarium</token>
-	<token value="[Eu]" commonOxidationStatesAndMax="2,3:3" labels="none" valType="SMILES">europium</token>
+	<token value="[Eu]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">europium</token><!--3 is more common than 2-->
 	<token value="[Gd]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">gadolinium</token>
 	<token value="[Tb]" commonOxidationStatesAndMax="3:4" labels="none" valType="SMILES">terbium</token>
 	<token value="[Dy]" commonOxidationStatesAndMax="3:3" labels="none" valType="SMILES">dysprosium</token>
