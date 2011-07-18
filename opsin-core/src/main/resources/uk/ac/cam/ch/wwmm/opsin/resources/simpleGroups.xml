@@ -53,6 +53,8 @@
 		<token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbohydrazide</token>
 		<token value="NNC(=O)NN" labels="1/2/3//4/5" valType="SMILES">carbazide</token>
 		<token value="O=CC(Cl)(Cl)Cl" labels="none" valType="SMILES">chloral</token>
+		<token value="ClC(C(O)O)(Cl)Cl" labels="none" valType="SMILES">chloral hydrate</token>
+		<token value="ClC(C(O)O)(Cl)Cl" labels="none" valType="SMILES">chloralhydrate</token>
 		<token value="NCl" labels="none" valType="SMILES">chloramine</token>
 		<token value="NCl" labels="none" valType="SMILES">chloramide</token>
 		<token value="CC(CC(C)(N)C)=O" labels="none" valType="SMILES">diacetonamine</token>
