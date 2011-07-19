@@ -109,7 +109,6 @@ class ComponentProcessor {
 			for (Element group : groups) {
 				Fragment thisFrag = resolveGroup(state, group);
 				processChargeAndOxidationNumberSpecification(group, thisFrag);//e.g. mercury(2+) or mercury(II)
-				cycliseCarbohydrates(state, group, thisFrag);//e.g. glucopyranose
 				state.xmlFragmentMap.put(group, thisFrag);
 			}
 			
@@ -140,6 +139,8 @@ class ComponentProcessor {
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
+				applyDLPrefixes(state, subOrRoot);
+				cycliseCarbohydrates(state, subOrRoot);//e.g. glucopyranose
 				processMultipliers(subOrRoot);
 				detectConjunctiveSuffixGroups(state, subOrRoot, groups);
 				matchLocantsToDirectFeatures(state, subOrRoot);
@@ -236,8 +237,7 @@ class ComponentProcessor {
 
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
-		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag);
-		applyDLPrefixesIfPresent(group, thisFrag);
+		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
 		return thisFrag;
 	}
 
@@ -618,76 +618,6 @@ class ComponentProcessor {
 		}
 	}
 	
-	static void applyDLPrefixesIfPresent(Element group, Fragment frag) throws ComponentGenerationException {
-		if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))){
-			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
-			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEMISTRY_EL)){
-				String value = possibleDl.getAttributeValue(VALUE_ATR);
-				List<Atom> atomList = frag.getAtomList();
-				List<Atom> atomsWithParities = new ArrayList<Atom>();
-				for (Atom atom : atomList) {
-					if (atom.getAtomParity()!=null){
-						atomsWithParities.add(atom);
-					}
-				}
-				if (atomsWithParities.isEmpty()){
-					throw new ComponentGenerationException("D/L stereochemistry :" +value + " found before achiral amino acid");
-				}
-				if (value.equals("l") || value.equals("ls")){
-					//do nothing, L- is implicit
-				}
-				else if (value.equals("d") || value.equals("ds")){
-					for (Atom atom : atomsWithParities) {
-						atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
-					}
-				}
-				else  if (value.equals("dl")){
-					for (Atom atom : atomsWithParities) {
-						atom.setAtomParity(null);
-					}
-				}
-				else{
-					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + value );
-				}
-				possibleDl.detach();
-			}
-		}
-		else if (CARBOHYDRATE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			Element possibleDl = (Element) XOMTools.getPreviousSibling(group);
-			if (possibleDl !=null && possibleDl.getLocalName().equals(DLSTEREOCHEMISTRY_EL)){
-				String value = possibleDl.getAttributeValue(VALUE_ATR);
-				List<Atom> atomList = frag.getAtomList();
-				List<Atom> atomsWithParities = new ArrayList<Atom>();
-				for (Atom atom : atomList) {
-					if (atom.getAtomParity()!=null){
-						atomsWithParities.add(atom);
-					}
-				}
-				if (atomsWithParities.isEmpty()){
-					throw new ComponentGenerationException("D/L stereochemistry :" +value + " found before achiral carbohydrate");//sounds like a vocab bug...
-				}
-				if (value.equals("d") || value.equals("dg")){
-					//do nothing, D- is implicit
-				}
-				else if (value.equals("l") || value.equals("lg")){
-					for (Atom atom : atomsWithParities) {
-						atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
-					}
-				}
-				else  if (value.equals("dl")){
-					for (Atom atom : atomsWithParities) {
-						atom.setAtomParity(null);
-					}
-				}
-				else{
-					throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + value );
-				}
-				possibleDl.detach();
-			}
-		}
-	}
-
-
 	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
 		Element nextEl = (Element) XOMTools.getNextSibling(group);
 		if (nextEl!=null){
@@ -700,196 +630,6 @@ class ComponentProcessor {
 				nextEl.detach();
 			}
 		}
-	}
-
-
-	/**
-	 * Cyclises carbohydrate configuration prefixes according to the adjacent ring size indicator
-	 * Alpha/beta stereochemistry is then applied if present
-	 * TODO support multi prefixes and alpha/beta stereochem with multiple prefixes
-	 * @param state
-	 * @param group
-	 * @param frag
-	 * @throws StructureBuildingException
-	 */
-	private void cycliseCarbohydrates(BuildState state, Element group, Fragment frag) throws StructureBuildingException {
-		if (CARBOHYDRATECONFIGURATIONALPREFIX_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))){
-			Element ringSize = (Element) XOMTools.getNextSibling(group);
-			if (ringSize==null || !ringSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
-				throw new RuntimeException("OPSIN bug: carbohydrate size indicator not found where expected");
-			}
-			Atom carbonylCarbon = getCarbonylCarbon(frag);
-			if (carbonylCarbon ==null){
-				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
-			}
-			for (Bond b: carbonylCarbon.getBonds()) {
-				if (b.getOrder()==2){
-					b.setOrder(1);
-					break;
-				}
-			}
-			int locantOfCarbonyl;
-			try{
-				locantOfCarbonyl = Integer.parseInt(carbonylCarbon.getFirstLocant());
-			}
-			catch (Exception e) {
-				throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
-			}
-			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSize.getAttributeValue(VALUE_ATR)) -2);
-			Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
-			if (atomToJoinWith ==null){
-				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
-			}
-			state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
-			ringSize.detach();
-			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(group);
-			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
-				Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
-				if (anomericReferenceAtom ==null){
-					throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +group.getValue());
-				}
-				applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
-			}
-		}
-	}
-
-	private Atom getCarbonylCarbon(Fragment frag) {
-		Set<Bond> bonds = frag.getBondSet();
-		for (Bond bond : bonds) {
-			if (bond.getOrder() ==2){
-				if (bond.getFromAtom().getElement().equals("C") && bond.getToAtom().getElement().equals("O")){
-					return bond.getFromAtom();
-				}
-				if (bond.getFromAtom().getElement().equals("O") && bond.getToAtom().getElement().equals("C")){
-					return bond.getToAtom();
-				}
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Gets the configurationalAtom currently i.e. the defined stereocentre with the highest locant
-	 * @param frag
-	 * @return
-	 */
-	private Atom getAnomericReferenceAtom(Fragment frag){
-		List<Atom> atomList = frag.getAtomList();
-		int highestLocantfound = Integer.MIN_VALUE;
-		Atom configurationalAtom = null;
-		for (Atom a : atomList) {
-			if (a.getAtomParity()==null){
-				continue;
-			}
-			try{
-				String locant = a.getFirstLocant();
-				int intVal = Integer.parseInt(locant);
-				if (intVal > highestLocantfound){
-					highestLocantfound = intVal;
-					configurationalAtom = a;
-				}
-			}
-			catch (Exception e) {
-				//may throw null pointer exceptions or number format exceptions
-			}
-		}
-		return configurationalAtom;
-	}
-
-	private void applyAnomerStereochemistryIfPresent(Element alphaOrBetaLocantEl, Atom anomericAtom, Atom anomericReferenceAtom) {
-		String value = alphaOrBetaLocantEl.getValue();
-		if (value.equals("alpha") || value.equals("beta")){
-			Atom[] referenceAtomRefs4 = getDeterministicAtomRefs4ForReferenceAtom(anomericReferenceAtom, anomericAtom);
-			boolean flip = StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(referenceAtomRefs4, 1, anomericReferenceAtom.getAtomParity().getAtomRefs4(), anomericReferenceAtom.getAtomParity().getParity());
-			Atom[] atomRefs4 = getDeterministicAtomRefs4ForAnomericAtom(anomericAtom);
-			if (flip){
-				if (value.equals("alpha")){
-					anomericAtom.setAtomParity(atomRefs4, 1);
-				}
-				else{
-					anomericAtom.setAtomParity(atomRefs4, -1);
-				}
-			}
-			else{
-				if (value.equals("alpha")){
-					anomericAtom.setAtomParity(atomRefs4, -1);
-				}
-				else{
-					anomericAtom.setAtomParity(atomRefs4, 1);
-				}
-			}
-			alphaOrBetaLocantEl.detach();
-		}
-		else if (value.equals("alpha,beta") || value.equals("beta,alpha")){
-			//unspecified stereochemistry
-			alphaOrBetaLocantEl.detach();
-		}
-	}
-
-	private Atom[] getDeterministicAtomRefs4ForReferenceAtom(Atom referenceAtom, Atom anomericAtom) {
-		List<Atom> neighbours = referenceAtom.getAtomNeighbours();
-		if (neighbours.size()!=3){
-			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric reference atom of carbohydrate");
-		}
-		Atom[] atomRefs4 = new Atom[4];
-		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O")){
-				atomRefs4[0] = neighbour;
-			}
-			else if (neighbour.getElement().equals("C")){
-				if (neighbour.getAtomParity()!=null || neighbour.equals(anomericAtom)){//second condition allows support for glycero rings
-					atomRefs4[1] = neighbour;
-				}
-				else {
-					atomRefs4[2] = neighbour;
-				}
-			}
-			else{
-				throw new RuntimeException("OPSIN bug: Unexpected atom element type connected to for anomeric reference atom");
-			}
-		}
-		atomRefs4[3] = AtomParity.hydrogen;
-		for (Atom atom : atomRefs4) {
-			if (atom ==null){
-				throw new RuntimeException("OPSIN bug: Unable to determine atomRefs4 for anomeric reference atom");
-			}
-		}
-		return atomRefs4;
-	}
-
-	private Atom[] getDeterministicAtomRefs4ForAnomericAtom(Atom anomericAtom) {
-		List<Atom> neighbours = anomericAtom.getAtomNeighbours();
-		if (neighbours.size()!=3){
-			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric atom of carbohydrate");
-		}
-		Atom[] atomRefs4 = new Atom[4];
-		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("C")){
-				atomRefs4[0] = neighbour;
-			}
-			else if (neighbour.getElement().equals("O")){
-				int incomingVal =neighbour.getIncomingValency();
-				if (incomingVal ==1){
-					atomRefs4[1] = neighbour;
-				}
-				else if (incomingVal ==2){
-					atomRefs4[2] = neighbour;
-				}
-				else{
-					throw new RuntimeException("OPSIN bug: Unexpected valency on oxygen in carbohydrate");
-				}
-			}
-			else{
-				throw new RuntimeException("OPSIN bug: Unexpected atom element type connected to anomeric atom of carbohydrate");
-			}
-		}
-		atomRefs4[3] = AtomParity.hydrogen;
-		for (Atom atom : atomRefs4) {
-			if (atom ==null){
-				throw new RuntimeException("OPSIN bug: Unable to assign anomeric carbon stereochemistry on carbohydrate");
-			}
-		}
-		return atomRefs4;
 	}
 
 	/**
@@ -1325,6 +1065,313 @@ class ComponentProcessor {
 			parentOfMultiplier=parentOfMultiplier.getParent();
 		}
 		return false;
+	}
+
+	private void applyDLPrefixes(BuildState state, Element subOrRoot) throws ComponentGenerationException {
+		Elements dlStereochemistryEls = subOrRoot.getChildElements(DLSTEREOCHEMISTRY_EL);
+		for (int i = 0; i < dlStereochemistryEls.size(); i++) {
+			Element dlStereochemistry = dlStereochemistryEls.get(i);
+			String dlStereochemistryValue = dlStereochemistry.getAttributeValue(VALUE_ATR);
+			Element elementToApplyTo = (Element) XOMTools.getNextSibling(dlStereochemistry);
+			if (elementToApplyTo ==null){
+				throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
+			}
+			if (AMINOACID_TYPE_VAL.equals(elementToApplyTo.getAttributeValue(TYPE_ATR))){
+				Fragment aminoAcid = state.xmlFragmentMap.get(elementToApplyTo);
+				applyDlStereochemistryToAminoAcid(aminoAcid, dlStereochemistryValue);
+			}
+			else if (CARBOHYDRATE_SUBTYPE_VAL.equals(elementToApplyTo.getAttributeValue(SUBTYPE_ATR))){
+				Fragment carbohydrate = state.xmlFragmentMap.get(elementToApplyTo);
+				applyDlStereochemistryToCarbohydrate(carbohydrate, dlStereochemistryValue);
+			}
+			else if (CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL.equals(elementToApplyTo.getAttributeValue(TYPE_ATR))){
+				applyDlStereochemistryToCarbohydrateConfigurationalPrefix(elementToApplyTo, dlStereochemistryValue);
+			}
+			else{
+				throw new RuntimeException("OPSIN bug: Unrecognised element after DL stereochemistry: " +elementToApplyTo.toXML());
+			}
+			dlStereochemistry.detach();
+		}
+	}
+
+	static void applyDlStereochemistryToAminoAcid(Fragment aminoAcid, String dlStereochemistryValue) throws ComponentGenerationException {
+		List<Atom> atomList = aminoAcid.getAtomList();
+		List<Atom> atomsWithParities = new ArrayList<Atom>();
+		for (Atom atom : atomList) {
+			if (atom.getAtomParity()!=null){
+				atomsWithParities.add(atom);
+			}
+		}
+		if (atomsWithParities.isEmpty()){
+			throw new ComponentGenerationException("D/L stereochemistry :" +dlStereochemistryValue + " found before achiral amino acid");
+		}
+		if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("ls")){
+			//do nothing, L- is implicit
+		}
+		else if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("ds")){
+			for (Atom atom : atomsWithParities) {
+				atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+			}
+		}
+		else  if (dlStereochemistryValue.equals("dl")){
+			for (Atom atom : atomsWithParities) {
+				atom.setAtomParity(null);
+			}
+		}
+		else{
+			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + dlStereochemistryValue );
+		}
+	}
+
+	static void applyDlStereochemistryToCarbohydrate(Fragment carbohydrate, String dlStereochemistryValue) throws ComponentGenerationException {
+		List<Atom> atomList = carbohydrate.getAtomList();
+		List<Atom> atomsWithParities = new ArrayList<Atom>();
+		for (Atom atom : atomList) {
+			if (atom.getAtomParity()!=null){
+				atomsWithParities.add(atom);
+			}
+		}
+		if (atomsWithParities.isEmpty()){
+			throw new ComponentGenerationException("D/L stereochemistry :" + dlStereochemistryValue + " found before achiral carbohydrate");//sounds like a vocab bug...
+		}
+		if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
+			//do nothing, D- is implicit
+		}
+		else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
+			for (Atom atom : atomsWithParities) {
+				atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+			}
+		}
+		else  if (dlStereochemistryValue.equals("dl")){
+			for (Atom atom : atomsWithParities) {
+				atom.setAtomParity(null);
+			}
+		}
+		else{
+			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + dlStereochemistryValue );
+		}
+	}
+
+	static void applyDlStereochemistryToCarbohydrateConfigurationalPrefix(Element elementToApplyTo, String dlStereochemistryValue) throws ComponentGenerationException {
+		if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
+			//do nothing, D- is implicit
+		}
+		else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
+			String[] values = MATCH_SLASH.split(elementToApplyTo.getAttributeValue(VALUE_ATR), -1);
+			StringBuilder sb = new StringBuilder();
+			for (String value : values) {
+				if (value.equals("r")){
+					sb.append("l");
+				}
+				else if (value.equals("l")){
+					sb.append("r");
+				}
+				else{
+					throw new RuntimeException("OPSIN Bug: Invalid carbohydrate prefix value: " + elementToApplyTo.getAttributeValue(VALUE_ATR));
+				}
+				sb.append("/");
+			}
+			String newVal = sb.toString().substring(0, sb.length()-1);
+			elementToApplyTo.getAttribute(VALUE_ATR).setValue(newVal);
+		}
+		else  if (dlStereochemistryValue.equals("dl")){
+			String[] values = MATCH_SLASH.split(elementToApplyTo.getAttributeValue(VALUE_ATR));
+			String newVal = "?" + StringTools.multiplyString("/?", values.length-1);
+			elementToApplyTo.getAttribute(VALUE_ATR).setValue(newVal);
+		}
+		else{
+			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate prefix: " + dlStereochemistryValue );
+		}
+	}
+
+	/**
+	 * Cyclises carbohydrate configuration prefixes according to the adjacent ring size indicator
+	 * Alpha/beta stereochemistry is then applied if present
+	 * TODO support multi prefixes and alpha/beta stereochem with multiple prefixes
+	 * @param state
+	 * @param subOrRoot
+	 * @throws StructureBuildingException
+	 */
+	private void cycliseCarbohydrates(BuildState state, Element subOrRoot) throws StructureBuildingException {
+		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATESTEM_TYPE_VAL);
+		for (Element group : carbohydrates) {
+			Fragment frag = state.xmlFragmentMap.get(group);
+			Element ringSize = (Element) XOMTools.getNextSibling(group);
+			if (ringSize==null || !ringSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
+				throw new RuntimeException("OPSIN bug: carbohydrate size indicator not found where expected");
+			}
+			Atom carbonylCarbon = getCarbonylCarbon(frag);
+			if (carbonylCarbon ==null){
+				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
+			}
+			for (Bond b: carbonylCarbon.getBonds()) {
+				if (b.getOrder()==2){
+					b.setOrder(1);
+					break;
+				}
+			}
+			int locantOfCarbonyl;
+			try{
+				locantOfCarbonyl = Integer.parseInt(carbonylCarbon.getFirstLocant());
+			}
+			catch (Exception e) {
+				throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
+			}
+			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSize.getAttributeValue(VALUE_ATR)) -2);
+			Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
+			if (atomToJoinWith ==null){
+				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
+			}
+			state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
+			ringSize.detach();
+			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(group);
+			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
+				Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
+				if (anomericReferenceAtom ==null){
+					throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +group.getValue());
+				}
+				applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
+			}
+		}
+	}
+
+	private Atom getCarbonylCarbon(Fragment frag) {
+		Set<Bond> bonds = frag.getBondSet();
+		for (Bond bond : bonds) {
+			if (bond.getOrder() ==2){
+				if (bond.getFromAtom().getElement().equals("C") && bond.getToAtom().getElement().equals("O")){
+					return bond.getFromAtom();
+				}
+				if (bond.getFromAtom().getElement().equals("O") && bond.getToAtom().getElement().equals("C")){
+					return bond.getToAtom();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the configurationalAtom currently i.e. the defined stereocentre with the highest locant
+	 * @param frag
+	 * @return
+	 */
+	private Atom getAnomericReferenceAtom(Fragment frag){
+		List<Atom> atomList = frag.getAtomList();
+		int highestLocantfound = Integer.MIN_VALUE;
+		Atom configurationalAtom = null;
+		for (Atom a : atomList) {
+			if (a.getAtomParity()==null){
+				continue;
+			}
+			try{
+				String locant = a.getFirstLocant();
+				int intVal = Integer.parseInt(locant);
+				if (intVal > highestLocantfound){
+					highestLocantfound = intVal;
+					configurationalAtom = a;
+				}
+			}
+			catch (Exception e) {
+				//may throw null pointer exceptions or number format exceptions
+			}
+		}
+		return configurationalAtom;
+	}
+
+	private void applyAnomerStereochemistryIfPresent(Element alphaOrBetaLocantEl, Atom anomericAtom, Atom anomericReferenceAtom) {
+		String value = alphaOrBetaLocantEl.getValue();
+		if (value.equals("alpha") || value.equals("beta")){
+			Atom[] referenceAtomRefs4 = getDeterministicAtomRefs4ForReferenceAtom(anomericReferenceAtom, anomericAtom);
+			boolean flip = StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(referenceAtomRefs4, 1, anomericReferenceAtom.getAtomParity().getAtomRefs4(), anomericReferenceAtom.getAtomParity().getParity());
+			Atom[] atomRefs4 = getDeterministicAtomRefs4ForAnomericAtom(anomericAtom);
+			if (flip){
+				if (value.equals("alpha")){
+					anomericAtom.setAtomParity(atomRefs4, 1);
+				}
+				else{
+					anomericAtom.setAtomParity(atomRefs4, -1);
+				}
+			}
+			else{
+				if (value.equals("alpha")){
+					anomericAtom.setAtomParity(atomRefs4, -1);
+				}
+				else{
+					anomericAtom.setAtomParity(atomRefs4, 1);
+				}
+			}
+			alphaOrBetaLocantEl.detach();
+		}
+		else if (value.equals("alpha,beta") || value.equals("beta,alpha")){
+			//unspecified stereochemistry
+			alphaOrBetaLocantEl.detach();
+		}
+	}
+
+	private Atom[] getDeterministicAtomRefs4ForReferenceAtom(Atom referenceAtom, Atom anomericAtom) {
+		List<Atom> neighbours = referenceAtom.getAtomNeighbours();
+		if (neighbours.size()!=3){
+			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric reference atom of carbohydrate");
+		}
+		Atom[] atomRefs4 = new Atom[4];
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement().equals("O")){
+				atomRefs4[0] = neighbour;
+			}
+			else if (neighbour.getElement().equals("C")){
+				if (neighbour.getAtomParity()!=null || neighbour.equals(anomericAtom)){//second condition allows support for glycero rings
+					atomRefs4[1] = neighbour;
+				}
+				else {
+					atomRefs4[2] = neighbour;
+				}
+			}
+			else{
+				throw new RuntimeException("OPSIN bug: Unexpected atom element type connected to for anomeric reference atom");
+			}
+		}
+		atomRefs4[3] = AtomParity.hydrogen;
+		for (Atom atom : atomRefs4) {
+			if (atom ==null){
+				throw new RuntimeException("OPSIN bug: Unable to determine atomRefs4 for anomeric reference atom");
+			}
+		}
+		return atomRefs4;
+	}
+
+	private Atom[] getDeterministicAtomRefs4ForAnomericAtom(Atom anomericAtom) {
+		List<Atom> neighbours = anomericAtom.getAtomNeighbours();
+		if (neighbours.size()!=3){
+			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric atom of carbohydrate");
+		}
+		Atom[] atomRefs4 = new Atom[4];
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement().equals("C")){
+				atomRefs4[0] = neighbour;
+			}
+			else if (neighbour.getElement().equals("O")){
+				int incomingVal =neighbour.getIncomingValency();
+				if (incomingVal ==1){
+					atomRefs4[1] = neighbour;
+				}
+				else if (incomingVal ==2){
+					atomRefs4[2] = neighbour;
+				}
+				else{
+					throw new RuntimeException("OPSIN bug: Unexpected valency on oxygen in carbohydrate");
+				}
+			}
+			else{
+				throw new RuntimeException("OPSIN bug: Unexpected atom element type connected to anomeric atom of carbohydrate");
+			}
+		}
+		atomRefs4[3] = AtomParity.hydrogen;
+		for (Atom atom : atomRefs4) {
+			if (atom ==null){
+				throw new RuntimeException("OPSIN bug: Unable to assign anomeric carbon stereochemistry on carbohydrate");
+			}
+		}
+		return atomRefs4;
 	}
 
 	/** Look for multipliers, and multiply out suffixes/unsaturators/heteroatoms/hydros.
