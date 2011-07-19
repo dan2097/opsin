@@ -48,9 +48,13 @@ class StereochemistryHandler {
 	void applyStereochemicalElements(List<Element> stereoChemistryEls) throws StructureBuildingException {
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
+		List<Element> carbohydrateStereoChemistryEls = new ArrayList<Element>();
 		for (Element stereoChemistryElement : stereoChemistryEls) {
 			if (stereoChemistryElement.getAttributeValue(LOCANT_ATR)!=null){
 				locantedStereoChemistryEls.add(stereoChemistryElement);
+			}
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)){
+				carbohydrateStereoChemistryEls.add(stereoChemistryElement);
 			}
 			else{
 				unlocantedStereoChemistryEls.add(stereoChemistryElement);
@@ -59,6 +63,9 @@ class StereochemistryHandler {
 		//perform locanted before unlocanted to avoid unlocanted elements using the stereocentres a locanted element refers to
 		for (Element stereochemistryEl : locantedStereoChemistryEls) {
 			matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+		}
+		if (!carbohydrateStereoChemistryEls.isEmpty()){
+			processCarbohydrateStereochemistry(carbohydrateStereoChemistryEls);
 		}
 		for (Element stereochemistryEl : unlocantedStereoChemistryEls) {
 			matchStereochemistryToAtomsAndBonds(stereochemistryEl);
@@ -109,6 +116,30 @@ class StereochemistryHandler {
 			throw new StructureBuildingException("Unsupported stereochemistry type: " +stereoChemistryType);
 		}
 		stereoChemistryEl.detach();
+	}
+
+	/**
+	 * Groups carbohydrateStereoChemistryEls by their parent element and
+	 * sends them for further processing
+	 * @param carbohydrateStereoChemistryEls
+	 * @throws StructureBuildingException 
+	 */
+	private void processCarbohydrateStereochemistry(List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {
+		Map<Element, List<Element>> groupToStereochemEls = new HashMap<Element, List<Element>>();
+		for (Element carbohydrateStereoChemistryEl : carbohydrateStereoChemistryEls) {
+			Element nextGroup = (Element) XOMTools.getNextSibling(carbohydrateStereoChemistryEl, GROUP_EL);
+			if (nextGroup ==null || !CARBOHYDRATECHAINLENGTH_TYPE_VAL.equals(nextGroup.getAttributeValue(TYPE_ATR))){
+				throw new RuntimeException("OPSIN bug: Could not find carbohydrate chain stem to apply stereochemistry to");
+			}
+			if (groupToStereochemEls.get(nextGroup)==null){
+				groupToStereochemEls.put(nextGroup, new ArrayList<Element>());
+			}
+			List<Element> stereochemistryEls = groupToStereochemEls.get(nextGroup);
+			stereochemistryEls.add(carbohydrateStereoChemistryEl);
+		}
+		for (Entry<Element, List<Element>> entry : groupToStereochemEls.entrySet()) {
+			assignCarbohydratePrefixStereochem(entry.getKey(), entry.getValue());
+		}
 	}
 
 	/**
@@ -737,6 +768,63 @@ class StereochemistryHandler {
 		}
 	}
 
+
+	/**
+	 * Applies carbohydate configurational prefixes to the appropriate carbohydrateStem
+	 * @param carbohydrateGroup 
+	 * @param carbohydrateStereoChemistryEls
+	 * @throws StructureBuildingException 
+	 */
+	private void assignCarbohydratePrefixStereochem(Element carbohydrateGroup, List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {;
+		Fragment carbohydrate = state.xmlFragmentMap.get(carbohydrateGroup);
+		Set<Atom> atoms = notExplicitlyDefinedStereoCentreMap.keySet();
+		List<Atom> stereocentresInCarbohydrate = new ArrayList<Atom>();
+		for (Atom atom : atoms) {
+			if (carbohydrate.getAtomByID(atom.getID())!=null){
+				stereocentresInCarbohydrate.add(atom);
+			}
+		}
+		//stereoconfiguration is specified from the farthest from C-1 to nearest to C-1
+		//but it is easier to set it the other way around hence this reverse
+		Collections.reverse(carbohydrateStereoChemistryEls);
+		List<String> stereocentreConfiguration = new ArrayList<String>();
+		for (Element carbohydrateStereoChemistryEl: carbohydrateStereoChemistryEls) {
+			String[] values = MATCH_SLASH.split(carbohydrateStereoChemistryEl.getAttributeValue(VALUE_ATR));
+			for (String value : values) {
+				stereocentreConfiguration.add(value);
+			}
+		}
+		
+		if (stereocentresInCarbohydrate.size() != stereocentreConfiguration.size()){
+			throw new StructureBuildingException("Disagreement between number of stereocentres on carbohydrate: " + stereocentresInCarbohydrate.size() + " and centres defined by configurational prefixes: " + stereocentreConfiguration.size());
+		}
+		Collections.sort(stereocentresInCarbohydrate, new FragmentTools.SortByLocants());
+		for (int i = 0; i < stereocentresInCarbohydrate.size(); i++) {
+			Atom stereoAtom =stereocentresInCarbohydrate.get(i);
+			String configuration = stereocentreConfiguration.get(i);
+			if (configuration.equals("r")){
+				AtomParity atomParity = stereoAtom.getAtomParity();
+				if (atomParity ==null){
+					throw new RuntimeException("OPSIN bug: stereochemistry was not defined on a carbohydrate stem, but it should been");
+				}
+				//do nothing, r by default
+			}
+			else if (configuration.equals("l")){
+				AtomParity atomParity = stereoAtom.getAtomParity();
+				if (atomParity ==null){
+					throw new RuntimeException("OPSIN bug: stereochemistry was not defined on a carbohydrate stem, but it should been");
+				}
+				atomParity.setParity(-atomParity.getParity());
+			}
+			else if (configuration.equals("?")){
+				stereoAtom.setAtomParity(null);
+			}
+			else{
+				throw new RuntimeException("OPSIN bug: unexpected carbohydrate stereochemistry configuration: " + configuration);
+			}
+			notExplicitlyDefinedStereoCentreMap.remove(stereoAtom);
+		}
+	}
 
 	static int swapsRequiredToSort(Atom[] atomRefs4){
 	  Atom[] atomRefs4Copy = atomRefs4.clone();

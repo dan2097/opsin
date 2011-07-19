@@ -291,8 +291,14 @@ class XmlDeclarations {
 	/**A locant enclosed in square brackets e.g. [5]*/
 	static final String BRACKETEDLOCANT_TYPE_VAL ="bracketedLocant";
 	
-	/**Indicates stereochemistry of a carbohydrate e.g. gluco*/
-	static final String CARBOHYDRATECONFIGURATIONALPREFIX_TYPE_VAL ="carbohydrateConfigurationalPrefix";
+	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hexose */
+	static final String CARBOHYDRATECHAINLENGTH_TYPE_VAL ="carbohydrateChainLength";
+	
+	/**This stereochemistry element specifies stereochemistry in a carbohydrate e.g. gluco is  r/l/r/r (position of hydroxy in a fischer projection)*/
+	static final String CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL ="carbohydrateConfigurationalPrefix";
+	
+	/**A carbohydrate which should have a suffix of some sort*/
+	static final String CARBOHYDRATESTEM_TYPE_VAL ="carbohydrateStem";
 	
 	/**Indicates the group should be acyclic*/
 	static final String CHAIN_TYPE_VAL ="chain";
