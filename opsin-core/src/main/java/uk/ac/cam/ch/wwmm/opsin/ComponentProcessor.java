@@ -134,13 +134,16 @@ class ComponentProcessor {
 				finalSubOrRootInWord = children.get(children.size()-1);
 			}
 		
+			for (Element subOrRoot : substituentsAndRoot) {
+				applyDLPrefixes(state, subOrRoot);
+				cycliseCarbohydrates(state, subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
+			}
+
 			for (Element subOrRootOrBracket : substituentsAndRootAndBrackets) {
 				determineLocantMeaning(state, subOrRootOrBracket, finalSubOrRootInWord);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
-				applyDLPrefixes(state, subOrRoot);
-				cycliseCarbohydrates(state, subOrRoot);//e.g. glucopyranose
 				processMultipliers(subOrRoot);
 				detectConjunctiveSuffixGroups(state, subOrRoot, groups);
 				matchLocantsToDirectFeatures(state, subOrRoot);
