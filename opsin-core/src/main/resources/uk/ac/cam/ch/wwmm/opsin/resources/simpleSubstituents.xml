@@ -255,7 +255,7 @@
 		<token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
 		<token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
 
-		<token value="-[P|5](=O)(O)O" labels="none" valType="SMILES">phosphono</token>
+		<token value="-[P|5](=O)(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphono</token>
 		<token value="-[P|5](=O)([O-])[O-]" labels="none" valType="SMILES">phosphonato</token>
 		<token value="-[P|5](=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the ComponentGenerator-->
 		<token value="-[P|5]=N" labels="none" valType="SMILES">phosphinimyl</token>
@@ -266,7 +266,7 @@
 		<token value="=[P|5]=S" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinothioylidene</token>
 		<token value="=P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphinidene</token>
 
-		<token value="-[As|5](=O)(O)O" labels="none" valType="SMILES">arsono</token>
+		<token value="-[As|5](=O)(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsono</token>
 		<token value="-[As|5](=O)([O-])[O-]" labels="none" valType="SMILES">arsonato</token>
 		<token value="-[As|5](=O)=O" labels="none" valType="SMILES">arso</token>
 		<token value="-[As|5]=N" labels="none" valType="SMILES">arsinimyl</token>
@@ -278,7 +278,7 @@
 		<token value="=[As|5]=S" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinothioylidene</token>
 		<token value="=[AsH]" labels="none" valType="SMILES" usableAsAJoiner="yes">arsinidene</token>
 
-		<token value="-[Sb|5](=O)(O)O" labels="none" valType="SMILES">stibono</token>
+		<token value="-[Sb|5](=O)(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes">stibono</token>
 		<token value="-[Sb|5](=O)([O-])[O-]" labels="none" valType="SMILES">stibonato</token>
 		<token value="-[Sb|5](=O)=O" labels="none" valType="SMILES">stibo</token>
 		<token value="-[Sb]=O" labels="none" valType="SMILES">stiboso</token>
