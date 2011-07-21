@@ -1392,7 +1392,7 @@ class StructureBuildingMethods {
 		}
 		Atom chalcogenAtom2 = bridgingFragment.getOutAtom(0).getAtom();
 		bridgingFragment.removeOutAtom(0);
-		if (firstAtomToJoinTo == secondAtomToJoinTo){
+		if (chalcogenAtom1.equals(chalcogenAtom2) && firstAtomToJoinTo == secondAtomToJoinTo){
 			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
 		}
 		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
