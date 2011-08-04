@@ -24,7 +24,7 @@
     <token value="NC(=[Se])NN" labels="4/3//2/1" valType="SMILES">selenosemicarbazone</token>
     <token value="NC(=[Te])NN" labels="4/3//2/1" valType="SMILES">tellurosemicarbazone</token>
     <token value="N" labels="N" valType="SMILES">imide</token>
-    <token value="N" labels="N" valType="SMILES">imine</token><!--only for use with quinones-->
+    <token value="N" labels="N" valType="SMILES">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
 
     <token value="[NH2-]" labels="none" valType="SMILES">amide</token>
     <token value="NN" labels="1/2" valType="SMILES">hydrazide</token>
