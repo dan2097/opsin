@@ -181,9 +181,13 @@
     <token value="CC=C(C)C" labels="none" valType="SMILES">seneci</token><!--unknown-->
     <token value="CC(O)C(O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">tartar</token><!--unknown-->
     <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">l-tartar</token><!--unknown-->
-    <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">levotartar</token><!--unknown-->
+    <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">l(+)-tartar</token><!--unknown-->
+    <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">l-(+)-tartar</token><!--unknown-->
+    <token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">dextrotartar</token><!--unknown-->
     <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">d-tartar</token><!--unknown-->
-    <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">dextrotartar</token><!--unknown-->
+    <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">d(-)-tartar</token><!--unknown-->
+    <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">d-(-)-tartar</token><!--unknown-->
+    <token value="C[C@@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">levotartar</token><!--unknown-->
     <token value="C[C@H](O)[C@H](O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">mesotartar</token><!--unknown-->
     <token value="CC(O)C" suffixAppliesTo="1,4" labels="none" valType="SMILES">tartron</token><!--unknown-->
 		<token value="C\C(C)=C\C" labels="none" valType="SMILES">tigl</token><!--both-->
