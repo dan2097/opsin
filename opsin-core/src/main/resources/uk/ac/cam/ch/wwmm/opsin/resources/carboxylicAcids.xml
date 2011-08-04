@@ -60,6 +60,7 @@
     <token value="CCO" labels="1/2/" valType="SMILES">glycol</token>
     <token value="CCOCC" labels="none" valType="SMILES" suffixAppliesTo="1,5">diglycol</token>
     <token value="CC=O" labels="1/2/" valType="SMILES">glyoxyl</token>
+    <token value="CC=O" labels="1/2/" valType="SMILES">glyoxal</token>
     <token value="CCNC(=O)c1ccccc1" labels="/////1/2,ortho/3,meta/4,para/5/6" valType="SMILES">hippur</token>
     <token value="CCCO" valType="SMILES">hydracryl</token>
     <token value="N1CCC(C)CC1" labels="1/2/3/4//5/6" valType="SMILES" suffixAppliesTo="5">isonipecot</token>
@@ -111,6 +112,7 @@
     <token value="Cc1c(O)ccc(O)c1" labels="/1/2//3/4/5//6" valType="SMILES">gentis</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ghedd</token>
     <token value="CC(O)CO" labels="none" valType="SMILES">glycer</token>
+    <token value="CC1CO1" labels="none" valType="SMILES">glycid</token>
     <token value="CCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">gondo</token>
     <token value="CCc1cc(OC)c(O)cc1" labels="//1/2,ortho/3,meta///4,para//5/6" valType="SMILES">homovanill</token>
     <token value="CCc1cc(OC)c(OC)cc1" labels="//1/2,ortho/3,meta///4,para///5/6" valType="SMILES">homoveratr</token>

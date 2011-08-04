@@ -53,6 +53,12 @@
 		<token value="O=CCc1cc(O)c(OC)cc1" labels="///1/2/3//4///5/6" valType="SMILES">homoisovanillin</token>
 		<token value="O=CCc1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6" valType="SMILES">homovanillin</token>
 		<token value="O=CCc1c(O)c(OC)ccc1" labels="///1/2//3///4/5/6" valType="SMILES">o-homovanillin</token>
+		<token value="c1(c(N)cccc1)C(=O)C(=O)O" labels="1/2//3/4/5/6/////" valType="SMILES" functionalIDs="12">isatic</token>
+		<token value="c1(c(N)cccc1)C(=O)C(=O)O" labels="1/2//3/4/5/6/////" valType="SMILES" functionalIDs="12">isaticacid</token>
+		<token value="c1(c(N)cccc1)C(=O)C(=O)O" labels="1/2//3/4/5/6/////" valType="SMILES" functionalIDs="12">isatic acid</token>
+		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" valType="SMILES" functionalIDs="4,9">isatoic</token>
+		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" valType="SMILES" functionalIDs="4,9">isatoicacid</token>
+		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" valType="SMILES" functionalIDs="4,9">isatoic acid</token>
 		<token value="COc1c(OC)c(OC)cc(C=CC)c1" labels="none" valType="SMILES">isoelemicin</token>
 		<token value="c1(c(O)ccc(C=CC)c1)OC" labels="1/2,ortho//3,meta/4,para/5////6//alpha" valType="SMILES">isoeugenol</token>
     <token value="OCc1cc(CO)ccc1" labels="//1/2,ortho/3,meta///4,para/5/6" valType="SMILES">isophthalyl alcohol</token>

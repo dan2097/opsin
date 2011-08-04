@@ -221,12 +221,14 @@
 		<token value="-Cl=O" labels="none" valType="SMILES">chlorosyl</token>
 		<token value="-Cl=O" labels="none" valType="SMILES">chloroso</token><!--deprecated-->
 		<token value="-I=O" labels="none" valType="SMILES">iodosyl</token>
+		<token value="-I=O" labels="none" valType="SMILES">iodoso</token><!--deprecated-->
 
 		<token value="-[F|5](=O)(=O)" labels="none" valType="SMILES">fluoryl</token>
 		<token value="-Br(=O)(=O)" labels="none" valType="SMILES">bromyl</token>
 		<token value="-Cl(=O)(=O)" labels="none" valType="SMILES">chloryl</token>
 		<token value="-Cl(=O)(=O)" labels="none" valType="SMILES">chloroxy</token><!--deprecated-->
 		<token value="-I(=O)(=O)" labels="none" valType="SMILES">iodyl</token>
+		<token value="-I(=O)(=O)" labels="none" valType="SMILES">iodoxy</token><!--deprecated-->
 
 		<token value="-[F|7](=O)(=O)(=O)" labels="none" valType="SMILES">perfluoryl</token>
 		<token value="-Br(=O)(=O)(=O)" labels="none" valType="SMILES">perbromyl</token>
