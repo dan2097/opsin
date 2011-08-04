@@ -37,6 +37,7 @@
 		<token value="CCCC[O-]" labels="1/2/3/4/" valType="SMILES">butoxide</token>
 		<token value="CCCC[O+]" labels="1/2/3/4/" valType="SMILES">butoxylium</token>
 		<token value="NCCCCCN" labels="/1/2/3/4/5/" valType="SMILES">cadaverine</token>
+		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" valType="SMILES">camphor</token>
 		<token value="[O-]C(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
 		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
 		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
@@ -69,6 +70,8 @@
 		<token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanicacid</token>
 		<token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic acid</token>
 		<token value="N#CC#N" labels="none" valType="SMILES">cyanogen</token>
+		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">cyanuric acid</token>
+		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">cyanuricacid</token>
 		<token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
 		<token value="O=P(OC)(OC=C(Cl)Cl)OC" labels="none" valType="SMILES">dichlorvos</token>
 		<token value="N#CC#N" labels="none" valType="SMILES">dicyan</token>
@@ -103,6 +106,7 @@
 		<token value="[Sb-](F)(F)(F)(F)(F)F" labels="none" valType="SMILES">hexafluoroantimonate</token>
 		<token value="[P-](F)(F)(F)(F)(F)F" labels="none" valType="SMILES">hexafluorophosphate</token>
 		<token value="O=P(N(C)C)(N(C)C)N(C)C" labels="none" valType="SMILES">hexametapol</token>
+		<token value="C[Si]([N-][Si](C)(C)C)(C)C" labels="none" valType="SMILES">hexamethyldisilazide</token>
 		<token value="[OH-]" labels="none" valType="SMILES">hydroxide</token>
 		<token value="[OH+]" labels="none" valType="SMILES">hydroxylium</token>
 		<token value="[OH+]O" labels="none" valType="SMILES">hydroperoxylium</token>
@@ -123,6 +127,8 @@
 		<token value="N=C=[Te]" labels="none" valType="SMILES" functionalIDs="1">isotellurocyanic</token>
 		<token value="N=C=[Te]" labels="none" valType="SMILES" functionalIDs="1">isotellurocyanicacid</token>
 		<token value="N=C=[Te]" labels="none" valType="SMILES" functionalIDs="1">isotellurocyanic acid</token>
+		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">isocyanuric acid</token>
+		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">isocyanuricacid</token>
 		<token value="CC([O-])C" labels="none" valType="SMILES">isopropoxide</token>
 		<token value="NC([SeH])=N" labels="1//2/3" valType="SMILES">isoselenourea</token>
 		<token value="NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazide</token>
