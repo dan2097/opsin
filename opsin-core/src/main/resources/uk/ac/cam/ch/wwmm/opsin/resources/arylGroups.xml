@@ -274,6 +274,7 @@
 		<token value="C1=CC=CC=2[SiH]=C3C=CC=CC3=[SiH]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthren</token>
 		<token value="N1cc(C)c2ccccc12" labels="1/2/3//3a/4/5/6/7/7a" valType="SMILES">skatol</token>
 		<token value="c1(ccccc1)C=Cc2ccccc2" labels="1/2/3/4/5/6/alpha/beta/1'/2'/3'/4'/5'/6'" valType="SMILES">stilben</token>
+		<token value="S1(=O)(=O)CCCC1" labels="1///2/3/4/5" valType="SMILES">sulfolan</token>
 		<token value="C=Cc1ccccc1" labels="beta/alpha/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">styren</token>
 		<token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenanthren</token>
 		<token value="[se]1cccc1" valType="SMILES">selenophen</token>

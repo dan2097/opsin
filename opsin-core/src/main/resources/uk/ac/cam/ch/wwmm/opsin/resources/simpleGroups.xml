@@ -180,6 +180,7 @@
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorous oxychloride</token><!--variant spelling-->
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorusoxychloride</token>
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorousoxychloride</token>
+		<token value="P12(=S)SP3(=S)SP(=S)(S1)SP(=S)(S2)S3" labels="none" valType="SMILES">phosphorus pentasulfide</token>
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO" labels="none" valType="SMILES">phytol</token>
 		<token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
 		<token value="CC(C(C)(C)C)=O" labels="none" valType="SMILES">pinacolone</token>
