@@ -147,11 +147,11 @@ public final class StringTools {
             case '\u00B1': return "+-";//plus minus symbol
             case '\u2213': return "-+";
             
-            case '\u00C6': return "ae";//common ligatures
+            case '\u00C6': return "AE";//common ligatures
             case '\u00E6': return "ae";
-            case '\u0152': return "oe";
+            case '\u0152': return "OE";
             case '\u0153': return "oe";
-            case '\u0132': return "ij";
+            case '\u0132': return "IJ";
             case '\u0133': return "ij";
             case '\u1D6B': return "ue";
             case '\uFB00': return "ff";
@@ -161,7 +161,61 @@ public final class StringTools {
             case '\uFB04': return "ffl";
             case '\uFB06': return "st";
             
-            case '\u00E9': return "e";//diacritics
+            case '\u00E0': return "a";//diacritics
+            case '\u00C0': return "A";
+            case '\u00E1': return "a";
+            case '\u00C1': return "A";
+            case '\u00E2': return "a";
+            case '\u00C2': return "A";
+            case '\u00E3': return "a";
+            case '\u00C3': return "A";
+            case '\u00E4': return "a";
+            case '\u00C4': return "A";
+            case '\u00E5': return "a";
+            case '\u00C5': return "A";
+            case '\u00E7': return "c";
+            case '\u00C7': return "C";
+            case '\u00E8': return "e";
+            case '\u00C8': return "E";
+            case '\u00E9': return "e";
+            case '\u00C9': return "E";
+            case '\u00EA': return "e";
+            case '\u00CA': return "E";
+            case '\u00EB': return "e";
+            case '\u00CB': return "E";
+            case '\u00EC': return "i";
+            case '\u00CC': return "I";
+            case '\u00ED': return "i";
+            case '\u00CD': return "I";
+            case '\u00EE': return "i";
+            case '\u00CE': return "I";
+            case '\u00EF': return "i";
+            case '\u00CF': return "I";
+            case '\u00F2': return "o";
+            case '\u00D2': return "O";
+            case '\u00F3': return "o";
+            case '\u00D3': return "O";
+            case '\u00F4': return "o";
+            case '\u00D4': return "O";
+            case '\u00F5': return "o";
+            case '\u00D5': return "O";
+            case '\u00F6': return "o";
+            case '\u00D6': return "O";
+            case '\u00F9': return "u";
+            case '\u00D9': return "U";
+            case '\u00FA': return "u";
+            case '\u00DA': return "U";
+            case '\u00FB': return "u";
+            case '\u00DB': return "U";
+            case '\u00FC': return "u";
+            case '\u00DC': return "U";
+            case '\u00FD': return "y";
+            case '\u00DD': return "Y";
+
+            case '\u0115': return "e";
+            case '\u0114': return "E";
+            case '\u0117': return "e";
+            case '\u0116': return "E";
             
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
