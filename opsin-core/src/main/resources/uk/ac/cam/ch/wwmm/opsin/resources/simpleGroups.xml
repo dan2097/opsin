@@ -75,7 +75,7 @@
 		<token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
 		<token value="O=P(OC)(OC=C(Cl)Cl)OC" labels="none" valType="SMILES">dichlorvos</token>
 		<token value="N#CC#N" labels="none" valType="SMILES">dicyan</token>
-		<token value="N(C#N)C#N" labels="none" valType="SMILES">dicyanamide</token>
+		<token value="[N-](C#N)C#N" labels="none" valType="SMILES">dicyanamide</token>
 		<token value="N(CCO)CCO" labels="none" valType="SMILES">diethanolamine</token>
 		<token value="OCC(S)CS" labels="none" valType="SMILES">dimercaprol</token>
 		<token value="COCCOCCOC" labels="none" valType="SMILES">diglyme</token>
