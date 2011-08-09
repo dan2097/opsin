@@ -95,15 +95,13 @@ class StereoAnalyser {
 		List<Atom> getOrderedStereoAtoms() throws StructureBuildingException {
 			Atom a1 = bond.getFromAtom();
 			Atom a2 = bond.getToAtom();
-			List<Atom> cipOrderedNeighbours1 = cipSequenceRules.getNeighbouringAtomsInCIPOrder(a1);
-			List<Atom> cipOrderedNeighbours2 = cipSequenceRules.getNeighbouringAtomsInCIPOrder(a2);
-			cipOrderedNeighbours1.remove(a2);
-			cipOrderedNeighbours2.remove(a1);
+			List<Atom> cipOrdered1 = cipSequenceRules.getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a1, a2);
+			List<Atom> cipOrdered2 = cipSequenceRules.getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a2, a1);
 			List<Atom> stereoAtoms = new ArrayList<Atom>();
-			stereoAtoms.add(cipOrderedNeighbours1.get(cipOrderedNeighbours1.size()-1));//highest CIP adjacent to a1
+			stereoAtoms.add(cipOrdered1.get(cipOrdered1.size()-1));//highest CIP adjacent to a1
 			stereoAtoms.add(a1);
 			stereoAtoms.add(a2);
-			stereoAtoms.add(cipOrderedNeighbours2.get(cipOrderedNeighbours2.size()-1));//highest CIP adjacent to a2
+			stereoAtoms.add(cipOrdered2.get(cipOrdered2.size()-1));//highest CIP adjacent to a2
 			return stereoAtoms;
 		}
 	}
