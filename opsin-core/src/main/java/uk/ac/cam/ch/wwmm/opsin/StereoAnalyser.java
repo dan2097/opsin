@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Map.Entry;
 
 /**
  * Identifies stereocentres and determines the CIP order of connected atoms
@@ -43,16 +44,30 @@ class StereoAnalyser {
 	 */
 	class StereoCentre{
 		private final Atom stereoAtom;
+		private final boolean trueStereoCentre;
+
 		/**
 		 * Creates a stereocentre object from a tetrahedral stereocentre atom
 		 * @param stereoAtom
 		 */
-		StereoCentre(Atom stereoAtom) {
+		StereoCentre(Atom stereoAtom, Boolean isTrueStereoCentre) {
 			this.stereoAtom = stereoAtom;
+			this.trueStereoCentre = isTrueStereoCentre;
 		}
+
 		Atom getStereoAtom() {
 			return stereoAtom;
 		}
+		
+		/**
+		 * Does this atom have 4 constitutionally different groups (or 3 and a lone pair)
+		 * or is it only a stereo centre due to the presence of other centres in the molecule
+		 * @return
+		 */
+		boolean isTrueStereoCentre() {
+			return trueStereoCentre;
+		}
+
 		List<Atom> getCipOrderedAtoms() throws StructureBuildingException {
 			List<Atom> cipOrderedAtoms = getNeighbouringAtomsInCIPOrder(stereoAtom);
 			if (cipOrderedAtoms.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
@@ -324,34 +339,143 @@ class StereoAnalyser {
 	 * @return List<StereoCentre>
 	 */
 	List<StereoCentre> findStereoCentres(){
-		List<Atom> atomList = molecule.getAtomList();
+		List<Atom> potentialStereoAtoms = getPotentialStereoCentres();
+		List<Atom> trueStereoCentres = new ArrayList<Atom>();
+		for (Atom potentialStereoAtom : potentialStereoAtoms) {
+			if (isTrueStereCentre(potentialStereoAtom)){
+				trueStereoCentres.add(potentialStereoAtom);
+			}
+		}
 		List<StereoCentre> stereoCentres = new ArrayList<StereoCentre>();
+		for (Atom trueStereoCentreAtom : trueStereoCentres) {
+			stereoCentres.add(new StereoCentre(trueStereoCentreAtom, true));
+		}
+
+//		potentialStereoAtoms.removeAll(trueStereoCentres);
+//		List<Atom> paraStereoCentres = findParaStereoCentres(potentialStereoAtoms, trueStereoCentres);
+//		for (Atom paraStereoCentreAtom : paraStereoCentres) {
+//			stereoCentres.add(new StereoCentre(paraStereoCentreAtom, false));
+//		}
+		return stereoCentres;
+	}
+
+	/**
+	 * Retrieves atoms that pass the isPossiblyStereogenic() criteria
+	 * @return
+	 */
+	private List<Atom> getPotentialStereoCentres() {
+		List<Atom> atomList = molecule.getAtomList();
+		List<Atom> potentialStereoAtoms = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
-			List<Atom> neighbours = atom.getAtomNeighbours();
 			if (isPossiblyStereogenic(atom)){
+				potentialStereoAtoms.add(atom);
+			}
+		}
+		return potentialStereoAtoms;
+	}
+	
+	/**
+	 * Checks whether the atom has 3 or 4 neighbours all of which are constitutionally different
+	 * @param potentialStereoAtom
+	 * @return
+	 */
+	private boolean isTrueStereCentre(Atom potentialStereoAtom) {
+		List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
+		if (neighbours.size()!=3 && neighbours.size()!=4){
+			return false;
+		}
+		int[] colours = new int[4];
+		for (int i = neighbours.size() -1 ; i >=0; i--) {
+			colours[i] = mappingToColour.get(neighbours.get(i));
+		}
+		
+		boolean foundIdenticalNeighbour =false;
+		for (int i = 0; i < 4; i++) {
+			int cl = colours[i];
+			for (int j = i +1; j < 4; j++) {
+				if (cl == colours[j]){
+					foundIdenticalNeighbour =true;
+					break;
+				}
+			}
+		}
+		return !foundIdenticalNeighbour;
+	}
+	
+	/**
+	 * Finds a subset of the stereocentres associated with rule 2 from:
+	 * DOI: 10.1021/ci00016a003
+	 * @param potentialStereoAtoms
+	 * @param trueStereoCentres 
+	 */
+	private List<Atom> findParaStereoCentres(List<Atom> potentialStereoAtoms, List<Atom> trueStereoCentres) {
+		List<Atom> paraStereoCentres = new ArrayList<Atom>();
+		for (Atom potentialStereoAtom : potentialStereoAtoms) {
+			List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
+			if (neighbours.size()==4){
 				int[] colours = new int[4];
 				for (int i = neighbours.size() -1 ; i >=0; i--) {
 					colours[i] = mappingToColour.get(neighbours.get(i));
 				}
-				
-				boolean foundIdenticalNeighbour =false;
+				Map<Integer, Integer> foundPairs = new HashMap<Integer, Integer>();
 				for (int i = 0; i < 4; i++) {
 					int cl = colours[i];
 					for (int j = i +1; j < 4; j++) {
 						if (cl == colours[j]){
-							foundIdenticalNeighbour =true;
-							break;
+							foundPairs.put(i, j);
 						}
 					}
 				}
-				if (!foundIdenticalNeighbour){
-					stereoCentres.add(new StereoCentre(atom));
+				int pairs = foundPairs.keySet().size();
+				if (pairs==1 || pairs==2){
+					for (Entry<Integer, Integer> entry: foundPairs.entrySet()) {
+						if (branchesHaveTrueStereocentre(neighbours.get(entry.getKey()), neighbours.get(entry.getValue()), potentialStereoAtom, trueStereoCentres)){
+							paraStereoCentres.add(potentialStereoAtom);
+						}
+					}
 				}
 			}
 		}
-		return stereoCentres;
+		return paraStereoCentres;
 	}
-	
+
+
+	private boolean branchesHaveTrueStereocentre(Atom branchAtom1, Atom branchAtom2, Atom potentialStereoAtom, List<Atom> trueStereoCentres) {
+		List<Atom> atomsToVisit= new ArrayList<Atom>();
+		Set<Atom> visitedAtoms = new HashSet<Atom>();
+		visitedAtoms.add(potentialStereoAtom);
+		atomsToVisit.add(branchAtom1);
+		atomsToVisit.add(branchAtom2);
+		while(!atomsToVisit.isEmpty()){
+			List<Atom> newAtomsToVisit = new ArrayList<Atom>();
+			while(!atomsToVisit.isEmpty()){
+				Atom atom = atomsToVisit.remove(0);
+				if (trueStereoCentres.contains(atom)){
+					return true;
+				}
+				if (atomsToVisit.contains(atom)){//the two branches have converged on this atom, don't investigate neighbours of it
+					do{
+						atomsToVisit.remove(atom);
+					}
+					while (atomsToVisit.contains(atom));
+					continue;
+				}
+				else{
+					List<Atom> neighbours = atom.getAtomNeighbours();
+					for (Atom neighbour : neighbours) {
+						if (visitedAtoms.contains(neighbour)){
+							continue;
+						}
+						newAtomsToVisit.add(neighbour);
+					}
+				}
+				visitedAtoms.add(atom);
+			}
+			atomsToVisit = newAtomsToVisit;
+		}
+		return false;
+	}
+
 	/**
 	 * Checks whether an atom could be a tetrahedral stereocentre by checking that it is both tetrahedral
 	 * and does not have neighbours that are identical due to resonance/tautomerism
