@@ -128,6 +128,23 @@ public class CipSequenceRules {
 		removeGhostAtoms();
 		return neighbours;
 	}
+	
+	/**
+	 * Returns the given atoms neighbours, with the exception of the given atom, in CIP order from lowest priority to highest priority
+	 * @param chiralAtom
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom chiralAtom, Atom neighbourToIgnore) throws StructureBuildingException{
+		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
+		if (!neighbours.remove(neighbourToIgnore)){
+			throw new RuntimeException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
+		}
+		addGhostAtomsForCIPAssignment(chiralAtom);
+		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+		removeGhostAtoms();
+		return neighbours;
+	}
 
 	/**
 	 * Holds information about what atoms to try next next, how those atoms are reached (to prevent immediate back tracking and to detect cycles)
