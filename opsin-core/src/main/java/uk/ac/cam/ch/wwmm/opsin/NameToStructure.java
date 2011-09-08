@@ -289,7 +289,7 @@ public class NameToStructure {
 	}
 
 	private static void interactiveCmlOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException, NameToStructureException {
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		StreamSerializer serializer = new StreamSerializer(System.out);
 		serializer.setIndent(2);
 		serializer.writeXMLDeclaration();
@@ -327,7 +327,7 @@ public class NameToStructure {
 	}
 	
 	private static void interactiveSmilesOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException, NameToStructureException {
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		String name = stdinReader.readLine();
 		while(name !=null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
@@ -346,7 +346,7 @@ public class NameToStructure {
 	
 	@SuppressWarnings("unchecked")
 	private static void interactiveInchiOutput(NameToStructure nts, NameToStructureConfig n2sconfig, boolean produceStdInChI) throws Exception {
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		Class c;
 		try {
 			c = Class.forName("uk.ac.cam.ch.wwmm.opsin.NameToInchi");
