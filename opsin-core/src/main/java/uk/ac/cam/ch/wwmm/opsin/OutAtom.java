@@ -26,7 +26,7 @@ class OutAtom {
 		this.atom = atom;
 		this.valency = valency;
 		this.setExplicitly = setExplicitly;
-		this.locant = null;
+		this.locant = locant;
 		if (setExplicitly){
 			atom.addOutValency(valency);
 		}

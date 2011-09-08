@@ -436,6 +436,9 @@ class FragmentManager {
 		}
         for (OutAtom outAtom : outAtoms) {
             newFragment.addOutAtom(oldToNewAtomMap.get(outAtom.getAtom()), outAtom.getValency(), outAtom.isSetExplicitly());
+            if (outAtom.getLocant() !=null){
+            	newFragment.getOutAtom(newFragment.getOutAtoms().size() -1).setLocant(outAtom.getLocant() + StringTools.multiplyString("'", primesToAdd) );
+            }
         }
 		for (FunctionalAtom functionalAtom : functionalAtoms) {
 			newFragment.addFunctionalAtom(oldToNewAtomMap.get(functionalAtom.getAtom()));
