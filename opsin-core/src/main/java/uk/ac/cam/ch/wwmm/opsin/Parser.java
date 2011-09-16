@@ -173,8 +173,8 @@ class Parser {
 					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating addition parses step");
 				}
 				
-				pw.setWordType(OpsinTools.determineWordType(pw.getParseTokens().get(0).getAnnotations()));
-				word.addAttribute(new Attribute(TYPE_ATR, pw.getWordType().toString()));
+				WordType wordType = OpsinTools.determineWordType(pw.getParseTokens().get(0).getAnnotations());
+				word.addAttribute(new Attribute(TYPE_ATR, wordType.toString()));
 				if (pw.getWord().startsWith("-")){//we want -acid to be the same as acid
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord().substring(1)));
 				}
@@ -334,10 +334,11 @@ class Parser {
             }
             annotPos++;
         }
-		if(pw.getWordType() == WordType.full) {
+        WordType wordType = WordType.valueOf(wordEl.getAttributeValue(TYPE_ATR));
+		if(wordType == WordType.full) {
 			chunk.setLocalName(ROOT_EL);
 		}
-		else if(pw.getWordType() == WordType.functionalTerm) {
+		else if(wordType == WordType.functionalTerm) {
 			chunk.setLocalName(FUNCTIONALTERM_EL);
 		}
 	}

@@ -154,7 +154,7 @@ class Tokeniser {
 
 	private boolean fixWord(TokenizationResult result, String parsedName, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		Matcher m = matchCompoundWithPhrase.matcher(result.getWorkingName());
-		if (m.lookingAt()) {
+		if (m.lookingAt() && lastParsedWordWasFullOrFunctionalTerm(result)) {
 			result.setUnparsedName(parsedName + result.getWorkingName().substring(m.group().length()));
 		} else if (matchCasCollectiveIndex.matcher(result.getWorkingName()).matches()) {
 			result.setUnparsedName(parsedName);
@@ -176,6 +176,20 @@ class Tokeniser {
 			}
 		}
 		return true;
+	}
+
+	private boolean lastParsedWordWasFullOrFunctionalTerm(TokenizationResult result) throws ParsingException {
+		List<ParseWord> parseWords = result.getParse().getWords();
+		if (parseWords.size()>0){
+			List<ParseTokens> parseTokensList = parseWords.get(parseWords.size()-1).getParseTokens();
+			for (ParseTokens parseTokens : parseTokensList) {
+				WordType type = OpsinTools.determineWordType(parseTokens.getAnnotations());
+				if (type.equals(WordType.full) || type.equals(WordType.functionalTerm)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private boolean fixWordInReverse(TokenizationResult result, String parsedName, boolean allowRemovalOfWhiteSpace) {
