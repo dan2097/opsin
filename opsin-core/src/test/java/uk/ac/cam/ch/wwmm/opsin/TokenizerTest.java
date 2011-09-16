@@ -165,6 +165,26 @@ public class TokenizerTest {
 	}
 	
 	@Test
+	public void compoundWithValidUse() throws ParsingException{
+		TokenizationResult result =tokenizer.tokenize("benzene compound with toluene", true);
+		assertEquals(true, result.isSuccessfullyTokenized());
+		TokenizationResult result2 =tokenizer.tokenize("benzene and toluene", true);
+		assertEquals(true, result2.isSuccessfullyTokenized());
+	}
+
+	@Test
+	public void compoundWithInvalidUse1() throws ParsingException{
+		TokenizationResult result =tokenizer.tokenize("ethyl and toluene", true);
+		assertEquals(false, result.isSuccessfullyTokenized());
+	}
+
+	@Test
+	public void compoundWithInvalidUse2() throws ParsingException{
+		TokenizationResult result =tokenizer.tokenize("and benzene", true);
+		assertEquals(false, result.isSuccessfullyTokenized());
+	}
+	
+	@Test
 	public void CCCP() throws ParsingException{
 		TokenizationResult result = tokenizer.tokenize("Carbonyl cyanide m-chlorophenyl oxime", true);
 		assertEquals(true, result.isSuccessfullyTokenized());

@@ -13,13 +13,9 @@ class ParseWord {
 	private final String word;
 	/**All of the possible tokenisations of the word.*/
 	private List<ParseTokens> parseTokens;
-	/**The type of word - full, substituent or functionalGroup*/
-	private WordType wordType = null;
 
 	ParseWord deepCopy() {
-		ParseWord pw = new ParseWord(word, parseTokens);
-		pw.wordType = wordType;
-		return pw;
+		return new ParseWord(word, parseTokens);
 	}
 	
 	ParseWord(String word, List<ParseTokens> parseTokens) {
@@ -30,14 +26,6 @@ class ParseWord {
 		else{
 			this.parseTokens =  new ArrayList<ParseTokens>(parseTokens);
 		}
-	}
-	
-	WordType getWordType() {
-		return wordType;
-	}
-
-	void setWordType(WordType wordType) {
-		this.wordType = wordType;
 	}
 
 	String getWord() {
@@ -53,7 +41,7 @@ class ParseWord {
 	}
 
 	public String toString() {
-		return "[" + word + ", " + wordType + ", " + parseTokens.toString() + "]";
+		return "[" + word + ", " + parseTokens.toString() + "]";
 	}
 
 }
