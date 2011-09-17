@@ -1867,6 +1867,14 @@ class ComponentGenerator {
 	 */
 	private void handleGroupIrregularities(Element group) throws ComponentGenerationException {
 		String groupValue =group.getValue();
+		
+		if (group.getAttribute(FUNCTIONALIDS_ATR) !=null && (groupValue.endsWith("ic") || groupValue.endsWith("ous"))){
+			Node next = XOMTools.getNext(group);
+			if (next == null){
+				throw new ComponentGenerationException("\"acid\" not found after " +groupValue);
+			}
+		}
+		
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {

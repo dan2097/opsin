@@ -38,6 +38,9 @@
 		<token value="CCCC[O+]" labels="1/2/3/4/" valType="SMILES">butoxylium</token>
 		<token value="NCCCCCN" labels="/1/2/3/4/5/" valType="SMILES">cadaverine</token>
 		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" valType="SMILES">camphor</token>
+		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" valType="SMILES" addGroup="S(=O)(=O)O locant10" frontLocantsExpected="3,4,5,6,8,9,10" functionalIDs="15">camphorsulfonic</token>
+		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" valType="SMILES" addGroup="S(=O)(=O)O locant10" frontLocantsExpected="3,4,5,6,8,9,10" functionalIDs="15">camphorsulfonicacid</token>
+		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" valType="SMILES" addGroup="S(=O)(=O)O locant10" frontLocantsExpected="3,4,5,6,8,9,10" functionalIDs="15">camphorsulfonic acid</token>
 		<token value="[O-]C(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">caprate</token>
 		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capric</token>
 		<token value="OC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" valType="SMILES" functionalIDs="1">capricacid</token>
