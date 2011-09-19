@@ -8,6 +8,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  */
 enum WordType{
 	full,
+	polymer,
 	substituent,
 	functionalTerm,
 }

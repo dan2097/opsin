@@ -114,14 +114,14 @@ class WordRules {
 	 */
 	static class WordRuleDescription {
 		private final List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
-		private final String ruleName;
-		private final String ruleType;
+		private final WordRule ruleName;
+		private final WordType ruleType;
 
-		String getRuleName() {
+		WordRule getRuleName() {
 			return ruleName;
 		}
 
-		String getRuleType() {
+		WordType getRuleType() {
 			return ruleType;
 		}
 
@@ -130,8 +130,8 @@ class WordRules {
 		 * @param wordRuleEl
 		 */
 		WordRuleDescription(Element wordRuleEl) {
-			ruleName =wordRuleEl.getAttributeValue("name");
-			ruleType =wordRuleEl.getAttributeValue("type");
+			ruleName = WordRule.valueOf(wordRuleEl.getAttributeValue("name"));
+			ruleType = WordType.valueOf(wordRuleEl.getAttributeValue("type"));
 			Elements words = wordRuleEl.getChildElements();
 			for (int i = 0; i < words.size(); i++) {
 				Element word = words.get(i);
@@ -200,13 +200,13 @@ class WordRules {
 	}
 
 	private boolean matchWordRule(NameToStructureConfig n2sConfig, List<Element> wordEls, int indexOfFirstWord, boolean allowSpaceRemoval) throws ParsingException {
-		wordRuleLoop: for (WordRuleDescription wordRule : wordRuleList) {
+		wordRuleLoop: for (WordRuleDescription wordRuleDesc : wordRuleList) {
 			int i =indexOfFirstWord;
-			int wordsInWordRule = wordRule.wordDescriptions.size();
+			int wordsInWordRule = wordRuleDesc.wordDescriptions.size();
 			if (i + wordsInWordRule -1 < wordEls.size()){//need sufficient words to match the word rule
 				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.get(i+j);
-					WordDescription wd = wordRule.wordDescriptions.get(j);
+					WordDescription wd = wordRuleDesc.wordDescriptions.get(j);
 					if (!wd.type.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 						continue wordRuleLoop;//type mismatch;
 					}
@@ -258,14 +258,14 @@ class WordRules {
 				}
 				//Word Rule matches!
 				Element wordRuleEl = new Element(WORDRULE_EL);
-				wordRuleEl.addAttribute(new Attribute(TYPE_ATR, wordRule.getRuleType()));
-				wordRuleEl.addAttribute(new Attribute(WORDRULE_EL, wordRule.getRuleName()));
+				wordRuleEl.addAttribute(new Attribute(TYPE_ATR, wordRuleDesc.getRuleType().toString()));
+				wordRuleEl.addAttribute(new Attribute(WORDRULE_EL, wordRuleDesc.getRuleName().toString()));
 
 				/*
 				 * Some wordRules can not be entirely processed at the structure building stage
 				 */
-				String wordRuleName = wordRule.getRuleName();
-				if (wordRuleName.equals(WordRule.functionGroupAsGroup.toString())){//convert the functional term into a full term
+				WordRule wordRule = wordRuleDesc.getRuleName();
+				if (wordRule == WordRule.functionGroupAsGroup){//convert the functional term into a full term
 					Element functionalWord = wordEls.get(i + wordsInWordRule -1);
 					if (!functionalWord.getAttributeValue(TYPE_ATR).equals(FUNCTIONALTERM_EL) || wordsInWordRule>2){
 						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup wordRule");
@@ -277,24 +277,24 @@ class WordRules {
 					}
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
 				}
-				else if (wordRuleName.equals(WordRule.carbonylDerivative.toString()) || wordRuleName.equals(WordRule.amide.toString())){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
+				else if (wordRule == WordRule.carbonylDerivative || wordRule == WordRule.amide){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
 					if (wordsInWordRule==3){//substituent present
 						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
 						wordsInWordRule--;
 						List<Element> functionalTerm = XOMTools.getDescendantElementsWithTagName(wordEls.get(i+1), FUNCTIONALTERM_EL);//rename functionalTerm element to root
 						if (functionalTerm.size()!=1){
-							throw new ParsingException("OPSIN bug: Problem with "+ wordRuleName +" wordRule");
+							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
 						}
 						functionalTerm.get(0).setLocalName(ROOT_EL);
 						List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
 						if (functionalGroups.size()!=1){
-							throw new ParsingException("OPSIN bug: Problem with "+ wordRuleName +" wordRule");
+							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
 						}
 						functionalGroups.get(0).setLocalName(GROUP_EL);
 						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 					}
 				}
-				else if (wordRuleName.equals(WordRule.additionCompound.toString()) || wordRuleName.equals(WordRule.oxide.toString())){//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
+				else if (wordRule == WordRule.additionCompound || wordRule == WordRule.oxide){//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
 					Element possibleElementaryAtom = wordEls.get(i);
 					List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtom, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
 					if (elementaryAtoms.size()==1){
