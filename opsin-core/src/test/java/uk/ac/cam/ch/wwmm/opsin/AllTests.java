@@ -31,7 +31,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	StereochemistryTest.class,
 	StructureBuilderTest.class,
 	TokenizerTest.class,
-	VerifyFragmentsTest.class
+	VerifyFragmentsTest.class,
+	WordToolsTest.class
 })
 public class AllTests {
 
