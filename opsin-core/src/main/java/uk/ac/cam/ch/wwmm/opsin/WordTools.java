@@ -11,10 +11,10 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 class WordTools {
 	/**
 	 * Splits cases where the parseTokensList describes a functionalTerm in addition to another mainGroup/substituent into two parseWords
-	 * This occurs if the name is formally missing a space e.g. ethylthiocyanide.
+	 * This occurs if the name is formally missing a space e.g. ethylthiocyanate.
 	 * If multiple parses are present then it may be possible to disambiguate between them:
 	 * 	parses with omitted spaces are discarded if a parse without omitted space is found
-	 * 	parses with shorter functional terms are discarded e.g. ethylthiocyanide is [ethyl] [thiocyanide] not [ethylthio] [cyanide]
+	 * 	parses with shorter functional terms are discarded e.g. ethylthiocyanate is [ethyl] [thiocyanate] not [ethylthio] [cyanate]
 	 * @param parseTokensList
 	 * @param chemicalName
 	 * @return
@@ -22,79 +22,59 @@ class WordTools {
 	 */
 	static List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) throws ParsingException {
 		List<ParseTokens> wellFormedParseTokens = new ArrayList<ParseTokens>();//these are all in the same word as would be expected
-		List<List<ParseTokens>> omittedWordParseTokensList = new ArrayList<List<ParseTokens>>();//these are grouped into words e.g. ethylchloride will have a list of parseTokens for the ethyl and chloride
-		omittedWordParseTokensList.add(new ArrayList<ParseTokens>());
-		omittedWordParseTokensList.add(new ArrayList<ParseTokens>());//only 1 space is allowed to be omitted
+		List<List<ParseTokens>> splitParseTokensForEachParseTokens = new ArrayList<List<ParseTokens>>();
+		/*
+		 * Each ParseTokens is split into the number of words it describes
+		 * e.g. ethylchloride has one interpretation so splitParseTokensList will have one entry
+		 * This entry will be formed of TWO parseTokens, one for the ethyl and one for the chloride
+		 */
+		int leastWordsInOmmittedSpaceParse = Integer.MAX_VALUE;//we want the least number of words i.e. less omitted spaces
 		int longestFunctionalTermEncountered = 0;//we want the longest functional term
-		int shortestNonFunctionalTermEncountered = Integer.MAX_VALUE;//and the shortest non functional term
 		for (ParseTokens parseTokens : parseTokensList) {
 			List<Character> annotations = parseTokens.getAnnotations();
 			List<List<Character>> chunkedAnnotations = chunkAnnotations(annotations);//chunked into mainGroup/substituent/functionalTerm
-			if (chunkedAnnotations.size() > 1 && annotations.contains(END_OF_FUNCTIONALTERM)) {//must be an omitted space as not allowed to have a functionalTerm and anything else
+			if (containsOmittedSpace(chunkedAnnotations)){
+				List<ParseTokens> omittedWordParseTokens = new ArrayList<ParseTokens>();
 				List<String> tokens = parseTokens.getTokens();
 				List<Character> newAnnotations = new ArrayList<Character>();
 				List<String> newTokens = new ArrayList<String>();
+				int currentFunctionalTermLength = 0;
 				int annotPos = 0;
-				int wordCounter = 0;
 				for (List<Character> annotationList : chunkedAnnotations) {
-					boolean functionalTermNext = false;
-					if (annotationList.get(annotationList.size() - 1).equals(END_OF_FUNCTIONALTERM)) {
-						functionalTermNext = true;
-						if (newAnnotations.size() > 0) {//create a new parseTokens, unless nothing has been read yet e.g. in the case of poly
-							ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
-							if (wordCounter >= 2) {
-								throw new ParsingException("Name appears to have 2 or more omitted spaces!");
-							}
-							int currentNonFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
-							if (currentNonFunctionalTermLength <= shortestNonFunctionalTermEncountered && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)) {
-								if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered) {
-									omittedWordParseTokensList.get(wordCounter).clear();
-									shortestNonFunctionalTermEncountered = currentNonFunctionalTermLength;
-								}
-								omittedWordParseTokensList.get(wordCounter).add(newParseTokens);
-							}
-							wordCounter++;
-							newAnnotations = new ArrayList<Character>();
-							newTokens = new ArrayList<String>();
-						}
+					Character finalAnnotationInList = annotationList.get(annotationList.size() - 1);
+					if (finalAnnotationInList.equals(END_OF_FUNCTIONALTERM) && newAnnotations.size() > 0) {
+						//create a new parseTokens for the substituent/maingroup preceding the functional term
+						//not necessary if the functional term is the first thing to be read e.g. in the case of poly
+						omittedWordParseTokens.add(new ParseTokens(newTokens, newAnnotations));
+						newAnnotations = new ArrayList<Character>();
+						newTokens = new ArrayList<String>();
 					}
 					for (Character annotation : annotationList) {
 						newAnnotations.add(annotation);
-						newTokens.add(tokens.get(annotPos));
-						annotPos++;
+						newTokens.add(tokens.get(annotPos++));
 					}
-					if (functionalTermNext) {
-						ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
-						if (wordCounter >= 2) {
-							throw new ParsingException("Name appears to have 2 or more omitted spaces!");
+					if (finalAnnotationInList.equals(END_OF_FUNCTIONALTERM) || finalAnnotationInList.equals(END_OF_MAINGROUP) || annotPos == tokens.size()) {
+						omittedWordParseTokens.add(new ParseTokens(newTokens, newAnnotations));
+						if (finalAnnotationInList.equals(END_OF_FUNCTIONALTERM)){
+							currentFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
 						}
-						int currentFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
-						if (currentFunctionalTermLength >= longestFunctionalTermEncountered && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)) {
-							if (currentFunctionalTermLength > longestFunctionalTermEncountered) {
-								omittedWordParseTokensList.get(wordCounter).clear();
-								longestFunctionalTermEncountered = currentFunctionalTermLength;
-							}
-							omittedWordParseTokensList.get(wordCounter).add(newParseTokens);
-						}
-						wordCounter++;
 						newAnnotations = new ArrayList<Character>();
 						newTokens = new ArrayList<String>();
 					}
 				}
-				if (!newAnnotations.isEmpty()) {
-					ParseTokens newParseTokens = new ParseTokens(newTokens, newAnnotations);
-					if (wordCounter >= 2) {
-						throw new ParsingException("Name appears to have 2 or more omitted spaces!");
+				if (omittedWordParseTokens.size() <= leastWordsInOmmittedSpaceParse){
+					if (omittedWordParseTokens.size() < leastWordsInOmmittedSpaceParse){
+						splitParseTokensForEachParseTokens.clear();
+						leastWordsInOmmittedSpaceParse = omittedWordParseTokens.size();
+						longestFunctionalTermEncountered = 0;
 					}
-					int currentNonFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
-					if (currentNonFunctionalTermLength <= shortestNonFunctionalTermEncountered && !omittedWordParseTokensList.get(wordCounter).contains(newParseTokens)) {
-						if (currentNonFunctionalTermLength < shortestNonFunctionalTermEncountered) {
-							omittedWordParseTokensList.get(wordCounter).clear();
-							shortestNonFunctionalTermEncountered = currentNonFunctionalTermLength;
+					if (currentFunctionalTermLength >=longestFunctionalTermEncountered){
+						if (currentFunctionalTermLength > longestFunctionalTermEncountered){
+							splitParseTokensForEachParseTokens.clear();
+							longestFunctionalTermEncountered =currentFunctionalTermLength;
 						}
-						omittedWordParseTokensList.get(wordCounter).add(newParseTokens);
+						splitParseTokensForEachParseTokens.add(omittedWordParseTokens);
 					}
-					wordCounter++;
 				}
 			} else {
 				wellFormedParseTokens.add(parseTokens);
@@ -104,11 +84,30 @@ class WordTools {
 		if (!wellFormedParseTokens.isEmpty()) {
 			parseWords.add(new ParseWord(chemicalName, wellFormedParseTokens));
 		} else {
-			for (List<ParseTokens> omittedWordParseTokens : omittedWordParseTokensList) {
-				parseWords.add(new ParseWord(StringTools.stringListToString(omittedWordParseTokens.get(0).getTokens(), ""), omittedWordParseTokens));
+			for (int i = 0; i < leastWordsInOmmittedSpaceParse; i++) {
+				List<ParseTokens> parseTokensForWord = new ArrayList<ParseTokens>();
+				for (List<ParseTokens> parseTokens : splitParseTokensForEachParseTokens) {
+					if (!parseTokensForWord.contains(parseTokens.get(i))){//if only one word is ambiguous there is no need for the unambiguous word to have multiple identical interpretation
+						parseTokensForWord.add(parseTokens.get(i));
+					}
+				}
+				parseWords.add(new ParseWord(StringTools.stringListToString(parseTokensForWord.get(0).getTokens(), ""), parseTokensForWord));
 			}
 		}
 		return parseWords;
+	}
+
+	private static boolean containsOmittedSpace(List<List<Character>> chunkedAnnotations) {
+		if (chunkedAnnotations.size() > 1){//there are multiple subsitutents/maingroup/functionalterms
+			for (List<Character> annotationList : chunkedAnnotations) {
+				for (Character annotation : annotationList) {
+					if (annotation.equals(END_OF_FUNCTIONALTERM)){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**Groups the token annotations for a given word into substituent/s and/or a maingroup and/or functionalTerm by
