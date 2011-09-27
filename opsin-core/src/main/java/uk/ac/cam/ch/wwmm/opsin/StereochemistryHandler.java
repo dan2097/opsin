@@ -470,7 +470,7 @@ class StereochemistryHandler {
 			if (stereoAtoms.size()==2){
 				Atom a1 = stereoAtoms.get(0);
 				Atom a2 = stereoAtoms.get(1);
-				
+				//FIXME THIS IS NOT A GENERAL SOLUTION
 				List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(a1, a2, fragment);
 				paths =findNonOverlappingPaths(paths);
 				if (paths.size()!=2 && paths.size()!=3){
@@ -558,6 +558,9 @@ class StereochemistryHandler {
 		atomRefs4a1[3] = secondPathAtom;
 		a1Neighbours.remove(firstPathAtom);
 		a1Neighbours.remove(secondPathAtom);
+		if (firstPathAtom.equals(secondPathAtom)){
+			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
+		}
 		if (paths.size()==3){
 			atomRefs4a1[1] = paths.get(2).size()>0 ? paths.get(2).get(0) : a2;
 		}
@@ -584,6 +587,9 @@ class StereochemistryHandler {
 		atomRefs4a2[3] = secondPathAtom;
 		a2Neighbours.remove(firstPathAtom);
 		a2Neighbours.remove(secondPathAtom);
+		if (firstPathAtom.equals(secondPathAtom)){
+			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
+		}
 		if (paths.size()==3){
 			atomRefs4a2[1] = paths.get(2).size()>0 ? paths.get(2).get(paths.get(2).size()-1) : a1;
 		}
