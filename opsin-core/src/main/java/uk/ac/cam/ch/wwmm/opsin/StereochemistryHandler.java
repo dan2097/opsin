@@ -594,7 +594,7 @@ class StereochemistryHandler {
 					break;
 				}
 			}
-			if (atomRefs4a1[1] ==null){
+			if (atomRefs4a2[1] ==null){
 				throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 			}
 		}
