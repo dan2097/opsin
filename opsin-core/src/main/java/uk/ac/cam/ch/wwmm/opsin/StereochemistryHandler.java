@@ -3,8 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -470,16 +469,17 @@ class StereochemistryHandler {
 			if (stereoAtoms.size()==2){
 				Atom a1 = stereoAtoms.get(0);
 				Atom a2 = stereoAtoms.get(1);
-				//FIXME THIS IS NOT A GENERAL SOLUTION
-				List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(a1, a2, fragment);
-				paths =findNonOverlappingPaths(paths);
-				if (paths.size()!=2 && paths.size()!=3){
-					return false;
-				}
+
 				if (a1.getAtomParity()!=null && a2.getAtomParity()!=null){//one can have defined stereochemistry but not both
 					return false;
 				}
-				applyStereoChemistryToCisTransOnRing(a1, a2, paths, stereoChemistryEl.getAttributeValue(VALUE_ATR));
+
+				Set<Bond> peripheryBonds = determinePeripheryBonds(fragment);
+				List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(a1, a2, peripheryBonds);
+				if (paths.size()!=2){
+					return false;
+				}
+				applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, stereoChemistryEl.getAttributeValue(VALUE_ATR));
 				notExplicitlyDefinedStereoCentreMap.remove(stereoAtoms.get(0));
 				notExplicitlyDefinedStereoCentreMap.remove(stereoAtoms.get(1));
 				return true;
@@ -489,67 +489,22 @@ class StereochemistryHandler {
 	}
 
 
-	/**
-	 * Tries to find the paths that do not overlap.
-	 * At least one path for each starting atom must be picked.
-	 * If this is not possible no paths are returned
-	 * @param paths
-	 * @return
-	 */
-	private List<List<Atom>> findNonOverlappingPaths(List<List<Atom>> paths) {
-		Map<Atom, List<List<Atom>>> sameStartingAtom = new LinkedHashMap<Atom, List<List<Atom>>>();
-		List<List<Atom>> zeroLengthPaths = new ArrayList<List<Atom>>();
-		for (List<Atom> path : paths) {
-			if (path.size()>0){
-				Atom firstAtom =path.get(0);
-				if (sameStartingAtom.get(firstAtom)==null){
-					sameStartingAtom.put(firstAtom, new ArrayList<List<Atom>>());
-				}
-				sameStartingAtom.get(firstAtom).add(path);
-			}
-			else{
-				zeroLengthPaths.add(path);
+	private Set<Bond> determinePeripheryBonds(Fragment fragment) {
+		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(fragment);
+		FusedRingNumberer.setupAdjacentFusedRingProperties(rings);
+		Set<Bond> bondsToConsider = new HashSet<Bond>();
+		for (Ring ring : rings) {
+			for (Bond bond : ring.getBondList()) {
+				bondsToConsider.add(bond);
 			}
 		}
-		Atom firstKey =sameStartingAtom.keySet().iterator().next();
-		List<List<Atom>> possiblePaths = sameStartingAtom.get(firstKey);
-		sameStartingAtom.remove(firstKey);
-		for (List<Atom> possiblePath : possiblePaths) {
-			List<List<Atom>> nonOverlappingPaths = new LinkedList<List<Atom>>();
-			nonOverlappingPaths.add(possiblePath);
-			for (Entry<Atom, List<List<Atom>>> entry : sameStartingAtom.entrySet()) {
-				List<List<Atom>> otherPaths = entry.getValue();
-				boolean nonOverlappingPathFound =false;
-				for (List<Atom> otherPath : otherPaths) {
-					boolean match =false;
-					ListLoop: for (List<Atom> nonOverlappingPath : nonOverlappingPaths) {
-						for (Atom atom : nonOverlappingPath) {
-							if (otherPath.contains(atom)){
-								match =true;
-								break ListLoop;
-							}
-						}
-					}
-					if (!match){
-						nonOverlappingPathFound=true;
-						nonOverlappingPaths.add(otherPath);
-						break;
-					}
-				}
-				if (!nonOverlappingPathFound){
-					break;
-				}
-			}
-			if (nonOverlappingPaths.size()==sameStartingAtom.keySet().size()+1){
-				nonOverlappingPaths.addAll(0, zeroLengthPaths);
-				return nonOverlappingPaths;
-			}
+		for (Ring ring : rings) {
+			bondsToConsider.removeAll(ring.getFusedBonds());
 		}
-		return Collections.emptyList();
+		return bondsToConsider;
 	}
 
-
-	private void applyStereoChemistryToCisTransOnRing(Atom a1, Atom a2, List<List<Atom>> paths, String cisOrTrans) throws StructureBuildingException {
+	private void applyStereoChemistryToCisTransOnRing(Atom a1, Atom a2, List<List<Atom>> paths, List<Atom> fragmentAtoms, String cisOrTrans) throws StructureBuildingException {
 		List<Atom> a1Neighbours = a1.getAtomNeighbours();
 		Atom[] atomRefs4a1 = new Atom[4];
 		Atom firstPathAtom = paths.get(0).size()>0 ? paths.get(0).get(0) : a2;
@@ -561,19 +516,9 @@ class StereochemistryHandler {
 		if (firstPathAtom.equals(secondPathAtom)){
 			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
-		if (paths.size()==3){
-			atomRefs4a1[1] = paths.get(2).size()>0 ? paths.get(2).get(0) : a2;
-		}
-		else{
-			for (Atom atom : a1Neighbours) {
-				if (atom.getElement().equals("H")){
-					atomRefs4a1[1] = atom;
-					break;
-				}
-			}
-			if (atomRefs4a1[1] ==null){
-				throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
-			}
+		atomRefs4a1[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a1Neighbours, fragmentAtoms);
+		if (atomRefs4a1[1] ==null){
+			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
 		a1Neighbours.remove(atomRefs4a1[1]);
 		atomRefs4a1[0] = a1Neighbours.get(0);
@@ -590,19 +535,9 @@ class StereochemistryHandler {
 		if (firstPathAtom.equals(secondPathAtom)){
 			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
-		if (paths.size()==3){
-			atomRefs4a2[1] = paths.get(2).size()>0 ? paths.get(2).get(paths.get(2).size()-1) : a1;
-		}
-		else{
-			for (Atom atom : a2Neighbours) {
-				if (atom.getElement().equals("H")){
-					atomRefs4a2[1] = atom;
-					break;
-				}
-			}
-			if (atomRefs4a2[1] ==null){
-				throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
-			}
+		atomRefs4a2[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a2Neighbours, fragmentAtoms);
+		if (atomRefs4a2[1] ==null){
+			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
 		a2Neighbours.remove(atomRefs4a2[1]);
 		atomRefs4a2[0] = a2Neighbours.get(0);
@@ -646,6 +581,20 @@ class StereochemistryHandler {
 		}
 	}
 	
+	private Atom getHydrogenOrAcyclicOrOutsideOfFragment(List<Atom> atoms, List<Atom> fragmentAtoms) {
+		for (Atom atom : atoms) {
+			if (atom.getElement().equals("H")){
+				return atom;
+			}
+		}
+		for (Atom atom : atoms) {
+			if (!atom.getAtomIsInACycle() || !fragmentAtoms.contains(atom)){
+				return atom;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Handles assignment of alpha and beta stereochemistry to appropriate ring systems
 	 * Currently these are only assignable to natural products

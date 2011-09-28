@@ -1,8 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Assigns whether atoms are in rings or not
@@ -54,10 +56,10 @@ class CycleDetector {
 
 	}
 
-	private static class IntraFragmentPathSearchState{
+	private static class PathSearchState{
 		final Atom currentAtom;
 		final LinkedList<Atom> orderAtomsVisited;
-		public IntraFragmentPathSearchState(Atom currentAtom, LinkedList<Atom> orderAtomsVisited ) {
+		public PathSearchState(Atom currentAtom, LinkedList<Atom> orderAtomsVisited ) {
 			this.currentAtom = currentAtom;
 			this.orderAtomsVisited = orderAtomsVisited;
 		}
@@ -69,17 +71,26 @@ class CycleDetector {
 		}
 	}
 	
-	static List<List<Atom>> getIntraFragmentPathsBetweenAtoms(Atom a1, Atom a2, Fragment fragment) throws StructureBuildingException {
+	/**
+	 * Attempts to find paths from a1 to a2 using only the given bonds
+	 * @param a1
+	 * @param a2
+	 * @param peripheryBonds
+	 * @return
+	 */
+	static List<List<Atom>> getPathBetweenAtomsUsingBonds(Atom a1, Atom a2, Set<Bond> peripheryBonds){
 		List<List<Atom>> paths = new ArrayList<List<Atom>>();
-		LinkedList<IntraFragmentPathSearchState> stateStack = new LinkedList<IntraFragmentPathSearchState>();
-		stateStack.add(new IntraFragmentPathSearchState(a1, new LinkedList<Atom>()));
+		LinkedList<PathSearchState> stateStack = new LinkedList<PathSearchState>();
+		stateStack.add(new PathSearchState(a1, new LinkedList<Atom>()));
 		while (stateStack.size()>0){
-			IntraFragmentPathSearchState state  =stateStack.removeLast();//depth first traversal
+			PathSearchState state  =stateStack.removeLast();//depth first traversal
 			LinkedList<Atom> orderAtomsVisited = state.getOrderAtomsVisited();
 			Atom nextAtom = state.getCurrentAtom();
 			orderAtomsVisited.add(nextAtom);
-			List<Atom> neighbours = fragment.getIntraFragmentAtomNeighbours(nextAtom);
-			for (Atom neighbour : neighbours) {
+			Set<Bond> neighbourBonds = new HashSet<Bond>(nextAtom.getBonds());
+			neighbourBonds.retainAll(peripheryBonds);
+			for (Bond neighbourBond : neighbourBonds) {
+				Atom neighbour = neighbourBond.getOtherAtom(nextAtom);
 				if (orderAtomsVisited.contains(neighbour)){//atom already visited by this path
 					continue;
 				}
@@ -87,7 +98,7 @@ class CycleDetector {
 					paths.add(new ArrayList<Atom>(orderAtomsVisited.subList(1, orderAtomsVisited.size())));
 				}
 				else{//add atom to stack, its neighbours will be recursively investigated shortly
-					stateStack.add(new IntraFragmentPathSearchState(neighbour, new LinkedList<Atom>(orderAtomsVisited)));
+					stateStack.add(new PathSearchState(neighbour, new LinkedList<Atom>(orderAtomsVisited)));
 				}
 			}
 		}
