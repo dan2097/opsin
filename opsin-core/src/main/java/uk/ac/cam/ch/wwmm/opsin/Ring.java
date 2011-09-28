@@ -17,9 +17,9 @@ class Ring {
 
 	private int nFusedBonds = 0;
 	
-	Ring(List<Bond> bondList) throws StructureBuildingException{
-		if (bondList==null || bondList.size()<=0){
-			throw new StructureBuildingException("Bond list is empty");
+	Ring(List<Bond> bondList){
+		if (bondList==null || bondList.size()==0){
+			throw new IllegalArgumentException("Bond list is empty");
 		}
 		this.bondList = bondList;
 
@@ -36,7 +36,7 @@ class Ring {
 		}
 		
 		if (atomList.size() != bondList.size()) {
-			throw new StructureBuildingException("atomList and bondList different sizes. Ring(bond)");
+			throw new RuntimeException("atomList and bondList different sizes. Ring(bond)");
 		}
 	}
 
