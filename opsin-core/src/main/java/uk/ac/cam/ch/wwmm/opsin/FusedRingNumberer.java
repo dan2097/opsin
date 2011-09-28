@@ -258,6 +258,9 @@ class FusedRingNumberer {
 	 */
 	static void numberFusedRing(Fragment fusedRing) throws StructureBuildingException {
 		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(fusedRing);
+		if (rings.size() <2){
+			throw new StructureBuildingException("Ring perception system found less than 2 rings within input fragment!");
+		}
 		List<Atom> atomList = fusedRing.getAtomList();
 		setupAdjacentFusedRingProperties(rings);
 		if (!checkRingApplicability(rings)){
@@ -294,7 +297,7 @@ class FusedRingNumberer {
 	 * notes which fused rings are adjacent to each other
 	 * @param rings
 	 */
-	private static void setupAdjacentFusedRingProperties(List<Ring> rings){
+	static void setupAdjacentFusedRingProperties(List<Ring> rings){
 		for (Ring curRing : rings) {
 			for(Bond bond : curRing.getBondList()) {
 				bond.getFusedRings().clear();

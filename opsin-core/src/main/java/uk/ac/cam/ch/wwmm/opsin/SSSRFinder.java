@@ -22,9 +22,8 @@ class SSSRFinder {
 	 * In corner cases the list of rings returned will not be the SSSR
 	 * @param frag 
 	 * @return list of rings
-     * @throws StructureBuildingException
 	 */
-	static List<Ring> getSetOfSmallestRings(Fragment frag) throws StructureBuildingException {
+	static List<Ring> getSetOfSmallestRings(Fragment frag){
 		List<Atom> atomSet = frag.getAtomList();
 				
 		List<Ring> ringList = getRings(atomSet);
@@ -37,9 +36,7 @@ class SSSRFinder {
 					change = reduceRingSizes(ring, ringList);
 				}
 			}
-		}
-		else throw new StructureBuildingException("Ring perception system found less than 2 rings within input fragment!");
-				
+		}		
 		return ringList;
 	}
 
@@ -47,9 +44,8 @@ class SSSRFinder {
 	 * not necessarily SSSR
 	 * @param atomSet
      * @return list of rings
-	 * @throws StructureBuildingException 
 	 */
-	private static List<Ring> getRings(List<Atom> atomSet ) throws StructureBuildingException {
+	private static List<Ring> getRings(List<Atom> atomSet ){
 		List<Ring> ringList = new ArrayList<Ring>();
 		Set<Atom> usedAtoms = new HashSet<Atom>();
 		
@@ -68,7 +64,7 @@ class SSSRFinder {
 		return ringList;
 	}
 	
-	private static Ring getRing(Bond bond, Map<Atom, Atom> atomToParentMap) throws StructureBuildingException { 
+	private static Ring getRing(Bond bond, Map<Atom, Atom> atomToParentMap){ 
 		Atom atomFrom =  bond.getFromAtom() ;
 		Atom atomTo = bond.getToAtom(); 
 		List<Bond>  bondSet0 = getAncestors1(atomFrom, atomToParentMap);
@@ -80,14 +76,14 @@ class SSSRFinder {
 		return ring;
 	}
 	
-	private static List<Bond> getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap) throws StructureBuildingException {
+	private static List<Bond> getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap){
 		List<Bond> newBondSet = new ArrayList<Bond>();
 		while (true) {
 			Atom atom1 = atomToParentMap.get(atom);
 			if (atom1 == null) {
 				break;
 			}
-			Bond bond = atom.getBondToAtomOrThrow(atom1);
+			Bond bond = atom.getBondToAtom(atom1);
 			if (newBondSet.contains(bond)) {
 				break;
 			}
@@ -99,7 +95,7 @@ class SSSRFinder {
 	
 	private static void expand(Atom atom, Atom parentAtom, 
 			Set<Atom> usedAtoms, Map<Atom, Atom> atomToParentMap,
-			Set<Bond> linkBondSet) throws StructureBuildingException {
+			Set<Bond> linkBondSet){
 		
 		usedAtoms.add(atom);
 		atomToParentMap.put(atom, parentAtom);
@@ -110,7 +106,7 @@ class SSSRFinder {
 			if (ligandAtom.equals(parentAtom)) {
 				// skip existing bond
 			} else if (usedAtoms.contains(ligandAtom)) {
-				Bond linkBond = atom.getBondToAtomOrThrow(ligandAtom);
+				Bond linkBond = atom.getBondToAtom(ligandAtom);
 				linkBondSet.add(linkBond);
 				// already treated
 			} else {
@@ -118,15 +114,8 @@ class SSSRFinder {
 			}
 		}
 	}
-	
-	
-	/**
-	 * @param ring
-	 * @param newList
-     * @throws StructureBuildingException
-     * @return
-	 */
-	private static boolean reduceRingSizes(Ring ring, List<Ring> newList) throws StructureBuildingException {
+
+	private static boolean reduceRingSizes(Ring ring, List<Ring> newList){
 		boolean change = false;
 		for (int i = 0; i < newList.size(); i++) {
 			Ring target = newList.get(i);
