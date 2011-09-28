@@ -3,8 +3,9 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -91,10 +92,10 @@ public class CycleDetectorTest {
 	}
 	
 	@Test
-	public void testFindIntraFragmentPaths1() throws StructureBuildingException {
+	public void testFindPathBetweenAtoms1() throws StructureBuildingException {
 		Fragment frag = fm.buildSMILES("c1ccccc1");
 		List<Atom> atomList = frag.getAtomList();
-		List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(atomList.get(0), atomList.get(3), frag);
+		List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(atomList.get(0), atomList.get(3), frag.getBondSet());
 		assertEquals(2, paths.size());
 		for (List<Atom> path : paths) {
 			assertEquals(2, path.size());
@@ -111,75 +112,65 @@ public class CycleDetectorTest {
 	}
 	
 	@Test
-	public void testFindIntraFragmentPaths2() throws StructureBuildingException {
+	public void testFindPathBetweenAtoms2() throws StructureBuildingException {
 		Fragment frag = fm.buildSMILES("C1CCCC2CCCCC12");
 		List<Atom> atomList = frag.getAtomList();
-		List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(atomList.get(4), atomList.get(9), frag);
-		assertEquals(3, paths.size());
+		Set<Bond> bonds = new HashSet<Bond>(frag.getBondSet());
+		bonds.remove(atomList.get(4).getBondToAtom(atomList.get(9)));
+		List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(atomList.get(4), atomList.get(9), bonds);
+		assertEquals(2, paths.size());
 		
-		List<List<Atom>> nonZeroLengthPaths = new ArrayList<List<Atom>>(); 
-		for (List<Atom> path : paths) {
-			if (path.size()!=0){
-				assertEquals(4, path.size());
-				nonZeroLengthPaths.add(path);
-			}
+		List<Atom> pathLeftRing;
+		List<Atom> pathRightRing;
+		if (atomList.indexOf(paths.get(0).get(0))==3){
+			pathLeftRing = paths.get(0);
+			pathRightRing = paths.get(1);
 		}
-		assertEquals(2, nonZeroLengthPaths.size());
-		for (List<Atom> path : nonZeroLengthPaths) {
-			if (atomList.indexOf(path.get(0))==5){
-				assertEquals(6, atomList.indexOf(path.get(1)));
-				assertEquals(7, atomList.indexOf(path.get(2)));
-				assertEquals(8, atomList.indexOf(path.get(3)));
-			}
-			else{
-				assertEquals(3, atomList.indexOf(path.get(0)));
-				assertEquals(2, atomList.indexOf(path.get(1)));
-				assertEquals(1, atomList.indexOf(path.get(2)));
-				assertEquals(0, atomList.indexOf(path.get(3)));
-			}
+		else{
+			pathLeftRing = paths.get(1);
+			pathRightRing = paths.get(0);
 		}
+		assertEquals(3, atomList.indexOf(pathLeftRing.get(0)));
+		assertEquals(2, atomList.indexOf(pathLeftRing.get(1)));
+		assertEquals(1, atomList.indexOf(pathLeftRing.get(2)));
+		assertEquals(0, atomList.indexOf(pathLeftRing.get(3)));
+		
+		assertEquals(5, atomList.indexOf(pathRightRing.get(0)));
+		assertEquals(6, atomList.indexOf(pathRightRing.get(1)));
+		assertEquals(7, atomList.indexOf(pathRightRing.get(2)));
+		assertEquals(8, atomList.indexOf(pathRightRing.get(3)));
 	}
 	
 	@Test
-	public void testFindIntraFragmentPaths3() throws StructureBuildingException {
+	public void testFindPathBetweenAtoms3() throws StructureBuildingException {
 		Fragment frag = fm.buildSMILES("C1(C)CCCC2C(C)CCCC12");
 		List<Atom> atomList = frag.getAtomList();
-		List<List<Atom>> paths = CycleDetector.getIntraFragmentPathsBetweenAtoms(atomList.get(0), atomList.get(6), frag);
-		assertEquals(4, paths.size());
-		for (List<Atom> path : paths) {
-			if (path.size()==2){
-				assertEquals(11, atomList.indexOf(path.get(0)));
-				assertEquals(5, atomList.indexOf(path.get(1)));
-			}
-			else if (path.size()==8){
-				assertEquals(2, atomList.indexOf(path.get(0)));
-				assertEquals(3, atomList.indexOf(path.get(1)));
-				assertEquals(4, atomList.indexOf(path.get(2)));
-				assertEquals(5, atomList.indexOf(path.get(3)));
-				assertEquals(11, atomList.indexOf(path.get(4)));
-				assertEquals(10, atomList.indexOf(path.get(5)));
-				assertEquals(9, atomList.indexOf(path.get(6)));
-				assertEquals(8, atomList.indexOf(path.get(7)));
-				
-			}
-			else if (path.size()==4){
-				if (atomList.indexOf(path.get(0))==11){
-					assertEquals(11, atomList.indexOf(path.get(0)));
-					assertEquals(10, atomList.indexOf(path.get(1)));
-					assertEquals(9, atomList.indexOf(path.get(2)));
-					assertEquals(8, atomList.indexOf(path.get(3)));
-				}
-				else{
-					assertEquals(2, atomList.indexOf(path.get(0)));
-					assertEquals(3, atomList.indexOf(path.get(1)));
-					assertEquals(4, atomList.indexOf(path.get(2)));
-					assertEquals(5, atomList.indexOf(path.get(3)));
-				}
-			}
-			else{
-				junit.framework.Assert.fail("Unexpected path length");
-			}
+		Set<Bond> bonds = new HashSet<Bond>(frag.getBondSet());
+		bonds.remove(atomList.get(0).getBondToAtom(atomList.get(1)));
+		bonds.remove(atomList.get(6).getBondToAtom(atomList.get(7)));
+		bonds.remove(atomList.get(5).getBondToAtom(atomList.get(11)));
+		List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(atomList.get(0), atomList.get(6), bonds);
+		assertEquals(2, paths.size());
+
+		List<Atom> pathLeftRing;
+		List<Atom> pathRightRing;
+		if (atomList.indexOf(paths.get(0).get(0))==2){
+			pathLeftRing = paths.get(0);
+			pathRightRing = paths.get(1);
 		}
+		else{
+			pathLeftRing = paths.get(1);
+			pathRightRing = paths.get(0);
+		}
+		assertEquals(2, atomList.indexOf(pathLeftRing.get(0)));
+		assertEquals(3, atomList.indexOf(pathLeftRing.get(1)));
+		assertEquals(4, atomList.indexOf(pathLeftRing.get(2)));
+		assertEquals(5, atomList.indexOf(pathLeftRing.get(3)));
+		
+		assertEquals(11, atomList.indexOf(pathRightRing.get(0)));
+		assertEquals(10, atomList.indexOf(pathRightRing.get(1)));
+		assertEquals(9, atomList.indexOf(pathRightRing.get(2)));
+		assertEquals(8, atomList.indexOf(pathRightRing.get(3)));
 	}
 }
 	
