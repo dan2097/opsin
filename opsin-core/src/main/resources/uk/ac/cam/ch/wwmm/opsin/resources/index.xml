@@ -37,6 +37,4 @@
   <tokenFile>suffixes.xml</tokenFile>
   <tokenFile>unsaturators.xml</tokenFile>
   <tokenFile>miscTokens.xml</tokenFile>
-  <tokenFile>germanTokens.xml</tokenFile>
-
 </tokenFiles>
