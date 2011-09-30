@@ -10,7 +10,6 @@ import java.util.List;
  *
  */
 class CyclicAtomList{
-	private static final long serialVersionUID = 1L;
 	private int indice = -1;
 	private final List<Atom> atomList;
 

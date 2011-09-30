@@ -51,7 +51,7 @@ class Atom {
 	private final Set<Bond> bonds = new LinkedHashSet<Bond>();
 
 	/**A map between PropertyKey s as declared here and useful atom properties, usually relating to some kind of special case. */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private final Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
 	/** A set of atoms that were equally plausible to perform functional replacement on */
     static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
