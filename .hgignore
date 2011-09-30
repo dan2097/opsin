@@ -1,4 +1,4 @@
-relre:src/main/java/dl/*
+relre:opsin-inchi/src/main/java/dl/*
 relre:target/*
 .classpath
 .project
