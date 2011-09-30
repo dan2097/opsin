@@ -711,137 +711,142 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	static void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
-		Elements stereoChemistryElements = subOrRoot.getChildElements(STEREOCHEMISTRY_EL);
-		for(int i=0;i<stereoChemistryElements.size();i++) {
-			Element stereoChemistryElement = stereoChemistryElements.get(i);
+		List<Element> stereoChemistryElements = XOMTools.getChildElementsWithTagName(subOrRoot, STEREOCHEMISTRY_EL);
+		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
-				String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
-				if (txt.startsWith("rel-")){
-					txt = txt.substring(4);
-				}
-				Matcher starMatcher = matchStar.matcher(txt);
-				txt = starMatcher.replaceAll("");
-				if (!txt.startsWith("rac-")){
-					txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
-					String[] stereoChemistryDescriptors = matchCommaOrDash.split(txt);
-					List<String> locants = new ArrayList<String>();
-                    for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
-                        Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
-                        if (m.matches()){
-                        	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
-                                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
-                                if (m.group(1).length()!=0){
-	                                stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
-	                                locants.add(m.group(1));
-                                }
-                                stereoChemEl.appendChild(stereoChemistryDescriptor);
-                                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
-                                if (matchRS.matcher(m.group(2)).matches()) {
-                                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
-                                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
-                                } else if (matchEZ.matcher(m.group(2)).matches()) {
-                                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-                                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
-                                } else if (matchAlphaBetaStereochem.matcher(m.group(2)).matches()){
-                                	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
-                                	if (Character.toLowerCase(m.group(2).charAt(0)) == 'a'){
-	                                	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
-                                	}
-                                	else if (Character.toLowerCase(m.group(2).charAt(0)) == 'b'){
-	                                	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "beta"));
-                                	}
-                                 	else if (Character.toLowerCase(m.group(2).charAt(0)) == 'x'){
-	                                	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "xi"));
-                                	}
-                                	else{
-                                		throw new ComponentGenerationException("Malformed alpha/beta stereochemistry element: " + stereoChemistryElement.getValue());
-                                	}
-                        	 	} else if (matchCisTrans.matcher(m.group(2)).matches()) {
-                                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
-                                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase()));
-                        	 	} else {
-                                    throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
-                                }
-                        	 		
-                        	}
-                        } else {
-                            throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
-                        }
-                    }
-				}
-				stereoChemistryElement.detach();
+				processStereochemistryBracket(stereoChemistryElement);
 			}
-			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(CISORTRANS_TYPE_VAL)){//assign a locant if one is directly before the cis/trans
-				Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
-				if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
-					stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
-					possibleLocant.detach();
-				}
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(CISORTRANS_TYPE_VAL)){
+				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the cis/trans
 			}
-			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(E_OR_Z_TYPE_VAL)){//assign a locant if one is directly before the E/Z
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(E_OR_Z_TYPE_VAL)){
 				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue()));
-				Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
-				if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
-					stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
-					possibleLocant.detach();
-				}
+				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the E/Z
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
-				String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
-				String[] stereoChemistryDescriptors = MATCH_COMMA.split(txt);
-				List<String> locants = new ArrayList<String>();
-	      		boolean createLocantsEl =false;
-                for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
-                	Matcher digitMatcher  = matchDigit.matcher(stereoChemistryDescriptor);
-                	if (digitMatcher.lookingAt()){
-                		String locant = digitMatcher.group();
-                		String possibleAlphaBeta = digitMatcher.replaceAll("");
-                        locants.add(locant);
-                		Matcher alphaBetaMatcher = matchAlphaBetaStereochem.matcher(possibleAlphaBeta);
-                		if (alphaBetaMatcher.matches()){
-                            Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
-                            stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, locant));
-                            stereoChemEl.appendChild(stereoChemistryDescriptor);
-                            XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
-	                       	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
-	                    	if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'a'){
-	                        	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
-	                    	}
-	                    	else if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'b'){
-	                        	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "beta"));
-	                    	}
-	                     	else if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'x'){
-	                        	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "xi"));
-	                    	}
-	                    	else{
-	                    		throw new ComponentGenerationException("Malformed alpha/beta stereochemistry element: " + stereoChemistryElement.getValue());
-	                    	}
-                        }
-                		else{
-                			createLocantsEl =true;
-                		}
-                	}
-                }
-        		if (!createLocantsEl){
-        			//create locants unless a group supporting alpha/beta stereochem is within this substituent/root
-        			createLocantsEl =true;
-            		List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
-	        		for (Element group : groups) {
-	        			if (group.getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR)!=null){
-	        				createLocantsEl=false;
-	        				break;
-	        			}
-					}
-        		}
-        		
-        		if (createLocantsEl){
-        			Element newLocantEl = new Element(LOCANT_EL);
-        			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
-        			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
-        		}
-				stereoChemistryElement.detach();
+				processUnbracketedAlphaBetaStereochemistry(stereoChemistryElement);
 			}
 		}
+	}
+
+	private static void processStereochemistryBracket(Element stereoChemistryElement) throws ComponentGenerationException {
+		String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
+		if (txt.startsWith("rel-")){
+			txt = txt.substring(4);
+		}
+		Matcher starMatcher = matchStar.matcher(txt);
+		txt = starMatcher.replaceAll("");
+		if (!txt.startsWith("rac-")){
+			txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
+			String[] stereoChemistryDescriptors = matchCommaOrDash.split(txt);
+		    for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
+		        Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
+		        if (m.matches()){
+		        	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
+		                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
+		                if (m.group(1).length()!=0){
+		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
+		                }
+		                stereoChemEl.appendChild(stereoChemistryDescriptor);
+		                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
+		                if (matchRS.matcher(m.group(2)).matches()) {
+		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
+		                } else if (matchEZ.matcher(m.group(2)).matches()) {
+		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
+		                } else if (matchAlphaBetaStereochem.matcher(m.group(2)).matches()){
+		                	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
+		                	if (Character.toLowerCase(m.group(2).charAt(0)) == 'a'){
+		                    	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
+		                	}
+		                	else if (Character.toLowerCase(m.group(2).charAt(0)) == 'b'){
+		                    	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "beta"));
+		                	}
+		                 	else if (Character.toLowerCase(m.group(2).charAt(0)) == 'x'){
+		                    	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "xi"));
+		                	}
+		                	else{
+		                		throw new ComponentGenerationException("Malformed alpha/beta stereochemistry element: " + stereoChemistryElement.getValue());
+		                	}
+		        	 	} else if (matchCisTrans.matcher(m.group(2)).matches()) {
+		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase()));
+		        	 	} else {
+		                    throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+		                }
+		        	 		
+		        	}
+		        } else {
+		            throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
+		        }
+		    }
+		}
+		stereoChemistryElement.detach();
+	}
+
+	private static void assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
+		Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
+		if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
+			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
+			possibleLocant.detach();
+		}
+	}
+
+	private static void processUnbracketedAlphaBetaStereochemistry(Element stereoChemistryElement) throws ComponentGenerationException {
+		String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
+		String[] stereoChemistryDescriptors = MATCH_COMMA.split(txt);
+		List<String> locants = new ArrayList<String>();
+		boolean createLocantsEl =false;
+		for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
+			Matcher digitMatcher  = matchDigit.matcher(stereoChemistryDescriptor);
+			if (digitMatcher.lookingAt()){
+				String locant = digitMatcher.group();
+				String possibleAlphaBeta = digitMatcher.replaceAll("");
+		        locants.add(locant);
+				Matcher alphaBetaMatcher = matchAlphaBetaStereochem.matcher(possibleAlphaBeta);
+				if (alphaBetaMatcher.matches()){
+		            Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
+		            stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, locant));
+		            stereoChemEl.appendChild(stereoChemistryDescriptor);
+		            XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
+		           	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
+		        	if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'a'){
+		            	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
+		        	}
+		        	else if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'b'){
+		            	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "beta"));
+		        	}
+		         	else if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'x'){
+		            	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "xi"));
+		        	}
+		        	else{
+		        		throw new ComponentGenerationException("Malformed alpha/beta stereochemistry element: " + stereoChemistryElement.getValue());
+		        	}
+		        }
+				else{
+					createLocantsEl =true;
+				}
+			}
+		}
+		if (!createLocantsEl){
+			//create locants unless a group supporting alpha/beta stereochem is within this substituent/root
+			createLocantsEl =true;
+			List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
+			for (Element group : groups) {
+				if (group.getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR)!=null){
+					createLocantsEl=false;
+					break;
+				}
+			}
+		}
+		
+		if (createLocantsEl){
+			Element newLocantEl = new Element(LOCANT_EL);
+			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
+			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
+		}
+		stereoChemistryElement.detach();
 	}
 
 	/**
