@@ -90,14 +90,13 @@ class ComponentGenerator {
 	private final static Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
-	/** The master method, processes a parse result destructively adding semantic information by processing the various micro syntaxes .
-	 *
-	 * @param moleculeEl The element to process.
-	 * @return
-	 * @throws Exception
+	/**
+	 * Processes a parse result destructively adding semantic information by processing the various micro syntaxes.
+	 * @param parse
+	 * @throws ComponentGenerationException 
 	 */
-	void process(Element moleculeEl) throws Exception {
-		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(moleculeEl, new String[]{SUBSTITUENT_EL, ROOT_EL});
+	void process(Element parse) throws ComponentGenerationException {
+		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(parse, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {
 			/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
@@ -114,7 +113,7 @@ class ComponentGenerator {
 			processSuffixPrefixes(subOrRoot);
 			processLambdaConvention(subOrRoot);
 		}
-		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(moleculeEl, GROUP_EL);
+		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(parse, GROUP_EL);
 
 		
 		/* Converts open/close bracket elements to bracket elements and
@@ -131,7 +130,7 @@ class ComponentGenerator {
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
 
-		addOmittedSpaces(moleculeEl);//e.g. change ethylmethyl ether to ethyl methyl ether
+		addOmittedSpaces(parse);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
 
 	/**
