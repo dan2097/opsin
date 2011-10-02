@@ -203,6 +203,7 @@ class ComponentProcessor {
 			}
 			processWordLevelMultiplierIfApplicable(word, wordCount);
 		}
+		new WordRulesOmittedSpaceCorrector(parse).correctOmittedSpaces();//TODO where should this go?
 	}
 
 	/**Resolves the contents of a group element

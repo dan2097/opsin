@@ -129,8 +129,6 @@ class ComponentGenerator {
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
-
-		addOmittedSpaces(parse);//e.g. change ethylmethyl ether to ethyl methyl ether
 	}
 
 	/**
@@ -2160,34 +2158,5 @@ class ComponentGenerator {
 			}
 		}
 	}
-	
-	/**
-	 * Moves substituents into new words if it appears that a space was omitted in the input name
-	 * @param elem
-	 */
-	private void addOmittedSpaces(Element elem)  {
-		List<Element> wordRules = XOMTools.getDescendantElementsWithTagName(elem, WORDRULE_EL);
-		for (Element wordRule : wordRules) {
-			if (WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR)) == WordRule.divalentFunctionalGroup){
-				List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(wordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);
-				if (substituentWords.size()==1){//potentially been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
-					Elements children  =substituentWords.get(0).getChildElements();
-					if (children.size()==2){
-						Element firstChildOfFirstSubstituent =(Element)children.get(0).getChild(0);
-						//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
-						if (!firstChildOfFirstSubstituent.getLocalName().equals(LOCANT_EL) && !firstChildOfFirstSubstituent.getLocalName().equals(MULTIPLIER_EL)){
-							Element subToMove =children.get(1);
-							subToMove.detach();
-							Element newWord =new Element(WORD_EL);
-							newWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
-							newWord.appendChild(subToMove);
-							XOMTools.insertAfter(substituentWords.get(0), newWord);
-						}
-					}
-				}
-			}
-		}
-	}
-
 }
 
