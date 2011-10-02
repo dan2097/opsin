@@ -95,7 +95,7 @@ class ComponentGenerator {
 	 * @param parse
 	 * @throws ComponentGenerationException 
 	 */
-	void process(Element parse) throws ComponentGenerationException {
+	void processParse(Element parse) throws ComponentGenerationException {
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(parse, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {

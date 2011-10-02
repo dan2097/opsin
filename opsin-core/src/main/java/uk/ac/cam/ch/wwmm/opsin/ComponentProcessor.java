@@ -31,7 +31,10 @@ class ComponentProcessor {
 	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
+	
 	private final SuffixRules suffixRules;
+	private final BuildState state;
+	private final Element parse;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private static final HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
@@ -70,23 +73,22 @@ class ComponentProcessor {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	public ComponentProcessor(SuffixRules suffixRules) {
+	public ComponentProcessor(SuffixRules suffixRules, BuildState state, Element parse) {
 		this.suffixRules = suffixRules;
+		this.state = state;
+		this.parse = parse;
 	}
 
-	/** The master method, processes a parse result that has already gone through the ComponentGenerator.
-	 * At this stage one can except all substituents/roots to have at least 1 group.
+	/**
+	* Processes a parse result that has already gone through the ComponentGenerator.
+	 * At this stage one can expect all substituents/roots to have at least 1 group.
 	 * Multiple groups are present in, for example, fusion nomenclature. By the end of this function there will be exactly 1 group
 	 * associated with each substituent/root. Multiplicative nomenclature can result in there being multiple roots
-	 *
-	 * @param state
-     * @param elem The element to process.
-	 * @return
-	 * @throws ComponentGenerationException 
-	 * @throws StructureBuildingException 
+	 * @throws ComponentGenerationException
+	 * @throws StructureBuildingException
 	 */
-	void process(BuildState state, Element elem) throws ComponentGenerationException, StructureBuildingException {
-		List<Element> words =XOMTools.getDescendantElementsWithTagName(elem, WORD_EL);
+	void processParse() throws ComponentGenerationException, StructureBuildingException {
+		List<Element> words =XOMTools.getDescendantElementsWithTagName(parse, WORD_EL);
 		int wordCount =words.size();
 		for (int i = wordCount -1; i>=0; i--) {
 			Element word =words.get(i);
@@ -114,7 +116,7 @@ class ComponentProcessor {
 			
 			for (int j = substituents.size() -1; j >=0; j--) {
 				Element substituent = substituents.get(j);
-				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(state, substituent);//this REMOVES a substituent just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
+				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(substituent);//this REMOVES a substituent just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
 				if (!removed){
 					removed = removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
 				}
@@ -135,22 +137,22 @@ class ComponentProcessor {
 			}
 		
 			for (Element subOrRoot : substituentsAndRoot) {
-				applyDLPrefixes(state, subOrRoot);
-				cycliseCarbohydrates(state, subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
+				applyDLPrefixes(subOrRoot);
+				cycliseCarbohydrates(subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
 			}
 
 			for (Element subOrRootOrBracket : substituentsAndRootAndBrackets) {
-				determineLocantMeaning(state, subOrRootOrBracket, finalSubOrRootInWord);
+				determineLocantMeaning(subOrRootOrBracket, finalSubOrRootInWord);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
 				processMultipliers(subOrRoot);
-				detectConjunctiveSuffixGroups(state, subOrRoot, groups);
-				matchLocantsToDirectFeatures(state, subOrRoot);
+				detectConjunctiveSuffixGroups(subOrRoot, groups);
+				matchLocantsToDirectFeatures(subOrRoot);
 
 				Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
-				preliminaryProcessSuffixes(state, lastGroupInSubOrRoot, XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
+				preliminaryProcessSuffixes(lastGroupInSubOrRoot, XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
 			FunctionalReplacement.processAmideOrHydrazideFunctionalClassNomenclature(state, finalSubOrRootInWord, word);
 
@@ -159,31 +161,31 @@ class ComponentProcessor {
 				substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
 			}
 			
-			handleGroupIrregularities(state, groups);
+			handleGroupIrregularities(groups);
 
 			for (Element subOrRoot : substituentsAndRoot) {
-				processHW(state, subOrRoot);//hantzch-widman rings
+				processHW(subOrRoot);//hantzch-widman rings
 				FusedRingBuilder.processFusedRings(state, subOrRoot);
-				processFusedRingBridges(state, subOrRoot);
-				assignElementSymbolLocants(state, subOrRoot);
-				processRingAssemblies(state, subOrRoot);
-				processPolyCyclicSpiroNomenclature(state, subOrRoot);
+				processFusedRingBridges(subOrRoot);
+				assignElementSymbolLocants(subOrRoot);
+				processRingAssemblies(subOrRoot);
+				processPolyCyclicSpiroNomenclature(subOrRoot);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
-				applyLambdaConvention(state, subOrRoot);
-				handleMultiRadicals(state, subOrRoot);
+				applyLambdaConvention(subOrRoot);
+				handleMultiRadicals(subOrRoot);
 			}
 
 			//System.out.println(new XOMFormatter().elemToString(elem));
 			addImplicitBracketsToAminoAcids(groups, brackets);
-			findAndStructureImplictBrackets(state, substituents, brackets);
+			findAndStructureImplictBrackets(substituents, brackets);
 
 			for (Element subOrRoot : substituentsAndRoot) {
-				matchLocantsToIndirectFeatures(state, subOrRoot);
-				assignImplicitLocantsToDiTerminalSuffixes(state, subOrRoot);
-				processConjunctiveNomenclature(state, subOrRoot);
-				resolveSuffixes(state, subOrRoot.getFirstChildElement(GROUP_EL), XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
+				matchLocantsToIndirectFeatures(subOrRoot);
+				assignImplicitLocantsToDiTerminalSuffixes(subOrRoot);
+				processConjunctiveNomenclature(subOrRoot);
+				resolveSuffixes(subOrRoot.getFirstChildElement(GROUP_EL), XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
 
 			moveErroneouslyPositionedLocantsAndMultipliers(brackets);//e.g. (tetramethyl)azanium == tetra(methyl)azanium
@@ -192,14 +194,14 @@ class ComponentProcessor {
 				children = XOMTools.getChildElementsWithTagNames(children.get(0), new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 			}
 			if (children.size()>0){
-				assignLocantsToMultipliedRootIfPresent(state, children.get(children.size()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
+				assignLocantsToMultipliedRootIfPresent(children.get(children.size()-1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
 			}
 			addImplicitBracketsInCaseWhereSubstituentHasTwoLocants(substituents, brackets);
 			substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);//implicit brackets may have been created
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
-				assignLocantsAndMultipliers(state, subBracketOrRoot);
+				assignLocantsAndMultipliers(subBracketOrRoot);
 			}
-			processWordLevelMultiplierIfApplicable(state, word, wordCount);
+			processWordLevelMultiplierIfApplicable(word, wordCount);
 		}
 	}
 
@@ -637,12 +639,11 @@ class ComponentProcessor {
 
 	/**
 	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
-	 * @param state
 	 * @param substituent
 	 * @return true is the substituent was a hydro substituent and hence was removed
 	 * @throws ComponentGenerationException
 	 */
-	private boolean removeAndMoveToAppropriateGroupIfHydroSubstituent(BuildState state, Element substituent) throws ComponentGenerationException {
+	private boolean removeAndMoveToAppropriateGroupIfHydroSubstituent(Element substituent) throws ComponentGenerationException {
 		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
 		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size()==0){
 			Element hydroSubstituent = substituent;
@@ -664,7 +665,7 @@ class ComponentProcessor {
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
 			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
 			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
-			if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
+			if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
 				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
 				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocantInFrontOfHydro.getValue()).length==1){
 					//e.g.4-decahydro-1-naphthalenyl
@@ -719,7 +720,7 @@ class ComponentProcessor {
 				Element nextSubOrRootOrBracketFromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
 				while (!nextSubOrRootOrBracketFromLast.equals(hydroSubstituent)){
 					potentialRing = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
-					if (potentialRing!=null && containsCyclicAtoms(state, potentialRing)){
+					if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
 						targetRing =potentialRing;
 						break;
 					}
@@ -749,7 +750,6 @@ class ComponentProcessor {
 
 	/**
 	 * Removes substituents which are just a substractivePrefix element e.g. deoxy and moves their contents to be in front of the next in scope biochemical fragment (or failing that group)
-	 * @param state
 	 * @param substituent
 	 * @return true is the substituent was a subtractivePrefix substituent and hence was removed
 	 * @throws ComponentGenerationException
@@ -810,7 +810,7 @@ class ComponentProcessor {
 	}
 
 
-	private boolean containsCyclicAtoms(BuildState state, Element potentialRing) {
+	private boolean containsCyclicAtoms(Element potentialRing) {
 		Fragment potentialRingFrag = state.xmlFragmentMap.get(potentialRing);
 		List<Atom> atomList = potentialRingFrag.getAtomList();
 		for (Atom atom : atomList) {
@@ -825,13 +825,12 @@ class ComponentProcessor {
 	 * Checks for agreement between the number of locants and multipliers.
 	 * If a locant element contains multiple elements and is not next to a multiplier the various cases where this is the case will be checked for
 	 * This may result in a locant being moved if it is more convenient for subsequent processing
-	 * @param state
 	 * @param subOrBracketOrRoot The substituent/root/bracket to looks for locants in.
 	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclature
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void determineLocantMeaning(BuildState state, Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, ComponentGenerationException {
+	private void determineLocantMeaning(Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, ComponentGenerationException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
 		Element group =subOrBracketOrRoot.getFirstChildElement(GROUP_EL);//will be null if element is a bracket
 		for (Element locant : locants) {
@@ -892,7 +891,7 @@ class ComponentProcessor {
 						boolean locantModified =false;//did determineLocantMeaning do something?
 						if (locantValues[locantValues.length-1].endsWith("'") && group!=null && subOrBracketOrRoot.indexOf(group) > subOrBracketOrRoot.indexOf(locant)){//quite possible that this is referring to a multiplied root
 							if (group.getAttribute(OUTIDS_ATR)!=null && MATCH_COMMA.split(group.getAttributeValue(OUTIDS_ATR)).length>1){
-								locantModified = checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord);
+								locantModified = checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord);
 							}
 							else{
 								Element afterGroup = (Element)XOMTools.getNextSibling(group);
@@ -909,7 +908,7 @@ class ComponentProcessor {
 									afterGroup = (Element)XOMTools.getNextSibling(afterGroup);
 								}
 								if (inlineSuffixCount >=2){
-									locantModified = checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord);
+									locantModified = checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord);
 								}
 							}
 						}
@@ -919,13 +918,13 @@ class ComponentProcessor {
 							XOMTools.insertBefore(multiplierEl, locant);
 						}
 					} else {
-						if(!checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord)) {
+						if(!checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord)) {
 							throw new ComponentGenerationException("Mismatch between locant and multiplier counts (" + Integer.toString(locantValues.length) + " and " + multiplierEl.getAttributeValue(VALUE_ATR) + "):" + locant.toXML());
 						}
 					}
 				} else {
 					/* Multiple locants without a multiplier */
-					if(!checkSpecialLocantUses(state, locant, locantValues, finalSubOrRootInWord)) {
+					if(!checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord)) {
 						throw new ComponentGenerationException("Multiple locants without a multiplier: " + locant.toXML());
 					}
 				}
@@ -939,14 +938,13 @@ class ComponentProcessor {
 	 * If this is not the case alternative possibilities are tested:
 	 * 	The locants could be intended to indicate the position of outAtoms e.g. 1,4-phenylene
 	 * 	The locants could be intended to indicate the attachement points of the root groups in multiplicative nomenclature e.g. 4,4'-methylenedibenzoic acid
-	 * @param state
 	 * @param locant The element corresponding to the locant group to be tested
 	 * @param locantValues The locant values;
 	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclatures)
 	 * @return true if there's a HW system, and agreement; or if the locants conform to one of the alternative possibilities, otherwise false.
 	 * @throws StructureBuildingException
 	 */
-	private boolean checkSpecialLocantUses(BuildState state, Element locant, String[] locantValues, Element finalSubOrRootInWord) throws StructureBuildingException {
+	private boolean checkSpecialLocantUses(Element locant, String[] locantValues, Element finalSubOrRootInWord) throws StructureBuildingException {
 		int count =locantValues.length;
 		Element currentElem = (Element)XOMTools.getNextSibling(locant);
 		int heteroCount = 0;
@@ -1070,7 +1068,7 @@ class ComponentProcessor {
 		return false;
 	}
 
-	private void applyDLPrefixes(BuildState state, Element subOrRoot) throws ComponentGenerationException {
+	private void applyDLPrefixes(Element subOrRoot) throws ComponentGenerationException {
 		Elements dlStereochemistryEls = subOrRoot.getChildElements(DLSTEREOCHEMISTRY_EL);
 		for (int i = 0; i < dlStereochemistryEls.size(); i++) {
 			Element dlStereochemistry = dlStereochemistryEls.get(i);
@@ -1191,11 +1189,10 @@ class ComponentProcessor {
 	 * Cyclises carbohydrate configuration prefixes according to the adjacent ring size indicator
 	 * Alpha/beta stereochemistry is then applied if present
 	 * TODO support multi prefixes and alpha/beta stereochem with multiple prefixes
-	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException
 	 */
-	private void cycliseCarbohydrates(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	private void cycliseCarbohydrates(Element subOrRoot) throws StructureBuildingException {
 		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATESTEM_TYPE_VAL);
 		for (Element group : carbohydrates) {
 			Fragment frag = state.xmlFragmentMap.get(group);
@@ -1422,13 +1419,12 @@ class ComponentProcessor {
 	/**
 	 * Converts group elements that are identified as being conjunctive suffixes to CONJUNCTIVESUFFIXGROUP_EL
 	 * and labels them appropriately. Any suffixes that the conjunctive suffix may have are resolved onto it
-	 * @param state
 	 * @param subOrRoot
 	 * @param allGroups
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void detectConjunctiveSuffixGroups(BuildState state, Element subOrRoot, List<Element> allGroups) throws ComponentGenerationException, StructureBuildingException {
+	private void detectConjunctiveSuffixGroups(Element subOrRoot, List<Element> allGroups) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size()>1){
 			List<Element> conjunctiveGroups = new ArrayList<Element>();
@@ -1467,8 +1463,8 @@ class ComponentProcessor {
 				}
 				possibleSuffix = (Element) XOMTools.getNextSibling(possibleSuffix);
 			}
-			preliminaryProcessSuffixes(state, primaryConjunctiveGroup, suffixes);
-			resolveSuffixes(state, primaryConjunctiveGroup, suffixes);
+			preliminaryProcessSuffixes(primaryConjunctiveGroup, suffixes);
+			resolveSuffixes(primaryConjunctiveGroup, suffixes);
             for (Element suffix : suffixes) {
                 suffix.detach();
             }
@@ -1533,12 +1529,11 @@ class ComponentProcessor {
 	/** Match each locant to the next applicable "feature". Assumes that processLocants
 	 * has done a good job and rejected cases where no match can be made.
 	 * Handles cases where the locant is next to the feature it refers to
-	 * @param state 
 	 *
 	 * @param subOrRoot The substituent/root to look for locants in.
 	 * @throws ComponentGenerationException
 	 */
-	private void matchLocantsToDirectFeatures(BuildState state, Element subOrRoot) throws ComponentGenerationException {
+	private void matchLocantsToDirectFeatures(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> locants =  XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		for (Element group : groups) {
@@ -1641,13 +1636,12 @@ class ComponentProcessor {
 	/**
 	 * Handles suffixes, passes them to resolveGroupAddingSuffixes.
 	 * Processes the suffixAppliesTo command which multiplies a suffix and attaches the suffixes to the atoms described by the given IDs
-	 * @param state
 	 * @param group
 	 * @param suffixes 
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void preliminaryProcessSuffixes(BuildState state, Element group, List<Element> suffixes) throws ComponentGenerationException, StructureBuildingException{
+	private void preliminaryProcessSuffixes(Element group, List<Element> suffixes) throws ComponentGenerationException, StructureBuildingException{
 		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
 
 		boolean imideSpecialCase =false;
@@ -1664,19 +1658,19 @@ class ComponentProcessor {
 		if (group.getAttribute(SUFFIXAPPLIESTOBYDEFAULT_ATR)!=null){
 			applyDefaultLocantToSuffixIfPresent(group.getAttributeValue(SUFFIXAPPLIESTOBYDEFAULT_ATR), group, suffixableFragment);
 		}
-		List<Fragment> suffixFragments =resolveGroupAddingSuffixes(state, suffixes, suffixableFragment);
+		List<Fragment> suffixFragments =resolveGroupAddingSuffixes(suffixes, suffixableFragment);
 		state.xmlSuffixMap.put(group, suffixFragments);
 		boolean suffixesResolved =false;
 		if (group.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL)){//merge the suffix into the chalcogen acid stem e.g sulfonoate needs to be one fragment for infix replacement
-	    	resolveSuffixes(state, group, suffixes);
+	    	resolveSuffixes(group, suffixes);
 	    	suffixesResolved =true;
 	    }
-		processSuffixPrefixes(state, suffixes);//e.g. carbox amide
+		processSuffixPrefixes(suffixes);//e.g. carbox amide
 		FunctionalReplacement.processInfixFunctionalReplacementNomenclature(state, suffixes, suffixFragments);
-		processRemovalOfHydroxyGroupsRules(state, suffixes, suffixableFragment);
+		processRemovalOfHydroxyGroupsRules(suffixes, suffixableFragment);
 
 		if (group.getValue().equals("oxal")){//oxalic acid is treated as a non carboxylic acid for the purposes of functional replacment. See P-65.2.3
-			resolveSuffixes(state, group, suffixes);
+			resolveSuffixes(group, suffixes);
 	    	group.getAttribute(TYPE_ATR).setValue(NONCARBOXYLICACID_TYPE_VAL);
 	    	suffixableFragment.setType(NONCARBOXYLICACID_TYPE_VAL);
 	    	suffixesResolved =true;
@@ -1698,7 +1692,7 @@ class ComponentProcessor {
 			if (!carbon.getElement().equals("C")){
 				throw new ComponentGenerationException("Carbon not found where carbon expected");
 			}
-			resolveSuffixes(state, group, suffixes);
+			resolveSuffixes(group, suffixes);
 			suffixesResolved = true;
 			state.fragManager.createBond(nitrogen, carbon, 1);//join the N of the amide to the carbon of the acid to form the cyclic imide
 		}
@@ -1795,14 +1789,13 @@ class ComponentProcessor {
 
 
 	/**Processes a suffix and returns any fragment the suffix intends to add to the molecule
-	 * @param state
 	 * @param suffixes The suffix elements for a fragment.
 	 * @param frag The fragment to which the suffix will be applied
 	 * @return An arrayList containing the generated fragments
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
 	 * @throws ComponentGenerationException
 	 */
-	private List<Fragment> resolveGroupAddingSuffixes(BuildState state, List<Element> suffixes, Fragment frag) throws StructureBuildingException, ComponentGenerationException {
+	private List<Fragment> resolveGroupAddingSuffixes(List<Element> suffixes, Fragment frag) throws StructureBuildingException, ComponentGenerationException {
 		List<Fragment> suffixFragments =new ArrayList<Fragment>();
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
@@ -1891,7 +1884,7 @@ class ComponentProcessor {
 					if (suffixFrag != null){
 						throw new ComponentGenerationException("removeOneDoubleBondedOxygen is not currently compatable with the addGroup suffix rule");
 					}
-					removeOneDoubleBondedOxygen(state, atomLikelyToBeUsedBySuffix);
+					removeOneDoubleBondedOxygen(atomLikelyToBeUsedBySuffix);
 				}
             }
             if (suffixFrag != null) {
@@ -1905,13 +1898,12 @@ class ComponentProcessor {
 	/**Processes any convertHydroxyGroupsToOutAtoms and convertHydroxyGroupsToPositiveCharge instructions
 	 * This is not handled as part of resolveGroupAddingSuffixes as something like carbonochloridoyl involves infix replacement
 	 * on a hydroxy that would otherwise actually be removed by this rule!
-	 * @param state
 	 * @param suffixes The suffix elements for a fragment.
 	 * @param frag The fragment to which the suffix will be applied
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException 
 	 */
-	private void processRemovalOfHydroxyGroupsRules(BuildState state, List<Element> suffixes, Fragment frag) throws ComponentGenerationException, StructureBuildingException{
+	private void processRemovalOfHydroxyGroupsRules(List<Element> suffixes, Fragment frag) throws ComponentGenerationException, StructureBuildingException{
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
@@ -1928,10 +1920,10 @@ class ComponentProcessor {
                 Element suffixRuleTag = suffixRuleTags.get(j);
                 String suffixRuleTagName = suffixRuleTag.getLocalName();
                 if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)){
-					convertHydroxyGroupsToOutAtoms(state, frag);
+					convertHydroxyGroupsToOutAtoms(frag);
 				}
                 else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL)){
-					convertHydroxyGroupsToPositiveCharge(state, frag);
+					convertHydroxyGroupsToPositiveCharge(frag);
 				}
             }
         }
@@ -1969,11 +1961,10 @@ class ComponentProcessor {
 	/**
 	 * Removes a double bonded Oxygen from the atom (an [N+][O-] is treated as N=O)
 	 * An exception is thrown if no double bonded oxygen could be found connected to the atom
-	 * @param state
 	 * @param atom
 	 * @throws StructureBuildingException
 	 */
-	private void removeOneDoubleBondedOxygen(BuildState state, Atom atom) throws StructureBuildingException {
+	private void removeOneDoubleBondedOxygen(Atom atom) throws StructureBuildingException {
 		//TODO prioritise [N+][O-]
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
@@ -2003,11 +1994,10 @@ class ComponentProcessor {
 	
 	/**
 	 * Given a fragment removes all hydroxy groups and adds a valency 1 outAtom to the adjacent atom for each hydroxy group
-	 * @param state
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
-	private void convertHydroxyGroupsToOutAtoms(BuildState state, Fragment frag) throws StructureBuildingException {
+	private void convertHydroxyGroupsToOutAtoms(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getElement().equals("O") && atom.getCharge()==0){
@@ -2022,11 +2012,10 @@ class ComponentProcessor {
 
 	/**
 	 * Given a fragment removes all hydroxy groups and applies ylium to the adjacent atom (+1 charge -1 proton)
-	 * @param state
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
-	private void convertHydroxyGroupsToPositiveCharge(BuildState state, Fragment frag) throws StructureBuildingException {
+	private void convertHydroxyGroupsToPositiveCharge(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getElement().equals("O") && atom.getCharge()==0){
@@ -2042,11 +2031,10 @@ class ComponentProcessor {
 	/**
 	 * Searches for suffix elements with the suffixPrefix attribute set
 	 * A suffixPrefix is something like sulfon in sulfonamide. It would in this case take the value S(=O)
-	 * @param state
 	 * @param suffixes
 	 * @throws StructureBuildingException
 	 */
-	private void processSuffixPrefixes(BuildState state, List<Element> suffixes) throws StructureBuildingException{
+	private void processSuffixPrefixes(List<Element> suffixes) throws StructureBuildingException{
 		for (Element suffix : suffixes) {
 			if (suffix.getAttribute(SUFFIXPREFIX_ATR)!=null){
 				Fragment suffixPrefixFrag = state.fragManager.buildSMILES(suffix.getAttributeValue(SUFFIXPREFIX_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
@@ -2076,13 +2064,12 @@ class ComponentProcessor {
 	/**
 	 * Checks through the groups accesible from the startingElement taking into account brackets (i.e. those that it is feasible that the group of the startingElement could substitute onto).
 	 * It is assumed that one does not intentionally locant onto something in a deeper level of bracketting (not implicit bracketing). e.g. 2-propyl(ethyl)ammonia will give prop-2-yl
-	 * @param state
 	 * @param startingElement
 	 * @param locant: the locant string to check for the presence of
 	 * @return whether the locant was found
 	 * @throws StructureBuildingException
 	 */
-	private boolean checkLocantPresentOnPotentialRoot(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
+	private boolean checkLocantPresentOnPotentialRoot(Element startingElement, String locant) throws StructureBuildingException {
 		boolean foundSibling =false;
 		Stack<Element> s = new Stack<Element>();
 		s.add(startingElement);
@@ -2176,11 +2163,10 @@ class ComponentProcessor {
 	}
 
 	/** Handles special cases in IUPAC nomenclature that are most elegantly solved by modification of the fragment
-	 * @param state
 	 * @param groups
 	 * @throws StructureBuildingException
 	 */
-	private void handleGroupIrregularities(BuildState state, List<Element> groups) throws StructureBuildingException{
+	private void handleGroupIrregularities(List<Element> groups) throws StructureBuildingException{
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
@@ -2206,12 +2192,11 @@ class ComponentProcessor {
 
 	/**
 	 * Handles Hantzsch-Widman rings. Adds SMILES to the group corresponding to the ring's structure
-	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException
 	 */
-	private void processHW(BuildState state, Element subOrRoot) throws StructureBuildingException, ComponentGenerationException{
+	private void processHW(Element subOrRoot) throws StructureBuildingException, ComponentGenerationException{
 		List<Element> hwGroups = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, SUBTYPE_ATR, HANTZSCHWIDMAN_SUBTYPE_VAL);
 		for (Element group : hwGroups) {
 			Fragment hwRing =state.xmlFragmentMap.get(group);
@@ -2375,11 +2360,10 @@ class ComponentProcessor {
 	/**
 	 * Assigns Element symbols to groups, suffixes and conjunctive suffixes.
 	 * Suffixes have preference.
-	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException 
 	 */
-	private void assignElementSymbolLocants(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	private void assignElementSymbolLocants(Element subOrRoot) throws StructureBuildingException {
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groups.get(groups.size()-1);
 		List<Fragment> suffixFragments = new ArrayList<Fragment>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
@@ -2398,12 +2382,11 @@ class ComponentProcessor {
 
 	/**
 	 * Processes constructs such as biphenyl, 1,1':4',1''-Terphenyl, 2,2'-Bipyridylium, m-Quaterphenyl
-	 * @param state
 	 * @param subOrRoot
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processRingAssemblies(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
+	private void processRingAssemblies(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> ringAssemblyMultipliers = XOMTools.getChildElementsWithTagName(subOrRoot, RINGASSEMBLYMULTIPLIER_EL);
 		for (Element multiplier : ringAssemblyMultipliers) {
 			int mvalue = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
@@ -2470,11 +2453,11 @@ class ComponentProcessor {
 				}
 			}
 			else{
-				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants.size(), fragmentToResolveAndDuplicate.getOutAtoms().size(),  state);
+				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants.size(), fragmentToResolveAndDuplicate.getOutAtoms().size());
 			}
 
 			List<Element> suffixes = XOMTools.getChildElementsWithTagName(elementToResolve, SUFFIX_EL);
-			resolveSuffixes(state, group, suffixes);
+			resolveSuffixes(group, suffixes);
 			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
 			group.detach();
@@ -2538,7 +2521,7 @@ class ComponentProcessor {
 	 * @return 
 	 * @throws ComponentGenerationException 
 	 */
-	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, int ringJoiningLocants, int outAtomCount,  BuildState state) throws ComponentGenerationException {
+	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, int ringJoiningLocants, int outAtomCount) throws ComponentGenerationException {
 		Element elementToResolve = new Element(SUBSTITUENT_EL);
 		boolean groupFound = false;
 		boolean inlineSuffixSeen = outAtomCount > 0;
@@ -2582,12 +2565,11 @@ class ComponentProcessor {
 	 * It is assumed that at this stage all hantzch widman rings/fused rings have been resolved to single groups allowing them to be simply spiro fused
 	 * 
 	 * http://www.chem.qmul.ac.uk/iupac/spiro/ (SP-2 through SP-6)
-	 * @param state
 	 * @param subOrRoot
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processPolyCyclicSpiroNomenclature(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
+	private void processPolyCyclicSpiroNomenclature(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> polyCyclicSpiros = XOMTools.getChildElementsWithTagName(subOrRoot, POLYCYCLICSPIRO_EL);
 		if (polyCyclicSpiros.size()>0){
 			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
@@ -2596,28 +2578,28 @@ class ComponentProcessor {
 				if (polyCyclicSpiros.size()!=1){
 					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
 				}
-				processNonIdenticalPolyCyclicSpiro(state, polyCyclicSpiroDescriptor);
+				processNonIdenticalPolyCyclicSpiro(polyCyclicSpiroDescriptor);
 			}
 			else if (value.equals("spiroOldMethod")){
-				processOldMethodPolyCyclicSpiro(state, polyCyclicSpiros);
+				processOldMethodPolyCyclicSpiro(polyCyclicSpiros);
 			}
 			else if (value.equals("spirobi")){
 				if (polyCyclicSpiros.size()!=1){
 					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
 				}
-				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 2);
+				processSpiroBiOrTer(polyCyclicSpiroDescriptor, 2);
 			}
 			else if (value.equals("spiroter")){
 				if (polyCyclicSpiros.size()!=1){
 					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
 				}
-				processSpiroBiOrTer(state, polyCyclicSpiroDescriptor, 3);
+				processSpiroBiOrTer(polyCyclicSpiroDescriptor, 3);
 			}
 			else if (value.equals("dispiroter")){
 				if (polyCyclicSpiros.size()!=1){
 					throw new ComponentGenerationException("Nested polyspiro systems are not supported");
 				}
-				processDispiroter(state, polyCyclicSpiroDescriptor);
+				processDispiroter(polyCyclicSpiroDescriptor);
 			}
 			else{
 				throw new ComponentGenerationException("Unsupported spiro system encountered");
@@ -2626,7 +2608,7 @@ class ComponentProcessor {
 		}
 	}
 
-	private void processNonIdenticalPolyCyclicSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws ComponentGenerationException, StructureBuildingException {
+	private void processNonIdenticalPolyCyclicSpiro(Element polyCyclicSpiroDescriptor) throws ComponentGenerationException, StructureBuildingException {
 		Element subOrRoot = (Element) polyCyclicSpiroDescriptor.getParent();
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size()<2){
@@ -2651,7 +2633,7 @@ class ComponentProcessor {
 		}
 		firstGroupEls.add(firstGroup);
 		firstGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(firstGroup, UNSATURATOR_EL));
-		resolveFeaturesOntoGroup(state, firstGroupEls);
+		resolveFeaturesOntoGroup(firstGroupEls);
 		Set<Atom> spiroAtoms = new HashSet<Atom>();
 		for (int i = 1; i < groups.size(); i++) {
 			Element nextGroup =groups.get(i);
@@ -2668,7 +2650,7 @@ class ComponentProcessor {
 			}
 			nextGroupEls.add(nextGroup);
 			nextGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(nextGroup, UNSATURATOR_EL));
-			resolveFeaturesOntoGroup(state, nextGroupEls);
+			resolveFeaturesOntoGroup(nextGroupEls);
 			
 			String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locant.getValue()));
 			if (locants.length!=2){
@@ -2728,18 +2710,17 @@ class ComponentProcessor {
 
 	/**
 	 * Processes spiro systems described using the now deprectated method described in the 1979 guidelines Rule A-42
-	 * @param state
 	 * @param spiroElements
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processOldMethodPolyCyclicSpiro(BuildState state, List<Element> spiroElements) throws ComponentGenerationException, StructureBuildingException {
+	private void processOldMethodPolyCyclicSpiro(List<Element> spiroElements) throws ComponentGenerationException, StructureBuildingException {
 		Element firstSpiro =spiroElements.get(0);
 		Element subOrRoot = (Element) firstSpiro.getParent();
 		Element firstEl = (Element) subOrRoot.getChild(0);
 		List<Element> elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(firstEl, POLYCYCLICSPIRO_EL);
 		elementsToResolve.add(0, firstEl);
-		resolveFeaturesOntoGroup(state, elementsToResolve);
+		resolveFeaturesOntoGroup(elementsToResolve);
 		
 		for (int i = 0; i < spiroElements.size(); i++) {
 			Element currentSpiro = spiroElements.get(i);
@@ -2755,7 +2736,7 @@ class ComponentProcessor {
 			Fragment previousFrag = state.xmlFragmentMap.get(previousGroup);
 			FragmentTools.relabelNumericLocants(parentFrag.getAtomList(), StringTools.multiplyString("'",i+1));
 			elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(currentSpiro, POLYCYCLICSPIRO_EL);
-			resolveFeaturesOntoGroup(state, elementsToResolve);
+			resolveFeaturesOntoGroup(elementsToResolve);
 			
 			String locant1 =null;
 			Element possibleFirstLocant = (Element) XOMTools.getPreviousSibling(currentSpiro);
@@ -2810,13 +2791,12 @@ class ComponentProcessor {
 
 	/**
 	 * Two or three copies of the fragment after polyCyclicSpiroDescriptor are spiro fused at one centre
-	 * @param state
 	 * @param polyCyclicSpiroDescriptor
 	 * @param components
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void processSpiroBiOrTer(BuildState state, Element polyCyclicSpiroDescriptor, int components) throws ComponentGenerationException, StructureBuildingException {
+	private void processSpiroBiOrTer(Element polyCyclicSpiroDescriptor, int components) throws ComponentGenerationException, StructureBuildingException {
 		Element locant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
 		String locantText;
 		if (locant ==null || !locant.getLocalName().equals(LOCANT_EL)){
@@ -2840,7 +2820,7 @@ class ComponentProcessor {
 			throw new ComponentGenerationException("Cannot find group to which spirobi/ter descriptor applies");
 		}
 
-		determineFeaturesToResolveInSingleComponentSpiro(state, polyCyclicSpiroDescriptor);
+		determineFeaturesToResolveInSingleComponentSpiro(polyCyclicSpiroDescriptor);
 		Fragment fragment = state.xmlFragmentMap.get(group);
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < components ; i++) {
@@ -2863,12 +2843,11 @@ class ComponentProcessor {
 
 	/**
 	 * Three copies of the fragment after polyCyclicSpiroDescriptor are spiro fused at two centres
-	 * @param state
 	 * @param polyCyclicSpiroDescriptor
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException
 	 */
-	private void processDispiroter(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
+	private void processDispiroter(Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
 		String value = polyCyclicSpiroDescriptor.getValue();
 		value = value.substring(0, value.length()-10);//remove dispiroter
 		value = StringTools.removeDashIfPresent(value);
@@ -2877,7 +2856,7 @@ class ComponentProcessor {
 		if (group==null){
 			throw new ComponentGenerationException("Cannot find group to which dispiroter descriptor applies");
 		}
-		determineFeaturesToResolveInSingleComponentSpiro(state, polyCyclicSpiroDescriptor);
+		determineFeaturesToResolveInSingleComponentSpiro(polyCyclicSpiroDescriptor);
 		Fragment fragment = state.xmlFragmentMap.get(group);
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < 3 ; i++) {
@@ -2907,12 +2886,11 @@ class ComponentProcessor {
 	/**
 	 * The features between the polyCyclicSpiroDescriptor and the first group element, or beween the STRUCTURALOPENBRACKET_EL and STRUCTURALCLOSEBRACKET_EL
 	 * are found and then passed to resolveFeaturesOntoGroup
-	 * @param state
 	 * @param polyCyclicSpiroDescriptor
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException 
 	 */
-	private void determineFeaturesToResolveInSingleComponentSpiro(BuildState state, Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
+	private void determineFeaturesToResolveInSingleComponentSpiro(Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
 		Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		List<Element> elementsToResolve;
 		if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
@@ -2923,18 +2901,17 @@ class ComponentProcessor {
 		else{
 			elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(polyCyclicSpiroDescriptor, GROUP_EL);
 		}
-		resolveFeaturesOntoGroup(state, elementsToResolve);
+		resolveFeaturesOntoGroup(elementsToResolve);
 	}
 	
 	/**
 	 * Given some elements including a group element resolves all locanted and unlocanted features.
 	 * If suffixes are present these are resolved and detached
-	 * @param state
 	 * @param elementsToResolve
 	 * @throws StructureBuildingException 
 	 * @throws ComponentGenerationException 
 	 */
-	private void resolveFeaturesOntoGroup(BuildState state, List<Element> elementsToResolve) throws StructureBuildingException, ComponentGenerationException{
+	private void resolveFeaturesOntoGroup(List<Element> elementsToResolve) throws StructureBuildingException, ComponentGenerationException{
 		if (elementsToResolve.size()==0){
 			return;
 		}
@@ -2973,7 +2950,7 @@ class ComponentProcessor {
 			}
 		}
 		if (!suffixes.isEmpty()){
-			resolveSuffixes(state, group, suffixes);
+			resolveSuffixes(group, suffixes);
 			for (Element suffix : suffixes) {
 				suffix.detach();
 			}
@@ -2994,11 +2971,10 @@ class ComponentProcessor {
 	/**
 	 * Processes bridges e.g. 4,7-methanoindene
 	 * Resolves and attaches said bridges to the adjacent ring fragment
-	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException 
 	 */
-	private void processFusedRingBridges(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	private void processFusedRingBridges(Element subOrRoot) throws StructureBuildingException {
 		List<Element> bridges = XOMTools.getChildElementsWithTagName(subOrRoot, FUSEDRINGBRIDGE_EL);
 		for (Element bridge : bridges) {
 			Fragment ringFrag = state.xmlFragmentMap.get(XOMTools.getNextSibling(bridge, GROUP_EL));
@@ -3029,11 +3005,10 @@ class ComponentProcessor {
 	/**
 	 * Searches for lambdaConvention elements and applies the valency they specify to the atom
 	 * they specify on the substituent/root's fragment
-	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException
 	 */
-	private void applyLambdaConvention(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	private void applyLambdaConvention(Element subOrRoot) throws StructureBuildingException {
 		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement(GROUP_EL));
@@ -3056,12 +3031,11 @@ class ComponentProcessor {
 	 * Hence at this point it can be determined if a multi radical susbtituent is present in the name
 	 * This would be expected in multiplicative nomenclature and is noted in the state so that the StructureBuilder knows to resolve the
 	 * section of the name from that point onwards in a left to right manner rather than right to left
-	 * @param state
 	 * @param subOrRoot: The sub/root to look in
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void handleMultiRadicals(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException{
+	private void handleMultiRadicals(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException{
 		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
@@ -3069,7 +3043,7 @@ class ComponentProcessor {
 			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
-				if (!unsuitableForFormingChainMultiradical(state, group, beforeGroup)){
+				if (!unsuitableForFormingChainMultiradical(group, beforeGroup)){
 					if (groupValue.equals("methylene")){
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", multiplierVal));
 					}
@@ -3147,7 +3121,7 @@ class ComponentProcessor {
 			}
 		}
 
-		int totalOutAtoms = outAtomCount + calculateOutAtomsToBeAddedFromInlineSuffixes(state, group, subOrRoot.getChildElements(SUFFIX_EL));
+		int totalOutAtoms = outAtomCount + calculateOutAtomsToBeAddedFromInlineSuffixes(group, subOrRoot.getChildElements(SUFFIX_EL));
 		if (totalOutAtoms >= 2){
 			group.addAttribute(new Attribute (ISAMULTIRADICAL_ATR, Integer.toString(totalOutAtoms)));
 		}
@@ -3156,12 +3130,11 @@ class ComponentProcessor {
 	/**
 	 * Checks for cases where multiplier(methylene) or multiplier(thio) and the like should not be interpreted as one fragment
 	 * Something like nitrilotrithiotriacetic acid or oxetane-3,3-diyldimethylene
-	 * @param state 
 	 * @param group
 	 * @param multiplierBeforeGroup 
 	 * @return
 	 */
-	private boolean unsuitableForFormingChainMultiradical(BuildState state, Element group, Element multiplierBeforeGroup) {
+	private boolean unsuitableForFormingChainMultiradical(Element group, Element multiplierBeforeGroup) {
 		Element previousGroup = (Element) OpsinTools.getPreviousGroup(group);
 		if (previousGroup!=null){
 			if (previousGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null){
@@ -3206,13 +3179,12 @@ class ComponentProcessor {
 
 	/**
 	 * Calculates number of OutAtoms that the resolveSuffixes method will add.
-	 * @param state
 	 * @param group
 	 * @param suffixes
 	 * @return numberOfOutAtoms that will be added by resolveSuffixes
 	 * @throws ComponentGenerationException
 	 */
-	private int calculateOutAtomsToBeAddedFromInlineSuffixes(BuildState state, Element group, Elements suffixes) throws  ComponentGenerationException {
+	private int calculateOutAtomsToBeAddedFromInlineSuffixes(Element group, Elements suffixes) throws  ComponentGenerationException {
 		int outAtomsThatWillBeAdded = 0;
 		Fragment frag = state.xmlFragmentMap.get(group);
 		String groupType = frag.getType();
@@ -3291,14 +3263,13 @@ class ComponentProcessor {
 	/**Looks for places where brackets should have been, and does the same
 	 * as findAndStructureBrackets. E.g. dimethylaminobenzene -> (dimethylamino)benzene.
 	 * The bracketting in the above case occurs when the substituent that is being procesed is the amino group
-	 * @param state
 	 * @param brackets
 	 * @param substituents: An arraylist of substituent elements
 	 * @return Whether the method did something, and so needs to be called again.
 	 * @throws StructureBuildingException
      * @throws ComponentGenerationException
 	 */
-	private void findAndStructureImplictBrackets(BuildState state, List<Element> substituents, List<Element> brackets) throws ComponentGenerationException, StructureBuildingException {
+	private void findAndStructureImplictBrackets(List<Element> substituents, List<Element> brackets) throws ComponentGenerationException, StructureBuildingException {
 		for (Element substituent : substituents) {//will attempt to bracket this substituent with the substituent before it
 			String firstElInSubName =((Element)substituent.getChild(0)).getLocalName();
 			if (firstElInSubName.equals(LOCANT_EL) ||firstElInSubName.equals(MULTIPLIER_EL)){
@@ -3446,7 +3417,7 @@ class ComponentProcessor {
 					//Check the right fragment in the bracket:
 					//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
 					if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()){
-						if (checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
+						if (checkLocantPresentOnPotentialRoot(substituent, locantText)){
 							moveLocants =true;//locant location is present elsewhere
 						}
 						else if (findElementsMissingIndirectLocants(elementBeforeSubstituent, locantRelatedElements.get(0)).size()==0 || !state.xmlFragmentMap.get(lastGroupOfElementBeforeSub).hasLocant(locantText)){
@@ -3534,11 +3505,10 @@ class ComponentProcessor {
 	/** 
 	 * Attempts to match locants to non adjacent suffixes/unsatuators
 	 * e.g.  2-propanol, 3-furyl, 2'-Butyronaphthone
-	 * @param state
 	 * @param subOrRoot The substituent/root to look for locants in.
 	 * @throws StructureBuildingException
 	 */
-	private void matchLocantsToIndirectFeatures(BuildState state, Element subOrRoot) throws  StructureBuildingException {
+	private void matchLocantsToIndirectFeatures(Element subOrRoot) throws  StructureBuildingException {
 		/* Root fragments (or the root in a bracket) can have prefix-locants
 		 * that work on suffixes - (2-furyl), 2-propanol, (2-propylmethyl), (2-propyloxy), 2'-Butyronaphthone.
 		 */
@@ -3580,7 +3550,7 @@ class ComponentProcessor {
 				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
 				 */
 				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
-						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && XOMTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
+						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(subOrRoot, locantValues[0]) && XOMTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
 					return;
 				}
 				boolean assignableToIndirectFeatures =true;
@@ -3697,11 +3667,10 @@ class ComponentProcessor {
 
 	/**
 	 * Put di-carbon modifying suffixes e.g. oic acids, aldehydes on opposite ends of chain
-	 * @param state
 	 * @param subOrRoot
 	 * @throws StructureBuildingException
 	 */
-	private void assignImplicitLocantsToDiTerminalSuffixes(BuildState state, Element subOrRoot) throws StructureBuildingException {
+	private void assignImplicitLocantsToDiTerminalSuffixes(Element subOrRoot) throws StructureBuildingException {
 		Element terminalSuffix1 = subOrRoot.getFirstChildElement(SUFFIX_EL);
 		if (terminalSuffix1!=null){
 			if (isATerminalSuffix(terminalSuffix1) && XOMTools.getNextSibling(terminalSuffix1) != null){
@@ -3733,7 +3702,7 @@ class ComponentProcessor {
                 (suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) || TERMINAL_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR)));
 		}
 
-	private void processConjunctiveNomenclature(BuildState state, Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
+	private void processConjunctiveNomenclature(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> conjunctiveGroups = XOMTools.getChildElementsWithTagName(subOrRoot, CONJUNCTIVESUFFIXGROUP_EL);
 		if (conjunctiveGroups.size()>0){
 			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
@@ -3780,13 +3749,12 @@ class ComponentProcessor {
 
 	/**Process the effects of suffixes upon a fragment. 
 	 * Unlocanted non-terminal suffixes are not attached yet. All other suffix effects are performed
-	 * @param state
 	 * @param group The group element for the fragment to which the suffixes will be added
 	 * @param suffixes The suffix elements for a fragment.
 	 * @throws StructureBuildingException If the suffixes can't be resolved properly.
 	 * @throws ComponentGenerationException
 	 */
-	private void resolveSuffixes(BuildState state, Element group, List<Element> suffixes) throws StructureBuildingException, ComponentGenerationException {
+	private void resolveSuffixes(Element group, List<Element> suffixes) throws StructureBuildingException, ComponentGenerationException {
 		Fragment frag = state.xmlFragmentMap.get(group);
 		int firstAtomID = frag.getIdOfFirstAtom();//typically equivalent to locant 1
 		List<Atom> atomList =frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
@@ -4087,12 +4055,11 @@ class ComponentProcessor {
 	 * Checks whether this is multiplied e.g. methylenedibenzene
 	 * If it is then it checks for the presence of locants e.g. 4,4'-oxydibenzene which has been changed to oxy-4,4'-dibenzene
 	 * An attribute called inLocants is then added that is either INLOCANTS_DEFAULT or a comma seperated list of locants
-	 * @param state
 	 * @param rightMostElement
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private void assignLocantsToMultipliedRootIfPresent(BuildState state, Element rightMostElement) throws ComponentGenerationException, StructureBuildingException {
+	private void assignLocantsToMultipliedRootIfPresent(Element rightMostElement) throws ComponentGenerationException, StructureBuildingException {
 		Elements multipliers = rightMostElement.getChildElements(MULTIPLIER_EL);
 		if(multipliers.size() == 1) {
 			Element multiplier =multipliers.get(0);
@@ -4120,7 +4087,7 @@ class ComponentProcessor {
 			}
 		}
 		else if (rightMostElement.getLocalName().equals(BRACKET_EL)){
-			assignLocantsToMultipliedRootIfPresent(state, ((Element) rightMostElement.getChild(rightMostElement.getChildCount()-1)));
+			assignLocantsToMultipliedRootIfPresent(((Element) rightMostElement.getChild(rightMostElement.getChildCount()-1)));
 		}
 	}
 
@@ -4203,12 +4170,11 @@ class ComponentProcessor {
 	 * WordLevel multipliers are processed e.g. diethyl ethanoate
 	 * Adding a locant to a root or any other group that cannot engage in substitive nomenclature will result in an exception being thrown
 	 * An exception is made for cases where the locant could be referring to a position on another word
-	 * @param state 
 	 * @param subOrBracket
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException 
 	 */
-	private void assignLocantsAndMultipliers(BuildState state, Element subOrBracket) throws ComponentGenerationException, StructureBuildingException {
+	private void assignLocantsAndMultipliers(Element subOrBracket) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracket, LOCANT_EL);
 		int multiplier =1;
 		List<Element> multipliers =  XOMTools.getChildElementsWithTagName(subOrBracket, MULTIPLIER_EL);
@@ -4233,7 +4199,7 @@ class ComponentProcessor {
 		}
 		if(locants.size() > 0) {
 			if (multiplier==1 && oneBelowWordLevel && XOMTools.getPreviousSibling(subOrBracket)==null){//locant might be word Level locant
-				if (wordLevelLocantsAllowed(state, subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
+				if (wordLevelLocantsAllowed(subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					Element locant = locants.remove(0);
 					if (MATCH_COMMA.split(locant.getValue()).length!=1){
 						throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
@@ -4294,7 +4260,7 @@ class ComponentProcessor {
 
 
 
-	private boolean wordLevelLocantsAllowed(BuildState state, Element subOrBracket, int numberOflocants) {
+	private boolean wordLevelLocantsAllowed(Element subOrBracket, int numberOflocants) {
 		Element parentElem =(Element)subOrBracket.getParent();
 		if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent
 				&& (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)){
@@ -4319,13 +4285,12 @@ class ComponentProcessor {
 	/**
 	 * If a word level multiplier is present e.g. diethyl butandioate then this is processed to ethyl ethyl butandioate
 	 * If wordCount is 1 then an exception is thrown if a multiplier is encountered e.g. triphosgene parsed as tri phosgene
-	 * @param state
 	 * @param word
 	 * @param wordCount 
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException
 	 */
-	private void processWordLevelMultiplierIfApplicable(BuildState state, Element word, int wordCount) throws StructureBuildingException, ComponentGenerationException {
+	private void processWordLevelMultiplierIfApplicable(Element word, int wordCount) throws StructureBuildingException, ComponentGenerationException {
 		if (word.getChildCount()==1){
 			Element subOrBracket = (Element) word.getChild(0);
 			Element multiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
@@ -4333,7 +4298,7 @@ class ComponentProcessor {
 				int multiVal =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 				Elements locants =subOrBracket.getChildElements(LOCANT_EL);
 				boolean assignLocants =false;
-				boolean wordLevelLocants = wordLevelLocantsAllowed(state, subOrBracket, locants.size());//something like O,S-dimethyl phosphorothioate
+				boolean wordLevelLocants = wordLevelLocantsAllowed(subOrBracket, locants.size());//something like O,S-dimethyl phosphorothioate
 				if (locants.size()>1){
 					throw new ComponentGenerationException("Unable to assign all locants");
 				}

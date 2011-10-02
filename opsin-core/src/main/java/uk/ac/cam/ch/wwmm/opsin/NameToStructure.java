@@ -41,9 +41,6 @@ public class NameToStructure {
 	/**Does destructive procedural parsing on parser results.*/
 	private ComponentGenerator componentGenerator;
 
-	/**Does structure-aware destructive procedural parsing on parser results.*/
-	private ComponentProcessor componentProcessor;
-
 	/** A builder for fragments specified as SMILES */
 	private SMILESFragmentBuilder sBuilder;
 
@@ -52,6 +49,9 @@ public class NameToStructure {
 
 	/**Constructs a single fragment from the result of the component generation and processing stages.*/
 	private StructureBuilder structureBuilder;
+	
+	/**Contains rules on how to interpret suffixes*/
+	private SuffixRules suffixRules;
 
 	private static NameToStructure NTS_INSTANCE;
 
@@ -84,8 +84,7 @@ public class NameToStructure {
 			sBuilder = new SMILESFragmentBuilder();
 			cmlBuilder = new CMLFragmentBuilder(resourceGetter);
 			structureBuilder = new StructureBuilder();
-
-			componentProcessor = new ComponentProcessor(new SuffixRules(resourceGetter));
+			suffixRules = new SuffixRules(resourceGetter);
 
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
@@ -160,12 +159,12 @@ public class NameToStructure {
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					BuildState state = new BuildState(n2sConfig, sBuilder, cmlBuilder);
-					componentGenerator.process(parse);
+					componentGenerator.processParse(parse);
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					componentProcessor.process(state, parse);
+					BuildState state = new BuildState(n2sConfig, sBuilder, cmlBuilder);
+					new ComponentProcessor(suffixRules, state, parse).processParse();
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
