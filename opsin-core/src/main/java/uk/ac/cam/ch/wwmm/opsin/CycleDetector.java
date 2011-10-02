@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -87,7 +87,7 @@ class CycleDetector {
 			LinkedList<Atom> orderAtomsVisited = state.getOrderAtomsVisited();
 			Atom nextAtom = state.getCurrentAtom();
 			orderAtomsVisited.add(nextAtom);
-			Set<Bond> neighbourBonds = new HashSet<Bond>(nextAtom.getBonds());
+			Set<Bond> neighbourBonds = new LinkedHashSet<Bond>(nextAtom.getBonds());
 			neighbourBonds.retainAll(peripheryBonds);
 			for (Bond neighbourBond : neighbourBonds) {
 				Atom neighbour = neighbourBond.getOtherAtom(nextAtom);
