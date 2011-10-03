@@ -124,9 +124,11 @@ public class WordRulesOmittedSpaceCorrector {
 		if (multiplierValue!=null && Integer.parseInt(multiplierValue)==1){
 			return true;
 		}
-		String potentialString = substituentGroupEl.getValue() + "yl[\\-]?(form|methan|acet|ethan)[o]?ate";
-		if (wordRuleContents.matches(potentialString)){
-			return true;
+		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))){
+			String potentialString = substituentGroupEl.getValue() + "yl[\\-]?(form|methan|acet|ethan)[o]?ate";
+			if (wordRuleContents.matches(potentialString)){
+				return true;
+			}
 		}
 		return false;
 	}
