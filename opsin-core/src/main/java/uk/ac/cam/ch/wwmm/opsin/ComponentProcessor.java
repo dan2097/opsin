@@ -1224,6 +1224,7 @@ class ComponentProcessor {
 				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
 			}
 			state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
+			CycleDetector.assignWhetherAtomsAreInCycles(frag);
 			ringSize.detach();
 			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(group);
 			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
@@ -1342,13 +1343,18 @@ class ComponentProcessor {
 
 	private Atom[] getDeterministicAtomRefs4ForAnomericAtom(Atom anomericAtom) {
 		List<Atom> neighbours = anomericAtom.getAtomNeighbours();
-		if (neighbours.size()!=3){
+		if (neighbours.size()!=3 && neighbours.size()!=4){
 			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric atom of carbohydrate");
 		}
 		Atom[] atomRefs4 = new Atom[4];
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("C")){
-				atomRefs4[0] = neighbour;
+				if (neighbour.getAtomIsInACycle()){
+					atomRefs4[0] = neighbour;
+				}
+				else{
+					atomRefs4[3] = neighbour;
+				}
 			}
 			else if (neighbour.getElement().equals("O")){
 				int incomingVal =neighbour.getIncomingValency();
@@ -1366,7 +1372,9 @@ class ComponentProcessor {
 				throw new RuntimeException("OPSIN bug: Unexpected atom element type connected to anomeric atom of carbohydrate");
 			}
 		}
-		atomRefs4[3] = AtomParity.hydrogen;
+		if (atomRefs4[3]==null){
+			atomRefs4[3] = AtomParity.hydrogen;
+		}
 		for (Atom atom : atomRefs4) {
 			if (atom ==null){
 				throw new RuntimeException("OPSIN bug: Unable to assign anomeric carbon stereochemistry on carbohydrate");
