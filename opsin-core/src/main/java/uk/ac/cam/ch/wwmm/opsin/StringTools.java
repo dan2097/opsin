@@ -220,6 +220,8 @@ public final class StringTools {
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
             case '\u201B': return "'";
+            case '\u201C': return "''";
+            case '\u201D': return "''";
             case '\u2032': return "'";//primes
             case '\u2033': return "''";
             case '\u2034': return "'''";
