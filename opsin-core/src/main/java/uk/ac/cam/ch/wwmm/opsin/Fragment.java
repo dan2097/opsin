@@ -662,15 +662,8 @@ class Fragment {
 				continue;
 			}
 			int currentExpectedValency = currentAtom.determineValency(takeIntoAccountOutValency);
-			if (takeIntoAccountOutValency){
-				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
-					return currentAtom;
-				}
-			}
-			else{
-				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
-					return currentAtom;
-				}
+			if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? currentAtom.getOutValency() : 0))){
+				return currentAtom;
 			}
 			atomListPosition++;
 		}
@@ -690,15 +683,8 @@ class Fragment {
 				continue;
 			}
 			int currentExpectedValency = currentAtom.determineValency(takeIntoAccountOutValency);
-			if (takeIntoAccountOutValency){
-				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
-					return currentAtom;
-				}
-			}
-			else{
-				if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
-					return currentAtom;
-				}
+			if(currentExpectedValency >= (currentAtom.getIncomingValency() + additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? currentAtom.getOutValency() : 0))){
+				return currentAtom;
 			}
 			atomListPosition++;
 		}
@@ -714,15 +700,8 @@ class Fragment {
 			}
 			currentAtom=atomList.get(atomListPosition);
 
-			if (takeIntoAccountOutValency){
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + currentAtom.getOutValency())){
-					return currentAtom;
-				}
-			}
-			else{
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0))){
-					return currentAtom;
-				}
+			if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? currentAtom.getOutValency() : 0))){
+				return currentAtom;
 			}
 			atomListPosition++;
 		}
@@ -736,15 +715,8 @@ class Fragment {
 				atomListPosition -=(atomList.size());
 			}
 			currentAtom=atomList.get(atomListPosition);
-			if (takeIntoAccountOutValency){
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + currentAtom.getOutValency())){
-					return currentAtom;
-				}
-			}
-			else{
-				if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired)){
-					return currentAtom;
-				}
+			if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (takeIntoAccountOutValency ? currentAtom.getOutValency() : 0))){
+				return currentAtom;
 			}
 			atomListPosition++;
 		}
