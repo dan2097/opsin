@@ -1040,7 +1040,7 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							frag.addInAtom(frag.getAtomOrNextSuitableAtom(frag.getDefaultInAtom(), 1, true), 1);
+							frag.addInAtom(frag.getAtomOrNextSuitableAtomOrThrow(frag.getDefaultInAtom(), 1, true), 1);
 							inAtomAdded=true;
 							inLocants.remove(j);
 							break;
