@@ -40,7 +40,7 @@ public class StereochemistryTest {
 	 * Tests for finding stereo centres
 	 */
 	@Test
-	public void findStereoCentresBromoChloroFluoroMethane() throws StructureBuildingException {
+	public void findStereoCentresBromoChloroFluoroMethane() {
 		Fragment f = n2s.parseChemicalName("bromochlorofluoromethane").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(1, stereoAnalyser.findStereoCentres().size());
@@ -53,7 +53,7 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void findStereoCentresNacetylleucine() throws StructureBuildingException {
+	public void findStereoCentresNacetylleucine() {
 		Fragment f = n2s.parseChemicalName("N-acetylleucine").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(1, stereoAnalyser.findStereoCentres().size());
@@ -81,7 +81,7 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void findStereoCentresBut2ene() throws StructureBuildingException {
+	public void findStereoCentresBut2ene() {
 		Fragment f = n2s.parseChemicalName("but-2-ene").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
@@ -575,7 +575,7 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void testAtomParityEquivalence1() throws StructureBuildingException {
+	public void testAtomParityEquivalence1() {
 		Atom a1= new Atom(1, "C", mock(Fragment.class));
 		Atom a2= new Atom(2, "C", mock(Fragment.class));
 		Atom a3= new Atom(3, "C", mock(Fragment.class));
@@ -588,7 +588,7 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void testAtomParityEquivalence2() throws StructureBuildingException {
+	public void testAtomParityEquivalence2() {
 		Atom a1= new Atom(1, "C", mock(Fragment.class));
 		Atom a2= new Atom(2, "C", mock(Fragment.class));
 		Atom a3= new Atom(3, "C", mock(Fragment.class));

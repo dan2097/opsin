@@ -10,7 +10,7 @@ import org.junit.Test;
 public class BondTest {
 	
 	@Test
-	public void testBond() throws StructureBuildingException {
+	public void testBond() {
 		Fragment frag = new Fragment();
 		Atom a1 = new Atom(1, "C", frag);
 		Atom a2 = new Atom(2, "C", frag);
@@ -24,7 +24,7 @@ public class BondTest {
 	}
 	
 	@Test
-	public void testToCMLBond() throws StructureBuildingException {
+	public void testToCMLBond() {
 		Fragment frag = new Fragment();
 		Atom a1 = new Atom(1, "C", frag);
 		Atom a2 = new Atom(2, "C", frag);

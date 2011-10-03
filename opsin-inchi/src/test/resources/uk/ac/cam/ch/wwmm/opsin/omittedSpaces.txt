@@ -1,0 +1,17 @@
+methylformate	InChI=1/C2H4O2/c1-4-2-3/h2H,1H3
+ethylacetate	InChI=1/C4H8O2/c1-3-6-4(2)5/h3H2,1-2H3
+ethyl-ethanoate	InChI=1/C4H8O2/c1-3-6-4(2)5/h3H2,1-2H3
+ethyl2-ethylacetate	InChI=1/C6H12O2/c1-3-5-6(7)8-4-2/h3-5H2,1-2H3
+monoethylterephthalate	InChI=1/C10H10O4/c1-2-14-10(13)8-5-3-7(4-6-8)9(11)12/h3-6H,2H2,1H3,(H,11,12)/p-1/fC10H9O4/q-1
+diethylterephthalate	InChI=1/C12H14O4/c1-3-15-11(13)9-5-7-10(8-6-9)12(14)16-4-2/h5-8H,3-4H2,1-2H3
+ethyloxalate	InChI=1/C4H6O4/c1-2-8-4(7)3(5)6/h2H2,1H3,(H,5,6)/p-1/fC4H5O4/q-1
+diethyloxalate	InChI=1/C6H10O4/c1-3-9-5(7)6(8)10-4-2/h3-4H2,1-2H3
+diethylsuccinate	InChI=1/C8H14O4/c1-3-11-7(9)5-6-8(10)12-4-2/h3-6H2,1-2H3
+//not omitted space
+2-methylacetate	InChI=1/C3H6O2/c1-2-3(4)5/h2H2,1H3,(H,4,5)/p-1/fC3H5O2/q-1
+ethylterephthalate	InChI=1/C10H10O4/c1-2-6-5-7(9(11)12)3-4-8(6)10(13)14/h3-5H,2H2,1H3,(H,11,12)(H,13,14)/p-2/fC10H8O4/q-2
+triethylterephthalate	InChI=1/C14H18O4/c1-4-8-7-11(13(15)16)9(5-2)10(6-3)12(8)14(17)18/h7H,4-6H2,1-3H3,(H,15,16)(H,17,18)/p-2/fC14H16O4/q-2
+tetraethylterephthalate	InChI=1/C16H22O4/c1-5-9-10(6-2)14(16(19)20)12(8-4)11(7-3)13(9)15(17)18/h5-8H2,1-4H3,(H,17,18)(H,19,20)/p-2/fC16H20O4/q-2
+ethylmalonate	InChI=1/C5H8O4/c1-2-3(4(6)7)5(8)9/h3H,2H2,1H3,(H,6,7)(H,8,9)/p-2/fC5H6O4/q-2
+diethylmalonate	InChI=1/C7H12O4/c1-3-7(4-2,5(8)9)6(10)11/h3-4H2,1-2H3,(H,8,9)(H,10,11)/p-2/fC7H10O4/q-2
+ethylsuccinate	InChI=1/C6H10O4/c1-2-4(6(9)10)3-5(7)8/h4H,2-3H2,1H3,(H,7,8)(H,9,10)/p-2/fC6H8O4/q-2

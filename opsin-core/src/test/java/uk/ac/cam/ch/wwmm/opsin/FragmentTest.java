@@ -46,14 +46,14 @@ public class FragmentTest {
 	}*/
 
 	@Test
-	public void testAddAtom() throws StructureBuildingException {
+	public void testAddAtom() {
 		assertEquals("Has no atoms", 0, frag.getAtomList().size());
 		frag.addAtom(new Atom(1, "C", frag));
 		assertEquals("Now has one atom", 1, frag.getAtomList().size());
 	}
 
 	@Test
-	public void testAddBond() throws StructureBuildingException {
+	public void testAddBond() {
 		frag.addAtom(new Atom(1, "C", frag));
 		frag.addAtom(new Atom(2, "C", frag));
 		assertEquals("Has no bonds", 0, frag.getBondSet().size());

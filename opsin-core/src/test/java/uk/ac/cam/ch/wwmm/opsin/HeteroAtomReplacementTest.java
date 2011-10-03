@@ -11,7 +11,7 @@ public class HeteroAtomReplacementTest {
 	Atom a;
 
 	@Before
-	public void setUp() throws StructureBuildingException{
+	public void setUp() {
 		fragManager = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
 		a = new Atom(0, "C", mock(Fragment.class));
 	}

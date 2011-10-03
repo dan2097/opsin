@@ -104,14 +104,13 @@ class Atom {
 	 * @param ID The ID number, unique to the atom in the molecule being built
 	 * @param element The atomic symbol of the chemical element
 	 * @param frag the Fragment to contain the Atom
-	 * @throws StructureBuildingException
 	 */
-	Atom(int ID, String element, Fragment frag) throws StructureBuildingException {
+	Atom(int ID, String element, Fragment frag) {
 		if (frag==null){
-			throw new StructureBuildingException("Atom is not in a fragment!");
+			throw new IllegalArgumentException("Atom is not in a fragment!");
 		}
 		if (element==null){
-			throw new StructureBuildingException("Atom does not have an element!");
+			throw new IllegalArgumentException("Atom does not have an element!");
 		}
 		this.frag = frag;
 		this.ID = ID;
