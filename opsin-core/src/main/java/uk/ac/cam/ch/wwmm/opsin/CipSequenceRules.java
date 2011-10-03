@@ -119,9 +119,8 @@ public class CipSequenceRules {
 	 * Returns the given atoms neighbours in CIP order from lowest priority to highest priority
 	 * @param chiralAtom
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrder(Atom chiralAtom) throws StructureBuildingException{
+	List<Atom> getNeighbouringAtomsInCIPOrder(Atom chiralAtom) {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		addGhostAtomsForCIPAssignment(chiralAtom);
 		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
@@ -133,9 +132,8 @@ public class CipSequenceRules {
 	 * Returns the given atoms neighbours, with the exception of the given atom, in CIP order from lowest priority to highest priority
 	 * @param chiralAtom
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom chiralAtom, Atom neighbourToIgnore) throws StructureBuildingException{
+	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom chiralAtom, Atom neighbourToIgnore) {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		if (!neighbours.remove(neighbourToIgnore)){
 			throw new RuntimeException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
@@ -423,16 +421,12 @@ public class CipSequenceRules {
 	}
 
 	private Atom createGhostAtomFromAtom(Atom atomToGhost, Atom atomToBondItTo) {
-		try{
-			Atom ghost = new Atom(ghostIdCounter--, atomToGhost.getElement(), molecule);
-			Bond b1 = new Bond(ghost, atomToBondItTo, 1);
-			atomToBondItTo.addBond(b1);
-			ghost.addBond(b1);
-			molecule.addAtom(ghost);
-			return ghost;
-		} catch (StructureBuildingException e) {//should never throw unless molecule is null
-			return null;
-		}
+		Atom ghost = new Atom(ghostIdCounter--, atomToGhost.getElement(), molecule);
+		Bond b1 = new Bond(ghost, atomToBondItTo, 1);
+		atomToBondItTo.addBond(b1);
+		ghost.addBond(b1);
+		molecule.addAtom(ghost);
+		return ghost;
 	}
 	
 	/**
@@ -474,9 +468,8 @@ public class CipSequenceRules {
 	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
 	 * Higher order bonds connected to the chiral atom are not converted in accordance with P-91.1.4.2.4 (IUPAC 2004 guidelines)
 	 * @param chiralAtom Higher order bonds connected to this atom are not touched
-	 * @throws StructureBuildingException
 	 */
-	private void addGhostAtomsForCIPAssignment(Atom chiralAtom) throws StructureBuildingException {
+	private void addGhostAtomsForCIPAssignment(Atom chiralAtom) {
 		Set<Bond> bonds = molecule.getBondSet();
 		for (Bond bond : bonds) {
 			int bondOrder = bond.getOrder();

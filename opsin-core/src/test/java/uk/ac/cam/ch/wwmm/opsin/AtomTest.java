@@ -22,7 +22,7 @@ public class AtomTest {
 	}
 	
 	@Test
-	public void testAtom() throws StructureBuildingException {
+	public void testAtom() {
 		Atom atom = new Atom(10, "C", frag);
 		assertNotNull("Got atom", atom);
 		assertEquals("Id = 10", 10, atom.getID());
@@ -30,7 +30,7 @@ public class AtomTest {
 	}
 	
 	@Test
-	public void testToCMLAtom() throws StructureBuildingException {
+	public void testToCMLAtom() {
 		Atom atom = new Atom(10, "C", frag);
 		atom.addLocant("1");
 		Element elem = atom.toCMLAtom();
@@ -39,7 +39,7 @@ public class AtomTest {
 	}
 	
 	@Test
-	public void testAddLocantHasLocant() throws StructureBuildingException {
+	public void testAddLocantHasLocant() {
 		Atom atom = new Atom(10, "C", frag);
 		atom.addLocant("1");
 		assertTrue("Atom has locant '1'", atom.hasLocant("1"));

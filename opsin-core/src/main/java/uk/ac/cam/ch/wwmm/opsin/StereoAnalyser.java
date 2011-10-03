@@ -60,7 +60,7 @@ class StereoAnalyser {
 			return trueStereoCentre;
 		}
 
-		List<Atom> getCipOrderedAtoms() throws StructureBuildingException {
+		List<Atom> getCipOrderedAtoms() {
 			List<Atom> cipOrderedAtoms = cipSequenceRules.getNeighbouringAtomsInCIPOrder(stereoAtom);
 			if (cipOrderedAtoms.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
 				cipOrderedAtoms.add(0, stereoAtom);
@@ -90,9 +90,8 @@ class StereoAnalyser {
 		 * other atom in bond
 		 * Highest CIP atom on other side
 		 * @return
-		 * @throws StructureBuildingException 
 		 */
-		List<Atom> getOrderedStereoAtoms() throws StructureBuildingException {
+		List<Atom> getOrderedStereoAtoms() {
 			Atom a1 = bond.getFromAtom();
 			Atom a2 = bond.getToAtom();
 			List<Atom> cipOrdered1 = cipSequenceRules.getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a1, a2);
@@ -173,9 +172,8 @@ class StereoAnalyser {
 	 * These labels can then be used by the findStereo(Atoms/Bonds) functions to find features that
 	 * can possess stereoChemistry
 	 * @param molecule
-	 * @throws StructureBuildingException
 	 */
-	StereoAnalyser(Fragment molecule) throws StructureBuildingException {
+	StereoAnalyser(Fragment molecule) {
 		this.molecule = molecule;
 		cipSequenceRules = new CipSequenceRules(molecule);
 		atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
@@ -202,9 +200,8 @@ class StereoAnalyser {
 	/**
 	 * Adds "ghost" atoms in accordance with the CIP rules for handling double bonds
 	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
-	 * @throws StructureBuildingException
 	 */
-	private void addGhostAtoms() throws StructureBuildingException {
+	private void addGhostAtoms() {
 		Set<Bond> bonds = molecule.getBondSet();
 		int ghostIdCounter = -1;
 		for (Bond bond : bonds) {
@@ -585,5 +582,15 @@ class StereoAnalyser {
 			}
 		}
 		return stereoBonds;
+	}
+	
+	/**
+	 * Returns a number describing the environment of an atom. Atoms with the same number are in identical environments
+	 * Null if atom was not part of this environment analysis
+	 * @param a
+	 * @return
+	 */
+	Integer getAtomEnvironmentNumber(Atom a) {
+		return mappingToColour.get(a);
 	}
 }

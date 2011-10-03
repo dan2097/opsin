@@ -405,9 +405,8 @@ class StereochemistryHandler {
 	 * @param bond The stereobond
 	 * @param stereoBond
 	 * @param eOrZ The stereo description given in the name
-	 * @throws StructureBuildingException
 	 */
-	private void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) throws StructureBuildingException {
+	private void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) {
 		List<Atom> stereoBondAtoms = stereoBond.getOrderedStereoAtoms();
 		//stereoBondAtoms contains the higher priority atom at one end, the two bond atoms and the higher priority atom at the other end
 		Atom[] atomRefs4 = new Atom[4];
@@ -422,7 +421,7 @@ class StereochemistryHandler {
 			bond.setBondStereoElement(atomRefs4, BondStereoValue.CIS);
 		}
 		else{
-			throw new StructureBuildingException("Unexpected stereochemistry type: " + eOrZ);
+			throw new IllegalArgumentException("Unexpected stereochemistry type: " + eOrZ);
 		}
 	}
 	
