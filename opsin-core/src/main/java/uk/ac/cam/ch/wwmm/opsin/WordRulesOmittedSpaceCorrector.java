@@ -125,7 +125,7 @@ public class WordRulesOmittedSpaceCorrector {
 			return true;
 		}
 		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))){
-			String potentialString = substituentGroupEl.getValue() + "yl[\\-]?(form|methan|acet|ethan)[o]?ate";
+			String potentialString = "(?i)" + substituentGroupEl.getValue() + "yl[\\-]?(form|methan|acet|ethan)[o]?ate";
 			if (wordRuleContents.matches(potentialString)){
 				return true;
 			}
