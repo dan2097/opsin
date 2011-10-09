@@ -254,6 +254,9 @@
 		<token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
 		<token value="C#C" labels="1/2" valType="SMILES">vinylene</token>
+		<token value="OC(=S)[S-]" labels="none" valType="SMILES" functionalIDs="1,4">xanthate</token><!--xanthate without any substituents is not acceptable-->
+		<token value="OC(=S)S" labels="none" valType="SMILES" functionalIDs="1,4">xanthic acid</token><!--xanthic acid without any substituents is not acceptable-->
+		<token value="OC(=S)S" labels="none" valType="SMILES" functionalIDs="1,4">xanthicacid</token><!--xanthic acid without any substituents is not acceptable-->
 
 		<token value="N" labels="none" valType="SMILES">ammonia</token>
 		<token value="O" labels="none" valType="SMILES">water</token>

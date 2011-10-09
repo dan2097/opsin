@@ -2008,18 +2008,27 @@ class ComponentGenerator {
 		}
 
 		//anthrone, phenanthrone and xanthone have the one at position 9 by default
-		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("xanth")|| groupValue.equals("xanthen")) {
+		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") ||
+				groupValue.equals("xanth") || groupValue.equals("thioxanth") || groupValue.equals("selenoxanth")|| groupValue.equals("telluroxanth")|| groupValue.equals("xanthen")) {
 			Element possibleLocant = (Element) XOMTools.getPreviousSibling(group);
 			if (possibleLocant==null || !possibleLocant.getLocalName().equals(LOCANT_EL)){//only need to give one a locant of 9 if no locant currently present
-				Element possibleOne =(Element) XOMTools.getNextSibling(group);
-				if (possibleOne!=null && possibleOne.getValue().equals("one")){
+				Element possibleSuffix =(Element) XOMTools.getNextSibling(group);
+				if (possibleSuffix!=null && "one".equals(possibleSuffix.getAttributeValue(VALUE_ATR))){
 					//Rule C-315.2
 					Element newLocant =new Element(LOCANT_EL);
 					newLocant.appendChild("9");
-					XOMTools.insertBefore(possibleOne, newLocant);
+					XOMTools.insertBefore(possibleSuffix, newLocant);
 					Element newAddedHydrogen = new Element(ADDEDHYDROGEN_EL);
 					newAddedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));
 					XOMTools.insertBefore(newLocant, newAddedHydrogen);
+				}
+				else if (possibleSuffix!=null && possibleSuffix.getLocalName().equals(SUFFIX_EL) &&
+					groupValue.equals("xanth") || groupValue.equals("thioxanth") || groupValue.equals("selenoxanth")|| groupValue.equals("telluroxanth")){
+					//diasambiguate between xanthate/xanthic acid and xanthene
+					String suffixVal = possibleSuffix.getAttributeValue(VALUE_ATR);
+					if (suffixVal.equals("ic") || suffixVal.equals("ate")){
+						throw new ComponentGenerationException(groupValue + possibleSuffix.getValue() +" is not a derivative of xanthene");
+					}
 				}
 			}
 		}
