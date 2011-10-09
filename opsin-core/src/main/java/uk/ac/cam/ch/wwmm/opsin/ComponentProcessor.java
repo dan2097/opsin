@@ -2174,8 +2174,9 @@ class ComponentProcessor {
 	/** Handles special cases in IUPAC nomenclature that are most elegantly solved by modification of the fragment
 	 * @param groups
 	 * @throws StructureBuildingException
+	 * @throws ComponentGenerationException 
 	 */
-	private void handleGroupIrregularities(List<Element> groups) throws StructureBuildingException{
+	private void handleGroupIrregularities(List<Element> groups) throws StructureBuildingException, ComponentGenerationException{
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
@@ -2193,6 +2194,15 @@ class ComponentProcessor {
 					Fragment frag =state.xmlFragmentMap.get(group);
 					frag.getAtomByLocantOrThrow("21").setSpareValency(false);
 					frag.getAtomByLocantOrThrow("23").setSpareValency(false);
+				}
+			}
+			else if (groupValue.equals("xanthate") || groupValue.equals("xanthic acid") || groupValue.equals("xanthicacid")){
+				//This test needs to be here rather in the ComponentGenerator to correctly reject non substituted thioxanthates
+				Element wordRule = OpsinTools.getParentWordRule(group);
+				if (wordRule.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString())){
+					if (XOMTools.getDescendantElementsWithTagName(wordRule, SUBSTITUENT_EL).size()==0){
+						throw new ComponentGenerationException(groupValue +" describes a class of compounds rather than a particular compound");
+					}
 				}
 			}
 		}

@@ -143,15 +143,14 @@ class OpsinTools {
 	 * Returns the wordRule element or throws an exception
 	 * @param el
 	 * @return wordRule Element
-	 * @throws ComponentGenerationException
 	 */
-	static Element getParentWordRule(Element el) throws ComponentGenerationException {
+	static Element getParentWordRule(Element el) {
 		Element parent=(Element)el.getParent();
 		while(parent !=null && !parent.getLocalName().equals(WORDRULE_EL)){
 			parent =(Element)parent.getParent();
 		}
 		if (parent==null){
-			throw new ComponentGenerationException("Cannot find enclosing wordRule element");
+			throw new RuntimeException("Cannot find enclosing wordRule element");
 		}
 		else{
 			return parent;
