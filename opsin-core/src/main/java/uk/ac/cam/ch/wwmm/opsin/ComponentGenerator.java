@@ -2173,9 +2173,14 @@ class ComponentGenerator {
 				if (substituent !=null){
 					Elements children = substituent.getChildElements();
 					if (children.size() ==1 && children.get(0).getLocalName().equals(GROUP_EL) && (children.get(0).getValue().equals("fluoro") || children.get(0).getValue().equals("fluor"))){
+						if (suffix.getAttributeValue(VALUE_ATR).equals("ic")){
+							group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F.[H+]");
+						}
+						else{
+							group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F");
+						}
 						substituent.detach();
 						suffix.detach();
-						group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F");
 					}
 				}
 			}
