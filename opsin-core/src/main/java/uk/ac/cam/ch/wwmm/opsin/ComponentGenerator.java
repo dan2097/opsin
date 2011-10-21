@@ -2166,6 +2166,34 @@ class ComponentGenerator {
 				}
 			}
 		}
+		else if (groupValue.equals("bor")){//fluoroboric acid/fluoroborate are trivial rather than systematic
+			Element suffix = (Element) XOMTools.getNextSibling(group);
+			if (suffix !=null && (suffix.getAttributeValue(VALUE_ATR).equals("ic") || suffix.getAttributeValue(VALUE_ATR).equals("ate"))){
+				Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
+				if (substituent !=null){
+					Elements children = substituent.getChildElements();
+					if (children.size() ==1 && children.get(0).getLocalName().equals(GROUP_EL) && (children.get(0).getValue().equals("fluoro") || children.get(0).getValue().equals("fluor"))){
+						substituent.detach();
+						suffix.detach();
+						group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F");
+					}
+				}
+			}
+		}
+		else if (groupValue.equals("antimon")){//fluoroantimonic acid is trivial rather than systematic
+			Element suffix = (Element) XOMTools.getNextSibling(group);
+			if (suffix !=null &&  suffix.getAttributeValue(VALUE_ATR).equals("ic")){
+				Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
+				if (substituent !=null){
+					Elements children = substituent.getChildElements();
+					if (children.size() ==1 && children.get(0).getLocalName().equals(GROUP_EL) && (children.get(0).getValue().equals("fluoro") || children.get(0).getValue().equals("fluor"))){
+						substituent.detach();
+						suffix.detach();
+						group.getAttribute(VALUE_ATR).setValue("F[Sb-](F)(F)(F)(F)F.[H+]");
+					}
+				}
+			}
+		}
 	}
 }
 
