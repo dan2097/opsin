@@ -587,8 +587,12 @@ class ComponentGenerator {
 				}
 				
 				//chain of heteroatoms
-				String smiles=multipliedElem.getAttributeValue(VALUE_ATR);
-				multipliedElem.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString(smiles, mvalue));
+				String heteroatomSmiles=multipliedElem.getAttributeValue(VALUE_ATR);
+				if (heteroatomSmiles.equals("B")){
+					throw new ComponentGenerationException("Polyboranes are not currently supported");
+				}
+				String smiles = StringTools.multiplyString(heteroatomSmiles, mvalue);
+				multipliedElem.getAttribute(VALUE_ATR).setValue(smiles);
 				m.detach();
 				multipliers.remove(i--);
 			}
