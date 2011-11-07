@@ -657,8 +657,9 @@ class ComponentGenerator {
 	}
 
 	/**
-	 * Checks that the first heteroatom is lower priority than the second
-	 * If it is higher priority than the second then the ordering is that which is expected for a Hantzch-widman ring
+	 * Throws an exception if the given heteroatoms could be part of a valid Hantzch-widman ring
+	 * For this to be true the first heteroatom must be higher priority than the second
+	 * and the second must be compatible with a HW ane stem
 	 * @param firstHeteroAtomSMILES
 	 * @param secondHeteroAtomSMILES
 	 * @throws ComponentGenerationException 
@@ -675,9 +676,25 @@ class ComponentGenerator {
 			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
 		String atom2Element = m.group();
-		if (AtomProperties.elementToHwPriority.get(atom1Element)> AtomProperties.elementToHwPriority.get(atom2Element)){
-			throw new ComponentGenerationException("Hantzch-widman ring misparsed as a heterogeneous hydride with alternating atoms");
+		if (AtomProperties.elementToHwPriority.get(atom1Element) > AtomProperties.elementToHwPriority.get(atom2Element)){
+			if (atom2Element.equals("O") || atom2Element.equals("S")  || atom2Element.equals("Se") || atom2Element.equals("Te") 
+					|| atom2Element.equals("Bi")  || atom2Element.equals("Hg")){
+				if (!hasSiorGeorSnorPb(atom1Element, atom2Element)){
+					throw new ComponentGenerationException("Hantzch-widman ring misparsed as a heterogeneous hydride with alternating atoms");
+				}
+			}
 		}
+	}
+
+	/**
+	 * Are either of the elements Si/Ge/Sn/Pb
+	 * @param atom1Element
+	 * @param atom2Element
+	 * @return
+	 */
+	private boolean hasSiorGeorSnorPb(String atom1Element, String atom2Element) {
+		return (atom1Element.equals("Si") || atom1Element.equals("Ge") || atom1Element.equals("Sn") ||atom1Element.equals("Pb")
+				|| atom2Element.equals("Si") || atom2Element.equals("Ge") || atom2Element.equals("Sn") ||atom2Element.equals("Pb"));
 	}
 
 	/** Handle 1H- in 1H-pyrrole etc.
