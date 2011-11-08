@@ -1901,11 +1901,14 @@ class ComponentGenerator {
 			}
 		}
 		
-		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is phenol with an O replaced with S not thiophene with a hydroxy
+		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is generally phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) && possibleSuffix !=null && possibleSuffix.getLocalName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
-					throw new ComponentGenerationException(groupValue + "ol has been incorrectly interpreted as "+ groupValue+", ol instead of phenol with the oxgen replaced");
+					Element isThisALocant =(Element)XOMTools.getPreviousSibling(group);
+					if (isThisALocant == null || !isThisALocant.getLocalName().equals(LOCANT_EL) || MATCH_COMMA.split(isThisALocant.getValue()).length != 1){
+						throw new ComponentGenerationException(groupValue + "ol has been incorrectly interpreted as "+ groupValue+", ol instead of phenol with the oxgen replaced");
+					}
 				}
 			}
 		}
