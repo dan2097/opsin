@@ -697,31 +697,30 @@ class ComponentGenerator {
 				|| atom2Element.equals("Si") || atom2Element.equals("Ge") || atom2Element.equals("Sn") ||atom2Element.equals("Pb"));
 	}
 
-	/** Handle 1H- in 1H-pyrrole etc.
+	/** Handle indicated hydrogen  e.g. 1H- in 1H-pyrrole
 	 *
-	 * @param elem The substituent/root to looks for indicated hydrogens in.
+	 * @param subOrRoot The substituent/root to looks for indicated hydrogens in.
 	 * @throws ComponentGenerationException 
 	 */
-	private void processIndicatedHydrogens(Element elem) throws ComponentGenerationException {
-		Elements hydrogens = elem.getChildElements(INDICATEDHYDROGEN_EL);
-		for(int i=0;i<hydrogens.size();i++) {
-			Element hydrogen = hydrogens.get(i);
-			String txt = StringTools.removeDashIfPresent(hydrogen.getValue());
+	private void processIndicatedHydrogens(Element subOrRoot) throws ComponentGenerationException {
+		List<Element> indicatedHydrogens = XOMTools.getChildElementsWithTagName(subOrRoot, INDICATEDHYDROGEN_EL);
+		for (Element indicatedHydrogenGroup : indicatedHydrogens) {
+			String txt = StringTools.removeDashIfPresent(indicatedHydrogenGroup.getValue());
 			if (!StringTools.endsWithCaseInsensitive(txt, "h")){//remove brackets if they are present
 				txt = txt.substring(1, txt.length()-1);
 			}
 			String[] hydrogenLocants =MATCH_COMMA.split(txt);
             for (String hydrogenLocant : hydrogenLocants) {
                 if (StringTools.endsWithCaseInsensitive(hydrogenLocant, "h")) {
-                    Element newHydrogenElement = new Element(INDICATEDHYDROGEN_EL);
-                    newHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
-                    XOMTools.insertBefore(hydrogen, newHydrogenElement);
+                    Element indicatedHydrogenEl = new Element(INDICATEDHYDROGEN_EL);
+                    indicatedHydrogenEl.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
+                    XOMTools.insertBefore(indicatedHydrogenGroup, indicatedHydrogenEl);
                 }
                 else{
                 	throw new ComponentGenerationException("OPSIN Bug: malformed indicated hydrogen element!");
                 }
             }
-			hydrogen.detach();
+			indicatedHydrogenGroup.detach();
 		}
 	}
 
