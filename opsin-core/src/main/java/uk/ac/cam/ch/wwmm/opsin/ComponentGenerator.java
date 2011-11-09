@@ -898,7 +898,7 @@ class ComponentGenerator {
 	private void processInfixes(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> infixes = XOMTools.getChildElementsWithTagName(subOrRoot, INFIX_EL);
 		for (Element infix : infixes) {
-			Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL});
+			Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL});
 			if (suffix ==null || !suffix.getLocalName().equals(SUFFIX_EL)){
 				throw new ComponentGenerationException("No suffix found next next to infix: "+ infix.getValue());
 			}
@@ -914,13 +914,16 @@ class ComponentGenerator {
 			currentInfixInformation.add(infixValue);
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(infix);
 			Element possibleBracket;
-			boolean suffixPrefixPresent =false;
+			boolean multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier =false;
 			if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
 				Element possibleSuffixPrefix = XOMTools.getPreviousSiblingIgnoringCertainElements(infix, new String[]{MULTIPLIER_EL, INFIX_EL});
 				if (possibleSuffixPrefix!=null && possibleSuffixPrefix.getLocalName().equals(SUFFIXPREFIX_EL)){
-					suffixPrefixPresent =true;
+					multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier =true;
 				}
 				possibleBracket  = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
+				if (possibleBracket.getLocalName().equals(MULTIPLIER_EL)){
+					multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier =true;
+				}
 			}
 			else{
 				possibleBracket=possibleMultiplier;
@@ -943,12 +946,15 @@ class ComponentGenerator {
 				possibleBracket.detach();
 				bracket.detach();
 			}
-			else if (possibleMultiplier!=null && suffixPrefixPresent){
+			else if (possibleMultiplier!=null && multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier){//multiplier unambiguously means multiplication of the infix
 				int multiplierVal = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				for (int i = 1; i < multiplierVal; i++) {
 					currentInfixInformation.add(infixValue);
 				}
 				possibleMultiplier.detach();
+				infix.detach();
+			}
+			else if (possibleMultiplier!=null && GROUP_TYPE_VAL.equals(possibleMultiplier.getAttributeValue(TYPE_ATR))){//e.g. ethanbisthioic acid == ethanbis(thioic acid)
 				infix.detach();
 			}
 			suffix.getAttribute(INFIX_ATR).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
