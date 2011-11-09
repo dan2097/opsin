@@ -312,7 +312,7 @@
 		<token value="NC(=N)NCCS(=O)O" labels="none" valType="SMILES" functionalIDs="9">hypotaurocyamine</token>
 		<token value="NC(=N)NCCS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="10">taurocyamine</token>
 		<token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O" labels="none" valType="SMILES">vitamin c</token>
-		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" valType="SMILES" defaultInID="37">>coenzyme a</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" valType="SMILES" defaultInID="37">coenzyme a</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" valType="SMILES" defaultInID="37">coa</token>
 	</tokenList>
 
