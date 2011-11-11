@@ -1,3 +1,10 @@
+Version 1.2.0
+Basic support for cylised carbohydrates e.g. alpha-D-glucopyranose
+Basic support for systematic carbohydrate stems e.g. D-glycero-D-gluco-Heptose
+Added heuristic for correcting esters with omitted spaces
+Added support for xanthates/xanthic acid
+Many minor improvements and bug fixes
+
 Version 1.1.0
 Significant improvements to fused ring numbering code, specifically 3/4/5/7/8 member rings are no longer only allowed in chains of rings
 Added support for outputting to StdInChI
