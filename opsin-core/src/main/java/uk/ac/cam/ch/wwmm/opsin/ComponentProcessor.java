@@ -3246,7 +3246,7 @@ class ComponentProcessor {
 	private void addImplicitBracketsToAminoAcids(List<Element> groups, List<Element> brackets) {
 		for (int i = groups.size() -1; i >=0; i--) {
 			Element group = groups.get(i);
-			if (group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)){
+			if (group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL) && OpsinTools.getNextGroup(group)!=null){
 				Element subOrRoot = (Element) group.getParent();
 				
 				//now find the brackets/substituents before this element
