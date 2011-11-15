@@ -31,7 +31,7 @@ public class WordRulesOmittedSpaceCorrector {
 				checkAndCorrectOmittedSpacesInDivalentFunctionalGroupRule(wordRule);
 			}
 			else if (wordRuleVal == WordRule.simple){
-				//note that this funciton may change the word rule to ester
+				//note that this function may change the word rule to ester
 				checkAndCorrectOmittedSpaceEster(wordRule);
 			}
 		}
@@ -88,12 +88,7 @@ public class WordRulesOmittedSpaceCorrector {
 					if (!checkSuitabilityOfSubstituentForEsterFormation(firstChild, functionalAtomsCount)){
 						return;
 					}
-					if (substituentsAndBrackets.size()>1){
-						for (int i = 1; i < substituentsAndBrackets.size(); i++) {
-							if (substituentsAndBrackets.get(i).getAttribute(LOCANT_ATR)==null){
-								return;
-							}
-						}
+					if (substituentsAndBrackets.size()>1 && (allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstition(substituentsAndBrackets, rootFrag))){
 						transformToEster(wordRule, firstChild);
 					}
 					else if (substituentsAndBrackets.size()==1){
@@ -110,6 +105,50 @@ public class WordRulesOmittedSpaceCorrector {
 				}
 			}
 		}
+	}
+
+	private boolean allBarFirstSubstituentHaveLocants(List<Element> substituentsAndBrackets) {
+		if (substituentsAndBrackets.size() <=1){
+			return false;
+		}
+		for (int i = 1; i < substituentsAndBrackets.size(); i++) {
+			if (substituentsAndBrackets.get(i).getAttribute(LOCANT_ATR)==null){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean insufficientSubstitutableHydrogenForSubstition(List<Element> substituentsAndBrackets, Fragment frag) {
+		int substitutableHydrogens = getAtomForEachSubstitutableHydrogen(frag).size();
+		for (int i = 1; i < substituentsAndBrackets.size(); i++) {
+			Element subOrBracket = substituentsAndBrackets.get(i);
+			Fragment f = state.xmlFragmentMap.get(getRightMostGroup(subOrBracket));
+			String multiplierValue = subOrBracket.getAttributeValue(MULTIPLIER_ATR);
+			int multiplier = 1;
+			if (multiplierValue!=null){
+				multiplier= Integer.parseInt(multiplierValue);
+			}
+			substitutableHydrogens -= (getTotalOutAtomValency(f) * multiplier);
+		}
+		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(state.xmlFragmentMap.get(getRightMostGroup(substituentsAndBrackets.get(0))));
+		String multiplierValue = substituentsAndBrackets.get(0).getAttributeValue(MULTIPLIER_ATR);
+		int multiplier = 1;
+		if (multiplierValue!=null){
+			multiplier= Integer.parseInt(multiplierValue);
+		}
+		if (substitutableHydrogens >=0 && (substitutableHydrogens - (firstFragSubstitutableHydrogenRequired * multiplier)) <0){
+			return true;
+		}
+		return false;
+	}
+
+	private int getTotalOutAtomValency(Fragment f) {
+		int outAtomValency = 0;
+		for (OutAtom outAtom : f.getOutAtoms()) {
+			outAtomValency += outAtom.getValency();
+		}
+		return outAtomValency;
 	}
 
 	/**
