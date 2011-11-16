@@ -17,6 +17,8 @@ then the SMILES replacement
   <token value="-O:OC#N">cyanatid</token>
   <token value="-O:C#N">cyanid</token>
   <token value="-O-:SS">dithioperox</token>
+  <token value="-O-:[Se|2][Se|2]">diselenoperox</token>
+  <token value="-O-:[Te|2][Te|2]">ditelluroperox</token>
   <token value="-O:F">fluorid</token>
   <token value="-O:NN">hydrazid</token>
   <token value="=O:=NN">hydrazon</token>
@@ -37,8 +39,6 @@ then the SMILES replacement
   <token value="-O:[Te|2]C#N">tellurocyanatid</token>
 
   <!--<token value="-O-:SO">thioperoxo</token> is it SO or OS???-->
-  <token value="-O-:[Se|2][Se|2]">diselenoperox</token>
-  <token value="-O-:[Te|2][Te|2]">ditellurooperox</token>
   <!--<token value="-O-:[Se|2]S">selenothioperoxo</token> is it [Se|2]S or S[Se|2]???-->
 
   <token value="=O:=NO">hydroxim</token><!--not an IUPAC infix-->
