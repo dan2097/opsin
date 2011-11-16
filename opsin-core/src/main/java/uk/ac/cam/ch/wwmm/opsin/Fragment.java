@@ -549,6 +549,9 @@ class Fragment {
 		for (String l : atom.getLocants()) {
 			atomMapFromLocant.remove(l);
 		}
+		if (defaultInAtom == atom){
+			defaultInAtom = getFirstAtom();
+		}
 	}
 	/**
 	 * Retrieves the overall charge of the fragment by querying all its atoms
@@ -607,7 +610,7 @@ class Fragment {
 	
 
 	/**
-	 * Returns an unmodifiable list of the locants asssociated with this fragment
+	 * Returns an unmodifiable list of the locants associated with this fragment
 	 * @return
 	 */
 	Set<String> getLocants() {

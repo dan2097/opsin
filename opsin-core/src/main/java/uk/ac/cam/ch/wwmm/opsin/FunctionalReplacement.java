@@ -193,8 +193,11 @@ class FunctionalReplacement {
 						}
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono || replacementType == PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide){
-						boolean appropriate = checkGroupIsAnAppropriateNonCarboxylicAcid(state, groupToBeModified, state.xmlFragmentMap.get(group).getOutAtom(0).getValency());
-						if (!appropriate){
+						Fragment acidFrag = state.xmlFragmentMap.get(groupToBeModified);
+						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL) ||
+								acidHasSufficientHydrogenForSubstitutionInterpretation(acidFrag, state.xmlFragmentMap.get(group).getOutAtom(0).getValency(), locantEl)){
+							//hydrazono replacement only applies to non carboxylic acids e.g. hydrazonooxalic acid
+							//need to be careful to note that something like chlorophosphonic acid isn't functional replacement
 							continue;
 						}
 						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
@@ -545,32 +548,32 @@ class FunctionalReplacement {
 	 */
 
 	
-	private static boolean checkGroupIsAnAppropriateNonCarboxylicAcid(BuildState state, Element groupToBeModified, int maxSubstitutableHydrogenOnOneAtom) throws StructureBuildingException {
-		if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
-			return false;//hydrazono replacement only applies to non carboxylic acids e.g. hydrazonooxalic acid
-		}
-		return calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(state, groupToBeModified) < maxSubstitutableHydrogenOnOneAtom;
-	}
-	
-	private static int calculateMaxSubstitutableHydrogenAttachedToAnAcidCentre(BuildState state, Element group) {
-		Fragment fragToBeModified = state.xmlFragmentMap.get(group);
-		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){
-			int maxSubstitutableHydrogen =0;
-			String[] atomIndices = MATCH_COMMA.split(group.getAttributeValue(SUFFIXAPPLIESTO_ATR));
-			List<Atom> atomList = fragToBeModified.getAtomList();
-			for (String atomIndice : atomIndices) {
-				int substitutableHydrogen = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atomList.get(Integer.parseInt(atomIndice)-1));
-				if (substitutableHydrogen > maxSubstitutableHydrogen){
-					maxSubstitutableHydrogen = substitutableHydrogen;
+	private static boolean acidHasSufficientHydrogenForSubstitutionInterpretation(Fragment acidFrag, int hydrogenRequiredForSubstitutionInterpretation, Element locantEl) throws StructureBuildingException {
+		List<Atom> atomsThatWouldBeSubstituted = new ArrayList<Atom>();
+		if (locantEl !=null){
+			String[] possibleLocants = MATCH_COMMA.split(locantEl.getValue());
+			for (String locant : possibleLocants) {
+				Atom atomToBeSubstituted = acidFrag.getAtomByLocant(locant);
+				if (atomToBeSubstituted !=null){
+					atomsThatWouldBeSubstituted.add(atomToBeSubstituted);
+				}
+				else{
+					atomsThatWouldBeSubstituted.clear();
+					atomsThatWouldBeSubstituted.add(acidFrag.getDefaultInAtom());
+					break;
 				}
 			}
-			return maxSubstitutableHydrogen;
 		}
 		else{
-			return StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(fragToBeModified.getFirstAtom());
+			atomsThatWouldBeSubstituted.add(acidFrag.getDefaultInAtom());
 		}
+		for (Atom atom : atomsThatWouldBeSubstituted) {
+			if (StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom) < hydrogenRequiredForSubstitutionInterpretation){
+				return false;//insufficient hydrogens for substitution interpretation
+			}
+		}
+		return true;
 	}
-
 
 	/**
 	 * Performs replacement of oxygen atoms by chalogen atoms
