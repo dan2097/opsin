@@ -178,8 +178,8 @@ class FusedRingBuilder {
 						if (MATCH_DASH.split(fusionDescriptors[j]).length==1 && 
 								MATCH_COMMA.split(fusionDescriptors[j]).length >1 &&
 								FragmentTools.allAtomsInRingAreIdentical(component)
-								&& ((-j + StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0])) != fusionLevel) ){//Could be like cyclopenta[3,4]cyclobuta[1,2]benzene where the first fusion to occur has parent locants omitted not child locants
-							int numberOfPrimes = -j + StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0]);
+								&& ((StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0])) != fusionLevel) ){//Could be like cyclopenta[3,4]cyclobuta[1,2]benzene where the first fusion to occur has parent locants omitted not child locants
+							int numberOfPrimes = StringTools.countTerminalPrimes(MATCH_COMMA.split(fusionDescriptors[j])[0]);
 							//note that this is the number of primes on the parent ring. So would expect the child ring and hence the fusionLevel to be 1 higher
 							if (numberOfPrimes + 1 != fusionLevel){
 								if (numberOfPrimes + 2 == fusionLevel){//ring could be in previous fusion level e.g. the benzo in benzo[10,11]phenanthro[2',3',4',5',6':4,5,6,7]chryseno[1,2,3-bc]coronene
