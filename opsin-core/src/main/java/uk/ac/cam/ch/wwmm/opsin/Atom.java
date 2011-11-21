@@ -589,7 +589,7 @@ class Atom {
 			}
 			else{
 				if (element.equals("C")){
-					maxValency =4;
+					maxValency = 4 + protonsExplicitlyAddedOrRemoved;
 				}
 				else{
 					if (ValencyChecker.getHWValency(element)==null){
