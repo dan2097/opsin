@@ -12,18 +12,18 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 
-public class WordRulesOmittedSpaceCorrector {
+class WordRulesOmittedSpaceCorrector {
 	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?$");
 	
 	private final BuildState state;
 	private final Element parse;
 
-	public WordRulesOmittedSpaceCorrector(BuildState state, Element parse) {
+	WordRulesOmittedSpaceCorrector(BuildState state, Element parse) {
 		this.state =state;
 		this.parse = parse;
 	}
 
-	public void correctOmittedSpaces() throws StructureBuildingException {
+	void correctOmittedSpaces() throws StructureBuildingException {
 		List<Element> wordRules = XOMTools.getDescendantElementsWithTagName(parse, WORDRULE_EL);
 		for (Element wordRule : wordRules) {
 			WordRule wordRuleVal = WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR));

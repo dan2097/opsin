@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class CipSequenceRules {
+class CipSequenceRules {
 	
 	/**
 	 * Sorts atoms by their atomic number, low to high

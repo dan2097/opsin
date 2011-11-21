@@ -11,7 +11,7 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
 
-public class SuffixRules {
+class SuffixRules {
 	
 	/**For a given group type what suffixes are applicable. Due to group subTypes altering suffix meaning, the same suffixValue maps to one or more suffixes*/
 	private final HashMap<String, HashMap<String, List<Element>>> suffixApplicability;
