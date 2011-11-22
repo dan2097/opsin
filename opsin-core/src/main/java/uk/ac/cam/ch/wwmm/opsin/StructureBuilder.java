@@ -159,9 +159,6 @@ class StructureBuilder {
 			rAtom.setElement("R");
 		}
 
-		if (uniFrag.getInAtoms().size()>0){
-			throw new StructureBuildingException("In atoms as used in multiplicative nomenclature were never used, maybe the name is malformed");
-		}
 		if (uniFrag.getOutAtoms().size()>0 && !state.n2sConfig.isAllowRadicals()){
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
@@ -1438,7 +1435,7 @@ class StructureBuilder {
 		resolveWordOrBracket(state, polymer);
 		BuildResults polymerBr = new BuildResults(state, polymer);
 		List<Fragment> rGroups = new ArrayList<Fragment>();
-		if (polymerBr.getOutAtomCount() ==2 && polymerBr.getInAtomCount()==0){
+		if (polymerBr.getOutAtomCount() ==2){
 			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
 			/*
@@ -1454,7 +1451,7 @@ class StructureBuilder {
 			polymerBr.removeAllOutAtoms();
 		}
 		else{
-			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outAtoms, found: " +polymerBr.getOutAtomCount() +" ,expected 0 inAtoms, found: " +polymerBr.getInAtomCount());
+			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outAtoms, found: " +polymerBr.getOutAtomCount());
 		}
 		return rGroups;
 	}

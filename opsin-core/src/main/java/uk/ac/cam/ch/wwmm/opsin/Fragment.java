@@ -51,10 +51,6 @@ class Fragment {
 	 * Initially empty */
 	private final LinkedList<FunctionalAtom> functionalAtoms = new LinkedList<FunctionalAtom>();
 
-	/**The atoms that must be bonded to and the order of the bonds. Currently used in suffixes and in multiplicative nomenclature
-	 * Initially empty */
-	private final LinkedList<InAtom> inAtoms = new LinkedList<InAtom>();
-
 	/**The atom that fragments connecting to this fragment connect to if a locant has not been specified
 	 * Defaults to the first atom to be added to the fragment. This is typically the one with locant 1
 	 * but allows for fragments with no locants. Can be overridden*/
@@ -374,53 +370,6 @@ class Fragment {
 		if (outAtom.isSetExplicitly()){
 			outAtom.getAtom().addOutValency(-outAtom.getValency());
 		}
-	}
-
-	/**Gets the linkedList of inAtoms. This is not modifiable, use the relevant methods in this class to modify it
-    * @return*/
-	List<InAtom> getInAtoms() {
-		return Collections.unmodifiableList(inAtoms);
-	}
-
-	/**
-	 * Gets the inAtom at a specific index of the inAtoms linkedList
-	 * @param i
-	 * @return
-	 */
-	InAtom getInAtom(int i) {
-		return inAtoms.get(i);
-	}
-
-	/**Adds an inAtom
-	 * @param atom
-     * @param valency
-     */
-	void addInAtom(Atom atom, int valency) {
-		inAtoms.add(new InAtom(atom, valency));
-	}
-	
-	/**Adds a list of inAtoms, copies of the given inAtoms are not made
-    * @param inAtoms*/
-	void addInAtoms(List<InAtom> inAtoms) {
-		this.inAtoms.addAll(inAtoms);
-	}
-
-	/**
-	 * Removes the inAtoms at a specific index of the inAtoms linkedList
-	 * @param i
-	 */
-	void removeInAtoms(int i) {
-		InAtom removedinAtom = inAtoms.remove(i);
-		removedinAtom.getAtom().addOutValency(-removedinAtom.getValency());
-	}
-
-	/**
-	 * Removes the specified inAtom from the inAtoms linkedList
-	 * @param inAtom
-	 */
-	void removeInAtom(InAtom inAtom) {
-		inAtoms.remove(inAtom);
-		inAtom.getAtom().addOutValency(-inAtom.getValency());
 	}
 
 	/**Gets the linkedList of functionalAtoms

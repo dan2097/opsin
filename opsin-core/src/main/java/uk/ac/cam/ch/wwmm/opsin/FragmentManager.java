@@ -125,7 +125,7 @@ class FragmentManager {
 	/** Incorporates a fragment, usually a suffix, into a parent fragment
 	 * This does:
 	 * Imports all of the atoms and bonds from another fragment into this one.
-	 * Also imports outAtoms/inAtoms and functionalAtoms
+	 * Also imports outAtoms and functionalAtoms
 	 * Reassigns inter fragment bonds of the parent fragment as either intra fragment bonds
 	 * of the parent fragment or as inter fragment bonds of the parent fragment
 	 *
@@ -143,7 +143,6 @@ class FragmentManager {
 			parentFrag.addBond(bond);
 		}
 		parentFrag.addOutAtoms(childFrag.getOutAtoms());
-		parentFrag.addInAtoms(childFrag.getInAtoms());
 		parentFrag.addFunctionalAtoms(childFrag.getFunctionalAtoms());
 
 		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {//reassign inter fragment bonds of child
@@ -364,7 +363,6 @@ class FragmentManager {
 		List<Atom> atomList =originalFragment.getAtomList();
 		List<OutAtom> outAtoms =originalFragment.getOutAtoms();
 		List<FunctionalAtom> functionalAtoms =originalFragment.getFunctionalAtoms();
-		List<InAtom> inAtoms =originalFragment.getInAtoms();
 		Atom defaultInAtom =originalFragment.getDefaultInAtom();
 		for (Atom atom : atomList) {
 			int id = idManager.getNextID();
@@ -443,9 +441,6 @@ class FragmentManager {
 		for (FunctionalAtom functionalAtom : functionalAtoms) {
 			newFragment.addFunctionalAtom(oldToNewAtomMap.get(functionalAtom.getAtom()));
 		}
-        for (InAtom inAtom : inAtoms) {
-            newFragment.addInAtom(oldToNewAtomMap.get(inAtom.getAtom()), inAtom.getValency());
-        }
 		newFragment.setDefaultInAtom(oldToNewAtomMap.get(defaultInAtom));
 		Set<Bond> bondSet =originalFragment.getBondSet();
 		for (Bond bond : bondSet) {
