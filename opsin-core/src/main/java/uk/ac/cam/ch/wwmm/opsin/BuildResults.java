@@ -25,9 +25,6 @@ class BuildResults {
 	/**The atoms that may be used to from things like esters*/
 	private final LinkedList<FunctionalAtom> functionalAtoms;
 
-	/**The atoms that must have bonds formed to them. Rarely used expect in the root of multiplicative names*/
-	private final LinkedList<InAtom> inAtoms;
-
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
 	private final LinkedHashSet<Fragment> fragments;
 
@@ -38,7 +35,6 @@ class BuildResults {
 	BuildResults(BuildState state, Element wordSubOrBracket) {
 		outAtoms = new LinkedList<OutAtom>();
 		functionalAtoms = new LinkedList<FunctionalAtom>();
-		inAtoms = new LinkedList<InAtom>();
 		fragments = new LinkedHashSet<Fragment>();
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(wordSubOrBracket, XmlDeclarations.GROUP_EL);
 		for (Element group : groups) {
@@ -46,7 +42,6 @@ class BuildResults {
 			fragments.add(frag);
 			outAtoms.addAll(frag.getOutAtoms());
 			functionalAtoms.addAll(frag.getFunctionalAtoms());
-			inAtoms.addAll(frag.getInAtoms());
 		}
 	}
 
@@ -56,7 +51,6 @@ class BuildResults {
 	BuildResults() {
 		outAtoms = new LinkedList<OutAtom>();
 		functionalAtoms = new LinkedList<FunctionalAtom>();
-		inAtoms = new LinkedList<InAtom>();
 		fragments = new LinkedHashSet<Fragment>();
 	}
 
@@ -136,9 +130,6 @@ class BuildResults {
 		return outAtoms.get(0);
 	}
 
-	int getInAtomCount(){
-		return inAtoms.size();
-	}
 	/**
 	 * Returns the atom corresponding to the given id assuming the atom the id corresponds to is within the list of fragment in this Buildresults
 	 * @param id index
@@ -158,7 +149,6 @@ class BuildResults {
 	void mergeBuildResults(BuildResults otherBR) {
 		outAtoms.addAll(otherBR.outAtoms);
 		functionalAtoms.addAll(otherBR.functionalAtoms);
-		inAtoms.addAll(otherBR.inAtoms);
 		fragments.addAll(otherBR.fragments);
 	}
 

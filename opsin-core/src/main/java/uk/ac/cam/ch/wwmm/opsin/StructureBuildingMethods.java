@@ -981,106 +981,118 @@ class StructureBuildingMethods {
 		List<Element> clonedElements = new ArrayList<Element>();
 		BuildResults newBr = new BuildResults();
 		for (int i = multiplier -1; i >=0; i--) {
-			Element currentElement;
+			Element multipliedElement;
 			if (i!=0){
-				currentElement = state.fragManager.cloneElement(state, multipliedParent, i);
-				addPrimesToLocantedStereochemistryElements(currentElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
-				clonedElements.add(currentElement);
+				multipliedElement = state.fragManager.cloneElement(state, multipliedParent, i);
+				addPrimesToLocantedStereochemistryElements(multipliedElement, StringTools.multiplyString("'", i));//Stereochemistry elements with locants will need to have their locants primed (stereochemistry is only processed after structure building)
+				clonedElements.add(multipliedElement);
 			}
 			else{
-				currentElement=multipliedParent;
+				multipliedElement=multipliedParent;
 			}
 			
 			//determine group that will be additively bonded to
-			Element group;
-			if (currentElement.getLocalName().equals(BRACKET_EL)){
-				group =getFirstMultiValentGroup(state, currentElement);
-				if (group == null){//root will not have a multivalent group
-					List<Element> groups = XOMTools.getDescendantElementsWithTagName(currentElement, GROUP_EL);
+			Element multipliedGroup;
+			if (multipliedElement.getLocalName().equals(BRACKET_EL)){
+				multipliedGroup =getFirstMultiValentGroup(state, multipliedElement);
+				if (multipliedGroup == null){//root will not have a multivalent group
+					List<Element> groups = XOMTools.getDescendantElementsWithTagName(multipliedElement, GROUP_EL);
 					if (inLocants==null){
 						throw new StructureBuildingException("OPSIN Bug? in locants must be specified for a multiplied root in multiplicative nomenclature");
 					}
 					if (inLocants.get(0).equals(INLOCANTS_DEFAULT)){
-						group = groups.get(groups.size()-1);
+						multipliedGroup = groups.get(groups.size()-1);
 					}
 					else{
 						groupLoop: for (int j = groups.size()-1; j >=0; j--) {
 							Fragment possibleFrag = state.xmlFragmentMap.get(groups.get(j));
 							for (String locant : inLocants) {
 								if (possibleFrag.hasLocant(locant)){
-									group =groups.get(j);
+									multipliedGroup =groups.get(j);
 									break groupLoop;
 								}
 							}
 						}
 					}
-					if (group==null){
+					if (multipliedGroup==null){
 						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 					}
 				}
 			}
 			else{
-				group = currentElement.getFirstChildElement(GROUP_EL);
+				multipliedGroup = multipliedElement.getFirstChildElement(GROUP_EL);
 			}
+			Fragment multipliedFrag = state.xmlFragmentMap.get(multipliedGroup);
 			
-			Fragment frag = state.xmlFragmentMap.get(group);
+			Fragment multiRadicalFrag = multiRadicalBR.getOutAtom(i).getAtom().getFrag();
+			Element multiRadicalGroup = state.xmlFragmentMap.getElement(multiRadicalFrag);
+			if (multiRadicalGroup.getAttribute(RESOLVED_ATR)==null){
+				resolveUnLocantedFeatures(state, (Element) multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
+				multiRadicalGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
+			}
+
+			boolean substitutivelyBondedToRoot = false;
 			if (inLocants !=null){
 				Element rightMostGroup;
-				if (currentElement.getLocalName().equals(BRACKET_EL)){
-					rightMostGroup = findRightMostGroupInBracket(currentElement);
+				if (multipliedElement.getLocalName().equals(BRACKET_EL)){
+					rightMostGroup = findRightMostGroupInBracket(multipliedElement);
 				}
 				else{
-					rightMostGroup = currentElement.getFirstChildElement(GROUP_EL);
+					rightMostGroup = multipliedElement.getFirstChildElement(GROUP_EL);
 				}
 				rightMostGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));//this group will not be used further within this word but can in principle be a substituent e.g. methylenedisulfonyl dichloride
-				if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null){//e.g. methylenedisulfonyl dichloride
+				if (multipliedGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null){//e.g. methylenedisulfonyl dichloride
 					if (!multipliedParent.getAttributeValue(INLOCANTS_ATR).equals(INLOCANTS_DEFAULT)){
 						throw new StructureBuildingException("inLocants should not be specified for a multiradical parent in multiplicative nomenclature");
 					}
 				}
 				else{
-					boolean inAtomAdded =false;
+					//bonding will be substitutive rather additive as this is bonding to a root
+					Atom atomToJoinTo = null;
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							frag.addInAtom(frag.getAtomOrNextSuitableAtomOrThrow(frag.getDefaultInAtom(), 1, true), 1);
-							inAtomAdded=true;
+							atomToJoinTo = multipliedFrag.getAtomOrNextSuitableAtomOrThrow(multipliedFrag.getDefaultInAtom(), 1, true);
 							inLocants.remove(j);
 							break;
 						}
 						else{
-							Atom inAtom = frag.getAtomByLocant(locant);
+							Atom inAtom = multipliedFrag.getAtomByLocant(locant);
 							if (inAtom!=null){
-								frag.addInAtom(inAtom, 1);
-								inAtomAdded=true;
+								atomToJoinTo = inAtom;
 								inLocants.remove(j);
 								break;
 							}
 						}
 					}
-					if (!inAtomAdded){
+					if (atomToJoinTo == null){
 						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 					}
+
+					OutAtom out = multiRadicalBR.getOutAtom(i);
+					Atom from = out.getAtom();
+					int bondOrder = out.getValency();
+					if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+						from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder, false);
+					}
+					multiRadicalFrag.removeOutAtom(out);
+
+					state.fragManager.createBond(from, atomToJoinTo, bondOrder);
+					if (LOG.isTraceEnabled()){LOG.trace("Substitutively bonded (multiplicative to root) " + from.getID() + " (" +state.xmlFragmentMap.getElement(from.getFrag()).getValue()+") " + atomToJoinTo.getID() + " (" +state.xmlFragmentMap.getElement(atomToJoinTo.getFrag()).getValue()+")");}
+					substitutivelyBondedToRoot = true;
 				}
 			}
-			if (frag.getInAtoms().size()!=1 && frag.getOutAtoms().size() ==0 ){
-				throw new StructureBuildingException("Multiplication bond formation failure: OPSIN bug, input to joinFragmentsMultiplicatively was unexpected");
+			if (!substitutivelyBondedToRoot){
+				joinFragmentsAdditively(state, multiRadicalBR.getOutAtom(i).getAtom().getFrag(), multipliedFrag);
 			}
-
-			Element multiRadicalGroup =state.xmlFragmentMap.getElement(multiRadicalBR.getOutAtom(i).getAtom().getFrag());
-			if (multiRadicalGroup.getAttribute(RESOLVED_ATR)==null){
-				resolveUnLocantedFeatures(state, (Element) multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
-				multiRadicalGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
-			}
-			joinFragmentsAdditively(state, multiRadicalBR.getOutAtom(i).getAtom().getFrag(), frag);
-			if (currentElement.getLocalName().equals(BRACKET_EL)){
-				recursivelyResolveUnLocantedFeatures(state, currentElement);//there may be outAtoms that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
+			if (multipliedElement.getLocalName().equals(BRACKET_EL)){
+				recursivelyResolveUnLocantedFeatures(state, multipliedElement);//there may be outAtoms that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
 			}
 
 			if (inLocants ==null){
 				//currentElement is not a root element. Need to build up a new BuildResults so as to call performMultiplicativeOperations again
 				//at this stage an outAtom has been removed from the fragment within currentElement through an additive bond
-				newBr.mergeBuildResults(new BuildResults(state, currentElement));
+				newBr.mergeBuildResults(new BuildResults(state, multipliedElement));
 			}
 		}
 
@@ -1204,82 +1216,72 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
 		}
 
-		Atom to;
-		int bondOrder;
-		if (parentFrag.getInAtoms().size()==1){//special case for the parent of multiplicative nomenclature. This is really substitutive nomenclature
-			InAtom in = parentFrag.getInAtom(0);
-			to = in.getAtom();
-			parentFrag.removeInAtom(in);
-			bondOrder = fragToBeJoined.getOutAtom(outAtomCountOnFragToBeJoined-1).getValency();
+		List<OutAtom> outAtomsOnParent = parentFrag.getOutAtoms();
+		if (outAtomsOnParent.size() ==0){
+			throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
 		}
-		else{
-			List<OutAtom> outAtomsOnParent = parentFrag.getOutAtoms();
-			if (outAtomsOnParent.size() ==0){
-				throw new StructureBuildingException("Additive bond formation failure: Fragment expected to have at least one OutAtom but had none");
+		OutAtom in = null;
+		if (outAtomsOnParent.size() >1){
+			int firstOutAtomOrder = outAtomsOnParent.get(0).getValency();
+			boolean unresolvedAmbiguity =false;
+			for (OutAtom outAtom : outAtomsOnParent) {
+				if (outAtom.getValency()!=firstOutAtomOrder){
+					unresolvedAmbiguity =true;
+				}
 			}
-			OutAtom in = null;
-			if (outAtomsOnParent.size() >1){
-				int firstOutAtomOrder = outAtomsOnParent.get(0).getValency();
-				boolean unresolvedAmbiguity =false;
-				for (OutAtom outAtom : outAtomsOnParent) {
+			if (unresolvedAmbiguity){//not all outAtoms on parent equivalent
+				List<OutAtom> outAtomsOnfragToBeJoined = fragToBeJoined.getOutAtoms();
+				firstOutAtomOrder = outAtomsOnfragToBeJoined.get(0).getValency();
+				unresolvedAmbiguity =false;
+				for (OutAtom outAtom : outAtomsOnfragToBeJoined) {
 					if (outAtom.getValency()!=firstOutAtomOrder){
 						unresolvedAmbiguity =true;
 					}
 				}
-				if (unresolvedAmbiguity){//not all outAtoms on parent equivalent
-					List<OutAtom> outAtomsOnfragToBeJoined = fragToBeJoined.getOutAtoms();
-					firstOutAtomOrder = outAtomsOnfragToBeJoined.get(0).getValency();
-					unresolvedAmbiguity =false;
-					for (OutAtom outAtom : outAtomsOnfragToBeJoined) {
-						if (outAtom.getValency()!=firstOutAtomOrder){
-							unresolvedAmbiguity =true;
-						}
-					}
-					if (unresolvedAmbiguity && outAtomsOnfragToBeJoined.size()==2){//not all outAtoms on frag to be joined are equivalent either!
-						//Solves the specific case of 2,2'-[ethane-1,2-diylbis(azanylylidenemethanylylidene)]diphenol vs 2,2'-[ethane-1,2-diylidenebis(azanylylidenemethanylylidene)]bis(cyclohexan-1-ol)
-						//but does not solve the general case as only a single look behind is performed.
-						Element previousGroup = (Element) OpsinTools.getPreviousGroup(elOfFragToBeJoined);
-						if (previousGroup!=null){
-							List<OutAtom> previousOutAtoms =  state.xmlFragmentMap.get(previousGroup).getOutAtoms();
-							if (previousOutAtoms.size()>1){
-								int previousGroupFirstOutAtomOrder = previousOutAtoms.get(0).getValency();
-								unresolvedAmbiguity =false;
-								for (OutAtom outAtom : previousOutAtoms) {
-									if (outAtom.getValency()!=previousGroupFirstOutAtomOrder){
-										unresolvedAmbiguity =true;
-									}
-								}
-								if (!unresolvedAmbiguity && previousGroupFirstOutAtomOrder==outAtomsOnParent.get(0).getValency()){
-									for (OutAtom outAtom : outAtomsOnParent) {
-										if (outAtom.getValency()!=previousGroupFirstOutAtomOrder){
-											in = outAtom;
-											break;
-										}
-									}
+				if (unresolvedAmbiguity && outAtomsOnfragToBeJoined.size()==2){//not all outAtoms on frag to be joined are equivalent either!
+					//Solves the specific case of 2,2'-[ethane-1,2-diylbis(azanylylidenemethanylylidene)]diphenol vs 2,2'-[ethane-1,2-diylidenebis(azanylylidenemethanylylidene)]bis(cyclohexan-1-ol)
+					//but does not solve the general case as only a single look behind is performed.
+					Element previousGroup = (Element) OpsinTools.getPreviousGroup(elOfFragToBeJoined);
+					if (previousGroup!=null){
+						List<OutAtom> previousOutAtoms =  state.xmlFragmentMap.get(previousGroup).getOutAtoms();
+						if (previousOutAtoms.size()>1){
+							int previousGroupFirstOutAtomOrder = previousOutAtoms.get(0).getValency();
+							unresolvedAmbiguity =false;
+							for (OutAtom outAtom : previousOutAtoms) {
+								if (outAtom.getValency()!=previousGroupFirstOutAtomOrder){
+									unresolvedAmbiguity =true;
 								}
 							}
-						}
-					}
-					else{
-						for (OutAtom outAtom : outAtomsOnParent) {
-							if (outAtom.getValency()==firstOutAtomOrder){
-								in = outAtom;
-								break;
+							if (!unresolvedAmbiguity && previousGroupFirstOutAtomOrder==outAtomsOnParent.get(0).getValency()){
+								for (OutAtom outAtom : outAtomsOnParent) {
+									if (outAtom.getValency()!=previousGroupFirstOutAtomOrder){
+										in = outAtom;
+										break;
+									}
+								}
 							}
 						}
 					}
 				}
+				else{
+					for (OutAtom outAtom : outAtomsOnParent) {
+						if (outAtom.getValency()==firstOutAtomOrder){
+							in = outAtom;
+							break;
+						}
+					}
+				}
 			}
-			if (in==null){
-				in = parentFrag.getOutAtom(0);
-			}
-			to = in.getAtom();
-			bondOrder = in.getValency();
-			if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-				to = to.getFrag().getAtomOrNextSuitableAtomOrThrow(to, bondOrder, false);
-			}
-			parentFrag.removeOutAtom(in);
 		}
+		if (in==null){
+			in = parentFrag.getOutAtom(0);
+		}
+		Atom to = in.getAtom();
+		int bondOrder = in.getValency();
+		if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+			to = to.getFrag().getAtomOrNextSuitableAtomOrThrow(to, bondOrder, false);
+		}
+		parentFrag.removeOutAtom(in);
 
 		OutAtom out =null;
 
