@@ -957,8 +957,13 @@ class StructureBuildingMethods {
 
 	private static void performMultiplicativeOperations(BuildState state, BuildResults multiRadicalBR, Element multipliedParent) throws StructureBuildingException {
 		int multiplier = Integer.parseInt(multipliedParent.getAttributeValue(MULTIPLIER_ATR));
-		if (multiplier > multiRadicalBR.getOutAtomCount()){
-			throw new StructureBuildingException("Multiplication bond formation failure: number of outAtoms disagree with multiplier(multiplier: " + multiplier + ", outAtom count: " + multiRadicalBR.getOutAtomCount()+ ") , this is an OPSIN bug");
+		if (multiplier != multiRadicalBR.getOutAtomCount()){
+			if (multiRadicalBR.getOutAtomCount() == multiplier*2){
+				//TODO substituents like nitrilo can have their outatoms combined
+			}
+			if (multiplier != multiRadicalBR.getOutAtomCount()){
+				throw new StructureBuildingException("Multiplication bond formation failure: number of outAtoms disagree with multiplier(multiplier: " + multiplier + ", outAtom count: " + multiRadicalBR.getOutAtomCount()+ ")");
+			}
 		}
 		if (LOG.isTraceEnabled()){LOG.trace(multiplier +" multiplicative bonds to be formed");}
 		multipliedParent.removeAttribute(multipliedParent.getAttribute(MULTIPLIER_ATR));
