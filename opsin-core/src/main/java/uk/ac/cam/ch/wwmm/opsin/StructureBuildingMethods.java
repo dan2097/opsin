@@ -974,7 +974,7 @@ class StructureBuildingMethods {
 			else{
 				inLocants = StringTools.arrayToList(MATCH_COMMA.split(inLocantsString));
 				if (inLocants.size() != multiplier){
-					throw new StructureBuildingException("Mismatch between multiplier and number inLocants in multiplicative nomenclature");
+					throw new StructureBuildingException("Mismatch between multiplier and number of inLocants in multiplicative nomenclature");
 				}
 			}
 		}
@@ -990,6 +990,8 @@ class StructureBuildingMethods {
 			else{
 				currentElement=multipliedParent;
 			}
+			
+			//determine group that will be additively bonded to
 			Element group;
 			if (currentElement.getLocalName().equals(BRACKET_EL)){
 				group =getFirstMultiValentGroup(state, currentElement);
@@ -1020,6 +1022,7 @@ class StructureBuildingMethods {
 			else{
 				group = currentElement.getFirstChildElement(GROUP_EL);
 			}
+			
 			Fragment frag = state.xmlFragmentMap.get(group);
 			if (inLocants !=null){
 				Element rightMostGroup;
@@ -1107,7 +1110,7 @@ class StructureBuildingMethods {
 			}
 		}
 
-		for (Element clone : clonedElements) {//make sure cloned substituents don't substitute onto each other!
+		for (Element clone : clonedElements) {//only insert cloned substituents now so they don't substitute onto each other!
 			XOMTools.insertAfter(multipliedParent, clone);
 		}
 	}
