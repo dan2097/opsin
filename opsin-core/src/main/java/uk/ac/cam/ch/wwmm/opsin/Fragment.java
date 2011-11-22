@@ -366,8 +366,7 @@ class Fragment {
 	 * @param outAtom
 	 */
 	void removeOutAtom(OutAtom outAtom) {
-		outAtoms.remove(outAtom);
-		if (outAtom.isSetExplicitly()){
+		if (outAtoms.remove(outAtom) && outAtom.isSetExplicitly()){
 			outAtom.getAtom().addOutValency(-outAtom.getValency());
 		}
 	}
