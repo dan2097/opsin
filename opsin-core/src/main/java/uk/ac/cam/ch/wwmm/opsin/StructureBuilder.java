@@ -1153,7 +1153,7 @@ class StructureBuilder {
 			if (!wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				wordsToAttachToGlcyol.add(wordOrWordRule);
 			}
-			else if (!wordOrWordRule.getAttributeValue(VALUE_ATR).equals("ether")){
+			else if (!wordOrWordRule.getAttributeValue(VALUE_ATR).equalsIgnoreCase("ether")){
 				throw new StructureBuildingException("Unexpected word encountered when applying glycol ether word rule " + wordOrWordRule.getAttributeValue(VALUE_ATR));
 			}
 		}
