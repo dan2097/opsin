@@ -54,7 +54,6 @@ class CipSequenceRules {
 	    	else if (atomicNumber1 < atomicNumber2){
 	    		return -1;
 	    	}
-	    	int currentGhostId = ghostIdCounter; 
 			CipState startingState = prepareInitialCIPState(a, b);
 	    	Queue<CipState> cipStateQueue = new LinkedList<CipState>();
 	    	cipStateQueue.add(startingState);
@@ -74,7 +73,6 @@ class CipSequenceRules {
 	    			break;
 	    		}
 	    	}
-	    	removeAnyGhostAtomsAddedAndCorrectGhostIdCounter(currentGhostId);
 	    	if (compare==0){
 	    		throw new RuntimeException("Failed to assign CIP stereochemistry, this indicates a bug in OPSIN or a limitation in OPSIN's implementation of the sequence rules");
 	    	}
@@ -182,6 +180,7 @@ class CipSequenceRules {
 		List<List<List<Atom>>> newNeighbours2 = getNextLevelNeighbours(cipState.previousAtomToVisitedAtoms2, cipState.previousAtoms2, cipState.nextAtoms2, currentToPrevious2);
 
 		int compare = compareNeighboursByCIPpriorityRules(newNeighbours1, newNeighbours2);
+
 		if (compare!=0){
 			return compare;
 		}
@@ -414,19 +413,10 @@ class CipSequenceRules {
 			if (visitedAtoms.contains(neighbour)){//cycle detected
 				atoms.remove(i);
 				if (neighbour.getID()>0){//make sure not to ghost ghosts
-					atoms.add(i, createGhostAtomFromAtom(neighbour, previousAtom));
+					atoms.add(i, new Atom(neighbour.getElement()));
 				}
 			}
 		}
-	}
-
-	private Atom createGhostAtomFromAtom(Atom atomToGhost, Atom atomToBondItTo) {
-		Atom ghost = new Atom(ghostIdCounter--, atomToGhost.getElement(), molecule);
-		Bond b1 = new Bond(ghost, atomToBondItTo, 1);
-		atomToBondItTo.addBond(b1);
-		ghost.addBond(b1);
-		molecule.addAtom(ghost);
-		return ghost;
 	}
 	
 	/**
@@ -446,22 +436,6 @@ class CipSequenceRules {
     	}
 		return 0;
     }
-    
-	/**
-	 * Removes the ghost atoms added by the CIP evaluating code
-	 * @param idValue
-	 */
-	private void removeAnyGhostAtomsAddedAndCorrectGhostIdCounter(int idValue) {
-		List<Atom> atomList = molecule.getAtomList();
-		for (Atom atom : atomList) {
-			if (atom.getID() <= idValue){
-				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
-				adjacentAtom.removeBond(atom.getFirstBond());
-				molecule.removeAtom(atom);
-			}
-		}
-		ghostIdCounter = idValue;
-	}
 	
 	/**
 	 * Adds "ghost" atoms in accordance with the CIP rules for handling double bonds
