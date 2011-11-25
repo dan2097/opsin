@@ -337,11 +337,11 @@ class StereoAnalyser {
 			stereoCentres.add(new StereoCentre(trueStereoCentreAtom, true));
 		}
 
-//		potentialStereoAtoms.removeAll(trueStereoCentres);
-//		List<Atom> paraStereoCentres = findParaStereoCentres(potentialStereoAtoms, trueStereoCentres);
-//		for (Atom paraStereoCentreAtom : paraStereoCentres) {
-//			stereoCentres.add(new StereoCentre(paraStereoCentreAtom, false));
-//		}
+		potentialStereoAtoms.removeAll(trueStereoCentres);
+		List<Atom> paraStereoCentres = findParaStereoCentres(potentialStereoAtoms, trueStereoCentres);
+		for (Atom paraStereoCentreAtom : paraStereoCentres) {
+			stereoCentres.add(new StereoCentre(paraStereoCentreAtom, false));
+		}
 		return stereoCentres;
 	}
 
@@ -403,21 +403,28 @@ class StereoAnalyser {
 				for (int i = neighbours.size() -1 ; i >=0; i--) {
 					colours[i] = mappingToColour.get(neighbours.get(i));
 				}
+				//find pairs of constitutionally identical substituents
 				Map<Integer, Integer> foundPairs = new HashMap<Integer, Integer>();
 				for (int i = 0; i < 4; i++) {
 					int cl = colours[i];
 					for (int j = i +1; j < 4; j++) {
 						if (cl == colours[j]){
 							foundPairs.put(i, j);
+							break;
 						}
 					}
 				}
 				int pairs = foundPairs.keySet().size();
 				if (pairs==1 || pairs==2){
+					boolean hasTrueStereoCentreInAllBranches = true;
 					for (Entry<Integer, Integer> entry: foundPairs.entrySet()) {
-						if (branchesHaveTrueStereocentre(neighbours.get(entry.getKey()), neighbours.get(entry.getValue()), potentialStereoAtom, trueStereoCentres)){
-							paraStereoCentres.add(potentialStereoAtom);
+						if (!branchesHaveTrueStereocentre(neighbours.get(entry.getKey()), neighbours.get(entry.getValue()), potentialStereoAtom, trueStereoCentres)){
+							hasTrueStereoCentreInAllBranches = false;
+							break;
 						}
+					}
+					if (hasTrueStereoCentreInAllBranches){
+						paraStereoCentres.add(potentialStereoAtom);
 					}
 				}
 			}

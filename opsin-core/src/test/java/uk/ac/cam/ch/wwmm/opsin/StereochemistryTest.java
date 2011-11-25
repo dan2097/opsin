@@ -677,4 +677,46 @@ public class StereochemistryTest {
 		assertEquals(true, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("N([H])(CC)(C)").getFirstAtom()));
 		assertEquals(false, StereoAnalyser.isAchiralDueToResonanceOrTautomerism(fm.buildSMILES("N1(C)(OS1)").getFirstAtom()));
 	}
+	
+	@Test
+	public void testFindPseudoAsymmetricCarbon1() throws StructureBuildingException {
+		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder, mock(CMLFragmentBuilder.class));
+		Fragment f = state.fragManager.buildSMILES("OCC(O)C(O)C(O)CO");
+		StructureBuilder.makeHydrogensExplicit(state);
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
+		assertEquals(3, stereoCentres.size());
+		for (int i = 0; i < stereoCentres.size(); i++) {
+			StereoCentre stereocentre = stereoCentres.get(i);
+			if (i < 2){
+				assertEquals(true, stereocentre.isTrueStereoCentre());
+			}
+			else{
+				assertEquals(false, stereocentre.isTrueStereoCentre());
+				assertEquals(5, stereocentre.getStereoAtom().getID());
+			}
+		}
+	}
+	
+	@Test
+	public void testFindPseudoAsymmetricCarbon2() throws StructureBuildingException {
+		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder, mock(CMLFragmentBuilder.class));
+		Fragment f = state.fragManager.buildSMILES("OCC(O)C(C(Cl)(Br)C)(C(Cl)(Br)C)C(O)CO");
+		StructureBuilder.makeHydrogensExplicit(state);
+		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
+		List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
+		assertEquals(5, stereoCentres.size());
+		for (int i = 0; i < stereoCentres.size(); i++) {
+			StereoCentre stereocentre = stereoCentres.get(i);
+			if (i <4){
+				assertEquals(true, stereocentre.isTrueStereoCentre());
+			}
+			else{
+				assertEquals(false, stereocentre.isTrueStereoCentre());
+				assertEquals(5, stereocentre.getStereoAtom().getID());
+			}
+		}
+	}
+	
+	
 }
