@@ -400,7 +400,8 @@ class CipSequenceRules {
 				Atom atomBondConnectsTo = b.getOtherAtom(atom);
 				if (!atomBondConnectsTo.equals(chiralAtom)){//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
 					for (int j = b.getOrder(); j >1; j--) {//add ghost atoms to represent higher order bonds
-						neighbours.add(new Atom(atomBondConnectsTo.getElement()));
+						Atom ghost = new Atom(atomBondConnectsTo.getElement());
+						neighbours.add(ghost);
 					}
 				}
 				if (!atomBondConnectsTo.equals(previousAtom)){
@@ -434,9 +435,8 @@ class CipSequenceRules {
 			Atom neighbour = atoms.get(i);
 			if (visitedAtoms.contains(neighbour)){//cycle detected
 				atoms.remove(i);
-				if (neighbour.getID()>0){//make sure not to ghost ghosts
-					atoms.add(i, new Atom(neighbour.getElement()));
-				}
+				Atom ghost = new Atom(neighbour.getElement());
+				atoms.add(i, ghost);
 			}
 		}
 	}
