@@ -27,7 +27,6 @@ class StereoAnalyser {
 
 	private final AtomColourThenNeighbouringColoursComparator atomColourThenNeighbouringColoursComparator;
 	private final AtomicNumberComparator atomicNumberComparator;
-	private final CipSequenceRules cipSequenceRules;
 	
 	/**
 	 * Holds information about a tetrahedral stereocentre
@@ -61,7 +60,7 @@ class StereoAnalyser {
 		}
 
 		List<Atom> getCipOrderedAtoms() {
-			List<Atom> cipOrderedAtoms = cipSequenceRules.getNeighbouringAtomsInCIPOrder(stereoAtom);
+			List<Atom> cipOrderedAtoms = new CipSequenceRules(stereoAtom).getNeighbouringAtomsInCIPOrder();
 			if (cipOrderedAtoms.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
 				cipOrderedAtoms.add(0, stereoAtom);
 			}
@@ -94,8 +93,8 @@ class StereoAnalyser {
 		List<Atom> getOrderedStereoAtoms() {
 			Atom a1 = bond.getFromAtom();
 			Atom a2 = bond.getToAtom();
-			List<Atom> cipOrdered1 = cipSequenceRules.getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a1, a2);
-			List<Atom> cipOrdered2 = cipSequenceRules.getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a2, a1);
+			List<Atom> cipOrdered1 = new CipSequenceRules(a1).getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a2);
+			List<Atom> cipOrdered2 = new CipSequenceRules(a2).getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a1);
 			List<Atom> stereoAtoms = new ArrayList<Atom>();
 			stereoAtoms.add(cipOrdered1.get(cipOrdered1.size()-1));//highest CIP adjacent to a1
 			stereoAtoms.add(a1);
@@ -175,7 +174,6 @@ class StereoAnalyser {
 	 */
 	StereoAnalyser(Fragment molecule) {
 		this.molecule = molecule;
-		cipSequenceRules = new CipSequenceRules(molecule);
 		atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
 		atomicNumberComparator = new AtomicNumberComparator();
 		addGhostAtoms();

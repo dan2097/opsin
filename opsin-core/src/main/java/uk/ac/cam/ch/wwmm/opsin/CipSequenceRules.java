@@ -4,13 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * An implementation of Rule 1 of the CIP rules i.e. constitutional differences excluding isotopes
+ * Cases that require rules 2-5 to distinguish result in an exception
+ * 
+ * Phantom atoms are not added as I believe that the results of the program will still be the same even in their absence as everything beats a phantom and comparing phantoms to phantoms achieves nothing
+ * (higher ligancy beats lower ligancy when comparisons are performed)
+ * @author dl387
+ *
+ */
 class CipSequenceRules {
 	
 	/**
@@ -90,12 +99,12 @@ class CipSequenceRules {
 			List<Atom> previousAtoms2 = new ArrayList<Atom>();
 			previousAtoms2.add(chiralAtom);
 			
-			Set<Atom> atomsVisted = new HashSet<Atom>();
+			Set<Atom> atomsVisted = new LinkedHashSet<Atom>();
 			atomsVisted.add(chiralAtom);
 			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms1 = new HashMap<Atom, Set<Atom>>();
 			previousAtomToVisitedAtoms1.put(chiralAtom, atomsVisted);
 			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms2 = new HashMap<Atom, Set<Atom>>();
-			previousAtomToVisitedAtoms2.put(chiralAtom, new HashSet<Atom>(atomsVisted));
+			previousAtomToVisitedAtoms2.put(chiralAtom, new LinkedHashSet<Atom>(atomsVisted));
 
 	    	CipState startingState = new CipState(previousAtomToVisitedAtoms1, previousAtomToVisitedAtoms2, previousAtoms1, previousAtoms2, nextAtoms1, nextAtoms2);
 			return startingState;
@@ -105,40 +114,33 @@ class CipSequenceRules {
 	private final static AtomListCIPComparator atomListCIPComparator = new AtomListCIPComparator();
 	private final static ListOfAtomListsCIPComparator listOfAtomListsCIPComparator = new ListOfAtomListsCIPComparator();
 	private final static AtomicNumberComparator atomicNumberComparator = new AtomicNumberComparator();
-	private final Fragment molecule;
-	private int ghostIdCounter =-1;
-	//phantom atoms are not added as I believe that the results of the program will still be the same even in their absence as everything beats a phantom and comparing phantoms to phantoms achieves nothing
+	private final Atom chiralAtom;
 
-    CipSequenceRules(Fragment molecule) {
-		this.molecule = molecule;
+    CipSequenceRules(Atom chiralAtom) {
+		this.chiralAtom = chiralAtom;
 	}
     
 	/**
-	 * Returns the given atoms neighbours in CIP order from lowest priority to highest priority
-	 * @param chiralAtom
+	 * Returns the chiral atom's neighbours in CIP order from lowest priority to highest priority
 	 * @return
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrder(Atom chiralAtom) {
+	List<Atom> getNeighbouringAtomsInCIPOrder() {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
-		addGhostAtomsForCIPAssignment(chiralAtom);
 		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
-		removeGhostAtoms();
 		return neighbours;
 	}
 	
 	/**
-	 * Returns the given atoms neighbours, with the exception of the given atom, in CIP order from lowest priority to highest priority
-	 * @param chiralAtom
+	 * Returns  the chiral atom's neighbours, with the exception of the given atom, in CIP order from lowest priority to highest priority
+	 * @param neighbourToIgnore
 	 * @return
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom chiralAtom, Atom neighbourToIgnore) {
+	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		if (!neighbours.remove(neighbourToIgnore)){
 			throw new RuntimeException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
 		}
-		addGhostAtomsForCIPAssignment(chiralAtom);
 		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
-		removeGhostAtoms();
 		return neighbours;
 	}
 
@@ -233,7 +235,7 @@ class CipSequenceRules {
 	}
 
 	private List<List<List<Atom>>> getNextLevelNeighbours(Map<Atom,Set<Atom>> previousAtomToVisitedAtoms, List<Atom> previousAtoms, List<Atom> nextAtoms, Map<Atom, Atom> currentToPrevious ) {
-		List<List<List<Atom>>> neighbours = getNextAtomsConvertingRevisitedToGhosts(nextAtoms, previousAtomToVisitedAtoms, previousAtoms, currentToPrevious);
+		List<List<List<Atom>>> neighbours = getNextAtomsWithAppropriateGhostAtoms(nextAtoms, previousAtomToVisitedAtoms, previousAtoms, currentToPrevious);
 		for (List<List<Atom>> list : neighbours) {
 			Collections.sort(list, atomListCIPComparator);
 		}
@@ -376,17 +378,37 @@ class CipSequenceRules {
 	    }
 	}
 	
-	private List<List<List<Atom>>> getNextAtomsConvertingRevisitedToGhosts(List<Atom> atoms, Map<Atom, Set<Atom>> previousAtomToVisitedAtoms, List<Atom> previousAtoms, Map<Atom, Atom> currentToPrevious) {
+	/**
+	 * Gets the neighbouring atoms bar the previous atoms
+	 * If the neighbouring atom has already been visited it is replaced with a ghost atom
+	 * Multiple bonds including those to previous atoms yield ghost atoms unless the bond goes to the chiral atom e.g. in a sulfoxide
+	 * @param atoms
+	 * @param previousAtomToVisitedAtoms
+	 * @param previousAtoms
+	 * @param currentToPrevious
+	 * @return
+	 */
+	private List<List<List<Atom>>> getNextAtomsWithAppropriateGhostAtoms(List<Atom> atoms, Map<Atom, Set<Atom>> previousAtomToVisitedAtoms, List<Atom> previousAtoms, Map<Atom, Atom> currentToPrevious) {
 		List<List<List<Atom>>> allNeighbours = new ArrayList<List<List<Atom>>>();
 		int counter =0;
 		Atom lastPreviousAtom = null;
 		for (int i = 0; i < atoms.size(); i++) {
 			Atom atom = atoms.get(i);
 			Atom previousAtom = previousAtoms.get(i);
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			neighbours.remove(previousAtoms.get(i));			
+			List<Atom> neighbours = new ArrayList<Atom>();
+			for(Bond b :  atom.getBonds()) {
+				Atom atomBondConnectsTo = b.getOtherAtom(atom);
+				if (!atomBondConnectsTo.equals(chiralAtom)){//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
+					for (int j = b.getOrder(); j >1; j--) {//add ghost atoms to represent higher order bonds
+						neighbours.add(new Atom(atomBondConnectsTo.getElement()));
+					}
+				}
+				if (!atomBondConnectsTo.equals(previousAtom)){
+					neighbours.add(atomBondConnectsTo);
+				}
+			}
 			replaceRevisitedAtomsWithGhosts(neighbours, previousAtomToVisitedAtoms.get(previousAtom), atom);
-			previousAtomToVisitedAtoms.put(atom, new HashSet<Atom>(previousAtomToVisitedAtoms.get(previousAtom)));
+			previousAtomToVisitedAtoms.put(atom, new LinkedHashSet<Atom>(previousAtomToVisitedAtoms.get(previousAtom)));
 			previousAtomToVisitedAtoms.get(atom).add(atom);
 			Collections.sort(neighbours, atomicNumberComparator);
 			if (lastPreviousAtom==null){
@@ -436,48 +458,4 @@ class CipSequenceRules {
     	}
 		return 0;
     }
-	
-	/**
-	 * Adds "ghost" atoms in accordance with the CIP rules for handling double bonds
-	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
-	 * Higher order bonds connected to the chiral atom are not converted in accordance with P-91.1.4.2.4 (IUPAC 2004 guidelines)
-	 * @param chiralAtom Higher order bonds connected to this atom are not touched
-	 */
-	private void addGhostAtomsForCIPAssignment(Atom chiralAtom) {
-		Set<Bond> bonds = molecule.getBondSet();
-		for (Bond bond : bonds) {
-			int bondOrder = bond.getOrder();
-			for (int i = bondOrder; i >1; i--) {
-				Atom fromAtom =bond.getFromAtom();
-				Atom toAtom =bond.getToAtom();
-				if (!fromAtom.equals(chiralAtom) && !toAtom.equals(chiralAtom)){//P-91.1.4.2.4
-					Atom ghost1 = new Atom(ghostIdCounter--, fromAtom.getElement(), molecule);
-					Bond b1 = new Bond(ghost1, toAtom, 1);
-					toAtom.addBond(b1);
-					ghost1.addBond(b1);
-					molecule.addAtom(ghost1);
-					Atom ghost2 = new Atom(ghostIdCounter--, toAtom.getElement(), molecule);
-					Bond b2 = new Bond(ghost2, fromAtom, 1);
-					fromAtom.addBond(b2);
-					ghost2.addBond(b2);
-					molecule.addAtom(ghost2);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Removes the ghost atoms added by addGhostAtomsForCIPAssignment
-	 */
-	private void removeGhostAtoms() {
-		List<Atom> atomList = molecule.getAtomList();
-		for (Atom atom : atomList) {
-			if (atom.getID() < 0){
-				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
-				adjacentAtom.removeBond(atom.getFirstBond());
-				molecule.removeAtom(atom);
-			}
-		}
-		ghostIdCounter = -1;
-	}
 }
