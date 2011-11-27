@@ -250,6 +250,7 @@
 		<token value="COCCOCCOCCOC" labels="none" valType="SMILES">triglyme</token>
 		<token value="O=[O+][O-]" labels="none" valType="SMILES">trioxygen</token>
 		<token value="ClC(Cl)(OC(OC(Cl)(Cl)Cl)=O)Cl" labels="none" valType="SMILES">triphosgene</token>
+		<token value="CC(C)(C)C(C)C" labels="none" valType="SMILES">triptane</token>
 		<token value="NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7" valType="SMILES">triuret</token>
 		<token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
