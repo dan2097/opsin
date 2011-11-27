@@ -2165,6 +2165,23 @@ class ComponentGenerator {
 			enclosingSubOrRoot.detach();
 			newBracket.appendChild(enclosingSubOrRoot);
 		}
+		else if (groupValue.equals("sphinganine") || groupValue.equals("icosasphinganine") || groupValue.equals("eicosasphinganine") || groupValue.equals("phytosphingosine") || groupValue.equals("sphingosine")){
+			Element enclosingSubOrRoot = (Element) group.getParent();
+			Element previous = (Element) XOMTools.getPreviousSibling(enclosingSubOrRoot);
+			if (previous!=null){
+				List<Element> groups = XOMTools.getDescendantElementsWithTagName(previous, GROUP_EL);
+				if (groups.size()>0){
+					Element possibleAcid = groups.get(groups.size()-1);
+					if (ALKANESTEM_SUBTYPE_VAL.equals(possibleAcid.getAttributeValue(SUBTYPE_ATR))){
+						List<Element> inlineSuffixes = XOMTools.getChildElementsWithTagNameAndAttribute((Element) possibleAcid.getParent(), SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL);
+						if (inlineSuffixes.size()==1 && inlineSuffixes.get(0).getAttributeValue(VALUE_ATR).equals("yl")){
+							inlineSuffixes.get(0).getAttribute(VALUE_ATR).setValue("oyl");//yl on a systematic acid next to a fatty acid means acyl
+							//c.f. Nomenclature of Lipids 1976, Appendix A, note a
+						}
+					}
+				}
+			}
+		}
 		else if (groupValue.equals("sel")){
 			//check that it is not "selenium"
 			if (HETEROSTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){

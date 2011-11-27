@@ -84,10 +84,10 @@
 		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="15">carbpentadecoxy</token>
 		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">carbobenzyloxy</token>
 		<token value="-C(=O)OCc1ccccc1" labels="none" valType="SMILES">cbz</token>
-		<token value="#C" valType="SMILES">carbyne</token>
+		<token value="#C" labels="none" valType="SMILES">carbyne</token>
 		<token value="-[CH2+]" labels="none" valType="SMILES">carbynium</token>
 		<token value="-c1cc(C(C)C)ccc1C" labels="none" valType="SMILES">carvacryl</token>
-		<token value="-CCCCCCCCCCCCCCCC" valType="SMILES">cetyl</token>
+		<token value="-CCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16" valType="SMILES">cetyl</token>
     <token value="=CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">cinnamal</token>
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
 		<token value="-CC=CC" valType="SMILES">crotyl</token>
@@ -128,6 +128,7 @@
 		<token value="-OC(C)C" labels="none" valType="SMILES">isopropoxyl</token>
 		<token value="-C(C)(C=C)CCC=C(C)C" labels="none" valType="SMILES">linalyl</token>
 		<token value="-CC(C)(C)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6" valType="SMILES">neophyl</token>
+		<token value="-C(C)(C=C)CCC=C(C)CCC=C(C)C" valType="SMILES" usableAsAJoiner="yes" defaultInID="15">nerolidyl</token>
 		<token value="-N[N+](=O)[O-]" labels="none" valType="SMILES">nitramido</token>
 		<token value="-N=O" labels="none" valType="SMILES">nitrosyl</token>
 		<token value="-[N+](=O)[O-]" labels="none" valType="SMILES">nitryl</token>
