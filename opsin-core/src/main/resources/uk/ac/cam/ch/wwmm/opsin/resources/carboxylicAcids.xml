@@ -27,6 +27,7 @@
     <token value="S(=O)c1ccc(N)c2ccccc12" labels="//1/2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphthion</token>
     <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
     <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelargon</token>
+    <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelarg</token>
     <token value="CC#CC" labels="1/2/3/4" valType="SMILES">tetrol</token>
   </tokenList>
 
@@ -104,12 +105,14 @@
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ceromeliss</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ceroplast</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">cerot</token>
+    <token value="CCC(C)CCC=C(C)C" labels="none" valType="SMILES">citronell</token>
     <token value="C/C=C/c1cc(OC)c(O)cc1" labels="none" valType="SMILES">conifer</token>
 		<token value="CCCCCC/C=C\C/C=C\C/C=C\C/C=C\C/C=C\CC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">clupanodon</token>
 		<token value="CCCCCCCCCCCC/C=C\CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" valType="SMILES" usableAsAJoiner="yes">eruc</token>
     <token value="CCCCCCCC/C=C\CCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" usableAsAJoiner="yes">gadole</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">gedd</token>
     <token value="Cc1c(O)ccc(O)c1" labels="/1/2//3/4/5//6" valType="SMILES">gentis</token>
+		<token value="C/C=C(C)/CCC=C(C)C" defaultInID="9" usableAsAJoiner="yes" labels="none" valType="SMILES">geran</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">ghedd</token>
     <token value="CC(O)CO" labels="none" valType="SMILES">glycer</token>
     <token value="CC1CO1" labels="none" valType="SMILES">glycid</token>
@@ -124,6 +127,7 @@
     <token value="CCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">margar</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">meliss</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">montan</token>
+		<token value="C\C=C(C)/CCC=C(C)C" defaultInID="9" usableAsAJoiner="yes" labels="none" valType="SMILES">ner</token>
     <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">picolin</token>
     <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">picol</token><!--contraction-->
     <token value="Cc1cc(O)c(O)cc1" labels="/1/2,ortho/3,meta//4,para//5/6" valType="SMILES">protocatechu</token>
@@ -196,6 +200,7 @@
     <token value="CCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">tridecyl</token><!--clashes with a systematic name-->
     <token value="CC(CO)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6" valType="SMILES">trop</token><!--tropyl is something else?-->
     <token value="CCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">undecyl</token><!--clashes with a systematic name-->
+    <token value="CC(CCC)CCC" labels="none" valType="SMILES">valpr</token><!--unknown-->
   </tokenList>
 
 </tokenLists>
