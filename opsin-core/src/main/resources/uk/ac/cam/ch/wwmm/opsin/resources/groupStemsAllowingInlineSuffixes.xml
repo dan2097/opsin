@@ -39,6 +39,8 @@
 		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES" usableAsAJoiner="yes">propionon</token>
 		<token value="CCCC(=O)CCC" labels="1/2/3/4//5/6/7" defaultInLocant="7" valType="SMILES" usableAsAJoiner="yes">butyron</token>
 		<token value="CCCCC(=O)CCCC" labels="1/2/3/4/5//6/7/8/9" defaultInLocant="9" valType="SMILES" usableAsAJoiner="yes">valeron</token>
+		<token value="CCCCCCC(=O)CCCCCC" labels="1/2/3/4/5/6/7//8/9/10/11/12/13" defaultInLocant="13" valType="SMILES" usableAsAJoiner="yes">enanthon</token>
+		<token value="CCCCCCCC(=O)CCCCCCC" labels="1/2/3/4/5/6/7/8//9/10/11/12/13/14/15" defaultInLocant="15" valType="SMILES" usableAsAJoiner="yes">caprylon</token>
 
 		<token value="CC(C)C(=O)C(C)C" labels="none" valType="SMILES">isobutyron</token>
 		<token value="CC(C)CC(=O)CC(C)C" labels="none" valType="SMILES">isovaleron</token>
