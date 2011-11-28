@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -99,12 +99,12 @@ class CipSequenceRules {
 			List<Atom> previousAtoms2 = new ArrayList<Atom>();
 			previousAtoms2.add(chiralAtom);
 			
-			Set<Atom> atomsVisted = new LinkedHashSet<Atom>();
+			Set<Atom> atomsVisted = new HashSet<Atom>();
 			atomsVisted.add(chiralAtom);
 			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms1 = new HashMap<Atom, Set<Atom>>();
 			previousAtomToVisitedAtoms1.put(chiralAtom, atomsVisted);
 			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms2 = new HashMap<Atom, Set<Atom>>();
-			previousAtomToVisitedAtoms2.put(chiralAtom, new LinkedHashSet<Atom>(atomsVisted));
+			previousAtomToVisitedAtoms2.put(chiralAtom, new HashSet<Atom>(atomsVisted));
 
 	    	CipState startingState = new CipState(previousAtomToVisitedAtoms1, previousAtomToVisitedAtoms2, previousAtoms1, previousAtoms2, nextAtoms1, nextAtoms2);
 			return startingState;
@@ -409,7 +409,7 @@ class CipSequenceRules {
 				}
 			}
 			replaceRevisitedAtomsWithGhosts(neighbours, previousAtomToVisitedAtoms.get(previousAtom), atom);
-			previousAtomToVisitedAtoms.put(atom, new LinkedHashSet<Atom>(previousAtomToVisitedAtoms.get(previousAtom)));
+			previousAtomToVisitedAtoms.put(atom, new HashSet<Atom>(previousAtomToVisitedAtoms.get(previousAtom)));
 			previousAtomToVisitedAtoms.get(atom).add(atom);
 			Collections.sort(neighbours, atomicNumberComparator);
 			if (lastPreviousAtom==null){
