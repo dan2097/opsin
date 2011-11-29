@@ -3,11 +3,9 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
@@ -27,18 +25,10 @@ class CipSequenceRules {
 	 * @author dl387
 	 *
 	 */
-	private static class AtomicNumberComparator implements Comparator<Atom> {
+	private static class AtomicNumberComparator implements Comparator<AtomWithHistory> {
 
-	    public int compare(Atom a, Atom b){
-	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
-	    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
-	    	if (atomicNumber1 > atomicNumber2){
-	    		return 1;
-	    	}
-	    	else if (atomicNumber1 < atomicNumber2){
-	    		return -1;
-	    	}
-			return 0;
+	    public int compare(AtomWithHistory a, AtomWithHistory b){
+	    	return CipSequenceRules.compareByAtomicNumber(a.atom, b.atom);
 	    }
 	}
 	
@@ -101,12 +91,12 @@ class CipSequenceRules {
 			
 			Set<Atom> atomsVisted = new HashSet<Atom>();
 			atomsVisted.add(chiralAtom);
-			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms1 = new HashMap<Atom, Set<Atom>>();
-			previousAtomToVisitedAtoms1.put(chiralAtom, atomsVisted);
-			Map<Atom,Set<Atom>> previousAtomToVisitedAtoms2 = new HashMap<Atom, Set<Atom>>();
-			previousAtomToVisitedAtoms2.put(chiralAtom, new HashSet<Atom>(atomsVisted));
+			List<Set<Atom>> previouslyVisitedAtoms1 = new ArrayList<Set<Atom>>();
+			previouslyVisitedAtoms1.add(atomsVisted);
+			List<Set<Atom>> previouslyVisitedAtoms2 = new ArrayList<Set<Atom>>();
+			previouslyVisitedAtoms2.add(new HashSet<Atom>(atomsVisted));
 
-	    	CipState startingState = new CipState(previousAtomToVisitedAtoms1, previousAtomToVisitedAtoms2, previousAtoms1, previousAtoms2, nextAtoms1, nextAtoms2);
+	    	CipState startingState = new CipState(previouslyVisitedAtoms1, previouslyVisitedAtoms2, previousAtoms1, previousAtoms2, nextAtoms1, nextAtoms2);
 			return startingState;
 		}
 	}
@@ -150,21 +140,37 @@ class CipSequenceRules {
 	 *
 	 */
 	private static class CipState{
-		CipState(Map<Atom, Set<Atom>> previousAtomToVisitedAtoms1, Map<Atom, Set<Atom>> previousAtomToVisitedAtoms2, 
+		CipState(List<Set<Atom>> previouslyVisitedAtoms1, List<Set<Atom>> previouslyVisitedAtoms2, 
 				List<Atom> previousAtoms1, List<Atom> previousAtoms2, List<Atom> nextAtoms1, List<Atom> nextAtoms2) {
-			this.previousAtomToVisitedAtoms1 = previousAtomToVisitedAtoms1;
-			this.previousAtomToVisitedAtoms2 = previousAtomToVisitedAtoms2;
+			this.previouslyVisitedAtoms1 = previouslyVisitedAtoms1;
+			this.previouslyVisitedAtoms2 = previouslyVisitedAtoms2;
 			this.previousAtoms1 = previousAtoms1;
 			this.previousAtoms2 = previousAtoms2;
 			this.nextAtoms1 = nextAtoms1;
 			this.nextAtoms2 = nextAtoms2;
 		}
-		final Map<Atom,Set<Atom>> previousAtomToVisitedAtoms1;
-		final Map<Atom,Set<Atom>> previousAtomToVisitedAtoms2;
+		final List<Set<Atom>> previouslyVisitedAtoms1;
+		final List<Set<Atom>> previouslyVisitedAtoms2;
 		final List<Atom> previousAtoms1;
 		final List<Atom> previousAtoms2;
 		final List<Atom> nextAtoms1;
 		final List<Atom> nextAtoms2;
+	}
+	
+	/**
+	 * Holds an atom with associated visited atoms and previous atom
+	 * @author dl387
+	 *
+	 */
+	private static class AtomWithHistory{
+		AtomWithHistory(Atom atom, Set<Atom> visitedAtoms, Atom previousAtom) {
+			this.atom = atom;
+			this.visitedAtoms = visitedAtoms;
+			this.previousAtom = previousAtom;
+		}
+		final Atom atom;
+		final Set<Atom> visitedAtoms;
+		final Atom previousAtom;
 	}
 	
 	/**
@@ -176,42 +182,48 @@ class CipSequenceRules {
 	 * @return
 	 */
 	private int compareAtNextLevel(CipState cipState, Queue<CipState> queue) {
-		Map<Atom, Atom> currentToPrevious1 = new HashMap<Atom, Atom>();
-		List<List<List<Atom>>> newNeighbours1 = getNextLevelNeighbours(cipState.previousAtomToVisitedAtoms1, cipState.previousAtoms1, cipState.nextAtoms1, currentToPrevious1);
-		Map<Atom, Atom> currentToPrevious2 = new HashMap<Atom, Atom>();
-		List<List<List<Atom>>> newNeighbours2 = getNextLevelNeighbours(cipState.previousAtomToVisitedAtoms2, cipState.previousAtoms2, cipState.nextAtoms2, currentToPrevious2);
+		List<List<List<AtomWithHistory>>> newNeighbours1 = getNextLevelNeighbours(cipState.previouslyVisitedAtoms1, cipState.previousAtoms1, cipState.nextAtoms1);
+		List<List<List<AtomWithHistory>>> newNeighbours2 = getNextLevelNeighbours(cipState.previouslyVisitedAtoms2, cipState.previousAtoms2, cipState.nextAtoms2);
 
 		int compare = compareNeighboursByCIPpriorityRules(newNeighbours1, newNeighbours2);
 
 		if (compare!=0){
 			return compare;
 		}
-
-    	List<List<List<Atom>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
-    	List<List<List<Atom>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
+    	List<List<List<AtomWithHistory>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
+    	List<List<List<AtomWithHistory>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
 
     	for (int i = 1; i <= prioritisedNeighbours1.size(); i++) {
-    		List<List<Atom>> nextNeighbourLists1 = prioritisedNeighbours1.get(prioritisedNeighbours1.size() -i);
-    		List<List<Atom>> nextNeighbourLists2 = prioritisedNeighbours2.get(prioritisedNeighbours2.size() -i);
+    		List<List<AtomWithHistory>> nextNeighbourLists1 = prioritisedNeighbours1.get(prioritisedNeighbours1.size() -i);
+    		List<List<AtomWithHistory>> nextNeighbourLists2 = prioritisedNeighbours2.get(prioritisedNeighbours2.size() -i);
 	    	for (int j = 1; j <= nextNeighbourLists1.size(); j++) {
-	    		List<Atom> nextNeighbours1 = nextNeighbourLists1.get(nextNeighbourLists1.size() -j);
-	    		List<Atom> nextNeighbours2 = nextNeighbourLists2.get(nextNeighbourLists2.size() -j);
+	    		List<AtomWithHistory> nextNeighbours1 = nextNeighbourLists1.get(nextNeighbourLists1.size() -j);
+	    		List<Set<Atom>> previouslyVisitedAtoms1 = new ArrayList<Set<Atom>>();
 	    		List<Atom> newPreviousAtoms1 = new ArrayList<Atom>();
-	    		for (Atom atom : nextNeighbours1) {
-	    			newPreviousAtoms1.add(currentToPrevious1.get(atom));
+	       		List<Atom> nextNeighbours1Atoms = new ArrayList<Atom>();
+	    		for (AtomWithHistory atom : nextNeighbours1) {
+	    			previouslyVisitedAtoms1.add(atom.visitedAtoms);
+	       			newPreviousAtoms1.add(atom.previousAtom);
+	    			nextNeighbours1Atoms.add(atom.atom);
 				}
+
+	    		List<AtomWithHistory> nextNeighbours2 = nextNeighbourLists2.get(nextNeighbourLists2.size() -j);
+	    		List<Set<Atom>> previouslyVisitedAtoms2 = new ArrayList<Set<Atom>>();
 	    		List<Atom> newPreviousAtoms2 = new ArrayList<Atom>();
-	    		for (Atom atom : nextNeighbours2) {
-	    			newPreviousAtoms2.add(currentToPrevious2.get(atom));
+	       		List<Atom> nextNeighbours2Atoms = new ArrayList<Atom>();
+	    		for (AtomWithHistory atom : nextNeighbours2) {
+	    			previouslyVisitedAtoms2.add(atom.visitedAtoms);
+	    			newPreviousAtoms2.add(atom.previousAtom);
+	    			nextNeighbours2Atoms.add(atom.atom);
 				}
-	    		CipState newCIPstate = new CipState(cipState.previousAtomToVisitedAtoms1, cipState.previousAtomToVisitedAtoms2, newPreviousAtoms1, newPreviousAtoms2, nextNeighbours1, nextNeighbours2);
+	    		CipState newCIPstate = new CipState(previouslyVisitedAtoms1, previouslyVisitedAtoms2, newPreviousAtoms1, newPreviousAtoms2, nextNeighbours1Atoms, nextNeighbours2Atoms);
 	    		queue.add(newCIPstate);
 	    	}
 		}
     	return 0;
 	}
 	
-	private int compareNeighboursByCIPpriorityRules(List<List<List<Atom>>> neighbours1, List<List<List<Atom>>> neighbours2){
+	private int compareNeighboursByCIPpriorityRules(List<List<List<AtomWithHistory>>> neighbours1, List<List<List<AtomWithHistory>>> neighbours2){
     	int neighbours1Size = neighbours1.size();
     	int neighbours2Size = neighbours2.size();
     	int differenceInSize = neighbours1Size - neighbours2Size;
@@ -234,9 +246,9 @@ class CipSequenceRules {
 		return 0;
 	}
 
-	private List<List<List<Atom>>> getNextLevelNeighbours(Map<Atom,Set<Atom>> previousAtomToVisitedAtoms, List<Atom> previousAtoms, List<Atom> nextAtoms, Map<Atom, Atom> currentToPrevious ) {
-		List<List<List<Atom>>> neighbours = getNextAtomsWithAppropriateGhostAtoms(nextAtoms, previousAtomToVisitedAtoms, previousAtoms, currentToPrevious);
-		for (List<List<Atom>> list : neighbours) {
+	private List<List<List<AtomWithHistory>>> getNextLevelNeighbours(List<Set<Atom>> previouslyVisitedAtoms, List<Atom> previousAtoms, List<Atom> nextAtoms) {
+		List<List<List<AtomWithHistory>>> neighbours = getNextAtomsWithAppropriateGhostAtoms(nextAtoms, previouslyVisitedAtoms, previousAtoms);
+		for (List<List<AtomWithHistory>> list : neighbours) {
 			Collections.sort(list, atomListCIPComparator);
 		}
 		Collections.sort(neighbours, listOfAtomListsCIPComparator);
@@ -252,41 +264,41 @@ class CipSequenceRules {
 	 * The original neighbours list is assumed to have been presorted.
 	 * @param neighbours
 	 */
-	private List<List<List<Atom>>> formListsWithSamePriority(List<List<List<Atom>>> neighbours) {
-		List<List<List<Atom>>> updatedNeighbours  = new LinkedList<List<List<Atom>>>();
-		List<List<Atom>> listsToRemove  = new ArrayList<List<Atom>>();
-		for (List<List<Atom>> neighbourLists : neighbours) {
-			List<List<Atom>> updatedNeighbourLists  = new LinkedList<List<Atom>>();
+	private List<List<List<AtomWithHistory>>> formListsWithSamePriority(List<List<List<AtomWithHistory>>> neighbours) {
+		List<List<List<AtomWithHistory>>> updatedNeighbours  = new LinkedList<List<List<AtomWithHistory>>>();
+		List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
+		for (List<List<AtomWithHistory>> neighbourLists : neighbours) {
+			List<List<AtomWithHistory>> updatedNeighbourLists  = new LinkedList<List<AtomWithHistory>>();
 			for (int i = 0; i < neighbourLists.size(); i++) {
-				List<List<Atom>> neighbourListsToCombine = new ArrayList<List<Atom>>();
-				List<Atom> primaryAtomList = neighbourLists.get(i);
+				List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
+				List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
 				for (int j = i +1; j < neighbourLists.size(); j++) {
 					if (atomListCIPComparator.compare(neighbourLists.get(i), neighbourLists.get(j))==0){
 						neighbourListsToCombine.add(neighbourLists.get(j));
 					}
 				}
-				for (List<Atom> neighbourList: neighbourListsToCombine) {
+				for (List<AtomWithHistory> neighbourList: neighbourListsToCombine) {
 					listsToRemove.add(neighbourList);
 					primaryAtomList.addAll(neighbourList);
 				}
 			}
-			for (List<Atom> list : listsToRemove) {
+			for (List<AtomWithHistory> list : listsToRemove) {
 				neighbourLists.remove(list);
 			}
 			//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
 			for (int i = neighbourLists.size()-1; i >=0; i--) {
-				List<Atom> neighbourList = neighbourLists.get(i);
+				List<AtomWithHistory> neighbourList = neighbourLists.get(i);
 				Collections.sort(neighbourList, atomicNumberComparator);
 				int lastAtomicNumber = Integer.MAX_VALUE;
-				List<Atom> currentAtomList = new ArrayList<Atom>();
+				List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
 				for (int j = neighbourList.size() -1; j >=0; j--) {
-					Atom a = neighbourList.get(j);
-					int atomicNumber = AtomProperties.elementToAtomicNumber.get(a.getElement());
+					AtomWithHistory a = neighbourList.get(j);
+					int atomicNumber = AtomProperties.elementToAtomicNumber.get(a.atom.getElement());
 					if (atomicNumber < lastAtomicNumber){
 						if (!currentAtomList.isEmpty()){
 							updatedNeighbourLists.add(0, currentAtomList);
 						}
-						currentAtomList =new ArrayList<Atom>();
+						currentAtomList =new ArrayList<AtomWithHistory>();
 						currentAtomList.add(a);
 					}
 					else{
@@ -309,14 +321,14 @@ class CipSequenceRules {
 	 * @author dl387
 	 *
 	 */
-	private static class AtomListCIPComparator implements Comparator<List<Atom>> {
-		public int compare(List<Atom> a, List<Atom> b){
+	private static class AtomListCIPComparator implements Comparator<List<AtomWithHistory>> {
+		public int compare(List<AtomWithHistory> a, List<AtomWithHistory> b){
 	    	int aSize = a.size();
 	    	int bSize = b.size();
 	    	int differenceInSize = aSize - bSize;
 	    	int maxCommonSize = aSize > bSize ? bSize : aSize;
 	    	for (int i = 1; i <= maxCommonSize; i++) {
-				int difference = compareByAtomicNumber(a.get(aSize -i), b.get(bSize -i));
+				int difference = compareByAtomicNumber(a.get(aSize -i).atom, b.get(bSize -i).atom);
 				if (difference >0){
 					return 1;
 				}
@@ -339,21 +351,21 @@ class CipSequenceRules {
 	 * @author dl387
 	 *
 	 */
-	private static class ListOfAtomListsCIPComparator implements Comparator<List<List<Atom>>> {
-		public int compare(List<List<Atom>> a, List<List<Atom>> b){
+	private static class ListOfAtomListsCIPComparator implements Comparator<List<List<AtomWithHistory>>> {
+		public int compare(List<List<AtomWithHistory>> a, List<List<AtomWithHistory>> b){
 	    	int aSize = a.size();
 	    	int bSize = b.size();
 	    	int differenceInSize = aSize - bSize;
 	    	int maxCommonSize = aSize > bSize ? bSize : aSize;
 	    	for (int i = 1; i <= maxCommonSize; i++) {
-	    		List<Atom> aprime = a.get(aSize -i);
-	    		List<Atom> bprime = b.get(bSize -i);
+	    		List<AtomWithHistory> aprime = a.get(aSize -i);
+	    		List<AtomWithHistory> bprime = b.get(bSize -i);
 		    	int aprimeSize = aprime.size();
 		    	int bprimeSize = bprime.size();
 		    	int differenceInSizeprime = aprimeSize - bprimeSize;
 		    	int maxCommonSizeprime = aprimeSize > bprimeSize ? bprimeSize : aprimeSize;
 		    	for (int j = 1; j <= maxCommonSizeprime; j++) {
-		    		int difference = compareByAtomicNumber(aprime.get(aprimeSize -j), bprime.get(bprimeSize -j));
+		    		int difference = compareByAtomicNumber(aprime.get(aprimeSize -j).atom, bprime.get(bprimeSize -j).atom);
 					if (difference >0){
 						return 1;
 					}
@@ -385,11 +397,10 @@ class CipSequenceRules {
 	 * @param atoms
 	 * @param previousAtomToVisitedAtoms
 	 * @param previousAtoms
-	 * @param currentToPrevious
 	 * @return
 	 */
-	private List<List<List<Atom>>> getNextAtomsWithAppropriateGhostAtoms(List<Atom> atoms, Map<Atom, Set<Atom>> previousAtomToVisitedAtoms, List<Atom> previousAtoms, Map<Atom, Atom> currentToPrevious) {
-		List<List<List<Atom>>> allNeighbours = new ArrayList<List<List<Atom>>>();
+	private List<List<List<AtomWithHistory>>> getNextAtomsWithAppropriateGhostAtoms(List<Atom> atoms, List<Set<Atom>> previouslyVisitedAtoms, List<Atom> previousAtoms) {
+		List<List<List<AtomWithHistory>>> allNeighbours = new ArrayList<List<List<AtomWithHistory>>>();
 		int counter =0;
 		Atom lastPreviousAtom = null;
 		for (int i = 0; i < atoms.size(); i++) {
@@ -408,10 +419,14 @@ class CipSequenceRules {
 					neighbours.add(atomBondConnectsTo);
 				}
 			}
-			replaceRevisitedAtomsWithGhosts(neighbours, previousAtomToVisitedAtoms.get(previousAtom), atom);
-			previousAtomToVisitedAtoms.put(atom, new HashSet<Atom>(previousAtomToVisitedAtoms.get(previousAtom)));
-			previousAtomToVisitedAtoms.get(atom).add(atom);
-			Collections.sort(neighbours, atomicNumberComparator);
+			replaceRevisitedAtomsWithGhosts(neighbours, previouslyVisitedAtoms.get(i), atom);
+			Set<Atom> visitedAtoms = new HashSet<Atom>(previouslyVisitedAtoms.get(i));
+			visitedAtoms.add(atom);
+			List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
+			for (Atom neighbour : neighbours) {
+				neighboursWithHistory.add(new AtomWithHistory(neighbour, visitedAtoms, atom));
+			}
+			Collections.sort(neighboursWithHistory, atomicNumberComparator);
 			if (lastPreviousAtom==null){
 				lastPreviousAtom = previousAtom;
 			}
@@ -420,12 +435,9 @@ class CipSequenceRules {
 				counter++;
 			}
 			if (allNeighbours.size() <=  counter){
-				allNeighbours.add(new ArrayList<List<Atom>>());
+				allNeighbours.add(new ArrayList<List<AtomWithHistory>>());
 			}
-			allNeighbours.get(counter).add(neighbours);
-			for (Atom neighbour : neighbours) {
-				currentToPrevious.put(neighbour, atom);
-			}
+			allNeighbours.get(counter).add(neighboursWithHistory);
 		}
 		return allNeighbours;
 	}
@@ -447,7 +459,7 @@ class CipSequenceRules {
 	 * @param b
 	 * @return
 	 */
-    private static int compareByAtomicNumber(Atom a, Atom b){
+    static int compareByAtomicNumber(Atom a, Atom b){
     	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
     	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
     	if (atomicNumber1 > atomicNumber2){
