@@ -68,12 +68,14 @@ class CipSequenceRules {
 	 *
 	 */
 	private static class AtomWithHistory{
-		AtomWithHistory(Atom atom, List<Atom> visitedAtoms) {
+		AtomWithHistory(Atom atom, List<Atom> visitedAtoms, Integer indexOfOriginalFromRoot) {
 			this.atom = atom;
 			this.visitedAtoms = visitedAtoms;
+			this.indexOfOriginalFromRoot = indexOfOriginalFromRoot;
 		}
 		final Atom atom;
 		final List<Atom> visitedAtoms;
+		final Integer indexOfOriginalFromRoot;
 	}
 	
 	/**
@@ -85,7 +87,7 @@ class CipSequenceRules {
 		private final Atom chiralAtom;
 		private final AtomListCIPComparator atomListCIPComparator = new AtomListCIPComparator();
 		private final ListOfAtomListsCIPComparator listOfAtomListsCIPComparator = new ListOfAtomListsCIPComparator();
-		private final AtomicNumberComparator atomicNumberComparator = new AtomicNumberComparator();
+		private final CIPComparator cipComparator = new CIPComparator();
 		private int rule = 0;
 		
 
@@ -99,11 +101,23 @@ class CipSequenceRules {
 	    	 * rule = 1 --> Rule 1b A duplicated atom, with its predecessor node having the same label closer to the root, ranks higher than a duplicated atom, with its predecessor node having the same label farther from the root, which ranks higher than any non-duplicated atom node
 	    	 */
 	    	for (rule = 0; rule <= 1; rule++) {
-	    		int compare = compareByCipRules(a, b);
+				List<Atom> atomsVisted = new ArrayList<Atom>();
+				atomsVisted.add(chiralAtom);
+				AtomWithHistory aWithHistory = new AtomWithHistory(a, atomsVisted, null);
+				AtomWithHistory bWithHistory = new AtomWithHistory(b, new ArrayList<Atom>(atomsVisted), null);
+				
+	    		int compare = compareByCipRules(aWithHistory, bWithHistory);
 				if (compare != 0){
 					return compare;
 				}
-				CipState startingState = prepareInitialCIPState(a, b);
+				
+				List<AtomWithHistory> nextAtoms1 = new ArrayList<AtomWithHistory>();
+				nextAtoms1.add(aWithHistory);
+				
+				List<AtomWithHistory> nextAtoms2 = new ArrayList<AtomWithHistory>();
+				nextAtoms2.add(bWithHistory);
+
+				CipState startingState = new CipState(nextAtoms1, nextAtoms2);
 		    	Queue<CipState> cipStateQueue = new LinkedList<CipState>();
 		    	cipStateQueue.add(startingState);
 		    	/* Go through CIP states in a breadth-first manner:
@@ -124,21 +138,7 @@ class CipSequenceRules {
 			}
 	    	throw new RuntimeException("Failed to assign CIP stereochemistry, this indicates a bug in OPSIN or a limitation in OPSIN's implementation of the sequence rules");
 	    }
-	
-		private CipState prepareInitialCIPState(Atom a, Atom b) {
-			List<Atom> atomsVisted = new ArrayList<Atom>();
-			atomsVisted.add(chiralAtom);
-			
-			List<AtomWithHistory> nextAtoms1 = new ArrayList<AtomWithHistory>();
-			nextAtoms1.add(new AtomWithHistory(a, atomsVisted));
-			
-			List<AtomWithHistory> nextAtoms2 = new ArrayList<AtomWithHistory>();
-			nextAtoms2.add(new AtomWithHistory(b, new ArrayList<Atom>(atomsVisted)));
 
-			return new CipState(nextAtoms1, nextAtoms2);
-		}
-		
-		
 		/**
 		 * Compares the neighbours of the atoms specified in nextAtom1/2 in cipstate.
 		 * Returns the result of the comparison between these neighbours
@@ -237,12 +237,12 @@ class CipSequenceRules {
 				//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
 				for (int i = neighbourLists.size()-1; i >=0; i--) {
 					List<AtomWithHistory> neighbourList = neighbourLists.get(i);
-					Collections.sort(neighbourList, atomicNumberComparator);
-					Atom lastAtom = null;
+					Collections.sort(neighbourList, cipComparator);
+					AtomWithHistory lastAtom = null;
 					List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
 					for (int j = neighbourList.size() -1; j >=0; j--) {
 						AtomWithHistory a = neighbourList.get(j);
-						if (lastAtom !=null && compareByCipRules(lastAtom, a.atom) !=0){
+						if (lastAtom !=null && compareByCipRules(lastAtom, a) !=0){
 							if (!currentAtomList.isEmpty()){
 								updatedNeighbourLists.add(0, currentAtomList);
 							}
@@ -252,7 +252,7 @@ class CipSequenceRules {
 						else{
 							currentAtomList.add(a);
 						}
-						lastAtom = a.atom;
+						lastAtom = a;
 					}
 					if (!currentAtomList.isEmpty()){
 						updatedNeighbourLists.add(0, currentAtomList);
@@ -269,9 +269,9 @@ class CipSequenceRules {
 		 * @author dl387
 		 *
 		 */
-		private class AtomicNumberComparator implements Comparator<AtomWithHistory> {
+		private class CIPComparator implements Comparator<AtomWithHistory> {
 		    public int compare(AtomWithHistory a, AtomWithHistory b){
-		    	return compareByCipRules(a.atom, b.atom);
+		    	return compareByCipRules(a, b);
 		    }
 		}
 
@@ -287,7 +287,7 @@ class CipSequenceRules {
 		    	int differenceInSize = aSize - bSize;
 		    	int maxCommonSize = aSize > bSize ? bSize : aSize;
 		    	for (int i = 1; i <= maxCommonSize; i++) {
-					int difference = compareByCipRules(a.get(aSize -i).atom, b.get(bSize -i).atom);
+					int difference = compareByCipRules(a.get(aSize -i), b.get(bSize -i));
 					if (difference >0){
 						return 1;
 					}
@@ -324,7 +324,7 @@ class CipSequenceRules {
 			    	int differenceInSizeprime = aprimeSize - bprimeSize;
 			    	int maxCommonSizeprime = aprimeSize > bprimeSize ? bprimeSize : aprimeSize;
 			    	for (int j = 1; j <= maxCommonSizeprime; j++) {
-			    		int difference = compareByCipRules(aprime.get(aprimeSize -j).atom, bprime.get(bprimeSize -j).atom);
+			    		int difference = compareByCipRules(aprime.get(aprimeSize -j), bprime.get(bprimeSize -j));
 						if (difference >0){
 							return 1;
 						}
@@ -362,10 +362,13 @@ class CipSequenceRules {
 			Atom lastPreviousAtom = null;
 			for (int i = 0; i < atoms.size(); i++) {
 				AtomWithHistory atomWithHistory = atoms.get(i);
-				List<Atom> visitedAtoms = new ArrayList<Atom>(atomWithHistory.visitedAtoms);
 				Atom atom = atomWithHistory.atom;
+				List<Atom> visitedAtoms = atomWithHistory.visitedAtoms;
 				Atom previousAtom = visitedAtoms.get(visitedAtoms.size()-1);
-				List<Atom> neighbours = new ArrayList<Atom>();
+				List<Atom> visitedAtomsIncludingCurrentAtom = new ArrayList<Atom>(visitedAtoms);
+				visitedAtomsIncludingCurrentAtom.add(atom);
+
+				List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
 				for(Bond b :  atom.getBonds()) {
 					Atom atomBondConnectsTo = b.getOtherAtom(atom);
 					if (!atomBondConnectsTo.equals(chiralAtom)){//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
@@ -374,34 +377,33 @@ class CipSequenceRules {
 							if (rule > 0){
 								int indexOfOriginalAtom = visitedAtoms.indexOf(atomBondConnectsTo);
 								if (indexOfOriginalAtom != -1){
-									ghost.setProperty(Atom.INDEX_OF_ORIGINAL_FROM_CIP_DIGRAPH_ROOT, indexOfOriginalAtom);
+									neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, indexOfOriginalAtom));
 								}
 								else{
-									ghost.setProperty(Atom.INDEX_OF_ORIGINAL_FROM_CIP_DIGRAPH_ROOT, visitedAtoms.size() + 1);
+									neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.size() + 1));
 								}
 							}
-							neighbours.add(ghost);
+							else{
+								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, null));
+							}
 						}
 					}
 					if (!atomBondConnectsTo.equals(previousAtom)){
 						if (visitedAtoms.contains(atomBondConnectsTo)){//cycle detected, add ghost atom instead
 							Atom ghost = new Atom(atomBondConnectsTo.getElement());
 							if (rule > 0){
-								ghost.setProperty(Atom.INDEX_OF_ORIGINAL_FROM_CIP_DIGRAPH_ROOT, visitedAtoms.indexOf(atomBondConnectsTo));
+								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.indexOf(atomBondConnectsTo)));
 							}
-							neighbours.add(ghost);
+							else{
+								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, null));
+							}
 						}
 						else{
-							neighbours.add(atomBondConnectsTo);
+							neighboursWithHistory.add(new AtomWithHistory(atomBondConnectsTo, visitedAtomsIncludingCurrentAtom, null));
 						}
 					}
 				}
-				visitedAtoms.add(atom);
-				List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
-				for (Atom neighbour : neighbours) {
-					neighboursWithHistory.add(new AtomWithHistory(neighbour, visitedAtoms));
-				}
-				Collections.sort(neighboursWithHistory, atomicNumberComparator);
+				Collections.sort(neighboursWithHistory, cipComparator);
 				if (lastPreviousAtom==null){
 					lastPreviousAtom = previousAtom;
 				}
@@ -423,11 +425,11 @@ class CipSequenceRules {
 		 * @param b
 		 * @return
 		 */
-	    private int compareByCipRules(Atom a, Atom b){
+	    private int compareByCipRules(AtomWithHistory a, AtomWithHistory b){
 	    	//rule 1a
 	    	//prefer higher atomic number
-	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
-	    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
+	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.atom.getElement());
+	    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.atom.getElement());
 	    	if (atomicNumber1 > atomicNumber2){
 	    		return 1;
 	    	}
@@ -437,8 +439,8 @@ class CipSequenceRules {
 	    	if (rule > 0){
 	    		//rule 1b
 	    		//prefer duplicate to non-duplicate
-	    		Integer indexFromRoot1 = a.getProperty(Atom.INDEX_OF_ORIGINAL_FROM_CIP_DIGRAPH_ROOT);
-	       		Integer indexFromRoot2 = b.getProperty(Atom.INDEX_OF_ORIGINAL_FROM_CIP_DIGRAPH_ROOT);
+	    		Integer indexFromRoot1 = a.indexOfOriginalFromRoot;
+	       		Integer indexFromRoot2 = b.indexOfOriginalFromRoot;
 	    		if (indexFromRoot1 != null && indexFromRoot2 == null){
 	    			return 1;
 	    		}
