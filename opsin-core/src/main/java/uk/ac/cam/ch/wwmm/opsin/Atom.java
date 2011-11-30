@@ -63,6 +63,8 @@ class Atom {
     static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
 	/** Transient integer used to indicate traversal of fragments*/
     static final PropertyKey<Integer> VISITED = new PropertyKey<Integer>("visited");
+	/** If this atom was created as a duplicate during CIP analysis record the index of the original atom from the root*/
+    static final PropertyKey<Integer> INDEX_OF_ORIGINAL_FROM_CIP_DIGRAPH_ROOT = new PropertyKey<Integer>("indexOfOriginalFromCipDigraphRoot");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
