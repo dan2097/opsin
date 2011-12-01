@@ -13,7 +13,7 @@ import nu.xom.Element;
 import nu.xom.Elements;
 
 class WordRulesOmittedSpaceCorrector {
-	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?$");
+	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?$", Pattern.CASE_INSENSITIVE);
 	
 	private final BuildState state;
 	private final Element parse;
