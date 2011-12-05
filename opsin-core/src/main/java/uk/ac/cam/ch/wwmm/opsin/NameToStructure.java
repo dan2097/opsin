@@ -345,8 +345,7 @@ public class NameToStructure {
 
 	private static void interactiveInchiOutput(NameToStructure nts, NameToStructureConfig n2sconfig, boolean produceStdInChI) throws Exception {
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-		@SuppressWarnings("rawtypes")
-		Class c;
+		Class<?> c;
 		try {
 			c = Class.forName("uk.ac.cam.ch.wwmm.opsin.NameToInchi");
 		} catch (ClassNotFoundException e) {
