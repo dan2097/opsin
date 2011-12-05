@@ -597,6 +597,28 @@ public class StereochemistryTest {
 	}
 	
 	@Test
+	public void testCIPpriority14() throws StructureBuildingException {
+		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder, mock(CMLFragmentBuilder.class));
+		Fragment f = state.fragManager.buildSMILES("C(Cl)([2H])([3H])[H]");
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		for (int i = 0; i < cipOrdered.size(); i++) {
+			Atom a = cipOrdered.get(i);
+			if (i==0){
+				assertEquals(5, a.getID());
+			}
+			else if (i==1){
+				assertEquals(3, a.getID());
+			}
+			else if (i==2){
+				assertEquals(4, a.getID());
+			}
+			else if (i==3){
+				assertEquals(2, a.getID());
+			}
+		}
+	}
+	
+	@Test
 	public void testAtomParityEquivalence1() {
 		Atom a1= new Atom(1, "C", mock(Fragment.class));
 		Atom a2= new Atom(2, "C", mock(Fragment.class));

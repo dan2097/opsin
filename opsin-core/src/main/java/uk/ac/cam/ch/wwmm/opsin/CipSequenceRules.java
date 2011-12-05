@@ -99,8 +99,9 @@ class CipSequenceRules {
 	    	/*
 	    	 * rule = 0 --> Rule 1a Higher atomic number precedes lower
 	    	 * rule = 1 --> Rule 1b A duplicated atom, with its predecessor node having the same label closer to the root, ranks higher than a duplicated atom, with its predecessor node having the same label farther from the root, which ranks higher than any non-duplicated atom node
+	    	 * rule = 2 --> Rule 2 Higher atomic mass number precedes lower
 	    	 */
-	    	for (rule = 0; rule <= 1; rule++) {
+	    	for (rule = 0; rule <= 2; rule++) {
 				List<Atom> atomsVisted = new ArrayList<Atom>();
 				atomsVisted.add(chiralAtom);
 				AtomWithHistory aWithHistory = new AtomWithHistory(a, atomsVisted, null);
@@ -455,6 +456,26 @@ class CipSequenceRules {
 	    	 		if (indexFromRoot1 > indexFromRoot2 ){
 		    			return -1;
 		    		}
+	    		}
+	    		if (rule > 1){
+		    		//rule 2
+		    		//prefer higher atomic mass
+	    	    	Integer atomicMass1 = a.atom.getIsotope();
+	    	    	Integer atomicMass2 = b.atom.getIsotope();
+	    	    	if (atomicMass1 != null && atomicMass2 == null){
+	    	    		return 1;
+	    	    	}
+	    	    	else if (atomicMass1 == null && atomicMass2 != null){
+	    	    		return -1;
+	    	    	}
+	    	    	else if (atomicMass1 != null && atomicMass2 != null){
+	    	        	if (atomicMass1 > atomicMass2){
+		    	    		return 1;
+		    	    	}
+		    	    	else if (atomicMass1 < atomicMass2){
+		    	    		return -1;
+		    	    	}
+	    	    	}
 	    		}
 	    		
 	    	}
