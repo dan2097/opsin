@@ -3,6 +3,8 @@ Basic support for cylised carbohydrates e.g. alpha-D-glucopyranose
 Basic support for systematic carbohydrate stems e.g. D-glycero-D-gluco-Heptose
 Added heuristic for correcting esters with omitted spaces
 Added support for xanthates/xanthic acid
+Minor vocabulary improvements
+Fixed a few minor bugs/limitations in the Cahn-Ingold-Prelog rules implementation and made more memory efficient
 Many minor improvements and bug fixes
 
 Version 1.1.0
