@@ -944,7 +944,6 @@ class FusedRingNumberer {
 	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem){
 		List<Double[]> chainQs = new ArrayList<Double[]>();
 		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
-		List<Chain> correspondingChain = new ArrayList<Chain>();
 		for (Ring[][] ringMap : ringMaps) {
 			List<Chain> chains = findChainsOfMaximumLengthInHorizontalDir(ringMap);
 			// For each chain count the number of rings in each quadrant
@@ -954,7 +953,6 @@ class FusedRingNumberer {
 				Double[] qs = countQuadrants(ringMap, midChainXcoord, chain.getY());
 				chainQs.add(qs);
 				correspondingRingMap.add(ringMap);
-				correspondingChain.add(chain);
 			}
 		}
 
@@ -973,9 +971,7 @@ class FusedRingNumberer {
 		List<List<Atom>> paths = new ArrayList<List<Atom>> ();
 		for (int c=0; c < chainQs.size(); c++) {
 			Ring[][] ringMap = correspondingRingMap.get(c);
-			Chain chain = correspondingChain.get(c);
 			List<Integer> allowedUpperRightQuadrants = allowedUpperRightQuadrantsForEachChain.get(c);
-			int midChainXcoord = chain.getLength() + chain.getStartingX() - 1;
 
 			for (Integer upperRightQuadrant : allowedUpperRightQuadrants) {
 				Ring[][] qRingMap = transformQuadrantToUpperRightOfRingMap(ringMap, upperRightQuadrant);
@@ -983,7 +979,7 @@ class FusedRingNumberer {
 					debugRingMap(qRingMap);
 				}
 				boolean inverseAtoms = (upperRightQuadrant == 2 || upperRightQuadrant == 0);
-				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, midChainXcoord, inverseAtoms, atomCountOfFusedRingSystem);
+				List<Atom> peripheralAtomPath = orderAtoms(qRingMap, inverseAtoms, atomCountOfFusedRingSystem);
 				paths.add(peripheralAtomPath);
 			}
 		}
@@ -1292,12 +1288,11 @@ class FusedRingNumberer {
 	 * Enumerates the peripheral atoms in a system in accordance with FR-5.3:
 	 * First finds the uppermost right ring, takes the next neighbour in the clockwise direction, and so on until the starting atom is reached
 	 * @param ringMap
-	 * @param midChain
 	 * @param inverseAtoms The direction in which the periphery atoms should be enumerated. Anticlockwise by default
 	 * @param atomCountOfFusedRingSystem 
 	 * @return
 	 */
-	private static List<Atom> orderAtoms(Ring[][] ringMap, int midChain, boolean inverseAtoms, int atomCountOfFusedRingSystem){
+	private static List<Atom> orderAtoms(Ring[][] ringMap, boolean inverseAtoms, int atomCountOfFusedRingSystem){
 		int w = ringMap.length;
 		int h = ringMap[0].length;
 

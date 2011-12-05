@@ -729,7 +729,7 @@ class StereochemistryHandler {
 	 * @param carbohydrateStereoChemistryEls
 	 * @throws StructureBuildingException 
 	 */
-	private void assignCarbohydratePrefixStereochem(Element carbohydrateGroup, List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {;
+	private void assignCarbohydratePrefixStereochem(Element carbohydrateGroup, List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {
 		Fragment carbohydrate = state.xmlFragmentMap.get(carbohydrateGroup);
 		Set<Atom> atoms = notExplicitlyDefinedStereoCentreMap.keySet();
 		List<Atom> stereocentresInCarbohydrate = new ArrayList<Atom>();
