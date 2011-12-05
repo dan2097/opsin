@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
+    <groupId>uk.ac.cam.ch.wwmm</groupId>
     <artifactId>wwmm-parent</artifactId>
-    <groupId>wwmm</groupId>
-    <version>1</version>
+    <version>4</version>
   </parent>
   <groupId>uk.ac.cam.ch.opsin</groupId>
   <artifactId>opsin</artifactId>
@@ -50,19 +50,10 @@
       <name>Rich Apodaca</name>
     </contributor>
   </contributors>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
   <modules>
     <module>opsin-core</module>
     <module>opsin-inchi</module>
   </modules>
-  <repositories>
-    <repository>
-      <id>ucc-repo</id>
-      <url>https://maven.ch.cam.ac.uk/m2repo</url>
-    </repository>
-  </repositories>
   <distributionManagement>
     <repository> 
       <id>ucc</id>
