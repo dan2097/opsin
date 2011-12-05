@@ -26,7 +26,7 @@ class StereoAnalyser {
 	private final Fragment molecule;
 
 	private final AtomColourThenNeighbouringColoursComparator atomColourThenNeighbouringColoursComparator;
-	private final AtomicNumberComparator atomicNumberComparator;
+	private final static AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
 	
 	/**
 	 * Holds information about a tetrahedral stereocentre
@@ -106,22 +106,42 @@ class StereoAnalyser {
 	
 	/**
 	 * Sorts atoms by their atomic number, low to high
+	 * In the case of a tie sorts by atomic mass
 	 * @author dl387
 	 *
 	 */
-	private static class AtomicNumberComparator implements Comparator<Atom> {
-
+	private static class AtomicNumberThenAtomicMassComparator implements Comparator<Atom> {
 	    public int compare(Atom a, Atom b){
-	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
-	    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
-	    	if (atomicNumber1 > atomicNumber2){
+	    	return compareAtomicNumberThenAtomicMass(a, b);
+	    }
+	}
+	
+	private static int compareAtomicNumberThenAtomicMass(Atom a, Atom b){
+    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
+    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
+    	if (atomicNumber1 > atomicNumber2){
+    		return 1;
+    	}
+    	else if (atomicNumber1 < atomicNumber2){
+    		return -1;
+    	}
+    	Integer atomicMass1 = a.getIsotope();
+    	Integer atomicMass2 = b.getIsotope();
+    	if (atomicMass1 != null && atomicMass2 == null){
+    		return 1;
+    	}
+    	else if (atomicMass1 == null && atomicMass2 != null){
+    		return -1;
+    	}
+    	else if (atomicMass1 != null && atomicMass2 != null){
+        	if (atomicMass1 > atomicMass2){
 	    		return 1;
 	    	}
-	    	else if (atomicNumber1 < atomicNumber2){
+	    	else if (atomicMass1 < atomicMass2){
 	    		return -1;
 	    	}
-			return 0;
-	    }
+    	}
+		return 0;
 	}
 	
 	/**
@@ -175,13 +195,12 @@ class StereoAnalyser {
 	StereoAnalyser(Fragment molecule) {
 		this.molecule = molecule;
 		atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
-		atomicNumberComparator = new AtomicNumberComparator();
 		addGhostAtoms();
 		List<Atom> atomList = molecule.getAtomList();
 		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
 		atomNeighbourColours = new HashMap<Atom,List<Integer>>(atomList.size());
-		Collections.sort(atomList, atomicNumberComparator);
-		populateColoursByAtomicNumber(atomList);
+		Collections.sort(atomList, atomicNumberThenAtomicMassComparator);
+		populateColoursByAtomicNumberAndMass(atomList);
 		
 		boolean changeFound = true;
 		while(changeFound){
@@ -196,7 +215,7 @@ class StereoAnalyser {
 	}
 
 	/**
-	 * Adds "ghost" atoms in accordance with the CIP rules for handling double bonds
+	 * Adds "ghost" atoms in the sam ways as the CIP rules for handling double bonds
 	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
 	 */
 	private void addGhostAtoms() {
@@ -238,22 +257,22 @@ class StereoAnalyser {
 
 
 	/**
-	 * Takes a list of atoms sorted by atomicNumber
+	 * Takes a list of atoms sorted by atomic number/mass
 	 * and populates the mappingToColour map
 	 * @param atomList
 	 */
-	private void populateColoursByAtomicNumber(List<Atom> atomList) {
-		String lastAtomElement = atomList.get(0).getElement();
+	private void populateColoursByAtomicNumberAndMass(List<Atom> atomList) {
+		Atom lastAtom = null;
 		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
-		int atomsSeen =0;
+		int atomsSeen = 0;
 		for (Atom atom : atomList) {
-			if (!atom.getElement().equals(lastAtomElement)){
+			if (lastAtom!=null && compareAtomicNumberThenAtomicMass(lastAtom, atom)!=0){
 				for (Atom a2 : atomsOfThisColour) {
 					mappingToColour.put(a2, atomsSeen);
 				}
-				lastAtomElement = atom.getElement();
 				atomsOfThisColour = new ArrayList<Atom>();
 			}
+			lastAtom = atom;
 			atomsOfThisColour.add(atom);
 			atomsSeen++;
 		}
@@ -520,26 +539,28 @@ class StereoAnalyser {
 	}
 
 	static boolean isAchiralDueToResonanceOrTautomerism(Atom atom) {
-		List<Atom> neighbours = atom.getAtomNeighbours();
-		Set<String> elementOfFoundResonanceOrTautomerismCapableAtom = new HashSet<String>();
-		for (Atom neighbour : neighbours) {
-			String element = neighbour.getElement();
-			if ((element.equals("O") || element.equals("S") || element.equals("Se") 
-					|| element.equals("Te") || element.equals("N") || element.equals("H"))
-					&& isOnlyBondedToHydrogensOtherThanGivenAtom(neighbour, atom)){
-				if (elementOfFoundResonanceOrTautomerismCapableAtom.contains(element)){
-					return true;
-				}
-				elementOfFoundResonanceOrTautomerismCapableAtom.add(element);
-			}
-		}
-		if (elementOfFoundResonanceOrTautomerismCapableAtom.contains("H") 
-				&& (atom.getElement().equals("N") || 
+		if(atom.getElement().equals("N") || 
 				atom.getElement().equals("P") ||
 				atom.getElement().equals("As") ||
 				atom.getElement().equals("S") ||
-				atom.getElement().equals("Se"))){
-			return true;
+				atom.getElement().equals("Se")){
+			List<Atom> neighbours = atom.getAtomNeighbours();
+			Set<String> resonanceAndTautomerismAtomicElementPlusIsotopes = new HashSet<String>();
+			for (Atom neighbour : neighbours) {
+				String element = neighbour.getElement();
+				if ((element.equals("O") || element.equals("S") || element.equals("Se") 
+						|| element.equals("Te") || element.equals("N"))
+						&& isOnlyBondedToHydrogensOtherThanGivenAtom(neighbour, atom)){
+					if (resonanceAndTautomerismAtomicElementPlusIsotopes.contains(element + atom.getIsotope())){
+						return true;
+					}
+					resonanceAndTautomerismAtomicElementPlusIsotopes.add(element + atom.getIsotope());
+				}
+				if (element.equals("H") && neighbour.getBonds().size()==1){
+					//terminal H atom neighbour
+					return true;
+				}
+			}
 		}
 		return false;
 	}
