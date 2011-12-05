@@ -21,10 +21,10 @@
   <scm>
     <url>http://bitbucket.org/dan2097/opsin/</url>
     <connection>
-      scm:hg:https://dan2097@bitbucket.org/dan2097/opsin/
+      scm:hg:http://bitbucket.org/dan2097/opsin
     </connection>
     <developerConnection>
-      scm:hg:https://dan2097@bitbucket.org/dan2097/opsin/
+      scm:hg:http://bitbucket.org/dan2097/opsin
     </developerConnection>
   </scm>
 	<repositories>
