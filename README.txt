@@ -20,14 +20,7 @@ The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and SMILES 
 
 To use OPSIN as a library add opsin-1.2.0-jar-with-dependencies.jar to your classpath.
 
-If you are using Maven then do the following:
-	Add our repository:
-		<repository>
-			<id>ucc-repo</id>
-			<url>https://maven.ch.cam.ac.uk/m2repo</url>
-		</repository>
-
-	Then add:
+If you are using Maven then add:
 		<dependency>
 			 <groupId>uk.ac.cam.ch.opsin</groupId>
 			 <artifactId>opsin-core</artifactId>
