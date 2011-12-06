@@ -1,4 +1,5 @@
 Version 1.2.0
+OPSIN is now available from Maven Central
 Basic support for cylised carbohydrates e.g. alpha-D-glucopyranose
 Basic support for systematic carbohydrate stems e.g. D-glycero-D-gluco-Heptose
 Added heuristic for correcting esters with omitted spaces

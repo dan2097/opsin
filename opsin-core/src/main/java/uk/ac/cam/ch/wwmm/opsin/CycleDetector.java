@@ -33,20 +33,19 @@ class CycleDetector {
 	}
 	
 	private static int traverseRings(Atom currentAtom, Atom previousAtom, int depth){
-		int temp, result;
 		if(currentAtom.getProperty(Atom.VISITED)!=null){
 			return currentAtom.getProperty(Atom.VISITED);
 		}
 		currentAtom.setProperty(Atom.VISITED, depth);
-		result = depth+1;
+		int result = depth+1;
 		List<Atom> neighbours = currentAtom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
 			if (neighbour.equals(previousAtom)){
 				continue;
 			}
-			temp = traverseRings(neighbour, currentAtom, depth+1);
+			int temp = traverseRings(neighbour, currentAtom, depth+1);
 			if( temp <= depth) {
-				result = Math.min(result,temp);
+				result = Math.min(result, temp);
 			}
 		}
 		if( result <= depth ){
