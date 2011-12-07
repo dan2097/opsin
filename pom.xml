@@ -7,7 +7,7 @@
   </parent>
   <groupId>uk.ac.cam.ch.opsin</groupId>
   <artifactId>opsin</artifactId>
-  <version>1.2.0</version>
+  <version>2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OPSIN</name>
   <description>Open Parser for Systematic IUPAC Nomenclature</description>
