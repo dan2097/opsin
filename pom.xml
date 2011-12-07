@@ -27,6 +27,12 @@
       scm:hg:http://bitbucket.org/dan2097/opsin
     </developerConnection>
   </scm>
+	<repositories>
+	  <repository>
+	    <id>ucc</id>
+	    <url>https://maven.ch.cam.ac.uk/m2repo</url>
+	  </repository>
+	</repositories>
   <developers>
     <developer>
       <name>Daniel Lowe</name>
