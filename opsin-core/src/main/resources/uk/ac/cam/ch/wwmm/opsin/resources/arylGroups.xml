@@ -176,6 +176,7 @@
 		<token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthren</token>
 		<token value="N1C(=O)Cc2ccccc12" labels="1/2//3/3a/4/5/6/7/7a" valType="SMILES">oxindol</token>
 		<token value="N(C(=O)C)c1ccc(O)cc1" labels="////1/2,ortho/3,meta/4,para//5/6" valType="SMILES">paracetamol</token>
+		<token value="N1(C)c(=O)Nc2ncN(C)c2c1=O" labels="1//2//3/4/9/8/7//5/6/" valType="SMILES">paraxanthin</token>
 		<token value="perimidine" valType="dbkey">perimidin</token>
 		<token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d" valType="SMILES">perylen</token>
 		<token value="phenalene" valType="dbkey">phenalen</token>
