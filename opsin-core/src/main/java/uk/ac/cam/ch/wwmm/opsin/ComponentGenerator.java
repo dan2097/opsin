@@ -277,7 +277,7 @@ class ComponentGenerator {
 								locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
 							}
 						}
-						else if ((brackettedText.endsWith("R") || brackettedText.endsWith("S"))){
+						else if (StringTools.endsWithCaseInsensitive(brackettedText, "R") || StringTools.endsWithCaseInsensitive(brackettedText, "S")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							String rs = brackettedText;
 							Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL);
@@ -741,7 +741,7 @@ class ComponentGenerator {
 				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the cis/trans
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(E_OR_Z_TYPE_VAL)){
-				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue()));
+				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue().toUpperCase()));
 				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the E/Z
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
