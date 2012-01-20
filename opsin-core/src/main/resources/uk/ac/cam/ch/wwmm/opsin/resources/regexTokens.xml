@@ -33,7 +33,7 @@
   <regex name="%locantTypesOptionalHyphen%" regex="(%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%|%greek%'*)|%greek%'*)"/><!--subset that do not end with a letter-->
   <regex name="%indicatedHydrogen%" regex="(%locant%[hH])"/>
   <regex name="%compoundLocantOrAddedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
-  <regex name="%RSstereochemAfterLocant%" regex="(-?%openBracket%[RS]%closeBracket%)"/><!--e.g. 2-(S) or 2(R),3(R),4(R),5-->
+  <regex name="%RSstereochemAfterLocant%" regex="(-?%openBracket%[RSrs]%closeBracket%)"/><!--e.g. 2-(S) or 2(R),3(R),4(R),5-->
   <regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)?)"/>
   <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
@@ -57,7 +57,7 @@
   <regexToken regex="[isn]-" symbol="n" tagname="alkaneStemModifier" determinise="yes"/><!--case sensitive so must be a regex-->
   <regexToken regex="([oO][rR][tT][hH][oO]|[mM][eE][tT][aA]|[pP][aA][rR][aA])-?|(o|[mM]|[p])-" symbol="O" tagname="orthoMetaPara" determinise="yes"/><!-- O- and P- means oxygen and phosphorus locant-->
   <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
-  <regexToken regex="[EZ]" symbol="t" type="EorZ" tagname="stereoChemistry" determinise="yes" /><!--unbracketted E or Z for stereochemistry-->
+  <regexToken regex="[EZz]" symbol="t" type="EorZ" tagname="stereoChemistry" determinise="yes" /><!--unbracketted E or Z for stereochemistry, e causes problems with reverse parsing-->
   <regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
   <regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¢" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
   <regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR|[cC][iI][sS]|[tT][rR][aA][nN][sS])|%alphaBetaLocant%)"/>
