@@ -59,4 +59,10 @@ public class PreProcessorTest {
 	public void testRemovalOfDotsFromGreekWords2() throws PreProcessingException {
 		assertEquals("alphabetaeta", PreProcessor.preProcess(".alpha..beta..eta."));
 	}
+
+	@Test
+	public void testHtmlGreeks() throws PreProcessingException {
+		assertEquals("alpha-methyl-toluene", PreProcessor.preProcess("&alpha;-methyl-toluene"));
+		assertEquals("BETA-methyl-styrene", PreProcessor.preProcess("&BETA;-methyl-styrene"));
+	}
 }
