@@ -16,6 +16,7 @@ class PreProcessor {
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
 	private static final Pattern MATCH_SULPH = Pattern.compile("sulph", Pattern.CASE_INSENSITIVE);
 	private static final Pattern MATCH_DOT_GREEK_DOT = Pattern.compile("\\.(alpha|beta|gamma|delta|epsilon|zeta|eta|omega)\\.", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MATCH_HTML_ENTITY_GREEK = Pattern.compile("&(alpha|beta|gamma|delta|epsilon|zeta|eta|omega);", Pattern.CASE_INSENSITIVE);
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
 	static {
@@ -53,6 +54,7 @@ class PreProcessor {
 		}
 		chemicalName = processDollarPrefixedGreeks(chemicalName);
 		chemicalName = processDotSurroundedGreeks(chemicalName);
+		chemicalName = processHtmlEntityGreeks(chemicalName);
 		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
 		chemicalName = MATCH_SULPH.matcher(chemicalName).replaceAll("sulf");//correct British spelling to the IUPAC spelling
 		return chemicalName;
@@ -82,6 +84,20 @@ class PreProcessor {
 		while (m.find()){
 			chemicalName = chemicalName.substring(0, m.start()) + m.group(1) + chemicalName.substring(m.end());
 			m = MATCH_DOT_GREEK_DOT.matcher(chemicalName);
+		}
+		return chemicalName;
+	}
+	
+	/**
+	 * Removes HTML entity escaping e.g. &alpha; -->alpha
+	 * @param chemicalName
+	 * @return
+	 */
+	private static String processHtmlEntityGreeks(String chemicalName) {
+		Matcher m = MATCH_HTML_ENTITY_GREEK.matcher(chemicalName);
+		while (m.find()){
+			chemicalName = chemicalName.substring(0, m.start()) + m.group(1) + chemicalName.substring(m.end());
+			m = MATCH_HTML_ENTITY_GREEK.matcher(chemicalName);
 		}
 		return chemicalName;
 	}
