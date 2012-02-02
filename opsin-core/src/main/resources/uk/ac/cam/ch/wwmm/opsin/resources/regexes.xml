@@ -44,7 +44,7 @@ does not define a CFG.
   <regex name="%annulen%" value="N"/>
   <regex name="%orthoMetaPara%" value="O"/>
   <regex name="%stereochemistryBracket%" value="E"/>
-  <regex name="%unbrackettedStereochem%" value="t"/>
+  <regex name="%unbrackettedCisTrans%" value="t"/>
   <regex name="%heteroStem%" value="p"/>
   <regex name="%o%" value="Y"/>
   <regex name="%e%" value="Z"/>
@@ -135,7 +135,8 @@ does not define a CFG.
 	<regex name="%carbohydrateRingSize%" value="─"/>
 	<regex name="%carbohydrateChain%" value="┼"/>
 	<regex name="%epoxy%" value="ã"/>
-  <!--up to ascii 198 used-->
+	<regex name="%unbrackettedEZ%" value="Ã"/>
+  <!--up to ascii 199 used-->
 
 <!-- composite regexes-->
 
@@ -144,7 +145,7 @@ does not define a CFG.
   <regex name="%multiplierNotGroup%" value="((%simpleMultiplier%|%elidedAMultiplier%)%hyphen%?)"/>
   <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
-  <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedStereochem%(%comma%%locant%?%unbrackettedStereochem%)*%hyphen%?|%lightRotation%|%alphaBetaStereochemLocant%)"/>
+  <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedCisTrans%(%comma%%locant%?%unbrackettedCisTrans%)*%hyphen%?|%locant%?%unbrackettedEZ%(%comma%%locant%?%unbrackettedEZ%)*%hyphen%|%lightRotation%|%alphaBetaStereochemLocant%)"/>
   <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locant%?)"/>
   <regex name="%optLocantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%)?)"/>
   <regex name="%locantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%))"/>
