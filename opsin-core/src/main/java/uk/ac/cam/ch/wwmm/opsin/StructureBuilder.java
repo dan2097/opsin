@@ -1526,6 +1526,7 @@ class StructureBuilder {
                     }
 				}
 				if (isElementSymbol && possibleAtom.getElement().equals(locant)){
+					mainGroupBR.removeFunctionalAtom(i);
 				    return possibleAtom;
 				}
 			}

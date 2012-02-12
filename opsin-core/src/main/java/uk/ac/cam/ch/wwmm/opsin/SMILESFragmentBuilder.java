@@ -168,12 +168,12 @@ class SMILESFragmentBuilder {
 			} else if(nextChar == '-'){
 				stack.peek().bondOrder = 1;
 			} else if(nextChar == '='){
-				if (stack.peek().bondOrder!=1){
+				if (stack.peek().bondOrder != 1){
 					throw new StructureBuildingException("= in unexpected position: bond order already defined!");
 				}
 				stack.peek().bondOrder = 2;
 			} else if(nextChar == '#'){
-				if (stack.peek().bondOrder!=1){
+				if (stack.peek().bondOrder != 1){
 					throw new StructureBuildingException("# in unexpected position: bond order already defined!");
 				}
 				stack.peek().bondOrder = 3;
@@ -183,7 +183,7 @@ class SMILESFragmentBuilder {
 				}
 				stack.peek().slash = SMILES_BOND_DIRECTION.RSLASH;
 			} else if(nextChar == '\\'){
-				if (stack.peek().slash!=null){
+				if (stack.peek().slash != null){
 					throw new StructureBuildingException("\\ in unexpected position: bond configuration already defined!");
 				}
 				stack.peek().slash = SMILES_BOND_DIRECTION.LSLASH;
