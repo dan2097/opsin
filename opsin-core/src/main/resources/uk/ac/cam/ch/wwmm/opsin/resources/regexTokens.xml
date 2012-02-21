@@ -40,7 +40,7 @@
   <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" determinise="yes" />
 
   <regex name="%lambdaConvention%" regex="(%locantTypes%?[lL][aA][mM][bB][dD][aA](%superScriptedNumber%|[0-9]+))" />
-  <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(lambdaConvention-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="Ç" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
+  <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="Ç" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
   <regexToken regex="[sS][pP][iI][rR][oO]-?%openBracket%[1-9][0-9]*([\.,][0-9]+%superScriptedNumber%?)+%closeBracket%-?" symbol="S" tagname="spiro" determinise="yes"/>
 
   <regex name="%superScriptedVonBaeyerDescriptor%" regex="([\.,][0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|[0-9]+,[0-9]+))"/>
