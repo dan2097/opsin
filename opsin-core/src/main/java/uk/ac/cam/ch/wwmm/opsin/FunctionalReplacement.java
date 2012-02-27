@@ -342,25 +342,26 @@ class FunctionalReplacement {
 						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");//this would be a bug
 					}
 					Fragment replacementFrag =state.fragManager.buildSMILES(replacementSMILES, SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-					if (replacementFrag.getOutAtoms().size()>0){
+					if (replacementFrag.getOutAtoms().size()>0){//SMILES include an indication of the bond order the replacement fragment will have, this is not intended to be an outatom
 						replacementFrag.removeOutAtom(0);
 					}
-					Atom atomThatWillReplaceOxyen =replacementFrag.getFirstAtom();
-					if (replacementFrag.getAtomList().size()==1 && matchChalcogen.matcher(atomThatWillReplaceOxyen.getElement()).matches()){
-						atomThatWillReplaceOxyen.setCharge(atomToUse.getCharge());
-						atomThatWillReplaceOxyen.setProtonsExplicitlyAddedOrRemoved(atomToUse.getProtonsExplicitlyAddedOrRemoved());
+					Atom atomThatWillReplaceOxygen =replacementFrag.getFirstAtom();
+					if (replacementFrag.getAtomList().size()==1 && matchChalcogen.matcher(atomThatWillReplaceOxygen.getElement()).matches()){
+						atomThatWillReplaceOxygen.setCharge(atomToUse.getCharge());
+						atomThatWillReplaceOxygen.setProtonsExplicitlyAddedOrRemoved(atomToUse.getProtonsExplicitlyAddedOrRemoved());
 					}
 					removeOrMoveObsoleteFunctionalAtoms(atomToUse, replacementFrag);//also will move charge if necessary
+					moveObsoleteOutAtoms(atomToUse, replacementFrag);//if the replaced atom was an outatom the fragments outatom list need to be corrected
 					if (nitrido){
 						atomToUse.getFirstBond().setOrder(3);
 						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
 					}
 					state.fragManager.incorporateFragment(replacementFrag, atomToUse.getFrag());
-					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToUse, atomThatWillReplaceOxyen);
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToUse, atomThatWillReplaceOxygen);
 					if (infixAssignmentAmbiguous){
-						ambiguousElementAtoms.add(atomThatWillReplaceOxyen);
-						if (atomThatWillReplaceOxyen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
-							ambiguousElementAtoms.addAll(atomThatWillReplaceOxyen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
+						ambiguousElementAtoms.add(atomThatWillReplaceOxygen);
+						if (atomThatWillReplaceOxygen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
+							ambiguousElementAtoms.addAll(atomThatWillReplaceOxygen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT));
 						}
 					}
 					if (infixAssignmentAmbiguous){//record what atoms could have been replaced. Often this ambiguity is resolved later e.g. S-methyl ethanthioate
@@ -806,6 +807,7 @@ class FunctionalReplacement {
 					if (outValency ==1){
 						removeOrMoveObsoleteFunctionalAtoms(atomToReplace, replacementFrag);
 					}
+					moveObsoleteOutAtoms(atomToReplace, replacementFrag);
 					state.fragManager.incorporateFragment(replacementFrag, atomToReplace.getFrag());
 				}
 				atomsReplaced++;
@@ -908,6 +910,28 @@ class FunctionalReplacement {
 					terminalAtomOfReplacementFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
 				}
 				atomToBeReplaced.neutraliseCharge();
+			}
+		}
+	}
+	
+	/**
+	 * Given an atom that is to be replaced by a functional replacement fragment
+	 * determines whether this atom has outvalency and if it does removes the outatom from the atom's fragment
+	 * and adds an outatom to the replacementFrag
+	 * @param atomToBeReplaced
+	 * @param replacementFrag
+	 */
+	private static void moveObsoleteOutAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
+		if (atomToBeReplaced.getOutValency() >0){//this is not known to occur in well formed IUPAC names but would occur in thioxy (as a suffix)
+			List<Atom> replacementAtomList = replacementFrag.getAtomList();
+			List<OutAtom> outAtoms = atomToBeReplaced.getFrag().getOutAtoms();
+			for (int i = outAtoms.size()-1; i >=0; i--) {
+				OutAtom outAtom = outAtoms.get(i);
+				if (atomToBeReplaced.equals(outAtom.getAtom())){
+					atomToBeReplaced.getFrag().removeOutAtom(i);
+					Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
+					replacementFrag.addOutAtom(terminalAtomOfReplacementFrag, outAtom.getValency(), outAtom.isSetExplicitly());
+				}
 			}
 		}
 	}
