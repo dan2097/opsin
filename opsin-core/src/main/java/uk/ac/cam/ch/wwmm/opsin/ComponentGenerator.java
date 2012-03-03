@@ -915,16 +915,20 @@ class ComponentGenerator {
 			currentInfixInformation.add(infixValue);
 			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(infix);
 			Element possibleBracket;
-			boolean multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier =false;
+			boolean multiplierKnownToIndicateInfixMultiplicationPresent =false;
 			if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+				//suffix prefix present so multiplier must indicate infix replacement
 				Element possibleSuffixPrefix = XOMTools.getPreviousSiblingIgnoringCertainElements(infix, new String[]{MULTIPLIER_EL, INFIX_EL});
 				if (possibleSuffixPrefix!=null && possibleSuffixPrefix.getLocalName().equals(SUFFIXPREFIX_EL)){
-					multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier =true;
+					multiplierKnownToIndicateInfixMultiplicationPresent =true;
 				}
-				possibleBracket  = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
-				if (possibleBracket.getLocalName().equals(MULTIPLIER_EL)){
-					multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier =true;
+				Element elementBeforeMultiplier = (Element) XOMTools.getPreviousSibling(possibleMultiplier);
+				//double multiplier indicates multiple suffixes which all have their infix multiplied
+				//if currentInfixInformation contains more than 1 entry it contains information from an infix from before the multiplier so the interpretation of the multiplier as a suffix multiplier is impossible
+				if (elementBeforeMultiplier.getLocalName().equals(MULTIPLIER_EL) || currentInfixInformation.size() > 1){
+					multiplierKnownToIndicateInfixMultiplicationPresent =true;
 				}
+				possibleBracket = elementBeforeMultiplier;
 			}
 			else{
 				possibleBracket=possibleMultiplier;
@@ -947,7 +951,7 @@ class ComponentGenerator {
 				possibleBracket.detach();
 				bracket.detach();
 			}
-			else if (possibleMultiplier!=null && multiplierPrecededBySuffixPrefixOrImmediatelyByMultiplier){//multiplier unambiguously means multiplication of the infix
+			else if (multiplierKnownToIndicateInfixMultiplicationPresent){//multiplier unambiguously means multiplication of the infix
 				int multiplierVal = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				for (int i = 1; i < multiplierVal; i++) {
 					currentInfixInformation.add(infixValue);
