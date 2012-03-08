@@ -85,29 +85,30 @@ public final class StringTools {
 		return sb.toString();
 	}
 
-	/**Converts a unicode string into ISO-8859-1, converting greek letters
-	 * to their names, and difficult characters to underscore.
+	/**Converts a unicode string into ASCII
+	 * e.g. converting Greek letters to their names (e.g. alpha)
+	 * Unrecognised non-ASCII characters trigger an exception
 	 *
-	 * @param s The string to convert.
-	 * @return The converted string.
+	 * @param s The string to convert
+	 * @return The converted string
 	 * @throws PreProcessingException
 	 */
 	public static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
 		s = MATCH_WHITESPACE.matcher(s).replaceAll(" ");//normalise white space
-		StringBuilder sb = new StringBuilder(s);
-		for(int i=0;i<sb.length();i++) {
-			char c = sb.charAt(i);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0, l = s.length(); i < l; i++) {
+			char c = s.charAt(i);
 			if(c >= 128) {
-				sb.replace(i, i+1, getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
+				sb.append(getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
 			}
-			else if (c ==96){
-				sb.replace(i, i+1, "'");//replace back ticks with apostrophe
+			else if (c == 96){
+				sb.append("'");//replace back ticks with apostrophe
 			}
-			else if (c ==34){
-				sb.replace(i, i+1, "''");//replace quotation mark with two primes
+			else if (c == 34){
+				sb.append("''");//replace quotation mark with two primes
 			}
-			else if (c<=31){
-				sb.replace(i, i+1, "");//ignore control characters
+			else if (c > 31){//ignore control characters
+				sb.append(c);
 			}
 		}
 		return sb.toString();
