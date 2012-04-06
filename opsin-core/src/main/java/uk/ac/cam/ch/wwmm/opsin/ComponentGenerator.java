@@ -569,12 +569,12 @@ class ComponentGenerator {
 			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
 				continue;
 			}
-			int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 			Element multipliedElem = (Element)XOMTools.getNextSibling(m);
 
 			if(multipliedElem.getLocalName().equals(GROUP_EL) &&
 					multipliedElem.getAttribute(SUBTYPE_ATR)!=null &&
 					multipliedElem.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)) {
+				int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 				
 				Element possiblyALocant = (Element)XOMTools.getPreviousSibling(m);//detect rare case where multiplier does not mean form a chain of heteroatoms e.g. something like 1,2-disulfanylpropane
 				if(possiblyALocant !=null && possiblyALocant.getLocalName().equals(LOCANT_EL)&& mvalue==MATCH_COMMA.split(possiblyALocant.getValue()).length){
