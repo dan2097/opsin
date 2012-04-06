@@ -157,10 +157,6 @@ class Parser {
 		if (parses.size()==0){
 			throw new ParsingException("No parses could be found for " + name);
 		}
-		if (parses.size()>128){
-			throw new ParsingException("Too many parses generated, the current limit is 128: " + parses.size());
-		}
-
 		
 		List<Element> results = new ArrayList<Element>();
 		for(Parse pp : parses) {
@@ -170,7 +166,7 @@ class Parser {
 				Element word = new Element(WORD_EL);
 				moleculeEl.appendChild(word);
 				if (pw.getParseTokens().size() >1){
-					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating addition parses step");
+					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating additional parses step");
 				}
 				
 				WordType wordType = OpsinTools.determineWordType(pw.getParseTokens().get(0).getAnnotations());
@@ -269,12 +265,13 @@ class Parser {
 
 	/**
 	 * For cases where any of the parse's parseWords contain multiple annotations create a
-	 * parse for each possibility. Hence after this process there may be multiple parse objects and
+	 * parse for each possibility. Hence after this process there may be multiple Parse objects but
 	 * the parseWords they contain will each only have one parseTokens object.
 	 * @param parse
 	 * @return
+	 * @throws ParsingException 
 	 */
-	private List<Parse> generateParseCombinations(Parse parse) {
+	private List<Parse> generateParseCombinations(Parse parse) throws ParsingException {
 		List<Integer> parseCounts = new ArrayList<Integer>();
 		for (ParseWord pw : parse.getWords()) {
 			parseCounts.add(pw.getParseTokens().size());
@@ -292,6 +289,9 @@ class Parser {
 				}
 			}
 			parses.add(parseCopy);
+			if (parses.size()>128){
+				throw new ParsingException("More than 128 parses generated!");
+			}
 		}
 		return parses;
 	}

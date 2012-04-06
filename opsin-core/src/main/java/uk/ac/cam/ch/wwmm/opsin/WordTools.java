@@ -100,10 +100,8 @@ class WordTools {
 	private static boolean containsOmittedSpace(List<List<Character>> chunkedAnnotations) {
 		if (chunkedAnnotations.size() > 1){//there are multiple subsitutents/maingroup/functionalterms
 			for (List<Character> annotationList : chunkedAnnotations) {
-				for (Character annotation : annotationList) {
-					if (annotation.equals(END_OF_FUNCTIONALTERM)){
-						return true;
-					}
+				if (annotationList.contains(END_OF_FUNCTIONALTERM)){
+					return true;
 				}
 			}
 		}
