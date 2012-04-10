@@ -12,7 +12,7 @@ class ParseWord {
 	/**The word itself.*/
 	private final String word;
 	/**All of the possible tokenisations of the word.*/
-	private List<ParseTokens> parseTokens;
+	private final List<ParseTokens> parseTokens;
 
 	ParseWord deepCopy() {
 		return new ParseWord(word, parseTokens);
@@ -21,10 +21,10 @@ class ParseWord {
 	ParseWord(String word, List<ParseTokens> parseTokens) {
 		this.word =word;
 		if (parseTokens ==null){
-			this.parseTokens =null;
+			this.parseTokens = null;
 		}
 		else{
-			this.parseTokens =  new ArrayList<ParseTokens>(parseTokens);
+			this.parseTokens = new ArrayList<ParseTokens>(parseTokens);
 		}
 	}
 
@@ -34,10 +34,6 @@ class ParseWord {
 
 	List<ParseTokens> getParseTokens() {
 		return parseTokens;
-	}
-	
-	void setParseTokens(List<ParseTokens> parseTokens) {
-		this.parseTokens = parseTokens;
 	}
 
 	public String toString() {

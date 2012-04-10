@@ -2,6 +2,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,54 +15,8 @@ import nu.xom.Element;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
-/** For a list of integers, generate all lists of non-negative integers where all
- * of the list members are strictly lower than their corresponding integer in the
- * input list.
- *
- * @author ptc24
- * @author dl387
- *
- */
-final class Combinations {
-
-	private List<List<Integer>> combList;
-	private List<Integer> scheme;
-
-	private Combinations() {
-
-	}
-
-	/**For a list of integers, generate all lists of non-negative integers where
-	 * all of the list members are strictly lower than their corresponding
-	 * integer in the input list.
-	 *
-	 * @param scheme The input list of integers.
-	 * @return The list of lists.
-	 */
-	public static List<List<Integer>> makeCombinations(List<Integer> scheme) {
-		Combinations c = new Combinations();
-		c.combList = new ArrayList<List<Integer>>();
-		c.scheme = scheme;
-		c.grow(new ArrayList<Integer>());
-		return c.combList;
-	}
-
-	private void grow(List<Integer> soFar) {
-		if(soFar.size() == scheme.size()) {
-			combList.add(soFar);
-		} else {
-			for(int i=0;i<scheme.get(soFar.size());i++) {
-				List<Integer> ll = new ArrayList<Integer>();
-				ll.addAll(soFar);
-				ll.add(i);
-				grow(ll);
-			}
-		}
-	}
-}
-
-/**Conducts finite-state parsing on chemical names. Preserves the name itself, just adding XML
- * annotation to the various constituents on the name.
+/**Conducts finite-state parsing on chemical names.
+ * Adds XML annotation to the semantic constituents of the name.
  *
  * @author ptc24/dl387
  *
@@ -274,7 +230,8 @@ class Parser {
 	private List<Parse> generateParseCombinations(Parse parse) throws ParsingException {
 		int numberOfCombinations = 1;
 		List<Integer> parseCounts = new ArrayList<Integer>();
-		for (ParseWord pw : parse.getWords()) {
+		List<ParseWord> parseWords = parse.getWords();
+		for (ParseWord pw : parseWords) {
 			int parsesForWord = pw.getParseTokens().size();
 			parseCounts.add(parsesForWord);
 			numberOfCombinations *= parsesForWord;
@@ -282,24 +239,30 @@ class Parser {
 				throw new ParsingException("Too many different combinations of word interpretation are possible (>128) i.e. name contains too many terms that OPSIN finds ambiguous to interpret");
 			}
 		}
-		List<Parse> parses = new ArrayList<Parse>();
 		if (numberOfCombinations ==1){
-			parses.add(parse);
-			return parses;
+			return Arrays.asList(parse);
 		}
-
-		List<List<Integer>> combinations = Combinations.makeCombinations(parseCounts);
-		for(List<Integer> c : combinations) {
-			Parse parseCopy = parse.deepCopy();
-			for(int i=0; i<c.size(); i++) {
-				if(parseCounts.get(i) > 1) {
-					ParseWord pw = parseCopy.getWord(i);
-					List<ParseTokens> ptl = new ArrayList<ParseTokens>();
-					ptl.add(pw.getParseTokens().get(c.get(i)));
-					pw.setParseTokens(ptl);
+		List<Parse> parses = new ArrayList<Parse>();
+		
+		LinkedList<Parse> parseQueue = new LinkedList<Parse>();
+		parseQueue.add(new Parse(parse.getName()));
+		while (!parseQueue.isEmpty()){
+			Parse currentParse = parseQueue.removeFirst();
+			int wordsInCurrentParse = currentParse.getWords().size();
+			if(wordsInCurrentParse == parseWords.size()) {
+				parses.add(currentParse);
+			}
+			else {
+				ParseWord referenceWord = parseWords.get(wordsInCurrentParse);
+				List<ParseTokens> referenceWordParseTokens = referenceWord.getParseTokens();
+				for (int i = referenceWordParseTokens.size()-1; i >=0; i--) {
+					ParseTokens parseTokens = referenceWordParseTokens.get(i);
+					Parse parseWithNextWord = i > 0 ? currentParse.deepCopy() : currentParse;
+					ParseWord newParseWord = new ParseWord(referenceWord.getWord(), Arrays.asList(parseTokens));
+					parseWithNextWord.addWord(newParseWord);
+					parseQueue.add(parseWithNextWord);
 				}
 			}
-			parses.add(parseCopy);
 		}
 		return parses;
 	}
