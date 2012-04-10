@@ -652,6 +652,20 @@ class ComponentGenerator {
 						possiblyAnotherHeteroAtom.detach();
 						m.detach();
 					}
+					else if (possiblyAnUnsaturator!=null && possiblyAnUnsaturator.getValue().equals("an") && HANTZSCHWIDMAN_SUBTYPE_VAL.equals(possiblyAnUnsaturator.getAttributeValue(SUBTYPE_ATR))){
+						//check for HWring that should be interpreted as a heterogenous hydride
+						boolean foundLocantIndicatingHwRingHeteroatomPositions =false;//allow formally incorrect HW ring systems if they have locants
+						Element possibleLocant = (Element) XOMTools.getPreviousSibling(m);
+						if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL)){
+							int expected = Integer.parseInt(m.getAttributeValue(VALUE_ATR)) + 1;
+							if (expected == MATCH_COMMA.split(possibleLocant.getValue()).length){
+								foundLocantIndicatingHwRingHeteroatomPositions = true;
+							}
+						}
+						if (!foundLocantIndicatingHwRingHeteroatomPositions){
+							checkForAmbiguityWithHeterogenousHydride(multipliedElem.getAttributeValue(VALUE_ATR), possiblyAnotherHeteroAtom.getAttributeValue(VALUE_ATR));
+						}
+					}
 				}
 			}
 		}
@@ -696,6 +710,30 @@ class ComponentGenerator {
 	private boolean hasSiorGeorSnorPb(String atom1Element, String atom2Element) {
 		return (atom1Element.equals("Si") || atom1Element.equals("Ge") || atom1Element.equals("Sn") ||atom1Element.equals("Pb")
 				|| atom2Element.equals("Si") || atom2Element.equals("Ge") || atom2Element.equals("Sn") ||atom2Element.equals("Pb"));
+	}
+	
+	/**
+	 * Throws an exception if the given heteroatoms could be part of a heterogenous hydride
+	 * For this to be true the second heteroatom must be higher priority than the first
+	 * @param firstHeteroAtomSMILES
+	 * @param secondHeteroAtomSMILES
+	 * @throws ComponentGenerationException 
+	 */
+	private void checkForAmbiguityWithHeterogenousHydride(String firstHeteroAtomSMILES, String secondHeteroAtomSMILES) throws ComponentGenerationException {
+		Matcher m = MATCH_ELEMENT_SYMBOL.matcher(firstHeteroAtomSMILES);
+		if (!m.find()){
+			throw new ComponentGenerationException("Failed to extract element from heteroatom");
+		}
+		String atom1Element = m.group();
+		
+		m = MATCH_ELEMENT_SYMBOL.matcher(secondHeteroAtomSMILES);
+		if (!m.find()){
+			throw new ComponentGenerationException("Failed to extract element from heteroatom");
+		}
+		String atom2Element = m.group();
+		if (AtomProperties.elementToHwPriority.get(atom2Element) > AtomProperties.elementToHwPriority.get(atom1Element)){
+			throw new ComponentGenerationException("heterogeneous hydride with alternating atoms misparsed as a Hantzch-widman ring");
+		}
 	}
 
 	/** Handle indicated hydrogen  e.g. 1H- in 1H-pyrrole
