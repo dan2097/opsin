@@ -272,12 +272,23 @@ class Parser {
 	 * @throws ParsingException 
 	 */
 	private List<Parse> generateParseCombinations(Parse parse) throws ParsingException {
+		int numberOfCombinations = 1;
 		List<Integer> parseCounts = new ArrayList<Integer>();
 		for (ParseWord pw : parse.getWords()) {
-			parseCounts.add(pw.getParseTokens().size());
+			int parsesForWord = pw.getParseTokens().size();
+			parseCounts.add(parsesForWord);
+			numberOfCombinations *= parsesForWord;
+			if (numberOfCombinations > 128){//checked here to avoid integer overflow on inappropriate input
+				throw new ParsingException("Too many different combinations of word interpretation are possible (>128) i.e. name contains too many terms that OPSIN finds ambiguous to interpret");
+			}
 		}
-		List<List<Integer>> combinations = Combinations.makeCombinations(parseCounts);
 		List<Parse> parses = new ArrayList<Parse>();
+		if (numberOfCombinations ==1){
+			parses.add(parse);
+			return parses;
+		}
+
+		List<List<Integer>> combinations = Combinations.makeCombinations(parseCounts);
 		for(List<Integer> c : combinations) {
 			Parse parseCopy = parse.deepCopy();
 			for(int i=0; i<c.size(); i++) {
@@ -289,9 +300,6 @@ class Parser {
 				}
 			}
 			parses.add(parseCopy);
-			if (parses.size()>128){
-				throw new ParsingException("More than 128 parses generated!");
-			}
 		}
 		return parses;
 	}
