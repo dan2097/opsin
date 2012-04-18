@@ -320,13 +320,17 @@ class SMILESWriter {
 	private void traverseSmiles(Atom currentAtom, Atom previousAtom, int depth){
 		smilesBuilder.append(atomToSmiles(currentAtom, depth, previousAtom));
 		Set<Bond> bonds = currentAtom.getBonds();
+		LinkedList<String> newlyAvailableClosureSymbols = null;
 		for (Bond bond : bonds) {//ring closures
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			Integer nDepth = neighbour.getProperty(Atom.VISITED);
 			if (nDepth!=null && nDepth<=depth && !neighbour.equals(previousAtom)){
 				String closure = bondToClosureSymbolMap.get(bond);
-				availableClosureSymbols.addFirst(closure);
 				smilesBuilder.append(closure);
+				if (newlyAvailableClosureSymbols == null){
+					newlyAvailableClosureSymbols = new LinkedList<String>();
+				}
+				newlyAvailableClosureSymbols.addFirst(closure);
 			}
 		}
 		for (Bond bond : bonds) {//ring openings
@@ -339,6 +343,12 @@ class SMILESWriter {
 				smilesBuilder.append(closure);
 			}
 		}
+		if (newlyAvailableClosureSymbols != null){
+			for (String closure : newlyAvailableClosureSymbols) {
+				availableClosureSymbols.addFirst(closure);
+			}
+		}
+
 		// count outgoing edges
 		int count = 0;
 		for (Bond bond : bonds) {
