@@ -240,8 +240,7 @@ public class SMILESWriterTest {
 		Fragment f = state.fragManager.buildSMILES("C12=C3C4=C5C6=C1C7=C8C9=C1C%10=C%11C(=C29)C3=C2C3=C4C4=C5C5=C9C6=C7C6=C7C8=C1C1=C8C%10=C%10C%11=C2C2=C3C3=C4C4=C5C5=C%11C%12=C(C6=C95)C7=C1C1=C%12C5=C%11C4=C3C3=C5C(=C81)C%10=C23");
 		StructureBuilder.makeHydrogensExplicit(state);
 		String smiles = new SMILESWriter(f).generateSmiles();
-		//the algorithm OPSIN uses appears to be more aggressive at reusing ring opening than Lexichem's canonical SMILES
-		assertEquals("C12=C3C4=C5C6=C1C1=C7C8=C9C%10=C%11C(=C28)C3=C3C8=C4C4=C5C5=C2C6=C1C1=C6C7=C9C9=C7C%10=C%10C%11=C3C3=C8C8=C4C4=C5C5=C%11C%12=C(C1=C25)C6=C9C9=C%12C%12=C%11C4=C8C8=C%12C(=C79)C%10=C38", smiles);
+		assertEquals("C12=C3C4=C5C6=C1C1=C7C8=C9C%10=C%11C(=C28)C3=C3C2=C4C4=C5C5=C8C6=C1C1=C6C7=C9C9=C7C%10=C%10C%11=C3C3=C2C2=C4C4=C5C5=C%11C%12=C(C1=C85)C6=C9C9=C%12C%12=C%11C4=C2C2=C%12C(=C79)C%10=C32", smiles);
 	}
 	
 	@Test
