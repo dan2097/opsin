@@ -103,7 +103,9 @@
 		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
 		<token value="-c1c(C)c(C)cc(C)c1C" labels="none" valType="SMILES">duryl</token>
+		<token value="-c1c(OC)cc(CC=C)cc1" labels="none" valType="SMILES">eugenyl</token>
 		<token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
+		<!--<token value="-c1c(OC)cccc1" labels="none" valType="SMILES">guaiacyl</token> ambiguous, can also mean 4-hydroxy-3-methoxyphenyl-->
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES" defaultInLocant="5">hydantoyl</token>
 		<token value="-NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>
 		<token value="=NN" valType="SMILES" usableAsAJoiner="yes">hydrazono</token><!--Also used in functional replacement-->
@@ -114,6 +116,7 @@
 		<token value="-C=C(C)C" labels="none" valType="SMILES">isocrotyl</token>
 		<token value="-NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
 		<token value="-[N+]#[C-]" labels="none" valType="SMILES">isocyanyl</token>
+		<token value="-c1c(OC)cc(C=CC)cc1" labels="none" valType="SMILES">isoeugenyl</token>
 		<token value="-CCC(=C)C" labels="none" valType="SMILES">isopentenyl</token><!--used in prenol nomenclature - overrides standard intepretation-->
 		<token value="-NNC(O)=N" labels="1/2//3/4" valType="SMILES">isosemicarbazido</token>
 		<token value="-C(=O)C(=O)C(=O)O" labels="1//2//3//" valType="SMILES">mesoxalo</token>
