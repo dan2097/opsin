@@ -28,6 +28,7 @@
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">benzol</token>
 		<token value="c1(ccccc1)C(O)(c2ccccc2)C(O)(c3ccccc3)c4ccccc4" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'///1''/2''/3''/4''/5''/6''/1'''/2'''/3'''/4'''/5'''/6'''" valType="SMILES">benzopinacol</token>
 		<token value="c1(ccccc1)C(c2ccccc2)(c3ccccc3)C(=O)c4ccccc4" labels="none" valType="SMILES">benzopinacolone</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="[O|1] locant1;O locant4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzosemiquinone</token>
 		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O" labels="none" valType="SMILES">bisphenol a</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6" valType="SMILES">bourbonal</token>
 		<token value="c1c(O)c(C)ccc1C(C)C" labels="none" valType="SMILES">carvacrol</token>
@@ -87,7 +88,9 @@
 		<token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2,ortho////3,meta////4,para/5/6" valType="SMILES" functionalIDs="5,9">quinolinic</token>
 		<token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2,ortho////3,meta////4,para/5/6" valType="SMILES" functionalIDs="5,9">quinolinicacid</token>
 		<token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2,ortho////3,meta////4,para/5/6" valType="SMILES" functionalIDs="5,9">quinolinic acid</token>
+		<token value="c1(cc(O)cc(O)c1)C=Cc2ccc(O)cc2" labels="1/2/3//4/5//6/alpha/beta/1'/2'/3'/4'//5'/6'" valType="SMILES">resveratrol</token>
 		<token value="c1(O)cc(O)ccc1" labels="1//2,ortho/3,meta//4,para/5/6" valType="SMILES">resorcin</token>
+		<token value="c1(cc(O)cc(O)c1)C=Cc2cc(O)c(OC)cc2" labels="1/2/3//4/5//6/alpha/beta/1'/2'/3'//4'///5'/6'" valType="SMILES">rhapontigenin</token>
 		<token value="OCc1ccccc1O" labels="none" valType="SMILES">saligenin</token>
 		<token value="CC/C(c1ccc(O)cc1)=C(c2ccc(O)cc2)/CC" labels="none" valType="SMILES">diethylstilbestrol</token>
 		<token value="c1([N+](=O)[O-])c([O-])c([N+](=O)[O-])cc([N+](=O)[O-])c1[O-]" labels="2,ortho////3,meta//4,para////5/6////1/" valType="SMILES" functionalIDs="6,17">styphnate</token>
