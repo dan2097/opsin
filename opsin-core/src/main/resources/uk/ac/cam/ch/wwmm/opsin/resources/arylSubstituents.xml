@@ -16,7 +16,6 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="pyrrole" valType="dbkey">pyrr</token>
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">styr</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" frontLocantsExpected="2,3,4">tol</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant1 alpha;C locant2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xyl</token>
 	</tokenList>
 	
 	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="┴">

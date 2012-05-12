@@ -36,6 +36,10 @@
     <token value="OC/C=C/c1cc(OC)c(O)cc1" labels="none" valType="SMILES">coniferol</token>
 		<token value="c1(c(OC)cc(C)cc1)O" labels="none" valType="SMILES">creosol</token>
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cumaldehyde</token>
+		<token value="OC(=O)c1ccc(C(C)C)cc1" labels="///1/2/3/4////5/6" valType="SMILES" functionalIDs="1">cuminic acid</token>
+		<token value="OC(=O)c1ccc(C(C)C)cc1" labels="///1/2/3/4////5/6" valType="SMILES" functionalIDs="1">cuminicacid</token>
+		<token value="OC(=O)c1ccc(C(C)C)cc1" labels="///1/2/3/4////5/6" valType="SMILES" functionalIDs="1">cumic acid</token>
+		<token value="OC(=O)c1ccc(C(C)C)cc1" labels="///1/2/3/4////5/6" valType="SMILES" functionalIDs="1">cumicacid</token>
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminal</token>
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminaldehyde</token>
 		<token value="OCc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminol</token>
@@ -43,6 +47,10 @@
 		<token value="C1(=O)CCCCO1" labels="1//2/3/4/5/" valType="SMILES">delta-valerolactone</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamid</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamide</token>
+		<token value="c1(c(C(=O)[O-])cccc1)c2c(C(=O)[O-])cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" valType="SMILES" functionalIDs="5,14">diphenate</token>
+		<token value="c1(c(C(=O)O)cccc1)c2c(C(=O)O)cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" valType="SMILES" functionalIDs="5,14">diphenic</token>
+		<token value="c1(c(C(=O)O)cccc1)c2c(C(=O)O)cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" valType="SMILES" functionalIDs="5,14">diphenicacid</token>
+		<token value="c1(c(C(=O)O)cccc1)c2c(C(=O)O)cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" valType="SMILES" functionalIDs="5,14">diphenic acid</token>
 		<token value="c1(c(C)c(C)c(O)c(C)c1C)O" labels="none" valType="SMILES">durohydroquinone</token>
 		<token value="CC(c1ccccc1)=CC(c2ccccc2)=O" labels="none" valType="SMILES">dypnone</token>
 		<token value="COc1c(OC)c(OC)cc(CC=C)c1" labels="none" valType="SMILES">elemicin</token>
@@ -65,6 +73,10 @@
     <token value="OCc1cc(CO)ccc1" labels="//1/2,ortho/3,meta///4,para/5/6" valType="SMILES">isophthalyl alcohol</token>
 		<token value="O=Cc1cc(O)c(OC)cc1" labels="//1/2/3//4///5/6" valType="SMILES">isovanillin</token>
 		<token value="c1(O)ccc(O)cc1" labels="1//2,ortho/3,meta/4,para//5/6" valType="SMILES">quinol</token>
+		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" valType="SMILES" functionalIDs="9">mesitylenate</token>
+		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" valType="SMILES" functionalIDs="9">mesitylenic</token>
+		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" valType="SMILES" functionalIDs="9">mesitylenic acid</token>
+		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" valType="SMILES" functionalIDs="9">mesitylenicacid</token>
 		<token value="c1(=O)c(=O)ccc2ccccc12" labels="1//2//3/4/4a/5/6/7/8/8a" valType="SMILES">naphtho-1,2-quinone</token>
 		<token value="c1(=O)ccc(=O)c2ccccc12" labels="1//2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphtho-1,4-quinone</token>
 		<token value="n1cccc(c1)C2N(C)CCC2" labels="none" valType="SMILES">nicotine</token><!--not to be confused with nicotinic acid-->

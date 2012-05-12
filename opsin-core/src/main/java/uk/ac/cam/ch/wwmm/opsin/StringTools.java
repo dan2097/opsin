@@ -247,6 +247,7 @@ public final class StringTools {
             case '\u00A0': return " ";//Non-breaking spaces
             case '\u2007': return " ";
             case '\u202F': return " ";
+            case '\u3000': return " ";//ideographics space
             
             case '\u200b': return "";//zero width space
             case '\u200d': return "";//zero width joiner
