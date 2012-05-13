@@ -19,8 +19,8 @@ does not define a CFG.
   <regex name="%unsaturator%" value="u"/>
   <regex name="%inlineSuffix%" value="i"/>
   <regex name="%simpleSubstituent%" value="x"/>
-  <regex name="%simpleMultiplier%" value="m"/>
-  <regex name="%elidedAMultiplier%" value="r"/>
+  <regex name="%tetrOrHigher%" value="m"/>
+  <regex name="%diOrTri%" value="r"/>
   <regex name="%groupMultiplier%" value="R"/>
   <regex name="%groupStemAllowingInlineSuffixes%" value="g"/>
   <regex name="%simpleGroup%" value="G"/>
@@ -141,8 +141,9 @@ does not define a CFG.
 <!-- composite regexes-->
 
 <!-- UsefulTerms-->
-  <regex name="%multiplier%" value="((%simpleMultiplier%|%elidedAMultiplier%|%groupMultiplier%)%hyphen%?)"/>
-  <regex name="%multiplierNotGroup%" value="((%simpleMultiplier%|%elidedAMultiplier%)%hyphen%?)"/>
+  <regex name="%simpleMultiplier%" value="(%mono%|%diOrTri%|%tetrOrHigher%%a%)"/>
+  <regex name="%multiplier%" value="((%mono%|%diOrTri%|%tetrOrHigher%%a%?|%groupMultiplier%)%hyphen%?)"/>
+  <regex name="%multiplierNotGroup%" value="((%mono%|%diOrTri%|%tetrOrHigher%%a%?)%hyphen%?)"/>
   <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
   <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedCisTrans%(%comma%%locant%?%unbrackettedCisTrans%)*%hyphen%?|%locant%?%unbrackettedEZ%(%comma%%locant%?%unbrackettedEZ%)*%hyphen%|%lightRotation%|%alphaBetaStereochemLocant%)"/>
@@ -218,7 +219,7 @@ does not define a CFG.
 
 
   <!--cyclic-->
-  <regex name="%semiTrivialFusedRing%" value = "(%vonBaeyerMultiplier%%FR2hydrocarbonComponent%)"/>
+  <regex name="%semiTrivialFusedRing%" value = "(%tetrOrHigher%%a%%FR2hydrocarbonComponent%)"/>
   <regex name="%vonBaeyerSystem%" value = "(%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%%a%?%unsaturationBlock%|%heteroChain%))"/><!--support for alternating heteroChain missing-->
   <regex name="%cycloChain%" value = "(%cyclo%%straightChainGroups%)"/>
   <regex name="%cycloChainSubstituent%" value = "(%cyclo%%alkaneStem%)"/>
