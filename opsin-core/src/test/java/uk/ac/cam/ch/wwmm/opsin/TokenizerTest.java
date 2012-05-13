@@ -54,13 +54,14 @@ public class TokenizerTest {
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Six tokens", 6, tokens.size());
-		assertEquals("First token: hexa", "hexa", tokens.get(0));
-		assertEquals("Second token: chloro", "chloro", tokens.get(1));
-		assertEquals("Third token: end of main substituent", "", tokens.get(2));
-		assertEquals("Fourth token: hex", "hex", tokens.get(3));
-		assertEquals("Fifth token: ane", "ane", tokens.get(4));
-		assertEquals("Sixth token: end of main group", "", tokens.get(5));
+		assertEquals("Seven tokens", 7, tokens.size());
+		assertEquals("First token: hex", "hex", tokens.get(0));
+		assertEquals("Second token: a", "a", tokens.get(1));
+		assertEquals("Third token: chloro", "chloro", tokens.get(2));
+		assertEquals("Fourth token: end of main substituent", "", tokens.get(3));
+		assertEquals("Fifth token: hex", "hex", tokens.get(4));
+		assertEquals("Sixth token: ane", "ane", tokens.get(5));
+		assertEquals("Seventh token: end of main group", "", tokens.get(6));
 	}
 	
 	@Test
@@ -112,15 +113,16 @@ public class TokenizerTest {
 		ParseWord w = parse.getWords().get(0);
 		assertEquals("One Parse", 1, w.getParseTokens().size());
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Eight tokens", 8, tokens.size());
+		assertEquals("Nine tokens", 9, tokens.size());
 		assertEquals("First token: {", "(", tokens.get(0));
-		assertEquals("Second token: hexa", "hexa", tokens.get(1));
-		assertEquals("Third token: chloro", "chloro", tokens.get(2));
-		assertEquals("Fourth token: )", ")", tokens.get(3));
-		assertEquals("Fifth token: end of main substituent", "", tokens.get(4));
-		assertEquals("Sixth token: hex", "hex", tokens.get(5));
-		assertEquals("Seventh token: ane", "ane", tokens.get(6));
-		assertEquals("Eigth token: end of main group", "", tokens.get(7));
+		assertEquals("Second token: hex", "hex", tokens.get(1));
+		assertEquals("Third token: a", "a", tokens.get(2));
+		assertEquals("Fourth token: chloro", "chloro", tokens.get(3));
+		assertEquals("Fifth token: )", ")", tokens.get(4));
+		assertEquals("Sixth token: end of main substituent", "", tokens.get(5));
+		assertEquals("Seventh token: hex", "hex", tokens.get(6));
+		assertEquals("Eigth token: ane", "ane", tokens.get(7));
+		assertEquals("Ninth token: end of main group", "", tokens.get(8));
 	}
 	
 	@Test
