@@ -1357,7 +1357,7 @@ class ComponentGenerator {
 					}
 					smilesSB.append("c3cc12");
 				} else if (classOfHydrocarbonFRSystem.equals("polyhelicene")){
-					if (multiplierValue <6){
+					if (multiplierValue <4){
 						throw new ComponentGenerationException("Invalid polyhelicene");
 					}
 					smilesSB.append("c1c");

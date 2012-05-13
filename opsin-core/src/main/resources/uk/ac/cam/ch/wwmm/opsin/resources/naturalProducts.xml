@@ -32,6 +32,7 @@
 		<token value="[CH3][C@]12[CH2][CH2][C@H]3[C@@H]([CH2][CH2][CH]4[CH2][CH2][CH2][CH2][C@]34[CH3])[C@H]1[CH2][CH2][C@@H]2[C@@H]1[CH2][O][C](=[O])[CH2]1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/21//23//22" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cardanolide</token>
 
 	<!--not retained-->
+	<token value="C[C@@]12C(=O)CC[C@H]1[C@@H]1CCC3CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" frontLocantsExpected="1,4,5,6,7,8,9,11,12,13,14,15" addBond="2 locant4">androstenedione</token>
 	<token value="[CH3][CH]([CH3])[CH2][CH2][CH2][C@@H]([CH3])[C@H]1[CH2][CH2][C@H]2[C@@H]3[CH2][CH]=C4[CH2][C@@H](O)[CH2][CH2][C@]4([CH3])[C@H]3[CH2][CH2][C@]12[CH3]" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholesterol</token>
 	</tokenList>
 
