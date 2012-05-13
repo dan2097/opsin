@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
-  <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V"><!--the a is part of the multiplier and the e is assumed to be optional -->
+  <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V">
     <token value="polyacene">cen</token>
     <token value="polyalene">len</token>
     <token value="polyaphene">phen</token><!--ambiguity between this and multiplier phenyl e.g. hexaphenylbenzene is resolved in the ComponentGenerator generally in favour of phenyl-->

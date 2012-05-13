@@ -47,6 +47,7 @@
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">beta-carbolin</token>
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a" valType="SMILES">b-carbolin</token>
 		<token value="c1(ccccc1)CCc2ccccc2" labels="1/2/3/4/5/6/alpha/alpha'/1'/2'/3'/4'/5'/6'" valType="SMILES">bibenzyl</token>
+		<token value="c1cccc2c3ccccc3c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b" valType="SMILES">biphenylen</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthren</token>
 		<token value="C123C4CC5CC1.C25(C)C.C3.O4" labels="1/2/3/4/5/6/7/8/9/10/" valType="SMILES">borneol</token>
 		<token value="N1(C)c(=O)N(C)c2ncN(C)c2c1=O" labels="1//2//3//4/9/8/7//5/6/" valType="SMILES">caffein</token>
@@ -293,8 +294,10 @@
 		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" valType="SMILES" addGroup="C locant2 alpha" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidin</token>
 		<token value="[O-]S(=O)(=O)c1ccc(C)cc1" labels="////1/2,ortho/3,meta/4,para//5/6" valType="SMILES" functionalIDs="1">tosylat</token>
 		<token value="[cH2]1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b" valType="SMILES">trinden</token>
+		<token value="c1cccc2cc3c4cc5ccccc5cc4c4cc5ccccc5cc4c3cc12" labels="1/2/3/4/4a/5/5a/5b/6/6a/7/8/9/10/10a/11/11a/11b/12/12a/13/14/15/16/16a/17/17a/17b/18/18a" valType="SMILES">trinaphthylen</token>
 		<token value="c1cccc2oc3cc4nc5ccccc5oc4cc3nc12" labels="1/2/3/4/4a/5/5a/6/6a/7/7a/8/9/10/11/11a/12/12a/13/13a/14/14a" valType="SMILES">triphenodioxazin</token>
 		<token value="c1cccc2sc3cc4nc5ccccc5sc4cc3nc12" labels="1/2/3/4/4a/5/5a/6/6a/7/7a/8/9/10/11/11a/12/12a/13/13a/14/14a" valType="SMILES">triphenodithiazin</token>
+		<token value="c1cccc2c3ccccc3c3ccccc3c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b/9/10/11/12/12a/12b" valType="SMILES">triphenylen</token>
 		<token value="C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">tritan</token>
 		<token value="NCCc1ccc(cc1)O" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES">tyramin</token>
 		<token value="NCCc1c[nH]c2ccccc12" labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a" valType="SMILES">tryptamin</token>
