@@ -18,12 +18,12 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" frontLocantsExpected="2,3,4">tol</token>
 	</tokenList>
 	
-	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="┴">
+	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="ß">
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">phenyl</token>
 	</tokenList>
 
 	<!--Contracted form allows all suffixes -->
-	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="«">
+	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="Ì">
 		<token value="C1Cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b" valType="SMILES">acenaphth</token>
 		<token value="c1cccc2nc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES">acrid</token>
 		<token value="c1cccc2[as]c3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">acridars</token>

@@ -9,7 +9,7 @@ O (for oxygen)
 
 then the SMILES replacement
  -->
-<tokenList tagname="infix" symbol="ü">
+<tokenList tagname="infix" symbol="¢">
   <token value="-O:N">amid</token>
   <token value="-O:N=[N+]=[N-]">azid</token>
   <token value="-O:Br">bromid</token>

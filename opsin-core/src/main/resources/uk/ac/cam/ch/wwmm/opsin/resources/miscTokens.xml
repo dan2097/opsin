@@ -19,7 +19,7 @@
     <token value="dehydro">dehydro</token>
     <token value="hydro">hydro</token>
   </tokenList>
-  <tokenList tagname="hydro" symbol="ú">
+  <tokenList tagname="hydro" symbol="Á">
     <token value="perhydro">perhydro</token>
   </tokenList>
 
@@ -28,39 +28,39 @@
     <token value="trans">trans</token>
   </tokenList>
 
-  <tokenList tagname="ine" symbol="î"><!--used for amino acids-->
+  <tokenList tagname="ine" symbol="«"><!--used for amino acids-->
     <token value="ine">ine</token>
     <token value="ine">in</token>
   </tokenList>
 
-  <tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="ó"><!--chalcogen replacement terms-->
+  <tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="À"><!--chalcogen replacement terms-->
     <token value="S" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
     <token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
     <token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="root" symbol="Ñ">
+  <tokenList tagname="suffix" type="root" symbol="Ã">
     <token value="amine">ylamine</token>
   </tokenList>
 
-  <tokenList tagname="polyCyclicSpiro" symbol="º">
+  <tokenList tagname="polyCyclicSpiro" symbol="Å">
     <token value="spirobi">spirobi</token>
     <token value="spirobi">spirobi-</token>
     <token value="spiroter">spiroter</token>
     <token value="spiroter">spiroter-</token>
   </tokenList>
 
-  <tokenList tagname="polyCyclicSpiro" symbol="⌐">
+  <tokenList tagname="polyCyclicSpiro" symbol="Ç">
     <token value="spiro">spiro</token>
     <token value="spiro">spiro-</token>
   </tokenList>
 
-  <tokenList tagname="polyCyclicSpiro" symbol="╝">
+  <tokenList tagname="polyCyclicSpiro" symbol="Ú">
     <token value="spiroOldMethod">spiro</token>
     <token value="spiroOldMethod">spiro-</token>
   </tokenList>
 
-  <tokenList tagname="dlStereochemistry" symbol="╛">
+  <tokenList tagname="dlStereochemistry" symbol="Ü">
     <token value="d">d-</token>
     <token value="l">l-</token>
     <token value="dl">dl-</token>
@@ -72,7 +72,7 @@
   </tokenList>
 
 <!--As a purely non-detachable prefixe-->
-  <tokenList tagname="subtractivePrefix" symbol="┐">
+  <tokenList tagname="subtractivePrefix" symbol="Ý">
     <token value="O">deoxy</token>
     <token value="O">desoxy</token><!--older variant spelling-->
   </tokenList>
@@ -87,7 +87,7 @@
     <token value="-">-</token>
   </tokenList>
   
-  <tokenList tagname="hyphen" symbol="ä"><!--an intersubstituent seperator-->
+  <tokenList tagname="hyphen" symbol="£"><!--an intersubstituent seperator-->
     <token value="-">-</token>
     <token value=",">,</token>
   </tokenList>
@@ -128,7 +128,7 @@
     <token value="}">}</token>
   </tokenList>
   
-  <tokenList tagname="NA" symbol="¬" ignoreWhenWritingXML="yes"><!--an optional a-->
+  <tokenList tagname="NA" symbol="È" ignoreWhenWritingXML="yes"><!--an optional a-->
     <token value="a">a</token>
   </tokenList>
   
@@ -140,19 +140,19 @@
     <token value="o">o</token>
   </tokenList>
   
-  <tokenList tagname="bridgeFormingO" symbol="╡"><!--an o used to indicate a prefix is a bridge e.g. the o in ethano-->
+  <tokenList tagname="bridgeFormingO" symbol="Ó"><!--an o used to indicate a prefix is a bridge e.g. the o in ethano-->
     <token value="o">o</token>
   </tokenList>
   
-  <tokenList tagname="NA" symbol="ç" ignoreWhenWritingXML="yes"><!--a comma used as a delimiter-->
+  <tokenList tagname="NA" symbol="¦" ignoreWhenWritingXML="yes"><!--a comma used as a delimiter-->
     <token value=",">,</token>
   </tokenList>
 
-  <tokenList tagname="suffix" symbol="£" type="root" subType="terminal"><!--an implicit ic-->
+  <tokenList tagname="suffix" symbol="º" type="root" subType="terminal"><!--an implicit ic-->
     <token value="ic"></token>
   </tokenList>
   
-  <tokenList tagname="suffix" symbol="₧" type="inline"><!--an o meaning yl e.g. glycino-->
+  <tokenList tagname="suffix" symbol="¼" type="inline"><!--an o meaning yl e.g. glycino-->
     <token value="oMeaningYl">o</token>
   </tokenList>
   

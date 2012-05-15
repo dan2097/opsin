@@ -2,12 +2,12 @@
 <!-- See the DTD for more details -->
 <!--Exhaustive set of fusion components (FR-2.1.1 through FR-2.2.8)-->
 <tokenLists>
-  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="Å">
+  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="®">
   <!-- benzo is special as fused rings formed from benzo are treated as components and a locant in front of a benzo assigns locants for this component-->
     <token value="c1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">benzo</token>
     <token value="c1ccccc1" labels="1/2/3/4/5/6" valType="SMILES">benz</token>
   </tokenList>
-  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="¡">
+  <tokenList tagname="group" type="ring" subType="fusionRing" symbol="Ë">
   <!-- may have front locants-->
 		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridino</token>
 		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrolino</token>

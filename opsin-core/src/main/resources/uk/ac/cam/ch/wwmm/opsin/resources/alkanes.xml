@@ -13,7 +13,7 @@
 		<token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">non</token>
     <token value="CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11" valType="SMILES" usableAsAJoiner="yes">undec</token>
   </tokenList>
-  <tokenList tagname="alkaneStemComponent" symbol="▒"><!--units-->
+  <tokenList tagname="alkaneStemComponent" symbol="Ï"><!--units-->
 		<token value="1">hen</token>
 		<token value="2">do</token>
 		<token value="3">tri</token>
@@ -24,7 +24,7 @@
 		<token value="8">oct</token>
 		<token value="9">non</token>
   </tokenList>
-  <tokenList tagname="alkaneStemComponent" symbol="▓"><!--tens-->
+  <tokenList tagname="alkaneStemComponent" symbol="Ð"><!--tens-->
 		<token value="10">dec</token>
 		<token value="20">cos</token>
 		<token value="20">icos</token>
@@ -39,7 +39,7 @@
 		<token value="90">nonacont</token>
 		<token value="100">decacont</token><!--hect preferred-->
   </tokenList>
-  <tokenList tagname="alkaneStemComponent" symbol="│"><!--hundreds-->
+  <tokenList tagname="alkaneStemComponent" symbol="Ñ"><!--hundreds-->
 		<token value="100">hect</token>
 		<token value="200">dict</token>
 		<token value="300">trict</token>
@@ -50,7 +50,7 @@
 		<token value="800">octact</token>
 		<token value="900">nonact</token>
   </tokenList>
-  <tokenList tagname="alkaneStemComponent" symbol="┤"><!--thousands-->
+  <tokenList tagname="alkaneStemComponent" symbol="Ò"><!--thousands-->
 		<token value="1000">kili</token>
 		<token value="2000">dili</token>
 		<token value="3000">trili</token>

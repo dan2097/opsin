@@ -99,13 +99,13 @@
 		<token value="[SeH2]" labels="none" outIDs="1,1" valType="SMILES">episeleno</token>
 		<token value="[TeH2]" labels="none" outIDs="1,1" valType="SMILES">epitelluro</token>
 	</tokenList>
-	<tokenList tagname="fusedRingBridge" symbol="ã">
+	<tokenList tagname="fusedRingBridge" symbol="å">
 		<token value="O" labels="none" valType="SMILES">epoxy</token>
 		<token value="S" labels="none" valType="SMILES">epithio</token>
 		<token value="[SeH2]" labels="none" valType="SMILES">episeleno</token>
 		<token value="[TeH2]" labels="none" valType="SMILES">epitelluro</token>
 	</tokenList>
-	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="╗">
+	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="Ù">
 		<token value="N" labels="none" outIDs="1,1,1" valType="SMILES">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
 	</tokenList>
 </tokenLists>

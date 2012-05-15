@@ -2,7 +2,7 @@
 <!-- See the DTD for more details -->
 <!--The same as arylGroups except these cannot have suffixes. Or if you like the same as simpleGroups except they can accept indicated hydrogen-->
 <tokenLists>
-	<tokenList tagname="group" type="ring" subType="simpleGroup" symbol="á">
+	<tokenList tagname="group" type="ring" subType="simpleGroup" symbol="¾">
 		<token value="C/C=C/C1=C(OC)C=C(OC)C(OC)=C1" labels="none" valType="SMILES">alpha-asarone</token>
 		<token value="C/C=C\C1=C(OC)C=C(OC)C(OC)=C1" labels="none" valType="SMILES">beta-asarone</token>
 		<token value="o1cccc1C(=O)C(=O)c2ccco2" labels="1/2/3/4/5/////2'/3'/4'/5'/1'" valType="SMILES">alpha-furil</token>
@@ -133,7 +133,7 @@
 		<token value="O=C(C)CCc1cc(OC)c(O)cc1" labels="none" valType="SMILES">zingerone</token>
 	</tokenList>
 
-	<tokenList tagname="group" type="ring" subType="biochemical" symbol="á">
+	<tokenList tagname="group" type="ring" subType="biochemical" symbol="¾">
 <!--nucleotides-->
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylicacid</token>

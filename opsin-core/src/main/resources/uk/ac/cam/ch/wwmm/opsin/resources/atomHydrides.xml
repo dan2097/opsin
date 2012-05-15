@@ -36,7 +36,7 @@
 		<token value="I" valType="SMILES" usableAsAJoiner="yes">iod</token>
 		<token value="[AtH?]" valType="SMILES" usableAsAJoiner="yes">astat</token>
 	</tokenList>
-	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="╕">
+	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="Ö">
 		<token value="N" valType="SMILES" usableAsAJoiner="yes">az</token>
 	</tokenList>
 </tokenLists>

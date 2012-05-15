@@ -2,7 +2,7 @@
 <!-- See the DTD for more details -->
 <tokenLists>
 <!--functional classes typically have hard coded rules in the StructureBuilder detailing their behaviour-->
-  <tokenList tagname="functionalClass" type="functionalClass" symbol="æ">
+  <tokenList tagname="functionalClass" type="functionalClass" symbol="°">
     <token value="ester">ester</token>
     <token value="O">glycol</token>
     <token value="F">fluorohydrin</token>
@@ -12,7 +12,7 @@
     <token value="C#N">cyanohydrin</token>
   </tokenList>
 
-  <tokenList tagname="functionalGroup" type="functionalClass" subType="functionalClassGroup" symbol="Æ">
+  <tokenList tagname="functionalGroup" type="functionalClass" subType="functionalClassGroup" symbol="±">
 <!--The atom that replaces the carbonyl oxygen is the last atom in the SMILES so that the first is where unlocanted substitution occurs)-->
     <token value="ON" labels="O/" valType="SMILES">oxime</token>
     <token value="SN" labels="S/" valType="SMILES">thioxime</token>
@@ -36,14 +36,14 @@
     <token value="[Te|2]" labels="none" valType="SMILES">telluride</token>
   </tokenList>
 
-  <tokenList tagname="functionalClass" type="functionalClass"  symbol="í">
+  <tokenList tagname="functionalClass" type="functionalClass"  symbol="¿">
     <token value="acetal">acetal</token>
     <token value="ketal">ketal</token>
     <token value="hemiacetal">hemiacetal</token>
     <token value="hemiketal">hemiketal</token>
   </tokenList>
 
-  <tokenList tagname="functionalGroup" type="functionalClass" subType="anhydride" symbol="Ü">
+  <tokenList tagname="functionalGroup" type="functionalClass" subType="anhydride" symbol="¸">
     <token value="O" labels="none" valType="SMILES">anhydride</token>
     <token value="S" labels="none" valType="SMILES">thioanhydride</token>
     <token value="[Se|2]" labels="none" valType="SMILES">selenoanhydride</token>
@@ -54,7 +54,7 @@
     <token value="[Te|2][Te|2]" labels="none" valType="SMILES">ditelluroperoxyanhydride</token>
   </tokenList>
 
-  <tokenList tagname="functionalModifier" symbol="ù">
+  <tokenList tagname="functionalModifier" symbol="µ">
     <token value="oligo">oligo</token>
     <token value="poly">poly</token>
   </tokenList>
@@ -62,7 +62,7 @@
 <!--The functional groups simply involve connecting said group to a radical on the provided group
 The standalone functionalgroups are alternatively valid as groups in their own right
 For these groups the charge on the first atom will be increased by 1 if they are used as a functional group-->
-  <tokenList tagname="functionalGroup" type="monoValentGroup" symbol="ô">
+  <tokenList tagname="functionalGroup" type="monoValentGroup" symbol="²">
     <token value="O" labels="none" valType="SMILES">alcohol</token>
     <token value="[O-]" labels="none" valType="SMILES">alcoholate</token>
     <token value="S" labels="none" valType="SMILES">mercaptan</token>
@@ -70,7 +70,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="S" labels="none" valType="SMILES">thiol</token>
   </tokenList>
 
-  <tokenList tagname="functionalGroup" type="diValentGroup" symbol="ö">
+  <tokenList tagname="functionalGroup" type="diValentGroup" symbol="³">
     <token value="O" labels="none" valType="SMILES">ether</token>
     <token value="C=O" labels="none" valType="SMILES">ketone</token>
     <token value="C(=O)C(=O)-" labels="none" valType="SMILES">diketone</token>
@@ -109,7 +109,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="C=S" labels="none" valType="SMILES">thioketone</token>
   </tokenList>
 
-  <tokenList tagname="functionalGroup" type="monoValentStandaloneGroup" symbol="ò">
+  <tokenList tagname="functionalGroup" type="monoValentStandaloneGroup" symbol="´">
     <token value="[N-]=[N+]=[N-]" labels="none" valType="SMILES">azide</token>
     <token value="[Br-]" labels="none" valType="SMILES">bromide</token>
     <token value="[Cl-]" labels="none" valType="SMILES">chloride</token>

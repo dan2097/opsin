@@ -8,7 +8,7 @@
 <!--NOTE that unlocanted substitution attempts atoms in the order of the SMILES hence why single bonded O is listed first. A double bonded O replaced by sulfur could be substituted onto! -->
 
  <!--This is the set of acids in which yl denotes an acyl (oyl will be tolerated)-->
-  <tokenList tagname="group" type="nonCarboxylicAcid" subType="ylForAcyl" symbol="Ö">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="ylForAcyl" symbol="·">
     <token value="[As](O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsor</token>
     <token value="[As](O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsen</token><!--deprecated-->
     <token value="[N+](O)(O)(O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes"  acceptsAdditiveBonds="yes">azor</token>
@@ -31,7 +31,7 @@
   </tokenList>
 
   <!--This is the set of acids in which oyl denotes an acyl (yl is unparsable)-->
-  <tokenList tagname="group" type="nonCarboxylicAcid" subType="ylForNothing" symbol="Ö">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="ylForNothing" symbol="·">
     <token value="[AsH2](O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes">arsin</token>
     <token value="[AsH](O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arson</token>
     <token value="[NH2+](O)[O-]" labels="none" valType="SMILES" usableAsAJoiner="yes">azin</token>
@@ -44,7 +44,7 @@
   </tokenList>
 
  <!--These two sets of acids do not have their acyl groups named as derivatives of the acid-->
-  <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="ƒ">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="½">
 <!--these form preferred IUPAC names-->
     <token value="[As](=O)(=O)O" labels="none" valType="SMILES">arsenen</token><!--CAS only-->
     <token value="B(O)(O)O" labels="none" valType="SMILES">bor</token>
@@ -109,7 +109,7 @@
 
   </tokenList>
 
-  <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="ƒ">
+  <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="½">
 <!--trivial names -->
     <token value="[As](O)(=O)(C)C" labels="none" valType="SMILES">cacodyl</token>
 		<token value="S(=O)(=O)(O)CCS(=O)(=O)O" labels="////1/2////" valType="SMILES" suffixAppliesTo="1,7">ethion</token>
@@ -287,7 +287,7 @@
   <!--This is the limiting set of chacolgen acid stems.
   These differ from the  more commonly used chalcogen stems e.g. sulfuric in that they can be used to unambiguously form acyl groups
   However the rules for doing so are subtly different than for normal acids hence the need for a different type-->
-  <tokenList tagname="group" type="chalcogenAcidStem" subType="none" symbol="ñ">
+  <tokenList tagname="group" type="chalcogenAcidStem" subType="none" symbol="Â">
     <token value="S(=O)(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfon</token>
     <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfin</token>
     <token value="S(=O)" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thion</token>

@@ -3,7 +3,7 @@
 <tokenLists>
 <!--SMILES have been written such that @ indicates the group is on the right and @@ on the left in a fischer projection
 OPSIN's code, however, is written such as to not assume that this is the case-->
-	<tokenList tagname="group" type="carbohydrateStem" subType="carbohydrate" symbol="├">
+	<tokenList tagname="group" type="carbohydrateStem" subType="carbohydrate" symbol="á">
 		<!--aldoses -->
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">glycero</token>
 
@@ -39,7 +39,7 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">mannoheptulo</token>
 	</tokenList>
 
-	<tokenList tagname="carbohydrateRingSize" symbol="─">
+	<tokenList tagname="carbohydrateRingSize" symbol="ã">
 		<token value="3">oxirose</token>
 		<token value="4">oxetose</token>
 		<token value="5">furanose</token>
@@ -49,7 +49,7 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 	</tokenList>
 
 	<!--all possible configurations of stereocentres for carbohydrates with 1-4 stereocentres (l/r for position on a fischer projection)-->
-	<tokenList tagname="stereoChemistry" type="carbohydrateConfigurationalPrefix" symbol="┬">
+	<tokenList tagname="stereoChemistry" type="carbohydrateConfigurationalPrefix" symbol="à">
 		<token value="r">glycero</token>
 
 		<token value="r/r">erythro</token>
@@ -71,7 +71,7 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 	</tokenList>
 
 <!--These are all D sugars and would have all groups pointing to the right on a fischer projection. They are used in combination with the above carbohydrateConfigurationalPrefixes -->
-	<tokenList tagname="group" type="carbohydrateChainLength" subType="carbohydrate" symbol="┼">
+	<tokenList tagname="group" type="carbohydrateChainLength" subType="carbohydrate" symbol="ä">
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">triose</token>
 		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">tetrose</token>
 		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">pentose</token>
@@ -88,7 +88,7 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14//15//16/" valType="SMILES">hexadecose</token>
 	</tokenList>
 
-	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="└">
+	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="Þ">
 			<!--aldoses-->
 			<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrose</token>
 			<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">threose</token>

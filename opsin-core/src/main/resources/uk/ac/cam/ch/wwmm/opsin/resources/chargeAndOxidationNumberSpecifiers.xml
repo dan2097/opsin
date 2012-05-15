@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <tokenLists>
-  <tokenList tagname="chargeSpecifier" symbol="░">
+  <tokenList tagname="chargeSpecifier" symbol="Î">
     <token value="1">(1+)</token>
     <token value="2">(2+)</token>
     <token value="3">(3+)</token>
@@ -38,7 +38,7 @@
     <token value="-8">(8-)</token>
     <token value="-9">(9-)</token>
   </tokenList>
-  <tokenList tagname="oxidationNumberSpecifier" symbol="░">
+  <tokenList tagname="oxidationNumberSpecifier" symbol="Î">
     <token value="0">(0)</token>
     <token value="1">(i)</token>
     <token value="2">(ii)</token>
