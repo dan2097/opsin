@@ -3,8 +3,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,7 +76,7 @@ class ReverseParseRules {
 		startingAS.tokens = new ArrayList<String>();
 		startingAS.untokenisedChemicalName = chemicalWord;
 		startingAS.untokenisedChemicalNameLowerCase = chemicalWord.toLowerCase();
-		Stack<AnnotatorState> asStack = new Stack<AnnotatorState>();
+		LinkedList<AnnotatorState> asStack = new LinkedList<AnnotatorState>();
 		asStack.add(startingAS);
 
 		int wordLengthRemainingOnLastSuccessfulAnnotations = chemicalWord.length();
@@ -90,7 +90,7 @@ class ReverseParseRules {
 		longestAnnotation.untokenisedChemicalNameLowerCase = chemicalWord.toLowerCase();
 		int stateSymbolsSize = stateSymbols.length;
 		while (!asStack.isEmpty()) {
-			AnnotatorState as = asStack.pop();
+			AnnotatorState as = asStack.removeFirst();
 			String untokenisedChemicalNameLowerCase = as.untokenisedChemicalNameLowerCase;
 			String untokenisedChemicalName = as.untokenisedChemicalName;
 			int wordLength = untokenisedChemicalNameLowerCase.length();
