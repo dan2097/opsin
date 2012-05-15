@@ -8,7 +8,7 @@
       <token value="3">yn</token>
   </tokenList>
 
-  <tokenList tagname="unsaturator" symbol="à">
+  <tokenList tagname="unsaturator" symbol="¤">
       <token value="1" locant="1">ane</token>
       <token value="1" locant="1">an</token>
   </tokenList>

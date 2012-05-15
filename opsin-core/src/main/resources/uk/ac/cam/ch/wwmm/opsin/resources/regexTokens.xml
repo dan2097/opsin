@@ -37,10 +37,10 @@
   <regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)?)"/>
   <regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
   <regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
-  <regexToken regex="(%locant%,)*%locant%-?" symbol="É" type="bracketedLocant" tagname="locant" determinise="yes" />
+  <regexToken regex="(%locant%,)*%locant%-?" symbol="¯" type="bracketedLocant" tagname="locant" determinise="yes" />
 
   <regex name="%lambdaConvention%" regex="(%locantTypes%?[lL][aA][mM][bB][dD][aA](%superScriptedNumber%|[0-9]+))" />
-  <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="Ç" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
+  <regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="¡" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
   <regexToken regex="[sS][pP][iI][rR][oO]-?%openBracket%[1-9][0-9]*([\.,][0-9]+%superScriptedNumber%?)+%closeBracket%-?" symbol="S" tagname="spiro" determinise="yes"/>
 
   <regex name="%superScriptedVonBaeyerDescriptor%" regex="([\.,][0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|[0-9]+,[0-9]+))"/>
@@ -52,18 +52,18 @@
   <regex name="%omittedLocantAmbiguousOrderFusion%" regex="(%locant%(,%locant%)+)"/><!--note that something like [4,5] can be a first or higher order fusion dependant on context!-->
   <regex name="%higherOrderFusion%" regex="(%locant%(,%locant%)+:%locant%(,%locant%)+)"/>
   <regexToken regex="%openBracket%(%firstOrderFusion%|%omittedLocantFirstOrderFusion%|%omittedLocantAmbiguousOrderFusion%|%higherOrderFusion%)%closeBracket%" symbol="F" tagname="fusion" determinise="yes"/>
-  <regexToken regex="%openBracket%((%firstOrderFusion%(:%firstOrderFusion%)+)|(%omittedLocantFirstOrderFusion%(,%omittedLocantFirstOrderFusion%)+)|(%higherOrderFusion%(;%higherOrderFusion%)+)|(%omittedLocantAmbiguousOrderFusion%(:%omittedLocantAmbiguousOrderFusion%)+))%closeBracket%" symbol="Ä" tagname="fusion" determinise="yes"/><!--e.g. dithieno[2',3':3,4;2",3":6,7]-->
+  <regexToken regex="%openBracket%((%firstOrderFusion%(:%firstOrderFusion%)+)|(%omittedLocantFirstOrderFusion%(,%omittedLocantFirstOrderFusion%)+)|(%higherOrderFusion%(;%higherOrderFusion%)+)|(%omittedLocantAmbiguousOrderFusion%(:%omittedLocantAmbiguousOrderFusion%)+))%closeBracket%" symbol="­" tagname="fusion" determinise="yes"/><!--e.g. dithieno[2',3':3,4;2",3":6,7]-->
   <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-|%openBracket%%indicatedHydrogen%(,%indicatedHydrogen%)*%closeBracket%-?" symbol="e" tagname="indicatedHydrogen" determinise="yes"/>
   <regexToken regex="[isn]-" symbol="n" tagname="alkaneStemModifier" determinise="yes"/><!--case sensitive so must be a regex-->
   <regexToken regex="([oO][rR][tT][hH][oO]|[mM][eE][tT][aA]|[pP][aA][rR][aA])-?|(o|[mM]|[p])-" symbol="O" tagname="orthoMetaPara" determinise="yes"/><!-- O- and P- means oxygen and phosphorus locant-->
   <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
-  <regexToken regex="[EZz]" symbol="Ã" type="EorZ" tagname="stereoChemistry" determinise="yes" /><!--unbracketted E or Z for stereochemistry, e intentionally disabled to avoid ambiguity with the end of tokens where e is optional-->
+  <regexToken regex="[EZz]" symbol="æ" type="EorZ" tagname="stereoChemistry" determinise="yes" /><!--unbracketted E or Z for stereochemistry, e intentionally disabled to avoid ambiguity with the end of tokens where e is optional-->
   <regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
-  <regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¢" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
+  <regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¹" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
   <regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR|[cC][iI][sS]|[tT][rR][aA][nN][sS])|%alphaBetaLocant%)"/>
   <regexToken regex="(rel-|rac-)?%openBracket%%stereochemPossibilities%([,-]%stereochemPossibilities%)*%closeBracket%-?" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
-  <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="¼" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
-  <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="¿" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
-  <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%'+(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="½" tagname="spiroLocant" determinise="yes"/>
-  <regexToken regex="%openBracket%([+\-]|[+][,\\/]?-|-[,\\/]?[+])%closeBracket%-?" symbol="ª" tagname="lightRotation" ignoreWhenWritingXML="yes" determinise="yes"/>
+  <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="Ê" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
+  <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="Å" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
+  <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%'+(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="É" tagname="spiroLocant" determinise="yes"/>
+  <regexToken regex="%openBracket%([+\-]|[+][,\\/]?-|-[,\\/]?[+])%closeBracket%-?" symbol="Ä" tagname="lightRotation" ignoreWhenWritingXML="yes" determinise="yes"/>
 </regexTokenList>

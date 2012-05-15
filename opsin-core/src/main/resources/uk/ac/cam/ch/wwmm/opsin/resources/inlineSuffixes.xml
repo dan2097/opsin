@@ -45,7 +45,7 @@
     <token value="ylidyne">ylidyn</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="ÿ"><!--inline suffixes allowing infixes -->
+  <tokenList tagname="suffix" type="inline" symbol="¶"><!--inline suffixes allowing infixes -->
     <token value="amido">amido</token>
     <token value="amido">amidyl</token>
     <token value="carbonyl">carbonyl</token>
@@ -53,17 +53,17 @@
     <token value="oyl">oyl</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="╜"><!--inline suffixes allowing infixes and suffix prefixes-->
+  <tokenList tagname="suffix" type="inline" symbol="Û"><!--inline suffixes allowing infixes and suffix prefixes-->
     <token value="amido">amido</token>
     <token value="amido">amidyl</token>
     <token value="oyl">oyl</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="¥"><!--used for amino acids-->
+  <tokenList tagname="suffix" type="inline" symbol="»"><!--used for amino acids-->
     <token value="aminoAcidYl">yl</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="╣"><!--ylene-->
+  <tokenList tagname="suffix" type="inline" symbol="×"><!--ylene-->
 <!--special cased to be the same as diyl-->
     <token value="yl" additionalValue="yl">ylene</token>
     <token value="yl" additionalValue="yl">ylen</token>

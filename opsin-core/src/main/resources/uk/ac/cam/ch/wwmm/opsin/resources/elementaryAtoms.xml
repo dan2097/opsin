@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
-<tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="»">
+<tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="Í">
 	<token value="[Li]" commonOxidationStatesAndMax="1:1" labels="none" valType="SMILES">lithium</token>
 	<token value="[Na]" commonOxidationStatesAndMax="1:1" labels="none" valType="SMILES">sodium</token>
 	<token value="[Na]" commonOxidationStatesAndMax="1:1" labels="none" valType="SMILES">natrium</token>

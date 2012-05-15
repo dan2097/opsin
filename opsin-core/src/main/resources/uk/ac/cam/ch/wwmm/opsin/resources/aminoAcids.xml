@@ -8,7 +8,7 @@
 <!-- L-/D-/DL- etc. are handled by the grammar-->
 <!-- Make sure that the substitutable N is the first atom in the SMILES and do not include the modifiable acid but note its position using suffixAppliesTo-->
 <tokenLists>
-  <tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="ë" >
+  <tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="¨" >
     <token labels="/2,alpha/3,beta/1" valType="SMILES" value="N[C@@H](C)C" suffixAppliesTo="4">alan</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1" valType="SMILES" value="N[C@@H](CCCNC(N)=N)C" suffixAppliesTo="10">argin</token>
     <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CC(N)=O)C" suffixAppliesTo="7">asparag</token>
@@ -90,11 +90,11 @@
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" valType="SMILES" value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" suffixAppliesTo="17">saccharop</token>
   </tokenList>
 
-  <tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="è" ><!--why isn't this tryptophine!!!!-->
+  <tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="©" ><!--why isn't this tryptophine!!!!-->
     <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](Cc1c[nH]c2ccccc12)C" suffixAppliesTo="13">tryptoph</token>
   </tokenList>
 
-  <tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ï" >
+  <tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ª" >
     <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5,4">aspart</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6,5">glutam</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CS(=O)(O)=O)C" suffixAppliesTo="8">cyste</token>
@@ -137,7 +137,7 @@
     <token labels="/2,alpha/3,beta//1/" valType="SMILES" value="N[C@H](CS)C=O" outIDs="4,5">d-half-cystyl</token>
   </tokenList>
 
-  <tokenList tagname="group" type="aminoAcid" subType="simpleGroup" symbol="└"><!--semi trivial amino acids (can be implicitly D/L prefixed)-->
+  <tokenList tagname="group" type="aminoAcid" subType="simpleGroup" symbol="Þ"><!--semi trivial amino acids (can be implicitly D/L prefixed)-->
     <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@@H](CC(=O)[O-])C(=O)[O-]" functionalIDs="6,9">aspartate(2-)</token>
     <token labels="/2,alpha/3,beta/4,gamma///1//" valType="SMILES" value="N[C@@H](CC(=O)O)C(=O)[O-]" functionalIDs="9">aspartate(1-)</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1//" valType="SMILES" value="N[C@@H](CCC(=O)[O-])C(=O)[O-]" functionalIDs="7,10">glutamate(2-)</token>

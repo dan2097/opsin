@@ -361,7 +361,7 @@
 	</tokenList>
 
   <!--groups that must be substituted-->
-	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="║">
+	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="Ø">
 		<token value="N" labels="none" valType="SMILES">amin</token>
 		<token value="N" labels="none" valType="SMILES">amine</token>
 		<token value="[NH4+]" labels="none" valType="SMILES">aminium</token>

@@ -123,7 +123,7 @@
 
 <!--allowed to prefixed by carbo(x)/sulfon etc. e.g. carboxamide, sulfonamide etc.-->
 <!--these suffixes may have a euphonic o in front of them-->
-  <tokenList tagname="suffix" type="root" subType="terminal" symbol="å">
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="¥">
     <token value="aldehyde">aldehyde</token>
     <token value="aldehyde">aldehyd</token>
     <token value="amide">amide</token>

@@ -2,7 +2,7 @@
 <!-- See the DTD for more details -->
 <!-- value = the obvious -->
 <tokenLists>
-  <tokenList tagname="multiplier" type="basic" symbol="╖">
+  <tokenList tagname="multiplier" type="basic" symbol="Õ">
     <token value="1">mono</token>
   </tokenList>
 
