@@ -244,6 +244,8 @@ public final class StringTools {
             case '\u2015': return "-";
             case '\u2212': return "-";
             
+            case '\uff0c': return ",";//full width comma
+            
             case '\u00A0': return " ";//Non-breaking spaces
             case '\u2007': return " ";
             case '\u202F': return " ";
