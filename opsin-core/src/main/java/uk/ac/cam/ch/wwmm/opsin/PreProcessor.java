@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 class PreProcessor {
 	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
 	private static final Pattern MATCH_SULPH = Pattern.compile("sulph", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MATCH_DOT_GREEK_DOT = Pattern.compile("\\.(alpha|beta|gamma|delta|epsilon|zeta|eta|omega)\\.", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MATCH_HTML_ENTITY_GREEK = Pattern.compile("&(alpha|beta|gamma|delta|epsilon|zeta|eta|omega);", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MATCH_DOT_GREEK_DOT = Pattern.compile("\\.(alpha|beta|gamma|delta|epsilon|zeta|eta|lambda|omega)\\.", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MATCH_HTML_ENTITY_GREEK = Pattern.compile("&(alpha|beta|gamma|delta|epsilon|zeta|eta|lambda|omega);", Pattern.CASE_INSENSITIVE);
 	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
 
 	static {
