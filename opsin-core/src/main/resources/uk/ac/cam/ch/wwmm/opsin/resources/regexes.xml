@@ -101,7 +101,7 @@ does not define a CFG.
   <regex name="%ylamine%" value="Ã"/>
   <regex name="%lightRotation%" value="Ä"/>
   <regex name="%symPolycylicSpiro%" value="Å"/>
-
+  <regex name="%aminoAcidEndsInCompulsoryIne%" value="Æ"/>
   <regex name="%spiro%" value="Ç"/>
   <regex name="%a%" value="È"/>
   <regex name="%spiroLocant%" value="É"/>
@@ -134,9 +134,10 @@ does not define a CFG.
 	<regex name="%carbohydrateChain%" value="ä"/>
 	<regex name="%epoxy%" value="å"/>
 	<regex name="%unbrackettedEZ%" value="æ"/>
+  <!--next would be Alt 0231-->
+
   <regex name="%endOfSubstituent%" value="é"/>
   <regex name="%endOfFunctionalGroup%" value="û"/>
-  <!--next would be Æ-->
 
 <!-- composite regexes-->
 
@@ -196,13 +197,13 @@ does not define a CFG.
   <regex name="%alkYlene%" value = "((%alkaneStemSystematic%%unsaturationBlock%?|%alkaneStemTrivial%%unsaturationBlock%)%optLocantGroupNoOMP%%ylene%)"/>
   <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
 
-  <regex name="%aminoMonoAcid%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%|%aminoAcidEndsInAn%%ane%))"/>
-  <regex name="%aminoAcidOptionalIne%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%))"/>
+  <regex name="%aminoMonoAcid%" value="(%dlStereochemistryPrefix%?((%aminoAcidEndsInIne%|%aminoAcidEndsInCompulsoryIne%)%ine%|%aminoAcidEndsInAn%%ane%))"/>
+  <regex name="%aminoAcidSubstituentStem%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInCompulsoryIne%%ine%|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%))"/>
   <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|(%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)(%infixedSuffix%|%rootSuffix%))"/>
 
   <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locant%%aminoAcidYl%)"/>
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
-  <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidOptionalIne%(%infixedInlineSuffix%|%inlineSuffix%))"/>
+  <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidSubstituentStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
   <regex name="%systematicAcyclicCarbohydrate%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%carbohydrateChain%)"/>
 
