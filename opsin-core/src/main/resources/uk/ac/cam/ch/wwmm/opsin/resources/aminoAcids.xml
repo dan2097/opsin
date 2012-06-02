@@ -17,7 +17,6 @@
     <token value="N[C@@H](CCSC[C@@H](C)N)C" labels="none" valType="SMILES" suffixAppliesTo="8,10">cystathion</token>
     <token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">isoglutam</token>
     <token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">iso-glutam</token>
-		<token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">alpha-glutam</token>
     <token labels="/2,alpha/1" valType="SMILES" value="NCC" suffixAppliesTo="3">glyc</token>
     <token labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" valType="SMILES" value="N[C@@H](Cc1c[nH]cn1)C" suffixAppliesTo="9">histid</token>
     <token labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H]([C@@H](C)CC)C" suffixAppliesTo="7">isoleuc</token>
@@ -88,6 +87,7 @@
 <!--These amino acids ends in yl even when forming acyl groups as otherwise they cause ambiguity with the acyls from the acid version
 e.g. glutamyl relates to glutamic acid not glutamine-->
   <tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="Æ" >
+		<token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">alpha-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">glutam</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](CS)C" suffixAppliesTo="5">cyste</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">homocyste</token>
