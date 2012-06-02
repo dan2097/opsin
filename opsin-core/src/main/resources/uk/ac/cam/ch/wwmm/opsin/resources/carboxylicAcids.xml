@@ -207,7 +207,6 @@
     <token value="CC(O)C(C)CC" suffixAppliesTo="1,5,7" labels="none" valType="SMILES">isocitr</token><!--unknown-->
     <token value="CC(CO)CC" labels="none" valType="SMILES" suffixAppliesTo="1,6">itamal</token><!--unknown-->
     <token value="CC(CO)(O)CC" labels="none" valType="SMILES" suffixAppliesTo="1,7">itatartar</token><!--unknown-->
-    <token value="CC(O)CC(C)C" labels="none" valType="SMILES">leuc</token><!--clashes with amino acid definition-->
     <token value="CCCC(=O)C" labels="none" valType="SMILES">levulin</token><!--unknown-->
 		<token value="c1c(O)cc(C)cc1" labels="none" valType="SMILES">m-homosalicyl</token><!--unknown-->
 		<token value="c1c(O)cc(C)cc1" labels="none" valType="SMILES">meta-homosalicyl</token><!--unknown-->
@@ -263,4 +262,11 @@
     <token value="CC(CCC)CCC" labels="none" valType="SMILES">valpr</token><!--unknown-->
   </tokenList>
 
+  <tokenList tagname="group" type="acidStem" subType="ylForNothing" symbol="½">
+		<!--avoids ambiguity with leucine radicals; this token class disallows any radical forming suffix-->
+    <token value="CC(O)CC(C)C" labels="none" valType="SMILES">leuc</token>
+    <token value="CC(O)CC(C)C" labels="none" valType="SMILES">dl-leuc</token>
+    <token value="C[C@H](O)CC(C)C" labels="none" valType="SMILES">d-leuc</token>
+    <token value="C[C@@H](O)CC(C)C" labels="none" valType="SMILES">l-leuc</token>
+  </tokenList>
 </tokenLists>

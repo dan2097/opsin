@@ -2119,11 +2119,22 @@ class ComponentGenerator {
 			}
 			
 		}
-		else if (groupValue.equals("cyste")){//ambiguity between cysteine and cysteic acid
-			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDININE_SUBTYPE_VAL)){//cysteine
-				Element ine = (Element) XOMTools.getNextSibling(group);
-				if (!ine.getAttributeValue(VALUE_ATR).equals("ine")){
-					throw new ComponentGenerationException("This is a cysteic acid derivative, not a cysteine derivative");
+		else if (groupValue.equals("aspart") || groupValue.equals("glutam")){//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
+			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDINIC_SUBTYPE_VAL)){
+				Element yl = (Element) XOMTools.getNextSibling(group);
+				if (yl.getAttributeValue(VALUE_ATR).equals("yl")){
+					group.removeAttribute(group.getAttribute(SUFFIXAPPLIESTO_ATR));
+					if (groupValue.equals("aspart")){
+						group.getAttribute("labels").setValue("/2,alpha/3,beta/4,gamma///1/");
+						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CC(O)=O)C=O");
+						group.addAttribute(new Attribute(OUTIDS_ATR, "7"));
+					}
+					else {
+						group.getAttribute("labels").setValue("/2,alpha/3,beta/4,gamma/5,delta///1/");
+						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CCC(O)=O)C=O");
+						group.addAttribute(new Attribute(OUTIDS_ATR, "8"));
+					}
+					yl.detach();
 				}
 			}
 		}
