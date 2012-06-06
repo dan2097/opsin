@@ -503,13 +503,19 @@ class ComponentGenerator {
 				}
 			}
 			alkaneStemModifier.detach();
-			if (type.equals("normal")){
-				continue;//do nothing
-			}
 			int chainLength = alkane.getAttributeValue(VALUE_ATR).length();
-			boolean suffixPresent = subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
 			String smiles;
-			if (type.equals("tert")){
+			if (type.equals("normal")){
+				//normal behaviour is default so don't need to do anything
+				//n-methyl and n-ethyl contain redundant information and are probably intended to mean N-methyl/N-ethyl
+				if ((chainLength==1 || chainLength ==2) && alkaneStemModifier.getValue().equals("n-")){
+					Element locant = new Element(LOCANT_EL);
+					locant.appendChild("N");
+					XOMTools.insertBefore(alkane, locant);
+				}
+				continue;
+			}
+			else if (type.equals("tert")){
 				if (chainLength <4){
 					throw new ComponentGenerationException("ChainLength to small for tert modifier, required minLength 4. Found: " +chainLength);
 				}
@@ -527,6 +533,7 @@ class ComponentGenerator {
 				if (chainLength <3){
 					throw new ComponentGenerationException("ChainLength to small for iso modifier, required minLength 3. Found: " +chainLength);
 				}
+				boolean suffixPresent = subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
 				if (chainLength==3 && !suffixPresent){
 					throw new ComponentGenerationException("iso has no meaning without a suffix on an alkane chain of length 3");
 				}
@@ -536,6 +543,7 @@ class ComponentGenerator {
 				if (chainLength <3){
 					throw new ComponentGenerationException("ChainLength to small for sec modifier, required minLength 3. Found: " +chainLength);
 				}
+				boolean suffixPresent = subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
 				if (!suffixPresent){
 					throw new ComponentGenerationException("sec has no meaning without a suffix on an alkane chain");
 				}
