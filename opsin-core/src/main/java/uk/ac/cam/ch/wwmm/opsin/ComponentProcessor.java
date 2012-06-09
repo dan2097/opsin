@@ -1664,9 +1664,8 @@ class ComponentProcessor {
 				}
 			}
 		}
-		if (group.getAttribute(SUFFIXAPPLIESTOBYDEFAULT_ATR)!=null){
-			applyDefaultLocantToSuffixIfPresent(group.getAttributeValue(SUFFIXAPPLIESTOBYDEFAULT_ATR), group, suffixableFragment);
-		}
+		applyDefaultLocantsToSuffixesIfApplicable(group, suffixableFragment);
+
 		List<Fragment> suffixFragments =resolveGroupAddingSuffixes(suffixes, suffixableFragment);
 		state.xmlSuffixMap.put(group, suffixFragments);
 		boolean suffixesResolved =false;
@@ -1724,14 +1723,20 @@ class ComponentProcessor {
 		}
 	}
 
-
-	private void applyDefaultLocantToSuffixIfPresent(String attributeValue, Element group, Fragment suffixableFragment)  {
-		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
-		if (suffix !=null){
-			suffix.addAttribute(new Attribute(DEFAULTLOCANTID_ATR, Integer.toString(suffixableFragment.getIdOfFirstAtom() + Integer.parseInt(attributeValue) -1)));
+	private void applyDefaultLocantsToSuffixesIfApplicable(Element group, Fragment suffixableFragment)  {
+		String defaultLocantsAtrValue = group.getAttributeValue(SUFFIXAPPLIESTOBYDEFAULT_ATR);
+		if (defaultLocantsAtrValue != null){
+			String[] suffixInstructions = MATCH_COMMA.split(defaultLocantsAtrValue);
+			int firstIdInFragment = suffixableFragment.getIdOfFirstAtom();
+			Element suffix = OpsinTools.getNextNonChargeSuffix(group);
+			for (String suffixInstruction : suffixInstructions) {
+				if (suffix !=null){
+					suffix.addAttribute(new Attribute(DEFAULTLOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstruction) -1)));
+					suffix = OpsinTools.getNextNonChargeSuffix(suffix);
+				}
+			}
 		}
 	}
-
 
 	/**
 	 * Processes the effects of the suffixAppliesTo attribute
