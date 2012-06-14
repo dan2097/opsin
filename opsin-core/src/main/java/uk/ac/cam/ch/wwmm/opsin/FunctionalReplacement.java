@@ -354,7 +354,9 @@ class FunctionalReplacement {
 					moveObsoleteOutAtoms(atomToUse, replacementFrag);//if the replaced atom was an outatom the fragments outatom list need to be corrected
 					if (nitrido){
 						atomToUse.getFirstBond().setOrder(3);
-						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
+						Atom removedHydroxy = singleBondedOxygen.removeFirst();
+						state.fragManager.removeAtomAndAssociatedBonds(removedHydroxy);
+						removeAssociatedFunctionalAtom(removedHydroxy);
 					}
 					state.fragManager.incorporateFragment(replacementFrag, atomToUse.getFrag());
 					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToUse, atomThatWillReplaceOxygen);
@@ -801,7 +803,9 @@ class FunctionalReplacement {
 					Fragment replacementFrag = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getType(), NONE_LABELS_VAL);
 					if (outValency ==3){//special case for nitrido
 						atomToReplace.getFirstBond().setOrder(3);
-						state.fragManager.removeAtomAndAssociatedBonds(singleBondedOxygen.removeFirst());
+						Atom removedHydroxy = singleBondedOxygen.removeFirst();
+						state.fragManager.removeAtomAndAssociatedBonds(removedHydroxy);
+						removeAssociatedFunctionalAtom(removedHydroxy);
 					}
 					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToReplace, replacementFrag.getFirstAtom());
 					if (outValency ==1){
@@ -936,7 +940,7 @@ class FunctionalReplacement {
 		}
 	}
 	
-	private static void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws ComponentGenerationException {
+	private static void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws StructureBuildingException {
 		List<FunctionalAtom> functionalAtoms = atomWithFunctionalAtom.getFrag().getFunctionalAtoms();
 		for (int j = functionalAtoms.size()-1; j >=0; j--) {
 			FunctionalAtom functionalAtom = functionalAtoms.get(j);
@@ -945,7 +949,7 @@ class FunctionalReplacement {
 				return;
 			}
 		}
-		throw new ComponentGenerationException("OPSIN bug: Unable to find associated functionalAtom");
+		throw new StructureBuildingException("OPSIN bug: Unable to find associated functionalAtom");
 	}
 	
 
