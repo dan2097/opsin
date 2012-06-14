@@ -5,6 +5,7 @@
 	<!--cyclic structures generally should be under arylGroups if they accept multiple suffixes or under simpleCyclicGroups if trivial
 	If you do not want them to support indicated hydrogen put them here-->
 		<token value="OC(C(C)=O)C" labels="none" valType="SMILES">acetoin</token>
+		<token value="CC(C#N)(O)C" labels="none" valType="SMILES">acetone cyanohydrin</token>
 		<token value="CC(C)=NO" labels="none" valType="SMILES">acetoxime</token>
 		<token value="CC(=O)[O+]" labels="2/1//" valType="SMILES">acetoxylium</token>
 		<token value="[C-]#[C-]" labels="none" valType="SMILES">acetylide</token>
@@ -68,8 +69,6 @@
 		<token value="ClC(C(O)O)(Cl)Cl" labels="none" valType="SMILES">chloralhydrate</token>
 		<token value="NCl" labels="none" valType="SMILES">chloramine</token>
 		<token value="NCl" labels="none" valType="SMILES">chloramide</token>
-		<token value="CC(CC(C)(N)C)=O" labels="none" valType="SMILES">diacetonamine</token>
-		<token value="CC(CC(C)(O)C)=O" labels="none" valType="SMILES">diacetone alcohol</token>
 		<token value="N(Cl)Cl" labels="none" valType="SMILES">dichloramine</token>
 		<token value="N(Cl)Cl" labels="none" valType="SMILES">chlorimide</token>
 		<token value="C(Cl)(Cl)(Cl)" labels="none" valType="SMILES">chloroform</token>
@@ -87,9 +86,15 @@
 		<token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanicacid</token>
 		<token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic acid</token>
 		<token value="N#CC#N" labels="none" valType="SMILES">cyanogen</token>
+		<token value="N#CBr" labels="none" valType="SMILES">cyanogen bromide</token>
+		<token value="N#CCl" labels="none" valType="SMILES">cyanogen chloride</token>
+		<token value="N#CF" labels="none" valType="SMILES">cyanogen fluoride</token>
+		<token value="N#CI" labels="none" valType="SMILES">cyanogen iodide</token>
 		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">cyanuric acid</token>
 		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">cyanuricacid</token>
 		<token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
+		<token value="CC(CC(C)(N)C)=O" labels="none" valType="SMILES">diacetonamine</token>
+		<token value="CC(CC(C)(O)C)=O" labels="none" valType="SMILES">diacetone alcohol</token>
 		<token value="O=P(OC)(OC=C(Cl)Cl)OC" labels="none" valType="SMILES">dichlorvos</token>
 		<token value="N#CC#N" labels="none" valType="SMILES">dicyan</token>
 		<token value="[N-](C#N)C#N" labels="none" valType="SMILES">dicyanamide</token>
