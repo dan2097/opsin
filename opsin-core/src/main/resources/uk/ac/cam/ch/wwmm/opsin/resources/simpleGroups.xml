@@ -216,10 +216,22 @@
 		<token value="CC(C)=CC(C=C(C)C)=O" labels="none" valType="SMILES">phorone</token>
 		<token value="C(=O)(Cl)Cl" labels="none" valType="SMILES">phosgene</token>
 		<token value="P(=O)(N)(N)N" labels="none" valType="SMILES" functionalIDs="3,4,5">phosphoramide</token>
+		<token value="P(=O)(Br)(Br)Br" labels="none" valType="SMILES">phosphorus oxybromide</token>
+		<token value="P(=O)(Br)(Br)Br" labels="none" valType="SMILES">phosphorous oxybromide</token><!--variant spelling-->
+		<token value="P(=O)(Br)(Br)Br" labels="none" valType="SMILES">phosphorusoxybromide</token>
+		<token value="P(=O)(Br)(Br)Br" labels="none" valType="SMILES">phosphorousoxybromide</token>
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorus oxychloride</token>
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorous oxychloride</token><!--variant spelling-->
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorusoxychloride</token>
 		<token value="P(=O)(Cl)(Cl)Cl" labels="none" valType="SMILES">phosphorousoxychloride</token>
+		<token value="P(=O)(F)(F)F" labels="none" valType="SMILES">phosphorus oxyfluoride</token>
+		<token value="P(=O)(F)(F)F" labels="none" valType="SMILES">phosphorous oxyfluoride</token><!--variant spelling-->
+		<token value="P(=O)(F)(F)F" labels="none" valType="SMILES">phosphorusoxyfluoride</token>
+		<token value="P(=O)(F)(F)F" labels="none" valType="SMILES">phosphorousoxyfluoride</token>
+		<token value="P(=O)(I)(I)I" labels="none" valType="SMILES">phosphorus oxyiodide</token>
+		<token value="P(=O)(I)(I)I" labels="none" valType="SMILES">phosphorous oxyiodide</token><!--variant spelling-->
+		<token value="P(=O)(I)(I)I" labels="none" valType="SMILES">phosphorusoxyiodide</token>
+		<token value="P(=O)(I)(I)I" labels="none" valType="SMILES">phosphorousoxyiodide</token>
 		<token value="P12(=S)SP3(=S)SP(=S)(S1)SP(=S)(S2)S3" labels="none" valType="SMILES">phosphorus pentasulfide</token>
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO" labels="none" valType="SMILES">phytol</token>
 		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18" valType="SMILES">phytosphingosine</token>
