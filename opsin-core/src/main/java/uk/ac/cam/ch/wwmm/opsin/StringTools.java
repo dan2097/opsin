@@ -244,7 +244,17 @@ public final class StringTools {
             case '\u2015': return "-";
             case '\u2212': return "-";
             
-            case '\uff0c': return ",";//full width comma
+            case '\uff0c': return ",";//full width punctuation
+            case '\uFF1A': return ":";
+            case '\uFF1B': return ";";
+            case '\uFF08': return "(";
+            case '\uFF09': return ")";
+            case '\uFF3B': return "[";
+            case '\uFF3D': return "]";
+            case '\u3010': return "[";
+            case '\u3011': return "]";
+            case '\uFF5B': return "{";
+            case '\uFF5D': return "}";
             
             case '\u00A0': return " ";//Non-breaking spaces
             case '\u2007': return " ";
