@@ -134,9 +134,10 @@ does not define a CFG.
 	<regex name="%carbohydrateChain%" value="ä"/>
 	<regex name="%epoxy%" value="å"/>
 	<regex name="%unbrackettedEZ%" value="æ"/>
-  <!--next would be Alt 0231-->
-
+	<regex name="%functionalSuffixBeforeInlineSuffix%" value="ç"/>
+  <!--Alt 0232 goes here-->
   <regex name="%endOfSubstituent%" value="é"/>
+  <!--next would be Alt 0234-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -159,8 +160,9 @@ does not define a CFG.
   <regex name="%unlocantedInlineSuffixGroup%" value="(%multiplierNoElidedA%?(%infixedInlineSuffix%|%inlineSuffix%|%optionalOpenBracket%%inlineSuffix%%optionalCloseBracket%|%infixedPrefixedInlineSuffix%|(%o%?%infixReplacement%)?%suffixPrefix%%inlineSuffixAllowingPrefixes%|%optionalOpenBracket%(%o%?%infixReplacement%)?%suffixPrefix%%inlineSuffixAllowingPrefixes%%optionalCloseBracket%))"/>
   <regex name="%inlineSuffixGroup%" value="(%hyphen%?(%newLocantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%unlocantedInlineSuffixGroup%)"/>
   <regex name="%repeatableInlineSuffixGroup%" value="(%hyphen%?(%newLocantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%simpleMultiplierGroup%?%repeatableInlineSuffix%)"/>
+  <regex name="%inlineFunctionSuffix%" value="(%optLocantGroup%%multiplier%?%functionalSuffixBeforeInlineSuffix%)"/>
   <regex name="%inlineChargeGroup%" value="(%optLocantGroup%%multiplier%?%inlineChargeSuffix%)"/>
-  <regex name="%inlineEndings%" value="(%inlineChargeGroup%*%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
+  <regex name="%inlineEndings%" value="(%inlineChargeGroup%*%inlineFunctionSuffix%?%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
   <regex name="%unsaturation%" value="(%optLocantGroupNoOMP%?%multiplier%?%unsaturator%)"/>
   <regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
   <regex name="%heteroReplacement%" value="((%newLocantGroupNoStartingHyphen%?%multiplierNotGroup%|(%locant%?|%lambdaConvention%)%multiplierNotGroup%?)%heteroAtom%%hyphen%?)"/>

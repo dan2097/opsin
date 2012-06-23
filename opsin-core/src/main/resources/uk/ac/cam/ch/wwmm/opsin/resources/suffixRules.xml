@@ -310,6 +310,9 @@ sense of this -->
   <rule value="telluronyl">
     <addgroup SMILES="[*][TeH](=O)(=O)" outIDs="2"/>
   </rule>
+  <rule value="thione">
+    <addgroup SMILES="[*]=[S]" ketoneLocant="yes" />
+  </rule>
   <rule value="uide">
     <changecharge charge="-1" protons="1" />
   </rule>
