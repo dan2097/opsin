@@ -152,4 +152,15 @@
     <token value="nitrilium">nitrilium</token>
     <token value="acylium">ylium</token>
   </tokenList>
+
+  <tokenList tagname="suffix" type="root" symbol="ç">
+    <token value="one">one</token>
+    <token value="one">on</token>
+    <token value="selone">selone</token>
+    <token value="selone">selon</token>
+    <token value="tellone">tellone</token>
+    <token value="tellone">tellon</token>
+    <token value="thione">thione</token>
+    <token value="thione">thion</token>
+  </tokenList>
 </tokenLists>

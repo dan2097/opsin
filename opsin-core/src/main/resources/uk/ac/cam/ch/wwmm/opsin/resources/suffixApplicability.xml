@@ -193,6 +193,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="tellurenyl">tellurenyl</suffix>
     <suffix value="tellurinyl">tellurinyl</suffix>
     <suffix value="telluronyl">telluronyl</suffix>
+    <suffix value="thione">thione</suffix>
     <suffix value="uide">uide</suffix>
     <suffix value="yl">yl</suffix>
     <suffix value="ylidene">ylidene</suffix>
