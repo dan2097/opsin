@@ -28,6 +28,7 @@
     <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
     <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelargon</token>
     <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelarg</token>
+    <token value="CC(S)C(S)C" valType="SMILES" labels="1/2//3//4" suffixAppliesTo="1,6">dimercaptosuccin</token>
     <token value="CC#CC" labels="1/2/3/4" valType="SMILES">tetrol</token>
   </tokenList>
 
@@ -85,6 +86,7 @@
     <token value="n1c(C)ccc(C)c1" labels="1/2//3/4/5//6" valType="SMILES" suffixAppliesTo="3,7">isocinchomeron</token>
     <token value="CC(=C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">itacon</token>
     <token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">mal</token>
+    <token value="CC(S)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">thiomal</token>
 		<token value="C/C=C/C=C/C" suffixAppliesTo="1,6" labels="1/2/3/4/5/6" valType="SMILES">mucon</token>
     <token value="N1CC(C)CCC1" labels="1/2/3//4/5/6" valType="SMILES" suffixAppliesTo="4">nipecot</token>
     <token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" valType="SMILES" suffixAppliesTo="3">pipecolin</token>
@@ -237,6 +239,7 @@
     <token value="Cc1c(C)cc(C)c(C)c1" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="1,4,7,9">pyromellit</token><!--unknown-->
     <token value="CC(C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">pyrotartar</token><!--unknown-->
     <token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES" defaultInID="4">salicyl</token><!--c.f. acetylsalicylic acid-->
+    <token value="Cc1c(S)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES" defaultInID="4">thiosalicyl</token>
     <token value="CC=C(C)C" labels="none" valType="SMILES">seneci</token><!--unknown-->
     <token value="CCCCC\C=C/C\C=C/C\C=C/C\C=C/CC" valType="SMILES" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" usableAsAJoiner="yes">stearidon</token>
     <token value="CC(O)C(O)C" suffixAppliesTo="1,6" labels="none" valType="SMILES">tartar</token><!--unknown-->

@@ -121,7 +121,11 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 			<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">sedoheptulose</token>
 			<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">mannoheptulose</token>
 
-			<!--trivial; should these be depicted in ring form?-->
+			<!--trivial-->
+			<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
+			<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
+
+			<!--should these be depicted in ring form?-->
 			<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
 			<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
 			<token value="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
