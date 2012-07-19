@@ -475,5 +475,7 @@
 		<token value="-Br" labels="none" valType="SMILES">perbromo</token>
 		<token value="-Cl" labels="none" valType="SMILES">perchloro</token>
 		<token value="-I" labels="none" valType="SMILES">periodo</token>
+		<token value="-[2H]" labels="none" valType="SMILES">perdeuterio</token>
+		<token value="-[3H]" labels="none" valType="SMILES">pertritio</token>
 	</tokenList>
 </tokenLists>
