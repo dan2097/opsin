@@ -100,6 +100,7 @@
 		<token value="-C#N" labels="none" valType="SMILES">cyanyl</token>
 		<token value="c1(ccccc1)C(=O)Cc2ccccc2" labels="1/2/3/4/5/6///alpha/1'/2'/3'/4'/5'/6'" valType="SMILES" outIDs="9">desyl</token>
 		<token value="-[2H]" valType="SMILES">deuterio</token>
+		<token value="-[2H]" valType="SMILES">deutero</token>
 		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
 		<token value="-c1c(C)c(C)cc(C)c1C" labels="none" valType="SMILES">duryl</token>
