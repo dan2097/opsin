@@ -309,6 +309,7 @@ class Fragment {
 		return subType;
 	}
 
+	//TODO remove this function and add getOutAtomCount? (same for in/functional atoms)
 	/**Gets the linkedList of outAtoms. This is not modifiable, use the relevant methods in this class to modify it*/
 	List<OutAtom> getOutAtoms() {
 		return Collections.unmodifiableList(outAtoms);
