@@ -271,6 +271,7 @@ public class NameToStructure {
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
 		options.addOption("r", "allowRadicals", false, "Enables interpretation of radicals");
+		options.addOption("w", "wildcardRadicals", false, "Radicals are output as wildcard atoms");
 		options.addOption("f", "detailedFailureAnalysis", false, "Enables reverse parsing to more accurately determine why parsing failed");
 		return options;
 	}
@@ -284,6 +285,7 @@ public class NameToStructure {
 		NameToStructureConfig n2sconfig = new NameToStructureConfig();
 		n2sconfig.setDetailedFailureAnalysis(cmd.hasOption("f"));
 		n2sconfig.setAllowRadicals(cmd.hasOption("r"));
+		n2sconfig.setOutputRadicalsAsWildCardAtoms(cmd.hasOption("w"));
 		return n2sconfig;
 	}
 

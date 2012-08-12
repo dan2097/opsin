@@ -154,14 +154,18 @@ class StructureBuilder {
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
 		processStereochemistry(state, molecule, uniFrag);
 
+		if (uniFrag.getOutAtoms().size()>0 && !state.n2sConfig.isAllowRadicals()){
+			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
+		}
+		if (state.n2sConfig.isOutputRadicalsAsWildCardAtoms()) {
+			rGroups.addAll(convertOutAtomsToRgroups(state, uniFrag));
+		}
+		
 		for (Fragment rGroup : rGroups) {
 			Atom rAtom = rGroup.getFirstAtom();
 			rAtom.setElement("R");
 		}
 
-		if (uniFrag.getOutAtoms().size()>0 && !state.n2sConfig.isAllowRadicals()){
-			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
-		}
 		return uniFrag;
 	}
 
@@ -2019,5 +2023,19 @@ class StructureBuilder {
 		Collections.reverse(stereochemistryElsAtThisLevel);
 		matchingElements.addAll(stereochemistryElsAtThisLevel);
 		return matchingElements;
+	}
+	
+	private List<Fragment> convertOutAtomsToRgroups(BuildState state, Fragment uniFrag) throws StructureBuildingException {
+		List<Fragment> rGroups = new ArrayList<Fragment>();
+		int outAtomCount = uniFrag.getOutAtoms().size();
+		for (int i = outAtomCount -1; i >=0; i--) {
+			OutAtom outAtom = uniFrag.getOutAtom(i);
+			uniFrag.removeOutAtom(i);
+			Fragment rGroup =state.fragManager.buildSMILES("[R|" + outAtom.getValency() + "]");
+			state.fragManager.createBond(outAtom.getAtom(), rGroup.getFirstAtom(), outAtom.getValency());
+			state.fragManager.incorporateFragment(rGroup, uniFrag);
+			rGroups.add(rGroup);
+		}
+		return rGroups;
 	}
 }

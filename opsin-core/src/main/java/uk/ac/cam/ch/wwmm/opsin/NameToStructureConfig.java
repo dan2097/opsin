@@ -14,6 +14,7 @@ public class NameToStructureConfig implements Cloneable {
 	
 	// Fields set with default values
 	private boolean allowRadicals = false;
+	private boolean outputRadicalsAsWildCardAtoms = false;
 	private boolean detailedFailureAnalysis = false;
 //	private boolean slackSpaceHandling;
 //	private boolean substituentAbbreviations;
@@ -24,6 +25,7 @@ public class NameToStructureConfig implements Cloneable {
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
 	 * allowRadicals = false
+	 * outputRadicalsAsWildCardAtoms = false
 	 * detailedFailureAnalysis = false
 	 */
 	public NameToStructureConfig() {
@@ -44,6 +46,23 @@ public class NameToStructureConfig implements Cloneable {
 	 */
 	public void setAllowRadicals(boolean allowRadicals) {
 		this.allowRadicals = allowRadicals;
+	}
+	
+	/**
+	 * Are radicals output as wildcard atoms e.g. [*]CC for ethyl
+	 * @return
+	 */
+	public boolean isOutputRadicalsAsWildCardAtoms() {
+		return outputRadicalsAsWildCardAtoms;
+	}
+
+	/**
+	 * Should radicals be output as wildcard atoms e.g. [*]CC for ethyl
+	 * Note that if this is set to true InChIs cannot be generated
+	 * @param outputRadicalsAsWildCardAtoms
+	 */
+	public void setOutputRadicalsAsWildCardAtoms(boolean outputRadicalsAsWildCardAtoms) {
+		this.outputRadicalsAsWildCardAtoms = outputRadicalsAsWildCardAtoms;
 	}
 
 	/**
