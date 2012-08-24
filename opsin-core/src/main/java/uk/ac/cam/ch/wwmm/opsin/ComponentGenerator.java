@@ -1421,10 +1421,18 @@ class ComponentGenerator {
 			else if (suffixValue.equals("quinone") || suffixValue.equals("quinon")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				XOMTools.setTextChild(suffix, "one");
-				Element multiplier = new Element(MULTIPLIER_EL);
-				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
-				multiplier.appendChild("di");
-				XOMTools.insertBefore(suffix, multiplier);
+				Element multiplier = (Element) XOMTools.getPreviousSibling(suffix);
+				if (multiplier.getLocalName().equals(MULTIPLIER_EL)){
+					Attribute multVal = multiplier.getAttribute(VALUE_ATR);
+					int newMultiplier = Integer.parseInt(multVal.getValue()) * 2;
+					multVal.setValue(String.valueOf(newMultiplier));
+				}
+				else{
+					multiplier = new Element(MULTIPLIER_EL);
+					multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
+					multiplier.appendChild("di");
+					XOMTools.insertBefore(suffix, multiplier);
+				}
 			}
 			else if (suffixValue.equals("ylene") || suffixValue.equals("ylen")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
