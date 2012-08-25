@@ -184,6 +184,8 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token value="NCCP(=O)(O)O" labels="none" valType="SMILES" functionalIDs="6,7">ciliatine</token>
     <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
     <token value="NCCS" labels="/2,alpha/3,beta/" valType="SMILES">cysteamine</token>
+    <token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" labels="none" valType="SMILES" functionalIDs="9,24,31,39">glutathione disulfide</token>
+    <token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" labels="none" valType="SMILES" functionalIDs="9,24,31,39">glutathionedisulfide</token>
     <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" valType="SMILES">methioninamine</token>
 		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="8,14">octopinic acid</token>
 		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="8,14">octopinicacid</token>
