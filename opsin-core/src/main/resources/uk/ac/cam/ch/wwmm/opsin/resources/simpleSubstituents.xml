@@ -241,6 +241,9 @@
 		<token value="-I(=O)(=O)(=O)" labels="none" valType="SMILES">periodyl</token>
 
 		<token value="-O[N+]#[C-]" labels="none" valType="SMILES">fulminato</token>
+		<token value="-[Se]C#N" labels="none" valType="SMILES">selenocyano</token><!--deprecated-->
+		<token value="-[Te]C#N" labels="none" valType="SMILES">tellurocyano</token><!--deprecated-->
+		<token value="-SC#N" labels="none" valType="SMILES">thiocyano</token><!--deprecated-->
 		<token value="-N=C=[Se]" labels="none" valType="SMILES">isoselenocyano</token><!--deprecated-->
 		<token value="-N=C=[Te]" labels="none" valType="SMILES">isotellurocyano</token><!--deprecated-->
 		<token value="-N=C=S" labels="none" valType="SMILES">isothiocyano</token><!--deprecated-->
