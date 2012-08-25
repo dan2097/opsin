@@ -52,6 +52,8 @@ class SMILESWriter {
 		organicAtomsToStandardValencies.put("Cl", new Integer[]{1});
 		organicAtomsToStandardValencies.put("Br", new Integer[]{1});
 		organicAtomsToStandardValencies.put("I", new Integer[]{1});
+		
+		organicAtomsToStandardValencies.put("R", new Integer[]{1,2,3,4,5,6,7,8,9});
 
 		for (int i = 1; i <=9; i++) {
 			closureSymbols.add(String.valueOf(i));
@@ -449,7 +451,8 @@ class SMILESWriter {
 	}
 
 	private boolean determineWhetherAtomNeedsSquareBrackets(Atom atom, int hydrogenCount) {
-		if (!organicAtomsToStandardValencies.containsKey(atom.getElement())){
+		Integer[] expectedValencies = organicAtomsToStandardValencies.get(atom.getElement());
+		if (expectedValencies == null){
 			return true;
 		}
 		if (atom.getCharge()!=0){
@@ -461,12 +464,11 @@ class SMILESWriter {
 		if (atom.getAtomParity()!=null){
 			return true;
 		}
-	
-		List<Integer> expectedValencies = Arrays.asList(organicAtomsToStandardValencies.get(atom.getElement()));
+
 		int valency = atom.getIncomingValency();
-		boolean valencyCanBeDescribedImplicitly = expectedValencies.contains(valency);
+		boolean valencyCanBeDescribedImplicitly = Arrays.binarySearch(expectedValencies, valency) >= 0;
 		int targetImplicitValency =valency;
-		if (valency > expectedValencies.get(expectedValencies.size()-1)){
+		if (valency > expectedValencies[expectedValencies.length-1]){
 			valencyCanBeDescribedImplicitly =true;
 		}
 		if (!valencyCanBeDescribedImplicitly){
@@ -475,9 +477,9 @@ class SMILESWriter {
 	
 		int nonHydrogenValency = valency -hydrogenCount;
 		int implicitValencyThatWouldBeGenerated = nonHydrogenValency;
-		for (int i = expectedValencies.size()-1; i>=0; i--) {
-			if (expectedValencies.get(i) >= nonHydrogenValency){
-				implicitValencyThatWouldBeGenerated =expectedValencies.get(i);
+		for (int i = expectedValencies.length-1; i>=0; i--) {
+			if (expectedValencies[i] >= nonHydrogenValency){
+				implicitValencyThatWouldBeGenerated =expectedValencies[i];
 			}
 		}
 		if (targetImplicitValency != implicitValencyThatWouldBeGenerated){
