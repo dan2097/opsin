@@ -5,7 +5,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  * @author ptc24
  *
  */
-public class NameToStructureException extends Exception {
+public class NameToStructureException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
