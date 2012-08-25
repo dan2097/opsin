@@ -13,7 +13,7 @@ public class InchiOutputTest {
 
 	private static NameToInchi n2i;
 	@BeforeClass
-	public static void setUp() throws NameToStructureException {
+	public static void setUp() {
 		n2i = new NameToInchi();
 	}
 	

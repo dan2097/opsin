@@ -12,7 +12,7 @@ import org.junit.Test;
 public class NomenclatureIntegrationTest {
 	private static NameToStructure n2s;
 	@BeforeClass
-	public static void setUp() throws NameToStructureException {
+	public static void setUp() {
 		n2s = NameToStructure.getInstance();
 	}
 	

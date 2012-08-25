@@ -31,7 +31,7 @@ public class NameToInchi {
 
 	private static final Logger LOG = Logger.getLogger(NameToInchi.class);
 	private NameToStructure n2s;
-	public NameToInchi() throws NameToStructureException {
+	public NameToInchi() {
 		n2s = NameToStructure.getInstance();
 	}
 

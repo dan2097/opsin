@@ -55,7 +55,7 @@ public class NameToStructure {
 
 	private static NameToStructure NTS_INSTANCE;
 
-	public static synchronized NameToStructure getInstance() throws NameToStructureException {
+	public static synchronized NameToStructure getInstance() {
 		if (NTS_INSTANCE ==null){
 			NTS_INSTANCE = new NameToStructure();
 		}
@@ -66,7 +66,7 @@ public class NameToStructure {
 	 *
 	 * @throws NameToStructureException If the converter cannot be initialised, most likely due to bad or missing data files.
 	 */
-	private NameToStructure() throws NameToStructureException {
+	private NameToStructure() {
 		LOG.info("Initialising OPSIN... ");
 		try {
 			/*Initialise all of OPSIN's classes. Some classes are injected as dependencies into subsequent classes*/
@@ -198,9 +198,9 @@ public class NameToStructure {
 	 * Just because a word can be split into tokens does not mean the word constitutes a valid chemical name
 	 * e.g. ester is interpretable but is not in itself a chemical name
 	 * @return
-	 * @throws NameToStructureException
+
 	 */
-	public static ParseRules getOpsinParser() throws NameToStructureException{
+	public static ParseRules getOpsinParser() {
 		NameToStructure n2s = NameToStructure.getInstance();
 		return n2s.parseRules;
 	}
@@ -289,7 +289,7 @@ public class NameToStructure {
 		return n2sconfig;
 	}
 
-	private static void interactiveCmlOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException, NameToStructureException {
+	private static void interactiveCmlOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException {
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		StreamSerializer serializer = new StreamSerializer(System.out);
 		serializer.setIndent(2);
@@ -327,7 +327,7 @@ public class NameToStructure {
 		serializer.flush();
 	}
 	
-	private static void interactiveSmilesOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException, NameToStructureException {
+	private static void interactiveSmilesOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException {
 		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		String name = stdinReader.readLine();
 		while(name !=null) {
