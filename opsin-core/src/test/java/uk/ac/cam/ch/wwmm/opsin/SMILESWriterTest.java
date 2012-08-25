@@ -232,7 +232,7 @@ public class SMILESWriterTest {
 		Fragment f = state.fragManager.buildSMILES("[R]CC[R]");
 		StructureBuilder.makeHydrogensExplicit(state);
 		String smiles = new SMILESWriter(f).generateSmiles();
-		assertEquals("[*]CC[*]", smiles);
+		assertEquals("*CC*", smiles);
 	}
 	
 	@Test
