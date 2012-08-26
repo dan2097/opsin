@@ -177,6 +177,15 @@ class StructureBuildingMethods {
 			else{
 				Fragment parentFrag = findFragmentWithLocant(state, subBracketOrRoot, locantString);
 				if (parentFrag==null){
+					String modifiedLocant = checkForBracketedPrimedLocantSpecialCase(subBracketOrRoot, locantString);
+					if (modifiedLocant != null){
+						parentFrag = findFragmentWithLocant(state, subBracketOrRoot, modifiedLocant);
+						if (parentFrag !=null){
+							locantString = modifiedLocant;
+						}
+					}
+				}
+				if (parentFrag==null){
 					throw new StructureBuildingException("Cannot find in scope fragment with atom with locant " + locantString + ".");
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -1588,6 +1597,24 @@ class StructureBuildingMethods {
 			}
 		}
 		return false;
+	}
+
+	static String checkForBracketedPrimedLocantSpecialCase(Element subBracketOrRoot, String locantString) {
+		int terminalPrimes = StringTools.countTerminalPrimes(locantString);
+		if (terminalPrimes > 0){
+			int brackettingDepth = 0;
+			Element parent = (Element) subBracketOrRoot.getParent();
+			while (parent !=null && parent.getLocalName().equals(BRACKET_EL)){
+				if (!IMPLICIT_TYPE_VAL.equals(parent.getAttributeValue(TYPE_ATR))){
+					brackettingDepth++;
+				}
+				parent = (Element) parent.getParent();
+			}
+			if (terminalPrimes == brackettingDepth){
+				return locantString.substring(0, locantString.length() - terminalPrimes);
+			}
+		}
+		return null;
 	}
 
 	/**
