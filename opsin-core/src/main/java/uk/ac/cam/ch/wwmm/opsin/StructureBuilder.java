@@ -1909,7 +1909,7 @@ class StructureBuilder {
 	 * @return
 	 */
 	private boolean checkForConnectedOxo(BuildState state, Atom atom) {
-		Set<Bond> bonds = atom.getBonds();
+		List<Bond> bonds = atom.getBonds();
 		for (Bond bond : bonds) {
 			Atom connectedAtom;
 			if (bond.getFromAtom() == atom){

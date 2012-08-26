@@ -538,7 +538,7 @@ class FragmentManager {
 			atomToBeReplaced.removeLocant(locant);
 			replacementAtom.addLocant(locant);
 		}
-		Set<Bond> bonds = atomToBeReplaced.getBonds();
+		List<Bond> bonds = atomToBeReplaced.getBonds();
 		for (Bond bond : bonds) {
 			createBond(replacementAtom, bond.getOtherAtom(atomToBeReplaced), bond.getOrder());
 		}

@@ -131,7 +131,7 @@ class SMILESWriter {
 			return;
 		}
 		currentAtom.setProperty(Atom.VISITED, depth);
-		Set<Bond> bonds = currentAtom.getBonds();
+		List<Bond> bonds = currentAtom.getBonds();
 		for (Bond bond : bonds) {
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			if (isSmilesImplicitProton(neighbour)){
@@ -168,7 +168,7 @@ class SMILESWriter {
 			
 			//special case where hydrogen is connected to a nitrogen with imine double bond stereochemistry
 			if (neighbours.get(0).getElement().equals("N")){
-				Set<Bond> bondsFromNitrogen = neighbours.get(0).getBonds();
+				List<Bond> bondsFromNitrogen = neighbours.get(0).getBonds();
 				if (bondsFromNitrogen.size()==2){
 					for (Bond bond : bondsFromNitrogen) {
 						if (bond.getBondStereo()!=null){
@@ -321,7 +321,7 @@ class SMILESWriter {
 	 */
 	private void traverseSmiles(Atom currentAtom, Atom previousAtom, int depth){
 		smilesBuilder.append(atomToSmiles(currentAtom, depth, previousAtom));
-		Set<Bond> bonds = currentAtom.getBonds();
+		List<Bond> bonds = currentAtom.getBonds();
 		LinkedList<String> newlyAvailableClosureSymbols = null;
 		for (Bond bond : bonds) {//ring closures
 			Atom neighbour = bond.getOtherAtom(currentAtom);
@@ -495,7 +495,7 @@ class SMILESWriter {
 
 		List<Atom> atomrefs4Current = new ArrayList<Atom>();
 
-		Set<Bond> bonds = currentAtom.getBonds();
+		List<Bond> bonds = currentAtom.getBonds();
 		for (Bond bond : bonds) {//previous atom
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			if (neighbour.getProperty(Atom.VISITED)!=null && neighbour.equals(previousAtom) ){

@@ -3,8 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,7 +46,7 @@ class Atom {
 	private AtomParity atomParity = null;
 
 	/**The bonds that involve the atom*/
-	private final Set<Bond> bonds = new LinkedHashSet<Bond>();
+	private final List<Bond> bonds = new ArrayList<Bond>();
 
 	/**A map between PropertyKey s as declared here and useful atom properties, usually relating to some kind of special case. */
 	@SuppressWarnings("rawtypes")
@@ -435,7 +433,9 @@ class Atom {
 	 * @param b The bond to be added
 	 */
 	void addBond(Bond b) {
-		bonds.add(b);
+		if (!bonds.contains(b)){
+			bonds.add(b);
+		}
 	}
 
 	/**Removes a bond to the atom
@@ -501,8 +501,8 @@ class Atom {
 		outValency += outV;
 	}
 
-	Set<Bond> getBonds() {
-		return Collections.unmodifiableSet(bonds);
+	List<Bond> getBonds() {
+		return Collections.unmodifiableList(bonds);
 	}
 
 	/**Gets a list of atoms that connect to the atom
@@ -612,13 +612,12 @@ class Atom {
 	}
 	
 	/**
-	 * Returns the the first bond in the atom's bondSet or null if it has no bonds
+	 * Returns the the first bond in the atom's bond list or null if it has no bonds
 	 * @return
 	 */
 	Bond getFirstBond() {
-		Iterator<Bond> bondIterator = bonds.iterator();
-		if (bondIterator.hasNext()){
-			return bondIterator.next();
+		if (bonds.size() > 0){
+			return bonds.get(0);
 		}
 		return null;
 	}

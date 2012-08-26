@@ -686,7 +686,7 @@ class StructureBuildingMethods {
 	static Bond findBondToUnSaturate(List<Atom> atomList, int bondOrder, boolean allowAdjacentUnsaturatedBonds) {
 		Bond bondToUnsaturate =null;
 		mainLoop: for (Atom atom1 : atomList) {
-			Set<Bond> bonds = atom1.getBonds();
+			List<Bond> bonds = atom1.getBonds();
 			if (!allowAdjacentUnsaturatedBonds){
 				for (Bond bond : bonds) {
 					if (bond.getOrder()!=1){//don't place implicitly unsaturated bonds next to each other

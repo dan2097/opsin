@@ -653,10 +653,10 @@ class SMILESFragmentBuilder {
 		for (Bond centralBond : bonds) {//identify cases of E/Z stereochemistry and add appropriate bondstereo tags
 			if (centralBond.getOrder()==2){
 
-				Set<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
+				List<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
 				for (Bond preceedingBond : fromAtomBonds) {
 					if (preceedingBond.getSmilesStereochemistry()!=null){
-						Set<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
+						List<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
 							if (followingBond.getSmilesStereochemistry()!=null){//now found a double bond surrounded by two bonds with slashs
 								boolean upFirst;

@@ -292,7 +292,7 @@ class StereochemistryHandler {
 			else{
 				Atom firstAtomInBond = fragment.getAtomByLocant(locant);
 				if (firstAtomInBond !=null){
-					Set<Bond> bonds = firstAtomInBond.getBonds();
+					List<Bond> bonds = firstAtomInBond.getBonds();
 					for (Bond potentialBond : bonds) {
 						if (notExplicitlyDefinedStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTransUnambiguousOnBond(potentialBond))){
 							applyStereoChemistryToStereoBond(potentialBond, notExplicitlyDefinedStereoBondMap.get(potentialBond), eOrZ);
@@ -332,7 +332,7 @@ class StereochemistryHandler {
 					else{
 						Atom firstAtomInBond = correspondingFrag.getAtomByLocant(locant);
 						if (firstAtomInBond !=null){
-							Set<Bond> bonds = firstAtomInBond.getBonds();
+							List<Bond> bonds = firstAtomInBond.getBonds();
 							for (Bond potentialBond : bonds) {
 								if (notExplicitlyDefinedStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTransUnambiguousOnBond(potentialBond))){
 									applyStereoChemistryToStereoBond(potentialBond, notExplicitlyDefinedStereoBondMap.get(potentialBond), eOrZ);
