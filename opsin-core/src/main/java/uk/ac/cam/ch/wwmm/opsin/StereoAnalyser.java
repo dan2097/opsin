@@ -327,7 +327,7 @@ class StereoAnalyser {
 	 */
 	private List<Integer> findColourOfNeighbours(Atom atom) {	
 		List<Integer> colourOfAdjacentAtoms = new ArrayList<Integer>();
-		Set<Bond> bonds = atom.getBonds();
+		List<Bond> bonds = atom.getBonds();
 		for (Bond bond : bonds) {
 			Atom otherAtom = bond.getFromAtom() == atom ? bond.getToAtom() : bond.getFromAtom();
 			colourOfAdjacentAtoms.add(mappingToColour.get(otherAtom));

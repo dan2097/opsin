@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -1559,7 +1558,7 @@ class FusedRingNumberer {
 	private static Bond getStartingNonFusedBond(Ring tRing){
 		List<Bond> allBonds = new ArrayList<Bond>(tRing.getBondList());
 		for (Bond fusedBond : tRing.getFusedBonds()) {
-			Set<Bond> neighbouringBonds = fusedBond.getFromAtom().getBonds();
+			List<Bond> neighbouringBonds = fusedBond.getFromAtom().getBonds();
 			for (Bond bond : neighbouringBonds) {
 				allBonds.remove(bond);
 			}
