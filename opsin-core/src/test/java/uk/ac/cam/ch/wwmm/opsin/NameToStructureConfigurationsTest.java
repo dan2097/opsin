@@ -33,4 +33,17 @@ public class NameToStructureConfigurationsTest {
 			or = n2s.parseChemicalName("methyl", n2sConfig);
 			assertEquals(OPSIN_RESULT_STATUS.SUCCESS, or.getStatus());
 		}
+		
+		@Test
+		public void testOutputRadicalsAsWildCards() throws StructureBuildingException {
+			NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+			n2sConfig.setAllowRadicals(true);
+			n2sConfig.setOutputRadicalsAsWildCardAtoms(false);
+			OpsinResult or = n2s.parseChemicalName("methyl", n2sConfig);
+			assertEquals("[CH3]", or.getSmiles());
+
+			n2sConfig.setOutputRadicalsAsWildCardAtoms(true);
+			or = n2s.parseChemicalName("methyl", n2sConfig);
+			assertEquals("C*", or.getSmiles());
+		}
 }
