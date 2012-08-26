@@ -935,7 +935,9 @@ class FragmentTools {
 		String element =atom.getElement();
 		if (element.equals("O")|| element.equals("S") || element.equals("Se") || element.equals("Te")){//potential chalcogen functional atom
 			boolean isFunctionalAtom =false;
-			for (FunctionalAtom funcAtom : atom.getFrag().getFunctionalAtoms()) {
+			Fragment frag = atom.getFrag();
+			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
+				FunctionalAtom funcAtom = frag.getFunctionalAtom(i);
 				if (atom.equals(funcAtom.getAtom())){
 					isFunctionalAtom =true;
 					break;
@@ -961,7 +963,9 @@ class FragmentTools {
 		String element =atom.getElement();
 		if (element.equals("O")|| element.equals("S") || element.equals("Se") || element.equals("Te")){//potential chalcogen functional atom
 			boolean isFunctionalAtom =false;
-			for (FunctionalAtom funcAtom : atom.getFrag().getFunctionalAtoms()) {
+			Fragment frag = atom.getFrag();
+			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
+				FunctionalAtom funcAtom = frag.getFunctionalAtom(i);
 				if (atom.equals(funcAtom.getAtom())){
 					isFunctionalAtom =true;
 					break;

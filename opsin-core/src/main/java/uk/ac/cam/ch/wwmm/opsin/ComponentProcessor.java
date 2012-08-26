@@ -347,10 +347,10 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("malformed addGroup tag");
 				}
-				if (newFrag.getOutAtoms().size() >1){
+				if (newFrag.getOutAtomCount() >1){
 					throw new ComponentGenerationException("too many outAtoms on group to be added");
 				}
-				if (newFrag.getOutAtoms().size() ==1) {
+				if (newFrag.getOutAtomCount() ==1) {
 					OutAtom newFragOutAtom = newFrag.getOutAtom(0);
 					newFrag.removeOutAtom(newFragOutAtom);
 					state.fragManager.incorporateFragment(newFrag, newFragOutAtom.getAtom(), parentFrag, atomOnParentFrag, newFragOutAtom.getValency());
@@ -1713,7 +1713,7 @@ class ComponentProcessor {
 		}
 		if (group.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)!=null){
 			int numberToRemove = Integer.parseInt(group.getAttributeValue(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR));
-			if (numberToRemove > suffixableFragment.getFunctionalAtoms().size()){
+			if (numberToRemove > suffixableFragment.getFunctionalAtomCount()){
 				throw new ComponentGenerationException("Too many hydrogen for the number of positions on non carboxylic acid");
 			}
 			for (int i = 0; i< numberToRemove; i++) {
@@ -2477,7 +2477,7 @@ class ComponentProcessor {
 				}
 			}
 			else{
-				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants.size(), fragmentToResolveAndDuplicate.getOutAtoms().size());
+				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants.size(), fragmentToResolveAndDuplicate.getOutAtomCount());
 			}
 
 			List<Element> suffixes = XOMTools.getChildElementsWithTagName(elementToResolve, SUFFIX_EL);
@@ -2488,10 +2488,10 @@ class ComponentProcessor {
 			XOMTools.insertAfter(multiplier, group);
 
 			int bondOrder = 1;
-			if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0){//e.g. bicyclohexanylidene
+			if (fragmentToResolveAndDuplicate.getOutAtomCount()>0){//e.g. bicyclohexanylidene
 				bondOrder =fragmentToResolveAndDuplicate.getOutAtom(0).getValency();
 			}
-			if (fragmentToResolveAndDuplicate.getOutAtoms().size()>1){
+			if (fragmentToResolveAndDuplicate.getOutAtomCount()>1){
 				throw new StructureBuildingException("Ring assembly fragment should have one or no OutAtoms; not more than one!");
 			}
 
@@ -2508,7 +2508,7 @@ class ComponentProcessor {
 					atomOnLatestClone = clone.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(1));
 				}
 				else{
-					if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0 && mvalue==2){
+					if (fragmentToResolveAndDuplicate.getOutAtomCount()>0 && mvalue==2){
 						atomOnParent = fragmentToResolveAndDuplicate.getOutAtom(0).getAtom();
 						atomOnLatestClone = clone.getOutAtom(0).getAtom();
 					}
@@ -2517,10 +2517,10 @@ class ComponentProcessor {
 						atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder, true);
 					}
 				}
-				if (fragmentToResolveAndDuplicate.getOutAtoms().size()>0){
+				if (fragmentToResolveAndDuplicate.getOutAtomCount()>0){
 					fragmentToResolveAndDuplicate.removeOutAtom(0);
 				}
-				if (clone.getOutAtoms().size()>0){
+				if (clone.getOutAtomCount()>0){
 					clone.removeOutAtom(0);
 				}
 				state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
@@ -3110,12 +3110,12 @@ class ComponentProcessor {
                 thisFrag.addOutAtom(firstIdInFrag + Integer.parseInt(radicalID) - 1, 1, true);
             }
 		}
-		int outAtomCount = thisFrag.getOutAtoms().size();
+		int outAtomCount = thisFrag.getOutAtomCount();
 		if (outAtomCount >=2){
 			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
 				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
 				Element nextGroup =(Element) OpsinTools.getNextGroup(group);
-				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtoms().size() < 2 || nextGroup==null){//must be preceded by a multi radical
+				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtomCount() < 2 || nextGroup==null){//must be preceded by a multi radical
 					throw new ComponentGenerationException("Invalid use of amine as a substituent!");
 				}
 			}
@@ -3180,7 +3180,7 @@ class ComponentProcessor {
 				//This is a 99% solution to the detection of cases such as ethylidenedioxy == ethan-1,1-diyldioxy
 				Fragment previousGroupFrag =state.xmlFragmentMap.get(previousGroup);
 				int outAtomValency =0;
-				if (previousGroupFrag.getOutAtoms().size()==1){
+				if (previousGroupFrag.getOutAtomCount()==1){
 					outAtomValency = previousGroupFrag.getOutAtom(0).getValency();
 				}
 				else{
@@ -3224,7 +3224,7 @@ class ComponentProcessor {
 		List<Fragment> suffixList =state.xmlSuffixMap.get(group);
 
 		for (Fragment suffix : suffixList) {
-			outAtomsThatWillBeAdded += suffix.getOutAtoms().size();
+			outAtomsThatWillBeAdded += suffix.getOutAtomCount();
 		}
 		for(int i=0;i<suffixes.size();i++) {
 			Element suffix = suffixes.get(i);
@@ -3731,7 +3731,7 @@ class ComponentProcessor {
 		if (conjunctiveGroups.size()>0){
 			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
 			Fragment ringFrag = state.xmlFragmentMap.get(ringGroup);
-			if (ringFrag.getOutAtoms().size()!=0 ){
+			if (ringFrag.getOutAtomCount()!=0 ){
 				throw new ComponentGenerationException("OPSIN Bug: Ring fragment should have no radicals");
 			}
 			List<Fragment> conjunctiveFragments = new ArrayList<Fragment>();
