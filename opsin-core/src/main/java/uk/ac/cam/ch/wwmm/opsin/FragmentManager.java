@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -488,7 +489,7 @@ class FragmentManager {
 		Element clone = new Element(elementToBeCloned);
 		List<Element> originalGroups = XOMTools.getDescendantElementsWithTagName(elementToBeCloned, XmlDeclarations.GROUP_EL);
 		List<Element> clonedGroups = XOMTools.getDescendantElementsWithTagName(clone,  XmlDeclarations.GROUP_EL);
-		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new HashMap<Fragment, Fragment>();
+		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new LinkedHashMap<Fragment, Fragment>();
 		for (int i = 0; i < originalGroups.size(); i++) {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
 			Fragment newFragment = copyAndRelabelFragment(originalFragment, primesToAdd);
@@ -501,7 +502,7 @@ class FragmentManager {
 			}
 			state.xmlSuffixMap.put(clonedGroups.get(i), newSuffixFragments);
 		}
-		Set<Bond> interFragmentBondsToClone = new HashSet<Bond>();
+		Set<Bond> interFragmentBondsToClone = new LinkedHashSet<Bond>();
 		for (Fragment originalFragment : oldNewFragmentMapping.keySet()) {//add inter fragment bonds to cloned fragments
 			for (Bond bond : fragToInterFragmentBond.get(originalFragment)) {
 				interFragmentBondsToClone.add(bond);

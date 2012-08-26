@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -883,7 +884,7 @@ class FusedRingBuilder {
 			fusionEdgeBonds.add(parentAtoms.get(i).getBondToAtomOrThrow(parentAtoms.get(i+1)));
 		}
 
-		Set<Bond> bondsToAddToParentAtoms = new HashSet<Bond>();
+		Set<Bond> bondsToAddToParentAtoms = new LinkedHashSet<Bond>();
 		for (Atom childAtom : childAtoms) {
 			for (Bond b : childAtom.getBonds()) {
 				if (!fusionEdgeBonds.contains(b)){
@@ -892,7 +893,7 @@ class FusedRingBuilder {
 			}
 		}
 		
-		Set<Bond> bondsToAddToChildAtoms = new HashSet<Bond>();
+		Set<Bond> bondsToAddToChildAtoms = new LinkedHashSet<Bond>();
 		for (Atom parentAtom : parentAtoms) {
 			for (Bond b : parentAtom.getBonds()) {
 				if (!fusionEdgeBonds.contains(b)){

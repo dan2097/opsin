@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -833,7 +834,7 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static Map<RingConnectivityTable, List<Integer>> findLongestChainDirections(List<RingConnectivityTable> cts){
-		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = new HashMap<RingConnectivityTable, List<Integer>>();
+		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = new LinkedHashMap<RingConnectivityTable, List<Integer>>();
 		int maxChain = 0;
 		for (RingConnectivityTable ct : cts) {
 			if (ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size()) {
