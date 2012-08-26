@@ -78,7 +78,7 @@ class WordRulesOmittedSpaceCorrector {
 			if (roots.size()==1){
 				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
 				Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
-				int functionalAtomsCount = rootFrag.getFunctionalAtoms().size();
+				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				if (functionalAtomsCount >0){
 					List<Element> substituentsAndBrackets = XOMTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
 					if (substituentsAndBrackets.size()==0){
@@ -145,8 +145,8 @@ class WordRulesOmittedSpaceCorrector {
 
 	private int getTotalOutAtomValency(Fragment f) {
 		int outAtomValency = 0;
-		for (OutAtom outAtom : f.getOutAtoms()) {
-			outAtomValency += outAtom.getValency();
+		for (int i = 0, l = f.getOutAtomCount(); i < l; i++) {
+			outAtomValency += f.getOutAtom(i).getValency();
 		}
 		return outAtomValency;
 	}
@@ -195,8 +195,8 @@ class WordRulesOmittedSpaceCorrector {
 		if (subOrBracket.getAttribute(LOCANT_ATR)!=null){
 			return false;
 		}
-		List<OutAtom> outAtomsOfFinalGroup = state.xmlFragmentMap.get(getRightMostGroup(subOrBracket)).getOutAtoms();
-		if (outAtomsOfFinalGroup.size()!=1 || outAtomsOfFinalGroup.get(0).getValency()!=1){
+		Fragment rightMostGroup = state.xmlFragmentMap.get(getRightMostGroup(subOrBracket));
+		if (rightMostGroup.getOutAtomCount() != 1 || rightMostGroup.getOutAtom(0).getValency()!=1){
 			return false;
 		}
 		String multiplierStr = subOrBracket.getAttributeValue(MULTIPLIER_ATR);

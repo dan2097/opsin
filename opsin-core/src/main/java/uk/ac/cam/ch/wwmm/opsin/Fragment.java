@@ -309,10 +309,12 @@ class Fragment {
 		return subType;
 	}
 
-	//TODO remove this function and add getOutAtomCount? (same for in/functional atoms)
-	/**Gets the linkedList of outAtoms. This is not modifiable, use the relevant methods in this class to modify it*/
-	List<OutAtom> getOutAtoms() {
-		return Collections.unmodifiableList(outAtoms);
+	/**
+	 * How many OutAtoms (i.e. radicals) are associated with this fragment
+	 * @return
+	 */
+	int getOutAtomCount() {
+		return outAtoms.size();
 	}
 
 	/**
@@ -344,11 +346,14 @@ class Fragment {
 	void addOutAtom(Atom atom, int valency, Boolean setExplicitly) {
 		outAtoms.add(new OutAtom(atom, valency, setExplicitly));
 	}
-
-	/**Adds a list of outAtoms, copies of the given outAtoms are not made
-    * @param outAtoms*/
-	void addOutAtoms(List<OutAtom> outAtoms) {
-		this.outAtoms.addAll(outAtoms);
+	
+	/**
+	 * Includes the OutAtoms of a given fragment into this fragment
+	 * Note that no OutAtoms are created in doing this 
+	 * @param outAtoms
+	 */
+	void incorporateOutAtoms(Fragment frag) {
+		outAtoms.addAll(frag.outAtoms);
 	}
 
 	/**
@@ -372,10 +377,12 @@ class Fragment {
 		}
 	}
 
-	/**Gets the linkedList of functionalAtoms
-    * @return*/
-	List<FunctionalAtom> getFunctionalAtoms() {
-		return Collections.unmodifiableList(functionalAtoms);
+	/**
+	 * How many functionalAtoms (i.e. locations that can form esters) are associated with this fragment
+	 * @return
+	 */
+	int getFunctionalAtomCount() {
+		return functionalAtoms.size();
 	}
 
 	/**
@@ -392,11 +399,14 @@ class Fragment {
 	void addFunctionalAtom(Atom atom) {
 		functionalAtoms.add(new FunctionalAtom(atom));
 	}
-
-	/**Adds a list of functionalAtoms, copies of the given functionalAtoms are not made
-    * @param functionalAtoms*/
-	void addFunctionalAtoms(List<FunctionalAtom> functionalAtoms) {
-		this.functionalAtoms.addAll(functionalAtoms);
+	
+	/**
+	 * Includes the FunctionalAtoms of a given fragment into this fragment
+	 * Note that no FunctionalAtoms are created in doing this 
+	 * @param functionalAtoms
+	 */
+	void incorporateFunctionalAtoms(Fragment frag) {
+		functionalAtoms.addAll(frag.functionalAtoms);
 	}
 
 	/**

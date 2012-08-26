@@ -140,7 +140,7 @@ class FunctionalReplacement {
 				if (nextSubOrBracket!=null && (nextSubOrBracket.getLocalName().equals(ROOT_EL) || nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL))){
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
 					if (XOMTools.getPreviousSibling(groupToBeModified)!=null){
-						if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
+						if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
 							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 						continue;//not 2,2'-thiodipyran
@@ -342,7 +342,7 @@ class FunctionalReplacement {
 						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");//this would be a bug
 					}
 					Fragment replacementFrag =state.fragManager.buildSMILES(replacementSMILES, SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
-					if (replacementFrag.getOutAtoms().size()>0){//SMILES include an indication of the bond order the replacement fragment will have, this is not intended to be an outatom
+					if (replacementFrag.getOutAtomCount()>0){//SMILES include an indication of the bond order the replacement fragment will have, this is not intended to be an outatom
 						replacementFrag.removeOutAtom(0);
 					}
 					Atom atomThatWillReplaceOxygen =replacementFrag.getFirstAtom();
@@ -902,11 +902,11 @@ class FunctionalReplacement {
 	 */
 	private static void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
 		List<Atom> replacementAtomList = replacementFrag.getAtomList();
-		List<FunctionalAtom> functionalAtoms = atomToBeReplaced.getFrag().getFunctionalAtoms();
-		for (int j = functionalAtoms.size()-1; j >=0; j--) {
-			FunctionalAtom functionalAtom = functionalAtoms.get(j);
+		Fragment origFrag = atomToBeReplaced.getFrag();
+		for (int i = origFrag.getFunctionalAtomCount() - 1; i >=0; i--) {
+			FunctionalAtom functionalAtom = origFrag.getFunctionalAtom(i);
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
-				atomToBeReplaced.getFrag().removeFunctionalAtom(j);
+				atomToBeReplaced.getFrag().removeFunctionalAtom(i);
 				Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
 				if ((terminalAtomOfReplacementFrag.getIncomingValency() ==1 || replacementAtomList.size()==1)&& matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
 					replacementFrag.addFunctionalAtom(terminalAtomOfReplacementFrag);
@@ -928,9 +928,9 @@ class FunctionalReplacement {
 	private static void moveObsoleteOutAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
 		if (atomToBeReplaced.getOutValency() >0){//this is not known to occur in well formed IUPAC names but would occur in thioxy (as a suffix)
 			List<Atom> replacementAtomList = replacementFrag.getAtomList();
-			List<OutAtom> outAtoms = atomToBeReplaced.getFrag().getOutAtoms();
-			for (int i = outAtoms.size()-1; i >=0; i--) {
-				OutAtom outAtom = outAtoms.get(i);
+			Fragment origFrag = atomToBeReplaced.getFrag();
+			for (int i = origFrag.getOutAtomCount() - 1; i >=0; i--) {
+				OutAtom outAtom = origFrag.getOutAtom(i);
 				if (atomToBeReplaced.equals(outAtom.getAtom())){
 					atomToBeReplaced.getFrag().removeOutAtom(i);
 					Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
@@ -941,11 +941,11 @@ class FunctionalReplacement {
 	}
 	
 	private static void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws StructureBuildingException {
-		List<FunctionalAtom> functionalAtoms = atomWithFunctionalAtom.getFrag().getFunctionalAtoms();
-		for (int j = functionalAtoms.size()-1; j >=0; j--) {
-			FunctionalAtom functionalAtom = functionalAtoms.get(j);
+		Fragment frag = atomWithFunctionalAtom.getFrag();
+		for (int i = frag.getFunctionalAtomCount() - 1; i >=0; i--) {
+			FunctionalAtom functionalAtom = frag.getFunctionalAtom(i);
 			if (atomWithFunctionalAtom.equals(functionalAtom.getAtom())){
-				atomWithFunctionalAtom.getFrag().removeFunctionalAtom(j);
+				atomWithFunctionalAtom.getFrag().removeFunctionalAtom(i);
 				return;
 			}
 		}
@@ -998,21 +998,20 @@ class FunctionalReplacement {
 	private static List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
 		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-        for (Element suffix : suffixElements) {
-            Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
-            if (suffixFrag != null) {//null for non carboxylic acids
-                List<FunctionalAtom> functionalAtoms = suffixFrag.getFunctionalAtoms();
-                for (FunctionalAtom funcA : functionalAtoms) {
-                    Atom a = funcA.getAtom();
-                    if (a.getElement().equals("O")) {
-                        oxygenAtoms.add(funcA.getAtom());
-                    }
-                }
-            }
-        }
+		for (Element suffix : suffixElements) {
+			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+			if (suffixFrag != null) {//null for non carboxylic acids
+				for (int i = 0, l = suffixFrag.getFunctionalAtomCount(); i < l; i++) {
+					Atom a = suffixFrag.getFunctionalAtom(i).getAtom();
+					if (a.getElement().equals("O")) {
+						oxygenAtoms.add(a);
+					}
+				}
+			}
+		}
 		return oxygenAtoms;
 	}
-	
+
 	/**
 	 * Returns functional oxygen atoms in groupToBeModified
 	 * @param state
@@ -1021,11 +1020,11 @@ class FunctionalReplacement {
 	 */
 	private static List<Atom> findFunctionalOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-		List<FunctionalAtom> functionalAtoms = state.xmlFragmentMap.get(groupToBeModified).getFunctionalAtoms();
-		for (FunctionalAtom funcA: functionalAtoms) {
-			Atom a = funcA.getAtom();
+		Fragment frag = state.xmlFragmentMap.get(groupToBeModified);
+		for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
+			Atom a = frag.getFunctionalAtom(i).getAtom();
 			if (a.getElement().equals("O")){
-				oxygenAtoms.add(funcA.getAtom());
+				oxygenAtoms.add(a);
 			}
 		}
 		return oxygenAtoms;
@@ -1059,19 +1058,19 @@ class FunctionalReplacement {
 	private static List<Atom> findOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
 		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-        for (Element suffix : suffixElements) {
-            Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
-            if (suffixFrag != null) {//null for non carboxylic acids
-                if (suffixFrag.getFunctionalAtoms().size() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || suffix.getAttributeValue(VALUE_ATR).equals("aldehyde")) {
-                    List<Atom> atomList = suffixFrag.getAtomList();
-                    for (Atom a : atomList) {
-                        if (a.getElement().equals("O")) {
-                            oxygenAtoms.add(a);
-                        }
-                    }
-                }
-            }
-        }
+		for (Element suffix : suffixElements) {
+			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+			if (suffixFrag != null) {//null for non carboxylic acids
+				if (suffixFrag.getFunctionalAtomCount() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || suffix.getAttributeValue(VALUE_ATR).equals("aldehyde")) {
+					List<Atom> atomList = suffixFrag.getAtomList();
+					for (Atom a : atomList) {
+						if (a.getElement().equals("O")) {
+							oxygenAtoms.add(a);
+						}
+					}
+				}
+			}
+		}
 		return oxygenAtoms;
 	}
 	

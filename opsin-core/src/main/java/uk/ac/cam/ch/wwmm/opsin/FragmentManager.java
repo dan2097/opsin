@@ -143,8 +143,8 @@ class FragmentManager {
 		for(Bond bond : childFrag.getBondSet()) {
 			parentFrag.addBond(bond);
 		}
-		parentFrag.addOutAtoms(childFrag.getOutAtoms());
-		parentFrag.addFunctionalAtoms(childFrag.getFunctionalAtoms());
+		parentFrag.incorporateOutAtoms(childFrag);
+		parentFrag.incorporateFunctionalAtoms(childFrag);
 
 		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {//reassign inter fragment bonds of child
 			if (bond.getFromAtom().getFrag() ==parentFrag || bond.getToAtom().getFrag() ==parentFrag){
@@ -362,8 +362,6 @@ class FragmentManager {
 		Fragment newFragment =new Fragment(originalFragment.getType(), originalFragment.getSubType());
 		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
-		List<OutAtom> outAtoms =originalFragment.getOutAtoms();
-		List<FunctionalAtom> functionalAtoms =originalFragment.getFunctionalAtoms();
 		Atom defaultInAtom =originalFragment.getDefaultInAtom();
 		for (Atom atom : atomList) {
 			int id = idManager.getNextID();
@@ -433,13 +431,15 @@ class FragmentManager {
 				oldToNewAtomMap.get(atom).setProperty(Atom.ISALDEHYDE, atom.getProperty(Atom.ISALDEHYDE));
 			}
 		}
-        for (OutAtom outAtom : outAtoms) {
+		for (int i = 0, l = originalFragment.getOutAtomCount(); i < l; i++) {
+			OutAtom outAtom = originalFragment.getOutAtom(i);
             newFragment.addOutAtom(oldToNewAtomMap.get(outAtom.getAtom()), outAtom.getValency(), outAtom.isSetExplicitly());
             if (outAtom.getLocant() !=null){
-            	newFragment.getOutAtom(newFragment.getOutAtoms().size() -1).setLocant(outAtom.getLocant() + StringTools.multiplyString("'", primesToAdd) );
+            	newFragment.getOutAtom(newFragment.getOutAtomCount() -1).setLocant(outAtom.getLocant() + StringTools.multiplyString("'", primesToAdd) );
             }
         }
-		for (FunctionalAtom functionalAtom : functionalAtoms) {
+		for (int i = 0, l = originalFragment.getFunctionalAtomCount(); i < l; i++) {
+			FunctionalAtom functionalAtom = originalFragment.getFunctionalAtom(i);
 			newFragment.addFunctionalAtom(oldToNewAtomMap.get(functionalAtom.getAtom()));
 		}
 		newFragment.setDefaultInAtom(oldToNewAtomMap.get(defaultInAtom));

@@ -154,7 +154,7 @@ class StructureBuilder {
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
 		processStereochemistry(state, molecule, uniFrag);
 
-		if (uniFrag.getOutAtoms().size()>0 && !state.n2sConfig.isAllowRadicals()){
+		if (uniFrag.getOutAtomCount()>0 && !state.n2sConfig.isAllowRadicals()){
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		if (state.n2sConfig.isOutputRadicalsAsWildCardAtoms()) {
@@ -322,7 +322,7 @@ class StructureBuilder {
 		substituent1.removeOutAtom(0);
 		Atom outAtom2 = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 		substituent2.removeOutAtom(0);
-		if (diValentGroup.getOutAtoms().size()==1){//c.f. peroxide where it is a linker
+		if (diValentGroup.getOutAtomCount()==1){//c.f. peroxide where it is a linker
 			state.fragManager.createBond(outAtom1, diValentGroup.getOutAtom(0).getAtom(), 1);
 			diValentGroup.removeOutAtom(0);
 			state.fragManager.createBond(outAtom2, diValentGroup.getFirstAtom(), 1);
@@ -344,7 +344,7 @@ class StructureBuilder {
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(words.get(0), GROUP_EL);
 		for (Element group : groups) {//replaces outAtoms with valency greater than 1 with multiple outAtoms; e.g. ylidene -->diyl
 			Fragment frag = state.xmlFragmentMap.get(group);
-			for (int i = frag.getOutAtoms().size()-1; i>=0; i--) {
+			for (int i = frag.getOutAtomCount()-1; i>=0; i--) {
 				OutAtom outAtom =frag.getOutAtom(i);
 				if (outAtom.getValency()>1){
 					FragmentTools.splitOutAtomIntoValency1OutAtoms(outAtom);
@@ -1104,8 +1104,8 @@ class StructureBuilder {
 		resolveWordOrBracket(state, words.get(wordIndice));//the group
 		Element finalGroup = findRightMostGroupInWordOrWordRule(words.get(wordIndice));
 		Fragment theDiRadical = state.xmlFragmentMap.get(finalGroup);
-		if (theDiRadical.getOutAtoms().size()!=2){
-			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outAtoms. Found: " + theDiRadical.getOutAtoms() );
+		if (theDiRadical.getOutAtomCount()!=2){
+			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outAtoms. Found: " + theDiRadical.getOutAtomCount() );
 		}
 		wordIndice++;
 		if (wordIndice >= words.size() || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
@@ -2027,7 +2027,7 @@ class StructureBuilder {
 	
 	private List<Fragment> convertOutAtomsToRgroups(BuildState state, Fragment uniFrag) throws StructureBuildingException {
 		List<Fragment> rGroups = new ArrayList<Fragment>();
-		int outAtomCount = uniFrag.getOutAtoms().size();
+		int outAtomCount = uniFrag.getOutAtomCount();
 		for (int i = outAtomCount -1; i >=0; i--) {
 			OutAtom outAtom = uniFrag.getOutAtom(i);
 			uniFrag.removeOutAtom(i);

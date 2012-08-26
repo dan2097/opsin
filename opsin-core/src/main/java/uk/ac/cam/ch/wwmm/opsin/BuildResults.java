@@ -40,8 +40,12 @@ class BuildResults {
 		for (Element group : groups) {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			fragments.add(frag);
-			outAtoms.addAll(frag.getOutAtoms());
-			functionalAtoms.addAll(frag.getFunctionalAtoms());
+			for (int i = 0, l = frag.getOutAtomCount(); i < l; i++) {
+				outAtoms.add(frag.getOutAtom(i));
+			}
+			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
+				functionalAtoms.add(frag.getFunctionalAtom(i));
+			}
 		}
 	}
 
