@@ -273,9 +273,11 @@
 		<token value="O=P(C#N)(N(C)C)OCC" labels="none" valType="SMILES">tabun</token>
 		<token value="C(=O)([O-])C(O)C(O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">tartrate</token>
 		<token value="C(=O)([O-])[C@@H](O)[C@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">d-tartrate</token>
+		<token value="C(=O)([O-])[C@@H](O)[C@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">(d)-tartrate</token>
 		<token value="C(=O)([O-])[C@@H](O)[C@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">d(-)-tartrate</token>
 		<token value="C(=O)([O-])[C@@H](O)[C@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">d-(-)-tartrate</token>
 		<token value="C(=O)([O-])[C@H](O)[C@@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">l-tartrate</token>
+		<token value="C(=O)([O-])[C@H](O)[C@@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">(l)-tartrate</token>
 		<token value="C(=O)([O-])[C@H](O)[C@@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">l(+)-tartrate</token>
 		<token value="C(=O)([O-])[C@H](O)[C@@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">l-(+)-tartrate</token>
 		<token value="[TeH2]=N" labels="none" valType="SMILES">tellurilimine</token>

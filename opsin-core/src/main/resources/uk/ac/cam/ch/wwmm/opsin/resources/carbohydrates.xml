@@ -136,7 +136,9 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="G">
 			<token value="O=CC(O)CO" labels="/1/2//3/" valType="SMILES">glyceraldehyde</token>
 			<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">d-glyceraldehyde</token>
+			<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">(d)-glyceraldehyde</token>
 			<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">l-glyceraldehyde</token>
+			<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
 
 			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
 			<!--add Neuraminic acid-->
