@@ -62,8 +62,11 @@
 
   <tokenList tagname="dlStereochemistry" symbol="Ü">
     <token value="d">d-</token>
+    <token value="d">(d)-</token>
     <token value="l">l-</token>
+    <token value="l">(l)-</token>
     <token value="dl">dl-</token>
+    <token value="dl">(dl)-</token>
 <!--used to distinguish amino acid D/L from carbohydrate D/L if desired-->
     <token value="ds">ds-</token>
     <token value="dg">dg-</token>
