@@ -1063,8 +1063,9 @@ class ComponentGenerator {
 					 possibleHeteroatomOrMultiplier!=null &&
 						(fusedRingPresent && possibleHeteroatomOrMultiplier.getLocalName().equals(GROUP_EL) &&
 						(possibleHeteroatomOrMultiplier.getValue().equals("benzo") || possibleHeteroatomOrMultiplier.getValue().equals("benz"))
-						&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(FUSION_EL)) ||
-						(possibleHeteroatomOrMultiplier.getLocalName().equals(POLYCYCLICSPIRO_EL) && 
+						&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(FUSION_EL)
+						&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(LOCANT_EL)) 
+						|| (possibleHeteroatomOrMultiplier.getLocalName().equals(POLYCYCLICSPIRO_EL) && 
 								(possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spirobi")|| possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spiroter")))){
 				frontLocantsExpected = true;//a benzo fused ring e.g. 1lambda4,3-benzothiazole or a symmetrical poly cyclic spiro system
 			}
