@@ -17,6 +17,7 @@
       <token value="c1cccc1" valType="SMILES">ol</token>
       <token value="C1CCCC1" valType="SMILES">olan</token>
       <token value="C1CCCC1" valType="SMILES">olidin</token>
+      <token value="C1CCCC1" valType="SMILES">olid</token><!--incorrect but avoids [ol, id] tokenisation-->
       <token value="C1CCCC1" valType="SMILES" addBond="2">olin</token>
       <token value="C1CCCC1" valType="SMILES" addBond="2">olen</token>
 

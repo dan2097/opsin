@@ -59,6 +59,10 @@ class ComponentProcessor {
 		specialHWRings.put("thiazolidin", new String[]{"","S","C","N","C","C"});
 		specialHWRings.put("selenazolidin", new String[]{"","Se","C","N","C","C"});
 		specialHWRings.put("tellurazolidin", new String[]{"","Te","C","N","C","C"});
+		specialHWRings.put("oxazolid", new String[]{"","O","C","N","C","C"});
+		specialHWRings.put("thiazolid", new String[]{"","S","C","N","C","C"});
+		specialHWRings.put("selenazolid", new String[]{"","Se","C","N","C","C"});
+		specialHWRings.put("tellurazolid", new String[]{"","Te","C","N","C","C"});
 		specialHWRings.put("oxazolin", new String[]{"","O","C","N","C","C"});
 		specialHWRings.put("thiazolin", new String[]{"","S","C","N","C","C"});
 		specialHWRings.put("selenazolin", new String[]{"","Se","C","N","C","C"});
