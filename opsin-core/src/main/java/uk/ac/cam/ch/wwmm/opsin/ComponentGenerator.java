@@ -2099,8 +2099,8 @@ class ComponentGenerator {
 			}
 		}
 
-		//anthrone, phenanthrone and xanthone have the one at position 9 by default
-		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") ||
+		//acridone (not codified), anthrone, phenanthrone and xanthone have the one at position 9 by default
+		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("acrid") ||
 				groupValue.equals("xanth") || groupValue.equals("thioxanth") || groupValue.equals("selenoxanth")|| groupValue.equals("telluroxanth")|| groupValue.equals("xanthen")) {
 			Element possibleLocant = (Element) XOMTools.getPreviousSibling(group);
 			if (possibleLocant==null || !possibleLocant.getLocalName().equals(LOCANT_EL)){//only need to give one a locant of 9 if no locant currently present
