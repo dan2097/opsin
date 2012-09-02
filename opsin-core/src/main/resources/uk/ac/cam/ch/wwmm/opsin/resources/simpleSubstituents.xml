@@ -262,6 +262,7 @@
 		<token value="-S" labels="none" valType="SMILES" usableAsAJoiner="yes">mercapto</token>
 		<token value="-S" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfhydryl</token>
 		<token value="=S" labels="none" valType="SMILES">thioxo</token>
+		<token value="=S" labels="none" valType="SMILES">thiono</token><!--deprecated-->
 		<token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
 		<token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
 
