@@ -20,6 +20,8 @@
 		<token value="[NH2+]" labels="none" valType="SMILES">aminylium</token>
 		<!--<token value="[O-]C(C[N+](C)(C)C)=O" labels="none" valType="SMILES">betaine</token> also is a modifier of other amino acids-->
 		<token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'" valType="SMILES">biacetyl</token>
+		<token value="Cl[Bi]=O" labels="none" valType="SMILES">bismuth oxychloride</token>
+		<token value="Cl[Bi]=O" labels="none" valType="SMILES">bismuthoxychloride</token>
 		<token value="[O-]C(=O)C(O)C(O)C(=O)O" labels="none" valType="SMILES" functionalIDs="1">bitartrate</token>
 		<token value="O=C(CN(CCO)CCO)O" labels="none" valType="SMILES">bicine</token>
 		<token value="C=C(C(C)=C)C" labels="none" valType="SMILES">biisopropenyl</token>
@@ -141,6 +143,8 @@
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES">icosasphinganine</token>
 		<token value="=[NH]" labels="none" valType="SMILES">imidogen</token>
 		<token value="C(I)(I)(I)" labels="none" valType="SMILES">iodoform</token>
+		<token value="Cl[Fe]=O" labels="none" valType="SMILES">iron oxychloride</token>
+		<token value="Cl[Fe]=O" labels="none" valType="SMILES">ironoxychloride</token>
 		<token value="CC(C)C[O-]" labels="none" valType="SMILES">isobutoxide</token>
 		<token value="CC(C)=C" labels="none" valType="SMILES">isobutylene</token>
 		<token value="NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazide</token>
@@ -253,6 +257,8 @@
 		<token value="CC([O-])CC" labels="none" valType="SMILES">sec-butoxide</token>
 		<token value="CC([O-])CC" labels="none" valType="SMILES">secbutoxide</token>
 		<token value="[SeH2]=N" labels="none" valType="SMILES">selenilimine</token>
+		<token value="Br[Se](Br)=O" labels="none" valType="SMILES">selenium oxybromide</token>
+		<token value="Br[Se](Br)=O" labels="none" valType="SMILES">seleniumoxybromide</token>
 		<token value="[SeH2](=O)=N" labels="none" valType="SMILES">selenoximide</token>
 		<token value="[SeH2](=O)=N" labels="none" valType="SMILES">selenoximine</token>
 		<token value="NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazide</token>
