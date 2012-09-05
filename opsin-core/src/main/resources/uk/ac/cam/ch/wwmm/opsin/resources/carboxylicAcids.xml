@@ -203,13 +203,13 @@
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">heptacosyl</token><!--clashes with a systematic name-->
     <token value="CCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">heptadecyl</token><!--clashes with a systematic name-->
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">hexatriacontyl</token><!--clashes with a systematic name-->
-    <token value="CCCC(=O)CC" labels="none" valType="SMILES">homolevulin</token><!--unknown-->
+    <token value="CCCC(=O)CC" labels="1/2/3/4//5/6" valType="SMILES">homolevulin</token><!--unknown-->
     <token value="CCNC(=O)N" labels="1/2/3/4//5" valType="SMILES">hydant</token><!--unknown-->
     <token value="CC(C)CC" labels="none" valType="SMILES">hydrangel</token><!--unknown-->
     <token value="CC(O)C(C)CC" suffixAppliesTo="1,5,7" labels="none" valType="SMILES">isocitr</token><!--unknown-->
     <token value="CC(CO)CC" labels="none" valType="SMILES" suffixAppliesTo="1,6">itamal</token><!--unknown-->
     <token value="CC(CO)(O)CC" labels="none" valType="SMILES" suffixAppliesTo="1,7">itatartar</token><!--unknown-->
-    <token value="CCCC(=O)C" labels="none" valType="SMILES">levulin</token><!--unknown-->
+    <token value="CCCC(=O)C" labels="1/2/3/4//5" valType="SMILES">levulin</token><!--unknown-->
 		<token value="c1c(O)cc(C)cc1" labels="none" valType="SMILES">m-homosalicyl</token><!--unknown-->
 		<token value="c1c(O)cc(C)cc1" labels="none" valType="SMILES">meta-homosalicyl</token><!--unknown-->
 		<token value="C/C=C\C(NC(N)=O)=O" labels="none" valType="SMILES">maleur</token><!--unknown-->
