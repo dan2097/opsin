@@ -316,6 +316,7 @@
 
 		<token value="-C(=O)OCC1c2ccccc2c3ccccc13" labels="none" valType="SMILES">fmoc</token>
 		<token value="-[Si](C)(C)C" labels="none" valType="SMILES">tms</token>
+		<token value="-[Si](C)(C)C(C)(C)C" labels="none" valType="SMILES">tbdms</token>
 
 		<token value="-[Ac]" labels="none" valType="SMILES">actinio</token>
 		<token value="-[Al]" labels="none" valType="SMILES">aluminio</token>
