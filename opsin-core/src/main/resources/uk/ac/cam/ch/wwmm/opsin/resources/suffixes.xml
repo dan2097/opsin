@@ -161,11 +161,25 @@
     <token value="thione">thion</token>
   </tokenList>
 
-<!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachement points as indicated by the subType-->
+<!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->
   <tokenList tagname="suffix" type="root" subType="cycleformer" symbol="s">
     <token value="imide">imide</token>
     <token value="imide">imid</token>
     <token value="imidium">imidium</token>
     <token value="imidylium">imidylium</token>
+  </tokenList>
+
+<!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->
+  <tokenList tagname="suffix" type="root" subType="cycleformer" symbol="è">
+    <token value="carbolactone">carbolactone</token>
+    <token value="dicarboximide">dicarboximide</token>
+    <token value="lactam">lactam</token>
+    <token value="lactim">lactim</token>
+    <token value="lactone">lactone</token>
+    <token value="olide">olide</token>
+    <token value="sultam">sultam</token>
+    <token value="sultim">sultim</token>
+    <token value="sultine">sultine</token>
+    <token value="sultone">sultone</token>
   </tokenList>
 </tokenLists>

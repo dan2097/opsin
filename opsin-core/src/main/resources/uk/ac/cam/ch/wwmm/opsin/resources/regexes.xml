@@ -135,7 +135,7 @@ does not define a CFG.
 	<regex name="%epoxy%" value="å"/>
 	<regex name="%unbrackettedEZ%" value="æ"/>
 	<regex name="%functionalSuffixBeforeInlineSuffix%" value="ç"/>
-  <!--Alt 0232 goes here-->
+	<regex name="%cycleFormingSuffix%" value="è"/>
   <regex name="%endOfSubstituent%" value="é"/>
   <!--next would be Alt 0234-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
@@ -171,7 +171,7 @@ does not define a CFG.
   <regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%suffix%)"/>
   <regex name="%infixedSuffix%" value ="((%o%?%infixReplacement%%suffixes%)|(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%))" />
   <regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%%optionalCloseBracket%)" />
-  <regex name="%rootSuffix%" value= "(%suffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%)" />
+  <regex name="%rootSuffix%" value= "(%suffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%|%cycleFormingSuffix%)" />
   <regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?(%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%|%infixedPrefixedSuffix%))|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
   <regex name="%suffixGroup%" value="(%hyphen%?(%relativeCisTrans%|%newLocantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%unlocantedSuffixGroup%)"/>
   <regex name="%rootEnding%" value="(%inlineChargeGroup%*%suffixGroup%?)"/>
@@ -213,6 +213,10 @@ does not define a CFG.
   <!--chalcogenAcidGroups must be substituted otherwise they are generic terms-->
   <regex name="%chalcogenAcidGroup%" value="(%chalcogenAcid%(%infixedSuffix%|%o%?%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%)|%chalcogenAcid%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%))"/>
+
+	<!--e.g. lactam, despite being cyclic it makes sense to class these as acyclic as they are highly unlikely to be used in more complex ring nomenclature
+  grouping these in with the acids makes sense considering their derivation-->
+  <!--<regex name="%cycleFormingSuffixAlkane%" value="(%alkaneStem%%a%?%unsaturationBlock%%o%?%cycleFormingSuffix%)"/> |%cycleFormingSuffixAlkane%-->
 
   <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
   <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
