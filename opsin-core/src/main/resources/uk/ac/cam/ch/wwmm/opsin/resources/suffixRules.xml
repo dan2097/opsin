@@ -91,11 +91,17 @@ sense of this -->
   <rule value="carbamic">
     <addgroup SMILES="[*]NC(=O)O" functionalIDs="5"/>
   </rule>
+  <rule value="carbolactone">
+    <addgroup SMILES="[*]C(=O)O[*]"/>
+  </rule>
   <rule value="carbonyl">
     <addgroup SMILES="[*]C(=O)" outIDs="2"/>
   </rule>
   <rule value="carbonylium">
     <addgroup SMILES="[*][C+]=O"/>
+  </rule>
+  <rule value="dicarboximide">
+    <addgroup SMILES="[*]C(=O)NC(=O)[*]"/>
   </rule>
   <rule value="carboxylic">
     <addgroup SMILES="[*]C(=O)O" functionalIDs="4"/>
@@ -178,6 +184,15 @@ sense of this -->
   <rule value="ium">
     <changecharge charge="1" protons="1"/>
   </rule>
+  <rule value="lactam">
+    <addgroup SMILES="[*](=O)N[*]"/>
+  </rule>
+  <rule value="lactim">
+    <addgroup SMILES="[*](O)=N[*]"/>
+  </rule>
+  <rule value="lactone">
+    <addgroup SMILES="[*](=O)O[*]"/>
+  </rule>
   <rule value="nitrile">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*]#N"/>
@@ -191,6 +206,9 @@ sense of this -->
   </rule>
   <rule value="olate">
     <addgroup SMILES="[*][O-]" />
+  </rule>
+  <rule value="olide">
+    <addgroup SMILES="[*](=O)O[*]"/>
   </rule>
   <rule value="onaphthone">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
@@ -300,6 +318,18 @@ sense of this -->
   </rule>
   <rule value="sulfonyl">
     <addgroup SMILES="[*]S(=O)(=O)" outIDs="2"/>
+  </rule>
+  <rule value="sultam">
+    <addgroup SMILES="[*]S(=O)(=O)N[*]"/>
+  </rule>
+  <rule value="sultim">
+    <addgroup SMILES="[*]S(O)(=O)=N[*]"/>
+  </rule>
+  <rule value="sultine">
+    <addgroup SMILES="[*]S(=O)[*]"/>
+  </rule>
+  <rule value="sultone">
+    <addgroup SMILES="[*]S(=O)(=O)[*]"/>
   </rule>
   <rule value="tellone">
     <addgroup SMILES="[*]=[Te]" ketoneLocant="yes" />

@@ -839,7 +839,7 @@ class ComponentProcessor {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
 		Element group =subOrBracketOrRoot.getFirstChildElement(GROUP_EL);//will be null if element is a bracket
 		for (Element locant : locants) {
-			String [] locantValues = MATCH_COMMA.split(locant.getValue());
+			String[] locantValues = MATCH_COMMA.split(locant.getValue());
 			if(locantValues.length > 1) {
 				Element afterLocant = (Element)XOMTools.getNextSibling(locant);
 				int structuralBracketDepth = 0;
@@ -1002,17 +1002,25 @@ class ComponentProcessor {
 				}
 			}
 		}
-		if(currentElem != null && currentElem.getLocalName().equals(POLYCYCLICSPIRO_EL)){
-			return true;
-		}
-		if(currentElem != null && count==2 && currentElem.getLocalName().equals(FUSEDRINGBRIDGE_EL)){
-			return true;
+		if(currentElem != null) {
+			String name = currentElem.getLocalName();
+			if (name.equals(POLYCYCLICSPIRO_EL)){
+				return true;
+			}
+			else if (name.equals(FUSEDRINGBRIDGE_EL) && count == 2){
+				return true;
+			}
+			else if (name.equals(SUFFIX_EL) && CYCLEFORMER_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR)) && count == 2){
+				currentElem.addAttribute(new Attribute(LOCANT_ATR, locant.getValue()));
+				locant.detach();
+				return true;
+			}
 		}
 		boolean detectedMultiplicativeNomenclature = detectMultiplicativeNomenclature(locant, locantValues, finalSubOrRootInWord);
 		if (detectedMultiplicativeNomenclature){
 			return true;
 		}
-		if (currentElem != null && currentElem.getLocalName().equals(GROUP_EL) && count ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
+		if (currentElem != null  && count ==2 && currentElem.getLocalName().equals(GROUP_EL) && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
 			return true;
 		}
 		Element parentElem = (Element) locant.getParent();
@@ -1809,11 +1817,15 @@ class ComponentProcessor {
 
             boolean cyclic;//needed for addSuffixPrefixIfNonePresentAndCyclic rule
             Atom atomLikelyToBeUsedBySuffix = null;
-            if (suffix.getAttribute(LOCANT_ATR) != null) {
-            	atomLikelyToBeUsedBySuffix = frag.getAtomByLocant(suffix.getAttributeValue(LOCANT_ATR));
+            
+            String locant = suffix.getAttributeValue(LOCANT_ATR);
+            String locantId = suffix.getAttributeValue(LOCANTID_ATR);
+
+            if (locant != null && locant.indexOf(',') == -1) {
+            	atomLikelyToBeUsedBySuffix = frag.getAtomByLocant(locant);
             }
-            else if (suffix.getAttribute(LOCANTID_ATR) != null && !CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))) {
-            	atomLikelyToBeUsedBySuffix = frag.getAtomByIDOrThrow(Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR)));
+            else if (locantId != null && locantId.indexOf(',') == -1) {
+            	atomLikelyToBeUsedBySuffix = frag.getAtomByIDOrThrow(Integer.parseInt(locantId));
             }
             if (atomLikelyToBeUsedBySuffix==null){
             	//a locant has not been specified
@@ -3657,7 +3669,8 @@ class ComponentProcessor {
 						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
 							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
 							String type = group.getAttributeValue(TYPE_ATR);
-							if (type.equals(ACIDSTEM_TYPE_VAL)|| type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
+							if ((type.equals(ACIDSTEM_TYPE_VAL) && !CYCLEFORMER_SUBTYPE_VAL.equals(el.getAttributeValue(SUBTYPE_ATR)))||
+									type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
 								continue;
 							}
 						}
@@ -3779,17 +3792,18 @@ class ComponentProcessor {
             String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 
             String locant = suffix.getAttributeValue(LOCANT_ATR);
+            String locantId = suffix.getAttributeValue(LOCANTID_ATR);
             int idOnParentFragToUse = 0;
-            if (locant != null) {
+            if (locant != null && locant.indexOf(',') == -1) {
                 idOnParentFragToUse = frag.getIDFromLocantOrThrow(locant);
             }
-            if (idOnParentFragToUse == 0 && suffix.getAttribute(LOCANTID_ATR) != null && !CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))) {
-                idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR));
+            else if (locantId != null && locantId.indexOf(',') == -1) {
+                idOnParentFragToUse = Integer.parseInt(locantId);
             }
-            if (idOnParentFragToUse == 0 && suffix.getAttribute(DEFAULTLOCANTID_ATR) != null) {
+            else if (suffix.getAttribute(DEFAULTLOCANTID_ATR) != null) {
                 idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(DEFAULTLOCANTID_ATR));
             }
-            if (idOnParentFragToUse == 0 && (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL))) {//means that e.g. sulfonyl has an explicit outAtom
+            else if (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL)) {//means that e.g. sulfonyl has an explicit outAtom
                 idOnParentFragToUse = firstAtomID;
             }
 
@@ -3812,7 +3826,7 @@ class ComponentProcessor {
                             throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
                         }
                         if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))){
-                        	processCycleFormingSuffix(suffixFrag, frag, group);
+                        	processCycleFormingSuffix(suffixFrag, frag, suffix);
                         }
                         else{
 	                        int bondOrderRequired = firstAtomInSuffix.getIncomingValency();
@@ -3940,7 +3954,7 @@ class ComponentProcessor {
 	}
 
 
-	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element group) throws StructureBuildingException, ComponentGenerationException {
+	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element suffix) throws StructureBuildingException, ComponentGenerationException {
 		List<Atom> rAtoms = new ArrayList<Atom>();
 		for (Atom a : suffixFrag.getAtomList()) {
 			if (a.getElement().equals("R")){
@@ -3950,25 +3964,45 @@ class ComponentProcessor {
 		if (rAtoms.size() != 2){
 			throw new ComponentGenerationException("OPSIN bug: Incorrect number of R atoms associated with cyclic suffix");
 		}
-		
-		String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-		if (suffixInstruction == null){
-			throw new ComponentGenerationException("OPSIN bug: Missing suffixAppliesTo on group preceding cyclic suffix");
-		}
-		String[] suffixInstructions = MATCH_COMMA.split(suffixInstruction);
-		if (suffixInstructions.length != 2){
-			throw new ComponentGenerationException("cyclic suffixes are not applicable to: " + group.getValue());
-		}
-	
 	    if (rAtoms.get(0).getBonds().size() <= 0 || rAtoms.get(1).getBonds().size() <= 0) {
 	        throw new ComponentGenerationException("OPSIN Bug: Dummy atoms in suffix should have at least one bond to them");
 	    }
-	    int firstIdInFragment = suffixableFragment.getIdOfFirstAtom(); 
-	    
-	    
-	    Atom parentAtom1 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1);
-	    Atom parentAtom2 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(suffixInstructions[1]) -1);
-	
+		
+	    Atom parentAtom1;
+	    Atom parentAtom2;
+
+	    String locant = suffix.getAttributeValue(LOCANT_ATR);
+	    String locantId = suffix.getAttributeValue(LOCANTID_ATR);
+	    if (locant != null){
+	    	String[] locants = MATCH_COMMA.split(locant);
+			if (locants.length ==2){
+			    parentAtom1 = suffixableFragment.getAtomByLocantOrThrow(locants[0]);
+			    parentAtom2 = suffixableFragment.getAtomByLocantOrThrow(locants[1]);
+			}
+			else if (locants.length ==1){
+			    parentAtom1 = suffixableFragment.getAtomByLocantOrThrow("1");
+			    parentAtom2 = suffixableFragment.getAtomByLocantOrThrow(locants[0]);
+			}
+			else{
+				throw new ComponentGenerationException("Incorrect number of locants associated with cycle forming suffix, expected 2 found: " + locants.length);
+			}
+	    }
+	    else if (locantId !=null) {
+	    	String[] locantIds = MATCH_COMMA.split(locantId);
+			if (locantIds.length !=2){
+				throw new ComponentGenerationException("OPSIN bug: Should be exactly 2 locants associated with a cyclic suffix");
+			}
+		    int firstIdInFragment = suffixableFragment.getIdOfFirstAtom(); 
+		    parentAtom1 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(locantIds[0]) -1);
+		    parentAtom2 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(locantIds[1]) -1);
+	    }
+	    else{
+	    	throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" should be locanted!");
+	    }
+	    if (parentAtom1.equals(parentAtom2)){
+	    	throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" attempted to form a cycle involving the same atom twice!");
+	    }
+
 	    makeBondsToSuffix(parentAtom1, rAtoms.get(0));
 	    makeBondsToSuffix(parentAtom2, rAtoms.get(1));
         state.fragManager.removeAtomAndAssociatedBonds(rAtoms.get(1));

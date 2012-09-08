@@ -44,7 +44,6 @@
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminaldehyde</token>
 		<token value="OCc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6" valType="SMILES">cuminol</token>
 		<token value="COc1cc(ccc1O)\C=C\C(=O)CC(=O)\C=C\c1ccc(O)c(OC)c1" labels="none" valType="SMILES">curcumin</token>
-		<token value="C1(=O)CCCCO1" labels="1//2/3/4/5/" valType="SMILES">delta-valerolactone</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamid</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" valType="SMILES" functionalIDs="9">dibenzamide</token>
 		<token value="c1(c(C(=O)[O-])cccc1)c2c(C(=O)[O-])cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" valType="SMILES" functionalIDs="5,14">diphenate</token>
@@ -57,8 +56,6 @@
 		<token value="c1(ccc(CC=C)cc1)OC" labels="none" valType="SMILES">estragole</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6" valType="SMILES">ethyl vanillin</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6" valType="SMILES">ethylvanillin</token>
-		<token value="C1(=O)CCCO1" labels="1//2/3/4/" valType="SMILES">gamma-butyrolactone</token>
-		<token value="C1(=O)CCC(C)O1" labels="1//2/3/4/5/" valType="SMILES">gamma-valerolactone</token>
 		<token value="O=CCc1cc(O)c(OC)cc1" labels="///1/2/3//4///5/6" valType="SMILES">homoisovanillin</token>
 		<token value="O=CCc1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6" valType="SMILES">homovanillin</token>
 		<token value="O=CCc1c(O)c(OC)ccc1" labels="///1/2//3///4/5/6" valType="SMILES">o-homovanillin</token>
