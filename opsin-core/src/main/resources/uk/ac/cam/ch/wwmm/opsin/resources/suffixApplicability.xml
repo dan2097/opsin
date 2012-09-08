@@ -88,6 +88,10 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="anilide">anilide</suffix>
     <suffix value="ate">ate</suffix>
     <suffix value="ic">ic</suffix>
+    <suffix value="imide">cyclicimide</suffix>
+    <suffix value="imidium">cyclicimidium</suffix>
+    <suffix value="imido">cyclicimido</suffix>
+    <suffix value="imidylium">cyclicimidylium</suffix>
     <suffix value="ium">ium</suffix>
     <suffix value="ol" subType="endInIne">ol</suffix>
     <suffix value="ol" subType="endInAn">ol</suffix>
