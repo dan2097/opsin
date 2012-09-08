@@ -3949,6 +3949,9 @@ class ComponentProcessor {
 					}
 				}
                 state.fragManager.incorporateFragment(suffixFrag, frag);
+                if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))){
+                	CycleDetector.assignWhetherAtomsAreInCycles(frag);
+                }
             }
         }
 	}
@@ -3997,10 +4000,26 @@ class ComponentProcessor {
 		    parentAtom2 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(locantIds[1]) -1);
 	    }
 	    else{
-	    	throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" should be locanted!");
+	    	int chainLength = suffixableFragment.getChainLength();
+	    	if (chainLength > 1 && chainLength == suffixableFragment.getAtomList().size()){
+	    		parentAtom1 = suffixableFragment.getAtomByLocantOrThrow("1");
+	    		parentAtom2 = suffixableFragment.getAtomByLocantOrThrow(String.valueOf(chainLength));
+	    	}
+	    	else{
+	    		throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" should be locanted!");
+	    	}
 	    }
 	    if (parentAtom1.equals(parentAtom2)){
 	    	throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" attempted to form a cycle involving the same atom twice!");
+	    }
+
+	    if (parentAtom2.getElement().equals("O")){//cyclic suffixes like lactone formally indicate the removal of hydroxy cf. 1979 rule 472.1
+	    	//...although in most cases they are used on structures that don't actually have a hydroxy group
+	    	List<Atom> neighbours = parentAtom2.getAtomNeighbours();
+	    	if (neighbours.size()==1){
+	    		state.fragManager.removeAtomAndAssociatedBonds(parentAtom2);
+	    		parentAtom2 = neighbours.get(0);
+	    	}
 	    }
 
 	    makeBondsToSuffix(parentAtom1, rAtoms.get(0));
