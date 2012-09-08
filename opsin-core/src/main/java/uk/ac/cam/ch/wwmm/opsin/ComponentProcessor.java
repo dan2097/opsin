@@ -1657,9 +1657,8 @@ class ComponentProcessor {
 	private void preliminaryProcessSuffixes(Element group, List<Element> suffixes) throws ComponentGenerationException, StructureBuildingException{
 		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
 
-		boolean imideSpecialCase =false;
 		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//typically a trivial polyAcid or aminoAcid
-			imideSpecialCase = processSuffixAppliesTo(group, suffixes,suffixableFragment);
+			processSuffixAppliesTo(group, suffixes,suffixableFragment);
 		}
 		else{
 			for (Element suffix : suffixes) {
@@ -1687,27 +1686,6 @@ class ComponentProcessor {
 	    	suffixableFragment.setType(NONCARBOXYLICACID_TYPE_VAL);
 	    	suffixesResolved =true;
 	    }
-		if (imideSpecialCase){//Pretty horrible hack to allow cyclic imides
-			if (suffixes.size() !=2){
-				throw new ComponentGenerationException("Expected two suffixes fragments for cyclic imide");
-			}
-			Atom nitrogen =null;
-			for (Atom a : suffixFragments.get(0).getAtomList()) {
-				if (a.getElement().equals("N")){//amide
-					nitrogen =a;
-				}
-			}
-			if (nitrogen ==null){
-				throw new ComponentGenerationException("Nitrogen not found where nitrogen expected");
-			}
-			Atom carbon = suffixableFragment.getAtomByIDOrThrow(Integer.parseInt(suffixes.get(1).getAttributeValue(LOCANTID_ATR)));
-			if (!carbon.getElement().equals("C")){
-				throw new ComponentGenerationException("Carbon not found where carbon expected");
-			}
-			resolveSuffixes(group, suffixes);
-			suffixesResolved = true;
-			state.fragManager.createBond(nitrogen, carbon, 1);//join the N of the amide to the carbon of the acid to form the cyclic imide
-		}
 		if (suffixesResolved){
 			//suffixes have already been resolved so need to be detached to avoid being passed to resolveSuffixes later
 			for (int i = suffixes.size() -1; i>=0; i--) {
@@ -1744,15 +1722,12 @@ class ComponentProcessor {
 
 	/**
 	 * Processes the effects of the suffixAppliesTo attribute
-	 * Returns true if an imide is detected
 	 * @param group
 	 * @param suffixes
 	 * @param suffixableFragment
-	 * @return
 	 * @throws ComponentGenerationException
 	 */
-	private boolean processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws ComponentGenerationException {
-		boolean imideSpecialCase =false;
+	private void processSuffixAppliesTo(Element group, List<Element> suffixes, Fragment suffixableFragment) throws ComponentGenerationException {
 		//suffixAppliesTo attribute contains instructions for number/positions of suffix
 		//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
@@ -1763,18 +1738,22 @@ class ComponentProcessor {
 			if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
 				throw new ComponentGenerationException("More than one suffix detected on trivial polyAcid. Not believed to be allowed");
 			}
+
 			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
 			String[] suffixInstructions = MATCH_COMMA.split(suffixInstruction);
+			if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))){
+				if (suffixInstructions.length !=2){
+					throw new ComponentGenerationException("suffix: " + suffix.getValue() + " used on an inappropriate group");
+				}
+				suffix.addAttribute(new Attribute(LOCANTID_ATR, suffixInstruction));
+				return;
+			}
 			boolean symmetricSuffixes =true;
 			if (suffix.getAttribute(ADDITIONALVALUE_ATR)!=null){//handles amic, aldehydic, anilic and amoyl suffixes properly
 				if (suffixInstructions.length < 2){
 					throw new ComponentGenerationException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
 				symmetricSuffixes = false;
-				String suffixValue = suffix.getValue();
-				if (suffixValue.equals("imide") || suffixValue.equals("imid")|| suffixValue.equals("imido") || suffixValue.equals("imidyl")|| suffixValue.equals("imidium")  || suffixValue.equals("imidylium")){
-					imideSpecialCase =true;//prematurely resolve the two suffixes and explicitly join them to form a cyclic imide
-				}
 			}
 
 			int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
@@ -1802,7 +1781,6 @@ class ComponentProcessor {
 				suffixes.add(newSuffix);
 			}
 		}
-		return imideSpecialCase;
 	}
 
 
@@ -1834,7 +1812,7 @@ class ComponentProcessor {
             if (suffix.getAttribute(LOCANT_ATR) != null) {
             	atomLikelyToBeUsedBySuffix = frag.getAtomByLocant(suffix.getAttributeValue(LOCANT_ATR));
             }
-            else if (suffix.getAttribute(LOCANTID_ATR) != null) {
+            else if (suffix.getAttribute(LOCANTID_ATR) != null && !CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))) {
             	atomLikelyToBeUsedBySuffix = frag.getAtomByIDOrThrow(Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR)));
             }
             if (atomLikelyToBeUsedBySuffix==null){
@@ -1946,7 +1924,6 @@ class ComponentProcessor {
             }
         }
 	}
-
 
 	/**
 	 * Finds all hydroxy groups connected to a given atom and adds a functionalAtom to each of them
@@ -3806,7 +3783,7 @@ class ComponentProcessor {
             if (locant != null) {
                 idOnParentFragToUse = frag.getIDFromLocantOrThrow(locant);
             }
-            if (idOnParentFragToUse == 0 && suffix.getAttribute(LOCANTID_ATR) != null) {
+            if (idOnParentFragToUse == 0 && suffix.getAttribute(LOCANTID_ATR) != null && !CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))) {
                 idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(LOCANTID_ATR));
             }
             if (idOnParentFragToUse == 0 && suffix.getAttribute(DEFAULTLOCANTID_ATR) != null) {
@@ -3830,51 +3807,54 @@ class ComponentProcessor {
                             throw new ComponentGenerationException("OPSIN Bug: Suffixlist should not be empty");
                         }
                         suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
-
-                        if (suffixFrag.getFirstAtom().getBonds().size() <= 0) {
+                        Atom firstAtomInSuffix = suffixFrag.getFirstAtom();
+                        if (firstAtomInSuffix.getBonds().size() <= 0) {
                             throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
                         }
-                        int bondOrderRequired = suffixFrag.getFirstAtom().getIncomingValency();
-                        Atom parentfragAtom;
-                        if (idOnParentFragToUse == 0) {
-                            if (suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
-                                if (defaultAtom == 0)
-                                    defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
-                                idOnParentFragToUse = atomList.get(defaultAtom).getID();
-                                defaultAtom++;
-                            } else {
-                                idOnParentFragToUse = atomList.get(defaultAtom).getID();
-                            }
-                            idOnParentFragToUse = frag.getAtomOrNextSuitableAtomOrThrow(frag.getAtomByIDOrThrow(idOnParentFragToUse), bondOrderRequired, true).getID();
-                            parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
-                            if (FragmentTools.isCharacteristicAtom(parentfragAtom)){
-                            	throw new StructureBuildingException("No suitable atom found to attach suffix");
-                            }
+                        if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))){
+                        	processCycleFormingSuffix(suffixFrag, frag, group);
                         }
                         else{
-                        	parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
+	                        int bondOrderRequired = firstAtomInSuffix.getIncomingValency();
+	                        Atom parentfragAtom;
+	                        if (idOnParentFragToUse == 0) {
+	                            if (suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
+	                                if (defaultAtom == 0)
+	                                    defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
+	                                idOnParentFragToUse = atomList.get(defaultAtom).getID();
+	                                defaultAtom++;
+	                            } else {
+	                                idOnParentFragToUse = atomList.get(defaultAtom).getID();
+	                            }
+	                            idOnParentFragToUse = frag.getAtomOrNextSuitableAtomOrThrow(frag.getAtomByIDOrThrow(idOnParentFragToUse), bondOrderRequired, true).getID();
+	                            parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
+	                            if (FragmentTools.isCharacteristicAtom(parentfragAtom)){
+	                            	throw new StructureBuildingException("No suitable atom found to attach suffix");
+	                            }
+	                        }
+	                        else{
+	                        	parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
+	                        }
+	
+	                        //create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
+	                        List<Bond> bonds = new ArrayList<Bond>(firstAtomInSuffix.getBonds());
+	                        for (Bond bondToSuffix : bonds) {
+	                            Atom suffixAtom = bondToSuffix.getOtherAtom(firstAtomInSuffix);
+	                            state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
+	                            state.fragManager.removeBond(bondToSuffix);
+	                            if (parentfragAtom.getIncomingValency()>2 && (suffixValue.equals("aldehyde") || suffixValue.equals("al")|| suffixValue.equals("aldoxime"))){//formaldehyde/methanal are excluded as they are substitutable
+	                            	if("X".equals(suffixAtom.getFirstLocant())){//carbaldehyde
+	                            		suffixAtom.setProperty(Atom.ISALDEHYDE, true);
+	                            	}
+	                            	else{
+	                            		parentfragAtom.setProperty(Atom.ISALDEHYDE, true);
+	                            	}
+	                            }
+	                        }
                         }
-
-                        //create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
-                        List<Bond> bonds = new ArrayList<Bond>(suffixFrag.getFirstAtom().getBonds());
-                        for (Bond bondToSuffix : bonds) {
-                            Atom suffixAtom;
-                            if (bondToSuffix.getToAtom().getElement().equals("R")) {
-                                suffixAtom = bondToSuffix.getFromAtom();
-                            } else {
-                                suffixAtom = bondToSuffix.getToAtom();
-                            }
-                            state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
-                            state.fragManager.removeBond(bondToSuffix);
-                            if (parentfragAtom.getIncomingValency()>2 && (suffixValue.equals("aldehyde") || suffixValue.equals("al")|| suffixValue.equals("aldoxime"))){//formaldehyde/methanal are excluded as they are substitutable
-                            	if("X".equals(suffixAtom.getFirstLocant())){//carbaldehyde
-                            		suffixAtom.setProperty(Atom.ISALDEHYDE, true);
-                            	}
-                            	else{
-                            		parentfragAtom.setProperty(Atom.ISALDEHYDE, true);
-                            	}
-                            }
-                        }
+                    }
+                    else{
+                    	throw new ComponentGenerationException("OPSIN bug: Suffix may only have one addgroup rule: " + suffix.getValue());
                     }
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
         			int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
@@ -3959,6 +3939,55 @@ class ComponentProcessor {
         }
 	}
 
+
+	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element group) throws StructureBuildingException, ComponentGenerationException {
+		List<Atom> rAtoms = new ArrayList<Atom>();
+		for (Atom a : suffixFrag.getAtomList()) {
+			if (a.getElement().equals("R")){
+				rAtoms.add(a);
+			}
+		}
+		if (rAtoms.size() != 2){
+			throw new ComponentGenerationException("OPSIN bug: Incorrect number of R atoms associated with cyclic suffix");
+		}
+		
+		String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
+		if (suffixInstruction == null){
+			throw new ComponentGenerationException("OPSIN bug: Missing suffixAppliesTo on group preceding cyclic suffix");
+		}
+		String[] suffixInstructions = MATCH_COMMA.split(suffixInstruction);
+		if (suffixInstructions.length != 2){
+			throw new ComponentGenerationException("cyclic suffixes are not applicable to: " + group.getValue());
+		}
+	
+	    if (rAtoms.get(0).getBonds().size() <= 0 || rAtoms.get(1).getBonds().size() <= 0) {
+	        throw new ComponentGenerationException("OPSIN Bug: Dummy atoms in suffix should have at least one bond to them");
+	    }
+	    int firstIdInFragment = suffixableFragment.getIdOfFirstAtom(); 
+	    
+	    
+	    Atom parentAtom1 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1);
+	    Atom parentAtom2 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(suffixInstructions[1]) -1);
+	
+	    makeBondsToSuffix(parentAtom1, rAtoms.get(0));
+	    makeBondsToSuffix(parentAtom2, rAtoms.get(1));
+        state.fragManager.removeAtomAndAssociatedBonds(rAtoms.get(1));
+	}
+	
+	/**
+	 * Creates bonds between the parentAtom and the atoms connected to the R atoms.
+	 * Removes bonds to the R atom
+	 * @param parentAtom
+	 * @param suffixRAtom
+	 */
+	private void makeBondsToSuffix(Atom parentAtom, Atom suffixRAtom) {
+	    List<Bond> bonds = new ArrayList<Bond>(suffixRAtom.getBonds());
+	    for (Bond bondToSuffix : bonds) {
+	    	Atom suffixAtom = bondToSuffix.getOtherAtom(suffixRAtom);
+	        state.fragManager.createBond(parentAtom, suffixAtom, bondToSuffix.getOrder());
+	        state.fragManager.removeBond(bondToSuffix);
+	    }
+	}
 
 	/**
 	 * Preference is given to mono cation/anions as they are expected to be more likely

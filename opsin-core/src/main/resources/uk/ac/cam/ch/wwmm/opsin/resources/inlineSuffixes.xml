@@ -11,8 +11,6 @@
     <token value="oyl" additionalValue="anilide">aniloyl</token>
     <token value="carbonyl">carbonyl</token>
     <token value="io">io</token>
-    <token value="amido" additionalValue="aldehyde">imido</token><!--suffixes joined by ComponentProcessor-->
-    <token value="amido" additionalValue="aldehyde">imidyl</token><!--suffixes joined by ComponentProcessor-->
     <token value="iminyl">iminyl</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
@@ -33,6 +31,12 @@
     <token value="ylidyne">ylidyne</token>
     <token value="ylidene">yliden</token>
     <token value="ylidyne">ylidyn</token>
+  </tokenList>
+
+  <!--Have two attachement points as indicated by the subType-->
+  <tokenList tagname="suffix" type="inline" subType="cycleformer" symbol="i">
+    <token value="imido">imido</token>
+    <token value="imido">imidyl</token>
   </tokenList>
 
   <tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes-->

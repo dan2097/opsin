@@ -106,6 +106,18 @@ sense of this -->
   <rule value="carboxylite">
     <addgroup SMILES="[*]C[O-]" functionalIDs="3" />
   </rule>
+  <rule value="cyclicimide">
+    <addgroup SMILES="[*](=O)N[*]=O"/>
+  </rule>
+  <rule value="cyclicimidium">
+    <addgroup SMILES="[*](=O)[NH2+][*]=O"/>
+  </rule>
+  <rule value="cyclicimido">
+    <addgroup SMILES="[*](=O)N[*]=O" outIDs="3"/>
+  </rule>
+  <rule value="cyclicimidylium">
+    <addgroup SMILES="[*](=O)[N+][*]=O"/>
+  </rule>
   <rule value="diazonium">
     <addgroup SMILES="[*][N+]#N" />
   </rule>
