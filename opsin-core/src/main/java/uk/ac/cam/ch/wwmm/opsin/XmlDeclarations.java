@@ -389,6 +389,8 @@ class XmlDeclarations {
 	
 	/**Groups formed in accordance with carbohydrate nomenclature */
 	static final String CARBOHYDRATE_SUBTYPE_VAL ="carbohydrate";
+	/**e.g. imide, lactam, sultam etc.*/
+	static final String CYCLEFORMER_SUBTYPE_VAL ="cycleformer";
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
 	/**amido/hydrazido/imido/nitrido*/
 	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";

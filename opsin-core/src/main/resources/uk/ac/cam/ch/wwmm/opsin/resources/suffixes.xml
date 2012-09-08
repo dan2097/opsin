@@ -102,10 +102,6 @@
     <token value="ic" additionalValue="anilide">anilic</token>
     <token value="ic" additionalValue="anilide">anilicacid</token>
     <token value="ic" additionalValue="anilide">anilic acid</token>
-    <token value="amide" additionalValue="aldehyde">imide</token><!--suffixes joined by ComponentProcessor-->
-    <token value="amide" additionalValue="aldehyde">imid</token><!--suffixes joined by ComponentProcessor-->
-    <token value="amidylium" additionalValue="aldehyde">imidylium</token><!--suffixes joined by ComponentProcessor-->
-    <token value="amidium" additionalValue="aldehyde">imidium</token><!--suffixes joined by ComponentProcessor-->
     <token value="ite">ite</token>
     <token value="ite">it</token>
     <token value="onaphthone">onaphthone</token>
@@ -153,6 +149,7 @@
     <token value="acylium">ylium</token>
   </tokenList>
 
+<!--May appear before an inline suffix e.g. -2-on-3-yl -->
   <tokenList tagname="suffix" type="root" symbol="ç">
     <token value="one">one</token>
     <token value="one">on</token>
@@ -162,5 +159,13 @@
     <token value="tellone">tellon</token>
     <token value="thione">thione</token>
     <token value="thione">thion</token>
+  </tokenList>
+
+<!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachement points as indicated by the subType-->
+  <tokenList tagname="suffix" type="root" subType="cycleformer" symbol="s">
+    <token value="imide">imide</token>
+    <token value="imide">imid</token>
+    <token value="imidium">imidium</token>
+    <token value="imidylium">imidylium</token>
   </tokenList>
 </tokenLists>
