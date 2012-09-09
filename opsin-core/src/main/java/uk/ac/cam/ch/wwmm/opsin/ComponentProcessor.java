@@ -4017,8 +4017,11 @@ class ComponentProcessor {
 	    	//...although in most cases they are used on structures that don't actually have a hydroxy group
 	    	List<Atom> neighbours = parentAtom2.getAtomNeighbours();
 	    	if (neighbours.size()==1){
-	    		state.fragManager.removeAtomAndAssociatedBonds(parentAtom2);
-	    		parentAtom2 = neighbours.get(0);
+	    		List<Atom> suffixNeighbours = rAtoms.get(1).getAtomNeighbours();
+	    		if (suffixNeighbours.size()==1 && suffixNeighbours.get(0).getElement().equals("O")){
+		    		state.fragManager.removeAtomAndAssociatedBonds(parentAtom2);
+		    		parentAtom2 = neighbours.get(0);
+	    		}
 	    	}
 	    }
 
