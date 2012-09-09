@@ -214,11 +214,10 @@ does not define a CFG.
   <regex name="%chalcogenAcidGroup%" value="(%chalcogenAcid%(%infixedSuffix%|%o%?%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%)|%chalcogenAcid%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%))"/>
 
-	<!--e.g. lactam, despite being cyclic it makes sense to class these as acyclic as they are highly unlikely to be used in more complex ring nomenclature
-  grouping these in with the acids makes sense considering their derivation-->
-  <!--<regex name="%cycleFormingSuffixAlkane%" value="(%alkaneStem%%a%?%unsaturationBlock%%o%?%cycleFormingSuffix%)"/> |%cycleFormingSuffixAlkane%-->
+	<!--e.g. this rule is specifically for lactam/lactones etc. with the 'o' before the locant. No attempt is made to indicate that they are cyclic as they are highly unlikely to be used in more complex ring nomenclature -->
+  <regex name="%cycleFormingSuffixAlkane%" value="(%alkaneStem%%a%?%unsaturationBlock%%o%%optLocantGroupNoOMP%%cycleFormingSuffix%)"/>
 
-  <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
+  <regex name="%acidGroup%" value = "(%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%|%cycleFormingSuffixAlkane%)"/>
   <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*)"/>
@@ -267,7 +266,7 @@ does not define a CFG.
   <regex name="%polycyclicSpiro%" value ="(%simpleMultiplier%?%spiro%%structuralOpenBracket%%polycyclicSpiroContents%%structuralCloseBracket%)"/>
   <regex name="%polycyclicSpiroGroup%" value ="(%polycyclicSpiroIdenticalComponents%|%polycyclicSpiro%|%polycyclicSpiroOldMethod%)" />
 
-  <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%ringGroup%|%simpleCyclicGroup%|%fusedRingSystem%)%rootEnding%)" />
+  <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?((%ringGroup%|%fusedRingSystem%)%rootEnding%|%simpleCyclicGroup%))" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%irregularRingSubstituentStem%%optLocantGroupNoOMP%%repeatableInlineSuffix%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%optLocantGroupNoOMP%%repeatableInlineSuffix%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
   <regex name="%locantForRingAssembly%" value = "(%colonSeperatedLocant%|%newLocantGroupNoStartingHyphen%|%optionalOpenBracket%(%colonSeperatedLocant%|%locant%)%optionalCloseBracket%%hyphen%?)" />
