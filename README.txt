@@ -1,5 +1,5 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
-version 1.2.0 (see ReleaseNotes.txt for what's new in this version)
+version 1.3.0 (see ReleaseNotes.txt for what's new in this version)
 
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 We are thankful for contributions from Albina Asadulina and Rich Apodaca
@@ -15,16 +15,16 @@ This is a Java(1.5+) library for IUPAC name-to-structure conversion offering hig
 
 OPSIN is available as a standalone JAR from Bitbucket, http://bitbucket.org/dan2097/opsin/downloads
 It is also available as a dependency for use with Apache Maven.
-opsin-1.2.0-jar-with-dependencies.jar includes CML (Chemical Markup Language), SMILES, and InChI (IUPAC International Chemical Identifier) output and all dependendencies
+opsin-1.3.0-jar-with-dependencies.jar includes CML (Chemical Markup Language), SMILES, and InChI (IUPAC International Chemical Identifier) output and all dependendencies
 The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and SMILES and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI.
 
-To use OPSIN as a library add opsin-1.2.0-jar-with-dependencies.jar to your classpath.
+To use OPSIN as a library add opsin-1.3.0-jar-with-dependencies.jar to your classpath.
 
 If you are using Maven then add:
 		<dependency>
 			 <groupId>uk.ac.cam.ch.opsin</groupId>
 			 <artifactId>opsin-core</artifactId>
-			 <version>1.2.0</version>
+			 <version>1.3.0</version>
 		</dependency>
 	If you need just CML or SMILES output support
 
@@ -32,7 +32,7 @@ If you are using Maven then add:
 		<dependency>
 			 <groupId>uk.ac.cam.ch.opsin</groupId>
 			 <artifactId>opsin-inchi</artifactId>
-			 <version>1.2.0</version>
+			 <version>1.3.0</version>
 		</dependency>
 
 	if you also need InChI output support.
@@ -40,12 +40,12 @@ If you are using Maven then add:
 ##################################################
 
 Using OPSIN as a command-line utility:
-	java -jar opsin-1.2.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
-	java -jar opsin-1.2.0-jar-with-dependencies.jar -h will give you information on more advanced usage
+	java -jar opsin-1.3.0-jar-with-dependencies.jar will give you a command-line interface to convert names to CML
+	java -jar opsin-1.3.0-jar-with-dependencies.jar -h will give you information on more advanced usage
 
 As well as interactive input on the command-line the command-line interface will accept a piped input of newline seperated chemical names.
-e.g. java -jar opsin-1.2.0-jar-with-dependencies.jar < input.name > output.cml
-e.g. java -jar opsin-1.2.0-jar-with-dependencies.jar -osmi < input.name > output.smiles
+e.g. java -jar opsin-1.3.0-jar-with-dependencies.jar < input.name > output.cml
+e.g. java -jar opsin-1.3.0-jar-with-dependencies.jar -osmi < input.name > output.smiles
 
 Using OPSIN as a library:
 
@@ -98,11 +98,12 @@ Conjunctive nomenclature e.g. cyclohexaneethanol
 Fused ring systems e.g. imidazo[4,5-d]pyridine
 Ring assemblies e.g. biphenyl
 Most prefix and infix functional replacement nomenclature
-The following functional classes: acids, acetals, alcohols, amides, anhydrides, azides, bromides, chlorides, cyanates, cyanides, esters, di/tri/tetra esters
-ethers, fluorides, fulminates, glycols, glycol ethers, hemiacetals, hemiketal, hydrazones, hydroperoxides, hydrazides, imides, iodides, isocyanates,
-isocyanides, isoselenocyanates, isothiocyanates, ketals, ketones, selenocyanates, thiocyanates, selenols, thiols, mercaptans, oxides, oximes, peroxides, selenides,
-selenones, selenoxides, selones, selenoketones, selenosemicarbazone, semicarbazones, sulfides, sulfones, sulfoxides, tellurides, telluroketones,
-tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
+The following functional classes: acids, acetals, alcohols, amides, anhydrides, azides, bromides, chlorides, cyanates, cyanides,
+esters, di/tri/tetra esters, ethers, fluorides, fulminates, glycols, glycol ethers, hemiacetals, hemiketal, hydrazones, hydroperoxides,
+hydrazides, imides, iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, ketals, ketones, lactams, lactims,
+lactones, selenocyanates, thiocyanates, selenols, thiols, mercaptans, oxides, oximes, peroxides, selenides, selenones, selenoxides,
+selones, selenoketones, selenosemicarbazones, semicarbazones, sulfides, sulfones, sulfoxides, sultams, sultims, sultines, sultones,
+tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
 Greek letters
 Lambda convention
 E/Z/R/S stereochemistry
@@ -125,8 +126,6 @@ Carbohydrate derivatives e.g. glycosides
 Most natural Products other than steroids
 Natural product specific nomenclature operations
 Multiplied, unsaturated or composite bridge prefixes e.g. epoxymethano
-
-The following functional classes: Lactones, sultams, lactams, sultims and lactims
 
 ##################################################
 
