@@ -207,9 +207,6 @@ sense of this -->
   <rule value="olate">
     <addgroup SMILES="[*][O-]" />
   </rule>
-  <rule value="olide">
-    <addgroup SMILES="[*](=O)O[*]"/>
-  </rule>
   <rule value="onaphthone">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)c1cccc2ccccc12" labels="//1'/2'/3'/4'/4a'/5'/6'/7'/8'/8a'" />
@@ -326,10 +323,10 @@ sense of this -->
     <addgroup SMILES="[*]S(O)(=O)=N[*]"/>
   </rule>
   <rule value="sultine">
-    <addgroup SMILES="[*]S(=O)[*]"/>
+    <addgroup SMILES="[*]S(=O)O[*]"/>
   </rule>
   <rule value="sultone">
-    <addgroup SMILES="[*]S(=O)(=O)[*]"/>
+    <addgroup SMILES="[*]S(=O)(=O)O[*]"/>
   </rule>
   <rule value="tellone">
     <addgroup SMILES="[*]=[Te]" ketoneLocant="yes" />
