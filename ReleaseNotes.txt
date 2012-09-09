@@ -1,3 +1,15 @@
+Version 1.3.0
+Added option to output radicals as R groups (* in SMILES)
+Added support for carbolactone/dicarboximide/lactam/lactim/lactone/olide/sultam/sultim/sultine/sultone suffixes
+Resolved some cases of ambiguity in the grammar; the program's capability to handle longer peptide names is improved
+Allowed one (as in ketone) before yl e.g. indol-2-on-3-yl
+Allowed primed locants to be used as unprimed locants in a bracket e.g. 2-(4'-methylphenyl)pyridine
+Minor vocabulary improvements
+SMILES writer will no longer reuse ring closures on the same atom
+Fixed case where a name formed of many words that could be parsed ambigously would cause OPSIN to run out of memory
+NameToStructure.getInstance() no longer throws a checked exception
+Many minor bug fixes
+
 Version 1.2.0
 OPSIN is now available from Maven Central
 Basic support for cylised carbohydrates e.g. alpha-D-glucopyranose
