@@ -106,6 +106,7 @@
 		<token value="-c1c(C)c(C)cc(C)c1C" labels="none" valType="SMILES">duryl</token>
 		<token value="-c1c(OC)cc(CC=C)cc1" labels="none" valType="SMILES">eugenyl</token>
 		<token value="-OCC" labels="/1/2" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
+		<token value="-C=N" labels="none" valType="SMILES">formimino</token>
 		<!--<token value="-c1c(OC)cccc1" labels="none" valType="SMILES">guaiacyl</token> ambiguous, can also mean 4-hydroxy-3-methoxyphenyl-->
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" valType="SMILES" defaultInLocant="5">hydantoyl</token>
 		<token value="-NN" valType="SMILES" usableAsAJoiner="yes">hydrazino</token>

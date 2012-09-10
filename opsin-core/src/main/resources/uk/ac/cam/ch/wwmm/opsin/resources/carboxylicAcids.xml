@@ -21,6 +21,14 @@
     <token value="CCCCCC" valType="SMILES" usableAsAJoiner="yes">capro</token>
     <token value="CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">capryl</token>
     <token value="CCCCCCC" valType="SMILES" usableAsAJoiner="yes">enanth</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2cnc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">fol</token><!--foloyl is unknown-->
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">dihydrofol</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">7,8-dihydrofol</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">tetrahydrofol</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,6,7,8-tetrahydrofol</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,10-methenyl-5,6,7,8-tetrahydrofol</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,10-methenyltetrahydrofol</token>
+    <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,10-methenyl-tetrahydrofol</token>
     <token value="CCCC(C)C" labels="none" valType="SMILES">isocapro</token>
     <token value="CC(C)C" labels="none" valType="SMILES" suffixAppliesTo="1,4">isosuccin</token>
     <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
@@ -236,6 +244,10 @@
     <token value="Cc1c(C)c(C)cc(C)c1" labels="/1/2//3//4/5//6" valType="SMILES" suffixAppliesTo="1,4,6,9">prehnit</token><!--unknown-->
     <token value="Cc1c(C)c(C)c(C)cc1" labels="/1/2//3//4//5/6" valType="SMILES">prehnityl</token><!--unknown-->
     <token value="CC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="none" valType="SMILES">pristan</token><!--unknown-->
+    <token value="Cc1ccc(NCc2cnc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">pter</token><!--unknown, pteroic preferred to pteric-->
+    <token value="Cc1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">dihydropter</token>
+    <token value="Cc1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">7,8-dihydropter</token>
+    <token value="Cc1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,6,7,8-tetrahydropter</token>
     <token value="Cc1c(C)cc(C)c(C)c1" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="1,4,7,9">pyromellit</token><!--unknown-->
     <token value="CC(C)CC" labels="none" valType="SMILES" suffixAppliesTo="1,5">pyrotartar</token><!--unknown-->
     <token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES" defaultInID="4">salicyl</token><!--c.f. acetylsalicylic acid-->
