@@ -77,6 +77,9 @@ class WordRulesOmittedSpaceCorrector {
 			List<Element> roots = XOMTools.getChildElementsWithTagName(word, ROOT_EL);
 			if (roots.size()==1){
 				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
+				if (AMINOACID_TYPE_VAL.equals(rootGroup.getAttributeValue(TYPE_ATR))){
+					return;//amino acids are implicitly N locanted
+				}
 				Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				if (functionalAtomsCount >0){
