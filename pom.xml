@@ -54,16 +54,6 @@
     <module>opsin-core</module>
     <module>opsin-inchi</module>
   </modules>
-  <distributionManagement>
-    <repository>
-      <id>ucc</id>
-      <url>https://maven.ch.cam.ac.uk/content/repositories/releases</url>
-    </repository>
-    <site>
-      <id>apidoc</id>
-      <url>scp://apidoc.ch.cam.ac.uk/opsin/</url>
-    </site>
-  </distributionManagement>
   <build>
     <plugins>
       <plugin>
