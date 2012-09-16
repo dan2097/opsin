@@ -14,7 +14,7 @@ This is a Java(1.5+) library for IUPAC name-to-structure conversion offering hig
 ##################################################
 
 OPSIN is available as a standalone JAR from Bitbucket, http://bitbucket.org/dan2097/opsin/downloads
-It is also available as a dependency for use with Apache Maven.
+It is also available from the Maven Central Repository for users of Apache Maven.
 opsin-1.3.0-jar-with-dependencies.jar includes CML (Chemical Markup Language), SMILES, and InChI (IUPAC International Chemical Identifier) output and all dependendencies
 The main classes are uk.ac.cam.ch.wwmm.opsin.NameToStructure for CML and SMILES and uk.ac.cam.ch.wwmm.opsin.NameToInchi for InChI.
 
