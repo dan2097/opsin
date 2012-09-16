@@ -4,7 +4,7 @@ version 1.3.0 (see ReleaseNotes.txt for what's new in this version)
 Daniel Lowe(Current maintainer), Dr. Peter Corbett and Prof. Peter Murray-Rust
 We are thankful for contributions from Albina Asadulina and Rich Apodaca
 
-Contact address: dl387@cam.ac.uk
+Contact address: daniel@nextmovesoftware.com
 Source code: http://bitbucket.org/dan2097/opsin/
 Web interface and informational site: http://opsin.ch.cam.ac.uk/
 JavaDoc is available via OPSIN's generated web site: http://apidoc.ch.cam.ac.uk/opsin/
@@ -130,4 +130,4 @@ Multiplied, unsaturated or composite bridge prefixes e.g. epoxymethano
 ##################################################
 
 Good Luck and let us know if you have problems, comments or suggestions!
-You can contact us by posting a message on Bitbucket or you can email me directly (dl387@cam.ac.uk)
+You can contact us by posting a message on Bitbucket or you can email me directly (daniel@nextmovesoftware.com)
