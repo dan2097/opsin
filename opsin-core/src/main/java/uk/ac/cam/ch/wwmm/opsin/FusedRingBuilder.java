@@ -873,7 +873,7 @@ class FusedRingBuilder {
 				parentAtom.setSpareValency(true);
 			}
 			if (!parentAtom.getElement().equals(childAtom.getElement())){
-				throw new StructureBuildingException("Invalid fusion descriptor: Heteroatom placement is ambigous as it is not present in both components of the fusion");
+				throw new StructureBuildingException("Invalid fusion descriptor: Heteroatom placement is ambiguous as it is not present in both components of the fusion");
 			}
 			atomsToRemoveToReplacementAtom.put(childAtom, parentAtom);
 		}

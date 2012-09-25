@@ -6,7 +6,7 @@ Allowed one (as in ketone) before yl e.g. indol-2-on-3-yl
 Allowed primed locants to be used as unprimed locants in a bracket e.g. 2-(4'-methylphenyl)pyridine
 Vocabulary improvements
 SMILES writer will no longer reuse ring closures on the same atom
-Fixed case where a name formed of many words that could be parsed ambigously would cause OPSIN to run out of memory
+Fixed case where a name formed of many words that could be parsed ambiguously would cause OPSIN to run out of memory
 NameToStructure.getInstance() no longer throws a checked exception
 Many minor bug fixes
 
