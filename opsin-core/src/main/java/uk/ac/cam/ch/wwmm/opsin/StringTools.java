@@ -217,6 +217,17 @@ public final class StringTools {
             case '\u0114': return "E";
             case '\u0117': return "e";
             case '\u0116': return "E";
+
+            case '\u00B9': return "1";//superscripts
+            case '\u00B2': return "2";
+            case '\u00B3': return "3";
+            case '\u2074': return "4";
+            case '\u2075': return "5";
+            case '\u2076': return "6";
+            case '\u2077': return "7";
+            case '\u2078': return "8";
+            case '\u2079': return "9";
+            case '\u2070': return "0";
             
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
