@@ -59,7 +59,7 @@ does not define a CFG.
   <regex name="%suffix%" value="s"/>
   <regex name="%unbrackettedCisTrans%" value="t"/>
   <regex name="%unsaturator%" value="u"/>
-  <regex name="%heteroAtomaElided%" value="v"/>
+<!--v unused -->
   <regex name="%repeatableInlineSuffix%" value="w"/>
   <regex name="%simpleSubstituent%" value="x"/>
   <regex name="%hydro%" value="y"/>
@@ -191,7 +191,7 @@ does not define a CFG.
   <!--acyclic-->
 
   <regex name="%heteroChain%" value = "((%multiplierNotGroup%%heteroStem%%unsaturationBlock%)|(%heteroStem%%hyphen%?%ane%))"/>
-  <regex name="%alternatingHeteroChain%" value = "(%multiplierNotGroup%(%heteroAtom%|%heteroAtomaElided%){2,}%unsaturationBlock%)"/>
+  <regex name="%alternatingHeteroChain%" value = "(%multiplierNotGroup%%hwHeteroAtom%{2,}%unsaturationBlock%)"/>
 
   <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%a%?%unsaturationBlock%)"/>
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%a%?%unsaturationBlock%)"/>
@@ -260,7 +260,7 @@ does not define a CFG.
   <regex name="%fusedRingSystem%" value = "((%simpleComponent%|%multipliedComponent%|%multipliedParent%)+(%ringGroup%|%simpleCyclicGroup%))"/>
 	
 	<regex name="%polycyclicSpiroOldMethod%" value="(%ringNonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*(%hyphen%?%locant%?%spiroOldMethod%%locant%?(%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*|%optionalOpenBracket%%locant%?%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%*%optionalCloseBracket%))+)"/>
-	<regex name="%vonBaeyerForSpiro%" value="(%structuralOpenBracket%%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%|%multiplier%%heteroStem%)%ane%%structuralCloseBracket%%unsaturation%+)" />
+	<regex name="%vonBaeyerForSpiro%" value="(%structuralOpenBracket%%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%|%multiplierNotGroup%%heteroStem%)%ane%%structuralCloseBracket%%unsaturation%+)" />
 	<regex name="%polycyclicSpiroIdenticalComponents%" value ="(%symPolycylicSpiro%((%ringGroup%|%fusedRingSystem%)|%structuralOpenBracket%%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%structuralCloseBracket%|%vonBaeyerForSpiro%))"/>
   <regex name="%polycyclicSpiroContents%" value="(%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)(%hyphen%?%spiroLocant%((%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%))|(%optionalOpenBracket%%ring_CanStartWithHydro_NonDetachableFeatures%(%ringGroup%|%fusedRingSystem%)%optionalCloseBracket%)))+)" />
   <regex name="%polycyclicSpiro%" value ="(%simpleMultiplier%?%spiro%%structuralOpenBracket%%polycyclicSpiroContents%%structuralCloseBracket%)"/>
