@@ -97,6 +97,7 @@
     <token value="CC(S)CC" suffixAppliesTo="1,5" labels="1/2//3/4" valType="SMILES">thiomal</token>
 		<token value="C/C=C/C=C/C" suffixAppliesTo="1,6" labels="1/2/3/4/5/6" valType="SMILES">mucon</token>
     <token value="N1CC(C)CCC1" labels="1/2/3//4/5/6" valType="SMILES" suffixAppliesTo="4">nipecot</token>
+    <token value="CC(=O)Nc1ccccc1" labels="1/2///1/2/3/4/5/6" valType="SMILES">oxanil</token>
     <token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" valType="SMILES" suffixAppliesTo="3">pipecolin</token>
     <token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" valType="SMILES" suffixAppliesTo="3">pipecol</token>
     <token value="CC(=O)C" labels="none" valType="SMILES">pyruv</token>

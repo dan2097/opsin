@@ -99,6 +99,7 @@
     <token value="ic" additionalValue="amide">amic</token>
     <token value="ic" additionalValue="amide">amicacid</token>
     <token value="ic" additionalValue="amide">amic acid</token>
+    <token value="ate" additionalValue="anilide">anilate</token>
     <token value="ic" additionalValue="anilide">anilic</token>
     <token value="ic" additionalValue="anilide">anilicacid</token>
     <token value="ic" additionalValue="anilide">anilic acid</token>
