@@ -3245,6 +3245,10 @@ class ComponentProcessor {
 		for (int i = groups.size() -1; i >=0; i--) {
 			Element group = groups.get(i);
 			if (group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL) && OpsinTools.getNextGroup(group)!=null){
+				Element possibleLocant = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{MULTIPLIER_EL});
+				if (possibleLocant != null && possibleLocant.getLocalName().equals(LOCANT_EL)){
+					continue;
+				}
 				Element subOrRoot = (Element) group.getParent();
 				
 				//now find the brackets/substituents before this element
