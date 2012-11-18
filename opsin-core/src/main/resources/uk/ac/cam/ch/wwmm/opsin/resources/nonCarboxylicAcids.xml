@@ -20,8 +20,9 @@
     <token value="[Sb](O)(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">antimon</token><!--deprecated-->
     <token value="S(O)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">sulfur</token>
 
-<!--carbonic acid and some contractions-->
+<!--carbonic acid and some contractions, oyl is correct for some of these-->
     <token value="C(N)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">carbam</token>
+    <token value="C(Nc1ccccc1)(O)=O" labels="//1/2/3/4/5/6//" valType="SMILES" defaultInID="2">carbanil</token>
     <token value="C(O)(O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
 		<token value="CS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">mesyl</token>
     <token value="S(N)(O)(=O)=O" labels="none" valType="SMILES" usableAsAJoiner="yes" defaultInID="2">sulfam</token>
