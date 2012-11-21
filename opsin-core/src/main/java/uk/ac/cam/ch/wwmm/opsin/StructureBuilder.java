@@ -1339,23 +1339,7 @@ class StructureBuilder {
 			else{
 				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocant("O5'");//take a guess at it being 5' ;-)
 				if (atomOnBiochemicalFragment==null){
-					List<Atom> atoms = biochemicalFragment.getAtomList();
-					for (Atom atom : atoms) {
-						if (atom.getElement().equals("O") && atom.getBonds().size()==1  && atom.getFirstBond().getOrder()==1){
-							Atom adjacentAtom = atom.getAtomNeighbours().get(0);
-							List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
-							if (adjacentAtom.getElement().equals("C") && neighbours.size()==3){
-								neighbours.remove(atom);
-								if (neighbours.get(0).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
-									continue;
-								}
-								if (neighbours.get(1).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
-									continue;
-								}
-							}
-							atomOnBiochemicalFragment= atom;//find a hydroxy - not a carboxylic acid
-						}
-					}
+					atomOnBiochemicalFragment = FragmentTools.findHydroxyGroup(biochemicalFragment);
 				}
 			}
 			String element = atomOnBiochemicalFragment !=null ? atomOnBiochemicalFragment.getElement() : null;

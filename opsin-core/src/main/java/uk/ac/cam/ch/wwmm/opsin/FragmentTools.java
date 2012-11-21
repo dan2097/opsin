@@ -1103,4 +1103,32 @@ class FragmentTools {
 		}
 		return true;
 	}
+	
+	/**
+	 * Finds a hydroxy atom in a hydroxy functional group
+	 * i.e. not in carboxylic acid or oxime
+	 * @param biochemicalFragment
+	 * @return
+	 * @throws StructureBuildingException 
+	 */
+	static Atom findHydroxyGroup(Fragment biochemicalFragment) throws StructureBuildingException {
+		List<Atom> atoms = biochemicalFragment.getAtomList();
+		for (Atom atom : atoms) {
+			if (atom.getElement().equals("O") && atom.getBonds().size()==1  && atom.getFirstBond().getOrder()==1){
+				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+				List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
+				if (adjacentAtom.getElement().equals("C")){
+					neighbours.remove(atom);
+					if (neighbours.size() >= 1 && neighbours.get(0).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
+						continue;
+					}
+					if (neighbours.size() >= 2 && neighbours.get(1).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
+						continue;
+					}
+					return atom;
+				}
+			}
+		}
+		return null;
+	}
 }
