@@ -2129,7 +2129,12 @@ class ComponentGenerator {
 			Element nextSubstituent = (Element) XOMTools.getNextSibling(substituent);
 			if (nextSubstituent !=null){
 				Element nextGroup = nextSubstituent.getFirstChildElement(GROUP_EL);
-				if (nextGroup !=null && (nextGroup.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL)||BIOCHEMICAL_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR)) ||CARBOHYDRATE_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR)))){
+				String subType = nextGroup.getAttributeValue(SUBTYPE_ATR);
+				if (nextGroup !=null && (nextGroup.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL) || 
+						BIOCHEMICAL_SUBTYPE_VAL.equals(subType) || CARBOHYDRATE_SUBTYPE_VAL.equals(subType) ||
+						(YLFORACYL_SUBTYPE_VAL.equals(subType) &&
+						("glycol".equals(nextGroup.getValue()) || "diglycol".equals(nextGroup.getValue())))
+						)){
 					group.getAttribute(VALUE_ATR).setValue("-P(=O)(O)O");
 					group.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
 				}

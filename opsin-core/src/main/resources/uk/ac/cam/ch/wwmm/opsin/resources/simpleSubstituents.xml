@@ -101,7 +101,6 @@
 		<token value="c1(ccccc1)C(=O)Cc2ccccc2" labels="1/2/3/4/5/6///alpha/1'/2'/3'/4'/5'/6'" valType="SMILES" outIDs="9">desyl</token>
 		<token value="-[2H]" valType="SMILES">deuterio</token>
 		<token value="-[2H]" valType="SMILES">deutero</token>
-		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
 		<token value="-[N+]#N" labels="none" valType="SMILES">diazonio</token>
 		<token value="-c1c(C)c(C)cc(C)c1C" labels="none" valType="SMILES">duryl</token>
 		<token value="-c1c(OC)cc(CC=C)cc1" labels="none" valType="SMILES">eugenyl</token>
@@ -187,7 +186,6 @@
 		<token value="-c1cc(C)ccc1C(C)C" labels="none" valType="SMILES">thymyl</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" addGroup="N locant4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6" valType="SMILES">tosyl</token>
-		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">triphospho</token>
 		<token value="-[3H]" valType="SMILES">tritio</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>
@@ -267,9 +265,6 @@
 		<token value="=[Se]" labels="none" valType="SMILES">selenoxo</token>
 		<token value="=[Te]" labels="none" valType="SMILES">telluroxo</token>
 
-		<token value="-[P|5](=O)(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphono</token>
-		<token value="-[P|5](=O)([O-])[O-]" labels="none" valType="SMILES">phosphonato</token>
-		<token value="-[P|5](=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the ComponentGenerator-->
 		<token value="-[P|5]=N" labels="none" valType="SMILES">phosphinimyl</token>
 		<token value="-P=O" labels="none" valType="SMILES">phosphoroso</token>
 		<token value="-P" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphino</token>
@@ -421,6 +416,15 @@
 		<token value="-[Y]" labels="none" valType="SMILES">yttrio</token>
 		<token value="-[Zn]" labels="none" valType="SMILES" usableAsAJoiner="yes">zincio</token>
 		<token value="-[Zr]" labels="none" valType="SMILES">zirconio</token>
+	</tokenList>
+
+	<tokenList tagname="group" type="substituent" subType="phospho" symbol="x">
+		<token value="-P(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">diphospho</token>
+		<token value="-[P|5](=O)(O)O" labels="none" valType="SMILES" usableAsAJoiner="yes">phosphono</token>
+		<token value="-[P|5](=O)([O-])[O-]" labels="none" valType="SMILES">phosphonato</token>
+		<token value="-[P|5](=O)=O" labels="none" valType="SMILES">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the ComponentGenerator-->
+		<token value="OC[C@@H](O)COP(=O)O" labels="1///2//3///" valType="SMILES" outIDs="7">sn-glycero-3-phospho</token>
+		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O" labels="none" valType="SMILES">triphospho</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="biochemical" symbol="x">

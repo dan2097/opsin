@@ -229,7 +229,17 @@ class StructureBuildingMethods {
 					performPerHalogenoSubstitution(state, frag, subBracketOrRoot);
 				}
 				else{
-					Atom atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutAtom(0).getValency());
+					Atom atomToJoinTo = null;
+					if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
+						List<Fragment> possibleParents =findAlternativeFragments(state, subBracketOrRoot);
+						for (Fragment fragment : possibleParents) {
+							atomToJoinTo = FragmentTools.findHydroxyGroup(fragment);
+							break;
+						}
+					}
+					if (atomToJoinTo ==null) {
+					  atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutAtom(0).getValency());
+					}
 					if (atomToJoinTo ==null){
 						throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 					}
@@ -1425,7 +1435,6 @@ class StructureBuildingMethods {
 	}
 
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder)  {
-		//case where you should actually be substituting onto the previous element e.g. 5-(4-methylphenylcarbonyl)pentane
 		Atom to =null;
 		List<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);
 		for (Fragment fragment : possibleParents) {
