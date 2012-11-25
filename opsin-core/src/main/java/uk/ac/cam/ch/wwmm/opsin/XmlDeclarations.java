@@ -446,7 +446,7 @@ class XmlDeclarations {
 	static final String SUFFIXRULES_CHANGECHARGE_EL = "changecharge";
 	static final String SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL = "addFunctionalAtomsToHydroxyGroups";
 	static final String SUFFIXRULES_CHARGEHYDROXYGROUPS_EL = "chargeHydroxyGroups";
-	static final String SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL = "removeOneDoubleBondedOxygen";
+	static final String SUFFIXRULES_REMOVETERMINALOXYGEN_EL = "removeTerminalOxygen";
 	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL = "convertHydroxyGroupsToOutAtoms";
 	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL = "convertHydroxyGroupsToPositiveCharge";
 	static final String SUFFIXRULES_VALUE_ATR = "value";
@@ -456,6 +456,7 @@ class XmlDeclarations {
 	static final String SUFFIXRULES_FUNCTIONALIDS_ATR = "functionalIDs";
 	static final String SUFFIXRULES_OUTIDS_ATR = "outIDs";
 	static final String SUFFIXRULES_KETONELOCANT_ATR = "ketoneLocant";
+	static final String SUFFIXRULES_ORDER_ATR = "order";
 	static final String SUFFIXRULES_OUTVALENCY_ATR = "outValency";
 	static final String SUFFIXRULES_CHARGE_ATR = "charge";
 	static final String SUFFIXRULES_PROTONS_ATR = "protons";

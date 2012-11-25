@@ -177,7 +177,7 @@ sense of this -->
     <addgroup SMILES="[*][O-]" functionalIDs="2" />
   </rule>
   <rule value="ite_nonCarboxylic">
-    <removeOneDoubleBondedOxygen />
+    <removeTerminalOxygen order="2" />
     <addFunctionalAtomsToHydroxyGroups />
     <chargeHydroxyGroups />
   </rule>
@@ -222,7 +222,7 @@ sense of this -->
     <addgroup SMILES="[*]O" functionalIDs="2"/>
   </rule>
   <rule value="ous_nonCarboxylic">
-    <removeOneDoubleBondedOxygen />
+    <removeTerminalOxygen order="2" />
     <addFunctionalAtomsToHydroxyGroups/>
   </rule>
   <rule value="oxoAndDiYl">
@@ -356,6 +356,10 @@ sense of this -->
     <changecharge charge="-1" protons="1" />
   </rule>
   <rule value="yl">
+    <setOutAtom />
+  </rule>
+  <rule value="yl_carbohydrate">
+    <removeTerminalOxygen order="1" />
     <setOutAtom />
   </rule>
   <rule value="diyl">

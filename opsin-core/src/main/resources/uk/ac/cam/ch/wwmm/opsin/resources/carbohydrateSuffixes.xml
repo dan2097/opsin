@@ -1,0 +1,26 @@
+﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<!-- See the DTD for more details -->
+<tokenLists>
+  <!--<tokenList tagname="suffix" type="root" subType="terminal" symbol="">
+    <token value="aldehyde">ose</token>
+    <token value="aldehyde" additionalValue="aldehyde">dialdehyde</token>
+    <token value="ol" additionalValue="ol">itol</token>
+  </tokenList>
+
+  <tokenList tagname="suffix" type="root" symbol="s">
+    <token value="one">ulose</token>
+  </tokenList>
+
+  <tokenList tagname="infix" type="carbohydrateStem" symbol="">
+    <token value="on">on</token>
+    <token value="uloson">uloson</token>might be redundant
+    <token value="uron">uron</token>
+    <token value="ar">ar</token>
+ for use with symbol="å"
+  </tokenList>-->
+
+  <tokenList tagname="suffix" type="inline" symbol="v">
+    <token value="yl">yl</token>
+    <!--<token value="oyl">onoyl</token>-->
+  </tokenList>
+</tokenLists>
