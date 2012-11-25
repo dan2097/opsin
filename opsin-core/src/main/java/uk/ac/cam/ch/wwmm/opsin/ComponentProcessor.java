@@ -1740,7 +1740,9 @@ class ComponentProcessor {
 		//this is of the form comma sepeated ids with the number of ids corresponding to the number of instances of the suffix
 		Element suffix =OpsinTools.getNextNonChargeSuffix(group);
 		if (suffix ==null){
-			throw new ComponentGenerationException("No suffix where suffix was expected");
+			if (group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
+				throw new ComponentGenerationException("No suffix where suffix was expected");
+			}
 		}
 		else{
 			if (suffixes.size()>1 && group.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL)){
@@ -1888,11 +1890,12 @@ class ComponentProcessor {
 					chargeHydroxyGroups(atomLikelyToBeUsedBySuffix);
 					
 				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL)){
+				else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVETERMINALOXYGEN_EL)){
 					if (suffixFrag != null){
-						throw new ComponentGenerationException("removeOneDoubleBondedOxygen is not currently compatable with the addGroup suffix rule");
+						throw new ComponentGenerationException("removeTerminalOxygen is not currently compatible with the addGroup suffix rule");
 					}
-					removeOneDoubleBondedOxygen(atomLikelyToBeUsedBySuffix);
+					int bondOrder = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_ORDER_ATR));
+					removeTerminalOxygen(atomLikelyToBeUsedBySuffix, bondOrder);
 				}
             }
             if (suffixFrag != null) {
@@ -1966,28 +1969,29 @@ class ComponentProcessor {
 	}
 
 	/**
-	 * Removes a double bonded Oxygen from the atom (an [N+][O-] is treated as N=O)
-	 * An exception is thrown if no double bonded oxygen could be found connected to the atom
+	 * Removes a terminal oxygen from the atom 
+	 * An exception is thrown if no suitable oxygen could be found connected to the atom
+	 * Note that [N+][O-] is treated as N=O
 	 * @param atom
 	 * @throws StructureBuildingException
 	 */
-	private void removeOneDoubleBondedOxygen(Atom atom) throws StructureBuildingException {
+	private void removeTerminalOxygen(Atom atom, int desiredBondOrder) throws StructureBuildingException {
 		//TODO prioritise [N+][O-]
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("O") && neighbour.getAtomNeighbours().size()==1){
 				Bond b = atom.getBondToAtomOrThrow(neighbour);
-				if (b.getOrder()==2 && neighbour.getCharge()==0){
+				if (b.getOrder()==desiredBondOrder && neighbour.getCharge()==0){
 					state.fragManager.removeAtomAndAssociatedBonds(neighbour);
 					if (atom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
-						atom.setLambdaConventionValency(atom.getLambdaConventionValency()-2);
+						atom.setLambdaConventionValency(atom.getLambdaConventionValency()-desiredBondOrder);
 					}
 					if (atom.getMinimumValency()!=null){//corrects valency for phosphin/arsin/stibin
-						atom.setMinimumValency(atom.getMinimumValency()-2);
+						atom.setMinimumValency(atom.getMinimumValency()-desiredBondOrder);
 					}
 					return;
 				}
-				else if (neighbour.getCharge() ==-1 && b.getOrder()==1){
+				else if (neighbour.getCharge() ==-1 && b.getOrder()==1 && desiredBondOrder == 2){
 					if (atom.getCharge() ==1 && atom.getElement().equals("N")){
 						state.fragManager.removeAtomAndAssociatedBonds(neighbour);
 						atom.neutraliseCharge();
@@ -1996,7 +2000,16 @@ class ComponentProcessor {
 				}
 			}
 		}
-		throw new StructureBuildingException("Double bonded oxygen not found in fragment. Perhaps a suffix has been used inappropriately");
+		if (desiredBondOrder ==2){
+			throw new StructureBuildingException("Double bonded oxygen not found at suffix attachment position. Perhaps a suffix has been used inappropriately");
+		}
+		else if (desiredBondOrder ==1){
+			throw new StructureBuildingException("Hydroxy oxygen not found at suffix attachment position. Perhaps a suffix has been used inappropriately");
+		}
+		else {
+			throw new StructureBuildingException("Suita;e oxygen not found at suffix attachment position Perhaps a suffix has been used inappropriately");
+		}
+
 	}
 	
 	/**
@@ -3931,7 +3944,7 @@ class ComponentProcessor {
                     //already processed
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CHARGEHYDROXYGROUPS_EL)) {
                     //already processed
-                } else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVEONEDOUBLEBONDEDOXYGEN_EL)) {
+                } else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVETERMINALOXYGEN_EL)) {
                     //already processed
                 } else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)) {
                     //already processed

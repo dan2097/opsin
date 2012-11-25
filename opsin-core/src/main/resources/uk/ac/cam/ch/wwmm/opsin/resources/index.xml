@@ -34,6 +34,7 @@
   <tokenFile>inlineSuffixes.xml</tokenFile>
   <tokenFile>inlineChargeSuffixes.xml</tokenFile>
   <tokenFile>suffixPrefix.xml</tokenFile>
+  <tokenFile>carbohydrateSuffixes.xml</tokenFile>
   <tokenFile>suffixes.xml</tokenFile>
   <tokenFile>unsaturators.xml</tokenFile>
   <tokenFile>miscTokens.xml</tokenFile>
