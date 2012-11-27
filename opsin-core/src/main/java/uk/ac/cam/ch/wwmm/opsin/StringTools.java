@@ -272,6 +272,7 @@ public final class StringTools {
             case '\u202F': return " ";
             case '\u3000': return " ";//ideographics space
             
+            case '\u00AD': return "";//soft hyphen
             case '\u200b': return "";//zero width space
             case '\u200d': return "";//zero width joiner
 
