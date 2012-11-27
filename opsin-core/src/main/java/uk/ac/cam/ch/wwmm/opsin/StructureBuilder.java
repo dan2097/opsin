@@ -1582,12 +1582,12 @@ class StructureBuilder {
 					neighbours.remove(atomRef);
 				}
 				if (neighbours.size()==0){
-					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
 				}
 				else if (neighbours.size()==1 && positionOfDeoxyHydrogen!=null){
 					atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
 					if (positionOfImplicitHydrogen != null){
-						throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+						throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
 					}
 				}
 				else if (neighbours.size()==1 && positionOfImplicitHydrogen!=null){
@@ -1599,7 +1599,7 @@ class StructureBuilder {
 					atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
 				}
 				else{
-					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substitued a hydrogen at stereocentre");
+					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
 				}
 			}
 		}
