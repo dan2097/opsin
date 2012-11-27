@@ -531,15 +531,16 @@ class FragmentTools {
 	 * Given the starting nitrogen returns the other nitrogen or null if that nitrogen does not appear to be involved in such tautomerism
 	 * @param nitrogen
 	 * @return null or the other nitrogen
+	 * @throws StructureBuildingException 
 	 */
-	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) {
+	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) throws StructureBuildingException {
 		if (nitrogen.getElement().equals("N") && nitrogen.getAtomIsInACycle()){
-			List<Atom> neighbours = nitrogen.getAtomNeighbours();
-			for (Atom neighbour : neighbours) {
-				if (neighbour.hasSpareValency()){
+			for (Atom neighbour : nitrogen.getAtomNeighbours()) {
+				if (neighbour.hasSpareValency() && neighbour.getElement().equals("C") && neighbour.getAtomIsInACycle()){
 					List<Atom> distance2Neighbours = neighbour.getAtomNeighbours();
+					distance2Neighbours.remove(nitrogen);
 					for (Atom distance2Neighbour : distance2Neighbours) {
-						if (distance2Neighbour.hasSpareValency() && distance2Neighbour.getElement().equals("N") && distance2Neighbour.getCharge()==0){
+						if (distance2Neighbour.hasSpareValency() && distance2Neighbour.getElement().equals("N") && distance2Neighbour.getAtomIsInACycle() && distance2Neighbour.getCharge()==0){
 							return distance2Neighbour;
 						}
 					}
@@ -646,7 +647,8 @@ class FragmentTools {
 		 pick an atom which definitely does have spare valency to be the indicated hydrogen.
 		*/
 		Atom atomToReduceValencyAt =null;
-		List<Atom> indicatedHydrogen = frag.getIndicatedHydrogen();
+		List<Atom> originalIndicatedHydrogen = frag.getIndicatedHydrogen();
+		List<Atom> indicatedHydrogen = new ArrayList<Atom>(originalIndicatedHydrogen);
 		for (int i = indicatedHydrogen.size() -1; i >=0; i--) {
 			if (!indicatedHydrogen.get(i).hasSpareValency()){
 				indicatedHydrogen.remove(i);
@@ -654,29 +656,24 @@ class FragmentTools {
 		}
 		if (indicatedHydrogen.size()>0){
 			if (indicatedHydrogen.size()>1){
-				if (indicatedHydrogen.size()==2){//fix for guanine like purine derivatives
-					for (Atom indicatedAtom : indicatedHydrogen) {
-						if (!indicatedAtom.hasSpareValency()){
-							continue;
-						}
-						List<Atom> neighbours = indicatedAtom.getAtomNeighbours();
-						for (Atom neighbour : neighbours) {
-							if (neighbour.hasSpareValency()){
-								List<Atom> neighbours2 = neighbour.getAtomNeighbours();
-								for (Atom secondNeighbour : neighbours2) {
-									if (secondNeighbour==indicatedAtom){
-										continue;
-									}
-									if (secondNeighbour.hasSpareValency() && secondNeighbour.getElement().equals("N")){
-										indicatedAtom.setSpareValency(false);
+				for (Atom indicatedAtom : indicatedHydrogen) {
+					boolean couldBeInvolvedInSimpleNitrogenTautomerism = false;//fix for guanine like purine derivatives
+					if (indicatedAtom.getElement().equals("N") && indicatedAtom.getAtomIsInACycle()){
+						atomloop : for (Atom neighbour : indicatedAtom.getAtomNeighbours()) {
+							if (neighbour.getElement().equals("C") && neighbour.getAtomIsInACycle()){
+								List<Atom> distance2Neighbours = neighbour.getAtomNeighbours();
+								distance2Neighbours.remove(indicatedAtom);
+								for (Atom distance2Neighbour : distance2Neighbours) {
+									if (distance2Neighbour.getElement().equals("N") && distance2Neighbour.getAtomIsInACycle() && !originalIndicatedHydrogen.contains(distance2Neighbour)){
+										couldBeInvolvedInSimpleNitrogenTautomerism =true;
+										break atomloop;
 									}
 								}
 							}
 						}
 					}
-				}
-				else{
-					for (Atom indicatedAtom : indicatedHydrogen) {
+					//retain spare valency if has the cyclic [NH]C=N moiety but substitution has meant that this tautomerism doesn't actually occur cf. 8-oxoguanine
+					if (!couldBeInvolvedInSimpleNitrogenTautomerism || detectSimpleNitrogenTautomer(indicatedAtom) != null){
 						indicatedAtom.setSpareValency(false);
 					}
 				}
@@ -1029,7 +1026,10 @@ class FragmentTools {
 				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for substractive nomenclature");
 			}
 		}
-		Atom atomToRemove = applicableTerminalAtoms.get(0);
+		removeTerminalAtom(state, applicableTerminalAtoms.get(0));
+	}
+	
+	static void removeTerminalAtom(BuildState state, Atom atomToRemove) {
 		AtomParity atomParity =  atomToRemove.getAtomNeighbours().get(0).getAtomParity();
 		if (atomParity!=null){//replace reference to atom with reference to implicit hydrogen
 			Atom[] atomRefs4= atomParity.getAtomRefs4();

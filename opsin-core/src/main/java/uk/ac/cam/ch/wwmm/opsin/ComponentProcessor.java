@@ -1982,7 +1982,7 @@ class ComponentProcessor {
 			if (neighbour.getElement().equals("O") && neighbour.getAtomNeighbours().size()==1){
 				Bond b = atom.getBondToAtomOrThrow(neighbour);
 				if (b.getOrder()==desiredBondOrder && neighbour.getCharge()==0){
-					state.fragManager.removeAtomAndAssociatedBonds(neighbour);
+					FragmentTools.removeTerminalAtom(state, neighbour);
 					if (atom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
 						atom.setLambdaConventionValency(atom.getLambdaConventionValency()-desiredBondOrder);
 					}
@@ -1993,7 +1993,7 @@ class ComponentProcessor {
 				}
 				else if (neighbour.getCharge() ==-1 && b.getOrder()==1 && desiredBondOrder == 2){
 					if (atom.getCharge() ==1 && atom.getElement().equals("N")){
-						state.fragManager.removeAtomAndAssociatedBonds(neighbour);
+						FragmentTools.removeTerminalAtom(state, neighbour);
 						atom.neutraliseCharge();
 						return;
 					}
