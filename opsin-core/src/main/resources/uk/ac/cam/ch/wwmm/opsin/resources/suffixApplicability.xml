@@ -108,6 +108,8 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="carbohydrateStem"><!--e.g. D-Glucose to D-Glucuronic acid-->
+		<suffix value="ulose">one</suffix>
+		<suffix value="glycoside">ic_nonCarboxylic</suffix>
     <suffix value="yl">yl_carbohydrate</suffix>
     <suffix value="locantedAminoAcidOrCarbohydrateYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->
     <!--<suffix value="oyl">oyl</suffix>-->
