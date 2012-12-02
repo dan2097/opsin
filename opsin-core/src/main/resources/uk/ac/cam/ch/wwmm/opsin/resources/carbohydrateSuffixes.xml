@@ -1,17 +1,19 @@
 ﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
-  <!--<tokenList tagname="suffix" type="root" subType="terminal" symbol="">
-    <token value="aldehyde">ose</token>
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="ê">
+		<token value="glycoside">ide</token>
+		<token value="glycoside">id</token>
+   <!-- <token value="aldehyde">ose</token>
     <token value="aldehyde" additionalValue="aldehyde">dialdehyde</token>
-    <token value="ol" additionalValue="ol">itol</token>
+    <token value="ol" additionalValue="ol">itol</token>-->
   </tokenList>
 
-  <tokenList tagname="suffix" type="root" symbol="s">
-    <token value="one">ulose</token>
+  <tokenList tagname="suffix" type="root" symbol="ë">
+    <token value="ulose">ulose</token>
   </tokenList>
 
-  <tokenList tagname="infix" type="carbohydrateStem" symbol="">
+  <!--<tokenList tagname="infix" type="carbohydrateStem" symbol="">
     <token value="on">on</token>
     <token value="uloson">uloson</token>might be redundant
     <token value="uron">uron</token>
