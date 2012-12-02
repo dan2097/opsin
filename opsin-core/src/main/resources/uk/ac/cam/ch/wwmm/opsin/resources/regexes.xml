@@ -90,7 +90,7 @@ does not define a CFG.
   <regex name="%anhydrideFunctionalGroup%" value="¸"/>
   <regex name="%alphaBetaStereochemLocant%" value="¹"/>
   <regex name="%implicitIc%" value="º"/>
-  <regex name="%aminoAcidYl%" value="»"/>
+  <regex name="%locantedAminoAcidOrCarbohydrateYl%" value="»"/>
   <regex name="%oMeaningYl%" value="¼"/>
   <regex name="%nonCarbonAcidNoAcyl%" value="½"/>
   <regex name="%simpleCyclicGroup%" value="¾"/>
@@ -151,7 +151,6 @@ does not define a CFG.
   <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedCisTrans%(%comma%%locant%?%unbrackettedCisTrans%)*%hyphen%?|%locant%?%unbrackettedEZ%(%comma%%locant%?%unbrackettedEZ%)*%hyphen%|%lightRotation%|%alphaBetaStereochemLocant%)"/>
   <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locant%?)"/>
   <regex name="%optLocantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%)?)"/>
-  <regex name="%locantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%))"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locant%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
   <regex name="%bracketedLocant%" value="(%optionalOpenBracket%%locantThatNeedsBrackets%%optionalCloseBracket%%hyphen%?)"/>
   <regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
@@ -197,13 +196,13 @@ does not define a CFG.
   <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%a%?%unsaturationBlock%)"/>
   <regex name="%nitrogenChainSubstituent%" value = "(((%multiplierNotGroup%%nitrogenHeteroStem%%unsaturationBlock%)|(%nitrogenHeteroStem%%hyphen%?%ane%))%oMeaningYl%)"/>
   <regex name="%alkYlene%" value = "((%alkaneStemSystematic%%unsaturationBlock%?|%alkaneStemTrivial%%unsaturationBlock%)%optLocantGroupNoOMP%%ylene%)"/>
-  <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroup%|%a%%locantGroup%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
+  <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroupNoOMP%|%a%%hyphen%?%locant%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
 
   <regex name="%aminoMonoAcid%" value="(%dlStereochemistryPrefix%?((%aminoAcidEndsInIne%|%aminoAcidEndsInCompulsoryIne%)%ine%|%aminoAcidEndsInAn%%ane%))"/>
   <regex name="%aminoAcidSubstituentStem%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInCompulsoryIne%%ine%|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%))"/>
   <regex name="%aminoAcidGroup%" value="(%aminoMonoAcid%%implicitIc%%inlineChargeSuffix%?|(%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)(%infixedSuffix%|%rootSuffix%))"/>
 
-  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locant%%aminoAcidYl%)"/>
+  <regex name="%aminoAcidLocantedYl%" value ="((%aminoMonoAcid%%implicitIc%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%%rootSuffix%)%hyphen%?%locant%%locantedAminoAcidOrCarbohydrateYl%)"/>
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidSubstituentStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
@@ -244,7 +243,7 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
 
   <regex name="%cyclicSugar%" value="(%dlStereochemistryPrefix%?%carbohydrateStem%%carbohydrateRingSize%%e%?)"/>
-  <regex name="%cycliSugarSubstituent%" value="(%cyclicSugar%%optLocantGroupNoOMP%%carbohydrateInlineSuffix%)"/>
+  <regex name="%cyclicSugarSubstituent%" value="(%cyclicSugar%%hyphen%?(%carbohydrateInlineSuffix%|%locant%%locantedAminoAcidOrCarbohydrateYl%))"/>
 
   <!--Fused ring terms-->
   <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locant%)%benzo%)"/>
@@ -257,7 +256,7 @@ does not define a CFG.
   <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locant%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%|%naturalProductGroup%)"/>
   <regex name="%preSuffixedRing%" value = "(%cyclicSugar%|%simpleCyclicGroup%)"/>
   <regex name="%irregularRingSubstituentStem%" value="(%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%|%cyclicUnsaturableHydrocarbon%%a%?)"/>
-  <regex name="%ringSubstituent%" value = "((%ringGroup%|%irregularRingSubstituentStem%)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%cycliSugarSubstituent%)"/>
+  <regex name="%ringSubstituent%" value = "((%ringGroup%|%irregularRingSubstituentStem%)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%cyclicSugarSubstituent%)"/>
 
   <regex name="%fusedRingSystem%" value = "((%simpleComponent%|%multipliedComponent%|%multipliedParent%)+(%ringGroup%|%preSuffixedRing%))"/>
 	

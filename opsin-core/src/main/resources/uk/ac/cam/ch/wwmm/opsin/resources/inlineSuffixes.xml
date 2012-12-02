@@ -63,8 +63,8 @@
     <token value="oyl">oyl</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="inline" symbol="»"><!--used for amino acids-->
-    <token value="aminoAcidYl">yl</token>
+  <tokenList tagname="suffix" type="inline" symbol="»"><!--used for amino acids and carbohydrates-->
+    <token value="locantedAminoAcidOrCarbohydrateYl">yl</token>
   </tokenList>
 
   <tokenList tagname="suffix" type="inline" symbol="×"><!--ylene-->
