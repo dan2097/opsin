@@ -205,6 +205,7 @@ class ComponentProcessor {
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
 				assignLocantsAndMultipliers(subBracketOrRoot);
 			}
+			processGlycosidicLinkgageDescriptors(substituents, brackets);
 			processWordLevelMultiplierIfApplicable(word, wordCount);
 		}
 		new WordRulesOmittedSpaceCorrector(state, parse).correctOmittedSpaces();//TODO where should this go?
@@ -4126,6 +4127,102 @@ class ComponentProcessor {
 	    	}
 	    }
 	    likelyAtom.addChargeAndProtons(chargeChange, protonChange);
+	}
+	
+	/**
+	 * Converts a glycosidic linkage description e.g. (1->4) into an O[1-9] locant
+	 * If the carbohydrate is preceded by substituents these are placed into a bracket and the bracket locanted
+	 * @param substituents
+	 * @param brackets
+	 * @throws StructureBuildingException
+	 */
+	private void processGlycosidicLinkgageDescriptors(List<Element> substituents, List<Element> brackets) throws StructureBuildingException {
+		for (Element substituent : substituents) {
+			List<Element> carbLocants = XOMTools.getChildElementsWithTagName(substituent, CARBOHYDRATELOCANT_EL);
+			if (carbLocants.size() > 0){
+				if (carbLocants.size() > 1){
+					throw new RuntimeException("OPSIN Bug: More than 1 glycosidic linkage locant associated with subsituted");
+				}
+				Element group = substituent.getFirstChildElement(GROUP_EL);
+				Fragment carbFrag = state.xmlFragmentMap.get(group);
+				String carbLocantStr = carbLocants.get(0).getValue();
+				String locantAnomeric = carbLocantStr.substring(1,2);
+				String locantToConnectTo = carbLocantStr.substring(4,5);
+				Atom anomericAtom = carbFrag.getAtomByLocantOrThrow(locantAnomeric);
+				boolean anomericIsOutAtom = false;
+				for (int i = 0; i < carbFrag.getOutAtomCount(); i++) {
+					if (carbFrag.getOutAtom(i).getAtom().equals(anomericAtom)){
+						anomericIsOutAtom = true;
+					}
+				}
+				if (!anomericIsOutAtom){
+					throw new StructureBuildingException("Invalid glycoside linkage descriptor. Locant: " + locantAnomeric + " should point to the anomeric carbon");
+				}
+				
+				if (OpsinTools.getNextGroup(group)==null){
+					throw new StructureBuildingException("Glycoside linkage descriptor should be followed by a carbohydrate: " + carbLocantStr);
+				}
+				Element parent = (Element) substituent.getParent();
+				Attribute locantAtr = new Attribute(LOCANT_ATR, "O" + locantToConnectTo);
+
+				Element elementAfterSubstituent = (Element) XOMTools.getNextSibling(substituent);				
+				boolean hasAdjacentGroupToSubstitute = (elementAfterSubstituent !=null &&
+						(elementAfterSubstituent.getLocalName().equals(SUBSTITUENT_EL) ||
+						elementAfterSubstituent.getLocalName().equals(BRACKET_EL) ||
+						elementAfterSubstituent.getLocalName().equals(ROOT_EL)));
+				
+
+				/* If a carbohydrate is not at the end of a scope but is preceded by substituents/brackets
+				 * these are bracketted and the locant assigned to the bracket.
+				 * Else If the group is the only thing in a bracket the locant is assigned to the bracket (this is used to describe branches)
+				 * Else the locant is assigned to the substituent
+				 */
+				boolean bracketAdded =false;
+				if (hasAdjacentGroupToSubstitute){
+					//now find the brackets/substituents before this element
+					Element previous = (Element) XOMTools.getPreviousSibling(substituent);
+					List<Element> previousElements = new ArrayList<Element>();
+					while( previous !=null){
+						if (!previous.getLocalName().equals(SUBSTITUENT_EL) && !previous.getLocalName().equals(BRACKET_EL)){
+							break;
+						}
+						previousElements.add(previous);
+						previous = (Element) XOMTools.getPreviousSibling(previous);
+					}
+					if (previousElements.size() > 0 ){//an explicit bracket is needed
+						Collections.reverse(previousElements);
+						Element bracket = new Element(BRACKET_EL);
+						bracket.addAttribute(locantAtr);
+						int indexToInsertAt = parent.indexOf(previousElements.get(0));
+						for (Element element : previousElements) {
+							element.detach();
+							bracket.appendChild(element);
+						}
+
+						substituent.detach();
+						bracket.appendChild(substituent);
+						parent.insertChild(bracket, indexToInsertAt);
+						brackets.add(bracket);
+						bracketAdded = true;
+					}
+				}
+				
+				if (!bracketAdded) {
+					Element elToAddAtrTo;
+					if (parent.getLocalName().equals(BRACKET_EL) && !hasAdjacentGroupToSubstitute){
+						elToAddAtrTo = parent;
+					}
+					else{
+						elToAddAtrTo = substituent;
+					}
+					if (elToAddAtrTo.getAttribute(LOCANT_ATR) !=null){
+						throw new StructureBuildingException("Carbohydrate with glycoside linkage descriptor should not also have a locant: " + elToAddAtrTo.getAttributeValue(LOCANT_ATR));
+					}
+					elToAddAtrTo.addAttribute(locantAtr);
+				}
+				carbLocants.get(0).detach();
+			}
+		}
 	}
 
 	/**
