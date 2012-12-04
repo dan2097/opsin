@@ -139,7 +139,8 @@ does not define a CFG.
   <regex name="%endOfSubstituent%" value="é"/>
 	<regex name="%carbohydrateUnlocantedRootSuffix%" value="ê"/>
   <regex name="%carbohydrateLocantedRootSuffix%" value="ë"/>
-  <!--next would be Alt 0236-->
+  <regex name="%carbohydrateLocant%" value="ì"/>
+  <!--next would be Alt 0237-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -245,7 +246,7 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
 
   <regex name="%cyclicSugar%" value="(%dlStereochemistryPrefix%?%carbohydrateStem%%hyphen%?%carbohydrateRingSize%%e%?(%hyphen%?%carbohydrateUnlocantedRootSuffix%)?(%optLocantGroupNoOMP%%carbohydrateLocantedRootSuffix%)?)"/>
-  <regex name="%cyclicSugarSubstituent%" value="(%cyclicSugar%%hyphen%?(%carbohydrateInlineSuffix%|%locant%%locantedAminoAcidOrCarbohydrateYl%))"/>
+  <regex name="%cyclicSugarSubstituent%" value="(%cyclicSugar%%hyphen%?(%carbohydrateInlineSuffix%(%hyphen%?%carbohydrateLocant%)?|%locant%%locantedAminoAcidOrCarbohydrateYl%))"/>
 
   <!--Fused ring terms-->
   <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locant%)%benzo%)"/>

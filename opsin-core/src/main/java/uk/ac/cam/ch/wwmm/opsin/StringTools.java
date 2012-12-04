@@ -148,6 +148,11 @@ public final class StringTools {
             case '\u00B1': return "+-";//plus minus symbol
             case '\u2213': return "-+";
             
+            case '\u2192': return "->";//right arrows
+            case '\u2794': return "->";
+            case '\u2799': return "->";
+            case '\u279C': return "->";
+            
             case '\u00C6': return "AE";//common ligatures
             case '\u00E6': return "ae";
             case '\u0152': return "OE";
