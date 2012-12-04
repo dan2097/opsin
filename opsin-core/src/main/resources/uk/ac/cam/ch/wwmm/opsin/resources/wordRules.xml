@@ -260,17 +260,17 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
   <wordRule name="biochemicalEster" type="full">
     <word type="full" endsWithGroupSubType="biochemical"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e?])[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="biochemicalEster" type="full">
     <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e?])[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="biochemicalEster" type="full">
     <word type="full" endsWithGroupSubType="carbohydrate"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e?])[\]\)\}]*"/>
   </wordRule>
 
   <wordRule name="polymer" type="polymer">
