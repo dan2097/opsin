@@ -540,6 +540,25 @@ class FragmentManager {
 		}
 		List<Bond> bonds = atomToBeReplaced.getBonds();
 		for (Bond bond : bonds) {
+			Atom connectedAtom = bond.getOtherAtom(atomToBeReplaced);
+			if (connectedAtom.getAtomParity() != null){
+				Atom[] atomRefs4 = connectedAtom.getAtomParity().getAtomRefs4();
+				for (int i = 0 ; i < 4; i++) {
+					if (atomRefs4[i] == atomToBeReplaced){
+						atomRefs4[i] = replacementAtom;
+						break;
+					}
+				}
+			}
+			if (bond.getBondStereo() != null){
+				Atom[] atomRefs4 = bond.getBondStereo().getAtomRefs4();
+				for (int i = 0 ; i < 4; i++) {
+					if (atomRefs4[i] == atomToBeReplaced){
+						atomRefs4[i] = replacementAtom;
+						break;
+					}
+				}
+			}
 			createBond(replacementAtom, bond.getOtherAtom(atomToBeReplaced), bond.getOrder());
 		}
 		removeAtomAndAssociatedBonds(atomToBeReplaced);
