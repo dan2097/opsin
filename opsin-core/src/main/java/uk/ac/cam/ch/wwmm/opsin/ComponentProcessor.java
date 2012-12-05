@@ -4546,11 +4546,14 @@ class ComponentProcessor {
 						throw new ComponentGenerationException("Unable to assign all locants");
 					}
 				}
-				if (multiVal ==1){//mono
-					return;
-				}
 				if (multiplier.getValue().equals("non")){
 					throw new StructureBuildingException("\"non\" probably means \"not\". If a multiplier of value 9 was intended \"nona\" should be used");
+				}
+				if (wordCount ==1){
+					throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
+				}
+				if (multiVal ==1){//mono
+					return;
 				}
 				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
 				for (int i = subOrBracket.indexOf(multiplier) -1 ; i >=0 ; i--) {
@@ -4559,9 +4562,6 @@ class ComponentProcessor {
 					elementsNotToBeMultiplied.add(el);
 				}
 				multiplier.detach();
-				if (wordCount ==1){
-					throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
-				}
 				for(int i=multiVal -1; i>=1; i--) {
 					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
