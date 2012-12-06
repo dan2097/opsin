@@ -155,14 +155,15 @@ class SMILESWriter {
 			if (neighbours.size() > 1){
 				return false;
 			}
-			//special case where hydrogen is a counter ion or only connects to other hydrogen
-			boolean foundNonHydrogenNeighbour =false;
+			//special case where hydrogen is a counter ion or only connects to other hydrogen and/or R-groups
+			boolean foundHeavyAtomNeighbour =false;
 			for (Atom neighbour : neighbours) {
-				if (!neighbour.getElement().equals("H")){
-					foundNonHydrogenNeighbour =true;
+				String element = neighbour.getElement();
+				if (!element.equals("H") && !element.equals("R")){
+					foundHeavyAtomNeighbour =true;
 				}
 			}
-			if (!foundNonHydrogenNeighbour){
+			if (!foundHeavyAtomNeighbour){
 				return false;
 			}
 			
