@@ -1965,14 +1965,6 @@ class ComponentGenerator {
 				throw new ComponentGenerationException("\"acid\" not found after " +groupValue);
 			}
 		}
-		else if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			Element possibleMono = (Element) XOMTools.getPreviousSibling(group);
-			if (possibleMono !=null && possibleMono.getLocalName().equals(MULTIPLIER_EL) &&
-					possibleMono.getAttributeValue(VALUE_ATR).equals("1")) {
-				possibleMono.detach();//e.g. monooxygen = oxygen
-			}
-		}
-		
 		
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is generally phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = (Element) XOMTools.getNextSibling(group);

@@ -4550,7 +4550,9 @@ class ComponentProcessor {
 					throw new StructureBuildingException("\"non\" probably means \"not\". If a multiplier of value 9 was intended \"nona\" should be used");
 				}
 				if (wordCount ==1){
-					throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
+					if (!isMonoFollowedByElement(multiplier, multiVal)){
+						throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
+					}
 				}
 				if (multiVal ==1){//mono
 					return;
@@ -4574,5 +4576,22 @@ class ComponentProcessor {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Names like monooxygen may be used to emphasise that a molecule is not being described
+	 * @param multiplier
+	 * @param multiVal
+	 * @return
+	 */
+	private boolean isMonoFollowedByElement(Element multiplier, int multiVal) {
+		if (multiVal ==1){
+			Element possibleElement = (Element) XOMTools.getNextSibling(multiplier);
+			if (possibleElement != null && possibleElement.getLocalName().equals(GROUP_EL) &&
+					(ELEMENTARYATOM_SUBTYPE_VAL.equals(possibleElement.getAttributeValue(SUBTYPE_ATR)) || possibleElement.getValue().equals("hydrogen"))){
+				return true;
+			}
+		}
+		return false;
 	}
 }
