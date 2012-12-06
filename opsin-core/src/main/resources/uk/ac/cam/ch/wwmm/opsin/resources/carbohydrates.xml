@@ -37,6 +37,18 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 
 		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES" suffixAppliesTo="3">sedoheptulo</token>
 		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES" suffixAppliesTo="3">mannoheptulo</token>
+
+		<!--deoxy -->
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinovo</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">rhamno</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">fuco</token>
+		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitoxo</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">abequo</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvelo</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">ascarylo</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">colito</token>
+		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">parato</token>
+
 	</tokenList>
 
 	<tokenList tagname="carbohydrateRingSize" symbol="ã">
@@ -89,48 +101,59 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="Þ">
-			<!--aldoses-->
-			<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrose</token>
-			<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">threose</token>
+		<!--aldoses-->
+		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrose</token>
+		<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">threose</token>
 
-			<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribose</token>
-			<token value="O=C[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">arabinose</token>
-			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylose</token>
-			<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">lyxose</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribose</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">arabinose</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylose</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">lyxose</token>
 
-			<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">allose</token>
-			<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">altrose</token>
-			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucose</token>
-			<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannose</token>
-			<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">gulose</token>
-			<token value="O=C[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">idose</token>
-			<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactose</token>
-			<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">talose</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">allose</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">altrose</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucose</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannose</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">gulose</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">idose</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactose</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">talose</token>
 
-			<!--ketoses-->
-			<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrulose</token>
+		<!--ketoses-->
+		<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES">erythrulose</token>
 
-			<token value="OCC(=O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribulose</token>
-			<token value="OCC(=O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylulose</token>
+		<token value="OCC(=O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">ribulose</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES">xylulose</token>
 
-			<token value="OCC(=O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">psicose</token>
-			<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">fructose</token>
-			<token value="OCC(=O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbose</token>
-			<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">tagatose</token>
+		<token value="OCC(=O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">psicose</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">fructose</token>
+		<token value="OCC(=O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbose</token>
+		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">tagatose</token>
 
-			<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">sedoheptulose</token>
-			<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">mannoheptulose</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">sedoheptulose</token>
+		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES">mannoheptulose</token>
 
-			<!--trivial-->
-			<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
-			<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
+		<!--deoxy -->
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinovose</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">rhamnose</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">fucose</token>
+		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitoxose</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">abequose</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvelose</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">ascarylose</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">colitose</token>
+		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">paratose</token>
 
-			<!--should these be depicted in ring form?-->
-			<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
-			<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
-			<token value="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
-			<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">fucosamine</token>
-			<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">quinovosamine</token>
+		<!--trivial-->
+		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
+		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
+
+		<!--should these be depicted in ring form?-->
+		<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
+		<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
+		<token value="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
+		<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">fucosamine</token>
+		<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">quinovosamine</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="carbohydrate" symbol="G">
