@@ -228,11 +228,19 @@ public class SMILESWriterTest {
 	}
 	
 	@Test
-	public void testRGroup() throws StructureBuildingException {
+	public void testRGroup1() throws StructureBuildingException {
 		Fragment f = state.fragManager.buildSMILES("[R]CC[R]");
 		StructureBuilder.makeHydrogensExplicit(state);
 		String smiles = new SMILESWriter(f).generateSmiles();
 		assertEquals("*CC*", smiles);
+	}
+	
+	@Test
+	public void testRGroup2() throws StructureBuildingException {
+		Fragment f = state.fragManager.buildSMILES("[H][R]");
+		StructureBuilder.makeHydrogensExplicit(state);
+		String smiles = new SMILESWriter(f).generateSmiles();
+		assertEquals("[H]*", smiles);
 	}
 	
 	@Test
