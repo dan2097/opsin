@@ -196,7 +196,20 @@ class StructureBuildingMethods {
 					joinFragmentsAdditively(state, frag, parentFrag);
 				}
 				else{
-					joinFragmentsSubstitutively(state, frag, parentFrag.getAtomByLocantOrThrow(locantString));
+					Atom atomToSubstituteAt = parentFrag.getAtomByLocantOrThrow(locantString);
+					if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
+						if (!atomToSubstituteAt.getElement().equals("O")){
+							for (Atom neighbour : atomToSubstituteAt.getAtomNeighbours()) {
+								if (neighbour.getElement().equals("O") &&
+										neighbour.getBonds().size()==1 &&
+										neighbour.getCharge() == 0){
+									atomToSubstituteAt = neighbour;
+									break;
+								}
+							}
+						}
+					}
+					joinFragmentsSubstitutively(state, frag, atomToSubstituteAt);
 				}
 			}
 		}
