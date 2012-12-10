@@ -182,6 +182,7 @@
 		<token value="C[O+]" labels="1/" valType="SMILES">methoxylium</token>
 		<token value="COCOC" labels="none" valType="SMILES">methylal</token>
 		<token value="C(O)CN" labels="none" valType="SMILES">monoethanolamine</token>
+		<token value="C(O)CN" labels="none" valType="SMILES">mono-ethanolamine</token>
 		<token value="C(OC)COC" labels="1///2//" valType="SMILES">monoglyme</token>
 		<token value="C=CC(CCCC(C)=C)=C" labels="none" valType="SMILES">alpha-myrcene</token>
 		<token value="C=CC(CCC=C(C)C)=C" labels="none" valType="SMILES">beta-myrcene</token>
