@@ -231,20 +231,12 @@ class ComponentProcessor {
 			else{
 				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, "");
 			}
-		} else if(groupValType.equals(DBKEY_VALTYPE_VAL)) {
-			thisFrag = state.fragManager.buildCML(groupValue, groupType, groupSubType);
-		}
-		else{
+		} else{
 			throw new StructureBuildingException("Group tag has bad or missing valType: " + group.toXML());
-		}
-		if (thisFrag ==null){
-			throw new StructureBuildingException("null fragment returned from the following xml: " + group.toXML());
 		}
 
 		//processes groups like cymene and xylene whose structure is determined by the presence of a locant in front e.g. p-xylene
 		processXyleneLikeNomenclature(state, group, thisFrag);
-
-		FragmentTools.convertHighOrderBondsToSpareValencies(thisFrag);//only applied to cyclic bonds
 
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);

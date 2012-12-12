@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ public class HeteroAtomReplacementTest {
 
 	@Before
 	public void setUp() {
-		fragManager = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		a = new Atom(0, "C", mock(Fragment.class));
 	}
 	

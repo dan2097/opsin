@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests that fused ring numbering is working as expected. A heteroatom(n) has been placed at the expected locant 1 to make numbering unambiguous where due to symmetry geometric consideration are insufficient to deduce unique numbering
@@ -22,7 +21,7 @@ public class FusedRingNumbererTest {
 
 	@BeforeClass
 	public static void setUp(){
-		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 	}
 	
 	@AfterClass

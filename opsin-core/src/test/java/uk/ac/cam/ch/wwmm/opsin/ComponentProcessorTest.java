@@ -4,7 +4,6 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static junit.framework.Assert.*;
 import nu.xom.Attribute;
 import nu.xom.Element;
-import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
@@ -115,7 +114,7 @@ public class ComponentProcessorTest {
 
 	@Test
 	public void testDLStereochemistryLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("N[C@@H](C)C");
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "l");
@@ -124,7 +123,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryDOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("N[C@@H](C)C");
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "d");
@@ -133,7 +132,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryDLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("N[C@@H](C)C");
 		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "dl");
 		assertEquals(null, f.getAtomByID(2).getAtomParity());
@@ -141,7 +140,7 @@ public class ComponentProcessorTest {
 	
 	@Test(expected=ComponentGenerationException.class)
 	public void testDLStereochemistryDOnAchiralAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("NC(C)C");
 		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "d");
 	}
@@ -149,7 +148,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryLOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("N[C@@H](C)C");
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor.applyDlStereochemistryToCarbohydrate(f, "l");
@@ -158,7 +157,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryDOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("N[C@@H](C)C");
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor.applyDlStereochemistryToCarbohydrate(f, "d");

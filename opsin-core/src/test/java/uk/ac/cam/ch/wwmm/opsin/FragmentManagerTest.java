@@ -15,7 +15,7 @@ public class FragmentManagerTest {
 
 	@Before
 	public void setUp() throws IOException{
-		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new CMLFragmentBuilder(new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/")), new IDManager());
+		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 	}
 
 	@Test

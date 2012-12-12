@@ -16,7 +16,7 @@ public class SMILESWriterTest {
 	BuildState state;
 	@Before
 	public void setup(){
-		state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class));
+		state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
 	}
 
 	@Test

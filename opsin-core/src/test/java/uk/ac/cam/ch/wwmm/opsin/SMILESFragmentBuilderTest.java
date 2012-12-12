@@ -2,7 +2,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 import java.util.List;
 import java.util.Set;
@@ -10,7 +9,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -21,7 +19,7 @@ public class SMILESFragmentBuilderTest {
 
 	@Before
 	public void setUp(){
-		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 	}
 
 	@Test
@@ -512,25 +510,13 @@ public class SMILESFragmentBuilderTest {
 	}
 	
 	@Test
-	public void indicatedHydrogen1() throws StructureBuildingException {
+	public void indicatedHydrogen() throws StructureBuildingException {
 		Fragment fragment = fm.buildSMILES("Nc1[nH]c(=O)c2c(n1)nc[nH]2");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(11, atomList.size());
 		assertEquals(2, fragment.getIndicatedHydrogen().size());
 		assertEquals(atomList.get(2), fragment.getIndicatedHydrogen().get(0));
 		assertEquals(atomList.get(10),  fragment.getIndicatedHydrogen().get(1));
-	}
-	
-	@Test
-	@Ignore
-	public void indicatedHydrogen2() throws StructureBuildingException {
-		Fragment fragment = fm.buildSMILES("NC(N1)=NC(N=CN2)=C2C1=O");
-		List<Atom> atomList = fragment.getAtomList();
-		assertEquals(11, atomList.size());
-		FragmentTools.convertHighOrderBondsToSpareValencies(fragment);
-		assertEquals(2, fragment.getIndicatedHydrogen().size());
-		assertEquals(atomList.get(2), fragment.getIndicatedHydrogen().get(0));
-		assertEquals(atomList.get(7),  fragment.getIndicatedHydrogen().get(1));
 	}
 
 	@Test

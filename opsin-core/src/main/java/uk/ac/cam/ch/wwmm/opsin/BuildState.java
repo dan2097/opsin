@@ -78,10 +78,10 @@ class BuildState {
 		}
 	}
 
-	BuildState(NameToStructureConfig n2sConfig, SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder) {
+	BuildState(NameToStructureConfig n2sConfig, SMILESFragmentBuilder sBuilder) {
 		this.n2sConfig = n2sConfig;
 		idManager = new IDManager();
-		fragManager = new FragmentManager(sBuilder, cmlBuilder, idManager);
+		fragManager = new FragmentManager(sBuilder, idManager);
 		xmlFragmentMap = new BiDirectionalHashMap();
 		xmlSuffixMap = new HashMap<Element, List<Fragment>>();
 	}

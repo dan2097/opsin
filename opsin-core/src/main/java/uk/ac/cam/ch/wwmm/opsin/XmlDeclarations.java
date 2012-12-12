@@ -271,10 +271,7 @@ class XmlDeclarations {
 	
 	/**A SMILES string is the value attribute. The SMILES parser of OPSIN is not entirely complete and additional supports a few things that are not supported by standard SMILES*/
 	static final String SMILES_VALTYPE_VAL = "SMILES";
-	
-	/**A reference to CML in fragments.xml is the value attribute*/
-	static final String DBKEY_VALTYPE_VAL = "dbkey";
-    
+
 	/*
 	 * The values the type attribute can take
 	 * Type is expected to be present at minimum on all group elements

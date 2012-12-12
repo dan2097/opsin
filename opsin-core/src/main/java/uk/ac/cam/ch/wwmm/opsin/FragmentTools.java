@@ -549,67 +549,6 @@ class FragmentTools {
 		}
 		return null;
 	}
-	
-
-	/** Looks for the atom that would have had a hydrogen indicated,
-	 * adds a spareValency to that atom, and sets indicatedHydrogen.
-     * @param frag
-	 */
-	static void pickUpIndicatedHydrogens(Fragment frag) {
-		if (frag.getIndicatedHydrogen().size()>0){
-			return;
-		}
-		List<Atom> atomList = frag.getAtomList();
-		int svCount = 0;
-		int dvCount = 0; /* Divalent, like O */
-		for(Atom a : atomList) {
-			svCount += a.hasSpareValency() ? 1 : 0;
-			if(a.getElement().equals("O")) dvCount++;
-			if(a.getElement().equals("S")) dvCount++;
-			if(a.getElement().equals("Se")) dvCount++;
-			if(a.getElement().equals("Te")) dvCount++;
-		}
-		if(svCount == atomList.size() - (1 + dvCount) && svCount > 0) {
-			// Now we're looking for a trivalent C, or failing that a divalent N/P/As/Sb
-			Atom nCandidate = null;
-			for(Atom a : atomList) {
-				if(a.getAtomIsInACycle() && !a.hasSpareValency()) {
-					String element =a.getElement();
-					if (element.equals("C")){
-						frag.addIndicatedHydrogen(a);
-						a.setSpareValency(true);
-						return;
-					} else if(element.equals("N")) {
-						nCandidate = a;
-					}
-				}
-			}
-			if(nCandidate != null) {
-				frag.addIndicatedHydrogen(nCandidate);
-				nCandidate.setSpareValency(true);
-			}
-		}
-	}
-
-	/**Looks for double and higher bonds, converts them to single bonds
-	 * and adds corresponding spareValencies to the atoms they join.
-	 * @param frag
-	 */
-	static void convertHighOrderBondsToSpareValencies(Fragment frag)  {
-		Set<Bond> bondSet = frag.getBondSet();
-		for(Bond b : bondSet) {
-			if(b.getOrder() == 2) {
-				Atom firstAtom =b.getFromAtom();
-				Atom secondAtom =b.getToAtom();
-				if (firstAtom.getAtomIsInACycle() && secondAtom.getAtomIsInACycle()){
-					b.setOrder(1);
-					firstAtom.setSpareValency(true);
-					secondAtom.setSpareValency(true);
-				}
-			}
-		}
-		FragmentTools.pickUpIndicatedHydrogens(frag);
-	}
 
 	/**Increases the order of bonds joining atoms with spareValencies,
 	 * and uses up said spareValencies.

@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +17,7 @@ public class CycleDetectorTest {
 
 	@Before
 	public void setup(){
-		fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 	}
 	
 	@Test

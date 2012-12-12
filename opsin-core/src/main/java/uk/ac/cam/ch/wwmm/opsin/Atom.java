@@ -78,7 +78,7 @@ class Atom {
 	/** Null by default or set by the lambda convention.*/
 	private Integer lambdaConventionValency;
 	
-	/** Null by default or set by the CML/SMILES builder*/
+	/** Null by default or set by the SMILES builder*/
 	private Integer minimumValency;
 
 	/** This is modified by ium/ide/ylium/uide and is used to choose the appropriate valency for the atom*/

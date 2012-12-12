@@ -151,7 +151,7 @@
 		<token value="-c1c(C)c(C)cc(C)c1" labels="none" valType="SMILES">as-pseudocumyl</token>
 		<token value="-c1c(C)c(C)ccc1C" labels="none" valType="SMILES">v-pseudocumyl</token>
 		<token value="-c1c(C)cc(C)c(C)c1" labels="none" valType="SMILES">s-pseudocumyl</token>
-		<token value="pyrrolidine" valType="dbkey" outIDs="1">pyrrolidino</token>
+		<token value="-N1CCCC1" labels="1/2/3/4/5" valType="SMILES">pyrrolidino</token>
     <token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" valType="SMILES">salicylal</token>
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">sec-isoamyl</token>
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">secisoamyl</token>

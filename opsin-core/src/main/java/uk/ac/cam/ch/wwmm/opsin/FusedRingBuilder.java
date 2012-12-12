@@ -984,7 +984,6 @@ class FusedRingBuilder {
 					for (Atom atom : heteroatoms) {
 						atom.setElement("C");
 					}
-					FragmentTools.pickUpIndicatedHydrogens(fusedRing);
 					for (int i=0; i< heteroatoms.size(); i ++){
 						String elementSymbol =elementOfHeteroAtom.get(i);
 						fusedRing.getAtomByLocantOrThrow(locants[i]).setElement(elementSymbol);
