@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -24,7 +23,7 @@ public class InchiOutputTest {
 	
 	@Test
 	public void testStaticToInChI() throws StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("C([H])([H])([H])C(=O)N([H])[H]");
 		OpsinResult result = new OpsinResult(f, OPSIN_RESULT_STATUS.SUCCESS, "", "");
 		assertEquals("InChI=1/C2H5NO/c1-2(3)4/h1H3,(H2,3,4)/f/h3H2", NameToInchi.convertResultToInChI(result));
@@ -32,7 +31,7 @@ public class InchiOutputTest {
 	
 	@Test
 	public void testStaticToStdInChI() throws StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 		Fragment f = fm.buildSMILES("C([H])([H])([H])C(=O)N([H])[H]");
 		OpsinResult result = new OpsinResult(f, OPSIN_RESULT_STATUS.SUCCESS, "", "");
 		assertEquals("InChI=1S/C2H5NO/c1-2(3)4/h1H3,(H2,3,4)", NameToInchi.convertResultToStdInChI(result));

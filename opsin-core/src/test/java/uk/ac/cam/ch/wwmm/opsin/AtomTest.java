@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.mockito.Mockito.mock;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -14,7 +13,7 @@ import org.junit.Test;
 public class AtomTest {
 
 	private Fragment frag;
-	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 	
 	@Before
 	public void setUp() {

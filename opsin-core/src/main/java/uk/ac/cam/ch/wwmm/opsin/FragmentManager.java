@@ -29,41 +29,23 @@ class FragmentManager {
 	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond;
 	/** A builder for fragments specified as SMILES */
 	private final SMILESFragmentBuilder sBuilder;
-	/** A builder for fragments specified as references to a CML data file */
-	private final CMLFragmentBuilder cmlBuilder;
 	/** A source of unique integers */
 	private final IDManager idManager;
 
 	/** Sets up a new Fragment mananger, containing no fragments.
 	 *
 	 * @param sBuilder A SMILESFragmentBuilder - dependency injection.
-	 * @param cmlBuilder A CMLFragmentBuilder - dependency injection.
 	 * @param idManager An IDManager.
 	 */
-	FragmentManager(SMILESFragmentBuilder sBuilder, CMLFragmentBuilder cmlBuilder, IDManager idManager) {
-		if (sBuilder == null || cmlBuilder == null || idManager == null ){
+	FragmentManager(SMILESFragmentBuilder sBuilder, IDManager idManager) {
+		if (sBuilder == null || idManager == null ){
 			throw new IllegalArgumentException("FragmentManager was parsed a null object in its constructor!");
 		}
 		this.sBuilder = sBuilder;
-		this.cmlBuilder = cmlBuilder;
 		this.idManager = idManager;
 		fragPile = new LinkedHashSet<Fragment>();
 		bondPile = new LinkedHashSet<Bond>();
 		fragToInterFragmentBond = new HashMap<Fragment, LinkedHashSet<Bond>>();
-	}
-
-	/** Builds a fragment, based on a reference to a CML data file
-	 *
-	 * @param idStr The name of the fragment in the CML file
-	 * @param type The fragment type
-	 * @param subType The fragment subType
-	 * @return The fragment
-	 * @throws StructureBuildingException If the fragment can't be built
-	 */
-	Fragment buildCML(String idStr, String type, String subType) throws StructureBuildingException {
-		Fragment newFrag = cmlBuilder.build(idStr, type, subType, this);
-		addFragment(newFrag);
-		return newFrag;
 	}
 
 	/** Builds a fragment, based on an SMILES string

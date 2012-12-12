@@ -56,7 +56,7 @@ class Fragment {
 	 * but allows for fragments with no locants. Can be overridden*/
 	private Atom defaultInAtom = null;
 
-	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES/CML level.*/
+	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES level.*/
 	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
 
 	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
@@ -80,7 +80,7 @@ class Fragment {
 	 * Makes an empty fragment with no specified type.*/
 	Fragment() {}
 
-	/**Produces a CML cml element, corresponding to the molecule. The cml element contains
+	/**Produces a CML element, corresponding to the molecule. The cml element contains
 	 * a molecule, which contains an atomArray and bondArray filled with atoms and bonds.
 	 * The molecule element has a dummy id of m1.
 	 * @param chemicalName

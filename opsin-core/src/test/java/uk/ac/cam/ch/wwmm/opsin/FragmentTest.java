@@ -7,13 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class FragmentTest {
 
 	private Fragment frag;
-	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class), new IDManager());
+	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
 
 	@Before
 	public void setUp(){
@@ -363,20 +362,17 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testPickUpIndicatedHydrogen() throws StructureBuildingException {
+	public void testIndicatedHydrogen() throws StructureBuildingException {
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment pyrrole = sBuilder.build("N1C=CC=C1", fm);
-		FragmentTools.convertHighOrderBondsToSpareValencies(pyrrole);
-		FragmentTools.pickUpIndicatedHydrogens(pyrrole);
+		Fragment pyrrole = sBuilder.build("[nH]1cccc1", fm);
 		assertEquals("Pyrrole has 1 indicated hydrogen", 1, pyrrole.getIndicatedHydrogen().size());
 		assertEquals("..and the indicated hydrogen is on the nitrogen", pyrrole.getFirstAtom(), pyrrole.getIndicatedHydrogen().get(0));
 	}
 
 	@Test
-	public void testConvertHighOrderBondsToSpareValencies() throws StructureBuildingException{
+	public void testSpareValenciesOnAromaticAtoms() throws StructureBuildingException{
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
-		FragmentTools.convertHighOrderBondsToSpareValencies(naphthalene);
+		Fragment naphthalene = sBuilder.build("c1cccc2ccccc12", fm);
 		for(Atom a : naphthalene.getAtomList()) {
 			assertEquals("All atoms have sv", true, a.hasSpareValency());
 		}
@@ -388,26 +384,25 @@ public class FragmentTest {
 	@Test
 	public void testConvertSpareValenciesToDoubleBonds() throws StructureBuildingException{
 		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment dhp = sBuilder.build("C1=CCC=CC1", fm);
-		FragmentTools.convertHighOrderBondsToSpareValencies(dhp);
+		Fragment dhp = sBuilder.build("c1cCccC1", fm);
 		FragmentTools.convertSpareValenciesToDoubleBonds(dhp);
 		for(Atom a : dhp.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
 		Fragment funnydiene = sBuilder.build("C(=C)C=C", fm);
-		FragmentTools.convertHighOrderBondsToSpareValencies(funnydiene);
 		FragmentTools.convertSpareValenciesToDoubleBonds(funnydiene);
 		for(Atom a : funnydiene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
-		FragmentTools.convertHighOrderBondsToSpareValencies(naphthalene);
+		Fragment naphthalene = sBuilder.build("c1cccc2ccccc12", fm);
 		FragmentTools.convertSpareValenciesToDoubleBonds(naphthalene);
 		for(Atom a : naphthalene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment pentalene = sBuilder.build("C12C(=CC=C1)C=CC=2", fm);
-		FragmentTools.convertHighOrderBondsToSpareValencies(pentalene);
+		Fragment pentalene = sBuilder.build("c12c(ccc1)ccc2", fm);
+		for(Atom a : pentalene.getAtomList()) {
+			assertEquals("All atoms have sv", true, a.hasSpareValency());
+		}
 		FragmentTools.convertSpareValenciesToDoubleBonds(pentalene);
 		for(Atom a : pentalene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());

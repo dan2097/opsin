@@ -59,7 +59,7 @@ public class StructureBuildingMethodsTest {
 	@Test
 	public void notPhosphoSubstitution() throws StructureBuildingException {
 		//standard unlocanted substitution
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class));
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
 		Element word = new Element(WORD_EL);
 		
 		Element amino = new Element(GROUP_EL);
@@ -84,7 +84,7 @@ public class StructureBuildingMethodsTest {
 	
 	@Test
 	public void phosphoUnlocantedSubstitution() throws StructureBuildingException {
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class));
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
 		Element word = new Element(WORD_EL);
 		
 		Element phospho = new Element(GROUP_EL);
@@ -110,7 +110,7 @@ public class StructureBuildingMethodsTest {
 	
 	@Test
 	public void phosphoLocantedSubstitution() throws StructureBuildingException {
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder(), mock(CMLFragmentBuilder.class));
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
 		Element word = new Element(WORD_EL);
 		
 		Element phospho = new Element(GROUP_EL);

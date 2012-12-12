@@ -7,13 +7,13 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 <tokenLists>
 <!--Contracted form allows only inline suffixes e.g. NOT [phen, one] -->
 	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="b">
-		<token value="imidazole" valType="dbkey">imidaz</token>
-		<token value="indazole" valType="dbkey">indaz</token>
+		<token value="[nH]1cncc1" labels="1/2/3/4/5" valType="SMILES">imidaz</token>
+		<token value="[nH]1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">indaz</token>
 		<token value="s1nccc1" valType="SMILES">isothiaz</token>
 		<token value="o1nccc1" valType="SMILES">isoxaz</token>
 		<token value="o1nccc1" valType="SMILES">isooxaz</token>
 		<token value="CCc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">pheneth</token>
-		<token value="pyrrole" valType="dbkey">pyrr</token>
+		<token value="[nH]1cccc1" labels="1/2/3/4/5" valType="SMILES">pyrr</token>
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" valType="SMILES">styr</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" frontLocantsExpected="2,3,4">tol</token>
 	</tokenList>
@@ -31,23 +31,23 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" valType="SMILES" frontLocantsExpected="1,2,9">anthr</token>
 		<token value="c1cccc2[as]c3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">arsanthr</token>
 		<token value="c1cccc2[as]cc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">arsanthrid</token>
-		<token value="as-indacene" valType="dbkey">as-indac</token>
-		<token value="azulene" valType="dbkey">azul</token>
+		<token value="c1ccc2ccc3cccc3c12" labels="1/2/3/3a/4/5/5a/6/7/8/8a/8b" valType="SMILES">as-indac</token>
+		<token value="c1ccc2cccccc12" labels="1/2/3/3a/4/5/6/7/8/8a" valType="SMILES">azul</token>
 		<token value="C(c1ccccc1)c1ccccc1" labels="alpha/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" valType="SMILES">benzhydr</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">boranthr</token>
-		<token value="chrysene" valType="dbkey">chrys</token>
-		<token value="cinnoline" valType="dbkey">cinnol</token>
+		<token value="c1cccc2c3ccc4ccccc4c3ccc12" labels="1/2/3/4/4a/4b/5/6/6a/7/8/9/10/10a/10b/11/12/12a" valType="SMILES">chrys</token>
+		<token value="n1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">cinnol</token>
 		<token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" valType="SMILES" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coron</token>
-		<token value="cyclopenta[a]phenanthrene" valType="dbkey">cyclopenta[a]phenanthr</token>
+		<token value="c1cccc2ccc3c4[cH2]ccc4ccc3c12" labels="1/2/3/4/5/6/7/8/14/15/16/17/13/12/11/9/10" valType="SMILES">cyclopenta[a]phenanthr</token>
 		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///" valType="SMILES" addGroup="C locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cym</token>
-		<token value="fluoranthene" valType="dbkey">fluoranth</token>
+		<token value="c1ccc2cccc3c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/10/10a/10b/10c" valType="SMILES">fluoranth</token>
 		<token value="C1=CC=CC1=C" labels="1/2/3/4/5/6" valType="SMILES">fulv</token>
 		<token value="o1cccc1" labels="1/2/3/4/5" valType="SMILES" frontLocantsExpected="2,3">fur</token>
 		<token value="Cc1ccco1" labels="alpha/2/3/4/5/1" valType="SMILES">furfur</token>
-		<token value="imidazolidine" valType="dbkey">imidazolid</token>
-		<token value="indolizine" valType="dbkey">indoliz</token>
+		<token value="N1CNCC1" labels="1/2/3/4/5" valType="SMILES">imidazolid</token>
+		<token value="c1ccn2ccccc12" labels="1/2/3/4/5/6/7/8/8a" valType="SMILES">indoliz</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzofur</token>
-		<token value="isoquinoline" valType="dbkey" frontLocantsExpected="1,3,4,5,6,7,8">isoquinol</token>
+		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES" frontLocantsExpected="1,3,4,5,6,7,8">isoquinol</token>
 		<token value="[se]1nccc1" valType="SMILES">isoselenaz</token>
 		<token value="[te]1nccc1" valType="SMILES">isotelluraz</token>
 		<token value="O1NCCC1" valType="SMILES">isoxazolid</token>
@@ -56,19 +56,19 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="S1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">thiomorphol</token>
 		<token value="[Se]1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">selenomorphol</token>
 		<token value="[Te]1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">telluromorphol</token>
-		<token value="naphthacene" valType="dbkey">naphthac</token>
-		<token value="naphthalene" valType="dbkey">naphthal</token>
-		<token value="naphthalene" valType="dbkey" frontLocantsExpected="1,2">naphth</token>
-		<token value="naphthalene" valType="dbkey" addHeteroAtom="N locant1;N locant8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyrid</token>
+		<token value="c1cccc2cc3cc4ccccc4cc3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/11/11a/12/12a" valType="SMILES">naphthac</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" valType="SMILES">naphthal</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" valType="SMILES" frontLocantsExpected="1,2">naphth</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" valType="SMILES" addHeteroAtom="N locant1;N locant8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyrid</token>
 		<token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k" valType="SMILES">oval</token>
 		<token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">oxanthr</token>
-		<token value="perimidine" valType="dbkey">perimid</token>
-		<token value="phenalene" valType="dbkey">phenal</token>
+		<token value="[nH]1cnc2cccc3cccc1c23" labels="1/2/3/3a/4/5/6/6a/7/8/9/9a/9b" valType="SMILES">perimid</token>
+		<token value="[cH2]1ccc2cccc3cccc1c23" labels="1/2/3/3a/4/5/6/6a/7/8/9/9a/9b" valType="SMILES">phenal</token>
 		<token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a" valType="SMILES" frontLocantsExpected="1,2,3,4,9">phenanthr</token>
 		<token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES">phenanthrid</token>
 		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" valType="SMILES" addHeteroAtom="N locant1;N locant7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrol</token>
-		<token value="phenarsazine" valType="dbkey">phenarsaz</token>
-		<token value="phenazine" valType="dbkey">phenaz</token>
+		<token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenarsaz</token>
+		<token value="c1cccc2nc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenaz</token>
 		<token value="c1cccc2oc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoxaz</token>
 		<token value="c1cccc2sc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenothiaz</token>
 		<token value="c1cccc2[se]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">phenoselenaz</token>
@@ -88,7 +88,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperaz</token>
 		<token value="N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" frontLocantsExpected="1,2,3,4">piperid</token>
 		<token value="c1ccc2cccc3cc4ccccc4cc51.c235" labels="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b" valType="SMILES">pleiad</token>
-		<token value="pteridine" valType="dbkey">pterid</token>
+		<token value="n1cncc2nccnc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">pterid</token>
 		<token value="n1cnc2nc[nH]c2c1" labels="1/2/3/4/9/8/7/5/6" valType="SMILES">pur</token>
 		<token value="o1[cH2]cccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">pyr</token>
 		<token value="s1[cH2]cccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">thiopyr</token>
@@ -96,18 +96,18 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="[te]1[cH2]cccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">telluropyr</token>
 		<token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/15b/15c/15d/15e">pyranthr</token>
 		<token value="N1NCCC1" valType="SMILES">pyrazolid</token>
-		<token value="pyridazine" valType="dbkey">pyridaz</token>
+		<token value="n1ncccc1" labels="1/2/3/4/5/6" valType="SMILES">pyridaz</token>
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES" frontLocantsExpected="2,3,4">pyrid</token>
-		<token value="pyrimidine" valType="dbkey">pyrimid</token>
+		<token value="n1cnccc1" labels="1/2/3/4/5/6" valType="SMILES">pyrimid</token>
 		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a" valType="SMILES">pyrroliz</token>
-		<token value="pyrrolidine" valType="dbkey">pyrrolid</token>
-		<token value="quinazoline" valType="dbkey">quinazol</token>
-		<token value="quinoline" valType="dbkey" frontLocantsExpected="2,3,4,5,6,7,8">quinol</token>
+		<token value="N1CCCC1" labels="1/2/3/4/5" valType="SMILES">pyrrolid</token>
+		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">quinazol</token>
+		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES" frontLocantsExpected="2,3,4,5,6,7,8">quinol</token>
 		<token value="c1cc[cH2]n2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a" valType="SMILES">quinoliz</token>
-		<token value="quinoxaline" valType="dbkey">quinoxal</token>
+		<token value="n1ccnc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">quinoxal</token>
 		<token value="N1(CCC2CC1)CC2" labels="1/2/3/4/5/6/7/8" valType="SMILES">quinuclid</token>
 		<token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e" valType="SMILES">rubic</token>
-		<token value="s-indacene" valType="dbkey">s-indac</token>
+		<token value="c1ccc2cc3cccc3cc12" labels="1/2/3/3a/4/4a/5/6/7/7a/8/8a" valType="SMILES">s-indac</token>
 		<token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">selenanthr</token>
 		<token value="[se]1cccc1" valType="SMILES">selenoph</token>
 		<token value="C1=CC=CC=2[SiH]=C3C=CC=CC3=[SiH]C12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" valType="SMILES">silanthr</token>
