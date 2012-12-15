@@ -434,6 +434,7 @@ class ComponentProcessor {
                 }
                 allBondInformation.add(bondInformation);
             }
+            boolean locanted = false;
 			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
@@ -446,6 +447,7 @@ class ComponentProcessor {
 					}
 					group.removeAttribute(group.getAttribute(FRONTLOCANTSEXPECTED_ATR));
 					previousEl.detach();
+					locanted = true;
 				}
 			}
 
@@ -461,7 +463,17 @@ class ComponentProcessor {
 				else{
 					throw new ComponentGenerationException("malformed addBond tag");
 				}
-				FragmentTools.unsaturate(atomOnParentFrag, Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
+				
+				Bond b = FragmentTools.unsaturate(atomOnParentFrag, Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
+				if (!locanted && b.getOrder() ==2 && 
+						parentFrag.getAtomList().size()==5 &&
+						b.getFromAtom().getAtomIsInACycle() &&
+						b.getToAtom().getAtomIsInACycle()){
+					//special case just that substitution of groups like imidazoline may actually remove the double bond...
+					b.setOrder(1);
+					b.getFromAtom().setSpareValency(true);
+					b.getToAtom().setSpareValency(true);
+				}
 			}
 		}
 	}

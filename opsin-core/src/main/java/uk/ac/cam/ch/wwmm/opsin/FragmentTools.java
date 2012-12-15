@@ -376,9 +376,10 @@ class FragmentTools {
 	 * @param fromAtom The lower-numbered atom in the bond
 	 * @param bondOrder The new bond order
 	 * @param fragment The fragment
+	 * @return The bond that was unsaturated
      * @throws StructureBuildingException
 	 */
-	static void unsaturate(Atom fromAtom, int bondOrder, Fragment fragment) throws StructureBuildingException {
+	static Bond unsaturate(Atom fromAtom, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		Atom toAtom = null;
 		Integer locant = null;
 		try{
@@ -415,6 +416,7 @@ class FragmentTools {
 		}
 		Bond b = fromAtom.getBondToAtomOrThrow(toAtom);
 		b.setOrder(bondOrder);
+		return b;
 	}
 
 	/** Adjusts the order of a bond in a fragment.
