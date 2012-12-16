@@ -3,7 +3,56 @@ L-erythro-L-gluco-Non-5-ulose	InChI=1S/C9H18O9/c10-1-3(12)5(14)7(16)9(18)8(17)6(
 4-O-Methyl-D-xylitol	InChI=1S/C6H14O5/c1-11-5(3-8)6(10)4(9)2-7/h4-10H,2-3H2,1H3/t4-,5+,6+/m0/s1
 2,3,5-Tri-O-methyl-D-mannitol	InChI=1S/C9H20O6/c1-13-6(4-10)8(12)9(15-3)7(5-11)14-2/h6-12H,4-5H2,1-3H3/t6-,7-,8-,9-/m1/s1
 2-O-Acetyl-5-O-methyl-D-mannitol	InChI=1S/C9H18O7/c1-5(12)16-7(4-11)9(14)8(13)6(3-10)15-2/h6-11,13-14H,3-4H2,1-2H3/t6-,7-,8-,9-/m1/s1
-//
+D-Glucose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h1,3-6,8-12H,2H2/t3-,4+,5+,6+/m0/s1
+//aldehydo-D-Glucose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h1,3-6,8-12H,2H2/t3-,4+,5+,6+/m0/s1
+keto-D-Fructose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h3,5-9,11-12H,1-2H2/t3-,5-,6-/m1/s1
+(+)-D-glucose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h1,3-6,8-12H,2H2/t3-,4+,5+,6+/m0/s1
+D-arabino-Hex-2-ulose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h3,5-9,11-12H,1-2H2/t3-,5-,6-/m1/s1
+D-glycero-L-gulo-Heptose	InChI=1S/C7H14O7/c8-1-3(10)5(12)7(14)6(13)4(11)2-9/h1,3-7,9-14H,2H2/t3-,4-,5-,6+,7+/m1/s1
+alpha-D-Glucooxirose	InChI=1S/C6H12O6/c7-1-2(8)3(9)4(10)5-6(11)12-5/h2-11H,1H2/t2-,3-,4+,5-,6+/m1/s1
+2,3,5,6-Tetra-O-acetyl-alpha-D-galactofuranose	InChI=1S/C14H20O10/c1-6(15)20-5-10(21-7(2)16)11-12(22-8(3)17)13(14(19)24-11)23-9(4)18/h10-14,19H,5H2,1-4H3/t10-,11+,12+,13-,14+/m1/s1
+alpha-D-Glucoseptanose	InChI=1S/C6H12O6/c7-2-1-12-6(11)5(10)4(9)3(2)8/h2-11H,1H2/t2-,3-,4+,5-,6+/m1/s1
+//alpha-D-Fructofuranose 1,6-bisphosphate	InChI=1S/C6H14O12P2/c7-4-3(1-16-19(10,11)12)18-6(9,5(4)8)2-17-20(13,14)15/h3-5,7-9H,1-2H2,(H2,10,11,12)(H2,13,14,15)/t3-,4-,5+,6+/m1/s1
+Methyl alpha-D-glucoseptanoside	InChI=1S/C7H14O6/c1-12-7-6(11)5(10)4(9)3(8)2-13-7/h3-11H,2H2,1H3/t3-,4-,5+,6-,7+/m1/s1
+Methyl alpha-L-altrooxetoside	InChI=1S/C7H14O6/c1-12-7-5(11)6(13-7)4(10)3(9)2-8/h3-11H,2H2,1H3/t3-,4-,5+,6-,7+/m0/s1
+Methyl beta-D-allooxiroside	InChI=1S/C7H14O6/c1-12-7-6(13-7)5(11)4(10)3(9)2-8/h3-11H,2H2,1H3/t3-,4-,5-,6-,7-/m1/s1
+//1,2:3,4-Di-O-isopropylidene-alpha-D-galactopyranose	InChI=1S/C12H20O6/c1-11(2)15-7-6(5-13)14-10-9(8(7)16-11)17-12(3,4)18-10/h6-10,13H,5H2,1-4H3/t6-,7+,8+,9-,10-/m1/s1
+//D-Glucaro-1,4:6,3-dilactone	InChI=1S/C6H6O6/c7-1-3-4(12-5(1)9)2(8)6(10)11-3/h1-4,7-8H/t1-,2+,3-,4-/m0/s1
+D-Arabinitol	InChI=1S/C5H12O5/c6-1-3(8)5(10)4(9)2-7/h3-10H,1-2H2/t3-,4-/m1/s1
+Xylitol	InChI=1S/C5H12O5/c6-1-3(8)5(10)4(9)2-7/h3-10H,1-2H2/t3-,4+,5+
+Methyl alpha-L-arabinopyranoside	InChI=1S/C6H12O5/c1-10-6-5(9)4(8)3(7)2-11-6/h3-9H,2H2,1H3/t3-,4-,5+,6+/m0/s1
+Methyl beta-L-threofuranoside	InChI=1S/C5H10O4/c1-8-5-4(7)3(6)2-9-5/h3-7H,2H2,1H3/t3-,4+,5-/m0/s1
+Methyl beta-D-galactofuranoside	InChI=1S/C7H14O6/c1-12-7-5(11)4(10)6(13-7)3(9)2-8/h3-11H,2H2,1H3/t3-,4-,5-,6+,7-/m1/s1
+//Methyl L-glycero-alpha-D-manno-heptopyranoside	InChI=1S/C8H16O7/c1-14-8-6(13)4(11)5(12)7(15-8)3(10)2-9/h3-13H,2H2,1H3/t3-,4-,5-,6-,7+,8-/m0/s1
+Methyl beta-D-fructofuranoside	InChI=1S/C7H14O6/c1-12-7(3-9)6(11)5(10)4(2-8)13-7/h4-6,8-11H,2-3H2,1H3/t4-,5-,6+,7-/m1/s1
+//Methyl 5-acetamido-3,5-dideoxy-D-glycero-beta-D-galacto-non-2-ulopyranosonate
+alpha,beta-D-Fructofuranose 6-phosphate	InChI=1S/C6H13O9P/c7-2-6(10)5(9)4(8)3(15-6)1-14-16(11,12)13/h3-5,7-10H,1-2H2,(H2,11,12,13)/t3-,4-,5+,6?/m1/s1
+//(6R)-D-gluco-Hexodialdo-6,2-pyranose
+//(6S)-1,2-0-isopropylidene-alpha-D-gluco-hexodialdo-1,4:6,3-difuranose
+D-ribo-Pentose	InChI=1S/C5H10O5/c6-1-3(8)5(10)4(9)2-7/h1,3-5,7-10H,2H2/t3-,4+,5-/m0/s1
 D-glycero-D-gluco-Heptose	InChI=1S/C7H14O7/c8-1-3(10)5(12)7(14)6(13)4(11)2-9/h1,3-7,9-14H,2H2/t3-,4+,5+,6+,7-/m0/s1
 L-ribo-D-manno-Nonose	InChI=1S/C9H18O9/c10-1-3(12)5(14)7(16)9(18)8(17)6(15)4(13)2-11/h1,3-9,11-18H,2H2/t3-,4+,5-,6+,7+,8+,9+/m1/s1
 3,6-Dideoxy-L-threo-L-talo-decose	InChI=1/C10H20O8/c11-3-5(13)1-6(14)7(15)2-8(16)10(18)9(17)4-12/h3,5-10,12-18H,1-2,4H2/t5-,6+,7-,8-,9+,10+/m1/s1
+L-threo-Tetrodialdose	InChI=1S/C4H6O4/c5-1-3(7)4(8)2-6/h1-4,7-8H/t3-,4-/m0/s1
+galacto-Hexodialdose	InChI=1S/C6H10O6/c7-1-3(9)5(11)6(12)4(10)2-8/h1-6,9-12H/t3-,4+,5+,6-
+//alpha-D-gluco-Hexodialdo-1,5-pyranose	InChI=1S/C6H10O6/c7-1-2-3(8)4(9)5(10)6(11)12-2/h1-6,8-11H/t2-,3-,4+,5-,6+/m1/s1
+//(6R)-D-gluco-Hexodialdo-6,2-pyranose	InChI=1S/C6H10O6/c7-1-2-3(8)4(9)5(10)6(11)12-2/h1-6,8-11H/t2-,3+,4-,5-,6+/m0/s1
+//Methyl alpha-D-gluco-hexodialdo-6,3-furanose-1,5-pyranoside	InChI=1S/C7H12O6/c1-11-7-3(9)4-2(8)5(13-7)6(10)12-4/h2-10H,1H3/t2-,3+,4-,5-,6?,7-/m0/s1
+//D-glycero-Tetrulose	InChI=1S/C4H8O4/c5-1-3(7)4(8)2-6/h3,5-7H,1-2H2/t3-/m1/s1
+D-lyxo-Hex-2-ulose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h3,5-9,11-12H,1-2H2/t3-,5+,6-/m1/s1
+//D-altro-Hept-2-ulopyranose	InChI=1S/C7H14O7/c8-1-3-4(10)5(11)6(12)7(13,2-9)14-3/h3-6,8-13H,1-2H2/t3-,4-,5-,6+,7?/m1/s1
+L-glycero-D-manno-Oct-2-ulose	InChI=1S/C8H16O8/c9-1-3(11)5(13)7(15)8(16)6(14)4(12)2-10/h3,5-11,13-16H,1-2H2/t3-,5+,6+,7+,8+/m0/s1
+L-gluco-Hept-4-ulose	InChI=1S/C7H14O7/c8-1-3(10)5(12)7(14)6(13)4(11)2-9/h3-6,8-13H,1-2H2/t3-,4+,5-,6-/m0/s1
+L-erythro-L-gluco-Non-5-ulose	InChI=1S/C9H18O9/c10-1-3(12)5(14)7(16)9(18)8(17)6(15)4(13)2-11/h3-8,10-17H,1-2H2/t3-,4+,5-,6-,7-,8+/m0/s1
+L-threo-Hexo-2,5-diulose	InChI=1S/C6H10O6/c7-1-3(9)5(11)6(12)4(10)2-8/h5-8,11-12H,1-2H2/t5-,6-/m0/s1
+//meso-xylo-Hepto-2,6-diulose	InChI=1S/C7H12O7/c8-1-3(10)5(12)7(14)6(13)4(11)2-9/h5-9,12-14H,1-2H2/t5-,6+,7+
+D-threo-Hexo-2,4-diulose	InChI=1S/C6H10O6/c7-1-3(9)5(11)6(12)4(10)2-8/h3,6-9,12H,1-2H2/t3-,6-/m1/s1
+//alpha-D-threo-Hexo-2,4-diulo-2,5-furanose	InChI=1S/C6H10O6/c7-1-3-4(9)5(10)6(11,2-8)12-3/h3,5,7-8,10-11H,1-2H2/t3-,5-,6-/m1/s1
+L-altro-Octo-4,5-diulose	InChI=1S/C8H14O8/c9-1-3(11)5(13)7(15)8(16)6(14)4(12)2-10/h3-6,9-14H,1-2H2/t3-,4-,5-,6+/m0/s1
+//
+L-Altraric acid	InChI=1S/C6H10O8/c7-1(3(9)5(11)12)2(8)4(10)6(13)14/h1-4,7-10H,(H,11,12)(H,13,14)/t1-,2+,3-,4-/m1/s1
+D-Glucaric acid	InChI=1S/C6H10O8/c7-1(3(9)5(11)12)2(8)4(10)6(13)14/h1-4,7-10H,(H,11,12)(H,13,14)/t1-,2-,3-,4+/m0/s1
+L-glycero-D-galacto-Heptaric acid	InChI=1S/C7H12O9/c8-1(2(9)4(11)6(13)14)3(10)5(12)7(15)16/h1-5,8-12H,(H,13,14)(H,15,16)/t2-,3-,4+,5+/m0/s1
+//meso-Xylaric acid	InChI=1S/C5H8O7/c6-1(2(7)4(9)10)3(8)5(11)12/h1-3,6-8H,(H,9,10)(H,11,12)/t1-,2-,3+
+//meso-Galactaric acid	InChI=1S/C6H10O8/c7-1(3(9)5(11)12)2(8)4(10)6(13)14/h1-4,7-10H,(H,11,12)(H,13,14)/t1-,2+,3+,4-
+4-O-Methyl-D-galactaric acid	InChI=1S/C7H12O8/c1-15-5(4(10)7(13)14)2(8)3(9)6(11)12/h2-5,8-10H,1H3,(H,11,12)(H,13,14)/t2-,3-,4+,5-/m1/s1

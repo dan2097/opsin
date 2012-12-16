@@ -387,7 +387,8 @@ class XmlDeclarations {
 	static final String CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL ="carbohydrateChainLength";
 	
 	/**A trivial carbohydrate stem */
-	static final String CARBOHYDRATESTEM_SUBTYPE_VAL ="carbohydrateStem";
+	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";
+	static final String CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL ="carbohydrateStemKetose";
 	
 	/**e.g. imide, lactam, sultam etc.*/
 	static final String CYCLEFORMER_SUBTYPE_VAL ="cycleformer";

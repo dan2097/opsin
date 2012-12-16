@@ -4,9 +4,6 @@
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="ê">
 		<token value="glycoside">ide</token>
 		<token value="glycoside">id</token>
-   <!-- <token value="aldehyde">ose</token>
-    <token value="aldehyde" additionalValue="aldehyde">dialdehyde</token>
-    <token value="ol" additionalValue="ol">itol</token>-->
   </tokenList>
 
   <tokenList tagname="suffix" type="root" symbol="ë">
@@ -20,7 +17,12 @@
 
 <!--acyclic no locant-->
   <tokenList tagname="suffix" type="root" symbol="í">
+    <token value="aric acid">aric acid</token>
     <token value="itol">itol</token>
+  </tokenList>
+<!--acyclic no locant may be cyclised-->
+  <tokenList tagname="suffix" type="root" symbol="ñ">
+    <token value="dialdose">odiald</token>
   </tokenList>
 
 <!--implicit itol for use with ulose-->
@@ -41,6 +43,8 @@
     <token value="ar">ar</token>
  for use with symbol="å"
   </tokenList>-->
+
+
 
   <tokenList tagname="suffix" type="inline" symbol="v">
     <token value="yl">yl</token>
