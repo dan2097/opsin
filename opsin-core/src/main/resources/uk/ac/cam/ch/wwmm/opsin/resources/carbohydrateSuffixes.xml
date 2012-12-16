@@ -13,6 +13,27 @@
     <token value="ulose">ulose</token>
   </tokenList>
 
+<!--default suffix, does not effect structure but required in names-->
+  <tokenList tagname="suffix" type="root" symbol="ð" ignoreWhenWritingXML="yes">
+    <token value="ose">ose</token>
+  </tokenList>
+
+<!--acyclic no locant-->
+  <tokenList tagname="suffix" type="root" symbol="í">
+    <token value="itol">itol</token>
+  </tokenList>
+
+<!--implicit itol for use with ulose-->
+  <tokenList tagname="suffix" type="root" symbol="ï">
+    <token value="itol">o</token>
+    <token value="itol"></token>
+  </tokenList>
+
+<!--acyclic locant allowed-->
+  <tokenList tagname="suffix" type="root" symbol="î">
+    <token value="ulose">ul</token>
+  </tokenList>
+
   <!--<tokenList tagname="infix" type="carbohydrateStem" symbol="">
     <token value="on">on</token>
     <token value="uloson">uloson</token>might be redundant

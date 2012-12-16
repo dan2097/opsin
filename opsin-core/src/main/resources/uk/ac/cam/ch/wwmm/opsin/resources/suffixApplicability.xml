@@ -107,8 +107,9 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="locantedAminoAcidOrCarbohydrateYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->
   </groupType>
 
-  <groupType type="carbohydrateStem"><!--e.g. D-Glucose to D-Glucuronic acid-->
-		<suffix value="ulose">one</suffix>
+  <groupType type="carbohydrate"><!--e.g. D-Glucose to D-Glucuronic acid-->
+		<suffix value="itol">carbonyl_to_hydroxy</suffix>
+		<suffix value="ulose">hydroxy_to_carbonyl</suffix>
 		<suffix value="glycoside">ic_nonCarboxylic</suffix>
     <suffix value="yl">yl_carbohydrate</suffix>
     <suffix value="locantedAminoAcidOrCarbohydrateYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->

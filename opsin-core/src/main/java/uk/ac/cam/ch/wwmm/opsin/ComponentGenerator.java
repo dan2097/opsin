@@ -2129,9 +2129,11 @@ class ComponentGenerator {
 			Element nextSubstituent = (Element) XOMTools.getNextSibling(substituent);
 			if (nextSubstituent !=null){
 				Element nextGroup = nextSubstituent.getFirstChildElement(GROUP_EL);
+				String type = nextGroup.getAttributeValue(TYPE_ATR);
 				String subType = nextGroup.getAttributeValue(SUBTYPE_ATR);
-				if (nextGroup !=null && (nextGroup.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL) || 
-						BIOCHEMICAL_SUBTYPE_VAL.equals(subType) || CARBOHYDRATE_SUBTYPE_VAL.equals(subType) ||
+				if (nextGroup !=null && (type.equals(AMINOACID_TYPE_VAL) || 
+						type.equals(CARBOHYDRATE_TYPE_VAL) ||
+						BIOCHEMICAL_SUBTYPE_VAL.equals(subType) ||
 						(YLFORACYL_SUBTYPE_VAL.equals(subType) &&
 						("glycol".equals(nextGroup.getValue()) || "diglycol".equals(nextGroup.getValue())))
 						)){
@@ -2277,7 +2279,7 @@ class ComponentGenerator {
 			Element nextSubOrRoot = (Element) XOMTools.getNextSibling(parentSubstituent);
 			if (nextSubOrRoot!=null){
 				Element possibleCarbohydrate = nextSubOrRoot.getFirstChildElement(GROUP_EL);
-				if (possibleCarbohydrate !=null && CARBOHYDRATE_SUBTYPE_VAL.equals(possibleCarbohydrate.getAttributeValue(SUBTYPE_ATR))){
+				if (possibleCarbohydrate !=null && possibleCarbohydrate.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
 					group.detach();
 					Elements childrenToMove = parentSubstituent.getChildElements();
 					for (int i = childrenToMove.size() -1 ; i >=0; i--) {
