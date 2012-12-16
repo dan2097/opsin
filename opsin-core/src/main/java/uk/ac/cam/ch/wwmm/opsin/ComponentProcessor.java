@@ -1211,14 +1211,26 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void cycliseCarbohydrates(Element subOrRoot) throws StructureBuildingException {
-		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, SUBTYPE_ATR, CARBOHYDRATESTEM_SUBTYPE_VAL);
+		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATE_TYPE_VAL);
 		for (Element group : carbohydrates) {
-			Fragment frag = state.xmlFragmentMap.get(group);
-			Element ringSize = (Element) XOMTools.getNextSibling(group);
-			if (ringSize==null || !ringSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
+			Element suffixOrRingSize = (Element) XOMTools.getNextSibling(group);
+			if (suffixOrRingSize !=null && suffixOrRingSize.getLocalName().equals(SUFFIX_EL)){
+				String value = suffixOrRingSize.getAttributeValue(VALUE_ATR);
+				if (value.equals("dialdose") || value.equals("aric acid")){
+					if (!CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) &&
+							!CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+						throw new StructureBuildingException(value + " may only be used with aldoses");
+					}
+					processAldoseDiSuffix(value, group);
+					suffixOrRingSize.detach();
+					suffixOrRingSize = (Element) XOMTools.getNextSibling(group);
+				}
+			}
+			if (suffixOrRingSize==null || !suffixOrRingSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
 				continue;
 			}
 			
+			Fragment frag = state.xmlFragmentMap.get(group);
 			Atom carbonylCarbon = getCarbonylCarbon(frag);
 			if (carbonylCarbon ==null){
 				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
@@ -1236,14 +1248,14 @@ class ComponentProcessor {
 			catch (Exception e) {
 				throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
 			}
-			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSize.getAttributeValue(VALUE_ATR)) -2);
+			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(suffixOrRingSize.getAttributeValue(VALUE_ATR)) -2);
 			Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
 			if (atomToJoinWith ==null){
-				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
+				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + suffixOrRingSize.getAttributeValue(VALUE_ATR));
 			}
 			state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
 			CycleDetector.assignWhetherAtomsAreInCycles(frag);
-			ringSize.detach();
+			suffixOrRingSize.detach();
 			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(group);
 			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
 				Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
@@ -1253,6 +1265,28 @@ class ComponentProcessor {
 				applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
 			}
 		}
+	}
+
+	private void processAldoseDiSuffix(String suffixValue, Element group) throws StructureBuildingException {
+		Fragment frag = state.xmlFragmentMap.get(group);
+		String aldehydePosRelativeId = group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
+		Atom aldehydeAtom = frag.getAtomList().get(Integer.parseInt(aldehydePosRelativeId) -1);
+		Atom alcoholAtom = frag.getAtomByLocantOrThrow(String.valueOf(frag.getChainLength()));
+		
+		if (suffixValue.equals("aric acid")){
+			Fragment f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, aldehydeAtom, 1);
+			f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 2);
+		}
+		else if (suffixValue.equals("dialdose")){
+			removeTerminalOxygen(alcoholAtom, 1);
+			Fragment f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 2);
+		}
+		else{
+			throw new IllegalArgumentException("OPSIN Bug: Unexpected suffix value: " + suffixValue);
+		}		
 	}
 
 	private Atom getCarbonylCarbon(Fragment frag) {

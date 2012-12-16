@@ -144,7 +144,8 @@ does not define a CFG.
   <regex name="%carbohydrateAcyclicLocantSuffix%" value="î"/>
   <regex name="%implicitItol%" value="ï"/>
   <regex name="%ose%" value="ð"/>
-  <!--next would be Alt 0241-->
+  <regex name="%diald%" value="ñ"/>
+  <!--next would be Alt 0242-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -214,7 +215,7 @@ does not define a CFG.
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidSubstituentStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
   <regex name="%systematicCarbohydrateStem%" value="(%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%carbohydrateChain%"/>
-  <regex name="%systematicAcyclicCarbohydrate%" value="((%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%o%?|%systematicCarbohydrateStem%)(%ose%|%carbohydrateAcyclicNoLocantSuffix%|%implicitItol%%optLocantGroupNoOMP%%multiplier%?%carbohydrateAcyclicLocantSuffix%%ose%))"/>
+  <regex name="%systematicAcyclicCarbohydrate%" value="((%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%o%?|%systematicCarbohydrateStem%)(%diald%?%ose%|%carbohydrateAcyclicNoLocantSuffix%|%implicitItol%%optLocantGroupNoOMP%%multiplier%?%carbohydrateAcyclicLocantSuffix%%ose%))"/>
 
   <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%))"/>
   <!--chalcogenAcidGroups must be substituted otherwise they are generic terms-->

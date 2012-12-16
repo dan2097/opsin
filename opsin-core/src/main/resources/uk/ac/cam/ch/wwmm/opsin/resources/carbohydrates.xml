@@ -3,7 +3,7 @@
 <tokenLists>
 <!--SMILES have been written such that @ indicates the group is on the right and @@ on the left in a fischer projection
 OPSIN's code, however, is written such as to not assume that this is the case-->
-	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStem" symbol="á">
+	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemAldose" symbol="á">
 		<!--aldoses -->
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES" suffixAppliesTo="2">glycer</token>
 
@@ -24,6 +24,19 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">galact</token>
 		<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">tal</token>
 
+		<!--deoxy -->
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinov</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">rhamn</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">fuc</token>
+		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitox</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">abequ</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvel</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">ascaryl</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">colit</token>
+		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">parat</token>
+	</tokenList>
+
+	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemKetose" symbol="á">
 		<!--ketoses -->
 		<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES" suffixAppliesTo="3">erythrul</token>
 
@@ -37,18 +50,6 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 
 		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES" suffixAppliesTo="3">sedoheptul</token>
 		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES" suffixAppliesTo="3">mannoheptul</token>
-
-		<!--deoxy -->
-		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinov</token>
-		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">rhamn</token>
-		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">fuc</token>
-		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitox</token>
-		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">abequ</token>
-		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvel</token>
-		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">ascaryl</token>
-		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">colit</token>
-		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">parat</token>
-
 	</tokenList>
 
 	<tokenList tagname="carbohydrateRingSize" symbol="ã">
@@ -114,15 +115,15 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
-			<token value="O=CC(O)CO" labels="/1/2//3/" valType="SMILES">glyceraldehyde</token>
-			<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">d-glyceraldehyde</token>
-			<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">(d)-glyceraldehyde</token>
-			<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">l-glyceraldehyde</token>
-			<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
+		<token value="O=CC(O)CO" labels="/1/2//3/" valType="SMILES">glyceraldehyde</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">d-glyceraldehyde</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">(d)-glyceraldehyde</token>
+		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">l-glyceraldehyde</token>
+		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
 
-			<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
-			<!--add Neuraminic acid-->
-			<!--add Muramic acid-->
-			<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token> rejected due to currently undetectable stereocentre, also is systematically related to xylose-->
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
+		<!--add Neuraminic acid-->
+		<!--add Muramic acid-->
+		<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token> rejected due to currently undetectable stereocentre, also is systematically related to xylose-->
 	</tokenList>
 </tokenLists>
