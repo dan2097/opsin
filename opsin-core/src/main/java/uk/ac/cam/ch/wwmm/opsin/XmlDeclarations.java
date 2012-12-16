@@ -291,14 +291,11 @@ class XmlDeclarations {
 	/**A locant enclosed in square brackets e.g. [5]*/
 	static final String BRACKETEDLOCANT_TYPE_VAL ="bracketedLocant";
 	
-	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hexose */
-	static final String CARBOHYDRATECHAINLENGTH_TYPE_VAL ="carbohydrateChainLength";
-	
 	/**This stereochemistry element specifies stereochemistry in a carbohydrate e.g. gluco is  r/l/r/r (position of hydroxy in a fischer projection)*/
 	static final String CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL ="carbohydrateConfigurationalPrefix";
 	
-	/**A carbohydrate which should have a suffix of some sort*/
-	static final String CARBOHYDRATESTEM_TYPE_VAL ="carbohydrateStem";
+	/**Groups formed in accordance with carbohydrate nomenclature */
+	static final String CARBOHYDRATE_TYPE_VAL ="carbohydrate";
 	
 	/**Indicates the group should be acyclic*/
 	static final String CHAIN_TYPE_VAL ="chain";
@@ -386,9 +383,12 @@ class XmlDeclarations {
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
 	/**Nucleotides/nucleosides/natural products*/
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
+	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hexose */
+	static final String CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL ="carbohydrateChainLength";
 	
-	/**Groups formed in accordance with carbohydrate nomenclature */
-	static final String CARBOHYDRATE_SUBTYPE_VAL ="carbohydrate";
+	/**A trivial carbohydrate stem */
+	static final String CARBOHYDRATESTEM_SUBTYPE_VAL ="carbohydrateStem";
+	
 	/**e.g. imide, lactam, sultam etc.*/
 	static final String CYCLEFORMER_SUBTYPE_VAL ="cycleformer";
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";

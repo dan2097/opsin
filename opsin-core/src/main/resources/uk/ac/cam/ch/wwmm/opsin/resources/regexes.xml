@@ -128,7 +128,7 @@ does not define a CFG.
   <regex name="%canBeDlPrefixedSimpleGroup%" value="Þ"/>
 	<regex name="%trivialRingSubstituent%" value="ß"/>
   <regex name="%carbohydrateConfigurationalPrefix%" value="à"/>
-  <regex name="%carbohydrateStem%" value="á"/>
+  <regex name="%trivialCarbohydrateStem%" value="á"/>
   <regex name="%endOfMainGroup%" value="â"/>
 	<regex name="%carbohydrateRingSize%" value="ã"/>
 	<regex name="%carbohydrateChain%" value="ä"/>
@@ -140,7 +140,11 @@ does not define a CFG.
 	<regex name="%carbohydrateUnlocantedRootSuffix%" value="ê"/>
   <regex name="%carbohydrateLocantedRootSuffix%" value="ë"/>
   <regex name="%carbohydrateLocant%" value="ì"/>
-  <!--next would be Alt 0237-->
+  <regex name="%carbohydrateAcyclicNoLocantSuffix%" value="í"/>
+  <regex name="%carbohydrateAcyclicLocantSuffix%" value="î"/>
+  <regex name="%implicitItol%" value="ï"/>
+  <regex name="%ose%" value="ð"/>
+  <!--next would be Alt 0241-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -209,7 +213,8 @@ does not define a CFG.
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidSubstituentStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
-  <regex name="%systematicAcyclicCarbohydrate%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%carbohydrateChain%)"/>
+  <regex name="%systematicCarbohydrateStem%" value="(%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%carbohydrateChain%"/>
+  <regex name="%systematicAcyclicCarbohydrate%" value="((%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%o%?|%systematicCarbohydrateStem%)(%ose%|%carbohydrateAcyclicNoLocantSuffix%|%implicitItol%%optLocantGroupNoOMP%%multiplier%?%carbohydrateAcyclicLocantSuffix%%ose%))"/>
 
   <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%))"/>
   <!--chalcogenAcidGroups must be substituted otherwise they are generic terms-->
@@ -245,7 +250,7 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainRoot%" value ="(%hyphen%?(%locant%|%alphaBetaStereochemLocant%)?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%(%infixedSuffix%|%o%?%rootSuffix%)))"/>
   <regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
 
-  <regex name="%cyclicSugar%" value="(%dlStereochemistryPrefix%?%carbohydrateStem%%hyphen%?%carbohydrateRingSize%%e%?(%hyphen%?%carbohydrateUnlocantedRootSuffix%)?(%optLocantGroupNoOMP%%carbohydrateLocantedRootSuffix%)?)"/>
+  <regex name="%cyclicSugar%" value="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%o%?%hyphen%?%carbohydrateRingSize%%e%?(%hyphen%?%carbohydrateUnlocantedRootSuffix%)?(%optLocantGroupNoOMP%%carbohydrateLocantedRootSuffix%)?)"/>
   <regex name="%cyclicSugarSubstituent%" value="(%cyclicSugar%%hyphen%?(%carbohydrateInlineSuffix%(%hyphen%?%carbohydrateLocant%)?|%locant%%locantedAminoAcidOrCarbohydrateYl%))"/>
 
   <!--Fused ring terms-->

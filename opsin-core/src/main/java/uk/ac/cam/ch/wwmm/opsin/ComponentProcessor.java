@@ -780,7 +780,7 @@ class ComponentProcessor {
 			//first check adjacent substituent/root. If this is a biochemical group treat as a non detachable prefix
 			Element potentialBiochemicalGroup =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
 			if (potentialBiochemicalGroup!=null && (BIOCHEMICAL_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR))|| 
-					CARBOHYDRATE_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR)))){
+					potentialBiochemicalGroup.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL))){
 				biochemicalGroup = potentialBiochemicalGroup;
 			}
 
@@ -789,7 +789,7 @@ class ComponentProcessor {
 				while (!nextSubOrRootOrBracketFromLast.equals(substituent)){
 					Element groupToConsider = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
 					if (groupToConsider!=null){
-						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || CARBOHYDRATE_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR))){
+						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || groupToConsider.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
 							biochemicalGroup = groupToConsider;
 							break;
 						}
@@ -1099,7 +1099,7 @@ class ComponentProcessor {
 				Fragment aminoAcid = state.xmlFragmentMap.get(elementToApplyTo);
 				applyDlStereochemistryToAminoAcid(aminoAcid, dlStereochemistryValue);
 			}
-			else if (CARBOHYDRATE_SUBTYPE_VAL.equals(elementToApplyTo.getAttributeValue(SUBTYPE_ATR))){
+			else if (elementToApplyTo.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
 				Fragment carbohydrate = state.xmlFragmentMap.get(elementToApplyTo);
 				applyDlStereochemistryToCarbohydrate(carbohydrate, dlStereochemistryValue);
 			}
@@ -1211,13 +1211,14 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void cycliseCarbohydrates(Element subOrRoot) throws StructureBuildingException {
-		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATESTEM_TYPE_VAL);
+		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, SUBTYPE_ATR, CARBOHYDRATESTEM_SUBTYPE_VAL);
 		for (Element group : carbohydrates) {
 			Fragment frag = state.xmlFragmentMap.get(group);
 			Element ringSize = (Element) XOMTools.getNextSibling(group);
 			if (ringSize==null || !ringSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
-				throw new RuntimeException("OPSIN bug: carbohydrate size indicator not found where expected");
+				continue;
 			}
+			
 			Atom carbonylCarbon = getCarbonylCarbon(frag);
 			if (carbonylCarbon ==null){
 				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");

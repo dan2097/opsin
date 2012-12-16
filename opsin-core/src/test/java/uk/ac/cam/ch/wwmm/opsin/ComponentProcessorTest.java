@@ -47,12 +47,14 @@ public class ComponentProcessorTest {
 		word.appendChild(substituent);
 		Element substituent2 = new Element(SUBSTITUENT_EL);
 		Element group1 = new Element(GROUP_EL);
+		group1.addAttribute(new Attribute(TYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 		group1.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 		substituent2.appendChild(group1);
 		word.appendChild(substituent2);
 		Element root = new Element(ROOT_EL);
 		word.appendChild(root);
 		Element group2 = new Element(GROUP_EL);
+		group2.addAttribute(new Attribute(TYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 		group2.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		root.appendChild(group2);
 
