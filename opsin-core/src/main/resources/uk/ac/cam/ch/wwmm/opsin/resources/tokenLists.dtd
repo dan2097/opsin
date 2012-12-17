@@ -24,6 +24,7 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
         outIDs CDATA #IMPLIED
         acceptsAdditiveBonds CDATA #IMPLIED
         iminoLike CDATA #IMPLIED
+        naturalEntIsOpposite CDATA #IMPLIED
         functionalIDs CDATA #IMPLIED
         addGroup CDATA #IMPLIED
         addHeteroAtom CDATA #IMPLIED

@@ -4,6 +4,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static junit.framework.Assert.*;
 import nu.xom.Attribute;
 import nu.xom.Element;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
@@ -116,54 +117,97 @@ public class ComponentProcessorTest {
 
 	@Test
 	public void testDLStereochemistryLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-		Fragment f = fm.buildSMILES("N[C@@H](C)C");
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element aminoAcidEl = new Element(GROUP_EL);
+		state.xmlFragmentMap.put(aminoAcidEl, f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
-		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "l");
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "l");
 		assertEquals(parityBefore, f.getAtomByID(2).getAtomParity().getParity());
 	}
 	
 	@Test
 	public void testDLStereochemistryDOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-		Fragment f = fm.buildSMILES("N[C@@H](C)C");
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element aminoAcidEl = new Element(GROUP_EL);
+		state.xmlFragmentMap.put(aminoAcidEl, f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
-		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "d");
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d");
 		assertEquals(parityBefore, -f.getAtomByID(2).getAtomParity().getParity());
 	}
 	
 	@Test
 	public void testDLStereochemistryDLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-		Fragment f = fm.buildSMILES("N[C@@H](C)C");
-		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "dl");
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element aminoAcidEl = new Element(GROUP_EL);
+		state.xmlFragmentMap.put(aminoAcidEl, f);
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl");
 		assertEquals(null, f.getAtomByID(2).getAtomParity());
 	}
 	
 	@Test(expected=ComponentGenerationException.class)
 	public void testDLStereochemistryDOnAchiralAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-		Fragment f = fm.buildSMILES("NC(C)C");
-		ComponentProcessor.applyDlStereochemistryToAminoAcid(f, "d");
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("NC(C)C");
+		Element aminoAcidEl = new Element(GROUP_EL);
+		state.xmlFragmentMap.put(aminoAcidEl, f);
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d");
 	}
-	
 	
 	@Test
 	public void testDLStereochemistryLOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-		Fragment f = fm.buildSMILES("N[C@@H](C)C");
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element carbohydrateEl = new Element(GROUP_EL);
+		state.xmlFragmentMap.put(carbohydrateEl, f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
-		ComponentProcessor.applyDlStereochemistryToCarbohydrate(f, "l");
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "l");
 		assertEquals(parityBefore, -f.getAtomByID(2).getAtomParity().getParity());
 	}
 	
 	@Test
 	public void testDLStereochemistryDOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-		Fragment f = fm.buildSMILES("N[C@@H](C)C");
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element carbohydrateEl = new Element(GROUP_EL);
+		state.xmlFragmentMap.put(carbohydrateEl, f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
-		ComponentProcessor.applyDlStereochemistryToCarbohydrate(f, "d");
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "d");
 		assertEquals(parityBefore, f.getAtomByID(2).getAtomParity().getParity());
+	}
+	
+	@Test
+	public void testDLStereochemistryInvertedNaturalOnCarbohydrate1() throws ComponentGenerationException, StructureBuildingException{
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element carbohydrateEl = new Element(GROUP_EL);
+		carbohydrateEl.addAttribute(new Attribute(NATURALENTISOPPOSITE_ATR, "yes"));
+		state.xmlFragmentMap.put(carbohydrateEl, f);
+		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "l");
+		assertEquals(parityBefore, f.getAtomByID(2).getAtomParity().getParity());
+	}
+	
+	@Test
+	public void testDLStereochemistryInvertedNaturalOnCarbohydrate2() throws ComponentGenerationException, StructureBuildingException{
+		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
+		Element carbohydrateEl = new Element(GROUP_EL);
+		carbohydrateEl.addAttribute(new Attribute(NATURALENTISOPPOSITE_ATR, "yes"));
+		state.xmlFragmentMap.put(carbohydrateEl, f);
+		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
+		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRules.class), state, mock(Element.class));
+		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "d");
+		assertEquals(parityBefore, -f.getAtomByID(2).getAtomParity().getParity());
 	}
 
 	@Test

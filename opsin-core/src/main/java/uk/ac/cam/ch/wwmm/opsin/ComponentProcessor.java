@@ -1096,12 +1096,10 @@ class ComponentProcessor {
 				throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
 			}
 			if (AMINOACID_TYPE_VAL.equals(elementToApplyTo.getAttributeValue(TYPE_ATR))){
-				Fragment aminoAcid = state.xmlFragmentMap.get(elementToApplyTo);
-				applyDlStereochemistryToAminoAcid(aminoAcid, dlStereochemistryValue);
+				applyDlStereochemistryToAminoAcid(elementToApplyTo, dlStereochemistryValue);
 			}
 			else if (elementToApplyTo.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
-				Fragment carbohydrate = state.xmlFragmentMap.get(elementToApplyTo);
-				applyDlStereochemistryToCarbohydrate(carbohydrate, dlStereochemistryValue);
+				applyDlStereochemistryToCarbohydrate(elementToApplyTo, dlStereochemistryValue);
 			}
 			else if (CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL.equals(elementToApplyTo.getAttributeValue(TYPE_ATR))){
 				applyDlStereochemistryToCarbohydrateConfigurationalPrefix(elementToApplyTo, dlStereochemistryValue);
@@ -1113,7 +1111,8 @@ class ComponentProcessor {
 		}
 	}
 
-	static void applyDlStereochemistryToAminoAcid(Fragment aminoAcid, String dlStereochemistryValue) throws ComponentGenerationException {
+	void applyDlStereochemistryToAminoAcid(Element aminoAcidEl, String dlStereochemistryValue) throws ComponentGenerationException {
+		Fragment aminoAcid = state.xmlFragmentMap.get(aminoAcidEl);
 		List<Atom> atomList = aminoAcid.getAtomList();
 		List<Atom> atomsWithParities = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
@@ -1124,25 +1123,34 @@ class ComponentProcessor {
 		if (atomsWithParities.isEmpty()){
 			throw new ComponentGenerationException("D/L stereochemistry :" +dlStereochemistryValue + " found before achiral amino acid");
 		}
-		if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("ls")){
-			//do nothing, L- is implicit
-		}
-		else if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("ds")){
-			for (Atom atom : atomsWithParities) {
-				atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
-			}
-		}
-		else  if (dlStereochemistryValue.equals("dl")){
+		if (dlStereochemistryValue.equals("dl")){
 			for (Atom atom : atomsWithParities) {
 				atom.setAtomParity(null);
 			}
 		}
 		else{
-			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + dlStereochemistryValue );
+			boolean invert;
+			if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("ls")){
+				invert = false;
+			} else if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("ds")){
+				invert = true;
+			} else{
+				throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + dlStereochemistryValue );
+			}
+			if ("yes".equals(aminoAcidEl.getAttributeValue(NATURALENTISOPPOSITE_ATR))){
+				invert = !invert;
+			}
+			
+			if (invert) {
+				for (Atom atom : atomsWithParities) {
+					atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+				}
+			}
 		}
 	}
 
-	static void applyDlStereochemistryToCarbohydrate(Fragment carbohydrate, String dlStereochemistryValue) throws ComponentGenerationException {
+	void applyDlStereochemistryToCarbohydrate(Element carbohydrateEl, String dlStereochemistryValue) throws ComponentGenerationException {
+		Fragment carbohydrate = state.xmlFragmentMap.get(carbohydrateEl);
 		List<Atom> atomList = carbohydrate.getAtomList();
 		List<Atom> atomsWithParities = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
@@ -1153,21 +1161,30 @@ class ComponentProcessor {
 		if (atomsWithParities.isEmpty()){
 			throw new ComponentGenerationException("D/L stereochemistry :" + dlStereochemistryValue + " found before achiral carbohydrate");//sounds like a vocab bug...
 		}
-		if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
-			//do nothing, D- is implicit
-		}
-		else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
-			for (Atom atom : atomsWithParities) {
-				atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
-			}
-		}
-		else  if (dlStereochemistryValue.equals("dl")){
+		
+		if (dlStereochemistryValue.equals("dl")){
 			for (Atom atom : atomsWithParities) {
 				atom.setAtomParity(null);
 			}
 		}
 		else{
-			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + dlStereochemistryValue );
+			boolean invert;
+			if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
+				invert = false;
+			} else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
+				invert = true;
+			} else{
+				throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + dlStereochemistryValue );
+			}
+			if ("yes".equals(carbohydrateEl.getAttributeValue(NATURALENTISOPPOSITE_ATR))){
+				invert = !invert;
+			}
+
+			if (invert) {
+				for (Atom atom : atomsWithParities) {
+					atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+				}
+			}
 		}
 	}
 

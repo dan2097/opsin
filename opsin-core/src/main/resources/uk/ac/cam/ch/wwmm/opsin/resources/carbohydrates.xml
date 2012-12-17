@@ -25,15 +25,18 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">tal</token>
 
 		<!--deoxy -->
-		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinov</token>
-		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">rhamn</token>
-		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">fuc</token>
-		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitox</token>
 		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">abequ</token>
-		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvel</token>
-		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">ascaryl</token>
-		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">colit</token>
+		<token value="O=CCC[C@H](O)[C@H](O)C" labels="/1/2/3/4//5//6" valType="SMILES" suffixAppliesTo="2">amicet</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">ascaryl</token>
+		<token value="O=CC[C@H](O)[C@@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">boivin</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">colit</token>
+		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitox</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">fuc</token>
 		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">parat</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinov</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhamn</token>
+		<token value="O=CCC[C@H](O)[C@@H](O)C" labels="/1/2/3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhodin</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvel</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemKetose" symbol="á">
