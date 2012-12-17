@@ -71,7 +71,7 @@ class Parser {
 		if (name.endsWith(")") || name.endsWith("]") || name.endsWith("}")){
 			Matcher m = matchStoichiometryIndication.matcher(name);
 			if (m.find()){
-				componentRatios = processStoichometryIndication(m.group());
+				componentRatios = processStoichiometryIndication(m.group());
 				name = m.replaceAll("");
 			}
 		}
@@ -145,7 +145,7 @@ class Parser {
 			try{
 				wordRules.groupWordsIntoWordRules(n2sConfig, moleculeEl, allowSpaceRemoval);
 				if (componentRatios!=null){
-					applyStoichometryIndicationToWordRules(moleculeEl, componentRatios);
+					applyStoichiometryIndicationToWordRules(moleculeEl, componentRatios);
 				}
 				results.add(moleculeEl);
 			}
@@ -160,7 +160,7 @@ class Parser {
 		return results;
 	}
 
-	static Integer[] processStoichometryIndication(String ratioString) throws ParsingException {
+	static Integer[] processStoichiometryIndication(String ratioString) throws ParsingException {
 		ratioString = ratioString.trim();
 		ratioString = ratioString.substring(1, ratioString.length()-1);
 		String[] ratioStrings = MATCH_COLON.split(ratioString);
@@ -315,19 +315,19 @@ class Parser {
 	}
 	
 	/**
-	 * Assigns an indication of stoichometry to each child word rule of the moleculeEl.
+	 * Assigns an indication of stoichiometry to each child word rule of the moleculeEl.
 	 * Throws an exception if there is a mismatch between the number of word rules and ratio.
 	 * @param moleculeEl
 	 * @param componentRatios
 	 * @throws ParsingException
 	 */
-	private void applyStoichometryIndicationToWordRules(Element moleculeEl,Integer[] componentRatios) throws ParsingException {
+	private void applyStoichiometryIndicationToWordRules(Element moleculeEl,Integer[] componentRatios) throws ParsingException {
 		List<Element> wordRules = XOMTools.getChildElementsWithTagName(moleculeEl, WORDRULE_EL);
 		if (wordRules.size()!=componentRatios.length){
-			throw new ParsingException("Component and stoichometry indication indication mismatch. OPSIN believes there to be " +wordRules.size() +" components but " + componentRatios.length +" ratios were given!");
+			throw new ParsingException("Component and stoichiometry indication indication mismatch. OPSIN believes there to be " +wordRules.size() +" components but " + componentRatios.length +" ratios were given!");
 		}
 		for (int i = 0; i < componentRatios.length; i++) {
-			wordRules.get(i).addAttribute(new Attribute(STOICHOMETRY_ATR,String.valueOf(componentRatios[i])));
+			wordRules.get(i).addAttribute(new Attribute(STOICHIOMETRY_ATR,String.valueOf(componentRatios[i])));
 		}
 	}
 

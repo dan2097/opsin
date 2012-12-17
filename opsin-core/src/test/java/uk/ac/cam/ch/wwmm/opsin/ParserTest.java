@@ -54,7 +54,7 @@ public class ParserTest {
 	@Test
 	public void testConvertStringToComponentRatios1() throws ParsingException {
 		String ratio = "(1:2)";
-		Integer[] componentRatios = Parser.processStoichometryIndication(ratio);
+		Integer[] componentRatios = Parser.processStoichiometryIndication(ratio);
 		assertEquals(2, componentRatios.length);
 		for (int i = 0; i < componentRatios.length; i++) {
 			if (i==0){
@@ -69,7 +69,7 @@ public class ParserTest {
 	@Test
 	public void testConvertStringToComponentRatios2() throws ParsingException {
 		String ratio = "[1/1/2]";
-		Integer[] componentRatios = Parser.processStoichometryIndication(ratio);
+		Integer[] componentRatios = Parser.processStoichiometryIndication(ratio);
 		assertEquals(3, componentRatios.length);
 		for (int i = 0; i < componentRatios.length; i++) {
 			if (i==0){
@@ -87,7 +87,7 @@ public class ParserTest {
 	@Test
 	public void testConvertStringToComponentRatios3() throws ParsingException {
 		String ratio = "(1:2:?)";
-		Integer[] componentRatios = Parser.processStoichometryIndication(ratio);
+		Integer[] componentRatios = Parser.processStoichiometryIndication(ratio);
 		assertEquals(3, componentRatios.length);
 		for (int i = 0; i < componentRatios.length; i++) {
 			if (i==0){
