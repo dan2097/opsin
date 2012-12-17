@@ -89,8 +89,9 @@ class StructureBuilder {
 			else if(wordRule == WordRule.functionalClassEster) {
 				buildFunctionalClassEster(state, words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
 			}
-			else if (wordRule == WordRule.amide){
-				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide, ethanoic acid amide
+			else if (wordRule == WordRule.amideOrHydrazide){
+				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide,
+				//ethanoic acid amide, carbonic dihydrazide
 				//already processed by the ComponentProcessor
 				for (Element word : words) {
 					resolveWordOrBracket(state, word);
@@ -125,13 +126,6 @@ class StructureBuilder {
 			}
 			else if(wordRule == WordRule.polymer) {
 				rGroups.addAll(buildPolymer(state, words));
-			}
-			else if(wordRule == WordRule.hydrazide) {
-				//e.g. carbonic dihydrazide
-				//already processed by the ComponentProcessor
-				for (Element word : words) {
-					resolveWordOrBracket(state, word);
-				}
 			}
 			else{
 				throw new StructureBuildingException("Unknown Word Rule");

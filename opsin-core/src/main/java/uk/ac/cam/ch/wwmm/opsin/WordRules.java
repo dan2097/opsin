@@ -277,7 +277,7 @@ class WordRules {
 					}
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
 				}
-				else if (wordRule == WordRule.carbonylDerivative || wordRule == WordRule.amide){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
+				else if (wordRule == WordRule.carbonylDerivative || wordRule == WordRule.amideOrHydrazide){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
 					if (wordsInWordRule==3){//substituent present
 						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
 						wordsInWordRule--;
