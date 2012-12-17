@@ -59,7 +59,7 @@ class FunctionalReplacement {
 
 	/**
 	 * Applies the effects of amide or hydrazide functional class nomenclature
-	 * This must be performed early so that prefix/infix funcional replacement is performed correctly
+	 * This must be performed early so that prefix/infix functional replacement is performed correctly
 	 * and so that element symbol locants are assigned appropriately
 	 * @param state 
 	 * @param finalSubOrRootInWord
@@ -69,26 +69,22 @@ class FunctionalReplacement {
 	 */
 	static void processAmideOrHydrazideFunctionalClassNomenclature(BuildState state, Element finalSubOrRootInWord, Element word) throws ComponentGenerationException, StructureBuildingException {
 		Element wordRule = OpsinTools.getParentWordRule(word);
-		WordRule wr = WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR));
-		if (wr == WordRule.hydrazide){
-			processHydrazideFunctionalClassNomenclature(state, finalSubOrRootInWord, ((Element) XOMTools.getNextSibling(word)));
-		}
-		else if (wr == WordRule.amide){
+		if (WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR)) == WordRule.amideOrHydrazide){
 			Element parentWordRule = (Element) word.getParent();
 			if (parentWordRule.indexOf(word)==0){
-				List<Element> amideFullWords = XOMTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
-				amideFullWords.remove(word);
-				if (amideFullWords.size()>0){
+				List<Element> amideOrHydrazideFullWords = XOMTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
+				amideOrHydrazideFullWords.remove(word);
+				if (amideOrHydrazideFullWords.size()>0){//case where functionalTerm is substituted
 					//as words are processed from right to left in cases like phosphoric acid tri(ethylamide) this will be phosphoric acid ethylamide ethylamide ethylamide
-					for (Element amideWord : amideFullWords) {
-						processAmideFunctionalClassNomenclatureFullWord(state, finalSubOrRootInWord, amideWord);
+					for (Element amideOrHydrazideWord : amideOrHydrazideFullWords) {
+						processAmideOrHydrazideFunctionalClassNomenclatureFullWord(state, finalSubOrRootInWord, amideOrHydrazideWord);
 					}
 				}
 				else if (parentWordRule.getChildElements().size()==2) {
-					processAmideFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, ((Element) XOMTools.getNextSibling(word)));
+					processAmideOrHydrazideFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, ((Element) XOMTools.getNextSibling(word)));
 				}
 				else{
-					throw new ComponentGenerationException("OPSIN bug: problem with amide word rule");
+					throw new ComponentGenerationException("OPSIN bug: problem with amideOrHydrazide word rule");
 				}
 			}
 		}
@@ -393,132 +389,86 @@ class FunctionalReplacement {
 	 */
 	
 	/**
-	 * Replaces the appropriate number of functional oxygen atoms with hydrazide fragments
+	 *  Replaces the appropriate number of functional oxygen atoms with amide/hydrazide fragments
 	 * @param state
 	 * @param acidContainingRoot
-	 * @param functionalWord
+	 * @param amideOrHydrazideWord
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private static void processHydrazideFunctionalClassNomenclature(BuildState state, Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
-		if (functionalWord !=null && functionalWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
-			Element functionalTerm = functionalWord.getFirstChildElement(FUNCTIONALTERM_EL);
-			if (functionalTerm ==null){
-				throw new ComponentGenerationException("OPSIN bug: functionalTerm word not found where one was expected for hydrazide wordRule");
-			}
-			Element hydrazideGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
-			Fragment hydrazide = ComponentProcessor.resolveGroup(state, hydrazideGroup);
-			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(hydrazideGroup);
-			int hydrazides =1;
-			if (possibleMultiplier!=null){
-				if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
-					throw new ComponentGenerationException("OPSIN bug: non multiplier found where only a multiplier was expected in hydrazide wordRule");
-				}
-				hydrazides = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
-				possibleMultiplier.detach();
-			}
-			if (functionalTerm.getChildElements().size()!=1){
-				throw new ComponentGenerationException("Unexpected qualifier to hydrazide functionalTerm");
-			}
-			
-			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
-			List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
-			if (oxygenAtoms.size()==0){
-				oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
-			}
-			if (oxygenAtoms.size()==0){
-				List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
-				for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
-					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
-				}
-			}
-			if (hydrazides > oxygenAtoms.size()){
-				throw new ComponentGenerationException("Insufficient oxygen to replace with hydrazides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
-			}
-			
-			Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
-			if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of hydrazide
-				for (Atom atom : hydrazide.getAtomList()) {
-					atom.clearLocants();
-				}
-			}
-			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), hydrazide.getFirstAtom());
-			removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
-			for (int i = 1; i < hydrazides; i++) {
-				Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, i);
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(i), clonedHydrazide.getFirstAtom());
-				state.fragManager.incorporateFragment(clonedHydrazide, oxygenAtoms.get(i).getFrag());
-				removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
-			}
-			state.fragManager.incorporateFragment(hydrazide, oxygenAtoms.get(0).getFrag());
+	private static void processAmideOrHydrazideFunctionalClassNomenclatureFullWord(BuildState state, Element acidContainingRoot, Element amideOrHydrazideWord) throws ComponentGenerationException, StructureBuildingException {
+		Element amideOrHydrazideGroup = StructureBuildingMethods.findRightMostGroupInBracket(amideOrHydrazideWord);
+		if (amideOrHydrazideGroup ==null){
+			throw new ComponentGenerationException("OPSIN bug: amide/hydrazide group not found where one was expected for amideOrHydrazide wordRule");
 		}
-		else{
-			throw new ComponentGenerationException("hydrazide word not found where expected, bug?");
-		}
-	}
-	
-	private static void processAmideFunctionalClassNomenclatureFullWord(BuildState state, Element acidContainingRoot, Element amideWord) throws ComponentGenerationException, StructureBuildingException {
-		Element amideGroup = StructureBuildingMethods.findRightMostGroupInBracket(amideWord);
-		if (amideGroup ==null){
-			throw new ComponentGenerationException("OPSIN bug: amide group not found where one was expected for amide wordRule");
-		}
-		Fragment amide = state.xmlFragmentMap.get(amideGroup);
-		if (((Element)amideGroup.getParent()).getChildElements().size()!=1){
-			throw new ComponentGenerationException("Unexpected qualifier to amide");
+		String functionalGroupName = amideOrHydrazideGroup.getValue();
+		Fragment amideOrHydrazide = state.xmlFragmentMap.get(amideOrHydrazideGroup);
+		if (((Element)amideOrHydrazideGroup.getParent()).getChildElements().size()!=1){
+			throw new ComponentGenerationException("Unexpected qualifier to: " + functionalGroupName);
 		}
 		
 		Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
 		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
-		if (oxygenAtoms.size()==0){
+		if (oxygenAtoms.size() == 0){
 			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
 		}
-		if (oxygenAtoms.size()==0){
+		if (oxygenAtoms.size() == 0){
 			List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 			for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
 				oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
 			}
 		}
-		if (oxygenAtoms.size()<1){
-			throw new ComponentGenerationException("Insufficient oxygen to replace with amides in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
+		if (oxygenAtoms.size() < 1){
+			throw new ComponentGenerationException("Insufficient oxygen to replace with " + functionalGroupName +"s in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
 		}
-		if (amide.getAtomList().size()!=1){
-			throw new ComponentGenerationException("OPSIN bug: amide not found where expected");
+		
+		boolean isHydrazide = functionalGroupName.startsWith("hydrazid");
+		if (isHydrazide){
+			if (amideOrHydrazide.getAtomList().size()!=2){
+				throw new ComponentGenerationException("OPSIN bug: " + functionalGroupName + " not found where expected");
+			}
 		}
-		Atom amideNitrogen = amide.getFirstAtom();
-		amideNitrogen.neutraliseCharge();
-		amideNitrogen.clearLocants();
-		amide.addMappingToAtomLocantMap("N", amideNitrogen);
-		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), amide.getFirstAtom());
-		state.fragManager.incorporateFragment(amide, oxygenAtoms.get(0).getFrag());
+		else{
+			if (amideOrHydrazide.getAtomList().size()!=1){
+				throw new ComponentGenerationException("OPSIN bug: " + functionalGroupName + " not found where expected");
+			}
+			Atom amideNitrogen = amideOrHydrazide.getFirstAtom();
+			amideNitrogen.neutraliseCharge();
+			amideNitrogen.clearLocants();
+			amideOrHydrazide.addMappingToAtomLocantMap("N", amideNitrogen);
+		}
+		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), amideOrHydrazide.getFirstAtom());
+		state.fragManager.incorporateFragment(amideOrHydrazide, oxygenAtoms.get(0).getFrag());
 		removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
 	}
+	
 
 	/**
-	 * Replaces the appropriate number of functional oxygen atoms with nitrogen atoms
+	 * Replaces the appropriate number of functional oxygen atoms with amide/hydrazide fragments
 	 * @param state
 	 * @param acidContainingRoot
 	 * @param functionalWord
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private static void processAmideFunctionalClassNomenclatureFunctionalWord(BuildState state, Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
+	private static void processAmideOrHydrazideFunctionalClassNomenclatureFunctionalWord(BuildState state, Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
 		if (functionalWord !=null && functionalWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			Element functionalTerm = functionalWord.getFirstChildElement(FUNCTIONALTERM_EL);
 			if (functionalTerm ==null){
-				throw new ComponentGenerationException("OPSIN bug: functionalTerm word not found where one was expected for amide wordRule");
+				throw new ComponentGenerationException("OPSIN bug: functionalTerm word not found where one was expected for amideOrHydrazide wordRule");
 			}
-			Element amideGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
-			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(amideGroup);
-			int numbrOfAmidesToForm =1;
+			Element amideOrHydrazideGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
+			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(amideOrHydrazideGroup);
+			int numberOfAmideOrHydrazidesToForm = 1;
 			if (possibleMultiplier!=null){
 				if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
-					throw new ComponentGenerationException("OPSIN bug: non multiplier found where only a multiplier was expected in amide wordRule");
+					throw new ComponentGenerationException("OPSIN bug: non multiplier found where only a multiplier was expected in amideOrHydrazide wordRule");
 				}
-				numbrOfAmidesToForm = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+				numberOfAmideOrHydrazidesToForm = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				possibleMultiplier.detach();
 			}
 			if (functionalTerm.getChildElements().size()!=1){
-				throw new ComponentGenerationException("Unexpected qualifier to amide functionalTerm");
+				throw new ComponentGenerationException("Unexpected qualifier to amideOrHydrazide functionalTerm");
 			}
 			
 			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
@@ -532,12 +482,32 @@ class FunctionalReplacement {
 					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
 				}
 			}
-			if (numbrOfAmidesToForm > oxygenAtoms.size()){
+			if (numberOfAmideOrHydrazidesToForm > oxygenAtoms.size()){
 				throw new ComponentGenerationException("Insufficient oxygen to replace with nitrogen in " + acidContainingRoot.getFirstChildElement(GROUP_EL).getValue());
 			}
-			for (int i = 0; i < numbrOfAmidesToForm; i++) {
-				oxygenAtoms.get(i).setElement("N");
-				removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
+			if (amideOrHydrazideGroup.getValue().startsWith("hydrazid")){
+				Fragment hydrazide = ComponentProcessor.resolveGroup(state, amideOrHydrazideGroup);
+				Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
+				if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of hydrazide
+					for (Atom atom : hydrazide.getAtomList()) {
+						atom.clearLocants();
+					}
+				}
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(0), hydrazide.getFirstAtom());
+				removeAssociatedFunctionalAtom(oxygenAtoms.get(0));
+				for (int i = 1; i < numberOfAmideOrHydrazidesToForm; i++) {
+					Fragment clonedHydrazide = state.fragManager.copyAndRelabelFragment(hydrazide, i);
+					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenAtoms.get(i), clonedHydrazide.getFirstAtom());
+					state.fragManager.incorporateFragment(clonedHydrazide, oxygenAtoms.get(i).getFrag());
+					removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
+				}
+				state.fragManager.incorporateFragment(hydrazide, oxygenAtoms.get(0).getFrag());
+			}
+			else{
+				for (int i = 0; i < numberOfAmideOrHydrazidesToForm; i++) {
+					removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
+					oxygenAtoms.get(i).setElement("N");
+				}
 			}
 		}
 		else{
