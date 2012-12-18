@@ -154,12 +154,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
   <wordRule name="carbonylDerivative" type="full">
     <word type="full" />
     <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxime|hydrazone|semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone|imide|imine)[\]\)\}]*" />
+    <word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\]\)\}]*" />
   </wordRule>
 
   <wordRule name="carbonylDerivative" type="full">
     <word type="full" />
-    <word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxime|hydrazone|semicarbazone|imide|imine)[\]\)\}]*" />
+    <word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxime|hydrazone|semicarbazone|isosemicarbazone|isothiosemicarbazone|isoselenosemicarbazone|isotellurosemicarbazone|imide|imine|semioxamazone)[\]\)\}]*" />
   </wordRule>
 
   <wordRule name="anhydride" type="full">

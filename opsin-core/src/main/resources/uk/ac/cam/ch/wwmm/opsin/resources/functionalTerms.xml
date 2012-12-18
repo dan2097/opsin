@@ -23,6 +23,12 @@
     <token value="NC(=S)NN" labels="4/3//2/1" valType="SMILES">thiosemicarbazone</token>
     <token value="NC(=[Se])NN" labels="4/3//2/1" valType="SMILES">selenosemicarbazone</token>
     <token value="NC(=[Te])NN" labels="4/3//2/1" valType="SMILES">tellurosemicarbazone</token>
+    <token value="N=C(O)NN" labels="none" valType="SMILES">isosemicarbazone</token>
+    <token value="N=C(S)NN" labels="none" valType="SMILES">isothiosemicarbazone</token>
+    <token value="N=C([SeH])NN" labels="none" valType="SMILES">isoselenosemicarbazone</token>
+    <token value="N=C([TeH])NN" labels="none" valType="SMILES">isotellurosemicarbazone</token>
+    <token value="NC(=O)C(=O)NN" labels="5/4//3//2/1" valType="SMILES">semioxamazone</token>
+
     <token value="N" labels="N" valType="SMILES">imide</token>
     <token value="N" labels="N" valType="SMILES">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
 
