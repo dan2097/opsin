@@ -132,6 +132,24 @@ public class CASToolsTest {
 		String name = CASTools.uninvertCASName("Acetamide, ethylenebis(((ethyl)amino)-", parseRules);
 		assertEquals("ethylenebis(((ethyl)amino)-Acetamide)", name);
 	}
+	
+	@Test
+	public void cas19() throws ParsingException{
+		String name = CASTools.uninvertCASName("Benzenesulfonic acid, 4-amino-, 1-methylhydrazide", parseRules);
+		assertEquals("4-amino-Benzenesulfonic acid 1-methylhydrazide", name);
+	}
+	
+	@Test
+	public void cas20() throws ParsingException{
+		String name = CASTools.uninvertCASName("Acetaldehyde, O-methyloxime", parseRules);
+		assertEquals("Acetaldehyde O-methyloxime", name);
+	}
+	
+	@Test
+	public void cas21() throws ParsingException{
+		String name = CASTools.uninvertCASName("Acetic acid, 2-amino-2-oxo-, 2-(phenylmethylene)hydrazide", parseRules);
+		assertEquals("2-amino-2-oxo-Acetic acid 2-(phenylmethylene)hydrazide", name);
+	}
 
 	@Test(expected=ParsingException.class)
 	public void notCas1() throws ParsingException{

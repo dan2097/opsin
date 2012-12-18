@@ -14,10 +14,11 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 class CASTools {
 
 	private static final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*");
+	private static final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchCommaSpace = Pattern.compile(", ");
 	private static final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE);
-
+	private static final Pattern matchFunctionalTermAllowingSubstituentPrefix = Pattern.compile("(amide|hydrazide|(thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
+	
 	/**
 	 * Inverts a CAS name.
 	 * Throws an exception is OPSIN is unable to determine whether something is a substituent or functional term
@@ -83,34 +84,57 @@ class CASTools {
 					ParseRulesResults results = parseRules.getParses(component);
 					List<ParseTokens> parseTokens = results.getParseTokensList();
 					if (parseTokens.size() > 0) {
-						if (WordTools.splitIntoParseWords(parseTokens, component).size() > 1) {
-							throw new ParsingException("Missing space found in name prevents interpetation as CAS index name");
-						}
-						WordType wordType = OpsinTools.determineWordType(parseTokens.get(0).getAnnotations());
-						for (int j = 1; j < parseTokens.size(); j++) {
-							if (!wordType.equals(OpsinTools.determineWordType(parseTokens.get(j).getAnnotations()))) {
-								throw new ParsingException(component + "can be interpeted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+						List<ParseWord> parseWords = WordTools.splitIntoParseWords(parseTokens, component);
+
+						List<ParseTokens> firstParseWordTokens = parseWords.get(0).getParseTokens();
+						WordType firstWordType = OpsinTools.determineWordType(firstParseWordTokens.get(0).getAnnotations());
+						for (int j = 1; j < firstParseWordTokens.size(); j++) {
+							if (!firstWordType.equals(OpsinTools.determineWordType(firstParseWordTokens.get(j).getAnnotations()))) {
+								throw new ParsingException(component + "can be interpreted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
 							}
 						}
-						if (wordType.equals(WordType.functionalTerm)) {
-							if (component.equalsIgnoreCase("ester")) {
-								if (esterEncountered) {
-									throw new ParsingException("ester formation was mentioned more than once in CAS name!");
+						
+						if (parseWords.size() ==1){
+							if (firstWordType.equals(WordType.functionalTerm)) {
+								if (component.equalsIgnoreCase("ester")) {
+									if (esterEncountered) {
+										throw new ParsingException("ester formation was mentioned more than once in CAS name!");
+									}
+									parent = uninvertEster(parent);
+									esterEncountered = true;
+								} else {
+									functionalTerms.add(component);
 								}
-								parent = uninvertEster(parent);
-								esterEncountered = true;
-							} else {
+							} else if (firstWordType.equals(WordType.substituent)) {
+								seperateWordSubstituents.add(component);
+							} else if (firstWordType.equals(WordType.full)) {
+								if (StringTools.endsWithCaseInsensitive(component, "ate") || StringTools.endsWithCaseInsensitive(component, "ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
+												|| component.equalsIgnoreCase("hydrofluoride") || component.equalsIgnoreCase("hydrochloride") || component.equalsIgnoreCase("hydrobromide") || component.equalsIgnoreCase("hydroiodide")) {
+									functionalTerms.add(component);
+								} else {
+									throw new ParsingException("Unable to interpret: " + component + " (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
+								}
+							}
+						}
+						else if (parseWords.size() == 2 && firstWordType.equals(WordType.substituent)) {
+							//could be something like O-methyloxime which is parsed as [O-methyl] [oxime]
+							List<ParseTokens> secondParseWordTokens = parseWords.get(1).getParseTokens();
+							WordType secondWordType = OpsinTools.determineWordType(secondParseWordTokens.get(0).getAnnotations());
+							for (int j = 1; j < secondParseWordTokens.size(); j++) {
+								if (!secondWordType.equals(OpsinTools.determineWordType(secondParseWordTokens.get(j).getAnnotations()))) {
+									throw new ParsingException(component + "can be interpreted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+								}
+							}
+							if (secondWordType.equals(WordType.functionalTerm) && 
+									matchFunctionalTermAllowingSubstituentPrefix.matcher(parseWords.get(1).getWord()).matches()){
 								functionalTerms.add(component);
 							}
-						} else if (wordType.equals(WordType.substituent)) {
-							seperateWordSubstituents.add(component);
-						} else if (wordType.equals(WordType.full)) {
-							if (StringTools.endsWithCaseInsensitive(component, "ate") || StringTools.endsWithCaseInsensitive(component, "ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
-											|| component.equalsIgnoreCase("hydrofluoride") || component.equalsIgnoreCase("hydrochloride") || component.equalsIgnoreCase("hydrobromide") || component.equalsIgnoreCase("hydroiodide")) {
-								functionalTerms.add(component);
-							} else {
-								throw new ParsingException("Unable to interpret: " + component + " (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
+							else{
+								throw new ParsingException("Unrecognised CAS index name form, could have a missing space?");
 							}
+						}
+						else {
+							throw new ParsingException("Unrecognised CAS index name form");
 						}
 					} else {
 						if (!matchCasCollectiveIndex.matcher(component).matches()) {//CAS collective index description should be ignored
