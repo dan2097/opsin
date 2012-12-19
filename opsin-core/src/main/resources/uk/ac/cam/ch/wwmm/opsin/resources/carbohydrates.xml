@@ -109,12 +109,21 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
 		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
 
-		<!--should these be depicted in ring form?-->
-		<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
-		<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
-		<token value="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
-		<token value="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">fucosamine</token>
-		<token value="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES">quinovosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
+		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" valType="SMILES">fucosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" valType="SMILES">quinovosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" valType="SMILES">bacillosamine</token>
+		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" valType="SMILES" naturalEntIsOpposite="yes">garosamine</token>
+
+		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">neuraminic acid</token>
+		<token value="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">keto-neuraminic acid</token>
+		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">alpha-neuraminic acid</token>
+		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">beta-neuraminic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">muramic acid</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">alpha-muramic acid</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">beta-muramic acid</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
@@ -125,8 +134,5 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
 
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
-		<!--add Neuraminic acid-->
-		<!--add Muramic acid-->
-		<!--<token value="OC[C@@H]([C@H]([C@@H](CO)O)O)O" labels="/1/2/3/4/5////" valType="SMILES">xylitol</token> rejected due to currently undetectable stereocentre, also is systematically related to xylose-->
 	</tokenList>
 </tokenLists>
