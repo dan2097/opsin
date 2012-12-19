@@ -108,12 +108,16 @@ The value of the suffix elements corresponds to the value attribute of the suffi
   </groupType>
 
   <groupType type="carbohydrate"><!--e.g. D-Glucose to D-Glucuronic acid-->
-		<suffix value="itol">carbonyl_to_hydroxy</suffix>
-		<suffix value="ulose">hydroxy_to_carbonyl</suffix>
-		<suffix value="glycoside">ic_nonCarboxylic</suffix>
+    <suffix value="onamide" subType="carbohydrateStemAldose">onamide_aldehyde</suffix>
+    <suffix value="onic acid" subType="carbohydrateStemAldose">ous</suffix>
+    <suffix value="onate" subType="carbohydrateStemAldose">ite</suffix>
+    <suffix value="ononitrile" subType="carbohydrateStemAldose">ononitrile_aldehyde</suffix>
+    <suffix value="itol">carbonyl_to_hydroxy</suffix>
+    <suffix value="ulose">hydroxy_to_carbonyl</suffix>
+    <suffix value="glycoside">ic_nonCarboxylic</suffix>
     <suffix value="yl">yl_carbohydrate</suffix>
     <suffix value="locantedAminoAcidOrCarbohydrateYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->
-    <!--<suffix value="oyl">oyl</suffix>-->
+    <suffix value="onoyl">yl</suffix><!--aldehyde to acyl-->
   </groupType>
 
   <groupType type="chalcogenAcidStem"><!--e.g. sulfon to sulfonyl -->

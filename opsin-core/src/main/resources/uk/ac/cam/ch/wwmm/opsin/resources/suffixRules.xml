@@ -222,6 +222,13 @@ sense of this -->
   <rule value="one">
     <addgroup SMILES="[*]=O" ketoneLocant="yes" />
   </rule>
+  <rule value="onamide_aldehyde">
+    <addgroup SMILES="[*]N" functionalIDs="2,2" />
+  </rule>
+  <rule value="ononitrile_aldehyde">
+    <removeTerminalOxygen order="2" />
+    <addgroup SMILES="[*]#N"/>
+  </rule>
   <rule value="ophenone">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)c1ccccc1" labels="//1'/2',ortho/3',meta/4',para/5'/6'" />
