@@ -18,6 +18,10 @@
 <!--acyclic no locant-->
   <tokenList tagname="suffix" type="root" symbol="í">
     <token value="aric acid">aric acid</token>
+    <token value="onamide">onamide</token>
+    <token value="onate">onate</token>
+    <token value="onic acid">onic acid</token>
+    <token value="ononitrile">ononitrile</token>
     <token value="itol">itol</token>
   </tokenList>
 <!--acyclic no locant may be cyclised-->
@@ -36,18 +40,10 @@
     <token value="ulose">ul</token>
   </tokenList>
 
-  <!--<tokenList tagname="infix" type="carbohydrateStem" symbol="">
-    <token value="on">on</token>
-    <token value="uloson">uloson</token>might be redundant
-    <token value="uron">uron</token>
-    <token value="ar">ar</token>
- for use with symbol="å"
-  </tokenList>-->
-
-
-
+<!--for use with aldoses
+    <token value="onoyl">onoyl</token>
+-->
   <tokenList tagname="suffix" type="inline" symbol="v">
     <token value="yl">yl</token>
-    <!--<token value="oyl">onoyl</token>-->
   </tokenList>
 </tokenLists>

@@ -369,8 +369,9 @@
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
 		<token value="O=C(O)c1c(I)c(CNC(=O)C)c(I)c(NC(=O)C)c1I" labels="none" valType="SMILES">iodamide</token>
 		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1" labels="none" valType="SMILES">methoxychlor</token>
-		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none" valType="SMILES">oxybenzone</token>
 		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">methanophenazine</token><!--preferred to systematic interpretation-->
+		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none" valType="SMILES">oxybenzone</token>
+		<token value="O.O.O.O.O.O.O.O.O.[Na+].[Na+].[Na+].[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO" labels="none" valType="SMILES">sodium stibogluconate</token><!--preferred to systematic interpretation-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
