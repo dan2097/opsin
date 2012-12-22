@@ -2,8 +2,8 @@
 <!-- See the DTD for more details -->
 <tokenLists>
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="ê">
-		<token value="glycoside">ide</token>
-		<token value="glycoside">id</token>
+    <token value="glycoside">ide</token>
+    <token value="glycoside">id</token>
   </tokenList>
 
   <tokenList tagname="suffix" type="root" symbol="ë">
@@ -23,7 +23,10 @@
     <token value="onic acid">onic acid</token>
     <token value="ononitrile">ononitrile</token>
     <token value="itol">itol</token>
+    <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
+    <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
   </tokenList>
+
 <!--acyclic no locant may be cyclised-->
   <tokenList tagname="suffix" type="root" symbol="ñ">
     <token value="dialdose">odiald</token>

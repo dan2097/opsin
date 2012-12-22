@@ -142,7 +142,7 @@ class ComponentProcessor {
 		
 			for (Element subOrRoot : substituentsAndRoot) {
 				applyDLPrefixes(subOrRoot);
-				cycliseCarbohydrates(subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
+				processCarbohydrates(subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
 			}
 
 			for (Element subOrRootOrBracket : substituentsAndRootAndBrackets) {
@@ -1221,13 +1221,11 @@ class ComponentProcessor {
 	}
 
 	/**
-	 * Cyclises carbohydrate configuration prefixes according to the adjacent ring size indicator
-	 * Alpha/beta stereochemistry is then applied if present
-	 * TODO support multi prefixes and alpha/beta stereochem with multiple prefixes
+	 * Cyclises carbohydrates and regularises their suffixes
 	 * @param subOrRoot
 	 * @throws StructureBuildingException
 	 */
-	private void cycliseCarbohydrates(Element subOrRoot) throws StructureBuildingException {
+	private void processCarbohydrates(Element subOrRoot) throws StructureBuildingException {
 		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATE_TYPE_VAL);
 		for (Element group : carbohydrates) {
 			Element suffixOrRingSize = (Element) XOMTools.getNextSibling(group);
@@ -1242,45 +1240,62 @@ class ComponentProcessor {
 					suffixOrRingSize.detach();
 					suffixOrRingSize = (Element) XOMTools.getNextSibling(group);
 				}
+				else if (value.equals("uronate") || value.equals("uronic acid")){
+					//strictly these are also aldose di suffixes but in practice they are also used on
+					Fragment frag = state.xmlFragmentMap.get(group);
+					suffixOrRingSize.addAttribute(new Attribute(LOCANT_ATR, String.valueOf(frag.getChainLength())));			
+				}
 			}
 			if (suffixOrRingSize==null || !suffixOrRingSize.getLocalName().equals(CARBOHYDRATERINGSIZE_EL)){
 				continue;
 			}
 			
-			Fragment frag = state.xmlFragmentMap.get(group);
-			Atom carbonylCarbon = getCarbonylCarbon(frag);
-			if (carbonylCarbon ==null){
-				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
+			cycliseCarbohydrate(group, suffixOrRingSize);
+		}
+	}
+
+	/**
+	 * Cyclises carbohydrate configuration prefixes according to the ring size indicator
+	 * Alpha/beta stereochemistry is then applied if present
+	 * TODO support multi prefixes and alpha/beta stereochem with multiple prefixes
+	 * @param carbohydrateGroup
+	 * @param ringSize
+	 * @throws StructureBuildingException
+	 */
+	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize) throws StructureBuildingException {
+		Fragment frag = state.xmlFragmentMap.get(carbohydrateGroup);
+		Atom carbonylCarbon = getCarbonylCarbon(frag);
+		if (carbonylCarbon ==null){
+			throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
+		}
+		for (Bond b: carbonylCarbon.getBonds()) {
+			if (b.getOrder()==2){
+				b.setOrder(1);
+				break;
 			}
-			for (Bond b: carbonylCarbon.getBonds()) {
-				if (b.getOrder()==2){
-					b.setOrder(1);
-					break;
-				}
+		}
+		int locantOfCarbonyl;
+		try{
+			locantOfCarbonyl = Integer.parseInt(carbonylCarbon.getFirstLocant());
+		}
+		catch (Exception e) {
+			throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
+		}
+		String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSize.getAttributeValue(VALUE_ATR)) -2);
+		Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
+		if (atomToJoinWith ==null){
+			throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
+		}
+		state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
+		CycleDetector.assignWhetherAtomsAreInCycles(frag);
+		ringSize.detach();
+		Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(carbohydrateGroup);
+		if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
+			Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
+			if (anomericReferenceAtom ==null){
+				throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +carbohydrateGroup.getValue());
 			}
-			int locantOfCarbonyl;
-			try{
-				locantOfCarbonyl = Integer.parseInt(carbonylCarbon.getFirstLocant());
-			}
-			catch (Exception e) {
-				throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
-			}
-			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(suffixOrRingSize.getAttributeValue(VALUE_ATR)) -2);
-			Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
-			if (atomToJoinWith ==null){
-				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + suffixOrRingSize.getAttributeValue(VALUE_ATR));
-			}
-			state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
-			CycleDetector.assignWhetherAtomsAreInCycles(frag);
-			suffixOrRingSize.detach();
-			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(group);
-			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
-				Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
-				if (anomericReferenceAtom ==null){
-					throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +group.getValue());
-				}
-				applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
-			}
+			applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
 		}
 	}
 
