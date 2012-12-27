@@ -1055,7 +1055,8 @@ class FragmentTools {
 	static Atom findHydroxyGroup(Fragment biochemicalFragment) throws StructureBuildingException {
 		List<Atom> atoms = biochemicalFragment.getAtomList();
 		for (Atom atom : atoms) {
-			if (atom.getElement().equals("O") && atom.getBonds().size()==1  && atom.getFirstBond().getOrder()==1){
+			if (atom.getElement().equals("O") && atom.getBonds().size()==1  &&
+					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
 				List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
 				if (adjacentAtom.getElement().equals("C")){
