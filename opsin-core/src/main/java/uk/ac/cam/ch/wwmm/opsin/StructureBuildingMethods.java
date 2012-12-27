@@ -202,6 +202,8 @@ class StructureBuildingMethods {
 							for (Atom neighbour : atomToSubstituteAt.getAtomNeighbours()) {
 								if (neighbour.getElement().equals("O") &&
 										neighbour.getBonds().size()==1 &&
+										neighbour.getFirstBond().getOrder() == 1 &&
+										neighbour.getOutValency() == 0 &&
 										neighbour.getCharge() == 0){
 									atomToSubstituteAt = neighbour;
 									break;
