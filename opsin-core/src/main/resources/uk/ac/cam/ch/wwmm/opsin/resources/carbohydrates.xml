@@ -37,6 +37,14 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhamn</token>
 		<token value="O=CCC[C@H](O)[C@@H](O)C" labels="/1/2/3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhodin</token>
 		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvel</token>
+
+		<!--branched-->
+		<token value="O=C[C@](CO)(O)[C@H](O)[C@H](O)CO" labels="/1/2////3//4//5/" valType="SMILES" suffixAppliesTo="2">hamamel</token>
+		<token value="O=CC[C@@](C)(OC)[C@@H](O)[C@@H](O)C" labels="/1/2/3////4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">cladin</token>
+		<token value="O=C[C@H](O)[C@](C=O)(O)[C@@H](O)C" labels="/1/2//3////4//5" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">strept</token>
+		<token value="O=C[C@@H](O)[C@@](C)(O)[C@H](O)[C@H](O)C" labels="/1/2//3///4//5//6" valType="SMILES" suffixAppliesTo="2">eval</token>
+		<token value="O=CC[C@](C)([N+](=O)[O-])[C@@H](OC)[C@@H](O)C" labels="/1/2/3/////4///5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">evernitr</token>
+		<token value="O=C[C@H](O)C(CO)(O)CO" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">api</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemKetose" symbol="á">
@@ -124,6 +132,9 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">muramic acid</token>
 		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">alpha-muramic acid</token>
 		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">beta-muramic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">isomuramic acid</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">alpha-isomuramic acid</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">beta-isomuramic acid</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
@@ -132,6 +143,20 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">(d)-glyceraldehyde</token>
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">l-glyceraldehyde</token>
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
+
+<!--used by CAS to describe cyclic apiose-->
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-alpha-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-beta-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-alpha-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-beta-l-furanose</token>
 
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
 	</tokenList>
