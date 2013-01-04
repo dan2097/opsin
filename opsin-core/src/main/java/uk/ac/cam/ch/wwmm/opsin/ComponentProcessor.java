@@ -1257,7 +1257,6 @@ class ComponentProcessor {
 	/**
 	 * Cyclises carbohydrate configuration prefixes according to the ring size indicator
 	 * Alpha/beta stereochemistry is then applied if present
-	 * TODO support multi prefixes and alpha/beta stereochem with multiple prefixes
 	 * @param carbohydrateGroup
 	 * @param ringSize
 	 * @throws StructureBuildingException
@@ -1289,7 +1288,21 @@ class ComponentProcessor {
 		state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(frag);
 		ringSize.detach();
-		Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSibling(carbohydrateGroup);
+		Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(carbohydrateGroup, new String[]{STEREOCHEMISTRY_EL});
+		if (CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
+			//systematic chains only have their stereochemistry defined after structure building to account for the fact that some stereocentres may be removed
+			//here we add an element to specify the stereochemistry of the anomeric centre
+			Element anomericStereoElement = new Element(STEREOCHEMISTRY_EL);
+			String stereoAtAnomeric = "?";
+			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
+				Element stereoPrefix = (Element) XOMTools.getNextSibling(alphaOrBetaLocantEl);
+				String val = stereoPrefix.getAttributeValue(VALUE_ATR);
+				stereoAtAnomeric =  val.substring(val.length() -1 , val.length());//"r" if D, "l" if L
+			}
+			anomericStereoElement.addAttribute(new Attribute(VALUE_ATR, stereoAtAnomeric));
+			anomericStereoElement.addAttribute(new Attribute(TYPE_ATR, CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL));
+			XOMTools.insertBefore(carbohydrateGroup, anomericStereoElement);
+		}
 		if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
 			Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
 			if (anomericReferenceAtom ==null){

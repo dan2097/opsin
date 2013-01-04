@@ -13,6 +13,7 @@
 <!--default suffix, does not effect structure but required in names-->
   <tokenList tagname="suffix" type="root" symbol="ð" ignoreWhenWritingXML="yes">
     <token value="ose">ose</token>
+    <token value="ose">os</token>
   </tokenList>
 
 <!--acyclic no locant-->
@@ -34,7 +35,6 @@
 
 <!--implicit itol for use with ulose-->
   <tokenList tagname="suffix" type="root" symbol="ï">
-    <token value="itol">o</token>
     <token value="itol"></token>
   </tokenList>
 
