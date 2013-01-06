@@ -9,6 +9,8 @@
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="ë">
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
+    <token value="osonate" locant="1">osonate</token>
+    <token value="osonic acid" locant="1">osonic acid</token>
   </tokenList>
 
 <!--default suffix, does not effect structure but required in names-->
@@ -20,10 +22,10 @@
 <!--acyclic no locant-->
   <tokenList tagname="suffix" type="root" symbol="í">
     <token value="aric acid">aric acid</token>
-    <token value="onamide">onamide</token>
-    <token value="onate">onate</token>
-    <token value="onic acid">onic acid</token>
-    <token value="ononitrile">ononitrile</token>
+    <token value="onamide" locant="1">onamide</token>
+    <token value="onate" locant="1">onate</token>
+    <token value="onic acid" locant="1">onic acid</token>
+    <token value="ononitrile" locant="1">ononitrile</token>
     <token value="itol">itol</token>
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->

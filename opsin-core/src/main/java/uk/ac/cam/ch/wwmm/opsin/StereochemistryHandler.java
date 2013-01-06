@@ -127,7 +127,7 @@ class StereochemistryHandler {
 		Map<Element, List<Element>> groupToStereochemEls = new HashMap<Element, List<Element>>();
 		for (Element carbohydrateStereoChemistryEl : carbohydrateStereoChemistryEls) {
 			Element nextGroup = (Element) XOMTools.getNextSibling(carbohydrateStereoChemistryEl, GROUP_EL);
-			if (nextGroup ==null || !CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR))){
+			if (nextGroup ==null || !SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR))){
 				throw new RuntimeException("OPSIN bug: Could not find carbohydrate chain stem to apply stereochemistry to");
 			}
 			if (groupToStereochemEls.get(nextGroup)==null){

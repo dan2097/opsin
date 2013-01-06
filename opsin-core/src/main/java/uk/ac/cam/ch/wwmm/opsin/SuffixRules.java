@@ -79,7 +79,7 @@ class SuffixRules {
 		}
 		List<Element> potentiallyApplicableSuffixes =groupToSuffixMap.get(suffixValue);
 		if(potentiallyApplicableSuffixes==null || potentiallyApplicableSuffixes.size()==0 ) {
-			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")according to suffixApplicability.xml");
+			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ") according to suffixApplicability.xml");
 		}
 		Element chosenSuffix=null;
         for (Element suffix : potentiallyApplicableSuffixes) {
@@ -94,7 +94,7 @@ class SuffixRules {
             chosenSuffix = suffix;
         }
 		if (chosenSuffix==null){
-			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ")due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
+			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ") due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
 		}
 		Element rule =suffixRules.get(chosenSuffix.getValue());
 		if(rule ==null) {
