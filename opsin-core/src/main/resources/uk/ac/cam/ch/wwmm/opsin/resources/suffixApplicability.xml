@@ -113,7 +113,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="onate" subType="carbohydrateStemAldose">ite</suffix>
     <suffix value="ononitrile" subType="carbohydrateStemAldose">ononitrile_aldehyde</suffix>
     <suffix value="itol">carbonyl_to_hydroxy</suffix>
-    <suffix value="ulose">hydroxy_to_carbonyl</suffix>
+    <suffix value="osulose">hydroxy_to_carbonyl</suffix>
     <suffix value="glycoside">ic_nonCarboxylic</suffix>
     <suffix value="uronate">hydroxy_to_ate</suffix>
     <suffix value="uronic acid">hydroxy_to_icacid</suffix>

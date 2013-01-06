@@ -149,6 +149,7 @@ sense of this -->
   </rule>
   <rule value="hydroxy_to_ate">
     <removeTerminalOxygen order="1" />
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)[O-]" functionalIDs="3"/>
   </rule>
   <rule value="hydroxy_to_carbonyl">
@@ -157,6 +158,7 @@ sense of this -->
   </rule>
   <rule value="hydroxy_to_icacid">
     <removeTerminalOxygen order="1" />
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
   </rule>
   <rule value="ic">

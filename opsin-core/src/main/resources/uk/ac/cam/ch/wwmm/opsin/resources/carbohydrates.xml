@@ -2,7 +2,8 @@
 <!-- See the DTD for more details -->
 <tokenLists>
 <!--SMILES have been written such that @ indicates the group is on the right and @@ on the left in a fischer projection
-OPSIN's code, however, is written such as to not assume that this is the case-->
+OPSIN's code, however, is written such as to not assume that this is the case
+NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by suffixes/cyclised!-->
 	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemAldose" symbol="á">
 		<!--aldoses -->
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES" suffixAppliesTo="2">glycer</token>
@@ -64,12 +65,12 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 	</tokenList>
 
 	<tokenList tagname="carbohydrateRingSize" symbol="ã">
-		<token value="3">oxiros</token>
-		<token value="4">oxetos</token>
-		<token value="5">furanos</token>
-		<token value="6">pyranos</token>
-		<token value="7">septanos</token>
-		<token value="8">octanos</token>
+		<token value="3">oxir</token>
+		<token value="4">oxet</token>
+		<token value="5">furan</token>
+		<token value="6">pyran</token>
+		<token value="7">septan</token>
+		<token value="8">octan</token>
 	</tokenList>
 
 	<!--all possible configurations of stereocentres for carbohydrates with 1-4 stereocentres (l/r for position on a fischer projection)-->
@@ -145,18 +146,18 @@ OPSIN's code, however, is written such as to not assume that this is the case-->
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
 
 <!--used by CAS to describe cyclic apiose-->
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-alpha-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-beta-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-alpha-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">d-apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">l-apio-beta-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-alpha-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-beta-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-alpha-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-beta-l-furanose</token>
 
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
 	</tokenList>
