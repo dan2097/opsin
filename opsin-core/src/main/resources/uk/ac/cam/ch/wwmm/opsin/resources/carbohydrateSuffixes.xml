@@ -6,8 +6,9 @@
     <token value="glycoside">id</token>
   </tokenList>
 
-  <tokenList tagname="suffix" type="root" symbol="ë">
-    <token value="ulose">ulose</token>
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="ë">
+    <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
+    <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
   </tokenList>
 
 <!--default suffix, does not effect structure but required in names-->
@@ -33,14 +34,14 @@
     <token value="dialdose">odiald</token>
   </tokenList>
 
-<!--implicit itol for use with ulose-->
-  <tokenList tagname="suffix" type="root" symbol="ï">
-    <token value="itol"></token>
+<!--forms ketoses, typically requires a locant-->
+  <tokenList tagname="suffix" type="root" symbol="î">
+    <token value="ulose">ul</token><!--This suffix is intentionally omitted from suffixApplicability as it should be entirely handled by processUloseSuffix-->
   </tokenList>
 
-<!--acyclic locant allowed-->
-  <tokenList tagname="suffix" type="root" symbol="î">
-    <token value="ulose">ul</token>
+<!--as above but does not remove aldose functionality cf. D-arabino-hexos-2-ulose-->
+  <tokenList tagname="suffix" type="root" symbol="ï">
+    <token value="osulose">ul</token>
   </tokenList>
 
 <!--for use with aldoses
