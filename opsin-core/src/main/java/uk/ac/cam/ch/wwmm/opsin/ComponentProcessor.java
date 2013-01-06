@@ -1503,7 +1503,7 @@ class ComponentProcessor {
 	private void applyAnomerStereochemistryIfPresent(Element alphaOrBetaLocantEl, Atom anomericAtom, Atom anomericReferenceAtom) {
 		String value = alphaOrBetaLocantEl.getValue();
 		if (value.equals("alpha") || value.equals("beta")){
-			Atom[] referenceAtomRefs4 = getDeterministicAtomRefs4ForReferenceAtom(anomericReferenceAtom, anomericAtom);
+			Atom[] referenceAtomRefs4 = getDeterministicAtomRefs4ForReferenceAtom(anomericReferenceAtom);
 			boolean flip = StereochemistryHandler.checkEquivalencyOfAtomsRefs4AndParity(referenceAtomRefs4, 1, anomericReferenceAtom.getAtomParity().getAtomRefs4(), anomericReferenceAtom.getAtomParity().getParity());
 			Atom[] atomRefs4 = getDeterministicAtomRefs4ForAnomericAtom(anomericAtom);
 			if (flip){
@@ -1530,18 +1530,19 @@ class ComponentProcessor {
 		}
 	}
 
-	private Atom[] getDeterministicAtomRefs4ForReferenceAtom(Atom referenceAtom, Atom anomericAtom) {
+	private Atom[] getDeterministicAtomRefs4ForReferenceAtom(Atom referenceAtom) {
 		List<Atom> neighbours = referenceAtom.getAtomNeighbours();
 		if (neighbours.size()!=3){
 			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric reference atom of carbohydrate");
 		}
+		String nextLowestLocant = String.valueOf(Integer.parseInt(referenceAtom.getFirstLocant()) -1);
 		Atom[] atomRefs4 = new Atom[4];
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement().equals("O")){
 				atomRefs4[0] = neighbour;
 			}
 			else if (neighbour.getElement().equals("C")){
-				if (neighbour.getAtomParity()!=null || neighbour.equals(anomericAtom)){//second condition allows support for glycero rings
+				if (neighbour.getFirstLocant().equals(nextLowestLocant)){
 					atomRefs4[1] = neighbour;
 				}
 				else {
