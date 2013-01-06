@@ -193,6 +193,9 @@ class XmlDeclarations {
 	static final String ALPHABETACLOCKWISEATOMORDERING_ATR="alphaBetaClockWiseAtomOrdering";	
 	static final String ACCEPTSADDITIVEBONDS_ATR = "acceptsAdditiveBonds";
 	
+	/**The absolute Id of the anomeric atom*/
+	static final String ANOMERICATOMID_ATR = "anomericAtomId";
+	
 	/**Works like a locant but refers to the atoms OPSIN id. Will be overridden by the locant/locantId attribute*/
     static final String DEFAULTLOCANTID_ATR = "defaultLocantID";
 

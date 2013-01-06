@@ -140,7 +140,7 @@ does not define a CFG.
   <regex name="%carbohydrateUnlocantedRootSuffix%" value="ê"/>
   <regex name="%uronicAcidSuffix%" value="ë"/>
   <regex name="%carbohydrateLocant%" value="ì"/>
-  <regex name="%carbohydrateAcyclicNoLocantSuffix%" value="í"/>
+  <regex name="%carbohydrateAcyclicSuffix%" value="í"/>
   <regex name="%carbohydrateUlSuffix%" value="î"/>
   <regex name="%carbohydrateOsUlSuffix%" value="ï"/>
   <regex name="%ose%" value="ð"/>
@@ -214,12 +214,12 @@ does not define a CFG.
   <regex name="%aminoAcidRadicalOnN%" value ="((%aminoMonoAcid%|%dlStereochemistryPrefix%?%aminoAcidEndsInIc%)%implicitIc%%oMeaningYl%)"/>
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidSubstituentStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
-  <regex name="%uloseSuffix%" value="(%optLocantGroupNoOMP%%multiplier%?%carbohydrateUlSuffix%%ose%)"/>
   <regex name="%osUloseSuffix%" value="(%optLocantGroupNoOMP%%multiplier%?%carbohydrateOsUlSuffix%%ose%)"/>
   <regex name="%systematicCarbohydrateStem%" value="(%carbohydrateChain%%unsaturation%*)"/>
-  <regex name="%systematicAcyclicCarbohydrateStem%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%systematicCarbohydrateStem%)"/>
-  <regex name="%indirectLocantUloseChain%" value ="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%locant%%carbohydrateChain%%hyphen%?%carbohydrateUlSuffix%%ose%)"/>
-  <regex name="%acyclicCarbohydrate%" value="((%dlStereochemistryPrefix%?%trivialCarbohydrateStem%|%systematicAcyclicCarbohydrateStem%)%o%?%hyphen%?(%carbohydrateAcyclicNoLocantSuffix%|%diald%?%ose%%osUloseSuffix%?|%uloseSuffix%)|%indirectLocantUloseChain%)"/>
+  <regex name="%systematicAldoseCarbohydrateStem%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%systematicCarbohydrateStem%)"/>
+  <regex name="%casSystematicKetose%" value ="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%locant%%carbohydrateChain%%hyphen%?%carbohydrateUlSuffix%)"/>
+  <regex name="%acyclicCarbohydrateStem%" value ="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%|%systematicAldoseCarbohydrateStem%(%o%?%optLocantGroupNoOMP%%multiplier%?%carbohydrateUlSuffix%)?|%casSystematicKetose%)"/>
+  <regex name="%acyclicCarbohydrate%" value="(%acyclicCarbohydrateStem%%o%?%hyphen%?(%carbohydrateAcyclicSuffix%|%diald%?%ose%%osUloseSuffix%?))"/>
 
   <regex name="%nonCarbonAcidGroup%" value="((%monoNuclearNonCarbonAcid%|%nonCarbonAcidNoAcyl%)(%infixedSuffix%|%rootSuffix%))"/>
   <!--chalcogenAcidGroups must be substituted otherwise they are generic terms-->
@@ -256,8 +256,9 @@ does not define a CFG.
   <regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
 
   <regex name="%systematicCyclicStemStereoPrefixes%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+(%locant%%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)?)"/>
-  <regex name="%carbohydrateCyclicStem%" value="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%|%systematicCyclicStemStereoPrefixes%%systematicCarbohydrateStem%(%optLocantGroupNoOMP%%carbohydrateUlSuffix%)?)"/>
-  <regex name="%cyclicCarbohydrate%" value="(%carbohydrateCyclicStem%%o%?%hyphen%?%carbohydrateRingSize%(%ose%(%hyphen%?%carbohydrateUnlocantedRootSuffix%(%osUloseSuffix%|%uronicAcidSuffix%)?|%osUloseSuffix%)?|%uronicAcidSuffix%))"/>
+  <regex name="%casSystematicCyclicKetose%" value ="(%systematicCyclicStemStereoPrefixes%%locant%%carbohydrateChain%%hyphen%?%carbohydrateUlSuffix%)"/>
+  <regex name="%carbohydrateCyclicStem%" value="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%diald%?|%systematicCyclicStemStereoPrefixes%%systematicCarbohydrateStem%(%o%?%optLocantGroupNoOMP%%multiplier%?%carbohydrateUlSuffix%|%diald%)?|%casSystematicCyclicKetose%)"/>
+  <regex name="%cyclicCarbohydrate%" value="(%carbohydrateCyclicStem%%o%?%optLocantGroupNoOMP%?%carbohydrateRingSize%(%ose%(%hyphen%?%carbohydrateUnlocantedRootSuffix%(%osUloseSuffix%|%uronicAcidSuffix%)?|%osUloseSuffix%)?|%uronicAcidSuffix%))"/>
   <regex name="%cyclicCarbohydrateSubstituent%" value="(%cyclicCarbohydrate%%hyphen%?(%carbohydrateInlineSuffix%(%hyphen%?%carbohydrateLocant%)?|%locant%%locantedAminoAcidOrCarbohydrateYl%))"/>
 
   <!--Fused ring terms-->
