@@ -1237,7 +1237,7 @@ class ComponentProcessor {
 					Element suffix = nextSibling;
 					String value = suffix.getAttributeValue(VALUE_ATR);
 					if (value.equals("dialdose") || value.equals("aric acid")){
-						if (!CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) &&
+						if (!SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) &&
 								!CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 							throw new StructureBuildingException(value + " may only be used with aldoses");
 						}
@@ -1398,7 +1398,7 @@ class ComponentProcessor {
 		state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(frag);
 		Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(carbohydrateGroup, new String[]{STEREOCHEMISTRY_EL});
-		if (CARBOHYDRATECHAINLENGTH_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
+		if (SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
 			//systematic chains only have their stereochemistry defined after structure building to account for the fact that some stereocentres may be removed
 			//here we add an element to specify the stereochemistry of the anomeric centre
 			Element anomericStereoElement = new Element(STEREOCHEMISTRY_EL);
