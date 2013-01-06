@@ -1361,6 +1361,7 @@ class ComponentProcessor {
 			if (!foundBond){
 				throw new StructureBuildingException("Failed to find hydroxy group at position:" + locantStr);
 			}
+			backboneAtom.setAtomParity(null);
 		}
 	}
 
@@ -1373,10 +1374,38 @@ class ComponentProcessor {
 	 */
 	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize) throws StructureBuildingException {
 		Fragment frag = state.xmlFragmentMap.get(carbohydrateGroup);
-		Atom carbonylCarbon = getCarbonylCarbon(frag);
-		if (carbonylCarbon ==null){
-			throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
+		String ringSizeVal = ringSize.getAttributeValue(VALUE_ATR);
+		Element potentialLocant = (Element) XOMTools.getPreviousSibling(ringSize);
+		Atom carbonylCarbon = null;
+		Atom atomToJoinWith = null;
+		if (potentialLocant.getLocalName().equals(LOCANT_EL)){
+			String[] locants = MATCH_COMMA.split(potentialLocant.getValue());
+			if (locants.length != 2){
+				throw new StructureBuildingException("Expected 2 locants in front of sugar ring size specifier but found: " + potentialLocant.getValue());
+			}
+			try{
+				int firstLocant = Integer.parseInt(locants[0]);
+				int secondLocant = Integer.parseInt(locants[1]);
+				if (Math.abs(secondLocant - firstLocant) != (Integer.parseInt(ringSizeVal) -2)){
+					throw new StructureBuildingException("Mismatch between ring size: " +  ringSizeVal + " and ring size specified by locants: " + (Math.abs(secondLocant - firstLocant) + 2) );
+				}
+			}
+			catch (NumberFormatException e){
+				throw new StructureBuildingException("Locants for ring should be numeric but were: " + potentialLocant.getValue());
+			}
+			carbonylCarbon = frag.getAtomByLocantOrThrow(locants[0]);
+			atomToJoinWith = frag.getAtomByLocantOrThrow("O" + locants[1]);
+			carbohydrateGroup.getAttribute(SUFFIXAPPLIESTO_ATR).setValue(String.valueOf(frag.getAtomList().indexOf(carbonylCarbon) + 1));
+			potentialLocant.detach();
 		}
+		
+		if (carbonylCarbon == null){
+			carbonylCarbon = frag.getAtomList().get(Integer.parseInt(carbohydrateGroup.getAttributeValue(SUFFIXAPPLIESTO_ATR)) -1);
+			if (carbonylCarbon ==null){
+				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
+			}
+		}
+
 		for (Bond b: carbonylCarbon.getBonds()) {
 			if (b.getOrder()==2){
 				b.setOrder(1);
@@ -1390,35 +1419,35 @@ class ComponentProcessor {
 		catch (Exception e) {
 			throw new RuntimeException("OPSIN bug: Could not determine locant of carbonyl carbon in carbohydrate", e);
 		}
-		String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSize.getAttributeValue(VALUE_ATR)) -2);
-		Atom atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
 		if (atomToJoinWith ==null){
-			throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSize.getAttributeValue(VALUE_ATR));
+			String locantToJoinWith = String.valueOf(locantOfCarbonyl + Integer.parseInt(ringSizeVal) -2);
+			atomToJoinWith =frag.getAtomByLocant("O" +locantToJoinWith);
+			if (atomToJoinWith ==null){
+				throw new StructureBuildingException("Carbohydrate was not an inappropriate length to form a ring of size: " + ringSizeVal);
+			}
 		}
 		state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(frag);
 		Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(carbohydrateGroup, new String[]{STEREOCHEMISTRY_EL});
-		if (SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
-			//systematic chains only have their stereochemistry defined after structure building to account for the fact that some stereocentres may be removed
-			//here we add an element to specify the stereochemistry of the anomeric centre
-			Element anomericStereoElement = new Element(STEREOCHEMISTRY_EL);
-			String stereoAtAnomeric = "?";
-			if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
-				Element stereoPrefix = (Element) XOMTools.getNextSibling(alphaOrBetaLocantEl);
-				String val = stereoPrefix.getAttributeValue(VALUE_ATR);
-				stereoAtAnomeric =  val.substring(val.length() -1 , val.length());//"r" if D, "l" if L
-			}
-			anomericStereoElement.addAttribute(new Attribute(VALUE_ATR, stereoAtAnomeric));
-			anomericStereoElement.addAttribute(new Attribute(TYPE_ATR, CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL));
-			XOMTools.insertBefore(carbohydrateGroup, anomericStereoElement);
-		}
 		if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
+			Element stereoPrefixAfterAlphaBeta = (Element) XOMTools.getNextSibling(alphaOrBetaLocantEl);
 			Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
 			if (anomericReferenceAtom ==null){
 				throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +carbohydrateGroup.getValue());
 			}
 			applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
+			if (SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
+				//systematic chains only have their stereochemistry defined after structure building to account for the fact that some stereocentres may be removed
+				//hence inspect the stereoprefix to see if it is L and flip if so
+				String val = stereoPrefixAfterAlphaBeta.getAttributeValue(VALUE_ATR);
+				if (val.substring(val.length() -1 , val.length()).equals("l")){//"r" if D, "l" if L
+					//flip if L
+					AtomParity atomParity = carbonylCarbon.getAtomParity();
+					atomParity.setParity(-atomParity.getParity());
+				}
+			}
 		}
+		carbohydrateGroup.addAttribute(new Attribute(ANOMERICATOMID_ATR, String.valueOf(carbonylCarbon.getID())));
 	}
 
 	private void processAldoseDiSuffix(String suffixValue, Element group) throws StructureBuildingException {
@@ -1441,21 +1470,6 @@ class ComponentProcessor {
 		else{
 			throw new IllegalArgumentException("OPSIN Bug: Unexpected suffix value: " + suffixValue);
 		}		
-	}
-
-	private Atom getCarbonylCarbon(Fragment frag) {
-		Set<Bond> bonds = frag.getBondSet();
-		for (Bond bond : bonds) {
-			if (bond.getOrder() ==2){
-				if (bond.getFromAtom().getElement().equals("C") && bond.getToAtom().getElement().equals("O")){
-					return bond.getFromAtom();
-				}
-				if (bond.getFromAtom().getElement().equals("O") && bond.getToAtom().getElement().equals("C")){
-					return bond.getToAtom();
-				}
-			}
-		}
-		return null;
 	}
 
 	/**
