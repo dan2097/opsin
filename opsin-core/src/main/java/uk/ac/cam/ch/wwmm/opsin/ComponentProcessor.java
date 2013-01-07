@@ -1247,7 +1247,7 @@ class ComponentProcessor {
 						processAldoseDiSuffix(value, group);
 						suffix.detach();
 					}
-					else if (value.equals("uronate") || value.equals("uronic acid")){
+					else if (value.startsWith("uron")){
 						//strictly these are also aldose di suffixes but in practice they are also used on ketoses
 						Fragment frag = state.xmlFragmentMap.get(group);
 						suffix.addAttribute(new Attribute(LOCANT_ATR, String.valueOf(frag.getChainLength())));			

@@ -1,16 +1,22 @@
 ﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
+<!--Indicates a glycoside linkage, maybe be used in conjunction with further suffixes-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="ê">
     <token value="glycoside">ide</token>
     <token value="glycoside">id</token>
   </tokenList>
 
+<!--used with cyclised carbohydrates-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="ë">
+    <token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
+    <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
+    <token value="osonamide" locant="1">osonamide</token>
     <token value="osonate" locant="1">osonate</token>
     <token value="osonic acid" locant="1">osonic acid</token>
+    <token value="osononitrile" locant="1">osononitrile</token>
   </tokenList>
 
 <!--default suffix, does not effect structure but required in names-->
@@ -19,7 +25,7 @@
     <token value="ose">os</token>
   </tokenList>
 
-<!--acyclic no locant-->
+<!--used with acyclic carbohydrates-->
   <tokenList tagname="suffix" type="root" symbol="í">
     <token value="aric acid">aric acid</token>
     <token value="onamide" locant="1">onamide</token>
@@ -27,11 +33,13 @@
     <token value="onic acid" locant="1">onic acid</token>
     <token value="ononitrile" locant="1">ononitrile</token>
     <token value="itol">itol</token>
+    <token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
+    <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
   </tokenList>
 
-<!--acyclic no locant may be cyclised-->
+<!--Maybe be used as an infix before cyclisation or an acyclic suffix-->
   <tokenList tagname="suffix" type="root" symbol="ñ">
     <token value="dialdose">odiald</token>
   </tokenList>
