@@ -1229,6 +1229,7 @@ class ComponentProcessor {
 		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATE_TYPE_VAL);
 		for (Element group : carbohydrates) {
 			boolean cyclisationPerformed = false;
+			boolean isAldose = !CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR));
 			Element nextSibling = (Element) XOMTools.getNextSibling(group);
 			while (nextSibling !=null){
 				Element nextNextSibling = (Element) XOMTools.getNextSibling(nextSibling);
@@ -1237,8 +1238,7 @@ class ComponentProcessor {
 					Element suffix = nextSibling;
 					String value = suffix.getAttributeValue(VALUE_ATR);
 					if (value.equals("dialdose") || value.equals("aric acid")){
-						if (!SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) &&
-								!CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+						if (!isAldose){
 							throw new StructureBuildingException(value + " may only be used with aldoses");
 						}
 						if (cyclisationPerformed){
@@ -1253,6 +1253,9 @@ class ComponentProcessor {
 						suffix.addAttribute(new Attribute(LOCANT_ATR, String.valueOf(frag.getChainLength())));			
 					}
 					else if (!cyclisationPerformed && (value.equals("ulose") || value.equals("osulose"))){
+						if (value.equals("ulose")){
+							isAldose = false;
+						}
 						processUloseSuffix(group, suffix);
 						suffix.detach();
 					}
