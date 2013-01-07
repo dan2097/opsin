@@ -2273,23 +2273,27 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("keto") && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 			//check for case where this is specifying the open chain form of a ketose
-			
-			//Currently all carbohydrates are treated as being the chain form, but this may need to be reconsidered later
-			Element parentSubstituent = (Element) group.getParent();
-			Element nextSubOrRoot = (Element) XOMTools.getNextSibling(parentSubstituent);
-			if (nextSubOrRoot!=null){
-				Element possibleCarbohydrate = nextSubOrRoot.getFirstChildElement(GROUP_EL);
-				if (possibleCarbohydrate !=null && possibleCarbohydrate.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
-					group.detach();
-					Elements childrenToMove = parentSubstituent.getChildElements();
-					for (int i = childrenToMove.size() -1 ; i >=0; i--) {
-						Element el = childrenToMove.get(i);
-						if (!el.getLocalName().equals(HYPHEN_EL)){
-							el.detach();
-							nextSubOrRoot.insertChild(el, 0);
+			//Carbohydrates are treated as being in the open chain form by default so ignore the term if this the case
+			Element previousEl = (Element) XOMTools.getPreviousSibling(group);
+			if (previousEl ==null || !previousEl.getLocalName().equals(LOCANT_EL)){
+				Element parentSubstituent = (Element) group.getParent();
+				Element nextSubOrRoot = (Element) XOMTools.getNextSibling(parentSubstituent);
+				while (nextSubOrRoot != null){
+					Element possibleCarbohydrate = nextSubOrRoot.getFirstChildElement(GROUP_EL);
+					if (possibleCarbohydrate !=null && possibleCarbohydrate.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
+						group.detach();
+						Elements childrenToMove = parentSubstituent.getChildElements();
+						for (int i = childrenToMove.size() -1 ; i >=0; i--) {
+							Element el = childrenToMove.get(i);
+							if (!el.getLocalName().equals(HYPHEN_EL)){
+								el.detach();
+								nextSubOrRoot.insertChild(el, 0);
+							}
 						}
+						parentSubstituent.detach();
+						break;
 					}
-					parentSubstituent.detach();
+					nextSubOrRoot = (Element) XOMTools.getNextSibling(nextSubOrRoot);
 				}
 			}
 		}
