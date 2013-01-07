@@ -137,8 +137,8 @@ does not define a CFG.
   <regex name="%functionalSuffixBeforeInlineSuffix%" value="ç"/>
   <regex name="%cycleFormingSuffix%" value="è"/>
   <regex name="%endOfSubstituent%" value="é"/>
-  <regex name="%carbohydrateUnlocantedRootSuffix%" value="ê"/>
-  <regex name="%uronicAcidSuffix%" value="ë"/>
+  <regex name="%glycosideSuffix%" value="ê"/>
+  <regex name="%cyclicCarbohydrateAcidSuffix%" value="ë"/>
   <regex name="%carbohydrateLocant%" value="ì"/>
   <regex name="%carbohydrateAcyclicSuffix%" value="í"/>
   <regex name="%carbohydrateUlSuffix%" value="î"/>
@@ -258,7 +258,7 @@ does not define a CFG.
   <regex name="%systematicCyclicStemStereoPrefixes%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+(%locant%%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)?)"/>
   <regex name="%casSystematicCyclicKetose%" value ="(%systematicCyclicStemStereoPrefixes%%locant%%carbohydrateChain%%hyphen%?%carbohydrateUlSuffix%)"/>
   <regex name="%carbohydrateCyclicStem%" value="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%diald%?|%systematicCyclicStemStereoPrefixes%%systematicCarbohydrateStem%(%o%?%optLocantGroupNoOMP%%multiplier%?%carbohydrateUlSuffix%|%diald%)?|%casSystematicCyclicKetose%)"/>
-  <regex name="%cyclicCarbohydrate%" value="(%carbohydrateCyclicStem%%o%?%optLocantGroupNoOMP%?%carbohydrateRingSize%(%ose%(%hyphen%?%carbohydrateUnlocantedRootSuffix%(%osUloseSuffix%|%uronicAcidSuffix%)?|%osUloseSuffix%)?|%uronicAcidSuffix%))"/>
+  <regex name="%cyclicCarbohydrate%" value="(%carbohydrateCyclicStem%%o%?%optLocantGroupNoOMP%?%carbohydrateRingSize%(%ose%(%hyphen%?%glycosideSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffix%)?|%osUloseSuffix%)?|%cyclicCarbohydrateAcidSuffix%))"/>
   <regex name="%cyclicCarbohydrateSubstituent%" value="(%cyclicCarbohydrate%%hyphen%?(%carbohydrateInlineSuffix%(%hyphen%?%carbohydrateLocant%)?|%locant%%locantedAminoAcidOrCarbohydrateYl%))"/>
 
   <!--Fused ring terms-->
