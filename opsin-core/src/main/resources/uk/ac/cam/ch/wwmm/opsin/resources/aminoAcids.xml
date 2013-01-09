@@ -106,6 +106,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token labels="/2,alpha/3,beta/4,gamma/////1" valType="SMILES" value="N[C@@H](CCS(=O)(O)=O)C" suffixAppliesTo="9">homocyste</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](C[Se](=O)(O)=O)C" suffixAppliesTo="8">selenocyste</token>
     <token labels="none" valType="SMILES" value="CCCNC([C@H](O)C(C)(C)CO)=O" suffixAppliesTo="1">pantothen</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//1" valType="SMILES" value="N1[C@@H](CCC1=O)C" suffixAppliesTo="7">pyroglutam</token>
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="simpleSubstituent" symbol="x"><!--semi trivial amino acid substituents-->
@@ -194,6 +195,10 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token value="NCC[SeH]" labels="/2,alpha/3,beta/" valType="SMILES">selenocysteamine</token>
 		<token value="NCCS(=O)O" labels="none" valType="SMILES" functionalIDs="6">hypotaurine</token>
 		<token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" labels="none" valType="SMILES" functionalIDs="11,16,21">nopaline</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolic acid</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolicacid</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolate</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pyroglutamide</token>
 		<token value="NCC[Se](=O)O" labels="none" valType="SMILES" functionalIDs="6">selenohypotaurine</token>
     <token value="N(C(C)C(=O)O)CC(=O)O" valType="SMILES" labels="none" functionalIDs="6,10">strombine</token>
 		<token value="NCCS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="7">taurine</token>
