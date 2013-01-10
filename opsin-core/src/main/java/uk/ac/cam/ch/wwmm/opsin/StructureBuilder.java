@@ -124,6 +124,9 @@ class StructureBuilder {
 			else if(wordRule == WordRule.biochemicalEster) {
 				buildBiochemicalEster(state, words, wordRules.size());//e.g. uridine 5'-(tetrahydrogen triphosphate)
 			}
+			else if(wordRule == WordRule.cyclicPeptide) {
+				buildCyclicPeptide(state, words);
+			}
 			else if(wordRule == WordRule.polymer) {
 				rGroups.addAll(buildPolymer(state, words));
 			}
@@ -1406,6 +1409,29 @@ class StructureBuilder {
 				acetalFrags.remove(acetalFrag);
 			}
 			usageMap.put(acetalFrag, usage);
+		}
+	}
+
+	private void buildCyclicPeptide(BuildState state, List<Element> words) throws StructureBuildingException {
+		if (words.size() != 2){
+			throw new StructureBuildingException("OPSIN Bug: Expected 2 words in cyclic peptide name, found: " + words.size());
+		}
+		Element peptide = words.get(1);
+		resolveWordOrBracket(state, peptide);
+		BuildResults peptideBr = new BuildResults(state, peptide);
+		if (peptideBr.getOutAtomCount() ==1){
+			Atom outAtom =peptideBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+			List<Element> aminoAcids = XOMTools.getDescendantElementsWithTagNameAndAttribute(peptide, GROUP_EL, TYPE_ATR, AMINOACID_TYPE_VAL);
+			if (aminoAcids.size() < 2){
+				throw new StructureBuildingException("Cyclic peptide building failed: Requires at least two amino acids!");
+			}
+			Atom inAtom = state.xmlFragmentMap.get(aminoAcids.get(0)).getDefaultInAtom();
+
+			state.fragManager.createBond(outAtom, inAtom, peptideBr.getOutAtom(0).getValency());
+			peptideBr.removeAllOutAtoms();
+		}
+		else{
+			throw new StructureBuildingException("Cyclic peptide building failed: Expected 1 outAtoms, found: " +peptideBr.getOutAtomCount());
 		}
 	}
 
