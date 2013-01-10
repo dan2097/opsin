@@ -63,6 +63,7 @@
   <tokenList tagname="functionalModifier" symbol="µ">
     <token value="oligo">oligo</token>
     <token value="poly">poly</token>
+    <token value="cyclo">cyclo</token>
   </tokenList>
 
 <!--The functional groups simply involve connecting said group to a radical on the provided group

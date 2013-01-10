@@ -14,6 +14,7 @@ enum WordRule{
 	anhydride,
 	biochemicalEster,
 	carbonylDerivative,
+	cyclicPeptide,
 	divalentFunctionalGroup,
 	ester,
 	functionalClassEster,
