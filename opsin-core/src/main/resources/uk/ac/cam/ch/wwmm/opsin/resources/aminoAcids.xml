@@ -171,6 +171,10 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 
     <token labels="none" valType="SMILES" value="OCCCNC([C@H](O)C(C)(C)CO)=O">pantothenol</token>
     <token labels="none" valType="SMILES" value="OCCCNC([C@H](O)C(C)(C)CO)=O">panthenol</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolic acid</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolicacid</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolate</token>
+    <token value="N1[C@@H](CCC1=O)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pyroglutamide</token>
 
     <token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" labels="none" valType="SMILES" functionalIDs="5,13">cystine</token>
     <token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" labels="none" valType="SMILES">dopa</token>
@@ -195,10 +199,6 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token value="NCC[SeH]" labels="/2,alpha/3,beta/" valType="SMILES">selenocysteamine</token>
 		<token value="NCCS(=O)O" labels="none" valType="SMILES" functionalIDs="6">hypotaurine</token>
 		<token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" labels="none" valType="SMILES" functionalIDs="11,16,21">nopaline</token>
-    <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolic acid</token>
-    <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolicacid</token>
-    <token value="N1[C@@H](CCC1=O)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolate</token>
-    <token value="N1[C@@H](CCC1=O)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pyroglutamide</token>
 		<token value="NCC[Se](=O)O" labels="none" valType="SMILES" functionalIDs="6">selenohypotaurine</token>
     <token value="N(C(C)C(=O)O)CC(=O)O" valType="SMILES" labels="none" functionalIDs="6,10">strombine</token>
 		<token value="NCCS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="7">taurine</token>
