@@ -16,6 +16,7 @@ public class ComponentProcessorTest {
 		Element substituent = new Element(SUBSTITUENT_EL);
 		word.appendChild(substituent);
 		Element substractivePrefix = new Element(SUBTRACTIVEPREFIX_EL);
+		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
 		substituent.appendChild(substractivePrefix);
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
 	}
@@ -25,6 +26,7 @@ public class ComponentProcessorTest {
 		Element word = new Element(WORD_EL);
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element substractivePrefix = new Element(SUBTRACTIVEPREFIX_EL);
+		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
 		substituent.appendChild(substractivePrefix);
 		word.appendChild(substituent);
 		Element root = new Element(ROOT_EL);
@@ -44,6 +46,7 @@ public class ComponentProcessorTest {
 		Element word = new Element(WORD_EL);
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element substractivePrefix = new Element(SUBTRACTIVEPREFIX_EL);
+		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
 		substituent.appendChild(substractivePrefix);
 		word.appendChild(substituent);
 		Element substituent2 = new Element(SUBSTITUENT_EL);
@@ -70,6 +73,7 @@ public class ComponentProcessorTest {
 		Element word = new Element(WORD_EL);
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element substractivePrefix = new Element(SUBTRACTIVEPREFIX_EL);
+		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
 		substituent.appendChild(substractivePrefix);
 		word.appendChild(substituent);
 		Element substituent2 = new Element(SUBSTITUENT_EL);
@@ -99,6 +103,7 @@ public class ComponentProcessorTest {
 		Element multiplier = new Element(MULTIPLIER_EL);
 		substituent.appendChild(multiplier);
 		Element substractivePrefix = new Element(SUBTRACTIVEPREFIX_EL);
+		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
 		substituent.appendChild(substractivePrefix);
 		word.appendChild(substituent);
 		Element root = new Element(ROOT_EL);

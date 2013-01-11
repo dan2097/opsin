@@ -991,7 +991,7 @@ class FragmentTools {
 	 * @param element
 	 * @return 
 	 */
-	private static List<Atom> findTerminalAtoms(List<Atom> atoms, String element) {
+	static List<Atom> findTerminalAtoms(List<Atom> atoms, String element) {
 		List<Atom> matches =new ArrayList<Atom>();
 		for (Atom atom : atoms) {
 			if (atom.getElement().equals(element) && atom.getIncomingValency()==1){

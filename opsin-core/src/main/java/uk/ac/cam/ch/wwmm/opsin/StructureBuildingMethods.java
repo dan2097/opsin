@@ -386,7 +386,7 @@ class StructureBuildingMethods {
 		ArrayList<Element> heteroatoms = new ArrayList<Element>();
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
 		ArrayList<Element> dehydroElements = new ArrayList<Element>();
-		ArrayList<Element> substractivePrefixElements = new ArrayList<Element>();
+		ArrayList<Element> subtractivePrefixElements = new ArrayList<Element>();
 
 		Elements children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
@@ -399,7 +399,7 @@ class StructureBuildingMethods {
 				heteroatoms.add(currentEl);
 			}
 			else if (elName.equals(SUBTRACTIVEPREFIX_EL)){
-				substractivePrefixElements.add(currentEl);
+				subtractivePrefixElements.add(currentEl);
 			}
 			else if (elName.equals(HYDRO_EL)){
 				if (!currentEl.getValue().equals("dehydro")){
@@ -420,13 +420,22 @@ class StructureBuildingMethods {
 		 * Add locanted functionality
 		 */
 		
-		for(int i=substractivePrefixElements.size() -1;i >= 0;i--) {
-			Element substractivePrefix = substractivePrefixElements.get(i);
-			//locant can be null but locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
-			String locant = substractivePrefix.getAttributeValue(LOCANT_ATR);
-			String element = substractivePrefix.getAttributeValue(VALUE_ATR);
-			FragmentTools.removeTerminalAtom(state, thisFrag, element, locant);
-			substractivePrefix.detach();
+		for(int i = subtractivePrefixElements.size() -1; i >= 0; i--) {
+			Element subtractivePrefix = subtractivePrefixElements.get(i);
+			String type = subtractivePrefix.getAttributeValue(TYPE_ATR);
+			if (type.equals(DEOXY_TYPE_VAL)){
+				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
+				String element = subtractivePrefix.getAttributeValue(VALUE_ATR);
+				//locant can be null but locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
+				FragmentTools.removeTerminalAtom(state, thisFrag, element, locant);
+			}
+			else if (type.equals(ANHYDRO_TYPE_VAL)){
+				applyAnhydroPrefix(state, thisFrag, subtractivePrefix);
+			}
+			else{
+				throw new StructureBuildingException("OPSIN bug: Unexpected subtractive prefix type: " + type);
+			}
+			subtractivePrefix.detach();
 		}
 		
 		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
@@ -510,6 +519,24 @@ class StructureBuildingMethods {
 				heteroatomEl.detach();
 			}
 		}
+	}
+
+	private static void applyAnhydroPrefix(BuildState state, Fragment frag, Element subtractivePrefix) throws StructureBuildingException {
+		String element = subtractivePrefix.getAttributeValue(VALUE_ATR);
+		String[] locants = MATCH_COMMA.split(subtractivePrefix.getAttributeValue(LOCANT_ATR));
+		Atom backBoneAtom1 = frag.getAtomByLocantOrThrow(locants[0]);
+		Atom backBoneAtom2 = frag.getAtomByLocantOrThrow(locants[1]);
+		List<Atom> applicableTerminalAtoms = FragmentTools.findTerminalAtoms(backBoneAtom1.getAtomNeighbours(), element);
+		if (applicableTerminalAtoms.isEmpty()){
+			throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
+		}
+		FragmentTools.removeTerminalAtom(state, applicableTerminalAtoms.get(0));
+		
+		applicableTerminalAtoms = FragmentTools.findTerminalAtoms(backBoneAtom2.getAtomNeighbours(), element);
+		if (applicableTerminalAtoms.isEmpty()){
+			throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
+		}
+		state.fragManager.createBond(backBoneAtom1, applicableTerminalAtoms.get(0), 1);
 	}
 
 	/**
