@@ -768,14 +768,14 @@ class ComponentProcessor {
 		Elements subtractivePrefixes = substituent.getChildElements(SUBTRACTIVEPREFIX_EL);
 		if (subtractivePrefixes.size() > 0){
 			if (subtractivePrefixes.size()!=1){
-				throw new RuntimeException("Unexpected number of suffixPrefixes found in substituent");
+				throw new RuntimeException("Unexpected number of subtractive prefixes found in substituent");
 			}
-			
+			Element substractivePrefix = subtractivePrefixes.get(0);
 			Element biochemicalGroup =null;//preferred
 			Element standardGroup =null;
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(substituent);
 			if (nextSubOrRootOrBracket == null){
-				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefixes.get(0).getValue() +" to apply to!");
+				throw new ComponentGenerationException("Unable to find group for: " + substractivePrefix.getValue() +" to apply to!");
 			}
 			//first check adjacent substituent/root. If this is a biochemical group treat as a non detachable prefix
 			Element potentialBiochemicalGroup =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
@@ -802,8 +802,21 @@ class ComponentProcessor {
 			}
 			Element targetGroup = biochemicalGroup!=null ? biochemicalGroup : standardGroup;
 			if (targetGroup == null){
-				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefixes.get(0).getValue() +" to apply to!");
+				throw new ComponentGenerationException("Unable to find group for: " + substractivePrefix.getValue() +" to apply to!");
 			}
+			if (substractivePrefix.getAttributeValue(TYPE_ATR).equals(ANHYDRO_TYPE_VAL)){
+				Element locant = (Element) XOMTools.getPreviousSibling(substractivePrefix);
+				if (locant == null || !locant.getLocalName().equals(LOCANT_EL)){
+					throw new ComponentGenerationException("Two locants are required before an anhydro prefix");
+				}
+				String locantStr = locant.getValue();
+				if (MATCH_COMMA.split(locantStr).length != 2){
+					throw new ComponentGenerationException("Two locants are required before an anhydro prefix, but found: "+ locantStr);
+				}
+				substractivePrefix.addAttribute(new Attribute(LOCANT_ATR, locantStr));
+				locant.detach();
+			}
+			
 			//move the children of the subtractivePrefix substituent
 			Elements children =substituent.getChildElements();
 			for (int i = children.size()-1; i >=0 ; i--) {
