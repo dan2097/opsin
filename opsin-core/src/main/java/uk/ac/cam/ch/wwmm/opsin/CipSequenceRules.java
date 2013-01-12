@@ -27,7 +27,7 @@ class CipSequenceRules {
 	 * Returns the chiral atom's neighbours in CIP order from lowest priority to highest priority
 	 * @return
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrder() {
+	List<Atom> getNeighbouringAtomsInCIPOrder() throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
 		return neighbours;
@@ -38,10 +38,10 @@ class CipSequenceRules {
 	 * @param neighbourToIgnore
 	 * @return
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) {
+	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		if (!neighbours.remove(neighbourToIgnore)){
-			throw new RuntimeException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
+			throw new IllegalArgumentException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
 		}
 		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
 		return neighbours;
@@ -137,7 +137,7 @@ class CipSequenceRules {
 		    		}
 		    	}
 			}
-	    	throw new RuntimeException("Failed to assign CIP stereochemistry, this indicates a bug in OPSIN or a limitation in OPSIN's implementation of the sequence rules");
+	    	throw new CipOrderingException("Failed to assign CIP stereochemistry, this indicates a bug in OPSIN or a limitation in OPSIN's implementation of the sequence rules");
 	    }
 
 		/**
