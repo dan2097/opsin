@@ -730,7 +730,7 @@ class ComponentProcessor {
 				Element nextSubOrRootOrBracketFromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
 				while (!nextSubOrRootOrBracketFromLast.equals(hydroSubstituent)){
 					potentialRing = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
-					if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
+					if (potentialRing!=null && (containsCyclicAtoms(potentialRing) || (potentialRing.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL) && hydroValue.equals("dehydro")))){
 						targetRing =potentialRing;
 						break;
 					}
