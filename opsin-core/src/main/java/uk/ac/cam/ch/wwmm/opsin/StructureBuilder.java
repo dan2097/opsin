@@ -1297,7 +1297,7 @@ class StructureBuilder {
 		Atom neighbouringCarbon = carbonylOxygen.get(0).getAtomNeighbours().get(0);
 		state.fragManager.removeAtomAndAssociatedBonds(carbonylOxygen.get(0));
 		carbonylOxygen.remove(0);
-		Fragment acetalFrag = state.fragManager.buildSMILES(StringTools.stringListToString(elements, "."));
+		Fragment acetalFrag = state.fragManager.buildSMILES(StringTools.stringListToString(elements, "."),"",NONE_LABELS_VAL);
 		FragmentTools.assignElementLocants(acetalFrag, new ArrayList<Fragment>());
 		List<Atom> acetalAtomList = acetalFrag.getAtomList();
 		Atom atom1 = acetalAtomList.get(0);
@@ -1449,10 +1449,10 @@ class StructureBuilder {
 			/*
 			 * We assume the polymer repeats so as an approximation we create an R group with the same element as the group at the other end of polymer (with valency equal to the bondorder of the Rgroup so no H added)
 			 */
-			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement() + "|" + polymerBr.getOutAtom(0).getValency() + "]");
+			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement() + "|" + polymerBr.getOutAtom(0).getValency() + "]", "", "alpha");
 			state.fragManager.createBond(inAtom, rGroup1.getFirstAtom(), polymerBr.getOutAtom(0).getValency());
 
-			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement() + "|" + polymerBr.getOutAtom(1).getValency() + "]");
+			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement() + "|" + polymerBr.getOutAtom(1).getValency() + "]", "", "omega");
 			state.fragManager.createBond(outAtom, rGroup2.getFirstAtom(), polymerBr.getOutAtom(1).getValency());
 			rGroups.add(rGroup1);
 			rGroups.add(rGroup2);
@@ -2035,7 +2035,7 @@ class StructureBuilder {
 		for (int i = outAtomCount -1; i >=0; i--) {
 			OutAtom outAtom = uniFrag.getOutAtom(i);
 			uniFrag.removeOutAtom(i);
-			Fragment rGroup =state.fragManager.buildSMILES("[R|" + outAtom.getValency() + "]");
+			Fragment rGroup =state.fragManager.buildSMILES("[R|" + outAtom.getValency() + "]", "", NONE_LABELS_VAL);
 			state.fragManager.createBond(outAtom.getAtom(), rGroup.getFirstAtom(), outAtom.getValency());
 			state.fragManager.incorporateFragment(rGroup, uniFrag);
 			rGroups.add(rGroup);
