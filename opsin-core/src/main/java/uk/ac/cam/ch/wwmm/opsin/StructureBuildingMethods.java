@@ -449,31 +449,47 @@ class StructureBuildingMethods {
 				else{
 					throw new StructureBuildingException("hydrogen addition at locant: " + locant +" was requested, but this atom is not unsaturated");
 				}
-				hydrogenElements.remove(hydrogen);
+				hydrogenElements.remove(i);
 				hydrogen.detach();
 			}
 		}
 		
-		List<Atom> atomsToFormTripleBondsBetween =new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
-		for(int i=dehydroElements.size() -1;i >= 0;i--) {
-			Element dehydro = dehydroElements.get(i);
-			String locant = dehydro.getAttributeValue(LOCANT_ATR);
-			if(locant!=null) {
-				Atom a =thisFrag.getAtomByLocantOrThrow(locant);
-				if (!a.hasSpareValency()){
-					a.setSpareValency(true);
+		if (dehydroElements.size() > 0){
+			List<Atom> atomsToFormDoubleBonds = new ArrayList<Atom>();
+			List<Atom> atomsToFormTripleBondsBetween =new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
+			for(int i=dehydroElements.size() -1;i >= 0;i--) {
+				Element dehydro = dehydroElements.get(i);
+				String locant = dehydro.getAttributeValue(LOCANT_ATR);
+				if(locant!=null) {
+					Atom a =thisFrag.getAtomByLocantOrThrow(locant);
+					if (!a.hasSpareValency()){
+						a.setSpareValency(true);
+						atomsToFormDoubleBonds.add(a);
+					}
+					else{
+						atomsToFormTripleBondsBetween.add(a);
+					}
+					dehydroElements.remove(i);
+					dehydro.detach();
 				}
 				else{
-					atomsToFormTripleBondsBetween.add(a);
+					throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
 				}
-				hydrogenElements.remove(dehydro);
-				dehydro.detach();
 			}
-			else{
-				throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
+			for (Atom atom : atomsToFormDoubleBonds) {//check that all the dehydro-ed atoms are next to another atom with spare valency
+				boolean hasSpareValency =false;
+				for (Atom neighbour : atom.getAtomNeighbours()) {
+					if (neighbour.hasSpareValency()){
+						hasSpareValency = true;
+						break;
+					}
+				}
+				if (!hasSpareValency){
+					throw new StructureBuildingException("Unexpected use of dehydro; two adjacent atoms were not unsaturated such as to form a double bond");
+				}
 			}
+			addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
 		}
-		addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
 
 		for(int i=unsaturators.size() -1;i >= 0;i--) {
 			Element unsaturator = unsaturators.get(i);
