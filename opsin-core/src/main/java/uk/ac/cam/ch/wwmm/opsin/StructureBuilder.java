@@ -1614,9 +1614,23 @@ class StructureBuilder {
 					atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
 				}
 				else if (neighbours.size()==2 && positionOfDeoxyHydrogen!=null && positionOfImplicitHydrogen!=null){
-					//TODO get CIP priority of neighbours. Refactor stereoanalyzer into two classes so that get CIP priority is decoupled from symmetry analysis
-					atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
-					atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
+					try{
+						List<Atom> cipOrderedAtoms = new CipSequenceRules(atom).getNeighbouringAtomsInCIPOrder();
+						//higher priority group replaces the former hydroxy groups (deoxyHydrogen)
+						if (cipOrderedAtoms.indexOf(neighbours.get(0)) > cipOrderedAtoms.indexOf(neighbours.get(1))){
+							atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
+							atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
+						}
+						else{
+							atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(1);
+							atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
+						}
+					}
+					catch (CipOrderingException e){
+						//assume ligands equivalent so it makes no difference which is which
+						atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
+						atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
+					}
 				}
 				else{
 					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
