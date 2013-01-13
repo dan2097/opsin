@@ -2271,29 +2271,47 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (groupValue.equals("keto") && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			//check for case where this is specifying the open chain form of a ketose
-			//Carbohydrates are treated as being in the open chain form by default so ignore the term if this the case
+		else if ((groupValue.equals("keto") || groupValue.equals("aldehydo")) && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			//check for case where this is specifying the open chain form of a ketose/aldose
 			Element previousEl = (Element) XOMTools.getPreviousSibling(group);
-			if (previousEl ==null || !previousEl.getLocalName().equals(LOCANT_EL)){
+			if (previousEl ==null || !previousEl.getLocalName().equals(LOCANT_EL) || groupValue.equals("aldehydo")){
 				Element parentSubstituent = (Element) group.getParent();
 				Element nextSubOrRoot = (Element) XOMTools.getNextSibling(parentSubstituent);
-				while (nextSubOrRoot != null){
-					Element possibleCarbohydrate = nextSubOrRoot.getFirstChildElement(GROUP_EL);
+				Element parentOfCarbohydate = nextSubOrRoot;
+				Element carbohydrate = null;
+				while (parentOfCarbohydate != null){
+					Element possibleCarbohydrate = parentOfCarbohydate.getFirstChildElement(GROUP_EL);
 					if (possibleCarbohydrate !=null && possibleCarbohydrate.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
-						group.detach();
-						Elements childrenToMove = parentSubstituent.getChildElements();
-						for (int i = childrenToMove.size() -1 ; i >=0; i--) {
-							Element el = childrenToMove.get(i);
-							if (!el.getLocalName().equals(HYPHEN_EL)){
-								el.detach();
-								nextSubOrRoot.insertChild(el, 0);
-							}
-						}
-						parentSubstituent.detach();
+						carbohydrate = possibleCarbohydrate;
 						break;
 					}
-					nextSubOrRoot = (Element) XOMTools.getNextSibling(nextSubOrRoot);
+					parentOfCarbohydate = (Element) XOMTools.getNextSibling(parentOfCarbohydate);
+				}
+				if (carbohydrate != null) {
+					if (XOMTools.getChildElementsWithTagName(parentOfCarbohydate, CARBOHYDRATERINGSIZE_EL).size() > 0){
+						throw new ComponentGenerationException("Carbohydrate has a specified ring size but " + groupValue + " indicates the open chain form!");
+					}
+					group.detach();
+					Elements childrenToMove = parentSubstituent.getChildElements();
+					for (int i = childrenToMove.size() -1 ; i >=0; i--) {
+						Element el = childrenToMove.get(i);
+						if (!el.getLocalName().equals(HYPHEN_EL)){
+							el.detach();
+							nextSubOrRoot.insertChild(el, 0);
+						}
+					}
+					parentSubstituent.detach();
+					String carbohydrateAdditionValue = carbohydrate.getAttributeValue(ADDITIONALVALUE_ATR);
+					//OPSIN assumes a few trival names are more likely to describe the cyclic form. additonalValue contains the SMILES for the acyclic form
+					if (carbohydrateAdditionValue != null){
+						if (carbohydrateAdditionValue.equals("n/a")){
+							throw new ComponentGenerationException(carbohydrate.getValue() + " can only describe the cyclic form  but " + groupValue + " indicates the open chain form!");
+						}
+						carbohydrate.getAttribute(VALUE_ATR).setValue(carbohydrateAdditionValue);
+					}
+				}
+				else if (groupValue.equals("aldehydo")){
+					throw new ComponentGenerationException("aldehydo is only a valid prefix when it precedes a carbohydrate!");
 				}
 			}
 		}
