@@ -95,7 +95,7 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 	</tokenList>
 
 <!--These are all D sugars and would have all groups pointing to the right on a fischer projection. They are used in combination with the above carbohydrateConfigurationalPrefixes -->
-	<tokenList tagname="group" type="carbohydrate" subType="systematicCarbohydrate" symbol="ä">
+	<tokenList tagname="group" type="carbohydrate" subType="systematicCarbohydrateStemAldose" symbol="ä">
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES" suffixAppliesTo="2">tri</token>
 		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES" suffixAppliesTo="2">tetr</token>
 		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="2">pent</token>

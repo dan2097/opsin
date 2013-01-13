@@ -531,6 +531,14 @@ class Fragment {
 	void setType(String type) {
 		this.type = type;
 	}
+	
+	/**
+	 * Sets the subType of the fragment
+	 * @param subType
+	 */
+	void setSubType(String subType) {
+		this.subType = subType;
+	}
 
 	Atom getDefaultInAtom() {
 		return defaultInAtom;
