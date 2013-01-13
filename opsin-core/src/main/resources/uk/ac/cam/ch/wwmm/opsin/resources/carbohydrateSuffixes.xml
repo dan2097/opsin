@@ -27,6 +27,8 @@
 
 <!--used with acyclic carbohydrates-->
   <tokenList tagname="suffix" type="root" symbol="í">
+    <token value="arate">arate</token>
+    <token value="arate">arate(2-)</token>
     <token value="aric acid">aric acid</token>
     <token value="itol">itol</token>
     <token value="onamide" locant="1">onamide</token>
