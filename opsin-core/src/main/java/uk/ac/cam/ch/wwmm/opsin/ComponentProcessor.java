@@ -1251,7 +1251,7 @@ class ComponentProcessor {
 				if (elName.equals(SUFFIX_EL)){
 					Element suffix = nextSibling;
 					String value = suffix.getAttributeValue(VALUE_ATR);
-					if (value.equals("dialdose") || value.equals("aric acid")){
+					if (value.equals("dialdose") || value.equals("aric acid") || value.equals("arate")){
 						if (!isAldose){
 							throw new StructureBuildingException(value + " may only be used with aldoses");
 						}
@@ -1478,12 +1478,28 @@ class ComponentProcessor {
 		Atom aldehydeAtom = frag.getAtomList().get(Integer.parseInt(aldehydePosRelativeId) -1);
 		Atom alcoholAtom = frag.getAtomByLocantOrThrow(String.valueOf(frag.getChainLength()));
 		
-		if (suffixValue.equals("aric acid")){
+		if (suffixValue.equals("aric acid") || suffixValue.equals("arate")){
+			removeTerminalOxygen(alcoholAtom, 1);
 			Fragment f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
-			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, aldehydeAtom, 1);
-			f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
 			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 2);
+			
+			f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			Atom hydroxyAtom = f.getFirstAtom();
+			if (suffixValue.equals("arate")){
+				hydroxyAtom.addChargeAndProtons(-1, -1);
+			}
+			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 1);
+			frag.addFunctionalAtom(hydroxyAtom);
+			
+			f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			hydroxyAtom = f.getFirstAtom();
+			if (suffixValue.equals("arate")){
+				hydroxyAtom.addChargeAndProtons(-1, -1);
+			}
+			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, aldehydeAtom, 1);
+			frag.addFunctionalAtom(hydroxyAtom);
 		}
+
 		else if (suffixValue.equals("dialdose")){
 			removeTerminalOxygen(alcoholAtom, 1);
 			Fragment f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
