@@ -1242,7 +1242,8 @@ class ComponentProcessor {
 		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATE_TYPE_VAL);
 		for (Element group : carbohydrates) {
 			boolean cyclisationPerformed = false;
-			boolean isAldose = !CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR));
+			String subtype = group.getAttributeValue(SUBTYPE_ATR);
+			boolean isAldose = CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype) || SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype);
 			Element nextSibling = (Element) XOMTools.getNextSibling(group);
 			while (nextSibling !=null){
 				Element nextNextSibling = (Element) XOMTools.getNextSibling(nextSibling);
@@ -1268,6 +1269,10 @@ class ComponentProcessor {
 					else if (!cyclisationPerformed && (value.equals("ulose") || value.equals("osulose"))){
 						if (value.equals("ulose")){
 							isAldose = false;
+							if (SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype)){
+								group.getAttribute(SUBTYPE_ATR).setValue(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
+								state.xmlFragmentMap.get(group).setSubType(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
+							}
 						}
 						processUloseSuffix(group, suffix);
 						suffix.detach();
@@ -1452,7 +1457,8 @@ class ComponentProcessor {
 				throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +carbohydrateGroup.getValue());
 			}
 			applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
-			if (SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
+			if (SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR)) ||
+					SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
 				//systematic chains only have their stereochemistry defined after structure building to account for the fact that some stereocentres may be removed
 				//hence inspect the stereoprefix to see if it is L and flip if so
 				String val = stereoPrefixAfterAlphaBeta.getAttributeValue(VALUE_ATR);

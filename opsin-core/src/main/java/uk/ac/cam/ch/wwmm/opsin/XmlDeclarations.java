@@ -396,7 +396,9 @@ class XmlDeclarations {
 	/**Nucleotides/nucleosides/natural products*/
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
 	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hexose */
-	static final String SYSTEMATICCARBOHYDRATE_SUBTYPE_VAL ="systematicCarbohydrate";
+	static final String SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="systematicCarbohydrateStemAldose";
+	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hex-2-ulose */
+	static final String SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL ="systematicCarbohydrateStemKetose";
 	
 	/**A trivial carbohydrate stem */
 	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";
