@@ -116,29 +116,28 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<!--trivial-->
 		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
 		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
-		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/"  valType="SMILES">glucal</token>
+		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a" valType="SMILES">glucal</token>
 		<token value="OC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbitol</token>
 		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">rhamnulose</token><!--nomenclature wise this is more similar to sorbose than rhamnose!-->
 		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">fuculose</token>
 
-		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" valType="SMILES">galactosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucosamine</token>
-		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" valType="SMILES">mannosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" valType="SMILES">fucosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" valType="SMILES">quinovosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" valType="SMILES">bacillosamine</token>
-		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" valType="SMILES" naturalEntIsOpposite="yes">garosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" valType="SMILES">galactosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">glucosamine</token>
+		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">mannosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C" valType="SMILES">fucosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C" valType="SMILES">quinovosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](N)[C@H](O)C" valType="SMILES">bacillosamine</token>
+		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" additionalValue="O=C[C@H](O)[C@@H](NC)[C@@](C)(O)CO" valType="SMILES" naturalEntIsOpposite="yes">garosamine</token>
 
-		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">neuraminic acid</token>
-		<token value="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">keto-neuraminic acid</token>
-		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">alpha-neuraminic acid</token>
-		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" valType="SMILES" functionalIDs="1">beta-neuraminic acid</token>
-		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">muramic acid</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">alpha-muramic acid</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">beta-muramic acid</token>
-		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">isomuramic acid</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">alpha-isomuramic acid</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" valType="SMILES" functionalIDs="10">beta-isomuramic acid</token>
+		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminic acid</token>
+		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminic acid</token>
+		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="10">muramic acid</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">alpha-muramic acid</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">beta-muramic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="10">isomuramic acid</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">alpha-isomuramic acid</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">beta-isomuramic acid</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
@@ -149,19 +148,24 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
 
 <!--used by CAS to describe cyclic apiose-->
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-alpha-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-beta-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-alpha-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">d-apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" valType="SMILES">l-apio-beta-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-alpha-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-beta-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-alpha-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-beta-l-furanose</token>
 
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
+	</tokenList>
+
+<!--dummy substituent for aldehydo prefix. This triggers the swapping of additionalValue with value on some trivial carbohydrate names but otherwise is ignored as carbohydrates are by default in the acyclic form-->
+	<tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
+		<token value="[*]" labels="none" valType="SMILES">aldehydo</token>
 	</tokenList>
 </tokenLists>
