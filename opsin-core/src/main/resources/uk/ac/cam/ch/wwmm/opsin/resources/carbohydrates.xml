@@ -116,6 +116,8 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<!--trivial-->
 		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
 		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
+		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/"  valType="SMILES">glucal</token>
+		<token value="OC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbitol</token>
 		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">rhamnulose</token><!--nomenclature wise this is more similar to sorbose than rhamnose!-->
 		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">fuculose</token>
 
