@@ -952,17 +952,17 @@ class FragmentTools {
 	 * @param locant A locant or null
 	 * @throws StructureBuildingException 
 	 */
-	static void removeTerminalAtom(BuildState state, Fragment fragment, String element, String locant) throws StructureBuildingException {
+	static void removeHydroxyLikeTerminalAtom(BuildState state, Fragment fragment, String element, String locant) throws StructureBuildingException {
 		List<Atom> applicableTerminalAtoms;
 		if (locant!=null){
 			Atom adjacentAtom = fragment.getAtomByLocantOrThrow(locant);
-			applicableTerminalAtoms = findTerminalAtoms(adjacentAtom.getAtomNeighbours(), element);
+			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(adjacentAtom.getAtomNeighbours(), element);
 			if (applicableTerminalAtoms.isEmpty()){
 				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " at locant "+ locant +" for substractive nomenclature");
 			}
 		}
 		else{
-			applicableTerminalAtoms = findTerminalAtoms(fragment.getAtomList(), element);
+			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(fragment.getAtomList(), element);
 			if (applicableTerminalAtoms.isEmpty()){
 				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for substractive nomenclature");
 			}
@@ -987,20 +987,21 @@ class FragmentTools {
 
 	/**
 	 * Finds terminal atoms of the given element type from the list given
+	 * The terminal atoms be single bonded, not radicals and uncharged
 	 * @param atoms
 	 * @param element
 	 * @return 
 	 */
-	static List<Atom> findTerminalAtoms(List<Atom> atoms, String element) {
+	static List<Atom> findHydroxyLikeTerminalAtoms(List<Atom> atoms, String element) {
 		List<Atom> matches =new ArrayList<Atom>();
 		for (Atom atom : atoms) {
-			if (atom.getElement().equals(element) && atom.getIncomingValency()==1){
+			if (atom.getElement().equals(element) && atom.getIncomingValency()==1 &&
+				atom.getOutValency() == 0 && atom.getCharge() == 0){
 				matches.add(atom);
 			}
 		}
 		return matches;
 	}
-	
 
 	/**
 	 * Checks whether a bond is part of a 6 member or smaller ring.

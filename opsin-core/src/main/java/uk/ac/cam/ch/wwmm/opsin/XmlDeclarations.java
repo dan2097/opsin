@@ -324,6 +324,9 @@ class XmlDeclarations {
 	/**This group is a sulfur/selenium/tellurium acid with the acidic hydroxy missing*/
 	static final String CHALCOGENACIDSTEM_TYPE_VAL ="chalcogenAcidStem";
 	
+	/**A substractive prefix that removes a hydrogen to covert a hydroxy into a carbonyl or convert a bond to a double/triple bond*/
+	static final String DEHYDRO_TYPE_VAL ="dehydro";
+	
 	/**A substractive prefix that removes a terminal hydroxy like atom*/
 	static final String DEOXY_TYPE_VAL ="deoxy";
 	

@@ -16,7 +16,6 @@
   </tokenList>
 
   <tokenList tagname="hydro" symbol="y">
-    <token value="dehydro">dehydro</token>
     <token value="hydro">hydro</token>
   </tokenList>
   <tokenList tagname="hydro" symbol="Á">
@@ -80,10 +79,22 @@
     <token value="O">desoxy</token><!--older variant spelling-->
   </tokenList>
 
+  <tokenList tagname="subtractivePrefix" type="dehydro" symbol="Ý">
+    <token value="dehydro">dehydro</token>
+  </tokenList>
+
+  <tokenList tagname="subtractivePrefix" type="anhydro" symbol="Ý">
+    <token value="O">anhydro</token>
+  </tokenList>
+
 <!--As a detachable prefix (which could itself have non-detachable prefixes in the case where it is being treated as a non-detachable prefix)-->
   <tokenList tagname="subtractivePrefix" type="deoxy" symbol="x">
     <token value="O">deoxy</token>
     <token value="O">desoxy</token><!--older variant spelling-->
+  </tokenList>
+
+  <tokenList tagname="subtractivePrefix" type="dehydro" symbol="x">
+    <token value="dehydro">dehydro</token>
   </tokenList>
 
   <tokenList tagname="subtractivePrefix" type="anhydro" symbol="x">

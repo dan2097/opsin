@@ -385,7 +385,6 @@ class StructureBuildingMethods {
 		ArrayList<Element> unsaturators = new ArrayList<Element>();
 		ArrayList<Element> heteroatoms = new ArrayList<Element>();
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
-		ArrayList<Element> dehydroElements = new ArrayList<Element>();
 		ArrayList<Element> subtractivePrefixElements = new ArrayList<Element>();
 
 		Elements children =subOrRoot.getChildElements();
@@ -402,12 +401,7 @@ class StructureBuildingMethods {
 				subtractivePrefixElements.add(currentEl);
 			}
 			else if (elName.equals(HYDRO_EL)){
-				if (!currentEl.getValue().equals("dehydro")){
-					hydrogenElements.add(currentEl);
-				}
-				else{
-					dehydroElements.add(currentEl);
-				}
+				hydrogenElements.add(currentEl);
 			}
 			else if (elName.equals(INDICATEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
@@ -419,7 +413,9 @@ class StructureBuildingMethods {
 		/*
 		 * Add locanted functionality
 		 */
-		
+
+		List<Atom> atomsToDehydro = new ArrayList<Atom>();
+
 		for(int i = subtractivePrefixElements.size() -1; i >= 0; i--) {
 			Element subtractivePrefix = subtractivePrefixElements.get(i);
 			String type = subtractivePrefix.getAttributeValue(TYPE_ATR);
@@ -427,15 +423,73 @@ class StructureBuildingMethods {
 				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
 				String element = subtractivePrefix.getAttributeValue(VALUE_ATR);
 				//locant can be null but locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
-				FragmentTools.removeTerminalAtom(state, thisFrag, element, locant);
+				FragmentTools.removeHydroxyLikeTerminalAtom(state, thisFrag, element, locant);
 			}
 			else if (type.equals(ANHYDRO_TYPE_VAL)){
 				applyAnhydroPrefix(state, thisFrag, subtractivePrefix);
+			}
+			else if (type.equals(DEHYDRO_TYPE_VAL)){
+				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
+				if(locant!=null) {
+					atomsToDehydro.add(thisFrag.getAtomByLocantOrThrow(locant));
+				}
+				else{
+					throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
+				}
 			}
 			else{
 				throw new StructureBuildingException("OPSIN bug: Unexpected subtractive prefix type: " + type);
 			}
 			subtractivePrefix.detach();
+		}
+		
+		if (atomsToDehydro.size() > 0){
+			boolean isCarbohydrateDehydro = false;
+			if (group.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
+				Set<Atom> uniquifiedDehydroAtoms = new HashSet<Atom>(atomsToDehydro);
+				if (uniquifiedDehydroAtoms.size()==atomsToDehydro.size()){//need to rule out case where dehydro is being used to form triple bonds on carbohydrates
+					isCarbohydrateDehydro = true;
+				}
+			}
+			if (isCarbohydrateDehydro){
+				for (Atom a : atomsToDehydro) {
+					List<Atom> hydroxyAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(a.getAtomNeighbours(), "O");
+					if (hydroxyAtoms.size() > 0){
+						hydroxyAtoms.get(0).getFirstBond().setOrder(2);
+					}
+					else{
+						throw new StructureBuildingException("atom with locant " + a.getFirstLocant() + " did not have a hydroxy group to convert to a ketose");
+					}
+				}
+			}
+			else{
+				List<Atom> atomsToFormDoubleBonds = new ArrayList<Atom>();
+				List<Atom> atomsToFormTripleBondsBetween = new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
+				
+				for (Atom a : atomsToDehydro) {
+					if (!a.hasSpareValency()){
+						a.setSpareValency(true);
+						atomsToFormDoubleBonds.add(a);
+					}
+					else{
+						atomsToFormTripleBondsBetween.add(a);
+					}
+				}
+				
+				for (Atom atom : atomsToFormDoubleBonds) {//check that all the dehydro-ed atoms are next to another atom with spare valency
+					boolean hasSpareValency =false;
+					for (Atom neighbour : atom.getAtomNeighbours()) {
+						if (neighbour.hasSpareValency()){
+							hasSpareValency = true;
+							break;
+						}
+					}
+					if (!hasSpareValency){
+						throw new StructureBuildingException("Unexpected use of dehydro; two adjacent atoms were not unsaturated such as to form a double bond");
+					}
+				}
+				addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
+			}
 		}
 		
 		for(int i=hydrogenElements.size() -1;i >= 0;i--) {
@@ -452,43 +506,6 @@ class StructureBuildingMethods {
 				hydrogenElements.remove(i);
 				hydrogen.detach();
 			}
-		}
-		
-		if (dehydroElements.size() > 0){
-			List<Atom> atomsToFormDoubleBonds = new ArrayList<Atom>();
-			List<Atom> atomsToFormTripleBondsBetween =new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
-			for(int i=dehydroElements.size() -1;i >= 0;i--) {
-				Element dehydro = dehydroElements.get(i);
-				String locant = dehydro.getAttributeValue(LOCANT_ATR);
-				if(locant!=null) {
-					Atom a =thisFrag.getAtomByLocantOrThrow(locant);
-					if (!a.hasSpareValency()){
-						a.setSpareValency(true);
-						atomsToFormDoubleBonds.add(a);
-					}
-					else{
-						atomsToFormTripleBondsBetween.add(a);
-					}
-					dehydroElements.remove(i);
-					dehydro.detach();
-				}
-				else{
-					throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
-				}
-			}
-			for (Atom atom : atomsToFormDoubleBonds) {//check that all the dehydro-ed atoms are next to another atom with spare valency
-				boolean hasSpareValency =false;
-				for (Atom neighbour : atom.getAtomNeighbours()) {
-					if (neighbour.hasSpareValency()){
-						hasSpareValency = true;
-						break;
-					}
-				}
-				if (!hasSpareValency){
-					throw new StructureBuildingException("Unexpected use of dehydro; two adjacent atoms were not unsaturated such as to form a double bond");
-				}
-			}
-			addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
 		}
 
 		for(int i=unsaturators.size() -1;i >= 0;i--) {
@@ -542,13 +559,13 @@ class StructureBuildingMethods {
 		String[] locants = MATCH_COMMA.split(subtractivePrefix.getAttributeValue(LOCANT_ATR));
 		Atom backBoneAtom1 = frag.getAtomByLocantOrThrow(locants[0]);
 		Atom backBoneAtom2 = frag.getAtomByLocantOrThrow(locants[1]);
-		List<Atom> applicableTerminalAtoms = FragmentTools.findTerminalAtoms(backBoneAtom1.getAtomNeighbours(), element);
+		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom1.getAtomNeighbours(), element);
 		if (applicableTerminalAtoms.isEmpty()){
 			throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
 		}
 		FragmentTools.removeTerminalAtom(state, applicableTerminalAtoms.get(0));
 		
-		applicableTerminalAtoms = FragmentTools.findTerminalAtoms(backBoneAtom2.getAtomNeighbours(), element);
+		applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom2.getAtomNeighbours(), element);
 		if (applicableTerminalAtoms.isEmpty()){
 			throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
 		}
@@ -616,9 +633,7 @@ class StructureBuildingMethods {
 				heteroatoms.add(currentEl);
 			}
 			else if (elName.equals(HYDRO_EL)){
-				if (!currentEl.getValue().equals("dehydro")){
-					hydrogenElements.add(currentEl);
-				}
+				hydrogenElements.add(currentEl);
 			}
 			else if (elName.equals(INDICATEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);

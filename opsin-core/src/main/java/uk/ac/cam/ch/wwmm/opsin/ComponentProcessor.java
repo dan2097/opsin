@@ -120,7 +120,7 @@ class ComponentProcessor {
 			
 			for (int j = substituents.size() -1; j >=0; j--) {
 				Element substituent = substituents.get(j);
-				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(substituent);//this REMOVES a substituent just containing hydro/dehydro/perhydro elements and moves these elements in front of an appropriate ring
+				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(substituent);//this REMOVES a substituent just containing hydro/perhydro elements and moves these elements in front of an appropriate ring
 				if (!removed){
 					removed = removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
 				}
@@ -648,7 +648,7 @@ class ComponentProcessor {
 	}
 
 	/**
-	 * Removes substituents which are just a hydro/dehydro/perhydro element and moves their contents to be in front of the next in scope ring
+	 * Removes substituents which are just a hydro/perhydro element and moves their contents to be in front of the next in scope ring
 	 * @param substituent
 	 * @return true is the substituent was a hydro substituent and hence was removed
 	 * @throws ComponentGenerationException
@@ -662,13 +662,13 @@ class ComponentProcessor {
 			}
 			Element hydroElement = hydroElements.get(0);
 			String hydroValue = hydroElement.getValue();
-			if (hydroValue.equals("hydro") || hydroValue.equals("dehydro")){
+			if (hydroValue.equals("hydro")){
 				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
 				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
 					throw new ComponentGenerationException("Multiplier expected but not found before hydro subsituent");
 				}
 				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
-					throw new ComponentGenerationException("Hydro/dehydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
+					throw new ComponentGenerationException("Hydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
 				}
 			}
 			Element targetRing =null;
@@ -730,7 +730,7 @@ class ComponentProcessor {
 				Element nextSubOrRootOrBracketFromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
 				while (!nextSubOrRootOrBracketFromLast.equals(hydroSubstituent)){
 					potentialRing = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
-					if (potentialRing!=null && (containsCyclicAtoms(potentialRing) || (potentialRing.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL) && hydroValue.equals("dehydro")))){
+					if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
 						targetRing =potentialRing;
 						break;
 					}
@@ -793,7 +793,7 @@ class ComponentProcessor {
 							biochemicalGroup = groupToConsider;
 							break;
 						}
-						else {
+						else if (standardGroup == null){
 							standardGroup = groupToConsider;
 						}
 					}
