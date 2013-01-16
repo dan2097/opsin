@@ -65,6 +65,8 @@
 
   <tokenList tagname="suffix" type="inline" symbol="»"><!--used for amino acids and carbohydrates-->
     <token value="locantedAminoAcidOrCarbohydrateYl">yl</token>
+    <token value="locantedAminoAcidOrCarbohydrateYlidene">ylidene</token>
+    <token value="locantedAminoAcidOrCarbohydrateYlidene">yliden</token>
   </tokenList>
 
   <tokenList tagname="suffix" type="inline" symbol="×"><!--ylene-->
