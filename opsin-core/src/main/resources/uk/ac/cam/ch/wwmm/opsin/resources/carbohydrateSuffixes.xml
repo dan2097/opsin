@@ -7,7 +7,7 @@
     <token value="glycoside">id</token>
   </tokenList>
 
-<!--used with cyclised carbohydrates-->
+<!--cyclic carbohydrate acid suffixes-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="ë">
     <token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
@@ -25,12 +25,11 @@
     <token value="ose">os</token>
   </tokenList>
 
-<!--used with acyclic carbohydrates-->
+<!--acyclic carbohydrate acid suffixes-->
   <tokenList tagname="suffix" type="root" symbol="í">
     <token value="arate">arate</token>
     <token value="arate">arate(2-)</token>
     <token value="aric acid">aric acid</token>
-    <token value="itol">itol</token>
     <token value="onamide" locant="1">onamide</token>
     <token value="onate" locant="1">onate</token>
     <token value="onic acid" locant="1">onic acid</token>
@@ -45,9 +44,14 @@
     <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
   </tokenList>
 
-<!--Maybe be used as an infix before cyclisation or an acyclic suffix-->
+<!--May be used as an infix before cyclisation or an acyclic suffix-->
   <tokenList tagname="suffix" type="root" symbol="ñ">
     <token value="dialdose">odiald</token>
+  </tokenList>
+
+<!--Removes aldose functionality, hence may not be cyclised-->
+  <tokenList tagname="suffix" type="root" symbol="ò">
+    <token value="itol">itol</token>
   </tokenList>
 
 <!--forms ketoses, typically requires a locant-->
@@ -60,10 +64,14 @@
     <token value="osulose">ul</token>
   </tokenList>
 
-<!--for use with aldoses
-    <token value="onoyl">onoyl</token>
--->
+<!--cyclic carbohydrate glycosyl-->
   <tokenList tagname="suffix" type="inline" symbol="v">
     <token value="yl">yl</token>
+  </tokenList>
+
+<!--acyclic carbohydrate acid inline suffixes-->
+  <tokenList tagname="suffix" type="inline" symbol="ó">
+    <token value="onoyl" locant="1">onoyl</token>
+    <token value="uronoyl">uronoyl</token><!--Locanted implicitly to end of chain-->
   </tokenList>
 </tokenLists>

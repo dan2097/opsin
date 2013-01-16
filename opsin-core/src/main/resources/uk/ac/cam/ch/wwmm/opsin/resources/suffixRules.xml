@@ -147,6 +147,12 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)NO" functionalIDs="4"/>
   </rule>
+  <rule value="hydroxy_to_acyl">
+    <removeTerminalOxygen order="1" />
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*]=O" />
+    <setOutAtom />
+  </rule>
   <rule value="hydroxy_to_amide">
     <removeTerminalOxygen order="1" />
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>

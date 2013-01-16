@@ -279,6 +279,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
   </wordRule>
 
+<!-- ester with osyluronate-->
+  <wordRule name="ester" type="substituent">
+    <word type="substituent" />
+    <word type="substituent" endsWithGroupType="carbohydrate" endsWithRegex="\S(at[e]?)[\]\)\}]*"/>
+  </wordRule>
+
   <wordRule name="cyclicPeptide" type="full">
     <word type="functionalTerm" value="cyclo"/>
     <word type="substituent" endsWithGroupType="aminoAcid"/>

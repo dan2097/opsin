@@ -167,61 +167,67 @@ class StructureBuilder {
 	}
 
 	private void buildEster(BuildState state, List<Element> words) throws StructureBuildingException {
-		int wordIndice = 0;
-		Element currentWord=words.get(wordIndice);
+		boolean inSubstituents = true;
 		BuildResults substituentsBr = new BuildResults();
-		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
-			resolveWordOrBracket(state, currentWord);
-			BuildResults substituentBr = new BuildResults(state, currentWord);
-			int outAtomCount = substituentBr.getOutAtomCount();
-			boolean traditionalEster =false;
-			for (int i = 0; i < outAtomCount; i++) {
-				OutAtom out = substituentBr.getOutAtom(i);
-				if (out.getValency()>1){
-					FragmentTools.splitOutAtomIntoValency1OutAtoms(out);
-					traditionalEster =true;
-				}
-			}
-			if (traditionalEster){//e.g. ethylidene dipropanoate
-				substituentBr = new BuildResults(state, currentWord);
-				outAtomCount = substituentBr.getOutAtomCount();
-			}
-			if (outAtomCount ==1){//TODO add support for locanted terepthaloyl
-				String locantForSubstituent = currentWord.getAttributeValue(LOCANT_ATR);
-				if (locantForSubstituent!=null){
-					substituentBr.getFirstOutAtom().setLocant(locantForSubstituent);//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
-				}
-			}
-			else if (outAtomCount ==0){
-				throw new StructureBuildingException("Substituent was expected to have at least one outAtom");
-			}
-			substituentsBr.mergeBuildResults(substituentBr);
-			currentWord=words.get(++wordIndice);
-		}
-
-		if (wordIndice == words.size() || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
-			throw new StructureBuildingException("Full word not found where full word expected: missing ate group in ester");
-		}
-
 		List<BuildResults> ateGroups = new ArrayList<BuildResults>();
 		Map<BuildResults, String> buildResultsToLocant = new HashMap<BuildResults, String>();//typically locant will be null
-		for (; wordIndice < words.size(); wordIndice++) {
-			Element word =words.get(wordIndice);
-			if (word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
-				String locant = word.getAttributeValue(LOCANT_ATR);//specifying a locant for an ateWord is very unusual as this information is typically redundant c.f. dodecamethylene 1,12-bis(chloroformate)
-				resolveWordOrBracket(state, word);
-				BuildResults ateBR = new BuildResults(state, word);
-				if (ateBR.getFunctionalAtomCount()<1){
-					throw new StructureBuildingException("bug? ate group did not have any functional atoms!");
+		
+		for (Element word : words) {
+			resolveWordOrBracket(state, word);
+			BuildResults br = new BuildResults(state, word);
+			if (inSubstituents && br.getFunctionalAtomCount() > 0){
+				inSubstituents = false;
+			}
+			if (inSubstituents){
+				if (!word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
+					if (!word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+						throw new StructureBuildingException("bug? ate group did not have any functional atoms!");
+					}
+					else{
+						throw new StructureBuildingException("OPSIN bug: Non substituent word found where substituent expected in ester");
+					}
 				}
-				ateGroups.add(ateBR);
-				buildResultsToLocant.put(ateBR, locant);
+				int outAtomCount = br.getOutAtomCount();
+				boolean traditionalEster =false;
+				for (int i = 0; i < outAtomCount; i++) {
+					OutAtom out = br.getOutAtom(i);
+					if (out.getValency()>1){
+						FragmentTools.splitOutAtomIntoValency1OutAtoms(out);
+						traditionalEster =true;
+					}
+				}
+				if (traditionalEster){//e.g. ethylidene dipropanoate
+					br = new BuildResults(state, word);
+					outAtomCount = br.getOutAtomCount();
+				}
+				if (outAtomCount ==1){//TODO add support for locanted terepthaloyl
+					String locantForSubstituent = word.getAttributeValue(LOCANT_ATR);
+					if (locantForSubstituent!=null){
+						br.getFirstOutAtom().setLocant(locantForSubstituent);//indexes which functional atom to connect to when there is a choice. Also can disambiguate which atom is a S in things like thioates
+					}
+				}
+				else if (outAtomCount ==0){
+					throw new StructureBuildingException("Substituent was expected to have at least one outAtom");
+				}
+				substituentsBr.mergeBuildResults(br);
 			}
 			else{
-				throw new StructureBuildingException("Non full word found where only full words were expected");
+				String locant = word.getAttributeValue(LOCANT_ATR);//specifying a locant for an ateWord is very unusual as this information is typically redundant c.f. dodecamethylene 1,12-bis(chloroformate)
+				if (br.getFunctionalAtomCount()<1){
+					throw new StructureBuildingException("bug? ate group did not have any functional atoms!");
+				}
+				ateGroups.add(br);
+				buildResultsToLocant.put(br, locant);
 			}
 		}
+		if (ateGroups.size() ==0){
+			throw new StructureBuildingException("OPSIN bug: Missing ate group in ester");
+		}
+
 		int outAtomCount =substituentsBr.getOutAtomCount();
+		if (outAtomCount ==0){
+			throw new StructureBuildingException("OPSIN bug: Missing outatom on ester substituents");
+		}
 		int esterIdCount = 0;
 		for (BuildResults br : ateGroups) {
 			esterIdCount += br.getFunctionalAtomCount();
