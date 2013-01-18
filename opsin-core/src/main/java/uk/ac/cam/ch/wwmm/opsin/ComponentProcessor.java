@@ -1292,6 +1292,39 @@ class ComponentProcessor {
 				}
 				nextSibling = nextNextSibling;
 			}
+			if (!cyclisationPerformed){
+				applyUnspecifiedRingSizeCyclisationIfPresent(group);
+			}
+		}
+	}
+
+	private void applyUnspecifiedRingSizeCyclisationIfPresent(Element group) throws StructureBuildingException {
+		boolean cyclise = false;
+		Element possibleYl = (Element) XOMTools.getNextSibling(group);
+		if (possibleYl != null && possibleYl.getLocalName().equals(SUFFIX_EL) && possibleYl.getValue().equals("yl")){
+			cyclise = true;
+		}
+		else{
+			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{STEREOCHEMISTRY_EL});
+			if (alphaOrBetaLocantEl != null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL) ){
+				String value = alphaOrBetaLocantEl.getValue();
+				if (value.equals("alpha") || value.equals("beta") || value.equals("alpha,beta") || value.equals("beta,alpha")){
+					cyclise = true;
+				}
+			}
+		}
+		if (cyclise) {
+			Element ringSize = new Element(CARBOHYDRATERINGSIZE_EL);
+			String sugarStem = group.getValue();
+			if (state.xmlFragmentMap.get(group).hasLocant("5") && !sugarStem.equals("rib") && !sugarStem.equals("fruct")){
+				ringSize.addAttribute(new Attribute(VALUE_ATR, "6"));
+			}
+			else{
+				ringSize.addAttribute(new Attribute(VALUE_ATR, "5"));
+			}
+			XOMTools.insertAfter(group, ringSize);
+			cycliseCarbohydrate(group, ringSize);
+			ringSize.detach();
 		}
 	}
 
@@ -1457,8 +1490,8 @@ class ComponentProcessor {
 				throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +carbohydrateGroup.getValue());
 			}
 			applyAnomerStereochemistryIfPresent(alphaOrBetaLocantEl, carbonylCarbon, anomericReferenceAtom);
-			if (SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR)) ||
-					SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR))){
+			if (carbonylCarbon.getAtomParity() !=null && (SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR)) ||
+					SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(carbohydrateGroup.getAttributeValue(SUBTYPE_ATR)))){
 				//systematic chains only have their stereochemistry defined after structure building to account for the fact that some stereocentres may be removed
 				//hence inspect the stereoprefix to see if it is L and flip if so
 				String val = stereoPrefixAfterAlphaBeta.getAttributeValue(VALUE_ATR);
