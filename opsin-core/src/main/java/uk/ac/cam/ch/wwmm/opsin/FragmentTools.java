@@ -958,13 +958,13 @@ class FragmentTools {
 			Atom adjacentAtom = fragment.getAtomByLocantOrThrow(locant);
 			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(adjacentAtom.getAtomNeighbours(), element);
 			if (applicableTerminalAtoms.isEmpty()){
-				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " at locant "+ locant +" for substractive nomenclature");
+				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " at locant "+ locant +" for subtractive nomenclature");
 			}
 		}
 		else{
 			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(fragment.getAtomList(), element);
 			if (applicableTerminalAtoms.isEmpty()){
-				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for substractive nomenclature");
+				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
 			}
 		}
 		removeTerminalAtom(state, applicableTerminalAtoms.get(0));

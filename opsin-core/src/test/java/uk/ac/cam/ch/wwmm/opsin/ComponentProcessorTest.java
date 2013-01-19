@@ -18,7 +18,7 @@ public class ComponentProcessorTest {
 		Element substractivePrefix = new Element(SUBTRACTIVEPREFIX_EL);
 		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
 		substituent.appendChild(substractivePrefix);
-		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 	}
 	
 	@Test
@@ -35,7 +35,7 @@ public class ComponentProcessorTest {
 		group.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		root.appendChild(group);
 
-		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
 		assertEquals(2, root.getChildElements().size());
 		assertEquals(substractivePrefix, root.getChildElements().get(0));
@@ -62,7 +62,7 @@ public class ComponentProcessorTest {
 		group2.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		root.appendChild(group2);
 
-		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
 		assertEquals(2, root.getChildElements().size());
 		assertEquals(substractivePrefix, root.getChildElements().get(0));
@@ -87,7 +87,7 @@ public class ComponentProcessorTest {
 		group2.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 		root.appendChild(group2);
 
-		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
 		assertEquals(1, root.getChildElements().size());
 		assertEquals(2, substituent2.getChildElements().size());
@@ -112,7 +112,7 @@ public class ComponentProcessorTest {
 		group.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		root.appendChild(group);
 
-		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
 		assertEquals(4, root.getChildElements().size());
 		assertEquals(locant, root.getChildElements().get(0));

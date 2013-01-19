@@ -291,7 +291,7 @@ class XmlDeclarations {
 	/**An aminoAcid. These by default do not have their acid groups which are then added on using suffixes. Notably these suffixes do NOT correspond to tokens in the input chemical name!*/
 	static final String AMINOACID_TYPE_VAL ="aminoAcid";
 	
-	/**A substractive prefix that removes a terminal chalcogen and forms an intramolecular bridge to another*/
+	/**A subtractive prefix that removes a terminal chalcogen and forms an intramolecular bridge to another*/
 	static final String ANHYDRO_TYPE_VAL ="anhydro";
     
 	/**A normal multiplier e.g. di*/
@@ -324,10 +324,10 @@ class XmlDeclarations {
 	/**This group is a sulfur/selenium/tellurium acid with the acidic hydroxy missing*/
 	static final String CHALCOGENACIDSTEM_TYPE_VAL ="chalcogenAcidStem";
 	
-	/**A substractive prefix that removes a hydrogen to covert a hydroxy into a carbonyl or convert a bond to a double/triple bond*/
+	/**A subtractive prefix that removes a hydrogen to covert a hydroxy into a carbonyl or convert a bond to a double/triple bond*/
 	static final String DEHYDRO_TYPE_VAL ="dehydro";
 	
-	/**A substractive prefix that removes a terminal hydroxy like atom*/
+	/**A subtractive prefix that removes a terminal hydroxy like atom*/
 	static final String DEOXY_TYPE_VAL ="deoxy";
 	
 	/**A functional group describing a divalent group*/
