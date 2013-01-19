@@ -147,7 +147,8 @@ does not define a CFG.
   <regex name="%diald%" value="ñ"/>
   <regex name="%itol%" value="ò"/>
   <regex name="%acyclicCarbohydrateAcidInlineSuffix%" value="ó"/>
-  <!--next would be Alt 0244-->
+  <regex name="%uron%" value="ô"/>
+  <!--next would be Alt 0245-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -268,9 +269,9 @@ does not define a CFG.
 
   <regex name="%unSpecifiedRingSizeSubstituent%" value="(%acyclicCarbohydrateStem%%o%?%ose%%glycosylSuffix%)"/>
   <regex name="%cyclicCarbohydrateSubstituentYl%" value="(%carbohydrateRingSizedStem%%ose%(%hyphen%?%glycosideSuffix%)?%osUloseSuffix%?%hyphen%?%locant%%locantedAminoAcidOrCarbohydrateYl%)"/>
-  <regex name="%cyclicCarbohydrateSubstituentGylcosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffix%)"/>
-  <regex name="%cyclicCarbohydrateSubstituentEndingInGlycosyl%" value="(%carbohydrateRingSizedStem%%ose%%osUloseSuffix%?%glycosylSuffix%)"/>
-  <regex name="%cyclicCarbohydrateSubstituent%" value="(%unSpecifiedRingSizeSubstituent%|%cyclicCarbohydrateSubstituentYl%|(%cyclicCarbohydrateSubstituentGylcosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%)(%hyphen%?%carbohydrateLocant%)?))"/>
+  <regex name="%cyclicCarbohydrateSubstituentGylcosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffix%))"/>
+  <regex name="%cyclicCarbohydrateSubstituentEndingInGlycosyl%" value="(%carbohydrateRingSizedStem%%uron%?%ose%%osUloseSuffix%?%glycosylSuffix%)"/>
+  <regex name="%cyclicCarbohydrateSubstituent%" value="(%unSpecifiedRingSizeSubstituent%|%cyclicCarbohydrateSubstituentYl%|(%cyclicCarbohydrateSubstituentGylcosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%)(%hyphen%?%carbohydrateLocant%)?)"/>
 
   <!--Fused ring terms-->
   <regex name="%benzoComponent%" value ="((%bracketedLocant%|%locant%)%benzo%)"/>
