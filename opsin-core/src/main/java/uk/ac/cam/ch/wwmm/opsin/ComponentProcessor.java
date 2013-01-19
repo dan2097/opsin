@@ -118,6 +118,11 @@ class ComponentProcessor {
 				state.xmlFragmentMap.put(group, thisFrag);
 			}
 			
+			for (Element subOrRoot : substituentsAndRoot) {
+				applyDLPrefixes(subOrRoot);
+				processCarbohydrates(subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
+			}
+			
 			for (int j = substituents.size() -1; j >=0; j--) {
 				Element substituent = substituents.get(j);
 				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(substituent);//this REMOVES a substituent just containing hydro/perhydro elements and moves these elements in front of an appropriate ring
@@ -130,7 +135,7 @@ class ComponentProcessor {
 					substituentsAndRootAndBrackets.remove(substituent);
 				}
 			}
-
+			
 			Element finalSubOrRootInWord =(Element) word.getChild(word.getChildElements().size()-1);
 			while (!finalSubOrRootInWord.getLocalName().equals(ROOT_EL) && !finalSubOrRootInWord.getLocalName().equals(SUBSTITUENT_EL)){
 				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
@@ -138,11 +143,6 @@ class ComponentProcessor {
 					throw new ComponentGenerationException("Unable to find finalSubOrRootInWord");
 				}
 				finalSubOrRootInWord = children.get(children.size()-1);
-			}
-		
-			for (Element subOrRoot : substituentsAndRoot) {
-				applyDLPrefixes(subOrRoot);
-				processCarbohydrates(subOrRoot);//e.g. glucopyranose (needs to be done before determineLocantMeaning to cope with alpha,beta for undefined anomer stereochemistry)
 			}
 
 			for (Element subOrRootOrBracket : substituentsAndRootAndBrackets) {
@@ -777,29 +777,23 @@ class ComponentProcessor {
 			if (nextSubOrRootOrBracket == null){
 				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefix.getValue() +" to apply to!");
 			}
-			//first check adjacent substituent/root. If this is a biochemical group treat as a non detachable prefix
-			Element potentialBiochemicalGroup =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
-			if (potentialBiochemicalGroup!=null && (BIOCHEMICAL_SUBTYPE_VAL.equals(potentialBiochemicalGroup.getAttributeValue(SUBTYPE_ATR))|| 
-					potentialBiochemicalGroup.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL))){
-				biochemicalGroup = potentialBiochemicalGroup;
-			}
-
-			if (biochemicalGroup==null){
-				Element nextSubOrRootOrBracketFromLast = (Element) substituent.getParent().getChild(substituent.getParent().getChildCount()-1);//the last sibling
-				while (!nextSubOrRootOrBracketFromLast.equals(substituent)){
-					Element groupToConsider = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
-					if (groupToConsider!=null){
-						if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || groupToConsider.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
-							biochemicalGroup = groupToConsider;
+			//prefer the nearest (unlocanted) biochemical group or the rightmost standard group
+			while (nextSubOrRootOrBracket != null){
+				Element groupToConsider = ((Element) nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
+				if (groupToConsider!=null){
+					if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || groupToConsider.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
+						biochemicalGroup = groupToConsider;
+						if (XOMTools.getPreviousSiblingsOfType(biochemicalGroup, LOCANT_EL).size() == 0){
 							break;
 						}
-						else if (standardGroup == null){
-							standardGroup = groupToConsider;
-						}
 					}
-					nextSubOrRootOrBracketFromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketFromLast);
+					else {
+						standardGroup = groupToConsider;
+					}
 				}
+				nextSubOrRootOrBracket = (Element) XOMTools.getNextSibling(nextSubOrRootOrBracket);
 			}
+			
 			Element targetGroup = biochemicalGroup!=null ? biochemicalGroup : standardGroup;
 			if (targetGroup == null){
 				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefix.getValue() +" to apply to!");
