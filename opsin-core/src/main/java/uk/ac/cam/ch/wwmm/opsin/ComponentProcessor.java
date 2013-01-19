@@ -122,7 +122,7 @@ class ComponentProcessor {
 				Element substituent = substituents.get(j);
 				boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(substituent);//this REMOVES a substituent just containing hydro/perhydro elements and moves these elements in front of an appropriate ring
 				if (!removed){
-					removed = removeAndMoveToAppropriateGroupIfSubstractivePrefix(substituent);
+					removed = removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 				}
 				if (removed){
 					substituents.remove(j);
@@ -205,7 +205,7 @@ class ComponentProcessor {
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
 				assignLocantsAndMultipliers(subBracketOrRoot);
 			}
-			processGlycosidicLinkgageDescriptors(substituents, brackets);
+			processGlycosidicLinkageDescriptors(substituents, brackets);
 			processWordLevelMultiplierIfApplicable(word, wordCount);
 		}
 		new WordRulesOmittedSpaceCorrector(state, parse).correctOmittedSpaces();//TODO where should this go?
@@ -759,23 +759,23 @@ class ComponentProcessor {
 	
 
 	/**
-	 * Removes substituents which are just a substractivePrefix element e.g. deoxy and moves their contents to be in front of the next in scope biochemical fragment (or failing that group)
+	 * Removes substituents which are just a subtractivePrefix element e.g. deoxy and moves their contents to be in front of the next in scope biochemical fragment (or failing that group)
 	 * @param substituent
 	 * @return true is the substituent was a subtractivePrefix substituent and hence was removed
 	 * @throws ComponentGenerationException
 	 */
-	static boolean removeAndMoveToAppropriateGroupIfSubstractivePrefix(Element substituent) throws ComponentGenerationException {
+	static boolean removeAndMoveToAppropriateGroupIfSubtractivePrefix(Element substituent) throws ComponentGenerationException {
 		Elements subtractivePrefixes = substituent.getChildElements(SUBTRACTIVEPREFIX_EL);
 		if (subtractivePrefixes.size() > 0){
 			if (subtractivePrefixes.size()!=1){
 				throw new RuntimeException("Unexpected number of subtractive prefixes found in substituent");
 			}
-			Element substractivePrefix = subtractivePrefixes.get(0);
+			Element subtractivePrefix = subtractivePrefixes.get(0);
 			Element biochemicalGroup =null;//preferred
 			Element standardGroup =null;
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(substituent);
 			if (nextSubOrRootOrBracket == null){
-				throw new ComponentGenerationException("Unable to find group for: " + substractivePrefix.getValue() +" to apply to!");
+				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefix.getValue() +" to apply to!");
 			}
 			//first check adjacent substituent/root. If this is a biochemical group treat as a non detachable prefix
 			Element potentialBiochemicalGroup =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
@@ -802,10 +802,10 @@ class ComponentProcessor {
 			}
 			Element targetGroup = biochemicalGroup!=null ? biochemicalGroup : standardGroup;
 			if (targetGroup == null){
-				throw new ComponentGenerationException("Unable to find group for: " + substractivePrefix.getValue() +" to apply to!");
+				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefix.getValue() +" to apply to!");
 			}
-			if (substractivePrefix.getAttributeValue(TYPE_ATR).equals(ANHYDRO_TYPE_VAL)){
-				Element locant = (Element) XOMTools.getPreviousSibling(substractivePrefix);
+			if (subtractivePrefix.getAttributeValue(TYPE_ATR).equals(ANHYDRO_TYPE_VAL)){
+				Element locant = (Element) XOMTools.getPreviousSibling(subtractivePrefix);
 				if (locant == null || !locant.getLocalName().equals(LOCANT_EL)){
 					throw new ComponentGenerationException("Two locants are required before an anhydro prefix");
 				}
@@ -813,7 +813,7 @@ class ComponentProcessor {
 				if (MATCH_COMMA.split(locantStr).length != 2){
 					throw new ComponentGenerationException("Two locants are required before an anhydro prefix, but found: "+ locantStr);
 				}
-				substractivePrefix.addAttribute(new Attribute(LOCANT_ATR, locantStr));
+				subtractivePrefix.addAttribute(new Attribute(LOCANT_ATR, locantStr));
 				locant.detach();
 			}
 			
@@ -4415,7 +4415,7 @@ class ComponentProcessor {
 	 * @param brackets
 	 * @throws StructureBuildingException
 	 */
-	private void processGlycosidicLinkgageDescriptors(List<Element> substituents, List<Element> brackets) throws StructureBuildingException {
+	private void processGlycosidicLinkageDescriptors(List<Element> substituents, List<Element> brackets) throws StructureBuildingException {
 		for (Element substituent : substituents) {
 			List<Element> carbLocants = XOMTools.getChildElementsWithTagName(substituent, CARBOHYDRATELOCANT_EL);
 			if (carbLocants.size() > 0){
