@@ -1292,7 +1292,10 @@ class ComponentProcessor {
 						suffix.detach();
 					}
 					else if (value.equals("itol") || value.equals("yl") || value.equals("glycoside")){
-						suffix.addAttribute(new Attribute(LOCANT_ATR, potentialCarbonyl.getFirstLocant()));	
+						suffix.addAttribute(new Attribute(LOCANT_ATR, potentialCarbonyl.getFirstLocant()));
+						if (value.equals("glycoside") && OpsinTools.getParentWordRule(subOrRoot).getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString())){
+							throw new StructureBuildingException("A glycoside requires a space seperated substituent e.g. methyl alpha-D-glucopyranoside");
+						}
 					}
 				}
 				else if (elName.equals(CARBOHYDRATERINGSIZE_EL)){
