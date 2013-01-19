@@ -1234,11 +1234,32 @@ class ComponentProcessor {
 	 */
 	private void processCarbohydrates(Element subOrRoot) throws StructureBuildingException {
 		List<Element> carbohydrates = XOMTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATE_TYPE_VAL);
-		for (Element group : carbohydrates) {
+		for (Element carbohydrate : carbohydrates) {
+			String subtype = carbohydrate.getAttributeValue(SUBTYPE_ATR);
+			boolean isAldose;
+			if (CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(subtype)){
+				isAldose = false;
+			}
+			else if (CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype) || SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype)){
+				isAldose = true;
+			}
+			else{
+				//trivial carbohydrates don't have suffixes
+				continue;
+			}
 			boolean cyclisationPerformed = false;
-			String subtype = group.getAttributeValue(SUBTYPE_ATR);
-			boolean isAldose = CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype) || SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype);
-			Element nextSibling = (Element) XOMTools.getNextSibling(group);
+			Fragment carbohydrateFrag = state.xmlFragmentMap.get(carbohydrate);
+			Attribute anomericId = carbohydrate.getAttribute(SUFFIXAPPLIESTO_ATR);
+			if (anomericId == null){
+				throw new StructureBuildingException("OPSIN bug: Missing suffixAppliesTo on: " + carbohydrate.getValue());
+			}
+			Atom potentialCarbonyl = carbohydrateFrag.getAtomByID(carbohydrateFrag.getIdOfFirstAtom() + Integer.parseInt(anomericId.getValue()) -1);
+			if (potentialCarbonyl == null){
+				throw new StructureBuildingException("OPSIN bug: " +  anomericId.getValue() + " did not point to an atom on: " + carbohydrate.getValue());
+			}
+			carbohydrate.removeAttribute(anomericId);
+			
+			Element nextSibling = (Element) XOMTools.getNextSibling(carbohydrate);
 			while (nextSibling !=null){
 				Element nextNextSibling = (Element) XOMTools.getNextSibling(nextSibling);
 				String elName = nextSibling.getLocalName();
@@ -1252,24 +1273,26 @@ class ComponentProcessor {
 						if (cyclisationPerformed){
 							throw new StructureBuildingException("OPSIN bug: " +  value + " not expected after carbohydrate cycliser");
 						}
-						processAldoseDiSuffix(value, group);
+						processAldoseDiSuffix(value, carbohydrate, potentialCarbonyl);
 						suffix.detach();
 					}
 					else if (value.startsWith("uron")){
 						//strictly these are also aldose di suffixes but in practice they are also used on ketoses
-						Fragment frag = state.xmlFragmentMap.get(group);
-						suffix.addAttribute(new Attribute(LOCANT_ATR, String.valueOf(frag.getChainLength())));			
+						suffix.addAttribute(new Attribute(LOCANT_ATR, String.valueOf(carbohydrateFrag.getChainLength())));			
 					}
 					else if (!cyclisationPerformed && (value.equals("ulose") || value.equals("osulose"))){
 						if (value.equals("ulose")){
 							isAldose = false;
 							if (SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype)){
-								group.getAttribute(SUBTYPE_ATR).setValue(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
-								state.xmlFragmentMap.get(group).setSubType(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
+								carbohydrate.getAttribute(SUBTYPE_ATR).setValue(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
+								carbohydrateFrag.setSubType(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
 							}
 						}
-						processUloseSuffix(group, suffix);
+						potentialCarbonyl = processUloseSuffix(carbohydrate, suffix, potentialCarbonyl);
 						suffix.detach();
+					}
+					else if (value.equals("itol") || value.equals("yl") || value.equals("glycoside")){
+						suffix.addAttribute(new Attribute(LOCANT_ATR, potentialCarbonyl.getFirstLocant()));	
 					}
 				}
 				else if (elName.equals(CARBOHYDRATERINGSIZE_EL)){
@@ -1277,7 +1300,7 @@ class ComponentProcessor {
 						throw new StructureBuildingException("OPSIN bug: Carbohydate cyclised twice!");
 					}
 					Element ringSize = nextSibling;
-					cycliseCarbohydrate(group, ringSize);
+					cycliseCarbohydrate(carbohydrate, ringSize, potentialCarbonyl);
 					ringSize.detach();
 					cyclisationPerformed = true;
 				}
@@ -1287,12 +1310,12 @@ class ComponentProcessor {
 				nextSibling = nextNextSibling;
 			}
 			if (!cyclisationPerformed){
-				applyUnspecifiedRingSizeCyclisationIfPresent(group);
+				applyUnspecifiedRingSizeCyclisationIfPresent(carbohydrate, potentialCarbonyl);
 			}
 		}
 	}
 
-	private void applyUnspecifiedRingSizeCyclisationIfPresent(Element group) throws StructureBuildingException {
+	private void applyUnspecifiedRingSizeCyclisationIfPresent(Element group, Atom potentialCarbonyl) throws StructureBuildingException {
 		boolean cyclise = false;
 		Element possibleYl = (Element) XOMTools.getNextSibling(group);
 		if (possibleYl != null && possibleYl.getLocalName().equals(SUFFIX_EL) && possibleYl.getValue().equals("yl")){
@@ -1317,20 +1340,23 @@ class ComponentProcessor {
 				ringSize.addAttribute(new Attribute(VALUE_ATR, "5"));
 			}
 			XOMTools.insertAfter(group, ringSize);
-			cycliseCarbohydrate(group, ringSize);
+			cycliseCarbohydrate(group, ringSize, potentialCarbonyl);
 			ringSize.detach();
 		}
 	}
 
 	/**
 	 * Indicates that the compound is a ketose.
-	 * Hence the aldose is converted into the appropriate ketose
+	 * This may take the form of replacement of the aldose functionality with ketose functionality or the additon of ketose functionality
 	 * The carbonyl may be subsequently used in cyclisation e.g. non-2-ulopyranose
+	 * A potentialcarbonyl is returned
 	 * @param group
 	 * @param suffix
+	 * @param potentialCarbonyl 
+	 * @return 
 	 * @throws StructureBuildingException 
 	 */
-	private void processUloseSuffix(Element group, Element suffix) throws StructureBuildingException {
+	private Atom processUloseSuffix(Element group, Element suffix, Atom potentialCarbonyl) throws StructureBuildingException {
 		List<String> locantsToConvertToKetones = new ArrayList<String>();
 		Element potentialLocantOrMultiplier = (Element) XOMTools.getPreviousSibling(suffix);
 		if (potentialLocantOrMultiplier.getLocalName().equals(MULTIPLIER_ATR)){
@@ -1374,8 +1400,7 @@ class ComponentProcessor {
 		}
 		Fragment frag = state.xmlFragmentMap.get(group);
 		if (suffix.getAttributeValue(VALUE_ATR).equals("ulose")) {//convert aldose to ketose
-			Attribute suffixAppliesTo = group.getAttribute(SUFFIXAPPLIESTO_ATR);
-			Atom aldehydeAtom = frag.getAtomList().get(Integer.parseInt(suffixAppliesTo.getValue()) -1);
+			Atom aldehydeAtom = potentialCarbonyl;
 			boolean foundBond = false;
 			for (Bond bond : aldehydeAtom.getBonds()) {
 				if (bond.getOrder() ==2){
@@ -1391,7 +1416,7 @@ class ComponentProcessor {
 				throw new StructureBuildingException("OPSIN bug: Unable to convert aldose to ketose");
 			}
 			Atom backboneAtom = frag.getAtomByLocantOrThrow(locantsToConvertToKetones.get(0));
-			suffixAppliesTo.setValue(String.valueOf(frag.getAtomList().indexOf(backboneAtom) +1));
+			potentialCarbonyl = backboneAtom;
 		}
 		for (String locantStr : locantsToConvertToKetones) {
 			Atom backboneAtom = frag.getAtomByLocantOrThrow(locantStr);
@@ -1411,6 +1436,7 @@ class ComponentProcessor {
 			}
 			backboneAtom.setAtomParity(null);
 		}
+		return potentialCarbonyl;
 	}
 
 	/**
@@ -1418,9 +1444,10 @@ class ComponentProcessor {
 	 * Alpha/beta stereochemistry is then applied if present
 	 * @param carbohydrateGroup
 	 * @param ringSize
+	 * @param potentialCarbonyl 
 	 * @throws StructureBuildingException
 	 */
-	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize) throws StructureBuildingException {
+	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize, Atom potentialCarbonyl) throws StructureBuildingException {
 		Fragment frag = state.xmlFragmentMap.get(carbohydrateGroup);
 		String ringSizeVal = ringSize.getAttributeValue(VALUE_ATR);
 		Element potentialLocant = (Element) XOMTools.getPreviousSibling(ringSize);
@@ -1443,12 +1470,11 @@ class ComponentProcessor {
 			}
 			carbonylCarbon = frag.getAtomByLocantOrThrow(locants[0]);
 			atomToJoinWith = frag.getAtomByLocantOrThrow("O" + locants[1]);
-			carbohydrateGroup.getAttribute(SUFFIXAPPLIESTO_ATR).setValue(String.valueOf(frag.getAtomList().indexOf(carbonylCarbon) + 1));
 			potentialLocant.detach();
 		}
 		
 		if (carbonylCarbon == null){
-			carbonylCarbon = frag.getAtomList().get(Integer.parseInt(carbohydrateGroup.getAttributeValue(SUFFIXAPPLIESTO_ATR)) -1);
+			carbonylCarbon = potentialCarbonyl;
 			if (carbonylCarbon ==null){
 				throw new RuntimeException("OPSIN bug: Could not find carbonyl carbon in carbohydrate");
 			}
@@ -1499,10 +1525,8 @@ class ComponentProcessor {
 		carbohydrateGroup.addAttribute(new Attribute(ANOMERICATOMID_ATR, String.valueOf(carbonylCarbon.getID())));
 	}
 
-	private void processAldoseDiSuffix(String suffixValue, Element group) throws StructureBuildingException {
+	private void processAldoseDiSuffix(String suffixValue, Element group, Atom aldehydeAtom) throws StructureBuildingException {
 		Fragment frag = state.xmlFragmentMap.get(group);
-		String aldehydePosRelativeId = group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
-		Atom aldehydeAtom = frag.getAtomList().get(Integer.parseInt(aldehydePosRelativeId) -1);
 		Atom alcoholAtom = frag.getAtomByLocantOrThrow(String.valueOf(frag.getChainLength()));
 		
 		if (suffixValue.equals("aric acid") || suffixValue.equals("arate")){

@@ -12,10 +12,12 @@
     <token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
+    <token value="uronic acid">uronicacid</token><!--Locanted implicitly to end of chain-->
     <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
     <token value="osonamide" locant="1">osonamide</token>
     <token value="osonate" locant="1">osonate</token>
     <token value="osonic acid" locant="1">osonic acid</token>
+    <token value="osonic acid" locant="1">osonicacid</token>
     <token value="osononitrile" locant="1">osononitrile</token>
   </tokenList>
 
@@ -30,18 +32,27 @@
     <token value="arate">arate</token>
     <token value="arate">arate(2-)</token>
     <token value="aric acid">aric acid</token>
+    <token value="aric acid">aricacid</token>
     <token value="onamide" locant="1">onamide</token>
     <token value="onate" locant="1">onate</token>
     <token value="onic acid" locant="1">onic acid</token>
+    <token value="onic acid" locant="1">onicacid</token>
     <token value="ononitrile" locant="1">ononitrile</token>
     <token value="osonamide" locant="1">osonamide</token>
     <token value="osonate" locant="1">osonate</token>
     <token value="osonic acid" locant="1">osonic acid</token>
+    <token value="osonic acid" locant="1">osonicacid</token>
     <token value="osononitrile" locant="1">osononitrile</token>
     <token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
     <token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
+    <token value="uronic acid">uronicacid</token><!--Locanted implicitly to end of chain-->
     <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
+  </tokenList>
+
+<!--An infix before osyl-->
+  <tokenList tagname="suffix" type="root" symbol="ô">
+    <token value="uronic acid">uron</token>
   </tokenList>
 
 <!--May be used as an infix before cyclisation or an acyclic suffix-->
