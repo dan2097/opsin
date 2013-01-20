@@ -320,7 +320,7 @@ does not define a CFG.
   <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
   <regex name="%functionalClass%" value ="(%locant%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
-  <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%|%functionalModifier%)%endOfFunctionalGroup%)"/>
+  <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%)%endOfFunctionalGroup%)"/>
 
   <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+%functionalTerm%?|(%substituent%*%mainGroup%|%substituent%+%mainGroupThatRequiresSubstituent%)(%hyphen%?%functionalTerm%)?)|%hyphen%?%functionalTerm%)"/>
 <!--Note that the %functionalTerm%? in the term above indicates that a space has technically been omitted!-->
