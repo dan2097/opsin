@@ -12,7 +12,7 @@ enum WordRule{
 	acidHalideOrPseudoHalide,
 	amideOrHydrazide,
 	anhydride,
-	biochemicalEster,
+	potentialBiochemicalEster,
 	carbonylDerivative,
 	cyclicPeptide,
 	divalentFunctionalGroup,

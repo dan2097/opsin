@@ -4795,7 +4795,7 @@ class ComponentProcessor {
 				return true;
 			}
 		}
-		if ((state.currentWordRule == WordRule.biochemicalEster || 
+		if ((state.currentWordRule == WordRule.potentialBiochemicalEster || 
 				(state.currentWordRule == WordRule.ester &&  (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)))
 				&& parentElem.getLocalName().equals(WORD_EL)){
 			Element wordRule = (Element) parentElem.getParent();
