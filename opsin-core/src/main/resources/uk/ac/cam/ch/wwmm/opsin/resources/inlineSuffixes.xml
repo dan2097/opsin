@@ -10,6 +10,7 @@
     <token value="oyl" additionalValue="amide">amoyl</token>
     <token value="oyl" additionalValue="anilide">aniloyl</token>
     <token value="carbonyl">carbonyl</token>
+    <token value="hydrazido">hydrazido</token>
     <token value="io">io</token>
     <token value="iminyl">iminyl</token>
     <token value="oxy">oxy</token>
@@ -53,6 +54,7 @@
     <token value="amido">amido</token>
     <token value="amido">amidyl</token>
     <token value="carbonyl">carbonyl</token>
+    <token value="hydrazido">hydrazido</token>
     <token value="oxy">oxy</token>
     <token value="oyl">oyl</token>
   </tokenList>
@@ -60,6 +62,7 @@
   <tokenList tagname="suffix" type="inline" symbol="Û"><!--inline suffixes allowing infixes and suffix prefixes-->
     <token value="amido">amido</token>
     <token value="amido">amidyl</token>
+    <token value="hydrazido">hydrazido</token>
     <token value="oyl">oyl</token>
   </tokenList>
 
