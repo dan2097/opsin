@@ -135,6 +135,10 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)NN" labels="//1'/2'"/>
   </rule>
+  <rule value="hydrazido">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=O)NN" labels="//1'/2'" outIDs="4"/>
+  </rule>
   <rule value="hydrazonic">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=NN)O" functionalIDs="4" />
