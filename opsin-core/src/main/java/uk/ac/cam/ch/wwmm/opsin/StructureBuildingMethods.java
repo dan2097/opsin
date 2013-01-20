@@ -248,7 +248,10 @@ class StructureBuildingMethods {
 					if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
 						List<Fragment> possibleParents =findAlternativeFragments(state, subBracketOrRoot);
 						for (Fragment fragment : possibleParents) {
-							atomToJoinTo = FragmentTools.findHydroxyGroup(fragment);
+							List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(fragment);
+							if (hydroxyAtoms.size() >0){
+								atomToJoinTo =hydroxyAtoms.get(0);
+							}
 							break;
 						}
 					}

@@ -121,7 +121,8 @@ class StructureBuilder {
 			else if(wordRule == WordRule.acetal) {
 				buildAcetal(state, words);//e.g. propanal diethyl acetal
 			}
-			else if(wordRule == WordRule.biochemicalEster) {
+			else if(wordRule == WordRule.potentialBiochemicalEster) {
+				//will be processed as two "simple" wordrules if no hydroxy found
 				buildBiochemicalEster(state, words, wordRules.size());//e.g. uridine 5'-(tetrahydrogen triphosphate)
 			}
 			else if(wordRule == WordRule.cyclicPeptide) {
@@ -1321,18 +1322,20 @@ class StructureBuilder {
 			}
 			resolveWordOrBracket(state, word);
 		}
+		int ateWords = words.size() -1;
+		if (ateWords < 1){
+			throw new StructureBuildingException("Bug in word rule for biochemicalEster");
+		}
+		
+		Fragment biochemicalFragment = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(0)));
+		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(biochemicalFragment);
+		boolean ambiguous = ateWords != hydroxyAtoms.size();
+		
 		for (int i = 1; i < words.size(); i++) {
 			Element ateWord = words.get(i);
-			BuildResults br = new BuildResults(state, ateWord);
 			String locant = ateWord.getAttributeValue(LOCANT_ATR);
-			if (br.getFunctionalAtomCount()==0){
-				throw new StructureBuildingException("Unable to find functional atom to form biochemical ester");
-			}
-			Atom functionalAtom =br.getFunctionalAtom(0);
-			br.removeFunctionalAtom(0);
+	
 			Atom atomOnBiochemicalFragment;
-			functionalAtom.neutraliseCharge();
-			Fragment biochemicalFragment = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(0)));
 			if (locant!=null){
 				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow(locant);
 				if (atomOnBiochemicalFragment.getBonds().size()!=1){
@@ -1341,16 +1344,27 @@ class StructureBuilder {
 			}
 			else{
 				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocant("O5'");//take a guess at it being 5' ;-)
-				if (atomOnBiochemicalFragment==null){
-					atomOnBiochemicalFragment = FragmentTools.findHydroxyGroup(biochemicalFragment);
+				if (atomOnBiochemicalFragment==null && !ambiguous && hydroxyAtoms.size() > 0){
+					atomOnBiochemicalFragment = hydroxyAtoms.get(0);
 				}
 			}
-			String element = atomOnBiochemicalFragment !=null ? atomOnBiochemicalFragment.getElement() : null;
-			if (atomOnBiochemicalFragment ==null || 
-					(atomOnBiochemicalFragment.getBonds().size()!=1 && !element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
-				throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
+			BuildResults br = new BuildResults(state, ateWord);
+			if (atomOnBiochemicalFragment != null){
+				hydroxyAtoms.remove(atomOnBiochemicalFragment);
+				String element = atomOnBiochemicalFragment.getElement();
+				if (atomOnBiochemicalFragment.getBonds().size()!=1 || (!element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
+					throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
+				}
+				if (br.getFunctionalAtomCount()==0){
+					throw new StructureBuildingException("Unable to find functional atom to form biochemical ester");
+				}
+				Atom functionalAtom =br.getFunctionalAtom(0);
+				br.removeFunctionalAtom(0);
+				functionalAtom.neutraliseCharge();
+				
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
 			}
-			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
+			
 			Element ateGroup = findRightMostGroupInWordOrWordRule(ateWord);
 			if (ateGroup.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)==null && numberOfWordRules==1){
 				//by convention [O-] are implicitly converted to [OH] to balance charge
