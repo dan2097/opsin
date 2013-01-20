@@ -1,3 +1,16 @@
+Version 1.4.0
+Added support for dialdoses,diketoses,ketoaldoses,alditols,aldonic acids,uronic acids,aldaric acids,glycosides,oligosacchardides, named systematically or from trivial stems, in cyclic or acyclic form
+Added support for ketoses named using dehydro
+Added support for anhydro
+Added more trivial carbohydrate names
+Added support for sn-glcyerol
+Improved heuristics for phospho substitution
+Added hydrazido and anilate suffixes
+Allowed more functional class nomenclature to apply to amino acids
+Added support for inverting CAS names with substituted functional terms e.g. Acetaldehyde, O-methyloxime
+Double substitution of a deoxy chiral centre now uses the CIP rules to decide which substituent replaced the hydroxy group 
+Unicode right arrows, superscripts and the soft hyphen are now recognised
+
 Version 1.3.0
 Added option to output radicals as R groups (* in SMILES)
 Added support for carbolactone/dicarboximide/lactam/lactim/lactone/olide/sultam/sultim/sultine/sultone suffixes
