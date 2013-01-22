@@ -112,6 +112,8 @@
 		<token value="CC(C)=CCC\C(C)=C\C\C=C(/C)C=C" labels="none" valType="SMILES">alpha-farnesene</token>
 		<token value="CCC(=C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">beta-farnesene</token>
 		<token value="OCC=C(C)CCC=C(C)CCC=C(C)C" defaultInID="16" labels="/1/2/3//4/5/6/7//8/9/10///" valType="SMILES">farnesol</token>
+		<token value="[Fe3+].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none" valType="SMILES">ferricyanide</token>
+		<token value="[Fe2+].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none" valType="SMILES">ferrocyanide</token>
 		<token value="NF" labels="none" valType="SMILES">fluoramine</token>
 		<token value="NF" labels="none" valType="SMILES">fluoramide</token>
 		<token value="N(F)F" labels="none" valType="SMILES">difluoramine</token>
@@ -195,6 +197,7 @@
 		<token value="[NH2+]" labels="none" valType="SMILES">nitrenium</token>
 		<token value="C([N+](=O)[O-])([N+](=O)[O-])[N+](=O)[O-]" labels="none" valType="SMILES">nitroform</token>
 		<token value="C(C(CO[N+](=O)[O-])O[N+](=O)[O-])O[N+](=O)[O-]" labels="none" valType="SMILES">nitroglycerin</token>
+		<token value="O=[N+]=O" labels="none" valType="SMILES">nitronium</token>
 		<token value="NN=O" labels="none" valType="SMILES">nitrosamide</token>
 		<token value="N#[N+][O-]" labels="none" valType="SMILES">nitrous oxide</token>
 		<token value="N#[N+][O-]" labels="none" valType="SMILES">nitrousoxide</token>
@@ -320,6 +323,7 @@
 		<token value="CC(C)(C)C(C)C" labels="none" valType="SMILES">triptane</token>
 		<token value="CCCCCCCCCCCCCCCCCC(OCC(OC(CCCCCCCCCCCCCCCCC)=O)COC(CCCCCCCCCCCCCCCCC)=O)=O" labels="none" valType="SMILES">tristearin</token>
 		<token value="NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7" valType="SMILES">triuret</token>
+		<token value="[CH+]1cccccc1" labels="1/2/3/4/5/6/7" valType="SMILES">tropylium</token>
 		<token value="NC(=O)N" labels="1/2//3" valType="SMILES">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3" valType="SMILES">uronium</token>
 		<token value="C#C" labels="1/2" valType="SMILES">vinylene</token>
