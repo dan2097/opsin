@@ -112,8 +112,8 @@
 		<token value="CC(C)=CCC\C(C)=C\C\C=C(/C)C=C" labels="none" valType="SMILES">alpha-farnesene</token>
 		<token value="CCC(=C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">beta-farnesene</token>
 		<token value="OCC=C(C)CCC=C(C)CCC=C(C)C" defaultInID="16" labels="/1/2/3//4/5/6/7//8/9/10///" valType="SMILES">farnesol</token>
-		<token value="[Fe3+].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none" valType="SMILES">ferricyanide</token>
-		<token value="[Fe2+].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none" valType="SMILES">ferrocyanide</token>
+		<token value="[Fe+3].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none" valType="SMILES">ferricyanide</token>
+		<token value="[Fe+2].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none" valType="SMILES">ferrocyanide</token>
 		<token value="NF" labels="none" valType="SMILES">fluoramine</token>
 		<token value="NF" labels="none" valType="SMILES">fluoramide</token>
 		<token value="N(F)F" labels="none" valType="SMILES">difluoramine</token>
