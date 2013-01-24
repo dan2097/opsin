@@ -415,9 +415,21 @@ class StructureBuilder {
 			throw new StructureBuildingException("No functionalAtoms detected!");
 		}
 
-		int i=1;
-		Element currentWord = words.get(i);
-		while (currentWord.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
+		int wordCountMinus1 = words.size() -1;
+		if (wordCountMinus1 < 2 || !words.get(wordCountMinus1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {
+			throw new StructureBuildingException("OPSIN Bug: Bug in functionalClassEster rule; 'ester' not found where it was expected");
+		}
+		
+		for (int i = 1; i < wordCountMinus1; i++) {
+			Element currentWord = words.get(i);
+			String wordType  = currentWord.getAttributeValue(TYPE_ATR);
+			if (!wordType.equals(WordType.substituent.toString())){
+				if (wordType.equals(WordType.functionalTerm.toString()) && currentWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("ester")){
+					//superfluous ester word
+					continue;
+				}
+				throw new StructureBuildingException("OPSIN Bug: Bug in functionalClassEster rule; Encountered: " + currentWord.getAttributeValue(VALUE_ATR));
+			}
 			if (acidBr.getFunctionalAtomCount()==0){
 				throw new StructureBuildingException("Insufficient functionalAtoms on acid");
 			}
@@ -445,10 +457,6 @@ class StructureBuilder {
 			else {
 				throw new StructureBuildingException("Substituent was expected to have one outAtom");
 			}
-			currentWord=words.get(++i);
-		}
-		if (!words.get(i++).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//ester
-			throw new StructureBuildingException("Number of words different to expectations; did not find ester");
 		}
 	}
 	
