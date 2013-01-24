@@ -66,6 +66,24 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="functionalTerm" endsWithRegex="amid[e]?[\]\)\}]*"/>
   </wordRule>
 
+<!--non standard repetition of "ester"-->
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
   <wordRule name="functionalClassEster" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
     <word type="substituent" />
@@ -83,6 +101,24 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
     <word type="substituent" />
     <word type="substituent" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+
+<!--non standard repetition of "ester"-->
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+  </wordRule>
+  <wordRule name="functionalClassEster" type="full">
+    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
+    <word type="substituent" />
+    <word type="functionalTerm" value="ester" />
     <word type="substituent" />
     <word type="functionalTerm" value="ester" />
   </wordRule>
