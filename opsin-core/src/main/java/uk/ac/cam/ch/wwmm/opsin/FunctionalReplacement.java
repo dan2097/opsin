@@ -180,7 +180,8 @@ class FunctionalReplacement {
 						oxygenReplaced = performPeroxyFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
-						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)){
+						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)
+								&& !(groupToBeModified.getValue().equals("form") && groupValue.equals("imido"))){
 							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
 						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));

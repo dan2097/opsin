@@ -365,17 +365,34 @@
 
 	<!-- Special cases-->
 	<!--Maybe this idea should be rethought as this way of special casing things is a bit tacky -->
+
+<!--yield names that should be ambiguous but by convention aren't-->
 		<token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">formamide</token>
 		<token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">methanamide</token>
-		<token value="CC(=O)N(C)(C)" labels="2/1////" valType="SMILES">dimethylacetamide</token>
-		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinon</token><!--preferred to systematic interpretation-->
-		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">dihydromethanophenazine</token><!--preferred to systematic interpretation-->
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
-		<token value="O=C(O)c1c(I)c(CNC(=O)C)c(I)c(NC(=O)C)c1I" labels="none" valType="SMILES">iodamide</token>
-		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1" labels="none" valType="SMILES">methoxychlor</token>
-		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">methanophenazine</token><!--preferred to systematic interpretation-->
-		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none" valType="SMILES">oxybenzone</token>
-		<token value="O.O.O.O.O.O.O.O.O.[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO" labels="none" valType="SMILES">stibogluconate</token><!--preferred to systematic interpretation-->
+		<token value="CC(=O)N(C)(C)" labels="2/1////" valType="SMILES">dimethylacetamide</token>
+
+<!--trivial names that clash with systematic names-->
+		<token value="Clc1cc(c(cc1OC(=O)NC)C)C" labels="none" valType="SMILES">carbanolate</token><!--pesticide name-->
+		<token value="Clc1cc(c(cc1OC(=O)NC)C)C" labels="none" valType="SMILES">carbanolat</token><!--pesticide name-->
+		<token value="Clc1nc(nc(n1)N(CC)CC)N(CC)CC" labels="none" valType="SMILES">chlorazine</token><!--pesticide name-->
+		<token value="Clc2cc1N(c3c(Sc1cc2)cccc3)CCCN(C)C" labels="none" valType="SMILES">chlorazin</token><!--drug name-->
+		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC" labels="none" valType="SMILES">chlorobenzilate</token><!--pesticide name-->
+		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC" labels="none" valType="SMILES">chlorobenzilat</token><!--pesticide name-->
+		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinone</token><!--pesticide name-->
+		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinon</token><!--pesticide name-->
+		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N" labels="none" valType="SMILES">dithianone</token><!--pesticide name-->
+		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N" labels="none" valType="SMILES">dithianon</token><!--pesticide name-->
+		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">dihydromethanophenazine</token><!--trivial name-->
+		<token value="O=C(O)c1c(I)c(CNC(=O)C)c(I)c(NC(=O)C)c1I" labels="none" valType="SMILES">iodamide</token><!--trivial name-->
+		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1" labels="none" valType="SMILES">methoxychlor</token><!--pesticide name-->
+		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">methanophenazine</token><!--trivial name-->
+		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)O" labels="none" valType="SMILES" functionalIDs="19">oxolinic acid</token><!--drug name-->
+		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="19">oxolinate</token><!--drug name-->
+		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none" valType="SMILES">oxybenzone</token><!--trivial name-->
+		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1" labels="none" valType="SMILES">pyridate</token><!--herbicide name-->
+		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1" labels="none" valType="SMILES">pyridat</token><!--herbicide name-->
+		<token value="O.O.O.O.O.O.O.O.O.[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO" labels="none" valType="SMILES">stibogluconate</token><!--drug name-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">

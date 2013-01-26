@@ -40,6 +40,7 @@
 		<token value="C[C@@]12C(=O)CC[C@H]1[C@@H]1CCC3CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" frontLocantsExpected="1,4,5,6,7,8,9,11,12,13,14,15" addBond="2 locant4">androstenedione</token>
 		<token value="CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CC=C4C[C@@H](O)CC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholesterol</token>
 		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CCC=3C=C(O)C=C[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">estratetraenol</token>
+		<token value="c1cc(O)c5c2[C@@]34[C@@H](O5)[C@@H](O)C=C[C@H]3[C@@H](Cc12)N(C)CC4" labels="1/2/3//4/12/13/5//6//7/8/14/9/10/11/17//16/15" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2" defaultInID="4">morphine</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="z">
