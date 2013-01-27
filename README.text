@@ -1,0 +1,153 @@
+OPSIN - Open Parser for Systematic IUPAC Nomenclature
+=====================================================
+__Version 1.4.0 (see ReleaseNotes.txt for what's new in this version)__  
+__Contact address: <daniel@nextmovesoftware.com>__  
+__Source code: <http://bitbucket.org/dan2097/opsin/>__  
+__Web interface and informational site: <http://opsin.ch.cam.ac.uk/>__  
+__License: [Artistic License 2.0](http://opensource.org/licenses/Artistic-2.0)__  
+
+OPSIN is a Java(1.5+) library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature.  
+Supported outputs are SMILES, CML (Chemical Markup Language), InChI (IUPAC International Chemical Identifier) and Standard InChI
+
+### Simple Usage Examples
+#### Convert a chemical name to SMILES
+`java -jar opsin-1.4.0-jar-with-dependencies.jar -osmi < input.txt > output.txt`  
+where input.txt contains chemical name/s, one per line
+
+    NameToStructure nts = NameToStructure.getInstance();
+    String smiles = nts.parseToSmiles("acetonitrile");
+
+#### Convert a chemical name to CML
+`java -jar opsin-1.4.0-jar-with-dependencies.jar -ocml < input.txt > output.txt`  
+where input.txt contains chemical name/s, one per line
+
+    NameToStructure nts = NameToStructure.getInstance();
+    Element cml = nts.parseToCML("acetonitrile");
+
+#### Convert a chemical name to InChI/StdInChI
+`java -jar opsin-1.4.0-jar-with-dependencies.jar -oinchi < input.txt > output.txt`  
+`java -jar opsin-1.4.0-jar-with-dependencies.jar -ostdinchi < input.txt > output.txt`  
+where input.txt contains chemical name/s, one per line
+
+    NameToInchi nti = new NameToInchi()
+    String inchi = nti.parseToInchi("acetonitrile");
+    String stdinchi = nti.parseToStdInchi("acetonitrile");
+
+### Advanced Usage
+OPSIN 1.4.0 allows enabling of the following parameters:
+
+* allowRadicals: Allows substituents to be interpretable e.g. allows ethyl be interpretable
+* wildcardRadicals: If allowRadicals is enabled, this option uses atom/s in the output to represent radical/s; 'R' in CML and '*' in SMILES e.g. changes the output of ethyl from C[CH2] to CC\*
+* detailedFailureAnalysis: Provides a potentially more accurate reason as to why a chemical name could not be parsed. This is done by parsing the chemical name from right to left. The trade-off for enabling this is slightly increased memory usage.
+* verbose: Enables debugging output\*
+
+\*When used as a library this is done by modifying Log4J's logging level e.g. `Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);`
+
+The usage of these parameters on the command line is described in the command line's help dialog accessible via:
+`java -jar opsin-1.4.0-jar-with-dependencies.jar -h`
+
+These parameters may be adjusted using the following code:
+
+    NameToStructure nts = NameToStructure.getInstance();
+    NameToStructureConfig ntsconfig = new NameToStructureConfig();
+    //a new NameToStructureConfig starts as copy of OPSIN's default configuration
+    ntsconfig.setAllowRadicals(true);
+    OpsinResult result = nts.parseChemicalName("acetonitrile", ntsconfig);
+    Element cml = result.getCml();
+    String smiles = result.getSmiles();
+    String inchi = NameToInchi.convertResultToInChI(result);
+    String stdinchi = NameToInchi.convertResultToStdInChI(result);
+
+`result.getStatus()` may be checked to see if the conversion was successful. If conversion was unsuccessful the output will always be null.
+Note that (std)InChI cannot be generated for polymers or radicals generated in combination with the wildcardRadicals option
+
+### Availability
+OPSIN is available as a standalone JAR from Bitbucket, <http://bitbucket.org/dan2097/opsin/downloads>  
+`opsin-1.4.0-jar-with-dependencies.jar` can be executed as a commandline application or added to the classpath for library usage.
+OPSIN is also available from the Maven Central Repository for users of Apache Maven.  
+
+If you are using Maven then add the following to your pom.xml:
+
+    <dependency>
+       <groupId>uk.ac.cam.ch.opsin</groupId>
+       <artifactId>opsin-core</artifactId>
+       <version>1.4.0</version>
+    </dependency>
+
+If you need just CML or SMILES output support
+
+or
+
+    <dependency>
+       <groupId>uk.ac.cam.ch.opsin</groupId>
+       <artifactId>opsin-inchi</artifactId>
+       <version>1.4.0</version>
+    </dependency>
+
+  if you also need InChI output support.
+
+### About OPSIN
+
+The workings of OPSIN are more fully described in:
+
+    Chemical Name to Structure: OPSIN, an Open Source Solution
+    Daniel M. Lowe, Peter T. Corbett, Peter Murray-Rust, Robert C. Glen
+    Journal of Chemical Information and Modeling 2011 51 (3), 739-753
+
+If you use OPSIN to produce results for publication, then it would be great if you could cite us.
+
+The following list broadly summarises what OPSIN can currently do and what will be worked on in the future.
+
+#### Supported nomenclature includes:
+* alkanes/alkenes/alkynes/heteroatom chains e.g. hexane, hex-1-ene, tetrasiloxane and their cyclic analogues e.g. cyclopropane
+* All IUPAC 1993 recommended rings
+* Trivial acids
+* Hantzsch-Widman e.g. 1,3-oxazole
+* Spiro systems
+* All von Baeyer rings e.g. bicyclo[2.2.2]octane
+* Hydro e.g. 2,3-dihydropyridine
+* Indicated hydrogen e.g. 1H-benzoimidazole
+* Heteroatom replacement
+* Specification of charge e.g. ium/ide/ylium/uide
+* Multiplicative nomenclature e.g. ethylenediaminetetraacetic acid
+* Conjunctive nomenclature e.g. cyclohexaneethanol
+* Fused ring systems e.g. imidazo[4,5-d]pyridine
+* Ring assemblies e.g. biphenyl
+* Most prefix and infix functional replacement nomenclature
+* The following functional classes: acids, acetals, alcohols, amides, anhydrides, azides, bromides, chlorides, cyanates, cyanides,
+esters, di/tri/tetra esters, ethers, fluorides, fulminates, glycols, glycol ethers, hemiacetals, hemiketal, hydrazones, hydroperoxides,
+hydrazides, imides, iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates, ketals, ketones, lactams, lactims,
+lactones, selenocyanates, thiocyanates, selenols, thiols, mercaptans, oxides, oximes, peroxides, selenides, selenones, selenoxides,
+selones, selenoketones, selenosemicarbazones, semicarbazones, sulfides, sulfones, sulfoxides, sultams, sultims, sultines, sultones,
+tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thioketones and thiosemicarbazones
+* Greek letters
+* Lambda convention
+* Amino Acids and derivatives
+* Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)
+* Simple bridge prefixes e.g. methano
+* Specification of oxidation numbers and charge on elements
+* Perhalogeno terms
+* Subtractive prefixes: deoxy, dehydro, anhydro
+* Stoichiometry ratios and mixture indicators
+* Nucleosides, nucleotides and their esters
+* Carbohydrate nomenclature
+* Simple CAS names including inverted CAS names
+* Steroids including alpha/beta stereochemistry
+* E/Z/R/S stereochemistry
+* cis/trans indicating relative stereochemistry on rings and as a synonym of E/Z
+
+#### Currently UNsupported nomenclature includes:
+* Other less common stereochemical terms
+* Most natural Products other than steroids
+* Natural product specific nomenclature operations
+* Multiplied, unsaturated or composite bridge prefixes e.g. epoxymethano
+
+### Developers and Contributors
+* Dr. Daniel Lowe (Current maintainer)
+* Dr. Peter Corbett
+* Prof. Peter Murray-Rust
+
+We are thankful for contributions from Albina Asadulina and Rich Apodaca
+
+Good Luck and let us know if you have problems, comments or suggestions!
+Bugs may be reported on the project's [issue tracker](https://bitbucket.org/dan2097/opsin/issues).
