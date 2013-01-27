@@ -46,11 +46,11 @@ OPSIN 1.4.0 allows enabling of the following parameters:
 The usage of these parameters on the command line is described in the command line's help dialog accessible via:
 `java -jar opsin-1.4.0-jar-with-dependencies.jar -h`
 
-These parameters may be adjusted using the following code:
+These parameters may be controlled using the following code:
 
     NameToStructure nts = NameToStructure.getInstance();
     NameToStructureConfig ntsconfig = new NameToStructureConfig();
-    //a new NameToStructureConfig starts as copy of OPSIN's default configuration
+    //a new NameToStructureConfig starts as a copy of OPSIN's default configuration
     ntsconfig.setAllowRadicals(true);
     OpsinResult result = nts.parseChemicalName("acetonitrile", ntsconfig);
     Element cml = result.getCml();
