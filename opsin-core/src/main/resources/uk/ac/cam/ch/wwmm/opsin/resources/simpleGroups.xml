@@ -129,13 +129,6 @@
 		<token value="C(=O)C(=O)" labels="1//2/" valType="SMILES">glyoxal</token>
 		<token value="C(=NO)C=NO" labels="none" valType="SMILES">glyoxime</token>
 		<token value="C(Cl)(Br)C(F)(F)F" labels="1///2///" valType="SMILES">halothane</token>
-		<token value="[Sb-](Br)(Br)(Br)(Br)(Br)Br" labels="none" valType="SMILES">hexabromoantimonate</token>
-		<token value="[Sb-](Cl)(Cl)(Cl)(Cl)(Cl)Cl" labels="none" valType="SMILES">hexachloroantimonate</token>
-		<token value="[As-](Cl)(Cl)(Cl)(Cl)(Cl)Cl" labels="none" valType="SMILES">hexachloroarsenate</token>
-		<token value="[P-](Cl)(Cl)(Cl)(Cl)(Cl)Cl" labels="none" valType="SMILES">hexachlorophosphate</token>
-		<token value="[As-](F)(F)(F)(F)(F)F" labels="none" valType="SMILES">hexafluoroarsenate</token>
-		<token value="[Sb-](F)(F)(F)(F)(F)F" labels="none" valType="SMILES">hexafluoroantimonate</token>
-		<token value="[P-](F)(F)(F)(F)(F)F" labels="none" valType="SMILES">hexafluorophosphate</token>
 		<token value="O=P(N(C)C)(N(C)C)N(C)C" labels="none" valType="SMILES">hexametapol</token>
 		<token value="C[Si]([N-][Si](C)(C)C)(C)C" labels="none" valType="SMILES">hexamethyldisilazide</token>
 		<token value="[OH-]" labels="none" valType="SMILES">hydroxide</token>
@@ -296,10 +289,6 @@
 		<token value="CC(C)([O-])C" labels="none" valType="SMILES">tertbutoxide</token>
 		<token value="CC(C)([O-])C" labels="none" valType="SMILES">t-butoxide</token>
 		<token value="CC(C)([O-])C" labels="none" valType="SMILES">tbutoxide</token>
-		<token value="[B-](Br)(Br)(Br)Br" labels="none" valType="SMILES">tetrabromoborate</token>
-		<token value="[B-](Cl)(Cl)(Cl)Cl" labels="none" valType="SMILES">tetrachloroborate</token>
-		<token value="[B-](F)(F)(F)F" labels="none" valType="SMILES">tetrafluoroborate</token>
-		<token value="[B-](I)(I)(I)I" labels="none" valType="SMILES">tetraiodoborate</token>
 		<token value="COCCOCCOCCOCCOC" labels="none" valType="SMILES">tetraglyme</token>
 		<token value="NC(=N)NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7//8/9" valType="SMILES">tetraguanide</token>
 		<token value="NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9" valType="SMILES">tetrauret</token>

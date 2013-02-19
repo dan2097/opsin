@@ -2315,36 +2315,91 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (groupValue.equals("bor")){//fluoroboric acid/fluoroborate are trivial rather than systematic
+		else if (groupValue.equals("bor")){//fluoroboric acid/fluoroborate are trivial rather than systematic; tetra(fooyl)borate is inorganic
 			Element suffix = (Element) XOMTools.getNextSibling(group);
-			if (suffix !=null && (suffix.getAttributeValue(VALUE_ATR).equals("ic") || suffix.getAttributeValue(VALUE_ATR).equals("ate"))){
+			if (suffix != null && suffix.getLocalName().equals(SUFFIX_EL)){
+				String suffixValue = suffix.getAttributeValue(VALUE_ATR);
+				if (suffixValue.equals("ic") || suffixValue.equals("ate")){
+					Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
+					if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
+						Elements children = substituent.getChildElements();
+						Element firstChild = children.get(0);
+						if (children.size() ==1 && firstChild.getLocalName().equals(GROUP_EL) && (firstChild.getValue().equals("fluoro") || firstChild.getValue().equals("fluor"))){
+							if (suffixValue.equals("ic")){
+								group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F.[H+]");
+							}
+							else{
+								group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F");
+							}
+							group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+							group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
+							substituent.detach();
+							suffix.detach();
+						}
+						else if (suffixValue.equals("ate") && firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("4")) {
+							group.getAttribute(VALUE_ATR).setValue("[BH4-]");
+							group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+							group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
+							suffix.detach();
+						}
+					}
+				}
+			}
+		}
+		else if (groupValue.equals("antimon")){//fluoroantimonic acid is trivial rather than systematic; hexa(fooyl)antimonate is inorganic
+			Element suffix = (Element) XOMTools.getNextSibling(group);
+			if (suffix != null && suffix.getLocalName().equals(SUFFIX_EL)){
+				String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 				Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
-				if (substituent !=null){
-					Elements children = substituent.getChildElements();
-					if (children.size() ==1 && children.get(0).getLocalName().equals(GROUP_EL) && (children.get(0).getValue().equals("fluoro") || children.get(0).getValue().equals("fluor"))){
-						if (suffix.getAttributeValue(VALUE_ATR).equals("ic")){
-							group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F.[H+]");
+				if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
+					if (suffixValue.equals("ic")){
+						Elements children = substituent.getChildElements();
+						if (children.size() ==1 && children.get(0).getLocalName().equals(GROUP_EL) && (children.get(0).getValue().equals("fluoro") || children.get(0).getValue().equals("fluor"))){
+							substituent.detach();
+							suffix.detach();
+							group.getAttribute(VALUE_ATR).setValue("F[Sb-](F)(F)(F)(F)F.[H+]");
 						}
-						else{
-							group.getAttribute(VALUE_ATR).setValue("F[B-](F)(F)F");
+					}
+					else if (suffixValue.equals("ate")){
+						Element firstChild = substituent.getChildElements().get(0);
+						if (firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("6")) {
+							group.getAttribute(VALUE_ATR).setValue("[SbH6-]");
+							group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+							group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
+							group.removeAttribute(group.getAttribute(USABLEASJOINER_ATR));
+							group.removeAttribute(group.getAttribute(ACCEPTSADDITIVEBONDS_ATR));
+							suffix.detach();
 						}
-						substituent.detach();
+					}
+				}
+			}
+		}
+		else if (groupValue.equals("arsen")){//hexa(fooyl)arsenate is inorganic
+			Element suffix = (Element) XOMTools.getNextSibling(group);
+			if (suffix != null && suffix.getLocalName().equals(SUFFIX_EL) && suffix.getAttributeValue(VALUE_ATR).equals("ate")){
+				Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
+				if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
+					Element firstChild = substituent.getChildElements().get(0);
+					if (firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("6")) {
+						group.getAttribute(VALUE_ATR).setValue("[AsH6-]");
+						group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+						group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
+						group.removeAttribute(group.getAttribute(USABLEASJOINER_ATR));
+						group.removeAttribute(group.getAttribute(ACCEPTSADDITIVEBONDS_ATR));
 						suffix.detach();
 					}
 				}
 			}
 		}
-		else if (groupValue.equals("antimon")){//fluoroantimonic acid is trivial rather than systematic
-			Element suffix = (Element) XOMTools.getNextSibling(group);
-			if (suffix !=null &&  suffix.getAttributeValue(VALUE_ATR).equals("ic")){
-				Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
-				if (substituent !=null){
-					Elements children = substituent.getChildElements();
-					if (children.size() ==1 && children.get(0).getLocalName().equals(GROUP_EL) && (children.get(0).getValue().equals("fluoro") || children.get(0).getValue().equals("fluor"))){
-						substituent.detach();
-						suffix.detach();
-						group.getAttribute(VALUE_ATR).setValue("F[Sb-](F)(F)(F)(F)F.[H+]");
-					}
+		else if (groupValue.equals("phosphate")){//hexa(fooyl)phosphate is inorganic
+			Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
+			if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
+				Element firstChild = substituent.getChildElements().get(0);
+				if (firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("6")) {
+					group.getAttribute(VALUE_ATR).setValue("[PH6-]");
+					group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+					group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
+					group.removeAttribute(group.getAttribute(FUNCTIONALIDS_ATR));
 				}
 			}
 		}
