@@ -4,6 +4,7 @@
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="Ô">
 <!--alkaloids-->
 		<token value="C1[C@@H]2C[C@@H]3[C@H]1[C@H](CC2)[C@H]1C[C@@H]2[C@H]4CCC[C@@]32[C@@H]1NC4" labels="14/13/12/10/9/8/15/16/7/6/5/4/3/2/1/11/17/18/19" valType="SMILES" alphaBetaClockWiseAtomOrdering="10/9/8/7/6/5/4/3/2/1/11">aconit</token>
+		<token value="c12[C@]3(C[C@H]45)C[C@@H]4N6C[C@@H](CC)[C@@H]5C[C@H]6[C@@H]3N(C)c2cccc1" labels="8/7/17/16/6/5/4/21/20/19/18/15/14/3/2/1/22/13/12/11/10/9" valType="SMILES" alphaBetaClockWiseAtomOrdering="8/7/6/5/4/21/20/15/14/3/2/1/13/12/11/10/9">ajmal</token>
 		<token value="c1cccc2[C@@]34CCCC[C@H]3[C@@H](Cc12)NCC4" labels="1/2/3/4/12/13/5/6/7/8/14/9/10/11/17/16/15" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2">morphin</token>
 		<token value="[C@H]12CCC[C@@H]3CC1.N23C" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/6/7">trop</token>
 <!--steroids-->
