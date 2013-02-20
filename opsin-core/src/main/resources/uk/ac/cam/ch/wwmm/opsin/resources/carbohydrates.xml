@@ -121,6 +121,8 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">rhamnulose</token><!--nomenclature wise this is more similar to sorbose than rhamnose!-->
 		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">fuculose</token>
 
+		<token value="NC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucamine</token>
+
 		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" valType="SMILES">galactosamine</token>
 		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">glucosamine</token>
 		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">mannosamine</token>
