@@ -2337,7 +2337,7 @@ class ComponentGenerator {
 							suffix.detach();
 						}
 						else if (suffixValue.equals("ate") && firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("4")) {
-							group.getAttribute(VALUE_ATR).setValue("[BH4-]");
+							group.getAttribute(VALUE_ATR).setValue("[B-]");
 							group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
 							group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
 							suffix.detach();
@@ -2363,7 +2363,7 @@ class ComponentGenerator {
 					else if (suffixValue.equals("ate")){
 						Element firstChild = substituent.getChildElements().get(0);
 						if (firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("6")) {
-							group.getAttribute(VALUE_ATR).setValue("[SbH6-]");
+							group.getAttribute(VALUE_ATR).setValue("[Sb-]");
 							group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
 							group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
 							group.removeAttribute(group.getAttribute(USABLEASJOINER_ATR));
@@ -2381,7 +2381,7 @@ class ComponentGenerator {
 				if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
 					Element firstChild = substituent.getChildElements().get(0);
 					if (firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("6")) {
-						group.getAttribute(VALUE_ATR).setValue("[AsH6-]");
+						group.getAttribute(VALUE_ATR).setValue("[As-]");
 						group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
 						group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
 						group.removeAttribute(group.getAttribute(USABLEASJOINER_ATR));
@@ -2396,7 +2396,7 @@ class ComponentGenerator {
 			if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
 				Element firstChild = substituent.getChildElements().get(0);
 				if (firstChild.getLocalName().equals(MULTIPLIER_EL) && firstChild.getAttributeValue(VALUE_ATR).equals("6")) {
-					group.getAttribute(VALUE_ATR).setValue("[PH6-]");
+					group.getAttribute(VALUE_ATR).setValue("[P-]");
 					group.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
 					group.getAttribute(SUBTYPE_ATR).setValue(SIMPLEGROUP_SUBTYPE_VAL);
 					group.removeAttribute(group.getAttribute(FUNCTIONALIDS_ATR));
