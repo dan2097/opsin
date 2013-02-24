@@ -181,7 +181,7 @@ class StructureBuilder {
 			}
 			if (inSubstituents){
 				if (!word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
-					if (!word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+					if (word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 						throw new StructureBuildingException("bug? ate group did not have any functional atoms!");
 					}
 					else{

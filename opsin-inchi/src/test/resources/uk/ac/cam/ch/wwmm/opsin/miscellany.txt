@@ -14,3 +14,6 @@ sodium tetraethylborate	InChI=1S/C8H20B.Na/c1-5-9(6-2,7-3)8-4;/h5-8H2,1-4H3;/q-1
 hexabromoantimonate	InChI=1S/6BrH.Sb/h6*1H;/q;;;;;;+5/p-6
 hexachloroarsenate	InChI=1S/AsCl6/c2-1(3,4,5,6)7/q-1
 hexachlorophosphate	InChI=1S/Cl6P/c1-7(2,3,4,5)6/q-1
+Hexafluorosilicic acid	InChI=1S/F6Si/c1-7(2,3,4,5)6/q-2/p+2
+Hexafluorophosphoric acid	InChI=1S/F6P/c1-7(2,3,4,5)6/q-1/p+1
+Hexafluorophosphoric acid triamide	InChI=1S/F6N3OP/c1-7(2)11(10,8(3)4)9(5)6
