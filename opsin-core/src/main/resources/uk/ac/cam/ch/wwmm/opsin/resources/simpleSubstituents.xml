@@ -186,6 +186,7 @@
 		<token value="-c1cc(C)ccc1C(C)C" labels="none" valType="SMILES">thymyl</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" valType="SMILES" addGroup="N locant4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6" valType="SMILES">tosyl</token>
+		<token value="-OS(=O)(=O)C(F)(F)F" labels="none" valType="SMILES">trifloxy</token>
 		<token value="-[3H]" valType="SMILES">tritio</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''" valType="SMILES">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" valType="SMILES" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>
