@@ -361,6 +361,8 @@
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
 		<token value="CC(=O)N(C)(C)" labels="2/1////" valType="SMILES">dimethylacetamide</token>
 
+		<token value="C(=O)C(=O)N" labels="2//1//" valType="SMILES" functionalIDs="5,5">glyoxalylamide</token>
+
 <!--trivial names that clash with systematic names-->
 		<token value="Clc1cc(c(cc1OC(=O)NC)C)C" labels="none" valType="SMILES">carbanolate</token><!--pesticide name-->
 		<token value="Clc1cc(c(cc1OC(=O)NC)C)C" labels="none" valType="SMILES">carbanolat</token><!--pesticide name-->
