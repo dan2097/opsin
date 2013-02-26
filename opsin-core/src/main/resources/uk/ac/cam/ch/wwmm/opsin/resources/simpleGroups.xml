@@ -12,6 +12,7 @@
 		<token value="C(=O)C=C" labels="1//2/3" valType="SMILES">acrolein</token>
 		<token value="NC(NCCCCN)=N" labels="none" valType="SMILES" defaultInID="8">agmatine</token>
 		<token value="C=CCS(SCC=C)=O" labels="none" valType="SMILES">allicin</token>
+		<token value="[AlH4-]" labels="none" valType="SMILES">aluminohydride</token>
 		<token value="NS(=O)(=O)O" labels="none" valType="SMILES">amidosulfonicacid</token>
 		<token value="NS(=O)(=O)O" labels="none" valType="SMILES">amidosulfonic acid</token>
 		<token value="[NH2]" labels="none" valType="SMILES" outIDs="1">amidogen</token>
