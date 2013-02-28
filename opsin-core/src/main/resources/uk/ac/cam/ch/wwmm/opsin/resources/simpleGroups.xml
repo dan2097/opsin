@@ -384,6 +384,7 @@
 		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none" valType="SMILES">oxybenzone</token><!--trivial name-->
 		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1" labels="none" valType="SMILES">pyridate</token><!--herbicide name-->
 		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1" labels="none" valType="SMILES">pyridat</token><!--herbicide name-->
+		<token value="OC(=O)c1c(O)ccc(S(=O)(=O)O)c1" labels="///1/2,ortho//3,meta/4,para/5/////6" valType="SMILES" functionalIDs="1,13">sulfosalicylic acid</token><!--trivial name-->
 		<token value="O.O.O.O.O.O.O.O.O.[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO" labels="none" valType="SMILES">stibogluconate</token><!--drug name-->
 	</tokenList>
 
