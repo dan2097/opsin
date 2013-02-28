@@ -122,6 +122,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[Cl-]" labels="none" valType="SMILES">chloride</token>
     <token value="[O-]C#N" labels="none" valType="SMILES">cyanate</token>
     <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
+    <token value="[2H-]" labels="none" valType="SMILES">deuteride</token>
     <token value="[F-]" labels="none" valType="SMILES">fluoride</token>
     <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
     <token value="[H-]" labels="none" valType="SMILES">hydride</token>
