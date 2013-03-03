@@ -53,4 +53,9 @@
 		<token value="S1CCCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">cepham</token>
 		<token value="S1CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">penam</token>
 	</tokenList>
+
+	<tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ª"><!--follows amino acid nomenclature rules-->
+		<token value="C[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="/8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" suffixAppliesTo="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lyserg</token>
+		<token value="C[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="/8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" suffixAppliesTo="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolyserg</token>
+	</tokenList>
 </tokenLists>
