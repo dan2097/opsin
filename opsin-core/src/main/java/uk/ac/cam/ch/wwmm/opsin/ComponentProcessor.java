@@ -4441,27 +4441,12 @@ class ComponentProcessor {
 			List<Element> carbLocants = XOMTools.getChildElementsWithTagName(substituent, CARBOHYDRATELOCANT_EL);
 			if (carbLocants.size() > 0){
 				if (carbLocants.size() > 1){
-					throw new RuntimeException("OPSIN Bug: More than 1 glycosidic linkage locant associated with subsituted");
+					throw new RuntimeException("OPSIN Bug: More than 1 glycosidic linkage locant associated with subsituent");
 				}
-				Element group = substituent.getFirstChildElement(GROUP_EL);
-				Fragment carbFrag = state.xmlFragmentMap.get(group);
-				String carbLocantStr = carbLocants.get(0).getValue();
-				String locantAnomeric = carbLocantStr.substring(1,2);
+				Element carbLocant = carbLocants.get(0);
+				String carbLocantStr = carbLocant.getValue();
+				checkGlycosidicLocantSanity(substituent, carbLocantStr);
 				String locantToConnectTo = carbLocantStr.substring(4,5);
-				Atom anomericAtom = carbFrag.getAtomByLocantOrThrow(locantAnomeric);
-				boolean anomericIsOutAtom = false;
-				for (int i = 0; i < carbFrag.getOutAtomCount(); i++) {
-					if (carbFrag.getOutAtom(i).getAtom().equals(anomericAtom)){
-						anomericIsOutAtom = true;
-					}
-				}
-				if (!anomericIsOutAtom){
-					throw new StructureBuildingException("Invalid glycoside linkage descriptor. Locant: " + locantAnomeric + " should point to the anomeric carbon");
-				}
-				
-				if (OpsinTools.getNextGroup(group)==null){
-					throw new StructureBuildingException("Glycoside linkage descriptor should be followed by a carbohydrate: " + carbLocantStr);
-				}
 				Element parent = (Element) substituent.getParent();
 				Attribute locantAtr = new Attribute(LOCANT_ATR, "O" + locantToConnectTo);
 
@@ -4520,8 +4505,50 @@ class ComponentProcessor {
 					}
 					elToAddAtrTo.addAttribute(locantAtr);
 				}
-				carbLocants.get(0).detach();
+				carbLocant.detach();
 			}
+		}
+		
+		for (Element bracket : brackets) {
+			List<Element> carbLocants = XOMTools.getChildElementsWithTagName(bracket, CARBOHYDRATELOCANT_EL);
+			if (carbLocants.size() > 0){
+				if (carbLocants.size() > 1){
+					throw new RuntimeException("OPSIN Bug: More than 1 glycosidic linkage locant associated with bracket");
+				}
+				Element carbLocant = carbLocants.get(0);
+				Element substituent = (Element) XOMTools.getPreviousSibling(carbLocant);
+				if (substituent == null || !substituent.getLocalName().equals(SUBSTITUENT_EL)){
+					throw new RuntimeException("OPSIN Bug: Substituent expected before glycosidic linkage locant");
+				}
+				String carbLocantStr = carbLocant.getValue();
+				checkGlycosidicLocantSanity(substituent, carbLocantStr);
+				String locantToConnectTo = carbLocantStr.substring(4,5);
+				if (bracket.getAttribute(LOCANT_ATR) !=null){
+					throw new StructureBuildingException("Carbohydrate with glycoside linkage descriptor should not also have a locant: " + bracket.getAttributeValue(LOCANT_ATR));
+				}
+				bracket.addAttribute(new Attribute(LOCANT_ATR, "O" + locantToConnectTo));
+				carbLocant.detach();
+			}
+		}
+	}
+
+	private void checkGlycosidicLocantSanity(Element substituent, String carbLocantStr) throws StructureBuildingException {
+		Element group = substituent.getFirstChildElement(GROUP_EL);
+		Fragment carbFrag = state.xmlFragmentMap.get(group);
+		String locantAnomeric = carbLocantStr.substring(1,2);
+		Atom anomericAtom = carbFrag.getAtomByLocantOrThrow(locantAnomeric);
+		boolean anomericIsOutAtom = false;
+		for (int i = 0; i < carbFrag.getOutAtomCount(); i++) {
+			if (carbFrag.getOutAtom(i).getAtom().equals(anomericAtom)){
+				anomericIsOutAtom = true;
+			}
+		}
+		if (!anomericIsOutAtom){
+			throw new StructureBuildingException("Invalid glycoside linkage descriptor. Locant: " + locantAnomeric + " should point to the anomeric carbon");
+		}
+		
+		if (OpsinTools.getNextGroup(group)==null){
+			throw new StructureBuildingException("Glycoside linkage descriptor should be followed by a carbohydrate: " + carbLocantStr);
 		}
 	}
 
