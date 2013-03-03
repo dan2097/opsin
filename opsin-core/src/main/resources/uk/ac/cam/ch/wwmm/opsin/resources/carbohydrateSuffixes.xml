@@ -14,11 +14,11 @@
     <token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
     <token value="uronic acid">uronicacid</token><!--Locanted implicitly to end of chain-->
     <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
-    <token value="osonamide" locant="1">osonamide</token>
-    <token value="osonate" locant="1">osonate</token>
-    <token value="osonic acid" locant="1">osonic acid</token>
-    <token value="osonic acid" locant="1">osonicacid</token>
-    <token value="osononitrile" locant="1">osononitrile</token>
+    <token value="osonamide" locant="1">onamide</token>
+    <token value="osonate" locant="1">onate</token>
+    <token value="osonic acid" locant="1">onic acid</token>
+    <token value="osonic acid" locant="1">onicacid</token>
+    <token value="osononitrile" locant="1">ononitrile</token>
   </tokenList>
 
 <!--default suffix, does not effect structure but required in names-->
