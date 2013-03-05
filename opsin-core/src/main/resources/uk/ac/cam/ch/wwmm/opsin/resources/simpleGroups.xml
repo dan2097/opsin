@@ -237,7 +237,7 @@
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO" labels="none" valType="SMILES">phytol</token>
 		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18" valType="SMILES">phytosphingosine</token>
 		<token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
-		<token value="CC(C(C)(C)C)=O" labels="none" valType="SMILES">pinacolone</token>
+		<token value="CC(C(C)(C)C)=O" labels="1//////" valType="SMILES">pinacolone</token>
 		<token value="C=CC=CC" labels="1/2/3/4/5" valType="SMILES">piperylene</token>
     <token value="CC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="none" valType="SMILES">pristane</token>
 		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES">propione</token>
