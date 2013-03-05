@@ -97,6 +97,9 @@ class CASTools {
 						if (parseWords.size() ==1){
 							if (firstWordType.equals(WordType.functionalTerm)) {
 								if (component.equalsIgnoreCase("ester")) {
+									if (seperateWordSubstituents.size() ==0){
+										throw new ParsingException("ester encountered but no substituents were specified in potential CAS name!");
+									}
 									if (esterEncountered) {
 										throw new ParsingException("ester formation was mentioned more than once in CAS name!");
 									}
@@ -202,24 +205,30 @@ class CASTools {
 	 */
 	private static String uninvertEster(String parent) throws ParsingException {
 		int len = parent.length();
-		if (len < 9) {
+		if (len == 0) {
 			throw new ParsingException("Failed to uninvert CAS ester");
 		}
 		char lastChar = parent.charAt(len - 1);
-		if (lastChar == ')' || lastChar == ']' || lastChar == '}') {
-			if (parent.substring(parent.length() - 8).equalsIgnoreCase("ic acid)")) {
+		if (lastChar == ')') {
+			if (StringTools.endsWithCaseInsensitive(parent, "ic acid)")) {
 				parent = parent.substring(0, parent.length() - 8) + "ate)";
-			} else if (parent.substring(parent.length() - 9).equalsIgnoreCase("ous acid)")) {
+			} else if (StringTools.endsWithCaseInsensitive(parent, "ous acid)")) {
 				parent = parent.substring(0, parent.length() - 9) + "ite)";
-			} else {
+			} else if (StringTools.endsWithCaseInsensitive(parent, "ine)")){//amino acid
+				parent = parent.substring(0, parent.length() - 2) + "ate)";
+			}
+			else{
 				throw new ParsingException("Failed to uninvert CAS ester");
 			}
 		} else {
-			if (parent.substring(parent.length() - 7).equalsIgnoreCase("ic acid")) {
+			if (StringTools.endsWithCaseInsensitive(parent, "ic acid")) {
 				parent = parent.substring(0, parent.length() - 7) + "ate";
-			} else if (parent.substring(parent.length() - 8).equalsIgnoreCase("ous acid")) {
+			} else if (StringTools.endsWithCaseInsensitive(parent, "ous acid")) {
 				parent = parent.substring(0, parent.length() - 8) + "ite";
-			} else {
+			} else if (StringTools.endsWithCaseInsensitive(parent, "ine")){//amino acid
+				parent = parent.substring(0, parent.length() - 1) + "ate";
+			}
+			else{
 				throw new ParsingException("Failed to uninvert CAS ester");
 			}
 		}
