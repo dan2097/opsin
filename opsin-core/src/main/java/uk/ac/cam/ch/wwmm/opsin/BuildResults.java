@@ -43,9 +43,17 @@ class BuildResults {
 			for (int i = 0, l = frag.getOutAtomCount(); i < l; i++) {
 				outAtoms.add(frag.getOutAtom(i));
 			}
-			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
-				functionalAtoms.add(frag.getFunctionalAtom(i));
+			int functionalAtomCount = frag.getFunctionalAtomCount();
+			if (functionalAtomCount > 0){
+				//avoid functional atoms from non-root groups (known to occur in carbohydrate nomenclature)
+				Element parent = (Element) group.getParent();
+				if (parent.getLocalName().equals(XmlDeclarations.ROOT_EL)){
+					for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
+						functionalAtoms.add(frag.getFunctionalAtom(i));
+					}
+				}
 			}
+
 		}
 	}
 
