@@ -395,22 +395,29 @@ class FragmentManager {
 				AtomParity newAtomParity =new AtomParity(newAtomRefs4, atom.getAtomParity().getParity());
 				oldToNewAtomMap.get(atom).setAtomParity(newAtomParity);
 			}
-			if (atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
-				Set<Atom> oldAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+			Set<Atom> oldAmbiguousElementAssignmentAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+			if (oldAmbiguousElementAssignmentAtoms!=null){
 				Set<Atom> newAtoms = new HashSet<Atom>();
-				for (Atom oldAtom : oldAtoms) {
+				for (Atom oldAtom : oldAmbiguousElementAssignmentAtoms) {
 					newAtoms.add(oldToNewAtomMap.get(oldAtom));
 				}
 				oldToNewAtomMap.get(atom).setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, newAtoms);
 			}
-			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null){
-				oldToNewAtomMap.get(atom).setProperty(Atom.SMILES_HYDROGEN_COUNT, atom.getProperty(Atom.SMILES_HYDROGEN_COUNT));
+			Integer smilesHydrogenCount = atom.getProperty(Atom.SMILES_HYDROGEN_COUNT);
+			if (smilesHydrogenCount!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.SMILES_HYDROGEN_COUNT, smilesHydrogenCount);
 			}
-			if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
-				oldToNewAtomMap.get(atom).setProperty(Atom.OXIDATION_NUMBER, atom.getProperty(Atom.OXIDATION_NUMBER));
+			Integer oxidationNumber = atom.getProperty(Atom.OXIDATION_NUMBER);
+			if (oxidationNumber!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.OXIDATION_NUMBER, oxidationNumber);
 			}
-			if (atom.getProperty(Atom.ISALDEHYDE)!=null){
-				oldToNewAtomMap.get(atom).setProperty(Atom.ISALDEHYDE, atom.getProperty(Atom.ISALDEHYDE));
+			Boolean isAldehyde = atom.getProperty(Atom.ISALDEHYDE);
+			if (isAldehyde!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.ISALDEHYDE, isAldehyde);
+			}
+			Boolean isAnomeric = atom.getProperty(Atom.ISANOMERIC);
+			if (isAnomeric!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.ISANOMERIC, isAnomeric);
 			}
 		}
 		for (int i = 0, l = originalFragment.getOutAtomCount(); i < l; i++) {

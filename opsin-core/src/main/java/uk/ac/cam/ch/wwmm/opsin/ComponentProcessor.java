@@ -1525,7 +1525,7 @@ class ComponentProcessor {
 				}
 			}
 		}
-		carbohydrateGroup.addAttribute(new Attribute(ANOMERICATOMID_ATR, String.valueOf(carbonylCarbon.getID())));
+		carbonylCarbon.setProperty(Atom.ISANOMERIC, true);
 	}
 
 	private void processAldoseDiSuffix(String suffixValue, Element group, Atom aldehydeAtom) throws StructureBuildingException {
