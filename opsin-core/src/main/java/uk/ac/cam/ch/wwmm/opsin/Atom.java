@@ -59,6 +59,8 @@ class Atom {
     static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
 	/** Is this atom the carbon of an aldehyde? (however NOT formaldehyde)*/
     static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
+	/** Indicates that this atom is an anomeric atom in a cyclised carbohydrate*/
+    static final PropertyKey<Boolean> ISANOMERIC = new PropertyKey<Boolean>("isAnomeric");
 	/** Transient integer used to indicate traversal of fragments*/
     static final PropertyKey<Integer> VISITED = new PropertyKey<Integer>("visited");
 

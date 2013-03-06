@@ -736,12 +736,11 @@ class StereochemistryHandler {
 		List<Atom> stereocentresInCarbohydrate = new ArrayList<Atom>();
 		for (Atom atom : atoms) {
 			if (carbohydrate.getAtomByID(atom.getID())!=null){
-				stereocentresInCarbohydrate.add(atom);
+				Boolean isAnomeric = atom.getProperty(Atom.ISANOMERIC);
+				if (isAnomeric ==null || !isAnomeric) {
+					stereocentresInCarbohydrate.add(atom);
+				}
 			}
-		}
-		if (carbohydrateGroup.getAttribute(ANOMERICATOMID_ATR)!=null){
-			int anomericAtomId =  Integer.parseInt(carbohydrateGroup.getAttributeValue(ANOMERICATOMID_ATR));
-			stereocentresInCarbohydrate.remove(carbohydrate.getAtomByIDOrThrow(anomericAtomId));
 		}
 		//stereoconfiguration is specified from the farthest from C-1 to nearest to C-1
 		//but it is easier to set it the other way around hence this reverse
