@@ -43,9 +43,17 @@ class BuildResults {
 			for (int i = 0, l = frag.getOutAtomCount(); i < l; i++) {
 				outAtoms.add(frag.getOutAtom(i));
 			}
-			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
-				functionalAtoms.add(frag.getFunctionalAtom(i));
+			int functionalAtomCount = frag.getFunctionalAtomCount();
+			if (functionalAtomCount > 0){
+				Element parent = (Element) group.getParent();
+				if (parent.getLocalName().equals(XmlDeclarations.ROOT_EL) ||
+						OpsinTools.getNextGroup(group) == null){
+					for (int i = 0, l = functionalAtomCount; i < l; i++) {
+						functionalAtoms.add(frag.getFunctionalAtom(i));
+					}
+				}
 			}
+			
 		}
 	}
 
