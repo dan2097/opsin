@@ -39,26 +39,26 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="full" endsWithRegex="\S(at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
   </wordRule>
 
-  <wordRule name="amideOrHydrazide" type="full">
+  <wordRule name="acidReplacingFunctionalGroup" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="functionalTerm" endsWithRegex="(amid|hydrazid)[e]?[\]\)\}]*"/>
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
   </wordRule>
   
-  <wordRule name="amideOrHydrazide" type="full">
+  <wordRule name="acidReplacingFunctionalGroup" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
     <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="^(amid|hydrazid)[e]?[\]\)\}]*"/>
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
   </wordRule>
 
-  <wordRule name="amideOrHydrazide" type="full">
+  <wordRule name="acidReplacingFunctionalGroup" type="full">
     <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="functionalTerm" endsWithRegex="(amid|hydrazid)[e]?[\]\)\}]*"/>
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
   </wordRule>
   
-  <wordRule name="amideOrHydrazide" type="full">
+  <wordRule name="acidReplacingFunctionalGroup" type="full">
     <word type="full" endsWithGroupType="aminoAcid"/>
     <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="^(amid|hydrazid)[e]?[\]\)\}]*"/>
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
   </wordRule>
 
   <wordRule name="functionGroupAsGroup" type="full">

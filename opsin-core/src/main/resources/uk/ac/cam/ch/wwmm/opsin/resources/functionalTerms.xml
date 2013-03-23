@@ -12,7 +12,7 @@
     <token value="C#N">cyanohydrin</token>
   </tokenList>
 
-  <tokenList tagname="functionalGroup" type="functionalClass" subType="functionalClassGroup" symbol="±">
+  <tokenList tagname="functionalGroup" type="functionalClass" subType="none" symbol="±">
 <!--The atom that replaces the carbonyl oxygen is the last atom in the SMILES so that the first is where unlocanted substitution occurs)-->
     <token value="ON" labels="O/" valType="SMILES">oxime</token>
     <token value="SN" labels="S/" valType="SMILES">thioxime</token>
@@ -32,14 +32,21 @@
     <token value="N" labels="N" valType="SMILES">imide</token>
     <token value="N" labels="N" valType="SMILES">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
 
-    <token value="[NH2-]" labels="none" valType="SMILES">amide</token>
-    <token value="NN" labels="1/2" valType="SMILES">hydrazide</token>
-
     <token value="O" labels="none" valType="SMILES">oxide</token>
     <token value="O" labels="none" valType="SMILES">monoxide</token>
     <token value="S" labels="none" valType="SMILES">sulfide</token>
     <token value="[Se|2]" labels="none" valType="SMILES">selenide</token>
     <token value="[Te|2]" labels="none" valType="SMILES">telluride</token>
+  </tokenList>
+
+  <tokenList tagname="functionalGroup" type="acidReplacingFunctionalGroup" subType="none" symbol="±">
+    <token value="[NH2-]" labels="none" valType="SMILES">amide</token>
+    <token value="N1CCC1" labels="1/2/3/4" valType="SMILES">azetidide</token>
+    <token value="NN" labels="1/2" valType="SMILES">hydrazide</token>
+    <token value="N1CCOCC1" labels="none" valType="SMILES">morpholide</token>
+    <token value="N1CCNCC1" labels="1/2/3/4/5/6" valType="SMILES">piperazide</token>
+    <token value="N1CCCCC1" labels="1/2/3/4/5/6" valType="SMILES">piperidide</token>
+    <token value="N1CCCC1" labels="1/2/3/4/5" valType="SMILES">pyrrolidide</token>
   </tokenList>
 
   <tokenList tagname="functionalClass" type="functionalClass"  symbol="¿">
