@@ -158,7 +158,7 @@ class ComponentProcessor {
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
 				preliminaryProcessSuffixes(lastGroupInSubOrRoot, XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
-			FunctionalReplacement.processAmideOrHydrazideFunctionalClassNomenclature(state, finalSubOrRootInWord, word);
+			FunctionalReplacement.processAcidReplacingFunctionalClassNomenclature(state, finalSubOrRootInWord, word);
 
 			if (FunctionalReplacement.processPrefixFunctionalReplacementNomenclature(state, groups, substituents)){//true if functional replacement performed, 1 or more substituents will have been removed
 				substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);

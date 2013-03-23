@@ -89,7 +89,7 @@ class StructureBuilder {
 			else if(wordRule == WordRule.functionalClassEster) {
 				buildFunctionalClassEster(state, words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
 			}
-			else if (wordRule == WordRule.amideOrHydrazide){
+			else if (wordRule == WordRule.acidReplacingFunctionalGroup){
 				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide,
 				//ethanoic acid amide, carbonic dihydrazide
 				//already processed by the ComponentProcessor

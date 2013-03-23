@@ -279,6 +279,9 @@ class XmlDeclarations {
 	 * The values the type attribute can take
 	 * Type is expected to be present at minimum on all group elements
 	 */
+	/**A term like amide or hydrazide that replaces a functional hydroxy group*/
+	static final String ACIDREPLACINGFUNCTIONALGROUP_TYPE_VAL ="acidReplacingFunctionalGroup";
+	
 	/**A trivial carboxylic acid. These by default do not have their acid groups which are then added on using suffixes*/
 	static final String ACIDSTEM_TYPE_VAL ="acidStem";
 	
@@ -414,7 +417,6 @@ class XmlDeclarations {
 	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
 	static final String ENDININE_SUBTYPE_VAL ="endInIne";
 	static final String EPOXYLIKE_SUBTYPE_VAL ="epoxyLike";
-	static final String FUNCTIONALCLASSGROUP_SUBTYPE_VAL ="functionalClassGroup";
 	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
 	static final String HALIDEORPSEUDOHALIDE_SUBTYPE_VAL = "halideOrPseudoHalide";
 	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";

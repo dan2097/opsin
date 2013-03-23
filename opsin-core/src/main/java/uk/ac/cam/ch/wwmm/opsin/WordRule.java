@@ -10,7 +10,7 @@ enum WordRule{
 	acetal,
 	additionCompound,
 	acidHalideOrPseudoHalide,
-	amideOrHydrazide,
+	acidReplacingFunctionalGroup,
 	anhydride,
 	potentialBiochemicalEster,
 	carbonylDerivative,
