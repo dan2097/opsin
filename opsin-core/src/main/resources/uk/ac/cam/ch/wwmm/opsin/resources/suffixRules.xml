@@ -63,7 +63,7 @@ sense of this -->
     <addgroup SMILES="[*](=O)Nc1ccccc1" labels="///1'/2',ortho/3',meta/4',para/5'/6'"/>
   </rule>
   <rule value="arsonous">
-    <addgroup SMILES="[*]As(O)O" functionalIDs="3,4"/>
+    <addgroup SMILES="[*][As](O)O" functionalIDs="3,4"/>
   </rule>
   <rule value="ate">
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
