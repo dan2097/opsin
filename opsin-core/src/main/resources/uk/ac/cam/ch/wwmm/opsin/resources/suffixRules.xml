@@ -70,10 +70,10 @@ sense of this -->
     <addgroup SMILES="[*](=O)[O-]" functionalIDs="3"/>
   </rule>
   <rule value="azonate">
-    <addgroup SMILES="[*][N+][O-]([O-])[O-]" functionalIDs="4,5"/>
+    <addgroup SMILES="[*][N+]([O-])([O-])[O-]" functionalIDs="4,5"/>
   </rule>
   <rule value="azonic">
-    <addgroup SMILES="[*][N+][O-](O)O" functionalIDs="4,5"/>
+    <addgroup SMILES="[*][N+]([O-])(O)O" functionalIDs="4,5"/>
   </rule>
   <rule value="azonous">
     <addgroup SMILES="[*]N(O)O" functionalIDs="3,4"/>
