@@ -62,6 +62,9 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)Nc1ccccc1" labels="///1'/2',ortho/3',meta/4',para/5'/6'"/>
   </rule>
+  <rule value="arsonite">
+    <addgroup SMILES="[*][As]([O-])[O-]" functionalIDs="3,4"/>
+  </rule>
   <rule value="arsonous">
     <addgroup SMILES="[*][As](O)O" functionalIDs="3,4"/>
   </rule>
@@ -75,6 +78,9 @@ sense of this -->
   <rule value="azonic">
     <addgroup SMILES="[*][N+]([O-])(O)O" functionalIDs="4,5"/>
   </rule>
+  <rule value="azonite">
+    <addgroup SMILES="[*]N([O-])[O-]" functionalIDs="3,4"/>
+  </rule>
   <rule value="azonous">
     <addgroup SMILES="[*]N(O)O" functionalIDs="3,4"/>
   </rule>
@@ -87,6 +93,9 @@ sense of this -->
   </rule>
   <rule value="boronic">
     <addgroup SMILES="[*]B(O)O" functionalIDs="3,4"/>
+  </rule>
+  <rule value="carbamate">
+    <addgroup SMILES="[*]NC(=O)[O-]" functionalIDs="5"/>
   </rule>
   <rule value="carbamic">
     <addgroup SMILES="[*]NC(=O)O" functionalIDs="5"/>
@@ -295,8 +304,14 @@ sense of this -->
   <rule value="oyl_nonCarboxylic">
     <convertHydroxyGroupsToOutAtoms />
   </rule>
+  <rule value="phosphonite">
+    <addgroup SMILES="[*]P([O-])[O-]" functionalIDs="3,4"/>
+  </rule>
   <rule value="phosphonous">
     <addgroup SMILES="[*]P(O)O" functionalIDs="3,4"/>
+  </rule>
+  <rule value="selenenate">
+    <addgroup SMILES="[*][Se][O-]" functionalIDs="3"/>
   </rule>
   <rule value="selenenic">
     <addgroup SMILES="[*][Se]O" functionalIDs="3"/>
@@ -319,8 +334,14 @@ sense of this -->
   <rule value="selone">
     <addgroup SMILES="[*]=[Se]" ketoneLocant="yes" />
   </rule>
+  <rule value="stibonite">
+    <addgroup SMILES="[*][Sb]([O-])[O-]" functionalIDs="3,4"/>
+  </rule>
   <rule value="stibonous">
     <addgroup SMILES="[*][Sb](O)O" functionalIDs="3,4"/>
+  </rule>
+  <rule value="sulfamate">
+    <addgroup SMILES="[*]NS(=O)(=O)[O-]" functionalIDs="6"/>
   </rule>
   <rule value="sulfamic">
     <addgroup SMILES="[*]NS(=O)(=O)O" functionalIDs="6"/>
@@ -331,14 +352,23 @@ sense of this -->
   <rule value="sulfenamido">
     <addgroup SMILES="[*]SN" outIDs="3"/>
   </rule>
+  <rule value="sulfenate">
+    <addgroup SMILES="[*]S[O-]" functionalIDs="3"/>
+  </rule>
   <rule value="sulfenic">
     <addgroup SMILES="[*]SO" functionalIDs="3"/>
+  </rule>
+  <rule value="sulfenoselenoate">
+    <addgroup SMILES="[*]S[Se-]" functionalIDs="3"/>
   </rule>
   <rule value="sulfenoselenoic">
     <addgroup SMILES="[*]S[SeH]" functionalIDs="3"/>
   </rule>
   <rule value="sulfenoselenoyl">
     <addgroup SMILES="[*]S[SeH]" outIDs="3"/>
+  </rule>
+  <rule value="sulfenothioate">
+    <addgroup SMILES="[*]S[S-]" functionalIDs="3"/>
   </rule>
   <rule value="sulfenothioic">
     <addgroup SMILES="[*]SS" functionalIDs="3"/>
@@ -375,6 +405,9 @@ sense of this -->
   </rule>
   <rule value="tellone">
     <addgroup SMILES="[*]=[Te]" ketoneLocant="yes" />
+  </rule>
+  <rule value="tellurenate">
+    <addgroup SMILES="[*][Te][O-]" functionalIDs="3"/>
   </rule>
   <rule value="tellurenic">
     <addgroup SMILES="[*][Te]O" functionalIDs="3"/>
