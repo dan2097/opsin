@@ -505,6 +505,7 @@ class ComponentGenerator {
 			alkaneStemModifier.detach();
 			int chainLength = alkane.getAttributeValue(VALUE_ATR).length();
 			String smiles;
+			String labels = NONE_LABELS_VAL;
 			if (type.equals("normal")){
 				//normal behaviour is default so don't need to do anything
 				//n-methyl and n-ethyl contain redundant information and are probably intended to mean N-methyl/N-ethyl
@@ -538,6 +539,13 @@ class ComponentGenerator {
 					throw new ComponentGenerationException("iso has no meaning without a suffix on an alkane chain of length 3");
 				}
 				smiles =StringTools.multiplyString("C", chainLength-3) +"C(C)C";
+				StringBuilder sb = new StringBuilder();
+				for (int c = 1; c <= chainLength - 2; c++) {
+					sb.append(c);
+					sb.append('/');
+				}
+				sb.append('/');
+				labels = sb.toString();
 			}
 			else if (type.equals("sec")){
 				if (chainLength <3){
@@ -560,7 +568,7 @@ class ComponentGenerator {
 			}
 			alkane.getAttribute(VALUE_ATR).setValue(smiles);
 			alkane.removeAttribute(alkane.getAttribute(USABLEASJOINER_ATR));
-			alkane.getAttribute(LABELS_ATR).setValue(NONE_LABELS_VAL);
+			alkane.getAttribute(LABELS_ATR).setValue(labels);
 		}
 	}
 
