@@ -44,7 +44,7 @@
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1" valType="SMILES" value="N[C@@H](CCCN)C" suffixAppliesTo="7">ornith</token>
     <token labels="//2,alpha/1" valType="SMILES" value="N(C)CC" suffixAppliesTo="4">sarcos</token>
     <token labels="/alpha/beta/1/2/3/4/5/6//1'/2'/3'/4'/5'/6'//" valType="SMILES" value="N[C@@H](Cc1ccc(cc1)Oc2ccc(cc2)O)C" suffixAppliesTo="18">thyron</token>
-    <token labels="none" valType="SMILES" value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(c(I)c2)O)C(O)=O" suffixAppliesTo="22">thyrox</token>
+    <token labels="none" valType="SMILES" value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(c(I)c2)O)C" suffixAppliesTo="22">thyrox</token>
     <token labels="none" valType="SMILES" value="N[C@@H](CCCCNC([C@H]1[C@H](C)CC=N1)=O)C" suffixAppliesTo="16">pyrrolys</token>
     <token labels="none" valType="SMILES" value="N[C@@H](CSC[C@H](N)C)C" suffixAppliesTo="8,9">lanthion</token>
     <token labels="none" valType="SMILES" value="N[C@@H](CCSCC[C@H](N)C)C" suffixAppliesTo="10,11">homolanthion</token>
