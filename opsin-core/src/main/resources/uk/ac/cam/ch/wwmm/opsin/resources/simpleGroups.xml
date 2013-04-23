@@ -413,5 +413,6 @@
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic acid</token>
 		<token value="C=[NH+][O-]" labels="alpha//" valType="SMILES">nitrone</token>
+		<token value="OC(=O)c1ccc(O)cc1" labels="none" valType="SMILES" defaultInID="1">paraben</token>
 	</tokenList>
 </tokenLists>
