@@ -2315,17 +2315,19 @@ class ComponentProcessor {
 	
 	/**
 	 * Given a fragment removes all hydroxy groups and adds a valency 1 outAtom to the adjacent atom for each hydroxy group
+	 * Note that O[OH] is not considered a hydroxy c.f. carbonoperoxoyl
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
 	private void convertHydroxyGroupsToOutAtoms(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getElement().equals("O") && atom.getCharge()==0){
-				List<Atom> neighbours = atom.getAtomNeighbours();
-				if (neighbours.size()==1 && atom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==1){
+			if (atom.getElement().equals("O") && atom.getCharge()==0 && atom.getBonds().size()==1  &&
+					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0){
+				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+				if (!adjacentAtom.getElement().equals("O")){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
-					frag.addOutAtom(neighbours.get(0), 1, true);
+					frag.addOutAtom(adjacentAtom, 1, true);
 				}
 			}
 		}
@@ -2333,17 +2335,19 @@ class ComponentProcessor {
 
 	/**
 	 * Given a fragment removes all hydroxy groups and applies ylium to the adjacent atom (+1 charge -1 proton)
+	 * Note that O[OH] is not considered a hydroxy
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
 	private void convertHydroxyGroupsToPositiveCharge(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getElement().equals("O") && atom.getCharge()==0){
-				List<Atom> neighbours = atom.getAtomNeighbours();
-				if (neighbours.size()==1 && atom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==1){
+			if (atom.getElement().equals("O") && atom.getCharge()==0 && atom.getBonds().size()==1  &&
+					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0){
+				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+				if (!adjacentAtom.getElement().equals("O")){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
-					neighbours.get(0).addChargeAndProtons(1, -1);
+					adjacentAtom.addChargeAndProtons(1, -1);
 				}
 			}
 		}
