@@ -2184,7 +2184,7 @@ class ComponentGenerator {
 					multiplier = possibleMultiplier.getAttributeValue(VALUE_ATR);
 					possibleMultiplier.detach();
 				}
-				possibleSuitableAteGroup.addAttribute(new Attribute("numberOfFunctionalAtomsToRemove", multiplier));
+				possibleSuitableAteGroup.addAttribute(new Attribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR, multiplier));
 				group.detach();
 				Elements childrenToMove = hydrogenParentEl.getChildElements();
 				for (int i = childrenToMove.size() -1 ; i >=0; i--) {

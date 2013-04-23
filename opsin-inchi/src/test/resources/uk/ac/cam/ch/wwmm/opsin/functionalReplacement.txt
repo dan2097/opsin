@@ -16,3 +16,5 @@ dihydrazonooxalic acid	InChI=1S/C2H6N4O2/c3-5-1(7)2(8)6-4/h3-4H2,(H,5,7)(H,6,8)
 bromooxalic acid	InChI=1S/C2HBrO3/c3-1(4)2(5)6/h(H,5,6)
 2-chloro-2-thiooxalic acid	InChI=1S/C2HClO2S/c3-1(6)2(4)5/h(H,4,5)
 cyanooxalic acid	InChI=1S/C3HNO3/c4-1-2(5)3(6)7/h(H,6,7)
+5-carbonoperoxoylpentanoic acid	InChI=1S/C6H10O5/c7-5(8)3-1-2-4-6(9)11-10/h10H,1-4H2,(H,7,8)
+phosphoroperoxoyldibenzene	InChI=1S/C12H11O3P/c13-15-16(14,11-7-3-1-4-8-11)12-9-5-2-6-10-12/h1-10,13H
