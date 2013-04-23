@@ -172,8 +172,7 @@
     <token value="CCCCCCCC\C=C/CCCCCC" valType="SMILES" usableAsAJoiner="yes">palmitole</token>
 		<token value="CCCCC\C=C/CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" valType="SMILES" usableAsAJoiner="yes">petroselin</token>
 		<token value="CCCCC\C=C/CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" valType="SMILES" usableAsAJoiner="yes">petrosel</token>
-    <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">picolin</token>
-    <token value="c1ccccn1" labels="2,ortho/3,meta/4,para/5/6/1" valType="SMILES" addGroup="C locant2 alpha" suffixAppliesTo="7" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">picol</token><!--contraction-->
+    <token value="[nH]1ccccc1" labels="1/2,ortho,alpha/3,meta,beta/4,para,gamma/5/6" valType="SMILES" addGroup="C locant2" suffixAppliesTo="7" frontLocantsExpected="2,ortho,alpha,3,meta,beta,4,para,gamma">picol</token><!--contraction-->
     <token value="Cc1cc(O)c(O)cc1" labels="/1/2,ortho/3,meta//4,para//5/6" valType="SMILES">protocatechu</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">psyll</token>
     <token value="CCCCCCCC/C=C\C=C\C=C/CCCC" valType="SMILES" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" usableAsAJoiner="yes">punic</token>

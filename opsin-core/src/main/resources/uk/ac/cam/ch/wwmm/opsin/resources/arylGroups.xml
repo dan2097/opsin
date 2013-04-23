@@ -3,6 +3,12 @@
 <!--This are groups but may be used as substituents when paired with appropriate suffixes-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="arylGroup" symbol="z">
+		<token value="[nH]1cccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">1-pyrindan</token>
+		<token value="[nH]1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">1-pyrinden</token>
+		<token value="[nH]1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">1-pyrindin</token>
+		<token value="[cH]1nccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">2-pyrindan</token>
+		<token value="[cH]1nccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">2-pyrinden</token>
+		<token value="[cH]1nccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" valType="SMILES">2-pyrindin</token>
 		<token value="C1Cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c" valType="SMILES">aceanthren</token>
 		<token value="c1cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c" valType="SMILES">aceanthrylen</token>
 		<token value="c1cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b" valType="SMILES">acenaphthylen</token>
@@ -82,6 +88,7 @@
 		<token value="C1CCCC2CCCCC12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">decalin</token>
 		<token value="NCCc1cc(O)c(O)cc1" labels="///1/2/3//4//5/6" valType="SMILES">dopamin</token>
 		<token value="c1(C)c(C)cc(C)c(C)c1" labels="1//2//3/4//5//6" valType="SMILES" suffixAppliesToByDefault="5">duren</token>
+		<token value="N1CC1" labels="1/2/3" valType="SMILES">ethylenimin</token>
 		<token value="c1(c(O)ccc(CC=C)c1)OC" labels="1/2,ortho//3,meta/4,para/5////6//alpha" valType="SMILES">eugenol</token>
 		<token value="[o+]1c(ccc2ccccc12)c3ccccc3" labels="1/2/3/4/4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" valType="SMILES">flavylium</token>
 		<token value="c1ccc2cccc3c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/10/10a/10b/10c" valType="SMILES">fluoranthen</token>
@@ -115,6 +122,7 @@
 		<token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isoarsindol</token>
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoarsinolin</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzofuran</token>
+		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a" valType="SMILES">isobenzothiophen</token>
 		<token value="C1OCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isochroman</token>
 		<token value="C1SCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isothiochroman</token>
 		<token value="C1[Se]CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">isoselenochroman</token>
@@ -224,6 +232,7 @@
 		<token value="C1(=O)OCc2ccccc12" labels="1//2/3/3a/4/5/6/7/7a" valType="SMILES">phthalid</token>
 		<token value="c1ccc2cccc3nc4c5ccccc5cn4c1c23" labels="1/2/3/3a/4/5/6/6a/7/7a/7b/8/9/10/11/11a/12/13/13a/13b" valType="SMILES">phthaloperin</token>
 		<token value="C1NCCc2c3cc(OC)ccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6///7/8/8a/9/9a" valType="SMILES">pinolin</token>
+		<token value="[nH]1ccccc1" labels="1/2,ortho,alpha/3,meta,beta/4,para,gamma/5/6" valType="SMILES" addGroup="C locant2" suffixAppliesTo="7" frontLocantsExpected="2,ortho,alpha,3,meta,beta,4,para,gamma">picolin</token>
 		<token value="N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperazin</token>
 		<token value="N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" valType="SMILES">piperidin</token>
 		<token value="c1cccc2ccc3c4ccc5ccccc5c4ccc3c21" labels="1/2/3/4/4a/5/6/6a/6b/7/8/8a/9/10/11/12/12a/12b/13/14/14a/14b" valType="SMILES">picen</token>

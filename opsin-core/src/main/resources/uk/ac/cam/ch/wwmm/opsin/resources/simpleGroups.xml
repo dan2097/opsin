@@ -89,6 +89,7 @@
 		<token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanicacid</token>
 		<token value="N#CO" labels="none" valType="SMILES" functionalIDs="3">cyanic acid</token>
 		<token value="N#CC#N" labels="none" valType="SMILES">cyanogen</token>
+		<token value="N#CN=[N+]=[N-]" labels="none" valType="SMILES">cyanogen azide</token>
 		<token value="N#CBr" labels="none" valType="SMILES">cyanogen bromide</token>
 		<token value="N#CCl" labels="none" valType="SMILES">cyanogen chloride</token>
 		<token value="N#CF" labels="none" valType="SMILES">cyanogen fluoride</token>
