@@ -113,6 +113,13 @@
 		<token value="-[H]" labels="none" valType="SMILES">hydrido</token><!--for inorganic contexts-->
 		<token value="-[H]" labels="none" valType="SMILES">hydrogen</token><!--only used in functional class nomenclature-->
 		<token value="-[SeH]" labels="none" valType="SMILES">hydroseleno</token>
+		<token value="-[SeH](=O)" labels="none" valType="SMILES">hydroseleninyl</token>
+		<token value="-[SeH](=O)(=O)" labels="none" valType="SMILES">hydroselenonyl</token>
+		<token value="-[SH](=O)" labels="none" valType="SMILES">hydrosulfinyl</token>
+		<token value="-[SH](=O)(=O)" labels="none" valType="SMILES">hydrosulfonyl</token>
+		<token value="-[TeH]" labels="none" valType="SMILES">hydrotelluro</token>
+		<token value="-[TeH](=O)" labels="none" valType="SMILES">hydrotellurinyl</token>
+		<token value="-[TeH](=O)(=O)" labels="none" valType="SMILES">hydrotelluronyl</token>
 		<token value="-OCC(C)C" labels="none" valType="SMILES">isobutoxyl</token>
 		<token value="-C=C(C)C" labels="none" valType="SMILES">isocrotyl</token>
 		<token value="-NNC(O)=NN" labels="1/2//3/4/5" valType="SMILES">isocarbonohydrazido</token>
