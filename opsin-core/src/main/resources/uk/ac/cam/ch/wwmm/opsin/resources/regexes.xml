@@ -281,8 +281,8 @@ does not define a CFG.
   <regex name="%fusedRingSystemFromTrivialRingSubstituent%" value = "((%simpleComponent%|%multipliedComponent%|%multipliedParent%)+%trivialRingSubstituentSub%)"/>
 
   <!--Complex terms-->
-  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locant%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%trivialRingSubstituentGroup%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%|%naturalProductGroup%)"/>
-  <regex name="%preSuffixedRing%" value = "(%cyclicCarbohydrate%|%simpleCyclicGroup%)"/>
+  <regex name="%ringGroup%" value = "((%semiTrivialFusedRing%|%hantzschWidmanRing%|%annulen%|(%locant%|%bracketedLocant%)?%trivialRing%)%e%?|%vonBaeyerSystem%|%spiroSystem%|%cycloChain%|%cyclicUnsaturableHydrocarbonGroup%|%naturalProductGroup%)"/>
+  <regex name="%preSuffixedRing%" value = "(%cyclicCarbohydrate%|%simpleCyclicGroup%|%trivialRingSubstituentGroup%)"/>
   <regex name="%irregularRingSubstituentStem%" value="(%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%|%cyclicUnsaturableHydrocarbon%%a%?)"/>
   <regex name="%ringSubstituent%" value = "((%ringGroup%|%irregularRingSubstituentStem%)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%cyclicCarbohydrateSubstituent%)"/>
 
