@@ -136,6 +136,16 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminic acid</token>
 		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminic acid</token>
 		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminic acid</token>
+		<token value="[O-]C(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="[O-]C(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminate</token>
+		<token value="[O-]C(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminate</token>
+		<token value="[O-]C(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminate</token>
+		<token value="NC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="NC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminamide</token>
+		<token value="NC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminamide</token>
+		<token value="NC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminamide</token>
+		<token value="OCC1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="OCC(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">neuraminol</token>
+		<token value="OC[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES">alpha-neuraminol</token>
+		<token value="OC[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES">beta-neuraminol</token>
+
 		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="10">muramic acid</token>
 		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">alpha-muramic acid</token>
 		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">beta-muramic acid</token>
