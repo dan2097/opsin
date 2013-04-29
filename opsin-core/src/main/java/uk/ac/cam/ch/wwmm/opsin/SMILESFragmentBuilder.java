@@ -15,7 +15,7 @@ import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
  *
  * Allowed:
  * Organic elements B,C,N,O,P,S,F,Cl,Br,I (square brackets not required)
- * Aromatic elements c,n,o,p,s (square brackets not required) as,se,sb,te (square brackets required) Note that the inclusion of sb/te are an unofficial extension
+ * Aromatic elements c,n,o,p,s (square brackets not required) si,as,se,sb,te (square brackets required) Note that the inclusion of si/sb/te are an unofficial extension
  * =, # for bond orders
  * . for disconnection
  * (, ) for branching
@@ -96,6 +96,7 @@ class SMILESFragmentBuilder {
 		aromaticAtoms.add("o");
 		aromaticAtoms.add("p");
 		aromaticAtoms.add("s");
+		aromaticAtoms.add("si");
 		aromaticAtoms.add("as");
 		aromaticAtoms.add("se");
 		aromaticAtoms.add("sb");
@@ -352,8 +353,10 @@ class SMILESFragmentBuilder {
 	    					else{
 	    						hydrogenCount = Integer.parseInt(hydrogenCountString);
 	    					}
-	    					if (atom.hasSpareValency()){
-	    						currentFrag.addIndicatedHydrogen(atom);
+	    					if (atom.hasSpareValency()) {
+	    						if ((!elementType.equals("C") && !elementType.equals("Si")) || hydrogenCount >=2){
+		    						currentFrag.addIndicatedHydrogen(atom);
+	    						}
 	    					}
 	            		}
 		            }
