@@ -178,6 +178,7 @@
 		<token value="-[Se](=O)(=O)(O)" labels="none" valType="SMILES">selenono</token>
 		<token value="-[SeH]" labels="none" valType="SMILES">selenyl</token>
 		<token value="-[SeH3]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenuranyl</token>
+		<token value="-[SeH4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenuraniumyl</token>
 		<token value="=[SeH2]" labels="none" valType="SMILES" usableAsAJoiner="yes">selenuranylidene</token>
 		<token value="-NNC(=O)N" labels="1/2/3//4" valType="SMILES">semicarbazido</token>
 		<token value="-C(C)C(C)C" labels="none" valType="SMILES">siamyl</token>
@@ -185,6 +186,7 @@
 		<token value="-S(=O)(=O)(O)" labels="none" valType="SMILES">sulfo</token>
 		<token value="-OS(=O)(=O)(O)" labels="none" valType="SMILES">sulfoxy</token><!--contraction-->
 		<token value="-[SH3]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfuranyl</token>
+		<token value="-[SH4+]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfuraniumyl</token>
 		<token value="=[SH2]" labels="none" valType="SMILES" usableAsAJoiner="yes">sulfuranylidene</token>
 		<token value="-[Te](O)" labels="none" valType="SMILES">tellureno</token>
 		<token value="-[Te](=O)(O)" labels="none" valType="SMILES">tellurino</token>
