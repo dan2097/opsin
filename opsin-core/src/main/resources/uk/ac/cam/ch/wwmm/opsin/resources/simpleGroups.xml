@@ -414,5 +414,9 @@
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic acid</token>
 		<token value="C=[NH+][O-]" labels="alpha//" valType="SMILES">nitrone</token>
 		<token value="OC(=O)c1ccc(O)cc1" labels="none" valType="SMILES" defaultInID="1">paraben</token>
+		<token value="[SeH6]" labels="none" valType="SMILES">perselenurane</token>
+		<token value="[SH6]" labels="none" valType="SMILES">persulfurane</token>
+		<token value="[SeH4]" labels="none" valType="SMILES">selenurane</token>
+		<token value="[SH4]" labels="none" valType="SMILES">sulfurane</token>
 	</tokenList>
 </tokenLists>
