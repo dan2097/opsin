@@ -131,7 +131,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[C-]#N" labels="none" valType="SMILES">cyanide</token>
     <token value="[2H-]" labels="none" valType="SMILES">deuteride</token>
     <token value="[F-]" labels="none" valType="SMILES">fluoride</token>
-    <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token>
+    <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">fulminate</token><!--technically fulminates are isofulminates but structure of fulminic acid was only later determined-->
     <token value="[H-]" labels="none" valType="SMILES">hydride</token>
     <token value="[O-]O" labels="none" valType="SMILES">hydroperoxide</token>
     <token value="[SeH-]" labels="none" valType="SMILES">hydroselenide</token>
@@ -147,6 +147,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
     <token value="[I-]" labels="none" valType="SMILES">iodide</token>
     <token value="[N-]=C=O" labels="none" valType="SMILES">isocyanate</token>
     <token value="N#[C-]" labels="none" valType="SMILES">isocyanide</token>
+    <token value="[O-][N+]#[C-]" labels="none" valType="SMILES">isofulminate</token>
     <token value="N#[C-]" labels="none" valType="SMILES">isonitrile</token>
     <token value="[N-]=C=[Se]" labels="none" valType="SMILES">isoselenocyanate</token>
     <token value="[N-]=C=[Te]" labels="none" valType="SMILES">isotellurocyanate</token>

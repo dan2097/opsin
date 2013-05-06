@@ -145,6 +145,9 @@
 
 <!-- a few entirely trivial acid/salts that can be modified by prefixes-->
 	<tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="G">
+		<token value="NS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">amidosulfonate</token>
+		<token value="NS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">amidosulfonicacid</token>
+		<token value="NS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="5">amidosulfonic acid</token>
 		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious</token>
 		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arseniousacid</token>
 		<token value="[As](O)(O)O" labels="none" valType="SMILES" functionalIDs="2,3,4">arsenious acid</token>
