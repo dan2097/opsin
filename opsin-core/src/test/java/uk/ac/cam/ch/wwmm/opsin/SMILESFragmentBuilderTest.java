@@ -408,8 +408,8 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = fm.buildSMILES("[SH5+]");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
-		int minimumVal =atomList.get(0).getMinimumValency();
-		assertEquals(4, minimumVal);
+		int lambdaConvent =atomList.get(0).getLambdaConventionValency();
+		assertEquals(4, lambdaConvent);
 		assertEquals(1, atomList.get(0).getCharge());
 		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(5, atomList.get(0).determineValency(true));

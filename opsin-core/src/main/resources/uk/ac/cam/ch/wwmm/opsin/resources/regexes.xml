@@ -148,7 +148,8 @@ does not define a CFG.
   <regex name="%itol%" value="ò"/>
   <regex name="%acyclicCarbohydrateAcidInlineSuffix%" value="ó"/>
   <regex name="%uron%" value="ô"/>
-  <!--next would be Alt 0245-->
+  <regex name="%ylium%" value="õ"/>
+  <!--next would be Alt 0246-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -203,8 +204,8 @@ does not define a CFG.
   <regex name="%heteroChain%" value = "((%multiplierNotGroup%%heteroStem%%unsaturationBlock%)|(%heteroStem%%hyphen%?%ane%))"/>
   <regex name="%alternatingHeteroChain%" value = "(%multiplierNotGroup%%hwHeteroAtom%{2,}%unsaturationBlock%)"/>
 
-  <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%%a%?%unsaturationBlock%)"/>
-  <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%%a%?%unsaturationBlock%)"/>
+  <regex name="%straightChainGroups%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStem%(%a%?%unsaturationBlock%|%ylium%))"/>
+  <regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%(%a%?%unsaturationBlock%|%ylium%))"/>
   <regex name="%nitrogenChainSubstituent%" value = "(((%multiplierNotGroup%%nitrogenHeteroStem%%unsaturationBlock%)|(%nitrogenHeteroStem%%hyphen%?%ane%))%oMeaningYl%)"/>
   <regex name="%alkYlene%" value = "((%alkaneStemSystematic%%unsaturationBlock%?|%alkaneStemTrivial%%unsaturationBlock%)%optLocantGroupNoOMP%%ylene%)"/>
   <regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroupNoOMP%|%a%%hyphen%?%locant%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
@@ -322,6 +323,6 @@ does not define a CFG.
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%)%endOfFunctionalGroup%)"/>
 
-  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%+%functionalTerm%?|(%substituent%*%mainGroup%|%substituent%+%mainGroupThatRequiresSubstituent%)(%hyphen%?%functionalTerm%)?)|%hyphen%?%functionalTerm%)"/>
+  <regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%*%mainGroup%(%hyphen%?%functionalTerm%)?|%substituent%+(%functionalTerm%|%mainGroupThatRequiresSubstituent%(%hyphen%?%functionalTerm%)?)?)|%hyphen%?%functionalTerm%)"/>
 <!--Note that the %functionalTerm%? in the term above indicates that a space has technically been omitted!-->
 </regexes>
