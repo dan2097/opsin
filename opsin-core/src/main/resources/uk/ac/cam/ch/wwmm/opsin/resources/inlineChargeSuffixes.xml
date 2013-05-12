@@ -1,12 +1,19 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
-<!-- value = a reference to suffixRules.xml -->   
-<tokenList tagname="suffix" type="charge" symbol="I">
-  <token value="ium">ium</token>
-  <token value="ide">ide</token>
-  <token value="ide">id</token>
-  <token value="ylium">ylium</token>
-  <token value="ylium">(ylium)</token>
-  <token value="uide">uide</token>
-  <token value="uide">uid</token>
-</tokenList>
+<!-- value = a reference to suffixApplicability.xml -->
+<tokenLists>
+	<tokenList tagname="suffix" type="charge" symbol="I">
+		<token value="ium">ium</token>
+		<token value="ide">ide</token>
+		<token value="ide">id</token>
+		<token value="ylium">ylium</token>
+		<token value="ylium">(ylium)</token>
+		<token value="uide">uide</token>
+		<token value="uide">uid</token>
+	</tokenList>
+<!--for use after alkanestems e.g. methylium-->
+	<tokenList tagname="suffix" type="charge" symbol="õ">
+		<token value="ylium">ylium</token>
+		<token value="ylium">(ylium)</token>
+	</tokenList>
+</tokenLists>

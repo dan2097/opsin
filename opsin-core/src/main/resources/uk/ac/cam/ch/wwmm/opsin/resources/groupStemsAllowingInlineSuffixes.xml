@@ -26,6 +26,12 @@
 		<token value="[BrH2+]" labels="none" valType="SMILES">bromonium</token>
 		<token value="[IH2+]" labels="none" valType="SMILES">iodonium</token>
 
+<!--P-73.2.2.1.1-->
+		<token value="[SiH3+]" labels="none" valType="SMILES">silylium</token>
+		<token value="[GeH3+]" labels="none" valType="SMILES">germylium</token>
+		<token value="[SnH3+]" labels="none" valType="SMILES">stannylium</token>
+		<token value="[PbH3+]" labels="none" valType="SMILES">plumbylium</token>
+
 	<!--These forms imply valency 3-->
 		<token value="[PH3]" valType="SMILES" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
 		<token value="[AsH3]" valType="SMILES" usableAsAJoiner="yes">arsine</token>

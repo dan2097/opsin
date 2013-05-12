@@ -763,21 +763,30 @@ class SMILESFragmentBuilder {
 		}
 		Integer defaultVal = ValencyChecker.getDefaultValency(element);
 		if (defaultVal !=null){//s or p block element
-			if (defaultVal != incomingValency || charge !=0){
-				Integer[] unchargedStableValencies = ValencyChecker.getPossibleValencies(element, 0);
-				boolean hasPlausibleValency =false;
-				for (Integer unchargedStableValency : unchargedStableValencies) {
-					if (Math.abs(incomingValency - unchargedStableValency)==Math.abs(charge)){
-						atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - unchargedStableValency);
-						if (!unchargedStableValency.equals(defaultVal)){
-							atom.setMinimumValency(unchargedStableValency);
-						}
-						hasPlausibleValency=true;
-						break;
-					}
+			if (defaultVal != incomingValency || charge !=0){		
+				if (Math.abs(incomingValency - defaultVal)==Math.abs(charge)){
+					atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - defaultVal);
 				}
-				if (!hasPlausibleValency){//could be something like [Sn] which would be expected to be attached to later
-					atom.setMinimumValency(incomingValency);
+				else{
+					Integer[] unchargedStableValencies = ValencyChecker.getPossibleValencies(element, 0);
+					boolean hasPlausibleValency =false;
+					for (Integer unchargedStableValency : unchargedStableValencies) {
+						if (Math.abs(incomingValency - unchargedStableValency)==Math.abs(charge)){
+							atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - unchargedStableValency);
+							//we strictly set the valency if a charge is specified but are more loose about things if uncharged e.g. allow penta substituted phosphine
+							if (charge != 0) {
+								atom.setLambdaConventionValency(unchargedStableValency);
+							}
+							else{
+								atom.setMinimumValency(incomingValency);
+							}
+							hasPlausibleValency=true;
+							break;
+						}
+					}
+					if (!hasPlausibleValency){//could be something like [Sn] which would be expected to be attached to later
+						atom.setMinimumValency(incomingValency);
+					}
 				}
 			}
 		}
