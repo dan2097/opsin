@@ -10,10 +10,12 @@
 <tokenLists>
   <tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="¨" >
     <token labels="/2,alpha/3,beta/1" valType="SMILES" value="N[C@@H](C)C" suffixAppliesTo="4">alan</token>
+    <token labels="/2,alpha/3,beta/1" valType="SMILES" value="NC(=C)C" suffixAppliesTo="4">dehydroalan</token>
+    <token labels="/2,alpha/3,beta/1" valType="SMILES" value="NC(=C)C" suffixAppliesTo="4">alpha,beta-dehydroalan</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1" valType="SMILES" value="N[C@@H](CCCNC(N)=N)C" suffixAppliesTo="10">argin</token>
     <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CC(N)=O)C" suffixAppliesTo="7">asparag</token>
     <token labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" value="N[C@@H](CC)C(N)=O" suffixAppliesTo="4">isoasparag</token>
-		<token labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" value="N[C@@H](CC)C(N)=O" suffixAppliesTo="4">alpha-asparag</token>
+    <token labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" value="N[C@@H](CC)C(N)=O" suffixAppliesTo="4">alpha-asparag</token>
     <token value="N[C@@H](CCSC[C@@H](C)N)C" labels="none" valType="SMILES" suffixAppliesTo="8,10">cystathion</token>
     <token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">isoglutam</token>
     <token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">iso-glutam</token>
@@ -28,6 +30,8 @@
     <token labels="/2,alpha/3,beta/4,gamma//methyl/1" valType="SMILES" value="N[C@@H](CCSC)C" suffixAppliesTo="7">methion</token>
     <token labels="/2,alpha/3,beta/4,gamma//methyl/1" valType="SMILES" value="N[C@@H](CC[Se]C)C" suffixAppliesTo="7">selenomethion</token>
     <token labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES" value="N[C@@H](Cc1ccccc1)C" suffixAppliesTo="10">phenylalan</token>
+    <token labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES" value="NC(=Cc1ccccc1)C" suffixAppliesTo="10">dehydrophenylalan</token>
+    <token labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES" value="NC(=Cc1ccccc1)C" suffixAppliesTo="10">alpha,beta-dehydrophenylalan</token>
     <token labels="1/2//3/4/5" valType="SMILES" value="N1[C@H](C)CCC1" suffixAppliesTo="3">prol</token>
     <token labels="/2,alpha/3,beta/O/1" valType="SMILES" value="N[C@@H](CO)C" suffixAppliesTo="5">ser</token>
     <token labels="/2,alpha/3,beta/O/4,gamma/1" valType="SMILES" value="N[C@@H]([C@H](O)C)C" suffixAppliesTo="6">threon</token>
@@ -35,10 +39,8 @@
     <token labels="/2,alpha/3,beta/O/4,gamma/1" valType="SMILES" value="N[C@@H]([C@@H](O)C)C" suffixAppliesTo="6">allo-threon</token>
     <token labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/O/" valType="SMILES" value="N[C@@H](Cc1ccc(cc1)O)C" suffixAppliesTo="11">tyros</token>
     <token labels="/2,alpha/3,beta/4',gamma'/4,gamma/1" valType="SMILES" value="N[C@@H](C(C)C)C" suffixAppliesTo="6">val</token>
-    <token labels="/2,alpha/3,beta/4,gamma/O/1" valType="SMILES" value="N[C@@H](CCO)C" suffixAppliesTo="6">homoser</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6">norval</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" valType="SMILES" value="N[C@@H](CCCC)C" suffixAppliesTo="7">norleuc</token>
-    <token labels="/3,beta/2,alpha/1" valType="SMILES" value="NCCC" suffixAppliesTo="4">beta-alan</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1" valType="SMILES" value="N[C@@H](CCCC=O)C" suffixAppliesTo="8">allys</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/////1" valType="SMILES" value="N[C@@H](CCCNC(=O)N)C" suffixAppliesTo="10">citrull</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1" valType="SMILES" value="N[C@@H](CCCN)C" suffixAppliesTo="7">ornith</token>
@@ -47,52 +49,61 @@
     <token labels="none" valType="SMILES" value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(c(I)c2)O)C" suffixAppliesTo="22">thyrox</token>
     <token labels="none" valType="SMILES" value="N[C@@H](CCCCNC([C@H]1[C@H](C)CC=N1)=O)C" suffixAppliesTo="16">pyrrolys</token>
     <token labels="none" valType="SMILES" value="N[C@@H](CSC[C@H](N)C)C" suffixAppliesTo="8,9">lanthion</token>
-    <token labels="none" valType="SMILES" value="N[C@@H](CCSCC[C@H](N)C)C" suffixAppliesTo="10,11">homolanthion</token>
-    <token labels="none" valType="SMILES" value="NC(=C)C" suffixAppliesTo="4">dehydroalan</token>
     <token labels="1/2//3/4//5" valType="SMILES" value="N1[C@H](C)C[C@@H](O)C1" suffixAppliesTo="3">hydroxyprol</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//6,epsilon//1" valType="SMILES" value="N[C@@H](CC[C@@H](O)CN)C" suffixAppliesTo="9">hydroxylys</token>
-		<token value="ON(C=O)CC" labels="none" valType="SMILES" suffixAppliesTo="6">hadacid</token>
-		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" valType="SMILES" suffixAppliesTo="5">isoser</token>
-		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" valType="SMILES" suffixAppliesTo="5">iso-ser</token>
+    <token value="ON(C=O)CC" labels="none" valType="SMILES" suffixAppliesTo="6">hadacid</token>
+    <token value="NCC(O)C" labels="/3,beta/2,alpha//1" valType="SMILES" suffixAppliesTo="5">isoser</token>
+    <token value="NCC(O)C" labels="/3,beta/2,alpha//1" valType="SMILES" suffixAppliesTo="5">iso-ser</token>
     <token labels="//alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N(C)[C@@H](Cc1c[nH]c2ccccc12)C" suffixAppliesTo="14">abr</token>
     <token labels="/2,alpha/3,beta/4,gamma/////////////1" valType="SMILES" value="N[C@@H](CCC(=O)NNc1ccc(CO)cc1)C" suffixAppliesTo="17">agarit</token>
     <token labels="/2,alpha/3,beta///////1" valType="SMILES" value="N[C@@H](COC(=O)C=[N+]=[N-])C" suffixAppliesTo="10">azaser</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CN(O)N=O)C" suffixAppliesTo="8">alanos</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CNC(=O)N)C" suffixAppliesTo="8">albizz</token>
-		<token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CNC(=O)N)C" suffixAppliesTo="8">albizzi</token>
+    <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CNC(=O)N)C" suffixAppliesTo="8">albizzi</token>
     <token labels="/2,alpha/3,beta//////1" valType="SMILES" value="N[C@@H](CS(=O)CC=C)C" suffixAppliesTo="9">alli</token>
     <token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CCSCC)C" suffixAppliesTo="8">ethion</token>
-		<token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CC[Se]CC)C" suffixAppliesTo="8">selenoethion</token>
-		<token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CCON)C" suffixAppliesTo="7">canal</token>
-		<token labels="/2,alpha/3,beta/4,gamma//////1" valType="SMILES" value="N[C@@H](CCONC(=N)C)C" suffixAppliesTo="10">canavan</token>
+    <token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CC[Se]CC)C" suffixAppliesTo="8">selenoethion</token>
+    <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CCON)C" suffixAppliesTo="7">canal</token>
+    <token labels="/2,alpha/3,beta/4,gamma//////1" valType="SMILES" value="N[C@@H](CCONC(=N)C)C" suffixAppliesTo="10">canavan</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@](CC)(C)C" suffixAppliesTo="6">isoval</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@](CC)(C)C" suffixAppliesTo="6">iso-val</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)S)C" suffixAppliesTo="7">penicillam</token>
-		<token labels="/2,alpha/3,beta/4,gamma/5,delta//methyl/1" valType="SMILES" value="N[C@@H](CCCSC)C" suffixAppliesTo="8">homomethion</token>
     <token labels="/2,alpha/3,beta/4,gamma//////1" valType="SMILES" value="N[C@@H](CCC(=O)NCC)C" suffixAppliesTo="10">thean</token>
-		<token labels="/2,alpha/3,beta////////1" valType="SMILES" value="N[C@@H](CSC(C)(C)CCO)C" suffixAppliesTo="11">felin</token>
+    <token labels="/2,alpha/3,beta////////1" valType="SMILES" value="N[C@@H](CSC(C)(C)CCO)C" suffixAppliesTo="11">felin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" valType="SMILES" value="N[C@@H](CCCCN=[N+]=[N-])C" suffixAppliesTo="10">azidonorleuc</token>
-    <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5">homoalan</token>
-    <token labels="none" valType="SMILES" value="N[C@@H](C)CC" suffixAppliesTo="5">beta-homoalan</token>
     <token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CCN=[N+]=[N-])C" suffixAppliesTo="8">azidohomoalan</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertleuc</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert-leuc</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8">panton</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" valType="SMILES" value="N[C@@H](CCCC[N+](C)(C)C)C" suffixAppliesTo="11">lamin</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" valType="SMILES" value="N[C@@H](CCCCNC(=O)N)C" suffixAppliesTo="11">homocitrull</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" valType="SMILES" value="N[C@@H](CCCCNC(=N)N)C" suffixAppliesTo="11">homoargin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" valType="SMILES" value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" suffixAppliesTo="17">saccharop</token>
+
+<!--homo amino acids-->
+    <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5">homoalan</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" valType="SMILES" value="N[C@@H](CCCCNC(=N)N)C" suffixAppliesTo="11">homoargin</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" valType="SMILES" value="N[C@@H](CCCCNC(=O)N)C" suffixAppliesTo="11">homocitrull</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//methyl/1" valType="SMILES" value="N[C@@H](CCCSC)C" suffixAppliesTo="8">homomethion</token>
+    <token labels="none" valType="SMILES" value="N[C@@H](CCSCC[C@H](N)C)C" suffixAppliesTo="10,11">homolanthion</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6',epsilon'/6,epsilon/1" valType="SMILES" value="N[C@@H](CCC(C)C)C" suffixAppliesTo="8">homoleuc</token>
+    <token labels="/alpha/beta/gamma/1/2,ortho/3,meta/4,para/5/6/" valType="SMILES" value="N[C@@H](CCc1ccccc1)C" suffixAppliesTo="11">homophenylalan</token>
+    <token labels="/2,alpha/3,beta////1" valType="SMILES" value="N[C@@H](CCC#C)C" suffixAppliesTo="7">homopropargylglyc</token>
+    <token labels="/2,alpha/3,beta/4,gamma/O/1" valType="SMILES" value="N[C@@H](CCO)C" suffixAppliesTo="6">homoser</token>
+    <token labels="/alpha/beta/gamma/1/2,ortho/3,meta/4,para/5/6/O/" valType="SMILES" value="N[C@@H](CCc1ccc(cc1)O)C" suffixAppliesTo="12">homotyros</token>
+
+<!--beta amino acids-->
+    <token labels="/3,beta/2,alpha/1" valType="SMILES" value="NCCC" suffixAppliesTo="4">beta-alan</token>
+    <token labels="none" valType="SMILES" value="N[C@@H](C)CC" suffixAppliesTo="5">beta-homoalan</token>
   </tokenList>
 
 <!--These amino acids ends in yl even when forming acyl groups as otherwise they cause ambiguity with the acyls from the acid version
 e.g. glutamyl relates to glutamic acid not glutamine-->
   <tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="Æ" >
-		<token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">alpha-glutam</token>
+    <token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">alpha-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">glutam</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](CS)C" suffixAppliesTo="5">cyste</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">homocyste</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[SeH])C" suffixAppliesTo="5">selenocyste</token>
-		<token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CC[Se])C" suffixAppliesTo="6">selenohomocyste</token>
+    <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CC[Se])C" suffixAppliesTo="6">selenohomocyste</token>
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="©" ><!--why isn't this tryptophine!!!!-->
@@ -103,7 +114,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5,4">aspart</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6,5">glutam</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CS(=O)(O)=O)C" suffixAppliesTo="8">cyste</token>
-		<token labels="/2,alpha/3,beta/4,gamma/////1" valType="SMILES" value="N[C@@H](CCS(=O)(O)=O)C" suffixAppliesTo="9">homocyste</token>
+    <token labels="/2,alpha/3,beta/4,gamma/////1" valType="SMILES" value="N[C@@H](CCS(=O)(O)=O)C" suffixAppliesTo="9">homocyste</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](C[Se](=O)(O)=O)C" suffixAppliesTo="8">selenocyste</token>
     <token labels="none" valType="SMILES" value="CCCNC([C@H](O)C(C)(C)CO)=O" suffixAppliesTo="1">pantothen</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1" valType="SMILES" value="N1[C@@H](CCC1=O)C" suffixAppliesTo="7">pyroglutam</token>
@@ -192,21 +203,21 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" labels="none" valType="SMILES" functionalIDs="9,24,31,39">glutathione disulfide</token>
     <token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" labels="none" valType="SMILES" functionalIDs="9,24,31,39">glutathionedisulfide</token>
     <token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" valType="SMILES">methioninamine</token>
-		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="8,14">octopinic acid</token>
-		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="8,14">octopinicacid</token>
-		<token value="NC(=N)NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="11,17">octopine</token>
+    <token value="NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="8,14">octopinic acid</token>
+    <token value="NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="8,14">octopinicacid</token>
+    <token value="NC(=N)NCCCC(C(=O)O)NC(C)C(=O)O" labels="none" valType="SMILES" functionalIDs="11,17">octopine</token>
     <token value="NCC[Se][Se]CCN" labels="none" valType="SMILES">selenocystamine</token>
     <token value="NCC[SeH]" labels="/2,alpha/3,beta/" valType="SMILES">selenocysteamine</token>
-		<token value="NCCS(=O)O" labels="none" valType="SMILES" functionalIDs="6">hypotaurine</token>
-		<token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" labels="none" valType="SMILES" functionalIDs="11,16,21">nopaline</token>
-		<token value="NCC[Se](=O)O" labels="none" valType="SMILES" functionalIDs="6">selenohypotaurine</token>
+    <token value="NCCS(=O)O" labels="none" valType="SMILES" functionalIDs="6">hypotaurine</token>
+    <token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" labels="none" valType="SMILES" functionalIDs="11,16,21">nopaline</token>
+    <token value="NCC[Se](=O)O" labels="none" valType="SMILES" functionalIDs="6">selenohypotaurine</token>
     <token value="N(C(C)C(=O)O)CC(=O)O" valType="SMILES" labels="none" functionalIDs="6,10">strombine</token>
-		<token value="NCCS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="7">taurine</token>
-		<token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" labels="none" valType="SMILES" functionalIDs="26">s-adenosylmethionine</token>
-		<token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" labels="none" valType="SMILES" functionalIDs="26">s-adenosyl-l-methionine</token>
-		<token value="N[C@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" labels="none" valType="SMILES" functionalIDs="26">s-adenosyl-d-methionine</token>
+    <token value="NCCS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="7">taurine</token>
+    <token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" labels="none" valType="SMILES" functionalIDs="26">s-adenosylmethionine</token>
+    <token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" labels="none" valType="SMILES" functionalIDs="26">s-adenosyl-l-methionine</token>
+    <token value="N[C@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" labels="none" valType="SMILES" functionalIDs="26">s-adenosyl-d-methionine</token>
 
-		<token value="NCC[Se](=O)(=O)O" labels="none" valType="SMILES" functionalIDs="7">selenotaurine</token>
+    <token value="NCC[Se](=O)(=O)O" labels="none" valType="SMILES" functionalIDs="7">selenotaurine</token>
     <token value="N(C(C)C(=O)O)CCS(=O)(=O)O" valType="SMILES" labels="none" functionalIDs="6,12">tauropine</token>
     <token value="N(CC(=O)O)C(CO)(CO)CO" labels="none" valType="SMILES" functionalIDs="5">tricine</token>
     <token value="NC(CC(=O)(O))CCCN" labels="/3/2/1///4/5/6/" valType="SMILES" functionalIDs="6">isolysine</token>
