@@ -3616,20 +3616,8 @@ class ComponentProcessor {
 			}
 
 			Element substituentGroup = substituent.getFirstChildElement(GROUP_EL);
-			String theSubstituentSubType = substituentGroup.getAttributeValue(SUBTYPE_ATR);
-			String theSubstituentType = substituentGroup.getAttributeValue(TYPE_ATR);
 			//Only some substituents are valid joiners (e.g. no rings are valid joiners). Need to be atleast bivalent.
 			if (substituentGroup.getAttribute(USABLEASJOINER_ATR)==null){
-				continue;
-			}
-			Fragment frag =state.xmlFragmentMap.get(substituentGroup);
-
-			//there must be an element after the substituent for the implicit bracket to be required
-			Element elementAftersubstituent =(Element)XOMTools.getNextSibling(substituent);
-			if (elementAftersubstituent ==null ||
-					!elementAftersubstituent.getLocalName().equals(SUBSTITUENT_EL) &&
-					!elementAftersubstituent.getLocalName().equals(BRACKET_EL) &&
-					!elementAftersubstituent.getLocalName().equals(ROOT_EL)){
 				continue;
 			}
 
@@ -3642,11 +3630,27 @@ class ComponentProcessor {
 				continue;
 			}
 			
-			//Not preceded and succeded by a bracket e.g. Not (benzyl)methyl(phenyl)amine	c.f. P-16.4.1.3 (draft 2004)
-			if (elementBeforeSubstituent.getLocalName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getLocalName().equals(BRACKET_EL)){
-				Element firstChildElementOfElementAfterSubstituent = (Element) elementAftersubstituent.getChild(0);
-				if ((firstChildElementOfElementAfterSubstituent.getLocalName().equals(SUBSTITUENT_EL) || firstChildElementOfElementAfterSubstituent.getLocalName().equals(BRACKET_EL))
-					&& !((Element)XOMTools.getPrevious(firstChildElementOfElementAfterSubstituent)).getLocalName().equals(HYPHEN_EL)){
+			Element elementAftersubstituent =(Element)XOMTools.getNextSibling(substituent);
+			if (elementAftersubstituent != null){
+				//Not preceded and succeded by a bracket e.g. Not (benzyl)methyl(phenyl)amine	c.f. P-16.4.1.3 (draft 2004)
+				if (elementBeforeSubstituent.getLocalName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getLocalName().equals(BRACKET_EL)){
+					Element firstChildElementOfElementAfterSubstituent = (Element) elementAftersubstituent.getChild(0);
+					if ((firstChildElementOfElementAfterSubstituent.getLocalName().equals(SUBSTITUENT_EL) || firstChildElementOfElementAfterSubstituent.getLocalName().equals(BRACKET_EL))
+						&& !((Element)XOMTools.getPrevious(firstChildElementOfElementAfterSubstituent)).getLocalName().equals(HYPHEN_EL)){
+						continue;
+					}
+				}
+			}
+			//there must be an element after the substituent (or the substituent is being used for locanted ester formation) for the implicit bracket to be required
+			if (elementAftersubstituent ==null ||
+					!elementAftersubstituent.getLocalName().equals(SUBSTITUENT_EL) &&
+					!elementAftersubstituent.getLocalName().equals(BRACKET_EL) &&
+					!elementAftersubstituent.getLocalName().equals(ROOT_EL)){
+				if (elementAftersubstituent == null && ((Element)substituent.getParent()).getLocalName().equals(WORD_EL) && (
+					state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal)){
+					//special case to allow bracketting for locanted esters
+				}
+				else{
 					continue;
 				}
 			}
@@ -3656,6 +3660,10 @@ class ComponentProcessor {
 			if (elementDirectlyBeforeSubstituent.getLocalName().equals(HYPHEN_EL)){
 				continue;
 			}
+			
+			Fragment frag =state.xmlFragmentMap.get(substituentGroup);
+			String theSubstituentSubType = substituentGroup.getAttributeValue(SUBTYPE_ATR);
+			String theSubstituentType = substituentGroup.getAttributeValue(TYPE_ATR);
 
 			//prevents alkyl chains being bracketed together e.g. ethylmethylamine
 			//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
