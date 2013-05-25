@@ -894,7 +894,7 @@ class StructureBuildingMethods {
 					if (siblingFragments.size()>0){
 						Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 						Element nextGroup = state.xmlFragmentMap.getElement(nextFrag);
-						if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextFrag!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutAtomCount()>1|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutAtomCount()>=1 )){
+						if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutAtomCount()>1|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutAtomCount()>=1 )){
 							Atom toAtom = nextFrag.getOutAtom(0).getAtom();
 							if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 								group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -905,7 +905,7 @@ class StructureBuildingMethods {
 							for (int i = 0; i< siblingFragments.size()-1; i++) {
 								Fragment lastFrag = siblingFragments.get(i);
 								Element lastGroup = state.xmlFragmentMap.getElement(lastFrag);
-								if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastFrag!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (lastFrag.getOutAtomCount()>1|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutAtomCount()>=1 )){
+								if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (lastFrag.getOutAtomCount()>1|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutAtomCount()>=1 )){
 									Atom toAtom = lastFrag.getOutAtom(0).getAtom();
 									if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 										group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -914,7 +914,7 @@ class StructureBuildingMethods {
 									break;
 								}
 
-								//loop may continue if lastFrag was in fact completely unsubtitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
+								//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
 								if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
 									break;
 								}
@@ -929,7 +929,7 @@ class StructureBuildingMethods {
 					int multiplier = Integer.parseInt(subBracketOrRoot.getAttributeValue(MULTIPLIER_ATR));
 					Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 					Element nextGroup = state.xmlFragmentMap.getElement(nextFrag);
-					if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextFrag!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutAtomCount()>=multiplier|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutAtomCount()>=multiplier +1 )){
+					if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  && (nextFrag.getOutAtomCount()>=multiplier|| nextGroup.getAttribute(RESOLVED_ATR)!=null && nextFrag.getOutAtomCount()>=multiplier +1 )){
 						Atom toAtom = nextFrag.getOutAtom(0).getAtom();
 						if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 							group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -940,7 +940,7 @@ class StructureBuildingMethods {
 						for (int i = 0; i< siblingFragments.size()-1; i++) {
 							Fragment lastFrag = siblingFragments.get(i);
 							Element lastGroup = state.xmlFragmentMap.getElement(lastFrag);
-							if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastFrag!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  &&  (lastFrag.getOutAtomCount()>=multiplier|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutAtomCount()>=multiplier +1 )){
+							if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR)!=null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null  &&  (lastFrag.getOutAtomCount()>=multiplier|| lastGroup.getAttribute(RESOLVED_ATR)!=null && lastFrag.getOutAtomCount()>=multiplier +1 )){
 								Atom toAtom = lastFrag.getOutAtom(0).getAtom();
 								if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 									group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -949,7 +949,7 @@ class StructureBuildingMethods {
 								break;
 							}
 
-							//loop may continue if lastFrag was in fact completely unsubtitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
+							//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
 							if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true)!=null){
 								break;
 							}

@@ -1067,14 +1067,13 @@ class ComponentGenerator {
 					assignLambdasToHeteroAtoms =true;
 				}
 			}
-			else if(heteroCount==0 && XOMTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
-					 possibleHeteroatomOrMultiplier!=null &&
-						(fusedRingPresent && possibleHeteroatomOrMultiplier.getLocalName().equals(GROUP_EL) &&
-						(possibleHeteroatomOrMultiplier.getValue().equals("benzo") || possibleHeteroatomOrMultiplier.getValue().equals("benz"))
-						&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(FUSION_EL)
-						&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(LOCANT_EL)) 
-						|| (possibleHeteroatomOrMultiplier.getLocalName().equals(POLYCYCLICSPIRO_EL) && 
-								(possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spirobi")|| possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spiroter")))){
+			else if (possibleHeteroatomOrMultiplier!=null && ((heteroCount==0 && XOMTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
+					fusedRingPresent && possibleHeteroatomOrMultiplier.getLocalName().equals(GROUP_EL) &&
+					(possibleHeteroatomOrMultiplier.getValue().equals("benzo") || possibleHeteroatomOrMultiplier.getValue().equals("benz"))
+					&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(FUSION_EL)
+					&& !((Element)XOMTools.getNextSibling(possibleHeteroatomOrMultiplier)).getLocalName().equals(LOCANT_EL))
+					|| (possibleHeteroatomOrMultiplier.getLocalName().equals(POLYCYCLICSPIRO_EL) && 
+							(possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spirobi")|| possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spiroter"))))){
 				frontLocantsExpected = true;//a benzo fused ring e.g. 1lambda4,3-benzothiazole or a symmetrical poly cyclic spiro system
 			}
 			List<Element> heteroAtoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
