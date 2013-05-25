@@ -4,3 +4,4 @@ dimethylaminobenzene	InChI=1S/C8H11N/c1-9(2)8-6-4-3-5-7-8/h3-7H,1-2H3
 2,5-bisaminothiobenzene	InChI=1S/C6H8N2S2/c7-9-5-1-2-6(10-8)4-3-5/h1-4H,7-8H2
 1,4-dimethoxycarbonyl-benzene	InChI=1S/C10H10O4/c1-13-9(11)7-3-5-8(6-4-7)10(12)14-2/h3-6H,1-2H3
 1,5-bis-(4-methylphenyl)sulfonylbenzene	InChI=1/C20H18O4S2/c1-15-6-10-17(11-7-15)25(21,22)19-4-3-5-20(14-19)26(23,24)18-12-8-16(2)9-13-18/h3-14H,1-2H3
+S-fluoromethyl methanethioate	InChI=1S/C2H3FOS/c3-1-5-2-4/h2H,1H2
