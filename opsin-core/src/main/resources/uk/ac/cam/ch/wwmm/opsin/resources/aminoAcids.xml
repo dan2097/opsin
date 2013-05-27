@@ -74,9 +74,16 @@
     <token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CCN=[N+]=[N-])C" suffixAppliesTo="8">azidohomoalan</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertleuc</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert-leuc</token>
+    <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">t-leuc</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8">panton</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" valType="SMILES" value="N[C@@H](CCCC[N+](C)(C)C)C" suffixAppliesTo="11">lamin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" valType="SMILES" value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" suffixAppliesTo="17">saccharop</token>
+    <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tertbutylalan</token>
+    <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tert-butylalan</token>
+    <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">t-butylalan</token>
+    <token labels="/2,alpha/////1" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertbutylglyc</token>
+    <token labels="/2,alpha/////1" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert-butylglyc</token>
+    <token labels="/2,alpha/////1" valType="SMILES" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">t-butylglyc</token>
 
 <!--homo amino acids-->
     <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5">homoalan</token>
@@ -93,6 +100,21 @@
 <!--beta amino acids-->
     <token labels="/3,beta/2,alpha/1" valType="SMILES" value="NCCC" suffixAppliesTo="4">beta-alan</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C)CC" suffixAppliesTo="5">beta-homoalan</token>
+    <token labels="/3,beta/4,gamma/5,delta/6,epsilon/////2,alpha/1" valType="SMILES" value="N[C@@H](CCCNC(=N)N)CC" suffixAppliesTo="11">beta-homoargin</token>
+    <token labels="/3,beta/4,gamma/5,delta///2,alpha/1" valType="SMILES" value="N[C@@H](CC(N)=O)CC" suffixAppliesTo="8">beta-homoasparag</token>
+    <token labels="1/2///3/4//5" valType="SMILES" value="N1[C@H](CC)C[C@@H](O)C1" suffixAppliesTo="4">beta-homohydroxyprol</token>
+    <token labels="/3,beta/3'/4,gamma/5,delta/6,epsilon/2,alpha/1" valType="SMILES" value="N[C@@H]([C@@H](C)CC)CC" suffixAppliesTo="8">beta-homoisoleuc</token>
+    <token labels="/3,beta/4,gamma/5,delta/6',epsilon'/6,epsilon/2,alpha/1" valType="SMILES" value="N[C@@H](CC(C)C)CC" suffixAppliesTo="8">beta-homoleuc</token>
+    <token labels="/3,beta/4,gamma/5,delta/6,epsilon/7,zeta//2,alpha/1" valType="SMILES" value="N[C@@H](CCCCN)CC" suffixAppliesTo="9">beta-homolys</token>
+    <token labels="/3,beta/4,gamma/5,delta//methyl/2,alpha/1" valType="SMILES" value="N[C@@H](CCSC)CC" suffixAppliesTo="8">beta-homomethion</token>
+    <token labels="/beta/gamma/1/2,ortho/3,meta/4,para/5/6/alpha/" valType="SMILES" value="N[C@@H](Cc1ccccc1)CC" suffixAppliesTo="11">beta-homophenylalan</token>
+    <token labels="1/2///3/4/5" valType="SMILES" value="N1[C@H](CC)CCC1" suffixAppliesTo="4">beta-homoprol</token>
+    <token labels="/3,beta////2,alpha/1" valType="SMILES" value="N[C@@H](CC#C)CC" suffixAppliesTo="7">beta-homopropargylglyc</token>
+    <token labels="/3,beta/4,gamma/O/2,alpha/1" valType="SMILES" value="N[C@@H](CO)CC" suffixAppliesTo="6">beta-homoser</token>
+    <token labels="/3,beta/4,gamma/O/5,delta/2,alpha/1" valType="SMILES" value="N[C@@H]([C@H](O)C)CC" suffixAppliesTo="7">beta-homothreon</token>
+    <token labels="/beta/gamma/1/2,ortho/3,meta/4,para/5/6/O/alpha/" valType="SMILES" value="N[C@@H](Cc1ccc(cc1)O)CC" suffixAppliesTo="12">beta-homotyros</token>
+    <token labels="/3,beta/4,gamma/5',delta'/5,delta/2,alpha/1" valType="SMILES" value="N[C@@H](C(C)C)CC" suffixAppliesTo="7">beta-leuc</token>
+    <token labels="/beta/1/2,ortho/3,meta/4,para/5/6/alpha/" valType="SMILES" value="N[C@@H](c1ccccc1)CC" suffixAppliesTo="10">beta-phenylalan</token>
   </tokenList>
 
 <!--These amino acids ends in yl even when forming acyl groups as otherwise they cause ambiguity with the acyls from the acid version
@@ -100,6 +122,9 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
   <tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="Æ" >
     <token labels="/4,gamma/3,beta/2,alpha/1///" valType="SMILES" value="N[C@@H](CCC)C(N)=O" suffixAppliesTo="5">alpha-glutam</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1" valType="SMILES" value="N[C@@H](CCC(N)=O)C" suffixAppliesTo="8">glutam</token>
+    <token labels="/3,beta/4,gamma/5,delta///2,alpha/1" valType="SMILES" value="N[C@@H](CC(N)=O)CC" suffixAppliesTo="8">beta-glutam</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///1" valType="SMILES" value="N[C@@H](CCCC(N)=O)C" suffixAppliesTo="9">homoglutam</token>
+    <token labels="/3,beta/4,gamma/5,delta/6,epsilon///2,alpha/1" valType="SMILES" value="N[C@@H](CCC(N)=O)CC" suffixAppliesTo="9">beta-homoglutam</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](CS)C" suffixAppliesTo="5">cyste</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@H](CCS)C" suffixAppliesTo="6">homocyste</token>
     <token labels="/2,alpha/3,beta//1" valType="SMILES" value="N[C@@H](C[SeH])C" suffixAppliesTo="5">selenocyste</token>
@@ -108,11 +133,18 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 
   <tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="©" ><!--why isn't this tryptophine!!!!-->
     <token labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](Cc1c[nH]c2ccccc12)C" suffixAppliesTo="13">tryptoph</token>
+    <token labels="/alpha/beta/gamma/3/2/1/7a/7/6/5/4/3a/" valType="SMILES" value="N[C@@H](CCc1c[nH]c2ccccc12)C" suffixAppliesTo="14">homotryptoph</token>
+    <token labels="/beta/gamma/3/2/1/7a/7/6/5/4/3a/alpha/" valType="SMILES" value="N[C@@H](Cc1c[nH]c2ccccc12)CC" suffixAppliesTo="14">beta-homotryptoph</token>
   </tokenList>
 
   <tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ª" >
     <token labels="/2,alpha/3,beta/4,gamma/1" valType="SMILES" value="N[C@@H](CC)C" suffixAppliesTo="5,4">aspart</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6,5">homoaspart</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/1" valType="SMILES" value="N[C@@H](CCC)C" suffixAppliesTo="6,5">glutam</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" valType="SMILES" value="N[C@@H](CCCC)C" suffixAppliesTo="7,6">homoglutam</token>
+    <token labels="/3,beta/4,gamma/5,delta/6,epsilon/2,alpha/1" valType="SMILES" value="N[C@@H](CCC)CC" suffixAppliesTo="7,5">beta-homoglutam</token>
+    <token labels="/3,beta/4,gamma/5,delta/2,alpha/1" valType="SMILES" value="N[C@@H](CC)CC" suffixAppliesTo="6,4">beta-glutam</token>
+    <token labels="/3,beta/4,gamma/5,delta/2,alpha/1" valType="SMILES" value="N[C@@H](CC)CC" suffixAppliesTo="6,4">beta-homoaspart</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](CS(=O)(O)=O)C" suffixAppliesTo="8">cyste</token>
     <token labels="/2,alpha/3,beta/4,gamma/////1" valType="SMILES" value="N[C@@H](CCS(=O)(O)=O)C" suffixAppliesTo="9">homocyste</token>
     <token labels="/2,alpha/3,beta/////1" valType="SMILES" value="N[C@@H](C[Se](=O)(O)=O)C" suffixAppliesTo="8">selenocyste</token>
@@ -180,6 +212,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(=O)O)CO" functionalIDs="7">glutam-1-ol</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC(O))C(=O)O" functionalIDs="9">glutam-4-ol</token>
 
+    <token labels="/2,alpha/3,beta/4,gamma///methyl/1//" valType="SMILES" value="N[C@@H](CCS(=O)C)C(=O)O" functionalIDs="10">methionine sulfoxide</token>
     <token labels="none" valType="SMILES" value="OCCCNC([C@H](O)C(C)(C)CO)=O">pantothenol</token>
     <token labels="none" valType="SMILES" value="OCCCNC([C@H](O)C(C)(C)CO)=O">panthenol</token>
     <token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" functionalIDs="9">pidolic acid</token>
@@ -198,6 +231,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token value="N(C(C)C(=O)O)CCC(=O)O" valType="SMILES" labels="none" functionalIDs="6,11">beta-alanopine</token>
     <token value="NC(CC)C(=O)O" labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" functionalIDs="7">butyrine</token>
     <token value="NCCP(=O)(O)O" labels="none" valType="SMILES" functionalIDs="6,7">ciliatine</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1//" valType="SMILES" value="NC1(CCCC1)C(=O)O" functionalIDs="9">cycloleucine</token>
     <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
     <token value="NCCS" labels="/2,alpha/3,beta/" valType="SMILES">cysteamine</token>
     <token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" labels="none" valType="SMILES" functionalIDs="9,24,31,39">glutathione disulfide</token>
