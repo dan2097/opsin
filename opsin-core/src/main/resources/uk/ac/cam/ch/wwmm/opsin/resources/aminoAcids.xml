@@ -65,6 +65,7 @@
     <token labels="/2,alpha/3,beta/4,gamma////1" valType="SMILES" value="N[C@@H](CC[Se]CC)C" suffixAppliesTo="8">selenoethion</token>
     <token labels="/2,alpha/3,beta/4,gamma///1" valType="SMILES" value="N[C@@H](CCON)C" suffixAppliesTo="7">canal</token>
     <token labels="/2,alpha/3,beta/4,gamma//////1" valType="SMILES" value="N[C@@H](CCONC(=N)C)C" suffixAppliesTo="10">canavan</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" valType="SMILES" value="NC1(CCCC1)C" suffixAppliesTo="7">cycloleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@](CC)(C)C" suffixAppliesTo="6">isoval</token>
     <token labels="/2,alpha/3,beta/4,gamma//1" valType="SMILES" value="N[C@@](CC)(C)C" suffixAppliesTo="6">iso-val</token>
     <token labels="none" valType="SMILES" value="N[C@@H](C(C)(C)S)C" suffixAppliesTo="7">penicillam</token>
@@ -231,7 +232,6 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token value="N(C(C)C(=O)O)CCC(=O)O" valType="SMILES" labels="none" functionalIDs="6,11">beta-alanopine</token>
     <token value="NC(CC)C(=O)O" labels="/2,alpha/3,beta/4,gamma/1//" valType="SMILES" functionalIDs="7">butyrine</token>
     <token value="NCCP(=O)(O)O" labels="none" valType="SMILES" functionalIDs="6,7">ciliatine</token>
-    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1//" valType="SMILES" value="NC1(CCCC1)C(=O)O" functionalIDs="9">cycloleucine</token>
     <token value="NCCSSCCN" labels="none" valType="SMILES">cystamine</token>
     <token value="NCCS" labels="/2,alpha/3,beta/" valType="SMILES">cysteamine</token>
     <token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" labels="none" valType="SMILES" functionalIDs="9,24,31,39">glutathione disulfide</token>
