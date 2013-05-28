@@ -2816,7 +2816,22 @@ class ComponentProcessor {
 				Atom atomOnLatestClone;
 				if (ringJoiningLocants.size()>0){//locants defined
 					atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(0));
-					atomOnLatestClone = clone.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(1));
+					String secondLocant = ringJoiningLocants.get(j).get(1);
+					if (mvalue ==2 && !secondLocant.endsWith("'")){
+						//Allow prime to be (incorrectly) omitted on second locant in bi ring assemblies e.g. 2,2-bipyridine
+						try {
+							atomOnLatestClone = clone.getAtomByLocantOrThrow(secondLocant);
+						}
+						catch (StructureBuildingException e){
+							atomOnLatestClone = clone.getAtomByLocant(secondLocant + "'");
+							if (atomOnLatestClone == null){
+								throw e;
+							}
+						}
+					}
+					else{
+						atomOnLatestClone = clone.getAtomByLocantOrThrow(secondLocant);
+					}
 				}
 				else{
 					if (fragmentToResolveAndDuplicate.getOutAtomCount()>0 && mvalue==2){
