@@ -3768,19 +3768,21 @@ class ComponentProcessor {
 			}
 
 			//either all locants will be moved, or none
-			Boolean moveLocants = false;
+			boolean moveLocants = false;
 			if (locantValues!=null){
 				Element elAfterLocant = (Element) XOMTools.getNextSibling(locantRelatedElements.get(0));
 				for (String locantText : locantValues) {
-					if (elAfterLocant.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(MATCH_COMMA.split(elAfterLocant.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
+					if (elAfterLocant !=null && elAfterLocant.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(MATCH_COMMA.split(elAfterLocant.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
 						continue;
 					}
 					
 					//Check the right fragment in the bracket:
 					//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
-					if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()){
+					if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()
+							|| (locantValues.length ==1 && elAfterLocant.getLocalName().equals(MULTIPLIER_EL))){
 						if (checkLocantPresentOnPotentialRoot(substituent, locantText)){
 							moveLocants =true;//locant location is present elsewhere
+							break;
 						}
 						else if (findElementsMissingIndirectLocants(elementBeforeSubstituent, locantRelatedElements.get(0)).size()==0 || !state.xmlFragmentMap.get(lastGroupOfElementBeforeSub).hasLocant(locantText)){
 							if( frag.getAtomList().size()==1 && frag.hasLocant(locantText)){
@@ -3788,35 +3790,36 @@ class ComponentProcessor {
 							}
 							else{
 								moveLocants =true;//the fragment adjacent to the locant doesn't have this locant or doesn't need any indirect locants. Assume it will appear elsewhere later
+								break;
 							}
 						}
 					}
 				}
-			}
+				
 
-			if (moveLocants && locantValues !=null && locantValues.length >1){
-				Element shouldBeAMultiplierNode = (Element)XOMTools.getNextSibling(locantRelatedElements.get(0));
-				if (shouldBeAMultiplierNode !=null && shouldBeAMultiplierNode.getLocalName().equals(MULTIPLIER_EL)){
-					Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSiblingIgnoringCertainElements(shouldBeAMultiplierNode, new String[]{MULTIPLIER_EL});
-					if (shouldBeAGroupOrSubOrBracket !=null){
-						if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && shouldBeAMultiplierNode.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-								|| (frag.getAtomList().size()==1)//e.g. 1,3,4-trimethylthiobenzene
-								|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
-							locantRelatedElements.add(shouldBeAMultiplierNode);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
+				if (moveLocants && locantValues.length >1){
+					if (elAfterLocant !=null && elAfterLocant.getLocalName().equals(MULTIPLIER_EL)){
+						Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
+						if (shouldBeAGroupOrSubOrBracket !=null){
+							if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
+									|| (frag.getAtomList().size()==1)//e.g. 1,3,4-trimethylthiobenzene
+									|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
+								locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
+							}
+							else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
+								XOMTools.setTextChild(locantRelatedElements.get(0), locantValues[1]);
+							}
+							else{//don't bracket other complex multiplied substituents (name hasn't given enough hints if indeed bracketing was expected)
+								continue;
+							}
 						}
-						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
-							XOMTools.setTextChild(locantRelatedElements.get(0), locantValues[1]);
-						}
-						else{//don't bracket other complex multiplied substituents (name hasn't given enough hints if indeed bracketing was expected)
-							continue;
+						else{
+							moveLocants =false;
 						}
 					}
 					else{
 						moveLocants =false;
 					}
-				}
-				else{
-					moveLocants =false;
 				}
 			}
 
