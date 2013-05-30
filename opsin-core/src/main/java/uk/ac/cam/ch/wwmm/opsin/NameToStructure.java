@@ -1,8 +1,15 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
@@ -211,45 +218,76 @@ public class NameToStructure {
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd = null;
 		try{
-			cmd =  parser.parse(options, args);
+			cmd = parser.parse(options, args);
 		}
 		catch (UnrecognizedOptionException e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
 		}
 		if (cmd.hasOption("h")){
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options]\n" +
-					"OPSIN accepts new line delimited names either interactively or in batch and can output CML, SMILES or InChI/StdInChI\n" +
-					"For batch use direct a new line seperated list of names to the program and direct the stdout to an output files e.g. " +
-					"java -jar opsin.jar -osmi < inputFile.name > outputFile.smiles", options);
-			System.exit(0);
+			displayUsage(options);
 		}
 		if(cmd.hasOption("v")){
 			Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);
 		}
-		NameToStructure nts = NameToStructure.getInstance();
+
 		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(cmd);
+		
+		InputStream input;
+		OutputStream output;
+		String[] unparsedArgs = cmd.getArgs();
+		if (unparsedArgs.length == 0){
+			input = System.in;
+			output = System.out;
+		}
+		else if (unparsedArgs.length == 1){
+			input = new FileInputStream(new File(unparsedArgs[0]));
+			output = System.out;
+		}
+		else if (unparsedArgs.length == 2){
+			input = new FileInputStream(new File(unparsedArgs[0]));
+			output = new FileOutputStream(new File(unparsedArgs[1]));
+		}
+		else {
+			input = null;
+			output = null;
+			displayUsage(options);
+		}
 
 		System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
 		String outputType = cmd.getOptionValue("o", "cml");
 		if (outputType.equalsIgnoreCase("cml")){
-			interactiveCmlOutput(nts, n2sconfig);
+			interactiveCmlOutput(input, output, n2sconfig);
 		}
 		else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")){
-			interactiveSmilesOutput(nts, n2sconfig);
+			interactiveSmilesOutput(input, output, n2sconfig);
 		}
 		else if (outputType.equalsIgnoreCase("inchi")){
-			interactiveInchiOutput(nts, n2sconfig, false);
+			interactiveInchiOutput(input, output, n2sconfig, false);
 		}
 		else if (outputType.equalsIgnoreCase("stdinchi")){
-			interactiveInchiOutput(nts, n2sconfig, true);
+			interactiveInchiOutput(input, output, n2sconfig, true);
 		}
 		else{
 			System.err.println("Unrecognised output format: " + outputType);
 			System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\" and \"stdinchi\"");
 			System.exit(1);
 		}
+		if (unparsedArgs.length == 1){
+			input.close();
+		}
+		else if (unparsedArgs.length == 2){
+			input.close();
+			output.close();
+		}
+	}
+
+	private static void displayUsage(Options options) {
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options] [inputfile] [outputfile]\n" +
+				"OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI\n" +
+				"Names should be new line delimited and may be read from stdin (default) or a file and output to stdout (default) or a file", options);
+		System.exit(0);
 	}
 
 	private static Options buildCommandLineOptions() throws ParseException {
@@ -285,9 +323,10 @@ public class NameToStructure {
 		return n2sconfig;
 	}
 
-	private static void interactiveCmlOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException {
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-		StreamSerializer serializer = new StreamSerializer(System.out);
+	private static void interactiveCmlOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException {
+		NameToStructure nts = NameToStructure.getInstance();
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		StreamSerializer serializer = new StreamSerializer(out);
 		serializer.setIndent(2);
 		serializer.writeXMLDeclaration();
 		Element cml = new Element("cml", XmlDeclarations.CML_NAMESPACE);
@@ -297,8 +336,8 @@ public class NameToStructure {
 		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
 		serializer.writeStartTag(cml);
 		int id =1;
-		String name = stdinReader.readLine();
-		while(name !=null) {
+		String name;
+		while((name =inputReader.readLine()) != null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			Element output = result.getCml();
 			if(output == null) {
@@ -317,32 +356,33 @@ public class NameToStructure {
 				serializer.write(molecule);
 				serializer.flush();
 			}
-			name = stdinReader.readLine();
 		}
 		serializer.writeEndTag(cml);
 		serializer.flush();
 	}
 	
-	private static void interactiveSmilesOutput(NameToStructure nts, NameToStructureConfig n2sconfig) throws IOException {
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-		String name = stdinReader.readLine();
-		while(name !=null) {
+	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException {
+		NameToStructure nts = NameToStructure.getInstance();
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+		String name;
+		while((name =inputReader.readLine()) != null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = result.getSmiles();
 			if(output == null) {
 				System.err.println(result.getMessage());
-				System.out.println("");
-				System.out.flush();
 			} else {
-				System.out.println(output);
-				System.out.flush();
+				outputWriter.write(output);
 			}
-			name = stdinReader.readLine();
+			outputWriter.newLine();
+			outputWriter.flush();
 		}
 	}
 
-	private static void interactiveInchiOutput(NameToStructure nts, NameToStructureConfig n2sconfig, boolean produceStdInChI) throws Exception {
-		BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean produceStdInChI) throws Exception {
+		NameToStructure nts = NameToStructure.getInstance();
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 		Class<?> c;
 		try {
 			c = Class.forName("uk.ac.cam.ch.wwmm.opsin.NameToInchi");
@@ -358,19 +398,17 @@ public class NameToStructure {
 			m = c.getMethod("convertResultToInChI", new Class[]{OpsinResult.class});
 		}
 
-		String name = stdinReader.readLine();
-		while(name !=null) {
+		String name;
+		while((name =inputReader.readLine()) != null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = (String) m.invoke(null, new Object[]{result});
 			if(output == null) {
 				System.err.println(result.getMessage());
-				System.out.println("");
-				System.out.flush();
 			} else {
-				System.out.println(output);
-				System.out.flush();
+				outputWriter.write(output);
 			}
-			name = stdinReader.readLine();
+			outputWriter.newLine();
+			outputWriter.flush();
 		}
 	}
 }
