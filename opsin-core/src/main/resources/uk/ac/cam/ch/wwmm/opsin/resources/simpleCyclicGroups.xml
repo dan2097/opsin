@@ -138,9 +138,9 @@
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="¾">
 <!--nucleotides-->
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylic</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylicacid</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-adenylic acid</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///////1/2//3/4//5/alpha/6" valType="SMILES" functionalIDs="10,11">5'-thymidylic</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///////1/2//3/4//5/alpha/6" valType="SMILES" functionalIDs="10,11">5'-thymidylicacid</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///////1/2//3/4//5/alpha/6" valType="SMILES" functionalIDs="10,11">5'-thymidylic acid</token>
@@ -153,9 +153,9 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-xanthylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-xanthylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-xanthylic acid</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc(N)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" valType="SMILES" functionalIDs="11,12">5'-cytidylic</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc(N)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" valType="SMILES" functionalIDs="11,12">5'-cytidylicacid</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc(N)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" valType="SMILES" functionalIDs="11,12">5'-cytidylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" valType="SMILES" functionalIDs="11,12">5'-cytidylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" valType="SMILES" functionalIDs="11,12">5'-cytidylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" valType="SMILES" functionalIDs="11,12">5'-cytidylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6" valType="SMILES" functionalIDs="11,12">5'-uridylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6" valType="SMILES" functionalIDs="11,12">5'-uridylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6" valType="SMILES" functionalIDs="11,12">5'-uridylic acid</token>
