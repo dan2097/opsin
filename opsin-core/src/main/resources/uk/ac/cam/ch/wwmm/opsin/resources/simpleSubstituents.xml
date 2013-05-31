@@ -455,21 +455,21 @@
 		<token value="-NC(=N)N" labels="1//2/3" valType="SMILES">guanidino</token>
 		<token value="-S(=O)(=O)CCN" labels="none" valType="SMILES">tauryl</token>
 
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'//////9/8/7/5/6/N/1/2/3/4" valType="SMILES" outIDs="9">5'-adenylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//////9/8/7/5/6/N/1/2/3/4" valType="SMILES" outIDs="9">5'-adenylyl</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'//////1/2//3/4//5/alpha/6" valType="SMILES" outIDs="8">5'-thymidylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'//////9/8/7/5/6//1/2//3/4" valType="SMILES" outIDs="9">5'-guanylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2cnc3c(O)ncnc23" labels="1'/2'//3'//4'/5'//////9/8/7/5/6//1/2/3/4" valType="SMILES" outIDs="9">5'-inosinylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'//////9/8/7/5/6//1/2//3/4" valType="SMILES" outIDs="9">5'-xanthylyl</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)nc(N)cc2" labels="1'/2'//3'//4'/5'//////1/2//3/4/N/5/6" valType="SMILES" outIDs="9">5'-cytidylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'//////1/2//3/4/N/5/6" valType="SMILES" outIDs="9">5'-cytidylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'//////1/2//3/4//5/6" valType="SMILES" outIDs="9">5'-uridylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'//////1/2//3/4//5/6///" valType="SMILES" outIDs="9">5'-orotidylyl</token>
 
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" valType="SMILES" outIDs="7">5'-adenosyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" valType="SMILES" outIDs="7">5'-adenosyl</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](C)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'//1/2//3/4//5/alpha/6" valType="SMILES" outIDs="6">5'-thymidyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6//1/2//3/4" valType="SMILES" outIDs="7">5'-guanosyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c(O)ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6//1/2/3/4" valType="SMILES" outIDs="7">5'-inosyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'//9/8/7/5/6//1/2//3/4" valType="SMILES" outIDs="7">5'-xanthosyl</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2c(=O)nc(N)cc2" labels="1'/2'//3'//4'/5'//1/2//3/4/N/5/6" valType="SMILES" outIDs="7">5'-cytidyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'//1/2//3/4/N/5/6" valType="SMILES" outIDs="7">5'-cytidyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'//1/2//3/4//5/6" valType="SMILES" outIDs="7">5'-uridyl</token>
 	</tokenList>
 
