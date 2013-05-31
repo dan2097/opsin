@@ -232,7 +232,7 @@ class WordRulesOmittedSpaceCorrector {
 		List<Atom> substitutableAtoms = new ArrayList<Atom>();
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (FragmentTools.isFunctionalAtomOrAldehyde(atom)){
+			if (FragmentTools.isCharacteristicAtom(atom)){
 				continue;
 			}
 			int currentExpectedValency = atom.determineValency(true);
