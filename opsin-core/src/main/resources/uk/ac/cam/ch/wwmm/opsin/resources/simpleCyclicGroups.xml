@@ -147,9 +147,9 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-guanylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-guanylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-guanylic acid</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(O)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-inosinic</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(O)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-inosinicacid</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(O)ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-inosinic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-inosinic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-inosinicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" valType="SMILES" functionalIDs="11,12">5'-inosinic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-xanthylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-xanthylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" valType="SMILES" functionalIDs="11,12">5'-xanthylic acid</token>
