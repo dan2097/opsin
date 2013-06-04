@@ -52,7 +52,7 @@
     <token value="CCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta,beta'/8,alpha'/9" valType="SMILES" suffixAppliesTo="1,9">azel</token>
     <token value="CCCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8,beta'/9,alpha'/10" valType="SMILES" suffixAppliesTo="1,10">sebac</token>
     <token value="CC=C" labels="1/2/3" valType="SMILES" usableAsAJoiner="yes">acryl</token>
-    <token value="CC(=C)C" labels="none" valType="SMILES">methacryl</token>
+    <token value="CC(=C)C" labels="1/2/3/" valType="SMILES">methacryl</token>
     <token value="C/C=C/C" labels="1/2/3/4" valType="SMILES" usableAsAJoiner="yes">croton</token>
     <token value="C\C=C/C" labels="1/2/3/4" valType="SMILES" usableAsAJoiner="yes">isocroton</token>
     <token value="C/C=C\C" labels="1/2,alpha/3,beta,alpha'/4" valType="SMILES" suffixAppliesTo="1,4">male</token>
