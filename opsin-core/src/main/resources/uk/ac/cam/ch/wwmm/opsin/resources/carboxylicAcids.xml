@@ -1,26 +1,28 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
+  <!--Ascending Greek locants are algoritmically added for monocarboxylic acids, but, if applicable, need to be manually specified for polycarboxylic acids-->
+
   <!--This is the set of trivial acids in which yl is added to denote an acyl. Oyl is not recommended but is unambiguous and so is accepted-->
   <tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">
-    <token value="C" valType="SMILES" usableAsAJoiner="yes">form</token>
+    <token value="C" labels="1" valType="SMILES" usableAsAJoiner="yes">form</token>
     <token value="CC" labels="1/2,omega" valType="SMILES" usableAsAJoiner="yes">acet</token>
-    <token value="CCC" valType="SMILES" usableAsAJoiner="yes">propion</token>
-    <token value="CCC" valType="SMILES" usableAsAJoiner="yes">propi</token>
-    <token value="CCCC" valType="SMILES" usableAsAJoiner="yes">butyr</token>
-    <token value="CC(C)C" valType="SMILES">isobutyr</token>
-    <token value="CCCCC" valType="SMILES" usableAsAJoiner="yes">valer</token>
-    <token value="CCC(C)C" valType="SMILES">isovaler</token>
-    <token value="CC" valType="SMILES" suffixAppliesTo="1,2">oxal</token>
-    <token value="CCC" valType="SMILES" suffixAppliesTo="1,3">malon</token>
-    <token value="CCCC" valType="SMILES" suffixAppliesTo="1,4">succin</token>
-    <token value="CCCCC" valType="SMILES" suffixAppliesTo="1,5">glutar</token>
+    <token value="CCC" labels="1/2/3" valType="SMILES" usableAsAJoiner="yes">propion</token>
+    <token value="CCC" labels="1/2/3" valType="SMILES" usableAsAJoiner="yes">propi</token>
+    <token value="CCCC" labels="1/2/3/4" valType="SMILES" usableAsAJoiner="yes">butyr</token>
+    <token value="CC(C)C" labels="1/2/3/" valType="SMILES">isobutyr</token>
+    <token value="CCCCC" labels="1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">valer</token>
+    <token value="CCC(C)C" labels="1/2/3/4/" valType="SMILES">isovaler</token>
+    <token value="CC" labels="1/2" valType="SMILES" suffixAppliesTo="1,2">oxal</token>
+    <token value="CCC" labels="1/2,alpha/3" valType="SMILES" suffixAppliesTo="1,3">malon</token>
+    <token value="CCCC" labels="1/2,alpha/3,beta,alpha'/4" valType="SMILES" suffixAppliesTo="1,4">succin</token>
+    <token value="CCCCC" labels="1/2,alpha/3,beta/4,alpha'/5" valType="SMILES" suffixAppliesTo="1,5">glutar</token>
 
     <token value="CCC(=O)C" labels="1/2/3//4" defaultInLocant="4" valType="SMILES" usableAsAJoiner="yes">acetoacet</token>
-    <token value="CCCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">caprin</token>
-    <token value="CCCCCC" valType="SMILES" usableAsAJoiner="yes">capro</token>
-    <token value="CCCCCCCC" valType="SMILES" usableAsAJoiner="yes">capryl</token>
-    <token value="CCCCCCC" valType="SMILES" usableAsAJoiner="yes">enanth</token>
+    <token value="CCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10" valType="SMILES" usableAsAJoiner="yes">caprin</token>
+    <token value="CCCCCC" labels="1/2/3/4/5/6" valType="SMILES" usableAsAJoiner="yes">capro</token>
+    <token value="CCCCCCCC" labels="1/2/3/4/5/6/7/8" valType="SMILES" usableAsAJoiner="yes">capryl</token>
+    <token value="CCCCCCC" labels="1/2/3/4/5/6/7" valType="SMILES" usableAsAJoiner="yes">enanth</token>
     <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2cnc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">fol</token><!--foloyl is unknown-->
     <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">dihydrofol</token>
     <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">7,8-dihydrofol</token>
@@ -29,32 +31,32 @@
     <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,10-methenyl-5,6,7,8-tetrahydrofol</token>
     <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,10-methenyltetrahydrofol</token>
     <token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'" valType="SMILES">5,10-methenyl-tetrahydrofol</token>
-    <token value="CCCC(C)C" labels="none" valType="SMILES">isocapro</token>
-    <token value="CC(C)C" labels="none" valType="SMILES" suffixAppliesTo="1,4">isosuccin</token>
+    <token value="CCCC(C)C" labels="1/2/3/4/5/" valType="SMILES">isocapro</token>
+    <token value="CC(C)C" labels="1/2,alpha//3" valType="SMILES" suffixAppliesTo="1,4">isosuccin</token>
     <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
     <token value="S(=O)c1ccc(N)c2ccccc12" labels="//1/2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphthion</token>
     <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
-    <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelargon</token>
-    <token value="CCCCCCCCC" valType="SMILES" usableAsAJoiner="yes">pelarg</token>
-    <token value="CC(S)C(S)C" valType="SMILES" labels="1/2//3//4" suffixAppliesTo="1,6">dimercaptosuccin</token>
+    <token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">pelargon</token>
+    <token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">pelarg</token>
+    <token value="CC(S)C(S)C" valType="SMILES" labels="1/2,alpha//3,beta,alpha'//4" suffixAppliesTo="1,6">dimercaptosuccin</token>
     <token value="CC#CC" labels="1/2/3/4" valType="SMILES">tetrol</token>
   </tokenList>
 
   <!--This is the set of trivial acids in which yl is used as above but oyl is recommended-->
   <tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">
-    <token value="CC(C)(C)C" valType="SMILES">pival</token>
-    <token value="CCCCCC" valType="SMILES" suffixAppliesTo="1,6">adip</token>
-    <token value="CCCCCCC" valType="SMILES" suffixAppliesTo="1,7">pimel</token>
-    <token value="CCCCCCCC" valType="SMILES" suffixAppliesTo="1,8">suber</token>
-    <token value="CCCCCCCCC" valType="SMILES" suffixAppliesTo="1,9">azela</token>
-    <token value="CCCCCCCCC" valType="SMILES" suffixAppliesTo="1,9">azel</token>
-    <token value="CCCCCCCCCC" valType="SMILES" suffixAppliesTo="1,10">sebac</token>
-    <token value="CC=C" valType="SMILES" usableAsAJoiner="yes">acryl</token>
-    <token value="CC(=C)C" valType="SMILES">methacryl</token>
-    <token value="C/C=C/C" valType="SMILES" usableAsAJoiner="yes">croton</token>
-    <token value="C\C=C/C" valType="SMILES" usableAsAJoiner="yes">isocroton</token>
-    <token value="C/C=C\C" valType="SMILES" suffixAppliesTo="1,4">male</token>
-    <token value="C\C=C\C" valType="SMILES" suffixAppliesTo="1,4">fumar</token>
+    <token value="CC(C)(C)C" labels="1/2/3,beta//" valType="SMILES">pival</token>
+    <token value="CCCCCC" labels="1/2,alpha/3,beta/4,gamma,beta'/5,delta,alpha'/6" valType="SMILES" suffixAppliesTo="1,6">adip</token>
+    <token value="CCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta,beta'/6,epsilon,alpha'/7" valType="SMILES" suffixAppliesTo="1,7">pimel</token>
+    <token value="CCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon,beta'/7,zeta,alpha'/8" valType="SMILES" suffixAppliesTo="1,8">suber</token>
+    <token value="CCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta,beta'/8,alpha'/9" valType="SMILES" suffixAppliesTo="1,9">azela</token>
+    <token value="CCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta,beta'/8,alpha'/9" valType="SMILES" suffixAppliesTo="1,9">azel</token>
+    <token value="CCCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8,beta'/9,alpha'/10" valType="SMILES" suffixAppliesTo="1,10">sebac</token>
+    <token value="CC=C" labels="1/2/3" valType="SMILES" usableAsAJoiner="yes">acryl</token>
+    <token value="CC(=C)C" labels="none" valType="SMILES">methacryl</token>
+    <token value="C/C=C/C" labels="1/2/3/4" valType="SMILES" usableAsAJoiner="yes">croton</token>
+    <token value="C\C=C/C" labels="1/2/3/4" valType="SMILES" usableAsAJoiner="yes">isocroton</token>
+    <token value="C/C=C\C" labels="1/2,alpha/3,beta,alpha'/4" valType="SMILES" suffixAppliesTo="1,4">male</token>
+    <token value="C\C=C\C" labels="1/2,alpha/3,beta,alpha'/4" valType="SMILES" suffixAppliesTo="1,4">fumar</token>
     <token value="C/C(C)=C\C" labels="1/2//3/4" valType="SMILES" suffixAppliesTo="1,5">citracon</token>
     <token value="C\C(C)=C\C" labels="1/2//3/4" valType="SMILES" suffixAppliesTo="1,5">mesacon</token>
     <token value="CC1(C)C(C)(C)C(C)CC1" labels="/1//2///3//4/5" valType="SMILES" suffixAppliesTo="1,8">camphor</token>
