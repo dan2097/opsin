@@ -192,6 +192,7 @@
 		<token value="[NH2+]" labels="none" valType="SMILES">nitrenium</token>
 		<token value="C([N+](=O)[O-])([N+](=O)[O-])[N+](=O)[O-]" labels="none" valType="SMILES">nitroform</token>
 		<token value="C(C(CO[N+](=O)[O-])O[N+](=O)[O-])O[N+](=O)[O-]" labels="none" valType="SMILES">nitroglycerin</token>
+		<token value="N#[O+]" labels="none" valType="SMILES">nitrosonium</token>
 		<token value="O=[N+]=O" labels="none" valType="SMILES">nitronium</token>
 		<token value="NN=O" labels="none" valType="SMILES">nitrosamide</token>
 		<token value="N#[N+][O-]" labels="none" valType="SMILES">nitrous oxide</token>
