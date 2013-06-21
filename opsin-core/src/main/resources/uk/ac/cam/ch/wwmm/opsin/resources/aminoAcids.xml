@@ -213,6 +213,10 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
     <token labels="/2,alpha/3,beta/4,gamma/5,delta///1/" valType="SMILES" value="N[C@@H](CCC(=O)O)CO" functionalIDs="7">glutam-1-ol</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta//1//" valType="SMILES" value="N[C@@H](CCC(O))C(=O)O" functionalIDs="9">glutam-4-ol</token>
 
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1//" valType="SMILES" value="N[C@@H](CCCNC(N)=N)C(=O)N" functionalIDs="12,12">arginamide</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1//" valType="SMILES" value="N[C@@H](CCCNC(N)=N)C(=O)[O-]" functionalIDs="12">arginate</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1//" valType="SMILES" value="N[C@@H](CCCCNC(=N)N)C(=O)N" functionalIDs="13,13">homoarginamide</token>
+    <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1//" valType="SMILES" value="N[C@@H](CCCCNC(=N)N)C(=O)[O-]" functionalIDs="13">homoarginate</token>
     <token labels="/2,alpha/3,beta/4,gamma///methyl/1//" valType="SMILES" value="N[C@@H](CCS(=O)C)C(=O)O" functionalIDs="10">methionine sulfoxide</token>
     <token labels="none" valType="SMILES" value="OCCCNC([C@H](O)C(C)(C)CO)=O">pantothenol</token>
     <token labels="none" valType="SMILES" value="OCCCNC([C@H](O)C(C)(C)CO)=O">panthenol</token>

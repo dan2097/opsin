@@ -95,6 +95,7 @@
 		<token value="N#CI" labels="none" valType="SMILES">cyanogen iodide</token>
 		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">cyanuric acid</token>
 		<token value="N1C(=O)NC(=O)NC1=O" labels="1/2//3/4//5/6/" valType="SMILES">cyanuricacid</token>
+		<token value="NS(=O)(=O)c1cccc2c(N(C)C)cccc12" labels="none" valType="SMILES" functionalIDs="1,1">dansylamide</token>
 		<token value="CC(=O)NC(=O)C" labels="none" valType="SMILES" functionalIDs="4">diacetamide</token>
 		<token value="CC(CC(C)(N)C)=O" labels="none" valType="SMILES">diacetonamine</token>
 		<token value="CC(CC(C)(O)C)=O" labels="none" valType="SMILES">diacetone alcohol</token>
