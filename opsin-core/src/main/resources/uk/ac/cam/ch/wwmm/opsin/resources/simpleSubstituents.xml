@@ -99,6 +99,8 @@
 		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" valType="SMILES">alpha-cumyl</token>
 		<token value="-NC#N" labels="none" valType="SMILES">cyanamido</token>
 		<token value="-C#N" labels="none" valType="SMILES">cyanyl</token>
+		<token value="-S(=O)(=O)c1ccc(N=Nc2ccc(N(C)C)cc2)cc1" labels="none" valType="SMILES">dabsyl</token>
+		<token value="-S(=O)(=O)c1cccc2c(N(C)C)cccc12" labels="none" valType="SMILES">dansyl</token>
 		<token value="c1(ccccc1)C(=O)Cc2ccccc2" labels="1/2/3/4/5/6///alpha/1'/2'/3'/4'/5'/6'" valType="SMILES" outIDs="9">desyl</token>
 		<token value="-[2H]" valType="SMILES">deuterio</token>
 		<token value="-[2H]" valType="SMILES">deutero</token>
