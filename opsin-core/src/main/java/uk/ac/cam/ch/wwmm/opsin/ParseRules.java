@@ -33,10 +33,8 @@ public class ParseRules {
 		List<Character> annot;
 		/** The strings these annotations correspond to. */
 		ArrayList<String> tokens;
-		/** Holds the part of chemical name that has yet to be tokenised */
-		String untokenisedChemicalName;
-		/** As above but all lower case */
-		String untokenisedChemicalNameLowerCase;
+		/** The index of the first char in the chemical name that has yet to be tokenised */
+		int posInName;
 	}
 
 	/** A DFA encompassing the grammar of a chemical word. */
@@ -67,118 +65,113 @@ public class ParseRules {
 	 * @throws ParsingException
 	 */
 	public ParseRulesResults getParses(String chemicalWord) throws ParsingException {
+		String chemicalWordLowerCase = chemicalWord.toLowerCase();
 		AnnotatorState startingAS = new AnnotatorState();
 		startingAS.state = chemAutomaton.getInitialState();
 		startingAS.annot = new ArrayList<Character>();
 		startingAS.tokens = new ArrayList<String>();
-		startingAS.untokenisedChemicalName = chemicalWord;
-		startingAS.untokenisedChemicalNameLowerCase = chemicalWord.toLowerCase();
+		startingAS.posInName = 0;
 		LinkedList<AnnotatorState> asStack = new LinkedList<AnnotatorState>();
 		asStack.add(startingAS);
 
-		int wordLengthRemainingOnLastSuccessfulAnnotations = chemicalWord.length();
-		int wordLengthRemainingOnLongestAnnotation = chemicalWord.length();
+		int posInNameOfLastSuccessfulAnnotations = 0;
 		List<AnnotatorState> successfulAnnotations = new ArrayList<AnnotatorState>();
 		AnnotatorState longestAnnotation = new AnnotatorState();//this is the longest annotation. It does not necessarily end in an accept state
 		longestAnnotation.state = chemAutomaton.getInitialState();
 		longestAnnotation.annot = new ArrayList<Character>();
 		longestAnnotation.tokens = new ArrayList<String>();
-		longestAnnotation.untokenisedChemicalName = chemicalWord;
-		longestAnnotation.untokenisedChemicalNameLowerCase = chemicalWord.toLowerCase();
+		longestAnnotation.posInName = 0;
 		int stateSymbolsSize = stateSymbols.length;
 		while (!asStack.isEmpty()) {
 			AnnotatorState as = asStack.removeFirst();
-			String untokenisedChemicalNameLowerCase = as.untokenisedChemicalNameLowerCase;
-			String untokenisedChemicalName = as.untokenisedChemicalName;
-			int wordLength = untokenisedChemicalNameLowerCase.length();
-	        if (chemAutomaton.isAccept(as.state)){
-	        	if (wordLength <= wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is worthy of consideration
-		        	if (wordLength < wordLengthRemainingOnLastSuccessfulAnnotations){//this annotation is longer than any previously found annotation
-		        		successfulAnnotations.clear();
-		        		wordLengthRemainingOnLastSuccessfulAnnotations = wordLength;
-		        	}
-		        	else if (successfulAnnotations.size()>128){
-		        		throw new ParsingException("Ambiguity in OPSIN's chemical grammar has produced more than 128 annotations. Parsing has been aborted. Please report this as a bug");
-		        	}
-		        	successfulAnnotations.add(as);
-	        	}
-	        }
-        	//record the longest annotation found so it can be reported to the user for debugging
-          	if (wordLength < wordLengthRemainingOnLongestAnnotation){
-          		wordLengthRemainingOnLongestAnnotation = wordLength;
-        		longestAnnotation =as;
-        	}
+			int posInName = as.posInName;
+			if (chemAutomaton.isAccept(as.state)){
+				if (posInName >= posInNameOfLastSuccessfulAnnotations){//this annotation is worthy of consideration
+					if (posInName > posInNameOfLastSuccessfulAnnotations){//this annotation is longer than any previously found annotation
+						successfulAnnotations.clear();
+						posInNameOfLastSuccessfulAnnotations = posInName;
+					}
+					else if (successfulAnnotations.size()>128){
+						throw new ParsingException("Ambiguity in OPSIN's chemical grammar has produced more than 128 annotations. Parsing has been aborted. Please report this as a bug");
+					}
+					successfulAnnotations.add(as);
+				}
+			}
+			//record the longest annotation found so it can be reported to the user for debugging
+			if (posInName > longestAnnotation.posInName){
+				longestAnnotation = as;
+			}
 
-	        for (int i = 0; i < stateSymbolsSize; i++) {
+			for (int i = 0; i < stateSymbolsSize; i++) {
 				char annotationCharacter = stateSymbols[i];
-	            int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
-	            if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-	                OpsinRadixTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDict[i];
-	                if (possibleTokenisationsTrie != null) {
-	                    List<Integer> possibleTokenisations = possibleTokenisationsTrie.findLengthsOfMatches(untokenisedChemicalNameLowerCase);
-	                    if (possibleTokenisations != null) {//next could be a token
-	                        for (int tokenizationLength : possibleTokenisations) {
-                                AnnotatorState newAs = new AnnotatorState();
-                                newAs.untokenisedChemicalName = untokenisedChemicalName.substring(tokenizationLength);
-                                newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(tokenizationLength);
-                                newAs.tokens = new ArrayList<String>(as.tokens);
-                                newAs.tokens.add(untokenisedChemicalNameLowerCase.substring(0,tokenizationLength));
-                                newAs.annot = new ArrayList<Character>(as.annot);
-                                newAs.annot.add(annotationCharacter);
-                                newAs.state = potentialNextState;
-                                //System.out.println("tokened " + newAs.untokenisedChemicalName);
-                                asStack.add(newAs);
-	                        }
-	                    }
-	                }
-	                List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDict[i];
-	                if (possibleAutomata != null) {//next could be a regex
-	                    for (RunAutomaton automaton : possibleAutomata) {
-	                        int matchLength = automaton.run(untokenisedChemicalName, 0);
-	                    	if (matchLength != -1){//matchLength = -1 means it did not match at the start of the string.
-	                            AnnotatorState newAs = new AnnotatorState();
-	                            newAs.untokenisedChemicalName =  untokenisedChemicalName.substring(matchLength);
-	                            newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(matchLength);
-	                            newAs.tokens = new ArrayList<String>(as.tokens);
-	                            newAs.tokens.add(untokenisedChemicalName.substring(0, matchLength));
-	                            newAs.annot = new ArrayList<Character>(as.annot);
-	                            newAs.annot.add(annotationCharacter);
-	                            newAs.state = potentialNextState;
-	                            //System.out.println("neword automata " + newAs.untokenisedChemicalName);
-	                            asStack.add(newAs);
-	                        }
-	                    }
-	                }
-	                List<Pattern> possibleRegexes = resourceManager.symbolRegexesDict[i];
-	                if (possibleRegexes != null) {//next could be a regex
-	                    for (Pattern pattern : possibleRegexes) {
-	                        Matcher mat = pattern.matcher(untokenisedChemicalName);
-	                        if (mat.lookingAt()) {//match at start
-	                            AnnotatorState newAs = new AnnotatorState();
-	                            newAs.untokenisedChemicalName =  untokenisedChemicalName.substring(mat.group(0).length());
-	                            newAs.untokenisedChemicalNameLowerCase = untokenisedChemicalNameLowerCase.substring(mat.group(0).length());
-	                            newAs.tokens = new ArrayList<String>(as.tokens);
-	                            newAs.tokens.add(mat.group(0));
-	                            newAs.annot = new ArrayList<Character>(as.annot);
-	                            newAs.annot.add(annotationCharacter);
-	                            newAs.state = potentialNextState;
-	                            //System.out.println("neword regex " + newAs.untokenisedChemicalName);
-	                            asStack.add(newAs);
-	                        }
-	                    }
-	                }
-	            }
-	        }
+				int potentialNextState = chemAutomaton.step(as.state, annotationCharacter);
+				if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
+					OpsinRadixTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDict[i];
+					if (possibleTokenisationsTrie != null) {
+						List<Integer> possibleTokenisations = possibleTokenisationsTrie.findMatches(chemicalWordLowerCase, posInName);
+						if (possibleTokenisations != null) {//next could be a token
+							for (int tokenizationIndex : possibleTokenisations) {
+								AnnotatorState newAs = new AnnotatorState();
+								newAs.posInName = tokenizationIndex;
+								newAs.tokens = new ArrayList<String>(as.tokens);
+								newAs.tokens.add(chemicalWordLowerCase.substring(posInName, tokenizationIndex));
+								newAs.annot = new ArrayList<Character>(as.annot);
+								newAs.annot.add(annotationCharacter);
+								newAs.state = potentialNextState;
+								//System.out.println("tokened " + chemicalWordLowerCase.substring(posInName, tokenizationIndex));
+								asStack.add(newAs);
+							}
+						}
+					}
+					List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDict[i];
+					if (possibleAutomata != null) {//next could be an automaton
+						for (RunAutomaton automaton : possibleAutomata) {
+							int matchLength = automaton.run(chemicalWord, posInName);
+							if (matchLength != -1){//matchLength = -1 means it did not match
+								AnnotatorState newAs = new AnnotatorState();
+								newAs.posInName = posInName + matchLength;
+								newAs.tokens = new ArrayList<String>(as.tokens);
+								newAs.tokens.add(chemicalWord.substring(posInName, posInName + matchLength));
+								newAs.annot = new ArrayList<Character>(as.annot);
+								newAs.annot.add(annotationCharacter);
+								newAs.state = potentialNextState;
+								//System.out.println("neword automata " + chemicalWord.substring(posInName, posInName + matchLength));
+								asStack.add(newAs);
+							}
+						}
+					}
+					List<Pattern> possibleRegexes = resourceManager.symbolRegexesDict[i];
+					if (possibleRegexes != null) {//next could be a regex
+						for (Pattern pattern : possibleRegexes) {
+							Matcher mat = pattern.matcher(chemicalWord).region(posInName, chemicalWord.length());
+							if (mat.lookingAt()) {//match at start
+								AnnotatorState newAs = new AnnotatorState();
+								String matchedString = mat.group(0);
+								newAs.posInName = posInName + matchedString.length();
+								newAs.tokens = new ArrayList<String>(as.tokens);
+								newAs.tokens.add(matchedString);
+								newAs.annot = new ArrayList<Character>(as.annot);
+								newAs.annot.add(annotationCharacter);
+								newAs.state = potentialNextState;
+								//System.out.println("neword regex " + matchedString);
+								asStack.add(newAs);
+							}
+						}
+					}
+				}
+			}
 		}
 		List<ParseTokens> outputList = new ArrayList<ParseTokens>();
 		String uninterpretableName = chemicalWord;
-		String unparseableName = longestAnnotation.untokenisedChemicalName;
-		if (successfulAnnotations.size()>0){//at least some of the name could be interpreted into a substituent/full/functionalTerm
+		String unparseableName = chemicalWord.substring(longestAnnotation.posInName);
+		if (successfulAnnotations.size() > 0){//at least some of the name could be interpreted into a substituent/full/functionalTerm
+			int bestAcceptPosInName = -1;
 			for(AnnotatorState as : successfulAnnotations) {
-				ParseTokens pt =new ParseTokens(as.tokens, as.annot);
+				ParseTokens pt = new ParseTokens(as.tokens, as.annot);
 				outputList.add(pt);
-				uninterpretableName=as.untokenisedChemicalName;//all acceptable annotator states found should have the same untokenisedName
+				bestAcceptPosInName = as.posInName;//all acceptable annotator states found should have the same posInName
 			}
+			uninterpretableName = chemicalWord.substring(bestAcceptPosInName);
 		}
 		return new ParseRulesResults(outputList, uninterpretableName, unparseableName);
 	}

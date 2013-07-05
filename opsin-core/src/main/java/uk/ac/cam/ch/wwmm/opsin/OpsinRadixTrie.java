@@ -27,7 +27,7 @@ class OpsinRadixTrie {
 		String remaingStr =token;
 		OpsinTrieNode currentNode = rootNode;
 		for (int i = 0; i < tokenLength;) {
-			int charsMatched = currentNode.getNumberOfMatchingCharacters(remaingStr);
+			int charsMatched = currentNode.getNumberOfMatchingCharacters(remaingStr, 0);
 			remaingStr = remaingStr.substring(charsMatched);
 			i+=charsMatched;
 			currentNode = currentNode.add(remaingStr, charsMatched);
@@ -38,24 +38,26 @@ class OpsinRadixTrie {
 	/**
 	 * Returns all possible runs of the input string that reached end point nodes in the trie
 	 * e.g. ylidene might return 2 ("yl"), 6 ("yliden") and 7 ("ylidene")
+	 * Results are given as the index of the end of the match in the chemicalName
 	 * Returns null if no runs were possible
-	 * @param untokenisedChemicalName
+	 * @param posInName The point at which to start matching
+	 * @param chemicalName
 	 * @return
 	 */
-	List<Integer> findLengthsOfMatches(String untokenisedChemicalName) {
-		int untokenisedChemicalNameLength = untokenisedChemicalName.length();
+	List<Integer> findMatches(String chemicalName, int posInName) {
+		int untokenisedChemicalNameLength = chemicalName.length();
 		List<Integer> lengths = null;
 		if (rootNode.isEndPoint()){
 			lengths = new ArrayList<Integer>();
-			lengths.add(0);
+			lengths.add(posInName);
 		}
 		OpsinTrieNode currentNode = rootNode;
-		for (int i = 0; i < untokenisedChemicalNameLength; i++) {
-			OpsinTrieNode node = currentNode.getChild(untokenisedChemicalName.charAt(i));
+		for (int i = posInName; i < untokenisedChemicalNameLength; i++) {
+			OpsinTrieNode node = currentNode.getChild(chemicalName.charAt(i));
 			if (node != null) {
 				currentNode = node;
-				int charsMatched =currentNode.getNumberOfMatchingCharacters(untokenisedChemicalName.substring(i));
-				i+=(charsMatched-1);
+				int charsMatched = currentNode.getNumberOfMatchingCharacters(chemicalName, i);
+				i += (charsMatched - 1);
 				if (charsMatched == currentNode.getValue().length()){
 					if (currentNode.isEndPoint()) {
 						if (lengths == null) {
@@ -158,10 +160,10 @@ class OpsinTrieNode {
 		return this;
 	}
 
-	int getNumberOfMatchingCharacters(String token) {
-		int maxLength = Math.min(key.length(), token.length());
+	int getNumberOfMatchingCharacters(String chemicalName, int posInName) {
+		int maxLength = Math.min(key.length(), chemicalName.length() - posInName);
 		for (int i = 0; i < maxLength; i++) {
-			if (key.charAt(i)!=token.charAt(i)){
+			if (key.charAt(i) != chemicalName.charAt(posInName + i)){
 				return i;
 			}
 		}
