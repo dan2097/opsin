@@ -54,8 +54,9 @@ class XmlDeclarations {
 	/**An O that indicates that the preceding alkaneStem is in fact a bridge*/
 	static final String BRIDGEFORMINGO_EL ="bridgeFormingO";
 
-	/**A locant indicating the positions for a glycosidic linkage. The first locant will point to an alpha carbon*/
-	static final String CARBOHYDRATELOCANT_EL ="carbohydrateLocant";	
+	/**A locant indicating the positions for a glycosidic linkage. The first locant will point to an alpha carbon
+	 * Also used to indicate joining of nucleosyl groups*/
+	static final String BIOCHEMICALLINKAGE_EL ="biochemicalLinkage";	
 
 	/**Indicates the size of the ring in a carbohydrate e.g. furanose = 5*/
 	static final String CARBOHYDRATERINGSIZE_EL ="carbohydrateRingSize";
