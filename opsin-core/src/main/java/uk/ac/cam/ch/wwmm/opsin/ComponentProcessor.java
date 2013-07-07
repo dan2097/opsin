@@ -205,7 +205,7 @@ class ComponentProcessor {
 			for (Element subBracketOrRoot : substituentsAndRootAndBrackets) {
 				assignLocantsAndMultipliers(subBracketOrRoot);
 			}
-			processGlycosidicLinkageDescriptors(substituents, brackets);
+			processBiochemicalLinkageDescriptors(substituents, brackets);
 			processWordLevelMultiplierIfApplicable(word, wordCount);
 		}
 		new WordRulesOmittedSpaceCorrector(state, parse).correctOmittedSpaces();//TODO where should this go?
@@ -4460,23 +4460,25 @@ class ComponentProcessor {
 	}
 	
 	/**
-	 * Converts a glycosidic linkage description e.g. (1->4) into an O[1-9] locant
+	 * Converts a biochemical linkage description e.g. (1->4) into an O[1-9] locant
 	 * If the carbohydrate is preceded by substituents these are placed into a bracket and the bracket locanted
 	 * @param substituents
 	 * @param brackets
 	 * @throws StructureBuildingException
 	 */
-	private void processGlycosidicLinkageDescriptors(List<Element> substituents, List<Element> brackets) throws StructureBuildingException {
+	private void processBiochemicalLinkageDescriptors(List<Element> substituents, List<Element> brackets) throws StructureBuildingException {
 		for (Element substituent : substituents) {
-			List<Element> carbLocants = XOMTools.getChildElementsWithTagName(substituent, CARBOHYDRATELOCANT_EL);
-			if (carbLocants.size() > 0){
-				if (carbLocants.size() > 1){
-					throw new RuntimeException("OPSIN Bug: More than 1 glycosidic linkage locant associated with subsituent");
+			List<Element> bioLinkLocants = XOMTools.getChildElementsWithTagName(substituent, BIOCHEMICALLINKAGE_EL);
+			if (bioLinkLocants.size() > 0){
+				if (bioLinkLocants.size() > 1){
+					throw new RuntimeException("OPSIN Bug: More than 1 biochemical linkage locant associated with subsituent");
 				}
-				Element carbLocant = carbLocants.get(0);
-				String carbLocantStr = carbLocant.getValue();
-				checkGlycosidicLocantSanity(substituent, carbLocantStr);
-				String locantToConnectTo = carbLocantStr.substring(4,5);
+				Element bioLinkLocant = bioLinkLocants.get(0);
+				String bioLinkLocantStr = bioLinkLocant.getValue();
+				bioLinkLocantStr = bioLinkLocantStr.substring(1, bioLinkLocantStr.length() -1);//strip brackets
+				checkAndApplyFirstLocantOfBiochemicalLinkage(substituent, bioLinkLocantStr);
+				int secondLocantStartPos = Math.max(bioLinkLocantStr.lastIndexOf('>'), bioLinkLocantStr.lastIndexOf('-')) + 1;
+				String locantToConnectTo = bioLinkLocantStr.substring(secondLocantStartPos);
 				Element parent = (Element) substituent.getParent();
 				Attribute locantAtr = new Attribute(LOCANT_ATR, "O" + locantToConnectTo);
 
@@ -4487,7 +4489,7 @@ class ComponentProcessor {
 						elementAfterSubstituent.getLocalName().equals(ROOT_EL)));
 				
 
-				/* If a carbohydrate is not at the end of a scope but is preceded by substituents/brackets
+				/* If a biochemical is not at the end of a scope but is preceded by substituents/brackets
 				 * these are bracketted and the locant assigned to the bracket.
 				 * Else If the group is the only thing in a bracket the locant is assigned to the bracket (this is used to describe branches)
 				 * Else the locant is assigned to the substituent
@@ -4531,54 +4533,71 @@ class ComponentProcessor {
 						elToAddAtrTo = substituent;
 					}
 					if (elToAddAtrTo.getAttribute(LOCANT_ATR) !=null){
-						throw new StructureBuildingException("Carbohydrate with glycoside linkage descriptor should not also have a locant: " + elToAddAtrTo.getAttributeValue(LOCANT_ATR));
+						throw new StructureBuildingException("Substituent with biochemical linkage descriptor should not also have a locant: " + elToAddAtrTo.getAttributeValue(LOCANT_ATR));
 					}
 					elToAddAtrTo.addAttribute(locantAtr);
 				}
-				carbLocant.detach();
+				bioLinkLocant.detach();
 			}
 		}
 		
 		for (Element bracket : brackets) {
-			List<Element> carbLocants = XOMTools.getChildElementsWithTagName(bracket, CARBOHYDRATELOCANT_EL);
-			if (carbLocants.size() > 0){
-				if (carbLocants.size() > 1){
-					throw new RuntimeException("OPSIN Bug: More than 1 glycosidic linkage locant associated with bracket");
+			List<Element> bioLinkLocants = XOMTools.getChildElementsWithTagName(bracket, BIOCHEMICALLINKAGE_EL);
+			if (bioLinkLocants.size() > 0){
+				if (bioLinkLocants.size() > 1){
+					throw new RuntimeException("OPSIN Bug: More than 1 biochemical linkage locant associated with bracket");
 				}
-				Element carbLocant = carbLocants.get(0);
-				Element substituent = (Element) XOMTools.getPreviousSibling(carbLocant);
+				Element bioLinkLocant = bioLinkLocants.get(0);
+				Element substituent = (Element) XOMTools.getPreviousSibling(bioLinkLocant);
 				if (substituent == null || !substituent.getLocalName().equals(SUBSTITUENT_EL)){
-					throw new RuntimeException("OPSIN Bug: Substituent expected before glycosidic linkage locant");
+					throw new RuntimeException("OPSIN Bug: Substituent expected before biochemical linkage locant");
 				}
-				String carbLocantStr = carbLocant.getValue();
-				checkGlycosidicLocantSanity(substituent, carbLocantStr);
-				String locantToConnectTo = carbLocantStr.substring(4,5);
+				String bioLinkLocantStr = bioLinkLocant.getValue();
+				bioLinkLocantStr = bioLinkLocantStr.substring(1, bioLinkLocantStr.length() -1);
+				checkAndApplyFirstLocantOfBiochemicalLinkage(substituent, bioLinkLocantStr);
+				int secondLocantStartPos = Math.max(bioLinkLocantStr.lastIndexOf('>'), bioLinkLocantStr.lastIndexOf('-')) + 1;
+				String locantToConnectTo = bioLinkLocantStr.substring(secondLocantStartPos);
 				if (bracket.getAttribute(LOCANT_ATR) !=null){
-					throw new StructureBuildingException("Carbohydrate with glycoside linkage descriptor should not also have a locant: " + bracket.getAttributeValue(LOCANT_ATR));
+					throw new StructureBuildingException("Substituent with biochemical linkage descriptor should not also have a locant: " + bracket.getAttributeValue(LOCANT_ATR));
 				}
 				bracket.addAttribute(new Attribute(LOCANT_ATR, "O" + locantToConnectTo));
-				carbLocant.detach();
+				bioLinkLocant.detach();
 			}
 		}
 	}
 
-	private void checkGlycosidicLocantSanity(Element substituent, String carbLocantStr) throws StructureBuildingException {
+	private void checkAndApplyFirstLocantOfBiochemicalLinkage(Element substituent, String biochemicalLinkage) throws StructureBuildingException {
 		Element group = substituent.getFirstChildElement(GROUP_EL);
-		Fragment carbFrag = state.xmlFragmentMap.get(group);
-		String locantAnomeric = carbLocantStr.substring(1,2);
-		Atom anomericAtom = carbFrag.getAtomByLocantOrThrow(locantAnomeric);
-		boolean anomericIsOutAtom = false;
-		for (int i = 0; i < carbFrag.getOutAtomCount(); i++) {
-			if (carbFrag.getOutAtom(i).getAtom().equals(anomericAtom)){
-				anomericIsOutAtom = true;
+		Fragment frag = state.xmlFragmentMap.get(group);
+		String firstLocant = biochemicalLinkage.substring(0, biochemicalLinkage.indexOf('-'));
+		if (group.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)) {
+			Atom anomericAtom = frag.getAtomByLocantOrThrow(firstLocant);
+			boolean anomericIsOutAtom = false;
+			for (int i = 0; i < frag.getOutAtomCount(); i++) {
+				if (frag.getOutAtom(i).getAtom().equals(anomericAtom)){
+					anomericIsOutAtom = true;
+				}
+			}
+			if (!anomericIsOutAtom){
+				throw new StructureBuildingException("Invalid glycoside linkage descriptor. Locant: " + firstLocant + " should point to the anomeric carbon");
 			}
 		}
-		if (!anomericIsOutAtom){
-			throw new StructureBuildingException("Invalid glycoside linkage descriptor. Locant: " + locantAnomeric + " should point to the anomeric carbon");
+		else{
+			Atom positionOfPhospho = frag.getAtomByLocantOrThrow("O" + firstLocant);
+			if (positionOfPhospho.getBonds().size() !=1){
+				throw new StructureBuildingException(firstLocant + " should be the carbon to which a hydroxy group is attached!");
+			}
+			if (frag.getOutAtomCount()==1){
+				Atom atomToConnect = frag.getOutAtom(0).getAtom();
+				state.fragManager.createBond(positionOfPhospho, atomToConnect, 1);
+			}
+			else{
+				throw new RuntimeException("OPSIN Bug: Biochemical linkage only expected on groups with 1 OutAtom");
+			}
 		}
 		
 		if (OpsinTools.getNextGroup(group)==null){
-			throw new StructureBuildingException("Glycoside linkage descriptor should be followed by a carbohydrate: " + carbLocantStr);
+			throw new StructureBuildingException("Biochemical linkage descriptor should be followed by another biochemical: " + biochemicalLinkage);
 		}
 	}
 
