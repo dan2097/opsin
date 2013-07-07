@@ -143,7 +143,7 @@ class XmlDeclarations {
 	static final String OXIDATIONNUMBERSPECIFIER_EL ="oxidationNumberSpecifier";
 
 	/**Used amongst other things to indicate how the rings of a ring assembly should be assembled*/
-	static final String COLONSEPERATEDLOCANT_EL ="colonSeperatedLocant";
+	static final String COLONORSEMICOLONDELIMITEDLOCANT_EL ="colonOrSemiColonDelimitedLocant";
 
 	/**Used to indicate how many rings are in a ring assembly*/
 	static final String RINGASSEMBLYMULTIPLIER_EL ="ringAssemblyMultiplier";

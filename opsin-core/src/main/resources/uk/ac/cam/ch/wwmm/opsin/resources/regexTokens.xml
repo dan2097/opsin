@@ -56,7 +56,7 @@
   <regexToken regex="%indicatedHydrogen%(,%indicatedHydrogen%)*-|%openBracket%%indicatedHydrogen%(,%indicatedHydrogen%)*%closeBracket%-?" symbol="e" tagname="indicatedHydrogen" determinise="yes"/>
   <regexToken regex="[isn]-" symbol="n" tagname="alkaneStemModifier" determinise="yes"/><!--case sensitive so must be a regex-->
   <regexToken regex="([oO][rR][tT][hH][oO]|[mM][eE][tT][aA]|[pP][aA][rR][aA])-?|(o|[mM]|[p])-" symbol="O" tagname="orthoMetaPara" determinise="yes"/><!-- O- and P- means oxygen and phosphorus locant-->
-  <regexToken regex="%locantTypes%,%locantTypes%(:%locantTypes%,%locantTypes%)*(:%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonSeperatedLocant" determinise="yes"/>
+  <regexToken regex="%locantTypes%,%locantTypes%([:;]%locantTypes%,%locantTypes%)*([:;]%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonOrSemiColonDelimitedLocant" determinise="yes"/>
   <regexToken regex="%openBracket%[1-9]'*->?[1-9]'*%closeBracket%" symbol="ì" tagname="biochemicalLinkage" determinise="yes"/>
 
   <regexToken regex="[EZz]" symbol="æ" type="EorZ" tagname="stereoChemistry" determinise="yes" /><!--unbracketted E or Z for stereochemistry, e intentionally disabled to avoid ambiguity with the end of tokens where e is optional-->

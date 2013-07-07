@@ -23,7 +23,7 @@ does not define a CFG.
   <regex name="%inlineChargeSuffix%" value="I"/>
   <regex name="%hwIneCompatible%" value="J"/>
   <regex name="%hwIne%" value="K"/>
-  <regex name="%colonSeperatedLocant%" value="L"/>
+  <regex name="%colonOrSemiColonDelimitedLocant%" value="L"/>
   <regex name="%vonBaeyerMultiplier%" value="M"/>
   <regex name="%annulen%" value="N"/>
   <regex name="%orthoMetaPara%" value="O"/>
@@ -302,7 +302,7 @@ does not define a CFG.
   <regex name="%ringAssemblyConjunctive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?((%ringGroup%|%fusedRingSystem%)%rootEnding%|%preSuffixedRing%))" />
   <regex name="%ringAssemblyAdditive%" value = "(%ring_CanStartWithHydro_NonDetachableFeatures%?(%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%irregularRingSubstituentStem%%optLocantGroupNoOMP%%repeatableInlineSuffix%|(%ringGroup%|%fusedRingSystem%)%inlineChargeGroup%?%optLocantGroupNoOMP%%repeatableInlineSuffix%))" />
   <regex name="%ringAssemblyRing%" value = "(%ringAssemblyConjunctive%|%ringAssemblyAdditive%)" />
-  <regex name="%locantForRingAssembly%" value = "(%colonSeperatedLocant%|%newLocantGroupNoStartingHyphen%|%optionalOpenBracket%(%colonSeperatedLocant%|%locant%)%optionalCloseBracket%%hyphen%?)" />
+  <regex name="%locantForRingAssembly%" value = "(%colonOrSemiColonDelimitedLocant%|%newLocantGroupNoStartingHyphen%|%optionalOpenBracket%(%colonOrSemiColonDelimitedLocant%|%locant%)%optionalCloseBracket%%hyphen%?)" />
   <regex name="%ringAssembly%" value = "(%locantForRingAssembly%?%ringAssemblyMultiplier%%hyphen%?(%ringAssemblyRing%|%structuralOpenBracket%%ringAssemblyRing%%structuralCloseBracket%))"/>
 
   <regex name="%allRingSubstituents%" value = "(%ringSubstituent%|((%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%)|%fusedRingSystem%|%polycyclicSpiroGroup%)(%inlineEndings%|%conjunctiveSideChainInline%))"/>
@@ -320,7 +320,7 @@ does not define a CFG.
   <regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%(%chalcogenAcidGroup%|%simpleGroupClass%)%mainGroupTail%)"/>
 
 <!-- functional Groups-->
-  <regex name="%anhydride%" value="((%locant%|%colonSeperatedLocant%)?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
+  <regex name="%anhydride%" value="((%locant%|%colonOrSemiColonDelimitedLocant%)?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
   <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
   <regex name="%functionalClass%" value ="(%locant%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>

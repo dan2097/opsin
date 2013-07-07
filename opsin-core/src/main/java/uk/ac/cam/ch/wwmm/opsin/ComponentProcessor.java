@@ -2733,7 +2733,7 @@ class ComponentProcessor {
 			List<List<String>> ringJoiningLocants =new ArrayList<List<String>>();
 			Element potentialLocant =(Element)XOMTools.getPreviousSibling(multiplier);
 			Element group =(Element)XOMTools.getNextSibling(multiplier, GROUP_EL);
-			if (potentialLocant!=null && (potentialLocant.getLocalName().equals(COLONSEPERATEDLOCANT_EL)||potentialLocant.getLocalName().equals(LOCANT_EL)) ){//a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
+			if (potentialLocant!=null && (potentialLocant.getLocalName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)||potentialLocant.getLocalName().equals(LOCANT_EL)) ){//a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
 				if (ORTHOMETAPARA_TYPE_VAL.equals(potentialLocant.getAttributeValue(TYPE_ATR))){//an OMP locant has been provided to indicate how to connect the rings of the ringAssembly
 					String locant2 =potentialLocant.getValue();
 					String locant1 ="1";
@@ -2752,7 +2752,7 @@ class ComponentProcessor {
 				else{
 					String locantText =StringTools.removeDashIfPresent(potentialLocant.getValue());
 					//locantText might be something like 1,1':3',1''
-					String[] perRingLocantArray =MATCH_COLON.split(locantText);
+					String[] perRingLocantArray = MATCH_COLONORSEMICOLON.split(locantText);
 					if (perRingLocantArray.length !=(mvalue -1)){
 						throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
 					}
