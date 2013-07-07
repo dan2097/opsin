@@ -23,6 +23,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  */
 class OpsinTools {
 	static final Pattern MATCH_COLON = Pattern.compile(":");
+	static final Pattern MATCH_COLONORSEMICOLON = Pattern.compile("[:;]");
 	static final Pattern MATCH_COMMA = Pattern.compile(",");
 	static final Pattern MATCH_DASH = Pattern.compile("-");
 	static final Pattern MATCH_SEMICOLON = Pattern.compile(";");

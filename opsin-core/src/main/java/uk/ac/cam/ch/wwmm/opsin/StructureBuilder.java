@@ -832,7 +832,7 @@ class StructureBuilder {
 			multipliers.get(0).detach();
 		}
 		String anhydrideLocant = null;
-		List<Element> anhydrideLocants =XOMTools.getDescendantElementsWithTagNames(anhydrideWord, new String[]{LOCANT_EL, COLONSEPERATEDLOCANT_EL});
+		List<Element> anhydrideLocants =XOMTools.getDescendantElementsWithTagNames(anhydrideWord, new String[]{LOCANT_EL, COLONORSEMICOLONDELIMITEDLOCANT_EL});
 		if (anhydrideLocants.size() >1){
 			throw new StructureBuildingException("Expected 0 or 1 anhydrideLocants found: " + anhydrideLocants.size());
 		}
@@ -891,7 +891,7 @@ class StructureBuilder {
 					if (anhydrideLocant ==null){
 						throw new StructureBuildingException("Anhydride formation appears to be ambiguous; More than 2 acids, no locants");
 					}
-					String[] acidLocants =MATCH_COLON.split(StringTools.removeDashIfPresent(anhydrideLocant));
+					String[] acidLocants =MATCH_COLONORSEMICOLON.split(StringTools.removeDashIfPresent(anhydrideLocant));
 					if (acidLocants.length != numberOfAnhydrideLinkages){
 						throw new StructureBuildingException("Mismatch between number of locants and number of anhydride linkages to form");
 					}
