@@ -16,17 +16,16 @@ public class NameToStructureConfig implements Cloneable {
 	private boolean allowRadicals = false;
 	private boolean outputRadicalsAsWildCardAtoms = false;
 	private boolean detailedFailureAnalysis = false;
-//	private boolean slackSpaceHandling;
-//	private boolean substituentAbbreviations;
-//	private boolean ignoreStereochemistry;
-//	private boolean ignoreCurrentlyUninterpretableStereochemistry;
-	
+	private boolean interpretAcidsWithoutTheWordAcid = false;
+	private boolean warnRatherThanFailOnUninterpretableStereochemistry = false;
 
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
 	 * allowRadicals = false
 	 * outputRadicalsAsWildCardAtoms = false
 	 * detailedFailureAnalysis = false
+	 * interpretAcidsWithoutTheWordAcid = false
+	 * warnRatherThanFailOnUninterpretableStereochemistry = false
 	 */
 	public NameToStructureConfig() {
 	}
@@ -81,65 +80,55 @@ public class NameToStructureConfig implements Cloneable {
 		this.detailedFailureAnalysis = detailedFailureAnalysis;
 	}
 
-//	boolean isSlackSpaceHandling() {
-//		return slackSpaceHandling;
-//	}
-//
-//	void setSlackSpaceHandling(boolean slackSpaceHandling) {
-//		this.slackSpaceHandling = slackSpaceHandling;
-//	}
+	/**
+	 * Are acids without the word "acid" interpretable e.g. should "acetic" be interpretable
+	 * @return
+	 */
+	public boolean allowInterpretationOfAcidsWithoutTheWordAcid() {
+		return interpretAcidsWithoutTheWordAcid;
+	}
 
-//	boolean isSubstituentAbbreviations() {
-//		return substituentAbbreviations;
-//	}
-//
-//	void setSubstituentAbbreviations(boolean substituentAbbreviations) {
-//		this.substituentAbbreviations = substituentAbbreviations;
-//	}
-//
-//	boolean isIgnoreStereochemistry() {
-//		return ignoreStereochemistry;
-//	}
-//
-//	void setIgnoreStereochemistry(boolean ignoreStereochemistry) {
-//		this.ignoreStereochemistry = ignoreStereochemistry;
-//	}
-//
-//	boolean isIgnoreCurrentlyUninterpretableStereochemistry() {
-//		return ignoreCurrentlyUninterpretableStereochemistry;
-//	}
-//
-//	void setIgnoreCurrentlyUninterpretableStereochemistry(boolean ignoreCurrentlyUninterpretableStereochemistry) {
-//		this.ignoreCurrentlyUninterpretableStereochemistry = ignoreCurrentlyUninterpretableStereochemistry;
-//	}
+
+	/**
+	 * Sets whether acids without the word "acid" interpretable e.g. should "acetic" be interpretable
+	 * @param interpretAcidsWithoutTheWordAcid
+	 */
+	public void setInterpretAcidsWithoutTheWordAcid(boolean interpretAcidsWithoutTheWordAcid) {
+		this.interpretAcidsWithoutTheWordAcid = interpretAcidsWithoutTheWordAcid;
+	}
+
+	/**
+	 * If OPSIN cannot understand the stereochemistry in a name should OPSIN's result be a warning
+	 * and structure with incomplete stereochemistry, or should failure be returned (Default)
+	 * @return
+	 */
+	public boolean warnRatherThanFailOnUninterpretableStereochemistry() {
+		return warnRatherThanFailOnUninterpretableStereochemistry;
+	}
+
+
+	/**
+	 * Sets whether if OPSIN cannot understand the stereochemistry in a name whether OPSIN's result should be a warning
+	 * and structure with incomplete stereochemistry, or should failure be returned (Default)
+	 * @param warnRatherThanFailOnUninterpretableStereochemistry
+	 */
+	public void setWarnRatherThanFailOnUninterpretableStereochemistry(
+			boolean warnRatherThanFailOnUninterpretableStereochemistry) {
+		this.warnRatherThanFailOnUninterpretableStereochemistry = warnRatherThanFailOnUninterpretableStereochemistry;
+	}
+
 
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
 	 * allowRadicals = false
+	 * outputRadicalsAsWildCardAtoms = false
 	 * detailedFailureAnalysis = false
+	 * interpretAcidsWithoutTheWordAcid = false
+	 * warnRatherThanFailOnUninterpretableStereochemistry = false
 	 */
 	public static NameToStructureConfig getDefaultConfigInstance() {
 		return new NameToStructureConfig();
 	}
-	
-//	/**
-//	 * Returns a NameToStructureConfig with the following settings:
-//	 * allowRadicals = false
-//	 * slackSpaceHandling = false
-//	 * substituentAbbreviations = false
-//	 * ignoreStereochemistry = false
-//	 * ignoreCurrentlyUninterpretableStereochemistry = false
-//	 */
-//	public static NameToStructureConfig getStrictConfigInstance() {
-//		NameToStructureConfig n2sConfig = new NameToStructureConfig();
-//		n2sConfig.allowRadicals = false;
-//		n2sConfig.slackSpaceHandling = true;
-//		n2sConfig.substituentAbbreviations = false;
-//		n2sConfig.ignoreStereochemistry = false;
-//		n2sConfig.ignoreCurrentlyUninterpretableStereochemistry = true;
-//		return n2sConfig;
-//	}
-	
 	
 	@Override
 	public NameToStructureConfig clone() {
