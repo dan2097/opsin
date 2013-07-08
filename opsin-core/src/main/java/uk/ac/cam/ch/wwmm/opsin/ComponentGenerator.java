@@ -69,7 +69,7 @@ class ComponentGenerator {
 	}
 
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
-	private final static  Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
+	private final static Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
 	private final static Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private final static Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final static String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
@@ -90,12 +90,20 @@ class ComponentGenerator {
 	private final static Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
+	
+	private final NameToStructureConfig n2sConfig;
+	private final Element parse;
+	
+	public ComponentGenerator(NameToStructureConfig n2sConfig, Element parse) {
+		this.n2sConfig = n2sConfig;
+		this.parse = parse;
+	}
+
 	/**
 	 * Processes a parse result destructively adding semantic information by processing the various micro syntaxes.
-	 * @param parse
 	 * @throws ComponentGenerationException 
 	 */
-	void processParse(Element parse) throws ComponentGenerationException {
+	void processParse() throws ComponentGenerationException {
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(parse, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {
@@ -115,7 +123,6 @@ class ComponentGenerator {
 		}
 		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(parse, GROUP_EL);
 
-		
 		/* Converts open/close bracket elements to bracket elements and
 		 *  places the elements inbetween within the newly created bracket */
 		while(findAndStructureBrackets(substituentsAndRoot));
@@ -1420,9 +1427,11 @@ class ComponentGenerator {
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getValue();
 			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
-				Node next = XOMTools.getNext(suffix);
-				if (next == null){
-					throw new ComponentGenerationException("\"acid\" not found after " +suffixValue);
+				if (!n2sConfig.allowInterpretationOfAcidsWithoutTheWordAcid()) {
+					Node next = XOMTools.getNext(suffix);
+					if (next == null){
+						throw new ComponentGenerationException("\"acid\" not found after " +suffixValue);
+					}
 				}
 			}
 			// convert quinone to dione
@@ -1966,10 +1975,12 @@ class ComponentGenerator {
 	private void handleGroupIrregularities(Element group) throws ComponentGenerationException {
 		String groupValue =group.getValue();
 		
-		if (group.getAttribute(FUNCTIONALIDS_ATR) !=null && (groupValue.endsWith("ic") || groupValue.endsWith("ous"))){
-			Node next = XOMTools.getNext(group);
-			if (next == null){
-				throw new ComponentGenerationException("\"acid\" not found after " +groupValue);
+		if (!n2sConfig.allowInterpretationOfAcidsWithoutTheWordAcid()) {
+			if (group.getAttribute(FUNCTIONALIDS_ATR) !=null && (groupValue.endsWith("ic") || groupValue.endsWith("ous"))){
+				Node next = XOMTools.getNext(group);
+				if (next == null){
+					throw new ComponentGenerationException("\"acid\" not found after " +groupValue);
+				}
 			}
 		}
 		
