@@ -1,3 +1,12 @@
+Version 1.5.0
+Command line interface now accepts files to read and write to as arguments
+Added option to allow interpretation of acids missing the word acid e.g. "acetic" (off by default)
+Added option to treat uninterpretable stereochemistry as a warning rather than a failure (off by default)
+Added support for nucleotide chains e.g. guanylyl(3'-5')uridine
+Added support for parabens, azetidides, morpholides, piperazides, piperidides and pyrrolidides
+Vocabulary improvements e.g. homo/beta amino acids
+Many minor bug fixes e.g. fulminic acid correctly interpreted
+
 Version 1.4.0
 Added support for dialdoses,diketoses,ketoaldoses,alditols,aldonic acids,uronic acids,aldaric acids,glycosides,oligosacchardides, named systematically or from trivial stems, in cyclic or acyclic form
 Added support for ketoses named using dehydro

@@ -2042,7 +2042,17 @@ class StructureBuilder {
 				}
 			}
 			StereochemistryHandler stereoChemistryHandler = new StereochemistryHandler(state, atomStereoCentreMap, bondStereoBondMap);
-			stereoChemistryHandler.applyStereochemicalElements(stereoChemistryEls);
+			try {
+				stereoChemistryHandler.applyStereochemicalElements(stereoChemistryEls);
+			}
+			catch (StereochemistryException e) {
+				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+					state.addWarningMessage(e.getMessage());
+				}
+				else{
+					throw e;
+				}
+			}
 			stereoChemistryHandler.removeRedundantStereoCentres(atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		}
 	}

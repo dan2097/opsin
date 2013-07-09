@@ -133,14 +133,15 @@ public class NameToStructure {
 	/**Parses a chemical name, returning an OpsinResult which represents the molecule.
 	 * This object contains in the status whether the name was parsed successfully
 	 * A message which may contain additional information if the status was warning/failure
-	 * A CML representation of the structure
+	 * CML and SMILES representations may be retrieved directly from the object
+	 * InChI may be generate using NameToInchi
 	 *
 	 * @param name The chemical name to parse.
 	 * @param n2sConfig Options to control how OPSIN interprets the name.
 	 * @return OpsinResult
 	 */
 	public OpsinResult parseChemicalName(String name, NameToStructureConfig n2sConfig) {
-		n2sConfig =  n2sConfig.clone();//avoid n2sconfig being modified mid name processing
+		n2sConfig = n2sConfig.clone();//avoid n2sconfig being modified mid name processing
 		if (name==null){
 			throw new IllegalArgumentException("String given for name was null");
 		}
@@ -151,7 +152,8 @@ public class NameToStructure {
 			List<Element> parses = parser.parse(n2sConfig, modifiedName);
 			//if(LOG.isDebugEnabled()) for(Element parse : parses) LOG.debug(new XOMFormatter().elemToString(parse));
 			Collections.sort(parses, new SortParses());//fewer tokens preferred
-			Fragment frag = null;
+			Fragment fragGeneratedWithWarning = null;
+			String warningMessage = null;
 			for(Element parse : parses) {
 				try {
 					if (LOG.isDebugEnabled()){
@@ -166,28 +168,37 @@ public class NameToStructure {
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					frag = structureBuilder.buildFragment(state, parse);
+					Fragment frag = structureBuilder.buildFragment(state, parse);
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					break;
+					if (state.getWarningMessage() == null){
+						return new OpsinResult(frag, OPSIN_RESULT_STATUS.SUCCESS, "", name);
+					}
+					if (fragGeneratedWithWarning == null){
+						//record first frag that had a warning but try other parses as they may work without a warning
+						fragGeneratedWithWarning = frag;
+						warningMessage = state.getWarningMessage();
+					}
 				} catch (Exception e) {
-					if (message.equals("")){
-						message += e.getMessage();
+					if (message.length() ==0){
+						message = e.getMessage();
 					}
 					if (LOG.isDebugEnabled()){
 						LOG.debug(e.getMessage(),e);
 					}
 				}
 			}
-			return new OpsinResult(frag, frag != null ? OPSIN_RESULT_STATUS.SUCCESS : OPSIN_RESULT_STATUS.FAILURE, message, name);
+			if (fragGeneratedWithWarning != null){
+				return new OpsinResult(fragGeneratedWithWarning, OPSIN_RESULT_STATUS.WARNING, warningMessage, name);
+			}
 		} catch (Exception e) {
 			message += e.getMessage();
 			if(LOG.isDebugEnabled()) {
 				LOG.debug(e.getMessage(),e);
 			}
-			return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, message, name);
 		}
+		return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, message, name);
 	}
 	
 	/**
