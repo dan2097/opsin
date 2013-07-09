@@ -310,9 +310,12 @@ public class NameToStructure {
 		options.addOption(OptionBuilder.create("o"));
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
-		options.addOption("r", "allowRadicals", false, "Enables interpretation of radicals");
-		options.addOption("w", "wildcardRadicals", false, "Radicals are output as wildcard atoms");
+		
+		options.addOption("a", "allowAcidsWithoutAcid", false, "Allows interpretation of acids without the word acid e.g. \"acetic\"");
 		options.addOption("f", "detailedFailureAnalysis", false, "Enables reverse parsing to more accurately determine why parsing failed");
+		options.addOption("r", "allowRadicals", false, "Enables interpretation of radicals");
+		options.addOption("s", "allowUninterpretableStereo", false, "Allows stereochemistry uninterpretable by OPSIN to be ignored");
+		options.addOption("w", "wildcardRadicals", false, "Radicals are output as wildcard atoms");
 		return options;
 	}
 	
@@ -323,8 +326,10 @@ public class NameToStructure {
 	 */
 	private static NameToStructureConfig generateOpsinConfigObjectFromCmd(CommandLine cmd) {
 		NameToStructureConfig n2sconfig = new NameToStructureConfig();
+		n2sconfig.setInterpretAcidsWithoutTheWordAcid(cmd.hasOption("a"));
 		n2sconfig.setDetailedFailureAnalysis(cmd.hasOption("f"));
 		n2sconfig.setAllowRadicals(cmd.hasOption("r"));
+		n2sconfig.setWarnRatherThanFailOnUninterpretableStereochemistry(cmd.hasOption("s"));
 		n2sconfig.setOutputRadicalsAsWildCardAtoms(cmd.hasOption("w"));
 		return n2sconfig;
 	}
