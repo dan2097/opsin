@@ -31,7 +31,7 @@ class StereochemistryHandler {
 	private final Map<Atom, StereoCentre> notExplicitlyDefinedStereoCentreMap;
 	private final Map<Bond, StereoBond> notExplicitlyDefinedStereoBondMap;
 	
-	StereochemistryHandler(BuildState state, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) throws StructureBuildingException {
+	StereochemistryHandler(BuildState state, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) {
 		this.state = state;
 		this.atomStereoCentreMap = atomStereoCentreMap;
 		notExplicitlyDefinedStereoCentreMap = new HashMap<Atom, StereoCentre>(atomStereoCentreMap);
@@ -43,8 +43,9 @@ class StereochemistryHandler {
 	 * Processes and assigns stereochemistry elements to appropriate fragments
 	 * @param stereoChemistryEls 
 	 * @throws StructureBuildingException
+	 * @throws StereochemistryException 
 	 */
-	void applyStereochemicalElements(List<Element> stereoChemistryEls) throws StructureBuildingException {
+	void applyStereochemicalElements(List<Element> stereoChemistryEls) throws StructureBuildingException, StereochemistryException {
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> carbohydrateStereoChemistryEls = new ArrayList<Element>();
@@ -94,8 +95,9 @@ class StereochemistryHandler {
 	 * Attempts to locate a suitable atom/bond for the stereochemistryEl, applies it and detaches the stereochemsitry
 	 * @param stereoChemistryEl
 	 * @throws StructureBuildingException
+	 * @throws StereochemistryException 
 	 */
-	private void matchStereochemistryToAtomsAndBonds(Element stereoChemistryEl) throws StructureBuildingException {
+	private void matchStereochemistryToAtomsAndBonds(Element stereoChemistryEl) throws StructureBuildingException, StereochemistryException {
 		String stereoChemistryType =stereoChemistryEl.getAttributeValue(TYPE_ATR);
 		if (stereoChemistryType.equals(R_OR_S_TYPE_VAL)){
 			assignStereoCentre(stereoChemistryEl);
@@ -146,8 +148,9 @@ class StereochemistryHandler {
 	 * Handles R/S stereochemistry. r/s is not currently handled
 	 * @param stereoChemistryEl
 	 * @throws StructureBuildingException
+	 * @throws StereochemistryException 
 	 */
-	private void assignStereoCentre(Element stereoChemistryEl) throws StructureBuildingException {
+	private void assignStereoCentre(Element stereoChemistryEl) throws StructureBuildingException, StereochemistryException {
 		//generally the LAST group in this list will be the appropriate groups e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = (Element) stereoChemistryEl.getParent();
@@ -208,7 +211,7 @@ class StereochemistryHandler {
 				}
 			}
 		}
-		throw new StructureBuildingException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
+		throw new StereochemistryException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 	}
 
 
@@ -245,8 +248,9 @@ class StereochemistryHandler {
 	 * Handles E/Z stereochemistry and cis/trans in cases where cis/trans unambiguously corresponds to E/Z
 	 * @param stereoChemistryEl
 	 * @throws StructureBuildingException
+	 * @throws StereochemistryException 
 	 */
-	private void assignStereoBond(Element stereoChemistryEl) throws StructureBuildingException {
+	private void assignStereoBond(Element stereoChemistryEl) throws StructureBuildingException, StereochemistryException {
 		//generally the LAST group in this list will be the appropriate groups e.g. (2Z)-5-ethyl-6-methylhex-2-ene where the hex-2-ene is the appropriate group
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = (Element) stereoChemistryEl.getParent();
@@ -347,10 +351,10 @@ class StereochemistryHandler {
 			}
 		}
 		if (isCisTrans){
-			throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " could refer unambiguously to");
+			throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " could refer unambiguously to");
 		}
 		else{
-			throw new StructureBuildingException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
+			throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
 		}
 	}
 

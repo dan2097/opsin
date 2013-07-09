@@ -19,10 +19,26 @@ class BuildState {
 
 	final IDManager idManager;
 	final FragmentManager fragManager;
-	WordRule currentWordRule = null;
 	final BiDirectionalHashMap xmlFragmentMap;
 	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
+	
+	WordRule currentWordRule = null;
+	
+	private String warningMessage = null;
+	
+	String getWarningMessage() {
+		return warningMessage;
+	}
+
+	void addWarningMessage(String warningMessage) {
+		if (warningMessage == null){
+			this.warningMessage = warningMessage;
+		}
+		else{
+			this.warningMessage += ("\n" + warningMessage);
+		}
+	}
 
 	/**
 	 * Wrapper class for returning multiple objects
@@ -57,8 +73,8 @@ class BuildState {
 			return xmlFragmentMap.put(key, value);
 		}
 		public void putAll(Map<? extends Element, ? extends Fragment> m) {
-			for (Element el : m.keySet()) {
-				fragmentXmlMap.put(m.get(el), el);
+			for (Entry<? extends Element, ? extends Fragment> e : m.entrySet()) {
+				fragmentXmlMap.put(e.getValue(), e.getKey());
 			}
 			xmlFragmentMap.putAll(m);
 		}

@@ -1,10 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 import static org.junit.Assert.*;
 
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
@@ -59,8 +57,7 @@ public class NameToStructureConfigurationsTest {
 			or = n2s.parseChemicalName("acetic", n2sConfig);
 			assertEquals(OPSIN_RESULT_STATUS.SUCCESS, or.getStatus());
 		}
-		
-		@Ignore
+
 		@Test
 		public void testWarnRatherThanFailOnUninterpretableStereochemistry() throws StructureBuildingException {
 			NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
