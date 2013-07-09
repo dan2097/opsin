@@ -272,6 +272,8 @@ public final class StringTools {
             case '\uFF5B': return "{";
             case '\uFF5D': return "}";
             
+            case '\u00DF': return "beta";//similar glyph
+            
             case '\u00A0': return " ";//Non-breaking spaces
             case '\u2007': return " ";
             case '\u202F': return " ";
