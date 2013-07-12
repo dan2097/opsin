@@ -86,12 +86,13 @@ public class RadixTrieTest {
 		trie.addToken("");
 		trie.addToken("ly");
 		trie.addToken("lyhtem");
-		List<Integer> matches= trie.findLengthsOfMatchesReadingStringRightToLeft("ethyl");
+		List<Integer> matches= trie.findMatchesReadingStringRightToLeft("ethyl", 5);
 		assertNotNull(matches);
+		
 		assertEquals(3, matches.size());
-		assertEquals(0, matches.get(0).intValue());
-		assertEquals(2, matches.get(1).intValue());
-		assertEquals(5, matches.get(2).intValue());
+		assertEquals(5, matches.get(0).intValue());
+		assertEquals(3, matches.get(1).intValue());
+		assertEquals(0, matches.get(2).intValue());
 	}
 }
 	
