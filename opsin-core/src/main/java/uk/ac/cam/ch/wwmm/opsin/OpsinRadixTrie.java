@@ -40,16 +40,16 @@ class OpsinRadixTrie {
 	 * e.g. ylidene might return 2 ("yl"), 6 ("yliden") and 7 ("ylidene")
 	 * Results are given as the index of the end of the match in the chemicalName
 	 * Returns null if no runs were possible
-	 * @param posInName The point at which to start matching
 	 * @param chemicalName
+	 * @param posInName The point at which to start matching
 	 * @return
 	 */
 	List<Integer> findMatches(String chemicalName, int posInName) {
 		int untokenisedChemicalNameLength = chemicalName.length();
-		List<Integer> lengths = null;
+		List<Integer> indexes = null;
 		if (rootNode.isEndPoint()){
-			lengths = new ArrayList<Integer>();
-			lengths.add(posInName);
+			indexes = new ArrayList<Integer>();
+			indexes.add(posInName);
 		}
 		OpsinTrieNode currentNode = rootNode;
 		for (int i = posInName; i < untokenisedChemicalNameLength; i++) {
@@ -60,10 +60,10 @@ class OpsinRadixTrie {
 				i += (charsMatched - 1);
 				if (charsMatched == currentNode.getValue().length()){
 					if (currentNode.isEndPoint()) {
-						if (lengths == null) {
-							lengths = new ArrayList<Integer>();
+						if (indexes == null) {
+							indexes = new ArrayList<Integer>();
 						}
-						lengths.add(i + 1);
+						indexes.add(i + 1);
 					}
 				}
 				else{
@@ -73,34 +73,34 @@ class OpsinRadixTrie {
 				break;
 			}
 		}
-		return lengths;
+		return indexes;
 	}
 
 	/**
-	 * Same as findLengthsOfMatches but the trie has been populated by reversed tokens
-	 * @param untokenisedChemicalName
+	 * Same as findMatches but the trie has been populated by reversed tokens
+	 * @param chemicalName
+	 * @param posInName The index after the first character to start matching
 	 * @return
 	 */
-	List<Integer> findLengthsOfMatchesReadingStringRightToLeft(String untokenisedChemicalName) {
-		int untokenisedChemicalNameLength = untokenisedChemicalName.length();
-		List<Integer> lengths = null;
+	List<Integer> findMatchesReadingStringRightToLeft(String chemicalName, int posInName ) {
+		List<Integer> indexes = null;
 		if (rootNode.isEndPoint()){
-			lengths = new ArrayList<Integer>();
-			lengths.add(0);
+			indexes = new ArrayList<Integer>();
+			indexes.add(posInName);
 		}
 		OpsinTrieNode currentNode = rootNode;
-		for (int i = untokenisedChemicalNameLength-1; i >=0; i--) {
-			OpsinTrieNode node = currentNode.getChild(untokenisedChemicalName.charAt(i));
+		for (int i = posInName - 1; i >=0; i--) {
+			OpsinTrieNode node = currentNode.getChild(chemicalName.charAt(i));
 			if (node != null) {
 				currentNode = node;
-				int charsMatched =currentNode.getNumberOfMatchingCharactersInReverse(untokenisedChemicalName.substring(0, i + 1));
-				i-=(charsMatched-1);
+				int charsMatched = currentNode.getNumberOfMatchingCharactersInReverse(chemicalName, i);
+				i -= (charsMatched - 1);
 				if (charsMatched == currentNode.getValue().length()){
 					if (currentNode.isEndPoint()) {
-						if (lengths == null) {
-							lengths = new ArrayList<Integer>();
+						if (indexes == null) {
+							indexes = new ArrayList<Integer>();
 						}
-						lengths.add(untokenisedChemicalNameLength -i);
+						indexes.add(i);
 					}
 				}
 				else{
@@ -110,7 +110,7 @@ class OpsinRadixTrie {
 				break;
 			}
 		}
-		return lengths;
+		return indexes;
 	}
 }
 
@@ -170,11 +170,10 @@ class OpsinTrieNode {
 		return maxLength;
 	}
 	
-	int getNumberOfMatchingCharactersInReverse(String token) {
-		int tokenLength = token.length();
-		int maxLength = Math.min(key.length(), tokenLength);
+	int getNumberOfMatchingCharactersInReverse(String chemicalName, int posInName) {
+		int maxLength = Math.min(key.length(), posInName + 1);
 		for (int i = 0; i < maxLength; i++) {
-			if (key.charAt(i)!=token.charAt(tokenLength-i-1)){
+			if (key.charAt(i) != chemicalName.charAt(posInName - i)){
 				return i;
 			}
 		}
