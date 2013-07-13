@@ -280,11 +280,9 @@ class StructureBuildingMethods {
 		List<Fragment> fragmentsToAttachTo = findAlternativeFragments(state, subBracketOrRoot);
 		List<Atom> atomsToHalogenate = new ArrayList<Atom>();
 		for (Fragment fragment : fragmentsToAttachTo) {
+			FragmentTools.convertSpareValenciesToDoubleBonds(fragment);
 			for (Atom atom : fragment.getAtomList()) {
 				int substitutableHydrogen = calculateSubstitutableHydrogenAtoms(atom);
-				if (substitutableHydrogen >0 && atom.hasSpareValency()){
-					substitutableHydrogen--;
-				}
 				if (substitutableHydrogen > 0  && FragmentTools.isCharacteristicAtom(atom)){
 					continue;
 				}
