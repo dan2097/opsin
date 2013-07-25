@@ -177,10 +177,7 @@ class FragmentTools {
 			for (Atom atom : atomList) {
 				List<String> elementSymbolLocants =atom.getElementSymbolLocants();
 				for (String locant : elementSymbolLocants) {
-					int primeCount =0;
-					for(int i=0;i<locant.length();i++) {
-						if(locant.charAt(i) == '\'') primeCount++;
-					}
+					int primeCount = StringTools.countTerminalPrimes(locant);
 					String element =locant.substring(0, locant.length()-primeCount);
 					if (elementCount.get(element)==null || (elementCount.get(element) < primeCount +1)){
 						elementCount.put(element, primeCount +1);
