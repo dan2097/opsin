@@ -1,44 +1,49 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 /**
  * Takes a name:
  * strips leading/trailing white space
- * rejects a few special cases
  * Normalises representation of greeks and some other characters
  * @author dl387
  *
  */
 class PreProcessor {
-	private static final Pattern MATCH_DOLLAR = Pattern.compile("\\$");
-	private static final Pattern MATCH_SULPH = Pattern.compile("sulph", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MATCH_DOT_GREEK_DOT = Pattern.compile("\\.(alpha|beta|gamma|delta|epsilon|zeta|eta|lambda|omega)\\.", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MATCH_HTML_ENTITY_GREEK = Pattern.compile("&(alpha|beta|gamma|delta|epsilon|zeta|eta|lambda|omega);", Pattern.CASE_INSENSITIVE);
-	private static final HashMap<String, String> GREEK_MAP = new HashMap<String, String>();
+	private static final Map<String, String> DOTENCLOSED_TO_DESIRED = new HashMap<String, String>();
+	private static final Map<String, String> XMLENTITY_TO_DESIRED = new HashMap<String, String>();
 
 	static {
-		GREEK_MAP.put("a", "alpha");
-		GREEK_MAP.put("b", "beta");
-		GREEK_MAP.put("g", "gamma");
-		GREEK_MAP.put("d", "delta");
-		GREEK_MAP.put("e", "epsilon");
-//		letterGreekMap.put("z", "zeta");
-//		letterGreekMap.put("i", "iota");
-//		letterGreekMap.put("k", "kappa");
-		GREEK_MAP.put("l", "lambda");
-//		letterGreekMap.put("m", "mu");
-//		letterGreekMap.put("n", "nu");
-//		letterGreekMap.put("x", "xi");
-//		letterGreekMap.put("p", "pi");
-//		letterGreekMap.put("r", "rho");
-//		letterGreekMap.put("s", "sigma");
-//		letterGreekMap.put("t", "tau");
-//		letterGreekMap.put("u", "upsilon");
-//		letterGreekMap.put("f", "phi");
-//		letterGreekMap.put("o", "omega");
+		DOTENCLOSED_TO_DESIRED.put("a", "alpha");
+		DOTENCLOSED_TO_DESIRED.put("b", "beta");
+		DOTENCLOSED_TO_DESIRED.put("g", "gamma");
+		DOTENCLOSED_TO_DESIRED.put("d", "delta");
+		DOTENCLOSED_TO_DESIRED.put("e", "epsilon");
+		DOTENCLOSED_TO_DESIRED.put("l", "lambda");
+		DOTENCLOSED_TO_DESIRED.put("x", "xi");
+		DOTENCLOSED_TO_DESIRED.put("alpha", "alpha");
+		DOTENCLOSED_TO_DESIRED.put("beta", "beta");
+		DOTENCLOSED_TO_DESIRED.put("gamma", "gamma");
+		DOTENCLOSED_TO_DESIRED.put("delta", "delta");
+		DOTENCLOSED_TO_DESIRED.put("epsilon", "epsilon");
+		DOTENCLOSED_TO_DESIRED.put("zeta", "zeta");
+		DOTENCLOSED_TO_DESIRED.put("eta", "eta");
+		DOTENCLOSED_TO_DESIRED.put("lambda", "lambda");
+		DOTENCLOSED_TO_DESIRED.put("xi", "xi");
+		DOTENCLOSED_TO_DESIRED.put("omega", "omega");
+		DOTENCLOSED_TO_DESIRED.put("fwdarw", "->");
+
+		XMLENTITY_TO_DESIRED.put("alpha", "alpha");
+		XMLENTITY_TO_DESIRED.put("beta", "beta");
+		XMLENTITY_TO_DESIRED.put("gamma", "gamma");
+		XMLENTITY_TO_DESIRED.put("delta", "delta");
+		XMLENTITY_TO_DESIRED.put("epsilon", "epsilon");
+		XMLENTITY_TO_DESIRED.put("zeta", "zeta");
+		XMLENTITY_TO_DESIRED.put("eta", "eta");
+		XMLENTITY_TO_DESIRED.put("lambda", "lambda");
+		XMLENTITY_TO_DESIRED.put("xi", "xi");
+		XMLENTITY_TO_DESIRED.put("omega", "omega");
 	}
 
 	/**
@@ -48,57 +53,119 @@ class PreProcessor {
 	 * @throws PreProcessingException 
 	 */
 	static String preProcess(String chemicalName) throws PreProcessingException {
-		chemicalName=chemicalName.trim();//remove leading and trailing whitespace
-		if ("".equals(chemicalName)){
+		chemicalName = chemicalName.trim();//remove leading and trailing whitespace
+		if (chemicalName.length() == 0){
 			throw new PreProcessingException("Input chemical name was blank!");
 		}
-		chemicalName = processDollarPrefixedGreeks(chemicalName);
-		chemicalName = processDotSurroundedGreeks(chemicalName);
-		chemicalName = processHtmlEntityGreeks(chemicalName);
+		
+		chemicalName = performMultiCharacterReplacements(chemicalName);
 		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
-		chemicalName = MATCH_SULPH.matcher(chemicalName).replaceAll("sulf");//correct British spelling to the IUPAC spelling
 		return chemicalName;
 	}
 
-	private static String processDollarPrefixedGreeks(String chemicalName) {
-		Matcher m = MATCH_DOLLAR.matcher(chemicalName);
-		while (m.find()){
-			if (chemicalName.length()>m.end()){
-				String letter = chemicalName.substring(m.end(), m.end()+1).toLowerCase();
-				if (GREEK_MAP.containsKey(letter)){
-					chemicalName = chemicalName.substring(0, m.end()-1) +GREEK_MAP.get(letter) +  chemicalName.substring(m.end()+1);
-					m = MATCH_DOLLAR.matcher(chemicalName);
+	private static String performMultiCharacterReplacements(String chemicalName) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0, nameLength = chemicalName.length(); i < nameLength; i++) {
+			char ch = chemicalName.charAt(i);
+			switch (ch) {
+			case '$':
+				if (i + 1 < nameLength){
+					char letter = chemicalName.charAt(i + 1);
+					String replacement = getReplacementForDollarGreek(letter);
+					if (replacement != null){
+						sb.append(replacement);
+						i++;
+						break;
+					}
 				}
+				sb.append(ch);
+				break;
+			case '.':
+				//e.g. .alpha.
+				String dotEnclosedString = getLowerCasedDotEnclosedString(chemicalName, i);
+				String dotEnclosedReplacement = DOTENCLOSED_TO_DESIRED.get(dotEnclosedString);
+				if (dotEnclosedReplacement != null){
+					sb.append(dotEnclosedReplacement);
+					i = i + dotEnclosedString.length() + 1;
+					break;
+				}
+				sb.append(ch);
+				break;
+			case '&':
+				{
+				//e.g. &alpha;
+				String xmlEntityString = getLowerCasedXmlEntityString(chemicalName, i);
+				String xmlEntityReplacement = XMLENTITY_TO_DESIRED.get(xmlEntityString);
+				if (xmlEntityReplacement != null){
+					sb.append(xmlEntityReplacement);
+					i = i + xmlEntityReplacement.length() + 1;
+					break;
+				}
+				sb.append(ch);
+				break;
+				}
+			case 's'://correct British spelling to the IUPAC spelling
+				if (chemicalName.regionMatches(i + 1, "ulph", 0, 4)){
+					sb.append("sulf");
+					i = i + 4;
+					break;
+				}
+				sb.append(ch);
+				break;
+			default:
+				sb.append(ch);
 			}
 		}
-		return chemicalName;
+		return sb.toString();
+	}
+
+	private static String getLowerCasedDotEnclosedString(String chemicalName, int indexOfFirstDot) {
+		int end = -1;
+		int limit = Math.min(indexOfFirstDot + 9, chemicalName.length());
+		for (int j = indexOfFirstDot + 1; j < limit; j++) {
+			if (chemicalName.charAt(j) == '.'){
+				end = j;
+				break;
+			}
+		}
+		if (end > 0){
+			return chemicalName.substring(indexOfFirstDot + 1, end).toLowerCase();
+		}
+		return null;
 	}
 	
-	/**
-	 * Removes dots around greek letters e.g. .alpha. -->alpha
-	 * @param chemicalName
-	 * @return
-	 */
-	private static String processDotSurroundedGreeks(String chemicalName) {
-		Matcher m = MATCH_DOT_GREEK_DOT.matcher(chemicalName);
-		while (m.find()){
-			chemicalName = chemicalName.substring(0, m.start()) + m.group(1) + chemicalName.substring(m.end());
-			m = MATCH_DOT_GREEK_DOT.matcher(chemicalName);
+	private static String getLowerCasedXmlEntityString(String chemicalName, int indexOfAmpersand) {
+		int end = -1;
+		int limit = Math.min(indexOfAmpersand + 9, chemicalName.length());
+		for (int j = indexOfAmpersand + 1; j < limit; j++) {
+			if (chemicalName.charAt(j) == ';'){
+				end = j;
+				break;
+			}
 		}
-		return chemicalName;
+		if (end > 0){
+			return chemicalName.substring(indexOfAmpersand + 1, end).toLowerCase();
+		}
+		return null;
 	}
 	
-	/**
-	 * Removes HTML entity escaping e.g. &alpha; -->alpha
-	 * @param chemicalName
-	 * @return
-	 */
-	private static String processHtmlEntityGreeks(String chemicalName) {
-		Matcher m = MATCH_HTML_ENTITY_GREEK.matcher(chemicalName);
-		while (m.find()){
-			chemicalName = chemicalName.substring(0, m.start()) + m.group(1) + chemicalName.substring(m.end());
-			m = MATCH_HTML_ENTITY_GREEK.matcher(chemicalName);
+	private static String getReplacementForDollarGreek(char ch) {
+		switch (ch) {
+		case 'a' :
+			return "alpha";
+		case 'b' :
+			return "beta";
+		case 'g' :
+			return "gamma";
+		case 'd' :
+			return "delta";
+		case 'e' :
+			return "epsilon";
+		case 'l' :
+			return "lambda";
+		default:
+			return null;
 		}
-		return chemicalName;
 	}
+
 }

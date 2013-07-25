@@ -63,6 +63,6 @@ public class PreProcessorTest {
 	@Test
 	public void testHtmlGreeks() throws PreProcessingException {
 		assertEquals("alpha-methyl-toluene", PreProcessor.preProcess("&alpha;-methyl-toluene"));
-		assertEquals("BETA-methyl-styrene", PreProcessor.preProcess("&BETA;-methyl-styrene"));
+		assertEquals("beta-methyl-styrene", PreProcessor.preProcess("&BETA;-methyl-styrene"));
 	}
 }
