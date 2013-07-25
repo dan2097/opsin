@@ -3,7 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**Static routines for string manipulation.
  * This is a specially tailored version of StringTools as found in OSCAR for use in OPSIN
@@ -94,21 +93,31 @@ public final class StringTools {
 	 * @throws PreProcessingException
 	 */
 	public static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
-		s = MATCH_WHITESPACE.matcher(s).replaceAll(" ");//normalise white space
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0, l = s.length(); i < l; i++) {
 			char c = s.charAt(i);
-			if(c >= 128) {
-				sb.append(getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
-			}
-			else if (c == 96){
+			switch (c) {
+			case '\t':
+			case '\n':
+			case '\u000B'://vertical tab
+			case '\f':
+			case '\r':
+				//normalise white space
+				sb.append(" ");
+				break;
+			case '`':
 				sb.append("'");//replace back ticks with apostrophe
-			}
-			else if (c == 34){
+				break;
+			case '"':
 				sb.append("''");//replace quotation mark with two primes
-			}
-			else if (c > 31){//ignore control characters
-				sb.append(c);
+				break;
+			default:
+				if(c >= 128) {
+					sb.append(getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
+				}
+				else if (c > 31){//ignore control characters
+					sb.append(c);
+				}
 			}
 		}
 		return sb.toString();

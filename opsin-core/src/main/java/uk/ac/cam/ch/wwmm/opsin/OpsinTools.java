@@ -29,7 +29,6 @@ class OpsinTools {
 	static final Pattern MATCH_SEMICOLON = Pattern.compile(";");
 	static final Pattern MATCH_SLASH = Pattern.compile("/");
 	static final Pattern MATCH_SPACE =Pattern.compile(" ");
-	static final Pattern MATCH_WHITESPACE = Pattern.compile("\\s+");
 	
 	static final Pattern MATCH_AMINOACID_STYLE_LOCANT =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
 	static final Pattern MATCH_ELEMENT_SYMBOL =Pattern.compile("[A-Z][a-z]?");
