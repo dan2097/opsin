@@ -22,7 +22,11 @@ import dk.brics.automaton.SpecialOperations;
 class AutomatonInitialiser {
 	
 	private static final Logger LOG = Logger.getLogger(AutomatonInitialiser.class);
-	private static final ResourceGetter resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/serialisedAutomata/");
+	private final ResourceGetter resourceGetter;
+	
+	AutomatonInitialiser(String resourcePath) {
+		resourceGetter = new ResourceGetter(resourcePath);
+	}
 
 	/**
 	 * In preference serialised automata and their hashes will be looked for in the resource folder in your working directory
@@ -36,7 +40,7 @@ class AutomatonInitialiser {
 	 * @param tableize: if true, a transition table is created which makes the run method faster in return of a higher memory usage (adds ~256kb)
 	 * @return A RunAutomaton, may have been built from scratch or loaded from a file
 	 */
-	static RunAutomaton loadAutomaton(String automatonName, String regex, boolean tableize, boolean reverseAutomaton) {
+	RunAutomaton loadAutomaton(String automatonName, String regex, boolean tableize, boolean reverseAutomaton) {
 		if (reverseAutomaton){
 			automatonName+="_reversed_";
 		}
@@ -53,22 +57,22 @@ class AutomatonInitialiser {
 		return automaton;
 	}
 	
-	private static boolean isAutomatonCached(String automatonName, String regex) {
+	private boolean isAutomatonCached(String automatonName, String regex) {
 		String currentRegexHash = getRegexHash(regex);
 		String cachedRegexHash = getCachedRegexHash(automatonName);
 		return currentRegexHash.equals(cachedRegexHash);
 	}
 	
-	private static String getRegexHash(String regex) {
+	private String getRegexHash(String regex) {
 		return Integer.toString(regex.hashCode());
 	}
 
-	private static String getCachedRegexHash(String automatonName) {
+	private String getCachedRegexHash(String automatonName) {
 		/*This file contains the hashcode of the regex which was used to generate the automaton on the disk */
 		return resourceGetter.getFileContentsAsString(automatonName + "RegexHash.txt");
 	}
 	
-	private static RunAutomaton loadCachedAutomaton(String automatonName) throws IOException{
+	private RunAutomaton loadCachedAutomaton(String automatonName) throws IOException{
 		InputStream automatonInput = resourceGetter.getInputstreamFromFileName(automatonName +"SerialisedAutomaton.aut");
 		try {
 			return RunAutomaton.load(automatonInput);
@@ -90,7 +94,7 @@ class AutomatonInitialiser {
 		return ra;
 	}
 
-	private static void cacheAutomaton(String automatonName, RunAutomaton automaton, String regex) {
+	private void cacheAutomaton(String automatonName, RunAutomaton automaton, String regex) {
 		OutputStream regexHashOutputStream = null;
 		OutputStream automatonOutputStream = null;
 		try {

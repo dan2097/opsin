@@ -28,6 +28,9 @@ class ResourceManager {
 	/**Used to load XML files.*/
 	private final ResourceGetter resourceGetter;
 	
+	/**Used to serialise and deserialise automata.*/
+	private final AutomatonInitialiser automatonInitialiser;
+	
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
 	final HashMap<String, HashMap<Character, Token>> tokenDict = new HashMap<String, HashMap<Character, Token>>();
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
@@ -66,6 +69,7 @@ class ResourceManager {
 	@SuppressWarnings("unchecked")
 	ResourceManager(ResourceGetter resourceGetter) throws IOException{
 		this.resourceGetter = resourceGetter;
+		this.automatonInitialiser = new AutomatonInitialiser(resourceGetter.getResourcePath() + "serialisedAutomata/");
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
 		symbolTokenNamesDict = new OpsinRadixTrie[grammarSymbolsSize];
@@ -166,7 +170,7 @@ class ResourceManager {
 					if(symbolRegexAutomataDict[index]==null) {
 						symbolRegexAutomataDict[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDict[index].add(AutomatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false));
+					symbolRegexAutomataDict[index].add(automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false));
 				}
 				else{
 					if(symbolRegexesDict[index]==null) {
@@ -180,7 +184,7 @@ class ResourceManager {
 					if(symbolRegexAutomataDictReversed[index]==null) {
 						symbolRegexAutomataDictReversed[index] = new ArrayList<RunAutomaton>();
 					}
-					symbolRegexAutomataDictReversed[index].add(AutomatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true));
+					symbolRegexAutomataDictReversed[index].add(automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true));
 				}
 				else{
 					if(symbolRegexesDictReversed[index]==null) {
@@ -218,10 +222,10 @@ class ResourceManager {
 		}
 		String re = regexDict.get("%chemical%");
 		if (!reversed){
-			return AutomatonInitialiser.loadAutomaton("chemical", re, true, false);
+			return automatonInitialiser.loadAutomaton("chemical", re, true, false);
 		}
 		else{
-			return AutomatonInitialiser.loadAutomaton("chemical", re, true, true);
+			return automatonInitialiser.loadAutomaton("chemical", re, true, true);
 		}
 	}
 
