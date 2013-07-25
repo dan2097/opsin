@@ -35,7 +35,7 @@ import nu.xom.ValidityException;
 class ResourceGetter {
 
 	private final String resourcePath;
-	private String workingDirectory;
+	private final String workingDirectory;
 	private final Builder xomBuilder;
 
 	/**
@@ -50,12 +50,14 @@ class ResourceGetter {
 			resourcePath = resourcePath.substring(1);
 		}
 		this.resourcePath = resourcePath;
+		String workingDirectory;
 		try {
-			workingDirectory =new File(".").getCanonicalPath();//works on linux unlike using the system property
+			workingDirectory = new File(".").getCanonicalPath();//works on linux unlike using the system property
 		} catch (IOException e) {
 			//Automata will not be serialisable
 			workingDirectory = null;
 		}
+		this.workingDirectory = workingDirectory;
 		
 		XMLReader xmlReader;
 		try{
@@ -73,6 +75,14 @@ class ResourceGetter {
 			throw new RuntimeException("Your system's default XML Reader has not recognised the DTD loading feature! Maybe try updating your version of java?", e);
 		}
 		xomBuilder = new Builder(xmlReader);
+	}
+	
+	/**
+	 * Gets the resourcePath used to initialise this ResourceGetter
+	 * @return
+	 */
+	String getResourcePath() {
+		return resourcePath;
 	}
 
 	/**Fetches a data file from resourcePath,
