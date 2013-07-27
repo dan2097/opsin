@@ -125,7 +125,6 @@
 		<token value="[O-][N+]#C" labels="none" valType="SMILES">fulminic acid</token>
 		<token value="CC(C)=CCC/C(C)=C/C=O" labels="none" valType="SMILES" defaultInID="1">geranial</token>
 		<token value="CC(C)=CCC/C(C)=C/CO" labels="none" valType="SMILES" defaultInID="1">geraniol</token>
-		<token value="C(O)C(=O)CO" labels="1//2//3/" valType="SMILES">glycerone</token>
 		<token value="C(OC)COC" labels="1///2//" valType="SMILES">glyme</token>
 		<token value="C(=O)C(=O)" labels="1//2/" valType="SMILES">glyoxal</token>
 		<token value="C(=NO)C=NO" labels="none" valType="SMILES">glyoxime</token>
@@ -395,6 +394,7 @@
 		<token value="OCC[N+](C)(C)C" labels="none" valType="SMILES" defaultInID="1">choline</token>
 		<token value="O=C(O)CN(C)C(N)=N" labels="none" valType="SMILES" functionalIDs="3">creatine</token>
 		<token value="C(O)CN" labels="none" valType="SMILES">ethanolamine</token>
+		<token value="C(O)C(=O)CO" labels="1//2//3/" valType="SMILES">glycerone</token>
 		<token value="O=C(O)CNC(N)=N" labels="none" valType="SMILES" functionalIDs="3">glycocyamine</token>
 		<token value="NC(=N)NCCS(=O)O" labels="none" valType="SMILES" functionalIDs="9">hypotaurocyamine</token>
 		<token value="NC(=N)NCCS(=O)(=O)O" labels="none" valType="SMILES" functionalIDs="10">taurocyamine</token>
