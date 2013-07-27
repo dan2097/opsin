@@ -172,6 +172,12 @@
     <token value="acylium">ylium</token>
   </tokenList>
 
+<!--used in aldehyde and the like-->
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="÷">
+    <token value="aldehyde">aldehyde</token>
+    <token value="aldehyde">aldehyd</token>
+  </tokenList>
+
 <!--May appear before an inline suffix e.g. -2-on-3-yl -->
   <tokenList tagname="suffix" type="root" symbol="ç">
     <token value="one">one</token>
@@ -205,4 +211,6 @@
     <token value="sultine">sultine</token>
     <token value="sultone">sultone</token>
   </tokenList>
+
+
 </tokenLists>

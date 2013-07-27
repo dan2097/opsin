@@ -150,7 +150,8 @@ does not define a CFG.
   <regex name="%uron%" value="ô"/>
   <regex name="%ylium%" value="õ"/>
   <regex name="%nucleosyl%" value="ö"/>
-  <!--next would be Alt 0247-->
+  <regex name="%aldehyde%" value="÷"/>
+  <!--next would be Alt 0248-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -220,7 +221,7 @@ does not define a CFG.
   <regex name="%aminoAcidSubstituent%" value="(%aminoAcidLocantedYl%|%aminoAcidRadicalOnN%|%aminoAcidSubstituentStem%(%infixedInlineSuffix%|%inlineSuffix%))"/>
 
   <regex name="%osUloseSuffix%" value="(%optLocantGroupNoOMP%%multiplier%?%carbohydrateOsUlSuffix%%ose%)"/>
-  <regex name="%systematicCarbohydrateStem%" value="(%carbohydrateChain%(%a%?%unsaturation%+)?)"/>
+  <regex name="%systematicCarbohydrateStem%" value="(%carbohydrateChain%(%a%?%unsaturation%+|%ane%)?)"/>
   <regex name="%systematicAldoseCarbohydrateStem%" value="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%systematicCarbohydrateStem%)"/>
   <regex name="%casSystematicKetose%" value ="((%dlStereochemistryPrefix%?%carbohydrateConfigurationalPrefix%%hyphen%?)+%locant%%carbohydrateChain%%hyphen%?%carbohydrateUlSuffix%)"/>
   <regex name="%acyclicCarbohydrateStem%" value ="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%|%systematicAldoseCarbohydrateStem%(%o%?%optLocantGroupNoOMP%%multiplier%?%carbohydrateUlSuffix%)?|%casSystematicKetose%)"/>
@@ -234,14 +235,14 @@ does not define a CFG.
   <regex name="%chalcogenAcidGroup%" value="(%chalcogenAcid%%hyphen%?(%infixedSuffix%|%o%?%rootSuffix%))"/>
   <regex name="%nonCarbonAcidSubstituent%" value="(%monoNuclearNonCarbonAcid%(%infixedInlineSuffix%|%inlineSuffix%)|%chalcogenAcid%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%))"/>
 
+  <regex name="%acidGroup%" value = "(%acidStem%%hyphen%?(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%)"/>
+  <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
   <!--e.g. this rule is specifically for lactam/lactones etc. with the 'o' before the locant. No attempt is made to indicate that they are cyclic as they are highly unlikely to be used in more complex ring nomenclature -->
   <regex name="%cycleFormingSuffixAlkane%" value="(%alkaneStem%%a%?%unsaturationBlock%%o%%optLocantGroupNoOMP%%cycleFormingSuffix%)"/>
-
-  <regex name="%acidGroup%" value = "(%acidStem%%hyphen%?(%infixedSuffix%|%o%?%rootSuffix%)|%aminoAcidGroup%|%nonCarbonAcidGroup%|%cycleFormingSuffixAlkane%)"/>
-  <regex name="%acidSubstituent%" value = "(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)|%aminoAcidSubstituent%|%nonCarbonAcidSubstituent%)"/>
+  <regex name="%alkaneNoUnsaturatorAldehyde%" value="(%alkaneStemModifier%?%alkaneStem%%aldehyde%)"/>
 
   <regex name="%simpleSubstituents%" value = "(%simpleSubstituent%|%suffixableSubstituent%%inlineSuffixGroup%%repeatableInlineSuffixGroup%*|%acyclicCarbohydrateSubstituent%)"/>
-  <regex name="%simpleGroups%" value = "(%simpleGroup%|%dlStereochemistryPrefix%?%canBeDlPrefixedSimpleGroup%|%acyclicCarbohydrate%)"/>
+  <regex name="%simpleGroups%" value = "(%simpleGroup%|%dlStereochemistryPrefix%?%canBeDlPrefixedSimpleGroup%|%acyclicCarbohydrate%|%cycleFormingSuffixAlkane%|%alkaneNoUnsaturatorAldehyde%)"/>
 
 
   <!--cyclic-->
