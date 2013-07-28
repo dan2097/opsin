@@ -271,10 +271,7 @@
 		<token value="CC(C)=CCC\C(C)=C\CC\C(C)=C\CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">squalene</token>
 		<token value="S(=O)(=O)(N)N" labels="none" valType="SMILES" functionalIDs="4,5">sulfamide</token>
 		<token value="[SH2]=N" labels="none" valType="SMILES">sulfilimine</token>
-		<token value="N=S" labels="none" valType="SMILES">sulfimide</token>
-		<token value="[SH2](=O)=N" labels="none" valType="SMILES">sulfoximide</token>
-		<token value="[SH2](=O)=N" labels="none" valType="SMILES">sulfoximine</token>
-		<token value="[SH3+]=O" labels="none" valType="SMILES">sulfoxonium</token>
+		<token value="[SH2]=N" labels="none" valType="SMILES">sulfimide</token>
 		<token value="O=P(C#N)(N(C)C)OCC" labels="none" valType="SMILES">tabun</token>
 		<token value="C(=O)([O-])C(O)C(O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">tartrate</token>
 		<token value="C(=O)([O-])[C@@H](O)[C@H](O)C(=O)[O-]" functionalIDs="3,10" labels="none" valType="SMILES">d-tartrate</token>
@@ -419,6 +416,9 @@
 		<token value="[SeH6]" labels="none" valType="SMILES">perselenurane</token>
 		<token value="[SH6]" labels="none" valType="SMILES">persulfurane</token>
 		<token value="[SeH4]" labels="none" valType="SMILES">selenurane</token>
+		<token value="[SH2](=O)=N" labels="none" valType="SMILES">sulfoximide</token>
+		<token value="[SH2](=O)=N" labels="none" valType="SMILES">sulfoximine</token>
+		<token value="[SH3+]=O" labels="none" valType="SMILES">sulfoxonium</token>
 		<token value="[SH4]" labels="none" valType="SMILES">sulfurane</token>
 	</tokenList>
 </tokenLists>
