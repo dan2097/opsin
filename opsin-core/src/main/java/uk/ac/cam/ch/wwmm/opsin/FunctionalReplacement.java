@@ -135,7 +135,7 @@ class FunctionalReplacement {
 				Element nextSubOrBracket = (Element) XOMTools.getNextSibling(substituent);
 				if (nextSubOrBracket!=null && (nextSubOrBracket.getLocalName().equals(ROOT_EL) || nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL))){
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
-					if (XOMTools.getPreviousSibling(groupToBeModified)!=null){
+					if (groupPrecededByElementThatBlocksPrefixReplacementInterpetation(groupToBeModified)) {
 						if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
 							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
@@ -225,6 +225,21 @@ class FunctionalReplacement {
 			}
 		}
 		return groups.size() != originalNumberOfGroups;
+	}
+	
+	/**
+	 * Currently prefix replacement terms must be directly adjacent to the groupToBeModified with an exception made
+	 * for carbohydrate stereochemistry prefixes e.g. 'gluco' and for substractive prefixes e.g. 'deoxy'
+	 * @param groupToBeModified
+	 * @return
+	 */
+	private static boolean groupPrecededByElementThatBlocksPrefixReplacementInterpetation(Element groupToBeModified) {
+		Element previous = (Element) XOMTools.getPreviousSibling(groupToBeModified);
+		while (previous !=null && (previous.getLocalName().equals(SUBTRACTIVEPREFIX_EL)
+				|| (previous.getLocalName().equals(STEREOCHEMISTRY_EL) && previous.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)))){
+			previous = (Element) XOMTools.getPreviousSibling(previous);
+		}
+		return previous != null;
 	}
 	
 	
