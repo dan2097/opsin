@@ -25,7 +25,7 @@ public class FragmentManagerTest {
 
 		fragManager.createBond(frag1.getAtomByLocant("1"), frag2.getAtomByLocant("1"), 1);
 		Fragment frag = fragManager.getUnifiedFragment();
-		assertEquals("Frag has five atoms", 5, frag.getAtomList().size());
+		assertEquals("Frag has five atoms", 5, frag.getAtomCount());
 		assertEquals("Frag has four bonds", 4, frag.getBondSet().size());
 	}
 
@@ -50,7 +50,7 @@ public class FragmentManagerTest {
 		assertNull(urea.getAtomByLocant("N'''"));
 		
 		Fragment primedCopy = fragManager.copyAndRelabelFragment(urea, 1);
-		assertEquals(4, primedCopy.getAtomList().size());
+		assertEquals(4, primedCopy.getAtomCount());
 		assertNull(primedCopy.getAtomByLocant("N"));
 		assertNull(primedCopy.getAtomByLocant("N'"));
 		assertNotNull(primedCopy.getAtomByLocant("N''"));

@@ -187,11 +187,10 @@ class FragmentManager {
 	 */
 	Atom getHeteroatom(String smiles) throws StructureBuildingException {
 		Fragment heteroAtomFrag = sBuilder.build(smiles, this);
-		List<Atom> atomList = heteroAtomFrag.getAtomList();
-		if (atomList.size()!=1){
+		if (heteroAtomFrag.getAtomCount() != 1){
 			throw new StructureBuildingException("Heteroatom smiles described a fragment with multiple SMILES!");
 		}
-		return atomList.get(0);
+		return heteroAtomFrag.getFirstAtom();
 	}
 	
 	/** Uses the information given in the given heteroatom to change the atomic symbol
