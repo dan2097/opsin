@@ -466,7 +466,7 @@ class ComponentProcessor {
 				
 				Bond b = FragmentTools.unsaturate(atomOnParentFrag, Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
 				if (!locanted && b.getOrder() ==2 && 
-						parentFrag.getAtomList().size()==5 &&
+						parentFrag.getAtomCount()==5 &&
 						b.getFromAtom().getAtomIsInACycle() &&
 						b.getToAtom().getAtomIsInACycle()){
 					//special case just that substitution of groups like imidazoline may actually remove the double bond...
@@ -989,7 +989,7 @@ class ComponentProcessor {
 			if (heteroCount==0 && currentElem.getAttribute(OUTIDS_ATR)!=null ) {//e.g. 1,4-phenylene
 				String[] outIDs = MATCH_COMMA.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
 				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
-				if (count ==outIDs.length && groupFragment.getAtomList().size()>1){//things like oxy do not need to have their outIDs specified
+				if (count ==outIDs.length && groupFragment.getAtomCount()>1){//things like oxy do not need to have their outIDs specified
 					int idOfFirstAtomInFrag =groupFragment.getIdOfFirstAtom();
 					boolean foundLocantNotPresentOnFragment = false;
 					for (int i = outIDs.length-1; i >=0; i--) {
@@ -1905,7 +1905,7 @@ class ComponentProcessor {
 						//detect a solitary locant in front of a HW system and prevent it being assigned.
 						//something like 1-aziridin-1-yl never means the N is at position 1 as it is at position 1 by convention
 						//this special case is not applied to pseudo HW like systems e.g. [1]oxacyclotetradecine
-						if (locantValues.length ==1 && state.xmlFragmentMap.get(group).getAtomList().size() <=10){
+						if (locantValues.length ==1 && state.xmlFragmentMap.get(group).getAtomCount() <=10){
 							locants.remove(locantBeforeHWSystem);//don't assign this locant
 						}
 						else {
@@ -3366,7 +3366,7 @@ class ComponentProcessor {
 				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue(LOCANT_ATR)).setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue(LAMBDA_ATR)));
 			}
 			else{
-				if (frag.getAtomList().size()!=1){
+				if (frag.getAtomCount()!=1){
 					throw new StructureBuildingException("Ambiguous use of lambda convention. Fragment has more than 1 atom but no locant was specified for the lambda");
 				}
 				frag.getFirstAtom().setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue(LAMBDA_ATR)));
@@ -3778,14 +3778,14 @@ class ComponentProcessor {
 					
 					//Check the right fragment in the bracket:
 					//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
-					if (frag.getAtomList().size()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()
+					if (frag.getAtomCount()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()
 							|| (locantValues.length ==1 && elAfterLocant.getLocalName().equals(MULTIPLIER_EL))){
 						if (checkLocantPresentOnPotentialRoot(substituent, locantText)){
 							moveLocants =true;//locant location is present elsewhere
 							break;
 						}
 						else if (findElementsMissingIndirectLocants(elementBeforeSubstituent, locantRelatedElements.get(0)).size()==0 || !state.xmlFragmentMap.get(lastGroupOfElementBeforeSub).hasLocant(locantText)){
-							if( frag.getAtomList().size()==1 && frag.hasLocant(locantText)){
+							if( frag.getAtomCount()==1 && frag.hasLocant(locantText)){
 								//1 locant was intended to locant onto fragment with 1 atom
 							}
 							else{
@@ -3802,7 +3802,7 @@ class ComponentProcessor {
 						Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
 						if (shouldBeAGroupOrSubOrBracket !=null){
 							if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-									|| (frag.getAtomList().size()==1)//e.g. 1,3,4-trimethylthiobenzene
+									|| (frag.getAtomCount()==1)//e.g. 1,3,4-trimethylthiobenzene
 									|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 								locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 							}
@@ -3906,7 +3906,7 @@ class ComponentProcessor {
 				}
 			}
 			Fragment fragmentAfterLocant =state.xmlFragmentMap.get(group);
-			if (fragmentAfterLocant.getAtomList().size()<=1){
+			if (fragmentAfterLocant.getAtomCount()<=1){
 				allowIndirectLocants =false;//e.g. prevent 1-methyl as meth-1-yl is extremely unlikely to be the intended result
 			}
 
@@ -4349,7 +4349,7 @@ class ComponentProcessor {
 	    }
 	    else{
 	    	int chainLength = suffixableFragment.getChainLength();
-	    	if (chainLength > 1 && chainLength == suffixableFragment.getAtomList().size()){
+	    	if (chainLength > 1 && chainLength == suffixableFragment.getAtomCount()){
 	    		parentAtom1 = suffixableFragment.getAtomByLocantOrThrow("1");
 	    		parentAtom2 = suffixableFragment.getAtomByLocantOrThrow(String.valueOf(chainLength));
 	    	}

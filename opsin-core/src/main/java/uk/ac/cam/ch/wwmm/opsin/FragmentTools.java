@@ -295,8 +295,7 @@ class FragmentTools {
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		for (Fragment fragment : suffixFragments) {
-			List<Atom> suffixAtomList =fragment.getAtomList();
-			Atom rAtom = suffixAtomList.get(0);
+			Atom rAtom = fragment.getFirstAtom();
 			LinkedList<Atom> nextAtoms = new LinkedList<Atom>(rAtom.getAtomNeighbours());
 			for (Atom nextAtom : nextAtoms) {
 				atomsVisited.add(nextAtom);
@@ -314,8 +313,7 @@ class FragmentTools {
 
 	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, HashMap<String, Integer> elementCount,HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
 		Set<Atom> atomsVisited = new HashSet<Atom>();
-		List<Atom> atomList =suffixableFragment.getAtomList();
-		Atom firstAtom = atomList.get(0);
+		Atom firstAtom = suffixableFragment.getFirstAtom();
 		LinkedList<Atom> nextAtoms = new LinkedList<Atom>(firstAtom.getAtomNeighbours());
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		for (Atom nextAtom : nextAtoms) {
@@ -443,7 +441,7 @@ class FragmentTools {
 			return atomIndice;
 		}
 		else {
-			if (atomIndice +1>=fragment.getAtomList().size()){
+			if (atomIndice +1>=fragment.getAtomCount()){
 				return 1;//this probably indicates a problem with the input name but nonetheless 1 is a better answer than an indice which isn't even in the range of the fragment
 			}
 			else{

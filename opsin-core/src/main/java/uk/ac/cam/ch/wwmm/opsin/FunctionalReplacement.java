@@ -358,7 +358,7 @@ class FunctionalReplacement {
 						replacementFrag.removeOutAtom(0);
 					}
 					Atom atomThatWillReplaceOxygen =replacementFrag.getFirstAtom();
-					if (replacementFrag.getAtomList().size()==1 && matchChalcogen.matcher(atomThatWillReplaceOxygen.getElement()).matches()){
+					if (replacementFrag.getAtomCount()==1 && matchChalcogen.matcher(atomThatWillReplaceOxygen.getElement()).matches()){
 						atomThatWillReplaceOxygen.setCharge(atomToUse.getCharge());
 						atomThatWillReplaceOxygen.setProtonsExplicitlyAddedOrRemoved(atomToUse.getProtonsExplicitlyAddedOrRemoved());
 					}
@@ -440,7 +440,7 @@ class FunctionalReplacement {
 		
 		boolean isAmide = functionalGroupName.equals("amide") || functionalGroupName.equals("amid");
 		if (isAmide) {
-			if (acidReplacingFrag.getAtomList().size()!=1){
+			if (acidReplacingFrag.getAtomCount()!=1){
 				throw new ComponentGenerationException("OPSIN bug: " + functionalGroupName + " not found where expected");
 			}
 			Atom amideNitrogen = acidReplacingFrag.getFirstAtom();

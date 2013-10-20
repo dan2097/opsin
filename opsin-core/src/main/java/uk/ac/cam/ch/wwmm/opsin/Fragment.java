@@ -127,8 +127,19 @@ class Fragment {
 		atomMapFromId.put(atom.getID(), atom);
 		atom.setFrag(this);
 	}
+	
+	/**
+	 * Return the number of atoms in the fragment
+	 * @return
+	 */
+	int getAtomCount() {
+		return atomCollection.size();
+	}
 
-	/**Gets atomList.*/
+	/**
+	 * Returns a copy of the fragment's atoms
+	 * @return
+	 */
 	List<Atom> getAtomList() {
 		return new ArrayList<Atom>(atomCollection);
 	}

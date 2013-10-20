@@ -1593,7 +1593,7 @@ class StructureBuildingMethods {
 					return monoNuclearHydride;
 				}
 				if (groupFrag.hasLocant(locant)){
-					if (locant.equals("1") && groupFrag.getAtomList().size()==1){
+					if (locant.equals("1") && groupFrag.getAtomCount()==1){
 						if (monoNuclearHydride ==null){
 							monoNuclearHydride= groupFrag;
 						}

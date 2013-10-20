@@ -1181,7 +1181,7 @@ class StructureBuilder {
 		List<Atom> atomList = theDiRadical.getAtomList();
 		List<Atom> glycolAtoms = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
-			if (atom.getElement().equals("O")&& atom.getType().equals(FUNCTIONALCLASS_TYPE_VAL)){
+			if (atom.getElement().equals("O") && atom.getType().equals(FUNCTIONALCLASS_TYPE_VAL)){
 				glycolAtoms.add(atom);
 			}
 		}
