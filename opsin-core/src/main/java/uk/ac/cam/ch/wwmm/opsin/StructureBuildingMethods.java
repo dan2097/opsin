@@ -703,9 +703,9 @@ class StructureBuildingMethods {
             }
 
             //checks if both atoms can accept an extra bond (if double bond) or two extra bonds (if triple bond)
-            Bond bondToUnsaturate = findBondToUnSaturate(atomList, bondOrder, false);
+            Bond bondToUnsaturate = findBondToUnSaturate(thisFrag, bondOrder, false);
             if (bondToUnsaturate ==null){
-            	bondToUnsaturate = findBondToUnSaturate(atomList, bondOrder, true);
+            	bondToUnsaturate = findBondToUnSaturate(thisFrag, bondOrder, true);
             }
             if (bondToUnsaturate ==null){
             	throw new StructureBuildingException("Cannot find bond to unsaturate using unsaturator: " +unsaturator.getValue());
@@ -770,16 +770,16 @@ class StructureBuildingMethods {
 
 	
 	/**
-	 * Attempts to find a bond that can have its bondOrder increased to the specified bond order
+	 * Attempts to find a bond within the fragment that can have its bondOrder increased to the specified bond order
 	 * Depending on the value of allowAdjacentUnsaturatedBonds adjacent higher bonds are prevented
-	 * @param atomList
+	 * @param frag
 	 * @param bondOrder
 	 * @param allowAdjacentUnsaturatedBonds
 	 * @return
 	 */
-	static Bond findBondToUnSaturate(List<Atom> atomList, int bondOrder, boolean allowAdjacentUnsaturatedBonds) {
+	static Bond findBondToUnSaturate(Fragment frag, int bondOrder, boolean allowAdjacentUnsaturatedBonds) {
 		Bond bondToUnsaturate =null;
-		mainLoop: for (Atom atom1 : atomList) {
+		mainLoop: for (Atom atom1 : frag.getAtomList()) {
 			List<Bond> bonds = atom1.getBonds();
 			if (!allowAdjacentUnsaturatedBonds){
 				for (Bond bond : bonds) {
@@ -792,18 +792,21 @@ class StructureBuildingMethods {
 				if (bond.getOrder()==1 && !atom1.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom1.getType()) && atom1.getProperty(Atom.ISALDEHYDE) ==null
 						&& ValencyChecker.checkValencyAvailableForBond(atom1, bondOrder - 1 + atom1.getOutValency())){
 					Atom atom2 = bond.getOtherAtom(atom1);
-					if (!allowAdjacentUnsaturatedBonds){
-			         	for (Bond bond2 : atom2.getBonds()) {
-			        		if (bond2.getOrder()!=1){//don't place implicitly unsaturated bonds next to each other
-			        			continue bondLoop;
-			        		}
-			        	}
+					if (frag.getAtomByID(atom2.getID()) !=null){//check other atom is actually in the fragment!
+						if (!allowAdjacentUnsaturatedBonds){
+				         	for (Bond bond2 : atom2.getBonds()) {
+				        		if (bond2.getOrder()!=1){//don't place implicitly unsaturated bonds next to each other
+				        			continue bondLoop;
+				        		}
+				        	}
+						}
+						if (!atom2.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom2.getType()) && atom2.getProperty(Atom.ISALDEHYDE) ==null 
+								&& ValencyChecker.checkValencyAvailableForBond(atom2, bondOrder - 1 + atom2.getOutValency())){
+							bondToUnsaturate = bond;
+							break mainLoop;
+						}
 					}
-					if (!atom2.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom2.getType()) && atom2.getProperty(Atom.ISALDEHYDE) ==null 
-							&& ValencyChecker.checkValencyAvailableForBond(atom2, bondOrder - 1 + atom2.getOutValency())){
-						bondToUnsaturate = bond;
-						break mainLoop;
-					}
+
 				}
 			}
 		}
