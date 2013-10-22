@@ -4922,9 +4922,7 @@ class ComponentProcessor {
 						throw new ComponentGenerationException("Unable to assign all locants");
 					}
 				}
-				if (multiplier.getValue().equals("non")){
-					throw new StructureBuildingException("\"non\" probably means \"not\". If a multiplier of value 9 was intended \"nona\" should be used");
-				}
+				checkForNonConfusedWithNona(multiplier);
 				if (wordCount ==1){
 					if (!isMonoFollowedByElement(multiplier, multiVal)){
 						throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
@@ -4951,6 +4949,16 @@ class ComponentProcessor {
 					subOrBracket.insertChild(el, 0);
 				}
 			}
+		}
+	}
+
+	private void checkForNonConfusedWithNona(Element multiplier) throws StructureBuildingException {
+		if (multiplier.getValue().equals("non")){
+			String subsequentUnsemanticToken = multiplier.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR);
+			if (subsequentUnsemanticToken !=null && subsequentUnsemanticToken.toLowerCase().startsWith("a")){
+				return;
+			}
+			throw new StructureBuildingException("\"non\" probably means \"not\". If a multiplier of value 9 was intended \"nona\" should be used");
 		}
 	}
 
