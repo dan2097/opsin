@@ -123,6 +123,7 @@
 		<token value="C(F)(F)(F)" labels="none" valType="SMILES">fluoroform</token>
 		<token value="[O-][N+]#C" labels="none" valType="SMILES">fulminicacid</token>
 		<token value="[O-][N+]#C" labels="none" valType="SMILES">fulminic acid</token>
+		<token value="[GaH4-]" labels="none" valType="SMILES">gallohydride</token>
 		<token value="CC(C)=CCC/C(C)=C/C=O" labels="none" valType="SMILES" defaultInID="1">geranial</token>
 		<token value="CC(C)=CCC/C(C)=C/CO" labels="none" valType="SMILES" defaultInID="1">geraniol</token>
 		<token value="C(OC)COC" labels="1///2//" valType="SMILES">glyme</token>
@@ -291,6 +292,9 @@
 		<token value="CC(C)([O-])C" labels="none" valType="SMILES">tbutoxide</token>
 		<token value="COCCOCCOCCOCCOC" labels="none" valType="SMILES">tetraglyme</token>
 		<token value="NC(=N)NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7//8/9" valType="SMILES">tetraguanide</token>
+		<token value="[AlH4-]" labels="none" valType="SMILES">tetrahydroaluminate</token>
+		<token value="[BH4-]" labels="none" valType="SMILES">tetrahydroborate</token>
+		<token value="[GaH4-]" labels="none" valType="SMILES">tetrahydrogallate</token>
 		<token value="NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9" valType="SMILES">tetrauret</token>
 		<token value="S=C(N)NCC=C" labels="none" valType="SMILES">thiosinamine</token>
 		<token value="NC(=S)SC(=S)N" labels="none" valType="SMILES">thiuram monosulfide</token>
