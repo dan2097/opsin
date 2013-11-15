@@ -19,7 +19,7 @@ public final class StringTools {
 	 * @return The corresponding string.
 	 */
 	public static String charListToString(List<Character> l) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for(char c : l) {
 			sb.append(c);
 		}
@@ -33,7 +33,7 @@ public final class StringTools {
 	 * @return The corresponding string.
 	 */
 	public static String stringListToString(List<String> l, String separator) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for(int i=0;i<l.size();i++) {
 			sb.append(l.get(i));
 			if(separator != null && i < l.size()-1) sb.append(separator);
@@ -61,8 +61,8 @@ public final class StringTools {
 	 * @return The multiplied string.
 	 */
 	public static String multiplyString(String s, int n) {
-		StringBuffer sb = new StringBuffer();
-		for(int i=n-1;i>=0;i--) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = n - 1; i >= 0; i--) {
 			sb.append(s);
 		}
 		return sb.toString();
@@ -75,7 +75,7 @@ public final class StringTools {
 	 * @return The resulting string.
 	 */
 	public static String arrayToString(String [] stringArray, String separator) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for(int i=0;i<stringArray.length-1;i++) {
 			sb.append(stringArray[i]);
 			sb.append(separator);
@@ -316,7 +316,7 @@ public final class StringTools {
 	 */
 	public static String removeDashIfPresent(String locantText){
 		if(locantText.endsWith("-")) {
-			locantText = locantText.substring(0, locantText.length()-1);
+			locantText = locantText.substring(0, locantText.length() - 1);
 		}
 		return locantText;
 	}
@@ -328,7 +328,7 @@ public final class StringTools {
 	 */
 	public static int countTerminalPrimes(String locantText){
 		int numberOfPrimes = 0;
-		for(int k = locantText.length() -1; k>0; k--){
+		for(int k = locantText.length() -1; k > 0; k--){
 			if (locantText.charAt(k)=='\''){
 				numberOfPrimes++;
 			}

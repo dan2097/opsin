@@ -121,7 +121,7 @@ class ResourceManager {
 						if(symbolTokenNamesDictReversed[index]==null) {
 							symbolTokenNamesDictReversed[index] = new OpsinRadixTrie();
 						}
-						symbolTokenNamesDictReversed[index].addToken(new StringBuffer(t).reverse().toString());
+						symbolTokenNamesDictReversed[index].addToken(new StringBuilder(t).reverse().toString());
 					}
 				}
 			}
