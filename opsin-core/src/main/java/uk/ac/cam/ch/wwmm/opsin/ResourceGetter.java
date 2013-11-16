@@ -122,10 +122,7 @@ class ResourceGetter {
 
 	private File getFile(String name) {
 		File f = new File(getResDir(), name);
-		if(f.isDirectory()){
-			return null;
-		}
-		if(f.exists()){
+		if(f.isFile()){
 			return f;
 		}
 		return null;
