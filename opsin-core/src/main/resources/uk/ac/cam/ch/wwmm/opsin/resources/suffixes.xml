@@ -193,9 +193,17 @@
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->
   <tokenList tagname="suffix" type="root" subType="cycleformer" symbol="s">
     <token value="imide">imide</token>
+    <token value="imide">ic imide</token>
+    <token value="imide">ic acid imide</token>
     <token value="imide">imid</token>
+    <token value="imide">ic imid</token>
+    <token value="imide">ic acid imid</token>
     <token value="imidium">imidium</token>
+    <token value="imidium">ic imidium</token>
+    <token value="imidium">ic acid imidium</token>
     <token value="imidylium">imidylium</token>
+    <token value="imidylium">ic imidylium</token>
+    <token value="imidylium">ic acid imidylium</token>
   </tokenList>
 
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->
