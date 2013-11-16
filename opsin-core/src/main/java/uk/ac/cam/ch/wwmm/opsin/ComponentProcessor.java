@@ -3735,6 +3735,15 @@ class ComponentProcessor {
 			if (lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR)!=null && substituentGroup.getAttribute(IMINOLIKE_ATR)!=null){
 				continue;//possibly a multiplicative additive operation
 			}
+			if (substituentGroup.getValue().equals("sulf") && frag.getAtomCount() == 1){
+				Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(substituentGroup, new String[]{UNSATURATOR_EL});
+				if (suffix != null && suffix.getAttributeValue(VALUE_ATR).equals("ylidene")) {
+					substituentGroup.removeAttribute(substituentGroup.getAttribute(USABLEASJOINER_ATR));
+					//TODO resolve suffixes as early as can be done unambiguously
+					//e.g. it should be possible to know that sulfanylidene has 0 hydrogen by azaniumylidyne has 1
+					continue;
+				}
+			}
 			
 			//prevent bracketting perhalogeno terms 
 			if (PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR))){
