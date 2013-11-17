@@ -94,7 +94,7 @@ class ReverseParseRules {
 						successfulAnnotations.clear();
 						posInNameOfLastSuccessfulAnnotations = posInName;
 					}
-					else if (successfulAnnotations.size()>128){
+					else if (successfulAnnotations.size() > 128){
 						throw new ParsingException("Ambiguity in OPSIN's chemical grammar has produced more than 128 annotations. Parsing has been aborted. Please report this as a bug");
 					}
 					successfulAnnotations.add(as);
@@ -113,7 +113,8 @@ class ReverseParseRules {
 					if (possibleTokenisationsTrie != null) {
 						List<Integer> possibleTokenisations = possibleTokenisationsTrie.findMatchesReadingStringRightToLeft(chemicalWordLowerCase, posInName);
 						if (possibleTokenisations != null) {//next could be a token
-							for (int tokenizationIndex : possibleTokenisations) {
+							for (int j = 0, l = possibleTokenisations.size(); j < l; j++) {//typically list size will be 1 so this is faster than an iterator
+								int tokenizationIndex = possibleTokenisations.get(j);
 								AnnotatorState newAs = new AnnotatorState();
 								newAs.posInName = tokenizationIndex;
 								newAs.tokens = new ArrayList<String>(as.tokens);
@@ -128,7 +129,8 @@ class ReverseParseRules {
 					}
 					List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDictReversed[i];
 					if (possibleAutomata != null) {//next could be an automaton
-						for (RunAutomaton automaton : possibleAutomata) {
+						for (int j = 0, l = possibleAutomata.size(); j < l; j++) {
+							RunAutomaton automaton = possibleAutomata.get(j);
 							int matchLength = runInReverse(automaton, chemicalWord, posInName);
 							if (matchLength != -1){//matchLength = -1 means it did not match
 								AnnotatorState newAs = new AnnotatorState();
@@ -145,7 +147,8 @@ class ReverseParseRules {
 					}
 					List<Pattern> possibleRegexes = resourceManager.symbolRegexesDictReversed[i];
 					if (possibleRegexes != null) {//next could be a regex
-						for (Pattern pattern : possibleRegexes) {
+						for (int j = 0, l = possibleRegexes.size(); j < l; j++) {
+							Pattern pattern = possibleRegexes.get(j);
 							Matcher mat = pattern.matcher(chemicalWord).region(0, posInName);
 							if (mat.find()) {//match at end (patterns use $ anchor)
 								AnnotatorState newAs = new AnnotatorState();

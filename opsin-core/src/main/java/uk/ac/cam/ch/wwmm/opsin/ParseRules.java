@@ -91,7 +91,7 @@ public class ParseRules {
 						successfulAnnotations.clear();
 						posInNameOfLastSuccessfulAnnotations = posInName;
 					}
-					else if (successfulAnnotations.size()>128){
+					else if (successfulAnnotations.size() > 128){
 						throw new ParsingException("Ambiguity in OPSIN's chemical grammar has produced more than 128 annotations. Parsing has been aborted. Please report this as a bug");
 					}
 					successfulAnnotations.add(as);
