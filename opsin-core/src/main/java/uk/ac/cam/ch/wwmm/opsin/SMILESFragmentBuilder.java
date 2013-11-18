@@ -112,7 +112,7 @@ class SMILESFragmentBuilder {
 	/**Build a Fragment based on a SMILES string, with a null type/subType.
 	 *
 	 * @param smiles The SMILES string to build from.
-     * @return The built fragment.
+	 * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles) throws StructureBuildingException {
@@ -167,7 +167,7 @@ class SMILESFragmentBuilder {
 		}
 
 		while(tmpString.length() > 0) {
-			Character nextChar = tmpString.charAt(0);
+			char nextChar = tmpString.charAt(0);
 			tmpString = tmpString.substring(1);
 			if(nextChar == '(') {
 				stack.push(new StackFrame(stack.peek()));
@@ -197,36 +197,36 @@ class SMILESFragmentBuilder {
 				stack.peek().slash = SMILES_BOND_DIRECTION.LSLASH;
 			} else if(nextChar == '.'){
 				stack.peek().atom = null;
-			} else if(Character.isLetter(nextChar)) {//organic atoms
-		        String elementType = String.valueOf(nextChar);
-		        boolean spareValency =false;
-		        if(Character.isUpperCase(nextChar)) {//normal atoms
-					if(tmpString.length() > 0 && Character.isLowerCase(tmpString.charAt(0)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
+			} else if(is_A_to_Z(nextChar) || is_a_to_z(nextChar)) {//organic atoms
+				String elementType = String.valueOf(nextChar);
+				boolean spareValency =false;
+				if(is_A_to_Z(nextChar)) {//normal atoms
+					if(tmpString.length() > 0 && is_a_to_z(tmpString.charAt(0)) && organicAtoms.contains(elementType + tmpString.substring(0,1))) {
 						elementType += tmpString.substring(0,1);
 						tmpString = tmpString.substring(1);
 					}
 					else if (!organicAtoms.contains(elementType)){
 						throw new StructureBuildingException(elementType +" is not an organic Element. If it is actually an element it should be in square brackets");
 					}
-		        }
-		        else if(Character.isLowerCase(nextChar)) {//aromatic atoms
+				}
+				else if(is_a_to_z(nextChar)) {//aromatic atoms
 					if (!aromaticAtoms.contains(elementType)){
 						throw new StructureBuildingException(elementType +" is not an aromatic Element. If it is actually an element it should not be in lower case");
 					}
 					elementType = elementType.toUpperCase();
 					spareValency =true;
-		        }
+				}
 				Atom atom = createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
 					String labels[] = MATCH_COMMA.split(labelMap[currentNumber-1]);
-                    for (String label : labels) {
-                        if (!label.equals("")) {
-                            atom.addLocant(label);
-                        }
-                    }
+					for (String label : labels) {
+						if (!label.equals("")) {
+							atom.addLocant(label);
+						}
+					}
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom !=null) {
@@ -244,36 +244,36 @@ class SMILESFragmentBuilder {
 				currentNumber++;
 			} else if(nextChar == '[') {//square brackets- contain non-organic atoms and are used to unambiguously set charge/chirality etc.
 				int indexOfRightSquareBracket = tmpString.indexOf(']');
-                if (indexOfRightSquareBracket == -1) {
-                    throw new StructureBuildingException("[ without matching \"]\"");
-                }
-                String atomString = tmpString.substring(0, indexOfRightSquareBracket);//the contents of the square bracket
-                tmpString = tmpString.substring(indexOfRightSquareBracket +1);
-             // isotope
-                String isotope = "";
-				while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
+				if (indexOfRightSquareBracket == -1) {
+					throw new StructureBuildingException("[ without matching \"]\"");
+				}
+				String atomString = tmpString.substring(0, indexOfRightSquareBracket);//the contents of the square bracket
+				tmpString = tmpString.substring(indexOfRightSquareBracket +1);
+			// isotope
+				String isotope = "";
+				while(atomString.length() > 0 && is_0_to_9(atomString.charAt(0))) {
 					isotope += atomString.charAt(0);
 					atomString = atomString.substring(1);
 				}
 
-		        if (atomString.length() > 0){
-		        	nextChar = atomString.charAt(0);
-		        	atomString = atomString.substring(1);
-		        }
-		        else{
-		        	throw new StructureBuildingException("No element found in square brackets");
-		        }
-		// elementType
-		        String elementType = String.valueOf(nextChar);
-		        boolean spareValency = false;
-		        if(Character.isUpperCase(nextChar)) {//normal atoms
-					if(atomString.length() > 0 && Character.isLowerCase(atomString.charAt(0))) {
+				if (atomString.length() > 0){
+					nextChar = atomString.charAt(0);
+					atomString = atomString.substring(1);
+				}
+				else{
+					throw new StructureBuildingException("No element found in square brackets");
+				}
+			// elementType
+				String elementType = String.valueOf(nextChar);
+				boolean spareValency = false;
+				if(is_A_to_Z(nextChar)) {//normal atoms
+					if(atomString.length() > 0 && is_a_to_z(atomString.charAt(0))) {
 						elementType += atomString.substring(0,1);
 						atomString = atomString.substring(1);
 					}
-		        }
-		        else if(Character.isLowerCase(nextChar)) {//aromatic atoms
-					if(atomString.length() > 0 && Character.isLowerCase(atomString.charAt(0))) {
+				}
+				else if(is_a_to_z(nextChar)) {//aromatic atoms
+					if(atomString.length() > 0 && is_a_to_z(atomString.charAt(0))) {
 						if (aromaticAtoms.contains(elementType + atomString.substring(0,1))){
 							elementType = elementType.toUpperCase() + atomString.substring(0,1);
 							atomString = atomString.substring(1);
@@ -289,27 +289,27 @@ class SMILESFragmentBuilder {
 						elementType = elementType.toUpperCase();
 					}
 					spareValency =true;
-		        }
-		        else if (elementType.equals("*")){
-		        	elementType = "R";
-		        }
-		        else{
-		        	throw new StructureBuildingException(elementType +" is not a valid element type!");
-		        }
+				}
+				else if (elementType.equals("*")){
+					elementType = "R";
+				}
+				else{
+					throw new StructureBuildingException(elementType +" is not a valid element type!");
+				}
 				Atom atom = createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
-		        if (!isotope.equals("")){
-		        	atom.setIsotope(Integer.parseInt(isotope));
-		        }
+				if (!isotope.equals("")){
+					atom.setIsotope(Integer.parseInt(isotope));
+				}
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
 				} else if (labelMap !=null){
 					String labels[] = MATCH_COMMA.split(labelMap[currentNumber-1]);
-                    for (String label : labels) {
-                        if (!label.equals("")) {
-                            atom.addLocant(label);
-                        }
-                    }
+					for (String label : labels) {
+						if (!label.equals("")) {
+							atom.addLocant(label);
+						}
+					}
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom != null) {
@@ -327,94 +327,94 @@ class SMILESFragmentBuilder {
 				stack.peek().bondOrder = 1;
 				currentNumber++;
 
-		        Integer hydrogenCount =0;
-		        int charge = 0;
-		        Boolean chiralitySet = false;
-		        while (atomString.length()>0){
-		        	nextChar = atomString.charAt(0);
-		        	atomString = atomString.substring(1);
-		        	if(nextChar == '@') {// chirality-sets atom parity
-		        		if (chiralitySet){
-		        			throw new StructureBuildingException("Atom parity appeared to be specified twice for an atom in a square bracket!");
-		        		}
-		        		atomString = processTetrahedralStereochemistry(atomString, atom, previousAtom);
+				Integer hydrogenCount =0;
+				int charge = 0;
+				Boolean chiralitySet = false;
+				while (atomString.length()>0){
+					nextChar = atomString.charAt(0);
+					atomString = atomString.substring(1);
+					if(nextChar == '@') {// chirality-sets atom parity
+						if (chiralitySet){
+							throw new StructureBuildingException("Atom parity appeared to be specified twice for an atom in a square bracket!");
+						}
+						atomString = processTetrahedralStereochemistry(atomString, atom, previousAtom);
 						chiralitySet = true;
-		 			}
-		            else if (nextChar == 'H'){// hydrogenCount
-		            	if (hydrogenCount ==null || hydrogenCount != 0){
-		            		throw new StructureBuildingException("Hydrogen count appeared to be specified twice for an atom in a square bracket!");
-		            	}
-	            		if (atomString.length() > 0 && atomString.charAt(0)=='?'){
-	            			atomString = atomString.substring(1);
-	            			hydrogenCount=null;
-	            		}
-	            		else{
-			            	String hydrogenCountString ="";
-	    					while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
-	    						hydrogenCountString += atomString.substring(0,1);
-	    						atomString = atomString.substring(1);
-	    					}
-	    					if (hydrogenCountString.equals("")){
-	    						hydrogenCount=1;
-	    					}
-	    					else{
-	    						hydrogenCount = Integer.parseInt(hydrogenCountString);
-	    					}
-	    					if (atom.hasSpareValency()) {
-	    						if ((!elementType.equals("C") && !elementType.equals("Si")) || hydrogenCount >=2){
-		    						currentFrag.addIndicatedHydrogen(atom);
-	    						}
-	    					}
-	            		}
-		            }
-		            else if(nextChar == '+' || nextChar == '-') {// formalCharge
-		            	if (charge != 0){
-		            		throw new StructureBuildingException("Charge appeared to be specified twice for an atom in a square bracket!");
-		            	}
-	    				charge = nextChar == '+' ? 1 : -1;
-    					String changeChargeStr = "";
-    					int changeCharge = 1;
-    					while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {//e.g. [C+2]
-    						changeChargeStr+= atomString.substring(0,1);
-    						atomString = atomString.substring(1);
-    					}
-    					if (changeChargeStr.equals("")){
-    						while(atomString.length() > 0){//e.g. [C++]
-    							nextChar = atomString.charAt(0);
-    							if (nextChar == '+'){
-    								if (charge != 1){
-    									throw new StructureBuildingException("Atom has both positive and negative charges specified!");//e.g. [C+-]
-    								}
-    							}
-    							else if (nextChar == '-'){
-    								if (charge != -1){
-    									throw new StructureBuildingException("Atom has both negative and positive charges specified!");
-    								}
-    							}
-    							else{
-    								break;
-    							}
-    							changeCharge++;
-        						atomString = atomString.substring(1);
-        					}
-    					}
-    					changeCharge = changeChargeStr.equals("") ? changeCharge : Integer.parseInt(changeChargeStr);
-    					atom.setCharge(atom.getCharge() + (charge * changeCharge) );
-		            }
-		            else if(nextChar == '|') {
+					}
+					else if (nextChar == 'H'){// hydrogenCount
+						if (hydrogenCount ==null || hydrogenCount != 0){
+							throw new StructureBuildingException("Hydrogen count appeared to be specified twice for an atom in a square bracket!");
+						}
+						if (atomString.length() > 0 && atomString.charAt(0)=='?'){
+							atomString = atomString.substring(1);
+							hydrogenCount=null;
+						}
+						else{
+							String hydrogenCountString ="";
+							while(atomString.length() > 0 && is_0_to_9(atomString.charAt(0))) {
+								hydrogenCountString += atomString.substring(0,1);
+								atomString = atomString.substring(1);
+							}
+							if (hydrogenCountString.equals("")){
+								hydrogenCount=1;
+							}
+							else{
+								hydrogenCount = Integer.parseInt(hydrogenCountString);
+							}
+							if (atom.hasSpareValency()) {
+								if ((!elementType.equals("C") && !elementType.equals("Si")) || hydrogenCount >=2){
+									currentFrag.addIndicatedHydrogen(atom);
+								}
+							}
+						}
+					}
+					else if(nextChar == '+' || nextChar == '-') {// formalCharge
+						if (charge != 0){
+							throw new StructureBuildingException("Charge appeared to be specified twice for an atom in a square bracket!");
+						}
+						charge = nextChar == '+' ? 1 : -1;
+						String changeChargeStr = "";
+						int changeCharge = 1;
+						while(atomString.length() > 0 && is_0_to_9(atomString.charAt(0))) {//e.g. [C+2]
+							changeChargeStr+= atomString.substring(0,1);
+							atomString = atomString.substring(1);
+						}
+						if (changeChargeStr.equals("")){
+							while(atomString.length() > 0){//e.g. [C++]
+								nextChar = atomString.charAt(0);
+								if (nextChar == '+'){
+									if (charge != 1){
+										throw new StructureBuildingException("Atom has both positive and negative charges specified!");//e.g. [C+-]
+									}
+								}
+								else if (nextChar == '-'){
+									if (charge != -1){
+										throw new StructureBuildingException("Atom has both negative and positive charges specified!");
+									}
+								}
+								else{
+									break;
+								}
+								changeCharge++;
+								atomString = atomString.substring(1);
+							}
+						}
+						changeCharge = changeChargeStr.equals("") ? changeCharge : Integer.parseInt(changeChargeStr);
+						atom.setCharge(atom.getCharge() + (charge * changeCharge) );
+					}
+					else if(nextChar == '|') {
 						String lambda = "";
-						while(atomString.length() > 0 && Character.isDigit(atomString.charAt(0))) {
+						while(atomString.length() > 0 && is_0_to_9(atomString.charAt(0))) {
 							lambda += atomString.substring(0,1);
 							atomString = atomString.substring(1);
 						}
 						atom.setLambdaConventionValency(Integer.parseInt(lambda));
 					}
-		            else{
-		            	throw new StructureBuildingException("Unexpected character found in square bracket");
-		            }
-		        }
+					else{
+						throw new StructureBuildingException("Unexpected character found in square bracket");
+					}
+				}
 				atom.setProperty(Atom.SMILES_HYDROGEN_COUNT, hydrogenCount);
-			} else if(Character.isDigit(nextChar)|| nextChar == '%') {
+			} else if(is_0_to_9(nextChar)|| nextChar == '%') {
 				tmpString = processRingOpeningOrClosure(stack, closures, tmpString, nextChar);
 			}
 			else{
@@ -513,7 +513,7 @@ class SMILESFragmentBuilder {
 	private String processRingOpeningOrClosure(Stack<StackFrame> stack, HashMap<String, StackFrame> closures, String tmpString, Character nextChar) throws StructureBuildingException {
 		String closure = String.valueOf(nextChar);
 		if(nextChar == '%') {
-			if (tmpString.length() >=2 && Character.isDigit(tmpString.charAt(0)) && Character.isDigit(tmpString.charAt(1))) {
+			if (tmpString.length() >=2 && is_0_to_9(tmpString.charAt(0)) && is_0_to_9(tmpString.charAt(1))) {
 				closure = tmpString.substring(0,2);
 				tmpString = tmpString.substring(2);
 			}
@@ -808,7 +808,7 @@ class SMILESFragmentBuilder {
 	 * @return Atom
 	 * @throws StructureBuildingException
 	 */
-	Atom createAtom(String elementSymbol, Fragment frag) throws StructureBuildingException {
+	private Atom createAtom(String elementSymbol, Fragment frag) throws StructureBuildingException {
 		Atom a = new Atom(idManager.getNextID(), elementSymbol, frag);
 		frag.addAtom(a);
 		return a;
@@ -822,12 +822,24 @@ class SMILESFragmentBuilder {
 	 * @param bondOrder
 	 * @return Bond
 	 */
-	Bond createBond(Atom fromAtom, Atom toAtom, int bondOrder) {
+	private Bond createBond(Atom fromAtom, Atom toAtom, int bondOrder) {
 		Bond b = new Bond(fromAtom, toAtom, bondOrder);
 		fromAtom.addBond(b);
 		toAtom.addBond(b);
 		fromAtom.getFrag().addBond(b);
 		return b;
+	}
+	
+	private boolean is_A_to_Z(char ch) {
+		return ch >= 'A' && ch <= 'Z';
+	}
+	
+	private boolean is_a_to_z(char ch) {
+		return ch >= 'a' && ch <= 'z';
+	}
+	
+	private boolean is_0_to_9(char ch){
+		return ch >= '0' && ch <= '9'; 
 	}
 
 }
