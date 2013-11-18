@@ -23,8 +23,6 @@ import nu.xom.Element;
 class FragmentManager {
 	/** All of the atom-containing fragments in the molecule */
 	private final Set<Fragment> fragPile;
-	/** All of the inter-fragment bonds */
-	private final Set<Bond> bondPile;
 	/** A mapping between fragments and inter fragment bonds */
 	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond;
 	/** A builder for fragments specified as SMILES */
@@ -44,7 +42,6 @@ class FragmentManager {
 		this.sBuilder = sBuilder;
 		this.idManager = idManager;
 		fragPile = new LinkedHashSet<Fragment>();
-		bondPile = new LinkedHashSet<Bond>();
 		fragToInterFragmentBond = new HashMap<Fragment, LinkedHashSet<Bond>>();
 	}
 
@@ -271,10 +268,6 @@ class FragmentManager {
 		}
 	}
 
-	Set<Bond> getBondPile() {
-		return Collections.unmodifiableSet(bondPile);
-	}
-
 	Set<Fragment> getFragPile() {
 		return Collections.unmodifiableSet(fragPile);
 	}
@@ -289,7 +282,7 @@ class FragmentManager {
 	}
 
 	/**
-	 * Removes a fragment from the fragPile and inter fragment bonds associated with it from the bondpile/fragToInterFragmentBond.
+	 * Removes a fragment from the fragPile and inter fragment bonds associated with it from the fragToInterFragmentBond.
 	 * Throws an exception if fragment wasn't present
 	 * @param frag
 	 * @throws StructureBuildingException
@@ -306,7 +299,6 @@ class FragmentManager {
 			else{
 				fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
 			}
-			bondPile.remove(bond);
 		}
 		fragToInterFragmentBond.remove(frag);
 	}
@@ -553,22 +545,19 @@ class FragmentManager {
 	}
 
 	/**
-	 * Checks if this bond is an inter fragment bond and if it is removes it
+	 * Removes a bond from the inter-fragment bond mappings if it was present
 	 * @param bond
 	 */
 	private void removeInterFragmentBondIfPresent(Bond bond) {
-		if (bondPile.remove(bond)){
-			fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
-			fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
-		}
+		fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).remove(bond);
+		fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
 	}
 	
 	/**
-	 * Adds a bond to the inter fragment bond list and fragment to inter-fragment bond mappings
+	 * Adds a bond to the fragment to inter-fragment bond mappings
 	 * @param bond
 	 */
 	private void addInterFragmentBond(Bond bond) {
-		bondPile.add(bond);
 		fragToInterFragmentBond.get(bond.getFromAtom().getFrag()).add(bond);
 		fragToInterFragmentBond.get(bond.getToAtom().getFrag()).add(bond);
 	}

@@ -146,6 +146,9 @@ class SMILESFragmentBuilder {
 		}
 		int currentNumber = 1;
 		Fragment currentFrag = new Fragment(type, subType);
+		if (smiles.length() == 0){
+			return currentFrag;
+		}
 		Stack<StackFrame> stack = new Stack<StackFrame>();
 		stack.push(new StackFrame(null, 1));
 		HashMap<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures

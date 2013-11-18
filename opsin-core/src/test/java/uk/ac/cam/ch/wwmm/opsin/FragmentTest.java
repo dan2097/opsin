@@ -12,37 +12,22 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 public class FragmentTest {
 
 	private Fragment frag;
-	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+	private FragmentManager fm;
 
 	@Before
 	public void setUp(){
-		frag = new Fragment();
+		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+		try {
+			frag = fm.buildSMILES("");
+		} catch (StructureBuildingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Test
 	public void testFragment() {
 		assertNotNull("Has atom list", frag.getAtomList());
 	}
-
-	//FIXME Argh! I hate namespaces!
-	/*public void testtoCMLMolecule() {
-		Element elem = frag.toCMLMolecule();
-		assertNotNull("Got an Element", elem);
-		assertEquals("Element is a cml tag", elem.getLocalName(), "cml");
-		frag.addAtom(new Atom(1, 1, "C", frag));
-		elem = frag.toCMLMolecule();
-		assertEquals("foo", elem.getFirstChildElement("molecule").toXML(), "foo bar");
-		assertEquals("Element has 1 atom greatgrandchild", 1, elem.getFirstChildElement("molecule")
-				.getFirstChildElement("atomArray").getChildElements("atom").size());
-		frag.addAtom(new Atom(2, 2, "C", frag));
-		elem = frag.toCMLMolecule();
-		assertEquals("Element has 2 atom greatgrandchildren", 2, elem.getFirstChildElement("molecule")
-				.getFirstChildElement("atomArray").getChildElements("atom").size());
-		frag.addBond(new Bond(1, 2, 1));
-		elem = frag.toCMLMolecule();
-		assertEquals("Element has 1 bond greatgrandchildren", 1, elem.getFirstChildElement("molecule")
-				.getFirstChildElement("bondArray").getChildElements("bond").size());
-	}*/
 
 	@Test
 	public void testAddAtom() {

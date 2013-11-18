@@ -49,19 +49,12 @@ public class AtomTest {
 	
 	@Test
 	public void testGetIncomingValency() throws StructureBuildingException {
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		assertEquals("No bonds", 0, 
-				sBuilder.build("C", fm).getFirstAtom().getIncomingValency());
-		assertEquals("One bond", 1, 
-				sBuilder.build("CC", fm).getFirstAtom().getIncomingValency());
-		assertEquals("Two bonds", 2, 
-				sBuilder.build("C(C)C", fm).getFirstAtom().getIncomingValency());
-		assertEquals("Double bond", 2, 
-				sBuilder.build("C=O", fm).getFirstAtom().getIncomingValency());
-		assertEquals("Triple bond", 3, 
-				sBuilder.build("C#C", fm).getFirstAtom().getIncomingValency());
-		assertEquals("One bond", 1, 
-				sBuilder.build("CC=CC#N", fm).getFirstAtom().getIncomingValency());
+		assertEquals("No bonds", 0, fm.buildSMILES("C").getFirstAtom().getIncomingValency());
+		assertEquals("One bond", 1, fm.buildSMILES("CC").getFirstAtom().getIncomingValency());
+		assertEquals("Two bonds", 2, fm.buildSMILES("C(C)C").getFirstAtom().getIncomingValency());
+		assertEquals("Double bond", 2, fm.buildSMILES("C=O").getFirstAtom().getIncomingValency());
+		assertEquals("Triple bond", 3, fm.buildSMILES("C#C").getFirstAtom().getIncomingValency());
+		assertEquals("One bond", 1, fm.buildSMILES("CC=CC#N").getFirstAtom().getIncomingValency());
 	}
 	
 }
