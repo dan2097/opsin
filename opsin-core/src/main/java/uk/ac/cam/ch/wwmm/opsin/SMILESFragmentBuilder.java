@@ -102,16 +102,21 @@ class SMILESFragmentBuilder {
 		aromaticAtoms.add("sb");
 		aromaticAtoms.add("te");
 	}
+	
+	private final IDManager idManager;
+	
+	SMILESFragmentBuilder(IDManager idManager) {
+		this.idManager = idManager;
+	}
 
 	/**Build a Fragment based on a SMILES string, with a null type/subType.
 	 *
 	 * @param smiles The SMILES string to build from.
-	 * @param fragManager
      * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
-	Fragment build(String smiles, FragmentManager fragManager) throws StructureBuildingException {
-		return build(smiles, "", "", "", fragManager);
+	Fragment build(String smiles) throws StructureBuildingException {
+		return build(smiles, "", "", "");
 	}
 
 	/**
@@ -120,22 +125,21 @@ class SMILESFragmentBuilder {
 	 * @param type The type of fragment being built.
 	 * @param subType The subtype of fragment being built.
 	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none". A value of "" is treated as synonymous to numeric
-	 * @param fragManager
 	 * @return Fragment The built fragment.
 	 * @throws StructureBuildingException
 	 */
-	Fragment build(String smiles, String type, String subType, String labelMapping, FragmentManager fragManager) throws StructureBuildingException {
+	Fragment build(String smiles, String type, String subType, String labelMapping) throws StructureBuildingException {
 		if (smiles==null){
-			throw new StructureBuildingException("SMILES specified is null");
+			throw new IllegalArgumentException("SMILES specified is null");
 		}
 		if (type==null){
-			throw new StructureBuildingException("type specified is null, use \"\" if a type is not desired ");
+			throw new IllegalArgumentException("type specified is null, use \"\" if a type is not desired ");
 		}
 		if (subType==null){
-			throw new StructureBuildingException("subType specified is null, use \"\" if a subType is not desired ");
+			throw new IllegalArgumentException("subType specified is null, use \"\" if a subType is not desired ");
 		}
 		if (labelMapping==null){
-			throw new StructureBuildingException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
+			throw new IllegalArgumentException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
 		}
 		String[] labelMap = null;
 		if (labelMapping.equals("")){
@@ -212,7 +216,7 @@ class SMILESFragmentBuilder {
 					elementType = elementType.toUpperCase();
 					spareValency =true;
 		        }
-				Atom atom = fragManager.createAtom(elementType, currentFrag);
+				Atom atom = createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
 				if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
 					atom.addLocant(Integer.toString(currentNumber));
@@ -226,7 +230,7 @@ class SMILESFragmentBuilder {
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom !=null) {
-					Bond b = fragManager.createBond(stack.peek().atom, atom, stack.peek().bondOrder);
+					Bond b = createBond(stack.peek().atom, atom, stack.peek().bondOrder);
 					if (stack.peek().slash!=null){
 						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
@@ -292,7 +296,7 @@ class SMILESFragmentBuilder {
 		        else{
 		        	throw new StructureBuildingException(elementType +" is not a valid element type!");
 		        }
-				Atom atom = fragManager.createAtom(elementType, currentFrag);
+				Atom atom = createAtom(elementType, currentFrag);
 				atom.setSpareValency(spareValency);
 		        if (!isotope.equals("")){
 		        	atom.setIsotope(Integer.parseInt(isotope));
@@ -309,7 +313,7 @@ class SMILESFragmentBuilder {
 				}
 				currentFrag.addAtom(atom);
 				if(stack.peek().atom != null) {
-					Bond b = fragManager.createBond(stack.peek().atom, atom, stack.peek().bondOrder);
+					Bond b = createBond(stack.peek().atom, atom, stack.peek().bondOrder);
 					if (stack.peek().slash!=null){
 						b.setSmilesStereochemistry(stack.peek().slash);
 						stack.peek().slash = null;
@@ -411,7 +415,7 @@ class SMILESFragmentBuilder {
 		        }
 				atom.setProperty(Atom.SMILES_HYDROGEN_COUNT, hydrogenCount);
 			} else if(Character.isDigit(nextChar)|| nextChar == '%') {
-				tmpString = processRingOpeningOrClosure(fragManager, stack, closures, tmpString, nextChar);
+				tmpString = processRingOpeningOrClosure(stack, closures, tmpString, nextChar);
 			}
 			else{
 				throw new StructureBuildingException(nextChar + " is in an unexpected position. Check this is not a mistake and that this feature of SMILES is supported by OPSIN's SMILES parser");
@@ -457,7 +461,7 @@ class SMILESFragmentBuilder {
 
 		for (Atom atom : atomList) {
 			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT)!=null && atom.getLambdaConventionValency() ==null){
-				setupAtomValency(fragManager, atom);
+				setupAtomValency(atom);
 			}
 		}
 		CycleDetector.assignWhetherAtomsAreInCycles(currentFrag);
@@ -499,7 +503,6 @@ class SMILESFragmentBuilder {
 
 	/**
 	 * Process ring openings and closings e.g. the two 1s in c1ccccc1
-	 * @param fragManager
 	 * @param stack
 	 * @param closures
 	 * @param tmpString
@@ -507,10 +510,7 @@ class SMILESFragmentBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private String processRingOpeningOrClosure(FragmentManager fragManager,
-			Stack<StackFrame> stack, HashMap<String, StackFrame> closures,
-			String tmpString, Character nextChar)
-			throws StructureBuildingException {
+	private String processRingOpeningOrClosure(Stack<StackFrame> stack, HashMap<String, StackFrame> closures, String tmpString, Character nextChar) throws StructureBuildingException {
 		String closure = String.valueOf(nextChar);
 		if(nextChar == '%') {
 			if (tmpString.length() >=2 && Character.isDigit(tmpString.charAt(0)) && Character.isDigit(tmpString.charAt(1))) {
@@ -522,7 +522,7 @@ class SMILESFragmentBuilder {
 			}
 		}
 		if(closures.containsKey(closure)) {
-			processRingClosure(fragManager, stack, closures, closure);
+			processRingClosure(stack, closures, closure);
 		} else {
 			if (stack.peek().atom==null){
 				throw new StructureBuildingException("A ring opening has appeared before any atom!");
@@ -532,8 +532,7 @@ class SMILESFragmentBuilder {
 		return tmpString;
 	}
 
-	private void processRingOpening(Stack<StackFrame> stack,
-			HashMap<String, StackFrame> closures, String closure) throws StructureBuildingException {
+	private void processRingOpening(Stack<StackFrame> stack, HashMap<String, StackFrame> closures, String closure) throws StructureBuildingException {
 		StackFrame sf = new StackFrame(stack.peek());
 		if (stack.peek().slash!=null){
 			sf.slash = stack.peek().slash;
@@ -562,9 +561,7 @@ class SMILESFragmentBuilder {
 		}
 	}
 
-	private void processRingClosure(FragmentManager fragManager,
-			Stack<StackFrame> stack, HashMap<String, StackFrame> closures,
-			String closure) throws StructureBuildingException {
+	private void processRingClosure(Stack<StackFrame> stack, HashMap<String, StackFrame> closures, String closure) throws StructureBuildingException {
 		StackFrame sf = closures.remove(closure);
 		int bondOrder = 1;
 		if(sf.bondOrder > 1) {
@@ -577,10 +574,10 @@ class SMILESFragmentBuilder {
 		}
 		Bond b;
 		if (stack.peek().slash ==null){
-			b = fragManager.createBond(sf.atom, stack.peek().atom, bondOrder);
+			b = createBond(sf.atom, stack.peek().atom, bondOrder);
 		}
 		else{
-			b = fragManager.createBond(stack.peek().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
+			b = createBond(stack.peek().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
 		}
 		if(sf.slash !=null) {
 			if(stack.peek().slash !=null) {
@@ -739,11 +736,10 @@ class SMILESFragmentBuilder {
 	/**
 	 * Utilises the atom's hydrogen count as set by the SMILES as well as incoming valency to determine the atom's valency
 	 * If the atom is charged whether protons have been added or removed will also need to be determined
-	 * @param fragManager 
 	 * @param atom
 	 * @throws StructureBuildingException 
 	 */
-	private void setupAtomValency(FragmentManager fragManager, Atom atom) throws StructureBuildingException {
+	private void setupAtomValency(Atom atom) throws StructureBuildingException {
 		int hydrogenCount = atom.getProperty(Atom.SMILES_HYDROGEN_COUNT);
 		int incomingValency = atom.getIncomingValency() + hydrogenCount +atom.getOutValency();
 		int charge = atom.getCharge();
@@ -797,11 +793,41 @@ class SMILESFragmentBuilder {
 			if (hydrogenCount >0){//make hydrogen explicit
 				Fragment frag =atom.getFrag();
 				for (int i = 0; i < hydrogenCount; i++) {
-					Atom hydrogen = fragManager.createAtom("H", frag);
-					fragManager.createBond(atom, hydrogen, 1);
+					Atom hydrogen = createAtom("H", frag);
+					createBond(atom, hydrogen, 1);
 				}
 			}
 		}
+	}
+	
+
+	/**
+	 * Create a new Atom of the given element belonging to the given fragment
+	 * @param elementSymbol
+	 * @param frag
+	 * @return Atom
+	 * @throws StructureBuildingException
+	 */
+	Atom createAtom(String elementSymbol, Fragment frag) throws StructureBuildingException {
+		Atom a = new Atom(idManager.getNextID(), elementSymbol, frag);
+		frag.addAtom(a);
+		return a;
+	}
+	
+	/**
+	 * Create a new bond between two atoms.
+	 * The bond is associated with these atoms.
+	 * @param fromAtom
+	 * @param toAtom
+	 * @param bondOrder
+	 * @return Bond
+	 */
+	Bond createBond(Atom fromAtom, Atom toAtom, int bondOrder) {
+		Bond b = new Bond(fromAtom, toAtom, bondOrder);
+		fromAtom.addBond(b);
+		toAtom.addBond(b);
+		fromAtom.getFrag().addBond(b);
+		return b;
 	}
 
 }

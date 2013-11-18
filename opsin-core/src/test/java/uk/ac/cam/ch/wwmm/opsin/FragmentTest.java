@@ -16,7 +16,8 @@ public class FragmentTest {
 
 	@Before
 	public void setUp(){
-		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+		IDManager idManager = new IDManager();
+		fm = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
 		try {
 			frag = fm.buildSMILES("");
 		} catch (StructureBuildingException e) {
@@ -348,16 +349,14 @@ public class FragmentTest {
 
 	@Test
 	public void testIndicatedHydrogen() throws StructureBuildingException {
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment pyrrole = sBuilder.build("[nH]1cccc1", fm);
+		Fragment pyrrole = fm.buildSMILES("[nH]1cccc1");
 		assertEquals("Pyrrole has 1 indicated hydrogen", 1, pyrrole.getIndicatedHydrogen().size());
 		assertEquals("..and the indicated hydrogen is on the nitrogen", pyrrole.getFirstAtom(), pyrrole.getIndicatedHydrogen().get(0));
 	}
 
 	@Test
 	public void testSpareValenciesOnAromaticAtoms() throws StructureBuildingException{
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment naphthalene = sBuilder.build("c1cccc2ccccc12", fm);
+		Fragment naphthalene = fm.buildSMILES("c1cccc2ccccc12");
 		for(Atom a : naphthalene.getAtomList()) {
 			assertEquals("All atoms have sv", true, a.hasSpareValency());
 		}
@@ -368,23 +367,22 @@ public class FragmentTest {
 
 	@Test
 	public void testConvertSpareValenciesToDoubleBonds() throws StructureBuildingException{
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment dhp = sBuilder.build("c1cCccC1", fm);
+		Fragment dhp = fm.buildSMILES("c1cCccC1");
 		FragmentTools.convertSpareValenciesToDoubleBonds(dhp);
 		for(Atom a : dhp.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment funnydiene = sBuilder.build("C(=C)C=C", fm);
+		Fragment funnydiene = fm.buildSMILES("C(=C)C=C");
 		FragmentTools.convertSpareValenciesToDoubleBonds(funnydiene);
 		for(Atom a : funnydiene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment naphthalene = sBuilder.build("c1cccc2ccccc12", fm);
+		Fragment naphthalene = fm.buildSMILES("c1cccc2ccccc12");
 		FragmentTools.convertSpareValenciesToDoubleBonds(naphthalene);
 		for(Atom a : naphthalene.getAtomList()) {
 			assertEquals("All atoms have no sv", false, a.hasSpareValency());
 		}
-		Fragment pentalene = sBuilder.build("c12c(ccc1)ccc2", fm);
+		Fragment pentalene = fm.buildSMILES("c12c(ccc1)ccc2");
 		for(Atom a : pentalene.getAtomList()) {
 			assertEquals("All atoms have sv", true, a.hasSpareValency());
 		}
@@ -397,8 +395,7 @@ public class FragmentTest {
 
 	@Test
 	public void testGetAtomNeighbours() throws StructureBuildingException{
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder();
-		Fragment naphthalene = sBuilder.build("C1=CC=CC2=CC=CC=C12", fm);
+		Fragment naphthalene = fm.buildSMILES("C1=CC=CC2=CC=CC=C12");
 		assertEquals("Atom 1 has two neighbours",
 				2, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(1)).size());
 		assertEquals("Atom 5 has three neighbours",

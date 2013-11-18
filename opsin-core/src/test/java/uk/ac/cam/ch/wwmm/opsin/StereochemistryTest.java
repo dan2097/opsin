@@ -21,19 +21,18 @@ import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 
 public class StereochemistryTest {
 
+	private SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
+	
 	private static NameToStructure n2s;
-	private static SMILESFragmentBuilder sBuilder;
 
 	@BeforeClass
 	public static void setup() {
 		n2s = NameToStructure.getInstance();
-		sBuilder = new SMILESFragmentBuilder();
 	}
 	
 	@AfterClass
 	public static void cleanUp(){
 		n2s = null;
-		sBuilder =null;
 	}
 	
 	/*
@@ -241,8 +240,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority1() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("C(Br)(F)([H])Cl", fm);
+		Fragment f = sBuilder.build("C(Br)(F)([H])Cl");
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -263,8 +261,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority2() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("C([H])(C1CC1)(C1CCC1)O", fm);
+		Fragment f = sBuilder.build("C([H])(C1CC1)(C1CCC1)O");
 		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -286,8 +283,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority3() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("[C](N)(C1=CC(O)=CC=C1)([H])C2=CC=C(O)C=C2", fm);
+		Fragment f = sBuilder.build("[C](N)(C1=CC(O)=CC=C1)([H])C2=CC=C(O)C=C2");
 		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -308,8 +304,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority4() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("[C](N)(C1CC(O)CCC1)([H])C2CCC(O)CC2", fm);
+		Fragment f = sBuilder.build("[C](N)(C1CC(O)CCC1)([H])C2CCC(O)CC2");
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -330,8 +325,7 @@ public class StereochemistryTest {
 
 	@Test
 	public void testCIPpriority5() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("C1([H])(C(=O)O[H])C([H])([H])SC([H])([H])N([H])1", fm);
+		Fragment f = sBuilder.build("C1([H])(C(=O)O[H])C([H])([H])SC([H])([H])N([H])1");
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -352,8 +346,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority6() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("C1([H])(O)C([H])(C([H])([H])[H])OC([H])([H])C([H])([H])C1([H])(O[H])", fm);
+		Fragment f = sBuilder.build("C1([H])(O)C([H])(C([H])([H])[H])OC([H])([H])C([H])([H])C1([H])(O[H])");
 		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -374,8 +367,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority7() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("[H]OC2([H])(C([H])([H])C([H])([H])C3([H])(C4([H])(C([H])([H])C([H])([H])C1=C([H])C([H])([H])C([H])([H])C([H])([H])C1([H])C4([H])(C([H])([H])C([H])([H])C23(C([H])([H])[H])))))", fm);
+		Fragment f = sBuilder.build("[H]OC2([H])(C([H])([H])C([H])([H])C3([H])(C4([H])(C([H])([H])C([H])([H])C1=C([H])C([H])([H])C([H])([H])C([H])([H])C1([H])C4([H])(C([H])([H])C([H])([H])C23(C([H])([H])[H])))))");
 		List<Atom> cipOrdered =  new CipSequenceRules(f.getAtomList().get(34)).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -417,7 +409,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority9() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("C1(C=C)CC1C2=CC=CC=C2");
 		StructureBuilder.makeHydrogensExplicit(state);
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
@@ -440,7 +432,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority10() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("C(O[H])([H])(C1([H])C([H])(F)C([H])(Cl)C([H])([H])C([H])(I)C1([H])([H]))C1([H])C([H])(F)C([H])(Br)C([H])([H])C([H])(Cl)C1([H])([H])");
 		StructureBuilder.makeHydrogensExplicit(state);
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
@@ -463,7 +455,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority11() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("C17C=CC23C45OC6C19.O74.O2C3.C5.C6(C)C.C9");
 		StructureBuilder.makeHydrogensExplicit(state);
 		//stereocentres at 1,4,5,7,8
@@ -552,7 +544,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority12() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("C1(C)(CCC(=O)N1)CCC(=O)NC(C)C");
 		StructureBuilder.makeHydrogensExplicit(state);
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
@@ -575,7 +567,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority13() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("C(O)(C#CC)C1=CC=CC=C1");
 		StructureBuilder.makeHydrogensExplicit(state);
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
@@ -598,7 +590,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority14() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("C(Cl)([2H])([3H])[H]");
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
@@ -646,15 +638,13 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCisTransUnambiguous() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("[H]C([H])([H])C([H])=C([H])C([H])([H])[H]", fm);
+		Fragment f = sBuilder.build("[H]C([H])([H])C([H])=C([H])C([H])([H])[H]");
 		assertEquals(true, StereochemistryHandler.cisTransUnambiguousOnBond(f.findBond(5, 7)));
 	}
 	
 	@Test
 	public void testCisTransAmbiguous() throws StructureBuildingException {
-		FragmentManager fm = new FragmentManager(sBuilder, new IDManager());
-		Fragment f = sBuilder.build("[H]C([H])([H])C(Cl)=C([H])C([H])([H])[H]", fm);
+		Fragment f = sBuilder.build("[H]C([H])([H])C(Cl)=C([H])C([H])([H])[H]");
 		assertEquals(false, StereochemistryHandler.cisTransUnambiguousOnBond(f.findBond(5, 7)));
 	}
 	
@@ -724,7 +714,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testFindPseudoAsymmetricCarbon1() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("OCC(O)C(O)C(O)CO");
 		StructureBuilder.makeHydrogensExplicit(state);
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
@@ -744,7 +734,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testFindPseudoAsymmetricCarbon2() throws StructureBuildingException {
-		BuildState state  =new BuildState(mock(NameToStructureConfig.class), sBuilder);
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("OCC(O)C(C(Cl)(Br)C)(C(Cl)(Br)C)C(O)CO");
 		StructureBuilder.makeHydrogensExplicit(state);
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);

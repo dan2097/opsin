@@ -4,8 +4,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,17 +15,7 @@ import org.junit.Test;
  */
 public class FusedRingNumbererTest {
 
-	private static FragmentManager fm;
-
-	@BeforeClass
-	public static void setUp(){
-		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-	}
-	
-	@AfterClass
-	public static void cleanUp(){
-		fm = null;
-	}
+	private SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
 
 	@Test
 	public void aceanthrene() throws StructureBuildingException {
@@ -438,7 +426,7 @@ public class FusedRingNumbererTest {
 	 * @throws StructureBuildingException 
 	 */
 	private void compareNumbering(String smiles, String labels) throws StructureBuildingException {
-		Fragment fusedRing =fm.buildSMILES(smiles, "", "none");
+		Fragment fusedRing = sBuilder.build(smiles, "", "", "none");
 		String[] labelArray =labels.split("/", -1);
 		FusedRingNumberer.numberFusedRing(fusedRing);
 		List<Atom> atomList =fusedRing.getAtomList();
