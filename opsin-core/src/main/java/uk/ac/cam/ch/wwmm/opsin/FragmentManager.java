@@ -77,7 +77,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles, String type, String subType, String labelMapping) throws StructureBuildingException {
-		Fragment newFrag = sBuilder.build(smiles, type, subType, labelMapping, this);
+		Fragment newFrag = sBuilder.build(smiles, type, subType, labelMapping);
 		addFragment(newFrag);
 		return newFrag;
 	}
@@ -183,7 +183,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Atom getHeteroatom(String smiles) throws StructureBuildingException {
-		Fragment heteroAtomFrag = sBuilder.build(smiles, this);
+		Fragment heteroAtomFrag = sBuilder.build(smiles);
 		if (heteroAtomFrag.getAtomCount() != 1){
 			throw new StructureBuildingException("Heteroatom smiles described a fragment with multiple SMILES!");
 		}

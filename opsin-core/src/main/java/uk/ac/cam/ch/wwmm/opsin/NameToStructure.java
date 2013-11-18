@@ -45,9 +45,6 @@ public class NameToStructure {
 	/**Applies OPSIN's grammar to tokenise and assign meanings tokens.*/
 	private ParseRules parseRules;
 
-	/** A builder for fragments specified as SMILES */
-	private SMILESFragmentBuilder sBuilder;
-
 	/**Constructs a single fragment from the result of the component generation and processing stages.*/
 	private StructureBuilder structureBuilder;
 	
@@ -80,7 +77,6 @@ public class NameToStructure {
 			Tokeniser tokeniser = new Tokeniser(parseRules);
 			parser = new Parser(wordRules, tokeniser, resourceManager);
 
-			sBuilder = new SMILESFragmentBuilder();
 			structureBuilder = new StructureBuilder();
 			suffixRules = new SuffixRules(resourceGetter);
 
@@ -163,7 +159,7 @@ public class NameToStructure {
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));
 					}
-					BuildState state = new BuildState(n2sConfig, sBuilder);
+					BuildState state = new BuildState(n2sConfig);
 					new ComponentProcessor(suffixRules, state, parse).processParse();
 					if (LOG.isDebugEnabled()){
 						LOG.debug(new XOMFormatter().elemToString(parse));

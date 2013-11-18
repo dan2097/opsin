@@ -10,6 +10,7 @@ import nu.xom.Element;
 import nu.xom.Elements;
 
 import org.junit.Test;
+
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class VerifyFragmentsTest {
@@ -18,7 +19,7 @@ public class VerifyFragmentsTest {
 	
 	@Test
 	public void verifySMILES() throws Exception {
-		FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
 		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
 		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
 		for (int i = 0; i < tokenFiles.size(); i++) {
@@ -45,19 +46,18 @@ public class VerifyFragmentsTest {
 							String subType = token.getAttribute(SUBTYPE_ATR) !=null ?  token.getAttributeValue(SUBTYPE_ATR) : "";
 	
 							String labels = token.getAttribute(LABELS_ATR) !=null ?  token.getAttributeValue(LABELS_ATR) : "";
-							mol = fm.buildSMILES(smiles, type, subType, labels);
+							mol = sBuilder.build(smiles, type, subType, labels);
 						}
 						catch (Exception e) {
 							e.printStackTrace();
 						}
 						assertNotNull("The following token's SMILES or labels were in error: " +token.toXML(), mol);
 						try{
-							fm.checkValencies();
+							mol.checkValencies();
 						}
 						catch (StructureBuildingException e) {
 							fail("The following token's SMILES produced a structure with invalid valency: " +token.toXML());
 						}
-						fm.removeFragment(mol);
 					}
 				}
 			}

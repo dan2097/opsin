@@ -11,7 +11,8 @@ public class HeteroAtomReplacementTest {
 
 	@Before
 	public void setUp() {
-		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+		IDManager idManager = new IDManager();
+		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
 		a = new Atom(0, "C", mock(Fragment.class));
 	}
 	

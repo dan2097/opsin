@@ -6,32 +6,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.Fragment;
 
 //Cycle detection is performed as part of fragment creation so we can just check the output of fragment creation
 public class CycleDetectorTest {
-	private FragmentManager fm;
-
-	@Before
-	public void setup(){
-		fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
-	}
+	private SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
 	
 	@Test
 	public void testAssignCyclic1() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("CCCC");
+		Fragment frag = sBuilder.build("CCCC");
 		for (Atom a : frag.getAtomList()) {
 			assertEquals("Should be acylic", false, a.getAtomIsInACycle());
 		}
 	}
-	
-	
+
 	@Test
 	public void testAssignCyclic2() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("c1ccccc1");
+		Fragment frag = sBuilder.build("c1ccccc1");
 		for (Atom a : frag.getAtomList()) {
 			assertEquals("Should be cylic", true, a.getAtomIsInACycle());
 		}
@@ -39,7 +32,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testAssignCyclic3() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("c12.c23.c34.c45.c56.c61");
+		Fragment frag = sBuilder.build("c12.c23.c34.c45.c56.c61");
 		for (Atom a : frag.getAtomList()) {
 			assertEquals("Should be cylic", true, a.getAtomIsInACycle());
 		}
@@ -47,7 +40,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testAssignCyclic4() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("c1ccccc1CCc1ccccc1");
+		Fragment frag = sBuilder.build("c1ccccc1CCc1ccccc1");
 		List<Atom> atomList = frag.getAtomList();
 		for (int i = 0; i < atomList.size(); i++) {
 			Atom a = atomList.get(i);
@@ -62,7 +55,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testAssignCyclic5() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("CCc1ccc(O)cc1");
+		Fragment frag = sBuilder.build("CCc1ccc(O)cc1");
 		List<Atom> atomList = frag.getAtomList();
 		for (int i = 0; i < atomList.size(); i++) {
 			Atom a = atomList.get(i);
@@ -77,7 +70,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testAssignCyclic6() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("CC1CC(O1)C");
+		Fragment frag = sBuilder.build("CC1CC(O1)C");
 		List<Atom> atomList = frag.getAtomList();
 		for (int i = 0; i < atomList.size(); i++) {
 			Atom a = atomList.get(i);
@@ -92,7 +85,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testFindPathBetweenAtoms1() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("c1ccccc1");
+		Fragment frag = sBuilder.build("c1ccccc1");
 		List<Atom> atomList = frag.getAtomList();
 		List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(atomList.get(0), atomList.get(3), frag.getBondSet());
 		assertEquals(2, paths.size());
@@ -112,7 +105,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testFindPathBetweenAtoms2() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("C1CCCC2CCCCC12");
+		Fragment frag = sBuilder.build("C1CCCC2CCCCC12");
 		List<Atom> atomList = frag.getAtomList();
 		Set<Bond> bonds = new HashSet<Bond>(frag.getBondSet());
 		bonds.remove(atomList.get(4).getBondToAtom(atomList.get(9)));
@@ -142,7 +135,7 @@ public class CycleDetectorTest {
 	
 	@Test
 	public void testFindPathBetweenAtoms3() throws StructureBuildingException {
-		Fragment frag = fm.buildSMILES("C1(C)CCCC2C(C)CCCC12");
+		Fragment frag = sBuilder.build("C1(C)CCCC2C(C)CCCC12");
 		List<Atom> atomList = frag.getAtomList();
 		Set<Bond> bonds = new HashSet<Bond>(frag.getBondSet());
 		bonds.remove(atomList.get(0).getBondToAtom(atomList.get(1)));

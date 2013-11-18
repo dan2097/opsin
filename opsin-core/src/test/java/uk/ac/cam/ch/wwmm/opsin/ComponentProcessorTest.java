@@ -122,7 +122,7 @@ public class ComponentProcessorTest {
 
 	@Test
 	public void testDLStereochemistryLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element aminoAcidEl = new Element(GROUP_EL);
 		state.xmlFragmentMap.put(aminoAcidEl, f);
@@ -134,7 +134,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryDOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element aminoAcidEl = new Element(GROUP_EL);
 		state.xmlFragmentMap.put(aminoAcidEl, f);
@@ -146,7 +146,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryDLOnAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element aminoAcidEl = new Element(GROUP_EL);
 		state.xmlFragmentMap.put(aminoAcidEl, f);
@@ -157,7 +157,7 @@ public class ComponentProcessorTest {
 	
 	@Test(expected=ComponentGenerationException.class)
 	public void testDLStereochemistryDOnAchiralAminoAcid() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("NC(C)C");
 		Element aminoAcidEl = new Element(GROUP_EL);
 		state.xmlFragmentMap.put(aminoAcidEl, f);
@@ -167,7 +167,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryLOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new Element(GROUP_EL);
 		state.xmlFragmentMap.put(carbohydrateEl, f);
@@ -179,7 +179,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryDOnCarbohydrate() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new Element(GROUP_EL);
 		state.xmlFragmentMap.put(carbohydrateEl, f);
@@ -191,7 +191,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryInvertedNaturalOnCarbohydrate1() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new Element(GROUP_EL);
 		carbohydrateEl.addAttribute(new Attribute(NATURALENTISOPPOSITE_ATR, "yes"));
@@ -204,7 +204,7 @@ public class ComponentProcessorTest {
 	
 	@Test
 	public void testDLStereochemistryInvertedNaturalOnCarbohydrate2() throws ComponentGenerationException, StructureBuildingException{
-		BuildState state = new BuildState(mock(NameToStructureConfig.class), new SMILESFragmentBuilder());
+		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new Element(GROUP_EL);
 		carbohydrateEl.addAttribute(new Attribute(NATURALENTISOPPOSITE_ATR, "yes"));

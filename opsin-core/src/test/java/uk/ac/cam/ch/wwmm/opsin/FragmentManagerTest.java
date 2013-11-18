@@ -15,7 +15,8 @@ public class FragmentManagerTest {
 
 	@Before
 	public void setUp() throws IOException{
-		fragManager = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+		IDManager idManager = new IDManager();
+		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
 	}
 
 	@Test

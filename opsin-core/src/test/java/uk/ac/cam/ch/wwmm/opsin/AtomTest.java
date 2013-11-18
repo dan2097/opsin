@@ -13,7 +13,7 @@ import org.junit.Test;
 public class AtomTest {
 
 	private Fragment frag;
-	private FragmentManager fm = new FragmentManager(new SMILESFragmentBuilder(), new IDManager());
+	private SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
 	
 	@Before
 	public void setUp() {
@@ -49,12 +49,12 @@ public class AtomTest {
 	
 	@Test
 	public void testGetIncomingValency() throws StructureBuildingException {
-		assertEquals("No bonds", 0, fm.buildSMILES("C").getFirstAtom().getIncomingValency());
-		assertEquals("One bond", 1, fm.buildSMILES("CC").getFirstAtom().getIncomingValency());
-		assertEquals("Two bonds", 2, fm.buildSMILES("C(C)C").getFirstAtom().getIncomingValency());
-		assertEquals("Double bond", 2, fm.buildSMILES("C=O").getFirstAtom().getIncomingValency());
-		assertEquals("Triple bond", 3, fm.buildSMILES("C#C").getFirstAtom().getIncomingValency());
-		assertEquals("One bond", 1, fm.buildSMILES("CC=CC#N").getFirstAtom().getIncomingValency());
+		assertEquals("No bonds", 0, sBuilder.build("C").getFirstAtom().getIncomingValency());
+		assertEquals("One bond", 1, sBuilder.build("CC").getFirstAtom().getIncomingValency());
+		assertEquals("Two bonds", 2, sBuilder.build("C(C)C").getFirstAtom().getIncomingValency());
+		assertEquals("Double bond", 2, sBuilder.build("C=O").getFirstAtom().getIncomingValency());
+		assertEquals("Triple bond", 3, sBuilder.build("C#C").getFirstAtom().getIncomingValency());
+		assertEquals("One bond", 1, sBuilder.build("CC=CC#N").getFirstAtom().getIncomingValency());
 	}
 	
 }
