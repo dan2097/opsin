@@ -56,6 +56,41 @@ public class FragmentTest {
 		assertEquals("Fragment now has four atoms", 4, frag1.getAtomCount());
 		assertEquals("Fragment now has two bonds", 2, frag1.getBondSet().size());
 	}
+	
+	@Test
+	public void testImportFragWithIntraFragBonds1() throws StructureBuildingException {
+		Fragment frag1 = fm.buildSMILES("C");
+		Fragment frag2 = fm.buildSMILES("C");
+		fm.createBond(frag1.getFirstAtom(), frag2.getFirstAtom(), 1);
+		assertEquals(0, frag1.getBondSet().size());
+		assertEquals(0, frag2.getBondSet().size());
+		assertEquals(1, fm.getInterFragmentBonds(frag1).size());
+		assertEquals(1, fm.getInterFragmentBonds(frag2).size());
+		fm.incorporateFragment(frag2, frag1);
+		assertEquals(1, frag1.getBondSet().size());
+		assertEquals(0, frag2.getBondSet().size());
+		assertEquals(0, fm.getInterFragmentBonds(frag1).size());
+	}
+	
+	@Test
+	public void testImportFragWithIntraFragBonds2() throws StructureBuildingException {
+		Fragment frag1 = fm.buildSMILES("C");
+		Fragment frag2 = fm.buildSMILES("C");
+		Fragment frag3 = fm.buildSMILES("C");
+		fm.createBond(frag2.getFirstAtom(), frag3.getFirstAtom(), 1);
+		assertEquals(0, frag1.getBondSet().size());
+		assertEquals(0, frag2.getBondSet().size());
+		assertEquals(0, frag3.getBondSet().size());
+		assertEquals(0, fm.getInterFragmentBonds(frag1).size());
+		assertEquals(1, fm.getInterFragmentBonds(frag2).size());
+		assertEquals(1, fm.getInterFragmentBonds(frag3).size());
+		fm.incorporateFragment(frag2, frag1);
+		assertEquals(0, frag1.getBondSet().size());
+		assertEquals(0, frag2.getBondSet().size());
+		assertEquals(0, frag3.getBondSet().size());
+		assertEquals(1, fm.getInterFragmentBonds(frag1).size());
+		assertEquals(1, fm.getInterFragmentBonds(frag3).size());
+	}
 
 	@Test
 	public void testGetIDFromLocant() throws StructureBuildingException {
