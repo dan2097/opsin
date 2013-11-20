@@ -147,7 +147,7 @@ class StructureBuilder {
 		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
 			balanceChargeIfPossible(state, molecule, overallCharge, explicitStoichiometryPresent);
 		}
-		makeHydrogensExplicit(state);
+		makeHydrogensExplicit(state.fragManager);
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
 		processStereochemistry(state, molecule, uniFrag);
@@ -1576,11 +1576,11 @@ class StructureBuilder {
 	 * Hydrogens are then added to bring the number of connections up to the minimum required to satisfy the atom's valency
 	 * This allows the valency of the atom to be encoded e.g. phopshane-3 hydrogen, phosphorane-5 hydrogen.
 	 * It is also neccesary when considering stereochemistry as a hydrogen beats nothing in the CIP rules
-	 * @param state
+	 * @param fm
 	 * @throws StructureBuildingException
 	 */
-	static void makeHydrogensExplicit(BuildState state) throws StructureBuildingException {
-		Set<Fragment> fragments = state.fragManager.getFragments();
+	static void makeHydrogensExplicit(FragmentManager fm) throws StructureBuildingException {
+		Set<Fragment> fragments = fm.getFragments();
 		for (Fragment fragment : fragments) {
 			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
 				continue;
@@ -1589,8 +1589,8 @@ class StructureBuilder {
 			for (Atom parentAtom : atomList) {
 				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
 				for (int i = 0; i < explicitHydrogensToAdd; i++) {
-					Atom hydrogen = state.fragManager.createAtom("H", fragment);
-					state.fragManager.createBond(parentAtom, hydrogen, 1);
+					Atom hydrogen = fm.createAtom("H", fragment);
+					fm.createBond(parentAtom, hydrogen, 1);
 				}
 				if (parentAtom.getAtomParity()!=null){
 					if (explicitHydrogensToAdd >1){
