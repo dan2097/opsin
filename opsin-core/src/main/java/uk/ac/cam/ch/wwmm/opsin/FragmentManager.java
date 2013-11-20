@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import nu.xom.Element;
@@ -21,16 +22,19 @@ import nu.xom.Element;
  *
  */
 class FragmentManager {
-	/** All of the atom-containing fragments in the molecule */
-	private final Set<Fragment> fragPile;
 	/** A mapping between fragments and inter fragment bonds */
-	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond;
+	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond = new LinkedHashMap<Fragment, LinkedHashSet<Bond>>();
+	
+	/** All of the atom-containing fragments in the molecule */
+	private final Set<Fragment> fragments = fragToInterFragmentBond.keySet();
+	
 	/** A builder for fragments specified as SMILES */
 	private final SMILESFragmentBuilder sBuilder;
+	
 	/** A source of unique integers */
 	private final IDManager idManager;
 
-	/** Sets up a new Fragment mananger, containing no fragments.
+	/** Sets up a new Fragment manager, containing no fragments.
 	 *
 	 * @param sBuilder A SMILESFragmentBuilder - dependency injection.
 	 * @param idManager An IDManager.
@@ -41,8 +45,6 @@ class FragmentManager {
 		}
 		this.sBuilder = sBuilder;
 		this.idManager = idManager;
-		fragPile = new LinkedHashSet<Fragment>();
-		fragToInterFragmentBond = new HashMap<Fragment, LinkedHashSet<Bond>>();
 	}
 
 	/** Builds a fragment, based on an SMILES string
@@ -85,7 +87,7 @@ class FragmentManager {
 	/**Creates a new fragment, containing all of the atoms and bonds
 	 * of all of the other fragments - i.e. the whole molecule. This updates
 	 * which fragments the atoms think they are in to the new super fragment
-	 * but does not remove change the contents of the original fragments.
+	 * but does not change the original fragments.
 	 * Hence the original fragments remain associated with their atoms
 	 * Atoms and Bonds are not copied.
 	 *
@@ -93,13 +95,25 @@ class FragmentManager {
 	 * @throws StructureBuildingException 
 	 */
 	Fragment getUnifiedFragment() throws StructureBuildingException {
-		Fragment outFrag = new Fragment();
-		List<Fragment> fragments = new ArrayList<Fragment>(fragPile);
-		addFragment(outFrag);
-		for(Fragment f : fragments) {
-			incorporateFragment(f, outFrag);//merge all fragments into one
+		Fragment uniFrag = new Fragment();
+		for (Entry<Fragment, LinkedHashSet<Bond>> entry : fragToInterFragmentBond.entrySet()) {
+			Fragment f = entry.getKey();
+			Set<Bond> interFragmentBonds = entry.getValue();
+			for(Atom atom : f.getAtomList()) {
+				uniFrag.addAtom(atom);
+			}
+			for(Bond bond : f.getBondSet()) {
+				uniFrag.addBond(bond);
+			}
+			uniFrag.incorporateOutAtoms(f);
+			uniFrag.incorporateFunctionalAtoms(f);
+
+			for (Bond interFragmentBond : interFragmentBonds) {
+				uniFrag.addBond(interFragmentBond);
+			}
 		}
-		return outFrag;
+		addFragment(uniFrag);
+		return uniFrag;
 	}
 
 	/** Incorporates a fragment, usually a suffix, into a parent fragment
@@ -109,7 +123,7 @@ class FragmentManager {
 	 * Reassigns inter fragment bonds of the parent fragment as either intra fragment bonds
 	 * of the parent fragment or as inter fragment bonds of the parent fragment
 	 *
-	 * The original fragment still maintains its original atomList/bondList/interFragmentBondList which is necessary for stereochemistry handling
+	 * The original fragment still maintains its original atomList/bondList
 	 *
 	 * @param childFrag The fragment to be incorporated
 	 * @param parentFrag The parent fragment
@@ -125,24 +139,26 @@ class FragmentManager {
 		parentFrag.incorporateOutAtoms(childFrag);
 		parentFrag.incorporateFunctionalAtoms(childFrag);
 
-		for (Bond bond : fragToInterFragmentBond.get(childFrag)) {//reassign inter fragment bonds of child
+		Set<Bond> interFragmentBonds = fragToInterFragmentBond.get(childFrag);
+		if (interFragmentBonds == null){
+			throw new StructureBuildingException("Fragment not registered with this FragmentManager!");
+		}
+		for (Bond bond : interFragmentBonds) {//reassign inter-fragment bonds of child
 			if (bond.getFromAtom().getFrag() ==parentFrag || bond.getToAtom().getFrag() ==parentFrag){
 				if (bond.getFromAtom().getFrag() ==parentFrag && bond.getToAtom().getFrag() ==parentFrag){
-					//bond is now enclosed within parentFrag so make it an intra fragment bond
-					//and remove it from the interfragment list of the parentFrag
+					//bond is now enclosed within parentFrag so make it an intra-fragment bond
+					//and remove it from the inter-fragment set of the parentFrag
 					parentFrag.addBond(bond);
 					fragToInterFragmentBond.get(parentFrag).remove(bond);
 				}
 				else{
-					//bond was an interfragment bond between the childFrag and another frag
+					//bond was an inter-fragment bond between the childFrag and another frag
 					//It is now between the parentFrag and another frag
 					addInterFragmentBond(bond);
 				}
 			}
 		}
-		if (!fragPile.remove(childFrag)){
-			throw new StructureBuildingException("Fragment not found in fragPile");
-		}
+		fragToInterFragmentBond.remove(childFrag);
 	}
 	
 	/** Incorporates a fragment, usually a suffix, into a parent fragment, creating a bond between them.
@@ -229,9 +245,11 @@ class FragmentManager {
 	 * @return The atom, or null if no such atom exists.
 	 */
 	Atom getAtomByID(int id) {
-		for(Fragment f : fragPile) {
+		for(Fragment f : fragments) {
 			Atom a = f.getAtomByID(id);
-			if(a != null) return a;
+			if(a != null) {
+				return a;
+			}
 		}
 		return null;
 	}
@@ -244,7 +262,9 @@ class FragmentManager {
 	 */
 	Atom getAtomByIDOrThrow(int id) throws StructureBuildingException {
 		Atom a = getAtomByID(id);
-		if(a == null) throw new StructureBuildingException("Couldn't get atom by id");
+		if(a == null) {
+			throw new StructureBuildingException("Couldn't get atom by id");
+		}
 		return a;
 	}
 
@@ -253,7 +273,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	void convertSpareValenciesToDoubleBonds() throws StructureBuildingException {
-		for(Fragment f : fragPile) {
+		for(Fragment f : fragments) {
 			FragmentTools.convertSpareValenciesToDoubleBonds(f);
 		}
 	}
@@ -263,37 +283,38 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	void checkValencies() throws StructureBuildingException {
-		for(Fragment f : fragPile) {
+		for(Fragment f : fragments) {
 			f.checkValencies();
 		}
 	}
 
-	Set<Fragment> getFragPile() {
-		return Collections.unmodifiableSet(fragPile);
+	Set<Fragment> getFragments() {
+		return Collections.unmodifiableSet(fragments);
 	}
 
 	/**
-	 * Adds a fragment to the fragPile
+	 * Registers a fragment
 	 * @param frag
 	 */
 	private void addFragment(Fragment frag)  {
-		fragPile.add(frag);
 		fragToInterFragmentBond.put(frag, new LinkedHashSet<Bond>());
 	}
 
 	/**
-	 * Removes a fragment from the fragPile and inter fragment bonds associated with it from the fragToInterFragmentBond.
+	 * Removes a fragment
+	 * Any inter-fragment bonds of this fragment are removed from the fragments it was connected to
 	 * Throws an exception if fragment wasn't present
 	 * @param frag
 	 * @throws StructureBuildingException
 	 */
 	void removeFragment(Fragment frag) throws StructureBuildingException {
-		if (!fragPile.remove(frag)){
-			throw new StructureBuildingException("Fragment not found in fragPile");
+		Set<Bond> interFragmentBondsInvolvingFragmentSet = fragToInterFragmentBond.get(frag);
+		if (interFragmentBondsInvolvingFragmentSet == null) {
+			throw new StructureBuildingException("Fragment not registered with this FragmentManager!");
 		}
-		List<Bond> interFragmentBondsInvolvingFragment = new ArrayList<Bond>(fragToInterFragmentBond.get(frag));
+		List<Bond> interFragmentBondsInvolvingFragment = new ArrayList<Bond>(interFragmentBondsInvolvingFragmentSet);
 		for (Bond bond : interFragmentBondsInvolvingFragment) {
-			if (bond.getFromAtom().getFrag() ==frag){
+			if (bond.getFromAtom().getFrag() == frag){
 				fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
 			}
 			else{
@@ -304,9 +325,9 @@ class FragmentManager {
 	}
 
 	int getOverallCharge() {
-		int totalCharge=0;
-		for (Fragment frag : fragPile) {
-			totalCharge+=frag.getCharge();
+		int totalCharge = 0;
+		for (Fragment frag : fragments) {
+			totalCharge += frag.getCharge();
 		}
 		return totalCharge;
 	}
@@ -563,12 +584,12 @@ class FragmentManager {
 	}
 
 	/**
-	 * Gets a set of the inter fragment bonds a fragment is involved in
+	 * Gets an unmodifiable view of the set of the inter-fragment bonds a fragment is involved in
 	 * @param frag
 	 * @return set of inter fragment bonds
 	 */
 	Set<Bond> getInterFragmentBonds(Fragment frag) {
-		return fragToInterFragmentBond.get(frag);
+		return Collections.unmodifiableSet(fragToInterFragmentBond.get(frag));
 	}
 
 	/**
@@ -607,7 +628,7 @@ class FragmentManager {
 	}
 	
 	void removeAtomAndAssociatedBonds(Atom atom){
-		ArrayList<Bond> bondsToBeRemoved=new ArrayList<Bond>(atom.getBonds());
+		List<Bond> bondsToBeRemoved = new ArrayList<Bond>(atom.getBonds());
 		for (Bond bond : bondsToBeRemoved) {
 			removeBond(bond);
 		}
