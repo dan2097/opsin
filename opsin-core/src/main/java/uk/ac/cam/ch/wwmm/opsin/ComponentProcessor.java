@@ -34,7 +34,6 @@ class ComponentProcessor {
 	
 	private final SuffixRules suffixRules;
 	private final BuildState state;
-	private final Element parse;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
 	private static final HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
@@ -77,10 +76,9 @@ class ComponentProcessor {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	public ComponentProcessor(SuffixRules suffixRules, BuildState state, Element parse) {
+	ComponentProcessor(SuffixRules suffixRules, BuildState state) {
 		this.suffixRules = suffixRules;
 		this.state = state;
-		this.parse = parse;
 	}
 
 	/**
@@ -88,10 +86,11 @@ class ComponentProcessor {
 	 * At this stage one can expect all substituents/roots to have at least 1 group.
 	 * Multiple groups are present in, for example, fusion nomenclature. By the end of this function there will be exactly 1 group
 	 * associated with each substituent/root. Multiplicative nomenclature can result in there being multiple roots
+	 * @param parse 
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	void processParse() throws ComponentGenerationException, StructureBuildingException {
+	void processParse(Element parse) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> words =XOMTools.getDescendantElementsWithTagName(parse, WORD_EL);
 		int wordCount =words.size();
 		for (int i = wordCount -1; i>=0; i--) {

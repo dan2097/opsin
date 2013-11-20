@@ -27,13 +27,18 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  *
  */
 class StructureBuilder {
+	private final BuildState state;
+	
+	StructureBuilder(BuildState state) {
+		this.state = state;
+	}
+
 	/**	Builds a molecule as a Fragment based on ComponentProcessor output.
-	 * @param state
 	 * @param molecule The ComponentProcessor output.
 	 * @return A single Fragment - the built molecule.
 	 * @throws StructureBuildingException If the molecule won't build - there may be many reasons.
 	 */
-	Fragment buildFragment(BuildState state, Element molecule) throws StructureBuildingException {
+	Fragment buildFragment(Element molecule) throws StructureBuildingException {
 		Elements wordRules = molecule.getChildElements(WORDRULE_EL);
 		if (wordRules.size()==0){
 			throw new StructureBuildingException("Molecule contains no words!?");
@@ -78,16 +83,16 @@ class StructureBuilder {
 				}
 			}
 			else if(wordRule == WordRule.ester || wordRule == WordRule.multiEster) {
-				buildEster(state, words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
+				buildEster(words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
 			}
 			else if (wordRule == WordRule.divalentFunctionalGroup){
-				buildDiValentFunctionalGroup(state, words);// diethyl ether or methyl propyl ketone
+				buildDiValentFunctionalGroup(words);// diethyl ether or methyl propyl ketone
 			}
 			else if (wordRule == WordRule.monovalentFunctionalGroup){
-				buildMonovalentFunctionalGroup(state, words);// ethyl chloride, isophthaloyl dichloride, diethyl ether, ethyl alcohol
+				buildMonovalentFunctionalGroup(words);// ethyl chloride, isophthaloyl dichloride, diethyl ether, ethyl alcohol
 			}
 			else if(wordRule == WordRule.functionalClassEster) {
-				buildFunctionalClassEster(state, words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
+				buildFunctionalClassEster(words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
 			}
 			else if (wordRule == WordRule.acidReplacingFunctionalGroup){
 				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide,
@@ -98,38 +103,38 @@ class StructureBuilder {
 				}
 			}
 			else if(wordRule == WordRule.oxide) {
-				buildOxide(state, words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
+				buildOxide(words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
 			}
 			else if(wordRule == WordRule.carbonylDerivative) {
-				buildCarbonylDerivative(state, words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
+				buildCarbonylDerivative(words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
 			}
 			else if(wordRule == WordRule.anhydride) {//e.g. acetic anhydride
-				buildAnhydride(state, words);
+				buildAnhydride(words);
 			}
 			else if(wordRule == WordRule.acidHalideOrPseudoHalide) {//e.g. phosphinimidic chloride
-				buildAcidHalideOrPseudoHalide(state, words);
+				buildAcidHalideOrPseudoHalide(words);
 			}
 			else if(wordRule == WordRule.additionCompound) {//e.g. carbon tetrachloride
-				buildAdditionCompound(state, words);
+				buildAdditionCompound(words);
 			}
 			else if (wordRule == WordRule.glycol){
-				buildGlycol(state, words);//e.g. ethylene glycol
+				buildGlycol(words);//e.g. ethylene glycol
 			}
 			else if (wordRule == WordRule.glycolEther){
-				buildGlycolEther(state, words);//e.g. octaethyleneglycol monododecyl ether
+				buildGlycolEther(words);//e.g. octaethyleneglycol monododecyl ether
 			}
 			else if(wordRule == WordRule.acetal) {
-				buildAcetal(state, words);//e.g. propanal diethyl acetal
+				buildAcetal(words);//e.g. propanal diethyl acetal
 			}
 			else if(wordRule == WordRule.potentialBiochemicalEster) {
 				//will be processed as two "simple" wordrules if no hydroxy found
-				buildBiochemicalEster(state, words, wordRules.size());//e.g. uridine 5'-(tetrahydrogen triphosphate)
+				buildBiochemicalEster(words, wordRules.size());//e.g. uridine 5'-(tetrahydrogen triphosphate)
 			}
 			else if(wordRule == WordRule.cyclicPeptide) {
-				buildCyclicPeptide(state, words);
+				buildCyclicPeptide(words);
 			}
 			else if(wordRule == WordRule.polymer) {
-				rGroups.addAll(buildPolymer(state, words));
+				rGroups.addAll(buildPolymer(words));
 			}
 			else{
 				throw new StructureBuildingException("Unknown Word Rule");
@@ -137,26 +142,26 @@ class StructureBuilder {
 		}
 		
 		List<Element> groupElements = XOMTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
-		processOxidoSpecialCase(state, groupElements);
-		processOxidationNumbers(state, groupElements);
+		processOxidoSpecialCase(groupElements);
+		processOxidationNumbers(groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
 		
-		boolean explicitStoichiometryPresent = applyExplicitStoichiometryIfProvided(state, wordRules);
+		boolean explicitStoichiometryPresent = applyExplicitStoichiometryIfProvided(wordRules);
 		int overallCharge = state.fragManager.getOverallCharge();
 		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
-			balanceChargeIfPossible(state, molecule, overallCharge, explicitStoichiometryPresent);
+			balanceChargeIfPossible(molecule, overallCharge, explicitStoichiometryPresent);
 		}
 		makeHydrogensExplicit(state.fragManager);
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
-		processStereochemistry(state, molecule, uniFrag);
+		processStereochemistry(molecule, uniFrag);
 
 		if (uniFrag.getOutAtomCount()>0 && !state.n2sConfig.isAllowRadicals()){
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		if (state.n2sConfig.isOutputRadicalsAsWildCardAtoms()) {
-			rGroups.addAll(convertOutAtomsToRgroups(state, uniFrag));
+			rGroups.addAll(convertOutAtomsToRgroups(uniFrag));
 		}
 		
 		for (Fragment rGroup : rGroups) {
@@ -167,7 +172,7 @@ class StructureBuilder {
 		return uniFrag;
 	}
 
-	private void buildEster(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildEster(List<Element> words) throws StructureBuildingException {
 		boolean inSubstituents = true;
 		BuildResults substituentsBr = new BuildResults();
 		List<BuildResults> ateGroups = new ArrayList<BuildResults>();
@@ -273,7 +278,7 @@ class StructureBuilder {
 
 
 
-	private void buildDiValentFunctionalGroup(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildDiValentFunctionalGroup(List<Element> words) throws StructureBuildingException {
 		int wordIndice = 0;
 		if (!words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())) {
 			throw new StructureBuildingException("word: " +wordIndice +" was expected to be a substituent");
@@ -343,7 +348,7 @@ class StructureBuilder {
 		state.fragManager.incorporateFragment(diValentGroup, outAtom1.getFrag());
 	}
 
-	private void buildMonovalentFunctionalGroup(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildMonovalentFunctionalGroup(List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(words.get(0), GROUP_EL);
 		for (Element group : groups) {//replaces outAtoms with valency greater than 1 with multiple outAtoms; e.g. ylidene -->diyl
@@ -404,7 +409,7 @@ class StructureBuilder {
 		}
 	}
 
-	private void buildFunctionalClassEster(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildFunctionalClassEster(List<Element> words) throws StructureBuildingException {
 		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
@@ -463,11 +468,10 @@ class StructureBuilder {
 	/**
 	 * Handles names like thiophene 1,1-dioxide; carbon dioxide; benzene oxide
 	 * Does the same for sulfide/selenide/telluride
-	 * @param state
 	 * @param words
 	 * @throws StructureBuildingException
 	 */
-	private void buildOxide(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildOxide(List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));//the group
 		List<Fragment> oxideFragments = new ArrayList<Fragment>();
 		List<String> locantsForOxide =new ArrayList<String>();//often not specified
@@ -546,14 +550,14 @@ class StructureBuilder {
 			Atom oxideAtom = oxideFragments.get(i).getFirstAtom();
 			if (!locantsForOxide.isEmpty()){
 				Atom atomToAddOxideTo =groupToModify.getAtomByLocantOrThrow(locantsForOxide.get(i));
-				formAppropriateBondToOxideAndAdjustCharges(state, atomToAddOxideTo, oxideAtom);
+				formAppropriateBondToOxideAndAdjustCharges(atomToAddOxideTo, oxideAtom);
 			}
 			else{
 				for (Fragment frag : orderedPossibleFragments) {
 					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
 					if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
 						Atom elementaryAtom= frag.getFirstAtom();
-						formAppropriateBondToOxideAndAdjustCharges(state, elementaryAtom, oxideAtom);//e.g. carbon dioxide
+						formAppropriateBondToOxideAndAdjustCharges(elementaryAtom, oxideAtom);//e.g. carbon dioxide
 						int chargeOnAtom =elementaryAtom.getCharge();
 						if (chargeOnAtom>=2){
 							elementaryAtom.setCharge(chargeOnAtom-2);
@@ -564,7 +568,7 @@ class StructureBuilder {
 						List<Atom> atomList = frag.getAtomList();
 						for (Atom atom : atomList) {
 							if (!atom.getElement().equals("C") && !atom.getElement().equals("O")){
-								formAppropriateBondToOxideAndAdjustCharges(state, atom, oxideAtom);
+								formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
 								continue mainLoop;
 							}
 						}
@@ -597,7 +601,7 @@ class StructureBuilder {
 					List<Atom> atomList = frag.getAtomList();
 					for (Atom atom : atomList) {
 						if (!atom.getElement().equals("C")){
-							formAppropriateBondToOxideAndAdjustCharges(state, atom, oxideAtom);
+							formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
 							continue mainLoop;
 						}
 					}
@@ -613,12 +617,11 @@ class StructureBuilder {
 	/**
 	 * Decides whether an oxide should double bond e.g. P=O or single bond as a zwitterionic form e.g. [N+]-[O-]
 	 * Corrects the charges if necessary and forms the bond
-	 * @param state
 	 * @param atomToAddOxideTo
 	 * @param oxideAtom
 	 * @throws StructureBuildingException 
 	 */
-	private void formAppropriateBondToOxideAndAdjustCharges(BuildState state, Atom atomToAddOxideTo, Atom oxideAtom) throws StructureBuildingException {
+	private void formAppropriateBondToOxideAndAdjustCharges(Atom atomToAddOxideTo, Atom oxideAtom) throws StructureBuildingException {
 		Integer maxVal = ValencyChecker.getMaximumValency(atomToAddOxideTo.getElement(), atomToAddOxideTo.getCharge());
 		if (maxVal ==null || (atomToAddOxideTo.getIncomingValency() + atomToAddOxideTo.getOutValency() +2) <= maxVal){
 			if (atomToAddOxideTo.getLambdaConventionValency()==null || !ValencyChecker.checkValencyAvailableForBond(atomToAddOxideTo, 2)){//probably in well formed names 2 protons should always be added but some names use the lambdaConvention to specify the valency after oxide has been applied
@@ -640,7 +643,7 @@ class StructureBuilder {
 		}
 	}
 
-	private void buildCarbonylDerivative(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildCarbonylDerivative(List<Element> words) throws StructureBuildingException {
 		if (!WordType.full.toString().equals(words.get(0).getAttributeValue(TYPE_ATR))){
 			throw new StructureBuildingException("OPSIN bug: Wrong word type encountered when applying carbonylDerivative wordRule");
 		}
@@ -716,7 +719,7 @@ class StructureBuilder {
 		if (!multiplied){
 			List<Atom> carbonylOxygens = findCarbonylOxygens(state.xmlFragmentMap.get(rightMostGroup), locantForFunctionalTerm);
 			int replacementsToPerform = Math.min(replacementFragments.size(), carbonylOxygens.size());
-			replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, replacementsToPerform);
+			replaceCarbonylOxygenWithReplacementFragments(words, replacementFragments, carbonylOxygens, replacementsToPerform);
 		}
 
 		resolveWordOrBracket(state, words.get(0));//the component
@@ -729,11 +732,11 @@ class StructureBuilder {
 			for (ListIterator<Fragment> iterator = fragments.listIterator(fragments.size()); iterator.hasPrevious();) {//iterate in reverse order - right most groups preferred
 				carbonylOxygens.addAll(findCarbonylOxygens(iterator.previous(), locantForFunctionalTerm));
 			}
-			replaceCarbonylOxygenWithReplacementFragments(state, words, replacementFragments, carbonylOxygens, replacementFragments.size());
+			replaceCarbonylOxygenWithReplacementFragments(words, replacementFragments, carbonylOxygens, replacementFragments.size());
 		}
 	}
 
-	private void replaceCarbonylOxygenWithReplacementFragments(BuildState state, List<Element> words, List<Fragment> replacementFragments, List<Atom> carbonylOxygens, int functionalReplacementsToPerform) throws StructureBuildingException {
+	private void replaceCarbonylOxygenWithReplacementFragments(List<Element> words, List<Fragment> replacementFragments, List<Atom> carbonylOxygens, int functionalReplacementsToPerform) throws StructureBuildingException {
 		if (functionalReplacementsToPerform > carbonylOxygens.size()){
 			throw new StructureBuildingException("Insufficient carbonyl groups found!");
 		}
@@ -812,7 +815,7 @@ class StructureBuilder {
 		return matches;
 	}
 
-	private void buildAnhydride(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildAnhydride(List<Element> words) throws StructureBuildingException {
 		if (words.size()!=2 && words.size()!=3){
 			throw new StructureBuildingException("Unexpected number of words in anhydride. Check wordRules.xml, this is probably a bug");
 		}
@@ -868,7 +871,7 @@ class StructureBuilder {
 					else{
 						newAcidBr =br1;
 					}
-					formAnhydrideLink(state, anhydrideSmiles, newAcidBr, br2);
+					formAnhydrideLink(anhydrideSmiles, newAcidBr, br2);
 				}
 				
 			}
@@ -876,7 +879,7 @@ class StructureBuilder {
 				if (br1.getFunctionalAtomCount()!=1 && br2.getFunctionalAtomCount()!=1 ) {
 					throw new StructureBuildingException("Invalid anhydride description");
 				}
-				formAnhydrideLink(state, anhydrideSmiles, br1, br2);
+				formAnhydrideLink(anhydrideSmiles, br1, br2);
 			}
 		}
 		else{//symmetric anhydride
@@ -885,7 +888,7 @@ class StructureBuilder {
 					if (numberOfAnhydrideLinkages!=1 || anhydrideLocant !=null ){
 						throw new StructureBuildingException("Unsupported or invalid anhydride");
 					}
-					formAnhydrideLink(state, anhydrideSmiles, br1, br1);
+					formAnhydrideLink(anhydrideSmiles, br1, br1);
 				}
 				else{//cyclic anhydride where group has more than 2 acids
 					if (anhydrideLocant ==null){
@@ -928,7 +931,7 @@ class StructureBuilder {
 						if (oxygen1 ==null || oxygen2==null){
 							throw new StructureBuildingException("Unable to find locanted atom for anhydride formation");
 						}
-						formAnhydrideLink(state, anhydrideSmiles, oxygen1, oxygen2);
+						formAnhydrideLink(anhydrideSmiles, oxygen1, oxygen2);
 					}
 				}
 			}
@@ -939,36 +942,34 @@ class StructureBuilder {
 				Element newAcid = state.fragManager.cloneElement(state, words.get(0));
 				XOMTools.insertAfter(words.get(0), newAcid);
 				BuildResults br2 = new BuildResults(state, newAcid);
-				formAnhydrideLink(state, anhydrideSmiles, br1, br2);
+				formAnhydrideLink(anhydrideSmiles, br1, br2);
 			}
 		}
 	}
 
 	/**
 	 * Given buildResults for both the acids and the SMILES of the anhydride forms the anhydride bond using the first functionalAtom on each BuildResults
-	 * @param state
 	 * @param anhydrideSmiles
 	 * @param acidBr1
 	 * @param acidBr2
 	 * @throws StructureBuildingException
 	 */
-	private void formAnhydrideLink(BuildState state, String anhydrideSmiles, BuildResults acidBr1, BuildResults acidBr2)throws StructureBuildingException {
+	private void formAnhydrideLink(String anhydrideSmiles, BuildResults acidBr1, BuildResults acidBr2)throws StructureBuildingException {
 		Atom oxygen1 = acidBr1.getFunctionalAtom(0);
 		acidBr1.removeFunctionalAtom(0);
 		Atom oxygen2 = acidBr2.getFunctionalAtom(0);
 		acidBr2.removeFunctionalAtom(0);
-		formAnhydrideLink(state, anhydrideSmiles, oxygen1, oxygen2);
+		formAnhydrideLink(anhydrideSmiles, oxygen1, oxygen2);
 	}
 	
 	/**
 	 * Given two atoms and the SMILES of the anhydride forms the anhydride bond
-	 * @param state
 	 * @param anhydrideSmiles
 	 * @param oxygen1
 	 * @param oxygen2
 	 * @throws StructureBuildingException
 	 */
-	private void formAnhydrideLink(BuildState state, String anhydrideSmiles, Atom oxygen1, Atom oxygen2)throws StructureBuildingException {
+	private void formAnhydrideLink(String anhydrideSmiles, Atom oxygen1, Atom oxygen2)throws StructureBuildingException {
 		if (!oxygen1.getElement().equals("O")||!oxygen2.getElement().equals("O") || oxygen1.getBonds().size()!=1 ||oxygen2.getBonds().size()!=1) {
 			throw new StructureBuildingException("Problem building anhydride");
 		}
@@ -982,7 +983,7 @@ class StructureBuilder {
 		state.fragManager.incorporateFragment(anhydride, acidFragment1);
 	}
 	
-	private void buildAcidHalideOrPseudoHalide(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildAcidHalideOrPseudoHalide(List<Element> words) throws StructureBuildingException {
 		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
@@ -1038,7 +1039,7 @@ class StructureBuilder {
 		}
 	}
 	
-	private void buildAdditionCompound(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildAdditionCompound(List<Element> words) throws StructureBuildingException {
 		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
@@ -1111,7 +1112,7 @@ class StructureBuilder {
 	}
 	
 
-	private void buildGlycol(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildGlycol(List<Element> words) throws StructureBuildingException {
 		int wordIndice  = 0;
 		resolveWordOrBracket(state, words.get(wordIndice));//the group
 		Element finalGroup = findRightMostGroupInWordOrWordRule(words.get(wordIndice));
@@ -1153,11 +1154,10 @@ class StructureBuilder {
 	 * triethylene glycol n-butyl ether
 	 * tripropylene glycol methyl ether
 	 * dipropylene glycol methyl ether acetate
-	 * @param state
 	 * @param words
 	 * @throws StructureBuildingException
 	 */
-	private void buildGlycolEther(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildGlycolEther(List<Element> words) throws StructureBuildingException {
 		List<Element> wordsToAttachToGlcyol = new ArrayList<Element>();
 		Element glycol =words.get(0);
 		if (!glycol.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
@@ -1215,11 +1215,10 @@ class StructureBuilder {
 	/**
 	 * Builds acetals/ketals/hemiacetals/hemiketals and chalcogen analogues
 	 * The distinction between acetals and ketals is not enforced (ketals are a subset of acetals)
-	 * @param state
 	 * @param words
 	 * @throws StructureBuildingException
 	 */
-	private void buildAcetal(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildAcetal(List<Element> words) throws StructureBuildingException {
 		for (int i = 0; i < words.size()-1; i++) {
 			resolveWordOrBracket(state, words.get(i));
 		}
@@ -1278,13 +1277,13 @@ class StructureBuilder {
 		boolean hemiacetal = functionalClass.contains("hemi");
 		List<Fragment> acetalFrags = new ArrayList<Fragment>();
 		for (int i = 0; i < numberOfAcetals; i++) {
-			acetalFrags.add(formAcetal(state, carbonylOxygen, elements));
+			acetalFrags.add(formAcetal(carbonylOxygen, elements));
 		}
 		int bondsToForm = hemiacetal ? numberOfAcetals : 2*numberOfAcetals;
 		if (substituentsBr.getOutAtomCount()!=bondsToForm){
 			throw new StructureBuildingException("incorrect number of susbtituents when forming " + functionalClass);
 		}
-		connectSubstituentsToAcetal(state, acetalFrags, substituentsBr, hemiacetal);
+		connectSubstituentsToAcetal(acetalFrags, substituentsBr, hemiacetal);
 	}
 
 	private List<String> determineChalcogenReplacementOfAcetal(Element functionalClassEl) throws StructureBuildingException {
@@ -1308,7 +1307,7 @@ class StructureBuilder {
 		return elements;
 	}
 
-	private Fragment formAcetal(BuildState state, List<Atom> carbonylOxygen, List<String> elements) throws StructureBuildingException {
+	private Fragment formAcetal(List<Atom> carbonylOxygen, List<String> elements) throws StructureBuildingException {
 		Atom neighbouringCarbon = carbonylOxygen.get(0).getAtomNeighbours().get(0);
 		state.fragManager.removeAtomAndAssociatedBonds(carbonylOxygen.get(0));
 		carbonylOxygen.remove(0);
@@ -1323,7 +1322,7 @@ class StructureBuilder {
 		return acetalFrag;
 	}
 	
-	private void buildBiochemicalEster(BuildState state, List<Element> words, int numberOfWordRules) throws StructureBuildingException {
+	private void buildBiochemicalEster(List<Element> words, int numberOfWordRules) throws StructureBuildingException {
 		for (Element word : words) {
 			if (!WordType.full.toString().equals(word.getAttributeValue(TYPE_ATR))){
 				throw new StructureBuildingException("Bug in word rule for biochemicalEster");
@@ -1385,7 +1384,7 @@ class StructureBuilder {
 		}
 	}
 
-	private void connectSubstituentsToAcetal(BuildState state, List<Fragment> acetalFrags, BuildResults subBr, boolean hemiacetal) throws StructureBuildingException {
+	private void connectSubstituentsToAcetal(List<Fragment> acetalFrags, BuildResults subBr, boolean hemiacetal) throws StructureBuildingException {
 		Map<Fragment,Integer> usageMap= new HashMap<Fragment, Integer>();
 		for (int i = subBr.getOutAtomCount() -1; i>=0; i--) {
 			OutAtom out = subBr.getOutAtom(i);
@@ -1440,7 +1439,7 @@ class StructureBuilder {
 		}
 	}
 
-	private void buildCyclicPeptide(BuildState state, List<Element> words) throws StructureBuildingException {
+	private void buildCyclicPeptide(List<Element> words) throws StructureBuildingException {
 		if (words.size() != 2){
 			throw new StructureBuildingException("OPSIN Bug: Expected 2 words in cyclic peptide name, found: " + words.size());
 		}
@@ -1463,7 +1462,7 @@ class StructureBuilder {
 		}
 	}
 
-	private List<Fragment> buildPolymer(BuildState state, List<Element> words) throws StructureBuildingException {
+	private List<Fragment> buildPolymer(List<Element> words) throws StructureBuildingException {
 		if (words.size()!=2){
 			throw new StructureBuildingException("Currently unsupported polymer name type");
 		}
@@ -1667,7 +1666,7 @@ class StructureBuilder {
 		}
 	}
 
-	private boolean applyExplicitStoichiometryIfProvided(BuildState state, Elements wordRules) throws StructureBuildingException {
+	private boolean applyExplicitStoichiometryIfProvided(Elements wordRules) throws StructureBuildingException {
 		boolean explicitStoichiometryPresent =false;
 		for (int i = 0; i < wordRules.size(); i++) {
 			Element wordRule = wordRules.get(i);
@@ -1690,13 +1689,12 @@ class StructureBuilder {
 	 * metals without specified charge may be given an implicit positive charge
 	 * 
 	 * If this fails look for the case where there are multiple molecules and the mixture is only negative due to negatively charged functional Atoms e.g. pyridine acetate and remove the negative charge
-	 * @param state
 	 * @param molecule
 	 * @param explicitStoichiometryPresent 
 	 * @param overallCharge
 	 * @throws StructureBuildingException
 	 */
-	private void balanceChargeIfPossible(BuildState state, Element molecule, int overallCharge, boolean explicitStoichiometryPresent) throws StructureBuildingException {
+	private void balanceChargeIfPossible(Element molecule, int overallCharge, boolean explicitStoichiometryPresent) throws StructureBuildingException {
 		List<Element> wordRules = XOMTools.getChildElementsWithTagName(molecule, WORDRULE_ATR);
 
 		List<Element> positivelyChargedComponents = new ArrayList<Element>();
@@ -1718,12 +1716,12 @@ class StructureBuilder {
 				}
 			}
 		}
-		overallCharge = setCationicElementsToTypicalCharge(state, cationicElements, overallCharge);
+		overallCharge = setCationicElementsToTypicalCharge(cationicElements, overallCharge);
 		if (overallCharge==0){
 			return;
 		}
 		if (cationicElements.size() ==1 && overallCharge <0){//e.g. nickel tetrachloride [Ni2+]-->[Ni4+]
-			boolean success = setChargeOnCationicElementAppropriately(state, overallCharge, cationicElements.get(0));
+			boolean success = setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0));
 			if (success){
 				return;
 			}
@@ -1742,13 +1740,13 @@ class StructureBuilder {
 		}
 		if (!explicitStoichiometryPresent &&
 				(positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 )){
-			boolean success = multiplyChargedComponents(state, negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
+			boolean success = multiplyChargedComponents(negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
 			if (success){
 				return;
 			}
 		}
 		if (cationicElements.size() ==1){//e.g. magnesium monochloride [Mg2+]-->[Mg+]
-			boolean success = setChargeOnCationicElementAppropriately(state, overallCharge, cationicElements.get(0));
+			boolean success = setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0));
 			if (success){
 				return;
 			}
@@ -1783,12 +1781,11 @@ class StructureBuilder {
 	/**
 	 * Sets the cationicElements to the lowest typical charge as specified by the COMMONOXIDATIONSTATESANDMAX_ATR that is >= incoming valency
 	 * The valency incoming to the cationicElement is taken into account e.g. phenylmagnesium chloride is [Mg+]
-	 * @param state
 	 * @param cationicElements
 	 * @param overallCharge
 	 * @return
 	 */
-	private int setCationicElementsToTypicalCharge(BuildState state, List<Element> cationicElements, int overallCharge)  {
+	private int setCationicElementsToTypicalCharge(List<Element> cationicElements, int overallCharge)  {
 		for (Element cationicElement : cationicElements) {
 			Fragment cationicFrag = state.xmlFragmentMap.get(cationicElement);
 			String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
@@ -1809,7 +1806,6 @@ class StructureBuilder {
 	/**
 	 * Multiplies out charged word rules to balance charge
 	 * Return true if balancing was possible else false
-	 * @param state
 	 * @param negativelyChargedComponents
 	 * @param positivelyChargedComponents
 	 * @param componentToChargeMapping
@@ -1817,7 +1813,7 @@ class StructureBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private boolean multiplyChargedComponents(BuildState state, List<Element>negativelyChargedComponents,List<Element> positivelyChargedComponents,HashMap<Element, Integer> componentToChargeMapping, int overallCharge) throws StructureBuildingException {
+	private boolean multiplyChargedComponents(List<Element>negativelyChargedComponents,List<Element> positivelyChargedComponents,HashMap<Element, Integer> componentToChargeMapping, int overallCharge) throws StructureBuildingException {
 		Element componentToMultiply;
 		if (overallCharge >0){
 			if (negativelyChargedComponents.size() >1){
@@ -1876,7 +1872,7 @@ class StructureBuilder {
 		return true;
 	}
 	
-	private boolean setChargeOnCationicElementAppropriately(BuildState state, int overallCharge, Element cationicElement)  {
+	private boolean setChargeOnCationicElementAppropriately(int overallCharge, Element cationicElement)  {
 		Atom cation = state.xmlFragmentMap.get(cationicElement).getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
 		int maximumCharge = Integer.parseInt(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
@@ -1912,16 +1908,15 @@ class StructureBuilder {
 	 * Nasty special case to cope with oxido and related groups acting as O= or even [O-][N+]
 	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
 	 * Acting as O= notably is often correct behaviour for inorganics
-	 * @param state
 	 * @param groups
 	 */
-	private void processOxidoSpecialCase(BuildState state, List<Element> groups)  {
+	private void processOxidoSpecialCase(List<Element> groups)  {
 		for (Element group : groups) {
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Atom oxidoAtom = state.xmlFragmentMap.get(group).getFirstAtom();
 				Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
 				String element = connectedAtom.getElement();
-				if (checkForConnectedOxo(state, connectedAtom)){//e.g. not oxido(trioxo)ruthenium
+				if (checkForConnectedOxo(connectedAtom)){//e.g. not oxido(trioxo)ruthenium
 					continue;
 				}
 				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
@@ -1954,7 +1949,7 @@ class StructureBuilder {
 	 * @param atom
 	 * @return
 	 */
-	private boolean checkForConnectedOxo(BuildState state, Atom atom) {
+	private boolean checkForConnectedOxo(Atom atom) {
 		List<Bond> bonds = atom.getBonds();
 		for (Bond bond : bonds) {
 			Atom connectedAtom;
@@ -1975,11 +1970,10 @@ class StructureBuilder {
 
 	/**
 	 * Sets the charge according to the oxidation number if the oxidation number atom property has been set
-	 * @param state
 	 * @param groups
 	 * @throws StructureBuildingException 
 	 */
-	private void processOxidationNumbers(BuildState state, List<Element> groups) throws StructureBuildingException  {
+	private void processOxidationNumbers(List<Element> groups) throws StructureBuildingException  {
 		for (Element group : groups) {
 			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Atom atom = state.xmlFragmentMap.get(group).getFirstAtom();
@@ -2005,12 +1999,11 @@ class StructureBuilder {
 	/**
 	 * Handles the application of stereochemistry and checking
 	 * existing stereochemical specification is still relevant.
-	 * @param state
 	 * @param molecule
 	 * @param uniFrag
 	 * @throws StructureBuildingException
 	 */
-	private void processStereochemistry(BuildState state, Element molecule, Fragment uniFrag) throws StructureBuildingException {
+	private void processStereochemistry(Element molecule, Fragment uniFrag) throws StructureBuildingException {
 		List<Element> stereoChemistryEls = findStereochemistryElsInProcessingOrder(molecule);
 		List<Atom> atomList = uniFrag.getAtomList();
 		List<Atom> atomsWithPreDefinedAtomParity = new ArrayList<Atom>();
@@ -2081,7 +2074,7 @@ class StructureBuilder {
 		return matchingElements;
 	}
 	
-	private List<Fragment> convertOutAtomsToRgroups(BuildState state, Fragment uniFrag) throws StructureBuildingException {
+	private List<Fragment> convertOutAtomsToRgroups(Fragment uniFrag) throws StructureBuildingException {
 		List<Fragment> rGroups = new ArrayList<Fragment>();
 		int outAtomCount = uniFrag.getOutAtomCount();
 		for (int i = outAtomCount -1; i >=0; i--) {

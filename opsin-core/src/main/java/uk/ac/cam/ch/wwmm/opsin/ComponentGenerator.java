@@ -92,18 +92,17 @@ class ComponentGenerator {
 
 	
 	private final NameToStructureConfig n2sConfig;
-	private final Element parse;
 	
-	public ComponentGenerator(NameToStructureConfig n2sConfig, Element parse) {
+	ComponentGenerator(NameToStructureConfig n2sConfig) {
 		this.n2sConfig = n2sConfig;
-		this.parse = parse;
 	}
 
 	/**
 	 * Processes a parse result destructively adding semantic information by processing the various micro syntaxes.
+	 * @param parse 
 	 * @throws ComponentGenerationException 
 	 */
-	void processParse() throws ComponentGenerationException {
+	void processParse(Element parse) throws ComponentGenerationException {
 		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(parse, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {
