@@ -1580,7 +1580,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	static void makeHydrogensExplicit(BuildState state) throws StructureBuildingException {
-		Set<Fragment> fragments = state.fragManager.getFragPile();
+		Set<Fragment> fragments = state.fragManager.getFragments();
 		for (Fragment fragment : fragments) {
 			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
 				continue;
