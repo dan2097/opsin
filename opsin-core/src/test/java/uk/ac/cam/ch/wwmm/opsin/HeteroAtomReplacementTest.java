@@ -1,6 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
-import static junit.framework.Assert.*;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+
 import org.junit.Before;
 import org.junit.Test;
 

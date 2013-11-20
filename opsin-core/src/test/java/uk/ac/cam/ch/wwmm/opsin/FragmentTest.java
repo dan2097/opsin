@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class FragmentTest {

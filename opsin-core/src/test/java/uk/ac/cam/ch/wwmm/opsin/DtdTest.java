@@ -1,5 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,7 +20,6 @@ import org.junit.Test;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import static junit.framework.Assert.*;
 
 public class DtdTest {
 	private final static String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";

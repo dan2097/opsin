@@ -1,12 +1,13 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-import static junit.framework.Assert.*;
-import nu.xom.Attribute;
-import nu.xom.Element;
-import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class ComponentProcessorTest {
 

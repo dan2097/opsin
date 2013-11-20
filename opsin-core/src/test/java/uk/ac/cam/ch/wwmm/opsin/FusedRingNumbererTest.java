@@ -1,8 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.List;
+import static org.junit.Assert.*;
 
-import junit.framework.Assert;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -432,7 +432,7 @@ public class FusedRingNumbererTest {
 		List<Atom> atomList =fusedRing.getAtomList();
 		for (int i = 0; i < atomList.size(); i++) {
 			if (!labelArray[i].equals("")){//exterior atom locant
-				Assert.assertEquals(labelArray[i],atomList.get(i).getFirstLocant());
+				assertEquals(labelArray[i],atomList.get(i).getFirstLocant());
 			}
 		}
 	}

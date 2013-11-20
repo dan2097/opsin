@@ -1,13 +1,13 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+
+import org.junit.Test;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
-
-import org.junit.Test;
 
 public class ComponentGeneration_StereochemistryTest {
 

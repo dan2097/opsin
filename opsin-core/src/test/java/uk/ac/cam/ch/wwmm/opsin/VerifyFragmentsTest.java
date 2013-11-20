@@ -1,7 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static junit.framework.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +9,7 @@ import nu.xom.Elements;
 
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class VerifyFragmentsTest {
