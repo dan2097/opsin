@@ -1,14 +1,14 @@
 package uk.ac.cam.ch.wwmm.opsin;
+
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.util.List;
+
 import nu.xom.Element;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-
-
 import org.junit.Test;
 
 public class ParserTest {

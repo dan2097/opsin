@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
-import static org.junit.Assert.fail;
+
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 public class NomenclatureIntegrationTest {
 	private static NameToStructure n2s;
+
 	@BeforeClass
 	public static void setUp() {
 		n2s = NameToStructure.getInstance();

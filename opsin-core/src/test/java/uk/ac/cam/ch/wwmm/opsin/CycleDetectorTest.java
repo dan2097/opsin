@@ -1,6 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.HashSet;
 import java.util.List;

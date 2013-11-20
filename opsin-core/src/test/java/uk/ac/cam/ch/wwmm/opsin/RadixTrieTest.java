@@ -1,9 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.junit.Test;
-import static junit.framework.Assert.*;
+
 
 public class RadixTrieTest {
 

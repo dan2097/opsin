@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import static org.junit.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-import static junit.framework.Assert.*;
 
 import org.junit.Test;
 

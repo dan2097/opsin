@@ -1,10 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import nu.xom.Element;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import nu.xom.Element;
 
 
 public class BondTest {

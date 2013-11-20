@@ -1,7 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
-import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 public class FusedRingNumbererFunctionsTest {
 
