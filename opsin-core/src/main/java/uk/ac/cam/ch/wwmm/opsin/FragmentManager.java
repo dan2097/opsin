@@ -22,6 +22,7 @@ import nu.xom.Element;
  *
  */
 class FragmentManager {
+
 	/** A mapping between fragments and inter fragment bonds */
 	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond = new LinkedHashMap<Fragment, LinkedHashSet<Bond>>();
 	
@@ -120,8 +121,8 @@ class FragmentManager {
 	 * This does:
 	 * Imports all of the atoms and bonds from another fragment into this one.
 	 * Also imports outAtoms and functionalAtoms
-	 * Reassigns inter fragment bonds of the parent fragment as either intra fragment bonds
-	 * of the parent fragment or as inter fragment bonds of the parent fragment
+	 * Reassigns inter-fragment bonds of the child fragment as either intra-fragment bonds
+	 * of the parent fragment or as inter-fragment bonds of the parent fragment
 	 *
 	 * The original fragment still maintains its original atomList/bondList
 	 *
@@ -144,18 +145,16 @@ class FragmentManager {
 			throw new StructureBuildingException("Fragment not registered with this FragmentManager!");
 		}
 		for (Bond bond : interFragmentBonds) {//reassign inter-fragment bonds of child
-			if (bond.getFromAtom().getFrag() ==parentFrag || bond.getToAtom().getFrag() ==parentFrag){
-				if (bond.getFromAtom().getFrag() ==parentFrag && bond.getToAtom().getFrag() ==parentFrag){
-					//bond is now enclosed within parentFrag so make it an intra-fragment bond
-					//and remove it from the inter-fragment set of the parentFrag
-					parentFrag.addBond(bond);
-					fragToInterFragmentBond.get(parentFrag).remove(bond);
-				}
-				else{
-					//bond was an inter-fragment bond between the childFrag and another frag
-					//It is now between the parentFrag and another frag
-					addInterFragmentBond(bond);
-				}
+			if (bond.getFromAtom().getFrag() == parentFrag && bond.getToAtom().getFrag() == parentFrag){
+				//bond is now enclosed within parentFrag so make it an intra-fragment bond
+				//and remove it from the inter-fragment set of the parentFrag
+				parentFrag.addBond(bond);
+				fragToInterFragmentBond.get(parentFrag).remove(bond);
+			}
+			else{
+				//bond was an inter-fragment bond between the childFrag and another frag
+				//It is now between the parentFrag and another frag
+				addInterFragmentBond(bond);
 			}
 		}
 		fragToInterFragmentBond.remove(childFrag);
@@ -342,7 +341,6 @@ class FragmentManager {
 	Fragment copyFragment(Fragment originalFragment) throws StructureBuildingException {
 		return copyAndRelabelFragment(originalFragment, 0);
 	}
-
 
 	/**
 	 * Creates a copy of a fragment by copying data
@@ -589,7 +587,11 @@ class FragmentManager {
 	 * @return set of inter fragment bonds
 	 */
 	Set<Bond> getInterFragmentBonds(Fragment frag) {
-		return Collections.unmodifiableSet(fragToInterFragmentBond.get(frag));
+		Set<Bond> interFragmentBonds = fragToInterFragmentBond.get(frag);
+		if (interFragmentBonds == null) {
+			throw new IllegalArgumentException("Fragment not registered with this FragmentManager!");
+		}
+		return Collections.unmodifiableSet(interFragmentBonds);
 	}
 
 	/**
