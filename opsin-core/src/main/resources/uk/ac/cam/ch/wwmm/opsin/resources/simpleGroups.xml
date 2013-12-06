@@ -249,6 +249,10 @@
 		<token value="CCC[O-]" labels="1/2/3/" valType="SMILES">propoxide</token>
 		<token value="CCC[O+]" labels="1/2/3/" valType="SMILES">propoxylium</token>
 		<token value="C=CC" labels="1/2/3" valType="SMILES">propylene</token>
+		<token value="NC([SeH])=N" labels="1//2/3" valType="SMILES">pseudoselenourea</token>
+		<token value="NC([TeH])=N" labels="1//2/3" valType="SMILES">pseudotellurourea</token>
+		<token value="NC(S)=N" labels="1//2/3" valType="SMILES">pseudothiourea</token>
+		<token value="NC(O)=N" labels="1//2/3" valType="SMILES">pseudourea</token>
 		<token value="NCCCCN" labels="none" valType="SMILES">putrescine</token>
 		<token value="C=C(C)CCC[C@H](C)CCO" labels="none" valType="SMILES">rhodinol</token>
 		<token value="C=C(C)CCC[C@H](C)CC=O" labels="none" valType="SMILES">rhodinal</token>
