@@ -76,7 +76,7 @@
   <token value="[Ho]" valType="SMILES">holma</token>
   <token value="[Er]" valType="SMILES">erba</token>
   <token value="[Tm]" valType="SMILES">thula</token>
-  <token value="[Yt]" valType="SMILES">ytterba</token>
+  <token value="[Yb]" valType="SMILES">ytterba</token>
   <token value="[Lu]" valType="SMILES">luteta</token>
   <token value="[Ac]" valType="SMILES">actina</token>
   <token value="[Th]" valType="SMILES">thora</token>
@@ -186,7 +186,7 @@
   <token value="[Ho+]" valType="SMILES">holmonia</token>
   <token value="[Er+]" valType="SMILES">erbonia</token>
   <token value="[Tm+]" valType="SMILES">thulonia</token>
-  <token value="[Yt+]" valType="SMILES">ytterbonia</token>
+  <token value="[Yb+]" valType="SMILES">ytterbonia</token>
   <token value="[Lu+]" valType="SMILES">lutetonia</token>
   <token value="[Ac+]" valType="SMILES">actinonia</token>
   <token value="[Th+]" valType="SMILES">thoronia</token>
