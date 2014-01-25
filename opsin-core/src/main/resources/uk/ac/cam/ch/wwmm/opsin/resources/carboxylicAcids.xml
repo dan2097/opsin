@@ -10,7 +10,7 @@
     <token value="CCC" labels="1/2/3" valType="SMILES" usableAsAJoiner="yes">propion</token>
     <token value="CCC" labels="1/2/3" valType="SMILES" usableAsAJoiner="yes">propi</token>
     <token value="CCCC" labels="1/2/3/4" valType="SMILES" usableAsAJoiner="yes">butyr</token>
-    <token value="CC(C)C" labels="1/2/3/" valType="SMILES">isobutyr</token>
+    <token value="CC(C)C" labels="1/2/3,beta/" valType="SMILES">isobutyr</token>
     <token value="CCCCC" labels="1/2/3/4/5" valType="SMILES" usableAsAJoiner="yes">valer</token>
     <token value="CCC(C)C" labels="1/2/3/4/" valType="SMILES">isovaler</token>
     <token value="CC" labels="1/2" valType="SMILES" suffixAppliesTo="1,2">oxal</token>
@@ -35,6 +35,7 @@
     <token value="CC(C)C" labels="1/2,alpha//3" valType="SMILES" suffixAppliesTo="1,4">isosuccin</token>
     <token value="CC(=O)C" labels="1/2//3" valType="SMILES" suffixAppliesTo="1,4">mesoxal</token>
     <token value="S(=O)c1ccc(N)c2ccccc12" labels="//1/2/3/4//4a/5/6/7/8/8a" valType="SMILES">naphthion</token>
+    <token value="Cc1cc(=O)[nH]c(=O)[nH]1" labels="/4/5/6//1/2//3" valType="SMILES">orot</token>
     <token value="CCC(=O)C" labels="1/2/3//4" valType="SMILES" suffixAppliesTo="1,5">oxalacet</token>
     <token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">pelargon</token>
     <token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" usableAsAJoiner="yes">pelarg</token>

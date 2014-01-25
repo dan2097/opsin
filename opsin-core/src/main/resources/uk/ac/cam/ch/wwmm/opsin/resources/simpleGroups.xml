@@ -19,14 +19,15 @@
 		<token value="[NH2+]" labels="none" valType="SMILES">aminylium</token>
 		<!--<token value="[O-]C(C[N+](C)(C)C)=O" labels="none" valType="SMILES">betaine</token> also is a modifier of other amino acids-->
 		<token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'" valType="SMILES">biacetyl</token>
-		<token value="Cl[Bi]=O" labels="none" valType="SMILES">bismuth oxychloride</token>
-		<token value="Cl[Bi]=O" labels="none" valType="SMILES">bismuthoxychloride</token>
-		<token value="[O-]C(=O)C(O)C(O)C(=O)O" labels="none" valType="SMILES" functionalIDs="1">bitartrate</token>
 		<token value="O=C(CN(CCO)CCO)O" labels="none" valType="SMILES">bicine</token>
 		<token value="C=C(C(C)=C)C" labels="none" valType="SMILES">biisopropenyl</token>
 		<token value="CC(C(C)C)C" labels="none" valType="SMILES">biisopropyl</token>
 		<token value="NC(=N)NC(=N)N" labels="1//2/3//4/5" valType="SMILES">biguanide</token>
 		<token value="NC(=N)NNC(=N)N" labels="none" valType="SMILES">biguanidine</token>
+		<token value="Cl[Bi]=O" labels="none" valType="SMILES">bismuth oxychloride</token>
+		<token value="Cl[Bi]=O" labels="none" valType="SMILES">bismuthoxychloride</token>
+		<token value="[O-]C(=O)C(O)C(O)C(=O)O" labels="none" valType="SMILES" functionalIDs="1">bitartrate</token>
+		<token value="NC(=O)NNC(N)=O" labels="none" valType="SMILES">biurea</token>
 		<token value="NC(=O)NC(=O)N" labels="1/2//3/4//5" valType="SMILES">biuret</token>
 		<token value="OCCCCCCCCC/C=C/C=C\CCC" labels="none" valType="SMILES">bombykol</token>
 		<token value="[BH4-]" labels="none" valType="SMILES">borohydride</token>
@@ -366,6 +367,8 @@
 <!--yield names that should be ambiguous but by convention aren't-->
 		<token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">formamide</token>
 		<token value="C(=O)N" labels="1//N" valType="SMILES" defaultInID="3" functionalIDs="3,3">methanamide</token>
+		<token value="C(=O)(NC1CCCCC1)NC1CCCCC1" labels="///1/2/3/4/5/6//1'/2'/3'/4'/5'/6'" valType="SMILES">dicyclohexylurea</token>
+		<token value="C(=O)(NC)NC" labels="none" valType="SMILES">dimethylurea</token>
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
 		<token value="CC(=O)N(C)(C)" labels="2/1////" valType="SMILES">dimethylacetamide</token>
 
@@ -380,10 +383,15 @@
 		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC" labels="none" valType="SMILES">chlorobenzilat</token><!--pesticide name-->
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinone</token><!--pesticide name-->
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none" valType="SMILES">diazinon</token><!--pesticide name-->
+		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O" labels="none" valType="SMILES">diazolidinylurea</token><!--antimicrobial name-->
+		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O" labels="none" valType="SMILES">diazolidinyl urea</token><!--antimicrobial name-->
+		<token value="O=C1N(CO)CCN1CO" labels="none" valType="SMILES">dimethylol ethylene urea</token><!--trivial name-->
 		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N" labels="none" valType="SMILES">dithianone</token><!--pesticide name-->
 		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N" labels="none" valType="SMILES">dithianon</token><!--pesticide name-->
 		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">dihydromethanophenazine</token><!--trivial name-->
 		<token value="O=C(O)c1c(I)c(CNC(=O)C)c(I)c(NC(=O)C)c1I" labels="none" valType="SMILES">iodamide</token><!--trivial name-->
+		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O" labels="none" valType="SMILES">imidazolidinylurea</token><!--antimicrobial name-->
+		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O" labels="none" valType="SMILES">imidazolidinyl urea</token><!--antimicrobial name-->
 		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1" labels="none" valType="SMILES">methoxychlor</token><!--pesticide name-->
 		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none" valType="SMILES">methanophenazine</token><!--trivial name-->
 		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)O" labels="none" valType="SMILES" functionalIDs="19">oxolinic acid</token><!--drug name-->
