@@ -798,7 +798,7 @@ class FusedRingBuilder {
 		
 		List<Atom> potentialFusionAtomsAscending = new ArrayList<Atom>();
 		potentialFusionAtomsAscending.add(cyclicRingAtomList.getCurrent());
-		while (cyclicRingAtomList.getIndice() != indexfinal){//assume numbers are ascending
+		while (cyclicRingAtomList.getIndex() != indexfinal){//assume numbers are ascending
 			potentialFusionAtomsAscending.add(cyclicRingAtomList.getNext());
 		}
 		if (expectedNumberOfAtomsToBeUsedForFusion ==null ||expectedNumberOfAtomsToBeUsedForFusion == potentialFusionAtomsAscending.size()){
@@ -814,10 +814,10 @@ class FusedRingBuilder {
 		}
 		
 		if (fusionAtoms ==null || expectedNumberOfAtomsToBeUsedForFusion ==null){//that didn't work, so try assuming the numbers are descending
-			cyclicRingAtomList.setIndice(indexfirst);
+			cyclicRingAtomList.setIndex(indexfirst);
 			List<Atom> potentialFusionAtomsDescending = new ArrayList<Atom>();
 			potentialFusionAtomsDescending.add(cyclicRingAtomList.getCurrent());
-			while (cyclicRingAtomList.getIndice() != indexfinal){//assume numbers are descending
+			while (cyclicRingAtomList.getIndex() != indexfinal){//assume numbers are descending
 				potentialFusionAtomsDescending.add(cyclicRingAtomList.getPrevious());
 			}
 			if (expectedNumberOfAtomsToBeUsedForFusion ==null || expectedNumberOfAtomsToBeUsedForFusion == potentialFusionAtomsDescending.size()){
