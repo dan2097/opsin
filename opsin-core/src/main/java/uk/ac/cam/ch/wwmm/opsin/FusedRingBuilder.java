@@ -13,7 +13,6 @@ import java.util.Set;
 
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-
 import nu.xom.Element;
 import nu.xom.Elements;
 
@@ -622,34 +621,32 @@ class FusedRingBuilder {
 	 * @return
 	 */
 	private List<String> findPossibleLetterLocants(Fragment ring, int edgeLength) {
-		List<Atom> atomlist = ring.getAtomList();
-		List<String> letterLocantsOfParent = null;
-		List<Atom> carbonAtoms = new ArrayList<Atom>();
-		atomlist.add(0, atomlist.get(atomlist.size()-1));//this atomList is a copy so we can safely do this
-		for (int i =atomlist.size() -1; i >=0; i--) {//iterate backwards in list to use highest locanted edge in preference.
+		List<Integer> carbonAtomIndexes = new ArrayList<Integer>();
+		int numberOfAtoms = ring.getAtomCount();
+		CyclicAtomList cyclicAtomList = new CyclicAtomList(ring.getAtomList());
+		for (int i = 0; i <= numberOfAtoms; i++) {
+			//iterate backwards in list to use highest locanted edge in preference.
 			//this retains what is currently locant 1 on the parent ring as locant 1 if the first two atoms found match
-			Atom atom = atomlist.get(i);
-			if (atom.getElement().equals("C")){
-				if (atom.getIncomingValency()>=3){
-					carbonAtoms.clear();
-					continue;//don't want bridgehead carbons
-				}
-				carbonAtoms.add(atom);
-				if (carbonAtoms.size() ==edgeLength +1 ){//as many in a row as edgelength ->use this side
-					letterLocantsOfParent = new ArrayList<String>();
-					Collections.reverse(carbonAtoms);
-					atomlist.remove(0);
+			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 6-5 and 1-6 are both possible
+			Atom atom = cyclicAtomList.getPrevious();
+			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
+			if (atom.getElement().equals("C") && atom.getBonds().size() == 2
+					&& (carbonAtomIndexes.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekNext()))){
+				carbonAtomIndexes.add(cyclicAtomList.getIndex());
+				if (carbonAtomIndexes.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
+					Collections.reverse(carbonAtomIndexes);
+					List<String> letterLocantsOfParent = new ArrayList<String>();
 					for (int j = 0; j < edgeLength; j++) {
-						letterLocantsOfParent.add(String.valueOf((char)(97 +atomlist.indexOf(carbonAtoms.get(j)))));//97 is ascii for a	
+						letterLocantsOfParent.add(String.valueOf((char)(97 + carbonAtomIndexes.get(j))));//97 is ascii for a	
 					}
-					break;
+					return letterLocantsOfParent;
 				}
 			}
 			else{
-				carbonAtoms.clear();
+				carbonAtomIndexes.clear();
 			}
 		}
-		return letterLocantsOfParent;
+		return null;
 	}
 
 	/**
@@ -661,30 +658,29 @@ class FusedRingBuilder {
 	 * @return
 	 */
 	private List<String> findPossibleNumericalLocants(Fragment ring, int edgeLength) {
-		List<Atom> atomlist = ring.getAtomList();
-		List<String> numericalLocantsOfChild = null;
 		List<String> carbonLocants = new ArrayList<String>();
-		atomlist.add(atomlist.get(0));//this atomList is a copy so we can safely do this
-		for (Atom atom : atomlist) {
-			if (atom.getElement().equals("C")){
-				if (atom.getIncomingValency()>=3){
-					carbonLocants.clear();
-					continue;//don't want bridgehead carbons
-				}
+		int numberOfAtoms = ring.getAtomCount();
+		CyclicAtomList cyclicAtomList = new CyclicAtomList(ring.getAtomList());
+		for (int i = 0; i <= numberOfAtoms; i++) {
+			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 1-2 and 6-1 are both possible
+			Atom atom = cyclicAtomList.getNext();
+			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
+			if (atom.getElement().equals("C") && atom.getBonds().size() == 2
+					&& (carbonLocants.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
 				carbonLocants.add(atom.getFirstLocant());
-				if (carbonLocants.size()==edgeLength +1){//as many in a row as edgelength ->use this side
-					numericalLocantsOfChild = new ArrayList<String>();
+				if (carbonLocants.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
+					List<String> numericalLocantsOfChild = new ArrayList<String>();
 					for (String locant : carbonLocants) {
 						numericalLocantsOfChild.add(locant);
 					}
-					break;
+					return numericalLocantsOfChild;
 				}
 			}
 			else{
 				carbonLocants.clear();
 			}
 		}
-		return numericalLocantsOfChild;
+		return null;
 	}
 
 	/**
