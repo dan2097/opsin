@@ -628,7 +628,7 @@ class FusedRingBuilder {
 			//iterate backwards in list to use highest locanted edge in preference.
 			//this retains what is currently locant 1 on the parent ring as locant 1 if the first two atoms found match
 			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 6-5 and 1-6 are both possible
-			Atom atom = cyclicAtomList.getPrevious();
+			Atom atom = cyclicAtomList.previous();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
 			if (atom.getElement().equals("C") && atom.getBonds().size() == 2
 					&& (carbonAtomIndexes.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekNext()))){
@@ -663,7 +663,7 @@ class FusedRingBuilder {
 		CyclicAtomList cyclicAtomList = new CyclicAtomList(ring.getAtomList());
 		for (int i = 0; i <= numberOfAtoms; i++) {
 			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 1-2 and 6-1 are both possible
-			Atom atom = cyclicAtomList.getNext();
+			Atom atom = cyclicAtomList.next();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
 			if (atom.getElement().equals("C") && atom.getBonds().size() == 2
 					&& (carbonLocants.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
@@ -702,7 +702,7 @@ class FusedRingBuilder {
 		CyclicAtomList cyclicListAtomsOnSurfaceOfParent = new CyclicAtomList(parentPeripheralAtomList, (int)letterLocantsOfParent.get(0).charAt(0) -97);//convert from lower case character through ascii to 0-23
 		parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getCurrent());
 		for (int i = 0; i < letterLocantsOfParent.size(); i++) {
-			parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getNext());
+			parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.next());
 		}
 		fuseRings(childAtoms, parentAtoms);
 	}
@@ -795,7 +795,7 @@ class FusedRingBuilder {
 		List<Atom> potentialFusionAtomsAscending = new ArrayList<Atom>();
 		potentialFusionAtomsAscending.add(cyclicRingAtomList.getCurrent());
 		while (cyclicRingAtomList.getIndex() != indexfinal){//assume numbers are ascending
-			potentialFusionAtomsAscending.add(cyclicRingAtomList.getNext());
+			potentialFusionAtomsAscending.add(cyclicRingAtomList.next());
 		}
 		if (expectedNumberOfAtomsToBeUsedForFusion ==null ||expectedNumberOfAtomsToBeUsedForFusion == potentialFusionAtomsAscending.size()){
 			boolean notInPotentialParentAtoms =false;
@@ -814,7 +814,7 @@ class FusedRingBuilder {
 			List<Atom> potentialFusionAtomsDescending = new ArrayList<Atom>();
 			potentialFusionAtomsDescending.add(cyclicRingAtomList.getCurrent());
 			while (cyclicRingAtomList.getIndex() != indexfinal){//assume numbers are descending
-				potentialFusionAtomsDescending.add(cyclicRingAtomList.getPrevious());
+				potentialFusionAtomsDescending.add(cyclicRingAtomList.previous());
 			}
 			if (expectedNumberOfAtomsToBeUsedForFusion ==null || expectedNumberOfAtomsToBeUsedForFusion == potentialFusionAtomsDescending.size()){
 				boolean notInPotentialParentAtoms =false;
