@@ -4,18 +4,18 @@ import java.util.List;
 
 /**
  * Convenience class for iterating over a list of atoms that form a ring
- * Doing getNext when the indice is the final atom in the list will return the first atom
- * Doing getPrevious when the indice is the first atom in the list will return the final atom
+ * Doing getNext when the index is the final atom in the list will return the first atom
+ * Doing getPrevious when the index is the first atom in the list will return the final atom
  * @author dl387
  *
  */
 class CyclicAtomList{
-	private int indice = -1;
+	private int index = -1;
 	private final List<Atom> atomList;
 
 	/**
 	 * Construct a cyclicAtomList from an atomList
-	 * Indice defaults to -1
+	 * Index defaults to -1
 	 * @param atomList
 	 */
 	CyclicAtomList(List<Atom> atomList) {
@@ -24,14 +24,14 @@ class CyclicAtomList{
 	
 	/**
 	 * Construct a cyclicAtomList from an atomList
-	 * The second parameter sets the current indice
+	 * The second parameter sets the current index
 	 * @param atomList
-	 * @param indice
+	 * @param index
 	 * @throws StructureBuildingException
 	 */
-	CyclicAtomList(List<Atom> atomList, int indice) throws StructureBuildingException {
+	CyclicAtomList(List<Atom> atomList, int index) throws StructureBuildingException {
 		this.atomList = atomList;
-		setIndice(indice);
+		setIndex(index);
 	}
 
 	/**
@@ -45,59 +45,59 @@ class CyclicAtomList{
 	}
 
 	/**
-	 * Return the current indice in the list
+	 * Return the current index in the list
 	 * @return
 	 */
-	int getIndice() {
-		return indice;
+	int getIndex() {
+		return index;
 	}
 
 	/**
-	 * Set the current indice
-	 * @param indice
+	 * Set the current index
+	 * @param index
 	 * @throws StructureBuildingException
 	 */
-	void setIndice(int indice) throws StructureBuildingException{
-		if (indice >= atomList.size()){
-			throw new StructureBuildingException("Specified indice is not within ringAtom list");
+	void setIndex(int index) throws StructureBuildingException{
+		if (index >= atomList.size()){
+			throw new StructureBuildingException("Specified index is not within ringAtom list");
 		}
-		this.indice =indice;
+		this.index = index;
 	}
 
 	/**
 	 * Returns the next atom in the list
-	 * When the indice is the final atom in the list will return the first atom
+	 * When the index is the final atom in the list will return the first atom
 	 * @return
 	 */
 	Atom getNext() {
-		int tempIndice = indice + 1;
-		if (tempIndice >= atomList.size()){
-			tempIndice=0;
+		int tempIndex = index + 1;
+		if (tempIndex >= atomList.size()){
+			tempIndex=0;
 		}
-		indice =tempIndice;
-		return atomList.get(indice);
+		index = tempIndex;
+		return atomList.get(index);
 	}
 	
 	/**
 	 * Returns the previous atom in the list
-	 * when the indice is the first atom in the list will return the final atom
+	 * when the index is the first atom in the list will return the final atom
 	 * @return
 	 */
 	Atom getPrevious() {
-		int tempIndice = indice - 1;
-		if (tempIndice < 0){
-			tempIndice = atomList.size() -1 ;
+		int tempIndex = index - 1;
+		if (tempIndex < 0){
+			tempIndex = atomList.size() -1 ;
 		}
-		indice =tempIndice;
-		return atomList.get(indice);
+		index = tempIndex;
+		return atomList.get(index);
 	}
 
 	/**
-	 * Returns the atom corresponding to the current indice
-	 * Note that CycliAtomLists have a default indice of -1
+	 * Returns the atom corresponding to the current index
+	 * Note that CycliAtomLists have a default index of -1
 	 * @return
 	 */
 	Atom getCurrent() {
-		return atomList.get(indice);
+		return atomList.get(index);
 	}
 }
