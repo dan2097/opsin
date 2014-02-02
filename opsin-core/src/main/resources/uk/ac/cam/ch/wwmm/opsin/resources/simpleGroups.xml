@@ -372,6 +372,7 @@
 		<token value="C(OC)C(OC)" labels="1///2//" valType="SMILES">dimethoxyethane</token>
 		<token value="CC(=O)N(C)(C)" labels="2/1////" valType="SMILES">dimethylacetamide</token>
 		<token value="n1c[nH]c2nc[nH]c2c1=S" labels="1/2/3/4/9/8/7/5/6/" valType="SMILES">mercaptopurine</token>
+		<token value="[C@@H]1(C[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C(F)(F)F)c2" labels="1'/2'/3'//4'/5'///1/2//3/4//5/alpha////6" valType="SMILES">trifluorothymidine</token><!--drug name-->
 
 		<token value="C(=O)C(=O)N" labels="2//1//" valType="SMILES" functionalIDs="5,5">glyoxalylamide</token>
 
