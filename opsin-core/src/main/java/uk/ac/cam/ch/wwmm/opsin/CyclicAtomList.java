@@ -33,6 +33,17 @@ class CyclicAtomList{
 		this.atomList = atomList;
 		setIndex(index);
 	}
+	
+	/**
+	 * Returns the number of elements in this list. If this list contains more
+	 * than <tt>Integer.MAX_VALUE</tt> elements, returns
+	 * <tt>Integer.MAX_VALUE</tt>.
+	 * 
+	 * @return the number of elements in this list
+	 */
+	int size() {
+		return atomList.size();
+	}
 
 	/**
 	 * Returns the atom at the specified position in this list.
@@ -72,7 +83,7 @@ class CyclicAtomList{
 	Atom getNext() {
 		int tempIndex = index + 1;
 		if (tempIndex >= atomList.size()){
-			tempIndex=0;
+			tempIndex = 0;
 		}
 		index = tempIndex;
 		return atomList.get(index);
@@ -90,6 +101,34 @@ class CyclicAtomList{
 		}
 		index = tempIndex;
 		return atomList.get(index);
+	}
+	
+	/**
+	 * Returns the next atom in the list
+	 * When the index is the final atom in the list will return the first atom
+	 * Doesn't effect the list
+	 * @return
+	 */
+	Atom peekNext() {
+		int tempIndex = index + 1;
+		if (tempIndex >= atomList.size()){
+			tempIndex = 0;
+		}
+		return atomList.get(tempIndex);
+	}
+	
+	/**
+	 * Returns the previous atom in the list
+	 * when the index is the first atom in the list will return the final atom
+	 * Doesn't effect the list
+	 * @return
+	 */
+	Atom peekPrevious() {
+		int tempIndex = index - 1;
+		if (tempIndex < 0){
+			tempIndex = atomList.size() -1 ;
+		}
+		return atomList.get(tempIndex);
 	}
 
 	/**
