@@ -76,11 +76,11 @@ class CyclicAtomList{
 	}
 
 	/**
-	 * Returns the next atom in the list
+	 * Increments and returns the atom at the new index in the list (next atom)
 	 * When the index is the final atom in the list will return the first atom
 	 * @return
 	 */
-	Atom getNext() {
+	Atom next() {
 		int tempIndex = index + 1;
 		if (tempIndex >= atomList.size()){
 			tempIndex = 0;
@@ -90,11 +90,11 @@ class CyclicAtomList{
 	}
 	
 	/**
-	 * Returns the previous atom in the list
+	 * Decrements and returns the atom at the new index in the list (previous atom)
 	 * when the index is the first atom in the list will return the final atom
 	 * @return
 	 */
-	Atom getPrevious() {
+	Atom previous() {
 		int tempIndex = index - 1;
 		if (tempIndex < 0){
 			tempIndex = atomList.size() -1 ;
