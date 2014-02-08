@@ -94,6 +94,9 @@ sense of this -->
   <rule value="boronic">
     <addgroup SMILES="[*]B(O)O" functionalIDs="3,4"/>
   </rule>
+  <rule value="boronicacidpinacolester">
+    <addgroup SMILES="[*]B(OC(C)(C)C1(C)(C))O1"/>
+  </rule>
   <rule value="carbamate">
     <addgroup SMILES="[*]NC(=O)[O-]" functionalIDs="5"/>
   </rule>
