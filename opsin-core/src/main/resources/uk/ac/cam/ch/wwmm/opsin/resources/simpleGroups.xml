@@ -243,7 +243,7 @@
 		<token value="OC(C)(C)C(C)(C)O" labels="none" valType="SMILES">pinacol</token>
 		<token value="CC(C(C)(C)C)=O" labels="1//////" valType="SMILES">pinacolone</token>
 		<token value="C=CC=CC" labels="1/2/3/4/5" valType="SMILES">piperylene</token>
-    <token value="CC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="none" valType="SMILES">pristane</token>
+		<token value="CC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="none" valType="SMILES">pristane</token>
 		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" valType="SMILES">propione</token>
 		<token value="CCC(C(O)CC)=O" labels="none" valType="SMILES">propionoin</token>
 		<token value="CCC(C(O)CC)=O" labels="none" valType="SMILES">propioin</token>
@@ -426,6 +426,15 @@
 		<token value="[NH4+]" labels="none" valType="SMILES">aminium</token>
 		<token value="[NH2-]" labels="none" valType="SMILES">aminide</token>
 		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" valType="SMILES">barbiturate</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic pinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acid pinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronicacid pinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronicacidpinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronicacid pinacolester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronicacidpinacolester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acidpinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acidpinacolester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acid pinacolester</token>
 		<token value="C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">carboxylate</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>

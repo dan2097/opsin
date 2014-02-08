@@ -86,6 +86,15 @@
     <token value="boronic">boronic</token>
     <token value="boronic">boronicacid</token>
     <token value="boronic">boronic acid</token>
+    <token value="boronicacidpinacolester">boronic pinacol ester</token>
+    <token value="boronicacidpinacolester">boronic acid pinacol ester</token>
+    <token value="boronicacidpinacolester">boronicacid pinacol ester</token>
+    <token value="boronicacidpinacolester">boronicacidpinacol ester</token>
+    <token value="boronicacidpinacolester">boronicacid pinacolester</token>
+    <token value="boronicacidpinacolester">boronicacidpinacolester</token>
+    <token value="boronicacidpinacolester">boronic acidpinacol ester</token>
+    <token value="boronicacidpinacolester">boronic acidpinacolester</token>
+    <token value="boronicacidpinacolester">boronic acid pinacolester</token>
     <token value="carbamate">carbamate</token>
     <token value="carbamate">carbamat</token>
     <token value="carbamic">carbamic</token>
