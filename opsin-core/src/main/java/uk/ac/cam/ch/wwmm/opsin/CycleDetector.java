@@ -26,7 +26,7 @@ class CycleDetector {
 			atom.setProperty(Atom.VISITED, null);
 		}
 		for (Atom a : atomList) {//as OPSIN does not disallow disconnected sections within a single "fragment" (e.g. in suffixes) for vigorousness this for loop is required
-			if(a.getProperty(Atom.VISITED)==null){//typically for all but the first atom this will be true
+			if(a.getProperty(Atom.VISITED)==null){//true for only the first atom in a fully connected molecule
 				traverseRings(a, null, 0);
 			}
 		}
