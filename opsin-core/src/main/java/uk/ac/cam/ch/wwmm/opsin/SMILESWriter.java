@@ -112,36 +112,57 @@ class SMILESWriter {
 			atom.setProperty(Atom.VISITED, null);
 		}
 		for (Atom a : atomList) {
-			if(a.getProperty(Atom.VISITED)==null && !isSmilesImplicitProton(a)){//typically for all but the first atom this will be true
-				traverseMolecule(a, null, 0);
+			if(a.getProperty(Atom.VISITED)==null && !isSmilesImplicitProton(a)){//true for only the first atom in a fully connected molecule
+				traverseMolecule(a);
 			}
 		}
 	}
+	
+	private static class TraversalState {
+		private final Atom atom;
+		private final Bond bondTaken;
+		private final int depth;
 
+		private TraversalState(Atom atom, Bond bondTaken, int depth) {
+			this.atom = atom;
+			this.bondTaken = bondTaken;
+			this.depth = depth;
+		}
+	}
+	
 	/**
-	 * Recursive function for populating the Atom.VISITED property 
+	 * Iterative function for populating the Atom.VISITED property 
 	 * Also populates the bondToNextAtom Map
-	 * @param currentAtom
-	 * @param previousAtom
-	 * @param depth
+	 * @param startingAtom
 	 * @return
 	 */
-	private void traverseMolecule(Atom currentAtom, Atom previousAtom, int depth){
-		if(currentAtom.getProperty(Atom.VISITED)!=null){
-			return;
-		}
-		currentAtom.setProperty(Atom.VISITED, depth);
-		List<Bond> bonds = currentAtom.getBonds();
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			if (isSmilesImplicitProton(neighbour)){
+	private void traverseMolecule(Atom startingAtom){
+		LinkedList<TraversalState> stack = new LinkedList<TraversalState>();
+		stack.add(new TraversalState(startingAtom, null, 0));
+		while (!stack.isEmpty()){
+			TraversalState currentstate = stack.removeLast();
+			Atom currentAtom = currentstate.atom;
+			Bond bondtaken = currentstate.bondTaken;
+			if (bondtaken != null) {
+				bondToNextAtomMap.put(bondtaken, currentAtom);
+			}	
+			if(currentAtom.getProperty(Atom.VISITED) != null){
 				continue;
 			}
-			if (neighbour.equals(previousAtom)){
-				continue;
+			int depth = currentstate.depth;
+			currentAtom.setProperty(Atom.VISITED, depth);
+			List<Bond> bonds = currentAtom.getBonds();
+			for (int i = bonds.size() - 1; i >=0; i--) {
+				Bond bond = bonds.get(i);
+				if (bond.equals(bondtaken)){
+					continue;
+				}
+				Atom neighbour = bond.getOtherAtom(currentAtom);
+				if (isSmilesImplicitProton(neighbour)){
+					continue;
+				}
+				stack.add(new TraversalState(neighbour, bond, depth + 1));
 			}
-			bondToNextAtomMap.put(bond, neighbour);
-			traverseMolecule(neighbour, currentAtom, depth+1);
 		}
 	}
 
