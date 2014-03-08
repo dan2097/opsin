@@ -789,32 +789,32 @@ class StereochemistryHandler {
 	}
 
 	static int swapsRequiredToSort(Atom[] atomRefs4){
-	  Atom[] atomRefs4Copy = atomRefs4.clone();
-	  int swapsPerformed = 0;
-	  int i,j;
-
-	  for (i=atomRefs4Copy.length; --i >=0;) {
-		boolean swapped = false;
-		for (j=0; j<i;j++) {
-			if (atomRefs4Copy[j].getID() > atomRefs4Copy[j+1].getID()){
-				Atom temp = atomRefs4Copy[j+1];
-				atomRefs4Copy[j+1] = atomRefs4Copy[j];
-				atomRefs4Copy[j] = temp;
-				swapsPerformed++;
-				swapped=true;
+		Atom[] atomRefs4Copy = atomRefs4.clone();
+		int swapsPerformed = 0;
+		int i,j;
+	
+		for (i=atomRefs4Copy.length; --i >=0;) {
+			boolean swapped = false;
+			for (j=0; j<i;j++) {
+				if (atomRefs4Copy[j].getID() > atomRefs4Copy[j+1].getID()){
+					Atom temp = atomRefs4Copy[j+1];
+					atomRefs4Copy[j+1] = atomRefs4Copy[j];
+					atomRefs4Copy[j] = temp;
+					swapsPerformed++;
+					swapped = true;
+				}
+			}
+			if (!swapped){
+				return swapsPerformed;
 			}
 		}
-		if (!swapped){
-			return swapsPerformed;
-		}
-	  }
-	  return swapsPerformed;
+		return swapsPerformed;
 	}
 	
 	static boolean checkEquivalencyOfAtomsRefs4AndParity(Atom[] atomRefs1, int atomParity1, Atom[] atomRefs2, int atomParity2){
-		int swaps1 =swapsRequiredToSort(atomRefs1);
-		int swaps2 =swapsRequiredToSort(atomRefs2);
-		if (atomParity1<0 && atomParity2>0 || atomParity1>0 && atomParity2<0){
+		int swaps1 = swapsRequiredToSort(atomRefs1);
+		int swaps2 = swapsRequiredToSort(atomRefs2);
+		if (atomParity1 < 0 && atomParity2 > 0 || atomParity1 > 0 && atomParity2 < 0){
 			 swaps1++;
 		}
 		return swaps1 %2 == swaps2 %2;
