@@ -85,17 +85,16 @@ class SMILESWriter {
 		assignDoubleBondStereochemistrySlashes();
 
 		List<Atom> atomList = structure.getAtomList();
-		List<Atom> nonProtonAtomList = createNonProtonAtomList(atomList);
-		int nonProtonCount = nonProtonAtomList.size();
-		boolean isEmpty =true;
-		for (int i = 0; i < nonProtonCount; i++) {
-			Atom currentAtom = nonProtonAtomList.get(i);
-			if(currentAtom.getProperty(Atom.VISITED)==0){//new component
+
+		boolean isEmpty = true;
+		for (Atom currentAtom : atomList) {
+			Integer visitedDepth = currentAtom.getProperty(Atom.VISITED);
+			if (visitedDepth != null && visitedDepth ==0) {//new component
 				if (!isEmpty){
 					smilesBuilder.append('.');
 				}
 				traverseSmiles(currentAtom, null, 0);
-				isEmpty =false;
+				isEmpty = false;
 			}
 		}
 
@@ -326,16 +325,6 @@ class SMILESWriter {
 				}
 			}
 		}
-	}
-
-	private List<Atom> createNonProtonAtomList(List<Atom> atomList) {
-		List<Atom> nonProtonAtomList = new ArrayList<Atom>();
-		for (Atom atom : atomList) {
-			if (atom.getProperty(Atom.VISITED) != null){
-				nonProtonAtomList.add(atom);
-			}
-		}
-		return nonProtonAtomList;
 	}
 
 	/**
