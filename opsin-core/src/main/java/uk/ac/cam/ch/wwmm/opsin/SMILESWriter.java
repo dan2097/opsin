@@ -107,12 +107,12 @@ class SMILESWriter {
 	 * an atom is from the start of the fragment walk. A new walk will be started for each disconnected component of the fragment
 	 */
 	private void assignSmilesOrder() {
-		List<Atom> atomList =structure.getAtomList();
+		List<Atom> atomList = structure.getAtomList();
 		for (Atom atom : atomList) {
 			atom.setProperty(Atom.VISITED, null);
 		}
 		for (Atom a : atomList) {
-			if(a.getProperty(Atom.VISITED)==null && !isSmilesImplicitProton(a)){//true for only the first atom in a fully connected molecule
+			if(a.getProperty(Atom.VISITED) == null && !isSmilesImplicitProton(a)){//true for only the first atom in a fully connected molecule
 				traverseMolecule(a);
 			}
 		}
@@ -167,35 +167,38 @@ class SMILESWriter {
 	}
 
 	private boolean isSmilesImplicitProton(Atom atom) {
-		if (!atom.getElement().equals("H") || (atom.getIsotope()!=null && atom.getIsotope()!=1) ){
+		if (!atom.getElement().equals("H")){
+			//not hydrogen
 			return false;
 		}
-		else{
-			List<Atom> neighbours = atom.getAtomNeighbours();
-			//special case where hydrogen is bridging
-			if (neighbours.size() > 1){
-				return false;
-			}
-			//special case where hydrogen is a counter ion or only connects to other hydrogen and/or R-groups
-			boolean foundHeavyAtomNeighbour =false;
-			for (Atom neighbour : neighbours) {
-				String element = neighbour.getElement();
-				if (!element.equals("H") && !element.equals("R")){
-					foundHeavyAtomNeighbour =true;
-				}
-			}
-			if (!foundHeavyAtomNeighbour){
-				return false;
-			}
-			
-			//special case where hydrogen is connected to a nitrogen with imine double bond stereochemistry
-			if (neighbours.get(0).getElement().equals("N")){
-				List<Bond> bondsFromNitrogen = neighbours.get(0).getBonds();
-				if (bondsFromNitrogen.size()==2){
-					for (Bond bond : bondsFromNitrogen) {
-						if (bond.getBondStereo()!=null){
-							return false;
-						}
+		if (atom.getIsotope() != null && atom.getIsotope() != 1){
+			//deuterium/tritium
+			return false;
+		}
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		int neighbourCount = neighbours.size();
+		if (neighbourCount > 1){
+			//bridging hydrogen
+			return false;
+		}
+		if (neighbourCount == 0){
+			//just a hydrogen atom
+			return false;
+		}
+		
+		Atom neighbour = neighbours.get(0);
+		String element = neighbour.getElement();
+		if (element.equals("H") || element.equals("R")){
+			//only connects to hydrogen or an R-group
+			return false;
+		}
+		if (element.equals("N")){
+			List<Bond> bondsFromNitrogen = neighbour.getBonds();
+			if (bondsFromNitrogen.size() == 2){
+				for (Bond bond : bondsFromNitrogen) {
+					if (bond.getBondStereo() != null){
+						//special case where hydrogen is connected to a nitrogen with imine double bond stereochemistry
+						return false;
 					}
 				}
 			}
@@ -328,7 +331,7 @@ class SMILESWriter {
 	private List<Atom> createNonProtonAtomList(List<Atom> atomList) {
 		List<Atom> nonProtonAtomList = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
-			if (atom.getProperty(Atom.VISITED)!=null){
+			if (atom.getProperty(Atom.VISITED) != null){
 				nonProtonAtomList.add(atom);
 			}
 		}
