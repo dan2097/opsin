@@ -93,7 +93,7 @@ class SMILESWriter {
 				if (!isEmpty){
 					smilesBuilder.append('.');
 				}
-				traverseSmiles(currentAtom, null, 0);
+				traverseSmiles(currentAtom);
 				isEmpty = false;
 			}
 		}
@@ -327,68 +327,88 @@ class SMILESWriter {
 		}
 	}
 
-	/**
-	 * Generates the SMILES for the currentAtom and its bonds and then is called recursively to explore the atom's neighbours
-	 * @param currentAtom
-	 * @param previousAtom
-	 * @param depth
-	 */
-	private void traverseSmiles(Atom currentAtom, Atom previousAtom, int depth){
-		smilesBuilder.append(atomToSmiles(currentAtom, depth, previousAtom));
-		List<Bond> bonds = currentAtom.getBonds();
-		LinkedList<String> newlyAvailableClosureSymbols = null;
-		for (Bond bond : bonds) {//ring closures
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth <= depth && !neighbour.equals(previousAtom)){
-				String closure = bondToClosureSymbolMap.get(bond);
-				smilesBuilder.append(closure);
-				if (newlyAvailableClosureSymbols == null){
-					newlyAvailableClosureSymbols = new LinkedList<String>();
-				}
-				newlyAvailableClosureSymbols.addFirst(closure);
-			}
-		}
-		for (Bond bond : bonds) {//ring openings
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth > (depth +1)){
-				String closure = availableClosureSymbols.removeFirst();
-				bondToClosureSymbolMap.put(bond, closure);
-				smilesBuilder.append(bondToSmiles(bond));
-				smilesBuilder.append(closure);
-			}
-		}
-		if (newlyAvailableClosureSymbols != null) {
-			//By not immediately adding to availableClosureSymbols we avoid using the same digit 
-			//to both close and open on the same atom
-			for (String closure : newlyAvailableClosureSymbols) {
-				availableClosureSymbols.addFirst(closure);
-			}
-		}
-
-		// count outgoing edges
-		int count = 0;
-		for (Bond bond : bonds) {
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth != null && nDepth == depth + 1){
-				count++;
-			}
-		}
 	
-		for (Bond bond : bonds) {//adjacent atoms which have not been previously written
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth != null && nDepth == depth + 1){
-				if (count > 1){
-				  smilesBuilder.append('(');
+	private static final TraversalState startBranch = new TraversalState(null, null, -1);
+	private static final TraversalState endBranch = new TraversalState(null, null, -1);
+	
+	/**
+	 * Generates the SMILES starting from the currentAtom, iteratively exploring
+	 * in the same order as {@link SMILESWriter#traverseMolecule(Atom)}
+	 * @param startingAtom
+	 */
+	private void traverseSmiles(Atom startingAtom){
+		LinkedList<TraversalState> stack = new LinkedList<TraversalState>();
+		stack.add(new TraversalState(startingAtom, null, 0));
+		while (!stack.isEmpty()){
+			TraversalState currentstate = stack.removeLast();
+			if (currentstate == startBranch){
+				smilesBuilder.append('(');
+				continue;
+			}
+			if (currentstate == endBranch){
+				smilesBuilder.append(')');
+				continue;
+			}
+			Atom currentAtom = currentstate.atom;
+			Bond bondtaken = currentstate.bondTaken;
+			if (bondtaken !=null){
+				smilesBuilder.append(bondToSmiles(bondtaken));
+			}
+			int depth = currentstate.depth;
+
+			smilesBuilder.append(atomToSmiles(currentAtom, depth, bondtaken));
+			List<Bond> bonds = currentAtom.getBonds();
+			LinkedList<String> newlyAvailableClosureSymbols = null;
+			for (Bond bond : bonds) {//ring closures
+				if (bond.equals(bondtaken)) {
+					continue;
 				}
-				smilesBuilder.append(bondToSmiles(bond));
-				traverseSmiles(neighbour, currentAtom, depth+1);
-				if (count > 1){
-					smilesBuilder.append(')');
-					count--;
+				Atom neighbour = bond.getOtherAtom(currentAtom);
+				Integer nDepth = neighbour.getProperty(Atom.VISITED);
+				if (nDepth!=null && nDepth <= depth){
+					String closure = bondToClosureSymbolMap.get(bond);
+					smilesBuilder.append(closure);
+					if (newlyAvailableClosureSymbols == null){
+						newlyAvailableClosureSymbols = new LinkedList<String>();
+					}
+					newlyAvailableClosureSymbols.addFirst(closure);
+				}
+			}
+			for (Bond bond : bonds) {//ring openings
+				Atom neighbour = bond.getOtherAtom(currentAtom);
+				Integer nDepth = neighbour.getProperty(Atom.VISITED);
+				if (nDepth!=null && nDepth > (depth +1)){
+					String closure = availableClosureSymbols.removeFirst();
+					bondToClosureSymbolMap.put(bond, closure);
+					smilesBuilder.append(bondToSmiles(bond));
+					smilesBuilder.append(closure);
+				}
+			}
+
+			if (newlyAvailableClosureSymbols != null) {
+				//By not immediately adding to availableClosureSymbols we avoid using the same digit 
+				//to both close and open on the same atom
+				for (String closure : newlyAvailableClosureSymbols) {
+					availableClosureSymbols.addFirst(closure);
+				}
+			}
+	
+			boolean seenFirstBranch = false;
+			for (int i = bonds.size() - 1; i >=0; i--) {
+				//adjacent atoms which have not been previously written
+				Bond bond = bonds.get(i);
+				Atom neighbour = bond.getOtherAtom(currentAtom);
+				Integer nDepth = neighbour.getProperty(Atom.VISITED);
+				if (nDepth != null && nDepth == depth + 1){
+					if (!seenFirstBranch){
+						stack.add(new TraversalState(neighbour, bond, depth + 1));
+						seenFirstBranch = true;
+					}
+					else {
+						stack.add(endBranch);
+						stack.add(new TraversalState(neighbour, bond, depth + 1));
+						stack.add(startBranch);
+					}
 				}
 			}
 		}
@@ -399,10 +419,10 @@ class SMILESWriter {
 	 * Where possible square brackets are not included to give more readable SMILES
 	 * @param atom
 	 * @param depth
-	 * @param previousAtom
+	 * @param bondtaken
 	 * @return
 	 */
-	private String atomToSmiles(Atom atom, int depth, Atom previousAtom) {
+	private String atomToSmiles(Atom atom, int depth, Bond bondtaken) {
 		StringBuilder atomSmiles = new StringBuilder();
 		int hydrogen =calculateNumberOfBondedExplicitHydrogen(atom);
 		boolean needsSquareBrackets = determineWhetherAtomNeedsSquareBrackets(atom, hydrogen);
@@ -425,7 +445,7 @@ class SMILESWriter {
 			}
 		}
 		if (atom.getAtomParity()!=null){
-			atomSmiles.append(atomParityToSmiles(atom, depth, previousAtom));
+			atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
 		}
 		if (hydrogen !=0 && needsSquareBrackets && !elementSymbol.equals("H")){
 			atomSmiles.append('H');
@@ -504,25 +524,26 @@ class SMILESWriter {
 		return false;
 	}
 
-	private String atomParityToSmiles(Atom currentAtom, int depth, Atom previousAtom) {
+	private String atomParityToSmiles(Atom currentAtom, int depth, Bond bondtaken) {
 		AtomParity atomParity = currentAtom.getAtomParity();
 		StringBuilder tetrahedralStereoChem = new StringBuilder();
 		Atom[] atomRefs4 = atomParity.getAtomRefs4().clone();
 
 		List<Atom> atomrefs4Current = new ArrayList<Atom>();
 
-		List<Bond> bonds = currentAtom.getBonds();
-		for (Bond bond : bonds) {//previous atom
-			Atom neighbour = bond.getOtherAtom(currentAtom);
-			if (neighbour.getProperty(Atom.VISITED)!=null && neighbour.equals(previousAtom) ){
-				atomrefs4Current.add(neighbour);
-			}
+
+		if (bondtaken != null){//previous atom
+			Atom neighbour = bondtaken.getOtherAtom(currentAtom);
+			atomrefs4Current.add(neighbour);
 		}
+
 		for (Atom atom : atomRefs4) {//lone pair as in tetrahedral sulfones
 			if (atom.equals(currentAtom)){
 				atomrefs4Current.add(currentAtom);
 			}
 		}
+
+		List<Bond> bonds = currentAtom.getBonds();
 		for (Bond bond : bonds) {//implicit hydrogen
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			if (neighbour.getProperty(Atom.VISITED)==null){
@@ -530,11 +551,14 @@ class SMILESWriter {
 			}
 		}
 		for (Bond bond : bonds) {//ring closures
+			if (bond.equals(bondtaken)){
+				continue;
+			}
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			if (neighbour.getProperty(Atom.VISITED)==null){
 				continue;
 			}
-			if (neighbour.getProperty(Atom.VISITED)<=depth && !neighbour.equals(previousAtom) ){
+			if (neighbour.getProperty(Atom.VISITED)<=depth){
 				atomrefs4Current.add(neighbour);
 			}
 		}
