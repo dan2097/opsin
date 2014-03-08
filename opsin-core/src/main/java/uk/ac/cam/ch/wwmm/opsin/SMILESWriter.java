@@ -33,7 +33,7 @@ class SMILESWriter {
 	private final HashMap<Bond, String> bondToClosureSymbolMap = new HashMap<Bond, String>();
 
 	/**Maps between bonds and the atom that this bond will go to in the SMILES. Populated in the order the bonds are to be made */
-	private final HashMap<Bond, Atom> bondToNextAtomMap= new LinkedHashMap<Bond, Atom>();
+	private final HashMap<Bond, Atom> bondToNextAtomMap = new LinkedHashMap<Bond, Atom>();
 
 	/**The structure to be converted to SMILES*/
 	private final Fragment structure;
@@ -340,7 +340,7 @@ class SMILESWriter {
 		for (Bond bond : bonds) {//ring closures
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth<=depth && !neighbour.equals(previousAtom)){
+			if (nDepth!=null && nDepth <= depth && !neighbour.equals(previousAtom)){
 				String closure = bondToClosureSymbolMap.get(bond);
 				smilesBuilder.append(closure);
 				if (newlyAvailableClosureSymbols == null){
@@ -359,7 +359,9 @@ class SMILESWriter {
 				smilesBuilder.append(closure);
 			}
 		}
-		if (newlyAvailableClosureSymbols != null){
+		if (newlyAvailableClosureSymbols != null) {
+			//By not immediately adding to availableClosureSymbols we avoid using the same digit 
+			//to both close and open on the same atom
 			for (String closure : newlyAvailableClosureSymbols) {
 				availableClosureSymbols.addFirst(closure);
 			}
@@ -370,7 +372,7 @@ class SMILESWriter {
 		for (Bond bond : bonds) {
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth==depth+1){
+			if (nDepth != null && nDepth == depth + 1){
 				count++;
 			}
 		}
@@ -378,12 +380,12 @@ class SMILESWriter {
 		for (Bond bond : bonds) {//adjacent atoms which have not been previously written
 			Atom neighbour = bond.getOtherAtom(currentAtom);
 			Integer nDepth = neighbour.getProperty(Atom.VISITED);
-			if (nDepth!=null && nDepth==depth+1){
+			if (nDepth != null && nDepth == depth + 1){
 				if (count > 1){
 				  smilesBuilder.append('(');
 				}
 				smilesBuilder.append(bondToSmiles(bond));
-				traverseSmiles(neighbour,currentAtom,depth+1);
+				traverseSmiles(neighbour, currentAtom, depth+1);
 				if (count > 1){
 					smilesBuilder.append(')');
 					count--;
