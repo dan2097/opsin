@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 
@@ -49,6 +48,12 @@ class Bond {
 	 * @param order The bond order.
 	 */
 	Bond(Atom from, Atom to, int order) {
+		if (from == to){
+			throw new IllegalArgumentException("Bonds must be made between different atoms");
+		}
+		if (order < 1 || order > 3){
+			throw new IllegalArgumentException("Bond order must be 1, 2 or 3");
+		}
 		this.from = from;
 		this.to = to;
 		this.order = order;
