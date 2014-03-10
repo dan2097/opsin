@@ -33,7 +33,7 @@ class Bond {
 	 * Holds the bondStereo object associated with this bond
 	 * null by default
 	 */
-	private BondStereo bondStereo= null;
+	private BondStereo bondStereo = null;
 
 	/**
 	 * If the bond is a fusion bond this will in the fused ring numberer be populated with the rings that it connects
@@ -53,6 +53,12 @@ class Bond {
 		}
 		if (order < 1 || order > 3){
 			throw new IllegalArgumentException("Bond order must be 1, 2 or 3");
+		}
+		if (from == null){
+			throw new IllegalArgumentException("From atom was null!");
+		}
+		if (to == null){
+			throw new IllegalArgumentException("To atom was null!");
 		}
 		this.from = from;
 		this.to = to;
@@ -190,5 +196,35 @@ class Bond {
 		else{
 			return null;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return from.hashCode() + to.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Bond other = (Bond) obj;
+		
+		if (from == other.from && 
+				to == other.to){
+			return true;
+		}
+		if (from == other.to && 
+				to == other.from){
+			return true;
+		}
+		
+		return false;
 	}
 }

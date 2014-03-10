@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
-
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**
@@ -106,10 +105,10 @@ class Atom {
 	 * @param frag the Fragment to contain the Atom
 	 */
 	Atom(int ID, String element, Fragment frag) {
-		if (frag==null){
+		if (frag == null){
 			throw new IllegalArgumentException("Atom is not in a fragment!");
 		}
-		if (element==null){
+		if (element == null){
 			throw new IllegalArgumentException("Atom does not have an element!");
 		}
 		this.frag = frag;
@@ -435,9 +434,10 @@ class Atom {
 	 * @param b The bond to be added
 	 */
 	void addBond(Bond b) {
-		if (!bonds.contains(b)){
-			bonds.add(b);
+		if (bonds.contains(b)){
+			throw new IllegalArgumentException("Atom already has given bond (This is not allowed as this would give two bonds between the same atoms!)");
 		}
+		bonds.add(b);
 	}
 
 	/**Removes a bond to the atom
