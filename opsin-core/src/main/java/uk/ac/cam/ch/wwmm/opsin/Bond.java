@@ -200,7 +200,11 @@ class Bond {
 
 	@Override
 	public int hashCode() {
-		return from.hashCode() + to.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + from.getID();
+		result = prime * result + to.getID();
+		return result;
 	}
 
 	@Override
