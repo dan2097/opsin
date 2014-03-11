@@ -293,34 +293,19 @@ class FusedRingNumberer {
 	}
 
 	/**
-	 * Calculates the number of fused bonds each ring is involved in and
-	 * notes which fused rings are adjacent to each other
+	 * Populates rings with their neighbouring fused rings and the bonds involved
 	 * @param rings
 	 */
 	static void setupAdjacentFusedRingProperties(List<Ring> rings){
-		for (Ring curRing : rings) {
-			for(Bond bond : curRing.getBondList()) {
-				bond.getFusedRings().clear();
-			}
-		}
-		for (Ring curRing : rings) {
-			for(Bond bond : curRing.getBondList()) {					// go through all the bonds for the current ring
-				if (bond.getFusedRings().size()>=2){				// Bond can't be involved in more than 2 rings, hence already analysed so skip it
-					continue;
-				}
-
-				for (Ring ring : rings) {							// check if this bond belongs to any other ring
-					if (curRing != ring) {
-						if (ring.getBondList().contains(bond)) {
-							bond.addFusedRing(ring);				// if so, then add the rings into fusedRing array in the bond
-							bond.addFusedRing(curRing);
-
-							ring.incrementNumberOfFusedBonds();		// and increment the number of fused bonds the ring is involved in
-							curRing.incrementNumberOfFusedBonds();
-
-							ring.addNeighbour(curRing);				// and note that the rings are neighbours of each other
-							curRing.addNeighbour(ring);
-						}
+		for (int i = 0, l = rings.size(); i < l; i++) {
+			Ring curRing  = rings.get(i);
+			bondLoop : for (Bond bond : curRing.getBondList()) {		// go through all the bonds for the current ring
+				for (int j = i + 1; j < l; j++) {
+					Ring otherRing = rings.get(j);	
+					if (otherRing.getBondList().contains(bond)) {		// check if this bond belongs to any other ring
+						otherRing.addNeighbour(bond, curRing);
+						curRing.addNeighbour(bond, otherRing);			// if so, then associate the bond with the adjacent ring
+						continue bondLoop;
 					}
 				}
 			}
@@ -1359,12 +1344,7 @@ class FusedRingNumberer {
 			}
 
 			// next ring
-			for (Ring ring : nextBond.getFusedRings()) {
-				if(ring != currentRing) {
-					nextRing = ring;
-					break;
-				}
-			}
+			nextRing = currentRing.getNeighbourOfFusedBond(nextBond);
 
 			int endNumber = currentRing.getBondIndex(nextBond) ;
 
@@ -1567,11 +1547,12 @@ class FusedRingNumberer {
 				allBonds.remove(bond);
 			}
 		}
-		if (allBonds.size()>0){
+		if (allBonds.size() > 0){
 			return allBonds.get(0);
 		}
 		for (Bond bond : tRing.getBondList()) {
-			if(bond.getFusedRings().size() < 1){
+			if(tRing.getNeighbourOfFusedBond(bond) == null){
+				// return a non-fused bond
 				return bond;
 			}
 		}

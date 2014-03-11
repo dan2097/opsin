@@ -1,11 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import nu.xom.Attribute;
 import nu.xom.Element;
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
 /**A bond, between two atoms.
  *
@@ -35,11 +32,6 @@ class Bond {
 	 */
 	private BondStereo bondStereo = null;
 
-	/**
-	 * If the bond is a fusion bond this will in the fused ring numberer be populated with the rings that it connects
-	 */
-	private final List<Ring> fusedRings = new ArrayList<Ring>(2);
-
 	/** DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Creates a new Bond.
 	 *
@@ -64,17 +56,6 @@ class Bond {
 		this.to = to;
 		this.order = order;
 	}
-
-	List<Ring> getFusedRings() {
-		return fusedRings;
-	}
-
-	void  addFusedRing(Ring ring) {
-		if (fusedRings.size()<2) {
-			fusedRings.add(ring);
-		}
-	}
-
 
 	/**Produces a nu.xom.Element corresponding to a CML bond tag.
 	 * Has attributes of atomRefs2 and order.
