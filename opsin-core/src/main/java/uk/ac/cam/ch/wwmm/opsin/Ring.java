@@ -1,7 +1,9 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class representing a single ring (i.e. NOT a fused ring which is formed from multiple rings)
@@ -9,13 +11,12 @@ import java.util.List;
  *
  */
 class Ring {
-	private List<Atom> atomList = new ArrayList<Atom>();
-	private List<Bond> bondList;
+	private final List<Atom> atomList = new ArrayList<Atom>();
+	private final List<Bond> bondList;
+	private final Map<Bond, Ring> bondToNeighbourRings = new LinkedHashMap<Bond, Ring>();
+	
 	private List<Atom> cyclicAtomList;
 	private List<Bond> cyclicBondList;
-	private List<Ring> neighbours = new ArrayList<Ring>();
-
-	private int nFusedBonds = 0;
 	
 	Ring(List<Bond> bondList){
 		if (bondList==null || bondList.size()==0){
@@ -58,11 +59,7 @@ class Ring {
 	}
 
 	int getNumberOfFusedBonds() {
-		return nFusedBonds;
-	}
-
-	void incrementNumberOfFusedBonds() {
-		nFusedBonds++;
+		return bondToNeighbourRings.size();
 	}
 
 	/**
@@ -70,14 +67,7 @@ class Ring {
 	 * @return List<Bond>
 	 */
 	List<Bond> getFusedBonds(){
-		List<Bond> bonds = new ArrayList<Bond>();
-
-		for (Bond bond : bondList) {
-			if (bond.getFusedRings().size()>0) {
-				bonds.add(bond);
-			}
-		}
-		return bonds;
+		return new ArrayList<Bond>(bondToNeighbourRings.keySet());
 	}
 
 	int getBondIndex(Bond bond){
@@ -93,11 +83,18 @@ class Ring {
 	}
 
 	List<Ring> getNeighbours() {
-		return neighbours;
+		return new ArrayList<Ring>(bondToNeighbourRings.values());
+	}
+	
+	Ring getNeighbourOfFusedBond(Bond fusedBond) {
+		return bondToNeighbourRings.get(fusedBond);
 	}
 
-	void addNeighbour(Ring ring) {
-		neighbours.add(ring);
+	void addNeighbour(Bond bond, Ring ring) {
+		if (this == ring) {
+			throw new IllegalArgumentException("Ring can't be a neighbour of itself");
+		}
+		bondToNeighbourRings.put(bond, ring);
 	}
 
 	/**
