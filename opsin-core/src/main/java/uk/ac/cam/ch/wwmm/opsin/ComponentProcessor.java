@@ -3781,27 +3781,24 @@ class ComponentProcessor {
 
 		//either all locants will be moved, or none
 		boolean moveLocants = false;
-		if (locantValues!=null){
+		if (locantValues != null){
 			Element elAfterLocant = (Element) XOMTools.getNextSibling(locantRelatedElements.get(0));
 			for (String locantText : locantValues) {
-				if (elAfterLocant !=null && elAfterLocant.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null && StringTools.arrayToList(MATCH_COMMA.split(elAfterLocant.getAttributeValue(FRONTLOCANTSEXPECTED_ATR))).contains(locantText)){
-					continue;
-				}
 				
 				//Check the right fragment in the bracket:
 				//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
-				if (frag.getAtomCount()==1 ||	!frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()
+				if (frag.getAtomCount()==1 || !frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()
 						|| (locantValues.length ==1 && elAfterLocant.getLocalName().equals(MULTIPLIER_EL))){
 					if (checkLocantPresentOnPotentialRoot(substituent, locantText)){
-						moveLocants =true;//locant location is present elsewhere
+						moveLocants = true;//locant location is present elsewhere
 						break;
 					}
-					else if (findElementsMissingIndirectLocants(elementBeforeSubstituent, locantRelatedElements.get(0)).size()==0 || !state.xmlFragmentMap.get(lastGroupOfElementBeforeSub).hasLocant(locantText)){
+					else {
 						if( frag.getAtomCount()==1 && frag.hasLocant(locantText)){
 							//1 locant was intended to locant onto fragment with 1 atom
 						}
 						else{
-							moveLocants =true;//the fragment adjacent to the locant doesn't have this locant or doesn't need any indirect locants. Assume it will appear elsewhere later
+							moveLocants = true;//the fragment adjacent to the locant doesn't have this locant or doesn't need any indirect locants. Assume it will appear elsewhere later
 							break;
 						}
 					}
@@ -3809,12 +3806,12 @@ class ComponentProcessor {
 			}
 			
 
-			if (moveLocants && locantValues.length >1){
-				if (elAfterLocant !=null && elAfterLocant.getLocalName().equals(MULTIPLIER_EL)){
+			if (moveLocants && locantValues.length > 1){
+				if (elAfterLocant != null && elAfterLocant.getLocalName().equals(MULTIPLIER_EL)){
 					Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
-					if (shouldBeAGroupOrSubOrBracket !=null){
+					if (shouldBeAGroupOrSubOrBracket != null){
 						if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-								|| (frag.getAtomCount()==1)//e.g. 1,3,4-trimethylthiobenzene
+								|| (frag.getAtomCount() == 1)//e.g. 1,3,4-trimethylthiobenzene
 								|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 							locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
@@ -3826,11 +3823,11 @@ class ComponentProcessor {
 						}
 					}
 					else{
-						moveLocants =false;
+						moveLocants = false;
 					}
 				}
 				else{
-					moveLocants =false;
+					moveLocants = false;
 				}
 			}
 		}
@@ -3853,7 +3850,7 @@ class ComponentProcessor {
 		 * Case when a multiplier should be moved
 		 * e.g. tripropan-2-yloxyphosphane -->tri(propan-2-yloxy)phosphane or trispropan-2-ylaminophosphane --> tris(propan-2-ylamino)phosphane
 		 */
-		if (locantRelatedElements.size()==0){
+		if (locantRelatedElements.size() == 0){
 			Element possibleMultiplier =childrenOfElementBeforeSubstituent.get(0);
 			if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL) && (
 					matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches() || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
