@@ -3804,19 +3804,20 @@ class ComponentProcessor {
 					}
 				}
 			}
-			
 
 			if (moveLocants && locantValues.length > 1){
 				if (elAfterLocant != null && elAfterLocant.getLocalName().equals(MULTIPLIER_EL)){
 					Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
 					if (shouldBeAGroupOrSubOrBracket != null){
 						if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-								|| (frag.getAtomCount() == 1)//e.g. 1,3,4-trimethylthiobenzene
 								|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 							locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
 						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
 							XOMTools.setTextChild(locantRelatedElements.get(0), locantValues[1]);
+						}
+						else if (frag.getAtomCount() == 1) {//e.g. 1,3,4-trimethylthiobenzene --> 1,3,4-tri(methylthio)benzene
+							locantRelatedElements.add(elAfterLocant);
 						}
 						else{//don't bracket other complex multiplied substituents (name hasn't given enough hints if indeed bracketing was expected)
 							return;
