@@ -1,9 +1,15 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.*;
-
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
@@ -120,7 +126,7 @@ class SMILESFragmentBuilder {
 	}
 	
 	private class ParserInstance {
-		private final Stack<StackFrame> stack = new Stack<StackFrame>();
+		private final LinkedList<StackFrame> stack = new LinkedList<StackFrame>();
 		private final Map<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures
 		
 		private final String smiles;

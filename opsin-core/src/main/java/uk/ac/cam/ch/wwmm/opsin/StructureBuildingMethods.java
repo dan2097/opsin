@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1531,7 +1530,7 @@ class StructureBuildingMethods {
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
 	static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
-		Stack<Element> stack = new Stack<Element>();
+		LinkedList<Element> stack = new LinkedList<Element>();
 		stack.add((Element) startingElement.getParent());
 		List<Fragment> foundFragments =new ArrayList<Fragment>();
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
@@ -1544,7 +1543,7 @@ class StructureBuildingMethods {
 			}
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			Stack<Element> bracketted = new Stack<Element>();
+			LinkedList<Element> bracketted = new LinkedList<Element>();
 			for (Element bracketOrSubOrRoot : siblings) {
 				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot)<=currentElement.indexOf(startingElement)){
 					continue;
@@ -1581,7 +1580,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static Fragment findFragmentWithLocant(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
-		Stack<Element> stack = new Stack<Element>();
+		LinkedList<Element> stack = new LinkedList<Element>();
 		stack.add((Element) startingElement.getParent());
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
@@ -1609,7 +1608,7 @@ class StructureBuildingMethods {
 			}
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			Stack<Element> bracketted = new Stack<Element>();
+			LinkedList<Element> bracketted = new LinkedList<Element>();
 			if (!doneFirstIteration){//on the first iteration, ignore elements before the starting element and favour the element directly after the starting element (conditions apply)
 				int indexOfStartingEl = currentElement.indexOf(startingElement);
 				Element substituentToTryFirst =null;
