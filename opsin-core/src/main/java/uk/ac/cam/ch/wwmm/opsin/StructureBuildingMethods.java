@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1535,7 +1536,7 @@ class StructureBuildingMethods {
 		List<Fragment> foundFragments =new ArrayList<Fragment>();
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (stack.size()>0){
-			Element currentElement =stack.pop();
+			Element currentElement =stack.removeLast();
 			if (currentElement.getLocalName().equals(GROUP_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
 				foundFragments.add(groupFrag);
@@ -1585,7 +1586,7 @@ class StructureBuildingMethods {
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
 		while (stack.size()>0){
-			Element currentElement =stack.pop();
+			Element currentElement =stack.removeLast();
 			if (currentElement.getLocalName().equals(SUBSTITUENT_EL)|| currentElement.getLocalName().equals(ROOT_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement.getFirstChildElement(GROUP_EL));
 				if (monoNuclearHydride!=null && currentElement.getAttribute(LOCANT_ATR)!=null){//It looks like all groups are locanting onto the monoNuclearHydride e.g. 1-oxo-1-phenyl-sulfanylidene
