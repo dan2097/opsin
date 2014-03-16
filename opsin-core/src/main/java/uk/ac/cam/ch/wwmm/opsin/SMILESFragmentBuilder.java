@@ -456,7 +456,7 @@ class SMILESFragmentBuilder {
 					if (charge != 0){
 						throw new StructureBuildingException("Charge appeared to be specified twice for an atom in a square bracket!");
 					}
-					charge = ch == '+' ? 1 : -1;
+					charge = (ch == '+') ? 1 : -1;
 					String changeChargeStr = "";
 					int changeCharge = 1;
 					while(is_0_to_9(smiles.charAt(i + 1))) {//e.g. [C+2]
@@ -484,7 +484,7 @@ class SMILESFragmentBuilder {
 						}
 					}
 					changeCharge = changeChargeStr.length() == 0 ? changeCharge : Integer.parseInt(changeChargeStr);
-					atom.setCharge(atom.getCharge() + (charge * changeCharge) );
+					atom.setCharge(charge * changeCharge);
 				}
 				else if(ch == '|') {
 					StringBuilder lambda = new StringBuilder();
