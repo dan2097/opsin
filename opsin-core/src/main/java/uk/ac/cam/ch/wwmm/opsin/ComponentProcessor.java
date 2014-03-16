@@ -2403,7 +2403,7 @@ class ComponentProcessor {
 		s.add(startingElement);
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
-			Element currentElement =s.pop();
+			Element currentElement =s.removeLast();
 			Element parent = (Element)currentElement.getParent();
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 			int indexOfCurrentElement =parent.indexOf(currentElement);
@@ -2416,7 +2416,7 @@ class ComponentProcessor {
 					if (bracketOrSub.getAttribute(TYPE_ATR)==null){
 						continue;
 					}
-					s.push((Element)bracketOrSub.getChild(0));
+					s.add((Element)bracketOrSub.getChild(0));
 				}
 				else{
 					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
@@ -2449,7 +2449,7 @@ class ComponentProcessor {
 			s.add(startingElement);
 			doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 			while (s.size()>0){
-				Element currentElement =s.pop();
+				Element currentElement =s.removeLast();
 				Element parent = (Element)currentElement.getParent();
 				List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 				int indexOfCurrentElement =parent.indexOf(currentElement);
@@ -2459,7 +2459,7 @@ class ComponentProcessor {
 						continue;
 					}
 					if (bracketOrSub.getLocalName().equals(BRACKET_EL)){
-						s.push((Element)bracketOrSub.getChild(0));
+						s.add((Element)bracketOrSub.getChild(0));
 					}
 					else{
 						Element group = bracketOrSub.getFirstChildElement(GROUP_EL);

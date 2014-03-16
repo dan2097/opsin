@@ -51,7 +51,7 @@ class StructureBuilder {
 		List<Fragment> rGroups = new ArrayList<Fragment>();//rGroups need to represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
 		List<Element> wordRulesVisited = new ArrayList<Element>();
 		while (wordRuleStack.size()>0) {
-			Element nextWordRuleEl = wordRuleStack.peek();//just has a look what's next
+			Element nextWordRuleEl = wordRuleStack.getLast();//just has a look what's next
 			if(!wordRulesVisited.contains(nextWordRuleEl)){
 				wordRulesVisited.add(nextWordRuleEl);
 				Elements wordRuleChildren = nextWordRuleEl.getChildElements(WORDRULE_EL);
@@ -62,7 +62,7 @@ class StructureBuilder {
 					continue;
 				}
 			}
-			Element currentWordRuleEl = wordRuleStack.pop();
+			Element currentWordRuleEl = wordRuleStack.removeLast();
 			WordRule wordRule = WordRule.valueOf(currentWordRuleEl.getAttributeValue(WORDRULE_ATR));
 			List<Element> words = XOMTools.getChildElementsWithTagNames(currentWordRuleEl, new String[]{WORD_EL, WORDRULE_EL});
 			state.currentWordRule =wordRule;
