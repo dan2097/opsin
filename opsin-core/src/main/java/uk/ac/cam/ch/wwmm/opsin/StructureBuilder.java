@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
@@ -43,7 +43,7 @@ class StructureBuilder {
 		if (wordRules.size()==0){
 			throw new StructureBuildingException("Molecule contains no words!?");
 		}
-		Stack<Element> wordRuleStack = new Stack<Element>();
+		LinkedList<Element> wordRuleStack = new LinkedList<Element>();
 		for (int i = wordRules.size() -1; i >=0; i--) {
 			wordRuleStack.add(wordRules.get(i));
 		}

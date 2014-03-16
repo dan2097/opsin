@@ -5,15 +5,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -2400,7 +2399,7 @@ class ComponentProcessor {
 	 */
 	private boolean checkLocantPresentOnPotentialRoot(Element startingElement, String locant) throws StructureBuildingException {
 		boolean foundSibling =false;
-		Stack<Element> s = new Stack<Element>();
+		LinkedList<Element> s = new LinkedList<Element>();
 		s.add(startingElement);
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
@@ -2446,7 +2445,7 @@ class ComponentProcessor {
 		}
 
 		if (!foundSibling){//Special case: anything the group could potentially substitute onto is in a bracket. The bracket is checked recursively
-			s = new Stack<Element>();
+			s = new LinkedList<Element>();
 			s.add(startingElement);
 			doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 			while (s.size()>0){
