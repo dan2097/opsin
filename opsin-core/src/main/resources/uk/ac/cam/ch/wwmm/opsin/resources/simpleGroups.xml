@@ -435,6 +435,7 @@
 		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acidpinacol ester</token>
 		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acidpinacolester</token>
 		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" valType="SMILES">boronic acid pinacolester</token>
+		<token value="C(=O)N" labels="none" valType="SMILES" functionalIDs="3,3">carboxamide</token>
 		<token value="C(=O)[O-]" labels="none" valType="SMILES" functionalIDs="3">carboxylate</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylic</token>
 		<token value="C(=O)O" labels="none" valType="SMILES" functionalIDs="3">carboxylicacid</token>
