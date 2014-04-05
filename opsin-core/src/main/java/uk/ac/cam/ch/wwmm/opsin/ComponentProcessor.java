@@ -225,17 +225,13 @@ class ComponentProcessor {
 		String groupType = group.getAttributeValue(TYPE_ATR);
 		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
 		String groupValue = group.getAttributeValue(VALUE_ATR);
-		String groupValType = group.getAttributeValue(VALTYPE_ATR);
+
 		Fragment thisFrag =null;
-		if(groupValType.equals(SMILES_VALTYPE_VAL)) {
-			if (group.getAttribute(LABELS_ATR)!=null){
-				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, group.getAttributeValue(LABELS_ATR));
-			}
-			else{
-				thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, "");
-			}
-		} else{
-			throw new StructureBuildingException("Group tag has bad or missing valType: " + group.toXML());
+		if (group.getAttribute(LABELS_ATR)!=null){
+			thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, group.getAttributeValue(LABELS_ATR));
+		}
+		else{
+			thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, "");
 		}
 
 		//processes groups like cymene and xylene whose structure is determined by the presence of a locant in front e.g. p-xylene

@@ -34,10 +34,14 @@ public class VerifyFragmentsTest {
 				tokenLists.add(rootElement);
 			}
 			for (Element tokenList : tokenLists) {
-				Elements tokenElements = tokenList.getChildElements("token");
-				for(int j=0;j<tokenElements.size();j++) {
-					Element token = tokenElements.get(j);
-					if (SMILES_VALTYPE_VAL.equals(token.getAttributeValue(VALTYPE_ATR))){
+				String tagname = tokenList.getAttributeValue("tagname");
+				if (tagname.equals(GROUP_EL) ||
+						tagname.equals(FUNCTIONALGROUP_EL) ||
+						tagname.equals(HETEROATOM_EL) ||
+						tagname.equals(SUFFIXPREFIX_EL)) {
+					Elements tokenElements = tokenList.getChildElements("token");
+					for(int j = 0; j < tokenElements.size(); j++) {
+						Element token = tokenElements.get(j);
 						Fragment mol =null;
 						try{
 							String smiles = token.getAttributeValue(VALUE_ATR);

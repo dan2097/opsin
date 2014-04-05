@@ -6,61 +6,61 @@ OPSIN's code, however, is written such as to not assume that this is the case
 NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by suffixes/cyclised!-->
 	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemAldose" symbol="á">
 		<!--aldoses -->
-		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES" suffixAppliesTo="2">glycer</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/" suffixAppliesTo="2">glycer</token>
 
-		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES" suffixAppliesTo="2">erythr</token>
-		<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES" suffixAppliesTo="2">thre</token>
+		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" suffixAppliesTo="2">erythr</token>
+		<token value="O=C[C@@H](O)[C@H](O)CO" labels="/1/2//3//4/" suffixAppliesTo="2">thre</token>
 
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="2">rib</token>
-		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="2">arabin</token>
-		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="2">xyl</token>
-		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="2">lyx</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="2">rib</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="2">arabin</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="2">xyl</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="2">lyx</token>
 
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">all</token>
-		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">altr</token>
-		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">gluc</token>
-		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">mann</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">gul</token>
-		<token value="O=C[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">id</token>
-		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">galact</token>
-		<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">tal</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">all</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">altr</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">gluc</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">mann</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">gul</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">id</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">galact</token>
+		<token value="O=C[C@@H](O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">tal</token>
 
 		<!--deoxy -->
-		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">abequ</token>
-		<token value="O=CCC[C@H](O)[C@H](O)C" labels="/1/2/3/4//5//6" valType="SMILES" suffixAppliesTo="2">amicet</token>
-		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">ascaryl</token>
-		<token value="O=CC[C@H](O)[C@@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">boivin</token>
-		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">colit</token>
-		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" valType="SMILES" suffixAppliesTo="2">digitox</token>
-		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">fuc</token>
-		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">parat</token>
-		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2">quinov</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhamn</token>
-		<token value="O=CCC[C@H](O)[C@@H](O)C" labels="/1/2/3/4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhodin</token>
-		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" valType="SMILES" suffixAppliesTo="2">tyvel</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2">abequ</token>
+		<token value="O=CCC[C@H](O)[C@H](O)C" labels="/1/2/3/4//5//6" suffixAppliesTo="2">amicet</token>
+		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">ascaryl</token>
+		<token value="O=CC[C@H](O)[C@@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" suffixAppliesTo="2">boivin</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">colit</token>
+		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" suffixAppliesTo="2">digitox</token>
+		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">fuc</token>
+		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2">parat</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2">quinov</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhamn</token>
+		<token value="O=CCC[C@H](O)[C@@H](O)C" labels="/1/2/3/4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhodin</token>
+		<token value="O=C[C@@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2">tyvel</token>
 
 		<!--branched-->
-		<token value="O=C[C@](CO)(O)[C@H](O)[C@H](O)CO" labels="/1/2////3//4//5/" valType="SMILES" suffixAppliesTo="2">hamamel</token>
-		<token value="O=CC[C@@](C)(OC)[C@@H](O)[C@@H](O)C" labels="/1/2/3////4//5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">cladin</token>
-		<token value="O=C[C@H](O)[C@](C=O)(O)[C@@H](O)C" labels="/1/2//3////4//5" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">strept</token>
-		<token value="O=C[C@@H](O)[C@@](C)(O)[C@H](O)[C@H](O)C" labels="/1/2//3///4//5//6" valType="SMILES" suffixAppliesTo="2">eval</token>
-		<token value="O=CC[C@](C)([N+](=O)[O-])[C@@H](OC)[C@@H](O)C" labels="/1/2/3/////4///5//6" valType="SMILES" suffixAppliesTo="2" naturalEntIsOpposite="yes">evernitr</token>
-		<token value="O=C[C@H](O)C(CO)(O)CO" labels="/1/2//3////4/" valType="SMILES" suffixAppliesTo="2">api</token>
+		<token value="O=C[C@](CO)(O)[C@H](O)[C@H](O)CO" labels="/1/2////3//4//5/" suffixAppliesTo="2">hamamel</token>
+		<token value="O=CC[C@@](C)(OC)[C@@H](O)[C@@H](O)C" labels="/1/2/3////4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">cladin</token>
+		<token value="O=C[C@H](O)[C@](C=O)(O)[C@@H](O)C" labels="/1/2//3////4//5" suffixAppliesTo="2" naturalEntIsOpposite="yes">strept</token>
+		<token value="O=C[C@@H](O)[C@@](C)(O)[C@H](O)[C@H](O)C" labels="/1/2//3///4//5//6" suffixAppliesTo="2">eval</token>
+		<token value="O=CC[C@](C)([N+](=O)[O-])[C@@H](OC)[C@@H](O)C" labels="/1/2/3/////4///5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">evernitr</token>
+		<token value="O=C[C@H](O)C(CO)(O)CO" labels="/1/2//3////4/" suffixAppliesTo="2">api</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemKetose" symbol="á">
 		<!--ketoses -->
-		<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES" suffixAppliesTo="3">erythrul</token>
+		<token value="OCC(=O)[C@H](O)CO" labels="/1/2//3//4/" suffixAppliesTo="3">erythrul</token>
 
-		<token value="OCC(=O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="3">ribul</token>
-		<token value="OCC(=O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="3">xylul</token>
+		<token value="OCC(=O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="3">ribul</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="3">xylul</token>
 
-		<token value="OCC(=O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="3">psic</token>
-		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="3">fruct</token>
-		<token value="OCC(=O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="3">sorb</token>
-		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="3">tagat</token>
+		<token value="OCC(=O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="3">psic</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="3">fruct</token>
+		<token value="OCC(=O)[C@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="3">sorb</token>
+		<token value="OCC(=O)[C@@H](O)[C@@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="3">tagat</token>
 
-		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES" suffixAppliesTo="3">sedoheptul</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" suffixAppliesTo="3">sedoheptul</token>
 	</tokenList>
 
 	<tokenList tagname="carbohydrateRingSize" symbol="ã">
@@ -96,91 +96,91 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 
 <!--These are all D sugars and would have all groups pointing to the right on a fischer projection. They are used in combination with the above carbohydrateConfigurationalPrefixes -->
 	<tokenList tagname="group" type="carbohydrate" subType="systematicCarbohydrateStemAldose" symbol="ä">
-		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES" suffixAppliesTo="2">tri</token>
-		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" valType="SMILES" suffixAppliesTo="2">tetr</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" valType="SMILES" suffixAppliesTo="2">pent</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES" suffixAppliesTo="2">hex</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" valType="SMILES" suffixAppliesTo="2">hept</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8/" valType="SMILES" suffixAppliesTo="2">oct</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9/" valType="SMILES" suffixAppliesTo="2">non</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10/" valType="SMILES" suffixAppliesTo="2">dec</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11/" valType="SMILES" suffixAppliesTo="2">undec</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12/" valType="SMILES" suffixAppliesTo="2">dodec</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13/" valType="SMILES" suffixAppliesTo="2">tridec</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14/" valType="SMILES" suffixAppliesTo="2">tetradec</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14//15/" valType="SMILES" suffixAppliesTo="2">pentadec</token>
-		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14//15//16/" valType="SMILES" suffixAppliesTo="2">hexadec</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/" suffixAppliesTo="2">tri</token>
+		<token value="O=C[C@H](O)[C@H](O)CO" labels="/1/2//3//4/" suffixAppliesTo="2">tetr</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5/" suffixAppliesTo="2">pent</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2">hex</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7/" suffixAppliesTo="2">hept</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8/" suffixAppliesTo="2">oct</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9/" suffixAppliesTo="2">non</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10/" suffixAppliesTo="2">dec</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11/" suffixAppliesTo="2">undec</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12/" suffixAppliesTo="2">dodec</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13/" suffixAppliesTo="2">tridec</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14/" suffixAppliesTo="2">tetradec</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14//15/" suffixAppliesTo="2">pentadec</token>
+		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14//15//16/" suffixAppliesTo="2">hexadec</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="Þ">
 		<!--trivial-->
-		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithioerythritol</token>
-		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/" valType="SMILES">dithiothreitol</token>
-		<token value="O1C=C[C@@H](O)[C@@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a" valType="SMILES">galactal</token>
-		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a" valType="SMILES">glucal</token>
-		<token value="OC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">sorbitol</token>
-		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">rhamnulose</token><!--nomenclature wise this is more similar to sorbose than rhamnose!-->
-		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" valType="SMILES" naturalEntIsOpposite="yes">fuculose</token>
+		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/">dithioerythritol</token>
+		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/">dithiothreitol</token>
+		<token value="O1C=C[C@@H](O)[C@@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a">galactal</token>
+		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a">glucal</token>
+		<token value="OC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">sorbitol</token>
+		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" naturalEntIsOpposite="yes">rhamnulose</token><!--nomenclature wise this is more similar to sorbose than rhamnose!-->
+		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" naturalEntIsOpposite="yes">fuculose</token>
 
-		<token value="NC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">glucamine</token>
-		<token value="OC(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)O" labels="/1//2//3//4//5//6//" valType="SMILES" functionalIDs="1,14">saccharic acid</token>
-		<token value="[O-]C(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)[O-]" labels="/1//2//3//4//5//6//" valType="SMILES" functionalIDs="1,14">saccharate</token>
+		<token value="NC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">glucamine</token>
+		<token value="OC(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)O" labels="/1//2//3//4//5//6//" functionalIDs="1,14">saccharic acid</token>
+		<token value="[O-]C(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)[O-]" labels="/1//2//3//4//5//6//" functionalIDs="1,14">saccharate</token>
 
-		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO" valType="SMILES">galactosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">glucosamine</token>
-		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">mannosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C" valType="SMILES">fucosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C" valType="SMILES">quinovosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](N)[C@H](O)C" valType="SMILES">bacillosamine</token>
-		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" additionalValue="O=C[C@H](O)[C@@H](NC)[C@@](C)(O)CO" valType="SMILES" naturalEntIsOpposite="yes">garosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO">galactosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">glucosamine</token>
+		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">mannosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C">fucosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C">quinovosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](N)[C@H](O)C">bacillosamine</token>
+		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" additionalValue="O=C[C@H](O)[C@@H](NC)[C@@](C)(O)CO" naturalEntIsOpposite="yes">garosamine</token>
 
-		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminic acid</token>
-		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminic acid</token>
-		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminic acid</token>
-		<token value="[O-]C(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="[O-]C(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminate</token>
-		<token value="[O-]C(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminate</token>
-		<token value="[O-]C(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminate</token>
-		<token value="NC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="NC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="1">neuraminamide</token>
-		<token value="NC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">alpha-neuraminamide</token>
-		<token value="NC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES" functionalIDs="1">beta-neuraminamide</token>
-		<token value="OCC1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="OCC(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" valType="SMILES">neuraminol</token>
-		<token value="OC[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES">alpha-neuraminol</token>
-		<token value="OC[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a" valType="SMILES">beta-neuraminol</token>
+		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminic acid</token>
+		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">alpha-neuraminic acid</token>
+		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">beta-neuraminic acid</token>
+		<token value="[O-]C(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="[O-]C(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminate</token>
+		<token value="[O-]C(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">alpha-neuraminate</token>
+		<token value="[O-]C(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">beta-neuraminate</token>
+		<token value="NC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="NC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminamide</token>
+		<token value="NC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">alpha-neuraminamide</token>
+		<token value="NC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">beta-neuraminamide</token>
+		<token value="OCC1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="OCC(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">neuraminol</token>
+		<token value="OC[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a">alpha-neuraminol</token>
+		<token value="OC[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a">beta-neuraminol</token>
 
-		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="10">muramic acid</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">alpha-muramic acid</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">beta-muramic acid</token>
-		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O)CO" valType="SMILES" functionalIDs="10">isomuramic acid</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">alpha-isomuramic acid</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" valType="SMILES" functionalIDs="10">beta-isomuramic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O)CO" functionalIDs="10">muramic acid</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">alpha-muramic acid</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">beta-muramic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O)CO" functionalIDs="10">isomuramic acid</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">alpha-isomuramic acid</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">beta-isomuramic acid</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
-		<token value="O=CC(O)CO" labels="/1/2//3/" valType="SMILES">glyceraldehyde</token>
-		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">d-glyceraldehyde</token>
-		<token value="O=C[C@H](O)CO" labels="/1/2//3/" valType="SMILES">(d)-glyceraldehyde</token>
-		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">l-glyceraldehyde</token>
-		<token value="O=C[C@@H](O)CO" labels="/1/2//3/" valType="SMILES">(l)-glyceraldehyde</token>
+		<token value="O=CC(O)CO" labels="/1/2//3/">glyceraldehyde</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/">d-glyceraldehyde</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/">(d)-glyceraldehyde</token>
+		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">l-glyceraldehyde</token>
+		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">(l)-glyceraldehyde</token>
 
 <!--used by CAS to describe cyclic apiose-->
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-alpha-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-beta-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-alpha-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">d-apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a" valType="SMILES">l-apio-beta-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-alpha-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-beta-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-alpha-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-beta-l-furanose</token>
 
-		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/" valType="SMILES">dextrose</token>
+		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">dextrose</token>
 	</tokenList>
 
 <!--dummy substituent for aldehydo prefix. This triggers the swapping of additionalValue with value on some trivial carbohydrate names but otherwise is ignored as carbohydrates are by default in the acyclic form-->
 	<tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
-		<token value="[*]" labels="none" valType="SMILES">aldehydo</token>
+		<token value="[*]" labels="none">aldehydo</token>
 	</tokenList>
 </tokenLists>

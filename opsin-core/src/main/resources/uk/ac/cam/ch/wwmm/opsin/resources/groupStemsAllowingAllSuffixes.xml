@@ -2,9 +2,9 @@
 <!-- See the DTD for more details -->
 <!-- A few trivially named chains that can have the same suffixes as other chains -->
 <tokenList tagname="group" type="chain" subType="groupStem" symbol="§">
-  <token value="NN" valType="SMILES" usableAsAJoiner="yes">hydrazin</token>
-  <token value="C#C" valType="SMILES" usableAsAJoiner="yes">acetylen</token>
+  <token value="NN" usableAsAJoiner="yes">hydrazin</token>
+  <token value="C#C" usableAsAJoiner="yes">acetylen</token>
 
-  <token value="NO" labels="N/O" valType="SMILES" usableAsAJoiner="yes">hydroxylamin</token>
-	<token value="CCC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="1/2/3/////////////////" valType="SMILES" suffixAppliesTo="1">phytan</token>
+  <token value="NO" labels="N/O" usableAsAJoiner="yes">hydroxylamin</token>
+	<token value="CCC(C)CCCC(C)CCCC(C)CCCC(C)C" labels="1/2/3/////////////////" suffixAppliesTo="1">phytan</token>
 </tokenList>

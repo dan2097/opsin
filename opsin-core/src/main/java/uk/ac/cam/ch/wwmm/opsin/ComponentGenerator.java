@@ -460,7 +460,6 @@ class ComponentGenerator {
 			alkaneStem.appendChild(alkaneName.toString());
 			alkaneStem.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
-			alkaneStem.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(VALUE_ATR, StringTools.multiplyString("C", alkaneChainLength)));
 			alkaneStem.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
 			StringBuilder labels = new StringBuilder();
@@ -662,7 +661,6 @@ class ComponentGenerator {
 
 						Element addedGroup=new Element(GROUP_EL);
 						addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
-						addedGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 						addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 						addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
 						if (!heteroatomChainWillFormARing){
@@ -1274,7 +1272,6 @@ class ComponentGenerator {
 
 			Element group =new Element(GROUP_EL);
 			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
-			group.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, ARYLGROUP_SUBTYPE_VAL));
 			group.appendChild(annulenValue);
@@ -1402,7 +1399,6 @@ class ComponentGenerator {
 				}
 
 				newGroup.addAttribute(new Attribute(VALUE_ATR, smilesSB.toString()));
-				newGroup.addAttribute(new Attribute(VALTYPE_ATR, SMILES_VALTYPE_VAL));
 				newGroup.addAttribute(new Attribute(LABELS_ATR, FUSEDRING_LABELS_VAL));
 				newGroup.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 				newGroup.addAttribute(new Attribute(SUBTYPE_ATR, HYDROCARBONFUSEDRINGSYSTEM_EL));
@@ -1698,30 +1694,25 @@ class ComponentGenerator {
 
 		int alkylChainLength;
 		LinkedList<String> elementSymbolArray = new LinkedList<String>();
-		if (chainEl.getAttributeValue(VALTYPE_ATR).equals(SMILES_VALTYPE_VAL)){
-			String smiles =chainEl.getAttributeValue(VALUE_ATR);
-			char[] smilesArray =smiles.toCharArray();
-			for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain
-				char currentChar =smilesArray[i];
-				if (currentChar == '['){
-					if ( smilesArray[i +2]==']'){
-						elementSymbolArray.add("[" +String.valueOf(smilesArray[i+1]) +"]");
-						i=i+2;
-					}
-					else{
-						elementSymbolArray.add("[" + String.valueOf(smilesArray[i+1]) +String.valueOf(smilesArray[i+2]) +"]");
-						i=i+3;
-					}
+		String smiles =chainEl.getAttributeValue(VALUE_ATR);
+		char[] smilesArray =smiles.toCharArray();
+		for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain
+			char currentChar =smilesArray[i];
+			if (currentChar == '['){
+				if ( smilesArray[i +2]==']'){
+					elementSymbolArray.add("[" +String.valueOf(smilesArray[i+1]) +"]");
+					i=i+2;
 				}
 				else{
-					elementSymbolArray.add(String.valueOf(currentChar));
+					elementSymbolArray.add("[" + String.valueOf(smilesArray[i+1]) +String.valueOf(smilesArray[i+2]) +"]");
+					i=i+3;
 				}
 			}
-			alkylChainLength=elementSymbolArray.size();
+			else{
+				elementSymbolArray.add(String.valueOf(currentChar));
+			}
 		}
-		else{
-			throw new ComponentGenerationException("unexpected group valType: " + chainEl.getAttributeValue(VALTYPE_ATR));
-		}
+		alkylChainLength=elementSymbolArray.size();
 
 
 		int totalLengthOfBridges=0;
@@ -2002,7 +1993,6 @@ class ComponentGenerator {
 				if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
 					XOMTools.setTextChild(group, groupValue + "dioxy");
 					group.getAttribute(VALUE_ATR).setValue("C(O)O");
-					group.getAttribute(VALTYPE_ATR).setValue(SMILES_VALTYPE_VAL);
 					group.getAttribute(OUTIDS_ATR).setValue("2,3");
 					group.getAttribute(SUBTYPE_ATR).setValue(EPOXYLIKE_SUBTYPE_VAL);
 					if (group.getAttribute(LABELS_ATR)!=null){
@@ -2075,7 +2065,6 @@ class ComponentGenerator {
 					if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
 						XOMTools.setTextChild(group, groupValue + "dioxy");
 						group.getAttribute(VALUE_ATR).setValue("C(O)CO");
-						group.getAttribute(VALTYPE_ATR).setValue(SMILES_VALTYPE_VAL);
 						group.getAttribute(OUTIDS_ATR).setValue("2,4");
 						group.getAttribute(SUBTYPE_ATR).setValue(EPOXYLIKE_SUBTYPE_VAL);
 						if (group.getAttribute(LABELS_ATR)!=null){

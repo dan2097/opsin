@@ -3,65 +3,65 @@
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="Ô">
 <!--alkaloids-->
-		<token value="C1[C@@H]2C[C@@H]3[C@H]1[C@H](CC2)[C@H]1C[C@@H]2[C@H]4CCC[C@@]32[C@@H]1NC4" labels="14/13/12/10/9/8/15/16/7/6/5/4/3/2/1/11/17/18/19" valType="SMILES" alphaBetaClockWiseAtomOrdering="10/9/8/7/6/5/4/3/2/1/11">aconit</token>
-		<token value="c12[C@]3(C[C@H]45)C[C@@H]4N6C[C@@H](CC)[C@@H]5C[C@H]6[C@@H]3N(C)c2cccc1" labels="8/7/17/16/6/5/4/21/20/19/18/15/14/3/2/1/22/13/12/11/10/9" valType="SMILES" alphaBetaClockWiseAtomOrdering="8/7/6/5/4/21/20/15/14/3/2/1/13/12/11/10/9">ajmal</token>
-		<token value="c1cccc2[C@@]34CCCC[C@H]3[C@@H](Cc12)NCC4" labels="1/2/3/4/12/13/5/6/7/8/14/9/10/11/17/16/15" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2">morphin</token>
-		<token value="[C@H]12CCC[C@@H]3CC1.N23C" labels="1/2/3/4/5/6/7/8/9" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/6/7">trop</token>
+		<token value="C1[C@@H]2C[C@@H]3[C@H]1[C@H](CC2)[C@H]1C[C@@H]2[C@H]4CCC[C@@]32[C@@H]1NC4" labels="14/13/12/10/9/8/15/16/7/6/5/4/3/2/1/11/17/18/19" alphaBetaClockWiseAtomOrdering="10/9/8/7/6/5/4/3/2/1/11">aconit</token>
+		<token value="c12[C@]3(C[C@H]45)C[C@@H]4N6C[C@@H](CC)[C@@H]5C[C@H]6[C@@H]3N(C)c2cccc1" labels="8/7/17/16/6/5/4/21/20/19/18/15/14/3/2/1/22/13/12/11/10/9" alphaBetaClockWiseAtomOrdering="8/7/6/5/4/21/20/15/14/3/2/1/13/12/11/10/9">ajmal</token>
+		<token value="c1cccc2[C@@]34CCCC[C@H]3[C@@H](Cc12)NCC4" labels="1/2/3/4/12/13/5/6/7/8/14/9/10/11/17/16/15" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2">morphin</token>
+		<token value="[C@H]12CCC[C@@H]3CC1.N23C" labels="1/2/3/4/5/6/7/8/9" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/6/7">trop</token>
 <!--steroids-->
-		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" suffixAppliesToByDefault="12,3">androst</token>
-		<token value="CC(C)[C@H](C)CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">campest</token>
-		<token value="CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">chol</token>
-		<token value="CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholest</token>
-		<token value="CC(C)[C@@H](C)CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">ergost</token>
-		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">estr</token>
-		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">oestr</token>
-		<token value="CC(C)CCC1O[C@H]2C[C@H]3[C@@H]4CCC5CCCC[C@]5(C)[C@H]4CC[C@]3(C)[C@H]2[C@@H]1C" labels="27/25/26/24/23/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/17/20/21" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/20/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/9">furost</token>
-		<token value="C1C[C@H]2CC[C@H]3[C@@H](CCC4CCCC[C@H]34)[C@@H]2C1" labels="16/17/13/12/11/9/8/7/6/5/4/3/2/1/10/14/15" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gon</token>
-		<token value="CC(C)[C@@H](C)[C@@]1(C)C[C@@H]1[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/33/34/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gorgoste</token>
-		<token value="CC[C@@H](CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C)C(C)C" labels="29/28/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/25/26/27" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">poriferast</token>
-		<token value="CC[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="21/20/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">pregn</token>
-		<token value="C[C@H]1[C@H]2[C@H](C[C@H]3[C@@H]4CCC5CCCC[C@]5(C)[C@H]4CC[C@]23C)O[C@]11CCC(C)CO1" labels="21/20/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/UnlabelledO/22/23/24/25/27/26/" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/20/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/9">spirost</token>
-		<token value="CC[C@H](CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C)C(C)C" labels="29/28/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/25/26/27" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">stigmast</token>
+		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" suffixAppliesToByDefault="12,3">androst</token>
+		<token value="CC(C)[C@H](C)CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">campest</token>
+		<token value="CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">chol</token>
+		<token value="CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholest</token>
+		<token value="CC(C)[C@@H](C)CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">ergost</token>
+		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">estr</token>
+		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">oestr</token>
+		<token value="CC(C)CCC1O[C@H]2C[C@H]3[C@@H]4CCC5CCCC[C@]5(C)[C@H]4CC[C@]3(C)[C@H]2[C@@H]1C" labels="27/25/26/24/23/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/17/20/21" alphaBetaClockWiseAtomOrdering="11/12/13/17/20/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/9">furost</token>
+		<token value="C1C[C@H]2CC[C@H]3[C@@H](CCC4CCCC[C@H]34)[C@@H]2C1" labels="16/17/13/12/11/9/8/7/6/5/4/3/2/1/10/14/15" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gon</token>
+		<token value="CC(C)[C@@H](C)[C@@]1(C)C[C@@H]1[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/33/34/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gorgoste</token>
+		<token value="CC[C@@H](CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C)C(C)C" labels="29/28/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/25/26/27" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">poriferast</token>
+		<token value="CC[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="21/20/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">pregn</token>
+		<token value="C[C@H]1[C@H]2[C@H](C[C@H]3[C@@H]4CCC5CCCC[C@]5(C)[C@H]4CC[C@]23C)O[C@]11CCC(C)CO1" labels="21/20/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/UnlabelledO/22/23/24/25/27/26/" alphaBetaClockWiseAtomOrdering="11/12/13/17/20/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/9">spirost</token>
+		<token value="CC[C@H](CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C)C(C)C" labels="29/28/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/25/26/27" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">stigmast</token>
 
 <!--misc-->
-		<token value="CCCCCCC[C@H]1CCC[C@@H]1CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" valType="SMILES" alphaBetaClockWiseAtomOrdering="8/12/11/10/9">prost</token>
-		<token value="CCCCCCC[C@H]1CCCO[C@@H]1CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/11a/12/13/14/15/16/17/18/19/20" valType="SMILES" alphaBetaClockWiseAtomOrdering="8/12/11a/11/10/9">thrombox</token>
+		<token value="CCCCCCC[C@H]1CCC[C@@H]1CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" alphaBetaClockWiseAtomOrdering="8/12/11/10/9">prost</token>
+		<token value="CCCCCCC[C@H]1CCCO[C@@H]1CCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/11a/12/13/14/15/16/17/18/19/20" alphaBetaClockWiseAtomOrdering="8/12/11a/11/10/9">thrombox</token>
 	</tokenList>
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="G">
 <!--steroids-->
-		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2[C@H]1CCC(=O)OC1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/22/23/24///21" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">bufanolide</token>
-		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2[C@@H]1COC(=O)C1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/21//23//22" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cardanolide</token>
+		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2[C@H]1CCC(=O)OC1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/22/23/24///21" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">bufanolide</token>
+		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2[C@@H]1COC(=O)C1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/21//23//22" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cardanolide</token>
 
 <!--not retained-->
-		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CC[C@H]3C[C@H](O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstenol</token>
-		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CC[C@H]3CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstenone</token>
-		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CCC3=CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstadienone</token>
-		<token value="C[C@@]12[C@@H](O)CC[C@H]1[C@@H]1CC[C@H]3CC(O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstanediol</token>
-		<token value="C[C@@]12[C@@H](O)CC[C@H]1[C@@H]1CCC3C[C@@H](O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" frontLocantsExpected="1,4,5,6,7,8,9,11,12,13,14,15" addBond="2 locant4">androstenediol</token>
-		<token value="C[C@@]12C(=O)CC[C@H]1[C@@H]1CCC3CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" frontLocantsExpected="1,4,5,6,7,8,9,11,12,13,14,15" addBond="2 locant4">androstenedione</token>
-		<token value="CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CC=C4C[C@@H](O)CC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12/13/18" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholesterol</token>
-		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CCC=3C=C(O)C=C[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/9/11/12" valType="SMILES" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">estratetraenol</token>
-		<token value="c1cc(O)c5c2[C@@]34[C@@H](O5)[C@@H](O)C=C[C@H]3[C@@H](Cc12)N(C)CC4" labels="1/2/3//4/12/13/5//6//7/8/14/9/10/11/17//16/15" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2" defaultInID="4">morphine</token>
+		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CC[C@H]3C[C@H](O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstenol</token>
+		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CC[C@H]3CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstenone</token>
+		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CCC3=CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstadienone</token>
+		<token value="C[C@@]12[C@@H](O)CC[C@H]1[C@@H]1CC[C@H]3CC(O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstanediol</token>
+		<token value="C[C@@]12[C@@H](O)CC[C@H]1[C@@H]1CCC3C[C@@H](O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" frontLocantsExpected="1,4,5,6,7,8,9,11,12,13,14,15" addBond="2 locant4">androstenediol</token>
+		<token value="C[C@@]12C(=O)CC[C@H]1[C@@H]1CCC3CC(=O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17//16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9" frontLocantsExpected="1,4,5,6,7,8,9,11,12,13,14,15" addBond="2 locant4">androstenedione</token>
+		<token value="CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CC=C4C[C@@H](O)CC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cholesterol</token>
+		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CCC=3C=C(O)C=C[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">estratetraenol</token>
+		<token value="c1cc(O)c5c2[C@@]34[C@@H](O5)[C@@H](O)C=C[C@H]3[C@@H](Cc12)N(C)CC4" labels="1/2/3//4/12/13/5//6//7/8/14/9/10/11/17//16/15" alphaBetaClockWiseAtomOrdering="1/11/19/9/14/8/7/6/5/13/12/4/3/2" defaultInID="4">morphine</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="z">
 <!--alkaloids-->
-		<token value="c1ccc2CCN(C)C3Cc4ccccc4c1c23" labels="1/2/3/3a/4/5/6/12/6a/7/7a/8/9/10/11/11a/11b/11c" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/11b">aporphin</token>
-		<token value="c1cccc2CCN3Cc4ccccc4CC3c12" labels="1/2/3/4/4a/5/6/7/8/8a/9/10/11/12/12a/13/13a/13b" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/4a/5/6/7/8/8a/9/10/11/12/12a/13/13a/13b">berbin</token>
-		<token value="C1CN[C@@H]2Cc3c[nH]c4cccc([C@H]2C1)c34" labels="8/7/6/5/4/3/2/1/15/14/13/12/11/10/9/16" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2">ergolin</token>
+		<token value="c1ccc2CCN(C)C3Cc4ccccc4c1c23" labels="1/2/3/3a/4/5/6/12/6a/7/7a/8/9/10/11/11a/11b/11c" alphaBetaClockWiseAtomOrdering="1/2/3/3a/4/5/6/6a/7/7a/8/9/10/11/11a/11b">aporphin</token>
+		<token value="c1cccc2CCN3Cc4ccccc4CC3c12" labels="1/2/3/4/4a/5/6/7/8/8a/9/10/11/12/12a/13/13a/13b" alphaBetaClockWiseAtomOrdering="1/2/3/4/4a/5/6/7/8/8a/9/10/11/12/12a/13/13a/13b">berbin</token>
+		<token value="C1CN[C@@H]2Cc3c[nH]c4cccc([C@H]2C1)c34" labels="8/7/6/5/4/3/2/1/15/14/13/12/11/10/9/16" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2">ergolin</token>
 <!--misc-->
-		<token value="S1CCCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">cepham</token>
-		<token value="S1CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">penam</token>
+		<token value="S1CCCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">cepham</token>
+		<token value="S1CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">penam</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="biochemical" symbol="Þ">
-		<token value="OC(=O)[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergic acid</token>
-		<token value="OC(=O)[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergic acid</token>
-		<token value="[O-]C(=O)[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergate</token>
-		<token value="[O-]C(=O)[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergate</token>
-		<token value="NC(=O)[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergamide</token>
-		<token value="NC(=O)[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergamide</token>
-		<token value="OC[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="//8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergol</token>
-		<token value="OC[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="//8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" valType="SMILES" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergol</token>
+		<token value="OC(=O)[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergic acid</token>
+		<token value="OC(=O)[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergic acid</token>
+		<token value="[O-]C(=O)[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergate</token>
+		<token value="[O-]C(=O)[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergate</token>
+		<token value="NC(=O)[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergamide</token>
+		<token value="NC(=O)[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="///8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" functionalIDs="1" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergamide</token>
+		<token value="OC[C@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="//8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">lysergol</token>
+		<token value="OC[C@@H]1CN(C)[C@@H]2Cc3c[nH]c4cccc(C2=C1)c34" labels="//8/7/6//5/4/3/2/1/15/14/13/12/11/10/9/16" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2" naturalEntIsOpposite="yes">isolysergol</token>
 	</tokenList>
 </tokenLists>

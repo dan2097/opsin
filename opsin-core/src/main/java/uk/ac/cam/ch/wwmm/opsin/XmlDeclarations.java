@@ -184,7 +184,6 @@ class XmlDeclarations {
 	 */
 
 	static final String VALUE_ATR ="value";
-	static final String VALTYPE_ATR = "valType";
 	static final String LABELS_ATR = "labels";
 	static final String FUSEDRINGNUMBERING_ATR = "fusedRingNumbering";
 	static final String DEFAULTINLOCANT_ATR = "defaultInLocant";
@@ -268,13 +267,6 @@ class XmlDeclarations {
     
 	/**The wordRule that a wordRule element corresponds to*/
 	static final String WORDRULE_ATR ="wordRule";
-    
-	/*
-	 * The values the valType attribute can take
-	 */
-	
-	/**A SMILES string is the value attribute. The SMILES parser of OPSIN is not entirely complete and additional supports a few things that are not supported by standard SMILES*/
-	static final String SMILES_VALTYPE_VAL = "SMILES";
 
 	/*
 	 * The values the type attribute can take
