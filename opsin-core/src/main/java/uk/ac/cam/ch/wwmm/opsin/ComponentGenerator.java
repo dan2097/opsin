@@ -2374,25 +2374,25 @@ class ComponentGenerator {
 						}
 					}
 					else if (firstChild.getLocalName().equals(MULTIPLIER_EL)) {
-						String multiplerVal = firstChild.getAttributeValue(VALUE_ATR);
+						String multiplierVal = firstChild.getAttributeValue(VALUE_ATR);
 						
-						if (groupValue.equals("bor") && multiplerVal.equals("4")) {
+						if (groupValue.equals("bor") && multiplierVal.equals("4")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[B-].[H+]" :"[B-]");
 							matched = true;
 						}
-						else if (groupValue.equals("antimon") && multiplerVal.equals("6")) {
+						else if (groupValue.equals("antimon") && multiplierVal.equals("6")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[Sb-].[H+]" :"[Sb-]");
 							matched = true;
 						}
-						else if (groupValue.equals("arsen") && multiplerVal.equals("6")) {
+						else if (groupValue.equals("arsen") && multiplierVal.equals("6")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[As-].[H+]" :"[As-]");
 							matched = true;
 						}
-						else if (groupValue.startsWith("phosph") && multiplerVal.equals("6")) {
+						else if (groupValue.startsWith("phosph") && multiplierVal.equals("6")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[P-].[H+]" :"[P-]");
 							matched = true;
 						}
-						else if (groupValue.startsWith("silic") && multiplerVal.equals("6")) {
+						else if (groupValue.startsWith("silic") && multiplierVal.equals("6")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[Si|6-2].[H+].[H+]" :"[Si|6-2]");
 							matched = true;
 						}
