@@ -958,37 +958,48 @@ class FusedRingBuilder {
 		Element locantEl = (Element) XOMTools.getPreviousSibling(benzoEl);
 		if (locantEl != null && locantEl.getLocalName().equals(LOCANT_EL)) {
 			String[] locants = MATCH_COMMA.split(locantEl.getValue());
-			Elements suffixes=((Element)benzoEl.getParent()).getChildElements(SUFFIX_EL);
-			int suffixesWithoutLocants =0;
-			for (int i = 0; i < suffixes.size(); i++) {
-				if (suffixes.get(i).getAttribute(LOCANT_ATR)==null){
-					suffixesWithoutLocants++;
-				}
-			}
-			if (locants.length != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
-				List<Atom> atomList =fusedRing.getAtomList();
-				LinkedList<Atom> heteroatoms =new LinkedList<Atom>();
-				LinkedList<String> elementOfHeteroAtom =new LinkedList<String>();
-				for (Atom atom : atomList) {//this iterates in the same order as the numbering system
-					if (!atom.getElement().equals("C")){
-						heteroatoms.add(atom);
-						elementOfHeteroAtom.add(atom.getElement());
+			if (locantsAreAllNumeric(locants)) {
+				Elements suffixes=((Element)benzoEl.getParent()).getChildElements(SUFFIX_EL);
+				int suffixesWithoutLocants =0;
+				for (int i = 0; i < suffixes.size(); i++) {
+					if (suffixes.get(i).getAttribute(LOCANT_ATR)==null){
+						suffixesWithoutLocants++;
 					}
 				}
-				if (locants.length == heteroatoms.size()){//as many locants as there are heteroatoms to assign
-					for (Atom atom : heteroatoms) {
-						atom.setElement("C");
+				if (locants.length != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
+					List<Atom> atomList =fusedRing.getAtomList();
+					LinkedList<Atom> heteroatoms =new LinkedList<Atom>();
+					LinkedList<String> elementOfHeteroAtom =new LinkedList<String>();
+					for (Atom atom : atomList) {//this iterates in the same order as the numbering system
+						if (!atom.getElement().equals("C")){
+							heteroatoms.add(atom);
+							elementOfHeteroAtom.add(atom.getElement());
+						}
 					}
-					for (int i=0; i< heteroatoms.size(); i ++){
-						String elementSymbol =elementOfHeteroAtom.get(i);
-						fusedRing.getAtomByLocantOrThrow(locants[i]).setElement(elementSymbol);
+					if (locants.length == heteroatoms.size()){//as many locants as there are heteroatoms to assign
+						for (Atom atom : heteroatoms) {
+							atom.setElement("C");
+						}
+						for (int i=0; i< heteroatoms.size(); i ++){
+							String elementSymbol =elementOfHeteroAtom.get(i);
+							fusedRing.getAtomByLocantOrThrow(locants[i]).setElement(elementSymbol);
+						}
+						locantEl.detach();
 					}
-					locantEl.detach();
-				}
-				else if (locants.length > 1){
-					throw new StructureBuildingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
+					else if (locants.length > 1){
+						throw new StructureBuildingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
+					}
 				}
 			}
 		}
+	}
+
+	private boolean locantsAreAllNumeric(String[] locants) {
+		for (String locant : locants) {
+			if (!MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
+				return false;
+			}
+		}
+		return true;
 	}
 }
