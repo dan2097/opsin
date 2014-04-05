@@ -8,7 +8,6 @@
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
-        valType (SMILES) #IMPLIED
         labels CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
         defaultInLocant CDATA #IMPLIED

@@ -16,7 +16,6 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
-        valType (SMILES) #IMPLIED
         labels CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
         defaultInLocant CDATA #IMPLIED
@@ -39,8 +38,7 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
         locant CDATA #IMPLIED>
 <!--
   (the #PCDATA inside the tag) = the string to match
-  value == depends on valType, or see the file itself
-   valType = SMILES => see the SMILESFragmentBuilder class
+  value == Meaning depends on the name of the element e.g. SMILES for group, value of multipler for multiplier etc.
 
   labels == What the locants are for this group. See the SMILESFragmentBuilder class
   fusedRingNumbering ==same as above but for some rings with non standard numbering. This numbering is used to decide which sides correspond to the letters employed in fusing rings. It is neccesary where non standard numbering does not precess regularly around the edge of the fused ring system c.f. purine

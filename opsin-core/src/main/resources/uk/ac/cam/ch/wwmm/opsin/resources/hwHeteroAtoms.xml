@@ -3,104 +3,104 @@
 <tokenLists>
   <!--For convenience in order of priority-->
   <tokenList tagname="heteroatom" symbol="D"><!--complete set including 2004 recommendations -->
-    <token value="F" valType="SMILES">fluora</token>
-    <token value="Cl" valType="SMILES">chlora</token>
-    <token value="Br" valType="SMILES">broma</token>
-    <token value="I" valType="SMILES">ioda</token>
-    <token value="O" valType="SMILES">oxa</token>
-    <token value="S" valType="SMILES">thia</token>
-    <token value="[Se]" valType="SMILES">selena</token>
-    <token value="[Te]" valType="SMILES">tellura</token>
-    <token value="N" valType="SMILES">aza</token>
-    <token value="P" valType="SMILES">phospha</token>
-    <token value="[As]" valType="SMILES">arsa</token>
-    <token value="[Sb]" valType="SMILES">stiba</token>
-    <token value="[Bi]" valType="SMILES">bisma</token>
-    <token value="[Si]" valType="SMILES">sila</token>
-    <token value="[Ge]" valType="SMILES">germa</token>
-    <token value="[Sn]" valType="SMILES">stanna</token>
-    <token value="[Pb]" valType="SMILES">plumba</token>
-    <token value="B" valType="SMILES">bora</token>
-    <token value="[Al]" valType="SMILES">aluma</token>
-    <token value="[Ga]" valType="SMILES">galla</token>
-    <token value="[In]" valType="SMILES">indiga</token>
-    <token value="[Tl]" valType="SMILES">thalla</token>
-    <token value="[Hg]" valType="SMILES">mercura</token>
+    <token value="F">fluora</token>
+    <token value="Cl">chlora</token>
+    <token value="Br">broma</token>
+    <token value="I">ioda</token>
+    <token value="O">oxa</token>
+    <token value="S">thia</token>
+    <token value="[Se]">selena</token>
+    <token value="[Te]">tellura</token>
+    <token value="N">aza</token>
+    <token value="P">phospha</token>
+    <token value="[As]">arsa</token>
+    <token value="[Sb]">stiba</token>
+    <token value="[Bi]">bisma</token>
+    <token value="[Si]">sila</token>
+    <token value="[Ge]">germa</token>
+    <token value="[Sn]">stanna</token>
+    <token value="[Pb]">plumba</token>
+    <token value="B">bora</token>
+    <token value="[Al]">aluma</token>
+    <token value="[Ga]">galla</token>
+    <token value="[In]">indiga</token>
+    <token value="[Tl]">thalla</token>
+    <token value="[Hg]">mercura</token>
 
-    <token value="F" valType="SMILES">fluor</token>
-    <token value="Cl" valType="SMILES">chlor</token>
-    <token value="Br" valType="SMILES">brom</token>
-    <token value="I" valType="SMILES">iod</token>
-    <token value="O" valType="SMILES">ox</token>
-    <token value="S" valType="SMILES">thi</token>
-    <token value="[Se]" valType="SMILES">selen</token>
-    <token value="[Te]" valType="SMILES">tellur</token>
-    <token value="N" valType="SMILES">az</token>
-    <token value="P" valType="SMILES">phosph</token>
-    <token value="[As]" valType="SMILES">ars</token>
-    <token value="[Sb]" valType="SMILES">stib</token>
-    <token value="[Bi]" valType="SMILES">bism</token>
-    <token value="[Si]" valType="SMILES">sil</token>
-    <token value="[Ge]" valType="SMILES">germ</token>
-    <token value="[Sn]" valType="SMILES">stann</token>
-    <token value="[Pb]" valType="SMILES">plumb</token>
-    <token value="B" valType="SMILES">bor</token>
-    <token value="[Al]" valType="SMILES">alum</token>
-    <token value="[Ga]" valType="SMILES">gall</token>
-    <token value="[In]" valType="SMILES">indig</token>
-    <token value="[Tl]" valType="SMILES">thall</token>
-    <token value="[Hg]" valType="SMILES">mercur</token>
+    <token value="F">fluor</token>
+    <token value="Cl">chlor</token>
+    <token value="Br">brom</token>
+    <token value="I">iod</token>
+    <token value="O">ox</token>
+    <token value="S">thi</token>
+    <token value="[Se]">selen</token>
+    <token value="[Te]">tellur</token>
+    <token value="N">az</token>
+    <token value="P">phosph</token>
+    <token value="[As]">ars</token>
+    <token value="[Sb]">stib</token>
+    <token value="[Bi]">bism</token>
+    <token value="[Si]">sil</token>
+    <token value="[Ge]">germ</token>
+    <token value="[Sn]">stann</token>
+    <token value="[Pb]">plumb</token>
+    <token value="B">bor</token>
+    <token value="[Al]">alum</token>
+    <token value="[Ga]">gall</token>
+    <token value="[In]">indig</token>
+    <token value="[Tl]">thall</token>
+    <token value="[Hg]">mercur</token>
 
-    <token value="P" valType="SMILES">phosphor</token>
-    <token value="[As]" valType="SMILES">arsen</token>
-    <token value="[Sb]" valType="SMILES">antimon</token>
+    <token value="P">phosphor</token>
+    <token value="[As]">arsen</token>
+    <token value="[Sb]">antimon</token>
   </tokenList>
 
   <tokenList tagname="heteroatom" symbol="J"><!--hetero atoms that are compatable with an ine HWsuffix-->
-    <token value="O" valType="SMILES">oxa</token>
-    <token value="S" valType="SMILES">thia</token>
-    <token value="[Se]" valType="SMILES">selena</token>
-    <token value="[Te]" valType="SMILES">tellura</token>
-    <token value="N" valType="SMILES">aza</token>
-    <token value="[Bi]" valType="SMILES">bisma</token>
-    <token value="[Si]" valType="SMILES">sila</token>
-    <token value="[Ge]" valType="SMILES">germa</token>
-    <token value="[Sn]" valType="SMILES">stanna</token>
-    <token value="[Pb]" valType="SMILES">plumba</token>
-    <token value="[Hg]" valType="SMILES">mercura</token>
+    <token value="O">oxa</token>
+    <token value="S">thia</token>
+    <token value="[Se]">selena</token>
+    <token value="[Te]">tellura</token>
+    <token value="N">aza</token>
+    <token value="[Bi]">bisma</token>
+    <token value="[Si]">sila</token>
+    <token value="[Ge]">germa</token>
+    <token value="[Sn]">stanna</token>
+    <token value="[Pb]">plumba</token>
+    <token value="[Hg]">mercura</token>
 
-    <token value="O" valType="SMILES">ox</token>
-    <token value="S" valType="SMILES">thi</token>
-    <token value="[Se]" valType="SMILES">selen</token>
-    <token value="[Te]" valType="SMILES">tellur</token>
-    <token value="N" valType="SMILES">az</token>
-    <token value="[Bi]" valType="SMILES">bism</token>
-    <token value="[Si]" valType="SMILES">sil</token>
-    <token value="[Ge]" valType="SMILES">germ</token>
-    <token value="[Sn]" valType="SMILES">stann</token>
-    <token value="[Pb]" valType="SMILES">plumb</token>
-    <token value="[Hg]" valType="SMILES">mercur</token>
+    <token value="O">ox</token>
+    <token value="S">thi</token>
+    <token value="[Se]">selen</token>
+    <token value="[Te]">tellur</token>
+    <token value="N">az</token>
+    <token value="[Bi]">bism</token>
+    <token value="[Si]">sil</token>
+    <token value="[Ge]">germ</token>
+    <token value="[Sn]">stann</token>
+    <token value="[Pb]">plumb</token>
+    <token value="[Hg]">mercur</token>
 
-    <token value="P" valType="SMILES">phosphor</token>
-    <token value="[As]" valType="SMILES">arsen</token>
-    <token value="[Sb]" valType="SMILES">antimon</token>
+    <token value="P">phosphor</token>
+    <token value="[As]">arsen</token>
+    <token value="[Sb]">antimon</token>
   </tokenList>
 
   <tokenList tagname="heteroatom" symbol="j"><!--hetero atoms that are compatable with an ane HWsuffix-->
-    <token value="O" valType="SMILES">oxa</token>
-    <token value="S" valType="SMILES">thia</token>
-    <token value="[Se]" valType="SMILES">selena</token>
-    <token value="[Te]" valType="SMILES">tellura</token>
-    <token value="[Bi]" valType="SMILES">bisma</token>
-    <token value="[Hg]" valType="SMILES">mercura</token>
+    <token value="O">oxa</token>
+    <token value="S">thia</token>
+    <token value="[Se]">selena</token>
+    <token value="[Te]">tellura</token>
+    <token value="[Bi]">bisma</token>
+    <token value="[Hg]">mercura</token>
 
-    <token value="O" valType="SMILES">ox</token>
-    <token value="S" valType="SMILES">thi</token>
-    <token value="[Se]" valType="SMILES">selen</token>
-    <token value="[Te]" valType="SMILES">tellur</token>
-    <token value="[Bi]" valType="SMILES">bism</token>
-    <token value="[Hg]" valType="SMILES">mercur</token>
+    <token value="O">ox</token>
+    <token value="S">thi</token>
+    <token value="[Se]">selen</token>
+    <token value="[Te]">tellur</token>
+    <token value="[Bi]">bism</token>
+    <token value="[Hg]">mercur</token>
 
-    <token value="[As]" valType="SMILES">arsen</token>
+    <token value="[As]">arsen</token>
   </tokenList>
 </tokenLists>
