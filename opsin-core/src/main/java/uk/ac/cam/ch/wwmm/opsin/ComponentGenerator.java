@@ -2376,9 +2376,12 @@ class ComponentGenerator {
 					else if (firstChild.getLocalName().equals(MULTIPLIER_EL)) {
 						String multiplierVal = firstChild.getAttributeValue(VALUE_ATR);
 						
-						if (groupValue.equals("bor") && multiplierVal.equals("4")) {
-							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[B-].[H+]" :"[B-]");
-							matched = true;
+						if (groupValue.equals("bor")){
+							if (multiplierVal.equals("4") || (multiplierVal.equals("3") && XOMTools.getPreviousSibling(substituent) != null)) {
+								//tri case allows organotrifluoroborates
+								group.getAttribute(VALUE_ATR).setValue(isAcid ? "[B-].[H+]" :"[B-]");
+								matched = true;
+							}
 						}
 						else if (groupValue.equals("antimon") && multiplierVal.equals("6")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "[Sb-].[H+]" :"[Sb-]");
