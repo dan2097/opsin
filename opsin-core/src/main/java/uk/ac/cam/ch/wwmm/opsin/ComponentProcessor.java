@@ -672,6 +672,9 @@ class ComponentProcessor {
 			}
 			Element targetRing =null;
 			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
+			if (nextSubOrRootOrBracket == null){
+				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
+			}
 			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
 			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
 			if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
