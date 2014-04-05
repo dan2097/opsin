@@ -2046,6 +2046,15 @@ class StructureBuilder {
 					throw e;
 				}
 			}
+			catch (CipOrderingException e) {
+				//CipOrderingException unfortunately cannot extend StereochemistryException as it is unchecked
+				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+					state.addWarningMessage(e.getMessage());
+				}
+				else{
+					throw e;
+				}
+			}
 			stereoChemistryHandler.removeRedundantStereoCentres(atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		}
 	}
