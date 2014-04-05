@@ -131,6 +131,8 @@
 		<token value="-c1c(OC)cc(C=CC)cc1" labels="none">isoeugenyl</token>
 		<token value="-CCC(=C)C" labels="none">isopentenyl</token><!--used in prenol nomenclature - overrides standard intepretation-->
 		<token value="-NNC(O)=N" labels="1/2//3/4">isosemicarbazido</token>
+		<token value="-NC(O)=N" labels="1//2/3">isoureido</token><!--double bond position ambiguous-->
+		<token value="-NC(S)=N" labels="1//2/3">isothioureido</token><!--double bond position ambiguous-->
 		<token value="-C(=O)C(=O)C(=O)O" labels="1//2//3//">mesoxalo</token>
 		<token value="-S(=O)(=O)C" labels="none">mesyl</token>
 		<token value="-CC(C)=C" labels="none">methallyl</token>
