@@ -151,7 +151,9 @@ does not define a CFG.
   <regex name="%ylium%" value="õ"/>
   <regex name="%nucleosyl%" value="ö"/>
   <regex name="%aldehyde%" value="÷"/>
-  <!--next would be Alt 0248-->
+  <regex name="%lactoneAcidInfixForCyclic%" value="ø"/>
+  <regex name="%lactoneAcidInfixForAcyclic%" value="ù"/>
+  <!--next would be Alt 0250-->
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -268,11 +270,14 @@ does not define a CFG.
   <regex name="%casSystematicCyclicKetose%" value ="(%systematicCyclicStemStereoPrefixes%%locant%%carbohydrateChain%%hyphen%?%carbohydrateUlSuffix%)"/>
   <regex name="%carbohydrateCyclicStem%" value="(%dlStereochemistryPrefix%?%trivialCarbohydrateStem%%diald%?|%systematicCyclicStemStereoPrefixes%%systematicCarbohydrateStem%(%o%?%optLocantGroupNoOMP%%multiplier%?%carbohydrateUlSuffix%|%diald%)?|%casSystematicCyclicKetose%)"/>
   <regex name="%carbohydrateRingSizedStem%" value="(%carbohydrateCyclicStem%%o%?%optLocantGroupNoOMP%?%carbohydrateRingSize%)"/>
-  <regex name="%cyclicCarbohydrate%" value="(%carbohydrateRingSizedStem%(%ose%(%hyphen%?%glycosideSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffix%)?|%osUloseSuffix%)?|%ose%?%cyclicCarbohydrateAcidSuffix%))"/>
+  <regex name="%carbohydrateLactoneSuffixGroup%" value="(%o%?%hyphen%?(%locant%|%colonOrSemiColonDelimitedLocant%%diOrTri%)%cycleFormingSuffix%)"/>
+  <regex name="%acyclicCarbohydrateWithLactoneSuffix%" value="(%acyclicCarbohydrateStem%%lactoneAcidInfixForAcyclic%%carbohydrateLactoneSuffixGroup%)"/>
+  <regex name="%cyclicCarbohydrateAcidSuffixGroup%" value="(%cyclicCarbohydrateAcidSuffix%|%lactoneAcidInfixForCyclic%%carbohydrateLactoneSuffixGroup%)"/>
+  <regex name="%cyclicCarbohydrate%" value="(%carbohydrateRingSizedStem%(%ose%(%hyphen%?%glycosideSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffixGroup%)?|%osUloseSuffix%)?|%ose%?%cyclicCarbohydrateAcidSuffixGroup%)|%acyclicCarbohydrateWithLactoneSuffix%)"/>
 
   <regex name="%unSpecifiedRingSizeSubstituent%" value="(%acyclicCarbohydrateStem%%o%?%ose%%glycosylSuffix%)"/>
   <regex name="%cyclicCarbohydrateSubstituentYl%" value="(%carbohydrateRingSizedStem%%ose%(%hyphen%?%glycosideSuffix%)?%osUloseSuffix%?%hyphen%?%locant%%locantedAminoAcidOrCarbohydrateYl%)"/>
-  <regex name="%cyclicCarbohydrateSubstituentGylcosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffix%))"/>
+  <regex name="%cyclicCarbohydrateSubstituentGylcosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffixGroup%))"/>
   <regex name="%cyclicCarbohydrateSubstituentEndingInGlycosyl%" value="(%carbohydrateRingSizedStem%%uron%?%ose%%osUloseSuffix%?%glycosylSuffix%)"/>
   <regex name="%cyclicCarbohydrateSubstituent%" value="(%unSpecifiedRingSizeSubstituent%|%cyclicCarbohydrateSubstituentYl%|(%cyclicCarbohydrateSubstituentGylcosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%)(%closeBracket%?%hyphen%?%biochemicalLinkage%)?)"/>
 
