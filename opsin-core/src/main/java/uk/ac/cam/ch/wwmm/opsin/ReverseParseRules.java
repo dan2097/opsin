@@ -127,41 +127,35 @@ class ReverseParseRules {
 							}
 						}
 					}
-					List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDictReversed[i];
+					RunAutomaton possibleAutomata = resourceManager.symbolRegexAutomataDictReversed[i];
 					if (possibleAutomata != null) {//next could be an automaton
-						for (int j = 0, l = possibleAutomata.size(); j < l; j++) {
-							RunAutomaton automaton = possibleAutomata.get(j);
-							int matchLength = runInReverse(automaton, chemicalWord, posInName);
-							if (matchLength != -1){//matchLength = -1 means it did not match
-								AnnotatorState newAs = new AnnotatorState();
-								newAs.posInName = posInName - matchLength;
-								newAs.tokens = new ArrayList<String>(as.tokens);
-								newAs.tokens.add(chemicalWord.substring(posInName - matchLength, posInName));
-								newAs.annot = new ArrayList<Character>(as.annot);
-								newAs.annot.add(annotationCharacter);
-								newAs.state = potentialNextState;
-								//System.out.println("neword automata " + chemicalWord.substring(posInName - matchLength, posInName));
-								asStack.add(newAs);
-							}
+						int matchLength = runInReverse(possibleAutomata, chemicalWord, posInName);
+						if (matchLength != -1){//matchLength = -1 means it did not match
+							AnnotatorState newAs = new AnnotatorState();
+							newAs.posInName = posInName - matchLength;
+							newAs.tokens = new ArrayList<String>(as.tokens);
+							newAs.tokens.add(chemicalWord.substring(posInName - matchLength, posInName));
+							newAs.annot = new ArrayList<Character>(as.annot);
+							newAs.annot.add(annotationCharacter);
+							newAs.state = potentialNextState;
+							//System.out.println("neword automata " + chemicalWord.substring(posInName - matchLength, posInName));
+							asStack.add(newAs);
 						}
 					}
-					List<Pattern> possibleRegexes = resourceManager.symbolRegexesDictReversed[i];
-					if (possibleRegexes != null) {//next could be a regex
-						for (int j = 0, l = possibleRegexes.size(); j < l; j++) {
-							Pattern pattern = possibleRegexes.get(j);
-							Matcher mat = pattern.matcher(chemicalWord).region(0, posInName);
-							if (mat.find()) {//match at end (patterns use $ anchor)
-								AnnotatorState newAs = new AnnotatorState();
-								String matchedString = mat.group(0);
-								newAs.posInName = posInName - matchedString.length();
-								newAs.tokens = new ArrayList<String>(as.tokens);
-								newAs.tokens.add(matchedString);
-								newAs.annot = new ArrayList<Character>(as.annot);
-								newAs.annot.add(annotationCharacter);
-								newAs.state = potentialNextState;
-								//System.out.println("neword regex " + matchedString);
-								asStack.add(newAs);
-							}
+					Pattern possibleRegex = resourceManager.symbolRegexesDictReversed[i];
+					if (possibleRegex != null) {//next could be a regex
+						Matcher mat = possibleRegex.matcher(chemicalWord).region(0, posInName);
+						if (mat.find()) {//match at end (patterns use $ anchor)
+							AnnotatorState newAs = new AnnotatorState();
+							String matchedString = mat.group(0);
+							newAs.posInName = posInName - matchedString.length();
+							newAs.tokens = new ArrayList<String>(as.tokens);
+							newAs.tokens.add(matchedString);
+							newAs.annot = new ArrayList<Character>(as.annot);
+							newAs.annot.add(annotationCharacter);
+							newAs.state = potentialNextState;
+							//System.out.println("neword regex " + matchedString);
+							asStack.add(newAs);
 						}
 					}
 				}
