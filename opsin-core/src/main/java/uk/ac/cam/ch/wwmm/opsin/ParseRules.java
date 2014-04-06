@@ -124,41 +124,35 @@ public class ParseRules {
 							}
 						}
 					}
-					List<RunAutomaton> possibleAutomata = resourceManager.symbolRegexAutomataDict[i];
+					RunAutomaton possibleAutomata = resourceManager.symbolRegexAutomataDict[i];
 					if (possibleAutomata != null) {//next could be an automaton
-						for (int j = 0, l = possibleAutomata.size(); j < l; j++) {
-							RunAutomaton automaton = possibleAutomata.get(j);
-							int matchLength = automaton.run(chemicalWord, posInName);
-							if (matchLength != -1){//matchLength = -1 means it did not match
-								AnnotatorState newAs = new AnnotatorState();
-								newAs.posInName = posInName + matchLength;
-								newAs.tokens = new ArrayList<String>(as.tokens);
-								newAs.tokens.add(chemicalWord.substring(posInName, posInName + matchLength));
-								newAs.annot = new ArrayList<Character>(as.annot);
-								newAs.annot.add(annotationCharacter);
-								newAs.state = potentialNextState;
-								//System.out.println("neword automata " + chemicalWord.substring(posInName, posInName + matchLength));
-								asStack.add(newAs);
-							}
+						int matchLength = possibleAutomata.run(chemicalWord, posInName);
+						if (matchLength != -1){//matchLength = -1 means it did not match
+							AnnotatorState newAs = new AnnotatorState();
+							newAs.posInName = posInName + matchLength;
+							newAs.tokens = new ArrayList<String>(as.tokens);
+							newAs.tokens.add(chemicalWord.substring(posInName, posInName + matchLength));
+							newAs.annot = new ArrayList<Character>(as.annot);
+							newAs.annot.add(annotationCharacter);
+							newAs.state = potentialNextState;
+							//System.out.println("neword automata " + chemicalWord.substring(posInName, posInName + matchLength));
+							asStack.add(newAs);
 						}
 					}
-					List<Pattern> possibleRegexes = resourceManager.symbolRegexesDict[i];
-					if (possibleRegexes != null) {//next could be a regex
-						for (int j = 0, l = possibleRegexes.size(); j < l; j++) {
-							Pattern pattern = possibleRegexes.get(j);
-							Matcher mat = pattern.matcher(chemicalWord).region(posInName, chemicalWord.length());
-							if (mat.lookingAt()) {//match at start
-								AnnotatorState newAs = new AnnotatorState();
-								String matchedString = mat.group(0);
-								newAs.posInName = posInName + matchedString.length();
-								newAs.tokens = new ArrayList<String>(as.tokens);
-								newAs.tokens.add(matchedString);
-								newAs.annot = new ArrayList<Character>(as.annot);
-								newAs.annot.add(annotationCharacter);
-								newAs.state = potentialNextState;
-								//System.out.println("neword regex " + matchedString);
-								asStack.add(newAs);
-							}
+					Pattern possibleRegex = resourceManager.symbolRegexesDict[i];
+					if (possibleRegex != null) {//next could be a regex
+						Matcher mat = possibleRegex.matcher(chemicalWord).region(posInName, chemicalWord.length());
+						if (mat.lookingAt()) {//match at start
+							AnnotatorState newAs = new AnnotatorState();
+							String matchedString = mat.group(0);
+							newAs.posInName = posInName + matchedString.length();
+							newAs.tokens = new ArrayList<String>(as.tokens);
+							newAs.tokens.add(matchedString);
+							newAs.annot = new ArrayList<Character>(as.annot);
+							newAs.annot.add(annotationCharacter);
+							newAs.state = potentialNextState;
+							//System.out.println("neword regex " + matchedString);
+							asStack.add(newAs);
 						}
 					}
 				}

@@ -40,9 +40,9 @@ class ResourceManager {
 	/**A mapping between annotation symbols and a trie of tokens.*/
 	final OpsinRadixTrie[] symbolTokenNamesDict;
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
-	final List<RunAutomaton>[] symbolRegexAutomataDict;
+	final RunAutomaton[] symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
-	final List<Pattern>[] symbolRegexesDict;
+	final Pattern[] symbolRegexesDict;
 	
 	/**The automaton which describes the grammar of a chemical name from left to right*/
 	final RunAutomaton chemicalAutomaton;
@@ -51,9 +51,9 @@ class ResourceManager {
 	/**As symbolTokenNamesDict but the tokens are reversed*/
 	OpsinRadixTrie[] symbolTokenNamesDictReversed;
 	/**As symbolRegexAutomataDict but automata are reversed */
-	List<RunAutomaton>[] symbolRegexAutomataDictReversed;
+	RunAutomaton[] symbolRegexAutomataDictReversed;
 	/**As symbolRegexesDict but regexes match the end of string */
-	List<Pattern>[] symbolRegexesDictReversed;
+	Pattern[] symbolRegexesDictReversed;
 	
 	/**The automaton which describes the grammar of a chemical name from right to left*/
 	RunAutomaton reverseChemicalAutomaton;
@@ -66,15 +66,14 @@ class ResourceManager {
 	 * @param resourceGetter
 	 * @throws IOException 
 	 */
-	@SuppressWarnings("unchecked")
 	ResourceManager(ResourceGetter resourceGetter) throws IOException{
 		this.resourceGetter = resourceGetter;
 		this.automatonInitialiser = new AutomatonInitialiser(resourceGetter.getResourcePath() + "serialisedAutomata/");
 		chemicalAutomaton = processChemicalGrammar(false);
 		int grammarSymbolsSize = chemicalAutomaton.getCharIntervals().length;
 		symbolTokenNamesDict = new OpsinRadixTrie[grammarSymbolsSize];
-		symbolRegexAutomataDict = new List[grammarSymbolsSize];
-		symbolRegexesDict = new List[grammarSymbolsSize];
+		symbolRegexAutomataDict = new RunAutomaton[grammarSymbolsSize];
+		symbolRegexesDict = new Pattern[grammarSymbolsSize];
 		processTokenFiles(false);
 		processRegexTokenFiles(false);
 	}
@@ -156,41 +155,34 @@ class ResourceManager {
 				tempRegexes.put(regexEl.getAttributeValue("name"), newValueSB.toString());
 				continue;
 			}
-			//must be a regexToken
-	
+			
 			Character symbol = regexEl.getAttributeValue("symbol").charAt(0);
-			reSymbolTokenDict.put(symbol, new Token(regexEl));
-	
+			if (!reversed) {
+				//reSymbolTokenDict will be populated when the constructor is called for left-right parsing, hence skip for right-left 
+				if (reSymbolTokenDict.get(symbol) != null) {
+					throw new RuntimeException(symbol +" is associated with multiple regular expressions. The following expression clashes: " + regexEl.toXML() +" This should be resolved by combining regular expressions that map the same symbol" );
+				}
+				reSymbolTokenDict.put(symbol, new Token(regexEl));
+			}
+			
 			int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
 			if (index < 0){
 				throw new RuntimeException(symbol +" is associated with the regex " + newValueSB.toString() +" however it is not actually used in OPSIN's grammar!!!");
 			}
 			if (!reversed){
-				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					if(symbolRegexAutomataDict[index]==null) {
-						symbolRegexAutomataDict[index] = new ArrayList<RunAutomaton>();
-					}
-					symbolRegexAutomataDict[index].add(automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false));
+				if (regexEl.getAttribute("determinise") != null){//should the regex be compiled into a DFA for faster execution?
+					symbolRegexAutomataDict[index] = automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false);
 				}
 				else{
-					if(symbolRegexesDict[index]==null) {
-						symbolRegexesDict[index] = new ArrayList<Pattern>();
-					}
-					symbolRegexesDict[index].add(Pattern.compile(newValueSB.toString()));
+					symbolRegexesDict[index] = Pattern.compile(newValueSB.toString());
 				}
 			}
 			else{
 				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					if(symbolRegexAutomataDictReversed[index]==null) {
-						symbolRegexAutomataDictReversed[index] = new ArrayList<RunAutomaton>();
-					}
-					symbolRegexAutomataDictReversed[index].add(automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true));
+					symbolRegexAutomataDictReversed[index] = automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true);
 				}
 				else{
-					if(symbolRegexesDictReversed[index]==null) {
-						symbolRegexesDictReversed[index] = new ArrayList<Pattern>();
-					}
-					symbolRegexesDictReversed[index].add(Pattern.compile(newValueSB.toString() +"$"));
+					symbolRegexesDictReversed[index] = Pattern.compile(newValueSB.toString() +"$");
 				}
 			}
 		}
@@ -229,19 +221,18 @@ class ResourceManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	synchronized void populatedReverseTokenMappings() throws IOException{
-		if (reverseChemicalAutomaton ==null){
+		if (reverseChemicalAutomaton == null){
 			reverseChemicalAutomaton = processChemicalGrammar(true);
 		}
 		int grammarSymbolsSize = reverseChemicalAutomaton.getCharIntervals().length;
-		if (symbolTokenNamesDictReversed ==null){
-			symbolTokenNamesDictReversed  = new OpsinRadixTrie[grammarSymbolsSize];
+		if (symbolTokenNamesDictReversed == null){
+			symbolTokenNamesDictReversed = new OpsinRadixTrie[grammarSymbolsSize];
 			processTokenFiles(true);
 		}
-		if (symbolRegexAutomataDictReversed ==null && symbolRegexesDictReversed==null){
-			symbolRegexAutomataDictReversed = new List[grammarSymbolsSize];
-			symbolRegexesDictReversed = new List[grammarSymbolsSize];
+		if (symbolRegexAutomataDictReversed == null && symbolRegexesDictReversed==null){
+			symbolRegexAutomataDictReversed = new RunAutomaton[grammarSymbolsSize];
+			symbolRegexesDictReversed = new Pattern[grammarSymbolsSize];
 			processRegexTokenFiles(true);
 		}
 	}
