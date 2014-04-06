@@ -626,6 +626,19 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl4.getAttributeValue(TYPE_ATR));
 	}
 	
+	@Test
+	public void testRelativeStereoChemistry3() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("rel-");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(0, children.size());
+	}
+	
 	//racemates are currently treated identically to completely undefined
 	@Test
 	public void testRacemate1() throws ComponentGenerationException {
@@ -686,6 +699,32 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(2RS,4RS)");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(0, children.size());
+	}
+	
+	@Test
+	public void testRacemate6() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("rac-");
+		ComponentGenerator.processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(0, children.size());
+	}
+	
+	@Test
+	public void testRacemate7() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("racemic-");
 		ComponentGenerator.processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();

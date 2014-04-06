@@ -809,13 +809,14 @@ class ComponentGenerator {
 	}
 
 	private static void processStereochemistryBracket(Element stereoChemistryElement) throws ComponentGenerationException {
-		String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
+		String txt = stereoChemistryElement.getValue();
 		if (txt.startsWith("rel-")){
 			txt = txt.substring(4);
 		}
+		txt = StringTools.removeDashIfPresent(txt);
 		Matcher starMatcher = matchStar.matcher(txt);
 		txt = starMatcher.replaceAll("");
-		if (!txt.startsWith("rac-")){
+		if (!txt.startsWith("rac") && txt.length() > 0){//if txt is just "rel-" then it will be length 0 at this point
 			txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
 			String[] stereoChemistryDescriptors = matchCommaOrDash.split(txt);
 		    for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
