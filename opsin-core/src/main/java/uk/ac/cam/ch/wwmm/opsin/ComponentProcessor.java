@@ -1309,7 +1309,10 @@ class ComponentProcessor {
 					ringSize.detach();
 					cyclisationPerformed = true;
 				}
-				else if (!elName.equals(LOCANT_EL) && !elName.equals(MULTIPLIER_ATR) && !elName.equals(UNSATURATOR_EL)){
+				else if (!elName.equals(LOCANT_EL) &&
+						!elName.equals(MULTIPLIER_ATR) &&
+						!elName.equals(UNSATURATOR_EL) &&
+						!elName.equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)){
 					break;
 				}
 				nextSibling = nextNextSibling;
@@ -1709,8 +1712,14 @@ class ComponentProcessor {
 		for (Element multiplier : multipliers) {
 			Element possibleLocant =(Element)XOMTools.getPreviousSibling(multiplier);
 			String[] locants = null;
-			if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL)){
-				locants = MATCH_COMMA.split(possibleLocant.getValue());
+			if (possibleLocant !=null){
+				String possibleLocantElName = possibleLocant.getLocalName();
+				if (possibleLocantElName.equals(LOCANT_EL)){
+					locants = MATCH_COMMA.split(possibleLocant.getValue());
+				}
+				else if (possibleLocantElName.equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)){
+					locants = MATCH_COLON.split(StringTools.removeDashIfPresent(possibleLocant.getValue()));
+				}
 			}
 			Element featureToMultiply = (Element)XOMTools.getNextSibling(multiplier);
 			String nextName = featureToMultiply.getLocalName();
@@ -4175,7 +4184,7 @@ class ComponentProcessor {
                         if (suffixList.size() <= 0) {
                             throw new ComponentGenerationException("OPSIN Bug: Suffixlist should not be empty");
                         }
-                        suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should of been added in the same order that it is now being read.
+                        suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should have been added in the same order that it is now being read.
                         Atom firstAtomInSuffix = suffixFrag.getFirstAtom();
                         if (firstAtomInSuffix.getBonds().size() <= 0) {
                             throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
@@ -4367,19 +4376,31 @@ class ComponentProcessor {
 	    if (parentAtom1.equals(parentAtom2)){
 	    	throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" attempted to form a cycle involving the same atom twice!");
 	    }
-
-	    if (parentAtom2.getElement().equals("O")){//cyclic suffixes like lactone formally indicate the removal of hydroxy cf. 1979 rule 472.1
-	    	//...although in most cases they are used on structures that don't actually have a hydroxy group
-	    	List<Atom> neighbours = parentAtom2.getAtomNeighbours();
-	    	if (neighbours.size()==1){
-	    		List<Atom> suffixNeighbours = rAtoms.get(1).getAtomNeighbours();
-	    		if (suffixNeighbours.size()==1 && suffixNeighbours.get(0).getElement().equals("O")){
-		    		state.fragManager.removeAtomAndAssociatedBonds(parentAtom2);
-		    		parentAtom2 = neighbours.get(0);
-	    		}
+	    
+	    if (suffixableFragment.getType().equals(CARBOHYDRATE_TYPE_VAL)){
+	    	removeTerminalOxygen(parentAtom1, 2);
+	    	removeTerminalOxygen(parentAtom1, 1);
+	    	List<Atom> chainHydroxy = FragmentTools.findHydroxyLikeTerminalAtoms(parentAtom2.getAtomNeighbours(), "O");
+	    	if (chainHydroxy.size() == 1){
+	    		FragmentTools.removeTerminalAtom(state, chainHydroxy.get(0));//make sure to retain stereochemistry
+	    	}
+	    	else{
+	    		throw new ComponentGenerationException("The second locant of a carbohydrate lactone should point to a carbon in the chain with a hydroxyl group");
 	    	}
 	    }
-
+	    else{
+		    if (parentAtom2.getElement().equals("O")){//cyclic suffixes like lactone formally indicate the removal of hydroxy cf. 1979 rule 472.1
+		    	//...although in most cases they are used on structures that don't actually have a hydroxy group
+		    	List<Atom> neighbours = parentAtom2.getAtomNeighbours();
+		    	if (neighbours.size()==1){
+		    		List<Atom> suffixNeighbours = rAtoms.get(1).getAtomNeighbours();
+		    		if (suffixNeighbours.size()==1 && suffixNeighbours.get(0).getElement().equals("O")){
+			    		state.fragManager.removeAtomAndAssociatedBonds(parentAtom2);
+			    		parentAtom2 = neighbours.get(0);
+		    		}
+		    	}
+		    }
+	    }
 	    makeBondsToSuffix(parentAtom1, rAtoms.get(0));
 	    makeBondsToSuffix(parentAtom2, rAtoms.get(1));
         state.fragManager.removeAtomAndAssociatedBonds(rAtoms.get(1));

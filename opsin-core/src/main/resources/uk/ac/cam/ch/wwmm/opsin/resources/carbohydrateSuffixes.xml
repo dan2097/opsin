@@ -50,6 +50,20 @@
     <token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
   </tokenList>
 
+<!--An infix before lactone formation (and other analogous ring formations)-->
+  <!--for cyclic carbohydrates-->
+  <tokenList tagname="suffix" type="root" symbol="ø">
+    <token value="osonic acid" locant="1">on</token>
+    <token value="uronic acid">uron</token><!--Locanted implicitly to end of chain-->
+  </tokenList>
+  <!--for acyclic carbohydrates-->
+  <tokenList tagname="suffix" type="root" symbol="ù">
+    <token value="aric acid">ar</token>
+    <token value="onic acid" locant="1">on</token>
+    <token value="osonic acid" locant="1">oson</token>
+    <token value="uronic acid">uron</token><!--Locanted implicitly to end of chain-->
+  </tokenList>
+
 <!--An infix before osyl-->
   <tokenList tagname="suffix" type="root" symbol="ô">
     <token value="uronic acid">uron</token>
