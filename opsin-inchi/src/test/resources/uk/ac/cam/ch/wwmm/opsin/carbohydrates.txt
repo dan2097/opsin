@@ -69,7 +69,7 @@ Methyl 3-azido-4-O-benzoyl-6-bromo-2,3,6-trideoxy-2-fluoro-alpha-D-allopyranosid
 3-Deoxy-D-ribohexose	InChI=1S/C6H12O5/c7-2-4(9)1-5(10)6(11)3-8/h2,4-6,8-11H,1,3H2/t4-,5+,6-/m1/s1
 5-Deoxy-D-arabino-hept-3-ulose	InChI=1S/C7H14O6/c8-2-4(10)1-5(11)7(13)6(12)3-9/h4-6,8-12H,1-3H2/t4-,5+,6+/m0/s1
 6-Deoxy-L-gluco-oct-2-ulose	InChI=1S/C8H16O7/c9-2-4(11)1-5(12)7(14)8(15)6(13)3-10/h4-5,7-12,14-15H,1-3H2/t4-,5+,7-,8-/m1/s1
-1 Deoxy-D-arabinitol	InChI=1S/C5H12O4/c1-3(7)5(9)4(8)2-6/h3-9H,2H2,1H3/t3-,4-,5+/m1/s1
+1-Deoxy-D-arabinitol	InChI=1S/C5H12O4/c1-3(7)5(9)4(8)2-6/h3-9H,2H2,1H3/t3-,4-,5+/m1/s1
 5-Deoxy-D-arabinitol	InChI=1S/C5H12O4/c1-3(7)5(9)4(8)2-6/h3-9H,2H2,1H3/t3-,4-,5-/m1/s1
 5-Acetamido-3,5-dideoxy-D-glycero-alpha-D-galacto-non-2-ulopyranosonic acid	InChI=1S/C11H19NO9/c1-4(14)12-7-5(15)2-11(20,10(18)19)21-9(7)8(17)6(16)3-13/h5-9,13,15-17,20H,2-3H2,1H3,(H,12,14)(H,18,19)/t5-,6+,7+,8+,9+,11+/m0/s1
 N-acetyl-alpha-neuraminic acid	InChI=1S/C11H19NO9/c1-4(14)12-7-5(15)2-11(20,10(18)19)21-9(7)8(17)6(16)3-13/h5-9,13,15-17,20H,2-3H2,1H3,(H,12,14)(H,18,19)/t5-,6+,7+,8+,9+,11+/m0/s1
