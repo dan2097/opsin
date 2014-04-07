@@ -277,9 +277,9 @@ does not define a CFG.
 
   <regex name="%unSpecifiedRingSizeSubstituent%" value="(%acyclicCarbohydrateStem%%o%?%ose%%glycosylSuffix%)"/>
   <regex name="%cyclicCarbohydrateSubstituentYl%" value="(%carbohydrateRingSizedStem%%ose%(%hyphen%?%glycosideSuffix%)?%osUloseSuffix%?%hyphen%?%locant%%locantedAminoAcidOrCarbohydrateYl%)"/>
-  <regex name="%cyclicCarbohydrateSubstituentGylcosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffixGroup%))"/>
+  <regex name="%cyclicCarbohydrateSubstituentGlycosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffixGroup%))"/>
   <regex name="%cyclicCarbohydrateSubstituentEndingInGlycosyl%" value="(%carbohydrateRingSizedStem%%uron%?%ose%%osUloseSuffix%?%glycosylSuffix%)"/>
-  <regex name="%cyclicCarbohydrateSubstituent%" value="(%unSpecifiedRingSizeSubstituent%|%cyclicCarbohydrateSubstituentYl%|(%cyclicCarbohydrateSubstituentGylcosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%)(%closeBracket%?%hyphen%?%biochemicalLinkage%)?)"/>
+  <regex name="%cyclicCarbohydrateSubstituent%" value="(%unSpecifiedRingSizeSubstituent%|%cyclicCarbohydrateSubstituentYl%|(%cyclicCarbohydrateSubstituentGlycosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%)(%closeBracket%?%hyphen%?%biochemicalLinkage%)?)"/>
 
   <regex name="%nucelosylSubstituent%" value="(%nucleosyl%(%hyphen%?%biochemicalLinkage%))"/>
 
