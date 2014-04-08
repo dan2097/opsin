@@ -18,7 +18,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(S)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(1, children.size());
@@ -28,7 +28,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals("S", newStereochemistryEl.getAttributeValue(VALUE_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
-	
+
 	@Test
 	public void testMultipleUnLocanted() throws ComponentGenerationException {
 		Element substituent = new Element(SUBSTITUENT_EL);
@@ -36,7 +36,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(R,R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -60,7 +60,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(1R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(1, children.size());
@@ -78,7 +78,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(alphaR,3S,7'S)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(3, children.size());
@@ -109,7 +109,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(E)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(1, children.size());
@@ -127,7 +127,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(5Z)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(1, children.size());
@@ -145,7 +145,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(NZ,2E,R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(3, children.size());
@@ -175,7 +175,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(NZ,2E-R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(3, children.size());
@@ -205,7 +205,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(3cis,5trans)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -229,7 +229,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(5S-trans)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -246,6 +246,48 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(CISORTRANS_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
 	}
 	
+	@Test
+	public void testBracketedExo() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("(exo)");
+		processStereochemistry(substituent);
+		
+		Elements children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element newStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
+		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("exo", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ENDO_EXO_SYN_ANTI_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testBracketedEndo() throws ComponentGenerationException {
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.appendChild(stereochem);
+		stereochem.appendChild("(3-endo,5S)");
+		processStereochemistry(substituent);
+		
+		Elements children = substituent.getChildElements();
+		assertEquals(2, children.size());
+		Element newStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
+		assertEquals("3", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("endo", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(ENDO_EXO_SYN_ANTI_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		
+		Element newStereochemistryEl2 = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getLocalName());
+		assertEquals("5", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
+		assertEquals("S", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
+	}
+
 	@Test
 	public void testLocantedCisTrans() throws ComponentGenerationException {
 		//XML for 3-cis,5-trans:
@@ -266,7 +308,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "trans"));
 		stereochem.appendChild("trans");
 		substituent.appendChild(stereochem);
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -291,7 +333,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
 		stereochem.appendChild("cis");
 		substituent.appendChild(stereochem);
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 	
 		Elements children = substituent.getChildElements();
 		assertEquals(1, children.size());
@@ -314,7 +356,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		stereochem.appendChild("Z");
 		substituent.appendChild(stereochem);
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -349,7 +391,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		stereochem.appendChild("Z");
 		substituent.appendChild(stereochem);
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -377,7 +419,7 @@ public class ComponentGeneration_StereochemistryTest {
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(6, children.size());
@@ -424,7 +466,7 @@ public class ComponentGeneration_StereochemistryTest {
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(3, children.size());
@@ -448,7 +490,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,5alpha");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(3, children.size());
@@ -476,7 +518,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(3beta,5alpha)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(2, children.size());
@@ -504,7 +546,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,5alpha");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(4, children.size());
@@ -532,7 +574,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("3beta,4,10,12alpha");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(3, children.size());
@@ -561,7 +603,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("rel-(1R,3S,4S,7R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(4, children.size());
@@ -597,7 +639,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(1R*,3S*,4S*,7R*)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(4, children.size());
@@ -633,7 +675,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("rel-");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -647,7 +689,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("rac-(2R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -660,7 +702,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(RS)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -673,7 +715,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(RS)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -686,7 +728,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("rac-(2R,4R)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -699,7 +741,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("(2RS,4RS)");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -712,7 +754,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("rac-");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
@@ -725,9 +767,13 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		stereochem.appendChild("racemic-");
-		ComponentGenerator.processStereochemistry(substituent);
+		processStereochemistry(substituent);
 
 		Elements children = substituent.getChildElements();
 		assertEquals(0, children.size());
+	}
+	
+	private void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
+		new ComponentGenerator(new NameToStructureConfig()).processStereochemistry(subOrRoot);
 	}
 }

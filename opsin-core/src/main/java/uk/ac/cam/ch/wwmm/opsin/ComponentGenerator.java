@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -73,14 +72,14 @@ class ComponentGenerator {
 	private final static Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private final static Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final static String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI])");
+	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)[-]?(SR|RS|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI])");
 	private final static Pattern matchStar = Pattern.compile("\\^?\\*");
 	private final static Pattern matchRS = Pattern.compile("[RSrs]");
 	private final static Pattern matchEZ = Pattern.compile("[EZez]");
 	private final static Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private final static Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
+	private final static Pattern matchEndoExoSynAnti = Pattern.compile("[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]");
 	private final static Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*", Pattern.CASE_INSENSITIVE);
-	private final static Pattern matchCommaOrDash =Pattern.compile("[,-]");
 	private final static Pattern matchHdigit =Pattern.compile("H\\d");
 	private final static Pattern matchDigit =Pattern.compile("\\d+");
 	private final static Pattern matchNonDigit =Pattern.compile("\\D+");
@@ -789,7 +788,7 @@ class ComponentGenerator {
 	 * @param subOrRoot The substituent/root to looks for stereoChemistry in.
 	 * @throws ComponentGenerationException
 	 */
-	static void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
+	void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> stereoChemistryElements = XOMTools.getChildElementsWithTagName(subOrRoot, STEREOCHEMISTRY_EL);
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
@@ -808,7 +807,7 @@ class ComponentGenerator {
 		}
 	}
 
-	private static void processStereochemistryBracket(Element stereoChemistryElement) throws ComponentGenerationException {
+	private void processStereochemistryBracket(Element stereoChemistryElement) throws ComponentGenerationException {
 		String txt = stereoChemistryElement.getValue();
 		if (txt.startsWith("rel-")){
 			txt = txt.substring(4);
@@ -817,8 +816,7 @@ class ComponentGenerator {
 		Matcher starMatcher = matchStar.matcher(txt);
 		txt = starMatcher.replaceAll("");
 		if (!txt.startsWith("rac") && txt.length() > 0){//if txt is just "rel-" then it will be length 0 at this point
-			txt =txt.substring(1, txt.length()-1);//remove opening and closing bracket.
-			String[] stereoChemistryDescriptors = matchCommaOrDash.split(txt);
+			List<String> stereoChemistryDescriptors = splitStereoBracketIntoDescriptors(txt);
 		    for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
 		        Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
 		        if (m.matches()){
@@ -852,6 +850,9 @@ class ComponentGenerator {
 		        	 	} else if (matchCisTrans.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase()));
+		        	 	} else if (matchEndoExoSynAnti.matcher(m.group(2)).matches()) {
+		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase()));
 		        	 	} else {
 		                    throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
 		                }
@@ -865,7 +866,38 @@ class ComponentGenerator {
 		stereoChemistryElement.detach();
 	}
 
-	private static void assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
+	private List<String> splitStereoBracketIntoDescriptors(String stereoBracket) {
+		List<String> stereoDescriptors = new ArrayList<String>();
+		boolean seenDigit = false;
+		StringBuilder sb = new StringBuilder();
+		//ignore first and last character (opening and closing bracket)
+		for (int i = 1, l = stereoBracket.length() - 1; i < l; i++) {
+			char ch = stereoBracket.charAt(i);
+			if (ch ==','){
+				stereoDescriptors.add(sb.toString());
+				sb.setLength(0);
+			}
+			else if (ch == '-'){
+				if (seenDigit){
+					//locanted stereochemistry term
+					sb.append(ch);
+				}
+				else{
+					//delimiter between stereochemistry
+					stereoDescriptors.add(sb.toString());
+					sb.setLength(0);
+				}
+			}
+			else{
+				sb.append(ch);
+			}
+			seenDigit = (ch >= '0' && ch <= '9');
+		}
+		stereoDescriptors.add(sb.toString());
+		return stereoDescriptors;
+	}
+
+	private void assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
 		Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
 		if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
@@ -873,7 +905,7 @@ class ComponentGenerator {
 		}
 	}
 
-	private static void processUnbracketedAlphaBetaStereochemistry(Element stereoChemistryElement) throws ComponentGenerationException {
+	private void processUnbracketedAlphaBetaStereochemistry(Element stereoChemistryElement) throws ComponentGenerationException {
 		String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
 		String[] stereoChemistryDescriptors = MATCH_COMMA.split(txt);
 		List<String> locants = new ArrayList<String>();

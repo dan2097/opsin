@@ -113,8 +113,11 @@ class StereochemistryHandler {
 		else if (stereoChemistryType.equals(ALPHA_OR_BETA_TYPE_VAL)){
 			assignAlphaBetaStereochem(stereoChemistryEl);
 		}
+		else if (stereoChemistryType.equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
+			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
+		}
 		else{
-			throw new StructureBuildingException("Unsupported stereochemistry type: " +stereoChemistryType);
+			throw new StructureBuildingException("Unexpected stereochemistry type: " +stereoChemistryType);
 		}
 		stereoChemistryEl.detach();
 	}
