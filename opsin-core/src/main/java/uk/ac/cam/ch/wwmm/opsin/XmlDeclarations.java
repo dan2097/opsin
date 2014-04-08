@@ -326,6 +326,10 @@ class XmlDeclarations {
 	/**A functional group describing a divalent group*/
 	static final String DIVALENTGROUP_TYPE_VAL ="diValentGroup";
 	
+	/**This stereochemistry element conveys endo/exo/syn/anti stereochemistry
+	 * These indicate relative orientation of groups attached to non-bridgehead atoms in a bicyclo[x.y.z]alkane (x >= y > z > 0)*/
+	static final String ENDO_EXO_SYN_ANTI_TYPE_VAL ="endoExoSynAnti";
+	
 	/**A group that is functional class e.g. O for anhydride*/
 	static final String FUNCTIONALCLASS_TYPE_VAL ="functionalClass";
 	
