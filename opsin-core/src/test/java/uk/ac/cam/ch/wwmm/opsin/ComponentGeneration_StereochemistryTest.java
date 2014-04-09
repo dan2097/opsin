@@ -292,7 +292,7 @@ public class ComponentGeneration_StereochemistryTest {
 	public void testLocantedCisTrans() throws ComponentGenerationException {
 		//XML for 3-cis,5-trans:
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element locant = new Element(LOCANT_ATR);
+		Element locant = new Element(LOCANT_EL);
 		locant.appendChild("3");
 		substituent.appendChild(locant);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
@@ -300,7 +300,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
 		stereochem.appendChild("cis");
 		substituent.appendChild(stereochem);
-		locant = new Element(LOCANT_ATR);
+		locant = new Element(LOCANT_EL);
 		locant.appendChild("5");
 		substituent.appendChild(locant);
 		stereochem = new Element(STEREOCHEMISTRY_EL);
@@ -323,6 +323,85 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals("5", modifiedStereochemistryEl2.getAttributeValue(LOCANT_ATR));
 		assertEquals("trans", modifiedStereochemistryEl2.getAttributeValue(VALUE_ATR));
 		assertEquals(CISORTRANS_TYPE_VAL, modifiedStereochemistryEl2.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testLocantedExoOn() throws ComponentGenerationException {
+		//XML for 3-exobicyclo[2.2.2]oct:
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element locant = new Element(LOCANT_EL);
+		locant.appendChild("3");
+		substituent.appendChild(locant);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(VALUE_ATR, "exo"));
+		stereochem.appendChild("exo");
+		substituent.appendChild(stereochem);
+		Element multiplier = new Element(MULTIPLIER_EL);
+		multiplier.addAttribute(new Attribute(TYPE_ATR, VONBAEYER_TYPE_VAL));
+		substituent.appendChild(multiplier);
+		Element vonBaeyer = new Element(VONBAEYER_EL);
+		substituent.appendChild(vonBaeyer);
+		Element group = new Element(GROUP_EL);
+		group.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
+		group.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
+		substituent.appendChild(group);
+		processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(4, children.size());
+		Element modifiedStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl.getLocalName());
+		assertEquals("3", modifiedStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("exo", modifiedStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ENDO_EXO_SYN_ANTI_TYPE_VAL, modifiedStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testLocantedExo() throws ComponentGenerationException {
+		//XML for 3-exoamino
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element locant = new Element(LOCANT_EL);
+		locant.appendChild("3");
+		substituent.appendChild(locant);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(VALUE_ATR, "exo"));
+		stereochem.appendChild("exo");
+		substituent.appendChild(stereochem);
+		Element group = new Element(GROUP_EL);
+		group.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_EL));
+		group.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLESUBSTITUENT_SUBTYPE_VAL));
+		substituent.appendChild(group);
+		processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(3, children.size());
+		assertEquals(LOCANT_EL, children.get(0).getLocalName());
+		Element modifiedStereochemistryEl = children.get(1);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl.getLocalName());
+		assertEquals("3", modifiedStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("exo", modifiedStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ENDO_EXO_SYN_ANTI_TYPE_VAL, modifiedStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testAnti() throws ComponentGenerationException {
+		//XML for anti:
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
+		stereochem.addAttribute(new Attribute(VALUE_ATR, "anti"));
+		stereochem.appendChild("anti");
+		substituent.appendChild(stereochem);
+		processStereochemistry(substituent);
+
+		Elements children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element unmodifiedStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, unmodifiedStereochemistryEl.getLocalName());
+		assertEquals("anti", unmodifiedStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(ENDO_EXO_SYN_ANTI_TYPE_VAL, unmodifiedStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 	
 	@Test
@@ -377,14 +456,14 @@ public class ComponentGeneration_StereochemistryTest {
 	public void testEandZUnbrackettedLocanted() throws ComponentGenerationException {//note that IUPAC mandates brackets
 		//XML for 2E,4Z:
 		Element substituent = new Element(SUBSTITUENT_EL);
-		Element locant = new Element(LOCANT_ATR);
+		Element locant = new Element(LOCANT_EL);
 		locant.appendChild("2");
 		substituent.appendChild(locant);
 		Element stereochem = new Element(STEREOCHEMISTRY_EL);
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		stereochem.appendChild("E");
 		substituent.appendChild(stereochem);
-		locant = new Element(LOCANT_ATR);
+		locant = new Element(LOCANT_EL);
 		locant.appendChild("4");
 		substituent.appendChild(locant);
 		stereochem = new Element(STEREOCHEMISTRY_EL);

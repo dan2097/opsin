@@ -57,7 +57,7 @@ does not define a CFG.
   <regex name="%structuralOpenBracket%" value="q"/>
   <regex name="%diOrTri%" value="r"/>
   <regex name="%suffix%" value="s"/>
-  <regex name="%unbrackettedCisTrans%" value="t"/>
+  <regex name="%unbrackettedCisTransEndoExoSynAnti%" value="t"/>
   <regex name="%unsaturator%" value="u"/>
   <regex name="%glycosylSuffix%" value="v"/>
   <regex name="%repeatableInlineSuffix%" value="w"/>
@@ -164,7 +164,7 @@ does not define a CFG.
   <regex name="%multiplierNotGroup%" value="((%mono%|%diOrTri%|%tetrOrHigher%%a%?)%hyphen%?)"/>
   <regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
   <regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
-  <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedCisTrans%(%comma%%locant%?%unbrackettedCisTrans%)*%hyphen%?|%locant%?%unbrackettedEZ%(%comma%%locant%?%unbrackettedEZ%)*%hyphen%|%lightRotation%|%alphaBetaStereochemLocant%)"/>
+  <regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedCisTransEndoExoSynAnti%(%comma%%locant%?%unbrackettedCisTransEndoExoSynAnti%)*%hyphen%?|%locant%?%unbrackettedEZ%(%comma%%locant%?%unbrackettedEZ%)*%hyphen%|%lightRotation%|%alphaBetaStereochemLocant%)"/>
   <regex name="%optLocantGroupNoOMP%" value="(%hyphen%?%locant%?)"/>
   <regex name="%optLocantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%)?)"/>
   <regex name="%newLocantGroupNoStartingHyphen%" value="(%locant%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
