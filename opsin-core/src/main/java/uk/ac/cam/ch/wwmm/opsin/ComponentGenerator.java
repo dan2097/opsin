@@ -809,13 +809,13 @@ class ComponentGenerator {
 
 	private void processStereochemistryBracket(Element stereoChemistryElement) throws ComponentGenerationException {
 		String txt = stereoChemistryElement.getValue();
-		if (txt.startsWith("rel-")){
+		if (StringTools.startsWithCaseInsensitive(txt, "rel-")){
 			txt = txt.substring(4);
 		}
 		txt = StringTools.removeDashIfPresent(txt);
 		Matcher starMatcher = matchStar.matcher(txt);
 		txt = starMatcher.replaceAll("");
-		if (!txt.startsWith("rac") && txt.length() > 0){//if txt is just "rel-" then it will be length 0 at this point
+		if (!StringTools.startsWithCaseInsensitive(txt, "rac") && txt.length() > 0){//if txt is just "rel-" then it will be length 0 at this point
 			List<String> stereoChemistryDescriptors = splitStereoBracketIntoDescriptors(txt);
 		    for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
 		        Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);

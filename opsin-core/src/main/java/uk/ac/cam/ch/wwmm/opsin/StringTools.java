@@ -340,6 +340,16 @@ public final class StringTools {
 	}
 	
 	/**
+	 * Tests if this string start with the specified prefix ignoring case.
+	 * @param str
+	 * @param prefix
+	 * @return
+	 */
+	public static boolean startsWithCaseInsensitive(String str, String prefix) {
+		return str.regionMatches(true, 0, prefix, 0, prefix.length());
+	}
+	
+	/**
 	 * Tests if this string ends with the specified suffix ignoring case.
 	 * @param str
 	 * @param suffix
