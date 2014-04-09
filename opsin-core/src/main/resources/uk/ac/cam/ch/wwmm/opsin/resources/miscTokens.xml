@@ -27,6 +27,13 @@
     <token value="trans">trans</token>
   </tokenList>
 
+  <tokenList tagname="stereoChemistry" type="endoExoSynAnti" symbol="t">
+    <token value="endo">endo</token>
+    <token value="exo">exo</token>
+    <token value="syn">syn</token>
+    <token value="anti">anti</token>
+  </tokenList>
+
   <tokenList tagname="ine" symbol="«"><!--used for amino acids-->
     <token value="ine">ine</token>
     <token value="ine">in</token>

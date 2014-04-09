@@ -801,6 +801,9 @@ class ComponentGenerator {
 				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue().toUpperCase()));
 				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the E/Z
 			}
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
+				processLocantAssigningForEndoExoSynAnti(stereoChemistryElement);//assign a locant if one is directly before the endo/exo/syn/anti. Don't neccesarily detach it
+			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
 				processUnbracketedAlphaBetaStereochemistry(stereoChemistryElement);
 			}
@@ -901,6 +904,21 @@ class ComponentGenerator {
 		if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 			possibleLocant.detach();
+		}
+	}
+	
+	private void processLocantAssigningForEndoExoSynAnti(Element stereoChemistryElement) {
+		Element possibleLocant = (Element) XOMTools.getPrevious(stereoChemistryElement);
+		if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
+			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
+			Element group = (Element) XOMTools.getNextSibling(stereoChemistryElement, GROUP_EL);
+			if (group != null && 
+					(CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))
+						|| ((Element)XOMTools.getPreviousSibling(group)).getLocalName().equals(VONBAEYER_EL))){
+				//detach locant only if we're sure it has no other meaning
+				//typically locants in front of endo/exo/syn/anti also indicate the position of a susbtituent/suffix e.g. 3-exo-amino
+				possibleLocant.detach();
+			}
 		}
 	}
 
