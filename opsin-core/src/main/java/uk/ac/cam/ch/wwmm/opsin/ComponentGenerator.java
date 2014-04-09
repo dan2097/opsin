@@ -72,7 +72,7 @@ class ComponentGenerator {
 	private final static Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private final static Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private final static String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)[-]?(SR|RS|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI])");
+	private final static Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI])");
 	private final static Pattern matchStar = Pattern.compile("\\^?\\*");
 	private final static Pattern matchRS = Pattern.compile("[RSrs]");
 	private final static Pattern matchEZ = Pattern.compile("[EZez]");
@@ -822,8 +822,9 @@ class ComponentGenerator {
 		        if (m.matches()){
 		        	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
 		                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
-		                if (m.group(1).length()!=0){
-		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
+		                String locantVal = m.group(1);
+		                if (locantVal.length() > 0){
+		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, StringTools.removeDashIfPresent(locantVal)));
 		                }
 		                stereoChemEl.appendChild(stereoChemistryDescriptor);
 		                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
@@ -868,7 +869,6 @@ class ComponentGenerator {
 
 	private List<String> splitStereoBracketIntoDescriptors(String stereoBracket) {
 		List<String> stereoDescriptors = new ArrayList<String>();
-		boolean seenDigit = false;
 		StringBuilder sb = new StringBuilder();
 		//ignore first and last character (opening and closing bracket)
 		for (int i = 1, l = stereoBracket.length() - 1; i < l; i++) {
@@ -878,20 +878,19 @@ class ComponentGenerator {
 				sb.setLength(0);
 			}
 			else if (ch == '-'){
-				if (seenDigit){
-					//locanted stereochemistry term
-					sb.append(ch);
-				}
-				else{
+				if (matchStereochemistry.matcher(sb.toString()).matches()){
 					//delimiter between stereochemistry
 					stereoDescriptors.add(sb.toString());
 					sb.setLength(0);
+				}
+				else{
+					//locanted stereochemistry term
+					sb.append(ch);
 				}
 			}
 			else{
 				sb.append(ch);
 			}
-			seenDigit = (ch >= '0' && ch <= '9');
 		}
 		stereoDescriptors.add(sb.toString());
 		return stereoDescriptors;
