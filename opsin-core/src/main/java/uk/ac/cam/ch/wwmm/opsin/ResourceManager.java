@@ -31,7 +31,7 @@ class ResourceManager {
 	private final AutomatonInitialiser automatonInitialiser;
 	
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
-	final HashMap<String, HashMap<Character, Token>> tokenDict = new HashMap<String, HashMap<Character, Token>>();
+	final HashMap<String, Map<Character, Token>> tokenDict = new HashMap<String, Map<Character, Token>>();
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
 	final HashMap<Character, Token> reSymbolTokenDict = new HashMap<Character, Token>();
 
@@ -85,7 +85,7 @@ class ResourceManager {
 	private void processTokenFiles(boolean reversed) throws IOException{
 		Document tokenFiles = resourceGetter.getXMLDocument("index.xml");
 		Elements files = tokenFiles.getRootElement().getChildElements("tokenFile");
-		for(int i=0;i<files.size();i++) {
+		for(int i = 0, l = files.size(); i < l; i++) {
 			Element rootElement = resourceGetter.getXMLDocument(files.get(i).getValue()).getRootElement();
 			List<Element> tokenLists;
 			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
@@ -105,10 +105,12 @@ class ResourceManager {
 				for (Element tokenElement : tokenElements) {
 					String t = tokenElement.getValue();
 
-					if(!tokenDict.containsKey(t)) {
-						tokenDict.put(t, new HashMap<Character, Token>());
+					Map<Character, Token> symbolToToken = tokenDict.get(t);
+					if(symbolToToken == null) {
+						symbolToToken = new HashMap<Character, Token>();
+						tokenDict.put(t, symbolToToken);
 					}
-					tokenDict.get(t).put(symbol, new Token(tokenElement, tokenList));
+					symbolToToken.put(symbol, new Token(tokenElement, tokenList));
 					if (!reversed){
 						if(symbolTokenNamesDict[index]==null) {
 							symbolTokenNamesDict[index] = new OpsinRadixTrie();
@@ -132,7 +134,7 @@ class ResourceManager {
 	
 		HashMap<String, String> tempRegexes = new HashMap<String, String>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
-		for(int i=0;i<regexEls.size();i++) {
+		for(int i = 0, l = regexEls.size(); i < l; i++) {
 			Element regexEl = regexEls.get(i);
 			String re = regexEl.getAttributeValue("regex");
 			Matcher m = matchRegexReplacement.matcher(re);
@@ -188,30 +190,31 @@ class ResourceManager {
 	}
 	
 	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException{
-		Map<String, String> regexDict = new HashMap<String, String>();
+		Map<String, StringBuilder> regexDict = new HashMap<String, StringBuilder>();
 		Elements regexes = resourceGetter.getXMLDocument("regexes.xml").getRootElement().getChildElements("regex");
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
-		for(int i=0;i<regexes.size();i++) {
-			String name = regexes.get(i).getAttributeValue("name");
-			String value = regexes.get(i).getAttributeValue("value");
+		for(int i = 0, l =regexes.size(); i < l; i++) {
+			Element regex =regexes.get(i);
+			String name = regex.getAttributeValue("name");
+			String value = regex.getAttributeValue("value");
 			Matcher m = matchRegexReplacement.matcher(value);
 			StringBuilder newValueSB = new StringBuilder();
 			int position = 0;
 			while(m.find()) {
 				newValueSB.append(value.substring(position, m.start()));
-				if (regexDict.get(m.group())==null){
+				if (regexDict.get(m.group()) == null){
 					throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexes.xml");
 				}
 				newValueSB.append(regexDict.get(m.group()));
 				position = m.end();
 			}
 			newValueSB.append(value.substring(position));
-			if (regexDict.get(name)!=null){
+			if (regexDict.get(name) != null){
 				throw new RuntimeException("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
 			}
-			regexDict.put(name, newValueSB.toString());
+			regexDict.put(name, newValueSB);
 		}
-		String re = regexDict.get("%chemical%");
+		String re = regexDict.get("%chemical%").toString();
 		if (!reversed){
 			return automatonInitialiser.loadAutomaton("chemical", re, true, false);
 		}
