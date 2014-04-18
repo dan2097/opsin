@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dk.brics.automaton.RunAutomaton;
-
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -239,19 +238,24 @@ class ResourceManager {
 
 	/**Given a token string and an annotation character, makes the XML element for
 	 * the token string.
-	 * @param token The token string.
+	 * @param tokenString The token string.
 	 * @param symbol The annotation character.
 	 *
 	 * @return The XML element produced.
 	 * @throws ParsingException
 	 */
-	Element makeTokenElement(String token, Character symbol) throws ParsingException {
-		if(tokenDict.get(token) != null && tokenDict.get(token).get(symbol) !=null ) {
-			return tokenDict.get(token).get(symbol).makeElement(token);
+	Element makeTokenElement(String tokenString, Character symbol) throws ParsingException {
+		Map<Character, Token> annotationToToken = tokenDict.get(tokenString);
+		if(annotationToToken != null){
+			Token token = annotationToToken.get(symbol);
+			if (token != null ) {
+				return token.makeElement(tokenString);
+			}
 		}
-		if (reSymbolTokenDict.get(symbol)!=null){
-			return reSymbolTokenDict.get(symbol).makeElement(token);
+		Token regexToken = reSymbolTokenDict.get(symbol);
+		if (regexToken != null){
+			return regexToken.makeElement(tokenString);
 		}
-		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + token +" using annotation symbol: " +symbol);
+		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);
 	}
 }
