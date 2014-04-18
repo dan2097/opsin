@@ -26,17 +26,21 @@ class Token {
 	 */
 	Token(Element regexTokenElement) {
 		elem = new Element(regexTokenElement.getAttributeValue("tagname"));
-		if (regexTokenElement.getAttribute("value")!=null){
-			elem.addAttribute(new Attribute(VALUE_ATR, regexTokenElement.getAttributeValue("value")));
-		}
-		if (regexTokenElement.getAttribute("type")!=null){
-			elem.addAttribute(new Attribute(TYPE_ATR, regexTokenElement.getAttributeValue("type")));
-		}
-		if (regexTokenElement.getAttribute("subType")!=null){
-			elem.addAttribute(new Attribute(SUBTYPE_ATR, regexTokenElement.getAttributeValue("subType")));
-		}
-		if ("yes".equals(regexTokenElement.getAttributeValue("ignoreWhenWritingXML"))){
-			ignoreWhenWritingXML=true;
+		for (int i = 0, l = regexTokenElement.getAttributeCount(); i < l; i++) {
+			Attribute att = regexTokenElement.getAttribute(i);
+			String attName = att.getLocalName();
+			if (attName.equals("value")){
+				elem.addAttribute(new Attribute(VALUE_ATR, att.getValue()));
+			}
+			else if (attName.equals("type")){
+				elem.addAttribute(new Attribute(TYPE_ATR, att.getValue()));
+			}
+			else if (attName.equals("subType")){
+				elem.addAttribute(new Attribute(SUBTYPE_ATR, att.getValue()));
+			}
+			else if (attName.equals("ignoreWhenWritingXML") && "yes".equals(att.getValue())){
+				ignoreWhenWritingXML = true;
+			}
 		}
 	}
 
@@ -48,14 +52,18 @@ class Token {
 	Token(Element tokenElement, Element tokenList) {
 		elem = OpsinTools.shallowCopy(tokenElement);
 		elem.setLocalName(tokenList.getAttributeValue("tagname"));
-		if(tokenList.getAttribute("type") != null) {
-			elem.addAttribute(new Attribute(TYPE_ATR, tokenList.getAttributeValue("type")));
-		}
-		if(tokenList.getAttribute("subType") != null) {
-			elem.addAttribute(new Attribute(SUBTYPE_ATR, tokenList.getAttributeValue("subType")));
-		}
-		if ("yes".equals(tokenList.getAttributeValue("ignoreWhenWritingXML"))){
-			ignoreWhenWritingXML=true;
+		for (int i = 0, l = tokenList.getAttributeCount(); i < l; i++) {
+			Attribute att = tokenList.getAttribute(i);
+			String attName = att.getLocalName();
+			if (attName.equals("type")){
+				elem.addAttribute(new Attribute(TYPE_ATR, att.getValue()));
+			}
+			else if (attName.equals("subType")){
+				elem.addAttribute(new Attribute(SUBTYPE_ATR, att.getValue()));
+			}
+			else if (attName.equals("ignoreWhenWritingXML") && "yes".equals(att.getValue())){
+				ignoreWhenWritingXML = true;
+			}
 		}
 	}
 
