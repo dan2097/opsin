@@ -38,6 +38,14 @@ public class InchiOutputTest {
 	}
 	
 	@Test
+	public void testStaticToStdInChIKey() throws StructureBuildingException{
+		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
+		Fragment f = sBuilder.build("C([H])([H])([H])C(=O)N([H])[H]");
+		OpsinResult result = new OpsinResult(f, OPSIN_RESULT_STATUS.SUCCESS, "", "");
+		assertEquals("DLFVBJFMPXGRIB-UHFFFAOYSA-N", NameToInchi.convertResultToStdInChIKey(result));
+	}
+	
+	@Test
 	public void testParseToInChI(){
 		assertEquals("InChI=1/C2H5NO/c1-2(3)4/h1H3,(H2,3,4)/f/h3H2", n2i.parseToInchi("acetamide"));
 	}
@@ -46,5 +54,10 @@ public class InchiOutputTest {
 	@Test
 	public void testParseToStdInChI(){
 		assertEquals("InChI=1S/C2H5NO/c1-2(3)4/h1H3,(H2,3,4)", n2i.parseToStdInchi("acetamide"));
+	}
+	
+	@Test
+	public void testParseToStdInChIKey(){
+		assertEquals("DLFVBJFMPXGRIB-UHFFFAOYSA-N", n2i.parseToStdInchiKey("acetamide"));
 	}
 }

@@ -26,7 +26,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 
@@ -206,6 +205,12 @@ public class NameToStructure {
 		NameToStructure n2s = NameToStructure.getInstance();
 		return n2s.parseRules;
 	}
+	
+	private enum InchiType{
+		inchiWithFixedH,
+		stdInchi,
+		stdInchiKey
+	}
 
 	/**Run OPSIN as a command-line application.
 	 *
@@ -262,14 +267,17 @@ public class NameToStructure {
 			interactiveSmilesOutput(input, output, n2sconfig);
 		}
 		else if (outputType.equalsIgnoreCase("inchi")){
-			interactiveInchiOutput(input, output, n2sconfig, false);
+			interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH);
 		}
 		else if (outputType.equalsIgnoreCase("stdinchi")){
-			interactiveInchiOutput(input, output, n2sconfig, true);
+			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi);
+		}
+		else if (outputType.equalsIgnoreCase("stdinchikey")){
+			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey);
 		}
 		else{
 			System.err.println("Unrecognised output format: " + outputType);
-			System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\" and \"stdinchi\"");
+			System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\", \"stdinchi\" and \"stdinchikey\"");
 			System.exit(1);
 		}
 		if (unparsedArgs.length == 1){
@@ -284,7 +292,7 @@ public class NameToStructure {
 	private static void displayUsage(Options options) {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options] [inputfile] [outputfile]\n" +
-				"OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI\n" +
+				"OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI/StdInChIKey\n" +
 				"Names should be new line delimited and may be read from stdin (default) or a file and output to stdout (default) or a file", options);
 		System.exit(0);
 	}
@@ -299,7 +307,8 @@ public class NameToStructure {
 				"cml for Chemical Markup Language\n" +
 				"smi for SMILES\n" +
 				"inchi for InChI\n" +
-				"stdinchi for StdInChI");
+				"stdinchi for StdInChI\n" +
+				"stdinchikey for StdInChIKey");
 		options.addOption(OptionBuilder.create("o"));
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
@@ -383,7 +392,7 @@ public class NameToStructure {
 		}
 	}
 
-	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean produceStdInChI) throws Exception {
+	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, InchiType inchiType) throws Exception {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
 		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
@@ -395,11 +404,18 @@ public class NameToStructure {
 			throw new RuntimeException(e);
 		}
 		Method m;
-		if (produceStdInChI){
-			m = c.getMethod("convertResultToStdInChI", new Class[]{OpsinResult.class});
-		}
-		else{
+		switch (inchiType) {
+		case inchiWithFixedH:
 			m = c.getMethod("convertResultToInChI", new Class[]{OpsinResult.class});
+			break;
+		case stdInchi:
+			m = c.getMethod("convertResultToStdInChI", new Class[]{OpsinResult.class});
+			break;
+		case stdInchiKey:
+			m = c.getMethod("convertResultToStdInChIKey", new Class[]{OpsinResult.class});
+			break;
+		default :
+			throw new IllegalArgumentException("Unexepected enum value: " + inchiType);
 		}
 
 		String name;
