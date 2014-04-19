@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
-
 import net.sf.jniinchi.INCHI_BOND_TYPE;
 import net.sf.jniinchi.INCHI_OPTION;
 import net.sf.jniinchi.INCHI_PARITY;
@@ -18,12 +17,13 @@ import net.sf.jniinchi.JniInchiBond;
 import net.sf.jniinchi.JniInchiException;
 import net.sf.jniinchi.JniInchiInput;
 import net.sf.jniinchi.JniInchiOutput;
+import net.sf.jniinchi.JniInchiOutputKey;
 import net.sf.jniinchi.JniInchiStereo0D;
 import net.sf.jniinchi.JniInchiWrapper;
 
 /**
- * Allows the conversion of OPSIN's output into (Std)InChIs
- * Also can be used as wrapper to directly convert chemical names to (Std)InChIs
+ * Allows the conversion of OPSIN's output into (Std)InChIs or StdInChIKeys
+ * Also can be used, as a convenience method, to directly convert chemical names to (Std)InChIs or StdInChIKeys
  * @author dl387
  *
  */
@@ -57,6 +57,17 @@ public class NameToInchi {
 		return convertResultToStdInChI(result);
 	}
 	
+	/**Parses a chemical name, returning a StdInChIKey for the molecule.
+	 * Like StdInChI, StdInChIKeys aim to not be tautomer specific
+	 *
+	 * @param name The chemical name to parse.
+	 * @return A StdInChIKey string or null if the molecule would not parse.
+	 */
+	public String parseToStdInchiKey(String name) {
+		OpsinResult result = n2s.parseChemicalName(name);
+		return convertResultToStdInChIKey(result);
+	}
+	
 	/**
 	 * Converts an OPSIN result to InChI. Null is returned if this conversion fails
 	 * @param result
@@ -77,8 +88,30 @@ public class NameToInchi {
 		return convertResultToInChI(result, true);
 	}
 	
+	/**
+	 * Converts an OPSIN result to a StdInChIKey. Null is returned if this conversion fails
+	 * Like StdInChI, StdInChIKeys aim to not be tautomer specific
+	 * @param result
+	 * @return String InChIKey
+	 */
+	public static String convertResultToStdInChIKey(OpsinResult result){
+		String stdInchi = convertResultToInChI(result, true);
+		if (stdInchi != null){
+			try {
+				JniInchiOutputKey key = JniInchiWrapper.getInchiKey(stdInchi);
+				return key.getKey();
+			} catch (Exception e) {
+				if (LOG.isDebugEnabled()){
+					LOG.debug(e.getMessage(), e);
+				}
+				return null;
+			}
+		}
+		return null;
+	}
+	
 	private static String convertResultToInChI(OpsinResult result, boolean produceStdInChI){
-		if (result.getStructure() !=null){
+		if (result.getStructure() != null){
 			String inchi = null;
 			try{
 				inchi = opsinFragmentToInchi(result.getStructure(), produceStdInChI);
@@ -101,7 +134,7 @@ public class NameToInchi {
 		return null;
 	}
 
-	private static String opsinFragmentToInchi(Fragment frag, boolean produceStdInChI) throws JniInchiException{
+	private static String opsinFragmentToInchi(Fragment frag, boolean produceStdInChI) throws JniInchiException {
 		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<Integer, JniInchiAtom>();
 		JniInchiInput input;
 		if (produceStdInChI){
