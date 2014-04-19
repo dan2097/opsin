@@ -20,39 +20,36 @@ class CycleDetector {
 	 * @param frag
 	 */
 	static void assignWhetherAtomsAreInCycles(Fragment frag) {
-		List<Atom> atomList =frag.getAtomList();
+		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			atom.setAtomIsInACycle(false);
 			atom.setProperty(Atom.VISITED, null);
 		}
 		for (Atom a : atomList) {//as OPSIN does not disallow disconnected sections within a single "fragment" (e.g. in suffixes) for vigorousness this for loop is required
-			if(a.getProperty(Atom.VISITED)==null){//true for only the first atom in a fully connected molecule
+			if(a.getProperty(Atom.VISITED) == null){//true for only the first atom in a fully connected molecule
 				traverseRings(a, null, 0);
 			}
 		}
 	}
 	
 	private static int traverseRings(Atom currentAtom, Atom previousAtom, int depth){
-		if(currentAtom.getProperty(Atom.VISITED)!=null){
+		if(currentAtom.getProperty(Atom.VISITED) != null){
 			return currentAtom.getProperty(Atom.VISITED);
 		}
 		currentAtom.setProperty(Atom.VISITED, depth);
-		int result = depth+1;
+		int result = depth + 1;
 		List<Atom> neighbours = currentAtom.getAtomNeighbours();
+		neighbours.remove(previousAtom);
 		for (Atom neighbour : neighbours) {
-			if (neighbour.equals(previousAtom)){
-				continue;
-			}
-			int temp = traverseRings(neighbour, currentAtom, depth+1);
-			if( temp <= depth) {
+			int temp = traverseRings(neighbour, currentAtom, depth + 1);
+			if (temp <= depth) {
 				result = Math.min(result, temp);
 			}
 		}
-		if( result <= depth ){
+		if (result <= depth){
 			currentAtom.setAtomIsInACycle(true);
 		}
 		return result;
-
 	}
 
 	private static class PathSearchState{
