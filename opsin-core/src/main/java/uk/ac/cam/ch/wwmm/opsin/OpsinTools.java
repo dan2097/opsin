@@ -33,7 +33,7 @@ class OpsinTools {
 	static final Pattern MATCH_AMINOACID_STYLE_LOCANT =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
 	static final Pattern MATCH_ELEMENT_SYMBOL =Pattern.compile("[A-Z][a-z]?");
 	static final Pattern MATCH_ELEMENT_SYMBOL_LOCANT =Pattern.compile("[A-Z][a-z]?'*");
-	static final Pattern MATCH_NUMERIC_LOCANT =Pattern.compile("\\d+[a-z]?'*");
+	static final Pattern MATCH_NUMERIC_LOCANT =Pattern.compile("(\\d+)[a-z]?'*");
 	static final char END_OF_SUBSTITUENT = '\u00e9';
 	static final char END_OF_MAINGROUP = '\u00e2';
 	static final char END_OF_FUNCTIONALTERM = '\u00FB';
