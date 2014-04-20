@@ -1469,9 +1469,10 @@ class StructureBuildingMethods {
 	 * @param state
 	 * @param bridgingFragment
 	 * @param atomToJoinTo
+	 * @return Atoms that the bridgingFragment attached to
 	 * @throws StructureBuildingException
 	 */
-	static void formEpoxide(BuildState state, Fragment bridgingFragment, Atom atomToJoinTo) throws StructureBuildingException {
+	static Atom[] formEpoxide(BuildState state, Fragment bridgingFragment, Atom atomToJoinTo) throws StructureBuildingException {
 		Fragment fragToJoinTo = atomToJoinTo.getFrag();
 		List<Atom> atomList = fragToJoinTo.getAtomList();
 		if (atomList.size()==1){
@@ -1508,6 +1509,7 @@ class StructureBuildingMethods {
 		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
 		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(bridgingFragment);
+		return new Atom[]{firstAtomToJoinTo, secondAtomToJoinTo};
 	}
 
 	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder)  {

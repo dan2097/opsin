@@ -1541,7 +1541,7 @@ class ComponentGenerator {
 	private void detectAlkaneFusedRingBridges(Element group) {
 		if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 			Element possibleBridgeFormer = XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
-			if(possibleBridgeFormer!=null && possibleBridgeFormer.getLocalName().equals(BRIDGEFORMINGO_EL)){
+			if(possibleBridgeFormer != null && possibleBridgeFormer.getLocalName().equals(BRIDGEFORMINGO_EL)){
 				possibleBridgeFormer.detach();
 				group.setLocalName(FUSEDRINGBRIDGE_EL);
 			}

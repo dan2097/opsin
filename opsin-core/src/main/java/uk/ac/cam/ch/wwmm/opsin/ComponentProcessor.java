@@ -3,10 +3,13 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -3327,41 +3330,111 @@ class ComponentProcessor {
 			}
 		}
 	}
+	
+	private static class SortBridgesByHighestLocantedBridgehead implements Comparator<Fragment>{
 
+		private final Map<Fragment, Atom[]> bridgeToRingAtoms;
+		SortBridgesByHighestLocantedBridgehead(Map<Fragment, Atom[]> bridgeToRingAtoms) {
+			this.bridgeToRingAtoms = bridgeToRingAtoms;
+		}
+
+		public int compare(Fragment bridge1, Fragment bridge2) {
+			Atom[] ringAtoms1 = bridgeToRingAtoms.get(bridge1);
+			int bridge1HighestRingLocant = Math.max(getLocantNumber(ringAtoms1[0]),getLocantNumber(ringAtoms1[1]));
+			
+			Atom[] ringAtoms2 = bridgeToRingAtoms.get(bridge2);
+			int bridge2HighestRingLocant = Math.max(getLocantNumber(ringAtoms2[0]),getLocantNumber(ringAtoms2[1]));
+			
+			if (bridge1HighestRingLocant > bridge2HighestRingLocant){
+				return -1;
+			}
+			if (bridge1HighestRingLocant < bridge2HighestRingLocant){
+				return 1;
+			}
+			return 0;
+		}
+		
+	}
 
 	/**
 	 * Processes bridges e.g. 4,7-methanoindene
 	 * Resolves and attaches said bridges to the adjacent ring fragment
+	 * Numbers the bridges in accordance with FR-8.6/FR-8.7
 	 * @param subOrRoot
 	 * @throws StructureBuildingException 
 	 */
 	private void processFusedRingBridges(Element subOrRoot) throws StructureBuildingException {
 		List<Element> bridges = XOMTools.getChildElementsWithTagName(subOrRoot, FUSEDRINGBRIDGE_EL);
+		int bridgeCount = bridges.size();
+		if (bridgeCount == 0) {
+			return;
+		}
+		Fragment ringFrag = state.xmlFragmentMap.get(XOMTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL));
+		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<Fragment, Atom[]>();
 		for (Element bridge : bridges) {
-			Fragment ringFrag = state.xmlFragmentMap.get(XOMTools.getNextSibling(bridge, GROUP_EL));
-			Fragment bridgeFrag =state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), ringFrag.getType(), ringFrag.getSubType(), NONE_LABELS_VAL);//TODO label bridges
-
-			List<Atom> bridgeAtomList =bridgeFrag.getAtomList();
+			Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), ringFrag.getType(), ringFrag.getSubType(), NONE_LABELS_VAL);
+			List<Atom> bridgeAtomList = bridgeFrag.getAtomList();
 			bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
-			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size()-1), 1, true);
+			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size() - 1), 1, true);
 			Element possibleLocant = (Element) XOMTools.getPreviousSibling(bridge);
-			if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL)){
+			Atom[] ringAtoms;
+			if (possibleLocant != null && possibleLocant.getLocalName().equals(LOCANT_EL)){
 				String[] locantArray = MATCH_COMMA.split(possibleLocant.getValue());
-				if (locantArray.length==2){
+				if (locantArray.length == 2){
 					bridgeFrag.getOutAtom(0).setLocant(locantArray[0]);
 					bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
 					possibleLocant.detach();
 				}
-				StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtom());
+				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtom());
 			}
 			else{
-				StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getDefaultInAtom(), 1, true));
+				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getDefaultInAtom(), 1, true));
 			}
+			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
 			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
+			Element unsaturator = (Element) XOMTools.getNextSibling(bridge);
+			if (unsaturator.getLocalName().equals(UNSATURATOR_EL)) {
+				unsaturator.detach();
+			}
 			bridge.detach();
+		}
+		int highestLocant = getHighestNumericLocant(ringFrag);
+		List<Fragment> bridgeFragments = new ArrayList<Fragment>(bridgeToRingAtoms.keySet());
+		Collections.sort(bridgeFragments, new SortBridgesByHighestLocantedBridgehead(bridgeToRingAtoms));
+		for (Fragment bridgeFragment: bridgeFragments) {
+			List<Atom> bridgeFragmentAtoms = bridgeFragment.getAtomList();
+			Atom[] ringAtoms = bridgeToRingAtoms.get(bridgeFragment);
+			if (getLocantNumber(ringAtoms[0]) <= getLocantNumber(ringAtoms[1])){
+				for (int i = bridgeFragmentAtoms.size() - 1; i >=0; i--) {
+					bridgeFragmentAtoms.get(i).addLocant(String.valueOf(++highestLocant));
+				}
+			}
+			else{
+				for (Atom atom : bridgeFragmentAtoms) {
+					atom.addLocant(String.valueOf(++highestLocant));
+				}
+			}
 		}
 	}
 
+	private static int getLocantNumber(Atom atom) {
+		String locant = atom.getFirstLocant();
+		if (locant != null) {
+			Matcher m = MATCH_NUMERIC_LOCANT.matcher(locant);
+			if (m.matches()){
+				return Integer.parseInt(m.group(1));
+			}
+		}
+		return 0;
+	}
+
+	private int getHighestNumericLocant(Fragment ringFrag) throws StructureBuildingException {
+		for (int i = 1; ; i++) {
+			if (ringFrag.getAtomByLocant(String.valueOf(i)) == null){
+				return i - 1;
+			}
+		}
+	}
 
 	/**
 	 * Searches for lambdaConvention elements and applies the valency they specify to the atom
