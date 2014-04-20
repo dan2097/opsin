@@ -3034,7 +3034,15 @@ class ComponentProcessor {
 			locant.detach();
 			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
 			FragmentTools.relabelNumericLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
-			Atom atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1]);
+			String secondLocant = locants[1];
+			Atom atomToBeReplaced;
+			if (secondLocant.endsWith("'")){
+				atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1]);
+			}
+			else{
+				//for simple spiro fusions the prime is often forgotten
+				atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1] + "'");
+			}
 			Atom atomOnParentFrag = null;
 			for (int j = 0; j < i; j++) {
 				atomOnParentFrag = state.xmlFragmentMap.get(groups.get(j)).getAtomByLocant(locants[0]);
