@@ -142,6 +142,7 @@ public class ParseRules {
 					Pattern possibleRegex = resourceManager.symbolRegexesDict[i];
 					if (possibleRegex != null) {//next could be a regex
 						Matcher mat = possibleRegex.matcher(chemicalWord).region(posInName, chemicalWord.length());
+						mat.useTransparentBounds(true);
 						if (mat.lookingAt()) {//match at start
 							AnnotatorState newAs = new AnnotatorState();
 							String matchedString = mat.group(0);
