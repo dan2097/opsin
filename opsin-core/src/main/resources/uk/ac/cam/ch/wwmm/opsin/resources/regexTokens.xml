@@ -69,6 +69,6 @@
   <regexToken regex="(%relativeOrRacemic%-)?%openBracket%%stereochemPossibilities%([,-]%stereochemPossibilities%)*%closeBracket%-?|%relativeOrRacemic%-" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
   <regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="Ê" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->
   <regexToken regex="%locant%,%locant%:%locant%,%locant%-?[dD][iI][sS][pP][iI][rR][oO][tT][eE][rR]-?" symbol="Å" tagname="polyCyclicSpiro" determinise="yes" value="dispiroter"/>
-  <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%'+(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="É" tagname="spiroLocant" determinise="yes"/>
+  <regexToken regex="%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?,%locant%(%openBracket%%indicatedHydrogen%%closeBracket%)?-?" symbol="É" tagname="spiroLocant" determinise="yes"/>
   <regexToken regex="%openBracket%([+\-]|[+][,\\/]?-|-[,\\/]?[+])%closeBracket%-?" symbol="Ä" tagname="lightRotation" ignoreWhenWritingXML="yes" determinise="yes"/>
 </regexTokenList>
