@@ -43,9 +43,8 @@ class StereochemistryHandler {
 	 * Processes and assigns stereochemistry elements to appropriate fragments
 	 * @param stereoChemistryEls 
 	 * @throws StructureBuildingException
-	 * @throws StereochemistryException 
 	 */
-	void applyStereochemicalElements(List<Element> stereoChemistryEls) throws StructureBuildingException, StereochemistryException {
+	void applyStereochemicalElements(List<Element> stereoChemistryEls) throws StructureBuildingException {
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> carbohydrateStereoChemistryEls = new ArrayList<Element>();
@@ -62,13 +61,33 @@ class StereochemistryHandler {
 		}
 		//perform locanted before unlocanted to avoid unlocanted elements using the stereocentres a locanted element refers to
 		for (Element stereochemistryEl : locantedStereoChemistryEls) {
-			matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+			try {
+				matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+			}
+			catch (StereochemistryException e) {
+				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+					state.addWarningMessage(e.getMessage());
+				}
+				else{
+					throw e;
+				}
+			}
 		}
 		if (!carbohydrateStereoChemistryEls.isEmpty()){
 			processCarbohydrateStereochemistry(carbohydrateStereoChemistryEls);
 		}
 		for (Element stereochemistryEl : unlocantedStereoChemistryEls) {
-			matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+			try {
+				matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+			}
+			catch (StereochemistryException e) {
+				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+					state.addWarningMessage(e.getMessage());
+				}
+				else{
+					throw e;
+				}
+			}
 		}
 	}
 
@@ -139,8 +158,7 @@ class StereochemistryHandler {
 			if (groupToStereochemEls.get(nextGroup)==null){
 				groupToStereochemEls.put(nextGroup, new ArrayList<Element>());
 			}
-			List<Element> stereochemistryEls = groupToStereochemEls.get(nextGroup);
-			stereochemistryEls.add(carbohydrateStereoChemistryEl);
+			groupToStereochemEls.get(nextGroup).add(carbohydrateStereoChemistryEl);
 		}
 		for (Entry<Element, List<Element>> entry : groupToStereochemEls.entrySet()) {
 			assignCarbohydratePrefixStereochem(entry.getKey(), entry.getValue());
@@ -224,8 +242,9 @@ class StereochemistryHandler {
 	 * @param stereoCentre
 	 * @param rOrS The description given in the name
 	 * @throws StructureBuildingException
+	 * @throws StereochemistryException
 	 */
-	private void applyStereoChemistryToStereoCentre(Atom atom, StereoCentre stereoCentre, String rOrS) throws StructureBuildingException {
+	private void applyStereoChemistryToStereoCentre(Atom atom, StereoCentre stereoCentre, String rOrS) throws StructureBuildingException, StereochemistryException {
 		List<Atom> cipOrderedAtoms =stereoCentre.getCipOrderedAtoms();
 		if (cipOrderedAtoms.size()!=4){
 			throw new StructureBuildingException("Only tetrahedral chirality is currently supported");
@@ -413,8 +432,9 @@ class StereochemistryHandler {
 	 * @param bond The stereobond
 	 * @param stereoBond
 	 * @param eOrZ The stereo description given in the name
+	 * @throws StereochemistryException 
 	 */
-	private void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) {
+	private void applyStereoChemistryToStereoBond(Bond bond, StereoBond stereoBond, String eOrZ ) throws StereochemistryException {
 		List<Atom> stereoBondAtoms = stereoBond.getOrderedStereoAtoms();
 		//stereoBondAtoms contains the higher priority atom at one end, the two bond atoms and the higher priority atom at the other end
 		Atom[] atomRefs4 = new Atom[4];

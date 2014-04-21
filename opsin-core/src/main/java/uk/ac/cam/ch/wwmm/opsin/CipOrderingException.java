@@ -6,7 +6,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  * @author dl387
  *
  */
-class CipOrderingException extends RuntimeException {
+class CipOrderingException extends StereochemistryException {
 
 	private static final long serialVersionUID = 1L;
 
