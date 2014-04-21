@@ -760,6 +760,29 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(0, children.size());
 	}
 	
+	//relativeCisTrans is only supported sufficiently to get constitutionally correct results i.e. locants extracted from the stereochemistry
+	@Test
+	public void testRelativeCisTrans() throws ComponentGenerationException {
+		//c-4-
+		Element substituent = new Element(SUBSTITUENT_EL);
+		Element stereochem = new Element(STEREOCHEMISTRY_EL);
+		stereochem.addAttribute(new Attribute(TYPE_ATR, RELATIVECISTRANS_TYPE_VAL));
+		stereochem.appendChild("c-4-");
+		substituent.appendChild(stereochem);
+		processStereochemistry(substituent);
+	
+		Elements children = substituent.getChildElements();
+		assertEquals(2, children.size());
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
+		assertEquals(null, modifiedStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("c-4-", modifiedStereochemistryEl1.getValue());
+		assertEquals(RELATIVECISTRANS_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+		Element locant = children.get(1);
+		assertEquals(LOCANT_EL, locant.getLocalName());
+		assertEquals("4", locant.getValue());
+	}
+	
 	//racemates are currently treated identically to completely undefined
 	@Test
 	public void testRacemate1() throws ComponentGenerationException {

@@ -807,6 +807,9 @@ class ComponentGenerator {
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ALPHA_OR_BETA_TYPE_VAL)){
 				processUnbracketedAlphaBetaStereochemistry(stereoChemistryElement);
 			}
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(RELATIVECISTRANS_TYPE_VAL)){
+				processRelativeCisTrans(stereoChemistryElement);
+			}
 		}
 	}
 
@@ -976,6 +979,26 @@ class ComponentGenerator {
 			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
 		}
 		stereoChemistryElement.detach();
+	}
+	
+	private void processRelativeCisTrans(Element stereoChemistryElement) {
+		String value = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
+		StringBuilder sb = new StringBuilder();
+		String[] terms = MATCH_COMMA.split(value);
+		for (String term : terms) {
+			if (term.startsWith("c-")|| term.startsWith("t-") || term.startsWith("r-")){
+				if (sb.length() > 0){
+					sb.append(',');
+				}
+				sb.append(term.substring(2));
+			}
+			else{
+				throw new RuntimeException("Malformed relativeCisTrans element");
+			}
+		}
+		Element locantEl = new Element(LOCANT_EL);
+		locantEl.appendChild(sb.toString());
+		XOMTools.insertAfter(stereoChemistryElement, locantEl);
 	}
 
 	/**
