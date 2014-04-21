@@ -3,33 +3,30 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Serializer;
-
-/**Turns a XOM Element into a pretty indented string.
- *
+/**
+ * Turns a XOM Element into a pretty indented string.
  * @author ptc24
+ * @author dl387
  *
  */
-public class XOMFormatter {
+public class XOMFormatter extends Serializer {
 
-	private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-	private Serializer serializer;
+	private final ByteArrayOutputStream outStream;
 
-	/**Sets up a new XOMFormatter.
-	 *
+	/**
+	 * Sets up a new XOMFormatter.
 	 */
 	public XOMFormatter() {
-		super();
-		try {
-			serializer = new Serializer(outStream, "ISO-8859-1");
-			serializer.setIndent(4);
-			serializer.setMaxLength(300);
-		    }
-		    catch (IOException ex) {
-		       System.err.println(ex);
-		    }
+		this(new ByteArrayOutputStream());
+	}
+	
+	private XOMFormatter(ByteArrayOutputStream outStream) {
+		super(outStream);
+		this.outStream = outStream;
+		setIndent(4);
+		setMaxLength(300);
 	}
 
 	/**Converts an Element to an indented string.
@@ -39,17 +36,13 @@ public class XOMFormatter {
 	 */
 	public String elemToString(Element elem) {
 		try {
-			// Grrr protected methods grrr
 			outStream.reset();
-			// Put the element in a document...
-			serializer.write(new Document(new Element(elem)));
-			// Then return the document, destroying the evidence
-			// that it ever was a document.
-			return outStream.toString().substring(45);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+			write(elem);
+			flush();
+			return outStream.toString();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
-
 }
