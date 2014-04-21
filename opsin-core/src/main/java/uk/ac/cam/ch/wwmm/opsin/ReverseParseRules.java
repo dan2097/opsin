@@ -145,6 +145,7 @@ class ReverseParseRules {
 					Pattern possibleRegex = resourceManager.symbolRegexesDictReversed[i];
 					if (possibleRegex != null) {//next could be a regex
 						Matcher mat = possibleRegex.matcher(chemicalWord).region(0, posInName);
+						mat.useTransparentBounds(true);
 						if (mat.find()) {//match at end (patterns use $ anchor)
 							AnnotatorState newAs = new AnnotatorState();
 							String matchedString = mat.group(0);
