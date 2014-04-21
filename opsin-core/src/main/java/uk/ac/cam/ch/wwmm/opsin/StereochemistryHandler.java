@@ -135,6 +135,9 @@ class StereochemistryHandler {
 		else if (stereoChemistryType.equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
+		else if (stereoChemistryType.equals(RELATIVECISTRANS_TYPE_VAL)){
+			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
+		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " +stereoChemistryType);
 		}
