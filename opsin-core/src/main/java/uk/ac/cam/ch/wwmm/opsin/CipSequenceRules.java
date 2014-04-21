@@ -17,6 +17,13 @@ import java.util.Queue;
  *
  */
 class CipSequenceRules {
+	private static class CipOrderingRunTimeException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+		public CipOrderingRunTimeException(String message) {
+			super(message);
+		}
+	}
+	
 	private final Atom chiralAtom;
 	
     CipSequenceRules(Atom chiralAtom) {
@@ -26,10 +33,16 @@ class CipSequenceRules {
 	/**
 	 * Returns the chiral atom's neighbours in CIP order from lowest priority to highest priority
 	 * @return
+	 * @throws CipOrderingException 
 	 */
 	List<Atom> getNeighbouringAtomsInCIPOrder() throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
-		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+		try {
+			Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+		}
+		catch (CipOrderingRunTimeException e){
+			throw new CipOrderingException(e.getMessage());
+		}
 		return neighbours;
 	}
 	
@@ -37,13 +50,19 @@ class CipSequenceRules {
 	 * Returns  the chiral atom's neighbours, with the exception of the given atom, in CIP order from lowest priority to highest priority
 	 * @param neighbourToIgnore
 	 * @return
+	 * @throws CipOrderingException 
 	 */
 	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		if (!neighbours.remove(neighbourToIgnore)){
 			throw new IllegalArgumentException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
 		}
-		Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+		try {
+			Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+		}
+		catch (CipOrderingRunTimeException e){
+			throw new CipOrderingException(e.getMessage());
+		}
 		return neighbours;
 	}
 
@@ -137,7 +156,7 @@ class CipSequenceRules {
 		    		}
 		    	}
 			}
-	    	throw new CipOrderingException("Failed to assign CIP stereochemistry, this indicates a bug in OPSIN or a limitation in OPSIN's implementation of the sequence rules");
+	    	throw new CipOrderingRunTimeException("Failed to assign CIP stereochemistry, this indicates a bug in OPSIN or a limitation in OPSIN's implementation of the sequence rules");
 	    }
 
 		/**

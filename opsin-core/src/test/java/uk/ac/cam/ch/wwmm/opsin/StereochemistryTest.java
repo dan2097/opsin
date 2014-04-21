@@ -56,7 +56,7 @@ public class StereochemistryTest {
 	}
 	
 	@Test
-	public void findStereoCentresNacetylleucine() {
+	public void findStereoCentresNacetylleucine() throws CipOrderingException {
 		Fragment f = n2s.parseChemicalName("N-acetylleucine").getStructure();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		assertEquals(1, stereoAnalyser.findStereoCentres().size());
