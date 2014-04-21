@@ -383,6 +383,7 @@
 		<token value="Clc2cc1N(c3c(Sc1cc2)cccc3)CCCN(C)C" labels="none">chlorazin</token><!--drug name-->
 		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC" labels="none">chlorobenzilate</token><!--pesticide name-->
 		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC" labels="none">chlorobenzilat</token><!--pesticide name-->
+		<token value="C1Cc2c1cccc2" labels="1/2/2a/3/4/5/6/6a">benzocyclobutene</token><!--Confusion as to whether ene means fully unsaturated-->
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none">diazinone</token><!--pesticide name-->
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C" labels="none">diazinon</token><!--pesticide name-->
 		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O" labels="none">diazolidinylurea</token><!--antimicrobial name-->
