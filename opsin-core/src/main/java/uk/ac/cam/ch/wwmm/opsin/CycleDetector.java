@@ -33,20 +33,44 @@ class CycleDetector {
 	}
 	
 	private static int traverseRings(Atom currentAtom, Atom previousAtom, int depth){
-		if(currentAtom.getProperty(Atom.VISITED) != null){
-			return currentAtom.getProperty(Atom.VISITED);
+		Integer previouslyAssignedDepth = currentAtom.getProperty(Atom.VISITED);
+		if(previouslyAssignedDepth != null){
+			return previouslyAssignedDepth;
 		}
 		currentAtom.setProperty(Atom.VISITED, depth);
-		int result = depth + 1;
-		List<Atom> neighbours = currentAtom.getAtomNeighbours();
-		neighbours.remove(previousAtom);
-		for (Atom neighbour : neighbours) {
-			int temp = traverseRings(neighbour, currentAtom, depth + 1);
-			if (temp <= depth) {
-				result = Math.min(result, temp);
+		List<Atom> equivalentAtoms = new ArrayList<Atom>();
+		equivalentAtoms.add(currentAtom);
+		
+		List<Atom> neighbours;
+		for(;;) {
+			//Non-recursively process atoms in a chain
+			//add the atoms in the chain to equivalentAtoms as either all or none of them are in a ring
+			neighbours = currentAtom.getAtomNeighbours();
+			neighbours.remove(previousAtom);
+			if (neighbours.size() != 1) {
+				break;
 			}
+			Atom nextAtom = neighbours.get(0);
+			if (nextAtom.getProperty(Atom.VISITED) != null) {
+				//chain reached a previously visited atom, must be a ring
+				break;
+			}
+			previousAtom = currentAtom;
+			currentAtom = nextAtom;
+			equivalentAtoms.add(currentAtom);
+			currentAtom.setProperty(Atom.VISITED, ++depth);
 		}
-		if (result <= depth){
+
+		int result = depth + 1;
+		for (Atom neighbour : neighbours) {
+		  int temp = traverseRings(neighbour, currentAtom, depth + 1);
+		  result = Math.min(result, temp);
+		}
+		if (result < depth){
+			for (Atom a : equivalentAtoms) {
+				a.setAtomIsInACycle(true);
+			}
+		} else if (result == depth) {
 			currentAtom.setAtomIsInACycle(true);
 		}
 		return result;
