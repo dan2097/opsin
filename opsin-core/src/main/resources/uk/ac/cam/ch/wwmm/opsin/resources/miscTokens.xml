@@ -84,6 +84,10 @@
   <tokenList tagname="subtractivePrefix" type="deoxy" symbol="Ý">
     <token value="O">deoxy</token>
     <token value="O">desoxy</token><!--older variant spelling-->
+    <token value="N">deamino</token>
+    <token value="N">desamino</token><!--older variant spelling-->
+    <token value="C">demethyl</token>
+    <token value="C">desmethyl</token><!--older variant spelling-->
   </tokenList>
 
   <tokenList tagname="subtractivePrefix" type="dehydro" symbol="Ý">
@@ -98,6 +102,10 @@
   <tokenList tagname="subtractivePrefix" type="deoxy" symbol="x">
     <token value="O">deoxy</token>
     <token value="O">desoxy</token><!--older variant spelling-->
+    <token value="N">deamino</token>
+    <token value="N">desamino</token><!--older variant spelling-->
+    <token value="C">demethyl</token>
+    <token value="C">desmethyl</token><!--older variant spelling-->
   </tokenList>
 
   <tokenList tagname="subtractivePrefix" type="dehydro" symbol="x">
