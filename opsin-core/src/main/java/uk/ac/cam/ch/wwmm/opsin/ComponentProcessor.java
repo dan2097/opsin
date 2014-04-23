@@ -4219,43 +4219,42 @@ class ComponentProcessor {
 	 */
 	private void resolveSuffixes(Element group, List<Element> suffixes) throws StructureBuildingException, ComponentGenerationException {
 		Fragment frag = state.xmlFragmentMap.get(group);
-		int firstAtomID = frag.getIdOfFirstAtom();//typically equivalent to locant 1
-		List<Atom> atomList =frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
-		int defaultAtom =0;//indice in atomList
+		Atom firstAtom = frag.getFirstAtom();//typically equivalent to locant 1
+		List<Atom> atomList = frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
+		int defaultAtom = 0;//index in atomList
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
-		String suffixTypeToUse =null;
-		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
-			suffixTypeToUse =groupType;
-		}
-		else{
-			suffixTypeToUse =STANDARDGROUP_TYPE_VAL;
-		}
+		String suffixTypeToUse = suffixRules.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
 
 		List<Fragment> suffixList = state.xmlSuffixMap.get(group);
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
-
+			
+			Atom fragAtomToUse = null;
 			String locant = suffix.getAttributeValue(LOCANT_ATR);
-			String locantId = suffix.getAttributeValue(LOCANTID_ATR);
-			int idOnParentFragToUse = 0;
 			if (locant != null && locant.indexOf(',') == -1) {
-				idOnParentFragToUse = frag.getIDFromLocantOrThrow(locant);
+				fragAtomToUse = frag.getAtomByLocantOrThrow(locant);
 			}
-			else if (locantId != null && locantId.indexOf(',') == -1) {
-				idOnParentFragToUse = Integer.parseInt(locantId);
-			}
-			else if (suffix.getAttribute(DEFAULTLOCANTID_ATR) != null) {
-				idOnParentFragToUse = Integer.parseInt(suffix.getAttributeValue(DEFAULTLOCANTID_ATR));
-			}
-			else if (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL)) {//means that e.g. sulfonyl has an explicit outAtom
-				idOnParentFragToUse = firstAtomID;
+			else{
+				String locantId = suffix.getAttributeValue(LOCANTID_ATR);
+				if (locantId != null && locantId.indexOf(',') == -1) {
+					fragAtomToUse = frag.getAtomByIDOrThrow(Integer.parseInt(locantId));
+				}
+				else{
+					String defaultLocantId = suffix.getAttributeValue(DEFAULTLOCANTID_ATR);
+					if (defaultLocantId != null) {
+						fragAtomToUse = frag.getAtomByIDOrThrow(Integer.parseInt(defaultLocantId));
+					}
+					else if (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL)) {//means that e.g. sulfonyl, has an explicit outAtom
+						fragAtomToUse = firstAtom;
+					}
+				}
 			}
 
 			Fragment suffixFrag = null;
 			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
-			for (int j = 0; j < suffixRuleTags.size(); j++) {
-				Element suffixRuleTag = suffixRuleTags.get(j);
+			for (int i = 0; i < suffixRuleTags.size(); i++) {
+				Element suffixRuleTag = suffixRuleTags.get(i);
 				String suffixRuleTagName = suffixRuleTag.getLocalName();
 				if (defaultAtom >= atomList.size()) {
 					defaultAtom = 0;
@@ -4275,38 +4274,34 @@ class ComponentProcessor {
 						}
 						else{
 							int bondOrderRequired = firstAtomInSuffix.getIncomingValency();
-							Atom parentfragAtom;
-							if (idOnParentFragToUse == 0) {
+							if (fragAtomToUse == null) {
 								if (suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
-									if (defaultAtom == 0)
+									if (defaultAtom == 0) {
 										defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
-									idOnParentFragToUse = atomList.get(defaultAtom).getID();
+									}
+									fragAtomToUse = atomList.get(defaultAtom);
 									defaultAtom++;
 								} else {
-									idOnParentFragToUse = atomList.get(defaultAtom).getID();
+									fragAtomToUse = atomList.get(defaultAtom);
 								}
-								idOnParentFragToUse = frag.getAtomOrNextSuitableAtomOrThrow(frag.getAtomByIDOrThrow(idOnParentFragToUse), bondOrderRequired, true).getID();
-								parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
-								if (FragmentTools.isCharacteristicAtom(parentfragAtom)){
+								fragAtomToUse = frag.getAtomOrNextSuitableAtomOrThrow(fragAtomToUse, bondOrderRequired, true);
+								if (FragmentTools.isCharacteristicAtom(fragAtomToUse)){
 									throw new StructureBuildingException("No suitable atom found to attach suffix");
 								}
-							}
-							else{
-								parentfragAtom  = frag.getAtomByIDOrThrow(idOnParentFragToUse);
 							}
 	
 							//create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
 							List<Bond> bonds = new ArrayList<Bond>(firstAtomInSuffix.getBonds());
 							for (Bond bondToSuffix : bonds) {
 								Atom suffixAtom = bondToSuffix.getOtherAtom(firstAtomInSuffix);
-								state.fragManager.createBond(parentfragAtom, suffixAtom, bondToSuffix.getOrder());
+								state.fragManager.createBond(fragAtomToUse, suffixAtom, bondToSuffix.getOrder());
 								state.fragManager.removeBond(bondToSuffix);
-								if (parentfragAtom.getIncomingValency()>2 && (suffixValue.equals("aldehyde") || suffixValue.equals("al")|| suffixValue.equals("aldoxime"))){//formaldehyde/methanal are excluded as they are substitutable
+								if (fragAtomToUse.getIncomingValency() > 2 && (suffixValue.equals("aldehyde") || suffixValue.equals("al")|| suffixValue.equals("aldoxime"))){//formaldehyde/methanal are excluded as they are substitutable
 									if("X".equals(suffixAtom.getFirstLocant())){//carbaldehyde
 										suffixAtom.setProperty(Atom.ISALDEHYDE, true);
 									}
 									else{
-										parentfragAtom.setProperty(Atom.ISALDEHYDE, true);
+										fragAtomToUse.setProperty(Atom.ISALDEHYDE, true);
 									}
 								}
 							}
@@ -4319,8 +4314,8 @@ class ComponentProcessor {
 					int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
 					int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
 					if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
-						if (idOnParentFragToUse != 0) {
-							frag.getAtomByIDOrThrow(idOnParentFragToUse).addChargeAndProtons(chargeChange, protonChange);
+						if (fragAtomToUse != null) {
+							fragAtomToUse.addChargeAndProtons(chargeChange, protonChange);
 						}
 						else{
 							applyUnlocantedChargeModification(atomList, chargeChange, protonChange);
@@ -4345,10 +4340,10 @@ class ComponentProcessor {
 				} else if (suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
 					int outValency = suffixRuleTag.getAttribute(SUFFIXRULES_OUTVALENCY_ATR) != null ? Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR)) : 1;
 					if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
-						if (idOnParentFragToUse != 0) {
-							frag.addOutAtom(idOnParentFragToUse, outValency, true);
+						if (fragAtomToUse != null) {
+							frag.addOutAtom(fragAtomToUse, outValency, true);
 						} else {
-							frag.addOutAtom(firstAtomID, outValency, false);
+							frag.addOutAtom(firstAtom, outValency, false);
 						}
 					} else {//something like oyl on a ring, which means it is now carbonyl and the outAtom is on the suffix and not frag
 						if (suffixFrag == null) {
