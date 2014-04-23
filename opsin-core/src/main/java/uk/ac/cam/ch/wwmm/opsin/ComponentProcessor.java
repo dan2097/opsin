@@ -4219,7 +4219,6 @@ class ComponentProcessor {
 	 */
 	private void resolveSuffixes(Element group, List<Element> suffixes) throws StructureBuildingException, ComponentGenerationException {
 		Fragment frag = state.xmlFragmentMap.get(group);
-		Atom firstAtom = frag.getFirstAtom();//typically equivalent to locant 1
 		List<Atom> atomList = frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
 		int defaultAtom = 0;//index in atomList
 		String groupType = frag.getType();
@@ -4325,7 +4324,7 @@ class ComponentProcessor {
 						if (fragAtomToUse != null) {
 							frag.addOutAtom(fragAtomToUse, outValency, true);
 						} else {
-							frag.addOutAtom(firstAtom, outValency, false);
+							frag.addOutAtom(frag.getFirstAtom(), outValency, false);
 						}
 					} else {//something like oyl on a ring, which means it is now carbonyl and the outAtom is on the suffix and not frag
 						if (suffixFrag == null) {
