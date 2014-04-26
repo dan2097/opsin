@@ -649,8 +649,8 @@ class StructureBuildingMethods {
 			 * However names are not consistent as to whether they bother having the hydro tags do this!
 			 * The atoms in atomsWithSV are in atom order those that can take a hydro element and then those that shouldn't really take a hydro element as its absence is unambiguous
 			 */
-			LinkedList<Atom> atomsWithSV = new LinkedList<Atom>();
-			LinkedList<Atom> atomsWhichImplicitlyWillHaveTheirSVRemoved = new LinkedList<Atom>();
+			List<Atom> atomsWithSV = new ArrayList<Atom>();
+			List<Atom> atomsWhichImplicitlyWillHaveTheirSVRemoved = new ArrayList<Atom>();
 			for (Atom atom : atomList) {
 				if (atom.getType().equals(SUFFIX_TYPE_VAL)){
 					break;
@@ -682,15 +682,15 @@ class StructureBuildingMethods {
 	            }
 			}
 			else{
-				if (hydrogenElements.size()> atomsWithSV.size()){
+				int hydrogenElementsCount = hydrogenElements.size();
+				if (hydrogenElementsCount > atomsWithSV.size()){
 					throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
-							hydrogenElements.size() + " hydrogen adding tags but only " +  atomsWithSV.size() +" positions that can be hydrogenated)" );
+							hydrogenElementsCount + " hydrogen adding tags but only " +  atomsWithSV.size() +" positions that can be hydrogenated)" );
 				}
-	            for (Element hydrogenElement : hydrogenElements) {
-	                Atom atomToReduceSpareValencyOn = atomsWithSV.removeFirst();
-	                atomToReduceSpareValencyOn.setSpareValency(false);
-	                hydrogenElement.detach();
-	            }
+				for (int i = 0; i < hydrogenElementsCount; i++) {
+					atomsWithSV.get(i).setSpareValency(false);
+					hydrogenElements.get(i).detach();
+				}
 			}
 		}
 
