@@ -1,4 +1,20 @@
-Version 1.5.0
+Version 1.6.0 (2014-04-26)
+Added API/command-line options to generate StdInchiKeys
+Added support for the IUPAC recommended nomenclature for carbobohydrate lactones
+Added support for boronic acid pinacol esters
+Added basic support for specifying chalcogen acid tautomer form e.g. thioacetic S-acid
+Fused ring bridges are now numbered
+Names with Endo/Exo/Syn/Anti stereochemistry can now be partially interpreted if warnRatherThanFailOnUninterpretableStereochemistry is used
+The warnRatherThanFailOnUninterpretableStereochemistry option will now assign as much stereochemistry as OPSIN understands (All ignored stereochemistry terms are mentioned in the OpsinResult message)
+Many minor nomenclature support improvements e.g. succinic imide; hexaldehyde; phenyldiazonium, organotrifluoroborates etc.
+Added more trivial names that can be confused with systematic names e.g. Imidazolidinyl urea
+Fixed StackOverFlowError that could occur when processing molecules with over 5000 atoms
+Many minor bug fixes
+Minor vocabulary improvements
+Minor speed improvements
+NOTE: This is the last release to support Java 1.5
+
+Version 1.5.0 (2013-07-21)
 Command line interface now accepts files to read and write to as arguments
 Added option to allow interpretation of acids missing the word acid e.g. "acetic" (off by default)
 Added option to treat uninterpretable stereochemistry as a warning rather than a failure (off by default)
@@ -7,7 +23,7 @@ Added support for parabens, azetidides, morpholides, piperazides, piperidides an
 Vocabulary improvements e.g. homo/beta amino acids
 Many minor bug fixes e.g. fulminic acid correctly interpreted
 
-Version 1.4.0
+Version 1.4.0 (2013-01-27)
 Added support for dialdoses,diketoses,ketoaldoses,alditols,aldonic acids,uronic acids,aldaric acids,glycosides,oligosacchardides, named systematically or from trivial stems, in cyclic or acyclic form
 Added support for ketoses named using dehydro
 Added support for anhydro
@@ -17,10 +33,10 @@ Improved heuristics for phospho substitution
 Added hydrazido and anilate suffixes
 Allowed more functional class nomenclature to apply to amino acids
 Added support for inverting CAS names with substituted functional terms e.g. Acetaldehyde, O-methyloxime
-Double substitution of a deoxy chiral centre now uses the CIP rules to decide which substituent replaced the hydroxy group 
+Double substitution of a deoxy chiral centre now uses the CIP rules to decide which substituent replaced the hydroxy group
 Unicode right arrows, superscripts and the soft hyphen are now recognised
 
-Version 1.3.0
+Version 1.3.0 (2012-09-16)
 Added option to output radicals as R groups (* in SMILES)
 Added support for carbolactone/dicarboximide/lactam/lactim/lactone/olide/sultam/sultim/sultine/sultone suffixes
 Resolved some cases of ambiguity in the grammar; the program's capability to handle longer peptide names is improved
@@ -32,7 +48,7 @@ Fixed case where a name formed of many words that could be parsed ambiguously wo
 NameToStructure.getInstance() no longer throws a checked exception
 Many minor bug fixes
 
-Version 1.2.0
+Version 1.2.0 (2011-12-06)
 OPSIN is now available from Maven Central
 Basic support for cylised carbohydrates e.g. alpha-D-glucopyranose
 Basic support for systematic carbohydrate stems e.g. D-glycero-D-gluco-Heptose
@@ -42,7 +58,7 @@ Minor vocabulary improvements
 Fixed a few minor bugs/limitations in the Cahn-Ingold-Prelog rules implementation and made more memory efficient
 Many minor improvements and bug fixes
 
-Version 1.1.0
+Version 1.1.0 (2011-06-16)
 Significant improvements to fused ring numbering code, specifically 3/4/5/7/8 member rings are no longer only allowed in chains of rings
 Added support for outputting to StdInChI
 Small improvements to fused ring building code
@@ -51,7 +67,7 @@ Lower case indicated hydrogen is now recognised
 Improvements to parsing speed
 Many minor improvements and bug fixes
 
-Version 1.0.0
+Version 1.0.0 (2011-03-09)
 Added native isomeric SMILES output
 Improved command-line interface. The desired format i.e. CML/SMILES/InChI as well as options such as allowing radicals can now all be specified via flags
 Debugging is now performed using log4j rather than by passing a verbose flag
@@ -68,7 +84,7 @@ Added support for isotopes into the program allowing deuterio/tritio
 Added support for R/S stereochemistry indicated by a locant which is also used to indicate the point of substitution for a substituent
 Many minor improvements and bug fixes
 
-Version 0.9.0
+Version 0.9.0 (2010-11-01)
 Added transition metals/f-block elements and nobel gases
 Added support for specifying the charge or oxidation number on elements e.g. aluminium(3+), iron(II)
 Calculations based off a van Arkel diagram are now used to determine whether functional bonds to metals should be treated as ionic or covalent
@@ -87,7 +103,7 @@ Vocabulary improvements especially in the area of nucleosides and nucleotides
 Esters of biochemical compounds e.g. triphosphates are now supported
 Many minor improvements and bug fixes
 
-Version 0.8.0
+Version 0.8.0 (2010-07-16)
 NameToStructureConfig can now be used to configure whether radicals e.g. ethyl are output or not.
 Names like carbon tetrachloride are now supported
 glycol ethers e.g. ethylene glycol ethyl ether are now supported
@@ -100,7 +116,7 @@ Vocabulary improvements
 Parsing is now even faster
 Various bug fixes and name intepretation fixes
 
-Version 0.7.0
+Version 0.7.0 (2010-06-09)
 Added full support for conjunctive nomenclature e.g. 1,3,5-benzenetriacetic acid
 Added basic support for CAS names
 Added trivial poly-noncarboxylic acids and more trivial carboxylic acids
@@ -117,7 +133,7 @@ OPSIN's SMILES parser now accept specification of number of hydrogens in cases o
 Mixtures specified by separating components by semicolonspace are now supported
 Many internal improvements and bug fixes
 
-Version 0.6.1
+Version 0.6.1 (2010-03-18)
 Counter ions are now duplicated such as to lead to if possible a neutral compound
 In names like nitrous amide the atoms modified by the functional replacement can now be substituted
 Allowed ~number~ for specifying superscripts
@@ -126,7 +142,7 @@ Added quinone suffix
 Tetrahedral sulfur stereochemistry is now recognised
 Bug fixes to fix incorrect interpretation of some names e.g. triphosgene is now unparseable rather than 3 x phosghene, phospho has different meanings depending on whether it used on an amino acid or another group etc.
 
-Version 0.6.0
+Version 0.6.0 (2010-02-18)
 OPSIN is now a mavenised project consisting of two modules: core and inchi. Core does name -->CML, inchi depends on core and allows conversion to inchi
 Instead of CML an OpsinResult can be returned which can yield information as to why a name was not interpretable
 Added support for unlocanted R/S/E/Z stereochemistry. Removed limit on number of atoms that stereochemistry code can handle
@@ -152,7 +168,7 @@ Made grammar more lenient in many places e.g. euphonic o, optional sqaure bracke
 Sulph is now treated like sulf as in sulphuric acid
 and many misc fixes and improvements
 
-Version 0.5.3
+Version 0.5.3 (2009-10-22)
 Added support for amic, aldehydic, anilic, anilide, carboxanilide and amoyl suffixes
 Added support for cyclic imides e.g. succinimide/succinimido
 Added support for amide functional class
@@ -162,7 +178,7 @@ Disabled stereochemistry in molecules with over 300 atoms as a temporary fix to 
 Slight improvement in method for deciding which group detachable hydro prefixes apply to.
 Minor vocabulary update
 
-Version 0.5.2
+Version 0.5.2 (2009-10-04)
 Outputting directly to InChI is now supported using the separately available nameToInchi jar (an OPSIN jar is expected in the same location as the nameToInchi jar)
 Fused rings with any number of rings in a chain or formed entirely of 6 membered rings can now be numbered
 Added support for E/Z/R/S where locants are given. Unlocanted cases will be dealt with in a subsequent release. In very large molecules a lack of memory may be encountered, this will be resolved in a subsequent release
@@ -175,7 +191,7 @@ Speed improvements
 Removed dependence on Nux/Saxon
 Misc minor fixes
 
-Version 0.5.1
+Version 0.5.1 (2009-07-20)
 Huge reduction in OPSIN initialisation time (typical ~7 seconds -->800ms)
 Allowed thio/seleno/telluro as divalent linkers and for functional replacement when used as prefixes. Peroxy can now be used for functional replacement
 Better support for semi-trivally named hydrocarbon fused rings e.g. tetracene
@@ -184,8 +200,8 @@ Improvements to locant assignment
 Support for names like triethyltetramine and triethylene glycol
 Misc other fixes to prevent OPSIN generating the wrong structure for certain types of names
 
-Version 0.5
+Version 0.5 (2009-06-23)
 Too many changes to list
 
-Version 0.1
+Version 0.1 (2006-10-11)
 Initial release
