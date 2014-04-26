@@ -463,6 +463,7 @@ class XmlDeclarations {
 	static final String SUFFIXRULES_REMOVETERMINALOXYGEN_EL = "removeTerminalOxygen";
 	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL = "convertHydroxyGroupsToOutAtoms";
 	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL = "convertHydroxyGroupsToPositiveCharge";
+	static final String SUFFIXRULES_SETACIDICELEMENT_EL = "setAcidicElement";
 	static final String SUFFIXRULES_VALUE_ATR = "value";
 	static final String SUFFIXRULES_SUBTYPE_ATR = "value";
 	static final String SUFFIXRULES_SMILES_ATR = "SMILES";
@@ -474,6 +475,7 @@ class XmlDeclarations {
 	static final String SUFFIXRULES_OUTVALENCY_ATR = "outValency";
 	static final String SUFFIXRULES_CHARGE_ATR = "charge";
 	static final String SUFFIXRULES_PROTONS_ATR = "protons";
+	static final String SUFFIXRULES_ELEMENT_ATR = "element";
 	
 	/**
 	 * See suffixApplicability.dtd

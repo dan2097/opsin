@@ -175,6 +175,10 @@
     <token value="ic">ic</token>
     <token value="ic">icacid</token>
     <token value="ic">ic acid</token>
+    <token value="ic_O_acid">ic o-acid</token>
+    <token value="ic_S_acid">ic s-acid</token>
+    <token value="ic_Se_acid">ic se-acid</token>
+    <token value="ic_Te_acid">ic te-acid</token>
     <token value="nitrile">nitrile</token>
     <token value="nitrile">nitril</token>
     <token value="nitrilium">nitrilium</token>

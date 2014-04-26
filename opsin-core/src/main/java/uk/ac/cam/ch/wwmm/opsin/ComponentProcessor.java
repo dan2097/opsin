@@ -4342,6 +4342,9 @@ class ComponentProcessor {
 							}
 						}
 					}
+				} else if (suffixRuleTagName.equals(SUFFIXRULES_SETACIDICELEMENT_EL)) {
+					String element = suffixRuleTag.getAttributeValue(SUFFIXRULES_ELEMENT_ATR);
+					swapElementsSuchThatThisElementIsAcidic(suffixFrag, element);
 				} else if (suffixRuleTagName.equals(SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL)) {
 					//already processed
 				} else if (suffixRuleTagName.equals(SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL)) {
@@ -4566,6 +4569,50 @@ class ComponentProcessor {
 			}
 		}
 		likelyAtom.addChargeAndProtons(chargeChange, protonChange);
+	}
+	
+	/**
+	 * e.g. if element is "S" changes C(=S)O -->C(=O)S
+	 * @param suffixFrag
+	 * @param element
+	 * @throws StructureBuildingException 
+	 */
+	private void swapElementsSuchThatThisElementIsAcidic(Fragment frag, String element) throws StructureBuildingException {
+		for (int i = 0, l =frag.getFunctionalAtomCount(); i < l; i++) {
+			Atom atom = frag.getFunctionalAtom(i).getAtom();
+			Set<Atom> ambiguouslyElementedAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+			if (ambiguouslyElementedAtoms != null) {
+				Atom atomToSwapWith = null;
+				for (Atom ambiguouslyElementedAtom : ambiguouslyElementedAtoms) {
+					if (ambiguouslyElementedAtom.getElement().equals(element)){
+						atomToSwapWith = ambiguouslyElementedAtom;
+						break;	
+					}
+				}
+				if (atomToSwapWith != null) {
+					if (atomToSwapWith != atom) {
+						//swap locants and element type
+						List<String> tempLocants1 = new ArrayList<String>(atom.getLocants());
+						List<String> tempLocants2 = new ArrayList<String>(atomToSwapWith.getLocants());
+						atom.clearLocants();
+						atomToSwapWith.clearLocants();
+						for (String locant : tempLocants1) {
+							atomToSwapWith.addLocant(locant);
+						}
+						for (String locant : tempLocants2) {
+							atom.addLocant(locant);
+						}
+						String a2Element = atomToSwapWith.getElement();
+						atomToSwapWith.setElement(atom.getElement());
+						atom.setElement(a2Element);
+						ambiguouslyElementedAtoms.remove(atomToSwapWith);
+					}
+					ambiguouslyElementedAtoms.remove(atom);
+					return;
+				}
+			}
+		}
+		throw new StructureBuildingException("Unable to find potential acidic atom with element: " + element);
 	}
 	
 	/**

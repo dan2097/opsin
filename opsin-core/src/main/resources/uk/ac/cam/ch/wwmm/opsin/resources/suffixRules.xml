@@ -197,6 +197,26 @@ sense of this -->
     <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
     <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
   </rule>
+  <rule value="ic_O_acid">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+    <setAcidicElement element="O"/>
+  </rule>
+  <rule value="ic_S_acid">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+    <setAcidicElement element="S"/>
+  </rule>
+  <rule value="ic_Se_acid">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+    <setAcidicElement element="Se"/>
+  </rule>
+  <rule value="ic_Te_acid">
+    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+    <setAcidicElement element="Te"/>
+  </rule>
   <rule value="ic_nonCarboxylic">
     <addFunctionalAtomsToHydroxyGroups/>
   </rule>
