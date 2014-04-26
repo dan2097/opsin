@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -115,7 +114,7 @@ class WordTools {
 	 * @return A List of lists of annotations, each list corresponds to a substituent/maingroup/functionalTerm
 	 */
 	static List<List<Character>> chunkAnnotations(List<Character> annots) {
-		LinkedList<List<Character>> chunkList = new LinkedList<List<Character>>();
+		List<List<Character>> chunkList = new ArrayList<List<Character>>();
 		List<Character> currentTerm = new ArrayList<Character>();
 		for (Character annot : annots) {
 			currentTerm.add(annot);

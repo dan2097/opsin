@@ -1,8 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,10 +20,10 @@ class BuildResults {
 	 * setExplicitly says whether the outAtom absolutely definitely refers to that atom or not.
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
 	 * These OutAtoms are the same objects as are present in the fragments*/
-	private final LinkedList<OutAtom> outAtoms;
+	private final ArrayList<OutAtom> outAtoms;
 
 	/**The atoms that may be used to from things like esters*/
-	private final LinkedList<FunctionalAtom> functionalAtoms;
+	private final ArrayList<FunctionalAtom> functionalAtoms;
 
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
 	private final LinkedHashSet<Fragment> fragments;
@@ -33,8 +33,8 @@ class BuildResults {
      * @param state
      * @param wordSubOrBracket*/
 	BuildResults(BuildState state, Element wordSubOrBracket) {
-		outAtoms = new LinkedList<OutAtom>();
-		functionalAtoms = new LinkedList<FunctionalAtom>();
+		outAtoms = new ArrayList<OutAtom>();
+		functionalAtoms = new ArrayList<FunctionalAtom>();
 		fragments = new LinkedHashSet<Fragment>();
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(wordSubOrBracket, XmlDeclarations.GROUP_EL);
 		for (Element group : groups) {
@@ -61,8 +61,8 @@ class BuildResults {
 	 * Construct a blank buildResults
 	 */
 	BuildResults() {
-		outAtoms = new LinkedList<OutAtom>();
-		functionalAtoms = new LinkedList<FunctionalAtom>();
+		outAtoms = new ArrayList<OutAtom>();
+		functionalAtoms = new ArrayList<FunctionalAtom>();
 		fragments = new LinkedHashSet<Fragment>();
 	}
 

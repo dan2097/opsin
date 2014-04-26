@@ -1,7 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Deque;
 import java.util.List;
 
 import nu.xom.Element;
@@ -324,7 +325,7 @@ public final class XOMTools {
 	 */
 	public static List<Element> getDescendantElementsWithTagName(Element startingElement, String elementName) {
 		List<Element> matchingElements = new ArrayList<Element>();
-		LinkedList<Element> stack = new LinkedList<Element>();
+		Deque<Element> stack = new ArrayDeque<Element>();
 		Elements children =startingElement.getChildElements();
 		for (int i = children.size() -1; i >= 0; i--) {
 			stack.add(children.get(i));
@@ -352,7 +353,7 @@ public final class XOMTools {
 	 */
 	public static List<Element> getDescendantElementsWithTagNames(Element startingElement, String[] elementNames) {
 		List<Element> matchingElements = new ArrayList<Element>();
-		LinkedList<Element> stack = new LinkedList<Element>();
+		Deque<Element> stack = new ArrayDeque<Element>();
 		Elements children =startingElement.getChildElements();
 		for (int i = children.size() -1; i >= 0; i--) {
 			stack.add(children.get(i));
@@ -431,7 +432,7 @@ public final class XOMTools {
 	 */
 	public static List<Element> getDescendantElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
 		List<Element> matchingElements = new ArrayList<Element>();
-		LinkedList<Element> stack = new LinkedList<Element>();
+		Deque<Element> stack = new ArrayDeque<Element>();
 		Elements children =startingElement.getChildElements();
 		for (int i = children.size() -1; i >= 0; i--) {
 			stack.add(children.get(i));
@@ -483,7 +484,7 @@ public final class XOMTools {
 	 */
 	public static int[] countNumberOfElementsAndNumberOfChildLessElements(Element startingElement) {
 		int[] counts = new int[2];
-		LinkedList<Element> stack = new LinkedList<Element>();
+		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement);
 		while (stack.size()>0){
 			Element currentElement =stack.removeLast();
