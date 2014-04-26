@@ -1,8 +1,9 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -78,15 +79,15 @@ class CycleDetector {
 
 	private static class PathSearchState{
 		final Atom currentAtom;
-		final LinkedList<Atom> orderAtomsVisited;
-		public PathSearchState(Atom currentAtom, LinkedList<Atom> orderAtomsVisited ) {
+		final List<Atom> orderAtomsVisited;
+		public PathSearchState(Atom currentAtom, List<Atom> orderAtomsVisited ) {
 			this.currentAtom = currentAtom;
 			this.orderAtomsVisited = orderAtomsVisited;
 		}
 		Atom getCurrentAtom() {
 			return currentAtom;
 		}
-		LinkedList<Atom> getOrderAtomsVisited() {
+		List<Atom> getOrderAtomsVisited() {
 			return orderAtomsVisited;
 		}
 	}
@@ -100,11 +101,11 @@ class CycleDetector {
 	 */
 	static List<List<Atom>> getPathBetweenAtomsUsingBonds(Atom a1, Atom a2, Set<Bond> peripheryBonds){
 		List<List<Atom>> paths = new ArrayList<List<Atom>>();
-		LinkedList<PathSearchState> stateStack = new LinkedList<PathSearchState>();
-		stateStack.add(new PathSearchState(a1, new LinkedList<Atom>()));
+		Deque<PathSearchState> stateStack = new ArrayDeque<PathSearchState>();
+		stateStack.add(new PathSearchState(a1, new ArrayList<Atom>()));
 		while (stateStack.size()>0){
 			PathSearchState state  =stateStack.removeLast();//depth first traversal
-			LinkedList<Atom> orderAtomsVisited = state.getOrderAtomsVisited();
+			List<Atom> orderAtomsVisited = state.getOrderAtomsVisited();
 			Atom nextAtom = state.getCurrentAtom();
 			orderAtomsVisited.add(nextAtom);
 			Set<Bond> neighbourBonds = new LinkedHashSet<Bond>(nextAtom.getBonds());
@@ -118,7 +119,7 @@ class CycleDetector {
 					paths.add(new ArrayList<Atom>(orderAtomsVisited.subList(1, orderAtomsVisited.size())));
 				}
 				else{//add atom to stack, its neighbours will be recursively investigated shortly
-					stateStack.add(new PathSearchState(neighbour, new LinkedList<Atom>(orderAtomsVisited)));
+					stateStack.add(new PathSearchState(neighbour, new ArrayList<Atom>(orderAtomsVisited)));
 				}
 			}
 		}

@@ -1,17 +1,16 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Deque;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import nu.xom.Attribute;
 import nu.xom.Element;
-
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -244,7 +243,7 @@ class Parser {
 		}
 		List<Parse> parses = new ArrayList<Parse>();
 		
-		LinkedList<Parse> parseQueue = new LinkedList<Parse>();
+		Deque<Parse> parseQueue = new ArrayDeque<Parse>();
 		parseQueue.add(new Parse(parse.getName()));
 		while (!parseQueue.isEmpty()){
 			Parse currentParse = parseQueue.removeFirst();

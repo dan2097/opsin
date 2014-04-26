@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -968,8 +967,8 @@ class FusedRingBuilder {
 				}
 				if (locants.length != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
 					List<Atom> atomList =fusedRing.getAtomList();
-					LinkedList<Atom> heteroatoms =new LinkedList<Atom>();
-					LinkedList<String> elementOfHeteroAtom =new LinkedList<String>();
+					List<Atom> heteroatoms = new ArrayList<Atom>();
+					List<String> elementOfHeteroAtom = new ArrayList<String>();
 					for (Atom atom : atomList) {//this iterates in the same order as the numbering system
 						if (!atom.getElement().equals("C")){
 							heteroatoms.add(atom);

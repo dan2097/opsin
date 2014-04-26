@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -45,11 +44,11 @@ class Fragment {
 
 	/**The atoms that are used when this fragment is connected to another fragment. Unused outAtoms means that the fragment is a radical or an error has occurred
 	 * Initially empty */
-	private final LinkedList<OutAtom> outAtoms = new LinkedList<OutAtom>();
+	private final List<OutAtom> outAtoms = new ArrayList<OutAtom>();
 
 	/**The atoms that are used on this fragment to form things like esters
 	 * Initially empty */
-	private final LinkedList<FunctionalAtom> functionalAtoms = new LinkedList<FunctionalAtom>();
+	private final List<FunctionalAtom> functionalAtoms = new ArrayList<FunctionalAtom>();
 
 	/**The atom that fragments connecting to this fragment connect to if a locant has not been specified
 	 * Defaults to the first atom to be added to the fragment. This is typically the one with locant 1

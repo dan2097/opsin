@@ -1,10 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,11 +24,11 @@ class SMILESWriter {
 	private static final Map<String,Integer[]> organicAtomsToStandardValencies = new HashMap<String, Integer[]>();
 
 	/**Closures 1-9, %10-99, 0 */
-	private static final  LinkedList<String> closureSymbols = new LinkedList<String>();
+	private static final  List<String> closureSymbols = new ArrayList<String>();
 
 
 	/**The available ring closure symbols, ordered from start to end in the preferred order for use.*/
-	private final LinkedList<String> availableClosureSymbols = new LinkedList<String>(closureSymbols);
+	private final Deque<String> availableClosureSymbols = new ArrayDeque<String>(closureSymbols);
 
 	/**Maps between bonds and the ring closure to use when the atom that ends the bond is encountered.*/
 	private final HashMap<Bond, String> bondToClosureSymbolMap = new HashMap<Bond, String>();
@@ -136,7 +137,7 @@ class SMILESWriter {
 	 * @return
 	 */
 	private void traverseMolecule(Atom startingAtom){
-		LinkedList<TraversalState> stack = new LinkedList<TraversalState>();
+		Deque<TraversalState> stack = new ArrayDeque<TraversalState>();
 		stack.add(new TraversalState(startingAtom, null, 0));
 		while (!stack.isEmpty()){
 			TraversalState currentstate = stack.removeLast();
@@ -337,7 +338,7 @@ class SMILESWriter {
 	 * @param startingAtom
 	 */
 	private void traverseSmiles(Atom startingAtom){
-		LinkedList<TraversalState> stack = new LinkedList<TraversalState>();
+		Deque<TraversalState> stack = new ArrayDeque<TraversalState>();
 		stack.add(new TraversalState(startingAtom, null, 0));
 		while (!stack.isEmpty()){
 			TraversalState currentstate = stack.removeLast();
@@ -358,7 +359,7 @@ class SMILESWriter {
 
 			smilesBuilder.append(atomToSmiles(currentAtom, depth, bondtaken));
 			List<Bond> bonds = currentAtom.getBonds();
-			LinkedList<String> newlyAvailableClosureSymbols = null;
+			List<String> newlyAvailableClosureSymbols = null;
 			for (Bond bond : bonds) {//ring closures
 				if (bond.equals(bondtaken)) {
 					continue;
@@ -369,9 +370,9 @@ class SMILESWriter {
 					String closure = bondToClosureSymbolMap.get(bond);
 					smilesBuilder.append(closure);
 					if (newlyAvailableClosureSymbols == null){
-						newlyAvailableClosureSymbols = new LinkedList<String>();
+						newlyAvailableClosureSymbols = new ArrayList<String>();
 					}
-					newlyAvailableClosureSymbols.addFirst(closure);
+					newlyAvailableClosureSymbols.add(closure);
 				}
 			}
 			for (Bond bond : bonds) {//ring openings
@@ -388,8 +389,8 @@ class SMILESWriter {
 			if (newlyAvailableClosureSymbols != null) {
 				//By not immediately adding to availableClosureSymbols we avoid using the same digit 
 				//to both close and open on the same atom
-				for (String closure : newlyAvailableClosureSymbols) {
-					availableClosureSymbols.addFirst(closure);
+				for (int i = newlyAvailableClosureSymbols.size() -1; i >=0; i--) {
+					availableClosureSymbols.addFirst(newlyAvailableClosureSymbols.get(i));
 				}
 			}
 	

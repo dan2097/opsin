@@ -1,19 +1,17 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-
 
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Node;
-
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**
@@ -180,7 +178,7 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 */
 	static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) {
-		LinkedList<Atom> stack = new LinkedList<Atom>();
+		Deque<Atom> stack = new ArrayDeque<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();
 		while (stack.size() > 0) {
@@ -217,7 +215,7 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 */
 	static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom){
-		LinkedList<Atom> stack = new LinkedList<Atom>();
+		Deque<Atom> stack = new ArrayDeque<Atom>();
 		stack.add(startingAtom);
 		Set<Atom> atomsVisited =new HashSet<Atom>();
 		while (stack.size() > 0) {
