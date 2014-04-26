@@ -1,7 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,7 +71,7 @@ public class ParseRules {
 		startingAS.annot = new ArrayList<Character>();
 		startingAS.tokens = new ArrayList<String>();
 		startingAS.posInName = 0;
-		LinkedList<AnnotatorState> asStack = new LinkedList<AnnotatorState>();
+		ArrayDeque<AnnotatorState> asStack = new ArrayDeque<AnnotatorState>();
 		asStack.add(startingAS);
 
 		int posInNameOfLastSuccessfulAnnotations = 0;
