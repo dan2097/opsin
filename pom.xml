@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>uk.ac.cam.ch.wwmm</groupId>
-    <artifactId>wwmm-parent</artifactId>
-    <version>4</version>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>9</version>
   </parent>
   <groupId>uk.ac.cam.ch.opsin</groupId>
   <artifactId>opsin</artifactId>
@@ -56,6 +56,23 @@
   </modules>
   <build>
     <plugins>
+      <!-- Use Java 1.6 -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <!-- Include POM.xml in source JAR -->
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <includePom>true</includePom>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <inherited>false</inherited>
@@ -63,11 +80,11 @@
           <descriptors>
             <descriptor>fullAssembly.xml</descriptor>
           </descriptors>
-           <archive>
-              <manifest>
-                 <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToStructure</mainClass>
-              </manifest>
-           </archive>
+          <archive>
+            <manifest>
+              <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToStructure</mainClass>
+            </manifest>
+          </archive>
        </configuration>
       </plugin>
       <plugin>
@@ -117,7 +134,7 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <targetJdk>1.5</targetJdk>
+          <targetJdk>1.6</targetJdk>
           <linkXref>true</linkXref>
         </configuration>
       </plugin>
