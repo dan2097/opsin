@@ -1,8 +1,9 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -12,8 +13,6 @@ import org.apache.log4j.Logger;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
-
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -1532,7 +1531,7 @@ class StructureBuildingMethods {
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
 	static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
-		LinkedList<Element> stack = new LinkedList<Element>();
+		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add((Element) startingElement.getParent());
 		List<Fragment> foundFragments =new ArrayList<Fragment>();
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
@@ -1545,7 +1544,7 @@ class StructureBuildingMethods {
 			}
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			LinkedList<Element> bracketted = new LinkedList<Element>();
+			List<Element> bracketted = new ArrayList<Element>();
 			for (Element bracketOrSubOrRoot : siblings) {
 				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot)<=currentElement.indexOf(startingElement)){
 					continue;
@@ -1566,7 +1565,10 @@ class StructureBuildingMethods {
 					stack.add(group);
 				}
 			}
-			stack.addAll(0, bracketted);//locanting into brackets is rarely the desired answer so place at the bottom of the stack
+			//locanting into brackets is rarely the desired answer so place at the bottom of the stack
+			for (int i = bracketted.size() -1; i >=0; i--) {
+				stack.addFirst(bracketted.get(i));
+			}
 			doneFirstIteration =true;
 		}
 		return foundFragments;
@@ -1582,7 +1584,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static Fragment findFragmentWithLocant(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
-		LinkedList<Element> stack = new LinkedList<Element>();
+		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add((Element) startingElement.getParent());
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
@@ -1610,7 +1612,7 @@ class StructureBuildingMethods {
 			}
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			LinkedList<Element> bracketted = new LinkedList<Element>();
+			List<Element> bracketted = new ArrayList<Element>();
 			if (!doneFirstIteration){//on the first iteration, ignore elements before the starting element and favour the element directly after the starting element (conditions apply)
 				int indexOfStartingEl = currentElement.indexOf(startingElement);
 				Element substituentToTryFirst =null;
@@ -1662,7 +1664,10 @@ class StructureBuildingMethods {
 					}
 				}
 			}
-			stack.addAll(0, bracketted);//locanting into brackets is rarely the desired answer so place at the bottom of the stack
+			//locanting into brackets is rarely the desired answer so place at the bottom of the stack
+			for (int i = bracketted.size() -1; i >=0; i--) {
+				stack.addFirst(bracketted.get(i));
+			}
 		}
 		return monoNuclearHydride;
 	}

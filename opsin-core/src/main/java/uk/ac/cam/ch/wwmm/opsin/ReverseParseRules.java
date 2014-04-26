@@ -1,9 +1,9 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +74,7 @@ class ReverseParseRules {
 		startingAS.annot = new ArrayList<Character>();
 		startingAS.tokens = new ArrayList<String>();
 		startingAS.posInName = chemicalWord.length();
-		LinkedList<AnnotatorState> asStack = new LinkedList<AnnotatorState>();
+		ArrayDeque<AnnotatorState> asStack = new ArrayDeque<AnnotatorState>();
 		asStack.add(startingAS);
 
 		int posInNameOfLastSuccessfulAnnotations = chemicalWord.length();
