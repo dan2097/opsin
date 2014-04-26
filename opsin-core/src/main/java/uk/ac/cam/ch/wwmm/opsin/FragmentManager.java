@@ -635,6 +635,13 @@ class FragmentManager {
 			removeBond(bond);
 		}
 		atom.getFrag().removeAtom(atom);
+		Set<Atom> ambiguousElementAssignment = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+		if (ambiguousElementAssignment != null){
+			ambiguousElementAssignment.remove(atom);
+			if (ambiguousElementAssignment.size() == 1){
+				ambiguousElementAssignment.iterator().next().setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, null);
+			}
+		}
 	}
 	
 	void removeBond(Bond bond){
