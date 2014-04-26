@@ -1,13 +1,14 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -2410,7 +2411,7 @@ class ComponentProcessor {
 	 */
 	private boolean checkLocantPresentOnPotentialRoot(Element startingElement, String locant) throws StructureBuildingException {
 		boolean foundSibling =false;
-		LinkedList<Element> s = new LinkedList<Element>();
+		Deque<Element> s = new ArrayDeque<Element>();
 		s.add(startingElement);
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
@@ -2456,7 +2457,7 @@ class ComponentProcessor {
 		}
 
 		if (!foundSibling){//Special case: anything the group could potentially substitute onto is in a bracket. The bracket is checked recursively
-			s = new LinkedList<Element>();
+			s = new ArrayDeque<Element>();
 			s.add(startingElement);
 			doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 			while (s.size()>0){

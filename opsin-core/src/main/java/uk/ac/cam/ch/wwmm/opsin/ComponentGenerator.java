@@ -1,10 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -442,14 +443,14 @@ class ComponentGenerator {
 	 * @param subOrRoot
 	 */
 	private void formAlkaneStemsFromComponents(Element subOrRoot) {
-		LinkedList<Element> alkaneStemComponents =new LinkedList<Element>(XOMTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
+		Deque<Element> alkaneStemComponents =new ArrayDeque<Element>(XOMTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
 		while(!alkaneStemComponents.isEmpty()){
 			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
 			int alkaneChainLength =0;
 			StringBuilder alkaneName = new StringBuilder();
 			alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
 			alkaneName.append(alkaneStemComponent.getValue());
-			while (!alkaneStemComponents.isEmpty() && XOMTools.getNextSibling(alkaneStemComponent)==alkaneStemComponents.get(0)) {
+			while (!alkaneStemComponents.isEmpty() && XOMTools.getNextSibling(alkaneStemComponent)==alkaneStemComponents.getFirst()) {
 				alkaneStemComponent.detach();
 				alkaneStemComponent = alkaneStemComponents.removeFirst();
 				alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
@@ -1766,7 +1767,7 @@ class ComponentGenerator {
 		multiplier.detach();
 
 		int alkylChainLength;
-		LinkedList<String> elementSymbolArray = new LinkedList<String>();
+		Deque<String> elementSymbolArray = new ArrayDeque<String>();
 		String smiles =chainEl.getAttributeValue(VALUE_ATR);
 		char[] smilesArray =smiles.toCharArray();
 		for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain

@@ -1,10 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -43,7 +44,7 @@ class StructureBuilder {
 		if (wordRules.size()==0){
 			throw new StructureBuildingException("Molecule contains no words!?");
 		}
-		LinkedList<Element> wordRuleStack = new LinkedList<Element>();
+		Deque<Element> wordRuleStack = new ArrayDeque<Element>();
 		for (int i = wordRules.size() -1; i >=0; i--) {
 			wordRuleStack.add(wordRules.get(i));
 		}

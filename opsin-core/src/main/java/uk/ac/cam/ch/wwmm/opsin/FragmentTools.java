@@ -1,8 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -1010,7 +1012,7 @@ class FragmentTools {
 		if (fromAtom.getAtomIsInACycle() && toAtom.getAtomIsInACycle()){//obviously both must be in rings
 			//attempt to get from the fromAtom to the toAtom in 6 or fewer steps.
 			List<Atom> visitedAtoms = new ArrayList<Atom>();
-			LinkedList<Atom> atomsToInvestigate = new LinkedList<Atom>();//A queue is not used as I need to make sure that only up to depth 6 is investigated
+			Deque<Atom> atomsToInvestigate = new ArrayDeque<Atom>();//A queue is not used as I need to make sure that only up to depth 6 is investigated
 			List<Atom> neighbours =fromAtom.getAtomNeighbours();
 			neighbours.remove(toAtom);
 			for (Atom neighbour : neighbours) {
@@ -1021,7 +1023,7 @@ class FragmentTools {
 				if (atomsToInvestigate.isEmpty()){
 					break;
 				}
-				LinkedList<Atom> atomsToInvestigateNext = new LinkedList<Atom>();
+				Deque<Atom> atomsToInvestigateNext = new ArrayDeque<Atom>();
 				while (!atomsToInvestigate.isEmpty()) {
 					Atom currentAtom =atomsToInvestigate.removeFirst();
 					if (currentAtom == toAtom){

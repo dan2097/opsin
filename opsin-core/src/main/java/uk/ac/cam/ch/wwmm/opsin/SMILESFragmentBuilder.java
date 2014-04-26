@@ -3,9 +3,10 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -126,7 +127,7 @@ class SMILESFragmentBuilder {
 	}
 	
 	private class ParserInstance {
-		private final LinkedList<StackFrame> stack = new LinkedList<StackFrame>();
+		private final Deque<StackFrame> stack = new ArrayDeque<StackFrame>();
 		private final Map<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures
 		
 		private final String smiles;
