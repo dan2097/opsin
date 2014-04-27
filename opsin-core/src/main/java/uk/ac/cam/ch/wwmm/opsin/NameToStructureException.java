@@ -11,22 +11,18 @@ public class NameToStructureException extends RuntimeException {
 
 	NameToStructureException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	NameToStructureException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	NameToStructureException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	NameToStructureException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }
