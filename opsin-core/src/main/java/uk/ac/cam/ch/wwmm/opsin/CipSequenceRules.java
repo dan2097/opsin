@@ -1,8 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -138,7 +140,7 @@ class CipSequenceRules {
 				nextAtoms2.add(bWithHistory);
 
 				CipState startingState = new CipState(nextAtoms1, nextAtoms2);
-		    	Queue<CipState> cipStateQueue = new LinkedList<CipState>();
+		    	Deque<CipState> cipStateQueue = new ArrayDeque<CipState>();
 		    	cipStateQueue.add(startingState);
 		    	/* Go through CIP states in a breadth-first manner:
 		    	 * Neighbours of the given atom/s (if multiple atoms this is because so far the two paths leading to them have been equivalent) are evaluated for both a and b
@@ -149,7 +151,7 @@ class CipSequenceRules {
 		    	 *
 		    	 */
 		    	while(!cipStateQueue.isEmpty()){
-		    		CipState currentState = cipStateQueue.remove();
+		    		CipState currentState = cipStateQueue.removeFirst();
 		    		compare = compareAtNextLevel(currentState, cipStateQueue);
 		    		if (compare != 0){
 		    			return compare;

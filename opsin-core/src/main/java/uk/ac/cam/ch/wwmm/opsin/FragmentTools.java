@@ -298,7 +298,7 @@ class FragmentTools {
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		for (Fragment fragment : suffixFragments) {
 			Atom rAtom = fragment.getFirstAtom();
-			LinkedList<Atom> nextAtoms = new LinkedList<Atom>(rAtom.getAtomNeighbours());
+			List<Atom> nextAtoms = rAtom.getAtomNeighbours();
 			for (Atom nextAtom : nextAtoms) {
 				atomsVisited.add(nextAtom);
 				atomPreviousBondMap.put(nextAtom, rAtom.getBondToAtomOrThrow(nextAtom));
