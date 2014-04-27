@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -293,7 +292,7 @@ class FragmentTools {
 
 
 	private static void processSuffixLabelling(List<Fragment> suffixFragments, HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
-		LinkedList<Atom> startingAtoms = new LinkedList<Atom>();
+		List<Atom> startingAtoms = new ArrayList<Atom>();
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		for (Fragment fragment : suffixFragments) {
@@ -307,8 +306,9 @@ class FragmentTools {
 		}
 		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
 
-		while (startingAtoms.size() > 0){
-			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, startingAtoms);
+		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
+		while (atomsToConsider.size() > 0){
+			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, atomsToConsider);
 		}
 	}
 
@@ -316,15 +316,16 @@ class FragmentTools {
 	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, HashMap<String, Integer> elementCount,HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		Atom firstAtom = suffixableFragment.getFirstAtom();
-		LinkedList<Atom> nextAtoms = new LinkedList<Atom>(firstAtom.getAtomNeighbours());
+		List<Atom> startingAtoms = firstAtom.getAtomNeighbours();
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
-		for (Atom nextAtom : nextAtoms) {
+		for (Atom nextAtom : startingAtoms) {
 			atomPreviousBondMap.put(nextAtom, firstAtom.getBondToAtomOrThrow(nextAtom));
 		}
-		Collections.sort(nextAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
 		atomsVisited.add(firstAtom);
-		while (nextAtoms.size() > 0){
-			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, nextAtoms);
+		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
+		while (atomsToConsider.size() > 0){
+			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, atomsToConsider);
 		}
 		if (!atomsToIgnore.contains(firstAtom) && firstAtom.determineValency(true) > firstAtom.getIncomingValency()){
 			//e.g. carbonimidoyl the carbon has locant C
@@ -333,24 +334,22 @@ class FragmentTools {
 	}
 
 
-	private static void assignLocantsAndExploreNeighbours(HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore, Set<Atom> atomsVisited, LinkedList<Atom> nextAtoms) throws StructureBuildingException {
-		Atom atom = nextAtoms.removeFirst();
+	private static void assignLocantsAndExploreNeighbours(HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore, Set<Atom> atomsVisited, Deque<Atom> atomsToConsider) throws StructureBuildingException {
+		Atom atom = atomsToConsider.removeFirst();
 		atomsVisited.add(atom);
 		if (!atomsToIgnore.contains(atom)){//assign locant
 			assignLocant(atom, elementCount);
 		}
 		List<Atom> atomNeighbours = atom.getAtomNeighbours();
-		for (int i = atomNeighbours.size() -1; i >=0; i--) {
-			if (atomsVisited.contains(atomNeighbours.get(i))){
-				atomNeighbours.remove(i);
-			}
-		}
+		atomNeighbours.removeAll(atomsVisited);
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		for (Atom atomNeighbour : atomNeighbours) {
 			atomPreviousBondMap.put(atomNeighbour, atom.getBondToAtomOrThrow(atomNeighbour));
 		}
 		Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
-		nextAtoms.addAll(0, atomNeighbours);
+		for (int i = atomNeighbours.size() - 1; i >= 0; i--) {
+			atomsToConsider.addFirst(atomNeighbours.get(i));
+		}
 	}
 
 
@@ -748,7 +747,7 @@ class FragmentTools {
 	static Atom getAtomByAminoAcidStyleLocant(Atom backboneAtom, String elementSymbol, String primes) throws StructureBuildingException {
 		//Search for appropriate atom by using the same algorithm as is used to assign locants initially
 
-		LinkedList<Atom> nextAtoms = new LinkedList<Atom>();
+		List<Atom> startingAtoms = new ArrayList<Atom>();
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		List<Atom> neighbours = backboneAtom.getAtomNeighbours();
@@ -761,16 +760,17 @@ class FragmentTools {
 					}
 				}
 			}
-			nextAtoms.add(neighbour);
+			startingAtoms.add(neighbour);
 			atomPreviousBondMap.put(neighbour, backboneAtom.getBondToAtomOrThrow(neighbour));
 		}
 
-		Collections.sort(nextAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
 		HashMap<String,Integer> elementCount =new HashMap<String,Integer>();//keeps track of how many times each element has been seen
 	
+		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
 		boolean hydrazoneSpecialCase =false;//look for special case violation of IUPAC rule where the locant of the =N- atom is skipped. This flag is set when =N- is encountered
-		while (nextAtoms.size() > 0){
-			Atom atom = nextAtoms.removeFirst();
+		while (atomsToConsider.size() > 0){
+			Atom atom = atomsToConsider.removeFirst();
 			atomsVisited.add(atom);
 			int primesOnPossibleAtom =0;
 			String element =atom.getElement();
@@ -820,7 +820,9 @@ class FragmentTools {
 				atomPreviousBondMap.put(atomNeighbour, atom.getBondToAtomOrThrow(atomNeighbour));
 			}
 			Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
-			nextAtoms.addAll(0, atomNeighbours);
+			for (int i = atomNeighbours.size() - 1; i >= 0; i--) {
+				atomsToConsider.addFirst(atomNeighbours.get(i));
+			}
 		}
 
 		if (primes.equals("") && backboneAtom.getElement().equals(elementSymbol)){//maybe it meant the starting atom

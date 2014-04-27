@@ -236,15 +236,15 @@ class CipSequenceRules {
 		 * @param neighbours
 		 */
 		private List<List<List<AtomWithHistory>>> formListsWithSamePriority(List<List<List<AtomWithHistory>>> neighbours) {
-			List<List<List<AtomWithHistory>>> updatedNeighbours  = new LinkedList<List<List<AtomWithHistory>>>();
+			List<List<List<AtomWithHistory>>> updatedNeighbours  = new ArrayList<List<List<AtomWithHistory>>>();
 			List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
 			for (List<List<AtomWithHistory>> neighbourLists : neighbours) {
-				List<List<AtomWithHistory>> updatedNeighbourLists  = new LinkedList<List<AtomWithHistory>>();
+				LinkedList<List<AtomWithHistory>> updatedNeighbourLists  = new LinkedList<List<AtomWithHistory>>();
 				for (int i = 0; i < neighbourLists.size(); i++) {
 					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
 					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
-					for (int j = i +1; j < neighbourLists.size(); j++) {
-						if (atomListCIPComparator.compare(neighbourLists.get(i), neighbourLists.get(j))==0){
+					for (int j = i + 1; j < neighbourLists.size(); j++) {
+						if (atomListCIPComparator.compare(primaryAtomList, neighbourLists.get(j))==0){
 							neighbourListsToCombine.add(neighbourLists.get(j));
 						}
 					}
@@ -257,27 +257,22 @@ class CipSequenceRules {
 					neighbourLists.remove(list);
 				}
 				//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
-				for (int i = neighbourLists.size()-1; i >=0; i--) {
+				for (int i = neighbourLists.size() - 1; i >=0; i--) {
 					List<AtomWithHistory> neighbourList = neighbourLists.get(i);
 					Collections.sort(neighbourList, cipComparator);
 					AtomWithHistory lastAtom = null;
 					List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
 					for (int j = neighbourList.size() -1; j >=0; j--) {
 						AtomWithHistory a = neighbourList.get(j);
-						if (lastAtom !=null && compareByCipRules(lastAtom, a) !=0){
-							if (!currentAtomList.isEmpty()){
-								updatedNeighbourLists.add(0, currentAtomList);
-							}
-							currentAtomList =new ArrayList<AtomWithHistory>();
-							currentAtomList.add(a);
+						if (lastAtom !=null && compareByCipRules(lastAtom, a) != 0){
+							updatedNeighbourLists.addFirst(currentAtomList);
+							currentAtomList = new ArrayList<AtomWithHistory>();
 						}
-						else{
-							currentAtomList.add(a);
-						}
+						currentAtomList.add(a);
 						lastAtom = a;
 					}
 					if (!currentAtomList.isEmpty()){
-						updatedNeighbourLists.add(0, currentAtomList);
+						updatedNeighbourLists.addFirst(currentAtomList);
 					}
 				}
 				updatedNeighbours.add(updatedNeighbourLists);
