@@ -273,8 +273,8 @@ class FunctionalReplacement {
 				List<String> infixTransformations = StringTools.arrayToList(MATCH_SEMICOLON.split(suffix.getAttributeValue(INFIX_ATR)));
 
 				List<Atom> atomList =fragToApplyInfixTo.getAtomList();
-				LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
-				LinkedList<Atom> doubleBondedOxygen =new LinkedList<Atom>();
+				LinkedList<Atom> singleBondedOxygen = new LinkedList<Atom>();
+				LinkedList<Atom> doubleBondedOxygen = new LinkedList<Atom>();
 				populateTerminalSingleAndDoubleBondedOxygen(atomList, singleBondedOxygen, doubleBondedOxygen);
 				int oxygenAvailable = singleBondedOxygen.size() +doubleBondedOxygen.size();
 
@@ -605,7 +605,7 @@ class FunctionalReplacement {
 				ethericOxygen.add(oxygen);
 			}
 		}
-		List<Atom> replaceableAtoms = new LinkedList<Atom>();
+		List<Atom> replaceableAtoms = new ArrayList<Atom>();
 		replaceableAtoms.addAll(doubleBondedOxygen);
 		replaceableAtoms.addAll(singleBondedOxygen);
 		replaceableAtoms.addAll(ethericOxygen);
@@ -736,8 +736,8 @@ class FunctionalReplacement {
 		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
-			LinkedList<Atom> terminalDoubleBondedOxygen =new LinkedList<Atom>();
+			List<Atom> singleBondedOxygen = new ArrayList<Atom>();
+			List<Atom> terminalDoubleBondedOxygen = new ArrayList<Atom>();
 			populateTerminalSingleAndDoubleBondedOxygen(oxygenWithAppropriateLocants, singleBondedOxygen, terminalDoubleBondedOxygen);
 			if (outValency ==1){
 				oxygenWithAppropriateLocants.removeAll(terminalDoubleBondedOxygen);
@@ -754,8 +754,8 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-		LinkedList<Atom> singleBondedOxygen =new LinkedList<Atom>();
-		LinkedList<Atom> terminalDoubleBondedOxygen =new LinkedList<Atom>();
+		List<Atom> singleBondedOxygen = new ArrayList<Atom>();
+		List<Atom> terminalDoubleBondedOxygen = new ArrayList<Atom>();
 		populateTerminalSingleAndDoubleBondedOxygen(oxygenAtoms, singleBondedOxygen, terminalDoubleBondedOxygen);
 		if (outValency ==1){
 			oxygenAtoms.removeAll(terminalDoubleBondedOxygen);
@@ -786,7 +786,7 @@ class FunctionalReplacement {
 					Fragment replacementFrag = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getType(), NONE_LABELS_VAL);
 					if (outValency ==3){//special case for nitrido
 						atomToReplace.getFirstBond().setOrder(3);
-						Atom removedHydroxy = singleBondedOxygen.removeFirst();
+						Atom removedHydroxy = singleBondedOxygen.remove(0);
 						state.fragManager.removeAtomAndAssociatedBonds(removedHydroxy);
 						removeAssociatedFunctionalAtom(removedHydroxy);
 					}
@@ -1075,7 +1075,7 @@ class FunctionalReplacement {
 	}
 	
 
-	private static void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, LinkedList<Atom> singleBondedOxygen,LinkedList<Atom> doubleBondedOxygen) throws StructureBuildingException {
+	private static void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, List<Atom> singleBondedOxygen, List<Atom> doubleBondedOxygen) throws StructureBuildingException {
 		for (Atom a : atomList) {
 			if (a.getElement().equals("O")){//find terminal oxygens
 				if (a.getBonds().size()==1){
