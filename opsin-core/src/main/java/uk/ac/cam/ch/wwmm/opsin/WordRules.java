@@ -389,9 +389,9 @@ class WordRules {
 			return lastChild;
 		}
 		else{
-			List<Element> groups = ((Element)lastChild.getParent()).getChildElements(GROUP_EL);
-			if (groups.size()>0){
-				return groups.get(groups.size()-1);
+			List<Element> groups = lastChild.getParent().getChildElements(GROUP_EL);
+			if (groups.size() > 0){
+				return groups.get(groups.size() - 1);
 			}
 		}
 		return null;

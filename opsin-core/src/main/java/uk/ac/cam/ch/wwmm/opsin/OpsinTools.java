@@ -37,12 +37,12 @@ class OpsinTools {
 	 * @param currentEl
 	 */
 	static Element getNextNonChargeSuffix(Element currentEl) {
-		Element next = (Element) XOMTools.getNextSibling(currentEl);
+		Element next = XOMTools.getNextSibling(currentEl);
 		while (next != null) {
 			if (next.getLocalName().equals(SUFFIX_EL) && !CHARGE_TYPE_VAL.equals(next.getAttributeValue(TYPE_ATR))){
 				return next;
 			}
-			next = (Element) XOMTools.getNextSibling(next);
+			next = XOMTools.getNextSibling(next);
 		}
 		return null;
 	}
@@ -79,21 +79,21 @@ class OpsinTools {
 	 */
 	static Element getPreviousGroup(Element current) {
 	  if (current.getLocalName().equals(GROUP_EL)){//can start with a group or the sub/root the group is in
-		  current=(Element)current.getParent();
+		  current = current.getParent();
 	  }
-	  Element parent = (Element) current.getParent();
+	  Element parent = current.getParent();
 	  if (parent == null || parent.getLocalName().equals(WORDRULE_EL)){
 		  return null;
 	  }
 	  int index = parent.indexOf(current);
 	  if (index ==0) return getPreviousGroup(parent);//no group found
-	  Element previous =(Element) parent.getChild(index-1);
+	  Element previous = parent.getChild(index-1);
 	  List<Element> children =previous.getChildElements();
 	  while (children.size()!=0){
 		  previous =children.get(children.size()-1);
 		  children =previous.getChildElements();
 	  }
-	  List<Element> groups =((Element)previous.getParent()).getChildElements(GROUP_EL);
+	  List<Element> groups = previous.getParent().getChildElements(GROUP_EL);
 	  if (groups.size()==0){
 		  return getPreviousGroup(previous);
 	  }
@@ -109,21 +109,21 @@ class OpsinTools {
 	 */
 	static Element getNextGroup(Element current) {
 	  if (current.getLocalName().equals(GROUP_EL)){//can start with a group or the sub/root the group is in
-		  current=(Element)current.getParent();
+		  current = current.getParent();
 	  }
-	  Element parent = (Element) current.getParent();
+	  Element parent = current.getParent();
 	  if (parent == null || parent.getLocalName().equals(MOLECULE_EL)){
 		  return null;
 	  }
 	  int index = parent.indexOf(current);
 	  if (index ==parent.getChildElements().size()-1) return getNextGroup(parent);//no group found
-	  Element next =(Element) parent.getChild(index +1);
+	  Element next = parent.getChild(index +1);
 	  List<Element> children =next.getChildElements();
 	  while (children.size()!=0){
 		  next =children.get(0);
 		  children =next.getChildElements();
 	  }
-	  List<Element> groups =((Element)next.getParent()).getChildElements(GROUP_EL);
+	  List<Element> groups = next.getParent().getChildElements(GROUP_EL);
 	  if (groups.size()==0){
 		  return getNextGroup(next);
 	  }
@@ -139,11 +139,11 @@ class OpsinTools {
 	 * @return wordRule Element
 	 */
 	static Element getParentWordRule(Element el) {
-		Element parent=(Element)el.getParent();
-		while(parent !=null && !parent.getLocalName().equals(WORDRULE_EL)){
-			parent =(Element)parent.getParent();
+		Element parent = el.getParent();
+		while(parent != null && !parent.getLocalName().equals(WORDRULE_EL)){
+			parent = parent.getParent();
 		}
-		if (parent==null){
+		if (parent == null){
 			throw new RuntimeException("Cannot find enclosing wordRule element");
 		}
 		else{

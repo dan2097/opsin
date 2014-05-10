@@ -39,10 +39,10 @@ class WordRulesOmittedSpaceCorrector {
 	 */
 	private void checkAndCorrectOmittedSpacesInDivalentFunctionalGroupRule(Element divalentFunctionalGroupWordRule)  {
 		List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(divalentFunctionalGroupWordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);
-		if (substituentWords.size()==1){//potentially has been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
-			List<Element> children  =substituentWords.get(0).getChildElements();
-			if (children.size()==2){
-				Element firstSubstituent =(Element)children.get(0);
+		if (substituentWords.size() == 1){//potentially has been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
+			List<Element> children = substituentWords.get(0).getChildElements();
+			if (children.size() == 2){
+				Element firstSubstituent = children.get(0);
 				//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
 				if (firstSubstituent.getAttribute(LOCANT_ATR)==null && firstSubstituent.getAttribute(MULTIPLIER_ATR)==null){
 					Element subToMove =children.get(1);

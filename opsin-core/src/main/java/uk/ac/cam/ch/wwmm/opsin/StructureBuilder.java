@@ -301,7 +301,7 @@ class StructureBuilder {
 			if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
 				Element clone = state.fragManager.cloneElement(state, words.get(0));
 				XOMTools.insertAfter(words.get(0), clone);
-				words = OpsinTools.elementsToElementArrayList(((Element)words.get(0).getParent()).getChildElements());
+				words = OpsinTools.elementsToElementArrayList(words.get(0).getParent().getChildElements());
 			}
 			else{
 				resolveWordOrBracket(state, words.get(wordIndice));
@@ -373,7 +373,7 @@ class StructureBuilder {
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = XOMTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -534,7 +534,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Mismatch between number of locants and number of oxides specified");
 		}
 		List<Fragment> orderedPossibleFragments = new ArrayList<Fragment>();//In preference suffixes are substituted onto e.g. acetonitrile oxide
-		List<Element> suffixEls = ((Element)rightMostGroup.getParent()).getChildElements(SUFFIX_EL);
+		List<Element> suffixEls = rightMostGroup.getParent().getChildElements(SUFFIX_EL);
 		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
 			Element suffixEl = suffixEls.get(i);
 			Fragment suffixFrag =state.xmlFragmentMap.get(suffixEl);
@@ -706,13 +706,13 @@ class StructureBuilder {
 		}
 
 		Element rightMostGroup = findRightMostGroupInWordOrWordRule(words.get(0));
-		Element parent = (Element) rightMostGroup.getParent();
+		Element parent = rightMostGroup.getParent();
 		boolean multiplied =false;
 		while (!parent.equals(words.get(0))){
 			if (parent.getAttribute(MULTIPLIER_ATR)!=null){
 				multiplied =true;
 			}
-			parent =(Element) parent.getParent();
+			parent = parent.getParent();
 		}
 		if (!multiplied){
 			List<Atom> carbonylOxygens = findCarbonylOxygens(state.xmlFragmentMap.get(rightMostGroup), locantForFunctionalTerm);
@@ -1006,7 +1006,7 @@ class StructureBuilder {
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = XOMTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -1059,7 +1059,7 @@ class StructureBuilder {
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = XOMTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -1246,7 +1246,7 @@ class StructureBuilder {
 		}
 		Element functionalClassEl = functionalClasses.get(0);
 		String functionalClass = functionalClassEl.getValue();
-		Element beforeAcetal = (Element) XOMTools.getPreviousSibling(functionalClassEl);
+		Element beforeAcetal = XOMTools.getPreviousSibling(functionalClassEl);
 		int numberOfAcetals =1;
 		List<String> elements = null;
 		if (beforeAcetal!=null){
@@ -1285,10 +1285,10 @@ class StructureBuilder {
 	}
 
 	private List<String> determineChalcogenReplacementOfAcetal(Element functionalClassEl) throws StructureBuildingException {
-		Element currentEl = (Element) functionalClassEl.getParent().getChild(0);
-		int multiplier =1;
+		Element currentEl = functionalClassEl.getParent().getChild(0);
+		int multiplier = 1;
 		List<String> elements = new ArrayList<String>();
-		while(currentEl !=functionalClassEl){
+		while(currentEl != functionalClassEl){
 			if (currentEl.getLocalName().equals(MULTIPLIER_EL)){
 				multiplier = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
 			}
@@ -1300,7 +1300,7 @@ class StructureBuilder {
 			else{
 				throw new StructureBuildingException("Unexpected element before acetal");
 			}
-			currentEl =(Element) XOMTools.getNextSibling(currentEl);
+			currentEl = XOMTools.getNextSibling(currentEl);
 		}
 		return elements;
 	}
@@ -1860,9 +1860,9 @@ class StructureBuilder {
 		if (componentToMultiply.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString()) && XOMTools.getChildElementsWithTagNameAndAttribute(componentToMultiply, WORD_EL, TYPE_ATR, WordType.full.toString()).size()>1){
 			return false;//already has been multiplied e.g. dichloride
 		}
-		Element firstChild = (Element) componentToMultiply.getChild(0);
+		Element firstChild = componentToMultiply.getChild(0);
 		while (firstChild.getChildElements().size() !=0){
-			firstChild = (Element) firstChild.getChild(0);
+			firstChild = firstChild.getChild(0);
 		}
 		if (firstChild.getLocalName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
 			return false;

@@ -135,7 +135,7 @@ class ComponentProcessor {
 				}
 			}
 			
-			Element finalSubOrRootInWord =(Element) word.getChild(word.getChildElements().size()-1);
+			Element finalSubOrRootInWord = word.getChild(word.getChildElements().size()-1);
 			while (!finalSubOrRootInWord.getLocalName().equals(ROOT_EL) && !finalSubOrRootInWord.getLocalName().equals(SUBSTITUENT_EL)){
 				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 				if (children.size()==0){
@@ -280,7 +280,7 @@ class ComponentProcessor {
 				}
 				allGroupInformation.add(groupInformation);
 			}
-			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
+			Element previousEl = XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
 				if ((locantValues.size()==groupsToBeAdded.length || locantValues.size() +1 ==groupsToBeAdded.length) && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){//one locant can be implicit in some cases
@@ -381,7 +381,7 @@ class ComponentProcessor {
 				}
 				allHeteroAtomInformation.add(heteroAtomInformation);
 			}
-			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
+			Element previousEl = XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
 				if (locantValues.size() ==heteroAtomsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
@@ -435,7 +435,7 @@ class ComponentProcessor {
 				allBondInformation.add(bondInformation);
 			}
 			boolean locanted = false;
-			Element previousEl =(Element) XOMTools.getPreviousSibling(group);
+			Element previousEl = XOMTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getLocalName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
 				if (locantValues.size() ==bondsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
@@ -518,7 +518,7 @@ class ComponentProcessor {
 			if (chainLength >1){
 				boolean connectEndToEndWithPreviousSub =true;
 				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
-					Element previousSubstituent =(Element) XOMTools.getPreviousSibling(group.getParent());
+					Element previousSubstituent = XOMTools.getPreviousSibling(group.getParent());
 					if (previousSubstituent!=null){
 						List<Element> groups = previousSubstituent.getChildElements(GROUP_EL);
 						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
@@ -527,12 +527,12 @@ class ComponentProcessor {
 					}
 				}
 				if (connectEndToEndWithPreviousSub){
-					Element parent =(Element) group.getParent();
+					Element parent = group.getParent();
 					while (parent.getLocalName().equals(BRACKET_EL)){
-						parent = (Element) parent.getParent();
+						parent = parent.getParent();
 					}
 					if (parent.getLocalName().equals(ROOT_EL)){
-						Element previous = (Element) XOMTools.getPrevious(group);
+						Element previous = XOMTools.getPrevious(group);
 						if (previous==null || !previous.getLocalName().equals(MULTIPLIER_EL)){
 							connectEndToEndWithPreviousSub=false;
 						}
@@ -609,7 +609,7 @@ class ComponentProcessor {
 			if (atomList.size()==1){
 				return;
 			}
-			Element possibleSuffix = (Element) XOMTools.getNextSibling(group, SUFFIX_EL);
+			Element possibleSuffix = XOMTools.getNextSibling(group, SUFFIX_EL);
 			Boolean terminalSuffixWithNoSuffixPrefixPresent =false;
 			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR)==null){
 				terminalSuffixWithNoSuffixPrefixPresent =true;
@@ -634,7 +634,7 @@ class ComponentProcessor {
 	}
 	
 	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
-		Element nextEl = (Element) XOMTools.getNextSibling(group);
+		Element nextEl = XOMTools.getNextSibling(group);
 		if (nextEl!=null){
 			if(nextEl.getLocalName().equals(CHARGESPECIFIER_EL)){
 				frag.getFirstAtom().setCharge(Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR)));
@@ -663,7 +663,7 @@ class ComponentProcessor {
 			Element hydroElement = hydroElements.get(0);
 			String hydroValue = hydroElement.getValue();
 			if (hydroValue.equals("hydro")){
-				Element multiplier = (Element) XOMTools.getPreviousSibling(hydroElement);
+				Element multiplier = XOMTools.getPreviousSibling(hydroElement);
 				if (multiplier == null || !multiplier.getLocalName().equals(MULTIPLIER_EL) ){
 					throw new ComponentGenerationException("Multiplier expected but not found before hydro subsituent");
 				}
@@ -677,7 +677,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
 			}
 			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
-			Element potentialRing =((Element)nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
+			Element potentialRing = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
 			if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
 				Element possibleLocantInFrontOfHydro = XOMTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
 				if (possibleLocantInFrontOfHydro !=null && possibleLocantInFrontOfHydro.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocantInFrontOfHydro.getValue()).length==1){
@@ -685,7 +685,7 @@ class ComponentProcessor {
 					targetRing =potentialRing;
 				}
 				else{
-					Element possibleLocantInFrontOfRing =(Element) XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
+					Element possibleLocantInFrontOfRing = XOMTools.getPreviousSibling(potentialRing, LOCANT_EL);
 					if (possibleLocantInFrontOfRing !=null){
 						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//check whether the group was expecting a locant e.g. 2-furyl
 							String locantValue = possibleLocantInFrontOfRing.getValue();
@@ -702,14 +702,14 @@ class ComponentProcessor {
 							String locantValue = possibleLocantInFrontOfRing.getValue();
 							int locants = MATCH_COMMA.split(locantValue).length;
 							int heteroCount = 0;
-							Element currentElem =  (Element) XOMTools.getNextSibling(possibleLocantInFrontOfRing);
+							Element currentElem = XOMTools.getNextSibling(possibleLocantInFrontOfRing);
 							while(!currentElem.equals(potentialRing)){
 								if(currentElem.getLocalName().equals(HETEROATOM_EL)) {
 									heteroCount++;
 								} else if (currentElem.getLocalName().equals(MULTIPLIER_EL)){
 									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
 								}
-								currentElem = (Element)XOMTools.getNextSibling(currentElem);
+								currentElem = XOMTools.getNextSibling(currentElem);
 							}
 							if (heteroCount==locants){//number of locants must match number
 								targetRing =potentialRing;
@@ -718,7 +718,7 @@ class ComponentProcessor {
 						//check whether the group is a benzofused ring e.g. 1,4-benzodioxin
 						if (FUSIONRING_SUBTYPE_VAL.equals(potentialRing.getAttributeValue(SUBTYPE_ATR)) && 
 								(potentialRing.getValue().equals("benzo")|| potentialRing.getValue().equals("benz")) &&
-								!((Element)XOMTools.getNextSibling(potentialRing)).getLocalName().equals(FUSION_EL)){
+								!XOMTools.getNextSibling(potentialRing).getLocalName().equals(FUSION_EL)){
 							targetRing =potentialRing;
 						}
 					}
@@ -730,7 +730,7 @@ class ComponentProcessor {
 	
 			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
 			if (targetRing ==null){
-				Element nextSubOrRootOrBracketFromLast = (Element) hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
+				Element nextSubOrRootOrBracketFromLast = hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
 				while (!nextSubOrRootOrBracketFromLast.equals(hydroSubstituent)){
 					potentialRing = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
 					if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
@@ -738,7 +738,7 @@ class ComponentProcessor {
 						break;
 					}
 					else{
-						nextSubOrRootOrBracketFromLast = (Element) XOMTools.getPreviousSibling(nextSubOrRootOrBracketFromLast);
+						nextSubOrRootOrBracketFromLast = XOMTools.getPreviousSibling(nextSubOrRootOrBracketFromLast);
 					}
 				}
 			}
@@ -782,7 +782,7 @@ class ComponentProcessor {
 			}
 			//prefer the nearest (unlocanted) biochemical group or the rightmost standard group
 			while (nextSubOrRootOrBracket != null){
-				Element groupToConsider = ((Element) nextSubOrRootOrBracket).getFirstChildElement(GROUP_EL);
+				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
 				if (groupToConsider!=null){
 					if (BIOCHEMICAL_SUBTYPE_VAL.equals(groupToConsider.getAttributeValue(SUBTYPE_ATR)) || groupToConsider.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
 						biochemicalGroup = groupToConsider;
@@ -794,7 +794,7 @@ class ComponentProcessor {
 						standardGroup = groupToConsider;
 					}
 				}
-				nextSubOrRootOrBracket = (Element) XOMTools.getNextSibling(nextSubOrRootOrBracket);
+				nextSubOrRootOrBracket = XOMTools.getNextSibling(nextSubOrRootOrBracket);
 			}
 			
 			Element targetGroup = biochemicalGroup!=null ? biochemicalGroup : standardGroup;
@@ -802,7 +802,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefix.getValue() +" to apply to!");
 			}
 			if (subtractivePrefix.getAttributeValue(TYPE_ATR).equals(ANHYDRO_TYPE_VAL)){
-				Element locant = (Element) XOMTools.getPreviousSibling(subtractivePrefix);
+				Element locant = XOMTools.getPreviousSibling(subtractivePrefix);
 				if (locant == null || !locant.getLocalName().equals(LOCANT_EL)){
 					throw new ComponentGenerationException("Two locants are required before an anhydro prefix");
 				}
@@ -856,7 +856,7 @@ class ComponentProcessor {
 		for (Element locant : locants) {
 			String[] locantValues = MATCH_COMMA.split(locant.getValue());
 			if(locantValues.length > 1) {
-				Element afterLocant = (Element)XOMTools.getNextSibling(locant);
+				Element afterLocant = XOMTools.getNextSibling(locant);
 				int structuralBracketDepth = 0;
 				Element multiplierEl = null;
 				while (afterLocant !=null){
@@ -868,7 +868,7 @@ class ComponentProcessor {
 						structuralBracketDepth--;
 					}
 					if (structuralBracketDepth!=0){
-						afterLocant = (Element)XOMTools.getNextSibling(afterLocant);
+						afterLocant = XOMTools.getNextSibling(afterLocant);
 						continue;
 					}
 					if(elName.equals(LOCANT_EL)) {
@@ -882,7 +882,7 @@ class ComponentProcessor {
 								break;
 							}
 							else{
-								Element afterMultiplier = (Element) XOMTools.getNextSibling(afterLocant);
+								Element afterMultiplier = XOMTools.getNextSibling(afterLocant);
 								if (afterMultiplier!=null && (afterMultiplier.getLocalName().equals(SUFFIX_EL) || afterMultiplier.getLocalName().equals(INFIX_EL)
 										|| afterMultiplier.getLocalName().equals(UNSATURATOR_EL) || afterMultiplier.getLocalName().equals(GROUP_EL))){
 									multiplierEl = afterLocant; //indirect locant
@@ -903,7 +903,7 @@ class ComponentProcessor {
 					else if (elName.equals(FUSEDRINGBRIDGE_EL)&& locantValues.length ==2 && afterLocant.equals(XOMTools.getNextSibling(locant))){//e.g. 1,8-methano
 						break;
 					}
-					afterLocant = (Element)XOMTools.getNextSibling(afterLocant);
+					afterLocant = XOMTools.getNextSibling(afterLocant);
 				}
 				if(multiplierEl != null) {
 					if(Integer.parseInt(multiplierEl.getAttributeValue(VALUE_ATR)) == locantValues.length ) {
@@ -914,7 +914,7 @@ class ComponentProcessor {
 								locantModified = checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord);
 							}
 							else{
-								Element afterGroup = (Element)XOMTools.getNextSibling(group);
+								Element afterGroup = XOMTools.getNextSibling(group);
 								int inlineSuffixCount =0;
 								int multiplier=1;
 								while (afterGroup !=null){
@@ -925,7 +925,7 @@ class ComponentProcessor {
 										inlineSuffixCount +=(multiplier);
 										multiplier=1;
 									}
-									afterGroup = (Element)XOMTools.getNextSibling(afterGroup);
+									afterGroup = XOMTools.getNextSibling(afterGroup);
 								}
 								if (inlineSuffixCount >=2){
 									locantModified = checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord);
@@ -966,7 +966,7 @@ class ComponentProcessor {
 	 */
 	private boolean checkSpecialLocantUses(Element locant, String[] locantValues, Element finalSubOrRootInWord) throws StructureBuildingException {
 		int count =locantValues.length;
-		Element currentElem = (Element)XOMTools.getNextSibling(locant);
+		Element currentElem = XOMTools.getNextSibling(locant);
 		int heteroCount = 0;
 		int multiplierValue = 1;
 		while(currentElem != null && !currentElem.getLocalName().equals(GROUP_EL)){
@@ -979,7 +979,7 @@ class ComponentProcessor {
 			else{
 				break;
 			}
-			currentElem = (Element)XOMTools.getNextSibling(currentElem);
+			currentElem = XOMTools.getNextSibling(currentElem);
 		}
 		if(currentElem != null && currentElem.getLocalName().equals(GROUP_EL)){
 			if (currentElem.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)) {
@@ -1038,7 +1038,7 @@ class ComponentProcessor {
 		if (currentElem != null  && count ==2 && currentElem.getLocalName().equals(GROUP_EL) && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
 			return true;
 		}
-		Element parentElem = (Element) locant.getParent();
+		Element parentElem = locant.getParent();
 		if (count==2 && parentElem.getLocalName().equals(BRACKET_EL)){//e.g. 3,4-(dichloromethylenedioxy) this is changed to (dichloro3,4-methylenedioxy)
 			List<Element> substituents = XOMTools.getChildElementsWithTagName(parentElem, SUBSTITUENT_EL);
 			if (substituents.size()>0){
@@ -1065,16 +1065,16 @@ class ComponentProcessor {
 	 */
 	private boolean detectMultiplicativeNomenclature(Element locant, String[] locantValues, Element finalSubOrRootInWord) {
 		int count =locantValues.length;
-		Element multiplier =(Element) finalSubOrRootInWord.getChild(0);
-		if (((Element)finalSubOrRootInWord.getParent()).getLocalName().equals(BRACKET_EL)){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
+		Element multiplier = finalSubOrRootInWord.getChild(0);
+		if (finalSubOrRootInWord.getParent().getLocalName().equals(BRACKET_EL)){//e.g. 1,1'-ethynediylbis(1-cyclopentanol)
 			if (!multiplier.getLocalName().equals(MULTIPLIER_EL)){
-				multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
+				multiplier = finalSubOrRootInWord.getParent().getChild(0);
 			}
 			else{
-				Element elAfterMultiplier = (Element) XOMTools.getNextSibling(multiplier);
+				Element elAfterMultiplier = XOMTools.getNextSibling(multiplier);
 				String elName = elAfterMultiplier.getLocalName();
 				if (elName.equals(HETEROATOM_EL) || elName.equals(SUBTRACTIVEPREFIX_EL)|| (elName.equals(HYDRO_EL) && !elAfterMultiplier.getValue().startsWith("per"))|| elName.equals(FUSEDRINGBRIDGE_EL)) {
-					multiplier =(Element) finalSubOrRootInWord.getParent().getChild(0);
+					multiplier = finalSubOrRootInWord.getParent().getChild(0);
 				}
 			}
 		}
@@ -1083,7 +1083,7 @@ class ComponentProcessor {
 		while (parentOfMultiplier!=null){
 			if (commonParent.equals(parentOfMultiplier)){
 				if (locantValues[count-1].endsWith("'")  &&
-						multiplier.getLocalName().equals(MULTIPLIER_EL) && !((Element)XOMTools.getNextSibling(multiplier)).getLocalName().equals(MULTIPLICATIVELOCANT_EL) &&
+						multiplier.getLocalName().equals(MULTIPLIER_EL) && !XOMTools.getNextSibling(multiplier).getLocalName().equals(MULTIPLICATIVELOCANT_EL) &&
 						Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) == count ){//multiplicative nomenclature
 					locant.setLocalName(MULTIPLICATIVELOCANT_EL);
 					locant.detach();
@@ -1101,7 +1101,7 @@ class ComponentProcessor {
 		for (int i = 0; i < dlStereochemistryEls.size(); i++) {
 			Element dlStereochemistry = dlStereochemistryEls.get(i);
 			String dlStereochemistryValue = dlStereochemistry.getAttributeValue(VALUE_ATR);
-			Element elementToApplyTo = (Element) XOMTools.getNextSibling(dlStereochemistry);
+			Element elementToApplyTo = XOMTools.getNextSibling(dlStereochemistry);
 			if (elementToApplyTo ==null){
 				throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
 			}
@@ -1262,9 +1262,9 @@ class ComponentProcessor {
 			}
 			carbohydrate.removeAttribute(anomericId);
 			
-			Element nextSibling = (Element) XOMTools.getNextSibling(carbohydrate);
+			Element nextSibling = XOMTools.getNextSibling(carbohydrate);
 			while (nextSibling !=null){
-				Element nextNextSibling = (Element) XOMTools.getNextSibling(nextSibling);
+				Element nextNextSibling = XOMTools.getNextSibling(nextSibling);
 				String elName = nextSibling.getLocalName();
 				if (elName.equals(SUFFIX_EL)){
 					Element suffix = nextSibling;
@@ -1326,12 +1326,12 @@ class ComponentProcessor {
 
 	private void applyUnspecifiedRingSizeCyclisationIfPresent(Element group, Atom potentialCarbonyl) throws StructureBuildingException {
 		boolean cyclise = false;
-		Element possibleYl = (Element) XOMTools.getNextSibling(group);
+		Element possibleYl = XOMTools.getNextSibling(group);
 		if (possibleYl != null && possibleYl.getLocalName().equals(SUFFIX_EL) && possibleYl.getValue().equals("yl")){
 			cyclise = true;
 		}
 		else{
-			Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{STEREOCHEMISTRY_EL});
+			Element alphaOrBetaLocantEl = XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{STEREOCHEMISTRY_EL});
 			if (alphaOrBetaLocantEl != null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL) ){
 				String value = alphaOrBetaLocantEl.getValue();
 				if (value.equals("alpha") || value.equals("beta") || value.equals("alpha,beta") || value.equals("beta,alpha")){
@@ -1367,10 +1367,10 @@ class ComponentProcessor {
 	 */
 	private Atom processUloseSuffix(Element group, Element suffix, Atom potentialCarbonyl) throws StructureBuildingException {
 		List<String> locantsToConvertToKetones = new ArrayList<String>();
-		Element potentialLocantOrMultiplier = (Element) XOMTools.getPreviousSibling(suffix);
+		Element potentialLocantOrMultiplier = XOMTools.getPreviousSibling(suffix);
 		if (potentialLocantOrMultiplier.getLocalName().equals(MULTIPLIER_ATR)){
 			int multVal = Integer.parseInt(potentialLocantOrMultiplier.getAttributeValue(VALUE_ATR));
-			Element locant = (Element) XOMTools.getPreviousSibling(potentialLocantOrMultiplier);
+			Element locant = XOMTools.getPreviousSibling(potentialLocantOrMultiplier);
 			if (locant != null && locant.getLocalName().equals(LOCANT_EL)){
 				String[] locantStrs = MATCH_COMMA.split(locant.getValue());
 				if (locantStrs.length != multVal) {
@@ -1391,7 +1391,7 @@ class ComponentProcessor {
 		else {
 			Element locant = potentialLocantOrMultiplier;
 			if (!locant.getLocalName().equals(LOCANT_EL)){
-				locant = (Element) XOMTools.getPreviousSibling(group);
+				locant = XOMTools.getPreviousSibling(group);
 			}
 			if (locant !=null && locant.getLocalName().equals(LOCANT_EL)){
 				String locantStr = locant.getValue();
@@ -1459,7 +1459,7 @@ class ComponentProcessor {
 	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize, Atom potentialCarbonyl) throws StructureBuildingException {
 		Fragment frag = state.xmlFragmentMap.get(carbohydrateGroup);
 		String ringSizeVal = ringSize.getAttributeValue(VALUE_ATR);
-		Element potentialLocant = (Element) XOMTools.getPreviousSibling(ringSize);
+		Element potentialLocant = XOMTools.getPreviousSibling(ringSize);
 		Atom carbonylCarbon = null;
 		Atom atomToJoinWith = null;
 		if (potentialLocant.getLocalName().equals(LOCANT_EL)){
@@ -1511,9 +1511,9 @@ class ComponentProcessor {
 		}
 		state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(frag);
-		Element alphaOrBetaLocantEl = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(carbohydrateGroup, new String[]{STEREOCHEMISTRY_EL});
+		Element alphaOrBetaLocantEl = XOMTools.getPreviousSiblingIgnoringCertainElements(carbohydrateGroup, new String[]{STEREOCHEMISTRY_EL});
 		if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getLocalName().equals(LOCANT_EL)){
-			Element stereoPrefixAfterAlphaBeta = (Element) XOMTools.getNextSibling(alphaOrBetaLocantEl);
+			Element stereoPrefixAfterAlphaBeta = XOMTools.getNextSibling(alphaOrBetaLocantEl);
 			Atom anomericReferenceAtom = getAnomericReferenceAtom(frag);
 			if (anomericReferenceAtom ==null){
 				throw new RuntimeException("OPSIN bug: Unable to determine anomeric reference atom in: " +carbohydrateGroup.getValue());
@@ -1711,9 +1711,9 @@ class ComponentProcessor {
 	private void processMultipliers(Element subOrRoot) {
 		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (Element multiplier : multipliers) {
-			Element possibleLocant =(Element)XOMTools.getPreviousSibling(multiplier);
+			Element possibleLocant = XOMTools.getPreviousSibling(multiplier);
 			String[] locants = null;
-			if (possibleLocant !=null){
+			if (possibleLocant != null){
 				String possibleLocantElName = possibleLocant.getLocalName();
 				if (possibleLocantElName.equals(LOCANT_EL)){
 					locants = MATCH_COMMA.split(possibleLocant.getValue());
@@ -1722,7 +1722,7 @@ class ComponentProcessor {
 					locants = MATCH_COLON.split(StringTools.removeDashIfPresent(possibleLocant.getValue()));
 				}
 			}
-			Element featureToMultiply = (Element)XOMTools.getNextSibling(multiplier);
+			Element featureToMultiply = XOMTools.getNextSibling(multiplier);
 			String nextName = featureToMultiply.getLocalName();
 			if(nextName.equals(UNSATURATOR_EL) ||
 					nextName.equals(SUFFIX_EL) ||
@@ -1790,12 +1790,12 @@ class ComponentProcessor {
 				atom.clearLocants();
 			}
 			List<Element> suffixes = new ArrayList<Element>();
-			Element possibleSuffix = (Element) XOMTools.getNextSibling(primaryConjunctiveGroup);
+			Element possibleSuffix = XOMTools.getNextSibling(primaryConjunctiveGroup);
 			while (possibleSuffix !=null){
 				if (possibleSuffix.getLocalName().equals(SUFFIX_EL)){
 					suffixes.add(possibleSuffix);
 				}
-				possibleSuffix = (Element) XOMTools.getNextSibling(possibleSuffix);
+				possibleSuffix = XOMTools.getNextSibling(possibleSuffix);
 			}
 			preliminaryProcessSuffixes(primaryConjunctiveGroup, suffixes);
 			resolveSuffixes(primaryConjunctiveGroup, suffixes);
@@ -1805,7 +1805,7 @@ class ComponentProcessor {
 			primaryConjunctiveGroup.setLocalName(CONJUNCTIVESUFFIXGROUP_EL);
 			allGroups.remove(primaryConjunctiveGroup);
 			
-			Element possibleMultiplier = (Element) XOMTools.getPreviousSibling(primaryConjunctiveGroup);
+			Element possibleMultiplier = XOMTools.getPreviousSibling(primaryConjunctiveGroup);
 			//label atoms appropriately
 			boolean alphaIsPosition1 = atomList.get(0).getIncomingValency() < 3;
 			int counter =0;
@@ -1843,7 +1843,7 @@ class ComponentProcessor {
 					conjunctiveGroups.add(conjunctiveSuffixGroup);
 					XOMTools.insertAfter(primaryConjunctiveGroup, conjunctiveSuffixGroup);
 				}
-				Element possibleLocant =(Element)XOMTools.getPreviousSibling(possibleMultiplier);
+				Element possibleLocant = XOMTools.getPreviousSibling(possibleMultiplier);
 				possibleMultiplier.detach();
 				if (possibleLocant.getLocalName().equals(LOCANT_EL)){
 					String[] locants = MATCH_COMMA.split(possibleLocant.getValue());
@@ -1893,15 +1893,15 @@ class ComponentProcessor {
 				if (locants.size()>0 ){
 					Element locantBeforeHWSystem = null;
 					List<Element> heteroAtoms = new ArrayList<Element>();
-					int indexOfGroup =subOrRoot.indexOf(group);
+					int indexOfGroup = subOrRoot.indexOf(group);
 					for (int j = indexOfGroup -1; j >= 0; j--) {
-						String elName=((Element)subOrRoot.getChild(j)).getLocalName();
+						String elName = subOrRoot.getChild(j).getLocalName();
 						if (elName.equals(LOCANT_EL)){
-							locantBeforeHWSystem = (Element)subOrRoot.getChild(j);
+							locantBeforeHWSystem = subOrRoot.getChild(j);
 							break;
 						}
 						else if(elName.equals(HETEROATOM_EL)){
-							Element heteroAtom = (Element)subOrRoot.getChild(j);
+							Element heteroAtom = subOrRoot.getChild(j);
 							heteroAtoms.add(heteroAtom);
 							if (heteroAtom.getAttribute(LOCANT_ATR)!=null){//locants already assigned, assumedly by process multipliers
 								break;
@@ -1949,8 +1949,8 @@ class ComponentProcessor {
 	private void assignSingleLocantsToAdjacentFeatures(List<Element> locants) {
 		for (Element locant : locants) {
 			String[] locantValues = MATCH_COMMA.split(locant.getValue());
-			Element referent = (Element)XOMTools.getNextSibling(locant);
-			if (referent!=null && locantValues.length==1){
+			Element referent = XOMTools.getNextSibling(locant);
+			if (referent != null && locantValues.length == 1){
 				String refName = referent.getLocalName();
 				//Only assigning locants to elements that were not created by a multiplier
 				if(referent.getAttribute(LOCANT_ATR) == null && referent.getAttribute(MULTIPLIED_ATR) == null && (refName.equals(UNSATURATOR_EL) ||
@@ -2413,7 +2413,7 @@ class ComponentProcessor {
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
 			Element currentElement =s.removeLast();
-			Element parent = (Element)currentElement.getParent();
+			Element parent = currentElement.getParent();
 			List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 			int indexOfCurrentElement =parent.indexOf(currentElement);
 
@@ -2425,7 +2425,7 @@ class ComponentProcessor {
 					if (bracketOrSub.getAttribute(TYPE_ATR)==null){
 						continue;
 					}
-					s.add((Element)bracketOrSub.getChild(0));
+					s.add(bracketOrSub.getChild(0));
 				}
 				else{
 					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
@@ -2459,7 +2459,7 @@ class ComponentProcessor {
 			doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 			while (s.size()>0){
 				Element currentElement =s.removeLast();
-				Element parent = (Element)currentElement.getParent();
+				Element parent = currentElement.getParent();
 				List<Element> siblings = XOMTools.getChildElementsWithTagNames(parent, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 				int indexOfCurrentElement =parent.indexOf(currentElement);
 
@@ -2468,7 +2468,7 @@ class ComponentProcessor {
 						continue;
 					}
 					if (bracketOrSub.getLocalName().equals(BRACKET_EL)){
-						s.add((Element)bracketOrSub.getChild(0));
+						s.add(bracketOrSub.getChild(0));
 					}
 					else{
 						Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
@@ -2508,7 +2508,7 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = XOMTools.getChildElementsWithTagName((Element) group.getParent(), INDICATEDHYDROGEN_EL);
+				List<Element> hydrogenAddingEls = XOMTools.getChildElementsWithTagName(group.getParent(), INDICATEDHYDROGEN_EL);
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
@@ -2548,15 +2548,15 @@ class ComponentProcessor {
 		for (Element group : hwGroups) {
 			Fragment hwRing =state.xmlFragmentMap.get(group);
 			List<Atom> atomList =hwRing.getAtomList();
-			Element prev = (Element) XOMTools.getPreviousSibling(group);
-			ArrayList<Element> prevs = new ArrayList<Element>();
+			Element prev = XOMTools.getPreviousSibling(group);
+			List<Element> prevs = new ArrayList<Element>();
 			boolean noLocants = true;
 			while(prev != null && prev.getLocalName().equals(HETEROATOM_EL)) {
 				prevs.add(prev);
 				if(prev.getAttribute(LOCANT_ATR) != null) {
 					noLocants = false;
 				}
-				prev = (Element) XOMTools.getPreviousSibling(prev);
+				prev = XOMTools.getPreviousSibling(prev);
 			}
 			if (atomList.size() == 6 && group.getValue().equals("an")){
 				boolean hasNitrogen = false;
@@ -2610,7 +2610,7 @@ class ComponentProcessor {
 						}
 						else if (specialInstruction.equals("not_icacid")){
 							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR)==null){
-								Element nextEl = (Element) XOMTools.getNextSibling(group);
+								Element nextEl = XOMTools.getNextSibling(group);
 								if (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
 									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a HW ring");
 								}
@@ -2618,7 +2618,7 @@ class ComponentProcessor {
 						}
 						else if (specialInstruction.equals("not_nothingOrOlate")){
 							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR)==null){
-								Element nextEl = (Element) XOMTools.getNextSibling(group);
+								Element nextEl = XOMTools.getNextSibling(group);
 								if (nextEl==null || (nextEl!=null && nextEl.getLocalName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ate"))){
 									throw new ComponentGenerationException(name +" has the syntax for a HW ring but probably does not mean that in this context");
 								}
@@ -2743,8 +2743,8 @@ class ComponentProcessor {
 			 * e.g. bi requires 2, ter requires 4 etc.
 			 */
 			List<List<String>> ringJoiningLocants =new ArrayList<List<String>>();
-			Element potentialLocant =(Element)XOMTools.getPreviousSibling(multiplier);
-			Element group =(Element)XOMTools.getNextSibling(multiplier, GROUP_EL);
+			Element potentialLocant = XOMTools.getPreviousSibling(multiplier);
+			Element group = XOMTools.getNextSibling(multiplier, GROUP_EL);
 			if (potentialLocant!=null && (potentialLocant.getLocalName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)||potentialLocant.getLocalName().equals(LOCANT_EL)) ){//a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
 				if (ORTHOMETAPARA_TYPE_VAL.equals(potentialLocant.getAttributeValue(TYPE_ATR))){//an OMP locant has been provided to indicate how to connect the rings of the ringAssembly
 					String locant2 =potentialLocant.getValue();
@@ -2783,15 +2783,15 @@ class ComponentProcessor {
 
 			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
 			Element elementToResolve;//temporary element containing elements that should be resolved before the ring is duplicated
-			Element nextEl =(Element) XOMTools.getNextSibling(multiplier);
+			Element nextEl = XOMTools.getNextSibling(multiplier);
 			if (nextEl.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
 				elementToResolve = new Element(SUBSTITUENT_EL);
 				Element currentEl =nextEl;
-				nextEl = (Element) XOMTools.getNextSibling(currentEl);
+				nextEl = XOMTools.getNextSibling(currentEl);
 				currentEl.detach();
 				while (nextEl !=null && !nextEl.getLocalName().equals(STRUCTURALCLOSEBRACKET_EL)){
 					currentEl =nextEl;
-					nextEl = (Element) XOMTools.getNextSibling(currentEl);
+					nextEl = XOMTools.getNextSibling(currentEl);
 					currentEl.detach();
 					elementToResolve.appendChild(currentEl);
 				}
@@ -2865,7 +2865,7 @@ class ComponentProcessor {
 				fragmentToResolveAndDuplicate.setDefaultInAtom(clone.getDefaultInAtom());
 			}
 			XOMTools.setTextChild(group, multiplier.getValue() +group.getValue());
-			Element possibleOpenStructuralBracket = (Element) XOMTools.getPreviousSibling(multiplier);
+			Element possibleOpenStructuralBracket = XOMTools.getPreviousSibling(multiplier);
 			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
 				//To emphasise there can actually be two sets of structural brackets e.g. [1,1'-bi(cyclohexyl)]
 				XOMTools.getNextSibling(possibleOpenStructuralBracket, STRUCTURALCLOSEBRACKET_EL).detach();
@@ -2887,9 +2887,9 @@ class ComponentProcessor {
 		Element elementToResolve = new Element(SUBSTITUENT_EL);
 		boolean groupFound = false;
 		boolean inlineSuffixSeen = outAtomCount > 0;
-		Element currentEl = (Element) XOMTools.getNextSibling(multiplier);
+		Element currentEl = XOMTools.getNextSibling(multiplier);
 		while (currentEl !=null){
-			Element nextEl = (Element) XOMTools.getNextSibling(currentEl);
+			Element nextEl = XOMTools.getNextSibling(currentEl);
 			if (!groupFound || currentEl.getLocalName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL)|| currentEl.getLocalName().equals(UNSATURATOR_EL)){
 				currentEl.detach();
 				elementToResolve.appendChild(currentEl);
@@ -2914,7 +2914,7 @@ class ComponentProcessor {
 			}
 			currentEl = nextEl;
 		}
-		Element parent = (Element) multiplier.getParent();
+		Element parent = multiplier.getParent();
 		if (!parent.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getChildElementsWithTagNameAndAttribute(parent, SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL).size()!=0){
 			throw new ComponentGenerationException("Unexpected radical adding suffix on ring assembly");			
 		}
@@ -2971,17 +2971,17 @@ class ComponentProcessor {
 	}
 
 	private void processNonIdenticalPolyCyclicSpiro(Element polyCyclicSpiroDescriptor) throws ComponentGenerationException, StructureBuildingException {
-		Element subOrRoot = (Element) polyCyclicSpiroDescriptor.getParent();
+		Element subOrRoot = polyCyclicSpiroDescriptor.getParent();
 		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size()<2){
 			throw new ComponentGenerationException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
 		}
-		Element openBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
+		Element openBracket = XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		if (!openBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
 			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
 		}
 		List<Element> spiroBracketElements = XOMTools.getSiblingsUpToElementWithTagName(openBracket, STRUCTURALCLOSEBRACKET_EL);
-		Element closeBracket = (Element) XOMTools.getNextSibling(spiroBracketElements.get(spiroBracketElements.size()-1));
+		Element closeBracket = XOMTools.getNextSibling(spiroBracketElements.get(spiroBracketElements.size()-1));
 		if (closeBracket == null || !closeBracket.getLocalName().equals(STRUCTURALCLOSEBRACKET_EL)){
 			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
 		}
@@ -2991,7 +2991,7 @@ class ComponentProcessor {
 		int indexOfOpenBracket = subOrRoot.indexOf(openBracket);
 		int indexOfFirstGroup = subOrRoot.indexOf(firstGroup);
 		for (int i =indexOfOpenBracket +1; i < indexOfFirstGroup; i++) {
-			firstGroupEls.add((Element) subOrRoot.getChild(i));
+			firstGroupEls.add(subOrRoot.getChild(i));
 		}
 		firstGroupEls.add(firstGroup);
 		firstGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(firstGroup, UNSATURATOR_EL));
@@ -2999,7 +2999,7 @@ class ComponentProcessor {
 		Set<Atom> spiroAtoms = new HashSet<Atom>();
 		for (int i = 1; i < groups.size(); i++) {
 			Element nextGroup =groups.get(i);
-			Element locant = (Element) XOMTools.getNextSibling(groups.get(i-1), SPIROLOCANT_EL);
+			Element locant = XOMTools.getNextSibling(groups.get(i-1), SPIROLOCANT_EL);
 			if (locant ==null){
 				throw new ComponentGenerationException("Unable to find locantEl for polycyclic spiro system");
 			}
@@ -3008,7 +3008,7 @@ class ComponentProcessor {
 			int indexOfLocant = subOrRoot.indexOf(locant);
 			int indexOfNextGroup = subOrRoot.indexOf(nextGroup);
 			for (int j =indexOfLocant +1; j < indexOfNextGroup; j++) {
-				nextGroupEls.add((Element) subOrRoot.getChild(j));
+				nextGroupEls.add(subOrRoot.getChild(j));
 			}
 			nextGroupEls.add(nextGroup);
 			nextGroupEls.addAll(XOMTools.getNextAdjacentSiblingsOfType(nextGroup, UNSATURATOR_EL));
@@ -3058,7 +3058,7 @@ class ComponentProcessor {
 			}
 		}
 		if (spiroAtoms.size()>1){
-			Element expectedMultiplier = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+			Element expectedMultiplier = XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
 			if (expectedMultiplier!=null && expectedMultiplier.getLocalName().equals(MULTIPLIER_EL) && Integer.parseInt(expectedMultiplier.getAttributeValue(VALUE_ATR))==spiroAtoms.size()){
 				expectedMultiplier.detach();
 			}
@@ -3086,19 +3086,19 @@ class ComponentProcessor {
 	 */
 	private void processOldMethodPolyCyclicSpiro(List<Element> spiroElements) throws ComponentGenerationException, StructureBuildingException {
 		Element firstSpiro =spiroElements.get(0);
-		Element subOrRoot = (Element) firstSpiro.getParent();
-		Element firstEl = (Element) subOrRoot.getChild(0);
+		Element subOrRoot = firstSpiro.getParent();
+		Element firstEl = subOrRoot.getChild(0);
 		List<Element> elementsToResolve = XOMTools.getSiblingsUpToElementWithTagName(firstEl, POLYCYCLICSPIRO_EL);
 		elementsToResolve.add(0, firstEl);
 		resolveFeaturesOntoGroup(elementsToResolve);
 		
 		for (int i = 0; i < spiroElements.size(); i++) {
 			Element currentSpiro = spiroElements.get(i);
-			Element previousGroup = (Element) XOMTools.getPreviousSibling(currentSpiro, GROUP_EL);
+			Element previousGroup = XOMTools.getPreviousSibling(currentSpiro, GROUP_EL);
 			if (previousGroup==null){
 				throw new ComponentGenerationException("OPSIN bug: unable to locate group before polycylic spiro descriptor");
 			}
-			Element nextGroup = (Element) XOMTools.getNextSibling(currentSpiro, GROUP_EL);
+			Element nextGroup = XOMTools.getNextSibling(currentSpiro, GROUP_EL);
 			if (nextGroup==null){
 				throw new ComponentGenerationException("OPSIN bug: unable to locate group after polycylic spiro descriptor");
 			}
@@ -3109,7 +3109,7 @@ class ComponentProcessor {
 			resolveFeaturesOntoGroup(elementsToResolve);
 			
 			String locant1 =null;
-			Element possibleFirstLocant = (Element) XOMTools.getPreviousSibling(currentSpiro);
+			Element possibleFirstLocant = XOMTools.getPreviousSibling(currentSpiro);
 			if (possibleFirstLocant !=null && possibleFirstLocant.getLocalName().equals(LOCANT_EL)){
 				if (MATCH_COMMA.split(possibleFirstLocant.getValue()).length==1){
 					locant1 = possibleFirstLocant.getValue();
@@ -3128,7 +3128,7 @@ class ComponentProcessor {
 			}
 			Atom atomOnParentFrag;
 			String locant2 =null;
-			Element possibleSecondLocant = (Element) XOMTools.getNextSibling(currentSpiro);
+			Element possibleSecondLocant = XOMTools.getNextSibling(currentSpiro);
 			if (possibleSecondLocant !=null && possibleSecondLocant.getLocalName().equals(LOCANT_EL)){
 				if (MATCH_COMMA.split(possibleSecondLocant.getValue()).length==1){
 					locant2 = possibleSecondLocant.getValue();
@@ -3167,7 +3167,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void processSpiroBiOrTer(Element polyCyclicSpiroDescriptor, int components) throws ComponentGenerationException, StructureBuildingException {
-		Element locant = (Element) XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
+		Element locant = XOMTools.getPreviousSibling(polyCyclicSpiroDescriptor);
 		String locantText;
 		if (locant ==null || !locant.getLocalName().equals(LOCANT_EL)){
 			if (components==2){
@@ -3185,7 +3185,7 @@ class ComponentProcessor {
 		if (locants.length!=components){
 			throw new ComponentGenerationException("Mismatch between spiro descriptor and number of locants provided");
 		}
-		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
+		Element group = XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
 		if (group==null){
 			throw new ComponentGenerationException("Cannot find group to which spirobi/ter descriptor applies");
 		}
@@ -3222,7 +3222,7 @@ class ComponentProcessor {
 		value = value.substring(0, value.length()-10);//remove dispiroter
 		value = StringTools.removeDashIfPresent(value);
 		String[] locants = MATCH_COLON.split(value);
-		Element group = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
+		Element group = XOMTools.getNextSibling(polyCyclicSpiroDescriptor, GROUP_EL);
 		if (group==null){
 			throw new ComponentGenerationException("Cannot find group to which dispiroter descriptor applies");
 		}
@@ -3261,7 +3261,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException 
 	 */
 	private void determineFeaturesToResolveInSingleComponentSpiro(Element polyCyclicSpiroDescriptor) throws StructureBuildingException, ComponentGenerationException {
-		Element possibleOpenBracket = (Element) XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
+		Element possibleOpenBracket = XOMTools.getNextSibling(polyCyclicSpiroDescriptor);
 		List<Element> elementsToResolve;
 		if (possibleOpenBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){
 			possibleOpenBracket.detach();
@@ -3286,7 +3286,7 @@ class ComponentProcessor {
 			return;
 		}
 		Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
-		Element parent = (Element) elementsToResolve.get(0).getParent();
+		Element parent = elementsToResolve.get(0).getParent();
 		int index = parent.indexOf(elementsToResolve.get(0));
 		Element group =null;
 		List<Element> suffixes = new ArrayList<Element>();
@@ -3382,7 +3382,7 @@ class ComponentProcessor {
 			List<Atom> bridgeAtomList = bridgeFrag.getAtomList();
 			bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
 			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size() - 1), 1, true);
-			Element possibleLocant = (Element) XOMTools.getPreviousSibling(bridge);
+			Element possibleLocant = XOMTools.getPreviousSibling(bridge);
 			Atom[] ringAtoms;
 			if (possibleLocant != null && possibleLocant.getLocalName().equals(LOCANT_EL)){
 				String[] locantArray = MATCH_COMMA.split(possibleLocant.getValue());
@@ -3398,7 +3398,7 @@ class ComponentProcessor {
 			}
 			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
 			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
-			Element unsaturator = (Element) XOMTools.getNextSibling(bridge);
+			Element unsaturator = XOMTools.getNextSibling(bridge);
 			if (unsaturator.getLocalName().equals(UNSATURATOR_EL)) {
 				unsaturator.detach();
 			}
@@ -3480,7 +3480,7 @@ class ComponentProcessor {
 		String groupValue =group.getValue();
 		Fragment thisFrag = state.xmlFragmentMap.get(group);
 		if (groupValue.equals("methylene") || groupValue.equals("oxy")|| matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
-			Element beforeGroup =(Element) XOMTools.getPreviousSibling(group);
+			Element beforeGroup = XOMTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getLocalName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && XOMTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
 				if (!unsuitableForFormingChainMultiradical(group, beforeGroup)){
@@ -3529,8 +3529,8 @@ class ComponentProcessor {
 		int outAtomCount = thisFrag.getOutAtomCount();
 		if (outAtomCount >=2){
 			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
-				Element previousGroup =(Element) OpsinTools.getPreviousGroup(group);
-				Element nextGroup =(Element) OpsinTools.getNextGroup(group);
+				Element previousGroup = OpsinTools.getPreviousGroup(group);
+				Element nextGroup = OpsinTools.getNextGroup(group);
 				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtomCount() < 2 || nextGroup==null){//must be preceded by a multi radical
 					throw new ComponentGenerationException("Invalid use of amine as a substituent!");
 				}
@@ -3549,7 +3549,7 @@ class ComponentProcessor {
 		}
 		
 		if (outAtomCount ==2 && EPOXYLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			Element possibleLocant =(Element) XOMTools.getPreviousSibling(group);
+			Element possibleLocant = XOMTools.getPreviousSibling(group);
 			if (possibleLocant !=null){
 				String[] locantValues = MATCH_COMMA.split(possibleLocant.getValue());
 				if (locantValues.length==2){
@@ -3575,14 +3575,14 @@ class ComponentProcessor {
 	 * @return
 	 */
 	private boolean unsuitableForFormingChainMultiradical(Element group, Element multiplierBeforeGroup) {
-		Element previousGroup = (Element) OpsinTools.getPreviousGroup(group);
+		Element previousGroup = OpsinTools.getPreviousGroup(group);
 		if (previousGroup!=null){
 			if (previousGroup.getAttribute(ISAMULTIRADICAL_ATR)!=null){
 				if (previousGroup.getAttributeValue(ACCEPTSADDITIVEBONDS_ATR)!=null && XOMTools.getPreviousSibling(previousGroup.getParent())!=null){
 					return false;
 				}
 				//the initial multiplier is proceded by another multiplier e.g. bis(dithio)
-				if (((Element)XOMTools.getPrevious(multiplierBeforeGroup)).getLocalName().equals(MULTIPLIER_EL)){
+				if (XOMTools.getPrevious(multiplierBeforeGroup).getLocalName().equals(MULTIPLIER_EL)){
 					return false;
 				}
 				if (previousGroup.getAttributeValue(ISAMULTIRADICAL_ATR).equals(multiplierBeforeGroup.getAttributeValue(VALUE_ATR))){
@@ -3600,7 +3600,7 @@ class ComponentProcessor {
 					outAtomValency = previousGroupFrag.getOutAtom(0).getValency();
 				}
 				else{
-					Element suffix = (Element) XOMTools.getNextSibling(previousGroup, SUFFIX_EL);
+					Element suffix = XOMTools.getNextSibling(previousGroup, SUFFIX_EL);
 					if (suffix!=null && suffix.getAttributeValue(VALUE_ATR).equals("ylidene")){
 						outAtomValency =2;
 					}
@@ -3668,27 +3668,27 @@ class ComponentProcessor {
 		for (int i = groups.size() -1; i >=0; i--) {
 			Element group = groups.get(i);
 			if (group.getAttributeValue(TYPE_ATR).equals(AMINOACID_TYPE_VAL) && OpsinTools.getNextGroup(group)!=null){
-				Element possibleLocant = (Element) XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{MULTIPLIER_EL});
+				Element possibleLocant = XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{MULTIPLIER_EL});
 				if (possibleLocant != null && possibleLocant.getLocalName().equals(LOCANT_EL)){
 					continue;
 				}
-				Element subOrRoot = (Element) group.getParent();
+				Element subOrRoot = group.getParent();
 				
 				//now find the brackets/substituents before this element
-				Element previous = (Element) XOMTools.getPreviousSibling(subOrRoot);
+				Element previous = XOMTools.getPreviousSibling(subOrRoot);
 				List<Element> previousElements = new ArrayList<Element>();
 				while( previous !=null){
 					if (!previous.getLocalName().equals(SUBSTITUENT_EL) && !previous.getLocalName().equals(BRACKET_EL)){
 						break;
 					}
 					previousElements.add(previous);
-					previous = (Element) XOMTools.getPreviousSibling(previous);
+					previous = XOMTools.getPreviousSibling(previous);
 				}
 				if (previousElements.size()>0){//an implicit bracket is needed
 					Collections.reverse(previousElements);
 					Element bracket = new Element(BRACKET_EL);
 					bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
-					Element parent = (Element) subOrRoot.getParent();
+					Element parent = subOrRoot.getParent();
 					int indexToInsertAt = parent.indexOf(previousElements.get(0));
 					for (Element element : previousElements) {
 						element.detach();
@@ -3714,7 +3714,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	private void implicitlyBracketToPreviousSubstituentIfAppropriate(Element substituent, List<Element> brackets) throws ComponentGenerationException, StructureBuildingException {
-		String firstElInSubName =((Element)substituent.getChild(0)).getLocalName();
+		String firstElInSubName = substituent.getChild(0).getLocalName();
 		if (firstElInSubName.equals(LOCANT_EL) ||firstElInSubName.equals(MULTIPLIER_EL)){
 			return;
 		}
@@ -3727,20 +3727,20 @@ class ComponentProcessor {
 
 		//checks that the element before is a substituent or a bracket which will obviously include substituent/s
 		//this makes sure there's more than just a substituent in the bracket
-		Element elementBeforeSubstituent =(Element)XOMTools.getPreviousSibling(substituent);
+		Element elementBeforeSubstituent = XOMTools.getPreviousSibling(substituent);
 		if (elementBeforeSubstituent ==null||
 				!elementBeforeSubstituent.getLocalName().equals(SUBSTITUENT_EL) &&
 				!elementBeforeSubstituent.getLocalName().equals(BRACKET_EL)){
 			return;
 		}
 		
-		Element elementAftersubstituent =(Element)XOMTools.getNextSibling(substituent);
+		Element elementAftersubstituent = XOMTools.getNextSibling(substituent);
 		if (elementAftersubstituent != null){
 			//Not preceded and succeded by a bracket e.g. Not (benzyl)methyl(phenyl)amine	c.f. P-16.4.1.3 (draft 2004)
 			if (elementBeforeSubstituent.getLocalName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getLocalName().equals(BRACKET_EL)){
-				Element firstChildElementOfElementAfterSubstituent = (Element) elementAftersubstituent.getChild(0);
+				Element firstChildElementOfElementAfterSubstituent = elementAftersubstituent.getChild(0);
 				if ((firstChildElementOfElementAfterSubstituent.getLocalName().equals(SUBSTITUENT_EL) || firstChildElementOfElementAfterSubstituent.getLocalName().equals(BRACKET_EL))
-					&& !((Element)XOMTools.getPrevious(firstChildElementOfElementAfterSubstituent)).getLocalName().equals(HYPHEN_EL)){
+					&& !XOMTools.getPrevious(firstChildElementOfElementAfterSubstituent).getLocalName().equals(HYPHEN_EL)){
 					return;
 				}
 			}
@@ -3750,7 +3750,7 @@ class ComponentProcessor {
 				!elementAftersubstituent.getLocalName().equals(SUBSTITUENT_EL) &&
 				!elementAftersubstituent.getLocalName().equals(BRACKET_EL) &&
 				!elementAftersubstituent.getLocalName().equals(ROOT_EL)){
-			if (elementAftersubstituent == null && ((Element)substituent.getParent()).getLocalName().equals(WORD_EL) && (
+			if (elementAftersubstituent == null && substituent.getParent().getLocalName().equals(WORD_EL) && (
 				state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal)){
 				//special case to allow bracketting for locanted esters
 			}
@@ -3760,7 +3760,7 @@ class ComponentProcessor {
 		}
 
 		//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
-		Element elementDirectlyBeforeSubstituent = (Element) XOMTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
+		Element elementDirectlyBeforeSubstituent = XOMTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
 		if (elementDirectlyBeforeSubstituent.getLocalName().equals(HYPHEN_EL)){
 			return;
 		}
@@ -3778,7 +3778,7 @@ class ComponentProcessor {
 				lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL)){
 			boolean placeInImplicitBracket =false;
 
-			Element suffixAfterGroup=(Element)XOMTools.getNextSibling(lastGroupOfElementBeforeSub, SUFFIX_EL);
+			Element suffixAfterGroup = XOMTools.getNextSibling(lastGroupOfElementBeforeSub, SUFFIX_EL);
 			//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane (other suffixes don't need to be considered as they would produce silly structures)
 			if (suffixAfterGroup !=null && matchInlineSuffixesThatAreAlsoGroups.matcher(suffixAfterGroup.getValue()).matches()){
 				placeInImplicitBracket =true;
@@ -3868,7 +3868,7 @@ class ComponentProcessor {
 		//either all locants will be moved, or none
 		boolean moveLocants = false;
 		if (locantValues != null){
-			Element elAfterLocant = (Element) XOMTools.getNextSibling(locantRelatedElements.get(0));
+			Element elAfterLocant = XOMTools.getNextSibling(locantRelatedElements.get(0));
 			for (String locantText : locantValues) {
 				
 				//Check the right fragment in the bracket:
@@ -3893,7 +3893,7 @@ class ComponentProcessor {
 
 			if (moveLocants && locantValues.length > 1){
 				if (elAfterLocant != null && elAfterLocant.getLocalName().equals(MULTIPLIER_EL)){
-					Element shouldBeAGroupOrSubOrBracket = (Element)XOMTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
+					Element shouldBeAGroupOrSubOrBracket = XOMTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
 					if (shouldBeAGroupOrSubOrBracket != null){
 						if ((shouldBeAGroupOrSubOrBracket.getLocalName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
 								|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
@@ -3949,7 +3949,7 @@ class ComponentProcessor {
 			}
 		}
 
-		Element parent = (Element)substituent.getParent();
+		Element parent = substituent.getParent();
 		int startIndex=parent.indexOf(elementBeforeSubstituent);
 		int endIndex=parent.indexOf(substituent);
 		for(int i = 0 ; i <= (endIndex-startIndex);i++) {
@@ -3982,7 +3982,7 @@ class ComponentProcessor {
 				String[] allowedLocants = MATCH_COMMA.split(group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
 				for (String allowedLocant : allowedLocants) {
 					if (locantValues[0].equals(allowedLocant)){
-						Element expectedSuffix =(Element) XOMTools.getNextSibling(group);
+						Element expectedSuffix = XOMTools.getNextSibling(group);
 						if (expectedSuffix!=null && expectedSuffix.getLocalName().equals(SUFFIX_EL) && expectedSuffix.getAttribute(LOCANT_ATR)==null){
 							expectedSuffix.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
 							lastLocant.detach();
@@ -3994,7 +3994,7 @@ class ComponentProcessor {
 			}
 			boolean allowIndirectLocants =true;
 			if(state.currentWordRule == WordRule.multiEster && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
-				Element parentEl=(Element) subOrRoot.getParent();
+				Element parentEl = subOrRoot.getParent();
 				if (parentEl.getLocalName().equals(WORD_EL) && parentEl.getAttributeValue(TYPE_ATR).equals(SUBSTITUENT_EL) && parentEl.getChildCount()==1 &&
 						locantValues.length==1 && !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){
 					allowIndirectLocants =false;
@@ -4079,7 +4079,7 @@ class ComponentProcessor {
 		for (int i = 0; i < children.size(); i++) {
 			Element el = children.get(i);
 			if (el.getLocalName().equals(LOCANT_EL)){
-				Element afterLocant =(Element) XOMTools.getNextSibling(el);
+				Element afterLocant = XOMTools.getNextSibling(el);
 				if (afterLocant!=null && afterLocant.getLocalName().equals(MULTIPLIER_EL)){//locant should not be followed by a multiplier. c.f. 1,2,3-tributyl 2-acetyloxypropane-1,2,3-tricarboxylate
 					continue;
 				}
@@ -4110,7 +4110,7 @@ class ComponentProcessor {
 				if (el.getAttribute(LOCANT_ATR) ==null && el.getAttribute(LOCANTID_ATR) ==null && el.getAttribute(MULTIPLIED_ATR)==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
 					if (subOrRoot.indexOf(el)>subOrRoot.indexOf(locantEl)){
 						if (name.equals(SUFFIX_EL)){//check a few special cases that must not be locanted
-							Element group = (Element) XOMTools.getPreviousSibling(el, GROUP_EL);
+							Element group = XOMTools.getPreviousSibling(el, GROUP_EL);
 							String type = group.getAttributeValue(TYPE_ATR);
 							if ((type.equals(ACIDSTEM_TYPE_VAL) && !CYCLEFORMER_SUBTYPE_VAL.equals(el.getAttributeValue(SUBTYPE_ATR)))||
 									type.equals(NONCARBOXYLICACID_TYPE_VAL) || type.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
@@ -4135,9 +4135,9 @@ class ComponentProcessor {
 		Element terminalSuffix1 = subOrRoot.getFirstChildElement(SUFFIX_EL);
 		if (terminalSuffix1!=null){
 			if (isATerminalSuffix(terminalSuffix1) && XOMTools.getNextSibling(terminalSuffix1) != null){
-				Element terminalSuffix2 =(Element)XOMTools.getNextSibling(terminalSuffix1);
+				Element terminalSuffix2 =XOMTools.getNextSibling(terminalSuffix1);
 				if (isATerminalSuffix(terminalSuffix2)){
-					Element hopefullyAChain = (Element) XOMTools.getPreviousSibling((Element)terminalSuffix1, GROUP_EL);
+					Element hopefullyAChain = XOMTools.getPreviousSibling(terminalSuffix1, GROUP_EL);
 					if (hopefullyAChain != null && hopefullyAChain.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){
 						int chainLength = state.xmlFragmentMap.get(hopefullyAChain).getChainLength();
 						if (chainLength >=2){
@@ -4633,10 +4633,10 @@ class ComponentProcessor {
 				checkAndApplyFirstLocantOfBiochemicalLinkage(substituent, bioLinkLocantStr);
 				int secondLocantStartPos = Math.max(bioLinkLocantStr.lastIndexOf('>'), bioLinkLocantStr.lastIndexOf('-')) + 1;
 				String locantToConnectTo = bioLinkLocantStr.substring(secondLocantStartPos);
-				Element parent = (Element) substituent.getParent();
+				Element parent = substituent.getParent();
 				Attribute locantAtr = new Attribute(LOCANT_ATR, "O" + locantToConnectTo);
 
-				Element elementAfterSubstituent = (Element) XOMTools.getNextSibling(substituent);				
+				Element elementAfterSubstituent = XOMTools.getNextSibling(substituent);				
 				boolean hasAdjacentGroupToSubstitute = (elementAfterSubstituent !=null &&
 						(elementAfterSubstituent.getLocalName().equals(SUBSTITUENT_EL) ||
 						elementAfterSubstituent.getLocalName().equals(BRACKET_EL) ||
@@ -4651,14 +4651,14 @@ class ComponentProcessor {
 				boolean bracketAdded =false;
 				if (hasAdjacentGroupToSubstitute){
 					//now find the brackets/substituents before this element
-					Element previous = (Element) XOMTools.getPreviousSibling(substituent);
+					Element previous = XOMTools.getPreviousSibling(substituent);
 					List<Element> previousElements = new ArrayList<Element>();
 					while( previous !=null){
 						if (!previous.getLocalName().equals(SUBSTITUENT_EL) && !previous.getLocalName().equals(BRACKET_EL)){
 							break;
 						}
 						previousElements.add(previous);
-						previous = (Element) XOMTools.getPreviousSibling(previous);
+						previous = XOMTools.getPreviousSibling(previous);
 					}
 					if (previousElements.size() > 0 ){//an explicit bracket is needed
 						Collections.reverse(previousElements);
@@ -4702,7 +4702,7 @@ class ComponentProcessor {
 					throw new RuntimeException("OPSIN Bug: More than 1 biochemical linkage locant associated with bracket");
 				}
 				Element bioLinkLocant = bioLinkLocants.get(0);
-				Element substituent = (Element) XOMTools.getPreviousSibling(bioLinkLocant);
+				Element substituent = XOMTools.getPreviousSibling(bioLinkLocant);
 				if (substituent == null || !substituent.getLocalName().equals(SUBSTITUENT_EL)){
 					throw new RuntimeException("OPSIN Bug: Substituent expected before biochemical linkage locant");
 				}
@@ -4844,7 +4844,7 @@ class ComponentProcessor {
 			}
 		}
 		else if (rightMostElement.getLocalName().equals(BRACKET_EL)){
-			assignLocantsToMultipliedRootIfPresent(((Element) rightMostElement.getChild(rightMostElement.getChildCount()-1)));
+			assignLocantsToMultipliedRootIfPresent(rightMostElement.getChild(rightMostElement.getChildCount()-1));
 		}
 	}
 
@@ -4858,18 +4858,18 @@ class ComponentProcessor {
 	 * @param brackets
 	 */
 	private void addImplicitBracketsInCaseWhereSubstituentHasTwoLocants(Element substituent, List<Element> brackets) {
-		Element siblingSubstituent = (Element) XOMTools.getNextSibling(substituent);
+		Element siblingSubstituent = XOMTools.getNextSibling(substituent);
 		if (siblingSubstituent != null && siblingSubstituent.getLocalName().equals(SUBSTITUENT_EL)){
 			List<Element> locants = getLocantsAtStartOfSubstituent(substituent);
 			if (locants.size() == 2 && locantsAreSingular(locants)
 					&& getLocantsAtStartOfSubstituent(siblingSubstituent).size() == 0){
 				Element bracket = new Element(BRACKET_EL);
 				bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
-				Element parent = (Element) substituent.getParent();
+				Element parent = substituent.getParent();
 				int indexToInsertAt = parent.indexOf(substituent);
 				int elementsToMove = substituent.indexOf(locants.get(0)) + 1;
 				for (int i = 0; i < elementsToMove; i++) {
-					Element locantOrStereoToMove =(Element) substituent.getChild(0);
+					Element locantOrStereoToMove = substituent.getChild(0);
 					locantOrStereoToMove.detach();
 					bracket.appendChild(locantOrStereoToMove);
 				}
@@ -4934,7 +4934,7 @@ class ComponentProcessor {
 		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrBracket, LOCANT_EL);
 		int multiplier =1;
 		List<Element> multipliers =  XOMTools.getChildElementsWithTagName(subOrBracket, MULTIPLIER_EL);
-		Element parentElem =(Element)subOrBracket.getParent();
+		Element parentElem = subOrBracket.getParent();
 		boolean oneBelowWordLevel = parentElem.getLocalName().equals(WORD_EL);
 		Element groupIfPresent = subOrBracket.getFirstChildElement(GROUP_EL);
 		if (multipliers.size()>0){
@@ -4980,7 +4980,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
 			}
 
-			Element parent =(Element) subOrBracket.getParent();
+			Element parent = subOrBracket.getParent();
 			//attempt to find cases where locant will not be utilised. A special case is made for carbonyl derivatives //e.g. 1H-2-benzopyran-1,3,4-trione 4-[N-(4-chlorophenyl)hydrazone]
 			if (!parent.getLocalName().equals(WORD_EL) || !parent.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) || !state.currentWordRule.equals(WordRule.carbonylDerivative)){
 				List<Element> children =parent.getChildElements();
@@ -5017,7 +5017,7 @@ class ComponentProcessor {
 
 
 	private boolean wordLevelLocantsAllowed(Element subOrBracket, int numberOflocants) {
-		Element parentElem =(Element)subOrBracket.getParent();
+		Element parentElem = subOrBracket.getParent();
 		if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent
 				&& (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)){
 			if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
@@ -5027,7 +5027,7 @@ class ComponentProcessor {
 		if ((state.currentWordRule == WordRule.potentialBiochemicalEster || 
 				(state.currentWordRule == WordRule.ester &&  (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)))
 				&& parentElem.getLocalName().equals(WORD_EL)){
-			Element wordRule = (Element) parentElem.getParent();
+			Element wordRule = parentElem.getParent();
 			List<Element> words = wordRule.getChildElements(WORD_EL);
 			Element ateWord = words.get(words.size()-1);
 			if (parentElem==ateWord){
@@ -5048,7 +5048,7 @@ class ComponentProcessor {
 	 */
 	private void processWordLevelMultiplierIfApplicable(Element word, int wordCount) throws StructureBuildingException, ComponentGenerationException {
 		if (word.getChildCount()==1){
-			Element subOrBracket = (Element) word.getChild(0);
+			Element subOrBracket = word.getChild(0);
 			Element multiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
 			if (multiplier !=null){
 				int multiVal =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
@@ -5086,7 +5086,7 @@ class ComponentProcessor {
 				}
 				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
 				for (int i = subOrBracket.indexOf(multiplier) -1 ; i >=0 ; i--) {
-					Element el = (Element) subOrBracket.getChild(i);
+					Element el = subOrBracket.getChild(i);
 					el.detach();
 					elementsNotToBeMultiplied.add(el);
 				}
@@ -5123,7 +5123,7 @@ class ComponentProcessor {
 	 */
 	private boolean isMonoFollowedByElement(Element multiplier, int multiVal) {
 		if (multiVal ==1){
-			Element possibleElement = (Element) XOMTools.getNextSibling(multiplier);
+			Element possibleElement = XOMTools.getNextSibling(multiplier);
 			if (possibleElement != null && possibleElement.getLocalName().equals(GROUP_EL) &&
 					(ELEMENTARYATOM_SUBTYPE_VAL.equals(possibleElement.getAttributeValue(SUBTYPE_ATR)) || possibleElement.getValue().equals("hydrogen"))){
 				return true;

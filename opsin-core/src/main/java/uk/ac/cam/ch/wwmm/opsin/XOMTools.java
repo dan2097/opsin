@@ -28,7 +28,7 @@ class XOMTools {
 	public static Element getNextSibling(Element current, String tagName) {
 		Element matchedElement =null;
 		while (true) {
-			Element next = (Element) getNextSibling(current);
+			Element next = getNextSibling(current);
 			if (next != null) {
 				if (next.getLocalName().equals(tagName)){
 					matchedElement=next;
@@ -67,7 +67,7 @@ class XOMTools {
 	public static Element getPreviousSibling(Element current, String tagName) {
 		Element matchedElement =null;
 		while (true) {
-			Element prev = (Element) getPreviousSibling(current);
+			Element prev = getPreviousSibling(current);
 			if (prev != null) {
 				if (prev.getLocalName().equals(tagName)){
 					matchedElement=prev;
@@ -113,14 +113,14 @@ class XOMTools {
 	 * @return
 	 */
 	public static Element getNext(Element node) {
-		Element parent = (Element) node.getParent();
+		Element parent = node.getParent();
 		if (parent == null || parent.getLocalName().equals(XmlDeclarations.MOLECULE_EL)){
 			return null;
 		}
 		int index = parent.indexOf(node);
 		if (index +1 >=parent.getChildCount()) return getNext(parent);//reached end of element
-		Element next =(Element) parent.getChild(index+1);
-		List<Element> children =next.getChildElements();
+		Element next = parent.getChild(index+1);
+		List<Element> children = next.getChildElements();
 		while (children.size()!=0){
 			next =children.get(0);
 			children =next.getChildElements();
@@ -134,13 +134,13 @@ class XOMTools {
 	 * @return
 	 */
 	public static Element getPrevious(Element node) {
-		Element parent = (Element) node.getParent();
+		Element parent = node.getParent();
 		if (parent == null || parent.getLocalName().equals(XmlDeclarations.MOLECULE_EL)){
 			return null;
 		}
 		int index = parent.indexOf(node);
 		if (index ==0) return getPrevious(parent);//reached beginning of element
-		Element previous =(Element) parent.getChild(index-1);
+		Element previous = parent.getChild(index-1);
 		List<Element>  children =previous.getChildElements();
 		while (children.size()!=0){
 			previous =children.get(children.size()-1);
@@ -168,8 +168,8 @@ class XOMTools {
 	 */
 	public static List<Element> getNextSiblingsOfType(Element currentElem, String type) {
 		List<Element> laterSiblingElementsOfType= new ArrayList<Element>();
-		Element parent =(Element) currentElem.getParent();
-		if (parent==null){
+		Element parent = currentElem.getParent();
+		if (parent == null){
 			return laterSiblingElementsOfType;
 		}
 		List<Element> potentialMatches =parent.getChildElements(type);
@@ -190,14 +190,14 @@ class XOMTools {
 	 */
 	public static List<Element> getNextAdjacentSiblingsOfType(Element currentElem, String type) {
 		List<Element> siblingElementsOfType= new ArrayList<Element>();
-		Element parent =(Element) currentElem.getParent();
-		if (parent==null){
+		Element parent = currentElem.getParent();
+		if (parent == null){
 			return siblingElementsOfType;
 		}
-		Element nextSibling = (Element) XOMTools.getNextSibling(currentElem);
+		Element nextSibling = XOMTools.getNextSibling(currentElem);
 		while (nextSibling !=null && nextSibling.getLocalName().equals(type)){
 			siblingElementsOfType.add(nextSibling);
-			nextSibling = (Element) XOMTools.getNextSibling(nextSibling);
+			nextSibling = XOMTools.getNextSibling(nextSibling);
 		}
 
 		return siblingElementsOfType;
@@ -212,7 +212,7 @@ class XOMTools {
 	 */
 	public static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] types){
 		List<Element> laterSiblingElementsOfTypes= new ArrayList<Element>();
-		currentElem =(Element) getNextSibling(currentElem);
+		currentElem = getNextSibling(currentElem);
 		while (currentElem !=null){
 			String name =currentElem.getLocalName();
 			for (String type : types) {
@@ -221,7 +221,7 @@ class XOMTools {
 					break;
 				}
 			}
-			currentElem =(Element) getNextSibling(currentElem);
+			currentElem = getNextSibling(currentElem);
 		}
 		return laterSiblingElementsOfTypes;
 	}
@@ -235,7 +235,7 @@ class XOMTools {
 	 */
 	public static List<Element> getPreviousSiblingsOfType(Element currentElem, String type) {
 		List<Element> earlierSiblingElementsOfType= new ArrayList<Element>();
-		Element parent =(Element) currentElem.getParent();
+		Element parent = currentElem.getParent();
 		if (parent==null){
 			return earlierSiblingElementsOfType;
 		}
@@ -263,7 +263,7 @@ class XOMTools {
 		}
 		int i = parent.indexOf(startingEl);
 		if (i+1 >= parent.getChildCount()) return null;
-		Element next =(Element)parent.getChild(i+1);
+		Element next = parent.getChild(i+1);
 		String elName =next.getLocalName();
 		for (String namesToIgnore : elementsToIgnore) {
 			if (elName.equals(namesToIgnore)){
@@ -288,7 +288,7 @@ class XOMTools {
 		}
 		int i = parent.indexOf(startingEl);
 		if (i==0) return null;
-		Element previous =(Element)parent.getChild(i-1);
+		Element previous = parent.getChild(i-1);
 		String elName =previous.getLocalName();
 		for (String namesToIgnore : elementsToIgnore) {
 			if (elName.equals(namesToIgnore)){
@@ -494,10 +494,10 @@ class XOMTools {
 	 */
 	public static List<Element> getSiblingsUpToElementWithTagName(Element startingEl, String tagName) {
 		List<Element> laterSiblings = new ArrayList<Element>();
-		Element nextEl = (Element) XOMTools.getNextSibling(startingEl);
+		Element nextEl = XOMTools.getNextSibling(startingEl);
 		while (nextEl !=null && !nextEl.getLocalName().equals(tagName)){
 			laterSiblings.add(nextEl);
-			nextEl = (Element) XOMTools.getNextSibling(nextEl);
+			nextEl = XOMTools.getNextSibling(nextEl);
 		}
 		return laterSiblings;
 	}
