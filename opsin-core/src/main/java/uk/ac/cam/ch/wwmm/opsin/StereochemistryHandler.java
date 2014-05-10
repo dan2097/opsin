@@ -16,8 +16,6 @@ import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
-import nu.xom.Element;
-
 /**
  * Identifies stereocentres, assigns stereochemistry elements to them and then uses the CIP rules to calculate appropriates atomParity/bondstereo tags
  * @author dl387

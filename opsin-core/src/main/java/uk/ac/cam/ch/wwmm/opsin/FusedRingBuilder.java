@@ -12,8 +12,6 @@ import java.util.Set;
 
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-import nu.xom.Element;
-import nu.xom.Elements;
 
 /**
  * Assembles fused rings named using fusion nomenclature
@@ -958,7 +956,7 @@ class FusedRingBuilder {
 		if (locantEl != null && locantEl.getLocalName().equals(LOCANT_EL)) {
 			String[] locants = MATCH_COMMA.split(locantEl.getValue());
 			if (locantsAreAllNumeric(locants)) {
-				Elements suffixes=((Element)benzoEl.getParent()).getChildElements(SUFFIX_EL);
+				List<Element> suffixes=((Element)benzoEl.getParent()).getChildElements(SUFFIX_EL);
 				int suffixesWithoutLocants =0;
 				for (int i = 0; i < suffixes.size(); i++) {
 					if (suffixes.get(i).getAttribute(LOCANT_ATR)==null){

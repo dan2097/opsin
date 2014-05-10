@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
-
 class WordRulesOmittedSpaceCorrector {
 	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?$", Pattern.CASE_INSENSITIVE);
 	
@@ -44,7 +40,7 @@ class WordRulesOmittedSpaceCorrector {
 	private void checkAndCorrectOmittedSpacesInDivalentFunctionalGroupRule(Element divalentFunctionalGroupWordRule)  {
 		List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(divalentFunctionalGroupWordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);
 		if (substituentWords.size()==1){//potentially has been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
-			Elements children  =substituentWords.get(0).getChildElements();
+			List<Element> children  =substituentWords.get(0).getChildElements();
 			if (children.size()==2){
 				Element firstSubstituent =(Element)children.get(0);
 				//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
@@ -67,7 +63,7 @@ class WordRulesOmittedSpaceCorrector {
 	 * @throws StructureBuildingException 
 	 */
 	private void checkAndCorrectOmittedSpaceEster(Element wordRule) throws StructureBuildingException {
-		Elements words = wordRule.getChildElements(WORD_EL);
+		List<Element> words = wordRule.getChildElements(WORD_EL);
 		if (words.size()!=1){
 			return;
 		}
@@ -246,7 +242,7 @@ class WordRulesOmittedSpaceCorrector {
 
 	private void transformToEster(Element parentSimpleWordRule, Element substituentOrBracket) throws StructureBuildingException {
 		parentSimpleWordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.ester.toString());
-		Elements childElsOfSub = substituentOrBracket.getChildElements();
+		List<Element> childElsOfSub = substituentOrBracket.getChildElements();
 		Element lastChildElOfSub =childElsOfSub.get(childElsOfSub.size()-1);
 		if (lastChildElOfSub.getLocalName().equals(HYPHEN_EL)){
 			lastChildElOfSub.detach();

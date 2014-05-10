@@ -15,12 +15,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nu.xom.Elements;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.Node;
 
 /**Performs structure-aware destructive procedural parsing on parser results.
 *
@@ -156,7 +153,7 @@ class ComponentProcessor {
 				detectConjunctiveSuffixGroups(subOrRoot, groups);
 				matchLocantsToDirectFeatures(subOrRoot);
 
-				Elements groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
+				List<Element> groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size()-1);
 				preliminaryProcessSuffixes(lastGroupInSubOrRoot, XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
 			}
@@ -523,7 +520,7 @@ class ComponentProcessor {
 				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
 					Element previousSubstituent =(Element) XOMTools.getPreviousSibling(group.getParent());
 					if (previousSubstituent!=null){
-						Elements groups = previousSubstituent.getChildElements(GROUP_EL);
+						List<Element> groups = previousSubstituent.getChildElements(GROUP_EL);
 						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
 							connectEndToEndWithPreviousSub = false;
 						}
@@ -657,7 +654,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	private boolean removeAndMoveToAppropriateGroupIfHydroSubstituent(Element substituent) throws ComponentGenerationException {
-		Elements hydroElements = substituent.getChildElements(HYDRO_EL);
+		List<Element> hydroElements = substituent.getChildElements(HYDRO_EL);
 		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size()==0){
 			Element hydroSubstituent = substituent;
 			if (hydroElements.size()!=1){
@@ -675,7 +672,7 @@ class ComponentProcessor {
 				}
 			}
 			Element targetRing =null;
-			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
+			Element nextSubOrRootOrBracket = XOMTools.getNextSibling(hydroSubstituent);
 			if (nextSubOrRootOrBracket == null){
 				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
 			}
@@ -749,7 +746,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
 			}
 			//move the children of the hydro substituent
-			Elements children =hydroSubstituent.getChildElements();
+			List<Element> children =hydroSubstituent.getChildElements();
 			for (int i = children.size()-1; i >=0 ; i--) {
 				Element child =children.get(i);
 				if (!child.getLocalName().equals(HYPHEN_EL)){
@@ -771,7 +768,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	static boolean removeAndMoveToAppropriateGroupIfSubtractivePrefix(Element substituent) throws ComponentGenerationException {
-		Elements subtractivePrefixes = substituent.getChildElements(SUBTRACTIVEPREFIX_EL);
+		List<Element> subtractivePrefixes = substituent.getChildElements(SUBTRACTIVEPREFIX_EL);
 		if (subtractivePrefixes.size() > 0){
 			if (subtractivePrefixes.size()!=1){
 				throw new RuntimeException("Unexpected number of subtractive prefixes found in substituent");
@@ -779,7 +776,7 @@ class ComponentProcessor {
 			Element subtractivePrefix = subtractivePrefixes.get(0);
 			Element biochemicalGroup =null;//preferred
 			Element standardGroup =null;
-			Node nextSubOrRootOrBracket = XOMTools.getNextSibling(substituent);
+			Element nextSubOrRootOrBracket = XOMTools.getNextSibling(substituent);
 			if (nextSubOrRootOrBracket == null){
 				throw new ComponentGenerationException("Unable to find group for: " + subtractivePrefix.getValue() +" to apply to!");
 			}
@@ -818,7 +815,7 @@ class ComponentProcessor {
 			}
 			
 			//move the children of the subtractivePrefix substituent
-			Elements children =substituent.getChildElements();
+			List<Element> children =substituent.getChildElements();
 			for (int i = children.size()-1; i >=0 ; i--) {
 				Element child =children.get(i);
 				if (!child.getLocalName().equals(HYPHEN_EL)){
@@ -1014,7 +1011,7 @@ class ComponentProcessor {
 				}
 			}
 			else if(currentElem.getValue().equals("benz") || currentElem.getValue().equals("benzo")){
-				Node potentialGroupAfterBenzo = XOMTools.getNextSibling(currentElem, GROUP_EL);//need to make sure this isn't benzyl
+				Element potentialGroupAfterBenzo = XOMTools.getNextSibling(currentElem, GROUP_EL);//need to make sure this isn't benzyl
 				if (potentialGroupAfterBenzo!=null){
 					return true;//e.g. 1,2-benzothiazole
 				}
@@ -1081,8 +1078,8 @@ class ComponentProcessor {
 				}
 			}
 		}
-		Node commonParent =locant.getParent().getParent();//this should be a common parent of the multiplier in front of the root. If it is not, then this locant is in a different scope
-		Node parentOfMultiplier =multiplier.getParent();
+		Element commonParent =locant.getParent().getParent();//this should be a common parent of the multiplier in front of the root. If it is not, then this locant is in a different scope
+		Element parentOfMultiplier =multiplier.getParent();
 		while (parentOfMultiplier!=null){
 			if (commonParent.equals(parentOfMultiplier)){
 				if (locantValues[count-1].endsWith("'")  &&
@@ -1100,7 +1097,7 @@ class ComponentProcessor {
 	}
 
 	private void applyDLPrefixes(Element subOrRoot) throws ComponentGenerationException {
-		Elements dlStereochemistryEls = subOrRoot.getChildElements(DLSTEREOCHEMISTRY_EL);
+		List<Element> dlStereochemistryEls = subOrRoot.getChildElements(DLSTEREOCHEMISTRY_EL);
 		for (int i = 0; i < dlStereochemistryEls.size(); i++) {
 			Element dlStereochemistry = dlStereochemistryEls.get(i);
 			String dlStereochemistryValue = dlStereochemistry.getAttributeValue(VALUE_ATR);
@@ -1877,7 +1874,7 @@ class ComponentProcessor {
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){//handle Hantzch-widman systems
 				if (group.getAttribute(ADDBOND_ATR)!=null){//special case for partunsatring
 					//exception for where a locant is supposed to indicate the location of a double bond...
-					Elements deltas = subOrRoot.getChildElements(DELTA_EL);
+					List<Element> deltas = subOrRoot.getChildElements(DELTA_EL);
 					if (deltas.size()==0){
 						Element delta =new Element(DELTA_EL);
 						Element appropriateLocant = XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{HETEROATOM_EL, MULTIPLIER_EL});
@@ -2158,7 +2155,7 @@ class ComponentProcessor {
 			 * Temp fragments are build for each addGroup rule and then merged into suffixFrag
 			 */
 			for (int j = 0; j < suffixRuleTags.size(); j++) {
-				Element suffixRuleTag = suffixRuleTags.get(j);
+				nu.xom.Element suffixRuleTag = suffixRuleTags.get(j);
 				String suffixRuleTagName = suffixRuleTag.getLocalName();
 				if (suffixRuleTagName.equals(SUFFIXRULES_ADDGROUP_EL)) {
 					String labels = NONE_LABELS_VAL;
@@ -2244,7 +2241,7 @@ class ComponentProcessor {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
 			for (int j = 0; j < suffixRuleTags.size(); j++) {
-				Element suffixRuleTag = suffixRuleTags.get(j);
+				nu.xom.Element suffixRuleTag = suffixRuleTags.get(j);
 				String suffixRuleTagName = suffixRuleTag.getLocalName();
 				if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)){
 					convertHydroxyGroupsToOutAtoms(frag);
@@ -2686,7 +2683,7 @@ class ComponentProcessor {
 				heteroatom.detach();
 			}
 
-			Elements deltas = subOrRoot.getChildElements(DELTA_EL);//add specified double bonds
+			List<Element> deltas = subOrRoot.getChildElements(DELTA_EL);//add specified double bonds
 			for (int j = 0; j < deltas.size(); j++) {
 				String locantOfDoubleBond = deltas.get(j).getValue();
 				if (locantOfDoubleBond.equals("")){
@@ -3331,7 +3328,7 @@ class ComponentProcessor {
 		if (substituentToResolve.getChildElements().size()!=0){
 			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
-			Elements children = substituentToResolve.getChildElements();
+			List<Element> children = substituentToResolve.getChildElements();
 			for (int i = children.size() -1; i>=0; i--) {
 				Element child = children.get(i);
 				child.detach();
@@ -3627,7 +3624,7 @@ class ComponentProcessor {
 	 * @return numberOfOutAtoms that will be added by resolveSuffixes
 	 * @throws ComponentGenerationException
 	 */
-	private int calculateOutAtomsToBeAddedFromInlineSuffixes(Element group, Elements suffixes) throws  ComponentGenerationException {
+	private int calculateOutAtomsToBeAddedFromInlineSuffixes(Element group, List<Element> suffixes) throws  ComponentGenerationException {
 		int outAtomsThatWillBeAdded = 0;
 		Fragment frag = state.xmlFragmentMap.get(group);
 		String groupType = frag.getType();
@@ -3650,7 +3647,7 @@ class ComponentProcessor {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
 			for(int j=0;j<suffixRuleTags.size();j++) {
-				Element suffixRuleTag = suffixRuleTags.get(j);
+				nu.xom.Element suffixRuleTag = suffixRuleTags.get(j);
 				String suffixRuleTagName =suffixRuleTag.getLocalName();
 				if(suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
 					outAtomsThatWillBeAdded +=1;
@@ -3788,7 +3785,7 @@ class ComponentProcessor {
 			}
 			//look for locants and check whether they appear to be referring to the other chain
 			if (!placeInImplicitBracket){
-				Elements childrenOfElementBeforeSubstituent  =elementBeforeSubstituent.getChildElements();
+				List<Element> childrenOfElementBeforeSubstituent  =elementBeforeSubstituent.getChildElements();
 				Boolean foundLocantNotReferringToChain =null;
 				for (int i = 0; i < childrenOfElementBeforeSubstituent.size(); i++) {
 					String currentElementName = childrenOfElementBeforeSubstituent.get(i).getLocalName();
@@ -3850,7 +3847,7 @@ class ComponentProcessor {
 		List<Element> locantRelatedElements = new ArrayList<Element>();//sometimes moved
 		String[] locantValues = null;
 		ArrayList<Element> stereoChemistryElements =new ArrayList<Element>();//always moved if bracketing occurs
-		Elements childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
+		List<Element> childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
 		for (int i = 0; i < childrenOfElementBeforeSubstituent.size(); i++) {
 			String currentElementName = childrenOfElementBeforeSubstituent.get(i).getLocalName();
 			if (currentElementName.equals(STEREOCHEMISTRY_EL)){
@@ -3956,7 +3953,7 @@ class ComponentProcessor {
 		int startIndex=parent.indexOf(elementBeforeSubstituent);
 		int endIndex=parent.indexOf(substituent);
 		for(int i = 0 ; i <= (endIndex-startIndex);i++) {
-			Node n = parent.getChild(startIndex);
+			Element n = parent.getChild(startIndex);
 			n.detach();
 			bracket.appendChild(n);
 		}
@@ -4077,7 +4074,7 @@ class ComponentProcessor {
 	 * @return
 	 */
 	private List<Element> findLocantsThatCouldBeIndirectLocants(Element subOrRoot) {
-		Elements children = subOrRoot.getChildElements();
+		List<Element> children = subOrRoot.getChildElements();
 		List<Element> locantEls = new ArrayList<Element>();
 		for (int i = 0; i < children.size(); i++) {
 			Element el = children.get(i);
@@ -4105,7 +4102,7 @@ class ComponentProcessor {
 	 */
 	private List<Element> findElementsMissingIndirectLocants(Element subOrRoot,Element locantEl) {
 		List<Element> locantAble = new ArrayList<Element>();
-		Elements childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
+		List<Element> childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
 		for (int j = 0; j < childrenOfSubOrBracketOrRoot.size(); j++) {
 			Element el =childrenOfSubOrBracketOrRoot.get(j);
 			String name =el.getLocalName();
@@ -4233,7 +4230,7 @@ class ComponentProcessor {
 			Fragment suffixFrag = null;
 			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
 			for (int i = 0; i < suffixRuleTags.size(); i++) {
-				Element suffixRuleTag = suffixRuleTags.get(i);
+				nu.xom.Element suffixRuleTag = suffixRuleTags.get(i);
 				String suffixRuleTagName = suffixRuleTag.getLocalName();
 				if (defaultAtom >= atomList.size()) {
 					defaultAtom = 0;
@@ -4768,7 +4765,7 @@ class ComponentProcessor {
 	private void moveErroneouslyPositionedLocantsAndMultipliers(List<Element> brackets) {
 		for (int i = brackets.size()-1; i >=0; i--) {
 			Element bracket =brackets.get(i);
-			Elements childElements = bracket.getChildElements();
+			List<Element> childElements = bracket.getChildElements();
 			boolean hyphenPresent = false;
 			int childCount = childElements.size();
 			if (childCount==2){
@@ -4779,7 +4776,7 @@ class ComponentProcessor {
 				}
 			}
 			if (childCount==1 || hyphenPresent && childCount==2){
-				Elements substituentContent = childElements.get(0).getChildElements();
+				List<Element> substituentContent = childElements.get(0).getChildElements();
 				if (substituentContent.size()>=2){
 					Element locant =null;
 					Element multiplier =null;
@@ -4820,7 +4817,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void assignLocantsToMultipliedRootIfPresent(Element rightMostElement) throws ComponentGenerationException, StructureBuildingException {
-		Elements multipliers = rightMostElement.getChildElements(MULTIPLIER_EL);
+		List<Element> multipliers = rightMostElement.getChildElements(MULTIPLIER_EL);
 		if(multipliers.size() == 1) {
 			Element multiplier =multipliers.get(0);
 			if (XOMTools.getPrevious(multiplier)==null){
@@ -4893,7 +4890,7 @@ class ComponentProcessor {
 	 */
 	private List<Element> getLocantsAtStartOfSubstituent(Element substituent) {
 		List<Element> locants = new ArrayList<Element>();
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
 			String currentElementName = children.get(i).getLocalName();
 			if (currentElementName.equals(LOCANT_EL)){
@@ -4986,7 +4983,7 @@ class ComponentProcessor {
 			Element parent =(Element) subOrBracket.getParent();
 			//attempt to find cases where locant will not be utilised. A special case is made for carbonyl derivatives //e.g. 1H-2-benzopyran-1,3,4-trione 4-[N-(4-chlorophenyl)hydrazone]
 			if (!parent.getLocalName().equals(WORD_EL) || !parent.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) || !state.currentWordRule.equals(WordRule.carbonylDerivative)){
-				Elements children =parent.getChildElements();
+				List<Element> children =parent.getChildElements();
 				boolean foundSomethingToSubstitute =false;
 				for (int i = parent.indexOf(subOrBracket) +1 ; i < children.size(); i++) {
 					if (!children.get(i).getLocalName().equals(HYPHEN_EL)){
@@ -5031,7 +5028,7 @@ class ComponentProcessor {
 				(state.currentWordRule == WordRule.ester &&  (XOMTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)))
 				&& parentElem.getLocalName().equals(WORD_EL)){
 			Element wordRule = (Element) parentElem.getParent();
-			Elements words = wordRule.getChildElements(WORD_EL);
+			List<Element> words = wordRule.getChildElements(WORD_EL);
 			Element ateWord = words.get(words.size()-1);
 			if (parentElem==ateWord){
 				return true;
@@ -5055,7 +5052,7 @@ class ComponentProcessor {
 			Element multiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
 			if (multiplier !=null){
 				int multiVal =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-				Elements locants =subOrBracket.getChildElements(LOCANT_EL);
+				List<Element> locants =subOrBracket.getChildElements(LOCANT_EL);
 				boolean assignLocants =false;
 				boolean wordLevelLocants = wordLevelLocantsAllowed(subOrBracket, locants.size());//something like O,S-dimethyl phosphorothioate
 				if (locants.size()>1){

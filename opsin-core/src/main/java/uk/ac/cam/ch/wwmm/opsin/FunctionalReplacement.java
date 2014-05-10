@@ -12,12 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.Node;
-
 /**
  * Master methods and convenience methods for performing functional replacement
  * @author dl387
@@ -206,9 +200,9 @@ class FunctionalReplacement {
 						state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
 						substituent.removeChild(group);
 						groups.remove(group);
-						Elements remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
+						List<Element> remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
 						for (int j = remainingChildren.size()-1; j>=0; j--){
-							Node child =substituent.getChild(j);
+							Element child =substituent.getChild(j);
 							child.detach();
 							nextSubOrBracket.insertChild(child, 0);
 						}

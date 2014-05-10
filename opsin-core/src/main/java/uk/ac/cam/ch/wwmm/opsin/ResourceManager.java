@@ -1,18 +1,19 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dk.brics.automaton.RunAutomaton;
-import nu.xom.Document;
-import nu.xom.Element;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import nu.xom.Elements;
+import dk.brics.automaton.RunAutomaton;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**Holds all of the tokens used in parsing of chemical names.
  * Holds all automata
@@ -23,6 +24,7 @@ import nu.xom.Elements;
  *
  */
 class ResourceManager {
+	private final static Element IGNORE_WHEN_WRITING_PARSE_TREE = new Element("");
 
 	/**Used to load XML files.*/
 	private final ResourceGetter resourceGetter;
@@ -31,9 +33,9 @@ class ResourceManager {
 	private final AutomatonInitialiser automatonInitialiser;
 	
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
-	final HashMap<String, Map<Character, Token>> tokenDict = new HashMap<String, Map<Character, Token>>();
+	final HashMap<String, Map<Character, Element>> tokenDict = new HashMap<String, Map<Character, Element>>();
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
-	final HashMap<Character, Token> reSymbolTokenDict = new HashMap<Character, Token>();
+	final HashMap<Character, Element> reSymbolTokenDict = new HashMap<Character, Element>();
 
 
 	/**A mapping between annotation symbols and a trie of tokens.*/
@@ -79,38 +81,121 @@ class ResourceManager {
 
 	/**
 	 * Processes tokenFiles
-	 * @param reversed Should the hashing of
-	 * @throws IOException 
+	 * @param reversed Should the tokens be reversed
 	 */
-	private void processTokenFiles(boolean reversed) throws IOException{
-		Document tokenFiles = resourceGetter.getXMLDocument("index.xml");
-		Elements files = tokenFiles.getRootElement().getChildElements("tokenFile");
-		for(int i = 0, l = files.size(); i < l; i++) {
-			Element rootElement = resourceGetter.getXMLDocument(files.get(i).getValue()).getRootElement();
-			List<Element> tokenLists;
-			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
-				tokenLists = XOMTools.getChildElementsWithTagName(rootElement, "tokenList");
+	private void processTokenFiles(boolean reversed) {
+		try {
+			XMLStreamReader filesToProcessReader = resourceGetter.getXMLDocument2("index.xml");
+			while (filesToProcessReader.hasNext()) {
+				int event = filesToProcessReader.next();
+				if (event == XMLStreamConstants.START_ELEMENT && 
+						filesToProcessReader.getLocalName().equals("tokenFile")) {
+					String fileName = filesToProcessReader.getElementText();
+					processTokenFile(fileName, reversed);
+				}
+			}
+			filesToProcessReader.close();
+		}
+		catch (IOException e){
+			throw new NameToStructureException(e.getMessage(), e);
+		}
+		catch (XMLStreamException e){
+			throw new NameToStructureException(e.getMessage(), e);
+		}
+	}
+
+	private void processTokenFile(String fileName, boolean reversed) throws IOException, XMLStreamException {
+		XMLStreamReader reader = resourceGetter.getXMLDocument2(fileName);
+		while (reader.hasNext()) {
+			switch (reader.next()) {
+			case XMLStreamConstants.START_ELEMENT:
+				String tagName = reader.getLocalName();
+				if (tagName.equals("tokenLists")) {
+					while (reader.hasNext()) {
+						switch (reader.next()) {
+						case XMLStreamConstants.START_ELEMENT:
+							if (reader.getLocalName().equals("tokenList")) {
+								processTokenList(reader, reversed);
+							}
+							break;
+						}
+					}
+				}
+				else if (tagName.equals("tokenList")) {
+					processTokenList(reader, reversed);
+				}
+				break;
+			}
+		}
+		reader.close();
+	}
+
+	private void processTokenList(XMLStreamReader reader, boolean reversed) throws XMLStreamException {
+		String tokenTagName = null;
+		Character symbol = null;
+		String type = null;
+		String subType = null;
+		boolean ignoreWhenWritingXML = false;
+		
+		for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
+			String atrName = reader.getAttributeLocalName(i);
+			String atrValue = reader.getAttributeValue(i);
+			if (atrName.equals("tagname")){
+				tokenTagName  = atrValue;
+			}
+			else if (atrName.equals("symbol")){
+				symbol = atrValue.charAt(0);
+			}
+			else if (atrName.equals(TYPE_ATR)){
+				type = atrValue;
+			}
+			else if (atrName.equals(SUBTYPE_ATR)){
+				subType = atrValue;
+			}
+			else if (atrName.equals("ignoreWhenWritingXML")){
+				ignoreWhenWritingXML = atrValue.equals("yes");
 			}
 			else{
-				tokenLists =new ArrayList<Element>();
-				tokenLists.add(rootElement);
+				throw new RuntimeException("Malformed tokenlist");
 			}
-			for (Element tokenList : tokenLists) {
-				char symbol = tokenList.getAttributeValue("symbol").charAt(0);
-				List<Element> tokenElements = XOMTools.getChildElementsWithTagName(tokenList, "token");
-				int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
-				if (index < 0){
-					throw new RuntimeException(symbol +" is associated with a tokenList of tagname " + tokenList.getAttributeValue("tagname") +" however it is not actually used in OPSIN's grammar!!!");
-				}
-				for (Element tokenElement : tokenElements) {
-					String t = tokenElement.getValue();
-
-					Map<Character, Token> symbolToToken = tokenDict.get(t);
+		}
+		if (tokenTagName == null || symbol == null) {
+			throw new RuntimeException("Malformed tokenlist");
+		}
+		
+		int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
+		if (index < 0){
+			throw new RuntimeException(symbol +" is associated with a tokenList of tagname " + tokenTagName +" however it is not actually used in OPSIN's grammar!!!");
+		}
+		
+		while (reader.hasNext()) {
+			switch (reader.next()) {
+			case XMLStreamConstants.START_ELEMENT:
+				if (reader.getLocalName().equals("token")) {
+					Element el;
+					if (ignoreWhenWritingXML){
+						el = IGNORE_WHEN_WRITING_PARSE_TREE;
+					}
+					else{
+						el = new Element(tokenTagName);
+						if (type != null){
+							el.addAttribute(TYPE_ATR, type);
+						}
+						if (subType != null){
+							el.addAttribute(SUBTYPE_ATR, subType);
+						}
+						for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
+							el.addAttribute(reader.getAttributeLocalName(i), reader.getAttributeValue(i));
+						}
+					}
+					String t = reader.getElementText();
+					Map<Character, Element> symbolToToken = tokenDict.get(t);
 					if(symbolToToken == null) {
-						symbolToToken = new HashMap<Character, Token>();
+						symbolToToken = new HashMap<Character, Element>();
 						tokenDict.put(t, symbolToToken);
 					}
-					symbolToToken.put(symbol, new Token(tokenElement, tokenList));
+					symbolToToken.put(symbol, el);
+
 					if (!reversed){
 						if(symbolTokenNamesDict[index]==null) {
 							symbolTokenNamesDict[index] = new OpsinRadixTrie();
@@ -124,18 +209,24 @@ class ResourceManager {
 						symbolTokenNamesDictReversed[index].addToken(new StringBuilder(t).reverse().toString());
 					}
 				}
+				break;
+			case XMLStreamConstants.END_ELEMENT:
+				if (reader.getLocalName().equals("tokenList")) {
+					return;
+				}
+				break;
 			}
 		}
 	}
 
 	private void processRegexTokenFiles(boolean reversed) throws IOException{
-		Element reTokenList = resourceGetter.getXMLDocument("regexTokens.xml").getRootElement();
+		nu.xom.Element reTokenList = resourceGetter.getXMLDocument("regexTokens.xml").getRootElement();
 		Elements regexEls = reTokenList.getChildElements();
 	
 		HashMap<String, String> tempRegexes = new HashMap<String, String>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		for(int i = 0, l = regexEls.size(); i < l; i++) {
-			Element regexEl = regexEls.get(i);
+			nu.xom.Element regexEl = regexEls.get(i);
 			String re = regexEl.getAttributeValue("regex");
 			Matcher m = matchRegexReplacement.matcher(re);
 			StringBuilder newValueSB = new StringBuilder();
@@ -163,7 +254,24 @@ class ResourceManager {
 				if (reSymbolTokenDict.get(symbol) != null) {
 					throw new RuntimeException(symbol +" is associated with multiple regular expressions. The following expression clashes: " + regexEl.toXML() +" This should be resolved by combining regular expressions that map the same symbol" );
 				}
-				reSymbolTokenDict.put(symbol, new Token(regexEl));
+				
+				boolean ignoreWhenWritingXML = "yes".equals(regexEl.getAttributeValue("ignoreWhenWritingXML"));
+				if (ignoreWhenWritingXML) {
+					reSymbolTokenDict.put(symbol, IGNORE_WHEN_WRITING_PARSE_TREE);
+				}
+				else{
+					String tokenTagName = regexEl.getAttributeValue("tagname");
+					String type = regexEl.getAttributeValue(TYPE_ATR);
+					String subType = regexEl.getAttributeValue(SUBTYPE_ATR);
+					Element el = new Element(tokenTagName);
+					if (type != null){
+						el.addAttribute(TYPE_ATR, type);
+					}
+					if (subType != null){
+						el.addAttribute(SUBTYPE_ATR, subType);
+					}
+					reSymbolTokenDict.put(symbol, el);
+				}
 			}
 			
 			int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
@@ -194,7 +302,7 @@ class ResourceManager {
 		Elements regexes = resourceGetter.getXMLDocument("regexes.xml").getRootElement().getChildElements("regex");
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		for(int i = 0, l =regexes.size(); i < l; i++) {
-			Element regex =regexes.get(i);
+			nu.xom.Element regex =regexes.get(i);
 			String name = regex.getAttributeValue("name");
 			String value = regex.getAttributeValue("value");
 			Matcher m = matchRegexReplacement.matcher(value);
@@ -248,17 +356,28 @@ class ResourceManager {
 	 * @throws ParsingException
 	 */
 	Element makeTokenElement(String tokenString, Character symbol) throws ParsingException {
-		Map<Character, Token> annotationToToken = tokenDict.get(tokenString);
+		Map<Character, Element> annotationToToken = tokenDict.get(tokenString);
 		if(annotationToToken != null){
-			Token token = annotationToToken.get(symbol);
-			if (token != null ) {
-				return token.makeElement(tokenString);
+			Element token = annotationToToken.get(symbol);
+			if (token != null) {
+				if (token == IGNORE_WHEN_WRITING_PARSE_TREE){
+					return null;
+				}
+				Element tokenInstance = new Element(token);
+				tokenInstance.appendChild(tokenString);
+				return tokenInstance;
 			}
 		}
-		Token regexToken = reSymbolTokenDict.get(symbol);
+		Element regexToken = reSymbolTokenDict.get(symbol);
 		if (regexToken != null){
-			return regexToken.makeElement(tokenString);
+			if (regexToken == IGNORE_WHEN_WRITING_PARSE_TREE){
+				return null;
+			}
+			Element tokenInstance = new Element(regexToken);
+			tokenInstance.appendChild(tokenString);
+			return tokenInstance;
 		}
 		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);
 	}
+	
 }

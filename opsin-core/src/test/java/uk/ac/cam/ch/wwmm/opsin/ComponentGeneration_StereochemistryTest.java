@@ -3,11 +3,9 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static org.junit.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
-import org.junit.Test;
+import java.util.List;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
+import org.junit.Test;
 
 public class ComponentGeneration_StereochemistryTest {
 
@@ -20,7 +18,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(S)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -38,7 +36,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(R,R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -62,7 +60,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(1R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -80,7 +78,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(alphaR,3S,7'S)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -111,7 +109,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(E)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -129,7 +127,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(5Z)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -147,7 +145,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(NZ,2E,R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -177,7 +175,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(NZ,2E-R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -207,7 +205,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(3cis,5trans)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -231,7 +229,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(5S-trans)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -255,7 +253,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(exo)");
 		processStereochemistry(substituent);
 		
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -273,7 +271,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(3-endo,5S)");
 		processStereochemistry(substituent);
 		
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -310,7 +308,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element modifiedStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
@@ -348,7 +346,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(group);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(4, children.size());
 		Element modifiedStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl.getLocalName());
@@ -375,7 +373,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(group);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		assertEquals(LOCANT_EL, children.get(0).getLocalName());
 		Element modifiedStereochemistryEl = children.get(1);
@@ -396,7 +394,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element unmodifiedStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, unmodifiedStereochemistryEl.getLocalName());
@@ -414,7 +412,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
 	
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(1, children.size());
 		Element modifiedStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
@@ -437,7 +435,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element modifiedStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
@@ -472,7 +470,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element modifiedStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
@@ -500,7 +498,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(naturalProduct);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(6, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -547,7 +545,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(naturalProduct);
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -571,7 +569,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("3beta,5alpha");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -599,7 +597,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(3beta,5alpha)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -627,7 +625,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("3beta,5alpha");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(4, children.size());
 		Element newStereochemistryEl = children.get(1);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -655,7 +653,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("3beta,4,10,12alpha");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(3, children.size());
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getLocalName());
@@ -684,7 +682,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("rel-(1R,3S,4S,7R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(4, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -720,7 +718,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(1R*,3S*,4S*,7R*)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(4, children.size());
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getLocalName());
@@ -756,7 +754,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("rel-");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	
@@ -771,7 +769,7 @@ public class ComponentGeneration_StereochemistryTest {
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
 	
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(2, children.size());
 		Element modifiedStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getLocalName());
@@ -793,7 +791,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("rac-(2R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	
@@ -806,7 +804,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(RS)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	
@@ -819,7 +817,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(RS)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 
@@ -832,7 +830,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("rac-(2R,4R)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	
@@ -845,7 +843,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("(2RS,4RS)");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	
@@ -858,7 +856,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("rac-");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	
@@ -871,7 +869,7 @@ public class ComponentGeneration_StereochemistryTest {
 		stereochem.appendChild("racemic-");
 		processStereochemistry(substituent);
 
-		Elements children = substituent.getChildElements();
+		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
 	}
 	

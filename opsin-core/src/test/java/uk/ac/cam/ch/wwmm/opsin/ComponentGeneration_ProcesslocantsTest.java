@@ -6,9 +6,6 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 public class ComponentGeneration_ProcesslocantsTest {
 	
 	private Element locant;

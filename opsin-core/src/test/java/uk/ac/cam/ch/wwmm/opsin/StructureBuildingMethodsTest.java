@@ -4,8 +4,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;

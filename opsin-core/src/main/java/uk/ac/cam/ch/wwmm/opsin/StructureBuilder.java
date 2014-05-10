@@ -14,9 +14,6 @@ import java.util.Set;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 
-
-import nu.xom.Element;
-import nu.xom.Elements;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
@@ -40,7 +37,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException If the molecule won't build - there may be many reasons.
 	 */
 	Fragment buildFragment(Element molecule) throws StructureBuildingException {
-		Elements wordRules = molecule.getChildElements(WORDRULE_EL);
+		List<Element> wordRules = molecule.getChildElements(WORDRULE_EL);
 		if (wordRules.size()==0){
 			throw new StructureBuildingException("Molecule contains no words!?");
 		}
@@ -55,7 +52,7 @@ class StructureBuilder {
 			Element nextWordRuleEl = wordRuleStack.getLast();//just has a look what's next
 			if(!wordRulesVisited.contains(nextWordRuleEl)){
 				wordRulesVisited.add(nextWordRuleEl);
-				Elements wordRuleChildren = nextWordRuleEl.getChildElements(WORDRULE_EL);
+				List<Element> wordRuleChildren = nextWordRuleEl.getChildElements(WORDRULE_EL);
 				if (wordRuleChildren.size()!=0){//nested word rules
 					for (int i = wordRuleChildren.size() -1; i >=0; i--) {
 						wordRuleStack.add(wordRuleChildren.get(i));
@@ -537,7 +534,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Mismatch between number of locants and number of oxides specified");
 		}
 		List<Fragment> orderedPossibleFragments = new ArrayList<Fragment>();//In preference suffixes are substituted onto e.g. acetonitrile oxide
-		Elements suffixEls = ((Element)rightMostGroup.getParent()).getChildElements(SUFFIX_EL);
+		List<Element> suffixEls = ((Element)rightMostGroup.getParent()).getChildElements(SUFFIX_EL);
 		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
 			Element suffixEl = suffixEls.get(i);
 			Fragment suffixFrag =state.xmlFragmentMap.get(suffixEl);
@@ -654,7 +651,7 @@ class StructureBuilder {
 			for (int i = 1; i < words.size(); i++) {
 				Fragment frag = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(i)));
 				replacementFragments.add(frag);
-				Elements children =words.get(i).getChildElements();
+				List<Element> children =words.get(i).getChildElements();
 				if (children.size()==1 && children.get(0).getLocalName().equals(BRACKET_EL) && children.get(0).getAttribute(LOCANT_ATR)!=null){
 					locantForFunctionalTerm.add(children.get(0).getAttributeValue(LOCANT_ATR));
 				}
@@ -1667,7 +1664,7 @@ class StructureBuilder {
 		}
 	}
 
-	private boolean applyExplicitStoichiometryIfProvided(Elements wordRules) throws StructureBuildingException {
+	private boolean applyExplicitStoichiometryIfProvided(List<Element> wordRules) throws StructureBuildingException {
 		boolean explicitStoichiometryPresent =false;
 		for (int i = 0; i < wordRules.size(); i++) {
 			Element wordRule = wordRules.get(i);
@@ -2049,7 +2046,7 @@ class StructureBuilder {
 	 */
 	private List<Element> findStereochemistryElsInProcessingOrder(Element parentEl) {
 		List<Element> matchingElements = new ArrayList<Element>();
-		Elements children =parentEl.getChildElements();
+		List<Element> children =parentEl.getChildElements();
 		List<Element> stereochemistryElsAtThisLevel = new ArrayList<Element>();
 		for (int i = children.size()-1; i >=0; i--) {
 			Element child = children.get(i);

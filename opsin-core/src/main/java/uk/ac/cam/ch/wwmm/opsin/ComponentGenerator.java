@@ -12,10 +12,6 @@ import java.util.regex.Pattern;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.Node;
 
 /**Does destructive procedural parsing on parser results.
  *
@@ -481,7 +477,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void processAlkaneStemModifications(Element subOrRoot) throws ComponentGenerationException {
-		Elements alkaneStemModifiers = subOrRoot.getChildElements(ALKANESTEMMODIFIER_EL);
+		List<Element> alkaneStemModifiers = subOrRoot.getChildElements(ALKANESTEMMODIFIER_EL);
 		for(int i=0;i<alkaneStemModifiers.size();i++) {
 			Element alkaneStemModifier =alkaneStemModifiers.get(i);
 			Element alkane = (Element) XOMTools.getNextSibling(alkaneStemModifier);
@@ -1250,7 +1246,7 @@ class ComponentGenerator {
 		Element openBracket = null;
 		Element closeBracket = null;
 		for (Element sub : substituentsAndRoot) {
-			Elements children = sub.getChildElements();
+			List<Element> children = sub.getChildElements();
 			for(int i=0; i<children.size(); i++) {
 				Element child = children.get(i);
 				if(child.getLocalName().equals(OPENBRACKET_EL)) {
@@ -1288,16 +1284,16 @@ class ComponentGenerator {
 		XOMTools.insertBefore(openBracket.getParent(), bracket);
 		/* Pick up everything in the substituent before the bracket*/
 		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
-			Node n = openBracket.getParent().getChild(0);
+			Element n = openBracket.getParent().getChild(0);
 			n.detach();
 			bracket.appendChild(n);
 		}
 		/* Pick up all nodes from the one with the open bracket,
 		 * to the one with the close bracket, inclusive.
 		 */
-		Node currentNode = openBracket.getParent();
+		Element currentNode = openBracket.getParent();
 		while(!currentNode.equals(closeBracket.getParent())) {
-			Node nextNode = XOMTools.getNextSibling(currentNode);
+			Element nextNode = XOMTools.getNextSibling(currentNode);
 			currentNode.detach();
 			bracket.appendChild(currentNode);
 			currentNode = nextNode;
@@ -1310,7 +1306,7 @@ class ComponentGenerator {
 		/* Pick up nodes after the close bracket */
 		currentNode = XOMTools.getNextSibling(closeBracket);
 		while(currentNode != null) {
-			Node nextNode = XOMTools.getNextSibling(currentNode);
+			Element nextNode = XOMTools.getNextSibling(currentNode);
 			currentNode.detach();
 			bracket.appendChild(currentNode);
 			currentNode = nextNode;
@@ -1497,7 +1493,7 @@ class ComponentGenerator {
 			String suffixValue = suffix.getValue();
 			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
 				if (!n2sConfig.allowInterpretationOfAcidsWithoutTheWordAcid()) {
-					Node next = XOMTools.getNext(suffix);
+					Element next = XOMTools.getNext(suffix);
 					if (next == null){
 						throw new ComponentGenerationException("\"acid\" not found after " +suffixValue);
 					}
@@ -1525,7 +1521,7 @@ class ComponentGenerator {
 				XOMTools.setTextChild(suffix, "yl");
 				Element alk = (Element) XOMTools.getPreviousSibling(suffix, GROUP_EL);
 				if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
-					alk.getAttribute(USABLEASJOINER_ATR).detach();
+					alk.removeAttribute(alk.getAttribute(USABLEASJOINER_ATR));
 				}
 				Element multiplier = new Element(MULTIPLIER_EL);
 				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
@@ -2041,7 +2037,7 @@ class ComponentGenerator {
 		
 		if (!n2sConfig.allowInterpretationOfAcidsWithoutTheWordAcid()) {
 			if (group.getAttribute(FUNCTIONALIDS_ATR) !=null && (groupValue.endsWith("ic") || groupValue.endsWith("ous"))){
-				Node next = XOMTools.getNext(group);
+				Element next = XOMTools.getNext(group);
 				if (next == null){
 					throw new ComponentGenerationException("\"acid\" not found after " +groupValue);
 				}
@@ -2063,7 +2059,7 @@ class ComponentGenerator {
 			Element nextSub = (Element) XOMTools.getNextSibling(group.getParent());
 			if (nextSub !=null && nextSub.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null 
 					&& (XOMTools.getPreviousSibling(group)==null || !((Element)XOMTools.getPreviousSibling(group)).getLocalName().equals(MULTIPLIER_EL))){//not trimethylenedioxy
-				Elements children = nextSub.getChildElements();
+				List<Element> children = nextSub.getChildElements();
 				if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
 					XOMTools.setTextChild(group, groupValue + "dioxy");
 					group.getAttribute(VALUE_ATR).setValue("C(O)O");
@@ -2104,7 +2100,7 @@ class ComponentGenerator {
 					}
 				}
 				else if (possibleRoot!=null && possibleRoot.getLocalName().equals(ROOT_EL)){
-					Elements children = possibleRoot.getChildElements();
+					List<Element> children = possibleRoot.getChildElements();
 					if (children.size()==2){
 						Element amineMultiplier =children.get(0);
 						Element amine =children.get(1);
@@ -2135,7 +2131,7 @@ class ComponentGenerator {
 			else{
 				Element nextSub = (Element) XOMTools.getNextSibling(group.getParent());
 				if (nextSub !=null && nextSub.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null){
-					Elements children = nextSub.getChildElements();
+					List<Element> children = nextSub.getChildElements();
 					if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
 						XOMTools.setTextChild(group, groupValue + "dioxy");
 						group.getAttribute(VALUE_ATR).setValue("C(O)CO");
@@ -2258,7 +2254,7 @@ class ComponentGenerator {
 				}
 				possibleSuitableAteGroup.addAttribute(new Attribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR, multiplier));
 				group.detach();
-				Elements childrenToMove = hydrogenParentEl.getChildElements();
+				List<Element> childrenToMove = hydrogenParentEl.getChildElements();
 				for (int i = childrenToMove.size() -1 ; i >=0; i--) {
 					childrenToMove.get(i).detach();
 					nextSubOrRoot.insertChild(childrenToMove.get(i), 0);
@@ -2372,7 +2368,7 @@ class ComponentGenerator {
 						throw new ComponentGenerationException("Carbohydrate has a specified ring size but " + groupValue + " indicates the open chain form!");
 					}
 					group.detach();
-					Elements childrenToMove = parentSubstituent.getChildElements();
+					List<Element> childrenToMove = parentSubstituent.getChildElements();
 					for (int i = childrenToMove.size() -1 ; i >=0; i--) {
 						Element el = childrenToMove.get(i);
 						if (!el.getLocalName().equals(HYPHEN_EL)){
@@ -2427,7 +2423,7 @@ class ComponentGenerator {
 			if (isAcid != null){//check for inorganic interpretation
 				Element substituent = (Element) XOMTools.getPreviousSibling(group.getParent());
 				if (substituent !=null && (substituent.getLocalName().equals(SUBSTITUENT_EL) || substituent.getLocalName().equals(BRACKET_EL))){
-					Elements children = substituent.getChildElements();
+					List<Element> children = substituent.getChildElements();
 					Element firstChild = children.get(0);
 					boolean matched = false;
 					if (children.size() ==1 && firstChild.getLocalName().equals(GROUP_EL) && (firstChild.getValue().equals("fluoro") || firstChild.getValue().equals("fluor"))){

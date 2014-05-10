@@ -11,9 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import nu.xom.Element;
-
-
 /** Holds the Fragments during the construction of the molecule,
  * handles the building of new fragments and handles the creation/deletion of atoms/bonds
  *

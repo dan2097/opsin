@@ -2,13 +2,13 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
@@ -19,32 +19,84 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  */
 class WordRules {
 
+	/**The wordRules themselves.*/
+	private final List<WordRuleDescription> wordRuleList;
+
 	/**
 	 * Describes a word that a wordRule is looking for
 	 * @author dl387
 	 *
 	 */
-	static class WordDescription {
+	private static class WordDescription {
 		/**Whether the word is a full word, substituent word or functionalTerm word*/
 		private final WordType type;
 
 		/**A case insensitive pattern which attempts to match the end of the String value of the word*/
-		private Pattern endsWithPattern = null;
+		private final Pattern endsWithPattern;
 
 		/**The case insensitive String value of the word */
-		private String value = null;
+		private final String value;
 
 		/** Only applicable for functionalTerms. The string value of the functionalTerm's type attribute*/
-		private String functionalGroupType = null;
+		private final String functionalGroupType;
 
 		/** The value of the value attribute of the last group element in the word e.g. maybe a SMILES string*/
-		private String endsWithGroupValueAtr = null;
+		private final String endsWithGroupValueAtr;
 		
 		/** The value of the type attribute of the last group element in the word e.g. maybe aminoAcid*/
-		private String endsWithGroupType = null;
+		private final String endsWithGroupType;
 		
 		/** The value of the subType attribute of the last group element in the word e.g. maybe elementaryAtom*/
-		private String endsWithGroupSubType = null;
+		private final String endsWithGroupSubType;
+		
+		/**
+		 * Makes a description of a word to looks for
+		 * @param reader
+		 */
+		WordDescription(XMLStreamReader reader){
+			WordType type = null;
+			Pattern endsWithPattern = null;
+			String value = null;
+			String functionalGroupType = null;
+			String endsWithGroupValueAtr = null;
+			String endsWithGroupType = null;
+			String endsWithGroupSubType = null;
+			for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
+				String atrName = reader.getAttributeLocalName(i);
+				String atrValue = reader.getAttributeValue(i);
+				if (atrName.equals("type")){
+					type = WordType.valueOf(atrValue);
+				}
+				else if (atrName.equals("value")){
+					value = atrValue;
+				}
+				else if (atrName.equals("functionalGroupType")){
+					functionalGroupType = atrValue;
+				}
+				else if (atrName.equals("endsWithRegex")){
+					endsWithPattern = Pattern.compile(atrValue +"$", Pattern.CASE_INSENSITIVE);
+				}
+				else if (atrName.equals("endsWithGroupValueAtr")){
+					endsWithGroupValueAtr = atrValue;
+				}
+				else if (atrName.equals("endsWithGroupType")){
+					endsWithGroupType = atrValue;
+				}
+				else if (atrName.equals("endsWithGroupSubType")){
+					endsWithGroupSubType = atrValue;
+				}
+			}
+			if (type == null) {
+				throw new RuntimeException("Malformed wordRules");
+			}
+			this.type = type;
+			this.endsWithPattern = endsWithPattern;
+			this.value = value;
+			this.functionalGroupType = functionalGroupType;
+			this.endsWithGroupValueAtr = endsWithGroupValueAtr;
+			this.endsWithGroupType = endsWithGroupType;
+			this.endsWithGroupSubType = endsWithGroupSubType;
+		}
 
 		WordType getType() {
 			return type;
@@ -54,56 +106,24 @@ class WordRules {
 			return endsWithPattern;
 		}
 
-		void setEndsWithPattern(Pattern endsWithPattern) {
-			this.endsWithPattern = endsWithPattern;
-		}
-
 		String getValue() {
 			return value;
-		}
-
-		void setValue(String value) {
-			this.value = value.toLowerCase();
 		}
 
 		String getFunctionalGroupType() {
 			return functionalGroupType;
 		}
 
-		void setFunctionalGroupType(String functionalGroupType) {
-			this.functionalGroupType = functionalGroupType;
-		}
-
 		String getEndsWithGroupValueAtr() {
 			return endsWithGroupValueAtr;
-		}
-
-		void setEndsWithGroupValueAtr(String endsWithElementValueAtr) {
-			this.endsWithGroupValueAtr = endsWithElementValueAtr;
 		}
 
 		String getEndsWithGroupType() {
 			return endsWithGroupType;
 		}
-
-		void setEndsWithGroupType(String endsWithElementType) {
-			this.endsWithGroupType = endsWithElementType;
-		}
 		
 		String getEndsWithGroupSubType() {
 			return endsWithGroupSubType;
-		}
-
-		void setEndsWithGroupSubType(String endsWithElementSubType) {
-			this.endsWithGroupSubType = endsWithElementSubType;
-		}
-
-		/**
-		 * Makes a description of a word to looks for
-		 * @param wordType
-		 */
-		WordDescription(WordType wordType){
-			type =wordType;
 		}
 	}
 
@@ -112,10 +132,14 @@ class WordRules {
 	 * @author dl387
 	 *
 	 */
-	static class WordRuleDescription {
-		private final List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
+	private static class WordRuleDescription {
+		private final List<WordDescription> wordDescriptions;
 		private final WordRule ruleName;
 		private final WordType ruleType;
+		
+		List<WordDescription> getWordDescriptions() {
+			return wordDescriptions;
+		}
 
 		WordRule getRuleName() {
 			return ruleName;
@@ -127,35 +151,27 @@ class WordRules {
 
 		/**
 		 * Creates a wordRule from a wordRule element found in wordRules.xml
-		 * @param wordRuleEl
+		 * @param reader
+		 * @throws XMLStreamException 
 		 */
-		WordRuleDescription(Element wordRuleEl) {
-			ruleName = WordRule.valueOf(wordRuleEl.getAttributeValue("name"));
-			ruleType = WordType.valueOf(wordRuleEl.getAttributeValue("type"));
-			Elements words = wordRuleEl.getChildElements();
-			for (int i = 0; i < words.size(); i++) {
-				Element word = words.get(i);
-				WordDescription wd = new WordDescription(WordType.valueOf(word.getAttributeValue("type")));
-				if (word.getAttribute("value")!=null){
-					wd.setValue(word.getAttributeValue("value"));
+		WordRuleDescription(XMLStreamReader reader) throws XMLStreamException {
+			List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
+			ruleName = WordRule.valueOf(reader.getAttributeValue(null, "name"));
+			ruleType = WordType.valueOf(reader.getAttributeValue(null,"type"));
+			while (reader.hasNext()) {
+				int event = reader.next();
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					if (reader.getLocalName().equals("word")) {
+						wordDescriptions.add(new WordDescription(reader));
+					}
 				}
-				if (word.getAttribute("functionalGroupType")!=null){
-					wd.setFunctionalGroupType(word.getAttributeValue("functionalGroupType"));
+				else if (event == XMLStreamConstants.END_ELEMENT) {
+					if (reader.getLocalName().equals("wordRule")) {
+						break;
+					}
 				}
-				if (word.getAttribute("endsWithRegex")!=null){
-					wd.setEndsWithPattern(Pattern.compile(word.getAttributeValue("endsWithRegex") +"$", Pattern.CASE_INSENSITIVE));
-				}
-				if (word.getAttribute("endsWithGroupValueAtr")!=null){
-					wd.setEndsWithGroupValueAtr(word.getAttributeValue("endsWithGroupValueAtr"));
-				}
-				if (word.getAttribute("endsWithGroupType")!=null){
-					wd.setEndsWithGroupType(word.getAttributeValue("endsWithGroupType"));
-				}
-				if (word.getAttribute("endsWithGroupSubType")!=null){
-					wd.setEndsWithGroupSubType(word.getAttributeValue("endsWithGroupSubType"));
-				}
-				wordDescriptions.add(wd);
 			}
+			this.wordDescriptions = Collections.unmodifiableList(wordDescriptions);
 		}
 	}
 
@@ -164,16 +180,29 @@ class WordRules {
 	 * @param resourceGetter
 	 * @throws IOException 
 	 */
-	WordRules(ResourceGetter resourceGetter) throws IOException{
-		Element wordRules =resourceGetter.getXMLDocument("wordRules.xml").getRootElement();
-		Elements rules = wordRules.getChildElements("wordRule");
-		for (int i = 0; i < rules.size(); i++) {
-			wordRuleList.add (new WordRuleDescription(rules.get(i)));
+	WordRules(ResourceGetter resourceGetter) throws IOException {
+		List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
+		XMLStreamReader reader = resourceGetter.getXMLDocument2("wordRules.xml");
+		try {
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT && 
+						reader.getLocalName().equals("wordRule")) {
+					wordRuleList.add(new WordRuleDescription(reader));
+				}
+			}
 		}
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading wordRules.xml", e);
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading wordRules.xml", e);
+			}
+		}
+		this.wordRuleList = Collections.unmodifiableList(wordRuleList);
 	}
-
-	/**The wordRules themselves.*/
-	private final List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
 
 	/**Takes a molecule element and places the word elements into wordRule elements
 	 * @param n2sConfig 
@@ -190,7 +219,7 @@ class WordRules {
 				i=-1;//if function did something
 			}
 		}
-		Elements wordRuleEls = moleculeEl.getChildElements();
+		List<Element> wordRuleEls = moleculeEl.getChildElements();
 		for (int i = 0; i < wordRuleEls.size(); i++) {
 			Element wordRuleEl = wordRuleEls.get(i);
 			if (!wordRuleEl.getLocalName().equals(WORDRULE_EL)){
@@ -202,27 +231,28 @@ class WordRules {
 	private boolean matchWordRule(NameToStructureConfig n2sConfig, List<Element> wordEls, int indexOfFirstWord, boolean allowSpaceRemoval) throws ParsingException {
 		wordRuleLoop: for (WordRuleDescription wordRuleDesc : wordRuleList) {
 			int i =indexOfFirstWord;
-			int wordsInWordRule = wordRuleDesc.wordDescriptions.size();
+			List<WordDescription> wordDescriptions = wordRuleDesc.getWordDescriptions();
+			int wordsInWordRule = wordDescriptions.size();
 			if (i + wordsInWordRule -1 < wordEls.size()){//need sufficient words to match the word rule
 				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.get(i+j);
-					WordDescription wd = wordRuleDesc.wordDescriptions.get(j);
-					if (!wd.type.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
+					WordDescription wd = wordDescriptions.get(j);
+					if (!wd.getType().toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 						continue wordRuleLoop;//type mismatch;
 					}
 					if (wd.getValue() !=null && !wordEl.getAttributeValue(VALUE_ATR).toLowerCase().equals(wd.getValue())){//word string contents mismatch
 						continue wordRuleLoop;
 					}
-					if (wd.functionalGroupType !=null){
+					if (wd.getFunctionalGroupType() !=null){
 						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
-							Elements children = wordEl.getChildElements();
+							List<Element> children = wordEl.getChildElements();
 							Element lastChild = children.get(children.size()-1);
 							while (lastChild.getChildElements().size()!=0){
 								children = lastChild.getChildElements();
 								lastChild = children.get(children.size()-1);
 							}
 							if (lastChild.getLocalName().equals(CLOSEBRACKET_EL)){
-								lastChild = (Element) XOMTools.getPreviousSibling(lastChild);
+								lastChild = XOMTools.getPreviousSibling(lastChild);
 							}
 							if (lastChild==null){
 								throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
@@ -232,26 +262,26 @@ class WordRules {
 							}
 						}
 					}
-					if (wd.endsWithPattern !=null){
-						if (!wd.endsWithPattern.matcher(wordEl.getAttributeValue(VALUE_ATR)).find()){
+					if (wd.getEndsWithPattern() !=null){
+						if (!wd.getEndsWithPattern().matcher(wordEl.getAttributeValue(VALUE_ATR)).find()){
 							continue wordRuleLoop;
 						}
 					}
-					if (wd.endsWithGroupValueAtr !=null){
+					if (wd.getEndsWithGroupValueAtr() !=null){
 						Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
-						if (lastGroupInWordRule==null || !wd.endsWithGroupValueAtr.equals(lastGroupInWordRule.getAttributeValue(VALUE_ATR))){
+						if (lastGroupInWordRule==null || !wd.getEndsWithGroupValueAtr().equals(lastGroupInWordRule.getAttributeValue(VALUE_ATR))){
 							continue wordRuleLoop;
 						}
 					}
-					if (wd.endsWithGroupType !=null){
+					if (wd.getEndsWithGroupType() !=null){
 						Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
-						if (lastGroupInWordRule==null || !wd.endsWithGroupType.equals(lastGroupInWordRule.getAttributeValue(TYPE_ATR))){
+						if (lastGroupInWordRule==null || !wd.getEndsWithGroupType().equals(lastGroupInWordRule.getAttributeValue(TYPE_ATR))){
 							continue wordRuleLoop;
 						}
 					}
-					if (wd.endsWithGroupSubType !=null){
+					if (wd.getEndsWithGroupSubType() !=null){
 						Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
-						if (lastGroupInWordRule==null || !wd.endsWithGroupSubType.equals(lastGroupInWordRule.getAttributeValue(SUBTYPE_ATR))){
+						if (lastGroupInWordRule==null || !wd.getEndsWithGroupSubType().equals(lastGroupInWordRule.getAttributeValue(SUBTYPE_ATR))){
 							continue wordRuleLoop;
 						}
 					}
@@ -309,7 +339,7 @@ class WordRules {
 
 
 				List<String> wordValues = new ArrayList<String>();
-				Element parentEl = (Element) wordEls.get(i).getParent();
+				Element parentEl = wordEls.get(i).getParent();
 				int indexToInsertAt = parentEl.indexOf(wordEls.get(i));
 				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.remove(i);
@@ -349,7 +379,7 @@ class WordRules {
 	}
 
 	private Element getLastGroupInWordRule(Element wordEl) {
-		Elements children = wordEl.getChildElements();
+		List<Element> children = wordEl.getChildElements();
 		Element lastChild = children.get(children.size()-1);
 		while (lastChild.getChildElements().size()!=0){
 			children = lastChild.getChildElements();
@@ -359,7 +389,7 @@ class WordRules {
 			return lastChild;
 		}
 		else{
-			Elements groups = ((Element)lastChild.getParent()).getChildElements(GROUP_EL);
+			List<Element> groups = ((Element)lastChild.getParent()).getChildElements(GROUP_EL);
 			if (groups.size()>0){
 				return groups.get(groups.size()-1);
 			}
@@ -368,7 +398,7 @@ class WordRules {
 	}
 
 	private void applySimpleWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
-		Element parentEl = (Element) firstWord.getParent();
+		Element parentEl = firstWord.getParent();
 		int indexToInsertAt = parentEl.indexOf(firstWord);
 		Element wordRuleEl = new Element(WORDRULE_ATR);
 		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.simple.toString()));//No wordRule
@@ -382,7 +412,7 @@ class WordRules {
 	
 
 	private void applySubstituentWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
-		Element parentEl = (Element) firstWord.getParent();
+		Element parentEl = firstWord.getParent();
 		int indexToInsertAt = parentEl.indexOf(firstWord);
 		Element wordRuleEl = new Element(WORDRULE_ATR);
 		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.substituent.toString()));
@@ -406,18 +436,18 @@ class WordRules {
 	private void joinWords(List<Element> wordEls, int indexOfFirstWord, Element firstWord, Element wordToPotentiallyCombineWith) throws ParsingException {
 		wordEls.remove(indexOfFirstWord +1);
 		wordToPotentiallyCombineWith.detach();
-		Elements substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
+		List<Element> substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
 		if (substituentEls.size()==0){
 			throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 		}
 		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
-		Elements finalSubstituentChildren = finalSubstituent.getChildElements();
+		List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
 		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getLocalName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
 			Element implicitHyphen = new Element(HYPHEN_EL);
 			implicitHyphen.appendChild("-");
 			finalSubstituent.appendChild(implicitHyphen);
 		}
-		Elements elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();
+		List<Element> elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();
 		for (int j =  elementsToMergeIntoSubstituent.size() -1 ; j >=0; j--) {
 			Element el = elementsToMergeIntoSubstituent.get(j);
 			el.detach();
@@ -436,7 +466,7 @@ class WordRules {
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalTerm expected in functionalGroupAsGroup wordRule");
 		}
 		functionalTerms.get(0).setLocalName(ROOT_EL);
-		Elements functionalGroups = functionalTerms.get(0).getChildElements(FUNCTIONALGROUP_EL);
+		List<Element> functionalGroups = functionalTerms.get(0).getChildElements(FUNCTIONALGROUP_EL);
 		if (functionalGroups.size()!=1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalGroup expected in functionalGroupAsGroup wordRule");
 		}
