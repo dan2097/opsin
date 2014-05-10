@@ -1,11 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-public class Attribute {
+class Attribute {
 
 	private final String name;
 	private String value;
 
-	public Attribute(String name, String value) {
+	Attribute(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -14,24 +14,24 @@ public class Attribute {
 	 * Creates a copy
 	 * @param attribute
 	 */
-	public Attribute(Attribute attribute) {
+	Attribute(Attribute attribute) {
 		this.name = attribute.getName();
 		this.value = attribute.getValue();
 	}
 
-	public String getValue() {
+	String getValue() {
 		return value;
 	}
 
-	public String getName() {
+	String getName() {
 		return name;
 	}
 	
-	public void setValue(String value) {
+	void setValue(String value) {
 		this.value = value;
 	}
 
-	public String toXML() {
+	String toXML() {
 		return getName() + "=\"" + escapeText(value) + "\"";
 	}
 
