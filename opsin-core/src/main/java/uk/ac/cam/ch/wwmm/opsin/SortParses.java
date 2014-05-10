@@ -5,8 +5,6 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.WORDRULE_EL;
 
 import java.util.Comparator;
 
-import nu.xom.Element;
-
 /**
  * Prefer non-substituent word rules to substituent word rule e.g. ethylene is C=C not -CC-
  * Prefer the parse with the least elements that have 0 children e.g. benzal beats benz al (1 childless element vs 2 childless elements)

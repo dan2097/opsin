@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.Node;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**
@@ -56,7 +52,7 @@ class OpsinTools {
 	 * @param elements
 	 * @return The new arrayList
 	 */
-	static ArrayList<Element> elementsToElementArrayList(Elements elements) {
+	static ArrayList<Element> elementsToElementArrayList(List<Element> elements) {
 		ArrayList<Element> elementList =new ArrayList<Element>(elements.size());
 		for (int i = 0, n=elements.size(); i < n; i++) {
 			elementList.add(elements.get(i));
@@ -81,7 +77,7 @@ class OpsinTools {
 	 * @param current: starting node
 	 * @return
 	 */
-	static Node getPreviousGroup(Element current) {
+	static Element getPreviousGroup(Element current) {
 	  if (current.getLocalName().equals(GROUP_EL)){//can start with a group or the sub/root the group is in
 		  current=(Element)current.getParent();
 	  }
@@ -92,12 +88,12 @@ class OpsinTools {
 	  int index = parent.indexOf(current);
 	  if (index ==0) return getPreviousGroup(parent);//no group found
 	  Element previous =(Element) parent.getChild(index-1);
-	  Elements children =previous.getChildElements();
+	  List<Element> children =previous.getChildElements();
 	  while (children.size()!=0){
 		  previous =children.get(children.size()-1);
 		  children =previous.getChildElements();
 	  }
-	  Elements groups =((Element)previous.getParent()).getChildElements(GROUP_EL);
+	  List<Element> groups =((Element)previous.getParent()).getChildElements(GROUP_EL);
 	  if (groups.size()==0){
 		  return getPreviousGroup(previous);
 	  }
@@ -111,7 +107,7 @@ class OpsinTools {
 	 * @param current: starting node
 	 * @return
 	 */
-	static Node getNextGroup(Element current) {
+	static Element getNextGroup(Element current) {
 	  if (current.getLocalName().equals(GROUP_EL)){//can start with a group or the sub/root the group is in
 		  current=(Element)current.getParent();
 	  }
@@ -122,12 +118,12 @@ class OpsinTools {
 	  int index = parent.indexOf(current);
 	  if (index ==parent.getChildElements().size()-1) return getNextGroup(parent);//no group found
 	  Element next =(Element) parent.getChild(index +1);
-	  Elements children =next.getChildElements();
+	  List<Element> children =next.getChildElements();
 	  while (children.size()!=0){
 		  next =children.get(0);
 		  children =next.getChildElements();
 	  }
-	  Elements groups =((Element)next.getParent()).getChildElements(GROUP_EL);
+	  List<Element> groups =((Element)next.getParent()).getChildElements(GROUP_EL);
 	  if (groups.size()==0){
 		  return getNextGroup(next);
 	  }

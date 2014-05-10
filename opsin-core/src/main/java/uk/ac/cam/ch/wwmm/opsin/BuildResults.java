@@ -6,8 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import nu.xom.Element;
-
 /**
  * A "struct" to hold the results of fragment building.
  * @author dl387

@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-import nu.xom.Element;
-
 /**
  * Used to pass the current mode, IDManager, FragmentManager and wordRule around as well as a mapping between the XML and fragments
  *

@@ -10,12 +10,19 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.apache.commons.io.IOUtils;
+import org.codehaus.stax2.XMLInputFactory2;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import com.ctc.wstx.stax.WstxInputFactory;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -37,6 +44,7 @@ class ResourceGetter {
 	private final String resourcePath;
 	private final String workingDirectory;
 	private final Builder xomBuilder;
+	private final XMLInputFactory xmlInputFactory;
 
 	/**
 	 * Sets up a resourceGetter to get resources from a particular path.
@@ -75,6 +83,9 @@ class ResourceGetter {
 			throw new RuntimeException("Your system's default XML Reader has not recognised the DTD loading feature! Maybe try updating your version of java?", e);
 		}
 		xomBuilder = new Builder(xmlReader);
+		xmlInputFactory = new WstxInputFactory();
+		xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		xmlInputFactory.setProperty(XMLInputFactory2.P_AUTO_CLOSE_INPUT, true);
 	}
 	
 	/**
@@ -83,6 +94,35 @@ class ResourceGetter {
 	 */
 	String getResourcePath() {
 		return resourcePath;
+	}
+	
+	/**Fetches a data file from resourcePath,
+	 * and returns an XML stream reader for it
+	 *
+	 * @param name The name of the file to parse.
+	 * @return Am XML stream reader 
+	 * @throws IOException 
+	 */
+	XMLStreamReader getXMLDocument2(String name) throws IOException {
+		if(name == null){
+			throw new IllegalArgumentException("Input to function was null");
+		}
+		try {
+			if (workingDirectory != null){
+				File f = getFile(name);
+				if(f != null) {
+					return xmlInputFactory.createXMLStreamReader(new FileInputStream(f));
+				}
+			}
+			ClassLoader l = getClass().getClassLoader();
+			URL url = l.getResource(resourcePath + name);
+			if (url == null){
+				throw new IOException("URL for resource: " + resourcePath + name + " is invalid");
+			}
+			return xmlInputFactory.createXMLStreamReader(url.openStream());
+		} catch (XMLStreamException e) {
+			throw new IOException("Validity exception occurred while reading the XML file with name:" +name, e);
+		}
 	}
 
 	/**Fetches a data file from resourcePath,

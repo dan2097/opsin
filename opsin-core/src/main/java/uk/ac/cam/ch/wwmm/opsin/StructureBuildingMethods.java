@@ -13,9 +13,6 @@ import org.apache.log4j.Logger;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
 
 /**
  * Methods for processing the substitutive and additive operations that connect all the fragments together
@@ -374,7 +371,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	static void resolveLocantedFeatures(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		Elements groups = subOrRoot.getChildElements(GROUP_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		if (groups.size()!=1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
 		}
@@ -386,7 +383,7 @@ class StructureBuildingMethods {
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
 		ArrayList<Element> subtractivePrefixElements = new ArrayList<Element>();
 
-		Elements children =subOrRoot.getChildElements();
+		List<Element> children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
 			Element currentEl =children.get(i);
 			String elName =currentEl.getLocalName();
@@ -609,7 +606,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	static void resolveUnLocantedFeatures(BuildState state, Element subOrRoot) throws StructureBuildingException {
-		Elements groups = subOrRoot.getChildElements(GROUP_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		if (groups.size()!=1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
 		}
@@ -621,7 +618,7 @@ class StructureBuildingMethods {
 		ArrayList<Element> heteroatoms = new ArrayList<Element>();
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
 
-		Elements children =subOrRoot.getChildElements();
+		List<Element> children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
 			Element currentEl =children.get(i);
 			String elName =currentEl.getLocalName();
@@ -1682,7 +1679,7 @@ class StructureBuildingMethods {
 
 	private static boolean potentiallyCanSubstitute(Element subBracketOrRoot) {
 		Element parent =(Element) subBracketOrRoot.getParent();
-		Elements children =parent.getChildElements();
+		List<Element> children =parent.getChildElements();
 		for (int i = parent.indexOf(subBracketOrRoot) +1 ; i < children.size(); i++) {
 			if (!children.get(i).getLocalName().equals(HYPHEN_EL)){
 				return true;

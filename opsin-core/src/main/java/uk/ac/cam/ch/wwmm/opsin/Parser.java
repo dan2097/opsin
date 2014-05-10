@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
+import javax.xml.stream.XMLStreamException;
+
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -38,7 +38,7 @@ class Parser {
 	 * uk/ac/cam/ch/wwmm/opsin/resources/
 	 * @throws IOException 
 	 */
-	Parser() throws IOException{
+	Parser() throws IOException {
 		ResourceGetter resources = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		this.wordRules = new WordRules(resources);
 		this.resourceManager = new ResourceManager(resources);
@@ -292,10 +292,10 @@ class Parser {
                     annotations.get(annotNumber).get(annotPos));
             if (tokenElement != null) {//null for tokens that have ignoreWhenWritingXML set
                 chunk.appendChild(tokenElement);
-                lastTokenElement=tokenElement;
+                lastTokenElement = tokenElement;
             }
-            else if (lastTokenElement!=null && !token.equals("")){
-            	if (lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR)!=null){
+            else if (lastTokenElement!=null && token.length() > 0){
+            	if (lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) != null){
             		lastTokenElement.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR).setValue(lastTokenElement.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR) + token);
             	}
             	else{
