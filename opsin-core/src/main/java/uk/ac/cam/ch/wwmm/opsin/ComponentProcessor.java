@@ -2699,7 +2699,7 @@ class ComponentProcessor {
 				}
 				deltas.get(j).detach();
 			}
-			XOMTools.setTextChild(group, name);
+			group.setValue(name);
 		}
 	}
 
@@ -2864,7 +2864,7 @@ class ComponentProcessor {
 				state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
 				fragmentToResolveAndDuplicate.setDefaultInAtom(clone.getDefaultInAtom());
 			}
-			XOMTools.setTextChild(group, multiplier.getValue() +group.getValue());
+			group.setValue(multiplier.getValue() +group.getValue());
 			Element possibleOpenStructuralBracket = XOMTools.getPreviousSibling(multiplier);
 			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getLocalName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
 				//To emphasise there can actually be two sets of structural brackets e.g. [1,1'-bi(cyclohexyl)]
@@ -3072,7 +3072,7 @@ class ComponentProcessor {
 			name = group.getValue() + name;
 			group.detach();
 		}
-		XOMTools.setTextChild(rootGroup, polyCyclicSpiroDescriptor.getValue() + name);
+		rootGroup.setValue(polyCyclicSpiroDescriptor.getValue() + name);
 		openBracket.detach();
 		closeBracket.detach();
 	}
@@ -3153,7 +3153,7 @@ class ComponentProcessor {
 				atomOnParentFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
 			}
 			state.fragManager.incorporateFragment(previousFrag, parentFrag);
-			XOMTools.setTextChild(nextGroup, previousGroup.getValue() + currentSpiro.getValue() + nextGroup.getValue());
+			nextGroup.setValue(previousGroup.getValue() + currentSpiro.getValue() + nextGroup.getValue());
 			previousGroup.detach();
 		}
 	}
@@ -3208,7 +3208,7 @@ class ComponentProcessor {
 				atomOnOriginalFragment.setSpareValency(true);
 			}
 		}
-		XOMTools.setTextChild(group, polyCyclicSpiroDescriptor.getValue() + group.getValue());
+		group.setValue(polyCyclicSpiroDescriptor.getValue() + group.getValue());
 	}
 
 	/**
@@ -3250,7 +3250,7 @@ class ComponentProcessor {
 			atomOnLessPrimedFragment.setSpareValency(true);
 		}
 
-		XOMTools.setTextChild(group, "dispiroter" + group.getValue());
+		group.setValue("dispiroter" + group.getValue());
 	}
 
 	/**
@@ -3503,7 +3503,7 @@ class ComponentProcessor {
 						throw new ComponentGenerationException("unexpected group value");
 					}
 					group.getAttribute(OUTIDS_ATR).setValue("1,"+Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR)));
-					XOMTools.setTextChild(group, beforeGroup.getValue() + groupValue);
+					group.setValue(beforeGroup.getValue() + groupValue);
 					beforeGroup.detach();
 					if (group.getAttribute(LABELS_ATR)!=null){//use numeric numbering
 						group.getAttribute(LABELS_ATR).setValue(NUMERIC_LABELS_VAL);
@@ -3900,7 +3900,7 @@ class ComponentProcessor {
 							locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
 						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
-							XOMTools.setTextChild(locantRelatedElements.get(0), locantValues[1]);
+							locantRelatedElements.get(0).setValue(locantValues[1]);
 						}
 						else if (frag.getAtomCount() == 1) {//e.g. 1,3,4-trimethylthiobenzene --> 1,3,4-tri(methylthio)benzene
 							locantRelatedElements.add(elAfterLocant);

@@ -150,16 +150,6 @@ class XOMTools {
 	}
 
 	/**
-	 * Sets the first text child of the group to the newName
-	 * Throws an exception if the first child is not a Text node
-	 * @param group
-	 * @param newName
-	 */
-	static void setTextChild(Element group, String newName){
-		group.setValue(newName);
-	}
-
-	/**
 	 * Returns an arrayList containing sibling elements of the given type after the given element.
 	 * These elements need not be continuous
 	 * @param currentElem: the element to look for following siblings of
