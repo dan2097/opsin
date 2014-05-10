@@ -319,7 +319,7 @@ class StructureBuildingMethods {
 		if (subOrBracket.getAttribute(LOCANT_ATR) !=null){
 			locants = MATCH_COMMA.split(subOrBracket.getAttributeValue(LOCANT_ATR));
 		}
-		Element parentWordOrBracket =(Element) subOrBracket.getParent();
+		Element parentWordOrBracket = subOrBracket.getParent();
 		int indexOfSubOrBracket = parentWordOrBracket.indexOf(subOrBracket);
 		subOrBracket.detach();
 
@@ -329,7 +329,7 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Multiplier not found where multiplier expected");
 		}
 		for (int j = subOrBracket.indexOf(multiplierEl) -1 ; j >=0 ; j--) {
-			Element el = (Element) subOrBracket.getChild(j);
+			Element el = subOrBracket.getChild(j);
 			el.detach();
 			elementsNotToBeMultiplied.add(el);
 		}
@@ -847,7 +847,7 @@ class StructureBuildingMethods {
 		int outAtomCount = frag.getOutAtomCount();
 		if (outAtomCount >=1){
 			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR) ==null){
-				Element nextSiblingEl = (Element) XOMTools.getNextSibling(subBracketOrRoot);
+				Element nextSiblingEl = XOMTools.getNextSibling(subBracketOrRoot);
 				if (nextSiblingEl.getAttribute(MULTIPLIER_ATR)!=null &&
 						(outAtomCount >= Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR)) || //probably multiplicative nomenclature, should be as many outAtoms as the multiplier
 						outAtomCount==1 && frag.getOutAtom(0).getValency()==Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR))) &&
@@ -863,13 +863,13 @@ class StructureBuildingMethods {
 					Fragment nextFrag = getNextInScopeMultiValentFragment(state, subBracketOrRoot);
 					if (nextFrag!=null){
 						Element nextMultiRadicalGroup = state.xmlFragmentMap.getElement(nextFrag);
-						Element parentSubOrRoot = (Element) nextMultiRadicalGroup.getParent();
+						Element parentSubOrRoot = nextMultiRadicalGroup.getParent();
 						if (state.currentWordRule != WordRule.polymer){//imino does not behave like a substituent in polymers only as a linker
 							if (nextMultiRadicalGroup.getAttribute(IMINOLIKE_ATR)!=null){//imino/methylene can just act as normal substituents, should an additive bond really be made???
 								Fragment adjacentFrag =state.xmlFragmentMap.get(OpsinTools.getNextGroup(subBracketOrRoot));
 								
 								if (nextFrag !=adjacentFrag){//imino is not the absolute next frag
-									if (potentiallyCanSubstitute((Element) nextMultiRadicalGroup.getParent()) || potentiallyCanSubstitute((Element) nextMultiRadicalGroup.getParent().getParent())){
+									if (potentiallyCanSubstitute(nextMultiRadicalGroup.getParent()) || potentiallyCanSubstitute(nextMultiRadicalGroup.getParent().getParent())){
 										return;
 									}
 								}
@@ -1008,7 +1008,7 @@ class StructureBuildingMethods {
 					throw new StructureBuildingException("Multiplier not found where multiplier expected");
 				}
 				for (int j = subOrBracket.indexOf(multiplierEl) -1 ; j >=0 ; j--) {
-					Element el = (Element) subOrBracket.getChild(j);
+					Element el = subOrBracket.getChild(j);
 					el.detach();
 					elementsNotToBeMultiplied.add(el);
 				}
@@ -1043,7 +1043,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static void performMultiplicativeOperations(BuildState state, Element group, Element multipliedParent) throws StructureBuildingException{
-		BuildResults multiRadicalBR = new BuildResults(state, (Element) group.getParent());
+		BuildResults multiRadicalBR = new BuildResults(state, group.getParent());
 		performMultiplicativeOperations(state, multiRadicalBR, multipliedParent);
 	}
 
@@ -1124,7 +1124,7 @@ class StructureBuildingMethods {
 			Fragment multiRadicalFrag = multiRadicalBR.getOutAtom(i).getAtom().getFrag();
 			Element multiRadicalGroup = state.xmlFragmentMap.getElement(multiRadicalFrag);
 			if (multiRadicalGroup.getAttribute(RESOLVED_ATR)==null){
-				resolveUnLocantedFeatures(state, (Element) multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
+				resolveUnLocantedFeatures(state, multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
 				multiRadicalGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 			}
 
@@ -1199,7 +1199,7 @@ class StructureBuildingMethods {
 		if (newBr.getFragmentCount()>=2){
 			List<Element> siblings = XOMTools.getNextSiblingsOfTypes(multipliedParent, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
 			if (siblings.size()==0){
-				Element parentOfMultipliedEl = (Element) multipliedParent.getParent();
+				Element parentOfMultipliedEl = multipliedParent.getParent();
 				if (parentOfMultipliedEl.getLocalName().equals(BRACKET_EL)){//brackets are allowed
 					siblings = XOMTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
 					if (siblings.get(0).getAttribute(MULTIPLIER_ATR)==null){
@@ -1241,7 +1241,7 @@ class StructureBuildingMethods {
 		if (substituentOrBracket.getParent()==null){
 			throw new StructureBuildingException("substituent did not have a parent!");
 		}
-		Element parent =(Element) substituentOrBracket.getParent();
+		Element parent = substituentOrBracket.getParent();
 
 		List<Element> children = XOMTools.getChildElementsWithTagNames(parent, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});//will be returned in index order
 		int indexOfSubstituent =parent.indexOf(substituentOrBracket);
@@ -1338,7 +1338,7 @@ class StructureBuildingMethods {
 				if (unresolvedAmbiguity && outAtomCountOnFragToBeJoined == 2){//not all outAtoms on frag to be joined are equivalent either!
 					//Solves the specific case of 2,2'-[ethane-1,2-diylbis(azanylylidenemethanylylidene)]diphenol vs 2,2'-[ethane-1,2-diylidenebis(azanylylidenemethanylylidene)]bis(cyclohexan-1-ol)
 					//but does not solve the general case as only a single look behind is performed.
-					Element previousGroup = (Element) OpsinTools.getPreviousGroup(elOfFragToBeJoined);
+					Element previousGroup = OpsinTools.getPreviousGroup(elOfFragToBeJoined);
 					if (previousGroup!=null){
 						Fragment previousFrag = state.xmlFragmentMap.get(previousGroup);
 						if (previousFrag.getOutAtomCount() > 1){
@@ -1529,7 +1529,7 @@ class StructureBuildingMethods {
 	 */
 	static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
 		Deque<Element> stack = new ArrayDeque<Element>();
-		stack.add((Element) startingElement.getParent());
+		stack.add(startingElement.getParent());
 		List<Fragment> foundFragments =new ArrayList<Fragment>();
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (stack.size()>0){
@@ -1582,7 +1582,7 @@ class StructureBuildingMethods {
 	 */
 	private static Fragment findFragmentWithLocant(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
 		Deque<Element> stack = new ArrayDeque<Element>();
-		stack.add((Element) startingElement.getParent());
+		stack.add(startingElement.getParent());
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
 		while (stack.size()>0){
@@ -1678,7 +1678,7 @@ class StructureBuildingMethods {
 	}
 
 	private static boolean potentiallyCanSubstitute(Element subBracketOrRoot) {
-		Element parent =(Element) subBracketOrRoot.getParent();
+		Element parent = subBracketOrRoot.getParent();
 		List<Element> children =parent.getChildElements();
 		for (int i = parent.indexOf(subBracketOrRoot) +1 ; i < children.size(); i++) {
 			if (!children.get(i).getLocalName().equals(HYPHEN_EL)){
@@ -1692,12 +1692,12 @@ class StructureBuildingMethods {
 		int terminalPrimes = StringTools.countTerminalPrimes(locantString);
 		if (terminalPrimes > 0){
 			int brackettingDepth = 0;
-			Element parent = (Element) subBracketOrRoot.getParent();
+			Element parent = subBracketOrRoot.getParent();
 			while (parent !=null && parent.getLocalName().equals(BRACKET_EL)){
 				if (!IMPLICIT_TYPE_VAL.equals(parent.getAttributeValue(TYPE_ATR))){
 					brackettingDepth++;
 				}
-				parent = (Element) parent.getParent();
+				parent = parent.getParent();
 			}
 			if (terminalPrimes == brackettingDepth){
 				return locantString.substring(0, locantString.length() - terminalPrimes);
@@ -1779,8 +1779,8 @@ class StructureBuildingMethods {
 	private static Integer levelsToWordEl(Element element) {
 		int count =0;
 		while (!element.getLocalName().equals(WORD_EL)){
-			element =(Element) element.getParent();
-			if (element==null){
+			element = element.getParent();
+			if (element == null){
 				return null;
 			}
 			count++;

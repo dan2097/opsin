@@ -165,7 +165,7 @@ public class Element {
 //		while (true) {
 //
 //			if (!endTag && current.getChildCount() > 0) {
-//				writeStartTag((Element) current, result);
+//				writeStartTag(current, result);
 //				current = current.getChild(0);
 //				index = 0;
 //				top++;
@@ -173,11 +173,11 @@ public class Element {
 //				indexes[top] = 0;
 //			} else {
 //				if (endTag) {
-//					writeEndTag((Element) current, result);
+//					writeEndTag(current, result);
 //					if (current == this)
 //						break;
 //				} else if (current.isElement()) {
-//					writeStartTag((Element) current, result);
+//					writeStartTag(current, result);
 //					if (current == this)
 //						break;
 //				} else {
