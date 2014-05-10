@@ -78,7 +78,7 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	public void testLocantsIndicatingTokenizationIsCorrect(){//should be a group multiplier formally
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element locant = new Element(LOCANT_EL);
-		locant.appendChild("1,2,3,4");
+		locant.setValue("1,2,3,4");
 		substituent.appendChild(locant);
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
@@ -99,7 +99,7 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	public void testLocantsIndicatingTokenizationIsIncorrect() throws ComponentGenerationException{
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element locant = new Element(LOCANT_EL);
-		locant.appendChild("1");
+		locant.setValue("1");
 		substituent.appendChild(locant);
 		Element erroneousMultiplier = new Element(MULTIPLIER_EL);
 		erroneousMultiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
@@ -119,9 +119,9 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new Element(HYDROCARBONFUSEDRINGSYSTEM_EL);
-		phen.appendChild("phen");
+		phen.setValue("phen");
 		Element yl = new Element(SUFFIX_EL);
-		yl.appendChild("yl");
+		yl.setValue("yl");
 		substituent.appendChild(multiplier);
 		substituent.appendChild(phen);
 		substituent.appendChild(yl);
@@ -135,9 +135,9 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new Element(HYDROCARBONFUSEDRINGSYSTEM_EL);
-		phen.appendChild("phen");
+		phen.setValue("phen");
 		Element yl = new Element(SUFFIX_EL);
-		yl.appendChild("oxy");
+		yl.setValue("oxy");
 		substituent.appendChild(multiplier);
 		substituent.appendChild(phen);
 		substituent.appendChild(yl);
@@ -152,9 +152,9 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new Element(HYDROCARBONFUSEDRINGSYSTEM_EL);
 		phen.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_ATR, "e"));
-		phen.appendChild("phen");
+		phen.setValue("phen");
 		Element yl = new Element(SUFFIX_EL);
-		yl.appendChild("yl");
+		yl.setValue("yl");
 		substituent.appendChild(multiplier);
 		substituent.appendChild(phen);
 		substituent.appendChild(yl);
@@ -173,11 +173,11 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new Element(HYDROCARBONFUSEDRINGSYSTEM_EL);
-		phen.appendChild("phen");
+		phen.setValue("phen");
 		Element locant = new Element(LOCANT_EL);
-		locant.appendChild("2");
+		locant.setValue("2");
 		Element yl = new Element(SUFFIX_EL);
-		yl.appendChild("yl");
+		yl.setValue("yl");
 		substituent.appendChild(multiplier);
 		substituent.appendChild(phen);
 		substituent.appendChild(locant);
@@ -194,14 +194,14 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	public void testTetraphenShouldBeTetraphen3(){//2tetraphenyl
 		Element substituent = new Element(SUBSTITUENT_EL);
 		Element locant = new Element(LOCANT_EL);
-		locant.appendChild("2");
+		locant.setValue("2");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new Element(HYDROCARBONFUSEDRINGSYSTEM_EL);
-		phen.appendChild("phen");
+		phen.setValue("phen");
 		Element yl = new Element(SUFFIX_EL);
-		yl.appendChild("yl");
+		yl.setValue("yl");
 		substituent.appendChild(locant);
 		substituent.appendChild(multiplier);
 		substituent.appendChild(phen);

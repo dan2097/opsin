@@ -1879,13 +1879,13 @@ class ComponentProcessor {
 						Element delta =new Element(DELTA_EL);
 						Element appropriateLocant = XOMTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{HETEROATOM_EL, MULTIPLIER_EL});
 						if (appropriateLocant !=null && appropriateLocant.getLocalName().equals(LOCANT_EL) && MATCH_COMMA.split(appropriateLocant.getValue()).length == 1){
-							delta.appendChild(appropriateLocant.getValue());
+							delta.setValue(appropriateLocant.getValue());
 							XOMTools.insertBefore(appropriateLocant, delta);
 							appropriateLocant.detach();
 							locants.remove(appropriateLocant);
 						}
 						else{
-							delta.appendChild("");
+							delta.setValue("");
 							subOrRoot.insertChild(delta, 0);//no obvious attempt to set double bond position, potentially ambiguous, valency will be used to choose later
 						}
 					}

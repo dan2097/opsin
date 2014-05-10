@@ -137,9 +137,7 @@ public class Element {
 		this.localName = localName;
 	}
 
-
-//TODO this method is inappropriately named
-	public void appendChild(String text) {
+	public void setValue(String text) {
 		this.value = text;
 	}
 

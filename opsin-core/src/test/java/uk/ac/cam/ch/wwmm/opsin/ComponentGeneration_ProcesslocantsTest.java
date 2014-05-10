@@ -21,14 +21,14 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Test
 	public void testCardinalNumber() throws ComponentGenerationException {
-		locant.appendChild("1");
+		locant.setValue("1");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("1", locant.getValue());
 	}
 	
 	@Test
 	public void testCardinalNumberWithHyphen() throws ComponentGenerationException {
-		locant.appendChild("1-");
+		locant.setValue("1-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("1", locant.getValue());
 	}
@@ -36,98 +36,98 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Test
 	public void testElementSymbol() throws ComponentGenerationException {
-		locant.appendChild("N-");
+		locant.setValue("N-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N", locant.getValue());
 	}
 	
 	@Test
 	public void testAminoAcidStyleLocant() throws ComponentGenerationException {
-		locant.appendChild("N1-");
+		locant.setValue("N1-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N1", locant.getValue());
 	}
 	
 	@Test
 	public void testCompoundLocant() throws ComponentGenerationException {
-		locant.appendChild("1(10)-");
+		locant.setValue("1(10)-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("1(10)", locant.getValue());
 	}
 	
 	@Test
 	public void testGreek() throws ComponentGenerationException {
-		locant.appendChild("alpha");
+		locant.setValue("alpha");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("alpha", locant.getValue());
 	}
 	
 	@Test
 	public void testNotlowercase1() throws ComponentGenerationException {
-		locant.appendChild("AlPhA-");
+		locant.setValue("AlPhA-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("alpha", locant.getValue());
 	}
 	
 	@Test
 	public void testNotlowercase2() throws ComponentGenerationException {
-		locant.appendChild("NAlPhA-");
+		locant.setValue("NAlPhA-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("Nalpha", locant.getValue());
 	}
 	
 	@Test
 	public void testIUPAC2004() throws ComponentGenerationException {
-		locant.appendChild("2-N-");
+		locant.setValue("2-N-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N2", locant.getValue());
 	}
 	
 	@Test
 	public void testSuperscript1() throws ComponentGenerationException {
-		locant.appendChild("N^(2)");
+		locant.setValue("N^(2)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N2", locant.getValue());
 	}
 	
 	@Test
 	public void testSuperscript2() throws ComponentGenerationException {
-		locant.appendChild("N^2");
+		locant.setValue("N^2");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N2", locant.getValue());
 	}
 	
 	@Test
 	public void testSuperscript3() throws ComponentGenerationException {
-		locant.appendChild("N(2)");
+		locant.setValue("N(2)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N2", locant.getValue());
 	}
 	
 	@Test
 	public void testSuperscript4() throws ComponentGenerationException {
-		locant.appendChild("N~12~");
+		locant.setValue("N~12~");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N12", locant.getValue());
 	}
 	
 	@Test
 	public void testSuperscript5() throws ComponentGenerationException {
-		locant.appendChild("N(alpha)");
+		locant.setValue("N(alpha)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("Nalpha", locant.getValue());
 	}
 	
 	@Test
 	public void testSuperscript6() throws ComponentGenerationException {
-		locant.appendChild("N^alpha");
+		locant.setValue("N^alpha");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("Nalpha", locant.getValue());
 	}
 	
 	@Test
 	public void testAddedHydrogen() throws ComponentGenerationException {
-		locant.appendChild("3(5'H)");
+		locant.setValue("3(5'H)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("3", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
@@ -139,7 +139,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Test
 	public void testAddedHydrogen2() throws ComponentGenerationException {
-		locant.appendChild("1,2(2H,7H)");
+		locant.setValue("1,2(2H,7H)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("1,2", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
@@ -155,7 +155,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 
 	@Test
 	public void testStereochemistryInLocant1() throws ComponentGenerationException {
-		locant.appendChild("5(R)");
+		locant.setValue("5(R)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("5", locant.getValue());
 		Element stereochemistry = XOMTools.getPreviousSibling(locant);
@@ -167,7 +167,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Test
 	public void testStereochemistryInLocant2() throws ComponentGenerationException {
-		locant.appendChild("5-(S)");
+		locant.setValue("5-(S)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("5", locant.getValue());
 		Element stereochemistry = XOMTools.getPreviousSibling(locant);
@@ -179,7 +179,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Test
 	public void testStereochemistryInLocant3() throws ComponentGenerationException {
-		locant.appendChild("N(3)-(S)");
+		locant.setValue("N(3)-(S)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N3", locant.getValue());
 		Element stereochemistry = XOMTools.getPreviousSibling(locant);
@@ -191,14 +191,14 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Test
 	public void testMultipleCardinals() throws ComponentGenerationException {
-		locant.appendChild("2,3-");
+		locant.setValue("2,3-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("2,3", locant.getValue());
 	}
 	
 	@Test
 	public void testMultipleTypesTogether() throws ComponentGenerationException {
-		locant.appendChild("2,N5,GaMMa,3-N,N^3,N(2),N~10~,4(5H),3-N(S),1(6)-");
+		locant.setValue("2,N5,GaMMa,3-N,N^3,N(2),N~10~,4(5H),3-N(S),1(6)-");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("2,N5,gamma,N3,N3,N2,N10,4,N3,1(6)", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
@@ -216,12 +216,12 @@ public class ComponentGeneration_ProcesslocantsTest {
 	@Test
 	public void testCarbohydrateStyleLocants() throws ComponentGenerationException {
 		//2,4,6-tri-O
-		locant.appendChild("O");
+		locant.setValue("O");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
 		XOMTools.insertBefore(locant, multiplier);
 		Element numericLocant = new Element(LOCANT_EL);
-		numericLocant.appendChild("2,4,6");
+		numericLocant.setValue("2,4,6");
 		XOMTools.insertBefore(multiplier, numericLocant);
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("O2,O4,O6", numericLocant.getValue());
@@ -233,7 +233,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 	@Test
 	public void testCarbohydrateStyleLocantsNoNumericComponent() throws ComponentGenerationException {
 		//tri-O
-		locant.appendChild("O");
+		locant.setValue("O");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
 		XOMTools.insertBefore(locant, multiplier);
@@ -250,12 +250,12 @@ public class ComponentGeneration_ProcesslocantsTest {
 	@Test
 	public void testCarbohydrateStyleLocantsCounterExample() throws ComponentGenerationException {
 		//2,4,6-tri-2 (this is not a carbohydrate style locant)
-		locant.appendChild("2");
+		locant.setValue("2");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
 		XOMTools.insertBefore(locant, multiplier);
 		Element numericLocant = new Element(LOCANT_EL);
-		numericLocant.appendChild("2,4,6");
+		numericLocant.setValue("2,4,6");
 		XOMTools.insertBefore(multiplier, numericLocant);
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("2,4,6", numericLocant.getValue());
