@@ -283,7 +283,7 @@ class ComponentGenerator {
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							String rs = brackettedText;
 							Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL);
-							newStereoChemEl.appendChild("(" + locantText +rs+")");
+							newStereoChemEl.setValue("(" + locantText +rs+")");
 							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 							XOMTools.insertBefore(locant, newStereoChemEl);
 						}
@@ -347,7 +347,7 @@ class ComponentGenerator {
 					sb.append(locant.getValue());
 					sb.append(StringTools.multiplyString("'", multiplierValue-1));
 					Element newLocant = new Element(LOCANT_EL);
-					newLocant.appendChild(sb.toString());
+					newLocant.setValue(sb.toString());
 					XOMTools.insertBefore(possibleMultiplier, newLocant);
 					locant.detach();
 				}
@@ -403,13 +403,13 @@ class ComponentGenerator {
 			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) && afterOmpLocant.getAttributeValue(VALUE_ATR).equals("2") ||
 					(afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && MATCH_COMMA.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
 				if ("o".equalsIgnoreCase(firstChar)){
-					ompLocant.appendChild("1,ortho");
+					ompLocant.setValue("1,ortho");
 				}
 				else if ("m".equalsIgnoreCase(firstChar)){
-					ompLocant.appendChild("1,meta");
+					ompLocant.setValue("1,meta");
 				}
 				else if ("p".equalsIgnoreCase(firstChar)){
-					ompLocant.appendChild("1,para");
+					ompLocant.setValue("1,para");
 				}
 				else{
 					throw new ComponentGenerationException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
@@ -417,13 +417,13 @@ class ComponentGenerator {
 			}
 			else{
 				if ("o".equalsIgnoreCase(firstChar)){
-					ompLocant.appendChild("ortho");
+					ompLocant.setValue("ortho");
 				}
 				else if ("m".equalsIgnoreCase(firstChar)){
-					ompLocant.appendChild("meta");
+					ompLocant.setValue("meta");
 				}
 				else if ("p".equalsIgnoreCase(firstChar)){
-					ompLocant.appendChild("para");
+					ompLocant.setValue("para");
 				}
 				else{
 					throw new ComponentGenerationException(locantText + " was not identified as being either ortho, meta or para but according to the chemical grammar it should of been");
@@ -453,7 +453,7 @@ class ComponentGenerator {
 				alkaneName.append(alkaneStemComponent.getValue());
 			}
 			Element alkaneStem = new Element(GROUP_EL);
-			alkaneStem.appendChild(alkaneName.toString());
+			alkaneStem.setValue(alkaneName.toString());
 			alkaneStem.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(VALUE_ATR, StringTools.multiplyString("C", alkaneChainLength)));
@@ -512,7 +512,7 @@ class ComponentGenerator {
 				//n-methyl and n-ethyl contain redundant information and are probably intended to mean N-methyl/N-ethyl
 				if ((chainLength==1 || chainLength ==2) && alkaneStemModifier.getValue().equals("n-")){
 					Element locant = new Element(LOCANT_EL);
-					locant.appendChild("N");
+					locant.setValue("N");
 					XOMTools.insertBefore(alkane, locant);
 				}
 				continue;
@@ -662,7 +662,7 @@ class ComponentGenerator {
 						if (!heteroatomChainWillFormARing){
 							addedGroup.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
 						}
-						addedGroup.appendChild(smiles);
+						addedGroup.setValue(smiles);
 						XOMTools.insertAfter(possiblyAnotherHeteroAtom, addedGroup);
 
 						possiblyAnotherHeteroAtom.detach();
@@ -829,7 +829,7 @@ class ComponentGenerator {
 		                if (locantVal.length() > 0){
 		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, StringTools.removeDashIfPresent(locantVal)));
 		                }
-		                stereoChemEl.appendChild(stereoChemistryDescriptor);
+		                stereoChemEl.setValue(stereoChemistryDescriptor);
 		                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		                if (matchRS.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
@@ -937,7 +937,7 @@ class ComponentGenerator {
 				if (alphaBetaMatcher.matches()){
 		            Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
 		            stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, locant));
-		            stereoChemEl.appendChild(stereoChemistryDescriptor);
+		            stereoChemEl.setValue(stereoChemistryDescriptor);
 		            XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		           	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		        	if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'a'){
@@ -972,7 +972,7 @@ class ComponentGenerator {
 		
 		if (createLocantsEl){
 			Element newLocantEl = new Element(LOCANT_EL);
-			newLocantEl.appendChild(StringTools.stringListToString(locants, ","));
+			newLocantEl.setValue(StringTools.stringListToString(locants, ","));
 			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
 		}
 		stereoChemistryElement.detach();
@@ -994,7 +994,7 @@ class ComponentGenerator {
 			}
 		}
 		Element locantEl = new Element(LOCANT_EL);
-		locantEl.appendChild(sb.toString());
+		locantEl.setValue(sb.toString());
 		XOMTools.insertAfter(stereoChemistryElement, locantEl);
 	}
 
@@ -1344,7 +1344,7 @@ class ComponentGenerator {
 			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, ARYLGROUP_SUBTYPE_VAL));
-			group.appendChild(annulenValue);
+			group.setValue(annulenValue);
 			annulen.getParent().replaceChild(annulen, group);
 		}
 
@@ -1472,7 +1472,7 @@ class ComponentGenerator {
 				newGroup.addAttribute(new Attribute(LABELS_ATR, FUSEDRING_LABELS_VAL));
 				newGroup.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 				newGroup.addAttribute(new Attribute(SUBTYPE_ATR, HYDROCARBONFUSEDRINGSYSTEM_EL));
-				newGroup.appendChild(multiplier.getValue() + hydrocarbonFRSystem.getValue());
+				newGroup.setValue(multiplier.getValue() + hydrocarbonFRSystem.getValue());
 				hydrocarbonFRSystem.getParent().replaceChild(hydrocarbonFRSystem, newGroup);
 				multiplier.detach();
 			}
@@ -1512,7 +1512,7 @@ class ComponentGenerator {
 				else{
 					multiplier = new Element(MULTIPLIER_EL);
 					multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
-					multiplier.appendChild("di");
+					multiplier.setValue("di");
 					XOMTools.insertBefore(suffix, multiplier);
 				}
 			}
@@ -1525,7 +1525,7 @@ class ComponentGenerator {
 				}
 				Element multiplier = new Element(MULTIPLIER_EL);
 				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
-				multiplier.appendChild("di");
+				multiplier.setValue("di");
 				XOMTools.insertBefore(suffix, multiplier);
 			}
 			else if (suffixValue.equals("ylium") &&//disambiguate between ylium the charge modifying suffix and ylium the acylium suffix
@@ -2184,7 +2184,7 @@ class ComponentGenerator {
 				if (possibleSuffix!=null && "one".equals(possibleSuffix.getAttributeValue(VALUE_ATR))){
 					//Rule C-315.2
 					Element newLocant =new Element(LOCANT_EL);
-					newLocant.appendChild("9");
+					newLocant.setValue("9");
 					XOMTools.insertBefore(possibleSuffix, newLocant);
 					Element newAddedHydrogen = new Element(ADDEDHYDROGEN_EL);
 					newAddedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));

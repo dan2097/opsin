@@ -364,7 +364,7 @@ class ResourceManager {
 					return null;
 				}
 				Element tokenInstance = new Element(token);
-				tokenInstance.appendChild(tokenString);
+				tokenInstance.setValue(tokenString);
 				return tokenInstance;
 			}
 		}
@@ -374,7 +374,7 @@ class ResourceManager {
 				return null;
 			}
 			Element tokenInstance = new Element(regexToken);
-			tokenInstance.appendChild(tokenString);
+			tokenInstance.setValue(tokenString);
 			return tokenInstance;
 		}
 		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);

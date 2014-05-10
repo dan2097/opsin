@@ -12,7 +12,7 @@ class XOMTools {
     * @param node The reference node.
     * @return The next Sibling, or null.
     */
-	public static Element getNextSibling(Element node) {
+	static Element getNextSibling(Element node) {
 		Element parent = node.getParent();
 		int i = parent.indexOf(node);
 		if (i+1 >= parent.getChildCount()) return null;
@@ -25,7 +25,7 @@ class XOMTools {
     * @param tagName The tagname of a node to look for
     * @return The matched next Sibling, or null.
     */
-	public static Element getNextSibling(Element current, String tagName) {
+	static Element getNextSibling(Element current, String tagName) {
 		Element matchedElement =null;
 		while (true) {
 			Element next = getNextSibling(current);
@@ -50,7 +50,7 @@ class XOMTools {
     * @param node The reference node.
     * @return The previous Sibling, or null.
     */
-	public static Element getPreviousSibling(Element node) {
+	static Element getPreviousSibling(Element node) {
 		Element parent = node.getParent();
 		int i = parent.indexOf(node);
 		if (i==0) return null;
@@ -64,7 +64,7 @@ class XOMTools {
     * @param tagName The tagname of a node to look for
     * @return The matched previous Sibling, or null.
     */
-	public static Element getPreviousSibling(Element current, String tagName) {
+	static Element getPreviousSibling(Element current, String tagName) {
 		Element matchedElement =null;
 		while (true) {
 			Element prev = getPreviousSibling(current);
@@ -89,7 +89,7 @@ class XOMTools {
      * @param node The reference node.
      * @param newElement The new node to insert.
      */
-	public static void insertBefore(Element node, Element newNode) {
+	static void insertBefore(Element node, Element newNode) {
 		Element parent = node.getParent();
 		int i = parent.indexOf(node);
 		parent.insertChild(newNode, i);
@@ -101,7 +101,7 @@ class XOMTools {
      * @param node The reference node.
      * @param newNode The new node to insert.
      */
-	public static void insertAfter(Element node, Element newNode) {
+	static void insertAfter(Element node, Element newNode) {
 		Element parent = node.getParent();
 		int i = parent.indexOf(node);
 		parent.insertChild(newNode, i+1);
@@ -112,7 +112,7 @@ class XOMTools {
 	 * @param node: starting node
 	 * @return
 	 */
-	public static Element getNext(Element node) {
+	static Element getNext(Element node) {
 		Element parent = node.getParent();
 		if (parent == null || parent.getLocalName().equals(XmlDeclarations.MOLECULE_EL)){
 			return null;
@@ -133,7 +133,7 @@ class XOMTools {
 	 * @param node: starting node
 	 * @return
 	 */
-	public static Element getPrevious(Element node) {
+	static Element getPrevious(Element node) {
 		Element parent = node.getParent();
 		if (parent == null || parent.getLocalName().equals(XmlDeclarations.MOLECULE_EL)){
 			return null;
@@ -155,8 +155,8 @@ class XOMTools {
 	 * @param group
 	 * @param newName
 	 */
-	public static void setTextChild(Element group, String newName){
-		group.appendChild(newName);
+	static void setTextChild(Element group, String newName){
+		group.setValue(newName);
 	}
 
 	/**
@@ -166,7 +166,7 @@ class XOMTools {
 	 * @param type: the "localname" of the element type desired
 	 * @return
 	 */
-	public static List<Element> getNextSiblingsOfType(Element currentElem, String type) {
+	static List<Element> getNextSiblingsOfType(Element currentElem, String type) {
 		List<Element> laterSiblingElementsOfType= new ArrayList<Element>();
 		Element parent = currentElem.getParent();
 		if (parent == null){
@@ -188,7 +188,7 @@ class XOMTools {
 	 * @param type: the "localname" of the element type desired
 	 * @return
 	 */
-	public static List<Element> getNextAdjacentSiblingsOfType(Element currentElem, String type) {
+	static List<Element> getNextAdjacentSiblingsOfType(Element currentElem, String type) {
 		List<Element> siblingElementsOfType= new ArrayList<Element>();
 		Element parent = currentElem.getParent();
 		if (parent == null){
@@ -210,7 +210,7 @@ class XOMTools {
 	 * @param types: An array of the "localname"s of the element types desired
 	 * @return
 	 */
-	public static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] types){
+	static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] types){
 		List<Element> laterSiblingElementsOfTypes= new ArrayList<Element>();
 		currentElem = getNextSibling(currentElem);
 		while (currentElem !=null){
@@ -233,7 +233,7 @@ class XOMTools {
 	 * @param type: the "localname" of the element type desired
 	 * @return
 	 */
-	public static List<Element> getPreviousSiblingsOfType(Element currentElem, String type) {
+	static List<Element> getPreviousSiblingsOfType(Element currentElem, String type) {
 		List<Element> earlierSiblingElementsOfType= new ArrayList<Element>();
 		Element parent = currentElem.getParent();
 		if (parent==null){
@@ -256,7 +256,7 @@ class XOMTools {
 	 * @param elementsToIgnore
 	 * @return
 	 */
-	public static Element getNextSiblingIgnoringCertainElements(Element startingEl, String[] elementsToIgnore){
+	static Element getNextSiblingIgnoringCertainElements(Element startingEl, String[] elementsToIgnore){
 		Element parent = startingEl.getParent();
 		if (parent==null){
 			return null;
@@ -281,7 +281,7 @@ class XOMTools {
 	 * @param elementsToIgnore
 	 * @return
 	 */
-	public static Element getPreviousSiblingIgnoringCertainElements(Element startingEl, String[] elementsToIgnore){
+	static Element getPreviousSiblingIgnoringCertainElements(Element startingEl, String[] elementsToIgnore){
 		Element parent = startingEl.getParent();
 		if (parent==null){
 			return null;
@@ -305,7 +305,7 @@ class XOMTools {
 	 * @param elementName
 	 * @return
 	 */
-	public static List<Element> getDescendantElementsWithTagName(Element startingElement, String elementName) {
+	static List<Element> getDescendantElementsWithTagName(Element startingElement, String elementName) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Deque<Element> stack = new ArrayDeque<Element>();
 		List<Element> children =startingElement.getChildElements();
@@ -333,7 +333,7 @@ class XOMTools {
 	 * @param elementNames
 	 * @return
 	 */
-	public static List<Element> getDescendantElementsWithTagNames(Element startingElement, String[] elementNames) {
+	static List<Element> getDescendantElementsWithTagNames(Element startingElement, String[] elementNames) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Deque<Element> stack = new ArrayDeque<Element>();
 		List<Element> children =startingElement.getChildElements();
@@ -365,7 +365,7 @@ class XOMTools {
 	 * @param elementNames
 	 * @return
 	 */
-	public static List<Element> getChildElementsWithTagNames(Element startingElement, String[] elementNames) {
+	static List<Element> getChildElementsWithTagNames(Element startingElement, String[] elementNames) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		List<Element> children =startingElement.getChildElements();
 		int childCount = children.size();
@@ -390,7 +390,7 @@ class XOMTools {
 	 * @param elementName
 	 * @return
 	 */
-	public static List<Element> getChildElementsWithTagName(Element startingElement, String elementName) {
+	static List<Element> getChildElementsWithTagName(Element startingElement, String elementName) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		List<Element> children =startingElement.getChildElements();
 		int childCount = children.size();
@@ -412,7 +412,7 @@ class XOMTools {
 	 * @param elementName
 	 * @return
 	 */
-	public static List<Element> getDescendantElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
+	static List<Element> getDescendantElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Deque<Element> stack = new ArrayDeque<Element>();
 		List<Element> children =startingElement.getChildElements();
@@ -443,7 +443,7 @@ class XOMTools {
 	 * @param elementName
 	 * @return
 	 */
-	public static List<Element> getChildElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
+	static List<Element> getChildElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		List<Element> children =startingElement.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
@@ -464,7 +464,7 @@ class XOMTools {
 	 * @param startingElement
 	 * @return
 	 */
-	public static int[] countNumberOfElementsAndNumberOfChildLessElements(Element startingElement) {
+	static int[] countNumberOfElementsAndNumberOfChildLessElements(Element startingElement) {
 		int[] counts = new int[2];
 		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement);
@@ -492,7 +492,7 @@ class XOMTools {
 	 * @param tagName
 	 * @return
 	 */
-	public static List<Element> getSiblingsUpToElementWithTagName(Element startingEl, String tagName) {
+	static List<Element> getSiblingsUpToElementWithTagName(Element startingEl, String tagName) {
 		List<Element> laterSiblings = new ArrayList<Element>();
 		Element nextEl = XOMTools.getNextSibling(startingEl);
 		while (nextEl !=null && !nextEl.getLocalName().equals(tagName)){
