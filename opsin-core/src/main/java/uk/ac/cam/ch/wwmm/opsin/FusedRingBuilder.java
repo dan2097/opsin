@@ -254,7 +254,7 @@ class FusedRingBuilder {
 		fusedRingEl.getAttribute(VALUE_ATR).setValue(fusedRingName.toString());
 		fusedRingEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
 		fusedRingEl.getAttribute(SUBTYPE_ATR).setValue(FUSEDRING_SUBTYPE_VAL);
-		XOMTools.setTextChild(fusedRingEl, fusedRingName.toString());
+		fusedRingEl.setValue(fusedRingName.toString());
 
 		for (Element element : nameComponents) {
 			element.detach();

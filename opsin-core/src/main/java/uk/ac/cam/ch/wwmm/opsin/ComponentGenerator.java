@@ -302,7 +302,7 @@ class ComponentGenerator {
 				individualLocants.set(i, locantText);
 			}
 
-			XOMTools.setTextChild(locant, StringTools.stringListToString(individualLocants, ","));
+			locant.setValue(StringTools.stringListToString(individualLocants, ","));
 
 			Element afterLocants = XOMTools.getNextSibling(locant);
 			if(afterLocants == null){
@@ -333,7 +333,7 @@ class ComponentGenerator {
 						for (int i = 0; i < locantValues.length; i++) {
 							locantValues[i] = locant.getValue() + locantValues[i];
 						}
-						XOMTools.setTextChild(possibleOtherLocant, StringTools.arrayToString(locantValues, ","));
+						possibleOtherLocant.setValue(StringTools.arrayToString(locantValues, ","));
 						locant.detach();
 					}
 				}
@@ -1229,7 +1229,7 @@ class ComponentGenerator {
 			}
 			else{
 				lambdaConventionEl.setLocalName(LOCANT_EL);
-				XOMTools.setTextChild(lambdaConventionEl, StringTools.arrayToString(lambdaValues, ","));
+				lambdaConventionEl.setValue(StringTools.arrayToString(lambdaValues, ","));
 			}
 		}
 	}
@@ -1502,7 +1502,7 @@ class ComponentGenerator {
 			// convert quinone to dione
 			else if (suffixValue.equals("quinone") || suffixValue.equals("quinon")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
-				XOMTools.setTextChild(suffix, "one");
+				suffix.setValue("one");
 				Element multiplier = XOMTools.getPreviousSibling(suffix);
 				if (multiplier.getLocalName().equals(MULTIPLIER_EL)){
 					Attribute multVal = multiplier.getAttribute(VALUE_ATR);
@@ -1518,7 +1518,7 @@ class ComponentGenerator {
 			}
 			else if (suffixValue.equals("ylene") || suffixValue.equals("ylen")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
-				XOMTools.setTextChild(suffix, "yl");
+				suffix.setValue("yl");
 				Element alk = XOMTools.getPreviousSibling(suffix, GROUP_EL);
 				if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
 					alk.removeAttribute(alk.getAttribute(USABLEASJOINER_ATR));
@@ -2061,7 +2061,7 @@ class ComponentGenerator {
 					&& (XOMTools.getPreviousSibling(group)==null || !XOMTools.getPreviousSibling(group).getLocalName().equals(MULTIPLIER_EL))){//not trimethylenedioxy
 				List<Element> children = nextSub.getChildElements();
 				if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
-					XOMTools.setTextChild(group, groupValue + "dioxy");
+					group.setValue(groupValue + "dioxy");
 					group.getAttribute(VALUE_ATR).setValue("C(O)O");
 					group.getAttribute(OUTIDS_ATR).setValue("2,3");
 					group.getAttribute(SUBTYPE_ATR).setValue(EPOXYLIKE_SUBTYPE_VAL);
@@ -2133,7 +2133,7 @@ class ComponentGenerator {
 				if (nextSub !=null && nextSub.getLocalName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null){
 					List<Element> children = nextSub.getChildElements();
 					if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
-						XOMTools.setTextChild(group, groupValue + "dioxy");
+						group.setValue(groupValue + "dioxy");
 						group.getAttribute(VALUE_ATR).setValue("C(O)CO");
 						group.getAttribute(OUTIDS_ATR).setValue("2,4");
 						group.getAttribute(SUBTYPE_ATR).setValue(EPOXYLIKE_SUBTYPE_VAL);
