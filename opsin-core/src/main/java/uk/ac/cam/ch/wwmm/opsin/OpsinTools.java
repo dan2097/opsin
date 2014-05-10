@@ -151,21 +151,6 @@ class OpsinTools {
 		}
 	}
 
-	/**Makes a shallow copy of an element, copying the element
-     * and the attributes, but no other child nodes.
-     *
-     * @param elem The element to copy.
-     * @return The copied element.
-     */
-	static Element shallowCopy(Element elem) {
-		Element newElem = new Element(elem.getLocalName());
-		int attributeCount = elem.getAttributeCount();
-		for(int i=0; i < attributeCount;i++) {
-			newElem.addAttribute(new Attribute(elem.getAttribute(i)));
-		}
-		return newElem;
-	}
-
 	/**
 	 * Searches in a depth-first manner for a non-suffix atom that has the target non element symbol locant
 	 * Returns either that atom or null if one cannot be found
