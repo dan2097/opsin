@@ -3,7 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Element {
+class Element {
 
 	private String localName;
 	private String value;
@@ -11,15 +11,16 @@ public class Element {
 	private List<Element> children = new ArrayList<Element>();
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 	
-	public Element(String name) {
+	Element(String name) {
 		this.localName = name;
+		this.value = "";
 	}
 
 	/**
 	 * Creates a deep copy with no parent
 	 * @param element
 	 */
-	public Element(Element element) {
+	Element(Element element) {
 		this.localName = element.localName;
 		this.value = element.value;
 		children = new ArrayList<Element>();
@@ -40,7 +41,7 @@ public class Element {
 	 * @param name
 	 * @return
 	 */
-	public List<Element> getChildElements(String name) {
+	List<Element> getChildElements(String name) {
 		List<Element> elements = new ArrayList<Element>();
 		for (Element element : children) {
 			if (element.localName.equals(name)) {
@@ -55,7 +56,7 @@ public class Element {
 	 * 
 	 * @return
 	 */
-	public List<Element> getChildElements() {
+	List<Element> getChildElements() {
 		return new ArrayList<Element>(children);
 	}
 
@@ -65,7 +66,7 @@ public class Element {
 	 * @param name
 	 * @return
 	 */
-	public Element getFirstChildElement(String name) {
+	Element getFirstChildElement(String name) {
 		for (Element child : children) {
 			if (child.getLocalName().equals(name)) {
 				return child;
@@ -74,20 +75,17 @@ public class Element {
 		return null;
 	}
 
-
-	public void addAttribute(Attribute attribute) {
+	void addAttribute(Attribute attribute) {
 		attributes.add(attribute);
 	}
 	
-	public void addAttribute(String atrName, String atrValue) {
+	void addAttribute(String atrName, String atrValue) {
 		attributes.add(new Attribute(atrName, atrValue));
 	}
 
-	
-	public boolean removeAttribute(Attribute attribute) {
+	boolean removeAttribute(Attribute attribute) {
 		return attributes.remove(attribute);
 	}
-
 
 	/**
 	 * Returns the attribute with the given name
@@ -95,7 +93,7 @@ public class Element {
 	 * @param name
 	 * @return
 	 */
-	public Attribute getAttribute(String name) {
+	Attribute getAttribute(String name) {
 		for (Attribute a : attributes) {
 			if (a.getName().equals(name)) {
 				return a;
@@ -104,14 +102,13 @@ public class Element {
 		return null;
 	}
 
-
 	/**
 	 * Returns the value of the attribute with the given name
 	 * or null if the attribute doesn't exist
 	 * @param name
 	 * @return
 	 */
-	public String getAttributeValue(String name) {
+	String getAttributeValue(String name) {
 		Attribute attribute = getAttribute(name);
 		if (attribute != null) {
 			return attribute.getValue();
@@ -119,138 +116,113 @@ public class Element {
 		return null;
 	}
 
-	public int getAttributeCount() {
+	int getAttributeCount() {
 		return attributes.size();
 	}
 
-
-	public Attribute getAttribute(int index) {
+	Attribute getAttribute(int index) {
 		return attributes.get(index);
 	}
 
-
-	public String getLocalName() {
+	String getLocalName() {
 		return localName;
 	}
 
-	public void setLocalName(String localName) {
+	void setLocalName(String localName) {
 		this.localName = localName;
 	}
 
-	public void setValue(String text) {
+	void setValue(String text) {
 		this.value = text;
 	}
 
-	public void removeChildren() {
+	void removeChildren() {
 		for (Element child : children) {
 			child.setParent(null);
 		}
 		children.clear();
 	}
 
+	String toXML() {
+		return toXML(0).toString();
+	}
+	
+	private StringBuilder toXML(int indent) {
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < indent; i++) {
+			result.append("  ");
+		}
+		result.append('<');
+		result.append(localName);
+		for (Attribute atr : attributes) {
+			result.append(' ');
+			result.append(atr.toXML());
+		}
+		result.append('>');
+		if (children.size() > 0){
+			for (Element child : children) {
+				result.append('\n');
+				result.append(child.toXML(indent + 1));
+			}
+			result.append('\n');
+			for (int i = 0; i < indent; i++) {
+				result.append("  ");
+			}
+			result.append("</");
+			result.append(localName);
+			result.append('>');
+		}
+		else{
+			result.append(value);
+			result.append("</");
+			result.append(localName);
+			result.append('>');
+		}
 
-	public String toXML() {
-		return localName;
-
-//		StringBuffer result = new StringBuffer(1024);
-//		Node current = this;
-//		boolean endTag = false;
-//		int index = -1;
-//		int[] indexes = new int[10];
-//		int top = 0;
-//		indexes[0] = -1;
-//
-//		while (true) {
-//
-//			if (!endTag && current.getChildCount() > 0) {
-//				writeStartTag(current, result);
-//				current = current.getChild(0);
-//				index = 0;
-//				top++;
-//				indexes = grow(indexes, top);
-//				indexes[top] = 0;
-//			} else {
-//				if (endTag) {
-//					writeEndTag(current, result);
-//					if (current == this)
-//						break;
-//				} else if (current.isElement()) {
-//					writeStartTag(current, result);
-//					if (current == this)
-//						break;
-//				} else {
-//					result.append(current.toXML());
-//				}
-//				endTag = false;
-//				ParentNode parent = current.getParent();
-//				if (parent.getChildCount() - 1 == index) {
-//					current = parent;
-//					top--;
-//					if (current != this) {
-//						index = indexes[top];
-//					}
-//					endTag = true;
-//				} else {
-//					index++;
-//					indexes[top] = index;
-//					current = parent.getChild(index);
-//				}
-//
-//			}
-//
-//		}
-//
-//		return result.toString();
-
+		return result;
 	}
 
-
-	public String getValue() {
-		//TODO should never be null?
-		return value != null ? value : "";
+	String getValue() {
+		return value;
 	}
 
 	public String toString() {
 		return toXML();
 	}
 
-	public Element getParent() {
+	Element getParent() {
 		return this.parent;
 	}
 
-	public void detach() {
+	void detach() {
 		if (parent != null) {
 			parent.removeChild(this);
 		}
 	}
 
-
-	public int getChildCount() {
+	int getChildCount() {
 		return children.size();
 	}
 
-
-	public void insertChild(Element child, int position) {
+	void insertChild(Element child, int position) {
 		child.setParent(this);
 		children.add(position, child);
 	}
 
-
-	public void appendChild(Element child) {
+	void appendChild(Element child) {
 		child.setParent(this);
 		children.add(child);
 	}
 
-	public Element getChild(int position) {
+	Element getChild(int position) {
 		return children.get(position);
 	}
 
-
-	public int indexOf(Element child) {
+	int indexOf(Element child) {
 		return children.indexOf(child);
 	}
 
-	public Element removeChild(int i) {
+	Element removeChild(int i) {
 		Element removed = children.remove(i);
 		removed.setParent(null);
 		return removed;
@@ -260,18 +232,16 @@ public class Element {
 		this.parent = newParentEl;
 	}
 
-
-	public boolean removeChild(Element child) {
+	boolean removeChild(Element child) {
 		child.setParent(null);
 		return children.remove(child);
 	}
 
-	public void replaceChild(Element oldChild, Element newChild) {
+	void replaceChild(Element oldChild, Element newChild) {
 		int position = indexOf(oldChild);
 		if (position == -1) {
 			throw new RuntimeException("oldChild is not a child of this element.");
 		}
-
 		removeChild(position);
 		insertChild(newChild, position);
 	}
