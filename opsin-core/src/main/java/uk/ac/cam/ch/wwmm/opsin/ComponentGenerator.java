@@ -398,7 +398,6 @@ class ComponentGenerator {
 			String firstChar = locantText.substring(0, 1);
 			Element afterOmpLocant = XOMTools.getNextSibling(ompLocant);
 			ompLocant.setLocalName(LOCANT_EL);
-			ompLocant.removeChildren();
 			ompLocant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
 			if(afterOmpLocant.getLocalName().equals(MULTIPLIER_EL) && afterOmpLocant.getAttributeValue(VALUE_ATR).equals("2") ||
 					(afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && MATCH_COMMA.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {

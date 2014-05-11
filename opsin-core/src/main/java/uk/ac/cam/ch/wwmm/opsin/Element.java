@@ -75,6 +75,14 @@ class Element {
 		return null;
 	}
 
+	Element getChild(int position) {
+		return children.get(position);
+	}
+
+	int getChildCount() {
+		return children.size();
+	}
+
 	void addAttribute(Attribute attribute) {
 		attributes.add(attribute);
 	}
@@ -136,13 +144,6 @@ class Element {
 		this.value = text;
 	}
 
-	void removeChildren() {
-		for (Element child : children) {
-			child.setParent(null);
-		}
-		children.clear();
-	}
-
 	String toXML() {
 		return toXML(0).toString();
 	}
@@ -186,10 +187,6 @@ class Element {
 		return value;
 	}
 
-	public String toString() {
-		return toXML();
-	}
-
 	Element getParent() {
 		return this.parent;
 	}
@@ -198,10 +195,6 @@ class Element {
 		if (parent != null) {
 			parent.removeChild(this);
 		}
-	}
-
-	int getChildCount() {
-		return children.size();
 	}
 
 	void insertChild(Element child, int position) {
@@ -214,27 +207,19 @@ class Element {
 		children.add(child);
 	}
 
-	Element getChild(int position) {
-		return children.get(position);
-	}
-
 	int indexOf(Element child) {
 		return children.indexOf(child);
+	}
+	
+	boolean removeChild(Element child) {
+		child.setParent(null);
+		return children.remove(child);
 	}
 
 	Element removeChild(int i) {
 		Element removed = children.remove(i);
 		removed.setParent(null);
 		return removed;
-	}
-
-	private void setParent(Element newParentEl) {
-		this.parent = newParentEl;
-	}
-
-	boolean removeChild(Element child) {
-		child.setParent(null);
-		return children.remove(child);
 	}
 
 	void replaceChild(Element oldChild, Element newChild) {
@@ -244,6 +229,14 @@ class Element {
 		}
 		removeChild(position);
 		insertChild(newChild, position);
+	}
+	
+	private void setParent(Element newParentEl) {
+		this.parent = newParentEl;
+	}
+	
+	public String toString() {
+		return toXML();
 	}
 
 }
