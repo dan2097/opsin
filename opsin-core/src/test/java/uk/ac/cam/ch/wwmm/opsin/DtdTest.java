@@ -1,20 +1,16 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.junit.Test;
 import org.xml.sax.ErrorHandler;
@@ -27,11 +23,14 @@ public class DtdTest {
 
 	@Test
 	public void testTokenFiles() throws Exception {
-		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
-		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
-		for (int i = 0; i < tokenFiles.size(); i++) {
-			validate(getUriForFile(tokenFiles.get(i).getValue()));
+		XMLStreamReader reader = resourceGetter.getXMLDocument2("index.xml");
+		while (reader.hasNext()) {
+			if (reader.next() == XMLStreamConstants.START_ELEMENT &&
+					reader.getLocalName().equals("tokenFile")) {
+				validate(getUriForFile(reader.getElementText()));
+			}
 		}
+		reader.close();
 	}
 	
 	@Test
@@ -60,35 +59,58 @@ public class DtdTest {
 	}
 	
 	@Test
-	public void testTokenFilesValueValidity() throws IOException {
-		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
-		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
-		for (int i = 0; i < tokenFiles.size(); i++) {
-			Element rootElement = resourceGetter.getXMLDocument(tokenFiles.get(i).getValue()).getRootElement();
-			List<Element> tokenLists =new ArrayList<Element>();
-			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
-				Elements children =rootElement.getChildElements();
-				for (int j = 0; j <children.size(); j++) {
-					tokenLists.add(children.get(j));
-				}
-			}
-			else{
-				tokenLists.add(rootElement);
-			}
-			for (Element tokenList : tokenLists) {
-				Elements tokenElements = tokenList.getChildElements("token");
-				for(int j=0;j<tokenElements.size();j++) {
-					String tokenString = tokenElements.get(j).getValue();
-					char[] characters = tokenString.toCharArray();
-					for (char c : characters) {
-						assertTrue("Non ascii character found in token: " + tokenString +" , an ASCII replacement should be used!" ,(int)c < 128);
+	public void testTokenFilesValueValidity() throws Exception {
+		XMLStreamReader indexReader = resourceGetter.getXMLDocument2("index.xml");
+		while (indexReader.hasNext()) {
+			if (indexReader.next() == XMLStreamConstants.START_ELEMENT &&
+					indexReader.getLocalName().equals("tokenFile")) {
+				XMLStreamReader tokenReader = resourceGetter.getXMLDocument2(indexReader.getElementText());
+				while (tokenReader.hasNext()) {
+					if (tokenReader.next() == XMLStreamConstants.START_ELEMENT) {
+						String tagName = tokenReader.getLocalName();
+						if (tagName.equals("tokenLists")) {
+							while (tokenReader.hasNext()) {
+								switch (tokenReader.next()) {
+								case XMLStreamConstants.START_ELEMENT:
+									if (tokenReader.getLocalName().equals("tokenList")) {
+										validateTokenList(tokenReader);
+									}
+									break;
+								}
+							}
+						}
+						else if (tagName.equals("tokenList")) {
+							validateTokenList(tokenReader);
+						}
 					}
-					assertEquals("The following token contains upper case characters!: " +tokenString,tokenString.toLowerCase(), tokenString);
 				}
 			}
 		}
+		indexReader.close();
 	}
 	
+	private void validateTokenList(XMLStreamReader reader) throws XMLStreamException {
+		while (reader.hasNext()) {
+			switch (reader.next()) {
+			case XMLStreamConstants.START_ELEMENT:
+				if (reader.getLocalName().equals("token")) {
+					String tokenString = reader.getElementText();
+					char[] characters = tokenString.toCharArray();
+					for (char c : characters) {
+						assertTrue("Non ascii character found in token: " + tokenString +" \nAn ASCII replacement should be used!" ,(int)c < 128);
+						assertTrue("Capital letter found in token: " + tokenString +" \nOnly lower case letters should be used!" , !(c >='A' && c <='Z'));
+					}
+				}
+				break;
+			case XMLStreamConstants.END_ELEMENT:
+				if (reader.getLocalName().equals("tokenList")) {
+					return;
+				}
+				break;
+			}
+		}
+	}
+
 	public static void validate(URI uri) throws Exception {
 		System.out.println("Validating:"+ uri);
 		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();

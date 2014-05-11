@@ -112,8 +112,7 @@ class ResourceManager {
 		XMLStreamReader reader = resourceGetter.getXMLDocument2(fileName);
 		try {
 			while (reader.hasNext()) {
-				switch (reader.next()) {
-				case XMLStreamConstants.START_ELEMENT:
+				if (reader.next() == XMLStreamConstants.START_ELEMENT) {
 					String tagName = reader.getLocalName();
 					if (tagName.equals("tokenLists")) {
 						while (reader.hasNext()) {
@@ -129,7 +128,6 @@ class ResourceManager {
 					else if (tagName.equals("tokenList")) {
 						processTokenList(reader, reversed);
 					}
-					break;
 				}
 			}
 		}
