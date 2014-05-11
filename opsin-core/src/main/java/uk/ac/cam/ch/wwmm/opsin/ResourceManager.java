@@ -66,7 +66,7 @@ class ResourceManager {
 	 * @param resourceGetter
 	 * @throws IOException 
 	 */
-	ResourceManager(ResourceGetter resourceGetter) throws IOException{
+	ResourceManager(ResourceGetter resourceGetter) throws IOException {
 		this.resourceGetter = resourceGetter;
 		this.automatonInitialiser = new AutomatonInitialiser(resourceGetter.getResourcePath() + "serialisedAutomata/");
 		chemicalAutomaton = processChemicalGrammar(false);
@@ -81,10 +81,11 @@ class ResourceManager {
 	/**
 	 * Processes tokenFiles
 	 * @param reversed Should the tokens be reversed
+	 * @throws IOException 
 	 */
-	private void processTokenFiles(boolean reversed) {
+	private void processTokenFiles(boolean reversed) throws IOException {
+		XMLStreamReader filesToProcessReader = resourceGetter.getXMLDocument2("index.xml");
 		try {
-			XMLStreamReader filesToProcessReader = resourceGetter.getXMLDocument2("index.xml");
 			while (filesToProcessReader.hasNext()) {
 				int event = filesToProcessReader.next();
 				if (event == XMLStreamConstants.START_ELEMENT && 
@@ -95,38 +96,53 @@ class ResourceManager {
 			}
 			filesToProcessReader.close();
 		}
-		catch (IOException e){
-			throw new NameToStructureException(e.getMessage(), e);
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading index.xml", e);
 		}
-		catch (XMLStreamException e){
-			throw new NameToStructureException(e.getMessage(), e);
+		finally {
+			try {
+				filesToProcessReader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading index.xml", e);
+			}
 		}
 	}
 
-	private void processTokenFile(String fileName, boolean reversed) throws IOException, XMLStreamException {
+	private void processTokenFile(String fileName, boolean reversed) throws IOException {
 		XMLStreamReader reader = resourceGetter.getXMLDocument2(fileName);
-		while (reader.hasNext()) {
-			switch (reader.next()) {
-			case XMLStreamConstants.START_ELEMENT:
-				String tagName = reader.getLocalName();
-				if (tagName.equals("tokenLists")) {
-					while (reader.hasNext()) {
-						switch (reader.next()) {
-						case XMLStreamConstants.START_ELEMENT:
-							if (reader.getLocalName().equals("tokenList")) {
-								processTokenList(reader, reversed);
+		try {
+			while (reader.hasNext()) {
+				switch (reader.next()) {
+				case XMLStreamConstants.START_ELEMENT:
+					String tagName = reader.getLocalName();
+					if (tagName.equals("tokenLists")) {
+						while (reader.hasNext()) {
+							switch (reader.next()) {
+							case XMLStreamConstants.START_ELEMENT:
+								if (reader.getLocalName().equals("tokenList")) {
+									processTokenList(reader, reversed);
+								}
+								break;
 							}
-							break;
 						}
 					}
+					else if (tagName.equals("tokenList")) {
+						processTokenList(reader, reversed);
+					}
+					break;
 				}
-				else if (tagName.equals("tokenList")) {
-					processTokenList(reader, reversed);
-				}
-				break;
 			}
 		}
-		reader.close();
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading " + fileName, e);
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading " + fileName, e);
+			}
+		}
 	}
 
 	private void processTokenList(XMLStreamReader reader, boolean reversed) throws XMLStreamException {
