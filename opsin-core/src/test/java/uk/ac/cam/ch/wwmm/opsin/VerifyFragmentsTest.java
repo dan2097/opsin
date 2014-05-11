@@ -1,67 +1,102 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
-
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class VerifyFragmentsTest {
-	private static final String RESOURCE_LOCATION = "uk/ac/cam/ch/wwmm/opsin/resources/";
-	private static final ResourceGetter resourceGetter = new ResourceGetter(RESOURCE_LOCATION);
+	
+	private static ResourceGetter resourceGetter;
+	private static SMILESFragmentBuilder sBuilder;
+
+	@BeforeClass
+	public static void setUp() {
+		resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
+		sBuilder = new SMILESFragmentBuilder(new IDManager());
+	}
+	
+	@AfterClass
+	public static void cleanUp(){
+		resourceGetter = null;
+		sBuilder = null;
+	}
 	
 	@Test
 	public void verifySMILES() throws Exception {
-		SMILESFragmentBuilder sBuilder = new SMILESFragmentBuilder(new IDManager());
-		Document tokenFileDoc = resourceGetter.getXMLDocument("index.xml");
-		Elements tokenFiles = tokenFileDoc.getRootElement().getChildElements();
-		for (int i = 0; i < tokenFiles.size(); i++) {
-			Element rootElement = resourceGetter.getXMLDocument(tokenFiles.get(i).getValue()).getRootElement();
-			List<Element> tokenLists =new ArrayList<Element>();
-			if (rootElement.getLocalName().equals("tokenLists")){//support for xml files with one "tokenList" or multiple "tokenList" under a "tokenLists" element
-				Elements children =rootElement.getChildElements();
-				for (int j = 0; j <children.size(); j++) {
-					tokenLists.add(children.get(j));
+
+		XMLStreamReader indexReader = resourceGetter.getXMLDocument2("index.xml");
+		while (indexReader.hasNext()) {
+			if (indexReader.next() == XMLStreamConstants.START_ELEMENT &&
+					indexReader.getLocalName().equals("tokenFile")) {
+				XMLStreamReader tokenReader = resourceGetter.getXMLDocument2(indexReader.getElementText());
+				while (tokenReader.hasNext()) {
+					if (tokenReader.next() == XMLStreamConstants.START_ELEMENT) {
+						String tagName = tokenReader.getLocalName();
+						if (tagName.equals("tokenLists")) {
+							while (tokenReader.hasNext()) {
+								switch (tokenReader.next()) {
+								case XMLStreamConstants.START_ELEMENT:
+									if (tokenReader.getLocalName().equals("tokenList")) {
+										verifySmilesInTokenList(tokenReader);
+									}
+									break;
+								}
+							}
+						}
+						else if (tagName.equals("tokenList")) {
+							verifySmilesInTokenList(tokenReader);
+						}
+					}
 				}
 			}
-			else{
-				tokenLists.add(rootElement);
-			}
-			for (Element tokenList : tokenLists) {
-				String tagname = tokenList.getAttributeValue("tagname");
-				if (tagname.equals(GROUP_EL) ||
-						tagname.equals(FUNCTIONALGROUP_EL) ||
-						tagname.equals(HETEROATOM_EL) ||
-						tagname.equals(SUFFIXPREFIX_EL)) {
-					Elements tokenElements = tokenList.getChildElements("token");
-					for(int j = 0; j < tokenElements.size(); j++) {
-						Element token = tokenElements.get(j);
-						Fragment mol =null;
+		}
+		indexReader.close();
+	}
+
+	private void verifySmilesInTokenList(XMLStreamReader reader) throws XMLStreamException {
+		String tagname = reader.getAttributeValue(null, "tagname");
+		if (tagname.equals(GROUP_EL) ||
+				tagname.equals(FUNCTIONALGROUP_EL) ||
+				tagname.equals(HETEROATOM_EL) ||
+				tagname.equals(SUFFIXPREFIX_EL)) {
+			while (reader.hasNext()) {
+				switch (reader.next()) {
+				case XMLStreamConstants.START_ELEMENT:
+					if (reader.getLocalName().equals("token")) {
+						Fragment mol = null;
+						String smiles = null;
 						try{
-							String smiles = token.getAttributeValue(VALUE_ATR);
-							String type = token.getAttribute(TYPE_ATR) !=null ?  token.getAttributeValue(TYPE_ATR) : "";
-							String subType = token.getAttribute(SUBTYPE_ATR) !=null ?  token.getAttributeValue(SUBTYPE_ATR) : "";
-	
-							String labels = token.getAttribute(LABELS_ATR) !=null ?  token.getAttributeValue(LABELS_ATR) : "";
-							mol = sBuilder.build(smiles, type, subType, labels);
+							smiles = reader.getAttributeValue(null, VALUE_ATR);
+							String type = reader.getAttributeValue(null, TYPE_ATR);
+							String subType = reader.getAttributeValue(null, SUBTYPE_ATR);
+							String labels =  reader.getAttributeValue(null, LABELS_ATR);
+
+							mol = sBuilder.build(smiles, type != null ? type : "", subType != null ? subType : "", labels != null ? labels : "");
 						}
 						catch (Exception e) {
 							e.printStackTrace();
 						}
-						assertNotNull("The following token's SMILES or labels were in error: " +token.toXML(), mol);
+						assertNotNull("The following token's SMILES or labels were in error: " + smiles, mol);
 						try{
 							mol.checkValencies();
 						}
 						catch (StructureBuildingException e) {
-							fail("The following token's SMILES produced a structure with invalid valency: " +token.toXML());
+							fail("The following token's SMILES produced a structure with invalid valency: " + smiles);
 						}
 					}
+					break;
+				case XMLStreamConstants.END_ELEMENT:
+					if (reader.getLocalName().equals("tokenList")) {
+						return;
+					}
+					break;
 				}
 			}
 		}
