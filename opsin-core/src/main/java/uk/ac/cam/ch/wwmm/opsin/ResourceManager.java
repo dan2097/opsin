@@ -220,83 +220,140 @@ class ResourceManager {
 	}
 
 	private void processRegexTokenFiles(boolean reversed) throws IOException{
-		nu.xom.Element reTokenList = resourceGetter.getXMLDocument("regexTokens.xml").getRootElement();
-		Elements regexEls = reTokenList.getChildElements();
-	
-		HashMap<String, String> tempRegexes = new HashMap<String, String>();
+		XMLStreamReader reader = resourceGetter.getXMLDocument2("regexTokens.xml");
+		Map<String, String> tempRegexes = new HashMap<String, String>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
-		for(int i = 0, l = regexEls.size(); i < l; i++) {
-			nu.xom.Element regexEl = regexEls.get(i);
-			String re = regexEl.getAttributeValue("regex");
-			Matcher m = matchRegexReplacement.matcher(re);
-			StringBuilder newValueSB = new StringBuilder();
-			int position = 0;
-			while(m.find()) {//replace sections enclosed in %..% with the appropriate regex
-				newValueSB.append(re.substring(position, m.start()));
-				if (tempRegexes.get(m.group())==null){
-					throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
-				}
-				newValueSB.append(tempRegexes.get(m.group()));
-				position = m.end();
-			}
-			newValueSB.append(re.substring(position));
-			if (regexEl.getLocalName().equals("regex")){
-				if (regexEl.getAttribute("name")==null){
-					throw new RuntimeException("Regex entry in regexTokenes.xml with no name. regex: " + newValueSB.toString());
-				}
-				tempRegexes.put(regexEl.getAttributeValue("name"), newValueSB.toString());
-				continue;
-			}
-			
-			Character symbol = regexEl.getAttributeValue("symbol").charAt(0);
-			if (!reversed) {
-				//reSymbolTokenDict will be populated when the constructor is called for left-right parsing, hence skip for right-left 
-				if (reSymbolTokenDict.get(symbol) != null) {
-					throw new RuntimeException(symbol +" is associated with multiple regular expressions. The following expression clashes: " + regexEl.toXML() +" This should be resolved by combining regular expressions that map the same symbol" );
-				}
-				
-				boolean ignoreWhenWritingXML = "yes".equals(regexEl.getAttributeValue("ignoreWhenWritingXML"));
-				if (ignoreWhenWritingXML) {
-					reSymbolTokenDict.put(symbol, IGNORE_WHEN_WRITING_PARSE_TREE);
-				}
-				else{
-					String tokenTagName = regexEl.getAttributeValue("tagname");
-					String type = regexEl.getAttributeValue(TYPE_ATR);
-					String subType = regexEl.getAttributeValue(SUBTYPE_ATR);
-					Element el = new Element(tokenTagName);
-					if (type != null){
-						el.addAttribute(TYPE_ATR, type);
+		try {
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT) {
+					String localName = reader.getLocalName();
+					if (!localName.equals("regex") && !localName.equals("regexToken")){
+						continue;
 					}
-					if (subType != null){
-						el.addAttribute(SUBTYPE_ATR, subType);
+					String re = reader.getAttributeValue(null, "regex");
+					Matcher m = matchRegexReplacement.matcher(re);
+					StringBuilder newValueSB = new StringBuilder();
+					int position = 0;
+					while(m.find()) {//replace sections enclosed in %..% with the appropriate regex
+						newValueSB.append(re.substring(position, m.start()));
+						if (tempRegexes.get(m.group()) == null){
+							throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
+						}
+						newValueSB.append(tempRegexes.get(m.group()));
+						position = m.end();
 					}
-					reSymbolTokenDict.put(symbol, el);
+					newValueSB.append(re.substring(position));
+					if (localName.equals("regex")) {
+						String regexName = reader.getAttributeValue(null, "name");
+						if (regexName == null){
+							throw new RuntimeException("Regex entry in regexTokenes.xml with no name. regex: " + newValueSB.toString());
+						}
+						tempRegexes.put(regexName, newValueSB.toString());
+						continue;
+					}
+					addRegexToken(reader, newValueSB.toString(), reversed);
 				}
 			}
-			
-			int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
-			if (index < 0){
-				throw new RuntimeException(symbol +" is associated with the regex " + newValueSB.toString() +" however it is not actually used in OPSIN's grammar!!!");
-			}
-			if (!reversed){
-				if (regexEl.getAttribute("determinise") != null){//should the regex be compiled into a DFA for faster execution?
-					symbolRegexAutomataDict[index] = automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, false);
-				}
-				else{
-					symbolRegexesDict[index] = Pattern.compile(newValueSB.toString());
-				}
-			}
-			else{
-				if (regexEl.getAttribute("determinise")!=null){//should the regex be compiled into a DFA for faster execution?
-					symbolRegexAutomataDictReversed[index] = automatonInitialiser.loadAutomaton(regexEl.getAttributeValue("tagname")+"_"+(int)symbol, newValueSB.toString(), false, true);
-				}
-				else{
-					symbolRegexesDictReversed[index] = Pattern.compile(newValueSB.toString() +"$");
-				}
+		}
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading regexTokens.xml", e);
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading regexTokens.xml", e);
 			}
 		}
 	}
 	
+	private void addRegexToken(XMLStreamReader reader, String regex, boolean reversed) {
+		String tokenTagName = null;
+		Character symbol = null;
+		String type = null;
+		String subType = null;
+		String value = null;
+		boolean determinise = false;
+		boolean ignoreWhenWritingXML = false;
+		
+		for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
+			String atrName = reader.getAttributeLocalName(i);
+			String atrValue = reader.getAttributeValue(i);
+			if (atrName.equals("tagname")){
+				tokenTagName  = atrValue;
+			}
+			else if (atrName.equals("symbol")){
+				symbol = atrValue.charAt(0);
+			}
+			else if (atrName.equals(TYPE_ATR)){
+				type = atrValue;
+			}
+			else if (atrName.equals(SUBTYPE_ATR)){
+				subType = atrValue;
+			}
+			else if (atrName.equals("value")){
+				value = atrValue;
+			}
+			else if (atrName.equals("determinise")){
+				determinise = atrValue.equals("yes");
+			}
+			else if (atrName.equals("ignoreWhenWritingXML")){
+				ignoreWhenWritingXML = atrValue.equals("yes");
+			}
+			else if (!atrName.equals("regex")){
+				throw new RuntimeException("Malformed regexToken");
+			}
+		}
+		if (tokenTagName == null || symbol == null) {
+			throw new RuntimeException("Malformed regexToken");
+		}
+		
+		if (!reversed) {
+			//reSymbolTokenDict will be populated when the constructor is called for left-right parsing, hence skip for right-left 
+			if (reSymbolTokenDict.get(symbol) != null) {
+				throw new RuntimeException(symbol +" is associated with multiple regular expressions. The following expression clashes: " + regex +" This should be resolved by combining regular expressions that map the same symbol" );
+			}
+
+			if (ignoreWhenWritingXML) {
+				reSymbolTokenDict.put(symbol, IGNORE_WHEN_WRITING_PARSE_TREE);
+			}
+			else{
+				Element el = new Element(tokenTagName);
+				if (type != null){
+					el.addAttribute(TYPE_ATR, type);
+				}
+				if (subType != null){
+					el.addAttribute(SUBTYPE_ATR, subType);
+				}
+				if (value != null){
+					el.addAttribute(VALUE_ATR, value);
+				}
+				reSymbolTokenDict.put(symbol, el);
+			}
+		}
+		
+		int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
+		if (index < 0){
+			throw new RuntimeException(symbol +" is associated with the regex " + regex +" however it is not actually used in OPSIN's grammar!!!");
+		}
+		if (!reversed){
+			if (determinise){//should the regex be compiled into a DFA for faster execution?
+				symbolRegexAutomataDict[index] = automatonInitialiser.loadAutomaton(tokenTagName + "_" + (int)symbol, regex, false, false);
+			}
+			else{
+				symbolRegexesDict[index] = Pattern.compile(regex);
+			}
+		}
+		else{
+			if (determinise){//should the regex be compiled into a DFA for faster execution?
+				symbolRegexAutomataDictReversed[index] = automatonInitialiser.loadAutomaton(tokenTagName + "_" + (int)symbol, regex, false, true);
+			}
+			else{
+				symbolRegexesDictReversed[index] = Pattern.compile(regex +"$");
+			}
+		}
+	}
+
 	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException{
 		Map<String, StringBuilder> regexDict = new HashMap<String, StringBuilder>();
 		Elements regexes = resourceGetter.getXMLDocument("regexes.xml").getRootElement().getChildElements("regex");
