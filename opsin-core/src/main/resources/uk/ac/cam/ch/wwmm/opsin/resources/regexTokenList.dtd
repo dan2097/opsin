@@ -10,5 +10,5 @@
                      type CDATA #IMPLIED
                      subType CDATA #IMPLIED
                      value CDATA #IMPLIED
-                     determinise CDATA #IMPLIED
-                     ignoreWhenWritingXML CDATA #IMPLIED>
+                     determinise (yes) #IMPLIED
+                     ignoreWhenWritingXML (yes) #IMPLIED>
