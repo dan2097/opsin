@@ -11,7 +11,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import nu.xom.Elements;
 import dk.brics.automaton.RunAutomaton;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
@@ -354,31 +353,46 @@ class ResourceManager {
 		}
 	}
 
-	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException{
+	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException {
+		XMLStreamReader reader = resourceGetter.getXMLDocument2("regexes.xml");
 		Map<String, StringBuilder> regexDict = new HashMap<String, StringBuilder>();
-		Elements regexes = resourceGetter.getXMLDocument("regexes.xml").getRootElement().getChildElements("regex");
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
-		for(int i = 0, l =regexes.size(); i < l; i++) {
-			nu.xom.Element regex =regexes.get(i);
-			String name = regex.getAttributeValue("name");
-			String value = regex.getAttributeValue("value");
-			Matcher m = matchRegexReplacement.matcher(value);
-			StringBuilder newValueSB = new StringBuilder();
-			int position = 0;
-			while(m.find()) {
-				newValueSB.append(value.substring(position, m.start()));
-				if (regexDict.get(m.group()) == null){
-					throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexes.xml");
+		try {
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT &&
+						reader.getLocalName().equals("regex")) {
+					String name = reader.getAttributeValue(null, "name");
+					String value = reader.getAttributeValue(null, "value");
+					Matcher m = matchRegexReplacement.matcher(value);
+					StringBuilder newValueSB = new StringBuilder();
+					int position = 0;
+					while(m.find()) {
+						newValueSB.append(value.substring(position, m.start()));
+						if (regexDict.get(m.group()) == null){
+							throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexes.xml");
+						}
+						newValueSB.append(regexDict.get(m.group()));
+						position = m.end();
+					}
+					newValueSB.append(value.substring(position));
+					if (regexDict.get(name) != null){
+						throw new RuntimeException("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
+					}
+					regexDict.put(name, newValueSB);
 				}
-				newValueSB.append(regexDict.get(m.group()));
-				position = m.end();
 			}
-			newValueSB.append(value.substring(position));
-			if (regexDict.get(name) != null){
-				throw new RuntimeException("Regex entry: " + name + " has duplicate definitions! Check regexes.xml");
-			}
-			regexDict.put(name, newValueSB);
 		}
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading regexes.xml", e);
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading regexes.xml", e);
+			}
+		}
+
 		String re = regexDict.get("%chemical%").toString();
 		if (!reversed){
 			return automatonInitialiser.loadAutomaton("chemical", re, true, false);
