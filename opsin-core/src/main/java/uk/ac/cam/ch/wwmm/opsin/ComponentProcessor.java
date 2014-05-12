@@ -31,7 +31,7 @@ class ComponentProcessor {
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
-	private final SuffixRules suffixRulesLookup;
+	private final SuffixRulesLookup suffixRulesLookup;
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
@@ -75,7 +75,7 @@ class ComponentProcessor {
 		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
 	}
 
-	ComponentProcessor(SuffixRules suffixRules, BuildState state) {
+	ComponentProcessor(SuffixRulesLookup suffixRules, BuildState state) {
 		this.suffixRulesLookup = suffixRules;
 		this.state = state;
 	}

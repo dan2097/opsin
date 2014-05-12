@@ -42,8 +42,8 @@ public class NameToStructure {
 	/**Applies OPSIN's grammar to tokenise and assign meanings tokens.*/
 	private ParseRules parseRules;
 	
-	/**Contains rules on how to interpret suffixes*/
-	private SuffixRules suffixRules;
+	/**Allows the lookup of the rules associated with suffixes*/
+	private SuffixRulesLookup suffixRulesLookup;
 
 	private static NameToStructure NTS_INSTANCE;
 
@@ -70,7 +70,7 @@ public class NameToStructure {
 			parseRules = new ParseRules(resourceManager);
 			Tokeniser tokeniser = new Tokeniser(parseRules);
 			parser = new Parser(wordRules, tokeniser, resourceManager);
-			suffixRules = new SuffixRules(resourceGetter);
+			suffixRulesLookup = new SuffixRulesLookup(resourceGetter);
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
 		}
@@ -152,7 +152,7 @@ public class NameToStructure {
 					}
 					BuildState state = new BuildState(n2sConfig);
 					//Converts the XML to fragments (handles many different nomenclatueres for describing structure). Assigns locants 
-					new ComponentProcessor(suffixRules, state).processParse(parse);
+					new ComponentProcessor(suffixRulesLookup, state).processParse(parse);
 					if (LOG.isDebugEnabled()){
 						LOG.debug(parse.toXML());
 					}

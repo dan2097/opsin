@@ -13,7 +13,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 
-class SuffixRules {
+class SuffixRulesLookup {
 	
 	/**For a given group type what suffixes are applicable.
 	 * Within this group type which are applicable for a given suffixValue
@@ -31,7 +31,7 @@ class SuffixRules {
 		}
 	}
 	
-	SuffixRules(ResourceGetter resourceGetter) throws IOException {
+	SuffixRulesLookup(ResourceGetter resourceGetter) throws IOException {
 		Map<String, List<SuffixRule>> suffixRulesMap = generateSuffixRulesMap(resourceGetter);
 		suffixApplicability = generateSuffixApplicabilityMap(resourceGetter, suffixRulesMap);
 	}
