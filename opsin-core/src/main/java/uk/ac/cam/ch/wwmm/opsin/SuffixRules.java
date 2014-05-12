@@ -38,7 +38,7 @@ class SuffixRules {
 	
 	private Map<String, List<SuffixRule>> generateSuffixRulesMap(ResourceGetter resourceGetter) throws IOException {
 		Map<String, List<SuffixRule>> suffixRulesMap = new HashMap<String, List<SuffixRule>>();
-		XMLStreamReader reader = resourceGetter.getXMLDocument2("suffixRules.xml");
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader("suffixRules.xml");
 		try {
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT && 
@@ -91,7 +91,7 @@ class SuffixRules {
 
 	private Map<String, Map<String, List<ApplicableSuffix>>> generateSuffixApplicabilityMap(ResourceGetter resourceGetter, Map<String, List<SuffixRule>> suffixRulesMap) throws IOException {
 		Map<String, Map<String, List<ApplicableSuffix>>> suffixApplicability = new HashMap<String, Map<String,List<ApplicableSuffix>>>();
-		XMLStreamReader reader = resourceGetter.getXMLDocument2("suffixApplicability.xml");
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader("suffixApplicability.xml");
 		try {
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT && 

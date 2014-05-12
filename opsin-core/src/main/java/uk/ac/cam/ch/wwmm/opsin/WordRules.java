@@ -182,7 +182,7 @@ class WordRules {
 	 */
 	WordRules(ResourceGetter resourceGetter) throws IOException {
 		List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
-		XMLStreamReader reader = resourceGetter.getXMLDocument2("wordRules.xml");
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader("wordRules.xml");
 		try {
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT && 

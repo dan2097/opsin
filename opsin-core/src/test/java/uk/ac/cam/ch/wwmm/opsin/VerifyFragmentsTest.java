@@ -31,11 +31,11 @@ public class VerifyFragmentsTest {
 	@Test
 	public void verifySMILES() throws Exception {
 
-		XMLStreamReader indexReader = resourceGetter.getXMLDocument2("index.xml");
+		XMLStreamReader indexReader = resourceGetter.getXMLStreamReader("index.xml");
 		while (indexReader.hasNext()) {
 			if (indexReader.next() == XMLStreamConstants.START_ELEMENT &&
 					indexReader.getLocalName().equals("tokenFile")) {
-				XMLStreamReader tokenReader = resourceGetter.getXMLDocument2(indexReader.getElementText());
+				XMLStreamReader tokenReader = resourceGetter.getXMLStreamReader(indexReader.getElementText());
 				while (tokenReader.hasNext()) {
 					if (tokenReader.next() == XMLStreamConstants.START_ELEMENT) {
 						String tagName = tokenReader.getLocalName();
