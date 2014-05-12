@@ -23,7 +23,7 @@ public class DtdTest {
 
 	@Test
 	public void testTokenFiles() throws Exception {
-		XMLStreamReader reader = resourceGetter.getXMLDocument2("index.xml");
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader("index.xml");
 		while (reader.hasNext()) {
 			if (reader.next() == XMLStreamConstants.START_ELEMENT &&
 					reader.getLocalName().equals("tokenFile")) {
@@ -60,11 +60,11 @@ public class DtdTest {
 	
 	@Test
 	public void testTokenFilesValueValidity() throws Exception {
-		XMLStreamReader indexReader = resourceGetter.getXMLDocument2("index.xml");
+		XMLStreamReader indexReader = resourceGetter.getXMLStreamReader("index.xml");
 		while (indexReader.hasNext()) {
 			if (indexReader.next() == XMLStreamConstants.START_ELEMENT &&
 					indexReader.getLocalName().equals("tokenFile")) {
-				XMLStreamReader tokenReader = resourceGetter.getXMLDocument2(indexReader.getElementText());
+				XMLStreamReader tokenReader = resourceGetter.getXMLStreamReader(indexReader.getElementText());
 				while (tokenReader.hasNext()) {
 					if (tokenReader.next() == XMLStreamConstants.START_ELEMENT) {
 						String tagName = tokenReader.getLocalName();

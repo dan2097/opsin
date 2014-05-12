@@ -75,7 +75,7 @@ class ResourceGetter {
 	 * @return An XMLStreamReader
 	 * @throws IOException 
 	 */
-	XMLStreamReader getXMLDocument2(String name) throws IOException {
+	XMLStreamReader getXMLStreamReader(String name) throws IOException {
 		if(name == null){
 			throw new IllegalArgumentException("Input to function was null");
 		}

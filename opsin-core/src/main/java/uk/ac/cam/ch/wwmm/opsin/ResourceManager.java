@@ -84,7 +84,7 @@ class ResourceManager {
 	 * @throws IOException 
 	 */
 	private void processTokenFiles(boolean reversed) throws IOException {
-		XMLStreamReader filesToProcessReader = resourceGetter.getXMLDocument2("index.xml");
+		XMLStreamReader filesToProcessReader = resourceGetter.getXMLStreamReader("index.xml");
 		try {
 			while (filesToProcessReader.hasNext()) {
 				int event = filesToProcessReader.next();
@@ -108,7 +108,7 @@ class ResourceManager {
 	}
 
 	private void processTokenFile(String fileName, boolean reversed) throws IOException {
-		XMLStreamReader reader = resourceGetter.getXMLDocument2(fileName);
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader(fileName);
 		try {
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT) {
@@ -232,7 +232,7 @@ class ResourceManager {
 	}
 
 	private void processRegexTokenFiles(boolean reversed) throws IOException{
-		XMLStreamReader reader = resourceGetter.getXMLDocument2("regexTokens.xml");
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader("regexTokens.xml");
 		Map<String, String> tempRegexes = new HashMap<String, String>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		try {
@@ -367,7 +367,7 @@ class ResourceManager {
 	}
 
 	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException {
-		XMLStreamReader reader = resourceGetter.getXMLDocument2("regexes.xml");
+		XMLStreamReader reader = resourceGetter.getXMLStreamReader("regexes.xml");
 		Map<String, StringBuilder> regexDict = new HashMap<String, StringBuilder>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		try {
