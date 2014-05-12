@@ -29,10 +29,17 @@ import com.ctc.wstx.stax.WstxInputFactory;
  *
  */
 class ResourceGetter {
+	
+	private final static XMLInputFactory xmlInputFactory;
 
 	private final String resourcePath;
 	private final String workingDirectory;
-	private final XMLInputFactory xmlInputFactory;
+	
+	static {
+		xmlInputFactory = new WstxInputFactory();
+		xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		xmlInputFactory.setProperty(XMLInputFactory2.P_AUTO_CLOSE_INPUT, true);
+	}
 
 	/**
 	 * Sets up a resourceGetter to get resources from a particular path.
@@ -54,10 +61,6 @@ class ResourceGetter {
 			workingDirectory = null;
 		}
 		this.workingDirectory = workingDirectory;
-
-		xmlInputFactory = new WstxInputFactory();
-		xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-		xmlInputFactory.setProperty(XMLInputFactory2.P_AUTO_CLOSE_INPUT, true);
 	}
 	
 	/**
