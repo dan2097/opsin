@@ -6,101 +6,172 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 
 class SuffixRules {
 	
-	/**For a given group type what suffixes are applicable. Due to group subTypes altering suffix meaning, the same suffixValue maps to one or more suffixes*/
-	private final HashMap<String, HashMap<String, List<Element>>> suffixApplicability;
-	/**A mapping between suffix rule names and elements containing the rules for applying the corresponding suffix*/
-	private final HashMap<String, Element> suffixRules;
-	
-	SuffixRules(ResourceGetter resourceGetter) throws IOException{
-		suffixApplicability = generateSuffixApplicabilityMap(resourceGetter);
-		suffixRules = generateSuffixRulesMap(resourceGetter);
-	}
+	/**For a given group type what suffixes are applicable.
+	 * Within this group type which are applicable for a given suffixValue
+	 * Returns a list as different group subTypes can give different meanings*/
+	private final Map<String, Map<String, List<ApplicableSuffix>>> suffixApplicability;
 
-	private HashMap<String, HashMap<String, List<Element>>> generateSuffixApplicabilityMap(ResourceGetter resourceGetter) throws IOException {
-		Document suffixApplicabilityDoc = resourceGetter.getXMLDocument("suffixApplicability.xml");
-		HashMap<String, HashMap<String, List<Element>>> suffixApplicability = new HashMap<String, HashMap<String,List<Element>>>();
-		Elements groupTypes = suffixApplicabilityDoc.getRootElement().getChildElements(SUFFIXAPPLICABILITY_GROUPTYPE_EL);
-		for (int i = 0; i < groupTypes.size(); i++) {
-			Element groupType =groupTypes.get(i);
-			Elements suffixes = groupType.getChildElements(SUFFIXAPPLICABILITY_SUFFIX_EL);
-			HashMap<String, List<Element>> suffixToRuleMap= new HashMap<String, List<Element>>();
-			for (int j = 0; j < suffixes.size(); j++) {
-				Element suffix =suffixes.get(j);
-				String suffixValue= suffix.getAttributeValue(SUFFIXAPPLICABILITY_VALUE_ATR);
-				if (suffixToRuleMap.get(suffixValue)!=null){//can have multiple entries if subType attribute is set
-					suffixToRuleMap.get(suffixValue).add(suffix);
-				}
-				else{
-					List<Element> suffixList =new ArrayList<Element>();
-					suffixList.add(suffix);
-					suffixToRuleMap.put(suffixValue, suffixList);
+	private static class ApplicableSuffix {
+
+		private final String requiredSubType;
+		private final List<SuffixRule> suffixRules;
+
+		public ApplicableSuffix(String requiredSubType, List<SuffixRule> suffixRules) {
+			this.requiredSubType = requiredSubType;
+			this.suffixRules = suffixRules;
+		}
+	}
+	
+	SuffixRules(ResourceGetter resourceGetter) throws IOException {
+		Map<String, List<SuffixRule>> suffixRulesMap = generateSuffixRulesMap(resourceGetter);
+		suffixApplicability = generateSuffixApplicabilityMap(resourceGetter, suffixRulesMap);
+	}
+	
+	private Map<String, List<SuffixRule>> generateSuffixRulesMap(ResourceGetter resourceGetter) throws IOException {
+		Map<String, List<SuffixRule>> suffixRulesMap = new HashMap<String, List<SuffixRule>>();
+		XMLStreamReader reader = resourceGetter.getXMLDocument2("suffixRules.xml");
+		try {
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT && 
+						reader.getLocalName().equals(SUFFIXRULES_RULE_EL)) {
+					String ruleValue = reader.getAttributeValue(null, SUFFIXRULES_VALUE_ATR);
+					if (suffixRulesMap.get(ruleValue) != null) {
+						throw new RuntimeException("Suffix: " + ruleValue + " appears multiple times in suffixRules.xml");
+					}
+					suffixRulesMap.put(ruleValue, processSuffixRules(reader));
 				}
 			}
-			suffixApplicability.put(groupType.getAttributeValue(SUFFIXAPPLICABILITY_TYPE_ATR), suffixToRuleMap);
+		}
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading suffixRules.xml", e);
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading suffixRules.xml", e);
+			}
+		}
+		return suffixRulesMap;
+	}
+	
+
+	private List<SuffixRule> processSuffixRules(XMLStreamReader reader) throws XMLStreamException {
+		String startingElName = reader.getLocalName();
+		List<SuffixRule> rules = new ArrayList<SuffixRule>();
+		while (reader.hasNext()) {
+			switch (reader.next()) {
+			case XMLStreamConstants.START_ELEMENT:
+				String tagName = reader.getLocalName();
+				SuffixRuleType type = SuffixRuleType.valueOf(tagName);
+				List<Attribute> attributes = new ArrayList<Attribute>();
+				for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
+					attributes.add(new Attribute(reader.getAttributeLocalName(i), reader.getAttributeValue(i)));
+				}
+				rules.add(new SuffixRule(type, attributes));
+				break;
+			case XMLStreamConstants.END_ELEMENT:
+				if (reader.getLocalName().equals(startingElName)) {
+					return rules;
+				}
+				break;
+			}
+		}
+		throw new RuntimeException("Malformed suffixRules.xml");
+	}
+
+	private Map<String, Map<String, List<ApplicableSuffix>>> generateSuffixApplicabilityMap(ResourceGetter resourceGetter, Map<String, List<SuffixRule>> suffixRulesMap) throws IOException {
+		Map<String, Map<String, List<ApplicableSuffix>>> suffixApplicability = new HashMap<String, Map<String,List<ApplicableSuffix>>>();
+		XMLStreamReader reader = resourceGetter.getXMLDocument2("suffixApplicability.xml");
+		try {
+			while (reader.hasNext()) {
+				if (reader.next() == XMLStreamConstants.START_ELEMENT && 
+						reader.getLocalName().equals(SUFFIXAPPLICABILITY_GROUPTYPE_EL)) {
+					Map<String, List<ApplicableSuffix>> suffixToRuleMap = new HashMap<String, List<ApplicableSuffix>>();
+					suffixApplicability.put(reader.getAttributeValue(null, SUFFIXAPPLICABILITY_TYPE_ATR), suffixToRuleMap);
+					while (reader.hasNext()) {
+						int event = reader.next();
+						if (event == XMLStreamConstants.START_ELEMENT &&
+							reader.getLocalName().equals(SUFFIXAPPLICABILITY_SUFFIX_EL)) {
+							String suffixValue = reader.getAttributeValue(null, SUFFIXAPPLICABILITY_VALUE_ATR);
+							List<ApplicableSuffix> suffixList = suffixToRuleMap.get(suffixValue);
+							//can have multiple entries if subType attribute is set
+							if (suffixToRuleMap.get(suffixValue) == null){
+								suffixList = new ArrayList<ApplicableSuffix>();
+								suffixToRuleMap.put(suffixValue, suffixList);
+							}
+							String requiredSubType = reader.getAttributeValue(null, SUFFIXAPPLICABILITY_SUBTYPE_ATR);
+							String suffixRuleName = reader.getElementText();
+							List<SuffixRule> suffixRules = suffixRulesMap.get(suffixRuleName);
+							if (suffixRules == null) {
+								throw new RuntimeException("Suffix: " + suffixRuleName +" does not have a rule associated with it in suffixRules.xml");
+							}
+							suffixList.add(new ApplicableSuffix(requiredSubType, suffixRules));
+						}
+						else if (event == XMLStreamConstants.END_ELEMENT &&
+								reader.getLocalName().equals(SUFFIXAPPLICABILITY_GROUPTYPE_EL)) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		catch (XMLStreamException e) {
+			throw new IOException("Parsing exception occurred while reading suffixApplicability.xml", e);
+		}
+		finally {
+			try {
+				reader.close();
+			} catch (XMLStreamException e) {
+				throw new IOException("Parsing exception occurred while reading suffixApplicability.xml", e);
+			}
 		}
 		return suffixApplicability;
 	}
 
-	private HashMap<String, Element> generateSuffixRulesMap(ResourceGetter resourceGetter) throws IOException {
-		Document suffixRulesDoc = resourceGetter.getXMLDocument("suffixRules.xml");
-		HashMap<String, Element> suffixRules = new HashMap<String, Element>();
-		Elements rules = suffixRulesDoc.getRootElement().getChildElements(SUFFIXRULES_RULE_EL);
-		for (int i = 0; i < rules.size(); i++) {
-			Element rule =rules.get(i);
-			String ruleValue=rule.getAttributeValue(SUFFIXRULES_VALUE_ATR);
-			if (suffixRules.get(ruleValue)!=null){
-				throw new RuntimeException("Suffix: " +ruleValue +" appears multiple times in suffixRules.xml");
-			}
-			suffixRules.put(ruleValue, rule);
-		}
-		return suffixRules;
-	}
-	
 	/**
-	 * Returns the appropriate suffixRule tags for the given arguments.
-	 * The suffix rule tags are the children of the appropriate rule in suffixRules.xml
+	 * Returns the appropriate suffixRules for the given arguments.
+	 * The suffix rules are the children of the appropriate rule in suffixRules.xml
 	 * @param suffixTypeToUse
 	 * @param suffixValue
 	 * @param subgroupType
 	 * @return
 	 * @throws ComponentGenerationException
 	 */
-	Elements getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws ComponentGenerationException {
-		HashMap<String, List<Element>> groupToSuffixMap = suffixApplicability.get(suffixTypeToUse);
-		if (groupToSuffixMap==null){
-			throw new ComponentGenerationException("Suffix Type: "+ suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
+	List<SuffixRule> getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws ComponentGenerationException {
+		Map<String, List<ApplicableSuffix>> groupToSuffixMap = suffixApplicability.get(suffixTypeToUse);
+		if (groupToSuffixMap == null){
+			throw new ComponentGenerationException("Suffix Type: " + suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
 		}
-		List<Element> potentiallyApplicableSuffixes =groupToSuffixMap.get(suffixValue);
-		if(potentiallyApplicableSuffixes==null || potentiallyApplicableSuffixes.size()==0 ) {
-			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ") according to suffixApplicability.xml");
+		List<ApplicableSuffix> potentiallyApplicableSuffixes = groupToSuffixMap.get(suffixValue);
+		if(potentiallyApplicableSuffixes == null || potentiallyApplicableSuffixes.size() == 0 ) {
+			throw new ComponentGenerationException("Suffix: " + suffixValue + " does not apply to the group it was associated with (type: " +	suffixTypeToUse + ") according to suffixApplicability.xml");
 		}
-		Element chosenSuffix=null;
-        for (Element suffix : potentiallyApplicableSuffixes) {
-            if (suffix.getAttribute(SUFFIXAPPLICABILITY_SUBTYPE_ATR) != null) {
-                if (!suffix.getAttributeValue(SUFFIXAPPLICABILITY_SUBTYPE_ATR).equals(subgroupType)) {
-                    continue;
-                }
-            }
-            if (chosenSuffix != null) {
-                throw new ComponentGenerationException("Suffix: " + suffixValue + " appears multiple times in suffixApplicability.xml");
-            }
-            chosenSuffix = suffix;
-        }
-		if (chosenSuffix==null){
-			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+  suffixTypeToUse + ") due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
+		List<SuffixRule> suffixRules = null;
+		for (ApplicableSuffix suffix : potentiallyApplicableSuffixes) {
+			if (suffix.requiredSubType != null) {
+				if (!suffix.requiredSubType.equals(subgroupType)) {
+					continue;
+				}
+			}
+			if (suffixRules != null) {
+				throw new ComponentGenerationException("Suffix: " + suffixValue + " appears multiple times in suffixApplicability.xml");
+			}
+			suffixRules = suffix.suffixRules;
 		}
-		Element rule =suffixRules.get(chosenSuffix.getValue());
-		if(rule ==null) {
-			throw new ComponentGenerationException("Suffix: " +chosenSuffix.getValue() +" does not have a rule associated with it in suffixRules.xml");
+		if (suffixRules == null){
+			throw new ComponentGenerationException("Suffix: " +suffixValue +" does not apply to the group it was associated with (type: "+	suffixTypeToUse + ") due to the group's subType: "+ subgroupType +" according to suffixApplicability.xml");
 		}
-		return rule.getChildElements();
+		return suffixRules;
 	}
 	
 	/**

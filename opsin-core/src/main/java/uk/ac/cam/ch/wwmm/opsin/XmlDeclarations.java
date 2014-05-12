@@ -454,18 +454,7 @@ class XmlDeclarations {
 	 * See suffixRules.dtd
 	 */
 	static final String SUFFIXRULES_RULE_EL = "rule";
-	static final String SUFFIXRULES_ADDGROUP_EL = "addgroup";
-	static final String SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL = "addSuffixPrefixIfNonePresentAndCyclic";
-	static final String SUFFIXRULES_SETOUTATOM_EL = "setOutAtom";
-	static final String SUFFIXRULES_CHANGECHARGE_EL = "changecharge";
-	static final String SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL = "addFunctionalAtomsToHydroxyGroups";
-	static final String SUFFIXRULES_CHARGEHYDROXYGROUPS_EL = "chargeHydroxyGroups";
-	static final String SUFFIXRULES_REMOVETERMINALOXYGEN_EL = "removeTerminalOxygen";
-	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL = "convertHydroxyGroupsToOutAtoms";
-	static final String SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL = "convertHydroxyGroupsToPositiveCharge";
-	static final String SUFFIXRULES_SETACIDICELEMENT_EL = "setAcidicElement";
 	static final String SUFFIXRULES_VALUE_ATR = "value";
-	static final String SUFFIXRULES_SUBTYPE_ATR = "value";
 	static final String SUFFIXRULES_SMILES_ATR = "SMILES";
 	static final String SUFFIXRULES_LABELS_ATR = "labels";
 	static final String SUFFIXRULES_FUNCTIONALIDS_ATR = "functionalIDs";
