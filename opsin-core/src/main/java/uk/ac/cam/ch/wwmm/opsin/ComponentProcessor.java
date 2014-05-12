@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nu.xom.Elements;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -32,7 +31,7 @@ class ComponentProcessor {
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
-	private final SuffixRules suffixRules;
+	private final SuffixRules suffixRulesLookup;
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
@@ -77,7 +76,7 @@ class ComponentProcessor {
 	}
 
 	ComponentProcessor(SuffixRules suffixRules, BuildState state) {
-		this.suffixRules = suffixRules;
+		this.suffixRulesLookup = suffixRules;
 		this.state = state;
 	}
 
@@ -2120,7 +2119,7 @@ class ComponentProcessor {
 		String subgroupType = frag.getSubType();
 
 		String suffixTypeToUse =null;
-		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
+		if (suffixRulesLookup.isGroupTypeWithSpecificSuffixRules(groupType)){
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -2149,23 +2148,23 @@ class ComponentProcessor {
 			}
 			cyclic = atomLikelyToBeUsedBySuffix.getAtomIsInACycle();
 
-			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+			List<SuffixRule> suffixRules = suffixRulesLookup.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
 			Fragment suffixFrag = null;
 			/*
 			 * Temp fragments are build for each addGroup rule and then merged into suffixFrag
 			 */
-			for (int j = 0; j < suffixRuleTags.size(); j++) {
-				nu.xom.Element suffixRuleTag = suffixRuleTags.get(j);
-				String suffixRuleTagName = suffixRuleTag.getLocalName();
-				if (suffixRuleTagName.equals(SUFFIXRULES_ADDGROUP_EL)) {
-					String labels = NONE_LABELS_VAL;
-					if (suffixRuleTag.getAttribute(SUFFIXRULES_LABELS_ATR) != null) {
-						labels = suffixRuleTag.getAttributeValue(SUFFIXRULES_LABELS_ATR);
+			for (SuffixRule suffixRule : suffixRules) {
+				switch (suffixRule.getType()) {
+				case addgroup:
+					String labels = suffixRule.getAttributeValue(SUFFIXRULES_LABELS_ATR);
+					if (labels == null) {
+						labels = NONE_LABELS_VAL;
 					}
-					suffixFrag = state.fragManager.buildSMILES(suffixRuleTag.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, SUFFIX_SUBTYPE_VAL, labels);
+					suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, SUFFIX_SUBTYPE_VAL, labels);
 					List<Atom> atomList = suffixFrag.getAtomList();
-					if (suffixRuleTag.getAttribute(SUFFIXRULES_FUNCTIONALIDS_ATR) != null) {
-						String[] relativeIdsOfFunctionalAtoms = MATCH_COMMA.split(suffixRuleTag.getAttributeValue(SUFFIXRULES_FUNCTIONALIDS_ATR));
+					String functionalIdsAtr = suffixRule.getAttributeValue(SUFFIXRULES_FUNCTIONALIDS_ATR);
+					if (functionalIdsAtr != null) {
+						String[] relativeIdsOfFunctionalAtoms = MATCH_COMMA.split(functionalIdsAtr);
 						for (String relativeId : relativeIdsOfFunctionalAtoms) {
 							int atomIndice = Integer.parseInt(relativeId) -1;
 							if (atomIndice >=atomList.size()){
@@ -2174,8 +2173,9 @@ class ComponentProcessor {
 							suffixFrag.addFunctionalAtom(atomList.get(atomIndice));
 						}
 					}
-					if (suffixRuleTag.getAttribute(SUFFIXRULES_OUTIDS_ATR) != null) {
-						String[] relativeIdsOfOutAtoms = MATCH_COMMA.split(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTIDS_ATR));
+					String outIdsAtr = suffixRule.getAttributeValue(SUFFIXRULES_OUTIDS_ATR);
+					if (outIdsAtr != null) {
+						String[] relativeIdsOfOutAtoms = MATCH_COMMA.split(outIdsAtr);
 						for (String relativeId : relativeIdsOfOutAtoms) {
 							int atomIndice = Integer.parseInt(relativeId) -1;
 							if (atomIndice >=atomList.size()){
@@ -2184,31 +2184,33 @@ class ComponentProcessor {
 							suffixFrag.addOutAtom(atomList.get(atomIndice), 1 , true);
 						}
 					}
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL)){
+					break;
+				case addSuffixPrefixIfNonePresentAndCyclic:
 					if (cyclic && suffix.getAttribute(SUFFIXPREFIX_ATR)==null){
-						suffix.addAttribute(new Attribute(SUFFIXPREFIX_ATR, suffixRuleTag.getAttributeValue(SUFFIXRULES_SMILES_ATR)));
+						suffix.addAttribute(new Attribute(SUFFIXPREFIX_ATR, suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR)));
 					}
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL)){
+					break;
+				case addFunctionalAtomsToHydroxyGroups:
 					if (suffixFrag != null){
 						throw new ComponentGenerationException("addFunctionalAtomsToHydroxyGroups is not currently compatable with the addGroup suffix rule");
 					}
 					addFunctionalAtomsToHydroxyGroups(atomLikelyToBeUsedBySuffix);
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_CHARGEHYDROXYGROUPS_EL)){
+					break;
+				case chargeHydroxyGroups:
 					if (suffixFrag != null){
 						throw new ComponentGenerationException("chargeHydroxyGroups is not currently compatable with the addGroup suffix rule");
 					}
 					chargeHydroxyGroups(atomLikelyToBeUsedBySuffix);
-					
-				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVETERMINALOXYGEN_EL)){
+					break;
+				case removeTerminalOxygen:
 					if (suffixFrag != null){
 						throw new ComponentGenerationException("removeTerminalOxygen is not currently compatible with the addGroup suffix rule");
 					}
-					int bondOrder = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_ORDER_ATR));
+					int bondOrder = Integer.parseInt(suffixRule.getAttributeValue(SUFFIXRULES_ORDER_ATR));
 					removeTerminalOxygen(atomLikelyToBeUsedBySuffix, bondOrder);
+					break;
+				default:
+					break;
 				}
 			}
 			if (suffixFrag != null) {
@@ -2231,7 +2233,7 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
-		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
+		if (suffixRulesLookup.isGroupTypeWithSpecificSuffixRules(groupType)) {
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -2239,14 +2241,13 @@ class ComponentProcessor {
 		}
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
-			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
-			for (int j = 0; j < suffixRuleTags.size(); j++) {
-				nu.xom.Element suffixRuleTag = suffixRuleTags.get(j);
-				String suffixRuleTagName = suffixRuleTag.getLocalName();
-				if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)){
+			List<SuffixRule> suffixRules = suffixRulesLookup.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+			for (SuffixRule suffixRule : suffixRules) {
+				SuffixRuleType type =suffixRule.getType();
+				if (type == SuffixRuleType.convertHydroxyGroupsToOutAtoms) {
 					convertHydroxyGroupsToOutAtoms(frag);
 				}
-				else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL)){
+				else if (type == SuffixRuleType.convertHydroxyGroupsToPositiveCharge) {
 					convertHydroxyGroupsToPositiveCharge(frag);
 				}
 			}
@@ -2261,7 +2262,7 @@ class ComponentProcessor {
 	private void addFunctionalAtomsToHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
+			if (neighbour.getElement().equals("O") && neighbour.getCharge() == 0 && neighbour.getAtomNeighbours().size() == 1 && atom.getBondToAtomOrThrow(neighbour).getOrder() == 1){
 				neighbour.getFrag().addFunctionalAtom(neighbour);
 			}
 		}
@@ -3630,7 +3631,7 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
-		if (suffixRules.isGroupTypeWithSpecificSuffixRules(groupType)){
+		if (suffixRulesLookup.isGroupTypeWithSpecificSuffixRules(groupType)){
 			suffixTypeToUse =groupType;
 		}
 		else{
@@ -3645,12 +3646,10 @@ class ComponentProcessor {
 		for(int i=0;i<suffixes.size();i++) {
 			Element suffix = suffixes.get(i);
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
-			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
-			for(int j=0;j<suffixRuleTags.size();j++) {
-				nu.xom.Element suffixRuleTag = suffixRuleTags.get(j);
-				String suffixRuleTagName =suffixRuleTag.getLocalName();
-				if(suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
-					outAtomsThatWillBeAdded +=1;
+			List<SuffixRule> suffixRules = suffixRulesLookup.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+			for (SuffixRule suffixRule : suffixRules) {
+				if(suffixRule.getType() == SuffixRuleType.setOutAtom) {
+					outAtomsThatWillBeAdded += 1;
 				}
 			}
 		}
@@ -4221,21 +4220,20 @@ class ComponentProcessor {
 		int defaultAtom = 0;//index in atomList
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
-		String suffixTypeToUse = suffixRules.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
+		String suffixTypeToUse = suffixRulesLookup.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
 
 		List<Fragment> suffixList = state.xmlSuffixMap.get(group);
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			
 			Fragment suffixFrag = null;
-			Elements suffixRuleTags = suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
-			for (int i = 0; i < suffixRuleTags.size(); i++) {
-				nu.xom.Element suffixRuleTag = suffixRuleTags.get(i);
-				String suffixRuleTagName = suffixRuleTag.getLocalName();
+			List<SuffixRule> suffixRules = suffixRulesLookup.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+			for (SuffixRule suffixRule : suffixRules) {
 				if (defaultAtom >= atomList.size()) {
 					defaultAtom = 0;
 				}
-				if (suffixRuleTagName.equals(SUFFIXRULES_ADDGROUP_EL)) {
+				switch (suffixRule.getType()) {
+				case addgroup:
 					if (suffixFrag == null) {
 						if (suffixList.size() <= 0) {
 							throw new ComponentGenerationException("OPSIN Bug: Suffixlist should not be empty");
@@ -4252,7 +4250,7 @@ class ComponentProcessor {
 							int bondOrderRequired = firstAtomInSuffix.getIncomingValency();
 							Atom fragAtomToUse = getFragAtomToUse(frag, suffix, suffixTypeToUse);
 							if (fragAtomToUse == null) {
-								if (suffixRuleTag.getAttribute(SUFFIXRULES_KETONELOCANT_ATR) != null && !atomList.get(defaultAtom).getAtomIsInACycle()) {
+								if ("yes".equals(suffixRule.getAttributeValue(SUFFIXRULES_KETONELOCANT_ATR)) && !atomList.get(defaultAtom).getAtomIsInACycle()) {
 									if (defaultAtom == 0) {
 										defaultAtom = FragmentTools.findKetoneAtomIndice(frag, defaultAtom);
 									}
@@ -4287,9 +4285,10 @@ class ComponentProcessor {
 					else{
 						throw new ComponentGenerationException("OPSIN bug: Suffix may only have one addgroup rule: " + suffix.getValue());
 					}
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_CHANGECHARGE_EL)) {
-					int chargeChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
-					int protonChange = Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
+					break;
+				case changecharge:
+					int chargeChange = Integer.parseInt(suffixRule.getAttributeValue(SUFFIXRULES_CHARGE_ATR));
+					int protonChange = Integer.parseInt(suffixRule.getAttributeValue(SUFFIXRULES_PROTONS_ATR));
 					if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
 						Atom fragAtomToUse = getFragAtomToUse(frag, suffix, suffixTypeToUse);
 						if (fragAtomToUse != null) {
@@ -4315,8 +4314,10 @@ class ComponentProcessor {
 							}
 						}
 					}
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_SETOUTATOM_EL)) {
-					int outValency = suffixRuleTag.getAttribute(SUFFIXRULES_OUTVALENCY_ATR) != null ? Integer.parseInt(suffixRuleTag.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR)) : 1;
+					break;
+				case setOutAtom:
+					String outValencyAtr = suffixRule.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR);
+					int outValency = outValencyAtr != null ? Integer.parseInt(outValencyAtr) : 1;
 					if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
 						Atom fragAtomToUse = getFragAtomToUse(frag, suffix, suffixTypeToUse);
 						if (fragAtomToUse != null) {
@@ -4340,23 +4341,19 @@ class ComponentProcessor {
 							}
 						}
 					}
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_SETACIDICELEMENT_EL)) {
-					String element = suffixRuleTag.getAttributeValue(SUFFIXRULES_ELEMENT_ATR);
+					break;
+				case setAcidicElement:
+					String element = suffixRule.getAttributeValue(SUFFIXRULES_ELEMENT_ATR);
 					swapElementsSuchThatThisElementIsAcidic(suffixFrag, element);
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_ADDSUFFIXPREFIXIFNONEPRESENTANDCYCLIC_EL)) {
+					break;
+				case addSuffixPrefixIfNonePresentAndCyclic:
+				case addFunctionalAtomsToHydroxyGroups:
+				case chargeHydroxyGroups:
+				case removeTerminalOxygen:
+				case convertHydroxyGroupsToOutAtoms:
+				case convertHydroxyGroupsToPositiveCharge:
 					//already processed
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_ADDFUNCTIONALATOMSTOHYDROXYGROUPS_EL)) {
-					//already processed
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_CHARGEHYDROXYGROUPS_EL)) {
-					//already processed
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_REMOVETERMINALOXYGEN_EL)) {
-					//already processed
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOOUTATOMS_EL)) {
-					//already processed
-				} else if (suffixRuleTagName.equals(SUFFIXRULES_CONVERTHYDROXYGROUPSTOPOSITIVECHARGE_EL)) {
-					//already processed
-				} else {
-					throw new StructureBuildingException("Unknown suffix rule:" + suffixRuleTagName);
+					break;
 				}
 			}
 

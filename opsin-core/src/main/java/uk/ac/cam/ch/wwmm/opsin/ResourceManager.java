@@ -94,7 +94,6 @@ class ResourceManager {
 					processTokenFile(fileName, reversed);
 				}
 			}
-			filesToProcessReader.close();
 		}
 		catch (XMLStreamException e) {
 			throw new IOException("Parsing exception occurred while reading index.xml", e);

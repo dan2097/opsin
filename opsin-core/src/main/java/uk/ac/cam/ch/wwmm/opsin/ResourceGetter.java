@@ -16,24 +16,13 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.stax2.XMLInputFactory2;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.ctc.wstx.stax.WstxInputFactory;
-
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.ParsingException;
-import nu.xom.ValidityException;
 
 /**
  * Handles I/O:
  * Gets resource files from packages which is useful for including data from the JAR file.
  * Provides OutputStreams for the serialisation of automata.
- * This class has its roots in the resourceGetter in OSCAR.
  *
  * @author ptc24
  * @author dl387
@@ -43,7 +32,6 @@ class ResourceGetter {
 
 	private final String resourcePath;
 	private final String workingDirectory;
-	private final Builder xomBuilder;
 	private final XMLInputFactory xmlInputFactory;
 
 	/**
@@ -66,23 +54,7 @@ class ResourceGetter {
 			workingDirectory = null;
 		}
 		this.workingDirectory = workingDirectory;
-		
-		XMLReader xmlReader;
-		try{
-			xmlReader = XMLReaderFactory.createXMLReader();
-		}
-		catch (SAXException e) {
-			throw new RuntimeException("No XML Reader could be initialised!", e);
-		}
-		try{
-			xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-		}
-		catch (SAXNotSupportedException e) {
-			throw new RuntimeException("Your system's default XML Reader does not support disabling DTD loading! Maybe try updating your version of java?", e);
-		} catch (SAXNotRecognizedException e) {
-			throw new RuntimeException("Your system's default XML Reader has not recognised the DTD loading feature! Maybe try updating your version of java?", e);
-		}
-		xomBuilder = new Builder(xmlReader);
+
 		xmlInputFactory = new WstxInputFactory();
 		xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		xmlInputFactory.setProperty(XMLInputFactory2.P_AUTO_CLOSE_INPUT, true);
@@ -100,7 +72,7 @@ class ResourceGetter {
 	 * and returns an XML stream reader for it
 	 *
 	 * @param name The name of the file to parse.
-	 * @return Am XML stream reader 
+	 * @return An XMLStreamReader
 	 * @throws IOException 
 	 */
 	XMLStreamReader getXMLDocument2(String name) throws IOException {
@@ -122,41 +94,6 @@ class ResourceGetter {
 			return xmlInputFactory.createXMLStreamReader(url.openStream());
 		} catch (XMLStreamException e) {
 			throw new IOException("Validity exception occurred while reading the XML file with name:" +name, e);
-		}
-	}
-
-	/**Fetches a data file from resourcePath,
-	 * and parses it to an XML Document.
-	 *
-	 * @param name The name of the file to parse.
-	 * @return The parsed document.
-	 * @throws IOException 
-	 */
-	Document getXMLDocument(String name) throws IOException {
-		if(name == null){
-			throw new IllegalArgumentException("Input to function was null");
-		}
-		try {
-			if (workingDirectory != null){
-				File f = getFile(name);
-				if(f != null) {
-					return xomBuilder.build(f);
-				}
-			}
-			ClassLoader l = getClass().getClassLoader();
-			URL url = l.getResource(resourcePath + name);
-			if (url == null){
-				throw new IOException("URL for resource: " + resourcePath + name + " is invalid");
-			}
-			return xomBuilder.build(url.openStream());
-		} catch (ValidityException e) {
-			IOException ioe = new IOException("Validity exception occurred while reading the XML file with name:" +name);
-			ioe.initCause(e);
-			throw ioe;
-		} catch (ParsingException e) {
-			IOException ioe = new IOException("Parsing exception occurred while reading the XML file with name:" +name);
-			ioe.initCause(e);
-			throw ioe;
 		}
 	}
 
