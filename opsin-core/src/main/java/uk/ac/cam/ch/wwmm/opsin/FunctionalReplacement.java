@@ -74,7 +74,7 @@ class FunctionalReplacement {
 						processAcidReplacingFunctionalClassNomenclatureFullWord(state, finalSubOrRootInWord, acidReplacingWord);
 					}
 				}
-				else if (parentWordRule.getChildElements().size()==2) {
+				else if (parentWordRule.getChildCount() == 2) {
 					processAcidReplacingFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, XOMTools.getNextSibling(word));
 				}
 				else{
@@ -413,7 +413,7 @@ class FunctionalReplacement {
 		}
 		String functionalGroupName = acidReplacingGroup.getValue();
 		Fragment acidReplacingFrag = state.xmlFragmentMap.get(acidReplacingGroup);
-		if (acidReplacingGroup.getParent().getChildElements().size() != 1){
+		if (acidReplacingGroup.getParent().getChildCount() != 1){
 			throw new ComponentGenerationException("Unexpected qualifier to: " + functionalGroupName);
 		}
 		
@@ -473,7 +473,7 @@ class FunctionalReplacement {
 				numberOfAcidicHydroxysToReplace = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				possibleMultiplier.detach();
 			}
-			if (functionalTerm.getChildElements().size()!=1){
+			if (functionalTerm.getChildCount() != 1){
 				throw new ComponentGenerationException("Unexpected qualifier to acidReplacingFunctionalGroup functionalTerm");
 			}
 			

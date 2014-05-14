@@ -134,7 +134,7 @@ class ComponentProcessor {
 				}
 			}
 			
-			Element finalSubOrRootInWord = word.getChild(word.getChildElements().size()-1);
+			Element finalSubOrRootInWord = word.getChild(word.getChildCount() - 1);
 			while (!finalSubOrRootInWord.getLocalName().equals(ROOT_EL) && !finalSubOrRootInWord.getLocalName().equals(SUBSTITUENT_EL)){
 				List<Element> children = XOMTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 				if (children.size()==0){
@@ -3326,7 +3326,7 @@ class ComponentProcessor {
 				suffix.detach();
 			}
 		}
-		if (substituentToResolve.getChildElements().size()!=0){
+		if (substituentToResolve.getChildCount() != 0){
 			StructureBuildingMethods.resolveLocantedFeatures(state, substituentToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, substituentToResolve);
 			List<Element> children = substituentToResolve.getChildElements();
@@ -5065,7 +5065,7 @@ class ComponentProcessor {
 							word.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
 						}
 						else{
-							throw new ComponentGenerationException(locantsToDebugString(OpsinTools.elementsToElementArrayList(locants)));
+							throw new ComponentGenerationException(locantsToDebugString(locants));
 						}
 					}
 					else{

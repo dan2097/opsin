@@ -247,7 +247,7 @@ class WordRules {
 						if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 							List<Element> children = wordEl.getChildElements();
 							Element lastChild = children.get(children.size()-1);
-							while (lastChild.getChildElements().size()!=0){
+							while (lastChild.getChildCount() != 0){
 								children = lastChild.getChildElements();
 								lastChild = children.get(children.size()-1);
 							}
@@ -381,7 +381,7 @@ class WordRules {
 	private Element getLastGroupInWordRule(Element wordEl) {
 		List<Element> children = wordEl.getChildElements();
 		Element lastChild = children.get(children.size()-1);
-		while (lastChild.getChildElements().size()!=0){
+		while (lastChild.getChildCount() != 0){
 			children = lastChild.getChildElements();
 			lastChild = children.get(children.size()-1);
 		}
