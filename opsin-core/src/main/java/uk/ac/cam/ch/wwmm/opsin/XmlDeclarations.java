@@ -238,7 +238,7 @@ class XmlDeclarations {
 	/**Defines the locants for which a radical will connect to another group in multiplicative nomenclature e.g. in 2,2'-methylenedipyridine the 2,2' become inlocants of the pyridine*/
     static final String INLOCANTS_ATR = "inLocants"; 
     
-	/**Determined by the prsStructreBuilder. True if a fragment has more than two radical positions e.g. ethan-1,2-diyl not ethanylidene*/
+	/**Determined by the {@link ComponentProcessor}. True if a fragment has more than two radical positions e.g. ethan-1,2-diyl not ethanylidene*/
     static final String ISAMULTIRADICAL_ATR = "isAMultiRadical"; 
     
 	/**Added to a heteroatom or LAMBDACONVENTION_EL to indicate the desired valency*/

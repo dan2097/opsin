@@ -301,7 +301,7 @@ class StructureBuilder {
 			if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
 				Element clone = state.fragManager.cloneElement(state, words.get(0));
 				XOMTools.insertAfter(words.get(0), clone);
-				words = OpsinTools.elementsToElementArrayList(words.get(0).getParent().getChildElements());
+				words = words.get(0).getParent().getChildElements();
 			}
 			else{
 				resolveWordOrBracket(state, words.get(wordIndice));
@@ -1861,7 +1861,7 @@ class StructureBuilder {
 			return false;//already has been multiplied e.g. dichloride
 		}
 		Element firstChild = componentToMultiply.getChild(0);
-		while (firstChild.getChildElements().size() !=0){
+		while (firstChild.getChildCount() != 0){
 			firstChild = firstChild.getChild(0);
 		}
 		if (firstChild.getLocalName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
