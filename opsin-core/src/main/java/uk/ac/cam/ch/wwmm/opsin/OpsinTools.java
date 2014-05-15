@@ -252,22 +252,14 @@ class OpsinTools {
 	* @return The matched next Sibling, or null.
 	*/
 	static Element getNextSibling(Element current, String elName) {
-		Element matchedElement = null;
-		while (true) {
-			Element next = getNextSibling(current);
-			if (next != null) {
-				if (next.getName().equals(elName)){
-					matchedElement = next;
-					break;
-				}
-				else{
-					current = next;
-				}
-			} else {
-				break;
+		Element next = getNextSibling(current);
+		while (next != null) {
+			if (next.getName().equals(elName)){
+				return next;
 			}
+			next = getNextSibling(next);
 		}
-		return matchedElement;
+		return null;
 	}
 
 	/**Gets the previous sibling of a given element.
@@ -290,23 +282,15 @@ class OpsinTools {
 	* @param elName The element name of a element to look for
 	* @return The matched previous Sibling, or null.
 	*/
-	static Element getPreviousSibling(Element current, String elName) {
-		Element matchedElement = null;
-		while (true) {
-			Element prev = getPreviousSibling(current);
-			if (prev != null) {
-				if (prev.getName().equals(elName)){
-					matchedElement = prev;
-					break;
-				}
-				else{
-					current = prev;
-				}
-			} else {
-				break;
+	static Element getPreviousSibling(Element current, String elName) {;
+		Element prev = getPreviousSibling(current);
+		while (prev != null) {
+			if (prev.getName().equals(elName)){
+				return prev;
 			}
+			prev = getPreviousSibling(prev);
 		}
-		return matchedElement;
+		return null;
 	}
 
 	/**Inserts a element so that it occurs before a reference element. The new element
@@ -348,10 +332,8 @@ class OpsinTools {
 			return getNext(parent);//reached end of element
 		}
 		Element next = parent.getChild(index + 1);
-		List<Element> children = next.getChildElements();
-		while (children.size() != 0){
-			next = children.get(0);
-			children = next.getChildElements();
+		while (next.getChildCount() > 0){
+			next = next.getChild(0);
 		}
 		return next;
 	}
@@ -371,10 +353,8 @@ class OpsinTools {
 			return getPrevious(parent);//reached beginning of element
 		}
 		Element previous = parent.getChild(index - 1);
-		List<Element> children =previous.getChildElements();
-		while (children.size() != 0){
-			previous = children.get(children.size() - 1);
-			children = previous.getChildElements();
+		while (previous.getChildCount() > 0){
+			previous = previous.getChild(previous.getChildCount() - 1);
 		}
 		return previous;
 	}
@@ -392,11 +372,11 @@ class OpsinTools {
 		if (parent == null){
 			return laterSiblingElementsOfType;
 		}
-		List<Element> potentialMatches = parent.getChildElements(elName);
 		int indexOfCurrentElem = parent.indexOf(currentElem);
-		for (int i = 0; i < potentialMatches.size(); i++) {
-			if (parent.indexOf(potentialMatches.get(i)) > indexOfCurrentElem){
-				laterSiblingElementsOfType.add(potentialMatches.get(i));
+		for (int i = indexOfCurrentElem + 1; i < parent.getChildCount(); i++) {
+			Element child = parent.getChild(i);
+			if (child.getName().equals(elName)) {
+				laterSiblingElementsOfType.add(child);
 			}
 		}
 		return laterSiblingElementsOfType;
@@ -458,11 +438,11 @@ class OpsinTools {
 		if (parent == null){
 			return earlierSiblingElementsOfType;
 		}
-		List<Element> potentialMatches = parent.getChildElements(elName);
 		int indexOfCurrentElem = parent.indexOf(currentElem);
-		for (int i = 0; i < potentialMatches.size(); i++) {
-			if (parent.indexOf(potentialMatches.get(i)) < indexOfCurrentElem){
-				earlierSiblingElementsOfType.add(potentialMatches.get(i));
+		for (int i = 0; i < indexOfCurrentElem - 1; i++) {
+			Element child = parent.getChild(i);
+			if (child.getName().equals(elName)) {
+				earlierSiblingElementsOfType.add(child);
 			}
 		}
 		return earlierSiblingElementsOfType;
