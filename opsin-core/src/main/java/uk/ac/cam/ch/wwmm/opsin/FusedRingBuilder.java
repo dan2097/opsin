@@ -41,7 +41,7 @@ class FusedRingBuilder {
 	 * @throws StructureBuildingException
 	 */
 	static void processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
-		List<Element> groups = XOMTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		List<Element> groups = OpsinTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
 		if (groups.size() < 2){
 			return;//nothing to fuse
 		}
@@ -52,12 +52,12 @@ class FusedRingBuilder {
 			if (i!=0){
 				Element startingEl = group;
 				if ((group.getValue().equals("benz") || group.getValue().equals("benzo")) && FUSIONRING_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-					Element beforeBenzo = XOMTools.getPreviousSibling(group);
+					Element beforeBenzo = OpsinTools.getPreviousSibling(group);
 					if (beforeBenzo !=null && beforeBenzo.getName().equals(LOCANT_EL)){
 						startingEl = beforeBenzo;
 					}
 				}
-				Element possibleGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{MULTIPLIER_EL, FUSION_EL});
+				Element possibleGroup = OpsinTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{MULTIPLIER_EL, FUSION_EL});
 				if (!groups.get(i-1).equals(possibleGroup)){//end of fused ring system
 					if (groupsInFusedRing.size()>=2){
 						//This will be invoked in cases where there are multiple fused ring systems in the same subOrRoot such as some spiro systems
@@ -92,7 +92,7 @@ class FusedRingBuilder {
 		parentFragments.add(parentRing);
 		
 		int numberOfParents = 1;
-		Element possibleMultiplier = XOMTools.getPreviousSibling(lastGroup);
+		Element possibleMultiplier = OpsinTools.getPreviousSibling(lastGroup);
 		if (nameComponents.size()>0 && possibleMultiplier !=null && possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 			numberOfParents = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 			possibleMultiplier.detach();
@@ -124,7 +124,7 @@ class FusedRingBuilder {
 			}
 			Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(ncIndice));
 			int multiplier = 1;
-			Element possibleMultiplierEl = XOMTools.getPreviousSibling(nameComponents.get(ncIndice));//e.g. the di of difuro
+			Element possibleMultiplierEl = OpsinTools.getPreviousSibling(nameComponents.get(ncIndice));//e.g. the di of difuro
 			if (possibleMultiplierEl != null && possibleMultiplierEl.getName().equals(MULTIPLIER_EL)){
 				multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue(VALUE_ATR));
 			}
@@ -279,7 +279,7 @@ class FusedRingBuilder {
 			if (currentEl.getName().equals(GROUP_EL) || currentEl.getName().equals(FUSION_EL)){
 				nameComponents.add(currentEl);
 			}
-			currentEl = XOMTools.getNextSibling(currentEl);
+			currentEl = OpsinTools.getNextSibling(currentEl);
 		}
 		return nameComponents;
 	}
@@ -325,7 +325,7 @@ class FusedRingBuilder {
 	 */
 	private void processPartiallyUnsaturatedHWSystems(Element group, Fragment ring) throws StructureBuildingException {
 		if (HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(ADDBOND_ATR)!=null){
-			List<Element> unsaturators = XOMTools.getNextAdjacentSiblingsOfType(group, UNSATURATOR_EL);
+			List<Element> unsaturators = OpsinTools.getNextAdjacentSiblingsOfType(group, UNSATURATOR_EL);
 			if (unsaturators.size()>0){
 				Element unsaturator = unsaturators.get(0);
 				if (unsaturator.getAttribute(LOCANT_ATR)==null && unsaturator.getAttributeValue(VALUE_ATR).equals("2")){
@@ -347,11 +347,11 @@ class FusedRingBuilder {
 	 * @param cyclicAlkaneGroup
 	 */
 	private void aromatiseCyclicAlkane(Element cyclicAlkaneGroup) {
-		Element next = XOMTools.getNextSibling(cyclicAlkaneGroup);
+		Element next = OpsinTools.getNextSibling(cyclicAlkaneGroup);
 		List<Element> unsaturators = new ArrayList<Element>();
 		while (next!=null && next.getName().equals(UNSATURATOR_EL)){
 			unsaturators.add(next);
-			next = XOMTools.getNextSibling(next);
+			next = OpsinTools.getNextSibling(next);
 		}
 		boolean conjugate =true;
 		if (unsaturators.size()==1){
@@ -412,7 +412,7 @@ class FusedRingBuilder {
 				Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(i));
 				relabelAccordingToFusionLevel(nextComponent, fusionLevel);
 				int multiplier = 1;
-				Element possibleMultiplierEl = XOMTools.getPreviousSibling(nameComponents.get(i));
+				Element possibleMultiplierEl = OpsinTools.getPreviousSibling(nameComponents.get(i));
 				if (possibleMultiplierEl != null && possibleMultiplierEl.getName().equals(MULTIPLIER_EL)){
 					multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue(VALUE_ATR));
 					possibleMultiplierEl.detach();
@@ -518,9 +518,9 @@ class FusedRingBuilder {
 	private void processBenzoFusions() throws StructureBuildingException {
 		for(int i= groupsInFusedRing.size() -2;i >=0; i--) {
 			if (groupsInFusedRing.get(i).getValue().equals("benz") || groupsInFusedRing.get(i).getValue().equals("benzo")){
-				Element possibleFusionbracket = XOMTools.getNextSibling(groupsInFusedRing.get(i));
+				Element possibleFusionbracket = OpsinTools.getNextSibling(groupsInFusedRing.get(i));
 				if (!possibleFusionbracket.getName().equals(FUSION_EL)){
-					Element possibleMultiplier = XOMTools.getPreviousSibling(groupsInFusedRing.get(i));
+					Element possibleMultiplier = OpsinTools.getPreviousSibling(groupsInFusedRing.get(i));
 					if (possibleMultiplier==null || !possibleMultiplier.getName().equals(MULTIPLIER_EL)|| possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
 						//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
 						//and have a special convention for indicating the position of heteroatoms 
@@ -952,7 +952,7 @@ class FusedRingBuilder {
 		/*
 		 * Check for locants and use these to set the heteroatom positions
 		 */
-		Element locantEl = XOMTools.getPreviousSibling(benzoEl);
+		Element locantEl = OpsinTools.getPreviousSibling(benzoEl);
 		if (locantEl != null && locantEl.getName().equals(LOCANT_EL)) {
 			String[] locants = MATCH_COMMA.split(locantEl.getValue());
 			if (locantsAreAllNumeric(locants)) {

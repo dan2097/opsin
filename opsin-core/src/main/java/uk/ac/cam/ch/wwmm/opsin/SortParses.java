@@ -21,8 +21,8 @@ class SortParses implements Comparator<Element>{
 			return -1;
 		}
 		
-		int[] counts1 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el1);
-		int[] counts2 = XOMTools.countNumberOfElementsAndNumberOfChildLessElements(el2);
+		int[] counts1 = OpsinTools.countNumberOfElementsAndNumberOfChildLessElements(el1);
+		int[] counts2 = OpsinTools.countNumberOfElementsAndNumberOfChildLessElements(el2);
 		int childLessElementsInEl1 = counts1[1];
 		int childLessElementsInEl2 = counts2[1];
 		if ( childLessElementsInEl1> childLessElementsInEl2){
