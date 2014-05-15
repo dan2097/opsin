@@ -44,7 +44,7 @@ class BuildResults {
 			int functionalAtomCount = frag.getFunctionalAtomCount();
 			if (functionalAtomCount > 0){
 				Element parent = group.getParent();
-				if (parent.getLocalName().equals(XmlDeclarations.ROOT_EL) ||
+				if (parent.getName().equals(XmlDeclarations.ROOT_EL) ||
 						OpsinTools.getNextGroup(group) == null){
 					for (int i = 0, l = functionalAtomCount; i < l; i++) {
 						functionalAtoms.add(frag.getFunctionalAtom(i));

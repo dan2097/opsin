@@ -39,7 +39,7 @@ class OpsinTools {
 	static Element getNextNonChargeSuffix(Element currentEl) {
 		Element next = XOMTools.getNextSibling(currentEl);
 		while (next != null) {
-			if (next.getLocalName().equals(SUFFIX_EL) && !CHARGE_TYPE_VAL.equals(next.getAttributeValue(TYPE_ATR))){
+			if (next.getName().equals(SUFFIX_EL) && !CHARGE_TYPE_VAL.equals(next.getAttributeValue(TYPE_ATR))){
 				return next;
 			}
 			next = XOMTools.getNextSibling(next);
@@ -65,11 +65,11 @@ class OpsinTools {
 	 * @return
 	 */
 	static Element getPreviousGroup(Element current) {
-	  if (current.getLocalName().equals(GROUP_EL)) {//can start with a group or the sub/root the group is in
+	  if (current.getName().equals(GROUP_EL)) {//can start with a group or the sub/root the group is in
 		  current = current.getParent();
 	  }
 	  Element parent = current.getParent();
-	  if (parent == null || parent.getLocalName().equals(WORDRULE_EL)) {
+	  if (parent == null || parent.getName().equals(WORDRULE_EL)) {
 		  return null;
 	  }
 	  int index = parent.indexOf(current);
@@ -97,11 +97,11 @@ class OpsinTools {
 	 * @return
 	 */
 	static Element getNextGroup(Element current) {
-	  if (current.getLocalName().equals(GROUP_EL)) {//can start with a group or the sub/root the group is in
+	  if (current.getName().equals(GROUP_EL)) {//can start with a group or the sub/root the group is in
 		  current = current.getParent();
 	  }
 	  Element parent = current.getParent();
-	  if (parent == null || parent.getLocalName().equals(MOLECULE_EL)) {
+	  if (parent == null || parent.getName().equals(MOLECULE_EL)) {
 		  return null;
 	  }
 	  int index = parent.indexOf(current);
@@ -131,7 +131,7 @@ class OpsinTools {
 	 */
 	static Element getParentWordRule(Element el) {
 		Element parent = el.getParent();
-		while(parent != null && !parent.getLocalName().equals(WORDRULE_EL)){
+		while(parent != null && !parent.getName().equals(WORDRULE_EL)){
 			parent = parent.getParent();
 		}
 		if (parent == null){

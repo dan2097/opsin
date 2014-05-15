@@ -5,14 +5,14 @@ import java.util.List;
 
 class Element {
 
-	private String localName;
+	private String name;
 	private String value;
 	private Element parent = null;
 	private List<Element> children = new ArrayList<Element>();
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 	
 	Element(String name) {
-		this.localName = name;
+		this.name = name;
 		this.value = "";
 	}
 
@@ -21,7 +21,7 @@ class Element {
 	 * @param element
 	 */
 	Element(Element element) {
-		this.localName = element.localName;
+		this.name = element.name;
 		this.value = element.value;
 		children = new ArrayList<Element>();
 		for (Element childEl : element.children) {
@@ -44,7 +44,7 @@ class Element {
 	List<Element> getChildElements(String name) {
 		List<Element> elements = new ArrayList<Element>();
 		for (Element element : children) {
-			if (element.localName.equals(name)) {
+			if (element.name.equals(name)) {
 				elements.add(element);
 			}
 		}
@@ -68,7 +68,7 @@ class Element {
 	 */
 	Element getFirstChildElement(String name) {
 		for (Element child : children) {
-			if (child.getLocalName().equals(name)) {
+			if (child.getName().equals(name)) {
 				return child;
 			}
 		}
@@ -132,12 +132,12 @@ class Element {
 		return attributes.get(index);
 	}
 
-	String getLocalName() {
-		return localName;
+	String getName() {
+		return name;
 	}
 
-	void setLocalName(String localName) {
-		this.localName = localName;
+	void setName(String name) {
+		this.name = name;
 	}
 
 	void setValue(String text) {
@@ -154,7 +154,7 @@ class Element {
 			result.append("  ");
 		}
 		result.append('<');
-		result.append(localName);
+		result.append(name);
 		for (Attribute atr : attributes) {
 			result.append(' ');
 			result.append(atr.toXML());
@@ -170,13 +170,13 @@ class Element {
 				result.append("  ");
 			}
 			result.append("</");
-			result.append(localName);
+			result.append(name);
 			result.append('>');
 		}
 		else{
 			result.append(value);
 			result.append("</");
-			result.append(localName);
+			result.append(name);
 			result.append('>');
 		}
 

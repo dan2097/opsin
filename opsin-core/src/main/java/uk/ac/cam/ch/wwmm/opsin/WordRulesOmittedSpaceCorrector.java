@@ -215,7 +215,7 @@ class WordRulesOmittedSpaceCorrector {
 	 */
 	private Element getRightMostGroup (Element subOrBracket) {
 		Element group;
-		if (subOrBracket.getLocalName().equals(BRACKET_EL)){
+		if (subOrBracket.getName().equals(BRACKET_EL)){
 			group = StructureBuildingMethods.findRightMostGroupInBracket(subOrBracket);
 		}
 		else{
@@ -244,7 +244,7 @@ class WordRulesOmittedSpaceCorrector {
 		parentSimpleWordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.ester.toString());
 		List<Element> childElsOfSub = substituentOrBracket.getChildElements();
 		Element lastChildElOfSub =childElsOfSub.get(childElsOfSub.size()-1);
-		if (lastChildElOfSub.getLocalName().equals(HYPHEN_EL)){
+		if (lastChildElOfSub.getName().equals(HYPHEN_EL)){
 			lastChildElOfSub.detach();
 		}
 		substituentOrBracket.detach();

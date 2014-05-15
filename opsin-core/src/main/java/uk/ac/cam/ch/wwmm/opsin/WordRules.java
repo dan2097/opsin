@@ -222,7 +222,7 @@ class WordRules {
 		List<Element> wordRuleEls = moleculeEl.getChildElements();
 		for (int i = 0; i < wordRuleEls.size(); i++) {
 			Element wordRuleEl = wordRuleEls.get(i);
-			if (!wordRuleEl.getLocalName().equals(WORDRULE_EL)){
+			if (!wordRuleEl.getName().equals(WORDRULE_EL)){
 				throw new ParsingException("Unable to assign wordRule to: " + wordRuleEl.getValue());
 			}
 		}
@@ -251,7 +251,7 @@ class WordRules {
 								children = lastChild.getChildElements();
 								lastChild = children.get(children.size()-1);
 							}
-							if (lastChild.getLocalName().equals(CLOSEBRACKET_EL)){
+							if (lastChild.getName().equals(CLOSEBRACKET_EL)){
 								lastChild = XOMTools.getPreviousSibling(lastChild);
 							}
 							if (lastChild==null){
@@ -315,12 +315,12 @@ class WordRules {
 						if (functionalTerm.size()!=1){
 							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
 						}
-						functionalTerm.get(0).setLocalName(ROOT_EL);
+						functionalTerm.get(0).setName(ROOT_EL);
 						List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
 						if (functionalGroups.size()!=1){
 							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
 						}
-						functionalGroups.get(0).setLocalName(GROUP_EL);
+						functionalGroups.get(0).setName(GROUP_EL);
 						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 					}
 				}
@@ -354,7 +354,7 @@ class WordRules {
 			}
 		}
 		Element firstWord = wordEls.get(indexOfFirstWord);
-		if (firstWord.getLocalName().equals(WORD_EL) && WordType.full.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){//No wordRule -->wordRule="simple"
+		if (firstWord.getName().equals(WORD_EL) && WordType.full.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){//No wordRule -->wordRule="simple"
 			applySimpleWordRule(wordEls, indexOfFirstWord, firstWord);
 			return false;
 		}
@@ -372,7 +372,7 @@ class WordRules {
 				}
 			}
 		}
-		if (n2sConfig.isAllowRadicals() && wordEls.size()==1 && indexOfFirstWord==0 && firstWord.getLocalName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
+		if (n2sConfig.isAllowRadicals() && wordEls.size()==1 && indexOfFirstWord==0 && firstWord.getName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
 			applySubstituentWordRule(wordEls, indexOfFirstWord, firstWord);
 		}
 		return false;
@@ -385,7 +385,7 @@ class WordRules {
 			children = lastChild.getChildElements();
 			lastChild = children.get(children.size()-1);
 		}
-		if (lastChild.getLocalName().equals(GROUP_EL)){
+		if (lastChild.getName().equals(GROUP_EL)){
 			return lastChild;
 		}
 		else{
@@ -442,7 +442,7 @@ class WordRules {
 		}
 		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
 		List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
-		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getLocalName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
+		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
 			Element implicitHyphen = new Element(HYPHEN_EL);
 			implicitHyphen.setValue("-");
 			finalSubstituent.appendChild(implicitHyphen);
@@ -465,12 +465,12 @@ class WordRules {
 		if (functionalTerms.size()!=1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalTerm expected in functionalGroupAsGroup wordRule");
 		}
-		functionalTerms.get(0).setLocalName(ROOT_EL);
+		functionalTerms.get(0).setName(ROOT_EL);
 		List<Element> functionalGroups = functionalTerms.get(0).getChildElements(FUNCTIONALGROUP_EL);
 		if (functionalGroups.size()!=1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalGroup expected in functionalGroupAsGroup wordRule");
 		}
-		functionalGroups.get(0).setLocalName(GROUP_EL);
+		functionalGroups.get(0).setName(GROUP_EL);
 		functionalGroups.get(0).getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
 		functionalGroups.get(0).addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 	}

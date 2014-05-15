@@ -127,7 +127,7 @@ class FunctionalReplacement {
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent = group.getParent();
 				Element nextSubOrBracket = XOMTools.getNextSibling(substituent);
-				if (nextSubOrBracket!=null && (nextSubOrBracket.getLocalName().equals(ROOT_EL) || nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL))){
+				if (nextSubOrBracket!=null && (nextSubOrBracket.getName().equals(ROOT_EL) || nextSubOrBracket.getName().equals(SUBSTITUENT_EL))){
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
 					if (groupPrecededByElementThatBlocksPrefixReplacementInterpetation(groupToBeModified)) {
 						if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
@@ -141,7 +141,7 @@ class FunctionalReplacement {
 					Element possibleMultiplier = XOMTools.getPreviousSibling(group);
 					if (possibleMultiplier !=null){
 						Element possibleLocant;
-						if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+						if (possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 							numberOfAtomsToReplace =Integer.valueOf(possibleMultiplier.getAttributeValue(VALUE_ATR));
 							possibleLocant = XOMTools.getPreviousSibling(possibleMultiplier);
 							multiplierEl = possibleMultiplier;
@@ -149,7 +149,7 @@ class FunctionalReplacement {
 						else{
 							possibleLocant = possibleMultiplier;
 						}
-						if (possibleLocant !=null && possibleLocant.getLocalName().equals(LOCANT_EL) && possibleLocant.getAttribute(TYPE_ATR)==null) {
+						if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && possibleLocant.getAttribute(TYPE_ATR)==null) {
 							int numberOfLocants = MATCH_COMMA.split(possibleLocant.getValue()).length;
 							if (numberOfLocants == numberOfAtomsToReplace){//locants and number of replacements agree
 								locantEl = possibleLocant;
@@ -168,7 +168,7 @@ class FunctionalReplacement {
 						oxygenReplaced = performChalcogenFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.peroxy){
-						if (nextSubOrBracket.getLocalName().equals(SUBSTITUENT_EL)){
+						if (nextSubOrBracket.getName().equals(SUBSTITUENT_EL)){
 							continue;
 						}
 						oxygenReplaced = performPeroxyFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
@@ -229,8 +229,8 @@ class FunctionalReplacement {
 	 */
 	private static boolean groupPrecededByElementThatBlocksPrefixReplacementInterpetation(Element groupToBeModified) {
 		Element previous = XOMTools.getPreviousSibling(groupToBeModified);
-		while (previous !=null && (previous.getLocalName().equals(SUBTRACTIVEPREFIX_EL)
-				|| (previous.getLocalName().equals(STEREOCHEMISTRY_EL) && previous.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)))){
+		while (previous !=null && (previous.getName().equals(SUBTRACTIVEPREFIX_EL)
+				|| (previous.getName().equals(STEREOCHEMISTRY_EL) && previous.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)))){
 			previous = XOMTools.getPreviousSibling(previous);
 		}
 		return previous != null;
@@ -255,7 +255,7 @@ class FunctionalReplacement {
 			if (suffix.getAttribute(INFIX_ATR)!=null){
 				Fragment fragToApplyInfixTo = state.xmlFragmentMap.get(suffix);
 				Element possibleAcidGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL, SUFFIX_EL});
-				if (possibleAcidGroup !=null && possibleAcidGroup.getLocalName().equals(GROUP_EL) && 
+				if (possibleAcidGroup !=null && possibleAcidGroup.getName().equals(GROUP_EL) && 
 						(possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)|| possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL))){
 					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
 				}
@@ -467,7 +467,7 @@ class FunctionalReplacement {
 			Element possibleMultiplier = XOMTools.getPreviousSibling(acidReplacingGroup);
 			int numberOfAcidicHydroxysToReplace = 1;
 			if (possibleMultiplier!=null){
-				if (!possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+				if (!possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 					throw new ComponentGenerationException("OPSIN bug: non multiplier found where only a multiplier was expected in acidReplacingFunctionalGroup wordRule");
 				}
 				numberOfAcidicHydroxysToReplace = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -819,9 +819,9 @@ class FunctionalReplacement {
 			List<Fragment> suffixFragments,Element suffix, Fragment suffixFrag, List<String> infixTransformations, int oxygenAvailable)
 			throws ComponentGenerationException, StructureBuildingException {
 		Element possibleInfix = XOMTools.getPreviousSibling(suffix);
-		if (possibleInfix.getLocalName().equals(INFIX_EL)){//the infix is only left when there was ambiguity
+		if (possibleInfix.getName().equals(INFIX_EL)){//the infix is only left when there was ambiguity
 			Element possibleMultiplier = XOMTools.getPreviousSibling(possibleInfix);
-			if (possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+			if (possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 				int multiplierValue =Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				if (infixTransformations.size() + multiplierValue-1 <=oxygenAvailable){//multiplier means multiply the infix e.g. butandithiate
 					for (int j = 1; j < multiplierValue; j++) {
@@ -831,7 +831,7 @@ class FunctionalReplacement {
 				else{
 					Element possibleLocant = XOMTools.getPreviousSibling(possibleMultiplier);
 					String[] locants = null;
-					if (possibleLocant.getLocalName().equals(LOCANT_EL)) {
+					if (possibleLocant.getName().equals(LOCANT_EL)) {
 						locants = MATCH_COMMA.split(possibleLocant.getValue());
 					}
 					if (locants !=null){

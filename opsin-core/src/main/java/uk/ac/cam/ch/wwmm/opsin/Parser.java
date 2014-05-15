@@ -304,10 +304,10 @@ class Parser {
         }
         WordType wordType = WordType.valueOf(wordEl.getAttributeValue(TYPE_ATR));
 		if(wordType == WordType.full) {
-			chunk.setLocalName(ROOT_EL);
+			chunk.setName(ROOT_EL);
 		}
 		else if(wordType == WordType.functionalTerm) {
-			chunk.setLocalName(FUNCTIONALTERM_EL);
+			chunk.setName(FUNCTIONALTERM_EL);
 		}
 	}
 	

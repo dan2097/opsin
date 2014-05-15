@@ -204,7 +204,7 @@ class StereochemistryHandler {
 			}
 		}
 		Element possibleWordParent = parentSubBracketOrRoot.getParent();
-		if (possibleWordParent.getLocalName().equals(WORD_EL) && possibleWordParent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
+		if (possibleWordParent.getName().equals(WORD_EL) && possibleWordParent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			//something like (3R,4R,5R)-ethyl 4-acetamido-5-amino-3-(pentan-3-yloxy)cyclohex-1-enecarboxylate
 			//I think this is a violation of the IUPAC rules...but anyway...
 			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(possibleWordParent.getParent(), WORD_EL, TYPE_ATR, WordType.full.toString());
@@ -332,7 +332,7 @@ class StereochemistryHandler {
 			}
 		}
 		Element possibleWordParent = parentSubBracketOrRoot.getParent();
-		if (possibleWordParent.getLocalName().equals(WORD_EL) && possibleWordParent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
+		if (possibleWordParent.getName().equals(WORD_EL) && possibleWordParent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			//the element is in front of a substituent and may refer to the full group
 			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(possibleWordParent.getParent(), WORD_EL, TYPE_ATR, WordType.full.toString());
 			for (Element word : words) {
@@ -633,7 +633,7 @@ class StereochemistryHandler {
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
 		Fragment substituentGroup =null;
-		if (parentSubBracketOrRoot.getLocalName().equals(SUBSTITUENT_EL)){
+		if (parentSubBracketOrRoot.getName().equals(SUBSTITUENT_EL)){
 			substituentGroup =state.xmlFragmentMap.get(parentSubBracketOrRoot.getFirstChildElement(GROUP_EL));
 		}
 		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
