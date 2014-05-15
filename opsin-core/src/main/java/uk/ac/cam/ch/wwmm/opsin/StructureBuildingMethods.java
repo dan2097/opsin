@@ -39,10 +39,10 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	static void resolveWordOrBracket(BuildState state, Element word) throws StructureBuildingException {
-		if (word.getLocalName().equals(WORDRULE_EL)){//already been resolved
+		if (word.getName().equals(WORDRULE_EL)){//already been resolved
 			return;
 		}
-		if (!word.getLocalName().equals(WORD_EL) && !word.getLocalName().equals(BRACKET_EL)){
+		if (!word.getName().equals(WORD_EL) && !word.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("A word or bracket is the expected input");
 		}
 		recursivelyResolveLocantedFeatures(state, word);
@@ -52,7 +52,7 @@ class StructureBuildingMethods {
 		List<Element> subsBracketsAndRoots = XOMTools.getDescendantElementsWithTagNames(word, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
         for (Element subsBracketsAndRoot : subsBracketsAndRoots) {
             if (subsBracketsAndRoot.getAttribute(MULTIPLIER_ATR) != null) {
-                throw new StructureBuildingException("Structure building problem: multiplier on :" + subsBracketsAndRoot.getLocalName() + " was never used");
+                throw new StructureBuildingException("Structure building problem: multiplier on :" + subsBracketsAndRoot.getName() + " was never used");
             }
         }
 		List<Element> groups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
@@ -74,7 +74,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	static void recursivelyResolveLocantedFeatures(BuildState state, Element word) throws StructureBuildingException {
-		if (!word.getLocalName().equals(WORD_EL) && !word.getLocalName().equals(BRACKET_EL)){
+		if (!word.getName().equals(WORD_EL) && !word.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("A word or bracket is the expected input");
 		}
 		List<Element> subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(word, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
@@ -82,7 +82,7 @@ class StructureBuildingMethods {
 		//due to multipliers being expanded will be in existence
 		for (int i =subsBracketsAndRoots.size()-1; i>=0; i--) {
 			Element subBracketOrRoot = subsBracketsAndRoots.get(i);
-			if (subBracketOrRoot.getLocalName().equals(BRACKET_EL)){
+			if (subBracketOrRoot.getName().equals(BRACKET_EL)){
 				recursivelyResolveLocantedFeatures(state,subBracketOrRoot);
 				if (potentiallyCanSubstitute(subBracketOrRoot)){
 					performAdditiveOperations(state, subBracketOrRoot);
@@ -105,7 +105,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	static void recursivelyResolveUnLocantedFeatures(BuildState state, Element word) throws StructureBuildingException {
-		if (!word.getLocalName().equals(WORD_EL) && !word.getLocalName().equals(BRACKET_EL)){
+		if (!word.getName().equals(WORD_EL) && !word.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("A word or bracket is the expected input");
 		}
 		List<Element> subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(word, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
@@ -113,7 +113,7 @@ class StructureBuildingMethods {
 		//due to multipliers being expanded will be in existence
 		for (int i =subsBracketsAndRoots.size()-1; i>=0; i--) {
 			Element subBracketOrRoot = subsBracketsAndRoots.get(i);
-			if (subBracketOrRoot.getLocalName().equals(BRACKET_EL)){
+			if (subBracketOrRoot.getName().equals(BRACKET_EL)){
 				recursivelyResolveUnLocantedFeatures(state,subBracketOrRoot);
 				if (potentiallyCanSubstitute(subBracketOrRoot)){
 					performUnLocantedSubstitutiveOperations(state, subBracketOrRoot);
@@ -151,7 +151,7 @@ class StructureBuildingMethods {
 
 	private static void performLocantedSubstitutiveOperations(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {
 		Element group;
-		if (subBracketOrRoot.getLocalName().equals(BRACKET_EL)){
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)){
 			group =findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
@@ -214,7 +214,7 @@ class StructureBuildingMethods {
 
 	private static void performUnLocantedSubstitutiveOperations(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {
 		Element group;
-		if (subBracketOrRoot.getLocalName().equals(BRACKET_EL)){
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)){
 			group =findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
@@ -386,7 +386,7 @@ class StructureBuildingMethods {
 		List<Element> children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
 			Element currentEl =children.get(i);
-			String elName =currentEl.getLocalName();
+			String elName =currentEl.getName();
 			if (elName.equals(UNSATURATOR_EL)){
 				unsaturators.add(currentEl);
 			}
@@ -621,7 +621,7 @@ class StructureBuildingMethods {
 		List<Element> children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
 			Element currentEl =children.get(i);
-			String elName =currentEl.getLocalName();
+			String elName =currentEl.getName();
 			if (elName.equals(UNSATURATOR_EL)){
 				unsaturators.add(currentEl);
 			}
@@ -834,7 +834,7 @@ class StructureBuildingMethods {
 			return;
 		}
 		Element group;
-		if (subBracketOrRoot.getLocalName().equals(BRACKET_EL)){
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)){
 			group =findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
@@ -1015,7 +1015,7 @@ class StructureBuildingMethods {
 				multiplierEl.detach();
 			}
 			Element group;
-			if (currentElement.getLocalName().equals(BRACKET_EL)){
+			if (currentElement.getName().equals(BRACKET_EL)){
 				group = findRightMostGroupInBracket(currentElement);
 			}
 			else{
@@ -1090,7 +1090,7 @@ class StructureBuildingMethods {
 			
 			//determine group that will be additively bonded to
 			Element multipliedGroup;
-			if (multipliedElement.getLocalName().equals(BRACKET_EL)){
+			if (multipliedElement.getName().equals(BRACKET_EL)){
 				multipliedGroup =getFirstMultiValentGroup(state, multipliedElement);
 				if (multipliedGroup == null){//root will not have a multivalent group
 					List<Element> groups = XOMTools.getDescendantElementsWithTagName(multipliedElement, GROUP_EL);
@@ -1131,7 +1131,7 @@ class StructureBuildingMethods {
 			boolean substitutivelyBondedToRoot = false;
 			if (inLocants !=null){
 				Element rightMostGroup;
-				if (multipliedElement.getLocalName().equals(BRACKET_EL)){
+				if (multipliedElement.getName().equals(BRACKET_EL)){
 					rightMostGroup = findRightMostGroupInBracket(multipliedElement);
 				}
 				else{
@@ -1182,7 +1182,7 @@ class StructureBuildingMethods {
 			if (!substitutivelyBondedToRoot){
 				joinFragmentsAdditively(state, multiRadicalBR.getOutAtom(i).getAtom().getFrag(), multipliedFrag);
 			}
-			if (multipliedElement.getLocalName().equals(BRACKET_EL)){
+			if (multipliedElement.getName().equals(BRACKET_EL)){
 				recursivelyResolveUnLocantedFeatures(state, multipliedElement);//there may be outAtoms that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
 			}
 
@@ -1200,7 +1200,7 @@ class StructureBuildingMethods {
 			List<Element> siblings = XOMTools.getNextSiblingsOfTypes(multipliedParent, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
 			if (siblings.size()==0){
 				Element parentOfMultipliedEl = multipliedParent.getParent();
-				if (parentOfMultipliedEl.getLocalName().equals(BRACKET_EL)){//brackets are allowed
+				if (parentOfMultipliedEl.getName().equals(BRACKET_EL)){//brackets are allowed
 					siblings = XOMTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
 					if (siblings.get(0).getAttribute(MULTIPLIER_ATR)==null){
 						throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
@@ -1235,7 +1235,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static Fragment getNextInScopeMultiValentFragment(BuildState state, Element substituentOrBracket) throws StructureBuildingException {
-		if (!substituentOrBracket.getLocalName().equals(SUBSTITUENT_EL) && !substituentOrBracket.getLocalName().equals(BRACKET_EL)){
+		if (!substituentOrBracket.getName().equals(SUBSTITUENT_EL) && !substituentOrBracket.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("Input to this function should be a substituent or bracket");
 		}
 		if (substituentOrBracket.getParent()==null){
@@ -1253,7 +1253,7 @@ class StructureBuildingMethods {
 				continue;
 			}
 			List<Element> childDescendants;
-			if (child.getLocalName().equals(BRACKET_EL)){
+			if (child.getName().equals(BRACKET_EL)){
 				childDescendants = XOMTools.getDescendantElementsWithTagNames(child, new String[]{SUBSTITUENT_EL, ROOT_EL});//will be returned in depth-first order
 			}
 			else{
@@ -1283,7 +1283,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static Element getFirstMultiValentGroup(BuildState state, Element bracket) throws StructureBuildingException {
-		if (!bracket.getLocalName().equals(BRACKET_EL)){
+		if (!bracket.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("Input to this function should be a bracket");
 		}
 
@@ -1534,7 +1534,7 @@ class StructureBuildingMethods {
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (stack.size()>0){
 			Element currentElement =stack.removeLast();
-			if (currentElement.getLocalName().equals(GROUP_EL)){
+			if (currentElement.getName().equals(GROUP_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement);
 				foundFragments.add(groupFrag);
 				continue;
@@ -1549,7 +1549,7 @@ class StructureBuildingMethods {
 				if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
 					continue;
 				}
-				if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+				if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)){
 					if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
 						stack.add(bracketOrSubOrRoot);
 					}
@@ -1587,7 +1587,7 @@ class StructureBuildingMethods {
 		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
 		while (stack.size()>0){
 			Element currentElement =stack.removeLast();
-			if (currentElement.getLocalName().equals(SUBSTITUENT_EL)|| currentElement.getLocalName().equals(ROOT_EL)){
+			if (currentElement.getName().equals(SUBSTITUENT_EL)|| currentElement.getName().equals(ROOT_EL)){
 				Fragment groupFrag =state.xmlFragmentMap.get(currentElement.getFirstChildElement(GROUP_EL));
 				if (monoNuclearHydride!=null && currentElement.getAttribute(LOCANT_ATR)!=null){//It looks like all groups are locanting onto the monoNuclearHydride e.g. 1-oxo-1-phenyl-sulfanylidene
 					return monoNuclearHydride;
@@ -1621,7 +1621,7 @@ class StructureBuildingMethods {
 					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
 						continue;
 					}
-					if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+					if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)){
 						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
 							stack.add(bracketOrSubOrRoot);
 						}
@@ -1648,7 +1648,7 @@ class StructureBuildingMethods {
 					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR)!=null){
 						continue;
 					}
-					if (bracketOrSubOrRoot.getLocalName().equals(BRACKET_EL)){
+					if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)){
 						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
 							stack.add(bracketOrSubOrRoot);
 						}
@@ -1671,7 +1671,7 @@ class StructureBuildingMethods {
 
 	static Element findRightMostGroupInBracket(Element bracket) {
 		List<Element> subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(bracket, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
-		while (subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getLocalName().equals(BRACKET_EL)){
+		while (subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getName().equals(BRACKET_EL)){
 			subsBracketsAndRoots = XOMTools.getChildElementsWithTagNames(subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1), new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 		}
 		return subsBracketsAndRoots.get(subsBracketsAndRoots.size()-1).getFirstChildElement(GROUP_EL);
@@ -1681,7 +1681,7 @@ class StructureBuildingMethods {
 		Element parent = subBracketOrRoot.getParent();
 		List<Element> children =parent.getChildElements();
 		for (int i = parent.indexOf(subBracketOrRoot) +1 ; i < children.size(); i++) {
-			if (!children.get(i).getLocalName().equals(HYPHEN_EL)){
+			if (!children.get(i).getName().equals(HYPHEN_EL)){
 				return true;
 			}
 		}
@@ -1693,7 +1693,7 @@ class StructureBuildingMethods {
 		if (terminalPrimes > 0){
 			int brackettingDepth = 0;
 			Element parent = subBracketOrRoot.getParent();
-			while (parent !=null && parent.getLocalName().equals(BRACKET_EL)){
+			while (parent !=null && parent.getName().equals(BRACKET_EL)){
 				if (!IMPLICIT_TYPE_VAL.equals(parent.getAttributeValue(TYPE_ATR))){
 					brackettingDepth++;
 				}
@@ -1778,7 +1778,7 @@ class StructureBuildingMethods {
 	 */
 	private static Integer levelsToWordEl(Element element) {
 		int count =0;
-		while (!element.getLocalName().equals(WORD_EL)){
+		while (!element.getName().equals(WORD_EL)){
 			element = element.getParent();
 			if (element == null){
 				return null;

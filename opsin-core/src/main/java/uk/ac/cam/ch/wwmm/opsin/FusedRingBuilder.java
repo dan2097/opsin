@@ -53,7 +53,7 @@ class FusedRingBuilder {
 				Element startingEl = group;
 				if ((group.getValue().equals("benz") || group.getValue().equals("benzo")) && FUSIONRING_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 					Element beforeBenzo = XOMTools.getPreviousSibling(group);
-					if (beforeBenzo !=null && beforeBenzo.getLocalName().equals(LOCANT_EL)){
+					if (beforeBenzo !=null && beforeBenzo.getName().equals(LOCANT_EL)){
 						startingEl = beforeBenzo;
 					}
 				}
@@ -93,7 +93,7 @@ class FusedRingBuilder {
 		
 		int numberOfParents = 1;
 		Element possibleMultiplier = XOMTools.getPreviousSibling(lastGroup);
-		if (nameComponents.size()>0 && possibleMultiplier !=null && possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)){
+		if (nameComponents.size()>0 && possibleMultiplier !=null && possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 			numberOfParents = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 			possibleMultiplier.detach();
 			for (int j = 1; j < numberOfParents; j++) {
@@ -116,16 +116,16 @@ class FusedRingBuilder {
 		int fusionLevel = (nameComponents.size()-1 -ncIndice)/2;
 		for (; ncIndice>=0; ncIndice--) {
 			Element fusion = null;
-			if (nameComponents.get(ncIndice).getLocalName().equals(FUSION_EL)){
+			if (nameComponents.get(ncIndice).getName().equals(FUSION_EL)){
 				fusion = nameComponents.get(ncIndice--);
 			}
-			if (ncIndice <0 || !nameComponents.get(ncIndice).getLocalName().equals(GROUP_EL)){
+			if (ncIndice <0 || !nameComponents.get(ncIndice).getName().equals(GROUP_EL)){
 				throw new StructureBuildingException("Group not found where group expected. This is probably a bug");
 			}
 			Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(ncIndice));
 			int multiplier = 1;
 			Element possibleMultiplierEl = XOMTools.getPreviousSibling(nameComponents.get(ncIndice));//e.g. the di of difuro
-			if (possibleMultiplierEl != null && possibleMultiplierEl.getLocalName().equals(MULTIPLIER_EL)){
+			if (possibleMultiplierEl != null && possibleMultiplierEl.getName().equals(MULTIPLIER_EL)){
 				multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue(VALUE_ATR));
 			}
 			String[] fusionDescriptors =null;
@@ -276,7 +276,7 @@ class FusedRingBuilder {
 		List<Element> nameComponents  = new ArrayList<Element>();
 		Element currentEl = groupsInFusedRing.get(0);
 		while(currentEl != lastGroup){
-			if (currentEl.getLocalName().equals(GROUP_EL) || currentEl.getLocalName().equals(FUSION_EL)){
+			if (currentEl.getName().equals(GROUP_EL) || currentEl.getName().equals(FUSION_EL)){
 				nameComponents.add(currentEl);
 			}
 			currentEl = XOMTools.getNextSibling(currentEl);
@@ -349,7 +349,7 @@ class FusedRingBuilder {
 	private void aromatiseCyclicAlkane(Element cyclicAlkaneGroup) {
 		Element next = XOMTools.getNextSibling(cyclicAlkaneGroup);
 		List<Element> unsaturators = new ArrayList<Element>();
-		while (next!=null && next.getLocalName().equals(UNSATURATOR_EL)){
+		while (next!=null && next.getName().equals(UNSATURATOR_EL)){
 			unsaturators.add(next);
 			next = XOMTools.getNextSibling(next);
 		}
@@ -400,20 +400,20 @@ class FusedRingBuilder {
 					break;
 				}
 				Element fusion = null;
-				if (nameComponents.get(i).getLocalName().equals(FUSION_EL)){
+				if (nameComponents.get(i).getName().equals(FUSION_EL)){
 					fusion = nameComponents.get(i--);
 				}
 				else{
 					throw new StructureBuildingException("Fusion bracket not found where fusion bracket expected");
 				}
-				if (i <0 || !nameComponents.get(i).getLocalName().equals(GROUP_EL)){
+				if (i <0 || !nameComponents.get(i).getName().equals(GROUP_EL)){
 					throw new StructureBuildingException("Group not found where group expected. This is probably a bug");
 				}
 				Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(i));
 				relabelAccordingToFusionLevel(nextComponent, fusionLevel);
 				int multiplier = 1;
 				Element possibleMultiplierEl = XOMTools.getPreviousSibling(nameComponents.get(i));
-				if (possibleMultiplierEl != null && possibleMultiplierEl.getLocalName().equals(MULTIPLIER_EL)){
+				if (possibleMultiplierEl != null && possibleMultiplierEl.getName().equals(MULTIPLIER_EL)){
 					multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue(VALUE_ATR));
 					possibleMultiplierEl.detach();
 				}
@@ -519,9 +519,9 @@ class FusedRingBuilder {
 		for(int i= groupsInFusedRing.size() -2;i >=0; i--) {
 			if (groupsInFusedRing.get(i).getValue().equals("benz") || groupsInFusedRing.get(i).getValue().equals("benzo")){
 				Element possibleFusionbracket = XOMTools.getNextSibling(groupsInFusedRing.get(i));
-				if (!possibleFusionbracket.getLocalName().equals(FUSION_EL)){
+				if (!possibleFusionbracket.getName().equals(FUSION_EL)){
 					Element possibleMultiplier = XOMTools.getPreviousSibling(groupsInFusedRing.get(i));
-					if (possibleMultiplier==null || !possibleMultiplier.getLocalName().equals(MULTIPLIER_EL)|| possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
+					if (possibleMultiplier==null || !possibleMultiplier.getName().equals(MULTIPLIER_EL)|| possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
 						//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
 						//and have a special convention for indicating the position of heteroatoms 
 						benzoSpecificFusion(groupsInFusedRing.get(i), groupsInFusedRing.get(i+1));
@@ -953,7 +953,7 @@ class FusedRingBuilder {
 		 * Check for locants and use these to set the heteroatom positions
 		 */
 		Element locantEl = XOMTools.getPreviousSibling(benzoEl);
-		if (locantEl != null && locantEl.getLocalName().equals(LOCANT_EL)) {
+		if (locantEl != null && locantEl.getName().equals(LOCANT_EL)) {
 			String[] locants = MATCH_COMMA.split(locantEl.getValue());
 			if (locantsAreAllNumeric(locants)) {
 				List<Element> suffixes = benzoEl.getParent().getChildElements(SUFFIX_EL);

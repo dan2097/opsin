@@ -66,7 +66,7 @@ class StructureBuilder {
 			state.currentWordRule =wordRule;
 			if(wordRule == WordRule.simple) {
 				for (Element word : words) {
-					if (!word.getLocalName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+					if (!word.getName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'simple' wordRule");
 					}
 					resolveWordOrBracket(state, word);
@@ -74,7 +74,7 @@ class StructureBuilder {
 			}
 			else if(wordRule == WordRule.substituent) {
 				for (Element word : words) {
-					if (!word.getLocalName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString()) || !state.n2sConfig.isAllowRadicals()){
+					if (!word.getName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString()) || !state.n2sConfig.isAllowRadicals()){
 						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'substituent' wordRule");
 					}
 					resolveWordOrBracket(state, word);
@@ -477,7 +477,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Oxide functional term not found where expected!");
 		}
 		Element rightMostGroup;
-		if (words.get(0).getLocalName().equals(WORDRULE_EL)){//e.g. Nicotinic acid N-oxide
+		if (words.get(0).getName().equals(WORDRULE_EL)){//e.g. Nicotinic acid N-oxide
 			List<Element> fullWords = XOMTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), WORD_EL, TYPE_ATR, WordType.full.toString());
 			if (fullWords.size()==0){
 				throw new StructureBuildingException("OPSIN is entirely unsure where the oxide goes so has decided not to guess");
@@ -652,12 +652,12 @@ class StructureBuilder {
 				Fragment frag = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(i)));
 				replacementFragments.add(frag);
 				List<Element> children =words.get(i).getChildElements();
-				if (children.size()==1 && children.get(0).getLocalName().equals(BRACKET_EL) && children.get(0).getAttribute(LOCANT_ATR)!=null){
+				if (children.size()==1 && children.get(0).getName().equals(BRACKET_EL) && children.get(0).getAttribute(LOCANT_ATR)!=null){
 					locantForFunctionalTerm.add(children.get(0).getAttributeValue(LOCANT_ATR));
 				}
 				else if (children.size()==2 && children.get(0).getAttribute(LOCANT_ATR)!=null ){
 					String locant =children.get(0).getAttributeValue(LOCANT_ATR);
-					if (children.get(1).getLocalName().equals(ROOT_EL) && !frag.hasLocant(locant) && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
+					if (children.get(1).getName().equals(ROOT_EL) && !frag.hasLocant(locant) && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
 						locantForFunctionalTerm.add(children.get(0).getAttributeValue(LOCANT_ATR));
 						children.get(0).removeAttribute(children.get(0).getAttribute(LOCANT_ATR));
 					}
@@ -1250,7 +1250,7 @@ class StructureBuilder {
 		int numberOfAcetals =1;
 		List<String> elements = null;
 		if (beforeAcetal!=null){
-			if (beforeAcetal.getLocalName().equals(MULTIPLIER_EL)){
+			if (beforeAcetal.getName().equals(MULTIPLIER_EL)){
 				numberOfAcetals = Integer.parseInt(beforeAcetal.getAttributeValue(VALUE_ATR));
 			}
 			else{
@@ -1289,10 +1289,10 @@ class StructureBuilder {
 		int multiplier = 1;
 		List<String> elements = new ArrayList<String>();
 		while(currentEl != functionalClassEl){
-			if (currentEl.getLocalName().equals(MULTIPLIER_EL)){
+			if (currentEl.getName().equals(MULTIPLIER_EL)){
 				multiplier = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
 			}
-			else if (currentEl.getLocalName().equals(GROUP_EL)){
+			else if (currentEl.getName().equals(GROUP_EL)){
 				for (int i = 0; i < multiplier; i++) {
 					elements.add(currentEl.getAttributeValue(VALUE_ATR));
 				}
@@ -1864,7 +1864,7 @@ class StructureBuilder {
 		while (firstChild.getChildCount() != 0){
 			firstChild = firstChild.getChild(0);
 		}
-		if (firstChild.getLocalName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
+		if (firstChild.getName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
 			return false;
 		}
 		return true;
@@ -1882,7 +1882,7 @@ class StructureBuilder {
 	}
 
 	private Element findRightMostGroupInWordOrWordRule(Element wordOrWordRule) throws StructureBuildingException {
-		if (wordOrWordRule.getLocalName().equals(WORDRULE_EL)){
+		if (wordOrWordRule.getName().equals(WORDRULE_EL)){
 			List<Element> words = XOMTools.getDescendantElementsWithTagName(wordOrWordRule, WORD_EL);
 			for (int i = words.size() -1 ; i >=0; i--) {//ignore functionalTerm Words
 				if (words.get(i).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
@@ -1894,7 +1894,7 @@ class StructureBuilder {
 			}
 			return StructureBuildingMethods.findRightMostGroupInBracket(words.get(words.size()-1));
 		}
-		else if (wordOrWordRule.getLocalName().equals(WORD_EL)){//word element can be treated just like a bracket
+		else if (wordOrWordRule.getName().equals(WORD_EL)){//word element can be treated just like a bracket
 			return StructureBuildingMethods.findRightMostGroupInBracket(wordOrWordRule);
 		}
 		else{
@@ -2050,7 +2050,7 @@ class StructureBuilder {
 		List<Element> stereochemistryElsAtThisLevel = new ArrayList<Element>();
 		for (int i = children.size()-1; i >=0; i--) {
 			Element child = children.get(i);
-			if (child.getLocalName().equals(STEREOCHEMISTRY_EL)){
+			if (child.getName().equals(STEREOCHEMISTRY_EL)){
 				stereochemistryElsAtThisLevel.add(child);
 			}
 			else{
