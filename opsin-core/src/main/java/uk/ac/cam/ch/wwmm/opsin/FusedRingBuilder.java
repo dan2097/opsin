@@ -41,7 +41,7 @@ class FusedRingBuilder {
 	 * @throws StructureBuildingException
 	 */
 	static void processFusedRings(BuildState state, Element subOrRoot) throws  StructureBuildingException {
-		List<Element> groups = OpsinTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		if (groups.size() < 2){
 			return;//nothing to fuse
 		}

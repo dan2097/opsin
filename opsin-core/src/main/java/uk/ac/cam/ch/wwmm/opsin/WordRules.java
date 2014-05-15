@@ -212,7 +212,7 @@ class WordRules {
 	 * @throws ParsingException
 	 */
 	void groupWordsIntoWordRules(NameToStructureConfig n2sConfig, Element moleculeEl, boolean allowSpaceRemoval) throws ParsingException {
-		List<Element> wordEls = OpsinTools.getChildElementsWithTagName(moleculeEl, WORD_EL);
+		List<Element> wordEls = moleculeEl.getChildElements(WORD_EL);
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
 			if (matchWordRule(n2sConfig, wordEls, i, allowSpaceRemoval)){

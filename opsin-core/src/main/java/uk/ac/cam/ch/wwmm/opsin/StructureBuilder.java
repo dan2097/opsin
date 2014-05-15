@@ -1693,7 +1693,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void balanceChargeIfPossible(Element molecule, int overallCharge, boolean explicitStoichiometryPresent) throws StructureBuildingException {
-		List<Element> wordRules = OpsinTools.getChildElementsWithTagName(molecule, WORDRULE_ATR);
+		List<Element> wordRules = molecule.getChildElements(WORDRULE_ATR);
 
 		List<Element> positivelyChargedComponents = new ArrayList<Element>();
 		List<Element> negativelyChargedComponents = new ArrayList<Element>();

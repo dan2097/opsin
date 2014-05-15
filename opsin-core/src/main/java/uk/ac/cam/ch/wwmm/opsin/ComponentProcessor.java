@@ -154,7 +154,7 @@ class ComponentProcessor {
 
 				List<Element> groupsOfSubOrRoot = subOrRoot.getChildElements(GROUP_EL);
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size() - 1);
-				preliminaryProcessSuffixes(lastGroupInSubOrRoot, OpsinTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
+				preliminaryProcessSuffixes(lastGroupInSubOrRoot, subOrRoot.getChildElements(SUFFIX_EL));
 			}
 			FunctionalReplacement.processAcidReplacingFunctionalClassNomenclature(state, finalSubOrRootInWord, word);
 
@@ -193,7 +193,7 @@ class ComponentProcessor {
 			for (Element subOrRoot : substituentsAndRoot) {
 				assignImplicitLocantsToDiTerminalSuffixes(subOrRoot);
 				processConjunctiveNomenclature(subOrRoot);
-				resolveSuffixes(subOrRoot.getFirstChildElement(GROUP_EL), OpsinTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL));
+				resolveSuffixes(subOrRoot.getFirstChildElement(GROUP_EL), subOrRoot.getChildElements(SUFFIX_EL));
 			}
 
 			moveErroneouslyPositionedLocantsAndMultipliers(brackets);//e.g. (tetramethyl)azanium == tetra(methyl)azanium
@@ -850,7 +850,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void determineLocantMeaning(Element subOrBracketOrRoot, Element finalSubOrRootInWord) throws StructureBuildingException, ComponentGenerationException {
-		List<Element> locants = OpsinTools.getChildElementsWithTagName(subOrBracketOrRoot, LOCANT_EL);
+		List<Element> locants = subOrBracketOrRoot.getChildElements(LOCANT_EL);
 		Element group = subOrBracketOrRoot.getFirstChildElement(GROUP_EL);//will be null if element is a bracket
 		for (Element locant : locants) {
 			String[] locantValues = MATCH_COMMA.split(locant.getValue());
@@ -1039,7 +1039,7 @@ class ComponentProcessor {
 		}
 		Element parentElem = locant.getParent();
 		if (count == 2 && parentElem.getName().equals(BRACKET_EL)){//e.g. 3,4-(dichloromethylenedioxy) this is changed to (dichloro3,4-methylenedioxy)
-			List<Element> substituents = OpsinTools.getChildElementsWithTagName(parentElem, SUBSTITUENT_EL);
+			List<Element> substituents = parentElem.getChildElements(SUBSTITUENT_EL);
 			if (substituents.size() > 0){
 				Element finalSub  = substituents.get(substituents.size() - 1);
 				Element group = finalSub.getFirstChildElement(GROUP_EL);
@@ -1707,7 +1707,7 @@ class ComponentProcessor {
 	 * @param subOrRoot The substituent/root to looks for multipliers in.
 	 */
 	private void processMultipliers(Element subOrRoot) {
-		List<Element> multipliers = OpsinTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
+		List<Element> multipliers = subOrRoot.getChildElements(MULTIPLIER_EL);
 		for (Element multiplier : multipliers) {
 			Element possibleLocant = OpsinTools.getPreviousSibling(multiplier);
 			String[] locants = null;
@@ -1757,7 +1757,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void detectConjunctiveSuffixGroups(Element subOrRoot, List<Element> allGroups) throws ComponentGenerationException, StructureBuildingException {
-		List<Element> groups = OpsinTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		if (groups.size()>1){
 			List<Element> conjunctiveGroups = new ArrayList<Element>();
 			Element ringGroup =null;
@@ -1866,8 +1866,8 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	private void matchLocantsToDirectFeatures(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> locants =  OpsinTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
-		List<Element> groups = OpsinTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		List<Element> locants =  subOrRoot.getChildElements(LOCANT_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		for (Element group : groups) {
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){//handle Hantzch-widman systems
 				if (group.getAttribute(ADDBOND_ATR)!=null){//special case for partunsatring
@@ -2508,7 +2508,7 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = OpsinTools.getChildElementsWithTagName(group.getParent(), INDICATEDHYDROGEN_EL);
+				List<Element> hydrogenAddingEls = group.getParent().getChildElements(INDICATEDHYDROGEN_EL);
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
@@ -2711,12 +2711,12 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException 
 	 */
 	private void assignElementSymbolLocants(Element subOrRoot) throws StructureBuildingException {
-		List<Element> groups = OpsinTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groups.get(groups.size()-1);
 		List<Fragment> suffixFragments = new ArrayList<Fragment>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
 		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
 		//treat conjunctive suffixesas if they were suffixes
-		List<Element> conjunctiveGroups = OpsinTools.getChildElementsWithTagName(subOrRoot, CONJUNCTIVESUFFIXGROUP_EL);
+		List<Element> conjunctiveGroups = subOrRoot.getChildElements(CONJUNCTIVESUFFIXGROUP_EL);
 		for (Element group : conjunctiveGroups) {
 			suffixFragments.add(state.xmlFragmentMap.get(group));
 		}
@@ -2734,7 +2734,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void processRingAssemblies(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
-		List<Element> ringAssemblyMultipliers = OpsinTools.getChildElementsWithTagName(subOrRoot, RINGASSEMBLYMULTIPLIER_EL);
+		List<Element> ringAssemblyMultipliers = subOrRoot.getChildElements(RINGASSEMBLYMULTIPLIER_EL);
 		for (Element multiplier : ringAssemblyMultipliers) {
 			int mvalue = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 
@@ -2803,7 +2803,7 @@ class ComponentProcessor {
 				elementToResolve = determineElementsToResolveIntoRingAssembly(multiplier, ringJoiningLocants.size(), fragmentToResolveAndDuplicate.getOutAtomCount());
 			}
 
-			List<Element> suffixes = OpsinTools.getChildElementsWithTagName(elementToResolve, SUFFIX_EL);
+			List<Element> suffixes = elementToResolve.getChildElements(SUFFIX_EL);
 			resolveSuffixes(group, suffixes);
 			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
 			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
@@ -2932,7 +2932,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void processPolyCyclicSpiroNomenclature(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
-		List<Element> polyCyclicSpiros = OpsinTools.getChildElementsWithTagName(subOrRoot, POLYCYCLICSPIRO_EL);
+		List<Element> polyCyclicSpiros = subOrRoot.getChildElements(POLYCYCLICSPIRO_EL);
 		if (polyCyclicSpiros.size()>0){
 			Element polyCyclicSpiroDescriptor = polyCyclicSpiros.get(0);
 			String value = polyCyclicSpiroDescriptor.getAttributeValue(VALUE_ATR);
@@ -2972,7 +2972,7 @@ class ComponentProcessor {
 
 	private void processNonIdenticalPolyCyclicSpiro(Element polyCyclicSpiroDescriptor) throws ComponentGenerationException, StructureBuildingException {
 		Element subOrRoot = polyCyclicSpiroDescriptor.getParent();
-		List<Element> groups = OpsinTools.getChildElementsWithTagName(subOrRoot, GROUP_EL);
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		if (groups.size()<2){
 			throw new ComponentGenerationException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
 		}
@@ -3370,7 +3370,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException 
 	 */
 	private void processFusedRingBridges(Element subOrRoot) throws StructureBuildingException {
-		List<Element> bridges = OpsinTools.getChildElementsWithTagName(subOrRoot, FUSEDRINGBRIDGE_EL);
+		List<Element> bridges = subOrRoot.getChildElements(FUSEDRINGBRIDGE_EL);
 		int bridgeCount = bridges.size();
 		if (bridgeCount == 0) {
 			return;
@@ -3449,7 +3449,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void applyLambdaConvention(Element subOrRoot) throws StructureBuildingException {
-		List<Element> lambdaConventionEls = OpsinTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
+		List<Element> lambdaConventionEls = subOrRoot.getChildElements(LAMBDACONVENTION_EL);
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement(GROUP_EL));
 			if (lambdaConventionEl.getAttribute(LOCANT_ATR)!=null){
@@ -4162,7 +4162,7 @@ class ComponentProcessor {
 		}
 
 	private void processConjunctiveNomenclature(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
-		List<Element> conjunctiveGroups = OpsinTools.getChildElementsWithTagName(subOrRoot, CONJUNCTIVESUFFIXGROUP_EL);
+		List<Element> conjunctiveGroups = subOrRoot.getChildElements(CONJUNCTIVESUFFIXGROUP_EL);
 		if (conjunctiveGroups.size()>0){
 			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
 			Fragment ringFrag = state.xmlFragmentMap.get(ringGroup);
@@ -4618,7 +4618,7 @@ class ComponentProcessor {
 	 */
 	private void processBiochemicalLinkageDescriptors(List<Element> substituents, List<Element> brackets) throws StructureBuildingException {
 		for (Element substituent : substituents) {
-			List<Element> bioLinkLocants = OpsinTools.getChildElementsWithTagName(substituent, BIOCHEMICALLINKAGE_EL);
+			List<Element> bioLinkLocants = substituent.getChildElements(BIOCHEMICALLINKAGE_EL);
 			if (bioLinkLocants.size() > 0){
 				if (bioLinkLocants.size() > 1){
 					throw new RuntimeException("OPSIN Bug: More than 1 biochemical linkage locant associated with subsituent");
@@ -4692,7 +4692,7 @@ class ComponentProcessor {
 		}
 		
 		for (Element bracket : brackets) {
-			List<Element> bioLinkLocants = OpsinTools.getChildElementsWithTagName(bracket, BIOCHEMICALLINKAGE_EL);
+			List<Element> bioLinkLocants = bracket.getChildElements(BIOCHEMICALLINKAGE_EL);
 			if (bioLinkLocants.size() > 0){
 				if (bioLinkLocants.size() > 1){
 					throw new RuntimeException("OPSIN Bug: More than 1 biochemical linkage locant associated with bracket");
@@ -4819,7 +4819,7 @@ class ComponentProcessor {
 			if (OpsinTools.getPrevious(multiplier)==null){
 				throw new StructureBuildingException("OPSIN bug: Unacceptable input to function");
 			}
-			List<Element> locants = OpsinTools.getChildElementsWithTagName(rightMostElement, MULTIPLICATIVELOCANT_EL);
+			List<Element> locants = rightMostElement.getChildElements(MULTIPLICATIVELOCANT_EL);
 			if (locants.size()>1){
 				throw new ComponentGenerationException("OPSIN bug: Only none or one multiplicative locant expected");
 			}
@@ -4927,9 +4927,9 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException 
 	 */
 	private void assignLocantsAndMultipliers(Element subOrBracket) throws ComponentGenerationException, StructureBuildingException {
-		List<Element> locants = OpsinTools.getChildElementsWithTagName(subOrBracket, LOCANT_EL);
+		List<Element> locants = subOrBracket.getChildElements(LOCANT_EL);
 		int multiplier =1;
-		List<Element> multipliers =  OpsinTools.getChildElementsWithTagName(subOrBracket, MULTIPLIER_EL);
+		List<Element> multipliers =  subOrBracket.getChildElements(MULTIPLIER_EL);
 		Element parentElem = subOrBracket.getParent();
 		boolean oneBelowWordLevel = parentElem.getName().equals(WORD_EL);
 		Element groupIfPresent = subOrBracket.getFirstChildElement(GROUP_EL);

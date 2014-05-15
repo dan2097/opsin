@@ -139,7 +139,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	static void resolveAmbiguities(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> multipliers = OpsinTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
+		List<Element> multipliers = subOrRoot.getChildElements(MULTIPLIER_EL);
 		for (Element apparentMultiplier : multipliers) {
 			if (!BASIC_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR)) && !VONBAEYER_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR))){
 				continue;
@@ -181,7 +181,7 @@ class ComponentGenerator {
 			}
 		}
 
-		List<Element> fusions = OpsinTools.getChildElementsWithTagName(subOrRoot, FUSION_EL);
+		List<Element> fusions = subOrRoot.getChildElements(FUSION_EL);
 		for (Element fusion : fusions) {
 			String fusionText = fusion.getValue();
 			if (matchNumberLocantsOnlyFusionBracket.matcher(fusionText).matches()){
@@ -230,7 +230,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	static void processLocants(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> locants = OpsinTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
+		List<Element> locants = subOrRoot.getChildElements(LOCANT_EL);
 		for (Element locant : locants) {
 			List<String> individualLocants = splitIntoIndividualLocants(StringTools.removeDashIfPresent(locant.getValue()));
 			for (int i = 0; i < individualLocants.size(); i++) {
@@ -392,7 +392,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void convertOrthoMetaParaToLocants(Element subOrRoot) throws ComponentGenerationException{
-		List<Element> ompLocants = OpsinTools.getChildElementsWithTagName(subOrRoot, ORTHOMETAPARA_EL);
+		List<Element> ompLocants = subOrRoot.getChildElements(ORTHOMETAPARA_EL);
 		for (Element ompLocant : ompLocants) {
 			String locantText = ompLocant.getValue();
 			String firstChar = locantText.substring(0, 1);
@@ -438,7 +438,7 @@ class ComponentGenerator {
 	 * @param subOrRoot
 	 */
 	private void formAlkaneStemsFromComponents(Element subOrRoot) {
-		Deque<Element> alkaneStemComponents =new ArrayDeque<Element>(OpsinTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
+		Deque<Element> alkaneStemComponents =new ArrayDeque<Element>(subOrRoot.getChildElements(ALKANESTEMCOMPONENT));
 		while(!alkaneStemComponents.isEmpty()){
 			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
 			int alkaneChainLength =0;
@@ -579,7 +579,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void processHeterogenousHydrides(Element subOrRoot) throws ComponentGenerationException  {
-		List<Element> multipliers = OpsinTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
+		List<Element> multipliers = subOrRoot.getChildElements(MULTIPLIER_EL);
 		for (int i = 0; i < multipliers.size(); i++) {
 			Element m = multipliers.get(i);
 			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
@@ -757,7 +757,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void processIndicatedHydrogens(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> indicatedHydrogens = OpsinTools.getChildElementsWithTagName(subOrRoot, INDICATEDHYDROGEN_EL);
+		List<Element> indicatedHydrogens = subOrRoot.getChildElements(INDICATEDHYDROGEN_EL);
 		for (Element indicatedHydrogenGroup : indicatedHydrogens) {
 			String txt = StringTools.removeDashIfPresent(indicatedHydrogenGroup.getValue());
 			if (!StringTools.endsWithCaseInsensitive(txt, "h")){//remove brackets if they are present
@@ -785,7 +785,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> stereoChemistryElements = OpsinTools.getChildElementsWithTagName(subOrRoot, STEREOCHEMISTRY_EL);
+		List<Element> stereoChemistryElements = subOrRoot.getChildElements(STEREOCHEMISTRY_EL);
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				processStereochemistryBracket(stereoChemistryElement);
@@ -1003,7 +1003,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processSuffixPrefixes(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> suffixPrefixes =  OpsinTools.getChildElementsWithTagName(subOrRoot, SUFFIXPREFIX_EL);
+		List<Element> suffixPrefixes =  subOrRoot.getChildElements(SUFFIXPREFIX_EL);
 		for (Element suffixPrefix : suffixPrefixes) {
 			Element suffix = OpsinTools.getNextSibling(suffixPrefix);
 			if (suffix==null || ! suffix.getName().equals(SUFFIX_EL)){
@@ -1024,7 +1024,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processInfixes(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> infixes = OpsinTools.getChildElementsWithTagName(subOrRoot, INFIX_EL);
+		List<Element> infixes = subOrRoot.getChildElements(INFIX_EL);
 		for (Element infix : infixes) {
 			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL});
 			if (suffix ==null || !suffix.getName().equals(SUFFIX_EL)){
@@ -1106,7 +1106,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processLambdaConvention(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> lambdaConventionEls = OpsinTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
+		List<Element> lambdaConventionEls = subOrRoot.getChildElements(LAMBDACONVENTION_EL);
 		boolean fusedRingPresent = false;
 		if (lambdaConventionEls.size()>0){
 			if (subOrRoot.getChildElements(GROUP_EL).size()>1){
@@ -1321,7 +1321,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processHydroCarbonRings(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> annulens = OpsinTools.getChildElementsWithTagName(subOrRoot, ANNULEN_EL);
+		List<Element> annulens = subOrRoot.getChildElements(ANNULEN_EL);
 		for (Element annulen : annulens) {
 			String annulenValue =annulen.getValue();
 	        Matcher match = matchAnnulene.matcher(annulenValue);
@@ -1347,7 +1347,7 @@ class ComponentGenerator {
 			annulen.getParent().replaceChild(annulen, group);
 		}
 
-		List<Element> hydrocarbonFRSystems = OpsinTools.getChildElementsWithTagName(subOrRoot, HYDROCARBONFUSEDRINGSYSTEM_EL);
+		List<Element> hydrocarbonFRSystems = subOrRoot.getChildElements(HYDROCARBONFUSEDRINGSYSTEM_EL);
 		for (Element hydrocarbonFRSystem : hydrocarbonFRSystems) {
 			Element multiplier = OpsinTools.getPreviousSibling(hydrocarbonFRSystem);
 			if(multiplier != null && multiplier.getName().equals(MULTIPLIER_EL)) {
@@ -1487,7 +1487,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void handleSuffixIrregularities(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> suffixes = OpsinTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL);
+		List<Element> suffixes = subOrRoot.getChildElements(SUFFIX_EL);
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getValue();
 			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
@@ -2277,7 +2277,7 @@ class ComponentGenerator {
 			}
 			if (next!=null && next.getName().equals(ROOT_EL)){
 				if (!(next.getChild(0).getName().equals(MULTIPLIER_EL))){
-					List<Element> suffixes = OpsinTools.getChildElementsWithTagName(next, SUFFIX_EL);
+					List<Element> suffixes = next.getChildElements(SUFFIX_EL);
 					if (suffixes.size()==0){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
 						Element newMultiplier = new Element(MULTIPLIER_EL);
 						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
@@ -2363,7 +2363,7 @@ class ComponentGenerator {
 					parentOfCarbohydate = OpsinTools.getNextSibling(parentOfCarbohydate);
 				}
 				if (carbohydrate != null) {
-					if (OpsinTools.getChildElementsWithTagName(parentOfCarbohydate, CARBOHYDRATERINGSIZE_EL).size() > 0){
+					if (parentOfCarbohydate.getChildElements(CARBOHYDRATERINGSIZE_EL).size() > 0){
 						throw new ComponentGenerationException("Carbohydrate has a specified ring size but " + groupValue + " indicates the open chain form!");
 					}
 					group.detach();
