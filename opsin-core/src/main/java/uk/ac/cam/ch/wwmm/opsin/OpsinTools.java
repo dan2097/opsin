@@ -580,29 +580,6 @@ class OpsinTools {
 	}
 
 	/**
-	 * Finds all child elements whose localname matches one of the strings in elementNames
-	 * Equivalent to an xpath of type ./*[local-name() = 'elementName'] from the startingElement
-	 * This is equivalent to XOM's getChildElements(String) other than returning a list
-	 * @param startingElement
-	 * @param elementName
-	 * @return
-	 */
-	static List<Element> getChildElementsWithTagName(Element startingElement, String elementName) {
-		//TODO remove this method as it's redundant
-		List<Element> matchingElements = new ArrayList<Element>();
-		List<Element> children =startingElement.getChildElements();
-		int childCount = children.size();
-		for (int i = 0; i < childCount; i++) {
-			Element child =children.get(i);
-			String currentElName=child.getName();
-			if (currentElName.equals(elementName)){
-				matchingElements.add(child);
-			}
-		}
-		return matchingElements;
-	}
-
-	/**
 	 * Finds all descendant elements whose element name matches the given elementName
 	 * Additionally the element must have the specified attribute and the value of the attribute must be as specified
 	 * @param startingElement

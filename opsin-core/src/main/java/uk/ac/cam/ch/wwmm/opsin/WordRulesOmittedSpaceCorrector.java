@@ -70,7 +70,7 @@ class WordRulesOmittedSpaceCorrector {
 		Element word =words.get(0);
 		String wordRuleContents = wordRule.getAttributeValue(VALUE_ATR);
 		if (matchAteOrIteEnding.matcher(wordRuleContents).find()){
-			List<Element> roots = OpsinTools.getChildElementsWithTagName(word, ROOT_EL);
+			List<Element> roots = word.getChildElements(ROOT_EL);
 			if (roots.size()==1){
 				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
 				if (AMINOACID_TYPE_VAL.equals(rootGroup.getAttributeValue(TYPE_ATR))){
