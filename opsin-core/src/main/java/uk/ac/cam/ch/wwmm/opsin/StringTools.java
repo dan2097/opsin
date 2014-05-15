@@ -5,53 +5,31 @@ import java.util.Arrays;
 import java.util.List;
 
 /**Static routines for string manipulation.
- * This is a specially tailored version of StringTools as found in OSCAR for use in OPSIN
  *
  * @author ptc24
  * @author dl387
  *
  */
-public final class StringTools {
-
-	/**Converts a list of characters into a string.
-	 *
-	 * @param l A list of characters.
-	 * @return The corresponding string.
-	 */
-	public static String charListToString(List<Character> l) {
-		StringBuilder sb = new StringBuilder();
-		for(char c : l) {
-			sb.append(c);
-		}
-		return sb.toString();
-	}
+class StringTools {
 
 	/**
 	 * Converts a list of strings into a single string delimited by the given separator
 	 *
 	 * @param l A list of strings.
+	 * @param separator
 	 * @return The corresponding string.
 	 */
-	public static String stringListToString(List<String> l, String separator) {
+	static String stringListToString(List<String> list, String separator) {
 		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<l.size();i++) {
-			sb.append(l.get(i));
-			if(separator != null && i < l.size()-1) sb.append(separator);
+		int lastIndexOfList = list.size() - 1;
+		for (int i = 0; i < lastIndexOfList; i++) {
+			sb.append(list.get(i));
+			sb.append(separator);
+		}
+		if (lastIndexOfList >= 0){
+			sb.append(list.get(lastIndexOfList));
 		}
 		return sb.toString();
-	}
-
-	/**Converts a string to a list of characters.
-	 *
-	 * @param s A string.
-	 * @return The corresponding list of characters.
-	 */
-	public static List<Character> stringToList(String s) {
-		List<Character> cl = new ArrayList<Character>();
-		for(int i=0;i<s.length();i++) {
-			cl.add(s.charAt(i));
-		}
-		return cl;
 	}
 
 	/**Produce repetitions of a string. Eg. HelloWorld * 2 = HelloWorldHelloWorld.
@@ -60,9 +38,9 @@ public final class StringTools {
 	 * @param n The number of times to multiply it.
 	 * @return The multiplied string.
 	 */
-	public static String multiplyString(String s, int n) {
+	static String multiplyString(String s, int n) {
 		StringBuilder sb = new StringBuilder();
-		for(int i = n - 1; i >= 0; i--) {
+		for (int i = 0; i < n; i++) {
 			sb.append(s);
 		}
 		return sb.toString();
@@ -74,13 +52,16 @@ public final class StringTools {
 	 * @param separator The separator to use.
 	 * @return The resulting string.
 	 */
-	public static String arrayToString(String [] stringArray, String separator) {
+	static String arrayToString(String[] stringArray, String separator) {
 		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<stringArray.length-1;i++) {
+		int lastIndexOfArray = stringArray.length - 1;
+		for(int i = 0; i < lastIndexOfArray; i++) {
 			sb.append(stringArray[i]);
 			sb.append(separator);
 		}
-		sb.append(stringArray[stringArray.length-1]);
+		if (lastIndexOfArray >= 0){
+			sb.append(stringArray[lastIndexOfArray]);
+		}
 		return sb.toString();
 	}
 
@@ -92,7 +73,7 @@ public final class StringTools {
 	 * @return The converted string
 	 * @throws PreProcessingException
 	 */
-	public static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
+	static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0, l = s.length(); i < l; i++) {
 			char c = s.charAt(i);
@@ -303,7 +284,7 @@ public final class StringTools {
 	 * @param array The array.
 	 * @return The ArrayList.
 	 */
-	public static List<String> arrayToList(String [] array) {
+	static List<String> arrayToList(String [] array) {
 		List<String> list = new ArrayList<String>();
         list.addAll(Arrays.asList(array));
 		return list;
@@ -314,7 +295,7 @@ public final class StringTools {
 	 * @param locantText
 	 * @return
 	 */
-	public static String removeDashIfPresent(String locantText){
+	static String removeDashIfPresent(String locantText){
 		if(locantText.endsWith("-")) {
 			locantText = locantText.substring(0, locantText.length() - 1);
 		}
@@ -326,10 +307,10 @@ public final class StringTools {
 	 * @param locantText
 	 * @return
 	 */
-	public static int countTerminalPrimes(String locantText){
+	static int countTerminalPrimes(String locantText){
 		int numberOfPrimes = 0;
-		for(int k = locantText.length() -1; k > 0; k--){
-			if (locantText.charAt(k)=='\''){
+		for(int i = locantText.length() -1; i > 0; i--){
+			if (locantText.charAt(i) == '\''){
 				numberOfPrimes++;
 			}
 			else{
@@ -345,7 +326,7 @@ public final class StringTools {
 	 * @param prefix
 	 * @return
 	 */
-	public static boolean startsWithCaseInsensitive(String str, String prefix) {
+	static boolean startsWithCaseInsensitive(String str, String prefix) {
 		return str.regionMatches(true, 0, prefix, 0, prefix.length());
 	}
 	
@@ -355,7 +336,7 @@ public final class StringTools {
 	 * @param suffix
 	 * @return
 	 */
-	public static boolean endsWithCaseInsensitive(String str, String suffix) {
+	static boolean endsWithCaseInsensitive(String str, String suffix) {
 		if (suffix.length() > str.length()) {
 			return false;
 		}
