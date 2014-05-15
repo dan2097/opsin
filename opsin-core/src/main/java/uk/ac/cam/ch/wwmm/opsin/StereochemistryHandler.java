@@ -151,7 +151,7 @@ class StereochemistryHandler {
 	private void processCarbohydrateStereochemistry(List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {
 		Map<Element, List<Element>> groupToStereochemEls = new HashMap<Element, List<Element>>();
 		for (Element carbohydrateStereoChemistryEl : carbohydrateStereoChemistryEls) {
-			Element nextGroup = XOMTools.getNextSibling(carbohydrateStereoChemistryEl, GROUP_EL);
+			Element nextGroup = OpsinTools.getNextSibling(carbohydrateStereoChemistryEl, GROUP_EL);
 			if (nextGroup ==null || (!SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR)) &&
 					!SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR)))){
 				throw new RuntimeException("OPSIN bug: Could not find carbohydrate chain stem to apply stereochemistry to");
@@ -177,7 +177,7 @@ class StereochemistryHandler {
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
-		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
 		}
@@ -207,9 +207,9 @@ class StereochemistryHandler {
 		if (possibleWordParent.getName().equals(WORD_EL) && possibleWordParent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			//something like (3R,4R,5R)-ethyl 4-acetamido-5-amino-3-(pentan-3-yloxy)cyclohex-1-enecarboxylate
 			//I think this is a violation of the IUPAC rules...but anyway...
-			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(possibleWordParent.getParent(), WORD_EL, TYPE_ATR, WordType.full.toString());
+			List<Element> words = OpsinTools.getChildElementsWithTagNameAndAttribute(possibleWordParent.getParent(), WORD_EL, TYPE_ATR, WordType.full.toString());
 			for (Element word : words) {
-				List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
+				List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 					if (locant == null){//undefined locant
@@ -278,7 +278,7 @@ class StereochemistryHandler {
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
-		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
 		}
@@ -334,9 +334,9 @@ class StereochemistryHandler {
 		Element possibleWordParent = parentSubBracketOrRoot.getParent();
 		if (possibleWordParent.getName().equals(WORD_EL) && possibleWordParent.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString())){
 			//the element is in front of a substituent and may refer to the full group
-			List<Element> words = XOMTools.getChildElementsWithTagNameAndAttribute(possibleWordParent.getParent(), WORD_EL, TYPE_ATR, WordType.full.toString());
+			List<Element> words = OpsinTools.getChildElementsWithTagNameAndAttribute(possibleWordParent.getParent(), WORD_EL, TYPE_ATR, WordType.full.toString());
 			for (Element word : words) {
-				List<Element> possibleGroups = XOMTools.getDescendantElementsWithTagName(word, GROUP_EL);
+				List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
 					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
 					if (locant == null){//undefined locant
@@ -467,7 +467,7 @@ class StereochemistryHandler {
 		}
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
-		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
 		}
@@ -636,7 +636,7 @@ class StereochemistryHandler {
 		if (parentSubBracketOrRoot.getName().equals(SUBSTITUENT_EL)){
 			substituentGroup =state.xmlFragmentMap.get(parentSubBracketOrRoot.getFirstChildElement(GROUP_EL));
 		}
-		List<Element> adjacentGroupEls = XOMTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
 		}

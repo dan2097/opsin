@@ -66,7 +66,7 @@ class FunctionalReplacement {
 		if (WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR)) == WordRule.acidReplacingFunctionalGroup){
 			Element parentWordRule = word.getParent();
 			if (parentWordRule.indexOf(word)==0){
-				List<Element> acidReplacingFullWords = XOMTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
+				List<Element> acidReplacingFullWords = OpsinTools.getChildElementsWithTagNameAndAttribute(parentWordRule, WORD_EL, TYPE_ATR, WordType.full.toString());
 				acidReplacingFullWords.remove(word);
 				if (acidReplacingFullWords.size()>0){//case where functionalTerm is substituted
 					//as words are processed from right to left in cases like phosphoric acid tri(ethylamide) this will be phosphoric acid ethylamide ethylamide ethylamide
@@ -75,7 +75,7 @@ class FunctionalReplacement {
 					}
 				}
 				else if (parentWordRule.getChildCount() == 2) {
-					processAcidReplacingFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, XOMTools.getNextSibling(word));
+					processAcidReplacingFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, OpsinTools.getNextSibling(word));
 				}
 				else{
 					throw new ComponentGenerationException("OPSIN bug: problem with acidReplacingFunctionalGroup word rule");
@@ -126,7 +126,7 @@ class FunctionalReplacement {
 			if (replacementType!=null){
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent = group.getParent();
-				Element nextSubOrBracket = XOMTools.getNextSibling(substituent);
+				Element nextSubOrBracket = OpsinTools.getNextSibling(substituent);
 				if (nextSubOrBracket!=null && (nextSubOrBracket.getName().equals(ROOT_EL) || nextSubOrBracket.getName().equals(SUBSTITUENT_EL))){
 					Element groupToBeModified = nextSubOrBracket.getFirstChildElement(GROUP_EL);
 					if (groupPrecededByElementThatBlocksPrefixReplacementInterpetation(groupToBeModified)) {
@@ -138,12 +138,12 @@ class FunctionalReplacement {
 					Element locantEl =null;//null unless a locant that agrees with the multiplier is present
 					Element multiplierEl =null;
 					int numberOfAtomsToReplace =1;//the number of atoms to be functionally replaced, modified by a multiplier e.g. dithio
-					Element possibleMultiplier = XOMTools.getPreviousSibling(group);
+					Element possibleMultiplier = OpsinTools.getPreviousSibling(group);
 					if (possibleMultiplier !=null){
 						Element possibleLocant;
 						if (possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 							numberOfAtomsToReplace =Integer.valueOf(possibleMultiplier.getAttributeValue(VALUE_ATR));
-							possibleLocant = XOMTools.getPreviousSibling(possibleMultiplier);
+							possibleLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
 							multiplierEl = possibleMultiplier;
 						}
 						else{
@@ -228,10 +228,10 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private static boolean groupPrecededByElementThatBlocksPrefixReplacementInterpetation(Element groupToBeModified) {
-		Element previous = XOMTools.getPreviousSibling(groupToBeModified);
+		Element previous = OpsinTools.getPreviousSibling(groupToBeModified);
 		while (previous !=null && (previous.getName().equals(SUBTRACTIVEPREFIX_EL)
 				|| (previous.getName().equals(STEREOCHEMISTRY_EL) && previous.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)))){
-			previous = XOMTools.getPreviousSibling(previous);
+			previous = OpsinTools.getPreviousSibling(previous);
 		}
 		return previous != null;
 	}
@@ -254,7 +254,7 @@ class FunctionalReplacement {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute(INFIX_ATR)!=null){
 				Fragment fragToApplyInfixTo = state.xmlFragmentMap.get(suffix);
-				Element possibleAcidGroup = XOMTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL, SUFFIX_EL});
+				Element possibleAcidGroup = OpsinTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL, SUFFIX_EL});
 				if (possibleAcidGroup !=null && possibleAcidGroup.getName().equals(GROUP_EL) && 
 						(possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)|| possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL))){
 					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
@@ -423,7 +423,7 @@ class FunctionalReplacement {
 			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
 		}
 		if (oxygenAtoms.size() == 0){
-			List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
+			List<Element> conjunctiveSuffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 			for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
 				oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
 			}
@@ -464,7 +464,7 @@ class FunctionalReplacement {
 			}
 			Element acidReplacingGroup = functionalTerm.getFirstChildElement(FUNCTIONALGROUP_EL);
 			String functionalGroupName = acidReplacingGroup.getValue();
-			Element possibleMultiplier = XOMTools.getPreviousSibling(acidReplacingGroup);
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(acidReplacingGroup);
 			int numberOfAcidicHydroxysToReplace = 1;
 			if (possibleMultiplier!=null){
 				if (!possibleMultiplier.getName().equals(MULTIPLIER_EL)){
@@ -483,7 +483,7 @@ class FunctionalReplacement {
 				oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
 			}
 			if (oxygenAtoms.size()==0){
-				List<Element> conjunctiveSuffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
+				List<Element> conjunctiveSuffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 				for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
 					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
 				}
@@ -818,9 +818,9 @@ class FunctionalReplacement {
 	private static void disambiguateMultipliedInfixMeaning(BuildState state,List<Element> suffixes,
 			List<Fragment> suffixFragments,Element suffix, Fragment suffixFrag, List<String> infixTransformations, int oxygenAvailable)
 			throws ComponentGenerationException, StructureBuildingException {
-		Element possibleInfix = XOMTools.getPreviousSibling(suffix);
+		Element possibleInfix = OpsinTools.getPreviousSibling(suffix);
 		if (possibleInfix.getName().equals(INFIX_EL)){//the infix is only left when there was ambiguity
-			Element possibleMultiplier = XOMTools.getPreviousSibling(possibleInfix);
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(possibleInfix);
 			if (possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 				int multiplierValue =Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				if (infixTransformations.size() + multiplierValue-1 <=oxygenAvailable){//multiplier means multiply the infix e.g. butandithiate
@@ -829,7 +829,7 @@ class FunctionalReplacement {
 					}
 				}
 				else{
-					Element possibleLocant = XOMTools.getPreviousSibling(possibleMultiplier);
+					Element possibleLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
 					String[] locants = null;
 					if (possibleLocant.getName().equals(LOCANT_EL)) {
 						locants = MATCH_COMMA.split(possibleLocant.getValue());
@@ -846,7 +846,7 @@ class FunctionalReplacement {
 						Fragment newSuffixFrag =state.fragManager.copyFragment(suffixFrag);
 						state.xmlFragmentMap.put(newSuffix, newSuffixFrag);
 						suffixFragments.add(newSuffixFrag);
-						XOMTools.insertAfter(suffix, newSuffix);
+						OpsinTools.insertAfter(suffix, newSuffix);
 						suffixes.add(newSuffix);
 						if (locants !=null){//assign locants if available
 							newSuffix.getAttribute(LOCANT_ATR).setValue(locants[j]);
@@ -973,7 +973,7 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private static List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
-		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
+		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		for (Element suffix : suffixElements) {
 			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
@@ -1033,7 +1033,7 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private static List<Atom> findOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
-		List<Element> suffixElements =XOMTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
+		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		for (Element suffix : suffixElements) {
 			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);

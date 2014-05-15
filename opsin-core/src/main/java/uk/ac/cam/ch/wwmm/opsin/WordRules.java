@@ -212,7 +212,7 @@ class WordRules {
 	 * @throws ParsingException
 	 */
 	void groupWordsIntoWordRules(NameToStructureConfig n2sConfig, Element moleculeEl, boolean allowSpaceRemoval) throws ParsingException {
-		List<Element> wordEls = XOMTools.getChildElementsWithTagName(moleculeEl, WORD_EL);
+		List<Element> wordEls = OpsinTools.getChildElementsWithTagName(moleculeEl, WORD_EL);
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
 			if (matchWordRule(n2sConfig, wordEls, i, allowSpaceRemoval)){
@@ -252,7 +252,7 @@ class WordRules {
 								lastChild = children.get(children.size()-1);
 							}
 							if (lastChild.getName().equals(CLOSEBRACKET_EL)){
-								lastChild = XOMTools.getPreviousSibling(lastChild);
+								lastChild = OpsinTools.getPreviousSibling(lastChild);
 							}
 							if (lastChild==null){
 								throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
@@ -311,12 +311,12 @@ class WordRules {
 					if (wordsInWordRule==3){//substituent present
 						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
 						wordsInWordRule--;
-						List<Element> functionalTerm = XOMTools.getDescendantElementsWithTagName(wordEls.get(i+1), FUNCTIONALTERM_EL);//rename functionalTerm element to root
+						List<Element> functionalTerm = OpsinTools.getDescendantElementsWithTagName(wordEls.get(i+1), FUNCTIONALTERM_EL);//rename functionalTerm element to root
 						if (functionalTerm.size()!=1){
 							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
 						}
 						functionalTerm.get(0).setName(ROOT_EL);
-						List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
+						List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
 						if (functionalGroups.size()!=1){
 							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
 						}
@@ -326,7 +326,7 @@ class WordRules {
 				}
 				else if (wordRule == WordRule.additionCompound || wordRule == WordRule.oxide){//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
 					Element possibleElementaryAtom = wordEls.get(i);
-					List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtom, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+					List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtom, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
 					if (elementaryAtoms.size()==1){
 						for (int j = 1; j < wordsInWordRule; j++) {
 							if (bondWillBeIonic(elementaryAtoms.get(0), wordEls.get(i+j))){//use separate word rules for ionic components
@@ -451,7 +451,7 @@ class WordRules {
 		for (int j =  elementsToMergeIntoSubstituent.size() -1 ; j >=0; j--) {
 			Element el = elementsToMergeIntoSubstituent.get(j);
 			el.detach();
-			XOMTools.insertAfter(finalSubstituent, el);
+			OpsinTools.insertAfter(finalSubstituent, el);
 		}
 		if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue(TYPE_ATR))){
 			firstWord.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
@@ -461,7 +461,7 @@ class WordRules {
 
 	private void convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
 		word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
-		List<Element> functionalTerms = XOMTools.getDescendantElementsWithTagName(word, FUNCTIONALTERM_EL);
+		List<Element> functionalTerms = OpsinTools.getDescendantElementsWithTagName(word, FUNCTIONALTERM_EL);
 		if (functionalTerms.size()!=1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalTerm expected in functionalGroupAsGroup wordRule");
 		}
@@ -488,7 +488,7 @@ class WordRules {
 		if (element1.startsWith("[")){
 			element1 = element1.substring(1, element1.length()-1);
 		}
-		List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALGROUP_EL);
+		List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALGROUP_EL);
 		if (functionalGroups.size()!=1){
 			throw new ParsingException("OPSIN bug: Unable to find functional group in oxide or addition compound rule");
 		}

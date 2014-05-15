@@ -319,7 +319,7 @@ class Parser {
 	 * @throws ParsingException
 	 */
 	private void applyStoichiometryIndicationToWordRules(Element moleculeEl,Integer[] componentRatios) throws ParsingException {
-		List<Element> wordRules = XOMTools.getChildElementsWithTagName(moleculeEl, WORDRULE_EL);
+		List<Element> wordRules = OpsinTools.getChildElementsWithTagName(moleculeEl, WORDRULE_EL);
 		if (wordRules.size()!=componentRatios.length){
 			throw new ParsingException("Component and stoichiometry indication indication mismatch. OPSIN believes there to be " +wordRules.size() +" components but " + componentRatios.length +" ratios were given!");
 		}

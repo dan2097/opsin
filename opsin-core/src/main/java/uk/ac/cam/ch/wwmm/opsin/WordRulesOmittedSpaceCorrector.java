@@ -20,7 +20,7 @@ class WordRulesOmittedSpaceCorrector {
 	}
 
 	void correctOmittedSpaces() throws StructureBuildingException {
-		List<Element> wordRules = XOMTools.getDescendantElementsWithTagName(parse, WORDRULE_EL);
+		List<Element> wordRules = OpsinTools.getDescendantElementsWithTagName(parse, WORDRULE_EL);
 		for (Element wordRule : wordRules) {
 			WordRule wordRuleVal = WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR));
 			if (wordRuleVal == WordRule.divalentFunctionalGroup){
@@ -38,7 +38,7 @@ class WordRulesOmittedSpaceCorrector {
 	 * @param wordRule
 	 */
 	private void checkAndCorrectOmittedSpacesInDivalentFunctionalGroupRule(Element divalentFunctionalGroupWordRule)  {
-		List<Element> substituentWords = XOMTools.getChildElementsWithTagNameAndAttribute(divalentFunctionalGroupWordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);
+		List<Element> substituentWords = OpsinTools.getChildElementsWithTagNameAndAttribute(divalentFunctionalGroupWordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);
 		if (substituentWords.size() == 1){//potentially has been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
 			List<Element> children = substituentWords.get(0).getChildElements();
 			if (children.size() == 2){
@@ -50,7 +50,7 @@ class WordRulesOmittedSpaceCorrector {
 					Element newWord =new Element(WORD_EL);
 					newWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
 					newWord.appendChild(subToMove);
-					XOMTools.insertAfter(substituentWords.get(0), newWord);
+					OpsinTools.insertAfter(substituentWords.get(0), newWord);
 				}
 			}
 		}
@@ -70,7 +70,7 @@ class WordRulesOmittedSpaceCorrector {
 		Element word =words.get(0);
 		String wordRuleContents = wordRule.getAttributeValue(VALUE_ATR);
 		if (matchAteOrIteEnding.matcher(wordRuleContents).find()){
-			List<Element> roots = XOMTools.getChildElementsWithTagName(word, ROOT_EL);
+			List<Element> roots = OpsinTools.getChildElementsWithTagName(word, ROOT_EL);
 			if (roots.size()==1){
 				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
 				if (AMINOACID_TYPE_VAL.equals(rootGroup.getAttributeValue(TYPE_ATR))){
@@ -79,7 +79,7 @@ class WordRulesOmittedSpaceCorrector {
 				Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				if (functionalAtomsCount >0){
-					List<Element> substituentsAndBrackets = XOMTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
+					List<Element> substituentsAndBrackets = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
 					if (substituentsAndBrackets.size()==0){
 						return;
 					}
@@ -258,7 +258,7 @@ class WordRulesOmittedSpaceCorrector {
 			int multiplier = Integer.parseInt(multiplierStr);
 			for (int i = 1; i < multiplier; i++) {
 				Element clone = state.fragManager.cloneElement(state, newSubstituentWord);
-				XOMTools.insertAfter(newSubstituentWord, clone);
+				OpsinTools.insertAfter(newSubstituentWord, clone);
 			}
 		}
 	}

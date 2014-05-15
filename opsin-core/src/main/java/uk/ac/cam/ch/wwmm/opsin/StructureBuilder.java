@@ -62,7 +62,7 @@ class StructureBuilder {
 			}
 			Element currentWordRuleEl = wordRuleStack.removeLast();
 			WordRule wordRule = WordRule.valueOf(currentWordRuleEl.getAttributeValue(WORDRULE_ATR));
-			List<Element> words = XOMTools.getChildElementsWithTagNames(currentWordRuleEl, new String[]{WORD_EL, WORDRULE_EL});
+			List<Element> words = OpsinTools.getChildElementsWithTagNames(currentWordRuleEl, new String[]{WORD_EL, WORDRULE_EL});
 			state.currentWordRule =wordRule;
 			if(wordRule == WordRule.simple) {
 				for (Element word : words) {
@@ -139,7 +139,7 @@ class StructureBuilder {
 			}
 		}
 		
-		List<Element> groupElements = XOMTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
+		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
 		processOxidoSpecialCase(groupElements);
 		processOxidationNumbers(groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
@@ -300,7 +300,7 @@ class StructureBuilder {
 			wordIndice++;
 			if (words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {//e.g. methyl sulfoxide rather than dimethyl sulfoxide
 				Element clone = state.fragManager.cloneElement(state, words.get(0));
-				XOMTools.insertAfter(words.get(0), clone);
+				OpsinTools.insertAfter(words.get(0), clone);
 				words = words.get(0).getParent().getChildElements();
 			}
 			else{
@@ -318,7 +318,7 @@ class StructureBuilder {
 		if (words.get(wordIndice) ==null || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {
 			throw new StructureBuildingException(words.get(wordIndice).getValue()+" was expected to be a functionalTerm");
 		}
-		List<Element> functionalGroup = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), FUNCTIONALGROUP_EL);
+		List<Element> functionalGroup = OpsinTools.getDescendantElementsWithTagName(words.get(wordIndice), FUNCTIONALGROUP_EL);
 		if (functionalGroup.size()!=1){
 			throw new StructureBuildingException("Unexpected number of functionalGroups found, could be a bug in OPSIN's grammar");
 		}
@@ -348,7 +348,7 @@ class StructureBuilder {
 
 	private void buildMonovalentFunctionalGroup(List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));
-		List<Element> groups = XOMTools.getDescendantElementsWithTagName(words.get(0), GROUP_EL);
+		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(words.get(0), GROUP_EL);
 		for (Element group : groups) {//replaces outAtoms with valency greater than 1 with multiple outAtoms; e.g. ylidene -->diyl
 			Fragment frag = state.xmlFragmentMap.get(group);
 			for (int i = frag.getOutAtomCount()-1; i>=0; i--) {
@@ -363,7 +363,7 @@ class StructureBuilder {
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
 		for (int i=1; i<words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
-			List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
+			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
 			if (functionalGroups.size()!=1){
 				throw new StructureBuildingException("Expected exactly 1 functionalGroup. Found " + functionalGroups.size());
 			}
@@ -373,7 +373,7 @@ class StructureBuilder {
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = XOMTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -478,7 +478,7 @@ class StructureBuilder {
 		}
 		Element rightMostGroup;
 		if (words.get(0).getName().equals(WORDRULE_EL)){//e.g. Nicotinic acid N-oxide
-			List<Element> fullWords = XOMTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), WORD_EL, TYPE_ATR, WordType.full.toString());
+			List<Element> fullWords = OpsinTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), WORD_EL, TYPE_ATR, WordType.full.toString());
 			if (fullWords.size()==0){
 				throw new StructureBuildingException("OPSIN is entirely unsure where the oxide goes so has decided not to guess");
 			}
@@ -489,7 +489,7 @@ class StructureBuilder {
 		}
 		
 		int numberOfOxygenToAdd =1;
-		List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(words.get(1), MULTIPLIER_EL);
+		List<Element> multipliers =OpsinTools.getDescendantElementsWithTagName(words.get(1), MULTIPLIER_EL);
 		if (multipliers.size() >1){
 			throw new StructureBuildingException("Expected 0 or 1 multiplier found: " + multipliers.size());
 		}
@@ -512,7 +512,7 @@ class StructureBuilder {
 				}
 			}
 		}
-		List<Element> functionalGroup =XOMTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
+		List<Element> functionalGroup =OpsinTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
 		if (functionalGroup.size()!=1){
 			throw new StructureBuildingException("Expected 1 group element found: " + functionalGroup.size());
 		}
@@ -521,7 +521,7 @@ class StructureBuilder {
 		for (int i = 0; i < numberOfOxygenToAdd; i++) {
 			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels));
 		}
-		List<Element> locantEls =XOMTools.getDescendantElementsWithTagName(words.get(1), LOCANT_EL);
+		List<Element> locantEls =OpsinTools.getDescendantElementsWithTagName(words.get(1), LOCANT_EL);
 		if (locantEls.size() >1){
 			throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
 		}
@@ -666,7 +666,7 @@ class StructureBuilder {
 		}
 		else{//e.g. butan-2,3-dione dioxime or hexan2,3-dione 2-oxime
 			int numberOfCarbonylReplacements =1;
-			List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(words.get(1), MULTIPLIER_EL);
+			List<Element> multipliers =OpsinTools.getDescendantElementsWithTagName(words.get(1), MULTIPLIER_EL);
 			if (multipliers.size() >1){
 				throw new StructureBuildingException("Expected 0 or 1 multiplier found: " + multipliers.size());
 			}
@@ -674,7 +674,7 @@ class StructureBuilder {
 				numberOfCarbonylReplacements = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
 				multipliers.get(0).detach();
 			}
-			List<Element> functionalGroup =XOMTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
+			List<Element> functionalGroup =OpsinTools.getDescendantElementsWithTagName(words.get(1), FUNCTIONALGROUP_EL);
 			if (functionalGroup.size()!=1){
 				throw new StructureBuildingException("Expected 1 functionalGroup element found: " + functionalGroup.size());
 			}
@@ -691,7 +691,7 @@ class StructureBuilder {
 				}
 				replacementFragments.add(replacementFragment);
 			}
-			List<Element> locantEls =XOMTools.getDescendantElementsWithTagName(words.get(1), LOCANT_EL);
+			List<Element> locantEls =OpsinTools.getDescendantElementsWithTagName(words.get(1), LOCANT_EL);
 			if (locantEls.size() >1){
 				throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
 			}
@@ -818,13 +818,13 @@ class StructureBuilder {
 			throw new StructureBuildingException("Unexpected number of words in anhydride. Check wordRules.xml, this is probably a bug");
 		}
 		Element anhydrideWord = words.get(words.size()-1);
-		List<Element> functionalClass =XOMTools.getDescendantElementsWithTagName(anhydrideWord, FUNCTIONALGROUP_EL);
+		List<Element> functionalClass =OpsinTools.getDescendantElementsWithTagName(anhydrideWord, FUNCTIONALGROUP_EL);
 		if (functionalClass.size()!=1){
 			throw new StructureBuildingException("Expected 1 group element found: " + functionalClass.size());
 		}
 		String anhydrideSmiles = functionalClass.get(0).getAttributeValue(VALUE_ATR);
 		int numberOfAnhydrideLinkages =1;
-		List<Element> multipliers =XOMTools.getDescendantElementsWithTagName(anhydrideWord, MULTIPLIER_EL);
+		List<Element> multipliers =OpsinTools.getDescendantElementsWithTagName(anhydrideWord, MULTIPLIER_EL);
 		if (multipliers.size() >1){
 			throw new StructureBuildingException("Expected 0 or 1 multiplier found: " + multipliers.size());
 		}
@@ -833,7 +833,7 @@ class StructureBuilder {
 			multipliers.get(0).detach();
 		}
 		String anhydrideLocant = null;
-		List<Element> anhydrideLocants =XOMTools.getDescendantElementsWithTagNames(anhydrideWord, new String[]{LOCANT_EL, COLONORSEMICOLONDELIMITEDLOCANT_EL});
+		List<Element> anhydrideLocants =OpsinTools.getDescendantElementsWithTagNames(anhydrideWord, new String[]{LOCANT_EL, COLONORSEMICOLONDELIMITEDLOCANT_EL});
 		if (anhydrideLocants.size() >1){
 			throw new StructureBuildingException("Expected 0 or 1 anhydrideLocants found: " + anhydrideLocants.size());
 		}
@@ -863,7 +863,7 @@ class StructureBuilder {
 					BuildResults newAcidBr;
 					if (i!=0){
 						Element newAcid = state.fragManager.cloneElement(state, words.get(0));
-						XOMTools.insertAfter(words.get(0), newAcid);
+						OpsinTools.insertAfter(words.get(0), newAcid);
 						newAcidBr = new BuildResults(state, newAcid);
 					}
 					else{
@@ -938,7 +938,7 @@ class StructureBuilder {
 					throw new StructureBuildingException("Unsupported or invalid anhydride");
 				}
 				Element newAcid = state.fragManager.cloneElement(state, words.get(0));
-				XOMTools.insertAfter(words.get(0), newAcid);
+				OpsinTools.insertAfter(words.get(0), newAcid);
 				BuildResults br2 = new BuildResults(state, newAcid);
 				formAnhydrideLink(anhydrideSmiles, br1, br2);
 			}
@@ -996,7 +996,7 @@ class StructureBuilder {
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
 		for (int i=1; i<words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
-			List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
+			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
 			if (functionalGroups.size()!=1){
 				throw new StructureBuildingException("Expected exactly 1 functionalGroup. Found " + functionalGroups.size());
 			}
@@ -1006,7 +1006,7 @@ class StructureBuilder {
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = XOMTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -1049,7 +1049,7 @@ class StructureBuilder {
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
 		for (int i=1; i<words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
-			List<Element> functionalGroups = XOMTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
+			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
 			if (functionalGroups.size()!=1){
 				throw new StructureBuildingException("Expected exactly 1 functionalGroup. Found " + functionalGroups.size());
 			}
@@ -1059,7 +1059,7 @@ class StructureBuilder {
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = XOMTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
 			if (possibleMultiplier!=null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
@@ -1122,7 +1122,7 @@ class StructureBuilder {
 		if (wordIndice >= words.size() || !words.get(wordIndice).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("Glycol functionalTerm word expected");
 		}
-		List<Element> functionalClassEls = XOMTools.getDescendantElementsWithTagName(words.get(wordIndice), FUNCTIONALCLASS_EL);
+		List<Element> functionalClassEls = OpsinTools.getDescendantElementsWithTagName(words.get(wordIndice), FUNCTIONALCLASS_EL);
 		if (functionalClassEls.size()!=1){
 			throw new StructureBuildingException("Glycol functional class not found where expected");
 		}
@@ -1240,13 +1240,13 @@ class StructureBuilder {
 		Fragment rootFragment = state.xmlFragmentMap.get(rightMostGroup);//the group which will be modified
 		List<Atom> carbonylOxygen= findCarbonylOxygens(rootFragment, new ArrayList<String>());
 		Element functionalWord = words.get(words.size()-1);
-		List<Element> functionalClasses = XOMTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALCLASS_EL);
+		List<Element> functionalClasses = OpsinTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALCLASS_EL);
 		if (functionalClasses.size()!=1){
 			throw new StructureBuildingException("OPSIN bug: unable to find acetal functionalClass");
 		}
 		Element functionalClassEl = functionalClasses.get(0);
 		String functionalClass = functionalClassEl.getValue();
-		Element beforeAcetal = XOMTools.getPreviousSibling(functionalClassEl);
+		Element beforeAcetal = OpsinTools.getPreviousSibling(functionalClassEl);
 		int numberOfAcetals =1;
 		List<String> elements = null;
 		if (beforeAcetal!=null){
@@ -1300,7 +1300,7 @@ class StructureBuilder {
 			else{
 				throw new StructureBuildingException("Unexpected element before acetal");
 			}
-			currentEl = XOMTools.getNextSibling(currentEl);
+			currentEl = OpsinTools.getNextSibling(currentEl);
 		}
 		return elements;
 	}
@@ -1446,7 +1446,7 @@ class StructureBuilder {
 		BuildResults peptideBr = new BuildResults(state, peptide);
 		if (peptideBr.getOutAtomCount() ==1){
 			Atom outAtom =peptideBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-			List<Element> aminoAcids = XOMTools.getDescendantElementsWithTagNameAndAttribute(peptide, GROUP_EL, TYPE_ATR, AMINOACID_TYPE_VAL);
+			List<Element> aminoAcids = OpsinTools.getDescendantElementsWithTagNameAndAttribute(peptide, GROUP_EL, TYPE_ATR, AMINOACID_TYPE_VAL);
 			if (aminoAcids.size() < 2){
 				throw new StructureBuildingException("Cyclic peptide building failed: Requires at least two amino acids!");
 			}
@@ -1673,7 +1673,7 @@ class StructureBuilder {
 				wordRule.removeAttribute(wordRule.getAttribute(STOICHIOMETRY_ATR));
 				for (int j = 1; j < stoichiometry; j++) {
 					Element clone = state.fragManager.cloneElement(state, wordRule);
-					XOMTools.insertAfter(wordRule, clone);
+					OpsinTools.insertAfter(wordRule, clone);
 				}
 				explicitStoichiometryPresent =true;
 			}
@@ -1693,7 +1693,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void balanceChargeIfPossible(Element molecule, int overallCharge, boolean explicitStoichiometryPresent) throws StructureBuildingException {
-		List<Element> wordRules = XOMTools.getChildElementsWithTagName(molecule, WORDRULE_ATR);
+		List<Element> wordRules = OpsinTools.getChildElementsWithTagName(molecule, WORDRULE_ATR);
 
 		List<Element> positivelyChargedComponents = new ArrayList<Element>();
 		List<Element> negativelyChargedComponents = new ArrayList<Element>();
@@ -1701,7 +1701,7 @@ class StructureBuilder {
 		HashMap<Element, BuildResults> componentToBR = new HashMap<Element, BuildResults>();
 		
 		List<Element> cationicElements = new ArrayList<Element>();
-		List<Element> elementaryAtoms = XOMTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
 		for (Element elementaryAtom : elementaryAtoms) {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
 				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
@@ -1833,7 +1833,7 @@ class StructureBuilder {
 			}
 			int timesToDuplicate = Math.abs(overallCharge/charge);
 			for (int i = 0; i < timesToDuplicate; i++) {
-				XOMTools.insertAfter(componentToMultiply, state.fragManager.cloneElement(state, componentToMultiply));
+				OpsinTools.insertAfter(componentToMultiply, state.fragManager.cloneElement(state, componentToMultiply));
 			}
 		}
 		else{//e.g. iron(3+) sulfate -->2:3 mixture
@@ -1847,17 +1847,17 @@ class StructureBuilder {
 			int negativeCharge = Math.abs(componentToChargeMapping.get(negativelyChargedComponents.get(0)));
 			int targetTotalAbsoluteCharge = positiveCharge * negativeCharge;
 			for (int i = (targetTotalAbsoluteCharge/negativeCharge); i >1; i--) {
-				XOMTools.insertAfter(negativelyChargedComponents.get(0), state.fragManager.cloneElement(state, negativelyChargedComponents.get(0)));
+				OpsinTools.insertAfter(negativelyChargedComponents.get(0), state.fragManager.cloneElement(state, negativelyChargedComponents.get(0)));
 			}
 			for (int i = (targetTotalAbsoluteCharge/positiveCharge); i >1; i--) {
-				XOMTools.insertAfter(positivelyChargedComponents.get(0), state.fragManager.cloneElement(state, positivelyChargedComponents.get(0)));
+				OpsinTools.insertAfter(positivelyChargedComponents.get(0), state.fragManager.cloneElement(state, positivelyChargedComponents.get(0)));
 			}
 		}
 		return true;
 	}
 
 	private boolean componentCanBeMultiplied(Element componentToMultiply) {
-		if (componentToMultiply.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString()) && XOMTools.getChildElementsWithTagNameAndAttribute(componentToMultiply, WORD_EL, TYPE_ATR, WordType.full.toString()).size()>1){
+		if (componentToMultiply.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString()) && OpsinTools.getChildElementsWithTagNameAndAttribute(componentToMultiply, WORD_EL, TYPE_ATR, WordType.full.toString()).size()>1){
 			return false;//already has been multiplied e.g. dichloride
 		}
 		Element firstChild = componentToMultiply.getChild(0);
@@ -1883,7 +1883,7 @@ class StructureBuilder {
 
 	private Element findRightMostGroupInWordOrWordRule(Element wordOrWordRule) throws StructureBuildingException {
 		if (wordOrWordRule.getName().equals(WORDRULE_EL)){
-			List<Element> words = XOMTools.getDescendantElementsWithTagName(wordOrWordRule, WORD_EL);
+			List<Element> words = OpsinTools.getDescendantElementsWithTagName(wordOrWordRule, WORD_EL);
 			for (int i = words.size() -1 ; i >=0; i--) {//ignore functionalTerm Words
 				if (words.get(i).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 					words.remove(words.get(i));

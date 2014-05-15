@@ -99,7 +99,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	void processParse(Element parse) throws ComponentGenerationException {
-		List<Element> substituentsAndRoot = XOMTools.getDescendantElementsWithTagNames(parse, new String[]{SUBSTITUENT_EL, ROOT_EL});
+		List<Element> substituentsAndRoot = OpsinTools.getDescendantElementsWithTagNames(parse, new String[]{SUBSTITUENT_EL, ROOT_EL});
 
 		for (Element subOrRoot: substituentsAndRoot) {
 			/* Throws exceptions for occurrences that are ambiguous and this parse has picked the incorrect interpretation */
@@ -116,7 +116,7 @@ class ComponentGenerator {
 			processSuffixPrefixes(subOrRoot);
 			processLambdaConvention(subOrRoot);
 		}
-		List<Element> groups =  XOMTools.getDescendantElementsWithTagName(parse, GROUP_EL);
+		List<Element> groups =  OpsinTools.getDescendantElementsWithTagName(parse, GROUP_EL);
 
 		/* Converts open/close bracket elements to bracket elements and
 		 *  places the elements inbetween within the newly created bracket */
@@ -139,19 +139,19 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	static void resolveAmbiguities(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
+		List<Element> multipliers = OpsinTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (Element apparentMultiplier : multipliers) {
 			if (!BASIC_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR)) && !VONBAEYER_TYPE_VAL.equals(apparentMultiplier.getAttributeValue(TYPE_ATR))){
 				continue;
 			}
 			int multiplierNum = Integer.parseInt(apparentMultiplier.getAttributeValue(VALUE_ATR));
-			Element nextEl = XOMTools.getNextSibling(apparentMultiplier);
+			Element nextEl = OpsinTools.getNextSibling(apparentMultiplier);
 			if (multiplierNum >=3){//detects ambiguous use of things like tetradeca
 				if(nextEl !=null){
 					if (nextEl.getName().equals(ALKANESTEMCOMPONENT)){//can ignore the trivial alkanes as ambiguity does not exist for them
 						int alkaneChainLength = Integer.parseInt(nextEl.getAttributeValue(VALUE_ATR));
 						if (alkaneChainLength >=10 && alkaneChainLength > multiplierNum){
-							Element isThisALocant = XOMTools.getPreviousSibling(apparentMultiplier);
+							Element isThisALocant = OpsinTools.getPreviousSibling(apparentMultiplier);
 							if (isThisALocant == null ||
 									!isThisALocant.getName().equals(LOCANT_EL) ||
 									MATCH_COMMA.split(isThisALocant.getValue()).length != multiplierNum){
@@ -163,10 +163,10 @@ class ComponentGenerator {
 			}
 
 			if (multiplierNum >=4 && nextEl !=null && nextEl.getName().equals(HYDROCARBONFUSEDRINGSYSTEM_EL) && nextEl.getValue().equals("phen") && !"e".equals(nextEl.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR))){//deals with tetra phenyl vs tetraphen yl
-				Element possibleLocantOrMultiplierOrSuffix = XOMTools.getNextSibling(nextEl);
+				Element possibleLocantOrMultiplierOrSuffix = OpsinTools.getNextSibling(nextEl);
 				if (possibleLocantOrMultiplierOrSuffix!=null){//null if not used as substituent
 					if (possibleLocantOrMultiplierOrSuffix.getName().equals(SUFFIX_EL)){//for phen the aryl substituent, expect an adjacent suffix e.g. phenyl, phenoxy
-						Element isThisALocant = XOMTools.getPreviousSibling(apparentMultiplier);
+						Element isThisALocant = OpsinTools.getPreviousSibling(apparentMultiplier);
 						if (isThisALocant == null || !isThisALocant.getName().equals(LOCANT_EL) || MATCH_COMMA.split(isThisALocant.getValue()).length != 1){
 							String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
 							throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
@@ -181,15 +181,15 @@ class ComponentGenerator {
 			}
 		}
 
-		List<Element> fusions = XOMTools.getChildElementsWithTagName(subOrRoot, FUSION_EL);
+		List<Element> fusions = OpsinTools.getChildElementsWithTagName(subOrRoot, FUSION_EL);
 		for (Element fusion : fusions) {
 			String fusionText = fusion.getValue();
 			if (matchNumberLocantsOnlyFusionBracket.matcher(fusionText).matches()){
-				Element possibleHWRing = XOMTools.getNextSiblingIgnoringCertainElements(fusion, new String[]{MULTIPLIER_EL, HETEROATOM_EL});
+				Element possibleHWRing = OpsinTools.getNextSiblingIgnoringCertainElements(fusion, new String[]{MULTIPLIER_EL, HETEROATOM_EL});
 				if (possibleHWRing !=null && HANTZSCHWIDMAN_SUBTYPE_VAL.equals(possibleHWRing.getAttributeValue(SUBTYPE_ATR))){
 					int heteroCount = 0;
 					int multiplierValue = 1;
-					Element currentElem = XOMTools.getNextSibling(fusion);
+					Element currentElem = OpsinTools.getNextSibling(fusion);
 					while(currentElem != null && !currentElem.getName().equals(GROUP_EL)){
 						if(currentElem.getName().equals(HETEROATOM_EL)) {
 							heteroCount+=multiplierValue;
@@ -197,7 +197,7 @@ class ComponentGenerator {
 						} else if (currentElem.getName().equals(MULTIPLIER_EL)){
 							multiplierValue = Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR));
 						}
-						currentElem = XOMTools.getNextSibling(currentElem);
+						currentElem = OpsinTools.getNextSibling(currentElem);
 					}
 					String[] locants = MATCH_COMMA.split(fusionText.substring(1, fusionText.length()-1));
 					if (locants.length == heteroCount){
@@ -230,7 +230,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	static void processLocants(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> locants = XOMTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
+		List<Element> locants = OpsinTools.getChildElementsWithTagName(subOrRoot, LOCANT_EL);
 		for (Element locant : locants) {
 			List<String> individualLocants = splitIntoIndividualLocants(StringTools.removeDashIfPresent(locant.getValue()));
 			for (int i = 0; i < individualLocants.size(); i++) {
@@ -273,7 +273,7 @@ class ComponentGenerator {
 							for (String addedHydrogen : addedHydrogens) {
 								Element addedHydrogenElement=new Element(ADDEDHYDROGEN_EL);
 								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length()-1)));
-								XOMTools.insertBefore(locant, addedHydrogenElement);
+								OpsinTools.insertBefore(locant, addedHydrogenElement);
 							}
 							if (locant.getAttribute(TYPE_ATR)==null){
 								locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
@@ -285,7 +285,7 @@ class ComponentGenerator {
 							Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL);
 							newStereoChemEl.setValue("(" + locantText +rs+")");
 							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-							XOMTools.insertBefore(locant, newStereoChemEl);
+							OpsinTools.insertBefore(locant, newStereoChemEl);
 						}
 						else if (matchDigit.matcher(brackettedText).matches()){
 							//compounds locant e.g. 1(10). Leave as is, it will be handled by the function that handles unsaturation
@@ -304,7 +304,7 @@ class ComponentGenerator {
 
 			locant.setValue(StringTools.stringListToString(individualLocants, ","));
 
-			Element afterLocants = XOMTools.getNextSibling(locant);
+			Element afterLocants = OpsinTools.getNextSibling(locant);
 			if(afterLocants == null){
 				throw new ComponentGenerationException("Nothing after locant tag: " + locant.toXML());
 			}
@@ -323,10 +323,10 @@ class ComponentGenerator {
 	 */
 	private static void ifCarbohydrateLocantConvertToAminoAcidStyleLocant(Element locant) {
 		if (MATCH_ELEMENT_SYMBOL.matcher(locant.getValue()).matches()){
-			Element possibleMultiplier = XOMTools.getPreviousSibling(locant);
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(locant);
 			if (possibleMultiplier!=null && possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
-				Element possibleOtherLocant = XOMTools.getPreviousSibling(possibleMultiplier);
+				Element possibleOtherLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
 				if (possibleOtherLocant!=null){
 					String[] locantValues = MATCH_COMMA.split(possibleOtherLocant.getValue());
 					if (locantValues.length == Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR))){
@@ -348,7 +348,7 @@ class ComponentGenerator {
 					sb.append(StringTools.multiplyString("'", multiplierValue-1));
 					Element newLocant = new Element(LOCANT_EL);
 					newLocant.setValue(sb.toString());
-					XOMTools.insertBefore(possibleMultiplier, newLocant);
+					OpsinTools.insertBefore(possibleMultiplier, newLocant);
 					locant.detach();
 				}
 			}
@@ -392,11 +392,11 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void convertOrthoMetaParaToLocants(Element subOrRoot) throws ComponentGenerationException{
-		List<Element> ompLocants = XOMTools.getChildElementsWithTagName(subOrRoot, ORTHOMETAPARA_EL);
+		List<Element> ompLocants = OpsinTools.getChildElementsWithTagName(subOrRoot, ORTHOMETAPARA_EL);
 		for (Element ompLocant : ompLocants) {
 			String locantText = ompLocant.getValue();
 			String firstChar = locantText.substring(0, 1);
-			Element afterOmpLocant = XOMTools.getNextSibling(ompLocant);
+			Element afterOmpLocant = OpsinTools.getNextSibling(ompLocant);
 			ompLocant.setName(LOCANT_EL);
 			ompLocant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
 			if(afterOmpLocant.getName().equals(MULTIPLIER_EL) && afterOmpLocant.getAttributeValue(VALUE_ATR).equals("2") ||
@@ -438,14 +438,14 @@ class ComponentGenerator {
 	 * @param subOrRoot
 	 */
 	private void formAlkaneStemsFromComponents(Element subOrRoot) {
-		Deque<Element> alkaneStemComponents =new ArrayDeque<Element>(XOMTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
+		Deque<Element> alkaneStemComponents =new ArrayDeque<Element>(OpsinTools.getChildElementsWithTagName(subOrRoot, ALKANESTEMCOMPONENT));
 		while(!alkaneStemComponents.isEmpty()){
 			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
 			int alkaneChainLength =0;
 			StringBuilder alkaneName = new StringBuilder();
 			alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
 			alkaneName.append(alkaneStemComponent.getValue());
-			while (!alkaneStemComponents.isEmpty() && XOMTools.getNextSibling(alkaneStemComponent)==alkaneStemComponents.getFirst()) {
+			while (!alkaneStemComponents.isEmpty() && OpsinTools.getNextSibling(alkaneStemComponent)==alkaneStemComponents.getFirst()) {
 				alkaneStemComponent.detach();
 				alkaneStemComponent = alkaneStemComponents.removeFirst();
 				alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
@@ -464,7 +464,7 @@ class ComponentGenerator {
 			}
 			labels.append(alkaneChainLength);
 			alkaneStem.addAttribute(new Attribute(LABELS_ATR, labels.toString()));
-			XOMTools.insertAfter(alkaneStemComponent, alkaneStem);
+			OpsinTools.insertAfter(alkaneStemComponent, alkaneStem);
 			alkaneStemComponent.detach();
 		}
 	}
@@ -479,7 +479,7 @@ class ComponentGenerator {
 		List<Element> alkaneStemModifiers = subOrRoot.getChildElements(ALKANESTEMMODIFIER_EL);
 		for(int i=0;i<alkaneStemModifiers.size();i++) {
 			Element alkaneStemModifier =alkaneStemModifiers.get(i);
-			Element alkane = XOMTools.getNextSibling(alkaneStemModifier);
+			Element alkane = OpsinTools.getNextSibling(alkaneStemModifier);
 			if (alkane ==null || !CHAIN_TYPE_VAL.equals(alkane.getAttributeValue(TYPE_ATR))
 					|| !ALKANESTEM_SUBTYPE_VAL.equals(alkane.getAttributeValue(SUBTYPE_ATR))){
 				throw new ComponentGenerationException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
@@ -512,7 +512,7 @@ class ComponentGenerator {
 				if ((chainLength==1 || chainLength ==2) && alkaneStemModifier.getValue().equals("n-")){
 					Element locant = new Element(LOCANT_EL);
 					locant.setValue("N");
-					XOMTools.insertBefore(alkane, locant);
+					OpsinTools.insertBefore(alkane, locant);
 				}
 				continue;
 			}
@@ -579,24 +579,24 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void processHeterogenousHydrides(Element subOrRoot) throws ComponentGenerationException  {
-		List<Element> multipliers = XOMTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
+		List<Element> multipliers = OpsinTools.getChildElementsWithTagName(subOrRoot, MULTIPLIER_EL);
 		for (int i = 0; i < multipliers.size(); i++) {
 			Element m = multipliers.get(i);
 			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
 				continue;
 			}
-			Element multipliedElem = XOMTools.getNextSibling(m);
+			Element multipliedElem = OpsinTools.getNextSibling(m);
 
 			if(multipliedElem.getName().equals(GROUP_EL) &&
 					multipliedElem.getAttribute(SUBTYPE_ATR)!=null &&
 					multipliedElem.getAttributeValue(SUBTYPE_ATR).equals(HETEROSTEM_SUBTYPE_VAL)) {
 				int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 				
-				Element possiblyALocant = XOMTools.getPreviousSibling(m);//detect rare case where multiplier does not mean form a chain of heteroatoms e.g. something like 1,2-disulfanylpropane
+				Element possiblyALocant = OpsinTools.getPreviousSibling(m);//detect rare case where multiplier does not mean form a chain of heteroatoms e.g. something like 1,2-disulfanylpropane
 				if(possiblyALocant !=null && possiblyALocant.getName().equals(LOCANT_EL)&& mvalue==MATCH_COMMA.split(possiblyALocant.getValue()).length){
-					Element suffix = XOMTools.getNextSibling(multipliedElem, SUFFIX_EL);
+					Element suffix = OpsinTools.getNextSibling(multipliedElem, SUFFIX_EL);
 					if (suffix !=null && suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL)){
-						Element possibleMultiplier = XOMTools.getPreviousSibling(suffix);
+						Element possibleMultiplier = OpsinTools.getPreviousSibling(suffix);
 						if (!possibleMultiplier.getName().equals(MULTIPLIER_EL)){//NOT something like 3,3'-diselane-1,2-diyl
 							continue;
 						}
@@ -605,8 +605,8 @@ class ComponentGenerator {
 				
 				//chain of heteroatoms
 				String heteroatomSmiles=multipliedElem.getAttributeValue(VALUE_ATR);
-				if (heteroatomSmiles.equals("B") && XOMTools.getPreviousSibling(m)==null){
-					Element possibleUnsaturator = XOMTools.getNextSibling(multipliedElem);
+				if (heteroatomSmiles.equals("B") && OpsinTools.getPreviousSibling(m)==null){
+					Element possibleUnsaturator = OpsinTools.getNextSibling(multipliedElem);
 					if (possibleUnsaturator !=null && possibleUnsaturator.getName().equals(UNSATURATOR_EL) && possibleUnsaturator.getAttributeValue(VALUE_ATR).equals("1")){
 						throw new ComponentGenerationException("Polyboranes are not currently supported");
 					}
@@ -621,11 +621,11 @@ class ComponentGenerator {
 			if (m.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
 				continue;
 			}
-			Element multipliedElem = XOMTools.getNextSibling(m);
+			Element multipliedElem = OpsinTools.getNextSibling(m);
 			if(multipliedElem.getName().equals(HETEROATOM_EL)){
-				Element possiblyAnotherHeteroAtom = XOMTools.getNextSibling(multipliedElem);
+				Element possiblyAnotherHeteroAtom = OpsinTools.getNextSibling(multipliedElem);
 				if (possiblyAnotherHeteroAtom !=null && possiblyAnotherHeteroAtom.getName().equals(HETEROATOM_EL)){
-					Element possiblyAnUnsaturator = XOMTools.getNextSiblingIgnoringCertainElements(possiblyAnotherHeteroAtom, new String[]{LOCANT_EL, MULTIPLIER_EL});//typically ane but can be ene or yne e.g. triphosphaza-1,3-diene
+					Element possiblyAnUnsaturator = OpsinTools.getNextSiblingIgnoringCertainElements(possiblyAnotherHeteroAtom, new String[]{LOCANT_EL, MULTIPLIER_EL});//typically ane but can be ene or yne e.g. triphosphaza-1,3-diene
 					if (possiblyAnUnsaturator !=null && possiblyAnUnsaturator.getName().equals(UNSATURATOR_EL)){
 						//chain of alternating heteroatoms
 						if (possiblyAnUnsaturator.getAttributeValue(VALUE_ATR).equals("1")){
@@ -633,7 +633,7 @@ class ComponentGenerator {
 						}
 						int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 						StringBuilder smilesSB= new StringBuilder();
-						Element possiblyARingFormingEl = XOMTools.getPreviousSibling(m);
+						Element possiblyARingFormingEl = OpsinTools.getPreviousSibling(m);
 						boolean heteroatomChainWillFormARing = false;
 						if (possiblyARingFormingEl!=null && (possiblyARingFormingEl.getName().equals(CYCLO_EL) || possiblyARingFormingEl.getName().equals(VONBAEYER_EL) || possiblyARingFormingEl.getName().equals(SPIRO_EL))){
 							heteroatomChainWillFormARing=true;
@@ -662,7 +662,7 @@ class ComponentGenerator {
 							addedGroup.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
 						}
 						addedGroup.setValue(smiles);
-						XOMTools.insertAfter(possiblyAnotherHeteroAtom, addedGroup);
+						OpsinTools.insertAfter(possiblyAnotherHeteroAtom, addedGroup);
 
 						possiblyAnotherHeteroAtom.detach();
 						m.detach();
@@ -670,7 +670,7 @@ class ComponentGenerator {
 					else if (possiblyAnUnsaturator!=null && possiblyAnUnsaturator.getValue().equals("an") && HANTZSCHWIDMAN_SUBTYPE_VAL.equals(possiblyAnUnsaturator.getAttributeValue(SUBTYPE_ATR))){
 						//check for HWring that should be interpreted as a heterogenous hydride
 						boolean foundLocantIndicatingHwRingHeteroatomPositions =false;//allow formally incorrect HW ring systems if they have locants
-						Element possibleLocant = XOMTools.getPreviousSibling(m);
+						Element possibleLocant = OpsinTools.getPreviousSibling(m);
 						if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL)){
 							int expected = Integer.parseInt(m.getAttributeValue(VALUE_ATR)) + 1;
 							if (expected == MATCH_COMMA.split(possibleLocant.getValue()).length){
@@ -757,7 +757,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void processIndicatedHydrogens(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> indicatedHydrogens = XOMTools.getChildElementsWithTagName(subOrRoot, INDICATEDHYDROGEN_EL);
+		List<Element> indicatedHydrogens = OpsinTools.getChildElementsWithTagName(subOrRoot, INDICATEDHYDROGEN_EL);
 		for (Element indicatedHydrogenGroup : indicatedHydrogens) {
 			String txt = StringTools.removeDashIfPresent(indicatedHydrogenGroup.getValue());
 			if (!StringTools.endsWithCaseInsensitive(txt, "h")){//remove brackets if they are present
@@ -768,7 +768,7 @@ class ComponentGenerator {
                 if (StringTools.endsWithCaseInsensitive(hydrogenLocant, "h")) {
                     Element indicatedHydrogenEl = new Element(INDICATEDHYDROGEN_EL);
                     indicatedHydrogenEl.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
-                    XOMTools.insertBefore(indicatedHydrogenGroup, indicatedHydrogenEl);
+                    OpsinTools.insertBefore(indicatedHydrogenGroup, indicatedHydrogenEl);
                 }
                 else{
                 	throw new ComponentGenerationException("OPSIN Bug: malformed indicated hydrogen element!");
@@ -785,7 +785,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> stereoChemistryElements = XOMTools.getChildElementsWithTagName(subOrRoot, STEREOCHEMISTRY_EL);
+		List<Element> stereoChemistryElements = OpsinTools.getChildElementsWithTagName(subOrRoot, STEREOCHEMISTRY_EL);
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				processStereochemistryBracket(stereoChemistryElement);
@@ -829,7 +829,7 @@ class ComponentGenerator {
 		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, StringTools.removeDashIfPresent(locantVal)));
 		                }
 		                stereoChemEl.setValue(stereoChemistryDescriptor);
-		                XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
+		                OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		                if (matchRS.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
 		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
@@ -899,7 +899,7 @@ class ComponentGenerator {
 	}
 
 	private void assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
-		Element possibleLocant = XOMTools.getPrevious(stereoChemistryElement);
+		Element possibleLocant = OpsinTools.getPrevious(stereoChemistryElement);
 		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 			possibleLocant.detach();
@@ -907,13 +907,13 @@ class ComponentGenerator {
 	}
 	
 	private void processLocantAssigningForEndoExoSynAnti(Element stereoChemistryElement) {
-		Element possibleLocant = XOMTools.getPrevious(stereoChemistryElement);
+		Element possibleLocant = OpsinTools.getPrevious(stereoChemistryElement);
 		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
-			Element group = XOMTools.getNextSibling(stereoChemistryElement, GROUP_EL);
+			Element group = OpsinTools.getNextSibling(stereoChemistryElement, GROUP_EL);
 			if (group != null && 
 					(CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))
-						|| XOMTools.getPreviousSibling(group).getName().equals(VONBAEYER_EL))){
+						|| OpsinTools.getPreviousSibling(group).getName().equals(VONBAEYER_EL))){
 				//detach locant only if we're sure it has no other meaning
 				//typically locants in front of endo/exo/syn/anti also indicate the position of a susbtituent/suffix e.g. 3-exo-amino
 				possibleLocant.detach();
@@ -937,7 +937,7 @@ class ComponentGenerator {
 		            Element stereoChemEl = new Element(STEREOCHEMISTRY_EL);
 		            stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, locant));
 		            stereoChemEl.setValue(stereoChemistryDescriptor);
-		            XOMTools.insertBefore(stereoChemistryElement, stereoChemEl);
+		            OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		           	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		        	if (Character.toLowerCase(possibleAlphaBeta.charAt(0)) == 'a'){
 		            	stereoChemEl.addAttribute(new Attribute(VALUE_ATR, "alpha"));
@@ -960,7 +960,7 @@ class ComponentGenerator {
 		if (!createLocantsEl){
 			//create locants unless a group supporting alpha/beta stereochem is within this substituent/root
 			createLocantsEl =true;
-			List<Element> groups = XOMTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
+			List<Element> groups = OpsinTools.getNextSiblingsOfType(stereoChemistryElement, GROUP_EL);
 			for (Element group : groups) {
 				if (group.getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR)!=null){
 					createLocantsEl=false;
@@ -972,7 +972,7 @@ class ComponentGenerator {
 		if (createLocantsEl){
 			Element newLocantEl = new Element(LOCANT_EL);
 			newLocantEl.setValue(StringTools.stringListToString(locants, ","));
-			XOMTools.insertAfter(stereoChemistryElement, newLocantEl);
+			OpsinTools.insertAfter(stereoChemistryElement, newLocantEl);
 		}
 		stereoChemistryElement.detach();
 	}
@@ -994,7 +994,7 @@ class ComponentGenerator {
 		}
 		Element locantEl = new Element(LOCANT_EL);
 		locantEl.setValue(sb.toString());
-		XOMTools.insertAfter(stereoChemistryElement, locantEl);
+		OpsinTools.insertAfter(stereoChemistryElement, locantEl);
 	}
 
 	/**
@@ -1003,9 +1003,9 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processSuffixPrefixes(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> suffixPrefixes =  XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIXPREFIX_EL);
+		List<Element> suffixPrefixes =  OpsinTools.getChildElementsWithTagName(subOrRoot, SUFFIXPREFIX_EL);
 		for (Element suffixPrefix : suffixPrefixes) {
-			Element suffix = XOMTools.getNextSibling(suffixPrefix);
+			Element suffix = OpsinTools.getNextSibling(suffixPrefix);
 			if (suffix==null || ! suffix.getName().equals(SUFFIX_EL)){
 				throw new ComponentGenerationException("OPSIN bug: suffix not found after suffixPrefix: " + suffixPrefix.getValue());
 			}
@@ -1024,9 +1024,9 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processInfixes(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> infixes = XOMTools.getChildElementsWithTagName(subOrRoot, INFIX_EL);
+		List<Element> infixes = OpsinTools.getChildElementsWithTagName(subOrRoot, INFIX_EL);
 		for (Element infix : infixes) {
-			Element suffix = XOMTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL});
+			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL});
 			if (suffix ==null || !suffix.getName().equals(SUFFIX_EL)){
 				throw new ComponentGenerationException("No suffix found next next to infix: "+ infix.getValue());
 			}
@@ -1040,16 +1040,16 @@ class ComponentGenerator {
 			}
 			String infixValue =infix.getAttributeValue(VALUE_ATR);
 			currentInfixInformation.add(infixValue);
-			Element possibleMultiplier = XOMTools.getPreviousSibling(infix);
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(infix);
 			Element possibleBracket;
 			boolean multiplierKnownToIndicateInfixMultiplicationPresent =false;
 			if (possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 				//suffix prefix present so multiplier must indicate infix replacement
-				Element possibleSuffixPrefix = XOMTools.getPreviousSiblingIgnoringCertainElements(infix, new String[]{MULTIPLIER_EL, INFIX_EL});
+				Element possibleSuffixPrefix = OpsinTools.getPreviousSiblingIgnoringCertainElements(infix, new String[]{MULTIPLIER_EL, INFIX_EL});
 				if (possibleSuffixPrefix!=null && possibleSuffixPrefix.getName().equals(SUFFIXPREFIX_EL)){
 					multiplierKnownToIndicateInfixMultiplicationPresent =true;
 				}
-				Element elementBeforeMultiplier = XOMTools.getPreviousSibling(possibleMultiplier);
+				Element elementBeforeMultiplier = OpsinTools.getPreviousSibling(possibleMultiplier);
 				//double multiplier indicates multiple suffixes which all have their infix multiplied
 				//if currentInfixInformation contains more than 1 entry it contains information from an infix from before the multiplier so the interpretation of the multiplier as a suffix multiplier is impossible
 				if (elementBeforeMultiplier.getName().equals(MULTIPLIER_EL) || currentInfixInformation.size() > 1){
@@ -1063,7 +1063,7 @@ class ComponentGenerator {
 				infix.detach();
 			}
 			if (possibleBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){
-				Element bracket = XOMTools.getNextSibling(suffix);
+				Element bracket = OpsinTools.getNextSibling(suffix);
 				if (!bracket.getName().equals(STRUCTURALCLOSEBRACKET_EL)){
 					throw new ComponentGenerationException("Matching closing bracket not found around infix/suffix block");
 				}
@@ -1106,7 +1106,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processLambdaConvention(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> lambdaConventionEls = XOMTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
+		List<Element> lambdaConventionEls = OpsinTools.getChildElementsWithTagName(subOrRoot, LAMBDACONVENTION_EL);
 		boolean fusedRingPresent = false;
 		if (lambdaConventionEls.size()>0){
 			if (subOrRoot.getChildElements(GROUP_EL).size()>1){
@@ -1116,7 +1116,7 @@ class ComponentGenerator {
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			boolean frontLocantsExpected =false;//Is the lambdaConvention el followed by benz/benzo of a fused ring system (these have front locants which correspond to the final fused rings numbering) or by a polycylicspiro system
 			String[] lambdaValues = MATCH_COMMA.split(StringTools.removeDashIfPresent(lambdaConventionEl.getValue()));
-			Element possibleHeteroatomOrMultiplier = XOMTools.getNextSibling(lambdaConventionEl);
+			Element possibleHeteroatomOrMultiplier = OpsinTools.getNextSibling(lambdaConventionEl);
 			int heteroCount = 0;
 			int multiplierValue = 1;
 			while(possibleHeteroatomOrMultiplier != null){
@@ -1129,7 +1129,7 @@ class ComponentGenerator {
 				else{
 					break;
 				}
-				possibleHeteroatomOrMultiplier = XOMTools.getNextSibling(possibleHeteroatomOrMultiplier);
+				possibleHeteroatomOrMultiplier = OpsinTools.getNextSibling(possibleHeteroatomOrMultiplier);
 			}
 			boolean assignLambdasToHeteroAtoms =false;
 			if (lambdaValues.length==heteroCount){//heteroatom and number of locants +lambdas must match
@@ -1140,11 +1140,11 @@ class ComponentGenerator {
 					assignLambdasToHeteroAtoms =true;
 				}
 			}
-			else if (possibleHeteroatomOrMultiplier!=null && ((heteroCount==0 && XOMTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
+			else if (possibleHeteroatomOrMultiplier!=null && ((heteroCount==0 && OpsinTools.getNextSibling(lambdaConventionEl).equals(possibleHeteroatomOrMultiplier) &&
 					fusedRingPresent && possibleHeteroatomOrMultiplier.getName().equals(GROUP_EL) &&
 					(possibleHeteroatomOrMultiplier.getValue().equals("benzo") || possibleHeteroatomOrMultiplier.getValue().equals("benz"))
-					&& !XOMTools.getNextSibling(possibleHeteroatomOrMultiplier).getName().equals(FUSION_EL)
-					&& !XOMTools.getNextSibling(possibleHeteroatomOrMultiplier).getName().equals(LOCANT_EL))
+					&& !OpsinTools.getNextSibling(possibleHeteroatomOrMultiplier).getName().equals(FUSION_EL)
+					&& !OpsinTools.getNextSibling(possibleHeteroatomOrMultiplier).getName().equals(LOCANT_EL))
 					|| (possibleHeteroatomOrMultiplier.getName().equals(POLYCYCLICSPIRO_EL) && 
 							(possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spirobi")|| possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spiroter"))))){
 				frontLocantsExpected = true;//a benzo fused ring e.g. 1lambda4,3-benzothiazole or a symmetrical poly cyclic spiro system
@@ -1152,14 +1152,14 @@ class ComponentGenerator {
 			List<Element> heteroAtoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
 			if (assignLambdasToHeteroAtoms){//populate heteroAtoms, multiplied heteroatoms are multiplied out
 				Element multiplier = null;
-				Element heteroatomOrMultiplier = XOMTools.getNextSibling(lambdaConventionEl);
+				Element heteroatomOrMultiplier = OpsinTools.getNextSibling(lambdaConventionEl);
 				while(heteroatomOrMultiplier != null){
 					if(heteroatomOrMultiplier.getName().equals(HETEROATOM_EL)) {
 						heteroAtoms.add(heteroatomOrMultiplier);
 						if (multiplier!=null){
 							for (int i = 1; i < Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)); i++) {
 								Element newHeteroAtom = new Element(heteroatomOrMultiplier);
-								XOMTools.insertBefore(heteroatomOrMultiplier, newHeteroAtom);
+								OpsinTools.insertBefore(heteroatomOrMultiplier, newHeteroAtom);
 								heteroAtoms.add(newHeteroAtom);
 							}
 							multiplier.detach();
@@ -1176,7 +1176,7 @@ class ComponentGenerator {
 					else{
 						break;
 					}
-					heteroatomOrMultiplier = XOMTools.getNextSibling(heteroatomOrMultiplier);
+					heteroatomOrMultiplier = OpsinTools.getNextSibling(heteroatomOrMultiplier);
 				}
 			}
 
@@ -1208,7 +1208,7 @@ class ComponentGenerator {
 						if (locantAtr!=null){
 							newLambda.addAttribute(locantAtr);
 						}
-						XOMTools.insertBefore(lambdaConventionEl, newLambda);
+						OpsinTools.insertBefore(lambdaConventionEl, newLambda);
 					}
 				}
 				else{//just a locant e.g 1,3lambda5
@@ -1258,7 +1258,7 @@ class ComponentGenerator {
 					if(blevel == 0) {
 						closeBracket = child;
 						Element bracket = structureBrackets(openBracket, closeBracket);
-						while(findAndStructureBrackets(XOMTools.getDescendantElementsWithTagName(bracket, SUBSTITUENT_EL)));
+						while(findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagName(bracket, SUBSTITUENT_EL)));
 						return true;
 					}
 				}
@@ -1280,7 +1280,7 @@ class ComponentGenerator {
 	 */
 	private Element structureBrackets(Element openBracket, Element closeBracket) throws ComponentGenerationException {
 		Element bracket = new Element(BRACKET_EL);
-		XOMTools.insertBefore(openBracket.getParent(), bracket);
+		OpsinTools.insertBefore(openBracket.getParent(), bracket);
 		/* Pick up everything in the substituent before the bracket*/
 		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
 			Element n = openBracket.getParent().getChild(0);
@@ -1292,7 +1292,7 @@ class ComponentGenerator {
 		 */
 		Element currentNode = openBracket.getParent();
 		while(!currentNode.equals(closeBracket.getParent())) {
-			Element nextNode = XOMTools.getNextSibling(currentNode);
+			Element nextNode = OpsinTools.getNextSibling(currentNode);
 			currentNode.detach();
 			bracket.appendChild(currentNode);
 			currentNode = nextNode;
@@ -1303,9 +1303,9 @@ class ComponentGenerator {
 		currentNode.detach();
 		bracket.appendChild(currentNode);
 		/* Pick up nodes after the close bracket */
-		currentNode = XOMTools.getNextSibling(closeBracket);
+		currentNode = OpsinTools.getNextSibling(closeBracket);
 		while(currentNode != null) {
-			Element nextNode = XOMTools.getNextSibling(currentNode);
+			Element nextNode = OpsinTools.getNextSibling(currentNode);
 			currentNode.detach();
 			bracket.appendChild(currentNode);
 			currentNode = nextNode;
@@ -1321,7 +1321,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processHydroCarbonRings(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> annulens = XOMTools.getChildElementsWithTagName(subOrRoot, ANNULEN_EL);
+		List<Element> annulens = OpsinTools.getChildElementsWithTagName(subOrRoot, ANNULEN_EL);
 		for (Element annulen : annulens) {
 			String annulenValue =annulen.getValue();
 	        Matcher match = matchAnnulene.matcher(annulenValue);
@@ -1347,9 +1347,9 @@ class ComponentGenerator {
 			annulen.getParent().replaceChild(annulen, group);
 		}
 
-		List<Element> hydrocarbonFRSystems = XOMTools.getChildElementsWithTagName(subOrRoot, HYDROCARBONFUSEDRINGSYSTEM_EL);
+		List<Element> hydrocarbonFRSystems = OpsinTools.getChildElementsWithTagName(subOrRoot, HYDROCARBONFUSEDRINGSYSTEM_EL);
 		for (Element hydrocarbonFRSystem : hydrocarbonFRSystems) {
-			Element multiplier = XOMTools.getPreviousSibling(hydrocarbonFRSystem);
+			Element multiplier = OpsinTools.getPreviousSibling(hydrocarbonFRSystem);
 			if(multiplier != null && multiplier.getName().equals(MULTIPLIER_EL)) {
 				int multiplierValue =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 				String classOfHydrocarbonFRSystem =hydrocarbonFRSystem.getAttributeValue(VALUE_ATR);
@@ -1487,12 +1487,12 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private void handleSuffixIrregularities(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> suffixes = XOMTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL);
+		List<Element> suffixes = OpsinTools.getChildElementsWithTagName(subOrRoot, SUFFIX_EL);
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getValue();
 			if (suffixValue.equals("ic") || suffixValue.equals("ous")){
 				if (!n2sConfig.allowInterpretationOfAcidsWithoutTheWordAcid()) {
-					Element next = XOMTools.getNext(suffix);
+					Element next = OpsinTools.getNext(suffix);
 					if (next == null){
 						throw new ComponentGenerationException("\"acid\" not found after " +suffixValue);
 					}
@@ -1502,7 +1502,7 @@ class ComponentGenerator {
 			else if (suffixValue.equals("quinone") || suffixValue.equals("quinon")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				suffix.setValue("one");
-				Element multiplier = XOMTools.getPreviousSibling(suffix);
+				Element multiplier = OpsinTools.getPreviousSibling(suffix);
 				if (multiplier.getName().equals(MULTIPLIER_EL)){
 					Attribute multVal = multiplier.getAttribute(VALUE_ATR);
 					int newMultiplier = Integer.parseInt(multVal.getValue()) * 2;
@@ -1512,30 +1512,30 @@ class ComponentGenerator {
 					multiplier = new Element(MULTIPLIER_EL);
 					multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 					multiplier.setValue("di");
-					XOMTools.insertBefore(suffix, multiplier);
+					OpsinTools.insertBefore(suffix, multiplier);
 				}
 			}
 			else if (suffixValue.equals("ylene") || suffixValue.equals("ylen")){
 				suffix.removeAttribute(suffix.getAttribute(ADDITIONALVALUE_ATR));
 				suffix.setValue("yl");
-				Element alk = XOMTools.getPreviousSibling(suffix, GROUP_EL);
+				Element alk = OpsinTools.getPreviousSibling(suffix, GROUP_EL);
 				if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
 					alk.removeAttribute(alk.getAttribute(USABLEASJOINER_ATR));
 				}
 				Element multiplier = new Element(MULTIPLIER_EL);
 				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 				multiplier.setValue("di");
-				XOMTools.insertBefore(suffix, multiplier);
+				OpsinTools.insertBefore(suffix, multiplier);
 			}
 			else if (suffixValue.equals("ylium") &&//disambiguate between ylium the charge modifying suffix and ylium the acylium suffix
 					"acylium".equals(suffix.getAttributeValue(VALUE_ATR)) &&
 					suffix.getAttribute(SUFFIXPREFIX_ATR)==null &&
 					suffix.getAttribute(INFIX_ATR)==null){
-				Element group = XOMTools.getPreviousSibling(suffix, GROUP_EL);
+				Element group = OpsinTools.getPreviousSibling(suffix, GROUP_EL);
 				if (group==null || (!ACIDSTEM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)) &&
 						!CHALCOGENACIDSTEM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)) &&
 								!NONCARBOXYLICACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)))){
-					Element beforeSuffix = XOMTools.getPreviousSibling(suffix);
+					Element beforeSuffix = OpsinTools.getPreviousSibling(suffix);
 					String o = beforeSuffix.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR);
 					if (o ==null || !StringTools.endsWithCaseInsensitive(o, "o")){
 						if (group!=null && ARYLSUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
@@ -1559,7 +1559,7 @@ class ComponentGenerator {
 	 */
 	private void detectAlkaneFusedRingBridges(Element group) {
 		if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			Element possibleBridgeFormer = XOMTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
+			Element possibleBridgeFormer = OpsinTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
 			if(possibleBridgeFormer != null && possibleBridgeFormer.getName().equals(BRIDGEFORMINGO_EL)){
 				possibleBridgeFormer.detach();
 				group.setName(FUSEDRINGBRIDGE_EL);
@@ -1574,7 +1574,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processRings(Element group) throws ComponentGenerationException {
-		Element previous = XOMTools.getPreviousSibling(group);
+		Element previous = OpsinTools.getPreviousSibling(group);
 		if(previous != null) {
 			String previousElType = previous.getName();
 			if(previousElType.equals(SPIRO_EL)){
@@ -1599,7 +1599,7 @@ class ComponentGenerator {
 	private void processSpiroSystem(Element chainGroup, Element spiroEl) throws NumberFormatException, ComponentGenerationException {
 		int[][] spiroDescriptors = getSpiroDescriptors(StringTools.removeDashIfPresent(spiroEl.getValue()));
 
-		Element multiplier = XOMTools.getPreviousSibling(spiroEl);
+		Element multiplier = OpsinTools.getPreviousSibling(spiroEl);
 		int numberOfSpiros = 1;
 		if (multiplier != null && multiplier.getName().equals(MULTIPLIER_EL)){
 			numberOfSpiros = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
@@ -1757,7 +1757,7 @@ class ComponentGenerator {
 	 */
 	private void processVonBaeyerSystem(Element chainEl, Element vonBaeyerBracketEl) throws ComponentGenerationException {
 		String vonBaeyerBracket = StringTools.removeDashIfPresent(vonBaeyerBracketEl.getValue());
-		Element multiplier = XOMTools.getPreviousSibling(vonBaeyerBracketEl);
+		Element multiplier = OpsinTools.getPreviousSibling(vonBaeyerBracketEl);
 		int numberOfRings=Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 		multiplier.detach();
 
@@ -2036,7 +2036,7 @@ class ComponentGenerator {
 		
 		if (!n2sConfig.allowInterpretationOfAcidsWithoutTheWordAcid()) {
 			if (group.getAttribute(FUNCTIONALIDS_ATR) !=null && (groupValue.endsWith("ic") || groupValue.endsWith("ous"))){
-				Element next = XOMTools.getNext(group);
+				Element next = OpsinTools.getNext(group);
 				if (next == null){
 					throw new ComponentGenerationException("\"acid\" not found after " +groupValue);
 				}
@@ -2044,10 +2044,10 @@ class ComponentGenerator {
 		}
 		
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is generally phenol with an O replaced with S not thiophene with a hydroxy
-			Element possibleSuffix = XOMTools.getNextSibling(group);
+			Element possibleSuffix = OpsinTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) && possibleSuffix !=null && possibleSuffix.getName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
-					Element isThisALocant = XOMTools.getPreviousSibling(group);
+					Element isThisALocant = OpsinTools.getPreviousSibling(group);
 					if (isThisALocant == null || !isThisALocant.getName().equals(LOCANT_EL) || MATCH_COMMA.split(isThisALocant.getValue()).length != 1){
 						throw new ComponentGenerationException(groupValue + "ol has been incorrectly interpreted as "+ groupValue+", ol instead of phenol with the oxgen replaced");
 					}
@@ -2055,9 +2055,9 @@ class ComponentGenerator {
 			}
 		}
 		else if (groupValue.equals("methylene") || groupValue.equals("methylen")) {//e.g. 3,4-methylenedioxyphenyl
-			Element nextSub = XOMTools.getNextSibling(group.getParent());
-			if (nextSub !=null && nextSub.getName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null 
-					&& (XOMTools.getPreviousSibling(group)==null || !XOMTools.getPreviousSibling(group).getName().equals(MULTIPLIER_EL))){//not trimethylenedioxy
+			Element nextSub = OpsinTools.getNextSibling(group.getParent());
+			if (nextSub !=null && nextSub.getName().equals(SUBSTITUENT_EL) && OpsinTools.getNextSibling(group)==null 
+					&& (OpsinTools.getPreviousSibling(group)==null || !OpsinTools.getPreviousSibling(group).getName().equals(MULTIPLIER_EL))){//not trimethylenedioxy
 				List<Element> children = nextSub.getChildElements();
 				if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
 					group.setValue(groupValue + "dioxy");
@@ -2073,16 +2073,16 @@ class ComponentGenerator {
 					nextSub.detach();
 					for (int i = children.size() -1 ; i >=2; i--) {
 						children.get(i).detach();
-						XOMTools.insertAfter(group, children.get(i));
+						OpsinTools.insertAfter(group, children.get(i));
 					}
 				}
 			}
 		}
 		else if (groupValue.equals("ethylene") || groupValue.equals("ethylen")) {
-			Element previous = XOMTools.getPreviousSibling(group);
+			Element previous = OpsinTools.getPreviousSibling(group);
 			if (previous != null && previous.getName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
-				Element possibleRoot = XOMTools.getNextSibling(group.getParent());
+				Element possibleRoot = OpsinTools.getNextSibling(group.getParent());
 				if (possibleRoot==null && OpsinTools.getParentWordRule(group).getAttributeValue(WORDRULE_ATR).equals(WordRule.glycol.toString())){//e.g. dodecaethylene glycol
 					StringBuilder smiles = new StringBuilder("CC");
 					for (int i = 1; i < multiplierValue; i++) {
@@ -2128,8 +2128,8 @@ class ComponentGenerator {
 				}
 			}
 			else{
-				Element nextSub = XOMTools.getNextSibling(group.getParent());
-				if (nextSub !=null && nextSub.getName().equals(SUBSTITUENT_EL) && XOMTools.getNextSibling(group)==null){
+				Element nextSub = OpsinTools.getNextSibling(group.getParent());
+				if (nextSub !=null && nextSub.getName().equals(SUBSTITUENT_EL) && OpsinTools.getNextSibling(group)==null){
 					List<Element> children = nextSub.getChildElements();
 					if (children.size() >=2 && children.get(0).getValue().equals("di")&& children.get(1).getValue().equals("oxy")){
 						group.setValue(groupValue + "dioxy");
@@ -2145,17 +2145,17 @@ class ComponentGenerator {
 						nextSub.detach();
 						for (int i = children.size() -1 ; i >=2; i--) {
 							children.get(i).detach();
-							XOMTools.insertAfter(group, children.get(i));
+							OpsinTools.insertAfter(group, children.get(i));
 						}
 					}
 				}
 			}
 		}
 		else if (groupValue.equals("propylene") || groupValue.equals("propylen")) {
-			Element previous = XOMTools.getPreviousSibling(group);
+			Element previous = OpsinTools.getPreviousSibling(group);
 			if (previous!=null && previous.getName().equals(MULTIPLIER_EL)){
 				int multiplierValue = Integer.parseInt(previous.getAttributeValue(VALUE_ATR));
-				Element possibleRoot = XOMTools.getNextSibling(group.getParent());
+				Element possibleRoot = OpsinTools.getNextSibling(group.getParent());
 				if (possibleRoot==null && OpsinTools.getParentWordRule(group).getAttributeValue(WORDRULE_ATR).equals(WordRule.glycol.toString())){//e.g. dodecaethylene glycol
 					StringBuilder smiles =new StringBuilder("CCC");
 					for (int i = 1; i < multiplierValue; i++) {
@@ -2177,17 +2177,17 @@ class ComponentGenerator {
 		//acridone (not codified), anthrone, phenanthrone and xanthone have the one at position 9 by default
 		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("acrid") ||
 				groupValue.equals("xanth") || groupValue.equals("thioxanth") || groupValue.equals("selenoxanth")|| groupValue.equals("telluroxanth")|| groupValue.equals("xanthen")) {
-			Element possibleLocant = XOMTools.getPreviousSibling(group);
+			Element possibleLocant = OpsinTools.getPreviousSibling(group);
 			if (possibleLocant==null || !possibleLocant.getName().equals(LOCANT_EL)){//only need to give one a locant of 9 if no locant currently present
-				Element possibleSuffix = XOMTools.getNextSibling(group);
+				Element possibleSuffix = OpsinTools.getNextSibling(group);
 				if (possibleSuffix!=null && "one".equals(possibleSuffix.getAttributeValue(VALUE_ATR))){
 					//Rule C-315.2
 					Element newLocant =new Element(LOCANT_EL);
 					newLocant.setValue("9");
-					XOMTools.insertBefore(possibleSuffix, newLocant);
+					OpsinTools.insertBefore(possibleSuffix, newLocant);
 					Element newAddedHydrogen = new Element(ADDEDHYDROGEN_EL);
 					newAddedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));
-					XOMTools.insertBefore(newLocant, newAddedHydrogen);
+					OpsinTools.insertBefore(newLocant, newAddedHydrogen);
 				}
 				else if (possibleSuffix!=null && possibleSuffix.getName().equals(SUFFIX_EL) &&
 					groupValue.equals("xanth") || groupValue.equals("thioxanth") || groupValue.equals("selenoxanth")|| groupValue.equals("telluroxanth")){
@@ -2201,7 +2201,7 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("phospho")){//is this the organic meaning (P(=O)=O) or biochemical meaning (P(=O)(O)O)
 			Element substituent = group.getParent();
-			Element nextSubstituent = XOMTools.getNextSibling(substituent);
+			Element nextSubstituent = OpsinTools.getNextSibling(substituent);
 			if (nextSubstituent !=null){
 				Element nextGroup = nextSubstituent.getFirstChildElement(GROUP_EL);
 				String type = nextGroup.getAttributeValue(TYPE_ATR);
@@ -2220,7 +2220,7 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("aspart") || groupValue.equals("glutam")){//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDINIC_SUBTYPE_VAL)){
-				Element yl = XOMTools.getNextSibling(group);
+				Element yl = OpsinTools.getNextSibling(group);
 				if (yl.getAttributeValue(VALUE_ATR).equals("yl")){
 					group.removeAttribute(group.getAttribute(SUFFIXAPPLIESTO_ATR));
 					if (groupValue.equals("aspart")){
@@ -2239,13 +2239,13 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("hydrogen")){
 			Element hydrogenParentEl = group.getParent();
-			Element nextSubOrRoot = XOMTools.getNextSibling(hydrogenParentEl);
+			Element nextSubOrRoot = OpsinTools.getNextSibling(hydrogenParentEl);
 			if (nextSubOrRoot!=null){
 				Element possibleSuitableAteGroup = nextSubOrRoot.getChild(0);
 				if (!possibleSuitableAteGroup.getName().equals(GROUP_EL) || !NONCARBOXYLICACID_TYPE_VAL.equals(possibleSuitableAteGroup.getAttributeValue(TYPE_ATR))){
 					throw new ComponentGenerationException("Hydrogen is not meant as a substituent in this context!");
 				}
-				Element possibleMultiplier = XOMTools.getPreviousSibling(group);
+				Element possibleMultiplier = OpsinTools.getPreviousSibling(group);
 				String multiplier = "1";
 				if (possibleMultiplier!=null && possibleMultiplier.getName().equals(MULTIPLIER_EL)){
 					multiplier = possibleMultiplier.getAttributeValue(VALUE_ATR);
@@ -2263,7 +2263,7 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("acryl")){
 			if (SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-				Element nextEl = XOMTools.getNext(group);
+				Element nextEl = OpsinTools.getNext(group);
 				if (nextEl!=null && nextEl.getValue().equals("amid")){
 					throw new ComponentGenerationException("amide in acrylamide is not [NH2-]");
 				}
@@ -2271,20 +2271,20 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("azo") || groupValue.equals("azoxy") || groupValue.equals("nno-azoxy") || groupValue.equals("non-azoxy") || groupValue.equals("onn-azoxy") || groupValue.equals("diazoamino") || groupValue.equals("hydrazo") ){
 			Element enclosingSub = group.getParent();
-			Element next = XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
-			if (next==null && XOMTools.getPreviousSibling(enclosingSub) == null){//e.g. [(E)-NNO-azoxy]benzene
-				next = XOMTools.getNextSiblingIgnoringCertainElements(enclosingSub.getParent(), new String[]{HYPHEN_EL});
+			Element next = OpsinTools.getNextSiblingIgnoringCertainElements(enclosingSub, new String[]{HYPHEN_EL});
+			if (next==null && OpsinTools.getPreviousSibling(enclosingSub) == null){//e.g. [(E)-NNO-azoxy]benzene
+				next = OpsinTools.getNextSiblingIgnoringCertainElements(enclosingSub.getParent(), new String[]{HYPHEN_EL});
 			}
 			if (next!=null && next.getName().equals(ROOT_EL)){
 				if (!(next.getChild(0).getName().equals(MULTIPLIER_EL))){
-					List<Element> suffixes = XOMTools.getChildElementsWithTagName(next, SUFFIX_EL);
+					List<Element> suffixes = OpsinTools.getChildElementsWithTagName(next, SUFFIX_EL);
 					if (suffixes.size()==0){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
 						Element newMultiplier = new Element(MULTIPLIER_EL);
 						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 						next.insertChild(newMultiplier, 0);
-						Element interSubstituentHyphen = XOMTools.getPrevious(group);
+						Element interSubstituentHyphen = OpsinTools.getPrevious(group);
 						if (interSubstituentHyphen!=null && !interSubstituentHyphen.getName().equals(HYPHEN_EL)){//prevent implicit bracketting
-							XOMTools.insertAfter(interSubstituentHyphen, new Element(HYPHEN_EL));
+							OpsinTools.insertAfter(interSubstituentHyphen, new Element(HYPHEN_EL));
 						}
 					}
 				}
@@ -2292,14 +2292,14 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("coenzyme a") || groupValue.equals("coa")){
 			Element enclosingSubOrRoot = group.getParent();
-			Element previous = XOMTools.getPreviousSibling(enclosingSubOrRoot);
+			Element previous = OpsinTools.getPreviousSibling(enclosingSubOrRoot);
 			if (previous!=null){
-				List<Element> groups = XOMTools.getDescendantElementsWithTagName(previous, GROUP_EL);
+				List<Element> groups = OpsinTools.getDescendantElementsWithTagName(previous, GROUP_EL);
 				if (groups.size()>0){
 					Element possibleAcid = groups.get(groups.size()-1);
 					if (ACIDSTEM_TYPE_VAL.equals(possibleAcid.getAttributeValue(TYPE_ATR))){
 						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//multi acid. yl should be one oyl and the rest carboxylic acids
-							Element suffix = XOMTools.getNextSibling(possibleAcid, SUFFIX_EL);
+							Element suffix = OpsinTools.getNextSibling(possibleAcid, SUFFIX_EL);
 							if (suffix.getAttribute(ADDITIONALVALUE_ATR)==null){
 								suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
 							}
@@ -2313,19 +2313,19 @@ class ComponentGenerator {
 			}
 			//locanted substitution onto Coenzyme A is rarely intended, so put it in a bracket to disfavour it
 			Element newBracket = new Element(BRACKET_EL);
-			XOMTools.insertAfter(enclosingSubOrRoot, newBracket);
+			OpsinTools.insertAfter(enclosingSubOrRoot, newBracket);
 			enclosingSubOrRoot.detach();
 			newBracket.appendChild(enclosingSubOrRoot);
 		}
 		else if (groupValue.equals("sphinganine") || groupValue.equals("icosasphinganine") || groupValue.equals("eicosasphinganine") || groupValue.equals("phytosphingosine") || groupValue.equals("sphingosine")){
 			Element enclosingSubOrRoot = group.getParent();
-			Element previous = XOMTools.getPreviousSibling(enclosingSubOrRoot);
+			Element previous = OpsinTools.getPreviousSibling(enclosingSubOrRoot);
 			if (previous!=null){
-				List<Element> groups = XOMTools.getDescendantElementsWithTagName(previous, GROUP_EL);
+				List<Element> groups = OpsinTools.getDescendantElementsWithTagName(previous, GROUP_EL);
 				if (groups.size()>0){
 					Element possibleAcid = groups.get(groups.size()-1);
 					if (ALKANESTEM_SUBTYPE_VAL.equals(possibleAcid.getAttributeValue(SUBTYPE_ATR))){
-						List<Element> inlineSuffixes = XOMTools.getChildElementsWithTagNameAndAttribute(possibleAcid.getParent(), SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL);
+						List<Element> inlineSuffixes = OpsinTools.getChildElementsWithTagNameAndAttribute(possibleAcid.getParent(), SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL);
 						if (inlineSuffixes.size()==1 && inlineSuffixes.get(0).getAttributeValue(VALUE_ATR).equals("yl")){
 							inlineSuffixes.get(0).getAttribute(VALUE_ATR).setValue("oyl");//yl on a systematic acid next to a fatty acid means acyl
 							//c.f. Nomenclature of Lipids 1976, Appendix A, note a
@@ -2337,9 +2337,9 @@ class ComponentGenerator {
 		else if (groupValue.equals("sel")){
 			//check that it is not "selenium"
 			if (HETEROSTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
-				Element unsaturator = XOMTools.getNextSibling(group);
+				Element unsaturator = OpsinTools.getNextSibling(group);
 				if (unsaturator !=null && unsaturator.getName().equals(UNSATURATOR_EL) && unsaturator.getValue().equals("en") && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
-					Element ium = XOMTools.getNextSibling(unsaturator);
+					Element ium = OpsinTools.getNextSibling(unsaturator);
 					if (ium !=null && ium.getName().equals(SUFFIX_EL) && ium.getValue().equals("ium")){
 						throw new ComponentGenerationException("<multiplier>selenium does not indicate a chain of selenium atoms with a double bond and a positive charge");
 					}
@@ -2348,10 +2348,10 @@ class ComponentGenerator {
 		}
 		else if ((groupValue.equals("keto") || groupValue.equals("aldehydo")) && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 			//check for case where this is specifying the open chain form of a ketose/aldose
-			Element previousEl = XOMTools.getPreviousSibling(group);
+			Element previousEl = OpsinTools.getPreviousSibling(group);
 			if (previousEl ==null || !previousEl.getName().equals(LOCANT_EL) || groupValue.equals("aldehydo")){
 				Element parentSubstituent = group.getParent();
-				Element nextSubOrRoot = XOMTools.getNextSibling(parentSubstituent);
+				Element nextSubOrRoot = OpsinTools.getNextSibling(parentSubstituent);
 				Element parentOfCarbohydate = nextSubOrRoot;
 				Element carbohydrate = null;
 				while (parentOfCarbohydate != null){
@@ -2360,10 +2360,10 @@ class ComponentGenerator {
 						carbohydrate = possibleCarbohydrate;
 						break;
 					}
-					parentOfCarbohydate = XOMTools.getNextSibling(parentOfCarbohydate);
+					parentOfCarbohydate = OpsinTools.getNextSibling(parentOfCarbohydate);
 				}
 				if (carbohydrate != null) {
-					if (XOMTools.getChildElementsWithTagName(parentOfCarbohydate, CARBOHYDRATERINGSIZE_EL).size() > 0){
+					if (OpsinTools.getChildElementsWithTagName(parentOfCarbohydate, CARBOHYDRATERINGSIZE_EL).size() > 0){
 						throw new ComponentGenerationException("Carbohydrate has a specified ring size but " + groupValue + " indicates the open chain form!");
 					}
 					group.detach();
@@ -2397,19 +2397,19 @@ class ComponentGenerator {
 			Element suffix = null;
 			Boolean isAcid = null;
 			if (groupValue.endsWith("acid")){
-				if (XOMTools.getNext(group) == null){
+				if (OpsinTools.getNext(group) == null){
 					isAcid = true;
 				}
 			}
 			else if (groupValue.endsWith("ate")){
-				if (XOMTools.getNext(group) == null){
+				if (OpsinTools.getNext(group) == null){
 					isAcid = false;
 				}
 			}
 			else{
-				suffix = XOMTools.getNextSibling(group);
+				suffix = OpsinTools.getNextSibling(group);
 				if (suffix != null && suffix.getName().equals(SUFFIX_EL) &&
-						suffix.getAttribute(INFIX_ATR) == null && XOMTools.getNext(suffix) == null){
+						suffix.getAttribute(INFIX_ATR) == null && OpsinTools.getNext(suffix) == null){
 					String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 					if (suffixValue.equals("ic")){
 						isAcid = true;
@@ -2420,7 +2420,7 @@ class ComponentGenerator {
 				}
 			}
 			if (isAcid != null){//check for inorganic interpretation
-				Element substituent = XOMTools.getPreviousSibling(group.getParent());
+				Element substituent = OpsinTools.getPreviousSibling(group.getParent());
 				if (substituent !=null && (substituent.getName().equals(SUBSTITUENT_EL) || substituent.getName().equals(BRACKET_EL))){
 					List<Element> children = substituent.getChildElements();
 					Element firstChild = children.get(0);
@@ -2446,7 +2446,7 @@ class ComponentGenerator {
 						String multiplierVal = firstChild.getAttributeValue(VALUE_ATR);
 						
 						if (groupValue.equals("bor")){
-							if (multiplierVal.equals("4") || (multiplierVal.equals("3") && XOMTools.getPreviousSibling(substituent) != null)) {
+							if (multiplierVal.equals("4") || (multiplierVal.equals("3") && OpsinTools.getPreviousSibling(substituent) != null)) {
 								//tri case allows organotrifluoroborates
 								group.getAttribute(VALUE_ATR).setValue(isAcid ? "[B-].[H+]" :"[B-]");
 								matched = true;

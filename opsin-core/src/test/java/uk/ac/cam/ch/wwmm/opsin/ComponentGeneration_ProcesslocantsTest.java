@@ -131,7 +131,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("3", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
-		Element addedHydrogen = XOMTools.getPreviousSibling(locant);
+		Element addedHydrogen = OpsinTools.getPreviousSibling(locant);
 		assertNotNull(addedHydrogen);
 		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen.getName());
 		assertEquals("5'", addedHydrogen.getAttributeValue(LOCANT_ATR));
@@ -143,11 +143,11 @@ public class ComponentGeneration_ProcesslocantsTest {
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("1,2", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
-		Element addedHydrogen1 = XOMTools.getPreviousSibling(locant);
+		Element addedHydrogen1 = OpsinTools.getPreviousSibling(locant);
 		assertNotNull(addedHydrogen1);
 		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen1.getName());
 		assertEquals("7", addedHydrogen1.getAttributeValue(LOCANT_ATR));
-		Element addedHydrogen2 = XOMTools.getPreviousSibling(addedHydrogen1);
+		Element addedHydrogen2 = OpsinTools.getPreviousSibling(addedHydrogen1);
 		assertNotNull(addedHydrogen2);
 		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen2.getName());
 		assertEquals("2", addedHydrogen2.getAttributeValue(LOCANT_ATR));
@@ -158,7 +158,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 		locant.setValue("5(R)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("5", locant.getValue());
-		Element stereochemistry = XOMTools.getPreviousSibling(locant);
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
 		assertNotNull(stereochemistry);
 		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
 		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
@@ -170,7 +170,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 		locant.setValue("5-(S)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("5", locant.getValue());
-		Element stereochemistry = XOMTools.getPreviousSibling(locant);
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
 		assertNotNull(stereochemistry);
 		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
 		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
@@ -182,7 +182,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 		locant.setValue("N(3)-(S)");
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("N3", locant.getValue());
-		Element stereochemistry = XOMTools.getPreviousSibling(locant);
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
 		assertNotNull(stereochemistry);
 		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
 		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
@@ -202,12 +202,12 @@ public class ComponentGeneration_ProcesslocantsTest {
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("2,N5,gamma,N3,N3,N2,N10,4,N3,1(6)", locant.getValue());
 		assertEquals(ADDEDHYDROGENLOCANT_TYPE_VAL, locant.getAttributeValue(TYPE_ATR));
-		Element stereochemistry = XOMTools.getPreviousSibling(locant);
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
 		assertNotNull(stereochemistry);
 		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
 		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
 		assertEquals("(N3S)", stereochemistry.getValue());
-		Element addedHydrogen = XOMTools.getPreviousSibling(stereochemistry);
+		Element addedHydrogen = OpsinTools.getPreviousSibling(stereochemistry);
 		assertNotNull(addedHydrogen);
 		assertEquals(ADDEDHYDROGEN_EL, addedHydrogen.getName());
 		assertEquals("5", addedHydrogen.getAttributeValue(LOCANT_ATR));
@@ -219,13 +219,13 @@ public class ComponentGeneration_ProcesslocantsTest {
 		locant.setValue("O");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
-		XOMTools.insertBefore(locant, multiplier);
+		OpsinTools.insertBefore(locant, multiplier);
 		Element numericLocant = new Element(LOCANT_EL);
 		numericLocant.setValue("2,4,6");
-		XOMTools.insertBefore(multiplier, numericLocant);
+		OpsinTools.insertBefore(multiplier, numericLocant);
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("O2,O4,O6", numericLocant.getValue());
-		Element group = XOMTools.getNextSibling(multiplier);
+		Element group = OpsinTools.getNextSibling(multiplier);
 		assertNotNull(group);
 		assertEquals(group.getName(), GROUP_EL);
 	}
@@ -236,13 +236,13 @@ public class ComponentGeneration_ProcesslocantsTest {
 		locant.setValue("O");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
-		XOMTools.insertBefore(locant, multiplier);
+		OpsinTools.insertBefore(locant, multiplier);
 		ComponentGenerator.processLocants(substituent);
-		Element elBeforeMultiplier = XOMTools.getPreviousSibling(multiplier);
+		Element elBeforeMultiplier = OpsinTools.getPreviousSibling(multiplier);
 		assertNotNull("A locant should not be in front of the multiplier", elBeforeMultiplier);
 		assertEquals(LOCANT_EL, elBeforeMultiplier.getName());
 		assertEquals("O,O',O''", elBeforeMultiplier.getValue());
-		Element group = XOMTools.getNextSibling(multiplier);
+		Element group = OpsinTools.getNextSibling(multiplier);
 		assertNotNull(group);
 		assertEquals(group.getName(), GROUP_EL);
 	}
@@ -253,13 +253,13 @@ public class ComponentGeneration_ProcesslocantsTest {
 		locant.setValue("2");
 		Element multiplier = new Element(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
-		XOMTools.insertBefore(locant, multiplier);
+		OpsinTools.insertBefore(locant, multiplier);
 		Element numericLocant = new Element(LOCANT_EL);
 		numericLocant.setValue("2,4,6");
-		XOMTools.insertBefore(multiplier, numericLocant);
+		OpsinTools.insertBefore(multiplier, numericLocant);
 		ComponentGenerator.processLocants(substituent);
 		assertEquals("2,4,6", numericLocant.getValue());
-		Element unmodifiedLocant = XOMTools.getNextSibling(multiplier);
+		Element unmodifiedLocant = OpsinTools.getNextSibling(multiplier);
 		assertNotNull(unmodifiedLocant);
 		assertEquals(unmodifiedLocant.getName(), LOCANT_EL);
 		assertEquals("2", unmodifiedLocant.getValue());
