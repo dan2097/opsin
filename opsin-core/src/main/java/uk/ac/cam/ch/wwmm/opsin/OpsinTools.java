@@ -439,7 +439,7 @@ class OpsinTools {
 			return earlierSiblingElementsOfType;
 		}
 		int indexOfCurrentElem = parent.indexOf(currentElem);
-		for (int i = 0; i < indexOfCurrentElem - 1; i++) {
+		for (int i = 0; i < indexOfCurrentElem; i++) {
 			Element child = parent.getChild(i);
 			if (child.getName().equals(elName)) {
 				earlierSiblingElementsOfType.add(child);
