@@ -555,7 +555,7 @@ class Fragment {
 	}
 
 	void setDefaultInAtom(Atom inAtom) {
-		this.defaultInAtom=inAtom;
+		this.defaultInAtom = inAtom;
 	}
 
 	/**
