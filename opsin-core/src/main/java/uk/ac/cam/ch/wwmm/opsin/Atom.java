@@ -30,7 +30,7 @@ class Atom {
 	private String element;
 
 	/**The locants that pertain to the atom.*/
-	private final List<String> locants = new ArrayList<String>();
+	private final List<String> locants = new ArrayList<String>(2);
 
 	/**The formal charge on the atom.*/
 	private int charge = 0;
@@ -45,7 +45,7 @@ class Atom {
 	private AtomParity atomParity = null;
 
 	/**The bonds that involve the atom*/
-	private final List<Bond> bonds = new ArrayList<Bond>();
+	private final List<Bond> bonds = new ArrayList<Bond>(4);
 
 	/**A map between PropertyKey s as declared here and useful atom properties, usually relating to some kind of special case. */
 	@SuppressWarnings("rawtypes")
