@@ -443,8 +443,7 @@ class WordRules {
 		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
 		List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
 		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
-			Element implicitHyphen = new Element(HYPHEN_EL);
-			implicitHyphen.setValue("-");
+			Element implicitHyphen = new Element(HYPHEN_EL, "-");
 			finalSubstituent.appendChild(implicitHyphen);
 		}
 		List<Element> elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();
