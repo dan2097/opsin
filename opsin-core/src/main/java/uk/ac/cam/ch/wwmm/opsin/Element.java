@@ -8,12 +8,27 @@ class Element {
 	private String name;
 	private String value;
 	private Element parent = null;
-	private List<Element> children = new ArrayList<Element>();
-	private List<Attribute> attributes = new ArrayList<Attribute>();
+	private final List<Element> children = new ArrayList<Element>();
+	private final List<Attribute> attributes = new ArrayList<Attribute>();
+	
+	Element(String name, String value) {
+		this.name = name;
+		this.value = value;
+	}
 	
 	Element(String name) {
 		this.name = name;
 		this.value = "";
+	}
+	
+	/**
+	 * Creates a deep copy with no parent
+	 * The value is set from the given parameter rather than copied
+	 * @param element
+	 */
+	Element(Element element, String value) {
+		this.value = value;
+		copyElementContents(element);
 	}
 
 	/**
@@ -21,16 +36,17 @@ class Element {
 	 * @param element
 	 */
 	Element(Element element) {
-		this.name = element.name;
 		this.value = element.value;
-		children = new ArrayList<Element>();
+		copyElementContents(element);
+	}
+	
+	private void copyElementContents(Element element) {
+		this.name = element.name;
 		for (Element childEl : element.children) {
 			Element newChild = new Element(childEl);
 			newChild.setParent(this);
 			children.add(newChild);
 		}
-		
-		attributes = new ArrayList<Attribute>();
 		for (Attribute atr : element.attributes) {
 			attributes.add(new Attribute(atr));
 		}

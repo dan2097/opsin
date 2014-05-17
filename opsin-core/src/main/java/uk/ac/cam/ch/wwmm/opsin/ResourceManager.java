@@ -447,8 +447,7 @@ class ResourceManager {
 				if (token == IGNORE_WHEN_WRITING_PARSE_TREE){
 					return null;
 				}
-				Element tokenInstance = new Element(token);
-				tokenInstance.setValue(tokenString);
+				Element tokenInstance = new Element(token, tokenString);
 				return tokenInstance;
 			}
 		}
@@ -457,8 +456,7 @@ class ResourceManager {
 			if (regexToken == IGNORE_WHEN_WRITING_PARSE_TREE){
 				return null;
 			}
-			Element tokenInstance = new Element(regexToken);
-			tokenInstance.setValue(tokenString);
+			Element tokenInstance = new Element(regexToken, tokenString);
 			return tokenInstance;
 		}
 		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);
