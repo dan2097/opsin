@@ -14,7 +14,7 @@ public class AtomTest {
 	
 	@Before
 	public void setUp() {
-		frag = new Fragment();
+		frag = new Fragment("", "");
 	}
 	
 	@Test

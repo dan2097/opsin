@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
@@ -25,22 +26,22 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 class Fragment {
 
 	/**A mapping between IDs and the atoms in this fragment, by default is ordered by the order atoms are added to the fragment*/
-	private final LinkedHashMap<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
+	private final Map<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
 
 	/**Equivalent to and synced to atomMapFromId.values() */
 	private final Collection<Atom> atomCollection = atomMapFromId.values();
 
 	/**A mapping between locants and the atoms in this fragment*/
-	private final HashMap<String, Atom> atomMapFromLocant = new HashMap<String, Atom>();
+	private final Map<String, Atom> atomMapFromLocant = new HashMap<String, Atom>();
 
 	/**The bonds in the fragment*/
 	private final Set<Bond> bondSet = new LinkedHashSet<Bond>();
 
 	/**The type of the fragment, for the purpose of resolving suffixes*/
-	private String type = "";
+	private String type;
 
 	/**The subType of the fragment, for the purpose of resolving suffixes*/
-	private String subType = "";
+	private String subType;
 
 	/**The atoms that are used when this fragment is connected to another fragment. Unused outAtoms means that the fragment is a radical or an error has occurred
 	 * Initially empty */
@@ -62,22 +63,17 @@ class Fragment {
 	 * Makes an empty Fragment with a given type and subType.
 	 * @param type The type of the fragment
 	 * @param subType The subtype of the fragment 
-	 * @throws StructureBuildingException
 	 */
-	Fragment(String type, String subType) throws StructureBuildingException {
-		if (type==null){
-			throw new StructureBuildingException("Type specified for fragment is null");
+	Fragment(String type, String subType) {
+		if (type == null){
+			throw new IllegalArgumentException("Type specified for fragment is null");
 		}
-		if (subType==null){
-			throw new StructureBuildingException("subType specified for fragment is null");
+		if (subType == null){
+			throw new IllegalArgumentException("subType specified for fragment is null");
 		}
 		this.type = type;
 		this.subType = subType;
 	}
-
-	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
-	 * Makes an empty fragment with no specified type.*/
-	Fragment() {}
 
 	/**Produces a CML element, corresponding to the molecule. The cml element contains
 	 * a molecule, which contains an atomArray and bondArray filled with atoms and bonds.

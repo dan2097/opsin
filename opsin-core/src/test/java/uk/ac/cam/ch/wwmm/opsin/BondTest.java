@@ -11,7 +11,7 @@ public class BondTest {
 	
 	@Test
 	public void testBond() {
-		Fragment frag = new Fragment();
+		Fragment frag = new Fragment("", "");
 		Atom a1 = new Atom(1, "C", frag);
 		Atom a2 = new Atom(2, "C", frag);
 		frag.addAtom(a1);
@@ -25,7 +25,7 @@ public class BondTest {
 	
 	@Test
 	public void testToCMLBond() {
-		Fragment frag = new Fragment();
+		Fragment frag = new Fragment("", "");
 		Atom a1 = new Atom(1, "C", frag);
 		Atom a2 = new Atom(2, "C", frag);
 		frag.addAtom(a1);

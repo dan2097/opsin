@@ -93,7 +93,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException 
 	 */
 	Fragment getUnifiedFragment() throws StructureBuildingException {
-		Fragment uniFrag = new Fragment();
+		Fragment uniFrag = new Fragment("", "");
 		for (Entry<Fragment, LinkedHashSet<Bond>> entry : fragToInterFragmentBond.entrySet()) {
 			Fragment f = entry.getKey();
 			Set<Bond> interFragmentBonds = entry.getValue();
