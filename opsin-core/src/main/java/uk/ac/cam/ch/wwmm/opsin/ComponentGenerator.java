@@ -1279,7 +1279,7 @@ class ComponentGenerator {
 		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
 			Element n = openBracket.getParent().getChild(0);
 			n.detach();
-			bracket.appendChild(n);
+			bracket.addChild(n);
 		}
 		/* Pick up all elements from the one with the open bracket,
 		 * to the one with the close bracket, inclusive.
@@ -1288,20 +1288,20 @@ class ComponentGenerator {
 		while(!currentEl.equals(closeBracket.getParent())) {
 			Element nextEl = OpsinTools.getNextSibling(currentEl);
 			currentEl.detach();
-			bracket.appendChild(currentEl);
+			bracket.addChild(currentEl);
 			currentEl = nextEl;
 			if (currentEl==null){
 				throw new ComponentGenerationException("Brackets within a word do not match!");
 			}
 		}
 		currentEl.detach();
-		bracket.appendChild(currentEl);
+		bracket.addChild(currentEl);
 		/* Pick up elements after the close bracket */
 		currentEl = OpsinTools.getNextSibling(closeBracket);
 		while(currentEl != null) {
 			Element nextEl = OpsinTools.getNextSibling(currentEl);
 			currentEl.detach();
-			bracket.appendChild(currentEl);
+			bracket.addChild(currentEl);
 			currentEl = nextEl;
 		}
 		openBracket.detach();
@@ -2302,7 +2302,7 @@ class ComponentGenerator {
 			Element newBracket = new GroupingEl(BRACKET_EL);
 			OpsinTools.insertAfter(enclosingSubOrRoot, newBracket);
 			enclosingSubOrRoot.detach();
-			newBracket.appendChild(enclosingSubOrRoot);
+			newBracket.addChild(enclosingSubOrRoot);
 		}
 		else if (groupValue.equals("sphinganine") || groupValue.equals("icosasphinganine") || groupValue.equals("eicosasphinganine") || groupValue.equals("phytosphingosine") || groupValue.equals("sphingosine")){
 			Element enclosingSubOrRoot = group.getParent();

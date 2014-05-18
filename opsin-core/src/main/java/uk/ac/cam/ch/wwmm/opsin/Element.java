@@ -35,9 +35,59 @@ abstract class Element {
 	 */
 	abstract Element getFirstChildElement(String name);
 
-	abstract Element getChild(int position);
+	/**
+	 * Returns the child at the given index in the children list
+	 * @param index
+	 * @return
+	 */
+	abstract Element getChild(int index);
 
+	/**
+	 * Returns the number of children
+	 * @return
+	 */
 	abstract int getChildCount();
+	
+	/**
+	 * Adds a child element
+	 * @param child
+	 */
+	abstract void addChild(Element child);
+	
+	/**
+	 * Returns the index of the given child in the children list (or -1 if it isn't a child)
+	 * @param child
+	 * @return
+	 */
+	abstract int indexOf(Element child);
+
+	/**
+	 * Inserts the element at the given index in the children list
+	 * @param child
+	 * @param index
+	 */
+	abstract void insertChild(Element child, int index);
+
+	/**
+	 * Removes the given child element
+	 * @param child
+	 * @return
+	 */
+	abstract boolean removeChild(Element child);
+
+	/**
+	 * Removes the element at the given index in the children list
+	 * @param index
+	 * @return
+	 */
+	abstract Element removeChild(int index);
+
+	/**
+	 * Replaces a child element with another element
+	 * @param oldChild
+	 * @param newChild
+	 */
+	abstract void replaceChild(Element oldChild, Element newChild);
 
 	void addAttribute(Attribute attribute) {
 		attributes.add(attribute);
@@ -146,17 +196,6 @@ abstract class Element {
 		}
 	}
 
-	abstract void insertChild(Element child, int position);
-	abstract void appendChild(Element child);
-
-	abstract int indexOf(Element child);
-	
-	abstract boolean removeChild(Element child);
-
-	abstract Element removeChild(int i);
-
-	abstract void replaceChild(Element oldChild, Element newChild);
-	
 	void setParent(Element newParentEl) {
 		this.parent = newParentEl;
 	}

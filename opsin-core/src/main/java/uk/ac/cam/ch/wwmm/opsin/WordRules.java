@@ -344,7 +344,7 @@ class WordRules {
 				for (int j = 0; j < wordsInWordRule; j++) {
 					Element wordEl = wordEls.remove(i);
 					wordEl.detach();
-					wordRuleEl.appendChild(wordEl);
+					wordRuleEl.addChild(wordEl);
 					wordValues.add(wordEl.getAttributeValue(VALUE_ATR));
 				}
 				wordRuleEl.addAttribute(new Attribute(VALUE_ATR, StringTools.stringListToString(wordValues, " ")));//The bare string of all the words under this wordRule
@@ -405,7 +405,7 @@ class WordRules {
 		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
 		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
 		firstWord.detach();
-		wordRuleEl.appendChild(firstWord);
+		wordRuleEl.addChild(firstWord);
 		wordEls.set(indexOfFirstWord, wordRuleEl);
 		parentEl.insertChild(wordRuleEl, indexToInsertAt);
 	}
@@ -419,7 +419,7 @@ class WordRules {
 		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
 		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
 		firstWord.detach();
-		wordRuleEl.appendChild(firstWord);
+		wordRuleEl.addChild(firstWord);
 		wordEls.set(indexOfFirstWord, wordRuleEl);
 		parentEl.insertChild(wordRuleEl, indexToInsertAt);
 	}
@@ -444,7 +444,7 @@ class WordRules {
 		List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
 		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
 			Element implicitHyphen = new TokenEl(HYPHEN_EL, "-");
-			finalSubstituent.appendChild(implicitHyphen);
+			finalSubstituent.addChild(implicitHyphen);
 		}
 		List<Element> elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();
 		for (int j =  elementsToMergeIntoSubstituent.size() -1 ; j >=0; j--) {

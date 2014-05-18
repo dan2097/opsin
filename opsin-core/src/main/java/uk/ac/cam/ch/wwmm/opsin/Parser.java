@@ -117,7 +117,7 @@ class Parser {
 			moleculeEl.addAttribute(new Attribute(NAME_ATR, name));
 			for(ParseWord pw : pp.getWords()) {
 				Element word = new GroupingEl(WORD_EL);
-				moleculeEl.appendChild(word);
+				moleculeEl.addChild(word);
 				if (pw.getParseTokens().size() >1){
 					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating additional parses step");
 				}
@@ -276,20 +276,20 @@ class Parser {
 		int annotNumber = 0;
 		int annotPos = 0;
 		Element chunk = new GroupingEl(SUBSTITUENT_EL);
-		wordEl.appendChild(chunk);
+		wordEl.addChild(chunk);
 		Element lastTokenElement = null;
         for (String token : tokens) {
             if (annotPos >= annotations.get(annotNumber).size()) {
                 annotPos = 0;
                 annotNumber++;
                 chunk = new GroupingEl(SUBSTITUENT_EL);
-                wordEl.appendChild(chunk);
+                wordEl.addChild(chunk);
                 lastTokenElement = null;
             }
             Element tokenElement = resourceManager.makeTokenElement(token,
                     annotations.get(annotNumber).get(annotPos));
             if (tokenElement != null) {//null for tokens that have ignoreWhenWritingXML set
-                chunk.appendChild(tokenElement);
+                chunk.addChild(tokenElement);
                 lastTokenElement = tokenElement;
             }
             else if (lastTokenElement!=null && token.length() > 0){

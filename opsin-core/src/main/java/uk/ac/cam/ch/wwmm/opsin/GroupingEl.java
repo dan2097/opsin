@@ -40,8 +40,8 @@ class GroupingEl extends Element{
 	}
 	
 	@Override
-	Element getChild(int position) {
-		return children.get(position);
+	Element getChild(int index) {
+		return children.get(index);
 	}
 
 	@Override
@@ -50,13 +50,13 @@ class GroupingEl extends Element{
 	}
 	
 	@Override
-	void insertChild(Element child, int position) {
+	void insertChild(Element child, int index) {
 		child.setParent(this);
-		children.add(position, child);
+		children.add(index, child);
 	}
 
 	@Override
-	void appendChild(Element child) {
+	void addChild(Element child) {
 		child.setParent(this);
 		children.add(child);
 	}
@@ -73,20 +73,20 @@ class GroupingEl extends Element{
 	}
 
 	@Override
-	Element removeChild(int i) {
-		Element removed = children.remove(i);
+	Element removeChild(int index) {
+		Element removed = children.remove(index);
 		removed.setParent(null);
 		return removed;
 	}
 
 	@Override
 	void replaceChild(Element oldChild, Element newChild) {
-		int position = indexOf(oldChild);
-		if (position == -1) {
+		int index = indexOf(oldChild);
+		if (index == -1) {
 			throw new RuntimeException("oldChild is not a child of this element.");
 		}
-		removeChild(position);
-		insertChild(newChild, position);
+		removeChild(index);
+		insertChild(newChild, index);
 	}
 	
 	void setValue(String text) {
@@ -118,7 +118,7 @@ class GroupingEl extends Element{
 		for (Element childEl : this.children) {
 			Element newChild = childEl.copy();
 			newChild.setParent(copy);
-			copy.appendChild(newChild);
+			copy.addChild(newChild);
 		}
 		for (Attribute atr : this.attributes) {
 			copy.addAttribute(new Attribute(atr));

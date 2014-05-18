@@ -15,8 +15,8 @@ public class ComponentGeneration_ProcesslocantsTest {
 	public void setUpSubstituent(){
 		substituent = new GroupingEl(SUBSTITUENT_EL);
 		locant = new TokenEl(LOCANT_EL);
-		substituent.appendChild(locant);
-		substituent.appendChild(new TokenEl(GROUP_EL));//a dummy element to give the locant a potential purpose
+		substituent.addChild(locant);
+		substituent.addChild(new TokenEl(GROUP_EL));//a dummy element to give the locant a potential purpose
 	}
 	
 	@Test

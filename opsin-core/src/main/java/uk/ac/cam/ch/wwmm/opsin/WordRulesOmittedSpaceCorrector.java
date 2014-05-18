@@ -49,7 +49,7 @@ class WordRulesOmittedSpaceCorrector {
 					subToMove.detach();
 					Element newWord =new GroupingEl(WORD_EL);
 					newWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
-					newWord.appendChild(subToMove);
+					newWord.addChild(subToMove);
 					OpsinTools.insertAfter(substituentWords.get(0), newWord);
 				}
 			}
@@ -250,7 +250,7 @@ class WordRulesOmittedSpaceCorrector {
 		substituentOrBracket.detach();
 		Element newSubstituentWord = new GroupingEl(WORD_EL);
 		newSubstituentWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
-		newSubstituentWord.appendChild(substituentOrBracket);
+		newSubstituentWord.addChild(substituentOrBracket);
 		parentSimpleWordRule.insertChild(newSubstituentWord, 0);
 		String multiplierStr = substituentOrBracket.getAttributeValue(MULTIPLIER_ATR);
 		if (multiplierStr!=null){

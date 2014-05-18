@@ -14,7 +14,7 @@ public class StructureBuildingMethodsTest {
 	public void bracketedPrimeNotSpecialCase() {
 		Element word = new GroupingEl(WORD_EL);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		word.appendChild(substituent);
+		word.addChild(substituent);
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4"));
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4'"));
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4''"));
@@ -24,9 +24,9 @@ public class StructureBuildingMethodsTest {
 	public void bracketedPrimeSpecialCase1() {
 		Element word = new GroupingEl(WORD_EL);
 		Element bracket = new GroupingEl(BRACKET_EL);
-		word.appendChild(bracket);
+		word.addChild(bracket);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		bracket.appendChild(substituent);
+		bracket.addChild(substituent);
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4"));
 		assertEquals("4", StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4'"));
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4''"));
@@ -40,11 +40,11 @@ public class StructureBuildingMethodsTest {
 	public void bracketedPrimeSpecialCase2() {
 		Element word = new GroupingEl(WORD_EL);
 		Element bracket = new GroupingEl(BRACKET_EL);
-		word.appendChild(bracket);
+		word.addChild(bracket);
 		Element bracket2 = new GroupingEl(BRACKET_EL);
-		bracket.appendChild(bracket2);
+		bracket.addChild(bracket2);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		bracket2.appendChild(substituent);
+		bracket2.addChild(substituent);
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4"));
 		assertEquals(null, StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4'"));
 		assertEquals("4", StructureBuildingMethods.checkForBracketedPrimedLocantSpecialCase(substituent, "4''"));
@@ -64,15 +64,15 @@ public class StructureBuildingMethodsTest {
 		Fragment aminoFrag = state.fragManager.buildSMILES("-N");
 		state.xmlFragmentMap.put(amino, aminoFrag);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		substituent.appendChild(amino);
+		substituent.addChild(amino);
 		
 		Element methanol = new TokenEl(GROUP_EL);
 		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CO"));
 		Element root = new GroupingEl(ROOT_EL);
-		root.appendChild(methanol);
+		root.addChild(methanol);
 
-		word.appendChild(substituent);
-		word.appendChild(root);
+		word.addChild(substituent);
+		word.addChild(root);
 		StructureBuildingMethods.resolveRootOrSubstituentUnLocanted(state, substituent);
 		
 		Set<Bond> interFragmentBonds =  state.fragManager.getInterFragmentBonds(aminoFrag);
@@ -90,15 +90,15 @@ public class StructureBuildingMethodsTest {
 		Fragment phosphoFrag = state.fragManager.buildSMILES("-P(=O)O");
 		state.xmlFragmentMap.put(phospho, phosphoFrag);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		substituent.appendChild(phospho);
+		substituent.addChild(phospho);
 		
 		Element methanol = new TokenEl(GROUP_EL);
 		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CO"));
 		Element root = new GroupingEl(ROOT_EL);
-		root.appendChild(methanol);
+		root.addChild(methanol);
 
-		word.appendChild(substituent);
-		word.appendChild(root);
+		word.addChild(substituent);
+		word.addChild(root);
 		StructureBuildingMethods.resolveRootOrSubstituentUnLocanted(state, substituent);
 		
 		Set<Bond> interFragmentBonds =  state.fragManager.getInterFragmentBonds(phosphoFrag);
@@ -117,15 +117,15 @@ public class StructureBuildingMethodsTest {
 		state.xmlFragmentMap.put(phospho, phosphoFrag);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		substituent.addAttribute(new Attribute(LOCANT_ATR, "4"));
-		substituent.appendChild(phospho);
+		substituent.addChild(phospho);
 		
 		Element methanol = new TokenEl(GROUP_EL);
 		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CCCCO","group","1/2/3/4/"));
 		Element root = new GroupingEl(ROOT_EL);
-		root.appendChild(methanol);
+		root.addChild(methanol);
 
-		word.appendChild(substituent);
-		word.appendChild(root);
+		word.addChild(substituent);
+		word.addChild(root);
 		StructureBuildingMethods.resolveRootOrSubstituentLocanted(state, substituent);
 		
 		Set<Bond> interFragmentBonds =  state.fragManager.getInterFragmentBonds(phosphoFrag);

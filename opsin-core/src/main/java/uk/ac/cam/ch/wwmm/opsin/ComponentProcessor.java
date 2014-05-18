@@ -2793,7 +2793,7 @@ class ComponentProcessor {
 					currentEl =nextEl;
 					nextEl = OpsinTools.getNextSibling(currentEl);
 					currentEl.detach();
-					elementToResolve.appendChild(currentEl);
+					elementToResolve.addChild(currentEl);
 				}
 				if (nextEl!=null){
 					nextEl.detach();
@@ -2892,7 +2892,7 @@ class ComponentProcessor {
 			Element nextEl = OpsinTools.getNextSibling(currentEl);
 			if (!groupFound || currentEl.getName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL)|| currentEl.getName().equals(UNSATURATOR_EL)){
 				currentEl.detach();
-				elementToResolve.appendChild(currentEl);
+				elementToResolve.addChild(currentEl);
 			}
 			else if (currentEl.getName().equals(SUFFIX_EL)){
 				state.xmlFragmentMap.get(currentEl);
@@ -2900,7 +2900,7 @@ class ComponentProcessor {
 						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants==0)) && state.xmlFragmentMap.get(currentEl)==null){
 					inlineSuffixSeen = true;
 					currentEl.detach();
-					elementToResolve.appendChild(currentEl);
+					elementToResolve.addChild(currentEl);
 				}
 				else{
 					break;
@@ -3303,7 +3303,7 @@ class ComponentProcessor {
 				locant = element;
 			}
 			element.detach();
-			substituentToResolve.appendChild(element);
+			substituentToResolve.addChild(element);
 		}
 		if (group ==null){
 			throw new ComponentGenerationException("OPSIN bug: group element should of been given to method");
@@ -3690,11 +3690,11 @@ class ComponentProcessor {
 					int indexToInsertAt = parent.indexOf(previousElements.get(0));
 					for (Element element : previousElements) {
 						element.detach();
-						bracket.appendChild(element);
+						bracket.addChild(element);
 					}
 
 					subOrRoot.detach();
-					bracket.appendChild(subOrRoot);
+					bracket.addChild(subOrRoot);
 					parent.insertChild(bracket, indexToInsertAt);
 					brackets.add(bracket);
 				}
@@ -3922,12 +3922,12 @@ class ComponentProcessor {
 
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			stereoChemistryElement.detach();
-			bracket.appendChild(stereoChemistryElement);
+			bracket.addChild(stereoChemistryElement);
 		}
 		if (moveLocants){
 			for (Element locantElement : locantRelatedElements) {
 				locantElement.detach();
-				bracket.appendChild(locantElement);
+				bracket.addChild(locantElement);
 			}
 		}
 
@@ -3942,7 +3942,7 @@ class ComponentProcessor {
 				Element desiredGroup = OpsinTools.getNextSiblingIgnoringCertainElements(possibleMultiplier, new String[]{MULTIPLIER_EL});
 				if (desiredGroup !=null && desiredGroup.getName().equals(GROUP_EL)){
 					childrenOfElementBeforeSubstituent.get(0).detach();
-					bracket.appendChild(childrenOfElementBeforeSubstituent.get(0));
+					bracket.addChild(childrenOfElementBeforeSubstituent.get(0));
 				}
 			}
 		}
@@ -3953,7 +3953,7 @@ class ComponentProcessor {
 		for(int i = 0 ; i <= (endIndex-startIndex);i++) {
 			Element n = parent.getChild(startIndex);
 			n.detach();
-			bracket.appendChild(n);
+			bracket.addChild(n);
 		}
 		parent.insertChild(bracket, startIndex);
 		brackets.add(bracket);
@@ -4663,11 +4663,11 @@ class ComponentProcessor {
 						int indexToInsertAt = parent.indexOf(previousElements.get(0));
 						for (Element element : previousElements) {
 							element.detach();
-							bracket.appendChild(element);
+							bracket.addChild(element);
 						}
 
 						substituent.detach();
-						bracket.appendChild(substituent);
+						bracket.addChild(substituent);
 						parent.insertChild(bracket, indexToInsertAt);
 						brackets.add(bracket);
 						bracketAdded = true;
@@ -4867,12 +4867,12 @@ class ComponentProcessor {
 				for (int i = 0; i < elementsToMove; i++) {
 					Element locantOrStereoToMove = substituent.getChild(0);
 					locantOrStereoToMove.detach();
-					bracket.appendChild(locantOrStereoToMove);
+					bracket.addChild(locantOrStereoToMove);
 				}
 				substituent.detach();
 				siblingSubstituent.detach();
-				bracket.appendChild(substituent);
-				bracket.appendChild(siblingSubstituent);
+				bracket.addChild(substituent);
+				bracket.addChild(siblingSubstituent);
 				parent.insertChild(bracket, indexToInsertAt);
 				brackets.add(bracket);
 			}
