@@ -865,26 +865,7 @@ class FragmentTools {
 		if (atom.getType().equals(SUFFIX_TYPE_VAL)){
 			return true;
 		}
-		if (atom.getProperty(Atom.ISALDEHYDE)!=null && atom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
-			return true;
-		}
-		
-		String element =atom.getElement();
-		if (element.equals("O")|| element.equals("S") || element.equals("Se") || element.equals("Te")){//potential chalcogen functional atom
-			boolean isFunctionalAtom =false;
-			Fragment frag = atom.getFrag();
-			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
-				FunctionalAtom funcAtom = frag.getFunctionalAtom(i);
-				if (atom.equals(funcAtom.getAtom())){
-					isFunctionalAtom =true;
-					break;
-				}
-			}
-			if (isFunctionalAtom){
-				return true;
-			}
-		}
-		return false;
+		return isFunctionalAtomOrAldehyde(atom);
 	}
 	
 	/**
@@ -893,28 +874,31 @@ class FragmentTools {
 	 * @return
 	 */
 	static boolean isFunctionalAtomOrAldehyde(Atom atom) {
-		if (atom.getProperty(Atom.ISALDEHYDE)!=null && atom.getProperty(Atom.ISALDEHYDE)){//substituting an aldehyde would make it no longer an aldehyde
+		if (Boolean.TRUE.equals(atom.getProperty(Atom.ISALDEHYDE))){//substituting an aldehyde would make it no longer an aldehyde
 			return true;
 		}
-		
-		String element =atom.getElement();
-		if (element.equals("O")|| element.equals("S") || element.equals("Se") || element.equals("Te")){//potential chalcogen functional atom
-			boolean isFunctionalAtom =false;
+		return isFunctionalAtom(atom);
+	}
+	
+	/**
+	 * Is the atom a chalcogen functional atom
+	 * @param atom
+	 * @return
+	 */
+	static boolean isFunctionalAtom(Atom atom) {
+		String element = atom.getElement();
+		if (element.equals("O") || element.equals("S") || element.equals("Se") || element.equals("Te")) {//potential chalcogen functional atom
 			Fragment frag = atom.getFrag();
 			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
-				FunctionalAtom funcAtom = frag.getFunctionalAtom(i);
-				if (atom.equals(funcAtom.getAtom())){
-					isFunctionalAtom =true;
-					break;
+				if (atom.equals(frag.getFunctionalAtom(i).getAtom())){
+					return true;
 				}
-			}
-			if (isFunctionalAtom){
-				return true;
 			}
 		}
 		return false;
 	}
-	
+
+
 	/**
 	 * Checks that all atoms in a ring appear to be equivalent
 	 * @param ring
@@ -966,7 +950,17 @@ class FragmentTools {
 				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
 			}
 		}
-		removeTerminalAtom(state, applicableTerminalAtoms.get(0));
+		Atom atomToRemove = applicableTerminalAtoms.get(0);
+		if (isFunctionalAtom(atomToRemove)){//This can occur with aminoglycosides where the anomeric OH is removed by deoxy
+			for (int i = 0, l = fragment.getFunctionalAtomCount(); i < l; i++) {
+				if (atomToRemove.equals(fragment.getFunctionalAtom(i).getAtom())){
+					fragment.removeFunctionalAtom(i);
+					break;
+				}
+			}
+			fragment.addFunctionalAtom(atomToRemove.getFirstBond().getOtherAtom(atomToRemove));
+		}
+		removeTerminalAtom(state, atomToRemove);
 	}
 	
 	static void removeTerminalAtom(BuildState state, Atom atomToRemove) {

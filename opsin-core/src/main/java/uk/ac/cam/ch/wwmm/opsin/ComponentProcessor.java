@@ -179,7 +179,6 @@ class ComponentProcessor {
 				handleMultiRadicals(subOrRoot);
 			}
 
-			//System.out.println(new XOMFormatter().elemToString(elem));
 			addImplicitBracketsToAminoAcids(groups, brackets);
 			for (Element substituent : substituents) {
 				matchLocantsToIndirectFeatures(substituent);
