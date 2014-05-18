@@ -1338,7 +1338,7 @@ class ComponentProcessor {
 			}
 		}
 		if (cyclise) {
-			Element ringSize = new Element(CARBOHYDRATERINGSIZE_EL);
+			Element ringSize = new TokenEl(CARBOHYDRATERINGSIZE_EL);
 			String sugarStem = group.getValue();
 			if (state.xmlFragmentMap.get(group).hasLocant("5") && !sugarStem.equals("rib") && !sugarStem.equals("fruct")){
 				ringSize.addAttribute(new Attribute(VALUE_ATR, "6"));
@@ -1732,7 +1732,7 @@ class ComponentProcessor {
 					featureToMultiply.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
 				}
 				for(int i= mvalue -1; i >=1; i--) {
-					Element newElement = new Element(featureToMultiply);
+					Element newElement = featureToMultiply.copy();
 					if (locants !=null && locants.length==mvalue){
 						newElement.addAttribute(new Attribute(LOCANT_ATR, locants[i]));
 					}
@@ -1835,7 +1835,7 @@ class ComponentProcessor {
 			if (MULTIPLIER_EL.equals(possibleMultiplier.getName())){
 				int multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				for (int i = 1; i < multiplier; i++) {
-					Element conjunctiveSuffixGroup = new Element(primaryConjunctiveGroup);
+					Element conjunctiveSuffixGroup = primaryConjunctiveGroup.copy();
 					Fragment newFragment = state.fragManager.copyAndRelabelFragment(primaryConjunctiveFrag, i);
 					state.xmlFragmentMap.put(conjunctiveSuffixGroup, newFragment);
 					conjunctiveGroups.add(conjunctiveSuffixGroup);
@@ -1874,7 +1874,7 @@ class ComponentProcessor {
 					//exception for where a locant is supposed to indicate the location of a double bond...
 					List<Element> deltas = subOrRoot.getChildElements(DELTA_EL);
 					if (deltas.size()==0){
-						Element delta =new Element(DELTA_EL);
+						Element delta =new TokenEl(DELTA_EL);
 						Element appropriateLocant = OpsinTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{HETEROATOM_EL, MULTIPLIER_EL});
 						if (appropriateLocant !=null && appropriateLocant.getName().equals(LOCANT_EL) && MATCH_COMMA.split(appropriateLocant.getValue()).length == 1){
 							delta.setValue(appropriateLocant.getValue());
@@ -2082,7 +2082,7 @@ class ComponentProcessor {
 				suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
 			}
 			for (int i = 1; i < suffixInstructions.length; i++) {
-				Element newSuffix = new Element(SUFFIX_EL);
+				Element newSuffix = new TokenEl(SUFFIX_EL);
 				if (symmetricSuffixes){
 					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
 					newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
@@ -2687,7 +2687,7 @@ class ComponentProcessor {
 			for (Element deltaEl : deltaEls) {
 				String locantOfDoubleBond = deltaEl.getValue();
 				if (locantOfDoubleBond.equals("")){
-					Element newUnsaturator = new Element(UNSATURATOR_EL);
+					Element newUnsaturator = new TokenEl(UNSATURATOR_EL);
 					newUnsaturator.addAttribute(new Attribute(VALUE_ATR, "2"));
 					OpsinTools.insertAfter(group, newUnsaturator);
 				}
@@ -2785,7 +2785,7 @@ class ComponentProcessor {
 			Element elementToResolve;//temporary element containing elements that should be resolved before the ring is duplicated
 			Element nextEl = OpsinTools.getNextSibling(multiplier);
 			if (nextEl.getName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
-				elementToResolve = new Element(SUBSTITUENT_EL);
+				elementToResolve = new GroupingEl(SUBSTITUENT_EL);
 				Element currentEl =nextEl;
 				nextEl = OpsinTools.getNextSibling(currentEl);
 				currentEl.detach();
@@ -2884,7 +2884,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException 
 	 */
 	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, int ringJoiningLocants, int outAtomCount) throws ComponentGenerationException {
-		Element elementToResolve = new Element(SUBSTITUENT_EL);
+		Element elementToResolve = new GroupingEl(SUBSTITUENT_EL);
 		boolean groupFound = false;
 		boolean inlineSuffixSeen = outAtomCount > 0;
 		Element currentEl = OpsinTools.getNextSibling(multiplier);
@@ -3022,7 +3022,7 @@ class ComponentProcessor {
 				String locantText= locants[j];
 				Matcher m = matchAddedHydrogenBracket.matcher(locantText);
 				if (m.find()){
-					Element addedHydrogenElement=new Element(ADDEDHYDROGEN_EL);
+					Element addedHydrogenElement=new TokenEl(ADDEDHYDROGEN_EL);
 					addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
 					OpsinTools.insertBefore(locant, addedHydrogenElement);
 					locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
@@ -3285,7 +3285,7 @@ class ComponentProcessor {
 		if (elementsToResolve.size()==0){
 			return;
 		}
-		Element substituentToResolve = new Element(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
+		Element substituentToResolve = new GroupingEl(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
 		Element parent = elementsToResolve.get(0).getParent();
 		int index = parent.indexOf(elementsToResolve.get(0));
 		Element group =null;
@@ -3684,7 +3684,7 @@ class ComponentProcessor {
 				}
 				if (previousElements.size()>0){//an implicit bracket is needed
 					Collections.reverse(previousElements);
-					Element bracket = new Element(BRACKET_EL);
+					Element bracket = new GroupingEl(BRACKET_EL);
 					bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
 					Element parent = subOrRoot.getParent();
 					int indexToInsertAt = parent.indexOf(previousElements.get(0));
@@ -3917,7 +3917,7 @@ class ComponentProcessor {
 			}
 		}
 
-		Element bracket = new Element(BRACKET_EL);
+		Element bracket = new GroupingEl(BRACKET_EL);
 		bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
 
 		for (Element stereoChemistryElement : stereoChemistryElements) {
@@ -4658,7 +4658,7 @@ class ComponentProcessor {
 					}
 					if (previousElements.size() > 0 ){//an explicit bracket is needed
 						Collections.reverse(previousElements);
-						Element bracket = new Element(BRACKET_EL);
+						Element bracket = new GroupingEl(BRACKET_EL);
 						bracket.addAttribute(locantAtr);
 						int indexToInsertAt = parent.indexOf(previousElements.get(0));
 						for (Element element : previousElements) {
@@ -4859,7 +4859,7 @@ class ComponentProcessor {
 			List<Element> locants = getLocantsAtStartOfSubstituent(substituent);
 			if (locants.size() == 2 && locantsAreSingular(locants)
 					&& getLocantsAtStartOfSubstituent(siblingSubstituent).size() == 0){
-				Element bracket = new Element(BRACKET_EL);
+				Element bracket = new GroupingEl(BRACKET_EL);
 				bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
 				Element parent = substituent.getParent();
 				int indexToInsertAt = parent.indexOf(substituent);

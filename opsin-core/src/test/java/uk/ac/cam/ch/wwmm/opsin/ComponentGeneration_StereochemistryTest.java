@@ -11,8 +11,8 @@ public class ComponentGeneration_StereochemistryTest {
 
 	@Test
 	public void testUnlocantedS() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(S)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(S)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -28,8 +28,8 @@ public class ComponentGeneration_StereochemistryTest {
 
 	@Test
 	public void testMultipleUnLocanted() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(R,R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(R,R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -51,8 +51,8 @@ public class ComponentGeneration_StereochemistryTest {
 
 	@Test
 	public void testLocantedR() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(1R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(1R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -68,8 +68,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testMultipleRorSLocanted() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(alphaR,3S,7'S)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(alphaR,3S,7'S)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -98,8 +98,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testUnLocantedE() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(E)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(E)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -115,8 +115,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testLocantedZ() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(5Z)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(5Z)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -132,8 +132,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testMultipleRorSorEorZ() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(NZ,2E,R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(NZ,2E,R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -161,8 +161,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testDashInsteadOfComma() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(NZ,2E-R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(NZ,2E-R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -190,8 +190,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testBracketedLocantedCisTrans() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(3cis,5trans)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(3cis,5trans)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -213,8 +213,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testBracketedUnlocantedCisTrans() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(5S-trans)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(5S-trans)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -236,8 +236,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testBracketedExo() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(exo)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(exo)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -253,8 +253,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testBracketedEndo() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(3-endo,5S)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(3-endo,5S)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -277,16 +277,16 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testLocantedCisTrans() throws ComponentGenerationException {
 		//XML for 3-cis,5-trans:
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element locant = new Element(LOCANT_EL, "3");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element locant = new TokenEl(LOCANT_EL, "3");
 		substituent.appendChild(locant);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "cis");
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "cis");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
 		substituent.appendChild(stereochem);
-		locant = new Element(LOCANT_EL, "5");
+		locant = new TokenEl(LOCANT_EL, "5");
 		substituent.appendChild(locant);
-		stereochem = new Element(STEREOCHEMISTRY_EL, "trans");
+		stereochem = new TokenEl(STEREOCHEMISTRY_EL, "trans");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "trans"));
 		substituent.appendChild(stereochem);
@@ -310,19 +310,19 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testLocantedExoOn() throws ComponentGenerationException {
 		//XML for 3-exobicyclo[2.2.2]oct:
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element locant = new Element(LOCANT_EL, "3");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element locant = new TokenEl(LOCANT_EL, "3");
 		substituent.appendChild(locant);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "exo");
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "exo");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "exo"));
 		substituent.appendChild(stereochem);
-		Element multiplier = new Element(MULTIPLIER_EL);
+		Element multiplier = new TokenEl(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(TYPE_ATR, VONBAEYER_TYPE_VAL));
 		substituent.appendChild(multiplier);
-		Element vonBaeyer = new Element(VONBAEYER_EL);
+		Element vonBaeyer = new TokenEl(VONBAEYER_EL);
 		substituent.appendChild(vonBaeyer);
-		Element group = new Element(GROUP_EL);
+		Element group = new TokenEl(GROUP_EL);
 		group.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 		group.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
 		substituent.appendChild(group);
@@ -340,14 +340,14 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testLocantedExo() throws ComponentGenerationException {
 		//XML for 3-exoamino
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element locant = new Element(LOCANT_EL, "3");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element locant = new TokenEl(LOCANT_EL, "3");
 		substituent.appendChild(locant);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "exo");
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "exo");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "exo"));
 		substituent.appendChild(stereochem);
-		Element group = new Element(GROUP_EL);
+		Element group = new TokenEl(GROUP_EL);
 		group.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_EL));
 		group.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLESUBSTITUENT_SUBTYPE_VAL));
 		substituent.appendChild(group);
@@ -366,8 +366,8 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testAnti() throws ComponentGenerationException {
 		//XML for anti:
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "anti");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "anti");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "anti"));
 		substituent.appendChild(stereochem);
@@ -383,8 +383,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testCis() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "cis");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "cis");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
 		substituent.appendChild(stereochem);
@@ -402,11 +402,11 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testZUnbracketted() throws ComponentGenerationException {//note that IUPAC mandates brackets
 		//XML for Z,Z:
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "Z");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "Z");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		substituent.appendChild(stereochem);
-		stereochem = new Element(STEREOCHEMISTRY_EL, "Z");
+		stereochem = new TokenEl(STEREOCHEMISTRY_EL, "Z");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -429,15 +429,15 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testEandZUnbrackettedLocanted() throws ComponentGenerationException {//note that IUPAC mandates brackets
 		//XML for 2E,4Z:
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element locant = new Element(LOCANT_EL, "2");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element locant = new TokenEl(LOCANT_EL, "2");
 		substituent.appendChild(locant);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "E");
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "E");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		substituent.appendChild(stereochem);
-		locant = new Element(LOCANT_EL, "4");
+		locant = new TokenEl(LOCANT_EL, "4");
 		substituent.appendChild(locant);
-		stereochem = new Element(STEREOCHEMISTRY_EL, "Z");
+		stereochem = new TokenEl(STEREOCHEMISTRY_EL, "Z");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -459,11 +459,11 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testBrackettedAlphaBeta() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(1a,2b,3bEtA,4alpha,5xi)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(1a,2b,3bEtA,4alpha,5xi)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
-		Element naturalProduct = new Element(GROUP_EL);
+		Element naturalProduct = new TokenEl(GROUP_EL);
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
@@ -505,11 +505,11 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testAlphaBeta() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "3beta,5alpha");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,5alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
-		Element naturalProduct = new Element(GROUP_EL);
+		Element naturalProduct = new TokenEl(GROUP_EL);
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
@@ -532,8 +532,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct1() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "3beta,5alpha");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,5alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -559,8 +559,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct2() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(3beta,5alpha)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(3beta,5alpha)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -582,12 +582,12 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testAlphaBetaNotDirectlyPrecedingANaturalProduct3() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element naturalProduct = new Element(GROUP_EL);
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element naturalProduct = new TokenEl(GROUP_EL);
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
 		substituent.appendChild(naturalProduct);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "3beta,5alpha");
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,5alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -613,8 +613,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testAlphaBetaStereoMixedWithNormalLocants() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "3beta,4,10,12alpha");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,4,10,12alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -641,8 +641,8 @@ public class ComponentGeneration_StereochemistryTest {
 	//relative stereochemistry is currently treated the same as absolute stereochemistry
 	@Test
 	public void testRelativeStereoChemistry1() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "rel-(1R,3S,4S,7R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rel-(1R,3S,4S,7R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -676,8 +676,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRelativeStereoChemistry2() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(1R*,3S*,4S*,7R*)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(1R*,3S*,4S*,7R*)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -711,8 +711,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRelativeStereoChemistry3() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "rel-");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rel-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -725,8 +725,8 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testRelativeCisTrans() throws ComponentGenerationException {
 		//c-4-
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "c-4-");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "c-4-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, RELATIVECISTRANS_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -746,8 +746,8 @@ public class ComponentGeneration_StereochemistryTest {
 	//racemates are currently treated identically to completely undefined
 	@Test
 	public void testRacemate1() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "rac-(2R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rac-(2R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -758,8 +758,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRacemate2() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(RS)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(RS)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -770,8 +770,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRacemate3() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(RS)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(RS)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -782,8 +782,8 @@ public class ComponentGeneration_StereochemistryTest {
 
 	@Test
 	public void testRacemate4() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "rac-(2R,4R)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rac-(2R,4R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -794,8 +794,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRacemate5() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "(2RS,4RS)");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(2RS,4RS)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -806,8 +806,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRacemate6() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "rac-");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rac-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);
@@ -818,8 +818,8 @@ public class ComponentGeneration_StereochemistryTest {
 	
 	@Test
 	public void testRacemate7() throws ComponentGenerationException {
-		Element substituent = new Element(SUBSTITUENT_EL);
-		Element stereochem = new Element(STEREOCHEMISTRY_EL, "racemic-");
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "racemic-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.appendChild(stereochem);
 		processStereochemistry(substituent);

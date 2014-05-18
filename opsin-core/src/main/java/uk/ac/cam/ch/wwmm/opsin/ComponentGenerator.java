@@ -271,7 +271,7 @@ class ComponentGenerator {
 							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
 							String[] addedHydrogens = MATCH_COMMA.split(brackettedText);
 							for (String addedHydrogen : addedHydrogens) {
-								Element addedHydrogenElement=new Element(ADDEDHYDROGEN_EL);
+								Element addedHydrogenElement=new TokenEl(ADDEDHYDROGEN_EL);
 								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length()-1)));
 								OpsinTools.insertBefore(locant, addedHydrogenElement);
 							}
@@ -282,7 +282,7 @@ class ComponentGenerator {
 						else if (StringTools.endsWithCaseInsensitive(brackettedText, "R") || StringTools.endsWithCaseInsensitive(brackettedText, "S")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							String rs = brackettedText;
-							Element newStereoChemEl = new Element(STEREOCHEMISTRY_EL, "(" + locantText +rs+")");
+							Element newStereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, "(" + locantText +rs+")");
 							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 							OpsinTools.insertBefore(locant, newStereoChemEl);
 						}
@@ -345,7 +345,7 @@ class ComponentGenerator {
 					}
 					sb.append(locant.getValue());
 					sb.append(StringTools.multiplyString("'", multiplierValue-1));
-					Element newLocant = new Element(LOCANT_EL, sb.toString());
+					Element newLocant = new TokenEl(LOCANT_EL, sb.toString());
 					OpsinTools.insertBefore(possibleMultiplier, newLocant);
 					locant.detach();
 				}
@@ -449,7 +449,7 @@ class ComponentGenerator {
 				alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
 				alkaneName.append(alkaneStemComponent.getValue());
 			}
-			Element alkaneStem = new Element(GROUP_EL, alkaneName.toString());
+			Element alkaneStem = new TokenEl(GROUP_EL, alkaneName.toString());
 			alkaneStem.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(VALUE_ATR, StringTools.multiplyString("C", alkaneChainLength)));
@@ -507,7 +507,7 @@ class ComponentGenerator {
 				//normal behaviour is default so don't need to do anything
 				//n-methyl and n-ethyl contain redundant information and are probably intended to mean N-methyl/N-ethyl
 				if ((chainLength==1 || chainLength ==2) && alkaneStemModifier.getValue().equals("n-")){
-					Element locant = new Element(LOCANT_EL, "N");
+					Element locant = new TokenEl(LOCANT_EL, "N");
 					OpsinTools.insertBefore(alkane, locant);
 				}
 				continue;
@@ -653,7 +653,7 @@ class ComponentGenerator {
 						smiles = matchHdigit.matcher(smiles).replaceAll("H?");//hydrogen count will be determined by standard valency
 						multipliedElem.detach();
 
-						Element addedGroup = new Element(GROUP_EL, newGroupName.toString());
+						Element addedGroup = new TokenEl(GROUP_EL, newGroupName.toString());
 						addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
 						addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 						addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
@@ -764,7 +764,7 @@ class ComponentGenerator {
 			String[] hydrogenLocants =MATCH_COMMA.split(txt);
             for (String hydrogenLocant : hydrogenLocants) {
                 if (StringTools.endsWithCaseInsensitive(hydrogenLocant, "h")) {
-                    Element indicatedHydrogenEl = new Element(INDICATEDHYDROGEN_EL);
+                    Element indicatedHydrogenEl = new TokenEl(INDICATEDHYDROGEN_EL);
                     indicatedHydrogenEl.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
                     OpsinTools.insertBefore(indicatedHydrogenGroup, indicatedHydrogenEl);
                 }
@@ -821,7 +821,7 @@ class ComponentGenerator {
 		        Matcher m = matchStereochemistry.matcher(stereoChemistryDescriptor);
 		        if (m.matches()){
 		        	if (!m.group(2).equals("RS") && !m.group(2).equals("SR")){
-		                Element stereoChemEl = new Element(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
+		                Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
 		                String locantVal = m.group(1);
 		                if (locantVal.length() > 0){
 		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, StringTools.removeDashIfPresent(locantVal)));
@@ -931,7 +931,7 @@ class ComponentGenerator {
 		        locants.add(locant);
 				Matcher alphaBetaMatcher = matchAlphaBetaStereochem.matcher(possibleAlphaBeta);
 				if (alphaBetaMatcher.matches()){
-		            Element stereoChemEl = new Element(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
+		            Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
 		            stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, locant));
 		            OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		           	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
@@ -966,7 +966,7 @@ class ComponentGenerator {
 		}
 		
 		if (createLocantsEl){
-			Element newLocantEl = new Element(LOCANT_EL, StringTools.stringListToString(locants, ","));
+			Element newLocantEl = new TokenEl(LOCANT_EL, StringTools.stringListToString(locants, ","));
 			OpsinTools.insertAfter(stereoChemistryElement, newLocantEl);
 		}
 		stereoChemistryElement.detach();
@@ -987,7 +987,7 @@ class ComponentGenerator {
 				throw new RuntimeException("Malformed relativeCisTrans element");
 			}
 		}
-		Element locantEl = new Element(LOCANT_EL, sb.toString());
+		Element locantEl = new TokenEl(LOCANT_EL, sb.toString());
 		OpsinTools.insertAfter(stereoChemistryElement, locantEl);
 	}
 
@@ -1152,7 +1152,7 @@ class ComponentGenerator {
 						heteroAtoms.add(heteroatomOrMultiplier);
 						if (multiplier!=null){
 							for (int i = 1; i < Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)); i++) {
-								Element newHeteroAtom = new Element(heteroatomOrMultiplier);
+								Element newHeteroAtom = heteroatomOrMultiplier.copy();
 								OpsinTools.insertBefore(heteroatomOrMultiplier, newHeteroAtom);
 								heteroAtoms.add(newHeteroAtom);
 							}
@@ -1197,7 +1197,7 @@ class ComponentGenerator {
 						}
 					}
 					else{
-						Element newLambda = new Element(LAMBDACONVENTION_EL);
+						Element newLambda = new TokenEl(LAMBDACONVENTION_EL);
 						newLambda.addAttribute(valencyChange);
 						if (locantAtr!=null){
 							newLambda.addAttribute(locantAtr);
@@ -1273,7 +1273,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	private Element structureBrackets(Element openBracket, Element closeBracket) throws ComponentGenerationException {
-		Element bracket = new Element(BRACKET_EL);
+		Element bracket = new GroupingEl(BRACKET_EL);
 		OpsinTools.insertBefore(openBracket.getParent(), bracket);
 		/* Pick up everything in the substituent before the bracket*/
 		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
@@ -1333,7 +1333,7 @@ class ComponentGenerator {
 			String SMILES = "c1" +StringTools.multiplyString("c", annulenSize -1);
 			SMILES += "1";
 
-			Element group =new Element(GROUP_EL, annulenValue);
+			Element group =new TokenEl(GROUP_EL, annulenValue);
 			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, ARYLGROUP_SUBTYPE_VAL));
@@ -1458,7 +1458,7 @@ class ComponentGenerator {
 				else{
 					throw new ComponentGenerationException("Unknown semi-trivially named hydrocarbon fused ring system");
 				}
-				Element newGroup =new Element(GROUP_EL, multiplier.getValue() + hydrocarbonFRSystem.getValue());
+				Element newGroup =new TokenEl(GROUP_EL, multiplier.getValue() + hydrocarbonFRSystem.getValue());
 				newGroup.addAttribute(new Attribute(VALUE_ATR, smilesSB.toString()));
 				newGroup.addAttribute(new Attribute(LABELS_ATR, FUSEDRING_LABELS_VAL));
 				newGroup.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
@@ -1500,7 +1500,7 @@ class ComponentGenerator {
 					multVal.setValue(String.valueOf(newMultiplier));
 				}
 				else{
-					multiplier = new Element(MULTIPLIER_EL, "di");
+					multiplier = new TokenEl(MULTIPLIER_EL, "di");
 					multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 					OpsinTools.insertBefore(suffix, multiplier);
 				}
@@ -1512,7 +1512,7 @@ class ComponentGenerator {
 				if (alk.getAttribute(USABLEASJOINER_ATR)!=null){
 					alk.removeAttribute(alk.getAttribute(USABLEASJOINER_ATR));
 				}
-				Element multiplier = new Element(MULTIPLIER_EL, "di");
+				Element multiplier = new TokenEl(MULTIPLIER_EL, "di");
 				multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 				OpsinTools.insertBefore(suffix, multiplier);
 			}
@@ -2171,9 +2171,9 @@ class ComponentGenerator {
 				Element possibleSuffix = OpsinTools.getNextSibling(group);
 				if (possibleSuffix!=null && "one".equals(possibleSuffix.getAttributeValue(VALUE_ATR))){
 					//Rule C-315.2
-					Element newLocant =new Element(LOCANT_EL, "9");
+					Element newLocant =new TokenEl(LOCANT_EL, "9");
 					OpsinTools.insertBefore(possibleSuffix, newLocant);
-					Element newAddedHydrogen = new Element(ADDEDHYDROGEN_EL);
+					Element newAddedHydrogen = new TokenEl(ADDEDHYDROGEN_EL);
 					newAddedHydrogen.addAttribute(new Attribute(LOCANT_ATR, "10"));
 					OpsinTools.insertBefore(newLocant, newAddedHydrogen);
 				}
@@ -2267,12 +2267,12 @@ class ComponentGenerator {
 				if (!(next.getChild(0).getName().equals(MULTIPLIER_EL))){
 					List<Element> suffixes = next.getChildElements(SUFFIX_EL);
 					if (suffixes.size()==0){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
-						Element newMultiplier = new Element(MULTIPLIER_EL);
+						Element newMultiplier = new TokenEl(MULTIPLIER_EL);
 						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 						next.insertChild(newMultiplier, 0);
 						Element interSubstituentHyphen = OpsinTools.getPrevious(group);
 						if (interSubstituentHyphen!=null && !interSubstituentHyphen.getName().equals(HYPHEN_EL)){//prevent implicit bracketting
-							OpsinTools.insertAfter(interSubstituentHyphen, new Element(HYPHEN_EL));
+							OpsinTools.insertAfter(interSubstituentHyphen, new TokenEl(HYPHEN_EL));
 						}
 					}
 				}
@@ -2300,7 +2300,7 @@ class ComponentGenerator {
 				}
 			}
 			//locanted substitution onto Coenzyme A is rarely intended, so put it in a bracket to disfavour it
-			Element newBracket = new Element(BRACKET_EL);
+			Element newBracket = new GroupingEl(BRACKET_EL);
 			OpsinTools.insertAfter(enclosingSubOrRoot, newBracket);
 			enclosingSubOrRoot.detach();
 			newBracket.appendChild(enclosingSubOrRoot);

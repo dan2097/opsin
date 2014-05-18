@@ -113,10 +113,10 @@ class Parser {
 		
 		List<Element> results = new ArrayList<Element>();
 		for(Parse pp : parses) {
-			Element moleculeEl = new Element(MOLECULE_EL);
+			Element moleculeEl = new GroupingEl(MOLECULE_EL);
 			moleculeEl.addAttribute(new Attribute(NAME_ATR, name));
 			for(ParseWord pw : pp.getWords()) {
-				Element word = new Element(WORD_EL);
+				Element word = new GroupingEl(WORD_EL);
 				moleculeEl.appendChild(word);
 				if (pw.getParseTokens().size() >1){
 					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating additional parses step");
@@ -275,14 +275,14 @@ class Parser {
 	void writeWordXML(Element wordEl, ParseWord pw, List<String> tokens, List<List<Character>> annotations) throws ParsingException {
 		int annotNumber = 0;
 		int annotPos = 0;
-		Element chunk = new Element(SUBSTITUENT_EL);
+		Element chunk = new GroupingEl(SUBSTITUENT_EL);
 		wordEl.appendChild(chunk);
 		Element lastTokenElement = null;
         for (String token : tokens) {
             if (annotPos >= annotations.get(annotNumber).size()) {
                 annotPos = 0;
                 annotNumber++;
-                chunk = new Element(SUBSTITUENT_EL);
+                chunk = new GroupingEl(SUBSTITUENT_EL);
                 wordEl.appendChild(chunk);
                 lastTokenElement = null;
             }

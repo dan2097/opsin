@@ -482,7 +482,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Element cloneElement(BuildState state, Element elementToBeCloned, int primesToAdd) throws StructureBuildingException {
-		Element clone = new Element(elementToBeCloned);
+		Element clone = elementToBeCloned.copy();
 		List<Element> originalGroups = OpsinTools.getDescendantElementsWithTagName(elementToBeCloned, XmlDeclarations.GROUP_EL);
 		List<Element> clonedGroups = OpsinTools.getDescendantElementsWithTagName(clone,  XmlDeclarations.GROUP_EL);
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new LinkedHashMap<Fragment, Fragment>();
