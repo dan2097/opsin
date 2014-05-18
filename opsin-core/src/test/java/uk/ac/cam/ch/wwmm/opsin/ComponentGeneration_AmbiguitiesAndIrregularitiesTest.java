@@ -14,8 +14,8 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		alkaneComponent1.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element alkaneComponent2 = new TokenEl(ALKANESTEMCOMPONENT);
 		alkaneComponent2.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.appendChild(alkaneComponent1);
-		substituent.appendChild(alkaneComponent2);
+		substituent.addChild(alkaneComponent1);
+		substituent.addChild(alkaneComponent2);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}
@@ -32,8 +32,8 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 		Element alkaneComponent = new TokenEl(ALKANESTEMCOMPONENT);
 		alkaneComponent.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.appendChild(multiplier);
-		substituent.appendChild(alkaneComponent);
+		substituent.addChild(multiplier);
+		substituent.addChild(alkaneComponent);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}
@@ -51,8 +51,8 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "6"));
 		Element alkaneComponent = new TokenEl(ALKANESTEMCOMPONENT);
 		alkaneComponent.addAttribute(new Attribute(VALUE_ATR, "6"));
-		substituent.appendChild(multiplier);
-		substituent.appendChild(alkaneComponent);
+		substituent.addChild(multiplier);
+		substituent.addChild(alkaneComponent);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}
@@ -69,8 +69,8 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		erroneousMultiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element alkaneComponent2 = new TokenEl(ALKANESTEMCOMPONENT);
 		alkaneComponent2.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.appendChild(erroneousMultiplier);
-		substituent.appendChild(alkaneComponent2);
+		substituent.addChild(erroneousMultiplier);
+		substituent.addChild(alkaneComponent2);
 		ComponentGenerator.resolveAmbiguities(substituent);
 	}
 
@@ -78,14 +78,14 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	public void testLocantsIndicatingTokenizationIsCorrect(){//should be a group multiplier formally
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL, "1,2,3,4");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element multiplier = new TokenEl(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element alkaneComponent = new TokenEl(ALKANESTEMCOMPONENT);
 		alkaneComponent.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.appendChild(multiplier);
-		substituent.appendChild(alkaneComponent);
+		substituent.addChild(multiplier);
+		substituent.addChild(alkaneComponent);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}
@@ -98,14 +98,14 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	public void testLocantsIndicatingTokenizationIsIncorrect() throws ComponentGenerationException{
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL, "1");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element erroneousMultiplier = new TokenEl(MULTIPLIER_EL);
 		erroneousMultiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
 		erroneousMultiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element alkaneComponent = new TokenEl(ALKANESTEMCOMPONENT);
 		alkaneComponent.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.appendChild(erroneousMultiplier);
-		substituent.appendChild(alkaneComponent);
+		substituent.addChild(erroneousMultiplier);
+		substituent.addChild(alkaneComponent);
 		ComponentGenerator.resolveAmbiguities(substituent);
 	}
 	
@@ -118,9 +118,9 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
 		Element yl = new TokenEl(SUFFIX_EL, "yl");
-		substituent.appendChild(multiplier);
-		substituent.appendChild(phen);
-		substituent.appendChild(yl);
+		substituent.addChild(multiplier);
+		substituent.addChild(phen);
+		substituent.addChild(yl);
 		ComponentGenerator.resolveAmbiguities(substituent);
 	}
 	
@@ -132,9 +132,9 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
 		Element yl = new TokenEl(SUFFIX_EL, "oxy");
-		substituent.appendChild(multiplier);
-		substituent.appendChild(phen);
-		substituent.appendChild(yl);
+		substituent.addChild(multiplier);
+		substituent.addChild(phen);
+		substituent.addChild(yl);
 		ComponentGenerator.resolveAmbiguities(substituent);
 	}
 	
@@ -147,9 +147,9 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
 		phen.addAttribute(new Attribute(SUBSEQUENTUNSEMANTICTOKEN_ATR, "e"));
 		Element yl = new TokenEl(SUFFIX_EL, "yl");
-		substituent.appendChild(multiplier);
-		substituent.appendChild(phen);
-		substituent.appendChild(yl);
+		substituent.addChild(multiplier);
+		substituent.addChild(phen);
+		substituent.addChild(yl);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}
@@ -167,10 +167,10 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
 		Element locant = new TokenEl(LOCANT_EL, "2");
 		Element yl = new TokenEl(SUFFIX_EL, "yl");
-		substituent.appendChild(multiplier);
-		substituent.appendChild(phen);
-		substituent.appendChild(locant);
-		substituent.appendChild(yl);
+		substituent.addChild(multiplier);
+		substituent.addChild(phen);
+		substituent.addChild(locant);
+		substituent.addChild(yl);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}
@@ -188,10 +188,10 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
 		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
 		Element yl = new TokenEl(SUFFIX_EL, "yl");
-		substituent.appendChild(locant);
-		substituent.appendChild(multiplier);
-		substituent.appendChild(phen);
-		substituent.appendChild(yl);
+		substituent.addChild(locant);
+		substituent.addChild(multiplier);
+		substituent.addChild(phen);
+		substituent.addChild(yl);
 		try{
 			ComponentGenerator.resolveAmbiguities(substituent);
 		}

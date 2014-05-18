@@ -13,10 +13,10 @@ public class ComponentProcessorTest {
 	public void testSubtractiveWithNoGroupToAttachTo() throws ComponentGenerationException{
 		Element word = new GroupingEl(WORD_EL);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		word.appendChild(substituent);
+		word.addChild(substituent);
 		Element substractivePrefix = new TokenEl(SUBTRACTIVEPREFIX_EL);
 		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
-		substituent.appendChild(substractivePrefix);
+		substituent.addChild(substractivePrefix);
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 	}
 	
@@ -26,13 +26,13 @@ public class ComponentProcessorTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element substractivePrefix = new TokenEl(SUBTRACTIVEPREFIX_EL);
 		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
-		substituent.appendChild(substractivePrefix);
-		word.appendChild(substituent);
+		substituent.addChild(substractivePrefix);
+		word.addChild(substituent);
 		Element root = new GroupingEl(ROOT_EL);
-		word.appendChild(root);
+		word.addChild(root);
 		Element group = new TokenEl(GROUP_EL);
 		group.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
-		root.appendChild(group);
+		root.addChild(group);
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
@@ -46,20 +46,20 @@ public class ComponentProcessorTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element substractivePrefix = new TokenEl(SUBTRACTIVEPREFIX_EL);
 		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
-		substituent.appendChild(substractivePrefix);
-		word.appendChild(substituent);
+		substituent.addChild(substractivePrefix);
+		word.addChild(substituent);
 		Element substituent2 = new GroupingEl(SUBSTITUENT_EL);
 		Element group1 = new TokenEl(GROUP_EL);
 		group1.addAttribute(new Attribute(TYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 		group1.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
-		substituent2.appendChild(group1);
-		word.appendChild(substituent2);
+		substituent2.addChild(group1);
+		word.addChild(substituent2);
 		Element root = new GroupingEl(ROOT_EL);
-		word.appendChild(root);
+		word.addChild(root);
 		Element group2 = new TokenEl(GROUP_EL);
 		group2.addAttribute(new Attribute(TYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 		group2.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
-		root.appendChild(group2);
+		root.addChild(group2);
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
@@ -73,18 +73,18 @@ public class ComponentProcessorTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element substractivePrefix = new TokenEl(SUBTRACTIVEPREFIX_EL);
 		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
-		substituent.appendChild(substractivePrefix);
-		word.appendChild(substituent);
+		substituent.addChild(substractivePrefix);
+		word.addChild(substituent);
 		Element substituent2 = new GroupingEl(SUBSTITUENT_EL);
 		Element group1 = new TokenEl(GROUP_EL);
 		group1.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
-		substituent2.appendChild(group1);
-		word.appendChild(substituent2);
+		substituent2.addChild(group1);
+		word.addChild(substituent2);
 		Element root = new GroupingEl(ROOT_EL);
-		word.appendChild(root);
+		word.addChild(root);
 		Element group2 = new TokenEl(GROUP_EL);
 		group2.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
-		root.appendChild(group2);
+		root.addChild(group2);
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
@@ -98,18 +98,18 @@ public class ComponentProcessorTest {
 		Element word = new GroupingEl(WORD_EL);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL);
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element multiplier = new TokenEl(MULTIPLIER_EL);
-		substituent.appendChild(multiplier);
+		substituent.addChild(multiplier);
 		Element substractivePrefix = new TokenEl(SUBTRACTIVEPREFIX_EL);
 		substractivePrefix.addAttribute(new Attribute(TYPE_ATR, DEOXY_TYPE_VAL));
-		substituent.appendChild(substractivePrefix);
-		word.appendChild(substituent);
+		substituent.addChild(substractivePrefix);
+		word.addChild(substituent);
 		Element root = new GroupingEl(ROOT_EL);
-		word.appendChild(root);
+		word.addChild(root);
 		Element group = new TokenEl(GROUP_EL);
 		group.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
-		root.appendChild(group);
+		root.addChild(group);
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());

@@ -33,7 +33,7 @@ class TokenEl extends Element {
 	}
 	
 	@Override
-	Element getChild(int position) {
+	Element getChild(int index) {
 		throw new UnsupportedOperationException("Tokens do not have children");
 	}
 
@@ -43,18 +43,18 @@ class TokenEl extends Element {
 	}
 
 	@Override
-	void insertChild(Element child, int position) {
+	void insertChild(Element child, int index) {
 		throw new UnsupportedOperationException("Tokens do not have children");
 	}
 
 	@Override
-	void appendChild(Element child) {
+	void addChild(Element child) {
 		throw new UnsupportedOperationException("Tokens do not have children");
 	}
 
 	@Override
 	int indexOf(Element child) {
-		throw new UnsupportedOperationException("Tokens do not have children");
+		return -1;
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ class TokenEl extends Element {
 	}
 
 	@Override
-	Element removeChild(int i) {
+	Element removeChild(int index) {
 		throw new UnsupportedOperationException("Tokens do not have children");
 	}
 

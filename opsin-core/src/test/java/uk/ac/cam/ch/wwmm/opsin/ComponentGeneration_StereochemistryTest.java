@@ -14,7 +14,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(S)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -31,7 +31,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(R,R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -54,7 +54,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(1R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -71,7 +71,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(alphaR,3S,7'S)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -101,7 +101,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(E)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -118,7 +118,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(5Z)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -135,7 +135,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(NZ,2E,R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -164,7 +164,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(NZ,2E-R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -193,7 +193,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(3cis,5trans)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -216,7 +216,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(5S-trans)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -239,7 +239,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(exo)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 		
 		List<Element> children = substituent.getChildElements();
@@ -256,7 +256,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(3-endo,5S)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 		
 		List<Element> children = substituent.getChildElements();
@@ -279,17 +279,17 @@ public class ComponentGeneration_StereochemistryTest {
 		//XML for 3-cis,5-trans:
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL, "3");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "cis");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		locant = new TokenEl(LOCANT_EL, "5");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		stereochem = new TokenEl(STEREOCHEMISTRY_EL, "trans");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "trans"));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -312,20 +312,20 @@ public class ComponentGeneration_StereochemistryTest {
 		//XML for 3-exobicyclo[2.2.2]oct:
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL, "3");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "exo");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "exo"));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		Element multiplier = new TokenEl(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(TYPE_ATR, VONBAEYER_TYPE_VAL));
-		substituent.appendChild(multiplier);
+		substituent.addChild(multiplier);
 		Element vonBaeyer = new TokenEl(VONBAEYER_EL);
-		substituent.appendChild(vonBaeyer);
+		substituent.addChild(vonBaeyer);
 		Element group = new TokenEl(GROUP_EL);
 		group.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 		group.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
-		substituent.appendChild(group);
+		substituent.addChild(group);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -342,15 +342,15 @@ public class ComponentGeneration_StereochemistryTest {
 		//XML for 3-exoamino
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL, "3");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "exo");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "exo"));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		Element group = new TokenEl(GROUP_EL);
 		group.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_EL));
 		group.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLESUBSTITUENT_SUBTYPE_VAL));
-		substituent.appendChild(group);
+		substituent.addChild(group);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -370,7 +370,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "anti");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "anti"));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -387,7 +387,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "cis");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
 		stereochem.addAttribute(new Attribute(VALUE_ATR, "cis"));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 	
 		List<Element> children = substituent.getChildElements();
@@ -405,10 +405,10 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "Z");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		stereochem = new TokenEl(STEREOCHEMISTRY_EL, "Z");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -431,15 +431,15 @@ public class ComponentGeneration_StereochemistryTest {
 		//XML for 2E,4Z:
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element locant = new TokenEl(LOCANT_EL, "2");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "E");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		locant = new TokenEl(LOCANT_EL, "4");
-		substituent.appendChild(locant);
+		substituent.addChild(locant);
 		stereochem = new TokenEl(STEREOCHEMISTRY_EL, "Z");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -462,11 +462,11 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(1a,2b,3bEtA,4alpha,5xi)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		Element naturalProduct = new TokenEl(GROUP_EL);
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
-		substituent.appendChild(naturalProduct);
+		substituent.addChild(naturalProduct);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -508,11 +508,11 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,5alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		Element naturalProduct = new TokenEl(GROUP_EL);
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
-		substituent.appendChild(naturalProduct);
+		substituent.addChild(naturalProduct);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -535,7 +535,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,5alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -562,7 +562,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(3beta,5alpha)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -586,10 +586,10 @@ public class ComponentGeneration_StereochemistryTest {
 		Element naturalProduct = new TokenEl(GROUP_EL);
 		naturalProduct.addAttribute(new Attribute(SUBTYPE_ATR, BIOCHEMICAL_SUBTYPE_VAL));
 		naturalProduct.addAttribute(new Attribute(ALPHABETACLOCKWISEATOMORDERING_ATR, ""));
-		substituent.appendChild(naturalProduct);
+		substituent.addChild(naturalProduct);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,5alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -616,7 +616,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "3beta,4,10,12alpha");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -644,7 +644,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rel-(1R,3S,4S,7R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -679,7 +679,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(1R*,3S*,4S*,7R*)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -714,7 +714,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rel-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -728,7 +728,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "c-4-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, RELATIVECISTRANS_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 	
 		List<Element> children = substituent.getChildElements();
@@ -749,7 +749,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rac-(2R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -761,7 +761,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(RS)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -773,7 +773,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(RS)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -785,7 +785,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rac-(2R,4R)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -797,7 +797,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(2RS,4RS)");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -809,7 +809,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "rac-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
@@ -821,7 +821,7 @@ public class ComponentGeneration_StereochemistryTest {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "racemic-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-		substituent.appendChild(stereochem);
+		substituent.addChild(stereochem);
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
