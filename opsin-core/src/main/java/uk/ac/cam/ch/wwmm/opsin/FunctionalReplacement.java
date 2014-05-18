@@ -842,7 +842,7 @@ class FunctionalReplacement {
 					}
 					suffix.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
 					for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
-						Element newSuffix =new Element(suffix);
+						Element newSuffix = suffix.copy();
 						Fragment newSuffixFrag =state.fragManager.copyFragment(suffixFrag);
 						state.xmlFragmentMap.put(newSuffix, newSuffixFrag);
 						suffixFragments.add(newSuffixFrag);

@@ -223,7 +223,7 @@ class WordRules {
 		for (int i = 0; i < wordRuleEls.size(); i++) {
 			Element wordRuleEl = wordRuleEls.get(i);
 			if (!wordRuleEl.getName().equals(WORDRULE_EL)){
-				throw new ParsingException("Unable to assign wordRule to: " + wordRuleEl.getValue());
+				throw new ParsingException("Unable to assign wordRule to: " + wordRuleEl.getAttributeValue(VALUE_ATR));
 			}
 		}
 	}
@@ -287,7 +287,7 @@ class WordRules {
 					}
 				}
 				//Word Rule matches!
-				Element wordRuleEl = new Element(WORDRULE_EL);
+				Element wordRuleEl = new GroupingEl(WORDRULE_EL);
 				wordRuleEl.addAttribute(new Attribute(TYPE_ATR, wordRuleDesc.getRuleType().toString()));
 				wordRuleEl.addAttribute(new Attribute(WORDRULE_EL, wordRuleDesc.getRuleName().toString()));
 
@@ -400,7 +400,7 @@ class WordRules {
 	private void applySimpleWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
 		Element parentEl = firstWord.getParent();
 		int indexToInsertAt = parentEl.indexOf(firstWord);
-		Element wordRuleEl = new Element(WORDRULE_ATR);
+		Element wordRuleEl = new GroupingEl(WORDRULE_EL);
 		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.simple.toString()));//No wordRule
 		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
 		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
@@ -414,7 +414,7 @@ class WordRules {
 	private void applySubstituentWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
 		Element parentEl = firstWord.getParent();
 		int indexToInsertAt = parentEl.indexOf(firstWord);
-		Element wordRuleEl = new Element(WORDRULE_ATR);
+		Element wordRuleEl = new GroupingEl(WORDRULE_EL);
 		wordRuleEl.addAttribute(new Attribute(WORDRULE_ATR, WordRule.substituent.toString()));
 		wordRuleEl.addAttribute(new Attribute(TYPE_ATR, WordType.full.toString()));
 		wordRuleEl.addAttribute(new Attribute(VALUE_ATR, firstWord.getAttributeValue(VALUE_ATR)));
@@ -443,7 +443,7 @@ class WordRules {
 		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
 		List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
 		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
-			Element implicitHyphen = new Element(HYPHEN_EL, "-");
+			Element implicitHyphen = new TokenEl(HYPHEN_EL, "-");
 			finalSubstituent.appendChild(implicitHyphen);
 		}
 		List<Element> elementsToMergeIntoSubstituent = wordToPotentiallyCombineWith.getChildElements();

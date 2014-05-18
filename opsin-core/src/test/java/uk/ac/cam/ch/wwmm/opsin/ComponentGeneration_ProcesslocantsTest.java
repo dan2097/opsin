@@ -13,10 +13,10 @@ public class ComponentGeneration_ProcesslocantsTest {
 	
 	@Before
 	public void setUpSubstituent(){
-		substituent = new Element(SUBSTITUENT_EL);
-		locant = new Element(LOCANT_EL);
+		substituent = new GroupingEl(SUBSTITUENT_EL);
+		locant = new TokenEl(LOCANT_EL);
 		substituent.appendChild(locant);
-		substituent.appendChild(new Element(GROUP_EL));//a dummy element to give the locant a potential purpose
+		substituent.appendChild(new TokenEl(GROUP_EL));//a dummy element to give the locant a potential purpose
 	}
 	
 	@Test
@@ -217,10 +217,10 @@ public class ComponentGeneration_ProcesslocantsTest {
 	public void testCarbohydrateStyleLocants() throws ComponentGenerationException {
 		//2,4,6-tri-O
 		locant.setValue("O");
-		Element multiplier = new Element(MULTIPLIER_EL);
+		Element multiplier = new TokenEl(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
 		OpsinTools.insertBefore(locant, multiplier);
-		Element numericLocant = new Element(LOCANT_EL);
+		Element numericLocant = new TokenEl(LOCANT_EL);
 		numericLocant.setValue("2,4,6");
 		OpsinTools.insertBefore(multiplier, numericLocant);
 		ComponentGenerator.processLocants(substituent);
@@ -234,7 +234,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 	public void testCarbohydrateStyleLocantsNoNumericComponent() throws ComponentGenerationException {
 		//tri-O
 		locant.setValue("O");
-		Element multiplier = new Element(MULTIPLIER_EL);
+		Element multiplier = new TokenEl(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
 		OpsinTools.insertBefore(locant, multiplier);
 		ComponentGenerator.processLocants(substituent);
@@ -251,10 +251,10 @@ public class ComponentGeneration_ProcesslocantsTest {
 	public void testCarbohydrateStyleLocantsCounterExample() throws ComponentGenerationException {
 		//2,4,6-tri-2 (this is not a carbohydrate style locant)
 		locant.setValue("2");
-		Element multiplier = new Element(MULTIPLIER_EL);
+		Element multiplier = new TokenEl(MULTIPLIER_EL);
 		multiplier.addAttribute(new Attribute(VALUE_ATR, "3"));
 		OpsinTools.insertBefore(locant, multiplier);
-		Element numericLocant = new Element(LOCANT_EL);
+		Element numericLocant = new TokenEl(LOCANT_EL);
 		numericLocant.setValue("2,4,6");
 		OpsinTools.insertBefore(multiplier, numericLocant);
 		ComponentGenerator.processLocants(substituent);

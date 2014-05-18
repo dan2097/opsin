@@ -23,7 +23,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  *
  */
 class ResourceManager {
-	private final static Element IGNORE_WHEN_WRITING_PARSE_TREE = new Element("");
+	private final static TokenEl IGNORE_WHEN_WRITING_PARSE_TREE = new TokenEl("");
 
 	/**Used to load XML files.*/
 	private final ResourceGetter resourceGetter;
@@ -32,9 +32,9 @@ class ResourceManager {
 	private final AutomatonInitialiser automatonInitialiser;
 	
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
-	final HashMap<String, Map<Character, Element>> tokenDict = new HashMap<String, Map<Character, Element>>();
+	final HashMap<String, Map<Character, TokenEl>> tokenDict = new HashMap<String, Map<Character, TokenEl>>();
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
-	final HashMap<Character, Element> reSymbolTokenDict = new HashMap<Character, Element>();
+	final HashMap<Character, TokenEl> reSymbolTokenDict = new HashMap<Character, TokenEl>();
 
 
 	/**A mapping between annotation symbols and a trie of tokens.*/
@@ -184,12 +184,12 @@ class ResourceManager {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 				if (reader.getLocalName().equals("token")) {
-					Element el;
+					TokenEl el;
 					if (ignoreWhenWritingXML){
 						el = IGNORE_WHEN_WRITING_PARSE_TREE;
 					}
 					else{
-						el = new Element(tokenTagName);
+						el = new TokenEl(tokenTagName);
 						if (type != null){
 							el.addAttribute(TYPE_ATR, type);
 						}
@@ -201,9 +201,9 @@ class ResourceManager {
 						}
 					}
 					String t = reader.getElementText();
-					Map<Character, Element> symbolToToken = tokenDict.get(t);
+					Map<Character, TokenEl> symbolToToken = tokenDict.get(t);
 					if(symbolToToken == null) {
-						symbolToToken = new HashMap<Character, Element>();
+						symbolToToken = new HashMap<Character, TokenEl>();
 						tokenDict.put(t, symbolToToken);
 					}
 					symbolToToken.put(symbol, el);
@@ -330,7 +330,7 @@ class ResourceManager {
 				reSymbolTokenDict.put(symbol, IGNORE_WHEN_WRITING_PARSE_TREE);
 			}
 			else{
-				Element el = new Element(tokenTagName);
+				TokenEl el = new TokenEl(tokenTagName);
 				if (type != null){
 					el.addAttribute(TYPE_ATR, type);
 				}
@@ -439,24 +439,24 @@ class ResourceManager {
 	 * @return The XML element produced.
 	 * @throws ParsingException
 	 */
-	Element makeTokenElement(String tokenString, Character symbol) throws ParsingException {
-		Map<Character, Element> annotationToToken = tokenDict.get(tokenString);
+	TokenEl makeTokenElement(String tokenString, Character symbol) throws ParsingException {
+		Map<Character, TokenEl> annotationToToken = tokenDict.get(tokenString);
 		if(annotationToToken != null){
-			Element token = annotationToToken.get(symbol);
+			TokenEl token = annotationToToken.get(symbol);
 			if (token != null) {
 				if (token == IGNORE_WHEN_WRITING_PARSE_TREE){
 					return null;
 				}
-				Element tokenInstance = new Element(token, tokenString);
+				TokenEl tokenInstance = token.copy(tokenString);
 				return tokenInstance;
 			}
 		}
-		Element regexToken = reSymbolTokenDict.get(symbol);
+		TokenEl regexToken = reSymbolTokenDict.get(symbol);
 		if (regexToken != null){
 			if (regexToken == IGNORE_WHEN_WRITING_PARSE_TREE){
 				return null;
 			}
-			Element tokenInstance = new Element(regexToken, tokenString);
+			TokenEl tokenInstance = regexToken.copy(tokenString);
 			return tokenInstance;
 		}
 		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);

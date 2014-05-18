@@ -3,53 +3,14 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 
-class Element {
+abstract class Element {
 
-	private String name;
-	private String value;
-	private Element parent = null;
-	private final List<Element> children = new ArrayList<Element>();
-	private final List<Attribute> attributes = new ArrayList<Attribute>();
-	
-	Element(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
+	protected String name;
+	protected Element parent = null;
+	protected final List<Attribute> attributes = new ArrayList<Attribute>();
+
 	Element(String name) {
 		this.name = name;
-		this.value = "";
-	}
-	
-	/**
-	 * Creates a deep copy with no parent
-	 * The value is set from the given parameter rather than copied
-	 * @param element
-	 */
-	Element(Element element, String value) {
-		this.value = value;
-		copyElementContents(element);
-	}
-
-	/**
-	 * Creates a deep copy with no parent
-	 * @param element
-	 */
-	Element(Element element) {
-		this.value = element.value;
-		copyElementContents(element);
-	}
-	
-	private void copyElementContents(Element element) {
-		this.name = element.name;
-		for (Element childEl : element.children) {
-			Element newChild = new Element(childEl);
-			newChild.setParent(this);
-			children.add(newChild);
-		}
-		for (Attribute atr : element.attributes) {
-			attributes.add(new Attribute(atr));
-		}
 	}
 
 	/**
@@ -57,24 +18,14 @@ class Element {
 	 * @param name
 	 * @return
 	 */
-	List<Element> getChildElements(String name) {
-		List<Element> elements = new ArrayList<Element>();
-		for (Element element : children) {
-			if (element.name.equals(name)) {
-				elements.add(element);
-			}
-		}
-		return elements;
-	}
+	abstract List<Element> getChildElements(String name);
 
 	/**
 	 * Returns a copy of the child elements
 	 * 
 	 * @return
 	 */
-	List<Element> getChildElements() {
-		return new ArrayList<Element>(children);
-	}
+	abstract List<Element> getChildElements();
 
 	/**
 	 * Returns the first child element with the specified name
@@ -82,22 +33,11 @@ class Element {
 	 * @param name
 	 * @return
 	 */
-	Element getFirstChildElement(String name) {
-		for (Element child : children) {
-			if (child.getName().equals(name)) {
-				return child;
-			}
-		}
-		return null;
-	}
+	abstract Element getFirstChildElement(String name);
 
-	Element getChild(int position) {
-		return children.get(position);
-	}
+	abstract Element getChild(int position);
 
-	int getChildCount() {
-		return children.size();
-	}
+	abstract int getChildCount();
 
 	void addAttribute(Attribute attribute) {
 		attributes.add(attribute);
@@ -156,14 +96,14 @@ class Element {
 		this.name = name;
 	}
 
-	void setValue(String text) {
-		this.value = text;
-	}
-
+	abstract void setValue(String text);
+	
+	abstract String getValue();
+	
 	String toXML() {
 		return toXML(0).toString();
 	}
-	
+
 	private StringBuilder toXML(int indent) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < indent; i++) {
@@ -176,8 +116,8 @@ class Element {
 			result.append(atr.toXML());
 		}
 		result.append('>');
-		if (children.size() > 0){
-			for (Element child : children) {
+		if (getChildCount() > 0){
+			for (Element child : getChildElements()) {
 				result.append('\n');
 				result.append(child.toXML(indent + 1));
 			}
@@ -185,22 +125,15 @@ class Element {
 			for (int i = 0; i < indent; i++) {
 				result.append("  ");
 			}
-			result.append("</");
-			result.append(name);
-			result.append('>');
 		}
 		else{
-			result.append(value);
-			result.append("</");
-			result.append(name);
-			result.append('>');
+			result.append(getValue());
 		}
+		result.append("</");
+		result.append(name);
+		result.append('>');
 
 		return result;
-	}
-
-	String getValue() {
-		return value;
 	}
 
 	Element getParent() {
@@ -213,43 +146,25 @@ class Element {
 		}
 	}
 
-	void insertChild(Element child, int position) {
-		child.setParent(this);
-		children.add(position, child);
-	}
+	abstract void insertChild(Element child, int position);
+	abstract void appendChild(Element child);
 
-	void appendChild(Element child) {
-		child.setParent(this);
-		children.add(child);
-	}
-
-	int indexOf(Element child) {
-		return children.indexOf(child);
-	}
+	abstract int indexOf(Element child);
 	
-	boolean removeChild(Element child) {
-		child.setParent(null);
-		return children.remove(child);
-	}
+	abstract boolean removeChild(Element child);
 
-	Element removeChild(int i) {
-		Element removed = children.remove(i);
-		removed.setParent(null);
-		return removed;
-	}
+	abstract Element removeChild(int i);
 
-	void replaceChild(Element oldChild, Element newChild) {
-		int position = indexOf(oldChild);
-		if (position == -1) {
-			throw new RuntimeException("oldChild is not a child of this element.");
-		}
-		removeChild(position);
-		insertChild(newChild, position);
-	}
+	abstract void replaceChild(Element oldChild, Element newChild);
 	
-	private void setParent(Element newParentEl) {
+	void setParent(Element newParentEl) {
 		this.parent = newParentEl;
 	}
+	
+	/**
+	 * Creates a deep copy with no parent
+	 */
+	abstract Element copy();
 	
 	public String toString() {
 		return toXML();
