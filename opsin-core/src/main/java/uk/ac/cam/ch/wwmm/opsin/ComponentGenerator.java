@@ -2189,22 +2189,21 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("phospho")){//is this the organic meaning (P(=O)=O) or biochemical meaning (P(=O)(O)O)
 			Element substituent = group.getParent();
-			Element nextSubstituent = OpsinTools.getNextSibling(substituent);
-			if (nextSubstituent !=null){
-				Element nextGroup = nextSubstituent.getFirstChildElement(GROUP_EL);
+			Element nextGroup = OpsinTools.getNextGroup(substituent);
+			if (nextGroup != null){
 				String type = nextGroup.getAttributeValue(TYPE_ATR);
 				String subType = nextGroup.getAttributeValue(SUBTYPE_ATR);
-				if (nextGroup !=null && (type.equals(AMINOACID_TYPE_VAL) || 
+				if (type.equals(AMINOACID_TYPE_VAL) || 
 						type.equals(CARBOHYDRATE_TYPE_VAL) ||
 						BIOCHEMICAL_SUBTYPE_VAL.equals(subType) ||
 						(YLFORACYL_SUBTYPE_VAL.equals(subType) &&
-						("glycol".equals(nextGroup.getValue()) || "diglycol".equals(nextGroup.getValue())))
-						)){
+								("glycol".equals(nextGroup.getValue()) || "diglycol".equals(nextGroup.getValue()))
+						)
+					) {
 					group.getAttribute(VALUE_ATR).setValue("-P(=O)(O)O");
 					group.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
 				}
 			}
-			
 		}
 		else if (groupValue.equals("aspart") || groupValue.equals("glutam")){//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
 			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDINIC_SUBTYPE_VAL)){
