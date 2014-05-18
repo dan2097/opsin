@@ -13,94 +13,35 @@ abstract class Element {
 		this.name = name;
 	}
 
-	/**
-	 * Gets child elements with this name (in iteration order)
-	 * @param name
-	 * @return
-	 */
-	abstract List<Element> getChildElements(String name);
+	void addAttribute(Attribute attribute) {
+		attributes.add(attribute);
+	}
 
-	/**
-	 * Returns a copy of the child elements
-	 * 
-	 * @return
-	 */
-	abstract List<Element> getChildElements();
+	void addAttribute(String atrName, String atrValue) {
+		attributes.add(new Attribute(atrName, atrValue));
+	}
 
-	/**
-	 * Returns the first child element with the specified name
-	 * 
-	 * @param name
-	 * @return
-	 */
-	abstract Element getFirstChildElement(String name);
-
-	/**
-	 * Returns the child at the given index in the children list
-	 * @param index
-	 * @return
-	 */
-	abstract Element getChild(int index);
-
-	/**
-	 * Returns the number of children
-	 * @return
-	 */
-	abstract int getChildCount();
-	
 	/**
 	 * Adds a child element
 	 * @param child
 	 */
 	abstract void addChild(Element child);
-	
-	/**
-	 * Returns the index of the given child in the children list (or -1 if it isn't a child)
-	 * @param child
-	 * @return
-	 */
-	abstract int indexOf(Element child);
 
 	/**
-	 * Inserts the element at the given index in the children list
-	 * @param child
-	 * @param index
+	 * Creates a deep copy with no parent
 	 */
-	abstract void insertChild(Element child, int index);
+	abstract Element copy();
 
-	/**
-	 * Removes the given child element
-	 * @param child
-	 * @return
-	 */
-	abstract boolean removeChild(Element child);
-
-	/**
-	 * Removes the element at the given index in the children list
-	 * @param index
-	 * @return
-	 */
-	abstract Element removeChild(int index);
-
-	/**
-	 * Replaces a child element with another element
-	 * @param oldChild
-	 * @param newChild
-	 */
-	abstract void replaceChild(Element oldChild, Element newChild);
-
-	void addAttribute(Attribute attribute) {
-		attributes.add(attribute);
+	void detach() {
+		if (parent != null) {
+			parent.removeChild(this);
+		}
 	}
 	
-	void addAttribute(String atrName, String atrValue) {
-		attributes.add(new Attribute(atrName, atrValue));
+	Attribute getAttribute(int index) {
+		return attributes.get(index);
 	}
-
-	boolean removeAttribute(Attribute attribute) {
-		return attributes.remove(attribute);
-	}
-
+	
 	/**
 	 * Returns the attribute with the given name
 	 * or null if the attribute doesn't exist
@@ -114,6 +55,10 @@ abstract class Element {
 			}
 		}
 		return null;
+	}
+
+	int getAttributeCount() {
+		return attributes.size();
 	}
 
 	/**
@@ -130,30 +75,108 @@ abstract class Element {
 		return null;
 	}
 
-	int getAttributeCount() {
-		return attributes.size();
-	}
+	/**
+	 * Returns the child at the given index in the children list
+	 * @param index
+	 * @return
+	 */
+	abstract Element getChild(int index);
 
-	Attribute getAttribute(int index) {
-		return attributes.get(index);
-	}
+	/**
+	 * Returns the number of children
+	 * @return
+	 */
+	abstract int getChildCount();
+
+	/**
+	 * Returns a copy of the child elements
+	 * 
+	 * @return
+	 */
+	abstract List<Element> getChildElements();
+	
+	/**
+	 * Gets child elements with this name (in iteration order)
+	 * @param name
+	 * @return
+	 */
+	abstract List<Element> getChildElements(String name);
+
+	/**
+	 * Returns the first child element with the specified name
+	 * 
+	 * @param name
+	 * @return
+	 */
+	abstract Element getFirstChildElement(String name);
 
 	String getName() {
 		return name;
 	}
 
+	Element getParent() {
+		return this.parent;
+	}
+
+	abstract String getValue();
+
+	/**
+	 * Returns the index of the given child in the children list (or -1 if it isn't a child)
+	 * @param child
+	 * @return
+	 */
+	abstract int indexOf(Element child);
+
+	/**
+	 * Inserts the element at the given index in the children list
+	 * @param child
+	 * @param index
+	 */
+	abstract void insertChild(Element child, int index);
+
+	boolean removeAttribute(Attribute attribute) {
+		return attributes.remove(attribute);
+	}
+
+	/**
+	 * Removes the given child element
+	 * @param child
+	 * @return
+	 */
+	abstract boolean removeChild(Element child);
+	
+	/**
+	 * Removes the element at the given index in the children list
+	 * @param index
+	 * @return
+	 */
+	abstract Element removeChild(int index);
+	
+	/**
+	 * Replaces a child element with another element
+	 * @param oldChild
+	 * @param newChild
+	 */
+	abstract void replaceChild(Element oldChild, Element newChild);
+
 	void setName(String name) {
 		this.name = name;
 	}
 
+	void setParent(Element newParentEl) {
+		this.parent = newParentEl;
+	}
+
 	abstract void setValue(String text);
-	
-	abstract String getValue();
+
+	public String toString() {
+		return toXML();
+	}
 	
 	String toXML() {
 		return toXML(0).toString();
 	}
-
+	
 	private StringBuilder toXML(int indent) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < indent; i++) {
@@ -184,29 +207,6 @@ abstract class Element {
 		result.append('>');
 
 		return result;
-	}
-
-	Element getParent() {
-		return this.parent;
-	}
-
-	void detach() {
-		if (parent != null) {
-			parent.removeChild(this);
-		}
-	}
-
-	void setParent(Element newParentEl) {
-		this.parent = newParentEl;
-	}
-	
-	/**
-	 * Creates a deep copy with no parent
-	 */
-	abstract Element copy();
-	
-	public String toString() {
-		return toXML();
 	}
 
 }
