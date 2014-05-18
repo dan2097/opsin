@@ -7,29 +7,42 @@ class TokenEl extends Element {
 	
 	private String value;
 
-	TokenEl(String name, String value) {
-		super(name);
-		this.value = value;
-	}
-	
 	TokenEl(String name) {
 		super(name);
 		this.value = "";
 	}
+	
+	TokenEl(String name, String value) {
+		super(name);
+		this.value = value;
+	}
 
 	@Override
-	List<Element> getChildElements(String name) {
-		return Collections.emptyList();
+	void addChild(Element child) {
+		throw new UnsupportedOperationException("Tokens do not have children");
 	}
 	
 	@Override
-	List<Element> getChildElements() {
-		return Collections.emptyList();
+	Element copy() {
+		TokenEl copy = new TokenEl(this.name, this.value);
+		for (Attribute atr : this.attributes) {
+			copy.addAttribute(new Attribute(atr));
+		}
+		return copy;
 	}
 	
-	@Override
-	Element getFirstChildElement(String name) {
-		return null;
+	/**
+	 * Creates a copy with no parent
+	 * The provided value is used instead of the Element to be copied's value
+	 * @param value
+	 * @return
+	 */
+	TokenEl copy(String value) {
+		TokenEl copy = new TokenEl(this.name, value);
+		for (Attribute atr : this.attributes) {
+			copy.addAttribute(new Attribute(atr));
+		}
+		return copy;
 	}
 	
 	@Override
@@ -43,25 +56,39 @@ class TokenEl extends Element {
 	}
 
 	@Override
-	void insertChild(Element child, int index) {
-		throw new UnsupportedOperationException("Tokens do not have children");
+	List<Element> getChildElements() {
+		return Collections.emptyList();
 	}
 
 	@Override
-	void addChild(Element child) {
-		throw new UnsupportedOperationException("Tokens do not have children");
+	List<Element> getChildElements(String name) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	Element getFirstChildElement(String name) {
+		return null;
+	}
+	
+	String getValue() {
+		return value;
 	}
 
 	@Override
 	int indexOf(Element child) {
 		return -1;
 	}
+
+	@Override
+	void insertChild(Element child, int index) {
+		throw new UnsupportedOperationException("Tokens do not have children");
+	}
 	
 	@Override
 	boolean removeChild(Element child) {
 		throw new UnsupportedOperationException("Tokens do not have children");
 	}
-
+	
 	@Override
 	Element removeChild(int index) {
 		throw new UnsupportedOperationException("Tokens do not have children");
@@ -71,36 +98,9 @@ class TokenEl extends Element {
 	void replaceChild(Element oldChild, Element newChild) {
 		throw new UnsupportedOperationException("Tokens do not have children");
 	}
-	
+
 	void setValue(String text) {
 		this.value = text;
-	}
-	
-	String getValue() {
-		return value;
-	}
-
-	@Override
-	Element copy() {
-		TokenEl copy = new TokenEl(this.name, this.value);
-		for (Attribute atr : this.attributes) {
-			copy.addAttribute(new Attribute(atr));
-		}
-		return copy;
-	}
-
-	/**
-	 * Creates a copy with no parent
-	 * The provided value is used instead of the Element to be copied's value
-	 * @param value
-	 * @return
-	 */
-	TokenEl copy(String value) {
-		TokenEl copy = new TokenEl(this.name, value);
-		for (Attribute atr : this.attributes) {
-			copy.addAttribute(new Attribute(atr));
-		}
-		return copy;
 	}
 
 }
