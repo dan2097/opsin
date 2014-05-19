@@ -109,6 +109,14 @@ abstract class Element {
 	 * @return
 	 */
 	abstract Element getFirstChildElement(String name);
+	
+	/**
+	 * Returns the fragment associated with this element (only applicable to group tokens!)
+	 * @return
+	 */
+	Fragment getFrag() {
+		throw new UnsupportedOperationException("Only group tokens can have associated fragments");
+	}
 
 	String getName() {
 		return name;
@@ -158,6 +166,14 @@ abstract class Element {
 	 * @param newChild
 	 */
 	abstract void replaceChild(Element oldChild, Element newChild);
+	
+	/**
+	 * Sets the fragment associated with this element (only applicable to group tokens!)
+	 * @param frag
+	 */
+	void setFrag(Fragment frag) {
+		throw new UnsupportedOperationException("Only group tokens can have associated fragments");
+	}
 
 	void setName(String name) {
 		this.name = name;
