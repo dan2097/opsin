@@ -1,5 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.SUBTYPE_ATR;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.TYPE_ATR;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +22,12 @@ import java.util.Set;
  *
  */
 class FragmentManager {
+	
+	final static Element DUMMY_TOKEN = new TokenEl("");
+	static{
+		DUMMY_TOKEN.addAttribute(TYPE_ATR, "");
+		DUMMY_TOKEN.addAttribute(SUBTYPE_ATR, "");
+	}
 
 	/** A mapping between fragments and inter fragment bonds */
 	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond = new LinkedHashMap<Fragment, LinkedHashSet<Bond>>();
@@ -46,38 +55,42 @@ class FragmentManager {
 	}
 
 	/** Builds a fragment, based on an SMILES string
+	 * The fragment will not correspond to a token
 	 *
 	 * @param smiles The fragment to build
 	 * @return The built fragment
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles) throws StructureBuildingException {
-		return buildSMILES(smiles, "", "");
+		return buildSMILES(smiles, DUMMY_TOKEN, "");
 	}
-
+	
 	/** Builds a fragment, based on an SMILES string
-	 *
-	 * @param smiles The fragment to build
-	 * @param type The fragment type
-	 * @param labelMapping How to label the fragment
-	 * @return The built fragment
+	 * The fragment will not correspond to a token
+	 * 
+	 * @param smiles
+	 * @param type
+	 * @param labelMapping
+	 * @return
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles, String type, String labelMapping) throws StructureBuildingException {
-		return buildSMILES(smiles, type, "", labelMapping);
+		Element tokenEl = new TokenEl("");
+		tokenEl.addAttribute(TYPE_ATR, type);
+		return buildSMILES(smiles, tokenEl, labelMapping);
 	}
 
 	/** Builds a fragment, based on an SMILES string
-	 *
+	 * The fragment will correspond to the given tokenEl
+	 * 
 	 * @param smiles The fragment to build
-	 * @param type The fragment type
-	 * @param subType The fragment subType
+	 * @param tokenEl The corresponding tokenEl
 	 * @param labelMapping How to label the fragment
 	 * @return The built fragment
 	 * @throws StructureBuildingException
 	 */
-	Fragment buildSMILES(String smiles, String type, String subType, String labelMapping) throws StructureBuildingException {
-		Fragment newFrag = sBuilder.build(smiles, type, subType, labelMapping);
+	Fragment buildSMILES(String smiles, Element tokenEl, String labelMapping) throws StructureBuildingException {
+		Fragment newFrag = sBuilder.build(smiles, tokenEl, labelMapping);
 		addFragment(newFrag);
 		return newFrag;
 	}
@@ -93,7 +106,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException 
 	 */
 	Fragment getUnifiedFragment() throws StructureBuildingException {
-		Fragment uniFrag = new Fragment("", "");
+		Fragment uniFrag = new Fragment(DUMMY_TOKEN);
 		for (Entry<Fragment, LinkedHashSet<Bond>> entry : fragToInterFragmentBond.entrySet()) {
 			Fragment f = entry.getKey();
 			Set<Bond> interFragmentBonds = entry.getValue();
@@ -348,7 +361,10 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Fragment copyAndRelabelFragment(Fragment originalFragment, int primesToAdd) throws StructureBuildingException {
-		Fragment newFragment =new Fragment(originalFragment.getType(), originalFragment.getSubType());
+		Element tokenEl = new TokenEl("");
+		tokenEl.addAttribute(TYPE_ATR, originalFragment.getType());
+		tokenEl.addAttribute(SUBTYPE_ATR, originalFragment.getSubType());
+		Fragment newFragment = new Fragment(tokenEl);
 		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
 		Atom defaultInAtom =originalFragment.getDefaultInAtom();
@@ -490,6 +506,7 @@ class FragmentManager {
 			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
 			Fragment newFragment = copyAndRelabelFragment(originalFragment, primesToAdd);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
+			newFragment.setTokenEl(clonedGroups.get(i));
 			state.xmlFragmentMap.put(clonedGroups.get(i), newFragment);
 			List<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
 			List<Fragment> newSuffixFragments =new ArrayList<Fragment>();

@@ -116,16 +116,6 @@ class SMILESFragmentBuilder {
 		this.idManager = idManager;
 	}
 
-	/**Build a Fragment based on a SMILES string, with a null type/subType.
-	 *
-	 * @param smiles The SMILES string to build from.
-	 * @return The built fragment.
-	 * @throws StructureBuildingException
-	 */
-	Fragment build(String smiles) throws StructureBuildingException {
-		return build(smiles, "", "", "");
-	}
-	
 	private class ParserInstance {
 		private final Deque<StackFrame> stack = new ArrayDeque<StackFrame>();
 		private final Map<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures
@@ -650,25 +640,34 @@ class SMILESFragmentBuilder {
 			return stack.getLast().atom;
 		}
 	}
+	
+	/**
+	 * Build a Fragment based on a SMILES string.
+	 * The associated token is a dummy token with type/subType of ""
+	 *
+	 * @param smiles The SMILES string to build from.
+	 * @return The built fragment.
+	 * @throws StructureBuildingException
+	 */
+	Fragment build(String smiles) throws StructureBuildingException {
+		return build(smiles, FragmentManager.DUMMY_TOKEN, "");
+	}
+	
 
 	/**
 	 * Build a Fragment based on a SMILES string.
 	 * @param smiles The SMILES string to build from.
-	 * @param type The type of fragment being built.
-	 * @param subType The subtype of fragment being built.
+	 * @param tokenEl The corresponding tokenEl
 	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none". A value of "" is treated as synonymous to numeric
 	 * @return Fragment The built fragment.
 	 * @throws StructureBuildingException
 	 */
-	Fragment build(String smiles, String type, String subType, String labelMapping) throws StructureBuildingException {
+	Fragment build(String smiles, Element tokenEl, String labelMapping) throws StructureBuildingException {
 		if (smiles == null){
 			throw new IllegalArgumentException("SMILES specified is null");
 		}
-		if (type == null){
-			throw new IllegalArgumentException("type specified is null, use \"\" if a type is not desired ");
-		}
-		if (subType == null){
-			throw new IllegalArgumentException("subType specified is null, use \"\" if a subType is not desired ");
+		if (tokenEl == null){
+			throw new IllegalArgumentException("tokenEl is null. FragmentManager's DUMMY_TOKEN should be used instead");
 		}
 		if (labelMapping == null){
 			throw new IllegalArgumentException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
@@ -680,7 +679,7 @@ class SMILESFragmentBuilder {
 		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
 			labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
 		}
-		Fragment fragment = new Fragment(type, subType);
+		Fragment fragment = new Fragment(tokenEl);
 		if (smiles.length() == 0){
 			return fragment;
 		}

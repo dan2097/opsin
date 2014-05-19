@@ -120,7 +120,7 @@ public class StructureBuildingMethodsTest {
 		substituent.addChild(phospho);
 		
 		Element methanol = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CCCCO","group","1/2/3/4/"));
+		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CCCCO",methanol,"1/2/3/4/"));
 		Element root = new GroupingEl(ROOT_EL);
 		root.addChild(methanol);
 

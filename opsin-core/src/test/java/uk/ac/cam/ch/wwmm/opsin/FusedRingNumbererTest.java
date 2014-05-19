@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
@@ -426,7 +427,7 @@ public class FusedRingNumbererTest {
 	 * @throws StructureBuildingException 
 	 */
 	private void compareNumbering(String smiles, String labels) throws StructureBuildingException {
-		Fragment fusedRing = sBuilder.build(smiles, "", "", "none");
+		Fragment fusedRing = sBuilder.build(smiles, mock(Element.class), "none");
 		String[] labelArray =labels.split("/", -1);
 		FusedRingNumberer.numberFusedRing(fusedRing);
 		List<Atom> atomList =fusedRing.getAtomList();

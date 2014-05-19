@@ -221,16 +221,14 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
-		String groupType = group.getAttributeValue(TYPE_ATR);
-		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
 		String groupValue = group.getAttributeValue(VALUE_ATR);
 
 		Fragment thisFrag = null;
 		if (group.getAttribute(LABELS_ATR) != null){
-			thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, group.getAttributeValue(LABELS_ATR));
+			thisFrag = state.fragManager.buildSMILES(groupValue, group, group.getAttributeValue(LABELS_ATR));
 		}
 		else{
-			thisFrag = state.fragManager.buildSMILES(groupValue, groupType, groupSubType, "");
+			thisFrag = state.fragManager.buildSMILES(groupValue, group, "");
 		}
 
 		//processes groups like cymene and xylene whose structure is determined by the presence of a locant in front e.g. p-xylene
@@ -326,10 +324,10 @@ class ComponentProcessor {
 				String smilesOfGroupToBeAdded = groupInformation.get("SMILES");
 				Fragment newFrag;
 				if (groupInformation.get("labels")!=null){
-					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, parentFrag.getType(), parentFrag.getSubType(), groupInformation.get("labels"));
+					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, group, groupInformation.get("labels"));
 				}
 				else{
-					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, parentFrag.getType(), parentFrag.getSubType(), NONE_LABELS_VAL);
+					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, group, NONE_LABELS_VAL);
 				}
 
 				Atom atomOnParentFrag =null;
@@ -1285,7 +1283,6 @@ class ComponentProcessor {
 							isAldose = false;
 							if (SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(subtype)){
 								carbohydrate.getAttribute(SUBTYPE_ATR).setValue(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
-								carbohydrateFrag.setSubType(SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL);
 							}
 						}
 						potentialCarbonyl = processUloseSuffix(carbohydrate, suffix, potentialCarbonyl);
@@ -1537,10 +1534,10 @@ class ComponentProcessor {
 		
 		if (suffixValue.equals("aric acid") || suffixValue.equals("arate")){
 			removeTerminalOxygen(alcoholAtom, 1);
-			Fragment f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			Fragment f = state.fragManager.buildSMILES("O", group, NONE_LABELS_VAL);
 			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 2);
 			
-			f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			f = state.fragManager.buildSMILES("O", group, NONE_LABELS_VAL);
 			Atom hydroxyAtom = f.getFirstAtom();
 			if (suffixValue.equals("arate")){
 				hydroxyAtom.addChargeAndProtons(-1, -1);
@@ -1548,7 +1545,7 @@ class ComponentProcessor {
 			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 1);
 			frag.addFunctionalAtom(hydroxyAtom);
 			
-			f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			f = state.fragManager.buildSMILES("O", group, NONE_LABELS_VAL);
 			hydroxyAtom = f.getFirstAtom();
 			if (suffixValue.equals("arate")){
 				hydroxyAtom.addChargeAndProtons(-1, -1);
@@ -1559,7 +1556,7 @@ class ComponentProcessor {
 
 		else if (suffixValue.equals("dialdose")){
 			removeTerminalOxygen(alcoholAtom, 1);
-			Fragment f = state.fragManager.buildSMILES("O", frag.getType(), frag.getSubType(), NONE_LABELS_VAL);
+			Fragment f = state.fragManager.buildSMILES("O", group, NONE_LABELS_VAL);
 			state.fragManager.incorporateFragment(f, f.getFirstAtom(), frag, alcoholAtom, 2);
 		}
 		else{
@@ -1836,6 +1833,7 @@ class ComponentProcessor {
 				for (int i = 1; i < multiplier; i++) {
 					Element conjunctiveSuffixGroup = primaryConjunctiveGroup.copy();
 					Fragment newFragment = state.fragManager.copyAndRelabelFragment(primaryConjunctiveFrag, i);
+					newFragment.setTokenEl(conjunctiveSuffixGroup);
 					state.xmlFragmentMap.put(conjunctiveSuffixGroup, newFragment);
 					conjunctiveGroups.add(conjunctiveSuffixGroup);
 					OpsinTools.insertAfter(primaryConjunctiveGroup, conjunctiveSuffixGroup);
@@ -2001,7 +1999,6 @@ class ComponentProcessor {
 		if (group.getValue().equals("oxal")){//oxalic acid is treated as a non carboxylic acid for the purposes of functional replacment. See P-65.2.3
 			resolveSuffixes(group, suffixes);
 			group.getAttribute(TYPE_ATR).setValue(NONCARBOXYLICACID_TYPE_VAL);
-			suffixableFragment.setType(NONCARBOXYLICACID_TYPE_VAL);
 			suffixesResolved =true;
 		}
 		if (suffixesResolved){
@@ -2158,7 +2155,7 @@ class ComponentProcessor {
 					if (labels == null) {
 						labels = NONE_LABELS_VAL;
 					}
-					suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, SUFFIX_SUBTYPE_VAL, labels);
+					suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, labels);
 					List<Atom> atomList = suffixFrag.getAtomList();
 					String functionalIdsAtr = suffixRule.getAttributeValue(SUFFIXRULES_FUNCTIONALIDS_ATR);
 					if (functionalIdsAtr != null) {
@@ -3374,10 +3371,11 @@ class ComponentProcessor {
 		if (bridgeCount == 0) {
 			return;
 		}
-		Fragment ringFrag = state.xmlFragmentMap.get(OpsinTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL));
+		Element groupEl = OpsinTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL);
+		Fragment ringFrag = state.xmlFragmentMap.get(groupEl);
 		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<Fragment, Atom[]>();
 		for (Element bridge : bridges) {
-			Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), ringFrag.getType(), ringFrag.getSubType(), NONE_LABELS_VAL);
+			Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), groupEl, NONE_LABELS_VAL);
 			List<Atom> bridgeAtomList = bridgeFrag.getAtomList();
 			bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
 			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size() - 1), 1, true);
