@@ -2078,7 +2078,7 @@ class ComponentProcessor {
 				suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
 			}
 			for (int i = 1; i < suffixInstructions.length; i++) {
-				Element newSuffix = new TokenEl(SUFFIX_EL);
+				Element newSuffix = new TokenGroupEl(SUFFIX_EL);
 				if (symmetricSuffixes){
 					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
 					newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));

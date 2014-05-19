@@ -189,7 +189,12 @@ class ResourceManager {
 						el = IGNORE_WHEN_WRITING_PARSE_TREE;
 					}
 					else{
-						el = new TokenEl(tokenTagName);
+						if(tokenTagName.equals(GROUP_EL) || tokenTagName.equals(SUFFIX_EL)) {
+							 el = new TokenGroupEl(tokenTagName);
+						}
+						else{
+							 el = new TokenEl(tokenTagName);
+						}
 						if (type != null){
 							el.addAttribute(TYPE_ATR, type);
 						}
@@ -330,7 +335,13 @@ class ResourceManager {
 				reSymbolTokenDict.put(symbol, IGNORE_WHEN_WRITING_PARSE_TREE);
 			}
 			else{
-				TokenEl el = new TokenEl(tokenTagName);
+				TokenEl el;
+				if(tokenTagName.equals(GROUP_EL) || tokenTagName.equals(SUFFIX_EL)) {
+					 el = new TokenGroupEl(tokenTagName);
+				}
+				else{
+					 el = new TokenEl(tokenTagName);
+				}
 				if (type != null){
 					el.addAttribute(TYPE_ATR, type);
 				}
