@@ -77,8 +77,15 @@ public class VerifyFragmentsTest {
 							String type = reader.getAttributeValue(null, TYPE_ATR);
 							String subType = reader.getAttributeValue(null, SUBTYPE_ATR);
 							String labels =  reader.getAttributeValue(null, LABELS_ATR);
+							TokenEl tokenEl = new TokenEl(GROUP_EL);
+							if (type != null){
+								tokenEl.addAttribute(TYPE_ATR, type);
+							}
+							if (subType != null){
+								tokenEl.addAttribute(SUBTYPE_ATR, subType);
+							}
 
-							mol = sBuilder.build(smiles, type != null ? type : "", subType != null ? subType : "", labels != null ? labels : "");
+							mol = sBuilder.build(smiles, tokenEl, labels != null ? labels : "");
 						}
 						catch (Exception e) {
 							e.printStackTrace();

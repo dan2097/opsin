@@ -1,17 +1,15 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-
-import nu.xom.Element;
-
 
 public class BondTest {
 	
 	@Test
 	public void testBond() {
-		Fragment frag = new Fragment("", "");
+		Fragment frag = new Fragment(mock(Element.class));
 		Atom a1 = new Atom(1, "C", frag);
 		Atom a2 = new Atom(2, "C", frag);
 		frag.addAtom(a1);
@@ -25,13 +23,13 @@ public class BondTest {
 	
 	@Test
 	public void testToCMLBond() {
-		Fragment frag = new Fragment("", "");
+		Fragment frag = new Fragment(mock(Element.class));
 		Atom a1 = new Atom(1, "C", frag);
 		Atom a2 = new Atom(2, "C", frag);
 		frag.addAtom(a1);
 		frag.addAtom(a2);
 		Bond bond = new Bond(a1, a2, 1);
-		Element elem = bond.toCMLBond();
+		nu.xom.Element elem = bond.toCMLBond();
 		assertNotNull("Got XOM Element", elem);
 		assertEquals("Correct XML", "<bond xmlns=\"http://www.xml-cml.org/schema\" id=\"a1_a2\" atomRefs2=\"a1 a2\" order=\"S\" />", elem.toXML());
 	}

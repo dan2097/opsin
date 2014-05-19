@@ -777,7 +777,7 @@ class FunctionalReplacement {
 					continue;
 				}
 				else{
-					Fragment replacementFrag = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getType(), NONE_LABELS_VAL);
+					Fragment replacementFrag = state.fragManager.buildSMILES(replacementSmiles, atomToReplace.getFrag().getTokenEl(), NONE_LABELS_VAL);
 					if (outValency ==3){//special case for nitrido
 						atomToReplace.getFirstBond().setOrder(3);
 						Atom removedHydroxy = singleBondedOxygen.remove(0);

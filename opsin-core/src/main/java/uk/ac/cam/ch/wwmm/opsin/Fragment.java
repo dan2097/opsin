@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
@@ -37,11 +35,8 @@ class Fragment {
 	/**The bonds in the fragment*/
 	private final Set<Bond> bondSet = new LinkedHashSet<Bond>();
 
-	/**The type of the fragment, for the purpose of resolving suffixes*/
-	private String type;
-
-	/**The subType of the fragment, for the purpose of resolving suffixes*/
-	private String subType;
+	/**The associated token element*/
+	private Element tokenEl;
 
 	/**The atoms that are used when this fragment is connected to another fragment. Unused outAtoms means that the fragment is a radical or an error has occurred
 	 * Initially empty */
@@ -59,20 +54,13 @@ class Fragment {
 	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES level.*/
 	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
 
-	/**DO NOT CALL DIRECTLY EXCEPT FOR TESTING
-	 * Makes an empty Fragment with a given type and subType.
-	 * @param type The type of the fragment
-	 * @param subType The subtype of the fragment 
+	/**
+	 * DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	 * Makes an empty Fragment associated with the given tokenEl
+	 * @param tokenEl
 	 */
-	Fragment(String type, String subType) {
-		if (type == null){
-			throw new IllegalArgumentException("Type specified for fragment is null");
-		}
-		if (subType == null){
-			throw new IllegalArgumentException("subType specified for fragment is null");
-		}
-		this.type = type;
-		this.subType = subType;
+	Fragment(Element tokenEl) {
+		this.tokenEl = tokenEl;
 	}
 
 	/**Produces a CML element, corresponding to the molecule. The cml element contains
@@ -84,23 +72,23 @@ class Fragment {
 	 * @see Atom
 	 * @see Bond
 	 */
-	Element toCMLMolecule(String chemicalName) {
-		Element cml = new Element("cml", CML_NAMESPACE);
-		cml.addAttribute(new Attribute("convention","conventions:molecular"));
+	nu.xom.Element toCMLMolecule(String chemicalName) {
+		nu.xom.Element cml = new nu.xom.Element("cml", CML_NAMESPACE);
+		cml.addAttribute(new nu.xom.Attribute("convention","conventions:molecular"));
 		cml.addNamespaceDeclaration("conventions", "http://www.xml-cml.org/convention/");
 		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
 		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
-		Element molecule = new Element("molecule", CML_NAMESPACE);
-		Element name = new Element("name", CML_NAMESPACE);
+		nu.xom.Element molecule = new nu.xom.Element("molecule", CML_NAMESPACE);
+		nu.xom.Element name = new nu.xom.Element("name", CML_NAMESPACE);
 		name.appendChild(chemicalName);
-		name.addAttribute(new Attribute("dictRef","nameDict:unknown"));
+		name.addAttribute(new nu.xom.Attribute("dictRef","nameDict:unknown"));
 		molecule.appendChild(name);
-		molecule.addAttribute(new Attribute("id", "m1"));
-		Element atomArray = new Element("atomArray", CML_NAMESPACE);
+		molecule.addAttribute(new nu.xom.Attribute("id", "m1"));
+		nu.xom.Element atomArray = new nu.xom.Element("atomArray", CML_NAMESPACE);
 		for(Atom atom : atomCollection) {
 			atomArray.appendChild(atom.toCMLAtom());
 		}
-		Element bondArray = new Element("bondArray", CML_NAMESPACE);
+		nu.xom.Element bondArray = new nu.xom.Element("bondArray", CML_NAMESPACE);
 		for(Bond bond : bondSet) {
 			bondArray.appendChild(bond.toCMLBond());
 		}
@@ -304,15 +292,42 @@ class Fragment {
 		return length;
 	}
 
-	/**Gets type.*/
+	/**
+	 * Gets the type of the corresponding tokenEl
+	 * Returns "" is undefined
+	 * @return
+	 */
 	String getType() {
-		return type;
+		String type = tokenEl.getAttributeValue(TYPE_ATR);
+		return type != null ? type : "";
 	}
 
-	/**Gets subType.
-    * @return subType*/
+	/**
+	 * Gets the subType of the corresponding tokenEl
+	 * Returns "" is undefined
+	 * @return
+	 */
 	String getSubType() {
-		return subType;
+		String subType = tokenEl.getAttributeValue(SUBTYPE_ATR);
+		return subType != null ? subType : "";
+	}
+
+	/**
+	 * Gets the associate tokenEl
+	 * Whether or not this is a real token can be tested by whether it has a parent
+	 * @return
+	 */
+	Element getTokenEl() {
+		return tokenEl;
+	}
+
+	/**
+	 * Sets the associated tokenEl
+	 * Type/subType are inherited from the tokenEl
+	 * @param tokenEl
+	 */
+	void setTokenEl(Element tokenEl) {
+		this.tokenEl = tokenEl;
 	}
 
 	/**
@@ -528,22 +543,6 @@ class Fragment {
 			charge+=a.getCharge();
 		}
 		return charge;
-	}
-
-	/**
-	 * Sets the type of the fragment e.g. aromaticStem
-	 * @param type
-	 */
-	void setType(String type) {
-		this.type = type;
-	}
-	
-	/**
-	 * Sets the subType of the fragment
-	 * @param subType
-	 */
-	void setSubType(String subType) {
-		this.subType = subType;
 	}
 
 	Atom getDefaultInAtom() {

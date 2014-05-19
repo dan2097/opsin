@@ -1,11 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import nu.xom.Element;
 
 public class AtomTest {
 
@@ -14,7 +14,7 @@ public class AtomTest {
 	
 	@Before
 	public void setUp() {
-		frag = new Fragment("", "");
+		frag = new Fragment(mock(Element.class));
 	}
 	
 	@Test
@@ -29,7 +29,7 @@ public class AtomTest {
 	public void testToCMLAtom() {
 		Atom atom = new Atom(10, "C", frag);
 		atom.addLocant("1");
-		Element elem = atom.toCMLAtom();
+		nu.xom.Element elem = atom.toCMLAtom();
 		assertNotNull("Got XOM Element", elem);
 		assertEquals("Correct XML", "<atom xmlns=\"http://www.xml-cml.org/schema\" id=\"a10\" elementType=\"C\" hydrogenCount=\"0\"><label value=\"1\" dictRef=\"cmlDict:locant\" /></atom>", elem.toXML()); 
 	}
