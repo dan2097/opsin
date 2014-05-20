@@ -31,11 +31,12 @@ class ComponentProcessor {
 	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
+	private final FunctionalReplacement functionalReplacement;
 	private final SuffixRulesLookup suffixRulesLookup;
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
-	private static final HashMap<String, String[]> specialHWRings = new HashMap<String, String[]>();
+	private static final Map<String, String[]> specialHWRings = new HashMap<String, String[]>();
 	static{
 		//The first entry of the array is a special instruction e.g. blocked or saturated. The correct order of the heteroatoms follows
 		//terminal e is ignored from all of the keys as it is optional in the input name
@@ -78,6 +79,7 @@ class ComponentProcessor {
 	ComponentProcessor(SuffixRulesLookup suffixRules, BuildState state) {
 		this.suffixRulesLookup = suffixRules;
 		this.state = state;
+		this.functionalReplacement = new FunctionalReplacement(state);
 	}
 
 	/**
@@ -155,9 +157,9 @@ class ComponentProcessor {
 				Element lastGroupInSubOrRoot =groupsOfSubOrRoot.get(groupsOfSubOrRoot.size() - 1);
 				preliminaryProcessSuffixes(lastGroupInSubOrRoot, subOrRoot.getChildElements(SUFFIX_EL));
 			}
-			FunctionalReplacement.processAcidReplacingFunctionalClassNomenclature(state, finalSubOrRootInWord, word);
+			functionalReplacement.processAcidReplacingFunctionalClassNomenclature(finalSubOrRootInWord, word);
 
-			if (FunctionalReplacement.processPrefixFunctionalReplacementNomenclature(state, groups, substituents)){//true if functional replacement performed, 1 or more substituents will have been removed
+			if (functionalReplacement.processPrefixFunctionalReplacementNomenclature(groups, substituents)){//true if functional replacement performed, 1 or more substituents will have been removed
 				substituentsAndRoot = OpsinTools.combineElementLists(substituents, roots);
 				substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);
 			}
@@ -1993,7 +1995,7 @@ class ComponentProcessor {
 			suffixesResolved =true;
 		}
 		processSuffixPrefixes(suffixes);//e.g. carbox amide
-		FunctionalReplacement.processInfixFunctionalReplacementNomenclature(state, suffixes, suffixFragments);
+		functionalReplacement.processInfixFunctionalReplacementNomenclature(suffixes, suffixFragments);
 		processRemovalOfHydroxyGroupsRules(suffixes, suffixableFragment);
 
 		if (group.getValue().equals("oxal")){//oxalic acid is treated as a non carboxylic acid for the purposes of functional replacment. See P-65.2.3
