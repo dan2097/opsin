@@ -170,11 +170,11 @@ class StructureBuildingMethods {
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
 			}
 			else{
-				Fragment parentFrag = findFragmentWithLocant(state, subBracketOrRoot, locantString);
+				Fragment parentFrag = findFragmentWithLocant(subBracketOrRoot, locantString);
 				if (parentFrag==null){
 					String modifiedLocant = checkForBracketedPrimedLocantSpecialCase(subBracketOrRoot, locantString);
 					if (modifiedLocant != null){
-						parentFrag = findFragmentWithLocant(state, subBracketOrRoot, modifiedLocant);
+						parentFrag = findFragmentWithLocant(subBracketOrRoot, modifiedLocant);
 						if (parentFrag !=null){
 							locantString = modifiedLocant;
 						}
@@ -241,7 +241,7 @@ class StructureBuildingMethods {
 				else{
 					Atom atomToJoinTo = null;
 					if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
-						List<Fragment> possibleParents =findAlternativeFragments(state, subBracketOrRoot);
+						List<Fragment> possibleParents =findAlternativeFragments(subBracketOrRoot);
 						for (Fragment fragment : possibleParents) {
 							List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(fragment);
 							if (hydroxyAtoms.size() >0){
@@ -251,7 +251,7 @@ class StructureBuildingMethods {
 						}
 					}
 					if (atomToJoinTo ==null) {
-					  atomToJoinTo = findAtomForSubstitution(state, subBracketOrRoot, frag.getOutAtom(0).getValency());
+					  atomToJoinTo = findAtomForSubstitution(subBracketOrRoot, frag.getOutAtom(0).getValency());
 					}
 					if (atomToJoinTo ==null){
 						throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
@@ -272,7 +272,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static void performPerHalogenoSubstitution(BuildState state, Fragment perhalogenFrag, Element subBracketOrRoot) throws StructureBuildingException {
-		List<Fragment> fragmentsToAttachTo = findAlternativeFragments(state, subBracketOrRoot);
+		List<Fragment> fragmentsToAttachTo = findAlternativeFragments(subBracketOrRoot);
 		List<Atom> atomsToHalogenate = new ArrayList<Atom>();
 		for (Fragment fragment : fragmentsToAttachTo) {
 			FragmentTools.convertSpareValenciesToDoubleBonds(fragment);
@@ -378,10 +378,10 @@ class StructureBuildingMethods {
 		Element group = groups.get(0);
 		Fragment thisFrag = group.getFrag();
 
-		ArrayList<Element> unsaturators = new ArrayList<Element>();
-		ArrayList<Element> heteroatoms = new ArrayList<Element>();
-		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
-		ArrayList<Element> subtractivePrefixElements = new ArrayList<Element>();
+		List<Element> unsaturators = new ArrayList<Element>();
+		List<Element> heteroatoms = new ArrayList<Element>();
+		List<Element> hydrogenElements = new ArrayList<Element>();
+		List<Element> subtractivePrefixElements = new ArrayList<Element>();
 
 		List<Element> children =subOrRoot.getChildElements();
 		for (int i = 0; i < children.size(); i++) {
@@ -851,7 +851,7 @@ class StructureBuildingMethods {
 				if (nextSiblingEl.getAttribute(MULTIPLIER_ATR)!=null &&
 						(outAtomCount >= Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR)) || //probably multiplicative nomenclature, should be as many outAtoms as the multiplier
 						outAtomCount==1 && frag.getOutAtom(0).getValency()==Integer.parseInt(nextSiblingEl.getAttributeValue(MULTIPLIER_ATR))) &&
-						hasRootLikeOrMultiRadicalGroup(state, nextSiblingEl)){
+						hasRootLikeOrMultiRadicalGroup(nextSiblingEl)){
 					if (outAtomCount==1){//special case e.g. 4,4'-(benzylidene)dianiline
 						FragmentTools.splitOutAtomIntoValency1OutAtoms(frag.getOutAtom(0));
 						//special case where something like benzylidene is being used as if it meant benzdiyl for multiplicative nomenclature
@@ -860,7 +860,7 @@ class StructureBuildingMethods {
 					performMultiplicativeOperations(state, group, nextSiblingEl);
 				}
 				else if (group.getAttribute(ISAMULTIRADICAL_ATR)!=null){//additive nomenclature e.g. ethyleneoxy
-					Fragment nextFrag = getNextInScopeMultiValentFragment(state, subBracketOrRoot);
+					Fragment nextFrag = getNextInScopeMultiValentFragment(subBracketOrRoot);
 					if (nextFrag!=null){
 						Element nextMultiRadicalGroup = nextFrag.getTokenEl();
 						Element parentSubOrRoot = nextMultiRadicalGroup.getParent();
@@ -886,7 +886,7 @@ class StructureBuildingMethods {
 					}
 				}
 				else {//e.g. chlorocarbonyl or hydroxy(sulfanyl)phosphoryl
-					List<Fragment> siblingFragments = findAlternativeFragments(state, subBracketOrRoot);
+					List<Fragment> siblingFragments = findAlternativeFragments(subBracketOrRoot);
 					if (siblingFragments.size()>0){
 						Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 						Element nextGroup = nextFrag.getTokenEl();
@@ -920,7 +920,7 @@ class StructureBuildingMethods {
 				}
 			}
 			else{// e.g. dimethoxyphosphoryl or bis(methylamino)phosphoryl
-				List<Fragment> siblingFragments = findAlternativeFragments(state, subBracketOrRoot);
+				List<Fragment> siblingFragments = findAlternativeFragments(subBracketOrRoot);
 				if (siblingFragments.size()>0){
 					int multiplier = Integer.parseInt(subBracketOrRoot.getAttributeValue(MULTIPLIER_ATR));
 					Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
@@ -958,11 +958,10 @@ class StructureBuildingMethods {
 
 	/**
 	 * Searches the input for something that either is a multiRadical or has no outAtoms i.e. not dimethyl
-	 * @param state
 	 * @param subBracketOrRoot
 	 * @return
 	 */
-	private static boolean hasRootLikeOrMultiRadicalGroup(BuildState state, Element subBracketOrRoot) {
+	private static boolean hasRootLikeOrMultiRadicalGroup(Element subBracketOrRoot) {
 		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(subBracketOrRoot, GROUP_EL);
 		if (subBracketOrRoot.getAttribute(INLOCANTS_ATR)!=null){
 			return true;// a terminus with specified inLocants
@@ -1043,7 +1042,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static void performMultiplicativeOperations(BuildState state, Element group, Element multipliedParent) throws StructureBuildingException{
-		BuildResults multiRadicalBR = new BuildResults(state, group.getParent());
+		BuildResults multiRadicalBR = new BuildResults(group.getParent());
 		performMultiplicativeOperations(state, multiRadicalBR, multipliedParent);
 	}
 
@@ -1091,7 +1090,7 @@ class StructureBuildingMethods {
 			//determine group that will be additively bonded to
 			Element multipliedGroup;
 			if (multipliedElement.getName().equals(BRACKET_EL)){
-				multipliedGroup =getFirstMultiValentGroup(state, multipliedElement);
+				multipliedGroup =getFirstMultiValentGroup(multipliedElement);
 				if (multipliedGroup == null){//root will not have a multivalent group
 					List<Element> groups = OpsinTools.getDescendantElementsWithTagName(multipliedElement, GROUP_EL);
 					if (inLocants==null){
@@ -1189,7 +1188,7 @@ class StructureBuildingMethods {
 			if (inLocants ==null){
 				//currentElement is not a root element. Need to build up a new BuildResults so as to call performMultiplicativeOperations again
 				//at this stage an outAtom has been removed from the fragment within currentElement through an additive bond
-				newBr.mergeBuildResults(new BuildResults(state, multipliedElement));
+				newBr.mergeBuildResults(new BuildResults(multipliedElement));
 			}
 		}
 
@@ -1229,12 +1228,11 @@ class StructureBuildingMethods {
 	 * e.g. for oxy(dichloromethyl)methylene given oxy substituent the methylene group would be found
 	 * for oxy(dichloroethylene) given oxy substituent the ethylene group would be found
 	 * for oxy(carbonylimino) given oxy carbonyl would be found
-	 * @param state
 	 * @param substituentOrBracket
 	 * @return frag
 	 * @throws StructureBuildingException
 	 */
-	private static Fragment getNextInScopeMultiValentFragment(BuildState state, Element substituentOrBracket) throws StructureBuildingException {
+	private static Fragment getNextInScopeMultiValentFragment(Element substituentOrBracket) throws StructureBuildingException {
 		if (!substituentOrBracket.getName().equals(SUBSTITUENT_EL) && !substituentOrBracket.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("Input to this function should be a substituent or bracket");
 		}
@@ -1277,12 +1275,11 @@ class StructureBuildingMethods {
 
 	/**
 	 * Given a bracket searches in a depth first manner for the first multi valent group
-	 * @param state
 	 * @param bracket
 	 * @return group
 	 * @throws StructureBuildingException
 	 */
-	private static Element getFirstMultiValentGroup(BuildState state, Element bracket) throws StructureBuildingException {
+	private static Element getFirstMultiValentGroup(Element bracket) throws StructureBuildingException {
 		if (!bracket.getName().equals(BRACKET_EL)){
 			throw new StructureBuildingException("Input to this function should be a bracket");
 		}
@@ -1508,9 +1505,9 @@ class StructureBuildingMethods {
 		return new Atom[]{firstAtomToJoinTo, secondAtomToJoinTo};
 	}
 
-	private static Atom findAtomForSubstitution(BuildState state, Element subOrBracket, int bondOrder)  {
+	private static Atom findAtomForSubstitution(Element subOrBracket, int bondOrder)  {
 		Atom to =null;
-		List<Fragment> possibleParents =findAlternativeFragments(state, subOrBracket);
+		List<Fragment> possibleParents =findAlternativeFragments(subOrBracket);
 		for (Fragment fragment : possibleParents) {
 			to = fragment.getAtomOrNextSuitableAtom(fragment.getDefaultInAtom(), bondOrder, true);
 			if (to !=null){
@@ -1523,11 +1520,10 @@ class StructureBuildingMethods {
 	/**
 	 * Finds all the groups accessible from the startingElement taking into account brackets
 	 * i.e. those that it is feasible that the group of the startingElement could substitute onto
-	 * @param state
 	 * @param startingElement
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
-	static List<Fragment> findAlternativeFragments(BuildState state, Element startingElement) {
+	static List<Fragment> findAlternativeFragments(Element startingElement) {
 		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement.getParent());
 		List<Fragment> foundFragments =new ArrayList<Fragment>();
@@ -1574,13 +1570,12 @@ class StructureBuildingMethods {
 	/**
 	 * Checks through the groups accessible from the currentElement taking into account brackets
 	 * i.e. those that it is feasible that the group of the currentElement could substitute onto
-	 * @param state
 	 * @param startingElement
 	 * @param locant: the locant string to check for the presence of
 	 * @return The fragment with the locant, or null
 	 * @throws StructureBuildingException
 	 */
-	private static Fragment findFragmentWithLocant(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
+	private static Fragment findFragmentWithLocant(Element startingElement, String locant) throws StructureBuildingException {
 		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement.getParent());
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element

@@ -176,7 +176,7 @@ class StereochemistryHandler {
 		//generally the LAST group in this list will be the appropriate groups e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
-		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
@@ -277,7 +277,7 @@ class StereochemistryHandler {
 		//generally the LAST group in this list will be the appropriate groups e.g. (2Z)-5-ethyl-6-methylhex-2-ene where the hex-2-ene is the appropriate group
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
-		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
@@ -466,7 +466,7 @@ class StereochemistryHandler {
 			return false;
 		}
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
-		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
@@ -631,7 +631,7 @@ class StereochemistryHandler {
 	 */
 	private void assignAlphaBetaStereochem(Element stereoChemistryEl) throws StructureBuildingException {
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
-		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
 		Fragment substituentGroup =null;
 		if (parentSubBracketOrRoot.getName().equals(SUBSTITUENT_EL)){
 			substituentGroup = parentSubBracketOrRoot.getFirstChildElement(GROUP_EL).getFrag();

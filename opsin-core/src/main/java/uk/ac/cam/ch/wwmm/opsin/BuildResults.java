@@ -18,19 +18,18 @@ class BuildResults {
 	 * setExplicitly says whether the outAtom absolutely definitely refers to that atom or not.
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
 	 * These OutAtoms are the same objects as are present in the fragments*/
-	private final ArrayList<OutAtom> outAtoms;
+	private final List<OutAtom> outAtoms;
 
 	/**The atoms that may be used to from things like esters*/
-	private final ArrayList<FunctionalAtom> functionalAtoms;
+	private final List<FunctionalAtom> functionalAtoms;
 
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
-	private final LinkedHashSet<Fragment> fragments;
+	private final Set<Fragment> fragments;
 
 	/**A BuildResults is constructed from a list of Fragments.
 	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.
-     * @param state
      * @param wordSubOrBracket*/
-	BuildResults(BuildState state, Element wordSubOrBracket) {
+	BuildResults(Element wordSubOrBracket) {
 		outAtoms = new ArrayList<OutAtom>();
 		functionalAtoms = new ArrayList<FunctionalAtom>();
 		fragments = new LinkedHashSet<Fragment>();
