@@ -40,7 +40,7 @@ class FunctionalReplacement {
 			}
 		}
 	}
-	private enum PREFIX_REPLACEMENT_TYPE{
+	private static enum PREFIX_REPLACEMENT_TYPE{
 		chalcogen,//ambiguous
 		halideOrPseudoHalide,//only mean functional replacement when applied to non carboxylic acids
 		dedicatedFunctionalReplacementPrefix,//no ambiguity exists
