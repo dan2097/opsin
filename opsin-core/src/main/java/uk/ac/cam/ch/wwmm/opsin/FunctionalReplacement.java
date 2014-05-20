@@ -184,9 +184,9 @@ class FunctionalReplacement {
 						}
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.hydrazono || replacementType == PREFIX_REPLACEMENT_TYPE.halideOrPseudoHalide){
-						Fragment acidFrag = state.xmlFragmentMap.get(groupToBeModified);
+						Fragment acidFrag = groupToBeModified.getFrag();
 						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL) ||
-								acidHasSufficientHydrogenForSubstitutionInterpretation(acidFrag, state.xmlFragmentMap.get(group).getOutAtom(0).getValency(), locantEl)){
+								acidHasSufficientHydrogenForSubstitutionInterpretation(acidFrag, group.getFrag().getOutAtom(0).getValency(), locantEl)){
 							//hydrazono replacement only applies to non carboxylic acids e.g. hydrazonooxalic acid
 							//need to be careful to note that something like chlorophosphonic acid isn't functional replacement
 							continue;
@@ -197,7 +197,7 @@ class FunctionalReplacement {
 						throw new StructureBuildingException("OPSIN bug: Unexpected prefix replacement type");
 					}
 					if (oxygenReplaced>0){
-						state.fragManager.removeFragment(state.xmlFragmentMap.get(group));
+						state.fragManager.removeFragment(group.getFrag());
 						substituent.removeChild(group);
 						groups.remove(group);
 						List<Element> remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
@@ -253,11 +253,11 @@ class FunctionalReplacement {
 		for (int i = 0; i < suffixes.size(); i++) {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute(INFIX_ATR)!=null){
-				Fragment fragToApplyInfixTo = state.xmlFragmentMap.get(suffix);
+				Fragment fragToApplyInfixTo = suffix.getFrag();
 				Element possibleAcidGroup = OpsinTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL, SUFFIX_EL});
 				if (possibleAcidGroup !=null && possibleAcidGroup.getName().equals(GROUP_EL) && 
 						(possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)|| possibleAcidGroup.getAttributeValue(TYPE_ATR).equals(CHALCOGENACIDSTEM_TYPE_VAL))){
-					fragToApplyInfixTo = state.xmlFragmentMap.get(possibleAcidGroup);
+					fragToApplyInfixTo = possibleAcidGroup.getFrag();
 				}
 				if (fragToApplyInfixTo ==null){
 					throw new ComponentGenerationException("infix has erroneously been assigned to a suffix which does not correspond to a suffix fragment. suffix: " + suffix.getValue());
@@ -412,7 +412,7 @@ class FunctionalReplacement {
 			throw new ComponentGenerationException("OPSIN bug: acid replacing group not found where one was expected for acidReplacingFunctionalGroup wordRule");
 		}
 		String functionalGroupName = acidReplacingGroup.getValue();
-		Fragment acidReplacingFrag = state.xmlFragmentMap.get(acidReplacingGroup);
+		Fragment acidReplacingFrag = acidReplacingGroup.getFrag();
 		if (acidReplacingGroup.getParent().getChildCount() != 1){
 			throw new ComponentGenerationException("Unexpected qualifier to: " + functionalGroupName);
 		}
@@ -500,7 +500,7 @@ class FunctionalReplacement {
 			}
 			else{
 				Fragment acidReplacingFrag = ComponentProcessor.resolveGroup(state, acidReplacingGroup);
-				Fragment acidFragment = state.xmlFragmentMap.get(groupToBeModified);
+				Fragment acidFragment = groupToBeModified.getFrag();
 				if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of replacing group
 					for (Atom atom : acidReplacingFrag.getAtomList()) {
 						atom.clearLocants();
@@ -683,13 +683,13 @@ class FunctionalReplacement {
 					state.fragManager.createBond(atomToAttachTo, newOxygen.getFirstAtom(), 1);
 					state.fragManager.createBond(newOxygen.getFirstAtom(), oxygenToReplace, 1);
 					state.fragManager.removeBond(bondToRemove);
-					state.fragManager.incorporateFragment(newOxygen, state.xmlFragmentMap.get(groupToBeModified));
+					state.fragManager.incorporateFragment(newOxygen, groupToBeModified.getFrag());
 				}
 				else{
 					Fragment replacementFrag = state.fragManager.buildSMILES("OO", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 					removeOrMoveObsoleteFunctionalAtoms(oxygenToReplace, replacementFrag);
 					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(oxygenToReplace, replacementFrag.getFirstAtom());
-					state.fragManager.incorporateFragment(replacementFrag, state.xmlFragmentMap.get(groupToBeModified));
+					state.fragManager.incorporateFragment(replacementFrag, groupToBeModified.getFrag());
 				}
 			}
 		}
@@ -843,8 +843,8 @@ class FunctionalReplacement {
 					suffix.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
 					for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
 						Element newSuffix = suffix.copy();
-						Fragment newSuffixFrag =state.fragManager.copyFragment(suffixFrag);
-						state.xmlFragmentMap.put(newSuffix, newSuffixFrag);
+						Fragment newSuffixFrag = state.fragManager.copyFragment(suffixFrag);
+						newSuffix.setFrag(newSuffixFrag);
 						suffixFragments.add(newSuffixFrag);
 						OpsinTools.insertAfter(suffix, newSuffix);
 						suffixes.add(newSuffix);
@@ -976,7 +976,7 @@ class FunctionalReplacement {
 		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		for (Element suffix : suffixElements) {
-			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+			Fragment suffixFrag = suffix.getFrag();
 			if (suffixFrag != null) {//null for non carboxylic acids
 				for (int i = 0, l = suffixFrag.getFunctionalAtomCount(); i < l; i++) {
 					Atom a = suffixFrag.getFunctionalAtom(i).getAtom();
@@ -997,7 +997,7 @@ class FunctionalReplacement {
 	 */
 	private static List<Atom> findFunctionalOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-		Fragment frag = state.xmlFragmentMap.get(groupToBeModified);
+		Fragment frag = groupToBeModified.getFrag();
 		for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
 			Atom a = frag.getFunctionalAtom(i).getAtom();
 			if (a.getElement().equals("O")){
@@ -1016,7 +1016,7 @@ class FunctionalReplacement {
 	 */
 	private static List<Atom> findEthericOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-		List<Atom> atomList = state.xmlFragmentMap.get(groupToBeModified).getAtomList();
+		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a: atomList) {
 			if (a.getElement().equals("O") && a.getBonds().size()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
 				oxygenAtoms.add(a);
@@ -1036,7 +1036,7 @@ class FunctionalReplacement {
 		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		for (Element suffix : suffixElements) {
-			Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+			Fragment suffixFrag = suffix.getFrag();
 			if (suffixFrag != null) {//null for non carboxylic acids
 				if (suffixFrag.getFunctionalAtomCount() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || suffix.getAttributeValue(VALUE_ATR).equals("aldehyde")) {
 					List<Atom> atomList = suffixFrag.getAtomList();
@@ -1059,7 +1059,7 @@ class FunctionalReplacement {
 	 */
 	private static List<Atom> findOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
-		List<Atom> atomList = state.xmlFragmentMap.get(groupToBeModified).getAtomList();
+		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a : atomList) {
 			if (a.getElement().equals("O")){
 				oxygenAtoms.add(a);

@@ -113,7 +113,6 @@ class ComponentProcessor {
 			for (Element group : groups) {
 				Fragment thisFrag = resolveGroup(state, group);
 				processChargeAndOxidationNumberSpecification(group, thisFrag);//e.g. mercury(2+) or mercury(II)
-				state.xmlFragmentMap.put(group, thisFrag);
 			}
 			
 			for (Element subOrRoot : substituentsAndRoot) {
@@ -223,13 +222,14 @@ class ComponentProcessor {
 	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
 		String groupValue = group.getAttributeValue(VALUE_ATR);
 
-		Fragment thisFrag = null;
+		Fragment thisFrag;
 		if (group.getAttribute(LABELS_ATR) != null){
 			thisFrag = state.fragManager.buildSMILES(groupValue, group, group.getAttributeValue(LABELS_ATR));
 		}
 		else{
 			thisFrag = state.fragManager.buildSMILES(groupValue, group, "");
 		}
+		group.setFrag(thisFrag);
 
 		//processes groups like cymene and xylene whose structure is determined by the presence of a locant in front e.g. p-xylene
 		processXyleneLikeNomenclature(state, group, thisFrag);
@@ -827,7 +827,7 @@ class ComponentProcessor {
 
 
 	private boolean containsCyclicAtoms(Element potentialRing) {
-		Fragment potentialRingFrag = state.xmlFragmentMap.get(potentialRing);
+		Fragment potentialRingFrag = potentialRing.getFrag();
 		List<Atom> atomList = potentialRingFrag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getAtomIsInACycle()){
@@ -892,7 +892,7 @@ class ComponentProcessor {
 					}
 					else if (elName.equals(RINGASSEMBLYMULTIPLIER_EL) && afterLocant.equals(OpsinTools.getNextSibling(locant))){//e.g. 1,1'-biphenyl
 						multiplierEl = afterLocant;
-						if (!FragmentTools.allAtomsInRingAreIdentical(state.xmlFragmentMap.get(group))){//if all atoms are identical then the locant may refer to suffixes
+						if (!FragmentTools.allAtomsInRingAreIdentical(group.getFrag())){//if all atoms are identical then the locant may refer to suffixes
 							break;
 						}
 					}
@@ -987,7 +987,7 @@ class ComponentProcessor {
 			}
 			if (heteroCount == 0 && currentElem.getAttribute(OUTIDS_ATR) != null ) {//e.g. 1,4-phenylene
 				String[] outIDs = MATCH_COMMA.split(currentElem.getAttributeValue(OUTIDS_ATR), -1);
-				Fragment groupFragment =state.xmlFragmentMap.get(currentElem);
+				Fragment groupFragment = currentElem.getFrag();
 				if (count ==outIDs.length && groupFragment.getAtomCount() > 1){//things like oxy do not need to have their outIDs specified
 					int idOfFirstAtomInFrag =groupFragment.getIdOfFirstAtom();
 					boolean foundLocantNotPresentOnFragment = false;
@@ -1117,7 +1117,7 @@ class ComponentProcessor {
 	}
 
 	void applyDlStereochemistryToAminoAcid(Element aminoAcidEl, String dlStereochemistryValue) throws ComponentGenerationException {
-		Fragment aminoAcid = state.xmlFragmentMap.get(aminoAcidEl);
+		Fragment aminoAcid = aminoAcidEl.getFrag();
 		List<Atom> atomList = aminoAcid.getAtomList();
 		List<Atom> atomsWithParities = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
@@ -1155,7 +1155,7 @@ class ComponentProcessor {
 	}
 
 	void applyDlStereochemistryToCarbohydrate(Element carbohydrateEl, String dlStereochemistryValue) throws ComponentGenerationException {
-		Fragment carbohydrate = state.xmlFragmentMap.get(carbohydrateEl);
+		Fragment carbohydrate = carbohydrateEl.getFrag();
 		List<Atom> atomList = carbohydrate.getAtomList();
 		List<Atom> atomsWithParities = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
@@ -1246,7 +1246,7 @@ class ComponentProcessor {
 				continue;
 			}
 			boolean cyclisationPerformed = false;
-			Fragment carbohydrateFrag = state.xmlFragmentMap.get(carbohydrate);
+			Fragment carbohydrateFrag = carbohydrate.getFrag();
 			Attribute anomericId = carbohydrate.getAttribute(SUFFIXAPPLIESTO_ATR);
 			if (anomericId == null){
 				throw new StructureBuildingException("OPSIN bug: Missing suffixAppliesTo on: " + carbohydrate.getValue());
@@ -1336,7 +1336,7 @@ class ComponentProcessor {
 		if (cyclise) {
 			Element ringSize = new TokenEl(CARBOHYDRATERINGSIZE_EL);
 			String sugarStem = group.getValue();
-			if (state.xmlFragmentMap.get(group).hasLocant("5") && !sugarStem.equals("rib") && !sugarStem.equals("fruct")){
+			if (group.getFrag().hasLocant("5") && !sugarStem.equals("rib") && !sugarStem.equals("fruct")){
 				ringSize.addAttribute(new Attribute(VALUE_ATR, "6"));
 			}
 			else{
@@ -1401,7 +1401,7 @@ class ComponentProcessor {
 				locantsToConvertToKetones.add("2");
 			}
 		}
-		Fragment frag = state.xmlFragmentMap.get(group);
+		Fragment frag = group.getFrag();
 		if (suffix.getAttributeValue(VALUE_ATR).equals("ulose")) {//convert aldose to ketose
 			Atom aldehydeAtom = potentialCarbonyl;
 			boolean foundBond = false;
@@ -1451,7 +1451,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize, Atom potentialCarbonyl) throws StructureBuildingException {
-		Fragment frag = state.xmlFragmentMap.get(carbohydrateGroup);
+		Fragment frag = carbohydrateGroup.getFrag();
 		String ringSizeVal = ringSize.getAttributeValue(VALUE_ATR);
 		Element potentialLocant = OpsinTools.getPreviousSibling(ringSize);
 		Atom carbonylCarbon = null;
@@ -1529,7 +1529,7 @@ class ComponentProcessor {
 	}
 
 	private void processAldoseDiSuffix(String suffixValue, Element group, Atom aldehydeAtom) throws StructureBuildingException {
-		Fragment frag = state.xmlFragmentMap.get(group);
+		Fragment frag = group.getFrag();
 		Atom alcoholAtom = frag.getAtomByLocantOrThrow(String.valueOf(frag.getChainLength()));
 		
 		if (suffixValue.equals("aric acid") || suffixValue.equals("arate")){
@@ -1777,7 +1777,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("OPSIN Bug: Two groups exactly should be present at this point when processing conjunctive nomenclature");
 			}
 			Element primaryConjunctiveGroup =conjunctiveGroups.get(0);
-			Fragment primaryConjunctiveFrag = state.xmlFragmentMap.get(primaryConjunctiveGroup);
+			Fragment primaryConjunctiveFrag = primaryConjunctiveGroup.getFrag();
 			//remove all locants
 			List<Atom> atomList = primaryConjunctiveFrag.getAtomList();
 			for (Atom atom : atomList) {
@@ -1834,7 +1834,7 @@ class ComponentProcessor {
 					Element conjunctiveSuffixGroup = primaryConjunctiveGroup.copy();
 					Fragment newFragment = state.fragManager.copyAndRelabelFragment(primaryConjunctiveFrag, i);
 					newFragment.setTokenEl(conjunctiveSuffixGroup);
-					state.xmlFragmentMap.put(conjunctiveSuffixGroup, newFragment);
+					conjunctiveSuffixGroup.setFrag(newFragment);
 					conjunctiveGroups.add(conjunctiveSuffixGroup);
 					OpsinTools.insertAfter(primaryConjunctiveGroup, conjunctiveSuffixGroup);
 				}
@@ -1912,7 +1912,7 @@ class ComponentProcessor {
 						//detect a solitary locant in front of a HW system and prevent it being assigned.
 						//something like 1-aziridin-1-yl never means the N is at position 1 as it is at position 1 by convention
 						//this special case is not applied to pseudo HW like systems e.g. [1]oxacyclotetradecine
-						if (locantValues.length ==1 && state.xmlFragmentMap.get(group).getAtomCount() <=10){
+						if (locantValues.length ==1 && group.getFrag().getAtomCount() <=10){
 							locants.remove(locantBeforeHWSystem);//don't assign this locant
 						}
 						else {
@@ -1971,7 +1971,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException
 	 */
 	private void preliminaryProcessSuffixes(Element group, List<Element> suffixes) throws ComponentGenerationException, StructureBuildingException{
-		Fragment suffixableFragment =state.xmlFragmentMap.get(group);
+		Fragment suffixableFragment = group.getFrag();
 
 		if (group.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//typically a trivial polyAcid or aminoAcid
 			processSuffixAppliesTo(group, suffixes,suffixableFragment);
@@ -2078,7 +2078,7 @@ class ComponentProcessor {
 				suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
 			}
 			for (int i = 1; i < suffixInstructions.length; i++) {
-				Element newSuffix = new TokenGroupEl(SUFFIX_EL);
+				Element newSuffix = new TokenEl(SUFFIX_EL);
 				if (symmetricSuffixes){
 					newSuffix.addAttribute(new Attribute(VALUE_ATR, suffix.getAttributeValue(VALUE_ATR)));
 					newSuffix.addAttribute(new Attribute(TYPE_ATR,  suffix.getAttributeValue(TYPE_ATR)));
@@ -2210,7 +2210,7 @@ class ComponentProcessor {
 			}
 			if (suffixFrag != null) {
 				suffixFragments.add(suffixFrag);
-				state.xmlFragmentMap.put(suffix, suffixFrag);
+				suffix.setFrag(suffixFrag);
 			}
 		}
 		return suffixFragments;
@@ -2377,7 +2377,7 @@ class ComponentProcessor {
 				}
 				Atom firstAtomOfPrefix = suffixPrefixFrag.getFirstAtom();
 				firstAtomOfPrefix.addLocant("X");//make sure this atom is not given a locant
-				Fragment suffixFrag = state.xmlFragmentMap.get(suffix);
+				Fragment suffixFrag = suffix.getFrag();
 				state.fragManager.incorporateFragment(suffixPrefixFrag, suffixFrag);
 				
 				//manipulate suffixFrag such that all the bonds to the first atom (the R)  go instead to the first atom of suffixPrefixFrag.
@@ -2425,7 +2425,7 @@ class ComponentProcessor {
 				}
 				else{
 					Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
-					Fragment groupFrag =state.xmlFragmentMap.get(group);
+					Fragment groupFrag = group.getFrag();
 					if (groupFrag.hasLocant(locant)){
 						return true;
 					}
@@ -2439,7 +2439,7 @@ class ComponentProcessor {
 					}
 					List<Element> conjunctiveGroups = OpsinTools.getNextSiblingsOfType(group, CONJUNCTIVESUFFIXGROUP_EL);
 					for (Element conjunctiveGroup : conjunctiveGroups) {
-						if (state.xmlFragmentMap.get(conjunctiveGroup).hasLocant(locant)){
+						if (conjunctiveGroup.getFrag().hasLocant(locant)){
 							return true;
 						}
 					}
@@ -2468,7 +2468,7 @@ class ComponentProcessor {
 					}
 					else{
 						Element group = bracketOrSub.getFirstChildElement(GROUP_EL);
-						Fragment groupFrag =state.xmlFragmentMap.get(group);
+						Fragment groupFrag = group.getFrag();
 						if (groupFrag.hasLocant(locant)){
 							return true;
 						}
@@ -2482,7 +2482,7 @@ class ComponentProcessor {
 						}
 						List<Element> conjunctiveGroups = OpsinTools.getNextSiblingsOfType(group, CONJUNCTIVESUFFIXGROUP_EL);
 						for (Element conjunctiveGroup : conjunctiveGroups) {
-							if (state.xmlFragmentMap.get(conjunctiveGroup).hasLocant(locant)){
+							if (conjunctiveGroup.getFrag().hasLocant(locant)){
 								return true;
 							}
 						}
@@ -2515,7 +2515,7 @@ class ComponentProcessor {
 				if (!implicitHydrogenExplicitlySet){
 					//porphyrins implicitly have indicated hydrogen at the 21/23 positions
 					//directly modify the fragment to avoid problems with locants in for example ring assemblies
-					Fragment frag =state.xmlFragmentMap.get(group);
+					Fragment frag = group.getFrag();
 					frag.getAtomByLocantOrThrow("21").setSpareValency(false);
 					frag.getAtomByLocantOrThrow("23").setSpareValency(false);
 				}
@@ -2542,7 +2542,7 @@ class ComponentProcessor {
 	private void processHW(Element subOrRoot) throws StructureBuildingException, ComponentGenerationException{
 		List<Element> hwGroups = OpsinTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, SUBTYPE_ATR, HANTZSCHWIDMAN_SUBTYPE_VAL);
 		for (Element group : hwGroups) {
-			Fragment hwRing = state.xmlFragmentMap.get(group);
+			Fragment hwRing = group.getFrag();
 			List<Atom> atomList =hwRing.getAtomList();
 			Element prev = OpsinTools.getPreviousSibling(group);
 			List<Element> prevs = new ArrayList<Element>();
@@ -2710,15 +2710,15 @@ class ComponentProcessor {
 		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groups.get(groups.size()-1);
 		List<Fragment> suffixFragments = new ArrayList<Fragment>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
-		Fragment suffixableFragment =state.xmlFragmentMap.get(lastGroupElementInSubOrRoot);
+		Fragment suffixableFragment = lastGroupElementInSubOrRoot.getFrag();
 		//treat conjunctive suffixesas if they were suffixes
 		List<Element> conjunctiveGroups = subOrRoot.getChildElements(CONJUNCTIVESUFFIXGROUP_EL);
 		for (Element group : conjunctiveGroups) {
-			suffixFragments.add(state.xmlFragmentMap.get(group));
+			suffixFragments.add(group.getFrag());
 		}
 		FragmentTools.assignElementLocants(suffixableFragment, suffixFragments);
 		for (int i = groups.size()-2; i>=0; i--) {
-			FragmentTools.assignElementLocants(state.xmlFragmentMap.get(groups.get(i)), new ArrayList<Fragment>());
+			FragmentTools.assignElementLocants(groups.get(i).getFrag(), new ArrayList<Fragment>());
 		}
 	}
 
@@ -2777,7 +2777,7 @@ class ComponentProcessor {
 				}
 			}
 
-			Fragment fragmentToResolveAndDuplicate =state.xmlFragmentMap.get(group);
+			Fragment fragmentToResolveAndDuplicate = group.getFrag();
 			Element elementToResolve;//temporary element containing elements that should be resolved before the ring is duplicated
 			Element nextEl = OpsinTools.getNextSibling(multiplier);
 			if (nextEl.getName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
@@ -2891,9 +2891,8 @@ class ComponentProcessor {
 				elementToResolve.addChild(currentEl);
 			}
 			else if (currentEl.getName().equals(SUFFIX_EL)){
-				state.xmlFragmentMap.get(currentEl);
 				if (!inlineSuffixSeen && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) ==null
-						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants==0)) && state.xmlFragmentMap.get(currentEl)==null){
+						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants==0)) && currentEl.getFrag()==null){
 					inlineSuffixSeen = true;
 					currentEl.detach();
 					elementToResolve.addChild(currentEl);
@@ -3026,7 +3025,7 @@ class ComponentProcessor {
 				}
 			}
 			locant.detach();
-			Fragment nextFragment = state.xmlFragmentMap.get(nextGroup);
+			Fragment nextFragment = nextGroup.getFrag();
 			FragmentTools.relabelNumericLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
 			String secondLocant = locants[1];
 			Atom atomToBeReplaced;
@@ -3039,7 +3038,7 @@ class ComponentProcessor {
 			}
 			Atom atomOnParentFrag = null;
 			for (int j = 0; j < i; j++) {
-				atomOnParentFrag = state.xmlFragmentMap.get(groups.get(j)).getAtomByLocant(locants[0]);
+				atomOnParentFrag = groups.get(j).getFrag().getAtomByLocant(locants[0]);
 				if (atomOnParentFrag!=null){
 					break;
 				}
@@ -3060,11 +3059,11 @@ class ComponentProcessor {
 			}
 		}
 		Element rootGroup = groups.get(groups.size()-1);
-		Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
+		Fragment rootFrag = rootGroup.getFrag();
 		String name = rootGroup.getValue();
 		for (int i = 0; i < groups.size() -1; i++) {
 			Element group =groups.get(i);
-			state.fragManager.incorporateFragment(state.xmlFragmentMap.get(group), rootFrag);
+			state.fragManager.incorporateFragment(group.getFrag(), rootFrag);
 			name = group.getValue() + name;
 			group.detach();
 		}
@@ -3098,8 +3097,8 @@ class ComponentProcessor {
 			if (nextGroup==null){
 				throw new ComponentGenerationException("OPSIN bug: unable to locate group after polycylic spiro descriptor");
 			}
-			Fragment parentFrag = state.xmlFragmentMap.get(nextGroup);
-			Fragment previousFrag = state.xmlFragmentMap.get(previousGroup);
+			Fragment parentFrag = nextGroup.getFrag();
+			Fragment previousFrag = previousGroup.getFrag();
 			FragmentTools.relabelNumericLocants(parentFrag.getAtomList(), StringTools.multiplyString("'",i+1));
 			elementsToResolve = OpsinTools.getSiblingsUpToElementWithTagName(currentSpiro, POLYCYCLICSPIRO_EL);
 			resolveFeaturesOntoGroup(elementsToResolve);
@@ -3187,7 +3186,7 @@ class ComponentProcessor {
 		}
 
 		determineFeaturesToResolveInSingleComponentSpiro(polyCyclicSpiroDescriptor);
-		Fragment fragment = state.xmlFragmentMap.get(group);
+		Fragment fragment = group.getFrag();
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < components ; i++) {
 			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
@@ -3223,7 +3222,7 @@ class ComponentProcessor {
 			throw new ComponentGenerationException("Cannot find group to which dispiroter descriptor applies");
 		}
 		determineFeaturesToResolveInSingleComponentSpiro(polyCyclicSpiroDescriptor);
-		Fragment fragment = state.xmlFragmentMap.get(group);
+		Fragment fragment = group.getFrag();
 		List<Fragment> clones = new ArrayList<Fragment>();
 		for (int i = 1; i < 3 ; i++) {
 			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
@@ -3372,7 +3371,7 @@ class ComponentProcessor {
 			return;
 		}
 		Element groupEl = OpsinTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL);
-		Fragment ringFrag = state.xmlFragmentMap.get(groupEl);
+		Fragment ringFrag = groupEl.getFrag();
 		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<Fragment, Atom[]>();
 		for (Element bridge : bridges) {
 			Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), groupEl, NONE_LABELS_VAL);
@@ -3448,7 +3447,7 @@ class ComponentProcessor {
 	private void applyLambdaConvention(Element subOrRoot) throws StructureBuildingException {
 		List<Element> lambdaConventionEls = subOrRoot.getChildElements(LAMBDACONVENTION_EL);
 		for (Element lambdaConventionEl : lambdaConventionEls) {
-			Fragment frag = state.xmlFragmentMap.get(subOrRoot.getFirstChildElement(GROUP_EL));
+			Fragment frag = subOrRoot.getFirstChildElement(GROUP_EL).getFrag();
 			if (lambdaConventionEl.getAttribute(LOCANT_ATR)!=null){
 				frag.getAtomByLocantOrThrow(lambdaConventionEl.getAttributeValue(LOCANT_ATR)).setLambdaConventionValency(Integer.parseInt(lambdaConventionEl.getAttributeValue(LAMBDA_ATR)));
 			}
@@ -3475,7 +3474,7 @@ class ComponentProcessor {
 	private void handleMultiRadicals(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException{
 		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 		String groupValue =group.getValue();
-		Fragment thisFrag = state.xmlFragmentMap.get(group);
+		Fragment thisFrag = group.getFrag();
 		if (groupValue.equals("methylene") || groupValue.equals("oxy")|| matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
 			Element beforeGroup = OpsinTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && OpsinTools.getPreviousSibling(beforeGroup)==null){
@@ -3509,8 +3508,7 @@ class ComponentProcessor {
 						group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 					}
 					state.fragManager.removeFragment(thisFrag);
-					thisFrag =resolveGroup(state, group);
-					state.xmlFragmentMap.put(group, thisFrag);
+					thisFrag = resolveGroup(state, group);
 					group.removeAttribute(group.getAttribute(USABLEASJOINER_ATR));
 				}
 			}
@@ -3528,7 +3526,7 @@ class ComponentProcessor {
 			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
 				Element previousGroup = OpsinTools.getPreviousGroup(group);
 				Element nextGroup = OpsinTools.getNextGroup(group);
-				if (previousGroup==null || state.xmlFragmentMap.get(previousGroup).getOutAtomCount() < 2 || nextGroup==null){//must be preceded by a multi radical
+				if (previousGroup==null || previousGroup.getFrag().getOutAtomCount() < 2 || nextGroup==null){//must be preceded by a multi radical
 					throw new ComponentGenerationException("Invalid use of amine as a substituent!");
 				}
 			}
@@ -3591,7 +3589,7 @@ class ComponentProcessor {
 			}
 			else if (OpsinTools.getPreviousSibling(previousGroup, MULTIPLIER_EL)==null){
 				//This is a 99% solution to the detection of cases such as ethylidenedioxy == ethan-1,1-diyldioxy
-				Fragment previousGroupFrag =state.xmlFragmentMap.get(previousGroup);
+				Fragment previousGroupFrag = previousGroup.getFrag();
 				int outAtomValency =0;
 				if (previousGroupFrag.getOutAtomCount()==1){
 					outAtomValency = previousGroupFrag.getOutAtom(0).getValency();
@@ -3623,7 +3621,7 @@ class ComponentProcessor {
 	 */
 	private int calculateOutAtomsToBeAddedFromInlineSuffixes(Element group, List<Element> suffixes) throws  ComponentGenerationException {
 		int outAtomsThatWillBeAdded = 0;
-		Fragment frag = state.xmlFragmentMap.get(group);
+		Fragment frag = group.getFrag();
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
@@ -3760,7 +3758,7 @@ class ComponentProcessor {
 			return;
 		}
 		
-		Fragment frag =state.xmlFragmentMap.get(substituentGroup);
+		Fragment frag = substituentGroup.getFrag();
 		String theSubstituentSubType = substituentGroup.getAttributeValue(SUBTYPE_ATR);
 		String theSubstituentType = substituentGroup.getAttributeValue(TYPE_ATR);
 
@@ -3995,7 +3993,7 @@ class ComponentProcessor {
 					allowIndirectLocants =false;
 				}
 			}
-			Fragment fragmentAfterLocant =state.xmlFragmentMap.get(group);
+			Fragment fragmentAfterLocant = group.getFrag();
 			if (fragmentAfterLocant.getAtomCount()<=1){
 				allowIndirectLocants =false;//e.g. prevent 1-methyl as meth-1-yl is extremely unlikely to be the intended result
 			}
@@ -4134,7 +4132,7 @@ class ComponentProcessor {
 				if (isATerminalSuffix(terminalSuffix2)){
 					Element hopefullyAChain = OpsinTools.getPreviousSibling(terminalSuffix1, GROUP_EL);
 					if (hopefullyAChain != null && hopefullyAChain.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL)){
-						int chainLength = state.xmlFragmentMap.get(hopefullyAChain).getChainLength();
+						int chainLength = hopefullyAChain.getFrag().getChainLength();
 						if (chainLength >=2){
 							terminalSuffix1.addAttribute(new Attribute(LOCANT_ATR, "1"));
 							terminalSuffix2.addAttribute(new Attribute(LOCANT_ATR, Integer.toString(chainLength)));
@@ -4162,13 +4160,13 @@ class ComponentProcessor {
 		List<Element> conjunctiveGroups = subOrRoot.getChildElements(CONJUNCTIVESUFFIXGROUP_EL);
 		if (conjunctiveGroups.size()>0){
 			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
-			Fragment ringFrag = state.xmlFragmentMap.get(ringGroup);
+			Fragment ringFrag = ringGroup.getFrag();
 			if (ringFrag.getOutAtomCount()!=0 ){
 				throw new ComponentGenerationException("OPSIN Bug: Ring fragment should have no radicals");
 			}
 			List<Fragment> conjunctiveFragments = new ArrayList<Fragment>();
 			for (Element group : conjunctiveGroups) {
-				Fragment frag = state.xmlFragmentMap.get(group);
+				Fragment frag = group.getFrag();
 				conjunctiveFragments.add(frag);
 			}
 			for (int i = 0; i < conjunctiveFragments.size(); i++) {
@@ -4211,7 +4209,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	private void resolveSuffixes(Element group, List<Element> suffixes) throws StructureBuildingException, ComponentGenerationException {
-		Fragment frag = state.xmlFragmentMap.get(group);
+		Fragment frag = group.getFrag();
 		List<Atom> atomList = frag.getAtomList();//this instance of atomList will not change even once suffixes are merged into the fragment
 		int defaultAtom = 0;//index in atomList
 		String groupType = frag.getType();
@@ -4715,7 +4713,7 @@ class ComponentProcessor {
 
 	private void checkAndApplyFirstLocantOfBiochemicalLinkage(Element substituent, String biochemicalLinkage) throws StructureBuildingException {
 		Element group = substituent.getFirstChildElement(GROUP_EL);
-		Fragment frag = state.xmlFragmentMap.get(group);
+		Fragment frag = group.getFrag();
 		String firstLocant = biochemicalLinkage.substring(0, biochemicalLinkage.indexOf('-'));
 		if (group.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)) {
 			Atom anomericAtom = frag.getAtomByLocantOrThrow(firstLocant);

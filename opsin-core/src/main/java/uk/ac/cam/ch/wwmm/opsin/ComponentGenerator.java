@@ -449,7 +449,7 @@ class ComponentGenerator {
 				alkaneChainLength += Integer.parseInt(alkaneStemComponent.getAttributeValue(VALUE_ATR));
 				alkaneName.append(alkaneStemComponent.getValue());
 			}
-			Element alkaneStem = new TokenGroupEl(GROUP_EL, alkaneName.toString());
+			Element alkaneStem = new TokenEl(GROUP_EL, alkaneName.toString());
 			alkaneStem.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(VALUE_ATR, StringTools.multiplyString("C", alkaneChainLength)));
@@ -653,7 +653,7 @@ class ComponentGenerator {
 						smiles = matchHdigit.matcher(smiles).replaceAll("H?");//hydrogen count will be determined by standard valency
 						multipliedElem.detach();
 
-						Element addedGroup = new TokenGroupEl(GROUP_EL, newGroupName.toString());
+						Element addedGroup = new TokenEl(GROUP_EL, newGroupName.toString());
 						addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
 						addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 						addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
@@ -1333,7 +1333,7 @@ class ComponentGenerator {
 			String SMILES = "c1" +StringTools.multiplyString("c", annulenSize -1);
 			SMILES += "1";
 
-			Element group =new TokenGroupEl(GROUP_EL, annulenValue);
+			Element group =new TokenEl(GROUP_EL, annulenValue);
 			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, ARYLGROUP_SUBTYPE_VAL));
@@ -1458,7 +1458,7 @@ class ComponentGenerator {
 				else{
 					throw new ComponentGenerationException("Unknown semi-trivially named hydrocarbon fused ring system");
 				}
-				Element newGroup =new TokenGroupEl(GROUP_EL, multiplier.getValue() + hydrocarbonFRSystem.getValue());
+				Element newGroup =new TokenEl(GROUP_EL, multiplier.getValue() + hydrocarbonFRSystem.getValue());
 				newGroup.addAttribute(new Attribute(VALUE_ATR, smilesSB.toString()));
 				newGroup.addAttribute(new Attribute(LABELS_ATR, FUSEDRING_LABELS_VAL));
 				newGroup.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));

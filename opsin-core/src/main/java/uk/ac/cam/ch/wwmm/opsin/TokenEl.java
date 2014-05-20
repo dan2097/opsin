@@ -6,6 +6,7 @@ import java.util.List;
 class TokenEl extends Element {
 	
 	private String value;
+	private Fragment frag;
 
 	TokenEl(String name) {
 		super(name);
@@ -70,6 +71,11 @@ class TokenEl extends Element {
 		return null;
 	}
 	
+	@Override
+	Fragment getFrag() {
+		return frag;
+	}
+	
 	String getValue() {
 		return value;
 	}
@@ -97,6 +103,11 @@ class TokenEl extends Element {
 	@Override
 	void replaceChild(Element oldChild, Element newChild) {
 		throw new UnsupportedOperationException("Tokens do not have children");
+	}
+	
+	@Override
+	void setFrag(Fragment frag) {
+		this.frag = frag;
 	}
 
 	void setValue(String text) {

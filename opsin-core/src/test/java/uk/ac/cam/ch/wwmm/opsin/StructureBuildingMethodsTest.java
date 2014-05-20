@@ -62,12 +62,12 @@ public class StructureBuildingMethodsTest {
 		
 		Element amino = new TokenEl(GROUP_EL);
 		Fragment aminoFrag = state.fragManager.buildSMILES("-N");
-		state.xmlFragmentMap.put(amino, aminoFrag);
+		amino.setFrag(aminoFrag);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		substituent.addChild(amino);
 		
 		Element methanol = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CO"));
+		methanol.setFrag(state.fragManager.buildSMILES("CO"));
 		Element root = new GroupingEl(ROOT_EL);
 		root.addChild(methanol);
 
@@ -88,12 +88,12 @@ public class StructureBuildingMethodsTest {
 		Element phospho = new TokenEl(GROUP_EL);
 		phospho.addAttribute(new Attribute(SUBTYPE_ATR, PHOSPHO_SUBTYPE_VAL));
 		Fragment phosphoFrag = state.fragManager.buildSMILES("-P(=O)O");
-		state.xmlFragmentMap.put(phospho, phosphoFrag);
+		phospho.setFrag(phosphoFrag);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		substituent.addChild(phospho);
 		
 		Element methanol = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CO"));
+		methanol.setFrag(state.fragManager.buildSMILES("CO"));
 		Element root = new GroupingEl(ROOT_EL);
 		root.addChild(methanol);
 
@@ -114,13 +114,13 @@ public class StructureBuildingMethodsTest {
 		Element phospho = new TokenEl(GROUP_EL);
 		phospho.addAttribute(new Attribute(SUBTYPE_ATR, PHOSPHO_SUBTYPE_VAL));
 		Fragment phosphoFrag = state.fragManager.buildSMILES("-P(=O)O");
-		state.xmlFragmentMap.put(phospho, phosphoFrag);
+		phospho.setFrag(phosphoFrag);
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		substituent.addAttribute(new Attribute(LOCANT_ATR, "4"));
 		substituent.addChild(phospho);
 		
 		Element methanol = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(methanol, state.fragManager.buildSMILES("CCCCO",methanol,"1/2/3/4/"));
+		methanol.setFrag(state.fragManager.buildSMILES("CCCCO",methanol,"1/2/3/4/"));
 		Element root = new GroupingEl(ROOT_EL);
 		root.addChild(methanol);
 

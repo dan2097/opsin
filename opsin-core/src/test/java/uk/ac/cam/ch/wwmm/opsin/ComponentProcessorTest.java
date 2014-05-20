@@ -124,7 +124,7 @@ public class ComponentProcessorTest {
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(aminoAcidEl, f);
+		aminoAcidEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "l");
@@ -136,7 +136,7 @@ public class ComponentProcessorTest {
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(aminoAcidEl, f);
+		aminoAcidEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d");
@@ -148,7 +148,7 @@ public class ComponentProcessorTest {
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(aminoAcidEl, f);
+		aminoAcidEl.setFrag(f);
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl");
 		assertEquals(null, f.getAtomByID(2).getAtomParity());
@@ -159,7 +159,7 @@ public class ComponentProcessorTest {
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("NC(C)C");
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(aminoAcidEl, f);
+		aminoAcidEl.setFrag(f);
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d");
 	}
@@ -169,7 +169,7 @@ public class ComponentProcessorTest {
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(carbohydrateEl, f);
+		carbohydrateEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "l");
@@ -181,7 +181,7 @@ public class ComponentProcessorTest {
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new TokenEl(GROUP_EL);
-		state.xmlFragmentMap.put(carbohydrateEl, f);
+		carbohydrateEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "d");
@@ -194,7 +194,7 @@ public class ComponentProcessorTest {
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new TokenEl(GROUP_EL);
 		carbohydrateEl.addAttribute(new Attribute(NATURALENTISOPPOSITE_ATR, "yes"));
-		state.xmlFragmentMap.put(carbohydrateEl, f);
+		carbohydrateEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "l");
@@ -207,7 +207,7 @@ public class ComponentProcessorTest {
 		Fragment f = state.fragManager.buildSMILES("N[C@@H](C)C");
 		Element carbohydrateEl = new TokenEl(GROUP_EL);
 		carbohydrateEl.addAttribute(new Attribute(NATURALENTISOPPOSITE_ATR, "yes"));
-		state.xmlFragmentMap.put(carbohydrateEl, f);
+		carbohydrateEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
 		processor.applyDlStereochemistryToCarbohydrate(carbohydrateEl, "d");
