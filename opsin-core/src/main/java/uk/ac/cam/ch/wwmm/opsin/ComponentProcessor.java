@@ -4215,8 +4215,7 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse = suffixRulesLookup.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
-
-		List<Fragment> suffixList = state.xmlSuffixMap.get(group);
+		state.xmlSuffixMap.get(group).clear();
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			
@@ -4229,10 +4228,10 @@ class ComponentProcessor {
 				switch (suffixRule.getType()) {
 				case addgroup:
 					if (suffixFrag == null) {
-						if (suffixList.size() <= 0) {
-							throw new ComponentGenerationException("OPSIN Bug: Suffixlist should not be empty");
+						suffixFrag = suffix.getFrag();
+						if (suffixFrag == null) {
+							throw new RuntimeException("OPSIN Bug: Suffix was expected to have an associated fragment but it wasn't found");
 						}
-						suffixFrag = suffixList.remove(0);//take the first suffix out of the list, it should have been added in the same order that it is now being read.
 						Atom firstAtomInSuffix = suffixFrag.getFirstAtom();
 						if (firstAtomInSuffix.getBonds().size() <= 0) {
 							throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");

@@ -252,7 +252,7 @@ class FunctionalReplacement {
 	static void processInfixFunctionalReplacementNomenclature(BuildState state, List<Element> suffixes, List<Fragment> suffixFragments) throws StructureBuildingException, ComponentGenerationException {
 		for (int i = 0; i < suffixes.size(); i++) {
 			Element suffix = suffixes.get(i);
-			if (suffix.getAttribute(INFIX_ATR)!=null){
+			if (suffix.getAttribute(INFIX_ATR) != null){
 				Fragment fragToApplyInfixTo = suffix.getFrag();
 				Element possibleAcidGroup = OpsinTools.getPreviousSiblingIgnoringCertainElements(suffix, new String[]{MULTIPLIER_EL, INFIX_EL, SUFFIX_EL});
 				if (possibleAcidGroup !=null && possibleAcidGroup.getName().equals(GROUP_EL) && 
@@ -275,7 +275,7 @@ class FunctionalReplacement {
 				/*
 				 * Modifies suffixes, suffixFragments, suffix and infixTransformations as appropriate
 				 */
-				disambiguateMultipliedInfixMeaning(state, suffixes, suffixFragments, suffix, fragToApplyInfixTo, infixTransformations, oxygenAvailable);
+				disambiguateMultipliedInfixMeaning(state, suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailable);
 
 				/*
 				 * Sort infixTransformations so more specific transformations are performed first
@@ -809,14 +809,13 @@ class FunctionalReplacement {
 	 * @param suffixes
 	 * @param suffixFragments
 	 * @param suffix
-	 * @param suffixFrag
 	 * @param infixTransformations
 	 * @param oxygenAvailable
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
 	private static void disambiguateMultipliedInfixMeaning(BuildState state,List<Element> suffixes,
-			List<Fragment> suffixFragments,Element suffix, Fragment suffixFrag, List<String> infixTransformations, int oxygenAvailable)
+			List<Fragment> suffixFragments,Element suffix, List<String> infixTransformations, int oxygenAvailable)
 			throws ComponentGenerationException, StructureBuildingException {
 		Element possibleInfix = OpsinTools.getPreviousSibling(suffix);
 		if (possibleInfix.getName().equals(INFIX_EL)){//the infix is only left when there was ambiguity
@@ -843,7 +842,7 @@ class FunctionalReplacement {
 					suffix.addAttribute(new Attribute(MULTIPLIED_ATR, "multiplied"));
 					for (int j = 1; j < multiplierValue; j++) {//multiplier means multiply the infixed suffix e.g. butandithione
 						Element newSuffix = suffix.copy();
-						Fragment newSuffixFrag = state.fragManager.copyFragment(suffixFrag);
+						Fragment newSuffixFrag = state.fragManager.copyFragment(suffix.getFrag());
 						newSuffix.setFrag(newSuffixFrag);
 						suffixFragments.add(newSuffixFrag);
 						OpsinTools.insertAfter(suffix, newSuffix);
