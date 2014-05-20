@@ -503,11 +503,11 @@ class FragmentManager {
 		List<Element> clonedGroups = OpsinTools.getDescendantElementsWithTagName(clone,  XmlDeclarations.GROUP_EL);
 		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new LinkedHashMap<Fragment, Fragment>();
 		for (int i = 0; i < originalGroups.size(); i++) {
-			Fragment originalFragment =state.xmlFragmentMap.get(originalGroups.get(i));
+			Fragment originalFragment = originalGroups.get(i).getFrag();
 			Fragment newFragment = copyAndRelabelFragment(originalFragment, primesToAdd);
 			oldNewFragmentMapping.put(originalFragment, newFragment);
 			newFragment.setTokenEl(clonedGroups.get(i));
-			state.xmlFragmentMap.put(clonedGroups.get(i), newFragment);
+			clonedGroups.get(i).setFrag(newFragment);
 			List<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
 			List<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {

@@ -36,7 +36,7 @@ class BuildResults {
 		fragments = new LinkedHashSet<Fragment>();
 		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(wordSubOrBracket, XmlDeclarations.GROUP_EL);
 		for (Element group : groups) {
-			Fragment frag = state.xmlFragmentMap.get(group);
+			Fragment frag = group.getFrag();
 			fragments.add(frag);
 			for (int i = 0, l = frag.getOutAtomCount(); i < l; i++) {
 				outAtoms.add(frag.getOutAtom(i));

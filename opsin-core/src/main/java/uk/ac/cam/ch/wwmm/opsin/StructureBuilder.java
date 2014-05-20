@@ -350,7 +350,7 @@ class StructureBuilder {
 		resolveWordOrBracket(state, words.get(0));
 		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(words.get(0), GROUP_EL);
 		for (Element group : groups) {//replaces outAtoms with valency greater than 1 with multiple outAtoms; e.g. ylidene -->diyl
-			Fragment frag = state.xmlFragmentMap.get(group);
+			Fragment frag = group.getFrag();
 			for (int i = frag.getOutAtomCount()-1; i>=0; i--) {
 				OutAtom outAtom =frag.getOutAtom(i);
 				if (outAtom.getValency()>1){
@@ -499,7 +499,7 @@ class StructureBuilder {
 		}
 		else{
 			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(rightMostGroup.getAttributeValue(SUBTYPE_ATR))){
-				Atom elementaryAtom = state.xmlFragmentMap.get(rightMostGroup).getFirstAtom();
+				Atom elementaryAtom = rightMostGroup.getFrag().getFirstAtom();
 				int charge = elementaryAtom.getCharge();
 				if (charge >0 && charge %2 ==0){
 					numberOfOxygenToAdd = charge/2;
@@ -537,12 +537,12 @@ class StructureBuilder {
 		List<Element> suffixEls = rightMostGroup.getParent().getChildElements(SUFFIX_EL);
 		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
 			Element suffixEl = suffixEls.get(i);
-			Fragment suffixFrag =state.xmlFragmentMap.get(suffixEl);
+			Fragment suffixFrag = suffixEl.getFrag();
 			if (suffixFrag!=null){
 				orderedPossibleFragments.add(suffixFrag);
 			}
 		}
-		Fragment groupToModify = state.xmlFragmentMap.get(rightMostGroup);//all the suffixes are actually part of this fragment already
+		Fragment groupToModify = rightMostGroup.getFrag();//all the suffixes are actually part of this fragment already
 		orderedPossibleFragments.add(groupToModify);
 		mainLoop: for (int i = 0; i < oxideFragments.size(); i++) {
 			Atom oxideAtom = oxideFragments.get(i).getFirstAtom();
@@ -552,7 +552,7 @@ class StructureBuilder {
 			}
 			else{
 				for (Fragment frag : orderedPossibleFragments) {
-					String subTypeVal = state.xmlFragmentMap.getElement(frag).getAttributeValue(SUBTYPE_ATR);
+					String subTypeVal = frag.getSubType();
 					if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
 						Atom elementaryAtom= frag.getFirstAtom();
 						formAppropriateBondToOxideAndAdjustCharges(elementaryAtom, oxideAtom);//e.g. carbon dioxide
@@ -649,7 +649,7 @@ class StructureBuilder {
 		List<String> locantForFunctionalTerm =new ArrayList<String>();//usually not specified
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
 			for (int i = 1; i < words.size(); i++) {
-				Fragment frag = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(i)));
+				Fragment frag = findRightMostGroupInWordOrWordRule(words.get(i)).getFrag();
 				replacementFragments.add(frag);
 				List<Element> children =words.get(i).getChildElements();
 				if (children.size()==1 && children.get(0).getName().equals(BRACKET_EL) && children.get(0).getAttribute(LOCANT_ATR)!=null){
@@ -715,7 +715,7 @@ class StructureBuilder {
 			parent = parent.getParent();
 		}
 		if (!multiplied){
-			List<Atom> carbonylOxygens = findCarbonylOxygens(state.xmlFragmentMap.get(rightMostGroup), locantForFunctionalTerm);
+			List<Atom> carbonylOxygens = findCarbonylOxygens(rightMostGroup.getFrag(), locantForFunctionalTerm);
 			int replacementsToPerform = Math.min(replacementFragments.size(), carbonylOxygens.size());
 			replaceCarbonylOxygenWithReplacementFragments(words, replacementFragments, carbonylOxygens, replacementsToPerform);
 		}
@@ -763,7 +763,7 @@ class StructureBuilder {
 			}
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(carbonylOxygen, atomToReplaceCarbonylOxygen);
 			atomToReplaceCarbonylOxygen.setType(carbonylOxygen.getType());//copy the type e.g. if the carbonyl was a suffix this should appear as a suffix
-			if (state.xmlFragmentMap.getElement(replacementFrag)==null){//incorporate only for the case that replacementFrag came from a functional class element
+			if (replacementFrag.getTokenEl().getParent() == null) {//incorporate only for the case that replacementFrag came from a functional class element
 				state.fragManager.incorporateFragment(replacementFrag, carbonylFrag);
 			}
 		}
@@ -1043,7 +1043,7 @@ class StructureBuilder {
 		}
 		resolveWordOrBracket(state, words.get(0));
 		Element elementaryAtomEl = StructureBuildingMethods.findRightMostGroupInBracket(words.get(0));
-		Fragment elementaryAtomFrag = state.xmlFragmentMap.get(elementaryAtomEl);
+		Fragment elementaryAtomFrag = elementaryAtomEl.getFrag();
 		Atom elementaryAtom = elementaryAtomFrag.getFirstAtom();
 		int charge = elementaryAtom.getCharge();
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
@@ -1114,7 +1114,7 @@ class StructureBuilder {
 		int wordIndice  = 0;
 		resolveWordOrBracket(state, words.get(wordIndice));//the group
 		Element finalGroup = findRightMostGroupInWordOrWordRule(words.get(wordIndice));
-		Fragment theDiRadical = state.xmlFragmentMap.get(finalGroup);
+		Fragment theDiRadical = finalGroup.getFrag();
 		if (theDiRadical.getOutAtomCount()!=2){
 			throw new StructureBuildingException("Glycol class names (e.g. ethylene glycol) expect two outAtoms. Found: " + theDiRadical.getOutAtomCount() );
 		}
@@ -1175,7 +1175,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Unexpected number of substituents for glycol ether. Expected 1 or 2 found: " +wordsToAttachToGlcyol.size());
 		}
 		Element finalGroup = findRightMostGroupInWordOrWordRule(glycol);
-		Fragment theDiRadical = state.xmlFragmentMap.get(finalGroup);
+		Fragment theDiRadical = finalGroup.getFrag();
 		List<Atom> atomList = theDiRadical.getAtomList();
 		List<Atom> glycolAtoms = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
@@ -1237,7 +1237,7 @@ class StructureBuilder {
 			substituentsBr.mergeBuildResults(substituentBr);
 		}	
 		Element rightMostGroup = findRightMostGroupInWordOrWordRule(words.get(0));
-		Fragment rootFragment = state.xmlFragmentMap.get(rightMostGroup);//the group which will be modified
+		Fragment rootFragment = rightMostGroup.getFrag();//the group which will be modified
 		List<Atom> carbonylOxygen= findCarbonylOxygens(rootFragment, new ArrayList<String>());
 		Element functionalWord = words.get(words.size()-1);
 		List<Element> functionalClasses = OpsinTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALCLASS_EL);
@@ -1332,7 +1332,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Bug in word rule for biochemicalEster");
 		}
 		
-		Fragment biochemicalFragment = state.xmlFragmentMap.get(findRightMostGroupInWordOrWordRule(words.get(0)));
+		Fragment biochemicalFragment = findRightMostGroupInWordOrWordRule(words.get(0)).getFrag();
 		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(biochemicalFragment);
 		boolean ambiguous = ateWords != hydroxyAtoms.size();
 		
@@ -1450,7 +1450,7 @@ class StructureBuilder {
 			if (aminoAcids.size() < 2){
 				throw new StructureBuildingException("Cyclic peptide building failed: Requires at least two amino acids!");
 			}
-			Atom inAtom = state.xmlFragmentMap.get(aminoAcids.get(0)).getDefaultInAtom();
+			Atom inAtom = aminoAcids.get(0).getFrag().getDefaultInAtom();
 
 			state.fragManager.createBond(outAtom, inAtom, peptideBr.getOutAtom(0).getValency());
 			peptideBr.removeAllOutAtoms();
@@ -1704,7 +1704,7 @@ class StructureBuilder {
 		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
 		for (Element elementaryAtom : elementaryAtoms) {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
-				Fragment cationicFrag =state.xmlFragmentMap.get(elementaryAtom);
+				Fragment cationicFrag = elementaryAtom.getFrag();
 				if (cationicFrag.getFirstAtom().getCharge()==0){//if not 0 charge cannot be implicitly modified
 					String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
@@ -1785,7 +1785,7 @@ class StructureBuilder {
 	 */
 	private int setCationicElementsToTypicalCharge(List<Element> cationicElements, int overallCharge)  {
 		for (Element cationicElement : cationicElements) {
-			Fragment cationicFrag = state.xmlFragmentMap.get(cationicElement);
+			Fragment cationicFrag = cationicElement.getFrag();
 			String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 			int incomingValency = cationicFrag.getFirstAtom().getIncomingValency();
 			for (String typicalOxidationState : typicalOxidationStates) {
@@ -1871,7 +1871,7 @@ class StructureBuilder {
 	}
 	
 	private boolean setChargeOnCationicElementAppropriately(int overallCharge, Element cationicElement)  {
-		Atom cation = state.xmlFragmentMap.get(cationicElement).getFirstAtom();
+		Atom cation = cationicElement.getFrag().getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
 		int maximumCharge = Integer.parseInt(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
 		if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
@@ -1911,7 +1911,7 @@ class StructureBuilder {
 	private void processOxidoSpecialCase(List<Element> groups)  {
 		for (Element group : groups) {
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-				Atom oxidoAtom = state.xmlFragmentMap.get(group).getFirstAtom();
+				Atom oxidoAtom = group.getFrag().getFirstAtom();
 				Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
 				String element = connectedAtom.getElement();
 				if (checkForConnectedOxo(connectedAtom)){//e.g. not oxido(trioxo)ruthenium
@@ -1957,7 +1957,7 @@ class StructureBuilder {
 			else{
 				connectedAtom = bond.getFromAtom();
 			}
-			Element correspondingEl = state.xmlFragmentMap.getElement(connectedAtom.getFrag());
+			Element correspondingEl = connectedAtom.getFrag().getTokenEl();
 			if (correspondingEl.getValue().equals("oxo")){
 				return true;
 			}
@@ -1974,12 +1974,12 @@ class StructureBuilder {
 	private void processOxidationNumbers(List<Element> groups) throws StructureBuildingException  {
 		for (Element group : groups) {
 			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-				Atom atom = state.xmlFragmentMap.get(group).getFirstAtom();
+				Atom atom = group.getFrag().getFirstAtom();
 				if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
 					List<Atom> neighbours = atom.getAtomNeighbours();
 					int chargeThatWouldFormIfLigandsWereRemoved =0;
 					for (Atom neighbour : neighbours) {
-						Element neighbourEl = state.xmlFragmentMap.getElement(neighbour.getFrag());
+						Element neighbourEl = neighbour.getFrag().getTokenEl();
 						Bond b = atom.getBondToAtomOrThrow(neighbour);
 						//carbonyl and nitrosyl are neutral ligands
 						if (!((neighbourEl.getValue().equals("carbon") && NONCARBOXYLICACID_TYPE_VAL.equals(neighbourEl.getAttributeValue(TYPE_ATR)))

@@ -76,7 +76,7 @@ class WordRulesOmittedSpaceCorrector {
 				if (AMINOACID_TYPE_VAL.equals(rootGroup.getAttributeValue(TYPE_ATR))){
 					return;//amino acids are implicitly N locanted
 				}
-				Fragment rootFrag = state.xmlFragmentMap.get(rootGroup);
+				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				if (functionalAtomsCount >0){
 					List<Element> substituentsAndBrackets = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
@@ -122,7 +122,7 @@ class WordRulesOmittedSpaceCorrector {
 		int substitutableHydrogens = getAtomForEachSubstitutableHydrogen(frag).size();
 		for (int i = 1; i < substituentsAndBrackets.size(); i++) {
 			Element subOrBracket = substituentsAndBrackets.get(i);
-			Fragment f = state.xmlFragmentMap.get(getRightMostGroup(subOrBracket));
+			Fragment f = getRightMostGroup(subOrBracket).getFrag();
 			String multiplierValue = subOrBracket.getAttributeValue(MULTIPLIER_ATR);
 			int multiplier = 1;
 			if (multiplierValue!=null){
@@ -130,7 +130,7 @@ class WordRulesOmittedSpaceCorrector {
 			}
 			substitutableHydrogens -= (getTotalOutAtomValency(f) * multiplier);
 		}
-		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(state.xmlFragmentMap.get(getRightMostGroup(substituentsAndBrackets.get(0))));
+		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(getRightMostGroup(substituentsAndBrackets.get(0)).getFrag());
 		String multiplierValue = substituentsAndBrackets.get(0).getAttributeValue(MULTIPLIER_ATR);
 		int multiplier = 1;
 		if (multiplierValue!=null){
@@ -194,7 +194,7 @@ class WordRulesOmittedSpaceCorrector {
 		if (subOrBracket.getAttribute(LOCANT_ATR)!=null){
 			return false;
 		}
-		Fragment rightMostGroup = state.xmlFragmentMap.get(getRightMostGroup(subOrBracket));
+		Fragment rightMostGroup = getRightMostGroup(subOrBracket).getFrag();
 		if (rightMostGroup.getOutAtomCount() != 1 || rightMostGroup.getOutAtom(0).getValency()!=1){
 			return false;
 		}

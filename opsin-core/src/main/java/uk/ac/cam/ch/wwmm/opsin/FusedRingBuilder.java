@@ -30,7 +30,7 @@ class FusedRingBuilder {
 		this.state = state;
 		this.groupsInFusedRing = groupsInFusedRing;
 		lastGroup = groupsInFusedRing.get(groupsInFusedRing.size()-1);
-		parentRing = state.xmlFragmentMap.get(lastGroup);
+		parentRing = lastGroup.getFrag();
 		fragmentInScopeForEachFusionLevel.put(0, parentRing);
 	}
 
@@ -122,7 +122,7 @@ class FusedRingBuilder {
 			if (ncIndice <0 || !nameComponents.get(ncIndice).getName().equals(GROUP_EL)){
 				throw new StructureBuildingException("Group not found where group expected. This is probably a bug");
 			}
-			Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(ncIndice));
+			Fragment nextComponent = nameComponents.get(ncIndice).getFrag();
 			int multiplier = 1;
 			Element possibleMultiplierEl = OpsinTools.getPreviousSibling(nameComponents.get(ncIndice));//e.g. the di of difuro
 			if (possibleMultiplierEl != null && possibleMultiplierEl.getName().equals(MULTIPLIER_EL)){
@@ -286,7 +286,7 @@ class FusedRingBuilder {
 
 	private void processRingNumberingAndIrregularities() throws StructureBuildingException {
 		for (Element group : groupsInFusedRing) {
-            Fragment ring = state.xmlFragmentMap.get(group);
+            Fragment ring = group.getFrag();
             if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
             	aromatiseCyclicAlkane(group);
             }
@@ -382,7 +382,7 @@ class FusedRingBuilder {
 			for (Element unsaturator : unsaturators) {
 				unsaturator.detach();
 			}
-			List<Atom> atomList =state.xmlFragmentMap.get(cyclicAlkaneGroup).getAtomList();
+			List<Atom> atomList = cyclicAlkaneGroup.getFrag().getAtomList();
 		    for (Atom atom : atomList) {
 		        atom.setSpareValency(true);
 		    }
@@ -409,7 +409,7 @@ class FusedRingBuilder {
 				if (i <0 || !nameComponents.get(i).getName().equals(GROUP_EL)){
 					throw new StructureBuildingException("Group not found where group expected. This is probably a bug");
 				}
-				Fragment nextComponent = state.xmlFragmentMap.get(nameComponents.get(i));
+				Fragment nextComponent = nameComponents.get(i).getFrag();
 				relabelAccordingToFusionLevel(nextComponent, fusionLevel);
 				int multiplier = 1;
 				Element possibleMultiplierEl = OpsinTools.getPreviousSibling(nameComponents.get(i));
@@ -941,8 +941,8 @@ class FusedRingBuilder {
 		/*
 		 * Perform the fusion, number it and associate it with the parentEl
 		 */
-		Fragment benzoRing = state.xmlFragmentMap.get(benzoEl);
-		Fragment parentRing = state.xmlFragmentMap.get(parentEl);
+		Fragment benzoRing = benzoEl.getFrag();
+		Fragment parentRing = parentEl.getFrag();
 		performSimpleFusion(null, benzoRing , parentRing);
 		state.fragManager.incorporateFragment(benzoRing, parentRing);
 		removeMergedAtoms();

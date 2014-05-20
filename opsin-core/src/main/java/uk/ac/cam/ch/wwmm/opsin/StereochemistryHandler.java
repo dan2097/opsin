@@ -179,7 +179,7 @@ class StereochemistryHandler {
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
-			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
 		}
 		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String rOrS = stereoChemistryEl.getAttributeValue(VALUE_ATR);
@@ -211,7 +211,7 @@ class StereochemistryHandler {
 			for (Element word : words) {
 				List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
-					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
+					Fragment correspondingFrag = possibleGroups.get(i).getFrag();
 					if (locant == null){//undefined locant
 						List<Atom> atomList = correspondingFrag.getAtomList();
 						for (Atom potentialStereoAtom : atomList) {
@@ -280,7 +280,7 @@ class StereochemistryHandler {
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
-			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
 		}
 		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String eOrZ = stereoChemistryEl.getAttributeValue(VALUE_ATR);
@@ -338,7 +338,7 @@ class StereochemistryHandler {
 			for (Element word : words) {
 				List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
-					Fragment correspondingFrag = state.xmlFragmentMap.get(possibleGroups.get(i));
+					Fragment correspondingFrag = possibleGroups.get(i).getFrag();
 					if (locant == null){//undefined locant
 						Set<Bond> bondSet = correspondingFrag.getBondSet();
 						for (Bond potentialBond : bondSet) {
@@ -469,7 +469,7 @@ class StereochemistryHandler {
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
-			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
 		}
 		for (Fragment fragment : possibleFragments) {
 			List<Atom> atomList = fragment.getAtomList();
@@ -634,18 +634,18 @@ class StereochemistryHandler {
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(state, parentSubBracketOrRoot);
 		Fragment substituentGroup =null;
 		if (parentSubBracketOrRoot.getName().equals(SUBSTITUENT_EL)){
-			substituentGroup =state.xmlFragmentMap.get(parentSubBracketOrRoot.getFirstChildElement(GROUP_EL));
+			substituentGroup = parentSubBracketOrRoot.getFirstChildElement(GROUP_EL).getFrag();
 		}
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
-			possibleFragments.add(state.xmlFragmentMap.get(adjacentGroupEls.get(i)));
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
 		}
 		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String alphaOrBeta = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (Fragment fragment : possibleFragments) {
 			Atom potentialStereoAtom = fragment.getAtomByLocant(locant);
 			if (potentialStereoAtom !=null && atomStereoCentreMap.containsKey(potentialStereoAtom)){//same stereocentre can defined twice e.g. one subsituent alpha the other beta
-				String alphaBetaClockWiseAtomOrdering = state.xmlFragmentMap.getElement(fragment).getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR);
+				String alphaBetaClockWiseAtomOrdering = fragment.getTokenEl().getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR);
 				if (alphaBetaClockWiseAtomOrdering==null){
 					throw new StructureBuildingException("Identified fragment is not known to be able to support alpha/beta stereochemistry");
 				}
@@ -759,7 +759,7 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException 
 	 */
 	private void assignCarbohydratePrefixStereochem(Element carbohydrateGroup, List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {
-		Fragment carbohydrate = state.xmlFragmentMap.get(carbohydrateGroup);
+		Fragment carbohydrate = carbohydrateGroup.getFrag();
 		Set<Atom> atoms = notExplicitlyDefinedStereoCentreMap.keySet();
 		List<Atom> stereocentresInCarbohydrate = new ArrayList<Atom>();
 		for (Atom atom : atoms) {
