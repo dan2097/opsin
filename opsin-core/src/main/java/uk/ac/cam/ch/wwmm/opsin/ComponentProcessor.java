@@ -4217,7 +4217,11 @@ class ComponentProcessor {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse = suffixRulesLookup.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
-		state.xmlSuffixMap.get(group).clear();
+		
+		List<Fragment> associatedSuffixFrags = state.xmlSuffixMap.get(group);
+		if (associatedSuffixFrags != null) {//null for non-final group in polycyclic spiro systems
+			associatedSuffixFrags.clear();
+		}
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			
