@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Master methods and convenience methods for performing functional replacement
+ * Methods for performing functional replacement
  * @author dl387
  *
  */
@@ -40,28 +40,34 @@ class FunctionalReplacement {
 			}
 		}
 	}
-	private final static Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
-	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
-	
-	enum PREFIX_REPLACEMENT_TYPE{
+	private enum PREFIX_REPLACEMENT_TYPE{
 		chalcogen,//ambiguous
 		halideOrPseudoHalide,//only mean functional replacement when applied to non carboxylic acids
 		dedicatedFunctionalReplacementPrefix,//no ambiguity exists
 		hydrazono,//ambiguous, only applies to non carboxylic acid
 		peroxy//ambiguous, also applies to etheric oxygen
+	}	
+	
+	
+	private final static Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
+	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
+	
+	private final BuildState state;
+
+	FunctionalReplacement(BuildState state) {
+		this.state = state;
 	}
 
 	/**
 	 * Applies the effects of acid replacing functional class nomenclature
 	 * This must be performed early so that prefix/infix functional replacement is performed correctly
 	 * and so that element symbol locants are assigned appropriately
-	 * @param state 
 	 * @param finalSubOrRootInWord
 	 * @param word
 	 * @throws ComponentGenerationException 
 	 * @throws StructureBuildingException 
 	 */
-	static void processAcidReplacingFunctionalClassNomenclature(BuildState state, Element finalSubOrRootInWord, Element word) throws ComponentGenerationException, StructureBuildingException {
+	void processAcidReplacingFunctionalClassNomenclature(Element finalSubOrRootInWord, Element word) throws ComponentGenerationException, StructureBuildingException {
 		Element wordRule = OpsinTools.getParentWordRule(word);
 		if (WordRule.valueOf(wordRule.getAttributeValue(WORDRULE_ATR)) == WordRule.acidReplacingFunctionalGroup){
 			Element parentWordRule = word.getParent();
@@ -71,11 +77,11 @@ class FunctionalReplacement {
 				if (acidReplacingFullWords.size()>0){//case where functionalTerm is substituted
 					//as words are processed from right to left in cases like phosphoric acid tri(ethylamide) this will be phosphoric acid ethylamide ethylamide ethylamide
 					for (Element acidReplacingWord : acidReplacingFullWords) {
-						processAcidReplacingFunctionalClassNomenclatureFullWord(state, finalSubOrRootInWord, acidReplacingWord);
+						processAcidReplacingFunctionalClassNomenclatureFullWord(finalSubOrRootInWord, acidReplacingWord);
 					}
 				}
 				else if (parentWordRule.getChildCount() == 2) {
-					processAcidReplacingFunctionalClassNomenclatureFunctionalWord(state, finalSubOrRootInWord, OpsinTools.getNextSibling(word));
+					processAcidReplacingFunctionalClassNomenclatureFunctionalWord(finalSubOrRootInWord, OpsinTools.getNextSibling(word));
 				}
 				else{
 					throw new ComponentGenerationException("OPSIN bug: problem with acidReplacingFunctionalGroup word rule");
@@ -95,14 +101,13 @@ class FunctionalReplacement {
 	 * For heterocyclic rings functional replacement should technically be limited to :
 	 * pyran, morpholine, chromene, isochromene and xanthene, chromane and isochromane.
 	 * but this is not currently enforced
-	 * @param state
 	 * @param groups
 	 * @param substituents
 	 * @return boolean: has any functional replacement occurred
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException 
 	 */
-	static boolean processPrefixFunctionalReplacementNomenclature(BuildState state, List<Element> groups, List<Element> substituents) throws StructureBuildingException, ComponentGenerationException {
+	boolean processPrefixFunctionalReplacementNomenclature(List<Element> groups, List<Element> substituents) throws StructureBuildingException, ComponentGenerationException {
 		int originalNumberOfGroups = groups.size();
 		for (int i = originalNumberOfGroups-1; i >=0; i--) {
 			Element group =groups.get(i);
@@ -165,20 +170,20 @@ class FunctionalReplacement {
 
 					int oxygenReplaced;
 					if (replacementType == PREFIX_REPLACEMENT_TYPE.chalcogen){
-						oxygenReplaced = performChalcogenFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+						oxygenReplaced = performChalcogenFunctionalReplacement(groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.peroxy){
 						if (nextSubOrBracket.getName().equals(SUBSTITUENT_EL)){
 							continue;
 						}
-						oxygenReplaced = performPeroxyFunctionalReplacement(state, groupToBeModified, locantEl, numberOfAtomsToReplace);
+						oxygenReplaced = performPeroxyFunctionalReplacement(groupToBeModified, locantEl, numberOfAtomsToReplace);
 					}
 					else if (replacementType == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
 						if (!groupToBeModified.getAttributeValue(TYPE_ATR).equals(NONCARBOXYLICACID_TYPE_VAL)
 								&& !(groupToBeModified.getValue().equals("form") && groupValue.equals("imido"))){
 							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
-						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+						oxygenReplaced = performFunctionalReplacementOnAcid(groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 						if (oxygenReplaced==0){
 							throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 						}
@@ -191,7 +196,7 @@ class FunctionalReplacement {
 							//need to be careful to note that something like chlorophosphonic acid isn't functional replacement
 							continue;
 						}
-						oxygenReplaced = performFunctionalReplacementOnAcid(state, groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
+						oxygenReplaced = performFunctionalReplacementOnAcid(groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
 					else{
 						throw new StructureBuildingException("OPSIN bug: Unexpected prefix replacement type");
@@ -227,7 +232,7 @@ class FunctionalReplacement {
 	 * @param groupToBeModified
 	 * @return
 	 */
-	private static boolean groupPrecededByElementThatBlocksPrefixReplacementInterpetation(Element groupToBeModified) {
+	private boolean groupPrecededByElementThatBlocksPrefixReplacementInterpetation(Element groupToBeModified) {
 		Element previous = OpsinTools.getPreviousSibling(groupToBeModified);
 		while (previous !=null && (previous.getName().equals(SUBTRACTIVEPREFIX_EL)
 				|| (previous.getName().equals(STEREOCHEMISTRY_EL) && previous.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)))){
@@ -243,13 +248,12 @@ class FunctionalReplacement {
 	
 	/**
 	 * Performs functional replacement using infixes e.g. thio in ethanthioic acid replaces an O with S
-	 * @param state
 	 * @param suffixFragments May be modified if a multiplier is determined to mean multiplication of a suffix, usually untouched
 	 * @param suffixes The suffix elements  May be modified if a multiplier is determined to mean multiplication of a suffix, usually untouched
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException
 	 */
-	static void processInfixFunctionalReplacementNomenclature(BuildState state, List<Element> suffixes, List<Fragment> suffixFragments) throws StructureBuildingException, ComponentGenerationException {
+	void processInfixFunctionalReplacementNomenclature(List<Element> suffixes, List<Fragment> suffixFragments) throws StructureBuildingException, ComponentGenerationException {
 		for (int i = 0; i < suffixes.size(); i++) {
 			Element suffix = suffixes.get(i);
 			if (suffix.getAttribute(INFIX_ATR) != null){
@@ -275,7 +279,7 @@ class FunctionalReplacement {
 				/*
 				 * Modifies suffixes, suffixFragments, suffix and infixTransformations as appropriate
 				 */
-				disambiguateMultipliedInfixMeaning(state, suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailable);
+				disambiguateMultipliedInfixMeaning(suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailable);
 
 				/*
 				 * Sort infixTransformations so more specific transformations are performed first
@@ -347,7 +351,7 @@ class FunctionalReplacement {
 					else{
 						throw new StructureBuildingException("Cannot find oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");//this would be a bug
 					}
-					Fragment replacementFrag =state.fragManager.buildSMILES(replacementSMILES, SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+					Fragment replacementFrag = state.fragManager.buildSMILES(replacementSMILES, SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 					if (replacementFrag.getOutAtomCount()>0){//SMILES include an indication of the bond order the replacement fragment will have, this is not intended to be an outatom
 						replacementFrag.removeOutAtom(0);
 					}
@@ -400,13 +404,12 @@ class FunctionalReplacement {
 	
 	/**
 	 * Replaces the appropriate number of functional oxygen atoms with the corresponding fragment
-	 * @param state
 	 * @param acidContainingRoot
 	 * @param acidReplacingWord
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private static void processAcidReplacingFunctionalClassNomenclatureFullWord(BuildState state, Element acidContainingRoot, Element acidReplacingWord) throws ComponentGenerationException, StructureBuildingException {
+	private void processAcidReplacingFunctionalClassNomenclatureFullWord(Element acidContainingRoot, Element acidReplacingWord) throws ComponentGenerationException, StructureBuildingException {
 		Element acidReplacingGroup = StructureBuildingMethods.findRightMostGroupInBracket(acidReplacingWord);
 		if (acidReplacingGroup ==null){
 			throw new ComponentGenerationException("OPSIN bug: acid replacing group not found where one was expected for acidReplacingFunctionalGroup wordRule");
@@ -418,14 +421,14 @@ class FunctionalReplacement {
 		}
 		
 		Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
-		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(groupToBeModified);
 		if (oxygenAtoms.size() == 0){
-			oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+			oxygenAtoms = findFunctionalOxygenAtomsInGroup(groupToBeModified);
 		}
 		if (oxygenAtoms.size() == 0){
 			List<Element> conjunctiveSuffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 			for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
-				oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
+				oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(conjunctiveSuffixElement));
 			}
 		}
 		if (oxygenAtoms.size() < 1){
@@ -450,13 +453,12 @@ class FunctionalReplacement {
 
 	/**
 	 * Replaces the appropriate number of functional oxygen atoms with the corresponding fragment
-	 * @param state
 	 * @param acidContainingRoot
 	 * @param functionalWord
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private static void processAcidReplacingFunctionalClassNomenclatureFunctionalWord(BuildState state, Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
+	private void processAcidReplacingFunctionalClassNomenclatureFunctionalWord(Element acidContainingRoot, Element functionalWord) throws ComponentGenerationException, StructureBuildingException {
 		if (functionalWord !=null && functionalWord.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			Element functionalTerm = functionalWord.getFirstChildElement(FUNCTIONALTERM_EL);
 			if (functionalTerm ==null){
@@ -478,14 +480,14 @@ class FunctionalReplacement {
 			}
 			
 			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
-			List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+			List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(groupToBeModified);
 			if (oxygenAtoms.size()==0){
-				oxygenAtoms = findFunctionalOxygenAtomsInGroup(state, groupToBeModified);
+				oxygenAtoms = findFunctionalOxygenAtomsInGroup(groupToBeModified);
 			}
 			if (oxygenAtoms.size()==0){
 				List<Element> conjunctiveSuffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 				for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
-					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, conjunctiveSuffixElement));
+					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(conjunctiveSuffixElement));
 				}
 			}
 			if (numberOfAcidicHydroxysToReplace > oxygenAtoms.size()){
@@ -528,7 +530,7 @@ class FunctionalReplacement {
 	 */
 
 	
-	private static boolean acidHasSufficientHydrogenForSubstitutionInterpretation(Fragment acidFrag, int hydrogenRequiredForSubstitutionInterpretation, Element locantEl) throws StructureBuildingException {
+	private boolean acidHasSufficientHydrogenForSubstitutionInterpretation(Fragment acidFrag, int hydrogenRequiredForSubstitutionInterpretation, Element locantEl) throws StructureBuildingException {
 		List<Atom> atomsThatWouldBeSubstituted = new ArrayList<Atom>();
 		if (locantEl !=null){
 			String[] possibleLocants = MATCH_COMMA.split(locantEl.getValue());
@@ -558,7 +560,6 @@ class FunctionalReplacement {
 	/**
 	 * Performs replacement of oxygen atoms by chalogen atoms
 	 * If this is ambiguous e.g. thioacetate then Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT is populated
-	 * @param state
 	 * @param groupToBeModified
 	 * @param locantEl
 	 * @param numberOfAtomsToReplace
@@ -566,10 +567,10 @@ class FunctionalReplacement {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static int performChalcogenFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
-		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+	private int performChalcogenFunctionalReplacement(Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
+		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(groupToBeModified);
 		if (oxygenAtoms.size()==0){
-			oxygenAtoms = findOxygenAtomsInGroup(state, groupToBeModified);
+			oxygenAtoms = findOxygenAtomsInGroup(groupToBeModified);
 		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
@@ -645,18 +646,17 @@ class FunctionalReplacement {
 	/**
 	 * Converts functional oxygen to peroxy e.g. peroxybenzoic acid
 	 * Returns the number of oxygen replaced
-	 * @param state
 	 * @param groupToBeModified
 	 * @param locantEl
 	 * @param numberOfAtomsToReplace
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static int performPeroxyFunctionalReplacement(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace) throws StructureBuildingException {
-		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+	private int performPeroxyFunctionalReplacement(Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace) throws StructureBuildingException {
+		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(groupToBeModified);
 		if (oxygenAtoms.size()==0){
-			oxygenAtoms = findEthericOxygenAtomsInGroup(state, groupToBeModified);
-			oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(state, groupToBeModified));
+			oxygenAtoms = findEthericOxygenAtomsInGroup(groupToBeModified);
+			oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(groupToBeModified));
 		}
 		if (locantEl !=null){
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
@@ -701,7 +701,6 @@ class FunctionalReplacement {
 	 * SMILES with a valency 1 outAtom replace -O, SMILES with a valency 2 outAtom replace =O
 	 * SMILES with a valency 3 outAtom replace -O and =O (nitrido)
 	 * Returns the number of oxygen replaced
-	 * @param state
 	 * @param groupToBeModified
 	 * @param locantEl
 	 * @param numberOfAtomsToReplace
@@ -709,7 +708,7 @@ class FunctionalReplacement {
      * @return
 	 * @throws StructureBuildingException
 	 */
-	private static int performFunctionalReplacementOnAcid(BuildState state, Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
+	private int performFunctionalReplacementOnAcid(Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
 		int outValency;
 		if (replacementSmiles.startsWith("-")){
 			outValency =1;
@@ -724,9 +723,9 @@ class FunctionalReplacement {
 			throw new StructureBuildingException("OPSIN bug: Unexpected valency on fragment for prefix functional replacement");
 		}
 		replacementSmiles = replacementSmiles.substring(1);
-		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(state, groupToBeModified);
+		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(groupToBeModified);
 		if (oxygenAtoms.size()==0){
-			oxygenAtoms = findOxygenAtomsInGroup(state, groupToBeModified);
+			oxygenAtoms = findOxygenAtomsInGroup(groupToBeModified);
 		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
@@ -805,7 +804,6 @@ class FunctionalReplacement {
 	 * This block handles infix multiplication. Unless brackets are provided this is ambiguous without knowledge of the suffix that is being modified
 	 * For example butandithione could be intepreted as butandi(thione) or butan(dithi)one.
 	 * Obviously the latter is wrong in this case but it is the correct interpretation for butandithiate
-	 * @param state
 	 * @param suffixes
 	 * @param suffixFragments
 	 * @param suffix
@@ -814,7 +812,7 @@ class FunctionalReplacement {
 	 * @throws ComponentGenerationException
 	 * @throws StructureBuildingException
 	 */
-	private static void disambiguateMultipliedInfixMeaning(BuildState state,List<Element> suffixes,
+	private void disambiguateMultipliedInfixMeaning(List<Element> suffixes,
 			List<Fragment> suffixFragments,Element suffix, List<String> infixTransformations, int oxygenAvailable)
 			throws ComponentGenerationException, StructureBuildingException {
 		Element possibleInfix = OpsinTools.getPreviousSibling(suffix);
@@ -876,7 +874,7 @@ class FunctionalReplacement {
 	 * @param atomToBeReplaced
 	 * @param replacementFrag
 	 */
-	private static void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
+	private void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
 		List<Atom> replacementAtomList = replacementFrag.getAtomList();
 		Fragment origFrag = atomToBeReplaced.getFrag();
 		for (int i = origFrag.getFunctionalAtomCount() - 1; i >=0; i--) {
@@ -901,7 +899,7 @@ class FunctionalReplacement {
 	 * @param atomToBeReplaced
 	 * @param replacementFrag
 	 */
-	private static void moveObsoleteOutAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
+	private void moveObsoleteOutAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
 		if (atomToBeReplaced.getOutValency() >0){//this is not known to occur in well formed IUPAC names but would occur in thioxy (as a suffix)
 			List<Atom> replacementAtomList = replacementFrag.getAtomList();
 			Fragment origFrag = atomToBeReplaced.getFrag();
@@ -916,7 +914,7 @@ class FunctionalReplacement {
 		}
 	}
 	
-	private static void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws StructureBuildingException {
+	private void removeAssociatedFunctionalAtom(Atom atomWithFunctionalAtom) throws StructureBuildingException {
 		Fragment frag = atomWithFunctionalAtom.getFrag();
 		for (int i = frag.getFunctionalAtomCount() - 1; i >=0; i--) {
 			FunctionalAtom functionalAtom = frag.getFunctionalAtom(i);
@@ -936,7 +934,7 @@ class FunctionalReplacement {
 	 * @param oxygenAtoms
 	 * @return
 	 */
-	private static List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
+	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
 		String[] possibleLocants = MATCH_COMMA.split(locantEl.getValue());
 		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
 		for (Atom atom : oxygenAtoms) {
@@ -967,11 +965,10 @@ class FunctionalReplacement {
 
 	/**
 	 * Returns oxygen atoms in suffixes with functionalAtoms
-	 * @param state
 	 * @param groupToBeModified
 	 * @return
 	 */
-	private static List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
+	private List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(Element groupToBeModified) {
 		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		for (Element suffix : suffixElements) {
@@ -990,11 +987,10 @@ class FunctionalReplacement {
 
 	/**
 	 * Returns functional oxygen atoms in groupToBeModified
-	 * @param state
 	 * @param groupToBeModified
 	 * @return
 	 */
-	private static List<Atom> findFunctionalOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
+	private List<Atom> findFunctionalOxygenAtomsInGroup(Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		Fragment frag = groupToBeModified.getFrag();
 		for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
@@ -1009,11 +1005,10 @@ class FunctionalReplacement {
 	
 	/**
 	 * Returns etheric oxygen atoms in groupToBeModified
-	 * @param state
 	 * @param groupToBeModified
 	 * @return
 	 */
-	private static List<Atom> findEthericOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
+	private List<Atom> findEthericOxygenAtomsInGroup(Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a: atomList) {
@@ -1027,11 +1022,10 @@ class FunctionalReplacement {
 	
 	/**
 	 * Returns oxygen atoms in suffixes with functionalAtoms or acidStem suffixes or aldehyde suffixes (1979 C-531)
-	 * @param state
 	 * @param groupToBeModified
 	 * @return
 	 */
-	private static List<Atom> findOxygenAtomsInApplicableSuffixes(BuildState state, Element groupToBeModified) {
+	private List<Atom> findOxygenAtomsInApplicableSuffixes(Element groupToBeModified) {
 		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		for (Element suffix : suffixElements) {
@@ -1052,11 +1046,10 @@ class FunctionalReplacement {
 	
 	/**
 	 * Returns oxygen atoms in groupToBeModified
-	 * @param state
 	 * @param groupToBeModified
 	 * @return
 	 */
-	private static List<Atom> findOxygenAtomsInGroup(BuildState state, Element groupToBeModified) {
+	private List<Atom> findOxygenAtomsInGroup(Element groupToBeModified) {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a : atomList) {
@@ -1068,7 +1061,7 @@ class FunctionalReplacement {
 	}
 	
 
-	private static void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, List<Atom> singleBondedOxygen, List<Atom> doubleBondedOxygen) throws StructureBuildingException {
+	private void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, List<Atom> singleBondedOxygen, List<Atom> doubleBondedOxygen) throws StructureBuildingException {
 		for (Atom a : atomList) {
 			if (a.getElement().equals("O")){//find terminal oxygens
 				if (a.getBonds().size()==1){
