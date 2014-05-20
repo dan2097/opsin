@@ -644,15 +644,15 @@ class SMILESFragmentBuilder {
 	/**
 	 * Build a Fragment based on a SMILES string.
 	 * The associated token is a dummy token with type/subType of ""
+	 * The fragment has no locants
 	 *
 	 * @param smiles The SMILES string to build from.
 	 * @return The built fragment.
 	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles) throws StructureBuildingException {
-		return build(smiles, FragmentManager.DUMMY_TOKEN, "");
+		return build(smiles, FragmentManager.DUMMY_TOKEN, NONE_LABELS_VAL);
 	}
-	
 
 	/**
 	 * Build a Fragment based on a SMILES string.
@@ -663,11 +663,15 @@ class SMILESFragmentBuilder {
 	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles, Element tokenEl, String labelMapping) throws StructureBuildingException {
-		if (smiles == null){
-			throw new IllegalArgumentException("SMILES specified is null");
-		}
 		if (tokenEl == null){
 			throw new IllegalArgumentException("tokenEl is null. FragmentManager's DUMMY_TOKEN should be used instead");
+		}
+		return build(smiles, new Fragment(tokenEl), labelMapping);
+	}
+	
+	private Fragment build(String smiles, Fragment fragment, String labelMapping) throws StructureBuildingException {	
+		if (smiles == null){
+			throw new IllegalArgumentException("SMILES specified is null");
 		}
 		if (labelMapping == null){
 			throw new IllegalArgumentException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
@@ -679,7 +683,6 @@ class SMILESFragmentBuilder {
 		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
 			labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
 		}
-		Fragment fragment = new Fragment(tokenEl);
 		if (smiles.length() == 0){
 			return fragment;
 		}
