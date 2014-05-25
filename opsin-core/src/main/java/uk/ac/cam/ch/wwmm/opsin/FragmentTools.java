@@ -25,18 +25,13 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  */
 class SortAtomsForElementSymbols implements Comparator<Atom> {
 
-	private final Map<Atom, Bond> atomToPreviousBondMap;
-    public SortAtomsForElementSymbols(Map<Atom, Bond> atomToPreviousBondMap) {
-    	this.atomToPreviousBondMap = atomToPreviousBondMap;
-	}
-
 	public int compare(Atom a, Atom b){
-    	Bond bondA = atomToPreviousBondMap.get(a);
-    	Bond bondB = atomToPreviousBondMap.get(b);
-    	if (bondA.getOrder() > bondB.getOrder()) {//lower order bond is preferred
+		int bondOrderA = a.getProperty(Atom.VISITED);
+		int bondOrderB = b.getProperty(Atom.VISITED);
+    	if (bondOrderA > bondOrderB) {//lower order bond is preferred
     		return 1;
     	}
-    	if (bondA.getOrder() < bondB.getOrder()) {
+    	if (bondOrderA < bondOrderB) {
     		return -1;
     	}
     	
@@ -280,18 +275,14 @@ class FragmentTools {
 
 	private static void processSuffixLabelling(List<Fragment> suffixFragments, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) throws StructureBuildingException {
 		List<Atom> startingAtoms = new ArrayList<Atom>();
-		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		for (Fragment fragment : suffixFragments) {
 			Atom rAtom = fragment.getFirstAtom();
-			List<Atom> nextAtoms = rAtom.getAtomNeighbours();
-			for (Atom nextAtom : nextAtoms) {
-				atomsVisited.add(nextAtom);
-				atomPreviousBondMap.put(nextAtom, rAtom.getBondToAtomOrThrow(nextAtom));
-			}
+			List<Atom> nextAtoms = getIntraFragmentNeighboursAndSetVisitedBondOrder(rAtom);
+			atomsVisited.addAll(nextAtoms);
 			startingAtoms.addAll(nextAtoms);
 		}
-		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		Collections.sort(startingAtoms, new SortAtomsForElementSymbols());
 
 		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
 		while (atomsToConsider.size() > 0){
@@ -302,12 +293,9 @@ class FragmentTools {
 	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) throws StructureBuildingException {
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		Atom firstAtom = suffixableFragment.getFirstAtom();
-		List<Atom> startingAtoms = firstAtom.getAtomNeighbours();
-		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
-		for (Atom nextAtom : startingAtoms) {
-			atomPreviousBondMap.put(nextAtom, firstAtom.getBondToAtomOrThrow(nextAtom));
-		}
-		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
+		List<Atom> startingAtoms = getIntraFragmentNeighboursAndSetVisitedBondOrder(firstAtom);
+		
+		Collections.sort(startingAtoms, new SortAtomsForElementSymbols());
 		atomsVisited.add(firstAtom);
 		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
 		while (atomsToConsider.size() > 0){
@@ -325,16 +313,31 @@ class FragmentTools {
 		if (!atomsToIgnore.contains(atom)) {//assign locant
 			assignLocant(atom, elementCount);
 		}
-		List<Atom> atomNeighbours = atom.getAtomNeighbours();
-		atomNeighbours.removeAll(atomsVisited);
-		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
-		for (Atom atomNeighbour : atomNeighbours) {
-			atomPreviousBondMap.put(atomNeighbour, atom.getBondToAtomOrThrow(atomNeighbour));
+		List<Atom> atomsToExplore = getIntraFragmentNeighboursAndSetVisitedBondOrder(atom);
+		atomsToExplore.removeAll(atomsVisited);
+		Collections.sort(atomsToExplore, new SortAtomsForElementSymbols());
+		for (int i = atomsToExplore.size() - 1; i >= 0; i--) {
+			atomsToConsider.addFirst(atomsToExplore.get(i));
 		}
-		Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
-		for (int i = atomNeighbours.size() - 1; i >= 0; i--) {
-			atomsToConsider.addFirst(atomNeighbours.get(i));
+	}
+
+	/**
+	 * Gets the neighbours of an atom that claim to be within the same frag
+	 * The order of bond taken to get to the neighbour is set on the neighbours Atom.VISITED property
+	 * @param atom
+	 * @return
+	 */
+	private static List<Atom> getIntraFragmentNeighboursAndSetVisitedBondOrder(Atom atom) {
+		List<Atom> atomsToExplore = new ArrayList<Atom>();
+		List<Bond> bonds = atom.getBonds();
+		for (Bond bond : bonds) {
+			Atom neighbour = bond.getOtherAtom(atom);
+			if (neighbour.getFrag().equals(atom.getFrag())) {
+				atomsToExplore.add(neighbour);
+				neighbour.setProperty(Atom.VISITED, bond.getOrder());
+			}
 		}
+		return atomsToExplore;
 	}
 
 	private static void assignLocant(Atom atom, Map<String, Integer> elementCount) {
@@ -731,9 +734,8 @@ class FragmentTools {
 		//Search for appropriate atom by using the same algorithm as is used to assign locants initially
 
 		List<Atom> startingAtoms = new ArrayList<Atom>();
-		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
-		List<Atom> neighbours = backboneAtom.getAtomNeighbours();
+		List<Atom> neighbours = getIntraFragmentNeighboursAndSetVisitedBondOrder(backboneAtom);
 		mainLoop: for (Atom neighbour : neighbours) {
 			atomsVisited.add(neighbour);
 			if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
@@ -744,11 +746,10 @@ class FragmentTools {
 				}
 			}
 			startingAtoms.add(neighbour);
-			atomPreviousBondMap.put(neighbour, backboneAtom.getBondToAtomOrThrow(neighbour));
 		}
 
-		Collections.sort(startingAtoms, new SortAtomsForElementSymbols(atomPreviousBondMap));
-		HashMap<String,Integer> elementCount =new HashMap<String,Integer>();//keeps track of how many times each element has been seen
+		Collections.sort(startingAtoms, new SortAtomsForElementSymbols());
+		Map<String,Integer> elementCount = new HashMap<String,Integer>();//keeps track of how many times each element has been seen
 	
 		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
 		boolean hydrazoneSpecialCase =false;//look for special case violation of IUPAC rule where the locant of the =N- atom is skipped. This flag is set when =N- is encountered
@@ -772,12 +773,10 @@ class FragmentTools {
 				hydrazoneSpecialCase =false;
 			}
 
-			List<Atom> atomNeighbours = atom.getAtomNeighbours();
+			List<Atom> atomNeighbours = getIntraFragmentNeighboursAndSetVisitedBondOrder(atom);
+			atomNeighbours.removeAll(atomsVisited);
 			for (int i = atomNeighbours.size() -1; i >=0; i--) {
 				Atom neighbour = atomNeighbours.get(i);
-				if (atomsVisited.contains(neighbour)){
-					atomNeighbours.remove(i);
-				}
 				if (!neighbour.getType().equals(SUFFIX_TYPE_VAL)){
 					for (String neighbourLocant : neighbour.getLocants()) {
 						if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){//gone to an inappropriate atom
@@ -798,11 +797,8 @@ class FragmentTools {
 					}
 				}
 			}
-			atomPreviousBondMap = new HashMap<Atom, Bond>();
-			for (Atom atomNeighbour : atomNeighbours) {
-				atomPreviousBondMap.put(atomNeighbour, atom.getBondToAtomOrThrow(atomNeighbour));
-			}
-			Collections.sort(atomNeighbours, new SortAtomsForElementSymbols(atomPreviousBondMap));
+
+			Collections.sort(atomNeighbours, new SortAtomsForElementSymbols());
 			for (int i = atomNeighbours.size() - 1; i >= 0; i--) {
 				atomsToConsider.addFirst(atomNeighbours.get(i));
 			}
