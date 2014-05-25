@@ -22,15 +22,9 @@ import java.util.Set;
  *
  */
 class FragmentManager {
-	
-	final static Element DUMMY_TOKEN = new TokenEl("");
-	static{
-		DUMMY_TOKEN.addAttribute(TYPE_ATR, "");
-		DUMMY_TOKEN.addAttribute(SUBTYPE_ATR, "");
-	}
 
 	/** A mapping between fragments and inter fragment bonds */
-	private final Map<Fragment,LinkedHashSet<Bond>> fragToInterFragmentBond = new LinkedHashMap<Fragment, LinkedHashSet<Bond>>();
+	private final Map<Fragment,Set<Bond>> fragToInterFragmentBond = new LinkedHashMap<Fragment, Set<Bond>>();
 	
 	/** All of the atom-containing fragments in the molecule */
 	private final Set<Fragment> fragments = fragToInterFragmentBond.keySet();
@@ -62,7 +56,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles) throws StructureBuildingException {
-		return buildSMILES(smiles, DUMMY_TOKEN, "");
+		return buildSMILES(smiles, "", "");
 	}
 	
 	/** Builds a fragment, based on an SMILES string
@@ -75,9 +69,9 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles, String type, String labelMapping) throws StructureBuildingException {
-		Element tokenEl = new TokenEl("");
-		tokenEl.addAttribute(TYPE_ATR, type);
-		return buildSMILES(smiles, tokenEl, labelMapping);
+		Fragment newFrag = sBuilder.build(smiles, type, labelMapping);
+		addFragment(newFrag);
+		return newFrag;
 	}
 
 	/** Builds a fragment, based on an SMILES string
@@ -106,8 +100,8 @@ class FragmentManager {
 	 * @throws StructureBuildingException 
 	 */
 	Fragment getUnifiedFragment() throws StructureBuildingException {
-		Fragment uniFrag = new Fragment(DUMMY_TOKEN);
-		for (Entry<Fragment, LinkedHashSet<Bond>> entry : fragToInterFragmentBond.entrySet()) {
+		Fragment uniFrag = new Fragment("");
+		for (Entry<Fragment, Set<Bond>> entry : fragToInterFragmentBond.entrySet()) {
 			Fragment f = entry.getKey();
 			Set<Bond> interFragmentBonds = entry.getValue();
 			for(Atom atom : f.getAtomList()) {
