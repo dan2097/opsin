@@ -32,7 +32,7 @@ public class FragmentManagerTest {
 	@Test
 	public void testRelabelFusedRingSystem() throws StructureBuildingException {
 		Fragment naphthalene = fragManager.buildSMILES("C1=CC=CC2=CC=CC=C12");
-		FragmentTools.relabelFusedRingSystem(naphthalene);
+		FragmentTools.relabelLocantsAsFusedRingSystem(naphthalene.getAtomList());
 		assertEquals("Locant 1 = atom 1", 1, naphthalene.getIDFromLocant("1"));
 		assertEquals("Locant 4a = atom 5", 5, naphthalene.getIDFromLocant("4a"));
 		assertEquals("Locant 8 = atom 9", 9, naphthalene.getIDFromLocant("8"));

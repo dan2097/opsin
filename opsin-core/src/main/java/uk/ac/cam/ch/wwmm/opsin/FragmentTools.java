@@ -440,18 +440,9 @@ class FragmentTools {
 	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
 	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
 	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
-     * @param fusedring
-	 */
-	static void relabelFusedRingSystem(Fragment fusedring){
-		relabelFusedRingSystem(fusedring.getAtomList());
-	}
-
-	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
-	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
-	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
      * @param atomList
 	 */
-	static void relabelFusedRingSystem(List<Atom> atomList) {
+	static void relabelLocantsAsFusedRingSystem(List<Atom> atomList) {
 		int locantVal = 0;
 		char locantLetter = 'a';
 		for (Atom atom : atomList) {
