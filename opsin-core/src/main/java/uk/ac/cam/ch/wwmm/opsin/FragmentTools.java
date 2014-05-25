@@ -25,7 +25,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  */
 class SortAtomsForElementSymbols implements Comparator<Atom> {
 
-	final Map<Atom, Bond> atomToPreviousBondMap;
+	private final Map<Atom, Bond> atomToPreviousBondMap;
     public SortAtomsForElementSymbols(Map<Atom, Bond> atomToPreviousBondMap) {
     	this.atomToPreviousBondMap = atomToPreviousBondMap;
 	}
@@ -33,28 +33,27 @@ class SortAtomsForElementSymbols implements Comparator<Atom> {
 	public int compare(Atom a, Atom b){
     	Bond bondA = atomToPreviousBondMap.get(a);
     	Bond bondB = atomToPreviousBondMap.get(b);
-    	if (bondA.getOrder() > bondB.getOrder()){//lower order bond is preferred
+    	if (bondA.getOrder() > bondB.getOrder()) {//lower order bond is preferred
     		return 1;
     	}
-    	if (bondA.getOrder() < bondB.getOrder()){
+    	if (bondA.getOrder() < bondB.getOrder()) {
     		return -1;
     	}
     	
-    	if (a.getOutValency() > b.getOutValency()){//prefer atoms with outValency
+    	if (a.getOutValency() > b.getOutValency()) {//prefer atoms with outValency
     		return -1;
     	}
-    	if (a.getOutValency() < b.getOutValency()){
+    	if (a.getOutValency() < b.getOutValency()) {
     		return 1;
     	}
 
     	int expectedHydrogenA = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a);
     	int expectedHydrogenB = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(b);
-    	
-    	
-    	if (expectedHydrogenA > expectedHydrogenB){//prefer atoms with more hydrogen
+
+    	if (expectedHydrogenA > expectedHydrogenB) {//prefer atoms with more hydrogen
     		return -1;
     	}
-    	if (expectedHydrogenA < expectedHydrogenB){
+    	if (expectedHydrogenA < expectedHydrogenB) {
     		return 1;
     	}
     	return 0;
@@ -70,25 +69,25 @@ class SortAtomsForElementSymbols implements Comparator<Atom> {
 class SortAtomsForMainGroupElementSymbols implements Comparator<Atom> {
 
     public int compare(Atom a, Atom b){
-    	int compare =a.getElement().compareTo(b.getElement());
-    	if (compare !=0){//only bother comparing properly if elements are the same
+    	int compare = a.getElement().compareTo(b.getElement());
+    	if (compare != 0) {//only bother comparing properly if elements are the same
     		return compare;
     	}
 
     	int aExpectedHydrogen = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a);
-    	int bExpectedHydrogen =StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(b);
-    	if (aExpectedHydrogen >0 &&  bExpectedHydrogen ==0){//having substitutable hydrogen preferred
+    	int bExpectedHydrogen = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(b);
+    	if (aExpectedHydrogen > 0 &&  bExpectedHydrogen == 0) {//having substitutable hydrogen preferred
     		return -1;
     	}
-    	if (aExpectedHydrogen ==0 && bExpectedHydrogen >0){
+    	if (aExpectedHydrogen == 0 && bExpectedHydrogen > 0) {
     		return 1;
     	}
     	List<String> locantsA = a.getLocants();
     	List<String> locantsB = b.getLocants();
-    	if (locantsA.size() ==0 &&  locantsB.size() >0){//having no locants preferred
+    	if (locantsA.size() == 0 &&  locantsB.size() > 0) {//having no locants preferred
     		return -1;
     	}
-    	if (locantsA.size() >0 &&  locantsB.size() ==0){
+    	if (locantsA.size() > 0 &&  locantsB.size() == 0) {
     		return 1;
     	}
     	return 0;
@@ -165,54 +164,55 @@ class FragmentTools {
 	 */
 	static void assignElementLocants(Fragment suffixableFragment, List<Fragment> suffixFragments) throws StructureBuildingException {
 		
-		HashMap<String,Integer> elementCount =new HashMap<String,Integer>();//keeps track of how many times each element has been seen
-		HashSet<Atom> atomsToIgnore = new HashSet<Atom>();//atoms which already have a symbolic locant
+		Map<String,Integer> elementCount = new HashMap<String,Integer>();//keeps track of how many times each element has been seen
+		Set<Atom> atomsToIgnore = new HashSet<Atom>();//atoms which already have a symbolic locant
 		
-		ArrayList<Fragment> allFragments =new ArrayList<Fragment>(suffixFragments);
+		List<Fragment> allFragments = new ArrayList<Fragment>(suffixFragments);
 		allFragments.add(suffixableFragment);
 		/*
 		 * First check whether any element locants have already been assigned, these will take precedence
 		 */
 		for (Fragment fragment : allFragments) {
-			List<Atom> atomList =fragment.getAtomList();
+			List<Atom> atomList = fragment.getAtomList();
 			for (Atom atom : atomList) {
-				List<String> elementSymbolLocants =atom.getElementSymbolLocants();
+				List<String> elementSymbolLocants = atom.getElementSymbolLocants();
 				for (String locant : elementSymbolLocants) {
 					int primeCount = StringTools.countTerminalPrimes(locant);
-					String element =locant.substring(0, locant.length()-primeCount);
-					if (elementCount.get(element)==null || (elementCount.get(element) < primeCount +1)){
-						elementCount.put(element, primeCount +1);
+					String element = locant.substring(0, locant.length() - primeCount);
+					Integer seenCount = elementCount.get(element);
+					if (seenCount == null || (seenCount < primeCount + 1)){
+						elementCount.put(element, primeCount + 1);
 					}
 					atomsToIgnore.add(atom);
 				}
 			}
 		}
 		
-		HashSet<String> elementToIgnore = new HashSet<String>();
-		for (String element : elementCount.keySet()) {
-			elementToIgnore.add(element);
-		}
-		for (Fragment fragment : allFragments) {
-			List<Atom> atomList =fragment.getAtomList();
-			for (Atom atom : atomList) {
-				if (elementToIgnore.contains(atom.getElement())){
-					atomsToIgnore.add(atom);
+		{
+			Set<String> elementsToIgnore = elementCount.keySet();
+	
+			for (Fragment fragment : allFragments) {
+				List<Atom> atomList = fragment.getAtomList();
+				for (Atom atom : atomList) {
+					if (elementsToIgnore.contains(atom.getElement())){
+						atomsToIgnore.add(atom);
+					}
 				}
 			}
 		}
-		
-		
+
 		String fragType = suffixableFragment.getType();
 		if (fragType.equals(NONCARBOXYLICACID_TYPE_VAL) || fragType.equals(CHALCOGENACIDSTEM_TYPE_VAL)){
-			if (suffixFragments.size()!=0){
+			if (suffixFragments.size() != 0){
 				throw new StructureBuildingException("No suffix fragments were expected to be present on non carboxylic acid");
 			}
 			processNonCarboxylicAcidLabelling(suffixableFragment, elementCount, atomsToIgnore);
 		}
 		else{
-			if (suffixFragments.size()>0){
+			if (suffixFragments.size() > 0){
 				processSuffixLabelling(suffixFragments, elementCount, atomsToIgnore);
-				if (elementCount.get("N")!=null &&  elementCount.get("N")>1){//look for special case violation of IUPAC rule, =(N)=(NN) is N//N' in practice rather than N/N'/N''
+				Integer seenCount = elementCount.get("N");
+				if (seenCount != null && seenCount > 1){//look for special case violation of IUPAC rule, =(N)=(NN) is N//N' in practice rather than N/N'/N''
 					//this method will put both locants on the N with substituable hydrogen
 					detectAndCorrectHydrazoneDerivativeViolation(suffixFragments);
 				}
@@ -220,7 +220,6 @@ class FragmentTools {
 			processMainGroupLabelling(suffixableFragment, elementCount, atomsToIgnore);
 		}
 	}
-
 
 	private static void detectAndCorrectHydrazoneDerivativeViolation(List<Fragment> suffixFragments) {
 		fragmentLoop: for (Fragment suffixFrag : suffixFragments) {
@@ -244,13 +243,9 @@ class FragmentTools {
 		}
 	}
 
-
-	private static void processMainGroupLabelling(Fragment suffixableFragment, HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore) {
-		HashSet<String> elementToIgnore = new HashSet<String>();
-		for (String element : elementCount.keySet()) {
-			elementToIgnore.add(element);
-		}
-		List<Atom> atomList =suffixableFragment.getAtomList();
+	private static void processMainGroupLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) {
+		Set<String> elementToIgnore = new HashSet<String>(elementCount.keySet());
+		List<Atom> atomList = suffixableFragment.getAtomList();
 		Collections.sort(atomList, new SortAtomsForMainGroupElementSymbols());
 		Atom atomToAddCLabelTo = null;//only add a C label if there is only one C in the main group
 		boolean seenMoreThanOneC = false;
@@ -258,40 +253,32 @@ class FragmentTools {
 			if (atomsToIgnore.contains(atom)){
 				continue;
 			}
-			String element =atom.getElement();
+			String element = atom.getElement();
 			if (elementToIgnore.contains(element)){
 				continue;
 			}
-			if (element.equals("C")){
-				if (seenMoreThanOneC){
+			if (element.equals("C")) {
+				if (seenMoreThanOneC) {
 					continue;
 				}
-				if (atomToAddCLabelTo !=null){
+				if (atomToAddCLabelTo != null){
 					atomToAddCLabelTo = null;
-					seenMoreThanOneC =true;
+					seenMoreThanOneC = true;
 				}
 				else{
-					atomToAddCLabelTo =atom;
+					atomToAddCLabelTo = atom;
 				}
-				continue;
-			}
-			if (elementCount.get(element)==null){
-				atom.addLocant(element);
-				elementCount.put(element,1);
 			}
 			else{
-				int count =elementCount.get(element);
-				atom.addLocant(element + StringTools.multiplyString("'", count));
-				elementCount.put(element, count +1);
+				assignLocant(atom, elementCount);
 			}
 		}
-		if (atomToAddCLabelTo !=null){
+		if (atomToAddCLabelTo != null){
 			atomToAddCLabelTo.addLocant("C");
 		}
 	}
 
-
-	private static void processSuffixLabelling(List<Fragment> suffixFragments, HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
+	private static void processSuffixLabelling(List<Fragment> suffixFragments, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) throws StructureBuildingException {
 		List<Atom> startingAtoms = new ArrayList<Atom>();
 		Map<Atom, Bond> atomPreviousBondMap = new HashMap<Atom, Bond>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
@@ -312,8 +299,7 @@ class FragmentTools {
 		}
 	}
 
-
-	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, HashMap<String, Integer> elementCount,HashSet<Atom> atomsToIgnore) throws StructureBuildingException {
+	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) throws StructureBuildingException {
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		Atom firstAtom = suffixableFragment.getFirstAtom();
 		List<Atom> startingAtoms = firstAtom.getAtomNeighbours();
@@ -327,17 +313,16 @@ class FragmentTools {
 		while (atomsToConsider.size() > 0){
 			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, atomsToConsider);
 		}
-		if (!atomsToIgnore.contains(firstAtom) && firstAtom.determineValency(true) > firstAtom.getIncomingValency()){
+		if (!atomsToIgnore.contains(firstAtom) && firstAtom.determineValency(true) > firstAtom.getIncomingValency()) {
 			//e.g. carbonimidoyl the carbon has locant C
 			assignLocant(firstAtom, elementCount);
 		}
 	}
 
-
-	private static void assignLocantsAndExploreNeighbours(HashMap<String, Integer> elementCount, HashSet<Atom> atomsToIgnore, Set<Atom> atomsVisited, Deque<Atom> atomsToConsider) throws StructureBuildingException {
+	private static void assignLocantsAndExploreNeighbours(Map<String, Integer> elementCount, Set<Atom> atomsToIgnore, Set<Atom> atomsVisited, Deque<Atom> atomsToConsider) throws StructureBuildingException {
 		Atom atom = atomsToConsider.removeFirst();
 		atomsVisited.add(atom);
-		if (!atomsToIgnore.contains(atom)){//assign locant
+		if (!atomsToIgnore.contains(atom)) {//assign locant
 			assignLocant(atom, elementCount);
 		}
 		List<Atom> atomNeighbours = atom.getAtomNeighbours();
@@ -352,20 +337,18 @@ class FragmentTools {
 		}
 	}
 
-
-	private static void assignLocant(Atom atom, HashMap<String, Integer> elementCount) {
-		String element =atom.getElement();
-		if (elementCount.get(element)==null){
+	private static void assignLocant(Atom atom, Map<String, Integer> elementCount) {
+		String element = atom.getElement();
+		Integer count = elementCount.get(element);
+		if (count == null){
 			atom.addLocant(element);
-			elementCount.put(element,1);
+			elementCount.put(element, 1);
 		}
 		else{
-			int count =elementCount.get(element);
 			atom.addLocant(element + StringTools.multiplyString("'", count));
-			elementCount.put(element, count +1);
+			elementCount.put(element, count + 1);
 		}
 	}
-
 
 	/** Adjusts the order of a bond in a fragment.
 	 *
