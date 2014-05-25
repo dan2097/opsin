@@ -3193,18 +3193,36 @@ class ComponentProcessor {
 		for (int i = 1; i < components ; i++) {
 			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
 		}
-		for (Fragment clone : clones) {
-			state.fragManager.incorporateFragment(clone, fragment);
-		}
 		
 		Atom atomOnOriginalFragment = fragment.getAtomByLocantOrThrow(locants[0]);
 		for (int i = 1; i < components ; i++) {
-			Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants[i]);
+			Fragment clone = clones.get(i - 1);
+			Atom atomToBeReplaced;
+			if (components ==2 && !locants[i].endsWith("'")){
+				//Allow prime to be (incorrectly) omitted on second locant in spirobi
+				try {
+					atomToBeReplaced = clone.getAtomByLocantOrThrow(locants[i]);
+				}
+				catch (StructureBuildingException e){
+					atomToBeReplaced = clone.getAtomByLocant(locants[i] + "'");
+					if (atomToBeReplaced == null){
+						throw e;
+					}
+				}
+			}
+			else{
+				atomToBeReplaced = clone.getAtomByLocantOrThrow(locants[i]);
+			}
+
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnOriginalFragment);
 			if (atomToBeReplaced.hasSpareValency()){
 				atomOnOriginalFragment.setSpareValency(true);
 			}
 		}
+		for (Fragment clone : clones) {
+			state.fragManager.incorporateFragment(clone, fragment);
+		}
+		
 		group.setValue(polyCyclicSpiroDescriptor.getValue() + group.getValue());
 	}
 
