@@ -62,6 +62,17 @@ class Fragment {
 	Fragment(Element tokenEl) {
 		this.tokenEl = tokenEl;
 	}
+	
+	/**
+	 * DO NOT CALL DIRECTLY EXCEPT FOR TESTING
+	 * Makes an empty Fragment with the given type
+	 * 
+	 * @param tokenEl
+	 */
+	Fragment(String type) {
+		this.tokenEl = new TokenEl("");
+		this.tokenEl.addAttribute(TYPE_ATR, type);
+	}
 
 	/**Produces a CML element, corresponding to the molecule. The cml element contains
 	 * a molecule, which contains an atomArray and bondArray filled with atoms and bonds.

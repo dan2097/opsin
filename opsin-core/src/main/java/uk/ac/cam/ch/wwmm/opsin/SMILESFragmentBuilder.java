@@ -643,7 +643,7 @@ class SMILESFragmentBuilder {
 	
 	/**
 	 * Build a Fragment based on a SMILES string.
-	 * The associated token is a dummy token with type/subType of ""
+	 * The type/subType of the Fragment are the empty String
 	 * The fragment has no locants
 	 *
 	 * @param smiles The SMILES string to build from.
@@ -651,7 +651,19 @@ class SMILESFragmentBuilder {
 	 * @throws StructureBuildingException
 	 */
 	Fragment build(String smiles) throws StructureBuildingException {
-		return build(smiles, FragmentManager.DUMMY_TOKEN, NONE_LABELS_VAL);
+		return build(smiles, "", NONE_LABELS_VAL);
+	}
+	
+	/**
+	 * Build a Fragment based on a SMILES string.
+	 * @param smiles The SMILES string to build from.
+	 * @param type The type of the fragment retrieved when calling {@link Fragment#getType()}
+	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none". A value of "" is treated as synonymous to numeric
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	Fragment build(String smiles, String type, String labelMapping) throws StructureBuildingException {
+		return build(smiles, new Fragment(type), labelMapping);
 	}
 
 	/**
