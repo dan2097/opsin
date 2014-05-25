@@ -123,18 +123,13 @@ class SMILESFragmentBuilder {
 		private final String smiles;
 		private final int endOfSmiles;
 		private final Fragment fragment;
-		private final String[] labelMap;
-		private final String labelMapping;
 		
 		private int i = 0;
-		private int atomNumber = 1;
 
-		public ParserInstance(String smiles, Fragment fragment, String[] labelMap, String labelMapping) {
+		public ParserInstance(String smiles, Fragment fragment) {
 			this.smiles = smiles;
 			this.endOfSmiles = smiles.length();
 			this.fragment = fragment;
-			this.labelMap = labelMap;
-			this.labelMapping =labelMapping;
 		}
 		
 		void parseSmiles() throws StructureBuildingException {
@@ -252,9 +247,6 @@ class SMILESFragmentBuilder {
 					throw new StructureBuildingException(ch + " is in an unexpected position. Check this is not a mistake and that this feature of SMILES is supported by OPSIN's SMILES parser");
 				}
 			}
-			if (labelMap != null && labelMap.length >= atomNumber ){
-				throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.length + ", atoms: " + (atomNumber -1) );
-			}
 			if (!closures.isEmpty()){
 				throw new StructureBuildingException("Unmatched ring opening");
 			}
@@ -286,16 +278,6 @@ class SMILESFragmentBuilder {
 			}
 			Atom atom = createAtom(elementType, fragment);
 			atom.setSpareValency(spareValency);
-			if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
-				atom.addLocant(Integer.toString(atomNumber));
-			} else if (labelMap != null){
-				String labels[] = MATCH_COMMA.split(labelMap[atomNumber - 1]);
-				for (String label : labels) {
-					if (label.length() > 0) {
-						atom.addLocant(label);
-					}
-				}
-			}
 			fragment.addAtom(atom);
 		
 			if(stack.getLast().atom != null) {
@@ -310,7 +292,6 @@ class SMILESFragmentBuilder {
 			}
 			stack.getLast().atom = atom;
 			stack.getLast().bondOrder = 1;
-			atomNumber++;
 		}
 
 		/**
@@ -377,16 +358,6 @@ class SMILESFragmentBuilder {
 			if (isotope.length() > 0){
 				atom.setIsotope(Integer.parseInt(isotope));
 			}
-			if(labelMapping.equals(NUMERIC_LABELS_VAL)) {
-				atom.addLocant(Integer.toString(atomNumber));
-			} else if (labelMap != null){
-				String labels[] = MATCH_COMMA.split(labelMap[atomNumber - 1]);
-				for (String label : labels) {
-					if (label.length() > 0) {
-						atom.addLocant(label);
-					}
-				}
-			}
 			fragment.addAtom(atom);
 			if(stack.getLast().atom != null) {
 				Bond b = createBond(stack.getLast().atom, atom, stack.getLast().bondOrder);
@@ -401,7 +372,6 @@ class SMILESFragmentBuilder {
 			Atom previousAtom = stack.getLast().atom;//needed for setting atomParity elements up
 			stack.getLast().atom = atom;
 			stack.getLast().bondOrder = 1;
-			atomNumber++;
 
 			Integer hydrogenCount = 0;
 			int charge = 0;
@@ -688,13 +658,6 @@ class SMILESFragmentBuilder {
 		if (labelMapping == null){
 			throw new IllegalArgumentException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
 		}
-		String[] labelMap = null;
-		if (labelMapping.equals("")){
-			labelMapping = NUMERIC_LABELS_VAL;
-		}
-		if(!labelMapping.equals(NONE_LABELS_VAL) && !labelMapping.equals(FUSEDRING_LABELS_VAL) ) {
-			labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
-		}
 		if (smiles.length() == 0){
 			return fragment;
 		}
@@ -708,14 +671,12 @@ class SMILESFragmentBuilder {
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {//used by OPSIN to specify the valency with which this fragment connects and to indicate it connects via the last atom in the SMILES
 			lastIndex--;
 		}
-		ParserInstance instance = new ParserInstance(smiles.substring(firstIndex, lastIndex), fragment, labelMap, labelMapping);
+		ParserInstance instance = new ParserInstance(smiles.substring(firstIndex, lastIndex), fragment);
 		instance.parseSmiles();
-
-		if(labelMapping.equals(FUSEDRING_LABELS_VAL)) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
-			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
-			FragmentTools.relabelFusedRingSystem(fragment);
-		}
+		
 		List<Atom> atomList = fragment.getAtomList();
+		processLabelling(labelMapping, atomList);
+
 		verifyAndTakeIntoAccountLonePairsInAtomParities(atomList);
 		addBondStereoElements(fragment);
 
@@ -749,6 +710,36 @@ class SMILESFragmentBuilder {
 		}
 		CycleDetector.assignWhetherAtomsAreInCycles(fragment);
 		return fragment;
+	}
+
+	private void processLabelling(String labelMapping, List<Atom> atomList) throws StructureBuildingException {
+		if (!labelMapping.equals(NONE_LABELS_VAL)) {
+			if (labelMapping.length() == 0 || labelMapping.equals(NUMERIC_LABELS_VAL)) {
+				int atomNumber = 1;
+				for (Atom atom : atomList) {
+					atom.addLocant(Integer.toString(atomNumber++));
+				}
+			}
+			else if(labelMapping.equals(FUSEDRING_LABELS_VAL)) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
+				//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
+				FragmentTools.relabelLocantsAsFusedRingSystem(atomList);
+			}
+			else{
+				String[] labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
+				int numOfAtoms = atomList.size();
+				if (labelMap.length != numOfAtoms){
+					throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.length + ", atoms: " + numOfAtoms );
+				}
+				for (int i = 0; i < numOfAtoms; i++) {
+					String labels[] = MATCH_COMMA.split(labelMap[i]);
+					for (String label : labels) {
+						if (label.length() > 0) {
+							atomList.get(i).addLocant(label);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void verifyAndTakeIntoAccountLonePairsInAtomParities(List<Atom> atomList) throws StructureBuildingException {
