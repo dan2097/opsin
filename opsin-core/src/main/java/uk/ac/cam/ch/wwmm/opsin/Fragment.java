@@ -455,16 +455,16 @@ class Fragment {
 	 */
 	List<Atom> getIntraFragmentAtomNeighbours(Atom atom) throws StructureBuildingException {
 		List<Atom> results = new ArrayList<Atom>();
-		for(Bond b :  atom.getBonds()) {
+		for(Bond b : atom.getBonds()) {
 			//recalled atoms will be null if they are not part of this fragment
 			if(b.getFromAtom() == atom) {
-				Atom a =getAtomByID(b.getTo());
-				if (a!=null){
+				Atom a = getAtomByID(b.getTo());
+				if (a != null){
 					results.add(a);
 				}
 			} else if(b.getToAtom() == atom) {
-				Atom a =getAtomByID(b.getFrom());
-				if (a!=null){
+				Atom a = getAtomByID(b.getFrom());
+				if (a != null){
 					results.add(a);
 				}
 			}
