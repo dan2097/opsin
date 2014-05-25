@@ -3,40 +3,40 @@
 <!-- add ane to get the atomHydride-->
 <tokenLists>
 	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="p">
-		<token value="B" usableAsAJoiner="yes">bor</token>
-		<token value="[AlH?]" usableAsAJoiner="yes">alum</token>
-		<token value="[InH?]" usableAsAJoiner="yes">indig</token>
-		<token value="[GaH?]" usableAsAJoiner="yes">gall</token>
-		<token value="[TlH?]" usableAsAJoiner="yes">thall</token>
+		<token value="B" labels="numeric" usableAsAJoiner="yes">bor</token>
+		<token value="[AlH?]" labels="numeric" usableAsAJoiner="yes">alum</token>
+		<token value="[InH?]" labels="numeric" usableAsAJoiner="yes">indig</token>
+		<token value="[GaH?]" labels="numeric" usableAsAJoiner="yes">gall</token>
+		<token value="[TlH?]" labels="numeric" usableAsAJoiner="yes">thall</token>
 
-		<token value="C" usableAsAJoiner="yes">carb</token>
-		<token value="[SiH?]" usableAsAJoiner="yes">sil</token>
-		<token value="[GeH?]" usableAsAJoiner="yes">germ</token>
-		<token value="[SnH?]" usableAsAJoiner="yes">stann</token>
-		<token value="[PbH?]" usableAsAJoiner="yes">plumb</token>
+		<token value="C" labels="numeric" usableAsAJoiner="yes">carb</token>
+		<token value="[SiH?]" labels="numeric" usableAsAJoiner="yes">sil</token>
+		<token value="[GeH?]" labels="numeric" usableAsAJoiner="yes">germ</token>
+		<token value="[SnH?]" labels="numeric" usableAsAJoiner="yes">stann</token>
+		<token value="[PbH?]" labels="numeric" usableAsAJoiner="yes">plumb</token>
 
-		<token value="N" usableAsAJoiner="yes">az</token>
-		<token value="P" usableAsAJoiner="yes">phosph</token>
-		<token value="[P|5]" usableAsAJoiner="yes">phosphor</token>
-		<token value="[AsH?]" usableAsAJoiner="yes">ars</token>
-		<token value="[As|5]" usableAsAJoiner="yes">arsor</token>
-		<token value="[SbH?]" usableAsAJoiner="yes">stib</token>
-		<token value="[Sb|5]" usableAsAJoiner="yes">stibor</token>
-		<token value="[BiH?]" usableAsAJoiner="yes">bismuth</token>
+		<token value="N" labels="numeric" usableAsAJoiner="yes">az</token>
+		<token value="P" labels="numeric" usableAsAJoiner="yes">phosph</token>
+		<token value="[P|5]" labels="numeric" usableAsAJoiner="yes">phosphor</token>
+		<token value="[AsH?]" labels="numeric" usableAsAJoiner="yes">ars</token>
+		<token value="[As|5]" labels="numeric" usableAsAJoiner="yes">arsor</token>
+		<token value="[SbH?]" labels="numeric" usableAsAJoiner="yes">stib</token>
+		<token value="[Sb|5]" labels="numeric" usableAsAJoiner="yes">stibor</token>
+		<token value="[BiH?]" labels="numeric" usableAsAJoiner="yes">bismuth</token>
 
-		<token value="O" usableAsAJoiner="yes">oxid</token>
-		<token value="S" usableAsAJoiner="yes">sulf</token>
-		<token value="[SeH?]" usableAsAJoiner="yes">sel</token>
-		<token value="[TeH?]" usableAsAJoiner="yes">tell</token>
-		<token value="[PoH?]" usableAsAJoiner="yes">pol</token>
+		<token value="O" labels="numeric" usableAsAJoiner="yes">oxid</token>
+		<token value="S" labels="numeric" usableAsAJoiner="yes">sulf</token>
+		<token value="[SeH?]" labels="numeric" usableAsAJoiner="yes">sel</token>
+		<token value="[TeH?]" labels="numeric" usableAsAJoiner="yes">tell</token>
+		<token value="[PoH?]" labels="numeric" usableAsAJoiner="yes">pol</token>
 
-		<token value="F" usableAsAJoiner="yes">fluor</token>
-		<token value="Cl" usableAsAJoiner="yes">chlor</token>
-		<token value="Br" usableAsAJoiner="yes">brom</token>
-		<token value="I" usableAsAJoiner="yes">iod</token>
-		<token value="[AtH?]" usableAsAJoiner="yes">astat</token>
+		<token value="F" labels="numeric" usableAsAJoiner="yes">fluor</token>
+		<token value="Cl" labels="numeric" usableAsAJoiner="yes">chlor</token>
+		<token value="Br" labels="numeric" usableAsAJoiner="yes">brom</token>
+		<token value="I" labels="numeric" usableAsAJoiner="yes">iod</token>
+		<token value="[AtH?]" labels="numeric" usableAsAJoiner="yes">astat</token>
 	</tokenList>
 	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="Ö">
-		<token value="N" usableAsAJoiner="yes">az</token>
+		<token value="N" labels="numeric" usableAsAJoiner="yes">az</token>
 	</tokenList>
 </tokenLists>
