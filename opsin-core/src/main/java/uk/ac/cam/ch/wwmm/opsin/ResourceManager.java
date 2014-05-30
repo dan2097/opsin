@@ -233,7 +233,7 @@ class ResourceManager {
 
 	private void processRegexTokenFiles(boolean reversed) throws IOException{
 		XMLStreamReader reader = resourceGetter.getXMLStreamReader("regexTokens.xml");
-		Map<String, String> tempRegexes = new HashMap<String, String>();
+		Map<String, StringBuilder> tempRegexes = new HashMap<String, StringBuilder>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		try {
 			while (reader.hasNext()) {
@@ -248,10 +248,11 @@ class ResourceManager {
 					int position = 0;
 					while(m.find()) {//replace sections enclosed in %..% with the appropriate regex
 						newValueSB.append(re.substring(position, m.start()));
-						if (tempRegexes.get(m.group()) == null){
+						StringBuilder replacement = tempRegexes.get(m.group()); 
+						if (replacement == null){
 							throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexTokens.xml");
 						}
-						newValueSB.append(tempRegexes.get(m.group()));
+						newValueSB.append(replacement);
 						position = m.end();
 					}
 					newValueSB.append(re.substring(position));
@@ -260,7 +261,7 @@ class ResourceManager {
 						if (regexName == null){
 							throw new RuntimeException("Regex entry in regexTokenes.xml with no name. regex: " + newValueSB.toString());
 						}
-						tempRegexes.put(regexName, newValueSB.toString());
+						tempRegexes.put(regexName, newValueSB);
 						continue;
 					}
 					addRegexToken(reader, newValueSB.toString(), reversed);
@@ -381,10 +382,11 @@ class ResourceManager {
 					int position = 0;
 					while(m.find()) {
 						newValueSB.append(value.substring(position, m.start()));
-						if (regexDict.get(m.group()) == null){
+						StringBuilder replacement = regexDict.get(m.group()); 
+						if (replacement == null){
 							throw new RuntimeException("Regex entry for: " + m.group() + " missing! Check regexes.xml");
 						}
-						newValueSB.append(regexDict.get(m.group()));
+						newValueSB.append(replacement);
 						position = m.end();
 					}
 					newValueSB.append(value.substring(position));
