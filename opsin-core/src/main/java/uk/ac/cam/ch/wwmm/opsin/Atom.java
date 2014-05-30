@@ -95,7 +95,7 @@ class Atom {
 	 * Double bonds are only converted to spareValency if atom is in a ring
 	 * Some suffixes have different meanings if an atom is part of a ring or not c.g. cyclohexanal vs ethanal
 	 */
-	private boolean atomIsInACycle =false;
+	private boolean atomIsInACycle = false;
 
 	/**
 	 * Builds an Atom from scratch.
@@ -291,9 +291,8 @@ class Atom {
 	 * @return true if it has, false if not
 	 */
 	boolean hasLocant(String locant) {
-		for(String l : locants) {
-			if(l.equals(locant))
-				return true;
+		if (locants.contains(locant)) {
+			return true;
 		}
 		Matcher m = MATCH_AMINOACID_STYLE_LOCANT.matcher(locant);
 		if (m.matches()){//e.g. N'5
@@ -316,9 +315,7 @@ class Atom {
 	 * @return The locant, or null if there is no locant
 	 */
 	String getFirstLocant() {
-		if(locants.size() == 0)
-			return null;
-		return locants.get(0);
+		return locants.size() > 0 ? locants.get(0) : null;
 	}
 
 	/**Returns the array of locants containing all locants associated with the atom
