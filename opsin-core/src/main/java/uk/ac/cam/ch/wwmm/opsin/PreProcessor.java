@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -129,7 +130,7 @@ class PreProcessor {
 			}
 		}
 		if (end > 0){
-			return chemicalName.substring(indexOfFirstDot + 1, end).toLowerCase();
+			return chemicalName.substring(indexOfFirstDot + 1, end).toLowerCase(Locale.ROOT);
 		}
 		return null;
 	}
@@ -144,7 +145,7 @@ class PreProcessor {
 			}
 		}
 		if (end > 0){
-			return chemicalName.substring(indexOfAmpersand + 1, end).toLowerCase();
+			return chemicalName.substring(indexOfAmpersand + 1, end).toLowerCase(Locale.ROOT);
 		}
 		return null;
 	}

@@ -280,7 +280,7 @@ class SMILESFragmentBuilder {
 				if (!aromaticAtoms.contains(elementType)){
 					throw new StructureBuildingException(elementType + " is not an aromatic Element. If it is actually an element it should not be in lower case");
 				}
-				elementType = elementType.toUpperCase();
+				elementType = String.valueOf((char)(ch - 32));
 				spareValency = true;
 			}
 			Atom atom = createAtom(elementType, fragment);
@@ -339,7 +339,7 @@ class SMILESFragmentBuilder {
 			else if(is_a_to_z(ch)) {//aromatic atoms
 				if(is_a_to_z(smiles.charAt(i))) {
 					if (aromaticAtoms.contains(elementType + smiles.charAt(i))){
-						elementType = elementType.toUpperCase() + smiles.charAt(i);
+						elementType = String.valueOf((char)(ch - 32)) + smiles.charAt(i);
 						i++;
 					}
 					else{
@@ -350,7 +350,7 @@ class SMILESFragmentBuilder {
 					if (!aromaticAtoms.contains(elementType)){
 						throw new StructureBuildingException(elementType + " is not an aromatic Element.");
 					}
-					elementType = elementType.toUpperCase();
+					elementType = String.valueOf((char)(ch - 32));
 				}
 				spareValency = true;
 			}

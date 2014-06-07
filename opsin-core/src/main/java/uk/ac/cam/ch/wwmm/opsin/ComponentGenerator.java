@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -255,7 +256,7 @@ class ComponentGenerator {
 						//convert greeks to lower case
 						m =  matchGreek.matcher(locantText);
 						while (m.find()) {
-							locantText = locantText.substring(0, m.start()) + m.group().toLowerCase() + locantText.substring(m.end());
+							locantText = locantText.substring(0, m.start()) + m.group().toLowerCase(Locale.ROOT) + locantText.substring(m.end());
 						}
 					}
 				}
@@ -792,7 +793,7 @@ class ComponentGenerator {
 				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the cis/trans
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(E_OR_Z_TYPE_VAL)){
-				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue().toUpperCase()));
+				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue().toUpperCase(Locale.ROOT)));
 				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the E/Z
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
@@ -829,10 +830,10 @@ class ComponentGenerator {
 		                OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		                if (matchRS.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
-		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase(Locale.ROOT)));
 		                } else if (matchEZ.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
-		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase()));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toUpperCase(Locale.ROOT)));
 		                } else if (matchAlphaBetaStereochem.matcher(m.group(2)).matches()){
 		                	stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));
 		                	if (Character.toLowerCase(m.group(2).charAt(0)) == 'a'){
@@ -849,10 +850,10 @@ class ComponentGenerator {
 		                	}
 		        	 	} else if (matchCisTrans.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, CISORTRANS_TYPE_VAL));
-		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase()));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase(Locale.ROOT)));
 		        	 	} else if (matchEndoExoSynAnti.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
-		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase()));
+		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase(Locale.ROOT)));
 		        	 	} else {
 		                    throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
 		                }

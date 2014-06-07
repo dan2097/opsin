@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ class ReverseParseRules {
 	 * @throws ParsingException
 	 */
 	public ParseRulesResults getParses(String chemicalWord) throws ParsingException {
-		String chemicalWordLowerCase = chemicalWord.toLowerCase();
+		String chemicalWordLowerCase = chemicalWord.toLowerCase(Locale.ROOT);
 		AnnotatorState startingAS = new AnnotatorState();
 		startingAS.state = chemAutomaton.getInitialState();
 		startingAS.annot = new ArrayList<Character>();
