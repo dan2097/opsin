@@ -150,19 +150,12 @@ class FusedRingNumberer {
 					continue;
 				}
 
-				int atomAElementValue, atomBElementValue;
-				if (heteroAtomValues.containsKey(atomA.getElement())){
-					atomAElementValue = heteroAtomValues.get(atomA.getElement());
-				}
-				else{
-					atomAElementValue=0;
-				}
-				if (heteroAtomValues.containsKey(atomB.getElement())){
-					atomBElementValue = heteroAtomValues.get(atomB.getElement());
-				}
-				else{
-					atomBElementValue=0;
-				}
+				Integer heteroAtomPriorityA = heteroAtomValues.get(atomA.getElement());
+				int atomAElementValue = heteroAtomPriorityA != null ? heteroAtomPriorityA : 0;
+				
+				Integer heteroAtomPriorityB = heteroAtomValues.get(atomB.getElement());
+				int atomBElementValue = heteroAtomPriorityB != null ? heteroAtomPriorityB : 0;
+
 				if (atomAElementValue > atomBElementValue){
 					return -1;
 				}

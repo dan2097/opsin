@@ -294,9 +294,11 @@ class ValencyChecker {
 	 * @return
 	 */
 	static Integer getMaximumValency(ChemEl chemEl, int charge) {
-		if (possibleStableValencies.get(chemEl) != null){
-			if (possibleStableValencies.get(chemEl).get(charge) != null){
-				return possibleStableValencies.get(chemEl).get(charge)[possibleStableValencies.get(chemEl).get(charge).length-1];
+		Map<Integer, Integer[]> possibleStableValenciesForEl =  possibleStableValencies.get(chemEl);
+		if (possibleStableValenciesForEl != null){
+			Integer[] possibleStableValenciesForElAndCharge = possibleStableValenciesForEl.get(charge);
+			if (possibleStableValenciesForElAndCharge != null){
+				return possibleStableValenciesForElAndCharge[possibleStableValenciesForElAndCharge.length - 1];
 			}
 		}
 		return null;
@@ -332,16 +334,16 @@ class ValencyChecker {
      * @return
 	 */
 	static boolean checkValencyAvailableForBond(Atom a, int bondOrder) {
-		int valency =a.getIncomingValency() +bondOrder;
+		int valency =a.getIncomingValency() + bondOrder;
 		Integer maxVal;
-		if (a.getLambdaConventionValency()!=null){
-			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
+		if (a.getLambdaConventionValency() != null){
+			maxVal = a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
 		}
 		else{
 			ChemEl chemEl = a.getElement();
 			int charge = a.getCharge();
 			maxVal = getMaximumValency(chemEl, charge);
-			if(maxVal==null) {
+			if(maxVal == null) {
 				return true;
 			}
 		}
@@ -382,13 +384,16 @@ class ValencyChecker {
 	}
 
 	/**
-	 * Returns the maximum valency of an element or null if unknown
+	 * Returns the maximum valency of an element with a given charge or null if unknown
 	 * @param element
 	 * @param charge
 	 * @return
 	 */
 	static Integer[] getPossibleValencies(ChemEl chemEl, int charge) {
-		if (possibleStableValencies.get(chemEl)==null){return null;}
-		return possibleStableValencies.get(chemEl).get(charge);
+		Map<Integer, Integer[]> possibleStableValenciesForEl =  possibleStableValencies.get(chemEl);
+		if (possibleStableValenciesForEl == null){
+			return null;
+		}
+		return possibleStableValenciesForEl.get(charge);
 	}
 }
