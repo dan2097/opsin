@@ -26,8 +26,8 @@ class Atom {
 	/**The (unique over the molecule) ID of the atom.*/
 	private int ID;
 
-	/**The atomic symbol of the atom. */
-	private String element;
+	/**The chemical element of the atom. */
+	private ChemEl chemEl;
 
 	/**The locants that pertain to the atom.*/
 	private final List<String> locants = new ArrayList<String>(2);
@@ -101,28 +101,28 @@ class Atom {
 	 * Builds an Atom from scratch.
 	 * GENERALLY EXCEPT FOR TESTING SHOULD NOT BE CALLED EXCEPT FROM THE FRAGMANAGER
 	 * @param ID The ID number, unique to the atom in the molecule being built
-	 * @param element The atomic symbol of the chemical element
+	 * @param chemlEl The chemical element
 	 * @param frag the Fragment to contain the Atom
 	 */
-	Atom(int ID, String element, Fragment frag) {
+	Atom(int ID, ChemEl chemlEl, Fragment frag) {
 		if (frag == null){
 			throw new IllegalArgumentException("Atom is not in a fragment!");
 		}
-		if (element == null){
+		if (chemlEl == null){
 			throw new IllegalArgumentException("Atom does not have an element!");
 		}
 		this.frag = frag;
 		this.ID = ID;
-		this.element = element;
+		this.chemEl = chemlEl;
 		this.type =frag.getType();
 	}
 	
 	/** Used to build a DUMMY atom.
 	 * Does not have an id/frag/type as would be expected for a proper atom
-	 * @param element An identifier for this atom
+	 * @param chemlEl The chemical element
 	 */
-	Atom(String element){
-		this.element = element;
+	Atom(ChemEl chemlEl){
+		this.chemEl = chemlEl;
 	}
 
 	/**Produces a nu.xom.Element for a CML Atom tag, containing
@@ -134,18 +134,18 @@ class Atom {
 	Element toCMLAtom() {
 		Element elem = new Element("atom", XmlDeclarations.CML_NAMESPACE);
 		elem.addAttribute(new Attribute("id", "a" + Integer.toString(ID)));
-		elem.addAttribute(new Attribute("elementType", element));
+		elem.addAttribute(new Attribute("elementType", chemEl.toString()));
 		if(charge != 0){
 			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
 		}
 		if(isotope != null){
 			elem.addAttribute(new Attribute("isotopeNumber", Integer.toString(isotope)));
 		}
-		if (!element.equals("H")){
+		if (chemEl != ChemEl.H){
 			int hydrogenCount =0;
 			List<Atom> neighbours = this.getAtomNeighbours();
 			for (Atom neighbour : neighbours) {
-				if (neighbour.getElement().equals("H")){
+				if (neighbour.getElement() == ChemEl.H){
 					hydrogenCount++;
 				}
 			}
@@ -189,7 +189,7 @@ class Atom {
 		}
 		Integer calculatedMinValency = minimumValency == null ? null : minimumValency + protonsExplicitlyAddedOrRemoved;
 		if (charge ==0 || protonsExplicitlyAddedOrRemoved !=0){
-			Integer defaultValency =ValencyChecker.getDefaultValency(element);
+			Integer defaultValency = ValencyChecker.getDefaultValency(chemEl);
 			if (defaultValency !=null){
 				defaultValency += protonsExplicitlyAddedOrRemoved;
 				if (currentValency <= defaultValency && (calculatedMinValency == null || defaultValency >= calculatedMinValency)){
@@ -197,7 +197,7 @@ class Atom {
 				}
 			}
 		}
-		Integer[] possibleValencies =ValencyChecker.getPossibleValencies(element, charge);
+		Integer[] possibleValencies = ValencyChecker.getPossibleValencies(chemEl, charge);
 		if (possibleValencies!=null) {
 			if (calculatedMinValency!=null  && calculatedMinValency >= currentValency){
 				return calculatedMinValency;
@@ -296,7 +296,7 @@ class Atom {
 		}
 		Matcher m = MATCH_AMINOACID_STYLE_LOCANT.matcher(locant);
 		if (m.matches()){//e.g. N'5
-			if (element.equals(m.group(1))){//element symbol
+			if (chemEl.toString().equals(m.group(1))){//element symbol
 				if (!m.group(2).equals("") && (!hasLocant(m.group(1) +m.group(2)))){//has primes
 					return false;//must have exact locant e.g. N'
 				}
@@ -356,20 +356,20 @@ class Atom {
 		return ID;
 	}
 
-	/**Gets the atomic symbol corresponding to the element of the atom.
+	/**Gets the chemical element corresponding to the element of the atom.
 	 *
-	 * @return The atomic symbol corresponding to the element of the atom
+	 * @return The chemical element corresponding to the element of the atom
 	 */
-	String getElement() {
-		return element;
+	ChemEl getElement() {
+		return chemEl;
 	}
 
-	/**Sets the atomic symbol corresponding to the element of the atom.
+	/**Sets the chemical element corresponding to the element of the atom.
 	 *
-	 * @param elem The atomic symbol corresponding to the element of the atom
+	 * @param elem The chemical element corresponding to the element of the atom
 	 */
-	void setElement(String elem) {
-		element = elem;
+	void setElement(ChemEl chemEl) {
+		this.chemEl = chemEl;
 	}
 
 	/**Gets the formal charge on the atom.
@@ -587,14 +587,15 @@ class Atom {
 				maxValency=lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 			}
 			else{
-				if (element.equals("C")){
+				if (chemEl == ChemEl.C){
 					maxValency = 4 + protonsExplicitlyAddedOrRemoved;
 				}
 				else{
-					if (ValencyChecker.getHWValency(element)==null){
-						throw new StructureBuildingException(element +" is not expected to be aromatic!");
+					Integer hwValency = ValencyChecker.getHWValency(chemEl);
+					if (hwValency == null){
+						throw new StructureBuildingException(chemEl +" is not expected to be aromatic!");
 					}
-					maxValency = ValencyChecker.getHWValency(element) + protonsExplicitlyAddedOrRemoved;
+					maxValency = hwValency + protonsExplicitlyAddedOrRemoved;
 				}
 			}
 			int maxSpareValency;

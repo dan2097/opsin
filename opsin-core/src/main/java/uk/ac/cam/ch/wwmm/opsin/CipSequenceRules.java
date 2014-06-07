@@ -445,8 +445,8 @@ class CipSequenceRules {
 	    private int compareByCipRules(AtomWithHistory a, AtomWithHistory b){
 	    	//rule 1a
 	    	//prefer higher atomic number
-	    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.atom.getElement());
-	    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.atom.getElement());
+	    	int atomicNumber1 = a.atom.getElement().ATOMIC_NUM;
+	    	int atomicNumber2 = b.atom.getElement().ATOMIC_NUM;
 	    	if (atomicNumber1 > atomicNumber2){
 	    		return 1;
 	    	}

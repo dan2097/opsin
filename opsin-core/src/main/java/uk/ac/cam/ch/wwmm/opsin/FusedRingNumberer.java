@@ -3,6 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,7 +107,7 @@ class FusedRingNumberer {
 	    	//Give low numbers for the heteroatoms as a set.
 	    	while(i < sequenceA.size()){
 				Atom atomA=sequenceA.get(i);
-				boolean isAaHeteroatom =!atomA.getElement().equals("C");
+				boolean isAaHeteroatom = atomA.getElement() != ChemEl.C;
 
 
 				//bridgehead carbon do not increment numbering
@@ -116,7 +117,7 @@ class FusedRingNumberer {
 				}
 
 				Atom atomB=sequenceB.get(j);
-				boolean isBaHeteroatom =!atomB.getElement().equals("C");
+				boolean isBaHeteroatom =atomB.getElement() != ChemEl.C;
 				if (!isBaHeteroatom && atomB.getIncomingValency()>=3){
 					j++;
 					continue;
@@ -138,13 +139,13 @@ class FusedRingNumberer {
 				Atom atomA=sequenceA.get(i);
 
 				//bridgehead carbon do not increment numbering
-				if (atomA.getElement().equals("C")&& atomA.getIncomingValency()>=3){
+				if (atomA.getElement() == ChemEl.C && atomA.getIncomingValency()>=3){
 					i++;
 					continue;
 				}
 
 				Atom atomB=sequenceB.get(j);
-				if (atomB.getElement().equals("C") && atomB.getIncomingValency()>=3){
+				if (atomB.getElement() == ChemEl.C && atomB.getIncomingValency()>=3){
 					j++;
 					continue;
 				}
@@ -175,13 +176,13 @@ class FusedRingNumberer {
 	    	for ( i = 0; i < sequenceA.size(); i++) {
 				Atom atomA=sequenceA.get(i);
 				Atom atomB=sequenceB.get(i);
-				if (atomA.getIncomingValency()>=3 && atomA.getElement().equals("C")){
-					if (!(atomB.getIncomingValency()>=3 && atomB.getElement().equals("C"))){
+				if (atomA.getIncomingValency()>=3 && atomA.getElement() == ChemEl.C){
+					if (!(atomB.getIncomingValency()>=3 && atomB.getElement() == ChemEl.C)){
 						return -1;
 					}
 				}
-				if (atomB.getIncomingValency()>=3 && atomB.getElement().equals("C")){
-					if (!(atomA.getIncomingValency()>=3 && atomA.getElement().equals("C"))){
+				if (atomB.getIncomingValency()>=3 && atomB.getElement() == ChemEl.C){
+					if (!(atomA.getIncomingValency()>=3 && atomA.getElement() == ChemEl.C)){
 						return 1;
 					}
 				}
@@ -209,32 +210,32 @@ class FusedRingNumberer {
 	    }
 	}
 
-	private static final HashMap<String, Integer> heteroAtomValues =new HashMap<String, Integer>();
+	private static final Map<ChemEl, Integer> heteroAtomValues = new EnumMap<ChemEl, Integer>(ChemEl.class);
 	static{
 		//unknown heteroatoms or carbon are given a value of 0
-		heteroAtomValues.put("Hg",2);
-		heteroAtomValues.put("Tl",3);
-		heteroAtomValues.put("In",4);
-		heteroAtomValues.put("Ga",5);
-		heteroAtomValues.put("Al",6);
-		heteroAtomValues.put("B",7);
-		heteroAtomValues.put("Pb",8);
-		heteroAtomValues.put("Sn",9);
-		heteroAtomValues.put("Ge",10);
-		heteroAtomValues.put("Si",11);
-		heteroAtomValues.put("Bi",12);
-		heteroAtomValues.put("Sb",13);
-		heteroAtomValues.put("As",14);
-		heteroAtomValues.put("P",15);
-		heteroAtomValues.put("N",16);
-		heteroAtomValues.put("Te",17);
-		heteroAtomValues.put("Se",18);
-		heteroAtomValues.put("S",19);
-		heteroAtomValues.put("O",20);
-		heteroAtomValues.put("I",21);
-		heteroAtomValues.put("Br",22);
-		heteroAtomValues.put("Cl",23);
-		heteroAtomValues.put("F",24);
+		heteroAtomValues.put(ChemEl.Hg, 2);
+		heteroAtomValues.put(ChemEl.Tl, 3);
+		heteroAtomValues.put(ChemEl.In, 4);
+		heteroAtomValues.put(ChemEl.Ga, 5);
+		heteroAtomValues.put(ChemEl.Al, 6);
+		heteroAtomValues.put(ChemEl.B, 7);
+		heteroAtomValues.put(ChemEl.Pb, 8);
+		heteroAtomValues.put(ChemEl.Sn, 9);
+		heteroAtomValues.put(ChemEl.Ge, 10);
+		heteroAtomValues.put(ChemEl.Si, 11);
+		heteroAtomValues.put(ChemEl.Bi, 12);
+		heteroAtomValues.put(ChemEl.Sb, 13);
+		heteroAtomValues.put(ChemEl.As, 14);
+		heteroAtomValues.put(ChemEl.P, 15);
+		heteroAtomValues.put(ChemEl.N, 16);
+		heteroAtomValues.put(ChemEl.Te, 17);
+		heteroAtomValues.put(ChemEl.Se, 18);
+		heteroAtomValues.put(ChemEl.S, 19);
+		heteroAtomValues.put(ChemEl.O, 20);
+		heteroAtomValues.put(ChemEl.I, 21);
+		heteroAtomValues.put(ChemEl.Br, 22);
+		heteroAtomValues.put(ChemEl.Cl, 23);
+		heteroAtomValues.put(ChemEl.F, 24);
 	}
 	/*
 	 * The meaning of the integers used is as follows:

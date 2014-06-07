@@ -24,8 +24,8 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = sBuilder.build("CC");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(2, atomList.size());
-		assertEquals("C", atomList.get(0).getElement());
-		assertEquals("C", atomList.get(1).getElement());
+		assertEquals(ChemEl.C, atomList.get(0).getElement());
+		assertEquals(ChemEl.C, atomList.get(1).getElement());
 	}
 
 	@Test
@@ -33,9 +33,9 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = sBuilder.build("O=C=O");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(3, atomList.size());
-		assertEquals("O", atomList.get(0).getElement());
-		assertEquals("C", atomList.get(1).getElement());
-		assertEquals("O", atomList.get(2).getElement());
+		assertEquals(ChemEl.O, atomList.get(0).getElement());
+		assertEquals(ChemEl.C, atomList.get(1).getElement());
+		assertEquals(ChemEl.O, atomList.get(2).getElement());
 		Set<Bond> bonds = fragment.getBondSet();
 		assertEquals(2, bonds.size());
 		for (Bond bond : bonds) {
@@ -61,7 +61,7 @@ public class SMILESFragmentBuilderTest {
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(7, atomList.size());
 		Atom nitrogen = atomList.get(2);
-		assertEquals("N", nitrogen.getElement());
+		assertEquals(ChemEl.N, nitrogen.getElement());
 		assertEquals(3, nitrogen.getBonds().size());
 		List<Atom> neighbours = nitrogen.getAtomNeighbours();//bonds and hence neighbours come from a linked hash set so the order of the neighbours is deterministic
 		assertEquals(3, neighbours.size());
@@ -142,7 +142,7 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = sBuilder.build("NC(Cl)(Br)C(=O)O");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(7, atomList.size());
-		assertEquals("Cl", atomList.get(2).getElement());
+		assertEquals(ChemEl.Cl, atomList.get(2).getElement());
 	}
 
 
@@ -426,7 +426,7 @@ public class SMILESFragmentBuilderTest {
 		
 		assertEquals(0, atomList.get(1).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(0, atomList.get(1).getCharge());
-		assertEquals("H", atomList.get(1).getElement());
+		assertEquals(ChemEl.H, atomList.get(1).getElement());
 	}
 	
 	@Test

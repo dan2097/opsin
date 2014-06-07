@@ -51,7 +51,7 @@ public class StereochemistryTest {
 		StereoCentre sc = stereoAnalyser.findStereoCentres().get(0);
 		assertNotNull(sc.getStereoAtom());
 		Atom stereoAtom = sc.getStereoAtom();
-		assertEquals("C", stereoAtom.getElement());
+		assertEquals(ChemEl.C, stereoAtom.getElement());
 		assertEquals(4, stereoAtom.getID());
 	}
 	
@@ -64,21 +64,21 @@ public class StereochemistryTest {
 		StereoCentre sc = stereoAnalyser.findStereoCentres().get(0);
 		assertNotNull(sc.getStereoAtom());
 		Atom stereoAtom = sc.getStereoAtom();
-		assertEquals("C", stereoAtom.getElement());
+		assertEquals(ChemEl.C, stereoAtom.getElement());
 		List<Atom> neighbours = sc.getCipOrderedAtoms();
 		for (int i = 0; i < neighbours.size(); i++) {
 			Atom a = neighbours.get(i);
 			if (i==0){
-				assertEquals(a.getElement(), "H");
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
-				assertEquals(a.getElement(), "C");
+				assertEquals(ChemEl.C, a.getElement());
 			}
 			else if (i==2){
-				assertEquals(a.getElement(), "C");
+				assertEquals(ChemEl.C, a.getElement());
 			}
 			else if (i==3){
-				assertEquals(a.getElement(), "N");
+				assertEquals(ChemEl.N, a.getElement());
 			}
 		}
 	}
@@ -249,16 +249,16 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
-				assertEquals("F", a.getElement());
+				assertEquals(ChemEl.F, a.getElement());
 			}
 			else if (i==2){
-				assertEquals("Cl", a.getElement());
+				assertEquals(ChemEl.Cl, a.getElement());
 			}
 			else if (i==3){
-				assertEquals("Br", a.getElement());
+				assertEquals(ChemEl.Br, a.getElement());
 			}
 		}
 	}
@@ -270,7 +270,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(3, a.getID());
@@ -279,7 +279,7 @@ public class StereochemistryTest {
 				assertEquals(6, a.getID());
 			}
 			else if (i==3){
-				assertEquals("O", a.getElement());
+				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
 	}
@@ -292,7 +292,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(11, a.getID());
@@ -301,7 +301,7 @@ public class StereochemistryTest {
 				assertEquals(3, a.getID());
 			}
 			else if (i==3){
-				assertEquals("N", a.getElement());
+				assertEquals(ChemEl.N, a.getElement());
 			}
 		}
 	}
@@ -313,7 +313,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(11, a.getID());
@@ -322,7 +322,7 @@ public class StereochemistryTest {
 				assertEquals(3, a.getID());
 			}
 			else if (i==3){
-				assertEquals("N", a.getElement());
+				assertEquals(ChemEl.N, a.getElement());
 			}
 		}
 	}
@@ -334,7 +334,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(3, a.getID());
@@ -343,7 +343,7 @@ public class StereochemistryTest {
 				assertEquals(7, a.getID());
 			}
 			else if (i==3){
-				assertEquals("N", a.getElement());
+				assertEquals(ChemEl.N, a.getElement());
 			}
 		}
 	}
@@ -355,7 +355,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(17, a.getID());
@@ -364,7 +364,7 @@ public class StereochemistryTest {
 				assertEquals(4, a.getID());
 			}
 			else if (i==3){
-				assertEquals("O", a.getElement());
+				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
 	}
@@ -376,7 +376,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(37, a.getID());
@@ -397,10 +397,10 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
-				assertEquals("C", a.getElement());
+				assertEquals(ChemEl.C, a.getElement());
 			}
 			else if (i==2){
 				assertEquals("6", a.getFirstLocant());
@@ -419,7 +419,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(4, a.getID());
@@ -441,7 +441,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(5, a.getID());
@@ -450,7 +450,7 @@ public class StereochemistryTest {
 				assertEquals(22, a.getID());
 			}
 			else if (i==3){
-				assertEquals("O", a.getElement());
+				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
 	}
@@ -465,7 +465,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(2, a.getID());
@@ -474,7 +474,7 @@ public class StereochemistryTest {
 				assertEquals(8, a.getID());
 			}
 			else if (i==3){
-				assertEquals("O", a.getElement());
+				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
 		cipOrdered = new CipSequenceRules(atomList.get(3)).getNeighbouringAtomsInCIPOrder();
@@ -490,7 +490,7 @@ public class StereochemistryTest {
 				assertEquals(5, a.getID());
 			}
 			else if (i==3){
-				assertEquals("O", a.getElement());
+				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
 		cipOrdered = new CipSequenceRules(atomList.get(4)).getNeighbouringAtomsInCIPOrder();
@@ -513,7 +513,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(13, a.getID());
@@ -522,14 +522,14 @@ public class StereochemistryTest {
 				assertEquals(8, a.getID());
 			}
 			else if (i==3){
-				assertEquals("O", a.getElement());
+				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
 		cipOrdered = new CipSequenceRules(atomList.get(7)).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(16, a.getID());
@@ -560,7 +560,7 @@ public class StereochemistryTest {
 				assertEquals(8, a.getID());
 			}
 			else if (i==3){
-				assertEquals("N", a.getElement());
+				assertEquals(ChemEl.N, a.getElement());
 			}
 		}
 	}
@@ -573,7 +573,7 @@ public class StereochemistryTest {
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
-				assertEquals("H", a.getElement());
+				assertEquals(ChemEl.H, a.getElement());
 			}
 			else if (i==1){
 				assertEquals(6, a.getID());
@@ -610,10 +610,10 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testAtomParityEquivalence1() {
-		Atom a1= new Atom(1, "C", mock(Fragment.class));
-		Atom a2= new Atom(2, "C", mock(Fragment.class));
-		Atom a3= new Atom(3, "C", mock(Fragment.class));
-		Atom a4= new Atom(4, "C", mock(Fragment.class));
+		Atom a1= new Atom(1, ChemEl.C, mock(Fragment.class));
+		Atom a2= new Atom(2, ChemEl.C, mock(Fragment.class));
+		Atom a3= new Atom(3, ChemEl.C, mock(Fragment.class));
+		Atom a4= new Atom(4, ChemEl.C, mock(Fragment.class));
 		Atom[] atomRefs1 = new Atom[]{a1,a2,a3,a4};
 		Atom[] atomRefs2 = new Atom[]{a3,a4,a1,a2};
 		//2 swaps (4 by bubble sort)
@@ -623,10 +623,10 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testAtomParityEquivalence2() {
-		Atom a1= new Atom(1, "C", mock(Fragment.class));
-		Atom a2= new Atom(2, "C", mock(Fragment.class));
-		Atom a3= new Atom(3, "C", mock(Fragment.class));
-		Atom a4= new Atom(4, "C", mock(Fragment.class));
+		Atom a1= new Atom(1, ChemEl.C, mock(Fragment.class));
+		Atom a2= new Atom(2, ChemEl.C, mock(Fragment.class));
+		Atom a3= new Atom(3, ChemEl.C, mock(Fragment.class));
+		Atom a4= new Atom(4, ChemEl.C, mock(Fragment.class));
 		Atom[] atomRefs1 = new Atom[]{a1,a2,a3,a4};
 		Atom[] atomRefs2 = new Atom[]{a2,a4,a1,a3};
 		//3 swaps

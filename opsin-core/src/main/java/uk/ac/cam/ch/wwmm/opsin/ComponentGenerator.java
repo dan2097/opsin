@@ -697,17 +697,17 @@ class ComponentGenerator {
 		if (!m.find()){
 			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
-		String atom1Element = m.group();
+		ChemEl atom1ChemEl = ChemEl.valueOf(m.group());
 		
 		m = MATCH_ELEMENT_SYMBOL.matcher(secondHeteroAtomSMILES);
 		if (!m.find()){
 			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
-		String atom2Element = m.group();
-		if (AtomProperties.elementToHwPriority.get(atom1Element) > AtomProperties.elementToHwPriority.get(atom2Element)){
-			if (atom2Element.equals("O") || atom2Element.equals("S")  || atom2Element.equals("Se") || atom2Element.equals("Te") 
-					|| atom2Element.equals("Bi")  || atom2Element.equals("Hg")){
-				if (!hasSiorGeorSnorPb(atom1Element, atom2Element)){
+		ChemEl atom2ChemEl =  ChemEl.valueOf(m.group());
+		if (AtomProperties.getHwpriority(atom1ChemEl) > AtomProperties.getHwpriority(atom2ChemEl)){
+			if (atom2ChemEl == ChemEl.O || atom2ChemEl == ChemEl.S || atom2ChemEl == ChemEl.Se || atom2ChemEl == ChemEl.Te 
+					|| atom2ChemEl == ChemEl.Bi || atom2ChemEl == ChemEl.Hg){
+				if (!hasSiorGeorSnorPb(atom1ChemEl, atom2ChemEl)){
 					throw new ComponentGenerationException("Hantzch-widman ring misparsed as a heterogeneous hydride with alternating atoms");
 				}
 			}
@@ -716,13 +716,13 @@ class ComponentGenerator {
 
 	/**
 	 * Are either of the elements Si/Ge/Sn/Pb
-	 * @param atom1Element
-	 * @param atom2Element
+	 * @param atom1ChemEl
+	 * @param atom2ChemEl
 	 * @return
 	 */
-	private boolean hasSiorGeorSnorPb(String atom1Element, String atom2Element) {
-		return (atom1Element.equals("Si") || atom1Element.equals("Ge") || atom1Element.equals("Sn") ||atom1Element.equals("Pb")
-				|| atom2Element.equals("Si") || atom2Element.equals("Ge") || atom2Element.equals("Sn") ||atom2Element.equals("Pb"));
+	private boolean hasSiorGeorSnorPb(ChemEl atom1ChemEl, ChemEl atom2ChemEl) {
+		return (atom1ChemEl == ChemEl.Si || atom1ChemEl == ChemEl.Ge || atom1ChemEl == ChemEl.Sn || atom1ChemEl == ChemEl.Pb
+				|| atom2ChemEl == ChemEl.Si || atom2ChemEl == ChemEl.Ge || atom2ChemEl == ChemEl.Sn || atom2ChemEl == ChemEl.Pb);
 	}
 	
 	/**
@@ -744,7 +744,7 @@ class ComponentGenerator {
 			throw new ComponentGenerationException("Failed to extract element from heteroatom");
 		}
 		String atom2Element = m.group();
-		if (AtomProperties.elementToHwPriority.get(atom2Element) > AtomProperties.elementToHwPriority.get(atom1Element)){
+		if (AtomProperties.getHwpriority(ChemEl.valueOf(atom2Element)) > AtomProperties.getHwpriority(ChemEl.valueOf(atom1Element))){
 			throw new ComponentGenerationException("heterogeneous hydride with alternating atoms misparsed as a Hantzch-widman ring");
 		}
 	}

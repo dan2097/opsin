@@ -15,7 +15,7 @@ public class HeteroAtomReplacementTest {
 	public void setUp() {
 		IDManager idManager = new IDManager();
 		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
-		a = new Atom(0, "C", mock(Fragment.class));
+		a = new Atom(0, ChemEl.C, mock(Fragment.class));
 	}
 	
 	@Test
@@ -60,7 +60,7 @@ public class HeteroAtomReplacementTest {
 	
 	@Test
 	public void replaceNeutralWithCharged() throws StructureBuildingException{
-		Atom a = new Atom(0, "C", mock(Fragment.class));
+		Atom a = new Atom(0, ChemEl.C, mock(Fragment.class));
 		fragManager.replaceAtomWithSmiles(a, "[NH4+]");
 		assertEquals(1, a.getCharge());
 		assertEquals(1, a.getProtonsExplicitlyAddedOrRemoved());
@@ -69,7 +69,7 @@ public class HeteroAtomReplacementTest {
 	
 	@Test
 	public void replaceChargedWithEquallyCharged() throws StructureBuildingException{
-		Atom a = new Atom(0, "C", mock(Fragment.class));
+		Atom a = new Atom(0, ChemEl.C, mock(Fragment.class));
 		a.addChargeAndProtons(1, -1);
 		fragManager.replaceAtomWithSmiles(a, "[NH4+]");
 		assertEquals(1, a.getCharge());
@@ -79,7 +79,7 @@ public class HeteroAtomReplacementTest {
 	
     @Test(expected=StructureBuildingException.class)
 	public void replaceChargedWithUnEquallyCharged() throws StructureBuildingException{
-		Atom a = new Atom(0, "C", mock(Fragment.class));
+		Atom a = new Atom(0, ChemEl.C, mock(Fragment.class));
 		a.addChargeAndProtons(1, -1);
 		fragManager.replaceAtomWithSmiles(a, "[NH2-]");
 	}

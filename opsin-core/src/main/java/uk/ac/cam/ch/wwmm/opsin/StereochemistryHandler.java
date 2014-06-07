@@ -392,7 +392,7 @@ class StereochemistryHandler {
 		List<Atom> neighbours1 = potentialBond.getFromAtom().getAtomNeighbours();
 		boolean foundHydrogen1 =false;
 		for (Atom neighbour : neighbours1) {
-			if (neighbour.getElement().equals("H")){
+			if (neighbour.getElement() == ChemEl.H){
 				foundHydrogen1 =true;
 			}
 		}
@@ -400,7 +400,7 @@ class StereochemistryHandler {
 		List<Atom> neighbours2 = potentialBond.getToAtom().getAtomNeighbours();
 		boolean foundHydrogen2 =false;
 		for (Atom neighbour : neighbours2) {
-			if (neighbour.getElement().equals("H")){
+			if (neighbour.getElement() == ChemEl.H){
 				foundHydrogen2 =true;
 			}
 		}
@@ -481,7 +481,7 @@ class StereochemistryHandler {
 						int hydrogenCount =0;
 						int acylicOrNotInFrag =0;
 						for (Atom neighbour : neighbours) {
-							if (neighbour.getElement().equals("H")){
+							if (neighbour.getElement() == ChemEl.H){
 								hydrogenCount++;
 							}
 							if (!neighbour.getAtomIsInACycle() || !atomList.contains(neighbour)){
@@ -611,7 +611,7 @@ class StereochemistryHandler {
 	
 	private Atom getHydrogenOrAcyclicOrOutsideOfFragment(List<Atom> atoms, List<Atom> fragmentAtoms) {
 		for (Atom atom : atoms) {
-			if (atom.getElement().equals("H")){
+			if (atom.getElement() == ChemEl.H){
 				return atom;
 			}
 		}
@@ -693,11 +693,11 @@ class StereochemistryHandler {
 					atomRefs4[1]=a2;
 					atomRefs4[2]=a1;
 				}
-				else if (a1.getElement().equals("H") && !a2.getElement().equals("H")){
+				else if (a1.getElement() == ChemEl.H && a2.getElement() != ChemEl.H){
 					atomRefs4[1]=a2;
 					atomRefs4[2]=a1;
 				}
-				else if (a2.getElement().equals("H") && !a1.getElement().equals("H")){
+				else if (a2.getElement() == ChemEl.H && a1.getElement() != ChemEl.H){
 					atomRefs4[1]=a1;
 					atomRefs4[2]=a2;
 				}//TODO support case where alpha/beta are applied prior to a suffix (and the stereocentre doesn't have a hydrogen) e.g. 17alpha-yl

@@ -193,9 +193,9 @@ class StructureBuildingMethods {
 				else{
 					Atom atomToSubstituteAt = parentFrag.getAtomByLocantOrThrow(locantString);
 					if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
-						if (!atomToSubstituteAt.getElement().equals("O")){
+						if (atomToSubstituteAt.getElement() != ChemEl.O){
 							for (Atom neighbour : atomToSubstituteAt.getAtomNeighbours()) {
-								if (neighbour.getElement().equals("O") &&
+								if (neighbour.getElement() == ChemEl.O &&
 										neighbour.getBonds().size()==1 &&
 										neighbour.getFirstBond().getOrder() == 1 &&
 										neighbour.getOutValency() == 0 &&
@@ -417,9 +417,9 @@ class StructureBuildingMethods {
 			String type = subtractivePrefix.getAttributeValue(TYPE_ATR);
 			if (type.equals(DEOXY_TYPE_VAL)){
 				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
-				String element = subtractivePrefix.getAttributeValue(VALUE_ATR);
+				ChemEl chemEl = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
 				//locant can be null but locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
-				FragmentTools.removeHydroxyLikeTerminalAtom(state, thisFrag, element, locant);
+				FragmentTools.removeHydroxyLikeTerminalAtom(state, thisFrag, chemEl, locant);
 			}
 			else if (type.equals(ANHYDRO_TYPE_VAL)){
 				applyAnhydroPrefix(state, thisFrag, subtractivePrefix);
@@ -449,7 +449,7 @@ class StructureBuildingMethods {
 			}
 			if (isCarbohydrateDehydro){
 				for (Atom a : atomsToDehydro) {
-					List<Atom> hydroxyAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(a.getAtomNeighbours(), "O");
+					List<Atom> hydroxyAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(a.getAtomNeighbours(), ChemEl.O);
 					if (hydroxyAtoms.size() > 0){
 						hydroxyAtoms.get(0).getFirstBond().setOrder(2);
 					}
@@ -537,7 +537,7 @@ class StructureBuildingMethods {
 			if(locant!=null) {
 				Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
 				Atom atomToBeReplaced =thisFrag.getAtomByLocantOrThrow(locant);
-				if (heteroatom.getElement().equals(atomToBeReplaced.getElement()) && heteroatom.getCharge() == atomToBeReplaced.getCharge()){
+				if (heteroatom.getElement() == atomToBeReplaced.getElement() && heteroatom.getCharge() == atomToBeReplaced.getCharge()){
 					throw new StructureBuildingException("The replacement term " +heteroatomEl.getValue() +" was used on an atom that already is a " + heteroatom.getElement());
 				}
 				state.fragManager.replaceAtomWithAtom(thisFrag.getAtomByLocantOrThrow(locant), heteroatom, true);
@@ -551,19 +551,19 @@ class StructureBuildingMethods {
 	}
 
 	private static void applyAnhydroPrefix(BuildState state, Fragment frag, Element subtractivePrefix) throws StructureBuildingException {
-		String element = subtractivePrefix.getAttributeValue(VALUE_ATR);
+		ChemEl chemEl = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
 		String[] locants = MATCH_COMMA.split(subtractivePrefix.getAttributeValue(LOCANT_ATR));
 		Atom backBoneAtom1 = frag.getAtomByLocantOrThrow(locants[0]);
 		Atom backBoneAtom2 = frag.getAtomByLocantOrThrow(locants[1]);
-		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom1.getAtomNeighbours(), element);
+		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom1.getAtomNeighbours(), chemEl);
 		if (applicableTerminalAtoms.isEmpty()){
-			throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
+			throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " for subtractive nomenclature");
 		}
 		FragmentTools.removeTerminalAtom(state, applicableTerminalAtoms.get(0));
 		
-		applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom2.getAtomNeighbours(), element);
+		applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom2.getAtomNeighbours(), chemEl);
 		if (applicableTerminalAtoms.isEmpty()){
-			throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
+			throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " for subtractive nomenclature");
 		}
 		state.fragManager.createBond(backBoneAtom1, applicableTerminalAtoms.get(0), 1);
 	}
@@ -712,7 +712,7 @@ class StructureBuildingMethods {
 
         for (Element heteroatomEl : heteroatoms) {
 			Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
-			String heteroatomSymbol = heteroatom.getElement();
+			ChemEl heteroatomChemEl = heteroatom.getElement();
             //finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
             Atom atomToReplaceWithHeteroAtom =null;
             for (; atomIndice < atomList.size(); atomIndice++) {
@@ -720,11 +720,11 @@ class StructureBuildingMethods {
                 if (possibleAtom.getType().equals(SUFFIX_TYPE_VAL)) {
                 	continue;
                 }
-                if ((heteroatomSymbol.equals(possibleAtom.getElement()) && heteroatom.getCharge() == possibleAtom.getCharge())){
+                if ((heteroatomChemEl.equals(possibleAtom.getElement()) && heteroatom.getCharge() == possibleAtom.getCharge())){
                 	continue;//replacement would do nothing
                 }
-    			if(!possibleAtom.getElement().equals("C") && !heteroatomSymbol.equals("C")){
-    				if (possibleAtom.getElement().equals("O") && (heteroatomSymbol.equals("S") || heteroatomSymbol.equals("Se") || heteroatomSymbol.equals("Te"))){
+    			if(possibleAtom.getElement() != ChemEl.C && heteroatomChemEl != ChemEl.C){
+    				if (possibleAtom.getElement() == ChemEl.O && (heteroatomChemEl == ChemEl.S || heteroatomChemEl == ChemEl.Se || heteroatomChemEl == ChemEl.Te)){
     					//special case for replacement of oxygen by chalcogen
     				}
     				else{

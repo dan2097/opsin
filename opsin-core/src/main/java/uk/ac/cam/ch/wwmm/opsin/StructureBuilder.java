@@ -164,7 +164,7 @@ class StructureBuilder {
 		
 		for (Fragment rGroup : rGroups) {
 			Atom rAtom = rGroup.getFirstAtom();
-			rAtom.setElement("R");
+			rAtom.setElement(ChemEl.R);
 		}
 
 		return uniFrag;
@@ -565,7 +565,7 @@ class StructureBuilder {
 					else{
 						List<Atom> atomList = frag.getAtomList();
 						for (Atom atom : atomList) {
-							if (!atom.getElement().equals("C") && !atom.getElement().equals("O")){
+							if (atom.getElement() != ChemEl.C && atom.getElement() != ChemEl.O){
 								formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
 								continue mainLoop;
 							}
@@ -575,7 +575,7 @@ class StructureBuilder {
 				//No heteroatoms could be found. Perhaps it's supposed to be something like styrene oxide
 				Set<Bond> bondSet = groupToModify.getBondSet();//looking for double bond
 				for (Bond bond : bondSet) {
-					if (bond.getOrder()==2 && bond.getFromAtom().getElement().equals("C") && bond.getToAtom().getElement().equals("C")){
+					if (bond.getOrder()==2 && bond.getFromAtom().getElement() == ChemEl.C && bond.getToAtom().getElement() == ChemEl.C){
 						bond.setOrder(1);
 						state.fragManager.createBond(bond.getFromAtom(), oxideAtom, 1);
 						state.fragManager.createBond(bond.getToAtom(), oxideAtom, 1);
@@ -587,7 +587,7 @@ class StructureBuilder {
 				for (Bond bond : bondSet) {
 					Atom fromAtom =bond.getFromAtom();
 					Atom toAtom = bond.getToAtom();
-					if (fromAtom.hasSpareValency() && toAtom.hasSpareValency() &&fromAtom.getElement().equals("C") && toAtom.getElement().equals("C")){
+					if (fromAtom.hasSpareValency() && toAtom.hasSpareValency() &&fromAtom.getElement() == ChemEl.C && toAtom.getElement() == ChemEl.C){
 						fromAtom.setSpareValency(false);
 						toAtom.setSpareValency(false);
 						state.fragManager.createBond(fromAtom, oxideAtom, 1);
@@ -598,7 +598,7 @@ class StructureBuilder {
 				for (Fragment frag : orderedPossibleFragments) {//something like where oxide goes on an oxygen propan-2-one oxide
 					List<Atom> atomList = frag.getAtomList();
 					for (Atom atom : atomList) {
-						if (!atom.getElement().equals("C")){
+						if (atom.getElement() != ChemEl.C){
 							formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
 							continue mainLoop;
 						}
@@ -746,7 +746,7 @@ class StructureBuilder {
 			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
 			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(carbonylOxygen);
 			if (numericLocantAtomConnectedToCarbonyl!=null){
-				atomList.get(0).addLocant(atomList.get(0).getElement() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
+				atomList.get(0).addLocant(atomList.get(0).getElement().toString() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
 			}
 			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				resolveWordOrBracket(state, words.get(1 +i));
@@ -781,10 +781,10 @@ class StructureBuilder {
 		List<Atom> matches = new ArrayList<Atom>();
 		List<Atom> rootFragAtomList = fragment.getAtomList();
 		for (Atom atom : rootFragAtomList) {//find all carbonyl oxygen
-			if (atom.getElement().equals("O") && atom.getCharge()==0){
+			if (atom.getElement() == ChemEl.O && atom.getCharge()==0){
 				List<Atom> neighbours =atom.getAtomNeighbours();
 				if (neighbours.size()==1){
-					if (neighbours.get(0).getElement().equals("C")){
+					if (neighbours.get(0).getElement() == ChemEl.C){
 						if (!locantForCarbonylAtom.isEmpty()){
 							Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atom);
 							if (numericLocantAtomConnectedToCarbonyl!=null){//could be the carbon of the carbonyl or the ring the carbonyl connects to in say a carbaldehyde
@@ -968,7 +968,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void formAnhydrideLink(String anhydrideSmiles, Atom oxygen1, Atom oxygen2)throws StructureBuildingException {
-		if (!oxygen1.getElement().equals("O")||!oxygen2.getElement().equals("O") || oxygen1.getBonds().size()!=1 ||oxygen2.getBonds().size()!=1) {
+		if (oxygen1.getElement() != ChemEl.O || oxygen2.getElement() != ChemEl.O || oxygen1.getBonds().size()!=1 ||oxygen2.getBonds().size()!=1) {
 			throw new StructureBuildingException("Problem building anhydride");
 		}
 		Atom atomOnSecondAcidToConnectTo = oxygen2.getAtomNeighbours().get(0);
@@ -1027,7 +1027,7 @@ class StructureBuilder {
 			Fragment ideFrag =functionalGroupFragments.get(i);
 			Atom ideAtom = ideFrag.getDefaultInAtom();
 			Atom acidAtom = acidBr.getFunctionalAtom(i);
-			if (!acidAtom.getElement().equals("O")){
+			if (acidAtom.getElement() != ChemEl.O){
 				throw new StructureBuildingException("Atom type expected to be oxygen but was: " +acidAtom.getElement());
 			}
 			acidBr.removeFunctionalAtom(i);
@@ -1179,7 +1179,7 @@ class StructureBuilder {
 		List<Atom> atomList = theDiRadical.getAtomList();
 		List<Atom> glycolAtoms = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
-			if (atom.getElement().equals("O") && atom.getType().equals(FUNCTIONALCLASS_TYPE_VAL)){
+			if (atom.getElement() == ChemEl.O && atom.getType().equals(FUNCTIONALCLASS_TYPE_VAL)){
 				glycolAtoms.add(atom);
 			}
 		}
@@ -1356,8 +1356,7 @@ class StructureBuilder {
 			BuildResults br = new BuildResults(ateWord);
 			if (atomOnBiochemicalFragment != null){
 				hydroxyAtoms.remove(atomOnBiochemicalFragment);
-				String element = atomOnBiochemicalFragment.getElement();
-				if (atomOnBiochemicalFragment.getBonds().size()!=1 || (!element.equals("O") && !element.equals("S") && !element.equals("Se") && !element.equals("Te"))){
+				if (atomOnBiochemicalFragment.getBonds().size()!=1 || !atomOnBiochemicalFragment.getElement().isChalcogen()){
 					throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
 				}
 				if (br.getFunctionalAtomCount()==0){
@@ -1474,10 +1473,10 @@ class StructureBuilder {
 			/*
 			 * We assume the polymer repeats so as an approximation we create an R group with the same element as the group at the other end of polymer (with valency equal to the bondorder of the Rgroup so no H added)
 			 */
-			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement() + "|" + polymerBr.getOutAtom(0).getValency() + "]", "", "alpha");
+			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement().toString() + "|" + polymerBr.getOutAtom(0).getValency() + "]", "", "alpha");
 			state.fragManager.createBond(inAtom, rGroup1.getFirstAtom(), polymerBr.getOutAtom(0).getValency());
 
-			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement() + "|" + polymerBr.getOutAtom(1).getValency() + "]", "", "omega");
+			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement().toString() + "|" + polymerBr.getOutAtom(1).getValency() + "]", "", "omega");
 			state.fragManager.createBond(outAtom, rGroup2.getFirstAtom(), polymerBr.getOutAtom(1).getValency());
 			rGroups.add(rGroup1);
 			rGroups.add(rGroup2);
@@ -1533,7 +1532,7 @@ class StructureBuilder {
 					Set<Atom> atoms =possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
 					boolean foundAtom = false;
                     for (Atom a : atoms) {
-                        if (a.hasLocant(locant) || (isElementSymbol && a.getElement().equals(locant))){
+                        if (a.hasLocant(locant) || (isElementSymbol && a.getElement().toString().equals(locant))){
                             //swap locants and element type
                             List<String> tempLocants = new ArrayList<String>(a.getLocants());
                             List<String> tempLocants2 = new ArrayList<String>(possibleAtom.getLocants());
@@ -1545,9 +1544,9 @@ class StructureBuilder {
                             for (String l : tempLocants2) {
                                 a.addLocant(l);
                             }
-                            String originalElement = possibleAtom.getElement();
+                            ChemEl originalChemEl = possibleAtom.getElement();
                             possibleAtom.setElement(a.getElement());
-                            a.setElement(originalElement);
+                            a.setElement(originalChemEl);
                             mainGroupBR.removeFunctionalAtom(i);
                             foundAtom =true;
                             break;
@@ -1558,7 +1557,7 @@ class StructureBuilder {
                         return possibleAtom;
                     }
 				}
-				if (isElementSymbol && possibleAtom.getElement().equals(locant)){
+				if (isElementSymbol && possibleAtom.getElement().toString().equals(locant)){
 					mainGroupBR.removeFunctionalAtom(i);
 				    return possibleAtom;
 				}
@@ -1586,7 +1585,7 @@ class StructureBuilder {
 			for (Atom parentAtom : atomList) {
 				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
 				for (int i = 0; i < explicitHydrogensToAdd; i++) {
-					Atom hydrogen = fm.createAtom("H", fragment);
+					Atom hydrogen = fm.createAtom(ChemEl.H, fragment);
 					fm.createBond(parentAtom, hydrogen, 1);
 				}
 				if (parentAtom.getAtomParity()!=null){
@@ -1913,16 +1912,16 @@ class StructureBuilder {
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
 				Atom oxidoAtom = group.getFrag().getFirstAtom();
 				Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
-				String element = connectedAtom.getElement();
+				ChemEl chemEl = connectedAtom.getElement();
 				if (checkForConnectedOxo(connectedAtom)){//e.g. not oxido(trioxo)ruthenium
 					continue;
 				}
 				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
-						((element.equals("S") || element.equals("P")) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
+						((chemEl == ChemEl.S || chemEl == ChemEl.P) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
 					oxidoAtom.neutraliseCharge();
 					oxidoAtom.getFirstBond().setOrder(2);
 				}
-				else if (element.equals("N") && connectedAtom.getCharge()==0){
+				else if (chemEl == ChemEl.N && connectedAtom.getCharge()==0){
 					int incomingValency = connectedAtom.getIncomingValency();
 					if ((incomingValency + connectedAtom.getOutValency()) ==3 && connectedAtom.hasSpareValency()){
 						connectedAtom.addChargeAndProtons(1, 1);//e.g. N-oxidopyridine

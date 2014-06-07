@@ -19,15 +19,15 @@ public class AtomTest {
 	
 	@Test
 	public void testAtom() {
-		Atom atom = new Atom(10, "C", frag);
+		Atom atom = new Atom(10, ChemEl.C, frag);
 		assertNotNull("Got atom", atom);
 		assertEquals("Id = 10", 10, atom.getID());
-		assertEquals("Element = C", "C", atom.getElement());
+		assertEquals("Element = C", ChemEl.C, atom.getElement());
 	}
 	
 	@Test
 	public void testToCMLAtom() {
-		Atom atom = new Atom(10, "C", frag);
+		Atom atom = new Atom(10, ChemEl.C, frag);
 		atom.addLocant("1");
 		nu.xom.Element elem = atom.toCMLAtom();
 		assertNotNull("Got XOM Element", elem);
@@ -36,7 +36,7 @@ public class AtomTest {
 	
 	@Test
 	public void testAddLocantHasLocant() {
-		Atom atom = new Atom(10, "C", frag);
+		Atom atom = new Atom(10, ChemEl.C, frag);
 		atom.addLocant("1");
 		assertTrue("Atom has locant '1'", atom.hasLocant("1"));
 		assertFalse("Atom has no locant 'C'", atom.hasLocant("C"));

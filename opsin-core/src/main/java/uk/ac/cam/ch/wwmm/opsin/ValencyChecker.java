@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,284 +17,286 @@ import java.util.Map;
  */
 class ValencyChecker {
 
-	private static final Map<String, Integer> expectedDefaultValency;//used to decide on the likely valency state
-	private static final Map<String, Integer> valencyInHW;//used to decide whether an atom has spare valency in a ring, these are the same as specified in the Hantzch-Widman system
-	private static final Map<String, HashMap<Integer, Integer[]>> possibleStableValencies;//used to decide on the likely valency state
+	/** used to decide on the likely valency state*/
+	private static final Map<ChemEl, Integer> expectedDefaultValency = new EnumMap<ChemEl, Integer>(ChemEl.class);
+	
+	/** used to decide whether an atom has spare valency in a ring, these are the same as specified in the Hantzch-Widman system */
+	private static final Map<ChemEl, Integer> valencyInHW = new EnumMap<ChemEl, Integer>(ChemEl.class);
+	
+	/** used to decide on the likely valency state */
+	private static final Map<ChemEl, Map<Integer, Integer[]>> possibleStableValencies = new EnumMap<ChemEl, Map<Integer, Integer[]>>(ChemEl.class);
 
 	static {
-		expectedDefaultValency = new HashMap<String, Integer>();
-		expectedDefaultValency.put("B", 3);
-		expectedDefaultValency.put("Al", 3);
-		expectedDefaultValency.put("In", 3);
-		expectedDefaultValency.put("Ga", 3);
-		expectedDefaultValency.put("Tl", 3);
-		expectedDefaultValency.put("C", 4);
-		expectedDefaultValency.put("Si", 4);
-		expectedDefaultValency.put("Ge", 4);
-		expectedDefaultValency.put("Sn", 4);
-		expectedDefaultValency.put("Pb", 4);
-		expectedDefaultValency.put("N", 3);
-		expectedDefaultValency.put("P", 3);
-		expectedDefaultValency.put("As", 3);
-		expectedDefaultValency.put("Sb", 3);
-		expectedDefaultValency.put("Bi", 3);
-		expectedDefaultValency.put("O", 2);
-		expectedDefaultValency.put("S", 2);
-		expectedDefaultValency.put("Se", 2);
-		expectedDefaultValency.put("Te", 2);
-		expectedDefaultValency.put("Po", 2);
-		expectedDefaultValency.put("F", 1);
-		expectedDefaultValency.put("Cl", 1);
-		expectedDefaultValency.put("Br", 1);
-		expectedDefaultValency.put("I", 1);
-		expectedDefaultValency.put("At", 1);
+		expectedDefaultValency.put(ChemEl.B, 3);
+		expectedDefaultValency.put(ChemEl.Al, 3);
+		expectedDefaultValency.put(ChemEl.In, 3);
+		expectedDefaultValency.put(ChemEl.Ga, 3);
+		expectedDefaultValency.put(ChemEl.Tl, 3);
+		expectedDefaultValency.put(ChemEl.C, 4);
+		expectedDefaultValency.put(ChemEl.Si, 4);
+		expectedDefaultValency.put(ChemEl.Ge, 4);
+		expectedDefaultValency.put(ChemEl.Sn, 4);
+		expectedDefaultValency.put(ChemEl.Pb, 4);
+		expectedDefaultValency.put(ChemEl.N, 3);
+		expectedDefaultValency.put(ChemEl.P, 3);
+		expectedDefaultValency.put(ChemEl.As, 3);
+		expectedDefaultValency.put(ChemEl.Sb, 3);
+		expectedDefaultValency.put(ChemEl.Bi, 3);
+		expectedDefaultValency.put(ChemEl.O, 2);
+		expectedDefaultValency.put(ChemEl.S, 2);
+		expectedDefaultValency.put(ChemEl.Se, 2);
+		expectedDefaultValency.put(ChemEl.Te, 2);
+		expectedDefaultValency.put(ChemEl.Po, 2);
+		expectedDefaultValency.put(ChemEl.F, 1);
+		expectedDefaultValency.put(ChemEl.Cl, 1);
+		expectedDefaultValency.put(ChemEl.Br, 1);
+		expectedDefaultValency.put(ChemEl.I, 1);
+		expectedDefaultValency.put(ChemEl.At, 1);
 
 		//in order of priority in the HW system
-		valencyInHW = new HashMap<String, Integer>();
-		valencyInHW.put("F", 1);
-		valencyInHW.put("Cl", 1);
-		valencyInHW.put("Br", 1);
-		valencyInHW.put("I", 1);
-		valencyInHW.put("O", 2);
-		valencyInHW.put("S", 2);
-		valencyInHW.put("Se", 2);
-		valencyInHW.put("Te", 2);
-		valencyInHW.put("N", 3);
-		valencyInHW.put("P", 3);
-		valencyInHW.put("As", 3);
-		valencyInHW.put("Sb", 3);
-		valencyInHW.put("Bi", 3);
-		valencyInHW.put("Si", 4);
-		valencyInHW.put("Ge", 4);
-		valencyInHW.put("Sn", 4);
-		valencyInHW.put("Pb", 4);
-		valencyInHW.put("B", 3);
-		valencyInHW.put("Al", 3);
-		valencyInHW.put("Ga", 3);
-		valencyInHW.put("In", 3);
-		valencyInHW.put("Tl", 3);
-		valencyInHW.put("Hg", 2);
+		valencyInHW.put(ChemEl.F, 1);
+		valencyInHW.put(ChemEl.Cl, 1);
+		valencyInHW.put(ChemEl.Br, 1);
+		valencyInHW.put(ChemEl.I, 1);
+		valencyInHW.put(ChemEl.O, 2);
+		valencyInHW.put(ChemEl.S, 2);
+		valencyInHW.put(ChemEl.Se, 2);
+		valencyInHW.put(ChemEl.Te, 2);
+		valencyInHW.put(ChemEl.N, 3);
+		valencyInHW.put(ChemEl.P, 3);
+		valencyInHW.put(ChemEl.As, 3);
+		valencyInHW.put(ChemEl.Sb, 3);
+		valencyInHW.put(ChemEl.Bi, 3);
+		valencyInHW.put(ChemEl.Si, 4);
+		valencyInHW.put(ChemEl.Ge, 4);
+		valencyInHW.put(ChemEl.Sn, 4);
+		valencyInHW.put(ChemEl.Pb, 4);
+		valencyInHW.put(ChemEl.B, 3);
+		valencyInHW.put(ChemEl.Al, 3);
+		valencyInHW.put(ChemEl.Ga, 3);
+		valencyInHW.put(ChemEl.In, 3);
+		valencyInHW.put(ChemEl.Tl, 3);
+		valencyInHW.put(ChemEl.Hg, 2);
 
-		possibleStableValencies = new HashMap<String, HashMap<Integer, Integer[]>>();
-		possibleStableValencies.put("H", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("He", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Li", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Be", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("B", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("C", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("N", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("O", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("F", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ne", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Na", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Mg", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Al", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Si", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("P", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("S", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Cl", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ar", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("K", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ca", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ga", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ge", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("As", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Se", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Br", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Kr", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Rb", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Sr", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("In", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Sn", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Sb", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Te", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("I", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Xe", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Cs", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ba", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Tl", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Pb", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Bi", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Po", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("At", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Rn", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Fr", new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put("Ra", new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.H, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.He, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Li, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Be, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.B, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.C, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.N, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.O, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.F, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ne, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Na, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Mg, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Al, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Si, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.P, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.S, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Cl, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ar, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.K, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ca, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ga, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ge, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.As, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Se, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Br, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Kr, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Rb, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Sr, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.In, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Sn, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Sb, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Te, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.I, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Xe, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Cs, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ba, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Tl, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Pb, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Bi, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Po, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.At, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Rn, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Fr, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.Ra, new HashMap<Integer, Integer[]>());
 
-		possibleStableValencies.get("H").put(0, new Integer[]{1});
-		possibleStableValencies.get("He").put(0, new Integer[]{0});
-		possibleStableValencies.get("Li").put(0, new Integer[]{1});
-		possibleStableValencies.get("Be").put(0, new Integer[]{2});
-		possibleStableValencies.get("B").put(0, new Integer[]{3});
-		possibleStableValencies.get("C").put(0, new Integer[]{4});
-		possibleStableValencies.get("N").put(0, new Integer[]{3});
-		possibleStableValencies.get("O").put(0, new Integer[]{2});
-		possibleStableValencies.get("F").put(0, new Integer[]{1});
-		possibleStableValencies.get("Ne").put(0, new Integer[]{0});
-		possibleStableValencies.get("Na").put(0, new Integer[]{1});
-		possibleStableValencies.get("Mg").put(0, new Integer[]{2});
-		possibleStableValencies.get("Al").put(0, new Integer[]{3});
-		possibleStableValencies.get("Si").put(0, new Integer[]{4});
-		possibleStableValencies.get("P").put(0, new Integer[]{3,5});
-		possibleStableValencies.get("S").put(0, new Integer[]{2,4,6});
-		possibleStableValencies.get("Cl").put(0, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Ar").put(0, new Integer[]{0});
-		possibleStableValencies.get("K").put(0, new Integer[]{1});
-		possibleStableValencies.get("Ca").put(0, new Integer[]{2});
-		possibleStableValencies.get("Ga").put(0, new Integer[]{3});
-		possibleStableValencies.get("Ge").put(0, new Integer[]{4});
-		possibleStableValencies.get("As").put(0, new Integer[]{3,5});
-		possibleStableValencies.get("Se").put(0, new Integer[]{2,4,6});
-		possibleStableValencies.get("Br").put(0, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Kr").put(0, new Integer[]{0,2});
-		possibleStableValencies.get("Rb").put(0, new Integer[]{1});
-		possibleStableValencies.get("Sr").put(0, new Integer[]{2});
-		possibleStableValencies.get("In").put(0, new Integer[]{3});
-		possibleStableValencies.get("Sn").put(0, new Integer[]{2,4});
-		possibleStableValencies.get("Sb").put(0, new Integer[]{3,5});
-		possibleStableValencies.get("Te").put(0, new Integer[]{2,4,6});
-		possibleStableValencies.get("I").put(0, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Xe").put(0, new Integer[]{0,2,4,6,8});
-		possibleStableValencies.get("Cs").put(0, new Integer[]{1});
-		possibleStableValencies.get("Ba").put(0, new Integer[]{2});
-		possibleStableValencies.get("Tl").put(0, new Integer[]{1,3});
-		possibleStableValencies.get("Pb").put(0, new Integer[]{2,4});
-		possibleStableValencies.get("Bi").put(0, new Integer[]{3,5});
-		possibleStableValencies.get("Po").put(0, new Integer[]{2,4,6});
-		possibleStableValencies.get("At").put(0, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Rn").put(0, new Integer[]{0,2,4,6,8});
-		possibleStableValencies.get("Fr").put(0, new Integer[]{1});
-		possibleStableValencies.get("Ra").put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.H).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.He).put(0, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Li).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Be).put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.B).put(0, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.C).put(0, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.N).put(0, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.O).put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.F).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Ne).put(0, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Na).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Mg).put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.Al).put(0, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Si).put(0, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.P).put(0, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.S).put(0, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Cl).put(0, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Ar).put(0, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.K).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Ca).put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.Ga).put(0, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Ge).put(0, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.As).put(0, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Se).put(0, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Br).put(0, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Kr).put(0, new Integer[]{0,2});
+		possibleStableValencies.get(ChemEl.Rb).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Sr).put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.In).put(0, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Sn).put(0, new Integer[]{2,4});
+		possibleStableValencies.get(ChemEl.Sb).put(0, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Te).put(0, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.I).put(0, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Xe).put(0, new Integer[]{0,2,4,6,8});
+		possibleStableValencies.get(ChemEl.Cs).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Ba).put(0, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.Tl).put(0, new Integer[]{1,3});
+		possibleStableValencies.get(ChemEl.Pb).put(0, new Integer[]{2,4});
+		possibleStableValencies.get(ChemEl.Bi).put(0, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Po).put(0, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.At).put(0, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Rn).put(0, new Integer[]{0,2,4,6,8});
+		possibleStableValencies.get(ChemEl.Fr).put(0, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Ra).put(0, new Integer[]{2});
 
-		possibleStableValencies.get("H").put(1, new Integer[]{0});
-		possibleStableValencies.get("Li").put(1, new Integer[]{0});
-		possibleStableValencies.get("Be").put(1, new Integer[]{1});
-		possibleStableValencies.get("Be").put(2, new Integer[]{0});
-		possibleStableValencies.get("B").put(2, new Integer[]{1});
-		possibleStableValencies.get("B").put(1, new Integer[]{2});
-		possibleStableValencies.get("B").put(-1, new Integer[]{4});
-		possibleStableValencies.get("B").put(-2, new Integer[]{3});
-		possibleStableValencies.get("C").put(2, new Integer[]{2});
-		possibleStableValencies.get("C").put(1, new Integer[]{3});
-		possibleStableValencies.get("C").put(-1, new Integer[]{3});
-		possibleStableValencies.get("C").put(-2, new Integer[]{2});
-		possibleStableValencies.get("N").put(2, new Integer[]{3});
-		possibleStableValencies.get("N").put(1, new Integer[]{4});
-		possibleStableValencies.get("N").put(-1, new Integer[]{2});
-		possibleStableValencies.get("N").put(-2, new Integer[]{1});
-		possibleStableValencies.get("O").put(1, new Integer[]{4});
-		possibleStableValencies.get("O").put(1, new Integer[]{3,5});
-		possibleStableValencies.get("O").put(-1, new Integer[]{1});
-		possibleStableValencies.get("O").put(-2, new Integer[]{0});
-		possibleStableValencies.get("F").put(2, new Integer[]{3,5});
-		possibleStableValencies.get("F").put(1, new Integer[]{2});
-		possibleStableValencies.get("F").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Na").put(1, new Integer[]{0});
-		possibleStableValencies.get("Na").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Mg").put(2, new Integer[]{0});
-		possibleStableValencies.get("Al").put(3, new Integer[]{0});
-		possibleStableValencies.get("Al").put(2, new Integer[]{1});
-		possibleStableValencies.get("Al").put(1, new Integer[]{2});
-		possibleStableValencies.get("Al").put(-1, new Integer[]{4});
-		possibleStableValencies.get("Al").put(-2, new Integer[]{3,5});
-		possibleStableValencies.get("Si").put(2, new Integer[]{2});
-		possibleStableValencies.get("Si").put(1, new Integer[]{3});
-		possibleStableValencies.get("Si").put(-1, new Integer[]{3,5});
-		possibleStableValencies.get("Si").put(-2, new Integer[]{2});
-		possibleStableValencies.get("P").put(2, new Integer[]{3});
-		possibleStableValencies.get("P").put(1, new Integer[]{4});
-		possibleStableValencies.get("P").put(-1, new Integer[]{2,4,6});
-		possibleStableValencies.get("P").put(-2, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("S").put(2, new Integer[]{4});
-		possibleStableValencies.get("S").put(1, new Integer[]{3,5});
-		possibleStableValencies.get("S").put(-1, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("S").put(-2, new Integer[]{0});
-		possibleStableValencies.get("Cl").put(2, new Integer[]{3,5});
-		possibleStableValencies.get("Cl").put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get("Cl").put(-1, new Integer[]{0});
-		possibleStableValencies.get("K").put(1, new Integer[]{0});
-		possibleStableValencies.get("K").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Ca").put(2, new Integer[]{0});
-		possibleStableValencies.get("Ca").put(1, new Integer[]{1});
-		possibleStableValencies.get("Ga").put(3, new Integer[]{0});
-		possibleStableValencies.get("Ga").put(2, new Integer[]{1});
-		possibleStableValencies.get("Ga").put(1, new Integer[]{0});
-		possibleStableValencies.get("Ga").put(-1, new Integer[]{4});
-		possibleStableValencies.get("Ga").put(-2, new Integer[]{3,5});
-		possibleStableValencies.get("Ge").put(4, new Integer[]{0});
-		possibleStableValencies.get("Ge").put(1, new Integer[]{3});
-		possibleStableValencies.get("Ge").put(-1, new Integer[]{3,5});
-		possibleStableValencies.get("Ge").put(-2, new Integer[]{2,4,6});
-		possibleStableValencies.get("As").put(2, new Integer[]{3});
-		possibleStableValencies.get("As").put(1, new Integer[]{4});
-		possibleStableValencies.get("As").put(-1, new Integer[]{2,4,6});
-		possibleStableValencies.get("As").put(-2, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("As").put(-3, new Integer[]{0});
-		possibleStableValencies.get("Se").put(2, new Integer[]{4});
-		possibleStableValencies.get("Se").put(1, new Integer[]{3,5});
-		possibleStableValencies.get("Se").put(-1, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Se").put(-2, new Integer[]{0});
-		possibleStableValencies.get("Br").put(2, new Integer[]{3,5});
-		possibleStableValencies.get("Br").put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get("Br").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Rb").put(1, new Integer[]{0});
-		possibleStableValencies.get("Rb").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Sr").put(2, new Integer[]{0});
-		possibleStableValencies.get("Sr").put(1, new Integer[]{1});
-		possibleStableValencies.get("In").put(3, new Integer[]{0});
-		possibleStableValencies.get("In").put(2, new Integer[]{1});
-		possibleStableValencies.get("In").put(1, new Integer[]{0});
-		possibleStableValencies.get("In").put(-1, new Integer[]{2,4});
-		possibleStableValencies.get("In").put(-2, new Integer[]{3,5});
-		possibleStableValencies.get("Sn").put(4, new Integer[]{0});
-		possibleStableValencies.get("Sn").put(2, new Integer[]{0});
-		possibleStableValencies.get("Sn").put(1, new Integer[]{3});
-		possibleStableValencies.get("Sn").put(-1, new Integer[]{3,5});
-		possibleStableValencies.get("Sn").put(-2, new Integer[]{2,4,6});
-		possibleStableValencies.get("Sb").put(3, new Integer[]{0});
-		possibleStableValencies.get("Sb").put(2, new Integer[]{3});
-		possibleStableValencies.get("Sb").put(1, new Integer[]{2,4});
-		possibleStableValencies.get("Sb").put(-1, new Integer[]{2,4,6});
-		possibleStableValencies.get("Sb").put(-2, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Te").put(2, new Integer[]{2,4});
-		possibleStableValencies.get("Te").put(1, new Integer[]{3,5});
-		possibleStableValencies.get("Te").put(-1, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("Te").put(-2, new Integer[]{0});
-		possibleStableValencies.get("I").put(2, new Integer[]{3,5});
-		possibleStableValencies.get("I").put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get("I").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Cs").put(1, new Integer[]{0});
-		possibleStableValencies.get("Cs").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Ba").put(2, new Integer[]{0});
-		possibleStableValencies.get("Ba").put(1, new Integer[]{1});
-		possibleStableValencies.get("Pb").put(2, new Integer[]{0});
-		possibleStableValencies.get("Pb").put(1, new Integer[]{3});
-		possibleStableValencies.get("Pb").put(-1, new Integer[]{3,5});
-		possibleStableValencies.get("Pb").put(-2, new Integer[]{2,4,6});
-		possibleStableValencies.get("Bi").put(3, new Integer[]{0});
-		possibleStableValencies.get("Bi").put(2, new Integer[]{3});
-		possibleStableValencies.get("Bi").put(1, new Integer[]{2,4});
-		possibleStableValencies.get("Bi").put(-1, new Integer[]{2,4,6});
-		possibleStableValencies.get("Bi").put(-2, new Integer[]{1,3,5,7});
-		possibleStableValencies.get("At").put(2, new Integer[]{3,5});
-		possibleStableValencies.get("At").put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get("At").put(-1, new Integer[]{0});
-		possibleStableValencies.get("Fr").put(1, new Integer[]{0});
-		possibleStableValencies.get("Ra").put(2, new Integer[]{0});
-		possibleStableValencies.get("Ra").put(1, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.H).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Li).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Be).put(1, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Be).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.B).put(2, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.B).put(1, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.B).put(-1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.B).put(-2, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.C).put(2, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.C).put(1, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.C).put(-1, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.C).put(-2, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.N).put(2, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.N).put(1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.N).put(-1, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.N).put(-2, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.O).put(1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.O).put(1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.O).put(-1, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.O).put(-2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.F).put(2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.F).put(1, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.F).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Na).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Na).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Mg).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Al).put(3, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Al).put(2, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Al).put(1, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.Al).put(-1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.Al).put(-2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Si).put(2, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.Si).put(1, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Si).put(-1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Si).put(-2, new Integer[]{2});
+		possibleStableValencies.get(ChemEl.P).put(2, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.P).put(1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.P).put(-1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.P).put(-2, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.S).put(2, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.S).put(1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.S).put(-1, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.S).put(-2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Cl).put(2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Cl).put(1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Cl).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.K).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.K).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ca).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ca).put(1, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Ga).put(3, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ga).put(2, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Ga).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ga).put(-1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.Ga).put(-2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Ge).put(4, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ge).put(1, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Ge).put(-1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Ge).put(-2, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.As).put(2, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.As).put(1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.As).put(-1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.As).put(-2, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.As).put(-3, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Se).put(2, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.Se).put(1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Se).put(-1, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Se).put(-2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Br).put(2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Br).put(1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Br).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Rb).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Rb).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Sr).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Sr).put(1, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.In).put(3, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.In).put(2, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.In).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.In).put(-1, new Integer[]{2,4});
+		possibleStableValencies.get(ChemEl.In).put(-2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Sn).put(4, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Sn).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Sn).put(1, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Sn).put(-1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Sn).put(-2, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Sb).put(3, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Sb).put(2, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Sb).put(1, new Integer[]{2,4});
+		possibleStableValencies.get(ChemEl.Sb).put(-1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Sb).put(-2, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Te).put(2, new Integer[]{2,4});
+		possibleStableValencies.get(ChemEl.Te).put(1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Te).put(-1, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.Te).put(-2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.I).put(2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.I).put(1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.I).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Cs).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Cs).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ba).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ba).put(1, new Integer[]{1});
+		possibleStableValencies.get(ChemEl.Pb).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Pb).put(1, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Pb).put(-1, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.Pb).put(-2, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Bi).put(3, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Bi).put(2, new Integer[]{3});
+		possibleStableValencies.get(ChemEl.Bi).put(1, new Integer[]{2,4});
+		possibleStableValencies.get(ChemEl.Bi).put(-1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.Bi).put(-2, new Integer[]{1,3,5,7});
+		possibleStableValencies.get(ChemEl.At).put(2, new Integer[]{3,5});
+		possibleStableValencies.get(ChemEl.At).put(1, new Integer[]{2,4,6});
+		possibleStableValencies.get(ChemEl.At).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Fr).put(1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ra).put(2, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Ra).put(1, new Integer[]{1});
 	}
 
 	/**
-	 * Given an element symbol (e.g. Na) and charge (e.g. 1) returns the highest stable valency that OPSIN knows is possible
-	 * If for the particular combination of element symbol and charge the highest stable valency is not known null is returned
-	 * @param symbol
+	 * Given a chemical element (e.g. Na) and charge (e.g. 1) returns the highest stable valency that OPSIN knows is possible
+	 * If for the particular combination of chemical element and charge the highest stable valency is not known null is returned
+	 * @param chemEl
 	 * @param charge
 	 * @return
 	 */
-	static Integer getMaximumValency(String symbol, int charge) {
-		if (possibleStableValencies.get(symbol)!=null){
-			if (possibleStableValencies.get(symbol).get(charge)!=null){
-				return possibleStableValencies.get(symbol).get(charge)[possibleStableValencies.get(symbol).get(charge).length-1];
+	static Integer getMaximumValency(ChemEl chemEl, int charge) {
+		if (possibleStableValencies.get(chemEl) != null){
+			if (possibleStableValencies.get(chemEl).get(charge) != null){
+				return possibleStableValencies.get(chemEl).get(charge)[possibleStableValencies.get(chemEl).get(charge).length-1];
 			}
 		}
 		return null;
@@ -308,14 +311,14 @@ class ValencyChecker {
 	static boolean checkValency(Atom a) {
 		int valency = a.getIncomingValency() + a.getOutValency();
 		Integer maxVal;
-		if (a.getLambdaConventionValency()!=null){
+		if (a.getLambdaConventionValency() != null){
 			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
 		}
 		else{
-			String symbol = a.getElement();
+			ChemEl chemEl = a.getElement();
 			int charge = a.getCharge();
-			maxVal=getMaximumValency(symbol, charge);
-			if(maxVal==null) {
+			maxVal = getMaximumValency(chemEl, charge);
+			if(maxVal == null) {
 				return true;
 			}
 		}
@@ -335,9 +338,9 @@ class ValencyChecker {
 			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
 		}
 		else{
-			String symbol = a.getElement();
+			ChemEl chemEl = a.getElement();
 			int charge = a.getCharge();
-			maxVal = getMaximumValency(symbol, charge);
+			maxVal = getMaximumValency(chemEl, charge);
 			if(maxVal==null) {
 				return true;
 			}
@@ -361,21 +364,21 @@ class ValencyChecker {
 
 	/**
 	 * Returns the default valency of an element when uncharged or null if unknown
-	 * @param element
+	 * @param chemlEl
 	 * @return
 	 */
-	static Integer getDefaultValency(String element) {
-		return expectedDefaultValency.get(element);
+	static Integer getDefaultValency(ChemEl chemlEl) {
+		return expectedDefaultValency.get(chemlEl);
 	}
 
 	/**
 	 * Returns the valency of an element in the HW system (useful for deciding whether something should have double bonds in a ring) or null if unknown
 	 * Note that the HW system makes no claim about valency when the atom is charged
-	 * @param element
+	 * @param chemEl
 	 * @return
 	 */
-	static Integer getHWValency(String element) {
-		return valencyInHW.get(element);
+	static Integer getHWValency(ChemEl chemEl) {
+		return valencyInHW.get(chemEl);
 	}
 
 	/**
@@ -384,8 +387,8 @@ class ValencyChecker {
 	 * @param charge
 	 * @return
 	 */
-	static Integer[] getPossibleValencies(String element, int charge) {
-		if (possibleStableValencies.get(element)==null){return null;}
-		return possibleStableValencies.get(element).get(charge);
+	static Integer[] getPossibleValencies(ChemEl chemEl, int charge) {
+		if (possibleStableValencies.get(chemEl)==null){return null;}
+		return possibleStableValencies.get(chemEl).get(charge);
 	}
 }
