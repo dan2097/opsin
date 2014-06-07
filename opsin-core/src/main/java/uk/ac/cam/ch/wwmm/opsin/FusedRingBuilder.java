@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -130,7 +131,7 @@ class FusedRingBuilder {
 			}
 			String[] fusionDescriptors =null;
 			if (fusion !=null){
-				String fusionDescriptorString = fusion.getValue().toLowerCase().substring(1, fusion.getValue().length()-1);
+				String fusionDescriptorString = fusion.getValue().toLowerCase(Locale.ROOT).substring(1, fusion.getValue().length()-1);
 				if (multiplier ==1){
 					fusionDescriptors = new String[]{fusionDescriptorString};
 				}
@@ -432,7 +433,7 @@ class FusedRingBuilder {
 				if (multiplier>1 && multiplier != previousFusionLevelFragments.size()){
 					throw new StructureBuildingException("Mismatch between number of components and number of parents in fused ring system");
 				}
-				String fusionDescriptorString = fusion.getValue().toLowerCase().substring(1, fusion.getValue().length()-1);
+				String fusionDescriptorString = fusion.getValue().toLowerCase(Locale.ROOT).substring(1, fusion.getValue().length()-1);
 				String[] fusionDescriptors =null;
 				if (MATCH_SEMICOLON.split(fusionDescriptorString).length >1){
 					fusionDescriptors = MATCH_SEMICOLON.split(fusionDescriptorString);

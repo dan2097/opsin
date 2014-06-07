@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -240,7 +241,7 @@ class WordRules {
 					if (!wd.getType().toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 						continue wordRuleLoop;//type mismatch;
 					}
-					if (wd.getValue() !=null && !wordEl.getAttributeValue(VALUE_ATR).toLowerCase().equals(wd.getValue())){//word string contents mismatch
+					if (wd.getValue() !=null && !wordEl.getAttributeValue(VALUE_ATR).toLowerCase(Locale.ROOT).equals(wd.getValue())){//word string contents mismatch
 						continue wordRuleLoop;
 					}
 					if (wd.getFunctionalGroupType() !=null){

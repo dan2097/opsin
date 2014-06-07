@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -2592,7 +2593,7 @@ class ComponentProcessor {
 				nameSB.append(heteroatom.getValue());
 			}
 			nameSB.append(group.getValue());
-			String name = nameSB.toString().toLowerCase();
+			String name = nameSB.toString().toLowerCase(Locale.ROOT);
 			if(noLocants && prevs.size() > 0) {
 				if(specialHWRings.containsKey(name)) {
 					String[] specialRingInformation = specialHWRings.get(name);
@@ -5122,7 +5123,7 @@ class ComponentProcessor {
 	private void checkForNonConfusedWithNona(Element multiplier) throws StructureBuildingException {
 		if (multiplier.getValue().equals("non")){
 			String subsequentUnsemanticToken = multiplier.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR);
-			if (subsequentUnsemanticToken !=null && subsequentUnsemanticToken.toLowerCase().startsWith("a")){
+			if (subsequentUnsemanticToken !=null && subsequentUnsemanticToken.toLowerCase(Locale.ROOT).startsWith("a")){
 				return;
 			}
 			throw new StructureBuildingException("\"non\" probably means \"not\". If a multiplier of value 9 was intended \"nona\" should be used");
