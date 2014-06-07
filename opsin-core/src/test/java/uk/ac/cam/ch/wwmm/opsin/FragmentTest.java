@@ -33,14 +33,14 @@ public class FragmentTest {
 	@Test
 	public void testAddAtom() {
 		assertEquals("Has no atoms", 0, frag.getAtomCount());
-		frag.addAtom(new Atom(1, "C", frag));
+		frag.addAtom(new Atom(1, ChemEl.C, frag));
 		assertEquals("Now has one atom", 1, frag.getAtomCount());
 	}
 
 	@Test
 	public void testAddBond() {
-		frag.addAtom(new Atom(1, "C", frag));
-		frag.addAtom(new Atom(2, "C", frag));
+		frag.addAtom(new Atom(1, ChemEl.C, frag));
+		frag.addAtom(new Atom(2, ChemEl.C, frag));
 		assertEquals("Has no bonds", 0, frag.getBondSet().size());
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		assertEquals("Now has one bond", 1, frag.getBondSet().size());
@@ -94,10 +94,10 @@ public class FragmentTest {
 
 	@Test
 	public void testGetIDFromLocant() throws StructureBuildingException {
-		Atom atom = new Atom(10, "C", frag);
+		Atom atom = new Atom(10, ChemEl.C, frag);
 		atom.addLocant("a");
 		frag.addAtom(atom);
-		atom = new Atom(20, "C", frag);
+		atom = new Atom(20, ChemEl.C, frag);
 		atom.addLocant("silly");
 		frag.addAtom(atom);
 		assertEquals("Locant a has ID 10", 10, frag.getIDFromLocant("a"));
@@ -107,10 +107,10 @@ public class FragmentTest {
 
 	@Test
 	public void testGetAtomByLocant() throws StructureBuildingException {
-		Atom atom1 = new Atom(10, "C", frag);
+		Atom atom1 = new Atom(10, ChemEl.C, frag);
 		atom1.addLocant("a");
 		frag.addAtom(atom1);
-		Atom atom2 = new Atom(20, "C", frag);
+		Atom atom2 = new Atom(20, ChemEl.C, frag);
 		atom2.addLocant("silly");
 		frag.addAtom(atom2);
 		assertEquals("Locant a gets atom1", atom1, frag.getAtomByLocant("a"));
@@ -120,9 +120,9 @@ public class FragmentTest {
 
 	@Test
 	public void testGetAtomByID() throws StructureBuildingException {
-		Atom atom1 = new Atom(10, "C", frag);
+		Atom atom1 = new Atom(10, ChemEl.C, frag);
 		frag.addAtom(atom1);
-		Atom atom2 = new Atom(20, "C", frag);
+		Atom atom2 = new Atom(20, ChemEl.C, frag);
 		frag.addAtom(atom2);
 		assertEquals("ID 10 gets atom1", atom1, frag.getAtomByID(10));
 		assertEquals("ID 20 gets atom2", atom2, frag.getAtomByID(20));
@@ -131,10 +131,10 @@ public class FragmentTest {
 
 	@Test
 	public void testFindBond() throws StructureBuildingException {
-		frag.addAtom(new Atom(1, "C", frag));
-		frag.addAtom(new Atom(2, "C", frag));
-		frag.addAtom(new Atom(3, "N", frag));
-		frag.addAtom(new Atom(4, "O", frag));
+		frag.addAtom(new Atom(1, ChemEl.C, frag));
+		frag.addAtom(new Atom(2, ChemEl.C, frag));
+		frag.addAtom(new Atom(3, ChemEl.N, frag));
+		frag.addAtom(new Atom(4, ChemEl.O, frag));
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(4), 2);
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(3), 3);
@@ -151,21 +151,21 @@ public class FragmentTest {
 	@Test
 	public void testGetChainLength() throws StructureBuildingException {
 		assertEquals("No chain", 0, frag.getChainLength());
-		Atom a1 =new Atom(1, "C", frag);
+		Atom a1 =new Atom(1, ChemEl.C, frag);
 		a1.addLocant("1");
 		frag.addAtom(a1);
 		assertEquals("Methane", 1, frag.getChainLength());
-		Atom a2 =new Atom(2, "C", frag);
+		Atom a2 =new Atom(2, ChemEl.C, frag);
 		a2.addLocant("2");
 		frag.addAtom(a2);
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		assertEquals("ethane", 2, frag.getChainLength());
-		Atom a3 =new Atom(3, "C", frag);
+		Atom a3 =new Atom(3, ChemEl.C, frag);
 		a3.addLocant("3");
 		frag.addAtom(a3);
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(3), 1);
 		assertEquals("propane", 3, frag.getChainLength());
-		Atom a4 =new Atom(4, "C", frag);
+		Atom a4 =new Atom(4, ChemEl.C, frag);
 		frag.addAtom(a4);
 		a4.addLocant("4");
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(4), 1);

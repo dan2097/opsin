@@ -118,8 +118,8 @@ class StereoAnalyser {
 	}
 	
 	private static int compareAtomicNumberThenAtomicMass(Atom a, Atom b){
-    	int atomicNumber1 = AtomProperties.elementToAtomicNumber.get(a.getElement());
-    	int atomicNumber2 = AtomProperties.elementToAtomicNumber.get(b.getElement());
+    	int atomicNumber1 = a.getElement().ATOMIC_NUM;
+    	int atomicNumber2 = b.getElement().ATOMIC_NUM;
     	if (atomicNumber1 > atomicNumber2){
     		return 1;
     	}
@@ -507,20 +507,20 @@ class StereoAnalyser {
 	 */
 	static boolean isKnownPotentiallyStereogenic(Atom atom) {
 		List<Atom> neighbours = atom.getAtomNeighbours();
-		String element = atom.getElement();
+		ChemEl chemEl = atom.getElement();
 		if (neighbours.size() == 4){
-			if (element.equals("B") || element.equals("C") || element.equals("Si") || element.equals("Ge") ||
-					element.equals("Sn") || element.equals("N")|| element.equals("P") || element.equals("As") ||
-					  element.equals("S") || element.equals("Se")){
+			if (chemEl == ChemEl.B || chemEl == ChemEl.C || chemEl == ChemEl.Si || chemEl == ChemEl.Ge ||
+					chemEl == ChemEl.Sn || chemEl == ChemEl.N || chemEl == ChemEl.P || chemEl == ChemEl.As ||
+						chemEl == ChemEl.S || chemEl == ChemEl.Se){
 				return true;
 			}
 		}
 		else if (neighbours.size() ==3){
-			if ((element.equals("S") || element.equals("Se")) && (atom.getIncomingValency()==4 || (atom.getCharge() ==1 && atom.getIncomingValency()==3))){
+			if ((chemEl == ChemEl.S || chemEl == ChemEl.Se) && (atom.getIncomingValency()==4 || (atom.getCharge() ==1 && atom.getIncomingValency()==3))){
 				//tetrahedral sulfur/selenium - 3 bonds and the lone pair
 				return true;
 			}
-			if (element.equals("N") && atom.getCharge() ==0 && atom.getIncomingValency()==3 && atomsContainABondBetweenThemselves(neighbours)){
+			if (chemEl == ChemEl.N && atom.getCharge() ==0 && atom.getIncomingValency()==3 && atomsContainABondBetweenThemselves(neighbours)){
 				return true;
 				//nitrogen where two attached atoms are connected together
 			}
@@ -540,24 +540,24 @@ class StereoAnalyser {
 	}
 
 	static boolean isAchiralDueToResonanceOrTautomerism(Atom atom) {
-		if(atom.getElement().equals("N") || 
-				atom.getElement().equals("P") ||
-				atom.getElement().equals("As") ||
-				atom.getElement().equals("S") ||
-				atom.getElement().equals("Se")){
+		ChemEl chemEl = atom.getElement();
+		if(chemEl == ChemEl.N || 
+				chemEl == ChemEl.P || 
+				chemEl == ChemEl.As || 
+				chemEl == ChemEl.S || 
+				chemEl == ChemEl.Se) {
 			List<Atom> neighbours = atom.getAtomNeighbours();
 			Set<String> resonanceAndTautomerismAtomicElementPlusIsotopes = new HashSet<String>();
 			for (Atom neighbour : neighbours) {
-				String element = neighbour.getElement();
-				if ((element.equals("O") || element.equals("S") || element.equals("Se") 
-						|| element.equals("Te") || element.equals("N"))
+				ChemEl neighbourChemEl = neighbour.getElement();
+				if ((neighbourChemEl.isChalcogen() || neighbourChemEl == ChemEl.N)
 						&& isOnlyBondedToHydrogensOtherThanGivenAtom(neighbour, atom)){
-					if (resonanceAndTautomerismAtomicElementPlusIsotopes.contains(element + atom.getIsotope())){
+					if (resonanceAndTautomerismAtomicElementPlusIsotopes.contains(neighbourChemEl.toString() + atom.getIsotope())){
 						return true;
 					}
-					resonanceAndTautomerismAtomicElementPlusIsotopes.add(element + atom.getIsotope());
+					resonanceAndTautomerismAtomicElementPlusIsotopes.add(neighbourChemEl.toString() + atom.getIsotope());
 				}
-				if (element.equals("H") && neighbour.getBonds().size()==1){
+				if (neighbourChemEl == ChemEl.H && neighbour.getBonds().size()==1){
 					//terminal H atom neighbour
 					return true;
 				}
@@ -571,7 +571,7 @@ class StereoAnalyser {
 			if (neighbour.equals(attachedNonHydrogen)){
 				continue;
 			}
-			if (!neighbour.getElement().equals("H")){
+			if (neighbour.getElement() != ChemEl.H){
 				return false;
 			}
 		}
@@ -592,14 +592,14 @@ class StereoAnalyser {
 				Atom a1 = bond.getFromAtom();
 				List<Atom> neighbours1 =  a1.getAtomNeighbours();
 				neighbours1.remove(bond.getToAtom());
-				if (neighbours1.size()==2 || (neighbours1.size()==1 && a1.getElement().equals("N") && a1.getIncomingValency()==3 && a1.getCharge()==0)){
+				if (neighbours1.size()==2 || (neighbours1.size()==1 && a1.getElement() == ChemEl.N && a1.getIncomingValency()==3 && a1.getCharge()==0)){
 					if (neighbours1.size()==2 && mappingToColour.get(neighbours1.get(0)).equals(mappingToColour.get(neighbours1.get(1)))){
 						continue;
 					}
 					Atom a2 = bond.getToAtom();
 					List<Atom> neighbours2 = a2.getAtomNeighbours();
 					neighbours2.remove(bond.getFromAtom());
-					if (neighbours2.size()==2 || (neighbours2.size()==1 && a2.getElement().equals("N") && a2.getIncomingValency()==3 && a2.getCharge()==0)){
+					if (neighbours2.size()==2 || (neighbours2.size()==1 && a2.getElement() == ChemEl.N && a2.getIncomingValency()==3 && a2.getCharge()==0)){
 						if (neighbours2.size()==2 && mappingToColour.get(neighbours2.get(0)).equals(mappingToColour.get(neighbours2.get(1)))){
 							continue;
 						}

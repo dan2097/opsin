@@ -4,9 +4,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 class SMILESWriter {
 
 	/**The organic atoms and their allowed implicit valences in SMILES */
-	private static final Map<String,Integer[]> organicAtomsToStandardValencies = new HashMap<String, Integer[]>();
+	private static final Map<ChemEl,Integer[]> organicAtomsToStandardValencies = new EnumMap<ChemEl, Integer[]>(ChemEl.class);
 
 	/**Closures 1-9, %10-99, 0 */
 	private static final  List<String> closureSymbols = new ArrayList<String>();
@@ -43,18 +45,18 @@ class SMILESWriter {
 	private final StringBuilder smilesBuilder = new StringBuilder();
 
 	static {
-		organicAtomsToStandardValencies.put("B", new Integer[]{3});
-		organicAtomsToStandardValencies.put("C", new Integer[]{4});
-		organicAtomsToStandardValencies.put("N", new Integer[]{3,5});//note that OPSIN doesn't accept valency 5 nitrogen without the lambda convention
-		organicAtomsToStandardValencies.put("O", new Integer[]{2});
-		organicAtomsToStandardValencies.put("P", new Integer[]{3,5});
-		organicAtomsToStandardValencies.put("S", new Integer[]{2,4,6});
-		organicAtomsToStandardValencies.put("F", new Integer[]{1});
-		organicAtomsToStandardValencies.put("Cl", new Integer[]{1});
-		organicAtomsToStandardValencies.put("Br", new Integer[]{1});
-		organicAtomsToStandardValencies.put("I", new Integer[]{1});
+		organicAtomsToStandardValencies.put(ChemEl.B, new Integer[]{3});
+		organicAtomsToStandardValencies.put(ChemEl.C, new Integer[]{4});
+		organicAtomsToStandardValencies.put(ChemEl.N, new Integer[]{3,5});//note that OPSIN doesn't accept valency 5 nitrogen without the lambda convention
+		organicAtomsToStandardValencies.put(ChemEl.O, new Integer[]{2});
+		organicAtomsToStandardValencies.put(ChemEl.P, new Integer[]{3,5});
+		organicAtomsToStandardValencies.put(ChemEl.S, new Integer[]{2,4,6});
+		organicAtomsToStandardValencies.put(ChemEl.F, new Integer[]{1});
+		organicAtomsToStandardValencies.put(ChemEl.Cl, new Integer[]{1});
+		organicAtomsToStandardValencies.put(ChemEl.Br, new Integer[]{1});
+		organicAtomsToStandardValencies.put(ChemEl.I, new Integer[]{1});
 		
-		organicAtomsToStandardValencies.put("R", new Integer[]{1,2,3,4,5,6,7,8,9});
+		organicAtomsToStandardValencies.put(ChemEl.R, new Integer[]{1,2,3,4,5,6,7,8,9});
 
 		for (int i = 1; i <=9; i++) {
 			closureSymbols.add(String.valueOf(i));
@@ -167,7 +169,7 @@ class SMILESWriter {
 	}
 
 	private boolean isSmilesImplicitProton(Atom atom) {
-		if (!atom.getElement().equals("H")){
+		if (atom.getElement() != ChemEl.H){
 			//not hydrogen
 			return false;
 		}
@@ -187,12 +189,12 @@ class SMILESWriter {
 		}
 		
 		Atom neighbour = neighbours.get(0);
-		String element = neighbour.getElement();
-		if (element.equals("H") || element.equals("R")){
+		ChemEl chemEl = neighbour.getElement();
+		if (chemEl == ChemEl.H || chemEl == ChemEl.R) {
 			//only connects to hydrogen or an R-group
 			return false;
 		}
-		if (element.equals("N")){
+		if (chemEl == ChemEl.N){
 			List<Bond> bondsFromNitrogen = neighbour.getBonds();
 			if (bondsFromNitrogen.size() == 2){
 				for (Bond bond : bondsFromNitrogen) {
@@ -433,22 +435,22 @@ class SMILESWriter {
 		if (atom.getIsotope() != null) {
 			atomSmiles.append(atom.getIsotope());
 		}
-		String elementSymbol = atom.getElement();
+		ChemEl chemEl = atom.getElement();
 		if (atom.hasSpareValency()) {//spare valency corresponds directly to lower case SMILES in OPSIN's SMILES reader
-			atomSmiles.append(elementSymbol.toLowerCase());
+			atomSmiles.append(chemEl.toString().toLowerCase(Locale.ROOT));
 		}
 		else{
-			if (elementSymbol.equals("R")){//used for polymers
+			if (chemEl == ChemEl.R) {//used for polymers
 				atomSmiles.append('*');
 			}
 			else{
-				atomSmiles.append(elementSymbol);
+				atomSmiles.append(chemEl.toString());
 			}
 		}
 		if (atom.getAtomParity() != null){
 			atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
 		}
-		if (hydrogenCount != 0 && needsSquareBrackets && !elementSymbol.equals("H")){
+		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
 			atomSmiles.append('H');
 			if (hydrogenCount != 1){
 				atomSmiles.append(String.valueOf(hydrogenCount));

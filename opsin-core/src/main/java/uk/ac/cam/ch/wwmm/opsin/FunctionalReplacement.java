@@ -47,9 +47,7 @@ class FunctionalReplacement {
 		hydrazono,//ambiguous, only applies to non carboxylic acid
 		peroxy//ambiguous, also applies to etheric oxygen
 	}	
-	
-	
-	private final static Pattern matchChalcogen = Pattern.compile("O|S|Se|Te");
+
 	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	
 	private final BuildState state;
@@ -356,7 +354,7 @@ class FunctionalReplacement {
 						replacementFrag.removeOutAtom(0);
 					}
 					Atom atomThatWillReplaceOxygen =replacementFrag.getFirstAtom();
-					if (replacementFrag.getAtomCount()==1 && matchChalcogen.matcher(atomThatWillReplaceOxygen.getElement()).matches()){
+					if (replacementFrag.getAtomCount()==1 && atomThatWillReplaceOxygen.getElement().isChalcogen()){
 						atomThatWillReplaceOxygen.setCharge(atomToUse.getCharge());
 						atomThatWillReplaceOxygen.setProtonsExplicitlyAddedOrRemoved(atomToUse.getProtonsExplicitlyAddedOrRemoved());
 					}
@@ -496,7 +494,7 @@ class FunctionalReplacement {
 			if (isAmide) {
 				for (int i = 0; i < numberOfAcidicHydroxysToReplace; i++) {
 					removeAssociatedFunctionalAtom(oxygenAtoms.get(i));
-					oxygenAtoms.get(i).setElement("N");
+					oxygenAtoms.get(i).setElement(ChemEl.N);
 				}
 			}
 			else{
@@ -881,7 +879,7 @@ class FunctionalReplacement {
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
 				atomToBeReplaced.getFrag().removeFunctionalAtom(i);
 				Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
-				if ((terminalAtomOfReplacementFrag.getIncomingValency() ==1 || replacementAtomList.size()==1)&& matchChalcogen.matcher(terminalAtomOfReplacementFrag.getElement()).matches()){
+				if ((terminalAtomOfReplacementFrag.getIncomingValency() ==1 || replacementAtomList.size()==1)&& terminalAtomOfReplacementFrag.getElement().isChalcogen()){
 					replacementFrag.addFunctionalAtom(terminalAtomOfReplacementFrag);
 					terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
 					terminalAtomOfReplacementFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
@@ -975,7 +973,7 @@ class FunctionalReplacement {
 			if (suffixFrag != null) {//null for non carboxylic acids
 				for (int i = 0, l = suffixFrag.getFunctionalAtomCount(); i < l; i++) {
 					Atom a = suffixFrag.getFunctionalAtom(i).getAtom();
-					if (a.getElement().equals("O")) {
+					if (a.getElement() == ChemEl.O) {
 						oxygenAtoms.add(a);
 					}
 				}
@@ -994,7 +992,7 @@ class FunctionalReplacement {
 		Fragment frag = groupToBeModified.getFrag();
 		for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
 			Atom a = frag.getFunctionalAtom(i).getAtom();
-			if (a.getElement().equals("O")){
+			if (a.getElement() == ChemEl.O){
 				oxygenAtoms.add(a);
 			}
 		}
@@ -1011,7 +1009,7 @@ class FunctionalReplacement {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a: atomList) {
-			if (a.getElement().equals("O") && a.getBonds().size()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
+			if (a.getElement() == ChemEl.O && a.getBonds().size()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
 				oxygenAtoms.add(a);
 			}
 		}
@@ -1033,7 +1031,7 @@ class FunctionalReplacement {
 				if (suffixFrag.getFunctionalAtomCount() > 0 || groupToBeModified.getAttributeValue(TYPE_ATR).equals(ACIDSTEM_TYPE_VAL) || suffix.getAttributeValue(VALUE_ATR).equals("aldehyde")) {
 					List<Atom> atomList = suffixFrag.getAtomList();
 					for (Atom a : atomList) {
-						if (a.getElement().equals("O")) {
+						if (a.getElement() == ChemEl.O) {
 							oxygenAtoms.add(a);
 						}
 					}
@@ -1052,7 +1050,7 @@ class FunctionalReplacement {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a : atomList) {
-			if (a.getElement().equals("O")){
+			if (a.getElement() == ChemEl.O){
 				oxygenAtoms.add(a);
 			}
 		}
@@ -1062,7 +1060,7 @@ class FunctionalReplacement {
 
 	private void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, List<Atom> singleBondedOxygen, List<Atom> doubleBondedOxygen) throws StructureBuildingException {
 		for (Atom a : atomList) {
-			if (a.getElement().equals("O")){//find terminal oxygens
+			if (a.getElement() == ChemEl.O){//find terminal oxygens
 				if (a.getBonds().size()==1){
 					int incomingValency = a.getIncomingValency();
 					if (incomingValency ==2){

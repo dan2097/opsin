@@ -10,8 +10,8 @@ public class BondTest {
 	@Test
 	public void testBond() {
 		Fragment frag = new Fragment(mock(Element.class));
-		Atom a1 = new Atom(1, "C", frag);
-		Atom a2 = new Atom(2, "C", frag);
+		Atom a1 = new Atom(1, ChemEl.C, frag);
+		Atom a2 = new Atom(2, ChemEl.C, frag);
 		frag.addAtom(a1);
 		frag.addAtom(a2);
 		Bond bond = new Bond(a1, a2, 1);
@@ -24,8 +24,8 @@ public class BondTest {
 	@Test
 	public void testToCMLBond() {
 		Fragment frag = new Fragment(mock(Element.class));
-		Atom a1 = new Atom(1, "C", frag);
-		Atom a2 = new Atom(2, "C", frag);
+		Atom a1 = new Atom(1, ChemEl.C, frag);
+		Atom a2 = new Atom(2, ChemEl.C, frag);
 		frag.addAtom(a1);
 		frag.addAtom(a2);
 		Bond bond = new Bond(a1, a2, 1);

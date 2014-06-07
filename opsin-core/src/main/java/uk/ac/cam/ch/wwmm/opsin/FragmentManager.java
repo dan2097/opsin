@@ -218,7 +218,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException if a charge disagreement occurs
 	 */
 	void replaceAtomWithAtom(Atom a, Atom heteroAtom, boolean assignLocant) throws StructureBuildingException {
-		String elementSymbol =heteroAtom.getElement();
+		ChemEl chemEl =heteroAtom.getElement();
 		int replacementCharge =heteroAtom.getCharge();
 		if (replacementCharge!=0){
 			if (a.getCharge()==0){
@@ -231,14 +231,14 @@ class FragmentManager {
 				throw new StructureBuildingException("Charge conflict between replacement term and atom to be replaced");
 			}
 		}
-		a.setElement(elementSymbol);
+		a.setElement(chemEl);
 		a.removeElementSymbolLocants();
 		if (assignLocant){
-			String primes ="";
-			while (a.getFrag().getAtomByLocant(elementSymbol+primes)!=null){//if element symbol already assigned, add a prime and try again
-				primes+="'";
+			String primes = "";
+			while (a.getFrag().getAtomByLocant(chemEl.toString() + primes) != null){//if element symbol already assigned, add a prime and try again
+				primes += "'";
 			}
-			a.addLocant(elementSymbol +primes);
+			a.addLocant(chemEl.toString() + primes);
 		}
 	}
 
@@ -604,13 +604,13 @@ class FragmentManager {
 
 	/**
 	 * Create a new Atom of the given element belonging to the given fragment
-	 * @param elementSymbol
+	 * @param chemEl
 	 * @param frag
 	 * @return Atom
 	 * @throws StructureBuildingException
 	 */
-	Atom createAtom(String elementSymbol, Fragment frag) throws StructureBuildingException {
-		Atom a = new Atom(idManager.getNextID(), elementSymbol, frag);
+	Atom createAtom(ChemEl chemEl, Fragment frag) throws StructureBuildingException {
+		Atom a = new Atom(idManager.getNextID(), chemEl, frag);
 		frag.addAtom(a);
 		return a;
 	}

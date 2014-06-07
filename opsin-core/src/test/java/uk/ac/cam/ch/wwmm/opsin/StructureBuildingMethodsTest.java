@@ -77,7 +77,7 @@ public class StructureBuildingMethodsTest {
 		
 		Set<Bond> interFragmentBonds =  state.fragManager.getInterFragmentBonds(aminoFrag);
 		assertEquals(1, interFragmentBonds.size());
-		assertEquals("C", interFragmentBonds.iterator().next().getOtherAtom(aminoFrag.getFirstAtom()).getElement());
+		assertEquals(ChemEl.C, interFragmentBonds.iterator().next().getOtherAtom(aminoFrag.getFirstAtom()).getElement());
 	}
 	
 	@Test
@@ -103,7 +103,7 @@ public class StructureBuildingMethodsTest {
 		
 		Set<Bond> interFragmentBonds =  state.fragManager.getInterFragmentBonds(phosphoFrag);
 		assertEquals(1, interFragmentBonds.size());
-		assertEquals("O", interFragmentBonds.iterator().next().getOtherAtom(phosphoFrag.getFirstAtom()).getElement());
+		assertEquals(ChemEl.O, interFragmentBonds.iterator().next().getOtherAtom(phosphoFrag.getFirstAtom()).getElement());
 	}
 	
 	@Test
@@ -130,6 +130,6 @@ public class StructureBuildingMethodsTest {
 		
 		Set<Bond> interFragmentBonds =  state.fragManager.getInterFragmentBonds(phosphoFrag);
 		assertEquals(1, interFragmentBonds.size());
-		assertEquals("O", interFragmentBonds.iterator().next().getOtherAtom(phosphoFrag.getFirstAtom()).getElement());
+		assertEquals(ChemEl.O, interFragmentBonds.iterator().next().getOtherAtom(phosphoFrag.getFirstAtom()).getElement());
 	}
 }

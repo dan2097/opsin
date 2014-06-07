@@ -149,7 +149,7 @@ public class NameToInchi {
 		List<Atom> atomList =frag.getAtomList();
 		// Generate atoms
 		for (Atom atom : atomList) {
-			JniInchiAtom jAtom = input.addAtom(new JniInchiAtom(0.0, 0.0, 0.0, atom.getElement()));
+			JniInchiAtom jAtom = input.addAtom(new JniInchiAtom(0.0, 0.0, 0.0, atom.getElement().toString()));
 			jAtom.setCharge(atom.getCharge());
 			Integer isotope = atom.getIsotope();
 			if (isotope !=null){

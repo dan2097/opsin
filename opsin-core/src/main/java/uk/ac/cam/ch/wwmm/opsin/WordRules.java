@@ -502,6 +502,6 @@ class WordRules {
 				break;
 			}
 		}
-		return !FragmentTools.isCovalent(element1, element2);
+		return !FragmentTools.isCovalent(ChemEl.valueOf(element1), ChemEl.valueOf(element2));
 	}
 }

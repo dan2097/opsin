@@ -626,7 +626,7 @@ class FusedRingBuilder {
 			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 6-5 and 1-6 are both possible
 			Atom atom = cyclicAtomList.previous();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
-			if (atom.getElement().equals("C") && atom.getBonds().size() == 2
+			if (atom.getElement() == ChemEl.C && atom.getBonds().size() == 2
 					&& (carbonAtomIndexes.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekNext()))){
 				carbonAtomIndexes.add(cyclicAtomList.getIndex());
 				if (carbonAtomIndexes.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
@@ -661,7 +661,7 @@ class FusedRingBuilder {
 			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 1-2 and 6-1 are both possible
 			Atom atom = cyclicAtomList.next();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
-			if (atom.getElement().equals("C") && atom.getBonds().size() == 2
+			if (atom.getElement() == ChemEl.C && atom.getBonds().size() == 2
 					&& (carbonLocants.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
 				carbonLocants.add(atom.getFirstLocant());
 				if (carbonLocants.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
@@ -864,7 +864,7 @@ class FusedRingBuilder {
 			if (childAtom.hasSpareValency()){
 				parentAtom.setSpareValency(true);
 			}
-			if (!parentAtom.getElement().equals(childAtom.getElement())){
+			if (parentAtom.getElement() != childAtom.getElement()){
 				throw new StructureBuildingException("Invalid fusion descriptor: Heteroatom placement is ambiguous as it is not present in both components of the fusion");
 			}
 			atomsToRemoveToReplacementAtom.put(childAtom, parentAtom);
@@ -966,20 +966,19 @@ class FusedRingBuilder {
 				if (locants.length != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
 					List<Atom> atomList =fusedRing.getAtomList();
 					List<Atom> heteroatoms = new ArrayList<Atom>();
-					List<String> elementOfHeteroAtom = new ArrayList<String>();
+					List<ChemEl> elementOfHeteroAtom = new ArrayList<ChemEl>();
 					for (Atom atom : atomList) {//this iterates in the same order as the numbering system
-						if (!atom.getElement().equals("C")){
+						if (atom.getElement() != ChemEl.C){
 							heteroatoms.add(atom);
 							elementOfHeteroAtom.add(atom.getElement());
 						}
 					}
 					if (locants.length == heteroatoms.size()){//as many locants as there are heteroatoms to assign
 						for (Atom atom : heteroatoms) {
-							atom.setElement("C");
+							atom.setElement(ChemEl.C);
 						}
-						for (int i=0; i< heteroatoms.size(); i ++){
-							String elementSymbol =elementOfHeteroAtom.get(i);
-							fusedRing.getAtomByLocantOrThrow(locants[i]).setElement(elementSymbol);
+						for (int i=0; i< heteroatoms.size(); i++) {
+							fusedRing.getAtomByLocantOrThrow(locants[i]).setElement(elementOfHeteroAtom.get(i));
 						}
 						locantEl.detach();
 					}

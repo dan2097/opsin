@@ -189,7 +189,7 @@ class FragmentTools {
 			for (Fragment fragment : allFragments) {
 				List<Atom> atomList = fragment.getAtomList();
 				for (Atom atom : atomList) {
-					if (elementsToIgnore.contains(atom.getElement())){
+					if (elementsToIgnore.contains(atom.getElement().toString())){
 						atomsToIgnore.add(atom);
 					}
 				}
@@ -220,12 +220,12 @@ class FragmentTools {
 		fragmentLoop: for (Fragment suffixFrag : suffixFragments) {
 			List<Atom> atomList = suffixFrag.getAtomList();
 			for (Atom atom : atomList) {
-				if (atom.getElement().equals("N") && atom.getIncomingValency() ==3 ){
+				if (atom.getElement() == ChemEl.N && atom.getIncomingValency() ==3 ){
 					List<String> locants =atom.getLocants();
 					if (locants.size()==1 && MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locants.get(0)).matches()){
 						List<Atom> neighbours = atom.getAtomNeighbours();
 						for (Atom neighbour : neighbours) {
-							if (neighbour.getElement().equals("N") && neighbour.getIncomingValency()==1){
+							if (neighbour.getElement() == ChemEl.N && neighbour.getIncomingValency()==1){
 								String locantToAdd = locants.get(0);
 								atom.clearLocants();
 								neighbour.addLocant(locantToAdd);
@@ -248,11 +248,11 @@ class FragmentTools {
 			if (atomsToIgnore.contains(atom)){
 				continue;
 			}
-			String element = atom.getElement();
-			if (elementToIgnore.contains(element)){
+			ChemEl chemEl = atom.getElement();
+			if (elementToIgnore.contains(chemEl.toString())){
 				continue;
 			}
-			if (element.equals("C")) {
+			if (chemEl == ChemEl.C) {
 				if (seenMoreThanOneC) {
 					continue;
 				}
@@ -341,7 +341,7 @@ class FragmentTools {
 	}
 
 	private static void assignLocant(Atom atom, Map<String, Integer> elementCount) {
-		String element = atom.getElement();
+		String element = atom.getElement().toString();
 		Integer count = elementCount.get(element);
 		if (count == null){
 			atom.addLocant(element);
@@ -449,7 +449,7 @@ class FragmentTools {
 			atom.clearLocants();
 		}
 		for (Atom atom : atomList) {
-			if(!atom.getElement().equals("C") || atom.getBonds().size() < 3) {
+			if(atom.getElement() != ChemEl.C || atom.getBonds().size() < 3) {
 				locantVal++;
 				locantLetter = 'a';
 				atom.addLocant(Integer.toString(locantVal));
@@ -509,13 +509,13 @@ class FragmentTools {
 	 * @throws StructureBuildingException 
 	 */
 	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) throws StructureBuildingException {
-		if (nitrogen.getElement().equals("N") && nitrogen.getAtomIsInACycle()){
+		if (nitrogen.getElement() == ChemEl.N && nitrogen.getAtomIsInACycle()){
 			for (Atom neighbour : nitrogen.getAtomNeighbours()) {
-				if (neighbour.hasSpareValency() && neighbour.getElement().equals("C") && neighbour.getAtomIsInACycle()){
+				if (neighbour.hasSpareValency() && neighbour.getElement() == ChemEl.C && neighbour.getAtomIsInACycle()){
 					List<Atom> distance2Neighbours = neighbour.getAtomNeighbours();
 					distance2Neighbours.remove(nitrogen);
 					for (Atom distance2Neighbour : distance2Neighbours) {
-						if (distance2Neighbour.hasSpareValency() && distance2Neighbour.getElement().equals("N") && distance2Neighbour.getAtomIsInACycle() && distance2Neighbour.getCharge()==0){
+						if (distance2Neighbour.hasSpareValency() && distance2Neighbour.getElement() == ChemEl.N && distance2Neighbour.getAtomIsInACycle() && distance2Neighbour.getCharge()==0){
 							return distance2Neighbour;
 						}
 					}
@@ -572,13 +572,13 @@ class FragmentTools {
 			if (indicatedHydrogen.size()>1){
 				for (Atom indicatedAtom : indicatedHydrogen) {
 					boolean couldBeInvolvedInSimpleNitrogenTautomerism = false;//fix for guanine like purine derivatives
-					if (indicatedAtom.getElement().equals("N") && indicatedAtom.getAtomIsInACycle()){
+					if (indicatedAtom.getElement() == ChemEl.N && indicatedAtom.getAtomIsInACycle()){
 						atomloop : for (Atom neighbour : indicatedAtom.getAtomNeighbours()) {
-							if (neighbour.getElement().equals("C") && neighbour.getAtomIsInACycle()){
+							if (neighbour.getElement() == ChemEl.C && neighbour.getAtomIsInACycle()){
 								List<Atom> distance2Neighbours = neighbour.getAtomNeighbours();
 								distance2Neighbours.remove(indicatedAtom);
 								for (Atom distance2Neighbour : distance2Neighbours) {
-									if (distance2Neighbour.getElement().equals("N") && distance2Neighbour.getAtomIsInACycle() && !originalIndicatedHydrogen.contains(distance2Neighbour)){
+									if (distance2Neighbour.getElement() == ChemEl.N && distance2Neighbour.getAtomIsInACycle() && !originalIndicatedHydrogen.contains(distance2Neighbour)){
 										couldBeInvolvedInSimpleNitrogenTautomerism =true;
 										break atomloop;
 									}
@@ -639,8 +639,8 @@ class FragmentTools {
 								if (atomToReduceValencyAt==null){
 									atomToReduceValencyAt=a;//else just go with the first atom with SV encountered
 								}
-								if (!a.getElement().equals("C")){
-									atomToReduceValencyAt=a;
+								if (a.getElement() != ChemEl.C) {
+									atomToReduceValencyAt = a;
 									break;
 								}
 							}
@@ -748,7 +748,7 @@ class FragmentTools {
 			Atom atom = atomsToConsider.removeFirst();
 			atomsVisited.add(atom);
 			int primesOnPossibleAtom =0;
-			String element =atom.getElement();
+			String element =atom.getElement().toString();
 			if (elementCount.get(element)==null){
 				elementCount.put(element,1);
 			}
@@ -777,8 +777,8 @@ class FragmentTools {
 					}
 				}
 			}
-			if (atom.getElement().equals("N") && atom.getIncomingValency() ==3 && atom.getCharge()==0 
-					&& atomNeighbours.size()==1 && atomNeighbours.get(0).getElement().equals("N")){
+			if (atom.getElement() == ChemEl.N && atom.getIncomingValency() ==3 && atom.getCharge()==0 
+					&& atomNeighbours.size()==1 && atomNeighbours.get(0).getElement() == ChemEl.N){
 				hydrazoneSpecialCase =true;
 			}
 			else{
@@ -795,7 +795,7 @@ class FragmentTools {
 			}
 		}
 
-		if (primes.equals("") && backboneAtom.getElement().equals(elementSymbol)){//maybe it meant the starting atom
+		if (primes.equals("") && backboneAtom.getElement().toString().equals(elementSymbol)){//maybe it meant the starting atom
 			return backboneAtom;
 		}
 		return null;
@@ -806,13 +806,13 @@ class FragmentTools {
 	 * Determines whether the bond between two elements is likely to be covalent
 	 * This is crudely determined based on whether the combination of elements fall outside the ionic and
 	 * metallic sections of a van Arkel diagram
-	 * @param element1
-	 * @param element2
+	 * @param chemEl1
+	 * @param chemEl2
 	 * @return
 	 */
-	static boolean isCovalent(String element1, String element2) {
-		Double atom1Electrongegativity = AtomProperties.elementToPaulingElectronegativity.get(element1);
-		Double atom2Electrongegativity = AtomProperties.elementToPaulingElectronegativity.get(element2);
+	static boolean isCovalent(ChemEl chemEl1, ChemEl chemEl2) {
+		Double atom1Electrongegativity = AtomProperties.getPaulingElectronegativity(chemEl1);
+		Double atom2Electrongegativity = AtomProperties.getPaulingElectronegativity(chemEl2);
 		if (atom1Electrongegativity!=null && atom2Electrongegativity !=null){
 			double halfSum = (atom1Electrongegativity + atom2Electrongegativity)/2;
 			double difference = Math.abs(atom1Electrongegativity - atom2Electrongegativity);
@@ -856,8 +856,8 @@ class FragmentTools {
 	 * @return
 	 */
 	static boolean isFunctionalAtom(Atom atom) {
-		String element = atom.getElement();
-		if (element.equals("O") || element.equals("S") || element.equals("Se") || element.equals("Te")) {//potential chalcogen functional atom
+		ChemEl chemEl = atom.getElement();
+		if (chemEl.isChalcogen()) {//potential chalcogen functional atom
 			Fragment frag = atom.getFrag();
 			for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
 				if (atom.equals(frag.getFunctionalAtom(i).getAtom())){
@@ -877,11 +877,11 @@ class FragmentTools {
 	static boolean  allAtomsInRingAreIdentical(Fragment ring){
 		List<Atom> atomList = ring.getAtomList();
 		Atom firstAtom = atomList.get(0);
-		String element = firstAtom.getElement();
+		ChemEl chemEl = firstAtom.getElement();
 		int valency = firstAtom.getIncomingValency();
 		boolean spareValency = firstAtom.hasSpareValency();
 		for (Atom atom : atomList) {
-			if (!atom.getElement().equals(element)){
+			if (atom.getElement() != chemEl){
 				return false;
 			}
 			if (atom.getIncomingValency() != valency){
@@ -901,23 +901,23 @@ class FragmentTools {
 	 * Formally the atom is replaced by hydrogen, hence stereochemistry is intentionally preserved
 	 * @param state 
 	 * @param fragment
-	 * @param element The symbol of the element
+	 * @param chemEl
 	 * @param locant A locant or null
 	 * @throws StructureBuildingException 
 	 */
-	static void removeHydroxyLikeTerminalAtom(BuildState state, Fragment fragment, String element, String locant) throws StructureBuildingException {
+	static void removeHydroxyLikeTerminalAtom(BuildState state, Fragment fragment, ChemEl chemEl, String locant) throws StructureBuildingException {
 		List<Atom> applicableTerminalAtoms;
 		if (locant!=null){
 			Atom adjacentAtom = fragment.getAtomByLocantOrThrow(locant);
-			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(adjacentAtom.getAtomNeighbours(), element);
+			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(adjacentAtom.getAtomNeighbours(), chemEl);
 			if (applicableTerminalAtoms.isEmpty()){
-				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " at locant "+ locant +" for subtractive nomenclature");
+				throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " at locant "+ locant +" for subtractive nomenclature");
 			}
 		}
 		else{
-			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(fragment.getAtomList(), element);
+			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(fragment.getAtomList(), chemEl);
 			if (applicableTerminalAtoms.isEmpty()){
-				throw new StructureBuildingException("Unable to find terminal atom of type: " + element + " for subtractive nomenclature");
+				throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " for subtractive nomenclature");
 			}
 		}
 		Atom atomToRemove = applicableTerminalAtoms.get(0);
@@ -952,13 +952,13 @@ class FragmentTools {
 	 * Finds terminal atoms of the given element type from the list given
 	 * The terminal atoms be single bonded, not radicals and uncharged
 	 * @param atoms
-	 * @param element
+	 * @param chemEl
 	 * @return 
 	 */
-	static List<Atom> findHydroxyLikeTerminalAtoms(List<Atom> atoms, String element) {
+	static List<Atom> findHydroxyLikeTerminalAtoms(List<Atom> atoms, ChemEl chemEl) {
 		List<Atom> matches =new ArrayList<Atom>();
 		for (Atom atom : atoms) {
-			if (atom.getElement().equals(element) && atom.getIncomingValency()==1 &&
+			if (atom.getElement() == chemEl && atom.getIncomingValency()==1 &&
 				atom.getOutValency() == 0 && atom.getCharge() == 0){
 				matches.add(atom);
 			}
@@ -1020,16 +1020,16 @@ class FragmentTools {
 		List<Atom> hydroxyAtoms = new ArrayList<Atom>();
 		List<Atom> atoms = biochemicalFragment.getAtomList();
 		for (Atom atom : atoms) {
-			if (atom.getElement().equals("O") && atom.getBonds().size()==1  &&
+			if (atom.getElement() == ChemEl.O && atom.getBonds().size()==1  &&
 					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
 				List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
-				if (adjacentAtom.getElement().equals("C")){
+				if (adjacentAtom.getElement() == ChemEl.C){
 					neighbours.remove(atom);
-					if (neighbours.size() >= 1 && neighbours.get(0).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
+					if (neighbours.size() >= 1 && neighbours.get(0).getElement() == ChemEl.O && adjacentAtom.getBondToAtomOrThrow(neighbours.get(0)).getOrder()==2){
 						continue;
 					}
-					if (neighbours.size() >= 2 && neighbours.get(1).getElement().equals("O") && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
+					if (neighbours.size() >= 2 && neighbours.get(1).getElement() == ChemEl.O && adjacentAtom.getBondToAtomOrThrow(neighbours.get(1)).getOrder()==2){
 						continue;
 					}
 					hydroxyAtoms.add(atom);

@@ -55,10 +55,15 @@ class SMILESFragmentBuilder {
 	private static class StackFrame {
 		/**The Atom currently under consideration.*/
 		Atom atom;
+
 		/**The order of the bond about to be formed.*/
 		int bondOrder;
+
 		/**Whether the bond is a \ or / bond for use in determining cis/trans.*/
-		SMILES_BOND_DIRECTION slash;
+		SMILES_BOND_DIRECTION slash = null;
+
+		/**The index of a dummy atom in the atom's stereochemistry atomrefs4*/
+		Integer indexOfDummyAtom = null;
 
 		/**Creates a stack frame with given parameters.
 		 *
@@ -68,7 +73,6 @@ class SMILESFragmentBuilder {
 		StackFrame(Atom a, int bondOrderVal) {
 			atom = a;
 			bondOrder = bondOrderVal;
-			slash = null;
 		}
 
 		/**Creates a copy of an existing StackFrame.
@@ -80,6 +84,9 @@ class SMILESFragmentBuilder {
 			bondOrder = sf.bondOrder;
 		}
 	}
+
+	/**Ring opening dummy atom, used as a placeholder in stereochemistry atomrefs4*/
+	private static final Atom ringOpeningDummyAtom = new Atom(ChemEl.R);
 
 	/**Organic Atoms.*/
 	private static final Set<String> organicAtoms = new HashSet<String>();
@@ -118,7 +125,7 @@ class SMILESFragmentBuilder {
 
 	private class ParserInstance {
 		private final Deque<StackFrame> stack = new ArrayDeque<StackFrame>();
-		private final Map<String, StackFrame> closures = new HashMap<String, StackFrame>();//used for ring closures
+		private final Map<String, StackFrame> ringClosures = new HashMap<String, StackFrame>();
 		
 		private final String smiles;
 		private final int endOfSmiles;
@@ -247,7 +254,7 @@ class SMILESFragmentBuilder {
 					throw new StructureBuildingException(ch + " is in an unexpected position. Check this is not a mistake and that this feature of SMILES is supported by OPSIN's SMILES parser");
 				}
 			}
-			if (!closures.isEmpty()){
+			if (!ringClosures.isEmpty()){
 				throw new StructureBuildingException("Unmatched ring opening");
 			}
 		}
@@ -509,7 +516,7 @@ class SMILESFragmentBuilder {
 					throw new StructureBuildingException("A ring opening indice after a % must be two digits long");
 				}
 			}
-			if(closures.containsKey(closure)) {
+			if(ringClosures.containsKey(closure)) {
 				processRingClosure(closure);
 			} else {
 				if (stack.getLast().atom == null){
@@ -526,15 +533,14 @@ class SMILESFragmentBuilder {
 				stack.getLast().slash = null;
 			}
 			if (sf.atom.getAtomParity() != null){//replace ringclosureX with actual reference to id when it is known
-				Atom dummyRingClosureAtom = new Atom(closure);
-				addAtomToAtomParity(sf.atom.getAtomParity(), dummyRingClosureAtom);
+				sf.indexOfDummyAtom = addAtomToAtomParity(sf.atom.getAtomParity(), ringOpeningDummyAtom);
 			}
-			closures.put(closure, sf);
+			ringClosures.put(closure, sf);
 			stack.getLast().bondOrder = 1;
 		}
 
 		private void processRingClosure(String closure) throws StructureBuildingException {
-			StackFrame sf = closures.remove(closure);
+			StackFrame sf = ringClosures.remove(closure);
 			int bondOrder = 1;
 			if(sf.bondOrder > 1) {
 				if(stack.getLast().bondOrder > 1 && sf.bondOrder != stack.getLast().bondOrder){
@@ -569,27 +575,27 @@ class SMILESFragmentBuilder {
 				addAtomToAtomParity(atomParity, sf.atom);
 			}
 			if (sf.atom.getAtomParity() != null){//replace dummy atom with actual atom e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy atom before being replaced with the F atom
-				AtomParity atomParity = sf.atom.getAtomParity();
-				Atom[] atomRefs4 = atomParity.getAtomRefs4();
-				boolean replacedAtom = false;
-				for (int i = 0; i < atomRefs4.length; i++) {
-					if (atomRefs4[i] !=null && atomRefs4[i].getElement().equals(closure)){
-						atomRefs4[i] = stack.getLast().atom;
-						replacedAtom = true;
-						break;
-					}
+				Atom[] atomRefs4 = sf.atom.getAtomParity().getAtomRefs4();
+				if (sf.indexOfDummyAtom == null) {
+					throw new RuntimeException("OPSIN Bug: Index of dummy atom representing ring closure atom not set");
 				}
-				if (!replacedAtom){
-					throw new StructureBuildingException("Unable to find ring closure atom in atomRefs4 of atomparity when building SMILES");
-				}
+				atomRefs4[sf.indexOfDummyAtom] = stack.getLast().atom;
 			}
 			stack.getLast().bondOrder = 1;
 		}
 
-		private void addAtomToAtomParity(AtomParity atomParity, Atom atom) throws StructureBuildingException {
+		/**
+		 * Adds an atom at the first non-null position in the atomParity's atomRefs4
+		 * @param atomParity
+		 * @param atom
+		 * @return Returns the index of the atom in the atomParity's atomRefs4
+		 * @throws StructureBuildingException
+		 */
+		private int addAtomToAtomParity(AtomParity atomParity, Atom atom) throws StructureBuildingException {
 			Atom[] atomRefs4 = atomParity.getAtomRefs4();
 			boolean setAtom = false;
-			for (int i = 0; i < atomRefs4.length; i++) {
+			int i = 0;
+			for (; i < atomRefs4.length; i++) {
 				if (atomRefs4[i] == null){
 					atomRefs4[i] = atom;
 					setAtom = true;
@@ -599,6 +605,7 @@ class SMILESFragmentBuilder {
 			if (!setAtom){
 				throw new StructureBuildingException("Tetrahedral stereocentre specified in SMILES appears to involve more than 4 atoms");
 			}
+			return i;
 		}
 		
 		/**
@@ -758,7 +765,7 @@ class SMILESFragmentBuilder {
 					}
 				}
 				if (nullAtoms != 0){
-					if (nullAtoms ==1 && hydrogen==0 && (atom.getElement().equals("S") || atom.getElement().equals("Se"))){//special case where lone pair is part of the tetrahedron
+					if (nullAtoms ==1 && hydrogen==0 && (atom.getElement() == ChemEl.S || atom.getElement() == ChemEl.Se)){//special case where lone pair is part of the tetrahedron
 						if (atomList.indexOf(atomRefs4[0]) < atomList.indexOf(atom)){//is there an atom in the SMILES in front of the stereocentre?
 							atomRefs4[3] = atomRefs4[2];
 							atomRefs4[2] = atomRefs4[1];
@@ -872,30 +879,30 @@ class SMILESFragmentBuilder {
 		int incomingValency = atom.getIncomingValency() + hydrogenCount +atom.getOutValency();
 		int charge = atom.getCharge();
 		int absoluteCharge =Math.abs(charge);
-		String element =atom.getElement();
+		ChemEl chemEl = atom.getElement();
 		if (atom.hasSpareValency()){
 			Integer hwValency;
-			if (element.equals("C")){
+			if (chemEl == ChemEl.C) {
 				hwValency = 4;
 			}
 			else{
-				hwValency = ValencyChecker.getHWValency(element);
+				hwValency = ValencyChecker.getHWValency(chemEl);
 				if (hwValency == null){
-					throw new StructureBuildingException(element +" is not expected to be aromatic!");
+					throw new StructureBuildingException(chemEl +" is not expected to be aromatic!");
 				}
 			}
 			if (incomingValency < (hwValency + absoluteCharge)){
 				incomingValency++;
 			}
 		}
-		Integer defaultVal = ValencyChecker.getDefaultValency(element);
+		Integer defaultVal = ValencyChecker.getDefaultValency(chemEl);
 		if (defaultVal !=null){//s or p block element
 			if (defaultVal != incomingValency || charge !=0){		
 				if (Math.abs(incomingValency - defaultVal)==Math.abs(charge)){
 					atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - defaultVal);
 				}
 				else{
-					Integer[] unchargedStableValencies = ValencyChecker.getPossibleValencies(element, 0);
+					Integer[] unchargedStableValencies = ValencyChecker.getPossibleValencies(chemEl, 0);
 					boolean hasPlausibleValency =false;
 					for (Integer unchargedStableValency : unchargedStableValencies) {
 						if (Math.abs(incomingValency - unchargedStableValency)==Math.abs(charge)){
@@ -921,14 +928,14 @@ class SMILESFragmentBuilder {
 			if (hydrogenCount > 0){//make hydrogen explicit
 				Fragment frag =atom.getFrag();
 				for (int i = 0; i < hydrogenCount; i++) {
-					Atom hydrogen = createAtom("H", frag);
+					Atom hydrogen = createAtom(ChemEl.H, frag);
 					createBond(atom, hydrogen, 1);
 				}
 			}
 		}
 	}
 	
-
+	
 	/**
 	 * Create a new Atom of the given element belonging to the given fragment
 	 * @param elementSymbol
@@ -937,7 +944,18 @@ class SMILESFragmentBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private Atom createAtom(String elementSymbol, Fragment frag) throws StructureBuildingException {
-		Atom a = new Atom(idManager.getNextID(), elementSymbol, frag);
+		return createAtom(ChemEl.valueOf(elementSymbol), frag);
+	}
+
+	/**
+	 * Create a new Atom of the given element belonging to the given fragment
+	 * @param chemEl
+	 * @param frag
+	 * @return Atom
+	 * @throws StructureBuildingException
+	 */
+	private Atom createAtom(ChemEl chemEl, Fragment frag) throws StructureBuildingException {
+		Atom a = new Atom(idManager.getNextID(), chemEl, frag);
 		frag.addAtom(a);
 		return a;
 	}

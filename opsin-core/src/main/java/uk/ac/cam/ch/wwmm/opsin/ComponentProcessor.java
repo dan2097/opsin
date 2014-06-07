@@ -578,7 +578,7 @@ class ComponentProcessor {
 			int counter = -1;
 			Atom previousAtom = startingAtom;
 			for (int i = neighbours.size() - 1; i >=0; i--) {//only consider carbon atoms
-				if (!neighbours.get(i).getElement().equals("C")){
+				if (neighbours.get(i).getElement() != ChemEl.C){
 					neighbours.remove(i);
 				}
 			}
@@ -595,7 +595,7 @@ class ComponentProcessor {
 				neighbours = nextAtom.getAtomNeighbours();
 				neighbours.remove(previousAtom);
 				for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
-					if (!neighbours.get(i).getElement().equals("C")){
+					if (neighbours.get(i).getElement() != ChemEl.C){
 						neighbours.remove(i);
 					}
 				}
@@ -1410,7 +1410,7 @@ class ComponentProcessor {
 			for (Bond bond : aldehydeAtom.getBonds()) {
 				if (bond.getOrder() ==2){
 					Atom otherAtom = bond.getOtherAtom(aldehydeAtom);
-					if (otherAtom.getElement().equals("O") && otherAtom.getCharge()==0 && otherAtom.getBonds().size()==1){
+					if (otherAtom.getElement() == ChemEl.O && otherAtom.getCharge()==0 && otherAtom.getBonds().size()==1){
 						bond.setOrder(1);
 						foundBond = true;
 						break;
@@ -1429,7 +1429,7 @@ class ComponentProcessor {
 			for (Bond bond : backboneAtom.getBonds()) {
 				if (bond.getOrder() ==1){
 					Atom otherAtom = bond.getOtherAtom(backboneAtom);
-					if (otherAtom.getElement().equals("O") && otherAtom.getCharge()==0 && otherAtom.getBonds().size()==1){
+					if (otherAtom.getElement() == ChemEl.O && otherAtom.getCharge()==0 && otherAtom.getBonds().size()==1){
 						bond.setOrder(2);
 						foundBond = true;
 						break;
@@ -1632,10 +1632,10 @@ class ComponentProcessor {
 		String nextLowestLocant = String.valueOf(Integer.parseInt(referenceAtom.getFirstLocant()) -1);
 		Atom[] atomRefs4 = new Atom[4];
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O")){
+			if (neighbour.getElement() == ChemEl.O) {
 				atomRefs4[0] = neighbour;
 			}
-			else if (neighbour.getElement().equals("C")){
+			else if (neighbour.getElement() == ChemEl.C) {
 				if (neighbour.getFirstLocant().equals(nextLowestLocant)){
 					atomRefs4[1] = neighbour;
 				}
@@ -1663,7 +1663,7 @@ class ComponentProcessor {
 		}
 		Atom[] atomRefs4 = new Atom[4];
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("C")){
+			if (neighbour.getElement() == ChemEl.C){
 				if (neighbour.getAtomIsInACycle()){
 					atomRefs4[0] = neighbour;
 				}
@@ -1671,7 +1671,7 @@ class ComponentProcessor {
 					atomRefs4[3] = neighbour;
 				}
 			}
-			else if (neighbour.getElement().equals("O")){
+			else if (neighbour.getElement() == ChemEl.O){
 				int incomingVal =neighbour.getIncomingValency();
 				if (incomingVal ==1){
 					atomRefs4[1] = neighbour;
@@ -2259,7 +2259,7 @@ class ComponentProcessor {
 	private void addFunctionalAtomsToHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O") && neighbour.getCharge() == 0 && neighbour.getAtomNeighbours().size() == 1 && atom.getBondToAtomOrThrow(neighbour).getOrder() == 1){
+			if (neighbour.getElement() == ChemEl.O && neighbour.getCharge() == 0 && neighbour.getAtomNeighbours().size() == 1 && atom.getBondToAtomOrThrow(neighbour).getOrder() == 1){
 				neighbour.getFrag().addFunctionalAtom(neighbour);
 			}
 		}
@@ -2273,7 +2273,7 @@ class ComponentProcessor {
 	private void chargeHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O") && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
+			if (neighbour.getElement() == ChemEl.O && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
 				neighbour.addChargeAndProtons(-1, -1);
 			}
 		}
@@ -2290,7 +2290,7 @@ class ComponentProcessor {
 		//TODO prioritise [N+][O-]
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement().equals("O") && neighbour.getAtomNeighbours().size()==1){
+			if (neighbour.getElement() == ChemEl.O && neighbour.getAtomNeighbours().size()==1){
 				Bond b = atom.getBondToAtomOrThrow(neighbour);
 				if (b.getOrder()==desiredBondOrder && neighbour.getCharge()==0){
 					FragmentTools.removeTerminalAtom(state, neighbour);
@@ -2303,7 +2303,7 @@ class ComponentProcessor {
 					return;
 				}
 				else if (neighbour.getCharge() ==-1 && b.getOrder()==1 && desiredBondOrder == 2){
-					if (atom.getCharge() ==1 && atom.getElement().equals("N")){
+					if (atom.getCharge() ==1 && atom.getElement() == ChemEl.N){
 						FragmentTools.removeTerminalAtom(state, neighbour);
 						atom.neutraliseCharge();
 						return;
@@ -2332,10 +2332,10 @@ class ComponentProcessor {
 	private void convertHydroxyGroupsToOutAtoms(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getElement().equals("O") && atom.getCharge()==0 && atom.getBonds().size()==1  &&
+			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBonds().size()==1  &&
 					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
-				if (!adjacentAtom.getElement().equals("O")){
+				if (adjacentAtom.getElement() != ChemEl.O){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
 					frag.addOutAtom(adjacentAtom, 1, true);
 				}
@@ -2352,10 +2352,10 @@ class ComponentProcessor {
 	private void convertHydroxyGroupsToPositiveCharge(Fragment frag) throws StructureBuildingException {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getElement().equals("O") && atom.getCharge()==0 && atom.getBonds().size()==1  &&
+			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBonds().size()==1  &&
 					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
-				if (!adjacentAtom.getElement().equals("O")){
+				if (adjacentAtom.getElement() != ChemEl.O){
 					state.fragManager.removeAtomAndAssociatedBonds(atom);
 					adjacentAtom.addChargeAndProtons(1, -1);
 				}
@@ -2629,7 +2629,7 @@ class ComponentProcessor {
 					//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
 					for (int j = 1; j < specialRingInformation.length; j++) {
 						Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(j));
-						a.setElement(specialRingInformation[j]);
+						a.setElement(ChemEl.valueOf(specialRingInformation[j]));
 					}
 					for(Element p : prevs){
 						p.detach();
@@ -2648,7 +2648,7 @@ class ComponentProcessor {
 					}
 					elementReplacement = m.group();
 					Atom a = hwRing.getAtomByLocantOrThrow(locant);
-					a.setElement(elementReplacement);
+					a.setElement(ChemEl.valueOf(elementReplacement));
 					if (heteroatom.getAttribute(LAMBDA_ATR) != null){
 						a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
 					}
@@ -2670,11 +2670,11 @@ class ComponentProcessor {
 				}
 				elementReplacement = m.group();
 
-				while (!hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant)).getElement().equals("C")){
+				while (hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant)).getElement() != ChemEl.C){
 					defaultLocant++;
 				}
 				Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant));
-				a.setElement(elementReplacement);
+				a.setElement(ChemEl.valueOf(elementReplacement));
 				if (heteroatom.getAttribute(LAMBDA_ATR)!=null){
 					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
 				}
@@ -4210,7 +4210,7 @@ class ComponentProcessor {
 			if (a.getType().equals(SUFFIX_TYPE_VAL)){
 				continue;
 			}
-			if (!a.getElement().equals("C")){
+			if (a.getElement() != ChemEl.C){
 				continue;
 			}
 			if (ValencyChecker.checkValencyAvailableForBond(a, 1)){
@@ -4360,8 +4360,8 @@ class ComponentProcessor {
 					}
 					break;
 				case setAcidicElement:
-					String element = suffixRule.getAttributeValue(SUFFIXRULES_ELEMENT_ATR);
-					swapElementsSuchThatThisElementIsAcidic(suffixFrag, element);
+					ChemEl chemEl = ChemEl.valueOf(suffixRule.getAttributeValue(SUFFIXRULES_ELEMENT_ATR));
+					swapElementsSuchThatThisElementIsAcidic(suffixFrag, chemEl);
 					break;
 				case addSuffixPrefixIfNonePresentAndCyclic:
 				case addFunctionalAtomsToHydroxyGroups:
@@ -4420,7 +4420,7 @@ class ComponentProcessor {
 	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element suffix) throws StructureBuildingException, ComponentGenerationException {
 		List<Atom> rAtoms = new ArrayList<Atom>();
 		for (Atom a : suffixFrag.getAtomList()) {
-			if (a.getElement().equals("R")){
+			if (a.getElement() == ChemEl.R){
 				rAtoms.add(a);
 			}
 		}
@@ -4476,7 +4476,7 @@ class ComponentProcessor {
 		if (suffixableFragment.getType().equals(CARBOHYDRATE_TYPE_VAL)){
 			removeTerminalOxygen(parentAtom1, 2);
 			removeTerminalOxygen(parentAtom1, 1);
-			List<Atom> chainHydroxy = FragmentTools.findHydroxyLikeTerminalAtoms(parentAtom2.getAtomNeighbours(), "O");
+			List<Atom> chainHydroxy = FragmentTools.findHydroxyLikeTerminalAtoms(parentAtom2.getAtomNeighbours(), ChemEl.O);
 			if (chainHydroxy.size() == 1){
 				FragmentTools.removeTerminalAtom(state, chainHydroxy.get(0));//make sure to retain stereochemistry
 			}
@@ -4485,12 +4485,12 @@ class ComponentProcessor {
 			}
 		}
 		else{
-			if (parentAtom2.getElement().equals("O")){//cyclic suffixes like lactone formally indicate the removal of hydroxy cf. 1979 rule 472.1
+			if (parentAtom2.getElement() == ChemEl.O){//cyclic suffixes like lactone formally indicate the removal of hydroxy cf. 1979 rule 472.1
 				//...although in most cases they are used on structures that don't actually have a hydroxy group
 				List<Atom> neighbours = parentAtom2.getAtomNeighbours();
 				if (neighbours.size()==1){
 					List<Atom> suffixNeighbours = rAtoms.get(1).getAtomNeighbours();
-					if (suffixNeighbours.size()==1 && suffixNeighbours.get(0).getElement().equals("O")){
+					if (suffixNeighbours.size()==1 && suffixNeighbours.get(0).getElement() == ChemEl.O){
 						state.fragManager.removeAtomAndAssociatedBonds(parentAtom2);
 						parentAtom2 = neighbours.get(0);
 					}
@@ -4531,12 +4531,12 @@ class ComponentProcessor {
 		Atom possibleCarbonAtom = null;
 		Atom possibleDiOrHigherIon = null;
 		for (Atom a : atomList) {
-			Integer[] stableValencies = ValencyChecker.getPossibleValencies(a.getElement(), a.getCharge() + chargeChange);
+			ChemEl chemEl = a.getElement();
+			Integer[] stableValencies = ValencyChecker.getPossibleValencies(chemEl, a.getCharge() + chargeChange);
 			if (stableValencies == null) {//unstable valency so seems unlikely
 				continue;
 			}
-			String element = a.getElement();
-			int resultantExpectedValency = (a.getLambdaConventionValency() ==null ? ValencyChecker.getDefaultValency(element) :  a.getLambdaConventionValency()) + a.getProtonsExplicitlyAddedOrRemoved() + protonChange;
+			int resultantExpectedValency = (a.getLambdaConventionValency() ==null ? ValencyChecker.getDefaultValency(chemEl) : a.getLambdaConventionValency()) + a.getProtonsExplicitlyAddedOrRemoved() + protonChange;
 			boolean matched = false;
 			for (Integer stableValency : stableValencies) {
 				if (stableValency ==resultantExpectedValency){
@@ -4551,11 +4551,11 @@ class ComponentProcessor {
 				continue;
 			}
 			if (Math.abs(a.getCharge())==0){
-				if (element.equals("N")){
+				if (chemEl == ChemEl.N){
 					likelyAtom = a;
 					break;
 				}
-				else if (possibleHeteroatom ==null && !element.equals("C")){
+				else if (possibleHeteroatom ==null && chemEl != ChemEl.C){
 					possibleHeteroatom= a;
 				}
 				else if (possibleCarbonAtom ==null){
@@ -4586,17 +4586,17 @@ class ComponentProcessor {
 	/**
 	 * e.g. if element is "S" changes C(=S)O -->C(=O)S
 	 * @param suffixFrag
-	 * @param element
+	 * @param chemEl
 	 * @throws StructureBuildingException 
 	 */
-	private void swapElementsSuchThatThisElementIsAcidic(Fragment frag, String element) throws StructureBuildingException {
+	private void swapElementsSuchThatThisElementIsAcidic(Fragment frag, ChemEl chemEl) throws StructureBuildingException {
 		for (int i = 0, l =frag.getFunctionalAtomCount(); i < l; i++) {
 			Atom atom = frag.getFunctionalAtom(i).getAtom();
 			Set<Atom> ambiguouslyElementedAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
 			if (ambiguouslyElementedAtoms != null) {
 				Atom atomToSwapWith = null;
 				for (Atom ambiguouslyElementedAtom : ambiguouslyElementedAtoms) {
-					if (ambiguouslyElementedAtom.getElement().equals(element)){
+					if (ambiguouslyElementedAtom.getElement() == chemEl){
 						atomToSwapWith = ambiguouslyElementedAtom;
 						break;	
 					}
@@ -4614,9 +4614,9 @@ class ComponentProcessor {
 						for (String locant : tempLocants2) {
 							atom.addLocant(locant);
 						}
-						String a2Element = atomToSwapWith.getElement();
+						ChemEl a2ChemEl = atomToSwapWith.getElement();
 						atomToSwapWith.setElement(atom.getElement());
-						atom.setElement(a2Element);
+						atom.setElement(a2ChemEl);
 						ambiguouslyElementedAtoms.remove(atomToSwapWith);
 					}
 					ambiguouslyElementedAtoms.remove(atom);
@@ -4624,7 +4624,7 @@ class ComponentProcessor {
 				}
 			}
 		}
-		throw new StructureBuildingException("Unable to find potential acidic atom with element: " + element);
+		throw new StructureBuildingException("Unable to find potential acidic atom with element: " + chemEl);
 	}
 	
 	/**
