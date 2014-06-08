@@ -475,8 +475,7 @@ class ComponentGenerator {
 	 */
 	private void processAlkaneStemModifications(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> alkaneStemModifiers = subOrRoot.getChildElements(ALKANESTEMMODIFIER_EL);
-		for(int i=0;i<alkaneStemModifiers.size();i++) {
-			Element alkaneStemModifier =alkaneStemModifiers.get(i);
+		for (Element alkaneStemModifier : alkaneStemModifiers) {
 			Element alkane = OpsinTools.getNextSibling(alkaneStemModifier);
 			if (alkane ==null || !CHAIN_TYPE_VAL.equals(alkane.getAttributeValue(TYPE_ATR))
 					|| !ALKANESTEM_SUBTYPE_VAL.equals(alkane.getAttributeValue(SUBTYPE_ATR))){
@@ -1241,8 +1240,7 @@ class ComponentGenerator {
 		Element closeBracket = null;
 		for (Element sub : substituentsAndRoot) {
 			List<Element> children = sub.getChildElements();
-			for(int i=0; i<children.size(); i++) {
-				Element child = children.get(i);
+			for (Element child : children) {
 				if(child.getName().equals(OPENBRACKET_EL)) {
 					if(openBracket == null) {
 						openBracket = child;

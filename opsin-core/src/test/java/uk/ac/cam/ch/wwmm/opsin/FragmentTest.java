@@ -93,7 +93,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testGetIDFromLocant() throws StructureBuildingException {
+	public void testGetIDFromLocant() {
 		Atom atom = new Atom(10, ChemEl.C, frag);
 		atom.addLocant("a");
 		frag.addAtom(atom);
@@ -106,7 +106,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testGetAtomByLocant() throws StructureBuildingException {
+	public void testGetAtomByLocant()  {
 		Atom atom1 = new Atom(10, ChemEl.C, frag);
 		atom1.addLocant("a");
 		frag.addAtom(atom1);
@@ -119,7 +119,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testGetAtomByID() throws StructureBuildingException {
+	public void testGetAtomByID() {
 		Atom atom1 = new Atom(10, ChemEl.C, frag);
 		frag.addAtom(atom1);
 		Atom atom2 = new Atom(20, ChemEl.C, frag);
@@ -130,7 +130,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testFindBond() throws StructureBuildingException {
+	public void testFindBond() {
 		frag.addAtom(new Atom(1, ChemEl.C, frag));
 		frag.addAtom(new Atom(2, ChemEl.C, frag));
 		frag.addAtom(new Atom(3, ChemEl.N, frag));
@@ -149,7 +149,7 @@ public class FragmentTest {
 	}
 
 	@Test
-	public void testGetChainLength() throws StructureBuildingException {
+	public void testGetChainLength() {
 		assertEquals("No chain", 0, frag.getChainLength());
 		Atom a1 =new Atom(1, ChemEl.C, frag);
 		a1.addLocant("1");
