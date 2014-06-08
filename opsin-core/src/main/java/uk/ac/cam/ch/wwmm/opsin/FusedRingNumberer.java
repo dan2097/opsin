@@ -590,10 +590,10 @@ class FusedRingNumberer {
 	}
 
 	/**
-	 * Uses the ring size, the ring shape and distance between the incoming and outgoing fused bond to determine
+	 * Uses the ring shape, the ring size and distance between the incoming and outgoing fused bond to determine
 	 * the relative direction between the entry point on the ring and the exit point
 	 * @param fusionRingShape
-	 * @param ringShape
+	 * @param ringSize
 	 * @param dist
 	 * @return
 	 */

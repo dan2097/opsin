@@ -2872,11 +2872,11 @@ class ComponentProcessor {
 
 	/**
 	 * Given the element after the ring assembly multiplier determines which siblings should be resolved by adding them to elementToResolve
-	 * @param ringJoiningLocants 
-	 * @param elementAfterMultiplier
-	 * @param elementToResolve
-	 * @return 
-	 * @throws ComponentGenerationException 
+	 * @param multiplier
+	 * @param ringJoiningLocants
+	 * @param outAtomCount
+	 * @return
+	 * @throws ComponentGenerationException
 	 */
 	private Element determineElementsToResolveIntoRingAssembly(Element multiplier, int ringJoiningLocants, int outAtomCount) throws ComponentGenerationException {
 		Element elementToResolve = new GroupingEl(SUBSTITUENT_EL);
@@ -4579,7 +4579,7 @@ class ComponentProcessor {
 	
 	/**
 	 * e.g. if element is "S" changes C(=S)O -->C(=O)S
-	 * @param suffixFrag
+	 * @param frag
 	 * @param chemEl
 	 * @throws StructureBuildingException 
 	 */

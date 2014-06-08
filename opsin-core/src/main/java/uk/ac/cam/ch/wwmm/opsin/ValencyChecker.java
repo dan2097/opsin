@@ -353,7 +353,7 @@ class ValencyChecker {
 	/** Check whether changing to a heteroatom will result in valency being exceeded
 	 * spareValency and outValency is taken into account
 	 * @param a atom you are interested in
-	 * @param the heteroatom atom which will be replacing it
+	 * @param heteroatom atom which will be replacing it
      * @return
 	 */
 	static boolean checkValencyAvailableForReplacementByHeteroatom(Atom a, Atom heteroatom) {
@@ -385,7 +385,7 @@ class ValencyChecker {
 
 	/**
 	 * Returns the maximum valency of an element with a given charge or null if unknown
-	 * @param element
+	 * @param chemEl
 	 * @param charge
 	 * @return
 	 */

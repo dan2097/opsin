@@ -2040,7 +2040,7 @@ class StructureBuilder {
 	/**
 	 * Finds stereochemistry els in a recursive right to left manner.
 	 * Within the same scope though stereochemistry els are found left to right
-	 * @param molecule
+	 * @param parentEl
 	 * @return
 	 */
 	private List<Element> findStereochemistryElsInProcessingOrder(Element parentEl) {

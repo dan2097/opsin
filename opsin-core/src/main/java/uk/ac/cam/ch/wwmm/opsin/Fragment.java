@@ -67,7 +67,7 @@ class Fragment {
 	 * DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Makes an empty Fragment with the given type
 	 * 
-	 * @param tokenEl
+	 * @param type
 	 */
 	Fragment(String type) {
 		this.tokenEl = new TokenEl("");
@@ -379,7 +379,7 @@ class Fragment {
 	/**
 	 * Includes the OutAtoms of a given fragment into this fragment
 	 * Note that no OutAtoms are created in doing this 
-	 * @param outAtoms
+	 * @param frag
 	 */
 	void incorporateOutAtoms(Fragment frag) {
 		outAtoms.addAll(frag.outAtoms);
@@ -432,7 +432,7 @@ class Fragment {
 	/**
 	 * Includes the FunctionalAtoms of a given fragment into this fragment
 	 * Note that no FunctionalAtoms are created in doing this 
-	 * @param functionalAtoms
+	 * @param frag
 	 */
 	void incorporateFunctionalAtoms(Fragment frag) {
 		functionalAtoms.addAll(frag.functionalAtoms);
