@@ -1180,18 +1180,19 @@ class FusedRingNumberer {
 		// Rule B: Maximum number of rings in upper right quadrant. Upper right corner candidates (it is not at this stage known which quadrant is the upper right one)
 		double qmax = 0;
 
-		for (int c = 0; c < nChains; c++) {
+		for (Double[] chainQ : chainQs) {
 			for (int j = 0; j < 4; j++)	{
-				if(chainQs.get(c)[j] > qmax) {
-					qmax = chainQs.get(c)[j];
+				Double q = chainQ[j];
+				if(q > qmax) {
+					qmax = q;
 				}
 			}
 		}
 
-		for (int c = 0; c < nChains; c++) {
+		for (Double[] chainQ : chainQs) {
 			List<Integer> allowedUpperRightQuadrants = new ArrayList<Integer>();
 			for (int j = 0; j < 4; j++){
-				if (chainQs.get(c)[j] == qmax) {
+				if (chainQ[j] == qmax) {
 					allowedUpperRightQuadrants.add(j);
 				}
 			}
@@ -1509,12 +1510,12 @@ class FusedRingNumberer {
 	/**
 	 * Checks if array contains an object
 	 * @param array
-	 * @param c2
+	 * @param obj
 	 * @return
 	 */
-	private static boolean arrayContains(Object[] array, Object c2) {
-		for (int i=0; i<array.length; i++) {
-			if (c2 == array[i]) {
+	private static boolean arrayContains(Object[] array, Object obj) {
+		for (Object arrObj : array) {
+			if (arrObj == obj) {
 				return true;
 			}
 		}
