@@ -110,7 +110,7 @@ class Tokeniser {
 		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getWorkingName().charAt(0) ==' ' || result.getWorkingName().charAt(0) =='-');
 	}
 	
-	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) throws ParsingException {
+	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) {
 		//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 		//In cases of properly formed names there will be only one ParseWord
 		//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -140,7 +140,7 @@ class Tokeniser {
 		}
 	}
 
-	private void addParseWords(List<ParseTokens> parseTokens, String parsedName, Parse parse, boolean reverse) throws ParsingException {
+	private void addParseWords(List<ParseTokens> parseTokens, String parsedName, Parse parse, boolean reverse) {
 		List<ParseWord> parseWords = WordTools.splitIntoParseWords(parseTokens, parsedName);
 
 		if (reverse) {

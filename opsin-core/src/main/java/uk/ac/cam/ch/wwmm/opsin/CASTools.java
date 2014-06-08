@@ -164,11 +164,10 @@ class CASTools {
 	}
 
 	private static Character missingCloseBracketCharIfApplicable(String component) {
-		char[] characters = component.toCharArray();
 		int bracketLevel =0;
 		Character missingCloseBracket =null;
-		for (int i = 0; i < characters.length; i++) {
-			char character = characters[i];
+		for (int i = 0, l = component.length(); i < l; i++) {
+			char character = component.charAt(i);
 			if (character == '(' || character == '[' || character == '{') {
 				bracketLevel++;
 				if (bracketLevel ==1){

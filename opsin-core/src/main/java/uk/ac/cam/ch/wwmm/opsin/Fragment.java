@@ -162,9 +162,8 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The id of the found atom, or 0 if it is not found
-	 * @throws StructureBuildingException 
 	 */
-	int getIDFromLocant(String locant) throws StructureBuildingException {
+	int getIDFromLocant(String locant)  {
 		Atom a = getAtomByLocant(locant);
 		if (a != null){
 			return a.getID();
@@ -284,10 +283,9 @@ class Fragment {
 	/**Works out how many atoms there are in the fragment there are
 	 * with consecutive locants, starting from 1 that are in a chain
 	 *
-	 * @return The number of atoms in the locant chain.
-	 * @throws StructureBuildingException 
+	 * @return The number of atoms in the locant chain
 	 */
-	int getChainLength() throws StructureBuildingException {
+	int getChainLength() {
 		int length = 0;
 		Atom next = getAtomByLocant(Integer.toString(length+1));
 		Atom previous = null;
@@ -584,10 +582,9 @@ class Fragment {
 	 * Checks to see whether a locant is present on this fragment
 	 * @param locant
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	boolean hasLocant(String locant) throws StructureBuildingException {
-		return getAtomByLocant(locant)!=null;
+	boolean hasLocant(String locant) {
+		return getAtomByLocant(locant) != null;
 	}
 	
 

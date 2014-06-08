@@ -961,9 +961,8 @@ class ComponentProcessor {
 	 * @param locantValues The locant values;
 	 * @param finalSubOrRootInWord : used to check if a locant is referring to the root as in multiplicative nomenclatures)
 	 * @return true if there's a HW system, and agreement; or if the locants conform to one of the alternative possibilities, otherwise false.
-	 * @throws StructureBuildingException
 	 */
-	private boolean checkSpecialLocantUses(Element locant, String[] locantValues, Element finalSubOrRootInWord) throws StructureBuildingException {
+	private boolean checkSpecialLocantUses(Element locant, String[] locantValues, Element finalSubOrRootInWord) {
 		int count = locantValues.length;
 		Element currentElem = OpsinTools.getNextSibling(locant);
 		int heteroCount = 0;
@@ -2225,9 +2224,8 @@ class ComponentProcessor {
 	 * @param suffixes The suffix elements for a fragment.
 	 * @param frag The fragment to which the suffix will be applied
 	 * @throws ComponentGenerationException
-	 * @throws StructureBuildingException 
 	 */
-	private void processRemovalOfHydroxyGroupsRules(List<Element> suffixes, Fragment frag) throws ComponentGenerationException, StructureBuildingException{
+	private void processRemovalOfHydroxyGroupsRules(List<Element> suffixes, Fragment frag) throws ComponentGenerationException {
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 		String suffixTypeToUse =null;
@@ -2766,10 +2764,10 @@ class ComponentProcessor {
 						throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
 					}
 					if (perRingLocantArray.length!=1 || MATCH_COMMA.split(perRingLocantArray[0]).length!=1){//not for the case of a single locant
-						for (int j = 0; j < perRingLocantArray.length; j++) {
-							String[] locantArray = MATCH_COMMA.split(perRingLocantArray[j]);
+						for (String ringLocantArray : perRingLocantArray) {
+							String[] locantArray = MATCH_COMMA.split(ringLocantArray);
 							if (locantArray.length !=2){
-								throw new ComponentGenerationException("missing locant, expected 2 locants: " + perRingLocantArray[j]);
+								throw new ComponentGenerationException("missing locant, expected 2 locants: " + ringLocantArray);
 							}
 							ringJoiningLocants.add(Arrays.asList(locantArray));
 						}
@@ -3449,7 +3447,7 @@ class ComponentProcessor {
 		return 0;
 	}
 
-	private int getHighestNumericLocant(Fragment ringFrag) throws StructureBuildingException {
+	private int getHighestNumericLocant(Fragment ringFrag) {
 		for (int i = 1; ; i++) {
 			if (ringFrag.getAtomByLocant(String.valueOf(i)) == null){
 				return i - 1;
@@ -3656,8 +3654,7 @@ class ComponentProcessor {
 		for (Fragment suffix : suffixList) {
 			outAtomsThatWillBeAdded += suffix.getOutAtomCount();
 		}
-		for(int i=0;i<suffixes.size();i++) {
-			Element suffix = suffixes.get(i);
+		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			List<SuffixRule> suffixRules = suffixRulesLookup.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
 			for (SuffixRule suffixRule : suffixRules) {
@@ -3799,10 +3796,10 @@ class ComponentProcessor {
 			if (!placeInImplicitBracket){
 				List<Element> childrenOfElementBeforeSubstituent  =elementBeforeSubstituent.getChildElements();
 				Boolean foundLocantNotReferringToChain =null;
-				for (int i = 0; i < childrenOfElementBeforeSubstituent.size(); i++) {
-					String currentElementName = childrenOfElementBeforeSubstituent.get(i).getName();
+				for (Element childOfElBeforeSub : childrenOfElementBeforeSubstituent) {
+					String currentElementName = childOfElBeforeSub.getName();
 					if (currentElementName.equals(LOCANT_EL)){
-						String locantText =childrenOfElementBeforeSubstituent.get(i).getValue();
+						String locantText = childOfElBeforeSub.getValue();
 						if(!frag.hasLocant(locantText)){
 							foundLocantNotReferringToChain=true;
 							break;
@@ -3860,17 +3857,17 @@ class ComponentProcessor {
 		String[] locantValues = null;
 		ArrayList<Element> stereoChemistryElements =new ArrayList<Element>();//always moved if bracketing occurs
 		List<Element> childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
-		for (int i = 0; i < childrenOfElementBeforeSubstituent.size(); i++) {
-			String currentElementName = childrenOfElementBeforeSubstituent.get(i).getName();
+		for (Element childOfElBeforeSub : childrenOfElementBeforeSubstituent) {
+			String currentElementName = childOfElBeforeSub.getName();
 			if (currentElementName.equals(STEREOCHEMISTRY_EL)){
-				stereoChemistryElements.add(childrenOfElementBeforeSubstituent.get(i));
+				stereoChemistryElements.add(childOfElBeforeSub);
 			}
 			else if (currentElementName.equals(LOCANT_EL)){
 				if (locantValues !=null){
 					break;
 				}
-				locantRelatedElements.add(childrenOfElementBeforeSubstituent.get(i));
-				locantValues = MATCH_COMMA.split(childrenOfElementBeforeSubstituent.get(i).getValue());
+				locantRelatedElements.add(childOfElBeforeSub);
+				locantValues = MATCH_COMMA.split(childOfElBeforeSub.getValue());
 			}
 			else{
 				break;
@@ -4088,8 +4085,7 @@ class ComponentProcessor {
 	private List<Element> findLocantsThatCouldBeIndirectLocants(Element subOrRoot) {
 		List<Element> children = subOrRoot.getChildElements();
 		List<Element> locantEls = new ArrayList<Element>();
-		for (int i = 0; i < children.size(); i++) {
-			Element el = children.get(i);
+		for (Element el : children) {
 			if (el.getName().equals(LOCANT_EL)){
 				Element afterLocant = OpsinTools.getNextSibling(el);
 				if (afterLocant!=null && afterLocant.getName().equals(MULTIPLIER_EL)){//locant should not be followed by a multiplier. c.f. 1,2,3-tributyl 2-acetyloxypropane-1,2,3-tricarboxylate
@@ -4115,8 +4111,7 @@ class ComponentProcessor {
 	private List<Element> findElementsMissingIndirectLocants(Element subOrRoot,Element locantEl) {
 		List<Element> locantAble = new ArrayList<Element>();
 		List<Element> childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
-		for (int j = 0; j < childrenOfSubOrBracketOrRoot.size(); j++) {
-			Element el =childrenOfSubOrBracketOrRoot.get(j);
+		for (Element el : childrenOfSubOrBracketOrRoot) {
 			String name =el.getName();
 			if (name.equals(SUFFIX_EL) || name.equals(UNSATURATOR_EL) || name.equals(CONJUNCTIVESUFFIXGROUP_EL)){
 				if (el.getAttribute(LOCANT_ATR) ==null && el.getAttribute(LOCANTID_ATR) ==null && el.getAttribute(MULTIPLIED_ATR)==null){// shouldn't already have a locant or be multiplied (should of already had locants assignd to it if that were the case)
@@ -4904,10 +4899,10 @@ class ComponentProcessor {
 	private List<Element> getLocantsAtStartOfSubstituent(Element substituent) {
 		List<Element> locants = new ArrayList<Element>();
 		List<Element> children = substituent.getChildElements();
-		for (int i = 0; i < children.size(); i++) {
-			String currentElementName = children.get(i).getName();
+		for (Element child : children) {
+			String currentElementName = child.getName();
 			if (currentElementName.equals(LOCANT_EL)){
-				locants.add(children.get(i));
+				locants.add(child);
 			}
 			else if (currentElementName.equals(STEREOCHEMISTRY_EL)){
 				//ignore

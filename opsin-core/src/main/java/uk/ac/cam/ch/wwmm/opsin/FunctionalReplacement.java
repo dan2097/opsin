@@ -527,7 +527,7 @@ class FunctionalReplacement {
 	 */
 
 	
-	private boolean acidHasSufficientHydrogenForSubstitutionInterpretation(Fragment acidFrag, int hydrogenRequiredForSubstitutionInterpretation, Element locantEl) throws StructureBuildingException {
+	private boolean acidHasSufficientHydrogenForSubstitutionInterpretation(Fragment acidFrag, int hydrogenRequiredForSubstitutionInterpretation, Element locantEl) {
 		List<Atom> atomsThatWouldBeSubstituted = new ArrayList<Atom>();
 		if (locantEl !=null){
 			String[] possibleLocants = MATCH_COMMA.split(locantEl.getValue());

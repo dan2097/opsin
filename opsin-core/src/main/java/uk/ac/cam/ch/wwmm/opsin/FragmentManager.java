@@ -351,9 +351,8 @@ class FragmentManager {
 	 * @param originalFragment
 	 * @param primesToAdd: The minimum number of primes to add to the cloned atoms. More primes will be added if necessary to keep the locants unique e.g. N in the presence of N' becomes N'' when this is 1
 	 * @return the clone of the fragment
-	 * @throws StructureBuildingException
 	 */
-	Fragment copyAndRelabelFragment(Fragment originalFragment, int primesToAdd) throws StructureBuildingException {
+	Fragment copyAndRelabelFragment(Fragment originalFragment, int primesToAdd) {
 		Element tokenEl = new TokenEl("");
 		tokenEl.addAttribute(TYPE_ATR, originalFragment.getType());
 		tokenEl.addAttribute(SUBTYPE_ATR, originalFragment.getSubType());

@@ -377,8 +377,7 @@ class CipSequenceRules {
 			List<List<List<AtomWithHistory>>> allNeighbours = new ArrayList<List<List<AtomWithHistory>>>();
 			int counter =0;
 			Atom lastPreviousAtom = null;
-			for (int i = 0; i < atoms.size(); i++) {
-				AtomWithHistory atomWithHistory = atoms.get(i);
+			for (AtomWithHistory atomWithHistory : atoms) {
 				Atom atom = atomWithHistory.atom;
 				List<Atom> visitedAtoms = atomWithHistory.visitedAtoms;
 				Atom previousAtom = visitedAtoms.get(visitedAtoms.size()-1);

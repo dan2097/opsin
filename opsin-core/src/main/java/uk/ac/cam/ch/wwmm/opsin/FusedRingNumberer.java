@@ -393,9 +393,8 @@ class FusedRingNumberer {
 	 * @param ct
 	 * @param cts
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private static List<RingConnectivityTable> buildRingConnectionTables(Ring currentRing, Ring previousRing, int previousDir, Bond previousBond, Atom atom, RingConnectivityTable ct, List<RingConnectivityTable> cts) throws StructureBuildingException {
+	private static List<RingConnectivityTable> buildRingConnectionTables(Ring currentRing, Ring previousRing, int previousDir, Bond previousBond, Atom atom, RingConnectivityTable ct, List<RingConnectivityTable> cts) {
 		// order atoms and bonds in the ring
 		currentRing.makeCyclicLists(previousBond, atom);
 		List<RingConnectivityTable> generatedCts = new ArrayList<RingConnectivityTable>();
