@@ -221,8 +221,7 @@ class WordRules {
 			}
 		}
 		List<Element> wordRuleEls = moleculeEl.getChildElements();
-		for (int i = 0; i < wordRuleEls.size(); i++) {
-			Element wordRuleEl = wordRuleEls.get(i);
+		for (Element wordRuleEl : wordRuleEls) {
 			if (!wordRuleEl.getName().equals(WORDRULE_EL)){
 				throw new ParsingException("Unable to assign wordRule to: " + wordRuleEl.getAttributeValue(VALUE_ATR));
 			}

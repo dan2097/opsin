@@ -1665,8 +1665,7 @@ class StructureBuilder {
 
 	private boolean applyExplicitStoichiometryIfProvided(List<Element> wordRules) throws StructureBuildingException {
 		boolean explicitStoichiometryPresent =false;
-		for (int i = 0; i < wordRules.size(); i++) {
-			Element wordRule = wordRules.get(i);
+		for (Element wordRule : wordRules) {
 			if (wordRule.getAttribute(STOICHIOMETRY_ATR)!=null){
 				int stoichiometry = Integer.parseInt(wordRule.getAttributeValue(STOICHIOMETRY_ATR));
 				wordRule.removeAttribute(wordRule.getAttribute(STOICHIOMETRY_ATR));

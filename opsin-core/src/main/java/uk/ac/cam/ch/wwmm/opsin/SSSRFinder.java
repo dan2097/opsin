@@ -43,7 +43,7 @@ class SSSRFinder {
 	/** get list of rings.
 	 * not necessarily SSSR
 	 * @param atomSet
-     * @return list of rings
+	 * @return list of rings
 	 */
 	private static List<Ring> getRings(List<Atom> atomSet ){
 		List<Ring> ringList = new ArrayList<Ring>();
@@ -99,9 +99,8 @@ class SSSRFinder {
 		usedAtoms.add(atom);
 		atomToParentMap.put(atom, parentAtom);
 		List<Atom> ligandAtomList = atom.getAtomNeighbours();
-				
-		for (int i = 0; i < ligandAtomList.size(); i++) {
-			Atom ligandAtom = ligandAtomList.get(i);
+		
+		for (Atom ligandAtom : ligandAtomList) {
 			if (ligandAtom.equals(parentAtom)) {
 				// skip existing bond
 			} else if (usedAtoms.contains(ligandAtom)) {
@@ -133,22 +132,20 @@ class SSSRFinder {
 	}
 
 	
-	 private static List<Bond> symmetricDifference(List<Bond> bondSet1, List<Bond> bondSet2) {
-	 	 List<Bond> newBondSet = new ArrayList<Bond>();
-	        
-        for (int i = 0; i < bondSet1.size(); i++) {
-            if (!bondSet2.contains(bondSet1.get(i))) {
-                newBondSet.add(bondSet1.get(i));
-            }
-        }
-        for (int i = 0; i < bondSet2.size(); i++) {
-            Bond bond = bondSet2.get(i);
-            if (!bondSet1.contains(bond)) {
-                newBondSet.add(bond);
-            }
-        }
+	private static List<Bond> symmetricDifference(List<Bond> bondSet1, List<Bond> bondSet2) {
+		List<Bond> newBondSet = new ArrayList<Bond>();
 
-	    return newBondSet;
-	 }
+		for (Bond bond1 : bondSet1) {
+			if (!bondSet2.contains(bond1)) {
+				newBondSet.add(bond1);
+			}
+		}
+		for (Bond bond2 : bondSet2) {
+			if (!bondSet1.contains(bond2)) {
+				newBondSet.add(bond2);
+			}
+		}
+		return newBondSet;
+	}
 
 }

@@ -384,8 +384,7 @@ class StructureBuildingMethods {
 		List<Element> subtractivePrefixElements = new ArrayList<Element>();
 
 		List<Element> children =subOrRoot.getChildElements();
-		for (int i = 0; i < children.size(); i++) {
-			Element currentEl =children.get(i);
+		for (Element currentEl : children) {
 			String elName =currentEl.getName();
 			if (elName.equals(UNSATURATOR_EL)){
 				unsaturators.add(currentEl);
@@ -619,8 +618,7 @@ class StructureBuildingMethods {
 		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
 
 		List<Element> children =subOrRoot.getChildElements();
-		for (int i = 0; i < children.size(); i++) {
-			Element currentEl =children.get(i);
+		for (Element currentEl : children) {
 			String elName =currentEl.getName();
 			if (elName.equals(UNSATURATOR_EL)){
 				unsaturators.add(currentEl);

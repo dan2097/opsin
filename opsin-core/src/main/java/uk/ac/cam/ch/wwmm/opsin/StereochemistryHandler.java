@@ -776,9 +776,7 @@ class StereochemistryHandler {
 		List<String> stereocentreConfiguration = new ArrayList<String>();
 		for (Element carbohydrateStereoChemistryEl: carbohydrateStereoChemistryEls) {
 			String[] values = MATCH_SLASH.split(carbohydrateStereoChemistryEl.getAttributeValue(VALUE_ATR));
-			for (String value : values) {
-				stereocentreConfiguration.add(value);
-			}
+			Collections.addAll(stereocentreConfiguration, values);
 		}
 		
 		if (stereocentresInCarbohydrate.size() != stereocentreConfiguration.size()){

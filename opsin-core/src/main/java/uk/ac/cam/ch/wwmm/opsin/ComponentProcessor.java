@@ -1372,9 +1372,7 @@ class ComponentProcessor {
 				if (locantStrs.length != multVal) {
 					throw new StructureBuildingException("Mismatch between locant and multiplier counts (" + locantStrs.length + " and " + multVal + "):" + locant.getValue());
 				}
-				for (String locantStr : locantStrs) {
-					locantsToConvertToKetones.add(locantStr);
-				}
+				Collections.addAll(locantsToConvertToKetones, locantStrs);
 				locant.detach();
 			}
 			else{
