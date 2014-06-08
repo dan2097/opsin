@@ -553,9 +553,8 @@ class FusedRingNumberer {
 	 * @param currentBond
 	 * @param previousDir
 	 * @return
-	 * @throws StructureBuildingException
 	 */
-	private static int calculateRingDirection(RingShape ringShape, Bond previousBond, Bond currentBond, int previousDir) throws StructureBuildingException{
+	private static int calculateRingDirection(RingShape ringShape, Bond previousBond, Bond currentBond, int previousDir) {
 		// take the ring fused to one from the previous loop step
 		Ring ring = ringShape.getRing();
 		if (ring.getCyclicBondList() == null ) {
@@ -966,7 +965,7 @@ class FusedRingNumberer {
 		return paths;
 	}
 
-	private static Ring[][] generateRingMap(RingConnectivityTable ct, int[] directionFromRingToNeighbouringRing) throws StructureBuildingException {
+	private static Ring[][] generateRingMap(RingConnectivityTable ct, int[] directionFromRingToNeighbouringRing) {
 		int ctEntriesSize = ct.ringShapes.size();
 		// Find max and min coordinates for ringMap
 		// we put the first ring into takenRings to start with it in the connection table

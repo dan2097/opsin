@@ -19,7 +19,6 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Level;
@@ -294,7 +293,7 @@ public class NameToStructure {
 		System.exit(0);
 	}
 
-	private static Options buildCommandLineOptions() throws ParseException {
+	private static Options buildCommandLineOptions() {
 		Options options = new Options();
 		OptionBuilder.withArgName("o");
 		OptionBuilder.withLongOpt("output");

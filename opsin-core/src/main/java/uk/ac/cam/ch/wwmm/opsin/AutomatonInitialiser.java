@@ -90,8 +90,7 @@ class AutomatonInitialiser {
 		if (reverseAutomaton){
 			SpecialOperations.reverse(a);
 		}
-		RunAutomaton ra = new RunAutomaton(a, tableize);
-		return ra;
+		return new RunAutomaton(a, tableize);
 	}
 
 	private void cacheAutomaton(String automatonName, RunAutomaton automaton, String regex) {

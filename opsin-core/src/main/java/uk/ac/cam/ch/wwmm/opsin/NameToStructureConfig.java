@@ -133,8 +133,7 @@ public class NameToStructureConfig implements Cloneable {
 	@Override
 	public NameToStructureConfig clone() {
 		try {
-			NameToStructureConfig copy = (NameToStructureConfig) super.clone();
-			return copy;
+			return (NameToStructureConfig) super.clone();
 		} catch (CloneNotSupportedException e) {
 			// Can only be thrown if we *don't* implement Cloneable, which we do...
 			throw new Error("Impossible!", e);

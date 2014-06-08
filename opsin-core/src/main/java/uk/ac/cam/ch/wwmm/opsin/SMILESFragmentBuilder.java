@@ -956,9 +956,8 @@ class SMILESFragmentBuilder {
 	 * @param chemEl
 	 * @param frag
 	 * @return Atom
-	 * @throws StructureBuildingException
 	 */
-	private Atom createAtom(ChemEl chemEl, Fragment frag) throws StructureBuildingException {
+	private Atom createAtom(ChemEl chemEl, Fragment frag) {
 		Atom a = new Atom(idManager.getNextID(), chemEl, frag);
 		frag.addAtom(a);
 		return a;

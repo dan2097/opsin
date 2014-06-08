@@ -2328,9 +2328,8 @@ class ComponentProcessor {
 	 * Given a fragment removes all hydroxy groups and adds a valency 1 outAtom to the adjacent atom for each hydroxy group
 	 * Note that O[OH] is not considered a hydroxy c.f. carbonoperoxoyl
 	 * @param frag
-	 * @throws StructureBuildingException
 	 */
-	private void convertHydroxyGroupsToOutAtoms(Fragment frag) throws StructureBuildingException {
+	private void convertHydroxyGroupsToOutAtoms(Fragment frag) {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBonds().size()==1  &&
@@ -2348,9 +2347,8 @@ class ComponentProcessor {
 	 * Given a fragment removes all hydroxy groups and applies ylium to the adjacent atom (+1 charge -1 proton)
 	 * Note that O[OH] is not considered a hydroxy
 	 * @param frag
-	 * @throws StructureBuildingException
 	 */
-	private void convertHydroxyGroupsToPositiveCharge(Fragment frag) throws StructureBuildingException {
+	private void convertHydroxyGroupsToPositiveCharge(Fragment frag) {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBonds().size()==1  &&

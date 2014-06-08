@@ -273,7 +273,7 @@ class FragmentTools {
 		}
 	}
 
-	private static void processSuffixLabelling(List<Fragment> suffixFragments, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) throws StructureBuildingException {
+	private static void processSuffixLabelling(List<Fragment> suffixFragments, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) {
 		List<Atom> startingAtoms = new ArrayList<Atom>();
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		for (Fragment fragment : suffixFragments) {
@@ -290,7 +290,7 @@ class FragmentTools {
 		}
 	}
 
-	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) throws StructureBuildingException {
+	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) {
 		Set<Atom> atomsVisited = new HashSet<Atom>();
 		Atom firstAtom = suffixableFragment.getFirstAtom();
 		List<Atom> startingAtoms = getIntraFragmentNeighboursAndSetVisitedBondOrder(firstAtom);
@@ -307,7 +307,7 @@ class FragmentTools {
 		}
 	}
 
-	private static void assignLocantsAndExploreNeighbours(Map<String, Integer> elementCount, Set<Atom> atomsToIgnore, Set<Atom> atomsVisited, Deque<Atom> atomsToConsider) throws StructureBuildingException {
+	private static void assignLocantsAndExploreNeighbours(Map<String, Integer> elementCount, Set<Atom> atomsToIgnore, Set<Atom> atomsVisited, Deque<Atom> atomsToConsider) {
 		Atom atom = atomsToConsider.removeFirst();
 		atomsVisited.add(atom);
 		if (!atomsToIgnore.contains(atom)) {//assign locant
@@ -506,9 +506,8 @@ class FragmentTools {
 	 * Given the starting nitrogen returns the other nitrogen or null if that nitrogen does not appear to be involved in such tautomerism
 	 * @param nitrogen
 	 * @return null or the other nitrogen
-	 * @throws StructureBuildingException 
 	 */
-	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) throws StructureBuildingException {
+	static Atom detectSimpleNitrogenTautomer(Atom nitrogen) {
 		if (nitrogen.getElement() == ChemEl.N && nitrogen.getAtomIsInACycle()){
 			for (Atom neighbour : nitrogen.getAtomNeighbours()) {
 				if (neighbour.hasSpareValency() && neighbour.getElement() == ChemEl.C && neighbour.getAtomIsInACycle()){
@@ -721,7 +720,7 @@ class FragmentTools {
 	}
 
 
-	static Atom getAtomByAminoAcidStyleLocant(Atom backboneAtom, String elementSymbol, String primes) throws StructureBuildingException {
+	static Atom getAtomByAminoAcidStyleLocant(Atom backboneAtom, String elementSymbol, String primes) {
 		//Search for appropriate atom by using the same algorithm as is used to assign locants initially
 
 		List<Atom> startingAtoms = new ArrayList<Atom>();

@@ -17,9 +17,8 @@ class WordTools {
 	 * @param parseTokensList
 	 * @param chemicalName
 	 * @return
-	 * @throws ParsingException
 	 */
-	static List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) throws ParsingException {
+	static List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) {
 		List<ParseTokens> wellFormedParseTokens = new ArrayList<ParseTokens>();//these are all in the same word as would be expected
 		List<List<ParseTokens>> splitParseTokensForEachParseTokens = new ArrayList<List<ParseTokens>>();
 		/*

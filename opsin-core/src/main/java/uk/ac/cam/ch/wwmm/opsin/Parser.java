@@ -131,7 +131,7 @@ class Parser {
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
 				}
 				for(ParseTokens pt : pw.getParseTokens()) {
-					writeWordXML(word, pw, pt.getTokens(), WordTools.chunkAnnotations(pt.getAnnotations()));
+					writeWordXML(word, pt.getTokens(), WordTools.chunkAnnotations(pt.getAnnotations()));
 				}
 			}
 			/* All words are placed into a wordRule.
@@ -267,12 +267,11 @@ class Parser {
 	/**Write the XML corresponding to a particular word in a parse.
 	 *
 	 * @param wordEl The empty XML word element to be written into.
-	 * @param pw The ParseWord for the word.
 	 * @param tokens The list of tokens.
 	 * @param annotations The lists of annotations. This has been divided into a separate list per substituent/root/functionalTerm
 	 * @throws ParsingException
 	 */
-	void writeWordXML(Element wordEl, ParseWord pw, List<String> tokens, List<List<Character>> annotations) throws ParsingException {
+	void writeWordXML(Element wordEl, List<String> tokens, List<List<Character>> annotations) throws ParsingException {
 		int annotNumber = 0;
 		int annotPos = 0;
 		Element chunk = new GroupingEl(SUBSTITUENT_EL);

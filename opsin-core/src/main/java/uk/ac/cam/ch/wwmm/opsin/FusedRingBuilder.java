@@ -25,7 +25,7 @@ class FusedRingBuilder {
 	private final Element lastGroup;
 	private final Fragment parentRing;
 	private final Map<Integer,Fragment> fragmentInScopeForEachFusionLevel = new HashMap<Integer,Fragment>();
-	private Map<Atom, Atom> atomsToRemoveToReplacementAtom = new HashMap<Atom, Atom>();
+	private final Map<Atom, Atom> atomsToRemoveToReplacementAtom = new HashMap<Atom, Atom>();
 
 	private FusedRingBuilder(BuildState state, List<Element> groupsInFusedRing) {
 		this.state = state;
@@ -322,9 +322,8 @@ class FusedRingBuilder {
      * This is necessary as this unsaturator can only refer to the HW ring and for names like 2-Benzoxazolinone to avoid confusion as to what the 2 refers to.
 	 * @param group
 	 * @param ring
-	 * @throws StructureBuildingException
 	 */
-	private void processPartiallyUnsaturatedHWSystems(Element group, Fragment ring) throws StructureBuildingException {
+	private void processPartiallyUnsaturatedHWSystems(Element group, Fragment ring) {
 		if (HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(ADDBOND_ATR)!=null){
 			List<Element> unsaturators = OpsinTools.getNextAdjacentSiblingsOfType(group, UNSATURATOR_EL);
 			if (unsaturators.size()>0){
