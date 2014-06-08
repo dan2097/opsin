@@ -25,12 +25,10 @@ class BuildState {
 	}
 
 	void addWarningMessage(String warningMessage) {
-		if (warningMessage == null){
-			this.warningMessage = warningMessage;
+		if (warningMessage == null) {
+			warningMessage = "null";
 		}
-		else{
-			this.warningMessage += ("\n" + warningMessage);
-		}
+		this.warningMessage += ("\n" + warningMessage);
 	}
 
 	BuildState(NameToStructureConfig n2sConfig) {

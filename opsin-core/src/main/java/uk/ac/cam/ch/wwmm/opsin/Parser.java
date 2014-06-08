@@ -118,21 +118,19 @@ class Parser {
 			for(ParseWord pw : pp.getWords()) {
 				Element word = new GroupingEl(WORD_EL);
 				moleculeEl.addChild(word);
-				if (pw.getParseTokens().size() >1){
-					throw new ParsingException("OPSIN bug: parseWord had multiple annotations after creating additional parses step");
+				if (pw.getParseTokens().size() != 1){
+					throw new ParsingException("OPSIN bug: parseWord should have exactly 1 annotations after creating additional parses step");
 				}
-				
-				WordType wordType = OpsinTools.determineWordType(pw.getParseTokens().get(0).getAnnotations());
+				ParseTokens tokensForWord = pw.getParseTokens().get(0);
+				WordType wordType = OpsinTools.determineWordType(tokensForWord.getAnnotations());
 				word.addAttribute(new Attribute(TYPE_ATR, wordType.toString()));
-				if (pw.getWord().startsWith("-")){//we want -acid to be the same as acid
+				if (pw.getWord().startsWith("-")){//we want -functionalterm to be the same as functionalterm
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord().substring(1)));
 				}
 				else{
 					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
 				}
-				for(ParseTokens pt : pw.getParseTokens()) {
-					writeWordXML(word, pt.getTokens(), WordTools.chunkAnnotations(pt.getAnnotations()));
-				}
+				writeWordXML(word, tokensForWord.getTokens(), WordTools.chunkAnnotations(tokensForWord.getAnnotations()));
 			}
 			/* All words are placed into a wordRule.
 			 * Often multiple words in the same wordRule.
@@ -226,11 +224,9 @@ class Parser {
 	 */
 	private List<Parse> generateParseCombinations(Parse parse) throws ParsingException {
 		int numberOfCombinations = 1;
-		List<Integer> parseCounts = new ArrayList<Integer>();
 		List<ParseWord> parseWords = parse.getWords();
 		for (ParseWord pw : parseWords) {
 			int parsesForWord = pw.getParseTokens().size();
-			parseCounts.add(parsesForWord);
 			numberOfCombinations *= parsesForWord;
 			if (numberOfCombinations > 128){//checked here to avoid integer overflow on inappropriate input
 				throw new ParsingException("Too many different combinations of word interpretation are possible (>128) i.e. name contains too many terms that OPSIN finds ambiguous to interpret");
