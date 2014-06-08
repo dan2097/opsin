@@ -645,14 +645,13 @@ class OpsinTools {
 		while (stack.size() > 0){
 			Element currentElement = stack.removeLast();
 			List<Element> children = currentElement.getChildElements();
-			int childCount = children.size();
-			if (childCount == 0){
+			if (children.size() == 0){
 				counts[1]++;
 			}
 			else{
-				for (int i = 0; i < childCount; i++) {
+				for (Element child : children) {
 					counts[0]++;
-					stack.add(children.get(i));
+					stack.add(child);
 				}
 			}
 		}

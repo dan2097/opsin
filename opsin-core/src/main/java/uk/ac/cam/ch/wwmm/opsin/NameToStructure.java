@@ -418,7 +418,7 @@ public class NameToStructure {
 		String name;
 		while((name =inputReader.readLine()) != null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
-			String output = (String) m.invoke(null, new Object[]{result});
+			String output = (String) m.invoke(null, result);
 			if(output == null) {
 				System.err.println(result.getMessage());
 			} else {

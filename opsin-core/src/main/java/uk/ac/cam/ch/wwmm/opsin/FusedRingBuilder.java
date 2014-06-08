@@ -958,8 +958,8 @@ class FusedRingBuilder {
 			if (locantsAreAllNumeric(locants)) {
 				List<Element> suffixes = benzoEl.getParent().getChildElements(SUFFIX_EL);
 				int suffixesWithoutLocants =0;
-				for (int i = 0; i < suffixes.size(); i++) {
-					if (suffixes.get(i).getAttribute(LOCANT_ATR)==null){
+				for (Element suffix : suffixes) {
+					if (suffix.getAttribute(LOCANT_ATR)==null){
 						suffixesWithoutLocants++;
 					}
 				}
