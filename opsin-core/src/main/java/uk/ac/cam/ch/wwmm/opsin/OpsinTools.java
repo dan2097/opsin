@@ -282,7 +282,7 @@ class OpsinTools {
 	* @param elName The element name of a element to look for
 	* @return The matched previous Sibling, or null.
 	*/
-	static Element getPreviousSibling(Element current, String elName) {;
+	static Element getPreviousSibling(Element current, String elName) {
 		Element prev = getPreviousSibling(current);
 		while (prev != null) {
 			if (prev.getName().equals(elName)){
