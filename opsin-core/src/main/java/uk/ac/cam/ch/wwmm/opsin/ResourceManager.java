@@ -449,8 +449,7 @@ class ResourceManager {
 				if (token == IGNORE_WHEN_WRITING_PARSE_TREE){
 					return null;
 				}
-				TokenEl tokenInstance = token.copy(tokenString);
-				return tokenInstance;
+				return token.copy(tokenString);
 			}
 		}
 		TokenEl regexToken = reSymbolTokenDict.get(symbol);
@@ -458,8 +457,7 @@ class ResourceManager {
 			if (regexToken == IGNORE_WHEN_WRITING_PARSE_TREE){
 				return null;
 			}
-			TokenEl tokenInstance = regexToken.copy(tokenString);
-			return tokenInstance;
+			return regexToken.copy(tokenString);
 		}
 		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);
 	}

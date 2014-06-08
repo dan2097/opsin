@@ -7,7 +7,7 @@ package uk.ac.cam.ch.wwmm.opsin;
  */
 class TokenizationResult {
 
-	private Parse parse;
+	private final Parse parse;
 	private String workingName;
 	private String unparsableName;
 	private String unparsedName;

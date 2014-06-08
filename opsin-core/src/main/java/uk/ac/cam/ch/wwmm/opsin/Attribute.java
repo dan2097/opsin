@@ -40,7 +40,7 @@ class Attribute {
 	}
 
 	private String escapeText(String s) {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		for (int i = 0, l = s.length(); i < l; i++) {
 			char c = s.charAt(i);
 			switch (c) {

@@ -97,9 +97,8 @@ class FragmentManager {
 	 * Atoms and Bonds are not copied.
 	 *
 	 * @return The unified fragment
-	 * @throws StructureBuildingException 
 	 */
-	Fragment getUnifiedFragment() throws StructureBuildingException {
+	Fragment getUnifiedFragment() {
 		Fragment uniFrag = new Fragment("");
 		for (Entry<Fragment, Set<Bond>> entry : fragToInterFragmentBond.entrySet()) {
 			Fragment f = entry.getKey();
@@ -607,9 +606,8 @@ class FragmentManager {
 	 * @param chemEl
 	 * @param frag
 	 * @return Atom
-	 * @throws StructureBuildingException
 	 */
-	Atom createAtom(ChemEl chemEl, Fragment frag) throws StructureBuildingException {
+	Atom createAtom(ChemEl chemEl, Fragment frag) {
 		Atom a = new Atom(idManager.getNextID(), chemEl, frag);
 		frag.addAtom(a);
 		return a;

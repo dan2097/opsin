@@ -190,9 +190,8 @@ class Fragment {
 	 *
 	 * @param locant The locant to look for
 	 * @return The found atom, or null if it is not found
-	 * @throws StructureBuildingException 
 	 */
-	Atom getAtomByLocant(String locant) throws StructureBuildingException {
+	Atom getAtomByLocant(String locant) {
 		Atom a =atomMapFromLocant.get(locant);
 		if (a != null){
 			return a;

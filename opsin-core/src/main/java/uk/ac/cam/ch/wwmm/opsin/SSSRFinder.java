@@ -72,8 +72,7 @@ class SSSRFinder {
 		List<Bond>  mergedBondSet = symmetricDifference (bondSet0, bondSet1); 
 		
 		mergedBondSet.add(bond);
-		Ring ring = new Ring(mergedBondSet);
-		return ring;
+		return new Ring(mergedBondSet);
 	}
 	
 	private static List<Bond> getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap){
