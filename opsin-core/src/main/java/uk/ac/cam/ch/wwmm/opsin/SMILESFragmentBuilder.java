@@ -235,7 +235,7 @@ class SMILESFragmentBuilder {
 					processOrganicAtom(ch);
 					break;
 				case '[':
-					processBracketedAtom(ch);
+					processBracketedAtom();
 					break;
 				case '0':
 				case '1':
@@ -287,27 +287,27 @@ class SMILESFragmentBuilder {
 			atom.setSpareValency(spareValency);
 			fragment.addAtom(atom);
 		
-			if(stack.getLast().atom != null) {
-				Bond b = createBond(stack.getLast().atom, atom, stack.getLast().bondOrder);
-				if (stack.getLast().slash != null){
-					b.setSmilesStereochemistry(stack.getLast().slash);
-					stack.getLast().slash = null;
+			StackFrame currentFrame = stack.getLast();
+			if(currentFrame.atom != null) {
+				Bond b = createBond(currentFrame.atom, atom, currentFrame.bondOrder);
+				if (currentFrame.slash != null){
+					b.setSmilesStereochemistry(currentFrame.slash);
+					currentFrame.slash = null;
 				}
-				if (stack.getLast().atom.getAtomParity() != null){
-					addAtomToAtomParity(stack.getLast().atom.getAtomParity(), atom);
+				if (currentFrame.atom.getAtomParity() != null){
+					addAtomToAtomParity(currentFrame.atom.getAtomParity(), atom);
 				}
 			}
-			stack.getLast().atom = atom;
-			stack.getLast().bondOrder = 1;
+			currentFrame.atom = atom;
+			currentFrame.bondOrder = 1;
 		}
 
 		/**
 		 * square brackets- contain non-organic atoms or where required to set properties such as charge/chirality etc.
 		 * e.g. [Na+]
-		 * @param ch
 		 * @throws StructureBuildingException
 		 */
-		private void processBracketedAtom(char ch) throws StructureBuildingException {
+		private void processBracketedAtom() throws StructureBuildingException {
 			i++;
 			int indexOfRightSquareBracket = smiles.indexOf(']', i);
 			if (indexOfRightSquareBracket == -1) {
@@ -320,6 +320,7 @@ class SMILESFragmentBuilder {
 				i++;
 			}
 
+			char ch;
 			if (i < indexOfRightSquareBracket){
 				ch = smiles.charAt(i);
 				i++;
@@ -366,19 +367,20 @@ class SMILESFragmentBuilder {
 				atom.setIsotope(Integer.parseInt(isotope));
 			}
 			fragment.addAtom(atom);
-			if(stack.getLast().atom != null) {
-				Bond b = createBond(stack.getLast().atom, atom, stack.getLast().bondOrder);
-				if (stack.getLast().slash != null){
-					b.setSmilesStereochemistry(stack.getLast().slash);
-					stack.getLast().slash = null;
+			StackFrame currentFrame = stack.getLast();
+			if(currentFrame.atom != null) {
+				Bond b = createBond(currentFrame.atom, atom, currentFrame.bondOrder);
+				if (currentFrame.slash != null){
+					b.setSmilesStereochemistry(currentFrame.slash);
+					currentFrame.slash = null;
 				}
-				if (stack.getLast().atom.getAtomParity() != null){
-					addAtomToAtomParity(stack.getLast().atom.getAtomParity(), atom);
+				if (currentFrame.atom.getAtomParity() != null){
+					addAtomToAtomParity(currentFrame.atom.getAtomParity(), atom);
 				}
 			}
-			Atom previousAtom = stack.getLast().atom;//needed for setting atomParity elements up
-			stack.getLast().atom = atom;
-			stack.getLast().bondOrder = 1;
+			Atom previousAtom = currentFrame.atom;//needed for setting atomParity elements up
+			currentFrame.atom = atom;
+			currentFrame.bondOrder = 1;
 
 			Integer hydrogenCount = 0;
 			int charge = 0;
@@ -519,7 +521,7 @@ class SMILESFragmentBuilder {
 			if(ringClosures.containsKey(closure)) {
 				processRingClosure(closure);
 			} else {
-				if (stack.getLast().atom == null){
+				if (getInscopeAtom() == null){
 					throw new StructureBuildingException("A ring opening has appeared before any atom!");
 				}
 				processRingOpening(closure);
@@ -527,51 +529,53 @@ class SMILESFragmentBuilder {
 		}
 
 		private void processRingOpening(String closure) throws StructureBuildingException {
-			StackFrame sf = new StackFrame(stack.getLast());
-			if (stack.getLast().slash != null){
-				sf.slash = stack.getLast().slash;
-				stack.getLast().slash = null;
+			StackFrame currentFrame = stack.getLast();
+			StackFrame sf = new StackFrame(currentFrame);
+			if (currentFrame.slash != null){
+				sf.slash = currentFrame.slash;
+				currentFrame.slash = null;
 			}
 			if (sf.atom.getAtomParity() != null){//replace ringclosureX with actual reference to id when it is known
 				sf.indexOfDummyAtom = addAtomToAtomParity(sf.atom.getAtomParity(), ringOpeningDummyAtom);
 			}
 			ringClosures.put(closure, sf);
-			stack.getLast().bondOrder = 1;
+			currentFrame.bondOrder = 1;
 		}
 
 		private void processRingClosure(String closure) throws StructureBuildingException {
 			StackFrame sf = ringClosures.remove(closure);
+			StackFrame currentFrame = stack.getLast();
 			int bondOrder = 1;
 			if(sf.bondOrder > 1) {
-				if(stack.getLast().bondOrder > 1 && sf.bondOrder != stack.getLast().bondOrder){
+				if(currentFrame.bondOrder > 1 && sf.bondOrder != currentFrame.bondOrder){
 					throw new StructureBuildingException("ring closure has two different bond orders specified!");
 				}
 				bondOrder = sf.bondOrder;
-			} else if(stack.getLast().bondOrder > 1) {
-				bondOrder = stack.getLast().bondOrder;
+			} else if(currentFrame.bondOrder > 1) {
+				bondOrder = currentFrame.bondOrder;
 			}
 			Bond b;
-			if (stack.getLast().slash == null){
-				b = createBond(sf.atom, stack.getLast().atom, bondOrder);
+			if (currentFrame.slash == null){
+				b = createBond(sf.atom, currentFrame.atom, bondOrder);
 			}
 			else{
-				b = createBond(stack.getLast().atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
+				b = createBond(currentFrame.atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
 			}
 			if(sf.slash != null) {
-				if(stack.getLast().slash != null) {
-					if (sf.slash.equals(stack.getLast().slash)){
+				if(currentFrame.slash != null) {
+					if (sf.slash.equals(currentFrame.slash)){
 						throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
 					}
 				}
 				else{
 					b.setSmilesStereochemistry(sf.slash);
 				}
-			} else if(stack.getLast().slash != null) {
-				b.setSmilesStereochemistry(stack.getLast().slash);
-				stack.getLast().slash = null;
+			} else if(currentFrame.slash != null) {
+				b.setSmilesStereochemistry(currentFrame.slash);
+				currentFrame.slash = null;
 			}
-			if (stack.getLast().atom.getAtomParity() != null){
-				AtomParity atomParity = stack.getLast().atom.getAtomParity();
+			if (currentFrame.atom.getAtomParity() != null){
+				AtomParity atomParity = currentFrame.atom.getAtomParity();
 				addAtomToAtomParity(atomParity, sf.atom);
 			}
 			if (sf.atom.getAtomParity() != null){//replace dummy atom with actual atom e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy atom before being replaced with the F atom
@@ -579,9 +583,9 @@ class SMILESFragmentBuilder {
 				if (sf.indexOfDummyAtom == null) {
 					throw new RuntimeException("OPSIN Bug: Index of dummy atom representing ring closure atom not set");
 				}
-				atomRefs4[sf.indexOfDummyAtom] = stack.getLast().atom;
+				atomRefs4[sf.indexOfDummyAtom] = currentFrame.atom;
 			}
-			stack.getLast().bondOrder = 1;
+			currentFrame.bondOrder = 1;
 		}
 
 		/**
