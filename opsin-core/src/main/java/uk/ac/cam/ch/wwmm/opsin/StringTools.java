@@ -15,7 +15,7 @@ class StringTools {
 	/**
 	 * Converts a list of strings into a single string delimited by the given separator
 	 *
-	 * @param l A list of strings.
+	 * @param list A list of strings.
 	 * @param separator
 	 * @return The corresponding string.
 	 */

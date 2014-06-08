@@ -366,7 +366,7 @@ class Atom {
 
 	/**Sets the chemical element corresponding to the element of the atom.
 	 *
-	 * @param elem The chemical element corresponding to the element of the atom
+	 * @param chemEl The chemical element corresponding to the element of the atom
 	 */
 	void setElement(ChemEl chemEl) {
 		this.chemEl = chemEl;

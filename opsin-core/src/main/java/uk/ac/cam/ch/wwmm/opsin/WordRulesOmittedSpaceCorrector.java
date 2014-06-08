@@ -35,7 +35,7 @@ class WordRulesOmittedSpaceCorrector {
 
 	/**
 	 * Corrects cases like "methylethyl ether" to "methyl ethyl ether"
-	 * @param wordRule
+	 * @param divalentFunctionalGroupWordRule
 	 */
 	private void checkAndCorrectOmittedSpacesInDivalentFunctionalGroupRule(Element divalentFunctionalGroupWordRule)  {
 		List<Element> substituentWords = OpsinTools.getChildElementsWithTagNameAndAttribute(divalentFunctionalGroupWordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);

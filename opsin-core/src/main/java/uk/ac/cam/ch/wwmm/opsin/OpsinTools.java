@@ -406,7 +406,7 @@ class OpsinTools {
 	 * Returns a list containing sibling elements with the given element names after the given element.
 	 * These elements need not be continuous and are returned in the order encountered
 	 * @param currentElem: the element to look for following siblings of
-	 * @param types: An array of the names of the elements desired
+	 * @param elNames: An array of the names of the elements desired
 	 * @return
 	 */
 	static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] elNames){
