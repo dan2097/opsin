@@ -1538,6 +1538,34 @@ class ComponentGenerator {
 					}
 				}
 			}
+			else if (suffixValue.equals("nitrolic acid") || suffixValue.equals("nitrolicacid")) {
+				Element precedingGroup = OpsinTools.getPreviousSibling(suffix, GROUP_EL);
+				if (precedingGroup == null){
+					if (subOrRoot.getChildCount() != 1) {
+						throw new RuntimeException("OPSIN Bug: nitrolic acid not expected to have sibilings");
+					}
+					Element precedingSubstituent = OpsinTools.getPreviousSibling(subOrRoot);
+					if(precedingSubstituent == null || !precedingSubstituent.getName().equals(SUBSTITUENT_EL)){
+						throw new ComponentGenerationException("Expected substituent before nitrolic acid");
+					}
+
+					List<Element> existingSuffixes = precedingSubstituent.getChildElements(SUFFIX_EL);
+					if (existingSuffixes.size() == 1) {
+						if (!existingSuffixes.get(0).getValue().equals("yl")){
+							throw new ComponentGenerationException("Unexpected suffix found before nitrolic acid");
+						}
+						existingSuffixes.get(0).detach();
+						for (Element child : precedingSubstituent.getChildElements()) {
+							child.detach();
+							OpsinTools.insertBefore(suffix, child);
+						}
+						precedingSubstituent.detach();
+					}
+					else{
+						throw new ComponentGenerationException("Only the nitrolic acid case where it is preceded by an yl suffix is supported");
+					}
+				}
+			}
 		}
 	}
 

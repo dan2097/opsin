@@ -452,4 +452,9 @@
 		<token value="[SH3+]=O" labels="none">sulfoxonium</token>
 		<token value="[SH4]" labels="none">sulfurane</token>
 	</tokenList>
+
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="Ø"><!--Fudged by handleSuffixIrregularities such that the preceding subsituent is merged in front of this-->
+    <token value="nitrolic acid">nitrolic acid</token>
+    <token value="nitrolic acid">nitrolicacid</token>
+	</tokenList>
 </tokenLists>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE suffixApplicability SYSTEM "suffixApplicability.dtd">
 <!-- This file dictates what suffixes are applicabily to the group types that OPSIN recognises.
-There are currently 3 main types: acidStem, substituent, standardGroup.
-Other types are used under specific conditions e.g. chalcogenAcidStem, aminoAcid, mononuclearNonCarbonOxoAcid
+The two most important/common types are: acidStem and standardGroup.
+Other types are used under specific conditions e.g. chalcogenAcidStem, aminoAcid, carbohydrate, nonCarboxylicAcid, substituent
 If a type in OPSIN corresponds to a group type then it is used:
 Hence acidStem is OPSIN type acidStem
 All other groups are classified as standardGroup
@@ -66,6 +66,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="lactone">lactone</suffix>
     <suffix value="nitrile">nitrile</suffix>
     <suffix value="nitrilium">nitrilium</suffix>
+    <suffix value="nitrolic acid">nitrolic acid</suffix>
     <suffix value="onaphthone">onaphthone</suffix>
     <!-- one is handled by hard coding common examples of its use -->
     <suffix value="ophenone">ophenone</suffix>
@@ -242,6 +243,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
     <suffix value="lactone">lactone</suffix>
     <suffix value="nitrile">nitrile</suffix>
     <suffix value="nitrilium">nitrilium</suffix>
+    <suffix value="nitrolic acid">nitrolic acid</suffix>
     <suffix value="ol">ol</suffix>
     <suffix value="olate">olate</suffix>
     <suffix value="olide">lactone</suffix>
