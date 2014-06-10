@@ -136,6 +136,8 @@
     <token value="ic" additionalValue="anilide">anilic acid</token>
     <token value="ite">ite</token>
     <token value="ite">it</token>
+    <token value="nitrolic acid">nitrolic acid</token>
+    <token value="nitrolic acid">nitrolicacid</token>
     <token value="onaphthone">onaphthone</token>
     <token value="onaphthone">onaphthon</token>
     <token value="onaphthone">naphthone</token>
