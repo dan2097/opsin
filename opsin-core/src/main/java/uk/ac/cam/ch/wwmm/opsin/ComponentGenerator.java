@@ -534,14 +534,19 @@ class ComponentGenerator {
 				if (chainLength==3 && !suffixPresent){
 					throw new ComponentGenerationException("iso has no meaning without a suffix on an alkane chain of length 3");
 				}
-				smiles =StringTools.multiplyString("C", chainLength-3) +"C(C)C";
-				StringBuilder sb = new StringBuilder();
-				for (int c = 1; c <= chainLength - 2; c++) {
-					sb.append(c);
-					sb.append('/');
+				if (chainLength ==8 && !suffixPresent){
+					smiles = "C(C)(C)CC(C)(C)C";
 				}
-				sb.append('/');
-				labels = sb.toString();
+				else{
+					smiles =StringTools.multiplyString("C", chainLength - 3) +"C(C)C";
+					StringBuilder sb = new StringBuilder();
+					for (int c = 1; c <= chainLength - 2; c++) {
+						sb.append(c);
+						sb.append('/');
+					}
+					sb.append('/');
+					labels = sb.toString();
+				}
 			}
 			else if (type.equals("sec")){
 				if (chainLength <3){
