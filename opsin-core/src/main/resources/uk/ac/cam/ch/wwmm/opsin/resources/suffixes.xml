@@ -177,6 +177,7 @@
     <token value="ic">ic</token>
     <token value="ic">icacid</token>
     <token value="ic">ic acid</token>
+    <token value="ate">ic acid anion</token>
     <token value="ic_O_acid">ic o-acid</token>
     <token value="ic_S_acid">ic s-acid</token>
     <token value="ic_Se_acid">ic se-acid</token>
