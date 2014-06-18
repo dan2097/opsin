@@ -203,7 +203,7 @@
 		<token value="CCCCCCCCCC\C=C/CCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" usableAsAJoiner="yes">asclepin</token><!--unknown-->
     <token value="CNN" labels="1/2/3">carbaz</token><!--unknown-->
     <token value="n1ccc(C)c2ccccc12" labels="1/2/3/4//4a/5/6/7/8/8a" suffixAppliesTo="5">cinchonin</token><!--cinchonine is an alkaloid-->
-		<token value="CCC(O)(C)CC" suffixAppliesTo="1,5,7" labels="1/2/3///4/5">citr</token><!--no clear definition as to what citryl means-->
+		<token value="CCC(O)(C)CC" suffixAppliesTo="1,5,7" labels="1/2/3///4/5" defaultInID="2">citr</token><!--no clear definition as to what citryl means, defaultInID gives correct interpretation of hydroxycitrate-->
     <token value="Cc1c(C)cc(C)c(C)c1" labels="/1/2//3/4//5//6">duryl</token><!--unknown-->
     <token value="C(N(CC)CC)CN(CC)CC" labels="none" suffixAppliesTo="4,6,10,12">edet</token><!--unknown-->
     <token value="Cc1cc(O)c(O)c(O)c1" labels="/1/2,ortho/3,meta//4,para//5//6">gall</token><!--unknown-->
