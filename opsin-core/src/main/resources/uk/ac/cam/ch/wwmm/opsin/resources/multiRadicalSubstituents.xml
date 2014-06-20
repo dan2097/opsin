@@ -81,9 +81,10 @@
 		<token value="B" labels="none" outIDs="1,1">borylene</token>
 
 		<token value="O" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">oxy</token>
-		<token value="S" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token><!--Also used in functional replacement-->
-		<token value="[SeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token><!--Also used in functional replacement-->
-		<token value="[TeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token><!--Also used in functional replacement-->
+		<!--limit chalcogen analogues to valency 2 to resolve ambiguity in badly bracketted names-->
+		<token value="[SH2|2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token><!--Also used in functional replacement-->
+		<token value="[SeH2|2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token><!--Also used in functional replacement-->
+		<token value="[TeH2|2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token><!--Also used in functional replacement-->
 
 	<!--Should be suffixes ONLY according to IUPAC-->
 		<token value="C=S" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbothioyl</token><!--alternative to thiocarbonyl-->
