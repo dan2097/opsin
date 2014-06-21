@@ -498,50 +498,19 @@ class ComponentProcessor {
 
 
 	/**
-	 * Looks for the presence of DEFAULTINLOCANT_ATR and DEFAULTINID_ATR on the group and applies them to the fragment
-	 * Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
+	 * Looks for the presence of {@link XmlDeclarations#DEFAULTINLOCANT_ATR} and {@link XmlDeclarations#DEFAULTINID_ATR} on the group and applies them to the fragment
 	 * @param thisFrag
 	 * @param group
 	 * @throws StructureBuildingException
 	 */
 	private static void setFragmentDefaultInAtomIfSpecified(Fragment thisFrag, Element group) throws StructureBuildingException {
-		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
-		if (group.getAttribute(DEFAULTINLOCANT_ATR) != null){//sets the atom at which substitution will occur to by default
-			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(group.getAttributeValue(DEFAULTINLOCANT_ATR)));
+		String defaultInLocant = group.getAttributeValue(DEFAULTINLOCANT_ATR);
+		String defaultInId = group.getAttributeValue(DEFAULTINID_ATR);
+		if (defaultInLocant != null){//sets the atom at which substitution will occur to by default
+			thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(defaultInLocant));
 		}
-		else if (group.getAttribute(DEFAULTINID_ATR) != null){
-			thisFrag.setDefaultInAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(group.getAttributeValue(DEFAULTINID_ATR)) - 1));
-		}
-		else if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) && group.getAttribute(SUFFIXAPPLIESTO_ATR) == null) {//makes linkers by default attach end to end
-			int chainLength = thisFrag.getChainLength();
-			if (chainLength >1){
-				boolean connectEndToEndWithPreviousSub = true;
-				if (groupSubType.equals(ALKANESTEM_SUBTYPE_VAL)){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
-					Element previousSubstituent = OpsinTools.getPreviousSibling(group.getParent());
-					if (previousSubstituent!=null){
-						List<Element> groups = previousSubstituent.getChildElements(GROUP_EL);
-						if (groups.size()==1 && groups.get(0).getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && !groups.get(0).getAttributeValue(TYPE_ATR).equals(RING_TYPE_VAL)){
-							connectEndToEndWithPreviousSub = false;
-						}
-					}
-				}
-				if (connectEndToEndWithPreviousSub){
-					Element parent = group.getParent();
-					while (parent.getName().equals(BRACKET_EL)){
-						parent = parent.getParent();
-					}
-					if (parent.getName().equals(ROOT_EL)){
-						Element previous = OpsinTools.getPrevious(group);
-						if (previous == null || !previous.getName().equals(MULTIPLIER_EL)){
-							connectEndToEndWithPreviousSub = false;
-						}
-					}
-				}
-				if (connectEndToEndWithPreviousSub){
-					group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
-					thisFrag.setDefaultInAtom(thisFrag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
-				}
-			}
+		else if (defaultInId != null){
+			thisFrag.setDefaultInAtom(thisFrag.getAtomByIDOrThrow(thisFrag.getIdOfFirstAtom() + Integer.parseInt(defaultInId) - 1));
 		}
 	}
 
@@ -2493,6 +2462,7 @@ class ComponentProcessor {
 	}
 
 	/** Handles special cases in IUPAC nomenclature that are most elegantly solved by modification of the fragment
+	 *  Also sets the default in atom for alkanes so that say methylethyl is prop-2-yl rather than propyl
 	 * @param groups
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException 
@@ -2523,6 +2493,48 @@ class ComponentProcessor {
 				if (wordRule.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString())){
 					if (OpsinTools.getDescendantElementsWithTagName(wordRule, SUBSTITUENT_EL).size()==0){
 						throw new ComponentGenerationException(groupValue +" describes a class of compounds rather than a particular compound");
+					}
+				}
+			}
+
+			if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) 
+					&& group.getAttribute(DEFAULTINID_ATR) == null
+					&& group.getAttribute(DEFAULTINLOCANT_ATR) == null) {
+				//makes linkers by default attach end to end
+				Fragment frag = group.getFrag();
+				int chainLength = frag.getChainLength();
+				if (chainLength > 1){
+					boolean connectEndToEndWithPreviousSub = true;
+					if (group.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){//don't do this if the group is preceded by another alkaneStem e.g. methylethyl makes more sense as prop-2-yl rather than propyl
+						Element previousSubstituent = OpsinTools.getPreviousSibling(group.getParent());
+						if (previousSubstituent != null){
+							List<Element> previousSubstGroups = previousSubstituent.getChildElements(GROUP_EL);
+							if (previousSubstGroups.size() == 1){
+								Element previousGroup = previousSubstGroups.get(0);
+								if (previousGroup.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(previousGroup.getAttributeValue(SUBTYPE_ATR))){
+									Element suffixAfterGroup = OpsinTools.getNextSibling(previousGroup, SUFFIX_EL);
+									if (suffixAfterGroup == null || suffixAfterGroup.getFrag() == null || suffixAfterGroup.getFrag().getOutAtomCount() == 0){
+										connectEndToEndWithPreviousSub = false;
+									}
+								}
+							}
+						}
+					}
+					if (connectEndToEndWithPreviousSub){
+						Element parent = group.getParent();
+						while (parent.getName().equals(BRACKET_EL)){
+							parent = parent.getParent();
+						}
+						if (parent.getName().equals(ROOT_EL)){
+							Element previous = OpsinTools.getPrevious(group);
+							if (previous == null || !previous.getName().equals(MULTIPLIER_EL)){
+								connectEndToEndWithPreviousSub = false;
+							}
+						}
+					}
+					if (connectEndToEndWithPreviousSub){
+						group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
+						frag.setDefaultInAtom(frag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
 					}
 				}
 			}
