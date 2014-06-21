@@ -29,7 +29,7 @@ class ComponentProcessor {
 	private final static Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
 	private final static Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
 	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
-	private final static Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
+	private final static Pattern matchGroupsThatAreAlsoInlineSuffixes = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
 	private final FunctionalReplacement functionalReplacement;
@@ -3778,32 +3778,35 @@ class ComponentProcessor {
 
 		//prevents alkyl chains being bracketed together e.g. ethylmethylamine
 		//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
-		List<Element> groupElements  = OpsinTools.getDescendantElementsWithTagName(elementBeforeSubstituent, GROUP_EL);//one for a substituent, possibly more for a bracket
-		Element lastGroupOfElementBeforeSub =groupElements.get(groupElements.size()-1);
-		if (lastGroupOfElementBeforeSub==null){throw new ComponentGenerationException("No group where group was expected");}
+		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(elementBeforeSubstituent, GROUP_EL);//one for a substituent, possibly more for a bracket
+		Element lastGroupOfElementBeforeSub =groupElements.get(groupElements.size() - 1);
+		if (lastGroupOfElementBeforeSub == null) {
+			throw new ComponentGenerationException("No group where group was expected");
+		}
 		if (theSubstituentType.equals(CHAIN_TYPE_VAL) && theSubstituentSubType.equals(ALKANESTEM_SUBTYPE_VAL) &&
 				lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL)){
-			boolean placeInImplicitBracket =false;
+			boolean placeInImplicitBracket = false;
 
 			Element suffixAfterGroup = OpsinTools.getNextSibling(lastGroupOfElementBeforeSub, SUFFIX_EL);
-			//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane (other suffixes don't need to be considered as they would produce silly structures)
-			if (suffixAfterGroup !=null && matchInlineSuffixesThatAreAlsoGroups.matcher(suffixAfterGroup.getValue()).matches()){
-				placeInImplicitBracket =true;
+			//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane
+			//the outatom check rules out things like "oyl" which don't extend the chain
+			if (suffixAfterGroup !=null && suffixAfterGroup.getFrag() != null && suffixAfterGroup.getFrag().getOutAtomCount() > 0){
+				placeInImplicitBracket = true;
 			}
 			//look for locants and check whether they appear to be referring to the other chain
 			if (!placeInImplicitBracket){
-				List<Element> childrenOfElementBeforeSubstituent  =elementBeforeSubstituent.getChildElements();
-				Boolean foundLocantNotReferringToChain =null;
+				List<Element> childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
+				Boolean foundLocantNotReferringToChain = null;
 				for (Element childOfElBeforeSub : childrenOfElementBeforeSubstituent) {
 					String currentElementName = childOfElBeforeSub.getName();
 					if (currentElementName.equals(LOCANT_EL)){
 						String locantText = childOfElBeforeSub.getValue();
 						if(!frag.hasLocant(locantText)){
-							foundLocantNotReferringToChain=true;
+							foundLocantNotReferringToChain = true;
 							break;
 						}
 						else{
-							foundLocantNotReferringToChain=false;
+							foundLocantNotReferringToChain = false;
 						}
 					}
 					else if (currentElementName.equals(STEREOCHEMISTRY_EL)){
@@ -3813,7 +3816,7 @@ class ComponentProcessor {
 					}
 				}
 				if (foundLocantNotReferringToChain !=null && !foundLocantNotReferringToChain){//a locant was found and it appeared to refer to the other chain
-					placeInImplicitBracket=true;
+					placeInImplicitBracket = true;
 				}
 			}
 			if (!placeInImplicitBracket){
@@ -3903,7 +3906,7 @@ class ComponentProcessor {
 					Element shouldBeAGroupOrSubOrBracket = OpsinTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
 					if (shouldBeAGroupOrSubOrBracket != null){
 						if ((shouldBeAGroupOrSubOrBracket.getName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-								|| (matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
+								|| (matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 							locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
 						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))){//e.g. p-dimethylamino[ring]
@@ -3947,7 +3950,7 @@ class ComponentProcessor {
 		if (locantRelatedElements.size() == 0){
 			Element possibleMultiplier =childrenOfElementBeforeSubstituent.get(0);
 			if (possibleMultiplier.getName().equals(MULTIPLIER_EL) && (
-					matchInlineSuffixesThatAreAlsoGroups.matcher(substituentGroup.getValue()).matches() || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
+					matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches() || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
 				Element desiredGroup = OpsinTools.getNextSiblingIgnoringCertainElements(possibleMultiplier, new String[]{MULTIPLIER_EL});
 				if (desiredGroup !=null && desiredGroup.getName().equals(GROUP_EL)){
 					childrenOfElementBeforeSubstituent.get(0).detach();

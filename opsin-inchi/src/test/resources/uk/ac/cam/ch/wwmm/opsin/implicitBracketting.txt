@@ -7,3 +7,4 @@ dimethylaminobenzene	InChI=1S/C8H11N/c1-9(2)8-6-4-3-5-7-8/h3-7H,1-2H3
 S-fluoromethyl methanethioate	InChI=1S/C2H3FOS/c3-1-5-2-4/h2H,1H2
 2-pentafluoroethylpropanamine	InChI=1S/C5H8F5N/c1-3(2-11)4(6,7)5(8,9)10/h3H,2,11H2,1H3
 p-dimethylaminopyridine	InChI=1S/C7H10N2/c1-9(2)7-3-5-8-6-4-7/h3-6H,1-2H3
+3-methanesulfonylmethyl-phenylamine	InChI=1S/C8H11NO2S/c1-12(10,11)6-7-3-2-4-8(9)5-7/h2-5H,6,9H2,1H3
