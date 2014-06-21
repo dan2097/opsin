@@ -3757,11 +3757,7 @@ class ComponentProcessor {
 				!elementAftersubstituent.getName().equals(SUBSTITUENT_EL) &&
 				!elementAftersubstituent.getName().equals(BRACKET_EL) &&
 				!elementAftersubstituent.getName().equals(ROOT_EL)){
-			if (elementAftersubstituent == null && substituent.getParent().getName().equals(WORD_EL) && (
-				state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal)){
-				//special case to allow bracketting for locanted esters
-			}
-			else{
+			if (!(elementAftersubstituent == null && locantedEsterImplicitBracketSpecialCase(substituent, elementBeforeSubstituent))) {
 				return;
 			}
 		}
@@ -3971,6 +3967,24 @@ class ComponentProcessor {
 		brackets.add(bracket);
 	}
 
+
+	/**
+	 * Retrusn true in the case that:
+	 * the given substituent is a direct child of a word element
+	 * The preceding substituent/bracket is the first element in the word element
+	 * The current word rule invovles locanted ester like linkages
+	 * @param substituent
+	 * @param elementBeforeSubstituent
+	 * @return
+	 */
+	private boolean locantedEsterImplicitBracketSpecialCase(Element substituent, Element elementBeforeSubstituent) {
+		if (substituent.getParent().getName().equals(WORD_EL) &&
+				OpsinTools.getPreviousSibling(elementBeforeSubstituent) == null &&
+				(state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal)){
+			return true;
+		}
+		return false;
+	}
 
 	/** 
 	 * Attempts to match locants to non adjacent suffixes/unsatuators
