@@ -39,6 +39,25 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
     <word type="full" endsWithRegex="\S(at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
   </wordRule>
 
+<!--unusual case where the acid is not a mono acid and the replacements are different-->
+  <wordRule name="acidReplacingFunctionalGroup" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+  </wordRule>
+
+  <wordRule name="acidReplacingFunctionalGroup" type="full">
+    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+    <word type="substituent" />
+    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+  </wordRule>
+
   <wordRule name="acidReplacingFunctionalGroup" type="full">
     <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
     <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
