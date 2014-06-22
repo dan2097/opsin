@@ -302,7 +302,7 @@ class WordRules {
 					}
 					convertFunctionalGroupIntoGroup(functionalWord);
 					if (wordsInWordRule==2){
-						joinWords(wordEls, i, wordEls.get(i), functionalWord);
+						joinWords(wordEls, wordEls.get(i), functionalWord);
 						wordsInWordRule =1;
 					}
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
@@ -311,7 +311,7 @@ class WordRules {
 					for (int j = 1; j < (wordsInWordRule - 1); j++) {
 						Element wordEl = wordEls.get(i + j);
 						if (WordType.substituent.toString().equals(wordEl.getAttributeValue(TYPE_ATR))) {
-							joinWords(wordEls, i + j, wordEls.get(i + j), wordEls.get(i + j + 1));
+							joinWords(wordEls, wordEls.get(i + j), wordEls.get(i + j + 1));
 							wordsInWordRule--;
 							List<Element> functionalTerm = OpsinTools.getDescendantElementsWithTagName(wordEls.get(i + j), FUNCTIONALTERM_EL);//rename functionalTerm element to root
 							if (functionalTerm.size() != 1){
@@ -370,7 +370,7 @@ class WordRules {
 				Element wordToPotentiallyCombineWith = wordEls.get(indexOfFirstWord +1);
 				if (WordType.full.toString().equals(wordToPotentiallyCombineWith.getAttributeValue(TYPE_ATR)) ||
 				WordType.substituent.toString().equals(wordToPotentiallyCombineWith.getAttributeValue(TYPE_ATR))){
-					joinWords(wordEls, indexOfFirstWord, firstWord, wordToPotentiallyCombineWith);
+					joinWords(wordEls, firstWord, wordToPotentiallyCombineWith);
 					return true;
 				}
 			}
@@ -428,24 +428,23 @@ class WordRules {
 	}
 
 	/**
-	 * Takes the list of wordEls, the indice of a word element, that element and the word element following it
-	 * Merges the latter word element into the former element
+	 * Merges two adjacent words
+	 * The latter word (wordToPotentiallyCombineWith) is merged into the former and removed from wordEls
 	 * @param wordEls
-	 * @param indexOfFirstWord
 	 * @param firstWord
 	 * @param wordToPotentiallyCombineWith
 	 * @throws ParsingException
 	 */
-	private void joinWords(List<Element> wordEls, int indexOfFirstWord, Element firstWord, Element wordToPotentiallyCombineWith) throws ParsingException {
-		wordEls.remove(indexOfFirstWord +1);
+	private void joinWords(List<Element> wordEls, Element firstWord, Element wordToPotentiallyCombineWith) throws ParsingException {
+		wordEls.remove(wordToPotentiallyCombineWith);
 		wordToPotentiallyCombineWith.detach();
 		List<Element> substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
 		if (substituentEls.size()==0){
 			throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 		}
-		Element finalSubstituent = substituentEls.get(substituentEls.size()-1);
+		Element finalSubstituent = substituentEls.get(substituentEls.size() - 1);
 		List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
-		if (!finalSubstituentChildren.get(finalSubstituentChildren.size()-1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
+		if (!finalSubstituentChildren.get(finalSubstituentChildren.size() - 1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
 			Element implicitHyphen = new TokenEl(HYPHEN_EL, "-");
 			finalSubstituent.addChild(implicitHyphen);
 		}
@@ -464,17 +463,19 @@ class WordRules {
 	private void convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
 		word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 		List<Element> functionalTerms = OpsinTools.getDescendantElementsWithTagName(word, FUNCTIONALTERM_EL);
-		if (functionalTerms.size()!=1){
+		if (functionalTerms.size() != 1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalTerm expected in functionalGroupAsGroup wordRule");
 		}
-		functionalTerms.get(0).setName(ROOT_EL);
-		List<Element> functionalGroups = functionalTerms.get(0).getChildElements(FUNCTIONALGROUP_EL);
-		if (functionalGroups.size()!=1){
+		Element functionalTerm = functionalTerms.get(0);
+		functionalTerm.setName(ROOT_EL);
+		List<Element> functionalGroups = functionalTerm.getChildElements(FUNCTIONALGROUP_EL);
+		if (functionalGroups.size() != 1){
 			throw new ParsingException("OPSIN Bug: Exactly 1 functionalGroup expected in functionalGroupAsGroup wordRule");
 		}
-		functionalGroups.get(0).setName(GROUP_EL);
-		functionalGroups.get(0).getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
-		functionalGroups.get(0).addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
+		Element functionalGroup = functionalGroups.get(0);
+		functionalGroup.setName(GROUP_EL);
+		functionalGroup.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
+		functionalGroup.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
 	}
 
 	
