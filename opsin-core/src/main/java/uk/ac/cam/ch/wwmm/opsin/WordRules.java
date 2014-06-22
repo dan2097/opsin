@@ -308,20 +308,23 @@ class WordRules {
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
 				}
 				else if (wordRule == WordRule.carbonylDerivative || wordRule == WordRule.acidReplacingFunctionalGroup){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
-					if (wordsInWordRule==3){//substituent present
-						joinWords(wordEls, i+1, wordEls.get(i+1), wordEls.get(i+2));
-						wordsInWordRule--;
-						List<Element> functionalTerm = OpsinTools.getDescendantElementsWithTagName(wordEls.get(i+1), FUNCTIONALTERM_EL);//rename functionalTerm element to root
-						if (functionalTerm.size()!=1){
-							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
+					for (int j = 1; j < (wordsInWordRule - 1); j++) {
+						Element wordEl = wordEls.get(i + j);
+						if (WordType.substituent.toString().equals(wordEl.getAttributeValue(TYPE_ATR))) {
+							joinWords(wordEls, i + j, wordEls.get(i + j), wordEls.get(i + j + 1));
+							wordsInWordRule--;
+							List<Element> functionalTerm = OpsinTools.getDescendantElementsWithTagName(wordEls.get(i + j), FUNCTIONALTERM_EL);//rename functionalTerm element to root
+							if (functionalTerm.size() != 1){
+								throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
+							}
+							functionalTerm.get(0).setName(ROOT_EL);
+							List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
+							if (functionalGroups.size() != 1){
+								throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
+							}
+							functionalGroups.get(0).setName(GROUP_EL);
+							wordEls.get(i + j).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 						}
-						functionalTerm.get(0).setName(ROOT_EL);
-						List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalTerm.get(0), FUNCTIONALGROUP_EL);//rename functionalGroup element to group
-						if (functionalGroups.size()!=1){
-							throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
-						}
-						functionalGroups.get(0).setName(GROUP_EL);
-						wordEls.get(i+1).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 					}
 				}
 				else if (wordRule == WordRule.additionCompound || wordRule == WordRule.oxide){//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
