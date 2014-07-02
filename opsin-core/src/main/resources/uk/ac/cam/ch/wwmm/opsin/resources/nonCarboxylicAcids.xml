@@ -129,8 +129,12 @@
     <token value="C(CC)(O)(O)O" labels="none">ortho-propion</token>
     <token value="C(CCC)(O)(O)O" labels="none">orthobutyr</token>
     <token value="C(CCC)(O)(O)O" labels="none">ortho-butyr</token>
+    <token value="C(C(C)C)(O)(O)O" labels="none">orthoisobutyr</token>
+    <token value="C(C(C)C)(O)(O)O" labels="none">ortho-isobutyr</token>
     <token value="C(CCCC)(O)(O)O" labels="none">orthovaler</token>
     <token value="C(CCCC)(O)(O)O" labels="none">ortho-valer</token>
+    <token value="C(CC(C)C)(O)(O)O" labels="none">orthoisovaler</token>
+    <token value="C(CC(C)C)(O)(O)O" labels="none">ortho-isovaler</token>
     <token value="[Te](O)(O)(O)(O)(O)O" labels="none">orthotellur</token>
     <token value="[Te](O)(O)(O)(O)(O)O" labels="none">ortho-tellur</token>
     <token value="B(O)(O)B(O)O" labels="none" suffixAppliesTo="1,4">hypobor</token>
