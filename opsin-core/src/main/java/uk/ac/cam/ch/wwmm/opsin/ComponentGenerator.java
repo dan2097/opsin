@@ -2312,29 +2312,37 @@ class ComponentGenerator {
 		else if (groupValue.equals("coenzyme a") || groupValue.equals("coa")){
 			Element enclosingSubOrRoot = group.getParent();
 			Element previous = OpsinTools.getPreviousSibling(enclosingSubOrRoot);
-			if (previous!=null){
+			if (previous != null){
 				List<Element> groups = OpsinTools.getDescendantElementsWithTagName(previous, GROUP_EL);
-				if (groups.size()>0){
-					Element possibleAcid = groups.get(groups.size()-1);
+				if (groups.size() > 0){
+					Element possibleAcid = groups.get(groups.size() - 1);
 					if (ACIDSTEM_TYPE_VAL.equals(possibleAcid.getAttributeValue(TYPE_ATR))){
-						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR)!=null){//multi acid. yl should be one oyl and the rest carboxylic acids
+						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR) != null){//multi acid. yl should be one oyl and the rest carboxylic acids
 							Element suffix = OpsinTools.getNextSibling(possibleAcid, SUFFIX_EL);
-							if (suffix.getAttribute(ADDITIONALVALUE_ATR)==null){
+							if (suffix.getAttribute(ADDITIONALVALUE_ATR) == null){
 								suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
 							}
 						}
 						String subType = possibleAcid.getAttributeValue(SUBTYPE_ATR);
 						if (subType.equals(YLFORYL_SUBTYPE_VAL) || subType.equals(YLFORNOTHING_SUBTYPE_VAL)){
-							possibleAcid.getAttribute(SUBTYPE_ATR).setValue(YLFORACYL_SUBTYPE_VAL);//yl always  means an acyl when next to coenzyme A
+							possibleAcid.getAttribute(SUBTYPE_ATR).setValue(YLFORACYL_SUBTYPE_VAL);//yl always means an acyl when next to coenzyme A
 						}
 					}
 				}
 			}
-			//locanted substitution onto Coenzyme A is rarely intended, so put it in a bracket to disfavour it
-			Element newBracket = new GroupingEl(BRACKET_EL);
-			OpsinTools.insertAfter(enclosingSubOrRoot, newBracket);
-			enclosingSubOrRoot.detach();
-			newBracket.addChild(enclosingSubOrRoot);
+			//locanted substitution onto Coenzyme A is rarely intended, so put prior content into a bracket to disfavour it
+			Element enclosingBracketOrWord = enclosingSubOrRoot.getParent();
+			int indexOfCoa = enclosingBracketOrWord.indexOf(enclosingSubOrRoot);
+			if (indexOfCoa > 0) {
+				Element newBracket = new GroupingEl(BRACKET_EL);
+				List<Element> precedingElements = enclosingBracketOrWord.getChildElements();
+				for (int i = 0; i < indexOfCoa; i++) {
+					Element precedingElement  = precedingElements.get(i);
+					precedingElement.detach();
+					newBracket.addChild(precedingElement);
+				}
+				OpsinTools.insertBefore(enclosingSubOrRoot, newBracket);
+			}
 		}
 		else if (groupValue.equals("sphinganine") || groupValue.equals("icosasphinganine") || groupValue.equals("eicosasphinganine") || groupValue.equals("phytosphingosine") || groupValue.equals("sphingosine")){
 			Element enclosingSubOrRoot = group.getParent();
