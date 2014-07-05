@@ -37,12 +37,12 @@ class OpsinTools {
 	 * @param currentEl
 	 */
 	static Element getNextNonChargeSuffix(Element currentEl) {
-		Element next = OpsinTools.getNextSibling(currentEl);
+		Element next = getNextSibling(currentEl);
 		while (next != null) {
 			if (next.getName().equals(SUFFIX_EL) && !CHARGE_TYPE_VAL.equals(next.getAttributeValue(TYPE_ATR))){
 				return next;
 			}
-			next = OpsinTools.getNextSibling(next);
+			next = getNextSibling(next);
 		}
 		return null;
 	}
