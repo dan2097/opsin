@@ -73,17 +73,29 @@
     <token labels="/2,alpha/3,beta////////1" value="N[C@@H](CSC(C)(C)CCO)C" suffixAppliesTo="11">felin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" value="N[C@@H](CCCCN=[N+]=[N-])C" suffixAppliesTo="10">azidonorleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma////1" value="N[C@@H](CCN=[N+]=[N-])C" suffixAppliesTo="8">azidohomoalan</token>
+    <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertiaryleuc</token>
+    <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertiary-leuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertleuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert-leuc</token>
+    <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert.leuc</token>
+    <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert.-leuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">t-leuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8">panton</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" value="N[C@@H](CCCC[N+](C)(C)C)C" suffixAppliesTo="11">lamin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" suffixAppliesTo="17">saccharop</token>
+    <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tertiarybutylalan</token>
+    <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tertiary-butylalan</token>
     <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tertbutylalan</token>
     <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tert-butylalan</token>
+    <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tert.butylalan</token>
+    <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">tert.-butylalan</token>
     <token labels="/2,alpha/3,beta/////1" value="N[C@@H](CC(C)(C)C)C" suffixAppliesTo="8">t-butylalan</token>
+    <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertiarybutylglyc</token>
+    <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertiary-butylglyc</token>
     <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertbutylglyc</token>
     <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert-butylglyc</token>
+    <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert.butylglyc</token>
+    <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert.-butylglyc</token>
     <token labels="/2,alpha/////1" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">t-butylglyc</token>
 
 <!--homo amino acids-->

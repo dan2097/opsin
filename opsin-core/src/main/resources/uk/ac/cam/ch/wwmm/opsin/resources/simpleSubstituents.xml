@@ -33,9 +33,13 @@
 		<token value="-CCC(C)C">isoamyl</token>
 		<token value="=CCC(C)C">isoamylidene</token>
 		<token value="-CC(C)(C)C">neoamyl</token>
-		<token value="-C(C)(C)CC" labels="none">t-amyl</token>
+		<token value="-C(C)(C)CC" labels="none">tertiary-amyl</token>
+		<token value="-C(C)(C)CC" labels="none">tertiaryamyl</token>
 		<token value="-C(C)(C)CC" labels="none">tert-amyl</token>
 		<token value="-C(C)(C)CC" labels="none">tertamyl</token>
+		<token value="-C(C)(C)CC" labels="none">tert.-amyl</token>
+		<token value="-C(C)(C)CC" labels="none">tert.amyl</token>
+		<token value="-C(C)(C)CC" labels="none">t-amyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilino</token>
 		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant4" outIDs="9" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisidino</token>
 		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal</token>
@@ -196,8 +200,12 @@
 		<token value="-[Te](=O)(O)" labels="none">tellurino</token>
 		<token value="-[Te](=O)(=O)(O)" labels="none">tellurono</token>
 		<token value="-[TeH]" labels="none">telluryl</token>
+		<token value="-OC(C)(C)C" labels="none">tertiary-butoxyl</token>
+		<token value="-OC(C)(C)C" labels="none">tertiarybutoxyl</token>
 		<token value="-OC(C)(C)C" labels="none">tert-butoxyl</token>
 		<token value="-OC(C)(C)C" labels="none">tertbutoxyl</token>
+		<token value="-OC(C)(C)C" labels="none">tert.-butoxyl</token>
+		<token value="-OC(C)(C)C" labels="none">tert.butoxyl</token>
 		<token value="-OC(C)(C)C" labels="none">t-butoxyl</token>
 		<token value="-OC(C)(C)C" labels="none">tbutoxyl</token>
 		<token value="-Cc1cccs1" labels="alpha/2/3/4/5/1">then-2-yl</token>

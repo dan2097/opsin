@@ -291,8 +291,12 @@
 		<token value="[TeH2]=N" labels="none">tellurilimine</token>
 		<token value="[TeH2](=O)=N" labels="none">telluroximide</token>
 		<token value="[TeH2](=O)=N" labels="none">telluroximine</token>
+		<token value="CC(C)([O-])C" labels="none">tertiary-butoxide</token>
+		<token value="CC(C)([O-])C" labels="none">tertiarybutoxide</token>
 		<token value="CC(C)([O-])C" labels="none">tert-butoxide</token>
 		<token value="CC(C)([O-])C" labels="none">tertbutoxide</token>
+		<token value="CC(C)([O-])C" labels="none">tert.-butoxide</token>
+		<token value="CC(C)([O-])C" labels="none">tert.butoxide</token>
 		<token value="CC(C)([O-])C" labels="none">t-butoxide</token>
 		<token value="CC(C)([O-])C" labels="none">tbutoxide</token>
 		<token value="COCCOCCOCCOCCOC" labels="none">tetraglyme</token>
