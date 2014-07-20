@@ -65,8 +65,8 @@
   <tokenList tagname="alkaneStemModifier" symbol="n">
     <token value="normal">normal</token>
     <token value="normal">normal-</token>
-    <token value="tert">tertiary-</token>
     <token value="tert">tertiary</token>
+    <token value="tert">tertiary-</token>
     <token value="tert">tert</token>
     <token value="tert">tert.</token>
     <token value="tert">tert-</token>
@@ -74,8 +74,10 @@
     <token value="tert">t-</token>
     <token value="iso">iso</token>
     <token value="iso">iso-</token>
-    <token value="sec">sec-</token>
     <token value="sec">sec</token>
+    <token value="sec">sec-</token>
+    <token value="sec">secondary</token>
+    <token value="sec">secondary-</token>
     <token value="neo">neo</token>
     <token value="neo">neo-</token>
   </tokenList>
