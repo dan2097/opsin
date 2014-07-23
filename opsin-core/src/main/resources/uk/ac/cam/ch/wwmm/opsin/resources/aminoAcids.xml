@@ -80,6 +80,7 @@
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert.leuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tert.-leuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">t-leuc</token>
+    <token labels="1/2//3/4/5" value="N1[C@H](C)CSC1" suffixAppliesTo="3">thioprol</token>
     <token labels="none" value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8">panton</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" value="N[C@@H](CCCC[N+](C)(C)C)C" suffixAppliesTo="11">lamin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" suffixAppliesTo="17">saccharop</token>
