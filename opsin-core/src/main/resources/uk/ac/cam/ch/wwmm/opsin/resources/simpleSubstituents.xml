@@ -87,7 +87,50 @@
 		<token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" usableAsAJoiner="yes" defaultInLocant="14">carbtetradecoxy</token>
 		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" usableAsAJoiner="yes" defaultInLocant="15">carbopentadecoxy</token>
 		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" usableAsAJoiner="yes" defaultInLocant="15">carbpentadecoxy</token>
+		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carballoxy</token>
+		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carboalloxy</token>
+		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carballyloxy</token>
+		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carboallyloxy</token>
+		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbbenzoxy</token>
+		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbobenzoxy</token>
+		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbbenzyloxy</token>
 		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbobenzyloxy</token>
+		<token value="-C(=O)OC(C)C" labels="none">carbisopropoxy</token>
+		<token value="-C(=O)OC(C)C" labels="none">carboisopropoxy</token>
+		<token value="-C(=O)OC(C)C" labels="none">carb-i-propoxy</token>
+		<token value="-C(=O)OC(C)C" labels="none">carbo-i-propoxy</token>
+		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbphenoxy</token>
+		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbophenoxy</token>
+		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbphenyloxy</token>
+		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbophenyloxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-tertiarybutoxy</token><!-- ideally this should be done systematically-->
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-tertiary-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-tertbutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-tert.butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-tert-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-tert.-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbo-t-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-tertiarybutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-tertiary-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-tertbutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-tert.butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-tert-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-tert.-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carb-t-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbotertiarybutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbotertiary-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbotertbutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbotert.butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbotert-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbotert.-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbot-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbtertiarybutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbtertiary-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbtertbutoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbtert.butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbtert-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbtert.-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C" labels="none">carbt-butoxy</token>
 		<token value="-C(=O)OCc1ccccc1" labels="none">cbz</token>
 		<token value="#C" labels="none">carbyne</token>
 		<token value="-[CH2+]" labels="none">carbynium</token>
