@@ -75,7 +75,9 @@
     <token value="iso">iso</token>
     <token value="iso">iso-</token>
     <token value="sec">sec</token>
+    <token value="sec">sec.</token>
     <token value="sec">sec-</token>
+    <token value="sec">sec.-</token>
     <token value="sec">secondary</token>
     <token value="sec">secondary-</token>
     <token value="neo">neo</token>
