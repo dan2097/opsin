@@ -557,7 +557,7 @@ class StereoAnalyser {
 					}
 					resonanceAndTautomerismAtomicElementPlusIsotopes.add(neighbourChemEl.toString() + atom.getIsotope());
 				}
-				if (neighbourChemEl == ChemEl.H && neighbour.getBonds().size()==1){
+				if (neighbourChemEl == ChemEl.H && neighbour.getBondCount()==1){
 					//terminal H atom neighbour
 					return true;
 				}

@@ -1393,7 +1393,7 @@ class FusedRingNumberer {
 	private static boolean isEntirelyFusionAtoms(Ring upperRightRing) {
 		List<Atom> atomList = upperRightRing.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getBonds().size() < 3){
+			if (atom.getBondCount() < 3){
 				return false;
 			}
 		}

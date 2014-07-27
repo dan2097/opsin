@@ -449,7 +449,7 @@ class FragmentTools {
 			atom.clearLocants();
 		}
 		for (Atom atom : atomList) {
-			if(atom.getElement() != ChemEl.C || atom.getBonds().size() < 3) {
+			if(atom.getElement() != ChemEl.C || atom.getBondCount() < 3) {
 				locantVal++;
 				locantLetter = 'a';
 				atom.addLocant(Integer.toString(locantVal));
@@ -1019,7 +1019,7 @@ class FragmentTools {
 		List<Atom> hydroxyAtoms = new ArrayList<Atom>();
 		List<Atom> atoms = biochemicalFragment.getAtomList();
 		for (Atom atom : atoms) {
-			if (atom.getElement() == ChemEl.O && atom.getBonds().size()==1  &&
+			if (atom.getElement() == ChemEl.O && atom.getBondCount()==1  &&
 					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
 				List<Atom> neighbours = adjacentAtom.getAtomNeighbours();

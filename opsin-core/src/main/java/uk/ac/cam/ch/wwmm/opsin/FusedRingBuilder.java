@@ -626,7 +626,7 @@ class FusedRingBuilder {
 			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 6-5 and 1-6 are both possible
 			Atom atom = cyclicAtomList.previous();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
-			if (atom.getElement() == ChemEl.C && atom.getBonds().size() == 2
+			if (atom.getElement() == ChemEl.C && atom.getBondCount() == 2
 					&& (carbonAtomIndexes.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekNext()))){
 				carbonAtomIndexes.add(cyclicAtomList.getIndex());
 				if (carbonAtomIndexes.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
@@ -661,7 +661,7 @@ class FusedRingBuilder {
 			//the last atom in the list is potentially tested twice e.g. on a 6 membered ring, 1-2 and 6-1 are both possible
 			Atom atom = cyclicAtomList.next();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
-			if (atom.getElement() == ChemEl.C && atom.getBonds().size() == 2
+			if (atom.getElement() == ChemEl.C && atom.getBondCount() == 2
 					&& (carbonLocants.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
 				carbonLocants.add(atom.getFirstLocant());
 				if (carbonLocants.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s

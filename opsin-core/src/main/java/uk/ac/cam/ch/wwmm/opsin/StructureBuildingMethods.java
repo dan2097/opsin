@@ -196,7 +196,7 @@ class StructureBuildingMethods {
 						if (atomToSubstituteAt.getElement() != ChemEl.O){
 							for (Atom neighbour : atomToSubstituteAt.getAtomNeighbours()) {
 								if (neighbour.getElement() == ChemEl.O &&
-										neighbour.getBonds().size()==1 &&
+										neighbour.getBondCount()==1 &&
 										neighbour.getFirstBond().getOrder() == 1 &&
 										neighbour.getOutValency() == 0 &&
 										neighbour.getCharge() == 0){
