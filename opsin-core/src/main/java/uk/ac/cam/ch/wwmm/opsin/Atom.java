@@ -503,6 +503,10 @@ class Atom {
 	List<Bond> getBonds() {
 		return Collections.unmodifiableList(bonds);
 	}
+	
+	int getBondCount() {
+		return bonds.size();
+	}
 
 	/**Gets a list of atoms that connect to the atom
 	 *
