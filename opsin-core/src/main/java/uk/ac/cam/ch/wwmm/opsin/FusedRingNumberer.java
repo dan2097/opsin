@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
  *
  */
 class FusedRingNumberer {
+	
 	private static final Logger LOG = Logger.getLogger(FusedRingNumberer.class);
 	private static class RingConnectivityTable {
 		final List<RingShape> ringShapes = new ArrayList<RingShape>();
@@ -111,14 +112,14 @@ class FusedRingNumberer {
 
 
 				//bridgehead carbon do not increment numbering
-				if (!isAaHeteroatom && atomA.getIncomingValency()>=3){
+				if (!isAaHeteroatom && atomA.getBondCount()>=3){
 					i++;
 					continue;
 				}
 
 				Atom atomB=sequenceB.get(j);
 				boolean isBaHeteroatom =atomB.getElement() != ChemEl.C;
-				if (!isBaHeteroatom && atomB.getIncomingValency()>=3){
+				if (!isBaHeteroatom && atomB.getBondCount()>=3){
 					j++;
 					continue;
 				}
@@ -139,13 +140,13 @@ class FusedRingNumberer {
 				Atom atomA=sequenceA.get(i);
 
 				//bridgehead carbon do not increment numbering
-				if (atomA.getElement() == ChemEl.C && atomA.getIncomingValency()>=3){
+				if (atomA.getElement() == ChemEl.C && atomA.getBondCount()>=3){
 					i++;
 					continue;
 				}
 
 				Atom atomB=sequenceB.get(j);
-				if (atomB.getElement() == ChemEl.C && atomB.getIncomingValency()>=3){
+				if (atomB.getElement() == ChemEl.C && atomB.getBondCount()>=3){
 					j++;
 					continue;
 				}
@@ -169,13 +170,13 @@ class FusedRingNumberer {
 	    	for ( i = 0; i < sequenceA.size(); i++) {
 				Atom atomA=sequenceA.get(i);
 				Atom atomB=sequenceB.get(i);
-				if (atomA.getIncomingValency()>=3 && atomA.getElement() == ChemEl.C){
-					if (!(atomB.getIncomingValency()>=3 && atomB.getElement() == ChemEl.C)){
+				if (atomA.getBondCount()>=3 && atomA.getElement() == ChemEl.C){
+					if (!(atomB.getBondCount()>=3 && atomB.getElement() == ChemEl.C)){
 						return -1;
 					}
 				}
-				if (atomB.getIncomingValency()>=3 && atomB.getElement() == ChemEl.C){
-					if (!(atomA.getIncomingValency()>=3 && atomA.getElement() == ChemEl.C)){
+				if (atomB.getBondCount()>=3 && atomB.getElement() == ChemEl.C){
+					if (!(atomA.getBondCount()>=3 && atomA.getElement() == ChemEl.C)){
 						return 1;
 					}
 				}
@@ -187,13 +188,13 @@ class FusedRingNumberer {
 	    	for (i = 0; i < sequenceA.size(); i++) {
 				Atom atomA=sequenceA.get(i);
 				Atom atomB=sequenceB.get(i);
-				if (atomA.getIncomingValency()>=3){
-					if (!(atomB.getIncomingValency()>=3)){
+				if (atomA.getBondCount()>=3){
+					if (!(atomB.getBondCount()>=3)){
 						return -1;
 					}
 				}
-				if (atomB.getIncomingValency()>=3){
-					if (!(atomA.getIncomingValency()>=3)){
+				if (atomB.getBondCount()>=3){
+					if (!(atomA.getBondCount()>=3)){
 						return 1;
 					}
 				}
