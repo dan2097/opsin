@@ -183,7 +183,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(-2, atomList.get(0).getCharge());
 	}
-	
+
 	@Test
 	public void noIsotopeSpecified() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[NH3]");
@@ -191,7 +191,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(null, atomList.get(0).getIsotope());
 	}
-	
+
 	@Test
 	public void isotopeSpecified() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[15NH3]");
@@ -220,36 +220,36 @@ public class SMILESFragmentBuilderTest {
 		fail("Should throw exception for bad smiles");
 	}
 
-    @Test(expected=StructureBuildingException.class)
-    public void badlyFormedSMILE4() throws StructureBuildingException {
-        sBuilder.build("C=#C");
-        fail("Should throw exception for bad smiles: is it a double or triple bond?");
-    }
-    
-    @Test(expected=StructureBuildingException.class)
-    public void badlyFormedSMILE5() throws StructureBuildingException {
-        sBuilder.build("C#=C");
-        fail("Should throw exception for bad smiles: is it a double or triple bond?");
-    }
-    
-    @Test(expected=StructureBuildingException.class)
-    public void badlyFormedSMILE6() throws StructureBuildingException {
-        sBuilder.build("F//C=C/F");
-        fail("Should throw exception for bad smiles: bond configuration specified twice");
-    }
+	@Test(expected=StructureBuildingException.class)
+	public void badlyFormedSMILE4() throws StructureBuildingException {
+		sBuilder.build("C=#C");
+		fail("Should throw exception for bad smiles: is it a double or triple bond?");
+	}
 
-	
-    @Test(expected=StructureBuildingException.class)
-    public void badlyFormedSMILE7() throws StructureBuildingException {
-        sBuilder.build("F/C=C/\\F");
-        fail("Should throw exception for bad smiles: bond configuration specified twice");
-    }
+	@Test(expected=StructureBuildingException.class)
+	public void badlyFormedSMILE5() throws StructureBuildingException {
+		sBuilder.build("C#=C");
+		fail("Should throw exception for bad smiles: is it a double or triple bond?");
+	}
 
-    @Test(expected=StructureBuildingException.class)
-    public void badlyFormedSMILE8() throws StructureBuildingException {
-        sBuilder.build("F[C@@](Cl)Br");
-        fail("Should throw exception for invalid atom parity, not enough atoms in atom parity");
-    }
+	@Test(expected=StructureBuildingException.class)
+	public void badlyFormedSMILE6() throws StructureBuildingException {
+		sBuilder.build("F//C=C/F");
+		fail("Should throw exception for bad smiles: bond configuration specified twice");
+	}
+
+
+	@Test(expected=StructureBuildingException.class)
+	public void badlyFormedSMILE7() throws StructureBuildingException {
+		sBuilder.build("F/C=C/\\F");
+		fail("Should throw exception for bad smiles: bond configuration specified twice");
+	}
+
+	@Test(expected=StructureBuildingException.class)
+	public void badlyFormedSMILE8() throws StructureBuildingException {
+		sBuilder.build("F[C@@](Cl)Br");
+		fail("Should throw exception for invalid atom parity, not enough atoms in atom parity");
+	}
 
 	@Test
 	public void ringClosureHandling1() throws StructureBuildingException {
@@ -288,7 +288,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(3, atomList.size());
 		assertEquals(2, atomList.get(0).getAtomNeighbours().size());
 	}
-	
+
 	@Test
 	public void hydrogenHandling1() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[OH3+]");
@@ -298,7 +298,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling2() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[CH3][CH2][OH]");
@@ -311,7 +311,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(2, atomList.get(2).determineValency(true));
 		assertEquals(0, atomList.get(2).getProtonsExplicitlyAddedOrRemoved());
 	}
-	
+
 	@Test
 	public void hydrogenHandling3() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH2]");
@@ -320,7 +320,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(2, atomList.get(0).determineValency(true));
 		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
-	
+
 	@Test
 	public void hydrogenHandling4() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH4]");
@@ -331,7 +331,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.get(0).determineValency(true));
 		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
-	
+
 	@Test
 	public void hydrogenHandling5() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH6]");
@@ -342,7 +342,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(6, atomList.get(0).determineValency(true));
 		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
-	
+
 	@Test
 	public void hydrogenHandling6() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH3]");
@@ -352,8 +352,8 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(3, minimumVal);
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
-	
-	
+
+
 	@Test
 	public void hydrogenHandling7() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH3+]");
@@ -363,7 +363,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling8() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH+]");
@@ -373,7 +373,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(-1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(1, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling9() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH3-]");
@@ -383,7 +383,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(3, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling10() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH-]");
@@ -393,7 +393,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(-1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(1, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling11() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SH5+]");
@@ -405,7 +405,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(5, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling12() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[Li+]");
@@ -415,7 +415,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(0, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling13() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[NaH]");
@@ -423,12 +423,12 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(2, atomList.size());
 		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(0, atomList.get(0).getCharge());
-		
+
 		assertEquals(0, atomList.get(1).getProtonsExplicitlyAddedOrRemoved());
 		assertEquals(0, atomList.get(1).getCharge());
 		assertEquals(ChemEl.H, atomList.get(1).getElement());
 	}
-	
+
 	@Test
 	public void hydrogenHandling14() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("-[SiH3]");
@@ -437,7 +437,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.get(0).determineValency(true));
 		assertEquals(0, atomList.get(0).getProtonsExplicitlyAddedOrRemoved());
 	}
-	
+
 	@Test
 	public void hydrogenHandling15() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("=[SiH2]");
@@ -445,8 +445,8 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
-	
-	
+
+
 	@Test
 	public void hydrogenHandling16() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("#[SiH]");
@@ -454,7 +454,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling17() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SiH3]-");
@@ -462,7 +462,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling18() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SiH2]=");
@@ -470,7 +470,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling19() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[SiH]#");
@@ -478,7 +478,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling20() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("=[Si]=");
@@ -486,7 +486,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(1, atomList.size());
 		assertEquals(4, atomList.get(0).determineValency(true));
 	}
-	
+
 	@Test
 	public void hydrogenHandling21() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[o+]1ccccc1");
@@ -499,7 +499,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(4, atomList.get(1).determineValency(true));
 		assertEquals(true, atomList.get(1).hasSpareValency());
 	}
-	
+
 	@Test
 	public void indicatedHydrogen() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("Nc1[nH]c(=O)c2c(n1)nc[nH]2");
@@ -631,7 +631,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(atomList.get(3), atomRefs4[3]);
 		assertEquals(-1, atomParity.getParity());
 	}
-	
+
 	@Test
 	public void chiralityTest8() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("[S@](C)(N)=O");
@@ -649,166 +649,177 @@ public class SMILESFragmentBuilderTest {
 	}
 
 	@Test
-    public void testDoubleBondStereo1() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("F/C=C/F");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-    }
+	public void testDoubleBondStereo1() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("F/C=C/F");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondStereo2() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("F\\C=C/F");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondStereo2() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("F\\C=C/F");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondStereo3() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C(/F)=C/F");
-        Bond b =fragment.findBond(1, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondStereo3() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C(/F)=C/F");
+		Bond b =fragment.findBond(1, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondStereo4() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C(\\F)=C/F");
-        Bond b =fragment.findBond(1, 3);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondStereo4() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C(\\F)=C/F");
+		Bond b =fragment.findBond(1, 3);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondStereo5a() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("CC1=C/F.O\\1");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondStereo5a() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("CC1=C/F.O\\1");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondStereo5b() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("CC/1=C/F.O1");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondStereo5b() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("CC/1=C/F.O1");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondStereo6() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("CC1=C/F.O/1");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondStereo6() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("CC1=C/F.O/1");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondMultiStereo1() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("F/C=C/C=C/C");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-        b =fragment.findBond(4, 5);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondMultiStereo1() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("F/C=C/C=C/C");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+		b =fragment.findBond(4, 5);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondMultiStereo2() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("F/C=C\\C=C/C");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        b =fragment.findBond(4, 5);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondMultiStereo2() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("F/C=C\\C=C/C");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+		b =fragment.findBond(4, 5);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondMultiStereo3() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("F/C=C\\C=C\\C");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        b =fragment.findBond(4, 5);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-    }
+	@Test
+	public void testDoubleBondMultiStereo3() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("F/C=C\\C=C\\C");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+		b =fragment.findBond(4, 5);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+	}
 
-    @Test
-    public void testDoubleBondMultiStereo4() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("F/C=C\\C=CC");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        b =fragment.findBond(4, 5);
-        assertEquals(null, b.getBondStereo());
-    }
-    
-    //From http://baoilleach.blogspot.com/2010/09/are-you-on-my-side-or-not-its-ez-part.html
-    @Test
-    public void testDoubleBondNoela() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C/C=C\\1/NC1");
-        Bond b =fragment.findBond(2, 3);
-        if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-        }
-        else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-        }
-    }
-    
-    @Test
-    public void testDoubleBondNoelb() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C/C=C1/NC1");
-        Bond b =fragment.findBond(2, 3);
-        assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
-        assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-    }
-    
-    @Test
-    public void testDoubleBondNoelc() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C/C=C\\1/NC/1");
-        Bond b =fragment.findBond(2, 3);
-        if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-        }
-        else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-        }
-    }
-    
-    @Test
-    public void testDoubleBondNoeld() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C/C=C1/NC/1");
-        Bond b =fragment.findBond(2, 3);
-        if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
-            assertEquals("a1 a2 a3 a4", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-        }
-        else{
-        	assertEquals("a1 a2 a3 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-        }
-    }
-    
-    @Test(expected=StructureBuildingException.class)
-    public void testDoubleBondNoele() throws StructureBuildingException {
-        sBuilder.build("C/C=C\\1\\NC1");
-        fail("Should throw exception for bad smiles: contradictory double bond configuration");
-    }
+	@Test
+	public void testDoubleBondMultiStereo4() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("F/C=C\\C=CC");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+		b =fragment.findBond(4, 5);
+		assertEquals(null, b.getBondStereo());
+	}
 
-    @Test(expected=StructureBuildingException.class)
-    public void testDoubleBondNoelf() throws StructureBuildingException {
-        sBuilder.build("C/C=C\1NC\1");
-        fail("Should throw exception for bad smiles: contradictory double bond configuration");
-    }
-    
-    @Test(expected=StructureBuildingException.class)
-    public void testDoubleBondNoelg() throws StructureBuildingException {
-        sBuilder.build("C/C=C\1/NC\1");
-        fail("Should throw exception for bad smiles: contradictory double bond configuration");
-    }
-    
-    @Test
-    public void testDoubleBondNoelLike1() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C\\1NC1=C/C");
-        Bond b =fragment.findBond(3, 4);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-    }
-    
-    @Test
-    public void testDoubleBondNoelLike2() throws StructureBuildingException {
-        Fragment fragment = sBuilder.build("C1NC/1=C/C");
-        Bond b =fragment.findBond(3, 4);
-        assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
-        assertEquals("a1 a3 a4 a5", b.getBondStereo().toCML().getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR));
-    }
+	//From http://baoilleach.blogspot.com/2010/09/are-you-on-my-side-or-not-its-ez-part.html
+	@Test
+	public void testDoubleBondNoela() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C/C=C\\1/NC1");
+		Bond b =fragment.findBond(2, 3);
+		if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
+			assertEquals("1 2 3 4", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+		}
+		else{
+			assertEquals("1 2 3 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+		}
+	}
+
+	@Test
+	public void testDoubleBondNoelb() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C/C=C1/NC1");
+		Bond b =fragment.findBond(2, 3);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+		assertEquals("1 2 3 4", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+	}
+
+	@Test
+	public void testDoubleBondNoelc() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C/C=C\\1/NC/1");
+		Bond b =fragment.findBond(2, 3);
+		if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
+			assertEquals("1 2 3 4", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+		}
+		else{
+			assertEquals("1 2 3 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+		}
+	}
+
+	@Test
+	public void testDoubleBondNoeld() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C/C=C1/NC/1");
+		Bond b =fragment.findBond(2, 3);
+		if (BondStereoValue.TRANS.equals( b.getBondStereo().getBondStereoValue())){
+			assertEquals("1 2 3 4", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+		}
+		else{
+			assertEquals("1 2 3 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+		}
+	}
+
+	@Test(expected=StructureBuildingException.class)
+	public void testDoubleBondNoele() throws StructureBuildingException {
+		sBuilder.build("C/C=C\\1\\NC1");
+		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	}
+
+	@Test(expected=StructureBuildingException.class)
+	public void testDoubleBondNoelf() throws StructureBuildingException {
+		sBuilder.build("C/C=C\1NC\1");
+		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	}
+
+	@Test(expected=StructureBuildingException.class)
+	public void testDoubleBondNoelg() throws StructureBuildingException {
+		sBuilder.build("C/C=C\1/NC\1");
+		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	}
+
+	@Test
+	public void testDoubleBondNoelLike1() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C\\1NC1=C/C");
+		Bond b =fragment.findBond(3, 4);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+		assertEquals("1 3 4 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+	}
+
+	@Test
+	public void testDoubleBondNoelLike2() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C1NC/1=C/C");
+		Bond b =fragment.findBond(3, 4);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+		assertEquals("1 3 4 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+	}
+
+	private String atomRefsToIdStr(Atom[] atomRefs4) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < atomRefs4.length; i++) {
+			sb.append(atomRefs4[i].getID());
+			if (i + 1 < atomRefs4.length) {
+				sb.append(' ');
+			}
+		}
+		return sb.toString();
+	}
 }
