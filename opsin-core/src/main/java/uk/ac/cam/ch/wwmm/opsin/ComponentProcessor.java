@@ -1377,7 +1377,7 @@ class ComponentProcessor {
 			for (Bond bond : aldehydeAtom.getBonds()) {
 				if (bond.getOrder() ==2){
 					Atom otherAtom = bond.getOtherAtom(aldehydeAtom);
-					if (otherAtom.getElement() == ChemEl.O && otherAtom.getCharge()==0 && otherAtom.getBonds().size()==1){
+					if (otherAtom.getElement() == ChemEl.O && otherAtom.getCharge()==0 && otherAtom.getBondCount()==1){
 						bond.setOrder(1);
 						foundBond = true;
 						break;
@@ -1396,7 +1396,7 @@ class ComponentProcessor {
 			for (Bond bond : backboneAtom.getBonds()) {
 				if (bond.getOrder() ==1){
 					Atom otherAtom = bond.getOtherAtom(backboneAtom);
-					if (otherAtom.getElement() == ChemEl.O && otherAtom.getCharge()==0 && otherAtom.getBonds().size()==1){
+					if (otherAtom.getElement() == ChemEl.O && otherAtom.getCharge()==0 && otherAtom.getBondCount()==1){
 						bond.setOrder(2);
 						foundBond = true;
 						break;
@@ -2297,7 +2297,7 @@ class ComponentProcessor {
 	private void convertHydroxyGroupsToOutAtoms(Fragment frag) {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBonds().size()==1  &&
+			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBondCount()==1  &&
 					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
 				if (adjacentAtom.getElement() != ChemEl.O){
@@ -2316,7 +2316,7 @@ class ComponentProcessor {
 	private void convertHydroxyGroupsToPositiveCharge(Fragment frag) {
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
-			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBonds().size()==1  &&
+			if (atom.getElement() == ChemEl.O && atom.getCharge()==0 && atom.getBondCount()==1  &&
 					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
 				if (adjacentAtom.getElement() != ChemEl.O){
@@ -4278,7 +4278,7 @@ class ComponentProcessor {
 							throw new RuntimeException("OPSIN Bug: Suffix was expected to have an associated fragment but it wasn't found");
 						}
 						Atom firstAtomInSuffix = suffixFrag.getFirstAtom();
-						if (firstAtomInSuffix.getBonds().size() <= 0) {
+						if (firstAtomInSuffix.getBondCount() <= 0) {
 							throw new ComponentGenerationException("OPSIN Bug: Dummy atom in suffix should have at least one bond to it");
 						}
 						if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))){
@@ -4448,7 +4448,7 @@ class ComponentProcessor {
 		if (rAtoms.size() != 2){
 			throw new ComponentGenerationException("OPSIN bug: Incorrect number of R atoms associated with cyclic suffix");
 		}
-		if (rAtoms.get(0).getBonds().size() <= 0 || rAtoms.get(1).getBonds().size() <= 0) {
+		if (rAtoms.get(0).getBondCount() <= 0 || rAtoms.get(1).getBondCount() <= 0) {
 			throw new ComponentGenerationException("OPSIN Bug: Dummy atoms in suffix should have at least one bond to them");
 		}
 		
@@ -4773,7 +4773,7 @@ class ComponentProcessor {
 		}
 		else{
 			Atom positionOfPhospho = frag.getAtomByLocantOrThrow("O" + firstLocant);
-			if (positionOfPhospho.getBonds().size() !=1){
+			if (positionOfPhospho.getBondCount() !=1){
 				throw new StructureBuildingException(firstLocant + " should be the carbon to which a hydroxy group is attached!");
 			}
 			if (frag.getOutAtomCount()==1){

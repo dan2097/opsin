@@ -62,7 +62,7 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(7, atomList.size());
 		Atom nitrogen = atomList.get(2);
 		assertEquals(ChemEl.N, nitrogen.getElement());
-		assertEquals(3, nitrogen.getBonds().size());
+		assertEquals(3, nitrogen.getBondCount());
 		List<Atom> neighbours = nitrogen.getAtomNeighbours();//bonds and hence neighbours come from a linked hash set so the order of the neighbours is deterministic
 		assertEquals(3, neighbours.size());
 		assertEquals(atomList.get(1), neighbours.get(0));

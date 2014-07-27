@@ -586,7 +586,7 @@ class FunctionalReplacement {
 		List<Atom> ethericOxygen = new ArrayList<Atom>();
 		for (Atom oxygen : oxygenAtoms) {
 			int incomingValency = oxygen.getIncomingValency();
-			int bondCount = oxygen.getBonds().size();
+			int bondCount = oxygen.getBondCount();
 			if (bondCount==1 && incomingValency==2){
 				doubleBondedOxygen.add(oxygen);
 			}
@@ -673,7 +673,7 @@ class FunctionalReplacement {
 			atomsReplaced = numberOfAtomsToReplace;
 			for (int j = 0; j < numberOfAtomsToReplace; j++) {
 				Atom oxygenToReplace = oxygenAtoms.get(j);
-				if (oxygenToReplace.getBonds().size()==2){//etheric oxygen
+				if (oxygenToReplace.getBondCount()==2){//etheric oxygen
 					Fragment newOxygen = state.fragManager.buildSMILES("O", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 					Bond bondToRemove = oxygenToReplace.getFirstBond();
 					Atom atomToAttachTo = bondToRemove.getFromAtom() == oxygenToReplace ?  bondToRemove.getToAtom() :  bondToRemove.getFromAtom();
@@ -1009,7 +1009,7 @@ class FunctionalReplacement {
 		List<Atom> oxygenAtoms = new ArrayList<Atom>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a: atomList) {
-			if (a.getElement() == ChemEl.O && a.getBonds().size()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
+			if (a.getElement() == ChemEl.O && a.getBondCount()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
 				oxygenAtoms.add(a);
 			}
 		}
@@ -1061,7 +1061,7 @@ class FunctionalReplacement {
 	private void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, List<Atom> singleBondedOxygen, List<Atom> doubleBondedOxygen) throws StructureBuildingException {
 		for (Atom a : atomList) {
 			if (a.getElement() == ChemEl.O){//find terminal oxygens
-				if (a.getBonds().size()==1){
+				if (a.getBondCount()==1){
 					int incomingValency = a.getIncomingValency();
 					if (incomingValency ==2){
 						doubleBondedOxygen.add(a);

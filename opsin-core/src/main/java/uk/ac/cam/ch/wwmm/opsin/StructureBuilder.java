@@ -968,7 +968,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void formAnhydrideLink(String anhydrideSmiles, Atom oxygen1, Atom oxygen2)throws StructureBuildingException {
-		if (oxygen1.getElement() != ChemEl.O || oxygen2.getElement() != ChemEl.O || oxygen1.getBonds().size()!=1 ||oxygen2.getBonds().size()!=1) {
+		if (oxygen1.getElement() != ChemEl.O || oxygen2.getElement() != ChemEl.O || oxygen1.getBondCount()!=1 ||oxygen2.getBondCount()!=1) {
 			throw new StructureBuildingException("Problem building anhydride");
 		}
 		Atom atomOnSecondAcidToConnectTo = oxygen2.getAtomNeighbours().get(0);
@@ -1343,7 +1343,7 @@ class StructureBuilder {
 			Atom atomOnBiochemicalFragment;
 			if (locant!=null){
 				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow(locant);
-				if (atomOnBiochemicalFragment.getBonds().size()!=1){
+				if (atomOnBiochemicalFragment.getBondCount()!=1){
 					atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow("O" + locant);
 				}
 			}
@@ -1356,7 +1356,7 @@ class StructureBuilder {
 			BuildResults br = new BuildResults(ateWord);
 			if (atomOnBiochemicalFragment != null){
 				hydroxyAtoms.remove(atomOnBiochemicalFragment);
-				if (atomOnBiochemicalFragment.getBonds().size()!=1 || !atomOnBiochemicalFragment.getElement().isChalcogen()){
+				if (atomOnBiochemicalFragment.getBondCount()!=1 || !atomOnBiochemicalFragment.getElement().isChalcogen()){
 					throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
 				}
 				if (br.getFunctionalAtomCount()==0){
@@ -1394,11 +1394,11 @@ class StructureBuilder {
 						Atom a  =OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAcetalFrag.getFirstAtom(), out.getLocant());
 						if (a!=null){
 							List<Atom> atomList =  possibleAcetalFrag.getAtomList();
-							if (atomList.get(0).getBonds().size()==1){
+							if (atomList.get(0).getBondCount()==1){
 								atomToUse = atomList.get(0);
 								break;
 							}
-							else if (atomList.get(1).getBonds().size()==1){
+							else if (atomList.get(1).getBondCount()==1){
 								atomToUse = atomList.get(1);
 								break;
 							}
@@ -1415,10 +1415,10 @@ class StructureBuilder {
 			}
 			else{
 				List<Atom> atomList =  acetalFrags.get(0).getAtomList();
-				if (atomList.get(0).getBonds().size()==1){
+				if (atomList.get(0).getBondCount()==1){
 					atomToUse = atomList.get(0);
 				}
-				else if (atomList.get(1).getBonds().size()==1){
+				else if (atomList.get(1).getBondCount()==1){
 					atomToUse = atomList.get(1);
 				}
 				else{
