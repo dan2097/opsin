@@ -124,7 +124,6 @@ public class StereochemistryTest {
 		assertEquals(XmlDeclarations.CML_BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals(BondStereoValue.CIS.toString(), bondStereo.getValue());
 	}
 	
@@ -141,7 +140,6 @@ public class StereochemistryTest {
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.CML_BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR);
-		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals(BondStereoValue.TRANS.toString(), bondStereo.getValue());
 	}
@@ -160,7 +158,6 @@ public class StereochemistryTest {
 		assertEquals(XmlDeclarations.CML_BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals(BondStereoValue.CIS.toString(), bondStereo.getValue());
 	}
 	
@@ -177,7 +174,6 @@ public class StereochemistryTest {
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.CML_BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR);
-		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals(BondStereoValue.TRANS.toString(), bondStereo.getValue());
 	}
@@ -196,7 +192,6 @@ public class StereochemistryTest {
 		assertEquals(XmlDeclarations.CML_BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
-		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals(BondStereoValue.CIS.toString(), bondStereo.getValue());
 	}
 	
@@ -213,7 +208,6 @@ public class StereochemistryTest {
 		assertNotNull(bondStereo);
 		assertEquals(XmlDeclarations.CML_BONDSTEREO_EL, bondStereo.getLocalName());
 		String atomRefs4 = bondStereo.getAttributeValue(XmlDeclarations.CML_ATOMREFS4_ATR);
-		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals("a1 a2 a3 a4", atomRefs4);
 		assertEquals(BondStereoValue.TRANS.toString(), bondStereo.getValue());
 	}
