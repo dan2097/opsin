@@ -227,7 +227,7 @@ class SMILESWriter {
 				Bond bond1 = atomRefs4[0].getBondToAtom(atomRefs4[1]);
 				Bond bond2 = atomRefs4[2].getBondToAtom(atomRefs4[3]);
 				if (bond1 ==null || bond2==null){
-					throw new RuntimeException("Bondstereo described atoms that are not bonded:" +bondStereo.toCML().toXML());
+					throw new RuntimeException("OPSIN Bug: Bondstereo described atoms that are not bonded");
 				}
 				Atom bond1ToAtom = bondToNextAtomMap.get(bond1);
 				Atom bond2ToAtom = bondToNextAtomMap.get(bond2);

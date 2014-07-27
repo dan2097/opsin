@@ -26,15 +26,6 @@ public class AtomTest {
 	}
 	
 	@Test
-	public void testToCMLAtom() {
-		Atom atom = new Atom(10, ChemEl.C, frag);
-		atom.addLocant("1");
-		nu.xom.Element elem = atom.toCMLAtom();
-		assertNotNull("Got XOM Element", elem);
-		assertEquals("Correct XML", "<atom xmlns=\"http://www.xml-cml.org/schema\" id=\"a10\" elementType=\"C\" hydrogenCount=\"0\"><label value=\"1\" dictRef=\"cmlDict:locant\" /></atom>", elem.toXML()); 
-	}
-	
-	@Test
 	public void testAddLocantHasLocant() {
 		Atom atom = new Atom(10, ChemEl.C, frag);
 		atom.addLocant("1");
