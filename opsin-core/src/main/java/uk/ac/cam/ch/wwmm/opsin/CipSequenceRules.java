@@ -57,7 +57,7 @@ class CipSequenceRules {
 	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		if (!neighbours.remove(neighbourToIgnore)){
-			throw new IllegalArgumentException("OPSIN bug: " + neighbourToIgnore.toCMLAtom().toXML() +" was not a neighbour of the given stereogenic atom");
+			throw new IllegalArgumentException("OPSIN bug: Atom" + neighbourToIgnore.getID() +" was not a neighbour of the given stereogenic atom");
 		}
 		try {
 			Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
