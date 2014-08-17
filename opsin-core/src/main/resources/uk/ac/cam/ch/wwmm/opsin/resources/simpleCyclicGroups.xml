@@ -44,6 +44,9 @@
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cuminaldehyde</token>
 		<token value="OCc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cuminol</token>
 		<token value="COc1cc(ccc1O)\C=C\C(=O)CC(=O)\C=C\c1ccc(O)c(OC)c1" labels="none">curcumin</token>
+		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanuramide</token>
+		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamide</token>
+		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamine</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" functionalIDs="9">dibenzamid</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" functionalIDs="9">dibenzamide</token>
 		<token value="c1(c(C(=O)[O-])cccc1)c2c(C(=O)[O-])cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" functionalIDs="5,14">diphenate</token>
@@ -69,6 +72,7 @@
 		<token value="c1(c(O)ccc(C=CC)c1)OC" labels="1/2,ortho//3,meta/4,para/5////6//alpha">isoeugenol</token>
     <token value="OCc1cc(CO)ccc1" labels="//1/2,ortho/3,meta///4,para/5/6">isophthalyl alcohol</token>
 		<token value="O=Cc1cc(O)c(OC)cc1" labels="//1/2/3//4///5/6">isovanillin</token>
+		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">melamine</token>
 		<token value="c1(O)ccc(O)cc1" labels="1//2,ortho/3,meta/4,para//5/6">quinol</token>
 		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" functionalIDs="9">mesitylenate</token>
 		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" functionalIDs="9">mesitylenic</token>
