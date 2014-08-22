@@ -395,11 +395,9 @@ class ComponentGenerator {
 		for (Element ompLocant : ompLocants) {
 			String locantText = ompLocant.getValue();
 			String firstChar = locantText.substring(0, 1);
-			Element afterOmpLocant = OpsinTools.getNextSibling(ompLocant);
 			ompLocant.setName(LOCANT_EL);
 			ompLocant.addAttribute(new Attribute(TYPE_ATR, ORTHOMETAPARA_TYPE_VAL));
-			if(afterOmpLocant.getName().equals(MULTIPLIER_EL) && afterOmpLocant.getAttributeValue(VALUE_ATR).equals("2") ||
-					(afterOmpLocant.getAttribute(OUTIDS_ATR)!=null && MATCH_COMMA.split(afterOmpLocant.getAttributeValue(OUTIDS_ATR)).length>1) ) {
+			if (orthoMetaParaLocantIsTwoLocants(ompLocant)) {
 				if ("o".equalsIgnoreCase(firstChar)){
 					ompLocant.setValue("1,ortho");
 				}
@@ -428,6 +426,33 @@ class ComponentGenerator {
 				}
 			}
 		}
+	}
+	
+	private boolean orthoMetaParaLocantIsTwoLocants(Element ompLocant) {
+		Element afterOmpLocant = OpsinTools.getNextSibling(ompLocant);
+		if (afterOmpLocant != null){
+			String elName = afterOmpLocant.getName();
+			if(elName.equals(MULTIPLIER_EL) && afterOmpLocant.getAttributeValue(VALUE_ATR).equals("2")){
+				//e.g. p-dimethyl
+				return true;
+			}
+			String outIds = afterOmpLocant.getAttributeValue(OUTIDS_ATR);
+			if (outIds != null && MATCH_COMMA.split(outIds).length > 1) {
+				//e.g. p-phenylene
+				return true;
+			}
+			if(elName.equals(GROUP_EL)){
+				Element multiplier = OpsinTools.getNextSibling(afterOmpLocant);
+				if(multiplier != null && multiplier.getName().equals(MULTIPLIER_EL) && multiplier.getAttributeValue(VALUE_ATR).equals("2")){
+					Element suffix = OpsinTools.getNextSibling(multiplier);
+					if(suffix.getName().equals(SUFFIX_EL)){
+						//e.g. o-benzenediamine
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**
