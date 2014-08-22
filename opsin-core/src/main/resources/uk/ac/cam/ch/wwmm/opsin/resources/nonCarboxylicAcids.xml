@@ -119,6 +119,7 @@
 		<token value="P(=O)(O)OP(=O)(O)O" labels="none" suffixAppliesTo="1,5">isohypophosphor</token>
     <token value="S(=O)(=O)(O)CS(=O)(=O)O" labels="1////2/3///" suffixAppliesTo="1,6">methion</token>
     <token value="[N+](O)([O-])=C" labels="none">nitron</token>
+    <token value="S(=O)(=O)(O)C(F)(F)C(F)(F)C(F)(F)C(F)(F)F" labels="none">nonafl</token>
     <token value="C(O)(O)(O)O" labels="none">orthocarbon</token>
     <token value="C(O)(O)(O)O" labels="none">ortho-carbon</token>
     <token value="C(O)(O)O" labels="none">orthoform</token>
@@ -144,6 +145,7 @@
     <token value="C(O)(=O)OC(=O)O" labels="none" suffixAppliesTo="1,5">pyro-carbon</token>
     <token value="S(=O)(=O)(N)O" labels="none">sulfamid</token>
     <token value="S(O)(O)" labels="none">sulfoxyl</token>
+    <token value="S(=O)(=O)(O)CC(F)(F)F" labels="none">tresyl</token>
   </tokenList>
 
 <!-- a few entirely trivial acid/salts that can be modified by prefixes-->
