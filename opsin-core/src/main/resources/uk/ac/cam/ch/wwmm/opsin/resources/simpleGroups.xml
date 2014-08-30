@@ -115,6 +115,7 @@
 		<token value="CC(C)=CCC\C(C)=C\C\C=C(/C)C=C" labels="none">alpha-farnesene</token>
 		<token value="CCC(=C)CC\C=C(/C)CCC=C(C)C" labels="none">beta-farnesene</token>
 		<token value="OCC=C(C)CCC=C(C)CCC=C(C)C" defaultInID="16" labels="/1/2/3//4/5/6/7//8/9/10///">farnesol</token>
+		<token value="OC(=O)Cc1ccc(c2ccccc2)cc1" labels="none" functionalIDs="1">felbinac</token>
 		<token value="[Fe+3].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none">ferricyanide</token>
 		<token value="[Fe+2].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none">ferrocyanide</token>
 		<token value="NF" labels="none">fluoramine</token>
@@ -137,6 +138,7 @@
 		<token value="[OH+]" labels="none">hydroxylium</token>
 		<token value="[OH+]O" labels="none">hydroperoxylium</token>
 		<token value="CC(CCCC(C)(C)O)CC=O" labels="none">hydroxycitronellal</token>
+		<token value="OC(=O)C(C)c1ccc(CC(C)C)cc1" labels="none" functionalIDs="1">ibuprofen</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">icosasphinganine</token>
 		<token value="=[NH]" labels="none">imidogen</token>
 		<token value="C(I)(I)(I)" labels="none">iodoform</token>
@@ -170,6 +172,7 @@
 		<token value="NC(S)=N" labels="1//2/3">isothiourea</token>
 		<token value="NC(O)=N" labels="1//2/3">isourea</token>
 		<token value="C(=O)([O-])C(CO)(O)CC(=O)[O-]" labels="none" functionalIDs="3,11">itatartrate</token>
+		<token value="OC(=O)C(C)c1cc(C(=O)c2ccccc2)ccc1" labels="none" functionalIDs="1">ketoprofen</token>
 		<token value="C(O)CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="1//2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24/25/26/27/28/29/30/31/32">laccerol</token>
 		<token value="C=CC(O)(C)CCC=C(C)C" labels="none">linalool</token>
 		<token value="C(O)CCCCCCCCCCCCCCCCCCCCCCC" labels="1//2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24">lignocerol</token>
