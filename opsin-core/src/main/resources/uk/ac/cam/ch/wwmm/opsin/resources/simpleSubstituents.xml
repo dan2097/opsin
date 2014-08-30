@@ -142,6 +142,7 @@
 		<token value="-Cc1ccc(C(C)C)cc1" labels="none">cuminyl</token>
 		<token value="=Cc1ccc(C(C)C)cc1" labels="none">cuminylidene</token>
 		<token value="=Cc1ccc(C(C)C)cc1" labels="none">cumal</token>
+		<token value="-C(=O)c1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cumoyl</token>
 		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cumyl</token>
 		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">alpha-cumyl</token>
 		<token value="-NC#N" labels="none">cyanamido</token>

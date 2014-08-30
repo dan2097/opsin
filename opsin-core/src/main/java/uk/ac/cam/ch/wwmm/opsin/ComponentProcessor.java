@@ -561,7 +561,10 @@ class ComponentProcessor {
 				if (nextAtom.getAtomIsInACycle()){
 					break;
 				}
-				nextAtom.addLocant(traditionalAlkanePositionNames[counter]);
+				String traditionalLocant = traditionalAlkanePositionNames[counter];
+				if (!nextAtom.hasLocant(traditionalLocant)){
+					nextAtom.addLocant(traditionalLocant);
+				}
 				neighbours = nextAtom.getAtomNeighbours();
 				neighbours.remove(previousAtom);
 				for (int i = neighbours.size()-1; i >=0; i--) {//only consider carbon atoms
