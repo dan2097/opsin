@@ -31,9 +31,20 @@ public class CMLWriter {
 	}
 	
 	static String generateCml(Fragment structure, String chemicalName) {
+		return generateCml(structure, chemicalName, false);
+	}
+	
+	static String generateIndentedCml(Fragment structure, String chemicalName) {
+		return generateCml(structure, chemicalName, true);
+	}
+	
+	private static String generateCml(Fragment structure, String chemicalName, boolean indent) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			XMLStreamWriter xmlWriter = factory.createXMLStreamWriter(out, "UTF-8");
+			if (indent) {
+				xmlWriter = new IndentingXMLStreamWriter(xmlWriter, 2);
+			}
 			CMLWriter cmlWriter = new CMLWriter(xmlWriter);
 			cmlWriter.writeCmlStart();
 			cmlWriter.writeMolecule(structure, chemicalName, 1);
@@ -48,7 +59,7 @@ public class CMLWriter {
 			throw new RuntimeException("JVM doesn't support UTF-8...but it should do!");
 		}
 	}
-	
+
 	void writeCmlStart(){
 		try {
 			writer.writeStartElement("cml");
@@ -182,4 +193,5 @@ public class CMLWriter {
 		atomRefsSb.append(atomRefs4[atomRefs4.length - 1].getID());
 		writer.writeAttribute("atomRefs4", atomRefsSb.toString());
 	}
+
 }

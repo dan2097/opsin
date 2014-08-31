@@ -91,6 +91,24 @@ public class OpsinResult {
 		}
 		return null;
 	}
+	
+	/**
+	 * Generates the CML corresponding to the molecule described by the name
+	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
+	 * The CML is indented
+	 * @return String cml
+	 */
+	public String getPrettyPrintedCml() {
+		if (structure != null){
+			try{
+				return CMLWriter.generateIndentedCml(structure, chemicalName);
+			}
+			catch (Exception e) {
+				LOG.debug("CML generation failed", e);
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Generates the SMILES corresponding to the molecule described by the name
