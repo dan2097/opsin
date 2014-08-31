@@ -1,12 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.SUBTYPE_ATR;
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.TYPE_ATR;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -412,7 +410,7 @@ class FragmentManager {
 			}
 			Set<Atom> oldAmbiguousElementAssignmentAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
 			if (oldAmbiguousElementAssignmentAtoms!=null){
-				Set<Atom> newAtoms = new HashSet<Atom>();
+				Set<Atom> newAtoms = new LinkedHashSet<Atom>();
 				for (Atom oldAtom : oldAmbiguousElementAssignmentAtoms) {
 					newAtoms.add(oldToNewAtomMap.get(oldAtom));
 				}
