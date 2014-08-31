@@ -6,7 +6,7 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -338,7 +338,7 @@ class FunctionalReplacement {
 						}
 					}
 
-					Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
+					Set<Atom> ambiguousElementAtoms = new LinkedHashSet<Atom>();
 					Atom atomToUse = null;
 					if ((acceptDoubleBondedOxygen || nitrido) && doubleBondedOxygen.size()>0 ){
 						atomToUse = doubleBondedOxygen.removeFirst();
@@ -611,7 +611,7 @@ class FunctionalReplacement {
 		int atomsReplaced =0;
 		if (totalOxygen >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
 			boolean prefixAssignmentAmbiguous =false;
-			Set<Atom> ambiguousElementAtoms = new HashSet<Atom>();
+			Set<Atom> ambiguousElementAtoms = new LinkedHashSet<Atom>();
 			if (totalOxygen != numberOfAtomsToReplace){
 				prefixAssignmentAmbiguous=true;
 			}
