@@ -1,8 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 /**
  * Hold information about 4 atoms and their chiral determinant allowing the description of tetrahedral stereochemistry
  * @author dl387
@@ -33,25 +30,6 @@ class AtomParity {
 		this.parity = parity;
 	}
 
-	/**
-	 * Serialises this object to CML
-	 * @return
-	 */
-	Element toCML() {
-		Element atomParityElement = new Element(XmlDeclarations.CML_ATOMPARITY_EL, XmlDeclarations.CML_NAMESPACE);
-		StringBuilder atomRefsSb = new StringBuilder();
-		for(int i=0; i<atomRefs4.length-1; i++) {
-			atomRefsSb.append('a');
-			atomRefsSb.append(atomRefs4[i].getID());
-			atomRefsSb.append(' ');
-		}
-		atomRefsSb.append('a');
-		atomRefsSb.append(atomRefs4[atomRefs4.length-1].getID());
-		atomParityElement.addAttribute(new Attribute(XmlDeclarations.CML_ATOMREFS4_ATR, atomRefsSb.toString()));
-		atomParityElement.appendChild(Integer.toString(parity));
-		return atomParityElement;
-	}
-	
 	Atom[] getAtomRefs4() {
 		return atomRefs4;
 	}

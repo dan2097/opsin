@@ -2,8 +2,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import org.apache.log4j.Logger;
 
-import nu.xom.Element;
-
 /**
  * Holds the structure OPSIN has generated from a name
  * Additionally holds a status code for whether name interpretation was successful
@@ -16,18 +14,27 @@ public class OpsinResult {
 	private final OPSIN_RESULT_STATUS status;
 	private final String message;
 	private final String chemicalName;
-	private Element cml = null;
-	private String smiles = null;
 
 	/**
-	 * Whether parsing the chemical name was successful,
-	 * encountered problems or was unsuccessful.
+	 * Whether parsing the chemical name was successful, encountered problems or was unsuccessful.<br>
+	 * If the result is not {@link OPSIN_RESULT_STATUS#FAILURE} then a structure has been generated
 	 * @author dl387
 	 *
 	 */
 	public enum OPSIN_RESULT_STATUS{
+		/**
+		 * OPSIN successfully interpreted the name
+		 */
 		SUCCESS,
+		/**
+		 * OPSIN interpreted the name but detected a potential problem e.g. could not interpret stereochemistry<br>
+		 * Currently, by default, WARNING is not used as stereochemistry failures are treated as failures<br>
+		 * In the future, ambiguous chemical names may produce WARNING
+		 */
 		WARNING,
+		/**
+		 * OPSIN failed to interpret the name
+		 */
 		FAILURE
 	}
 
@@ -69,39 +76,37 @@ public class OpsinResult {
 	}
 
 	/**
-	 * Lazily evaluates and returns the CML corresponding to the molecule described by the name
+	 * Generates the CML corresponding to the molecule described by the name
 	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
-	 * @return Element cml
+	 * @return String cml
 	 */
-	public synchronized Element getCml() {
-		if (cml ==null && structure!=null){
+	public String getCml() {
+		if (structure != null){
 			try{
-				cml = structure.toCMLMolecule(chemicalName);
+				return CMLWriter.generateCml(structure, chemicalName);
 			}
 			catch (Exception e) {
 				LOG.debug("CML generation failed", e);
-				cml = null;
 			}
 		}
-		return cml;
+		return null;
 	}
 
 	/**
-	 * Lazily evaluates and returns the SMILES corresponding to the molecule described by the name
+	 * Generates the SMILES corresponding to the molecule described by the name
 	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
 	 * @return String smiles
 	 */
-	public synchronized String getSmiles() {
-		if (smiles ==null && structure!=null){
+	public String getSmiles() {
+		if (structure != null){
 			try{
-				smiles = new SMILESWriter(structure).generateSmiles();
+				return new SMILESWriter(structure).generateSmiles();
 			}
 			catch (Exception e) {
 				LOG.debug("SMILES generation failed", e);
-				smiles = null;
 			}
 		}
-		return smiles;
+		return null;
 	}
 	
 	

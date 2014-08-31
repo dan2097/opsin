@@ -74,41 +74,6 @@ class Fragment {
 		this.tokenEl.addAttribute(TYPE_ATR, type);
 	}
 
-	/**Produces a CML element, corresponding to the molecule. The cml element contains
-	 * a molecule, which contains an atomArray and bondArray filled with atoms and bonds.
-	 * The molecule element has a dummy id of m1.
-	 * @param chemicalName
-	 *
-	 * @return The CML element.
-	 * @see Atom
-	 * @see Bond
-	 */
-	nu.xom.Element toCMLMolecule(String chemicalName) {
-		nu.xom.Element cml = new nu.xom.Element("cml", CML_NAMESPACE);
-		cml.addAttribute(new nu.xom.Attribute("convention","conventions:molecular"));
-		cml.addNamespaceDeclaration("conventions", "http://www.xml-cml.org/convention/");
-		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
-		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
-		nu.xom.Element molecule = new nu.xom.Element("molecule", CML_NAMESPACE);
-		nu.xom.Element name = new nu.xom.Element("name", CML_NAMESPACE);
-		name.appendChild(chemicalName);
-		name.addAttribute(new nu.xom.Attribute("dictRef","nameDict:unknown"));
-		molecule.appendChild(name);
-		molecule.addAttribute(new nu.xom.Attribute("id", "m1"));
-		nu.xom.Element atomArray = new nu.xom.Element("atomArray", CML_NAMESPACE);
-		for(Atom atom : atomCollection) {
-			atomArray.appendChild(atom.toCMLAtom());
-		}
-		nu.xom.Element bondArray = new nu.xom.Element("bondArray", CML_NAMESPACE);
-		for(Bond bond : bondSet) {
-			bondArray.appendChild(bond.toCMLBond());
-		}
-		molecule.appendChild(atomArray);
-		molecule.appendChild(bondArray);
-		cml.appendChild(molecule);
-		return cml;
-	}
-
 	/**Adds an atom to the fragment and associates it with this fragment*/
 	void addAtom(Atom atom) {
 		if (defaultInAtom == null){//the first atom added becomes the defaultInAtom

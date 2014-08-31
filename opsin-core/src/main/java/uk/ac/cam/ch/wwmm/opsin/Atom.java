@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**
@@ -124,48 +122,6 @@ class Atom {
 	Atom(ChemEl chemlEl){
 		this.chemEl = chemlEl;
 	}
-
-	/**Produces a nu.xom.Element for a CML Atom tag, containing
-	 * attributes for id, elementType and (if appropriate) formalCharge, isotopeNumber.
-	 * Where applicable child elements are created for atomParity and locant labels
-	 *
-	 * @return nu.xom.Element for a CML Atom tag
-	 */
-	Element toCMLAtom() {
-		Element elem = new Element("atom", XmlDeclarations.CML_NAMESPACE);
-		elem.addAttribute(new Attribute("id", "a" + Integer.toString(ID)));
-		elem.addAttribute(new Attribute("elementType", chemEl.toString()));
-		if(charge != 0){
-			elem.addAttribute(new Attribute("formalCharge", Integer.toString(charge)));
-		}
-		if(isotope != null){
-			elem.addAttribute(new Attribute("isotopeNumber", Integer.toString(isotope)));
-		}
-		if (chemEl != ChemEl.H){
-			int hydrogenCount =0;
-			List<Atom> neighbours = this.getAtomNeighbours();
-			for (Atom neighbour : neighbours) {
-				if (neighbour.getElement() == ChemEl.H){
-					hydrogenCount++;
-				}
-			}
-			if (hydrogenCount==0){//prevent adding of implicit hydrogen
-				elem.addAttribute(new Attribute("hydrogenCount", "0"));
-			}
-		}
-		if(atomParity != null){
-			elem.appendChild(atomParity.toCML());
-		}
-		for(String l : locants) {
-			Element locant = new Element("label", XmlDeclarations.CML_NAMESPACE);
-			locant.addAttribute(new Attribute("value", l));
-			locant.addAttribute(new Attribute("dictRef", "cmlDict:locant" ));
-			elem.appendChild(locant);
-		}
-		return elem;
-	}
-
-
 	
 	/**
 	 * Uses the lambdaConventionValency or if that is not available
