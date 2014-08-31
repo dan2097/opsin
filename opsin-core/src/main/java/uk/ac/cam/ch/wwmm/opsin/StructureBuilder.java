@@ -527,7 +527,7 @@ class StructureBuilder {
 		}
 		if (locantEls.size()==1){
 			String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
-            locantsForOxide.addAll(Arrays.asList(locants));
+			locantsForOxide.addAll(Arrays.asList(locants));
 			locantEls.get(0).detach();
 		}
 		if (!locantsForOxide.isEmpty() && locantsForOxide.size()!=oxideFragments.size()){
@@ -697,7 +697,7 @@ class StructureBuilder {
 			}
 			if (locantEls.size()==1){
 				String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
-                locantForFunctionalTerm.addAll(Arrays.asList(locants));
+				locantForFunctionalTerm.addAll(Arrays.asList(locants));
 				locantEls.get(0).detach();
 			}
 		}
@@ -1502,8 +1502,9 @@ class StructureBuilder {
 			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 			if (possibleAtom.hasLocant(locant)){
 				mainGroupBR.removeFunctionalAtom(i);
-				if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
-					possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT).remove(possibleAtom);
+				Set<Atom> degenerateAtoms = possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+				if (degenerateAtoms != null){
+					degenerateAtoms.remove(possibleAtom);
 				}
 				return possibleAtom;
 			}
@@ -1514,8 +1515,9 @@ class StructureBuilder {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 				if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(possibleAtom, locant)!=null){
 					mainGroupBR.removeFunctionalAtom(i);
-					if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
-						possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT).remove(possibleAtom);
+					Set<Atom> degenerateAtoms = possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+					if (degenerateAtoms != null){
+						degenerateAtoms.remove(possibleAtom);
 					}
 					return possibleAtom;
 				}
@@ -1530,36 +1532,36 @@ class StructureBuilder {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
 				if (isElementSymbol && possibleAtom.getElement().toString().equals(locant)){
 					mainGroupBR.removeFunctionalAtom(i);
-				    return possibleAtom;
+					return possibleAtom;
 				}
-				if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
-					Set<Atom> atoms =possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+				Set<Atom> degenerateAtoms = possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+				if (degenerateAtoms != null){
 					boolean foundAtom = false;
-                    for (Atom a : atoms) {
-                        if (a.hasLocant(locant) || (isElementSymbol && a.getElement().toString().equals(locant))){
-                            //swap locants and element type
-                            List<String> tempLocants = new ArrayList<String>(a.getLocants());
-                            List<String> tempLocants2 = new ArrayList<String>(possibleAtom.getLocants());
-                            a.clearLocants();
-                            possibleAtom.clearLocants();
-                            for (String l : tempLocants) {
-                                possibleAtom.addLocant(l);
-                            }
-                            for (String l : tempLocants2) {
-                                a.addLocant(l);
-                            }
-                            ChemEl originalChemEl = possibleAtom.getElement();
-                            possibleAtom.setElement(a.getElement());
-                            a.setElement(originalChemEl);
-                            mainGroupBR.removeFunctionalAtom(i);
-                            foundAtom =true;
-                            break;
-                        }
-                    }
-                    if (foundAtom){
-                    	atoms.remove(possibleAtom);
-                        return possibleAtom;
-                    }
+					for (Atom a : degenerateAtoms) {
+						if (a.hasLocant(locant) || (isElementSymbol && a.getElement().toString().equals(locant))){
+							//swap locants and element type
+							List<String> tempLocants = new ArrayList<String>(a.getLocants());
+							List<String> tempLocants2 = new ArrayList<String>(possibleAtom.getLocants());
+							a.clearLocants();
+							possibleAtom.clearLocants();
+							for (String l : tempLocants) {
+								possibleAtom.addLocant(l);
+							}
+							for (String l : tempLocants2) {
+								a.addLocant(l);
+							}
+							ChemEl originalChemEl = possibleAtom.getElement();
+							possibleAtom.setElement(a.getElement());
+							a.setElement(originalChemEl);
+							mainGroupBR.removeFunctionalAtom(i);
+							foundAtom =true;
+							break;
+						}
+					}
+					if (foundAtom){
+						degenerateAtoms.remove(possibleAtom);
+						return possibleAtom;
+					}
 				}
 			}
 		}
