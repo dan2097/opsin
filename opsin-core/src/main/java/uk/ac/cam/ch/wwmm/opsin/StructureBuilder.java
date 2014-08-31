@@ -1528,6 +1528,10 @@ class StructureBuilder {
 			boolean isElementSymbol = MATCH_ELEMENT_SYMBOL.matcher(locant).matches();
 			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
+				if (isElementSymbol && possibleAtom.getElement().toString().equals(locant)){
+					mainGroupBR.removeFunctionalAtom(i);
+				    return possibleAtom;
+				}
 				if (possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){
 					Set<Atom> atoms =possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
 					boolean foundAtom = false;
@@ -1556,10 +1560,6 @@ class StructureBuilder {
                     	atoms.remove(possibleAtom);
                         return possibleAtom;
                     }
-				}
-				if (isElementSymbol && possibleAtom.getElement().toString().equals(locant)){
-					mainGroupBR.removeFunctionalAtom(i);
-				    return possibleAtom;
 				}
 			}
 		}
