@@ -1,7 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
 /**A bond, between two atoms.
@@ -55,35 +53,6 @@ class Bond {
 		this.from = from;
 		this.to = to;
 		this.order = order;
-	}
-
-	/**Produces a nu.xom.Element corresponding to a CML bond tag.
-	 * Has attributes of atomRefs2 and order.
-	 *
-	 * @return The CML element.
-	 */
-	Element toCMLBond() {
-		Element elem = new Element("bond", XmlDeclarations.CML_NAMESPACE);
-		elem.addAttribute(new Attribute("id", "a" + Integer.toString(from.getID())
-				+ "_a" + Integer.toString(to.getID())));
-		elem.addAttribute(new Attribute("atomRefs2", "a" + Integer.toString(from.getID())
-				+ " a" + Integer.toString(to.getID())));
-		if (order==1){
-			elem.addAttribute(new Attribute("order", "S"));
-		}
-		else if (order==2){
-			elem.addAttribute(new Attribute("order", "D"));
-		}
-		else if (order==3){
-			elem.addAttribute(new Attribute("order", "T"));
-		}
-		else{
-			elem.addAttribute(new Attribute("order", "unknown"));
-		}
-		if (bondStereo!=null){
-			elem.appendChild(bondStereo.toCML());
-		}
-		return elem;
 	}
 
 	/**

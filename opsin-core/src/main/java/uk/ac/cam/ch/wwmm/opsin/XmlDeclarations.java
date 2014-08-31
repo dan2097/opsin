@@ -473,19 +473,4 @@ class XmlDeclarations {
 	static final String SUFFIXAPPLICABILITY_TYPE_ATR = "type";
 	static final String SUFFIXAPPLICABILITY_VALUE_ATR = "value";
 	static final String SUFFIXAPPLICABILITY_SUBTYPE_ATR = "subType";
-	
-	/**
-	 * CML Elements/Attributes/NameSpace
-	 */
-	static final String CML_NAMESPACE = "http://www.xml-cml.org/schema";
-
-	/**A CML element used to hold atomParity information e.g. 1 or -1 and atomRefs4 */
-	static final String CML_ATOMPARITY_EL = "atomParity";
-	
-	/**A CML element used to hold bondStereo information e.g. C (cis) or T (trans) and atomRefs4 */
-	static final String CML_BONDSTEREO_EL = "bondStereo";
-
-	/**An attribute holding the ids of the 4 atoms that are needed to define a bondStereo of a double bond or an atom parity.
-	 * Note that the ids are prefixed with an 'a'*/
-	static final String CML_ATOMREFS4_ATR = "atomRefs4";
 }

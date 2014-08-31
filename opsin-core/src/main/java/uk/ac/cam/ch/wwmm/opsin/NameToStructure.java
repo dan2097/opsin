@@ -14,6 +14,10 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -23,6 +27,8 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import com.ctc.wstx.stax.WstxOutputFactory;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
@@ -81,11 +87,11 @@ public class NameToStructure {
 	 * @param name The chemical name to parse.
 	 * @return A CML element, containing the parsed molecule, or null if the name was uninterpretable.
 	 */
-	public nu.xom.Element parseToCML(String name) {
+	public String parseToCML(String name) {
 		OpsinResult result = parseChemicalName(name);
-		nu.xom.Element cml = result.getCml();
+		String cml = result.getCml();
 		if(cml != null && LOG.isDebugEnabled()){
-			LOG.debug(new XOMFormatter().elemToString(result.getCml()));
+			LOG.debug(cml);
 		}
 		return cml;
 	}
@@ -332,43 +338,30 @@ public class NameToStructure {
 		return n2sconfig;
 	}
 
-	private static void interactiveCmlOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException {
+	private static void interactiveCmlOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException, XMLStreamException {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-		StreamSerializer serializer = new StreamSerializer(out);
-		serializer.setIndent(2);
-		serializer.writeXMLDeclaration();
-		nu.xom.Element cml = new nu.xom.Element("cml", XmlDeclarations.CML_NAMESPACE);
-		cml.addAttribute(new nu.xom.Attribute("convention","conventions:molecular"));
-		cml.addNamespaceDeclaration("conventions", "http://www.xml-cml.org/convention/");
-		cml.addNamespaceDeclaration("cmlDict", "http://www.xml-cml.org/dictionary/cml/");
-		cml.addNamespaceDeclaration("nameDict", "http://www.xml-cml.org/dictionary/cml/name/");
-		serializer.writeStartTag(cml);
-		int id =1;
+		XMLOutputFactory factory = new WstxOutputFactory();
+		XMLStreamWriter writer = factory.createXMLStreamWriter(out, "UTF-8");
+		writer = new IndentingXMLStreamWriter(writer, 2);
+		writer.writeStartDocument();
+		CMLWriter cmlWriter = new CMLWriter(writer);
+		cmlWriter.writeCmlStart();
+		int id = 1;
 		String name;
 		while((name =inputReader.readLine()) != null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
-			nu.xom.Element output = result.getCml();
-			if(output == null) {
+			Fragment structure = result.getStructure();
+			cmlWriter.writeMolecule(structure, name, id++);
+			writer.flush();
+			if(structure == null) {
 				System.err.println(result.getMessage());
-				nu.xom.Element uninterpretableMolecule = new nu.xom.Element("molecule", XmlDeclarations.CML_NAMESPACE);
-				uninterpretableMolecule.addAttribute(new nu.xom.Attribute("id", "m" + id++));
-				nu.xom.Element nameEl = new nu.xom.Element("name", XmlDeclarations.CML_NAMESPACE);
-				nameEl.appendChild(name);
-				nameEl.addAttribute(new nu.xom.Attribute("dictRef", "nameDict:unknown"));
-				uninterpretableMolecule.appendChild(nameEl);
-				serializer.write(uninterpretableMolecule);
-				serializer.flush();
-			} else {
-				//TODO check this is still correct
-				nu.xom.Element molecule = output.getFirstChildElement("molecule", XmlDeclarations.CML_NAMESPACE);
-				molecule.getAttribute("id").setValue("m" + id++);
-				serializer.write(molecule);
-				serializer.flush();
 			}
 		}
-		serializer.writeEndTag(cml);
-		serializer.flush();
+		cmlWriter.writeCmlEnd();
+		writer.writeEndDocument();
+		writer.flush();
+		writer.close();
 	}
 	
 	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException {

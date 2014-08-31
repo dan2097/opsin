@@ -1,8 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 /**
  * Holds information about the positions of 2 atoms relative to a double bond allowing the specification of cis/trans stereochemistry
  * @author dl387
@@ -31,8 +28,7 @@ class BondStereo {
 			return value;
 		}
 	}
-	
-	
+
 	/**
 	 * Create a bondStereo from an array of 4 atoms. The 2nd and 3rd atoms of this array are connected via a double bond.
 	 * The 1st and 4th atoms are at either end of this bond and indication is given as to whether they are cis or trans to each other.
@@ -45,26 +41,6 @@ class BondStereo {
 		}
 		this.atomRefs4 = atomRefs4;
 		this.bondStereoValue = cOrT;
-	}
-
-	/**
-	 * Serialises this object to CML
-	 * @return
-	 */
-	Element toCML() {
-		Element bondStereoElement = new Element(XmlDeclarations.CML_BONDSTEREO_EL, XmlDeclarations.CML_NAMESPACE);
-		StringBuilder atomRefsSb = new StringBuilder();
-		for(int i=0; i<atomRefs4.length-1; i++) {
-			atomRefsSb.append('a');
-			atomRefsSb.append(atomRefs4[i].getID());
-			atomRefsSb.append(' ');
-		}
-		atomRefsSb.append('a');
-		atomRefsSb.append(atomRefs4[atomRefs4.length-1].getID());
-
-		bondStereoElement.addAttribute(new Attribute(XmlDeclarations.CML_ATOMREFS4_ATR, atomRefsSb.toString()));
-		bondStereoElement.appendChild(bondStereoValue.toString());
-		return bondStereoElement;
 	}
 	
 	Atom[] getAtomRefs4() {
