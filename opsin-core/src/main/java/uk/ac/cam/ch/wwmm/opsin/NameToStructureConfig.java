@@ -41,7 +41,6 @@ public class NameToStructureConfig implements Cloneable {
 
 	/**
 	 * Sets whether radicals allowed? e.g. should fragments such as phenyl be interpretable
-	 * @return
 	 */
 	public void setAllowRadicals(boolean allowRadicals) {
 		this.allowRadicals = allowRadicals;
@@ -74,7 +73,6 @@ public class NameToStructureConfig implements Cloneable {
 
 	/**
 	 * Sets whether OPSIN should attempt reverse parsing to more accurately determine why parsing failed
-	 * @return
 	 */
 	public void setDetailedFailureAnalysis(boolean detailedFailureAnalysis) {
 		this.detailedFailureAnalysis = detailedFailureAnalysis;
@@ -112,8 +110,7 @@ public class NameToStructureConfig implements Cloneable {
 	 * and structure with incomplete stereochemistry, or should failure be returned (Default)
 	 * @param warnRatherThanFailOnUninterpretableStereochemistry
 	 */
-	public void setWarnRatherThanFailOnUninterpretableStereochemistry(
-			boolean warnRatherThanFailOnUninterpretableStereochemistry) {
+	public void setWarnRatherThanFailOnUninterpretableStereochemistry(boolean warnRatherThanFailOnUninterpretableStereochemistry) {
 		this.warnRatherThanFailOnUninterpretableStereochemistry = warnRatherThanFailOnUninterpretableStereochemistry;
 	}
 
