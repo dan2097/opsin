@@ -64,6 +64,7 @@
     <token value="[Tc](=O)(=O)(=O)O" labels="none">pertechnet</token>
     <token value="[Re](=O)(=O)(O)O" labels="none">rhen</token>
     <token value="[Re](=O)(=O)(=O)O" labels="none">perrhen</token>
+    <token value="[Ru](=O)(=O)(=O)O" labels="none">perruthen</token>
 
     <token value="B(O)(O)OB(O)O" labels="1///2/3//" suffixAppliesTo="1,5">dibor</token>
     <token value="B(O)OBO" labels="1//2/3/" suffixAppliesTo="1,4">diboron</token>
