@@ -73,6 +73,12 @@
     <token labels="/2,alpha/3,beta////////1" value="N[C@@H](CSC(C)(C)CCO)C" suffixAppliesTo="11">felin</token>
     <token labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" value="N[C@@H](CCCCN=[N+]=[N-])C" suffixAppliesTo="10">azidonorleuc</token>
     <token labels="/2,alpha/3,beta/4,gamma////1" value="N[C@@H](CCN=[N+]=[N-])C" suffixAppliesTo="8">azidohomoalan</token>
+    <token labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" value="N[C@@H](Cc1cc(I)c(cc1)O)C" suffixAppliesTo="12">monoiodotyros</token>
+    <token labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" value="N[C@@H](Cc1cc(I)c(cc1)O)C" suffixAppliesTo="12">mono-iodotyros</token>
+    <token labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" suffixAppliesTo="13">diiodotyros</token>
+    <token labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" suffixAppliesTo="13">di-iodotyros</token>
+    <token labels="/alpha/beta/1/2/3//4/5//6//1'/2'/3'//4'/5'/6'//" value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(cc2)O)C" suffixAppliesTo="21">triiodothyron</token>
+    <token labels="/alpha/beta/1/2/3//4/5//6//1'/2'/3'//4'/5'/6'//" value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(cc2)O)C" suffixAppliesTo="21">tri-iodothyron</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertiaryleuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertiary-leuc</token>
     <token labels="none" value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7">tertleuc</token>
