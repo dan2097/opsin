@@ -327,19 +327,33 @@ class WordRules {
 						}
 					}
 				}
-				else if (wordRule == WordRule.additionCompound || wordRule == WordRule.oxide){//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
-					Element possibleElementaryAtom = wordEls.get(i);
-					List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtom, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
-					if (elementaryAtoms.size()==1){
-						for (int j = 1; j < wordsInWordRule; j++) {
-							if (bondWillBeIonic(elementaryAtoms.get(0), wordEls.get(i+j))){//use separate word rules for ionic components
+				else if (wordRule == WordRule.additionCompound || wordRule == WordRule.oxide){
+					//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
+					Element possibleElementaryAtomContainingWord = wordEls.get(i);
+					List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtomContainingWord, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+					if (elementaryAtoms.size() == 1){
+						Element elementaryAtom = elementaryAtoms.get(0);
+						if (wordRule == WordRule.oxide) {
+							if (wordsInWordRule != 2){
+								throw new ParsingException("OPSIN bug: Problem with "+ wordRule +" wordRule");
+							}
+							Element oxideWord = wordEls.get(i + 1);
+							if (bondWillBeIonic(elementaryAtom, wordEls.get(i + 1))){
+								Element oxideGroup = convertFunctionalGroupIntoGroup(oxideWord);
+								setOxideStructureAppropriately(oxideGroup, elementaryAtom);
+								applySimpleWordRule(wordEls, indexOfFirstWord, possibleElementaryAtomContainingWord);
 								continue wordRuleLoop;
+							}
+						}
+						else {
+							for (int j = 1; j < wordsInWordRule; j++) {
+								if (bondWillBeIonic(elementaryAtom, wordEls.get(i + j))){//use separate word rules for ionic components
+									continue wordRuleLoop;
+								}
 							}
 						}
 					}
 				}
-
-
 
 				List<String> wordValues = new ArrayList<String>();
 				Element parentEl = wordEls.get(i).getParent();
@@ -460,7 +474,7 @@ class WordRules {
 		firstWord.getAttribute(VALUE_ATR).setValue(firstWord.getAttributeValue(VALUE_ATR) + wordToPotentiallyCombineWith.getAttributeValue(VALUE_ATR));
 	}
 
-	private void convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
+	private Element convertFunctionalGroupIntoGroup(Element word) throws ParsingException {
 		word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 		List<Element> functionalTerms = OpsinTools.getDescendantElementsWithTagName(word, FUNCTIONALTERM_EL);
 		if (functionalTerms.size() != 1){
@@ -476,8 +490,71 @@ class WordRules {
 		functionalGroup.setName(GROUP_EL);
 		functionalGroup.getAttribute(TYPE_ATR).setValue(SIMPLEGROUP_TYPE_VAL);
 		functionalGroup.addAttribute(new Attribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL));
+		return functionalGroup;
 	}
+	
 
+	/**
+	 * Sets the SMILES of the oxide group to be something like [O-2]
+	 * ... unless the oxide group is multiplied and the elementaryAtom has no oxidation states greater 2
+	 * in which case [O-][O-] would be assumed
+	 * @param oxideGroup
+	 * @param elementaryAtom
+	 */
+	private void setOxideStructureAppropriately(Element oxideGroup, Element elementaryAtom) {
+		boolean chainInterpretation = false;
+		Integer multiplierVal = null;
+		Element possibleMultiplier = OpsinTools.getPreviousSibling(oxideGroup);
+		if (possibleMultiplier != null && 
+				possibleMultiplier.getName().equals(MULTIPLIER_EL)){
+			multiplierVal = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+			if (multiplierVal > 1) {
+				String commonOxidationStatesAndMax = elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR);
+				if (commonOxidationStatesAndMax == null ||
+						Integer.parseInt(OpsinTools.MATCH_COLON.split(commonOxidationStatesAndMax)[1]) <= 2){
+					chainInterpretation = true;
+				}
+			}
+		}
+
+		Attribute value = oxideGroup.getAttribute(VALUE_ATR);
+		String smiles = value.getValue();
+		String element;
+		if (smiles.equals("O")){
+			element = "O";
+		}
+		else if (smiles.equals("S")){
+			element = "S";
+		}
+		else if (smiles.startsWith("[Se")){
+			element = "Se";
+		}
+		else if (smiles.startsWith("[Te")){
+			element = "Te";
+		}
+		else{
+			throw new RuntimeException("OPSIN Bug: Unexpected smiles for oxideGroup: " + smiles);
+		}
+		if (chainInterpretation){
+			StringBuilder sb = new StringBuilder();
+			sb.append('[');
+			sb.append(element);
+			sb.append("-]");
+			for (int i = 2; i < multiplierVal; i++) {
+				sb.append('[');
+				sb.append(element);
+				sb.append(']');
+			}
+			sb.append('[');
+			sb.append(element);
+			sb.append("-]");
+			value.setValue(sb.toString());
+			possibleMultiplier.detach();
+		}
+		else{
+			value.setValue("[" + element + "-2]");
+		}
+	}
 	
 	/**
 	 * Checks whether the bond that will be formed will be ionic by inspection of the SMILES
