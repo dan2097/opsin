@@ -1,4 +1,4 @@
-﻿<!DOCTYPE wordRules SYSTEM "wordRules.dtd">
+<!DOCTYPE wordRules SYSTEM "wordRules.dtd">
 <!--These are set of rules indicating what words may be combined and what the rule for combining them is
 These rules are hard coded into the structure builder.
 Rules are checked in the order they are listed in this file so the order is potentially important. Hence also less used word rules appear lower for speed

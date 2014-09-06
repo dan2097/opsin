@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
   <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V">
