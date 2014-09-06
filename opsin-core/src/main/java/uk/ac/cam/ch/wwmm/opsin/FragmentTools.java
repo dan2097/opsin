@@ -818,7 +818,7 @@ class FragmentTools {
 			if (halfSum < 1.6){
 				return false;//probably metallic
 			}
-			if (difference < 1.39* halfSum -2.2){
+			if (difference < 1.76 * halfSum - 3.03){
 				return true;
 			}			
 		}
