@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
 <tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="Í">
 	<token value="[Li]" commonOxidationStatesAndMax="1:1" labels="none">lithium</token>

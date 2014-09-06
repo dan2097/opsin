@@ -1,4 +1,4 @@
-﻿<!DOCTYPE regexes SYSTEM "regexes.dtd">
+<!DOCTYPE regexes SYSTEM "regexes.dtd">
 <regexes>
 <!-- These define the basic grammar of chemical words. These build the single-letter
 codes found in regexTokens and the other tokenlist files into a large regular

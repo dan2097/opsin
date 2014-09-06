@@ -1,4 +1,4 @@
-﻿<!DOCTYPE regexTokenList SYSTEM "regexTokenList.dtd">
+<!DOCTYPE regexTokenList SYSTEM "regexTokenList.dtd">
 <!-- 
   Allowed elements are regex and regexToken. Regex elements simply contain regex fragments than be built into larger regexes
 

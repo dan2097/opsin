@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- See the DTD for more details -->
 <!-- A few trivially named chains that can have the same suffixes as other chains -->
 <tokenList tagname="group" type="chain" subType="groupStem" symbol="§">

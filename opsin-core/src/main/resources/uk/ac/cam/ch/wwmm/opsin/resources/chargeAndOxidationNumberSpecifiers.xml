@@ -1,4 +1,4 @@
-﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <tokenLists>
   <tokenList tagname="chargeSpecifier" symbol="Î">
     <token value="1">(1+)</token>
