@@ -153,7 +153,7 @@ does not define a CFG.
   <regex name="%aldehyde%" value="÷"/>
   <regex name="%lactoneAcidInfixForCyclic%" value="ø"/>
   <regex name="%lactoneAcidInfixForAcyclic%" value="ù"/>
-  <!--next would be Alt 0250-->
+  <regex name="%mon%" value="ú"/>
   <regex name="%endOfFunctionalGroup%" value="û"/>
 
 <!-- composite regexes-->
@@ -328,7 +328,7 @@ does not define a CFG.
 <!-- functional Groups-->
   <regex name="%anhydride%" value="((%locant%|%colonOrSemiColonDelimitedLocant%)?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
   <regex name="%acetal%" value="(%simpleMultiplier%?%chalcogenReplacement%{0,2}%acetalClass%)" />
-  <regex name="%functionalClass%" value ="(%locant%?%simpleMultiplierGroup%?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
+  <regex name="%functionalClass%" value ="(%locant%?(%multiplierNotGroup%|%mon%%hyphen%?)?%multiplyableFunctionalClass%%closeBracket%?|%acetal%|%anhydride%|%basicFunctionalClass%)"/>
   <regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
   <regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%)%endOfFunctionalGroup%)"/>
 

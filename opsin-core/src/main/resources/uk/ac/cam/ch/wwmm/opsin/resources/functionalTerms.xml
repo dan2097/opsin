@@ -33,7 +33,6 @@
     <token value="N" labels="N">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
 
     <token value="O" labels="none">oxide</token>
-    <token value="O" labels="none">monoxide</token>
     <token value="S" labels="none">sulfide</token>
     <token value="[Se|2]" labels="none">selenide</token>
     <token value="[Te|2]" labels="none">telluride</token>

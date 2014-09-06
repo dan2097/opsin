@@ -1,9 +1,13 @@
-﻿<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <!-- value = the obvious -->
 <tokenLists>
   <tokenList tagname="multiplier" type="basic" symbol="Õ">
     <token value="1">mono</token>
+  </tokenList>
+
+  <tokenList tagname="multiplier" type="basic" symbol="ú">
+    <token value="1">mon</token>
   </tokenList>
 
   <tokenList tagname="multiplier" type="basic" symbol="r">
