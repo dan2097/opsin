@@ -403,6 +403,7 @@
 		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O" labels="none">imidazolidinylurea</token><!--antimicrobial name-->
 		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O" labels="none">imidazolidinyl urea</token><!--antimicrobial name-->
 		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1" labels="none">methoxychlor</token><!--pesticide name-->
+		<token value="CC(=O)OC/N=[N+](/C)\[O-]" labels="none">methylazoxymethanol acetate</token><!--trivial name-->
 		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none">methanophenazine</token><!--trivial name-->
 		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)O" labels="none" functionalIDs="19">oxolinic acid</token><!--drug name-->
 		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)[O-]" labels="none" functionalIDs="19">oxolinate</token><!--drug name-->
@@ -411,6 +412,8 @@
 		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1" labels="none">pyridat</token><!--herbicide name-->
 		<token value="OC(=O)c1c(O)ccc(S(=O)(=O)O)c1" labels="///1/2,ortho//3,meta/4,para/5/////6" functionalIDs="1,13">sulfosalicylic acid</token><!--trivial name-->
 		<token value="O.O.O.O.O.O.O.O.O.[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO" labels="none">stibogluconate</token><!--drug name-->
+		<token value="Cc1c(N=C=O)cc(N=C=O)cc1" labels="none">toluene-diisocyanate</token><!--trivial name-->
+		<token value="Cc1c(N=C=O)cc(N=C=O)cc1" labels="none">toluene diisocyanate</token><!--trivial name-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
