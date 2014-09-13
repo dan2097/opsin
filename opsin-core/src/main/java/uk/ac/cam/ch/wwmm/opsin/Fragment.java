@@ -219,7 +219,7 @@ class Fragment {
 	 */
 	Bond findBond(int ID1, int ID2) {
 		Atom a = atomMapFromId.get(ID1);
-		if (a!=null){
+		if (a != null){
 			for (Bond b : a.getBonds()) {
 				if((b.getFrom() == ID1 && b.getTo() == ID2) ||
 						(b.getTo() == ID1 && b.getFrom() == ID2)) {
@@ -254,8 +254,8 @@ class Fragment {
 		int length = 0;
 		Atom next = getAtomByLocant(Integer.toString(length+1));
 		Atom previous = null;
-		while (next !=null){
-			if (previous !=null && previous.getBondToAtom(next) == null){
+		while (next != null){
+			if (previous != null && previous.getBondToAtom(next) == null){
 				break;
 			}
 			length++;
@@ -464,12 +464,12 @@ class Fragment {
 			//recalled atoms will be null if they are not part of this fragment
 			if(b.getFromAtom() == atom) {
 				Atom a =getAtomByID(b.getTo());
-				if (a!=null && !a.getType().equals(SUFFIX_TYPE_VAL)){
+				if (a != null && !a.getType().equals(SUFFIX_TYPE_VAL)){
 					v += b.getOrder();
 				}
 			} else if(b.getToAtom() == atom) {
 				Atom a =getAtomByID(b.getFrom());
-				if (a!=null && !a.getType().equals(SUFFIX_TYPE_VAL)){
+				if (a != null && !a.getType().equals(SUFFIX_TYPE_VAL)){
 					v += b.getOrder();
 				}
 			}
@@ -571,8 +571,8 @@ class Fragment {
 
 
 	Atom getAtomOrNextSuitableAtomOrThrow(Atom startingAtom, int additionalValencyRequired, boolean takeIntoAccountOutValency) throws StructureBuildingException {
-		Atom a =getAtomOrNextSuitableAtom(startingAtom, additionalValencyRequired, takeIntoAccountOutValency);
-		if (a==null){
+		Atom a = getAtomOrNextSuitableAtom(startingAtom, additionalValencyRequired, takeIntoAccountOutValency);
+		if (a == null){
 			throw new StructureBuildingException("No suitable atom found");
 		}
 		return a;
@@ -592,18 +592,19 @@ class Fragment {
      * @return Atom
 	 */
 	Atom getAtomOrNextSuitableAtom(Atom startingAtom, int additionalValencyRequired, boolean takeIntoAccountOutValency) {
-		List<Atom> atomList =getAtomList();
+		List<Atom> atomList = getAtomList();
+		int atomCount = atomList.size();
 		Atom currentAtom = startingAtom;
-		int atomCounter=0;
-		int atomListPosition=atomList.indexOf(currentAtom);
-		int startingIndex =atomListPosition;
+		int atomCounter = 0;
+		int atomListPosition = atomList.indexOf(currentAtom);
+		int startingIndex = atomListPosition;
 
 		do {//aromaticity preserved and standard valency assumed
 			atomCounter++;
-			if (atomListPosition >= atomList.size()){
-				atomListPosition -=(atomList.size());
+			if (atomListPosition >= atomCount){
+				atomListPosition -= atomCount;
 			}
-			currentAtom=atomList.get(atomListPosition);
+			currentAtom = atomList.get(atomListPosition);
 			if (FragmentTools.isCharacteristicAtom(currentAtom)){
 				atomListPosition++;
 				continue;
@@ -614,17 +615,17 @@ class Fragment {
 			}
 			atomListPosition++;
 		}
-		while(atomCounter < atomList.size());
+		while(atomCounter < atomCount);
 
-		atomListPosition =startingIndex;
-		atomCounter=0;
+		atomListPosition = startingIndex;
+		atomCounter = 0;
 
 		do {//aromaticity preserved, standard valency assumed, non functional suffixes substitutable
 			atomCounter++;
-			if (atomListPosition >= atomList.size()){
-				atomListPosition -=(atomList.size());
+			if (atomListPosition >= atomCount){
+				atomListPosition -= atomCount;
 			}
-			currentAtom=atomList.get(atomListPosition);
+			currentAtom = atomList.get(atomListPosition);
 			if (FragmentTools.isFunctionalAtomOrAldehyde(currentAtom)){
 				atomListPosition++;
 				continue;
@@ -635,39 +636,39 @@ class Fragment {
 			}
 			atomListPosition++;
 		}
-		while(atomCounter < atomList.size());
+		while(atomCounter < atomCount);
 		
-		atomListPosition =startingIndex;
-		atomCounter=0;
+		atomListPosition = startingIndex;
+		atomCounter = 0;
 
 		do {//aromaticity preserved any suffix substitutable
 			atomCounter++;
-			if (atomListPosition >= atomList.size()){
-				atomListPosition -=(atomList.size());
+			if (atomListPosition >= atomCount){
+				atomListPosition -= atomCount;
 			}
-			currentAtom=atomList.get(atomListPosition);
+			currentAtom = atomList.get(atomListPosition);
 
 			if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (currentAtom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? currentAtom.getOutValency() : 0))){
 				return currentAtom;
 			}
 			atomListPosition++;
 		}
-		while(atomCounter < atomList.size());
+		while(atomCounter < atomCount);
 
 		atomListPosition =startingIndex;
-		atomCounter=0;
+		atomCounter = 0;
 		do {//aromaticity dropped, anything substitutable
 			atomCounter++;
-			if (atomListPosition >= atomList.size()){
-				atomListPosition -=(atomList.size());
+			if (atomListPosition >= atomCount){
+				atomListPosition -= atomCount;
 			}
-			currentAtom=atomList.get(atomListPosition);
+			currentAtom = atomList.get(atomListPosition);
 			if(ValencyChecker.checkValencyAvailableForBond(currentAtom, additionalValencyRequired + (takeIntoAccountOutValency ? currentAtom.getOutValency() : 0))){
 				return currentAtom;
 			}
 			atomListPosition++;
 		}
-		while(atomCounter < atomList.size());
+		while(atomCounter < atomCount);
 		return null;
 	}
 
@@ -699,7 +700,7 @@ class Fragment {
 	 * @throws StructureBuildingException
 	 */
 	void reorderAtomCollection(List<Atom> atomList) throws StructureBuildingException {
-		if (atomMapFromId.size()!=atomList.size()){
+		if (atomMapFromId.size() != atomList.size()){
 			throw new StructureBuildingException("atom list is not the same size as the number of atoms in the fragment");
 		}
 		atomMapFromId.clear();
