@@ -137,16 +137,16 @@ class Atom {
 	 */
 	int determineValency(boolean considerOutValency) {
 		if (lambdaConventionValency != null){
-			return lambdaConventionValency +protonsExplicitlyAddedOrRemoved;
+			return lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 		}
-		int currentValency =getIncomingValency();
+		int currentValency = getIncomingValency();
 		if (considerOutValency){
-			currentValency+=outValency;
+			currentValency += outValency;
 		}
 		Integer calculatedMinValency = minimumValency == null ? null : minimumValency + protonsExplicitlyAddedOrRemoved;
-		if (charge ==0 || protonsExplicitlyAddedOrRemoved !=0){
+		if (charge ==0 || protonsExplicitlyAddedOrRemoved != 0){
 			Integer defaultValency = ValencyChecker.getDefaultValency(chemEl);
-			if (defaultValency !=null){
+			if (defaultValency != null){
 				defaultValency += protonsExplicitlyAddedOrRemoved;
 				if (currentValency <= defaultValency && (calculatedMinValency == null || defaultValency >= calculatedMinValency)){
 					return defaultValency;
@@ -154,12 +154,12 @@ class Atom {
 			}
 		}
 		Integer[] possibleValencies = ValencyChecker.getPossibleValencies(chemEl, charge);
-		if (possibleValencies!=null) {
-			if (calculatedMinValency!=null  && calculatedMinValency >= currentValency){
+		if (possibleValencies != null) {
+			if (calculatedMinValency != null  && calculatedMinValency >= currentValency){
 				return calculatedMinValency;
 			}
 			for (Integer possibleValency : possibleValencies) {
-				if (calculatedMinValency!=null && possibleValency < calculatedMinValency){
+				if (calculatedMinValency != null && possibleValency < calculatedMinValency){
 					continue;
 				}
 				if (currentValency <= possibleValency){
@@ -167,7 +167,7 @@ class Atom {
 				}
 			}
 		}
-		if (calculatedMinValency!=null && calculatedMinValency>= currentValency){
+		if (calculatedMinValency != null && calculatedMinValency >= currentValency){
 			return calculatedMinValency;
 		}
 		else{
@@ -256,7 +256,7 @@ class Atom {
 				if (!m.group(2).equals("") && (!hasLocant(m.group(1) +m.group(2)))){//has primes
 					return false;//must have exact locant e.g. N'
 				}
-				if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(this, m.group(3))!=null){
+				if (OpsinTools.depthFirstSearchForNonSuffixAtomWithLocant(this, m.group(3)) != null){
 					return true;
 				}
 			}
@@ -543,7 +543,7 @@ class Atom {
 	void ensureSVIsConsistantWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
 		if (spareValency){
 			Integer maxValency;
-			if (lambdaConventionValency!=null){
+			if (lambdaConventionValency != null){
 				maxValency=lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 			}
 			else{
