@@ -769,7 +769,8 @@ class SMILESFragmentBuilder {
 					}
 				}
 				if (nullAtoms != 0){
-					if (nullAtoms ==1 && hydrogen==0 && (atom.getElement() == ChemEl.S || atom.getElement() == ChemEl.Se)){//special case where lone pair is part of the tetrahedron
+					if (nullAtoms ==1 && hydrogen==0 && 
+							(atom.getElement() == ChemEl.N || atom.getElement() == ChemEl.S || atom.getElement() == ChemEl.Se)){//special case where lone pair is part of the tetrahedron
 						if (atomList.indexOf(atomRefs4[0]) < atomList.indexOf(atom)){//is there an atom in the SMILES in front of the stereocentre?
 							atomRefs4[3] = atomRefs4[2];
 							atomRefs4[2] = atomRefs4[1];
