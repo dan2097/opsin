@@ -123,7 +123,7 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" naturalEntIsOpposite="yes">fuculose</token>
 
 		<token value="O=C1C(O)=C(O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbic acid</token>
-		<token value="O=C1C(=O)C(=O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">dehdyroascorbic acid</token>
+		<token value="O=C1C(=O)C(=O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">dehydroascorbic acid</token>
 		<token value="O=C1C(O)=C([O-])[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbate</token>
 		<token value="NC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">glucamine</token>
 		<token value="OC(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)O" labels="/1//2//3//4//5//6//" functionalIDs="1,14">saccharic acid</token>
