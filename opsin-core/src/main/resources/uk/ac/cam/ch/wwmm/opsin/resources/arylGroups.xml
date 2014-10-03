@@ -68,10 +68,10 @@
 		<token value="[Se]1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">selenochroman</token>
 		<token value="[Te]1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">tellurochroman</token>
 		<token value="o1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chromen</token>
-		<token value="O1C=CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">chrom-2-en</token>
-		<token value="O1CC=Cc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">chrom-3-en</token>
-		<token value="O1C=CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">2-chromen</token>
-		<token value="O1CC=Cc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" valType="SMILES">3-chromen</token>
+		<token value="O1C=CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chrom-2-en</token>
+		<token value="O1CC=Cc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chrom-3-en</token>
+		<token value="O1C=CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">2-chromen</token>
+		<token value="O1CC=Cc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">3-chromen</token>
 		<token value="s1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">thiochromen</token>
 		<token value="[se]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">selenochromen</token>
 		<token value="[te]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">tellurochromen</token>
