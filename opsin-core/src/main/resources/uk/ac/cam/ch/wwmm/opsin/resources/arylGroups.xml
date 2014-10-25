@@ -3,12 +3,6 @@
 <!--This are groups but may be used as substituents when paired with appropriate suffixes-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="arylGroup" symbol="z">
-		<token value="[nH]1cccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a">1-pyrindan</token>
-		<token value="[nH]1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a">1-pyrinden</token>
-		<token value="[nH]1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a">1-pyrindin</token>
-		<token value="[cH]1nccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a">2-pyrindan</token>
-		<token value="[cH]1nccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a">2-pyrinden</token>
-		<token value="[cH]1nccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a">2-pyrindin</token>
 		<token value="C1Cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c">aceanthren</token>
 		<token value="c1cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c">aceanthrylen</token>
 		<token value="c1cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b">acenaphthylen</token>
@@ -264,8 +258,9 @@
 		<token value="n1ncccc1" labels="1/2/3/4/5/6">pyridazin</token>
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">pyridin</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidin</token>
-		<token value="[nH]1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a">1-pyrinden</token>
-		<token value="c1[nH]ccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a">2-pyrinden</token>
+		<token value="c1cccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant1" frontLocantsExpected="1,2">pyrindan</token>
+		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant1" frontLocantsExpected="1,2">pyrinden</token>
+		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant1" frontLocantsExpected="1,2">pyrindin</token>
 		<token value="c1(O)c(O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">pyrocatechol</token>
 		<token value="c1(O)c(O)c(O)ccc1" labels="1//2,ortho//3,meta//4,para/5/6">pyrogallol</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrol</token>
