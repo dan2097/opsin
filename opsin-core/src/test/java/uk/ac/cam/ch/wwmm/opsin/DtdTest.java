@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,11 +92,14 @@ public class DtdTest {
 	}
 	
 	private void validateTokenList(XMLStreamReader reader) throws XMLStreamException {
+		Set<String> terms = new HashSet<String>();
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 				if (reader.getLocalName().equals("token")) {
 					String tokenString = reader.getElementText();
+					assertTrue(tokenString +" occurred more than once in a tokenList",!terms.contains(tokenString));
+					terms.add(tokenString);
 					char[] characters = tokenString.toCharArray();
 					for (char c : characters) {
 						assertTrue("Non ascii character found in token: " + tokenString +" \nAn ASCII replacement should be used!" ,(int)c < 128);
