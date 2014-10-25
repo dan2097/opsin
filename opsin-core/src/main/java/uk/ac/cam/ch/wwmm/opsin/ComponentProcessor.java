@@ -242,6 +242,52 @@ class ComponentProcessor {
 		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
 		return thisFrag;
 	}
+	
+	private enum AtomReferenceType {
+		ID,
+		LOCANT
+	}
+	
+	private static class AtomReference {
+		private final AtomReferenceType referenceType;
+		private final String reference;
+		
+		AtomReference(AtomReferenceType referenceType, String reference) {
+			this.referenceType = referenceType;
+			this.reference = reference;
+		}
+	}
+	
+	private static class AddGroup {
+		private final Fragment frag;
+		private AtomReference atomReference;
+		
+		AddGroup(Fragment frag, AtomReference atomReference) {
+			this.frag = frag;
+			this.atomReference = atomReference;
+		}
+	}
+	
+	private static class AddHeteroatom {
+		private final String heteroAtomSmiles;
+		private AtomReference atomReference;
+		
+		AddHeteroatom(String heteroAtomSmiles, AtomReference atomReference) {
+			this.heteroAtomSmiles = heteroAtomSmiles;
+			this.atomReference = atomReference;
+		}
+	}
+
+	private static class AddBond {
+		private final int bondOrder;
+		private AtomReference atomReference;
+		
+		AddBond(int bondOrder, AtomReference atomReference) {
+			this.bondOrder = bondOrder;
+			this.atomReference = atomReference;
+		}
+	}
+	
 
 	/**
 	 * Checks for groups with the addGroup/addBond/addHeteroAtom attributes. For the addGroup attribute adds the group defined by the SMILES described within
@@ -256,61 +302,70 @@ class ComponentProcessor {
 	private static void processXyleneLikeNomenclature(BuildState state, Element group, Fragment parentFrag) throws StructureBuildingException, ComponentGenerationException {
 		if(group.getAttribute(ADDGROUP_ATR) != null) {
 			String addGroupInformation = group.getAttributeValue(ADDGROUP_ATR);
-			String[] groupsToBeAdded = MATCH_SEMICOLON.split(addGroupInformation);//typically only one, but 2 in the case of xylene and quinones
-			List<Map<String, String>> allGroupInformation = new ArrayList<Map<String, String>>();
-			for (String groupToBeAdded : groupsToBeAdded) {//populate allGroupInformation list
-				String[] tempArray = MATCH_SPACE.split(groupToBeAdded);
-				Map<String, String> groupInformation = new HashMap<String, String>();
-				if (tempArray.length != 2 && tempArray.length != 3) {
+			List<AddGroup> groupsToBeAdded = new ArrayList<AddGroup>();
+			////typically only one, but 2 in the case of xylene and quinones
+			for (String groupToBeAdded : MATCH_SEMICOLON.split(addGroupInformation)) {
+				String[] description = MATCH_SPACE.split(groupToBeAdded);
+				if (description.length < 3 || description.length > 4) {
 					throw new ComponentGenerationException("malformed addGroup tag");
 				}
-				groupInformation.put("SMILES", tempArray[0]);
-				if (tempArray[1].startsWith("id")) {
-					groupInformation.put("atomReferenceType", "id");
-					groupInformation.put("atomReference", tempArray[1].substring(2));
-				} else if (tempArray[1].startsWith("locant")) {
-					groupInformation.put("atomReferenceType", "locant");
-					groupInformation.put("atomReference", tempArray[1].substring(6));
+				String smiles = description[0];
+				AtomReferenceType referenceType;
+				String reference;
+				String referenceTypeString = description[1];
+
+				if (referenceTypeString.equals("locant")) {
+					referenceType = AtomReferenceType.LOCANT;
+					reference = description[2];
+				}
+				else if (referenceTypeString.equals("id")) {
+					referenceType = AtomReferenceType.ID;
+					reference = description[2];
 				} else {
 					throw new ComponentGenerationException("malformed addGroup tag");
 				}
-				if (tempArray.length == 3) {//labels may optionally be specified for the group to be added
-					groupInformation.put("labels", tempArray[2]);
+				Fragment fragToAdd;
+				if (description.length == 4) {//labels may optionally be specified for the group to be added
+					fragToAdd = state.fragManager.buildSMILES(smiles, group, description[3]);
 				}
-				allGroupInformation.add(groupInformation);
+				else{
+					fragToAdd = state.fragManager.buildSMILES(smiles, group, NONE_LABELS_VAL);
+				}
+				groupsToBeAdded.add(new AddGroup(fragToAdd, new AtomReference(referenceType, reference)));
 			}
 			Element previousEl = OpsinTools.getPreviousSibling(group);
 			if (previousEl !=null && previousEl.getName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues = StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
-				if ((locantValues.size() == groupsToBeAdded.length || locantValues.size() +1 == groupsToBeAdded.length) && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){//one locant can be implicit in some cases
-					boolean assignlocants =true;
-					if (locantValues.size()!=groupsToBeAdded.length){
+				if ((locantValues.size() == groupsToBeAdded.size() || locantValues.size() + 1 == groupsToBeAdded.size()) &&
+						locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){//one locant can be implicit in some cases
+					boolean assignlocants = true;
+					if (locantValues.size() != groupsToBeAdded.size()){
 						//check that the firstGroup by default will be added to the atom with locant 1. If this is not the case then as many locants as there were groups should of been specified
 						//or no locants should have been specified, which is what will be assumed (i.e. the locants will be left unassigned)
-						Map<String, String> groupInformation = allGroupInformation.get(0);
+						AddGroup groupInformation = groupsToBeAdded.get(0);
 						String locant;
-						if (groupInformation.get("atomReferenceType").equals("locant")){
-							locant =parentFrag.getAtomByLocantOrThrow(groupInformation.get("atomReference")).getFirstLocant();
-						}
-						else if (groupInformation.get("atomReferenceType").equals("id") ){
-							locant =parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.get("atomReference")) -1 ).getFirstLocant();
-						}
-						else{
+						switch (groupInformation.atomReference.referenceType) {
+						case LOCANT:
+							locant = parentFrag.getAtomByLocantOrThrow(groupInformation.atomReference.reference).getFirstLocant();
+							break;
+						case ID:
+							locant = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.atomReference.reference) - 1).getFirstLocant();
+							break;
+						default:
 							throw new ComponentGenerationException("malformed addGroup tag");
 						}
-						if (locant ==null || !locant.equals("1")){
-							assignlocants=false;
+						if (locant == null || !locant.equals("1")){
+							assignlocants = false;
 						}
 					}
 					if (assignlocants){
-						for (int i = groupsToBeAdded.length -1; i >=0 ; i--) {
+						for (int i = groupsToBeAdded.size() - 1; i >=0 ; i--) {
 							//if less locants than expected are specified the locants of only the later groups will be changed
 							//e.g. 4-xylene will transform 1,2-xylene to 1,4-xylene
-							Map<String, String> groupInformation =allGroupInformation.get(i);
+							AddGroup groupInformation = groupsToBeAdded.get(i);
 							if (locantValues.size() >0){
-								groupInformation.put("atomReferenceType", "locant");
-								groupInformation.put("atomReference", locantValues.get(locantValues.size()-1));
-								locantValues.remove(locantValues.size()-1);
+								groupInformation.atomReference = new AtomReference(AtomReferenceType.LOCANT, locantValues.get(locantValues.size() - 1));
+								locantValues.remove(locantValues.size() - 1);
 							}
 							else{
 								break;
@@ -322,27 +377,22 @@ class ComponentProcessor {
 				}
 			}
 
-			for (int i = 0; i < groupsToBeAdded.length; i++) {
-				Map<String, String> groupInformation = allGroupInformation.get(i);
-				String smilesOfGroupToBeAdded = groupInformation.get("SMILES");
-				Fragment newFrag;
-				if (groupInformation.get("labels")!=null){
-					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, group, groupInformation.get("labels"));
-				}
-				else{
-					newFrag = state.fragManager.buildSMILES(smilesOfGroupToBeAdded, group, NONE_LABELS_VAL);
-				}
+			for (int i = 0; i < groupsToBeAdded.size(); i++) {
+				AddGroup groupInformation = groupsToBeAdded.get(i);
+				Fragment newFrag = groupInformation.frag;
 
-				Atom atomOnParentFrag =null;
-				if (groupInformation.get("atomReferenceType").equals("locant")){
-					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(groupInformation.get("atomReference"));
-				}
-				else if (groupInformation.get("atomReferenceType").equals("id") ){
-					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.get("atomReference")) -1);
-				}
-				else{
+				Atom atomOnParentFrag;
+				switch (groupInformation.atomReference.referenceType) {
+				case LOCANT:
+					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(groupInformation.atomReference.reference);
+					break;
+				case ID:
+					atomOnParentFrag = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.atomReference.reference) -1);
+					break;
+				default:
 					throw new ComponentGenerationException("malformed addGroup tag");
 				}
+				
 				if (newFrag.getOutAtomCount() >1){
 					throw new ComponentGenerationException("too many outAtoms on group to be added");
 				}
@@ -358,91 +408,97 @@ class ComponentProcessor {
 			}
 		}
 
-		if(group.getAttributeValue(ADDHETEROATOM_ATR)!=null) {
-			String addHeteroAtomInformation=group.getAttributeValue(ADDHETEROATOM_ATR);
-			String[] heteroAtomsToBeAdded = MATCH_SEMICOLON.split(addHeteroAtomInformation);
-			ArrayList<HashMap<String, String>> allHeteroAtomInformation = new ArrayList<HashMap<String, String>>();
-			for (String heteroAtomToBeAdded : heteroAtomsToBeAdded) {//populate allHeteroAtomInformation list
-				String[] tempArray = MATCH_SPACE.split(heteroAtomToBeAdded);
-				HashMap<String, String> heteroAtomInformation = new HashMap<String, String>();
-				if (tempArray.length != 2) {
+		if(group.getAttributeValue(ADDHETEROATOM_ATR) != null) {
+			String addHeteroAtomInformation = group.getAttributeValue(ADDHETEROATOM_ATR);
+			List<AddHeteroatom> heteroAtomsToBeAdded = new ArrayList<AddHeteroatom>();
+			for (String heteroAtomToBeAdded : MATCH_SEMICOLON.split(addHeteroAtomInformation)) {
+				String[] description = MATCH_SPACE.split(heteroAtomToBeAdded);
+				if (description.length != 3) {
 					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
-				heteroAtomInformation.put("SMILES", tempArray[0]);
-				if (tempArray[1].startsWith("id")) {
-					heteroAtomInformation.put("atomReferenceType", "id");
-					heteroAtomInformation.put("atomReference", tempArray[1].substring(2));
-				} else if (tempArray[1].startsWith("locant")) {
-					heteroAtomInformation.put("atomReferenceType", "locant");
-					heteroAtomInformation.put("atomReference", tempArray[1].substring(6));
+				String heteroAtomSmiles = description[0];
+				AtomReferenceType referenceType;
+				String reference;
+				String referenceTypeString = description[1];
+
+				if (referenceTypeString.equals("locant")) {
+					referenceType = AtomReferenceType.LOCANT;
+					reference = description[2];
+				}
+				else if (referenceTypeString.equals("id")) {
+					referenceType = AtomReferenceType.ID;
+					reference = description[2];
 				} else {
 					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
-				allHeteroAtomInformation.add(heteroAtomInformation);
+				heteroAtomsToBeAdded.add(new AddHeteroatom(heteroAtomSmiles, new AtomReference(referenceType, reference)));
 			}
 			Element previousEl = OpsinTools.getPreviousSibling(group);
-			if (previousEl !=null && previousEl.getName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
+			if (previousEl != null && previousEl.getName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
 				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
-				if (locantValues.size() ==heteroAtomsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
-					for (int i = heteroAtomsToBeAdded.length -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
-						HashMap<String, String> groupInformation =allHeteroAtomInformation.get(i);
-						groupInformation.put("atomReferenceType", "locant");
-						groupInformation.put("atomReference", locantValues.get(locantValues.size()-1));
-						locantValues.remove(locantValues.size()-1);
+				if (locantValues.size() == heteroAtomsToBeAdded.size() && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
+					for (int i = heteroAtomsToBeAdded.size() -1; i >=0 ; i--) {//all heteroatoms must have a locant or default locants will be used
+						AddHeteroatom groupInformation = heteroAtomsToBeAdded.get(i);
+						groupInformation.atomReference = new AtomReference(AtomReferenceType.LOCANT, locantValues.get(locantValues.size() - 1));
+						locantValues.remove(locantValues.size() - 1);
 					}
 					group.removeAttribute(group.getAttribute(FRONTLOCANTSEXPECTED_ATR));
 					previousEl.detach();
 				}
 			}
 
-			for (int i = 0; i < heteroAtomsToBeAdded.length; i++) {
-				HashMap<String, String> heteroAtomInformation =allHeteroAtomInformation.get(i);
-				Atom atomOnParentFrag =null;
-				if (heteroAtomInformation.get("atomReferenceType").equals("locant")){
-					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(heteroAtomInformation.get("atomReference"));
-				}
-				else if (heteroAtomInformation.get("atomReferenceType").equals("id") ){
-					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(heteroAtomInformation.get("atomReference")) -1);
-				}
-				else{
+			for (int i = 0; i < heteroAtomsToBeAdded.size(); i++) {
+				AddHeteroatom heteroAtomInformation = heteroAtomsToBeAdded.get(i);
+				Atom atomOnParentFrag = null;
+				switch (heteroAtomInformation.atomReference.referenceType) {
+				case LOCANT:
+					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(heteroAtomInformation.atomReference.reference);
+					break;
+				case ID:
+					atomOnParentFrag = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(heteroAtomInformation.atomReference.reference) - 1);
+					break;
+				default:
 					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
-				state.fragManager.replaceAtomWithSmiles(atomOnParentFrag, heteroAtomInformation.get("SMILES"));
+				state.fragManager.replaceAtomWithSmiles(atomOnParentFrag, heteroAtomInformation.heteroAtomSmiles);
 			}
 		}
 
-		if(group.getAttributeValue(ADDBOND_ATR)!=null && !HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {//HW add bond is handled later
-			String addBondInformation=group.getAttributeValue(ADDBOND_ATR);
-			String[] bondsToBeAdded = MATCH_SEMICOLON.split(addBondInformation);
-			ArrayList<HashMap<String, String>> allBondInformation = new ArrayList<HashMap<String, String>>();
-			for (String bondToBeAdded : bondsToBeAdded) {//populate allBondInformation list
-				String[] tempArray = MATCH_SPACE.split(bondToBeAdded);
-				HashMap<String, String> bondInformation = new HashMap<String, String>();
-				if (tempArray.length != 2) {
+		if(group.getAttributeValue(ADDBOND_ATR) != null && !HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {//HW add bond is handled later
+			String addBondInformation = group.getAttributeValue(ADDBOND_ATR);
+			List<AddBond> bondsToBeAdded = new ArrayList<AddBond>();
+			for (String bondToBeAdded : MATCH_SEMICOLON.split(addBondInformation)) {
+				String[] description = MATCH_SPACE.split(bondToBeAdded);
+				if (description.length != 3) {
 					throw new ComponentGenerationException("malformed addBond tag");
 				}
-				bondInformation.put("bondOrder", tempArray[0]);
-				if (tempArray[1].startsWith("id")) {
-					bondInformation.put("atomReferenceType", "id");
-					bondInformation.put("atomReference", tempArray[1].substring(2));
-				} else if (tempArray[1].startsWith("locant")) {
-					bondInformation.put("atomReferenceType", "locant");
-					bondInformation.put("atomReference", tempArray[1].substring(6));
+				String bondOrderString = description[0];
+				int bondOrder = Integer.parseInt(bondOrderString);
+				AtomReferenceType referenceType;
+				String reference;
+				String referenceTypeString = description[1];
+
+				if (referenceTypeString.equals("locant")) {
+					referenceType = AtomReferenceType.LOCANT;
+					reference = description[2];
+				}
+				else if (referenceTypeString.equals("id")) {
+					referenceType = AtomReferenceType.ID;
+					reference = description[2];
 				} else {
 					throw new ComponentGenerationException("malformed addBond tag");
 				}
-				allBondInformation.add(bondInformation);
+				bondsToBeAdded.add(new AddBond(bondOrder, new AtomReference(referenceType, reference)));
 			}
 			boolean locanted = false;
 			Element previousEl = OpsinTools.getPreviousSibling(group);
-			if (previousEl !=null && previousEl.getName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
-				List<String> locantValues =StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
-				if (locantValues.size() ==bondsToBeAdded.length && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
-					for (int i = bondsToBeAdded.length -1; i >=0 ; i--) {//all bond order changes must have a locant or default locants will be used
-						HashMap<String, String> bondInformation =allBondInformation.get(i);
-						bondInformation.put("atomReferenceType", "locant");
-						bondInformation.put("atomReference", locantValues.get(locantValues.size()-1));
-						locantValues.remove(locantValues.size()-1);
+			if (previousEl != null && previousEl.getName().equals(LOCANT_EL)){//has the name got specified locants to override the default ones
+				List<String> locantValues = StringTools.arrayToList(MATCH_COMMA.split(previousEl.getValue()));
+				if (locantValues.size() == bondsToBeAdded.size() && locantAreAcceptableForXyleneLikeNomenclatures(locantValues, group)){
+					for (int i = bondsToBeAdded.size() -1; i >=0 ; i--) {//all bond order changes must have a locant or default locants will be used
+						AddBond bondInformation = bondsToBeAdded.get(i);
+						bondInformation.atomReference = new AtomReference(AtomReferenceType.LOCANT, locantValues.get(locantValues.size() - 1));
+						locantValues.remove(locantValues.size() - 1);
 					}
 					group.removeAttribute(group.getAttribute(FRONTLOCANTSEXPECTED_ATR));
 					previousEl.detach();
@@ -450,22 +506,23 @@ class ComponentProcessor {
 				}
 			}
 
-			for (int i = 0; i < bondsToBeAdded.length; i++) {
-				HashMap<String, String> bondInformation =allBondInformation.get(i);
-				Atom atomOnParentFrag =null;
-				if (bondInformation.get("atomReferenceType").equals("locant")){
-					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(bondInformation.get("atomReference"));
-				}
-				else if (bondInformation.get("atomReferenceType").equals("id") ){
-					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(bondInformation.get("atomReference")) -1);
-				}
-				else{
+			for (int i = 0; i < bondsToBeAdded.size(); i++) {
+				AddBond bondInformation = bondsToBeAdded.get(i);
+				Atom atomOnParentFrag;
+				switch (bondInformation.atomReference.referenceType) {
+				case LOCANT:
+					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(bondInformation.atomReference.reference);
+					break;
+				case ID:
+					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(bondInformation.atomReference.reference) -1);
+					break;
+				default:
 					throw new ComponentGenerationException("malformed addBond tag");
 				}
 				
-				Bond b = FragmentTools.unsaturate(atomOnParentFrag, Integer.parseInt(bondInformation.get("bondOrder")) , parentFrag);
-				if (!locanted && b.getOrder() ==2 && 
-						parentFrag.getAtomCount()==5 &&
+				Bond b = FragmentTools.unsaturate(atomOnParentFrag, bondInformation.bondOrder, parentFrag);
+				if (!locanted && b.getOrder() == 2 && 
+						parentFrag.getAtomCount() == 5 &&
 						b.getFromAtom().getAtomIsInACycle() &&
 						b.getToAtom().getAtomIsInACycle()){
 					//special case just that substitution of groups like imidazoline may actually remove the double bond...

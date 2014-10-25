@@ -28,7 +28,7 @@
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">benzol</token>
 		<token value="c1(ccccc1)C(O)(c2ccccc2)C(O)(c3ccccc3)c4ccccc4" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'///1''/2''/3''/4''/5''/6''/1'''/2'''/3'''/4'''/5'''/6'''">benzopinacol</token>
 		<token value="c1(ccccc1)C(c2ccccc2)(c3ccccc3)C(=O)c4ccccc4" labels="none">benzopinacolone</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="[O|1] locant1;O locant4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzosemiquinone</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="[O|1] locant 1;O locant 4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzosemiquinone</token>
 		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O" labels="none">bisphenol a</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6">bourbonal</token>
 		<token value="c1c(O)c(C)ccc1C(C)C" labels="none">carvacrol</token>
@@ -130,7 +130,7 @@
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/">uric acid</token>
 		<token value="O=Cc1cc(OC)c(O)cc1" labels="//1/2/3///4//5/6">vanillin</token>
 		<token value="O=Cc1c(O)c(OC)ccc1" labels="//1/2//3///4/5/6">o-vanillin</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant1 alpha;C locant2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylol</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 1 alpha;C locant 2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylol</token>
 		<token value="c1(c(C)c(C)c(O)cc1)O" labels="none">o-xylohydroquinone</token>
 		<token value="c1(c(C)c(C)c(O)cc1)O" labels="none">ortho-xylohydroquinone</token>
 		<token value="c1(c(C)cc(O)cc1C)O" labels="none">m-xylohydroquinone</token>

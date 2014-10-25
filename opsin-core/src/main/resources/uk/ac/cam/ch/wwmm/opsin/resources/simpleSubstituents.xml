@@ -26,7 +26,7 @@
 		<token value="-OCCCCC">amoxy</token>
 		<token value="-CCCCC">amyl</token>
 		<token value="=CCCCC">amylidene</token>
-		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
+		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC locant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
     <token value="-c1c(OC)cc(OC)c(OC)c1" labels="none">asaryl</token>
 		<token value="-N=[N+]=[N-]" labels="none">azidyl</token>
 		<token value="-OCCC(C)C">isoamoxy</token>
@@ -41,7 +41,7 @@
 		<token value="-C(C)(C)CC" labels="none">tert.amyl</token>
 		<token value="-C(C)(C)CC" labels="none">t-amyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilino</token>
-		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant4" outIDs="9" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisidino</token>
+		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant 4" outIDs="9" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisidino</token>
 		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/">benzidino</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" >4,4'-benzidino</token>
@@ -137,7 +137,7 @@
 		<token value="-c1cc(C(C)C)ccc1C" labels="none">carvacryl</token>
 		<token value="-CCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16">cetyl</token>
     <token value="=CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cinnamal</token>
-		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
+		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
 		<token value="-CC=CC">crotyl</token>
 		<token value="-Cc1ccc(C(C)C)cc1" labels="none">cuminyl</token>
 		<token value="=Cc1ccc(C(C)C)cc1" labels="none">cuminylidene</token>
@@ -205,8 +205,8 @@
 		<token value="=[SeH4]" labels="none" usableAsAJoiner="yes">perselenuranylidene</token>
 		<token value="-[SH5]" labels="none" usableAsAJoiner="yes">persulfuranyl</token>
 		<token value="=[SH4]" labels="none" usableAsAJoiner="yes">persulfuranylidene</token>
-		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant4" outIDs="10" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetidino</token>
-		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="OCC locant4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetyl</token>
+		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant 4" outIDs="10" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetidino</token>
+		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="OCC locant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetyl</token>
 		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">phenoxy</token>
 		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">phenoxyl</token>
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2,ortho////3,meta/4,para////5/6///">picryl</token>
@@ -263,7 +263,7 @@
 		<token value="-C(C)(C)C(C)C" labels="none">thexyl</token>
 		<token value="-S" labels="none">thiyl</token>
 		<token value="-c1cc(C)ccc1C(C)C" labels="none">thymyl</token>
-		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" addGroup="N locant4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
+		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" addGroup="N locant 4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6">tosyl</token>
 		<token value="-OS(=O)(=O)C(F)(F)F" labels="none">trifloxy</token>
 		<token value="-[3H]">tritio</token>
@@ -273,7 +273,7 @@
     <token value="=Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6">veratral</token>
     <token value="-Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">o-veratryl</token>
 		<token value="-c1ccc(cc1)-c2ccccc2" labels="4/3/2/1/2/3/1'/2'/3'/4'/5'/6'">xenyl</token>
-		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="C locant2;C locant3" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">xylidino</token>
+		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 3" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">xylidino</token>
 
 
 
