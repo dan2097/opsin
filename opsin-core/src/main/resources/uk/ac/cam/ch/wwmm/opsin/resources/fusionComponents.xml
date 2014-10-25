@@ -9,8 +9,8 @@
   </tokenList>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="Ë">
   <!-- may have front locants-->
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addHeteroAtom="N locant1;N locant8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridino</token>
-		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" addHeteroAtom="N locant1;N locant7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrolino</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addHeteroAtom="N locant 1;N locant 8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridino</token>
+		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" addHeteroAtom="N locant 1;N locant 7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrolino</token>
   </tokenList>
   <tokenList tagname="group" type="ring" subType="fusionRing" symbol="f">
     <token value="c1cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c">aceanthryleno</token>
