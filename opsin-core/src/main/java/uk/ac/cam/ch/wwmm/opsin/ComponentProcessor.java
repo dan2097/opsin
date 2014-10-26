@@ -384,6 +384,9 @@ class ComponentProcessor {
 				Atom atomOnParentFrag;
 				switch (groupInformation.atomReference.referenceType) {
 				case LOCANT:
+					if (groupInformation.atomReference.reference.equals("required")) {
+						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
+					}
 					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(groupInformation.atomReference.reference);
 					break;
 				case ID:
@@ -452,6 +455,9 @@ class ComponentProcessor {
 				Atom atomOnParentFrag = null;
 				switch (heteroAtomInformation.atomReference.referenceType) {
 				case LOCANT:
+					if (heteroAtomInformation.atomReference.reference.equals("required")) {
+						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
+					}
 					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(heteroAtomInformation.atomReference.reference);
 					break;
 				case ID:
@@ -511,6 +517,9 @@ class ComponentProcessor {
 				Atom atomOnParentFrag;
 				switch (bondInformation.atomReference.referenceType) {
 				case LOCANT:
+					if (bondInformation.atomReference.reference.equals("required")) {
+						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
+					}
 					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(bondInformation.atomReference.reference);
 					break;
 				case ID:
