@@ -2100,6 +2100,18 @@ class ComponentGenerator {
 				}
 			}
 		}
+		else if(groupValue.equals("chromen")) {//chromene in IUPAC nomenclature is fully unsaturated, but sometimes is instead considered to be chromane with a front locanted double bond
+			Element possibleLocant = OpsinTools.getPreviousSibling(group);
+			if (possibleLocant != null && possibleLocant.getName().equals(LOCANT_EL) &&
+					(possibleLocant.getValue().equals("2") || possibleLocant.getValue().equals("3"))) {
+				Element possibleSuffix = OpsinTools.getNextSibling(group);
+				if (possibleSuffix == null || possibleSuffix.getName().equals(LOCANT_EL)){//if there is a suffix assume the locant refers to that rather than the double bond
+					group.getAttribute(VALUE_ATR).setValue("O1CCCc2ccccc12");
+					group.addAttribute(ADDBOND_ATR, "2 locant required");
+					group.addAttribute(FRONTLOCANTSEXPECTED_ATR, "2,3");
+				}
+			}
+		}
 		else if (groupValue.equals("methylene") || groupValue.equals("methylen")) {//e.g. 3,4-methylenedioxyphenyl
 			Element nextSub = OpsinTools.getNextSibling(group.getParent());
 			if (nextSub !=null && nextSub.getName().equals(SUBSTITUENT_EL) && OpsinTools.getNextSibling(group)==null 

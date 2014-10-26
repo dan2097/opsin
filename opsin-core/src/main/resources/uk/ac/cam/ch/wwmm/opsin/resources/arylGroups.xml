@@ -64,8 +64,6 @@
 		<token value="o1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chromen</token>
 		<token value="O1C=CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chrom-2-en</token>
 		<token value="O1CC=Cc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chrom-3-en</token>
-		<token value="O1C=CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">2-chromen</token>
-		<token value="O1CC=Cc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">3-chromen</token>
 		<token value="s1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">thiochromen</token>
 		<token value="[se]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">selenochromen</token>
 		<token value="[te]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">tellurochromen</token>
@@ -258,9 +256,9 @@
 		<token value="n1ncccc1" labels="1/2/3/4/5/6">pyridazin</token>
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">pyridin</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidin</token>
-		<token value="c1cccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant 1" frontLocantsExpected="1,2">pyrindan</token>
-		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant 1" frontLocantsExpected="1,2">pyrinden</token>
-		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant 1" frontLocantsExpected="1,2">pyrindin</token>
+		<token value="c1cccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrindan</token>
+		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrinden</token>
+		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrindin</token>
 		<token value="c1(O)c(O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">pyrocatechol</token>
 		<token value="c1(O)c(O)c(O)ccc1" labels="1//2,ortho//3,meta//4,para/5/6">pyrogallol</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrol</token>
