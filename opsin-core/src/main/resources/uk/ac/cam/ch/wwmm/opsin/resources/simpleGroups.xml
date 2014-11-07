@@ -116,8 +116,8 @@
 		<token value="CCC(=C)CC\C=C(/C)CCC=C(C)C" labels="none">beta-farnesene</token>
 		<token value="OCC=C(C)CCC=C(C)CCC=C(C)C" defaultInID="16" labels="/1/2/3//4/5/6/7//8/9/10///">farnesol</token>
 		<token value="OC(=O)Cc1ccc(c2ccccc2)cc1" labels="none" functionalIDs="1">felbinac</token>
-		<token value="[Fe+3].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none">ferricyanide</token>
-		<token value="[Fe+2].[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N.[C-]#N" labels="none">ferrocyanide</token>
+		<token value="[Fe-3](C#N)(C#N)(C#N)(C#N)(C#N)C#N" labels="none">ferricyanide</token>
+		<token value="[Fe-4](C#N)(C#N)(C#N)(C#N)(C#N)C#N" labels="none">ferrocyanide</token>
 		<token value="NF" labels="none">fluoramine</token>
 		<token value="NF" labels="none">fluoramide</token>
 		<token value="N(F)F" labels="none">difluoramine</token>
