@@ -1165,6 +1165,7 @@ class StructureBuilder {
 			Element wordOrWordRule =words.get(i);
 			//ether ignored
 			if (!wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
+				resolveWordOrBracket(state, wordOrWordRule);//the substituent to attach
 				wordsToAttachToGlcyol.add(wordOrWordRule);
 			}
 			else if (!wordOrWordRule.getAttributeValue(VALUE_ATR).equalsIgnoreCase("ether")){
