@@ -10,7 +10,6 @@
     <token value="CCC" labels="1/2/3" usableAsAJoiner="yes">propion</token>
     <token value="CCC" labels="1/2/3" usableAsAJoiner="yes">propi</token>
     <token value="CCCC" labels="1/2/3/4" usableAsAJoiner="yes">butyr</token>
-    <token value="CCCC" labels="1/2/3/4" usableAsAJoiner="yes">n-butyr</token>
     <token value="CC(C)C" labels="1/2/3,beta/">isobutyr</token>
     <token value="CCCCC" labels="1/2/3/4/5" usableAsAJoiner="yes">valer</token>
     <token value="CCC(C)C" labels="1/2/3/4/">isovaler</token>
@@ -335,10 +334,14 @@
   </tokenList>
 
   <tokenList tagname="group" type="acidStem" subType="ylForNothing" symbol="½">
-		<!--avoids ambiguity with leucine radicals; this token class disallows any radical forming suffix-->
+    <!--This token class disallows any radical forming suffix-->
+    <!--avoids ambiguity with leucine radicals-->
     <token value="CC(O)CC(C)C" labels="none">leuc</token>
     <token value="CC(O)CC(C)C" labels="none">dl-leuc</token>
     <token value="C[C@H](O)CC(C)C" labels="none">d-leuc</token>
     <token value="C[C@@H](O)CC(C)C" labels="none">l-leuc</token>
+
+    <!--avoids ambiguity with N-butyryl substituents-->
+    <token value="CCCC" labels="1/2/3/4" usableAsAJoiner="yes">n-butyr</token>
   </tokenList>
 </tokenLists>
