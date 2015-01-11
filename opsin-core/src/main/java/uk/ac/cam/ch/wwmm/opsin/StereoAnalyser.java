@@ -263,27 +263,27 @@ class StereoAnalyser {
 	 * @param atomList
 	 */
 	private void populateColoursByAtomicNumberAndMass(List<Atom> atomList) {
-		Atom lastAtom = null;
+		Atom previousAtom = null;
 		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
 		int atomsSeen = 0;
 		for (Atom atom : atomList) {
-			if (lastAtom!=null && compareAtomicNumberThenAtomicMass(lastAtom, atom)!=0){
-				for (Atom a2 : atomsOfThisColour) {
-					mappingToColour.put(a2, atomsSeen);
+			if (previousAtom != null && compareAtomicNumberThenAtomicMass(previousAtom, atom) != 0){
+				for (Atom atomOfthisColour : atomsOfThisColour) {
+					mappingToColour.put(atomOfthisColour, atomsSeen);
 				}
 				atomsOfThisColour = new ArrayList<Atom>();
 			}
-			lastAtom = atom;
+			previousAtom = atom;
 			atomsOfThisColour.add(atom);
 			atomsSeen++;
 		}
 		if (!atomsOfThisColour.isEmpty()){
-			for (Atom a2 : atomsOfThisColour) {
-				mappingToColour.put(a2, atomsSeen);
+			for (Atom atomOfThisColour : atomsOfThisColour) {
+				mappingToColour.put(atomOfThisColour, atomsSeen);
 			}
 		}
 	}
-	
+
 	/**
 	 * Takes a list of atoms sorted by colour/the colour of their neighbours
 	 * and populates the mappingToColour map
@@ -292,28 +292,28 @@ class StereoAnalyser {
 	 * @return boolean Whether mappingToColour was changed
 	 */
 	private boolean populateColoursAndReportIfColoursWereChanged(List<Atom> atomList) {
-		Atom previousAtom = atomList.get(0);
+		Atom previousAtom = null;
 		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
-		int atomsSeen =0;
+		int atomsSeen = 0;
 		boolean changeFound = false;
 		for (Atom atom : atomList) {
-			if (atomColourThenNeighbouringColoursComparator.compare(previousAtom, atom)!=0){
+			if (previousAtom != null && atomColourThenNeighbouringColoursComparator.compare(previousAtom, atom) != 0){
 				for (Atom atomOfThisColour : atomsOfThisColour) {
 					if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
-						changeFound =true;
+						changeFound = true;
 					}
 					mappingToColour.put(atomOfThisColour, atomsSeen);
 				}
-				previousAtom = atom;
 				atomsOfThisColour = new ArrayList<Atom>();
 			}
+			previousAtom = atom;
 			atomsOfThisColour.add(atom);
 			atomsSeen++;
 		}
 		if (!atomsOfThisColour.isEmpty()){
 			for (Atom atomOfThisColour : atomsOfThisColour) {
 				if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
-					changeFound =true;
+					changeFound = true;
 				}
 				mappingToColour.put(atomOfThisColour, atomsSeen);
 			}
