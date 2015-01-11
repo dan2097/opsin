@@ -174,21 +174,22 @@ class CipSequenceRules {
 
 			int compare = compareNeighboursByCIPpriorityRules(newNeighbours1, newNeighbours2);
 
-			if (compare!=0){
+			if (compare != 0){
 				return compare;
 			}
 	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
 	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
 
-	    	for (int i = 1; i <= prioritisedNeighbours1.size(); i++) {
-	    		List<List<AtomWithHistory>> nextNeighbourLists1 = prioritisedNeighbours1.get(prioritisedNeighbours1.size() -i);
-	    		List<List<AtomWithHistory>> nextNeighbourLists2 = prioritisedNeighbours2.get(prioritisedNeighbours2.size() -i);
-		    	for (int j = 1; j <= nextNeighbourLists1.size(); j++) {
-		    		List<AtomWithHistory> nextNeighbours1 = nextNeighbourLists1.get(nextNeighbourLists1.size() -j);
-		    		List<AtomWithHistory> nextNeighbours2 = nextNeighbourLists2.get(nextNeighbourLists2.size() -j);
+	    	//As earlier compare was 0,  prioritisedNeighbours/nextNeighbourLists1 and 2 are the same size
+	    	for (int i = prioritisedNeighbours1.size() - 1; i >=0; i--) {
+	     		List<List<AtomWithHistory>> nextNeighbourLists1 = prioritisedNeighbours1.get(i);
+	    		List<List<AtomWithHistory>> nextNeighbourLists2 = prioritisedNeighbours2.get(i);
+	    		for (int j = nextNeighbourLists1.size() - 1; j >=0; j--) {
+		    		List<AtomWithHistory> nextNeighbours1 = nextNeighbourLists1.get(j);
+		    		List<AtomWithHistory> nextNeighbours2 = nextNeighbourLists2.get(j);
 		    		CipState newCIPstate = new CipState(nextNeighbours1, nextNeighbours2);
 		    		queue.add(newCIPstate);
-		    	}
+	    		}
 			}
 	    	return 0;
 		}
