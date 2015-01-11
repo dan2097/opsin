@@ -244,8 +244,9 @@ class CipSequenceRules {
 					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
 					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
 					for (int j = i + 1; j < neighbourLists.size(); j++) {
-						if (atomListCIPComparator.compare(primaryAtomList, neighbourLists.get(j))==0){
-							neighbourListsToCombine.add(neighbourLists.get(j));
+						List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
+						if (atomListCIPComparator.compare(primaryAtomList, neighbourListToCompareWith)==0){
+							neighbourListsToCombine.add(neighbourListToCompareWith);
 						}
 					}
 					for (List<AtomWithHistory> neighbourList: neighbourListsToCombine) {
@@ -253,9 +254,8 @@ class CipSequenceRules {
 						primaryAtomList.addAll(neighbourList);
 					}
 				}
-				for (List<AtomWithHistory> list : listsToRemove) {
-					neighbourLists.remove(list);
-				}
+				neighbourLists.removeAll(listsToRemove);
+
 				//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
 				for (int i = neighbourLists.size() - 1; i >=0; i--) {
 					List<AtomWithHistory> neighbourList = neighbourLists.get(i);
