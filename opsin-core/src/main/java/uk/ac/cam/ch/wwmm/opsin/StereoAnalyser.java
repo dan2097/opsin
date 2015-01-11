@@ -16,16 +16,16 @@ import java.util.Map.Entry;
  *
  */
 class StereoAnalyser {
+	/** The molecule upon which this StereoAnalyser is operating */
+	private final Fragment molecule;
+	
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;
 
 	/** Maps each atom to a list of of the colours of its neighbours*/
 	private final Map<Atom, List<Integer>> atomNeighbourColours;
 
-	/** The molecule upon which this StereoAnalyser is operating */
-	private final Fragment molecule;
-
-	private final AtomColourThenNeighbouringColoursComparator atomColourThenNeighbouringColoursComparator;
+	private final AtomColourThenNeighbouringColoursComparator atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
 	private final static AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
 	
 	/**
@@ -167,21 +167,22 @@ class StereoAnalyser {
 	    	
 	    	int colours1Size = colours1.size();
 	    	int colours2Size = colours2.size();
-	    	int differenceInSize = colours1Size - colours2Size;
-	    	int maxCommonColourSize = colours1Size > colours2Size ? colours2Size : colours1Size;
+	    	
+	    	int maxCommonColourSize = Math.min(colours1Size, colours2Size);
 	    	for (int i = 1; i <= maxCommonColourSize; i++) {
-				int difference = colours1.get(colours1Size -i) - colours2.get(colours2Size -i);
-				if (difference >0){
+				int difference = colours1.get(colours1Size - i) - colours2.get(colours2Size - i);
+				if (difference > 0){
 					return 1;
 				}
 				if (difference < 0){
 					return -1;
 				}
 			}
-	    	if (differenceInSize >0){
+	    	int differenceInSize = colours1Size - colours2Size;
+	    	if (differenceInSize > 0){
 	    		return 1;
 	    	}
-	    	if (differenceInSize <0){
+	    	if (differenceInSize < 0){
 	    		return -1;
 	    	}
 			return 0;
@@ -195,7 +196,6 @@ class StereoAnalyser {
 	 */
 	StereoAnalyser(Fragment molecule) {
 		this.molecule = molecule;
-		atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
 		addGhostAtoms();
 		List<Atom> atomList = molecule.getAtomList();
 		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
@@ -224,9 +224,9 @@ class StereoAnalyser {
 		int ghostIdCounter = -1;
 		for (Bond bond : bonds) {
 			int bondOrder = bond.getOrder();
-			for (int i = bondOrder; i >1; i--) {
-				Atom fromAtom =bond.getFromAtom();
-				Atom toAtom =bond.getToAtom();
+			for (int i = bondOrder; i > 1; i--) {
+				Atom fromAtom = bond.getFromAtom();
+				Atom toAtom = bond.getToAtom();
 
 				Atom ghost1 = new Atom(ghostIdCounter--, fromAtom.getElement(), molecule);
 				Bond b1 = new Bond(ghost1, toAtom, 1);
@@ -330,7 +330,7 @@ class StereoAnalyser {
 		List<Integer> colourOfAdjacentAtoms = new ArrayList<Integer>();
 		List<Bond> bonds = atom.getBonds();
 		for (Bond bond : bonds) {
-			Atom otherAtom = bond.getFromAtom() == atom ? bond.getToAtom() : bond.getFromAtom();
+			Atom otherAtom = bond.getOtherAtom(atom);
 			colourOfAdjacentAtoms.add(mappingToColour.get(otherAtom));
 		} 
 		Collections.sort(colourOfAdjacentAtoms);//sort such that this goes from low to high
@@ -389,7 +389,7 @@ class StereoAnalyser {
 			return false;
 		}
 		int[] colours = new int[4];
-		for (int i = neighbours.size() -1 ; i >=0; i--) {
+		for (int i = neighbours.size() - 1 ; i >=0; i--) {
 			colours[i] = mappingToColour.get(neighbours.get(i));
 		}
 		
@@ -416,9 +416,9 @@ class StereoAnalyser {
 		List<Atom> paraStereoCentres = new ArrayList<Atom>();
 		for (Atom potentialStereoAtom : potentialStereoAtoms) {
 			List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
-			if (neighbours.size()==4){
+			if (neighbours.size() == 4){
 				int[] colours = new int[4];
-				for (int i = neighbours.size() -1 ; i >=0; i--) {
+				for (int i = neighbours.size() - 1 ; i >=0; i--) {
 					colours[i] = mappingToColour.get(neighbours.get(i));
 				}
 				//find pairs of constitutionally identical substituents
