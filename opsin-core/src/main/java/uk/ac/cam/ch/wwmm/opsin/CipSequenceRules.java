@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -239,7 +238,6 @@ class CipSequenceRules {
 			List<List<List<AtomWithHistory>>> updatedNeighbours  = new ArrayList<List<List<AtomWithHistory>>>();
 			List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
 			for (List<List<AtomWithHistory>> neighbourLists : neighbours) {
-				LinkedList<List<AtomWithHistory>> updatedNeighbourLists  = new LinkedList<List<AtomWithHistory>>();
 				for (int i = 0; i < neighbourLists.size(); i++) {
 					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
 					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
@@ -256,23 +254,24 @@ class CipSequenceRules {
 				}
 				neighbourLists.removeAll(listsToRemove);
 
+				List<List<AtomWithHistory>> updatedNeighbourLists  = new ArrayList<List<AtomWithHistory>>();
 				//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
-				for (int i = neighbourLists.size() - 1; i >=0; i--) {
+				for (int i = 0, lnls = neighbourLists.size(); i < lnls; i++) {
 					List<AtomWithHistory> neighbourList = neighbourLists.get(i);
 					Collections.sort(neighbourList, cipComparator);
 					AtomWithHistory lastAtom = null;
 					List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
-					for (int j = neighbourList.size() -1; j >=0; j--) {
+					for (int j = 0, lnl = neighbourList.size(); j < lnl; j++) {
 						AtomWithHistory a = neighbourList.get(j);
-						if (lastAtom !=null && compareByCipRules(lastAtom, a) != 0){
-							updatedNeighbourLists.addFirst(currentAtomList);
+						if (lastAtom != null && compareByCipRules(lastAtom, a) != 0){
+							updatedNeighbourLists.add(currentAtomList);
 							currentAtomList = new ArrayList<AtomWithHistory>();
 						}
 						currentAtomList.add(a);
 						lastAtom = a;
 					}
 					if (!currentAtomList.isEmpty()){
-						updatedNeighbourLists.addFirst(currentAtomList);
+						updatedNeighbourLists.add(currentAtomList);
 					}
 				}
 				updatedNeighbours.add(updatedNeighbourLists);
