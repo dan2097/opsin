@@ -180,7 +180,7 @@ class CipSequenceRules {
 	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
 	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
 
-	    	//As earlier compare was 0,  prioritisedNeighbours/nextNeighbourLists1 and 2 are the same size
+	    	//As earlier compare was 0,  prioritisedNeighbours1.size==2.size and nextNeighbourLists1.size==2.size
 	    	for (int i = prioritisedNeighbours1.size() - 1; i >=0; i--) {
 	     		List<List<AtomWithHistory>> nextNeighbourLists1 = prioritisedNeighbours1.get(i);
 	    		List<List<AtomWithHistory>> nextNeighbourLists2 = prioritisedNeighbours2.get(i);
