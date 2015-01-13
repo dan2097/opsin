@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,8 +23,8 @@ class StereoAnalyser {
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;
 
-	/** Maps each atom to a list of of the colours of its neighbours*/
-	private final Map<Atom, List<Integer>> atomNeighbourColours;
+	/** Maps each atom to an array of the colours of its neighbours*/
+	private final Map<Atom, int[]> atomNeighbourColours;
 
 	private final AtomNeighbouringColoursComparator atomNeighbouringColoursComparator = new AtomNeighbouringColoursComparator();
 	private final static AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
@@ -153,15 +154,15 @@ class StereoAnalyser {
 	 */
 	private class AtomNeighbouringColoursComparator implements Comparator<Atom> {
 	    public int compare(Atom a, Atom b){
-	    	List<Integer> colours1 = atomNeighbourColours.get(a);
-	    	List<Integer> colours2 = atomNeighbourColours.get(b);
+	    	int[] colours1 = atomNeighbourColours.get(a);
+	    	int[] colours2 = atomNeighbourColours.get(b);
 	    	
-	    	int colours1Size = colours1.size();
-	    	int colours2Size = colours2.size();
+	    	int colours1Size = colours1.length;
+	    	int colours2Size = colours2.length;
 	    	
 	    	int maxCommonColourSize = Math.min(colours1Size, colours2Size);
 	    	for (int i = 1; i <= maxCommonColourSize; i++) {
-				int difference = colours1.get(colours1Size - i) - colours2.get(colours2Size - i);
+				int difference = colours1[colours1Size - i] - colours2[colours2Size - i];
 				if (difference > 0){
 					return 1;
 				}
@@ -190,14 +191,14 @@ class StereoAnalyser {
 		addGhostAtoms();
 		List<Atom> atomList = molecule.getAtomList();
 		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
-		atomNeighbourColours = new HashMap<Atom,List<Integer>>(atomList.size());
+		atomNeighbourColours = new HashMap<Atom, int[]>(atomList.size());
 		Collections.sort(atomList, atomicNumberThenAtomicMassComparator);
 		List<List<Atom>> groupsByColour = populateColoursByAtomicNumberAndMass(atomList);
 		boolean changeFound = true;
 		while(changeFound){
 			for (List<Atom> groupWithAColour : groupsByColour) {
 				for (Atom atom : groupWithAColour) {
-					List<Integer> neighbourColours = findColourOfNeighbours(atom);
+					int[] neighbourColours = findColourOfNeighbours(atom);
 					atomNeighbourColours.put(atom, neighbourColours);
 				}
 			}
@@ -328,18 +329,20 @@ class StereoAnalyser {
 	}
 
 	/**
-	 * Produces a sorted (low to high) list of the colour of the atoms surrounding a given atom
+	 * Produces a sorted (low to high) array of the colour of the atoms surrounding a given atom
 	 * @param atom
-	 * @return List<Integer> colourOfAdjacentAtoms
+	 * @return int[] colourOfAdjacentAtoms
 	 */
-	private List<Integer> findColourOfNeighbours(Atom atom) {	
-		List<Integer> colourOfAdjacentAtoms = new ArrayList<Integer>();
+	private int[] findColourOfNeighbours(Atom atom) {	
 		List<Bond> bonds = atom.getBonds();
-		for (Bond bond : bonds) {
+		int bondCount = bonds.size();
+		int[] colourOfAdjacentAtoms = new int[bondCount];
+		for (int i = 0; i < bondCount; i++) {
+			Bond bond = bonds.get(i);
 			Atom otherAtom = bond.getOtherAtom(atom);
-			colourOfAdjacentAtoms.add(mappingToColour.get(otherAtom));
+			colourOfAdjacentAtoms[i] = mappingToColour.get(otherAtom);
 		} 
-		Collections.sort(colourOfAdjacentAtoms);//sort such that this goes from low to high
+		Arrays.sort(colourOfAdjacentAtoms);//sort such that this goes from low to high
 		return colourOfAdjacentAtoms;
 	}
 
