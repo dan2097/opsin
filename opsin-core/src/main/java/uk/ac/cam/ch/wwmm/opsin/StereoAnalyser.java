@@ -25,7 +25,7 @@ class StereoAnalyser {
 	/** Maps each atom to a list of of the colours of its neighbours*/
 	private final Map<Atom, List<Integer>> atomNeighbourColours;
 
-	private final AtomColourThenNeighbouringColoursComparator atomColourThenNeighbouringColoursComparator = new AtomColourThenNeighbouringColoursComparator();
+	private final AtomNeighbouringColoursComparator atomNeighbouringColoursComparator = new AtomNeighbouringColoursComparator();
 	private final static AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
 	
 	/**
@@ -146,22 +146,13 @@ class StereoAnalyser {
 	}
 	
 	/**
-	 * Initially sorts on the atoms' colour and if these are the same then
-	 * sorts based on the list of colours for neighbouring atoms 
+	 * Sorts based on the list of colours for neighbouring atoms 
 	 * e.g. [1,2] > [1,1]  [1,1,3] > [2,2,2]  [1,1,3] > [3]  
 	 * @author dl387
 	 *
 	 */
-	private class AtomColourThenNeighbouringColoursComparator implements Comparator<Atom> {
+	private class AtomNeighbouringColoursComparator implements Comparator<Atom> {
 	    public int compare(Atom a, Atom b){
-	    	int colour1 = mappingToColour.get(a);
-	    	int colour2 = mappingToColour.get(b);
-	    	if (colour1 > colour2){
-	    		return 1;
-	    	}
-	    	else if (colour1 < colour2){
-	    		return -1;
-	    	}
 	    	List<Integer> colours1 = atomNeighbourColours.get(a);
 	    	List<Integer> colours2 = atomNeighbourColours.get(b);
 	    	
@@ -201,16 +192,18 @@ class StereoAnalyser {
 		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
 		atomNeighbourColours = new HashMap<Atom,List<Integer>>(atomList.size());
 		Collections.sort(atomList, atomicNumberThenAtomicMassComparator);
-		populateColoursByAtomicNumberAndMass(atomList);
-		
+		List<List<Atom>> groupsByColour = populateColoursByAtomicNumberAndMass(atomList);
 		boolean changeFound = true;
 		while(changeFound){
-			for (Atom atom : atomList) {
-				List<Integer> neighbourColours = findColourOfNeighbours(atom);
-				atomNeighbourColours.put(atom, neighbourColours);
+			for (List<Atom> groupWithAColour : groupsByColour) {
+				for (Atom atom : groupWithAColour) {
+					List<Integer> neighbourColours = findColourOfNeighbours(atom);
+					atomNeighbourColours.put(atom, neighbourColours);
+				}
 			}
-			Collections.sort(atomList, atomColourThenNeighbouringColoursComparator);
-			changeFound = populateColoursAndReportIfColoursWereChanged(atomList);
+			List<List<Atom>> updatedGroupsByColour = new ArrayList<List<Atom>>();
+			changeFound = populateColoursAndReportIfColoursWereChanged(groupsByColour, updatedGroupsByColour);
+			groupsByColour = updatedGroupsByColour;
 		}
 		removeGhostAtoms();
 	}
@@ -261,8 +254,10 @@ class StereoAnalyser {
 	 * Takes a list of atoms sorted by atomic number/mass
 	 * and populates the mappingToColour map
 	 * @param atomList
+	 * @return 
 	 */
-	private void populateColoursByAtomicNumberAndMass(List<Atom> atomList) {
+	private List<List<Atom>> populateColoursByAtomicNumberAndMass(List<Atom> atomList) {
+		List<List<Atom>> groupsByColour = new ArrayList<List<Atom>>();
 		Atom previousAtom = null;
 		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
 		int atomsSeen = 0;
@@ -271,6 +266,7 @@ class StereoAnalyser {
 				for (Atom atomOfthisColour : atomsOfThisColour) {
 					mappingToColour.put(atomOfthisColour, atomsSeen);
 				}
+				groupsByColour.add(atomsOfThisColour);
 				atomsOfThisColour = new ArrayList<Atom>();
 			}
 			previousAtom = atom;
@@ -281,41 +277,50 @@ class StereoAnalyser {
 			for (Atom atomOfThisColour : atomsOfThisColour) {
 				mappingToColour.put(atomOfThisColour, atomsSeen);
 			}
+			groupsByColour.add(atomsOfThisColour);
 		}
+		return groupsByColour;
 	}
 
 	/**
-	 * Takes a list of atoms sorted by colour/the colour of their neighbours
+	 * Takes the lists of atoms pre-grouped by colour and sorts each by its neighbours colours
+	 * The updatedGroupsByColour is populated with those for which this process caused a change
 	 * and populates the mappingToColour map
-	 * Returns whether mappingToColour was changed
-	 * @param atomList
+	 * Returns whether mappingToColour was changed 
+	 * @param groupsByColour 
+	 * @param updatedGroupsByColour 
 	 * @return boolean Whether mappingToColour was changed
 	 */
-	private boolean populateColoursAndReportIfColoursWereChanged(List<Atom> atomList) {
-		Atom previousAtom = null;
-		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
-		int atomsSeen = 0;
+	private boolean populateColoursAndReportIfColoursWereChanged(List<List<Atom>> groupsByColour, List<List<Atom>> updatedGroupsByColour) {
 		boolean changeFound = false;
-		for (Atom atom : atomList) {
-			if (previousAtom != null && atomColourThenNeighbouringColoursComparator.compare(previousAtom, atom) != 0){
+		int atomsSeen = 0;
+		for (List<Atom> groupWithAColour : groupsByColour) {
+			Collections.sort(groupWithAColour, atomNeighbouringColoursComparator);
+			Atom previousAtom = null;
+			List<Atom> atomsOfThisColour = new ArrayList<Atom>();
+			for (Atom atom : groupWithAColour) {
+				if (previousAtom != null && atomNeighbouringColoursComparator.compare(previousAtom, atom) != 0){
+					for (Atom atomOfThisColour : atomsOfThisColour) {
+						if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
+							changeFound = true;
+						}
+						mappingToColour.put(atomOfThisColour, atomsSeen);
+					}
+					updatedGroupsByColour.add(atomsOfThisColour);
+					atomsOfThisColour = new ArrayList<Atom>();
+				}
+				previousAtom = atom;
+				atomsOfThisColour.add(atom);
+				atomsSeen++;
+			}
+			if (!atomsOfThisColour.isEmpty()){
 				for (Atom atomOfThisColour : atomsOfThisColour) {
 					if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
 						changeFound = true;
 					}
 					mappingToColour.put(atomOfThisColour, atomsSeen);
 				}
-				atomsOfThisColour = new ArrayList<Atom>();
-			}
-			previousAtom = atom;
-			atomsOfThisColour.add(atom);
-			atomsSeen++;
-		}
-		if (!atomsOfThisColour.isEmpty()){
-			for (Atom atomOfThisColour : atomsOfThisColour) {
-				if (!changeFound && atomsSeen != mappingToColour.get(atomOfThisColour)){
-					changeFound = true;
-				}
-				mappingToColour.put(atomOfThisColour, atomsSeen);
+				updatedGroupsByColour.add(atomsOfThisColour);
 			}
 		}
 		return changeFound;
