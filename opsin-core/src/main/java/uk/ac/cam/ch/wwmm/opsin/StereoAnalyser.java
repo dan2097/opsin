@@ -205,7 +205,7 @@ class StereoAnalyser {
 			changeFound = populateColoursAndReportIfColoursWereChanged(groupsByColour, updatedGroupsByColour);
 			groupsByColour = updatedGroupsByColour;
 		}
-		removeGhostAtoms();
+		removeGhostAtoms(atomList);
 	}
 
 	/**
@@ -237,12 +237,13 @@ class StereoAnalyser {
 
 	/**
 	 * Removes the ghost atoms added by addGhostAtoms
+	 * @param atomList 
 	 */
-	private void removeGhostAtoms() {
-		List<Atom> atomList = molecule.getAtomList();
+	private void removeGhostAtoms(List<Atom> atomList) {
 		for (Atom atom : atomList) {
 			if (atom.getID() < 0){
-				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
+				Bond b = atom.getFirstBond();
+				Atom adjacentAtom = b.getOtherAtom(atom);
 				adjacentAtom.removeBond(atom.getFirstBond());
 				molecule.removeAtom(atom);
 			}
