@@ -113,11 +113,14 @@
 
   <tokenList tagname="group" type="nonCarboxylicAcid" subType="noAcyl" symbol="½">
 <!--trivial names -->
+    <token value="S(=O)(=O)(O)c1ccccc1" labels="none">besyl</token>
     <token value="[As](O)(=O)(C)C" labels="none">cacodyl</token>
-		<token value="S(=O)(=O)(O)CCS(=O)(=O)O" labels="////1/2////" suffixAppliesTo="1,7">ethion</token>
+    <token value="S(=O)(=O)(O)CCS(=O)(=O)O" labels="////1/2////" suffixAppliesTo="1,7">edisyl</token>
+    <token value="S(=O)(=O)(O)CC" labels="none">esyl</token>
+    <token value="S(=O)(=O)(O)CCS(=O)(=O)O" labels="////1/2////" suffixAppliesTo="1,7">ethion</token>
     <token value="[N+]([O-])(O)=NO" labels="none">hyponitr</token>
     <token value="S(=O)(=O)(O)CCO" labels="none">isethion</token>
-		<token value="P(=O)(O)OP(=O)(O)O" labels="none" suffixAppliesTo="1,5">isohypophosphor</token>
+    <token value="P(=O)(O)OP(=O)(O)O" labels="none" suffixAppliesTo="1,5">isohypophosphor</token>
     <token value="S(=O)(=O)(O)CS(=O)(=O)O" labels="1////2/3///" suffixAppliesTo="1,6">methion</token>
     <token value="[N+](O)([O-])=C" labels="none">nitron</token>
     <token value="S(=O)(=O)(O)C(F)(F)C(F)(F)C(F)(F)C(F)(F)F" labels="none">nonafl</token>
@@ -146,6 +149,7 @@
     <token value="C(O)(=O)OC(=O)O" labels="none" suffixAppliesTo="1,5">pyro-carbon</token>
     <token value="S(=O)(=O)(N)O" labels="none">sulfamid</token>
     <token value="S(O)(O)" labels="none">sulfoxyl</token>
+    <token value="S(=O)(=O)(O)c1ccc(C)cc1" labels="////1/2,ortho/3,meta/4,para//5/6">tosyl</token>
     <token value="S(=O)(=O)(O)CC(F)(F)F" labels="none">tresyl</token>
   </tokenList>
 

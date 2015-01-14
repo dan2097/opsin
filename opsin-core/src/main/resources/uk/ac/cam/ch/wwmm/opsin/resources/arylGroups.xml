@@ -304,7 +304,6 @@
 		<token value="c1(ccccc1)C#Cc2ccccc2" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'">tolan</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha">toluen</token>
 		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2 alpha" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidin</token>
-		<token value="[O-]S(=O)(=O)c1ccc(C)cc1" labels="////1/2,ortho/3,meta/4,para//5/6" functionalIDs="1">tosylat</token>
 		<token value="[cH2]1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b">trinden</token>
 		<token value="c1cccc2cc3c4cc5ccccc5cc4c4cc5ccccc5cc4c3cc12" labels="1/2/3/4/4a/5/5a/5b/6/6a/7/8/9/10/10a/11/11a/11b/12/12a/13/14/15/16/16a/17/17a/17b/18/18a">trinaphthylen</token>
 		<token value="c1cccc2oc3cc4nc5ccccc5oc4cc3nc12" labels="1/2/3/4/4a/5/5a/6/6a/7/7a/8/9/10/11/11a/12/12a/13/13a/14/14a">triphenodioxazin</token>
