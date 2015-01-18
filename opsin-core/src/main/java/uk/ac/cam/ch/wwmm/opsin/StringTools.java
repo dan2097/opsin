@@ -343,4 +343,20 @@ class StringTools {
 		int strOffset = str.length() - suffix.length();
 		return str.regionMatches(true, strOffset, suffix, 0, suffix.length());
 	}
+	
+	/**
+	* Lower cases a string (only converts A-Z to a-z)
+	* @param str
+	*/
+	static String lowerCaseAsciiString(String str) {
+		StringBuilder sb = new StringBuilder(str.length());
+		for (int i = 0, l = str.length(); i < l; i++) {
+			char c = str.charAt(i);
+			if (c >= 'A' && c <= 'Z') {
+				c = (char) (c + 32);
+			}
+			sb.append(c);
+		}
+		return sb.toString();
+	}
 }
