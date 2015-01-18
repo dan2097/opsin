@@ -117,9 +117,12 @@
     <token value="sulfamic">sulfamic acid</token>
   </tokenList>
 
-<!--not allowed to prefixed by carbo(x)/sulfon etc. Implicitly must be at a terminal position-->
+<!--not allowed to prefixed by carbo(x)/sulfon etc. Implicitly must be at a terminal position
+al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != acetaldehyde-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="s">
     <token value="al">al</token>
+  </tokenList>
+  <tokenList tagname="suffix" type="root" subType="terminal" symbol="ü">
     <token value="ic" additionalValue="aldehyde">aldehydic</token>
     <token value="ic" additionalValue="aldehyde">aldehydicacid</token>
     <token value="ic" additionalValue="aldehyde">aldehydic acid</token>
@@ -188,7 +191,7 @@
     <token value="acylium">ylium</token>
   </tokenList>
 
-<!--used in aldehyde and the like-->
+<!--used in hexaldehyde and the like-->
   <tokenList tagname="suffix" type="root" subType="terminal" symbol="÷">
     <token value="aldehyde">aldehyde</token>
     <token value="aldehyde">aldehyd</token>
@@ -207,7 +210,7 @@
   </tokenList>
 
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->
-  <tokenList tagname="suffix" type="root" subType="cycleformer" symbol="s">
+  <tokenList tagname="suffix" type="root" subType="cycleformer" symbol="ü">
     <token value="imide">imide</token>
     <token value="imide">ic imide</token>
     <token value="imide">ic acid imide</token>
@@ -235,6 +238,5 @@
     <token value="sultine">sultine</token>
     <token value="sultone">sultone</token>
   </tokenList>
-
 
 </tokenLists>
