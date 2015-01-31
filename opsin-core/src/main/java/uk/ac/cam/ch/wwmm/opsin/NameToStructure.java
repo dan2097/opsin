@@ -148,7 +148,8 @@ public class NameToStructure {
 			if(LOG.isDebugEnabled()) {
 				LOG.debug(e.getMessage(), e);
 			}
-			return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, e.getMessage(), name);
+			String message = e.getMessage() != null ? e.getMessage() : "exception with null message";
+			return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, message, name);
 		}
 		String reasonForFailure = "";
 		Fragment fragGeneratedWithWarning = null;
@@ -184,7 +185,7 @@ public class NameToStructure {
 				}
 			} catch (Exception e) {
 				if (reasonForFailure.length() == 0) {
-					reasonForFailure = e.getMessage();
+					reasonForFailure= e.getMessage() != null ? e.getMessage() : "exception with null message";
 				}
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(e.getMessage(), e);
