@@ -150,7 +150,7 @@ class StructureBuilder {
 		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
 			balanceChargeIfPossible(molecule, overallCharge, explicitStoichiometryPresent);
 		}
-		makeHydrogensExplicit(state.fragManager);
+		state.fragManager.makeHydrogensExplicit();
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
 		processStereochemistry(molecule, uniFrag);
@@ -1568,102 +1568,6 @@ class StructureBuilder {
 		}
 
 		throw new StructureBuildingException("Cannot find functional atom with locant: " +locant + " to form an ester with");
-	}
-
-	/**
-	 * Valency is used to determine the expected number of hydrogen
-	 * Hydrogens are then added to bring the number of connections up to the minimum required to satisfy the atom's valency
-	 * This allows the valency of the atom to be encoded e.g. phopshane-3 hydrogen, phosphorane-5 hydrogen.
-	 * It is also neccesary when considering stereochemistry as a hydrogen beats nothing in the CIP rules
-	 * @param fm
-	 * @throws StructureBuildingException
-	 */
-	static void makeHydrogensExplicit(FragmentManager fm) throws StructureBuildingException {
-		Set<Fragment> fragments = fm.getFragments();
-		for (Fragment fragment : fragments) {
-			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
-				continue;
-			}
-			List<Atom> atomList =fragment.getAtomList();
-			for (Atom parentAtom : atomList) {
-				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);
-				for (int i = 0; i < explicitHydrogensToAdd; i++) {
-					Atom hydrogen = fm.createAtom(ChemEl.H, fragment);
-					fm.createBond(parentAtom, hydrogen, 1);
-				}
-				if (parentAtom.getAtomParity()!=null){
-					if (explicitHydrogensToAdd >1){
-						//Cannot have tetrahedral chirality and more than 2 hydrogens
-						parentAtom.setAtomParity(null);//probably caused by deoxy
-					}
-					else{
-						modifyAtomParityToTakeIntoAccountExplicitHydrogen(parentAtom);
-					}
-				}
-			}
-		}
-	}
-
-	private static void modifyAtomParityToTakeIntoAccountExplicitHydrogen(Atom atom) throws StructureBuildingException {
-		AtomParity atomParity = atom.getAtomParity();
-		if (!StereoAnalyser.isPossiblyStereogenic(atom)){
-			//no longer a stereoCentre e.g. due to unsaturation
-			atom.setAtomParity(null);
-		}
-		else{
-			Atom[] atomRefs4 = atomParity.getAtomRefs4();
-			Integer positionOfImplicitHydrogen = null;
-			Integer positionOfDeoxyHydrogen = null;
-			for (int i = 0; i < atomRefs4.length; i++) {
-				if (atomRefs4[i].equals(AtomParity.hydrogen)){
-					positionOfImplicitHydrogen = i;
-				}
-				else if (atomRefs4[i].equals(AtomParity.deoxyHydrogen)){
-					positionOfDeoxyHydrogen = i;
-				}
-			}
-			if (positionOfImplicitHydrogen !=null || positionOfDeoxyHydrogen !=null){
-				//atom parity was set in SMILES, the dummy hydrogen atom has now been substituted
-				List<Atom> neighbours = atom.getAtomNeighbours();
-				for (Atom atomRef : atomRefs4) {
-					neighbours.remove(atomRef);
-				}
-				if (neighbours.size()==0){
-					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
-				}
-				else if (neighbours.size()==1 && positionOfDeoxyHydrogen!=null){
-					atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
-					if (positionOfImplicitHydrogen != null){
-						throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
-					}
-				}
-				else if (neighbours.size()==1 && positionOfImplicitHydrogen!=null){
-					atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
-				}
-				else if (neighbours.size()==2 && positionOfDeoxyHydrogen!=null && positionOfImplicitHydrogen!=null){
-					try{
-						List<Atom> cipOrderedAtoms = new CipSequenceRules(atom).getNeighbouringAtomsInCIPOrder();
-						//higher priority group replaces the former hydroxy groups (deoxyHydrogen)
-						if (cipOrderedAtoms.indexOf(neighbours.get(0)) > cipOrderedAtoms.indexOf(neighbours.get(1))){
-							atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
-							atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
-						}
-						else{
-							atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(1);
-							atomRefs4[positionOfImplicitHydrogen] = neighbours.get(0);
-						}
-					}
-					catch (CipOrderingException e){
-						//assume ligands equivalent so it makes no difference which is which
-						atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
-						atomRefs4[positionOfImplicitHydrogen] = neighbours.get(1);
-					}
-				}
-				else{
-					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
-				}
-			}
-		}
 	}
 
 	private boolean applyExplicitStoichiometryIfProvided(List<Element> wordRules) throws StructureBuildingException {

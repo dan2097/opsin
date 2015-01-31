@@ -394,7 +394,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority9() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C1(C=C)CC1C2=CC=CC=C2");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -416,7 +416,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority10() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C(O[H])([H])(C1([H])C([H])(F)C([H])(Cl)C([H])([H])C([H])(I)C1([H])([H]))C1([H])C([H])(F)C([H])(Br)C([H])([H])C([H])(Cl)C1([H])([H])");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -438,7 +438,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority11() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C17C=CC23C45OC6C19.O74.O2C3.C5.C6(C)C.C9");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		//stereocentres at 1,4,5,7,8
 		List<Atom> atomList = f.getAtomList();
 		List<Atom> cipOrdered = new CipSequenceRules(atomList.get(0)).getNeighbouringAtomsInCIPOrder();
@@ -526,7 +526,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority12() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C1(C)(CCC(=O)N1)CCC(=O)NC(C)C");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -548,7 +548,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority13() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C(O)(C#CC)C1=CC=CC=C1");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
@@ -690,7 +690,7 @@ public class StereochemistryTest {
 	@Test
 	public void testFindPseudoAsymmetricCarbon1() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("OCC(O)C(O)C(O)CO");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
 		assertEquals(3, stereoCentres.size());
@@ -709,7 +709,7 @@ public class StereochemistryTest {
 	@Test
 	public void testFindPseudoAsymmetricCarbon2() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("OCC(O)C(C(Cl)(Br)C)(C(Cl)(Br)C)C(O)CO");
-		StructureBuilder.makeHydrogensExplicit(fm);
+		fm.makeHydrogensExplicit();
 		StereoAnalyser stereoAnalyser = new StereoAnalyser(f);
 		List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
 		assertEquals(5, stereoCentres.size());
