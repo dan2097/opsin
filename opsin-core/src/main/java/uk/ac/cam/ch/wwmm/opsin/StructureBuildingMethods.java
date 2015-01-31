@@ -151,13 +151,13 @@ class StructureBuildingMethods {
 
 	private static void performLocantedSubstitutiveOperations(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {
 		Element group;
-		if (subBracketOrRoot.getName().equals(BRACKET_EL)){
-			group =findRightMostGroupInBracket(subBracketOrRoot);
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)) {
+			group = findRightMostGroupInBracket(subBracketOrRoot);
 		}
 		else{
-			group =subBracketOrRoot.getFirstChildElement(GROUP_EL);
+			group = subBracketOrRoot.getFirstChildElement(GROUP_EL);
 		}
-		if (group.getAttribute(RESOLVED_ATR) != null){
+		if (group.getAttribute(RESOLVED_ATR) != null) {
 			return;
 		}
 		Fragment frag = group.getFrag();
@@ -166,12 +166,12 @@ class StructureBuildingMethods {
 			if (frag.getOutAtomCount() >1){
 				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
 			}
-			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR) != null){//e.g. 1,2-diethyl
+			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR) != null) {//e.g. 1,2-diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
 			}
 			else{
 				Fragment parentFrag = findFragmentWithLocant(subBracketOrRoot, locantString);
-				if (parentFrag==null){
+				if (parentFrag == null){
 					String modifiedLocant = checkForBracketedPrimedLocantSpecialCase(subBracketOrRoot, locantString);
 					if (modifiedLocant != null){
 						parentFrag = findFragmentWithLocant(subBracketOrRoot, modifiedLocant);
@@ -185,8 +185,8 @@ class StructureBuildingMethods {
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 				Element groupToAttachTo = parentFrag.getTokenEl();
-				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && parentFrag.getOutAtomCount()>0 && groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR) != null
-						&& parentFrag.getAtomByLocantOrThrow(locantString).getOutValency()>0 && frag.getOutAtom(0).getValency()==1){
+				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && parentFrag.getOutAtomCount() > 0 && groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR) != null
+						&& parentFrag.getAtomByLocantOrThrow(locantString).getOutValency() > 0 && frag.getOutAtom(0).getValency() == 1){
 					//horrible special case to allow C-methylcarbonimidoyl
 					joinFragmentsAdditively(state, frag, parentFrag);
 				}
@@ -231,11 +231,11 @@ class StructureBuildingMethods {
 			if (frag.getOutAtomCount() > 1){
 				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
 			}
-			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR) != null){//e.g. diethyl
+			if (subBracketOrRoot.getAttribute(MULTIPLIER_ATR) != null) {//e.g. diethyl
 				multiplyOutAndSubstitute(state, subBracketOrRoot);
 			}
 			else{
-				if (PERHALOGENO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+				if (PERHALOGENO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
 					performPerHalogenoSubstitution(state, frag, subBracketOrRoot);
 				}
 				else{
