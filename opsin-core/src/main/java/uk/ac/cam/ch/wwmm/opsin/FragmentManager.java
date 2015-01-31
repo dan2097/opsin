@@ -501,7 +501,7 @@ class FragmentManager {
 			List<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
 			List<Fragment> newSuffixFragments =new ArrayList<Fragment>();
 			for (Fragment suffix : originalSuffixes) {
-				newSuffixFragments.add(state.fragManager.copyFragment(suffix));
+				newSuffixFragments.add(copyFragment(suffix));
 			}
 			state.xmlSuffixMap.put(clonedGroups.get(i), newSuffixFragments);
 		}
