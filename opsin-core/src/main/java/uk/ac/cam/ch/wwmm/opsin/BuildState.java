@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,26 +16,37 @@ class BuildState {
 	final FragmentManager fragManager;
 	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
+	private final List<String> warningMessages = new ArrayList<String>();
 	
 	WordRule currentWordRule = null;
 	
-	private String warningMessage = null;
+	
+	BuildState(NameToStructureConfig n2sConfig) {
+		this.n2sConfig = n2sConfig;
+		IDManager idManager = new IDManager();
+		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
+		xmlSuffixMap = new HashMap<Element, List<Fragment>>();
+	}
+
+	List<String> getWarningMessages() {
+		return warningMessages;
+	}
 	
 	String getWarningMessage() {
-		return warningMessage;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0, l = warningMessages.size(); i < l; i++) {
+			sb.append(warningMessages.get(i));
+			if (i + 1 > l){
+				sb.append(System.getProperty("line.separator"));
+			}
+		}
+		return sb.toString();
 	}
 
 	void addWarningMessage(String warningMessage) {
 		if (warningMessage == null) {
 			warningMessage = "null";
 		}
-		this.warningMessage += ("\n" + warningMessage);
-	}
-
-	BuildState(NameToStructureConfig n2sConfig) {
-		this.n2sConfig = n2sConfig;
-		IDManager idManager = new IDManager();
-		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
-		xmlSuffixMap = new HashMap<Element, List<Fragment>>();
+		warningMessages.add(warningMessage);
 	}
 }
