@@ -267,7 +267,7 @@ class Fragment {
 
 	/**
 	 * Gets the type of the corresponding tokenEl
-	 * Returns "" is undefined
+	 * Returns "" if undefined
 	 * @return
 	 */
 	String getType() {
@@ -277,7 +277,7 @@ class Fragment {
 
 	/**
 	 * Gets the subType of the corresponding tokenEl
-	 * Returns "" is undefined
+	 * Returns "" if undefined
 	 * @return
 	 */
 	String getSubType() {
