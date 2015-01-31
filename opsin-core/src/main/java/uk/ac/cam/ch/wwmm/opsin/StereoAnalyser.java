@@ -17,8 +17,9 @@ import java.util.Map.Entry;
  *
  */
 class StereoAnalyser {
-	/** The molecule upon which this StereoAnalyser is operating */
-	private final Fragment molecule;
+	/** The atoms/bonds upon which this StereoAnalyser is operating */
+	private final List<Atom> atoms;
+	private final Set<Bond> bonds;
 	
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;
@@ -180,6 +181,7 @@ class StereoAnalyser {
 			return 0;
 	    }
 	}
+	
 	/**
 	 * Employs a derivative of the InChI algorithm to label which atoms are equivalent.
 	 * These labels can then be used by the findStereo(Atoms/Bonds) functions to find features that
@@ -187,13 +189,27 @@ class StereoAnalyser {
 	 * @param molecule
 	 */
 	StereoAnalyser(Fragment molecule) {
-		this.molecule = molecule;
-		addGhostAtoms();
-		List<Atom> atomList = molecule.getAtomList();
-		mappingToColour = new HashMap<Atom, Integer>(atomList.size());
-		atomNeighbourColours = new HashMap<Atom, int[]>(atomList.size());
-		Collections.sort(atomList, atomicNumberThenAtomicMassComparator);
-		List<List<Atom>> groupsByColour = populateColoursByAtomicNumberAndMass(atomList);
+		this (molecule.getAtomList(), molecule.getBondSet());
+	}
+
+	/**
+	 * Employs a derivative of the InChI algorithm to label which atoms are equivalent.
+	 * These labels can then be used by the findStereo(Atoms/Bonds) functions to find features that
+	 * can possess stereoChemistry
+	 * NOTE: All bonds of every atom must be in the set of bonds, no atom may have a bond to an atom not in the list
+	 * @param atoms
+	 * @param bonds
+	 */
+	StereoAnalyser(List<Atom> atoms, Set<Bond> bonds) {
+		this.atoms = atoms;
+		this.bonds = bonds;
+		List<Atom> ghostAtoms = addGhostAtoms();
+		List<Atom> atomsToSort = new ArrayList<Atom>(atoms);
+		atomsToSort.addAll(ghostAtoms);
+		mappingToColour = new HashMap<Atom, Integer>(atomsToSort.size());
+		atomNeighbourColours = new HashMap<Atom, int[]>(atomsToSort.size());
+		Collections.sort(atomsToSort, atomicNumberThenAtomicMassComparator);
+		List<List<Atom>> groupsByColour = populateColoursByAtomicNumberAndMass(atomsToSort);
 		boolean changeFound = true;
 		while(changeFound){
 			for (List<Atom> groupWithAColour : groupsByColour) {
@@ -206,48 +222,47 @@ class StereoAnalyser {
 			changeFound = populateColoursAndReportIfColoursWereChanged(groupsByColour, updatedGroupsByColour);
 			groupsByColour = updatedGroupsByColour;
 		}
-		removeGhostAtoms(atomList);
+		removeGhostAtoms(ghostAtoms);
 	}
 
 	/**
-	 * Adds "ghost" atoms in the sam ways as the CIP rules for handling double bonds
+	 * Adds "ghost" atoms in the same way as the CIP rules for handling double bonds
 	 * e.g. C=C --> C(G)=C(G) where ghost is a carbon with no hydrogen bonded to it
+	 * @return The ghost atoms created
 	 */
-	private void addGhostAtoms() {
-		Set<Bond> bonds = molecule.getBondSet();
-		int ghostIdCounter = -1;
+	private List<Atom> addGhostAtoms() {
+		List<Atom> ghostAtoms = new ArrayList<Atom>();
 		for (Bond bond : bonds) {
 			int bondOrder = bond.getOrder();
 			for (int i = bondOrder; i > 1; i--) {
 				Atom fromAtom = bond.getFromAtom();
 				Atom toAtom = bond.getToAtom();
 
-				Atom ghost1 = new Atom(ghostIdCounter--, fromAtom.getElement(), molecule);
+				Atom ghost1 = new Atom(fromAtom.getElement());
 				Bond b1 = new Bond(ghost1, toAtom, 1);
 				toAtom.addBond(b1);
 				ghost1.addBond(b1);
-				molecule.addAtom(ghost1);
-				Atom ghost2 = new Atom(ghostIdCounter--, toAtom.getElement(), molecule);
+				ghostAtoms.add(ghost1);
+				
+				Atom ghost2 = new Atom(toAtom.getElement());
 				Bond b2 = new Bond(ghost2, fromAtom, 1);
 				fromAtom.addBond(b2);
 				ghost2.addBond(b2);
-				molecule.addAtom(ghost2);
+				ghostAtoms.add(ghost2);
 			}
 		}
+		return ghostAtoms;
 	}
 
 	/**
 	 * Removes the ghost atoms added by addGhostAtoms
-	 * @param atomList 
+	 * @param ghostAtoms 
 	 */
-	private void removeGhostAtoms(List<Atom> atomList) {
-		for (Atom atom : atomList) {
-			if (atom.getID() < 0){
-				Bond b = atom.getFirstBond();
-				Atom adjacentAtom = b.getOtherAtom(atom);
-				adjacentAtom.removeBond(atom.getFirstBond());
-				molecule.removeAtom(atom);
-			}
+	private void removeGhostAtoms(List<Atom> ghostAtoms) {
+		for (Atom atom : ghostAtoms) {
+			Bond b = atom.getFirstBond();
+			Atom adjacentAtom = b.getOtherAtom(atom);
+			adjacentAtom.removeBond(atom.getFirstBond());
 		}
 	}
 
@@ -377,9 +392,8 @@ class StereoAnalyser {
 	 * @return
 	 */
 	private List<Atom> getPotentialStereoCentres() {
-		List<Atom> atomList = molecule.getAtomList();
 		List<Atom> potentialStereoAtoms = new ArrayList<Atom>();
-		for (Atom atom : atomList) {
+		for (Atom atom : atoms) {
 			if (isPossiblyStereogenic(atom)){
 				potentialStereoAtoms.add(atom);
 			}
@@ -594,9 +608,8 @@ class StereoAnalyser {
 	 * @return
 	 */
 	List<StereoBond> findStereoBonds() {
-		Set<Bond> bondSet =molecule.getBondSet();
 		List<StereoBond> stereoBonds = new ArrayList<StereoBond>();
-		for (Bond bond : bondSet) {
+		for (Bond bond : bonds) {
 			if (bond.getOrder()==2){
 				Atom a1 = bond.getFromAtom();
 				List<Atom> neighbours1 =  a1.getAtomNeighbours();
