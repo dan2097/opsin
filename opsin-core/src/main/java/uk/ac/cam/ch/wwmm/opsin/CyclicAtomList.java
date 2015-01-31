@@ -27,9 +27,8 @@ class CyclicAtomList{
 	 * The second parameter sets the current index
 	 * @param atomList
 	 * @param index
-	 * @throws StructureBuildingException
 	 */
-	CyclicAtomList(List<Atom> atomList, int index) throws StructureBuildingException {
+	CyclicAtomList(List<Atom> atomList, int index)  {
 		this.atomList = atomList;
 		setIndex(index);
 	}
@@ -66,11 +65,10 @@ class CyclicAtomList{
 	/**
 	 * Set the current index
 	 * @param index
-	 * @throws StructureBuildingException
 	 */
-	void setIndex(int index) throws StructureBuildingException{
+	void setIndex(int index) {
 		if (index >= atomList.size()){
-			throw new StructureBuildingException("Specified index is not within ringAtom list");
+			throw new IllegalArgumentException("Specified index is not within ringAtom list");
 		}
 		this.index = index;
 	}
