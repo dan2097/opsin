@@ -1526,11 +1526,11 @@ class StructureBuildingMethods {
 	static List<Fragment> findAlternativeFragments(Element startingElement) {
 		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement.getParent());
-		List<Fragment> foundFragments =new ArrayList<Fragment>();
-		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
-		while (stack.size()>0){
+		List<Fragment> foundFragments = new ArrayList<Fragment>();
+		boolean doneFirstIteration = false;//check on index only done on first iteration to only get elements with an index greater than the starting element
+		while (stack.size() > 0) {
 			Element currentElement =stack.removeLast();
-			if (currentElement.getName().equals(GROUP_EL)){
+			if (currentElement.getName().equals(GROUP_EL)) {
 				Fragment groupFrag = currentElement.getFrag();
 				foundFragments.add(groupFrag);
 				continue;
@@ -1539,7 +1539,7 @@ class StructureBuildingMethods {
 
 			List<Element> bracketted = new ArrayList<Element>();
 			for (Element bracketOrSubOrRoot : siblings) {
-				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot)<=currentElement.indexOf(startingElement)){
+				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot) <= currentElement.indexOf(startingElement)){
 					continue;
 				}
 				if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR) != null){
@@ -1562,7 +1562,7 @@ class StructureBuildingMethods {
 			for (int i = bracketted.size() -1; i >=0; i--) {
 				stack.addFirst(bracketted.get(i));
 			}
-			doneFirstIteration =true;
+			doneFirstIteration = true;
 		}
 		return foundFragments;
 	}
