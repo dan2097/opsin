@@ -303,6 +303,23 @@ class ValencyChecker {
 		}
 		return null;
 	}
+	
+	/**
+	 * Return the lambda convention derived valency if set otherwise returns the same as {@link #getMaximumValency(ChemEl, int)} 
+	 * Returns null if the maximum valency is not known
+	 * @param a
+	 * @return
+	 */
+	static Integer getMaximumValency(Atom a) {
+		Integer maxVal;
+		if (a.getLambdaConventionValency() != null) {
+			maxVal = a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
+		}
+		else{
+			maxVal = getMaximumValency(a.getElement(), a.getCharge());
+		}
+		return maxVal;
+	}
 
 	/**
 	 * Checks whether the total incoming valency to an atom exceeds its expected valency
@@ -312,17 +329,9 @@ class ValencyChecker {
 	 */
 	static boolean checkValency(Atom a) {
 		int valency = a.getIncomingValency() + a.getOutValency();
-		Integer maxVal;
-		if (a.getLambdaConventionValency() != null){
-			maxVal=a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
-		}
-		else{
-			ChemEl chemEl = a.getElement();
-			int charge = a.getCharge();
-			maxVal = getMaximumValency(chemEl, charge);
-			if(maxVal == null) {
-				return true;
-			}
+		Integer maxVal = getMaximumValency(a);
+		if(maxVal == null) {
+			return true;
 		}
 		return valency <= maxVal;
 	}
@@ -334,18 +343,10 @@ class ValencyChecker {
      * @return
 	 */
 	static boolean checkValencyAvailableForBond(Atom a, int bondOrder) {
-		int valency =a.getIncomingValency() + bondOrder;
-		Integer maxVal;
-		if (a.getLambdaConventionValency() != null){
-			maxVal = a.getLambdaConventionValency() + a.getProtonsExplicitlyAddedOrRemoved();
-		}
-		else{
-			ChemEl chemEl = a.getElement();
-			int charge = a.getCharge();
-			maxVal = getMaximumValency(chemEl, charge);
-			if(maxVal == null) {
-				return true;
-			}
+		int valency = a.getIncomingValency() + bondOrder;
+		Integer maxVal = getMaximumValency(a);
+		if(maxVal == null) {
+			return true;
 		}
 		return valency <= maxVal;
 	}
