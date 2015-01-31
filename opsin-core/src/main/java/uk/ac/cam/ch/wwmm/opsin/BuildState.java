@@ -33,10 +33,14 @@ class BuildState {
 	}
 	
 	String getWarningMessage() {
+		int numWarnings = warningMessages.size();
+		if (numWarnings == 0) {
+			return null;
+		}
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0, l = warningMessages.size(); i < l; i++) {
+		for (int i = 0; i < numWarnings; i++) {
 			sb.append(warningMessages.get(i));
-			if (i + 1 > l){
+			if (i + 1 > numWarnings){
 				sb.append(System.getProperty("line.separator"));
 			}
 		}
