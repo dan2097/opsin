@@ -1041,40 +1041,6 @@ class FragmentTools {
 		return hydroxyAtoms;
 	}
 	
-	/**
-	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
-	 * @param frag
-	 * @param bondOrder
-	 * @return
-	 */
-	static Atom findAtomForSubstitution(Fragment frag, int bondOrder) {
-		List<Atom> atoms = findAtomsForSubstitution(frag, 1, bondOrder);
-		if (atoms != null) {
-			return atoms.get(0);
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns a list of atoms of size >= numberOfSubstitutionsDesired (or null if this not possible)
-	 * An atom must have have sufficient valency to support a substituent requiring a bond of order bondOrder
-	 * If an atom can support multiple substituents it will appear in the list multiple times
-	 * This method iterates over the the fragment atoms attempting to fulfil these requirements with incrementally more lenient constraints:
-	 * aromaticity preserved, standard valency assumed, characteristic atoms ignored
-	 * aromaticity preserved, standard valency assumed, functional suffixes ignored
-	 * aromaticity preserved, any sensible valency allowed, anything substitutable
-	 * aromaticity dropped, any sensible valency allowed, anything substitutable
-	 * 
-	 * Iteration starts from the defaultInAtom (if applicable, else the first atom) i.e. the defaultInAtom if substitutable will be the first atom in the list
-	 * @param frag
-	 * @param numberOfSubstitutionsRequired
-	 * @param bondOrder
-	 * @return
-	 */
-	static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsRequired, int bondOrder) {
-		return findAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), numberOfSubstitutionsRequired, bondOrder, true);
-	}
-
 	private static List<Atom> findAtomsForSubstitution(List<Atom> atomList, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
 		int atomCount = atomList.size();
 		int startingIndex = preferredAtom != null ? atomList.indexOf(preferredAtom) : 0;
@@ -1156,4 +1122,71 @@ class FragmentTools {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns a list of atoms of size >= numberOfSubstitutionsDesired (or null if this not possible)
+	 * An atom must have have sufficient valency to support a substituent requiring a bond of order bondOrder
+	 * If an atom can support multiple substituents it will appear in the list multiple times
+	 * This method iterates over the the fragment atoms attempting to fulfil these requirements with incrementally more lenient constraints:
+	 * aromaticity preserved, standard valency assumed, characteristic atoms ignored
+	 * aromaticity preserved, standard valency assumed, functional suffixes ignored
+	 * aromaticity preserved, any sensible valency allowed, anything substitutable
+	 * aromaticity dropped, any sensible valency allowed, anything substitutable
+	 * 
+	 * Iteration starts from the defaultInAtom (if applicable, else the first atom) i.e. the defaultInAtom if substitutable will be the first atom in the list
+	 * @param frag
+	 * @param numberOfSubstitutionsRequired
+	 * @param bondOrder
+	 * @return
+	 */
+	static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsRequired, int bondOrder) {
+		return findAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), numberOfSubstitutionsRequired, bondOrder, true);
+	}
+	
+	/**
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * The defaultInAtom in this case is the provided preferredAtom
+	 * takeIntoAccountOutValency may be set to false for cases where the position of radicals is being determined
+	 * Return null if no suitable atom can be found
+	 * @param frag
+	 * @param preferredAtom
+	 * @param bondOrder
+	 * @param takeIntoAccountOutValency
+	 * @return
+	 */
+	static Atom findAtomForSubstitution(Fragment frag, Atom preferredAtom, int bondOrder, boolean takeIntoAccountOutValency) {
+		List<Atom> atoms = findAtomsForSubstitution(frag.getAtomList(), preferredAtom, 1, bondOrder, takeIntoAccountOutValency);
+		if (atoms != null) {
+			return atoms.get(0);
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * Return null if no suitable atom can be found
+	 * @param frag
+	 * @param bondOrder
+	 * @return
+	 */
+	static Atom findAtomForSubstitution(Fragment frag, int bondOrder) {
+		return findAtomForSubstitution(frag, frag.getDefaultInAtom(), bondOrder, true);
+	}
+	
+	/**
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * Throws an exception if no suitable atom can be found
+	 * @param frag
+	 * @param bondOrder
+	 * @return
+	 * @throws StructureBuildingException 
+	 */
+	static Atom findAtomForSubstitutionOrThrow(Fragment frag, int bondOrder) throws StructureBuildingException {
+		Atom a = findAtomForSubstitution(frag, bondOrder);
+		if (a == null) {
+			throw new StructureBuildingException("No suitable atom found");
+		}
+		return a;
+	}
+
 }
