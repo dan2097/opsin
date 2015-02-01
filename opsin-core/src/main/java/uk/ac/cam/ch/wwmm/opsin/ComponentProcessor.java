@@ -405,7 +405,7 @@ class ComponentProcessor {
 					state.fragManager.incorporateFragment(newFrag, newFragOutAtom.getAtom(), parentFrag, atomOnParentFrag, newFragOutAtom.getValency());
 				}
 				else{
-					Atom atomOnNewFrag = newFrag.getDefaultInAtom();
+					Atom atomOnNewFrag = newFrag.getDefaultInAtomOrFirstAtom();
 					state.fragManager.incorporateFragment(newFrag, atomOnNewFrag, parentFrag, atomOnParentFrag, 1);
 				}
 			}
@@ -2925,8 +2925,8 @@ class ComponentProcessor {
 						atomOnLatestClone = clone.getOutAtom(0).getAtom();
 					}
 					else{
-						atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtom(), bondOrder, true);
-						atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtom(), bondOrder, true);
+						atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtomOrFirstAtom(), bondOrder, true);
+						atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtomOrFirstAtom(), bondOrder, true);
 					}
 				}
 				if (fragmentToResolveAndDuplicate.getOutAtomCount()>0){
@@ -3483,10 +3483,10 @@ class ComponentProcessor {
 					bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
 					possibleLocant.detach();
 				}
-				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtom());
+				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtomOrFirstAtom());
 			}
 			else{
-				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getDefaultInAtom(), 1, true));
+				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getDefaultInAtomOrFirstAtom(), 1, true));
 			}
 			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
 			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);

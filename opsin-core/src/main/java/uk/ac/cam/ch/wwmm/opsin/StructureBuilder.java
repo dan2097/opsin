@@ -370,7 +370,7 @@ class StructureBuilder {
 			
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
-				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
+				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtomOrFirstAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
@@ -399,7 +399,7 @@ class StructureBuilder {
 		}
 		for (int i = 0; i < outAtomCount; i++) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
-			Atom ideAtom = ideFrag.getDefaultInAtom();
+			Atom ideAtom = ideFrag.getDefaultInAtomOrFirstAtom();
 			Atom subAtom=substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
 			state.fragManager.createBond(ideAtom, subAtom, 1);
 			substituentBR.removeOutAtom(0);
@@ -1003,7 +1003,7 @@ class StructureBuilder {
 			
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
-				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
+				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtomOrFirstAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
@@ -1025,7 +1025,7 @@ class StructureBuilder {
 		}
 		for (int i = halideCount - 1; i>=0; i--) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
-			Atom ideAtom = ideFrag.getDefaultInAtom();
+			Atom ideAtom = ideFrag.getDefaultInAtomOrFirstAtom();
 			Atom acidAtom = acidBr.getFunctionalAtom(i);
 			if (acidAtom.getElement() != ChemEl.O){
 				throw new StructureBuildingException("Atom type expected to be oxygen but was: " +acidAtom.getElement());
@@ -1056,7 +1056,7 @@ class StructureBuilder {
 			
 			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
-				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtom();
+				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtomOrFirstAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
@@ -1104,7 +1104,7 @@ class StructureBuilder {
 		}
 		for (int i = halideCount - 1; i>=0; i--) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
-			Atom ideAtom = ideFrag.getDefaultInAtom();
+			Atom ideAtom = ideFrag.getDefaultInAtomOrFirstAtom();
 			state.fragManager.incorporateFragment(ideFrag, ideAtom, elementaryAtomFrag, elementaryAtom, 1);
 		}
 	}
@@ -1450,7 +1450,7 @@ class StructureBuilder {
 			if (aminoAcids.size() < 2){
 				throw new StructureBuildingException("Cyclic peptide building failed: Requires at least two amino acids!");
 			}
-			Atom inAtom = aminoAcids.get(0).getFrag().getDefaultInAtom();
+			Atom inAtom = aminoAcids.get(0).getFrag().getDefaultInAtomOrFirstAtom();
 
 			state.fragManager.createBond(outAtom, inAtom, peptideBr.getOutAtom(0).getValency());
 			peptideBr.removeAllOutAtoms();

@@ -982,7 +982,7 @@ class StructureBuildingMethods {
 								}
 
 								//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-								if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true) != null){
+								if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtomOrFirstAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true) != null){
 									break;
 								}
 							}
@@ -1017,7 +1017,7 @@ class StructureBuildingMethods {
 							}
 
 							//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-							if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true) != null){
+							if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtomOrFirstAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true) != null){
 								break;
 							}
 						}
@@ -1219,7 +1219,7 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							atomToJoinTo = multipliedFrag.getAtomOrNextSuitableAtomOrThrow(multipliedFrag.getDefaultInAtom(), 1, true);
+							atomToJoinTo = multipliedFrag.getAtomOrNextSuitableAtomOrThrow(multipliedFrag.getDefaultInAtomOrFirstAtom(), 1, true);
 							inLocants.remove(j);
 							break;
 						}
@@ -1610,12 +1610,13 @@ class StructureBuildingMethods {
 	private static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder) {
 		List<Atom> atomList = frag.getAtomList();
 		int atomCount = atomList.size();
-		int startingIndex = atomList.indexOf(frag.getDefaultInAtom());
+		Atom defaultInAtom = frag.getDefaultInAtom();
+		int startingIndex = defaultInAtom != null ? atomList.indexOf(defaultInAtom) : 0;
 		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
 		List<Atom> substitutableAtoms = new ArrayList<Atom>();
 		for (int i = 0; i < atomCount; i++) {//aromaticity preserved and standard valency assumed
 			Atom atom = atoms.next();
-			if (!FragmentTools.isCharacteristicAtom(atom)){
+			if (!FragmentTools.isCharacteristicAtom(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
 				int currentExpectedValency = atom.determineValency(true);
 				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
 				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
@@ -1630,7 +1631,7 @@ class StructureBuildingMethods {
 		substitutableAtoms.clear();
 		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, non functional suffixes substitutable
 			Atom atom = atoms.next();
-			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom)){
+			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
 				int currentExpectedValency = atom.determineValency(true);
 				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
 				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);

@@ -538,13 +538,13 @@ class FunctionalReplacement {
 				}
 				else{
 					atomsThatWouldBeSubstituted.clear();
-					atomsThatWouldBeSubstituted.add(acidFrag.getDefaultInAtom());
+					atomsThatWouldBeSubstituted.add(acidFrag.getDefaultInAtomOrFirstAtom());
 					break;
 				}
 			}
 		}
 		else{
-			atomsThatWouldBeSubstituted.add(acidFrag.getDefaultInAtom());
+			atomsThatWouldBeSubstituted.add(acidFrag.getDefaultInAtomOrFirstAtom());
 		}
 		for (Atom atom : atomsThatWouldBeSubstituted) {
 			if (StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom) < hydrogenRequiredForSubstitutionInterpretation){
