@@ -1219,7 +1219,7 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							atomToJoinTo = multipliedFrag.getAtomOrNextSuitableAtomOrThrow(multipliedFrag.getDefaultInAtomOrFirstAtom(), 1, true);
+							atomToJoinTo = FragmentTools.findAtomForSubstitutionOrThrow(multipliedFrag, 1);
 							inLocants.remove(j);
 							break;
 						}
@@ -1240,7 +1240,7 @@ class StructureBuildingMethods {
 					Atom from = out.getAtom();
 					int bondOrder = out.getValency();
 					if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-						from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder, false);
+						from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
 					}
 					multiRadicalFrag.removeOutAtom(out);
 
@@ -1447,7 +1447,7 @@ class StructureBuildingMethods {
 		Atom to = in.getAtom();
 		int bondOrder = in.getValency();
 		if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			to = to.getFrag().getAtomOrNextSuitableAtomOrThrow(to, bondOrder, false);
+			to = FragmentTools.findAtomForSubstitutionOrThrow(to.getFrag(), to, bondOrder, false);
 		}
 		parentFrag.removeOutAtom(in);
 
@@ -1488,7 +1488,7 @@ class StructureBuildingMethods {
 
 		Atom from = out.getAtom();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder, false);
+			from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
 		}
 		fragToBeJoined.removeOutAtom(out);
 
@@ -1518,7 +1518,7 @@ class StructureBuildingMethods {
 		Atom from = out.getAtom();
 		int bondOrder = out.getValency();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			from=from.getFrag().getAtomOrNextSuitableAtomOrThrow(from, bondOrder, false);
+			from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
 		}
 		fragToBeJoined.removeOutAtom(out);
 
@@ -1557,11 +1557,11 @@ class StructureBuildingMethods {
 		}
 		else{
 			int index = atomList.indexOf(firstAtomToJoinTo);
-			if (index +1 >= atomList.size()){
-				secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index-1), 1, true);
+			if (index +1 >= atomList.size()) {
+				secondAtomToJoinTo = FragmentTools.findAtomForSubstitutionOrThrow(fragToJoinTo, atomList.get(index - 1), 1, true);
 			}
 			else{
-				secondAtomToJoinTo = fragToJoinTo.getAtomOrNextSuitableAtomOrThrow(atomList.get(index+1), 1, true);
+				secondAtomToJoinTo = FragmentTools.findAtomForSubstitutionOrThrow(fragToJoinTo, atomList.get(index + 1), 1, true);
 			}
 		}
 		Atom chalcogenAtom2 = bridgingFragment.getOutAtom(0).getAtom();

@@ -1127,20 +1127,22 @@ class StructureBuilder {
 			throw new StructureBuildingException("Glycol functional class not found where expected");
 		}
 		
-		Atom outAtom1 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(0).getAtom(), theDiRadical.getOutAtom(0).getValency(), false);
+		OutAtom outAtom1 = theDiRadical.getOutAtom(0);
+		Atom chosenAtom1 = FragmentTools.findAtomForSubstitutionOrThrow(theDiRadical, outAtom1.getAtom(), outAtom1.getValency(), false);
 		Fragment functionalFrag =state.fragManager.buildSMILES(functionalClassEls.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
-		if (theDiRadical.getOutAtom(0).getValency() !=1){
-			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(0).getValency());
+		if (outAtom1.getValency() != 1){
+			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + outAtom1.getValency());
 		}
-		state.fragManager.createBond(outAtom1, functionalFrag.getFirstAtom(), 1);
+		state.fragManager.createBond(chosenAtom1, functionalFrag.getFirstAtom(), 1);
 		state.fragManager.incorporateFragment(functionalFrag, theDiRadical);
 		
-		Atom outAtom2 = theDiRadical.getAtomOrNextSuitableAtomOrThrow(theDiRadical.getOutAtom(1).getAtom(), theDiRadical.getOutAtom(1).getValency(), false);
+		OutAtom outAtom2 = theDiRadical.getOutAtom(1);
+		Atom chosenAtom2 = FragmentTools.findAtomForSubstitutionOrThrow(theDiRadical, outAtom2.getAtom(), outAtom2.getValency(), false);
 		Fragment hydroxy =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
-		if (theDiRadical.getOutAtom(1).getValency() !=1){
-			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + theDiRadical.getOutAtom(1).getValency());
+		if (outAtom2.getValency() != 1){
+			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + outAtom2.getValency());
 		}
-		state.fragManager.createBond(outAtom2, hydroxy.getFirstAtom(), 1);
+		state.fragManager.createBond(chosenAtom2, hydroxy.getFirstAtom(), 1);
 		state.fragManager.incorporateFragment(hydroxy, theDiRadical);
 		theDiRadical.removeOutAtom(1);
 		theDiRadical.removeOutAtom(0);

@@ -4366,7 +4366,7 @@ class ComponentProcessor {
 								} else {
 									fragAtomToUse = atomList.get(defaultAtom);
 								}
-								fragAtomToUse = frag.getAtomOrNextSuitableAtomOrThrow(fragAtomToUse, bondOrderRequired, true);
+								fragAtomToUse = FragmentTools.findAtomForSubstitutionOrThrow(frag, fragAtomToUse, bondOrderRequired, true);
 								if (FragmentTools.isCharacteristicAtom(fragAtomToUse)){
 									throw new StructureBuildingException("No suitable atom found to attach suffix");
 								}
