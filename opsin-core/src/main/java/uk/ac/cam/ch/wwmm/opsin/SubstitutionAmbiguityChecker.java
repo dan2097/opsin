@@ -1,7 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
@@ -17,9 +15,7 @@ class SubstitutionAmbiguityChecker {
 		if (substitutableAtoms.size() == numberToBeSubstituted){
 			return false;
 		}
-		Fragment frag = substitutableAtoms.get(0).getFrag();
-		if (numberToBeSubstituted ==1 && (frag.getTokenEl().getAttribute(DEFAULTINID_ATR)!= null || frag.getTokenEl().getAttribute(DEFAULTINLOCANT_ATR)!=null)) {
-			//TODO this is far too crude
+		if (numberToBeSubstituted ==1 && substitutableAtoms.get(0).equals(substitutableAtoms.get(0).getFrag().getDefaultInAtom())) {
 			return false;
 		}
 		Set<Atom> uniqueAtoms = new HashSet<Atom>(substitutableAtoms);
