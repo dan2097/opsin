@@ -364,7 +364,6 @@ class Atom {
 		charge = 0;
 		protonsExplicitlyAddedOrRemoved = 0;
 	}
-	
 
 	/**
 	 * Gets the mass number of the atom or null if not explicitly defined
