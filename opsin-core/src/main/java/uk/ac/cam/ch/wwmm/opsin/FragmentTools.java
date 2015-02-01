@@ -1164,6 +1164,26 @@ class FragmentTools {
 	
 	/**
 	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * The defaultInAtom in this case is the provided preferredAtom
+	 * takeIntoAccountOutValency may be set to false for cases where the position of radicals is being determined
+	 * Throws an exception if no suitable atom can be found
+	 * @param frag
+	 * @param preferredAtom
+	 * @param bondOrder
+	 * @param takeIntoAccountOutValency
+	 * @return
+	 * @throws StructureBuildingException 
+	 */
+	static Atom findAtomForSubstitutionOrThrow(Fragment frag, Atom preferredAtom, int bondOrder, boolean takeIntoAccountOutValency) throws StructureBuildingException {
+		Atom a = findAtomForSubstitution(frag, preferredAtom, bondOrder, takeIntoAccountOutValency);
+		if (a == null) {
+			throw new StructureBuildingException("No suitable atom found");
+		}
+		return a;
+	}
+	
+	/**
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
 	 * Return null if no suitable atom can be found
 	 * @param frag
 	 * @param bondOrder

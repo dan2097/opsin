@@ -88,7 +88,7 @@ class BuildResults {
 			return outAtom.getAtom();
 		}
 		else{
-			return outAtom.getAtom().getFrag().getAtomOrNextSuitableAtomOrThrow(outAtom.getAtom(), outAtom.getValency(), false);
+			return FragmentTools.findAtomForSubstitutionOrThrow(outAtom.getAtom().getFrag(), outAtom.getAtom(), outAtom.getValency(), false);
 		}
 	}
 

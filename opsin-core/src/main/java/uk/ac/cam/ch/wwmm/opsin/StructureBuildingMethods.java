@@ -823,7 +823,7 @@ class StructureBuildingMethods {
 			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
 				OutAtom outAtom = thisFrag.getOutAtom(i);
 				if (!outAtom.isSetExplicitly()){
-					Atom atomToAssociateOutAtomWith = thisFrag.getAtomOrNextSuitableAtom(outAtom.getAtom(), outAtom.getValency(), true);
+					Atom atomToAssociateOutAtomWith = FragmentTools.findAtomForSubstitution(thisFrag, outAtom.getAtom(), outAtom.getValency(), true);
 		            if (atomToAssociateOutAtomWith == null){
 		            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 	                }
@@ -1017,7 +1017,7 @@ class StructureBuildingMethods {
 							}
 
 							//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-							if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtomOrFirstAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true) != null){
+							if (FragmentTools.findAtomForSubstitution(lastFrag, frag.getOutAtom(outAtomCount - 1).getValency()) != null){
 								break;
 							}
 						}
