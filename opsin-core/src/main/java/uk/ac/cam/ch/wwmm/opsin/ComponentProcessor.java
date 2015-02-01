@@ -2925,8 +2925,8 @@ class ComponentProcessor {
 						atomOnLatestClone = clone.getOutAtom(0).getAtom();
 					}
 					else{
-						atomOnParent =fragmentToResolveAndDuplicate.getAtomOrNextSuitableAtomOrThrow(fragmentToResolveAndDuplicate.getDefaultInAtomOrFirstAtom(), bondOrder, true);
-						atomOnLatestClone = clone.getAtomOrNextSuitableAtomOrThrow(clone.getDefaultInAtomOrFirstAtom(), bondOrder, true);
+						atomOnParent = FragmentTools.findAtomForSubstitutionOrThrow(fragmentToResolveAndDuplicate, bondOrder);
+						atomOnLatestClone = FragmentTools.findAtomForSubstitutionOrThrow(clone, bondOrder);
 					}
 				}
 				if (fragmentToResolveAndDuplicate.getOutAtomCount()>0){
@@ -3197,7 +3197,7 @@ class ComponentProcessor {
 				atomToBeReplaced = previousFrag.getAtomByLocantOrThrow(locant1);
 			}
 			else{
-				atomToBeReplaced = previousFrag.getAtomOrNextSuitableAtomOrThrow(previousFrag.getFirstAtom(), 2, true);
+				atomToBeReplaced = FragmentTools.findAtomForSubstitutionOrThrow(previousFrag, 2);
 			}
 			Atom atomOnParentFrag;
 			String locant2 =null;
@@ -3215,7 +3215,7 @@ class ComponentProcessor {
 				atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(locant2);
 			}
 			else{
-				atomOnParentFrag = parentFrag.getAtomOrNextSuitableAtomOrThrow(parentFrag.getFirstAtom(), 2, true);
+				atomOnParentFrag = FragmentTools.findAtomForSubstitutionOrThrow(parentFrag, 2);
 			}
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnParentFrag);
 			if (atomToBeReplaced.hasSpareValency()){
@@ -3486,7 +3486,7 @@ class ComponentProcessor {
 				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtomOrFirstAtom());
 			}
 			else{
-				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getDefaultInAtomOrFirstAtom(), 1, true));
+				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, FragmentTools.findAtomForSubstitutionOrThrow(ringFrag, 1));
 			}
 			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
 			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
@@ -4285,7 +4285,7 @@ class ComponentProcessor {
 					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
 				}
 				else{
-					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomOrNextSuitableAtomOrThrow(ringFrag.getFirstAtom(), 1, true) , 1);
+					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), FragmentTools.findAtomForSubstitutionOrThrow(ringFrag, 1) , 1);
 				}
 				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);
 			}
