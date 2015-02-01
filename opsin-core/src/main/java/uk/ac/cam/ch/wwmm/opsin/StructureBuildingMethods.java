@@ -239,24 +239,28 @@ class StructureBuildingMethods {
 					performPerHalogenoSubstitution(state, frag, subBracketOrRoot);
 				}
 				else{
-					Atom atomToJoinTo = null;
+					List<Atom> atomsToJoinTo = null;
 					if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
 						List<Fragment> possibleParents = findAlternativeFragments(subBracketOrRoot);
 						for (Fragment fragment : possibleParents) {
 							List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(fragment);
-							if (hydroxyAtoms.size() > 0){
-								atomToJoinTo = hydroxyAtoms.get(0);
+							if (hydroxyAtoms.size() >= 1){
+								atomsToJoinTo = hydroxyAtoms;
 							}
 							break;
 						}
 					}
-					if (atomToJoinTo ==null) {
-					  atomToJoinTo = findAtomForSubstitution(subBracketOrRoot, frag.getOutAtom(0).getValency());
+					if (atomsToJoinTo == null) {
+						atomsToJoinTo = findAtomsForSubstitution(subBracketOrRoot, 1, frag.getOutAtom(0).getValency());
 					}
-					if (atomToJoinTo ==null){
+					if (atomsToJoinTo == null){
 						throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 					}
-					joinFragmentsSubstitutively(state, frag, atomToJoinTo);
+					boolean isAmbiguous = SubstitutionAmbiguityChecker.isSubstitutionAmbiguous(atomsToJoinTo, 1);
+					if (isAmbiguous){
+						state.addWarningMessage("Name appears to be ambiguous");
+					}
+					joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(0));
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 			}
@@ -348,21 +352,88 @@ class StructureBuildingMethods {
 				currentElement = subOrBracket;
 			}
 			multipliedElements.add(currentElement);
-			parentWordOrBracket.insertChild(currentElement, indexOfSubOrBracket);
 			if (locants != null){
+				parentWordOrBracket.insertChild(currentElement, indexOfSubOrBracket);
 				currentElement.getAttribute(LOCANT_ATR).setValue(locants[i]);
 				performLocantedSubstitutiveOperations(state, currentElement);
+				currentElement.detach();
 			}
-			else{
-				performUnLocantedSubstitutiveOperations(state, currentElement);
-			}
-			currentElement.detach();
+		}
+		if (locants == null) {
+			parentWordOrBracket.insertChild(multipliedElements.get(0), indexOfSubOrBracket);
+			performUnlocantedSubstitutiveOperations(state, multipliedElements);
+			multipliedElements.get(0).detach();
 		}
 		for (Element multipliedElement : multipliedElements) {//attach all the multiplied subs/brackets
 			parentWordOrBracket.insertChild(multipliedElement, indexOfSubOrBracket);
 		}
 		for (Element el : elementsNotToBeMultiplied) {//re-add anything before multiplier to original subOrBracket
 			subOrBracket.insertChild(el, 0);
+		}
+	}
+
+	private static void performUnlocantedSubstitutiveOperations(BuildState state, List<Element> multipliedElements) throws StructureBuildingException {
+		int numOfSubstituents = multipliedElements.size();
+		Element subBracketOrRoot = multipliedElements.get(0);
+		Element group;
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)){
+			group = findRightMostGroupInBracket(subBracketOrRoot);
+		}
+		else{
+			group = subBracketOrRoot.getFirstChildElement(GROUP_EL);
+		}
+		Fragment frag = group.getFrag();
+		if (frag.getOutAtomCount() >= 1){
+			if (subBracketOrRoot.getAttribute(LOCANT_ATR) != null){
+				throw new RuntimeException("Substituent has an unused outAtom and has a locant but locanted substitution should already been been performed!");
+			}
+			if (PERHALOGENO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+				throw new StructureBuildingException(group.getValue() + " cannot be multiplied");
+			}
+			if (frag.getOutAtomCount() > 1){
+				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
+			}
+			List<Atom> atomsToJoinTo = null;
+			if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && frag.getOutAtom(0).getValency() == 1){
+				List<Fragment> possibleParents = findAlternativeFragments(subBracketOrRoot);
+				for (Fragment fragment : possibleParents) {
+					List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(fragment);
+					if (hydroxyAtoms.size() >= numOfSubstituents){
+						atomsToJoinTo = hydroxyAtoms;
+					}
+					break;
+				}
+			}
+			if (atomsToJoinTo == null) {
+				atomsToJoinTo = findAtomsForSubstitution(subBracketOrRoot, numOfSubstituents, frag.getOutAtom(0).getValency());
+			}
+			if (atomsToJoinTo == null) {
+				throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
+			}
+			boolean isAmbiguous = SubstitutionAmbiguityChecker.isSubstitutionAmbiguous(atomsToJoinTo, numOfSubstituents);
+			if (isAmbiguous){
+				state.addWarningMessage("Name appears to be ambiguous");
+			}
+
+			joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(0));
+			group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
+			
+			for (int i = 1; i < numOfSubstituents; i++) {
+				subBracketOrRoot = multipliedElements.get(i);
+				if (subBracketOrRoot.getName().equals(BRACKET_EL)){
+					group = findRightMostGroupInBracket(subBracketOrRoot);
+				}
+				else{
+					group = subBracketOrRoot.getFirstChildElement(GROUP_EL);
+				}
+				frag = group.getFrag();
+				if (frag.getOutAtomCount() > 1){//TODO do this prior to multiplication?
+					checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
+				}
+				
+				joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(i));
+				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
+			}
 		}
 	}
 
@@ -1504,17 +1575,117 @@ class StructureBuildingMethods {
 		CycleDetector.assignWhetherAtomsAreInCycles(bridgingFragment);
 		return new Atom[]{firstAtomToJoinTo, secondAtomToJoinTo};
 	}
-
-	private static Atom findAtomForSubstitution(Element subOrBracket, int bondOrder)  {
-		Atom to = null;
+	
+	/**
+	 * Attempts to find an in-scope fragment capable of forming the given numberOfSubstitutions each with the given bondOrder
+	 * @param subOrBracket
+	 * @param numberOfSubstitutions
+	 * @param bondOrder
+	 * @return
+	 */
+	private static List<Atom> findAtomsForSubstitution(Element subOrBracket, int numberOfSubstitutions, int bondOrder) {
 		List<Fragment> possibleParents = findAlternativeFragments(subOrBracket);
 		for (Fragment fragment : possibleParents) {
-			to = fragment.getAtomOrNextSuitableAtom(fragment.getDefaultInAtom(), bondOrder, true);
-			if (to != null){
-				break;
+			List<Atom> substitutableAtoms = findAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
+			if (substitutableAtoms.size() >= numberOfSubstitutions){
+				return substitutableAtoms;
 			}
 		}
-		return to;
+		return null;
+	}
+
+	/**
+	 * Takes an id and additional valency required. Returns the atom associated with that id if adding the specified valency will not violate
+	 * that atom type's maximum valency.
+	 * If this is not possible it iterates sequentially through all atoms in the fragment till one is found
+	 * Spare valency is initially taken into account so that the atom is not dearomatised
+	 * If this is impossible to accomplish dearomatisation is done
+	 * If an atom is still not found an exception is thrown
+	 * atoms belonging to suffixes are never selected unless the original id specified was a suffix atom
+	 * @param fragment
+	 * @param numberOfSubstitutionsDesired
+	 * @param bondOrder
+	 * @return
+	 */
+	private static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder) {
+		List<Atom> atomList = frag.getAtomList();
+		int atomCount = atomList.size();
+		int startingIndex = atomList.indexOf(frag.getDefaultInAtom());
+		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
+		List<Atom> substitutableAtoms = new ArrayList<Atom>();
+		for (int i = 0; i < atomCount; i++) {//aromaticity preserved and standard valency assumed
+			Atom atom = atoms.next();
+			if (!FragmentTools.isCharacteristicAtom(atom)){
+				int currentExpectedValency = atom.determineValency(true);
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, non functional suffixes substitutable
+			Atom atom = atoms.next();
+			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom)){
+				int currentExpectedValency = atom.determineValency(true);
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+		
+		for (int i = 0; i < atomCount; i++) {//aromaticity preserved any suffix substitutable
+			Atom atom = atoms.next();
+			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
+			if (maximumValency != null) {
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+			else{
+				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+
+		for (int i = 0; i < atomCount; i++) {//aromaticity dropped, anything substitutable
+			Atom atom = atoms.next();
+			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
+			if (maximumValency != null) {
+				int usedValency = atom.getIncomingValency() + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+			else {
+				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+		return substitutableAtoms;
 	}
 
 	/**
