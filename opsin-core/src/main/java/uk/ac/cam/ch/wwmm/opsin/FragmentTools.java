@@ -1040,4 +1040,105 @@ class FragmentTools {
 		}
 		return hydroxyAtoms;
 	}
+	
+	
+	/**
+	 * Returns a list of atoms of size >= numberOfSubstitutionsDesired (or null if this not possible)
+	 * An atom must have have sufficient valency to support a substituent requiring a bond of order bondOrder
+	 * If an atom can support multiple substituents it will appear in the list multiple times
+	 * This method iterates over the the fragment atoms attempting to fulfil these requirements with incrementally more lenient constraints:
+	 * aromaticity preserved, standard valency assumed, characteristic atoms ignored
+	 * aromaticity preserved, standard valency assumed, functional suffixes ignored
+	 * aromaticity preserved, any sensible valency allowed, anything substitutable
+	 * aromaticity dropped, any sensible valency allowed, anything substitutable
+	 * @param frag
+	 * @param numberOfSubstitutionsDesired
+	 * @param bondOrder
+	 * @return
+	 */
+	static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder) {
+		return findAtomsForSubstitution(frag, numberOfSubstitutionsDesired, bondOrder, true);
+	}
+
+	private static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder, boolean takeIntoAccountOutValency) {
+		List<Atom> atomList = frag.getAtomList();
+		int atomCount = atomList.size();
+		Atom defaultInAtom = frag.getDefaultInAtom();
+		int startingIndex = defaultInAtom != null ? atomList.indexOf(defaultInAtom) : 0;
+		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
+		List<Atom> substitutableAtoms = new ArrayList<Atom>();
+		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, characteristic atoms ignored
+			Atom atom = atoms.next();
+			if (!FragmentTools.isCharacteristicAtom(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
+				int currentExpectedValency = atom.determineValency(true);
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, functional suffixes ignored
+			Atom atom = atoms.next();
+			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
+				int currentExpectedValency = atom.determineValency(true);
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+		
+		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, any sensible valency allowed, anything substitutable
+			Atom atom = atoms.next();
+			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
+			if (maximumValency != null) {
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+			else{
+				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+
+		for (int i = 0; i < atomCount; i++) {//aromaticity dropped, any sensible valency allowed, anything substitutable
+			Atom atom = atoms.next();
+			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
+			if (maximumValency != null) {
+				int usedValency = atom.getIncomingValency() + atom.getOutValency();
+				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
+				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+			else {
+				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
+					substitutableAtoms.add(atom);
+				}
+			}
+		}
+		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+			return substitutableAtoms;
+		}
+		substitutableAtoms.clear();
+		return substitutableAtoms;
+	}
 }
