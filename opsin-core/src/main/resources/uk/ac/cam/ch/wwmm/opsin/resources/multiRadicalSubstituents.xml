@@ -45,10 +45,10 @@
 		<token value="NN" outIDs="1,2" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">hydrazo</token>
 		<token value="=NN=" labels="none">azino</token>
 		<token value="N=N" labels="none" outIDs="1,2" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">azo</token>
-		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" defaultInID="2" acceptsAdditiveBonds="yes">azoxy</token>
-		<token value="N=[NH+][O-]" labels="none" outIDs="1,2" usableAsAJoiner="yes" defaultInID="2" acceptsAdditiveBonds="yes">nno-azoxy</token>
-		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" defaultInID="2" acceptsAdditiveBonds="yes">non-azoxy</token>
-		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" defaultInID="3" acceptsAdditiveBonds="yes">onn-azoxy</token>
+		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">azoxy</token><!--unknown oxygen position-->
+		<token value="N=[NH+][O-]" labels="none" outIDs="1,2" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">nno-azoxy</token>
+		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">non-azoxy</token><!--unknown oxygen position-->
+		<token value="[NH+]([O-])=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">onn-azoxy</token>
 		<token value="NN=N" labels="none" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">diazoamino</token>
 		<token value="N" labels="none" outIDs="1,1">nitrene</token>
 		<token value="N" labels="none" outIDs="1,1">aminylene</token>
