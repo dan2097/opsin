@@ -982,7 +982,7 @@ class StructureBuildingMethods {
 								}
 
 								//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-								if (lastFrag.getAtomOrNextSuitableAtom(lastFrag.getDefaultInAtomOrFirstAtom(), frag.getOutAtom(outAtomCount-1).getValency(), true) != null){
+								if (FragmentTools.findAtomForSubstitution(lastFrag, frag.getOutAtom(outAtomCount - 1).getValency()) != null){
 									break;
 								}
 							}
@@ -1587,7 +1587,7 @@ class StructureBuildingMethods {
 		List<Fragment> possibleParents = findAlternativeFragments(subOrBracket);
 		for (Fragment fragment : possibleParents) {
 			List<Atom> substitutableAtoms = FragmentTools.findAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
-			if (substitutableAtoms.size() >= numberOfSubstitutions){
+			if (substitutableAtoms != null){
 				return substitutableAtoms;
 			}
 		}

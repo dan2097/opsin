@@ -1041,6 +1041,19 @@ class FragmentTools {
 		return hydroxyAtoms;
 	}
 	
+	/**
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * @param frag
+	 * @param bondOrder
+	 * @return
+	 */
+	static Atom findAtomForSubstitution(Fragment frag, int bondOrder) {
+		List<Atom> atoms = findAtomsForSubstitution(frag, 1, bondOrder);
+		if (atoms != null) {
+			return atoms.get(0);
+		}
+		return null;
+	}
 	
 	/**
 	 * Returns a list of atoms of size >= numberOfSubstitutionsDesired (or null if this not possible)
@@ -1051,25 +1064,28 @@ class FragmentTools {
 	 * aromaticity preserved, standard valency assumed, functional suffixes ignored
 	 * aromaticity preserved, any sensible valency allowed, anything substitutable
 	 * aromaticity dropped, any sensible valency allowed, anything substitutable
+	 * 
+	 * Iteration starts from the defaultInAtom (if applicable, else the first atom) i.e. the defaultInAtom if substitutable will be the first atom in the list
 	 * @param frag
-	 * @param numberOfSubstitutionsDesired
+	 * @param numberOfSubstitutionsRequired
 	 * @param bondOrder
 	 * @return
 	 */
-	static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder) {
-		return findAtomsForSubstitution(frag, numberOfSubstitutionsDesired, bondOrder, true);
+	static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsRequired, int bondOrder) {
+		return findAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), numberOfSubstitutionsRequired, bondOrder, true);
 	}
 
-	private static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder, boolean takeIntoAccountOutValency) {
-		List<Atom> atomList = frag.getAtomList();
+	private static List<Atom> findAtomsForSubstitution(List<Atom> atomList, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
 		int atomCount = atomList.size();
-		Atom defaultInAtom = frag.getDefaultInAtom();
-		int startingIndex = defaultInAtom != null ? atomList.indexOf(defaultInAtom) : 0;
+		int startingIndex = preferredAtom != null ? atomList.indexOf(preferredAtom) : 0;
+		if (startingIndex < 0){
+			throw new IllegalArgumentException("OPSIN Bug: preferredAtom should be part of the list of atoms to search through");
+		}
 		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
 		List<Atom> substitutableAtoms = new ArrayList<Atom>();
 		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, characteristic atoms ignored
 			Atom atom = atoms.next();
-			if (!FragmentTools.isCharacteristicAtom(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
+			if (!FragmentTools.isCharacteristicAtom(atom) || (numberOfSubstitutionsRequired == 1 && atom == preferredAtom)) {
 				int currentExpectedValency = atom.determineValency(true);
 				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
 				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
@@ -1078,13 +1094,13 @@ class FragmentTools {
 				}
 			}
 		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+		if (substitutableAtoms.size() >= numberOfSubstitutionsRequired){
 			return substitutableAtoms;
 		}
 		substitutableAtoms.clear();
 		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, functional suffixes ignored
 			Atom atom = atoms.next();
-			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
+			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom) || (numberOfSubstitutionsRequired == 1 && atom == preferredAtom)) {
 				int currentExpectedValency = atom.determineValency(true);
 				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
 				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
@@ -1093,7 +1109,7 @@ class FragmentTools {
 				}
 			}
 		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+		if (substitutableAtoms.size() >= numberOfSubstitutionsRequired){
 			return substitutableAtoms;
 		}
 		substitutableAtoms.clear();
@@ -1109,12 +1125,12 @@ class FragmentTools {
 				}
 			}
 			else{
-				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
+				for (int j = 0; j < numberOfSubstitutionsRequired; j++) {
 					substitutableAtoms.add(atom);
 				}
 			}
 		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+		if (substitutableAtoms.size() >= numberOfSubstitutionsRequired){
 			return substitutableAtoms;
 		}
 		substitutableAtoms.clear();
@@ -1130,15 +1146,14 @@ class FragmentTools {
 				}
 			}
 			else {
-				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
+				for (int j = 0; j < numberOfSubstitutionsRequired; j++) {
 					substitutableAtoms.add(atom);
 				}
 			}
 		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
+		if (substitutableAtoms.size() >= numberOfSubstitutionsRequired){
 			return substitutableAtoms;
 		}
-		substitutableAtoms.clear();
-		return substitutableAtoms;
+		return null;
 	}
 }
