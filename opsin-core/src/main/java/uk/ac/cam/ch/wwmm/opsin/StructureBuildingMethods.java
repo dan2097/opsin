@@ -1586,107 +1586,12 @@ class StructureBuildingMethods {
 	private static List<Atom> findAtomsForSubstitution(Element subOrBracket, int numberOfSubstitutions, int bondOrder) {
 		List<Fragment> possibleParents = findAlternativeFragments(subOrBracket);
 		for (Fragment fragment : possibleParents) {
-			List<Atom> substitutableAtoms = findAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
+			List<Atom> substitutableAtoms = FragmentTools.findAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
 			if (substitutableAtoms.size() >= numberOfSubstitutions){
 				return substitutableAtoms;
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Takes an id and additional valency required. Returns the atom associated with that id if adding the specified valency will not violate
-	 * that atom type's maximum valency.
-	 * If this is not possible it iterates sequentially through all atoms in the fragment till one is found
-	 * Spare valency is initially taken into account so that the atom is not dearomatised
-	 * If this is impossible to accomplish dearomatisation is done
-	 * If an atom is still not found an exception is thrown
-	 * atoms belonging to suffixes are never selected unless the original id specified was a suffix atom
-	 * @param fragment
-	 * @param numberOfSubstitutionsDesired
-	 * @param bondOrder
-	 * @return
-	 */
-	private static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsDesired, int bondOrder) {
-		List<Atom> atomList = frag.getAtomList();
-		int atomCount = atomList.size();
-		Atom defaultInAtom = frag.getDefaultInAtom();
-		int startingIndex = defaultInAtom != null ? atomList.indexOf(defaultInAtom) : 0;
-		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
-		List<Atom> substitutableAtoms = new ArrayList<Atom>();
-		for (int i = 0; i < atomCount; i++) {//aromaticity preserved and standard valency assumed
-			Atom atom = atoms.next();
-			if (!FragmentTools.isCharacteristicAtom(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
-				int currentExpectedValency = atom.determineValency(true);
-				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
-				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
-				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
-					substitutableAtoms.add(atom);
-				}
-			}
-		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
-			return substitutableAtoms;
-		}
-		substitutableAtoms.clear();
-		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, non functional suffixes substitutable
-			Atom atom = atoms.next();
-			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom) || (numberOfSubstitutionsDesired == 1 && atom == defaultInAtom)) {
-				int currentExpectedValency = atom.determineValency(true);
-				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
-				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
-				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
-					substitutableAtoms.add(atom);
-				}
-			}
-		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
-			return substitutableAtoms;
-		}
-		substitutableAtoms.clear();
-		
-		for (int i = 0; i < atomCount; i++) {//aromaticity preserved any suffix substitutable
-			Atom atom = atoms.next();
-			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
-			if (maximumValency != null) {
-				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
-				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
-				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
-					substitutableAtoms.add(atom);
-				}
-			}
-			else{
-				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
-					substitutableAtoms.add(atom);
-				}
-			}
-		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
-			return substitutableAtoms;
-		}
-		substitutableAtoms.clear();
-
-		for (int i = 0; i < atomCount; i++) {//aromaticity dropped, anything substitutable
-			Atom atom = atoms.next();
-			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
-			if (maximumValency != null) {
-				int usedValency = atom.getIncomingValency() + atom.getOutValency();
-				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
-				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
-					substitutableAtoms.add(atom);
-				}
-			}
-			else {
-				for (int j = 0; j < numberOfSubstitutionsDesired; j++) {
-					substitutableAtoms.add(atom);
-				}
-			}
-		}
-		if (substitutableAtoms.size() >= numberOfSubstitutionsDesired){
-			return substitutableAtoms;
-		}
-		substitutableAtoms.clear();
-		return substitutableAtoms;
 	}
 
 	/**
