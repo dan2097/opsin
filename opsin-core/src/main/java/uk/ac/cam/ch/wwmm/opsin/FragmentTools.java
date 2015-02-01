@@ -1041,7 +1041,7 @@ class FragmentTools {
 		return hydroxyAtoms;
 	}
 	
-	private static List<Atom> findAtomsForSubstitution(List<Atom> atomList, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
+	static List<Atom> findAtomsForSubstitution(List<Atom> atomList, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
 		int atomCount = atomList.size();
 		int startingIndex = preferredAtom != null ? atomList.indexOf(preferredAtom) : 0;
 		if (startingIndex < 0){

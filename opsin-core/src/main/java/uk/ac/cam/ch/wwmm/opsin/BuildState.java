@@ -53,4 +53,11 @@ class BuildState {
 		}
 		warningMessages.add(warningMessage);
 	}
+
+	void checkForAmbiguity(List<Atom> substituentPoints, int numberOfSubstitutionsRequired) {
+		boolean isAmbiguous = SubstitutionAmbiguityChecker.isSubstitutionAmbiguous(substituentPoints, numberOfSubstitutionsRequired);
+		if (isAmbiguous){
+			addWarningMessage("Name appears to be ambiguous");
+		}
+	}
 }
