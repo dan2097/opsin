@@ -357,7 +357,6 @@ class FragmentManager {
 		Fragment newFragment = new Fragment(tokenEl);
 		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
-		Atom defaultInAtom =originalFragment.getDefaultInAtom();
 		for (Atom atom : atomList) {
 			int id = idManager.getNextID();
 			ArrayList<String> newLocants = new ArrayList<String>(atom.getLocants());
@@ -444,7 +443,9 @@ class FragmentManager {
 			FunctionalAtom functionalAtom = originalFragment.getFunctionalAtom(i);
 			newFragment.addFunctionalAtom(oldToNewAtomMap.get(functionalAtom.getAtom()));
 		}
-		newFragment.setDefaultInAtom(oldToNewAtomMap.get(defaultInAtom));
+		if (originalFragment.getDefaultInAtom() != null) {
+			newFragment.setDefaultInAtom(oldToNewAtomMap.get(originalFragment.getDefaultInAtom()));
+		}
 		Set<Bond> bondSet =originalFragment.getBondSet();
 		for (Bond bond : bondSet) {
 			Bond newBond = createBond(oldToNewAtomMap.get(bond.getFromAtom()), oldToNewAtomMap.get(bond.getToAtom()), bond.getOrder());

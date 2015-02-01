@@ -46,9 +46,9 @@ class Fragment {
 	 * Initially empty */
 	private final List<FunctionalAtom> functionalAtoms = new ArrayList<FunctionalAtom>();
 
-	/**The atom that fragments connecting to this fragment connect to if a locant has not been specified
-	 * Defaults to the first atom to be added to the fragment. This is typically the one with locant 1
-	 * but allows for fragments with no locants. Can be overridden*/
+	/**The atom that fragments connecting to this fragment should connect to in preference
+	 * e.g. for amino acids the alpha amino group
+	 * Null by default*/
 	private Atom defaultInAtom = null;
 
 	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES level.*/
@@ -76,9 +76,6 @@ class Fragment {
 
 	/**Adds an atom to the fragment and associates it with this fragment*/
 	void addAtom(Atom atom) {
-		if (defaultInAtom == null){//the first atom added becomes the defaultInAtom
-			defaultInAtom = atom;
-		}
 		List<String> locants =atom.getLocants();
 		for (String locant: locants) {
 			atomMapFromLocant.put(locant, atom);
@@ -503,7 +500,7 @@ class Fragment {
 			atomMapFromLocant.remove(l);
 		}
 		if (defaultInAtom == atom){
-			defaultInAtom = getFirstAtom();
+			defaultInAtom = null;
 		}
 	}
 	/**
@@ -517,13 +514,17 @@ class Fragment {
 		}
 		return charge;
 	}
-
+	
 	Atom getDefaultInAtom() {
 		return defaultInAtom;
 	}
 
 	void setDefaultInAtom(Atom inAtom) {
 		this.defaultInAtom = inAtom;
+	}
+	
+	Atom getDefaultInAtomOrFirstAtom() {
+		return defaultInAtom != null ? defaultInAtom : getFirstAtom();
 	}
 
 	/**
