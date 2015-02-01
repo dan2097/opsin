@@ -2885,22 +2885,24 @@ class ComponentProcessor {
 			OpsinTools.insertAfter(multiplier, group);
 
 			int bondOrder = 1;
-			if (fragmentToResolveAndDuplicate.getOutAtomCount()>0){//e.g. bicyclohexanylidene
-				bondOrder =fragmentToResolveAndDuplicate.getOutAtom(0).getValency();
-			}
-			if (fragmentToResolveAndDuplicate.getOutAtomCount()>1){
+			if (fragmentToResolveAndDuplicate.getOutAtomCount() > 1){
 				throw new StructureBuildingException("Ring assembly fragment should have one or no OutAtoms; not more than one!");
+			}
+			if (fragmentToResolveAndDuplicate.getOutAtomCount() == 1) {//e.g. bicyclohexanylidene
+				bondOrder = fragmentToResolveAndDuplicate.getOutAtom(0).getValency();
 			}
 
 			List<Fragment> clonedFragments = new ArrayList<Fragment>();
 			for (int j = 1; j < mvalue; j++) {
 				clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, j));
 			}
+			
+			Fragment lastRingUnlocantedBondedTo = null;
 			for (int j = 0; j < mvalue-1; j++) {
-				Fragment clone =clonedFragments.get(j);
+				Fragment clone = clonedFragments.get(j);
 				Atom atomOnParent;
 				Atom atomOnLatestClone;
-				if (ringJoiningLocants.size()>0){//locants defined
+				if (ringJoiningLocants.size() > 0){//locants defined
 					atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(0));
 					String secondLocant = ringJoiningLocants.get(j).get(1);
 					if (mvalue ==2 && !secondLocant.endsWith("'")){
@@ -2920,25 +2922,30 @@ class ComponentProcessor {
 					}
 				}
 				else{
-					if (fragmentToResolveAndDuplicate.getOutAtomCount()>0 && mvalue==2){
+					if (fragmentToResolveAndDuplicate.getOutAtomCount() == 1 && mvalue == 2){
 						atomOnParent = fragmentToResolveAndDuplicate.getOutAtom(0).getAtom();
 						atomOnLatestClone = clone.getOutAtom(0).getAtom();
 					}
 					else{
-						atomOnParent = FragmentTools.findAtomForSubstitutionOrThrow(fragmentToResolveAndDuplicate, bondOrder);
+						if (lastRingUnlocantedBondedTo == null){
+							atomOnParent = FragmentTools.findAtomForSubstitutionOrThrow(fragmentToResolveAndDuplicate, bondOrder);
+						}
+						else{
+							atomOnParent = FragmentTools.findAtomForSubstitutionOrThrow(lastRingUnlocantedBondedTo, bondOrder);
+						}
 						atomOnLatestClone = FragmentTools.findAtomForSubstitutionOrThrow(clone, bondOrder);
+						lastRingUnlocantedBondedTo = clone;
 					}
 				}
-				if (fragmentToResolveAndDuplicate.getOutAtomCount()>0){
+				if (fragmentToResolveAndDuplicate.getOutAtomCount() == 1){
 					fragmentToResolveAndDuplicate.removeOutAtom(0);
 				}
-				if (clone.getOutAtomCount()>0){
+				if (clone.getOutAtomCount() == 1){
 					clone.removeOutAtom(0);
 				}
 				state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
-				fragmentToResolveAndDuplicate.setDefaultInAtom(clone.getDefaultInAtom());
 			}
-			group.setValue(multiplier.getValue() +group.getValue());
+			group.setValue(multiplier.getValue() + group.getValue());
 			Element possibleOpenStructuralBracket = OpsinTools.getPreviousSibling(multiplier);
 			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
 				//To emphasise there can actually be two sets of structural brackets e.g. [1,1'-bi(cyclohexyl)]
