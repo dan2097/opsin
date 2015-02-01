@@ -7,12 +7,12 @@
   <token value="[SnH4]" labels="none" usableAsAJoiner="yes">stann</token>
   <token value="[PbH4]" labels="none" usableAsAJoiner="yes">plumb</token>
 
-  <token value="CCc1cc2OCOc2cc1" labels="none">homopiperon</token>
-  <token value="C/C=C(C)/CCC[C@H](C)CCC[C@H](C)CCCC(C)C" labels="none">phyt</token>
-  <token value="CC(=O)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">phenac</token>
-  <token value="Cc1cc2OCOc2cc1" labels="none">piperon</token>
-  <token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" defaultInID="4">salic</token>
-  <token value="CC=C" usableAsAJoiner="yes">all</token>
-  <token value="CC=C" usableAsAJoiner="yes">allan</token>
-  <token value="C=C" usableAsAJoiner="yes">vin</token>
+  <token value="CCc1cc2OCOc2cc1" labels="none" suffixAppliesTo="1">homopiperon</token>
+  <token value="C/C=C(C)/CCC[C@H](C)CCC[C@H](C)CCCC(C)C" labels="none" suffixAppliesTo="1">phyt</token>
+  <token value="CC(=O)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenac</token>
+  <token value="Cc1cc2OCOc2cc1" labels="none" suffixAppliesTo="1">piperon</token>
+  <token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" defaultInID="4" suffixAppliesTo="1">salic</token>
+  <token value="CC=C" usableAsAJoiner="yes" suffixAppliesTo="1">all</token>
+  <token value="CC=C" usableAsAJoiner="yes" suffixAppliesTo="1">allan</token>
+  <token value="C=C" usableAsAJoiner="yes" suffixAppliesTo="1">vin</token>
 </tokenList>
