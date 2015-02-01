@@ -22,7 +22,7 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 class Atom {
 
 	/**The (unique over the molecule) ID of the atom.*/
-	private int ID;
+	private final int id;
 
 	/**The chemical element of the atom. */
 	private ChemEl chemEl;
@@ -98,11 +98,11 @@ class Atom {
 	/**
 	 * Builds an Atom from scratch.
 	 * GENERALLY EXCEPT FOR TESTING SHOULD NOT BE CALLED EXCEPT FROM THE FRAGMANAGER
-	 * @param ID The ID number, unique to the atom in the molecule being built
+	 * @param id The ID number, unique to the atom in the molecule being built
 	 * @param chemlEl The chemical element
 	 * @param frag the Fragment to contain the Atom
 	 */
-	Atom(int ID, ChemEl chemlEl, Fragment frag) {
+	Atom(int id, ChemEl chemlEl, Fragment frag) {
 		if (frag == null){
 			throw new IllegalArgumentException("Atom is not in a fragment!");
 		}
@@ -110,7 +110,7 @@ class Atom {
 			throw new IllegalArgumentException("Atom does not have an element!");
 		}
 		this.frag = frag;
-		this.ID = ID;
+		this.id = id;
 		this.chemEl = chemlEl;
 		this.type =frag.getType();
 	}
@@ -121,6 +121,7 @@ class Atom {
 	 */
 	Atom(ChemEl chemlEl){
 		this.chemEl = chemlEl;
+		this.id = 0;
 	}
 	
 	/**
@@ -309,7 +310,7 @@ class Atom {
 	 * @return The ID of the atom
 	 */
 	int getID() {
-		return ID;
+		return id;
 	}
 
 	/**Gets the chemical element corresponding to the element of the atom.
