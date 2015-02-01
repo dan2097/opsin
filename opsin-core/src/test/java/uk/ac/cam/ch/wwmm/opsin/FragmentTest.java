@@ -436,5 +436,48 @@ public class FragmentTest {
 		assertEquals("Atom 5 has three neighbours",
 				3, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(5)).size());
 	}
+	
+	@Test
+	public void testIsCharacteristicAtomSuffix() throws StructureBuildingException{
+		Fragment parent = fm.buildSMILES("CC");
+		Fragment suffix = fm.buildSMILES("N", SUFFIX_TYPE_VAL, "");
+		fm.incorporateFragment(suffix, suffix.getFirstAtom(), parent, parent.getFirstAtom(), 1);
+		List<Atom> parentAtoms = parent.getAtomList();
+		assertFalse(FragmentTools.isCharacteristicAtom(parentAtoms.get(0)));
+		assertFalse(FragmentTools.isCharacteristicAtom(parentAtoms.get(1)));
+		assertTrue(FragmentTools.isCharacteristicAtom(parentAtoms.get(2)));
+	}
+	
+	@Test
+	public void testIsCharacteristicAtomAldehyde() throws StructureBuildingException{
+		Fragment parent = fm.buildSMILES("CC");
+		Fragment suffix = fm.buildSMILES("O", SUFFIX_TYPE_VAL, "");
+		fm.incorporateFragment(suffix, suffix.getFirstAtom(), parent, parent.getFirstAtom(), 2);
+		List<Atom> parentAtoms = parent.getAtomList();
+		parentAtoms.get(1).setProperty(Atom.ISALDEHYDE, true);
+		assertFalse(FragmentTools.isCharacteristicAtom(parentAtoms.get(0)));
+		assertTrue(FragmentTools.isCharacteristicAtom(parentAtoms.get(1)));
+		assertTrue(FragmentTools.isCharacteristicAtom(parentAtoms.get(2)));
+	}
+	
+	@Test
+	public void testIsCharacteristicAtomFunctionalAtom() throws StructureBuildingException{
+		Fragment parent = fm.buildSMILES("CC(=O)[O-]");
+		List<Atom> parentAtoms = parent.getAtomList();
+		parent.addFunctionalAtom(parentAtoms.get(3));
+		for (int i = 0; i < parentAtoms.size() - 1; i++) {
+			assertFalse(FragmentTools.isCharacteristicAtom(parentAtoms.get(i)));
+		}
+		assertTrue(FragmentTools.isCharacteristicAtom(parentAtoms.get(parentAtoms.size() - 1)));
+	}
+	
+	@Test
+	public void testIsCharacteristicAtomHydroxy() throws StructureBuildingException{
+		List<Atom> phenolAtoms = fm.buildSMILES("Oc1ccccc1").getAtomList();
+		assertTrue(FragmentTools.isCharacteristicAtom(phenolAtoms.get(0)));
+		for (int i = 1; i < phenolAtoms.size(); i++) {
+			assertFalse(FragmentTools.isCharacteristicAtom(phenolAtoms.get(i)));
+		}
+	}
 
 }

@@ -826,12 +826,16 @@ class FragmentTools {
 	}
 	
 	/**
-	 * Is the atom a suffix atom or an aldehyde atom or a chalcogen functional atom
+	 * Is the atom a suffix atom/carbon of an aldehyde atom/chalcogen functional atom/hydroxy (or chalcogen equivalent)
+	 * (by special step heterostems are not considered hydroxy e.g. disulfane)
 	 * @param atom
 	 * @return
 	 */
 	static boolean isCharacteristicAtom(Atom atom) {
-		if (atom.getType().equals(SUFFIX_TYPE_VAL)){
+		if (atom.getType().equals(SUFFIX_TYPE_VAL) || 
+			(atom.getElement().isChalcogen() && !HETEROSTEM_SUBTYPE_VAL.equals(atom.getFrag().getSubType()) &&
+			atom.getIncomingValency() == 1 &&
+			atom.getOutValency() == 0 && atom.getCharge() == 0)) {
 			return true;
 		}
 		return isFunctionalAtomOrAldehyde(atom);
@@ -957,7 +961,7 @@ class FragmentTools {
 	static List<Atom> findHydroxyLikeTerminalAtoms(List<Atom> atoms, ChemEl chemEl) {
 		List<Atom> matches =new ArrayList<Atom>();
 		for (Atom atom : atoms) {
-			if (atom.getElement() == chemEl && atom.getIncomingValency()==1 &&
+			if (atom.getElement() == chemEl && atom.getIncomingValency() == 1 &&
 				atom.getOutValency() == 0 && atom.getCharge() == 0){
 				matches.add(atom);
 			}
@@ -1019,8 +1023,7 @@ class FragmentTools {
 		List<Atom> hydroxyAtoms = new ArrayList<Atom>();
 		List<Atom> atoms = biochemicalFragment.getAtomList();
 		for (Atom atom : atoms) {
-			if (atom.getElement() == ChemEl.O && atom.getBondCount()==1  &&
-					atom.getFirstBond().getOrder()==1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
+			if (atom.getElement() == ChemEl.O && atom.getIncomingValency() == 1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
 				List<Atom> neighbours = adjacentAtom.getAtomNeighbours();
 				if (adjacentAtom.getElement() == ChemEl.C){
