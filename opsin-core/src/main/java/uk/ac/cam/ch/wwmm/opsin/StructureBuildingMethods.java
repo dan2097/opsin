@@ -256,10 +256,7 @@ class StructureBuildingMethods {
 					if (atomsToJoinTo == null){
 						throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 					}
-					boolean isAmbiguous = SubstitutionAmbiguityChecker.isSubstitutionAmbiguous(atomsToJoinTo, 1);
-					if (isAmbiguous){
-						state.addWarningMessage("Name appears to be ambiguous");
-					}
+					state.checkForAmbiguity(atomsToJoinTo, 1);
 					joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(0));
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -410,10 +407,7 @@ class StructureBuildingMethods {
 			if (atomsToJoinTo == null) {
 				throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 			}
-			boolean isAmbiguous = SubstitutionAmbiguityChecker.isSubstitutionAmbiguous(atomsToJoinTo, numOfSubstituents);
-			if (isAmbiguous){
-				state.addWarningMessage("Name appears to be ambiguous");
-			}
+			state.checkForAmbiguity(atomsToJoinTo, numOfSubstituents);
 
 			joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(0));
 			group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -823,11 +817,14 @@ class StructureBuildingMethods {
 			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
 				OutAtom outAtom = thisFrag.getOutAtom(i);
 				if (!outAtom.isSetExplicitly()){
-					Atom atomToAssociateOutAtomWith = FragmentTools.findAtomForSubstitution(thisFrag, outAtom.getAtom(), outAtom.getValency(), true);
-		            if (atomToAssociateOutAtomWith == null){
+					List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(thisFrag.getAtomList(), outAtom.getAtom(), 1, outAtom.getValency(), true);
+		            if (possibleAtoms == null){
 		            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 	                }
-					outAtom.setAtom(atomToAssociateOutAtomWith);
+		            if (!(ALKANESTEM_SUBTYPE_VAL.equals(thisFrag.getSubType()) && possibleAtoms.get(0).equals(thisFrag.getFirstAtom()))) {
+		    			state.checkForAmbiguity(possibleAtoms, 1);
+		            }
+					outAtom.setAtom(possibleAtoms.get(0));
 					outAtom.setSetExplicitly(true);
 				}
 			}
@@ -1518,7 +1515,14 @@ class StructureBuildingMethods {
 		Atom from = out.getAtom();
 		int bondOrder = out.getValency();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
+			List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(fragToBeJoined.getAtomList(), from, 1, bondOrder, false);
+            if (possibleAtoms == null){
+            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
+            }
+            if (!(ALKANESTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType()) && possibleAtoms.get(0).equals(fragToBeJoined.getFirstAtom()))) {
+    			state.checkForAmbiguity(possibleAtoms, 1);
+            }
+			from = possibleAtoms.get(0);
 		}
 		fragToBeJoined.removeOutAtom(out);
 
