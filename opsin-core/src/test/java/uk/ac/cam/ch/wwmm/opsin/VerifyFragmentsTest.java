@@ -66,6 +66,8 @@ public class VerifyFragmentsTest {
 				tagname.equals(FUNCTIONALGROUP_EL) ||
 				tagname.equals(HETEROATOM_EL) ||
 				tagname.equals(SUFFIXPREFIX_EL)) {
+			String type = reader.getAttributeValue(null, TYPE_ATR);
+			String subType = reader.getAttributeValue(null, SUBTYPE_ATR);
 			while (reader.hasNext()) {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
@@ -74,8 +76,6 @@ public class VerifyFragmentsTest {
 						String smiles = null;
 						try{
 							smiles = reader.getAttributeValue(null, VALUE_ATR);
-							String type = reader.getAttributeValue(null, TYPE_ATR);
-							String subType = reader.getAttributeValue(null, SUBTYPE_ATR);
 							String labels =  reader.getAttributeValue(null, LABELS_ATR);
 							TokenEl tokenEl = new TokenEl(GROUP_EL);
 							if (type != null){
