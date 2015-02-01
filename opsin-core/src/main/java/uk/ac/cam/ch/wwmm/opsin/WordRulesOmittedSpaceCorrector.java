@@ -97,7 +97,7 @@ class WordRulesOmittedSpaceCorrector {
 							multiplier= Integer.parseInt(multiplierValue);
 						}
 						if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, wordRuleContents) ||
-								substitutionWouldBeAmbiguous(rootGroup, rootFrag, multiplier)){
+								substitutionWouldBeAmbiguous(rootFrag, multiplier)){
 							transformToEster(wordRule, firstChild);
 						}
 					}
@@ -171,8 +171,8 @@ class WordRulesOmittedSpaceCorrector {
 		return false;
 	}
 
-	private boolean substitutionWouldBeAmbiguous(Element rootGroup, Fragment frag, int multiplier) {
-		if (multiplier ==1 && (rootGroup.getAttribute(DEFAULTINID_ATR)!=null || rootGroup.getAttribute(DEFAULTINLOCANT_ATR)!=null)){
+	private boolean substitutionWouldBeAmbiguous(Fragment frag, int multiplier) {
+		if (multiplier ==1 && frag.getDefaultInAtom() != null) {
 			return false;
 		}
 		List<Atom> atomForEachSubstitutableHydrogen = getAtomForEachSubstitutableHydrogen(frag);
