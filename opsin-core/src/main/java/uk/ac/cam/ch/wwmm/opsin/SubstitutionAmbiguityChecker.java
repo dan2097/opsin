@@ -1,10 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.DEFAULTINID_ATR;
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.DEFAULTINLOCANT_ATR;
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -58,6 +56,6 @@ class SubstitutionAmbiguityChecker {
 				}
 			}
 		}
-		return new StereoAnalyser(new ArrayList<Atom>(atoms), bonds);
+		return new StereoAnalyser(atoms, bonds);
 	}
 }

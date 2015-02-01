@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,8 +19,8 @@ import java.util.Map.Entry;
  */
 class StereoAnalyser {
 	/** The atoms/bonds upon which this StereoAnalyser is operating */
-	private final List<Atom> atoms;
-	private final Set<Bond> bonds;
+	private final Collection<Atom> atoms;
+	private final Collection<Bond> bonds;
 	
 	/** Maps each atom to its currently assigned colour. Eventually all atoms in non identical environments will have different colours. Higher is higher priority*/
 	private final Map<Atom, Integer> mappingToColour;
@@ -200,7 +201,7 @@ class StereoAnalyser {
 	 * @param atoms
 	 * @param bonds
 	 */
-	StereoAnalyser(List<Atom> atoms, Set<Bond> bonds) {
+	StereoAnalyser(Collection<Atom> atoms, Collection<Bond> bonds) {
 		this.atoms = atoms;
 		this.bonds = bonds;
 		List<Atom> ghostAtoms = addGhostAtoms();
