@@ -1052,8 +1052,8 @@ class FragmentTools {
 		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, characteristic atoms ignored
 			Atom atom = atoms.next();
 			if (!FragmentTools.isCharacteristicAtom(atom) || (numberOfSubstitutionsRequired == 1 && atom == preferredAtom)) {
-				int currentExpectedValency = atom.determineValency(true);
-				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int currentExpectedValency = atom.determineValency(takeIntoAccountOutValency);
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? atom.getOutValency() : 0);
 				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
 				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
 					substitutableAtoms.add(atom);
@@ -1067,8 +1067,8 @@ class FragmentTools {
 		for (int i = 0; i < atomCount; i++) {//aromaticity preserved, standard valency assumed, functional suffixes ignored
 			Atom atom = atoms.next();
 			if (!FragmentTools.isFunctionalAtomOrAldehyde(atom) || (numberOfSubstitutionsRequired == 1 && atom == preferredAtom)) {
-				int currentExpectedValency = atom.determineValency(true);
-				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int currentExpectedValency = atom.determineValency(takeIntoAccountOutValency);
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? atom.getOutValency() : 0);
 				int timesAtomCanBeSubstitued = ((currentExpectedValency - usedValency)/ bondOrder);
 				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
 					substitutableAtoms.add(atom);
@@ -1084,7 +1084,7 @@ class FragmentTools {
 			Atom atom = atoms.next();
 			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
 			if (maximumValency != null) {
-				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + atom.getOutValency();
+				int usedValency = atom.getIncomingValency() + (atom.hasSpareValency() ? 1 : 0) + (takeIntoAccountOutValency ? atom.getOutValency() : 0);
 				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
 				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
 					substitutableAtoms.add(atom);
@@ -1105,7 +1105,7 @@ class FragmentTools {
 			Atom atom = atoms.next();
 			Integer maximumValency = ValencyChecker.getMaximumValency(atom);
 			if (maximumValency != null) {
-				int usedValency = atom.getIncomingValency() + atom.getOutValency();
+				int usedValency = atom.getIncomingValency() + (takeIntoAccountOutValency ? atom.getOutValency() : 0);
 				int timesAtomCanBeSubstitued = ((maximumValency - usedValency)/ bondOrder);
 				for (int j = 1; j <= timesAtomCanBeSubstitued; j++) {
 					substitutableAtoms.add(atom);
