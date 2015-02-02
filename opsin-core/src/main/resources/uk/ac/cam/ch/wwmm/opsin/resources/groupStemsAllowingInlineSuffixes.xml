@@ -3,13 +3,13 @@
 <!--These are groups that can be followed by charge modifying suffixes and should be terminated by an e or an inline suffix if used as substituent -->
 <tokenLists>
 	<tokenList tagname="group" type="simpleGroup" subType="groupStem" symbol="g">
-		<token value="C=C=C" usableAsAJoiner="yes">allen</token>
+		<token value="C=C=C" labels="1/2/3" usableAsAJoiner="yes" suffixAppliesToByDefault="1">allen</token>
 		<token value="N=NC=NN" labels="1/2/3/4/5" suffixAppliesToByDefault="3">formazan</token>
-		<token value="[NH2+]=[N-]" labels="none">isodiazen</token>
-		<token value="C=C=O" labels="none">keten</token>
-		<token value="NC(=O)OCC" labels="none">urethan</token>
+		<token value="[NH2+]=[N-]" labels="none" suffixAppliesTo="1">isodiazen</token>
+		<token value="C=C=O" labels="none" suffixAppliesTo="1">keten</token>
+		<token value="NC(=O)OCC" labels="none" suffixAppliesTo="1">urethan</token>
 
-		<token value="C=CC(C)=C" labels="none">isopren</token>
+		<token value="C=CC(C)=C" labels="none" suffixAppliesTo="1">isopren</token>
 
 <!--RC-82.1.1.1-->
 		<token value="[NH4+]" labels="none">ammonium</token>
@@ -39,27 +39,27 @@
 		<token value="[BiH3]" usableAsAJoiner="yes">bismuthin</token>
 
 	<!-- trivial acid derived ketones -->
-		<token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" usableAsAJoiner="yes">aceton</token>
-		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" usableAsAJoiner="yes">propionon</token>
-		<token value="CCCC(=O)CCC" labels="1/2/3/4//5/6/7" defaultInLocant="7" usableAsAJoiner="yes">butyron</token>
-		<token value="CCCCC(=O)CCCC" labels="1/2/3/4/5//6/7/8/9" defaultInLocant="9" usableAsAJoiner="yes">valeron</token>
-		<token value="CCCCCCC(=O)CCCCCC" labels="1/2/3/4/5/6/7//8/9/10/11/12/13" defaultInLocant="13" usableAsAJoiner="yes">enanthon</token>
-		<token value="CCCCCCCC(=O)CCCCCCC" labels="1/2/3/4/5/6/7/8//9/10/11/12/13/14/15" defaultInLocant="15" usableAsAJoiner="yes">caprylon</token>
+		<token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" usableAsAJoiner="yes" suffixAppliesToByDefault="1">aceton</token>
+		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5" usableAsAJoiner="yes" suffixAppliesToByDefault="1">propionon</token>
+		<token value="CCCC(=O)CCC" labels="1/2/3/4//5/6/7" defaultInLocant="7" usableAsAJoiner="yes" suffixAppliesToByDefault="1">butyron</token>
+		<token value="CCCCC(=O)CCCC" labels="1/2/3/4/5//6/7/8/9" defaultInLocant="9" usableAsAJoiner="yes" suffixAppliesToByDefault="1">valeron</token>
+		<token value="CCCCCCC(=O)CCCCCC" labels="1/2/3/4/5/6/7//8/9/10/11/12/13" defaultInLocant="13" usableAsAJoiner="yes" suffixAppliesToByDefault="1">enanthon</token>
+		<token value="CCCCCCCC(=O)CCCCCCC" labels="1/2/3/4/5/6/7/8//9/10/11/12/13/14/15" defaultInLocant="15" usableAsAJoiner="yes" suffixAppliesToByDefault="1">caprylon</token>
 
-		<token value="CC(C)C(=O)C(C)C" labels="none">isobutyron</token>
-		<token value="CC(C)CC(=O)CC(C)C" labels="none">isovaleron</token>
+		<token value="CC(C)C(=O)C(C)C" labels="none" suffixAppliesToByDefault="1">isobutyron</token>
+		<token value="CC(C)CC(=O)CC(C)C" labels="none" suffixAppliesToByDefault="1">isovaleron</token>
 
-		<token value="CCCCCCCCCCCC(=O)CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12//13/14/15/16/17/18/19/20/21/22/23" defaultInLocant="23" usableAsAJoiner="yes">lauron</token>
-		<token value="CCCCCCCCCCCCCC(=O)CCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14//15/16/17/18/19/20/21/22/23/24/25/26/27" defaultInLocant="27" usableAsAJoiner="yes">myriston</token>
-		<token value="CCCCCCCCCCCCCCCC(=O)CCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16//17/18/19/20/21/22/23/24/25/26/27/28/29/30/31" defaultInLocant="31" usableAsAJoiner="yes">palmiton</token>
-		<token value="CCCCCCCCCCCCCCCCCC(=O)CCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18//19/20/21/22/23/24/25/26/27/28/29/30/31/32/33/34/35" defaultInLocant="35" usableAsAJoiner="yes">stearon</token>
+		<token value="CCCCCCCCCCCC(=O)CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12//13/14/15/16/17/18/19/20/21/22/23" defaultInLocant="23" usableAsAJoiner="yes" suffixAppliesToByDefault="1">lauron</token>
+		<token value="CCCCCCCCCCCCCC(=O)CCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14//15/16/17/18/19/20/21/22/23/24/25/26/27" defaultInLocant="27" usableAsAJoiner="yes" suffixAppliesToByDefault="1">myriston</token>
+		<token value="CCCCCCCCCCCCCCCC(=O)CCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16//17/18/19/20/21/22/23/24/25/26/27/28/29/30/31" defaultInLocant="31" usableAsAJoiner="yes" suffixAppliesToByDefault="1">palmiton</token>
+		<token value="CCCCCCCCCCCCCCCCCC(=O)CCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18//19/20/21/22/23/24/25/26/27/28/29/30/31/32/33/34/35" defaultInLocant="35" usableAsAJoiner="yes" suffixAppliesToByDefault="1">stearon</token>
 	</tokenList>
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="g">
 		<token value="N[C@H](C(=O)O)CCC(=O)N[C@@H](CS)C(=O)NCC(=O)O" labels="none">glutathion</token>
 		<token value="OCC(O)CO" labels="1///2//3">glycerol</token>
 		<token value="OCC(O)CO" labels="1///2//3">glycerin</token>
 		<token value="OC[C@@H](O)CO" labels="1///2//3">sn-glycerol</token>
-		<token value="NC(=N)N" labels="1,N//2,N''/3,N'">guanidin</token>
-		<token value="S1(=O)(=O)NC(=O)c2ccccc12" labels="1///2/3//3a/4/5/6/7/7a">saccharin</token>
+		<token value="NC(=N)N" labels="1,N//2,N''/3,N'" suffixAppliesToByDefault="1">guanidin</token>
+		<token value="S1(=O)(=O)NC(=O)c2ccccc12" labels="1///2/3//3a/4/5/6/7/7a" suffixAppliesToByDefault="4">saccharin</token>
 	</tokenList>
 </tokenLists>
