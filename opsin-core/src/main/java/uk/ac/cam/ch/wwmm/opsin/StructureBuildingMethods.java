@@ -821,7 +821,7 @@ class StructureBuildingMethods {
 		            if (possibleAtoms == null){
 		            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 	                }
-		            if (!(ALKANESTEM_SUBTYPE_VAL.equals(thisFrag.getSubType()) && possibleAtoms.get(0).equals(thisFrag.getFirstAtom()))) {
+		            if (!((ALKANESTEM_SUBTYPE_VAL.equals(thisFrag.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(thisFrag.getSubType())) && possibleAtoms.get(0).equals(thisFrag.getFirstAtom()))) {
 		    			state.checkForAmbiguity(possibleAtoms, 1);
 		            }
 					outAtom.setAtom(possibleAtoms.get(0));
@@ -1519,7 +1519,7 @@ class StructureBuildingMethods {
             if (possibleAtoms == null){
             	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
             }
-            if (!(ALKANESTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType()) && possibleAtoms.get(0).equals(fragToBeJoined.getFirstAtom()))) {
+            if (!((ALKANESTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType())) && possibleAtoms.get(0).equals(fragToBeJoined.getFirstAtom()))) {
     			state.checkForAmbiguity(possibleAtoms, 1);
             }
 			from = possibleAtoms.get(0);
