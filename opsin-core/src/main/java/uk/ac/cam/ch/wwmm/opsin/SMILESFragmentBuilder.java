@@ -232,6 +232,7 @@ class SMILESFragmentBuilder {
 				case 'X':
 				case 'Y':
 				case 'Z':
+				case '*':
 					processOrganicAtom(ch);
 					break;
 				case '[':
@@ -282,6 +283,9 @@ class SMILESFragmentBuilder {
 				}
 				elementType = String.valueOf((char)(ch - 32));
 				spareValency = true;
+			}
+			else if (ch == '*') {
+				elementType = "R";
 			}
 			Atom atom = createAtom(elementType, fragment);
 			atom.setSpareValency(spareValency);
