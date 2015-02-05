@@ -73,28 +73,26 @@ class WordRulesOmittedSpaceCorrector {
 			List<Element> roots = word.getChildElements(ROOT_EL);
 			if (roots.size()==1){
 				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
-				if (AMINOACID_TYPE_VAL.equals(rootGroup.getAttributeValue(TYPE_ATR))){
-					return;//amino acids are implicitly N locanted
-				}
 				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
-				if (functionalAtomsCount >0){
+				if (functionalAtomsCount > 0){
 					List<Element> substituentsAndBrackets = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
-					if (substituentsAndBrackets.size()==0){
+					if (substituentsAndBrackets.size() == 0){
 						return;
 					}
 					Element firstChild = substituentsAndBrackets.get(0);
 					if (!checkSuitabilityOfSubstituentForEsterFormation(firstChild, functionalAtomsCount)){
 						return;
 					}
-					if (substituentsAndBrackets.size()>1 && (allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstition(substituentsAndBrackets, rootFrag))){
+					if (substituentsAndBrackets.size() > 1 && 
+							(allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstitution(substituentsAndBrackets, rootFrag))){
 						transformToEster(wordRule, firstChild);
 					}
-					else if (substituentsAndBrackets.size()==1){
+					else if (substituentsAndBrackets.size() == 1){
 						String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
 						int multiplier = 1;
-						if (multiplierValue!=null){
-							multiplier= Integer.parseInt(multiplierValue);
+						if (multiplierValue != null){
+							multiplier = Integer.parseInt(multiplierValue);
 						}
 						if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, wordRuleContents) ||
 								substitutionWouldBeAmbiguous(rootFrag, multiplier)){
@@ -118,25 +116,26 @@ class WordRulesOmittedSpaceCorrector {
 		return true;
 	}
 
-	private boolean insufficientSubstitutableHydrogenForSubstition(List<Element> substituentsAndBrackets, Fragment frag) {
+	private boolean insufficientSubstitutableHydrogenForSubstitution(List<Element> substituentsAndBrackets, Fragment frag) {
 		int substitutableHydrogens = getAtomForEachSubstitutableHydrogen(frag).size();
 		for (int i = 1; i < substituentsAndBrackets.size(); i++) {
 			Element subOrBracket = substituentsAndBrackets.get(i);
 			Fragment f = getRightMostGroup(subOrBracket).getFrag();
 			String multiplierValue = subOrBracket.getAttributeValue(MULTIPLIER_ATR);
 			int multiplier = 1;
-			if (multiplierValue!=null){
-				multiplier= Integer.parseInt(multiplierValue);
+			if (multiplierValue != null){
+				multiplier = Integer.parseInt(multiplierValue);
 			}
 			substitutableHydrogens -= (getTotalOutAtomValency(f) * multiplier);
 		}
-		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(getRightMostGroup(substituentsAndBrackets.get(0)).getFrag());
-		String multiplierValue = substituentsAndBrackets.get(0).getAttributeValue(MULTIPLIER_ATR);
+		Element potentialEsterSub = substituentsAndBrackets.get(0);
+		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(getRightMostGroup(potentialEsterSub).getFrag());
+		String multiplierValue = potentialEsterSub.getAttributeValue(MULTIPLIER_ATR);
 		int multiplier = 1;
-		if (multiplierValue!=null){
-			multiplier= Integer.parseInt(multiplierValue);
+		if (multiplierValue != null){
+			multiplier = Integer.parseInt(multiplierValue);
 		}
-		if (substitutableHydrogens >=0 && (substitutableHydrogens - (firstFragSubstitutableHydrogenRequired * multiplier)) <0){
+		if (substitutableHydrogens >=0 && (substitutableHydrogens - (firstFragSubstitutableHydrogenRequired * multiplier)) < 0){
 			return true;
 		}
 		return false;
@@ -159,7 +158,7 @@ class WordRulesOmittedSpaceCorrector {
 	 * @return
 	 */
 	private boolean specialCaseWhereEsterPreferred(Element substituentGroupEl, String multiplierValue, String wordRuleContents) {
-		if (multiplierValue!=null && Integer.parseInt(multiplierValue)==1){
+		if (multiplierValue != null && Integer.parseInt(multiplierValue) == 1){
 			return true;
 		}
 		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))){
@@ -172,7 +171,7 @@ class WordRulesOmittedSpaceCorrector {
 	}
 
 	private boolean substitutionWouldBeAmbiguous(Fragment frag, int multiplier) {
-		if (multiplier ==1 && frag.getDefaultInAtom() != null) {
+		if (multiplier == 1 && frag.getDefaultInAtom() != null) {
 			return false;
 		}
 		List<Atom> atomForEachSubstitutableHydrogen = getAtomForEachSubstitutableHydrogen(frag);
@@ -181,27 +180,27 @@ class WordRulesOmittedSpaceCorrector {
 		for (Atom a : atomForEachSubstitutableHydrogen) {
 			uniqueEnvironments.add(analyzer.getAtomEnvironmentNumber(a));
 		}
-		if (atomForEachSubstitutableHydrogen.size()==multiplier){
+		if (atomForEachSubstitutableHydrogen.size() == multiplier){
 			return false;
 		}
-		if (uniqueEnvironments.size()==1 && (multiplier==1 || multiplier == atomForEachSubstitutableHydrogen.size()-1)){
+		if (uniqueEnvironments.size() == 1 && (multiplier == 1 || multiplier == atomForEachSubstitutableHydrogen.size() - 1)){
 			return false;
 		}
 		return true;
 	}
 
 	private boolean checkSuitabilityOfSubstituentForEsterFormation(Element subOrBracket, int rootFunctionalAtomsCount) {
-		if (subOrBracket.getAttribute(LOCANT_ATR)!=null){
+		if (subOrBracket.getAttribute(LOCANT_ATR) != null){
 			return false;
 		}
 		Fragment rightMostGroup = getRightMostGroup(subOrBracket).getFrag();
-		if (rightMostGroup.getOutAtomCount() != 1 || rightMostGroup.getOutAtom(0).getValency()!=1){
+		if (rightMostGroup.getOutAtomCount() != 1 || rightMostGroup.getOutAtom(0).getValency() != 1) {
 			return false;
 		}
 		String multiplierStr = subOrBracket.getAttributeValue(MULTIPLIER_ATR);
-		if (multiplierStr!=null){
+		if (multiplierStr!=null) {
 			int multiplier = Integer.parseInt(multiplierStr);
-			if (multiplier > rootFunctionalAtomsCount){
+			if (multiplier > rootFunctionalAtomsCount) {
 				return false;
 			}
 		}
