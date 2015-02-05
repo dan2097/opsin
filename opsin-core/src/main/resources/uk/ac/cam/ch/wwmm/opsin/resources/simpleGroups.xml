@@ -404,9 +404,11 @@
 		<token value="O=C(O)c1c(I)c(CNC(=O)C)c(I)c(NC(=O)C)c1I" labels="none">iodamide</token><!--trivial name-->
 		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O" labels="none">imidazolidinylurea</token><!--antimicrobial name-->
 		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O" labels="none">imidazolidinyl urea</token><!--antimicrobial name-->
+		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none">methanophenazine</token><!--trivial name-->
 		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1" labels="none">methoxychlor</token><!--pesticide name-->
 		<token value="CC(=O)OC/N=[N+](/C)\[O-]" labels="none">methylazoxymethanol acetate</token><!--trivial name-->
-		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C" labels="none">methanophenazine</token><!--trivial name-->
+		<token value="C(CC(CBr)(C#N)Br)C#N" labels="none">methyldibromo glutaronitrile</token><!--trivial name-->
+		<token value="C(CC(CBr)(C#N)Br)C#N" labels="none">methyldibromoglutaronitrile</token><!--trivial name-->
 		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)O" labels="none" functionalIDs="19">oxolinic acid</token><!--drug name-->
 		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)[O-]" labels="none" functionalIDs="19">oxolinate</token><!--drug name-->
 		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2" labels="none">oxybenzone</token><!--trivial name-->
