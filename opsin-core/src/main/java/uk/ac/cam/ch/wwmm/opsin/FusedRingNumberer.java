@@ -281,8 +281,7 @@ class FusedRingNumberer {
 			}
 		}
 		// find the preferred numbering scheme then relabel with this scheme
-		Collections.sort( atomSequences, new SortAtomSequences());
-		fusedRing.setDefaultInAtom(atomSequences.get(0).get(0));
+		Collections.sort(atomSequences, new SortAtomSequences());
 		FragmentTools.relabelLocantsAsFusedRingSystem(atomSequences.get(0));
 		fusedRing.reorderAtomCollection(atomSequences.get(0));
 	}
