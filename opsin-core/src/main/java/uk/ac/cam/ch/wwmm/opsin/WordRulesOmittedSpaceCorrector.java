@@ -71,7 +71,7 @@ class WordRulesOmittedSpaceCorrector {
 		String wordRuleContents = wordRule.getAttributeValue(VALUE_ATR);
 		if (matchAteOrIteEnding.matcher(wordRuleContents).find()){
 			List<Element> roots = word.getChildElements(ROOT_EL);
-			if (roots.size()==1){
+			if (roots.size() == 1){
 				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
 				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
@@ -84,20 +84,16 @@ class WordRulesOmittedSpaceCorrector {
 					if (!checkSuitabilityOfSubstituentForEsterFormation(firstChild, functionalAtomsCount)){
 						return;
 					}
-					if (substituentsAndBrackets.size() > 1 && 
+					String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
+					if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, rootGroup)) {
+						transformToEster(wordRule, firstChild);
+					}
+					else if (substituentsAndBrackets.size() > 1 && 
 							(allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstitution(substituentsAndBrackets, rootFrag))){
 						transformToEster(wordRule, firstChild);
 					}
-					else if (substituentsAndBrackets.size() == 1){
-						String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
-						int multiplier = 1;
-						if (multiplierValue != null){
-							multiplier = Integer.parseInt(multiplierValue);
-						}
-						if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, wordRuleContents) ||
-								substitutionWouldBeAmbiguous(rootFrag, multiplier)){
-							transformToEster(wordRule, firstChild);
-						}
+					else if (substituentsAndBrackets.size() == 1 && substitutionWouldBeAmbiguous(rootFrag, multiplierValue)){
+						transformToEster(wordRule, firstChild);
 					}
 				}
 			}
@@ -154,23 +150,29 @@ class WordRulesOmittedSpaceCorrector {
 	 * e.g. ethylacetate
 	 * @param substituentGroupEl
 	 * @param multiplierValue
-	 * @param wordRuleContents 
+	 * @param rootGroup 
 	 * @return
 	 */
-	private boolean specialCaseWhereEsterPreferred(Element substituentGroupEl, String multiplierValue, String wordRuleContents) {
+	private boolean specialCaseWhereEsterPreferred(Element substituentGroupEl, String multiplierValue, Element rootGroup) {
 		if (multiplierValue != null && Integer.parseInt(multiplierValue) == 1){
 			return true;
 		}
-		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))){
-			String potentialString = "(?i)" + substituentGroupEl.getValue() + "yl[\\-]?(form|methan|acet|ethan)[o]?ate";
-			if (wordRuleContents.matches(potentialString)){
+		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) &&
+				ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))) {
+			if (substituentGroupEl.getParent().getValue().matches(substituentGroupEl.getValue() + "yl-?") &&
+					rootGroup.getParent().getValue().matches("(form|methan|acet|ethan)[o]?ate")) {
 				return true;
 			}
+
 		}
 		return false;
 	}
 
-	private boolean substitutionWouldBeAmbiguous(Fragment frag, int multiplier) {
+	private boolean substitutionWouldBeAmbiguous(Fragment frag, String multiplierValue) {
+		int multiplier = 1;
+		if (multiplierValue != null){
+			multiplier = Integer.parseInt(multiplierValue);
+		}
 		if (multiplier == 1 && frag.getDefaultInAtom() != null) {
 			return false;
 		}
