@@ -40,7 +40,7 @@ class BuildState {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < numWarnings; i++) {
 			sb.append(warningMessages.get(i));
-			if (i + 1 > numWarnings){
+			if (i + 1 < numWarnings){
 				sb.append(System.getProperty("line.separator"));
 			}
 		}
