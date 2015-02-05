@@ -8,14 +8,14 @@ import java.util.Set;
 
 class SubstitutionAmbiguityChecker {
 
-	public static boolean isSubstitutionAmbiguous(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
+	static boolean isSubstitutionAmbiguous(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
 		if (substitutableAtoms.size() == 0) {
 			throw new IllegalArgumentException("Must provide at least one substituable atom");
 		}
 		if (substitutableAtoms.size() == numberToBeSubstituted){
 			return false;
 		}
-		if (numberToBeSubstituted ==1 && substitutableAtoms.get(0).equals(substitutableAtoms.get(0).getFrag().getDefaultInAtom())) {
+		if (numberToBeSubstituted == 1 && substitutableAtoms.get(0).equals(substitutableAtoms.get(0).getFrag().getDefaultInAtom())) {
 			return false;
 		}
 		Set<Atom> uniqueAtoms = new HashSet<Atom>(substitutableAtoms);
