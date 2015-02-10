@@ -2816,36 +2816,36 @@ class ComponentProcessor {
 			 * Populate locants with locants. Two locants are required for every pair of rings to be joined.
 			 * e.g. bi requires 2, ter requires 4 etc.
 			 */
-			List<List<String>> ringJoiningLocants =new ArrayList<List<String>>();
+			List<List<String>> ringJoiningLocants = new ArrayList<List<String>>();
 			Element potentialLocant = OpsinTools.getPreviousSibling(multiplier);
 			Element group = OpsinTools.getNextSibling(multiplier, GROUP_EL);
-			if (potentialLocant!=null && (potentialLocant.getName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)||potentialLocant.getName().equals(LOCANT_EL)) ){//a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
+			if (potentialLocant != null && (potentialLocant.getName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL) || potentialLocant.getName().equals(LOCANT_EL))){ //a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
 				if (ORTHOMETAPARA_TYPE_VAL.equals(potentialLocant.getAttributeValue(TYPE_ATR))){//an OMP locant has been provided to indicate how to connect the rings of the ringAssembly
-					String locant2 =potentialLocant.getValue();
-					String locant1 ="1";
-					ArrayList<String> locantArrayList =new ArrayList<String>();
+					String locant2 = potentialLocant.getValue();
+					String locant1 = "1";
+					List<String> locantArrayList = new ArrayList<String>();
 					locantArrayList.add("1");
 					locantArrayList.add("1'");
 					ringJoiningLocants.add(locantArrayList);
-					for (int j = 1; j < mvalue -1; j++) {
-						locantArrayList =new ArrayList<String>();
-						locantArrayList.add(locant2 + StringTools.multiplyString("'", j));
-						locantArrayList.add(locant1 + StringTools.multiplyString("'", j+1));
+					for (int i = 1; i < mvalue - 1; i++) {
+						locantArrayList = new ArrayList<String>();
+						locantArrayList.add(locant2 + StringTools.multiplyString("'", i));
+						locantArrayList.add(locant1 + StringTools.multiplyString("'", i + 1));
 						ringJoiningLocants.add(locantArrayList);
 					}
 					potentialLocant.detach();
 				}
 				else{
-					String locantText =StringTools.removeDashIfPresent(potentialLocant.getValue());
+					String locantText = StringTools.removeDashIfPresent(potentialLocant.getValue());
 					//locantText might be something like 1,1':3',1''
 					String[] perRingLocantArray = MATCH_COLONORSEMICOLON.split(locantText);
-					if (perRingLocantArray.length !=(mvalue -1)){
-						throw new ComponentGenerationException("Disagreement between number of locants(" + locantText +") and ring assembly multiplier: " + mvalue);
+					if (perRingLocantArray.length != (mvalue - 1)){
+						throw new ComponentGenerationException("Disagreement between number of locants(" + locantText + ") and ring assembly multiplier: " + mvalue);
 					}
-					if (perRingLocantArray.length!=1 || MATCH_COMMA.split(perRingLocantArray[0]).length!=1){//not for the case of a single locant
+					if (perRingLocantArray.length != 1 || MATCH_COMMA.split(perRingLocantArray[0]).length != 1){//if there is just a single locant it doesn't relate to how the rings are connected
 						for (String ringLocantArray : perRingLocantArray) {
 							String[] locantArray = MATCH_COMMA.split(ringLocantArray);
-							if (locantArray.length !=2){
+							if (locantArray.length != 2){
 								throw new ComponentGenerationException("missing locant, expected 2 locants: " + ringLocantArray);
 							}
 							ringJoiningLocants.add(Arrays.asList(locantArray));
@@ -2860,16 +2860,16 @@ class ComponentProcessor {
 			Element nextEl = OpsinTools.getNextSibling(multiplier);
 			if (nextEl.getName().equals(STRUCTURALOPENBRACKET_EL)){//brackets have been provided to aid disambiguation. These brackets are detached e.g. bi(cyclohexyl)
 				elementToResolve = new GroupingEl(SUBSTITUENT_EL);
-				Element currentEl =nextEl;
+				Element currentEl = nextEl;
 				nextEl = OpsinTools.getNextSibling(currentEl);
 				currentEl.detach();
-				while (nextEl !=null && !nextEl.getName().equals(STRUCTURALCLOSEBRACKET_EL)){
-					currentEl =nextEl;
+				while (nextEl != null && !nextEl.getName().equals(STRUCTURALCLOSEBRACKET_EL)){
+					currentEl = nextEl;
 					nextEl = OpsinTools.getNextSibling(currentEl);
 					currentEl.detach();
 					elementToResolve.addChild(currentEl);
 				}
-				if (nextEl!=null){
+				if (nextEl != null){
 					nextEl.detach();
 				}
 			}
@@ -2898,13 +2898,13 @@ class ComponentProcessor {
 			}
 			
 			Fragment lastRingUnlocantedBondedTo = null;
-			for (int j = 0; j < mvalue-1; j++) {
-				Fragment clone = clonedFragments.get(j);
+			for (int i = 0; i < mvalue - 1; i++) {
+				Fragment clone = clonedFragments.get(i);
 				Atom atomOnParent;
 				Atom atomOnLatestClone;
 				if (ringJoiningLocants.size() > 0){//locants defined
-					atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(j).get(0));
-					String secondLocant = ringJoiningLocants.get(j).get(1);
+					atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(i).get(0));
+					String secondLocant = ringJoiningLocants.get(i).get(1);
 					if (mvalue ==2 && !secondLocant.endsWith("'")){
 						//Allow prime to be (incorrectly) omitted on second locant in bi ring assemblies e.g. 2,2-bipyridine
 						try {
@@ -2969,15 +2969,15 @@ class ComponentProcessor {
 		boolean groupFound = false;
 		boolean inlineSuffixSeen = outAtomCount > 0;
 		Element currentEl = OpsinTools.getNextSibling(multiplier);
-		while (currentEl !=null){
+		while (currentEl != null){
 			Element nextEl = OpsinTools.getNextSibling(currentEl);
 			if (!groupFound || currentEl.getName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL)|| currentEl.getName().equals(UNSATURATOR_EL)){
 				currentEl.detach();
 				elementToResolve.addChild(currentEl);
 			}
 			else if (currentEl.getName().equals(SUFFIX_EL)){
-				if (!inlineSuffixSeen && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) ==null
-						&& (currentEl.getAttribute(LOCANT_ATR)==null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants==0)) && currentEl.getFrag()==null){
+				if (!inlineSuffixSeen && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) == null
+						&& (currentEl.getAttribute(LOCANT_ATR) == null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants == 0)) && currentEl.getFrag() == null){
 					inlineSuffixSeen = true;
 					currentEl.detach();
 					elementToResolve.addChild(currentEl);
@@ -2995,7 +2995,7 @@ class ComponentProcessor {
 			currentEl = nextEl;
 		}
 		Element parent = multiplier.getParent();
-		if (!parent.getName().equals(SUBSTITUENT_EL) && OpsinTools.getChildElementsWithTagNameAndAttribute(parent, SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL).size()!=0){
+		if (!parent.getName().equals(SUBSTITUENT_EL) && OpsinTools.getChildElementsWithTagNameAndAttribute(parent, SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL).size() != 0){
 			throw new ComponentGenerationException("Unexpected radical adding suffix on ring assembly");			
 		}
 		return elementToResolve;
