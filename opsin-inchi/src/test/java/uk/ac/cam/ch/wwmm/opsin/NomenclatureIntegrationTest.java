@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -165,7 +166,7 @@ public class NomenclatureIntegrationTest {
 				}
 			}
 		} finally {
-			input.close();
+			IOUtils.closeQuietly(input);
 		}
 	}
 }
