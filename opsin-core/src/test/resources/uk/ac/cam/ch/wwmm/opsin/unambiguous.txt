@@ -1,0 +1,7 @@
+benzene
+methylbenzene
+pentamethylbenzene
+hexamethylbenzene
+biphenyl
+bipyrid-2-yl
+2,2'-bipyridyl
