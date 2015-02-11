@@ -2937,13 +2937,21 @@ class ComponentProcessor {
 						}
 					}
 					else{
+						List<Atom> potentialAtomsOnParent;
 						if (lastRingUnlocantedBondedTo == null){
-							atomOnParent = FragmentTools.findAtomForSubstitutionOrThrow(fragmentToResolveAndDuplicate, bondOrder);
+							potentialAtomsOnParent = FragmentTools.findAtomsForSubstitution(fragmentToResolveAndDuplicate, 1, bondOrder);
 						}
 						else{
-							atomOnParent = FragmentTools.findAtomForSubstitutionOrThrow(lastRingUnlocantedBondedTo, bondOrder);
+							potentialAtomsOnParent = FragmentTools.findAtomsForSubstitution(lastRingUnlocantedBondedTo, 1, bondOrder);
 						}
-						atomOnLatestClone = FragmentTools.findAtomForSubstitutionOrThrow(clone, bondOrder);
+						List<Atom> potentialAtomsOnClone = FragmentTools.findAtomsForSubstitution(clone, 1, bondOrder);
+						if (potentialAtomsOnParent == null || potentialAtomsOnClone == null){
+							throw new StructureBuildingException("Unable to find suitable atom for unlocanted ring assembly construction");
+						}
+						state.checkForAmbiguity(potentialAtomsOnParent, 1);
+						state.checkForAmbiguity(potentialAtomsOnClone, 1);
+						atomOnParent = potentialAtomsOnParent.get(0);
+						atomOnLatestClone = potentialAtomsOnClone.get(0);
 						lastRingUnlocantedBondedTo = clone;
 					}
 					state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
