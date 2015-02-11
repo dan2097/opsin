@@ -2,3 +2,4 @@ dimethylbenzene
 trimethylbenzene
 tetramethylbenzene
 bipyridyl
+terphenyl
