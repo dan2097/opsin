@@ -2879,11 +2879,6 @@ class ComponentProcessor {
 
 			List<Element> suffixes = elementToResolve.getChildElements(SUFFIX_EL);
 			resolveSuffixes(group, suffixes);
-			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
-			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
-			group.detach();
-			OpsinTools.insertAfter(multiplier, group);
-
 			int bondOrder = 1;
 			if (fragmentToResolveAndDuplicate.getOutAtomCount() > 1){
 				throw new StructureBuildingException("Ring assembly fragment should have one or no OutAtoms; not more than one!");
@@ -2891,40 +2886,55 @@ class ComponentProcessor {
 			if (fragmentToResolveAndDuplicate.getOutAtomCount() == 1) {//e.g. bicyclohexanylidene
 				bondOrder = fragmentToResolveAndDuplicate.getOutAtom(0).getValency();
 			}
-
-			List<Fragment> clonedFragments = new ArrayList<Fragment>();
-			for (int j = 1; j < mvalue; j++) {
-				clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, j));
-			}
 			
-			Fragment lastRingUnlocantedBondedTo = null;
-			for (int i = 0; i < mvalue - 1; i++) {
-				Fragment clone = clonedFragments.get(i);
-				Atom atomOnParent;
-				Atom atomOnLatestClone;
-				if (ringJoiningLocants.size() > 0){//locants defined
-					atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(i).get(0));
-					String secondLocant = ringJoiningLocants.get(i).get(1);
-					if (mvalue ==2 && !secondLocant.endsWith("'")){
-						//Allow prime to be (incorrectly) omitted on second locant in bi ring assemblies e.g. 2,2-bipyridine
-						try {
-							atomOnLatestClone = clone.getAtomByLocantOrThrow(secondLocant);
-						}
-						catch (StructureBuildingException e){
-							atomOnLatestClone = clone.getAtomByLocant(secondLocant + "'");
-							if (atomOnLatestClone == null){
-								throw e;
+			boolean twoRingsJoinedUsingSuffixPosition = ringJoiningLocants.size() == 0 && mvalue == 2 && fragmentToResolveAndDuplicate.getOutAtomCount() == 1;
+			if (!twoRingsJoinedUsingSuffixPosition && fragmentToResolveAndDuplicate.getOutAtomCount() == 1) {
+				//remove yl (or the like). Need to make sure that resolveUnLocantedFeatures doesn't consider 2,2'-bipyridyl ambiguous due to the location of the ul
+				fragmentToResolveAndDuplicate.removeOutAtom(0);
+			}
+
+			StructureBuildingMethods.resolveLocantedFeatures(state, elementToResolve);
+			StructureBuildingMethods.resolveUnLocantedFeatures(state, elementToResolve);
+
+			group.detach();
+			OpsinTools.insertAfter(multiplier, group);
+			
+			if (twoRingsJoinedUsingSuffixPosition){
+				Fragment clone = state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, 1);
+				Atom atomOnParent = fragmentToResolveAndDuplicate.getOutAtom(0).getAtom();
+				Atom atomOnClone = clone.getOutAtom(0).getAtom();
+				fragmentToResolveAndDuplicate.removeOutAtom(0);
+				clone.removeOutAtom(0);
+				state.fragManager.incorporateFragment(clone, atomOnClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
+			}
+			else {
+				List<Fragment> clonedFragments = new ArrayList<Fragment>();
+				for (int j = 1; j < mvalue; j++) {
+					clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, j));
+				}
+				Fragment lastRingUnlocantedBondedTo = null;
+				for (int i = 0; i < mvalue - 1; i++) {
+					Fragment clone = clonedFragments.get(i);
+					Atom atomOnParent;
+					Atom atomOnLatestClone;
+					if (ringJoiningLocants.size() > 0){//locants defined
+						atomOnParent = fragmentToResolveAndDuplicate.getAtomByLocantOrThrow(ringJoiningLocants.get(i).get(0));
+						String secondLocant = ringJoiningLocants.get(i).get(1);
+						if (mvalue ==2 && !secondLocant.endsWith("'")){
+							//Allow prime to be (incorrectly) omitted on second locant in bi ring assemblies e.g. 2,2-bipyridine
+							try {
+								atomOnLatestClone = clone.getAtomByLocantOrThrow(secondLocant);
+							}
+							catch (StructureBuildingException e){
+								atomOnLatestClone = clone.getAtomByLocant(secondLocant + "'");
+								if (atomOnLatestClone == null){
+									throw e;
+								}
 							}
 						}
-					}
-					else{
-						atomOnLatestClone = clone.getAtomByLocantOrThrow(secondLocant);
-					}
-				}
-				else{
-					if (fragmentToResolveAndDuplicate.getOutAtomCount() == 1 && mvalue == 2){
-						atomOnParent = fragmentToResolveAndDuplicate.getOutAtom(0).getAtom();
-						atomOnLatestClone = clone.getOutAtom(0).getAtom();
+						else{
+							atomOnLatestClone = clone.getAtomByLocantOrThrow(secondLocant);
+						}
 					}
 					else{
 						if (lastRingUnlocantedBondedTo == null){
@@ -2936,15 +2946,10 @@ class ComponentProcessor {
 						atomOnLatestClone = FragmentTools.findAtomForSubstitutionOrThrow(clone, bondOrder);
 						lastRingUnlocantedBondedTo = clone;
 					}
+					state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
 				}
-				if (fragmentToResolveAndDuplicate.getOutAtomCount() == 1){
-					fragmentToResolveAndDuplicate.removeOutAtom(0);
-				}
-				if (clone.getOutAtomCount() == 1){
-					clone.removeOutAtom(0);
-				}
-				state.fragManager.incorporateFragment(clone, atomOnLatestClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
 			}
+
 			group.setValue(multiplier.getValue() + group.getValue());
 			Element possibleOpenStructuralBracket = OpsinTools.getPreviousSibling(multiplier);
 			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
