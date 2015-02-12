@@ -3,3 +3,5 @@ trimethylbenzene
 tetramethylbenzene
 bipyridyl
 terphenyl
+epoxynaphthalene
+methanonaphthalene

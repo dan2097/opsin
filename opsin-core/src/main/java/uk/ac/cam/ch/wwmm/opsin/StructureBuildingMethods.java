@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -1555,26 +1556,32 @@ class StructureBuildingMethods {
 		}
 		Atom chalcogenAtom1 = bridgingFragment.getOutAtom(0).getAtom();
 		bridgingFragment.removeOutAtom(0);
+		
+		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
+		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
+		
 		Atom secondAtomToJoinTo;
 		if (bridgingFragment.getOutAtom(0).getLocant() != null){
 			secondAtomToJoinTo = fragToJoinTo.getAtomByLocantOrThrow(bridgingFragment.getOutAtom(0).getLocant());
 		}
 		else{
 			int index = atomList.indexOf(firstAtomToJoinTo);
-			if (index +1 >= atomList.size()) {
-				secondAtomToJoinTo = FragmentTools.findAtomForSubstitutionOrThrow(fragToJoinTo, atomList.get(index - 1), 1, true);
+			Atom preferredAtom = (index + 1 >= atomList.size()) ? atomList.get(index - 1) : atomList.get(index + 1);
+			List<Atom> possibleSecondAtom = FragmentTools.findAtomsForSubstitution(fragToJoinTo.getAtomList(), preferredAtom, 1, 1, true);
+			if (possibleSecondAtom != null) {
+				possibleSecondAtom.removeAll(Collections.singleton(firstAtomToJoinTo));
 			}
-			else{
-				secondAtomToJoinTo = FragmentTools.findAtomForSubstitutionOrThrow(fragToJoinTo, atomList.get(index + 1), 1, true);
+			if (possibleSecondAtom == null || possibleSecondAtom.size() == 0) {
+				throw new StructureBuildingException("Unable to find suitable atom to form bridge");
 			}
+			state.checkForAmbiguity(possibleSecondAtom, 1);
+			secondAtomToJoinTo = possibleSecondAtom.get(0);
 		}
 		Atom chalcogenAtom2 = bridgingFragment.getOutAtom(0).getAtom();
 		bridgingFragment.removeOutAtom(0);
 		if (chalcogenAtom1.equals(chalcogenAtom2) && firstAtomToJoinTo == secondAtomToJoinTo){
 			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
 		}
-		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
-		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
 		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(bridgingFragment);
 		return new Atom[]{firstAtomToJoinTo, secondAtomToJoinTo};
