@@ -3506,7 +3506,12 @@ class ComponentProcessor {
 				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtomOrFirstAtom());
 			}
 			else{
-				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, FragmentTools.findAtomForSubstitutionOrThrow(ringFrag, 1));
+				List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(ringFrag, 1, 1);
+				if (possibleAtoms == null) {
+					throw new StructureBuildingException("Unable to find suitable atom to form bridge");
+				}
+				state.checkForAmbiguity(possibleAtoms, 1);
+				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, possibleAtoms.get(0));
 			}
 			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
 			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
