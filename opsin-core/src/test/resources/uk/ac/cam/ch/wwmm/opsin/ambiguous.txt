@@ -5,3 +5,4 @@ bipyridyl
 terphenyl
 epoxynaphthalene
 methanonaphthalene
+ethylenedipyridine
