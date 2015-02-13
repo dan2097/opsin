@@ -4310,7 +4310,12 @@ class ComponentProcessor {
 					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
 				}
 				else{
-					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), FragmentTools.findAtomForSubstitutionOrThrow(ringFrag, 1) , 1);
+					List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(ringFrag, 1, 1);
+					if (possibleAtoms == null){
+						throw new StructureBuildingException("No suitable atom found for conjunctive operation");
+					}
+					state.checkForAmbiguity(possibleAtoms, 1);
+					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), possibleAtoms.get(0) , 1);
 				}
 				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);
 			}

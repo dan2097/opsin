@@ -9,3 +9,5 @@ epoxyethane
 1,2-methanobenzene
 2,2'-ethylenedipyridine
 ethylenedibenzene
+1,3,5-benzenetriacetic acid
+benzeneacetic acid

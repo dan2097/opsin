@@ -6,3 +6,5 @@ terphenyl
 epoxynaphthalene
 methanonaphthalene
 ethylenedipyridine
+benzenetriacetic acid
+pyridineacetic acid
