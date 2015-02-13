@@ -10,32 +10,47 @@ class SubstitutionAmbiguityChecker {
 
 	static boolean isSubstitutionAmbiguous(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
 		if (substitutableAtoms.size() == 0) {
-			throw new IllegalArgumentException("Must provide at least one substituable atom");
+			throw new IllegalArgumentException("OPSIN Bug: Must provide at least one substituable atom");
+		}
+		if (substitutableAtoms.size() < numberToBeSubstituted) {
+			throw new IllegalArgumentException("OPSIN Bug: substitutableAtoms must be >= numberToBeSubstituted");
 		}
 		if (substitutableAtoms.size() == numberToBeSubstituted){
 			return false;
 		}
-		if (numberToBeSubstituted == 1 && substitutableAtoms.get(0).equals(substitutableAtoms.get(0).getFrag().getDefaultInAtom())) {
+		if (allAtomsConnectToDefaultInAtom(substitutableAtoms, numberToBeSubstituted)) {
 			return false;
 		}
 		Set<Atom> uniqueAtoms = new HashSet<Atom>(substitutableAtoms);
 		if (uniqueAtoms.size() == 1) {
 			return false;
 		}
-		
 		StereoAnalyser analyzer = analyzeRelevantAtomsAndBonds(uniqueAtoms);
-		Set<Integer> uniqueEnvironments = new HashSet<Integer>();
+		Set<String> uniqueEnvironments = new HashSet<String>();
 		for (Atom a : substitutableAtoms) {
 			Integer env = analyzer.getAtomEnvironmentNumber(a);
 			if (env == null){
 				throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
 			}
-			uniqueEnvironments.add(env);
+			uniqueEnvironments.add(env +"\t" + a.getOutValency());
 		}
 		if (uniqueEnvironments.size() == 1 && (numberToBeSubstituted == 1 || numberToBeSubstituted == substitutableAtoms.size() - 1)){
 			return false;
 		}
 		return true;
+	}
+
+	private static boolean allAtomsConnectToDefaultInAtom(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
+		Atom defaultInAtom = substitutableAtoms.get(0).getFrag().getDefaultInAtom();
+		if (defaultInAtom != null) {
+			for (int i = 0; i < numberToBeSubstituted; i++) {
+				if (!substitutableAtoms.get(i).equals(defaultInAtom)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	private static StereoAnalyser analyzeRelevantAtomsAndBonds(Set<Atom> startingAtoms) {

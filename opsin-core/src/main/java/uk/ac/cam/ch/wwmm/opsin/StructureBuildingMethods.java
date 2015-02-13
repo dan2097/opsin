@@ -227,7 +227,7 @@ class StructureBuildingMethods {
 		Fragment frag = group.getFrag();
 		if (frag.getOutAtomCount() >= 1){
 			if (subBracketOrRoot.getAttribute(LOCANT_ATR) != null){
-				throw new RuntimeException("Substituent has an unused outAtom and has a locant but locanted substitution should already been been performed!");
+				throw new RuntimeException("Substituent has an unused outAtom and has a locant but locanted substitution should already have been performed!");
 			}
 			if (frag.getOutAtomCount() > 1){
 				checkAndApplySpecialCaseWhereOutAtomsCanBeCombinedOrThrow(frag, group);
