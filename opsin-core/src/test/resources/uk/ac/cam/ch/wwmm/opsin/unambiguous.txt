@@ -7,3 +7,5 @@ bipyrid-2-yl
 2,2'-bipyridyl
 epoxyethane
 1,2-methanobenzene
+2,2'-ethylenedipyridine
+ethylenedibenzene

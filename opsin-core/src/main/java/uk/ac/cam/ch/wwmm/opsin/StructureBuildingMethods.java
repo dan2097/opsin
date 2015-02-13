@@ -1189,7 +1189,8 @@ class StructureBuildingMethods {
 			}
 			Fragment multipliedFrag = multipliedGroup.getFrag();
 			
-			Fragment multiRadicalFrag = multiRadicalBR.getOutAtom(i).getAtom().getFrag();
+			OutAtom multiRadicalOutAtom = multiRadicalBR.getOutAtom(i);
+			Fragment multiRadicalFrag = multiRadicalOutAtom.getAtom().getFrag();
 			Element multiRadicalGroup = multiRadicalFrag.getTokenEl();
 			if (multiRadicalGroup.getAttribute(RESOLVED_ATR)==null){
 				resolveUnLocantedFeatures(state, multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
@@ -1212,12 +1213,19 @@ class StructureBuildingMethods {
 					}
 				}
 				else{
+					Atom from = multiRadicalOutAtom.getAtom();
+					int bondOrder = multiRadicalOutAtom.getValency();
 					//bonding will be substitutive rather additive as this is bonding to a root
 					Atom atomToJoinTo = null;
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							atomToJoinTo = FragmentTools.findAtomForSubstitutionOrThrow(multipliedFrag, 1);
+							List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(multipliedFrag, 1, bondOrder);
+							if (possibleAtoms == null) {
+								throw new StructureBuildingException("No suitable atom found for multiplicative operation");
+							}
+							state.checkForAmbiguity(possibleAtoms, 1);
+							atomToJoinTo = possibleAtoms.get(0);
 							inLocants.remove(j);
 							break;
 						}
@@ -1234,13 +1242,10 @@ class StructureBuildingMethods {
 						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 					}
 
-					OutAtom out = multiRadicalBR.getOutAtom(i);
-					Atom from = out.getAtom();
-					int bondOrder = out.getValency();
-					if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+					if (!multiRadicalOutAtom.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
 						from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
 					}
-					multiRadicalFrag.removeOutAtom(out);
+					multiRadicalFrag.removeOutAtom(multiRadicalOutAtom);
 
 					state.fragManager.createBond(from, atomToJoinTo, bondOrder);
 					if (LOG.isTraceEnabled()){LOG.trace("Substitutively bonded (multiplicative to root) " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + atomToJoinTo.getID() + " (" + atomToJoinTo.getFrag().getTokenEl().getValue() + ")");}
@@ -1248,7 +1253,7 @@ class StructureBuildingMethods {
 				}
 			}
 			if (!substitutivelyBondedToRoot){
-				joinFragmentsAdditively(state, multiRadicalBR.getOutAtom(i).getAtom().getFrag(), multipliedFrag);
+				joinFragmentsAdditively(state, multiRadicalFrag, multipliedFrag);
 			}
 			if (multipliedElement.getName().equals(BRACKET_EL)){
 				recursivelyResolveUnLocantedFeatures(state, multipliedElement);//there may be outAtoms that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
