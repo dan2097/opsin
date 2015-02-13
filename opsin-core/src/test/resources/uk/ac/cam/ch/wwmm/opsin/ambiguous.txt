@@ -8,3 +8,4 @@ methanonaphthalene
 ethylenedipyridine
 benzenetriacetic acid
 pyridineacetic acid
+tetraaminoethylbenzene
