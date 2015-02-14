@@ -11,3 +11,5 @@ epoxyethane
 ethylenedibenzene
 1,3,5-benzenetriacetic acid
 benzeneacetic acid
+cyclopentanespirocyclobutane
+indene-2-spiro-1'-cyclopentane
