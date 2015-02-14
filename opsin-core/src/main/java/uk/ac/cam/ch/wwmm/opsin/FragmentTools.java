@@ -1041,7 +1041,7 @@ class FragmentTools {
 		return hydroxyAtoms;
 	}
 	
-	static List<Atom> findAtomsForSubstitution(List<Atom> atomList, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
+	static List<Atom> findnAtomsForSubstitution(List<Atom> atomList, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
 		int atomCount = atomList.size();
 		int startingIndex = preferredAtom != null ? atomList.indexOf(preferredAtom) : 0;
 		if (startingIndex < 0){
@@ -1139,8 +1139,8 @@ class FragmentTools {
 	 * @param bondOrder
 	 * @return
 	 */
-	static List<Atom> findAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsRequired, int bondOrder) {
-		return findAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), numberOfSubstitutionsRequired, bondOrder, true);
+	static List<Atom> findnAtomsForSubstitution(Fragment frag, int numberOfSubstitutionsRequired, int bondOrder) {
+		return findnAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), numberOfSubstitutionsRequired, bondOrder, true);
 	}
 	
 	/**
@@ -1159,7 +1159,7 @@ class FragmentTools {
 	 * @return
 	 */
 	static List<Atom> findSubstituableAtoms(Fragment frag, int bondOrder) {
-		List<Atom> potentialAtoms = findAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), 1, bondOrder, true);
+		List<Atom> potentialAtoms = findnAtomsForSubstitution(frag, 1, bondOrder);
 		if (potentialAtoms == null) {
 			return Collections.emptyList();
 		}
@@ -1167,7 +1167,7 @@ class FragmentTools {
 	}
 	
 	/**
-	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findnAtomsForSubstitution(Fragment, int, int)}
 	 * The defaultInAtom in this case is the provided preferredAtom
 	 * takeIntoAccountOutValency may be set to false for cases where the position of radicals is being determined
 	 * Return null if no suitable atom can be found
@@ -1178,7 +1178,7 @@ class FragmentTools {
 	 * @return
 	 */
 	static Atom findAtomForSubstitution(Fragment frag, Atom preferredAtom, int bondOrder, boolean takeIntoAccountOutValency) {
-		List<Atom> atoms = findAtomsForSubstitution(frag.getAtomList(), preferredAtom, 1, bondOrder, takeIntoAccountOutValency);
+		List<Atom> atoms = findnAtomsForSubstitution(frag.getAtomList(), preferredAtom, 1, bondOrder, takeIntoAccountOutValency);
 		if (atoms != null) {
 			return atoms.get(0);
 		}
@@ -1186,7 +1186,7 @@ class FragmentTools {
 	}
 	
 	/**
-	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findAtomsForSubstitution(Fragment, int, int)}
+	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findnAtomsForSubstitution(Fragment, int, int)}
 	 * The defaultInAtom in this case is the provided preferredAtom
 	 * takeIntoAccountOutValency may be set to false for cases where the position of radicals is being determined
 	 * Throws an exception if no suitable atom can be found

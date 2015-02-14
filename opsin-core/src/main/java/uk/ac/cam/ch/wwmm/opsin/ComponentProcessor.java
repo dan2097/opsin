@@ -2939,13 +2939,13 @@ class ComponentProcessor {
 					else{
 						List<Atom> potentialAtomsOnParent;
 						if (lastRingUnlocantedBondedTo == null){
-							potentialAtomsOnParent = FragmentTools.findAtomsForSubstitution(fragmentToResolveAndDuplicate, 1, bondOrder);
+							potentialAtomsOnParent = FragmentTools.findSubstituableAtoms(fragmentToResolveAndDuplicate, bondOrder);
 						}
 						else{
-							potentialAtomsOnParent = FragmentTools.findAtomsForSubstitution(lastRingUnlocantedBondedTo, 1, bondOrder);
+							potentialAtomsOnParent = FragmentTools.findSubstituableAtoms(lastRingUnlocantedBondedTo, bondOrder);
 						}
-						List<Atom> potentialAtomsOnClone = FragmentTools.findAtomsForSubstitution(clone, 1, bondOrder);
-						if (potentialAtomsOnParent == null || potentialAtomsOnClone == null){
+						List<Atom> potentialAtomsOnClone = FragmentTools.findSubstituableAtoms(clone, bondOrder);
+						if (potentialAtomsOnParent.isEmpty() || potentialAtomsOnClone.isEmpty()) {
 							throw new StructureBuildingException("Unable to find suitable atom for unlocanted ring assembly construction");
 						}
 						state.checkForAmbiguity(potentialAtomsOnParent, 1);
@@ -3217,8 +3217,8 @@ class ComponentProcessor {
 				atomToBeReplaced = previousFrag.getAtomByLocantOrThrow(locant1);
 			}
 			else{
-				List<Atom> potentialAtoms = FragmentTools.findAtomsForSubstitution(previousFrag, 1, 2);
-				if (potentialAtoms == null) {
+				List<Atom> potentialAtoms = FragmentTools.findSubstituableAtoms(previousFrag, 2);
+				if (potentialAtoms.isEmpty()) {
 					throw new StructureBuildingException("No suitable atom found for spiro fusion");
 				}
 				state.checkForAmbiguity(potentialAtoms, 1);
@@ -3240,8 +3240,8 @@ class ComponentProcessor {
 				atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(locant2);
 			}
 			else{
-				List<Atom> potentialAtoms = FragmentTools.findAtomsForSubstitution(parentFrag, 1, 2);
-				if (potentialAtoms == null) {
+				List<Atom> potentialAtoms = FragmentTools.findSubstituableAtoms(parentFrag, 2);
+				if (potentialAtoms.isEmpty()) {
 					throw new StructureBuildingException("No suitable atom found for spiro fusion");
 				}
 				state.checkForAmbiguity(potentialAtoms, 1);
@@ -3516,8 +3516,8 @@ class ComponentProcessor {
 				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtomOrFirstAtom());
 			}
 			else{
-				List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(ringFrag, 1, 1);
-				if (possibleAtoms == null) {
+				List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(ringFrag, 1);
+				if (possibleAtoms.isEmpty()) {
 					throw new StructureBuildingException("Unable to find suitable atom to form bridge");
 				}
 				state.checkForAmbiguity(possibleAtoms, 1);
@@ -4320,8 +4320,8 @@ class ComponentProcessor {
 					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
 				}
 				else{
-					List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(ringFrag, 1, 1);
-					if (possibleAtoms == null){
+					List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(ringFrag, 1);
+					if (possibleAtoms.isEmpty()){
 						throw new StructureBuildingException("No suitable atom found for conjunctive operation");
 					}
 					state.checkForAmbiguity(possibleAtoms, 1);
