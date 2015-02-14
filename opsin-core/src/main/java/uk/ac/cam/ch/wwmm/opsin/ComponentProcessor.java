@@ -3217,7 +3217,12 @@ class ComponentProcessor {
 				atomToBeReplaced = previousFrag.getAtomByLocantOrThrow(locant1);
 			}
 			else{
-				atomToBeReplaced = FragmentTools.findAtomForSubstitutionOrThrow(previousFrag, 2);
+				List<Atom> potentialAtoms = FragmentTools.findAtomsForSubstitution(previousFrag, 1, 2);
+				if (potentialAtoms == null) {
+					throw new StructureBuildingException("No suitable atom found for spiro fusion");
+				}
+				state.checkForAmbiguity(potentialAtoms, 1);
+				atomToBeReplaced = potentialAtoms.get(0);
 			}
 			Atom atomOnParentFrag;
 			String locant2 =null;
@@ -3231,11 +3236,16 @@ class ComponentProcessor {
 					throw new ComponentGenerationException("Malformed locant after polycyclic spiro descriptor");
 				}
 			}
-			if (locant2!=null){
+			if (locant2 != null){
 				atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(locant2);
 			}
 			else{
-				atomOnParentFrag = FragmentTools.findAtomForSubstitutionOrThrow(parentFrag, 2);
+				List<Atom> potentialAtoms = FragmentTools.findAtomsForSubstitution(parentFrag, 1, 2);
+				if (potentialAtoms == null) {
+					throw new StructureBuildingException("No suitable atom found for spiro fusion");
+				}
+				state.checkForAmbiguity(potentialAtoms, 1);
+				atomOnParentFrag = potentialAtoms.get(0);
 			}
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnParentFrag);
 			if (atomToBeReplaced.hasSpareValency()){
