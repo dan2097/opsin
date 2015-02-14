@@ -2,17 +2,17 @@
 <!-- See the DTD for more details -->
 <tokenLists>
   <tokenList tagname="group" type="ring" subType="cyclicUnsaturableHydrocarbon" symbol="A">
-    <token value="C12CC3CC4CC5C1.C24.C35" labels="1/2/3/4/5/6/7/8/9/10" frontLocantsExpected="1,2">adamant</token>
-    <token value="C12C3C4C5C3C1C5C24" labels="1/2/3/4/5/6/7/8">cub</token>
-    <token value="C12C3C4C1C4C32" labels="1/2/3/4/5/6">prism</token>
+    <token value="C12CC3CC4CC5C1.C24.C35" labels="numeric" frontLocantsExpected="1,2">adamant</token>
+    <token value="C12C3C4C5C3C1C5C24" labels="numeric">cub</token>
+    <token value="C12C3C4C1C4C32" labels="numeric">prism</token>
   </tokenList>
 
   <tokenList tagname="group" type="ring" subType="cyclicUnsaturableHydrocarbon" symbol="A">
     <!-- terpenes-->
-    <token value="C123CCC4CC1.C24(C)C.C3">born</token>
-      <token value="C123CCC4CC1.C24(C)C.C3">camph</token>
-      <token value="C123CCC4CC1.C24(C)C.C3">bornyl</token>
-    <token value="C12CC3CCC1C2(C)C.C3">car</token>
+    <token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">born</token>
+      <token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">camph</token>
+      <token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">bornyl</token>
+    <token value="C12CC3CCC1C2(C)C.C3" labels="numeric">car</token>
     <!--it's quicker to write out all forms of this than create a special case for menthane to allow things like 1-p-menthene-->
     <token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" suffixAppliesToByDefault="3">menth</token>
     <token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" suffixAppliesToByDefault="3">p-menth</token>
@@ -21,12 +21,12 @@
     <token value="C12CC3CCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">meta-menth</token>
     <token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">o-menth</token>
     <token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">ortho-menth</token>
-    <token value="C12CCC(CC2)C1">norborn</token>
-      <token value="C12CCC(CC2)C1">norcamph</token>
-      <token value="C12CCC(CC2)C1">norbornyl</token>
-    <token value="C12CCCCC2C1">norcar</token>
-    <token value="C12CCCC(C2)C1">norpin</token>
-    <token value="C12C3CCC4C156.C24.C5.C6.C3">pin</token>
-    <token value="C123CCC4C1C2.C3(C)C.C4">thuj</token>
+    <token value="C12CCC(CC2)C1" labels="numeric">norborn</token>
+      <token value="C12CCC(CC2)C1" labels="numeric">norcamph</token>
+      <token value="C12CCC(CC2)C1" labels="numeric">norbornyl</token>
+    <token value="C12CCCCC2C1" labels="numeric">norcar</token>
+    <token value="C12CCCC(C2)C1" labels="numeric">norpin</token>
+    <token value="C12C3CCC4C156.C24.C5.C6.C3" labels="numeric">pin</token>
+    <token value="C123CCC4C1C2.C3(C)C.C4" labels="numeric">thuj</token>
   </tokenList>
 </tokenLists>
