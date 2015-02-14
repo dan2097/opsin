@@ -818,7 +818,7 @@ class StructureBuildingMethods {
 			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
 				OutAtom outAtom = thisFrag.getOutAtom(i);
 				if (!outAtom.isSetExplicitly()){
-					List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(thisFrag.getAtomList(), outAtom.getAtom(), 1, outAtom.getValency(), true);
+					List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(thisFrag.getAtomList(), outAtom.getAtom(), 1, outAtom.getValency(), true);
 		            if (possibleAtoms == null){
 		            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 	                }
@@ -980,7 +980,7 @@ class StructureBuildingMethods {
 								}
 
 								//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-								if (FragmentTools.findSubstituableAtoms(lastFrag, frag.getOutAtom(outAtomCount - 1).getValency()).size() > 0){
+								if (FragmentTools.findSubstituableAtoms(lastFrag, frag.getOutAtom(outAtomCount - 1).getValency()).size() > 0) {
 									break;
 								}
 							}
@@ -1015,7 +1015,7 @@ class StructureBuildingMethods {
 							}
 
 							//loop may continue if lastFrag was in fact completely unsubstitutable e.g. hydroxy...phosphoryloxy. The oxy is unsubstituable as the phosphoryl will already have bonded to it
-							if (FragmentTools.findSubstituableAtoms(lastFrag, frag.getOutAtom(outAtomCount - 1).getValency()).size() > 0){
+							if (FragmentTools.findSubstituableAtoms(lastFrag, frag.getOutAtom(outAtomCount - 1).getValency()).size() > 0) {
 								break;
 							}
 						}
@@ -1220,8 +1220,8 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(multipliedFrag, 1, bondOrder);
-							if (possibleAtoms == null) {
+							List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(multipliedFrag, bondOrder);
+							if (possibleAtoms.isEmpty()) {
 								throw new StructureBuildingException("No suitable atom found for multiplicative operation");
 							}
 							state.checkForAmbiguity(possibleAtoms, 1);
@@ -1521,7 +1521,7 @@ class StructureBuildingMethods {
 		Atom from = out.getAtom();
 		int bondOrder = out.getValency();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			List<Atom> possibleAtoms = FragmentTools.findAtomsForSubstitution(fragToBeJoined.getAtomList(), from, 1, bondOrder, false);
+			List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(fragToBeJoined.getAtomList(), from, 1, bondOrder, false);
             if (possibleAtoms == null){
             	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
             }
@@ -1572,7 +1572,7 @@ class StructureBuildingMethods {
 		else{
 			int index = atomList.indexOf(firstAtomToJoinTo);
 			Atom preferredAtom = (index + 1 >= atomList.size()) ? atomList.get(index - 1) : atomList.get(index + 1);
-			List<Atom> possibleSecondAtom = FragmentTools.findAtomsForSubstitution(fragToJoinTo.getAtomList(), preferredAtom, 1, 1, true);
+			List<Atom> possibleSecondAtom = FragmentTools.findnAtomsForSubstitution(fragToJoinTo.getAtomList(), preferredAtom, 1, 1, true);
 			if (possibleSecondAtom != null) {
 				possibleSecondAtom.removeAll(Collections.singleton(firstAtomToJoinTo));
 			}
@@ -1602,7 +1602,7 @@ class StructureBuildingMethods {
 	private static List<Atom> findAtomsForSubstitution(Element subOrBracket, int numberOfSubstitutions, int bondOrder) {
 		List<Fragment> possibleParents = findAlternativeFragments(subOrBracket);
 		for (Fragment fragment : possibleParents) {
-			List<Atom> substitutableAtoms = FragmentTools.findAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
+			List<Atom> substitutableAtoms = FragmentTools.findnAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
 			if (substitutableAtoms != null){
 				return substitutableAtoms;
 			}
