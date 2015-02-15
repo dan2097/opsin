@@ -85,7 +85,7 @@ class WordRulesOmittedSpaceCorrector {
 						return;
 					}
 					String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
-					if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, rootGroup)) {
+					if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, rootGroup, substituentsAndBrackets.size())) {
 						transformToEster(wordRule, firstChild);
 					}
 					else if (substituentsAndBrackets.size() > 1 && 
@@ -146,24 +146,37 @@ class WordRulesOmittedSpaceCorrector {
 	}
 
 	/**
-	 * Ester form preferred when mono is used and when an alkyl chain is used on formate/acetate
-	 * e.g. ethylacetate
+	 * Ester form preferred when:
+	 * mono is used on substituent
+	 * alkyl chain is used on formate/acetate e.g. ethylacetate
+	 * Root is carbamate, >=2 substituents, and this is the only word rule 
+	 * (ester and non-ester carbamates differ only by whether or not there is a space, heuristically the ester is almost always intended under these conditions)
 	 * @param substituentGroupEl
 	 * @param multiplierValue
 	 * @param rootGroup 
+	 * @param numOfSubstituents 
 	 * @return
 	 */
-	private boolean specialCaseWhereEsterPreferred(Element substituentGroupEl, String multiplierValue, Element rootGroup) {
+	private boolean specialCaseWhereEsterPreferred(Element substituentGroupEl, String multiplierValue, Element rootGroup, int numOfSubstituents) {
 		if (multiplierValue != null && Integer.parseInt(multiplierValue) == 1){
 			return true;
 		}
+		String rootGroupName = rootGroup.getParent().getValue();
 		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) &&
 				ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))) {
 			if (substituentGroupEl.getParent().getValue().matches(substituentGroupEl.getValue() + "yl-?") &&
-					rootGroup.getParent().getValue().matches("(form|methan|acet|ethan)[o]?ate")) {
+					rootGroupName.matches("(form|methan|acet|ethan)[o]?ate")) {
 				return true;
 			}
-
+		}
+		if (rootGroupName.equals("carbamate") && numOfSubstituents >= 2) {
+			Element temp = substituentGroupEl.getParent();
+			while (temp.getParent() != null) {
+				temp = temp.getParent();
+			}
+			if (temp.getChildElements(WORDRULE_EL).size() == 1) {
+				return true;
+			}
 		}
 		return false;
 	}
