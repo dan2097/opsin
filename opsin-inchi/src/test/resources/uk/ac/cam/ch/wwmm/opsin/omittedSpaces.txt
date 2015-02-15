@@ -8,6 +8,8 @@ ethyloxalate	InChI=1/C4H6O4/c1-2-8-4(7)3(5)6/h2H2,1H3,(H,5,6)/p-1/fC4H5O4/q-1
 diethyloxalate	InChI=1/C6H10O4/c1-3-9-5(7)6(8)10-4-2/h3-4H2,1-2H3
 diethylsuccinate	InChI=1/C8H14O4/c1-3-11-7(9)5-6-8(10)12-4-2/h3-6H2,1-2H3
 ethylphenylacetate	InChI=1S/C10H12O2/c1-2-12-10(11)8-9-6-4-3-5-7-9/h3-7H,2,8H2,1H3
+//Note that this is a fudge to give the expected real-world interpretation
+tert-butyl(phenyl)carbamate	InChI=1S/C11H15NO2/c1-11(2,3)14-10(13)12-9-7-5-4-6-8-9/h4-8H,1-3H3,(H,12,13)
 //not omitted space
 2-methylacetate	InChI=1/C3H6O2/c1-2-3(4)5/h2H2,1H3,(H,4,5)/p-1/fC3H5O2/q-1
 ethylterephthalate	InChI=1/C10H10O4/c1-2-6-5-7(9(11)12)3-4-8(6)10(13)14/h3-5H,2H2,1H3,(H,11,12)(H,13,14)/p-2/fC10H8O4/q-2
@@ -17,3 +19,5 @@ ethylmalonate	InChI=1/C5H8O4/c1-2-3(4(6)7)5(8)9/h3H,2H2,1H3,(H,6,7)(H,8,9)/p-2/f
 diethylmalonate	InChI=1/C7H12O4/c1-3-7(4-2,5(8)9)6(10)11/h3-4H2,1-2H3,(H,8,9)(H,10,11)/p-2/fC7H10O4/q-2
 ethylsuccinate	InChI=1/C6H10O4/c1-2-4(6(9)10)3-5(7)8/h4H,2-3H2,1H3,(H,7,8)(H,9,10)/p-2/fC6H8O4/q-2
 acetylacetate	InChI=1/C4H6O3/c1-3(5)2-4(6)7/h2H2,1H3,(H,6,7)/p-1/fC4H5O3/q-1
+diethylcarbamate	InChI=1S/C5H11NO2/c1-3-6(4-2)5(7)8/h3-4H2,1-2H3,(H,7,8)/p-1
+sodium tert-butyl(phenyl)carbamate	InChI=1S/C11H15NO2.Na/c1-11(2,3)12(10(13)14)9-7-5-4-6-8-9;/h4-8H,1-3H3,(H,13,14);/q;+1/p-1
