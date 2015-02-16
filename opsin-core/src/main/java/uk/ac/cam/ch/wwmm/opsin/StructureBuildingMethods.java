@@ -1600,9 +1600,29 @@ class StructureBuildingMethods {
 	 * @return
 	 */
 	private static List<Atom> findAtomsForSubstitution(Element subOrBracket, int numberOfSubstitutions, int bondOrder) {
-		List<Fragment> possibleParents = findAlternativeFragments(subOrBracket);
-		for (Fragment fragment : possibleParents) {
-			List<Atom> substitutableAtoms = FragmentTools.findnAtomsForSubstitution(fragment, numberOfSubstitutions, bondOrder);
+		boolean rootHandled = false;
+		List<Element> possibleParents = findAlternativeGroups(subOrBracket);
+		for (int i = 0, l = possibleParents.size(); i < l; i++) {
+			Element possibleParent = possibleParents.get(i);
+			Fragment frag = possibleParent.getFrag();
+			List<Atom> substitutableAtoms;
+			if (possibleParent.getParent().getName().equals(ROOT_EL)){//consider all root groups as if they were one
+				if(rootHandled) {
+					continue;
+				}
+				List<Atom> atoms = frag.getAtomList();
+				for (int j = i + 1; j < l; j++) {
+					Element possibleOtherRoot = possibleParents.get(j);
+					if (possibleOtherRoot.getParent().getName().equals(ROOT_EL)) {
+						atoms.addAll(possibleOtherRoot.getFrag().getAtomList());
+					}
+				}
+				rootHandled = true;
+				substitutableAtoms = FragmentTools.findnAtomsForSubstitution(atoms, frag.getDefaultInAtom(), numberOfSubstitutions, bondOrder, true);
+			}
+			else{
+				substitutableAtoms = FragmentTools.findnAtomsForSubstitution(frag, numberOfSubstitutions, bondOrder);
+			}
 			if (substitutableAtoms != null){
 				return substitutableAtoms;
 			}
@@ -1611,21 +1631,34 @@ class StructureBuildingMethods {
 	}
 
 	/**
-	 * Finds all the groups accessible from the startingElement taking into account brackets
+	 * Finds all the fragments accessible from the startingElement taking into account brackets
 	 * i.e. those that it is feasible that the group of the startingElement could substitute onto
 	 * @param startingElement
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
 	static List<Fragment> findAlternativeFragments(Element startingElement) {
+		List<Fragment> foundFragments = new ArrayList<Fragment>();
+		for (Element group : findAlternativeGroups(startingElement)) {
+			foundFragments.add(group.getFrag());
+		}
+		return foundFragments;
+	}
+	
+	/**
+	 * Finds all the groups accessible from the startingElement taking into account brackets
+	 * i.e. those that it is feasible that the group of the startingElement could substitute onto
+	 * @param startingElement
+	 * @return A list of groups in the order to try them as possible parent groups (for substitutive operations)
+	 */
+	static List<Element> findAlternativeGroups(Element startingElement) {
 		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement.getParent());
-		List<Fragment> foundFragments = new ArrayList<Fragment>();
+		List<Element> foundGroups = new ArrayList<Element>();
 		boolean doneFirstIteration = false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (stack.size() > 0) {
 			Element currentElement =stack.removeLast();
 			if (currentElement.getName().equals(GROUP_EL)) {
-				Fragment groupFrag = currentElement.getFrag();
-				foundFragments.add(groupFrag);
+				foundGroups.add(currentElement);
 				continue;
 			}
 			List<Element> siblings = OpsinTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
@@ -1657,7 +1690,7 @@ class StructureBuildingMethods {
 			}
 			doneFirstIteration = true;
 		}
-		return foundFragments;
+		return foundGroups;
 	}
 
 	/**
