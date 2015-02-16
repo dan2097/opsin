@@ -102,8 +102,8 @@ public class DtdTest {
 					terms.add(tokenString);
 					char[] characters = tokenString.toCharArray();
 					for (char c : characters) {
-						assertTrue("Non ascii character found in token: " + tokenString +" \nAn ASCII replacement should be used!" ,(int)c < 128);
-						assertTrue("Capital letter found in token: " + tokenString +" \nOnly lower case letters should be used!" , !(c >='A' && c <='Z'));
+						assertTrue("Non ascii character found in token: " + tokenString + OpsinTools.NEWLINE + "An ASCII replacement should be used!" ,(int)c < 128);
+						assertTrue("Capital letter found in token: " + tokenString + OpsinTools.NEWLINE + "Only lower case letters should be used!" , !(c >='A' && c <='Z'));
 					}
 				}
 				break;

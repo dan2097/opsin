@@ -32,6 +32,8 @@ class OpsinTools {
 	static final char END_OF_MAINGROUP = '\u00e2';
 	static final char END_OF_FUNCTIONALTERM = '\u00FB';
 	
+	static final String NEWLINE = System.getProperty("line.separator");
+	
 	/**
 	 * Returns the next sibling suffix node which is not related to altering charge (ium/ide/id)
 	 * @param currentEl
