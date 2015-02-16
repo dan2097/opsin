@@ -374,6 +374,9 @@
 
 <!--yield names that should be ambiguous but by convention aren't-->
 		<token value="N(=NC(C#N)(C)C)C(C#N)(C)C" labels="none">azobisisobutyronitrile</token>
+		<token value="N(=NC(C#N)(C)C)C(C#N)(C)C" labels="none">azobis-isobutyronitrile</token>
+		<token value="C(N)(c1ccccc1)C(N)c1ccccc1" labels="//1/2/3/4/5/6///1'/2'/3'/4'/5'/6'">diphenylethylenediamin</token>
+		<token value="C(N)(c1ccccc1)C(N)c1ccccc1" labels="//1/2/3/4/5/6///1'/2'/3'/4'/5'/6'">diphenylethylenediamine</token>
 		<token value="C(=O)(NC1CCCCC1)NC1CCCCC1" labels="///1/2/3/4/5/6//1'/2'/3'/4'/5'/6'">dicyclohexylurea</token>
 		<token value="C(=O)(NC)NC" labels="none">dimethylurea</token>
 		<token value="C(OC)C(OC)" labels="1///2//">dimethoxyethane</token>
