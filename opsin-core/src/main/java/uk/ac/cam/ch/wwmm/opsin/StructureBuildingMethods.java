@@ -681,11 +681,11 @@ class StructureBuildingMethods {
 		Fragment thisFrag = group.getFrag();
 		List<Atom> atomList =thisFrag.getAtomList();
 
-		ArrayList<Element> unsaturators = new ArrayList<Element>();
-		ArrayList<Element> heteroatoms = new ArrayList<Element>();
-		ArrayList<Element> hydrogenElements = new ArrayList<Element>();
+		List<Element> unsaturators = new ArrayList<Element>();
+		List<Element> heteroatoms = new ArrayList<Element>();
+		List<Element> hydrogenElements = new ArrayList<Element>();
 
-		List<Element> children =subOrRoot.getChildElements();
+		List<Element> children = subOrRoot.getChildElements();
 		for (Element currentEl : children) {
 			String elName =currentEl.getName();
 			if (elName.equals(UNSATURATOR_EL)){
