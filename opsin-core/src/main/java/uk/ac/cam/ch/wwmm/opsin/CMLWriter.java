@@ -8,6 +8,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
 public class CMLWriter {
@@ -17,6 +18,9 @@ public class CMLWriter {
 	static final String CML_NAMESPACE = "http://www.xml-cml.org/schema";
 
 	private static final XMLOutputFactory factory = new WstxOutputFactory();
+	static {
+		factory.setProperty(WstxOutputProperties.P_OUTPUT_ESCAPE_CR, false);
+	}
 	
 	/**The XML writer*/
 	private final XMLStreamWriter writer;

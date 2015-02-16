@@ -207,10 +207,10 @@ abstract class Element {
 		result.append('>');
 		if (getChildCount() > 0){
 			for (Element child : getChildElements()) {
-				result.append('\n');
+				result.append(OpsinTools.NEWLINE);
 				result.append(child.toXML(indent + 1));
 			}
-			result.append('\n');
+			result.append(OpsinTools.NEWLINE);
 			for (int i = 0; i < indent; i++) {
 				result.append("  ");
 			}

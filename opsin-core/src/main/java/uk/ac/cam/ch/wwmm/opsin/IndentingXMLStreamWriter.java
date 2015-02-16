@@ -22,7 +22,7 @@ class IndentingXMLStreamWriter extends StreamWriterDelegate {
 	@Override
 	public void writeStartElement(String arg0) throws XMLStreamException {
 		if (!atStartOfNewline){
-			super.writeCharacters("\n");
+			super.writeCharacters(OpsinTools.NEWLINE);
 		}
 		super.writeCharacters(StringTools.multiplyString(" ", depth * indentSize));
 		super.writeStartElement(arg0);
@@ -37,7 +37,7 @@ class IndentingXMLStreamWriter extends StreamWriterDelegate {
 			super.writeCharacters(StringTools.multiplyString(" ", depth * indentSize));
 		}
 		super.writeEndElement();
-		super.writeCharacters("\n");
+		super.writeCharacters(OpsinTools.NEWLINE);
 		atStartOfNewline = true;
 	}
 	

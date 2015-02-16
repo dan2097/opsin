@@ -28,6 +28,7 @@ import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
@@ -296,8 +297,8 @@ public class NameToStructure {
 
 	private static void displayUsage(Options options) {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options] [inputfile] [outputfile]\n" +
-				"OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI/StdInChIKey\n" +
+		formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options] [inputfile] [outputfile]" + OpsinTools.NEWLINE +
+				"OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI/StdInChIKey" + OpsinTools.NEWLINE +
 				"Names should be new line delimited and may be read from stdin (default) or a file and output to stdout (default) or a file", options);
 		System.exit(0);
 	}
@@ -307,13 +308,15 @@ public class NameToStructure {
 		OptionBuilder.withArgName("o");
 		OptionBuilder.withLongOpt("output");
 		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("Sets OPSIN's output format (default cml)\n" +
-				"Allowed values are:\n" +
-				"cml for Chemical Markup Language\n" +
-				"smi for SMILES\n" +
-				"inchi for InChI\n" +
-				"stdinchi for StdInChI\n" +
-				"stdinchikey for StdInChIKey");
+		StringBuilder outputOptionsDesc = new StringBuilder();
+		outputOptionsDesc.append("Sets OPSIN's output format (default cml)").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("Allowed values are:").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("cml for Chemical Markup Language").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("smi for SMILES").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("inchi for InChI").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("stdinchi for StdInChI").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("stdinchikey for StdInChIKey");
+		OptionBuilder.withDescription(outputOptionsDesc.toString());
 		options.addOption(OptionBuilder.create("o"));
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
@@ -345,6 +348,7 @@ public class NameToStructure {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
 		XMLOutputFactory factory = new WstxOutputFactory();
+		factory.setProperty(WstxOutputProperties.P_OUTPUT_ESCAPE_CR, false);
 		XMLStreamWriter writer = factory.createXMLStreamWriter(out, "UTF-8");
 		writer = new IndentingXMLStreamWriter(writer, 2);
 		writer.writeStartDocument();
