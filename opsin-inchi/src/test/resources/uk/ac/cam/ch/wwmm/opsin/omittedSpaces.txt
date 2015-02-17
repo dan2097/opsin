@@ -21,3 +21,4 @@ ethylsuccinate	InChI=1/C6H10O4/c1-2-4(6(9)10)3-5(7)8/h4H,2-3H2,1H3,(H,7,8)(H,9,1
 acetylacetate	InChI=1/C4H6O3/c1-3(5)2-4(6)7/h2H2,1H3,(H,6,7)/p-1/fC4H5O3/q-1
 diethylcarbamate	InChI=1S/C5H11NO2/c1-3-6(4-2)5(7)8/h3-4H2,1-2H3,(H,7,8)/p-1
 sodium tert-butyl(phenyl)carbamate	InChI=1S/C11H15NO2.Na/c1-11(2,3)12(10(13)14)9-7-5-4-6-8-9;/h4-8H,1-3H3,(H,13,14);/q;+1/p-1
+dimethyl(ethylenedioxy)dicarbamate	InChI=1S/C6H12N2O6/c1-11-5(9)7-13-3-4-14-8-6(10)12-2/h3-4H2,1-2H3,(H,7,9)(H,8,10)

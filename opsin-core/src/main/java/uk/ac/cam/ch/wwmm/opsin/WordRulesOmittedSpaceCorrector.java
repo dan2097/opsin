@@ -72,9 +72,18 @@ class WordRulesOmittedSpaceCorrector {
 		if (matchAteOrIteEnding.matcher(wordRuleContents).find()){
 			List<Element> roots = word.getChildElements(ROOT_EL);
 			if (roots.size() == 1){
-				Element rootGroup = roots.get(0).getFirstChildElement(GROUP_EL);
+				Element rootEl = roots.get(0);
+				Element rootGroup = rootEl.getFirstChildElement(GROUP_EL);
 				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
+				int rootMultiplier = 1;
+				{
+					String rootElMultiplierAtrVal = rootEl.getAttributeValue(MULTIPLIER_ATR);
+					if (rootElMultiplierAtrVal != null) {
+						rootMultiplier = Integer.parseInt(rootElMultiplierAtrVal);
+						functionalAtomsCount *= rootMultiplier;
+					}
+				}
 				if (functionalAtomsCount > 0){
 					List<Element> substituentsAndBrackets = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
 					if (substituentsAndBrackets.size() == 0){
@@ -89,7 +98,7 @@ class WordRulesOmittedSpaceCorrector {
 						transformToEster(wordRule, firstChild);
 					}
 					else if (substituentsAndBrackets.size() > 1 && 
-							(allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstitution(substituentsAndBrackets, rootFrag))){
+							(allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstitution(substituentsAndBrackets, rootFrag, rootMultiplier))){
 						transformToEster(wordRule, firstChild);
 					}
 					else if (substituentsAndBrackets.size() == 1 && substitutionWouldBeAmbiguous(rootFrag, multiplierValue)){
@@ -112,8 +121,8 @@ class WordRulesOmittedSpaceCorrector {
 		return true;
 	}
 
-	private boolean insufficientSubstitutableHydrogenForSubstitution(List<Element> substituentsAndBrackets, Fragment frag) {
-		int substitutableHydrogens = getAtomForEachSubstitutableHydrogen(frag).size();
+	private boolean insufficientSubstitutableHydrogenForSubstitution(List<Element> substituentsAndBrackets, Fragment frag, int rootMultiplier) {
+		int substitutableHydrogens = getAtomForEachSubstitutableHydrogen(frag).size() * rootMultiplier;
 		for (int i = 1; i < substituentsAndBrackets.size(); i++) {
 			Element subOrBracket = substituentsAndBrackets.get(i);
 			Fragment f = getRightMostGroup(subOrBracket).getFrag();
@@ -165,11 +174,11 @@ class WordRulesOmittedSpaceCorrector {
 		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) &&
 				ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))) {
 			if (substituentGroupEl.getParent().getValue().matches(substituentGroupEl.getValue() + "yl-?") &&
-					rootGroupName.matches("(form|methan|acet|ethan)[o]?ate")) {
+					rootGroupName.matches(".*(form|methan|acet|ethan)[o]?ate")) {
 				return true;
 			}
 		}
-		if (rootGroupName.equals("carbamate") && numOfSubstituents >= 2) {
+		if (rootGroupName.endsWith("carbamate") && numOfSubstituents >= 2) {
 			Element temp = substituentGroupEl.getParent();
 			while (temp.getParent() != null) {
 				temp = temp.getParent();
