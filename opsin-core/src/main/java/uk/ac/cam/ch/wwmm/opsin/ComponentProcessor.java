@@ -2591,19 +2591,13 @@ class ComponentProcessor {
 					}
 					if (connectEndToEndWithPreviousSub){
 						Element parent = group.getParent();
-						while (parent.getName().equals(BRACKET_EL)){
+						while (parent.getName().equals(BRACKET_EL)) {
 							parent = parent.getParent();
 						}
-						if (parent.getName().equals(ROOT_EL)){
-							Element previous = OpsinTools.getPrevious(group);
-							if (previous == null || !previous.getName().equals(MULTIPLIER_EL)){
-								connectEndToEndWithPreviousSub = false;
-							}
+						if (!parent.getName().equals(ROOT_EL)) {
+							group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
+							frag.setDefaultInAtom(frag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
 						}
-					}
-					if (connectEndToEndWithPreviousSub){
-						group.addAttribute(new Attribute(DEFAULTINID_ATR, Integer.toString(chainLength)));
-						frag.setDefaultInAtom(frag.getAtomByLocantOrThrow(Integer.toString(chainLength)));
 					}
 				}
 			}
