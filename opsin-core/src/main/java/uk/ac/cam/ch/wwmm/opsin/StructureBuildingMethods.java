@@ -1128,8 +1128,8 @@ class StructureBuildingMethods {
 		if (LOG.isTraceEnabled()){LOG.trace(multiplier +" multiplicative bonds to be formed");}
 		multipliedParent.removeAttribute(multipliedParent.getAttribute(MULTIPLIER_ATR));
 		List<String> inLocants = null;
-		if (multipliedParent.getAttribute(INLOCANTS_ATR) != null){//true for the root of a multiplicative name
-			String inLocantsString = multipliedParent.getAttributeValue(INLOCANTS_ATR);
+		String inLocantsString = multipliedParent.getAttributeValue(INLOCANTS_ATR);
+		if (inLocantsString != null){//true for the root of a multiplicative name
 			if (inLocantsString.equals(INLOCANTS_DEFAULT)){
 				inLocants = new ArrayList<String>(multiplier);
 				for (int i = 0; i < multiplier; i++) {
@@ -1153,33 +1153,33 @@ class StructureBuildingMethods {
 				clonedElements.add(multipliedElement);
 			}
 			else{
-				multipliedElement=multipliedParent;
+				multipliedElement = multipliedParent;
 			}
 			
 			//determine group that will be additively bonded to
 			Element multipliedGroup;
-			if (multipliedElement.getName().equals(BRACKET_EL)){
-				multipliedGroup =getFirstMultiValentGroup(multipliedElement);
+			if (multipliedElement.getName().equals(BRACKET_EL)) {
+				multipliedGroup = getFirstMultiValentGroup(multipliedElement);
 				if (multipliedGroup == null){//root will not have a multivalent group
 					List<Element> groups = OpsinTools.getDescendantElementsWithTagName(multipliedElement, GROUP_EL);
-					if (inLocants==null){
+					if (inLocants == null){
 						throw new StructureBuildingException("OPSIN Bug? in locants must be specified for a multiplied root in multiplicative nomenclature");
 					}
 					if (inLocants.get(0).equals(INLOCANTS_DEFAULT)){
-						multipliedGroup = groups.get(groups.size()-1);
+						multipliedGroup = groups.get(groups.size() - 1);
 					}
 					else{
 						groupLoop: for (int j = groups.size()-1; j >=0; j--) {
 							Fragment possibleFrag = groups.get(j).getFrag();
 							for (String locant : inLocants) {
 								if (possibleFrag.hasLocant(locant)){
-									multipliedGroup =groups.get(j);
+									multipliedGroup = groups.get(j);
 									break groupLoop;
 								}
 							}
 						}
 					}
-					if (multipliedGroup==null){
+					if (multipliedGroup == null){
 						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 					}
 				}
@@ -1192,23 +1192,23 @@ class StructureBuildingMethods {
 			OutAtom multiRadicalOutAtom = multiRadicalBR.getOutAtom(i);
 			Fragment multiRadicalFrag = multiRadicalOutAtom.getAtom().getFrag();
 			Element multiRadicalGroup = multiRadicalFrag.getTokenEl();
-			if (multiRadicalGroup.getAttribute(RESOLVED_ATR)==null){
+			if (multiRadicalGroup.getAttribute(RESOLVED_ATR) == null){
 				resolveUnLocantedFeatures(state, multiRadicalGroup.getParent());//the addition of unlocanted unsaturators can effect the position of radicals e.g. diazenyl
 				multiRadicalGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 			}
 
 			boolean substitutivelyBondedToRoot = false;
-			if (inLocants != null){
+			if (inLocants != null) {
 				Element rightMostGroup;
-				if (multipliedElement.getName().equals(BRACKET_EL)){
+				if (multipliedElement.getName().equals(BRACKET_EL)) {
 					rightMostGroup = findRightMostGroupInBracket(multipliedElement);
 				}
 				else{
 					rightMostGroup = multipliedElement.getFirstChildElement(GROUP_EL);
 				}
 				rightMostGroup.addAttribute(new Attribute(RESOLVED_ATR, "yes"));//this group will not be used further within this word but can in principle be a substituent e.g. methylenedisulfonyl dichloride
-				if (multipliedGroup.getAttribute(ISAMULTIRADICAL_ATR) != null){//e.g. methylenedisulfonyl dichloride
-					if (!multipliedParent.getAttributeValue(INLOCANTS_ATR).equals(INLOCANTS_DEFAULT)){
+				if (multipliedGroup.getAttribute(ISAMULTIRADICAL_ATR) != null) {//e.g. methylenedisulfonyl dichloride
+					if (!multipliedParent.getAttributeValue(INLOCANTS_ATR).equals(INLOCANTS_DEFAULT)) {
 						throw new StructureBuildingException("inLocants should not be specified for a multiradical parent in multiplicative nomenclature");
 					}
 				}
@@ -1231,7 +1231,7 @@ class StructureBuildingMethods {
 						}
 						else{
 							Atom inAtom = multipliedFrag.getAtomByLocant(locant);
-							if (inAtom != null){
+							if (inAtom != null) {
 								atomToJoinTo = inAtom;
 								inLocants.remove(j);
 								break;
@@ -1242,7 +1242,7 @@ class StructureBuildingMethods {
 						throw new StructureBuildingException("Locants for inAtoms on the root were either misassigned to the root or were invalid: " + inLocants.toString() +" could not be assigned!");
 					}
 
-					if (!multiRadicalOutAtom.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
+					if (!multiRadicalOutAtom.isSetExplicitly()) {//not set explicitly so may be an inappropriate atom
 						from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
 					}
 					multiRadicalFrag.removeOutAtom(multiRadicalOutAtom);
@@ -1252,30 +1252,30 @@ class StructureBuildingMethods {
 					substitutivelyBondedToRoot = true;
 				}
 			}
-			if (!substitutivelyBondedToRoot){
+			if (!substitutivelyBondedToRoot) {
 				joinFragmentsAdditively(state, multiRadicalFrag, multipliedFrag);
 			}
-			if (multipliedElement.getName().equals(BRACKET_EL)){
+			if (multipliedElement.getName().equals(BRACKET_EL)) {
 				recursivelyResolveUnLocantedFeatures(state, multipliedElement);//there may be outAtoms that are involved in unlocanted substitution, these can be safely used now e.g. ...bis((3-hydroxy-4-methoxyphenyl)methylene) where (3-hydroxy-4-methoxyphenyl)methylene is the currentElement
 			}
 
-			if (inLocants ==null){
+			if (inLocants == null) {
 				//currentElement is not a root element. Need to build up a new BuildResults so as to call performMultiplicativeOperations again
 				//at this stage an outAtom has been removed from the fragment within currentElement through an additive bond
 				newBr.mergeBuildResults(new BuildResults(multipliedElement));
 			}
 		}
 
-		if (newBr.getFragmentCount()==1){
+		if (newBr.getFragmentCount() == 1) {
 			throw new StructureBuildingException("Multiplicative nomenclature cannot yield only one temporary terminal fragment");
 		}
-		if (newBr.getFragmentCount()>=2){
+		if (newBr.getFragmentCount() >= 2) {
 			List<Element> siblings = OpsinTools.getNextSiblingsOfTypes(multipliedParent, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
-			if (siblings.size()==0){
+			if (siblings.size() == 0) {
 				Element parentOfMultipliedEl = multipliedParent.getParent();
-				if (parentOfMultipliedEl.getName().equals(BRACKET_EL)){//brackets are allowed
+				if (parentOfMultipliedEl.getName().equals(BRACKET_EL)) {//brackets are allowed
 					siblings = OpsinTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
-					if (siblings.get(0).getAttribute(MULTIPLIER_ATR)==null){
+					if (siblings.get(0).getAttribute(MULTIPLIER_ATR) == null) {
 						throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
 					}
 					performMultiplicativeOperations(state, newBr, siblings.get(0));
@@ -1285,7 +1285,7 @@ class StructureBuildingMethods {
 				}
 			}
 			else{
-				if (siblings.get(0).getAttribute(MULTIPLIER_ATR)==null){
+				if (siblings.get(0).getAttribute(MULTIPLIER_ATR) == null) {
 					throw new StructureBuildingException("Multiplier not found where multiplier was expected for successful multiplicative nomenclature");
 				}
 				performMultiplicativeOperations(state, newBr, siblings.get(0));
