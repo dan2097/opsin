@@ -249,7 +249,7 @@ class Fragment {
 	 */
 	int getChainLength() {
 		int length = 0;
-		Atom next = getAtomByLocant(Integer.toString(length+1));
+		Atom next = getAtomByLocant(Integer.toString(length + 1));
 		Atom previous = null;
 		while (next != null){
 			if (previous != null && previous.getBondToAtom(next) == null){
@@ -257,7 +257,7 @@ class Fragment {
 			}
 			length++;
 			previous = next;
-			next = getAtomByLocant(Integer.toString(length+1));
+			next = getAtomByLocant(Integer.toString(length + 1));
 		}
 		return length;
 	}

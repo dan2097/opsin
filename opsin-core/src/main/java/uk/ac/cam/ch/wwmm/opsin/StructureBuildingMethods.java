@@ -1220,7 +1220,7 @@ class StructureBuildingMethods {
 					for (int j = inLocants.size() -1; j >=0; j--) {
 						String locant = inLocants.get(j);
 						if (locant.equals(INLOCANTS_DEFAULT)){//note that if one entry in inLocantArray is default then they all are "default"
-							List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(multipliedFrag, bondOrder);
+							List<Atom> possibleAtoms = getPossibleAtomsForUnlocantedConnectionToMultipliedRoot(multipliedGroup, bondOrder, i);
 							if (possibleAtoms.isEmpty()) {
 								throw new StructureBuildingException("No suitable atom found for multiplicative operation");
 							}
@@ -1295,6 +1295,54 @@ class StructureBuildingMethods {
 		for (Element clone : clonedElements) {//only insert cloned substituents now so they don't substitute onto each other!
 			OpsinTools.insertAfter(multipliedParent, clone);
 		}
+	}
+
+	/**
+	 * Applies special case to prefer the end of chains with the usableAsAJoiner attributes cf. p-phenylenedipropionic acid
+	 * Such cases will still be considered to be formally ambiguous
+	 * @param multipliedGroup
+	 * @param multipliedFrag
+	 * @param bondOrder
+	 * @param primesAdded 
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private static List<Atom> getPossibleAtomsForUnlocantedConnectionToMultipliedRoot(Element multipliedGroup, int bondOrder, int primesAdded) throws StructureBuildingException {
+		Fragment multipliedFrag = multipliedGroup.getFrag();
+		if ("yes".equals(multipliedGroup.getAttributeValue(USABLEASJOINER_ATR)) && multipliedFrag.getDefaultInAtom() == null) {
+			Element previous = OpsinTools.getPrevious(multipliedGroup);
+			if (previous != null && previous.getName().equals(MULTIPLIER_EL)){
+				String locant = getLocantOfEndOfChainIfGreaterThan1(multipliedFrag, primesAdded);
+				if (locant != null) {
+					Atom preferredAtom = multipliedFrag.getAtomByLocantOrThrow(locant);
+					List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(multipliedFrag.getAtomList(), preferredAtom, 1, bondOrder, true);
+					if (possibleAtoms == null) {
+						possibleAtoms = Collections.emptyList();
+					}
+					return possibleAtoms;
+				}
+			}
+		}
+		return FragmentTools.findSubstituableAtoms(multipliedFrag, bondOrder);
+	}
+	
+	private static String getLocantOfEndOfChainIfGreaterThan1(Fragment frag, int primes) {
+		String primesStr = StringTools.multiplyString("'", primes);
+		int length = 0;
+		Atom next = frag.getAtomByLocant(Integer.toString(length + 1) + primesStr);
+		Atom previous = null;
+		while (next != null){
+			if (previous != null && previous.getBondToAtom(next) == null){
+				break;
+			}
+			length++;
+			previous = next;
+			next = frag.getAtomByLocant(Integer.toString(length + 1) + primesStr);
+		}
+		if (length > 1){
+			return Integer.toString(length) + primesStr;
+		}
+		return null;
 	}
 
 	/**
