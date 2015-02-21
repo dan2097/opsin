@@ -408,7 +408,12 @@ class StructureBuildingMethods {
 			if (atomsToJoinTo == null) {
 				throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 			}
-			state.checkForAmbiguity(atomsToJoinTo, numOfSubstituents);
+			if (state.checkForAmbiguity(atomsToJoinTo, numOfSubstituents)){
+				List<Atom> atomsPreferredByEnvironment = SubstitutionAmbiguityChecker.useAtomEnvironmentsToGivePlausibleSubstitution(atomsToJoinTo, numOfSubstituents);
+				if (atomsPreferredByEnvironment != null) {
+					atomsToJoinTo = atomsPreferredByEnvironment;
+				}
+			}
 
 			joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(0));
 			group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
