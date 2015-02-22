@@ -110,7 +110,7 @@
 		<token value="c1(O)ccc(O)cc1" labels="1//2,ortho/3,meta/4,para//5/6" defaultInLocant="2">hydroquinon</token>
 		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidazol</token>
 		<token value="N1CNCC1" labels="1/2/3/4/5">imidazolidin</token>
-		<token value="N1CNCC1" labels="1/2/3/4/5" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">imidazolin</token>
+		<token value="N1CNCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">imidazolin</token>
 		<token value="C1CCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indan</token>
 		<token value="[nH]1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indazol</token>
 		<token value="[cH2]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">inden</token>
@@ -147,19 +147,19 @@
 		<token value="O1COc2cc(C=CC)ccc12" labels="1/2/3/3a/4/5/1'/2'/3'/6/7/7a">isosafrol</token>
 		<token value="[se]1nccc1">isoselenazol</token>
 		<token value="[Se]1NCCC1">isoselenazolidin</token>
-		<token value="[Se]1NCCC1" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">isoselenazolin</token>
+		<token value="[Se]1NCCC1" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isoselenazolin</token>
 		<token value="[te]1nccc1">isotellurazol</token>
 		<token value="[Te]1NCCC1">isotellurazolidin</token>
-		<token value="[Te]1NCCC1" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">isotellurazolin</token>
+		<token value="[Te]1NCCC1" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isotellurazolin</token>
 		<token value="s1nccc1">isothiazol</token>
 		<token value="S1NCCC1">isothiazolidin</token>
-		<token value="S1NCCC1" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">isothiazolin</token>
+		<token value="S1NCCC1" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isothiazolin</token>
 		<token value="o1nccc1">isoxazol</token>
 		<token value="o1nccc1">isooxazol</token>
 		<token value="O1NCCC1">isoxazolidin</token>
 		<token value="O1NCCC1">isooxazolidin</token>
-		<token value="O1NCCC1" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">isoxazolin</token>
-		<token value="O1NCCC1" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">isooxazolin</token>
+		<token value="O1NCCC1" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isoxazolin</token>
+		<token value="O1NCCC1" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isooxazolin</token>
 		<token value="c1cccc2c3ccc4c5ccc6Cc7ccccc7c8ccc9c%10ccc%11Cc12.c3%11c4%10.c59c68" labels="1/2/3/4/4a/4b/5/6/6a/6b/7/8/8a/9/9a/10/11/12/13/13a/13b/14/15/15a/15b/16/17/17a/18/18a/18b/18c/18d/18e">isoviolanthren</token>
 		<token value="n1ccc(C)c2ccccc12" labels="1/2/3/4//4a/5/6/7/8/8a">lepidin</token>
 		<token value="N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 6" frontLocantsExpected="1,2,3,4,5,6">lupetidin</token>
@@ -252,7 +252,7 @@
 		<token value="n1ccncc1" labels="1/2,ortho/3,meta/4,para/5/6">pyrazin</token>
 		<token value="[nH]1nccc1" labels="1/2/3/4/5">pyrazol</token>
 		<token value="N1NCCC1" labels="1/2/3/4/5">pyrazolidin</token>
-		<token value="N1NCCC1" labels="1/2/3/4/5" addBond="2 locant 3" frontLocantsExpected="1,2,3,4,5">pyrazolin</token>
+		<token value="N1NCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 3" frontLocantsExpected="1,2,3,4,5">pyrazolin</token>
 		<token value="c1ccc2ccc3cccc4ccc1c2c34" labels="1/2/3/3a/4/5/5a/6/7/8/8a/9/10/10a/10b/10c">pyren</token>
 		<token value="n1ncccc1" labels="1/2/3/4/5/6">pyridazin</token>
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">pyridin</token>
@@ -266,7 +266,7 @@
 		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrrolizin</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidin</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5" addGroup="=O locant 2" frontLocantsExpected="2,3,4,5">pyrrolidon</token>
-		<token value="N1CCCC1" addBond="2 locant 2" frontLocantsExpected="1,2,3,4,5">pyrrolin</token>
+		<token value="N1CCCC1" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">pyrrolin</token>
 		<token value="[o+]1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">pyrylium</token>
 		<token value="n1c(C)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a">quinaldin</token>
 		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinazolin</token>

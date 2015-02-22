@@ -465,23 +465,10 @@ class ComponentProcessor {
 				String[] description = MATCH_SPACE.split(bondToBeAdded);
 				if (description.length != 3) {
 					throw new ComponentGenerationException("malformed addBond tag");
-				}
-				String bondOrderString = description[0];
-				int bondOrder = Integer.parseInt(bondOrderString);
-				AtomReferenceType referenceType;
-				String reference;
-				String referenceTypeString = description[1];
-
-				if (referenceTypeString.equals("locant")) {
-					referenceType = AtomReferenceType.LOCANT;
-					reference = description[2];
-				}
-				else if (referenceTypeString.equals("id")) {
-					referenceType = AtomReferenceType.ID;
-					reference = description[2];
-				} else {
-					throw new ComponentGenerationException("malformed addBond tag");
-				}
+				} 
+				int bondOrder = Integer.parseInt(description[0]);
+				AtomReferenceType referenceType = AtomReferenceType.valueOf(description[1].toUpperCase(Locale.ROOT));
+				String reference = description[2];
 				bondsToBeAdded.add(new AddBond(bondOrder, new AtomReference(referenceType, reference)));
 			}
 			boolean locanted = false;
@@ -504,12 +491,16 @@ class ComponentProcessor {
 				AddBond bondInformation = bondsToBeAdded.get(i);
 				Atom atomOnParentFrag;
 				switch (bondInformation.atomReference.referenceType) {
+				case DEFAULTLOCANT:
+					state.addIsAmbiguous();
 				case LOCANT:
 					if (bondInformation.atomReference.reference.equals("required")) {
 						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
 					}
 					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(bondInformation.atomReference.reference);
 					break;
+				case DEFAULTID:
+					state.addIsAmbiguous();
 				case ID:
 					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(bondInformation.atomReference.reference) -1);
 					break;
