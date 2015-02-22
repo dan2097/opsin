@@ -245,7 +245,9 @@ class ComponentProcessor {
 	
 	private enum AtomReferenceType {
 		ID,
-		LOCANT
+		DEFAULTID,
+		LOCANT,
+		DEFAULTLOCANT
 	}
 	
 	private static class AtomReference {
@@ -310,20 +312,8 @@ class ComponentProcessor {
 					throw new ComponentGenerationException("malformed addGroup tag");
 				}
 				String smiles = description[0];
-				AtomReferenceType referenceType;
-				String reference;
-				String referenceTypeString = description[1];
-
-				if (referenceTypeString.equals("locant")) {
-					referenceType = AtomReferenceType.LOCANT;
-					reference = description[2];
-				}
-				else if (referenceTypeString.equals("id")) {
-					referenceType = AtomReferenceType.ID;
-					reference = description[2];
-				} else {
-					throw new ComponentGenerationException("malformed addGroup tag");
-				}
+				AtomReferenceType referenceType = AtomReferenceType.valueOf(description[1].toUpperCase(Locale.ROOT));
+				String reference = description[2];
 				Fragment fragToAdd;
 				if (description.length == 4) {//labels may optionally be specified for the group to be added
 					fragToAdd = state.fragManager.buildSMILES(smiles, group, description[3]);
@@ -345,9 +335,11 @@ class ComponentProcessor {
 						AddGroup groupInformation = groupsToBeAdded.get(0);
 						String locant;
 						switch (groupInformation.atomReference.referenceType) {
+						case DEFAULTLOCANT:
 						case LOCANT:
 							locant = parentFrag.getAtomByLocantOrThrow(groupInformation.atomReference.reference).getFirstLocant();
 							break;
+						case DEFAULTID:
 						case ID:
 							locant = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.atomReference.reference) - 1).getFirstLocant();
 							break;
@@ -383,12 +375,16 @@ class ComponentProcessor {
 
 				Atom atomOnParentFrag;
 				switch (groupInformation.atomReference.referenceType) {
+				case DEFAULTLOCANT:
+					state.addIsAmbiguous();
 				case LOCANT:
 					if (groupInformation.atomReference.reference.equals("required")) {
 						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
 					}
 					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(groupInformation.atomReference.reference);
 					break;
+				case DEFAULTID:
+					state.addIsAmbiguous();
 				case ID:
 					atomOnParentFrag = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.atomReference.reference) -1);
 					break;

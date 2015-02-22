@@ -13,3 +13,8 @@ ethylenedibenzene
 benzeneacetic acid
 cyclopentanespirocyclobutane
 indene-2-spiro-1'-cyclopentane
+4-xylene
+p-xylene
+1,4-xylene
+acenaphthoquinone
+1,2-acenaphthenequinone

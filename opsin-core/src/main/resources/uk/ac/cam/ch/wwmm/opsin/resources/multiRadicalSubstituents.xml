@@ -40,7 +40,7 @@
 		<token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1">semicarbazono</token>
 		<token value="[SiH3]O" outIDs="1,2">siloxane</token>
 		<token value="NC(=O)N" labels="3/2//1" outIDs="1,4">ureylene</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="7,8" addGroup="C locant 1;C locant 2" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylylene</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="7,8" addGroup="C locant 1;C defaultLocant 2" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylylene</token>
 
 		<token value="NN" outIDs="1,2" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">hydrazo</token>
 		<token value="=NN=" labels="none">azino</token>
