@@ -177,7 +177,7 @@
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalen</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addGroup="=O defaultLocant 1;=O defaultLocant 4" frontLocantsExpected="1,2,3,4,5,6,7,8">naphthoquinon</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addGroup="=O locant 1;=O locant 4;=O locant 5;=O locant 8" frontLocantsExpected="1,2,3,4,5,6,7,8">naphthodiquinon</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addHeteroAtom="N locant 1;N locant 8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridin</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addHeteroAtom="N defaultLocant 1;N defaultLocant 8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridin</token>
 		<token value="C12C=CC(CC2)C1">norbornen</token>
 			<token value="C12C=CC(CC2)C1">norcamphen</token>
 			<token value="C12C=CC(CC2)C1">norbornylen</token>
@@ -193,7 +193,7 @@
 		<token value="c1cccc2c3ccccc3c4nc5c6ccccc6c7ccccc7c5nc4c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b/9/9a/9b/10/11/12/13/13a/13b/14/15/16/17/17a/17b/18/18a/18b">phenanthrazin</token>
 		<token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a">phenanthren</token>
 		<token value="c1cccc2ncc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">phenanthridin</token>
-		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" addHeteroAtom="N locant 1;N locant 7" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrolin</token>
+		<token value="c1cccc2ccc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b" addHeteroAtom="N locant 1;N locant 10" frontLocantsExpected="1,2,3,4,4a,5,6,6a,7,8,9,10,10a,10b">phenanthrolin</token>
 		<token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenarsazin</token>
 		<token value="c1cccc2nc3ccccc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenazin</token>
 		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetidin</token>
