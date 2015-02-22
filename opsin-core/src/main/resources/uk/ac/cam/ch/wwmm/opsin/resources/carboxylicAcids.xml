@@ -74,7 +74,7 @@
     <token value="CNNC" labels="none" suffixAppliesTo="1,4">bicarbam</token>
     <token value="CCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13" suffixAppliesTo="1,13">brassyl</token>
     <token value="CCC(C)(O)C" labels="1/2/3///4" suffixAppliesTo="1,6">citramal</token><!--coA yl only-->
-		<token value="c1ccccc1" labels="1/2/3/4/5/6" addGroup="O locant 2;C locant 3" frontLocantsExpected="1,2,3,4,5,6">cresot</token>
+		<token value="c1ccccc1" labels="1/2/3/4/5/6" addGroup="O defaultLocant 2;C defaultLocant 3" frontLocantsExpected="1,2,3,4,5,6">cresot</token>
 		<token value="c1c(O)c(C)ccc1" labels="none">o-cresot</token>
 		<token value="c1c(O)c(C)ccc1" labels="none">ortho-cresot</token>
 		<token value="c1c(O)c(C)ccc1" labels="none">o-cresotin</token>
@@ -137,7 +137,7 @@
     <token value="Cc1ccncc1" labels="/4,para/3,meta/2,ortho/1/6/5">isonicotin</token>
 		<token value="c1cccs1" labels="2/3/4/5/1" addGroup="C locant 2 alpha" frontLocantsExpected="2,3" suffixAppliesTo="6">then</token>
 
-    <token value="Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC locant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anis</token>
+    <token value="Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anis</token>
 		<token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" usableAsAJoiner="yes">arachid</token>
     <token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" usableAsAJoiner="yes">arachidyl</token>
 		<token value="CCCCCCCCCCCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20" usableAsAJoiner="yes">arach</token>
@@ -151,7 +151,7 @@
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" usableAsAJoiner="yes">ceroplast</token>
     <token value="CCCCCCCCCCCCCCCCCCCCCCCCCC" usableAsAJoiner="yes">cerot</token>
     <token value="CCC(C)CCC=C(C)C" labels="none">citronell</token>
-    <token value="C/C=C/c1ccccc1" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6" addGroup="O locant 4" frontLocantsExpected="2,ortho,3,meta,4,para">coumar</token>
+    <token value="C/C=C/c1ccccc1" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6" addGroup="O defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para">coumar</token>
     <token value="C/C=C/c1cc(OC)c(O)cc1" labels="/alpha/beta/1/2/3///4//5/6">conifer</token>
 		<token value="CCCCCC/C=C\C/C=C\C/C=C\C/C=C\C/C=C\CC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20/21/22" usableAsAJoiner="yes">clupanodon</token>
     <token value="CCCCCCCCC=CC=CC=CCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" usableAsAJoiner="yes">eleostear</token>
@@ -221,7 +221,7 @@
 		<token value="CCCCCCCCCC/C=C/CCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18" usableAsAJoiner="yes">vaccen</token>
     <token value="Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">vanill</token>
     <token value="Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6">veratr</token>
-		<token value="c1ccccc1" labels="1/2/3/4/5/6" addGroup="C locant 2 alpha;C locant 3 alpha'" frontLocantsExpected="1,2,3,4,5,6">xyl</token>
+		<token value="c1ccccc1" labels="1/2/3/4/5/6" addGroup="C defaultLocant 2 alpha;C defaultLocant 3 alpha'" frontLocantsExpected="1,2,3,4,5,6">xyl</token>
   </tokenList>
 
   <!--This is the set of trivial acids for which common usage for yl is not known or use as both yl and oyl is common!!!-->
