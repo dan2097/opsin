@@ -11,3 +11,4 @@ pyridineacetic acid
 tetraaminoethylbenzene
 indenespirocyclopentane
 xylene
+naphthyridine

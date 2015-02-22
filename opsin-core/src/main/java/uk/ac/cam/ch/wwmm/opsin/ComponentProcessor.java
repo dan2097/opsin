@@ -416,20 +416,8 @@ class ComponentProcessor {
 					throw new ComponentGenerationException("malformed addHeteroAtom tag");
 				}
 				String heteroAtomSmiles = description[0];
-				AtomReferenceType referenceType;
-				String reference;
-				String referenceTypeString = description[1];
-
-				if (referenceTypeString.equals("locant")) {
-					referenceType = AtomReferenceType.LOCANT;
-					reference = description[2];
-				}
-				else if (referenceTypeString.equals("id")) {
-					referenceType = AtomReferenceType.ID;
-					reference = description[2];
-				} else {
-					throw new ComponentGenerationException("malformed addHeteroAtom tag");
-				}
+				AtomReferenceType referenceType = AtomReferenceType.valueOf(description[1].toUpperCase(Locale.ROOT));
+				String reference = description[2];
 				heteroAtomsToBeAdded.add(new AddHeteroatom(heteroAtomSmiles, new AtomReference(referenceType, reference)));
 			}
 			Element previousEl = OpsinTools.getPreviousSibling(group);
@@ -450,12 +438,16 @@ class ComponentProcessor {
 				AddHeteroatom heteroAtomInformation = heteroAtomsToBeAdded.get(i);
 				Atom atomOnParentFrag = null;
 				switch (heteroAtomInformation.atomReference.referenceType) {
+				case DEFAULTLOCANT:
+					state.addIsAmbiguous();
 				case LOCANT:
 					if (heteroAtomInformation.atomReference.reference.equals("required")) {
 						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
 					}
 					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(heteroAtomInformation.atomReference.reference);
 					break;
+				case DEFAULTID:
+					state.addIsAmbiguous();
 				case ID:
 					atomOnParentFrag = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(heteroAtomInformation.atomReference.reference) - 1);
 					break;

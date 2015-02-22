@@ -18,3 +18,4 @@ p-xylene
 1,4-xylene
 acenaphthoquinone
 1,2-acenaphthenequinone
+1,8-naphthyridine
