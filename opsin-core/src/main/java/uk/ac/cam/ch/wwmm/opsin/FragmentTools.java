@@ -1015,13 +1015,13 @@ class FragmentTools {
 	/**
 	 * Finds the hydroxy atom of all hydroxy functional groups in a fragment
 	 * i.e. not in carboxylic acid or oxime
-	 * @param biochemicalFragment
+	 * @param frag
 	 * @return
 	 * @throws StructureBuildingException 
 	 */
-	static List<Atom> findHydroxyGroups(Fragment biochemicalFragment) throws StructureBuildingException {
+	static List<Atom> findHydroxyGroups(Fragment frag) throws StructureBuildingException {
 		List<Atom> hydroxyAtoms = new ArrayList<Atom>();
-		List<Atom> atoms = biochemicalFragment.getAtomList();
+		List<Atom> atoms = frag.getAtomList();
 		for (Atom atom : atoms) {
 			if (atom.getElement() == ChemEl.O && atom.getIncomingValency() == 1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
 				Atom adjacentAtom = atom.getAtomNeighbours().get(0);
