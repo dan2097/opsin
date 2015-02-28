@@ -23,16 +23,16 @@
 		<token value="-N" labels="none" usableAsAJoiner="yes">aminyl</token>
 		<token value="=N" labels="none" usableAsAJoiner="yes">aminylidene</token>
 		<token value="#N" labels="none">aminylidyne</token>
-		<token value="-OCCCCC">amoxy</token>
-		<token value="-CCCCC">amyl</token>
-		<token value="=CCCCC">amylidene</token>
+		<token value="-OCCCCC" labels="/1/2/3/4/5">amoxy</token>
+		<token value="-CCCCC" labels="1/2/3/4/5">amyl</token>
+		<token value="=CCCCC" labels="1/2/3/4/5">amylidene</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
 		<token value="-c1c(OC)cc(OC)c(OC)c1" labels="none">asaryl</token>
 		<token value="-N=[N+]=[N-]" labels="none">azidyl</token>
-		<token value="-OCCC(C)C">isoamoxy</token>
-		<token value="-CCC(C)C">isoamyl</token>
-		<token value="=CCC(C)C">isoamylidene</token>
-		<token value="-CC(C)(C)C">neoamyl</token>
+		<token value="-OCCC(C)C" labels="/1/2/3//">isoamoxy</token>
+		<token value="-CCC(C)C" labels="1/2/3//">isoamyl</token>
+		<token value="=CCC(C)C" labels="1/2/3//">isoamylidene</token>
+		<token value="-CC(C)(C)C" labels="none">neoamyl</token>
 		<token value="-C(C)(C)CC" labels="none">tertiary-amyl</token>
 		<token value="-C(C)(C)CC" labels="none">tertiaryamyl</token>
 		<token value="-C(C)(C)CC" labels="none">tert-amyl</token>
