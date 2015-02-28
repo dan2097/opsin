@@ -1,5 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the dtd for full details. "value" is bond order in this context -->
+<!-- "value" is the integer bond order to set the bond to-->
 <tokenLists>
 	<tokenList tagname="unsaturator" symbol="u">
 		<token value="2">en</token>
@@ -8,6 +8,7 @@
 		<token value="3">yn</token>
 	</tokenList>
 
+	<!--the ane suffix is ignored, the locant prevents it being assigned a locant-->
 	<tokenList tagname="unsaturator" symbol="¤">
 		<token value="1" locant="1">ane</token>
 		<token value="1" locant="1">an</token>

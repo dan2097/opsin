@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
 <!--functional classes typically have hard coded rules in the StructureBuilder detailing their behaviour-->
 	<tokenList tagname="functionalClass" type="functionalClass" symbol="°">

@@ -1,6 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
-<!-- add ane to get the atomHydride-->
+<!-- add ane to get the atomHydride, can be multiplied to form a chain-->
 <tokenLists>
 	<tokenList tagname="group" type="chain" subType="heteroStem" symbol="p">
 		<token value="B" labels="numeric" usableAsAJoiner="yes">bor</token>

@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <!--These are groups that can be followed by charge modifying suffixes and should be terminated by an e or an inline suffix if used as substituent -->
 <tokenLists>
 	<tokenList tagname="group" type="simpleGroup" subType="groupStem" symbol="g">

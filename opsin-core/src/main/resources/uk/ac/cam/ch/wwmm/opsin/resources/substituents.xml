@@ -1,5 +1,4 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
-<!-- See the DTD for more details -->
 <tokenList tagname="group" type="substituent" subType="substituent" symbol="X">
 	<token value="B" labels="none" usableAsAJoiner="yes">bor</token>
 	<token value="[SiH4]" labels="none" usableAsAJoiner="yes">sil</token>

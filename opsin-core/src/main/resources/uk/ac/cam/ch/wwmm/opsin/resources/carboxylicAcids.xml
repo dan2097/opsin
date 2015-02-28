@@ -1,7 +1,6 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
-	<!--Ascending Greek locants are algoritmically added for monocarboxylic acids, but, if applicable, need to be manually specified for polycarboxylic acids-->
+	<!--Ascending Greek locants are algorithmically added for monocarboxylic acids, but, if applicable, need to be manually specified for polycarboxylic acids-->
 
 	<!--This is the set of trivial acids in which yl is added to denote an acyl. Oyl is not recommended but is unambiguous and so is accepted-->
 	<tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">

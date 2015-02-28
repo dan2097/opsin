@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <!--Exhaustive set of fusion components (FR-2.1.1 through FR-2.2.8)-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="fusionRing" symbol="®">

@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
 <!--SMILES have been written such that @ indicates the group is on the right and @@ on the left in a fischer projection
 OPSIN's code, however, is written such as to not assume that this is the case

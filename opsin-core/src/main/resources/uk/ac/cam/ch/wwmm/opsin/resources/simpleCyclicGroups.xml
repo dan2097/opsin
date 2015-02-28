@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <!--The same as arylGroups except these cannot have suffixes. Or if you like the same as simpleGroups except they can accept indicated hydrogen-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="simpleGroup" symbol="¾">

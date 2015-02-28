@@ -1,6 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
-<!--This are groups but may be used as substituents when paired with appropriate suffixes-->
+<!--These are groups but may be used as substituents when paired with appropriate suffixes-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="arylGroup" symbol="z">
 		<token value="C1Cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c">aceanthren</token>

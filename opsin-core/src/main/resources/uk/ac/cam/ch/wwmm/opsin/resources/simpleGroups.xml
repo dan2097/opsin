@@ -1,5 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
+<!-- Trivial groups not allowing any suffixes -->
 <tokenLists>
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="G">
 	<!--cyclic structures generally should be under arylGroups if they accept multiple suffixes or under simpleCyclicGroups if trivial

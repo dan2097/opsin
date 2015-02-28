@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <!--HW rings; the ane and ine suffix are included seperately as there are limitations as to what heteroatoms they can be used with-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="W">
