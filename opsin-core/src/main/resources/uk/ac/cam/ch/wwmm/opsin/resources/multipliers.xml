@@ -1,6 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
-<!-- value = the obvious -->
+<!-- value = The multiplier's Integer value -->
 <tokenLists>
 	<tokenList tagname="multiplier" type="basic" symbol="Õ">
 		<token value="1">mono</token>

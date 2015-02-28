@@ -1,5 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
+<!--Trivial substituents-->
 <tokenLists>
 	<tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
 		<token value="-N=NC=NN" labels="1/2/3/4/5">1-formazano</token>

@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="cyclicUnsaturableHydrocarbon" symbol="A">
 		<token value="C12CC3CC4CC5C1.C24.C35" labels="numeric" frontLocantsExpected="1,2">adamant</token>

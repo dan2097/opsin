@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
 <!--Indicates a glycoside linkage, maybe be used in conjunction with further suffixes-->
 	<tokenList tagname="suffix" type="root" subType="terminal" symbol="ê">

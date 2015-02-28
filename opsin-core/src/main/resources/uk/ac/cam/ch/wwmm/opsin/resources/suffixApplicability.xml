@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE suffixApplicability SYSTEM "suffixApplicability.dtd">
-<!-- This file dictates what suffixes are applicabily to the group types that OPSIN recognises.
+<!-- This file dictates which suffixes are applicable to the group types that OPSIN recognises.
 The two most important/common types are: acidStem and standardGroup.
 Other types are used under specific conditions e.g. chalcogenAcidStem, aminoAcid, carbohydrate, nonCarboxylicAcid, substituent
 If a type in OPSIN corresponds to a group type then it is used:
@@ -8,7 +8,7 @@ Hence acidStem is OPSIN type acidStem
 All other groups are classified as standardGroup
 In some cases it is further specified that a suffix only applies to a certain subtype e.g. yl has different meanings to different acids
 
-The value of the suffix elements corresponds to the value attribute of the suffixes in suffixes.xml/inlineSuffixes.xml whilst the text is what should be looked up in suffixRules
+The value of the suffix elements corresponds to the value attribute of the suffixes in suffixes.xml/inlineSuffixes.xml whilst the text is what should be looked up in suffixRules.xml
 -->
 <suffixApplicability>
 	<groupType type="substituent"><!--e.g. bor to boryl -->

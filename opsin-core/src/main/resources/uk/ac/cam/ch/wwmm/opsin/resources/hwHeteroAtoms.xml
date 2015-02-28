@@ -1,8 +1,7 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
 	<!--For convenience in order of priority-->
-	<tokenList tagname="heteroatom" symbol="D"><!--complete set including 2004 recommendations -->
+	<tokenList tagname="heteroatom" symbol="D"><!--complete set, including 2004 recommendations -->
 		<token value="F">fluora</token>
 		<token value="Cl">chlora</token>
 		<token value="Br">broma</token>

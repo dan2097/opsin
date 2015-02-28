@@ -1,6 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
-<!-- value = a reference to suffixRules.xml -->
+<!-- value = a reference to suffixApplicability.xml -->
 <tokenLists>
 	<tokenList tagname="suffix" type="inline" symbol="i">
 		<token value="oyl" additionalValue="aldehyde">aldehydoyl</token>

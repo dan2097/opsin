@@ -1,11 +1,10 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
-<!--IUPAC only  allows the contracted form e.g. pyridine -> pyridyl (instead of pyridinyl) for a  limited selection of rings
+<!--IUPAC only allows the contracted form e.g. pyridine -> pyridyl (instead of pyridinyl) for a  limited selection of rings
 In practice it was found that while not that common that such contractions were used for many other rings
 Hence for cases that are unambiguous they are included here e.g. NOT indyl (could mean indenyl or indanyl) or fluoryl (could mean F radical)
 -->
 <tokenLists>
-<!--Contracted form allows only inline suffixes e.g. NOT [tol, one] -->
+	<!--Contracted form allows only inline suffixes e.g. NOT [tol, one] -->
 	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="b">
 		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidaz</token>
 		<token value="[nH]1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indaz</token>

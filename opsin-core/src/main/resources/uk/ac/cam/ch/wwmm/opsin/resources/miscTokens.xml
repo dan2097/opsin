@@ -1,5 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
+<!-- Miscellaneous concepts; on elements included in the parse tree, behaviour is often hard-coded to the value of the "value" attribute -->
 <tokenLists>
 	<tokenList tagname="hydrocarbonFusedRingSystem" symbol="V">
 		<token value="polyacene">cen</token>

@@ -1,5 +1,6 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
+<!--A natural product including any trivially named alkaloid/steroid/terpenoid 
+Natural products are treated as cyclic biochemicals. Many natural products support the alpha/beta convention for indicating stereochemistry-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="Ô">
 <!--alkaloids-->

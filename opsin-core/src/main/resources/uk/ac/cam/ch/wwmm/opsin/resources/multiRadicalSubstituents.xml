@@ -1,5 +1,5 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
+<!--Used grammatically the same as simpleSubstituents, but all substituents support being bonded to multiple groups i.e. they are divalent (or higher)-->
 <tokenLists>
 	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="x">
 	<!-- implement ylene =diyl for rings e.g. naphthylene-->

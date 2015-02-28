@@ -1,7 +1,6 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <!-- value = a reference to suffixApplicability.xml -->
-<!--Suffix subType is used to indicate those that occur at the end of chains.-->
+<!--Suffix subType is used to indicate those that occur at the end of chains and those that form rings-->
 <tokenLists>
 <!--not allowed to be prefixed by carbo(x)/sulfon etc. Can be locanted to any position-->
 	<tokenList tagname="suffix" type="root" symbol="s">

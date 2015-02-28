@@ -1,5 +1,4 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
-<!-- See the DTD for more details -->
 <tokenLists>
 	<tokenList tagname="group" type="chain" subType="alkaneStem" symbol="a"><!--trivial/treated as trivial-->
 		<token value="C" labels="numeric" usableAsAJoiner="yes">meth</token>
@@ -61,7 +60,7 @@
 		<token value="8000">octali</token>
 		<token value="9000">nonali</token>
 	</tokenList>
-<!--note that n-,i-,s- are case sensitive due to potential confusion with nitrogen/iodine/sulfur respectively and hence are matched by a regex-->
+	<!--note that n-,i-,s- are case sensitive due to potential confusion with nitrogen/iodine/sulfur respectively and hence are matched by a regex-->
 	<tokenList tagname="alkaneStemModifier" symbol="n">
 		<token value="normal">normal</token>
 		<token value="normal">normal-</token>
