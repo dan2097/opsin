@@ -4569,7 +4569,14 @@ class ComponentProcessor {
 				parentAtom2 = suffixableFragment.getAtomByLocantOrThrow(String.valueOf(chainLength));
 			}
 			else{
-				throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" should be locanted!");
+				List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(suffixableFragment);
+				if (hydroxyAtoms.size() == 1 && suffixableFragment.getAtomByLocant("1") != null){
+					parentAtom1 = suffixableFragment.getAtomByLocantOrThrow("1");
+					parentAtom2 = hydroxyAtoms.get(0);
+				}
+				else{
+					throw new ComponentGenerationException("cycle forming suffix: " + suffix.getValue() +" should be locanted!");
+				}
 			}
 		}
 		if (parentAtom1.equals(parentAtom2)){
