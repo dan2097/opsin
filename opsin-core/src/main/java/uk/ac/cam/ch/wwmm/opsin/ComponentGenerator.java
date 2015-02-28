@@ -8,6 +8,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -480,13 +481,7 @@ class ComponentGenerator {
 			alkaneStem.addAttribute(new Attribute(SUBTYPE_ATR, ALKANESTEM_SUBTYPE_VAL));
 			alkaneStem.addAttribute(new Attribute(VALUE_ATR, StringTools.multiplyString("C", alkaneChainLength)));
 			alkaneStem.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
-			StringBuilder labels = new StringBuilder();
-			for (int i=1; i<alkaneChainLength; i++) {
-				labels.append(i);
-				labels.append("/");
-			}
-			labels.append(alkaneChainLength);
-			alkaneStem.addAttribute(new Attribute(LABELS_ATR, labels.toString()));
+			alkaneStem.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 			OpsinTools.insertAfter(alkaneStemComponent, alkaneStem);
 			alkaneStemComponent.detach();
 		}
@@ -685,6 +680,7 @@ class ComponentGenerator {
 
 						Element addedGroup = new TokenEl(GROUP_EL, newGroupName.toString());
 						addedGroup.addAttribute(new Attribute(VALUE_ATR, smiles));
+						addedGroup.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 						addedGroup.addAttribute(new Attribute(TYPE_ATR, CHAIN_TYPE_VAL));
 						addedGroup.addAttribute(new Attribute(SUBTYPE_ATR, HETEROSTEM_SUBTYPE_VAL));
 						if (!heteroatomChainWillFormARing){
@@ -1364,6 +1360,7 @@ class ComponentGenerator {
 
 			Element group =new TokenEl(GROUP_EL, annulenValue);
 			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
+			group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, ARYLGROUP_SUBTYPE_VAL));
 			annulen.getParent().replaceChild(annulen, group);
@@ -1834,8 +1831,8 @@ class ComponentGenerator {
 		int bridgeLabelsUsed=3;//start labelling from 3 upwards
 		//3 and 4 will be the atoms on each end of one secondary bridge, 5 and 6 for the next etc.
 
-		ArrayList<HashMap<String, Integer>> bridges = new ArrayList<HashMap<String, Integer>>();
-		HashMap<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<Integer, ArrayList<Integer>>(alkylChainLength);
+		List<HashMap<String, Integer>> bridges = new ArrayList<HashMap<String, Integer>>();
+		Map<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<Integer, ArrayList<Integer>>(alkylChainLength);
 		if (vonBaeyerBracket.indexOf("-")==5){
 			vonBaeyerBracket = vonBaeyerBracket.substring(7, vonBaeyerBracket.length()-1);//cut off cyclo-[ and terminal ]
 		}
@@ -1975,7 +1972,7 @@ class ComponentGenerator {
 
 		//create list of secondary bridges that need to be added
 		//0 length bridges and the 3 main bridges are dropped
-		ArrayList<HashMap<String, Integer>> secondaryBridges = new ArrayList<HashMap<String, Integer>>();
+		List<HashMap<String, Integer>> secondaryBridges = new ArrayList<HashMap<String, Integer>>();
 		for (HashMap<String, Integer> bridge : bridges) {
 			if(bridge.get("AtomId_Larger")!=null && bridge.get("Bridge Length")!=0){
 				secondaryBridges.add(bridge);
@@ -1985,7 +1982,7 @@ class ComponentGenerator {
 		Comparator<HashMap<String, Integer>> sortBridges= new VonBaeyerSecondaryBridgeSort();
 		Collections.sort(secondaryBridges, sortBridges);
 
-		ArrayList<HashMap<String, Integer>> dependantSecondaryBridges;
+		List<HashMap<String, Integer>> dependantSecondaryBridges;
 		//add secondary bridges, recursively add dependent secondary bridges
 		do{
 			dependantSecondaryBridges = new ArrayList<HashMap<String, Integer>>();
@@ -2280,12 +2277,12 @@ class ComponentGenerator {
 				if (yl.getAttributeValue(VALUE_ATR).equals("yl")){
 					group.removeAttribute(group.getAttribute(SUFFIXAPPLIESTO_ATR));
 					if (groupValue.equals("aspart")){
-						group.getAttribute("labels").setValue("/2,alpha/3,beta/4,gamma///1/");
+						group.getAttribute(LABELS_ATR).setValue("/2,alpha/3,beta/4,gamma///1/");
 						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CC(O)=O)C=O");
 						group.addAttribute(new Attribute(OUTIDS_ATR, "7"));
 					}
 					else {
-						group.getAttribute("labels").setValue("/2,alpha/3,beta/4,gamma/5,delta///1/");
+						group.getAttribute(LABELS_ATR).setValue("/2,alpha/3,beta/4,gamma/5,delta///1/");
 						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CCC(O)=O)C=O");
 						group.addAttribute(new Attribute(OUTIDS_ATR, "8"));
 					}

@@ -23,7 +23,7 @@ public class FragmentManagerTest {
 		Fragment frag1 = fragManager.buildSMILES("CC");
 		Fragment frag2 = fragManager.buildSMILES("CNC");
 
-		fragManager.createBond(frag1.getAtomByLocant("1"), frag2.getAtomByLocant("1"), 1);
+		fragManager.createBond(frag1.getFirstAtom(), frag2.getFirstAtom(), 1);
 		Fragment frag = fragManager.getUnifiedFragment();
 		assertEquals("Frag has five atoms", 5, frag.getAtomCount());
 		assertEquals("Frag has four bonds", 4, frag.getBondSet().size());
@@ -37,7 +37,7 @@ public class FragmentManagerTest {
 		assertEquals("Locant 4a = atom 5", 5, naphthalene.getIDFromLocant("4a"));
 		assertEquals("Locant 8 = atom 9", 9, naphthalene.getIDFromLocant("8"));
 		assertEquals("Locant 8a = atom 10", 10, naphthalene.getIDFromLocant("8a"));
-		assertEquals("No locant 9", 0, naphthalene.getIDFromLocant(""));
+		assertEquals("No locant 9", 0, naphthalene.getIDFromLocant("9"));
 	}
 	
 	@Test

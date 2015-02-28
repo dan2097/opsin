@@ -427,7 +427,7 @@ public class FusedRingNumbererTest {
 	 * @throws StructureBuildingException 
 	 */
 	private void compareNumbering(String smiles, String labels) throws StructureBuildingException {
-		Fragment fusedRing = sBuilder.build(smiles, mock(Element.class), "none");
+		Fragment fusedRing = sBuilder.build(smiles, mock(Element.class), XmlDeclarations.NONE_LABELS_VAL);
 		String[] labelArray =labels.split("/", -1);
 		FusedRingNumberer.numberFusedRing(fusedRing);
 		List<Atom> atomList =fusedRing.getAtomList();
