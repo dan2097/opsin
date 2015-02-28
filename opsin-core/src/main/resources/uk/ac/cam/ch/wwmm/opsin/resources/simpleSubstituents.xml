@@ -138,7 +138,7 @@
 		<token value="-CCCCCCCCCCCCCCCC" labels="numeric">cetyl</token>
 		<token value="=CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cinnamal</token>
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
-		<token value="-CC=CC">crotyl</token>
+		<token value="-CC=CC" labels="1/2/3/4">crotyl</token>
 		<token value="-Cc1ccc(C(C)C)cc1" labels="none">cuminyl</token>
 		<token value="=Cc1ccc(C(C)C)cc1" labels="none">cuminylidene</token>
 		<token value="=Cc1ccc(C(C)C)cc1" labels="none">cumal</token>
@@ -150,8 +150,8 @@
 		<token value="-S(=O)(=O)c1ccc(N=Nc2ccc(N(C)C)cc2)cc1" labels="none">dabsyl</token>
 		<token value="-S(=O)(=O)c1cccc2c(N(C)C)cccc12" labels="none">dansyl</token>
 		<token value="c1(ccccc1)C(=O)Cc2ccccc2" labels="1/2/3/4/5/6///alpha/1'/2'/3'/4'/5'/6'" outIDs="9">desyl</token>
-		<token value="-[2H]">deuterio</token>
-		<token value="-[2H]">deutero</token>
+		<token value="-[2H]" labels="none">deuterio</token>
+		<token value="-[2H]" labels="none">deutero</token>
 		<token value="-[N+]#N" labels="none">diazonio</token>
 		<token value="-c1c(C)c(C)cc(C)c1C" labels="none">duryl</token>
 		<token value="-OCC" labels="/1/2" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
@@ -160,8 +160,8 @@
 		<token value="-C=N" labels="none">formimino</token>
 		<!--<token value="-c1c(OC)cccc1" labels="none">guaiacyl</token> ambiguous, can also mean 4-hydroxy-3-methoxyphenyl-->
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" defaultInLocant="5">hydantoyl</token>
-		<token value="-NN" usableAsAJoiner="yes">hydrazino</token>
-		<token value="=NN" usableAsAJoiner="yes">hydrazono</token><!--Also used in functional replacement-->
+		<token value="-NN" labels="1/2" usableAsAJoiner="yes">hydrazino</token>
+		<token value="=NN" labels="1/2" usableAsAJoiner="yes">hydrazono</token><!--Also used in functional replacement-->
 		<token value="-[H]" labels="none">hydrido</token><!--for inorganic contexts-->
 		<token value="-[H]" labels="none">hydrogen</token><!--only used in functional class nomenclature-->
 		<token value="-[SeH]" labels="none">hydroseleno</token>
@@ -193,7 +193,7 @@
 		<token value="-OC(C)C" labels="none">isopropoxyl</token>
 		<token value="-C(C)(C=C)CCC=C(C)C" labels="none">linalyl</token>
 		<token value="-CC(C)(C)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6">neophyl</token>
-		<token value="-C(C)(C=C)CCC=C(C)CCC=C(C)C" usableAsAJoiner="yes" defaultInID="15">nerolidyl</token>
+		<token value="-C(C)(C=C)CCC=C(C)CCC=C(C)C" labels="none" usableAsAJoiner="yes" defaultInID="15">nerolidyl</token>
 		<token value="-N[N+](=O)[O-]" labels="none">nitramido</token>
 		<token value="-N[N+](=O)[O-]" labels="none">nitramino</token><!--contraction-->
 		<token value="-O[N+](=O)[O-]" labels="none">nitroxy</token><!--contraction-->
@@ -266,7 +266,7 @@
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" addGroup="N defaultLocant 4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6">tosyl</token>
 		<token value="-OS(=O)(=O)C(F)(F)F" labels="none">trifloxy</token>
-		<token value="-[3H]">tritio</token>
+		<token value="-[3H]" labels="none">tritio</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>
 		<token value="=Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">vanillal</token>

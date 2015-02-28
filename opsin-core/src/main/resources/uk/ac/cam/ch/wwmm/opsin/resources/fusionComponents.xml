@@ -129,9 +129,9 @@
 		<token value="n1cncc2nccnc12" labels="1/2/3/4/4a/5/6/7/8/8a">pteridino</token>
 		<token value="n1cnc2nc[nH]c2c1" labels="1/2/3/4/9/8/7/5/6" fusedRingNumbering="1/2/3/3a/4/5/6/6a/7">purino</token>
 		<token value="o1[cH2]cccc1" labels="1/2/3/4/5/6">pyrano</token>
-		<token value="s1[cH2]cccc1">thiopyrano</token>
-		<token value="[se]1[cH2]cccc1">selenopyrano</token>
-		<token value="[te]1[cH2]cccc1">telluropyrano</token>
+		<token value="s1[cH2]cccc1" labels="1/2/3/4/5/6">thiopyrano</token>
+		<token value="[se]1[cH2]cccc1" labels="1/2/3/4/5/6">selenopyrano</token>
+		<token value="[te]1[cH2]cccc1" labels="1/2/3/4/5/6">telluropyrano</token>
 		<token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/16a/15b/15c/15d/15e">pyranthreno</token>
 		<token value="n1ccncc1" labels="1/2/3/4/5/6">pyrazino</token>
 		<token value="[nH]1nccc1" labels="1/2/3/4/5">pyrazolo</token>
@@ -152,14 +152,14 @@
 		<token value="n1ccnc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinoxalino</token>
 		<token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e">rubiceno</token>
 		<token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">selenanthreno</token>
-		<token value="[se]1cccc1">selenopheno</token>
+		<token value="[se]1cccc1" labels="1/2/3/4/5">selenopheno</token>
 		<token value="c1cccc2[siH]c3ccccc3[siH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">silanthreno</token>
-		<token value="n1cncnc1">s-triazino</token>
-		<token value="n1cncnc1">sym-triazino</token>
-		<token value="[nH]1ncnc1">s-triazolo</token>
-		<token value="[nH]1ncnc1">sym-triazolo</token>
+		<token value="n1cncnc1" labels="1/2/3/4/5/6">s-triazino</token>
+		<token value="n1cncnc1" labels="1/2/3/4/5/6">sym-triazino</token>
+		<token value="[nH]1ncnc1" labels="1/2/3/4/5">s-triazolo</token>
+		<token value="[nH]1ncnc1" labels="1/2/3/4/5">sym-triazolo</token>
 		<token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">telluranthreno</token>
-		<token value="[te]1cccc1">telluropheno</token>
+		<token value="[te]1cccc1" labels="1/2/3/4/5">telluropheno</token>
 		<token value="c1ccc2ncc3cccc4ccc1c2c34" labels="1/2/3/3a/4/5/5a/6/7/8/8a/9/10/10a/10b/10c">thebenidino</token>
 		<token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">thianthreno</token>
 		<token value="s1cccc1" labels="1/2/3/4/5">thieno</token>

@@ -32,10 +32,10 @@
 		<token value="[PbH3+]" labels="none">plumbylium</token>
 
 	<!--These forms imply valency 3-->
-		<token value="[PH3]" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
-		<token value="[AsH3]" usableAsAJoiner="yes">arsine</token>
-		<token value="[SbH3]" usableAsAJoiner="yes">stibin</token>
-		<token value="[BiH3]" usableAsAJoiner="yes">bismuthin</token>
+		<token value="[PH3]" labels="none" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
+		<token value="[AsH3]" labels="none" usableAsAJoiner="yes">arsine</token>
+		<token value="[SbH3]" labels="none" usableAsAJoiner="yes">stibin</token>
+		<token value="[BiH3]" labels="none" usableAsAJoiner="yes">bismuthin</token>
 
 	<!-- trivial acid derived ketones -->
 		<token value="CC(=O)C" labels="1/2//3" defaultInLocant="3" usableAsAJoiner="yes" suffixAppliesToByDefault="1">aceton</token>

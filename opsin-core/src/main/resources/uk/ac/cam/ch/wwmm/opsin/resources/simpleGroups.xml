@@ -192,7 +192,7 @@
 		<token value="OCC(C)(CO)C" labels="none">neopentyl glycol</token>
 		<token value="CC(C)=CCC/C(C)=C\C=O" labels="none" defaultInID="1">neral</token>
 		<token value="OC\C=C(/CCC=C(C)C)C" labels="none">nerol</token>
-		<token value="OC(C)(C=C)CCC=C(C)CCC=C(C)C" defaultInID="16">nerolidol</token>
+		<token value="OC(C)(C=C)CCC=C(C)CCC=C(C)C" labels="none" defaultInID="16">nerolidol</token>
 		<token value="C=C[N+](C)(C)C.[OH-]" labels="none">neurine</token>
 		<token value="N[N+](=O)([O-])" labels="none" functionalIDs="1,1">nitramide</token>
 		<token value="[NH2+]" labels="none">nitrenium</token>
