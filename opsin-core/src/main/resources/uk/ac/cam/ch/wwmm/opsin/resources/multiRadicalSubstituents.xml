@@ -11,18 +11,18 @@
 		<token value="CCC" labels="1/2/3" outIDs="1,2">propylen</token>
 		<token value="CCCC" labels="1/2/3/4" outIDs="1,4">butylene</token>
 		<token value="CCCC" labels="1/2/3/4" outIDs="1,4">butylen</token>
-		<token value="CCCCC" labels="1/2/3/4/5" outIDs="1,5">pentylene</token>
-		<token value="CCCCC" labels="1/2/3/4/5" outIDs="1,5">pentylen</token>
-		<token value="CCCCCC" labels="1/2/3/4/5/6" outIDs="1,6">hexylene</token>
-		<token value="CCCCCC" labels="1/2/3/4/5/6" outIDs="1,6">hexylen</token>
-		<token value="CCCCCCC" labels="1/2/3/4/5/6/7" outIDs="1,7">heptylene</token>
-		<token value="CCCCCCC" labels="1/2/3/4/5/6/7" outIDs="1,7">heptylen</token>
-		<token value="CCCCCCCC" labels="1/2/3/4/5/6/7/8" outIDs="1,8">octylene</token>
-		<token value="CCCCCCCC" labels="1/2/3/4/5/6/7/8" outIDs="1,8">octylen</token>
-		<token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" outIDs="1,9">nonylene</token>
-		<token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" outIDs="1,9">nonylen</token>
-    <token value="CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11" outIDs="1,11">undecylene</token>
-    <token value="CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11" outIDs="1,11">undecylen</token>
+		<token value="CCCCC" labels="numeric" outIDs="1,5">pentylene</token>
+		<token value="CCCCC" labels="numeric" outIDs="1,5">pentylen</token>
+		<token value="CCCCCC" labels="numeric" outIDs="1,6">hexylene</token>
+		<token value="CCCCCC" labels="numeric" outIDs="1,6">hexylen</token>
+		<token value="CCCCCCC" labels="numeric" outIDs="1,7">heptylene</token>
+		<token value="CCCCCCC" labels="numeric" outIDs="1,7">heptylen</token>
+		<token value="CCCCCCCC" labels="numeric" outIDs="1,8">octylene</token>
+		<token value="CCCCCCCC" labels="numeric" outIDs="1,8">octylen</token>
+		<token value="CCCCCCCCC" labels="numeric" outIDs="1,9">nonylene</token>
+		<token value="CCCCCCCCC" labels="numeric" outIDs="1,9">nonylen</token>
+    <token value="CCCCCCCCCCC" labels="numeric" outIDs="1,11">undecylene</token>
+    <token value="CCCCCCCCCCC" labels="numeric" outIDs="1,11">undecylen</token>
 
 		<token value="C" labels="none" outIDs="1,1" usableAsAJoiner="yes" iminoLike="yes">carbene</token>
 		<token value="C=C" outIDs="1,2">vinylene</token>
