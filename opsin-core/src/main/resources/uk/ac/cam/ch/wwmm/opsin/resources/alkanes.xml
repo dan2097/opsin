@@ -2,16 +2,16 @@
 <!-- See the DTD for more details -->
 <tokenLists>
   <tokenList tagname="group" type="chain" subType="alkaneStem" symbol="a"><!--trivial/treated as trivial-->
-		<token value="C" labels="1" usableAsAJoiner="yes">meth</token>
-		<token value="CC" labels="1/2" usableAsAJoiner="yes">eth</token>
-		<token value="CCC" labels="1/2/3" usableAsAJoiner="yes">prop</token>
-		<token value="CCCC" labels="1/2/3/4" usableAsAJoiner="yes">but</token>
-		<token value="CCCCC" labels="1/2/3/4/5" usableAsAJoiner="yes">pent</token>
-		<token value="CCCCCC" labels="1/2/3/4/5/6" usableAsAJoiner="yes">hex</token>
-		<token value="CCCCCCC" labels="1/2/3/4/5/6/7" usableAsAJoiner="yes">hept</token>
-		<token value="CCCCCCCC" labels="1/2/3/4/5/6/7/8" usableAsAJoiner="yes">oct</token>
-		<token value="CCCCCCCCC" labels="1/2/3/4/5/6/7/8/9" usableAsAJoiner="yes">non</token>
-    <token value="CCCCCCCCCCC" labels="1/2/3/4/5/6/7/8/9/10/11" usableAsAJoiner="yes">undec</token>
+		<token value="C" labels="numeric" usableAsAJoiner="yes">meth</token>
+		<token value="CC" labels="numeric" usableAsAJoiner="yes">eth</token>
+		<token value="CCC" labels="numeric" usableAsAJoiner="yes">prop</token>
+		<token value="CCCC" labels="numeric" usableAsAJoiner="yes">but</token>
+		<token value="CCCCC" labels="numeric" usableAsAJoiner="yes">pent</token>
+		<token value="CCCCCC" labels="numeric" usableAsAJoiner="yes">hex</token>
+		<token value="CCCCCCC" labels="numeric" usableAsAJoiner="yes">hept</token>
+		<token value="CCCCCCCC" labels="numeric" usableAsAJoiner="yes">oct</token>
+		<token value="CCCCCCCCC" labels="numeric" usableAsAJoiner="yes">non</token>
+    <token value="CCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">undec</token>
   </tokenList>
   <tokenList tagname="alkaneStemComponent" symbol="Ï"><!--units-->
 		<token value="1">hen</token>
