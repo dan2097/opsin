@@ -2,79 +2,79 @@
 <!-- See the DTD for more details -->
 <!--HW rings; the ane and ine suffix are included seperately as there are limitations as to what heteroatoms they can be used with-->
 <tokenLists>
-  <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="W">
-      <token value="c1cc1" labels="numeric">iren</token>
-      <token value="C1CC1" labels="numeric">iran</token>
-      <token value="c1cc1" labels="numeric">irin</token>
-      <token value="C1CC1" labels="numeric">iridin</token>
+	<tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="W">
+		<token value="c1cc1" labels="numeric">iren</token>
+		<token value="C1CC1" labels="numeric">iran</token>
+		<token value="c1cc1" labels="numeric">irin</token>
+		<token value="C1CC1" labels="numeric">iridin</token>
 
-      <token value="c1ccc1" labels="numeric">et</token>
-      <token value="C1CCC1" labels="numeric">etan</token>
-      <token value="C1CCC1" labels="numeric">etidin</token>
-      <token value="C1CCC1" labels="numeric" addBond="2">etin</token>
-      <token value="C1CCC1" labels="numeric" addBond="2">eten</token>
+		<token value="c1ccc1" labels="numeric">et</token>
+		<token value="C1CCC1" labels="numeric">etan</token>
+		<token value="C1CCC1" labels="numeric">etidin</token>
+		<token value="C1CCC1" labels="numeric" addBond="2">etin</token>
+		<token value="C1CCC1" labels="numeric" addBond="2">eten</token>
 
-      <token value="c1cccc1" labels="numeric">ol</token>
-      <token value="C1CCCC1" labels="numeric">olan</token>
-      <token value="C1CCCC1" labels="numeric">olidin</token>
-      <token value="C1CCCC1" labels="numeric">olid</token><!--incorrect but avoids [ol, id] tokenisation-->
-      <token value="C1CCCC1" labels="numeric" addBond="2">olin</token>
-      <token value="C1CCCC1" labels="numeric" addBond="2">olen</token>
+		<token value="c1cccc1" labels="numeric">ol</token>
+		<token value="C1CCCC1" labels="numeric">olan</token>
+		<token value="C1CCCC1" labels="numeric">olidin</token>
+		<token value="C1CCCC1" labels="numeric">olid</token><!--incorrect but avoids [ol, id] tokenisation-->
+		<token value="C1CCCC1" labels="numeric" addBond="2">olin</token>
+		<token value="C1CCCC1" labels="numeric" addBond="2">olen</token>
 
-      <token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6">inan</token>
-      <token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">inin</token>
+		<token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6">inan</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">inin</token>
 
-      <token value="c1cccccc1" labels="numeric">epin</token>
-      <token value="C1CCCCCC1" labels="numeric">epan</token>
+		<token value="c1cccccc1" labels="numeric">epin</token>
+		<token value="C1CCCCCC1" labels="numeric">epan</token>
 
-      <token value="c1ccccccc1" labels="numeric">ocin</token>
-      <token value="C1CCCCCCC1" labels="numeric">ocan</token>
+		<token value="c1ccccccc1" labels="numeric">ocin</token>
+		<token value="C1CCCCCCC1" labels="numeric">ocan</token>
 
-      <token value="c1cccccccc1" labels="numeric">onin</token>
-      <token value="C1CCCCCCCC1" labels="numeric">onan</token>
+		<token value="c1cccccccc1" labels="numeric">onin</token>
+		<token value="C1CCCCCCCC1" labels="numeric">onan</token>
 
-      <token value="c1ccccccccc1" labels="numeric">ecin</token>
-      <token value="C1CCCCCCCCC1" labels="numeric">ecan</token>
+		<token value="c1ccccccccc1" labels="numeric">ecin</token>
+		<token value="C1CCCCCCCCC1" labels="numeric">ecan</token>
 
-      <!--Extension for fused rings according to FR-2.2.1(c)-->
-      <token value="c1cccccccccc1" labels="numeric">cycloundecin</token>
-      <token value="c1ccccccccccc1" labels="numeric">cyclododecin</token>
-      <token value="c1cccccccccccc1" labels="numeric">cyclotridecin</token>
-      <token value="c1ccccccccccccc1" labels="numeric">cyclotetradecin</token>
-      <token value="c1cccccccccccccc1" labels="numeric">cyclopentadecin</token>
-      <token value="c1ccccccccccccccc1" labels="numeric">cyclohexadecin</token>
-      <token value="c1cccccccccccccccc1" labels="numeric">cycloheptadecin</token>
-      <token value="c1ccccccccccccccccc1" labels="numeric">cyclooctadecin</token>
-      <token value="c1cccccccccccccccccc1" labels="numeric">cyclononadecin</token>
-      <token value="c1ccccccccccccccccccc1" labels="numeric">cycloeicosin</token>
-      <token value="c1ccccccccccccccccccc1" labels="numeric">cycloicosin</token>
-      <token value="c1cccccccccccccccccccc1" labels="numeric">cyclohenicosin</token>
-      <token value="c1ccccccccccccccccccccc1" labels="numeric">cyclodocosin</token>
-      <token value="c1cccccccccccccccccccccc1" labels="numeric">cyclotricosin</token>
-      <token value="c1ccccccccccccccccccccccc1" labels="numeric">cyclotetracosin</token>
-      <token value="c1cccccccccccccccccccccccc1" labels="numeric">cyclopentacosin</token>
-      <token value="c1ccccccccccccccccccccccccc1" labels="numeric">cyclohexacosin</token>
-      <token value="c1cccccccccccccccccccccccccc1" labels="numeric">cycloheptacosin</token>
-      <token value="c1ccccccccccccccccccccccccccc1" labels="numeric">cyclooctacosin</token>
-      <token value="c1cccccccccccccccccccccccccccc1" labels="numeric">cyclononacosin</token>
-      <token value="c1ccccccccccccccccccccccccccccc1" labels="numeric">cyclotriacontin</token>
-      <token value="c1cccccccccccccccccccccccccccccc1" labels="numeric">cyclohentriacontin</token>
-      <token value="c1ccccccccccccccccccccccccccccccc1" labels="numeric">cyclodotriacontin</token>
-      <token value="c1cccccccccccccccccccccccccccccccc1" labels="numeric">cyclotritriacontin</token>
-      <token value="c1ccccccccccccccccccccccccccccccccc1" labels="numeric">cyclotetratriacontin</token>
-      <token value="c1cccccccccccccccccccccccccccccccccc1" labels="numeric">cyclopentatriacontin</token>
-      <token value="c1ccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclohexatriacontin</token>
-      <token value="c1cccccccccccccccccccccccccccccccccccc1" labels="numeric">cycloheptatriacontin</token>
-      <token value="c1ccccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclooctatriacontin</token>
-      <token value="c1cccccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclononatriacontin</token>
-      <token value="c1ccccccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclotetracontin</token>
-  </tokenList>
+		<!--Extension for fused rings according to FR-2.2.1(c)-->
+		<token value="c1cccccccccc1" labels="numeric">cycloundecin</token>
+		<token value="c1ccccccccccc1" labels="numeric">cyclododecin</token>
+		<token value="c1cccccccccccc1" labels="numeric">cyclotridecin</token>
+		<token value="c1ccccccccccccc1" labels="numeric">cyclotetradecin</token>
+		<token value="c1cccccccccccccc1" labels="numeric">cyclopentadecin</token>
+		<token value="c1ccccccccccccccc1" labels="numeric">cyclohexadecin</token>
+		<token value="c1cccccccccccccccc1" labels="numeric">cycloheptadecin</token>
+		<token value="c1ccccccccccccccccc1" labels="numeric">cyclooctadecin</token>
+		<token value="c1cccccccccccccccccc1" labels="numeric">cyclononadecin</token>
+		<token value="c1ccccccccccccccccccc1" labels="numeric">cycloeicosin</token>
+		<token value="c1ccccccccccccccccccc1" labels="numeric">cycloicosin</token>
+		<token value="c1cccccccccccccccccccc1" labels="numeric">cyclohenicosin</token>
+		<token value="c1ccccccccccccccccccccc1" labels="numeric">cyclodocosin</token>
+		<token value="c1cccccccccccccccccccccc1" labels="numeric">cyclotricosin</token>
+		<token value="c1ccccccccccccccccccccccc1" labels="numeric">cyclotetracosin</token>
+		<token value="c1cccccccccccccccccccccccc1" labels="numeric">cyclopentacosin</token>
+		<token value="c1ccccccccccccccccccccccccc1" labels="numeric">cyclohexacosin</token>
+		<token value="c1cccccccccccccccccccccccccc1" labels="numeric">cycloheptacosin</token>
+		<token value="c1ccccccccccccccccccccccccccc1" labels="numeric">cyclooctacosin</token>
+		<token value="c1cccccccccccccccccccccccccccc1" labels="numeric">cyclononacosin</token>
+		<token value="c1ccccccccccccccccccccccccccccc1" labels="numeric">cyclotriacontin</token>
+		<token value="c1cccccccccccccccccccccccccccccc1" labels="numeric">cyclohentriacontin</token>
+		<token value="c1ccccccccccccccccccccccccccccccc1" labels="numeric">cyclodotriacontin</token>
+		<token value="c1cccccccccccccccccccccccccccccccc1" labels="numeric">cyclotritriacontin</token>
+		<token value="c1ccccccccccccccccccccccccccccccccc1" labels="numeric">cyclotetratriacontin</token>
+		<token value="c1cccccccccccccccccccccccccccccccccc1" labels="numeric">cyclopentatriacontin</token>
+		<token value="c1ccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclohexatriacontin</token>
+		<token value="c1cccccccccccccccccccccccccccccccccccc1" labels="numeric">cycloheptatriacontin</token>
+		<token value="c1ccccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclooctatriacontin</token>
+		<token value="c1cccccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclononatriacontin</token>
+		<token value="c1ccccccccccccccccccccccccccccccccccccccc1" labels="numeric">cyclotetracontin</token>
+	</tokenList>
 
-  <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="K"><!--the ine suffix -->
-    <token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">in</token>
-  </tokenList>
+	<tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="K"><!--the ine suffix -->
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">in</token>
+	</tokenList>
 
-  <tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="k"><!--the ane suffix -->
-    <token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6">an</token>
-  </tokenList>
+	<tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="k"><!--the ane suffix -->
+		<token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6">an</token>
+	</tokenList>
 </tokenLists>

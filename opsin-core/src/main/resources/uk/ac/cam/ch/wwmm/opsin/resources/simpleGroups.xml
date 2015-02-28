@@ -438,7 +438,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" defaultInID="37">coa</token>
 	</tokenList>
 
-  <!--groups that must be substituted-->
+	<!--groups that must be substituted-->
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="Ø">
 		<token value="N" labels="none">amin</token>
 		<token value="N" labels="none">amine</token>
@@ -471,8 +471,8 @@
 		<token value="[SH4]" labels="none">sulfurane</token>
 	</tokenList>
 
-  <tokenList tagname="suffix" type="root" subType="terminal" symbol="Ø"><!--Fudged by handleSuffixIrregularities such that the preceding subsituent is merged in front of this-->
-    <token value="nitrolic acid">nitrolic acid</token>
-    <token value="nitrolic acid">nitrolicacid</token>
+	<tokenList tagname="suffix" type="root" subType="terminal" symbol="Ø"><!--Fudged by handleSuffixIrregularities such that the preceding subsituent is merged in front of this-->
+		<token value="nitrolic acid">nitrolic acid</token>
+		<token value="nitrolic acid">nitrolicacid</token>
 	</tokenList>
 </tokenLists>

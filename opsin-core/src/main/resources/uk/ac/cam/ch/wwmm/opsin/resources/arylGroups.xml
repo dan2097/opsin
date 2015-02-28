@@ -53,7 +53,7 @@
 		<token value="N1(C)c(=O)N(C)c2ncN(C)c2c1=O" labels="1//2//3//4/9/8/7//5/6/">caffein</token>
 		<token value="c1cccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">carbazol</token>
 		<token value="C12C(C)(C)C(=C)C(CC2)C1" labels="1/2///3//4/5/6/7">camphen</token>
-    <token value="C123C(=O)C(=O)C4CC1.C24(C)C.C3" labels="1/2//3//4/5/6/7/8/9/10">camphorquinon</token>
+		<token value="C123C(=O)C(=O)C4CC1.C24(C)C.C3" labels="1/2//3//4/5/6/7/8/9/10">camphorquinon</token>
 		<token value="c1(O)c(O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">catechol</token>
 		<token value="c1(ccccc1)C=CC(=O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'">chalcon</token>
 		<token value="C1Cc2cccc3cc4c5ccccc5ccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/6b/7/8/9/10/10a/11/12/12a/12b/12c">cholanthren</token>

@@ -27,7 +27,7 @@
 		<token value="-CCCCC">amyl</token>
 		<token value="=CCCCC">amylidene</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
-    <token value="-c1c(OC)cc(OC)c(OC)c1" labels="none">asaryl</token>
+		<token value="-c1c(OC)cc(OC)c(OC)c1" labels="none">asaryl</token>
 		<token value="-N=[N+]=[N-]" labels="none">azidyl</token>
 		<token value="-OCCC(C)C">isoamoxy</token>
 		<token value="-CCC(C)C">isoamyl</token>
@@ -136,7 +136,7 @@
 		<token value="-[CH2+]" labels="none">carbynium</token>
 		<token value="-c1cc(C(C)C)ccc1C" labels="none">carvacryl</token>
 		<token value="-CCCCCCCCCCCCCCCC" labels="numeric">cetyl</token>
-    <token value="=CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cinnamal</token>
+		<token value="=CC=Cc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cinnamal</token>
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
 		<token value="-CC=CC">crotyl</token>
 		<token value="-Cc1ccc(C(C)C)cc1" labels="none">cuminyl</token>
@@ -220,7 +220,7 @@
 		<token value="-c1c(C)c(C)ccc1C" labels="none">v-pseudocumyl</token>
 		<token value="-c1c(C)cc(C)c(C)c1" labels="none">s-pseudocumyl</token>
 		<token value="-N1CCCC1" labels="1/2/3/4/5">pyrrolidino</token>
-    <token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6">salicylal</token>
+		<token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6">salicylal</token>
 		<token value="-C(C)C(C)C" labels="none">sec-isoamyl</token>
 		<token value="-C(C)C(C)C" labels="none">secisoamyl</token>
 		<token value="-OC(C)CC" labels="none">sec-butoxyl</token>
@@ -269,9 +269,9 @@
 		<token value="-[3H]">tritio</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>
-    <token value="=Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">vanillal</token>
-    <token value="=Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6">veratral</token>
-    <token value="-Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">o-veratryl</token>
+		<token value="=Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">vanillal</token>
+		<token value="=Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6">veratral</token>
+		<token value="-Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">o-veratryl</token>
 		<token value="-c1ccc(cc1)-c2ccccc2" labels="4/3/2/1/2/3/1'/2'/3'/4'/5'/6'">xenyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 2;C defaultLocant 3" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">xylidino</token>
 
