@@ -54,7 +54,7 @@ class FragmentManager {
 	 * @throws StructureBuildingException
 	 */
 	Fragment buildSMILES(String smiles) throws StructureBuildingException {
-		return buildSMILES(smiles, "", "");
+		return buildSMILES(smiles, "", NONE_LABELS_VAL);
 	}
 	
 	/** Builds a fragment, based on an SMILES string

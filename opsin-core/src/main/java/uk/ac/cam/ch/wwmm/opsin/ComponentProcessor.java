@@ -224,14 +224,8 @@ class ComponentProcessor {
 	 */
 	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
 		String groupValue = group.getAttributeValue(VALUE_ATR);
-
-		Fragment thisFrag;
-		if (group.getAttribute(LABELS_ATR) != null){
-			thisFrag = state.fragManager.buildSMILES(groupValue, group, group.getAttributeValue(LABELS_ATR));
-		}
-		else{
-			thisFrag = state.fragManager.buildSMILES(groupValue, group, "");
-		}
+		String labelsValue = group.getAttributeValue(LABELS_ATR);
+		Fragment thisFrag = state.fragManager.buildSMILES(groupValue, group, labelsValue != null ? labelsValue : NONE_LABELS_VAL);
 		group.setFrag(thisFrag);
 
 		//processes groups like cymene and xylene whose structure is determined by the presence of a locant in front e.g. p-xylene

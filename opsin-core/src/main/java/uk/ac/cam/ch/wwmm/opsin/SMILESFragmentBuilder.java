@@ -643,7 +643,7 @@ class SMILESFragmentBuilder {
 	 * Build a Fragment based on a SMILES string.
 	 * @param smiles The SMILES string to build from.
 	 * @param type The type of the fragment retrieved when calling {@link Fragment#getType()}
-	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none". A value of "" is treated as synonymous to numeric
+	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none"/""
 	 * @return
 	 * @throws StructureBuildingException
 	 */
@@ -655,7 +655,7 @@ class SMILESFragmentBuilder {
 	 * Build a Fragment based on a SMILES string.
 	 * @param smiles The SMILES string to build from.
 	 * @param tokenEl The corresponding tokenEl
-	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none". A value of "" is treated as synonymous to numeric
+	 * @param labelMapping A string indicating which locants to assign to each atom. Can be a slash delimited list, "numeric", "fusedRing" or "none"/""
 	 * @return Fragment The built fragment.
 	 * @throws StructureBuildingException
 	 */
@@ -728,29 +728,30 @@ class SMILESFragmentBuilder {
 	}
 
 	private void processLabelling(String labelMapping, List<Atom> atomList) throws StructureBuildingException {
-		if (!labelMapping.equals(NONE_LABELS_VAL)) {
-			if (labelMapping.length() == 0 || labelMapping.equals(NUMERIC_LABELS_VAL)) {
-				int atomNumber = 1;
-				for (Atom atom : atomList) {
-					atom.addLocant(Integer.toString(atomNumber++));
-				}
+		if (labelMapping.equals(NONE_LABELS_VAL) || labelMapping.length() == 0) {
+			return;
+		}
+		if (labelMapping.equals(NUMERIC_LABELS_VAL)) {
+			int atomNumber = 1;
+			for (Atom atom : atomList) {
+				atom.addLocant(Integer.toString(atomNumber++));
 			}
-			else if(labelMapping.equals(FUSEDRING_LABELS_VAL)) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
-				//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
-				FragmentTools.relabelLocantsAsFusedRingSystem(atomList);
+		}
+		else if(labelMapping.equals(FUSEDRING_LABELS_VAL)) {//fragment is a fusedring with atoms in the correct order for fused ring numbering
+			//this will do stuff like changing labels from 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
+			FragmentTools.relabelLocantsAsFusedRingSystem(atomList);
+		}
+		else{
+			String[] labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
+			int numOfAtoms = atomList.size();
+			if (labelMap.length != numOfAtoms){
+				throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.length + ", atoms: " + numOfAtoms );
 			}
-			else{
-				String[] labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
-				int numOfAtoms = atomList.size();
-				if (labelMap.length != numOfAtoms){
-					throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.length + ", atoms: " + numOfAtoms );
-				}
-				for (int i = 0; i < numOfAtoms; i++) {
-					String labels[] = MATCH_COMMA.split(labelMap[i]);
-					for (String label : labels) {
-						if (label.length() > 0) {
-							atomList.get(i).addLocant(label);
-						}
+			for (int i = 0; i < numOfAtoms; i++) {
+				String labels[] = MATCH_COMMA.split(labelMap[i]);
+				for (String label : labels) {
+					if (label.length() > 0) {
+						atomList.get(i).addLocant(label);
 					}
 				}
 			}

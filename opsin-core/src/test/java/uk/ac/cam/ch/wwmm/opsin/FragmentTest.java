@@ -440,7 +440,7 @@ public class FragmentTest {
 	@Test
 	public void testIsCharacteristicAtomSuffix() throws StructureBuildingException{
 		Fragment parent = fm.buildSMILES("CC");
-		Fragment suffix = fm.buildSMILES("N", SUFFIX_TYPE_VAL, "");
+		Fragment suffix = fm.buildSMILES("N", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 		fm.incorporateFragment(suffix, suffix.getFirstAtom(), parent, parent.getFirstAtom(), 1);
 		List<Atom> parentAtoms = parent.getAtomList();
 		assertFalse(FragmentTools.isCharacteristicAtom(parentAtoms.get(0)));
@@ -451,7 +451,7 @@ public class FragmentTest {
 	@Test
 	public void testIsCharacteristicAtomAldehyde() throws StructureBuildingException{
 		Fragment parent = fm.buildSMILES("CC");
-		Fragment suffix = fm.buildSMILES("O", SUFFIX_TYPE_VAL, "");
+		Fragment suffix = fm.buildSMILES("O", SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 		fm.incorporateFragment(suffix, suffix.getFirstAtom(), parent, parent.getFirstAtom(), 2);
 		List<Atom> parentAtoms = parent.getAtomList();
 		parentAtoms.get(1).setProperty(Atom.ISALDEHYDE, true);

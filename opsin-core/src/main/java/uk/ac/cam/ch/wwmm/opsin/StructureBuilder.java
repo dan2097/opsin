@@ -519,7 +519,7 @@ class StructureBuilder {
 		String smilesReplacement = functionalGroup.get(0).getAttributeValue(VALUE_ATR);
 		String labels =  functionalGroup.get(0).getAttributeValue(LABELS_ATR);
 		for (int i = 0; i < numberOfOxygenToAdd; i++) {
-			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels));
+			oxideFragments.add(state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels != null ? labels : NONE_LABELS_VAL));
 		}
 		List<Element> locantEls =OpsinTools.getDescendantElementsWithTagName(words.get(1), LOCANT_EL);
 		if (locantEls.size() >1){
@@ -681,7 +681,7 @@ class StructureBuilder {
 			String smilesReplacement = functionalGroup.get(0).getAttributeValue(VALUE_ATR);
 			String labels =  functionalGroup.get(0).getAttributeValue(LABELS_ATR);
 			for (int i = 0; i < numberOfCarbonylReplacements; i++) {
-				Fragment replacementFragment = state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels);
+				Fragment replacementFragment = state.fragManager.buildSMILES(smilesReplacement, FUNCTIONALCLASS_TYPE_VAL, labels != null ? labels : NONE_LABELS_VAL);
 				if (i >0){
 					FragmentTools.relabelLocants(replacementFragment.getAtomList(), StringTools.multiplyString("'", i));
 				}

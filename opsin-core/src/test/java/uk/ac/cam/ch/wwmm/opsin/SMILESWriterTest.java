@@ -423,4 +423,31 @@ public class SMILESWriterTest {
 			fail(smiles +" did not correspond to one of the expected SMILES strings");
 		}
 	}
+	
+	@Test
+	public void testLabelling1() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("CCC", "", XmlDeclarations.NONE_LABELS_VAL);
+		for (Atom a : f.getAtomList()) {
+			assertEquals(0, a.getLocants().size());
+		}
+		
+		Fragment f2 = fm.buildSMILES("CCC", "", "");
+		for (Atom a : f2.getAtomList()) {
+			assertEquals(0, a.getLocants().size());
+		}
+	}
+	
+	@Test
+	public void testLabelling2() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("CCC", "", "1/2,alpha,2'/");
+		List<Atom> atoms = f.getAtomList();
+		assertEquals(1, atoms.get(0).getLocants().size());
+		assertEquals(3, atoms.get(1).getLocants().size());
+		assertEquals(0, atoms.get(2).getLocants().size());
+		
+		assertEquals("1", atoms.get(0).getLocants().get(0));
+		assertEquals("2", atoms.get(1).getLocants().get(0));
+		assertEquals("alpha", atoms.get(1).getLocants().get(1));
+		assertEquals("2'", atoms.get(1).getLocants().get(2));
+	}
 }
