@@ -3,481 +3,481 @@
 <!-- See the DTD and the OPSIN code (ComponentProcessor.resolveGroupAddingSuffixes and ComponentProcessor.resolveSuffixes) to make
 sense of this -->
 <suffixRulesList>
-  <rule value="acylium">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]=O"/>
-    <changecharge charge="1" protons="-1" />
-  </rule>
-  <rule value="acylium_nonCarboxylic">
-    <convertHydroxyGroupsToPositiveCharge />
-  </rule>
-  <rule value="aldehyde">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]=O"/>
-  </rule>
-  <rule value="aldoxime">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]=NO"/>
-  </rule>
-  <rule value="amide">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)N" functionalIDs="3,3" />
-  </rule>
-  <rule value="amidylium">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)[NH+]" functionalIDs="3,3" />
-  </rule>
-  <rule value="amidine">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=N)N" functionalIDs="3,3" labels="/N2/N1"/>
-  </rule>
-  <rule value="amidinium">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=[NH2+])N" functionalIDs="3,3" labels="/N2/N1"/>
-  </rule>
-  <rule value="amidium">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)[NH3+]" functionalIDs="3,3" />
-  </rule>
-  <rule value="amido">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)N" outIDs="3"/>
-  </rule>
-  <rule value="amine">
-    <addgroup SMILES="[*]N" />
-  </rule>
-  <rule value="aminide">
-    <addgroup SMILES="[*][NH-]" />
-  </rule>
-  <rule value="aminium">
-    <addgroup SMILES="[*][NH3+]" />
-  </rule>
-  <rule value="aminylium">
-    <addgroup SMILES="[*][NH+]" />
-  </rule>
-  <rule value="amino">
-    <addgroup SMILES="[*]N" outIDs="2"/>
-  </rule>
-  <rule value="anilide">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)Nc1ccccc1" labels="///1'/2',ortho/3',meta/4',para/5'/6'"/>
-  </rule>
-  <rule value="arsonite">
-    <addgroup SMILES="[*][As]([O-])[O-]" functionalIDs="3,4"/>
-  </rule>
-  <rule value="arsonous">
-    <addgroup SMILES="[*][As](O)O" functionalIDs="3,4"/>
-  </rule>
-  <rule value="ate">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)[O-]" functionalIDs="3"/>
-  </rule>
-  <rule value="azonate">
-    <addgroup SMILES="[*][N+]([O-])([O-])[O-]" functionalIDs="4,5"/>
-  </rule>
-  <rule value="azonic">
-    <addgroup SMILES="[*][N+]([O-])(O)O" functionalIDs="4,5"/>
-  </rule>
-  <rule value="azonite">
-    <addgroup SMILES="[*]N([O-])[O-]" functionalIDs="3,4"/>
-  </rule>
-  <rule value="azonous">
-    <addgroup SMILES="[*]N(O)O" functionalIDs="3,4"/>
-  </rule>
-  <rule value="ate_nonCarboxylic">
-    <addFunctionalAtomsToHydroxyGroups />
-    <chargeHydroxyGroups />
-  </rule>
-  <rule value="boronate">
-    <addgroup SMILES="[*]B([O-])[O-]" functionalIDs="3,4"/>
-  </rule>
-  <rule value="boronic">
-    <addgroup SMILES="[*]B(O)O" functionalIDs="3,4"/>
-  </rule>
-  <rule value="boronicacidpinacolester">
-    <addgroup SMILES="[*]B(OC(C)(C)C1(C)(C))O1"/>
-  </rule>
-  <rule value="carbamate">
-    <addgroup SMILES="[*]NC(=O)[O-]" functionalIDs="5"/>
-  </rule>
-  <rule value="carbamic">
-    <addgroup SMILES="[*]NC(=O)O" functionalIDs="5"/>
-  </rule>
-  <rule value="carbolactone">
-    <addgroup SMILES="[*]C(=O)O[*]"/>
-  </rule>
-  <rule value="carbonyl">
-    <addgroup SMILES="[*]C(=O)" outIDs="2"/>
-  </rule>
-  <rule value="carbonyl_to_hydroxy">
-    <removeTerminalOxygen order="2" />
-    <addgroup SMILES="[*]O"/>
-  </rule>
-  <rule value="carbonylium">
-    <addgroup SMILES="[*][C+]=O"/>
-  </rule>
-  <rule value="dicarboximide">
-    <addgroup SMILES="[*]C(=O)NC(=O)[*]"/>
-  </rule>
-  <rule value="carboxylic">
-    <addgroup SMILES="[*]C(=O)O" functionalIDs="4"/>
-  </rule>
-  <rule value="carboxylate">
-    <addgroup SMILES="[*]C(=O)[O-]" functionalIDs="4" />
-  </rule>
-  <rule value="carboxylite">
-    <addgroup SMILES="[*]C[O-]" functionalIDs="3" />
-  </rule>
-  <rule value="cyclicimide">
-    <addgroup SMILES="[*](=O)N[*]=O"/>
-  </rule>
-  <rule value="cyclicimidium">
-    <addgroup SMILES="[*](=O)[NH2+][*]=O"/>
-  </rule>
-  <rule value="cyclicimido">
-    <addgroup SMILES="[*](=O)N[*]=O" outIDs="3"/>
-  </rule>
-  <rule value="cyclicimidylium">
-    <addgroup SMILES="[*](=O)[N+][*]=O"/>
-  </rule>
-  <rule value="diazonium">
-    <addgroup SMILES="[*][N+]#N" />
-  </rule>
-  <rule value="hydrazide">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)NN" labels="//1'/2'"/>
-  </rule>
-  <rule value="hydrazido">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)NN" labels="//1'/2'" outIDs="4"/>
-  </rule>
-  <rule value="hydrazonic">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=NN)O" functionalIDs="4" />
-  </rule>
-  <rule value="hydroxamate">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)N[O-]" functionalIDs="4"/>
-  </rule>
-  <rule value="hydroxamic">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)NO" functionalIDs="4"/>
-  </rule>
-  <rule value="hydroxy_to_acyl">
-    <removeTerminalOxygen order="1" />
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]=O" />
-    <setOutAtom />
-  </rule>
-  <rule value="hydroxy_to_amide">
-    <removeTerminalOxygen order="1" />
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)N" functionalIDs="3"/>
-  </rule>
-  <rule value="hydroxy_to_ate">
-    <removeTerminalOxygen order="1" />
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)[O-]" functionalIDs="3"/>
-  </rule>
-  <rule value="hydroxy_to_carbonyl">
-    <removeTerminalOxygen order="1" />
-    <addgroup SMILES="[*]=O"/>
-  </rule>
-  <rule value="hydroxy_to_icacid">
-    <removeTerminalOxygen order="1" />
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
-  </rule>
-  <rule value="hydroxy_to_nitrile">
-    <removeTerminalOxygen order="1" />
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]#N"/>
-  </rule>
-  <rule value="ic">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
-  </rule>
-  <rule value="ic_O_acid">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
-    <setAcidicElement element="O"/>
-  </rule>
-  <rule value="ic_S_acid">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
-    <setAcidicElement element="S"/>
-  </rule>
-  <rule value="ic_Se_acid">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
-    <setAcidicElement element="Se"/>
-  </rule>
-  <rule value="ic_Te_acid">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)O" functionalIDs="3"/>
-    <setAcidicElement element="Te"/>
-  </rule>
-  <rule value="ic_nonCarboxylic">
-    <addFunctionalAtomsToHydroxyGroups/>
-  </rule>
-  <rule value="ide">
-    <changecharge charge="-1" protons="-1" />
-  </rule>
-  <rule value="imine">
-    <addgroup SMILES="[*]=N"/>
-  </rule>
-  <rule value="iminide">
-    <addgroup SMILES="[*]=[N-]"/>
-  </rule>
-  <rule value="iminium">
-    <addgroup SMILES="[*]=[NH2+]"/>
-  </rule>
-  <rule value="iminyl">
-    <addgroup SMILES="[*]=N" outIDs="2"/>
-  </rule>
-  <rule value="iminylium">
-    <addgroup SMILES="[*]=[N+]"/>
-  </rule>
-  <rule value="io">
-    <setOutAtom />
-    <changecharge charge="1" protons="1"/>
-  </rule>
-  <rule value="ite">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*][O-]" functionalIDs="2" />
-  </rule>
-  <rule value="ite_nonCarboxylic">
-    <removeTerminalOxygen order="2" />
-    <addFunctionalAtomsToHydroxyGroups />
-    <chargeHydroxyGroups />
-  </rule>
-  <rule value="ium">
-    <changecharge charge="1" protons="1"/>
-  </rule>
-  <rule value="lactam">
-    <addgroup SMILES="[*](=O)N[*]"/>
-  </rule>
-  <rule value="lactim">
-    <addgroup SMILES="[*](O)=N[*]"/>
-  </rule>
-  <rule value="lactone">
-    <addgroup SMILES="[*](=O)O[*]"/>
-  </rule>
-  <rule value="nitrile">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]#N"/>
-  </rule>
-  <rule value="nitrilium">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]#[NH+]"/>
-  </rule>
-  <rule value="nitrolic acid">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=NO)[N+](=O)[O-]"/>
-  </rule>
-  <rule value="ol">
-    <addgroup SMILES="[*]O" />
-  </rule>
-  <rule value="olate">
-    <addgroup SMILES="[*][O-]" />
-  </rule>
-  <rule value="onaphthone">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)c1cccc2ccccc12" labels="//1'/2'/3'/4'/4a'/5'/6'/7'/8'/8a'" />
-  </rule>
-  <rule value="one">
-    <addgroup SMILES="[*]=O" ketoneLocant="yes" />
-  </rule>
-  <rule value="onamide_aldehyde">
-    <addgroup SMILES="[*]N" functionalIDs="2,2" />
-  </rule>
-  <rule value="ononitrile_aldehyde">
-    <removeTerminalOxygen order="2" />
-    <addgroup SMILES="[*]#N"/>
-  </rule>
-  <rule value="ophenone">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*](=O)c1ccccc1" labels="//1'/2',ortho/3',meta/4',para/5'/6'" />
-  </rule>
-  <rule value="ous">
-    <addgroup SMILES="[*]O" functionalIDs="2"/>
-  </rule>
-  <rule value="ous_nonCarboxylic">
-    <removeTerminalOxygen order="2" />
-    <addFunctionalAtomsToHydroxyGroups/>
-  </rule>
-  <rule value="oxoAndDiYl">
-    <addgroup SMILES="[*]=O"/>
-    <setOutAtom />
-    <setOutAtom />
-  </rule>
-  <rule value="oxoAndTriYl">
-    <addgroup SMILES="[*]=O" />
-    <setOutAtom />
-    <setOutAtom />
-    <setOutAtom />
-  </rule>
-  <rule value="oxy">
-    <addgroup SMILES="[*]O" outIDs="2" />
-  </rule>
-  <rule value="oxy-ylForAcyl">
-    <addgroup SMILES="[*](=O)O" outIDs="3" />
-  </rule>
-  <rule value="oyl">
-    <addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
-    <addgroup SMILES="[*]=O" />
-    <setOutAtom />
-  </rule>
-  <rule value="oyl_nonCarboxylic">
-    <convertHydroxyGroupsToOutAtoms />
-  </rule>
-  <rule value="phosphonite">
-    <addgroup SMILES="[*]P([O-])[O-]" functionalIDs="3,4"/>
-  </rule>
-  <rule value="phosphonous">
-    <addgroup SMILES="[*]P(O)O" functionalIDs="3,4"/>
-  </rule>
-  <rule value="selenenate">
-    <addgroup SMILES="[*][Se][O-]" functionalIDs="3"/>
-  </rule>
-  <rule value="selenenic">
-    <addgroup SMILES="[*][Se]O" functionalIDs="3"/>
-  </rule>
-  <rule value="selenenyl">
-    <addgroup SMILES="[*][SeH]" outIDs="2"/>
-  </rule>
-  <rule value="seleninic">
-    <addgroup SMILES="[*][Se](=O)O" functionalIDs="4"/>
-  </rule>
-  <rule value="seleninyl">
-    <addgroup SMILES="[*][SeH](=O)" outIDs="2"/>
-  </rule>
-  <rule value="selenonic">
-    <addgroup SMILES="[*][Se](=O)(=O)O" functionalIDs="5"/>
-  </rule>
-  <rule value="selenonyl">
-    <addgroup SMILES="[*][SeH](=O)(=O)" outIDs="2"/>
-  </rule>
-  <rule value="selone">
-    <addgroup SMILES="[*]=[Se]" ketoneLocant="yes" />
-  </rule>
-  <rule value="stibonite">
-    <addgroup SMILES="[*][Sb]([O-])[O-]" functionalIDs="3,4"/>
-  </rule>
-  <rule value="stibonous">
-    <addgroup SMILES="[*][Sb](O)O" functionalIDs="3,4"/>
-  </rule>
-  <rule value="sulfamate">
-    <addgroup SMILES="[*]NS(=O)(=O)[O-]" functionalIDs="6"/>
-  </rule>
-  <rule value="sulfamic">
-    <addgroup SMILES="[*]NS(=O)(=O)O" functionalIDs="6"/>
-  </rule>
-  <rule value="sulfenamide">
-    <addgroup SMILES="[*]SN" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenamido">
-    <addgroup SMILES="[*]SN" outIDs="3"/>
-  </rule>
-  <rule value="sulfenate">
-    <addgroup SMILES="[*]S[O-]" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenic">
-    <addgroup SMILES="[*]SO" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenoselenoate">
-    <addgroup SMILES="[*]S[Se-]" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenoselenoic">
-    <addgroup SMILES="[*]S[SeH]" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenoselenoyl">
-    <addgroup SMILES="[*]S[SeH]" outIDs="3"/>
-  </rule>
-  <rule value="sulfenothioate">
-    <addgroup SMILES="[*]S[S-]" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenothioic">
-    <addgroup SMILES="[*]SS" functionalIDs="3"/>
-  </rule>
-  <rule value="sulfenothioyl">
-    <addgroup SMILES="[*]SS" outIDs="3"/>
-  </rule>
-  <rule value="sulfenyl">
-    <addgroup SMILES="[*]S" outIDs="2"/>
-  </rule>
-  <rule value="sulfinic">
-    <addgroup SMILES="[*]S(=O)O" functionalIDs="4"/>
-  </rule>
-  <rule value="sulfinyl">
-    <addgroup SMILES="[*]S(=O)" outIDs="2"/>
-  </rule>
-  <rule value="sulfonic">
-    <addgroup SMILES="[*]S(=O)(=O)O" functionalIDs="5"/>
-  </rule>
-  <rule value="sulfonyl">
-    <addgroup SMILES="[*]S(=O)(=O)" outIDs="2"/>
-  </rule>
-  <rule value="sultam">
-    <addgroup SMILES="[*]S(=O)(=O)N[*]"/>
-  </rule>
-  <rule value="sultim">
-    <addgroup SMILES="[*]S(O)(=O)=N[*]"/>
-  </rule>
-  <rule value="sultine">
-    <addgroup SMILES="[*]S(=O)O[*]"/>
-  </rule>
-  <rule value="sultone">
-    <addgroup SMILES="[*]S(=O)(=O)O[*]"/>
-  </rule>
-  <rule value="tellone">
-    <addgroup SMILES="[*]=[Te]" ketoneLocant="yes" />
-  </rule>
-  <rule value="tellurenate">
-    <addgroup SMILES="[*][Te][O-]" functionalIDs="3"/>
-  </rule>
-  <rule value="tellurenic">
-    <addgroup SMILES="[*][Te]O" functionalIDs="3"/>
-  </rule>
-  <rule value="tellurenyl">
-    <addgroup SMILES="[*][TeH]" outIDs="2"/>
-  </rule>
-  <rule value="tellurinic">
-    <addgroup SMILES="[*][Te](=O)O" functionalIDs="4"/>
-  </rule>
-  <rule value="tellurinyl">
-    <addgroup SMILES="[*][TeH](=O)" outIDs="2"/>
-  </rule>
-  <rule value="telluronic">
-    <addgroup SMILES="[*][Te](=O)(=O)O" functionalIDs="5"/>
-  </rule>
-  <rule value="telluronyl">
-    <addgroup SMILES="[*][TeH](=O)(=O)" outIDs="2"/>
-  </rule>
-  <rule value="thione">
-    <addgroup SMILES="[*]=[S]" ketoneLocant="yes" />
-  </rule>
-  <rule value="uide">
-    <changecharge charge="-1" protons="1" />
-  </rule>
-  <rule value="yl">
-    <setOutAtom />
-  </rule>
-  <rule value="yl_carbohydrate">
-    <removeTerminalOxygen order="1" />
-    <setOutAtom />
-  </rule>
-  <rule value="diyl">
-    <setOutAtom />
-    <setOutAtom />
-  </rule>
-  <rule value="ylidene">
-    <setOutAtom outValency="2" />
-  </rule>
-  <rule value="ylidyne">
-    <setOutAtom outValency="3" />
-  </rule>
-  <rule value="ylium">
-    <changecharge charge="1" protons="-1" />
-  </rule>
+	<rule value="acylium">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]=O"/>
+		<changecharge charge="1" protons="-1" />
+	</rule>
+	<rule value="acylium_nonCarboxylic">
+		<convertHydroxyGroupsToPositiveCharge />
+	</rule>
+	<rule value="aldehyde">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]=O"/>
+	</rule>
+	<rule value="aldoxime">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]=NO"/>
+	</rule>
+	<rule value="amide">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)N" functionalIDs="3,3" />
+	</rule>
+	<rule value="amidylium">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)[NH+]" functionalIDs="3,3" />
+	</rule>
+	<rule value="amidine">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=N)N" functionalIDs="3,3" labels="/N2/N1"/>
+	</rule>
+	<rule value="amidinium">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=[NH2+])N" functionalIDs="3,3" labels="/N2/N1"/>
+	</rule>
+	<rule value="amidium">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)[NH3+]" functionalIDs="3,3" />
+	</rule>
+	<rule value="amido">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)N" outIDs="3"/>
+	</rule>
+	<rule value="amine">
+		<addgroup SMILES="[*]N" />
+	</rule>
+	<rule value="aminide">
+		<addgroup SMILES="[*][NH-]" />
+	</rule>
+	<rule value="aminium">
+		<addgroup SMILES="[*][NH3+]" />
+	</rule>
+	<rule value="aminylium">
+		<addgroup SMILES="[*][NH+]" />
+	</rule>
+	<rule value="amino">
+		<addgroup SMILES="[*]N" outIDs="2"/>
+	</rule>
+	<rule value="anilide">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)Nc1ccccc1" labels="///1'/2',ortho/3',meta/4',para/5'/6'"/>
+	</rule>
+	<rule value="arsonite">
+		<addgroup SMILES="[*][As]([O-])[O-]" functionalIDs="3,4"/>
+	</rule>
+	<rule value="arsonous">
+		<addgroup SMILES="[*][As](O)O" functionalIDs="3,4"/>
+	</rule>
+	<rule value="ate">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)[O-]" functionalIDs="3"/>
+	</rule>
+	<rule value="azonate">
+		<addgroup SMILES="[*][N+]([O-])([O-])[O-]" functionalIDs="4,5"/>
+	</rule>
+	<rule value="azonic">
+		<addgroup SMILES="[*][N+]([O-])(O)O" functionalIDs="4,5"/>
+	</rule>
+	<rule value="azonite">
+		<addgroup SMILES="[*]N([O-])[O-]" functionalIDs="3,4"/>
+	</rule>
+	<rule value="azonous">
+		<addgroup SMILES="[*]N(O)O" functionalIDs="3,4"/>
+	</rule>
+	<rule value="ate_nonCarboxylic">
+		<addFunctionalAtomsToHydroxyGroups />
+		<chargeHydroxyGroups />
+	</rule>
+	<rule value="boronate">
+		<addgroup SMILES="[*]B([O-])[O-]" functionalIDs="3,4"/>
+	</rule>
+	<rule value="boronic">
+		<addgroup SMILES="[*]B(O)O" functionalIDs="3,4"/>
+	</rule>
+	<rule value="boronicacidpinacolester">
+		<addgroup SMILES="[*]B(OC(C)(C)C1(C)(C))O1"/>
+	</rule>
+	<rule value="carbamate">
+		<addgroup SMILES="[*]NC(=O)[O-]" functionalIDs="5"/>
+	</rule>
+	<rule value="carbamic">
+		<addgroup SMILES="[*]NC(=O)O" functionalIDs="5"/>
+	</rule>
+	<rule value="carbolactone">
+		<addgroup SMILES="[*]C(=O)O[*]"/>
+	</rule>
+	<rule value="carbonyl">
+		<addgroup SMILES="[*]C(=O)" outIDs="2"/>
+	</rule>
+	<rule value="carbonyl_to_hydroxy">
+		<removeTerminalOxygen order="2" />
+		<addgroup SMILES="[*]O"/>
+	</rule>
+	<rule value="carbonylium">
+		<addgroup SMILES="[*][C+]=O"/>
+	</rule>
+	<rule value="dicarboximide">
+		<addgroup SMILES="[*]C(=O)NC(=O)[*]"/>
+	</rule>
+	<rule value="carboxylic">
+		<addgroup SMILES="[*]C(=O)O" functionalIDs="4"/>
+	</rule>
+	<rule value="carboxylate">
+		<addgroup SMILES="[*]C(=O)[O-]" functionalIDs="4" />
+	</rule>
+	<rule value="carboxylite">
+		<addgroup SMILES="[*]C[O-]" functionalIDs="3" />
+	</rule>
+	<rule value="cyclicimide">
+		<addgroup SMILES="[*](=O)N[*]=O"/>
+	</rule>
+	<rule value="cyclicimidium">
+		<addgroup SMILES="[*](=O)[NH2+][*]=O"/>
+	</rule>
+	<rule value="cyclicimido">
+		<addgroup SMILES="[*](=O)N[*]=O" outIDs="3"/>
+	</rule>
+	<rule value="cyclicimidylium">
+		<addgroup SMILES="[*](=O)[N+][*]=O"/>
+	</rule>
+	<rule value="diazonium">
+		<addgroup SMILES="[*][N+]#N" />
+	</rule>
+	<rule value="hydrazide">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)NN" labels="//1'/2'"/>
+	</rule>
+	<rule value="hydrazido">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)NN" labels="//1'/2'" outIDs="4"/>
+	</rule>
+	<rule value="hydrazonic">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=NN)O" functionalIDs="4" />
+	</rule>
+	<rule value="hydroxamate">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)N[O-]" functionalIDs="4"/>
+	</rule>
+	<rule value="hydroxamic">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)NO" functionalIDs="4"/>
+	</rule>
+	<rule value="hydroxy_to_acyl">
+		<removeTerminalOxygen order="1" />
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]=O" />
+		<setOutAtom />
+	</rule>
+	<rule value="hydroxy_to_amide">
+		<removeTerminalOxygen order="1" />
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)N" functionalIDs="3"/>
+	</rule>
+	<rule value="hydroxy_to_ate">
+		<removeTerminalOxygen order="1" />
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)[O-]" functionalIDs="3"/>
+	</rule>
+	<rule value="hydroxy_to_carbonyl">
+		<removeTerminalOxygen order="1" />
+		<addgroup SMILES="[*]=O"/>
+	</rule>
+	<rule value="hydroxy_to_icacid">
+		<removeTerminalOxygen order="1" />
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+	</rule>
+	<rule value="hydroxy_to_nitrile">
+		<removeTerminalOxygen order="1" />
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]#N"/>
+	</rule>
+	<rule value="ic">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+	</rule>
+	<rule value="ic_O_acid">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+		<setAcidicElement element="O"/>
+	</rule>
+	<rule value="ic_S_acid">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+		<setAcidicElement element="S"/>
+	</rule>
+	<rule value="ic_Se_acid">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+		<setAcidicElement element="Se"/>
+	</rule>
+	<rule value="ic_Te_acid">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)O" functionalIDs="3"/>
+		<setAcidicElement element="Te"/>
+	</rule>
+	<rule value="ic_nonCarboxylic">
+		<addFunctionalAtomsToHydroxyGroups/>
+	</rule>
+	<rule value="ide">
+		<changecharge charge="-1" protons="-1" />
+	</rule>
+	<rule value="imine">
+		<addgroup SMILES="[*]=N"/>
+	</rule>
+	<rule value="iminide">
+		<addgroup SMILES="[*]=[N-]"/>
+	</rule>
+	<rule value="iminium">
+		<addgroup SMILES="[*]=[NH2+]"/>
+	</rule>
+	<rule value="iminyl">
+		<addgroup SMILES="[*]=N" outIDs="2"/>
+	</rule>
+	<rule value="iminylium">
+		<addgroup SMILES="[*]=[N+]"/>
+	</rule>
+	<rule value="io">
+		<setOutAtom />
+		<changecharge charge="1" protons="1"/>
+	</rule>
+	<rule value="ite">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*][O-]" functionalIDs="2" />
+	</rule>
+	<rule value="ite_nonCarboxylic">
+		<removeTerminalOxygen order="2" />
+		<addFunctionalAtomsToHydroxyGroups />
+		<chargeHydroxyGroups />
+	</rule>
+	<rule value="ium">
+		<changecharge charge="1" protons="1"/>
+	</rule>
+	<rule value="lactam">
+		<addgroup SMILES="[*](=O)N[*]"/>
+	</rule>
+	<rule value="lactim">
+		<addgroup SMILES="[*](O)=N[*]"/>
+	</rule>
+	<rule value="lactone">
+		<addgroup SMILES="[*](=O)O[*]"/>
+	</rule>
+	<rule value="nitrile">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]#N"/>
+	</rule>
+	<rule value="nitrilium">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]#[NH+]"/>
+	</rule>
+	<rule value="nitrolic acid">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=NO)[N+](=O)[O-]"/>
+	</rule>
+	<rule value="ol">
+		<addgroup SMILES="[*]O" />
+	</rule>
+	<rule value="olate">
+		<addgroup SMILES="[*][O-]" />
+	</rule>
+	<rule value="onaphthone">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)c1cccc2ccccc12" labels="//1'/2'/3'/4'/4a'/5'/6'/7'/8'/8a'" />
+	</rule>
+	<rule value="one">
+		<addgroup SMILES="[*]=O" ketoneLocant="yes" />
+	</rule>
+	<rule value="onamide_aldehyde">
+		<addgroup SMILES="[*]N" functionalIDs="2,2" />
+	</rule>
+	<rule value="ononitrile_aldehyde">
+		<removeTerminalOxygen order="2" />
+		<addgroup SMILES="[*]#N"/>
+	</rule>
+	<rule value="ophenone">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=O)c1ccccc1" labels="//1'/2',ortho/3',meta/4',para/5'/6'" />
+	</rule>
+	<rule value="ous">
+		<addgroup SMILES="[*]O" functionalIDs="2"/>
+	</rule>
+	<rule value="ous_nonCarboxylic">
+		<removeTerminalOxygen order="2" />
+		<addFunctionalAtomsToHydroxyGroups/>
+	</rule>
+	<rule value="oxoAndDiYl">
+		<addgroup SMILES="[*]=O"/>
+		<setOutAtom />
+		<setOutAtom />
+	</rule>
+	<rule value="oxoAndTriYl">
+		<addgroup SMILES="[*]=O" />
+		<setOutAtom />
+		<setOutAtom />
+		<setOutAtom />
+	</rule>
+	<rule value="oxy">
+		<addgroup SMILES="[*]O" outIDs="2" />
+	</rule>
+	<rule value="oxy-ylForAcyl">
+		<addgroup SMILES="[*](=O)O" outIDs="3" />
+	</rule>
+	<rule value="oyl">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]=O" />
+		<setOutAtom />
+	</rule>
+	<rule value="oyl_nonCarboxylic">
+		<convertHydroxyGroupsToOutAtoms />
+	</rule>
+	<rule value="phosphonite">
+		<addgroup SMILES="[*]P([O-])[O-]" functionalIDs="3,4"/>
+	</rule>
+	<rule value="phosphonous">
+		<addgroup SMILES="[*]P(O)O" functionalIDs="3,4"/>
+	</rule>
+	<rule value="selenenate">
+		<addgroup SMILES="[*][Se][O-]" functionalIDs="3"/>
+	</rule>
+	<rule value="selenenic">
+		<addgroup SMILES="[*][Se]O" functionalIDs="3"/>
+	</rule>
+	<rule value="selenenyl">
+		<addgroup SMILES="[*][SeH]" outIDs="2"/>
+	</rule>
+	<rule value="seleninic">
+		<addgroup SMILES="[*][Se](=O)O" functionalIDs="4"/>
+	</rule>
+	<rule value="seleninyl">
+		<addgroup SMILES="[*][SeH](=O)" outIDs="2"/>
+	</rule>
+	<rule value="selenonic">
+		<addgroup SMILES="[*][Se](=O)(=O)O" functionalIDs="5"/>
+	</rule>
+	<rule value="selenonyl">
+		<addgroup SMILES="[*][SeH](=O)(=O)" outIDs="2"/>
+	</rule>
+	<rule value="selone">
+		<addgroup SMILES="[*]=[Se]" ketoneLocant="yes" />
+	</rule>
+	<rule value="stibonite">
+		<addgroup SMILES="[*][Sb]([O-])[O-]" functionalIDs="3,4"/>
+	</rule>
+	<rule value="stibonous">
+		<addgroup SMILES="[*][Sb](O)O" functionalIDs="3,4"/>
+	</rule>
+	<rule value="sulfamate">
+		<addgroup SMILES="[*]NS(=O)(=O)[O-]" functionalIDs="6"/>
+	</rule>
+	<rule value="sulfamic">
+		<addgroup SMILES="[*]NS(=O)(=O)O" functionalIDs="6"/>
+	</rule>
+	<rule value="sulfenamide">
+		<addgroup SMILES="[*]SN" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenamido">
+		<addgroup SMILES="[*]SN" outIDs="3"/>
+	</rule>
+	<rule value="sulfenate">
+		<addgroup SMILES="[*]S[O-]" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenic">
+		<addgroup SMILES="[*]SO" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenoselenoate">
+		<addgroup SMILES="[*]S[Se-]" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenoselenoic">
+		<addgroup SMILES="[*]S[SeH]" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenoselenoyl">
+		<addgroup SMILES="[*]S[SeH]" outIDs="3"/>
+	</rule>
+	<rule value="sulfenothioate">
+		<addgroup SMILES="[*]S[S-]" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenothioic">
+		<addgroup SMILES="[*]SS" functionalIDs="3"/>
+	</rule>
+	<rule value="sulfenothioyl">
+		<addgroup SMILES="[*]SS" outIDs="3"/>
+	</rule>
+	<rule value="sulfenyl">
+		<addgroup SMILES="[*]S" outIDs="2"/>
+	</rule>
+	<rule value="sulfinic">
+		<addgroup SMILES="[*]S(=O)O" functionalIDs="4"/>
+	</rule>
+	<rule value="sulfinyl">
+		<addgroup SMILES="[*]S(=O)" outIDs="2"/>
+	</rule>
+	<rule value="sulfonic">
+		<addgroup SMILES="[*]S(=O)(=O)O" functionalIDs="5"/>
+	</rule>
+	<rule value="sulfonyl">
+		<addgroup SMILES="[*]S(=O)(=O)" outIDs="2"/>
+	</rule>
+	<rule value="sultam">
+		<addgroup SMILES="[*]S(=O)(=O)N[*]"/>
+	</rule>
+	<rule value="sultim">
+		<addgroup SMILES="[*]S(O)(=O)=N[*]"/>
+	</rule>
+	<rule value="sultine">
+		<addgroup SMILES="[*]S(=O)O[*]"/>
+	</rule>
+	<rule value="sultone">
+		<addgroup SMILES="[*]S(=O)(=O)O[*]"/>
+	</rule>
+	<rule value="tellone">
+		<addgroup SMILES="[*]=[Te]" ketoneLocant="yes" />
+	</rule>
+	<rule value="tellurenate">
+		<addgroup SMILES="[*][Te][O-]" functionalIDs="3"/>
+	</rule>
+	<rule value="tellurenic">
+		<addgroup SMILES="[*][Te]O" functionalIDs="3"/>
+	</rule>
+	<rule value="tellurenyl">
+		<addgroup SMILES="[*][TeH]" outIDs="2"/>
+	</rule>
+	<rule value="tellurinic">
+		<addgroup SMILES="[*][Te](=O)O" functionalIDs="4"/>
+	</rule>
+	<rule value="tellurinyl">
+		<addgroup SMILES="[*][TeH](=O)" outIDs="2"/>
+	</rule>
+	<rule value="telluronic">
+		<addgroup SMILES="[*][Te](=O)(=O)O" functionalIDs="5"/>
+	</rule>
+	<rule value="telluronyl">
+		<addgroup SMILES="[*][TeH](=O)(=O)" outIDs="2"/>
+	</rule>
+	<rule value="thione">
+		<addgroup SMILES="[*]=[S]" ketoneLocant="yes" />
+	</rule>
+	<rule value="uide">
+		<changecharge charge="-1" protons="1" />
+	</rule>
+	<rule value="yl">
+		<setOutAtom />
+	</rule>
+	<rule value="yl_carbohydrate">
+		<removeTerminalOxygen order="1" />
+		<setOutAtom />
+	</rule>
+	<rule value="diyl">
+		<setOutAtom />
+		<setOutAtom />
+	</rule>
+	<rule value="ylidene">
+		<setOutAtom outValency="2" />
+	</rule>
+	<rule value="ylidyne">
+		<setOutAtom outValency="3" />
+	</rule>
+	<rule value="ylium">
+		<changecharge charge="1" protons="-1" />
+	</rule>
 </suffixRulesList>

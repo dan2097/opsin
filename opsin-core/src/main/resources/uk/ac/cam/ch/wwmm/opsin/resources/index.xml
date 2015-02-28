@@ -1,41 +1,41 @@
 <!DOCTYPE tokenFiles SYSTEM "tokenFiles.dtd">
 <!-- All of the token list files to be used -->
 <tokenFiles>
-  <tokenFile>arylSubstituents.xml</tokenFile>
-  <tokenFile>multiRadicalSubstituents.xml</tokenFile>
-  <tokenFile>simpleSubstituents.xml</tokenFile>
-  <tokenFile>substituents.xml</tokenFile>
+	<tokenFile>arylSubstituents.xml</tokenFile>
+	<tokenFile>multiRadicalSubstituents.xml</tokenFile>
+	<tokenFile>simpleSubstituents.xml</tokenFile>
+	<tokenFile>substituents.xml</tokenFile>
 
-  <tokenFile>arylGroups.xml</tokenFile>
-  <tokenFile>simpleGroups.xml</tokenFile>
-  <tokenFile>simpleCyclicGroups.xml</tokenFile>
-  <tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
-  <tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
-  <tokenFile>cyclicUnsaturableHydrocarbon.xml</tokenFile>
-  <tokenFile>elementaryAtoms.xml</tokenFile>
-  <tokenFile>aminoAcids.xml</tokenFile>
-  <tokenFile>carbohydrates.xml</tokenFile>
-  <tokenFile>naturalProducts.xml</tokenFile>
+	<tokenFile>arylGroups.xml</tokenFile>
+	<tokenFile>simpleGroups.xml</tokenFile>
+	<tokenFile>simpleCyclicGroups.xml</tokenFile>
+	<tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
+	<tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
+	<tokenFile>cyclicUnsaturableHydrocarbon.xml</tokenFile>
+	<tokenFile>elementaryAtoms.xml</tokenFile>
+	<tokenFile>aminoAcids.xml</tokenFile>
+	<tokenFile>carbohydrates.xml</tokenFile>
+	<tokenFile>naturalProducts.xml</tokenFile>
 
-  <tokenFile>alkanes.xml</tokenFile>
-  <tokenFile>atomHydrides.xml</tokenFile>
+	<tokenFile>alkanes.xml</tokenFile>
+	<tokenFile>atomHydrides.xml</tokenFile>
 
-  <tokenFile>carboxylicAcids.xml</tokenFile>
-  <tokenFile>nonCarboxylicAcids.xml</tokenFile>
+	<tokenFile>carboxylicAcids.xml</tokenFile>
+	<tokenFile>nonCarboxylicAcids.xml</tokenFile>
 
-  <tokenFile>chargeAndOxidationNumberSpecifiers.xml</tokenFile>
-  <tokenFile>functionalTerms.xml</tokenFile>
-  <tokenFile>heteroAtoms.xml</tokenFile>
-  <tokenFile>hwHeteroAtoms.xml</tokenFile>
-  <tokenFile>hwSuffixes.xml</tokenFile>
-  <tokenFile>fusionComponents.xml</tokenFile>
-  <tokenFile>multipliers.xml</tokenFile>
-  <tokenFile>infixes.xml</tokenFile>
-  <tokenFile>inlineSuffixes.xml</tokenFile>
-  <tokenFile>inlineChargeSuffixes.xml</tokenFile>
-  <tokenFile>suffixPrefix.xml</tokenFile>
-  <tokenFile>carbohydrateSuffixes.xml</tokenFile>
-  <tokenFile>suffixes.xml</tokenFile>
-  <tokenFile>unsaturators.xml</tokenFile>
-  <tokenFile>miscTokens.xml</tokenFile>
+	<tokenFile>chargeAndOxidationNumberSpecifiers.xml</tokenFile>
+	<tokenFile>functionalTerms.xml</tokenFile>
+	<tokenFile>heteroAtoms.xml</tokenFile>
+	<tokenFile>hwHeteroAtoms.xml</tokenFile>
+	<tokenFile>hwSuffixes.xml</tokenFile>
+	<tokenFile>fusionComponents.xml</tokenFile>
+	<tokenFile>multipliers.xml</tokenFile>
+	<tokenFile>infixes.xml</tokenFile>
+	<tokenFile>inlineSuffixes.xml</tokenFile>
+	<tokenFile>inlineChargeSuffixes.xml</tokenFile>
+	<tokenFile>suffixPrefix.xml</tokenFile>
+	<tokenFile>carbohydrateSuffixes.xml</tokenFile>
+	<tokenFile>suffixes.xml</tokenFile>
+	<tokenFile>unsaturators.xml</tokenFile>
+	<tokenFile>miscTokens.xml</tokenFile>
 </tokenFiles>

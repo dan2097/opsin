@@ -1,106 +1,106 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
-  <!--For convenience in order of priority-->
-  <tokenList tagname="heteroatom" symbol="D"><!--complete set including 2004 recommendations -->
-    <token value="F">fluora</token>
-    <token value="Cl">chlora</token>
-    <token value="Br">broma</token>
-    <token value="I">ioda</token>
-    <token value="O">oxa</token>
-    <token value="S">thia</token>
-    <token value="[Se]">selena</token>
-    <token value="[Te]">tellura</token>
-    <token value="N">aza</token>
-    <token value="P">phospha</token>
-    <token value="[As]">arsa</token>
-    <token value="[Sb]">stiba</token>
-    <token value="[Bi]">bisma</token>
-    <token value="[Si]">sila</token>
-    <token value="[Ge]">germa</token>
-    <token value="[Sn]">stanna</token>
-    <token value="[Pb]">plumba</token>
-    <token value="B">bora</token>
-    <token value="[Al]">aluma</token>
-    <token value="[Ga]">galla</token>
-    <token value="[In]">indiga</token>
-    <token value="[Tl]">thalla</token>
-    <token value="[Hg]">mercura</token>
+	<!--For convenience in order of priority-->
+	<tokenList tagname="heteroatom" symbol="D"><!--complete set including 2004 recommendations -->
+		<token value="F">fluora</token>
+		<token value="Cl">chlora</token>
+		<token value="Br">broma</token>
+		<token value="I">ioda</token>
+		<token value="O">oxa</token>
+		<token value="S">thia</token>
+		<token value="[Se]">selena</token>
+		<token value="[Te]">tellura</token>
+		<token value="N">aza</token>
+		<token value="P">phospha</token>
+		<token value="[As]">arsa</token>
+		<token value="[Sb]">stiba</token>
+		<token value="[Bi]">bisma</token>
+		<token value="[Si]">sila</token>
+		<token value="[Ge]">germa</token>
+		<token value="[Sn]">stanna</token>
+		<token value="[Pb]">plumba</token>
+		<token value="B">bora</token>
+		<token value="[Al]">aluma</token>
+		<token value="[Ga]">galla</token>
+		<token value="[In]">indiga</token>
+		<token value="[Tl]">thalla</token>
+		<token value="[Hg]">mercura</token>
 
-    <token value="F">fluor</token>
-    <token value="Cl">chlor</token>
-    <token value="Br">brom</token>
-    <token value="I">iod</token>
-    <token value="O">ox</token>
-    <token value="S">thi</token>
-    <token value="[Se]">selen</token>
-    <token value="[Te]">tellur</token>
-    <token value="N">az</token>
-    <token value="P">phosph</token>
-    <token value="[As]">ars</token>
-    <token value="[Sb]">stib</token>
-    <token value="[Bi]">bism</token>
-    <token value="[Si]">sil</token>
-    <token value="[Ge]">germ</token>
-    <token value="[Sn]">stann</token>
-    <token value="[Pb]">plumb</token>
-    <token value="B">bor</token>
-    <token value="[Al]">alum</token>
-    <token value="[Ga]">gall</token>
-    <token value="[In]">indig</token>
-    <token value="[Tl]">thall</token>
-    <token value="[Hg]">mercur</token>
+		<token value="F">fluor</token>
+		<token value="Cl">chlor</token>
+		<token value="Br">brom</token>
+		<token value="I">iod</token>
+		<token value="O">ox</token>
+		<token value="S">thi</token>
+		<token value="[Se]">selen</token>
+		<token value="[Te]">tellur</token>
+		<token value="N">az</token>
+		<token value="P">phosph</token>
+		<token value="[As]">ars</token>
+		<token value="[Sb]">stib</token>
+		<token value="[Bi]">bism</token>
+		<token value="[Si]">sil</token>
+		<token value="[Ge]">germ</token>
+		<token value="[Sn]">stann</token>
+		<token value="[Pb]">plumb</token>
+		<token value="B">bor</token>
+		<token value="[Al]">alum</token>
+		<token value="[Ga]">gall</token>
+		<token value="[In]">indig</token>
+		<token value="[Tl]">thall</token>
+		<token value="[Hg]">mercur</token>
 
-    <token value="P">phosphor</token>
-    <token value="[As]">arsen</token>
-    <token value="[Sb]">antimon</token>
-  </tokenList>
+		<token value="P">phosphor</token>
+		<token value="[As]">arsen</token>
+		<token value="[Sb]">antimon</token>
+	</tokenList>
 
-  <tokenList tagname="heteroatom" symbol="J"><!--hetero atoms that are compatable with an ine HWsuffix-->
-    <token value="O">oxa</token>
-    <token value="S">thia</token>
-    <token value="[Se]">selena</token>
-    <token value="[Te]">tellura</token>
-    <token value="N">aza</token>
-    <token value="[Bi]">bisma</token>
-    <token value="[Si]">sila</token>
-    <token value="[Ge]">germa</token>
-    <token value="[Sn]">stanna</token>
-    <token value="[Pb]">plumba</token>
-    <token value="[Hg]">mercura</token>
+	<tokenList tagname="heteroatom" symbol="J"><!--hetero atoms that are compatable with an ine HWsuffix-->
+		<token value="O">oxa</token>
+		<token value="S">thia</token>
+		<token value="[Se]">selena</token>
+		<token value="[Te]">tellura</token>
+		<token value="N">aza</token>
+		<token value="[Bi]">bisma</token>
+		<token value="[Si]">sila</token>
+		<token value="[Ge]">germa</token>
+		<token value="[Sn]">stanna</token>
+		<token value="[Pb]">plumba</token>
+		<token value="[Hg]">mercura</token>
 
-    <token value="O">ox</token>
-    <token value="S">thi</token>
-    <token value="[Se]">selen</token>
-    <token value="[Te]">tellur</token>
-    <token value="N">az</token>
-    <token value="[Bi]">bism</token>
-    <token value="[Si]">sil</token>
-    <token value="[Ge]">germ</token>
-    <token value="[Sn]">stann</token>
-    <token value="[Pb]">plumb</token>
-    <token value="[Hg]">mercur</token>
+		<token value="O">ox</token>
+		<token value="S">thi</token>
+		<token value="[Se]">selen</token>
+		<token value="[Te]">tellur</token>
+		<token value="N">az</token>
+		<token value="[Bi]">bism</token>
+		<token value="[Si]">sil</token>
+		<token value="[Ge]">germ</token>
+		<token value="[Sn]">stann</token>
+		<token value="[Pb]">plumb</token>
+		<token value="[Hg]">mercur</token>
 
-    <token value="P">phosphor</token>
-    <token value="[As]">arsen</token>
-    <token value="[Sb]">antimon</token>
-  </tokenList>
+		<token value="P">phosphor</token>
+		<token value="[As]">arsen</token>
+		<token value="[Sb]">antimon</token>
+	</tokenList>
 
-  <tokenList tagname="heteroatom" symbol="j"><!--hetero atoms that are compatable with an ane HWsuffix-->
-    <token value="O">oxa</token>
-    <token value="S">thia</token>
-    <token value="[Se]">selena</token>
-    <token value="[Te]">tellura</token>
-    <token value="[Bi]">bisma</token>
-    <token value="[Hg]">mercura</token>
+	<tokenList tagname="heteroatom" symbol="j"><!--hetero atoms that are compatable with an ane HWsuffix-->
+		<token value="O">oxa</token>
+		<token value="S">thia</token>
+		<token value="[Se]">selena</token>
+		<token value="[Te]">tellura</token>
+		<token value="[Bi]">bisma</token>
+		<token value="[Hg]">mercura</token>
 
-    <token value="O">ox</token>
-    <token value="S">thi</token>
-    <token value="[Se]">selen</token>
-    <token value="[Te]">tellur</token>
-    <token value="[Bi]">bism</token>
-    <token value="[Hg]">mercur</token>
+		<token value="O">ox</token>
+		<token value="S">thi</token>
+		<token value="[Se]">selen</token>
+		<token value="[Te]">tellur</token>
+		<token value="[Bi]">bism</token>
+		<token value="[Hg]">mercur</token>
 
-    <token value="[As]">arsen</token>
-  </tokenList>
+		<token value="[As]">arsen</token>
+	</tokenList>
 </tokenLists>

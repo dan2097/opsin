@@ -11,345 +11,345 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 -->
 <!--need to be added: lactone, lactam, lactims, sultams and sultims-->
 <wordRules>
-  <wordRule name="monovalentFunctionalGroup" type="full">
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="monoValentGroup"/>
-  </wordRule>
+	<wordRule name="monovalentFunctionalGroup" type="full">
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="monoValentGroup"/>
+	</wordRule>
 
-  <wordRule name="monovalentFunctionalGroup" type="full">
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="monovalentFunctionalGroup" type="full">
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="monovalentFunctionalGroup" type="full">
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="monovalentFunctionalGroup" type="full">
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="monovalentFunctionalGroup" type="full">
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="monovalentFunctionalGroup" type="full">
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="ester" type="full">
-    <word type="substituent" />
-    <word type="full" endsWithRegex="\S(at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="ester" type="full">
+		<word type="substituent" />
+		<word type="full" endsWithRegex="\S(at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
 
 <!--unusual case where the acid is not a mono acid and the replacements are different-->
-  <wordRule name="acidReplacingFunctionalGroup" type="full">
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-  </wordRule>
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
 
-  <wordRule name="acidReplacingFunctionalGroup" type="full">
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-  </wordRule>
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
 
-  <wordRule name="acidReplacingFunctionalGroup" type="full">
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-  </wordRule>
-  
-  <wordRule name="acidReplacingFunctionalGroup" type="full">
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-  </wordRule>
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
 
-  <wordRule name="acidReplacingFunctionalGroup" type="full">
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-  </wordRule>
-  
-  <wordRule name="acidReplacingFunctionalGroup" type="full">
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-  </wordRule>
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
 
-  <wordRule name="functionGroupAsGroup" type="full">
-    <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="amid[e]?[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
+
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
+
+	<wordRule name="functionGroupAsGroup" type="full">
+		<word type="substituent" />
+		<word type="functionalTerm" endsWithRegex="amid[e]?[\]\)\}]*"/>
+	</wordRule>
 
 <!--non standard repetition of "ester"-->
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
 
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
 
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
 
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
 
-  <wordRule name="functionalClassEster" type="full">
-    <word type="full"/>
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="functionalTerm" value="ester" />
-  </wordRule>
+	<wordRule name="functionalClassEster" type="full">
+		<word type="full"/>
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="functionalTerm" value="ester" />
+	</wordRule>
 
-  <wordRule name="multiEster" type="full">
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
-  </wordRule>
-  <wordRule name="multiEster" type="full"><!-- e.g. methyl ethyl propyl phosphate-->
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="multiEster" type="full">
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+	</wordRule>
+	<wordRule name="multiEster" type="full"><!-- e.g. methyl ethyl propyl phosphate-->
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="multiEster" type="full">
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="multiEster" type="full">
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="divalentFunctionalGroup" type="full">
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="functionalTerm" functionalGroupType="diValentGroup"/>
-  </wordRule>
+	<wordRule name="divalentFunctionalGroup" type="full">
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="diValentGroup"/>
+	</wordRule>
 
-  <wordRule name="divalentFunctionalGroup" type="full">
-    <word type="substituent"/>
-    <word type="functionalTerm" functionalGroupType="diValentGroup" />
-  </wordRule>
+	<wordRule name="divalentFunctionalGroup" type="full">
+		<word type="substituent"/>
+		<word type="functionalTerm" functionalGroupType="diValentGroup" />
+	</wordRule>
 
-  <wordRule name="glycol" type="full">
-    <word type="substituent" endsWithRegex="(diyl|ylen[e]?)[\]\)\}]*" />
-    <word type="functionalTerm" endsWithRegex="(glycol|fluorohydrin|chlorohydrin|bromohydrin|iodohydrin|cyanohydrin)" functionalGroupType="functionalClass" />
-  </wordRule>
+	<wordRule name="glycol" type="full">
+		<word type="substituent" endsWithRegex="(diyl|ylen[e]?)[\]\)\}]*" />
+		<word type="functionalTerm" endsWithRegex="(glycol|fluorohydrin|chlorohydrin|bromohydrin|iodohydrin|cyanohydrin)" functionalGroupType="functionalClass" />
+	</wordRule>
 
-  <wordRule name="glycolEther" type="full">
-    <word type="full" endsWithRegex="glycol"/>
-    <word type="substituent"/>
-    <word type="functionalTerm" value="ether" />
-    <word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="glycolEther" type="full">
+		<word type="full" endsWithRegex="glycol"/>
+		<word type="substituent"/>
+		<word type="functionalTerm" value="ether" />
+		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="glycolEther" type="full">
-    <word type="full" endsWithRegex="glycol"/>
-    <word type="substituent"/>
-    <word type="functionalTerm" value="ether" />
-  </wordRule>
+	<wordRule name="glycolEther" type="full">
+		<word type="full" endsWithRegex="glycol"/>
+		<word type="substituent"/>
+		<word type="functionalTerm" value="ether" />
+	</wordRule>
 
-  <wordRule name="glycolEther" type="full">
-    <word type="full" endsWithRegex="glycol"/>
-    <word type="substituent"/>
-    <word type="substituent"/>
-    <word type="functionalTerm" value="ether" />
-  </wordRule>
+	<wordRule name="glycolEther" type="full">
+		<word type="full" endsWithRegex="glycol"/>
+		<word type="substituent"/>
+		<word type="substituent"/>
+		<word type="functionalTerm" value="ether" />
+	</wordRule>
 
-  <wordRule name="oxide" type="full">
-    <word type="full" endsWithRegex="(?&lt;!ic|ous)" />
-    <word type="functionalTerm" endsWithRegex="(oxide|sulfide|selenide|telluride)" functionalGroupType="functionalClass" />
-  </wordRule>
+	<wordRule name="oxide" type="full">
+		<word type="full" endsWithRegex="(?&lt;!ic|ous)" />
+		<word type="functionalTerm" endsWithRegex="(oxide|sulfide|selenide|telluride)" functionalGroupType="functionalClass" />
+	</wordRule>
 
-  <wordRule name="carbonylDerivative" type="full">
-    <word type="full" />
-    <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\]\)\}]*" />
-  </wordRule>
+	<wordRule name="carbonylDerivative" type="full">
+		<word type="full" />
+		<word type="substituent" />
+		<word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\]\)\}]*" />
+	</wordRule>
 
-  <wordRule name="carbonylDerivative" type="full">
-    <word type="full" />
-    <word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxime|hydrazone|semicarbazone|isosemicarbazone|isothiosemicarbazone|isoselenosemicarbazone|isotellurosemicarbazone|imide|imine|semioxamazone)[\]\)\}]*" />
-  </wordRule>
+	<wordRule name="carbonylDerivative" type="full">
+		<word type="full" />
+		<word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxime|hydrazone|semicarbazone|isosemicarbazone|isothiosemicarbazone|isoselenosemicarbazone|isotellurosemicarbazone|imide|imine|semioxamazone)[\]\)\}]*" />
+	</wordRule>
 
-  <wordRule name="anhydride" type="full">
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="anhydride" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="anhydride" type="full">
-    <word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="anhydride" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="acidHalideOrPseudoHalide" type="full">
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="acidHalideOrPseudoHalide" type="full">
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="acidHalideOrPseudoHalide" type="full">
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="acidHalideOrPseudoHalide" type="full">
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="functionGroupAsGroup" type="full">
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="functionGroupAsGroup" type="full">
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="acidHalideOrPseudoHalide" type="full">
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="acidHalideOrPseudoHalide" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="anhydride" type="full">
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="anhydride" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="anhydride" type="full">
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="anhydride" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtom"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="additionCompound" type="full">
+		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtom"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="additionCompound" type="full">
+		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtom"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="additionCompound" type="full">
+		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="additionCompound" type="full">
-    <word type="full" endsWithGroupSubType="elementaryAtom"/>
-    <word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-  </wordRule>
+	<wordRule name="additionCompound" type="full">
+		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
+	</wordRule>
 
-  <wordRule name="acetal" type="full">
-    <word type="full" />
-    <word type="substituent" />
-    <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="(acetal|ketal)" />
-  </wordRule>
+	<wordRule name="acetal" type="full">
+		<word type="full" />
+		<word type="substituent" />
+		<word type="substituent" />
+		<word type="functionalTerm" endsWithRegex="(acetal|ketal)" />
+	</wordRule>
 
-  <wordRule name="acetal" type="full">
-    <word type="full" />
-    <word type="substituent" />
-    <word type="functionalTerm" endsWithRegex="(acetal|ketal)" />
-  </wordRule>
+	<wordRule name="acetal" type="full">
+		<word type="full" />
+		<word type="substituent" />
+		<word type="functionalTerm" endsWithRegex="(acetal|ketal)" />
+	</wordRule>
 
-  <wordRule name="acetal" type="full">
-    <word type="full" />
-    <word type="functionalTerm" endsWithRegex="(acetal|ketal)" />
-  </wordRule>
+	<wordRule name="acetal" type="full">
+		<word type="full" />
+		<word type="functionalTerm" endsWithRegex="(acetal|ketal)" />
+	</wordRule>
 
-  <wordRule name="potentialBiochemicalEster" type="full">
-    <word type="full" endsWithGroupSubType="biochemical"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="potentialBiochemicalEster" type="full">
+		<word type="full" endsWithGroupSubType="biochemical"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="potentialBiochemicalEster" type="full">
-    <word type="full" endsWithGroupType="aminoAcid"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="potentialBiochemicalEster" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="potentialBiochemicalEster" type="full">
-    <word type="full" endsWithGroupType="carbohydrate"/>
-    <word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="potentialBiochemicalEster" type="full">
+		<word type="full" endsWithGroupType="carbohydrate"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
 
 <!-- ester with osyluronate-->
-  <wordRule name="ester" type="substituent">
-    <word type="substituent" />
-    <word type="substituent" endsWithGroupType="carbohydrate" endsWithRegex="\S(at[e]?)[\]\)\}]*"/>
-  </wordRule>
+	<wordRule name="ester" type="substituent">
+		<word type="substituent" />
+		<word type="substituent" endsWithGroupType="carbohydrate" endsWithRegex="\S(at[e]?)[\]\)\}]*"/>
+	</wordRule>
 
-  <wordRule name="cyclicPeptide" type="full">
-    <word type="functionalTerm" value="cyclo"/>
-    <word type="substituent" endsWithGroupType="aminoAcid"/>
-  </wordRule>
+	<wordRule name="cyclicPeptide" type="full">
+		<word type="functionalTerm" value="cyclo"/>
+		<word type="substituent" endsWithGroupType="aminoAcid"/>
+	</wordRule>
 
-  <wordRule name="polymer" type="polymer">
-    <word type="functionalTerm" value="poly"/>
-    <word type="substituent"/>
-  </wordRule>
+	<wordRule name="polymer" type="polymer">
+		<word type="functionalTerm" value="poly"/>
+		<word type="substituent"/>
+	</wordRule>
 
-  <wordRule name="polymer" type="polymer">
-    <word type="functionalTerm" value="oligo"/>
-    <word type="substituent"/>
-  </wordRule>
+	<wordRule name="polymer" type="polymer">
+		<word type="functionalTerm" value="oligo"/>
+		<word type="substituent"/>
+	</wordRule>
 </wordRules>

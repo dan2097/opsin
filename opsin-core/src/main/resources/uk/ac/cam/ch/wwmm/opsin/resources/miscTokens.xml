@@ -1,203 +1,203 @@
 <!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
 <!-- See the DTD for more details -->
 <tokenLists>
-  <tokenList tagname="hydrocarbonFusedRingSystem" symbol="V">
-    <token value="polyacene">cen</token>
-    <token value="polyalene">len</token>
-    <token value="polyaphene">phen</token><!--ambiguity between this and multiplier phenyl e.g. hexaphenylbenzene is resolved in the ComponentGenerator generally in favour of phenyl-->
-    <token value="polyphenylene">phenylen</token>
-    <token value="polynaphthylene">naphthylen</token>
-    <token value="polyhelicene">helicen</token>
-  </tokenList>
-  
-  <tokenList tagname="cyclo" symbol="C">
-    <token value="cyclo">cyclo</token>
-    <token value="cyclo">cyclo-</token>
-  </tokenList>
+	<tokenList tagname="hydrocarbonFusedRingSystem" symbol="V">
+		<token value="polyacene">cen</token>
+		<token value="polyalene">len</token>
+		<token value="polyaphene">phen</token><!--ambiguity between this and multiplier phenyl e.g. hexaphenylbenzene is resolved in the ComponentGenerator generally in favour of phenyl-->
+		<token value="polyphenylene">phenylen</token>
+		<token value="polynaphthylene">naphthylen</token>
+		<token value="polyhelicene">helicen</token>
+	</tokenList>
 
-  <tokenList tagname="hydro" symbol="y">
-    <token value="hydro">hydro</token>
-  </tokenList>
-  <tokenList tagname="hydro" symbol="Á">
-    <token value="perhydro">perhydro</token>
-  </tokenList>
+	<tokenList tagname="cyclo" symbol="C">
+		<token value="cyclo">cyclo</token>
+		<token value="cyclo">cyclo-</token>
+	</tokenList>
 
-  <tokenList tagname="stereoChemistry" type="cisOrTrans" symbol="t">
-    <token value="cis">cis</token>
-    <token value="trans">trans</token>
-  </tokenList>
+	<tokenList tagname="hydro" symbol="y">
+		<token value="hydro">hydro</token>
+	</tokenList>
+	<tokenList tagname="hydro" symbol="Á">
+		<token value="perhydro">perhydro</token>
+	</tokenList>
 
-  <tokenList tagname="stereoChemistry" type="endoExoSynAnti" symbol="t">
-    <token value="endo">endo</token>
-    <token value="exo">exo</token>
-    <token value="syn">syn</token>
-    <token value="anti">anti</token>
-  </tokenList>
+	<tokenList tagname="stereoChemistry" type="cisOrTrans" symbol="t">
+		<token value="cis">cis</token>
+		<token value="trans">trans</token>
+	</tokenList>
 
-  <tokenList tagname="ine" symbol="«"><!--used for amino acids-->
-    <token value="ine">ine</token>
-    <token value="ine">in</token>
-  </tokenList>
+	<tokenList tagname="stereoChemistry" type="endoExoSynAnti" symbol="t">
+		<token value="endo">endo</token>
+		<token value="exo">exo</token>
+		<token value="syn">syn</token>
+		<token value="anti">anti</token>
+	</tokenList>
 
-  <tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="À"><!--chalcogen replacement terms-->
-    <token value="S" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
-    <token value="[SeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
-    <token value="[TeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
-  </tokenList>
+	<tokenList tagname="ine" symbol="«"><!--used for amino acids-->
+		<token value="ine">ine</token>
+		<token value="ine">in</token>
+	</tokenList>
 
-  <tokenList tagname="suffix" type="root" symbol="Ã">
-    <token value="amine">ylamine</token>
-  </tokenList>
+	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="À"><!--chalcogen replacement terms-->
+		<token value="S" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
+		<token value="[SeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
+		<token value="[TeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
+	</tokenList>
 
-  <tokenList tagname="polyCyclicSpiro" symbol="Å">
-    <token value="spirobi">spirobi</token>
-    <token value="spirobi">spirobi-</token>
-    <token value="spiroter">spiroter</token>
-    <token value="spiroter">spiroter-</token>
-  </tokenList>
+	<tokenList tagname="suffix" type="root" symbol="Ã">
+		<token value="amine">ylamine</token>
+	</tokenList>
 
-  <tokenList tagname="polyCyclicSpiro" symbol="Ç">
-    <token value="spiro">spiro</token>
-    <token value="spiro">spiro-</token>
-  </tokenList>
+	<tokenList tagname="polyCyclicSpiro" symbol="Å">
+		<token value="spirobi">spirobi</token>
+		<token value="spirobi">spirobi-</token>
+		<token value="spiroter">spiroter</token>
+		<token value="spiroter">spiroter-</token>
+	</tokenList>
 
-  <tokenList tagname="polyCyclicSpiro" symbol="Ú">
-    <token value="spiroOldMethod">spiro</token>
-    <token value="spiroOldMethod">spiro-</token>
-  </tokenList>
+	<tokenList tagname="polyCyclicSpiro" symbol="Ç">
+		<token value="spiro">spiro</token>
+		<token value="spiro">spiro-</token>
+	</tokenList>
 
-  <tokenList tagname="dlStereochemistry" symbol="Ü">
-    <token value="d">d-</token>
-    <token value="d">(d)-</token>
-    <token value="l">l-</token>
-    <token value="l">(l)-</token>
-    <token value="dl">dl-</token>
-    <token value="dl">(dl)-</token>
-<!--used to distinguish amino acid D/L from carbohydrate D/L if desired-->
-    <token value="ds">ds-</token>
-    <token value="dg">dg-</token>
-    <token value="ls">ls-</token>
-    <token value="lg">lg-</token>
-  </tokenList>
+	<tokenList tagname="polyCyclicSpiro" symbol="Ú">
+		<token value="spiroOldMethod">spiro</token>
+		<token value="spiroOldMethod">spiro-</token>
+	</tokenList>
+
+	<tokenList tagname="dlStereochemistry" symbol="Ü">
+		<token value="d">d-</token>
+		<token value="d">(d)-</token>
+		<token value="l">l-</token>
+		<token value="l">(l)-</token>
+		<token value="dl">dl-</token>
+		<token value="dl">(dl)-</token>
+	<!--used to distinguish amino acid D/L from carbohydrate D/L if desired-->
+		<token value="ds">ds-</token>
+		<token value="dg">dg-</token>
+		<token value="ls">ls-</token>
+		<token value="lg">lg-</token>
+	</tokenList>
 
 <!--As a purely non-detachable prefixe-->
-  <tokenList tagname="subtractivePrefix" type="deoxy" symbol="Ý">
-    <token value="O">deoxy</token>
-    <token value="O">desoxy</token><!--older variant spelling-->
-    <token value="N">deamino</token>
-    <token value="N">desamino</token><!--older variant spelling-->
-    <token value="C">demethyl</token>
-    <token value="C">desmethyl</token><!--older variant spelling-->
-  </tokenList>
+	<tokenList tagname="subtractivePrefix" type="deoxy" symbol="Ý">
+		<token value="O">deoxy</token>
+		<token value="O">desoxy</token><!--older variant spelling-->
+		<token value="N">deamino</token>
+		<token value="N">desamino</token><!--older variant spelling-->
+		<token value="C">demethyl</token>
+		<token value="C">desmethyl</token><!--older variant spelling-->
+	</tokenList>
 
-  <tokenList tagname="subtractivePrefix" type="dehydro" symbol="Ý">
-    <token value="dehydro">dehydro</token>
-  </tokenList>
+	<tokenList tagname="subtractivePrefix" type="dehydro" symbol="Ý">
+		<token value="dehydro">dehydro</token>
+	</tokenList>
 
-  <tokenList tagname="subtractivePrefix" type="anhydro" symbol="Ý">
-    <token value="O">anhydro</token>
-  </tokenList>
+	<tokenList tagname="subtractivePrefix" type="anhydro" symbol="Ý">
+		<token value="O">anhydro</token>
+	</tokenList>
 
 <!--As a detachable prefix (which could itself have non-detachable prefixes in the case where it is being treated as a non-detachable prefix)-->
-  <tokenList tagname="subtractivePrefix" type="deoxy" symbol="x">
-    <token value="O">deoxy</token>
-    <token value="O">desoxy</token><!--older variant spelling-->
-    <token value="N">deamino</token>
-    <token value="N">desamino</token><!--older variant spelling-->
-    <token value="C">demethyl</token>
-    <token value="C">desmethyl</token><!--older variant spelling-->
-  </tokenList>
+	<tokenList tagname="subtractivePrefix" type="deoxy" symbol="x">
+		<token value="O">deoxy</token>
+		<token value="O">desoxy</token><!--older variant spelling-->
+		<token value="N">deamino</token>
+		<token value="N">desamino</token><!--older variant spelling-->
+		<token value="C">demethyl</token>
+		<token value="C">desmethyl</token><!--older variant spelling-->
+	</tokenList>
 
-  <tokenList tagname="subtractivePrefix" type="dehydro" symbol="x">
-    <token value="dehydro">dehydro</token>
-  </tokenList>
+	<tokenList tagname="subtractivePrefix" type="dehydro" symbol="x">
+		<token value="dehydro">dehydro</token>
+	</tokenList>
 
-  <tokenList tagname="subtractivePrefix" type="anhydro" symbol="x">
-    <token value="O">anhydro</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="h" ignoreWhenWritingXML="yes"><!--an optional hyphen-->
-    <token value="-">-</token>
-  </tokenList>
-  
-  <tokenList tagname="hyphen" symbol="£"><!--an intersubstituent seperator-->
-    <token value="-">-</token>
-    <token value=",">,</token>
-  </tokenList>
-  
-  <tokenList tagname="openbracket" symbol="o"><!--an open bracket-->
-    <token value="(">(</token>
-    <token value="[">[</token>
-    <token value="{">{</token>
-  </tokenList>
-  
-  <tokenList tagname="closebracket" symbol="c"><!--a close bracket-->
-    <token value=")">)</token>
-    <token value="]">]</token>
-    <token value="}">}</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="T" ignoreWhenWritingXML="yes"><!--an open bracket that forms a pair of optional brackets-->
-    <token value="(">(</token>
-    <token value="[">[</token>
-    <token value="{">{</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="U" ignoreWhenWritingXML="yes"><!--a close bracket that forms a pair of optional brackets-->
-    <token value=")">)</token>
-    <token value="]">]</token>
-    <token value="}">}</token>
-  </tokenList>
-  
-  <tokenList tagname="structuralOpenBracket" symbol="q"><!--an open bracket that disambiguates a specific type of nomenclature e.g. ring assembly-->
-    <token value="(">(</token>
-    <token value="[">[</token>
-    <token value="{">{</token>
-  </tokenList>
-  
-  <tokenList tagname="structuralCloseBracket" symbol="Q"><!--a close bracket that disambiguates a specific type of nomenclature e.g. ring assembly-->
-    <token value=")">)</token>
-    <token value="]">]</token>
-    <token value="}">}</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="È" ignoreWhenWritingXML="yes"><!--an optional a-->
-    <token value="a">a</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="Z" ignoreWhenWritingXML="yes"><!--an optional e-->
-    <token value="e">e</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="Y" ignoreWhenWritingXML="yes"><!--an optional o-->
-    <token value="o">o</token>
-  </tokenList>
-  
-  <tokenList tagname="bridgeFormingO" symbol="Ó"><!--an o used to indicate a prefix is a bridge e.g. the o in ethano-->
-    <token value="o">o</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="¦" ignoreWhenWritingXML="yes"><!--a comma used as a delimiter-->
-    <token value=",">,</token>
-  </tokenList>
+	<tokenList tagname="subtractivePrefix" type="anhydro" symbol="x">
+		<token value="O">anhydro</token>
+	</tokenList>
 
-  <tokenList tagname="suffix" symbol="º" type="root" subType="terminal"><!--an implicit ic-->
-    <token value="ic"></token>
-  </tokenList>
-  
-  <tokenList tagname="suffix" symbol="¼" type="inline"><!--an o meaning yl e.g. glycino-->
-    <token value="oMeaningYl">o</token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="é" ignoreWhenWritingXML="yes"><!--endOfSubstituent-->
-    <token value="endOfSubstituent"></token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="â" ignoreWhenWritingXML="yes"><!--endOfMainGroup-->
-    <token value="endOfMainGroup"></token>
-  </tokenList>
-  
-  <tokenList tagname="NA" symbol="û" ignoreWhenWritingXML="yes"><!--endOfFunctionalGroup-->
-    <token value="endOfFunctionalGroup"></token>
-  </tokenList>
+	<tokenList tagname="NA" symbol="h" ignoreWhenWritingXML="yes"><!--an optional hyphen-->
+		<token value="-">-</token>
+	</tokenList>
+
+	<tokenList tagname="hyphen" symbol="£"><!--an intersubstituent seperator-->
+		<token value="-">-</token>
+		<token value=",">,</token>
+	</tokenList>
+
+	<tokenList tagname="openbracket" symbol="o"><!--an open bracket-->
+		<token value="(">(</token>
+		<token value="[">[</token>
+		<token value="{">{</token>
+	</tokenList>
+
+	<tokenList tagname="closebracket" symbol="c"><!--a close bracket-->
+		<token value=")">)</token>
+		<token value="]">]</token>
+		<token value="}">}</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="T" ignoreWhenWritingXML="yes"><!--an open bracket that forms a pair of optional brackets-->
+		<token value="(">(</token>
+		<token value="[">[</token>
+		<token value="{">{</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="U" ignoreWhenWritingXML="yes"><!--a close bracket that forms a pair of optional brackets-->
+		<token value=")">)</token>
+		<token value="]">]</token>
+		<token value="}">}</token>
+	</tokenList>
+
+	<tokenList tagname="structuralOpenBracket" symbol="q"><!--an open bracket that disambiguates a specific type of nomenclature e.g. ring assembly-->
+		<token value="(">(</token>
+		<token value="[">[</token>
+		<token value="{">{</token>
+	</tokenList>
+
+	<tokenList tagname="structuralCloseBracket" symbol="Q"><!--a close bracket that disambiguates a specific type of nomenclature e.g. ring assembly-->
+		<token value=")">)</token>
+		<token value="]">]</token>
+		<token value="}">}</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="È" ignoreWhenWritingXML="yes"><!--an optional a-->
+		<token value="a">a</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="Z" ignoreWhenWritingXML="yes"><!--an optional e-->
+		<token value="e">e</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="Y" ignoreWhenWritingXML="yes"><!--an optional o-->
+		<token value="o">o</token>
+	</tokenList>
+
+	<tokenList tagname="bridgeFormingO" symbol="Ó"><!--an o used to indicate a prefix is a bridge e.g. the o in ethano-->
+		<token value="o">o</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="¦" ignoreWhenWritingXML="yes"><!--a comma used as a delimiter-->
+		<token value=",">,</token>
+	</tokenList>
+
+	<tokenList tagname="suffix" symbol="º" type="root" subType="terminal"><!--an implicit ic-->
+		<token value="ic"></token>
+	</tokenList>
+
+	<tokenList tagname="suffix" symbol="¼" type="inline"><!--an o meaning yl e.g. glycino-->
+		<token value="oMeaningYl">o</token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="é" ignoreWhenWritingXML="yes"><!--endOfSubstituent-->
+		<token value="endOfSubstituent"></token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="â" ignoreWhenWritingXML="yes"><!--endOfMainGroup-->
+		<token value="endOfMainGroup"></token>
+	</tokenList>
+
+	<tokenList tagname="NA" symbol="û" ignoreWhenWritingXML="yes"><!--endOfFunctionalGroup-->
+		<token value="endOfFunctionalGroup"></token>
+	</tokenList>
 </tokenLists>

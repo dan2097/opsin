@@ -2,141 +2,141 @@
 <!-- See the DTD for more details -->
 <!-- value = the obvious -->
 <tokenLists>
-  <tokenList tagname="multiplier" type="basic" symbol="Õ">
-    <token value="1">mono</token>
-  </tokenList>
+	<tokenList tagname="multiplier" type="basic" symbol="Õ">
+		<token value="1">mono</token>
+	</tokenList>
 
-  <tokenList tagname="multiplier" type="basic" symbol="ú">
-    <token value="1">mon</token>
-  </tokenList>
+	<tokenList tagname="multiplier" type="basic" symbol="ú">
+		<token value="1">mon</token>
+	</tokenList>
 
-  <tokenList tagname="multiplier" type="basic" symbol="r">
-    <token value="2">di</token>
-    <token value="3">tri</token>
-  </tokenList>
+	<tokenList tagname="multiplier" type="basic" symbol="r">
+		<token value="2">di</token>
+		<token value="3">tri</token>
+	</tokenList>
 
-  <tokenList tagname="multiplier" type="basic" symbol="m"><!--'a' is added as an optional or compulsory suffix-->
-    <token value="4">tetr</token>
-    <token value="5">pent</token>
-    <token value="6">hex</token>
-    <token value="7">hept</token>
-    <token value="8">oct</token>
-    <token value="9">non</token>
-    <token value="10">dec</token>
-    <token value="11">undec</token>
-    <token value="12">dodec</token>
-    <token value="13">tridec</token>
-    <token value="14">tetradec</token>
-    <token value="15">pentadec</token>
-    <token value="16">hexadec</token>
-    <token value="17">heptadec</token>
-    <token value="18">octadec</token>
-    <token value="19">nonadec</token>
-    <token value="20">eicos</token>
-    <token value="20">icos</token>
-    <token value="21">henicos</token>
-    <token value="21">heneicos</token>
-    <token value="22">docos</token>
-    <token value="23">tricos</token>
-    <token value="24">tetracos</token>
-    <token value="25">pentacos</token>
-    <token value="26">hexacos</token>
-    <token value="27">heptacos</token>
-    <token value="28">octacos</token>
-    <token value="29">nonacos</token>
-    <token value="30">triacont</token>
-    <token value="31">hentriacont</token>
-    <token value="32">dotriacont</token>
-    <token value="33">tritriacont</token>
-    <token value="34">tetratriacont</token>
-    <token value="35">pentatriacont</token>
-    <token value="36">hexatriacont</token>
-    <token value="37">heptatriacont</token>
-    <token value="38">octatriacont</token>
-    <token value="39">nonatriacont</token>
-    <token value="40">tetracont</token>
-    <token value="41">hentetracont</token>
-    <token value="42">dotetracont</token>
-    <token value="43">tritetracont</token>
-    <token value="44">tetratetracont</token>
-    <token value="45">pentatetracont</token>
-    <token value="46">hexatetracont</token>
-    <token value="47">heptatetracont</token>
-    <token value="48">octatetracont</token>
-    <token value="49">nonatetracont</token>
-    <token value="50">pentacont</token>
-  </tokenList>
+	<tokenList tagname="multiplier" type="basic" symbol="m"><!--'a' is added as an optional or compulsory suffix-->
+		<token value="4">tetr</token>
+		<token value="5">pent</token>
+		<token value="6">hex</token>
+		<token value="7">hept</token>
+		<token value="8">oct</token>
+		<token value="9">non</token>
+		<token value="10">dec</token>
+		<token value="11">undec</token>
+		<token value="12">dodec</token>
+		<token value="13">tridec</token>
+		<token value="14">tetradec</token>
+		<token value="15">pentadec</token>
+		<token value="16">hexadec</token>
+		<token value="17">heptadec</token>
+		<token value="18">octadec</token>
+		<token value="19">nonadec</token>
+		<token value="20">eicos</token>
+		<token value="20">icos</token>
+		<token value="21">henicos</token>
+		<token value="21">heneicos</token>
+		<token value="22">docos</token>
+		<token value="23">tricos</token>
+		<token value="24">tetracos</token>
+		<token value="25">pentacos</token>
+		<token value="26">hexacos</token>
+		<token value="27">heptacos</token>
+		<token value="28">octacos</token>
+		<token value="29">nonacos</token>
+		<token value="30">triacont</token>
+		<token value="31">hentriacont</token>
+		<token value="32">dotriacont</token>
+		<token value="33">tritriacont</token>
+		<token value="34">tetratriacont</token>
+		<token value="35">pentatriacont</token>
+		<token value="36">hexatriacont</token>
+		<token value="37">heptatriacont</token>
+		<token value="38">octatriacont</token>
+		<token value="39">nonatriacont</token>
+		<token value="40">tetracont</token>
+		<token value="41">hentetracont</token>
+		<token value="42">dotetracont</token>
+		<token value="43">tritetracont</token>
+		<token value="44">tetratetracont</token>
+		<token value="45">pentatetracont</token>
+		<token value="46">hexatetracont</token>
+		<token value="47">heptatetracont</token>
+		<token value="48">octatetracont</token>
+		<token value="49">nonatetracont</token>
+		<token value="50">pentacont</token>
+	</tokenList>
 
-  <tokenList tagname="multiplier" type="group" symbol="R"><!--groupMultiplier-->
-    <token value="2">bis</token>
-    <token value="3">tris</token>
-    <token value="4">tetrakis</token>
-    <token value="5">pentakis</token>
-    <token value="6">hexakis</token>
-    <token value="7">heptakis</token>
-    <token value="8">octakis</token>
-    <token value="9">nonakis</token>
-    <token value="10">decakis</token>
-    <token value="11">undecakis</token>
-    <token value="12">dodecakis</token>
-    <token value="13">tridecakis</token>
-    <token value="14">tetradecakis</token>
-    <token value="15">pentadecakis</token>
-    <token value="16">hexadecakis</token>
-    <token value="17">heptadecakis</token>
-    <token value="18">octadecakis</token>
-    <token value="19">nonadecakis</token>
-    <token value="20">eicosakis</token>
-    <token value="20">icosakis</token>
-    <token value="21">henicosakis</token>
-    <token value="21">heneicosakis</token>
-    <token value="22">docosakis</token>
-    <token value="23">tricosakis</token>
-    <token value="24">tetracosakis</token>
-    <token value="25">pentacosakis</token>
-    <token value="26">hexacosakis</token>
-    <token value="27">heptacosakis</token>
-    <token value="28">octacosakis</token>
-    <token value="29">nonacosakis</token>
-    <token value="30">triacontakis</token>
-  </tokenList>
+	<tokenList tagname="multiplier" type="group" symbol="R"><!--groupMultiplier-->
+		<token value="2">bis</token>
+		<token value="3">tris</token>
+		<token value="4">tetrakis</token>
+		<token value="5">pentakis</token>
+		<token value="6">hexakis</token>
+		<token value="7">heptakis</token>
+		<token value="8">octakis</token>
+		<token value="9">nonakis</token>
+		<token value="10">decakis</token>
+		<token value="11">undecakis</token>
+		<token value="12">dodecakis</token>
+		<token value="13">tridecakis</token>
+		<token value="14">tetradecakis</token>
+		<token value="15">pentadecakis</token>
+		<token value="16">hexadecakis</token>
+		<token value="17">heptadecakis</token>
+		<token value="18">octadecakis</token>
+		<token value="19">nonadecakis</token>
+		<token value="20">eicosakis</token>
+		<token value="20">icosakis</token>
+		<token value="21">henicosakis</token>
+		<token value="21">heneicosakis</token>
+		<token value="22">docosakis</token>
+		<token value="23">tricosakis</token>
+		<token value="24">tetracosakis</token>
+		<token value="25">pentacosakis</token>
+		<token value="26">hexacosakis</token>
+		<token value="27">heptacosakis</token>
+		<token value="28">octacosakis</token>
+		<token value="29">nonacosakis</token>
+		<token value="30">triacontakis</token>
+	</tokenList>
 
-  <tokenList tagname="multiplier" type="VonBaeyer" symbol="M"><!--VonBaeyer multipliers-->
-    <token value="2">bi</token>
-    <token value="3">tri</token>
-    <token value="4">tetra</token>
-    <token value="5">penta</token>
-    <token value="6">hexa</token>
-    <token value="7">hepta</token>
-    <token value="8">octa</token>
-    <token value="9">nona</token>
-    <token value="10">deca</token>
-    <token value="11">undeca</token>
-    <token value="12">dodeca</token>
-    <token value="13">trideca</token>
-    <token value="14">tetradeca</token>
-    <token value="15">pentadeca</token>
-    <token value="16">hexadeca</token>
-    <token value="17">heptadeca</token>
-    <token value="18">octadeca</token>
-    <token value="19">nonadeca</token>
-    <token value="20">eicosa</token>
-  </tokenList>
+	<tokenList tagname="multiplier" type="VonBaeyer" symbol="M"><!--VonBaeyer multipliers-->
+		<token value="2">bi</token>
+		<token value="3">tri</token>
+		<token value="4">tetra</token>
+		<token value="5">penta</token>
+		<token value="6">hexa</token>
+		<token value="7">hepta</token>
+		<token value="8">octa</token>
+		<token value="9">nona</token>
+		<token value="10">deca</token>
+		<token value="11">undeca</token>
+		<token value="12">dodeca</token>
+		<token value="13">trideca</token>
+		<token value="14">tetradeca</token>
+		<token value="15">pentadeca</token>
+		<token value="16">hexadeca</token>
+		<token value="17">heptadeca</token>
+		<token value="18">octadeca</token>
+		<token value="19">nonadeca</token>
+		<token value="20">eicosa</token>
+	</tokenList>
 
-  <tokenList tagname="ringAssemblyMultiplier" symbol="P"><!--ring assembly multipliers-->
-    <token value="2">bi</token>
-    <token value="3">ter</token>
-    <token value="4">quater</token>
-    <token value="5">quinque</token>
-    <token value="6">sexi</token>
-    <token value="7">septi</token>
-    <token value="8">octi</token>
-    <token value="9">novi</token>
-    <token value="10">deci</token>
-    <token value="11">undeci</token>
-    <token value="12">dodeci</token>
-    <token value="13">trideci</token>
-    <token value="14">tetradeci</token>
-    <token value="15">pentadeci</token>
-  </tokenList>
+	<tokenList tagname="ringAssemblyMultiplier" symbol="P"><!--ring assembly multipliers-->
+		<token value="2">bi</token>
+		<token value="3">ter</token>
+		<token value="4">quater</token>
+		<token value="5">quinque</token>
+		<token value="6">sexi</token>
+		<token value="7">septi</token>
+		<token value="8">octi</token>
+		<token value="9">novi</token>
+		<token value="10">deci</token>
+		<token value="11">undeci</token>
+		<token value="12">dodeci</token>
+		<token value="13">trideci</token>
+		<token value="14">tetradeci</token>
+		<token value="15">pentadeci</token>
+	</tokenList>
 </tokenLists>

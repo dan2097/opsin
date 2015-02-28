@@ -1,46 +1,43 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <!-- value is:
 A comma seperated list of:
-{
 SMILES bond type to oxygen
 O (for oxygen)
 (optional and currently ignored) SMILES bond type from oxygen
-}
 
 then the SMILES replacement
- -->
+-->
 <tokenList tagname="infix" symbol="¢">
-  <token value="-O:N">amid</token>
-  <token value="-O:N=[N+]=[N-]">azid</token>
-  <token value="-O:Br">bromid</token>
-  <token value="-O:Cl">chlorid</token>
-  <token value="-O:OC#N">cyanatid</token>
-  <token value="-O:C#N">cyanid</token>
-  <token value="-O-:SS">dithioperox</token>
-  <token value="-O-:[Se|2][Se|2]">diselenoperox</token>
-  <token value="-O-:[Te|2][Te|2]">ditelluroperox</token>
-  <token value="-O:F">fluorid</token>
-  <token value="-O:NN">hydrazid</token>
-  <token value="=O:=NN">hydrazon</token>
-  <token value="=O:=N">imid</token>
-  <token value="-O:I">iodid</token>
-  <token value="-O:N=C=O">isocyanatid</token>
-  <token value="-O:[N|4+]#[C-]">isocyanid</token>
-  <token value="-O:N=C=S">isothiocyanatid</token>
-  <token value="-O:N=C=[Se]">isoselenocyanatid</token>
-  <token value="-O:N=C=[Te]">isotellurocyanatid</token>
-  <token value="#O:#N">nitrid</token>
-  <token value="-O-:OO">perox</token>
-  <token value="=O,-O:[SeH?]">selen</token>
-  <token value="=O,-O:[TeH?]">tellur</token>
-  <token value="=O,-O:S">thi</token>
-  <token value="-O:SC#N">thiocyanatid</token>
-  <token value="-O:[Se|2]C#N">selenocyanatid</token>
-  <token value="-O:[Te|2]C#N">tellurocyanatid</token>
+	<token value="-O:N">amid</token>
+	<token value="-O:N=[N+]=[N-]">azid</token>
+	<token value="-O:Br">bromid</token>
+	<token value="-O:Cl">chlorid</token>
+	<token value="-O:OC#N">cyanatid</token>
+	<token value="-O:C#N">cyanid</token>
+	<token value="-O-:SS">dithioperox</token>
+	<token value="-O-:[Se|2][Se|2]">diselenoperox</token>
+	<token value="-O-:[Te|2][Te|2]">ditelluroperox</token>
+	<token value="-O:F">fluorid</token>
+	<token value="-O:NN">hydrazid</token>
+	<token value="=O:=NN">hydrazon</token>
+	<token value="=O:=N">imid</token>
+	<token value="-O:I">iodid</token>
+	<token value="-O:N=C=O">isocyanatid</token>
+	<token value="-O:[N|4+]#[C-]">isocyanid</token>
+	<token value="-O:N=C=S">isothiocyanatid</token>
+	<token value="-O:N=C=[Se]">isoselenocyanatid</token>
+	<token value="-O:N=C=[Te]">isotellurocyanatid</token>
+	<token value="#O:#N">nitrid</token>
+	<token value="-O-:OO">perox</token>
+	<token value="=O,-O:[SeH?]">selen</token>
+	<token value="=O,-O:[TeH?]">tellur</token>
+	<token value="=O,-O:S">thi</token>
+	<token value="-O:SC#N">thiocyanatid</token>
+	<token value="-O:[Se|2]C#N">selenocyanatid</token>
+	<token value="-O:[Te|2]C#N">tellurocyanatid</token>
 
-  <!--<token value="-O-:SO">thioperoxo</token> is it SO or OS???-->
-  <!--<token value="-O-:[Se|2]S">selenothioperoxo</token> is it [Se|2]S or S[Se|2]???-->
+	<!--<token value="-O-:SO">thioperoxo</token> is it SO or OS???-->
+	<!--<token value="-O-:[Se|2]S">selenothioperoxo</token> is it [Se|2]S or S[Se|2]???-->
 
-  <token value="=O:=NO">hydroxim</token><!--not an IUPAC infix-->
-
+	<token value="=O:=NO">hydroxim</token><!--not an IUPAC infix-->
 </tokenList>
