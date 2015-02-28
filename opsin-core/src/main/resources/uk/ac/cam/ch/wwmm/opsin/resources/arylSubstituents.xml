@@ -9,9 +9,9 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidaz</token>
 		<token value="[nH]1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indaz</token>
 		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothioph</token>
-		<token value="s1nccc1">isothiaz</token>
-		<token value="o1nccc1">isoxaz</token>
-		<token value="o1nccc1">isooxaz</token>
+		<token value="s1nccc1" labels="1/2/3/4/5">isothiaz</token>
+		<token value="o1nccc1" labels="1/2/3/4/5">isoxaz</token>
+		<token value="o1nccc1" labels="1/2/3/4/5">isooxaz</token>
 		<token value="CCc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">pheneth</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrr</token>
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">styr</token>
@@ -52,9 +52,9 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofur</token>
 		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiofur</token>
 		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" frontLocantsExpected="1,3,4,5,6,7,8">isoquinol</token>
-		<token value="[se]1nccc1">isoselenaz</token>
-		<token value="[te]1nccc1">isotelluraz</token>
-		<token value="O1NCCC1">isoxazolid</token>
+		<token value="[se]1nccc1" labels="1/2/3/4/5">isoselenaz</token>
+		<token value="[te]1nccc1" labels="1/2/3/4/5">isotelluraz</token>
+		<token value="O1NCCC1" labels="1/2/3/4/5">isoxazolid</token>
 		<token value="c12cc3cc4c1.C2.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6///" suffixAppliesToByDefault="2">mesit</token>
 		<token value="N1CCOCC1" labels="4,para/3,meta/2,ortho/1/6/5">morphol</token>
 		<token value="N1CCSCC1" labels="4,para/3,meta/2,ortho/1/6/5">thiamorphol</token>
@@ -100,7 +100,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="[se]1[cH2]cccc1" labels="1/2,ortho/3,meta/4,para/5/6">selenopyr</token>
 		<token value="[te]1[cH2]cccc1" labels="1/2,ortho/3,meta/4,para/5/6">telluropyr</token>
 		<token value="c1cccc2c3cc4ccc5cc6ccccc6c6cc7ccc8cc12.c38c7c4c56" labels="1/2/3/4/4a/4b/5/5a/6/7/7a/8/8a/9/10/11/12/12a/12b/13/13a/14/15/15a/16/16a/15b/15c/15d/15e">pyranthr</token>
-		<token value="N1NCCC1">pyrazolid</token>
+		<token value="N1NCCC1" labels="1/2/3/4/5">pyrazolid</token>
 		<token value="n1ncccc1" labels="1/2/3/4/5/6">pyridaz</token>
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" frontLocantsExpected="2,3,4">pyrid</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimid</token>
@@ -114,11 +114,11 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e">rubic</token>
 		<token value="c1ccc2cc3cccc3cc12" labels="1/2/3/3a/4/4a/5/6/7/7a/8/8a">s-indac</token>
 		<token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">selenanthr</token>
-		<token value="[se]1cccc1">selenoph</token>
+		<token value="[se]1cccc1" labels="1/2/3/4/5">selenoph</token>
 		<token value="c1cccc2[siH]c3ccccc3[siH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">silanthr</token>
 		<token value="c1(ccccc1)C=Cc2ccccc2" labels="1/2/3/4/5/6/alpha/beta/1'/2'/3'/4'/5'/6'">stilb</token>
 		<token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">telluranthr</token>
-		<token value="[te]1cccc1">telluroph</token>
+		<token value="[te]1cccc1" labels="1/2/3/4/5">telluroph</token>
 		<token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">thianthr</token>
 		<token value="s1cccc1" labels="1/2/3/4/5">thioph</token>
 		<token value="s1cccc1" labels="1/2/3/4/5" frontLocantsExpected="2,3">thien</token>
