@@ -65,7 +65,7 @@ public class NameToStructure {
 	 * @throws NameToStructureException If the converter cannot be initialised, most likely due to bad or missing data files.
 	 */
 	private NameToStructure() {
-		LOG.info("Initialising OPSIN... ");
+		LOG.debug("Initialising OPSIN... ");
 		try {
 			/*Initialise all of OPSIN's classes. Some classes are injected as dependencies into subsequent classes*/
 
@@ -80,7 +80,7 @@ public class NameToStructure {
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
 		}
-		LOG.info("OPSIN initialised");
+		LOG.debug("OPSIN initialised");
 	}
 
 	/**
