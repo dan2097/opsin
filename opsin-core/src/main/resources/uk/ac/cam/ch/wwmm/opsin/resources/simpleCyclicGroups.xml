@@ -2,14 +2,14 @@
 <!--The same as arylGroups except these cannot have suffixes. Or if you like the same as simpleGroups except they can accept indicated hydrogen-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="simpleGroup" symbol="¾">
-		<token value="C/C=C/C1=C(OC)C=C(OC)C(OC)=C1" labels="none">alpha-asarone</token>
-		<token value="C/C=C\C1=C(OC)C=C(OC)C(OC)=C1" labels="none">beta-asarone</token>
+		<token value="C/C=C/C1=C(OC)C=C(OC)C(OC)=C1">alpha-asarone</token>
+		<token value="C/C=C\C1=C(OC)C=C(OC)C(OC)=C1">beta-asarone</token>
 		<token value="o1cccc1C(=O)C(=O)c2ccco2" labels="1/2/3/4/5/////2'/3'/4'/5'/1'">alpha-furil</token>
 		<token value="o1cccc1C(=O)C(=O)c2ccco2" labels="1/2/3/4/5/////2'/3'/4'/5'/1'">2,2'-furil</token>
 		<token value="o1cccc1C(=O)C(O)c2ccco2" labels="1/2/3/4/5///alpha//2'/3'/4'/5'/1'">2,2'-furoin</token>
-		<token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N" labels="none">abietamide</token>
+		<token value="C[C@@]1([C@H]2[C@@](CCC1)(C)[C@H]3CCC(C(C)C)=CC3=CC2)C(=O)N">abietamide</token>
 		<token value="CC(=O)c1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6">acetovanillone</token>
-		<token value="OCc1ccc(OC)cc1" labels="none">anise alcohol</token>
+		<token value="OCc1ccc(OC)cc1">anise alcohol</token>
 		<token value="c1(ccc(OC)cc1)C(=O)C(=O)c2ccc(OC)cc2" labels="1/2/3/4///5/6/////1'/2'/3'/4'///5'/6'">anisil</token>
 		<token value="c1(ccc(OC)cc1)C(=O)C(=O)c2ccc(OC)cc2" labels="1/2/3/4///5/6/////1'/2'/3'/4'///5'/6'">p-anisil</token>
 		<token value="c1(ccc(OC)cc1)C(=O)C(O)c2ccc(OC)cc2" labels="1/2/3/4///5/6///alpha//1'/2'/3'/4'///5'/6'">anisoin</token>
@@ -26,14 +26,14 @@
 		<token value="c1(=O)ccc(=O)cc1" labels="1//2,ortho/3,meta/4,para//5/6">benzo-1,4-quinone</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">benzol</token>
 		<token value="c1(ccccc1)C(O)(c2ccccc2)C(O)(c3ccccc3)c4ccccc4" labels="1/2/3/4/5/6///1'/2'/3'/4'/5'/6'///1''/2''/3''/4''/5''/6''/1'''/2'''/3'''/4'''/5'''/6'''">benzopinacol</token>
-		<token value="c1(ccccc1)C(c2ccccc2)(c3ccccc3)C(=O)c4ccccc4" labels="none">benzopinacolone</token>
+		<token value="c1(ccccc1)C(c2ccccc2)(c3ccccc3)C(=O)c4ccccc4">benzopinacolone</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="[O|1] locant 1;O locant 4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzosemiquinone</token>
-		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O" labels="none">bisphenol a</token>
+		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O">bisphenol a</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6">bourbonal</token>
-		<token value="c1c(O)c(C)ccc1C(C)C" labels="none">carvacrol</token>
-		<token value="c1(ccc(CC=C)cc1)O" labels="none">chavicol</token>
-		<token value="OC/C=C/c1cc(OC)c(O)cc1" labels="none">coniferol</token>
-		<token value="c1(c(OC)cc(C)cc1)O" labels="none">creosol</token>
+		<token value="c1c(O)c(C)ccc1C(C)C">carvacrol</token>
+		<token value="c1(ccc(CC=C)cc1)O">chavicol</token>
+		<token value="OC/C=C/c1cc(OC)c(O)cc1">coniferol</token>
+		<token value="c1(c(OC)cc(C)cc1)O">creosol</token>
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cumaldehyde</token>
 		<token value="OC(=O)c1ccc(C(C)C)cc1" labels="///1/2/3/4////5/6" functionalIDs="1">cuminic acid</token>
 		<token value="OC(=O)c1ccc(C(C)C)cc1" labels="///1/2/3/4////5/6" functionalIDs="1">cuminicacid</token>
@@ -42,20 +42,20 @@
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cuminal</token>
 		<token value="O=Cc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cuminaldehyde</token>
 		<token value="OCc1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cuminol</token>
-		<token value="COc1cc(ccc1O)\C=C\C(=O)CC(=O)\C=C\c1ccc(O)c(OC)c1" labels="none">curcumin</token>
+		<token value="COc1cc(ccc1O)\C=C\C(=O)CC(=O)\C=C\c1ccc(O)c(OC)c1">curcumin</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanuramide</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamide</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamine</token>
-		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" functionalIDs="9">dibenzamid</token>
-		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" labels="none" functionalIDs="9">dibenzamide</token>
+		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" functionalIDs="9">dibenzamid</token>
+		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" functionalIDs="9">dibenzamide</token>
 		<token value="c1(c(C(=O)[O-])cccc1)c2c(C(=O)[O-])cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" functionalIDs="5,14">diphenate</token>
 		<token value="c1(c(C(=O)O)cccc1)c2c(C(=O)O)cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" functionalIDs="5,14">diphenic</token>
 		<token value="c1(c(C(=O)O)cccc1)c2c(C(=O)O)cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" functionalIDs="5,14">diphenicacid</token>
 		<token value="c1(c(C(=O)O)cccc1)c2c(C(=O)O)cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" functionalIDs="5,14">diphenic acid</token>
-		<token value="c1(c(C)c(C)c(O)c(C)c1C)O" labels="none">durohydroquinone</token>
-		<token value="CC(c1ccccc1)=CC(c2ccccc2)=O" labels="none">dypnone</token>
-		<token value="COc1c(OC)c(OC)cc(CC=C)c1" labels="none">elemicin</token>
-		<token value="c1(ccc(CC=C)cc1)OC" labels="none">estragole</token>
+		<token value="c1(c(C)c(C)c(O)c(C)c1C)O">durohydroquinone</token>
+		<token value="CC(c1ccccc1)=CC(c2ccccc2)=O">dypnone</token>
+		<token value="COc1c(OC)c(OC)cc(CC=C)c1">elemicin</token>
+		<token value="c1(ccc(CC=C)cc1)OC">estragole</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6">ethyl vanillin</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6">ethylvanillin</token>
 		<token value="O=CCc1cc(O)c(OC)cc1" labels="///1/2/3//4///5/6">homoisovanillin</token>
@@ -67,7 +67,7 @@
 		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" functionalIDs="4,9">isatoic</token>
 		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" functionalIDs="4,9">isatoicacid</token>
 		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" functionalIDs="4,9">isatoic acid</token>
-		<token value="COc1c(OC)c(OC)cc(C=CC)c1" labels="none">isoelemicin</token>
+		<token value="COc1c(OC)c(OC)cc(C=CC)c1">isoelemicin</token>
 		<token value="c1(c(O)ccc(C=CC)c1)OC" labels="1/2,ortho//3,meta/4,para/5////6//alpha">isoeugenol</token>
 		<token value="OCc1cc(CO)ccc1" labels="//1/2,ortho/3,meta///4,para/5/6">isophthalyl alcohol</token>
 		<token value="O=Cc1cc(O)c(OC)cc1" labels="//1/2/3//4///5/6">isovanillin</token>
@@ -79,9 +79,9 @@
 		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" functionalIDs="9">mesitylenicacid</token>
 		<token value="c1(=O)c(=O)ccc2ccccc12" labels="1//2//3/4/4a/5/6/7/8/8a">naphtho-1,2-quinone</token>
 		<token value="c1(=O)ccc(=O)c2ccccc12" labels="1//2/3/4//4a/5/6/7/8/8a">naphtho-1,4-quinone</token>
-		<token value="n1cccc(c1)C2N(C)CCC2" labels="none">nicotine</token><!--not to be confused with nicotinic acid-->
-		<token value="c1(cc(O)cc(CCCCC)c1)O" labels="none">olivetol</token>
-		<token value="c1(cc(O)cc(C)c1)O" labels="none">orcinol</token>
+		<token value="n1cccc(c1)C2N(C)CCC2">nicotine</token><!--not to be confused with nicotinic acid-->
+		<token value="c1(cc(O)cc(CCCCC)c1)O">olivetol</token>
+		<token value="c1(cc(O)cc(C)c1)O">orcinol</token>
 		<token value="c1ccccc1C(=O)O[O-]" labels="2,ortho/3,meta/4,para/5/6/1////" functionalIDs="10">perbenzoate</token>
 		<token value="c1ccccc1C(=O)OO" labels="2,ortho/3,meta/4,para/5/6/1////" functionalIDs="10">perbenzoic</token>
 		<token value="c1ccccc1C(=O)OO" labels="2,ortho/3,meta/4,para/5/6/1////" functionalIDs="10">perbenzoicacid</token>
@@ -90,13 +90,13 @@
 		<token value="c1(ccccc1)O" labels="1/2,ortho/3,meta/4,para/5/6/">phenol</token>
 		<token value="c1(ccccc1)[O-]" labels="1/2,ortho/3,meta/4,para/5/6/">phenolate</token>
 		<token value="[c+]1(ccccc1)" labels="1/2,ortho/3,meta/4,para/5/6">phenylium</token>
-		<token value="Oc1ccc(CCC(=O)c2c(O)cc(O)cc2O)cc1" labels="none">phloretin</token>
-		<token value="c1(c(CC)cccc1)O" labels="none">phlorol</token>
+		<token value="Oc1ccc(CCC(=O)c2c(O)cc(O)cc2O)cc1">phloretin</token>
+		<token value="c1(c(CC)cccc1)O">phlorol</token>
 		<token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1[O-]" labels="2,ortho////3,meta/4,para////5/6////1/" functionalIDs="16">picrate</token>
 		<token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta/4,para////5/6////1/" functionalIDs="16">picric</token>
 		<token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta/4,para////5/6////1/" functionalIDs="16">picricacid</token>
 		<token value="c1([N+](=O)[O-])cc([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta/4,para////5/6////1/" functionalIDs="16">picric acid</token>
-		<token value="c1(c(C)c(C)c(O)c(C)c1)O" labels="none">pseudocumohydroquinone</token>
+		<token value="c1(c(C)c(C)c(O)c(C)c1)O">pseudocumohydroquinone</token>
 		<token value="n1c(N)[nH]c(=O)c2nccnc12" labels="1/2//3/4//4a/5/6/7/8/8a">pterin</token>
 		<token value="n1c(N)[nH]c(=O)c2ncCNc12" labels="1/2//3/4//4a/5/6/7/8/8a">dihydropterin</token>
 		<token value="n1c(N)[nH]c(=O)c2NCCNc12" labels="1/2//3/4//4a/5/6/7/8/8a">tetrahydropterin</token>
@@ -109,8 +109,8 @@
 		<token value="c1(cc(O)cc(O)c1)C=Cc2ccc(O)cc2" labels="1/2/3//4/5//6/alpha/beta/1'/2'/3'/4'//5'/6'">resveratrol</token>
 		<token value="c1(O)cc(O)ccc1" labels="1//2,ortho/3,meta//4,para/5/6">resorcin</token>
 		<token value="c1(cc(O)cc(O)c1)C=Cc2cc(O)c(OC)cc2" labels="1/2/3//4/5//6/alpha/beta/1'/2'/3'//4'///5'/6'">rhapontigenin</token>
-		<token value="OCc1ccccc1O" labels="none">saligenin</token>
-		<token value="CC/C(c1ccc(O)cc1)=C(c2ccc(O)cc2)/CC" labels="none">diethylstilbestrol</token>
+		<token value="OCc1ccccc1O">saligenin</token>
+		<token value="CC/C(c1ccc(O)cc1)=C(c2ccc(O)cc2)/CC">diethylstilbestrol</token>
 		<token value="c1([N+](=O)[O-])c([O-])c([N+](=O)[O-])cc([N+](=O)[O-])c1[O-]" labels="2,ortho////3,meta//4,para////5/6////1/" functionalIDs="6,17">styphnate</token>
 		<token value="c1([N+](=O)[O-])c(O)c([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta//4,para////5/6////1/" functionalIDs="6,17">styphnic</token>
 		<token value="c1([N+](=O)[O-])c(O)c([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta//4,para////5/6////1/" functionalIDs="6,17">styphnicacid</token>
@@ -118,25 +118,25 @@
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6">styrol</token>
 		<token value="O1[N-][NH+]=CC1(=O)" labels="1/2/3/4/5/">sydnone</token>
 		<token value="OCc1ccc(CO)cc1" labels="//1/2,ortho/3,meta/4,para///5/6">terephthalyl alcohol</token>
-		<token value="c1(c(C(C)C)cc(O)c(C)c1)O" labels="none">thymohydroquinone</token>
-		<token value="c1c(C)ccc(C(C)C)c1O" labels="none">thymol</token>
-		<token value="c1(c(C)cc(O)cc1)O" labels="none">toluhydroquinone</token>
+		<token value="c1(c(C(C)C)cc(O)c(C)c1)O">thymohydroquinone</token>
+		<token value="c1c(C)ccc(C(C)C)c1O">thymol</token>
+		<token value="c1(c(C)cc(O)cc1)O">toluhydroquinone</token>
 		<token value="c1(ccccc1)C" labels="1/2,ortho/3,meta/4,para/5/6/alpha">toluol</token>
-		<token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none">tribenzamid</token>
-		<token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3" labels="none">tribenzamide</token>
+		<token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3">tribenzamid</token>
+		<token value="c1ccccc1C(=O)N(C(=O)c2ccccc2)C(=O)c3ccccc3">tribenzamide</token>
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/">uric</token>
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/">uricacid</token>
 		<token value="[nH]1c(=O)[nH]c2[nH]c(=O)[nH]c2c1=O" labels="1/2//3/4/9/8//7/5/6/">uric acid</token>
 		<token value="O=Cc1cc(OC)c(O)cc1" labels="//1/2/3///4//5/6">vanillin</token>
 		<token value="O=Cc1c(O)c(OC)ccc1" labels="//1/2//3///4/5/6">o-vanillin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 1 alpha;C defaultLocant 2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylol</token>
-		<token value="c1(c(C)c(C)c(O)cc1)O" labels="none">o-xylohydroquinone</token>
-		<token value="c1(c(C)c(C)c(O)cc1)O" labels="none">ortho-xylohydroquinone</token>
-		<token value="c1(c(C)cc(O)cc1C)O" labels="none">m-xylohydroquinone</token>
-		<token value="c1(c(C)cc(O)cc1C)O" labels="none">meta-xylohydroquinone</token>
-		<token value="c1(c(C)cc(O)c(C)c1)O" labels="none">p-xylohydroquinone</token>
-		<token value="c1(c(C)cc(O)c(C)c1)O" labels="none">para-xylohydroquinone</token>
-		<token value="O=C(C)CCc1cc(OC)c(O)cc1" labels="none">zingerone</token>
+		<token value="c1(c(C)c(C)c(O)cc1)O">o-xylohydroquinone</token>
+		<token value="c1(c(C)c(C)c(O)cc1)O">ortho-xylohydroquinone</token>
+		<token value="c1(c(C)cc(O)cc1C)O">m-xylohydroquinone</token>
+		<token value="c1(c(C)cc(O)cc1C)O">meta-xylohydroquinone</token>
+		<token value="c1(c(C)cc(O)c(C)c1)O">p-xylohydroquinone</token>
+		<token value="c1(c(C)cc(O)c(C)c1)O">para-xylohydroquinone</token>
+		<token value="O=C(C)CCc1cc(OC)c(O)cc1">zingerone</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="¾">

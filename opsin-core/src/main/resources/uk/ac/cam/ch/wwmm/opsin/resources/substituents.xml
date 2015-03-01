@@ -1,15 +1,15 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <tokenList tagname="group" type="substituent" subType="substituent" symbol="X">
-	<token value="B" labels="none" usableAsAJoiner="yes">bor</token>
-	<token value="[SiH4]" labels="none" usableAsAJoiner="yes">sil</token>
-	<token value="[GeH4]" labels="none" usableAsAJoiner="yes">germ</token>
-	<token value="[SnH4]" labels="none" usableAsAJoiner="yes">stann</token>
-	<token value="[PbH4]" labels="none" usableAsAJoiner="yes">plumb</token>
+	<token value="B" usableAsAJoiner="yes">bor</token>
+	<token value="[SiH4]" usableAsAJoiner="yes">sil</token>
+	<token value="[GeH4]" usableAsAJoiner="yes">germ</token>
+	<token value="[SnH4]" usableAsAJoiner="yes">stann</token>
+	<token value="[PbH4]" usableAsAJoiner="yes">plumb</token>
 
-	<token value="CCc1cc2OCOc2cc1" labels="none" suffixAppliesTo="1">homopiperon</token>
-	<token value="C/C=C(C)/CCC[C@H](C)CCC[C@H](C)CCCC(C)C" labels="none" suffixAppliesTo="1">phyt</token>
+	<token value="CCc1cc2OCOc2cc1" suffixAppliesTo="1">homopiperon</token>
+	<token value="C/C=C(C)/CCC[C@H](C)CCC[C@H](C)CCCC(C)C" suffixAppliesTo="1">phyt</token>
 	<token value="CC(=O)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenac</token>
-	<token value="Cc1cc2OCOc2cc1" labels="none" suffixAppliesTo="1">piperon</token>
+	<token value="Cc1cc2OCOc2cc1" suffixAppliesTo="1">piperon</token>
 	<token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" defaultInID="4" suffixAppliesTo="1">salic</token>
 	<token value="CC=C" labels="1/2/3" usableAsAJoiner="yes" suffixAppliesTo="1">all</token>
 	<token value="CC=C" labels="1/2/3" usableAsAJoiner="yes" suffixAppliesTo="1">allan</token>
