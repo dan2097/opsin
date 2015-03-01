@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 class WordRulesOmittedSpaceCorrector {
-	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?$", Pattern.CASE_INSENSITIVE);
+	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?[\\])}]*$", Pattern.CASE_INSENSITIVE);
 	
 	private final BuildState state;
 	private final Element parse;
@@ -70,10 +70,10 @@ class WordRulesOmittedSpaceCorrector {
 		Element word =words.get(0);
 		String wordRuleContents = wordRule.getAttributeValue(VALUE_ATR);
 		if (matchAteOrIteEnding.matcher(wordRuleContents).find()){
-			List<Element> roots = word.getChildElements(ROOT_EL);
-			if (roots.size() == 1){
-				Element rootEl = roots.get(0);
-				Element rootGroup = rootEl.getFirstChildElement(GROUP_EL);
+			List<Element> children = word.getChildElements();
+			if (children.size() >= 2){
+				Element rootEl = children.get(children.size() - 1);
+				Element rootGroup = rootEl.getName().equals(BRACKET_EL) ? StructureBuildingMethods.findRightMostGroupInBracket(rootEl) : rootEl.getFirstChildElement(GROUP_EL);
 				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				int rootMultiplier = 1;
@@ -85,23 +85,25 @@ class WordRulesOmittedSpaceCorrector {
 					}
 				}
 				if (functionalAtomsCount > 0){
-					List<Element> substituentsAndBrackets = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
-					if (substituentsAndBrackets.size() == 0){
+					List<Element> substituents = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
+					substituents.remove(rootEl);
+					if (substituents.size() == 0 || (substituents.size() == 1 && rootMultiplier > 1)) {
 						return;
 					}
-					Element firstChild = substituentsAndBrackets.get(0);
+					Element firstChild = substituents.get(0);
 					if (!checkSuitabilityOfSubstituentForEsterFormation(firstChild, functionalAtomsCount)){
 						return;
 					}
 					String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
-					if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, rootGroup, substituentsAndBrackets.size())) {
+					if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, rootGroup, substituents.size())) {
 						transformToEster(wordRule, firstChild);
 					}
-					else if (substituentsAndBrackets.size() > 1 && 
-							(allBarFirstSubstituentHaveLocants(substituentsAndBrackets) || insufficientSubstitutableHydrogenForSubstitution(substituentsAndBrackets, rootFrag, rootMultiplier))){
+					else if (substituents.size() > 1 && 
+							(allBarFirstSubstituentHaveLocants(substituents) || insufficientSubstitutableHydrogenForSubstitution(substituents, rootFrag, rootMultiplier))){
 						transformToEster(wordRule, firstChild);
 					}
-					else if (substituentsAndBrackets.size() == 1 && substitutionWouldBeAmbiguous(rootFrag, multiplierValue)){
+					else if ((substituents.size() == 1 || rootMultiplier > 1) && substitutionWouldBeAmbiguous(rootFrag, multiplierValue)) {
+						//either 1 substituent or multiplicative nomenclature (in the multiplicative nomenclature case many substituents will not have locants)
 						transformToEster(wordRule, firstChild);
 					}
 				}
