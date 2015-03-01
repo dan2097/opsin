@@ -1,4 +1,4 @@
-Version 2.0.0 (2014-02-??)
+Version 2.0.0 (2014-03-??)
 OPSIN now attempts to identify if a chemical name is ambiguous. Names that appear ambiguous return with a status of WARNING with the structure provided being one interpretation of the name
 Multiplied unlocanted substitution is now more intelligent e.g. all substituents must connect to same group, and degeneracy of atom environments is taken into account
 The ester interpretation is now preferred in more cases where a name does not contain a space but the parent is methanoate/ethanoate/formate/acetate/carbamate
@@ -18,6 +18,10 @@ Various minor bug fixes
 NOTE: Requires Java 1.6 or higher 
 NOTE: Chemical Markup Language is now returned as a String rather than a XOM Element
 NOTE: Utility functions designed for internal use are no longer on the public API
+
+Internal XML Changes:
+Groups lacking a labels attribute now have no locants (previously had ascending numeric locants)
+Syntax for addGroup/addHeteroAtom/addBond attributes changed to be easier to parse and allow specification of whether the name is ambiguous if a locant is not provided
 
 Version 1.6.0 (2014-04-26)
 Added API/command-line options to generate StdInchiKeys

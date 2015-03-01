@@ -444,30 +444,30 @@
 		<token value="N" labels="none">amine</token>
 		<token value="[NH4+]" labels="none">aminium</token>
 		<token value="[NH2-]" labels="none">aminide</token>
-		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/">barbiturate</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronic pinacol ester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronic acid pinacol ester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronicacid pinacol ester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronicacidpinacol ester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronicacid pinacolester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronicacidpinacolester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronic acidpinacol ester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronic acidpinacolester</token>
-		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none">boronic acid pinacolester</token>
-		<token value="C(=O)N" labels="none" functionalIDs="3,3">carboxamide</token>
-		<token value="C(=O)[O-]" labels="none" functionalIDs="3">carboxylate</token>
-		<token value="C(=O)O" labels="none" functionalIDs="3">carboxylic</token>
-		<token value="C(=O)O" labels="none" functionalIDs="3">carboxylicacid</token>
-		<token value="C(=O)O" labels="none" functionalIDs="3">carboxylic acid</token>
-		<token value="[NH+]#N" labels="none">diazonium</token>
-		<token value="C=[NH+][O-]" labels="alpha//">nitrone</token>
+		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" defaultInLocant="5">barbiturate</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronic pinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronic acid pinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronicacid pinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronicacidpinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronicacid pinacolester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronicacidpinacolester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronic acidpinacol ester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronic acidpinacolester</token>
+		<token value="B(OC(C)(C)C1(C)(C))O1" labels="none" defaultInID="1">boronic acid pinacolester</token>
+		<token value="C(=O)N" labels="none" defaultInID="1" functionalIDs="3,3" >carboxamide</token>
+		<token value="C(=O)[O-]" labels="none" defaultInID="1" functionalIDs="3">carboxylate</token>
+		<token value="C(=O)O" labels="none" defaultInID="1" functionalIDs="3">carboxylic</token>
+		<token value="C(=O)O" labels="none" defaultInID="1" functionalIDs="3">carboxylicacid</token>
+		<token value="C(=O)O" labels="none" defaultInID="1" functionalIDs="3">carboxylic acid</token>
+		<token value="[NH+]#N" labels="none" defaultInID="1">diazonium</token>
+		<token value="C=[NH+][O-]" labels="alpha//" defaultInID="1">nitrone</token>
 		<token value="OC(=O)c1ccc(O)cc1" labels="none" defaultInID="1">paraben</token>
 		<token value="[SeH6]" labels="none">perselenurane</token>
 		<token value="[SH6]" labels="none">persulfurane</token>
 		<token value="[SeH4]" labels="none">selenurane</token>
-		<token value="[SH2](=O)=N" labels="none">sulfoximide</token>
-		<token value="[SH2](=O)=N" labels="none">sulfoximine</token>
-		<token value="[SH3+]=O" labels="none">sulfoxonium</token>
+		<token value="[SH2](=O)=N" labels="none" defaultInID="1">sulfoximide</token>
+		<token value="[SH2](=O)=N" labels="none" defaultInID="1">sulfoximine</token>
+		<token value="[SH3+]=O" labels="none" defaultInID="1">sulfoxonium</token>
 		<token value="[SH4]" labels="none">sulfurane</token>
 	</tokenList>
 
