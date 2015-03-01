@@ -819,6 +819,18 @@ public class ComponentGeneration_StereochemistryTest {
 	@Test
 	public void testRacemate7() throws ComponentGenerationException {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "racem-");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		assertEquals(0, children.size());
+	}
+
+	@Test
+	public void testRacemate8() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "racemic-");
 		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 		substituent.addChild(stereochem);
