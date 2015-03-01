@@ -40,9 +40,9 @@
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="À"><!--chalcogen replacement terms-->
-		<token value="S" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
-		<token value="[SeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
-		<token value="[TeH2]" labels="none" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
+		<token value="S" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">thio</token>
+		<token value="[SeH2]" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">seleno</token>
+		<token value="[TeH2]" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">telluro</token>
 	</tokenList>
 
 	<tokenList tagname="suffix" type="root" symbol="Ã">

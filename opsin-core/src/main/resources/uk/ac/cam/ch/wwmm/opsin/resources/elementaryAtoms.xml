@@ -1,134 +1,134 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="Í">
-	<token value="[Li]" commonOxidationStatesAndMax="1:1" labels="none">lithium</token>
-	<token value="[Na]" commonOxidationStatesAndMax="1:1" labels="none">sodium</token>
-	<token value="[Na]" commonOxidationStatesAndMax="1:1" labels="none">natrium</token>
-	<token value="[K]" commonOxidationStatesAndMax="1:1" labels="none">potassium</token>
-	<token value="[K]" commonOxidationStatesAndMax="1:1" labels="none">kalium</token>
-	<token value="[Rb]" commonOxidationStatesAndMax="1:1" labels="none">rubidium</token>
-	<token value="[Cs]" commonOxidationStatesAndMax="1:1" labels="none">caesium</token>
-	<token value="[Cs]" commonOxidationStatesAndMax="1:1" labels="none">cesium</token>
-	<token value="[Fr]" commonOxidationStatesAndMax="1:1" labels="none">francium</token>
+	<token value="[Li]" commonOxidationStatesAndMax="1:1">lithium</token>
+	<token value="[Na]" commonOxidationStatesAndMax="1:1">sodium</token>
+	<token value="[Na]" commonOxidationStatesAndMax="1:1">natrium</token>
+	<token value="[K]" commonOxidationStatesAndMax="1:1">potassium</token>
+	<token value="[K]" commonOxidationStatesAndMax="1:1">kalium</token>
+	<token value="[Rb]" commonOxidationStatesAndMax="1:1">rubidium</token>
+	<token value="[Cs]" commonOxidationStatesAndMax="1:1">caesium</token>
+	<token value="[Cs]" commonOxidationStatesAndMax="1:1">cesium</token>
+	<token value="[Fr]" commonOxidationStatesAndMax="1:1">francium</token>
 
-	<token value="[Be]" commonOxidationStatesAndMax="2:2" labels="none">beryllium</token>
-	<token value="[Mg]" commonOxidationStatesAndMax="2:2" labels="none">magnesium</token>
-	<token value="[Ca]" commonOxidationStatesAndMax="2:2" labels="none">calcium</token>
-	<token value="[Sr]" commonOxidationStatesAndMax="2:2" labels="none">strontium</token>
-	<token value="[Ba]" commonOxidationStatesAndMax="2:2" labels="none">barium</token>
-	<token value="[Ra]" commonOxidationStatesAndMax="2:2" labels="none">radium</token>
+	<token value="[Be]" commonOxidationStatesAndMax="2:2">beryllium</token>
+	<token value="[Mg]" commonOxidationStatesAndMax="2:2">magnesium</token>
+	<token value="[Ca]" commonOxidationStatesAndMax="2:2">calcium</token>
+	<token value="[Sr]" commonOxidationStatesAndMax="2:2">strontium</token>
+	<token value="[Ba]" commonOxidationStatesAndMax="2:2">barium</token>
+	<token value="[Ra]" commonOxidationStatesAndMax="2:2">radium</token>
 
-	<token value="[Al]" commonOxidationStatesAndMax="3:3" labels="none">aluminium</token>
-	<token value="[Al]" commonOxidationStatesAndMax="3:3" labels="none">aluminum</token>
-	<token value="[Ga]" commonOxidationStatesAndMax="3:3" labels="none">gallium</token>
-	<token value="[In]" commonOxidationStatesAndMax="3:3" labels="none">indium</token>
-	<token value="[Tl]" commonOxidationStatesAndMax="1,3:3" labels="none">thallium</token>
+	<token value="[Al]" commonOxidationStatesAndMax="3:3">aluminium</token>
+	<token value="[Al]" commonOxidationStatesAndMax="3:3">aluminum</token>
+	<token value="[Ga]" commonOxidationStatesAndMax="3:3">gallium</token>
+	<token value="[In]" commonOxidationStatesAndMax="3:3">indium</token>
+	<token value="[Tl]" commonOxidationStatesAndMax="1,3:3">thallium</token>
 
-	<token value="[Sn]" commonOxidationStatesAndMax="4:4" labels="none">tin</token><!--4 is more common than 2-->
-	<token value="[Sn]" commonOxidationStatesAndMax="4:4" labels="none">stannum</token>
-	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4" labels="none">lead</token>
-	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4" labels="none">plumbum</token>
+	<token value="[Sn]" commonOxidationStatesAndMax="4:4">tin</token><!--4 is more common than 2-->
+	<token value="[Sn]" commonOxidationStatesAndMax="4:4">stannum</token>
+	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4">lead</token>
+	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4">plumbum</token>
 
-	<token value="[Bi]" commonOxidationStatesAndMax="3:5" labels="none">bismuth</token>
+	<token value="[Bi]" commonOxidationStatesAndMax="3:5">bismuth</token>
 
-	<token value="[Po]" commonOxidationStatesAndMax="2,4:6" labels="none">polonium</token>
+	<token value="[Po]" commonOxidationStatesAndMax="2,4:6">polonium</token>
 <!--transition metals-->
-	<token value="[Sc]" commonOxidationStatesAndMax="3:3" labels="none">scandium</token>
-	<token value="[Ti]" commonOxidationStatesAndMax="4:4" labels="none">titanium</token>
-	<token value="[V]" commonOxidationStatesAndMax="5:5" labels="none">vanadium</token>
-	<token value="[Cr]" commonOxidationStatesAndMax="3,6:6" labels="none">chromium</token>
-	<token value="[Mn]" commonOxidationStatesAndMax="2,4,7:7" labels="none">manganese</token>
-	<token value="[Fe]" commonOxidationStatesAndMax="2,3:6" labels="none">iron</token>
-	<token value="[Co]" commonOxidationStatesAndMax="2,3:5" labels="none">cobalt</token>
-	<token value="[Ni]" commonOxidationStatesAndMax="2:4" labels="none">nickel</token>
-	<token value="[Cu]" commonOxidationStatesAndMax="2:4" labels="none">copper</token>
-	<token value="[Zn]" commonOxidationStatesAndMax="2:2" labels="none">zinc</token>
+	<token value="[Sc]" commonOxidationStatesAndMax="3:3">scandium</token>
+	<token value="[Ti]" commonOxidationStatesAndMax="4:4">titanium</token>
+	<token value="[V]" commonOxidationStatesAndMax="5:5">vanadium</token>
+	<token value="[Cr]" commonOxidationStatesAndMax="3,6:6">chromium</token>
+	<token value="[Mn]" commonOxidationStatesAndMax="2,4,7:7">manganese</token>
+	<token value="[Fe]" commonOxidationStatesAndMax="2,3:6">iron</token>
+	<token value="[Co]" commonOxidationStatesAndMax="2,3:5">cobalt</token>
+	<token value="[Ni]" commonOxidationStatesAndMax="2:4">nickel</token>
+	<token value="[Cu]" commonOxidationStatesAndMax="2:4">copper</token>
+	<token value="[Zn]" commonOxidationStatesAndMax="2:2">zinc</token>
 
-	<token value="[Y]" commonOxidationStatesAndMax="3:3" labels="none">yttrium</token>
-	<token value="[Zr]" commonOxidationStatesAndMax="4:4" labels="none">zirconium</token>
-	<token value="[Nb]" commonOxidationStatesAndMax="5:5" labels="none">niobium</token>
-	<token value="[Mo]" commonOxidationStatesAndMax="4,6:6" labels="none">molybdenum</token>
-	<token value="[Tc]" commonOxidationStatesAndMax="4,7:7" labels="none">technetium</token>
-	<token value="[Ru]" commonOxidationStatesAndMax="3,4:8" labels="none">ruthenium</token>
-	<token value="[Rh]" commonOxidationStatesAndMax="3:6" labels="none">rhodium</token>
-	<token value="[Pd]" commonOxidationStatesAndMax="2,4:4" labels="none">palladium</token>
-	<token value="[Ag]" commonOxidationStatesAndMax="1:3" labels="none">silver</token>
-	<!--<token value="[Ag]" commonOxidationStatesAndMax="1:3" labels="none">argentum</token>has many non chemical uses-->
-	<token value="[Cd]" commonOxidationStatesAndMax="2:2" labels="none">cadmium</token>
+	<token value="[Y]" commonOxidationStatesAndMax="3:3">yttrium</token>
+	<token value="[Zr]" commonOxidationStatesAndMax="4:4">zirconium</token>
+	<token value="[Nb]" commonOxidationStatesAndMax="5:5">niobium</token>
+	<token value="[Mo]" commonOxidationStatesAndMax="4,6:6">molybdenum</token>
+	<token value="[Tc]" commonOxidationStatesAndMax="4,7:7">technetium</token>
+	<token value="[Ru]" commonOxidationStatesAndMax="3,4:8">ruthenium</token>
+	<token value="[Rh]" commonOxidationStatesAndMax="3:6">rhodium</token>
+	<token value="[Pd]" commonOxidationStatesAndMax="2,4:4">palladium</token>
+	<token value="[Ag]" commonOxidationStatesAndMax="1:3">silver</token>
+	<!--<token value="[Ag]" commonOxidationStatesAndMax="1:3">argentum</token>has many non chemical uses-->
+	<token value="[Cd]" commonOxidationStatesAndMax="2:2">cadmium</token>
 
-	<token value="[La]" commonOxidationStatesAndMax="3:3" labels="none">lanthanum</token>
-	<token value="[Ce]" commonOxidationStatesAndMax="3,4:4" labels="none">cerium</token>
-	<token value="[Pr]" commonOxidationStatesAndMax="3:4" labels="none">praseodymium</token>
-	<token value="[Nd]" commonOxidationStatesAndMax="3:3" labels="none">neodymium</token>
-	<token value="[Pm]" commonOxidationStatesAndMax="3:3" labels="none">promethium</token>
-	<token value="[Sm]" commonOxidationStatesAndMax="3:3" labels="none">samarium</token>
-	<token value="[Eu]" commonOxidationStatesAndMax="3:3" labels="none">europium</token><!--3 is more common than 2-->
-	<token value="[Gd]" commonOxidationStatesAndMax="3:3" labels="none">gadolinium</token>
-	<token value="[Tb]" commonOxidationStatesAndMax="3:4" labels="none">terbium</token>
-	<token value="[Dy]" commonOxidationStatesAndMax="3:3" labels="none">dysprosium</token>
-	<token value="[Ho]" commonOxidationStatesAndMax="3:3" labels="none">holmium</token>
-	<token value="[Er]" commonOxidationStatesAndMax="3:3" labels="none">erbium</token>
-	<token value="[Tm]" commonOxidationStatesAndMax="3:3" labels="none">thulium</token>
-	<token value="[Yb]" commonOxidationStatesAndMax="3:3" labels="none">ytterbium</token>
-	<token value="[Lu]" commonOxidationStatesAndMax="3:3" labels="none">lutetium</token>
-	<token value="[Hf]" commonOxidationStatesAndMax="4:4" labels="none">hafnium</token>
-	<token value="[Ta]" commonOxidationStatesAndMax="5:5" labels="none">tantalum</token>
-	<token value="[W]" commonOxidationStatesAndMax="4,6:6" labels="none">tungsten</token>
-	<!--<token value="[W]" commonOxidationStatesAndMax="4,6:6" labels="none">wolfram</token>has many non chemical uses-->
-	<token value="[Re]" commonOxidationStatesAndMax="4:7" labels="none">rhenium</token>
-	<token value="[Os]" commonOxidationStatesAndMax="4:8" labels="none">osmium</token>
-	<token value="[Ir]" commonOxidationStatesAndMax="3,4:6" labels="none">iridium</token>
-	<token value="[Pt]" commonOxidationStatesAndMax="2,4:6" labels="none">platinum</token>
-	<token value="[Au]" commonOxidationStatesAndMax="3:5" labels="none">gold</token>
-	<!--<token value="[Au]" commonOxidationStatesAndMax="3:5" labels="none">aurum</token>has many non chemical uses-->
-	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4" labels="none">mercury</token>
-	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4" labels="none">hydrargyrum</token>
+	<token value="[La]" commonOxidationStatesAndMax="3:3">lanthanum</token>
+	<token value="[Ce]" commonOxidationStatesAndMax="3,4:4">cerium</token>
+	<token value="[Pr]" commonOxidationStatesAndMax="3:4">praseodymium</token>
+	<token value="[Nd]" commonOxidationStatesAndMax="3:3">neodymium</token>
+	<token value="[Pm]" commonOxidationStatesAndMax="3:3">promethium</token>
+	<token value="[Sm]" commonOxidationStatesAndMax="3:3">samarium</token>
+	<token value="[Eu]" commonOxidationStatesAndMax="3:3">europium</token><!--3 is more common than 2-->
+	<token value="[Gd]" commonOxidationStatesAndMax="3:3">gadolinium</token>
+	<token value="[Tb]" commonOxidationStatesAndMax="3:4">terbium</token>
+	<token value="[Dy]" commonOxidationStatesAndMax="3:3">dysprosium</token>
+	<token value="[Ho]" commonOxidationStatesAndMax="3:3">holmium</token>
+	<token value="[Er]" commonOxidationStatesAndMax="3:3">erbium</token>
+	<token value="[Tm]" commonOxidationStatesAndMax="3:3">thulium</token>
+	<token value="[Yb]" commonOxidationStatesAndMax="3:3">ytterbium</token>
+	<token value="[Lu]" commonOxidationStatesAndMax="3:3">lutetium</token>
+	<token value="[Hf]" commonOxidationStatesAndMax="4:4">hafnium</token>
+	<token value="[Ta]" commonOxidationStatesAndMax="5:5">tantalum</token>
+	<token value="[W]" commonOxidationStatesAndMax="4,6:6">tungsten</token>
+	<!--<token value="[W]" commonOxidationStatesAndMax="4,6:6">wolfram</token>has many non chemical uses-->
+	<token value="[Re]" commonOxidationStatesAndMax="4:7">rhenium</token>
+	<token value="[Os]" commonOxidationStatesAndMax="4:8">osmium</token>
+	<token value="[Ir]" commonOxidationStatesAndMax="3,4:6">iridium</token>
+	<token value="[Pt]" commonOxidationStatesAndMax="2,4:6">platinum</token>
+	<token value="[Au]" commonOxidationStatesAndMax="3:5">gold</token>
+	<!--<token value="[Au]" commonOxidationStatesAndMax="3:5">aurum</token>has many non chemical uses-->
+	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4">mercury</token>
+	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4">hydrargyrum</token>
 
-	<token value="[Ac]" commonOxidationStatesAndMax="3:3" labels="none">actinium</token>
-	<token value="[Th]" commonOxidationStatesAndMax="4:4" labels="none">thorium</token>
-	<token value="[Pa]" commonOxidationStatesAndMax="5:5" labels="none">protactinium</token>
-	<token value="[U]" commonOxidationStatesAndMax="6:6" labels="none">uranium</token>
-	<token value="[Np]" commonOxidationStatesAndMax="5:7" labels="none">neptunium</token>
-	<token value="[Pu]" commonOxidationStatesAndMax="4:7" labels="none">plutonium</token>
-	<token value="[Am]" commonOxidationStatesAndMax="3:6" labels="none">americium</token>
-	<token value="[Cm]" commonOxidationStatesAndMax="3:4" labels="none">curium</token>
-	<token value="[Bk]" commonOxidationStatesAndMax="3:4" labels="none">berkelium</token>
-	<token value="[Cf]" commonOxidationStatesAndMax="3:4" labels="none">californium</token>
-	<token value="[Es]" commonOxidationStatesAndMax="3:3" labels="none">einsteinium</token>
-	<token value="[Fm]" commonOxidationStatesAndMax="3:3" labels="none">fermium</token>
-	<token value="[Md]" commonOxidationStatesAndMax="3:3" labels="none">mendelevium</token>
-	<token value="[No]" commonOxidationStatesAndMax="3:3" labels="none">nobelium</token>
-	<token value="[Lr]" commonOxidationStatesAndMax="3:3" labels="none">lawrencium</token>
-		<token value="[Rf]" commonOxidationStatesAndMax="4:4" labels="none">rutherfordium</token>
+	<token value="[Ac]" commonOxidationStatesAndMax="3:3">actinium</token>
+	<token value="[Th]" commonOxidationStatesAndMax="4:4">thorium</token>
+	<token value="[Pa]" commonOxidationStatesAndMax="5:5">protactinium</token>
+	<token value="[U]" commonOxidationStatesAndMax="6:6">uranium</token>
+	<token value="[Np]" commonOxidationStatesAndMax="5:7">neptunium</token>
+	<token value="[Pu]" commonOxidationStatesAndMax="4:7">plutonium</token>
+	<token value="[Am]" commonOxidationStatesAndMax="3:6">americium</token>
+	<token value="[Cm]" commonOxidationStatesAndMax="3:4">curium</token>
+	<token value="[Bk]" commonOxidationStatesAndMax="3:4">berkelium</token>
+	<token value="[Cf]" commonOxidationStatesAndMax="3:4">californium</token>
+	<token value="[Es]" commonOxidationStatesAndMax="3:3">einsteinium</token>
+	<token value="[Fm]" commonOxidationStatesAndMax="3:3">fermium</token>
+	<token value="[Md]" commonOxidationStatesAndMax="3:3">mendelevium</token>
+	<token value="[No]" commonOxidationStatesAndMax="3:3">nobelium</token>
+	<token value="[Lr]" commonOxidationStatesAndMax="3:3">lawrencium</token>
+		<token value="[Rf]" commonOxidationStatesAndMax="4:4">rutherfordium</token>
 	<!--non metals-->
 	<!--hydrogen is currently excluded as it is already present as a substituent anyway allowing names like hydrogen chloride -->
 
-	<token value="[B]" commonOxidationStatesAndMax="3:3" labels="none">boron</token>
+	<token value="[B]" commonOxidationStatesAndMax="3:3">boron</token>
 
-	<token value="[C]" commonOxidationStatesAndMax="4:4" labels="none">carbon</token>
-	<token value="[Si]" commonOxidationStatesAndMax="4:4" labels="none">silicon</token>
-	<token value="[Ge]" commonOxidationStatesAndMax="2,4:4" labels="none">germanium</token>
+	<token value="[C]" commonOxidationStatesAndMax="4:4">carbon</token>
+	<token value="[Si]" commonOxidationStatesAndMax="4:4">silicon</token>
+	<token value="[Ge]" commonOxidationStatesAndMax="2,4:4">germanium</token>
 
-	<token value="[N]" commonOxidationStatesAndMax="3:3" labels="none">nitrogen</token>
-	<token value="[P]" commonOxidationStatesAndMax="3,5:5" labels="none">phosphorus</token>
-	<token value="[As]" commonOxidationStatesAndMax="3,5:5" labels="none">arsenic</token>
-	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5" labels="none">antimony</token>
-	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5" labels="none">stibium</token>
+	<token value="[N]" commonOxidationStatesAndMax="3:3">nitrogen</token>
+	<token value="[P]" commonOxidationStatesAndMax="3,5:5">phosphorus</token>
+	<token value="[As]" commonOxidationStatesAndMax="3,5:5">arsenic</token>
+	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5">antimony</token>
+	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5">stibium</token>
 
-	<token value="[O]" commonOxidationStatesAndMax="2:2" labels="none">oxygen</token>
-	<token value="[S]" commonOxidationStatesAndMax="2,4,6:6" labels="none">sulfur</token>
-	<token value="[Se]" commonOxidationStatesAndMax="2,4,6:6" labels="none">selenium</token>
-	<token value="[Te]" commonOxidationStatesAndMax="2,4,6:6" labels="none">tellurium</token>
+	<token value="[O]" commonOxidationStatesAndMax="2:2">oxygen</token>
+	<token value="[S]" commonOxidationStatesAndMax="2,4,6:6">sulfur</token>
+	<token value="[Se]" commonOxidationStatesAndMax="2,4,6:6">selenium</token>
+	<token value="[Te]" commonOxidationStatesAndMax="2,4,6:6">tellurium</token>
 
-	<token value="[F]" labels="none">fluorine</token>
-	<token value="[Cl]" commonOxidationStatesAndMax="1,3,5,7:7" labels="none">chlorine</token>
-	<token value="[Br]" commonOxidationStatesAndMax="1,3,5,7:7" labels="none">bromine</token>
-	<token value="[I]" commonOxidationStatesAndMax="1,3,5,7:7" labels="none">iodine</token>
-	<token value="[At]" commonOxidationStatesAndMax="1:5" labels="none">astatine</token>
+	<token value="[F]">fluorine</token>
+	<token value="[Cl]" commonOxidationStatesAndMax="1,3,5,7:7">chlorine</token>
+	<token value="[Br]" commonOxidationStatesAndMax="1,3,5,7:7">bromine</token>
+	<token value="[I]" commonOxidationStatesAndMax="1,3,5,7:7">iodine</token>
+	<token value="[At]" commonOxidationStatesAndMax="1:5">astatine</token>
 
-	<token value="[He]" labels="none">helium</token>
-	<token value="[Ne]" labels="none">neon</token>
-	<token value="[Ar]" labels="none">argon</token>
-	<token value="[Kr]" labels="none">krypton</token>
-	<token value="[Xe]" labels="none">xenon</token>
-	<token value="[Rn]" labels="none">radon</token>
+	<token value="[He]">helium</token>
+	<token value="[Ne]">neon</token>
+	<token value="[Ar]">argon</token>
+	<token value="[Kr]">krypton</token>
+	<token value="[Xe]">xenon</token>
+	<token value="[Rn]">radon</token>
 </tokenList>

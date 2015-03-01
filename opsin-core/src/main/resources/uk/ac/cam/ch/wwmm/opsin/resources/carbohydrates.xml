@@ -157,15 +157,15 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">beta-isomuramic acid</token>
 
 <!--oligo saccharides-->
-		<token value="OC1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">lactose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">alpha-lactose</token>
-		<token value="O[C@H]1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">beta-lactose</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">lactosamine</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">alpha-lactosamine</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">beta-lactosamine</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">lactosediamine</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">alpha-lactosediamine</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="none">beta-lactosediamine</token>
+		<token value="OC1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">lactose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">alpha-lactose</token>
+		<token value="O[C@H]1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">beta-lactose</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">lactosamine</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">alpha-lactosamine</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">beta-lactosamine</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">lactosediamine</token>
+		<token value="O[C@@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">alpha-lactosediamine</token>
+		<token value="O[C@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">beta-lactosediamine</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
@@ -194,6 +194,6 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 
 <!--dummy substituent for aldehydo prefix. This triggers the swapping of additionalValue with value on some trivial carbohydrate names but otherwise is ignored as carbohydrates are by default in the acyclic form-->
 	<tokenList tagname="group" type="substituent" subType="simpleSubstituent" symbol="x">
-		<token value="[*]" labels="none">aldehydo</token>
+		<token value="[*]">aldehydo</token>
 	</tokenList>
 </tokenLists>

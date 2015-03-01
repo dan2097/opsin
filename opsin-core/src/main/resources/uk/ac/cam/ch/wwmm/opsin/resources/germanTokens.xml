@@ -3,16 +3,16 @@
 It is far from comprehensive -->
 <tokenLists>
 	<tokenList tagname="group" type="substituent" subType="halideOrPseudoHalide" symbol="x">
-		<token value="-Br" labels="none">brom</token>
-		<token value="-Cl" labels="none">chlor</token>
-		<token value="-F" labels="none">fluor</token>
-		<token value="-I" labels="none">iod</token>
+		<token value="-Br">brom</token>
+		<token value="-Cl">chlor</token>
+		<token value="-F">fluor</token>
+		<token value="-I">iod</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="perhalogeno" symbol="x">
-		<token value="-F" labels="none">perfluor</token>
-		<token value="-Br" labels="none">perbrom</token>
-		<token value="-Cl" labels="none">perchlor</token>
-		<token value="-I" labels="none">period</token>
+		<token value="-F">perfluor</token>
+		<token value="-Br">perbrom</token>
+		<token value="-Cl">perchlor</token>
+		<token value="-I">period</token>
 	</tokenList>
 </tokenLists>
