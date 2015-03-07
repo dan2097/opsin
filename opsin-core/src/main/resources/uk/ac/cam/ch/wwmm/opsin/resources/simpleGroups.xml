@@ -382,6 +382,7 @@
 		<token value="C(OC)C(OC)" labels="1///2//">dimethoxyethane</token>
 		<token value="CC(=O)N(C)(C)" labels="2/1////">dimethylacetamide</token>
 		<token value="CC(=O)N(C)(C)" labels="2/1////">dimethyl-acetamide</token>
+		<token value="C(=O)(n1cncc1)n1cncc1" labels="//1/2/3/4/5/1'/2'/3'/4'/5'">carbonyldiimidazole</token>
 		<token value="C(=O)N" labels="1//N" defaultInID="3" functionalIDs="3,3">formamide</token>
 		<token value="n1c[nH]c2nc[nH]c2c1=S" labels="1/2/3/4/9/8/7/5/6/">mercaptopurine</token>
 		<token value="C(=O)N" labels="1//N" defaultInID="3" functionalIDs="3,3">methanamide</token>
