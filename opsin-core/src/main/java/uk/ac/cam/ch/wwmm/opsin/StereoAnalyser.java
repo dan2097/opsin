@@ -29,7 +29,7 @@ class StereoAnalyser {
 	private final Map<Atom, int[]> atomNeighbourColours;
 
 	private final AtomNeighbouringColoursComparator atomNeighbouringColoursComparator = new AtomNeighbouringColoursComparator();
-	private final static AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
+	private static final AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
 	
 	/**
 	 * Holds information about a tetrahedral stereocentre

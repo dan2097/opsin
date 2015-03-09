@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 class WordRulesOmittedSpaceCorrector {
-	private final static Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?[\\])}]*$", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchAteOrIteEnding = Pattern.compile("[ai]t[e]?[\\])}]*$", Pattern.CASE_INSENSITIVE);
 	
 	private final BuildState state;
 	private final Element parse;

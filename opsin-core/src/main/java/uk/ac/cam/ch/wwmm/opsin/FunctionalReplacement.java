@@ -48,7 +48,7 @@ class FunctionalReplacement {
 		peroxy//ambiguous, also applies to etheric oxygen
 	}	
 
-	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
+	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	
 	private final BuildState state;
 

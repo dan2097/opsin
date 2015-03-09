@@ -30,7 +30,7 @@ import com.ctc.wstx.stax.WstxInputFactory;
  */
 class ResourceGetter {
 	
-	private final static XMLInputFactory xmlInputFactory;
+	private static final XMLInputFactory xmlInputFactory;
 
 	private final String resourcePath;
 	private final String workingDirectory;

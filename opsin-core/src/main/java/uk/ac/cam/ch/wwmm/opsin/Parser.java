@@ -28,8 +28,8 @@ class Parser {
 	private final ResourceManager resourceManager;
 	private final ParseRules parseRules;
 	
-	private final static Pattern matchSemiColonSpace = Pattern.compile("; ");
-	private final static Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
+	private static final Pattern matchSemiColonSpace = Pattern.compile("; ");
+	private static final Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
 
 	/**
 	 * No-argument constructor. Uses ResouceGetter found at
