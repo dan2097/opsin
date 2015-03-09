@@ -1604,8 +1604,8 @@ class StructureBuilder {
 
 		List<Element> positivelyChargedComponents = new ArrayList<Element>();
 		List<Element> negativelyChargedComponents = new ArrayList<Element>();
-		HashMap<Element, Integer> componentToChargeMapping = new HashMap<Element, Integer>();
-		HashMap<Element, BuildResults> componentToBR = new HashMap<Element, BuildResults>();
+		Map<Element, Integer> componentToChargeMapping = new HashMap<Element, Integer>();
+		Map<Element, BuildResults> componentToBR = new HashMap<Element, BuildResults>();
 		
 		List<Element> cationicElements = new ArrayList<Element>();
 		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
@@ -1718,7 +1718,7 @@ class StructureBuilder {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private boolean multiplyChargedComponents(List<Element>negativelyChargedComponents,List<Element> positivelyChargedComponents,HashMap<Element, Integer> componentToChargeMapping, int overallCharge) throws StructureBuildingException {
+	private boolean multiplyChargedComponents(List<Element>negativelyChargedComponents, List<Element> positivelyChargedComponents, Map<Element, Integer> componentToChargeMapping, int overallCharge) throws StructureBuildingException {
 		Element componentToMultiply;
 		if (overallCharge >0){
 			if (negativelyChargedComponents.size() >1){

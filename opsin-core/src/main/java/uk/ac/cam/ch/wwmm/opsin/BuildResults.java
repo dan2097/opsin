@@ -18,21 +18,18 @@ class BuildResults {
 	 * setExplicitly says whether the outAtom absolutely definitely refers to that atom or not.
 	 * e.g. propyl is stored as prop-1-yl with this set to false while prop-2-yl has it set to true
 	 * These OutAtoms are the same objects as are present in the fragments*/
-	private final List<OutAtom> outAtoms;
+	private final List<OutAtom> outAtoms = new ArrayList<OutAtom>();
 
 	/**The atoms that may be used to from things like esters*/
-	private final List<FunctionalAtom> functionalAtoms;
+	private final List<FunctionalAtom> functionalAtoms = new ArrayList<FunctionalAtom>();
 
 	/**A list of fragments that have been evaluated to form this BuildResults. They are in the order they would be found in the XML*/
-	private final Set<Fragment> fragments;
+	private final Set<Fragment> fragments = new LinkedHashSet<Fragment>();
 
 	/**A BuildResults is constructed from a list of Fragments.
 	 * This constructor creates this list from the groups present in an XML word/bracket/sub element.
      * @param wordSubOrBracket*/
 	BuildResults(Element wordSubOrBracket) {
-		outAtoms = new ArrayList<OutAtom>();
-		functionalAtoms = new ArrayList<FunctionalAtom>();
-		fragments = new LinkedHashSet<Fragment>();
 		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(wordSubOrBracket, XmlDeclarations.GROUP_EL);
 		for (Element group : groups) {
 			Fragment frag = group.getFrag();
@@ -44,7 +41,7 @@ class BuildResults {
 			if (functionalAtomCount > 0){
 				Element parent = group.getParent();
 				if (parent.getName().equals(XmlDeclarations.ROOT_EL) ||
-						OpsinTools.getNextGroup(group) == null){
+						OpsinTools.getNextGroup(group) == null) {
 					for (int i = 0; i < functionalAtomCount; i++) {
 						functionalAtoms.add(frag.getFunctionalAtom(i));
 					}
@@ -57,11 +54,7 @@ class BuildResults {
 	/**
 	 * Construct a blank buildResults
 	 */
-	BuildResults() {
-		outAtoms = new ArrayList<OutAtom>();
-		functionalAtoms = new ArrayList<FunctionalAtom>();
-		fragments = new LinkedHashSet<Fragment>();
-	}
+	BuildResults() {}
 
 	/**
 	 * Returns a read only view of the fragments in this BuildResults
@@ -92,16 +85,16 @@ class BuildResults {
 		}
 	}
 
-	OutAtom getOutAtom(int i){
+	OutAtom getOutAtom(int i) {
 		return outAtoms.get(i);
 	}
 
-	int getOutAtomCount(){
+	int getOutAtomCount() {
 		return outAtoms.size();
 	}
 
 	OutAtom removeOutAtom(int i) {
-		OutAtom outAtom =outAtoms.get(i);
+		OutAtom outAtom = outAtoms.get(i);
 		outAtom.getAtom().getFrag().removeOutAtom(outAtom);
 		return outAtoms.remove(i);
 	}
@@ -117,12 +110,12 @@ class BuildResults {
 	 * @param i index
 	 * @return atom
 	 */
-	Atom getFunctionalAtom(int i){
+	Atom getFunctionalAtom(int i) {
 		return functionalAtoms.get(i).getAtom();
 	}
 
 	FunctionalAtom removeFunctionalAtom(int i) {
-		FunctionalAtom functionalAtom =functionalAtoms.get(i);
+		FunctionalAtom functionalAtom = functionalAtoms.get(i);
 		functionalAtom.getAtom().getFrag().removeFunctionalAtom(functionalAtom);
 		return functionalAtoms.remove(i);
 	}
@@ -135,7 +128,7 @@ class BuildResults {
 	 * Returns the first OutAtom
 	 * @return OutAtom
 	 */
-	OutAtom getFirstOutAtom(){
+	OutAtom getFirstOutAtom() {
 		return outAtoms.get(0);
 	}
 
@@ -148,7 +141,7 @@ class BuildResults {
 	Atom getAtomByIdOrThrow(int id) throws StructureBuildingException {
 		for (Fragment fragment : fragments) {
 			Atom outAtom =fragment.getAtomByID(id);
-			if (outAtom!=null){
+			if (outAtom != null){
 				return outAtom;
 			}
 		}
@@ -166,9 +159,9 @@ class BuildResults {
 	 * @return
 	 */
 	int getCharge() {
-		int totalCharge=0;
+		int totalCharge = 0;
 		for (Fragment frag : fragments) {
-			totalCharge+=frag.getCharge();
+			totalCharge += frag.getCharge();
 		}
 		return totalCharge;
 	}
