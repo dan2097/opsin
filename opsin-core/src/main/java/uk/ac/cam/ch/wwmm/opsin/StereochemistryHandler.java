@@ -261,6 +261,9 @@ class StereochemistryHandler {
 		else if (rOrS.equals("S")){
 			atom.setAtomParity(atomRefs4, 1);
 		}
+		else if (rOrS.equals("RS") || rOrS.equals("SR")){
+			atom.setAtomParity(null);
+		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " + rOrS);
 		}
