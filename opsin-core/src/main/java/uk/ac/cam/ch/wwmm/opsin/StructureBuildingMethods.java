@@ -23,7 +23,7 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
  */
 class StructureBuildingMethods {
 	private static final Logger LOG = Logger.getLogger(StructureBuildingMethods.class);
-	private final static Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
+	private static final Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 	private StructureBuildingMethods() {}
 
 	/**

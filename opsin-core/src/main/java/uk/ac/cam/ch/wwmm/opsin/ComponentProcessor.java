@@ -26,11 +26,11 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 */
 
 class ComponentProcessor {
-	private final static Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
-	private final static Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
-	private final static Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
-	private final static Pattern matchGroupsThatAreAlsoInlineSuffixes = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
-	private final static String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
+	private static final Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
+	private static final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
+	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
+	private static final Pattern matchGroupsThatAreAlsoInlineSuffixes = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
+	private static final String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
 	private final FunctionalReplacement functionalReplacement;
 	private final SuffixRulesLookup suffixRulesLookup;

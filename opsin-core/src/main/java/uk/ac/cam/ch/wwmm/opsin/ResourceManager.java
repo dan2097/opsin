@@ -23,7 +23,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  *
  */
 class ResourceManager {
-	private final static TokenEl IGNORE_WHEN_WRITING_PARSE_TREE = new TokenEl("");
+	private static final TokenEl IGNORE_WHEN_WRITING_PARSE_TREE = new TokenEl("");
 
 	/**Used to load XML files.*/
 	private final ResourceGetter resourceGetter;
