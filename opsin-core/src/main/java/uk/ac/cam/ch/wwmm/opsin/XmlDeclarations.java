@@ -286,6 +286,10 @@ class XmlDeclarations {
 	
 	/**A subtractive prefix that removes a terminal chalcogen and forms an intramolecular bridge to another*/
 	static final String ANHYDRO_TYPE_VAL ="anhydro";
+	
+	/**This stereochemistry element conveys axial stereochemistry
+	 * These indicate the postion of groups are an axis/plane/helix. This is expressed by the descriptors: M, P, Ra, Sa, Rp, Sp*/
+	static final String AXIAL_TYPE_VAL ="axial";
     
 	/**A normal multiplier e.g. di*/
 	static final String BASIC_TYPE_VAL ="basic";

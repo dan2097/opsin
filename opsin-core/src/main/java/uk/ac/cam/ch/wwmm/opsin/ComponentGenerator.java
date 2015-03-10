@@ -71,7 +71,7 @@ class ComponentGenerator {
 	private static final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI])");
+	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|RS|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp)");
 	private static final Pattern matchStar = Pattern.compile("\\^?\\*");
 	private static final Pattern matchRacemic = Pattern.compile("rac(em(ic)?)?-?", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchRS = Pattern.compile("[Rr][Ss]?|[Ss][Rr]?");
@@ -79,6 +79,7 @@ class ComponentGenerator {
 	private static final Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private static final Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
 	private static final Pattern matchEndoExoSynAnti = Pattern.compile("[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]");
+	private static final Pattern matchAxialStereo = Pattern.compile("M|P|Ra|Sa|Sp|Rp");
 	private static final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchHdigit =Pattern.compile("H\\d");
 	private static final Pattern matchDigit =Pattern.compile("\\d+");
@@ -893,6 +894,9 @@ class ComponentGenerator {
 	        	 	} else if (matchEndoExoSynAnti.matcher(m.group(2)).matches()) {
 	                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ENDO_EXO_SYN_ANTI_TYPE_VAL));
 	                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2).toLowerCase(Locale.ROOT)));
+	        	 	} else if (matchAxialStereo.matcher(m.group(2)).matches()) {
+	                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, AXIAL_TYPE_VAL));
+	                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2)));
 	        	 	} else {
 	                    throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
 	                }
