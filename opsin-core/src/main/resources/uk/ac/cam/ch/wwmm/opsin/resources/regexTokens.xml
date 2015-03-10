@@ -63,8 +63,9 @@
 	<regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
 	<regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¹" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
 	<regex name="%relativeOrientationStereochemTerm%" regex="((%locant%-?)?([eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]))"/>
+	<regex name="%axialStereoTerm%" regex="(M|P|Ra|Sa|Sp|Rp)"/>
 	<regex name="%cisTransOptionallyLocanted%" regex="((%locantTypes%-?)?([cC][iI][sS]|[tT][rR][aA][nN][sS]))"/>
-	<regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR)|%cisTransOptionallyLocanted%|%alphaBetaLocant%|%relativeOrientationStereochemTerm%)"/>
+	<regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|SR)|%cisTransOptionallyLocanted%|%alphaBetaLocant%|%relativeOrientationStereochemTerm%|%axialStereoTerm%)"/>
 	<regex name="%relativeOrRacemic%" regex="([rR][eE][lL]|[rR][aA][cC]([eE][mM]([iI][cC])?)?)"/>
 	<regexToken regex="(%relativeOrRacemic%-)?%openBracket%%stereochemPossibilities%([,-]%stereochemPossibilities%)*%closeBracket%-?|%relativeOrRacemic%-" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
 	<regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="Ê" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->

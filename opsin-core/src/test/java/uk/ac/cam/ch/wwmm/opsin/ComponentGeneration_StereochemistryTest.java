@@ -400,6 +400,40 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 
 	@Test
+	public void testAxial1() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(M)");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+		
+		List<Element> children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element newStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
+		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("M", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(AXIAL_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testAxial2() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(Ra)");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+		
+		List<Element> children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element newStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
+		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("Ra", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(AXIAL_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+
+	@Test
 	public void testZUnbracketted() throws ComponentGenerationException {//note that IUPAC mandates brackets
 		//XML for Z,Z:
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
