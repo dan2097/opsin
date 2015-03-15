@@ -186,9 +186,14 @@ class StructureBuildingMethods {
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
 				Element groupToAttachTo = parentFrag.getTokenEl();
-				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && parentFrag.getOutAtomCount() > 0 && groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR) != null
-						&& parentFrag.getAtomByLocantOrThrow(locantString).getOutValency() > 0 && frag.getOutAtom(0).getValency() == 1){
-					//horrible special case to allow C-methylcarbonimidoyl
+				if (groupToAttachTo.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null &&
+						parentFrag.getOutAtomCount() > 0 &&
+						groupToAttachTo.getAttribute(ISAMULTIRADICAL_ATR) != null &&
+						parentFrag.getAtomByLocantOrThrow(locantString).getOutValency() > 0 &&
+						frag.getOutAtom(0).getValency() == 1 &&
+						parentFrag.getFirstAtom().equals(parentFrag.getAtomByLocantOrThrow(locantString))) {
+					//horrible special case to allow C-hydroxycarbonimidoyl and the like
+					//If additive nomenclature the first atom should be an out atom
 					joinFragmentsAdditively(state, frag, parentFrag);
 				}
 				else{

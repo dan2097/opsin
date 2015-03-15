@@ -3836,10 +3836,7 @@ class ComponentProcessor {
 			}
 		}
 		//there must be an element after the substituent (or the substituent is being used for locanted ester formation) for the implicit bracket to be required
-		if (elementAftersubstituent ==null ||
-				!elementAftersubstituent.getName().equals(SUBSTITUENT_EL) &&
-				!elementAftersubstituent.getName().equals(BRACKET_EL) &&
-				!elementAftersubstituent.getName().equals(ROOT_EL)){
+		if (!isSubBracketOrRoot(elementAftersubstituent)) {
 			if (!(elementAftersubstituent == null && locantedEsterImplicitBracketSpecialCase(substituent, elementBeforeSubstituent))) {
 				return;
 			}
@@ -3913,6 +3910,11 @@ class ComponentProcessor {
 		if (lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR)!=null && substituentGroup.getAttribute(IMINOLIKE_ATR)!=null){
 			return;//possibly a multiplicative additive operation
 		}
+
+		if (implicitBracketWouldPreventAdditiveBonding(elementBeforeSubstituent, elementAftersubstituent)) {
+			return;//e.g. N-ethylmethylsulfonimidoyl
+		}
+		
 		if (substituentGroup.getValue().equals("sulf") && frag.getAtomCount() == 1){
 			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(substituentGroup, new String[]{UNSATURATOR_EL});
 			if (suffix != null && suffix.getAttributeValue(VALUE_ATR).equals("ylidene")) {
@@ -4050,6 +4052,31 @@ class ComponentProcessor {
 		brackets.add(bracket);
 	}
 
+	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {
+		if (elementAftersubstituent != null && elementAftersubstituent.getName().equals(SUBSTITUENT_EL)) {
+			Element groupAfterSubstituent = elementAftersubstituent.getFirstChildElement(GROUP_EL);
+			if (groupAfterSubstituent.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null &&
+				!isSubBracketOrRoot(OpsinTools.getNextSibling(elementAftersubstituent))) {
+				if (elementBeforeSubstituent.getChild(0).getName().equals(LOCANT_EL)) {
+					Fragment additiveAcceptingFrag = groupAfterSubstituent.getFrag();
+					Element viableSubstituent = elementBeforeSubstituent;
+					while (viableSubstituent != null) {
+						if (viableSubstituent.getName().equals(SUBSTITUENT_EL) || viableSubstituent.getName().equals(BRACKET_EL)) {
+							Element possibleLocant = viableSubstituent.getChild(0);
+							if (possibleLocant.getName().equals(LOCANT_EL)){
+								if (additiveAcceptingFrag.getFirstAtom().equals(additiveAcceptingFrag.getAtomByLocant(possibleLocant.getValue()))) {
+									return false;
+								}
+							}
+						}
+						viableSubstituent = OpsinTools.getPreviousSibling(viableSubstituent);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Retrusn true in the case that:
@@ -4755,10 +4782,7 @@ class ComponentProcessor {
 				Attribute locantAtr = new Attribute(LOCANT_ATR, "O" + locantToConnectTo);
 
 				Element elementAfterSubstituent = OpsinTools.getNextSibling(substituent);				
-				boolean hasAdjacentGroupToSubstitute = (elementAfterSubstituent !=null &&
-						(elementAfterSubstituent.getName().equals(SUBSTITUENT_EL) ||
-						elementAfterSubstituent.getName().equals(BRACKET_EL) ||
-						elementAfterSubstituent.getName().equals(ROOT_EL)));
+				boolean hasAdjacentGroupToSubstitute = isSubBracketOrRoot(elementAfterSubstituent);
 				
 
 				/* If a biochemical is not at the end of a scope but is preceded by substituents/brackets
@@ -4836,6 +4860,13 @@ class ComponentProcessor {
 				bioLinkLocant.detach();
 			}
 		}
+	}
+
+	private boolean isSubBracketOrRoot(Element element) {
+		return element !=null &&
+				(element.getName().equals(SUBSTITUENT_EL) ||
+						element.getName().equals(BRACKET_EL) ||
+						element.getName().equals(ROOT_EL));
 	}
 
 	private void checkAndApplyFirstLocantOfBiochemicalLinkage(Element substituent, String biochemicalLinkage) throws StructureBuildingException {

@@ -1,0 +1,4 @@
+methylsulfonylbenzene	InChI=1S/C7H8O2S/c1-10(8,9)7-5-3-2-4-6-7/h2-6H,1H3
+methylsulfonamidobenzene	InChI=1S/C7H9NO2S/c1-11(9,10)8-7-5-3-2-4-6-7/h2-6,8H,1H3
+2-(N-(2-ethylphenyl)methylsulfonamido)-acetamide	InChI=1S/C11H16N2O3S/c1-3-9-6-4-5-7-10(9)13(8-11(12)14)17(2,15)16/h4-7H,3,8H2,1-2H3,(H2,12,14)
+methylcarbonylbenzene	InChI=1S/C8H8O/c1-7(9)8-5-3-2-4-6-8/h2-6H,1H3
