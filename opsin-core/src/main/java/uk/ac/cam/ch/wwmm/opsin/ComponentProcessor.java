@@ -2949,33 +2949,47 @@ class ComponentProcessor {
 		boolean groupFound = false;
 		boolean inlineSuffixSeen = outAtomCount > 0;
 		Element currentEl = OpsinTools.getNextSibling(multiplier);
-		while (currentEl != null){
+		while (currentEl != null) {
+			//Attach all until group found
+			//Attach unlocanted charge suffixes/unsaturation
+			//Attach one unlocanted unmultiplied inline suffix (or one locanted unmultiplied inline suffix if it is a bi ring assembly e.g. bipyridin-2-yl)
 			Element nextEl = OpsinTools.getNextSibling(currentEl);
-			if (!groupFound || currentEl.getName().equals(SUFFIX_EL) && currentEl.getAttributeValue(TYPE_ATR).equals(CHARGE_TYPE_VAL)|| currentEl.getName().equals(UNSATURATOR_EL)){
+			if (!groupFound) {
 				currentEl.detach();
 				elementToResolve.addChild(currentEl);
+				if (currentEl.getName().equals(GROUP_EL)) {
+					groupFound = true;
+				}
 			}
-			else if (currentEl.getName().equals(SUFFIX_EL)){
-				if (!inlineSuffixSeen && currentEl.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) == null
-						&& (currentEl.getAttribute(LOCANT_ATR) == null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants == 0)) && currentEl.getFrag() == null){
-					inlineSuffixSeen = true;
+			else {
+				if (currentEl.getName().equals(SUFFIX_EL)) {
+					String suffixType = currentEl.getAttributeValue(TYPE_ATR);
+					if (suffixType.equals(CHARGE_TYPE_VAL) && currentEl.getAttribute(LOCANT_ATR) == null) {
+						currentEl.detach();
+						elementToResolve.addChild(currentEl);
+					}
+					else if (!inlineSuffixSeen && suffixType.equals(INLINE_TYPE_VAL) && currentEl.getAttributeValue(MULTIPLIED_ATR) == null
+							&& (currentEl.getAttribute(LOCANT_ATR) == null || ("2".equals(multiplier.getAttributeValue(VALUE_ATR)) && ringJoiningLocants == 0)) && currentEl.getFrag() == null){
+						inlineSuffixSeen = true;
+						currentEl.detach();
+						elementToResolve.addChild(currentEl);
+					}
+					else {
+						break;
+					}
+				}
+				else if (currentEl.getName().equals(UNSATURATOR_EL) && currentEl.getAttribute(LOCANT_ATR) == null) {
 					currentEl.detach();
 					elementToResolve.addChild(currentEl);
 				}
-				else{
+				else {
 					break;
 				}
-			}
-			else{
-				break;
-			}
-			if (currentEl.getName().equals(GROUP_EL)){
-				groupFound = true;
 			}
 			currentEl = nextEl;
 		}
 		Element parent = multiplier.getParent();
-		if (!parent.getName().equals(SUBSTITUENT_EL) && OpsinTools.getChildElementsWithTagNameAndAttribute(parent, SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL).size() != 0){
+		if (!parent.getName().equals(SUBSTITUENT_EL) && OpsinTools.getChildElementsWithTagNameAndAttribute(parent, SUFFIX_EL, TYPE_ATR, INLINE_TYPE_VAL).size() > 0){
 			throw new ComponentGenerationException("Unexpected radical adding suffix on ring assembly");			
 		}
 		return elementToResolve;
