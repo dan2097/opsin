@@ -471,6 +471,10 @@ sense of this -->
 		<setOutAtom />
 		<setOutAtom />
 	</rule>
+	<rule value="aminoAndYl">
+		<setOutAtom /><!--This will be used additively so is added first-->
+		<addgroup SMILES="[*]N" outIDs="2"/>
+	</rule>
 	<rule value="ylidene">
 		<setOutAtom outValency="2" />
 	</rule>

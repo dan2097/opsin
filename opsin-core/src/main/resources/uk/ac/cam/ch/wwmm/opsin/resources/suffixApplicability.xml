@@ -166,7 +166,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 		<suffix value="acylium">ylium</suffix>
 		<suffix value="amide">amine</suffix>
 		<suffix value="amidylium">aminylium</suffix>
-		<suffix value="amido">amino</suffix>
+		<suffix value="amido">aminoAndYl</suffix>
 		<suffix value="ate">ite</suffix>
 		<suffix value="ic">ous</suffix>
 		<suffix value="oyl">diyl</suffix>
