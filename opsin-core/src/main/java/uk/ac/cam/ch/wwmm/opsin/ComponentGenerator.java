@@ -447,7 +447,7 @@ class ComponentGenerator {
 			if(elName.equals(GROUP_EL)){
 				Element multiplier = OpsinTools.getNextSibling(afterOmpLocant);
 				if(multiplier != null && multiplier.getName().equals(MULTIPLIER_EL) && multiplier.getAttributeValue(VALUE_ATR).equals("2")){
-					Element suffix = OpsinTools.getNextSibling(multiplier);
+					Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(multiplier, new String[]{INFIX_EL, SUFFIXPREFIX_EL});
 					if(suffix.getName().equals(SUFFIX_EL)){
 						//e.g. o-benzenediamine
 						return true;
