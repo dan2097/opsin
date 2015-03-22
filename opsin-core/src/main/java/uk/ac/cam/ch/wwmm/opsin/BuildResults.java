@@ -67,23 +67,6 @@ class BuildResults {
 		return fragments.size();
 	}
 
-	/**
-	 * Returns the atom corresponding to position i in the outAtoms list
-	 * If not set explicitly and atom would violate valency or break aromaticity another is looked for
-	 * @param i index
-	 * @return atom
-	 * @throws StructureBuildingException
-	 */
-	Atom getOutAtomTakingIntoAccountWhetherSetExplicitly(int i) throws StructureBuildingException {
-		OutAtom outAtom = outAtoms.get(i);
-		if (outAtom.isSetExplicitly()){
-			return outAtom.getAtom();
-		}
-		else{
-			return FragmentTools.findAtomForSubstitutionOrThrow(outAtom.getAtom().getFrag(), outAtom.getAtom(), outAtom.getValency(), false);
-		}
-	}
-
 	OutAtom getOutAtom(int i) {
 		return outAtoms.get(i);
 	}

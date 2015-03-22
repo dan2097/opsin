@@ -13,7 +13,6 @@ import java.util.Set;
 
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
-
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
@@ -251,7 +250,7 @@ class StructureBuilder {
 			}
 			String locant = buildResultsToLocant.get(ateBr);
 			if (locant ==null){//typical case
-				Atom atomOnSubstituentToUse =substituentsBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+				Atom atomOnSubstituentToUse = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentsBr, 0);
 				state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
 				substituentsBr.removeOutAtom(0);
 			}
@@ -325,9 +324,9 @@ class StructureBuilder {
 		String smilesOfGroup = functionalGroup.get(0).getAttributeValue(VALUE_ATR);
 		Fragment diValentGroup =state.fragManager.buildSMILES(smilesOfGroup, FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 
-		Atom outAtom1 =substituent1.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+		Atom outAtom1 = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituent1, 0);
 		substituent1.removeOutAtom(0);
-		Atom outAtom2 = substituent2.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+		Atom outAtom2 = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituent2, 0);
 		substituent2.removeOutAtom(0);
 		if (diValentGroup.getOutAtomCount()==1){//c.f. peroxide where it is a linker
 			state.fragManager.createBond(outAtom1, diValentGroup.getOutAtom(0).getAtom(), 1);
@@ -400,7 +399,7 @@ class StructureBuilder {
 		for (int i = 0; i < outAtomCount; i++) {
 			Fragment ideFrag =functionalGroupFragments.get(i);
 			Atom ideAtom = ideFrag.getDefaultInAtomOrFirstAtom();
-			Atom subAtom=substituentBR.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+			Atom subAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentBR, 0);
 			state.fragManager.createBond(ideAtom, subAtom, 1);
 			substituentBR.removeOutAtom(0);
 			state.fragManager.incorporateFragment(ideFrag, subAtom.getFrag());
@@ -451,7 +450,7 @@ class StructureBuilder {
 				if (substituentBr.getOutAtom(0).getValency()!=1){
 					throw new StructureBuildingException("Substituent was expected to have only have an outgoing valency of 1");
 				}
-				state.fragManager.createBond(functionalAtom,substituentBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0), 1);
+				state.fragManager.createBond(functionalAtom, getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentBr, 0), 1);
 				if (functionalAtom.getCharge()==-1){
 					functionalAtom.neutraliseCharge();
 				}
@@ -1447,7 +1446,7 @@ class StructureBuilder {
 		resolveWordOrBracket(state, peptide);
 		BuildResults peptideBr = new BuildResults(peptide);
 		if (peptideBr.getOutAtomCount() ==1){
-			Atom outAtom =peptideBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
+			Atom outAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(peptideBr, 0);
 			List<Element> aminoAcids = OpsinTools.getDescendantElementsWithTagNameAndAttribute(peptide, GROUP_EL, TYPE_ATR, AMINOACID_TYPE_VAL);
 			if (aminoAcids.size() < 2){
 				throw new StructureBuildingException("Cyclic peptide building failed: Requires at least two amino acids!");
@@ -1471,8 +1470,8 @@ class StructureBuilder {
 		BuildResults polymerBr = new BuildResults(polymer);
 		List<Fragment> rGroups = new ArrayList<Fragment>();
 		if (polymerBr.getOutAtomCount() ==2){
-			Atom inAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(0);
-			Atom outAtom =polymerBr.getOutAtomTakingIntoAccountWhetherSetExplicitly(1);
+			Atom inAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(polymerBr, 0);
+			Atom outAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(polymerBr, 1);
 			/*
 			 * We assume the polymer repeats so as an approximation we create an R group with the same element as the group at the other end of polymer (with valency equal to the bondorder of the Rgroup so no H added)
 			 */
@@ -1981,5 +1980,24 @@ class StructureBuilder {
 			rGroups.add(rGroup);
 		}
 		return rGroups;
+	}
+	
+
+	/**
+	 * Returns the atom corresponding to position i in the outAtoms list
+	 * If the outAtom is not set explicitly a suitable atom will be found
+	 * @param buildResults 
+	 * @param i index
+	 * @return atom
+	 * @throws StructureBuildingException
+	 */
+	private Atom getOutAtomTakingIntoAccountWhetherSetExplicitly(BuildResults buildResults, int i) throws StructureBuildingException {
+		OutAtom outAtom = buildResults.getOutAtom(i);
+		if (outAtom.isSetExplicitly()){
+			return outAtom.getAtom();
+		}
+		else{
+			return findAtomForUnlocantedRadical(state, outAtom.getAtom().getFrag(), outAtom);
+		}
 	}
 }
