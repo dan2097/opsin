@@ -835,7 +835,7 @@ class StructureBuildingMethods {
 		}
 	}
 
-	private static Atom findAtomForUnlocantedRadical(BuildState state, Fragment frag, OutAtom outAtom) throws StructureBuildingException {
+	static Atom findAtomForUnlocantedRadical(BuildState state, Fragment frag, OutAtom outAtom) throws StructureBuildingException {
 		List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(frag, outAtom.getAtom(), 1, outAtom.getValency(), true);
 		if (possibleAtoms == null){
 			throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
