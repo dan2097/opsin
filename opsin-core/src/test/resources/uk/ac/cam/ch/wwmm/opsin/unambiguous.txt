@@ -24,3 +24,4 @@ cyclo(tyrosinylvalylprolyl)
 tetramethylene sulfone
 dipyridin-2-yl ketone
 pyridin-2-yl acetate
+ethylene glycol
