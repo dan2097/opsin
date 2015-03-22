@@ -1127,7 +1127,7 @@ class StructureBuilder {
 		}
 		
 		OutAtom outAtom1 = theDiRadical.getOutAtom(0);
-		Atom chosenAtom1 = FragmentTools.findAtomForSubstitutionOrThrow(theDiRadical, outAtom1.getAtom(), outAtom1.getValency(), false);
+		Atom chosenAtom1 = outAtom1.isSetExplicitly() ? outAtom1.getAtom() : findAtomForUnlocantedRadical(state, theDiRadical, outAtom1);
 		Fragment functionalFrag =state.fragManager.buildSMILES(functionalClassEls.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 		if (outAtom1.getValency() != 1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + outAtom1.getValency());
@@ -1136,7 +1136,7 @@ class StructureBuilder {
 		state.fragManager.incorporateFragment(functionalFrag, theDiRadical);
 		
 		OutAtom outAtom2 = theDiRadical.getOutAtom(1);
-		Atom chosenAtom2 = FragmentTools.findAtomForSubstitutionOrThrow(theDiRadical, outAtom2.getAtom(), outAtom2.getValency(), false);
+		Atom chosenAtom2 = outAtom2.isSetExplicitly() ? outAtom2.getAtom() : findAtomForUnlocantedRadical(state, theDiRadical, outAtom2);
 		Fragment hydroxy =state.fragManager.buildSMILES("O", FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 		if (outAtom2.getValency() != 1){
 			throw new StructureBuildingException("OutAtom has unexpected valency. Expected 1. Actual: " + outAtom2.getValency());
