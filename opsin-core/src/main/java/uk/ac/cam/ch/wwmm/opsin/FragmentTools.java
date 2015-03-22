@@ -1123,6 +1123,10 @@ class FragmentTools {
 		return null;
 	}
 	
+	static List<Atom> findnAtomsForSubstitution(Fragment frag, Atom preferredAtom, int numberOfSubstitutionsRequired, int bondOrder, boolean takeIntoAccountOutValency) {
+		return findnAtomsForSubstitution(frag.getAtomList(), preferredAtom, numberOfSubstitutionsRequired, bondOrder, takeIntoAccountOutValency);
+	}
+	
 	/**
 	 * Returns a list of atoms of size >= numberOfSubstitutionsDesired (or null if this not possible)
 	 * An atom must have have sufficient valency to support a substituent requiring a bond of order bondOrder

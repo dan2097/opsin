@@ -828,18 +828,22 @@ class StructureBuildingMethods {
 			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
 				OutAtom outAtom = thisFrag.getOutAtom(i);
 				if (!outAtom.isSetExplicitly()){
-					List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(thisFrag.getAtomList(), outAtom.getAtom(), 1, outAtom.getValency(), true);
-		            if (possibleAtoms == null){
-		            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
-	                }
-		            if (!((ALKANESTEM_SUBTYPE_VAL.equals(thisFrag.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(thisFrag.getSubType())) && possibleAtoms.get(0).equals(thisFrag.getFirstAtom()))) {
-		    			state.checkForAmbiguity(possibleAtoms, 1);
-		            }
-					outAtom.setAtom(possibleAtoms.get(0));
+					outAtom.setAtom(findAtomForUnlocantedRadical(state, thisFrag, outAtom));
 					outAtom.setSetExplicitly(true);
 				}
 			}
 		}
+	}
+
+	private static Atom findAtomForUnlocantedRadical(BuildState state, Fragment frag, OutAtom outAtom) throws StructureBuildingException {
+		List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(frag, outAtom.getAtom(), 1, outAtom.getValency(), true);
+		if (possibleAtoms == null){
+			throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
+		}
+		if (!((ALKANESTEM_SUBTYPE_VAL.equals(frag.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(frag.getSubType())) && possibleAtoms.get(0).equals(frag.getFirstAtom()))) {
+			state.checkForAmbiguity(possibleAtoms, 1);
+		}
+		return possibleAtoms.get(0);
 	}
 
 	
@@ -1253,7 +1257,7 @@ class StructureBuildingMethods {
 					}
 
 					if (!multiRadicalOutAtom.isSetExplicitly()) {//not set explicitly so may be an inappropriate atom
-						from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
+						from = findAtomForUnlocantedRadical(state, from.getFrag(), multiRadicalOutAtom);
 					}
 					multiRadicalFrag.removeOutAtom(multiRadicalOutAtom);
 
@@ -1508,7 +1512,7 @@ class StructureBuildingMethods {
 		Atom to = in.getAtom();
 		int bondOrder = in.getValency();
 		if (!in.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			to = FragmentTools.findAtomForSubstitutionOrThrow(to.getFrag(), to, bondOrder, false);
+			to = findAtomForUnlocantedRadical(state, to.getFrag(), in);
 		}
 		parentFrag.removeOutAtom(in);
 
@@ -1549,7 +1553,7 @@ class StructureBuildingMethods {
 
 		Atom from = out.getAtom();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
-			from = FragmentTools.findAtomForSubstitutionOrThrow(from.getFrag(), from, bondOrder, false);
+			from = findAtomForUnlocantedRadical(state, from.getFrag(), out);
 		}
 		fragToBeJoined.removeOutAtom(out);
 

@@ -19,3 +19,4 @@ p-xylene
 acenaphthoquinone
 1,2-acenaphthenequinone
 1,8-naphthyridine
+4,4'-(ethane-1,2-diylbis(azanediyl))dibutan-1-ol

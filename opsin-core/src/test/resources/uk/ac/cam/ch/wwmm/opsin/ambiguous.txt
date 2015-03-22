@@ -12,3 +12,4 @@ tetraaminoethylbenzene
 indenespirocyclopentane
 xylene
 naphthyridine
+4,4'-(ethane-1,2-diylbis(pyridindiyl))dibutan-1-ol
