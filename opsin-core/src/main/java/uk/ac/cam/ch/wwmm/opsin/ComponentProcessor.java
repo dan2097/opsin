@@ -2634,14 +2634,21 @@ class ComponentProcessor {
 				}
 			}
 			StringBuilder nameSB = new StringBuilder();
-			for(Element heteroatom : heteroatomsToProcess){
-				nameSB.append(heteroatom.getValue());
+			for(Element heteroatom : heteroatomsToProcess) {
+				String hetValue = heteroatom.getValue();
+				if (hetValue.endsWith("a")) {
+					nameSB.append(hetValue.substring(0, hetValue.length() - 1));
+				}
+				else {
+					nameSB.append(hetValue);
+				}
 			}
 			nameSB.append(group.getValue());
-			String name = nameSB.toString().toLowerCase(Locale.ROOT);
+			String name = nameSB.toString();
+			group.setValue(name);
 			if(noLocants && heteroatomsToProcess.size() > 0) {
-				if(specialHWRings.containsKey(name)) {
-					String[] specialRingInformation = specialHWRings.get(name);
+				String[] specialRingInformation = specialHWRings.get(name);
+				if(specialRingInformation != null) {
 					String specialInstruction =specialRingInformation[0];
 					if (!specialInstruction.equals("")){
 						if (specialInstruction.equals("blocked")){
@@ -2673,9 +2680,9 @@ class ComponentProcessor {
 						}
 					}
 					//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
-					for (int j = 1; j < specialRingInformation.length; j++) {
-						Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(j));
-						a.setElement(ChemEl.valueOf(specialRingInformation[j]));
+					for (int i = 1; i < specialRingInformation.length; i++) {
+						Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(i));
+						a.setElement(ChemEl.valueOf(specialRingInformation[i]));
 					}
 					for(Element p : heteroatomsToProcess){
 						p.detach();
@@ -2742,7 +2749,6 @@ class ComponentProcessor {
 				}
 				heteroatom.detach();
 			}
-			group.setValue(name);
 		}
 	}
 
