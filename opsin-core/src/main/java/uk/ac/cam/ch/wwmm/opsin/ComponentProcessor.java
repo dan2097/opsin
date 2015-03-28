@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -2589,9 +2590,9 @@ class ComponentProcessor {
 		for (Element group : hwGroups) {
 			Fragment hwRing = group.getFrag();
 			List<Atom> atomList =hwRing.getAtomList();
-			Element prev = OpsinTools.getPreviousSibling(group);
-			List<Element> prevs = new ArrayList<Element>();
 			boolean noLocants = true;
+			List<Element> prevs = new ArrayList<Element>();
+			Element prev = OpsinTools.getPreviousSibling(group);
 			while(prev != null && prev.getName().equals(HETEROATOM_EL)) {
 				prevs.add(prev);
 				if(prev.getAttribute(LOCANT_ATR) != null) {
@@ -2599,11 +2600,14 @@ class ComponentProcessor {
 				}
 				prev = OpsinTools.getPreviousSibling(prev);
 			}
+			Collections.reverse(prevs);
+			List<Element> heteroatomsToProcess = prevs;
+			
 			if (atomList.size() == 6 && group.getValue().equals("an")){
 				boolean hasNitrogen = false;
 				boolean hasSiorGeorSnorPb = false;
 				boolean saturatedRing = true;
-				for(Element heteroatom : prevs){
+				for(Element heteroatom : heteroatomsToProcess){
 					String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
 					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(heteroAtomElement);
 					if (!m.find()){
@@ -2630,13 +2634,12 @@ class ComponentProcessor {
 				}
 			}
 			StringBuilder nameSB = new StringBuilder();
-			Collections.reverse(prevs);
-			for(Element heteroatom : prevs){
+			for(Element heteroatom : heteroatomsToProcess){
 				nameSB.append(heteroatom.getValue());
 			}
 			nameSB.append(group.getValue());
 			String name = nameSB.toString().toLowerCase(Locale.ROOT);
-			if(noLocants && prevs.size() > 0) {
+			if(noLocants && heteroatomsToProcess.size() > 0) {
 				if(specialHWRings.containsKey(name)) {
 					String[] specialRingInformation = specialHWRings.get(name);
 					String specialInstruction =specialRingInformation[0];
@@ -2645,7 +2648,7 @@ class ComponentProcessor {
 							throw new ComponentGenerationException("Blocked HW system");
 						}
 						else if (specialInstruction.equals("saturated")){
-							for (Atom a: hwRing.getAtomList()) {
+							for (Atom a: atomList) {
 								a.setSpareValency(false);
 							}
 						}
@@ -2674,38 +2677,54 @@ class ComponentProcessor {
 						Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(j));
 						a.setElement(ChemEl.valueOf(specialRingInformation[j]));
 					}
-					for(Element p : prevs){
+					for(Element p : heteroatomsToProcess){
 						p.detach();
 					}
-					prevs.clear();
+					heteroatomsToProcess.clear();
 				}
 			}
-			Set<Element> elementsToRemove = new HashSet<Element>();
-			for(Element heteroatom : prevs){//add locanted heteroatoms
-				if (heteroatom.getAttribute(LOCANT_ATR) !=null){
-					String locant = heteroatom.getAttributeValue(LOCANT_ATR);
-					String elementReplacement = heteroatom.getAttributeValue(VALUE_ATR);
-					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
-					if (!m.find()){
-						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
-					}
-					elementReplacement = m.group();
-					Atom a = hwRing.getAtomByLocantOrThrow(locant);
-					a.setElement(ChemEl.valueOf(elementReplacement));
-					if (heteroatom.getAttribute(LAMBDA_ATR) != null){
-						a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
-					}
-					heteroatom.detach();
-					elementsToRemove.add(heteroatom);
+			
+			//add locanted heteroatoms
+			for (Iterator<Element> it = heteroatomsToProcess.iterator(); it.hasNext();) {
+				Element heteroatom = it.next();
+				String locant = heteroatom.getAttributeValue(LOCANT_ATR);
+				if (locant == null) {
+					continue;
 				}
+				String elementReplacement = heteroatom.getAttributeValue(VALUE_ATR);
+				Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
+				if (!m.find()){
+					throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
+				}
+				elementReplacement = m.group();
+				Atom a = hwRing.getAtomByLocantOrThrow(locant);
+				a.setElement(ChemEl.valueOf(elementReplacement));
+				if (heteroatom.getAttribute(LAMBDA_ATR) != null){
+					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
+				}
+				heteroatom.detach();
+				it.remove();
 			}
-			for(Element p : elementsToRemove){
-				prevs.remove(p);
+			
+			List<Element> deltaEls = subOrRoot.getChildElements(DELTA_EL);
+			//add locanted double bonds and convert unlocanted to unsaturators
+			for (Element deltaEl : deltaEls) {
+				String locantOfDoubleBond = deltaEl.getValue();
+				if (locantOfDoubleBond.equals("")){
+					Element newUnsaturator = new TokenEl(UNSATURATOR_EL);
+					newUnsaturator.addAttribute(new Attribute(VALUE_ATR, "2"));
+					OpsinTools.insertAfter(group, newUnsaturator);
+				}
+				else{
+					Atom firstInDoubleBond = hwRing.getAtomByLocantOrThrow(locantOfDoubleBond);
+					FragmentTools.unsaturate(firstInDoubleBond, 2, hwRing);
+				}
+				deltaEl.detach();
 			}
 
 			//add unlocanted heteroatoms
 			int defaultLocant = 1;
-			for(Element heteroatom : prevs){
+			for(Element heteroatom : heteroatomsToProcess){
 				String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
 				Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
 				if (!m.find()){
@@ -2722,23 +2741,6 @@ class ComponentProcessor {
 					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
 				}
 				heteroatom.detach();
-			}
-
-			List<Element> deltaEls = subOrRoot.getChildElements(DELTA_EL);//add specified double bonds
-			for (Element deltaEl : deltaEls) {
-				String locantOfDoubleBond = deltaEl.getValue();
-				if (locantOfDoubleBond.equals("")){
-					Element newUnsaturator = new TokenEl(UNSATURATOR_EL);
-					newUnsaturator.addAttribute(new Attribute(VALUE_ATR, "2"));
-					OpsinTools.insertAfter(group, newUnsaturator);
-				}
-				else{
-					Atom firstInDoubleBond = hwRing.getAtomByLocantOrThrow(locantOfDoubleBond);
-					Atom secondInDoubleBond = hwRing.getAtomByIDOrThrow(firstInDoubleBond.getID() + 1);
-					Bond b = firstInDoubleBond.getBondToAtomOrThrow(secondInDoubleBond);
-					b.setOrder(2);
-				}
-				deltaEl.detach();
 			}
 			group.setValue(name);
 		}
