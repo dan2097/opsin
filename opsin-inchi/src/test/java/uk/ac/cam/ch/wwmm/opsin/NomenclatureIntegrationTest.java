@@ -33,6 +33,14 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
+	public void testAcetals() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "acetals.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+	
+	@Test
 	public void testCarbohydrates() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);

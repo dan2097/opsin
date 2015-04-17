@@ -48,10 +48,16 @@
 	</tokenList>
 
 	<tokenList tagname="functionalClass" type="functionalClass"  symbol="¿">
-		<token value="acetal">acetal</token>
-		<token value="ketal">ketal</token>
-		<token value="hemiacetal">hemiacetal</token>
-		<token value="hemiketal">hemiketal</token>
+		<token value="S,S">mercaptal</token>
+		<token value="O,O">acetal</token>
+		<token value="O,O">ketal</token>
+		<token value="S,S">hemimercaptal</token>
+		<token value="O,O">hemiacetal</token>
+		<token value="O,O">hemiketal</token>
+		<token value="S,O">hemithioacetal</token>
+		<token value="S,O">hemithioketal</token>
+		<token value="S,S">hemidithioacetal</token>
+		<token value="S,S">hemidithioketal</token>
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="functionalClass" subType="anhydride" symbol="¸">
