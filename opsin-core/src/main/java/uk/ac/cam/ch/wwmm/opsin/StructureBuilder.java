@@ -1250,25 +1250,14 @@ class StructureBuilder {
 		String functionalClass = functionalClassEl.getValue();
 		Element beforeAcetal = OpsinTools.getPreviousSibling(functionalClassEl);
 		int numberOfAcetals =1;
-		List<String> elements = null;
-		if (beforeAcetal!=null){
+		String[] elements = MATCH_COMMA.split(functionalClassEl.getAttributeValue(VALUE_ATR));
+		if (beforeAcetal != null){
 			if (beforeAcetal.getName().equals(MULTIPLIER_EL)){
 				numberOfAcetals = Integer.parseInt(beforeAcetal.getAttributeValue(VALUE_ATR));
 			}
 			else{
-				elements = determineChalcogenReplacementOfAcetal(functionalClassEl);
-				if (elements.size()>2){
-					throw new StructureBuildingException(functionalClass + " only has two oxygen");
-				}
-				if (elements.size()==1){
-					elements.add("O");
-				}
+				replaceChalcogensInAcetal(functionalClassEl, elements);
 			}
-		}
-		if (elements==null){
-			elements = new ArrayList<String>();
-			elements.add("O");
-			elements.add("O");
 		}
 
 		if (carbonylOxygen.size() < numberOfAcetals){
@@ -1286,32 +1275,41 @@ class StructureBuilder {
 		connectSubstituentsToAcetal(acetalFrags, substituentsBr, hemiacetal);
 	}
 
-	private List<String> determineChalcogenReplacementOfAcetal(Element functionalClassEl) throws StructureBuildingException {
+	private void replaceChalcogensInAcetal(Element functionalClassEl, String[] elements) throws StructureBuildingException {
 		Element currentEl = functionalClassEl.getParent().getChild(0);
 		int multiplier = 1;
-		List<String> elements = new ArrayList<String>();
-		while(currentEl != functionalClassEl){
-			if (currentEl.getName().equals(MULTIPLIER_EL)){
-				multiplier = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
+		if (currentEl.getName().equals(MULTIPLIER_EL)){
+			multiplier = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
+			if (multiplier > 2){
+				throw new StructureBuildingException(functionalClassEl.getValue() + " only has two oxygen!");
 			}
-			else if (currentEl.getName().equals(GROUP_EL)){
-				for (int i = 0; i < multiplier; i++) {
-					elements.add(currentEl.getAttributeValue(VALUE_ATR));
+			currentEl = OpsinTools.getNextSibling(currentEl);
+		}
+		int i = 0;
+		while(currentEl != functionalClassEl) {
+			if (currentEl.getName().equals(GROUP_EL)) {
+				for (int j = 0; j < multiplier; j++) {
+					if (i == 2) {
+						throw new StructureBuildingException(functionalClassEl.getValue() + " only has two oxygen!");
+					}
+					if (!elements[i].equals("O")){
+						throw new StructureBuildingException("Replacement on " + functionalClassEl.getValue() + " can only be used to replace oxygen!");
+					}
+					elements[i++] = currentEl.getAttributeValue(VALUE_ATR);
 				}
 			}
-			else{
+			else {
 				throw new StructureBuildingException("Unexpected element before acetal");
 			}
 			currentEl = OpsinTools.getNextSibling(currentEl);
 		}
-		return elements;
 	}
 
-	private Fragment formAcetal(List<Atom> carbonylOxygen, List<String> elements) throws StructureBuildingException {
+	private Fragment formAcetal(List<Atom> carbonylOxygen, String[] elements) throws StructureBuildingException {
 		Atom neighbouringCarbon = carbonylOxygen.get(0).getAtomNeighbours().get(0);
 		state.fragManager.removeAtomAndAssociatedBonds(carbonylOxygen.get(0));
 		carbonylOxygen.remove(0);
-		Fragment acetalFrag = state.fragManager.buildSMILES(StringTools.stringListToString(elements, "."),"",NONE_LABELS_VAL);
+		Fragment acetalFrag = state.fragManager.buildSMILES(StringTools.arrayToString(elements, "."),"",NONE_LABELS_VAL);
 		FragmentTools.assignElementLocants(acetalFrag, new ArrayList<Fragment>());
 		List<Atom> acetalAtomList = acetalFrag.getAtomList();
 		Atom atom1 = acetalAtomList.get(0);
