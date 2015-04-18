@@ -107,7 +107,6 @@
 		<token value="OCC(S)CS">dimercaprol</token>
 		<token value="COCCOCCOC">diglyme</token>
 		<token value="O=C(OC(Cl)(Cl)Cl)Cl">diphosgene</token>
-		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine</token>
 		<token value="C(Cl)C1CO1" labels="1//2/3/">epichlorohydrin</token>
 		<token value="C=CC=C" labels="1/2/3/4">erythrene</token>
 		<token value="CC[O-]" labels="1/2/">ethoxide</token>
@@ -140,7 +139,6 @@
 		<token value="[OH+]O">hydroperoxylium</token>
 		<token value="CC(CCCC(C)(C)O)CC=O">hydroxycitronellal</token>
 		<token value="OC(=O)C(C)c1ccc(CC(C)C)cc1" functionalIDs="1">ibuprofen</token>
-		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">icosasphinganine</token>
 		<token value="=[NH]">imidogen</token>
 		<token value="C(I)(I)(I)">iodoform</token>
 		<token value="Cl[Fe]=O">iron oxychloride</token>
@@ -243,7 +241,6 @@
 		<token value="P(=O)(I)(I)I">phosphorousoxyiodide</token>
 		<token value="P12(=S)SP3(=S)SP(=S)(S1)SP(=S)(S2)S3">phosphorus pentasulfide</token>
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO">phytol</token>
-		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18">phytosphingosine</token>
 		<token value="OC(C)(C)C(C)(C)O">pinacol</token>
 		<token value="CC(C(C)(C)C)=O" labels="1//////">pinacolone</token>
 		<token value="C=CC=CC" labels="1/2/3/4/5">piperylene</token>
@@ -275,8 +272,6 @@
 		<token value="CP(OC(C(C)(C)C)C)(F)=O">soman</token>
 		<token value="NCCCCNCCCN">spermidine</token>
 		<token value="NCCCNCCCCNCCCN">spermine</token>
-		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphinganine</token>
-		<token value="OC[C@H](N)[C@H](O)/C=C/CCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphingosine</token>
 		<token value="CC(C)CCCC(C)CCCC(C)CCCCC(C)CCCC(C)CCCC(C)C">squalane</token>
 		<token value="CC(C)=CCC\C(C)=C\CC\C(C)=C\CC\C=C(/C)CC\C=C(/C)CCC=C(C)C">squalene</token>
 		<token value="S(=O)(=O)(N)N" functionalIDs="4,5">sulfamide</token>
@@ -428,11 +423,16 @@
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
 		<token value="OCC[N+](C)(C)C" defaultInID="1">choline</token>
 		<token value="O=C(O)CN(C)C(N)=N" functionalIDs="3">creatine</token>
+		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine</token>
 		<token value="C(O)CN">ethanolamine</token>
 		<token value="[nH]1c(=O)Nc(=O)c(F)c1" labels="1/2//3/4//5//6">fluorouracil</token><!--should be ambiguous but by convention isn't-->
 		<token value="C(O)C(=O)CO" labels="1//2//3/">glycerone</token>
 		<token value="O=C(O)CNC(N)=N" functionalIDs="3">glycocyamine</token>
 		<token value="NC(=N)NCCS(=O)O" functionalIDs="9">hypotaurocyamine</token>
+		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">icosasphinganine</token>
+		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18">phytosphingosine</token>
+		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphinganine</token>
+		<token value="OC[C@H](N)[C@H](O)/C=C/CCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphingosine</token>
 		<token value="NC(=N)NCCS(=O)(=O)O" functionalIDs="10">taurocyamine</token>
 		<token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O">vitamin c</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" defaultInID="37">coenzyme a</token>
