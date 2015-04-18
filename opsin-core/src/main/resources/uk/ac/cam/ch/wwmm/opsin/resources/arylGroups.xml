@@ -34,6 +34,8 @@
 		<token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">arsinolin</token>
 		<token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">arsinolizin</token>
 		<token value="c1ccc2ccc3cccc3c12" labels="1/2/3/3a/4/5/5a/6/7/8/8a/8b">as-indacen</token>
+		<token value="n1ncncc1" labels="1/2/3/4/5/6">as-triazin</token>
+		<token value="n1ncncc1" labels="1/2/3/4/5/6">asym-triazin</token>
 		<token value="c1ccc2cccccc12" labels="1/2/3/3a/4/5/6/7/8/8a">azulen</token>
 		<token value="c1ccc2cccc3c(=O)c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/7//7a/8/9/10/11/11a/11b/11c">benzanthron</token>
 		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'">benzidin</token>
@@ -314,6 +316,7 @@
 		<token value="NCCc1c[nH]c2ccccc12" labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a">tryptamin</token>
 		<token value="C1NCCc2c3ccccc3Nc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">tryptolin</token>
 		<token value="N1NC(=O)NC1=O" labels="1/2/3//4/5/">urazol</token>
+		<token value="n1nnccc1" labels="1/2/3/4/5/6">v-triazin</token>
 		<token value="c1(c(OC)cccc1)OC" labels="1/2,ortho//alpha'/3,meta/4,para/5/6//alpha">veratrol</token>
 		<token value="c1cccc2oc3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" suffixAppliesToByDefault="13">xanthen</token>
 		<token value="c1cccc2sc3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" suffixAppliesToByDefault="13">thioxanthen</token>
@@ -348,6 +351,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'//3'//4'/5'///1/2//3/4//5/alpha/6">ribosylthymin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'///1/2//3/4//5/6///">orotidin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)c2c[nH]c(=O)[nH]c2(=O)" labels="1'/2'//3'//4'/5'///5/6/1/2//3/4/">pseudouridin</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)n4c(CC[C@@H](C(=O)OC)NC(=O)OC)c(C)nc4n(C)c32" labels="1'/2'//3'//4'/5'///3/2/1/9a/9//8/7/gamma/beta/alpha//////////6//5/4a/4//3a">wybutosin</token>
 
 		<!--misc-->
 		<token value="[nH]1cccc1cc2ccc(n2)cc3ccc(n3)cc4cccn4" labels="21/1/2/3/4/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24">bilin</token>
