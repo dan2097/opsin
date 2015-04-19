@@ -5195,7 +5195,7 @@ class ComponentProcessor {
 				return true;
 			}
 		}
-		if ((state.currentWordRule == WordRule.potentialBiochemicalEster || 
+		if ((state.currentWordRule == WordRule.potentialAlcoholEster || 
 				(state.currentWordRule == WordRule.ester &&  (OpsinTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)))
 				&& parentElem.getName().equals(WORD_EL)){
 			Element wordRule = parentElem.getParent();

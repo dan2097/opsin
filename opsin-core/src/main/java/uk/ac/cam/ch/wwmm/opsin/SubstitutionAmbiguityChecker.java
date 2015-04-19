@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,7 +57,7 @@ class SubstitutionAmbiguityChecker {
 		return false;
 	}
 
-	private static StereoAnalyser analyzeRelevantAtomsAndBonds(Set<Atom> startingAtoms) {
+	static StereoAnalyser analyzeRelevantAtomsAndBonds(Collection<Atom> startingAtoms) {
 		Set<Atom> atoms = new HashSet<Atom>();
 		Set<Bond> bonds = new HashSet<Bond>();
 		Deque<Atom> stack = new ArrayDeque<Atom>(startingAtoms);

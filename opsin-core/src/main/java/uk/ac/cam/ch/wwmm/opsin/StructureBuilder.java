@@ -6,10 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
@@ -123,9 +125,14 @@ class StructureBuilder {
 			else if(wordRule == WordRule.acetal) {
 				buildAcetal(words);//e.g. propanal diethyl acetal
 			}
-			else if(wordRule == WordRule.potentialBiochemicalEster) {
-				//will be processed as two "simple" wordrules if no hydroxy found
-				buildBiochemicalEster(words, wordRules.size());//e.g. uridine 5'-(tetrahydrogen triphosphate)
+			else if(wordRule == WordRule.potentialAlcoholEster) {
+				//e.g. uridine 5'-(tetrahydrogen triphosphate)
+				if (!buildAlcoholEster(words, wordRules.size())){
+					//should be processed as two "simple" wordrules if no hydroxy found, hence number of top level word rules may change
+					//These simple word rules have already been processed
+					splitAlcoholEsterRuleIntoTwoSimpleWordRules(words);
+					wordRules = molecule.getChildElements(WORDRULE_EL);
+				}
 			}
 			else if(wordRule == WordRule.cyclicPeptide) {
 				buildCyclicPeptide(words);
@@ -1320,64 +1327,154 @@ class StructureBuilder {
 		return acetalFrag;
 	}
 	
-	private void buildBiochemicalEster(List<Element> words, int numberOfWordRules) throws StructureBuildingException {
+	private boolean buildAlcoholEster(List<Element> words, int numberOfWordRules) throws StructureBuildingException {
 		for (Element word : words) {
 			if (!WordType.full.toString().equals(word.getAttributeValue(TYPE_ATR))){
-				throw new StructureBuildingException("Bug in word rule for biochemicalEster");
+				throw new StructureBuildingException("Bug in word rule for potentialAlcoholEster");
 			}
 			resolveWordOrBracket(state, word);
 		}
 		int ateWords = words.size() -1;
 		if (ateWords < 1){
-			throw new StructureBuildingException("Bug in word rule for biochemicalEster");
+			throw new StructureBuildingException("Bug in word rule for potentialAlcoholEster");
 		}
 		
-		Fragment biochemicalFragment = findRightMostGroupInWordOrWordRule(words.get(0)).getFrag();
-		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(biochemicalFragment);
-		boolean ambiguous = ateWords != hydroxyAtoms.size();
+		Fragment potentialAlcoholFragment = findRightMostGroupInWordOrWordRule(words.get(0)).getFrag();
+		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(potentialAlcoholFragment);
 		
+		List<Atom> chosenHydroxyAtoms = new ArrayList<Atom>();
+		List<BuildResults> ateBuildResults = new ArrayList<BuildResults>();
 		for (int i = 1; i < words.size(); i++) {
 			Element ateWord = words.get(i);
-			String locant = ateWord.getAttributeValue(LOCANT_ATR);
-	
-			Atom atomOnBiochemicalFragment;
-			if (locant!=null){
-				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow(locant);
-				if (atomOnBiochemicalFragment.getBondCount()!=1){
-					atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocantOrThrow("O" + locant);
+			BuildResults wordBr = new BuildResults(ateWord);
+			if (isAppropriateAteGroupForAlcoholEster(ateWord, wordBr)) {
+				String locant = ateWord.getAttributeValue(LOCANT_ATR);
+				if (locant != null) {
+					Atom atomOnAlcoholFragment = potentialAlcoholFragment.getAtomByLocantOrThrow(locant);
+					if (!hydroxyAtoms.contains(atomOnAlcoholFragment) || chosenHydroxyAtoms.contains(atomOnAlcoholFragment)) {
+						atomOnAlcoholFragment = potentialAlcoholFragment.getAtomByLocantOrThrow("O" + locant);
+					}
+					if (!hydroxyAtoms.contains(atomOnAlcoholFragment) || chosenHydroxyAtoms.contains(atomOnAlcoholFragment)) {
+						throw new StructureBuildingException(locant + " did not point to a hydroxy group to be used for ester formation");
+					}
+					chosenHydroxyAtoms.add(atomOnAlcoholFragment);
+				}
+				else if (words.size() == 2) {
+					//special case for adenosine triphosphate and the like
+					//guess that locant might be 5'
+					Atom atomOnAlcoholFragment = potentialAlcoholFragment.getAtomByLocant("O5'");
+					if (hydroxyAtoms.contains(atomOnAlcoholFragment)) {
+						chosenHydroxyAtoms.add(atomOnAlcoholFragment);
+					}
+				}
+				ateBuildResults.add(wordBr);
+			}
+			else {
+				return false;
+			}
+		}
+
+		if (chosenHydroxyAtoms.size() < ateWords) {
+			if (!chosenHydroxyAtoms.isEmpty()) {
+				throw new RuntimeException("OPSIN Bug: Either all or none of the esters should be locanted in alcohol ester rule");
+			}
+			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && allAtomsEquivalent(hydroxyAtoms)) {
+				for (int i = 0; i < ateWords; i++) {
+					chosenHydroxyAtoms.add(hydroxyAtoms.get(i));
 				}
 			}
-			else{
-				atomOnBiochemicalFragment = biochemicalFragment.getAtomByLocant("O5'");//take a guess at it being 5' ;-)
-				if (atomOnBiochemicalFragment==null && !ambiguous && hydroxyAtoms.size() > 0){
-					atomOnBiochemicalFragment = hydroxyAtoms.get(0);
-				}
+			else {
+				return false;
 			}
-			BuildResults br = new BuildResults(ateWord);
-			if (atomOnBiochemicalFragment != null){
-				hydroxyAtoms.remove(atomOnBiochemicalFragment);
-				if (atomOnBiochemicalFragment.getBondCount()!=1 || !atomOnBiochemicalFragment.getElement().isChalcogen()){
-					throw new StructureBuildingException("Failed to find hydroxy group on biochemical fragment");
-				}
-				if (br.getFunctionalAtomCount()==0){
-					throw new StructureBuildingException("Unable to find functional atom to form biochemical ester");
-				}
-				Atom functionalAtom =br.getFunctionalAtom(0);
-				br.removeFunctionalAtom(0);
-				functionalAtom.neutraliseCharge();
-				
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, atomOnBiochemicalFragment);
-			}
-			
+		}
+
+		for (int i = 0; i < ateWords; i++) {
+			BuildResults br = ateBuildResults.get(i);
+			Element ateWord = words.get(i + 1);
 			Element ateGroup = findRightMostGroupInWordOrWordRule(ateWord);
-			if (ateGroup.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR)==null && numberOfWordRules==1){
-				//by convention [O-] are implicitly converted to [OH] to balance charge
-				for (int j = br.getFunctionalAtomCount() -1; j>=0; j--) {
-					Atom atomToDefunctionalise =br.getFunctionalAtom(j);
+			if (ateGroup.getAttribute(NUMBEROFFUNCTIONALATOMSTOREMOVE_ATR) == null && numberOfWordRules == 1) {
+				//by convention [O-] are implicitly converted to [OH] when phosphates/sulfates are attached
+				//If word rules is > 1 this will be done or not done as part of charge balancing
+				for (int j = br.getFunctionalAtomCount() -1; j >= 1; j--) {
+					Atom atomToDefunctionalise = br.getFunctionalAtom(j);
 					br.removeFunctionalAtom(j);
 					atomToDefunctionalise.neutraliseCharge();
 				}
 			}
+			Atom functionalAtom = br.getFunctionalAtom(0);
+			br.removeFunctionalAtom(0);
+			functionalAtom.neutraliseCharge();
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, chosenHydroxyAtoms.get(i));
+		}
+		return true;
+	}
+
+	private static final Pattern matchCommonCarboxylicSalt = Pattern.compile("tri-?fluoro-?acetate?$", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchCommonEsterFormingInorganicSalt = Pattern.compile("(ortho-?)?(bor|phosphor|phosphate?|phosphite?)|carbam|carbon|sulfur|sulfate?|sulfite?|diphosphate?|triphosphate?", Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * CAS endorses the use of ...ol ...ate names means esters
+	 * but only for cases involving "common acids":
+	 * Acetic acid; Benzenesulfonic acid; Benzenesulfonic acid, 4-methyl-; Benzoic acid and its monoamino, mononitro, and dinitro derivatives;
+	 * Boric acid (H3BO3); Carbamic acid; Carbamic acid, N-methyl-; Carbamic acid, N-phenyl-; Carbonic acid; Formic acid; Methanesulfonic acid;
+	 * Nitric acid; Phosphoric acid; Phosphorodithioic acid; Phosphorothioic acid; Phosphorous acid; Propanoic acid; Sulfuric acid; and Sulfurous acid.
+	 * ...unless the alcohol component is also common.
+	 * 
+	 * As in practice a lot of use won't be from CAS names we use the following heuristic:
+	 * Is locanted OR
+	 * Has 1 functional atom  (And not common salt e.g. Trifluoroacetate) OR
+	 * common phosphorus/sulfur ate including di/tri phosphate
+	 * @param ateWord
+	 * @param wordBr
+	 * @return
+	 * @throws StructureBuildingException 
+	 */
+	private boolean isAppropriateAteGroupForAlcoholEster(Element ateWord, BuildResults wordBr) throws StructureBuildingException {
+		if (wordBr.getFunctionalAtomCount() > 0) {
+			if (ateWord.getAttributeValue(LOCANT_ATR) != null) {
+				//locanted, so locant must be used for this purpose
+				return true;
+			}
+			if (wordBr.getFunctionalAtomCount() == 1) {
+				if (matchCommonCarboxylicSalt.matcher(ateWord.getAttributeValue(VALUE_ATR)).find()) {
+					return false;
+				}
+				return true;
+			}
+			String ateGroupText = findRightMostGroupInWordOrWordRule(ateWord).getValue();
+			//e.g. triphosphate
+			if (matchCommonEsterFormingInorganicSalt.matcher(ateGroupText).matches()) {
+				return true;
+			}
+			
+		}
+		return false;
+	}
+
+	private boolean allAtomsEquivalent(List<Atom> hydroxyAtoms) {
+		StereoAnalyser analyser = SubstitutionAmbiguityChecker.analyzeRelevantAtomsAndBonds(hydroxyAtoms);
+		Set<Integer> environments = new HashSet<Integer>();
+		for (Atom hydroxyAtom : hydroxyAtoms) {
+			environments.add(analyser.getAtomEnvironmentNumber(hydroxyAtom));
+		}
+		return environments.size() == 1;
+	}
+
+	private void splitAlcoholEsterRuleIntoTwoSimpleWordRules(List<Element> words) {
+		Element firstGroup = words.get(0);
+		Element wordRule = firstGroup.getParent();
+		wordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
+		wordRule.getAttribute(VALUE_ATR).setValue(firstGroup.getAttributeValue(VALUE_ATR));
+
+		Element newWordRule = new GroupingEl(WORDRULE_EL);
+		newWordRule.addAttribute(TYPE_ATR, WordType.full.toString());
+		newWordRule.addAttribute(WORDRULE_ATR, WordRule.simple.toString());
+		newWordRule.addAttribute(VALUE_ATR, words.get(1).getAttributeValue(VALUE_ATR));
+		OpsinTools.insertAfter(wordRule, newWordRule);
+		for (int i = 1; i < words.size(); i++) {
+			Element word = words.get(i);
+			word.detach();
+			newWordRule.addChild(word);
 		}
 	}
 
