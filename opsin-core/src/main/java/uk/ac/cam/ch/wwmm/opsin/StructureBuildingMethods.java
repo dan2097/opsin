@@ -293,6 +293,9 @@ class StructureBuildingMethods {
 				}
 			}
 		}
+		if (atomsToHalogenate.size() == 0){
+			throw new RuntimeException("Failed to find any substitutable hydrogen to apply " + perhalogenFrag.getTokenEl().getValue() + " to!");
+		}
 		List<Fragment> halogens = new ArrayList<Fragment>();
 		halogens.add(perhalogenFrag);
 		for (int i = 0; i < atomsToHalogenate.size() - 1; i++) {
