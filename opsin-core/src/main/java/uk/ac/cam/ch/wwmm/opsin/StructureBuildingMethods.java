@@ -51,11 +51,11 @@ class StructureBuildingMethods {
 		//TODO check all things that can substitute have outAtoms
 		//TOOD think whether you can avoid the need to have a cansubstitute function by only using appropriate group
 		List<Element> subsBracketsAndRoots = OpsinTools.getDescendantElementsWithTagNames(word, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
-        for (Element subsBracketsAndRoot : subsBracketsAndRoots) {
-            if (subsBracketsAndRoot.getAttribute(MULTIPLIER_ATR) != null) {
-                throw new StructureBuildingException("Structure building problem: multiplier on :" + subsBracketsAndRoot.getName() + " was never used");
-            }
-        }
+		for (Element subsBracketsAndRoot : subsBracketsAndRoots) {
+			if (subsBracketsAndRoot.getAttribute(MULTIPLIER_ATR) != null) {
+				throw new StructureBuildingException("Structure building problem: multiplier on :" + subsBracketsAndRoot.getName() + " was never used");
+			}
+		}
 		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 		for (int i = 0; i < groups.size(); i++) {
 			Element group = groups.get(i);
@@ -285,7 +285,7 @@ class StructureBuildingMethods {
 			FragmentTools.convertSpareValenciesToDoubleBonds(fragment);
 			for (Atom atom : fragment.getAtomList()) {
 				int substitutableHydrogen = calculateSubstitutableHydrogenAtoms(atom);
-				if (substitutableHydrogen > 0  && FragmentTools.isCharacteristicAtom(atom)){
+				if (substitutableHydrogen > 0 && FragmentTools.isCharacteristicAtom(atom)){
 					continue;
 				}
 				for (int i = 0; i < substitutableHydrogen; i++) {
@@ -598,15 +598,15 @@ class StructureBuildingMethods {
 				 * Is the locant a compound locant e.g. 1(6) 
 				 * This would indicate unsaturation between the atoms with locants 1 and 6
 				 */
-	            Matcher matcher = matchCompoundLocant.matcher(locant);
-	            if (matcher.find()) {
-	            	String compoundLocant = matcher.group(1);
-	            	locant = matcher.replaceAll("");
-	            	FragmentTools.unsaturate(thisFrag.getAtomByLocantOrThrow(locant), compoundLocant, bondOrder, thisFrag);
-	            }
-	            else{
-	            	FragmentTools.unsaturate(thisFrag.getAtomByLocantOrThrow(locant), bondOrder, thisFrag);
-	            }
+				Matcher matcher = matchCompoundLocant.matcher(locant);
+				if (matcher.find()) {
+					String compoundLocant = matcher.group(1);
+					locant = matcher.replaceAll("");
+					FragmentTools.unsaturate(thisFrag.getAtomByLocantOrThrow(locant), compoundLocant, bondOrder, thisFrag);
+				}
+				else {
+					FragmentTools.unsaturate(thisFrag.getAtomByLocantOrThrow(locant), bondOrder, thisFrag);
+				}
 				unsaturator.detach();
 			}
 		}
@@ -661,7 +661,7 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("locants specified for dehydro specify the same atom too many times");
 			}
 			atomLoop: for (int i = atomsToFormTripleBondsBetween.size()-1; i >=0; i = i-2) {//two atoms will have a triple bond formed betwen them
-				Atom a  = atomsToFormTripleBondsBetween.get(i);
+				Atom a = atomsToFormTripleBondsBetween.get(i);
 				List<Atom> neighbours = a.getAtomNeighbours();
 				for (Atom neighbour : neighbours) {
 					if (atomsToFormTripleBondsBetween.contains(neighbour)){
@@ -752,15 +752,15 @@ class StructureBuildingMethods {
 				if (hydrogenElements.size() != 1){
 					throw new StructureBuildingException("Unexpected indication of hydrogen when perhydro makes such indication redundnant");
 				}
-	            for (Atom atomToReduceSpareValencyOn : atomsWithSV) {
-	                atomToReduceSpareValencyOn.setSpareValency(false);
-	            }
+				for (Atom atomToReduceSpareValencyOn : atomsWithSV) {
+					atomToReduceSpareValencyOn.setSpareValency(false);
+				}
 			}
 			else{
 				int hydrogenElementsCount = hydrogenElements.size();
 				if (hydrogenElementsCount > atomsWithSV.size()){
 					throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
-							hydrogenElementsCount + " hydrogen adding tags but only " +  atomsWithSV.size() +" positions that can be hydrogenated)" );
+							hydrogenElementsCount + " hydrogen adding tags but only " + atomsWithSV.size() +" positions that can be hydrogenated)" );
 				}
 				for (int i = 0; i < hydrogenElementsCount; i++) {
 					atomsWithSV.get(i).setSpareValency(false);
@@ -789,44 +789,44 @@ class StructureBuildingMethods {
         }
         int atomIndice =0;
 
-        for (Element heteroatomEl : heteroatoms) {
+		for (Element heteroatomEl : heteroatoms) {
 			Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
 			ChemEl heteroatomChemEl = heteroatom.getElement();
-            //finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
-            Atom atomToReplaceWithHeteroAtom =null;
-            for (; atomIndice < atomList.size(); atomIndice++) {
-            	Atom possibleAtom  = atomList.get(atomIndice);
-                if (possibleAtom.getType().equals(SUFFIX_TYPE_VAL)) {
-                	continue;
-                }
-                if ((heteroatomChemEl.equals(possibleAtom.getElement()) && heteroatom.getCharge() == possibleAtom.getCharge())){
-                	continue;//replacement would do nothing
-                }
-    			if(possibleAtom.getElement() != ChemEl.C && heteroatomChemEl != ChemEl.C){
-    				if (possibleAtom.getElement() == ChemEl.O && (heteroatomChemEl == ChemEl.S || heteroatomChemEl == ChemEl.Se || heteroatomChemEl == ChemEl.Te)){
-    					//special case for replacement of oxygen by chalcogen
-    				}
-    				else{
-    					//replacement of heteroatom by another heteroatom
-	    				continue;
-    				}
-    			}
-                if (ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(possibleAtom, heteroatom)) {
-                	atomToReplaceWithHeteroAtom = possibleAtom;
-                	break;
-                }
+			//finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
+			Atom atomToReplaceWithHeteroAtom =null;
+			for (; atomIndice < atomList.size(); atomIndice++) {
+				Atom possibleAtom = atomList.get(atomIndice);
+				if (possibleAtom.getType().equals(SUFFIX_TYPE_VAL)) {
+					continue;
+				}
+				if ((heteroatomChemEl.equals(possibleAtom.getElement()) && heteroatom.getCharge() == possibleAtom.getCharge())){
+					continue;//replacement would do nothing
+				}
+				if(possibleAtom.getElement() != ChemEl.C && heteroatomChemEl != ChemEl.C){
+					if (possibleAtom.getElement() == ChemEl.O && (heteroatomChemEl == ChemEl.S || heteroatomChemEl == ChemEl.Se || heteroatomChemEl == ChemEl.Te)){
+						//special case for replacement of oxygen by chalcogen
+					}
+					else{
+						//replacement of heteroatom by another heteroatom
+						continue;
+					}
+				}
+				if (ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(possibleAtom, heteroatom)) {
+					atomToReplaceWithHeteroAtom = possibleAtom;
+					break;
+				}
 			}
-            if (atomToReplaceWithHeteroAtom == null){
-            	throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
-            }
-            
-            state.fragManager.replaceAtomWithAtom(atomToReplaceWithHeteroAtom, heteroatom, true);
-            if (heteroatomEl.getAttribute(LAMBDA_ATR) != null) {
-                atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatomEl.getAttributeValue(LAMBDA_ATR)));
-            }
-            atomIndice++;
-            heteroatomEl.detach();
-        }
+			if (atomToReplaceWithHeteroAtom == null){
+				throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
+			}
+			
+			state.fragManager.replaceAtomWithAtom(atomToReplaceWithHeteroAtom, heteroatom, true);
+			if (heteroatomEl.getAttribute(LAMBDA_ATR) != null) {
+				atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatomEl.getAttributeValue(LAMBDA_ATR)));
+			}
+			atomIndice++;
+			heteroatomEl.detach();
+		}
 		if (thisFrag.getOutAtomCount() > 0){//assign any outAtoms that have not been set to a specific atom to a specific atom
 			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
 				OutAtom outAtom = thisFrag.getOutAtom(i);
@@ -848,7 +848,6 @@ class StructureBuildingMethods {
 		}
 		return possibleAtoms.get(0);
 	}
-
 	
 	/**
 	 * Attempts to find a bond within the fragment that can have its bondOrder increased to the specified bond order
@@ -976,7 +975,7 @@ class StructureBuildingMethods {
 					if (siblingFragments.size()>0){
 						Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 						Element nextGroup = nextFrag.getTokenEl();
-						if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR) != null  && (nextFrag.getOutAtomCount()>1|| nextGroup.getAttribute(RESOLVED_ATR) != null && nextFrag.getOutAtomCount()>=1 )){
+						if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR) != null && (nextFrag.getOutAtomCount()>1|| nextGroup.getAttribute(RESOLVED_ATR) != null && nextFrag.getOutAtomCount()>=1 )){
 							Atom toAtom = nextFrag.getOutAtom(0).getAtom();
 							if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 								group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -987,7 +986,7 @@ class StructureBuildingMethods {
 							for (int i = 0; i< siblingFragments.size()-1; i++) {
 								Fragment lastFrag = siblingFragments.get(i);
 								Element lastGroup = lastFrag.getTokenEl();
-								if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR) != null  && (lastFrag.getOutAtomCount()>1|| lastGroup.getAttribute(RESOLVED_ATR) != null && lastFrag.getOutAtomCount()>=1 )){
+								if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR) != null && (lastFrag.getOutAtomCount()>1|| lastGroup.getAttribute(RESOLVED_ATR) != null && lastFrag.getOutAtomCount()>=1 )){
 									Atom toAtom = lastFrag.getOutAtom(0).getAtom();
 									if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 										group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -1011,7 +1010,7 @@ class StructureBuildingMethods {
 					int multiplier = Integer.parseInt(subBracketOrRoot.getAttributeValue(MULTIPLIER_ATR));
 					Fragment nextFrag = siblingFragments.get(siblingFragments.size()-1);
 					Element nextGroup = nextFrag.getTokenEl();
-					if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR) != null  && (nextFrag.getOutAtomCount()>=multiplier|| nextGroup.getAttribute(RESOLVED_ATR) != null && nextFrag.getOutAtomCount()>=multiplier +1 )){
+					if (nextGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && nextGroup.getAttribute(ISAMULTIRADICAL_ATR) != null && (nextFrag.getOutAtomCount()>=multiplier|| nextGroup.getAttribute(RESOLVED_ATR) != null && nextFrag.getOutAtomCount()>=multiplier +1 )){
 						Atom toAtom = nextFrag.getOutAtom(0).getAtom();
 						if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 							group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -1022,7 +1021,7 @@ class StructureBuildingMethods {
 						for (int i = 0; i< siblingFragments.size()-1; i++) {
 							Fragment lastFrag = siblingFragments.get(i);
 							Element lastGroup = lastFrag.getTokenEl();
-							if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR) != null  &&  (lastFrag.getOutAtomCount()>=multiplier|| lastGroup.getAttribute(RESOLVED_ATR) != null && lastFrag.getOutAtomCount()>=multiplier +1 )){
+							if (lastGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) != null && lastGroup.getAttribute(ISAMULTIRADICAL_ATR) != null && (lastFrag.getOutAtomCount()>=multiplier|| lastGroup.getAttribute(RESOLVED_ATR) != null && lastFrag.getOutAtomCount()>=multiplier +1 )){
 								Atom toAtom = lastFrag.getOutAtom(0).getAtom();
 								if (calculateSubstitutableHydrogenAtoms(toAtom) ==0){
 									group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -1587,12 +1586,12 @@ class StructureBuildingMethods {
 		int bondOrder = out.getValency();
 		if (!out.isSetExplicitly()){//not set explicitly so may be an inappropriate atom
 			List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(fragToBeJoined.getAtomList(), from, 1, bondOrder, false);
-            if (possibleAtoms == null){
-            	throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
-            }
-            if (!((ALKANESTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType())) && possibleAtoms.get(0).equals(fragToBeJoined.getFirstAtom()))) {
-    			state.checkForAmbiguity(possibleAtoms, 1);
-            }
+			if (possibleAtoms == null){
+				throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
+			}
+			if (!((ALKANESTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType())) && possibleAtoms.get(0).equals(fragToBeJoined.getFirstAtom()))) {
+				state.checkForAmbiguity(possibleAtoms, 1);
+			}
 			from = possibleAtoms.get(0);
 		}
 		fragToBeJoined.removeOutAtom(out);
