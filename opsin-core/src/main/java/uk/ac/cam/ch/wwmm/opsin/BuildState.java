@@ -59,7 +59,7 @@ class BuildState {
 	}
 
 	boolean checkForAmbiguity(List<Atom> substituentPoints, int numberOfSubstitutionsRequired) {
-		boolean isAmbiguous = SubstitutionAmbiguityChecker.isSubstitutionAmbiguous(substituentPoints, numberOfSubstitutionsRequired);
+		boolean isAmbiguous = AmbiguityChecker.isSubstitutionAmbiguous(substituentPoints, numberOfSubstitutionsRequired);
 		if (isAmbiguous){
 			addIsAmbiguous();
 		}

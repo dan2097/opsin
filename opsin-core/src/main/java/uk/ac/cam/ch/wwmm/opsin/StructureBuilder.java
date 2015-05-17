@@ -1377,7 +1377,7 @@ class StructureBuilder {
 			if (!chosenHydroxyAtoms.isEmpty()) {
 				throw new RuntimeException("OPSIN Bug: Either all or none of the esters should be locanted in alcohol ester rule");
 			}
-			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && SubstitutionAmbiguityChecker.allAtomsEquivalent(hydroxyAtoms)) {
+			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && AmbiguityChecker.allAtomsEquivalent(hydroxyAtoms)) {
 				for (int i = 0; i < ateWords; i++) {
 					chosenHydroxyAtoms.add(hydroxyAtoms.get(i));
 				}
