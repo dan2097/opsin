@@ -16,3 +16,8 @@ naphthyridine
 dipyridyl ketone
 pyridyl acetate
 pyridindiyl glycol
+hexadiene
+hexene
+hexadienyne
+hexyne
+cyclohexadiene

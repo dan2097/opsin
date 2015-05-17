@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -1378,7 +1377,7 @@ class StructureBuilder {
 			if (!chosenHydroxyAtoms.isEmpty()) {
 				throw new RuntimeException("OPSIN Bug: Either all or none of the esters should be locanted in alcohol ester rule");
 			}
-			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && allAtomsEquivalent(hydroxyAtoms)) {
+			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && SubstitutionAmbiguityChecker.allAtomsEquivalent(hydroxyAtoms)) {
 				for (int i = 0; i < ateWords; i++) {
 					chosenHydroxyAtoms.add(hydroxyAtoms.get(i));
 				}
@@ -1449,15 +1448,6 @@ class StructureBuilder {
 			
 		}
 		return false;
-	}
-
-	private boolean allAtomsEquivalent(List<Atom> hydroxyAtoms) {
-		StereoAnalyser analyser = SubstitutionAmbiguityChecker.analyzeRelevantAtomsAndBonds(hydroxyAtoms);
-		Set<Integer> environments = new HashSet<Integer>();
-		for (Atom hydroxyAtom : hydroxyAtoms) {
-			environments.add(analyser.getAtomEnvironmentNumber(hydroxyAtom));
-		}
-		return environments.size() == 1;
 	}
 
 	private void splitAlcoholEsterRuleIntoTwoSimpleWordRules(List<Element> words) {
