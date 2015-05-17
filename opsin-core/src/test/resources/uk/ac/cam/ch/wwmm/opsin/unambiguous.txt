@@ -31,3 +31,6 @@ propadiene
 1-chlorocyclohexene
 cyclohexene
 cyclohexatriene
+azole
+tetrazole
+pentazole

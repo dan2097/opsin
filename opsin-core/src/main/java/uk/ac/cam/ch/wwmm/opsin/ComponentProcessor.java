@@ -2730,24 +2730,41 @@ class ComponentProcessor {
 			}
 
 			//add unlocanted heteroatoms
-			int defaultLocant = 1;
-			for(Element heteroatom : heteroatomsToProcess){
-				String elementReplacement =heteroatom.getAttributeValue(VALUE_ATR);
-				Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
-				if (!m.find()){
-					throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
+			int hetAtomsToProcess = heteroatomsToProcess.size();
+			if (hetAtomsToProcess > 0) {
+				List<Atom> carbonAtomsInRing = new ArrayList<Atom>();
+				for (Atom atom : atomList) {
+					if (atom.getElement() == ChemEl.C) {
+						carbonAtomsInRing.add(atom);
+					}
 				}
-				elementReplacement = m.group();
 
-				while (hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant)).getElement() != ChemEl.C){
-					defaultLocant++;
+				if (hetAtomsToProcess> 1 && hetAtomsToProcess < (carbonAtomsInRing.size() -1)) {
+					Element possibleBenzo = OpsinTools.getPreviousSibling(group, GROUP_EL);
+					//assume benzo fusions or hwring as a fusion prefix produce unambiguous heteroatom positioning
+					if (!(possibleBenzo != null && (possibleBenzo.getValue().equals("benz") || possibleBenzo.getValue().equals("benzo"))
+							|| "o".equals(group.getAttributeValue((SUBSEQUENTUNSEMANTICTOKEN_ATR))))) {
+						state.addIsAmbiguous();
+					}
 				}
-				Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(defaultLocant));
-				a.setElement(ChemEl.valueOf(elementReplacement));
-				if (heteroatom.getAttribute(LAMBDA_ATR)!=null){
-					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
+				if (hetAtomsToProcess > carbonAtomsInRing.size()) {
+					throw new StructureBuildingException("More unlocanted heteroatoms than size of HW ring: " + heteroatomsToProcess.size() +" " + carbonAtomsInRing);
 				}
-				heteroatom.detach();
+				for (int i = 0; i < hetAtomsToProcess; i++) {
+					Element heteroatom = heteroatomsToProcess.get(i);
+					String elementReplacement = heteroatom.getAttributeValue(VALUE_ATR);
+					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
+					if (!m.find()){
+						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
+					}
+					elementReplacement = m.group();
+					Atom a = carbonAtomsInRing.get(i);
+					a.setElement(ChemEl.valueOf(elementReplacement));
+					if (heteroatom.getAttribute(LAMBDA_ATR)!=null){
+						a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
+					}
+					heteroatom.detach();
+				}
 			}
 		}
 	}
