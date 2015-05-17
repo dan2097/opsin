@@ -418,7 +418,7 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 			}
 			if (state.checkForAmbiguity(atomsToJoinTo, numOfSubstituents)){
-				List<Atom> atomsPreferredByEnvironment = SubstitutionAmbiguityChecker.useAtomEnvironmentsToGivePlausibleSubstitution(atomsToJoinTo, numOfSubstituents);
+				List<Atom> atomsPreferredByEnvironment = AmbiguityChecker.useAtomEnvironmentsToGivePlausibleSubstitution(atomsToJoinTo, numOfSubstituents);
 				if (atomsPreferredByEnvironment != null) {
 					atomsToJoinTo = atomsPreferredByEnvironment;
 				}
@@ -873,13 +873,13 @@ class StructureBuildingMethods {
 				if (alternativeBondsThatCouldBeUnsaturated.size() >= numToUnsaturate) {
 					List<Bond> allBonds = new ArrayList<Bond>(bondsThatCouldBeUnsaturated);
 					allBonds.addAll(alternativeBondsThatCouldBeUnsaturated);
-					if (!(SubstitutionAmbiguityChecker.allBondsEquivalent(allBonds) &&
+					if (!(AmbiguityChecker.allBondsEquivalent(allBonds) &&
 							numToUnsaturate == 1 )) {
 						state.addIsAmbiguous();
 					}
 				}
 				else {
-					if (!(SubstitutionAmbiguityChecker.allBondsEquivalent(bondsThatCouldBeUnsaturated) && 
+					if (!(AmbiguityChecker.allBondsEquivalent(bondsThatCouldBeUnsaturated) && 
 							(numToUnsaturate == 1 || numToUnsaturate == bondsThatCouldBeUnsaturated.size() - 1))){
 						state.addIsAmbiguous();
 					}

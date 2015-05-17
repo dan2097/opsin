@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class SubstitutionAmbiguityChecker {
+class AmbiguityChecker {
 
 	static boolean isSubstitutionAmbiguous(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
 		if (substitutableAtoms.size() == 0) {
