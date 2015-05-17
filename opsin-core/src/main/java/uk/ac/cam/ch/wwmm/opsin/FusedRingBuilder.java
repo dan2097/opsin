@@ -330,9 +330,13 @@ class FusedRingBuilder {
 				Element unsaturator = unsaturators.get(0);
 				if (unsaturator.getAttribute(LOCANT_ATR)==null && unsaturator.getAttributeValue(VALUE_ATR).equals("2")){
 					unsaturator.detach();
-					Bond bondToUnsaturate = StructureBuildingMethods.findBondToUnSaturate(ring, 2, true);
-					bondToUnsaturate.getFromAtom().setSpareValency(true);
-					bondToUnsaturate.getToAtom().setSpareValency(true);
+					List<Bond> bondsToUnsaturate = StructureBuildingMethods.findBondsToUnSaturate(ring, 2, true);
+					if (bondsToUnsaturate.size() == 0) {
+						throw new RuntimeException("Failed to find bond to unsaturate on partially saturated HW ring");
+					}
+					Bond b = bondsToUnsaturate.get(0);
+					b.getFromAtom().setSpareValency(true);
+					b.getToAtom().setSpareValency(true);
 				}
 			}
 		}		

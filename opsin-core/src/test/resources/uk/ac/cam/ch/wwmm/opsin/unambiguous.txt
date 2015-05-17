@@ -25,3 +25,9 @@ tetramethylene sulfone
 dipyridin-2-yl ketone
 pyridin-2-yl acetate
 ethylene glycol
+butadiene
+propene
+propadiene
+1-chlorocyclohexene
+cyclohexene
+cyclohexatriene

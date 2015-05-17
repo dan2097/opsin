@@ -29,19 +29,56 @@ class SubstitutionAmbiguityChecker {
 		if (uniqueAtoms.size() == 1) {
 			return false;
 		}
-		StereoAnalyser analyzer = analyzeRelevantAtomsAndBonds(uniqueAtoms);
+		if (allAtomsEquivalent(uniqueAtoms) && (numberToBeSubstituted == 1 || numberToBeSubstituted == substitutableAtoms.size() - 1)){
+			return false;
+		}
+		return true;
+	}
+	
+	static boolean allAtomsEquivalent(Collection<Atom> atoms) {
+		StereoAnalyser analyser = analyzeRelevantAtomsAndBonds(atoms);
 		Set<String> uniqueEnvironments = new HashSet<String>();
-		for (Atom a : substitutableAtoms) {
-			Integer env = analyzer.getAtomEnvironmentNumber(a);
+		for (Atom a : atoms) {
+			Integer env = analyser.getAtomEnvironmentNumber(a);
 			if (env == null){
 				throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
 			}
 			uniqueEnvironments.add(env + "\t" + a.getOutValency());
 		}
-		if (uniqueEnvironments.size() == 1 && (numberToBeSubstituted == 1 || numberToBeSubstituted == substitutableAtoms.size() - 1)){
-			return false;
+		return uniqueEnvironments.size() == 1;
+	}
+
+	static boolean allBondsEquivalent(Collection<Bond> bonds) {
+		Set<Atom> relevantAtoms = new HashSet<Atom>();
+		for (Bond b : bonds) {
+			relevantAtoms.add(b.getFromAtom());
+			relevantAtoms.add(b.getToAtom());
 		}
-		return true;
+		StereoAnalyser analyser = analyzeRelevantAtomsAndBonds(relevantAtoms);
+		Set<String> uniqueBonds = new HashSet<String>();
+		for (Bond b : bonds) {
+			uniqueBonds.add(bondToCanonicalEnvironString(analyser, b));
+		}
+		return uniqueBonds.size() == 1;
+	}
+
+	private static String bondToCanonicalEnvironString(StereoAnalyser analyser, Bond b) {
+		String s1 = getAtomEnviron(analyser, b.getFromAtom());
+		String s2 = getAtomEnviron(analyser, b.getToAtom());
+		if (s1.compareTo(s2) > 0){
+			return s1 + s2;
+		}
+		else {
+			return s2 + s1;
+		}
+	}
+
+	private static String getAtomEnviron(StereoAnalyser analyser, Atom a) {
+		Integer env = analyser.getAtomEnvironmentNumber(a);
+		if (env == null){
+			throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
+		}
+		return env + "\t" + a.getOutValency();
 	}
 
 	private static boolean allAtomsConnectToDefaultInAtom(List<Atom> substitutableAtoms, int numberToBeSubstituted) {

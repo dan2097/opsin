@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -694,15 +695,19 @@ class StructureBuildingMethods {
 		Fragment thisFrag = group.getFrag();
 		List<Atom> atomList =thisFrag.getAtomList();
 
-		List<Element> unsaturators = new ArrayList<Element>();
+		List<Integer> unsaturationBondOrders = new ArrayList<Integer>();
 		List<Element> heteroatoms = new ArrayList<Element>();
 		List<Element> hydrogenElements = new ArrayList<Element>();
 
 		List<Element> children = subOrRoot.getChildElements();
 		for (Element currentEl : children) {
-			String elName =currentEl.getName();
-			if (elName.equals(UNSATURATOR_EL)){
-				unsaturators.add(currentEl);
+			String elName = currentEl.getName();
+			if (elName.equals(UNSATURATOR_EL)) {
+				int bondOrder = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
+				currentEl.detach();
+				if (bondOrder > 1) {
+					unsaturationBondOrders.add(bondOrder);
+				}
 			}
 			else if (elName.equals(HETEROATOM_EL)){
 				heteroatoms.add(currentEl);
@@ -769,25 +774,11 @@ class StructureBuildingMethods {
 			}
 		}
 
-        for (Element unsaturator : unsaturators) {
-            int bondOrder = Integer.parseInt(unsaturator.getAttributeValue(VALUE_ATR));
-            if (bondOrder <= 1) {
-            	unsaturator.detach();
-                continue;
-            }
+		if (unsaturationBondOrders.size() > 0){
+			unsaturateBonds(state, thisFrag, unsaturationBondOrders);
+		}
 
-            //checks if both atoms can accept an extra bond (if double bond) or two extra bonds (if triple bond)
-            Bond bondToUnsaturate = findBondToUnSaturate(thisFrag, bondOrder, false);
-            if (bondToUnsaturate ==null){
-            	bondToUnsaturate = findBondToUnSaturate(thisFrag, bondOrder, true);
-            }
-            if (bondToUnsaturate ==null){
-            	throw new StructureBuildingException("Cannot find bond to unsaturate using unsaturator: " +unsaturator.getValue());
-            }
-            bondToUnsaturate.setOrder(bondOrder);
-            unsaturator.detach();
-        }
-        int atomIndice =0;
+		int atomIndice =0;
 
 		for (Element heteroatomEl : heteroatoms) {
 			Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
@@ -838,6 +829,83 @@ class StructureBuildingMethods {
 		}
 	}
 
+	private static void unsaturateBonds(BuildState state, Fragment frag, List<Integer> unsaturationBondOrders) throws StructureBuildingException {
+		int tripleBonds = 0;
+		int doublebonds = 0;
+		for (Integer bondOrder : unsaturationBondOrders) {
+			if (bondOrder == 3) {
+				tripleBonds++;
+			}
+			else if (bondOrder == 2) {
+				doublebonds++;
+			}
+			else {
+				throw new RuntimeException("Unexpected unsaturation bon order: " + bondOrder);
+			}
+		}
+		
+		if (tripleBonds > 0) {
+			unsaturateBonds(state, frag, 3, tripleBonds);
+		}
+		if (doublebonds > 0) {
+			unsaturateBonds(state, frag, 2, doublebonds);
+		}
+	}
+
+	private static void unsaturateBonds(BuildState state, Fragment frag, int bondOrder, int numToUnsaturate) throws StructureBuildingException {
+		List<Bond> bondsThatCouldBeUnsaturated = findBondsToUnSaturate(frag, bondOrder, false);
+		List<Bond> alternativeBondsThatCouldBeUnsaturated = Collections.emptyList();
+		if (bondsThatCouldBeUnsaturated.size() < numToUnsaturate){
+			bondsThatCouldBeUnsaturated = findBondsToUnSaturate(frag, bondOrder, true);
+		}
+		else {
+			alternativeBondsThatCouldBeUnsaturated = findAlternativeBondsToUnSaturate(frag, bondOrder, bondsThatCouldBeUnsaturated);
+		}
+		if (bondsThatCouldBeUnsaturated.size() < numToUnsaturate){
+			throw new StructureBuildingException("Failed to find bond to change to a bond of order: " + bondOrder);
+		}
+
+		if (bondsThatCouldBeUnsaturated.size() > numToUnsaturate) {
+			//by convention cycloalkanes can have one unsaturation implicitly at the 1 locant
+			//terms like oxazoline are formally ambiguous but in practice the lowest locant is the one that will be intended (in this case 2-oxazoline)
+			if (!isCycloAlkaneSpecialCase(frag, numToUnsaturate, bondsThatCouldBeUnsaturated) &&
+					!HANTZSCHWIDMAN_SUBTYPE_VAL.equals(frag.getSubType())) {
+				if (alternativeBondsThatCouldBeUnsaturated.size() >= numToUnsaturate) {
+					List<Bond> allBonds = new ArrayList<Bond>(bondsThatCouldBeUnsaturated);
+					allBonds.addAll(alternativeBondsThatCouldBeUnsaturated);
+					if (!(SubstitutionAmbiguityChecker.allBondsEquivalent(allBonds) &&
+							numToUnsaturate == 1 )) {
+						state.addIsAmbiguous();
+					}
+				}
+				else {
+					if (!(SubstitutionAmbiguityChecker.allBondsEquivalent(bondsThatCouldBeUnsaturated) && 
+							(numToUnsaturate == 1 || numToUnsaturate == bondsThatCouldBeUnsaturated.size() - 1))){
+						state.addIsAmbiguous();
+					}
+				}
+			}
+		}
+		for (int i = 0; i < numToUnsaturate; i++) {
+			bondsThatCouldBeUnsaturated.get(i).setOrder(bondOrder);
+		}
+	}
+
+	private static boolean isCycloAlkaneSpecialCase(Fragment frag, int numToUnsaturate, List<Bond> bondsThatCouldBeUnsaturated) {
+		if (numToUnsaturate == 1) {
+			Bond b = bondsThatCouldBeUnsaturated.get(0);
+			Atom a1 = b.getFromAtom();
+			Atom a2 = b.getToAtom();
+			if ((ALKANESTEM_SUBTYPE_VAL.equals(frag.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(frag.getSubType())) && 
+					a1.getAtomIsInACycle() && a2.getAtomIsInACycle() &&
+					(a1.equals(frag.getFirstAtom()) || a2.equals(frag.getFirstAtom()))) {
+				//mono unsaturated cyclo alkanes are unambiguous e.g. cyclohexene
+				return true;
+			}
+		}
+		return false;
+	}
+
 	static Atom findAtomForUnlocantedRadical(BuildState state, Fragment frag, OutAtom outAtom) throws StructureBuildingException {
 		List<Atom> possibleAtoms = FragmentTools.findnAtomsForSubstitution(frag, outAtom.getAtom(), 1, outAtom.getValency(), true);
 		if (possibleAtoms == null){
@@ -849,48 +917,85 @@ class StructureBuildingMethods {
 		return possibleAtoms.get(0);
 	}
 	
+
+	private static List<Bond> findAlternativeBondsToUnSaturate(Fragment frag, int bondOrder, Collection<Bond> bondsToIgnore) {
+		return findBondsToUnSaturate(frag, bondOrder, false, new HashSet<Bond>(bondsToIgnore));
+	}
+	
 	/**
-	 * Attempts to find a bond within the fragment that can have its bondOrder increased to the specified bond order
+	 * Finds bond within the fragment that can have their bondOrder increased to the specified bond order
 	 * Depending on the value of allowAdjacentUnsaturatedBonds adjacent higher bonds are prevented
 	 * @param frag
 	 * @param bondOrder
 	 * @param allowAdjacentUnsaturatedBonds
 	 * @return
 	 */
-	static Bond findBondToUnSaturate(Fragment frag, int bondOrder, boolean allowAdjacentUnsaturatedBonds) {
-		Bond bondToUnsaturate =null;
+	static List<Bond> findBondsToUnSaturate(Fragment frag, int bondOrder, boolean allowAdjacentUnsaturatedBonds) {
+		return findBondsToUnSaturate(frag, bondOrder, allowAdjacentUnsaturatedBonds, Collections.<Bond>emptySet());
+	}
+	
+	private static List<Bond> findBondsToUnSaturate(Fragment frag, int bondOrder, boolean allowAdjacentUnsaturatedBonds, Set<Bond> bondsToIgnore) {
+		List<Bond> bondsToUnsaturate = new ArrayList<Bond>();
 		mainLoop: for (Atom atom1 : frag.getAtomList()) {
+			if (atom1.hasSpareValency() || SUFFIX_TYPE_VAL.equals(atom1.getType()) || atom1.getProperty(Atom.ISALDEHYDE) !=null) {
+				continue;
+			}
 			List<Bond> bonds = atom1.getBonds();
-			if (!allowAdjacentUnsaturatedBonds){
-				for (Bond bond : bonds) {
-					if (bond.getOrder() != 1){//don't place implicitly unsaturated bonds next to each other
+			int incomingValency = 0;
+			for (Bond bond : bonds) {
+				//don't place implicitly unsaturated bonds next to each other
+				if (bond.getOrder() != 1 && !allowAdjacentUnsaturatedBonds) {
+					continue mainLoop;
+				}
+				if (bondsToUnsaturate.contains(bond)) {
+					if (!allowAdjacentUnsaturatedBonds) {
 						continue mainLoop;
 					}
+					incomingValency += bondOrder;
+				}
+				else {
+					incomingValency += bond.getOrder();
 				}
 			}
+			Integer maxVal = ValencyChecker.getMaximumValency(atom1);
+			if(maxVal != null && (incomingValency + (bondOrder - 1) + atom1.getOutValency()) > maxVal) {
+				continue;
+			}
 			bondLoop: for (Bond bond : bonds) {
-				if (bond.getOrder()==1 && !atom1.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom1.getType()) && atom1.getProperty(Atom.ISALDEHYDE) ==null
-						&& ValencyChecker.checkValencyAvailableForBond(atom1, bondOrder - 1 + atom1.getOutValency())){
+				if (bond.getOrder() == 1 && !bondsToUnsaturate.contains(bond) && !bondsToIgnore.contains(bond)) {
 					Atom atom2 = bond.getOtherAtom(atom1);
-					if (frag.getAtomByID(atom2.getID()) != null){//check other atom is actually in the fragment!
-						if (!allowAdjacentUnsaturatedBonds){
-				         	for (Bond bond2 : atom2.getBonds()) {
-				        		if (bond2.getOrder() != 1){//don't place implicitly unsaturated bonds next to each other
-				        			continue bondLoop;
-				        		}
-				        	}
+					if (frag.getAtomByID(atom2.getID()) != null) {//check other atom is actually in the fragment!
+						if (atom2.hasSpareValency() || SUFFIX_TYPE_VAL.equals(atom2.getType()) || atom2.getProperty(Atom.ISALDEHYDE) !=null) {
+							continue;
 						}
-						if (!atom2.hasSpareValency() && !SUFFIX_TYPE_VAL.equals(atom2.getType()) && atom2.getProperty(Atom.ISALDEHYDE) ==null 
-								&& ValencyChecker.checkValencyAvailableForBond(atom2, bondOrder - 1 + atom2.getOutValency())){
-							bondToUnsaturate = bond;
-							break mainLoop;
+						int incomingValency2 = 0;
+						for (Bond bond2 : atom2.getBonds()) {
+							//don't place implicitly unsaturated bonds next to each other
+							if (bond2.getOrder() != 1 && !allowAdjacentUnsaturatedBonds) {
+								continue bondLoop;
+							}
+							if (bondsToUnsaturate.contains(bond2)) {
+								if (!allowAdjacentUnsaturatedBonds) {
+									continue bondLoop;
+								}
+								incomingValency2 += bondOrder;
+							}
+							else {
+								incomingValency2 += bond2.getOrder();
+							}
 						}
+						
+						Integer maxVal2 = ValencyChecker.getMaximumValency(atom2);
+						if(maxVal2 != null && (incomingValency2 + (bondOrder - 1) + atom2.getOutValency()) > maxVal2) {
+							continue;
+						}
+						bondsToUnsaturate.add(bond);
+						break bondLoop;
 					}
-
 				}
 			}
 		}
-		return bondToUnsaturate;
+		return bondsToUnsaturate;
 	}
 
 	private static boolean atomWillHaveSVImplicitlyRemoved(Atom atom) throws StructureBuildingException {
