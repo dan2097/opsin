@@ -27,3 +27,5 @@ diazabenzene
 azapropane
 diazapropane
 triazatrithiabenzene
+dihydrobenzene
+dihydropyridine

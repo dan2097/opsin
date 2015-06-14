@@ -694,9 +694,7 @@ class StructureBuildingMethods {
 		if (groups.size() != 1){
 			throw new StructureBuildingException("Each sub or root should only have one group element. This indicates a bug in OPSIN");
 		}
-		Element group = groups.get(0);
-		Fragment thisFrag = group.getFrag();
-		List<Atom> atomList =thisFrag.getAtomList();
+		Fragment frag = groups.get(0).getFrag();
 
 		List<Integer> unsaturationBondOrders = new ArrayList<Integer>();
 		List<Element> heteroatoms = new ArrayList<Element>();
@@ -724,72 +722,107 @@ class StructureBuildingMethods {
 			}
 		}
 
-		if (hydrogenElements.size()>0){
-			/*
-			 * This function is not entirely straightforward as certain atoms definitely should have their spare valency reduced
-			 * However names are not consistent as to whether they bother having the hydro tags do this!
-			 * The atoms in atomsWithSV are in atom order those that can take a hydro element and then those that shouldn't really take a hydro element as its absence is unambiguous
-			 */
-			List<Atom> atomsWithSV = new ArrayList<Atom>();
-			List<Atom> atomsWhichImplicitlyWillHaveTheirSVRemoved = new ArrayList<Atom>();
-			for (Atom atom : atomList) {
-				if (atom.getType().equals(SUFFIX_TYPE_VAL)){
-					break;
-				}
-				atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
-				if (atom.hasSpareValency()){
-					if (atomWillHaveSVImplicitlyRemoved(atom)){
-						atomsWhichImplicitlyWillHaveTheirSVRemoved.add(atom);
-					}
-					else{
-						atomsWithSV.add(atom);
-					}
-				}
-			}
-			atomsWithSV.addAll(atomsWhichImplicitlyWillHaveTheirSVRemoved);//these end up at the end of the list
-			boolean saturateAllAtoms =false;
-			for (Element hydrogenElement : hydrogenElements) {
-				if (hydrogenElement.getValue().equals("perhydro")){
-					saturateAllAtoms =true;
-					break;
-				}
-			}
-			if (saturateAllAtoms){
-				if (hydrogenElements.size() != 1){
-					throw new StructureBuildingException("Unexpected indication of hydrogen when perhydro makes such indication redundnant");
-				}
-				for (Atom atomToReduceSpareValencyOn : atomsWithSV) {
-					atomToReduceSpareValencyOn.setSpareValency(false);
-				}
-			}
-			else{
-				int hydrogenElementsCount = hydrogenElements.size();
-				if (hydrogenElementsCount > atomsWithSV.size()){
-					throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
-							hydrogenElementsCount + " hydrogen adding tags but only " + atomsWithSV.size() +" positions that can be hydrogenated)" );
-				}
-				for (int i = 0; i < hydrogenElementsCount; i++) {
-					atomsWithSV.get(i).setSpareValency(false);
-				}
-			}
+		if (hydrogenElements.size() > 0) {
+			applyUnlocantedHydro(state, frag, hydrogenElements);
 		}
 
 		if (unsaturationBondOrders.size() > 0){
-			unsaturateBonds(state, thisFrag, unsaturationBondOrders);
+			unsaturateBonds(state, frag, unsaturationBondOrders);
 		}
 
 		if (heteroatoms.size() > 0) {
-			applyUnlocantedHeteroatoms(state, thisFrag, heteroatoms);
+			applyUnlocantedHeteroatoms(state, frag, heteroatoms);
 		}
 
-		if (thisFrag.getOutAtomCount() > 0){//assign any outAtoms that have not been set to a specific atom to a specific atom
-			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
-				OutAtom outAtom = thisFrag.getOutAtom(i);
+		if (frag.getOutAtomCount() > 0){//assign any outAtoms that have not been set to a specific atom to a specific atom
+			for (int i = 0, l = frag.getOutAtomCount(); i < l; i++) {
+				OutAtom outAtom = frag.getOutAtom(i);
 				if (!outAtom.isSetExplicitly()){
-					outAtom.setAtom(findAtomForUnlocantedRadical(state, thisFrag, outAtom));
+					outAtom.setAtom(findAtomForUnlocantedRadical(state, frag, outAtom));
 					outAtom.setSetExplicitly(true);
 				}
 			}
+		}
+	}
+
+	private static void applyUnlocantedHydro(BuildState state, Fragment frag, List<Element> hydrogenElements) throws StructureBuildingException {
+		/*
+		 * This function is not entirely straightforward as certain atoms definitely should have their spare valency reduced
+		 * However names are not consistent as to whether they bother having the hydro tags do this!
+		 * The atoms in atomsWithSV are in atom order those that can take a hydro element and then those that shouldn't really take a hydro element as its absence is unambiguous
+		 */
+		List<Atom> atomsAcceptingHydroPrefix = new ArrayList<Atom>();
+		Set<Atom> atomsWhichImplicitlyHadTheirSVRemoved = new HashSet<Atom>();
+		List<Atom> atomList = frag.getAtomList();
+		for (Atom atom : atomList) {
+			if (atom.getType().equals(SUFFIX_TYPE_VAL)){
+				continue;
+			}
+			atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
+			if (atom.hasSpareValency()) {
+				atomsAcceptingHydroPrefix.add(atom);
+				//if we take into account suffixes is the SV removed
+				atom.ensureSVIsConsistantWithValency(true);
+				if (!atom.hasSpareValency()) {
+					atomsWhichImplicitlyHadTheirSVRemoved.add(atom);
+				}
+			}
+		}
+		
+		int hydrogenElsCount = hydrogenElements.size();
+		for (Element hydrogenElement : hydrogenElements) {
+			if (hydrogenElement.getValue().equals("perhydro")) {
+				if (hydrogenElsCount != 1){
+					throw new StructureBuildingException("Unexpected indication of hydrogen when perhydro makes such indication redundnant");
+				}
+				for (Atom atom : atomsAcceptingHydroPrefix) {
+					atom.setSpareValency(false);
+				}
+				return;
+			}
+		}
+		
+		List<Atom> atomsWithDefiniteSV = new ArrayList<Atom>();
+		List<Atom> otherAtomsThatCanHaveHydro = new ArrayList<Atom>();
+		for(Atom a : atomsAcceptingHydroPrefix) {
+			if (atomsWhichImplicitlyHadTheirSVRemoved.contains(a)) {
+				otherAtomsThatCanHaveHydro.add(a);
+			}
+			else {
+				boolean canFormDoubleBond = false;
+				for(Atom aa : frag.getIntraFragmentAtomNeighbours(a)) {
+					if(aa.hasSpareValency()) {
+						canFormDoubleBond = true;
+						break;
+					}
+				}
+				if (canFormDoubleBond) {
+					atomsWithDefiniteSV.add(a);
+				}
+				else {
+					otherAtomsThatCanHaveHydro.add(a);
+				}
+			}
+		}
+		List<Atom> prioritisedAtomsAcceptingHydro = new ArrayList<Atom>(atomsWithDefiniteSV);
+		prioritisedAtomsAcceptingHydro.addAll(otherAtomsThatCanHaveHydro);//these end up at the end of the list
+
+		if (hydrogenElsCount > prioritisedAtomsAcceptingHydro.size()) {
+			throw new StructureBuildingException("Cannot find atom to add hydrogen to (" +
+					hydrogenElsCount + " hydrogens requested but only " + prioritisedAtomsAcceptingHydro.size() +" positions that can be hydrogenated)" );
+		}
+		
+		int svCountAfterRemoval = atomsWithDefiniteSV.size() - hydrogenElsCount;
+		if (svCountAfterRemoval > 1) { //ambiguity likely. If it's 1 then an atom will be implicitly hydrogenated
+			//NOTE: as hydrogens as added in pairs the unambiguous if one hydrogen is added and allow atoms are identical condition is unlikely to be ever satisfied
+			if (!(AmbiguityChecker.allAtomsEquivalent(atomsWithDefiniteSV) &&
+					(hydrogenElsCount == 1 || hydrogenElsCount == atomsWithDefiniteSV.size() - 1))) {
+				state.addIsAmbiguous();
+			}
+		}
+
+		for (int i = 0; i < hydrogenElsCount; i++) {
+			prioritisedAtomsAcceptingHydro.get(i).setSpareValency(false);
 		}
 	}
 
@@ -1077,27 +1110,6 @@ class StructureBuildingMethods {
 			}
 		}
 		return bondsToUnsaturate;
-	}
-
-	private static boolean atomWillHaveSVImplicitlyRemoved(Atom atom) throws StructureBuildingException {
-		boolean canFormDoubleBond =false;
-		for(Atom aa : atom.getFrag().getIntraFragmentAtomNeighbours(atom)) {
-			if(aa.hasSpareValency()){
-				canFormDoubleBond=true;
-			}
-		}
-		if (!canFormDoubleBond){
-			return true;
-		}
-		
-		if (atom.hasSpareValency()){
-			atom.ensureSVIsConsistantWithValency(true);
-			if (!atom.hasSpareValency()){
-				atom.setSpareValency(true);
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private static void performAdditiveOperations(BuildState state, Element subBracketOrRoot) throws StructureBuildingException {

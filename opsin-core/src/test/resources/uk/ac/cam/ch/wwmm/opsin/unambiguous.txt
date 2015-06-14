@@ -40,3 +40,7 @@ hexaazabenzene
 azaethane
 triazapropane
 oxacycloundecan-2-one
+hexahydrobenzene
+tetrahydropyridin-2-one
+hexahydropyridin-2-one
+dihydrorotic acid
