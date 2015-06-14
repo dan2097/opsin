@@ -23,3 +23,7 @@ hexyne
 cyclohexadiene
 diazole
 triazole
+diazabenzene
+azapropane
+diazapropane
+triazatrithiabenzene
