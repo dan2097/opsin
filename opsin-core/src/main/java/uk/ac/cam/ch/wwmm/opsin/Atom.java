@@ -470,8 +470,9 @@ class Atom {
 	 * @return The list of atoms connected to the atom
 	 */
 	List<Atom> getAtomNeighbours(){
-		List<Atom> results = new ArrayList<Atom>(4);
-		for (int i = 0, l = bonds.size(); i < l; i++) {
+		int bondCount = bonds.size();
+		List<Atom> results = new ArrayList<Atom>(bondCount);
+		for (int i = 0; i < bondCount; i++) {
 			results.add(bonds.get(i).getOtherAtom(this));
 		}
 		return results;
