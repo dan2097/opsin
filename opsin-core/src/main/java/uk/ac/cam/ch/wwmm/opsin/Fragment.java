@@ -421,25 +421,17 @@ class Fragment {
 	 *
 	 * @param atom The reference atom
 	 * @return The list of atoms connected to the atom
-	 * @throws StructureBuildingException
 	 */
-	List<Atom> getIntraFragmentAtomNeighbours(Atom atom) throws StructureBuildingException {
-		List<Atom> results = new ArrayList<Atom>();
+	List<Atom> getIntraFragmentAtomNeighbours(Atom atom) {
+		List<Atom> results = new ArrayList<Atom>(atom.getBondCount());
 		for(Bond b : atom.getBonds()) {
-			//recalled atoms will be null if they are not part of this fragment
-			if(b.getFromAtom() == atom) {
-				Atom a = getAtomByID(b.getTo());
-				if (a != null){
-					results.add(a);
-				}
-			} else if(b.getToAtom() == atom) {
-				Atom a = getAtomByID(b.getFrom());
-				if (a != null){
-					results.add(a);
-				}
+			Atom otherAtom = b.getOtherAtom(atom);
+			if (otherAtom == null) {
+				throw new RuntimeException("OPSIN Bug: A bond associated with an atom does not involve it");
 			}
-			else{
-				throw new StructureBuildingException("A bond associated with an atom does not involve it");
+			//If the other atom is in atomMapFromId then it is in this fragment
+			if (atomMapFromId.get(otherAtom.getID()) != null) {
+				results.add(otherAtom);
 			}
 		}
 		return results;

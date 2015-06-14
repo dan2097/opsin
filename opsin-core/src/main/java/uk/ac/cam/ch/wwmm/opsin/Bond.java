@@ -137,10 +137,10 @@ class Bond {
 	 * @return
 	 */
 	Atom getOtherAtom(Atom atom) {
-		if (from ==atom){
+		if (from == atom){
 			return to;
 		}
-		else if (to ==atom){
+		else if (to == atom){
 			return from;
 		}
 		else{
