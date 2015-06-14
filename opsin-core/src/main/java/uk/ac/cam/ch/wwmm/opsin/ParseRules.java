@@ -53,7 +53,7 @@ public class ParseRules {
 	 * For something like eth no parses would be found and the string will equal "eth"
 	 *
 	 * @param chemicalWord
-	 * @return
+	 * @return Results of parsing
 	 * @throws ParsingException
 	 */
 	public ParseRulesResults getParses(String chemicalWord) throws ParsingException {

@@ -204,8 +204,7 @@ public class NameToStructure {
 	 * This can be used to determine whether a word can be interpreted as being part of a chemical name.
 	 * Just because a word can be split into tokens does not mean the word constitutes a valid chemical name
 	 * e.g. ester is interpretable but is not in itself a chemical name
-	 * @return
-
+	 * @return Opsin parser for recognition/parsing of a chemical word
 	 */
 	public static ParseRules getOpsinParser() {
 		NameToStructure n2s = NameToStructure.getInstance();
@@ -332,7 +331,7 @@ public class NameToStructure {
 	/**
 	 * Uses the command line parameters to configure a new NameToStructureConfig
 	 * @param cmd
-	 * @return
+	 * @return The configured NameToStructureConfig
 	 */
 	private static NameToStructureConfig generateOpsinConfigObjectFromCmd(CommandLine cmd) {
 		NameToStructureConfig n2sconfig = new NameToStructureConfig();
