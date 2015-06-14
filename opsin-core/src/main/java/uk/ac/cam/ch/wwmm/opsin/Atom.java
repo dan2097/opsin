@@ -196,7 +196,7 @@ class Atom {
 	}
 
 	void removeLocant(String locantToRemove) {
-		int locantArraySize =locants.size();
+		int locantArraySize = locants.size();
 		for (int i = locantArraySize -1; i >=0 ; i--) {
 			if (locants.get(i).equals(locantToRemove)){
 				locants.remove(i);
@@ -209,8 +209,8 @@ class Atom {
 	 *
 	 */
 	void clearLocants() {
-		for (String l : locants) {
-			frag.removeMappingFromAtomLocantMap(l);
+		for (int i = 0, l = locants.size(); i < l; i++) {
+			frag.removeMappingFromAtomLocantMap(locants.get(i));
 		}
 		locants.clear();
 	}
@@ -219,10 +219,10 @@ class Atom {
 	 * Removes only elementSymbolLocants: e.g. N, S', Se
 	 */
 	void removeElementSymbolLocants() {
-		for (int i = locants.size()-1; i >=0; i--) {
-			String l =locants.get(i);
-			if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(l).matches()){
-				frag.removeMappingFromAtomLocantMap(l);
+		for (int i = locants.size() - 1; i >= 0; i--) {
+			String locant = locants.get(i);
+			if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locant).matches()){
+				frag.removeMappingFromAtomLocantMap(locant);
 				locants.remove(i);
 			}
 		}
@@ -233,10 +233,10 @@ class Atom {
 	 * Hence removes numeric locants and greek locants
 	 */
 	void removeLocantsOtherThanElementSymbolLocants() {
-		for (int i = locants.size()-1; i >=0; i--) {
-			String l =locants.get(i);
-			if (!MATCH_ELEMENT_SYMBOL_LOCANT.matcher(l).matches()){
-				frag.removeMappingFromAtomLocantMap(l);
+		for (int i = locants.size() - 1; i >= 0; i--) {
+			String locant = locants.get(i);
+			if (!MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locant).matches()){
+				frag.removeMappingFromAtomLocantMap(locant);
 				locants.remove(i);
 			}
 		}
@@ -288,10 +288,11 @@ class Atom {
 	 * @return The list of locants (may be empty)
 	 */
 	List<String> getElementSymbolLocants() {
-		List<String> elementSymbolLocants =new ArrayList<String>();
-        for (String l : locants) {
-            if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(l).matches()) {
-                elementSymbolLocants.add(l);
+		List<String> elementSymbolLocants = new ArrayList<String>(1);
+		for (int i = 0, l = locants.size(); i < l; i++) {
+			String locant = locants.get(i);
+            if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locant).matches()) {
+                elementSymbolLocants.add(locant);
             }
         }
 		return elementSymbolLocants;
@@ -410,8 +411,8 @@ class Atom {
 	 */
 	int getIncomingValency() {
 		int v = 0;
-		for(Bond b : bonds) {
-			v += b.getOrder();
+		for (int i = 0, l = bonds.size(); i < l; i++) {
+			v += bonds.get(i).getOrder();
 		}
 		return v;
 	}
@@ -469,9 +470,9 @@ class Atom {
 	 * @return The list of atoms connected to the atom
 	 */
 	List<Atom> getAtomNeighbours(){
-		List<Atom> results = new ArrayList<Atom>();
-		for(Bond b :  bonds) {
-			results.add(b.getOtherAtom(this));
+		List<Atom> results = new ArrayList<Atom>(4);
+		for (int i = 0, l = bonds.size(); i < l; i++) {
+			results.add(bonds.get(i).getOtherAtom(this));
 		}
 		return results;
 	}
@@ -588,7 +589,8 @@ class Atom {
 	 * @return The bond, or null if there is no bond
 	 */
 	Bond getBondToAtom(Atom a) {
-		for (Bond b : bonds) {
+		for (int i = 0, l = bonds.size(); i < l; i++) {
+			Bond b = bonds.get(i);
 			if(b.getOtherAtom(this) == a){
 				return b;
 			}
