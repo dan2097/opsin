@@ -22,7 +22,7 @@ public class ParseRulesResults {
    /**
     * One ParseTokens object is returned for each possible interpretation of a chemical name
     * If none of the name can be interpreted this list will be empty
-    * @return
+    * @return List of possible tokenisations/annotation of tokens
     */
    public List<ParseTokens> getParseTokensList() {
       return parseTokensList;
@@ -31,7 +31,7 @@ public class ParseRulesResults {
    /**
     * The substring of the name that could not be classified into a substituent/full/functionalTerm
     * e.g. in ethyl-2H-fooarene  "2H-fooarene" will be returned
-    * @return
+    * @return String of uninterpetable chemical name
     */
    public String getUninterpretableName() {
       return uninterpretableName;
@@ -41,7 +41,7 @@ public class ParseRulesResults {
     * The substring of the name that could not be tokenised at all.
     * This will always be the same or shorter than the uninterpetable substring of name
     * e.g. in ethyl-2H-fooarene  "fooarene" will be returned
-    * @return
+    * @return String of unparseable chemical name
     */
    public String getUnparseableName() {
 	   return unparseableName;

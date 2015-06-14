@@ -33,7 +33,7 @@ public class NameToStructureConfig implements Cloneable {
 
 	/**
 	 * Are radicals allowed?  e.g. should fragments such as phenyl be interpretable
-	 * @return
+	 * @return whether radicals are allowed
 	 */
 	public boolean isAllowRadicals() {
 		return allowRadicals;
@@ -48,14 +48,14 @@ public class NameToStructureConfig implements Cloneable {
 	
 	/**
 	 * Are radicals output as wildcard atoms e.g. [*]CC for ethyl
-	 * @return
+	 * @return whether radicals are output using explicit wildcard atoms
 	 */
 	public boolean isOutputRadicalsAsWildCardAtoms() {
 		return outputRadicalsAsWildCardAtoms;
 	}
 
 	/**
-	 * Should radicals be output as wildcard atoms e.g. [*]CC for ethyl
+	 * Should radicals be output as wildcard atoms e.g. [*]CC for ethyl (as opposed to [CH2]C)<br>
 	 * Note that if this is set to true InChIs cannot be generated
 	 * @param outputRadicalsAsWildCardAtoms
 	 */
@@ -65,7 +65,7 @@ public class NameToStructureConfig implements Cloneable {
 
 	/**
 	 * Should OPSIN attempt reverse parsing to more accurately determine why parsing failed
-	 * @return
+	 * @return whether a more precise cause of failure should be determined if parsing fails
 	 */
 	public boolean isDetailedFailureAnalysis() {
 		return detailedFailureAnalysis;
@@ -80,7 +80,7 @@ public class NameToStructureConfig implements Cloneable {
 
 	/**
 	 * Are acids without the word "acid" interpretable e.g. should "acetic" be interpretable
-	 * @return
+	 * @return whether acids without the word "acid" should be interpretable
 	 */
 	public boolean allowInterpretationOfAcidsWithoutTheWordAcid() {
 		return interpretAcidsWithoutTheWordAcid;
@@ -98,7 +98,7 @@ public class NameToStructureConfig implements Cloneable {
 	/**
 	 * If OPSIN cannot understand the stereochemistry in a name should OPSIN's result be a warning
 	 * and structure with incomplete stereochemistry, or should failure be returned (Default)
-	 * @return
+	 * @return whether ignored stereochemistry is a warning (rather than a failure)
 	 */
 	public boolean warnRatherThanFailOnUninterpretableStereochemistry() {
 		return warnRatherThanFailOnUninterpretableStereochemistry;

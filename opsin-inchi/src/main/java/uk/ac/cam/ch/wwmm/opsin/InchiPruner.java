@@ -11,7 +11,7 @@ public class InchiPruner {
 	 * stereochemistry, fixed hydrogen and reconnected layers have been removed
 	 * The S indicating standard InChI is also removed
 	 * @param inchi
-	 * @return
+	 * @return InChI just containing the c,h,q,p,i layers
 	 */
 	public static String mainAndChargeLayers(String inchi){
 		String[] inchiLayers = inchi.split("/");
@@ -20,7 +20,7 @@ public class InchiPruner {
 		}
 		List<String> retainedLayers = new ArrayList<String>();
 		if (Character.isLetter(inchiLayers[0].charAt(inchiLayers[0].length() -1))){//remove the S indicating this to be a standard InChI
-			inchiLayers[0]=inchiLayers[0].substring(0, inchiLayers[0].length() -1);
+			inchiLayers[0] = inchiLayers[0].substring(0, inchiLayers[0].length() -1);
 		}
 		retainedLayers.add(inchiLayers[0]);//version identifier
 		retainedLayers.add(inchiLayers[1]);//molecular formula
@@ -42,7 +42,7 @@ public class InchiPruner {
 	 * fixed hydrogen and reconnected layers have been removed
 	 * The S indicating standard InChI is also removed
 	 * @param inchi
-	 * @return
+	 * @return InChI just containing the c,h,q,p,b,t,m,s,i layers
 	 */
 	public static String mainChargeAndStereochemistryLayers(String inchi){
 		String[] inchiLayers = inchi.split("/");
@@ -51,7 +51,7 @@ public class InchiPruner {
 		}
 		List<String> retainedLayers = new ArrayList<String>();
 		if (Character.isLetter(inchiLayers[0].charAt(inchiLayers[0].length() -1))){//remove the S indicating this to be a standard InChI
-			inchiLayers[0]=inchiLayers[0].substring(0, inchiLayers[0].length() -1);
+			inchiLayers[0] = inchiLayers[0].substring(0, inchiLayers[0].length() -1);
 		}
 		retainedLayers.add(inchiLayers[0]);//version identifier
 		retainedLayers.add(inchiLayers[1]);//molecular formula
