@@ -36,14 +36,10 @@ class AmbiguityChecker {
 	}
 	
 	static boolean allAtomsEquivalent(Collection<Atom> atoms) {
-		StereoAnalyser analyser = analyzeRelevantAtomsAndBonds(atoms);
+		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(atoms);
 		Set<String> uniqueEnvironments = new HashSet<String>();
 		for (Atom a : atoms) {
-			Integer env = analyser.getAtomEnvironmentNumber(a);
-			if (env == null){
-				throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
-			}
-			uniqueEnvironments.add(env + "\t" + a.getOutValency());
+			uniqueEnvironments.add(getAtomEnviron(analyser, a));
 		}
 		return uniqueEnvironments.size() == 1;
 	}
@@ -54,7 +50,7 @@ class AmbiguityChecker {
 			relevantAtoms.add(b.getFromAtom());
 			relevantAtoms.add(b.getToAtom());
 		}
-		StereoAnalyser analyser = analyzeRelevantAtomsAndBonds(relevantAtoms);
+		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(relevantAtoms);
 		Set<String> uniqueBonds = new HashSet<String>();
 		for (Bond b : bonds) {
 			uniqueBonds.add(bondToCanonicalEnvironString(analyser, b));
@@ -73,12 +69,14 @@ class AmbiguityChecker {
 		}
 	}
 
-	private static String getAtomEnviron(StereoAnalyser analyser, Atom a) {
+	static String getAtomEnviron(StereoAnalyser analyser, Atom a) {
 		Integer env = analyser.getAtomEnvironmentNumber(a);
-		if (env == null){
+		if (env == null) {
 			throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
 		}
-		return env + "\t" + a.getOutValency();
+		//"identical" atoms may be distinguished by bonds yet to be formed, hence split by outvalency
+		//"identical" atoms may differ by valency as hydrogens are yet to be added
+		return env + "\t" + a.getOutValency() + "\t" + a.determineValency(true);
 	}
 
 	private static boolean allAtomsConnectToDefaultInAtom(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
@@ -94,7 +92,7 @@ class AmbiguityChecker {
 		return false;
 	}
 
-	static StereoAnalyser analyzeRelevantAtomsAndBonds(Collection<Atom> startingAtoms) {
+	static StereoAnalyser analyseRelevantAtomsAndBonds(Collection<Atom> startingAtoms) {
 		Set<Atom> atoms = new HashSet<Atom>();
 		Set<Bond> bonds = new HashSet<Bond>();
 		Deque<Atom> stack = new ArrayDeque<Atom>(startingAtoms);
@@ -130,18 +128,14 @@ class AmbiguityChecker {
 	}
 
 	private static List<Atom> findPlausibleSubstitutionPatternUsingSymmmetry(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
-		StereoAnalyser analyzer = analyzeRelevantAtomsAndBonds(new HashSet<Atom>(substitutableAtoms));
+		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(new HashSet<Atom>(substitutableAtoms));
 		Map<String, List<Atom>> atomsInEachEnvironment = new HashMap<String, List<Atom>>();
 		for (Atom a : substitutableAtoms) {
-			Integer env = analyzer.getAtomEnvironmentNumber(a);
-			if (env == null) {
-				throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
-			}
-			String s = env + "\t" + a.getOutValency();
-			List<Atom> atomsInEnvironment = atomsInEachEnvironment.get(s);
+			String env = getAtomEnviron(analyser, a);
+			List<Atom> atomsInEnvironment = atomsInEachEnvironment.get(env);
 			if (atomsInEnvironment == null) {
 				atomsInEnvironment = new ArrayList<Atom>();
-				atomsInEachEnvironment.put(s, atomsInEnvironment);
+				atomsInEachEnvironment.put(env, atomsInEnvironment);
 			}
 			atomsInEnvironment.add(a);
 		}
