@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
+
 /**
  * Used to pass the current configuration and FragmentManager around
  * The currentWordRule can be mutated to keep track of what the parent wordRule is at the given time
@@ -16,11 +18,10 @@ class BuildState {
 	final FragmentManager fragManager;
 	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
-	private final List<String> warningMessages = new ArrayList<String>();
+	private final List<OpsinWarning> warnings = new ArrayList<OpsinWarning>();
 	
 	WordRule currentWordRule = null;
-	
-	
+
 	BuildState(NameToStructureConfig n2sConfig) {
 		this.n2sConfig = n2sConfig;
 		IDManager idManager = new IDManager();
@@ -28,34 +29,20 @@ class BuildState {
 		xmlSuffixMap = new HashMap<Element, List<Fragment>>();
 	}
 
-	List<String> getWarningMessages() {
-		return warningMessages;
+	List<OpsinWarning> getWarnings() {
+		return warnings;
 	}
 	
-	String getWarningMessage() {
-		int numWarnings = warningMessages.size();
-		if (numWarnings == 0) {
-			return null;
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < numWarnings; i++) {
-			sb.append(warningMessages.get(i));
-			if (i + 1 < numWarnings){
-				sb.append(System.getProperty("line.separator"));
-			}
-		}
-		return sb.toString();
-	}
-
-	void addWarningMessage(String warningMessage) {
-		if (warningMessage == null) {
-			warningMessage = "null";
-		}
-		warningMessages.add(warningMessage);
+	void addWarning(OpsinWarningType type, String message) {
+		warnings.add(new OpsinWarning(type, message));
 	}
 	
 	void addIsAmbiguous() {
-		addWarningMessage("Name appears to be ambiguous");
+		warnings.add(new OpsinWarning(OpsinWarningType.APPEARS_AMBIGUOUS, ""));
+	}
+	
+	void addIsAmbiguous(String message) {
+		warnings.add(new OpsinWarning(OpsinWarningType.APPEARS_AMBIGUOUS, message));
 	}
 
 	boolean checkForAmbiguity(List<Atom> substituentPoints, int numberOfSubstitutionsRequired) {
@@ -65,4 +52,6 @@ class BuildState {
 		}
 		return isAmbiguous;
 	}
+
+
 }
