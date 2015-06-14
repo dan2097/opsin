@@ -34,3 +34,9 @@ cyclohexatriene
 azole
 tetrazole
 pentazole
+azabenzene
+pentaazabenzene
+hexaazabenzene
+azaethane
+triazapropane
+oxacycloundecan-2-one

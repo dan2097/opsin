@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -704,22 +707,20 @@ class StructureBuildingMethods {
 			String elName = currentEl.getName();
 			if (elName.equals(UNSATURATOR_EL)) {
 				int bondOrder = Integer.parseInt(currentEl.getAttributeValue(VALUE_ATR));
-				currentEl.detach();
 				if (bondOrder > 1) {
 					unsaturationBondOrders.add(bondOrder);
 				}
+				currentEl.detach();
 			}
 			else if (elName.equals(HETEROATOM_EL)){
 				heteroatoms.add(currentEl);
+				currentEl.detach();
 			}
-			else if (elName.equals(HYDRO_EL)){
+			else if (elName.equals(HYDRO_EL) || 
+				elName.equals(INDICATEDHYDROGEN_EL) ||
+				elName.equals(ADDEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
-			}
-			else if (elName.equals(INDICATEDHYDROGEN_EL)){
-				hydrogenElements.add(currentEl);
-			}
-			else if (elName.equals(ADDEDHYDROGEN_EL)){
-				hydrogenElements.add(currentEl);
+				currentEl.detach();
 			}
 		}
 
@@ -750,7 +751,7 @@ class StructureBuildingMethods {
 			for (Element hydrogenElement : hydrogenElements) {
 				if (hydrogenElement.getValue().equals("perhydro")){
 					saturateAllAtoms =true;
-					hydrogenElement.detach();
+					break;
 				}
 			}
 			if (saturateAllAtoms){
@@ -769,7 +770,6 @@ class StructureBuildingMethods {
 				}
 				for (int i = 0; i < hydrogenElementsCount; i++) {
 					atomsWithSV.get(i).setSpareValency(false);
-					hydrogenElements.get(i).detach();
 				}
 			}
 		}
@@ -778,46 +778,10 @@ class StructureBuildingMethods {
 			unsaturateBonds(state, thisFrag, unsaturationBondOrders);
 		}
 
-		int atomIndice =0;
-
-		for (Element heteroatomEl : heteroatoms) {
-			Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
-			ChemEl heteroatomChemEl = heteroatom.getElement();
-			//finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
-			Atom atomToReplaceWithHeteroAtom =null;
-			for (; atomIndice < atomList.size(); atomIndice++) {
-				Atom possibleAtom = atomList.get(atomIndice);
-				if (possibleAtom.getType().equals(SUFFIX_TYPE_VAL)) {
-					continue;
-				}
-				if ((heteroatomChemEl.equals(possibleAtom.getElement()) && heteroatom.getCharge() == possibleAtom.getCharge())){
-					continue;//replacement would do nothing
-				}
-				if(possibleAtom.getElement() != ChemEl.C && heteroatomChemEl != ChemEl.C){
-					if (possibleAtom.getElement() == ChemEl.O && (heteroatomChemEl == ChemEl.S || heteroatomChemEl == ChemEl.Se || heteroatomChemEl == ChemEl.Te)){
-						//special case for replacement of oxygen by chalcogen
-					}
-					else{
-						//replacement of heteroatom by another heteroatom
-						continue;
-					}
-				}
-				if (ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(possibleAtom, heteroatom)) {
-					atomToReplaceWithHeteroAtom = possibleAtom;
-					break;
-				}
-			}
-			if (atomToReplaceWithHeteroAtom == null){
-				throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
-			}
-			
-			state.fragManager.replaceAtomWithAtom(atomToReplaceWithHeteroAtom, heteroatom, true);
-			if (heteroatomEl.getAttribute(LAMBDA_ATR) != null) {
-				atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(heteroatomEl.getAttributeValue(LAMBDA_ATR)));
-			}
-			atomIndice++;
-			heteroatomEl.detach();
+		if (heteroatoms.size() > 0) {
+			applyUnlocantedHeteroatoms(state, thisFrag, heteroatoms);
 		}
+
 		if (thisFrag.getOutAtomCount() > 0){//assign any outAtoms that have not been set to a specific atom to a specific atom
 			for (int i = 0, l = thisFrag.getOutAtomCount(); i < l; i++) {
 				OutAtom outAtom = thisFrag.getOutAtom(i);
@@ -904,6 +868,123 @@ class StructureBuildingMethods {
 			}
 		}
 		return false;
+	}
+	
+	private static boolean isCycloAlkaneHeteroatomSpecialCase(Fragment frag, int numHeteroatoms, List<Atom> atomsThatCouldBeReplaced) {
+		if (numHeteroatoms == 1) {
+			if ((ALKANESTEM_SUBTYPE_VAL.equals(frag.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(frag.getSubType())) && 
+					frag.getFirstAtom().getAtomIsInACycle() && atomsThatCouldBeReplaced.get(0).equals(frag.getFirstAtom())) {
+				//single heteroatom implicitly goes to 1 position
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private static class HeteroAtomSmilesAndLambda {
+		private final String smiles;
+		private final String lambdaConvention;
+		
+		public HeteroAtomSmilesAndLambda(String smiles, String lambdaConvention) {
+			this.smiles = smiles;
+			this.lambdaConvention = lambdaConvention;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime
+					* result
+					+ ((lambdaConvention == null) ? 0 : lambdaConvention
+							.hashCode());
+			result = prime * result
+					+ ((smiles == null) ? 0 : smiles.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			HeteroAtomSmilesAndLambda other = (HeteroAtomSmilesAndLambda) obj;
+			if (lambdaConvention == null) {
+				if (other.lambdaConvention != null)
+					return false;
+			} else if (!lambdaConvention.equals(other.lambdaConvention))
+				return false;
+			if (smiles == null) {
+				if (other.smiles != null)
+					return false;
+			} else if (!smiles.equals(other.smiles))
+				return false;
+			return true;
+		}
+		
+		
+	}
+
+	private static void applyUnlocantedHeteroatoms(BuildState state, Fragment frag, List<Element> heteroatoms) throws StructureBuildingException {
+		Map<HeteroAtomSmilesAndLambda, Integer> heteroatomDescriptionToCount = new HashMap<HeteroAtomSmilesAndLambda, Integer>();
+		for (Element heteroatomEl : heteroatoms) {
+			String smiles = heteroatomEl.getAttributeValue(VALUE_ATR);
+			String lambdaConvention = heteroatomEl.getAttributeValue(LAMBDA_ATR);
+			HeteroAtomSmilesAndLambda desc = new HeteroAtomSmilesAndLambda(smiles, lambdaConvention);
+			Integer count = heteroatomDescriptionToCount.get(desc);
+			heteroatomDescriptionToCount.put(desc, count != null ? count + 1 : 1);
+		}
+		List<Atom> atomlist = frag.getAtomList();
+		for (Entry<HeteroAtomSmilesAndLambda, Integer> entry : heteroatomDescriptionToCount.entrySet()) {
+			HeteroAtomSmilesAndLambda desc = entry.getKey();
+			int replacementsRequired = entry.getValue();
+			Atom heteroatom = state.fragManager.getHeteroatom(desc.smiles);
+			ChemEl heteroatomChemEl = heteroatom.getElement();
+			//finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
+			List<Atom> atomsThatCouldBeReplaced = new ArrayList<Atom>();
+			for (Atom atom : atomlist) {
+				if (atom.getType().equals(SUFFIX_TYPE_VAL)) {
+					continue;
+				}
+				if ((heteroatomChemEl.equals(atom.getElement()) && heteroatom.getCharge() == atom.getCharge())){
+					continue;//replacement would do nothing
+				}
+				if(atom.getElement() != ChemEl.C && heteroatomChemEl != ChemEl.C){
+					if (atom.getElement() == ChemEl.O && (heteroatomChemEl == ChemEl.S || heteroatomChemEl == ChemEl.Se || heteroatomChemEl == ChemEl.Te)) {
+						//by special case allow replacement of oxygen by chalcogen
+					}
+					else{
+						//replacement of heteroatom by another heteroatom
+						continue;
+					}
+				}
+				if (ValencyChecker.checkValencyAvailableForReplacementByHeteroatom(atom, heteroatom)) {
+					atomsThatCouldBeReplaced.add(atom);
+				}
+			}
+			if (atomsThatCouldBeReplaced.size() < replacementsRequired){
+				throw new StructureBuildingException("Cannot find suitable atom for heteroatom replacement");
+			}
+			
+			if (atomsThatCouldBeReplaced.size() > replacementsRequired && !isCycloAlkaneHeteroatomSpecialCase(frag, replacementsRequired, atomsThatCouldBeReplaced)) {
+				if (!(AmbiguityChecker.allAtomsEquivalent(atomsThatCouldBeReplaced) &&
+						(replacementsRequired == 1 || replacementsRequired == atomsThatCouldBeReplaced.size() - 1))) {
+					//by convention cycloalkanes can have one unsaturation implicitly at the 1 locant
+					state.addIsAmbiguous();
+				}
+			}
+			
+			for (int i = 0; i < replacementsRequired; i++) {
+				Atom atomToReplaceWithHeteroAtom = atomsThatCouldBeReplaced.get(i);
+				state.fragManager.replaceAtomWithAtom(atomToReplaceWithHeteroAtom, heteroatom, true);
+				if (desc.lambdaConvention != null) {
+					atomToReplaceWithHeteroAtom.setLambdaConventionValency(Integer.parseInt(desc.lambdaConvention));
+				}
+			}
+		}
 	}
 
 	static Atom findAtomForUnlocantedRadical(BuildState state, Fragment frag, OutAtom outAtom) throws StructureBuildingException {
