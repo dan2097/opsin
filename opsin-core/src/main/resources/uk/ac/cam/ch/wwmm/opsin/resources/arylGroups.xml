@@ -356,6 +356,7 @@
 		<!--misc-->
 		<token value="[nH]1cccc1cc2ccc(n2)cc3ccc(n3)cc4cccn4" labels="21/1/2/3/4/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24">bilin</token>
 		<token value="C12CCc(n1)cc3CCc(n3)cc4CCc(n4)cc5CCC2[nH]5" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24">corrin</token>
+		<token value="C1(=O)C=C(O)CC(O)C1" labels="none">dihydrophloroglucinol</token><!--semi systematic derivative of phloroglucinol, implies specific tautomer-->
 		<token value="c12ccc([nH]1)cc3ccc(n3)cc4ccc([nH]4)cc5ccc(n5)c2" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24/20">porphyrin</token>
 		<token value="c12ccc([nH]1)cc3ccc(n3)cc4ccc([nH]4)cc5ccc(n5)c2" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24/20">porphin</token>
 		<token value="O1C(CCc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavan</token><!--cf. flavanol-->
