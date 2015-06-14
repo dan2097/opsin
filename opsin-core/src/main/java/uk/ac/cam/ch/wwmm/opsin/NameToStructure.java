@@ -154,7 +154,7 @@ public class NameToStructure {
 		}
 		String reasonForFailure = "";
 		Fragment fragGeneratedWithWarning = null;
-		String warningMessage = null;
+		List<OpsinWarning> warnings = Collections.emptyList();
 		for(Element parse : parses) {
 			try {
 				if (LOG.isDebugEnabled()) {
@@ -176,25 +176,25 @@ public class NameToStructure {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(parse.toXML());
 				}
-				if (state.getWarningMessage() == null) {
+				if (state.getWarnings().size() == 0) {
 					return new OpsinResult(frag, OPSIN_RESULT_STATUS.SUCCESS, "", name);
 				}
 				if (fragGeneratedWithWarning == null) {
 					//record first frag that had a warning but try other parses as they may work without a warning
 					fragGeneratedWithWarning = frag;
-					warningMessage = state.getWarningMessage();
+					warnings = state.getWarnings();
 				}
 			} catch (Exception e) {
 				if (reasonForFailure.length() == 0) {
-					reasonForFailure= e.getMessage() != null ? e.getMessage() : "exception with null message";
+					reasonForFailure = e.getMessage() != null ? e.getMessage() : "exception with null message";
 				}
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(e.getMessage(), e);
 				}
 			}
 		}
-		if (fragGeneratedWithWarning != null){
-			return new OpsinResult(fragGeneratedWithWarning, OPSIN_RESULT_STATUS.WARNING, warningMessage, name);
+		if (fragGeneratedWithWarning != null) {
+			return new OpsinResult(fragGeneratedWithWarning, OPSIN_RESULT_STATUS.WARNING, warnings, name);
 		}
 		return new OpsinResult(null, OPSIN_RESULT_STATUS.FAILURE, reasonForFailure, name);
 	}

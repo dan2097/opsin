@@ -10,9 +10,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
+import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
-
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
@@ -64,7 +64,7 @@ class StereochemistryHandler {
 			}
 			catch (StereochemistryException e) {
 				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
-					state.addWarningMessage(e.getMessage());
+					state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, e.getMessage());
 				}
 				else{
 					throw e;
@@ -80,7 +80,7 @@ class StereochemistryHandler {
 			}
 			catch (StereochemistryException e) {
 				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
-					state.addWarningMessage(e.getMessage());
+					state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, e.getMessage());
 				}
 				else{
 					throw e;
