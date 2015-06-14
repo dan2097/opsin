@@ -201,13 +201,13 @@ class WordRulesOmittedSpaceCorrector {
 			return false;
 		}
 		List<Atom> atomForEachSubstitutableHydrogen = getAtomForEachSubstitutableHydrogen(frag);
-		StereoAnalyser analyzer = new StereoAnalyser(frag);
-		Set<Integer> uniqueEnvironments = new HashSet<Integer>();
-		for (Atom a : atomForEachSubstitutableHydrogen) {
-			uniqueEnvironments.add(analyzer.getAtomEnvironmentNumber(a));
-		}
 		if (atomForEachSubstitutableHydrogen.size() == multiplier){
 			return false;
+		}
+		StereoAnalyser analyser = new StereoAnalyser(frag);
+		Set<String> uniqueEnvironments = new HashSet<String>();
+		for (Atom a : atomForEachSubstitutableHydrogen) {
+			uniqueEnvironments.add(AmbiguityChecker.getAtomEnviron(analyser, a));
 		}
 		if (uniqueEnvironments.size() == 1 && (multiplier == 1 || multiplier == atomForEachSubstitutableHydrogen.size() - 1)){
 			return false;
