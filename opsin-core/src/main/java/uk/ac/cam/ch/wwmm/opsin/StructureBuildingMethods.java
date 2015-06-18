@@ -266,7 +266,9 @@ class StructureBuildingMethods {
 					if (atomsToJoinTo == null){
 						throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 					}
-					state.checkForAmbiguity(atomsToJoinTo, 1);
+					if (AmbiguityChecker.isSubstitutionAmbiguous(atomsToJoinTo, 1)) {
+						state.addIsAmbiguous("Connection of " + group.getValue() + " to " + atomsToJoinTo.get(0).getFrag().getTokenEl().getValue());
+					}
 					joinFragmentsSubstitutively(state, frag, atomsToJoinTo.get(0));
 				}
 				group.addAttribute(new Attribute(RESOLVED_ATR, "yes"));
@@ -420,7 +422,8 @@ class StructureBuildingMethods {
 			if (atomsToJoinTo == null) {
 				throw new StructureBuildingException("Unlocanted substitution failed: unable to find suitable atom to bond atom with id:" + frag.getOutAtom(0).getAtom().getID() + " to!");
 			}
-			if (state.checkForAmbiguity(atomsToJoinTo, numOfSubstituents)){
+			if (AmbiguityChecker.isSubstitutionAmbiguous(atomsToJoinTo, numOfSubstituents)) {
+				state.addIsAmbiguous("Connection of " + group.getValue() + " to " + atomsToJoinTo.get(0).getFrag().getTokenEl().getValue());
 				List<Atom> atomsPreferredByEnvironment = AmbiguityChecker.useAtomEnvironmentsToGivePlausibleSubstitution(atomsToJoinTo, numOfSubstituents);
 				if (atomsPreferredByEnvironment != null) {
 					atomsToJoinTo = atomsPreferredByEnvironment;
@@ -817,7 +820,7 @@ class StructureBuildingMethods {
 			//NOTE: as hydrogens as added in pairs the unambiguous if one hydrogen is added and allow atoms are identical condition is unlikely to be ever satisfied
 			if (!(AmbiguityChecker.allAtomsEquivalent(atomsWithDefiniteSV) &&
 					(hydrogenElsCount == 1 || hydrogenElsCount == atomsWithDefiniteSV.size() - 1))) {
-				state.addIsAmbiguous();
+				state.addIsAmbiguous("Ambiguous choice of positions to add hydrogen to on " + frag.getTokenEl().getValue());
 			}
 		}
 
@@ -872,13 +875,13 @@ class StructureBuildingMethods {
 					allBonds.addAll(alternativeBondsThatCouldBeUnsaturated);
 					if (!(AmbiguityChecker.allBondsEquivalent(allBonds) &&
 							numToUnsaturate == 1 )) {
-						state.addIsAmbiguous();
+						state.addIsAmbiguous("Unsaturation of bonds of " + frag.getTokenEl().getValue());
 					}
 				}
 				else {
 					if (!(AmbiguityChecker.allBondsEquivalent(bondsThatCouldBeUnsaturated) && 
 							(numToUnsaturate == 1 || numToUnsaturate == bondsThatCouldBeUnsaturated.size() - 1))){
-						state.addIsAmbiguous();
+						state.addIsAmbiguous("Unsaturation of bonds of " + frag.getTokenEl().getValue());
 					}
 				}
 			}
@@ -1006,7 +1009,7 @@ class StructureBuildingMethods {
 				if (!(AmbiguityChecker.allAtomsEquivalent(atomsThatCouldBeReplaced) &&
 						(replacementsRequired == 1 || replacementsRequired == atomsThatCouldBeReplaced.size() - 1))) {
 					//by convention cycloalkanes can have one unsaturation implicitly at the 1 locant
-					state.addIsAmbiguous();
+					state.addIsAmbiguous("Heteroatom replacement on " + frag.getTokenEl().getValue());
 				}
 			}
 			
@@ -1026,7 +1029,9 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 		}
 		if (!((ALKANESTEM_SUBTYPE_VAL.equals(frag.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(frag.getSubType())) && possibleAtoms.get(0).equals(frag.getFirstAtom()))) {
-			state.checkForAmbiguity(possibleAtoms, 1);
+			if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
+				state.addIsAmbiguous("Positioning of radical on: " + frag.getTokenEl().getValue());
+			}
 		}
 		return possibleAtoms.get(0);
 	}
@@ -1438,7 +1443,9 @@ class StructureBuildingMethods {
 							if (possibleAtoms.isEmpty()) {
 								throw new StructureBuildingException("No suitable atom found for multiplicative operation");
 							}
-							state.checkForAmbiguity(possibleAtoms, 1);
+							if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
+								state.addIsAmbiguous("Connection to multiplied group: " + multipliedGroup.getValue());
+							}
 							atomToJoinTo = possibleAtoms.get(0);
 							inLocants.remove(j);
 							break;
@@ -1788,7 +1795,9 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("Failed to assign all unlocanted radicals to actual atoms without violating valency");
 			}
 			if (!((ALKANESTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType()) || HETEROSTEM_SUBTYPE_VAL.equals(fragToBeJoined.getSubType())) && possibleAtoms.get(0).equals(fragToBeJoined.getFirstAtom()))) {
-				state.checkForAmbiguity(possibleAtoms, 1);
+				if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
+					state.addIsAmbiguous("Positioning of radical on: " + fragToBeJoined.getTokenEl().getValue());
+				}
 			}
 			from = possibleAtoms.get(0);
 		}
@@ -1841,7 +1850,9 @@ class StructureBuildingMethods {
 			if (possibleSecondAtom == null || possibleSecondAtom.size() == 0) {
 				throw new StructureBuildingException("Unable to find suitable atom to form bridge");
 			}
-			state.checkForAmbiguity(possibleSecondAtom, 1);
+			if (AmbiguityChecker.isSubstitutionAmbiguous(possibleSecondAtom, 1)) {
+				state.addIsAmbiguous("Addition of bridge to: "+ fragToJoinTo.getTokenEl().getValue());
+			}
 			secondAtomToJoinTo = possibleSecondAtom.get(0);
 		}
 		Atom chalcogenAtom2 = bridgingFragment.getOutAtom(0).getAtom();
