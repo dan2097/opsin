@@ -139,6 +139,9 @@ class StereochemistryHandler {
 		else if (stereoChemistryType.equals(AXIAL_TYPE_VAL)){
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
+		else if (stereoChemistryType.equals(OPTICALROTATION_TYPE_VAL)){
+			state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Optical rotation cannot be algorithmically used to assign stereochemistry. This term was ignored: " + stereoChemistryEl.getValue());
+		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " +stereoChemistryType);
 		}

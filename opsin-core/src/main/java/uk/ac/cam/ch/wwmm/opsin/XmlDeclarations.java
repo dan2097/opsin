@@ -278,7 +278,7 @@ class XmlDeclarations {
 	/**A trivial carboxylic acid. These by default do not have their acid groups which are then added on using suffixes*/
 	static final String ACIDSTEM_TYPE_VAL ="acidStem";
 	
-	/**This stereochemistry element conveys alpha/beta stereochemisty*/
+	/**This stereochemistry element conveys alpha/beta stereochemistry*/
 	static final String ALPHA_OR_BETA_TYPE_VAL ="alphaOrBeta";
 	
 	/**An aminoAcid. These by default do not have their acid groups which are then added on using suffixes. Notably these suffixes do NOT correspond to tokens in the input chemical name!*/
@@ -309,13 +309,13 @@ class XmlDeclarations {
 	/**This suffix modifies charge*/
 	static final String CHARGE_TYPE_VAL ="charge";
 	
-	/**This stereochemistry element conveys cis/trans stereochemisty*/
+	/**This stereochemistry element conveys cis/trans stereochemistry*/
 	static final String CISORTRANS_TYPE_VAL ="cisOrTrans";
 	
-	/**This stereochemistry element conveys R/S stereochemisty*/
+	/**This stereochemistry element conveys R/S stereochemistry*/
 	static final String R_OR_S_TYPE_VAL ="RorS";
 	
-	/**This stereochemistry element conveys E/Z stereochemisty*/
+	/**This stereochemistry element conveys E/Z stereochemistry*/
 	static final String E_OR_Z_TYPE_VAL ="EorZ";
 	
 	/**This group is a sulfur/selenium/tellurium acid with the acidic hydroxy missing*/
@@ -354,11 +354,14 @@ class XmlDeclarations {
 	
 	/**A non carboxylic acid e.g. phosphoric*/
 	static final String NONCARBOXYLICACID_TYPE_VAL ="nonCarboxylicAcid";
+	
+	/**This stereochemistry element describes the direction that plane polarised light is rotated*/
+	static final String OPTICALROTATION_TYPE_VAL ="opticalRotation";
 
 	/**Indicates the locant was made from an ortho/meta/para term*/
 	static final String ORTHOMETAPARA_TYPE_VAL ="orthoMetaPara";
 	
-	/**This stereochemistry element conveys relative cis/trans stereochemisty e.g. r-1, c-2, t-3*/
+	/**This stereochemistry element conveys relative cis/trans stereochemistry e.g. r-1, c-2, t-3*/
 	static final String RELATIVECISTRANS_TYPE_VAL ="relativeCisTrans";
 	
 	/**Indicates the group should be, at least in part, cyclic*/
