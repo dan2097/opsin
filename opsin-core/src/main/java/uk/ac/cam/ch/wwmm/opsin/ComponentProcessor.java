@@ -297,6 +297,8 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	private static void processXyleneLikeNomenclature(BuildState state, Element group, Fragment parentFrag) throws StructureBuildingException, ComponentGenerationException {
+		boolean ambiguous = false;
+		
 		if(group.getAttribute(ADDGROUP_ATR) != null) {
 			String addGroupInformation = group.getAttributeValue(ADDGROUP_ATR);
 			List<AddGroup> groupsToBeAdded = new ArrayList<AddGroup>();
@@ -371,7 +373,7 @@ class ComponentProcessor {
 				Atom atomOnParentFrag;
 				switch (groupInformation.atomReference.referenceType) {
 				case DEFAULTLOCANT:
-					state.addIsAmbiguous();
+					ambiguous = true;
 				case LOCANT:
 					if (groupInformation.atomReference.reference.equals("required")) {
 						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
@@ -379,7 +381,7 @@ class ComponentProcessor {
 					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(groupInformation.atomReference.reference);
 					break;
 				case DEFAULTID:
-					state.addIsAmbiguous();
+					ambiguous = true;
 				case ID:
 					atomOnParentFrag = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(groupInformation.atomReference.reference) -1);
 					break;
@@ -434,7 +436,7 @@ class ComponentProcessor {
 				Atom atomOnParentFrag = null;
 				switch (heteroAtomInformation.atomReference.referenceType) {
 				case DEFAULTLOCANT:
-					state.addIsAmbiguous();
+					ambiguous = true;
 				case LOCANT:
 					if (heteroAtomInformation.atomReference.reference.equals("required")) {
 						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
@@ -442,7 +444,7 @@ class ComponentProcessor {
 					atomOnParentFrag = parentFrag.getAtomByLocantOrThrow(heteroAtomInformation.atomReference.reference);
 					break;
 				case DEFAULTID:
-					state.addIsAmbiguous();
+					ambiguous = true;
 				case ID:
 					atomOnParentFrag = parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(heteroAtomInformation.atomReference.reference) - 1);
 					break;
@@ -487,7 +489,7 @@ class ComponentProcessor {
 				Atom atomOnParentFrag;
 				switch (bondInformation.atomReference.referenceType) {
 				case DEFAULTLOCANT:
-					state.addIsAmbiguous();
+					ambiguous = true;
 				case LOCANT:
 					if (bondInformation.atomReference.reference.equals("required")) {
 						throw new ComponentGenerationException(group.getValue() +  " requires an allowed locant");
@@ -495,7 +497,7 @@ class ComponentProcessor {
 					atomOnParentFrag=parentFrag.getAtomByLocantOrThrow(bondInformation.atomReference.reference);
 					break;
 				case DEFAULTID:
-					state.addIsAmbiguous();
+					ambiguous = true;
 				case ID:
 					atomOnParentFrag= parentFrag.getAtomByIDOrThrow(parentFrag.getIdOfFirstAtom() + Integer.parseInt(bondInformation.atomReference.reference) -1);
 					break;
@@ -514,6 +516,9 @@ class ComponentProcessor {
 					b.getToAtom().setSpareValency(true);
 				}
 			}
+		}
+		if (ambiguous) {
+			state.addIsAmbiguous(group.getValue() +" describes multiple structures");
 		}
 	}
 
@@ -2744,7 +2749,7 @@ class ComponentProcessor {
 					//assume benzo fusions or hwring as a fusion prefix produce unambiguous heteroatom positioning
 					if (!(possibleBenzo != null && (possibleBenzo.getValue().equals("benz") || possibleBenzo.getValue().equals("benzo"))
 							|| "o".equals(group.getAttributeValue((SUBSEQUENTUNSEMANTICTOKEN_ATR))))) {
-						state.addIsAmbiguous();
+						state.addIsAmbiguous("Heteroatom positioning in the Hantzsch–Widman name " + name);
 					}
 				}
 				if (hetAtomsToProcess > carbonAtomsInRing.size()) {
@@ -2940,8 +2945,12 @@ class ComponentProcessor {
 						if (potentialAtomsOnParent.isEmpty() || potentialAtomsOnClone.isEmpty()) {
 							throw new StructureBuildingException("Unable to find suitable atom for unlocanted ring assembly construction");
 						}
-						state.checkForAmbiguity(potentialAtomsOnParent, 1);
-						state.checkForAmbiguity(potentialAtomsOnClone, 1);
+						if (AmbiguityChecker.isSubstitutionAmbiguous(potentialAtomsOnParent, 1)) {
+							state.addIsAmbiguous("Choice of atoms to form ring assembly: " + group.getValue());
+						}
+						if (AmbiguityChecker.isSubstitutionAmbiguous(potentialAtomsOnClone, 1)) {
+							state.addIsAmbiguous("Choice of atoms to form ring assembly: " + group.getValue());
+						}
 						atomOnParent = potentialAtomsOnParent.get(0);
 						atomOnLatestClone = potentialAtomsOnClone.get(0);
 						lastRingUnlocantedBondedTo = clone;
@@ -3201,8 +3210,8 @@ class ComponentProcessor {
 			if (nextGroup==null){
 				throw new ComponentGenerationException("OPSIN bug: unable to locate group after polycylic spiro descriptor");
 			}
-			Fragment parentFrag = nextGroup.getFrag();
 			Fragment previousFrag = previousGroup.getFrag();
+			Fragment parentFrag = nextGroup.getFrag();
 			FragmentTools.relabelNumericLocants(parentFrag.getAtomList(), StringTools.multiplyString("'",i+1));
 			elementsToResolve = OpsinTools.getSiblingsUpToElementWithTagName(currentSpiro, POLYCYCLICSPIRO_EL);
 			resolveFeaturesOntoGroup(elementsToResolve);
@@ -3227,7 +3236,9 @@ class ComponentProcessor {
 				if (potentialAtoms.isEmpty()) {
 					throw new StructureBuildingException("No suitable atom found for spiro fusion");
 				}
-				state.checkForAmbiguity(potentialAtoms, 1);
+				if (AmbiguityChecker.isSubstitutionAmbiguous(potentialAtoms, 1)) {
+					state.addIsAmbiguous("Choice of atom for spiro fusion on: " + previousGroup.getValue());
+				}
 				atomToBeReplaced = potentialAtoms.get(0);
 			}
 			Atom atomOnParentFrag;
@@ -3250,7 +3261,9 @@ class ComponentProcessor {
 				if (potentialAtoms.isEmpty()) {
 					throw new StructureBuildingException("No suitable atom found for spiro fusion");
 				}
-				state.checkForAmbiguity(potentialAtoms, 1);
+				if (AmbiguityChecker.isSubstitutionAmbiguous(potentialAtoms, 1)) {
+					state.addIsAmbiguous("Choice of atom for spiro fusion on: " + nextGroup.getValue());
+				};
 				atomOnParentFrag = potentialAtoms.get(0);
 			}
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnParentFrag);
@@ -3526,7 +3539,9 @@ class ComponentProcessor {
 				if (possibleAtoms.isEmpty()) {
 					throw new StructureBuildingException("Unable to find suitable atom to form bridge");
 				}
-				state.checkForAmbiguity(possibleAtoms, 1);
+				if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
+					state.addIsAmbiguous("Addition of bridge to: " + groupEl.getValue());
+				}
 				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, possibleAtoms.get(0));
 			}
 			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
@@ -4357,7 +4372,9 @@ class ComponentProcessor {
 					if (possibleAtoms.isEmpty()){
 						throw new StructureBuildingException("No suitable atom found for conjunctive operation");
 					}
-					state.checkForAmbiguity(possibleAtoms, 1);
+					if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
+						state.addIsAmbiguous("Connection of conjunctive group to: " + ringGroup.getValue());
+					}
 					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), possibleAtoms.get(0) , 1);
 				}
 				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);

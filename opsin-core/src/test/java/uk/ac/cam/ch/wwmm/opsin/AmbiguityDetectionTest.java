@@ -11,8 +11,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
-
 public class AmbiguityDetectionTest {
 	
 	private static NameToStructure n2s;
@@ -29,15 +27,15 @@ public class AmbiguityDetectionTest {
 
 	@Test
 	public void testNamesThatShouldBeDetectedAsAmbiguous() throws IOException{
-		checkNames("ambiguous.txt", OPSIN_RESULT_STATUS.WARNING);
+		checkNames("ambiguous.txt", true);
 	}
 	
 	@Test
 	public void testUnAmbiguousCounterExamples() throws IOException{
-		checkNames("unambiguous.txt", OPSIN_RESULT_STATUS.SUCCESS);
+		checkNames("unambiguous.txt", false);
 	}
 	
-	private void checkNames(String file, OPSIN_RESULT_STATUS expectedStatus) throws IOException{
+	private void checkNames(String file, boolean isAmbiguous) throws IOException{
 		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
 		try {
 			String line = null;
@@ -46,7 +44,7 @@ public class AmbiguityDetectionTest {
 					continue;
 				}
 				OpsinResult result = n2s.parseChemicalName(line);
-				assertEquals(line + " gave unexpected result", expectedStatus, result.getStatus());
+				assertEquals(line + " gave unexpected result", isAmbiguous, result.nameAppearsToBeAmbiguous());
 			}
 		} finally {
 			IOUtils.closeQuietly(input);

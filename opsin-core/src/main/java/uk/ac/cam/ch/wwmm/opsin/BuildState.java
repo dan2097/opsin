@@ -37,21 +37,7 @@ class BuildState {
 		warnings.add(new OpsinWarning(type, message));
 	}
 	
-	void addIsAmbiguous() {
-		warnings.add(new OpsinWarning(OpsinWarningType.APPEARS_AMBIGUOUS, ""));
-	}
-	
 	void addIsAmbiguous(String message) {
 		warnings.add(new OpsinWarning(OpsinWarningType.APPEARS_AMBIGUOUS, message));
 	}
-
-	boolean checkForAmbiguity(List<Atom> substituentPoints, int numberOfSubstitutionsRequired) {
-		boolean isAmbiguous = AmbiguityChecker.isSubstitutionAmbiguous(substituentPoints, numberOfSubstitutionsRequired);
-		if (isAmbiguous){
-			addIsAmbiguous();
-		}
-		return isAmbiguous;
-	}
-
-
 }
