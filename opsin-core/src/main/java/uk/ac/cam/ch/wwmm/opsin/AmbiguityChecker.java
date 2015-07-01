@@ -128,6 +128,7 @@ class AmbiguityChecker {
 	}
 
 	private static List<Atom> findPlausibleSubstitutionPatternUsingSymmmetry(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
+		//cf. octaethylporphyrin (8 identical atoms capable of substitution)
 		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(new HashSet<Atom>(substitutableAtoms));
 		Map<String, List<Atom>> atomsInEachEnvironment = new HashMap<String, List<Atom>>();
 		for (Atom a : substitutableAtoms) {
@@ -148,13 +149,31 @@ class AmbiguityChecker {
 				preferredAtoms = atoms;
 			}
 		}
+		if (preferredAtoms == null) {
+			//check for environments with double the required atoms where this means each atom can support two substitutions c.f. cyclohexane
+			for (List<Atom> atoms : atomsInEachEnvironment.values()) {
+				if (atoms.size() == (numberToBeSubstituted * 2)){
+					Set<Atom> uniquified = new HashSet<Atom>(atoms);
+					if (uniquified.size() == numberToBeSubstituted) {
+						if (preferredAtoms != null){
+							return null;
+						}
+						preferredAtoms = new ArrayList<Atom>(uniquified);
+					}
+				}
+			}
+		}
 		return preferredAtoms;
 	}
 	
 	private static List<Atom> findPlausibleSubstitutionPatternUsingLocalEnvironment(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
+		//cf. pentachlorotoluene (5 sp2 carbons vs sp3 methyl)
 		Map<String, List<Atom>> atomsInEachLocalEnvironment = new HashMap<String, List<Atom>>();
 		for (Atom a : substitutableAtoms) {
-			String s = a.getElement().toString() +"\t" + a.determineValency(true) +"\t" + a.hasSpareValency();
+			int valency = a.determineValency(true);	
+			int currentValency = a.getIncomingValency() + a.getOutValency();
+			int numOfBonds = (valency - currentValency) + a.getBondCount();//distinguish sp2 and sp3 atoms
+			String s = a.getElement().toString() +"\t" + valency + "\t" + numOfBonds + "\t" + a.hasSpareValency();
 			List<Atom> atomsInEnvironment = atomsInEachLocalEnvironment.get(s);
 			if (atomsInEnvironment == null) {
 				atomsInEnvironment = new ArrayList<Atom>();
