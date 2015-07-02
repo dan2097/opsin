@@ -57,6 +57,7 @@
 		<token value="C123C(=O)C(=O)C4CC1.C24(C)C.C3" labels="1/2//3//4/5/6/7/8/9/10">camphorquinon</token>
 		<token value="c1(O)c(O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">catechol</token>
 		<token value="c1(ccccc1)C=CC(=O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'">chalcon</token>
+		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chinolin</token>
 		<token value="C1Cc2cccc3cc4c5ccccc5ccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/6b/7/8/9/10/10a/11/12/12a/12b/12c">cholanthren</token>
 		<token value="O1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chroman</token>
 		<token value="S1CCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">thiochroman</token>
@@ -124,6 +125,7 @@
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofuran</token>
 		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiofuran</token>
 		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiophen</token>
+		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochinolin</token>
 		<token value="C1OCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochroman</token>
 		<token value="C1SCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isothiochroman</token>
 		<token value="C1[Se]CCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoselenochroman</token>
