@@ -39,6 +39,7 @@
 		<token value="c1cccc2c3ccccc3c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b">biphenyleno</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">boranthreno</token>
 		<token value="c1cccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">carbazolo</token>
+		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chinolino</token>
 		<token value="o1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">chromeno</token>
 		<token value="s1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">thiochromeno</token>
 		<token value="[se]1[cH2]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">selenochromeno</token>
@@ -62,6 +63,7 @@
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoarsinolino</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofurano</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofuro</token>
+		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochinolino</token>
 		<token value="[cH2]1occc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochromeno</token>
 		<token value="[cH2]1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isothiochromeno</token>
 		<token value="[cH2]1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoselenochromeno</token>
