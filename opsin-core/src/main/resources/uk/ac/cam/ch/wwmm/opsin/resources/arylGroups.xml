@@ -178,6 +178,7 @@
 		<token value="N1CC[Te]CC1" labels="4,para/3,meta/2,ortho/1/6/5">telluromorpholin</token>
 		<token value="c1cccc2cc3cc4ccccc4cc3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/11/11a/12/12a">naphthacen</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalen</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalin</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addGroup="=O defaultLocant 1;=O defaultLocant 4" frontLocantsExpected="1,2,3,4,5,6,7,8">naphthoquinon</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addGroup="=O locant 1;=O locant 4;=O locant 5;=O locant 8" frontLocantsExpected="1,2,3,4,5,6,7,8">naphthodiquinon</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addHeteroAtom="N defaultLocant 1;N defaultLocant 8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridin</token>
