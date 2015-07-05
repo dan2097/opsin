@@ -428,6 +428,7 @@
 		<token value="[nH]1c(=O)Nc(=O)c(F)c1" labels="1/2//3/4//5//6">fluorouracil</token><!--should be ambiguous but by convention isn't-->
 		<token value="C(O)C(=O)CO" labels="1//2//3/">glycerone</token>
 		<token value="O=C(O)CNC(N)=N" functionalIDs="3">glycocyamine</token>
+		<token value="NC(=[NH2+])N" labels="1,N//2,N''/3,N'">guanidinium</token>
 		<token value="NC(=N)NCCS(=O)O" functionalIDs="9">hypotaurocyamine</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">icosasphinganine</token>
 		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18">phytosphingosine</token>
