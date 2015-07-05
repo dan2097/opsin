@@ -4572,28 +4572,23 @@ class ComponentProcessor {
 		}
 	}
 
-	private Atom getFragAtomToUse(Fragment frag, Element suffix, String suffixTypeToUse) throws StructureBuildingException {
-		Atom fragAtomToUse = null;
+	private Atom getFragAtomToUse(Fragment frag, Element suffix, String suffixTypeToUse) throws StructureBuildingException {;
 		String locant = suffix.getAttributeValue(LOCANT_ATR);
 		if (locant != null) {
-			fragAtomToUse = frag.getAtomByLocantOrThrow(locant);
+			return frag.getAtomByLocantOrThrow(locant);
 		}
-		else{
-			String locantId = suffix.getAttributeValue(LOCANTID_ATR);
-			if (locantId != null) {
-				fragAtomToUse = frag.getAtomByIDOrThrow(Integer.parseInt(locantId));
-			}
-			else{
-				String defaultLocantId = suffix.getAttributeValue(DEFAULTLOCANTID_ATR);
-				if (defaultLocantId != null) {
-					fragAtomToUse = frag.getAtomByIDOrThrow(Integer.parseInt(defaultLocantId));
-				}
-				else if (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL)) {//means that e.g. sulfonyl, has an explicit outAtom
-					fragAtomToUse = frag.getFirstAtom();
-				}
-			}
+		String locantId = suffix.getAttributeValue(LOCANTID_ATR);
+		if (locantId != null) {
+			return frag.getAtomByIDOrThrow(Integer.parseInt(locantId));
 		}
-		return fragAtomToUse;
+		String defaultLocantId = suffix.getAttributeValue(DEFAULTLOCANTID_ATR);
+		if (defaultLocantId != null) {
+			return frag.getAtomByIDOrThrow(Integer.parseInt(defaultLocantId));
+		}
+		else if (suffixTypeToUse.equals(ACIDSTEM_TYPE_VAL) || suffixTypeToUse.equals(NONCARBOXYLICACID_TYPE_VAL) || suffixTypeToUse.equals(CHALCOGENACIDSTEM_TYPE_VAL)) {//means that e.g. sulfonyl, has an explicit outAtom
+			return frag.getFirstAtom();
+		}
+		return null;
 	}
 
 
