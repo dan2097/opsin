@@ -44,3 +44,5 @@ hexahydrobenzene
 tetrahydropyridin-2-one
 hexahydropyridin-2-one
 dihydroorotic acid
+pyridinium
+isoquinolinium

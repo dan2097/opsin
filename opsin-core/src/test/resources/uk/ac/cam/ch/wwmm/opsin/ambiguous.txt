@@ -29,3 +29,5 @@ diazapropane
 triazatrithiabenzene
 dihydrobenzene
 dihydropyridine
+triazolium
+naphthalenium

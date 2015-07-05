@@ -4713,10 +4713,14 @@ class ComponentProcessor {
 	 * @param protonChange
 	 */
 	private void applyUnlocantedChargeModification(List<Atom> atomList, int chargeChange, int protonChange) {
-		Atom likelyAtom = null;
-		Atom possibleHeteroatom = null;
-		Atom possibleCarbonAtom = null;
-		Atom possibleDiOrHigherIon = null;
+		//List of atoms that can accept this charge while remaining in a reasonable valency
+		List<Atom> nitrogens = new ArrayList<Atom>();//most likely
+		List<Atom> otherHeteroatoms = new ArrayList<Atom>();//plausible
+		List<Atom> carbonsAtoms = new ArrayList<Atom>();//rare
+		List<Atom> chargedAtoms = new ArrayList<Atom>();//very rare
+		if (atomList.isEmpty()) {
+			throw new RuntimeException("OPSIN Bug: List of atoms to add charge suffix to was empty");
+		}
 		for (Atom a : atomList) {
 			ChemEl chemEl = a.getElement();
 			Integer[] stableValencies = ValencyChecker.getPossibleValencies(chemEl, a.getCharge() + chargeChange);
@@ -4724,50 +4728,60 @@ class ComponentProcessor {
 				continue;
 			}
 			int resultantExpectedValency = (a.getLambdaConventionValency() ==null ? ValencyChecker.getDefaultValency(chemEl) : a.getLambdaConventionValency()) + a.getProtonsExplicitlyAddedOrRemoved() + protonChange;
-			boolean matched = false;
-			for (Integer stableValency : stableValencies) {
-				if (stableValency ==resultantExpectedValency){
-					matched =true;
-					break;
-				}
-			}
-			if (!matched){//unstable valency so seems unlikely
+			
+			if (!Arrays.asList(stableValencies).contains(resultantExpectedValency)) {
+				//unstable valency so seems unlikely
 				continue;
 			}
-			if (protonChange <0 && StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a)<=0){
+			if (protonChange < 0 && StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a) < 1) {
+				//no hydrogens so operation can't remove one
 				continue;
 			}
-			if (Math.abs(a.getCharge())==0){
-				if (chemEl == ChemEl.N){
-					likelyAtom = a;
-					break;
+			if (a.getCharge() == 0) {
+				if (chemEl == ChemEl.N) {
+					nitrogens.add(a);
 				}
-				else if (possibleHeteroatom ==null && chemEl != ChemEl.C){
-					possibleHeteroatom= a;
+				else if (chemEl != ChemEl.C) {
+					otherHeteroatoms.add(a);
 				}
-				else if (possibleCarbonAtom ==null){
-					possibleCarbonAtom = a;
+				else {
+					carbonsAtoms.add(a);
 				}
 			}
-			else if (possibleDiOrHigherIon ==null){
-				possibleDiOrHigherIon = a;
+			else {
+				chargedAtoms.add(a);
 			}
 		}
-		if (likelyAtom == null) {
-			if (possibleHeteroatom !=null){
-				likelyAtom = possibleHeteroatom;
-			}
-			else if (possibleCarbonAtom !=null){
-				likelyAtom = possibleCarbonAtom;
-			}
-			else if (possibleDiOrHigherIon !=null){
-				likelyAtom = possibleDiOrHigherIon;
-			}
-			else{
-				likelyAtom = atomList.get(0);
+		List<Atom> listFromWhichToChoose;
+		if (!nitrogens.isEmpty()) {
+			listFromWhichToChoose = nitrogens;
+			if (AMINOACID_TYPE_VAL.equals(atomList.get(0).getFrag().getType())) {
+				//By convention treat names like lysinium as unambiguous (prefer alpha nitrogen)
+				if (listFromWhichToChoose.contains(atomList.get(0))){
+					listFromWhichToChoose = new ArrayList<Atom>();
+					listFromWhichToChoose.add(atomList.get(0));
+				}
 			}
 		}
-		likelyAtom.addChargeAndProtons(chargeChange, protonChange);
+		else if (!otherHeteroatoms.isEmpty()) {
+			listFromWhichToChoose = otherHeteroatoms;
+		}
+		else if (!carbonsAtoms.isEmpty()) {
+			listFromWhichToChoose = carbonsAtoms;
+		}
+		else if (!chargedAtoms.isEmpty()) {
+			listFromWhichToChoose = chargedAtoms;
+		}
+		else {
+			listFromWhichToChoose = atomList;
+		}
+
+		Atom chosenAtom =  listFromWhichToChoose.get(0);
+		if (!AmbiguityChecker.allAtomsEquivalent(listFromWhichToChoose)) {
+			state.addIsAmbiguous("Addition of charge suffix to: " + chosenAtom.getFrag().getTokenEl().getValue());
+		}
+
+		chosenAtom.addChargeAndProtons(chargeChange, protonChange);
 	}
 	
 	/**
