@@ -414,29 +414,7 @@ class FragmentTools {
 		Bond b = fromAtom.getBondToAtomOrThrow(toAtom);
 		b.setOrder(bondOrder);
 	}
-	
-	/** Works out where to put an "one", if this is unspecified. position 2 for propanone
-	 * and higher, else 1. Position 2 is assumed to be 1 higher than the atomIndice given.
-	 *
-	 * @param fragment The fragment
-	 * @param atomIndice
-     * @return the appropriate atom indice
-	 * @throws StructureBuildingException 
-	 */
-	static int findKetoneAtomIndice(Fragment fragment, int atomIndice) throws StructureBuildingException {
-		if(fragment.getChainLength() < 3){
-			return atomIndice;
-		}
-		else {
-			if (atomIndice +1>=fragment.getAtomCount()){
-				return 1;//this probably indicates a problem with the input name but nonetheless 1 is a better answer than an indice which isn't even in the range of the fragment
-			}
-			else{
-				return atomIndice +1;
-			}
-		}
-	}
-	
+
 	/**Adjusts the labeling on a fused ring system, such that bridgehead atoms
 	 * have locants endings in 'a' or 'b' etc. Example: naphthalene
 	 * 1,2,3,4,5,6,7,8,9,10->1,2,3,4,4a,5,6,7,8,8a
@@ -1168,45 +1146,6 @@ class FragmentTools {
 			return Collections.emptyList();
 		}
 		return potentialAtoms;
-	}
-	
-	/**
-	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findnAtomsForSubstitution(Fragment, int, int)}
-	 * The defaultInAtom in this case is the provided preferredAtom
-	 * takeIntoAccountOutValency may be set to false for cases where the position of radicals is being determined
-	 * Return null if no suitable atom can be found
-	 * @param frag
-	 * @param preferredAtom
-	 * @param bondOrder
-	 * @param takeIntoAccountOutValency
-	 * @return
-	 */
-	static Atom findAtomForSubstitution(Fragment frag, Atom preferredAtom, int bondOrder, boolean takeIntoAccountOutValency) {
-		List<Atom> atoms = findnAtomsForSubstitution(frag.getAtomList(), preferredAtom, 1, bondOrder, takeIntoAccountOutValency);
-		if (atoms != null) {
-			return atoms.get(0);
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns the first substitutable atom found using the same criteria as {@link FragmentTools#findnAtomsForSubstitution(Fragment, int, int)}
-	 * The defaultInAtom in this case is the provided preferredAtom
-	 * takeIntoAccountOutValency may be set to false for cases where the position of radicals is being determined
-	 * Throws an exception if no suitable atom can be found
-	 * @param frag
-	 * @param preferredAtom
-	 * @param bondOrder
-	 * @param takeIntoAccountOutValency
-	 * @return
-	 * @throws StructureBuildingException 
-	 */
-	static Atom findAtomForSubstitutionOrThrow(Fragment frag, Atom preferredAtom, int bondOrder, boolean takeIntoAccountOutValency) throws StructureBuildingException {
-		Atom a = findAtomForSubstitution(frag, preferredAtom, bondOrder, takeIntoAccountOutValency);
-		if (a == null) {
-			throw new StructureBuildingException("No suitable atom found");
-		}
-		return a;
 	}
 
 }
