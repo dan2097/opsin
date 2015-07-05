@@ -20,10 +20,11 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Option.Builder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -224,7 +225,7 @@ public class NameToStructure {
 	 */
 	public static void main(String [] args) throws Exception {
 		Options options = buildCommandLineOptions();
-		CommandLineParser parser = new PosixParser();
+		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null;
 		try{
 			cmd = parser.parse(options, args);
@@ -304,9 +305,10 @@ public class NameToStructure {
 
 	private static Options buildCommandLineOptions() {
 		Options options = new Options();
-		OptionBuilder.withArgName("o");
-		OptionBuilder.withLongOpt("output");
-		OptionBuilder.hasArg();
+		Builder outputBuilder = Option.builder("o");
+		outputBuilder.longOpt("output");
+		outputBuilder.hasArg();
+		outputBuilder.argName("format");
 		StringBuilder outputOptionsDesc = new StringBuilder();
 		outputOptionsDesc.append("Sets OPSIN's output format (default smi)").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("Allowed values are:").append(OpsinTools.NEWLINE);
@@ -315,8 +317,8 @@ public class NameToStructure {
 		outputOptionsDesc.append("inchi for InChI (with FixedH)").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchi for StdInChI").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchikey for StdInChIKey");
-		OptionBuilder.withDescription(outputOptionsDesc.toString());
-		options.addOption(OptionBuilder.create("o"));
+		outputBuilder.desc(outputOptionsDesc.toString());
+		options.addOption(outputBuilder.build());
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
 		
