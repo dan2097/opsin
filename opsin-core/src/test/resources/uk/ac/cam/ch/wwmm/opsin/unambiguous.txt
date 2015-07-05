@@ -46,3 +46,12 @@ hexahydropyridin-2-one
 dihydroorotic acid
 pyridinium
 isoquinolinium
+ethanol
+propanol
+cyclohexanol
+benzenepentaol
+benzenehexaol
+valeric acid
+butanone
+pentanaldehyde
+pyridin-2-one
