@@ -264,7 +264,7 @@ public class NameToStructure {
 		}
 
 		System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
-		String outputType = cmd.getOptionValue("o", "cml");
+		String outputType = cmd.getOptionValue("o", "smi");
 		if (outputType.equalsIgnoreCase("cml")){
 			interactiveCmlOutput(input, output, n2sconfig);
 		}
@@ -308,11 +308,11 @@ public class NameToStructure {
 		OptionBuilder.withLongOpt("output");
 		OptionBuilder.hasArg();
 		StringBuilder outputOptionsDesc = new StringBuilder();
-		outputOptionsDesc.append("Sets OPSIN's output format (default cml)").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("Sets OPSIN's output format (default smi)").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("Allowed values are:").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("cml for Chemical Markup Language").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("smi for SMILES").append(OpsinTools.NEWLINE);
-		outputOptionsDesc.append("inchi for InChI").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("inchi for InChI (with FixedH)").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchi for StdInChI").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchikey for StdInChIKey");
 		OptionBuilder.withDescription(outputOptionsDesc.toString());
