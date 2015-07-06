@@ -11,7 +11,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
-public class CMLWriter {
+class CMLWriter {
 	/**
 	 * CML Elements/Attributes/NameSpace
 	 */
