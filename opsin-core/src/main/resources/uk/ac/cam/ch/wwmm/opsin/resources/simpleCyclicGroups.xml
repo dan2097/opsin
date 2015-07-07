@@ -141,27 +141,74 @@
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="¾">
 <!--nucleotides-->
+
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="6,7">2'-adenylic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="6,7">2'-adenylicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="6,7">2'-adenylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="8,9">3'-adenylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="8,9">3'-adenylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="8,9">3'-adenylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" functionalIDs="11,12">5'-adenylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" functionalIDs="11,12">5'-adenylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6/N/1/2/3/4" functionalIDs="11,12">5'-adenylic acid</token>
+		<token value="[C@@H]1(C[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//////4'/5'///1/2//3/4//5/alpha/6" functionalIDs="7,8">3'-thymidylic</token>
+		<token value="[C@@H]1(C[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//////4'/5'///1/2//3/4//5/alpha/6" functionalIDs="7,8">3'-thymidylicacid</token>
+		<token value="[C@@H]1(C[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//////4'/5'///1/2//3/4//5/alpha/6" functionalIDs="7,8">3'-thymidylic acid</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///////1/2//3/4//5/alpha/6" functionalIDs="10,11">5'-thymidylic</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///////1/2//3/4//5/alpha/6" functionalIDs="10,11">5'-thymidylicacid</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///////1/2//3/4//5/alpha/6" functionalIDs="10,11">5'-thymidylic acid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-guanylic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-guanylicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-guanylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-guanylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-guanylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-guanylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-guanylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-guanylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-guanylic acid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="6,7">2'-inosinic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="6,7">2'-inosinicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="6,7">2'-inosinic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="8,9">3'-inosinic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="8,9">3'-inosinicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="8,9">3'-inosinic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" functionalIDs="11,12">5'-inosinic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" functionalIDs="11,12">5'-inosinicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" functionalIDs="11,12">5'-inosinic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" functionalIDs="11,12">inosinic acid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-xanthylic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-xanthylicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-xanthylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-xanthylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-xanthylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-xanthylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-xanthylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-xanthylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-xanthylic acid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//////3'//4'/5'///1/2//3/4/N/5/6" functionalIDs="6,7">2'-cytidylic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//////3'//4'/5'///1/2//3/4/N/5/6" functionalIDs="6,7">2'-cytidylicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//////3'//4'/5'///1/2//3/4/N/5/6" functionalIDs="6,7">2'-cytidylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//////4'/5'///1/2//3/4/N/5/6" functionalIDs="8,9">3'-cytidylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//////4'/5'///1/2//3/4/N/5/6" functionalIDs="8,9">3'-cytidylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//////4'/5'///1/2//3/4/N/5/6" functionalIDs="8,9">3'-cytidylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" functionalIDs="11,12">5'-cytidylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" functionalIDs="11,12">5'-cytidylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4/N/5/6" functionalIDs="11,12">5'-cytidylic acid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6" functionalIDs="6,7">2'-uridylic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6" functionalIDs="6,7">2'-uridylicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6" functionalIDs="6,7">2'-uridylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6" functionalIDs="8,9">3'-uridylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6" functionalIDs="8,9">3'-uridylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6" functionalIDs="8,9">3'-uridylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6" functionalIDs="11,12">5'-uridylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6" functionalIDs="11,12">5'-uridylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6" functionalIDs="11,12">5'-uridylic acid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6///" functionalIDs="6,7">2'-orotidylic</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6///" functionalIDs="6,7">2'-orotidylicacid</token>
+		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6///" functionalIDs="6,7">2'-orotidylic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6///" functionalIDs="8,9">3'-orotidylic</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6///" functionalIDs="8,9">3'-orotidylicacid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6///" functionalIDs="8,9">3'-orotidylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6///" functionalIDs="11,12">5'-orotidylic</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6///" functionalIDs="11,12">5'-orotidylicacid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6///" functionalIDs="11,12">5'-orotidylic acid</token>
