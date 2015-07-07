@@ -54,7 +54,6 @@
 		<token value="ON(C=O)CC" suffixAppliesTo="6">hadacid</token>
 		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" suffixAppliesTo="5" defaultInID="1">isoser</token>
 		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" suffixAppliesTo="5" defaultInID="1">iso-ser</token>
-		<token value="N(C)[C@@H](Cc1c[nH]c2ccccc12)C" labels="//alpha/beta/3/2/1/7a/7/6/5/4/3a/" suffixAppliesTo="14" defaultInID="1">abr</token>
 		<token value="N[C@@H](CCC(=O)NNc1ccc(CO)cc1)C" labels="/2,alpha/3,beta/4,gamma/////////////1" suffixAppliesTo="17" defaultInID="1">agarit</token>
 		<token value="N[C@@H](COC(=O)C=[N+]=[N-])C" labels="/2,alpha/3,beta///////1" suffixAppliesTo="10" defaultInID="1">azaser</token>
 		<token value="N[C@@H](CN(O)N=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">alanos</token>
@@ -245,6 +244,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="N1[C@@H](CCC1=O)CO" labels="/2,alpha/3,beta/4,gamma/5,delta//1/" defaultInID="1">pyroglutamol</token>
 		<token value="N1[C@@H](CCC1=O)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pyroglutamide</token>
 
+		<token value="N(C)[C@@H](Cc1c[nH]c2ccccc12)C(=O)O" labels="//alpha/beta/3/2/1/7a/7/6/5/4/3a///" defaultInID="1">abrine</token>
 		<token value="C([C@@H](C(=O)O)N)SSC[C@@H](C(=O)O)N" functionalIDs="5,13">cystine</token>
 		<token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" defaultInID="5">dopa</token>
 		<token value="C(C[C@@H](C(=O)O)N)SSCC[C@@H](C(=O)O)N" functionalIDs="6,15">homocystine</token>
