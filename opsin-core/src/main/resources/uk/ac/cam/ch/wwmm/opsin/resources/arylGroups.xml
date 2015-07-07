@@ -344,7 +344,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'///9/8/7/5/6/N/1/2/3/4">adenosin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'///1/2//3/4/N/5/6">cytidin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c(o)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2//3/4">guanosin</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2/3/4">inosine</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2/3/4">inosin</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///1/2//3/4//5/alpha/6">thymidin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///1/2//3/4//5/6">uridin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2//3/4">xanthosin</token>
