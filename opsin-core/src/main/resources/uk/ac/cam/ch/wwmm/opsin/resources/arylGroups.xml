@@ -327,7 +327,7 @@
 		<token value="c1cccc2[te]c3ccccc3[cH2]c12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" suffixAppliesToByDefault="13">telluroxanthen</token>
 		<token value="c1cccc2[o+]c3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a" suffixAppliesToByDefault="13">xanthylium</token>
 		<token value="c1cccc2Cc3ccc4c5ccc6Cc7ccccc7c8ccc9c%10ccc%11c12.c3%11c4%10.c59c68" labels="1/2/3/4/4a/5/5a/6/7/7a/7b/8/9/9a/10/10a/11/12/13/14/14a/14b/15/16/16a/16b/17/18/18a/18b/18c/18d/18e/18f">violanthren</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 1 alpha;C defaultLocant 2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylen</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 1 alpha;C defaultLocant 2 alpha'" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6" suffixAppliesToByDefault="1">xylen</token>
 		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 2;C defaultLocant 3" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylidin</token>
 	</tokenList>
 
