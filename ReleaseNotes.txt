@@ -1,5 +1,6 @@
-Version 2.0.0 (2014-03-??)
+Version 2.0.0 (2015-07-08)
 OPSIN now attempts to identify if a chemical name is ambiguous. Names that appear ambiguous return with a status of WARNING with the structure provided being one interpretation of the name
+Added support for "alcohol esters" e.g. phenol acetate [meaning phenyl acetate]
 Multiplied unlocanted substitution is now more intelligent e.g. all substituents must connect to same group, and degeneracy of atom environments is taken into account
 The ester interpretation is now preferred in more cases where a name does not contain a space but the parent is methanoate/ethanoate/formate/acetate/carbamate
 Inorganic oxides are now interpreted, yielding structures with [O-2] ions
