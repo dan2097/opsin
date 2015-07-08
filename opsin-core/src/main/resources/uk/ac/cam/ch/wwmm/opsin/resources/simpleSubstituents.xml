@@ -340,6 +340,7 @@
 		<token value="=O">keto</token>
 		<token value="-S" usableAsAJoiner="yes">mercapto</token>
 		<token value="-S" usableAsAJoiner="yes">sulfhydryl</token>
+		<token value="-S" usableAsAJoiner="yes">sulfydryl</token>
 		<token value="=S">thioxo</token>
 		<token value="=S">thiono</token><!--deprecated-->
 		<token value="=[Se]">selenoxo</token>
