@@ -1,0 +1,3 @@
+benzeneacetic acid	InChI=1S/C8H8O2/c9-8(10)6-7-4-2-1-3-5-7/h1-5H,6H2,(H,9,10)
+benzeneethylamine	InChI=1S/C8H11N/c9-7-6-8-4-2-1-3-5-8/h1-5H,6-7,9H2
+cyclohexaneacetic acid piperidide	InChI=1S/C13H23NO/c15-13(14-9-5-2-6-10-14)11-12-7-3-1-4-8-12/h12H,1-11H2

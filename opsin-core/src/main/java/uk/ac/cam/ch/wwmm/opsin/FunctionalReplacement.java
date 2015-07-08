@@ -498,7 +498,9 @@ class FunctionalReplacement {
 				}
 			}
 			else{
-				Fragment acidReplacingFrag = ComponentProcessor.resolveGroup(state, acidReplacingGroup);
+				String groupValue = acidReplacingGroup.getAttributeValue(VALUE_ATR);
+				String labelsValue = acidReplacingGroup.getAttributeValue(LABELS_ATR);
+				Fragment acidReplacingFrag = state.fragManager.buildSMILES(groupValue, SUFFIX_TYPE_VAL, labelsValue != null ? labelsValue : NONE_LABELS_VAL);
 				Fragment acidFragment = groupToBeModified.getFrag();
 				if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of replacing group
 					for (Atom atom : acidReplacingFrag.getAtomList()) {
