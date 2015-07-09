@@ -5,6 +5,9 @@
 
 <!--NOTE that unlocanted substitution attempts atoms in the order of the SMILES hence why single bonded O is listed first. A double bonded O replaced by sulfur could be substituted onto! -->
 
+<!--Tokens to which suffixes appleis must have the acid centre (i.e. the atom to which OHs attach) at the start of the SMILES or use the suffixAppliesTo attribute
+This attribute is required for multi-centre acids. Acids containing OH not directly connected to the acid centre e.g. O[OH], should be handled as trivial names-->
+
 	<!--This is the set of acids in which yl denotes an acyl (oyl will be tolerated)-->
 	<tokenList tagname="group" type="nonCarboxylicAcid" subType="ylForAcyl" symbol="·">
 		<token value="[As](O)(O)(O)=O" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsor</token>
@@ -141,11 +144,9 @@
 		<token value="[Te](O)(O)(O)(O)(O)O">orthotellur</token>
 		<token value="[Te](O)(O)(O)(O)(O)O">ortho-tellur</token>
 		<token value="B(O)(O)B(O)O" suffixAppliesTo="1,4">hypobor</token>
-		<token value="C(C)(=O)OO" labels="1/2///">peracet</token>
-		<token value="C(=O)OO" labels="1///">perform</token>
 		<token value="C(O)(=O)OC(=O)O" suffixAppliesTo="1,5">pyrocarbon</token>
 		<token value="C(O)(=O)OC(=O)O" suffixAppliesTo="1,5">pyro-carbon</token>
-		<token value="S(=O)(=O)(N)O">sulfamid</token>
+		<token value="S(=O)(=O)(N)O" defaultInID="4">sulfamid</token>
 		<token value="S(O)(O)">sulfoxyl</token>
 		<token value="S(=O)(=O)(O)c1ccc(C)cc1" labels="////1/2,ortho/3,meta/4,para//5/6">tosyl</token>
 		<token value="S(=O)(=O)(O)CC(F)(F)F">tresyl</token>
