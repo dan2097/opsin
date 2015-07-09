@@ -22,7 +22,7 @@
 		<token value="C(N)(O)=O" usableAsAJoiner="yes" defaultInID="2">carbam</token>
 		<token value="C(Nc1ccccc1)(O)=O" labels="//1/2/3/4/5/6//" defaultInID="2">carbanil</token>
 		<token value="C(O)(O)=O" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
-		<token value="CS(=O)(=O)O" functionalIDs="5">mesyl</token>
+		<token value="S(C)(=O)(=O)O" defaultInID="2">mesyl</token>
 		<token value="S(N)(O)(=O)=O" usableAsAJoiner="yes" defaultInID="2">sulfam</token>
 		<token value="S(N)(O)=O" usableAsAJoiner="yes" defaultInID="2">sulfinam</token>
 		<token value="S(N)O" usableAsAJoiner="yes" defaultInID="2">sulfenam</token>
@@ -141,7 +141,7 @@
 		<token value="[Te](O)(O)(O)(O)(O)O">orthotellur</token>
 		<token value="[Te](O)(O)(O)(O)(O)O">ortho-tellur</token>
 		<token value="B(O)(O)B(O)O" suffixAppliesTo="1,4">hypobor</token>
-		<token value="C(C)(=O)OO" labels="2/1///">peracet</token>
+		<token value="C(C)(=O)OO" labels="1/2///">peracet</token>
 		<token value="C(=O)OO" labels="1///">perform</token>
 		<token value="C(O)(=O)OC(=O)O" suffixAppliesTo="1,5">pyrocarbon</token>
 		<token value="C(O)(=O)OC(=O)O" suffixAppliesTo="1,5">pyro-carbon</token>
