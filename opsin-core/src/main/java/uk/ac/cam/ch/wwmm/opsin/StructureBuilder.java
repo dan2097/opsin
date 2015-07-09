@@ -1699,7 +1699,7 @@ class StructureBuilder {
 				if (cationicFrag.getFirstAtom().getCharge()==0){//if not 0 charge cannot be implicitly modified
 					String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
-					if (typicalCharge > cationicFrag.getFirstAtom().getAtomNeighbours().size()){
+					if (typicalCharge > cationicFrag.getFirstAtom().getBondCount()){
 						cationicElements.add(elementaryAtom);
 					}
 				}
