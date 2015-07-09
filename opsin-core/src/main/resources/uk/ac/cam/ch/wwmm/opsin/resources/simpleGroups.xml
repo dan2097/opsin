@@ -134,6 +134,7 @@
 		<token value="C(Cl)(Br)C(F)(F)F" labels="1///2///">halothane</token>
 		<token value="O=P(N(C)C)(N(C)C)N(C)C">hexametapol</token>
 		<token value="C[Si]([N-][Si](C)(C)C)(C)C">hexamethyldisilazide</token>
+		<token value="[OH3+]">hydronium</token>
 		<token value="[OH-]">hydroxide</token>
 		<token value="[OH+]">hydroxylium</token>
 		<token value="[OH+]O">hydroperoxylium</token>
@@ -219,6 +220,14 @@
 		<token value="OCC(CO)(COCC(CO)(COCC(CO)(CO)CO)CO)CO">tripentaerythritol</token>
 		<token value="NC(=N)NC(=N)NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7//8/9//10/11">pentaguanide</token>
 		<token value="NC(=O)NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9/10//11">pentauret</token>
+		<token value="C(C)(=O)OO" labels="1/2///" functionalIDs="5">peracetic</token>
+		<token value="C(C)(=O)OO" labels="1/2///" functionalIDs="5">peraceticacid</token>
+		<token value="C(C)(=O)OO" labels="1/2///" functionalIDs="5">peracetic acid</token>
+		<token value="C(C)(=O)O[O-]" labels="1/2///" functionalIDs="5">peracetate</token>
+		<token value="C(=O)OO" labels="1///" functionalIDs="4">performic</token>
+		<token value="C(=O)OO" labels="1///" functionalIDs="4">performicacid</token>
+		<token value="C(=O)OO" labels="1///" functionalIDs="4">performic acid</token>
+		<token value="C(=O)O[O-]" labels="1///" functionalIDs="4">performate</token>
 		<token value="O[O+]">peroxylium</token>
 		<token value="CC(C)=CC(C=C(C)C)=O">phorone</token>
 		<token value="C(=O)(Cl)Cl">phosgene</token>
