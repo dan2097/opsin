@@ -1,5 +1,9 @@
-Version 2.0.0 (2015-07-08)
+Version 2.0.0 (2015-07-10)
+MAJOR CHANGES:
+Requires Java 1.6 or higher
+CML (Chemical Markup Language) is now returned as a String rather than a XOM Element
 OPSIN now attempts to identify if a chemical name is ambiguous. Names that appear ambiguous return with a status of WARNING with the structure provided being one interpretation of the name
+
 Added support for "alcohol esters" e.g. phenol acetate [meaning phenyl acetate]
 Multiplied unlocanted substitution is now more intelligent e.g. all substituents must connect to same group, and degeneracy of atom environments is taken into account
 The ester interpretation is now preferred in more cases where a name does not contain a space but the parent is methanoate/ethanoate/formate/acetate/carbamate
@@ -14,11 +18,8 @@ Initialisation time reduced by a third
 InChI generation is now ~20% faster
 XML processing dependency changed from XOM to Woodstox
 Significant internal refactoring
+Utility functions designed for internal use are no longer on the public API
 Various minor bug fixes
-
-NOTE: Requires Java 1.6 or higher 
-NOTE: Chemical Markup Language is now returned as a String rather than a XOM Element
-NOTE: Utility functions designed for internal use are no longer on the public API
 
 Internal XML Changes:
 Groups lacking a labels attribute now have no locants (previously had ascending numeric locants)

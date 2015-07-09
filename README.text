@@ -1,33 +1,33 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
 =====================================================
-__Version 1.6.0 (see ReleaseNotes.txt for what's new in this version)__  
+__Version 2.0.0 (see ReleaseNotes.txt for what's new in this version)__  
 __Contact address: <daniel@nextmovesoftware.com>__  
 __Source code: <http://bitbucket.org/dan2097/opsin/>__  
 __Web interface and informational site: <http://opsin.ch.cam.ac.uk/>__  
 __License: [Artistic License 2.0](http://opensource.org/licenses/Artistic-2.0)__  
 
-OPSIN is a Java(1.5+) library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature.  
+OPSIN is a Java(1.6+) library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature.  
 Supported outputs are SMILES, CML (Chemical Markup Language) and InChI (IUPAC International Chemical Identifier)
 
 ### Simple Usage Examples
 #### Convert a chemical name to SMILES
-`java -jar opsin-1.6.0-jar-with-dependencies.jar -osmi input.txt output.txt`  
+`java -jar opsin-2.0.0-jar-with-dependencies.jar -osmi input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToStructure nts = NameToStructure.getInstance();
     String smiles = nts.parseToSmiles("acetonitrile");
 
 #### Convert a chemical name to CML
-`java -jar opsin-1.6.0-jar-with-dependencies.jar -ocml input.txt output.txt`  
+`java -jar opsin-2.0.0-jar-with-dependencies.jar -ocml input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToStructure nts = NameToStructure.getInstance();
-    Element cml = nts.parseToCML("acetonitrile");
+    String cml = nts.parseToCML("acetonitrile");
 
 #### Convert a chemical name to InChI/StdInChI/StdInChIKey
-`java -jar opsin-1.6.0-jar-with-dependencies.jar -oinchi input.txt output.txt`  
-`java -jar opsin-1.6.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt`  
-`java -jar opsin-1.6.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt`  
+`java -jar opsin-2.0.0-jar-with-dependencies.jar -oinchi input.txt output.txt`  
+`java -jar opsin-2.0.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt`  
+`java -jar opsin-2.0.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToInchi nti = new NameToInchi()
@@ -35,11 +35,12 @@ where input.txt contains chemical name/s, one per line
     String stdinchi = nti.parseToStdInchi("acetonitrile");
     String stdinchikey = nti.parseToStdInchiKey("acetonitrile");
 
+NOTE: OPSIN's non-standard InChI includes an additional layer (FixedH) that indicates which tautomer the chemical name described. StdInChI aims to be tautomer independent.
 ### Advanced Usage
-OPSIN 1.6.0 allows enabling of the following parameters:
+OPSIN 2.0.0 allows enabling of the following parameters:
 
-* allowRadicals: Allows substituents to be interpretable e.g. allows ethyl be interpretable
-* wildcardRadicals: If allowRadicals is enabled, this option uses atom/s in the output to represent radical/s; 'R' in CML and '*' in SMILES e.g. changes the output of ethyl from C[CH2] to CC\*
+* allowRadicals: Allows substituents to be interpretable e.g. allows interpretation of "ethyl"
+* wildcardRadicals: If allowRadicals is enabled, this option uses atoms in the output to represent radicals: 'R' in CML and '*' in SMILES e.g. changes the output of ethyl from C[CH2] to CC\*
 * detailedFailureAnalysis: Provides a potentially more accurate reason as to why a chemical name could not be parsed. This is done by parsing the chemical name from right to left. The trade-off for enabling this is slightly increased memory usage.
 * allowAcidsWithoutAcid: Allows interpretation of acids without the word acid e.g. "acetic"
 * allowUninterpretableStereo: Allows stereochemistry uninterpretable by OPSIN to be ignored (When used as a library the OpsinResult has a status of WARNING if stereochemistry was ignored)
@@ -48,7 +49,7 @@ OPSIN 1.6.0 allows enabling of the following parameters:
 \*When used as a library this is done by modifying Log4J's logging level e.g. `Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);`
 
 The usage of these parameters on the command line is described in the command line's help dialog accessible via:
-`java -jar opsin-1.6.0-jar-with-dependencies.jar -h`
+`java -jar opsin-2.0.0-jar-with-dependencies.jar -h`
 
 These parameters may be controlled using the following code:
 
@@ -57,17 +58,22 @@ These parameters may be controlled using the following code:
     //a new NameToStructureConfig starts as a copy of OPSIN's default configuration
     ntsconfig.setAllowRadicals(true);
     OpsinResult result = nts.parseChemicalName("acetonitrile", ntsconfig);
-    Element cml = result.getCml();
+    String cml = result.getCml();
     String smiles = result.getSmiles();
     String inchi = NameToInchi.convertResultToInChI(result);
     String stdinchi = NameToInchi.convertResultToStdInChI(result);
 
 `result.getStatus()` may be checked to see if the conversion was successful. If conversion was unsuccessful the output will always be null.
-Note that (std)InChI cannot be generated for polymers or radicals generated in combination with the wildcardRadicals option
+If a structure was generated but OPSIN believes there may be a problem a status of WARNING is returned. Currently this may occur if the name appeared to be ambiguous or stereochemistry was ignored.
+By default only optical rotation specification is ignored (this cannot be converted to stereo-configuration algorithmically).
+
+Convenience methods like `result.nameAppearsToBeAmbiguous()` may be used to check the cause of the warning.
+
+NOTE: (Std)InChI cannot be generated for polymers or radicals generated in combination with the wildcardRadicals option
 
 ### Availability
 OPSIN is available as a standalone JAR from Bitbucket, <http://bitbucket.org/dan2097/opsin/downloads>  
-`opsin-1.6.0-jar-with-dependencies.jar` can be executed as a commandline application or added to the classpath for library usage.
+`opsin-2.0.0-jar-with-dependencies.jar` can be executed as a commandline application or added to the classpath for library usage.
 OPSIN is also available from the Maven Central Repository for users of Apache Maven.  
 
 If you are using Maven then add the following to your pom.xml:
@@ -75,7 +81,7 @@ If you are using Maven then add the following to your pom.xml:
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
        <artifactId>opsin-core</artifactId>
-       <version>1.6.0</version>
+       <version>2.0.0</version>
     </dependency>
 
 If you need just CML or SMILES output support
@@ -85,7 +91,7 @@ or
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
        <artifactId>opsin-inchi</artifactId>
-       <version>1.6.0</version>
+       <version>2.0.0</version>
     </dependency>
 
   if you also need InChI output support.
@@ -98,7 +104,7 @@ The workings of OPSIN are more fully described in:
     Daniel M. Lowe, Peter T. Corbett, Peter Murray-Rust, Robert C. Glen
     Journal of Chemical Information and Modeling 2011 51 (3), 739-753
 
-If you use OPSIN to produce results for publication, then it would be great if you could cite us.
+If you use OPSIN in your work, then it would be great if you could cite us.
 
 The following list broadly summarises what OPSIN can currently do and what will be worked on in the future.
 
