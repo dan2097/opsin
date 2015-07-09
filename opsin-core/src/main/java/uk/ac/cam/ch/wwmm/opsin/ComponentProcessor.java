@@ -2281,7 +2281,7 @@ class ComponentProcessor {
 	private void addFunctionalAtomsToHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement() == ChemEl.O && neighbour.getCharge() == 0 && neighbour.getAtomNeighbours().size() == 1 && atom.getBondToAtomOrThrow(neighbour).getOrder() == 1){
+			if (neighbour.getElement() == ChemEl.O && neighbour.getCharge() == 0 && neighbour.getBondCount() == 1 && atom.getBondToAtomOrThrow(neighbour).getOrder() == 1){
 				neighbour.getFrag().addFunctionalAtom(neighbour);
 			}
 		}
@@ -2295,7 +2295,7 @@ class ComponentProcessor {
 	private void chargeHydroxyGroups(Atom atom) throws StructureBuildingException {
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement() == ChemEl.O && neighbour.getCharge()==0 && neighbour.getAtomNeighbours().size()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
+			if (neighbour.getElement() == ChemEl.O && neighbour.getCharge()==0 && neighbour.getBondCount()==1 && atom.getBondToAtomOrThrow(neighbour).getOrder()==1){
 				neighbour.addChargeAndProtons(-1, -1);
 			}
 		}
@@ -2312,7 +2312,7 @@ class ComponentProcessor {
 		//TODO prioritise [N+][O-]
 		List<Atom> neighbours = atom.getAtomNeighbours();
 		for (Atom neighbour : neighbours) {
-			if (neighbour.getElement() == ChemEl.O && neighbour.getAtomNeighbours().size()==1){
+			if (neighbour.getElement() == ChemEl.O && neighbour.getBondCount()==1){
 				Bond b = atom.getBondToAtomOrThrow(neighbour);
 				if (b.getOrder()==desiredBondOrder && neighbour.getCharge()==0){
 					FragmentTools.removeTerminalAtom(state, neighbour);
