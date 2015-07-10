@@ -3,10 +3,10 @@
 This distribution contains some content that is copyrighted by its respective owners
 and distributed under the indicated licenses.
 
-Automaton (http://www.brics.dk/~amoeller/automaton) - content licensed under the BSD
-License (see below)
+Automaton (http://www.brics.dk/~amoeller/automaton) - content licensed under the BSD License
+(see below)
 
-XOM (http://www.xom.nu) - content licensed under the GNU Lesser General Public License (LGPL)
+Woodstox (https://github.com/FasterXML/woodstox) - content licenced under the The Apache Software License, Version 2.0
 (see below)
 
 log4j (http://logging.apache.org/log4j/) - content licenced under the The Apache Software License, Version 2.0
