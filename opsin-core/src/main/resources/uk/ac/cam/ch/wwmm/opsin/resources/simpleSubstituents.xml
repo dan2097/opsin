@@ -14,6 +14,7 @@
 		<token value="-C#C">acetenyl</token>
 		<token value="=[N+]([O-])O">aci-nitro</token>
 		<token value="-C(=O)C=C" labels="1//2/3" usableAsAJoiner="yes" defaultInLocant="3">acryl</token>
+		<token value="-CC(C)CC">active amyl</token>
 		<token value="-CC(C)CC">active-amyl</token>
 		<token value="-CC(C)CC">activeamyl</token>
 		<token value="-C(=O)C(=O)N">amidoxalyl</token>
@@ -25,16 +26,31 @@
 		<token value="#N">aminylidyne</token>
 		<token value="-OCCCCC" labels="/1/2/3/4/5">amoxy</token>
 		<token value="-CCCCC" labels="1/2/3/4/5">amyl</token>
+		<token value="-CCCCC" labels="1/2/3/4/5">normalamyl</token>
+		<token value="-CCCCC" labels="1/2/3/4/5">normal amyl</token>
+		<token value="-CCCCC" labels="1/2/3/4/5">normal-amyl</token>
 		<token value="=CCCCC" labels="1/2/3/4/5">amylidene</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
 		<token value="-c1c(OC)cc(OC)c(OC)c1">asaryl</token>
 		<token value="-N=[N+]=[N-]">azidyl</token>
+		<token value="-OCCC(C)C" labels="/1/2/3//">iso-amoxy</token>
 		<token value="-OCCC(C)C" labels="/1/2/3//">isoamoxy</token>
+		<token value="-CCC(C)C" labels="1/2/3//">iso-amyl</token>
 		<token value="-CCC(C)C" labels="1/2/3//">isoamyl</token>
+		<token value="=CCC(C)C" labels="1/2/3//">iso-amylidene</token>
 		<token value="=CCC(C)C" labels="1/2/3//">isoamylidene</token>
+		<token value="-CC(C)(C)C">neo-amyl</token>
 		<token value="-CC(C)(C)C">neoamyl</token>
-		<token value="-C(C)(C)CC">tertiary-amyl</token>
+		<token value="-C(C)CCC">secamyl</token>
+		<token value="-C(C)CCC">sec.amyl</token>
+		<token value="-C(C)CCC">sec-amyl</token>
+		<token value="-C(C)CCC">sec.-amyl</token>
+		<token value="-C(C)CCC">secondaryamyl</token>
+		<token value="-C(C)CCC">secondary amyl</token>
+		<token value="-C(C)CCC">secondary-amyl</token>
 		<token value="-C(C)(C)CC">tertiaryamyl</token>
+		<token value="-C(C)(C)CC">tertiary amyl</token>
+		<token value="-C(C)(C)CC">tertiary-amyl</token>
 		<token value="-C(C)(C)CC">tert-amyl</token>
 		<token value="-C(C)(C)CC">tertamyl</token>
 		<token value="-C(C)(C)CC">tert.-amyl</token>
@@ -173,6 +189,7 @@
 		<token value="-[TeH](=O)">hydrotellurinyl</token>
 		<token value="-[TeH](=O)(=O)">hydrotelluronyl</token>
 		<token value="-OCC(C)C">isobutoxyl</token>
+		<token value="-OCC(C)C">iso-butoxyl</token>
 		<token value="-C=C(C)C">isocrotyl</token>
 		<token value="-NNC(O)=NN" labels="1/2//3/4/5">isocarbonohydrazido</token>
 		<token value="-[N+]#[C-]">isocyanyl</token>
@@ -221,9 +238,13 @@
 		<token value="-c1c(C)cc(C)c(C)c1">s-pseudocumyl</token>
 		<token value="-N1CCCC1" labels="1/2/3/4/5">pyrrolidino</token>
 		<token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6">salicylal</token>
+		<token value="-C(C)C(C)C">sec-iso-amyl</token>
+		<token value="-C(C)C(C)C">sec.-iso-amyl</token>
 		<token value="-C(C)C(C)C">sec-isoamyl</token>
+		<token value="-C(C)C(C)C">sec.-isoamyl</token>
 		<token value="-C(C)C(C)C">secisoamyl</token>
 		<token value="-OC(C)CC">sec-butoxyl</token>
+		<token value="-OC(C)CC">sec.-butoxyl</token>
 		<token value="-OC(C)CC">secbutoxyl</token>
 		<token value="-[Se](O)">seleneno</token>
 		<token value="-[Se](=O)(O)">selenino</token>
