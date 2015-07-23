@@ -105,8 +105,9 @@ class PreProcessor {
 				sb.append(ch);
 				break;
 				}
-			case 's'://correct British spelling to the IUPAC spelling
-				if (chemicalName.regionMatches(i + 1, "ulph", 0, 4)){
+			case 's':
+			case 'S'://correct British spelling to the IUPAC spelling
+				if (chemicalName.regionMatches(true, i + 1, "ulph", 0, 4)){
 					sb.append("sulf");
 					i = i + 4;
 					break;
