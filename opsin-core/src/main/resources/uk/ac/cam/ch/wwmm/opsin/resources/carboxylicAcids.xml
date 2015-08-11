@@ -19,6 +19,8 @@
 
 		<token value="CCC(=O)C" labels="1/2/3//4" defaultInLocant="4" usableAsAJoiner="yes">acetoacet</token>
 		<token value="CC(O)(C)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6">atrolact</token>
+		<token value="CCCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12">biotin</token>
+		<token value="CCCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12">d-biotin</token>
 		<token value="CCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">caprin</token>
 		<token value="CCCCCC" labels="numeric" usableAsAJoiner="yes">capro</token>
 		<token value="CCCCCCCC" labels="numeric" usableAsAJoiner="yes">capryl</token>
