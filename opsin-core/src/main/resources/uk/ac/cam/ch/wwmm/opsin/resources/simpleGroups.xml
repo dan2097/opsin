@@ -432,6 +432,18 @@
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
+		<token value="OC(=O)CCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotin</token>
+		<token value="OC(=O)CCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotine</token>
+		<token value="OC(=O)CCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotin</token>
+		<token value="OC(=O)CCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotine</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotin sulfone</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotine sulfone</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotin sulfone</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotine sulfone</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotin sulfoxide</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotine sulfoxide</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotin sulfoxide</token>
+		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotine sulfoxide</token>
 		<token value="OCC[N+](C)(C)C" defaultInID="1">choline</token>
 		<token value="O=C(O)CN(C)C(N)=N" functionalIDs="3">creatine</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine</token>
