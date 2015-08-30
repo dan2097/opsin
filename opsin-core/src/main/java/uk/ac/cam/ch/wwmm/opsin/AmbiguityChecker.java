@@ -1,5 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.ELEMENTARYATOM_SUBTYPE_VAL;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,8 +77,8 @@ class AmbiguityChecker {
 			throw new RuntimeException("OPSIN Bug: Atom was not part of ambiguity analysis");
 		}
 		//"identical" atoms may be distinguished by bonds yet to be formed, hence split by outvalency
-		//"identical" atoms may differ by valency as hydrogens are yet to be added
-		return env + "\t" + a.getOutValency() + "\t" + a.determineValency(true);
+		// e.g. [PH3] vs [PH3]=
+		return env + "\t" + a.getOutValency();
 	}
 
 	private static boolean allAtomsConnectToDefaultInAtom(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
@@ -106,7 +108,28 @@ class AmbiguityChecker {
 				}
 			}
 		}
-		return new StereoAnalyser(atoms, bonds);
+		
+		List<Atom> ghostHydrogens = new ArrayList<Atom>();
+		for (Atom atom : atoms) {
+			if (atom.getFrag().getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
+				continue;
+			}
+			int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom);
+			for (int i = 0; i < explicitHydrogensToAdd; i++) {
+				Atom ghostHydrogen = new Atom(ChemEl.H);
+				Bond b = new Bond(ghostHydrogen, atom, 1);
+				atom.addBond(b);
+				ghostHydrogen.addBond(b);
+				ghostHydrogens.add(ghostHydrogen);
+			}
+		}
+		atoms.addAll(ghostHydrogens);
+		StereoAnalyser analyzer = new StereoAnalyser(atoms, bonds);
+		for (Atom ghostHydrogen : ghostHydrogens) {
+			Bond b = ghostHydrogen.getFirstBond();
+			b.getOtherAtom(ghostHydrogen).removeBond(b);
+		}
+		return analyzer;
 	}
 
 	static List<Atom> useAtomEnvironmentsToGivePlausibleSubstitution(List<Atom> substitutableAtoms, int numberToBeSubstituted) {

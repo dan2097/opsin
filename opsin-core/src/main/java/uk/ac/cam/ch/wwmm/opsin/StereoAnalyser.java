@@ -262,8 +262,7 @@ class StereoAnalyser {
 	private void removeGhostAtoms(List<Atom> ghostAtoms) {
 		for (Atom atom : ghostAtoms) {
 			Bond b = atom.getFirstBond();
-			Atom adjacentAtom = b.getOtherAtom(atom);
-			adjacentAtom.removeBond(atom.getFirstBond());
+			b.getOtherAtom(atom).removeBond(b);
 		}
 	}
 
