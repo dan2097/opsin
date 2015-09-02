@@ -72,6 +72,7 @@
 		<token value="l">l-</token>
 		<token value="l">(l)-</token>
 		<token value="dl">dl-</token>
+		<token value="dl">d,l-</token>
 		<token value="dl">(dl)-</token>
 	<!--used to distinguish amino acid D/L from carbohydrate D/L if desired-->
 		<token value="ds">ds-</token>
