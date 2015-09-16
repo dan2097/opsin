@@ -748,10 +748,14 @@ class StructureBuilder {
 			Fragment carbonylFrag = carbonylOxygen.getFrag();
 			Fragment replacementFrag = replacementFragments.remove(0);
 			List<Atom> atomList = replacementFrag.getAtomList();
-			Atom atomToReplaceCarbonylOxygen = atomList.get(atomList.size()-1);
-			Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(carbonylOxygen);
-			if (numericLocantAtomConnectedToCarbonyl!=null){
-				atomList.get(0).addLocant(atomList.get(0).getElement().toString() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());//adds a locant like O1 giving another way of referencing this atom
+			if (atomList.size() == 2){
+				//special case for oxime
+				//adds a locant like O1 giving another way of referencing this atom
+				Atom numericLocantAtomConnectedToCarbonyl = OpsinTools.depthFirstSearchForAtomWithNumericLocant(carbonylOxygen);
+				if (numericLocantAtomConnectedToCarbonyl != null) {
+					Atom lastatom = atomList.get(1);
+					lastatom.addLocant(lastatom.getElement().toString() + numericLocantAtomConnectedToCarbonyl.getFirstLocant());	
+				}
 			}
 			if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				resolveWordOrBracket(state, words.get(1 +i));
@@ -766,6 +770,11 @@ class StructureBuilder {
 					}
 				}
 			}
+			if (replacementFrag.getOutAtomCount() !=1) {
+				throw new RuntimeException("OPSIN Bug: Carbonyl replacement fragment expected to have one outatom");
+			}
+			Atom atomToReplaceCarbonylOxygen = replacementFrag.getOutAtom(0).getAtom();
+			replacementFrag.removeOutAtom(0);
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(carbonylOxygen, atomToReplaceCarbonylOxygen);
 			atomToReplaceCarbonylOxygen.setType(carbonylOxygen.getType());//copy the type e.g. if the carbonyl was a suffix this should appear as a suffix
 			if (replacementFrag.getTokenEl().getParent() == null) {//incorporate only for the case that replacementFrag came from a functional class element
