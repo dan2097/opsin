@@ -241,6 +241,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolic acid</token>
 		<token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolicacid</token>
 		<token value="N1[C@@H](CCC1=O)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolate</token>
+		<token value="N1[C@@H](CCC1=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta//1/" defaultInID="1">pyroglutamal</token>
 		<token value="N1[C@@H](CCC1=O)CO" labels="/2,alpha/3,beta/4,gamma/5,delta//1/" defaultInID="1">pyroglutamol</token>
 		<token value="N1[C@@H](CCC1=O)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pyroglutamide</token>
 
