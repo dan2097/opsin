@@ -12,25 +12,25 @@
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="functionalClass" subType="none" symbol="±">
-	<!--The atom that replaces the carbonyl oxygen is the last atom in the SMILES so that the first is where unlocanted substitution occurs)-->
-		<token value="ON" labels="O/">oxime</token>
-		<token value="SN" labels="S/">thioxime</token>
-		<token value="[Se|2]N" labels="Se/">selenoxime</token>
-		<token value="[Te|2]N" labels="Te/">telluroxime</token>
-		<token value="NN" labels="1,N/">hydrazone</token>
-		<token value="NC(=O)NN" labels="4/3//2/1">semicarbazone</token>
-		<token value="NC(=S)NN" labels="4/3//2/1">thiosemicarbazone</token>
-		<token value="NC(=[Se])NN" labels="4/3//2/1">selenosemicarbazone</token>
-		<token value="NC(=[Te])NN" labels="4/3//2/1">tellurosemicarbazone</token>
-		<token value="N=C(O)NN">isosemicarbazone</token>
-		<token value="N=C(S)NN">isothiosemicarbazone</token>
-		<token value="N=C([SeH])NN">isoselenosemicarbazone</token>
-		<token value="N=C([TeH])NN">isotellurosemicarbazone</token>
-		<token value="NC(=O)C(=O)NN" labels="5/4//3//2/1">semioxamazone</token>
+		<!--Carbonyl replacement terms. The first atom replaces a carbonyl oxygen-->
+		<token value="=NO" labels="/O">oxime</token>
+		<token value="=NS" labels="/S">thioxime</token>
+		<token value="=N[Se|2]" labels="/Se">selenoxime</token>
+		<token value="=N[Te|2]" labels="/Te">telluroxime</token>
+		<token value="=NN" labels="/1,N">hydrazone</token>
+		<token value="=NNC(=O)N" labels="1/2/3//4">semicarbazone</token>
+		<token value="=NNC(=S)N" labels="1/2/3//4">thiosemicarbazone</token>
+		<token value="=NNC(=[Se])N" labels="1/2/3//4">selenosemicarbazone</token>
+		<token value="=NNC(=[Te])N" labels="1/2/3//4">tellurosemicarbazone</token>
+		<token value="=NNC(O)=N">isosemicarbazone</token>
+		<token value="=NNC(S)=N">isothiosemicarbazone</token>
+		<token value="=NNC([SeH])=N">isoselenosemicarbazone</token>
+		<token value="=NNC([TeH])=N">isotellurosemicarbazone</token>
+		<token value="=NNC(=O)C(=O)N" labels="1/2/3//4//5">semioxamazone</token>
+		<token value="=N" labels="N">imide</token>
+		<token value="=N" labels="N">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
 
-		<token value="N" labels="N">imide</token>
-		<token value="N" labels="N">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
-
+		<!--Indicate addition of chalcogen OR formation of chalcogen ether OR inorganic salt with chalcogen-->
 		<token value="O">oxide</token>
 		<token value="S">sulfide</token>
 		<token value="[Se|2]">selenide</token>

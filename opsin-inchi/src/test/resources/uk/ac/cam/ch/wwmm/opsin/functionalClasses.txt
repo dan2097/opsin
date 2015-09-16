@@ -7,3 +7,6 @@ acetic acid N-methyl amide	InChI=1S/C3H7NO/c1-3(5)4-2/h1-2H3,(H,4,5)
 ibuprofen methyl ester	InChI=1S/C14H20O2/c1-10(2)9-12-5-7-13(8-6-12)11(3)14(15)16-4/h5-8,10-11H,9H2,1-4H3
 acetic acid ethyl ester	InChI=1S/C4H8O2/c1-3-6-4(2)5/h3H2,1-2H3
 acetate ethyl ester	InChI=1S/C4H8O2/c1-3-6-4(2)5/h3H2,1-2H3
+acetone ethyloxime	InChI=1S/C5H11NO/c1-4-7-6-5(2)3/h4H2,1-3H3
+acetone O-ethyloxime	InChI=1S/C5H11NO/c1-4-7-6-5(2)3/h4H2,1-3H3
+acetone O2-ethyloxime	InChI=1S/C5H11NO/c1-4-7-6-5(2)3/h4H2,1-3H3
