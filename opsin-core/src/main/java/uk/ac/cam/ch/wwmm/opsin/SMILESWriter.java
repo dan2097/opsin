@@ -71,7 +71,7 @@ class SMILESWriter {
 	 * Creates a SMILES writer for the given fragment
 	 * @param structure
 	 */
-	SMILESWriter(Fragment structure) {
+	private SMILESWriter(Fragment structure) {
 		this.structure =structure;
 	}
 
@@ -81,9 +81,13 @@ class SMILESWriter {
 	 * 	The fragment contains no bonds to atoms outside the fragment
 	 * 	Hydrogens are all explicit
 	 * 	Spare valency has been converted to double bonds
-	 * @return
+	 * @return SMILES String
 	 */
-	String generateSmiles() {
+	static String generateSmiles(Fragment structure) {
+		return new SMILESWriter(structure).writeSmiles();
+	}
+	
+	String writeSmiles() {
 		assignSmilesOrder();
 		assignDoubleBondStereochemistrySlashes();
 
@@ -103,6 +107,7 @@ class SMILESWriter {
 
 		return smilesBuilder.toString();
 	}
+
 
 	/**
 	 * Walks through the fragment populating the Atom.VISITED property indicating how many bonds
