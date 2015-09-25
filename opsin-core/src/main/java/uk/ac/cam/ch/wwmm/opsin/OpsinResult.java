@@ -143,7 +143,7 @@ public class OpsinResult {
 	public String getSmiles() {
 		if (structure != null){
 			try{
-				return new SMILESWriter(structure).generateSmiles();
+				return SMILESWriter.generateSmiles(structure);
 			}
 			catch (Exception e) {
 				LOG.debug("SMILES generation failed", e);
