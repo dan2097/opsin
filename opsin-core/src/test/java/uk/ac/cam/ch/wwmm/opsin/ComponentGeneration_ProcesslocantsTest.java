@@ -126,6 +126,13 @@ public class ComponentGeneration_ProcesslocantsTest {
 	}
 	
 	@Test
+	public void testSuperscript7() throws ComponentGenerationException {
+		locant.setValue("N*12*");
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("N12", locant.getValue());
+	}
+	
+	@Test
 	public void testAddedHydrogen() throws ComponentGenerationException {
 		locant.setValue("3(5'H)");
 		ComponentGenerator.processLocants(substituent);
