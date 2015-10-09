@@ -1864,8 +1864,8 @@ class ComponentGenerator {
 			if (i > 2){//this is a secondary bridge (chain start/end locations should have been specified)
 				i++;
 				String coordinatesStr1;
-				String coordinatesStr2 = bridgeDescriptors[i].replaceAll("\\D", "");
-				String[] tempArray = bridgeDescriptor.split("\\D+");
+				String coordinatesStr2 = matchNonDigit.matcher(bridgeDescriptors[i]).replaceAll("");
+				String[] tempArray = matchNonDigit.split(bridgeDescriptor);
 
 				if (tempArray.length ==1){
 					//there is some ambiguity as it has not been made obvious which number/s are supposed to be the superscripted locant
