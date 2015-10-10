@@ -32,31 +32,31 @@ class ResourceManager {
 	private final AutomatonInitialiser automatonInitialiser;
 	
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
-	final HashMap<String, Map<Character, TokenEl>> tokenDict = new HashMap<String, Map<Character, TokenEl>>();
+	private final HashMap<String, Map<Character, TokenEl>> tokenDict = new HashMap<String, Map<Character, TokenEl>>();
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
-	final HashMap<Character, TokenEl> reSymbolTokenDict = new HashMap<Character, TokenEl>();
+	private final HashMap<Character, TokenEl> reSymbolTokenDict = new HashMap<Character, TokenEl>();
 
 
 	/**A mapping between annotation symbols and a trie of tokens.*/
-	final OpsinRadixTrie[] symbolTokenNamesDict;
+	private final OpsinRadixTrie[] symbolTokenNamesDict;
 	/**A mapping between annotation symbols and DFAs (annotation->automata mapping).*/
-	final RunAutomaton[] symbolRegexAutomataDict;
+	private final RunAutomaton[] symbolRegexAutomataDict;
 	/**A mapping between annotation symbols and regex patterns (annotation->regex pattern mapping).*/
-	final Pattern[] symbolRegexesDict;
+	private final Pattern[] symbolRegexesDict;
 	
 	/**The automaton which describes the grammar of a chemical name from left to right*/
-	final RunAutomaton chemicalAutomaton;
+	private final RunAutomaton chemicalAutomaton;
 	
 	
 	/**As symbolTokenNamesDict but the tokens are reversed*/
-	OpsinRadixTrie[] symbolTokenNamesDictReversed;
+	private OpsinRadixTrie[] symbolTokenNamesDictReversed;
 	/**As symbolRegexAutomataDict but automata are reversed */
-	RunAutomaton[] symbolRegexAutomataDictReversed;
+	private RunAutomaton[] symbolRegexAutomataDictReversed;
 	/**As symbolRegexesDict but regexes match the end of string */
-	Pattern[] symbolRegexesDictReversed;
+	private Pattern[] symbolRegexesDictReversed;
 	
 	/**The automaton which describes the grammar of a chemical name from right to left*/
-	RunAutomaton reverseChemicalAutomaton;
+	private RunAutomaton reverseChemicalAutomaton;
 
 	/**Generates the ResourceManager.
 	 * This involves reading in the token files, the regexToken file (regexTokens.xml) and the grammar file (regexes.xml).
@@ -460,6 +460,38 @@ class ResourceManager {
 			return regexToken.copy(tokenString);
 		}
 		throw new ParsingException("Parsing Error: This is a bug in the program. A token element could not be found for token: " + tokenString +" using annotation symbol: " +symbol);
+	}
+	
+	RunAutomaton getChemicalAutomaton() {
+		return chemicalAutomaton;
+	}
+	
+	OpsinRadixTrie[] getSymbolTokenNamesDict() {
+		return symbolTokenNamesDict;
+	}
+
+	RunAutomaton[] getSymbolRegexAutomataDict() {
+		return symbolRegexAutomataDict;
+	}
+
+	Pattern[] getSymbolRegexesDict() {
+		return symbolRegexesDict;
+	}
+
+	RunAutomaton getReverseChemicalAutomaton() {
+		return reverseChemicalAutomaton;
+	}
+
+	OpsinRadixTrie[] getSymbolTokenNamesDictReversed() {
+		return symbolTokenNamesDictReversed;
+	}
+
+	RunAutomaton[] getSymbolRegexAutomataDictReversed() {
+		return symbolRegexAutomataDictReversed;
+	}
+
+	Pattern[] getSymbolRegexesDictReversed() {
+		return symbolRegexesDictReversed;
 	}
 	
 }

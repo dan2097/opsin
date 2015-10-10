@@ -26,12 +26,14 @@ import dk.brics.automaton.RunAutomaton;
  */
 public class ParseRules {
 
-	private final ResourceManager resourceManager;
-
 	/** A DFA encompassing the grammar of a chemical word. */
 	private final RunAutomaton chemAutomaton;
 	/** The allowed symbols in chemAutomaton */
 	private final char[] stateSymbols;
+	
+	private final OpsinRadixTrie[] symbolTokenNamesDict;
+	private final RunAutomaton[] symbolRegexAutomataDict;
+	private final Pattern[] symbolRegexesDict;
 	
 	private final AnnotatorState initialState;
 
@@ -40,10 +42,12 @@ public class ParseRules {
 	 * @param resourceManager
 	 */
 	ParseRules(ResourceManager resourceManager){
-		this.resourceManager = resourceManager;
-		chemAutomaton = resourceManager.chemicalAutomaton;
-		stateSymbols = chemAutomaton.getCharIntervals();
-		initialState = new AnnotatorState(chemAutomaton.getInitialState(), '\0', 0, true, null);
+		this.chemAutomaton = resourceManager.getChemicalAutomaton();
+		this.symbolTokenNamesDict = resourceManager.getSymbolTokenNamesDict();
+		this.symbolRegexAutomataDict = resourceManager.getSymbolRegexAutomataDict();
+		this.symbolRegexesDict = resourceManager.getSymbolRegexesDict();
+		this.stateSymbols = chemAutomaton.getCharIntervals();
+		this.initialState = new AnnotatorState(chemAutomaton.getInitialState(), '\0', 0, true, null);
 	}
 
 	/**Determines the possible annotations for a chemical word
@@ -89,7 +93,7 @@ public class ParseRules {
 				char annotationCharacter = stateSymbols[i];
 				int potentialNextState = chemAutomaton.step(as.getState(), annotationCharacter);
 				if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-					OpsinRadixTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDict[i];
+					OpsinRadixTrie possibleTokenisationsTrie = symbolTokenNamesDict[i];
 					if (possibleTokenisationsTrie != null) {
 						List<Integer> possibleTokenisations = possibleTokenisationsTrie.findMatches(chemicalWordLowerCase, posInName);
 						if (possibleTokenisations != null) {//next could be a token
@@ -101,7 +105,7 @@ public class ParseRules {
 							}
 						}
 					}
-					RunAutomaton possibleAutomata = resourceManager.symbolRegexAutomataDict[i];
+					RunAutomaton possibleAutomata = symbolRegexAutomataDict[i];
 					if (possibleAutomata != null) {//next could be an automaton
 						int matchLength = possibleAutomata.run(chemicalWord, posInName);
 						if (matchLength != -1){//matchLength = -1 means it did not match
@@ -111,7 +115,7 @@ public class ParseRules {
 							asStack.add(newAs);
 						}
 					}
-					Pattern possibleRegex = resourceManager.symbolRegexesDict[i];
+					Pattern possibleRegex = symbolRegexesDict[i];
 					if (possibleRegex != null) {//next could be a regex
 						Matcher mat = possibleRegex.matcher(chemicalWord).region(posInName, chemicalWord.length());
 						mat.useTransparentBounds(true);

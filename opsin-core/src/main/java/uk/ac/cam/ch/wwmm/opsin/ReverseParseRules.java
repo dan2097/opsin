@@ -25,12 +25,14 @@ import dk.brics.automaton.RunAutomaton;
  */
 class ReverseParseRules {
 
-	private final ResourceManager resourceManager;
-
 	/** A DFA encompassing the grammar of a chemical word. */
 	private final RunAutomaton chemAutomaton;
 	/** The allowed symbols in chemAutomaton */
 	private final char[] stateSymbols;
+	
+	private final OpsinRadixTrie[] symbolTokenNamesDictReversed;
+	private final RunAutomaton[] symbolRegexAutomataDictReversed;
+	private final Pattern[] symbolRegexesDictReversed;
 
 	/** 
 	 * Creates a right to left parser that can parse a substituent/full/functional word
@@ -38,10 +40,12 @@ class ReverseParseRules {
 	 * @throws IOException 
 	 */
 	ReverseParseRules(ResourceManager resourceManager) throws IOException{
-		this.resourceManager = resourceManager;
 		resourceManager.populatedReverseTokenMappings();
-		chemAutomaton = resourceManager.reverseChemicalAutomaton;
-		stateSymbols = chemAutomaton.getCharIntervals();
+		this.chemAutomaton = resourceManager.getReverseChemicalAutomaton();
+		this.symbolTokenNamesDictReversed = resourceManager.getSymbolTokenNamesDictReversed();
+		this.symbolRegexAutomataDictReversed = resourceManager.getSymbolRegexAutomataDictReversed();
+		this.symbolRegexesDictReversed = resourceManager.getSymbolRegexesDictReversed();
+		this.stateSymbols = chemAutomaton.getCharIntervals();
 	}
 
 	/**Determines the possible annotations for a chemical word
@@ -88,7 +92,7 @@ class ReverseParseRules {
 				char annotationCharacter = stateSymbols[i];
 				int potentialNextState = chemAutomaton.step(as.getState(), annotationCharacter);
 				if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
-					OpsinRadixTrie possibleTokenisationsTrie = resourceManager.symbolTokenNamesDictReversed[i];
+					OpsinRadixTrie possibleTokenisationsTrie = symbolTokenNamesDictReversed[i];
 					if (possibleTokenisationsTrie != null) {
 						List<Integer> possibleTokenisations = possibleTokenisationsTrie.findMatchesReadingStringRightToLeft(chemicalWordLowerCase, posInName);
 						if (possibleTokenisations != null) {//next could be a token
@@ -100,7 +104,7 @@ class ReverseParseRules {
 							}
 						}
 					}
-					RunAutomaton possibleAutomata = resourceManager.symbolRegexAutomataDictReversed[i];
+					RunAutomaton possibleAutomata = symbolRegexAutomataDictReversed[i];
 					if (possibleAutomata != null) {//next could be an automaton
 						int matchLength = runInReverse(possibleAutomata, chemicalWord, posInName);
 						if (matchLength != -1){//matchLength = -1 means it did not match
@@ -110,7 +114,7 @@ class ReverseParseRules {
 							asStack.add(newAs);
 						}
 					}
-					Pattern possibleRegex = resourceManager.symbolRegexesDictReversed[i];
+					Pattern possibleRegex = symbolRegexesDictReversed[i];
 					if (possibleRegex != null) {//next could be a regex
 						Matcher mat = possibleRegex.matcher(chemicalWord).region(0, posInName);
 						mat.useTransparentBounds(true);
