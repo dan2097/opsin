@@ -164,7 +164,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
 		}
 		if (state.n2sConfig.isOutputRadicalsAsWildCardAtoms()) {
-			rGroups.addAll(convertOutAtomsToRgroups(uniFrag));
+			convertOutAtomsToAttachmentAtoms(uniFrag);
 		}
 		
 		for (Fragment rGroup : rGroups) {
@@ -2062,20 +2062,15 @@ class StructureBuilder {
 		return matchingElements;
 	}
 	
-	private List<Fragment> convertOutAtomsToRgroups(Fragment uniFrag) throws StructureBuildingException {
-		List<Fragment> rGroups = new ArrayList<Fragment>();
+	private void convertOutAtomsToAttachmentAtoms(Fragment uniFrag) throws StructureBuildingException {
 		int outAtomCount = uniFrag.getOutAtomCount();
 		for (int i = outAtomCount -1; i >=0; i--) {
 			OutAtom outAtom = uniFrag.getOutAtom(i);
 			uniFrag.removeOutAtom(i);
-			Fragment rGroup =state.fragManager.buildSMILES("[R|" + outAtom.getValency() + "]", "", NONE_LABELS_VAL);
-			state.fragManager.createBond(outAtom.getAtom(), rGroup.getFirstAtom(), outAtom.getValency());
-			state.fragManager.incorporateFragment(rGroup, uniFrag);
-			rGroups.add(rGroup);
+			Atom rGroup = state.fragManager.createAtom(ChemEl.R, uniFrag);
+			state.fragManager.createBond(outAtom.getAtom(), rGroup, outAtom.getValency());
 		}
-		return rGroups;
 	}
-	
 
 	/**
 	 * Returns the atom corresponding to position i in the outAtoms list
