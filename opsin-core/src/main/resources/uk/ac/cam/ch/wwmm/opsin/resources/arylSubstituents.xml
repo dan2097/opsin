@@ -12,7 +12,13 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="s1nccc1" labels="1/2/3/4/5">isothiaz</token>
 		<token value="o1nccc1" labels="1/2/3/4/5">isoxaz</token>
 		<token value="o1nccc1" labels="1/2/3/4/5">isooxaz</token>
+		<token value="Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenmeth</token>
 		<token value="CCc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">pheneth</token>
+		<token value="CCCc1ccccc1" labels="alpha/beta/gamma/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenprop</token>
+		<token value="C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenisoprop</token>
+		<token value="CCCCc1ccccc1" labels="alpha/beta/gamma/delta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenbut</token>
+		<token value="CCCCCc1ccccc1" labels="alpha/beta/gamma/delta/epsilon/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenpent</token>
+		<token value="CCCCCCc1ccccc1" labels="alpha/beta/gamma/delta/epsilon/zeta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenhex</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrr</token>
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">styr</token>
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" frontLocantsExpected="2,3,4">tol</token>

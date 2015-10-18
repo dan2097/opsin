@@ -29,6 +29,7 @@
 		<token value="c1(ccccc1)C(c2ccccc2)(c3ccccc3)C(=O)c4ccccc4">benzopinacolone</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="[O|1] locant 1;O locant 4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzosemiquinone</token>
 		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O">bisphenol a</token>
+		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O">bisphenol-a</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6">bourbonal</token>
 		<token value="c1c(O)c(C)ccc1C(C)C">carvacrol</token>
 		<token value="c1(ccc(CC=C)cc1)O">chavicol</token>
