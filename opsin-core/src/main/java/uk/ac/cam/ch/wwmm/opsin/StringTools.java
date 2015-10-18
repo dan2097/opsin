@@ -74,7 +74,7 @@ class StringTools {
 	 * @throws PreProcessingException
 	 */
 	static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(s.length());
 		for (int i = 0, l = s.length(); i < l; i++) {
 			char c = s.charAt(i);
 			switch (c) {
