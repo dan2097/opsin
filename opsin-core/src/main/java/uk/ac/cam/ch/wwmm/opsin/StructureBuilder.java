@@ -244,6 +244,10 @@ class StructureBuilder {
 		if (outAtomCount > esterIdCount){
 			throw new StructureBuildingException("There are more radicals in the substituents(" + outAtomCount +") than there are places to form esters("+esterIdCount+")");
 		}
+		if (esterIdCount > outAtomCount && outAtomCount % ateGroups.size() !=0) {
+			//actually checks if the same number of ester forming points would be used in each ate group e.g. ethyl diacetate is wrong
+			throw new StructureBuildingException("There are less radicals in the substituents(" + outAtomCount +") than there are places to form esters("+esterIdCount+")");
+		}
 		for(int i=0; i< outAtomCount; i++) {
 			BuildResults ateBr = ateGroups.get(i % ateGroups.size());
 			Atom ateAtom;
