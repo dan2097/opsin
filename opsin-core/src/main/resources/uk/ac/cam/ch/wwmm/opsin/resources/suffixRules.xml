@@ -116,6 +116,10 @@ sense of this -->
 	<rule value="carbonylium">
 		<addgroup SMILES="[*][C+]=O"/>
 	</rule>
+	<rule value="carboxamide">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*]C(=O)N" functionalIDs="4,4" />
+	</rule>
 	<rule value="dicarboximide">
 		<addgroup SMILES="[*]C(=O)NC(=O)[*]"/>
 	</rule>

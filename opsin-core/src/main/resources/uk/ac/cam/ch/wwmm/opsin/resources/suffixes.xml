@@ -11,6 +11,7 @@
 		<token value="aminium">aminium</token>
 		<token value="aminylium">aminylium</token>
 		<token value="carbonylium">carbonylium</token>
+		<token value="carboxamide">carboxyamide</token><!--non-standard variant of carboxamide-->
 		<token value="carboxylate">carboxylate</token>
 		<token value="carboxylate">carboxylat</token>
 		<token value="carboxylic">carboxylic</token>
