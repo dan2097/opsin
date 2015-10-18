@@ -65,7 +65,7 @@ class PreProcessor {
 	}
 
 	private static String performMultiCharacterReplacements(String chemicalName) {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(chemicalName.length());
 		for (int i = 0, nameLength = chemicalName.length(); i < nameLength; i++) {
 			char ch = chemicalName.charAt(i);
 			switch (ch) {
