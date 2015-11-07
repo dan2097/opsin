@@ -36,7 +36,7 @@ public class ComponentProcessorTest {
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
-		assertEquals(2, root.getChildElements().size());
+		assertEquals(2, root.getChildCount());
 		assertEquals(substractivePrefix, root.getChildElements().get(0));
 	}
 	
@@ -63,7 +63,7 @@ public class ComponentProcessorTest {
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
-		assertEquals(2, root.getChildElements().size());
+		assertEquals(2, root.getChildCount());
 		assertEquals(substractivePrefix, root.getChildElements().get(0));
 	}
 	
@@ -88,8 +88,8 @@ public class ComponentProcessorTest {
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
-		assertEquals(1, root.getChildElements().size());
-		assertEquals(2, substituent2.getChildElements().size());
+		assertEquals(1, root.getChildCount());
+		assertEquals(2, substituent2.getChildCount());
 		assertEquals(substractivePrefix, substituent2.getChildElements().get(0));
 	}
 	
@@ -113,7 +113,7 @@ public class ComponentProcessorTest {
 
 		ComponentProcessor.removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 		assertEquals("Substractive prefix should of been detached", null, substituent.getParent());
-		assertEquals(4, root.getChildElements().size());
+		assertEquals(4, root.getChildCount());
 		assertEquals(locant, root.getChildElements().get(0));
 		assertEquals(multiplier, root.getChildElements().get(1));
 		assertEquals(substractivePrefix, root.getChildElements().get(2));

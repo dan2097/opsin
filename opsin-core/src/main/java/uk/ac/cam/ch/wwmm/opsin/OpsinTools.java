@@ -79,10 +79,8 @@ class OpsinTools {
 		  return getPreviousGroup(parent);//no group found
 	  }
 	  Element previous = parent.getChild(index - 1);
-	  List<Element> children = previous.getChildElements();
-	  while (children.size() != 0){
-		  previous = children.get(children.size() - 1);
-		  children = previous.getChildElements();
+	  while (previous.getChildCount() != 0) {
+		  previous = previous.getChild(previous.getChildCount() - 1);
 	  }
 	  List<Element> groups = previous.getParent().getChildElements(GROUP_EL);
 	  if (groups.size() == 0){
@@ -111,10 +109,8 @@ class OpsinTools {
 		  return getNextGroup(parent);//no group found
 	  }
 	  Element next = parent.getChild(index + 1);
-	  List<Element> children = next.getChildElements();
-	  while (children.size() != 0){
-		  next = children.get(0);
-		  children = next.getChildElements();
+	  while (next.getChildCount() != 0){
+		  next = next.getChild(0);
 	  }
 	  List<Element> groups = next.getParent().getChildElements(GROUP_EL);
 	  if (groups.size() == 0){
@@ -511,19 +507,16 @@ class OpsinTools {
 	static List<Element> getDescendantElementsWithTagName(Element startingElement, String elementName) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Deque<Element> stack = new ArrayDeque<Element>();
-		List<Element> children = startingElement.getChildElements();
-		for (int i = children.size() -1; i >= 0; i--) {
-			stack.add(children.get(i));
+		for (int i = startingElement.getChildCount() - 1; i >= 0; i--) {
+			stack.add(startingElement.getChild(i));
 		}
 		while (stack.size() > 0){
 			Element currentElement = stack.removeLast();
 			if (currentElement.getName().equals(elementName)){
 				matchingElements.add(currentElement);
 			}
-			children = currentElement.getChildElements();
-			for (int i = children.size() -1; i >= 0; i--) {
-				Element child = children.get(i);
-				stack.add(child);
+			for (int i = currentElement.getChildCount() - 1; i >= 0; i--) {
+				stack.add(currentElement.getChild(i));
 			}
 		}
 		return matchingElements;
@@ -538,9 +531,8 @@ class OpsinTools {
 	static List<Element> getDescendantElementsWithTagNames(Element startingElement, String[] elementNames) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Deque<Element> stack = new ArrayDeque<Element>();
-		List<Element> children =startingElement.getChildElements();
-		for (int i = children.size() -1; i >= 0; i--) {
-			stack.add(children.get(i));
+		for (int i = startingElement.getChildCount() - 1; i >= 0; i--) {
+			stack.add(startingElement.getChild(i));
 		}
 		while (stack.size()>0){
 			Element currentElement = stack.removeLast();
@@ -551,10 +543,8 @@ class OpsinTools {
 					break;
 				}
 			}
-			children = currentElement.getChildElements();
-			for (int i = children.size() -1; i >= 0; i--) {
-				Element child =children.get(i);
-				stack.add(child);
+			for (int i = currentElement.getChildCount() - 1; i >= 0; i--) {
+				stack.add(currentElement.getChild(i));
 			}
 		}
 		return matchingElements;
@@ -568,8 +558,8 @@ class OpsinTools {
 	 */
 	static List<Element> getChildElementsWithTagNames(Element startingElement, String[] elementNames) {
 		List<Element> matchingElements = new ArrayList<Element>();
-		List<Element> children = startingElement.getChildElements();
-		for (Element  child : children) {
+		for (int i = 0, l = startingElement.getChildCount(); i < l; i++) {
+			Element child = startingElement.getChild(i);
 			String currentElName = child.getName();
 			for (String targetTagName : elementNames) {
 				if (currentElName.equals(targetTagName)){
@@ -593,9 +583,8 @@ class OpsinTools {
 	static List<Element> getDescendantElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
 		List<Element> matchingElements = new ArrayList<Element>();
 		Deque<Element> stack = new ArrayDeque<Element>();
-		List<Element> children =startingElement.getChildElements();
-		for (int i = children.size() - 1; i >= 0; i--) {
-			stack.add(children.get(i));
+		for (int i = startingElement.getChildCount() - 1; i >= 0; i--) {
+			stack.add(startingElement.getChild(i));
 		}
 		while (stack.size() > 0){
 			Element currentElement =stack.removeLast();
@@ -604,10 +593,8 @@ class OpsinTools {
 					matchingElements.add(currentElement);
 				}
 			}
-			children =currentElement.getChildElements();
-			for (int i = children.size() - 1; i >= 0; i--) {
-				Element child =children.get(i);
-				stack.add(child);
+			for (int i = currentElement.getChildCount() - 1; i >= 0; i--) {
+				stack.add(currentElement.getChild(i));
 			}
 		}
 		return matchingElements;
@@ -622,8 +609,8 @@ class OpsinTools {
 	 */
 	static List<Element> getChildElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
 		List<Element> matchingElements = new ArrayList<Element>();
-		List<Element> children = startingElement.getChildElements();
-		for (Element child : children) {
+		for (int i = 0, l = startingElement.getChildCount(); i < l; i++) {
+			Element child = startingElement.getChild(i);
 			if (child.getName().equals(elementName)){
 				if (attributeValue.equals(child.getAttributeValue(attributeName))){
 					matchingElements.add(child);
@@ -646,15 +633,13 @@ class OpsinTools {
 		stack.add(startingElement);
 		while (stack.size() > 0){
 			Element currentElement = stack.removeLast();
-			List<Element> children = currentElement.getChildElements();
-			if (children.size() == 0){
+			int childCount = currentElement.getChildCount();
+			if (childCount == 0) {
 				counts[1]++;
 			}
 			else{
-				for (Element child : children) {
-					counts[0]++;
-					stack.add(child);
-				}
+				stack.addAll(currentElement.getChildElements());
+				counts[0] += childCount;
 			}
 		}
 		return counts;

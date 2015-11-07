@@ -50,7 +50,7 @@ class GroupingEl extends Element{
 	
 	@Override
 	List<Element> getChildElements(String name) {
-		List<Element> elements = new ArrayList<Element>();
+		List<Element> elements = new ArrayList<Element>(1);
 		for (Element element : children) {
 			if (element.name.equals(name)) {
 				elements.add(element);
