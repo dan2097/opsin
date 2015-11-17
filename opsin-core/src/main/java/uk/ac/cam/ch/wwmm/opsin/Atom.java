@@ -549,16 +549,11 @@ class Atom {
 				maxValency=lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 			}
 			else{
-				if (chemEl == ChemEl.C){
-					maxValency = 4 + protonsExplicitlyAddedOrRemoved;
+				Integer hwValency = ValencyChecker.getHWValency(chemEl);
+				if (hwValency == null){
+					throw new StructureBuildingException(chemEl +" is not expected to be aromatic!");
 				}
-				else{
-					Integer hwValency = ValencyChecker.getHWValency(chemEl);
-					if (hwValency == null){
-						throw new StructureBuildingException(chemEl +" is not expected to be aromatic!");
-					}
-					maxValency = hwValency + protonsExplicitlyAddedOrRemoved;
-				}
+				maxValency = hwValency + protonsExplicitlyAddedOrRemoved;
 			}
 			int maxSpareValency;
 			if (takeIntoAccountExternalBonds){
