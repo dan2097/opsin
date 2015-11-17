@@ -47,6 +47,8 @@
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanuramide</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamide</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamine</token>
+		<token value="N1=PN=PN=P1" labels="1/2/3/4/5/6">cyclotriphosphazen</token>
+		<token value="N1=PN=PN=P1" labels="1/2/3/4/5/6">cyclotriphosphazene</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" functionalIDs="9">dibenzamid</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" functionalIDs="9">dibenzamide</token>
 		<token value="c1(c(C(=O)[O-])cccc1)c2c(C(=O)[O-])cccc2" labels="1/2////3/4/5/6/1'/2'////3'/4'/5'/6'" functionalIDs="5,14">diphenate</token>
