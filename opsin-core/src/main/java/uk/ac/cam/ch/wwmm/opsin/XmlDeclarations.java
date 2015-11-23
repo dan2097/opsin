@@ -78,6 +78,9 @@ class XmlDeclarations {
 	
 	/** Used in amino acid and carbohydrate nomenclature to indicate stereochemistry*/
 	static final String DLSTEREOCHEMISTRY_EL ="dlStereochemistry";
+	
+	/**A fractional multiplier e.g. hemi*/
+	static final String FRACTIONALMULTIPLIER_EL ="fractionalMultiplier";
 
 	/**A functional Class such as acid. Does not correspond to a fragment*/
 	static final String FUNCTIONALCLASS_EL ="functionalClass";

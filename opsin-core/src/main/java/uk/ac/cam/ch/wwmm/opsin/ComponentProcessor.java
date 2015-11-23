@@ -212,7 +212,7 @@ class ComponentProcessor {
 				assignLocantsAndMultipliers(subBracketOrRoot);
 			}
 			processBiochemicalLinkageDescriptors(substituents, brackets);
-			processWordLevelMultiplierIfApplicable(word, wordCount);
+			processWordLevelMultiplierIfApplicable(word, roots, wordCount);
 		}
 		new WordRulesOmittedSpaceCorrector(state, parse).correctOmittedSpaces();//TODO where should this go?
 	}
@@ -5205,13 +5205,13 @@ class ComponentProcessor {
 	 */
 	private void assignLocantsAndMultipliers(Element subOrBracket) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> locants = subOrBracket.getChildElements(LOCANT_EL);
-		int multiplier =1;
+		int multiplier = 1;
 		List<Element> multipliers =  subOrBracket.getChildElements(MULTIPLIER_EL);
 		Element parentElem = subOrBracket.getParent();
 		boolean oneBelowWordLevel = parentElem.getName().equals(WORD_EL);
 		Element groupIfPresent = subOrBracket.getFirstChildElement(GROUP_EL);
-		if (multipliers.size()>0){
-			if (multipliers.size()>1){
+		if (multipliers.size() > 0) {
+			if (multipliers.size() > 1){
 				throw new ComponentGenerationException(subOrBracket.getName() +" has multiple multipliers, unable to determine meaning!");
 			}
 			if (oneBelowWordLevel &&
@@ -5221,7 +5221,7 @@ class ComponentProcessor {
 			}
 			multiplier = Integer.parseInt(multipliers.get(0).getAttributeValue(VALUE_ATR));
 			subOrBracket.addAttribute(new Attribute(MULTIPLIER_ATR, multipliers.get(0).getAttributeValue(VALUE_ATR)));
-			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is neccesary at that stage to determine what elements (if any) are in front of the multiplier
+			//multiplier is INTENTIONALLY not detached. As brackets/subs are only multiplied later on it is necessary at that stage to determine what elements (if any) are in front of the multiplier
 			if (groupIfPresent !=null && PERHALOGENO_SUBTYPE_VAL.equals(groupIfPresent.getAttributeValue(SUBTYPE_ATR))){
 				throw new StructureBuildingException(groupIfPresent.getValue() +" cannot be multiplied");
 			}
@@ -5244,7 +5244,7 @@ class ComponentProcessor {
 				locantsToDebugString(locants);
 				throw new ComponentGenerationException(locantsToDebugString(locants));
 			}
-			if (locants.size()!=1){
+			if (locants.size() != 1){
 				throw new ComponentGenerationException(locantsToDebugString(locants));
 			}
 			Element locantEl = locants.get(0);
@@ -5315,27 +5315,28 @@ class ComponentProcessor {
 	 * If a word level multiplier is present e.g. diethyl butandioate then this is processed to ethyl ethyl butandioate
 	 * If wordCount is 1 then an exception is thrown if a multiplier is encountered e.g. triphosgene parsed as tri phosgene
 	 * @param word
+	 * @param roots 
 	 * @param wordCount 
 	 * @throws StructureBuildingException
 	 * @throws ComponentGenerationException
 	 */
-	private void processWordLevelMultiplierIfApplicable(Element word, int wordCount) throws StructureBuildingException, ComponentGenerationException {
-		if (word.getChildCount()==1){
-			Element subOrBracket = word.getChild(0);
-			Element multiplier = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
-			if (multiplier !=null){
-				int multiVal =Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-				List<Element> locants =subOrBracket.getChildElements(LOCANT_EL);
-				boolean assignLocants =false;
-				boolean wordLevelLocants = wordLevelLocantsAllowed(subOrBracket, locants.size());//something like O,S-dimethyl phosphorothioate
-				if (locants.size()>1){
+	private void processWordLevelMultiplierIfApplicable(Element word, List<Element> roots, int wordCount) throws StructureBuildingException, ComponentGenerationException {
+		if (word.getChildCount() == 1){
+			Element firstSubBrackOrRoot = word.getChild(0);
+			Element multiplier = firstSubBrackOrRoot.getFirstChildElement(MULTIPLIER_EL);
+			if (multiplier != null) {
+				int multiVal = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
+				List<Element> locants = firstSubBrackOrRoot.getChildElements(LOCANT_EL);
+				boolean assignLocants = false;
+				boolean wordLevelLocants = wordLevelLocantsAllowed(firstSubBrackOrRoot, locants.size());//something like O,S-dimethyl phosphorothioate
+				if (locants.size() > 1) {
 					throw new ComponentGenerationException("Unable to assign all locants");
 				}
 				String[] locantValues = null;
-				if (locants.size()==1){
+				if (locants.size() == 1) {
 					locantValues = MATCH_COMMA.split(locants.get(0).getValue());
 					if (locantValues.length == multiVal){
-						assignLocants=true;
+						assignLocants = true;
 						locants.get(0).detach();
 						if (wordLevelLocants){
 							word.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
@@ -5349,22 +5350,22 @@ class ComponentProcessor {
 					}
 				}
 				checkForNonConfusedWithNona(multiplier);
-				if (wordCount ==1){
+				if (wordCount == 1) {
 					if (!isMonoFollowedByElement(multiplier, multiVal)){
 						throw new StructureBuildingException("Unexpected multiplier found at start of word. Perhaps the name is trivial e.g. triphosgene");
 					}
 				}
-				if (multiVal ==1){//mono
+				if (multiVal == 1) {//mono
 					return;
 				}
 				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
-				for (int i = subOrBracket.indexOf(multiplier) -1 ; i >=0 ; i--) {
-					Element el = subOrBracket.getChild(i);
+				for (int i = firstSubBrackOrRoot.indexOf(multiplier) -1 ; i >=0 ; i--) {
+					Element el = firstSubBrackOrRoot.getChild(i);
 					el.detach();
 					elementsNotToBeMultiplied.add(el);
 				}
 				multiplier.detach();
-				for(int i=multiVal -1; i>=1; i--) {
+				for(int i= multiVal -1; i>=1; i--) {
 					Element clone = state.fragManager.cloneElement(state, word);
 					if (assignLocants){
 						clone.getAttribute(LOCANT_ATR).setValue(locantValues[i]);
@@ -5372,8 +5373,13 @@ class ComponentProcessor {
 					OpsinTools.insertAfter(word, clone);
 				}
 				for (Element el : elementsNotToBeMultiplied) {//re-add anything before multiplier to original word
-					subOrBracket.insertChild(el, 0);
+					firstSubBrackOrRoot.insertChild(el, 0);
 				}
+			}
+		}
+		else if (roots.size() == 1) {
+			if (OpsinTools.getDescendantElementsWithTagName(roots.get(0), FRACTIONALMULTIPLIER_EL).size() > 0){
+				throw new StructureBuildingException("Unexpected fractional multiplier found within chemical name");
 			}
 		}
 	}
