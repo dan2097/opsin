@@ -197,7 +197,7 @@ al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != ac
 		<token value="aldehyde">aldehyd</token>
 	</tokenList>
 
-<!--May appear before an inline suffix e.g. -2-on-3-yl -->
+<!--May appear before an subsequent suffix e.g. on-3-yl -->
 	<tokenList tagname="suffix" type="root" symbol="ç">
 		<token value="one">one</token>
 		<token value="one">on</token>
@@ -207,6 +207,10 @@ al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != ac
 		<token value="tellone">tellon</token>
 		<token value="thione">thione</token>
 		<token value="thione">thion</token>
+	</tokenList>
+<!--As above but requires locant e.g. -2-ol-3-yl -->
+	<tokenList tagname="suffix" type="root" symbol="ý">
+		<token value="ol">ol</token>
 	</tokenList>
 
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->

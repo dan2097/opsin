@@ -138,4 +138,11 @@
 		<token value="14">tetradeci</token>
 		<token value="15">pentadeci</token>
 	</tokenList>
+
+	<tokenList tagname="fractionalMultiplier" symbol="þ">
+		<token value="1/2">hemi</token>
+		<token value="3/2">sesqui</token>
+		<token value="5/2">hemipenta</token>
+		<token value="7/2">hemihepta</token>
+	</tokenList>
 </tokenLists>

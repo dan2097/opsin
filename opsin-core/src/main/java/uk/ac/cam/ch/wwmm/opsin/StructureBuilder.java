@@ -150,11 +150,8 @@ class StructureBuilder {
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
 		
-		boolean explicitStoichiometryPresent = applyExplicitStoichiometryIfProvided(wordRules);
-		int overallCharge = state.fragManager.getOverallCharge();
-		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
-			balanceChargeIfPossible(molecule, overallCharge, explicitStoichiometryPresent);
-		}
+		manipulateStoichiometry(molecule, wordRules);
+		
 		state.fragManager.makeHydrogensExplicit();
 
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
@@ -1669,6 +1666,81 @@ class StructureBuilder {
 		throw new StructureBuildingException("Cannot find functional atom with locant: " +locant + " to form an ester with");
 	}
 
+	/**
+	 * Applies explicit stoichiometry, charge balancing and fractional multipliers
+	 * @param molecule
+	 * @param wordRules
+	 * @throws StructureBuildingException
+	 */
+	private void manipulateStoichiometry(Element molecule, List<Element> wordRules) throws StructureBuildingException {
+		boolean explicitStoichiometryPresent = applyExplicitStoichiometryIfProvided(wordRules);
+		boolean chargedFractionalGroup = false;
+		List<Element> wordRulesWithFractionalMultipliers = new ArrayList<Element>(0);
+		for (Element wordRule : wordRules) {
+			Element fractionalMultiplier = wordRule.getChild(0);
+			while (fractionalMultiplier.getChildCount() != 0){
+				fractionalMultiplier = fractionalMultiplier.getChild(0);
+			}
+			if (fractionalMultiplier.getName().equals(FRACTIONALMULTIPLIER_EL)) {
+				if (explicitStoichiometryPresent) {
+					throw new StructureBuildingException("Fractional multipliers should not be used in conjunction with explicit stoichiometry");
+				}
+				String[] value = fractionalMultiplier.getAttributeValue(VALUE_ATR).split("/");
+				if (value.length != 2) {
+					throw new RuntimeException("OPSIN Bug: malformed fractional multiplier: " + fractionalMultiplier.getAttributeValue(VALUE_ATR));
+				}
+				try {
+					int numerator = Integer.parseInt(value[0]);
+					int denominator = Integer.parseInt(value[1]);
+					if (denominator != 2) {
+						throw new RuntimeException("Only fractions of a 1/2 currently supported");
+					}
+					for (int j = 1; j < numerator; j++) {
+						Element clone = state.fragManager.cloneElement(state, wordRule);
+						OpsinTools.insertAfter(wordRule, clone);
+						wordRulesWithFractionalMultipliers.add(clone);
+					}
+				}
+				catch (NumberFormatException e) {
+					throw new RuntimeException("OPSIN Bug: malformed fractional multiplier: " + fractionalMultiplier.getAttributeValue(VALUE_ATR));
+				}
+				//don't detach the fractional multiplier to avoid charge balancing multiplication (cf. handling of mono)
+				wordRulesWithFractionalMultipliers.add(wordRule);
+				if (new BuildResults(wordRule).getCharge() !=0){
+					chargedFractionalGroup = true;
+				}
+			}
+		}
+		if (wordRulesWithFractionalMultipliers.size() > 0) {
+			if (wordRules.size() == 1) {
+				throw new StructureBuildingException("Unexpected fractional multiplier found at start of word");
+			}
+			if (chargedFractionalGroup) {
+				for (Element wordRule : wordRules) {
+					if (wordRulesWithFractionalMultipliers.contains(wordRule)) {
+						continue;
+					}
+					Element clone = state.fragManager.cloneElement(state, wordRule);
+					OpsinTools.insertAfter(wordRule, clone);
+				}
+			}
+		}
+		int overallCharge = state.fragManager.getOverallCharge();
+		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
+			balanceChargeIfPossible(molecule, overallCharge, explicitStoichiometryPresent);
+		}
+		if (wordRulesWithFractionalMultipliers.size() > 0 && !chargedFractionalGroup) {
+			for (Element wordRule : molecule.getChildElements(WORDRULE_EL)) {
+				if (wordRulesWithFractionalMultipliers.contains(wordRule)) {
+					continue;
+				}
+				Element clone = state.fragManager.cloneElement(state, wordRule);
+				OpsinTools.insertAfter(wordRule, clone);
+			}
+		}
+
+	}
+
 	private boolean applyExplicitStoichiometryIfProvided(List<Element> wordRules) throws StructureBuildingException {
 		boolean explicitStoichiometryPresent =false;
 		for (Element wordRule : wordRules) {
@@ -1868,7 +1940,7 @@ class StructureBuilder {
 		while (firstChild.getChildCount() != 0){
 			firstChild = firstChild.getChild(0);
 		}
-		if (firstChild.getName().equals(MULTIPLIER_EL)){//e.g. monochloride. Allows specification of explicit stoichiometry
+		if (firstChild.getName().equals(MULTIPLIER_EL) || firstChild.getName().equals(FRACTIONALMULTIPLIER_EL) ){//e.g. monochloride. Allows specification of explicit stoichiometry
 			return false;
 		}
 		return true;
