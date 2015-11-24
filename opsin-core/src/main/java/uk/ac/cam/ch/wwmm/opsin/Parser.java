@@ -208,7 +208,7 @@ class Parser {
 			message.append(" has no tokens unknown to OPSIN but does not conform to its grammar. ");
 			message.append("From left to right it is unparsable due to the following being uninterpretable:");
 			message.append(uninterpretableLR);
-			message.append(" The following or which was not parseable: ");
+			message.append(" The following of which was not parseable: ");
 			message.append(unparseableLR);
 		}
 		throw new ParsingException(message.toString());
