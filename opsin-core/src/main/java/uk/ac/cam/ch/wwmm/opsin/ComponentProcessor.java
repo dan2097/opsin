@@ -4359,21 +4359,19 @@ class ComponentProcessor {
 
 	private void processConjunctiveNomenclature(Element subOrRoot) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> conjunctiveGroups = subOrRoot.getChildElements(CONJUNCTIVESUFFIXGROUP_EL);
-		if (conjunctiveGroups.size()>0){
+		int conjunctiveGroupCount = conjunctiveGroups.size();
+		if (conjunctiveGroupCount > 0){
 			Element ringGroup = subOrRoot.getFirstChildElement(GROUP_EL);
 			Fragment ringFrag = ringGroup.getFrag();
 			if (ringFrag.getOutAtomCount()!=0 ){
 				throw new ComponentGenerationException("OPSIN Bug: Ring fragment should have no radicals");
 			}
-			List<Fragment> conjunctiveFragments = new ArrayList<Fragment>();
-			for (Element group : conjunctiveGroups) {
-				Fragment frag = group.getFrag();
-				conjunctiveFragments.add(frag);
-			}
-			for (int i = 0; i < conjunctiveFragments.size(); i++) {
-				Fragment conjunctiveFragment = conjunctiveFragments.get(i);
-				if (conjunctiveGroups.get(i).getAttribute(LOCANT_ATR)!=null){
-					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(conjunctiveGroups.get(i).getAttributeValue(LOCANT_ATR)) , 1);
+			for (int i = 0; i < conjunctiveGroupCount; i++) {
+				Element conjunctiveGroup = conjunctiveGroups.get(i);
+				Fragment conjunctiveFragment = conjunctiveGroup.getFrag();
+				String locant = conjunctiveGroup.getAttributeValue(LOCANT_ATR);
+				if (locant != null){
+					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(locant) , 1);
 				}
 				else{
 					List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(ringFrag, 1);
