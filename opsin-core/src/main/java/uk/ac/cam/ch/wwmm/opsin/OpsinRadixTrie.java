@@ -47,30 +47,29 @@ class OpsinRadixTrie {
 	List<Integer> findMatches(String chemicalName, int posInName) {
 		int untokenisedChemicalNameLength = chemicalName.length();
 		List<Integer> indexes = null;
-		if (rootNode.isEndPoint()){
+		if (rootNode.isEndPoint()) {
 			indexes = new ArrayList<Integer>();
 			indexes.add(posInName);
 		}
-		OpsinTrieNode currentNode = rootNode;
+		OpsinTrieNode node = rootNode;
 		for (int i = posInName; i < untokenisedChemicalNameLength; i++) {
-			OpsinTrieNode node = currentNode.getChild(chemicalName.charAt(i));
-			if (node != null) {
-				currentNode = node;
-				int charsMatched = currentNode.getNumberOfMatchingCharacters(chemicalName, i);
-				i += (charsMatched - 1);
-				if (charsMatched == currentNode.getValue().length()){
-					if (currentNode.isEndPoint()) {
-						if (indexes == null) {
-							indexes = new ArrayList<Integer>();
-						}
-						indexes.add(i + 1);
-					}
-				}
-				else{
+			node = node.getChild(chemicalName.charAt(i));
+			if (node == null) {
+				break;
+			}
+			int nodeLength = node.getValue().length();
+			if (nodeLength > 1) {
+				int charsMatched = node.getNumberOfMatchingCharacters(chemicalName, i);
+				if (charsMatched != nodeLength) {
 					break;
 				}
-			} else {
-				break;
+				i += (charsMatched - 1);
+			}
+			if (node.isEndPoint()) {
+				if (indexes == null) {
+					indexes = new ArrayList<Integer>();
+				}
+				indexes.add(i + 1);
 			}
 		}
 		return indexes;
@@ -84,30 +83,29 @@ class OpsinRadixTrie {
 	 */
 	List<Integer> findMatchesReadingStringRightToLeft(String chemicalName, int posInName ) {
 		List<Integer> indexes = null;
-		if (rootNode.isEndPoint()){
+		if (rootNode.isEndPoint()) {
 			indexes = new ArrayList<Integer>();
 			indexes.add(posInName);
 		}
-		OpsinTrieNode currentNode = rootNode;
+		OpsinTrieNode node = rootNode;
 		for (int i = posInName - 1; i >=0; i--) {
-			OpsinTrieNode node = currentNode.getChild(chemicalName.charAt(i));
-			if (node != null) {
-				currentNode = node;
-				int charsMatched = currentNode.getNumberOfMatchingCharactersInReverse(chemicalName, i);
-				i -= (charsMatched - 1);
-				if (charsMatched == currentNode.getValue().length()){
-					if (currentNode.isEndPoint()) {
-						if (indexes == null) {
-							indexes = new ArrayList<Integer>();
-						}
-						indexes.add(i);
-					}
-				}
-				else{
+			node = node.getChild(chemicalName.charAt(i));
+			if (node == null) {
+				break;
+			}
+			int nodeLength = node.getValue().length();
+			if (nodeLength > 1) {
+				int charsMatched = node.getNumberOfMatchingCharactersInReverse(chemicalName, i);
+				if (charsMatched != nodeLength) {
 					break;
 				}
-			} else {
-				break;
+				i -= (charsMatched - 1);
+			}
+			if (node.isEndPoint()) {
+				if (indexes == null) {
+					indexes = new ArrayList<Integer>();
+				}
+				indexes.add(i);
 			}
 		}
 		return indexes;
