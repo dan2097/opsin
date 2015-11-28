@@ -138,6 +138,10 @@ class StructureBuilder {
 			case cyclicPeptide:
 				buildCyclicPeptide(words);
 				break;
+			case amineDiConjunctiveSuffix:
+				//e.g. glycine N,N-diacetic acid
+				buildAmineDiConjunctiveSuffix(words);
+				break;
 			case polymer:
 				rGroups.addAll(buildPolymer(words));
 				break;
@@ -1418,6 +1422,42 @@ class StructureBuilder {
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(functionalAtom, chosenHydroxyAtoms.get(i));
 		}
 		return true;
+	}
+	
+	private void buildAmineDiConjunctiveSuffix(List<Element> words) throws StructureBuildingException {
+		for (Element word : words) {
+			if (!WordType.full.toString().equals(word.getAttributeValue(TYPE_ATR))){
+				throw new StructureBuildingException("Bug in word rule for amineDiConjunctiveSuffix");
+			}
+			resolveWordOrBracket(state, word);
+		}
+		if (words.size() != 3) {
+			throw new StructureBuildingException("Unexpected number of words encountered when processing name of type amineDiConjunctiveSuffix, expected 3 but found: " + words.size());
+		}
+		Element aminoAcid = findRightMostGroupInWordOrWordRule(words.get(0));
+		if (aminoAcid == null) {
+			throw new RuntimeException("OPSIN Bug: failed to find amino acid");
+		}
+		Atom amineAtom = aminoAcid.getFrag().getDefaultInAtom();
+		if (amineAtom == null) {
+			throw new StructureBuildingException("OPSIN did not know where the amino acid amine was located");
+		}
+		
+		for (int i = 1; i < words.size(); i++) {
+			Element word = words.get(i);
+			Fragment suffixLikeGroup = findRightMostGroupInWordOrWordRule(word).getFrag();
+			String locant = word.getAttributeValue(LOCANT_ATR);
+			if (locant != null){
+				if (!locant.equals("N")) {
+					throw new RuntimeException("OPSIN Bug: locant expected to be N but was: " + locant);
+				}
+			}
+			Atom atomToConnectToOnConjunctiveFrag = FragmentTools.lastNonSuffixCarbonWithSufficientValency(suffixLikeGroup);
+			if (atomToConnectToOnConjunctiveFrag == null) {
+				throw new StructureBuildingException("OPSIN Bug: Unable to find non suffix carbon with sufficient valency");
+			}
+			state.fragManager.createBond(atomToConnectToOnConjunctiveFrag, amineAtom, 1);
+		}
 	}
 
 	private static final Pattern matchCommonCarboxylicSalt = Pattern.compile("tri-?fluoro-?acetate?$", Pattern.CASE_INSENSITIVE);

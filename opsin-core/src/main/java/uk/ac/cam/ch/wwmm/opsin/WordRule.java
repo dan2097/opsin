@@ -11,6 +11,7 @@ enum WordRule{
 	additionCompound,
 	acidHalideOrPseudoHalide,
 	acidReplacingFunctionalGroup,
+	amineDiConjunctiveSuffix,
 	anhydride,
 	potentialAlcoholEster,
 	carbonylDerivative,

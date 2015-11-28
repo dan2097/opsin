@@ -1,3 +1,5 @@
 benzeneacetic acid	InChI=1S/C8H8O2/c9-8(10)6-7-4-2-1-3-5-7/h1-5H,6H2,(H,9,10)
 benzeneethylamine	InChI=1S/C8H11N/c9-7-6-8-4-2-1-3-5-8/h1-5H,6-7,9H2
 cyclohexaneacetic acid piperidide	InChI=1S/C13H23NO/c15-13(14-9-5-2-6-10-14)11-12-7-3-1-4-8-12/h12H,1-11H2
+L-aspartic acid N,N-diacetic acid	InChI=1S/C8H11NO8/c10-5(11)1-4(8(16)17)9(2-6(12)13)3-7(14)15/h4H,1-3H2,(H,10,11)(H,12,13)(H,14,15)(H,16,17)/t4-/m0/s1
+beta-alanine diacetic acid	InChI=1S/C7H11NO6/c9-5(10)1-2-8(3-6(11)12)4-7(13)14/h1-4H2,(H,9,10)(H,11,12)(H,13,14)

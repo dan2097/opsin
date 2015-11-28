@@ -1148,4 +1148,22 @@ class FragmentTools {
 		return potentialAtoms;
 	}
 
+	static Atom lastNonSuffixCarbonWithSufficientValency(Fragment conjunctiveFragment) {
+		List<Atom> atomList = conjunctiveFragment.getAtomList();
+		for (int i = atomList.size()-1; i >=0; i--) {
+			Atom a = atomList.get(i);
+			if (a.getType().equals(SUFFIX_TYPE_VAL)){
+				continue;
+			}
+			if (a.getElement() != ChemEl.C){
+				continue;
+			}
+			if (ValencyChecker.checkValencyAvailableForBond(a, 1)){
+				return a;
+			}
+		}
+		return null;
+	}
+
+
 }

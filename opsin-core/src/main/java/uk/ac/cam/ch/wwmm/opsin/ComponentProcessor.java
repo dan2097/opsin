@@ -4370,8 +4370,12 @@ class ComponentProcessor {
 				Element conjunctiveGroup = conjunctiveGroups.get(i);
 				Fragment conjunctiveFragment = conjunctiveGroup.getFrag();
 				String locant = conjunctiveGroup.getAttributeValue(LOCANT_ATR);
+				Atom atomToConnectToOnConjunctiveFrag = FragmentTools.lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment);
+				if (atomToConnectToOnConjunctiveFrag == null) {
+					throw new ComponentGenerationException("OPSIN Bug: Unable to find non suffix carbon with sufficient valency");
+				}
 				if (locant != null){
-					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), ringFrag.getAtomByLocantOrThrow(locant) , 1);
+					state.fragManager.createBond(atomToConnectToOnConjunctiveFrag, ringFrag.getAtomByLocantOrThrow(locant) , 1);
 				}
 				else{
 					List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(ringFrag, 1);
@@ -4381,31 +4385,12 @@ class ComponentProcessor {
 					if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
 						state.addIsAmbiguous("Connection of conjunctive group to: " + ringGroup.getValue());
 					}
-					state.fragManager.createBond(lastNonSuffixCarbonWithSufficientValency(conjunctiveFragment), possibleAtoms.get(0) , 1);
+					state.fragManager.createBond(atomToConnectToOnConjunctiveFrag, possibleAtoms.get(0) , 1);
 				}
 				state.fragManager.incorporateFragment(conjunctiveFragment, ringFrag);
 			}
 		}
 	}
-
-
-	private Atom lastNonSuffixCarbonWithSufficientValency(Fragment conjunctiveFragment) throws ComponentGenerationException {
-		List<Atom> atomList = conjunctiveFragment.getAtomList();
-		for (int i = atomList.size()-1; i >=0; i--) {
-			Atom a = atomList.get(i);
-			if (a.getType().equals(SUFFIX_TYPE_VAL)){
-				continue;
-			}
-			if (a.getElement() != ChemEl.C){
-				continue;
-			}
-			if (ValencyChecker.checkValencyAvailableForBond(a, 1)){
-				return a;
-			}
-		}
-		throw new ComponentGenerationException("OPSIN Bug: Unable to find non suffix carbon with sufficient valency");
-	}
-
 
 	/**Process the effects of suffixes upon a fragment. 
 	 * Unlocanted non-terminal suffixes are not attached yet. All other suffix effects are performed
@@ -5287,16 +5272,16 @@ class ComponentProcessor {
 
 
 
-	private boolean wordLevelLocantsAllowed(Element subOrBracket, int numberOflocants) {
-		Element parentElem = subOrBracket.getParent();
+	private boolean wordLevelLocantsAllowed(Element subBracketOrRoot, int numberOflocants) {
+		Element parentElem = subBracketOrRoot.getParent();
 		if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent
-				&& (OpsinTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)){
+				&& (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)){
 			if (state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.functionalClassEster || state.currentWordRule == WordRule.multiEster || state.currentWordRule == WordRule.acetal){
 				return true;
 			}
 		}
-		if ((state.currentWordRule == WordRule.potentialAlcoholEster || 
-				(state.currentWordRule == WordRule.ester &&  (OpsinTools.getNextSibling(subOrBracket)==null || numberOflocants>=2)))
+		if ((state.currentWordRule == WordRule.potentialAlcoholEster || state.currentWordRule == WordRule.amineDiConjunctiveSuffix || 
+				(state.currentWordRule == WordRule.ester &&  (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)))
 				&& parentElem.getName().equals(WORD_EL)){
 			Element wordRule = parentElem.getParent();
 			List<Element> words = wordRule.getChildElements(WORD_EL);
