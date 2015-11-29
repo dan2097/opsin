@@ -927,6 +927,18 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 	
+	@Test
+	public void testRacemate10() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(RAC)");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		assertEquals(0, children.size());
+	}
+	
 	private void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
 		new ComponentGenerator(new NameToStructureConfig()).processStereochemistry(subOrRoot);
 	}
