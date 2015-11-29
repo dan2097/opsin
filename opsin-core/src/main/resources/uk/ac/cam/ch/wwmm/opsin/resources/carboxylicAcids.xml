@@ -184,6 +184,8 @@
 		<token value="CCCc1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">dihydroisoferul</token>
 		<token value="C/C=C/c1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">isoferul</token>
 		<token value="C/C=C/c1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">iso-ferul</token>
+		<token value="CCCCCCCCCCCCCCCC(C)C" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/omega/omega'">isostear</token>
+		<token value="CCCCCCCCCCCCCCCC(C)C" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/omega/omega'">iso-stear</token>
 		<token value="Cc1cc(O)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">isovanill</token>
 		<token value="Cc1cc(O)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">iso-vanill</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">laccer</token>
