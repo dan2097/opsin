@@ -36,6 +36,13 @@
 		<token value="CCCC(C)C" labels="1/2/3/4/5/">isocapro</token>
 		<token value="CC(C)C" labels="1/2,alpha//3" suffixAppliesTo="1,4">isosuccin</token>
 		<token value="CC(O)C" labels="1/2//3">lact</token>
+		<token value="CC(O)C" labels="1/2//3">dl-lact</token>
+		<token value="C[C@@H](O)C" labels="1/2//3">l-lact</token>
+		<token value="C[C@@H](O)C" labels="1/2//3">l(+)-lact</token>
+		<token value="C[C@@H](O)C" labels="1/2//3">l-(+)-lact</token>
+		<token value="C[C@H](O)C" labels="1/2//3">d-lact</token>
+		<token value="C[C@H](O)C" labels="1/2//3">d(-)-lact</token>
+		<token value="C[C@H](O)C" labels="1/2//3">d-(-)-lact</token>
 		<token value="CC(=O)C" labels="1/2//3" suffixAppliesTo="1,4">mesoxal</token>
 		<token value="S(=O)c1ccc(N)c2ccccc12" labels="//1/2/3/4//4a/5/6/7/8/8a">naphthion</token>
 		<token value="Cc1cc(=O)[nH]c(=O)[nH]1" labels="/4/5/6//1/2//3">orot</token>
@@ -99,7 +106,21 @@
 		<token value="n1c(C)ccc(C)c1" labels="1/2//3/4/5//6" suffixAppliesTo="3,7">isocinchomeron</token>
 		<token value="CC(=C)CC" suffixAppliesTo="1,5">itacon</token>
 		<token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">mal</token>
+		<token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">dl-mal</token>
+		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l-mal</token>
+		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l(+)-mal</token>
+		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l-(+)-mal</token>
+		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d-mal</token>
+		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d(-)-mal</token>
+		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d-(-)-mal</token>
 		<token value="CC(O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">mandel</token>
+		<token value="CC(O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">dl-mandel</token>
+		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l-mandel</token>
+		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l(+)-mandel</token>
+		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l-(+)-mandel</token>
+		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d-mandel</token>
+		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d(-)-mandel</token>
+		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d-(-)-mandel</token>
 		<token value="CC(S)CC" suffixAppliesTo="1,5" labels="1/2//3/4">thiomal</token>
 		<token value="C/C=C/C=C/C" suffixAppliesTo="1,6" labels="numeric">mucon</token>
 		<token value="N1CC(C)CCC1" labels="1/2/3//4/5/6" suffixAppliesTo="4">nipecot</token>
@@ -309,6 +330,7 @@
 		<token value="CC=C(C)C">seneci</token><!--unknown-->
 		<token value="CCCCC\C=C/C\C=C/C\C=C/C\C=C/CC" labels="numeric" usableAsAJoiner="yes">stearidon</token>
 		<token value="CC(O)C(O)C" suffixAppliesTo="1,6">tartar</token><!--unknown-->
+		<token value="CC(O)C(O)C" suffixAppliesTo="1,6">dl-tartar</token><!--unknown-->
 		<token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6">l-tartar</token><!--unknown-->
 		<token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6">l(+)-tartar</token><!--unknown-->
 		<token value="C[C@H](O)[C@@H](O)C" suffixAppliesTo="1,6">l-(+)-tartar</token><!--unknown-->
