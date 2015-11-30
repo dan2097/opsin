@@ -230,12 +230,12 @@ class WordRules {
 
 	private boolean matchWordRule(NameToStructureConfig n2sConfig, List<Element> wordEls, int indexOfFirstWord, boolean allowSpaceRemoval) throws ParsingException {
 		wordRuleLoop: for (WordRuleDescription wordRuleDesc : wordRuleList) {
-			int i =indexOfFirstWord;
+			int i = indexOfFirstWord;
 			List<WordDescription> wordDescriptions = wordRuleDesc.getWordDescriptions();
 			int wordsInWordRule = wordDescriptions.size();
-			if (i + wordsInWordRule -1 < wordEls.size()){//need sufficient words to match the word rule
+			if (i + wordsInWordRule <= wordEls.size()){//need sufficient words to match the word rule
 				for (int j = 0; j < wordsInWordRule; j++) {
-					Element wordEl = wordEls.get(i+j);
+					Element wordEl = wordEls.get(i + j);
 					WordDescription wd = wordDescriptions.get(j);
 					if (!wd.getType().toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 						continue wordRuleLoop;//type mismatch;
