@@ -62,6 +62,9 @@
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/">benzidino</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" >4,4'-benzidino</token>
 		<token value="-C(C)=C">beta-allyl</token>
+		<token value="-c1ccccc1-c2ccccc2" labels="2/3/4/5/6/1/1'/2'/3'/4'/5'/6'">biphen-2-yl</token>
+		<token value="-c1cccc(c1)-c2ccccc2" labels="3/4/5/6/1/2/1'/2'/3'/4'/5'/6'">biphen-3-yl</token>
+		<token value="-c1ccc(cc1)-c2ccccc2" labels="4/5/6/1/2/3/1'/2'/3'/4'/5'/6'">biphen-4-yl</token>
 		<token value="-C(=O)OC(C)(C)C">boc</token>
 		<token value="-B(O)O">borono</token>
 		<token value="-S(=O)(=O)c1ccc(Br)cc1" labels="///1/2,ortho/3,meta/4,para//5/6">brosyl</token>
