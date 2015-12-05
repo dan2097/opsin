@@ -124,7 +124,7 @@ class ComponentGenerator {
 
 		/* Converts open/close bracket elements to bracket elements and
 		 *  places the elements inbetween within the newly created bracket */
-		while(findAndStructureBrackets(substituentsAndRoot));
+		findAndStructureBrackets(substituentsAndRoot);
 		
 		for (Element subOrRoot: substituentsAndRoot) {
 			processHydroCarbonRings(subOrRoot);
@@ -1285,12 +1285,12 @@ class ComponentGenerator {
 	 * elements contained within in a big &lt;bracket&gt; element.
 	 *
 	 * @param substituentsAndRoot: The substituent/root elements at the current level of the tree
-	 * @return Whether the method did something, and so needs to be called again.
 	 * @throws ComponentGenerationException
 	 */
-	private boolean findAndStructureBrackets(List<Element> substituentsAndRoot) throws ComponentGenerationException {
+	private void findAndStructureBrackets(List<Element> substituentsAndRoot) throws ComponentGenerationException {
 		int blevel = 0;
 		Element openBracket = null;
+		boolean nestedBrackets = false;
 		for (Element sub : substituentsAndRoot) {
 			List<Element> children = sub.getChildElements();
 			for (Element child : children) {
@@ -1300,12 +1300,18 @@ class ComponentGenerator {
 					if(openBracket == null) {
 						openBracket = child;
 					}
+					else {
+						nestedBrackets = true;
+					}
 				} else if (name.equals(CLOSEBRACKET_EL)) {
 					blevel--;
 					if(blevel == 0) {
 						Element bracket = structureBrackets(openBracket, child);
-						while(findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagNames(bracket, new String[]{SUBSTITUENT_EL, ROOT_EL})));
-						return true;
+						if (nestedBrackets) {
+							findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagNames(bracket, new String[]{SUBSTITUENT_EL, ROOT_EL}));
+						}
+						openBracket = null;
+						nestedBrackets = false;
 					}
 				}
 			}
@@ -1313,7 +1319,6 @@ class ComponentGenerator {
 		if (blevel != 0){
 			throw new ComponentGenerationException("Brackets do not match!");
 		}
-		return false;
 	}
 
 	/**Places the elements in substituents containing/between an open and close bracket
