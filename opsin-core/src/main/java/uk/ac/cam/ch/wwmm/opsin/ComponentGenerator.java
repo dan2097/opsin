@@ -1676,7 +1676,7 @@ class ComponentGenerator {
 
 		Element multiplier = OpsinTools.getPreviousSibling(spiroEl);
 		int numberOfSpiros = 1;
-		if (multiplier != null && multiplier.getName().equals(MULTIPLIER_EL)){
+		if (multiplier != null && multiplier.getName().equals(MULTIPLIER_EL) && BASIC_TYPE_VAL.equals(multiplier.getAttributeValue(TYPE_ATR))) {
 			numberOfSpiros = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 			multiplier.detach();
 		}
