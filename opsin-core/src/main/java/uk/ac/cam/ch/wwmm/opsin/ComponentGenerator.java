@@ -1291,21 +1291,20 @@ class ComponentGenerator {
 	private boolean findAndStructureBrackets(List<Element> substituentsAndRoot) throws ComponentGenerationException {
 		int blevel = 0;
 		Element openBracket = null;
-		Element closeBracket = null;
 		for (Element sub : substituentsAndRoot) {
 			List<Element> children = sub.getChildElements();
 			for (Element child : children) {
-				if(child.getName().equals(OPENBRACKET_EL)) {
+				String name = child.getName();
+				if(name.equals(OPENBRACKET_EL)) {
+					blevel++;
 					if(openBracket == null) {
 						openBracket = child;
 					}
-					blevel++;
-				} else if (child.getName().equals(CLOSEBRACKET_EL)) {
+				} else if (name.equals(CLOSEBRACKET_EL)) {
 					blevel--;
 					if(blevel == 0) {
-						closeBracket = child;
-						Element bracket = structureBrackets(openBracket, closeBracket);
-						while(findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagName(bracket, SUBSTITUENT_EL)));
+						Element bracket = structureBrackets(openBracket, child);
+						while(findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagNames(bracket, new String[]{SUBSTITUENT_EL, ROOT_EL})));
 						return true;
 					}
 				}
@@ -1327,23 +1326,24 @@ class ComponentGenerator {
 	 */
 	private Element structureBrackets(Element openBracket, Element closeBracket) throws ComponentGenerationException {
 		Element bracket = new GroupingEl(BRACKET_EL);
-		OpsinTools.insertBefore(openBracket.getParent(), bracket);
+		Element currentEl = openBracket.getParent();
+		OpsinTools.insertBefore(currentEl, bracket);
 		/* Pick up everything in the substituent before the bracket*/
-		while(!openBracket.getParent().getChild(0).equals(openBracket)) {
-			Element n = openBracket.getParent().getChild(0);
-			n.detach();
-			bracket.addChild(n);
+		Element firstChild = currentEl.getChild(0);
+		while(!firstChild.equals(openBracket)) {
+			firstChild.detach();
+			bracket.addChild(firstChild);
+			firstChild = currentEl.getChild(0);
 		}
 		/* Pick up all elements from the one with the open bracket,
 		 * to the one with the close bracket, inclusive.
 		 */
-		Element currentEl = openBracket.getParent();
 		while(!currentEl.equals(closeBracket.getParent())) {
 			Element nextEl = OpsinTools.getNextSibling(currentEl);
 			currentEl.detach();
 			bracket.addChild(currentEl);
 			currentEl = nextEl;
-			if (currentEl==null){
+			if (currentEl == null) {
 				throw new ComponentGenerationException("Brackets within a word do not match!");
 			}
 		}
@@ -1359,7 +1359,6 @@ class ComponentGenerator {
 		}
 		openBracket.detach();
 		closeBracket.detach();
-	
 		return bracket;
 	}
 
