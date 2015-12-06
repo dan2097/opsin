@@ -48,7 +48,7 @@ class WordRulesOmittedSpaceCorrector {
 				if (firstSubOrbracket.getAttribute(LOCANT_ATR) == null && firstSubOrbracket.getAttribute(MULTIPLIER_ATR) == null) {
 					Element firstGroup = findRightMostGroupInSubBracketOrRoot(firstSubOrbracket);
 					Fragment firstFrag = firstGroup.getFrag();
-					if (firstFrag.getOutAtomCount() == 1 && firstFrag.getOutAtom(0).getAtom().getElement() == ChemEl.C) {//expected to be a carbon radical
+					if (hasSingleMonoValentCarbonOrSiliconRadical(firstFrag)) {
 						Element subToMove =children.get(1);
 						subToMove.detach();
 						Element newWord =new GroupingEl(WORD_EL);
@@ -60,8 +60,7 @@ class WordRulesOmittedSpaceCorrector {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Corrects cases like methyl-2-ethylacetate --> methyl 2-ethylacetate
 	 * @param wordRule
@@ -75,7 +74,7 @@ class WordRulesOmittedSpaceCorrector {
 		Element word = words.get(0);
 		String wordRuleContents = wordRule.getAttributeValue(VALUE_ATR);
 		if (matchAteOrIteEnding.matcher(wordRuleContents).find()) {
-			List<Element> children = word.getChildElements();
+			List<Element> children = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
 			if (children.size() >= 2) {
 				Element rootEl = children.get(children.size() - 1);
 				Element rootGroup = findRightMostGroupInSubBracketOrRoot(rootEl);
@@ -90,9 +89,9 @@ class WordRulesOmittedSpaceCorrector {
 					}
 				}
 				if (functionalAtomsCount > 0){
-					List<Element> substituents = OpsinTools.getChildElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL});
-					substituents.remove(rootEl);
-					if (substituents.size() == 0 || (substituents.size() == 1 && rootMultiplier > 1)) {
+					List<Element> substituents = children.subList(0, children.size() - 1);
+					int substituentCount = substituents.size();
+					if (substituentCount == 1 && rootMultiplier > 1) {
 						return;
 					}
 					Element firstChild = substituents.get(0);
@@ -100,14 +99,14 @@ class WordRulesOmittedSpaceCorrector {
 						return;
 					}
 					String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
-					if (specialCaseWhereEsterPreferred(findRightMostGroupInSubBracketOrRoot(firstChild), multiplierValue, rootGroup, substituents.size())) {
+					if (specialCaseWhereEsterPreferred(findRightMostGroupInSubBracketOrRoot(firstChild), multiplierValue, rootGroup, substituentCount)) {
 						transformToEster(wordRule, firstChild);
 					}
-					else if (substituents.size() > 1 && 
+					else if (substituentCount > 1 && 
 							(allBarFirstSubstituentHaveLocants(substituents) || insufficientSubstitutableHydrogenForSubstitution(substituents, rootFrag, rootMultiplier))){
 						transformToEster(wordRule, firstChild);
 					}
-					else if ((substituents.size() == 1 || rootMultiplier > 1) && substitutionWouldBeAmbiguous(rootFrag, multiplierValue)) {
+					else if ((substituentCount == 1 || rootMultiplier > 1) && substitutionWouldBeAmbiguous(rootFrag, multiplierValue)) {
 						//either 1 substituent or multiplicative nomenclature (in the multiplicative nomenclature case many substituents will not have locants)
 						transformToEster(wordRule, firstChild);
 					}
@@ -225,17 +224,28 @@ class WordRulesOmittedSpaceCorrector {
 			return false;
 		}
 		Fragment rightMostGroup = findRightMostGroupInSubBracketOrRoot(subOrBracket).getFrag();
-		if (rightMostGroup.getOutAtomCount() != 1 || rightMostGroup.getOutAtom(0).getValency() != 1) {
+		if (!hasSingleMonoValentCarbonOrSiliconRadical(rightMostGroup)) {
 			return false;
 		}
 		String multiplierStr = subOrBracket.getAttributeValue(MULTIPLIER_ATR);
-		if (multiplierStr!=null) {
+		if (multiplierStr != null) {
 			int multiplier = Integer.parseInt(multiplierStr);
 			if (multiplier > rootFunctionalAtomsCount) {
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	private boolean hasSingleMonoValentCarbonOrSiliconRadical(Fragment frag) {
+		if (frag.getOutAtomCount() == 1) {
+			OutAtom outAtom = frag.getOutAtom(0);
+			if (outAtom.getValency() == 1 && 
+					(outAtom.getAtom().getElement() == ChemEl.C || outAtom.getAtom().getElement() == ChemEl.Si)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private List<Atom> getAtomForEachSubstitutableHydrogen(Fragment frag) {
