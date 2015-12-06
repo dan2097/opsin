@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
+import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.findRightMostGroupInSubBracketOrRoot;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,7 +46,7 @@ class WordRulesOmittedSpaceCorrector {
 				Element firstSubOrbracket = children.get(0);
 				//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
 				if (firstSubOrbracket.getAttribute(LOCANT_ATR) == null && firstSubOrbracket.getAttribute(MULTIPLIER_ATR) == null) {
-					Element firstGroup = firstSubOrbracket.getName().equals(BRACKET_EL) ? StructureBuildingMethods.findRightMostGroupInBracket(firstSubOrbracket) : firstSubOrbracket.getFirstChildElement(GROUP_EL);
+					Element firstGroup = findRightMostGroupInSubBracketOrRoot(firstSubOrbracket);
 					Fragment firstFrag = firstGroup.getFrag();
 					if (firstFrag.getOutAtomCount() == 1 && firstFrag.getOutAtom(0).getAtom().getElement() == ChemEl.C) {//expected to be a carbon radical
 						Element subToMove =children.get(1);
@@ -68,16 +69,16 @@ class WordRulesOmittedSpaceCorrector {
 	 */
 	private void checkAndCorrectOmittedSpaceEster(Element wordRule) throws StructureBuildingException {
 		List<Element> words = wordRule.getChildElements(WORD_EL);
-		if (words.size()!=1){
+		if (words.size() != 1) {
 			return;
 		}
-		Element word =words.get(0);
+		Element word = words.get(0);
 		String wordRuleContents = wordRule.getAttributeValue(VALUE_ATR);
-		if (matchAteOrIteEnding.matcher(wordRuleContents).find()){
+		if (matchAteOrIteEnding.matcher(wordRuleContents).find()) {
 			List<Element> children = word.getChildElements();
-			if (children.size() >= 2){
+			if (children.size() >= 2) {
 				Element rootEl = children.get(children.size() - 1);
-				Element rootGroup = rootEl.getName().equals(BRACKET_EL) ? StructureBuildingMethods.findRightMostGroupInBracket(rootEl) : rootEl.getFirstChildElement(GROUP_EL);
+				Element rootGroup = findRightMostGroupInSubBracketOrRoot(rootEl);
 				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				int rootMultiplier = 1;
@@ -99,7 +100,7 @@ class WordRulesOmittedSpaceCorrector {
 						return;
 					}
 					String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
-					if (specialCaseWhereEsterPreferred(getRightMostGroup(firstChild), multiplierValue, rootGroup, substituents.size())) {
+					if (specialCaseWhereEsterPreferred(findRightMostGroupInSubBracketOrRoot(firstChild), multiplierValue, rootGroup, substituents.size())) {
 						transformToEster(wordRule, firstChild);
 					}
 					else if (substituents.size() > 1 && 
@@ -131,7 +132,7 @@ class WordRulesOmittedSpaceCorrector {
 		int substitutableHydrogens = getAtomForEachSubstitutableHydrogen(frag).size() * rootMultiplier;
 		for (int i = 1; i < substituentsAndBrackets.size(); i++) {
 			Element subOrBracket = substituentsAndBrackets.get(i);
-			Fragment f = getRightMostGroup(subOrBracket).getFrag();
+			Fragment f = findRightMostGroupInSubBracketOrRoot(subOrBracket).getFrag();
 			String multiplierValue = subOrBracket.getAttributeValue(MULTIPLIER_ATR);
 			int multiplier = 1;
 			if (multiplierValue != null){
@@ -140,7 +141,7 @@ class WordRulesOmittedSpaceCorrector {
 			substitutableHydrogens -= (getTotalOutAtomValency(f) * multiplier);
 		}
 		Element potentialEsterSub = substituentsAndBrackets.get(0);
-		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(getRightMostGroup(potentialEsterSub).getFrag());
+		int firstFragSubstitutableHydrogenRequired = getTotalOutAtomValency(findRightMostGroupInSubBracketOrRoot(potentialEsterSub).getFrag());
 		String multiplierValue = potentialEsterSub.getAttributeValue(MULTIPLIER_ATR);
 		int multiplier = 1;
 		if (multiplierValue != null){
@@ -223,7 +224,7 @@ class WordRulesOmittedSpaceCorrector {
 		if (subOrBracket.getAttribute(LOCANT_ATR) != null){
 			return false;
 		}
-		Fragment rightMostGroup = getRightMostGroup(subOrBracket).getFrag();
+		Fragment rightMostGroup = findRightMostGroupInSubBracketOrRoot(subOrBracket).getFrag();
 		if (rightMostGroup.getOutAtomCount() != 1 || rightMostGroup.getOutAtom(0).getValency() != 1) {
 			return false;
 		}
@@ -235,22 +236,6 @@ class WordRulesOmittedSpaceCorrector {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Returns the right most group
-	 * @param subOrBracket
-	 * @return
-	 */
-	private Element getRightMostGroup (Element subOrBracket) {
-		Element group;
-		if (subOrBracket.getName().equals(BRACKET_EL)){
-			group = StructureBuildingMethods.findRightMostGroupInBracket(subOrBracket);
-		}
-		else{
-			group = subOrBracket.getFirstChildElement(GROUP_EL);
-		}
-		return group;
 	}
 
 	private List<Atom> getAtomForEachSubstitutableHydrogen(Fragment frag) {
