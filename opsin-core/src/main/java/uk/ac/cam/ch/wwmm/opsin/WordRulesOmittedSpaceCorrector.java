@@ -40,17 +40,21 @@ class WordRulesOmittedSpaceCorrector {
 	private void checkAndCorrectOmittedSpacesInDivalentFunctionalGroupRule(Element divalentFunctionalGroupWordRule)  {
 		List<Element> substituentWords = OpsinTools.getChildElementsWithTagNameAndAttribute(divalentFunctionalGroupWordRule, WORD_EL, TYPE_ATR, SUBSTITUENT_TYPE_VAL);
 		if (substituentWords.size() == 1){//potentially has been "wrongly" interpreted e.g. ethylmethyl ketone is more likely to mean ethyl methyl ketone
-			List<Element> children = substituentWords.get(0).getChildElements();
-			if (children.size() == 2){
-				Element firstSubstituent = children.get(0);
+			List<Element> children = OpsinTools.getChildElementsWithTagNames(substituentWords.get(0), new String[]{SUBSTITUENT_EL, BRACKET_EL});
+			if (children.size() == 2) {
+				Element firstSubOrbracket = children.get(0);
 				//rule out correct usage e.g. diethyl ether and locanted substituents e.g. 2-methylpropyl ether
-				if (firstSubstituent.getAttribute(LOCANT_ATR)==null && firstSubstituent.getAttribute(MULTIPLIER_ATR)==null){
-					Element subToMove =children.get(1);
-					subToMove.detach();
-					Element newWord =new GroupingEl(WORD_EL);
-					newWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
-					newWord.addChild(subToMove);
-					OpsinTools.insertAfter(substituentWords.get(0), newWord);
+				if (firstSubOrbracket.getAttribute(LOCANT_ATR) == null && firstSubOrbracket.getAttribute(MULTIPLIER_ATR) == null) {
+					Element firstGroup = firstSubOrbracket.getName().equals(BRACKET_EL) ? StructureBuildingMethods.findRightMostGroupInBracket(firstSubOrbracket) : firstSubOrbracket.getFirstChildElement(GROUP_EL);
+					Fragment firstFrag = firstGroup.getFrag();
+					if (firstFrag.getOutAtomCount() == 1 && firstFrag.getOutAtom(0).getAtom().getElement() == ChemEl.C) {//expected to be a carbon radical
+						Element subToMove =children.get(1);
+						subToMove.detach();
+						Element newWord =new GroupingEl(WORD_EL);
+						newWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
+						newWord.addChild(subToMove);
+						OpsinTools.insertAfter(substituentWords.get(0), newWord);
+					}
 				}
 			}
 		}
