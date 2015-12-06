@@ -109,7 +109,10 @@
 		<token value="OCC(S)CS">dimercaprol</token>
 		<token value="COCCOCCOC">diglyme</token>
 		<token value="O=C(OC(Cl)(Cl)Cl)Cl">diphosgene</token>
+		<token value="C(Br)C1CO1" labels="1//2/3/">epibromohydrin</token>
 		<token value="C(Cl)C1CO1" labels="1//2/3/">epichlorohydrin</token>
+		<token value="C(F)C1CO1" labels="1//2/3/">epifluorohydrin</token>
+		<token value="C(I)C1CO1" labels="1//2/3/">epiiodohydrin</token>
 		<token value="C=CC=C" labels="1/2/3/4">erythrene</token>
 		<token value="[O-]CC" labels="/1/2">ethoxide</token>
 		<token value="[O+]CC" labels="/1/2">ethoxylium</token>
