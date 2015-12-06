@@ -20,12 +20,14 @@
 		<!--<token value="[O-]C(C[N+](C)(C)C)=O">betaine</token> also is a modifier of other amino acids-->
 		<token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'">biacetyl</token>
 		<token value="O=C(CN(CCO)CCO)O">bicine</token>
+		<token value="F[H-]F">bifluoride</token>
 		<token value="C=C(C(C)=C)C">biisopropenyl</token>
 		<token value="CC(C(C)C)C">biisopropyl</token>
 		<token value="NC(=N)NC(=N)N" labels="1//2/3//4/5">biguanide</token>
 		<token value="NC(=N)NNC(=N)N">biguanidine</token>
 		<token value="Cl[Bi]=O">bismuth oxychloride</token>
 		<token value="Cl[Bi]=O">bismuthoxychloride</token>
+		<token value="[SH-]">bisulfide</token>
 		<token value="[O-]C(=O)C(O)C(O)C(=O)O" functionalIDs="1">bitartrate</token>
 		<token value="NC(=O)NNC(N)=O">biurea</token>
 		<token value="NC(=O)NC(=O)N" labels="1/2//3/4//5">biuret</token>
