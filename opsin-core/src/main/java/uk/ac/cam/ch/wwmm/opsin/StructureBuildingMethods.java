@@ -2086,10 +2086,31 @@ class StructureBuildingMethods {
 
 	static Element findRightMostGroupInBracket(Element bracket) {
 		List<Element> subsBracketsAndRoots = OpsinTools.getChildElementsWithTagNames(bracket, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
-		while (subsBracketsAndRoots.get(subsBracketsAndRoots.size() - 1).getName().equals(BRACKET_EL)){
-			subsBracketsAndRoots = OpsinTools.getChildElementsWithTagNames(subsBracketsAndRoots.get(subsBracketsAndRoots.size() - 1), new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
+		Element lastSubsBracketOrRoot = subsBracketsAndRoots.get(subsBracketsAndRoots.size() - 1);
+		while (lastSubsBracketOrRoot.getName().equals(BRACKET_EL)) {
+			subsBracketsAndRoots = OpsinTools.getChildElementsWithTagNames(lastSubsBracketOrRoot, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
+			lastSubsBracketOrRoot = subsBracketsAndRoots.get(subsBracketsAndRoots.size() - 1);
 		}
-		return subsBracketsAndRoots.get(subsBracketsAndRoots.size() - 1).getFirstChildElement(GROUP_EL);
+		return findRightMostGroupInSubOrRoot(lastSubsBracketOrRoot);
+	}
+	
+	static Element findRightMostGroupInSubBracketOrRoot(Element subBracketOrRoot) {
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)) {
+			return findRightMostGroupInBracket(subBracketOrRoot);
+		}
+		else {
+			return findRightMostGroupInSubOrRoot(subBracketOrRoot);
+		}
+	}
+
+	private static Element findRightMostGroupInSubOrRoot(Element subOrRoot) {
+		for (int i = subOrRoot.getChildCount() - 1; i >= 0; i--) {
+			Element el = subOrRoot.getChild(i);
+			if (el.getName().equals(GROUP_EL)) {
+				return el;
+			}
+		}
+		return null;
 	}
 
 	private static boolean potentiallyCanSubstitute(Element subBracketOrRoot) {
