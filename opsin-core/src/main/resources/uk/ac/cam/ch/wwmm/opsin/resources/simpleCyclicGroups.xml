@@ -47,6 +47,14 @@
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanuramide</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamide</token>
 		<token value="n1c(N)nc(N)nc1N" labels="1/2/N/3/4/N'/5/6/N''">cyanurotriamine</token>
+		<token value="n1c(Br)nc(Br)nc1Br">cyanuric bromide</token>
+		<token value="n1c(Br)nc(Br)nc1Br">cyanuryl bromide</token>
+		<token value="n1c(Cl)nc(Cl)nc1Cl">cyanuric chloride</token>
+		<token value="n1c(Cl)nc(Cl)nc1Cl">cyanuryl chloride</token>
+		<token value="n1c(F)nc(F)nc1F">cyanuric fluoride</token>
+		<token value="n1c(F)nc(F)nc1F">cyanuryl fluoride</token>
+		<token value="n1c(I)nc(I)nc1I">cyanuric iodide</token>
+		<token value="n1c(I)nc(I)nc1I">cyanuryl iodide</token>
 		<token value="N1=PN=PN=P1" labels="1/2/3/4/5/6">cyclotriphosphazen</token>
 		<token value="N1=PN=PN=P1" labels="1/2/3/4/5/6">cyclotriphosphazene</token>
 		<token value="c1ccccc1C(=O)NC(=O)c2ccccc2" functionalIDs="9">dibenzamid</token>
