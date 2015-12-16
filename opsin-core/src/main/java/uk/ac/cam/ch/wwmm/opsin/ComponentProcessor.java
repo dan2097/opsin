@@ -5281,7 +5281,7 @@ class ComponentProcessor {
 			}
 		}
 		if ((state.currentWordRule == WordRule.potentialAlcoholEster || state.currentWordRule == WordRule.amineDiConjunctiveSuffix || 
-				(state.currentWordRule == WordRule.ester &&  (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)))
+				(state.currentWordRule == WordRule.ester  &&  (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)))
 				&& parentElem.getName().equals(WORD_EL)){
 			Element wordRule = parentElem.getParent();
 			List<Element> words = wordRule.getChildElements(WORD_EL);
@@ -5290,7 +5290,14 @@ class ComponentProcessor {
 				return true;
 			}
 		}
-			
+		if (state.currentWordRule == WordRule.acidReplacingFunctionalGroup && parentElem.getName().equals(WORD_EL) &&
+				(OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)) {
+			//e.g. diphosphoric acid 1,3-di(ethylamide)
+			if (parentElem.getParent().indexOf(parentElem) > 0){
+				return true;
+			}
+		}
+
 		return false;
 	}
 

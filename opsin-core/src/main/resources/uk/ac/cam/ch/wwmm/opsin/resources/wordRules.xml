@@ -60,12 +60,32 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
 		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
 		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
 		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
+
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+		<word type="substituent" />
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
+
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
+	</wordRule>
+
+	<wordRule name="acidReplacingFunctionalGroup" type="full">
+		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
