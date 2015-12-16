@@ -41,7 +41,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 <!--unusual case where the acid is not a mono acid and the replacements are different-->
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="substituent" />
@@ -51,7 +51,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="substituent" />
@@ -59,33 +59,33 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
@@ -237,18 +237,18 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?(acid)?)?[\]\)\}]*"/>
+		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
@@ -256,20 +256,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)"/>
+		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
