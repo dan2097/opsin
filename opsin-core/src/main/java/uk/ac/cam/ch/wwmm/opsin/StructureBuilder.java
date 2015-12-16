@@ -1015,7 +1015,7 @@ class StructureBuilder {
 
 		boolean monoMultiplierDetected =false;
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
-		for (int i=1; i<words.size(); i++ ) {
+		for (int i = 1; i < words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
 			if (functionalGroups.size()!=1){
@@ -1029,9 +1029,9 @@ class StructureBuilder {
 			}
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
-			if (possibleMultiplier!=null){
+			if (possibleMultiplier != null){
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
-				if (multiplierValue==1){
+				if (multiplierValue == 1) {
 					monoMultiplierDetected = true;
 				}
 				for (int j = 1; j < multiplierValue; j++) {
@@ -1041,7 +1041,15 @@ class StructureBuilder {
 			}
 		}
 		int halideCount = functionalGroupFragments.size();
-		if (halideCount > functionalAtomCount || (!monoMultiplierDetected && halideCount <functionalAtomCount)){
+		if (halideCount < functionalAtomCount && halideCount == 1 && !monoMultiplierDetected) {
+			//e.g. phosphoric chloride, chloride is implicitly multiplied
+			Fragment ideFrag = functionalGroupFragments.get(0);
+			for (int i = halideCount; i < functionalAtomCount; i++) {
+				functionalGroupFragments.add(state.fragManager.copyFragment(ideFrag));
+			}
+			halideCount = functionalAtomCount;
+		}
+		else if (halideCount > functionalAtomCount || (!monoMultiplierDetected && halideCount <functionalAtomCount)){
 			throw new StructureBuildingException("Mismatch between number of halide/pseudo halide fragments and acidic oxygens");
 		}
 		for (int i = halideCount - 1; i>=0; i--) {
