@@ -339,6 +339,7 @@
 		<token value="CCCCCCCCCCCCCCCCCC(OCC(OC(CCCCCCCCCCCCCCCCC)=O)COC(CCCCCCCCCCCCCCCCC)=O)=O">tristearin</token>
 		<token value="NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7">triuret</token>
 		<token value="[CH+]1cccccc1" labels="1/2/3/4/5/6/7">tropylium</token>
+		<token value="[U+2](=O)=O">uranyl</token>
 		<token value="NC(=O)N" labels="1/2//3">urea</token>
 		<token value="[NH2+]=C(O)N" labels="1//2/3">uronium</token>
 		<token value="C#C" labels="1/2">vinylene</token>
