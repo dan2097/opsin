@@ -1,10 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -26,6 +24,9 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 	private final BuildState state;
+	private final List<Fragment> rGroups = new ArrayList<Fragment>();//rGroups need to represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
+	
+	private int currentTopLevelWordRuleCount;
 	
 	StructureBuilder(BuildState state) {
 		this.state = state;
@@ -38,118 +39,20 @@ class StructureBuilder {
 	 */
 	Fragment buildFragment(Element molecule) throws StructureBuildingException {
 		List<Element> wordRules = molecule.getChildElements(WORDRULE_EL);
-		if (wordRules.size() == 0) {
-			throw new StructureBuildingException("Molecule contains no words!?");
-		}
-		Deque<Element> wordRuleStack = new ArrayDeque<Element>();
-		for (int i = wordRules.size() -1; i >=0; i--) {
-			wordRuleStack.add(wordRules.get(i));
+
+		currentTopLevelWordRuleCount = wordRules.size();
+		if (currentTopLevelWordRuleCount == 0) {
+			throw new StructureBuildingException("Molecule contains no word rules!?");
 		}
 		
-		List<Fragment> rGroups = new ArrayList<Fragment>();//rGroups need to represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
-		List<Element> wordRulesVisited = new ArrayList<Element>();
-		while (wordRuleStack.size() > 0) {
-			Element nextWordRuleEl = wordRuleStack.getLast();//just has a look what's next
-			if(!wordRulesVisited.contains(nextWordRuleEl)){
-				wordRulesVisited.add(nextWordRuleEl);
-				List<Element> wordRuleChildren = nextWordRuleEl.getChildElements(WORDRULE_EL);
-				if (wordRuleChildren.size()!=0){//nested word rules
-					for (int i = wordRuleChildren.size() -1; i >=0; i--) {
-						wordRuleStack.add(wordRuleChildren.get(i));
-					}
-					continue;
-				}
-			}
-			Element currentWordRuleEl = wordRuleStack.removeLast();
-			WordRule wordRule = WordRule.valueOf(currentWordRuleEl.getAttributeValue(WORDRULE_ATR));
-			List<Element> words = OpsinTools.getChildElementsWithTagNames(currentWordRuleEl, new String[]{WORD_EL, WORDRULE_EL});
-			state.currentWordRule =wordRule;
-			switch (wordRule) {
-			case simple:
-				for (Element word : words) {
-					if (!word.getName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
-						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'simple' wordRule");
-					}
-					resolveWordOrBracket(state, word);
-				}
-				break;
-			case substituent:
-				for (Element word : words) {
-					if (!word.getName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString()) || !state.n2sConfig.isAllowRadicals()){
-						throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'substituent' wordRule");
-					}
-					resolveWordOrBracket(state, word);
-				}
-				break;
-			case ester:
-			case multiEster:
-				buildEster(words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
-				break;
-			case divalentFunctionalGroup:
-				buildDiValentFunctionalGroup(words);// diethyl ether or methyl propyl ketone
-				break;
-			case monovalentFunctionalGroup:
-				buildMonovalentFunctionalGroup(words);// ethyl chloride, isophthaloyl dichloride, diethyl ether, ethyl alcohol
-				break;
-			case functionalClassEster:
-				buildFunctionalClassEster(words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
-				break;
-			case acidReplacingFunctionalGroup:
-				//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide,
-				//ethanoic acid amide, carbonic dihydrazide
-				//already processed by the ComponentProcessor
-				for (Element word : words) {
-					resolveWordOrBracket(state, word);
-				}
-				break;
-			case oxide:
-				buildOxide(words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
-				break;
-			case carbonylDerivative:
-				buildCarbonylDerivative(words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
-				break;
-			case anhydride:
-				buildAnhydride(words);//e.g. acetic anhydride
-				break;
-			case acidHalideOrPseudoHalide:
-				buildAcidHalideOrPseudoHalide(words);//e.g. phosphinimidic chloride
-				break;
-			case additionCompound:
-				buildAdditionCompound(words);//e.g. carbon tetrachloride
-				break;
-			case glycol:
-				buildGlycol(words);//e.g. ethylene glycol
-				break;
-			case glycolEther:
-				buildGlycolEther(words);//e.g. octaethyleneglycol monododecyl ether
-				break;
-			case acetal:
-				buildAcetal(words);//e.g. propanal diethyl acetal
-				break;
-			case potentialAlcoholEster:
-				//e.g. uridine 5'-(tetrahydrogen triphosphate)
-				if (!buildAlcoholEster(words, wordRules.size())){
-					//should be processed as two "simple" wordrules if no hydroxy found, hence number of top level word rules may change
-					//These simple word rules have already been processed
-					splitAlcoholEsterRuleIntoTwoSimpleWordRules(words);
-					wordRules = molecule.getChildElements(WORDRULE_EL);
-				}
-				break;
-			case cyclicPeptide:
-				buildCyclicPeptide(words);
-				break;
-			case amineDiConjunctiveSuffix:
-				//e.g. glycine N,N-diacetic acid
-				buildAmineDiConjunctiveSuffix(words);
-				break;
-			case polymer:
-				rGroups.addAll(buildPolymer(words));
-				break;
-			default:
-				throw new StructureBuildingException("Unexpected Word Rule");
-			}
+		for (Element wordRule : wordRules) {
+			processWordRuleChildrenThenRule(wordRule);
 		}
 		
+		if (currentTopLevelWordRuleCount != wordRules.size()) {
+			wordRules = molecule.getChildElements(WORDRULE_EL);//very rarely a word rule adds a top level word rule
+		}
+
 		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
 		processOxidoSpecialCase(groupElements);
 		processOxidationNumbers(groupElements);
@@ -163,11 +66,13 @@ class StructureBuilder {
 		Fragment uniFrag = state.fragManager.getUnifiedFragment();
 		processStereochemistry(molecule, uniFrag);
 
-		if (uniFrag.getOutAtomCount()>0 && !state.n2sConfig.isAllowRadicals()){
-			throw new StructureBuildingException("Radicals are currently set to not convert to structures");
-		}
-		if (state.n2sConfig.isOutputRadicalsAsWildCardAtoms()) {
-			convertOutAtomsToAttachmentAtoms(uniFrag);
+		if (uniFrag.getOutAtomCount() > 0) {
+			if (!state.n2sConfig.isAllowRadicals()) {
+				throw new StructureBuildingException("Radicals are currently set to not convert to structures");
+			}
+			if (state.n2sConfig.isOutputRadicalsAsWildCardAtoms()) {
+				convertOutAtomsToAttachmentAtoms(uniFrag);
+			}
 		}
 		
 		for (Fragment rGroup : rGroups) {
@@ -177,6 +82,106 @@ class StructureBuilder {
 
 		return uniFrag;
 	}
+
+
+	private void processWordRuleChildrenThenRule(Element wordRule) throws StructureBuildingException {
+		List<Element> wordRuleChildren = wordRule.getChildElements(WORDRULE_EL);
+		for (Element wordRuleChild : wordRuleChildren) {
+			processWordRuleChildrenThenRule(wordRuleChild);
+		}
+		processWordRule(wordRule);
+	}
+	
+	private void processWordRule(Element wordRuleEl) throws StructureBuildingException {
+		WordRule wordRule = WordRule.valueOf(wordRuleEl.getAttributeValue(WORDRULE_ATR));
+		List<Element> words = OpsinTools.getChildElementsWithTagNames(wordRuleEl, new String[]{WORD_EL, WORDRULE_EL});
+		state.currentWordRule = wordRule;
+		switch (wordRule) {
+		case simple:
+			for (Element word : words) {
+				if (!word.getName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+					throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'simple' wordRule");
+				}
+				resolveWordOrBracket(state, word);
+			}
+			break;
+		case substituent:
+			for (Element word : words) {
+				if (!word.getName().equals(WORD_EL) || !word.getAttributeValue(TYPE_ATR).equals(WordType.substituent.toString()) || !state.n2sConfig.isAllowRadicals()){
+					throw new StructureBuildingException("OPSIN bug: Unexpected contents of 'substituent' wordRule");
+				}
+				resolveWordOrBracket(state, word);
+			}
+			break;
+		case ester:
+		case multiEster:
+			buildEster(words);//e.g. ethyl ethanoate, dimethyl terephthalate,  methyl propanamide
+			break;
+		case divalentFunctionalGroup:
+			buildDiValentFunctionalGroup(words);// diethyl ether or methyl propyl ketone
+			break;
+		case monovalentFunctionalGroup:
+			buildMonovalentFunctionalGroup(words);// ethyl chloride, isophthaloyl dichloride, diethyl ether, ethyl alcohol
+			break;
+		case functionalClassEster:
+			buildFunctionalClassEster(words);//e.g. ethanoic acid ethyl ester, tetrathioterephthalic acid dimethyl ester
+			break;
+		case acidReplacingFunctionalGroup:
+			//e.g. ethanoic acid ethyl amide, terephthalic acid dimethyl amide,
+			//ethanoic acid amide, carbonic dihydrazide
+			//already processed by the ComponentProcessor
+			for (Element word : words) {
+				resolveWordOrBracket(state, word);
+			}
+			break;
+		case oxide:
+			buildOxide(words);//e.g. styrene oxide, triphenylphosphane oxide, thianthrene 5,5-dioxide, propan-2-one oxide
+			break;
+		case carbonylDerivative:
+			buildCarbonylDerivative(words);//e.g. Imidazole-2-carboxamide O-ethyloxime, pentan-3-one oxime
+			break;
+		case anhydride:
+			buildAnhydride(words);//e.g. acetic anhydride
+			break;
+		case acidHalideOrPseudoHalide:
+			buildAcidHalideOrPseudoHalide(words);//e.g. phosphinimidic chloride
+			break;
+		case additionCompound:
+			buildAdditionCompound(words);//e.g. carbon tetrachloride
+			break;
+		case glycol:
+			buildGlycol(words);//e.g. ethylene glycol
+			break;
+		case glycolEther:
+			buildGlycolEther(words);//e.g. octaethyleneglycol monododecyl ether
+			break;
+		case acetal:
+			buildAcetal(words);//e.g. propanal diethyl acetal
+			break;
+		case potentialAlcoholEster:
+			//e.g. uridine 5'-(tetrahydrogen triphosphate)
+			if (!buildAlcoholEster(words, currentTopLevelWordRuleCount)){
+				//should be processed as two "simple" wordrules if no hydroxy found, hence number of top level word rules may change
+				//These simple word rules have already been processed
+				splitAlcoholEsterRuleIntoTwoSimpleWordRules(words);
+				currentTopLevelWordRuleCount++;
+			}
+			break;
+		case cyclicPeptide:
+			buildCyclicPeptide(words);
+			break;
+		case amineDiConjunctiveSuffix:
+			//e.g. glycine N,N-diacetic acid
+			buildAmineDiConjunctiveSuffix(words);
+			break;
+		case polymer:
+			rGroups.addAll(buildPolymer(words));
+			break;
+		default:
+			throw new StructureBuildingException("Unexpected Word Rule");
+		}
+	}
+
 
 	private void buildEster(List<Element> words) throws StructureBuildingException {
 		boolean inSubstituents = true;
