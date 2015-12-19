@@ -20,6 +20,7 @@
 		<token value="-C(=O)C(=O)N">amidoxalyl</token>
 		<token value="-[NH-]">amidyl</token>
 		<token value="=[N-]">amidylidene</token>
+		<token value="-ON" usableAsAJoiner="yes">aminoxy</token>
 		<token value="-ON" usableAsAJoiner="yes">aminoxyl</token>
 		<token value="-N" usableAsAJoiner="yes">aminyl</token>
 		<token value="=N" usableAsAJoiner="yes">aminylidene</token>
