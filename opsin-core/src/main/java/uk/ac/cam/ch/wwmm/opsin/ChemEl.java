@@ -127,4 +127,8 @@ enum ChemEl {
 	boolean isChalcogen() {
 		return (this == O || this == S || this == Se || this == Te);
 	}
+	
+	boolean isHalogen() {
+		return (this == F || this == Cl || this == Br || this == I);
+	}
 }
