@@ -38,7 +38,7 @@ class StructureBuilder {
 	 */
 	Fragment buildFragment(Element molecule) throws StructureBuildingException {
 		List<Element> wordRules = molecule.getChildElements(WORDRULE_EL);
-		if (wordRules.size()==0){
+		if (wordRules.size() == 0) {
 			throw new StructureBuildingException("Molecule contains no words!?");
 		}
 		Deque<Element> wordRuleStack = new ArrayDeque<Element>();
@@ -48,7 +48,7 @@ class StructureBuilder {
 		
 		List<Fragment> rGroups = new ArrayList<Fragment>();//rGroups need to represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
 		List<Element> wordRulesVisited = new ArrayList<Element>();
-		while (wordRuleStack.size()>0) {
+		while (wordRuleStack.size() > 0) {
 			Element nextWordRuleEl = wordRuleStack.getLast();//just has a look what's next
 			if(!wordRulesVisited.contains(nextWordRuleEl)){
 				wordRulesVisited.add(nextWordRuleEl);
@@ -1067,48 +1067,50 @@ class StructureBuilder {
 	}
 	
 	private void buildAdditionCompound(List<Element> words) throws StructureBuildingException {
-		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+		Element firstWord = words.get(0);
+		if (!firstWord.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())) {
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
-		resolveWordOrBracket(state, words.get(0));
-		Element elementaryAtomEl = StructureBuildingMethods.findRightMostGroupInBracket(words.get(0));
+		resolveWordOrBracket(state, firstWord);
+		Element elementaryAtomEl = StructureBuildingMethods.findRightMostGroupInBracket(firstWord);
 		Fragment elementaryAtomFrag = elementaryAtomEl.getFrag();
 		Atom elementaryAtom = elementaryAtomFrag.getFirstAtom();
 		int charge = elementaryAtom.getCharge();
 		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
-		for (int i=1; i<words.size(); i++ ) {
-			Element functionalGroupWord =words.get(i);
+		for (int i = 1; i < words.size(); i++ ) {
+			Element functionalGroupWord = words.get(i);
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
-			if (functionalGroups.size()!=1){
+			if (functionalGroups.size() != 1){
 				throw new StructureBuildingException("Expected exactly 1 functionalGroup. Found " + functionalGroups.size());
 			}
+			Element functionGroup = functionalGroups.get(0);
 			
-			Fragment monoValentFunctionGroup =state.fragManager.buildSMILES(functionalGroups.get(0).getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
-			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
+			Fragment monoValentFunctionGroup = state.fragManager.buildSMILES(functionGroup.getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
+			if (functionGroup.getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtomOrFirstAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
 			}
-			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionGroup);
 			functionalGroupFragments.add(monoValentFunctionGroup);
-			if (possibleMultiplier!=null){
+			if (possibleMultiplier != null) {
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				for (int j = 1; j < multiplierValue; j++) {
 					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 				}
 				possibleMultiplier.detach();
 			}
-			else if (words.size()==2){//silicon chloride -->silicon tetrachloride
-				int incomingBondOrder =elementaryAtom.getIncomingValency();
+			else if (words.size() == 2) {//silicon chloride -->silicon tetrachloride
+				int incomingBondOrder = elementaryAtom.getIncomingValency();
 				int expectedValency;
-				if (charge > 0){
+				if (charge > 0) {
 					expectedValency = incomingBondOrder + charge;
 				}
 				else{
-					if (elementaryAtom.getProperty(Atom.OXIDATION_NUMBER)!=null){
+					if (elementaryAtom.getProperty(Atom.OXIDATION_NUMBER) != null) {
 						expectedValency = elementaryAtom.getProperty(Atom.OXIDATION_NUMBER);
 					}
 					else{
-						if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
+						if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR) != null) {
 							String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
 							expectedValency = Integer.parseInt(typicalOxidationStates[0]);
 						}
@@ -1117,22 +1119,22 @@ class StructureBuilder {
 						}
 					}
 				}
-				int implicitMultiplier = expectedValency -incomingBondOrder >1 ? expectedValency -incomingBondOrder : 1;
+				int implicitMultiplier = expectedValency - incomingBondOrder > 1 ? expectedValency - incomingBondOrder : 1;
 				for (int j = 1; j < implicitMultiplier; j++) {
 					functionalGroupFragments.add(state.fragManager.copyFragment(monoValentFunctionGroup));
 				}
 			}
 		}
 		int halideCount = functionalGroupFragments.size();
-		if (charge>0){
+		if (charge > 0) {
 			elementaryAtom.setCharge(charge - halideCount);
 		}
 		Integer maximumVal = ValencyChecker.getMaximumValency(elementaryAtom.getElement(), elementaryAtom.getCharge());
-		if (maximumVal!=null && halideCount > maximumVal){
+		if (maximumVal != null && halideCount > maximumVal) {
 			throw new StructureBuildingException("Too many halides/psuedo halides addded to " +elementaryAtom.getElement());
 		}
-		for (int i = halideCount - 1; i>=0; i--) {
-			Fragment ideFrag =functionalGroupFragments.get(i);
+		for (int i = halideCount - 1; i >= 0; i--) {
+			Fragment ideFrag = functionalGroupFragments.get(i);
 			Atom ideAtom = ideFrag.getDefaultInAtomOrFirstAtom();
 			state.fragManager.incorporateFragment(ideFrag, ideAtom, elementaryAtomFrag, elementaryAtom, 1);
 		}
