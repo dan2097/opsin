@@ -357,7 +357,52 @@ class WordRules {
 								Element functionalGroup = wordEls.get(i + j);
 								ChemEl chemEl2 = getChemElFromWordWithFunctionalGroup(functionalGroup);
 								if (!FragmentTools.isCovalent(chemEl1, chemEl2)) {//use separate word rules for ionic components
-									if (!(wordsInWordRule == 2 && chemEl1 == ChemEl.Mg && chemEl2.isHalogen() && possibleElementaryAtomContainingWord.getChildCount() > 1)) {//by special case treat grignards (i.e. substitutedmagnesium halides) as covalent
+									boolean specialCaseCovalency = false;
+									if (wordsInWordRule == 2 && chemEl2.isHalogen()) {
+										switch (chemEl1) {
+										case Mg:
+											if (possibleElementaryAtomContainingWord.getChildCount() > 1) {
+												//treat grignards (i.e. substitutedmagnesium halides) as covalent
+												specialCaseCovalency = true;
+											}
+											break;
+										case Ti:
+											if (oxidationNumberOrMultiplierIs(elementaryAtom, functionalGroup, 4) && 
+													(chemEl2 == ChemEl.Cl || chemEl2 == ChemEl.Br || chemEl2 == ChemEl.I)) {
+												specialCaseCovalency = true;
+											}
+											break;
+										case V:
+											if (oxidationNumberOrMultiplierIs(elementaryAtom, functionalGroup, 4) && 
+													chemEl2 == ChemEl.Cl) {
+												specialCaseCovalency = true;
+											}
+											break;
+										case Zr:
+										case Hf:
+											if (oxidationNumberOrMultiplierIs(elementaryAtom, functionalGroup, 4) && 
+													chemEl2 == ChemEl.Br) {
+												specialCaseCovalency = true;
+											}
+											break;
+										case U:
+											if (oxidationNumberOrMultiplierIs(elementaryAtom, functionalGroup, 6) && 
+													(chemEl2 == ChemEl.F || chemEl2 == ChemEl.Cl)) {
+												specialCaseCovalency = true;
+											}
+											break;
+										case Np:
+										case Pu:
+											if (oxidationNumberOrMultiplierIs(elementaryAtom, functionalGroup, 6) && 
+													chemEl2 == ChemEl.F) {
+												specialCaseCovalency = true;
+											}
+											break;
+										default:
+											break;
+										}
+									}
+									if (!specialCaseCovalency) {
 										continue wordRuleLoop;
 									}
 								}
@@ -405,6 +450,25 @@ class WordRules {
 		}
 		if (n2sConfig.isAllowRadicals() && wordEls.size()==1 && indexOfFirstWord==0 && firstWord.getName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
 			applySubstituentWordRule(wordEls, indexOfFirstWord, firstWord);
+		}
+		return false;
+	}
+
+	private boolean oxidationNumberOrMultiplierIs(Element elementaryAtomEl, Element functionalGroupWord, int expectedVal) throws ParsingException {
+		List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
+		if (functionalGroups.size() != 1) {
+			throw new ParsingException("OPSIN bug: Unable to find functional group in oxide or addition compound rule");
+		}
+		Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
+		if (possibleMultiplier != null && possibleMultiplier.getName().equals(MULTIPLIER_EL)) {
+			return Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR)) == expectedVal;
+				
+		}
+		else {
+			Element possibleOxidationNumber = OpsinTools.getNextSibling(elementaryAtomEl);
+			if(possibleOxidationNumber != null && possibleOxidationNumber.getName().equals(OXIDATIONNUMBERSPECIFIER_EL)) {
+				return Integer.parseInt(possibleOxidationNumber.getAttributeValue(VALUE_ATR)) == expectedVal;
+			}
 		}
 		return false;
 	}
