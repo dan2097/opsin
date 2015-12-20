@@ -288,14 +288,16 @@ class WordRules {
 				}
 				//Word Rule matches!
 				Element wordRuleEl = new GroupingEl(WORDRULE_EL);
+				WordRule wordRule = wordRuleDesc.getRuleName();
 				wordRuleEl.addAttribute(new Attribute(TYPE_ATR, wordRuleDesc.getRuleType().toString()));
-				wordRuleEl.addAttribute(new Attribute(WORDRULE_EL, wordRuleDesc.getRuleName().toString()));
+				wordRuleEl.addAttribute(new Attribute(WORDRULE_EL, wordRule.toString()));
 
 				/*
 				 * Some wordRules can not be entirely processed at the structure building stage
 				 */
-				WordRule wordRule = wordRuleDesc.getRuleName();
-				if (wordRule == WordRule.functionGroupAsGroup){//convert the functional term into a full term
+				switch (wordRule) {
+				case functionGroupAsGroup:
+					//convert the functional term into a full term
 					Element functionalWord = wordEls.get(i + wordsInWordRule -1);
 					if (!functionalWord.getAttributeValue(TYPE_ATR).equals(FUNCTIONALTERM_EL) || wordsInWordRule>2){
 						throw new ParsingException("OPSIN bug: Problem with functionGroupAsGroup wordRule");
@@ -306,8 +308,10 @@ class WordRules {
 						wordsInWordRule =1;
 					}
 					wordRuleEl.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
-				}
-				else if (wordRule == WordRule.carbonylDerivative || wordRule == WordRule.acidReplacingFunctionalGroup){//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
+					break;
+				case carbonylDerivative:
+				case acidReplacingFunctionalGroup:
+					//e.g. acetone 4,4-diphenylsemicarbazone. This is better expressed as a full word as the substituent actually locants onto the functional term
 					for (int j = 1; j < (wordsInWordRule - 1); j++) {
 						Element wordEl = wordEls.get(i + j);
 						if (WordType.substituent.toString().equals(wordEl.getAttributeValue(TYPE_ATR))) {
@@ -326,8 +330,9 @@ class WordRules {
 							wordEls.get(i + j).getAttribute(TYPE_ATR).setValue(WordType.full.toString());
 						}
 					}
-				}
-				else if (wordRule == WordRule.additionCompound || wordRule == WordRule.oxide){
+					break;
+				case additionCompound:
+				case oxide:
 					//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
 					Element possibleElementaryAtomContainingWord = wordEls.get(i);
 					List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtomContainingWord, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
@@ -359,6 +364,9 @@ class WordRules {
 							}
 						}
 					}
+					break;
+				default:
+					break;
 				}
 
 				List<String> wordValues = new ArrayList<String>();
