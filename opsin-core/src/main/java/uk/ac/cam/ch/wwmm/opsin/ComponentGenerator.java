@@ -237,25 +237,25 @@ class ComponentGenerator {
 		List<Element> locants = subOrRoot.getChildElements(LOCANT_EL);
 		for (Element locant : locants) {
 			List<String> individualLocants = splitIntoIndividualLocants(StringTools.removeDashIfPresent(locant.getValue()));
-			for (int i = 0; i < individualLocants.size(); i++) {
-				String locantText =individualLocants.get(i);
+			for (int i = 0, locantCount = individualLocants.size(); i <  locantCount; i++) {
+				String locantText = individualLocants.get(i);
 				
-				if (locantText.contains("-")){//avoids this regex being invoked typically
+				if (locantText.contains("-")) {//avoids this regex being invoked typically
 					//rearranges locant to the older equivalent form
-					Matcher m= matchIUPAC2004ElementLocant.matcher(locantText);
+					Matcher m = matchIUPAC2004ElementLocant.matcher(locantText);
 					if (m.matches()){
 						locantText = m.group(2) + m.group(1) + m.group(3);
 					}
 				}
 				
-				if (Character.isLetter(locantText.charAt(0))){
+				if (Character.isLetter(locantText.charAt(0))) {
 					//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
 					Matcher m =  matchSuperscriptedLocant.matcher(locantText);
-					if (m.lookingAt()){
-						String replacementString = m.group(1) +m.group(2);
+					if (m.lookingAt()) {
+						String replacementString = m.group(1) + m.group(2);
 						locantText = m.replaceFirst(replacementString);
 					}
-					if (locantText.length()>=3){
+					if (locantText.length() >= 3){
 						//convert greeks to lower case
 						m =  matchGreek.matcher(locantText);
 						while (m.find()) {
@@ -263,34 +263,34 @@ class ComponentGenerator {
 						}
 					}
 				}
-				char lastChar = locantText.charAt(locantText.length()-1);
-				if(lastChar == ')' || lastChar == ']' || lastChar == '}') {				
+				char lastChar = locantText.charAt(locantText.length() - 1);
+				if(lastChar == ')' || lastChar == ']' || lastChar == '}') {
 					//stereochemistry or added hydrogen that result from the application of this locant as a locant for a substituent may be included in brackets after the locant
 					
 					Matcher m = matchBracketAtEndOfLocant.matcher(locantText);
-					if (m.find()){
+					if (m.find()) {
 						String brackettedText = m.group(1);
-						if (StringTools.endsWithCaseInsensitive(brackettedText, "H")){
+						if (StringTools.endsWithCaseInsensitive(brackettedText, "H")) {
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
 							String[] addedHydrogens = MATCH_COMMA.split(brackettedText);
 							for (String addedHydrogen : addedHydrogens) {
-								Element addedHydrogenElement=new TokenEl(ADDEDHYDROGEN_EL);
-								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length()-1)));
+								Element addedHydrogenElement = new TokenEl(ADDEDHYDROGEN_EL);
+								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length() - 1)));
 								OpsinTools.insertBefore(locant, addedHydrogenElement);
 							}
-							if (locant.getAttribute(TYPE_ATR)==null){
+							if (locant.getAttribute(TYPE_ATR) == null){
 								locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
 							}
 						}
 						else if (StringTools.endsWithCaseInsensitive(brackettedText, "R") || StringTools.endsWithCaseInsensitive(brackettedText, "S")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							String rs = brackettedText;
-							Element newStereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, "(" + locantText +rs+")");
+							Element newStereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, "(" + locantText + rs + ")");
 							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 							OpsinTools.insertBefore(locant, newStereoChemEl);
 						}
-						else if (matchDigit.matcher(brackettedText).matches()){
+						else if (matchDigit.matcher(brackettedText).matches()) {
 							//compounds locant e.g. 1(10). Leave as is, it will be handled by the function that handles unsaturation
 						}
 						else{
@@ -308,11 +308,11 @@ class ComponentGenerator {
 			locant.setValue(StringTools.stringListToString(individualLocants, ","));
 
 			Element afterLocants = OpsinTools.getNextSibling(locant);
-			if(afterLocants == null){
+			if(afterLocants == null) {
 				throw new ComponentGenerationException("Nothing after locant tag: " + locant.toXML());
 			}
 			
-			if (individualLocants.size()==1){
+			if (individualLocants.size() == 1) {
 				ifCarbohydrateLocantConvertToAminoAcidStyleLocant(locant);
 			}
 		}
@@ -325,12 +325,12 @@ class ComponentGenerator {
 	 * @param locant
 	 */
 	private static void ifCarbohydrateLocantConvertToAminoAcidStyleLocant(Element locant) {
-		if (MATCH_ELEMENT_SYMBOL.matcher(locant.getValue()).matches()){
+		if (MATCH_ELEMENT_SYMBOL.matcher(locant.getValue()).matches()) {
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(locant);
-			if (possibleMultiplier!=null && possibleMultiplier.getName().equals(MULTIPLIER_EL)){
+			if (possibleMultiplier != null && possibleMultiplier.getName().equals(MULTIPLIER_EL)) {
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				Element possibleOtherLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
-				if (possibleOtherLocant!=null){
+				if (possibleOtherLocant != null) {
 					String[] locantValues = MATCH_COMMA.split(possibleOtherLocant.getValue());
 					if (locantValues.length == Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR))){
 						for (int i = 0; i < locantValues.length; i++) {
@@ -342,13 +342,13 @@ class ComponentGenerator {
 				}
 				else{
 					StringBuilder sb = new StringBuilder();
-					for (int i = 0; i < multiplierValue-1; i++) {
+					for (int i = 0; i < multiplierValue - 1; i++) {
 						sb.append(locant.getValue());
 						sb.append(StringTools.multiplyString("'", i));
 						sb.append(',');
 					}
 					sb.append(locant.getValue());
-					sb.append(StringTools.multiplyString("'", multiplierValue-1));
+					sb.append(StringTools.multiplyString("'", multiplierValue - 1));
 					Element newLocant = new TokenEl(LOCANT_EL, sb.toString());
 					OpsinTools.insertBefore(possibleMultiplier, newLocant);
 					locant.detach();
