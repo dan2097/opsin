@@ -250,6 +250,10 @@ class StringTools {
             case '\u2015': return "-";
             case '\u2212': return "-";
             
+            case '\u02DC': return "~";//small tilde
+            case '\u223C': return "~";//tilde operator
+            case '\u301C': return "~";//wave dash
+            
             case '\uff0c': return ",";//full width punctuation
             case '\uFF1A': return ":";
             case '\uFF1B': return ";";
