@@ -265,6 +265,8 @@
 		<token value="[O-]CCC" labels="/1/2/3">propoxide</token>
 		<token value="[O+]CCC" labels="/1/2/3">propoxylium</token>
 		<token value="C=CC" labels="1/2/3">propylene</token>
+		<token value="C#N">prussicacid</token>
+		<token value="C#N">prussic acid</token>
 		<token value="NC([SeH])=N" labels="1//2/3">pseudoselenourea</token>
 		<token value="NC([TeH])=N" labels="1//2/3">pseudotellurourea</token>
 		<token value="NC(S)=N" labels="1//2/3">pseudothiourea</token>
