@@ -89,8 +89,9 @@ class Parser {
 				parse = tokenizationResult.getParse();
 			}
 		}
-		boolean allowSpaceRemoval = parse ==null ? true : false;
-		if (parse == null){
+		boolean allowSpaceRemoval;
+		if (parse == null) {
+			allowSpaceRemoval = true;
 			TokenizationResult tokenizationResult = tokeniser.tokenize(name , true);
 			if (tokenizationResult.isSuccessfullyTokenized()){
 				parse = tokenizationResult.getParse();
@@ -105,9 +106,12 @@ class Parser {
 				}
 			}
 		}
+		else {
+			allowSpaceRemoval = false;
+		}
 		
 		List<Parse> parses = generateParseCombinations(parse);
-		if (parses.size()==0){
+		if (parses.size()==0) {
 			throw new ParsingException("No parses could be found for " + name);
 		}
 		
@@ -138,8 +142,8 @@ class Parser {
 			 * <wr><wr>Carbonyl cyanide</wr> m-chlorophenyl hydrazone </wr>
 			 */
 			try{
-				wordRules.groupWordsIntoWordRules(n2sConfig, moleculeEl, allowSpaceRemoval);
-				if (componentRatios!=null){
+				wordRules.groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios);
+				if (componentRatios != null){
 					applyStoichiometryIndicationToWordRules(moleculeEl, componentRatios);
 				}
 				results.add(moleculeEl);
@@ -148,7 +152,7 @@ class Parser {
 				// Using that parse no word rules matched
 			}
 		}
-		if (results.size()==0){
+		if (results.size() == 0) {
 			throw new ParsingException(name + " could be parsed but OPSIN was unsure of the meaning of the words. This error will occur, by default, if a name is just a substituent");
 		}
 		
@@ -169,10 +173,10 @@ class Parser {
 				throw new ParsingException("Unexpected / in component ratio declaration");
 			}
 			if (currentRatio.equals("?")){
-				componentRatios[i]=1;
+				componentRatios[i] = 1;
 			}
 			else{
-				componentRatios[i]=Integer.parseInt(currentRatio);
+				componentRatios[i] = Integer.parseInt(currentRatio);
 			}
 		}
 		return componentRatios;
