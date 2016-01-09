@@ -115,7 +115,9 @@ class CASTools {
 								break;
 							case full:
 								if (StringTools.endsWithCaseInsensitive(component, "ate") || StringTools.endsWithCaseInsensitive(component, "ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
-										|| component.equalsIgnoreCase("hydrofluoride") || component.equalsIgnoreCase("hydrochloride") || component.equalsIgnoreCase("hydrobromide") || component.equalsIgnoreCase("hydroiodide")) {
+										|| StringTools.endsWithCaseInsensitive(component, "ium")
+										|| StringTools.endsWithCaseInsensitive(component, "hydrofluoride") || StringTools.endsWithCaseInsensitive(component, "hydrochloride") 
+										|| StringTools.endsWithCaseInsensitive(component, "hydrobromide") || StringTools.endsWithCaseInsensitive(component, "hydroiodide")) {
 									functionalTerms.add(component);
 								} else {
 									throw new ParsingException("Unable to interpret: " + component + " (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
