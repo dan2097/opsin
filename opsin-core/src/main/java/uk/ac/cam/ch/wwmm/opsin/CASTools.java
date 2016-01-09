@@ -94,8 +94,9 @@ class CASTools {
 							}
 						}
 						
-						if (parseWords.size() ==1){
-							if (firstWordType.equals(WordType.functionalTerm)) {
+						if (parseWords.size() == 1) {
+							switch (firstWordType) {
+							case functionalTerm:
 								if (component.equalsIgnoreCase("ester")) {
 									if (seperateWordSubstituents.size() ==0){
 										throw new ParsingException("ester encountered but no substituents were specified in potential CAS name!");
@@ -108,15 +109,20 @@ class CASTools {
 								} else {
 									functionalTerms.add(component);
 								}
-							} else if (firstWordType.equals(WordType.substituent)) {
+								break;
+							case substituent:
 								seperateWordSubstituents.add(component);
-							} else if (firstWordType.equals(WordType.full)) {
+								break;
+							case full:
 								if (StringTools.endsWithCaseInsensitive(component, "ate") || StringTools.endsWithCaseInsensitive(component, "ite")//e.g. Piperazinium, 1,1-dimethyl-, 2,2,2-trifluoroacetate hydrochloride
-												|| component.equalsIgnoreCase("hydrofluoride") || component.equalsIgnoreCase("hydrochloride") || component.equalsIgnoreCase("hydrobromide") || component.equalsIgnoreCase("hydroiodide")) {
+										|| component.equalsIgnoreCase("hydrofluoride") || component.equalsIgnoreCase("hydrochloride") || component.equalsIgnoreCase("hydrobromide") || component.equalsIgnoreCase("hydroiodide")) {
 									functionalTerms.add(component);
 								} else {
 									throw new ParsingException("Unable to interpret: " + component + " (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
 								}
+								break;
+							default:
+								throw new ParsingException("Unrecognised CAS index name form");
 							}
 						}
 						else if (parseWords.size() == 2 && firstWordType.equals(WordType.substituent)) {
@@ -152,8 +158,9 @@ class CASTools {
 			casName.append(prefixFunctionalTerm);
 			casName.append(" ");
 		}
-		for (String substituent : substituents) {
-			casName.append(substituent);
+		for (int i = substituents.size() - 1; i >= 0; i--) {
+			//stereochemistry term comes after substituent term. In older CAS names (9CI) this stereochemistry term can apply to the substituent term. Hence append in reverse order
+			casName.append(substituents.get(i));
 		}
 		casName.append(parent);
 		for (String functionalTerm : functionalTerms) {
