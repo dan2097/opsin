@@ -28,3 +28,16 @@ hexahydroazepinium-1-spiro-1'-imidazolidine-3'-spiro-1''-piperidinium dibromide	
 Cyclohexanespiro-2'-(tetrahydrofuran)-5'-yl	InChI=1S/C9H15O/c1-2-5-9(6-3-1)7-4-8-10-9/h8H,1-7H2
 Spiro[benzofuran-2(3H),1'-cyclohexan]-4'-yl	InChI=1S/C13H15O/c1-4-8-13(9-5-1)10-11-6-2-3-7-12(11)14-13/h1-3,6-7H,4-5,8-10H2
 Spiro[naphthalene-2(3H),2'-thian]-4'-yl	InChI=1S/C14H15S/c1-2-6-13-11-14(8-3-4-10-15-14)9-7-12(13)5-1/h1-3,5-7,11H,4,8-10H2
+5lambda^5-arsaspiro[4.4]nonan-5-ylium	InChI=1S/C8H16As/c1-2-6-9(5-1)7-3-4-8-9/h1-8H2/q+1
+5-arsoniaspiro[4.4]nonane	InChI=1S/C8H16As/c1-2-6-9(5-1)7-3-4-8-9/h1-8H2/q+1
+5lambda^5-phosphaspiro[4.4]nonan-5-uide	InChI=1S/C8H18P/c1-2-6-9(5-1)7-3-4-8-9/h1-9H2/q-1
+5lambda^5-phosphanuidaspiro[4.4]nonane	InChI=1S/C8H18P/c1-2-6-9(5-1)7-3-4-8-9/h1-9H2/q-1
+5lambda^5,5'-spirobi[benzo[b]phosphindol]-5-ylium	InChI=1S/C24H16P/c1-5-13-21-17(9-1)18-10-2-6-14-22(18)25(21)23-15-7-3-11-19(23)20-12-4-8-16-24(20)25/h1-16H/q+1
+9-phosphonia-9,9'-spirobi[fluorene]	InChI=1S/C24H16P/c1-5-13-21-17(9-1)18-10-2-6-14-22(18)25(21)23-15-7-3-11-19(23)20-12-4-8-16-24(20)25/h1-16H/q+1
+5,5'-spirobi[benzo[b]phosphindolium]	InChI=1S/C24H16P/c1-5-13-21-17(9-1)18-10-2-6-14-22(18)25(21)23-15-7-3-11-19(23)20-12-4-8-16-24(20)25/h1-16H/q+1
+5,5'-spirobi[5H-dibenzophospholinium]	InChI=1S/C24H16P/c1-5-13-21-17(9-1)18-10-2-6-14-22(18)25(21)23-15-7-3-11-19(23)20-12-4-8-16-24(20)25/h1-16H/q+1
+5lambda7,5',5''-spiroter[benzo[b]phosphindol]-5-ide	InChI=1S/C36H24P/c1-7-19-31-25(13-1)26-14-2-8-20-32(26)37(31,33-21-9-3-15-27(33)28-16-4-10-22-34(28)37)35-23-11-5-17-29(35)30-18-6-12-24-36(30)37/h1-24H/q-1
+1H-2lambda5-spiro[isoquinoline-2,2'-pyrido[1,2-a]pyrazin]-2-ylium	InChI=1/C17H15N2/c1-2-6-16-13-19(11-8-15(16)5-1)12-10-18-9-4-3-7-17(18)14-19/h1-12,14H,13H2/q+1
+spiro[isoquinoline-2(1H),2'-[2H]pyrido[1,2-a]pyrazinium]	InChI=1/C17H15N2/c1-2-6-16-13-19(11-8-15(16)5-1)12-10-18-9-4-3-7-17(18)14-19/h1-12,14H,13H2/q+1
+2'H-3lambda5-spiro[3-azabicyclo[3.2.2]nonane-3,3'-[1,3]oxazol]-3-ylium	InChI=1S/C11H18NO/c1-2-11-4-3-10(1)7-12(8-11)5-6-13-9-12/h5-6,10-11H,1-4,7-9H2/q+1
+spiro[3-azabicyclo[3.2.2]nonane-3,3'(2H)-oxazolium]	InChI=1S/C11H18NO/c1-2-11-4-3-10(1)7-12(8-11)5-6-13-9-12/h5-6,10-11H,1-4,7-9H2/q+1

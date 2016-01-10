@@ -3148,102 +3148,137 @@ class ComponentProcessor {
 
 	private void processNonIdenticalPolyCyclicSpiro(Element polyCyclicSpiroDescriptor) throws ComponentGenerationException, StructureBuildingException {
 		Element subOrRoot = polyCyclicSpiroDescriptor.getParent();
-		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
-		if (groups.size()<2){
-			throw new ComponentGenerationException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
-		}
 		Element openBracket = OpsinTools.getNextSibling(polyCyclicSpiroDescriptor);
 		if (!openBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){
 			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
 		}
 		List<Element> spiroBracketElements = OpsinTools.getSiblingsUpToElementWithTagName(openBracket, STRUCTURALCLOSEBRACKET_EL);
-		Element closeBracket = OpsinTools.getNextSibling(spiroBracketElements.get(spiroBracketElements.size()-1));
+		Element closeBracket = OpsinTools.getNextSibling(spiroBracketElements.get(spiroBracketElements.size() - 1));
 		if (closeBracket == null || !closeBracket.getName().equals(STRUCTURALCLOSEBRACKET_EL)){
 			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
+		}
+		
+		List<Element> groups = new ArrayList<Element>();
+		for (Element spiroBracketElement : spiroBracketElements) {
+			String name = spiroBracketElement.getName();
+			if (name.equals(GROUP_EL)) {
+				groups.add(spiroBracketElement);
+			}
+			else if (name.equals(SPIROLOCANT_EL)) {
+				Element spiroLocant = spiroBracketElement;
+				String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(spiroLocant.getValue()));
+				if (locants.length != 2) {
+					throw new ComponentGenerationException("Incorrect number of locants found before component of polycyclic spiro system");
+				}
+				boolean changed = false;
+				Matcher m1 = matchAddedHydrogenBracket.matcher(locants[0]);
+				if (m1.find()) {
+					Element addedHydrogenElement = new TokenEl(ADDEDHYDROGEN_EL);
+					String addedHydrogenLocant = m1.group(1);
+					int primes = StringTools.countTerminalPrimes(addedHydrogenLocant);
+					if (primes > 0 && primes == (groups.size() - 1)) {//rings are primeless before spiro fusion (hydrogen is currently added before spiro fusion)
+						addedHydrogenLocant = addedHydrogenLocant.substring(0, addedHydrogenLocant.length() - primes);
+					}
+					addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogenLocant));
+					OpsinTools.insertBefore(spiroLocant, addedHydrogenElement);
+					locants[0] = m1.replaceAll("");
+					changed = true;
+				}	
+				Matcher m2 = matchAddedHydrogenBracket.matcher(locants[1]);
+				if (m2.find()) {
+					Element addedHydrogenElement = new TokenEl(ADDEDHYDROGEN_EL);
+					String addedHydrogenLocant = m2.group(1);
+					int primes = StringTools.countTerminalPrimes(addedHydrogenLocant);
+					if (primes > 0 && primes == groups.size()) {//rings are primeless before spiro fusion (hydrogen is currently added before spiro fusion)
+						addedHydrogenLocant = addedHydrogenLocant.substring(0, addedHydrogenLocant.length() - primes);
+					}
+					addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogenLocant));
+					OpsinTools.insertAfter(spiroLocant, addedHydrogenElement);
+					locants[1] = m2.replaceAll("");
+					changed = true;
+				}
+				if (changed) {
+					spiroLocant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
+				}
+				spiroLocant.setValue(StringTools.arrayToString(locants, ","));
+			}
+		}
+		int groupCount = groups.size();
+		if (groupCount < 2) {
+			throw new ComponentGenerationException("OPSIN Bug: Atleast two groups were expected in polycyclic spiro system");
 		}
 		
 		Element firstGroup = groups.get(0);
 		List<Element> firstGroupEls = new ArrayList<Element>();
 		int indexOfOpenBracket = subOrRoot.indexOf(openBracket);
-		int indexOfFirstGroup = subOrRoot.indexOf(firstGroup);
-		for (int i =indexOfOpenBracket +1; i < indexOfFirstGroup; i++) {
+		Element firstSpiroLocant = OpsinTools.getNextSibling(firstGroup, SPIROLOCANT_EL);
+		if (firstSpiroLocant == null) {
+			throw new ComponentGenerationException("Unable to find spiroLocant for polycyclic spiro system");
+		}
+		int indexOfFirstSpiroLocant = subOrRoot.indexOf(firstSpiroLocant);
+		for (int i = indexOfOpenBracket + 1; i < indexOfFirstSpiroLocant; i++) {
 			firstGroupEls.add(subOrRoot.getChild(i));
 		}
-		firstGroupEls.add(firstGroup);
-		firstGroupEls.addAll(OpsinTools.getNextAdjacentSiblingsOfType(firstGroup, UNSATURATOR_EL));
 		resolveFeaturesOntoGroup(firstGroupEls);
 		Set<Atom> spiroAtoms = new HashSet<Atom>();
-		for (int i = 1; i < groups.size(); i++) {
-			Element nextGroup =groups.get(i);
-			Element locant = OpsinTools.getNextSibling(groups.get(i-1), SPIROLOCANT_EL);
-			if (locant ==null){
-				throw new ComponentGenerationException("Unable to find locantEl for polycyclic spiro system");
+		for (int i = 1; i < groupCount; i++) {
+			Element nextGroup = groups.get(i);
+			Element spiroLocant = OpsinTools.getNextSibling(groups.get(i - 1), SPIROLOCANT_EL);
+			if (spiroLocant == null) {
+				throw new ComponentGenerationException("Unable to find spiroLocant for polycyclic spiro system");
 			}
-			
+			String[] locants = MATCH_COMMA.split(spiroLocant.getValue());
+
 			List<Element> nextGroupEls = new ArrayList<Element>();
-			int indexOfLocant = subOrRoot.indexOf(locant);
-			int indexOfNextGroup = subOrRoot.indexOf(nextGroup);
-			for (int j =indexOfLocant +1; j < indexOfNextGroup; j++) {
+			int indexOfLocant = subOrRoot.indexOf(spiroLocant);
+			int indexOfNextSpiroLocantOrEndOfSpiro = subOrRoot.indexOf(i + 1 < groupCount ? OpsinTools.getNextSibling(nextGroup, SPIROLOCANT_EL) : OpsinTools.getNextSibling(nextGroup, STRUCTURALCLOSEBRACKET_EL));
+			for (int j = indexOfLocant + 1; j < indexOfNextSpiroLocantOrEndOfSpiro; j++) {
 				nextGroupEls.add(subOrRoot.getChild(j));
 			}
-			nextGroupEls.add(nextGroup);
-			nextGroupEls.addAll(OpsinTools.getNextAdjacentSiblingsOfType(nextGroup, UNSATURATOR_EL));
 			resolveFeaturesOntoGroup(nextGroupEls);
-			
-			String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locant.getValue()));
-			if (locants.length!=2){
-				throw new ComponentGenerationException("Incorrect number of locants found before component of polycyclic spiro system");
-			}
-			for (int j = 0; j < locants.length; j++) {
-				String locantText= locants[j];
-				Matcher m = matchAddedHydrogenBracket.matcher(locantText);
-				if (m.find()){
-					Element addedHydrogenElement=new TokenEl(ADDEDHYDROGEN_EL);
-					addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, m.group(1)));
-					OpsinTools.insertBefore(locant, addedHydrogenElement);
-					locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));
-					locants[j] = m.replaceAll("");
-				}
-			}
-			locant.detach();
+
+			spiroLocant.detach();
 			Fragment nextFragment = nextGroup.getFrag();
 			FragmentTools.relabelNumericLocants(nextFragment.getAtomList(), StringTools.multiplyString("'", i));
 			String secondLocant = locants[1];
-			Atom atomToBeReplaced;
+			Atom atomOnNextFragment;
 			if (secondLocant.endsWith("'")){
-				atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1]);
+				atomOnNextFragment = nextFragment.getAtomByLocantOrThrow(locants[1]);
 			}
 			else{
 				//for simple spiro fusions the prime is often forgotten
-				atomToBeReplaced = nextFragment.getAtomByLocantOrThrow(locants[1] + "'");
+				atomOnNextFragment = nextFragment.getAtomByLocantOrThrow(locants[1] + "'");
 			}
-			Atom atomOnParentFrag = null;
+			Atom atomToBeReplaced = null;
 			for (int j = 0; j < i; j++) {
-				atomOnParentFrag = groups.get(j).getFrag().getAtomByLocant(locants[0]);
-				if (atomOnParentFrag!=null){
+				atomToBeReplaced = groups.get(j).getFrag().getAtomByLocant(locants[0]);
+				if (atomToBeReplaced != null){
 					break;
 				}
 			}
-			if (atomOnParentFrag==null){
+			if (atomToBeReplaced == null){
 				throw new ComponentGenerationException("Could not find the atom with locant " + locants[0] +" for use in polycyclic spiro system");
 			}
-			spiroAtoms.add(atomOnParentFrag);
-			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnParentFrag);
+			spiroAtoms.add(atomToBeReplaced);
+			if (atomToBeReplaced.getElement() != atomOnNextFragment.getElement()){
+				throw new ComponentGenerationException("Disagreement between which element the spiro atom should be: " + atomToBeReplaced.getElement() +" and " + atomOnNextFragment.getElement() );
+			}
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnNextFragment);
 			if (atomToBeReplaced.hasSpareValency()){
-				atomOnParentFrag.setSpareValency(true);
+				atomOnNextFragment.setSpareValency(true);
 			}
 		}
-		if (spiroAtoms.size()>1){
+		if (spiroAtoms.size() > 1) {
 			Element expectedMultiplier = OpsinTools.getPreviousSibling(polyCyclicSpiroDescriptor);
-			if (expectedMultiplier!=null && expectedMultiplier.getName().equals(MULTIPLIER_EL) && Integer.parseInt(expectedMultiplier.getAttributeValue(VALUE_ATR))==spiroAtoms.size()){
+			if (expectedMultiplier != null && expectedMultiplier.getName().equals(MULTIPLIER_EL) && Integer.parseInt(expectedMultiplier.getAttributeValue(VALUE_ATR)) == spiroAtoms.size()) {
 				expectedMultiplier.detach();
 			}
 		}
-		Element rootGroup = groups.get(groups.size()-1);
+		Element rootGroup = groups.get(groupCount - 1);
 		Fragment rootFrag = rootGroup.getFrag();
 		String name = rootGroup.getValue();
-		for (int i = 0; i < groups.size() -1; i++) {
-			Element group =groups.get(i);
+		for (int i = 0; i < groupCount - 1; i++) {
+			Element group = groups.get(i);
 			state.fragManager.incorporateFragment(group.getFrag(), rootFrag);
 			name = group.getValue() + name;
 			group.detach();
