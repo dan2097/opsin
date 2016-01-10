@@ -672,86 +672,86 @@ class ComponentProcessor {
 	 */
 	private boolean removeAndMoveToAppropriateGroupIfHydroSubstituent(Element substituent) throws ComponentGenerationException {
 		List<Element> hydroElements = substituent.getChildElements(HYDRO_EL);
-		if (hydroElements.size() > 0 && substituent.getChildElements(GROUP_EL).size() == 0){
+		if (hydroElements.size() > 0 && substituent.getFirstChildElement(GROUP_EL) == null) {
 			Element hydroSubstituent = substituent;
-			if (hydroElements.size() != 1){
+			if (hydroElements.size() != 1) {
 				throw new ComponentGenerationException("Unexpected number of hydro elements found in substituent");
 			}
 			Element hydroElement = hydroElements.get(0);
 			String hydroValue = hydroElement.getValue();
-			if (hydroValue.equals("hydro")){
+			if (hydroValue.equals("hydro")) {
 				Element multiplier = OpsinTools.getPreviousSibling(hydroElement);
-				if (multiplier == null || !multiplier.getName().equals(MULTIPLIER_EL) ){
+				if (multiplier == null || !multiplier.getName().equals(MULTIPLIER_EL)) {
 					throw new ComponentGenerationException("Multiplier expected but not found before hydro subsituent");
 				}
-				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0){
+				if (Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) %2 !=0) {
 					throw new ComponentGenerationException("Hydro can only be added in pairs but multiplier was odd: " + multiplier.getAttributeValue(VALUE_ATR));
 				}
 			}
 			Element targetRing = null;
 			Element nextSubOrRootOrBracket = OpsinTools.getNextSibling(hydroSubstituent);
-			if (nextSubOrRootOrBracket == null){
+			if (nextSubOrRootOrBracket == null) {
 				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
 			}
-			//first check adjacent substituent/root. If the hydroelement has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
+			//first check adjacent substituent/root. If the hydro element has one locant or the ring is locantless then we can assume the hydro is acting as a nondetachable prefix
 			Element potentialRing = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
-			if (potentialRing != null && containsCyclicAtoms(potentialRing)){
+			if (potentialRing != null && containsCyclicAtoms(potentialRing)) {
 				Element possibleLocantInFrontOfHydro = OpsinTools.getPreviousSiblingIgnoringCertainElements(hydroElement, new String[]{MULTIPLIER_EL});
-				if (possibleLocantInFrontOfHydro != null && possibleLocantInFrontOfHydro.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocantInFrontOfHydro.getValue()).length == 1){
+				if (possibleLocantInFrontOfHydro != null && possibleLocantInFrontOfHydro.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocantInFrontOfHydro.getValue()).length == 1) {
 					//e.g.4-decahydro-1-naphthalenyl
-					targetRing =potentialRing;
+					targetRing = potentialRing;
 				}
 				else{
 					Element possibleLocantInFrontOfRing = OpsinTools.getPreviousSibling(potentialRing, LOCANT_EL);
-					if (possibleLocantInFrontOfRing != null){
-						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR) != null){//check whether the group was expecting a locant e.g. 2-furyl
+					if (possibleLocantInFrontOfRing != null) {
+						if (potentialRing.getAttribute(FRONTLOCANTSEXPECTED_ATR) != null) {//check whether the group was expecting a locant e.g. 2-furyl
 							String locantValue = possibleLocantInFrontOfRing.getValue();
 							String[] expectedLocants = MATCH_COMMA.split(potentialRing.getAttributeValue(FRONTLOCANTSEXPECTED_ATR));
 							for (String expectedLocant : expectedLocants) {
 								if (locantValue.equals(expectedLocant)){
-									targetRing =potentialRing;
+									targetRing = potentialRing;
 									break;
 								}
 							}
 						}
 						//check whether the group is a HW system e.g. 1,3-thiazole
-						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)){
+						if (potentialRing.getAttributeValue(SUBTYPE_ATR).equals(HANTZSCHWIDMAN_SUBTYPE_VAL)) {
 							String locantValue = possibleLocantInFrontOfRing.getValue();
 							int locants = MATCH_COMMA.split(locantValue).length;
 							int heteroCount = 0;
 							Element currentElem = OpsinTools.getNextSibling(possibleLocantInFrontOfRing);
-							while(!currentElem.equals(potentialRing)){
+							while(!currentElem.equals(potentialRing)) {
 								if(currentElem.getName().equals(HETEROATOM_EL)) {
 									heteroCount++;
 								} else if (currentElem.getName().equals(MULTIPLIER_EL)){
-									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) -1;
+									heteroCount += Integer.parseInt(currentElem.getAttributeValue(VALUE_ATR)) - 1;
 								}
 								currentElem = OpsinTools.getNextSibling(currentElem);
 							}
-							if (heteroCount==locants){//number of locants must match number
-								targetRing =potentialRing;
+							if (heteroCount == locants) {//number of locants must match number
+								targetRing = potentialRing;
 							}
 						}
 						//check whether the group is a benzofused ring e.g. 1,4-benzodioxin
 						if (FUSIONRING_SUBTYPE_VAL.equals(potentialRing.getAttributeValue(SUBTYPE_ATR)) && 
 								(potentialRing.getValue().equals("benzo")|| potentialRing.getValue().equals("benz")) &&
 								!OpsinTools.getNextSibling(potentialRing).getName().equals(FUSION_EL)){
-							targetRing =potentialRing;
+							targetRing = potentialRing;
 						}
 					}
 					else{
-						targetRing =potentialRing;
+						targetRing = potentialRing;
 					}
 				}
 			}
 	
 			//that didn't match so the hydro appears to be a detachable prefix. detachable prefixes attach in preference to the rightmost applicable group so search any remaining substituents/roots from right to left
-			if (targetRing == null){
-				Element nextSubOrRootOrBracketFromLast = hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount()-1);//the last sibling
+			if (targetRing == null) {
+				Element nextSubOrRootOrBracketFromLast = hydroSubstituent.getParent().getChild(hydroSubstituent.getParent().getChildCount() - 1);//the last sibling
 				while (!nextSubOrRootOrBracketFromLast.equals(hydroSubstituent)){
 					potentialRing = nextSubOrRootOrBracketFromLast.getFirstChildElement(GROUP_EL);
-					if (potentialRing!=null && containsCyclicAtoms(potentialRing)){
-						targetRing =potentialRing;
+					if (potentialRing != null && containsCyclicAtoms(potentialRing)){
+						targetRing = potentialRing;
 						break;
 					}
 					else{
@@ -759,16 +759,46 @@ class ComponentProcessor {
 					}
 				}
 			}
-			if (targetRing == null){
+			if (targetRing == null) {
 				throw new ComponentGenerationException("Cannot find ring for hydro substituent to apply to");
 			}
 			//move the children of the hydro substituent
 			List<Element> children = hydroSubstituent.getChildElements();
-			for (int i = children.size()-1; i >=0 ; i--) {
-				Element child = children.get(i);
-				if (!child.getName().equals(HYPHEN_EL)){
+			Element targetSubstituent = targetRing.getParent();
+			if (targetSubstituent.equals(nextSubOrRootOrBracket)) {
+				for (int i = children.size()-1; i >=0 ; i--) {
+					Element child = children.get(i);
+					if (child.getName().equals(HYPHEN_EL)) {
+						continue;
+					}
 					child.detach();
-					targetRing.getParent().insertChild(child, 0);
+					targetSubstituent.insertChild(child, 0);
+				}
+			}
+			else {
+				Element nextEl = OpsinTools.getPreviousSibling(hydroElement);
+				hydroElement.detach();
+				targetSubstituent.insertChild(hydroElement, 0);
+				if (nextEl != null && nextEl.getName().equals(MULTIPLIER_EL)) {
+					Element elToMove = nextEl;
+					nextEl = OpsinTools.getPreviousSibling(nextEl);
+					elToMove.detach();
+					targetSubstituent.insertChild(elToMove, 0);
+					if (nextEl != null && nextEl.getName().equals(LOCANT_EL)) {
+						elToMove = nextEl;
+						nextEl = OpsinTools.getPreviousSibling(nextEl);
+						elToMove.detach();
+						targetSubstituent.insertChild(elToMove, 0);
+					}
+				}
+				while (nextEl != null && nextEl.getName().equals(STEREOCHEMISTRY_EL)) {
+					Element elToMove = nextEl;
+					nextEl = OpsinTools.getPreviousSibling(nextEl);
+					elToMove.detach();
+					nextSubOrRootOrBracket.insertChild(elToMove, 0);
+				}
+				if (nextEl != null) {
+					throw new ComponentGenerationException("Unexpected term found before detachable hydro prefix: " + nextEl.getValue() );
 				}
 			}
 			hydroSubstituent.detach();
