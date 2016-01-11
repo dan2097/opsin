@@ -812,6 +812,7 @@ class ComponentGenerator {
 	 */
 	void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> stereoChemistryElements = subOrRoot.getChildElements(STEREOCHEMISTRY_EL);
+		List<Element> locantedUnbrackettedEzTerms = new ArrayList<Element>();
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				processStereochemistryBracket(stereoChemistryElement);
@@ -821,7 +822,9 @@ class ComponentGenerator {
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(E_OR_Z_TYPE_VAL)){
 				stereoChemistryElement.addAttribute(new Attribute(VALUE_ATR, stereoChemistryElement.getValue().toUpperCase(Locale.ROOT)));
-				assignLocantUsingPreviousElementIfPresent(stereoChemistryElement);//assign a locant if one is directly before the E/Z
+				if (assignLocantUsingPreviousElementIfPresent(stereoChemistryElement)) {//assign a locant if one is directly before the E/Z
+					locantedUnbrackettedEzTerms.add(stereoChemistryElement);
+				}
 			}
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
 				processLocantAssigningForEndoExoSynAnti(stereoChemistryElement);//assign a locant if one is directly before the endo/exo/syn/anti. Don't neccesarily detach it
@@ -832,6 +835,9 @@ class ComponentGenerator {
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(RELATIVECISTRANS_TYPE_VAL)){
 				processRelativeCisTrans(stereoChemistryElement);
 			}
+		}
+		if (locantedUnbrackettedEzTerms.size() > 0) {
+			duplicateLocantFromStereoTermIfAdjacentToEneOrYlidene(locantedUnbrackettedEzTerms);
 		}
 	}
 
@@ -949,12 +955,14 @@ class ComponentGenerator {
 		return stereoDescriptors;
 	}
 
-	private void assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
+	private boolean assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
 		Element possibleLocant = OpsinTools.getPrevious(stereoChemistryElement);
 		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 			possibleLocant.detach();
+			return true;
 		}
+		return false;
 	}
 	
 	private void processLocantAssigningForEndoExoSynAnti(Element stereoChemistryElement) {
@@ -1043,6 +1051,57 @@ class ComponentGenerator {
 		}
 		Element locantEl = new TokenEl(LOCANT_EL, sb.toString());
 		OpsinTools.insertAfter(stereoChemistryElement, locantEl);
+	}
+	
+	/**
+	 * If the e/z term is next to an ene or ylidene duplicate the locant
+	 * e.g. 2E,4Z-diene --> 2E,4Z-2,4-diene
+	 * 2E-ylidene --> 2E-2-ylidene
+	 * @param locantedUnbrackettedEzTerms
+	 */
+	private void duplicateLocantFromStereoTermIfAdjacentToEneOrYlidene(List<Element> locantedUnbrackettedEzTerms) {
+		for (int i = 0, l = locantedUnbrackettedEzTerms.size(); i < l; i++) {
+			Element currentTerm = locantedUnbrackettedEzTerms.get(i);
+			List<Element> groupedTerms = new ArrayList<Element>();
+			groupedTerms.add(currentTerm);
+			while (i + 1 < l && locantedUnbrackettedEzTerms.get(i + 1).equals(OpsinTools.getNextSibling(currentTerm))) {
+				currentTerm = locantedUnbrackettedEzTerms.get(++i);
+				groupedTerms.add(currentTerm);
+			}
+			Element lastTermInGroup = groupedTerms.get(groupedTerms.size() - 1);
+			Element eneOrYlidene;
+			if (groupedTerms.size() > 1) {
+				Element multiplier = OpsinTools.getNextSibling(lastTermInGroup);
+				if (!(multiplier != null && multiplier.getName().equals(MULTIPLIER_EL) && String.valueOf(groupedTerms.size()).equals(multiplier.getAttributeValue(VALUE_ATR)))) {
+					continue;
+				}
+				eneOrYlidene = OpsinTools.getNextSibling(multiplier);
+			}
+			else {
+				eneOrYlidene = OpsinTools.getNextSibling(lastTermInGroup);
+			}
+			if (eneOrYlidene != null) {
+				String name = eneOrYlidene.getName();
+				if (name.equals(UNSATURATOR_EL) || name.equals(SUFFIX_EL)) {
+						if ((name.equals(UNSATURATOR_EL) && eneOrYlidene.getAttributeValue(VALUE_ATR).equals("2"))
+								|| (name.equals(SUFFIX_EL) && eneOrYlidene.getAttributeValue(VALUE_ATR).equals("ylidene"))) {
+						List<String> locants = new ArrayList<String>();
+						for (Element stereochemistryTerm : groupedTerms) {
+							locants.add(stereochemistryTerm.getAttributeValue(LOCANT_ATR));
+						}
+						Element newLocant = new TokenEl(LOCANT_EL, StringTools.stringListToString(locants, ","));
+						OpsinTools.insertAfter(lastTermInGroup, newLocant);
+					} else{
+						if (name.equals(UNSATURATOR_EL)){
+							throw new RuntimeException("After E/Z stereo expected ene but found: " + eneOrYlidene.getValue());
+						}
+						else {
+							throw new RuntimeException("After E/Z stereo expected yldiene but found: " + eneOrYlidene.getValue());
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
