@@ -54,7 +54,16 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="C1CN[C@@H]2Cc3c[nH]c4cccc([C@H]2C1)c34" labels="8/7/6/5/4/3/2/1/15/14/13/12/11/10/9/16" alphaBetaClockWiseAtomOrdering="1/15/14/13/12/11/10/9/8/7/6/5/4/3/2">ergolin</token>
 <!--misc-->
 		<token value="S1CCCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">cepham</token>
+		<token value="S1CCCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6" addBond="2 defaultLocant 3" frontLocantsExpected="2,3">cephem</token>
+		<token value="S1C=CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">ceph-2-em</token>
+		<token value="S1CC=CN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/8/" alphaBetaClockWiseAtomOrdering="1/2/3/4/5/8/7/6">ceph-3-em</token>
 		<token value="S1CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">penam</token>
+		<token value="S1CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5" addBond="2 locant 2" frontLocantsExpected="1,2">penem</token><!--in carbapenems a double bond can be placed at locant 1-->
+		<token value="S1C=CN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">pen-2-em</token>
+		<token value="C1=CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">1-carbapen-1-em</token>
+		<token value="C1=CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">1-carba-pen-1-em</token>
+		<token value="C1=CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">carbapen-1-em</token>
+		<token value="C1=CCN2[C@H]1CC2=O" labels="1/2/3/4/5/6/7/" alphaBetaClockWiseAtomOrdering="1/2/3/4/7/6/5">carba-pen-1-em</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="biochemical" symbol="Þ">
