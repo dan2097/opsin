@@ -176,7 +176,7 @@ class ResourceManager {
 		}
 		
 		int index = Arrays.binarySearch(chemicalAutomaton.getCharIntervals(), symbol);
-		if (index < 0){
+		if (index < 0) {
 			throw new RuntimeException(symbol +" is associated with a tokenList of tagname " + tokenTagName +" however it is not actually used in OPSIN's grammar!!!");
 		}
 		
@@ -185,15 +185,15 @@ class ResourceManager {
 			case XMLStreamConstants.START_ELEMENT:
 				if (reader.getLocalName().equals("token")) {
 					TokenEl el;
-					if (ignoreWhenWritingXML){
+					if (ignoreWhenWritingXML) {
 						el = IGNORE_WHEN_WRITING_PARSE_TREE;
 					}
 					else{
 						el = new TokenEl(tokenTagName);
-						if (type != null){
+						if (type != null) {
 							el.addAttribute(TYPE_ATR, type);
 						}
-						if (subType != null){
+						if (subType != null) {
 							el.addAttribute(SUBTYPE_ATR, subType);
 						}
 						for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
@@ -209,16 +209,20 @@ class ResourceManager {
 					symbolToToken.put(symbol, el);
 
 					if (!reversed){
-						if(symbolTokenNamesDict[index]==null) {
-							symbolTokenNamesDict[index] = new OpsinRadixTrie();
+						OpsinRadixTrie trie = symbolTokenNamesDict[index];
+						if(trie == null) {
+							trie = new OpsinRadixTrie();
+							symbolTokenNamesDict[index] = trie;
 						}
-						symbolTokenNamesDict[index].addToken(t);
+						trie.addToken(t);
 					}
 					else{
-						if(symbolTokenNamesDictReversed[index]==null) {
-							symbolTokenNamesDictReversed[index] = new OpsinRadixTrie();
+						OpsinRadixTrie trie = symbolTokenNamesDictReversed[index];
+						if(trie == null) {
+							trie = new OpsinRadixTrie();
+							symbolTokenNamesDictReversed[index] = trie;
 						}
-						symbolTokenNamesDictReversed[index].addToken(new StringBuilder(t).reverse().toString());
+						trie.addToken(new StringBuilder(t).reverse().toString());
 					}
 				}
 				break;
