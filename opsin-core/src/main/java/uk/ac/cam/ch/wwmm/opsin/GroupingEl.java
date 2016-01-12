@@ -27,7 +27,8 @@ class GroupingEl extends Element{
 			newChild.setParent(copy);
 			copy.addChild(newChild);
 		}
-		for (Attribute atr : this.attributes) {
+		for (int i = 0, len = this.attributes.size(); i < len; i++) {
+			Attribute atr = this.attributes.get(i);
 			copy.addAttribute(new Attribute(atr));
 		}
 		return copy;

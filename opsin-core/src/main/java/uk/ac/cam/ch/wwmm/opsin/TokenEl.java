@@ -26,7 +26,8 @@ class TokenEl extends Element {
 	@Override
 	Element copy() {
 		TokenEl copy = new TokenEl(this.name, this.value);
-		for (Attribute atr : this.attributes) {
+		for (int i = 0, len = this.attributes.size(); i < len; i++) {
+			Attribute atr = this.attributes.get(i);
 			copy.addAttribute(new Attribute(atr));
 		}
 		return copy;
@@ -40,7 +41,8 @@ class TokenEl extends Element {
 	 */
 	TokenEl copy(String value) {
 		TokenEl copy = new TokenEl(this.name, value);
-		for (Attribute atr : this.attributes) {
+		for (int i = 0, len = this.attributes.size(); i < len; i++) {
+			Attribute atr = this.attributes.get(i);
 			copy.addAttribute(new Attribute(atr));
 		}
 		return copy;
