@@ -49,7 +49,8 @@ abstract class Element {
 	 * @return
 	 */
 	Attribute getAttribute(String name) {
-		for (Attribute a : attributes) {
+		for (int i = 0, len = attributes.size(); i < len; i++) {
+			Attribute a = attributes.get(i);
 			if (a.getName().equals(name)) {
 				return a;
 			}
