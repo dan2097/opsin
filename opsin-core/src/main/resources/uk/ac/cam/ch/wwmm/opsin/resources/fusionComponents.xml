@@ -50,6 +50,7 @@
 		<token value="c1ccc2cccc3c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/10/10a/10b/10c">fluorantheno</token>
 		<token value="c1cccc2c3ccccc3[cH2]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">fluoreno</token>
 		<token value="o1cccc1" labels="1/2/3/4/5">furano</token>
+		<token value="o1nccn1" labels="1/2/3/4/5">furazano</token>
 		<token value="o1cccc1" labels="1/2/3/4/5">furo</token>
 		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidazolo</token>
 		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidazo</token>
@@ -57,8 +58,9 @@
 		<token value="c1ccc2cc3cccc3cc12" labels="1/2/3/3a/4/4a/5/6/7/7a/8/8a">s-indaceno</token>
 		<token value="[nH]1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indazolo</token>
 		<token value="[cH2]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indeno</token>
-		<token value="[nH]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indolo</token>
+		<token value="C1CCN2CCCCC12" labels="1/2/3/4/5/6/7/8/8a">indolizidino</token>
 		<token value="c1ccn2ccccc12" labels="1/2/3/4/5/6/7/8/8a">indolizino</token>
+		<token value="[nH]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indolo</token>
 		<token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoarsindolo</token>
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoarsinolino</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofurano</token>
@@ -144,6 +146,7 @@
 		<token value="n1ccccc1" labels="1/2/3/4/5/6">pyrido</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidino</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimido</token>
+		<token value="C1CCN2CCCC12" labels="1/2/3/4/5/6/7/7a">pyrrolizidino</token>
 		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrrolizino</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrolo</token>
 		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinazolino</token>
@@ -151,6 +154,7 @@
 		<token value="c1cccc2nc3nc4ccccc4c3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/10b/11/11a">quinindolino</token>
 		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quino</token>
 		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinolino</token>
+		<token value="C1CCCN2CCCCC12" labels="1/2/3/4/5/6/7/8/9/9a">quinolizidino</token>
 		<token value="c1cc[cH2]n2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">quinolizino</token>
 		<token value="n1ccnc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinoxalino</token>
 		<token value="c1ccc2c3ccccc3c3c4cccc5c6ccccc6c6c71.c237.c456" labels="1/2/3/3a/3b/4/5/6/7/7a/7b/7c/8/9/10/10a/10b/11/12/13/14/14a/14b/14c/14d/14e">rubiceno</token>

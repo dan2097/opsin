@@ -326,6 +326,7 @@
 		<token value="Cc1c(O)c(O)ccc1" labels="/1/2,ortho//3,meta//4,para/5/6">o-pyrocatechu</token><!--unknown-->
 		<token value="Cc1c(C)cc(C)c(C)c1" labels="/1/2//3/4//5//6" suffixAppliesTo="1,4,7,9">pyromellit</token><!--unknown-->
 		<token value="CC(C)CC" suffixAppliesTo="1,5">pyrotartar</token><!--unknown-->
+		<token value="Cc(n1)ccc2ccccc12" labels="/2/1/3/4/4a/5/6/7/8/8a">quinald</token><!--both-->
 		<token value="Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" defaultInID="4">salicyl</token><!--c.f. acetylsalicylic acid-->
 		<token value="Cc1c(S)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6" defaultInID="4">thiosalicyl</token>
 		<token value="CC=C(C)C">seneci</token><!--unknown-->
