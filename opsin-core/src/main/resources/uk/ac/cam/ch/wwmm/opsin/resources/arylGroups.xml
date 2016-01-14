@@ -122,7 +122,9 @@
 		<token value="[cH2]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">inden</token>
 		<token value="[nH]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indol</token>
 		<token value="N1CCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indolin</token>
+		<token value="C1CCN2CCCCC12" labels="1/2/3/4/5/6/7/8/8a">indolizidin</token>
 		<token value="c1ccn2ccccc12" labels="1/2/3/4/5/6/7/8/8a">indolizin</token>
+		<token value="o1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indoxazen</token>
 		<token value="N1C(=O)C(=O)c2ccccc12" labels="1/2//3//3a/4/5/6/7/7a">isatin</token>
 		<token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoarsindol</token>
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoarsinolin</token>
@@ -243,6 +245,9 @@
 		<token value="c1nncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">phthalazin</token>
 		<token value="C1(=O)OCc2ccccc12" labels="1//2/3/3a/4/5/6/7/7a">phthalid</token>
 		<token value="c1ccc2cccc3nc4c5ccccc5cn4c1c23" labels="1/2/3/3a/4/5/6/6a/7/7a/7b/8/9/10/11/11a/12/13/13a/13b">phthaloperin</token>
+		<token value="n1[se]nc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piaselenol</token>
+		<token value="n1[se]nc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piazselenol</token>
+		<token value="n1snc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piazthiol</token>
 		<token value="C1NCCc2c3cc(OC)ccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6///7/8/8a/9/9a">pinolin</token>
 		<token value="[nH]1ccccc1" labels="1/2,ortho,alpha/3,meta,beta/4,para,gamma/5/6" addGroup="C locant 2" suffixAppliesTo="7" frontLocantsExpected="2,ortho,alpha,3,meta,beta,4,para,gamma,5,6">picolin</token>
 		<token value="N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6">piperazin</token>
@@ -272,16 +277,18 @@
 		<token value="c1(O)c(O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">pyrocatechol</token>
 		<token value="c1(O)c(O)c(O)ccc1" labels="1//2,ortho//3,meta//4,para/5/6">pyrogallol</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrol</token>
+		<token value="C1CCN2CCCC12" labels="1/2/3/4/5/6/7/7a">pyrrolizidin</token>
 		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrrolizin</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidin</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5" addGroup="=O locant 2" frontLocantsExpected="2,3,4,5">pyrrolidon</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">pyrrolin</token>
 		<token value="[o+]1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">pyrylium</token>
-		<token value="n1c(C)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a">quinaldin</token>
+		<token value="n1c(C)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a" suffixAppliesToByDefault="3">quinaldin</token><!--Gives quinaldinic acid-->
 		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinazolin</token>
 		<token value="c1cccc2nc3c4ccccc4nc3cc12" labels="1/2/3/4/4a/5/5a/5b/6/7/8/9/9a/10/10a/11/11a">quindolin</token>
 		<token value="c1cccc2nc3nc4ccccc4c3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/10b/11/11a">quinindolin</token>
 		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinolin</token>
+		<token value="C1CCCN2CCCCC12" labels="1/2/3/4/5/6/7/8/9/9a">quinolizidin</token>
 		<token value="c1cc[cH2]n2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">quinolizin</token>
 		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" addGroup="=O defaultLocant 2" frontLocantsExpected="2,3,4,5,6,7,8">quinolon</token>
 		<token value="n1ccnc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinoxalin</token>
