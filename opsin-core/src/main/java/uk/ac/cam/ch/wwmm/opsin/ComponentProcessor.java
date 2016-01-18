@@ -1111,8 +1111,14 @@ class ComponentProcessor {
 		if (detectedMultiplicativeNomenclature){
 			return true;
 		}
-		if (currentElem != null && count ==2 && currentElem.getName().equals(GROUP_EL) && EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
-			return true;
+		if (currentElem != null && count ==2 && currentElem.getName().equals(GROUP_EL)){
+			if (EPOXYLIKE_SUBTYPE_VAL.equals(currentElem.getAttributeValue(SUBTYPE_ATR))){
+				return true;
+			}
+			if ("yes".equals(currentElem.getAttributeValue(IMINOLIKE_ATR))){
+				currentElem.getAttribute(SUBTYPE_ATR).setValue(EPOXYLIKE_SUBTYPE_VAL);
+				return true;
+			}
 		}
 		Element parentElem = locant.getParent();
 		if (count == 2 && parentElem.getName().equals(BRACKET_EL)){//e.g. 3,4-(dichloromethylenedioxy) this is changed to (dichloro3,4-methylenedioxy)
