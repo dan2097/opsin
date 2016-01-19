@@ -180,7 +180,7 @@ class WordRulesOmittedSpaceCorrector {
 		if (substituentGroupEl.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) &&
 				ALKANESTEM_SUBTYPE_VAL.equals(substituentGroupEl.getAttributeValue(SUBTYPE_ATR))) {
 			if (substituentGroupEl.getParent().getValue().matches(substituentGroupEl.getValue() + "yl-?") &&
-					rootGroupName.matches(".*(form|methan|acet|ethan)[o]?ate")) {
+					rootGroupName.matches(".*(form|methan|acet|ethan)[o]?ate?")) {
 				return true;
 			}
 		}
