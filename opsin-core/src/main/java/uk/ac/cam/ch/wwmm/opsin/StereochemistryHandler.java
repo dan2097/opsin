@@ -458,6 +458,9 @@ class StereochemistryHandler {
 		else if (eOrZ.equals("Z")){
 			bond.setBondStereoElement(atomRefs4, BondStereoValue.CIS);
 		}
+		else if (eOrZ.equals("EZ")){
+			bond.setBondStereo(null);
+		}
 		else{
 			throw new IllegalArgumentException("Unexpected stereochemistry type: " + eOrZ);
 		}

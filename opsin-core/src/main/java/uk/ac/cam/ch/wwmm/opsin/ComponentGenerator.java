@@ -71,11 +71,11 @@ class ComponentGenerator {
 	private static final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp)");
+	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Ee][Zz]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp)");
 	private static final Pattern matchStar = Pattern.compile("\\^?\\*");
 	private static final Pattern matchRacemic = Pattern.compile("rac(\\.|em(\\.|ic)?)?-?", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchRS = Pattern.compile("[Rr]/?[Ss]?|[Ss][Rr]?");
-	private static final Pattern matchEZ = Pattern.compile("[EZez]");
+	private static final Pattern matchEZ = Pattern.compile("[EZez]|[Ee][Zz]");
 	private static final Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private static final Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
 	private static final Pattern matchEndoExoSynAnti = Pattern.compile("[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]");
@@ -285,7 +285,14 @@ class ComponentGenerator {
 						}
 						else if (StringTools.endsWithCaseInsensitive(brackettedText, "R") || StringTools.endsWithCaseInsensitive(brackettedText, "S")){
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
-							String rs = brackettedText;
+							String rs;
+							if (brackettedText.length() == 3 && (brackettedText.charAt(1) ==','|| brackettedText.charAt(1) =='/')) {
+								rs = new StringBuilder(2).append(brackettedText.charAt(0)).append(brackettedText.charAt(2)).toString();
+							}
+							else {
+								rs = brackettedText;
+							}
+	
 							Element newStereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, "(" + locantText + rs + ")");
 							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
 							OpsinTools.insertBefore(locant, newStereoChemEl);
