@@ -197,6 +197,42 @@ public class ComponentGeneration_ProcesslocantsTest {
 	}
 	
 	@Test
+	public void testStereochemistryInLocant4() throws ComponentGenerationException {
+		locant.setValue("5(RS)");
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("5", locant.getValue());
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
+		assertNotNull(stereochemistry);
+		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
+		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
+		assertEquals("(5RS)", stereochemistry.getValue());//will be handled by process stereochemistry function
+	}
+	
+	@Test
+	public void testStereochemistryInLocant5() throws ComponentGenerationException {
+		locant.setValue("5(R,S)");
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("5", locant.getValue());
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
+		assertNotNull(stereochemistry);
+		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
+		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
+		assertEquals("(5RS)", stereochemistry.getValue());//will be handled by process stereochemistry function
+	}
+	
+	@Test
+	public void testStereochemistryInLocant6() throws ComponentGenerationException {
+		locant.setValue("5(R/S)");
+		ComponentGenerator.processLocants(substituent);
+		assertEquals("5", locant.getValue());
+		Element stereochemistry = OpsinTools.getPreviousSibling(locant);
+		assertNotNull(stereochemistry);
+		assertEquals(STEREOCHEMISTRY_EL, stereochemistry.getName());
+		assertEquals(STEREOCHEMISTRYBRACKET_TYPE_VAL, stereochemistry.getAttributeValue(TYPE_ATR));
+		assertEquals("(5RS)", stereochemistry.getValue());//will be handled by process stereochemistry function
+	}
+	
+	@Test
 	public void testMultipleCardinals() throws ComponentGenerationException {
 		locant.setValue("2,3-");
 		ComponentGenerator.processLocants(substituent);

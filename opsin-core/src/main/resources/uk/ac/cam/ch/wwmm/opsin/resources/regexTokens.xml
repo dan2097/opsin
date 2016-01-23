@@ -33,7 +33,7 @@
 	<regex name="%locantTypesOptionalHyphen%" regex="(%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%|%greek%'*)|%greek%'*)"/><!--subset that do not end with a letter-->
 	<regex name="%indicatedHydrogen%" regex="(%locant%[hH])"/>
 	<regex name="%compoundLocantOrAddedHydrogen%" regex="(%openBracket%(%locant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->
-	<regex name="%RSstereochemAfterLocant%" regex="(-?%openBracket%[RSrs]%closeBracket%)"/><!--e.g. 2-(S) or 2(R),3(R),4(R),5-->
+	<regex name="%RSstereochemAfterLocant%" regex="(-?%openBracket%([RSrs]|[Rr][,/]?[Ss])%closeBracket%)"/><!--e.g. 2-(S) or 2(R),3(R),4(R),5-->
 	<regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)?)"/>
 	<regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
 	<regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
@@ -59,13 +59,13 @@
 	<regexToken regex="%locantTypes%,%locantTypes%([:;]%locantTypes%,%locantTypes%)*([:;]%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonOrSemiColonDelimitedLocant" determinise="yes"/>
 	<regexToken regex="%openBracket%[1-9]'*->?[1-9]'*%closeBracket%" symbol="ì" tagname="biochemicalLinkage" determinise="yes"/>
 
-	<regexToken regex="(?&lt;![A-Za-z])[EZez]" symbol="æ" type="EorZ" tagname="stereoChemistry"/><!--unbracketted E or Z for stereochemistry-->
+	<regexToken regex="(?&lt;![A-Za-z])(ez?|EZ?|[Zz])" symbol="æ" type="EorZ" tagname="stereoChemistry"/><!--unbracketted E or Z for stereochemistry-->
 	<regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
 	<regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¹" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
 	<regex name="%relativeOrientationStereochemTerm%" regex="((%locant%-?)?([eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]))"/>
 	<regex name="%axialStereoTerm%" regex="(M|P|Ra|Sa|Sp|Rp)"/>
 	<regex name="%cisTransOptionallyLocanted%" regex="((%locantTypes%-?)?([cC][iI][sS]|[tT][rR][aA][nN][sS]))"/>
-	<regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|[RSrs](\^?\*)?|RS|R/S|SR)|%cisTransOptionallyLocanted%|%alphaBetaLocant%|%relativeOrientationStereochemTerm%|%axialStereoTerm%)"/>
+	<regex name="%stereochemPossibilities%" regex="(%locantTypes%?([EZez]|EZ|ez|[RSrs](\^?\*)?|RS|R/S|rs|r/s|SR)|%cisTransOptionallyLocanted%|%alphaBetaLocant%|%relativeOrientationStereochemTerm%|%axialStereoTerm%)"/>
 	<regex name="%relativeOrRacemic%" regex="([rR][eE][lL]|[rR][aA][cC](\.|[eE][mM](\.|[iI][cC])?)?)"/>
 	<regexToken regex="(%relativeOrRacemic%-)?%openBracket%%stereochemPossibilities%([,-]%stereochemPossibilities%)*%closeBracket%-?|%openBracket%%relativeOrRacemic%%closeBracket%-?|%relativeOrRacemic%-" symbol="E" type="stereochemistryBracket" tagname="stereoChemistry" determinise="yes" />
 	<regexToken regex="([rct]-%allLocantForms%,)*[rct]-(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="Ê" type="relativeCisTrans" tagname="stereoChemistry" determinise="yes" /><!--relative/cis/trans descriptor-->

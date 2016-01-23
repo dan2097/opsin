@@ -883,6 +883,23 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	@Test
+	public void testRacemate2_ci() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(rs)");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element newStereochemistryEl = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
+		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
+		assertEquals("RS", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
 	public void testRacemate3() throws ComponentGenerationException {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
 		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(SR)");
@@ -1008,6 +1025,72 @@ public class ComponentGeneration_StereochemistryTest {
 
 		List<Element> children = substituent.getChildElements();
 		assertEquals(0, children.size());
+	}
+
+	@Test
+	public void testRacemateEz1() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(EZ)");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getName());
+		assertEquals("EZ", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testRacemateEz2() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "(2EZ)");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getName());
+		assertEquals("2", modifiedStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("EZ", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testRacemateEz3_unbracketted() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element locant = new TokenEl(LOCANT_EL, "2");
+		substituent.addChild(locant);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "ez");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		assertEquals(1, children.size());
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getName());
+		assertEquals("2", modifiedStereochemistryEl1.getAttributeValue(LOCANT_ATR));
+		assertEquals("EZ", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
+	}
+	
+	@Test
+	public void testRacemateEz4_unbracketted() throws ComponentGenerationException {
+		Element substituent = new GroupingEl(SUBSTITUENT_EL);
+		Element stereochem = new TokenEl(STEREOCHEMISTRY_EL, "EZ");
+		stereochem.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
+		substituent.addChild(stereochem);
+		processStereochemistry(substituent);
+
+		List<Element> children = substituent.getChildElements();
+		Element modifiedStereochemistryEl1 = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, modifiedStereochemistryEl1.getName());
+		assertEquals("EZ", modifiedStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(E_OR_Z_TYPE_VAL, modifiedStereochemistryEl1.getAttributeValue(TYPE_ATR));
 	}
 	
 	private void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
