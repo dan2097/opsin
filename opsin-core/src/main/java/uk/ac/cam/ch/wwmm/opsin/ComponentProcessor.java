@@ -3267,12 +3267,18 @@ class ComponentProcessor {
 			}
 			spiroAtoms.add(atomToBeReplaced);
 			if (atomToBeReplaced.getElement() != atomOnNextFragment.getElement()){
-				throw new ComponentGenerationException("Disagreement between which element the spiro atom should be: " + atomToBeReplaced.getElement() +" and " + atomOnNextFragment.getElement() );
+				//In well formed names these should be identical but by special case pick the heteroatom if the other is carbon
+				if (atomToBeReplaced.getElement() != ChemEl.C && atomOnNextFragment.getElement() == ChemEl.C) {
+					atomOnNextFragment.setElement(atomToBeReplaced.getElement());
+				}
+				else if (atomToBeReplaced.getElement() != ChemEl.C && atomOnNextFragment.getElement() != ChemEl.C) {
+					throw new ComponentGenerationException("Disagreement between which element the spiro atom should be: " + atomToBeReplaced.getElement() +" and " + atomOnNextFragment.getElement() );	
+				}
 			}
-			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnNextFragment);
 			if (atomToBeReplaced.hasSpareValency()){
 				atomOnNextFragment.setSpareValency(true);
 			}
+			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnNextFragment);
 		}
 		if (spiroAtoms.size() > 1) {
 			Element expectedMultiplier = OpsinTools.getPreviousSibling(polyCyclicSpiroDescriptor);
