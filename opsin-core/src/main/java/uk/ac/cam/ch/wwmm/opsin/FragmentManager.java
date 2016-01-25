@@ -431,6 +431,10 @@ class FragmentManager {
 			if (isAnomeric!=null){
 				oldToNewAtomMap.get(atom).setProperty(Atom.ISANOMERIC, isAnomeric);
 			}
+			Integer atomClass = atom.getProperty(Atom.ATOM_CLASS);
+			if (atomClass!=null){
+				oldToNewAtomMap.get(atom).setProperty(Atom.ATOM_CLASS, atomClass);
+			}
 		}
 		for (int i = 0, l = originalFragment.getOutAtomCount(); i < l; i++) {
 			OutAtom outAtom = originalFragment.getOutAtom(i);
