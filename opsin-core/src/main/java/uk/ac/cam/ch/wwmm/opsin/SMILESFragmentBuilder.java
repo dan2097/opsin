@@ -694,6 +694,16 @@ class SMILESFragmentBuilder {
 
 		verifyAndTakeIntoAccountLonePairsInAtomParities(atomList);
 		addBondStereoElements(fragment);
+		
+		if(firstCharacter == '-'){
+			fragment.addOutAtom(fragment.getFirstAtom(), 1, true);
+		}
+		else if(firstCharacter == '='){
+			fragment.addOutAtom(fragment.getFirstAtom(), 2, true);
+		}
+		else if (firstCharacter == '#'){
+			fragment.addOutAtom(fragment.getFirstAtom(), 3, true);
+		}
 
 		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
 			Atom lastAtom = instance.getInscopeAtom();//note that in something like C(=O)- this would be the carbon not the oxygen
@@ -706,16 +716,6 @@ class SMILESFragmentBuilder {
 			else{
 				fragment.addOutAtom(lastAtom, 1, true);
 			}
-		}
-
-		if(firstCharacter == '-'){
-			fragment.addOutAtom(fragment.getFirstAtom(), 1, true);
-		}
-		else if(firstCharacter == '='){
-			fragment.addOutAtom(fragment.getFirstAtom(), 2, true);
-		}
-		else if (firstCharacter == '#'){
-			fragment.addOutAtom(fragment.getFirstAtom(), 3, true);
 		}
 
 		for (Atom atom : atomList) {
