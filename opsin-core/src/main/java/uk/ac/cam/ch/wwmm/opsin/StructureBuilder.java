@@ -1628,9 +1628,11 @@ class StructureBuilder {
 			 * We assume the polymer repeats so as an approximation we create an R group with the same element as the group at the other end of polymer (with valency equal to the bondorder of the Rgroup so no H added)
 			 */
 			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement().toString() + "|" + polymerBr.getOutAtom(0).getValency() + "]", "", "alpha");
+			rGroup1.getFirstAtom().setProperty(Atom.ATOM_CLASS, 1);
 			state.fragManager.createBond(inAtom, rGroup1.getFirstAtom(), polymerBr.getOutAtom(0).getValency());
 
 			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement().toString() + "|" + polymerBr.getOutAtom(1).getValency() + "]", "", "omega");
+			rGroup2.getFirstAtom().setProperty(Atom.ATOM_CLASS, 2);
 			state.fragManager.createBond(outAtom, rGroup2.getFirstAtom(), polymerBr.getOutAtom(1).getValency());
 			rGroups.add(rGroup1);
 			rGroups.add(rGroup2);

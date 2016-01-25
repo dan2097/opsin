@@ -441,12 +441,12 @@ class SMILESWriter {
 			atomSmiles.append(atom.getIsotope());
 		}
 		ChemEl chemEl = atom.getElement();
-		if (atom.hasSpareValency()) {//spare valency corresponds directly to lower case SMILES in OPSIN's SMILES reader
-			atomSmiles.append(chemEl.toString().toLowerCase(Locale.ROOT));
+		if (chemEl == ChemEl.R) {//used for polymers
+			atomSmiles.append('*');
 		}
 		else{
-			if (chemEl == ChemEl.R) {//used for polymers
-				atomSmiles.append('*');
+			if (atom.hasSpareValency()) {//spare valency corresponds directly to lower case SMILES in OPSIN's SMILES reader
+				atomSmiles.append(chemEl.toString().toLowerCase(Locale.ROOT));
 			}
 			else{
 				atomSmiles.append(chemEl.toString());
@@ -477,6 +477,11 @@ class SMILESWriter {
 	    	}
 	    }
 	    if (needsSquareBrackets) {
+	    	Integer atomClass = atom.getProperty(Atom.ATOM_CLASS);
+			if (atomClass != null) {
+				atomSmiles.append(':');
+				atomSmiles.append(String.valueOf(atomClass));
+			}
 	    	atomSmiles.append(']');
 	    }
 		return atomSmiles.toString();
@@ -526,6 +531,9 @@ class SMILESWriter {
 			}
 		}
 		if (targetImplicitValency != implicitValencyThatWouldBeGenerated){
+			return true;
+		}
+		if (atom.getProperty(Atom.ATOM_CLASS) != null) {
 			return true;
 		}
 		return false;
