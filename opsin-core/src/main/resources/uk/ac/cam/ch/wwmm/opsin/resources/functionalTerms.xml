@@ -93,6 +93,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
 		<token value="C=O">ketone</token>
 		<token value="C(=O)C(=O)-">diketone</token>
 		<token value="C(=O)C(=O)C(=O)-">triketone</token>
+		<token value="C=NO">ketoxime</token>
 		<token value="O">oxide</token>
 		<token value="OO-">peroxide</token>
 		<token value="[Se|2]">selenide</token>
