@@ -43,6 +43,10 @@
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">benzen</token>
 		<token value="c1(ccccc1)C(=O)C(O)c2ccccc2" labels="1/2/3/4/5/6///alpha//1'/2'/3'/4'/5'/6'">benzoin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="=O locant 1;=O locant 4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzoquinon</token>
+		<token value="c12ccccc1.C2(Br)(Br)Br" labels="1/2,ortho/3,meta/4,para/5/6/alpha///">benzotribromid</token>
+		<token value="c12ccccc1.C2(Cl)(Cl)Cl" labels="1/2,ortho/3,meta/4,para/5/6/alpha///">benzotrichlorid</token>
+		<token value="c12ccccc1.C2(F)(F)F" labels="1/2,ortho/3,meta/4,para/5/6/alpha///">benzotrifluorid</token>
+		<token value="c12ccccc1.C2(I)(I)I" labels="1/2,ortho/3,meta/4,para/5/6/alpha///">benzotriiodid</token>
 		<token value="C1#CC=CC=C1" labels="1/2,ortho/3,meta/4,para/5/6">benzyn</token>
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">betacarbolin</token>
 		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">beta-carbolin</token>
