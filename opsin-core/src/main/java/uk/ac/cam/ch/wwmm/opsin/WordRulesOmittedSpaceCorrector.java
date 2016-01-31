@@ -184,7 +184,7 @@ class WordRulesOmittedSpaceCorrector {
 				return true;
 			}
 		}
-		if (rootGroupName.endsWith("carbamate") && numOfSubstituents >= 2) {
+		if ((rootGroupName.endsWith("carbamate") || rootGroupName.endsWith("carbamat")) && numOfSubstituents >= 2) {
 			Element temp = substituentGroupEl.getParent();
 			while (temp.getParent() != null) {
 				temp = temp.getParent();
