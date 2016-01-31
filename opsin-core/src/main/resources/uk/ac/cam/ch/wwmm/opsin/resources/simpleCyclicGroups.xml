@@ -33,6 +33,7 @@
 		<token value="Oc1ccc(cc1)C(C)(C)c2ccc(cc2)O">bisphenol-a</token>
 		<token value="O=Cc1cc(OCC)c(O)cc1" labels="//1/2/3////4//5/6">bourbonal</token>
 		<token value="c1c(O)c(C)ccc1C(C)C">carvacrol</token>
+		<token value="c1([O-])c([O-])cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">catecholate</token>
 		<token value="c1(ccc(CC=C)cc1)O">chavicol</token>
 		<token value="OC/C=C/c1cc(OC)c(O)cc1">coniferol</token>
 		<token value="c1(c(OC)cc(C)cc1)O">creosol</token>
@@ -115,6 +116,7 @@
 		<token value="n1c(N)[nH]c(=O)c2nccnc12" labels="1/2//3/4//4a/5/6/7/8/8a">pterin</token>
 		<token value="n1c(N)[nH]c(=O)c2ncCNc12" labels="1/2//3/4//4a/5/6/7/8/8a">dihydropterin</token>
 		<token value="n1c(N)[nH]c(=O)c2NCCNc12" labels="1/2//3/4//4a/5/6/7/8/8a">tetrahydropterin</token>
+		<token value="c1([O-])c([O-])cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">pyrocatecholate</token>
 		<token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2,ortho////3,meta////4,para/5/6" functionalIDs="5,9">quinolinic</token>
 		<token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2,ortho////3,meta////4,para/5/6" functionalIDs="5,9">quinolinicacid</token>
 		<token value="n1c(C(=O)O)c(C(=O)O)ccc1" labels="1/2,ortho////3,meta////4,para/5/6" functionalIDs="5,9">quinolinic acid</token>

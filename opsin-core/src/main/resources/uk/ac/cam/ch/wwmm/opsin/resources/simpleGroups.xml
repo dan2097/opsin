@@ -415,6 +415,7 @@
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C">diazinon</token><!--pesticide name-->
 		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O">diazolidinylurea</token><!--antimicrobial name-->
 		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O">diazolidinyl urea</token><!--antimicrobial name-->
+		<token value="ClC(C(C1=CC=C(C=C1)Cl)C1=CC=C(C=C1)Cl)(Cl)Cl">dichlorodiphenyltrichloroethane</token><!--pesticide name-->
 		<token value="O=C1N(CO)CCN1CO">dimethylol ethylene urea</token><!--trivial name-->
 		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N">dithianone</token><!--pesticide name-->
 		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N">dithianon</token><!--pesticide name-->
@@ -435,6 +436,10 @@
 		<token value="OC(=O)c1cc(C(O)=O)c-2c(n1)C(=O)C(=O)c1cc([nH]c-21)C(O)=O">pyrroloquinoline quinone</token><!--enzyme cofactor-->
 		<token value="OC(=O)c1c(O)ccc(S(=O)(=O)O)c1" labels="///1/2,ortho//3,meta/4,para/5/////6" functionalIDs="1,13">sulfosalicylic acid</token><!--trivial name-->
 		<token value="O.O.O.O.O.O.O.O.O.[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO">stibogluconate</token><!--drug name-->
+		<token value="Br[Ga-](Br)(Br)Br">tetrabromogallate</token><!--gallate has multiple meanings-->
+		<token value="Cl[Ga-](Cl)(Cl)Cl">tetrachlorogallate</token><!--gallate has multiple meanings-->
+		<token value="F[Ga-](F)(F)F">tetrafluorogallate</token><!--gallate has multiple meanings-->
+		<token value="I[Ga-](I)(I)I">tetraiodogallate</token><!--gallate has multiple meanings-->
 		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene-diisocyanate</token><!--trivial name-->
 		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene diisocyanate</token><!--trivial name-->
 	</tokenList>
@@ -453,6 +458,7 @@
 		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotin sulfoxide</token>
 		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">d-biotine sulfoxide</token>
 		<token value="OCC[N+](C)(C)C" defaultInID="1">choline</token>
+		<token value="ClCC[N+](C)(C)C">chlorocholine</token>
 		<token value="O=C(O)CN(C)C(N)=N" functionalIDs="3">creatine</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine</token>
 		<token value="C(O)CN">ethanolamine</token>

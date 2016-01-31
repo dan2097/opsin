@@ -573,12 +573,12 @@
 <!--Used as prefixes and for functional replacement of some acids-->
 	<tokenList tagname="group" type="substituent" subType="halideOrPseudoHalide" symbol="x">
 		<token value="-N=[N+]=[N-]">azido</token>
-		<token value="-Br">bromo</token>
-		<token value="-Cl">chloro</token>
+		<token value="-[Br|1]">bromo</token>
+		<token value="-[Cl|1]">chloro</token>
 		<token value="-OC#N">cyanato</token>
 		<token value="-C#N">cyano</token>
-		<token value="-F">fluoro</token>
-		<token value="-I">iodo</token>
+		<token value="-[F|1]">fluoro</token>
+		<token value="-[I|1]">iodo</token>
 		<token value="-N=C=O">isocyanato</token>
 		<token value="-[N+]#[C-]">isocyano</token>
 		<token value="-N=C=[Se]">isoselenocyanato</token>
@@ -603,10 +603,10 @@
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="perhalogeno" symbol="x">
-		<token value="-F">perfluoro</token>
-		<token value="-Br">perbromo</token>
-		<token value="-Cl">perchloro</token>
-		<token value="-I">periodo</token>
+		<token value="-[F|1]">perfluoro</token>
+		<token value="-[Br|1]">perbromo</token>
+		<token value="-[Cl|1]">perchloro</token>
+		<token value="-[I|1]">periodo</token>
 		<token value="-[2H]">perdeuterio</token>
 		<token value="-[2H]">perdeutero</token>
 		<token value="-[3H]">pertritio</token>
