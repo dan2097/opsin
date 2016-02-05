@@ -420,6 +420,16 @@
 		<token value="-C(=O)OCC1c2ccccc2c3ccccc13">fmoc</token>
 		<token value="-[Si](C)(C)C">tms</token>
 		<token value="-[Si](C)(C)C(C)(C)C">tbdms</token>
+		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tbdps</token>
+		<!--currently these terms are not implicitly bracketed correctly-->
+		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyldimethylsiloxy</token>
+		<token value="-O[Si](C)(C)C(C)(C)C">t-butyldimethylsiloxy</token>
+		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyldimethylsilyloxy</token>
+		<token value="-O[Si](C)(C)C(C)(C)C">t-butyldimethylsilyloxy</token>
+		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyldiphenylsiloxy</token>
+		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyldiphenylsiloxy</token>
+		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyldiphenylsilyloxy</token>
+		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyldiphenylsilyloxy</token>
 
 		<token value="-[Ac]">actinio</token>
 		<token value="-[Al]">aluminio</token>
