@@ -1,5 +1,5 @@
-relre:opsin-inchi/src/main/java/dl/*
-relre:target/*
+relre:opsin-inchi/src/main/java/dl/.*
+relre:target/.*
 .classpath
 .project
 .settings
