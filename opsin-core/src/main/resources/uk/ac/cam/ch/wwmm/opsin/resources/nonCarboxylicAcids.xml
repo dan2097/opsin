@@ -229,6 +229,14 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="S(=O)([O-])[O-]" functionalIDs="3,4">sulfite</token>
 		<token value="S(=O)(=O)([O-])[O-]" functionalIDs="4,5">sulfate</token>
 		<token value="S(=O)(=O)([O-])[O-]" functionalIDs="4,5">sulfoate</token>
+		<token value="S(=O)(=O)(O[O-])[O-]" functionalIDs="5,6">peroxomonosulfate</token>
+		<token value="S(=O)(=O)(O[O-])[O-]" functionalIDs="5,6">peroxymonosulfate</token>
+		<token value="S(=O)(=O)(OO)O" functionalIDs="5,6">peroxomonosulfuric</token>
+		<token value="S(=O)(=O)(OO)O" functionalIDs="5,6">peroxomonosulfuricacid</token>
+		<token value="S(=O)(=O)(OO)O" functionalIDs="5,6">peroxomonosulfuric acid</token>
+		<token value="S(=O)(=O)(OO)O" functionalIDs="5,6">peroxymonosulfuric</token>
+		<token value="S(=O)(=O)(OO)O" functionalIDs="5,6">peroxymonosulfuricacid</token>
+		<token value="S(=O)(=O)(OO)O" functionalIDs="5,6">peroxymonosulfuric acid</token>
 		<token value="[Te](=O)([O-])[O-]" functionalIDs="3,4">tellurite</token>
 		<token value="[Te](=O)(=O)([O-])[O-]" functionalIDs="4,5">tellurate</token>
 		<token value="[Te](=O)(=O)([O-])[O-]" functionalIDs="4,5">telluroate</token>
