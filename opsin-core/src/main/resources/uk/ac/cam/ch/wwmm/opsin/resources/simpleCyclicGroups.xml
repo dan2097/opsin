@@ -132,6 +132,7 @@
 		<token value="c1([N+](=O)[O-])c(O)c([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta//4,para////5/6////1/" functionalIDs="6,17">styphnic</token>
 		<token value="c1([N+](=O)[O-])c(O)c([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta//4,para////5/6////1/" functionalIDs="6,17">styphnicacid</token>
 		<token value="c1([N+](=O)[O-])c(O)c([N+](=O)[O-])cc([N+](=O)[O-])c1O" labels="2,ortho////3,meta//4,para////5/6////1/" functionalIDs="6,17">styphnic acid</token>
+		<token value="C(OC(=O)O1)C1c1ccccc1" labels="beta/////alpha/1/2,ortho/3,meta/4,para/5/6">styrene carbonate</token>
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6">styrol</token>
 		<token value="O1[N-][NH+]=CC1(=O)" labels="1/2/3/4/5/">sydnone</token>
 		<token value="OCc1ccc(CO)cc1" labels="//1/2,ortho/3,meta/4,para///5/6">terephthalyl alcohol</token>
