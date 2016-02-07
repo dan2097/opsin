@@ -133,6 +133,9 @@
 		<token value="[GaH4-]">gallohydride</token>
 		<token value="CC(C)=CCC/C(C)=C/C=O" defaultInID="1">geranial</token>
 		<token value="CC(C)=CCC/C(C)=C/CO" defaultInID="1">geraniol</token>
+		<token value="OCC1OC(OC1)=O">glycerol carbonate</token>
+		<token value="OCC1OC(OC1)=O">glycerin carbonate</token>
+		<token value="OCC1OC(OC1)=O">glyceryl carbonate</token>
 		<token value="C(OC)COC" labels="1///2//">glyme</token>
 		<token value="C(=O)C(=O)" labels="1//2/">glyoxal</token>
 		<token value="C(=NO)C=NO">glyoxime</token>
