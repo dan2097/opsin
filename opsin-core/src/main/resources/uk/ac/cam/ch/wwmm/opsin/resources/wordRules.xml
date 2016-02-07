@@ -345,6 +345,18 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupSubType="biochemical"/>
 		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
+
+	<wordRule name="potentialAlcoholEster" type="full">
+		<word type="full" endsWithGroupSubType="biochemical"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
+
+	<wordRule name="potentialAlcoholEster" type="full">
+		<word type="full" endsWithGroupType="aminoAcid"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
@@ -354,6 +366,18 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupType="carbohydrate"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
+
+	<wordRule name="potentialAlcoholEster" type="full">
+		<word type="full" endsWithGroupType="carbohydrate"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+	</wordRule>
+
+	<wordRule name="potentialAlcoholEster" type="full">
+		<word type="full" endsWithRegex="ol[\]\)\}]*"/>
+		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
 		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
 	</wordRule>
 
