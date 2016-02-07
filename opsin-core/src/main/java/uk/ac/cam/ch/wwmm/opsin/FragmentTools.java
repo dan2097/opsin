@@ -539,14 +539,14 @@ class FragmentTools {
 		*/
 		Atom atomToReduceValencyAt =null;
 		List<Atom> originalIndicatedHydrogen = frag.getIndicatedHydrogen();
-		List<Atom> indicatedHydrogen = new ArrayList<Atom>(originalIndicatedHydrogen);
-		for (int i = indicatedHydrogen.size() -1; i >=0; i--) {
-			if (!indicatedHydrogen.get(i).hasSpareValency()){
-				indicatedHydrogen.remove(i);
+		List<Atom> indicatedHydrogen = new ArrayList<Atom>(originalIndicatedHydrogen.size());
+		for (Atom atom : frag.getIndicatedHydrogen()) {
+			if (atom.hasSpareValency() && atom.getCharge() == 0) {
+				indicatedHydrogen.add(atom);
 			}
 		}
-		if (indicatedHydrogen.size()>0){
-			if (indicatedHydrogen.size()>1){
+		if (indicatedHydrogen.size() > 0) {
+			if (indicatedHydrogen.size() > 1) {
 				for (Atom indicatedAtom : indicatedHydrogen) {
 					boolean couldBeInvolvedInSimpleNitrogenTautomerism = false;//fix for guanine like purine derivatives
 					if (indicatedAtom.getElement() == ChemEl.N && indicatedAtom.getAtomIsInACycle()){
@@ -580,50 +580,8 @@ class FragmentTools {
 		}
 
 		if((svCount % 2) == 1) {
-			if (atomToReduceValencyAt ==null){
-				for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
-					if(a.hasSpareValency()) {
-						int atomsWithSV =0;
-						for(Atom aa : frag.getIntraFragmentAtomNeighbours(a)) {
-							if(aa.hasSpareValency()) {
-								atomsWithSV++;
-							}
-						}
-						if (atomsWithSV==1){
-							atomToReduceValencyAt=a;
-							break;
-						}
-					}
-				}
-				if (atomToReduceValencyAt==null){
-					atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine ==10H-phenoxastibinine
-						if(a.hasSpareValency()) {
-							List<Atom> neighbours =frag.getIntraFragmentAtomNeighbours(a);
-							if (neighbours.size()==2){
-								for(Atom aa : neighbours) {
-									if(frag.getIntraFragmentAtomNeighbours(aa).size() < 3){
-										continue atomLoop;
-									}
-								}
-								atomToReduceValencyAt=a;
-								break;
-							}
-						}
-					}
-					if (atomToReduceValencyAt==null){//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
-						for(Atom a : atomCollection) {
-							if(a.hasSpareValency()) {
-								if (atomToReduceValencyAt==null){
-									atomToReduceValencyAt=a;//else just go with the first atom with SV encountered
-								}
-								if (a.getElement() != ChemEl.C) {
-									atomToReduceValencyAt = a;
-									break;
-								}
-							}
-						}
-					}
-				}
+			if (atomToReduceValencyAt == null) {
+				atomToReduceValencyAt = findBestatomToRemoveSpareValencyFrom(frag, atomCollection);
 			}
 			atomToReduceValencyAt.setSpareValency(false);
 			svCount--;
@@ -695,6 +653,49 @@ class FragmentTools {
 				}
 			}
 		}
+	}
+
+	private static Atom findBestatomToRemoveSpareValencyFrom(Fragment frag, List<Atom> atomCollection) {
+		for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
+			if(a.hasSpareValency()) {
+				int atomsWithSV = 0;
+				for(Atom aa : frag.getIntraFragmentAtomNeighbours(a)) {
+					if(aa.hasSpareValency()) {
+						atomsWithSV++;
+					}
+				}
+				if (atomsWithSV == 1) {
+					return a;
+				}
+			}
+		}
+		atomLoop: for(Atom a : atomCollection) {//try and find an atom with bridgehead atoms with SV on both sides c.f. phenoxastibinine == 10H-phenoxastibinine
+			if(a.hasSpareValency()) {
+				List<Atom> neighbours = frag.getIntraFragmentAtomNeighbours(a);
+				if (neighbours.size() == 2) {
+					for(Atom aa : neighbours) {
+						if(frag.getIntraFragmentAtomNeighbours(aa).size() < 3){
+							continue atomLoop;
+						}
+					}
+					return a;
+				}
+			}
+		}
+		//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
+		Atom atomToReduceValencyAt = null;
+		for(Atom a : atomCollection) {
+			if(a.hasSpareValency()) {
+				if (a.getElement() != ChemEl.C && a.getCharge() ==0) {
+					return a;
+				}
+				atomToReduceValencyAt = a;
+			}
+		}
+		if (atomToReduceValencyAt == null) {
+			throw new IllegalArgumentException("OPSIN Bug: No atom had spare valency!");
+		}
+		return atomToReduceValencyAt;
 	}
 
 
