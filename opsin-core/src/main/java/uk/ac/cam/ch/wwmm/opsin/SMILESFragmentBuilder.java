@@ -892,17 +892,26 @@ class SMILESFragmentBuilder {
 		ChemEl chemEl = atom.getElement();
 		if (atom.hasSpareValency()) {
 			Integer hwValency = ValencyChecker.getHWValency(chemEl);
-			if (hwValency == null){
+			if (hwValency == null || absoluteCharge > 1) {
 				throw new StructureBuildingException(chemEl +" is not expected to be aromatic!");
 			}
-			if (incomingValency < (hwValency + absoluteCharge)){
+			if (absoluteCharge != 0) {
+				Integer[] possibleVal = ValencyChecker.getPossibleValencies(chemEl, charge);
+				if (possibleVal != null && possibleVal.length > 0) {
+					hwValency = possibleVal[0];
+				}
+				else {
+					throw new StructureBuildingException(chemEl +" with charge " + charge + " is not expected to be aromatic!");
+				}
+			}
+			if (incomingValency < hwValency){
 				incomingValency++;
 			}
 		}
 		Integer defaultVal = ValencyChecker.getDefaultValency(chemEl);
 		if (defaultVal !=null){//s or p block element
-			if (defaultVal != incomingValency || charge !=0){		
-				if (Math.abs(incomingValency - defaultVal)==Math.abs(charge)){
+			if (defaultVal != incomingValency || charge !=0) {
+				if (Math.abs(incomingValency - defaultVal) == absoluteCharge) {
 					atom.setProtonsExplicitlyAddedOrRemoved(incomingValency - defaultVal);
 				}
 				else{
