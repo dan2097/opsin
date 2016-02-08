@@ -76,8 +76,14 @@
 		<token value="N[C@@H](C(C)(C)S)C" suffixAppliesTo="7" defaultInID="1">penicillam</token>
 		<token value="N[C@@H](CCC(=O)NCC)C" labels="/2,alpha/3,beta/4,gamma//////1" suffixAppliesTo="10" defaultInID="1">thean</token>
 		<token value="N[C@@H](CSC(C)(C)CCO)C" labels="/2,alpha/3,beta////////1" suffixAppliesTo="11" defaultInID="1">felin</token>
+		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azidolys</token><!--somewhat of a misnomer-->
+		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azido-lys</token>
 		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azidonorleuc</token>
+		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azido-norleuc</token>
 		<token value="N[C@@H](CCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">azidohomoalan</token>
+		<token value="N[C@@H](CCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">azido-homoalan</token>
+		<token value="N[C@@H](Cc1ccc(N=[N+]=[N-])cc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para////5/6/" suffixAppliesTo="13" defaultInID="1">azidophenylalan</token>
+		<token value="N[C@@H](Cc1ccc(N=[N+]=[N-])cc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para////5/6/" suffixAppliesTo="13" defaultInID="1">azido-phenylalan</token>
 		<token value="N[C@@H](Cc1cc(I)c(cc1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" suffixAppliesTo="12" defaultInID="1">monoiodotyros</token>
 		<token value="N[C@@H](Cc1cc(I)c(cc1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" suffixAppliesTo="12" defaultInID="1">mono-iodotyros</token>
 		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" suffixAppliesTo="13" defaultInID="1">diiodotyros</token>
@@ -91,6 +97,7 @@
 		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tert.leuc</token>
 		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tert.-leuc</token>
 		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">t-leuc</token>
+		<token value="N1[C@H](C)CSC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">thiaprol</token>
 		<token value="N1[C@H](C)CSC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">thioprol</token>
 		<token value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8" defaultInID="1">panton</token>
 		<token value="N[C@@H](CCCC[N+](C)(C)C)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" suffixAppliesTo="11" defaultInID="1">lamin</token>

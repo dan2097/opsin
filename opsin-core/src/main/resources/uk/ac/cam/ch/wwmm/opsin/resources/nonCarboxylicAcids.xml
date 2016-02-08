@@ -26,6 +26,9 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="C(Nc1ccccc1)(O)=O" labels="//1/2/3/4/5/6//" defaultInID="2">carbanil</token>
 		<token value="C(O)(O)=O" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbon</token>
 		<token value="S(C)(=O)(=O)O" defaultInID="2">mesyl</token>
+		<token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">diphosphor</token>
+		<token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">pyrophosphor</token><!--deprecated-->
+		<token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">pyro-phosphor</token><!--deprecated-->
 		<token value="S(N)(O)(=O)=O" usableAsAJoiner="yes" defaultInID="2">sulfam</token>
 		<token value="S(N)(O)=O" usableAsAJoiner="yes" defaultInID="2">sulfinam</token>
 		<token value="S(N)O" usableAsAJoiner="yes" defaultInID="2">sulfenam</token>
@@ -70,9 +73,6 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="B(O)(O)OB(O)O" labels="1///2/3//" suffixAppliesTo="1,5">dibor</token>
 		<token value="B(O)OBO" labels="1//2/3/" suffixAppliesTo="1,4">diboron</token>
 		<token value="P(=O)(O)OP(=O)O" labels="1///2/3//" suffixAppliesTo="1,5">diphosphon</token>
-		<token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">diphosphor</token>
-		<token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">pyrophosphor</token><!--deprecated-->
-		<token value="P(=O)(O)(O)OP(=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">pyro-phosphor</token><!--deprecated-->
 		<token value="[As](=O)(O)O[As](=O)O" labels="1///2/3//" suffixAppliesTo="1,5">diarson</token>
 		<token value="[As](=O)(O)(O)O[As](=O)(O)O" labels="1////2/3///" suffixAppliesTo="1,6">diarsor</token>
 		<token value="[Sb](=O)(O)O[Sb](=O)O" labels="1///2/3//" suffixAppliesTo="1,5">distibon</token>
