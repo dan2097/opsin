@@ -683,19 +683,27 @@ class FragmentTools {
 			}
 		}
 		//Prefer nitrogen to carbon e.g. get NHC=C rather than N=CCH
-		Atom atomToReduceValencyAt = null;
+		Atom firstAtomWithSpareValency = null;
+		Atom firstHeteroAtomWithSpareValency = null;
 		for(Atom a : atomCollection) {
 			if(a.hasSpareValency()) {
-				if (a.getElement() != ChemEl.C && a.getCharge() ==0) {
-					return a;
+				if (a.getElement() != ChemEl.C) {
+					if (a.getCharge() == 0) {
+						return a;
+					}
+					if(firstHeteroAtomWithSpareValency == null) {
+						firstHeteroAtomWithSpareValency = a;
+					}
 				}
-				atomToReduceValencyAt = a;
+				if(firstAtomWithSpareValency == null) {
+					firstAtomWithSpareValency = a;
+				}
 			}
 		}
-		if (atomToReduceValencyAt == null) {
+		if (firstAtomWithSpareValency == null) {
 			throw new IllegalArgumentException("OPSIN Bug: No atom had spare valency!");
 		}
-		return atomToReduceValencyAt;
+		return firstHeteroAtomWithSpareValency != null ? firstHeteroAtomWithSpareValency : firstAtomWithSpareValency;
 	}
 
 
