@@ -186,7 +186,7 @@ class ValencyChecker {
 		possibleStableValencies.get(ChemEl.N).put(1, new Integer[]{4});
 		possibleStableValencies.get(ChemEl.N).put(-1, new Integer[]{2});
 		possibleStableValencies.get(ChemEl.N).put(-2, new Integer[]{1});
-		possibleStableValencies.get(ChemEl.O).put(1, new Integer[]{4});
+		possibleStableValencies.get(ChemEl.O).put(2, new Integer[]{4});
 		possibleStableValencies.get(ChemEl.O).put(1, new Integer[]{3,5});
 		possibleStableValencies.get(ChemEl.O).put(-1, new Integer[]{1});
 		possibleStableValencies.get(ChemEl.O).put(-2, new Integer[]{0});
