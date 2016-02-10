@@ -598,6 +598,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'//////1/2//3/4/N/5/6" outIDs="9">5'-cytidylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'//////1/2//3/4//5/6" outIDs="9">5'-uridylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'//////1/2//3/4//5/6///" outIDs="9">5'-orotidylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)c2c[nH]c(=O)[nH]c2(=O)" labels="1'/2'//3'//4'/5'//////5/6/1/2//3/4/" outIDs="9">5'-pseudouridylyl</token>
 
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" outIDs="7">5'-adenosyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" outIDs="7">5'-deoxy-5'-adenosyl</token>
@@ -608,6 +609,8 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'//9/8/7/5/6//1/2//3/4" outIDs="7">5'-xanthosyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'//4'/5'//1/2//3/4/N/5/6" outIDs="7">5'-cytidyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'//1/2//3/4//5/6" outIDs="7">5'-uridyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'//1/2//3/4//5/6///" outIDs="7">5'-orotidyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)c2c[nH]c(=O)[nH]c2(=O)" labels="1'/2'//3'//4'/5'//5/6/1/2//3/4/" outIDs="7">5'-pseudouridyl</token>
 	</tokenList>
 
 <!--requires a biochemical linkage which then bonds the disconnected phospho group to the appropriate position cf. processBiochemicalLinkageDescriptors-->
@@ -620,6 +623,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2.P(=O)O" labels="1'/2'//3'//4'/5'///1/2//3/4/N/5/6///" outIDs="18">cytidylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2.P(=O)O" labels="1'/2'//3'//4'/5'///1/2//3/4//5/6///" outIDs="18">uridylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O.P(=O)O" labels="1'/2'//3'//4'/5'///1/2//3/4//5/6//////" outIDs="21">orotidylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)c2c[nH]c(=O)[nH]c2(=O).P(=O)O" labels="1'/2'//3'//4'/5'///5/6/1/2//3/4////" outIDs="18">pseudouridylyl</token>
 	</tokenList>
 
 <!--Used as prefixes and for functional replacement of some acids-->
