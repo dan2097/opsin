@@ -167,6 +167,7 @@
 		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">alpha-cumyl</token>
 		<token value="-NC#N">cyanamido</token>
 		<token value="-C#N">cyanyl</token>
+		<token value="-C1C=CC=C1" labels="1/2/3/4/5">cyclopentadienyl</token><!--PIN: meaning cyclopenta-2,4-dien-1-yl aka Cp-->
 		<token value="-S(=O)(=O)c1ccc(N=Nc2ccc(N(C)C)cc2)cc1">dabsyl</token>
 		<token value="-S(=O)(=O)c1cccc2c(N(C)C)cccc12">dansyl</token>
 		<token value="c1(ccccc1)C(=O)Cc2ccccc2" labels="1/2/3/4/5/6///alpha/1'/2'/3'/4'/5'/6'" outIDs="9">desyl</token>

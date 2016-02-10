@@ -57,6 +57,8 @@
 		<token value="n1c(F)nc(F)nc1F">cyanuryl fluoride</token>
 		<token value="n1c(I)nc(I)nc1I">cyanuric iodide</token>
 		<token value="n1c(I)nc(I)nc1I">cyanuryl iodide</token>
+		<token value="[CH-]1C=CC=C1" labels="1/2/3/4/5">cyclopentadienide</token><!--PIN-->
+		<token value="[CH+]1C=CC=C1" labels="1/2/3/4/5">cyclopentadienylium</token><!--PIN-->
 		<token value="N1=PN=PN=PN=P1" labels="1/2/3/4/5/6/7/8">cyclotetraphosphazen</token>
 		<token value="N1=PN=PN=PN=P1" labels="1/2/3/4/5/6/7/8">cyclotetraphosphazene</token>
 		<token value="N1=PN=PN=P1" labels="1/2/3/4/5/6">cyclotriphosphazen</token>
