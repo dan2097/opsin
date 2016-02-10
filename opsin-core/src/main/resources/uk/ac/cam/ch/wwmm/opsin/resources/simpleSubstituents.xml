@@ -292,6 +292,7 @@
 		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" addGroup="N defaultLocant 4" outIDs="8" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">toluidino</token>
 		<token value="-S(=O)(=O)c1ccc(C)cc1" labels="///1/2,ortho/3,meta/4,para//5/6">tosyl</token>
 		<token value="-OS(=O)(=O)C(F)(F)F">trifloxy</token>
+		<token value="-S(=O)(=O)C(F)(F)F">triflyl</token>
 		<token value="-[3H]">tritio</token>
 		<token value="-C(c1ccccc1)(c1ccccc1)c1ccccc1" labels="/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/1''/2''/3''/4''/5''/6''">trityl</token>
 		<token value="-NC(=O)N" labels="1/2//3" usableAsAJoiner="yes" defaultInLocant="3">ureido</token>

@@ -32,7 +32,6 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="S(N)(O)(=O)=O" usableAsAJoiner="yes" defaultInID="2">sulfam</token>
 		<token value="S(N)(O)=O" usableAsAJoiner="yes" defaultInID="2">sulfinam</token>
 		<token value="S(N)O" usableAsAJoiner="yes" defaultInID="2">sulfenam</token>
-		<token value="S(=O)(=O)(C(F)(F)F)O">trifl</token>
 	</tokenList>
 
 	<!--This is the set of acids in which oyl denotes an acyl (yl is unparsable)-->
@@ -240,6 +239,10 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="[Te](=O)([O-])[O-]" functionalIDs="3,4">tellurite</token>
 		<token value="[Te](=O)(=O)([O-])[O-]" functionalIDs="4,5">tellurate</token>
 		<token value="[Te](=O)(=O)([O-])[O-]" functionalIDs="4,5">telluroate</token>
+		<token value="OS(=O)(=O)C(F)(F)F" functionalIDs="1">triflic</token>
+		<token value="OS(=O)(=O)C(F)(F)F" functionalIDs="1">triflicacid</token>
+		<token value="OS(=O)(=O)C(F)(F)F" functionalIDs="1">triflic acid</token>
+		<token value="[O-]S(=O)(=O)C(F)(F)F" functionalIDs="1">triflate</token>
 		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])OP(=O)([O-])[O-]" labels="/1///2/3///4/5///6/7///" functionalIDs="1,3,8,12,16,17">tetraphosphate</token>
 		<token value="[O-]P([O-])(=O)OP(=O)([O-])OP(=O)([O-])[O-]" labels="/1///2/3///4/5///" functionalIDs="1,3,8,12,13">triphosphate</token>
 
