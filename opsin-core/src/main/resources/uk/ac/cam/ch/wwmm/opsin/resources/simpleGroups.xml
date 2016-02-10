@@ -27,6 +27,7 @@
 		<token value="NC(=N)NNC(=N)N">biguanidine</token>
 		<token value="Cl[Bi]=O">bismuth oxychloride</token>
 		<token value="Cl[Bi]=O">bismuthoxychloride</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bistriflimide</token>
 		<token value="[SH-]">bisulfide</token>
 		<token value="[O-]C(=O)C(O)C(O)C(=O)O" functionalIDs="1">bitartrate</token>
 		<token value="NC(=O)NNC(N)=O">biurea</token>
@@ -317,12 +318,16 @@
 		<token value="CC(C)([O-])C">tert.butoxide</token>
 		<token value="CC(C)([O-])C">t-butoxide</token>
 		<token value="CC(C)([O-])C">tbutoxide</token>
+		<token value="Br[Al-](Br)(Br)Br">tetrabromoaluminate</token>
+		<token value="Cl[Al-](Cl)(Cl)Cl">tetrachloroaluminate</token>
 		<token value="COCCOCCOCCOCCOC">tetraglyme</token>
+		<token value="F[Al-](F)(F)F">tetrafluoroaluminate</token>
+		<token value="I[Al-](I)(I)I">tetraiodoaluminate</token>
 		<token value="NC(=N)NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7//8/9">tetraguanide</token>
+		<token value="NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9">tetrauret</token>
 		<token value="[AlH4-]">tetrahydroaluminate</token>
 		<token value="[BH4-]">tetrahydroborate</token>
 		<token value="[GaH4-]">tetrahydrogallate</token>
-		<token value="NC(=O)NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7/8//9">tetrauret</token>
 		<token value="S=C(N)NCC=C">thiosinamine</token>
 		<token value="NC(=S)SC(=S)N">thiuram monosulfide</token>
 		<token value="NC(=S)SSC(=S)N">thiuram disulfide</token>
@@ -332,6 +337,9 @@
 		<token value="ClCC(Cl)CCl">trichlorohydrin</token>
 		<token value="O=P(O)(OCC(Cl)(Cl)Cl)O">triclofos</token>
 		<token value="N(CCO)(CCO)CCO">triethanolamine</token>
+		<token value="N(S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">triflimide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">triflimidate</token>
+		<token value="N(S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">triflimidic acid</token>
 		<token value="NC(=N)NC(=N)NC(=N)N" labels="1//2/3//4/5//6/7">triguanide</token>
 		<token value="COCCOCCOCCOC">triglyme</token>
 		<token value="O=C(OCC(OC(=O)CCCCCCCCCCC)COC(=O)CCCCCCCCCCC)CCCCCCCCCCC">trilaurin</token>
@@ -383,6 +391,41 @@
 		<token value="[NH+]#[C-]">hydroisocyanic acid</token>
 		<token value="N=[N+]=[N-]">hydrazoicacid</token>
 		<token value="N=[N+]=[N-]">hydrazoic acid</token>
+
+
+		<!--The nomenclature of these compounds is a mess cf. http://www.iupac.org/publications/ci/2007/2904/ud.html -->
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis((trifluoromethyl)sulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis(trifluoromethane)sulfonimide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis(trifluoromethanesulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis(trifluoromethylsulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bistrifluoromethanesulfonimide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis[(trifluoromethyl)sulfonyl]imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">trifluoromethanesulfonimide</token>
+
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis((pentafluoroethyl)sulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis((perfluoroethyl)sulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis(pentafluoroethanesulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis(pentafluoroethylsulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis(perfluoroethanesulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis(perfluoroethylsulfonyl)imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bispentafluoroethylsulfonylimide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bisperfluoroethylsulfonylimide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis[(pentafluoroethyl)sulfonyl]imide</token>
+		<token value="[N-](S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">bis[(perfluoroethyl)sulfonyl]imide</token>
+
+		<token value="[C-](S(=O)(=O)C(F)(F)F)(S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">tris((trifluoromethyl)sulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)F)(S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">tris(trifluoromethanesulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)F)(S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">tris(trifluoromethylsulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)F)(S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">tris[(trifluoromethyl)sulfonyl]methide</token>
+
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris((pentafluoroethyl)sulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris((perfluoroethyl)sulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris(pentafluoroethanesulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris(pentafluoroethylsulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris(perfluoroethanesulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris(perfluoroethylsulfonyl)methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris[(pentafluoroethyl)sulfonyl]methide</token>
+		<token value="[C-](S(=O)(=O)C(F)(F)C(F)(F)F)(S(=O)(=O)C(F)(F)C(F)(F)F)S(=O)(=O)C(F)(F)C(F)(F)F">tris[(perfluoroethyl)sulfonyl]methide</token>
 
 	<!-- Special cases-->
 	<!--Maybe this idea should be rethought as this way of special casing things is a bit tacky -->
