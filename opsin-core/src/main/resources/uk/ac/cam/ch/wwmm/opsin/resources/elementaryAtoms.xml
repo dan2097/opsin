@@ -1,13 +1,10 @@
 <!DOCTYPE tokenList SYSTEM "tokenList.dtd">
 <tokenList tagname="group" type="simpleGroup" subType="elementaryAtom" symbol="Í">
 	<token value="[Li]" commonOxidationStatesAndMax="1:1">lithium</token>
-	<token value="[Na]" commonOxidationStatesAndMax="1:1">sodium</token>
-	<token value="[Na]" commonOxidationStatesAndMax="1:1">natrium</token>
-	<token value="[K]" commonOxidationStatesAndMax="1:1">potassium</token>
-	<token value="[K]" commonOxidationStatesAndMax="1:1">kalium</token>
+	<token value="[Na]" commonOxidationStatesAndMax="1:1">sodium|natrium</token>
+	<token value="[K]" commonOxidationStatesAndMax="1:1">potassium|kalium</token>
 	<token value="[Rb]" commonOxidationStatesAndMax="1:1">rubidium</token>
-	<token value="[Cs]" commonOxidationStatesAndMax="1:1">caesium</token>
-	<token value="[Cs]" commonOxidationStatesAndMax="1:1">cesium</token>
+	<token value="[Cs]" commonOxidationStatesAndMax="1:1">caesium|cesium</token>
 	<token value="[Fr]" commonOxidationStatesAndMax="1:1">francium</token>
 
 	<token value="[Be]" commonOxidationStatesAndMax="2:2">beryllium</token>
@@ -17,16 +14,14 @@
 	<token value="[Ba]" commonOxidationStatesAndMax="2:2">barium</token>
 	<token value="[Ra]" commonOxidationStatesAndMax="2:2">radium</token>
 
-	<token value="[Al]" commonOxidationStatesAndMax="3:3">aluminium</token>
-	<token value="[Al]" commonOxidationStatesAndMax="3:3">aluminum</token>
+	<token value="[Al]" commonOxidationStatesAndMax="3:3">aluminium|aluminum</token>
 	<token value="[Ga]" commonOxidationStatesAndMax="3:3">gallium</token>
 	<token value="[In]" commonOxidationStatesAndMax="3:3">indium</token>
 	<token value="[Tl]" commonOxidationStatesAndMax="1,3:3">thallium</token>
 
 	<token value="[Sn]" commonOxidationStatesAndMax="4:4">tin</token><!--4 is more common than 2-->
 	<token value="[Sn]" commonOxidationStatesAndMax="4:4">stannum</token>
-	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4">lead</token>
-	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4">plumbum</token>
+	<token value="[Pb]" commonOxidationStatesAndMax="2,4:4">lead|plumbum</token>
 
 	<token value="[Bi]" commonOxidationStatesAndMax="3:5">bismuth</token>
 
@@ -80,8 +75,7 @@
 	<token value="[Pt]" commonOxidationStatesAndMax="2,4:6">platinum</token>
 	<token value="[Au]" commonOxidationStatesAndMax="3:5">gold</token>
 	<!--<token value="[Au]" commonOxidationStatesAndMax="3:5">aurum</token>has many non chemical uses-->
-	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4">mercury</token>
-	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4">hydrargyrum</token>
+	<token value="[Hg]" commonOxidationStatesAndMax="1,2:4">mercury|hydrargyrum</token>
 
 	<token value="[Ac]" commonOxidationStatesAndMax="3:3">actinium</token>
 	<token value="[Th]" commonOxidationStatesAndMax="4:4">thorium</token>
@@ -111,8 +105,7 @@
 	<token value="[N]" commonOxidationStatesAndMax="3:3">nitrogen</token>
 	<token value="[P]" commonOxidationStatesAndMax="3,5:5">phosphorus</token>
 	<token value="[As]" commonOxidationStatesAndMax="3,5:5">arsenic</token>
-	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5">antimony</token>
-	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5">stibium</token>
+	<token value="[Sb]" commonOxidationStatesAndMax="3,5:5">antimony|stibium</token>
 
 	<token value="[O]" commonOxidationStatesAndMax="2:2">oxygen</token>
 	<token value="[S]" commonOxidationStatesAndMax="2,4,6:6">sulfur</token>

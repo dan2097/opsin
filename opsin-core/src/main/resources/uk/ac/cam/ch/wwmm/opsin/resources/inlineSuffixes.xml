@@ -3,8 +3,7 @@
 <tokenLists>
 	<tokenList tagname="suffix" type="inline" symbol="i">
 		<token value="oyl" additionalValue="aldehyde">aldehydoyl</token>
-		<token value="amido">amido</token>
-		<token value="amido">amidyl</token>
+		<token value="amido">amido|amidyl</token>
 		<token value="aminyl">aminyl</token>
 		<token value="oyl" additionalValue="amide">amoyl</token>
 		<token value="oyl" additionalValue="anilide">aniloyl</token>
@@ -35,8 +34,7 @@
 
 	<!--Have two attachement points as indicated by the subType-->
 	<tokenList tagname="suffix" type="inline" subType="cycleformer" symbol="i">
-		<token value="imido">imido</token>
-		<token value="imido">imidyl</token>
+		<token value="imido">imido|imidyl</token>
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes-->
@@ -50,8 +48,7 @@
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="¶"><!--inline suffixes allowing infixes -->
-		<token value="amido">amido</token>
-		<token value="amido">amidyl</token>
+		<token value="amido">amido|amidyl</token>
 		<token value="carbonyl">carbonyl</token>
 		<token value="hydrazido">hydrazido</token>
 		<token value="oxy">oxy</token>
@@ -59,21 +56,18 @@
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="Û"><!--inline suffixes allowing infixes and suffix prefixes-->
-		<token value="amido">amido</token>
-		<token value="amido">amidyl</token>
+		<token value="amido">amido|amidyl</token>
 		<token value="hydrazido">hydrazido</token>
 		<token value="oyl">oyl</token>
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="»"><!--used for amino acids and carbohydrates-->
 		<token value="locantedAminoAcidOrCarbohydrateYl">yl</token>
-		<token value="locantedAminoAcidOrCarbohydrateYlidene">ylidene</token>
-		<token value="locantedAminoAcidOrCarbohydrateYlidene">yliden</token>
+		<token value="locantedAminoAcidOrCarbohydrateYlidene">ylidene|yliden</token>
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="×"><!--ylene-->
 		<!--special cased to be the same as diyl-->
-		<token value="yl" additionalValue="yl">ylene</token>
-		<token value="yl" additionalValue="yl">ylen</token>
+		<token value="yl" additionalValue="yl">ylene|ylen</token>
 	</tokenList>
 </tokenLists>

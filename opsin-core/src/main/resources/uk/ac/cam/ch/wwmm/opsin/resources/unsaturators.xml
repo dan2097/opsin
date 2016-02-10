@@ -2,15 +2,12 @@
 <!-- "value" is the integer bond order to set the bond to-->
 <tokenLists>
 	<tokenList tagname="unsaturator" symbol="u">
-		<token value="2">en</token>
-		<token value="2">ene</token>
-		<token value="3">yne</token>
-		<token value="3">yn</token>
+		<token value="2">en|ene</token>
+		<token value="3">yne|yn</token>
 	</tokenList>
 
 	<!--the ane suffix is ignored, the locant prevents it being assigned a locant-->
 	<tokenList tagname="unsaturator" symbol="¤">
-		<token value="1" locant="1">ane</token>
-		<token value="1" locant="1">an</token>
+		<token value="1" locant="1">ane|an</token>
 	</tokenList>
 </tokenLists>

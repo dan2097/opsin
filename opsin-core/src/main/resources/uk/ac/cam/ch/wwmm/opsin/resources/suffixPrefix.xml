@@ -5,32 +5,19 @@ Not all suffixes appear to accept a suffixPrefix
 value is the SMILES for this suffixPrefix
 -->
 <tokenList tagname="suffixPrefix" symbol="¬">
-	<token value="C">carb</token>
-	<token value="C">carbo</token>
-	<token value="C">carbox</token>
-	<token value="C">carbono</token>
+	<token value="C">carb|carbo|carbox|carbono</token>
 
-	<token value="S=O">sulfon</token>
-	<token value="S=O">sulfono</token>
-	<token value="S">sulfin</token>
-	<token value="S">sulfino</token>
+	<token value="S=O">sulfon|sulfono</token>
+	<token value="S">sulfin|sulfino</token>
 
-	<token value="[SeH?]=O">selenon</token>
-	<token value="[SeH?]=O">selenono</token>
-	<token value="[SeH?]">selenin</token>
-	<token value="[SeH?]">selenino</token>
+	<token value="[SeH?]=O">selenon|selenono</token>
+	<token value="[SeH?]">selenin|selenino</token>
 
-	<token value="[TeH?]=O">telluron</token>
-	<token value="[TeH?]=O">tellurono</token>
-	<token value="[TeH?]">tellurin</token>
-	<token value="[TeH?]">tellurino</token>
-
+	<token value="[TeH?]=O">telluron|tellurono</token>
+	<token value="[TeH?]">tellurin|tellurino</token>
 
 	<!--not recommended by IUPAC-->
-	<token value="PO">phosphon</token>
-	<token value="PO">phosphono</token>
-	<token value="[AsH?]O">arson</token>
-	<token value="[AsH?]O">arsono</token>
-	<token value="[SbH?]O">stibon</token>
-	<token value="[SbH?]O">stibono</token>
+	<token value="PO">phosphon|phosphono</token>
+	<token value="[AsH?]O">arson|arsono</token>
+	<token value="[SbH?]O">stibon|stibono</token>
 </tokenList>

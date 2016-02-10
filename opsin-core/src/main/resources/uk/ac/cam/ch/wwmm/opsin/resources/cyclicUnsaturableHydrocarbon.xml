@@ -8,21 +8,13 @@
 
 	<tokenList tagname="group" type="ring" subType="cyclicUnsaturableHydrocarbon" symbol="A">
 		<!-- terpenes-->
-		<token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">born</token>
-			<token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">camph</token>
-			<token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">bornyl</token>
+		<token value="C123CCC4CC1.C24(C)C.C3" labels="numeric" suffixAppliesToByDefault="2">born|camph|bornyl</token>
 		<token value="C12CC3CCC1C2(C)C.C3" labels="numeric">car</token>
 		<!--it's quicker to write out all forms of this than create a special case for menthane to allow things like 1-p-menthene-->
-		<token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" suffixAppliesToByDefault="3">menth</token>
-		<token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" suffixAppliesToByDefault="3">p-menth</token>
-		<token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" suffixAppliesToByDefault="3">para-menth</token>
-		<token value="C12CC3CCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">m-menth</token>
-		<token value="C12CC3CCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">meta-menth</token>
-		<token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">o-menth</token>
-		<token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">ortho-menth</token>
-		<token value="C12CCC(CC2)C1" labels="numeric">norborn</token>
-			<token value="C12CCC(CC2)C1" labels="numeric">norcamph</token>
-			<token value="C12CCC(CC2)C1" labels="numeric">norbornyl</token>
+		<token value="C12CCC3CC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10" suffixAppliesToByDefault="3">menth|p-menth|para-menth</token>
+		<token value="C12CC3CCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">m-menth|meta-menth</token>
+		<token value="C12C3CCCC1.C2.C3(C)C" labels="1/2,ortho/3,meta/4,para/5/6/7/8/9/10">o-menth|ortho-menth</token>
+		<token value="C12CCC(CC2)C1" labels="numeric">norborn|norcamph|norbornyl</token>
 		<token value="C12CCCCC2C1" labels="numeric">norcar</token>
 		<token value="C12CCCC(C2)C1" labels="numeric">norpin</token>
 		<token value="C12C3CCC4C156.C24.C5.C6.C3" labels="numeric">pin</token>

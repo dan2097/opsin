@@ -200,30 +200,24 @@ class ResourceManager {
 							el.addAttribute(reader.getAttributeLocalName(i), reader.getAttributeValue(i));
 						}
 					}
-					String t = reader.getElementText();
-					Map<Character, TokenEl> symbolToToken = tokenDict.get(t);
-					if(symbolToToken == null) {
-						symbolToToken = new HashMap<Character, TokenEl>();
-						tokenDict.put(t, symbolToToken);
-					}
-					symbolToToken.put(symbol, el);
-
-					if (!reversed){
-						OpsinRadixTrie trie = symbolTokenNamesDict[index];
-						if(trie == null) {
-							trie = new OpsinRadixTrie();
-							symbolTokenNamesDict[index] = trie;
+					String text = reader.getElementText();
+					StringBuilder sb = new StringBuilder(text.length());
+					for (int i = 0, len = text.length(); i < len; i++) {
+						char ch = text.charAt(i);
+						if (ch == '\\') {
+							if (i + 1 >= len) {
+								throw new RuntimeException("Malformed token text: " + text);
+							}
+							ch = text.charAt(++i);
 						}
-						trie.addToken(t);
-					}
-					else{
-						OpsinRadixTrie trie = symbolTokenNamesDictReversed[index];
-						if(trie == null) {
-							trie = new OpsinRadixTrie();
-							symbolTokenNamesDictReversed[index] = trie;
+						else if (ch == '|') {
+							addToken(sb.toString(), el, symbol, index, reversed);
+							sb.setLength(0);
+							continue;
 						}
-						trie.addToken(new StringBuilder(t).reverse().toString());
+						sb.append(ch);
 					}
+					addToken(sb.toString(), el, symbol, index, reversed);
 				}
 				break;
 			case XMLStreamConstants.END_ELEMENT:
@@ -232,6 +226,32 @@ class ResourceManager {
 				}
 				break;
 			}
+		}
+	}
+
+	private void addToken(String text, TokenEl el, Character symbol, int index, boolean reversed) {
+		Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
+		if(symbolToToken == null) {
+			symbolToToken = new HashMap<Character, TokenEl>();
+			tokenDict.put(text, symbolToToken);
+		}
+		symbolToToken.put(symbol, el);
+
+		if (!reversed){
+			OpsinRadixTrie trie = symbolTokenNamesDict[index];
+			if(trie == null) {
+				trie = new OpsinRadixTrie();
+				symbolTokenNamesDict[index] = trie;
+			}
+			trie.addToken(text);
+		}
+		else{
+			OpsinRadixTrie trie = symbolTokenNamesDictReversed[index];
+			if(trie == null) {
+				trie = new OpsinRadixTrie();
+				symbolTokenNamesDictReversed[index] = trie;
+			}
+			trie.addToken(new StringBuilder(text).reverse().toString());
 		}
 	}
 

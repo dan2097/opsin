@@ -34,12 +34,10 @@
 		<token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">arsinolin</token>
 		<token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">arsinolizin</token>
 		<token value="c1ccc2ccc3cccc3c12" labels="1/2/3/3a/4/5/5a/6/7/8/8a/8b">as-indacen</token>
-		<token value="n1ncncc1" labels="1/2/3/4/5/6">as-triazin</token>
-		<token value="n1ncncc1" labels="1/2/3/4/5/6">asym-triazin</token>
+		<token value="n1ncncc1" labels="1/2/3/4/5/6">as-triazin|asym-triazin</token>
 		<token value="c1ccc2cccccc12" labels="1/2/3/3a/4/5/6/7/8/8a">azulen</token>
 		<token value="c1ccc2cccc3c(=O)c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/7//7a/8/9/10/11/11a/11b/11c">benzanthron</token>
-		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'">benzidin</token>
-		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'">4,4'-benzidin</token>
+		<token value="c1(ccc(N)cc1)c2ccc(N)cc2" labels="1/2/3/4//5/6/1'/2'/3'/4'//5'/6'">benzidin|4,4'-benzidin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">benzen</token>
 		<token value="c1(ccccc1)C(=O)C(O)c2ccccc2" labels="1/2/3/4/5/6///alpha//1'/2'/3'/4'/5'/6'">benzoin</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="=O locant 1;=O locant 4" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">benzoquinon</token>
@@ -48,9 +46,7 @@
 		<token value="c12ccccc1.C2(F)(F)F" labels="1/2,ortho/3,meta/4,para/5/6/alpha///">benzotrifluorid</token>
 		<token value="c12ccccc1.C2(I)(I)I" labels="1/2,ortho/3,meta/4,para/5/6/alpha///">benzotriiodid</token>
 		<token value="C1#CC=CC=C1" labels="1/2,ortho/3,meta/4,para/5/6">benzyn</token>
-		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">betacarbolin</token>
-		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">beta-carbolin</token>
-		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">b-carbolin</token>
+		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">betacarbolin|beta-carbolin|b-carbolin</token>
 		<token value="c1(ccccc1)CCc2ccccc2" labels="1/2/3/4/5/6/alpha/alpha'/1'/2'/3'/4'/5'/6'">bibenzyl</token>
 		<token value="c1cccc2c3ccccc3c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b">biphenylen</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">boranthren</token>
@@ -84,8 +80,7 @@
 		<token value="n1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">cinnolin</token>
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Co+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">cobaltocen</token>
 		<token value="n1ccccc1" labels="1/2/3/4/5/6" addGroup="C defaultLocant 2;C defaultLocant 4;C defaultLocant 6" frontLocantsExpected="2,3,4,5,6">collidin</token>
-		<token value="o1c(=O)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a">coumarin</token>
-		<token value="o1c(=O)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a">cumarin</token>
+		<token value="o1c(=O)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a">coumarin|cumarin</token>
 		<token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coronen</token>
 		<token value="c1ccccc1O" labels="2,ortho/3,meta/4,para/5/6/1/" addGroup="C defaultLocant 2 alpha" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresol</token>
 		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///">cumen</token>
@@ -136,8 +131,7 @@
 		<token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoarsindol</token>
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoarsinolin</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofuran</token>
-		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiofuran</token>
-		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiophen</token>
+		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiofuran|isobenzothiophen</token>
 		<token value="c(=O)1[nH]ccc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a">isocarbostyril</token>
 		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochinolin</token>
 		<token value="C1OCCc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochroman</token>
@@ -152,8 +146,7 @@
 		<token value="c1[s+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isothiochromenylium</token>
 		<token value="c1[se+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoselenochromenylium</token>
 		<token value="c1[te+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isotellurochromenylium</token>
-		<token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a">isocoumarin</token>
-		<token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a">isocumarin</token>
+		<token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a">isocoumarin|isocumarin</token>
 		<token value="c1(C)c(C)c(C)cc(C)c1" labels="1//2//3//4/5//6" suffixAppliesToByDefault="7">isoduren</token>
 		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/">isoguanin</token>
 		<token value="c1[nH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoindol</token>
@@ -172,12 +165,9 @@
 		<token value="s1nccc1" labels="1/2/3/4/5">isothiazol</token>
 		<token value="S1NCCC1" labels="1/2/3/4/5">isothiazolidin</token>
 		<token value="S1NCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isothiazolin</token>
-		<token value="o1nccc1" labels="1/2/3/4/5">isoxazol</token>
-		<token value="o1nccc1" labels="1/2/3/4/5">isooxazol</token>
-		<token value="O1NCCC1" labels="1/2/3/4/5">isoxazolidin</token>
-		<token value="O1NCCC1" labels="1/2/3/4/5">isooxazolidin</token>
-		<token value="O1NCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isoxazolin</token>
-		<token value="O1NCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isooxazolin</token>
+		<token value="o1nccc1" labels="1/2/3/4/5">isoxazol|isooxazol</token>
+		<token value="O1NCCC1" labels="1/2/3/4/5">isoxazolidin|isooxazolidin</token>
+		<token value="O1NCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">isoxazolin|isooxazolin</token>
 		<token value="c1cccc2c3ccc4c5ccc6Cc7ccccc7c8ccc9c%10ccc%11Cc12.c3%11c4%10.c59c68" labels="1/2/3/4/4a/4b/5/6/6a/6b/7/8/8a/9/9a/10/11/12/13/13a/13b/14/15/15a/15b/16/17/17a/18/18a/18b/18c/18d/18e">isoviolanthren</token>
 		<token value="n1ccc(C)c2ccccc12" labels="1/2/3/4//4a/5/6/7/8/8a">lepidin</token>
 		<token value="N1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 6" frontLocantsExpected="1,2,3,4,5,6">lupetidin</token>
@@ -187,21 +177,17 @@
 		<token value="c1(C)c(C)c(C)c(C)c(C)c1C" labels="1//2//3//4//5//6/">melliten</token>
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Mo+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">molybdocen</token>
 		<token value="N1CCOCC1" labels="4,para/3,meta/2,ortho/1/6/5">morpholin</token>
-		<token value="N1CCSCC1" labels="4,para/3,meta/2,ortho/1/6/5">thiamorpholin</token>
-		<token value="N1CCSCC1" labels="4,para/3,meta/2,ortho/1/6/5">thiomorpholin</token>
+		<token value="N1CCSCC1" labels="4,para/3,meta/2,ortho/1/6/5">thiamorpholin|thiomorpholin</token>
 		<token value="N1CC[Se]CC1" labels="4,para/3,meta/2,ortho/1/6/5">selenomorpholin</token>
 		<token value="N1CC[Te]CC1" labels="4,para/3,meta/2,ortho/1/6/5">telluromorpholin</token>
 		<token value="c1cccc2cc3cc4ccccc4cc3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/11/11a/12/12a">naphthacen</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalen</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalin</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalen|naphthalin</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addGroup="=O defaultLocant 1;=O defaultLocant 4" frontLocantsExpected="1,2,3,4,5,6,7,8">naphthoquinon</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addGroup="=O locant 1;=O locant 4;=O locant 5;=O locant 8" frontLocantsExpected="1,2,3,4,5,6,7,8">naphthodiquinon</token>
 		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a" addHeteroAtom="N defaultLocant 1;N defaultLocant 8" frontLocantsExpected="1,2,3,4,4a,5,6,7,8,8a">naphthyridin</token>
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Ni+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">nickelocen</token>
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Nb+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">niobocen</token>
-		<token value="C12C=CC(CC2)C1" labels="1/2/3/4/5/6/7">norbornen</token>
-			<token value="C12C=CC(CC2)C1" labels="1/2/3/4/5/6/7">norcamphen</token>
-			<token value="C12C=CC(CC2)C1" labels="1/2/3/4/5/6/7">norbornylen</token>
+		<token value="C12C=CC(CC2)C1" labels="1/2/3/4/5/6/7">norbornen|norcamphen|norbornylen</token>
 		<token value="c1nccc2c3ccc(OC)cc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7///8/8a/9/9a">norharmin</token>
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Os+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">osmocen</token>
 		<token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k">ovalen</token>
@@ -227,25 +213,19 @@
 		<token value="c1cccc2sc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiazin</token>
 		<token value="c1cccc2[se]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoselenazin</token>
 		<token value="c1cccc2[te]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenotellurazin</token>
-		<token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenophosphazinin</token>
-		<token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenophosphazin</token>
+		<token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenophosphazinin|phenophosphazin</token>
 		<token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenarsazinin</token>
 		<token value="c1cccc2nc3ccccc3[siH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenazasilin</token>
 		<token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoarsazin</token>
-		<token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercurazin</token>
-		<token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercazin</token>
+		<token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercurazin|phenomercazin</token>
 		<token value="c1cccc2oc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxathiin</token>
 		<token value="c1cccc2oc3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaselenin</token>
 		<token value="c1cccc2oc3ccccc3[siH2]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxasilin</token>
 		<token value="c1cccc2oc3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxatellurin</token>
-		<token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaphosphinin</token>
-		<token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaphosphin</token>
-		<token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxarsinin</token>
-		<token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxarsin</token>
-		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxastibinin</token>
-		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxantimonin</token>
-		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiarsinin</token>
-		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiarsin</token>
+		<token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaphosphinin|phenoxaphosphin</token>
+		<token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxarsinin|phenoxarsin</token>
+		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxastibinin|phenoxantimonin</token>
+		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiarsinin|phenothiarsin</token>
 		<token value="c1(O)cc(O)cc(O)c1" labels="1//2,ortho/3,meta//4,para/5//6">phloroglucinol</token>
 		<token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phosphanthren</token>
 		<token value="c1cccc2pcc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">phosphanthridin</token>
@@ -256,8 +236,7 @@
 		<token value="c1nncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">phthalazin</token>
 		<token value="C1(=O)OCc2ccccc12" labels="1//2/3/3a/4/5/6/7/7a">phthalid</token>
 		<token value="c1ccc2cccc3nc4c5ccccc5cn4c1c23" labels="1/2/3/3a/4/5/6/6a/7/7a/7b/8/9/10/11/11a/12/13/13a/13b">phthaloperin</token>
-		<token value="n1[se]nc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piaselenol</token>
-		<token value="n1[se]nc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piazselenol</token>
+		<token value="n1[se]nc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piaselenol|piazselenol</token>
 		<token value="n1snc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">piazthiol</token>
 		<token value="C1NCCc2c3cc(OC)ccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6///7/8/8a/9/9a">pinolin</token>
 		<token value="[nH]1ccccc1" labels="1/2,ortho,alpha/3,meta,beta/4,para,gamma/5/6" addGroup="C locant 2" suffixAppliesTo="7" frontLocantsExpected="2,ortho,alpha,3,meta,beta,4,para,gamma,5,6">picolin</token>
@@ -284,8 +263,7 @@
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">pyridin</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidin</token>
 		<token value="c1cccc2CCCc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrindan</token>
-		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrinden</token>
-		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrindin</token>
+		<token value="c1cccc2cccc12" labels="1/2/3/4/4a/5/6/7/7a" addHeteroAtom="N locant required" frontLocantsExpected="1,2">pyrinden|pyrindin</token>
 		<token value="c1(O)c(O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6" defaultInLocant="3">pyrocatechol</token>
 		<token value="c1(O)c(O)c(O)ccc1" labels="1//2,ortho//3,meta//4,para/5/6">pyrogallol</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrol</token>
@@ -312,10 +290,8 @@
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Ru+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">ruthenocen</token>
 		<token value="O1COc2cc(CC=C)ccc12" labels="1/2/3/3a/4/5/1'/2'/3'/6/7/7a">safrol</token>
 		<token value="c1ccc2cc3cccc3cc12" labels="1/2/3/3a/4/4a/5/6/7/7a/8/8a">s-indacen</token>
-		<token value="n1cncnc1" labels="1/2,ortho/3,meta/4,para/5/6">s-triazin</token>
-		<token value="n1cncnc1" labels="1/2,ortho/3,meta/4,para/5/6">sym-triazin</token>
-		<token value="[nH]1ncnc1" labels="1/2/3/4/5">s-triazol</token>
-		<token value="[nH]1ncnc1" labels="1/2/3/4/5">sym-triazol</token>
+		<token value="n1cncnc1" labels="1/2,ortho/3,meta/4,para/5/6">s-triazin|sym-triazin</token>
+		<token value="[nH]1ncnc1" labels="1/2/3/4/5">s-triazol|sym-triazol</token>
 		<token value="c1cccc2[siH]c3ccccc3[siH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">silanthren</token>
 		<token value="N1cc(C)c2ccccc12" labels="1/2/3//3a/4/5/6/7/7a">skatol</token>
 		<token value="c1(ccccc1)C=Cc2ccccc2" labels="1/2/3/4/5/6/alpha/beta/1'/2'/3'/4'/5'/6'">stilben</token>
@@ -393,35 +369,22 @@
 		<token value="[nH]1cccc1cc2ccc(n2)cc3ccc(n3)cc4cccn4" labels="21/1/2/3/4/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24">bilin</token>
 		<token value="C12CCc(n1)cc3CCc(n3)cc4CCc(n4)cc5CCC2[nH]5" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24">corrin</token>
 		<token value="C1(=O)C=C(O)CC(O)C1" labels="none">dihydrophloroglucinol</token><!--semi systematic derivative of phloroglucinol, implies specific tautomer-->
-		<token value="c12ccc([nH]1)cc3ccc(n3)cc4ccc([nH]4)cc5ccc(n5)c2" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24/20">porphyrin</token>
-		<token value="c12ccc([nH]1)cc3ccc(n3)cc4ccc([nH]4)cc5ccc(n5)c2" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24/20">porphin</token>
+		<token value="c12ccc([nH]1)cc3ccc(n3)cc4ccc([nH]4)cc5ccc(n5)c2" labels="1/2/3/4/21/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24/20">porphyrin|porphin</token>
 		<token value="O1C(CCc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavan</token><!--cf. flavanol-->
-		<token value="O1C(=CCc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavan-2-en</token>
-		<token value="O1C(=CCc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flav-2-en</token>
-		<token value="O1C(C=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavan-3-en</token>
-		<token value="O1C(C=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flav-3-en</token>
+		<token value="O1C(=CCc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavan-2-en|flav-2-en</token>
+		<token value="O1C(C=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavan-3-en|flav-3-en</token>
 		<token value="O1CC(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflavan</token><!--cf. isoflavanone-->
 		<token value="O1CC(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flavan</token>
-		<token value="O1C=C(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflavan-2-en</token>
-		<token value="O1C=C(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflav-2-en</token>
-		<token value="O1CC(=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflavan-3-en</token>
-		<token value="O1CC(=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflav-3-en</token>
-		<token value="O1C=C(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flavan-2-en</token>
-		<token value="O1C=C(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flav-2-en</token>
-		<token value="O1CC(=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flavan-3-en</token>
-		<token value="O1CC(=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flav-3-en</token>
-		<token value="o1cc(c(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">isoflavon</token>
-		<token value="o1cc(c(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">iso-flavon</token>
-		<token value="O1CCC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan</token>
-		<token value="O1CCC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flavan</token>
-		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan-2-en</token>
-		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflav-2-en</token>
-		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan-3-en</token>
-		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflav-3-en</token>
-		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flavan-2-en</token>
-		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flav-2-en</token>
-		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flavan-3-en</token>
-		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flav-3-en</token>
+		<token value="O1C=C(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflavan-2-en|isoflav-2-en</token>
+		<token value="O1CC(=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">isoflavan-3-en|isoflav-3-en</token>
+		<token value="O1C=C(Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flavan-2-en|iso-flav-2-en</token>
+		<token value="O1CC(=Cc2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="4">iso-flavan-3-en|iso-flav-3-en</token>
+		<token value="o1cc(c(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">isoflavon|iso-flavon</token>
+		<token value="O1CCC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan|neo-flavan</token>
+		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan-2-en|neoflav-2-en</token>
+		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan-3-en|neoflav-3-en</token>
+		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flavan-2-en|neo-flav-2-en</token>
+		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neo-flavan-3-en|neo-flav-3-en</token>
 		<token value="o1c(cc(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavon</token><!--cf. flavonol-->
 		<token value="O1C(CC(=O)c2ccccc12)c3ccccc3" labels="1/2/3/4//4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'" suffixAppliesToByDefault="3">flavanon</token><!--cf. flavanonol-->
 	</tokenList>

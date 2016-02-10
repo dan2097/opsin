@@ -170,20 +170,14 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
 		<token value="O=CC(O)CO" labels="/1/2//3/">glyceraldehyde</token>
-		<token value="O=C[C@H](O)CO" labels="/1/2//3/">d-glyceraldehyde</token>
-		<token value="O=C[C@H](O)CO" labels="/1/2//3/">(d)-glyceraldehyde</token>
-		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">l-glyceraldehyde</token>
-		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">(l)-glyceraldehyde</token>
+		<token value="O=C[C@H](O)CO" labels="/1/2//3/">d-glyceraldehyde|(d)-glyceraldehyde</token>
+		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">l-glyceraldehyde|(l)-glyceraldehyde</token>
 
 <!--used by CAS to describe cyclic apiose-->
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-alpha-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-beta-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-alpha-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">d-apio-beta-l-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-d-furanose|d-apio-alpha-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-d-furanose|d-apio-beta-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-l-furanose|d-apio-alpha-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-l-furanose|d-apio-beta-l-furanose</token>
 		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-alpha-d-furanose</token>
 		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-beta-d-furanose</token>
 		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-alpha-l-furanose</token>

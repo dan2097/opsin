@@ -3,17 +3,13 @@
 <tokenLists>
 	<tokenList tagname="suffix" type="charge" symbol="I">
 		<token value="ium">ium</token>
-		<token value="ide">ide</token>
-		<token value="ide">id</token>
-		<token value="ylium">ylium</token>
-		<token value="ylium">(ylium)</token>
-		<token value="uide">uide</token>
-		<token value="uide">uid</token>
+		<token value="ide">ide|id</token>
+		<token value="ylium">ylium|(ylium)</token>
+		<token value="uide">uide|uid</token>
 	</tokenList>
 
 	<!--for use after alkanestems e.g. methylium-->
 	<tokenList tagname="suffix" type="charge" symbol="õ">
-		<token value="ylium">ylium</token>
-		<token value="ylium">(ylium)</token>
+		<token value="ylium">ylium|(ylium)</token>
 	</tokenList>
 </tokenLists>
