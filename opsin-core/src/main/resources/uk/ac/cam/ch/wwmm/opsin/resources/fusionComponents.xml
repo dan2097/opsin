@@ -3,8 +3,7 @@
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="fusionRing" symbol="®">
 		<!-- benzo is special as fused rings formed from benzo are treated as components and a locant in front of a benzo assigns locants for this component-->
-		<token value="c1ccccc1" labels="1/2/3/4/5/6">benzo</token>
-		<token value="c1ccccc1" labels="1/2/3/4/5/6">benz</token>
+		<token value="c1ccccc1" labels="1/2/3/4/5/6">benzo|benz</token>
 	</tokenList>
 	<tokenList tagname="group" type="ring" subType="fusionRing" symbol="Ë">
 		<!-- may have front locants-->
@@ -13,17 +12,14 @@
 	</tokenList>
 	<tokenList tagname="group" type="ring" subType="fusionRing" symbol="f">
 		<token value="c1cc2cccc3cc4ccccc4c1c23" labels="1/2/2a/3/4/5/5a/6/6a/7/8/9/10/10a/10b/10c">aceanthryleno</token>
-		<token value="c1cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b">acenaphthyleno</token>
-		<token value="c1cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b">acenaphth</token>
-		<token value="c1cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b">acenaphtho</token>
+		<token value="c1cc2cccc3cccc1c23" labels="1/2/2a/3/4/5/5a/6/7/8/8a/8b">acenaphthyleno|acenaphth|acenaphtho</token>
 		<token value="c1ccc2ccc3cc4ccccc4c1c23" labels="1/2/3/3a/4/5/5a/6/6a/7/8/9/10/10a/10b/10c">acephenanthryleno</token>
 		<token value="c1cccc2[as]c3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">acridarsino</token>
 		<token value="c1cccc2nc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">acridino</token>
 		<token value="c1cccc2pc3ccccc3cc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">acridophosphino</token>
 		<token value="c1cccc2c3ccc4cc5ccccc5nc4c3nc12" labels="1/2/3/4/4a/4b/5/6/6a/7/7a/8/9/10/11/11a/12/12a/12b/13/13a">acrindolino</token>
 		<token value="n1cccc2cc3cccnc3nc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">anthyridino</token>
-		<token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10">anthraceno</token>
-		<token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10">anthra</token>
+		<token value="c1cccc2cc3ccccc3cc12" labels="1/2/3/4/4a/10/10a/5/6/7/8/8a/9/9a" fusedRingNumbering="1/2/3/4/4a/5/5a/6/7/8/9/9a/10">anthraceno|anthra</token>
 		<token value="c1cccc2cc3c4nc5ccc6cc7ccccc7cc6c5nc4ccc3cc12" labels="1/2/3/4/4a/5/5a/5b/6/6a/7/8/8a/9/9a/10/11/12/13/13a/14/14a/14b/15/15a/16/17/17a/18/18a">anthrazino</token>
 		<token value="c1cccc2[as]c3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">arsanthreno</token>
 		<token value="c1cccc2[as]cc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">arsanthridino</token>
@@ -33,9 +29,7 @@
 		<token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">arsinolizino</token>
 		<token value="c1ccc2cccccc12" labels="1/2/3/3a/4/5/6/7/8/8a">azuleno</token>
 		<token value="c1ccccc1" labels="1/2/3/4/5/6">benzeno</token>
-		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">betacarbolino</token>
-		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">beta-carbolino</token>
-		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">b-carbolino</token>
+		<token value="c1nccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">betacarbolino|beta-carbolino|b-carbolino</token>
 		<token value="c1cccc2c3ccccc3c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b">biphenyleno</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">boranthreno</token>
 		<token value="c1cccc2c3ccccc3[nH]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">carbazolo</token>
@@ -52,8 +46,7 @@
 		<token value="o1cccc1" labels="1/2/3/4/5">furano</token>
 		<token value="o1nccn1" labels="1/2/3/4/5">furazano</token>
 		<token value="o1cccc1" labels="1/2/3/4/5">furo</token>
-		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidazolo</token>
-		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidazo</token>
+		<token value="[nH]1cncc1" labels="1/2/3/4/5">imidazolo|imidazo</token>
 		<token value="c1ccc2ccc3cccc3c12" labels="1/2/3/3a/4/5/5a/6/7/8/8a/8b">as-indaceno</token>
 		<token value="c1ccc2cc3cccc3cc12" labels="1/2/3/3a/4/4a/5/6/7/7a/8/8a">s-indaceno</token>
 		<token value="[nH]1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indazolo</token>
@@ -63,34 +56,27 @@
 		<token value="[nH]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indolo</token>
 		<token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoarsindolo</token>
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoarsinolino</token>
-		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofurano</token>
-		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofuro</token>
+		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofurano|isobenzofuro</token>
 		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochinolino</token>
 		<token value="[cH2]1occc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isochromeno</token>
 		<token value="[cH2]1sccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isothiochromeno</token>
 		<token value="[cH2]1[se]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoselenochromeno</token>
 		<token value="[cH2]1[te]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isotellurochromeno</token>
 		<token value="c1[nH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoindolo</token>
-		<token value="o1nccc1" labels="1/2/3/4/5">isooxazolo</token>
-		<token value="o1nccc1" labels="1/2/3/4/5">isoxazolo</token>
+		<token value="o1nccc1" labels="1/2/3/4/5">isooxazolo|isoxazolo</token>
 		<token value="c1[pH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isophosphindolo</token>
 		<token value="c1pccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isophosphinolino</token>
-		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoquino</token>
-		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoquinolino</token>
+		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoquino|isoquinolino</token>
 		<token value="[se]1nccc1" labels="1/2/3/4/5">isoselenazolo</token>
 		<token value="[te]1nccc1" labels="1/2/3/4/5">isotellurazolo</token>
 		<token value="s1nccc1" labels="1/2/3/4/5">isothiazolo</token>
 		<token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">mercuranthreno</token>
 		<token value="c1cccc2cc3cc4ccccc4cc3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/11/11a/12/12a">naphthaceno</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthaleno</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthalino</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphth</token>
-		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphtho</token>
+		<token value="c1cccc2ccccc12" labels="1,alpha/2,beta/3/4/4a/5/6/7/8/8a">naphthaleno|naphthalino|naphth|naphtho</token>
 		<token value="c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19" labels="1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k">ovaleno</token>
 		<token value="c1cccc2oc3ccccc3oc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">oxanthreno</token>
 		<token value="[nH]1cnc2cccc3cccc1c23" labels="1/2/3/3a/4/5/6/6a/7/8/9/9a/9b">perimidino</token>
-		<token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d">peryleno</token>
-		<token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d">perylo</token>
+		<token value="c1ccc2cccc3c4cccc5cccc6c71.c237.c456" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/9a/10/11/12/12a/12b/12c/12d">peryleno|perylo</token>
 		<token value="[cH2]1ccc2cccc3cccc1c23" labels="1/2/3/3a/4/5/6/6a/7/8/9/9a/9b">phenaleno</token>
 		<token value="c1cccc2c3ccccc3c4nc5c6ccccc6c7ccccc7c5nc4c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/8b/9/9a/9b/10/11/12/13/13a/13b/14/15/16/17/17a/17b/18/18a/18b">phenanthrazino</token>
 		<token value="c1cccc2c3ccccc3ccc12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/10/10a">phenanthreno</token>
@@ -101,25 +87,19 @@
 		<token value="c1cccc2sc3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiazino</token>
 		<token value="c1cccc2[se]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoselenazino</token>
 		<token value="c1cccc2[te]c3ccccc3[nH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenotellurazino</token>
-		<token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenophosphazinino</token>
-		<token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenophosphazino</token>
+		<token value="c1cccc2nc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenophosphazinino|phenophosphazino</token>
 		<token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenarsazinino</token>
 		<token value="c1cccc2nc3ccccc3[siH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenazasilino</token>
 		<token value="c1cccc2nc3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoarsazino</token>
-		<token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercurazino</token>
-		<token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercazino</token>
+		<token value="c1cccc2[nH]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercurazino|phenomercazino</token>
 		<token value="c1cccc2oc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxathiino</token>
 		<token value="c1cccc2oc3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaselenino</token>
 		<token value="c1cccc2oc3ccccc3[siH2]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxasilin</token>
 		<token value="c1cccc2oc3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxatellurino</token>
-		<token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaphosphinino</token>
-		<token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaphosphino</token>
-		<token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxarsinino</token>
-		<token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxarsino</token>
-		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxastibinino</token>
-		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxantimonino</token>
-		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiarsinino</token>
-		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiarsino</token>
+		<token value="c1cccc2oc3ccccc3[pH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxaphosphinino|phenoxaphosphino</token>
+		<token value="c1cccc2oc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxarsinino|phenoxarsino</token>
+		<token value="c1cccc2oc3ccccc3[sbH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenoxastibinino|phenoxantimonino</token>
+		<token value="c1cccc2sc3ccccc3[asH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenothiarsinino|phenothiarsino</token>
 		<token value="c1cccc2[Hg]c3ccccc3[Hg]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phenomercurino</token>
 		<token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phosphanthreno</token>
 		<token value="c1cccc2pcc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">phosphanthridino</token>
@@ -142,18 +122,15 @@
 		<token value="[nH]1nccc1" labels="1/2/3/4/5">pyrazolo</token>
 		<token value="c1ccc2ccc3cccc4ccc1c2c34" labels="1/2/3/3a/4/5/5a/6/7/8/8a/9/10/10a/10b/10c">pyreno</token>
 		<token value="n1ncccc1" labels="1/2/3/4/5/6">pyridazino</token>
-		<token value="n1ccccc1" labels="1/2/3/4/5/6">pyridino</token>
-		<token value="n1ccccc1" labels="1/2/3/4/5/6">pyrido</token>
-		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidino</token>
-		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimido</token>
+		<token value="n1ccccc1" labels="1/2/3/4/5/6">pyridino|pyrido</token>
+		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidino|pyrimido</token>
 		<token value="C1CCN2CCCC12" labels="1/2/3/4/5/6/7/7a">pyrrolizidino</token>
 		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrrolizino</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrolo</token>
 		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinazolino</token>
 		<token value="c1cccc2nc3c4ccccc4nc3cc12" labels="1/2/3/4/4a/5/5a/5b/6/7/8/9/9a/10/10a/11/11a">quindolino</token>
 		<token value="c1cccc2nc3nc4ccccc4c3cc12" labels="1/2/3/4/4a/5/5a/6/6a/7/8/9/10/10a/10b/11/11a">quinindolino</token>
-		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quino</token>
-		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinolino</token>
+		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quino|quinolino</token>
 		<token value="C1CCCN2CCCCC12" labels="1/2/3/4/5/6/7/8/9/9a">quinolizidino</token>
 		<token value="c1cc[cH2]n2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">quinolizino</token>
 		<token value="n1ccnc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinoxalino</token>
@@ -161,16 +138,13 @@
 		<token value="c1cccc2[se]c3ccccc3[se]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">selenanthreno</token>
 		<token value="[se]1cccc1" labels="1/2/3/4/5">selenopheno</token>
 		<token value="c1cccc2[siH]c3ccccc3[siH]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">silanthreno</token>
-		<token value="n1cncnc1" labels="1/2/3/4/5/6">s-triazino</token>
-		<token value="n1cncnc1" labels="1/2/3/4/5/6">sym-triazino</token>
-		<token value="[nH]1ncnc1" labels="1/2/3/4/5">s-triazolo</token>
-		<token value="[nH]1ncnc1" labels="1/2/3/4/5">sym-triazolo</token>
+		<token value="n1cncnc1" labels="1/2/3/4/5/6">s-triazino|sym-triazino</token>
+		<token value="[nH]1ncnc1" labels="1/2/3/4/5">s-triazolo|sym-triazolo</token>
 		<token value="c1cccc2[te]c3ccccc3[te]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">telluranthreno</token>
 		<token value="[te]1cccc1" labels="1/2/3/4/5">telluropheno</token>
 		<token value="c1ccc2ncc3cccc4ccc1c2c34" labels="1/2/3/3a/4/5/5a/6/7/8/8a/9/10/10a/10b/10c">thebenidino</token>
 		<token value="c1cccc2sc3ccccc3sc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">thianthreno</token>
-		<token value="s1cccc1" labels="1/2/3/4/5">thieno</token>
-		<token value="s1cccc1" labels="1/2/3/4/5">thiopheno</token>
+		<token value="s1cccc1" labels="1/2/3/4/5">thieno|thiopheno</token>
 		<token value="[cH2]1ccc2c3cccc3c4cccc4c12" labels="1/2/3/3a/3b/4/5/6/6a/6b/7/8/9/9a/9b">trindeno</token>
 		<token value="c1cccc2cc3c4cc5ccccc5cc4c4cc5ccccc5cc4c3cc12" labels="1/2/3/4/4a/5/5a/5b/6/6a/7/8/9/10/10a/11/11a/11b/12/12a/13/14/15/16/16a/17/17a/17b/18/18a">trinaphthyleno</token>
 		<token value="c1cccc2oc3cc4nc5ccccc5oc4cc3nc12" labels="1/2/3/4/4a/5/5a/6/6a/7/7a/8/9/10/11/11a/12/12a/13/13a/14/14a">triphenodioxazino</token>

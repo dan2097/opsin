@@ -31,10 +31,8 @@
 		<token value="17">heptadec</token>
 		<token value="18">octadec</token>
 		<token value="19">nonadec</token>
-		<token value="20">eicos</token>
-		<token value="20">icos</token>
-		<token value="21">henicos</token>
-		<token value="21">heneicos</token>
+		<token value="20">eicos|icos</token>
+		<token value="21">henicos|heneicos</token>
 		<token value="22">docos</token>
 		<token value="23">tricos</token>
 		<token value="24">tetracos</token>
@@ -85,10 +83,8 @@
 		<token value="17">heptadecakis</token>
 		<token value="18">octadecakis</token>
 		<token value="19">nonadecakis</token>
-		<token value="20">eicosakis</token>
-		<token value="20">icosakis</token>
-		<token value="21">henicosakis</token>
-		<token value="21">heneicosakis</token>
+		<token value="20">eicosakis|icosakis</token>
+		<token value="21">henicosakis|heneicosakis</token>
 		<token value="22">docosakis</token>
 		<token value="23">tricosakis</token>
 		<token value="24">tetracosakis</token>

@@ -10,36 +10,27 @@
 <tokenLists>
 	<tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="¨" >
 		<token value="N[C@@H](C)C" labels="/2,alpha/3,beta/1" suffixAppliesTo="4" defaultInID="1">alan</token>
-		<token value="NC(=C)C" labels="/2,alpha/3,beta/1" suffixAppliesTo="4" defaultInID="1">dehydroalan</token>
-		<token value="NC(=C)C" labels="/2,alpha/3,beta/1" suffixAppliesTo="4" defaultInID="1">alpha,beta-dehydroalan</token>
+		<token value="NC(=C)C" labels="/2,alpha/3,beta/1" suffixAppliesTo="4" defaultInID="1">dehydroalan|alpha,beta-dehydroalan</token>
 		<token value="N[C@@H](CCCNC(N)=N)C" labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1" suffixAppliesTo="10" defaultInID="1">argin</token>
 		<token value="N[C@@H](CC(N)=O)C" labels="/2,alpha/3,beta/4,gamma///1" suffixAppliesTo="7" defaultInID="1">asparag</token>
-		<token value="N[C@@H](CC)C(N)=O" labels="/2,alpha/3,beta/4,gamma/1//" suffixAppliesTo="4" defaultInID="1">isoasparag</token>
-		<token value="N[C@@H](CC)C(N)=O" labels="/2,alpha/3,beta/4,gamma/1//" suffixAppliesTo="4" defaultInID="1">alpha-asparag</token>
+		<token value="N[C@@H](CC)C(N)=O" labels="/2,alpha/3,beta/4,gamma/1//" suffixAppliesTo="4" defaultInID="1">isoasparag|alpha-asparag</token>
 		<token value="N[C@@H](CCSC[C@@H](C)N)C" suffixAppliesTo="8,10" defaultInID="1">cystathion</token>
-		<token value="N[C@@H](CCC)C(N)=O" labels="/4,gamma/3,beta/2,alpha/1///" suffixAppliesTo="5" defaultInID="1">isoglutam</token>
-		<token value="N[C@@H](CCC)C(N)=O" labels="/4,gamma/3,beta/2,alpha/1///" suffixAppliesTo="5" defaultInID="1">iso-glutam</token>
+		<token value="N[C@@H](CCC)C(N)=O" labels="/4,gamma/3,beta/2,alpha/1///" suffixAppliesTo="5" defaultInID="1">isoglutam|iso-glutam</token>
 		<token value="NCC" labels="/2,alpha/1" suffixAppliesTo="3" defaultInID="1">glyc</token>
 		<token value="N[C@@H](Cc1c[nH]cn1)C" labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi/" suffixAppliesTo="9" defaultInID="1">histid</token>
-		<token value="N[C@@H]([C@@H](C)CC)C" labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" suffixAppliesTo="7" defaultInID="1">isoleuc</token>
-		<token value="N[C@@H]([C@@H](C)CC)C" labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" suffixAppliesTo="7" defaultInID="1">iso-leuc</token>
-		<token value="N[C@@H]([C@H](C)CC)C" labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" suffixAppliesTo="7" defaultInID="1">alloisoleuc</token>
-		<token value="N[C@@H]([C@H](C)CC)C" labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" suffixAppliesTo="7" defaultInID="1">allo-isoleuc</token>
+		<token value="N[C@@H]([C@@H](C)CC)C" labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" suffixAppliesTo="7" defaultInID="1">isoleuc|iso-leuc</token>
+		<token value="N[C@@H]([C@H](C)CC)C" labels="/2,alpha/3,beta/3'/4,gamma/5,delta/1" suffixAppliesTo="7" defaultInID="1">alloisoleuc|allo-isoleuc</token>
 		<token value="N[C@@H](CC(C)C)C" labels="/2,alpha/3,beta/4,gamma/5',delta'/5,delta/1" suffixAppliesTo="7" defaultInID="1">leuc</token>
 		<token value="N[C@@H](CCCCN)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//1" suffixAppliesTo="8" defaultInID="1">lys</token>
 		<token value="N[C@@H](CCSC)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">methion</token>
-		<token value="N[C@@H](CC[Se]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">selenomethion</token>
-		<token value="N[C@@H](CC[Se]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">seleno-methion</token>
-		<token value="N[C@@H](CC[Te]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">telluromethion</token>
-		<token value="N[C@@H](CC[Te]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">telluro-methion</token>
+		<token value="N[C@@H](CC[Se]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">selenomethion|seleno-methion</token>
+		<token value="N[C@@H](CC[Te]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">telluromethion|telluro-methion</token>
 		<token value="N[C@@H](Cc1ccccc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="10" defaultInID="1">phenylalan</token>
-		<token value="NC(=Cc1ccccc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="10" defaultInID="1">dehydrophenylalan</token>
-		<token value="NC(=Cc1ccccc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="10" defaultInID="1">alpha,beta-dehydrophenylalan</token>
+		<token value="NC(=Cc1ccccc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="10" defaultInID="1">dehydrophenylalan|alpha,beta-dehydrophenylalan</token>
 		<token value="N1[C@H](C)CCC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">prol</token>
 		<token value="N[C@@H](CO)C" labels="/2,alpha/3,beta/O/1" suffixAppliesTo="5" defaultInID="1">ser</token>
 		<token value="N[C@@H]([C@H](O)C)C" labels="/2,alpha/3,beta/O/4,gamma/1" suffixAppliesTo="6" defaultInID="1">threon</token>
-		<token value="N[C@@H]([C@@H](O)C)C" labels="/2,alpha/3,beta/O/4,gamma/1" suffixAppliesTo="6" defaultInID="1">allothreon</token>
-		<token value="N[C@@H]([C@@H](O)C)C" labels="/2,alpha/3,beta/O/4,gamma/1" suffixAppliesTo="6" defaultInID="1">allo-threon</token>
+		<token value="N[C@@H]([C@@H](O)C)C" labels="/2,alpha/3,beta/O/4,gamma/1" suffixAppliesTo="6" defaultInID="1">allothreon|allo-threon</token>
 		<token value="N[C@@H](Cc1ccc(cc1)O)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/O/" suffixAppliesTo="11" defaultInID="1">tyros</token>
 		<token value="N[C@@H](C(C)C)C" labels="/2,alpha/3,beta/4',gamma'/4,gamma/1" suffixAppliesTo="6" defaultInID="1">val</token>
 		<token value="N[C@@H](CCC)C" labels="/2,alpha/3,beta/4,gamma/5,delta/1" suffixAppliesTo="6" defaultInID="1">norval</token>
@@ -55,67 +46,36 @@
 		<token value="N1[C@H](C)C[C@@H](O)C1" labels="1/2//3/4//5" suffixAppliesTo="3" defaultInID="1">hydroxyprol</token>
 		<token value="N[C@@H](CC[C@@H](O)CN)C" labels="/2,alpha/3,beta/4,gamma/5,delta//6,epsilon//1" suffixAppliesTo="9" defaultInID="1">hydroxylys</token>
 		<token value="ON(C=O)CC" suffixAppliesTo="6">hadacid</token>
-		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" suffixAppliesTo="5" defaultInID="1">isoser</token>
-		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" suffixAppliesTo="5" defaultInID="1">iso-ser</token>
+		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" suffixAppliesTo="5" defaultInID="1">isoser|iso-ser</token>
 		<token value="N[C@@H](CCC(=O)NNc1ccc(CO)cc1)C" labels="/2,alpha/3,beta/4,gamma/////////////1" suffixAppliesTo="17" defaultInID="1">agarit</token>
 		<token value="N[C@@H](COC(=O)C=[N+]=[N-])C" labels="/2,alpha/3,beta///////1" suffixAppliesTo="10" defaultInID="1">azaser</token>
 		<token value="N[C@@H](CN(O)N=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">alanos</token>
-		<token value="N[C@@H](CNC(=O)N)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">albizz</token>
-		<token value="N[C@@H](CNC(=O)N)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">albizzi</token>
+		<token value="N[C@@H](CNC(=O)N)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">albizz|albizzi</token>
 		<token value="N[C@@H](CS(=O)CC=C)C" labels="/2,alpha/3,beta//////1" suffixAppliesTo="9" defaultInID="1">alli</token>
 		<token value="N[C@@H](CCSCC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">ethion</token>
-		<token value="N[C@@H](CC[Se]CC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">selenoethion</token>
-		<token value="N[C@@H](CC[Se]CC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">seleno-ethion</token>
-		<token value="N[C@@H](CC[Te]CC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">telluroethion</token>
-		<token value="N[C@@H](CC[Te]CC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">telluro-ethion</token>
+		<token value="N[C@@H](CC[Se]CC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">selenoethion|seleno-ethion</token>
+		<token value="N[C@@H](CC[Te]CC)C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">telluroethion|telluro-ethion</token>
 		<token value="N[C@@H](CCON)C" labels="/2,alpha/3,beta/4,gamma///1" suffixAppliesTo="7" defaultInID="1">canal</token>
 		<token value="N[C@@H](CCONC(=N)C)C" labels="/2,alpha/3,beta/4,gamma//////1" suffixAppliesTo="10" defaultInID="1">canavan</token>
 		<token value="NC1(CCCC1)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" suffixAppliesTo="7" defaultInID="1">cycloleuc</token>
-		<token value="N[C@@](CC)(C)C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">isoval</token>
-		<token value="N[C@@](CC)(C)C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">iso-val</token>
+		<token value="N[C@@](CC)(C)C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">isoval|iso-val</token>
 		<token value="N[C@@H](C(C)(C)S)C" suffixAppliesTo="7" defaultInID="1">penicillam</token>
 		<token value="N[C@@H](CCC(=O)NCC)C" labels="/2,alpha/3,beta/4,gamma//////1" suffixAppliesTo="10" defaultInID="1">thean</token>
 		<token value="N[C@@H](CSC(C)(C)CCO)C" labels="/2,alpha/3,beta////////1" suffixAppliesTo="11" defaultInID="1">felin</token>
 		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azidolys</token><!--somewhat of a misnomer-->
-		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azido-lys</token>
-		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azidonorleuc</token>
-		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azido-norleuc</token>
-		<token value="N[C@@H](CCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">azidohomoalan</token>
-		<token value="N[C@@H](CCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">azido-homoalan</token>
-		<token value="N[C@@H](Cc1ccc(N=[N+]=[N-])cc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para////5/6/" suffixAppliesTo="13" defaultInID="1">azidophenylalan</token>
-		<token value="N[C@@H](Cc1ccc(N=[N+]=[N-])cc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para////5/6/" suffixAppliesTo="13" defaultInID="1">azido-phenylalan</token>
-		<token value="N[C@@H](Cc1cc(I)c(cc1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" suffixAppliesTo="12" defaultInID="1">monoiodotyros</token>
-		<token value="N[C@@H](Cc1cc(I)c(cc1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" suffixAppliesTo="12" defaultInID="1">mono-iodotyros</token>
-		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" suffixAppliesTo="13" defaultInID="1">diiodotyros</token>
-		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" suffixAppliesTo="13" defaultInID="1">di-iodotyros</token>
-		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(cc2)O)C" labels="/alpha/beta/1/2/3//4/5//6//1'/2'/3'//4'/5'/6'//" suffixAppliesTo="21" defaultInID="1">triiodothyron</token>
-		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(cc2)O)C" labels="/alpha/beta/1/2/3//4/5//6//1'/2'/3'//4'/5'/6'//" suffixAppliesTo="21" defaultInID="1">tri-iodothyron</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tertiaryleuc</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tertiary-leuc</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tertleuc</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tert-leuc</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tert.leuc</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tert.-leuc</token>
-		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">t-leuc</token>
-		<token value="N1[C@H](C)CSC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">thiaprol</token>
-		<token value="N1[C@H](C)CSC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">thioprol</token>
+		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azido-lys|azidonorleuc|azido-norleuc</token>
+		<token value="N[C@@H](CCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma////1" suffixAppliesTo="8" defaultInID="1">azidohomoalan|azido-homoalan</token>
+		<token value="N[C@@H](Cc1ccc(N=[N+]=[N-])cc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para////5/6/" suffixAppliesTo="13" defaultInID="1">azidophenylalan|azido-phenylalan</token>
+		<token value="N[C@@H](Cc1cc(I)c(cc1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5/6/O/" suffixAppliesTo="12" defaultInID="1">monoiodotyros|mono-iodotyros</token>
+		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" suffixAppliesTo="13" defaultInID="1">diiodotyros|di-iodotyros</token>
+		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(cc2)O)C" labels="/alpha/beta/1/2/3//4/5//6//1'/2'/3'//4'/5'/6'//" suffixAppliesTo="21" defaultInID="1">triiodothyron|tri-iodothyron</token>
+		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tertiaryleuc|tertiary-leuc|tertleuc|tert-leuc|tert.leuc|tert.-leuc|t-leuc</token>
+		<token value="N1[C@H](C)CSC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">thiaprol|thioprol</token>
 		<token value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8" defaultInID="1">panton</token>
 		<token value="N[C@@H](CCCC[N+](C)(C)C)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" suffixAppliesTo="11" defaultInID="1">lamin</token>
 		<token value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" suffixAppliesTo="17" defaultInID="1">saccharop</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tertiarybutylalan</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tertiary-butylalan</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tertbutylalan</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tert-butylalan</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tert.butylalan</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tert.-butylalan</token>
-		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">t-butylalan</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tertiarybutylglyc</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tertiary-butylglyc</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tertbutylglyc</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tert-butylglyc</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tert.butylglyc</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tert.-butylglyc</token>
-		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">t-butylglyc</token>
+		<token value="N[C@@H](CC(C)(C)C)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tertiarybutylalan|tertiary-butylalan|tertbutylalan|tert-butylalan|tert.butylalan|tert.-butylalan|t-butylalan</token>
+		<token value="N[C@@H](C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tertiarybutylglyc|tertiary-butylglyc|tertbutylglyc|tert-butylglyc|tert.butylglyc|tert.-butylglyc|t-butylglyc</token>
 
 <!--homo amino acids-->
 		<token value="N[C@@H](CC)C" labels="/2,alpha/3,beta/4,gamma/1" suffixAppliesTo="5" defaultInID="1">homoalan</token>
@@ -159,14 +119,10 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="N[C@@H](CCC(N)=O)CC" labels="/3,beta/4,gamma/5,delta/6,epsilon///2,alpha/1" suffixAppliesTo="9" defaultInID="1">beta-homoglutam</token>
 		<token value="N[C@@H](CS)C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">cyste</token>
 		<token value="N[C@@H](CCS)C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">homocyste</token>
-		<token value="N[C@@H](C[SeH])C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">selenocyste</token>
-		<token value="N[C@@H](C[SeH])C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">seleno-cyste</token>
-		<token value="N[C@@H](CC[Se])C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">selenohomocyste</token>
-		<token value="N[C@@H](CC[Se])C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">seleno-homocyste</token>
-		<token value="N[C@@H](C[TeH])C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">tellurocyste</token>
-		<token value="N[C@@H](C[TeH])C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">telluro-cyste</token>
-		<token value="N[C@@H](CC[Te])C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">tellurohomocyste</token>
-		<token value="N[C@@H](CC[Te])C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">telluro-homocyste</token>
+		<token value="N[C@@H](C[SeH])C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">selenocyste|seleno-cyste</token>
+		<token value="N[C@@H](CC[Se])C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">selenohomocyste|seleno-homocyste</token>
+		<token value="N[C@@H](C[TeH])C" labels="/2,alpha/3,beta//1" suffixAppliesTo="5" defaultInID="1">tellurocyste|telluro-cyste</token>
+		<token value="N[C@@H](CC[Te])C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">tellurohomocyste|telluro-homocyste</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="endInAn" symbol="©" ><!--why isn't this tryptophine!!!!-->
@@ -177,61 +133,39 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 
 	<tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ª" >
 		<token value="N[C@@H](CC)C" labels="/2,alpha/3,beta/4,gamma/1" suffixAppliesTo="5,4" defaultInID="1">aspart</token>
-		<token value="N[C@@H](CCC)C" labels="/2,alpha/3,beta/4,gamma/5,delta/1" suffixAppliesTo="6,5" defaultInID="1">homoaspart</token>
-		<token value="N[C@@H](CCC)C" labels="/2,alpha/3,beta/4,gamma/5,delta/1" suffixAppliesTo="6,5" defaultInID="1">glutam</token>
+		<token value="N[C@@H](CCC)C" labels="/2,alpha/3,beta/4,gamma/5,delta/1" suffixAppliesTo="6,5" defaultInID="1">homoaspart|glutam</token>
 		<token value="N[C@@H](CCCC)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" suffixAppliesTo="7,6" defaultInID="1">homoglutam</token>
 		<token value="N[C@@H](CCC)CC" labels="/3,beta/4,gamma/5,delta/6,epsilon/2,alpha/1" suffixAppliesTo="7,5" defaultInID="1">beta-homoglutam</token>
-		<token value="N[C@@H](CC)CC" labels="/3,beta/4,gamma/5,delta/2,alpha/1" suffixAppliesTo="6,4" defaultInID="1">beta-glutam</token>
-		<token value="N[C@@H](CC)CC" labels="/3,beta/4,gamma/5,delta/2,alpha/1" suffixAppliesTo="6,4" defaultInID="1">beta-homoaspart</token>
+		<token value="N[C@@H](CC)CC" labels="/3,beta/4,gamma/5,delta/2,alpha/1" suffixAppliesTo="6,4" defaultInID="1">beta-glutam|beta-homoaspart</token>
 		<token value="N[C@@H](CS(=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">cyste</token>
 		<token value="N[C@@H](CCS(=O)(O)=O)C" labels="/2,alpha/3,beta/4,gamma/////1" suffixAppliesTo="9" defaultInID="1">homocyste</token>
-		<token value="N[C@@H](C[Se](=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">selenocyste</token>
-		<token value="N[C@@H](C[Se](=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">seleno-cyste</token>
-		<token value="N[C@@H](C[Te](=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tellurocyste</token>
-		<token value="N[C@@H](C[Te](=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">telluro-cyste</token>
+		<token value="N[C@@H](C[Se](=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">selenocyste|seleno-cyste</token>
+		<token value="N[C@@H](C[Te](=O)(O)=O)C" labels="/2,alpha/3,beta/////1" suffixAppliesTo="8" defaultInID="1">tellurocyste|telluro-cyste</token>
 		<token value="CCCNC([C@H](O)C(C)(C)CO)=O" suffixAppliesTo="1">pantothen</token>
 		<token value="N1[C@@H](CCC1=O)C" labels="/2,alpha/3,beta/4,gamma/5,delta//1" suffixAppliesTo="7" defaultInID="1">pyroglutam</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="simpleSubstituent" symbol="x"><!--semi trivial amino acid substituents-->
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">aspart-1-yl</token>
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">l-aspart-1-yl</token>
+		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">aspart-1-yl|l-aspart-1-yl</token>
 		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">d-aspart-1-yl</token>
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">alpha-aspartyl</token>
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">l-alpha-aspartyl</token>
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">alpha-l-aspartyl</token>
-		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">d-alpha-aspartyl</token>
-		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">alpha-d-aspartyl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">aspart-4-yl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">l-aspart-4-yl</token>
+		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">alpha-aspartyl|l-alpha-aspartyl|alpha-l-aspartyl</token>
+		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">d-alpha-aspartyl|alpha-d-aspartyl</token>
+		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">aspart-4-yl|l-aspart-4-yl</token>
 		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">d-aspart-4-yl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">beta-aspartyl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">l-beta-aspartyl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">beta-l-aspartyl</token>
-		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">d-beta-aspartyl</token>
-		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">beta-d-aspartyl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">glutam-1-yl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">l-glutam-1-yl</token>
+		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">beta-aspartyl|l-beta-aspartyl|beta-l-aspartyl</token>
+		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">d-beta-aspartyl|beta-d-aspartyl</token>
+		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">glutam-1-yl|l-glutam-1-yl</token>
 		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">d-glutam-1-yl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">alpha-glutamyl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">l-alpha-glutamyl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">alpha-l-glutamyl</token>
-		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">d-alpha-glutamyl</token>
-		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">alpha-d-glutamyl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">glutam-5-yl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">l-glutam-5-yl</token>
+		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">alpha-glutamyl|l-alpha-glutamyl|alpha-l-glutamyl</token>
+		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">d-alpha-glutamyl|alpha-d-glutamyl</token>
+		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">glutam-5-yl|l-glutam-5-yl</token>
 		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">d-glutam-5-yl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">gamma-glutamyl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">l-gamma-glutamyl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">gamma-l-glutamyl</token>
-		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">d-gamma-glutamyl</token>
-		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">gamma-d-glutamyl</token>
+		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">gamma-glutamyl|l-gamma-glutamyl|gamma-l-glutamyl</token>
+		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">d-gamma-glutamyl|gamma-d-glutamyl</token>
 
-		<token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" outIDs="3,10">cystyl</token>
-		<token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" outIDs="3,10">l-cystyl</token>
+		<token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" outIDs="3,10">cystyl|l-cystyl</token>
 		<token value="C([C@H](C(=O))N)SSC[C@H](C(=O))N" outIDs="3,10">d-cystyl</token>
-		<token value="N[C@@H](CS)C=O" labels="/2,alpha/3,beta//1/" outIDs="4,5" defaultInID="1">half-cystyl</token>
-		<token value="N[C@@H](CS)C=O" labels="/2,alpha/3,beta//1/" outIDs="4,5" defaultInID="1">l-half-cystyl</token>
+		<token value="N[C@@H](CS)C=O" labels="/2,alpha/3,beta//1/" outIDs="4,5" defaultInID="1">half-cystyl|l-half-cystyl</token>
 		<token value="N[C@H](CS)C=O" labels="/2,alpha/3,beta//1/" outIDs="4,5" defaultInID="1">d-half-cystyl</token>
 	</tokenList>
 
@@ -258,10 +192,8 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="N[C@@H](CCCCNC(=N)N)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1//" functionalIDs="13,13" defaultInID="1">homoarginamide</token>
 		<token value="N[C@@H](CCCCNC(=N)N)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1//" functionalIDs="13" defaultInID="1">homoarginate</token>
 		<token value="N[C@@H](CCS(=O)C)C(=O)O" labels="/2,alpha/3,beta/4,gamma///methyl/1//" functionalIDs="10" defaultInID="1">methionine sulfoxide</token>
-		<token value="OCCCNC([C@H](O)C(C)(C)CO)=O">pantothenol</token>
-		<token value="OCCCNC([C@H](O)C(C)(C)CO)=O">panthenol</token>
-		<token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolic acid</token>
-		<token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolicacid</token>
+		<token value="OCCCNC([C@H](O)C(C)(C)CO)=O">pantothenol|panthenol</token>
+		<token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolic acid|pidolicacid</token>
 		<token value="N1[C@@H](CCC1=O)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolate</token>
 		<token value="N1[C@@H](CCC1=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta//1/" defaultInID="1">pyroglutamal</token>
 		<token value="N1[C@@H](CCC1=O)CO" labels="/2,alpha/3,beta/4,gamma/5,delta//1/" defaultInID="1">pyroglutamol</token>
@@ -273,14 +205,10 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="O=C(O)[C@@H](N)Cc1ccc(O)c(O)c1" defaultInID="5">dopa</token>
 		<token value="C(C[C@@H](C(=O)O)N)SSCC[C@@H](C(=O)O)N" functionalIDs="6,15">homocystine</token>
 		<token value="C(C[C@@H](C(=O)[O-])N)SSCC[C@@H](C(=O)[O-])N" functionalIDs="6,15">homocystinate</token>
-		<token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" functionalIDs="5,13">selenocystine</token>
-		<token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" functionalIDs="5,13">seleno-cystine</token>
-		<token value="C([C@@H](C(=O)[O-])N)[Se][Se]C[C@@H](C(=O)[O-])N" functionalIDs="5,13">selenocystinate</token>
-		<token value="C([C@@H](C(=O)[O-])N)[Se][Se]C[C@@H](C(=O)[O-])N" functionalIDs="5,13">seleno-cystinate</token>
-		<token value="C([C@@H](C(=O)O)N)[Te][Te]C[C@@H](C(=O)O)N" functionalIDs="5,13">tellurocystine</token>
-		<token value="C([C@@H](C(=O)O)N)[Te][Te]C[C@@H](C(=O)O)N" functionalIDs="5,13">telluro-cystine</token>
-		<token value="C([C@@H](C(=O)[O-])N)[Te][Te]C[C@@H](C(=O)[O-])N" functionalIDs="5,13">tellurocystinate</token>
-		<token value="C([C@@H](C(=O)[O-])N)[Te][Te]C[C@@H](C(=O)[O-])N" functionalIDs="5,13">telluro-cystinate</token>
+		<token value="C([C@@H](C(=O)O)N)[Se][Se]C[C@@H](C(=O)O)N" functionalIDs="5,13">selenocystine|seleno-cystine</token>
+		<token value="C([C@@H](C(=O)[O-])N)[Se][Se]C[C@@H](C(=O)[O-])N" functionalIDs="5,13">selenocystinate|seleno-cystinate</token>
+		<token value="C([C@@H](C(=O)O)N)[Te][Te]C[C@@H](C(=O)O)N" functionalIDs="5,13">tellurocystine|telluro-cystine</token>
+		<token value="C([C@@H](C(=O)[O-])N)[Te][Te]C[C@@H](C(=O)[O-])N" functionalIDs="5,13">tellurocystinate|telluro-cystinate</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="simpleGroup" symbol="G">
@@ -290,34 +218,25 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="NCCP(=O)(O)O" functionalIDs="6,7" defaultInID="1">ciliatine</token>
 		<token value="NCCSSCCN" defaultInID="1">cystamine</token>
 		<token value="NCCS" labels="/2,alpha/3,beta/" defaultInID="1">cysteamine</token>
-		<token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" functionalIDs="9,24,31,39">glutathione disulfide</token>
-		<token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" functionalIDs="9,24,31,39">glutathionedisulfide</token>
+		<token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" functionalIDs="9,24,31,39">glutathione disulfide|glutathionedisulfide</token>
 		<token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" defaultInID="1">methioninamine</token>
-		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="8,14">octopinic acid</token>
-		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="8,14">octopinicacid</token>
+		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="8,14">octopinic acid|octopinicacid</token>
 		<token value="NC(=N)NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="11,17">octopine</token>
-		<token value="NCC[Se][Se]CCN" defaultInID="1">selenocystamine</token>
-		<token value="NCC[Se][Se]CCN" defaultInID="1">seleno-cystamine</token>
-		<token value="NCC[SeH]" labels="/2,alpha/3,beta/" defaultInID="1">selenocysteamine</token>
-		<token value="NCC[SeH]" labels="/2,alpha/3,beta/" defaultInID="1">seleno-cysteamine</token>
+		<token value="NCC[Se][Se]CCN" defaultInID="1">selenocystamine|seleno-cystamine</token>
+		<token value="NCC[SeH]" labels="/2,alpha/3,beta/" defaultInID="1">selenocysteamine|seleno-cysteamine</token>
 		<token value="NCCS(=O)O" functionalIDs="6" defaultInID="1">hypotaurine</token>
 		<token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" functionalIDs="11,16,21">nopaline</token>
-		<token value="NCC[Se](=O)O" functionalIDs="6" defaultInID="1">selenohypotaurine</token>
-		<token value="NCC[Se](=O)O" functionalIDs="6" defaultInID="1">seleno-hypotaurine</token>
+		<token value="NCC[Se](=O)O" functionalIDs="6" defaultInID="1">selenohypotaurine|seleno-hypotaurine</token>
 		<token value="N(C(C)C(=O)O)CC(=O)O" functionalIDs="6,10" defaultInID="1">strombine</token>
 		<token value="NCCS(=O)(=O)O" functionalIDs="7" defaultInID="1">taurine</token>
-		<token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" functionalIDs="26" defaultInID="1">s-adenosylmethionine</token>
-		<token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" functionalIDs="26" defaultInID="1">s-adenosyl-l-methionine</token>
+		<token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" functionalIDs="26" defaultInID="1">s-adenosylmethionine|s-adenosyl-l-methionine</token>
 		<token value="N[C@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" functionalIDs="26" defaultInID="1">s-adenosyl-d-methionine</token>
 
-		<token value="NCC[Se](=O)(=O)O" functionalIDs="7" defaultInID="1">selenotaurine</token>
-		<token value="NCC[Se](=O)(=O)O" functionalIDs="7" defaultInID="1">seleno-taurine</token>
+		<token value="NCC[Se](=O)(=O)O" functionalIDs="7" defaultInID="1">selenotaurine|seleno-taurine</token>
 		<token value="N(C(C)C(=O)O)CCS(=O)(=O)O" functionalIDs="6,12" defaultInID="1">tauropine</token>
 		<token value="N(CC(=O)O)C(CO)(CO)CO" functionalIDs="5" defaultInID="1">tricine</token>
-		<token value="NC(CC(=O)(O))CCCN" labels="/3/2/1///4/5/6/" functionalIDs="6">isolysine</token>
-		<token value="NC(CC(=O)(O))CCCN" labels="/3/2/1///4/5/6/" functionalIDs="6">beta-lysine</token>
-		<token value="O=C(O)[C@H](N[C@H](C(=O)O)CCCCN)C" functionalIDs="3">lysopine</token>
-		<token value="O=C(O)[C@H](N[C@H](C(=O)O)CCCCN)C" functionalIDs="3">d-lysopine</token>
+		<token value="NC(CC(=O)(O))CCCN" labels="/3/2/1///4/5/6/" functionalIDs="6">isolysine|beta-lysine</token>
+		<token value="O=C(O)[C@H](N[C@H](C(=O)O)CCCCN)C" functionalIDs="3">lysopine|d-lysopine</token>
 		<token value="O=C(NCCC(NCCS)=O)[C@H](O)C(C)(C)CO">pantetheine</token>
 		<token value="N[C@@H](CC(C)C)[C@@H](O)CC(O)=O" labels="/4/5/6///3//2/1//" defaultInID="1">statine</token>
 	</tokenList>

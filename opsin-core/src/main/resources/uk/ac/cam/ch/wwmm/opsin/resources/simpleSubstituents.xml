@@ -14,49 +14,26 @@
 		<token value="-C#C">acetenyl</token>
 		<token value="=[N+]([O-])O">aci-nitro</token>
 		<token value="-C(=O)C=C" labels="1//2/3" usableAsAJoiner="yes" defaultInLocant="3">acryl</token>
-		<token value="-CC(C)CC">active amyl</token>
-		<token value="-CC(C)CC">active-amyl</token>
-		<token value="-CC(C)CC">activeamyl</token>
+		<token value="-CC(C)CC">active amyl|active-amyl|activeamyl</token>
 		<token value="-C(=O)C(=O)N">amidoxalyl</token>
 		<token value="-[NH-]">amidyl</token>
 		<token value="=[N-]">amidylidene</token>
-		<token value="-ON" usableAsAJoiner="yes">aminoxy</token>
-		<token value="-ON" usableAsAJoiner="yes">aminoxyl</token>
+		<token value="-ON" usableAsAJoiner="yes">aminoxy|aminoxyl</token>
 		<token value="-N" usableAsAJoiner="yes">aminyl</token>
 		<token value="=N" usableAsAJoiner="yes">aminylidene</token>
 		<token value="#N">aminylidyne</token>
 		<token value="-OCCCCC" labels="/1/2/3/4/5">amoxy</token>
-		<token value="-CCCCC" labels="1/2/3/4/5">amyl</token>
-		<token value="-CCCCC" labels="1/2/3/4/5">normalamyl</token>
-		<token value="-CCCCC" labels="1/2/3/4/5">normal amyl</token>
-		<token value="-CCCCC" labels="1/2/3/4/5">normal-amyl</token>
+		<token value="-CCCCC" labels="1/2/3/4/5">amyl|normalamyl|normal amyl|normal-amyl</token>
 		<token value="=CCCCC" labels="1/2/3/4/5">amylidene</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
 		<token value="-c1c(OC)cc(OC)c(OC)c1">asaryl</token>
 		<token value="-N=[N+]=[N-]">azidyl</token>
-		<token value="-OCCC(C)C" labels="/1/2/3//">iso-amoxy</token>
-		<token value="-OCCC(C)C" labels="/1/2/3//">isoamoxy</token>
-		<token value="-CCC(C)C" labels="1/2/3//">iso-amyl</token>
-		<token value="-CCC(C)C" labels="1/2/3//">isoamyl</token>
-		<token value="=CCC(C)C" labels="1/2/3//">iso-amylidene</token>
-		<token value="=CCC(C)C" labels="1/2/3//">isoamylidene</token>
-		<token value="-CC(C)(C)C">neo-amyl</token>
-		<token value="-CC(C)(C)C">neoamyl</token>
-		<token value="-C(C)CCC">secamyl</token>
-		<token value="-C(C)CCC">sec.amyl</token>
-		<token value="-C(C)CCC">sec-amyl</token>
-		<token value="-C(C)CCC">sec.-amyl</token>
-		<token value="-C(C)CCC">secondaryamyl</token>
-		<token value="-C(C)CCC">secondary amyl</token>
-		<token value="-C(C)CCC">secondary-amyl</token>
-		<token value="-C(C)(C)CC">tertiaryamyl</token>
-		<token value="-C(C)(C)CC">tertiary amyl</token>
-		<token value="-C(C)(C)CC">tertiary-amyl</token>
-		<token value="-C(C)(C)CC">tert-amyl</token>
-		<token value="-C(C)(C)CC">tertamyl</token>
-		<token value="-C(C)(C)CC">tert.-amyl</token>
-		<token value="-C(C)(C)CC">tert.amyl</token>
-		<token value="-C(C)(C)CC">t-amyl</token>
+		<token value="-OCCC(C)C" labels="/1/2/3//">iso-amoxy|isoamoxy</token>
+		<token value="-CCC(C)C" labels="1/2/3//">iso-amyl|isoamyl</token>
+		<token value="=CCC(C)C" labels="1/2/3//">iso-amylidene|isoamylidene</token>
+		<token value="-CC(C)(C)C">neo-amyl|neoamyl</token>
+		<token value="-C(C)CCC">secamyl|sec.amyl|sec-amyl|sec.-amyl|secondaryamyl|secondary amyl|secondary-amyl</token>
+		<token value="-C(C)(C)CC">tertiaryamyl|tertiary amyl|tertiary-amyl|tert-amyl|tertamyl|tert.-amyl|tert.amyl|t-amyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilino</token>
 		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N defaultLocant 4" outIDs="9" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisidino</token>
 		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal</token>
@@ -74,83 +51,29 @@
 		<token value="-NC(=N)N" labels="N//N''/N'" usableAsAJoiner="yes" defaultInID="4">carbamimidamido</token>
 		<token value="-NNC(=O)N=N" labels="1/2/3//4/5">carbazono</token>
 		<token value="-N=NC(=O)N=N" labels="1/2/3//4/5">carbodiazono</token>
-		<token value="-NNC(=O)NN" labels="1/2/3//4/5">carbonohydrazido</token>
-		<token value="-NNC(=O)NN" labels="1/2/3//4/5">carbohydrazido</token>
-		<token value="-NNC(=O)NN" labels="1/2/3//4/5">carbazido</token>
+		<token value="-NNC(=O)NN" labels="1/2/3//4/5">carbonohydrazido|carbohydrazido|carbazido</token>
 		<token value="-C(=O)OC" labels="///1" usableAsAJoiner="yes" defaultInLocant="1">carbmethoxy</token><!--deprecated alternative to alkaneoxycarbonyl-->
 		<token value="-C(=O)OC" labels="///1" usableAsAJoiner="yes" defaultInLocant="1">carbomethoxy</token>
-		<token value="-C(=O)OCC" labels="///1/2" usableAsAJoiner="yes" defaultInLocant="2">carbethoxy</token>
-		<token value="-C(=O)OCC" labels="///1/2" usableAsAJoiner="yes" defaultInLocant="2">carboethoxy</token>
-		<token value="-C(=O)OCCC" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carbopropoxy</token>
-		<token value="-C(=O)OCCC" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carbpropoxy</token>
-		<token value="-C(=O)OCCCC" labels="///1/2/3/4" usableAsAJoiner="yes" defaultInLocant="4">carbobutoxy</token>
-		<token value="-C(=O)OCCCC" labels="///1/2/3/4" usableAsAJoiner="yes" defaultInLocant="4">carbbutoxy</token>
-		<token value="-C(=O)OCCCCC" labels="///1/2/3/4/5" usableAsAJoiner="yes" defaultInLocant="5">carbopentoxy</token>
-		<token value="-C(=O)OCCCCC" labels="///1/2/3/4/5" usableAsAJoiner="yes" defaultInLocant="5">carbpentoxy</token>
-		<token value="-C(=O)OCCCCCC" labels="///1/2/3/4/5/6" usableAsAJoiner="yes" defaultInLocant="6">carbohexoxy</token>
-		<token value="-C(=O)OCCCCCC" labels="///1/2/3/4/5/6" usableAsAJoiner="yes" defaultInLocant="6">carbhexoxy</token>
-		<token value="-C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" usableAsAJoiner="yes" defaultInLocant="7">carboheptoxy</token>
-		<token value="-C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" usableAsAJoiner="yes" defaultInLocant="7">carbheptoxy</token>
-		<token value="-C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" usableAsAJoiner="yes" defaultInLocant="8">carbooctoxy</token>
-		<token value="-C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" usableAsAJoiner="yes" defaultInLocant="8">carboctoxy</token>
-		<token value="-C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" usableAsAJoiner="yes" defaultInLocant="9">carbononoxy</token>
-		<token value="-C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" usableAsAJoiner="yes" defaultInLocant="9">carbnonoxy</token>
-		<token value="-C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" usableAsAJoiner="yes" defaultInLocant="10">carbodecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" usableAsAJoiner="yes" defaultInLocant="10">carbdecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" usableAsAJoiner="yes" defaultInLocant="11">carboundecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" usableAsAJoiner="yes" defaultInLocant="11">carbundecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" usableAsAJoiner="yes" defaultInLocant="12">carbododecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" usableAsAJoiner="yes" defaultInLocant="12">carbdodecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" usableAsAJoiner="yes" defaultInLocant="13">carbotridecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" usableAsAJoiner="yes" defaultInLocant="13">carbtridecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" usableAsAJoiner="yes" defaultInLocant="14">carbotetradecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" usableAsAJoiner="yes" defaultInLocant="14">carbtetradecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" usableAsAJoiner="yes" defaultInLocant="15">carbopentadecoxy</token>
-		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" usableAsAJoiner="yes" defaultInLocant="15">carbpentadecoxy</token>
-		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carballoxy</token>
-		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carboalloxy</token>
-		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carballyloxy</token>
-		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carboallyloxy</token>
-		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbbenzoxy</token>
-		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbobenzoxy</token>
-		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbbenzyloxy</token>
-		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbobenzyloxy</token>
-		<token value="-C(=O)OC(C)C">carbisopropoxy</token>
-		<token value="-C(=O)OC(C)C">carboisopropoxy</token>
-		<token value="-C(=O)OC(C)C">carb-i-propoxy</token>
-		<token value="-C(=O)OC(C)C">carbo-i-propoxy</token>
-		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbphenoxy</token>
-		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbophenoxy</token>
-		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbphenyloxy</token>
-		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbophenyloxy</token>
+		<token value="-C(=O)OCC" labels="///1/2" usableAsAJoiner="yes" defaultInLocant="2">carbethoxy|carboethoxy</token>
+		<token value="-C(=O)OCCC" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carbopropoxy|carbpropoxy</token>
+		<token value="-C(=O)OCCCC" labels="///1/2/3/4" usableAsAJoiner="yes" defaultInLocant="4">carbobutoxy|carbbutoxy</token>
+		<token value="-C(=O)OCCCCC" labels="///1/2/3/4/5" usableAsAJoiner="yes" defaultInLocant="5">carbopentoxy|carbpentoxy</token>
+		<token value="-C(=O)OCCCCCC" labels="///1/2/3/4/5/6" usableAsAJoiner="yes" defaultInLocant="6">carbohexoxy|carbhexoxy</token>
+		<token value="-C(=O)OCCCCCCC" labels="///1/2/3/4/5/6/7" usableAsAJoiner="yes" defaultInLocant="7">carboheptoxy|carbheptoxy</token>
+		<token value="-C(=O)OCCCCCCCC" labels="///1/2/3/4/5/6/7/8" usableAsAJoiner="yes" defaultInLocant="8">carbooctoxy|carboctoxy</token>
+		<token value="-C(=O)OCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9" usableAsAJoiner="yes" defaultInLocant="9">carbononoxy|carbnonoxy</token>
+		<token value="-C(=O)OCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10" usableAsAJoiner="yes" defaultInLocant="10">carbodecoxy|carbdecoxy</token>
+		<token value="-C(=O)OCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11" usableAsAJoiner="yes" defaultInLocant="11">carboundecoxy|carbundecoxy</token>
+		<token value="-C(=O)OCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12" usableAsAJoiner="yes" defaultInLocant="12">carbododecoxy|carbdodecoxy</token>
+		<token value="-C(=O)OCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13" usableAsAJoiner="yes" defaultInLocant="13">carbotridecoxy|carbtridecoxy</token>
+		<token value="-C(=O)OCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14" usableAsAJoiner="yes" defaultInLocant="14">carbotetradecoxy|carbtetradecoxy</token>
+		<token value="-C(=O)OCCCCCCCCCCCCCCC" labels="///1/2/3/4/5/6/7/8/9/10/11/12/13/14/15" usableAsAJoiner="yes" defaultInLocant="15">carbopentadecoxy|carbpentadecoxy</token>
+		<token value="-C(=O)OCC=C" labels="///1/2/3" usableAsAJoiner="yes" defaultInLocant="3">carballoxy|carboalloxy|carballyloxy|carboallyloxy</token>
+		<token value="-C(=O)OCc1ccccc1" labels="///alpha/1/2,ortho/3,meta/4,para/5/6">carbbenzoxy|carbobenzoxy|carbbenzyloxy|carbobenzyloxy</token>
+		<token value="-C(=O)OC(C)C">carbisopropoxy|carboisopropoxy|carb-i-propoxy|carbo-i-propoxy</token>
+		<token value="-C(=O)Oc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">carbphenoxy|carbophenoxy|carbphenyloxy|carbophenyloxy</token>
 		<token value="-C(=O)OC(C)(C)C">carbo-tertiarybutoxy</token><!-- ideally this should be done systematically-->
-		<token value="-C(=O)OC(C)(C)C">carbo-tertiary-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbo-tertbutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbo-tert.butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbo-tert-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbo-tert.-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbo-t-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-tertiarybutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-tertiary-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-tertbutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-tert.butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-tert-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-tert.-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carb-t-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbotertiarybutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbotertiary-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbotertbutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbotert.butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbotert-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbotert.-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbot-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbtertiarybutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbtertiary-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbtertbutoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbtert.butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbtert-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbtert.-butoxy</token>
-		<token value="-C(=O)OC(C)(C)C">carbt-butoxy</token>
+		<token value="-C(=O)OC(C)(C)C">carbo-tertiary-butoxy|carbo-tertbutoxy|carbo-tert.butoxy|carbo-tert-butoxy|carbo-tert.-butoxy|carbo-t-butoxy|carb-tertiarybutoxy|carb-tertiary-butoxy|carb-tertbutoxy|carb-tert.butoxy|carb-tert-butoxy|carb-tert.-butoxy|carb-t-butoxy|carbotertiarybutoxy|carbotertiary-butoxy|carbotertbutoxy|carbotert.butoxy|carbotert-butoxy|carbotert.-butoxy|carbot-butoxy|carbtertiarybutoxy|carbtertiary-butoxy|carbtertbutoxy|carbtert.butoxy|carbtert-butoxy|carbtert.-butoxy|carbt-butoxy</token>
 		<token value="-C(=O)OCc1ccccc1">cbz</token>
 		<token value="#C">carbyne</token>
 		<token value="-[CH2+]">carbynium</token>
@@ -160,19 +83,16 @@
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresyl</token>
 		<token value="-CC=CC" labels="1/2/3/4">crotyl</token>
 		<token value="-Cc1ccc(C(C)C)cc1">cuminyl</token>
-		<token value="=Cc1ccc(C(C)C)cc1">cuminylidene</token>
-		<token value="=Cc1ccc(C(C)C)cc1">cumal</token>
+		<token value="=Cc1ccc(C(C)C)cc1">cuminylidene|cumal</token>
 		<token value="-C(=O)c1ccc(C(C)C)cc1" labels="//1/2/3/4////5/6">cumoyl</token>
-		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cumyl</token>
-		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">alpha-cumyl</token>
+		<token value="-C(C)(C)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">cumyl|alpha-cumyl</token>
 		<token value="-NC#N">cyanamido</token>
 		<token value="-C#N">cyanyl</token>
 		<token value="-C1C=CC=C1" labels="1/2/3/4/5">cyclopentadienyl</token><!--PIN: meaning cyclopenta-2,4-dien-1-yl aka Cp-->
 		<token value="-S(=O)(=O)c1ccc(N=Nc2ccc(N(C)C)cc2)cc1">dabsyl</token>
 		<token value="-S(=O)(=O)c1cccc2c(N(C)C)cccc12">dansyl</token>
 		<token value="c1(ccccc1)C(=O)Cc2ccccc2" labels="1/2/3/4/5/6///alpha/1'/2'/3'/4'/5'/6'" outIDs="9">desyl</token>
-		<token value="-[2H]">deuterio</token>
-		<token value="-[2H]">deutero</token>
+		<token value="-[2H]">deuterio|deutero</token>
 		<token value="-[N+]#N">diazonio</token>
 		<token value="-c1c(C)c(C)cc(C)c1C">duryl</token>
 		<token value="-OCC" labels="/1/2" usableAsAJoiner="yes" defaultInLocant="2">ethoxyl</token>
@@ -194,8 +114,7 @@
 		<token value="-[TeH]">hydrotelluro</token>
 		<token value="-[TeH](=O)">hydrotellurinyl</token>
 		<token value="-[TeH](=O)(=O)">hydrotelluronyl</token>
-		<token value="-OCC(C)C">isobutoxyl</token>
-		<token value="-OCC(C)C">iso-butoxyl</token>
+		<token value="-OCC(C)C">isobutoxyl|iso-butoxyl</token>
 		<token value="-C=C(C)C">isocrotyl</token>
 		<token value="-NNC(O)=NN" labels="1/2//3/4/5">isocarbonohydrazido</token>
 		<token value="-[N+]#[C-]">isocyanyl</token>
@@ -230,8 +149,7 @@
 		<token value="=[SH4]" usableAsAJoiner="yes">persulfuranylidene</token>
 		<token value="CCOc1ccccc1" labels="beta/alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N defaultLocant 4" outIDs="10" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetidino</token>
 		<token value="-c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="OCC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">phenetyl</token>
-		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">phenoxy</token>
-		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">phenoxyl</token>
+		<token value="-Oc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">phenoxy|phenoxyl</token>
 		<token value="-c1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="1/2,ortho////3,meta/4,para////5/6///">picryl</token>
 		<token value="-C(C)C(C)(C)C">pinacolyl</token>
 		<token value="-N1CCNCC1" labels="1/2,ortho/3,meta/4,para/5/6">piperazino</token>
@@ -244,14 +162,8 @@
 		<token value="-c1c(C)cc(C)c(C)c1">s-pseudocumyl</token>
 		<token value="-N1CCCC1" labels="1/2/3/4/5">pyrrolidino</token>
 		<token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6">salicylal</token>
-		<token value="-C(C)C(C)C">sec-iso-amyl</token>
-		<token value="-C(C)C(C)C">sec.-iso-amyl</token>
-		<token value="-C(C)C(C)C">sec-isoamyl</token>
-		<token value="-C(C)C(C)C">sec.-isoamyl</token>
-		<token value="-C(C)C(C)C">secisoamyl</token>
-		<token value="-OC(C)CC">sec-butoxyl</token>
-		<token value="-OC(C)CC">sec.-butoxyl</token>
-		<token value="-OC(C)CC">secbutoxyl</token>
+		<token value="-C(C)C(C)C">sec-iso-amyl|sec.-iso-amyl|sec-isoamyl|sec.-isoamyl|secisoamyl</token>
+		<token value="-OC(C)CC">sec-butoxyl|sec.-butoxyl|secbutoxyl</token>
 		<token value="-[Se](O)">seleneno</token>
 		<token value="-[Se](=O)(O)">selenino</token>
 		<token value="-[Se](=O)(=O)(O)">selenono</token>
@@ -271,14 +183,7 @@
 		<token value="-[Te](=O)(O)">tellurino</token>
 		<token value="-[Te](=O)(=O)(O)">tellurono</token>
 		<token value="-[TeH]">telluryl</token>
-		<token value="-OC(C)(C)C">tertiary-butoxyl</token>
-		<token value="-OC(C)(C)C">tertiarybutoxyl</token>
-		<token value="-OC(C)(C)C">tert-butoxyl</token>
-		<token value="-OC(C)(C)C">tertbutoxyl</token>
-		<token value="-OC(C)(C)C">tert.-butoxyl</token>
-		<token value="-OC(C)(C)C">tert.butoxyl</token>
-		<token value="-OC(C)(C)C">t-butoxyl</token>
-		<token value="-OC(C)(C)C">tbutoxyl</token>
+		<token value="-OC(C)(C)C">tertiary-butoxyl|tertiarybutoxyl|tert-butoxyl|tertbutoxyl|tert.-butoxyl|tert.butoxyl|t-butoxyl|tbutoxyl</token>
 		<token value="-Cc1cccs1" labels="alpha/2/3/4/5/1">then-2-yl</token>
 		<token value="=Cc1cccs1" labels="alpha/2/3/4/5/1">then-2-ylidene</token>
 		<token value="#Cc1cccs1" labels="alpha/2/3/4/5/1">then-2-ylidyne</token>
@@ -354,21 +259,13 @@
 		<token value="-N=C=[Se]">isoselenocyano</token><!--deprecated-->
 		<token value="-N=C=[Te]">isotellurocyano</token><!--deprecated-->
 		<token value="-N=C=S">isothiocyano</token><!--deprecated-->
-		<token value="-O">hydroxy</token>
-		<token value="-O">hydroxyl</token>
-		<token value="-OO">hydroperoxy</token>
-		<token value="-OO">hydroperoxyl</token>
-		<token value="-OO">hydrogenperoxyl</token>
-		<token value="-OO">perhydroxyl</token>
+		<token value="-O">hydroxy|hydroxyl</token>
+		<token value="-OO">hydroperoxy|hydroperoxyl|hydrogenperoxyl|perhydroxyl</token>
 		<token value="-O" usableAsAJoiner="yes">oxyl</token>
-		<token value="-OO" usableAsAJoiner="yes">peroxyl</token>
-		<token value="-OO" usableAsAJoiner="yes">dioxyl</token>
+		<token value="-OO" usableAsAJoiner="yes">peroxyl|dioxyl</token>
 
-		<token value="=O">oxo</token>
-		<token value="=O">keto</token>
-		<token value="-S" usableAsAJoiner="yes">mercapto</token>
-		<token value="-S" usableAsAJoiner="yes">sulfhydryl</token>
-		<token value="-S" usableAsAJoiner="yes">sulfydryl</token>
+		<token value="=O">oxo|keto</token>
+		<token value="-S" usableAsAJoiner="yes">mercapto|sulfhydryl|sulfydryl</token>
 		<token value="=S">thioxo</token>
 		<token value="=S">thiono</token><!--deprecated-->
 		<token value="=[Se]">selenoxo</token>
@@ -386,8 +283,7 @@
 		<token value="-[As|5](=O)([O-])[O-]">arsonato</token>
 		<token value="-[As|5](=O)=O">arso</token>
 		<token value="-[As|5]=N">arsinimyl</token>
-		<token value="-[As]=O">arsoroso</token>
-		<token value="-[As]=O">arsenoso</token>
+		<token value="-[As]=O">arsoroso|arsenoso</token>
 		<token value="-[AsH2]" usableAsAJoiner="yes">arsino</token>
 		<token value="-[As|5]=O" usableAsAJoiner="yes">arsinyl</token>
 		<token value="=[As|5]=O" usableAsAJoiner="yes">arsinylidene</token>
@@ -412,8 +308,7 @@
 		<token value="-N=O">nitroso</token>
 		<token value="-C(=O)O">carboxy</token>
 		<token value="-C(=O)[O-]">carboxylato</token>
-		<token value="-C(N)=N" usableAsAJoiner="yes" defaultInID="2">amidino</token>
-		<token value="-C(N)=N" usableAsAJoiner="yes" defaultInID="2">guanyl</token>
+		<token value="-C(N)=N" usableAsAJoiner="yes" defaultInID="2">amidino|guanyl</token>
 
 		<token value="-C(=O)C(=O)O">oxalo</token>
 		<token value="-C(=O)C(=O)OC">methoxalyl</token>
@@ -424,54 +319,10 @@
 		<token value="-[Si](C)(C)C(C)(C)C">tbdms</token>
 		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tbdps</token>
 		<!--currently these terms are not implicitly bracketed correctly-->
-		<token value="-O[Si](C)(C)C(C)(C)C">t-butyl(dimethyl)silanoxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">t-butyl(dimethyl)siloxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">t-butyl-dimethylsilanoxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">t-butyl-dimethylsiloxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">t-butyldimethylsilanoxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">t-butyldimethylsiloxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyl(dimethyl)silanoxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyl(dimethyl)siloxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyl-dimethylsilanoxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyl-dimethylsiloxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyldimethylsilanoxy</token>
-		<token value="-O[Si](C)(C)C(C)(C)C">tert-butyldimethylsiloxy</token>
-		<token value="-[Si](C)(C)C(C)(C)C">t-butyl(dimethyl)silanyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">t-butyl(dimethyl)silyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">t-butyl-dimethylsilanyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">t-butyl-dimethylsilyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">t-butyldimethylsilanyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">t-butyldimethylsilyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">tert-butyl(dimethyl)silanyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">tert-butyl(dimethyl)silyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">tert-butyl-dimethylsilanyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">tert-butyl-dimethylsilyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">tert-butyldimethylsilanyl</token>
-		<token value="-[Si](C)(C)C(C)(C)C">tert-butyldimethylsilyl</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl(diphenyl)silanoxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl(diphenyl)siloxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl-diphenylsilanoxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl-diphenylsiloxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyldiphenylsilanoxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyldiphenylsiloxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl(diphenyl)silanoxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl(diphenyl)siloxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl-diphenylsilanoxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl-diphenylsiloxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyldiphenylsilanoxy</token>
-		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyldiphenylsiloxy</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl(diphenyl)silanyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl(diphenyl)silyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl-diphenylsilanyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl-diphenylsilyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyldiphenylsilanyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyldiphenylsilyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl(diphenyl)silanyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl(diphenyl)silyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl-diphenylsilanyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyl-diphenylsilyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyldiphenylsilanyl</token>
-		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">tert-butyldiphenylsilyl</token>
+		<token value="-O[Si](C)(C)C(C)(C)C">t-butyl(dimethyl)silanoxy|t-butyl(dimethyl)siloxy|t-butyl-dimethylsilanoxy|t-butyl-dimethylsiloxy|t-butyldimethylsilanoxy|t-butyldimethylsiloxy|tert-butyl(dimethyl)silanoxy|tert-butyl(dimethyl)siloxy|tert-butyl-dimethylsilanoxy|tert-butyl-dimethylsiloxy|tert-butyldimethylsilanoxy|tert-butyldimethylsiloxy</token>
+		<token value="-[Si](C)(C)C(C)(C)C">t-butyl(dimethyl)silanyl|t-butyl(dimethyl)silyl|t-butyl-dimethylsilanyl|t-butyl-dimethylsilyl|t-butyldimethylsilanyl|t-butyldimethylsilyl|tert-butyl(dimethyl)silanyl|tert-butyl(dimethyl)silyl|tert-butyl-dimethylsilanyl|tert-butyl-dimethylsilyl|tert-butyldimethylsilanyl|tert-butyldimethylsilyl</token>
+		<token value="-O[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl(diphenyl)silanoxy|t-butyl(diphenyl)siloxy|t-butyl-diphenylsilanoxy|t-butyl-diphenylsiloxy|t-butyldiphenylsilanoxy|t-butyldiphenylsiloxy|tert-butyl(diphenyl)silanoxy|tert-butyl(diphenyl)siloxy|tert-butyl-diphenylsilanoxy|tert-butyl-diphenylsiloxy|tert-butyldiphenylsilanoxy|tert-butyldiphenylsiloxy</token>
+		<token value="-[Si](c1ccccc1)(c1ccccc1)C(C)(C)C">t-butyl(diphenyl)silanyl|t-butyl(diphenyl)silyl|t-butyl-diphenylsilanyl|t-butyl-diphenylsilyl|t-butyldiphenylsilanyl|t-butyldiphenylsilyl|tert-butyl(diphenyl)silanyl|tert-butyl(diphenyl)silyl|tert-butyl-diphenylsilanyl|tert-butyl-diphenylsilyl|tert-butyldiphenylsilanyl|tert-butyldiphenylsilyl</token>
 
 		<token value="-[Ac]">actinio</token>
 		<token value="-[Al]">aluminio</token>
@@ -537,8 +388,7 @@
 		<token value="-[Pt]">platinio</token>
 		<token value="-[Pu]">plutonio</token>
 		<token value="-[Po]" usableAsAJoiner="yes">polonio</token>
-		<token value="-[K]">potassio</token>
-		<token value="-[K]">kalio</token>
+		<token value="-[K]">potassio|kalio</token>
 		<token value="-[Pr]">praseodymio</token>
 		<token value="-[Pm]">promethio</token>
 		<token value="-[Pa]">protactinio</token>
@@ -553,8 +403,7 @@
 		<token value="-[Se]" usableAsAJoiner="yes">selenio</token>
 		<token value="-[Si]">silicio</token>
 		<token value="-[Ag]">argentio</token>
-		<token value="-[Na]">sodio</token>
-		<token value="-[Na]">natrio</token>
+		<token value="-[Na]">sodio|natrio</token>
 		<token value="-[Sr]" usableAsAJoiner="yes">strontio</token>
 		<token value="-[S]" usableAsAJoiner="yes">sulfurio</token>
 		<token value="-[Ta]">tantalio</token>
@@ -566,8 +415,7 @@
 		<token value="-[Tm]">thulio</token>
 		<token value="-[Sn]">stannio</token>
 		<token value="-[Ti]">titanio</token>
-		<token value="-[W]">tungstenio</token>
-		<token value="-[W]">wolframio</token>
+		<token value="-[W]">tungstenio|wolframio</token>
 		<token value="-[U]">uranio</token>
 		<token value="-[V]">vanadio</token>
 		<token value="-[Xe]">xenonio</token>
@@ -600,9 +448,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'//////1/2//3/4//5/6///" outIDs="9">5'-orotidylyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)c2c[nH]c(=O)[nH]c2(=O)" labels="1'/2'//3'//4'/5'//////5/6/1/2//3/4/" outIDs="9">5'-pseudouridylyl</token>
 
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" outIDs="7">5'-adenosyl</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" outIDs="7">5'-deoxy-5'-adenosyl</token>
-		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" outIDs="7">adenosyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6/N/1/2/3/4" outIDs="7">5'-adenosyl|5'-deoxy-5'-adenosyl|adenosyl</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](C)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'//1/2//3/4//5/alpha/6" outIDs="6">5'-thymidyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6//1/2//3/4" outIDs="7">5'-guanosyl</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](C)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'//9/8/7/5/6//1/2/3/4" outIDs="7">5'-inosyl</token>
@@ -663,8 +509,7 @@
 		<token value="-[Br|1]">perbromo</token>
 		<token value="-[Cl|1]">perchloro</token>
 		<token value="-[I|1]">periodo</token>
-		<token value="-[2H]">perdeuterio</token>
-		<token value="-[2H]">perdeutero</token>
+		<token value="-[2H]">perdeuterio|perdeutero</token>
 		<token value="-[3H]">pertritio</token>
 	</tokenList>
 </tokenLists>

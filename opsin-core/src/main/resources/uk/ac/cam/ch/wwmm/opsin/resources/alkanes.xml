@@ -25,9 +25,7 @@
 	</tokenList>
 	<tokenList tagname="alkaneStemComponent" symbol="Ð"><!--tens-->
 		<token value="10">dec</token>
-		<token value="20">cos</token>
-		<token value="20">icos</token>
-		<token value="20">eicos</token>
+		<token value="20">cos|icos|eicos</token>
 		<token value="30">triacont</token>
 		<token value="30">tricont</token><!--triacont preferred-->
 		<token value="40">tetracont</token>
@@ -62,27 +60,10 @@
 	</tokenList>
 	<!--note that n-,i-,s- are case sensitive due to potential confusion with nitrogen/iodine/sulfur respectively and hence are matched by a regex-->
 	<tokenList tagname="alkaneStemModifier" symbol="n">
-		<token value="normal">normal</token>
-		<token value="normal">normal </token>
-		<token value="normal">normal-</token>
-		<token value="tert">tertiary</token>
-		<token value="tert">tertiary </token>
-		<token value="tert">tertiary-</token>
-		<token value="tert">tert</token>
-		<token value="tert">tert.</token>
-		<token value="tert">tert-</token>
-		<token value="tert">tert.-</token>
-		<token value="tert">t-</token>
-		<token value="iso">iso</token>
-		<token value="iso">iso-</token>
-		<token value="sec">sec</token>
-		<token value="sec">sec.</token>
-		<token value="sec">sec-</token>
-		<token value="sec">sec.-</token>
-		<token value="sec">secondary</token>
-		<token value="sec">secondary </token>
-		<token value="sec">secondary-</token>
-		<token value="neo">neo</token>
-		<token value="neo">neo-</token>
+		<token value="normal">normal|normal |normal-</token>
+		<token value="tert">tertiary|tertiary |tertiary-|tert|tert.|tert-|tert.-|t-</token>
+		<token value="iso">iso|iso-</token>
+		<token value="sec">sec|sec.|sec-|sec.-|secondary|secondary |secondary-</token>
+		<token value="neo">neo|neo-</token>
 	</tokenList>
 </tokenLists>

@@ -8,17 +8,13 @@
 		<token value="C1CC1" labels="numeric">iridin</token>
 
 		<token value="c1ccc1" labels="numeric">et</token>
-		<token value="C1CCC1" labels="numeric">etan</token>
-		<token value="C1CCC1" labels="numeric">etidin</token>
-		<token value="C1CCC1" labels="numeric" addBond="2">etin</token>
-		<token value="C1CCC1" labels="numeric" addBond="2">eten</token>
+		<token value="C1CCC1" labels="numeric">etan|etidin</token>
+		<token value="C1CCC1" labels="numeric" addBond="2">etin|eten</token>
 
 		<token value="c1cccc1" labels="numeric">ol</token>
-		<token value="C1CCCC1" labels="numeric">olan</token>
-		<token value="C1CCCC1" labels="numeric">olidin</token>
+		<token value="C1CCCC1" labels="numeric">olan|olidin</token>
 		<token value="C1CCCC1" labels="numeric">olid</token><!--incorrect but avoids [ol, id] tokenisation-->
-		<token value="C1CCCC1" labels="numeric" addBond="2">olin</token>
-		<token value="C1CCCC1" labels="numeric" addBond="2">olen</token>
+		<token value="C1CCCC1" labels="numeric" addBond="2">olin|olen</token>
 
 		<token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6">inan</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">inin</token>
@@ -45,8 +41,7 @@
 		<token value="c1cccccccccccccccc1" labels="numeric">cycloheptadecin</token>
 		<token value="c1ccccccccccccccccc1" labels="numeric">cyclooctadecin</token>
 		<token value="c1cccccccccccccccccc1" labels="numeric">cyclononadecin</token>
-		<token value="c1ccccccccccccccccccc1" labels="numeric">cycloeicosin</token>
-		<token value="c1ccccccccccccccccccc1" labels="numeric">cycloicosin</token>
+		<token value="c1ccccccccccccccccccc1" labels="numeric">cycloeicosin|cycloicosin</token>
 		<token value="c1cccccccccccccccccccc1" labels="numeric">cyclohenicosin</token>
 		<token value="c1ccccccccccccccccccccc1" labels="numeric">cyclodocosin</token>
 		<token value="c1cccccccccccccccccccccc1" labels="numeric">cyclotricosin</token>

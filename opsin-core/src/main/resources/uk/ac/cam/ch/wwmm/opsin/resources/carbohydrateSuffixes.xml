@@ -2,8 +2,7 @@
 <tokenLists>
 <!--Indicates a glycoside linkage, maybe be used in conjunction with further suffixes-->
 	<tokenList tagname="suffix" type="root" subType="terminal" symbol="ê">
-		<token value="glycoside">ide</token>
-		<token value="glycoside">id</token>
+		<token value="glycoside">ide|id</token>
 	</tokenList>
 
 <!--cyclic carbohydrate acid suffixes-->
@@ -15,32 +14,26 @@
 		<token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
 		<token value="osonamide" locant="1">onamide</token>
 		<token value="osonate" locant="1">onate</token>
-		<token value="osonic acid" locant="1">onic acid</token>
-		<token value="osonic acid" locant="1">onicacid</token>
+		<token value="osonic acid" locant="1">onic acid|onicacid</token>
 		<token value="osononitrile" locant="1">ononitrile</token>
 	</tokenList>
 
 <!--default suffix, does not effect structure but required in names-->
 	<tokenList tagname="suffix" type="root" symbol="ð" ignoreWhenWritingXML="yes">
-		<token value="ose">ose</token>
-		<token value="ose">os</token>
+		<token value="ose">ose|os</token>
 	</tokenList>
 
 <!--acyclic carbohydrate acid suffixes-->
 	<tokenList tagname="suffix" type="root" symbol="í">
-		<token value="arate">arate</token>
-		<token value="arate">arate(2-)</token>
-		<token value="aric acid">aric acid</token>
-		<token value="aric acid">aricacid</token>
+		<token value="arate">arate|arate(2-)</token>
+		<token value="aric acid">aric acid|aricacid</token>
 		<token value="onamide" locant="1">onamide</token>
 		<token value="onate" locant="1">onate</token>
-		<token value="onic acid" locant="1">onic acid</token>
-		<token value="onic acid" locant="1">onicacid</token>
+		<token value="onic acid" locant="1">onic acid|onicacid</token>
 		<token value="ononitrile" locant="1">ononitrile</token>
 		<token value="osonamide" locant="1">osonamide</token>
 		<token value="osonate" locant="1">osonate</token>
-		<token value="osonic acid" locant="1">osonic acid</token>
-		<token value="osonic acid" locant="1">osonicacid</token>
+		<token value="osonic acid" locant="1">osonic acid|osonicacid</token>
 		<token value="osononitrile" locant="1">osononitrile</token>
 		<token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
 		<token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->

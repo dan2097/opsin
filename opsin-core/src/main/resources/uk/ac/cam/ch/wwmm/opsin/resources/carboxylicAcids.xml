@@ -6,8 +6,7 @@
 	<tokenList tagname="group" type="acidStem" subType="ylForAcyl" symbol="d">
 		<token value="C" labels="1" usableAsAJoiner="yes">form</token>
 		<token value="CC" labels="1/2,omega" usableAsAJoiner="yes">acet</token>
-		<token value="CCC" labels="1/2/3" usableAsAJoiner="yes">propion</token>
-		<token value="CCC" labels="1/2/3" usableAsAJoiner="yes">propi</token>
+		<token value="CCC" labels="1/2/3" usableAsAJoiner="yes">propion|propi</token>
 		<token value="CCCC" labels="1/2/3/4" usableAsAJoiner="yes">butyr</token>
 		<token value="CC(C)C" labels="1/2/3,beta/">isobutyr</token>
 		<token value="CCCCC" labels="1/2/3/4/5" usableAsAJoiner="yes">valer</token>
@@ -19,36 +18,25 @@
 
 		<token value="CCC(=O)C" labels="1/2/3//4" defaultInLocant="4" usableAsAJoiner="yes">acetoacet</token>
 		<token value="CC(O)(C)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6">atrolact</token>
-		<token value="CCCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12">biotin</token>
-		<token value="CCCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12">d-biotin</token>
+		<token value="CCCCC[C@@H]1SC[C@@H]2NC(=O)N[C@H]12">biotin|d-biotin</token>
 		<token value="CCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">caprin</token>
 		<token value="CCCCCC" labels="numeric" usableAsAJoiner="yes">capro</token>
 		<token value="CCCCCCCC" labels="numeric" usableAsAJoiner="yes">capryl</token>
 		<token value="CCCCCCC" labels="numeric" usableAsAJoiner="yes">enanth</token>
 		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2cnc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">fol</token><!--foloyl is unknown-->
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">dihydrofol</token>
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">7,8-dihydrofol</token>
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">tetrahydrofol</token>
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">5,6,7,8-tetrahydrofol</token>
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">5,10-methenyl-5,6,7,8-tetrahydrofol</token>
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">5,10-methenyltetrahydrofol</token>
-		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">5,10-methenyl-tetrahydrofol</token>
+		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">dihydrofol|7,8-dihydrofol</token>
+		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="//////////1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">tetrahydrofol|5,6,7,8-tetrahydrofol</token>
+		<token value="CCC[C@@H](C(=O)O)NC(=O)c1ccc(N(C=4)CC2CNc3nc(N)[nH]c(=O)c3[N+]42)cc1" labels="//////////1'/2'/3'/4'/10//9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">5,10-methenyl-5,6,7,8-tetrahydrofol|5,10-methenyltetrahydrofol|5,10-methenyl-tetrahydrofol</token>
 		<token value="CCCC(C)C" labels="1/2/3/4/5/">isocapro</token>
 		<token value="CC(C)C" labels="1/2,alpha//3" suffixAppliesTo="1,4">isosuccin</token>
-		<token value="CC(O)C" labels="1/2//3">lact</token>
-		<token value="CC(O)C" labels="1/2//3">dl-lact</token>
-		<token value="C[C@@H](O)C" labels="1/2//3">l-lact</token>
-		<token value="C[C@@H](O)C" labels="1/2//3">l(+)-lact</token>
-		<token value="C[C@@H](O)C" labels="1/2//3">l-(+)-lact</token>
-		<token value="C[C@H](O)C" labels="1/2//3">d-lact</token>
-		<token value="C[C@H](O)C" labels="1/2//3">d(-)-lact</token>
-		<token value="C[C@H](O)C" labels="1/2//3">d-(-)-lact</token>
+		<token value="CC(O)C" labels="1/2//3">lact|dl-lact</token>
+		<token value="C[C@@H](O)C" labels="1/2//3">l-lact|l(+)-lact|l-(+)-lact</token>
+		<token value="C[C@H](O)C" labels="1/2//3">d-lact|d(-)-lact|d-(-)-lact</token>
 		<token value="CC(=O)C" labels="1/2//3" suffixAppliesTo="1,4">mesoxal</token>
 		<token value="S(=O)c1ccc(N)c2ccccc12" labels="//1/2/3/4//4a/5/6/7/8/8a">naphthion</token>
 		<token value="Cc1cc(=O)[nH]c(=O)[nH]1" labels="/4/5/6//1/2//3">orot</token>
 		<token value="CCC(=O)C" labels="1/2/3//4" suffixAppliesTo="1,5">oxalacet</token>
-		<token value="CCCCCCCCC" labels="numeric" usableAsAJoiner="yes">pelargon</token>
-		<token value="CCCCCCCCC" labels="numeric" usableAsAJoiner="yes">pelarg</token>
+		<token value="CCCCCCCCC" labels="numeric" usableAsAJoiner="yes">pelargon|pelarg</token>
 		<token value="CC(S)C(S)C" labels="1/2,alpha//3,beta,alpha'//4" suffixAppliesTo="1,6">dimercaptosuccin</token>
 		<token value="CC#CC" labels="1/2/3/4">tetrol</token>
 	</tokenList>
@@ -59,8 +47,7 @@
 		<token value="CCCCCC" labels="1/2,alpha/3,beta/4,gamma,beta'/5,delta,alpha'/6" suffixAppliesTo="1,6">adip</token>
 		<token value="CCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta,beta'/6,epsilon,alpha'/7" suffixAppliesTo="1,7">pimel</token>
 		<token value="CCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon,beta'/7,zeta,alpha'/8" suffixAppliesTo="1,8">suber</token>
-		<token value="CCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta,beta'/8,alpha'/9" suffixAppliesTo="1,9">azela</token>
-		<token value="CCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta,beta'/8,alpha'/9" suffixAppliesTo="1,9">azel</token>
+		<token value="CCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta,beta'/8,alpha'/9" suffixAppliesTo="1,9">azela|azel</token>
 		<token value="CCCCCCCCCC" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8,beta'/9,alpha'/10" suffixAppliesTo="1,10">sebac</token>
 		<token value="CC=C" labels="1/2/3" usableAsAJoiner="yes">acryl</token>
 		<token value="CC(=C)C" labels="1/2/3/">methacryl</token>
@@ -82,57 +69,33 @@
 		<token value="CCCCCCCCCCCCC" labels="numeric" suffixAppliesTo="1,13">brassyl</token>
 		<token value="CCC(C)(O)C" labels="1/2/3///4" suffixAppliesTo="1,6">citramal</token><!--coA yl only-->
 		<token value="c1ccccc1" labels="1/2/3/4/5/6" addGroup="O defaultLocant 2;C defaultLocant 3" frontLocantsExpected="1,2,3,4,5,6">cresot</token>
-		<token value="c1c(O)c(C)ccc1">o-cresot</token>
-		<token value="c1c(O)c(C)ccc1">ortho-cresot</token>
-		<token value="c1c(O)c(C)ccc1">o-cresotin</token>
-		<token value="c1c(O)c(C)ccc1">ortho-cresotin</token>
-		<token value="c1c(O)cc(C)cc1">m-cresot</token>
-		<token value="c1c(O)cc(C)cc1">meta-cresot</token>
-		<token value="c1c(O)cc(C)cc1">m-cresotin</token>
-		<token value="c1c(O)cc(C)cc1">meta-cresotin</token>
-		<token value="c1c(O)ccc(C)c1">p-cresot</token>
-		<token value="c1c(O)ccc(C)c1">para-cresot</token>
-		<token value="c1c(O)ccc(C)c1">p-cresotin</token>
-		<token value="c1c(O)ccc(C)c1">para-cresotin</token>
+		<token value="c1c(O)c(C)ccc1">o-cresot|ortho-cresot|o-cresotin|ortho-cresotin</token>
+		<token value="c1c(O)cc(C)cc1">m-cresot|meta-cresot|m-cresotin|meta-cresotin</token>
+		<token value="c1c(O)ccc(C)c1">p-cresot|para-cresot|p-cresotin|para-cresotin</token>
 		<token value="Cc1c(C)c(C)cc(C)c1" labels="/1/2//3//4/5//6">gamma-isoduryl</token>
 		<token value="CC=CCC" labels="1/2/3/4/5" suffixAppliesTo="1,5">glutacon</token><!--coA yl only-->
 		<token value="CCO" labels="1/2/">glycol</token>
 		<token value="CCOCC" suffixAppliesTo="1,5">diglycol</token>
-		<token value="CC=O" labels="1/2/">glyoxyl</token>
-		<token value="CC=O" labels="1/2/">glyoxal</token>
+		<token value="CC=O" labels="1/2/">glyoxyl|glyoxal</token>
 		<token value="CCNC(=O)c1ccccc1" labels="/////1/2,ortho/3,meta/4,para/5/6">hippur</token>
 		<token value="CCCO" labels="1/2/3/">hydracryl</token>
 		<token value="N1CCC(C)CC1" labels="1/2/3/4//5/6" suffixAppliesTo="5">isonipecot</token>
 		<token value="n1c(C)ccc(C)c1" labels="1/2//3/4/5//6" suffixAppliesTo="3,7">isocinchomeron</token>
 		<token value="CC(=C)CC" suffixAppliesTo="1,5">itacon</token>
-		<token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">mal</token>
-		<token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">dl-mal</token>
-		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l-mal</token>
-		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l(+)-mal</token>
-		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l-(+)-mal</token>
-		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d-mal</token>
-		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d(-)-mal</token>
-		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d-(-)-mal</token>
+		<token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">mal|dl-mal</token>
+		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l-mal|l(+)-mal|l-(+)-mal</token>
+		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d-mal|d(-)-mal|d-(-)-mal</token>
 		<token value="C/C=C\C" labels="1/2,alpha/3,beta,alpha'/4" suffixAppliesTo="1,4">malein</token>
-		<token value="CC(O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">mandel</token>
-		<token value="CC(O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">dl-mandel</token>
-		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l-mandel</token>
-		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l(+)-mandel</token>
-		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l-(+)-mandel</token>
-		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d-mandel</token>
-		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d(-)-mandel</token>
-		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d-(-)-mandel</token>
+		<token value="CC(O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">mandel|dl-mandel</token>
+		<token value="C[C@@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">l-mandel|l(+)-mandel|l-(+)-mandel</token>
+		<token value="C[C@H](O)c1ccccc1" labels="/alpha//1/2,ortho/3,meta/4,para/5/6">d-mandel|d(-)-mandel|d-(-)-mandel</token>
 		<token value="CC(S)CC" suffixAppliesTo="1,5" labels="1/2//3/4">thiomal</token>
 		<token value="C/C=C/C=C/C" suffixAppliesTo="1,6" labels="numeric">mucon</token>
 		<token value="N1CC(C)CCC1" labels="1/2/3//4/5/6" suffixAppliesTo="4">nipecot</token>
-		<token value="Cc1c(O)cc(O)cc1C" labels="/1/2//3/4//5/6/">orsellin</token>
-		<token value="Cc1c(O)cc(O)cc1C" labels="/1/2//3/4//5/6/">o-orsellin</token>
-		<token value="Cc1c(O)cc(O)cc1C" labels="/1/2//3/4//5/6/">ortho-orsellin</token>
-		<token value="Cc1c(O)cc(C)cc1O" labels="/1/2,ortho//3,meta/4,para//5/6/">p-orsellin</token>
-		<token value="Cc1c(O)cc(C)cc1O" labels="/1/2,ortho//3,meta/4,para//5/6/">para-orsellin</token>
+		<token value="Cc1c(O)cc(O)cc1C" labels="/1/2//3/4//5/6/">orsellin|o-orsellin|ortho-orsellin</token>
+		<token value="Cc1c(O)cc(C)cc1O" labels="/1/2,ortho//3,meta/4,para//5/6/">p-orsellin|para-orsellin</token>
 		<token value="CC(=O)Nc1ccccc1" labels="1/2///1/2/3/4/5/6">oxanil</token>
-		<token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" suffixAppliesTo="3">pipecolin</token>
-		<token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" suffixAppliesTo="3">pipecol</token>
+		<token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" suffixAppliesTo="3">pipecolin|pipecol</token>
 		<token value="CC(=O)C" labels="1/2//3">pyruv</token>
 		<token value="S(=O)c1ccccc1" labels="//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">sulfanil</token>
 		<token value="CCS" labels="1/2/">thioglycol</token>
@@ -160,9 +123,7 @@
 		<token value="c1cccs1" labels="2/3/4/5/1" addGroup="C locant 2 alpha" frontLocantsExpected="2,3" suffixAppliesTo="6">then</token>
 
 		<token value="Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anis</token>
-		<token value="CCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">arachid</token>
-		<token value="CCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">arachidyl</token>
-		<token value="CCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">arach</token>
+		<token value="CCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">arachid|arachidyl|arach</token>
 		<token value="CCCC/C=C\C/C=C\C/C=C\C/C=C\CCCCC" labels="numeric" usableAsAJoiner="yes">arachidon</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">behen</token>
 		<token value="CCCCCCCCCCCCC#CCCCCCCCC" labels="numeric" usableAsAJoiner="yes">behenol</token>
@@ -204,35 +165,25 @@
 		<token value="CCCc1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6">dihydrocinnam</token>
 		<token value="CCCc1cc(OC)c(O)cc1" labels="/alpha/beta/1/2/3///4//5/6">dihydroferul</token>
 		<token value="CCCc1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">dihydroisoferul</token>
-		<token value="C/C=C/c1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">isoferul</token>
-		<token value="C/C=C/c1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">iso-ferul</token>
-		<token value="CCCCCCCCCCCCCCCC(C)C" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/omega/omega'">isostear</token>
-		<token value="CCCCCCCCCCCCCCCC(C)C" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/omega/omega'">iso-stear</token>
-		<token value="Cc1cc(O)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">isovanill</token>
-		<token value="Cc1cc(O)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">iso-vanill</token>
+		<token value="C/C=C/c1cc(O)c(OC)cc1" labels="/alpha/beta/1/2/3//4///5/6">isoferul|iso-ferul</token>
+		<token value="CCCCCCCCCCCCCCCC(C)C" labels="1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/omega/omega'">isostear|iso-stear</token>
+		<token value="Cc1cc(O)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">isovanill|iso-vanill</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">laccer</token>
 <!--Lauroleic acid is intentionally excluded due to ambiguity in the position of the double bond and stereochemistry-->
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">lignocer</token>
 		<token value="CCCCCCCC\C=C/C\C=C/CCCCC" labels="numeric" usableAsAJoiner="yes">linole</token>
-		<token value="CCCCCCCC\C=C/C\C=C/C\C=C/CC" labels="numeric" usableAsAJoiner="yes">(9,12,15)-linolen</token>
-		<token value="CCCCCCCC\C=C/C\C=C/C\C=C/CC" labels="numeric" usableAsAJoiner="yes">alpha-linolen</token>
-		<token value="CCCCC\C=C/C\C=C/C\C=C/CCCCC" labels="numeric" usableAsAJoiner="yes">(6,9,12)-linolen</token>
-		<token value="CCCCC\C=C/C\C=C/C\C=C/CCCCC" labels="numeric" usableAsAJoiner="yes">gamma-linolen</token>
+		<token value="CCCCCCCC\C=C/C\C=C/C\C=C/CC" labels="numeric" usableAsAJoiner="yes">(9,12,15)-linolen|alpha-linolen</token>
+		<token value="CCCCC\C=C/C\C=C/C\C=C/CCCCC" labels="numeric" usableAsAJoiner="yes">(6,9,12)-linolen|gamma-linolen</token>
 		<token value="CCCCCCCCCCCCCC/C=C\CCCCCCCC" labels="numeric" usableAsAJoiner="yes">nervon</token>
 		<token value="CCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">margar</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">meliss</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">montan</token>
 		<token value="CCCCCCCC\C=C/CCCC" labels="numeric" usableAsAJoiner="yes">myristole</token>
 		<token value="C\C=C(C)/CCC=C(C)C" labels="1/2/3//4/5/6///" defaultInID="9" usableAsAJoiner="yes">ner</token>
-		<token value="Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">o-veratr</token>
-		<token value="Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">orthoveratr</token>
-		<token value="Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">ortho-veratr</token>
-		<token value="CCc1c(OC)c(OC)ccc1" labels="/alpha/1/2,ortho///3,meta///4,para/5/6">o-homoveratr</token>
-		<token value="CCc1c(OC)c(OC)ccc1" labels="/alpha/1/2,ortho///3,meta///4,para/5/6">orthohomoveratr</token>
-		<token value="CCc1c(OC)c(OC)ccc1" labels="/alpha/1/2,ortho///3,meta///4,para/5/6">ortho-homoveratr</token>
+		<token value="Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">o-veratr|orthoveratr|ortho-veratr</token>
+		<token value="CCc1c(OC)c(OC)ccc1" labels="/alpha/1/2,ortho///3,meta///4,para/5/6">o-homoveratr|orthohomoveratr|ortho-homoveratr</token>
 		<token value="CCCCCCCC\C=C/CCCCCC" labels="numeric" usableAsAJoiner="yes">palmitole</token>
-		<token value="CCCCC\C=C/CCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">petroselin</token>
-		<token value="CCCCC\C=C/CCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">petrosel</token>
+		<token value="CCCCC\C=C/CCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">petroselin|petrosel</token>
 		<token value="[nH]1ccccc1" labels="1/2,ortho,alpha/3,meta,beta/4,para,gamma/5/6" addGroup="C locant 2" suffixAppliesTo="7" frontLocantsExpected="2,ortho,alpha,3,meta,beta,4,para,gamma">picol</token><!--contraction-->
 		<token value="Cc1cc(O)c(O)cc1" labels="/1/2,ortho/3,meta//4,para//5/6">protocatechu</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">psyll</token>
@@ -319,8 +270,7 @@
 		<token value="CC(C)CCCC(C)CCCC(C)CCCC(C)C">pristan</token><!--unknown-->
 		<token value="CC#C" labels="1/2/3" usableAsAJoiner="yes">propargyl</token><!--unknown-->
 		<token value="Cc1ccc(NCc2cnc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">pter</token><!--unknown, pteroic preferred to pteric-->
-		<token value="Cc1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">dihydropter</token>
-		<token value="Cc1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">7,8-dihydropter</token>
+		<token value="Cc1ccc(NCc2CNc3nc(N)[nH]c(=O)c3n2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">dihydropter|7,8-dihydropter</token>
 		<token value="Cc1ccc(NCC2CNc3nc(N)[nH]c(=O)c3N2)cc1" labels="/1'/2'/3'/4'/10/9/6/7/8/8a/1/2//3/4//4a/5/5'/6'">5,6,7,8-tetrahydropter</token>
 		<token value="Cc1c(O)c(O)ccc1" labels="/1/2,ortho//3,meta//4,para/5/6">2-pyrocatechu</token><!--unknown-->
 		<token value="Cc1c(O)c(O)ccc1" labels="/1/2,ortho//3,meta//4,para/5/6">o-pyrocatechu</token><!--unknown-->
@@ -363,8 +313,7 @@
 	<tokenList tagname="group" type="acidStem" subType="ylForNothing" symbol="½">
 		<!--This token class disallows any radical forming suffix-->
 		<!--avoids ambiguity with leucine radicals-->
-		<token value="CC(O)CC(C)C">leuc</token>
-		<token value="CC(O)CC(C)C">dl-leuc</token>
+		<token value="CC(O)CC(C)C">leuc|dl-leuc</token>
 		<token value="C[C@H](O)CC(C)C">d-leuc</token>
 		<token value="C[C@@H](O)CC(C)C">l-leuc</token>
 
