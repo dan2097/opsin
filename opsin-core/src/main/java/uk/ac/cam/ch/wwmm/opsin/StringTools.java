@@ -227,12 +227,15 @@ class StringTools {
             case '\u2018': return "'";//quotation marks and primes (map to apostrophe/s)
             case '\u2019': return "'";
             case '\u201B': return "'";
+            case '\u02BC': return "'";
             case '\u201C': return "''";
             case '\u201D': return "''";
             case '\u2032': return "'";//primes
             case '\u2033': return "''";
             case '\u2034': return "'''";
             case '\u2057': return "''''";
+            case '\u02B9': return "'";//modifier primes
+            case '\u02BA': return "''";
             case '\u2035': return "'";//back primes
             case '\u2036': return "''";
             case '\u2037': return "'''";
