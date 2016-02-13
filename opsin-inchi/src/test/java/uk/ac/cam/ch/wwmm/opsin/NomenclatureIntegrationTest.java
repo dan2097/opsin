@@ -167,6 +167,14 @@ public class NomenclatureIntegrationTest {
 		String file = "implicitBracketting.txt";
 		checkNamesAgainstInChIs(file, n2sConfig);
 	}
+	
+	@Test
+	public void testStereochemistry() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "stereochemistry.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
 
 	@Test
 	public void testMiscellany() throws IOException{

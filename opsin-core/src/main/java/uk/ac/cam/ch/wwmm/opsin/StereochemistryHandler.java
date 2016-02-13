@@ -128,7 +128,7 @@ class StereochemistryHandler {
 			}
 		}
 		else if (stereoChemistryType.equals(ALPHA_OR_BETA_TYPE_VAL)){
-			assignAlphaBetaStereochem(stereoChemistryEl);
+			assignAlphaBetaXiStereochem(stereoChemistryEl);
 		}
 		else if (stereoChemistryType.equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
@@ -638,10 +638,11 @@ class StereochemistryHandler {
 	/**
 	 * Handles assignment of alpha and beta stereochemistry to appropriate ring systems
 	 * Currently these are only assignable to natural products
+	 * Xi (unknown) stereochemistry is applicable to any tetrahedral centre
 	 * @param stereoChemistryEl
 	 * @throws StructureBuildingException
 	 */
-	private void assignAlphaBetaStereochem(Element stereoChemistryEl) throws StructureBuildingException {
+	private void assignAlphaBetaXiStereochem(Element stereoChemistryEl) throws StructureBuildingException {
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
 		Fragment substituentGroup =null;
@@ -656,12 +657,17 @@ class StereochemistryHandler {
 		String alphaOrBeta = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		for (Fragment fragment : possibleFragments) {
 			Atom potentialStereoAtom = fragment.getAtomByLocant(locant);
-			if (potentialStereoAtom !=null && atomStereoCentreMap.containsKey(potentialStereoAtom)){//same stereocentre can defined twice e.g. one subsituent alpha the other beta
-				String alphaBetaClockWiseAtomOrdering = fragment.getTokenEl().getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR);
-				if (alphaBetaClockWiseAtomOrdering==null){
-					throw new StructureBuildingException("Identified fragment is not known to be able to support alpha/beta stereochemistry");
+			if (potentialStereoAtom !=null && atomStereoCentreMap.containsKey(potentialStereoAtom)){//same stereocentre can be defined twice e.g. one subsituent alpha the other beta
+				if (alphaOrBeta.equals("xi")){
+					potentialStereoAtom.setAtomParity(null);
 				}
-				applyAlphaBetaStereochemistryToStereoCentre(potentialStereoAtom, fragment, alphaBetaClockWiseAtomOrdering, alphaOrBeta, substituentGroup);
+				else {
+					String alphaBetaClockWiseAtomOrdering = fragment.getTokenEl().getAttributeValue(ALPHABETACLOCKWISEATOMORDERING_ATR);
+					if (alphaBetaClockWiseAtomOrdering==null){
+						throw new StructureBuildingException("Identified fragment is not known to be able to support alpha/beta stereochemistry");
+					}
+					applyAlphaBetaStereochemistryToStereoCentre(potentialStereoAtom, fragment, alphaBetaClockWiseAtomOrdering, alphaOrBeta, substituentGroup);
+				}
 				notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
 				return;
 			}
@@ -730,9 +736,6 @@ class StereochemistryHandler {
 				}
 				else if (alphaOrBeta.equals("beta")){
 					stereoAtom.setAtomParity(atomRefs4, -1);
-				}
-				else if (alphaOrBeta.equals("xi")){
-					stereoAtom.setAtomParity(null);
 				}
 				else{
 					throw new StructureBuildingException("OPSIN Bug: malformed alpha/beta stereochemistry value");
