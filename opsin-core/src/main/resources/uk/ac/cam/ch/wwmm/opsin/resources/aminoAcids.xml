@@ -238,6 +238,6 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="NC(CC(=O)(O))CCCN" labels="/3/2/1///4/5/6/" functionalIDs="6">isolysine|beta-lysine</token>
 		<token value="O=C(O)[C@H](N[C@H](C(=O)O)CCCCN)C" functionalIDs="3">lysopine|d-lysopine</token>
 		<token value="O=C(NCCC(NCCS)=O)[C@H](O)C(C)(C)CO">pantetheine</token>
-		<token value="N[C@@H](CC(C)C)[C@@H](O)CC(O)=O" labels="/4/5/6///3//2/1//" defaultInID="1">statine</token>
+		<token value="N[C@@H](CC(C)C)[C@@H](O)CC(O)=O" labels="/4/5/6///3//2/1//" functionalIDs="11" defaultInID="1">statine</token>
 	</tokenList>
 </tokenLists>
