@@ -56,6 +56,7 @@
 		<token value="O=CCc1cc(O)c(OC)cc1" labels="///1/2/3//4///5/6">homoisovanillin</token>
 		<token value="O=CCc1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6">homovanillin</token>
 		<token value="O=CCc1c(O)c(OC)ccc1" labels="///1/2//3///4/5/6">o-homovanillin</token>
+		<token value="[n-]1cncc1" labels="1/2/3/4/5">imidazolate|imidazolat</token>
 		<token value="c1(c(N)cccc1)C(=O)C(=O)O" labels="1/2//3/4/5/6/////" functionalIDs="12">isatic|isaticacid|isatic acid</token>
 		<token value="c1(C(=O)O)c(NC(=O)O)cccc1" labels="1////2/////3/4/5/6" functionalIDs="4,9">isatoic|isatoicacid|isatoic acid</token>
 		<token value="COc1c(OC)c(OC)cc(C=CC)c1">isoelemicin</token>

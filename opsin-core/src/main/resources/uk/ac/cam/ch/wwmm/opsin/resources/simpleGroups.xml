@@ -346,35 +346,28 @@
 		<token value="C(=O)C(=O)N" labels="2//1//" functionalIDs="5,5">glyoxalylamide</token>
 
 <!--trivial names that clash with systematic names-->
-		<token value="Clc1cc(c(cc1OC(=O)NC)C)C">carbanolate</token><!--pesticide name-->
-		<token value="Clc1cc(c(cc1OC(=O)NC)C)C">carbanolat</token><!--pesticide name-->
+		<token value="Clc1cc(c(cc1OC(=O)NC)C)C">carbanolate|carbanolat</token><!--pesticide name-->
 		<token value="Clc1nc(nc(n1)N(CC)CC)N(CC)CC">chlorazine</token><!--pesticide name-->
 		<token value="Clc2cc1N(c3c(Sc1cc2)cccc3)CCCN(C)C">chlorazin</token><!--drug name-->
-		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC">chlorobenzilate</token><!--pesticide name-->
-		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC">chlorobenzilat</token><!--pesticide name-->
+		<token value="Clc1ccc(cc1)C(O)(c2ccc(Cl)cc2)C(=O)OCC">chlorobenzilate|chlorobenzilat</token><!--pesticide name-->
 		<token value="C1Cc2c1cccc2" labels="1/2/2a/3/4/5/6/6a">benzocyclobutene</token><!--Confusion as to whether ene means fully unsaturated-->
-		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C">diazinone</token><!--pesticide name-->
-		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C">diazinon</token><!--pesticide name-->
-		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O">diazolidinylurea</token><!--antimicrobial name-->
-		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O">diazolidinyl urea</token><!--antimicrobial name-->
+		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C">diazinon|diazinone</token><!--pesticide name-->
+		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O">diazolidinylurea|diazolidinyl urea</token><!--antimicrobial name-->
 		<token value="ClC(C(C1=CC=C(C=C1)Cl)C1=CC=C(C=C1)Cl)(Cl)Cl">dichlorodiphenyltrichloroethane</token><!--pesticide name-->
 		<token value="O=C1N(CO)CCN1CO">dimethylol ethylene urea</token><!--trivial name-->
-		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N">dithianone</token><!--pesticide name-->
-		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N">dithianon</token><!--pesticide name-->
+		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N">dithianone|dithianon</token><!--pesticide name-->
 		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C">dihydromethanophenazine</token><!--trivial name-->
 		<token value="O=C(O)c1c(I)c(CNC(=O)C)c(I)c(NC(=O)C)c1I">iodamide</token><!--trivial name-->
-		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O">imidazolidinylurea</token><!--antimicrobial name-->
-		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O">imidazolidinyl urea</token><!--antimicrobial name-->
+		<token value="OCC1(NC(=O)NCNC(=O)NC2(CO)NC(=O)NC2=O)NC(=O)NC1=O">imidazolidinylurea|imidazolidinyl urea</token><!--antimicrobial name-->
 		<token value="CC(CCOc1ccc2nc3ccccc3nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C">methanophenazine</token><!--trivial name-->
 		<token value="COc1ccc(C(c2ccc(OC)cc2)C(Cl)(Cl)Cl)cc1">methoxychlor</token><!--pesticide name-->
 		<token value="CC(=O)OC/N=[N+](/C)\[O-]">methylazoxymethanol acetate</token><!--trivial name-->
-		<token value="C(CC(CBr)(C#N)Br)C#N">methyldibromo glutaronitrile</token><!--trivial name-->
-		<token value="C(CC(CBr)(C#N)Br)C#N">methyldibromoglutaronitrile</token><!--trivial name-->
+		<token value="C(CC(CBr)(C#N)Br)C#N">methyldibromo glutaronitrile|methyldibromoglutaronitrile</token><!--trivial name-->
 		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)O" functionalIDs="19">oxolinic acid</token><!--drug name-->
-		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)[O-]" functionalIDs="19">oxolinate</token><!--drug name-->
-		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2">oxybenzone</token><!--trivial name-->
-		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1">pyridate</token><!--herbicide name-->
-		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1">pyridat</token><!--herbicide name-->
+		<token value="CCn1cc(c(=O)c2c1cc3c(c2)OCO3)C(=O)[O-]" functionalIDs="19">oxolinate|oxolinat</token><!--drug name-->
+		<token value="O=C(c1ccc(OC)cc1O)c2ccccc2">oxybenzone|oxybenzon</token><!--trivial name-->
+		<token value="OC1=CC(C2(C)C(C)C(C3)N(C/C=C(C)\C)CC2)=C3C=C1">pentazocine|pentazocin</token><!--drug name-->
+		<token value="O=C(SCCCCCCCC)Oc2cc(Cl)nnc2c1ccccc1">pyridate|pyridat</token><!--herbicide name-->
 		<token value="OC(=O)c1cc(C(O)=O)c-2c(n1)C(=O)C(=O)c1cc([nH]c-21)C(O)=O">pyrroloquinoline quinone</token><!--enzyme cofactor-->
 		<token value="OC(=O)c1c(O)ccc(S(=O)(=O)O)c1" labels="///1/2,ortho//3,meta/4,para/5/////6" functionalIDs="1,13">sulfosalicylic acid</token><!--trivial name-->
 		<token value="O.O.O.O.O.O.O.O.O.[C@@H]1(O[Sb]2(O)(O[C@@H](C([O-])=O)[C@H]1O2)O[Sb]12([O-])O[C@@H](C([O-])=O)[C@@H](O1)[C@H](O2)[C@H](O)CO)[C@H](O)CO">stibogluconate</token><!--drug name-->
@@ -382,8 +375,7 @@
 		<token value="Cl[Ga-](Cl)(Cl)Cl">tetrachlorogallate</token><!--gallate has multiple meanings-->
 		<token value="F[Ga-](F)(F)F">tetrafluorogallate</token><!--gallate has multiple meanings-->
 		<token value="I[Ga-](I)(I)I">tetraiodogallate</token><!--gallate has multiple meanings-->
-		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene-diisocyanate</token><!--trivial name-->
-		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene diisocyanate</token><!--trivial name-->
+		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene-diisocyanate|toluene diisocyanate</token><!--trivial name-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
