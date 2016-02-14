@@ -26,3 +26,5 @@ tetraphenylporphyrin	InChI=1S/C44H30N4/c1-5-13-29(14-6-1)41-33-21-23-35(45-33)42
 hexachlorocyclohexane	InChI=1S/C6H6Cl6/c7-1-2(8)4(10)6(12)5(11)3(1)9/h1-6H
 pyridinium hemisulfate	InChI=1S/2C5H5N.H2O4S/c2*1-2-4-6-5-3-1;1-5(2,3)4/h2*1-5H;(H2,1,2,3,4)
 potassium carbonate sesquihydrate 	InChI=1S/2CH2O3.4K.3H2O/c2*2-1(3)4;;;;;;;/h2*(H2,2,3,4);;;;;3*1H2/q;;4*+1;;;/p-4
+S-methylmethionine	InChI=1S/C6H13NO2S/c1-10(2)4-3-5(7)6(8)9/h5H,3-4,7H2,1-2H3/p+1/t5-/m0/s1
+Se-benzyl-seleno-methionine	InChI=1S/C12H17NO2Se/c1-16(8-7-11(13)12(14)15)9-10-5-3-2-4-6-10/h2-6,11H,7-9,13H2,1H3/p+1/t11-,16?/m0/s1

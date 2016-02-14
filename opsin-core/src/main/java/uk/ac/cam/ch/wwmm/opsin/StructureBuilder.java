@@ -54,7 +54,7 @@ class StructureBuilder {
 		}
 
 		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
-		processOxidoSpecialCase(groupElements);
+		processOxidoAndMethionineSpecialCases(groupElements);
 		processOxidationNumbers(groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
@@ -2044,11 +2044,14 @@ class StructureBuilder {
 	 * Nasty special case to cope with oxido and related groups acting as O= or even [O-][N+]
 	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
 	 * Acting as O= notably is often correct behaviour for inorganics
+	 * 
+	 * Methionine (and the like) when substituted at the sulfur/selenium/tellurium are implicitly positively charged
 	 * @param groups
 	 */
-	private void processOxidoSpecialCase(List<Element> groups)  {
+	private void processOxidoAndMethionineSpecialCases(List<Element> groups)  {
 		for (Element group : groups) {
-			if (OXIDOLIKE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			String subType = group.getAttributeValue(SUBTYPE_ATR);
+			if (OXIDOLIKE_SUBTYPE_VAL.equals(subType)){
 				Atom oxidoAtom = group.getFrag().getFirstAtom();
 				Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
 				ChemEl chemEl = connectedAtom.getElement();
@@ -2075,6 +2078,19 @@ class StructureBuilder {
 							connectedAtom.addChargeAndProtons(1, 1);
 						}
 					}
+				}
+			}
+			else if (ENDININE_SUBTYPE_VAL.equals(subType) && group.getValue().contains("methion")) {
+				Fragment frag = group.getFrag();
+				Atom chalcogen = frag.getAtomByLocant("S");
+				if (chalcogen == null) {
+					chalcogen = frag.getAtomByLocant("Se");
+				}
+				if (chalcogen == null) {
+					chalcogen = frag.getAtomByLocant("Te");
+				}
+				if (chalcogen != null && chalcogen.getIncomingValency() == 3 && chalcogen.getCharge() == 0) {
+					chalcogen.addChargeAndProtons(1, 1);
 				}
 			}
 		}
