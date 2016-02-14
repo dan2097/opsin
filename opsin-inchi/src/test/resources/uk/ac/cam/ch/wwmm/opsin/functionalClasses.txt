@@ -17,3 +17,5 @@ Bisphenol A diglycidyl ether	InChI=1/C21H24O4/c1-21(2,15-3-7-17(8-4-15)22-11-19-
 1,4-butanediol diglycidyl ether	InChI=1S/C10H18O4/c1(3-11-5-9-7-13-9)2-4-12-6-10-8-14-10/h9-10H,1-8H2
 ethylene glycol ethyl ether acetate	InChI=1S/C6H12O3/c1-3-8-4-5-9-6(2)7/h3-5H2,1-2H3
 diethylene glycol ethyl methyl ether	InChI=1S/C7H16O3/c1-3-9-6-7-10-5-4-8-2/h3-7H2,1-2H3
+glycerol monooleate	InChI=1/C21H40O4/c1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-21(24)25-19-20(23)18-22/h9-10,20,22-23H,2-8,11-19H2,1H3/b10-9-
+glycerol triglycidyl ether	InChI=1S/C12H20O6/c1(13-3-10-5-16-10)9(15-7-12-8-18-12)2-14-4-11-6-17-11/h9-12H,1-8H2

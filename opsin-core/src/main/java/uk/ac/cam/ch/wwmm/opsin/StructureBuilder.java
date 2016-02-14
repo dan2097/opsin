@@ -1197,7 +1197,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void buildGlycolEther(List<Element> words) throws StructureBuildingException {
-		List<Element> wordsToAttachToGlcyol = new ArrayList<Element>();
+		List<Element> wordsToAttachToGlycol = new ArrayList<Element>();
 		Element glycol =words.get(0);
 		resolveWordOrBracket(state, glycol);//if this actually is something like ethylene glycol this is a no-op as it will already have been resolved
 		if (!glycol.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
@@ -1208,43 +1208,38 @@ class StructureBuilder {
 			//ether ignored
 			if (!wordOrWordRule.getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 				resolveWordOrBracket(state, wordOrWordRule);//the substituent to attach
-				wordsToAttachToGlcyol.add(wordOrWordRule);
+				wordsToAttachToGlycol.add(wordOrWordRule);
 			}
 			else if (!wordOrWordRule.getAttributeValue(VALUE_ATR).equalsIgnoreCase("ether")){
 				throw new StructureBuildingException("Unexpected word encountered when applying glycol ether word rule " + wordOrWordRule.getAttributeValue(VALUE_ATR));
 			}
 		}
-		if (wordsToAttachToGlcyol.size() !=1 && wordsToAttachToGlcyol.size() !=2 ){
-			throw new StructureBuildingException("Unexpected number of substituents for glycol ether. Expected 1 or 2 found: " +wordsToAttachToGlcyol.size());
+		int numOfEthers = wordsToAttachToGlycol.size();
+		if (numOfEthers == 0) {
+			throw new StructureBuildingException("OPSIN Bug: Unexpected number of substituents for glycol ether");
 		}
 		Element finalGroup = findRightMostGroupInWordOrWordRule(glycol);
 		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(finalGroup.getFrag());
 		if (hydroxyAtoms.size() == 0) {
 			throw new StructureBuildingException("No hydroxy groups found in: " + finalGroup.getValue() + " to form ether");
 		}
-		if (hydroxyAtoms.size() < wordsToAttachToGlcyol.size()) {
-			throw new StructureBuildingException("Insufficient hydroxy groups found in: " + finalGroup.getValue() + " to form diether");
+		if (hydroxyAtoms.size() < numOfEthers) {
+			throw new StructureBuildingException("Insufficient hydroxy groups found in: " + finalGroup.getValue() + " to form required number of ethers");
 		}
-		BuildResults br1 = new BuildResults(wordsToAttachToGlcyol.get(0));
-		if (br1.getOutAtomCount() ==0) {
-			throw new StructureBuildingException("Substituent had no outAtom to form glycol ether");
-		}
-		state.fragManager.createBond(hydroxyAtoms.get(0), br1.getOutAtom(0).getAtom(), 1);
-		br1.removeOutAtom(0);
-		if (wordsToAttachToGlcyol.size()==2){
-			BuildResults br2 = new BuildResults(wordsToAttachToGlcyol.get(1));
-			if (br2.getOutAtomCount() >0){//form ether
-				state.fragManager.createBond(hydroxyAtoms.get(1), br2.getOutAtom(0).getAtom(), 1);
-				br2.removeOutAtom(0);
+		for (int i = 0; i < numOfEthers; i++) {
+			BuildResults br = new BuildResults(wordsToAttachToGlycol.get(i));
+			if (br.getOutAtomCount() >0){//form ether
+				state.fragManager.createBond(hydroxyAtoms.get(i), br.getOutAtom(0).getAtom(), 1);
+				br.removeOutAtom(0);
 			}
-			else if (br2.getFunctionalAtomCount() >0){//form ester
-				Atom ateAtom = br2.getFunctionalAtom(0);
+			else if (br.getFunctionalAtomCount() >0){//form ester
+				Atom ateAtom = br.getFunctionalAtom(0);
 				ateAtom.neutraliseCharge();
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(hydroxyAtoms.get(1), br2.getFunctionalAtom(0));
-				br2.removeFunctionalAtom(0);
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(hydroxyAtoms.get(i), br.getFunctionalAtom(0));
+				br.removeFunctionalAtom(0);
 			}
 			else{
-				throw new StructureBuildingException("Word had neither an outAtom or a functionalAtom! hence neither and ether or ester could be formed : " + wordsToAttachToGlcyol.get(1).getAttributeValue(VALUE_ATR));
+				throw new StructureBuildingException("Word had neither an outAtom or a functionalAtom! hence neither and ether or ester could be formed : " + wordsToAttachToGlycol.get(i).getAttributeValue(VALUE_ATR));
 			}
 		}
 	}
@@ -1408,7 +1403,7 @@ class StructureBuilder {
 			if (!chosenHydroxyAtoms.isEmpty()) {
 				throw new RuntimeException("OPSIN Bug: Either all or none of the esters should be locanted in alcohol ester rule");
 			}
-			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && AmbiguityChecker.allAtomsEquivalent(hydroxyAtoms)) {
+			if (hydroxyAtoms.size() == ateWords  || hydroxyAtoms.size() > ateWords && (AmbiguityChecker.allAtomsEquivalent(hydroxyAtoms) || potentialAlcoholFragment.getTokenEl().getValue().equals("glycerol") )) {
 				for (int i = 0; i < ateWords; i++) {
 					chosenHydroxyAtoms.add(hydroxyAtoms.get(i));
 				}
