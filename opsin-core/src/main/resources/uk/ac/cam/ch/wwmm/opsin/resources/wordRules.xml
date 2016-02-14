@@ -201,20 +201,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="glycolEther" type="full">
-		<word type="full" endsWithRegex="glycol"/>
+		<word type="full"/>
 		<word type="substituent"/>
 		<word type="functionalTerm" value="ether" />
 		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="glycolEther" type="full">
-		<word type="full" endsWithRegex="glycol"/>
+		<word type="full"/>
 		<word type="substituent"/>
 		<word type="functionalTerm" value="ether" />
 	</wordRule>
 
 	<wordRule name="glycolEther" type="full">
-		<word type="full" endsWithRegex="glycol"/>
+		<word type="full"/>
 		<word type="substituent"/>
 		<word type="substituent"/>
 		<word type="functionalTerm" value="ether" />
