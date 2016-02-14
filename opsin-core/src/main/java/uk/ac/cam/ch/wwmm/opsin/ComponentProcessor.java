@@ -4876,9 +4876,15 @@ class ComponentProcessor {
 				//unstable valency so seems unlikely
 				continue;
 			}
-			if (protonChange < 0 && StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a) < 1) {
-				//no hydrogens so operation can't remove one
-				continue;
+			if (protonChange < 0) {
+				int substitableHydrogen = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a);
+				if (a.hasSpareValency() && !a.getFrag().getIndicatedHydrogen().contains(a)) {
+					substitableHydrogen--;
+				}
+				if (substitableHydrogen < 1) {
+					//no hydrogens so operation can't remove one!
+					continue;
+				}
 			}
 			if (a.getCharge() == 0) {
 				if (chemEl == ChemEl.N) {

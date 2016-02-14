@@ -2,10 +2,8 @@
 <!--HW rings; the ane and ine suffix are included seperately as there are limitations as to what heteroatoms they can be used with-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="hantzschWidman" symbol="W">
-		<token value="c1cc1" labels="numeric">iren</token>
-		<token value="C1CC1" labels="numeric">iran</token>
-		<token value="c1cc1" labels="numeric">irin</token>
-		<token value="C1CC1" labels="numeric">iridin</token>
+		<token value="c1cc1" labels="numeric">iren|irin</token>
+		<token value="C1CC1" labels="numeric">iran|iridin</token>
 
 		<token value="c1ccc1" labels="numeric">et</token>
 		<token value="C1CCC1" labels="numeric">etan|etidin</token>
@@ -13,7 +11,6 @@
 
 		<token value="c1cccc1" labels="numeric">ol</token>
 		<token value="C1CCCC1" labels="numeric">olan|olidin</token>
-		<token value="C1CCCC1" labels="numeric">olid</token><!--incorrect but avoids [ol, id] tokenisation-->
 		<token value="C1CCCC1" labels="numeric" addBond="2">olin|olen</token>
 
 		<token value="C1CCCCC1" labels="1/2,ortho/3,meta/4,para/5/6">inan</token>
