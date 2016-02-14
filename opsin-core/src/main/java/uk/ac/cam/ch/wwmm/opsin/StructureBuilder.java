@@ -565,6 +565,9 @@ class StructureBuilder {
 			Atom oxideAtom = oxideFragments.get(i).getFirstAtom();
 			if (!locantsForOxide.isEmpty()){
 				Atom atomToAddOxideTo =groupToModify.getAtomByLocantOrThrow(locantsForOxide.get(i));
+				if (atomToAddOxideTo.getElement() == ChemEl.C && !ELEMENTARYATOM_SUBTYPE_VAL.equals(groupToModify.getSubType())) {
+					throw new StructureBuildingException("Locant " + locantsForOxide.get(i) + " indicated oxide applied to carbon, but this would lead to hypervalency!");
+				}
 				formAppropriateBondToOxideAndAdjustCharges(atomToAddOxideTo, oxideAtom);
 			}
 			else{
