@@ -1199,6 +1199,7 @@ class StructureBuilder {
 	private void buildGlycolEther(List<Element> words) throws StructureBuildingException {
 		List<Element> wordsToAttachToGlcyol = new ArrayList<Element>();
 		Element glycol =words.get(0);
+		resolveWordOrBracket(state, glycol);//if this actually is something like ethylene glycol this is a no-op as it will already have been resolved
 		if (!glycol.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
 			throw new StructureBuildingException("OPSIN Bug: Cannot find glycol word!");
 		}
@@ -1217,33 +1218,29 @@ class StructureBuilder {
 			throw new StructureBuildingException("Unexpected number of substituents for glycol ether. Expected 1 or 2 found: " +wordsToAttachToGlcyol.size());
 		}
 		Element finalGroup = findRightMostGroupInWordOrWordRule(glycol);
-		Fragment theDiRadical = finalGroup.getFrag();
-		List<Atom> atomList = theDiRadical.getAtomList();
-		List<Atom> glycolAtoms = new ArrayList<Atom>();
-		for (Atom atom : atomList) {
-			if (atom.getElement() == ChemEl.O && atom.getType().equals(FUNCTIONALCLASS_TYPE_VAL)){
-				glycolAtoms.add(atom);
-			}
+		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(finalGroup.getFrag());
+		if (hydroxyAtoms.size() == 0) {
+			throw new StructureBuildingException("No hydroxy groups found in: " + finalGroup.getValue() + " to form ether");
 		}
-		if (glycolAtoms.size()!=2){
-			throw new StructureBuildingException("OPSIN bug: unable to find the two glycol oxygens");
+		if (hydroxyAtoms.size() < wordsToAttachToGlcyol.size()) {
+			throw new StructureBuildingException("Insufficient hydroxy groups found in: " + finalGroup.getValue() + " to form diether");
 		}
 		BuildResults br1 = new BuildResults(wordsToAttachToGlcyol.get(0));
-		if (br1.getOutAtomCount() ==0){
+		if (br1.getOutAtomCount() ==0) {
 			throw new StructureBuildingException("Substituent had no outAtom to form glycol ether");
 		}
-		state.fragManager.createBond(glycolAtoms.get(0), br1.getOutAtom(0).getAtom(), 1);
+		state.fragManager.createBond(hydroxyAtoms.get(0), br1.getOutAtom(0).getAtom(), 1);
 		br1.removeOutAtom(0);
 		if (wordsToAttachToGlcyol.size()==2){
 			BuildResults br2 = new BuildResults(wordsToAttachToGlcyol.get(1));
 			if (br2.getOutAtomCount() >0){//form ether
-				state.fragManager.createBond(glycolAtoms.get(1), br2.getOutAtom(0).getAtom(), 1);
+				state.fragManager.createBond(hydroxyAtoms.get(1), br2.getOutAtom(0).getAtom(), 1);
 				br2.removeOutAtom(0);
 			}
 			else if (br2.getFunctionalAtomCount() >0){//form ester
 				Atom ateAtom = br2.getFunctionalAtom(0);
 				ateAtom.neutraliseCharge();
-				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(glycolAtoms.get(1), br2.getFunctionalAtom(0));
+				state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(hydroxyAtoms.get(1), br2.getFunctionalAtom(0));
 				br2.removeFunctionalAtom(0);
 			}
 			else{
