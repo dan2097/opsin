@@ -53,9 +53,6 @@
 		<token value="c1(ccccc1)C(=O)CCCCCCCCC" labels="1'/2'/3'/4'/5'/6'/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" functionalIDs="1">capriphenone</token>
 		<token value="NNC(=O)N=N" labels="1/2/3//4/5">carbazone</token>
 		<token value="CO">carbinol</token>
-		<token value="OC(C[N+](C)(C)C)CC([O-])=O">carnitine</token>
-		<token value="O[C@@H](C[N+](C)(C)C)CC([O-])=O">l-carnitine</token>
-		<token value="O[C@H](C[N+](C)(C)C)CC([O-])=O">d-carnitine</token>
 		<token value="N=NC(=O)N=N" labels="1/2/3//4/5">carbodiazone</token>
 		<token value="N=C=N" labels="1//3">carbodiimide</token>
 		<token value="NNC(=O)NN" labels="1/2/3//4/5">carbonohydrazide|carbohydrazide|carbazide</token>
@@ -384,7 +381,6 @@
 		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotin sulfoxide|biotine sulfoxide|d-biotin sulfoxide|d-biotine sulfoxide</token>
 		<token value="OCC[N+](C)(C)C" defaultInID="1">choline</token>
 		<token value="ClCC[N+](C)(C)C">chlorocholine</token>
-		<token value="O=C(O)CN(C)C(N)=N" functionalIDs="3">creatine</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine</token>
 		<token value="C(O)CN">ethanolamine</token>
 		<token value="[nH]1c(=O)Nc(=O)c(F)c1" labels="1/2//3/4//5//6">fluorouracil</token><!--should be ambiguous but by convention isn't-->
@@ -392,12 +388,10 @@
 		<token value="C(O)C(=O)CO" labels="1//2//3/">glycerone</token>
 		<token value="O=C(O)CNC(N)=N" functionalIDs="3">glycocyamine</token>
 		<token value="NC(=[NH2+])N" labels="1,N//2,N''/3,N'">guanidinium</token>
-		<token value="NC(=N)NCCS(=O)O" functionalIDs="9">hypotaurocyamine</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">icosasphinganine</token>
 		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18">phytosphingosine</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphinganine</token>
 		<token value="OC[C@H](N)[C@H](O)/C=C/CCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphingosine</token>
-		<token value="NC(=N)NCCS(=O)(=O)O" functionalIDs="10">taurocyamine</token>
 		<token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O">vitamin c</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" defaultInID="37">coenzyme a|coa</token>
 	</tokenList>
