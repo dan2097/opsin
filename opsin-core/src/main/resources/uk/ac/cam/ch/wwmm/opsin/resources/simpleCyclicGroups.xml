@@ -17,7 +17,7 @@
 		<token value="n1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">anthranil</token>
 		<token value="CC(=O)c1cc(OC)c(O)cc1" labels="///1/2/3///4//5/6">apocynin</token>
 		<token value="N1C(=O)NC(=O)CC(=O)1" labels="1/2//3/4//5/6/" defaultInLocant="5">barbituric|barbituricacid|barbituric acid</token>
-		<token value="c1(ccccc1)C(=O)C(=O)c2ccccc2" labels="1/2/3/4/5/6/////1'/2'/3'/4'/5'/6'">benzil</token>
+		<token value="c1(ccccc1)C(=O)C(=O)c2ccccc2" labels="1/2,ortho/3,meta/4,para/5/6/////1'/2'/3'/4'/5'/6'">benzil</token>
 		<token value="c1(=O)c(=O)cccc1" labels="1//2,ortho//3,meta/4,para/5/6">benzo-1,2-quinone</token>
 		<token value="c1(=O)ccc(=O)cc1" labels="1//2,ortho/3,meta/4,para//5/6">benzo-1,4-quinone</token>
 		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6">benzol</token>

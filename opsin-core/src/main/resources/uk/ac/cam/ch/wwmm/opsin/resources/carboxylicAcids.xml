@@ -63,7 +63,7 @@
 		<token value="CNC(=O)N" labels="1/2/3//4">allophan</token>
 		<token value="Cc1cc(C)c(C)c(C)c1" labels="/1/2/3//4//5//6">alpha-isoduryl</token>
 		<token value="C/C(C)=C\C">angel</token>
-		<token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2/3/4/5/6/1'/2'/3'/4'/5'/6'">benzil</token>
+		<token value="CC(O)(c1ccccc1)c1ccccc1" labels="///1/2,ortho/3,meta/4,para/5/6/1'/2'/3'/4'/5'/6'">benzil</token>
 		<token value="Cc1c(C)cc(C)cc1(C)" labels="/1/2//3/4//5/6/">beta-isoduryl</token>
 		<token value="CNNC" suffixAppliesTo="1,4">bicarbam</token>
 		<token value="CCCCCCCCCCCCC" labels="numeric" suffixAppliesTo="1,13">brassyl</token>

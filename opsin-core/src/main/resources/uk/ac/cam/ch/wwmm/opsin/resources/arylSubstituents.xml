@@ -38,7 +38,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="c1cccc2[as]cc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">arsanthrid</token>
 		<token value="c1ccc2ccc3cccc3c12" labels="1/2/3/3a/4/5/5a/6/7/8/8a/8b">as-indac</token>
 		<token value="c1ccc2cccccc12" labels="1/2/3/3a/4/5/6/7/8/8a">azul</token>
-		<token value="C(c1ccccc1)c1ccccc1" labels="alpha/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'" suffixAppliesTo="1">benzhydr</token>
+		<token value="C(c1ccccc1)c1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6/1'/2'/3'/4'/5'/6'" suffixAppliesTo="1">benzhydr</token>
 		<token value="C1=CC=CC=2B=C3C=CC=CC3=BC12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">boranthr</token>
 		<token value="c1cccc2c3ccc4ccccc4c3ccc12" labels="1/2/3/4/4a/4b/5/6/6a/7/8/9/10/10a/10b/11/12/12a">chrys</token>
 		<token value="n1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">cinnol</token>
