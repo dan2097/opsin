@@ -480,7 +480,7 @@
 		<token value="-OC#N">cyanato</token>
 		<token value="-C#N">cyano</token>
 		<token value="-[F|1]">fluoro</token>
-		<token value="-[I|1]">iodo</token>
+		<token value="-I">iodo</token><!--allow hypervalent iodine as this is relatively common-->
 		<token value="-N=C=O">isocyanato</token>
 		<token value="-[N+]#[C-]">isocyano</token>
 		<token value="-N=C=[Se]">isoselenocyanato</token>

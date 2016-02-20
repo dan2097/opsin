@@ -1186,13 +1186,21 @@ class ComponentProcessor {
 			if (elementToApplyTo == null){
 				throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
 			}
-			if (AMINOACID_TYPE_VAL.equals(elementToApplyTo.getAttributeValue(TYPE_ATR))){
+			String type = elementToApplyTo.getAttributeValue(TYPE_ATR);
+			if (OPTICALROTATION_TYPE_VAL.equals(type)) {
+				elementToApplyTo = OpsinTools.getNextSibling(elementToApplyTo);
+				if (elementToApplyTo == null){
+					throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
+				}
+				type = elementToApplyTo.getAttributeValue(TYPE_ATR);
+			}
+			if (AMINOACID_TYPE_VAL.equals(type)) {
 				applyDlStereochemistryToAminoAcid(elementToApplyTo, dlStereochemistryValue);
 			}
-			else if (elementToApplyTo.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
+			else if (CARBOHYDRATE_TYPE_VAL.equals(type)) {
 				applyDlStereochemistryToCarbohydrate(elementToApplyTo, dlStereochemistryValue);
 			}
-			else if (CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL.equals(elementToApplyTo.getAttributeValue(TYPE_ATR))){
+			else if (CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL.equals(type)) {
 				applyDlStereochemistryToCarbohydrateConfigurationalPrefix(elementToApplyTo, dlStereochemistryValue);
 			}
 			else{
