@@ -2157,11 +2157,15 @@ class ComponentProcessor {
 
 			String suffixInstruction =group.getAttributeValue(SUFFIXAPPLIESTO_ATR);
 			String[] suffixInstructions = MATCH_COMMA.split(suffixInstruction);
+			int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
 			if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))){
 				if (suffixInstructions.length !=2){
 					throw new ComponentGenerationException("suffix: " + suffix.getValue() + " used on an inappropriate group");
 				}
-				suffix.addAttribute(new Attribute(LOCANTID_ATR, suffixInstruction));
+				String[] locantIds = new String[2];
+				locantIds[0] = Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) - 1);
+				locantIds[1] = Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[1]) - 1);
+				suffix.addAttribute(new Attribute(LOCANTID_ATR, StringTools.arrayToString(locantIds, ",")));
 				return;
 			}
 			boolean symmetricSuffixes =true;
@@ -2172,7 +2176,6 @@ class ComponentProcessor {
 				symmetricSuffixes = false;
 			}
 
-			int firstIdInFragment=suffixableFragment.getIdOfFirstAtom();
 			if (suffix.getAttribute(LOCANT_ATR)==null){
 				suffix.addAttribute(new Attribute(LOCANTID_ATR, Integer.toString(firstIdInFragment + Integer.parseInt(suffixInstructions[0]) -1)));
 			}
@@ -4786,9 +4789,8 @@ class ComponentProcessor {
 			if (locantIds.length !=2){
 				throw new ComponentGenerationException("OPSIN bug: Should be exactly 2 locants associated with a cyclic suffix");
 			}
-			int firstIdInFragment = suffixableFragment.getIdOfFirstAtom(); 
-			parentAtom1 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(locantIds[0]) -1);
-			parentAtom2 = suffixableFragment.getAtomByIDOrThrow(firstIdInFragment + Integer.parseInt(locantIds[1]) -1);
+			parentAtom1 = suffixableFragment.getAtomByIDOrThrow(Integer.parseInt(locantIds[0]));
+			parentAtom2 = suffixableFragment.getAtomByIDOrThrow(Integer.parseInt(locantIds[1]));
 		}
 		else{
 			int chainLength = suffixableFragment.getChainLength();
