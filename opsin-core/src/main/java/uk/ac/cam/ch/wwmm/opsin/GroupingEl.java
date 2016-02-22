@@ -1,8 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 class GroupingEl extends Element{
@@ -71,20 +69,13 @@ class GroupingEl extends Element{
 	}
 
 	String getValue() {
-		if (children.size() == 0) {
+		int childCount = getChildCount();
+		if (childCount == 0) {
 			return "";
 		}
 		StringBuilder result = new StringBuilder();
-		Deque<Element> stack = new ArrayDeque<Element>();
-		for (int i = children.size() -1; i >= 0; i--) {
-			stack.add(children.get(i));
-		}
-		while (stack.size() > 0){
-			Element currentElement = stack.removeLast();
-			result.append(currentElement.getValue());
-			for (int i = currentElement.getChildCount() -1; i >= 0; i--) {
-				stack.add(currentElement.getChild(i));
-			}
+		for (int i = 0; i < childCount; i++) {
+			result.append(children.get(i).getValue());
 		}
 		return result.toString();
 	}
