@@ -106,6 +106,9 @@ sense of this -->
 	<rule value="carbolactone">
 		<addgroup SMILES="[*]C(=O)O[*]"/>
 	</rule>
+	<rule value="carboximidoyl">
+		<addgroup SMILES="[*]C(=N)" outIDs="2"/>
+	</rule>
 	<rule value="carbonyl">
 		<addgroup SMILES="[*]C(=O)" outIDs="2"/>
 	</rule>
