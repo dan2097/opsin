@@ -7,6 +7,7 @@
 		<token value="aminyl">aminyl</token>
 		<token value="oyl" additionalValue="amide">amoyl</token>
 		<token value="oyl" additionalValue="anilide">aniloyl</token>
+		<token value="carbonimidoyl">carbonimidoyl</token>
 		<token value="carbonyl">carbonyl</token>
 		<token value="hydrazido">hydrazido</token>
 		<token value="io">io</token>
