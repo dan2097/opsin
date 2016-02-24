@@ -25,7 +25,7 @@
 
 <!--acyclic carbohydrate acid suffixes-->
 	<tokenList tagname="suffix" type="root" symbol="í">
-		<token value="arate">arate|arate(2-)</token>
+		<token value="arate">arate|arat|arate(2-)|arat(2-)</token>
 		<token value="aric acid">aric acid|aricacid</token>
 		<token value="onamide" locant="1">onamide|onamid</token>
 		<token value="onate" locant="1">onate|onat</token>
