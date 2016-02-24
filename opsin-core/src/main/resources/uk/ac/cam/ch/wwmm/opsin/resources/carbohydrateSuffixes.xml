@@ -7,15 +7,15 @@
 
 <!--cyclic carbohydrate acid suffixes-->
 	<tokenList tagname="suffix" type="root" subType="terminal" symbol="ë">
-		<token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
-		<token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
+		<token value="uronamide">uronamide|uronamid</token><!--Locanted implicitly to end of chain-->
+		<token value="uronate">uronate|uronat</token><!--Locanted implicitly to end of chain-->
 		<token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
 		<token value="uronic acid">uronicacid</token><!--Locanted implicitly to end of chain-->
-		<token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
-		<token value="osonamide" locant="1">onamide</token>
-		<token value="osonate" locant="1">onate</token>
+		<token value="urononitrile">urononitrile|urononitril</token><!--Locanted implicitly to end of chain-->
+		<token value="osonamide" locant="1">onamide|onamid</token>
+		<token value="osonate" locant="1">onate|onat</token>
 		<token value="osonic acid" locant="1">onic acid|onicacid</token>
-		<token value="osononitrile" locant="1">ononitrile</token>
+		<token value="osononitrile" locant="1">ononitrile|ononitril</token>
 	</tokenList>
 
 <!--default suffix, does not effect structure but required in names-->
@@ -27,19 +27,19 @@
 	<tokenList tagname="suffix" type="root" symbol="í">
 		<token value="arate">arate|arate(2-)</token>
 		<token value="aric acid">aric acid|aricacid</token>
-		<token value="onamide" locant="1">onamide</token>
-		<token value="onate" locant="1">onate</token>
+		<token value="onamide" locant="1">onamide|onamid</token>
+		<token value="onate" locant="1">onate|onat</token>
 		<token value="onic acid" locant="1">onic acid|onicacid</token>
-		<token value="ononitrile" locant="1">ononitrile</token>
-		<token value="osonamide" locant="1">osonamide</token>
-		<token value="osonate" locant="1">osonate</token>
+		<token value="ononitrile" locant="1">ononitrile|ononitril</token>
+		<token value="osonamide" locant="1">osonamide|osonamid</token>
+		<token value="osonate" locant="1">osonate|osonat</token>
 		<token value="osonic acid" locant="1">osonic acid|osonicacid</token>
-		<token value="osononitrile" locant="1">osononitrile</token>
-		<token value="uronamide">uronamide</token><!--Locanted implicitly to end of chain-->
-		<token value="uronate">uronate</token><!--Locanted implicitly to end of chain-->
+		<token value="osononitrile" locant="1">osononitrile|osononitril</token>
+		<token value="uronamide">uronamide|uronamid</token><!--Locanted implicitly to end of chain-->
+		<token value="uronate">uronate|uronat</token><!--Locanted implicitly to end of chain-->
 		<token value="uronic acid">uronic acid</token><!--Locanted implicitly to end of chain-->
 		<token value="uronic acid">uronicacid</token><!--Locanted implicitly to end of chain-->
-		<token value="urononitrile">urononitrile</token><!--Locanted implicitly to end of chain-->
+		<token value="urononitrile">urononitrile|urononitril</token><!--Locanted implicitly to end of chain-->
 	</tokenList>
 
 <!--An infix before lactone formation (and other analogous ring formations)-->
