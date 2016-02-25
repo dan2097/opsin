@@ -48,6 +48,11 @@ public class ParserTest {
 	public void testParseThrowsWhenNameIsSubstituentOnly() throws ParsingException {
 		parser.parse(config, "chloro");
 	}
+	
+	@Test(expected=ParsingException.class)
+	public void testNoParseForOneComponentSalt() throws ParsingException {
+		parser.parse(config, "pyridine salt");
+	}
 
 	@Test
 	public void testConvertStringToComponentRatios1() throws ParsingException {

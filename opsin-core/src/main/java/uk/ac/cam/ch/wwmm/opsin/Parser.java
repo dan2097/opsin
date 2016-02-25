@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -30,6 +32,7 @@ class Parser {
 	
 	private static final Pattern matchSemiColonSpace = Pattern.compile("; ");
 	private static final Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
+	private static final Logger LOG = Logger.getLogger(Parser.class);
 
 	/**
 	 * No-argument constructor. Uses ResouceGetter found at
@@ -116,6 +119,7 @@ class Parser {
 		}
 		
 		List<Element> results = new ArrayList<Element>();
+		ParsingException preciseException = null;
 		for(Parse pp : parses) {
 			Element moleculeEl = new GroupingEl(MOLECULE_EL);
 			moleculeEl.addAttribute(new Attribute(NAME_ATR, name));
@@ -141,18 +145,32 @@ class Parser {
 			 * WordRules can be nested within each other e.g. in Carbonyl cyanide m-chlorophenyl hydrazone ->
 			 * <wr><wr>Carbonyl cyanide</wr> m-chlorophenyl hydrazone </wr>
 			 */
-			try{
+			try {
 				wordRules.groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios);
+			} catch (ParsingException e) {
+				if(LOG.isDebugEnabled()) {
+					LOG.debug(e.getMessage(), e);
+				}
+				// Using that parse no word rules matched
+				continue;
+			}
+			try{
 				if (componentRatios != null){
 					applyStoichiometryIndicationToWordRules(moleculeEl, componentRatios);
 				}
+				if (moleculeEl.getAttributeValue(ISSALT_ATR) != null && moleculeEl.getChildElements(WORDRULE_EL).size() < 2) {
+					throw new ParsingException(name + " is apparently a salt, but the name only contained one component. The name could be describing a class of compounds");
+				}
 				results.add(moleculeEl);
+			} catch (ParsingException e) {
+				preciseException = e;
 			}
-			catch (ParsingException e) {
-				// Using that parse no word rules matched
-			}
+	
 		}
 		if (results.size() == 0) {
+			if (preciseException != null) {
+				throw preciseException;
+			}
 			throw new ParsingException(name + " could be parsed but OPSIN was unsure of the meaning of the words. This error will occur, by default, if a name is just a substituent");
 		}
 		
