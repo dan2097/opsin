@@ -17,6 +17,7 @@
 		<token value="N[O-]">aminoxide</token>
 		<token value="N[O+]">aminoxylium</token>
 		<token value="[NH2+]">aminylium</token>
+		<token value="[AsH3]">arsin</token>
 		<!--<token value="[O-]C(C[N+](C)(C)C)=O">betaine</token> also is a modifier of other amino acids-->
 		<token value="C(=O)(C)C(=O)C" labels="1//2/1'//2'">biacetyl</token>
 		<token value="O=C(CN(CCO)CCO)O">bicine</token>
@@ -199,6 +200,7 @@
 		<token value="O[O+]">peroxylium</token>
 		<token value="CC(C)=CC(C=C(C)C)=O">phorone</token>
 		<token value="C(=O)(Cl)Cl">phosgene</token>
+		<token value="[PH3]">phosphin</token>
 		<token value="P(=O)(N)(N)N" functionalIDs="3,4,5">phosphoramide</token>
 		<token value="P(=O)(Br)(Br)Br">phosphorus oxybromide</token>
 		<token value="P(=O)(Br)(Br)Br">phosphorous oxybromide</token><!--variant spelling-->
