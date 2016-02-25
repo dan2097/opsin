@@ -9,7 +9,7 @@
 		<token value="aminium">aminium</token>
 		<token value="aminylium">aminylium</token>
 		<token value="carbonylium">carbonylium</token>
-		<token value="carboxamide">carboxyamide</token><!--non-standard variant of carboxamide-->
+		<token value="carboxamide">carboxyamide|carboxyamid</token><!--non-standard variant of carboxamide-->
 		<token value="carboxylate">carboxylate|carboxylat</token>
 		<token value="carboxylic">carboxylic|carboxylicacid|carboxylic acid</token>
 		<token value="carboxylite">carboxylite|carboxylit</token>
@@ -18,8 +18,7 @@
 		<token value="iminide">iminide|iminid</token>
 		<token value="iminium">iminium</token>
 		<token value="iminylium">iminylium</token>
-		<token value="one" additionalValue="one">quinone</token><!--special cased to be the same as dione-->
-		<token value="one" additionalValue="one">quinon</token>
+		<token value="one" additionalValue="one">quinone|quinon</token><!--special cased to be the same as dione-->
 		<token value="ol">ol</token>
 		<token value="olate">olate|olat</token>
 		<token value="one">one|on</token>
@@ -67,7 +66,7 @@ al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != ac
 		<token value="aldoxime">aldoxime|aldoxim</token>
 		<token value="ate" additionalValue="amide">amate|amat</token>
 		<token value="ic" additionalValue="amide">amic|amicacid|amic acid</token>
-		<token value="ate" additionalValue="anilide">anilate</token>
+		<token value="ate" additionalValue="anilide">anilate|anilat</token>
 		<token value="ic" additionalValue="anilide">anilic|anilicacid|anilic acid</token>
 		<token value="ite">ite|it</token>
 		<token value="nitrolic acid">nitrolic acid|nitrolicacid</token>
@@ -84,8 +83,7 @@ al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != ac
 		<token value="amidylium">amidylium</token>
 		<token value="amidium">amidium</token>
 		<token value="anilide">anilide|anilid</token>
-		<token value="amidine">amidine</token><!--deprecated-->
-		<token value="amidine">amidin</token><!--deprecated-->
+		<token value="amidine">amidine|amidin</token><!--deprecated-->
 		<token value="amidinium">amidinium</token><!--deprecated-->
 		<token value="ate">ate|at</token>
 		<token value="hydrazide">hydrazide|hydrazid</token>
@@ -128,16 +126,16 @@ al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != ac
 
 <!--not allowed to prefixed by carbo(x)/sulfon etc. Have two attachment points as indicated by the subType-->
 	<tokenList tagname="suffix" type="root" subType="cycleformer" symbol="è">
-		<token value="carbolactone">carbolactone</token>
-		<token value="dicarboximide">dicarboximide</token>
+		<token value="carbolactone">carbolactone|carbolacton</token>
+		<token value="dicarboximide">dicarboximide|dicarboximid</token>
 		<token value="lactam">lactam</token>
 		<token value="lactim">lactim</token>
-		<token value="lactone">lactone</token>
-		<token value="olide">olide</token>
+		<token value="lactone">lactone|lacton</token>
+		<token value="olide">olide|olid</token>
 		<token value="sultam">sultam</token>
 		<token value="sultim">sultim</token>
-		<token value="sultine">sultine</token>
-		<token value="sultone">sultone</token>
+		<token value="sultine">sultine|sultin</token>
+		<token value="sultone">sultone|sulton</token>
 	</tokenList>
 
 </tokenLists>
