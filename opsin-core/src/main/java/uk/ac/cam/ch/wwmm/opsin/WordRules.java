@@ -468,7 +468,16 @@ class WordRules {
 					}
 				}
 			}
-			if (allowRadicals && wordEls.size()==1 && indexOfFirstWord==0 && firstWord.getName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
+			else if (WordType.functionalTerm.toString().equals(firstWord.getAttributeValue(TYPE_ATR)) &&  firstWord.getAttributeValue(VALUE_ATR).toLowerCase(Locale.ROOT).equals("salt")) {
+				wordEls.remove(indexOfFirstWord);
+				firstWord.detach();
+				if (moleculeEl.getAttribute(ISSALT_ATR) == null) {
+					moleculeEl.addAttribute(ISSALT_ATR, "yes");
+				}
+				return true;
+			}
+			if (allowRadicals && wordEls.size() == 1 && indexOfFirstWord == 0 && firstWord.getName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
+				//name is all one substituent, make this a substituent and finish
 				applySubstituentWordRule(wordEls, indexOfFirstWord, firstWord);
 			}
 			return false;

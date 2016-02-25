@@ -9,6 +9,9 @@
 		<token value="Br">bromohydrin</token>
 		<token value="I">iodohydrin</token>
 		<token value="C#N">cyanohydrin</token>
+
+		<!--Treatedd as a hint that an ionic salt was desired e.g. acetic acid sodium salt = sodium acetate. Requires that the chemical name be formed of at least two words-->
+		<token value="salt">salt</token>
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="functionalClass" subType="none" symbol="±">

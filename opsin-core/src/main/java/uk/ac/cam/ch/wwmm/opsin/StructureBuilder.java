@@ -1779,6 +1779,10 @@ class StructureBuilder {
 				}
 			}
 		}
+		boolean saltExpected = molecule.getAttribute(ISSALT_ATR) != null;
+		if (saltExpected) {
+			deprotonateAcidIfSaltWithMetal(molecule);
+		}
 		int overallCharge = state.fragManager.getOverallCharge();
 		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
 			balanceChargeIfPossible(molecule, overallCharge, explicitStoichiometryPresent);
@@ -1810,6 +1814,38 @@ class StructureBuilder {
 		}
 		return explicitStoichiometryPresent;
 	}
+	
+
+	private void deprotonateAcidIfSaltWithMetal(Element molecule) {
+		List<BuildResults> positivelyChargedComponents = new ArrayList<BuildResults>();
+		List<BuildResults> negativelyChargedComponents = new ArrayList<BuildResults>();
+		List<BuildResults> neutralComponents = new ArrayList<BuildResults>();
+		List<Element> wordRules = molecule.getChildElements(WORDRULE_ATR);
+		for (Element wordRule : wordRules) {
+			BuildResults br = new BuildResults(wordRule);
+			int charge = br.getCharge();
+			if (charge > 0) {
+				positivelyChargedComponents.add(br);
+			}
+			else if (charge < 0) {
+				negativelyChargedComponents.add(br);
+			}
+			else {
+				neutralComponents.add(br);
+			}
+		}
+		if (negativelyChargedComponents.size() == 0 && (positivelyChargedComponents.size() > 0 || getMetalsThatCanBeImplicitlyCations(molecule).size() > 0)) {
+			for (int i = neutralComponents.size() - 1; i>=0; i--) {
+				BuildResults br =neutralComponents.get(i);
+				for (int j = br.getFunctionalAtomCount() -1; j >=0; j--) {
+					Atom functionalAtom = br.getFunctionalAtom(j);
+					if (functionalAtom.getCharge() == 0 && functionalAtom.getIncomingValency() == 1){
+						functionalAtom.addChargeAndProtons(-1, -1);
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * A net charge is present; Given the molecule element the overallCharge is there an unambiguous way of 
@@ -1830,20 +1866,7 @@ class StructureBuilder {
 		Map<Element, Integer> componentToChargeMapping = new HashMap<Element, Integer>();
 		Map<Element, BuildResults> componentToBR = new HashMap<Element, BuildResults>();
 		
-		List<Element> cationicElements = new ArrayList<Element>();
-		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
-		for (Element elementaryAtom : elementaryAtoms) {
-			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
-				Fragment cationicFrag = elementaryAtom.getFrag();
-				if (cationicFrag.getFirstAtom().getCharge()==0){//if not 0 charge cannot be implicitly modified
-					String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
-					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
-					if (typicalCharge > cationicFrag.getFirstAtom().getBondCount()){
-						cationicElements.add(elementaryAtom);
-					}
-				}
-			}
-		}
+		List<Element> cationicElements = getMetalsThatCanBeImplicitlyCations(molecule);
 		overallCharge = setCationicElementsToTypicalCharge(cationicElements, overallCharge);
 		if (overallCharge==0){
 			return;
@@ -1903,6 +1926,24 @@ class StructureBuilder {
 				}
 			}
 		}
+	}
+
+	private List<Element> getMetalsThatCanBeImplicitlyCations(Element molecule) {
+		List<Element> cationicElements = new ArrayList<Element>();
+		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+		for (Element elementaryAtom : elementaryAtoms) {
+			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
+				Atom metalAtom = elementaryAtom.getFrag().getFirstAtom();
+				if (metalAtom.getCharge() == 0 && metalAtom.getProperty(Atom.OXIDATION_NUMBER) == null) {//if not 0 charge cannot be implicitly modified
+					String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
+					if (typicalCharge > metalAtom.getBondCount()){
+						cationicElements.add(elementaryAtom);
+					}
+				}
+			}
+		}
+		return cationicElements;
 	}
 
 

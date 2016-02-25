@@ -39,6 +39,9 @@ class XmlDeclarations {
 	 * Some are produced by OPSIN in the ComponentGenerator/ComponentProcessor
 	 */
 	
+	/**Adds a hydrogen to an unsaturated system, this is hydrogen that is added due to a suffix and is expressed in a locant e.g. 1(2H) */
+	static final String ADDEDHYDROGEN_EL ="addedHydrogen";
+	
 	/**A component of an alkaneStem e.g. [octa][hexaconta][tetract]ane will have three alkaneStemComponents*/
 	static final String ALKANESTEMCOMPONENT ="alkaneStemComponent";
 	
@@ -102,15 +105,15 @@ class XmlDeclarations {
 
 	/**Adds a hydrogen to an unsaturated system (hydro/perhydro)*/
 	static final String HYDRO_EL ="hydro";
-	
+
 	/**One of the systematic hydrocarbon fused ring series e.g. tetralene, pentalene. Converted to a group by the ComponentGenerator*/
 	static final String HYDROCARBONFUSEDRINGSYSTEM_EL ="hydrocarbonFusedRingSystem";
 
 	/**Adds a hydrogen to an unsaturated system to indicate what atoms are saturated in a system where not all atoms with spare valency can form double bonds e.g.  e.g. 2H-pyran*/
 	static final String INDICATEDHYDROGEN_EL ="indicatedHydrogen";
 	
-	/**Adds a hydrogen to an unsaturated system, this is hydrogen that is added due to a suffix and is expressed in a locant e.g. 1(2H) */
-	static final String ADDEDHYDROGEN_EL ="addedHydrogen";
+	/**Was the word salt encountered indicating that a salt was expected? */
+	static final String ISSALT_ATR = "isSalt";
 	
 	/**A hyphen between two substituents. Used as hint that the two substituents do not join together*/
 	static final String HYPHEN_EL ="hyphen";
