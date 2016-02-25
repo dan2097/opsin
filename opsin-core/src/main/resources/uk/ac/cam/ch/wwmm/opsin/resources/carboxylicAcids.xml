@@ -193,6 +193,7 @@
 		<token value="C/C=C/c1cc(OC)c(O)c(OC)c1">sinap</token>
 		<token value="C/C=C/C=C/C" labels="numeric" usableAsAJoiner="yes">sorb</token>
 		<token value="Cc1cc(OC)c(O)c(OC)c1" labels="/1/2/3///4//5///6">syring</token>
+		<token value="CCCCCCCCCC=C" labels="numeric">undecylen</token>
 		<token value="CCCCCCCCCC/C=C/CCCCCC" labels="numeric" usableAsAJoiner="yes">vaccen</token>
 		<token value="Cc1cc(OC)c(O)cc1" labels="/1/2,ortho/3,meta///4,para//5/6">vanill</token>
 		<token value="Cc1cc(OC)c(OC)cc1" labels="/1/2,ortho/3,meta///4,para///5/6">veratr</token>
