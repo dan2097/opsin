@@ -44,7 +44,9 @@
 		<token value="NCCCCCN" labels="/1/2/3/4/5/" defaultInID="1">cadaverine</token>
 		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10">camphor</token>
 		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" addGroup="S(=O)(=O)[O-] locant 10" frontLocantsExpected="3,4,5,6,8,9,10" functionalIDs="15">camphorsulfonate</token>
+		<token value="C123C(=O)CC4CC1.C24(C)C.C3S(=O)(=O)[O-]" labels="1/2//3/4/5/6/7/8/9/10////" functionalIDs="15">camphor-10-sulfonate</token>
 		<token value="C123C(=O)CC4CC1.C24(C)C.C3" labels="1/2//3/4/5/6/7/8/9/10" addGroup="S(=O)(=O)O locant 10" frontLocantsExpected="3,4,5,6,8,9,10" functionalIDs="15">camphorsulfonic|camphorsulfonicacid|camphorsulfonic acid</token>
+		<token value="C123C(=O)CC4CC1.C24(C)C.C3S(=O)(=O)O" labels="1/2//3/4/5/6/7/8/9/10////" functionalIDs="15">camphor-10-sulfonic|camphor-10-sulfonicacid|camphor-10-sulfonic acid</token>
 		<token value="C(=O)CCCCCCCCC" labels="1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10">capraldehyde</token>
 		<token value="NC(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" functionalIDs="1">capramide</token>
 		<token value="[O-]C(=O)CCCCCCCCC" labels="/1//2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta/8/9/10" functionalIDs="1">caprate</token>
