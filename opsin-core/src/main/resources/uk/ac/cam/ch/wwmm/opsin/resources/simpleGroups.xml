@@ -283,6 +283,7 @@
 		<token value="CC(C)(C)C(C)C">triptane</token>
 		<token value="CCCCCCCCCCCCCCCCCC(OCC(OC(CCCCCCCCCCCCCCCCC)=O)COC(CCCCCCCCCCCCCCCCC)=O)=O">tristearin</token>
 		<token value="NC(=O)NC(=O)NC(=O)N" labels="1/2//3/4//5/6//7">triuret</token>
+		<token value="NC(CO)(CO)CO">trometamol|tromethamine|tromethamin|tromethane|tromethan</token>
 		<token value="[CH+]1cccccc1" labels="1/2/3/4/5/6/7">tropylium</token>
 		<token value="[U+2](=O)=O">uranyl</token>
 		<token value="NC(=O)N" labels="1/2//3">urea</token>
