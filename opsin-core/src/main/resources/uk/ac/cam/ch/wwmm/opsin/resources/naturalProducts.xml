@@ -18,7 +18,7 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="C[C@@]12CCC[C@H]1[C@@H]1CCC3CCCC[C@@H]3[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">estr|oestr</token>
 		<token value="CC(C)CCC1O[C@H]2C[C@H]3[C@@H]4CCC5CCCC[C@]5(C)[C@H]4CC[C@]3(C)[C@H]2[C@@H]1C" labels="27/25/26/24/23/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/17/20/21" alphaBetaClockWiseAtomOrdering="11/12/13/17/20/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/9">furost</token>
 		<token value="C1C[C@H]2CC[C@H]3[C@@H](CCC4CCCC[C@H]34)[C@@H]2C1" labels="16/17/13/12/11/9/8/7/6/5/4/3/2/1/10/14/15" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gon</token>
-		<token value="CC(C)[C@@H](C)[C@@]1(C)C[C@@H]1[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/33/34/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gorgoste</token>
+		<token value="CC(C)[C@@H](C)[C@@]1(C)C[C@@H]1[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="26/25/27/24/28/23/33/34/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">gorgost</token>
 		<token value="CC[C@@H](CC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C)C(C)C" labels="29/28/24/23/22/20/21/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/25/26/27" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">poriferast</token>
 		<token value="CC[C@H]1CC[C@H]2[C@@H]3CCC4CCCC[C@]4(C)[C@H]3CC[C@]12C" labels="21/20/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">pregn</token>
 		<token value="C[C@H]1[C@H]2[C@H](C[C@H]3[C@@H]4CCC5CCCC[C@]5(C)[C@H]4CC[C@]23C)O[C@]11CCC(C)CO1" labels="21/20/17/16/15/14/8/7/6/5/4/3/2/1/10/19/9/11/12/13/18/UnlabelledO/22/23/24/25/27/26/" alphaBetaClockWiseAtomOrdering="11/12/13/17/20/22/UnlabelledO/16/15/14/8/7/6/5/4/3/2/1/10/9">spirost</token>
@@ -31,7 +31,9 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="G">
 <!--steroids-->
 		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2[C@H]1CCC(=O)OC1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/22/23/24///21" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">bufanolide</token>
+		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2C=1C=CC(=O)OC1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/22/23/24///21" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">bufadienolide</token>
 		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2[C@@H]1COC(=O)C1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/21//23//22" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cardanolide</token>
+		<token value="C[C@]12CC[C@H]3[C@@H](CCC4CCCC[C@]34C)[C@H]1CC[C@@H]2C=1COC(=O)C1" labels="18/13/12/11/9/8/7/6/5/4/3/2/1/10/19/14/15/16/17/20/21//23//22" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">cardenolide</token>
 
 <!--not retained-->
 		<token value="C[C@@]12C=CC[C@H]1[C@@H]1CC[C@H]3C[C@H](O)CC[C@]3(C)[C@H]1CC2" labels="18/13/17/16/15/14/8/7/6/5/4/3//2/1/10/19/9/11/12" alphaBetaClockWiseAtomOrdering="11/12/13/17/16/15/14/8/7/6/5/4/3/2/1/10/9">androstenol</token>
