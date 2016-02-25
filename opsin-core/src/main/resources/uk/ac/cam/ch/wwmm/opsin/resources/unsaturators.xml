@@ -2,7 +2,7 @@
 <!-- "value" is the integer bond order to set the bond to-->
 <tokenLists>
 	<tokenList tagname="unsaturator" symbol="u">
-		<token value="2">en|ene</token>
+		<token value="2">ene|en</token>
 		<token value="3">yne|yn</token>
 	</tokenList>
 
