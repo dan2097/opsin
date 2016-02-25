@@ -222,29 +222,29 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="oxide" type="full">
 		<word type="full" endsWithRegex="(?&lt;!ic|ous)" />
-		<word type="functionalTerm" endsWithRegex="(oxide|sulfide|selenide|telluride)" functionalGroupType="functionalClass" />
+		<word type="functionalTerm" endsWithRegex="(oxid|sulfid|selenid|tellurid)[e]?" functionalGroupType="functionalClass" />
 	</wordRule>
 
 	<wordRule name="carbonylDerivative" type="full">
 		<word type="full" />
 		<word type="substituent" />
-		<word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\]\)\}]*" />
+		<word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxim|hydrazon|(iso)?(semicarbazon|thiosemicarbazon|selenosemicarbazon|tellurosemicarbazon)|imid|imin|semioxamazon)[e]?[\]\)\}]*" />
 	</wordRule>
 
 	<wordRule name="carbonylDerivative" type="full">
 		<word type="full" />
-		<word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxime|hydrazone|semicarbazone|isosemicarbazone|isothiosemicarbazone|isoselenosemicarbazone|isotellurosemicarbazone|imide|imine|semioxamazone)[\]\)\}]*" />
+		<word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxim|hydrazon|semicarbazon|isosemicarbazon|isothiosemicarbazon|isoselenosemicarbazon|isotellurosemicarbazon|imid|imin|semioxamazon)[e]?[\]\)\}]*" />
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
 		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
-		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
-		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
@@ -285,12 +285,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" endsWithRegex="anhydride[\]\)\}]*"/>
+		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">
@@ -339,7 +339,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="amineDiConjunctiveSuffix" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="full" endsWithRegex="^(N,N-)?diacet(ic[ ]?acid|ate)"/>
+		<word type="full" endsWithRegex="^(N,N-)?diacet(ic[ ]?acid|at[e]?)"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
