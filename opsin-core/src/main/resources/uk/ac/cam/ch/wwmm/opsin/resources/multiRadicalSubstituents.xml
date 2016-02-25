@@ -5,8 +5,7 @@
 	<!-- implement ylene =diyl for rings e.g. naphthylene-->
 		<token value="C" labels="1" outIDs="1,1" usableAsAJoiner="yes" iminoLike="yes">methylene|methylen</token>
 		<token value="CC" labels="1/2" outIDs="1,2">ethylene|ethylen</token>
-		<token value="CCC" labels="1/2/3" outIDs="1,2">propylene</token><!--retained in 1979 guidelines, note it is not 1,3-->
-		<token value="CCC" labels="1/2/3" outIDs="1,2">propylen</token>
+		<token value="CCC" labels="1/2/3" outIDs="1,2">propylene|propylen</token><!--retained in 1979 guidelines, note it is not 1,3-->
 		<token value="CCCC" labels="1/2/3/4" outIDs="1,4">butylene|butylen</token>
 		<token value="CCCCC" labels="numeric" outIDs="1,5">pentylene|pentylen</token>
 		<token value="CCCCCC" labels="numeric" outIDs="1,6">hexylene|hexylen</token>
@@ -16,19 +15,19 @@
 		<token value="CCCCCCCCCCC" labels="numeric" outIDs="1,11">undecylene|undecylen</token>
 
 		<token value="C" outIDs="1,1" usableAsAJoiner="yes" iminoLike="yes">carbene</token>
-		<token value="C=C" labels="1/2" outIDs="1,2">vinylene</token>
-		<token value="CC(C)(C)C" outIDs="1,3">neopentylene</token>
+		<token value="C=C" labels="1/2" outIDs="1,2">vinylene|vinylen</token>
+		<token value="CC(C)(C)C" outIDs="1,3">neopentylene|neopentylen</token>
 
-		<token value="c1c(C)c(C)cc(C)c1C" outIDs="1,6">durylene</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="1,2">phenylene</token>
-		<token value="=Cc1c2cccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/">phthalylidene|phthalal</token>
-		<token value="=Cc1cc2ccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/">isophthalylidene|isophthalal</token>
-		<token value="=Cc1ccc2cc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/">terephthalylidene|terephthalal</token>
-		<token value="Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" outIDs="3,5">tolylene</token>
+		<token value="c1c(C)c(C)cc(C)c1C" outIDs="1,6">durylene|durylen</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="1,2">phenylene|phenylen</token>
+		<token value="=Cc1c2cccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/">phthalylidene|phthalyliden|phthalal</token>
+		<token value="=Cc1cc2ccc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/">isophthalylidene|isophthalyliden|isophthalal</token>
+		<token value="=Cc1ccc2cc1.C2=" labels="/1/2,ortho/3,meta/4,para/5/6/">terephthalylidene|terephthalyliden|terephthalal</token>
+		<token value="Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6" outIDs="3,5">tolylene|tolylen</token>
 		<token value="NNC(=O)N" labels="1/2/3//4" outIDs="1,1">semicarbazono</token>
-		<token value="[SiH3]O" outIDs="1,2">siloxane</token>
-		<token value="NC(=O)N" labels="3/2//1" outIDs="1,4">ureylene</token>
-		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="7,8" addGroup="C locant 1;C defaultLocant 2" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylylene</token>
+		<token value="[SiH3]O" outIDs="1,2">siloxane|siloxan</token>
+		<token value="NC(=O)N" labels="3/2//1" outIDs="1,4">ureylene|ureylen</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" outIDs="7,8" addGroup="C locant 1;C defaultLocant 2" frontLocantsExpected="1,2,ortho,3,meta,4,para,5,6">xylylene|xylylen</token>
 
 		<token value="NN" labels="1/2" outIDs="1,2" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">hydrazo</token>
 		<token value="=NN=">azino</token>
@@ -38,16 +37,16 @@
 		<token value="[NH+]([O-])=N" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">non-azoxy</token><!--unknown oxygen position-->
 		<token value="[NH+]([O-])=N" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">onn-azoxy</token>
 		<token value="NN=N" outIDs="1,3" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">diazoamino</token>
-		<token value="N" outIDs="1,1">nitrene|aminylene</token>
+		<token value="N" outIDs="1,1">nitrene|aminylene|aminylen</token>
 		<token value="N" outIDs="1,1" usableAsAJoiner="yes" iminoLike="yes">imino</token>
 		<token value="[NH4+]" outIDs="1,1" usableAsAJoiner="yes" iminoLike="yes">iminio</token>
 		<token value="N" outIDs="1,1,1">nitrilo</token>
 		<token value="[NH4+]" outIDs="1,1,1">nitrilio</token>
 
-		<token value="[P|3]" outIDs="1,1,1">phosphinidyne</token>
-		<token value="[As|3]" outIDs="1,1,1">arsinidyne</token>
-		<token value="[Sb|3]" outIDs="1,1,1">stibylidyne</token>
-		<token value="[Bi|3]" outIDs="1,1,1">bismuthylidyne</token>
+		<token value="[P|3]" outIDs="1,1,1">phosphinidyne|phosphinidyn</token>
+		<token value="[As|3]" outIDs="1,1,1">arsinidyne|arsinidyn</token>
+		<token value="[Sb|3]" outIDs="1,1,1">stibylidyne|stibylidyn</token>
+		<token value="[Bi|3]" outIDs="1,1,1">bismuthylidyne|bismuthylidyn</token>
 		<token value="[P|4+]" outIDs="1,1">phosphinidenio</token>
 		<token value="[As|4+]" outIDs="1,1">arsinidenio</token>
 		<token value="[P|5](=O)(O)" outIDs="1,1">phosphinico</token>
@@ -61,11 +60,11 @@
 		<token value="[As|5](=O)[O-]" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">arsinato</token>
 		<token value="[Sb|5](=O)[O-]" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">stibinato</token>
 
-		<token value="[SiH4]" outIDs="1,1">silylene</token>
-		<token value="[GeH4]" outIDs="1,1">germylene</token>
-		<token value="[SnH4]" outIDs="1,1">stannylene</token>
-		<token value="[PbH4]" outIDs="1,1">plumbylene</token>
-		<token value="B" outIDs="1,1">borylene</token>
+		<token value="[SiH4]" outIDs="1,1">silylene|silylen</token>
+		<token value="[GeH4]" outIDs="1,1">germylene|germylen</token>
+		<token value="[SnH4]" outIDs="1,1">stannylene|stannylen</token>
+		<token value="[PbH4]" outIDs="1,1">plumbylene|plumbylen</token>
+		<token value="B" outIDs="1,1">borylene|borylen</token>
 
 		<token value="O" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">oxy</token>
 		<!--limit chalcogen analogues to valency 2 to resolve ambiguity in badly bracketted names-->
@@ -96,6 +95,6 @@
 		<token value="N" outIDs="1,1">epiazano|epimino|epiimino</token>
 	</tokenList>
 	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="Ù">
-		<token value="N" outIDs="1,1,1">amine</token><!--Can not be used as the core of multiplicative nomenclature-->
+		<token value="N" outIDs="1,1,1">amine|amin</token><!--Can not be used as the core of multiplicative nomenclature-->
 	</tokenList>
 </tokenLists>

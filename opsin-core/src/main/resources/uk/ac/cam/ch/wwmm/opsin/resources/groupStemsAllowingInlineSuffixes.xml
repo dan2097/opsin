@@ -32,7 +32,7 @@
 		<token value="[PbH3+]">plumbylium</token>
 
 	<!--These forms imply valency 3-->
-		<token value="[PH3]" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl-->
+		<token value="[PH3]" usableAsAJoiner="yes">phosphine</token><!--e required to avoid confusion with CAS definition of phosphinyl/arsinyl as derivaties of phosphinic/arsinic acid-->
 		<token value="[AsH3]" usableAsAJoiner="yes">arsine</token>
 		<token value="[SbH3]" usableAsAJoiner="yes">stibin</token>
 		<token value="[BiH3]" usableAsAJoiner="yes">bismuthin</token>

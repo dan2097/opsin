@@ -16,38 +16,38 @@
 
 	<tokenList tagname="functionalGroup" type="functionalClass" subType="none" symbol="±">
 		<!--Carbonyl replacement terms. The first atom replaces a carbonyl oxygen-->
-		<token value="=NO" labels="/O">oxime</token>
-		<token value="=NS" labels="/S">thioxime</token>
-		<token value="=N[Se|2]" labels="/Se">selenoxime</token>
-		<token value="=N[Te|2]" labels="/Te">telluroxime</token>
-		<token value="=NN" labels="/1,N">hydrazone</token>
-		<token value="=NNC(=O)N" labels="1/2/3//4">semicarbazone</token>
-		<token value="=NNC(=S)N" labels="1/2/3//4">thiosemicarbazone</token>
-		<token value="=NNC(=[Se])N" labels="1/2/3//4">selenosemicarbazone</token>
-		<token value="=NNC(=[Te])N" labels="1/2/3//4">tellurosemicarbazone</token>
-		<token value="=NNC(O)=N">isosemicarbazone</token>
-		<token value="=NNC(S)=N">isothiosemicarbazone</token>
-		<token value="=NNC([SeH])=N">isoselenosemicarbazone</token>
-		<token value="=NNC([TeH])=N">isotellurosemicarbazone</token>
-		<token value="=NNC(=O)C(=O)N" labels="1/2/3//4//5">semioxamazone</token>
-		<token value="=N" labels="N">imide</token>
-		<token value="=N" labels="N">imine</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
+		<token value="=NO" labels="/O">oxime|oxim</token>
+		<token value="=NS" labels="/S">thioxime|thioxim</token>
+		<token value="=N[Se|2]" labels="/Se">selenoxime|selenoxim</token>
+		<token value="=N[Te|2]" labels="/Te">telluroxime|telluroxim</token>
+		<token value="=NN" labels="/1,N">hydrazone|hydrazon</token>
+		<token value="=NNC(=O)N" labels="1/2/3//4">semicarbazone|semicarbazon</token>
+		<token value="=NNC(=S)N" labels="1/2/3//4">thiosemicarbazone|thiosemicarbazon</token>
+		<token value="=NNC(=[Se])N" labels="1/2/3//4">selenosemicarbazone|selenosemicarbazon</token>
+		<token value="=NNC(=[Te])N" labels="1/2/3//4">tellurosemicarbazone|tellurosemicarbazon</token>
+		<token value="=NNC(O)=N">isosemicarbazone|isosemicarbazon</token>
+		<token value="=NNC(S)=N">isothiosemicarbazone|isothiosemicarbazon</token>
+		<token value="=NNC([SeH])=N">isoselenosemicarbazone|isoselenosemicarbazon</token>
+		<token value="=NNC([TeH])=N">isotellurosemicarbazone|isotellurosemicarbazon</token>
+		<token value="=NNC(=O)C(=O)N" labels="1/2/3//4//5">semioxamazone|semioxamazon</token>
+		<token value="=N" labels="N">imide|imid</token>
+		<token value="=N" labels="N">imine|imin</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
 
 		<!--Indicate addition of chalcogen OR formation of chalcogen ether OR inorganic salt with chalcogen-->
-		<token value="O">oxide</token>
-		<token value="S">sulfide</token>
-		<token value="[Se|2]">selenide</token>
-		<token value="[Te|2]">telluride</token>
+		<token value="O">oxide|oxid</token>
+		<token value="S">sulfide|sulfid</token>
+		<token value="[Se|2]">selenide|selenid</token>
+		<token value="[Te|2]">telluride|tellurid</token>
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="acidReplacingFunctionalGroup" subType="none" symbol="±">
-		<token value="[NH2-]">amide</token>
-		<token value="N1CCC1" labels="1/2/3/4">azetidide</token>
-		<token value="NN" labels="1/2">hydrazide</token>
-		<token value="N1CCOCC1">morpholide</token>
-		<token value="N1CCNCC1" labels="1/2/3/4/5/6">piperazide</token>
-		<token value="N1CCCCC1" labels="1/2/3/4/5/6">piperidide</token>
-		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidide</token>
+		<token value="[NH2-]">amide|amid</token>
+		<token value="N1CCC1" labels="1/2/3/4">azetidide|azetidid</token>
+		<token value="NN" labels="1/2">hydrazide|hydrazid</token>
+		<token value="N1CCOCC1">morpholide|morpholid</token>
+		<token value="N1CCNCC1" labels="1/2/3/4/5/6">piperazide|piperazid</token>
+		<token value="N1CCCCC1" labels="1/2/3/4/5/6">piperidide|piperidid</token>
+		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidide|pyrrolidid</token>
 	</tokenList>
 
 	<tokenList tagname="functionalClass" type="functionalClass"  symbol="¿">
@@ -60,14 +60,14 @@
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="functionalClass" subType="anhydride" symbol="¸">
-		<token value="O">anhydride</token>
-		<token value="S">thioanhydride</token>
-		<token value="[Se|2]">selenoanhydride</token>
-		<token value="[Te|2]">telluroanhydride</token>
-		<token value="OO">peroxyanhydride</token>
-		<token value="SS">dithioperoxyanhydride</token>
-		<token value="[Se|2][Se|2]">diselenoperoxyanhydride</token>
-		<token value="[Te|2][Te|2]">ditelluroperoxyanhydride</token>
+		<token value="O">anhydride|anhydrid</token>
+		<token value="S">thioanhydride|thioanhydrid</token>
+		<token value="[Se|2]">selenoanhydride|selenoanhydrid</token>
+		<token value="[Te|2]">telluroanhydride|telluroanhydrid</token>
+		<token value="OO">peroxyanhydride|peroxyanhydrid</token>
+		<token value="SS">dithioperoxyanhydride|dithioperoxyanhydrid</token>
+		<token value="[Se|2][Se|2]">diselenoperoxyanhydride|diselenoperoxyanhydrid</token>
+		<token value="[Te|2][Te|2]">ditelluroperoxyanhydride|ditelluroperoxyanhydrid</token>
 	</tokenList>
 
 	<tokenList tagname="functionalModifier" symbol="µ">
@@ -89,79 +89,79 @@ For these groups the charge on the first atom will be increased by 1 if they are
 
 	<tokenList tagname="functionalGroup" type="diValentGroup" symbol="³">
 		<token value="O">ether</token>
-		<token value="C=O">ketone</token>
-		<token value="C(=O)C(=O)-">diketone</token>
-		<token value="C(=O)C(=O)C(=O)-">triketone</token>
-		<token value="C=NO">ketoxime</token>
-		<token value="O">oxide</token>
-		<token value="OO-">peroxide</token>
-		<token value="[Se|2]">selenide</token>
-		<token value="[Se|2][Se|2]-">diselenide</token>
-		<token value="[Se|2][Se|2][Se|2]-">triselenide</token>
-		<token value="[Se|6](=O)=O">selenone</token>
-		<token value="[Se|6](=O)(=O)[Se|6](=O)(=O)-">diselenone</token>
-		<token value="[Se|4]=O">selenoxide</token>
-		<token value="[Se|4](=O)[Se|4](=O)-">diselenoxide</token>
+		<token value="C=O">ketone|keton</token>
+		<token value="C(=O)C(=O)-">diketone|diketon</token>
+		<token value="C(=O)C(=O)C(=O)-">triketone|triketon</token>
+		<token value="C=NO">ketoxime|ketoxim</token>
+		<token value="O">oxide|oxid</token>
+		<token value="OO-">peroxide|peroxid</token>
+		<token value="[Se|2]">selenide|selenid</token>
+		<token value="[Se|2][Se|2]-">diselenide|diselenid</token>
+		<token value="[Se|2][Se|2][Se|2]-">triselenide|triselenid</token>
+		<token value="[Se|6](=O)=O">selenone|selenon</token>
+		<token value="[Se|6](=O)(=O)[Se|6](=O)(=O)-">diselenone|diselenon</token>
+		<token value="[Se|4]=O">selenoxide|selenoxid</token>
+		<token value="[Se|4](=O)[Se|4](=O)-">diselenoxide|diselenoxid</token>
 		<token value="[Se|2]">selenoether</token>
-		<token value="C=[Se]">selenoketone</token>
-		<token value="S">sulfide</token>
-		<token value="SS-">disulfide</token>
-		<token value="SSS-">trisulfide</token>
-		<token value="SSSS-">tetrasulfide</token>
-		<token value="SSSSS-">pentasulfide</token>
-		<token value="SSSSSS-">hexasulfide</token>
-		<token value="S(=O)=O">sulfone</token>
-		<token value="S((=O)=O)S((=O)=O)-">disulfone</token>
-		<token value="S=O">sulfoxide</token>
-		<token value="S(=O)S(=O)-">disulfoxide</token>
-		<token value="[Te|2]">telluride</token>
-		<token value="[Te|2][Te|2]-">ditelluride</token>
-		<token value="[Te|2][Te|2][Te|2]-">tritelluride</token>
+		<token value="C=[Se]">selenoketone|selenoketon</token>
+		<token value="S">sulfide|sulfid</token>
+		<token value="SS-">disulfide|disulfid</token>
+		<token value="SSS-">trisulfide|trisulfid</token>
+		<token value="SSSS-">tetrasulfide|tetrasulfid</token>
+		<token value="SSSSS-">pentasulfide|pentasulfid</token>
+		<token value="SSSSSS-">hexasulfide|hexasulfid</token>
+		<token value="S(=O)=O">sulfone|sulfon</token>
+		<token value="S((=O)=O)S((=O)=O)-">disulfone|disulfon</token>
+		<token value="S=O">sulfoxide|sulfoxid</token>
+		<token value="S(=O)S(=O)-">disulfoxide|disulfoxid</token>
+		<token value="[Te|2]">telluride|tellurid</token>
+		<token value="[Te|2][Te|2]-">ditelluride|ditellurid</token>
+		<token value="[Te|2][Te|2][Te|2]-">tritelluride|tritellurid</token>
 		<token value="[Te|2]">telluroether</token>
-		<token value="C=[Te]">telluroketone</token>
-		<token value="[Te|6](=O)=O">tellurone</token>
-		<token value="[Te|6](=O)(=O)[Te|6](=O)(=O)-">ditellurone</token>
-		<token value="[Te|4]=O">telluroxide</token>
-		<token value="[Te|4](=O)[Te|4](=O)-">ditelluroxide</token>
+		<token value="C=[Te]">telluroketone|telluroketon</token>
+		<token value="[Te|6](=O)=O">tellurone|telluron</token>
+		<token value="[Te|6](=O)(=O)[Te|6](=O)(=O)-">ditellurone|ditelluron</token>
+		<token value="[Te|4]=O">telluroxide|telluroxid</token>
+		<token value="[Te|4](=O)[Te|4](=O)-">ditelluroxide|ditelluroxid</token>
 		<token value="S">thioether</token>
-		<token value="C=S">thioketone</token>
+		<token value="C=S">thioketone|thioketon</token>
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="monoValentStandaloneGroup" symbol="´">
-		<token value="[N-]=[N+]=[N-]">azide</token>
-		<token value="[Br-]">bromide</token>
-		<token value="[Cl-]">chloride</token>
-		<token value="[O-]C#N">cyanate</token>
-		<token value="[C-]#N">cyanide</token>
-		<token value="[2H-]">deuteride</token>
-		<token value="[F-]">fluoride</token>
-		<token value="[O-][N+]#[C-]">fulminate</token><!--technically fulminates are isofulminates but structure of fulminic acid was only later determined-->
-		<token value="[H-]">hydride</token>
-		<token value="[O-]O">hydroperoxide</token>
-		<token value="[SeH-]">hydroselenide</token>
-		<token value="[Se-][SeH]">hydrodiselenide</token>
-		<token value="[Se-][Se][SeH]">hydrotriselenide</token>
-		<token value="[SH-]">hydrosulfide</token>
-		<token value="[S-]S">hydrodisulfide</token>
-		<token value="[S-]SS">hydrotrisulfide</token>
-		<token value="[S-]SSS">hydrotetrasulfide</token>
-		<token value="[TeH-]">hydrotelluride</token>
-		<token value="[Te-][TeH]">hydroditelluride</token>
-		<token value="[Te-][Te][TeH]">hydrotritelluride</token>
-		<token value="[I-]">iodide</token>
-		<token value="[N-]=C=O">isocyanate</token>
-		<token value="N#[C-]">isocyanide</token>
-		<token value="[O-][N+]#[C-]">isofulminate</token>
-		<token value="N#[C-]">isonitrile</token>
-		<token value="[N-]=C=[Se]">isoselenocyanate</token>
-		<token value="[N-]=C=[Te]">isotellurocyanate</token>
-		<token value="[N-]=C=S">isothiocyanate</token>
-		<token value="[Se-]C#N">selenocyanate</token>
-		<token value="[Se-][N+]#[C-]">selenofulminate</token>
-		<token value="[Te-]C#N">tellurocyanate</token>
-		<token value="[Te-][N+]#[C-]">tellurofulminate</token>
-		<token value="[S-]C#N">thiocyanate</token>
-		<token value="[S-][N+]#[C-]">thiofulminate</token>
+		<token value="[N-]=[N+]=[N-]">azide|azid</token>
+		<token value="[Br-]">bromide|bromid</token>
+		<token value="[Cl-]">chloride|chlorid</token>
+		<token value="[O-]C#N">cyanate|cyanat</token>
+		<token value="[C-]#N">cyanide|cyanid</token>
+		<token value="[2H-]">deuteride|deuterid</token>
+		<token value="[F-]">fluoride|fluorid</token>
+		<token value="[O-][N+]#[C-]">fulminate|fulminat</token><!--technically fulminates are isofulminates but structure of fulminic acid was only later determined-->
+		<token value="[H-]">hydride|hydrid</token>
+		<token value="[O-]O">hydroperoxide|hydroperoxid</token>
+		<token value="[SeH-]">hydroselenide|hydroselenid</token>
+		<token value="[Se-][SeH]">hydrodiselenide|hydrodiselenid</token>
+		<token value="[Se-][Se][SeH]">hydrotriselenide|hydrotriselenid</token>
+		<token value="[SH-]">hydrosulfide|hydrosulfid</token>
+		<token value="[S-]S">hydrodisulfide|hydrodisulfid</token>
+		<token value="[S-]SS">hydrotrisulfide|hydrotrisulfid</token>
+		<token value="[S-]SSS">hydrotetrasulfide|hydrotetrasulfid</token>
+		<token value="[TeH-]">hydrotelluride|hydrotellurid</token>
+		<token value="[Te-][TeH]">hydroditelluride|hydroditellurid</token>
+		<token value="[Te-][Te][TeH]">hydrotritelluride|hydrotritellurid</token>
+		<token value="[I-]">iodide|iodid</token>
+		<token value="[N-]=C=O">isocyanate|isocyanat</token>
+		<token value="N#[C-]">isocyanide|isocyanid</token>
+		<token value="[O-][N+]#[C-]">isofulminate|isofulminat</token>
+		<token value="N#[C-]">isonitrile|isonitril</token>
+		<token value="[N-]=C=[Se]">isoselenocyanate|isoselenocyanat</token>
+		<token value="[N-]=C=[Te]">isotellurocyanate|isotellurocyanat</token>
+		<token value="[N-]=C=S">isothiocyanate|isothiocyanat</token>
+		<token value="[Se-]C#N">selenocyanate|selenocyanat</token>
+		<token value="[Se-][N+]#[C-]">selenofulminate|selenofulminat</token>
+		<token value="[Te-]C#N">tellurocyanate|tellurocyanat</token>
+		<token value="[Te-][N+]#[C-]">tellurofulminate|tellurofulminat</token>
+		<token value="[S-]C#N">thiocyanate|thiocyanat</token>
+		<token value="[S-][N+]#[C-]">thiofulminate|thiofulminat</token>
 	</tokenList>
 
 </tokenLists>

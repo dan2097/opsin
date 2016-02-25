@@ -44,7 +44,7 @@
 	</tokenList>
 
 	<tokenList tagname="suffix" type="root" symbol="Ã">
-		<token value="amine">ylamine</token>
+		<token value="amine">ylamine|ylamin</token>
 	</tokenList>
 
 	<tokenList tagname="polyCyclicSpiro" symbol="Å">
