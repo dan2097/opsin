@@ -27,10 +27,8 @@
 		<token value="tellurinyl">tellurinyl</token>
 		<token value="telluronyl">telluronyl</token>
 		<token value="yl">yl</token>
-		<token value="ylidene">ylidene</token>
-		<token value="ylidyne">ylidyne</token>
-		<token value="ylidene">yliden</token>
-		<token value="ylidyne">ylidyn</token>
+		<token value="ylidene">ylidene|yliden</token>
+		<token value="ylidyne">ylidyne|ylidyn</token>
 	</tokenList>
 
 	<!--Have two attachement points as indicated by the subType-->
@@ -42,10 +40,8 @@
 		<token value="amido">amido</token>
 		<token value="oyl">oyl</token>
 		<token value="yl">yl</token>
-		<token value="ylidene">ylidene</token>
-		<token value="ylidyne">ylidyne</token>
-		<token value="ylidene">yliden</token>
-		<token value="ylidyne">ylidyn</token>
+		<token value="ylidene">ylidene|yliden</token>
+		<token value="ylidyne">ylidyne|ylidyn</token>
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="¶"><!--inline suffixes allowing infixes -->
