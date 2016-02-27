@@ -2183,7 +2183,7 @@ class ComponentGenerator {
 				}
 			}
 		}
-		
+
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is generally phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = OpsinTools.getNextSibling(group);
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) && possibleSuffix !=null && possibleSuffix.getName().equals(SUFFIX_EL)) {
@@ -2649,6 +2649,32 @@ class ComponentGenerator {
 							suffix.detach();
 						}
 					}
+				}
+			}
+		}
+		else if (SALTCOMPONENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+			Element parse = null;
+			Element tempParent = group.getParent();
+			while (tempParent != null) {
+				parse = tempParent;
+				tempParent = tempParent.getParent();
+			}
+			if (parse.getChildCount() <= 1) {
+				throw new ComponentGenerationException("Group expected to be part of a salt but only one component found. Could be a class of compound: " + groupValue);
+			}
+			if (groupValue.length() > 0) {
+				//e.g. 2HCl
+				char firstChar = groupValue.charAt(0);
+				if (firstChar >= '1' && firstChar <= '9') {
+					Element shouldntBeAmultiplier= OpsinTools.getPreviousSibling(group);
+					if (shouldntBeAmultiplier != null && shouldntBeAmultiplier.getName().equals(MULTIPLIER_EL)) {
+						throw new ComponentGenerationException("Unepxected multiplier found before: " + groupValue);
+					}
+					Element multiplier = new TokenEl(MULTIPLIER_EL, String.valueOf(firstChar));
+					multiplier.addAttribute(TYPE_ATR, BASIC_TYPE_VAL);
+					multiplier.addAttribute(VALUE_ATR, String.valueOf(firstChar));
+					OpsinTools.insertBefore(group, multiplier);
+					group.setValue(groupValue.substring(1));
 				}
 			}
 		}
