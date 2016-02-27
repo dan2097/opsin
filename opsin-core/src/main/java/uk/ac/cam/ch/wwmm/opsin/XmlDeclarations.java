@@ -402,53 +402,78 @@ class XmlDeclarations {
 	 * The values the subType attribute can take
 	 * subType is expected to be present at minimum on all group elements
 	 */
+	
+	/**The stem of an alkane e.g. "eth" */
 	static final String ALKANESTEM_SUBTYPE_VAL ="alkaneStem";
+	/**An anhydride functional term e.g. "thioanhydride"*/
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
+	/**An aryl group e.g. "pyridin" */
 	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
+	/**An aryl subsituent or stem e.g. "phenyl", "styr" */
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
-	/**Nucleotides/nucleosides/natural products*/
+	//FIXME ideally carbohydrates and nucleotides/nucleosides/natural products should have a common type or subtype
+	/**Nucleotides/nucleosides/natural products. Carbohydrates can be detected by {@link CARBOHYDRATE_TYPE_VAL}*/
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
+	/**A trivial carbohydrate stem for an aldose e.g. "galact"*/
+	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";
+	/**A trivial carbohydrate stem for a ketose e.g. "fruct"*/
+	static final String CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL ="carbohydrateStemKetose";
+	/**A suffix that forms a cycle e.g. imide, lactam, sultam*/
+	static final String CYCLEFORMER_SUBTYPE_VAL ="cycleformer";
+	/**A hydrocarbon stem that is typically followed by an unsaturator e.g. "adamant" */
+	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
+	/**Replacmenet terms that are not substituents e.g.  amido/hydrazido/imido/nitrido*/
+	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
+	/**An atom e.g. "lithium" */
+	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
+	/**An amino acid that ends in an e.g. tryptoph */
+	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
+	/**An amino acid that ends in ic e.g. aspart */
+	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
+	/**An amino acid that ends in ine e.g. alan */
+	static final String ENDININE_SUBTYPE_VAL ="endInIne";
+	/**A substituent that is expected to form a bridge e.g. "epoxy", "epiimino" */
+	static final String EPOXYLIKE_SUBTYPE_VAL ="epoxyLike";
+	/**A ring that will be fused onto another ring e.g. "benzo", "pyrido", "pyridino" */
+	static final String FUSIONRING_SUBTYPE_VAL ="fusionRing";
+	/**A group that can be suffixed e.g. "hydrazin" */
+	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
+	/**A halide or pseudo halide e.g. "bromo", "cyano". Can be functional replacment terms when preceding certain non-carboxylic acids */
+	static final String HALIDEORPSEUDOHALIDE_SUBTYPE_VAL = "halideOrPseudoHalide";
+	/**The stem of a hantzch Widman ring sytem e.g. "an", "ol", "olidin"  */
+	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
+	/**A heteroatom hydride e.g. "az" "sulf" (will be followed by an unsaturator, may be preceded by a multiplier to form the heteroatom equivalent of alkanes)*/
+	static final String HETEROSTEM_SUBTYPE_VAL ="heteroStem";
+	/**A group with no special properties {@see ff}*/
+	static final String SIMPLEGROUP_SUBTYPE_VAL ="simpleGroup";
+	/**A substituent which intrinsically forms multiple bonds e.g. "siloxane", "thio" */
+	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
+	/**A non-carboxylic acid which cannot form a substituent e.g. "bor" */
+	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
+	/**A group with no special properties {@see }*/
+	static final String NONE_SUBTYPE_VAL ="none";
+	/**oxido/sulfido/selenido/tellurido These are handled similarly to oxide e.g. might give -[O-] or =O*/
+	static final String OXIDOLIKE_SUBTYPE_VAL ="oxidoLike";
+	/**A term indicating replacement of all substitutable hydrogens by a halogen e.g. "perchloro" */
+	static final String PERHALOGENO_SUBTYPE_VAL ="perhalogeno";
+	/** phospho and other very related substituents. Strongly prefer forming bonds to hydroxy groups */
+	static final String PHOSPHO_SUBTYPE_VAL ="phospho";
+	/**A substitutent with no suffix e.g. "amino" */
+	static final String SIMPLESUBSTITUENT_SUBTYPE_VAL ="simpleSubstituent";
+	/**A substituent expecting a suffix e.g."bor" "vin" */
+	static final String SUBSTITUENT_SUBTYPE_VAL ="substituent";
 	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hexose */
 	static final String SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="systematicCarbohydrateStemAldose";
 	/**A group representing a straight chain carbohydrate of a certain length with undefined stereochemistry e.g. hex in hex-2-ulose */
 	static final String SYSTEMATICCARBOHYDRATESTEMKETOSE_SUBTYPE_VAL ="systematicCarbohydrateStemKetose";
-	
-	/**A trivial carbohydrate stem */
-	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";
-	static final String CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL ="carbohydrateStemKetose";
-	
-	/**e.g. imide, lactam, sultam etc.*/
-	static final String CYCLEFORMER_SUBTYPE_VAL ="cycleformer";
-	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
-	/**amido/hydrazido/imido/nitrido*/
-	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
-	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
-	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
-	static final String ENDINIC_SUBTYPE_VAL ="endInIc";
-	static final String ENDININE_SUBTYPE_VAL ="endInIne";
-	static final String EPOXYLIKE_SUBTYPE_VAL ="epoxyLike";
-	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
-	static final String HALIDEORPSEUDOHALIDE_SUBTYPE_VAL = "halideOrPseudoHalide";
-	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
-	static final String HETEROSTEM_SUBTYPE_VAL ="heteroStem";
-	static final String FUSEDRING_SUBTYPE_VAL ="fusedRing";
-	static final String FUSIONRING_SUBTYPE_VAL ="fusionRing";
-	static final String SIMPLEGROUP_SUBTYPE_VAL ="simpleGroup";
-	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
-	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
-	static final String NONE_SUBTYPE_VAL ="none";
-	/**oxido/sulfido/selenido/tellurido*/
-	static final String OXIDOLIKE_SUBTYPE_VAL ="oxidoLike";
-	static final String PERHALOGENO_SUBTYPE_VAL ="perhalogeno";
-	static final String PHOSPHO_SUBTYPE_VAL ="phospho";
-	static final String SIMPLESUBSTITUENT_SUBTYPE_VAL ="simpleSubstituent";
-	static final String SUBSTITUENT_SUBTYPE_VAL ="substituent";
+	/**A suffix that attaches to the end of a chain e.g. "aldehyde", "ic acid" */
 	static final String TERMINAL_SUBTYPE_VAL ="terminal";
+	/**An acid that when suffixed with yl gives an acyl group e.g. "acet" */
 	static final String YLFORACYL_SUBTYPE_VAL ="ylForAcyl";
+	/**An acid that has undefined meaning when suffixed with yl */
 	static final String YLFORNOTHING_SUBTYPE_VAL ="ylForNothing";
+	/**An acid that when suffixed with yl gives an alkyl group e.g. "laur" */
 	static final String YLFORYL_SUBTYPE_VAL ="ylForYl";
-
-	//TODO java doc this
 	
 	/**Requests that no labelling should be applied */
 	static final String NONE_LABELS_VAL ="none";//TODO no labels attribute should probably mean no labelling

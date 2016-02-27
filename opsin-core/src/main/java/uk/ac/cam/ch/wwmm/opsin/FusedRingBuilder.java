@@ -254,7 +254,6 @@ class FusedRingBuilder {
 		Element fusedRingEl =lastGroup;//reuse this element to save having to remap suffixes...
 		fusedRingEl.getAttribute(VALUE_ATR).setValue(fusedRingName.toString());
 		fusedRingEl.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
-		fusedRingEl.getAttribute(SUBTYPE_ATR).setValue(FUSEDRING_SUBTYPE_VAL);
 		fusedRingEl.setValue(fusedRingName.toString());
 
 		for (Element element : nameComponents) {
