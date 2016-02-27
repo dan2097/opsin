@@ -2476,7 +2476,8 @@ class ComponentGenerator {
 				OpsinTools.insertBefore(enclosingSubOrRoot, newBracket);
 			}
 		}
-		else if (groupValue.equals("sphinganine") || groupValue.equals("icosasphinganine") || groupValue.equals("eicosasphinganine") || groupValue.equals("phytosphingosine") || groupValue.equals("sphingosine")){
+		else if (groupValue.equals("sphinganine") || groupValue.equals("icosasphinganine") || groupValue.equals("eicosasphinganine") || groupValue.equals("phytosphingosine") || groupValue.equals("sphingosine")
+				|| groupValue.equals("sphinganin") || groupValue.equals("icosasphinganin") || groupValue.equals("eicosasphinganin") || groupValue.equals("phytosphingosin") || groupValue.equals("sphingosin")){
 			Element enclosingSubOrRoot = group.getParent();
 			Element previous = OpsinTools.getPreviousSibling(enclosingSubOrRoot);
 			if (previous!=null){
@@ -2550,9 +2551,9 @@ class ComponentGenerator {
 			}
 		}
 		else if (groupValue.equals("bor") || groupValue.equals("antimon") 
-				|| groupValue.equals("arsen") || groupValue.equals("phosphor") || groupValue.equals("phosphate")
+				|| groupValue.equals("arsen") || groupValue.equals("phosphor") || groupValue.equals("phosphate") || groupValue.equals("phosphat")
 				|| groupValue.equals("silicicacid") || groupValue.equals("silicic acid")
-				|| groupValue.equals("silicate")){//fluoroboric acid/fluoroborate are trivial rather than systematic; tetra(fooyl)borate is inorganic
+				|| groupValue.equals("silicate") || groupValue.equals("silicat")){//fluoroboric acid/fluoroborate are trivial rather than systematic; tetra(fooyl)borate is inorganic
 			Element suffix = null;
 			Boolean isAcid = null;
 			if (groupValue.endsWith("acid")){
@@ -2560,7 +2561,7 @@ class ComponentGenerator {
 					isAcid = true;
 				}
 			}
-			else if (groupValue.endsWith("ate")){
+			else if (groupValue.endsWith("ate") || groupValue.endsWith("at")){
 				if (OpsinTools.getNext(group) == null){
 					isAcid = false;
 				}

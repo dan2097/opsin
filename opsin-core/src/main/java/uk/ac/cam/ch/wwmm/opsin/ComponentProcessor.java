@@ -2620,7 +2620,7 @@ class ComponentProcessor {
 					frag.getAtomByLocantOrThrow("23").setSpareValency(false);
 				}
 			}
-			else if (groupValue.equals("xanthate") || groupValue.equals("xanthic acid") || groupValue.equals("xanthicacid")){
+			else if (groupValue.equals("xanthate") || groupValue.equals("xanthat") || groupValue.equals("xanthic acid") || groupValue.equals("xanthicacid")){
 				//This test needs to be here rather in the ComponentGenerator to correctly reject non substituted thioxanthates
 				Element wordRule = OpsinTools.getParentWordRule(group);
 				if (wordRule.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString())){
@@ -3753,12 +3753,12 @@ class ComponentProcessor {
 		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 		String groupValue =group.getValue();
 		Fragment thisFrag = group.getFrag();
-		if (groupValue.equals("methylene") || groupValue.equals("oxy")|| matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
+		if (groupValue.equals("methylene") || groupValue.equals("methylen") || groupValue.equals("oxy")|| matchChalcogenReplacement.matcher(groupValue).matches()){//resolves for example trimethylene to propan-1,3-diyl or dithio to disulfan-1,2-diyl. Locants may not be specified before the multiplier
 			Element beforeGroup = OpsinTools.getPreviousSibling(group);
 			if (beforeGroup!=null && beforeGroup.getName().equals(MULTIPLIER_ATR) && beforeGroup.getAttributeValue(TYPE_ATR).equals(BASIC_TYPE_VAL) && OpsinTools.getPreviousSibling(beforeGroup)==null){
 				int multiplierVal = Integer.parseInt(beforeGroup.getAttributeValue(VALUE_ATR));
 				if (!unsuitableForFormingChainMultiradical(group, beforeGroup)){
-					if (groupValue.equals("methylene")){
+					if (groupValue.equals("methylene") || groupValue.equals("methylen")){
 						group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", multiplierVal));
 					}
 					else if (groupValue.equals("oxy")){
@@ -3801,7 +3801,7 @@ class ComponentProcessor {
 		}
 		int outAtomCount = thisFrag.getOutAtomCount();
 		if (outAtomCount >=2){
-			if (groupValue.equals("amine")){//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
+			if (groupValue.equals("amine") || groupValue.equals("amin")) {//amine is a special case as it shouldn't technically be allowed but is allowed due to it's common usage in EDTA
 				Element previousGroup = OpsinTools.getPreviousGroup(group);
 				Element nextGroup = OpsinTools.getNextGroup(group);
 				if (previousGroup==null || previousGroup.getFrag().getOutAtomCount() < 2 || nextGroup==null){//must be preceded by a multi radical
