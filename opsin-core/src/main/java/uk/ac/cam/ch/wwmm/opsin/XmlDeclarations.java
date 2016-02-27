@@ -412,7 +412,7 @@ class XmlDeclarations {
 	/**An aryl subsituent or stem e.g. "phenyl", "styr" */
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
 	//FIXME ideally carbohydrates and nucleotides/nucleosides/natural products should have a common type or subtype
-	/**Nucleotides/nucleosides/natural products. Carbohydrates can be detected by {@link CARBOHYDRATE_TYPE_VAL}*/
+	/**Nucleotides/nucleosides/natural products. Carbohydrates can be detected by {@link XmlDeclarations#CARBOHYDRATE_TYPE_VAL}*/
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
 	/**A trivial carbohydrate stem for an aldose e.g. "galact"*/
 	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";
@@ -444,13 +444,13 @@ class XmlDeclarations {
 	static final String HANTZSCHWIDMAN_SUBTYPE_VAL ="hantzschWidman";
 	/**A heteroatom hydride e.g. "az" "sulf" (will be followed by an unsaturator, may be preceded by a multiplier to form the heteroatom equivalent of alkanes)*/
 	static final String HETEROSTEM_SUBTYPE_VAL ="heteroStem";
-	/**A group with no special properties {@see ff}*/
+	/**A group with no special properties Similar to: {@link XmlDeclarations#NONE_SUBTYPE_VAL}*/
 	static final String SIMPLEGROUP_SUBTYPE_VAL ="simpleGroup";
 	/**A substituent which intrinsically forms multiple bonds e.g. "siloxane", "thio" */
 	static final String MULTIRADICALSUBSTITUENT_SUBTYPE_VAL ="multiRadicalSubstituent";
 	/**A non-carboxylic acid which cannot form a substituent e.g. "bor" */
 	static final String NOACYL_SUBTYPE_VAL ="noAcyl";
-	/**A group with no special properties {@see }*/
+	/**A group with no special properties Similar to: {@link XmlDeclarations#SIMPLEGROUP_SUBTYPE_VAL}*/
 	static final String NONE_SUBTYPE_VAL ="none";
 	/**oxido/sulfido/selenido/tellurido These are handled similarly to oxide e.g. might give -[O-] or =O*/
 	static final String OXIDOLIKE_SUBTYPE_VAL ="oxidoLike";
@@ -458,6 +458,8 @@ class XmlDeclarations {
 	static final String PERHALOGENO_SUBTYPE_VAL ="perhalogeno";
 	/** phospho and other very related substituents. Strongly prefer forming bonds to hydroxy groups */
 	static final String PHOSPHO_SUBTYPE_VAL ="phospho";
+	/** A component of a salt e.g "hydrate", "2HCl" */
+	static final String SALTCOMPONENT_SUBTYPE_VAL ="saltComponent";
 	/**A substitutent with no suffix e.g. "amino" */
 	static final String SIMPLESUBSTITUENT_SUBTYPE_VAL ="simpleSubstituent";
 	/**A substituent expecting a suffix e.g."bor" "vin" */

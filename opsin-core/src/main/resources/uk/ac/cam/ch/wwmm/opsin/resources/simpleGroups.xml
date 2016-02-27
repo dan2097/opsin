@@ -293,7 +293,7 @@
 		<token value="OC(=S)S" functionalIDs="1,4">xanthic acid|xanthicacid</token><!--xanthic acid without any substituents is not acceptable-->
 
 		<token value="N">ammonia</token>
-		<token value="O">water|hydrate|hydrat</token>
+		<token value="O">water</token>
 		<token value="[CH3+]">carbenium</token>
 
 		<token value="F">hydrofluoride|hydrofluorid</token>
@@ -390,6 +390,14 @@
 		<token value="OC[C@H](N)[C@H](O)/C=C/CCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphingosine|sphingosin</token>
 		<token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O">vitamin c</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" defaultInID="37">coenzyme a|coa</token>
+	</tokenList>
+
+	<!--groups that must be part of a mult-component name-->
+	<tokenList tagname="group" type="simpleGroup" subType="saltComponent" symbol="G">
+		<token value="O">hydrate|hydrat</token>
+		<token value="Br">hbr|2hbr|3hbr|4hbr</token>
+		<token value="Cl">hcl|2hcl|3hcl|4hcl</token>
+		<token value="[O-]C(=O)C(F)(F)F" functionalIDs="1">tfa|2tfa|3tfa|4tfa</token>
 	</tokenList>
 
 	<!--groups that must be substituted-->
