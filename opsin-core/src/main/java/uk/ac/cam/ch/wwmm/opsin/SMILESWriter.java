@@ -43,6 +43,12 @@ class SMILESWriter {
 
 	/**Holds the SMILES string which is under construction*/
 	private final StringBuilder smilesBuilder = new StringBuilder();
+	
+	/**Should extended SMILES be output*/
+	private final boolean outputExtendedSmiles;
+	
+	/**The order atoms were traversed when creating the SMILES*/
+	private List<Atom> smilesOutputOrder;
 
 	static {
 		organicAtomsToStandardValencies.put(ChemEl.B, new Integer[]{3});
@@ -70,13 +76,15 @@ class SMILESWriter {
 	/**
 	 * Creates a SMILES writer for the given fragment
 	 * @param structure
+	 * @param outputExtendedSmiles 
 	 */
-	private SMILESWriter(Fragment structure) {
-		this.structure =structure;
+	private SMILESWriter(Fragment structure, boolean outputExtendedSmiles) {
+		this.structure = structure;
+		this.outputExtendedSmiles = outputExtendedSmiles;
 	}
 
 	/**
-	 * Generates SMILES from the fragment the SMILESWriter was created with
+	 * Generates SMILES for the given fragment
 	 * The following assumptions are currently made:
 	 * 	The fragment contains no bonds to atoms outside the fragment
 	 * 	Hydrogens are all explicit
@@ -84,14 +92,27 @@ class SMILESWriter {
 	 * @return SMILES String
 	 */
 	static String generateSmiles(Fragment structure) {
-		return new SMILESWriter(structure).writeSmiles();
+		return new SMILESWriter(structure, false).writeSmiles();
 	}
-	
+
+	/**
+	 * Generates extended SMILES for the given fragment
+	 * The following assumptions are currently made:
+	 * 	The fragment contains no bonds to atoms outside the fragment
+	 * 	Hydrogens are all explicit
+	 * 	Spare valency has been converted to double bonds
+	 * @return Extended SMILES String
+	 */
+	static String generateExtendedSmiles(Fragment structure) {
+		return new SMILESWriter(structure, true).writeSmiles();
+	}
+
 	String writeSmiles() {
 		assignSmilesOrder();
 		assignDoubleBondStereochemistrySlashes();
 
 		List<Atom> atomList = structure.getAtomList();
+		smilesOutputOrder = new ArrayList<Atom>(atomList.size());
 
 		boolean isEmpty = true;
 		for (Atom currentAtom : atomList) {
@@ -104,10 +125,108 @@ class SMILESWriter {
 				isEmpty = false;
 			}
 		}
+		
+		if (outputExtendedSmiles) {
+			writeExtendedSmilesLayer();
+		}
 
 		return smilesBuilder.toString();
 	}
 
+	private void writeExtendedSmilesLayer() {
+		List<String> atomLabels = new ArrayList<String>();
+		List<String> positionVariationBonds = new ArrayList<String>();
+		Integer lastLabel = null;
+		int attachmentPointCounter = 1;
+		boolean isPolymer = structure.getPolymerAttachmentPoints().size() > 0;
+		for (int i = 0, l = smilesOutputOrder.size(); i < l; i++) {
+			Atom a = smilesOutputOrder.get(i);
+			String homologyGroup = a.getProperty(Atom.HOMOLOGY_GROUP);
+			if (homologyGroup != null) {
+				homologyGroup = escapeExtendedSmilesLabel(homologyGroup);
+				if (homologyGroup.startsWith("_")) {
+					atomLabels.add(homologyGroup);
+				}
+				else {
+					atomLabels.add(homologyGroup + "_p");
+				}
+				lastLabel = i;
+			}
+			else if (a.getElement() == ChemEl.R){
+				if (isPolymer) {
+					atomLabels.add("star_e");
+				}
+				else {
+					atomLabels.add("_AP" + String.valueOf(attachmentPointCounter++));
+				}
+				lastLabel = i;
+			}
+			else {
+				atomLabels.add("");
+			}
+			List<Atom> atomsInPositionVariationBond = a.getProperty(Atom.POSITION_VARIATION_BOND);
+			if (atomsInPositionVariationBond != null) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(i);
+				for (int j = 0; j < atomsInPositionVariationBond.size(); j++) {
+					sb.append(j==0 ? ':' : '.');
+					Atom referencedAtom = atomsInPositionVariationBond.get(j);
+					int referencedAtomIndex = smilesOutputOrder.indexOf(referencedAtom);
+					if (referencedAtomIndex == -1){
+						throw new RuntimeException("OPSIN Bug: Failed to resolve position variation bond atom");
+					}
+					sb.append(referencedAtomIndex);
+				}
+				positionVariationBonds.add(sb.toString());
+			}
+		}
+		List<String> extendedSmiles = new ArrayList<String>(2);
+		if (lastLabel != null) {
+			extendedSmiles.add("$" + StringTools.stringListToString(atomLabels.subList(0, lastLabel + 1), ";") + "$" );
+		}
+		if (positionVariationBonds.size() > 0) {
+			extendedSmiles.add("m:" + StringTools.stringListToString(positionVariationBonds, ","));
+		}
+		if (isPolymer) {
+			StringBuilder sruContents = new StringBuilder();
+			sruContents.append("Sg:n:");
+			boolean appendDelimiter = false;
+			for (int i = 0, l = smilesOutputOrder.size(); i < l; i++) {
+				if (smilesOutputOrder.get(i).getElement() != ChemEl.R) {
+					if (appendDelimiter) {
+						sruContents.append(',');
+					}
+					sruContents.append(i);
+					appendDelimiter = true;
+				}
+			}
+			sruContents.append("::ht");
+			extendedSmiles.add(sruContents.toString());
+		}
+		if (extendedSmiles.size() > 0) {
+			smilesBuilder.append(" |");
+			smilesBuilder.append(StringTools.stringListToString(extendedSmiles, ","));
+			smilesBuilder.append('|');
+		}
+	}
+	
+	private String escapeExtendedSmilesLabel(String str) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0, len = str.length(); i < len; i++) {
+			char ch = str.charAt(i);
+			if ((ch >= 'a' && ch <= 'z') || 
+			   (ch >= 'A' && ch <= 'Z')  ||
+			   (ch >= '0' && ch <= '9') ) {
+				sb.append(ch);
+			}
+			else {
+				sb.append("&#");
+				sb.append(String.valueOf((int)ch));
+				sb.append(';');
+			}
+		}
+		return sb.toString();
+	}
 
 	/**
 	 * Walks through the fragment populating the Atom.VISITED property indicating how many bonds
@@ -365,6 +484,7 @@ class SMILESWriter {
 			int depth = currentstate.depth;
 
 			smilesBuilder.append(atomToSmiles(currentAtom, depth, bondtaken));
+			smilesOutputOrder.add(currentAtom);
 			List<Bond> bonds = currentAtom.getBonds();
 			List<String> newlyAvailableClosureSymbols = null;
 			for (Bond bond : bonds) {//ring closures

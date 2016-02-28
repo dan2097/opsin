@@ -24,7 +24,7 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 	private final BuildState state;
-	private final List<Fragment> rGroups = new ArrayList<Fragment>();//rGroups need to represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
+	private final List<Atom> polymerAttachmentPoints = new ArrayList<Atom>();//rGroups need to be represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
 	
 	private int currentTopLevelWordRuleCount;
 	
@@ -75,11 +75,12 @@ class StructureBuilder {
 			}
 		}
 		
-		for (Fragment rGroup : rGroups) {
-			Atom rAtom = rGroup.getFirstAtom();
-			rAtom.setElement(ChemEl.R);
+		if (polymerAttachmentPoints.size() > 0) {
+			for (Atom rAtom : polymerAttachmentPoints) {
+				rAtom.setElement(ChemEl.R);
+			}
+			uniFrag.setPolymerAttachmentPoints(polymerAttachmentPoints);
 		}
-
 		return uniFrag;
 	}
 
@@ -175,7 +176,7 @@ class StructureBuilder {
 			buildAmineDiConjunctiveSuffix(words);
 			break;
 		case polymer:
-			rGroups.addAll(buildPolymer(words));
+			buildPolymer(words);
 			break;
 		default:
 			throw new StructureBuildingException("Unexpected Word Rule");
@@ -1608,35 +1609,33 @@ class StructureBuilder {
 		}
 	}
 
-	private List<Fragment> buildPolymer(List<Element> words) throws StructureBuildingException {
+	private void buildPolymer(List<Element> words) throws StructureBuildingException {
 		if (words.size()!=2){
 			throw new StructureBuildingException("Currently unsupported polymer name type");
 		}
 		Element polymer = words.get(1);
 		resolveWordOrBracket(state, polymer);
 		BuildResults polymerBr = new BuildResults(polymer);
-		List<Fragment> rGroups = new ArrayList<Fragment>();
 		if (polymerBr.getOutAtomCount() ==2){
 			Atom inAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(polymerBr, 0);
 			Atom outAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(polymerBr, 1);
 			/*
 			 * We assume the polymer repeats so as an approximation we create an R group with the same element as the group at the other end of polymer (with valency equal to the bondorder of the Rgroup so no H added)
 			 */
-			Fragment rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement().toString() + "|" + polymerBr.getOutAtom(0).getValency() + "]", "", "alpha");
-			rGroup1.getFirstAtom().setProperty(Atom.ATOM_CLASS, 1);
-			state.fragManager.createBond(inAtom, rGroup1.getFirstAtom(), polymerBr.getOutAtom(0).getValency());
+			Atom rGroup1 =state.fragManager.buildSMILES("[" + outAtom.getElement().toString() + "|" + polymerBr.getOutAtom(0).getValency() + "]", "", "alpha").getFirstAtom();
+			rGroup1.setProperty(Atom.ATOM_CLASS, 1);
+			state.fragManager.createBond(inAtom, rGroup1, polymerBr.getOutAtom(0).getValency());
 
-			Fragment rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement().toString() + "|" + polymerBr.getOutAtom(1).getValency() + "]", "", "omega");
-			rGroup2.getFirstAtom().setProperty(Atom.ATOM_CLASS, 2);
-			state.fragManager.createBond(outAtom, rGroup2.getFirstAtom(), polymerBr.getOutAtom(1).getValency());
-			rGroups.add(rGroup1);
-			rGroups.add(rGroup2);
+			Atom rGroup2 =state.fragManager.buildSMILES("[" + inAtom.getElement().toString() + "|" + polymerBr.getOutAtom(1).getValency() + "]", "", "omega").getFirstAtom();
+			rGroup2.setProperty(Atom.ATOM_CLASS, 2);
+			state.fragManager.createBond(outAtom, rGroup2, polymerBr.getOutAtom(1).getValency());
+			polymerAttachmentPoints.add(rGroup1);
+			polymerAttachmentPoints.add(rGroup2);
 			polymerBr.removeAllOutAtoms();
 		}
 		else{
 			throw new StructureBuildingException("Polymer building failed: Two termini were not found; Expected 2 outAtoms, found: " +polymerBr.getOutAtomCount());
 		}
-		return rGroups;
 	}
 
 	/**

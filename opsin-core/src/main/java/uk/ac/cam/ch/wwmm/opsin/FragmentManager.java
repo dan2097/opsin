@@ -435,6 +435,18 @@ class FragmentManager {
 			if (atomClass!=null){
 				oldToNewAtomMap.get(atom).setProperty(Atom.ATOM_CLASS, atomClass);
 			}
+			String homologyGroup = atom.getProperty(Atom.HOMOLOGY_GROUP);
+			if (homologyGroup != null) {
+				oldToNewAtomMap.get(atom).setProperty(Atom.HOMOLOGY_GROUP, homologyGroup);
+			}
+			List<Atom> oldPositionVariationAtoms = atom.getProperty(Atom.POSITION_VARIATION_BOND);
+			if (oldPositionVariationAtoms != null) {
+				List<Atom> newAtoms = new ArrayList<Atom>();
+				for (Atom oldAtom : oldPositionVariationAtoms) {
+					newAtoms.add(oldToNewAtomMap.get(oldAtom));
+				}
+				oldToNewAtomMap.get(atom).setProperty(Atom.POSITION_VARIATION_BOND, newAtoms);
+			}
 		}
 		for (int i = 0, l = originalFragment.getOutAtomCount(); i < l; i++) {
 			OutAtom outAtom = originalFragment.getOutAtom(i);
