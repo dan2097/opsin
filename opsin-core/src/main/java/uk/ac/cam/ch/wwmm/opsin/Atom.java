@@ -49,19 +49,23 @@ class Atom {
 	@SuppressWarnings("rawtypes")
 	private final Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
 	/** A set of atoms that were equally plausible to perform functional replacement on */
-    static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
-	/** A set of atoms that were equally plausible to perform functional replacement on */
-    static final PropertyKey<Integer> ATOM_CLASS = new PropertyKey<Integer>("atomClass");
+	static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
+	/** The atom class which will be output when serialised to SMILES. Useful for distinguishing attachment points */
+	static final PropertyKey<Integer> ATOM_CLASS = new PropertyKey<Integer>("atomClass");
+	/** Used on wildcard atoms to indicate their meaning */
+	static final PropertyKey<String> HOMOLOGY_GROUP = new PropertyKey<String>("homologyGroup");
+	/** Used on wildcard atoms to indicate that they are a position variation bond */
+	static final PropertyKey<List<Atom>> POSITION_VARIATION_BOND = new PropertyKey<List<Atom>>("positionVariationBond");
 	/** The hydrogen count as set in the SMILES*/
-    static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
+	static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
 	/** The oxidation number as specified by Roman numerals in the name*/
-    static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
+	static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
 	/** Is this atom the carbon of an aldehyde? (however NOT formaldehyde)*/
-    static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
+	static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
 	/** Indicates that this atom is an anomeric atom in a cyclised carbohydrate*/
-    static final PropertyKey<Boolean> ISANOMERIC = new PropertyKey<Boolean>("isAnomeric");
+	static final PropertyKey<Boolean> ISANOMERIC = new PropertyKey<Boolean>("isAnomeric");
 	/** Transient integer used to indicate traversal of fragments*/
-    static final PropertyKey<Integer> VISITED = new PropertyKey<Integer>("visited");
+	static final PropertyKey<Integer> VISITED = new PropertyKey<Integer>("visited");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;

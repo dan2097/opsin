@@ -53,6 +53,9 @@ class Fragment {
 
 	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES level.*/
 	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
+	
+	/**Pseudo atoms indicating start and end of polymer structure repeat unit*/
+	private List<Atom> polymerAttachmentPoints =  null;
 
 	/**
 	 * DO NOT CALL DIRECTLY EXCEPT FOR TESTING
@@ -415,6 +418,14 @@ class Fragment {
 	 */
 	void removeFunctionalAtom(FunctionalAtom functionalAtom) {
 		functionalAtoms.remove(functionalAtom);
+	}
+	
+	List<Atom> getPolymerAttachmentPoints() {
+		return polymerAttachmentPoints;
+	}
+
+	void setPolymerAttachmentPoints(List<Atom> polymerAttachmentPoints) {
+		this.polymerAttachmentPoints = polymerAttachmentPoints;
 	}
 
 	/**Gets a list of atoms in the fragment that connect to a specified atom

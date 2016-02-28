@@ -151,6 +151,24 @@ public class OpsinResult {
 		}
 		return null;
 	}
+	
+	/**
+	 * Generates the extended SMILES corresponding to the molecule described by the name
+	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
+	 * If the molecule doesn't utilise any features made possible by extended SMILES (e.g. coordinate bonds) this is equivalent to {@link #getSmiles()}
+	 * @return Extended SMILES as a String
+	 */
+	public String getExtendedSmiles() {
+		if (structure != null){
+			try{
+				return SMILESWriter.generateExtendedSmiles(structure);
+			}
+			catch (Exception e) {
+				LOG.debug("Extended SMILES generation failed", e);
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * A list of warnings encountered when the result was {@link OPSIN_RESULT_STATUS#WARNING}<br>
