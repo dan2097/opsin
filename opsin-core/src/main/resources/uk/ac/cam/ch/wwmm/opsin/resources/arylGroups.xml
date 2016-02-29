@@ -101,6 +101,7 @@
 		<token value="[se]1cccc1" labels="1/2/3/4/5">selenofuran</token>
 		<token value="[te]1cccc1" labels="1/2/3/4/5">tellurofuran</token>
 		<token value="o1nccn1" labels="1/2/3/4/5">furazan</token>
+		<token value="o1[n+]([O-])ccn1" labels="1/2//3/4/5">furoxan</token>
 		<token value="c1(c(O)cccc1)OC" labels="1/2,ortho//3,meta/4,para/5/6//alpha">guaiacol</token>
 		<token value="c1(C)nCCc2c3ccc(OC)cc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7///8/8a/9/9a">harmalin</token>
 		<token value="c1(C)nCCc2c3ccc(O)cc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7//8/8a/9/9a">harmalol</token>
