@@ -138,7 +138,8 @@ class SMILESWriter {
 		List<String> positionVariationBonds = new ArrayList<String>();
 		Integer lastLabel = null;
 		int attachmentPointCounter = 1;
-		boolean isPolymer = structure.getPolymerAttachmentPoints().size() > 0;
+		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
+		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
 		for (int i = 0, l = smilesOutputOrder.size(); i < l; i++) {
 			Atom a = smilesOutputOrder.get(i);
 			String homologyGroup = a.getProperty(Atom.HOMOLOGY_GROUP);
