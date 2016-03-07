@@ -80,7 +80,9 @@
 		<token value="n1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">cinnolin</token>
 		<token value="[CH-]1cccc1.[CH-]1cccc1.[Co+2]" labels="1/2/3/4/5/1'/2'/3'/4'/5'/" suffixAppliesToByDefault="1">cobaltocen</token>
 		<token value="n1ccccc1" labels="1/2/3/4/5/6" addGroup="C defaultLocant 2;C defaultLocant 4;C defaultLocant 6" frontLocantsExpected="2,3,4,5,6">collidin</token>
+		<token value="O1CCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">coumaran</token>
 		<token value="o1c(=O)ccc2ccccc12" labels="1/2//3/4/4a/5/6/7/8/8a">coumarin|cumarin</token>
+		<token value="o1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">coumaron</token>
 		<token value="c1cc2ccc3ccc4ccc5ccc6ccc71.c28c3c4c5c6c78" labels="1/2/2a/3/4/4a/5/6/6a/7/8/8a/9/10/10a/11/12/12a/12b/12c/12d/12e/12f/12g" >coronen</token>
 		<token value="c1ccccc1O" labels="2,ortho/3,meta/4,para/5/6/1/" addGroup="C defaultLocant 2 alpha" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">cresol</token>
 		<token value="c12ccccc1.C2(C)C" labels="1/2,ortho/3,meta/4,para/5/6///">cumen</token>
@@ -356,6 +358,7 @@
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c(o)[nH]c(N)nc23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2//3/4">guanosin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2/3/4">inosin</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///1/2//3/4//5/alpha/6">thymidin</token>
+		<token value="[C@@H]1(C[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'///1/2//3/4//5/alpha/6">deoxythymidin</token><!--thymidin is a deoxyribosyl unlike the other nucleosides -->
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'//4'/5'///1/2//3/4//5/6">uridin</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///9/8/7/5/6//1/2//3/4">xanthosin</token>
 
