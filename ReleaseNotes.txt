@@ -1,3 +1,29 @@
+Version 2.1.0 (2016-03-12)
+Added support for fractional multipliers e.g. hemihydrochloride
+Added support for abbreviated common salts e.g. HCl
+Added support for sandwich compounds e.g. ferrocene
+Improved recognition of names missing the last 'e' (common in German)
+Support for E/Z directly before double bond indication e.g. 2Z-ylidene, 2Z-ene
+Improved support for functional class ethers e.g. "glycerol triglycidyl ether"
+Added general support for names involving an ester formed from an alcohol and an ate group
+Grignards reagents and certain compounds (e.g. uranium hexafluoride), are now treated as covalent rather than ionic
+Added experimental support for outputting extended SMILES. Polymers and attachment points are annotated explicitly
+Polymers when output as SMILES now have atom classes to indicate which end of the repeat unit is which
+Support * as a superscript indicator e.g. *6* to mean superscript 6
+Improved recognition of racemic stereochemistry terms
+Added general support for names like "beta-alanine N,N-diacetic acid"
+Allowed "one" and "ol" suffixes to be used in more cases where another suffix is also present
+"ic acid halide" is not interpreted the same as "ic halide"
+Fixed some cases where ambiguous operations were not considered ambiguous e.g. monosubstitututed phenyl
+Improvements/bug fixes to heuristics for detecting when spaces are omitted from ether/ester names
+Improved support for stereochemistry in older CAS index names
+Many precision improvements e.g. cyclotriphosphazene, thiazoline, TBDMS/TBDPS protecting groups, S-substituted-methionine
+Various minor bug fixes e.g. names containing "SULPH" not recognized
+Minor vocabulary improvements
+
+Internal XML Changes:
+Synonymns of the same concept are now or-ed rather being seperate entities e.g. <token>tertiary|tert-|t-</token>
+
 Version 2.0.0 (2015-07-10)
 MAJOR CHANGES:
 Requires Java 1.6 or higher
