@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -24,6 +25,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Level;
@@ -55,10 +57,31 @@ public class NameToStructure {
 	private static NameToStructure NTS_INSTANCE;
 
 	public static synchronized NameToStructure getInstance() {
-		if (NTS_INSTANCE ==null){
+		if (NTS_INSTANCE == null) {
 			NTS_INSTANCE = new NameToStructure();
 		}
 		return NTS_INSTANCE;
+	}
+	
+	/**
+	 * Returns the version of the OPSIN library
+	 * @return Version number String
+	 */
+	public static String getVersion() {
+		try {
+			InputStream is = NameToStructure.class.getResourceAsStream("opsinbuild.props");
+			try {
+				Properties props = new Properties();
+				props.load(is);
+				return props.getProperty("version");
+			}
+			finally {
+				IOUtils.closeQuietly(is);
+			}
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**Initialises the name-to-structure converter.
@@ -297,7 +320,8 @@ public class NameToStructure {
 
 	private static void displayUsage(Options options) {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("java -jar opsin-[version]-jar-with-dependencies.jar [options] [inputfile] [outputfile]" + OpsinTools.NEWLINE +
+		String version = getVersion();
+		formatter.printHelp("java -jar opsin-" + (version != null ? version : "[version]") + "-jar-with-dependencies.jar [options] [inputfile] [outputfile]" + OpsinTools.NEWLINE +
 				"OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI/StdInChIKey" + OpsinTools.NEWLINE +
 				"Names should be new line delimited and may be read from stdin (default) or a file and output to stdout (default) or a file", options);
 		System.exit(0);
