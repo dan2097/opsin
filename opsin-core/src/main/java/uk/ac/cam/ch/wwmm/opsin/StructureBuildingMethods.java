@@ -584,7 +584,9 @@ class StructureBuildingMethods {
 					a.setSpareValency(false);
 				}
 				else{
-					throw new StructureBuildingException("hydrogen addition at locant: " + locant +" was requested, but this atom is not unsaturated");
+					if (!acdNameSpiroIndicatedHydrogenBug(group, locant)){
+						throw new StructureBuildingException("hydrogen addition at locant: " + locant +" was requested, but this atom is not unsaturated");
+					}
 				}
 				hydrogenElements.remove(i);
 				hydrogen.detach();
@@ -635,6 +637,27 @@ class StructureBuildingMethods {
 				heteroatomEl.detach();
 			}
 		}
+	}
+
+	/**
+	 * ACD/Name has a known bug where it produces names in which a suffixed saturated ring in a polycyclic spiro 
+	 * is treated as if it is unsaturated and hence has indicated hydrogens
+	 * e.g. 1',3'-dihydro-2H,5H-spiro[imidazolidine-4,2'-indene]-2,5-dione 
+	 * @param group
+	 * @param indicatedHydrogenLocant
+	 * @return
+	 */
+	private static boolean acdNameSpiroIndicatedHydrogenBug(Element group, String indicatedHydrogenLocant) {
+		if (group.getValue().startsWith("spiro")) {
+			for (Element suffix : group.getParent().getChildElements(SUFFIX_EL)) {
+				String suffixLocant = suffix.getAttributeValue(LOCANT_ATR);
+				if (suffixLocant != null && suffixLocant.equals(indicatedHydrogenLocant)) {
+					LOG.debug("Indicated hydrogen at " + indicatedHydrogenLocant + " ignored. Known bug in generated IUPAC name");
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private static void applyAnhydroPrefix(BuildState state, Fragment frag, Element subtractivePrefix) throws StructureBuildingException {
