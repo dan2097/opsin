@@ -2352,20 +2352,20 @@ class ComponentGenerator {
 			}
 		}
 		else if (groupValue.equals("phospho")){//is this the organic meaning (P(=O)=O) or biochemical meaning (P(=O)(O)O)
-			Element substituent = group.getParent();
-			Element nextGroup = OpsinTools.getNextGroup(substituent);
-			if (nextGroup != null){
-				String type = nextGroup.getAttributeValue(TYPE_ATR);
-				String subType = nextGroup.getAttributeValue(SUBTYPE_ATR);
+			Element wordRule = OpsinTools.getParentWordRule(group);
+			for (Element otherGroup : OpsinTools.getDescendantElementsWithTagName(wordRule, GROUP_EL)) {
+				String type = otherGroup.getAttributeValue(TYPE_ATR);
+				String subType = otherGroup.getAttributeValue(SUBTYPE_ATR);
 				if (type.equals(AMINOACID_TYPE_VAL) || 
 						type.equals(CARBOHYDRATE_TYPE_VAL) ||
 						BIOCHEMICAL_SUBTYPE_VAL.equals(subType) ||
 						(YLFORACYL_SUBTYPE_VAL.equals(subType) &&
-								("glycol".equals(nextGroup.getValue()) || "diglycol".equals(nextGroup.getValue()))
+								("glycol".equals(otherGroup.getValue()) || "diglycol".equals(otherGroup.getValue()))
 						)
 					) {
 					group.getAttribute(VALUE_ATR).setValue("-P(=O)(O)O");
 					group.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
+					break;
 				}
 			}
 		}
