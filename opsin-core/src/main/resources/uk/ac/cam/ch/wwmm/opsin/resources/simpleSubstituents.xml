@@ -13,6 +13,7 @@
 		<token value="-NC(=O)C">acetamino</token>
 		<token value="-C#C">acetenyl</token>
 		<token value="=[N+]([O-])O">aci-nitro</token>
+		<token value="-C(=O)C=C" labels="1//2/3" usableAsAJoiner="yes" defaultInLocant="3">acroyl</token>
 		<token value="-C(=O)C=C" labels="1//2/3" usableAsAJoiner="yes" defaultInLocant="3">acryl</token>
 		<token value="-CC(C)CC">active amyl|active-amyl|activeamyl</token>
 		<token value="-C(=O)C(=O)N">amidoxalyl</token>
@@ -134,6 +135,8 @@
 		<token value="=NO">hydroximino</token>
 		<token value="-OC(C)C">isopropoxyl</token>
 		<token value="-C(C)(C=C)CCC=C(C)C">linalyl</token>
+		<token value="-C(=O)C(=C)C" labels="1//2/3/">methacroyl</token>
+		<token value="-C(=O)C(=C)C" labels="1//2/3/">methacryl</token>
 		<token value="-CC(C)(C)c1ccccc1" labels="////1/2,ortho/3,meta/4,para/5/6">neophyl</token>
 		<token value="-C(C)(C=C)CCC=C(C)CCC=C(C)C" usableAsAJoiner="yes" defaultInID="15">nerolidyl</token>
 		<token value="-N[N+](=O)[O-]">nitramido</token>
