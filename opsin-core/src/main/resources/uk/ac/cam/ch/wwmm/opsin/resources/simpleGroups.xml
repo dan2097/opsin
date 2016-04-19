@@ -41,7 +41,7 @@
 		<token value="N(Br)Br">dibromamine|bromimide|dibromamin|bromimid</token>
 		<token value="C(Br)(Br)(Br)">bromoform</token>
 		<token value="O=S(OCCCCOS(=O)(C)=O)(C)=O">busulfan</token>
-		<token value="[O-]CCCC" labels="/1/2/3/4">butoxide|butoxid</token>
+		<token value="[O-]CCCC" labels="/1/2/3/4">butoxide|n-butoxide|butoxid|n-butoxid</token>
 		<token value="[O+]CCCC" labels="/1/2/3/4">butoxylium</token>
 		<token value="CCCC(C(O)CCC)=O">butyroin</token>
 		<token value="NCCCCCN" labels="/1/2/3/4/5/" defaultInID="1">cadaverine|cadaverin</token>
@@ -133,7 +133,7 @@
 		<token value="=[NH]">imidogen</token>
 		<token value="C(I)(I)(I)">iodoform</token>
 		<token value="Cl[Fe]=O">iron oxychloride|ironoxychloride|iron oxychlorid|ironoxychlorid</token>
-		<token value="CC(C)C[O-]">isobutoxide|isobutoxid</token>
+		<token value="CC(C)C[O-]">isobutoxide|iso-butoxide|isobutoxid|iso-butoxid|isobutylate|iso-butylate|isobutylat|iso-butylat</token>
 		<token value="CC(C)=C">isobutylene|isobutylen</token>
 		<token value="NNC(O)=NN" labels="1/2//3/4/5">isocarbonohydrazide|isocarbonohydrazid</token>
 		<token value="N=C=O" functionalIDs="1">isocyanic|isocyanicacid|isocyanic acid</token>
@@ -144,7 +144,7 @@
 		<token value="O[N+]#[C-]">isofulminicacid|isofulminic acid</token>
 		<token value="O=C1C=C(CC(C)(C)C1)C">isophorone|isophoron</token>
 		<token value="O=C=NC1CC(CN=C=O)(CC(C1)(C)C)C">isophorone diisocyanate|isophorone diisocyanat|isophoron diisocyanat</token>
-		<token value="CC([O-])C">isopropoxide|isopropoxid</token>
+		<token value="CC([O-])C">isopropoxide|iso-propoxide|isopropoxid|iso-propoxid</token>
 		<token value="NC([SeH])=N" labels="1//2/3">isoselenourea</token>
 		<token value="NNC(O)=N" labels="1/2//3/4">isosemicarbazide|isosemicarbazid</token>
 		<token value="NC([TeH])=N" labels="1//2/3">isotellurourea</token>
@@ -217,7 +217,7 @@
 		<token value="CC(C)CCCC(C)CCCC(C)CCCC(C)C">pristane|pristan</token>
 		<token value="CCC(=O)CC" labels="1/2/3//4/5" defaultInLocant="5">propione</token>
 		<token value="CCC(C(O)CC)=O">propionoin|propioin</token>
-		<token value="[O-]CCC" labels="/1/2/3">propoxide|propoxid</token>
+		<token value="[O-]CCC" labels="/1/2/3">propoxide|n-propoxide|propoxid|n-propoxid</token>
 		<token value="[O+]CCC" labels="/1/2/3">propoxylium</token>
 		<token value="C=CC" labels="1/2/3">propylene|propylen</token>
 		<token value="C#N">prussicacid|prussic acid</token>
@@ -230,7 +230,7 @@
 		<token value="C=C(C)CCC[C@H](C)CC=O">rhodinal</token>
 		<token value="S=C(N)C(N)=S">rubeanic acid</token>
 		<token value="CP(OC(C)C)(F)=O">sarin</token>
-		<token value="CC([O-])CC">sec-butoxide|secbutoxide|sec-butoxid|secbutoxid</token>
+		<token value="CC([O-])CC">sec-butoxide|secbutoxide|sec-butoxid|secbutoxid|sec-butylate|secbutylate|sec-butylat|secbutylat</token>
 		<token value="[SeH2]=N">selenilimine|selenilimin</token>
 		<token value="Br[Se](Br)=O">selenium oxybromide|seleniumoxybromide|selenium oxybromid|seleniumoxybromid</token>
 		<token value="[SeH2](=O)=N">selenoximide|selenoximine|selenoximid|selenoximin</token>
@@ -249,7 +249,8 @@
 		<token value="C(=O)([O-])[C@H](O)[C@@H](O)C(=O)[O-]" functionalIDs="3,10">l-tartrate|(l)-tartrate|l(+)-tartrate|l-(+)-tartrate|l-tartrat|(l)-tartrat|l(+)-tartrat|l-(+)-tartrat</token>
 		<token value="[TeH2]=N">tellurilimine|tellurilimin</token>
 		<token value="[TeH2](=O)=N">telluroximide|telluroximine|telluroximid|telluroximin</token>
-		<token value="CC(C)([O-])C">tertiary-butoxide|tertiarybutoxide|tert-butoxide|tertbutoxide|tert.-butoxide|tert.butoxide|t-butoxide|tbutoxide|tertiary-butoxid|tertiarybutoxid|tert-butoxid|tertbutoxid|tert.-butoxid|tert.butoxid|t-butoxid|tbutoxid</token>
+		<token value="CC(C)(C)[O-]">tertiary-butoxide|tertiarybutoxide|tert-butoxide|tertbutoxide|tert.-butoxide|tert.butoxide|t-butoxide|tbutoxide|tertiary-butoxid|tertiarybutoxid|tert-butoxid|tertbutoxid|tert.-butoxid|tert.butoxid|t-butoxid|tbutoxid|tertiary-butylate|tertiarybutylate|tert-butylate|tertbutylate|tert.-butylate|tert.butylate|t-butylate|tertiary-butylat|tertiarybutylat|tert-butylat|tertbutylat|tert.-butylat|tert.butylat|t-butylat</token>
+		<token value="CCC(C)(C)[O-]">tertiary-pentoxide|tertiarypentoxide|tert-pentoxide|tertpentoxide|tert.-pentoxide|tert.pentoxide|t-pentoxide|tertiary-pentoxid|tertiarypentoxid|tert-pentoxid|tertpentoxid|tert.-pentoxid|tert.pentoxid|t-pentoxid|tertiary-pentylate|tertiarypentylate|tert-pentylate|tertpentylate|tert.-pentylate|tert.pentylate|t-pentylate|tertiary-pentylat|tertiarypentylat|tert-pentylat|tertpentylat|tert.-pentylat|tert.pentylat|t-pentylat|tertiary-amoxide|tertiaryamoxide|tert-amoxide|tertamoxide|tert.-amoxide|tert.amoxide|t-amoxide|tertiary-amoxid|tertiaryamoxid|tert-amoxid|tertamoxid|tert.-amoxid|tert.amoxid|t-amoxid|tertiary-amylate|tertiaryamylate|tert-amylate|tertamylate|tert.-amylate|tert.amylate|t-amylate|tertiary-amylat|tertiaryamylat|tert-amylat|tertamylat|tert.-amylat|tert.amylat|t-amylat</token>
 		<token value="Br[Al-](Br)(Br)Br">tetrabromoaluminate|tetrabromoaluminat</token>
 		<token value="Cl[Al-](Cl)(Cl)Cl">tetrachloroaluminate|tetrachloroaluminat</token>
 		<token value="COCCOCCOCCOCCOC">tetraglyme</token>
