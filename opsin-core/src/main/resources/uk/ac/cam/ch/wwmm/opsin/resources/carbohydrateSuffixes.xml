@@ -42,23 +42,19 @@
 		<token value="urononitrile">urononitrile|urononitril</token><!--Locanted implicitly to end of chain-->
 	</tokenList>
 
-<!--An infix before lactone formation (and other analogous ring formations)-->
+<!--An acid adding infix prior to another suffix e.g. lactone formation, osyl -->
 	<!--for cyclic carbohydrates-->
-	<tokenList tagname="suffix" type="root" symbol="ø">
-		<token value="osonic acid" locant="1">on</token>
+	<tokenList tagname="suffix" type="root" symbol="ô">
+		<token value="osonic acid" locant="1">on</token><!--Only applicable to ketoses-->
 		<token value="uronic acid">uron</token><!--Locanted implicitly to end of chain-->
 	</tokenList>
+
 	<!--for acyclic carbohydrates-->
 	<tokenList tagname="suffix" type="root" symbol="ù">
 		<token value="aric acid">ar</token>
 		<token value="onic acid" locant="1">on</token>
 		<token value="osonic acid" locant="1">oson</token>
 		<token value="uronic acid">uron</token><!--Locanted implicitly to end of chain-->
-	</tokenList>
-
-<!--An infix before osyl-->
-	<tokenList tagname="suffix" type="root" symbol="ô">
-		<token value="uronic acid">uron</token>
 	</tokenList>
 
 <!--May be used as an infix before cyclisation or an acyclic suffix-->

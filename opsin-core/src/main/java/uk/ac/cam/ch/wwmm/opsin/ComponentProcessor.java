@@ -1415,10 +1415,20 @@ class ComponentProcessor {
 	private void applyUnspecifiedRingSizeCyclisationIfPresent(Element group, Atom potentialCarbonyl) throws StructureBuildingException {
 		boolean cyclise = false;
 		Element possibleYl = OpsinTools.getNextSibling(group);
-		if (possibleYl != null && possibleYl.getName().equals(SUFFIX_EL) && possibleYl.getValue().equals("yl")){
-			cyclise = true;
+		if (possibleYl != null && possibleYl.getName().equals(SUFFIX_EL)){
+			if (possibleYl.getAttributeValue(VALUE_ATR).equals("yl")){
+				cyclise = true;
+			}
+			else {
+				//(on|uron)osyl
+				possibleYl = OpsinTools.getNextSibling(possibleYl);
+				if (possibleYl != null && possibleYl.getName().equals(SUFFIX_EL) &&
+					possibleYl.getAttributeValue(VALUE_ATR).equals("yl")) {
+					cyclise = true;
+				}
+			}
 		}
-		else{
+		if (!cyclise) {
 			Element alphaOrBetaLocantEl = OpsinTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{STEREOCHEMISTRY_EL});
 			if (alphaOrBetaLocantEl != null && alphaOrBetaLocantEl.getName().equals(LOCANT_EL) ){
 				String value = alphaOrBetaLocantEl.getValue();
