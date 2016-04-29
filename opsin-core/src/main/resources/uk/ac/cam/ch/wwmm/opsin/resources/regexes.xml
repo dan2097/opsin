@@ -202,7 +202,7 @@ does not define a CFG.
 	<regex name="%suffixGroup%" value="(%hyphen%?(%relativeCisTrans%|%locantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%unlocantedSuffixGroup%)"/>
 	<regex name="%locantedGroupAddingSuffixAllowedBeforeSuffix%" value="(%locantGroup%%multiplier%?(%groupAddingSuffixBeforeSuffix%|%groupAddingSuffixBeforeSuffixRequiresLocant%))"/>
 	<regex name="%rootEnding%" value="(%inlineChargeGroup%?(%locantedGroupAddingSuffixAllowedBeforeSuffix%?%suffixGroup%)?)"/>
-	<regex name="%locantOpenBracket%" value="(%stereochemistry%*%locantGroupNoStartingHyphen%{0,2}%stereochemistry%*(%multiplier%%locant%?)?%openBracket%%hyphen%?)"/>
+	<regex name="%locantOpenBracket%" value="(%stereochemistry%*(%relativeCisTrans%|%locantGroupNoStartingHyphen%{1,2})?%stereochemistry%*(%multiplier%%locant%?)?%openBracket%%hyphen%?)"/>
 	<regex name="%alkaneStemSystematic%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%)"/>
 	<regex name="%alkaneStem%" value="(%alkaneStemSystematic%|%alkaneStemTrivial%)"/>
 	<regex name="%dlStereochemistryPrefix%" value="(%dlStereochemistry%%lightRotation%?)"/>
