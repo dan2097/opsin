@@ -29,7 +29,8 @@
 		<token value="c1cccc2[as]c3ccccc3[as]c12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">arsanthren</token>
 		<token value="c1cccc2[as]cc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">arsanthridin</token>
 		<token value="[asH]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">arsindol</token>
-		<token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">arsindolin</token>
+		<token value="[AsH]1CCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">arsindolin</token>
+		<token value="C1CC[As]2CCCCC12" labels="1/2/3/4/5/6/7/8/8a">arsindolizidin</token>
 		<token value="c1cc[as]2ccccc12" labels="1/2/3/4/5/6/7/8/8a">arsindolizin</token>
 		<token value="[as]1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">arsinolin</token>
 		<token value="c1cc[cH2][as]2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">arsinolizin</token>
@@ -132,6 +133,7 @@
 		<token value="o1ncc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">indoxazen</token>
 		<token value="N1C(=O)C(=O)c2ccccc12" labels="1/2//3//3a/4/5/6/7/7a">isatin</token>
 		<token value="c1[asH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoarsindol</token>
+		<token value="C1[AsH]Cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoarsindolin</token>
 		<token value="c1[as]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoarsinolin</token>
 		<token value="c1occ2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzofuran</token>
 		<token value="c1scc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isobenzothiofuran|isobenzothiophen</token>
@@ -157,6 +159,7 @@
 		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoquinolin</token>
 		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" addGroup="=O locant 1" frontLocantsExpected="1,3,4,5,6,7,8">isoquinolon</token>
 		<token value="c1[pH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isophosphindol</token>
+		<token value="C1PCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isophosphindolin</token>
 		<token value="c1pccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isophosphinolin</token>
 		<token value="O1COc2cc(C=CC)ccc12" labels="1/2/3/3a/4/5/1'/2'/3'/6/7/7a">isosafrol</token>
 		<token value="[se]1nccc1" labels="1/2/3/4/5">isoselenazol</token>
@@ -233,6 +236,8 @@
 		<token value="c1cccc2pc3ccccc3pc12" labels="1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a">phosphanthren</token>
 		<token value="c1cccc2pcc3ccccc3c12" labels="1/2/3/4/4a/5/6/6a/7/8/9/10/10a/10b">phosphanthridin</token>
 		<token value="[pH]1ccc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">phosphindol</token>
+		<token value="P1CCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">phosphindolin</token>
+		<token value="C1CCP2CCCCC12" labels="1/2/3/4/5/6/7/8/8a">phosphindolizidin</token>
 		<token value="c1ccp2ccccc12" labels="1/2/3/4/5/6/7/8/8a">phosphindolizin</token>
 		<token value="p1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">phosphinolin</token>
 		<token value="c1cc[cH2]p2ccccc12" labels="1/2/3/4/5/6/7/8/9/9a">phosphinolizin</token>

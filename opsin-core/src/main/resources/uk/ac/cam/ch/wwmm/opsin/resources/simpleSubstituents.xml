@@ -37,7 +37,7 @@
 		<token value="-C(C)(C)CC">tertiaryamyl|tertiary amyl|tertiary-amyl|tert-amyl|tertamyl|tert.-amyl|tert.amyl|t-amyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilino</token>
 		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N defaultLocant 4" outIDs="9" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisidino</token>
-		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal</token>
+		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal|benzylene</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/">benzidino</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" >4,4'-benzidino</token>
 		<token value="-C(C)=C">beta-allyl</token>
