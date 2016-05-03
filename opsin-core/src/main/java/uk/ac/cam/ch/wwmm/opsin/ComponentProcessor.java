@@ -1327,6 +1327,7 @@ class ComponentProcessor {
 	private void processCarbohydrates(Element subOrRoot) throws StructureBuildingException {
 		List<Element> carbohydrates = OpsinTools.getChildElementsWithTagNameAndAttribute(subOrRoot, GROUP_EL, TYPE_ATR, CARBOHYDRATE_TYPE_VAL);
 		for (Element carbohydrate : carbohydrates) {
+			Fragment carbohydrateFrag = carbohydrate.getFrag();
 			String subtype = carbohydrate.getAttributeValue(SUBTYPE_ATR);
 			boolean isAldose;
 			if (CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL.equals(subtype)){
@@ -1336,11 +1337,16 @@ class ComponentProcessor {
 				isAldose = true;
 			}
 			else{
+				Attribute anomericId = carbohydrate.getAttribute(SUFFIXAPPLIESTO_ATR);
+				if (anomericId != null){
+					Atom anomericCarbon = carbohydrateFrag.getAtomByID(carbohydrateFrag.getIdOfFirstAtom() + Integer.parseInt(anomericId.getValue()) -1);
+					applyAlphaBetaStereoToCyclisedCarbohydrate(carbohydrate, anomericCarbon);
+					carbohydrate.removeAttribute(anomericId);
+				}
 				//trivial carbohydrates don't have suffixes
 				continue;
 			}
 			boolean cyclisationPerformed = false;
-			Fragment carbohydrateFrag = carbohydrate.getFrag();
 			Attribute anomericId = carbohydrate.getAttribute(SUFFIXAPPLIESTO_ATR);
 			if (anomericId == null){
 				throw new StructureBuildingException("OPSIN bug: Missing suffixAppliesTo on: " + carbohydrate.getValue());
@@ -1394,7 +1400,7 @@ class ComponentProcessor {
 						throw new StructureBuildingException("OPSIN bug: Carbohydate cyclised twice!");
 					}
 					Element ringSize = nextSibling;
-					cycliseCarbohydrate(carbohydrate, ringSize, potentialCarbonyl);
+					cycliseCarbohydrateAndApplyAlphaBetaStereo(carbohydrate, ringSize, potentialCarbonyl);
 					ringSize.detach();
 					cyclisationPerformed = true;
 				}
@@ -1447,7 +1453,7 @@ class ComponentProcessor {
 				ringSize.addAttribute(new Attribute(VALUE_ATR, "5"));
 			}
 			OpsinTools.insertAfter(group, ringSize);
-			cycliseCarbohydrate(group, ringSize, potentialCarbonyl);
+			cycliseCarbohydrateAndApplyAlphaBetaStereo(group, ringSize, potentialCarbonyl);
 			ringSize.detach();
 		}
 	}
@@ -1552,7 +1558,7 @@ class ComponentProcessor {
 	 * @param potentialCarbonyl 
 	 * @throws StructureBuildingException
 	 */
-	private void cycliseCarbohydrate(Element carbohydrateGroup, Element ringSize, Atom potentialCarbonyl) throws StructureBuildingException {
+	private void cycliseCarbohydrateAndApplyAlphaBetaStereo(Element carbohydrateGroup, Element ringSize, Atom potentialCarbonyl) throws StructureBuildingException {
 		Fragment frag = carbohydrateGroup.getFrag();
 		String ringSizeVal = ringSize.getAttributeValue(VALUE_ATR);
 		Element potentialLocant = OpsinTools.getPreviousSibling(ringSize);
@@ -1607,6 +1613,11 @@ class ComponentProcessor {
 		}
 		state.fragManager.createBond(carbonylCarbon, atomToJoinWith, 1);
 		CycleDetector.assignWhetherAtomsAreInCycles(frag);
+		applyAlphaBetaStereoToCyclisedCarbohydrate(carbohydrateGroup, carbonylCarbon);
+	}
+
+	private void applyAlphaBetaStereoToCyclisedCarbohydrate(Element carbohydrateGroup, Atom carbonylCarbon) {
+		Fragment frag = carbohydrateGroup.getFrag();
 		Element alphaOrBetaLocantEl = OpsinTools.getPreviousSiblingIgnoringCertainElements(carbohydrateGroup, new String[]{STEREOCHEMISTRY_EL});
 		if (alphaOrBetaLocantEl !=null && alphaOrBetaLocantEl.getName().equals(LOCANT_EL)){
 			Element stereoPrefixAfterAlphaBeta = OpsinTools.getNextSibling(alphaOrBetaLocantEl);
@@ -1681,14 +1692,17 @@ class ComponentProcessor {
 			}
 			try{
 				String locant = a.getFirstLocant();
-				int intVal = Integer.parseInt(locant);
-				if (intVal > highestLocantfound){
-					highestLocantfound = intVal;
-					configurationalAtom = a;
+				if (locant !=null) {
+					int intVal = Integer.parseInt(locant);
+					if (intVal > highestLocantfound){
+						highestLocantfound = intVal;
+						configurationalAtom = a;
+					}
 				}
+	
 			}
-			catch (Exception e) {
-				//may throw null pointer exceptions or number format exceptions
+			catch (NumberFormatException e) {
+				//may throw number format exceptions
 			}
 		}
 		return configurationalAtom;
