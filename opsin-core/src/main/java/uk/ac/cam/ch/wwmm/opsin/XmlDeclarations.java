@@ -407,8 +407,6 @@ class XmlDeclarations {
 	static final String ALKANESTEM_SUBTYPE_VAL ="alkaneStem";
 	/**An anhydride functional term e.g. "thioanhydride"*/
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
-	/**An aryl group e.g. "pyridin" */
-	static final String ARYLGROUP_SUBTYPE_VAL ="arylGroup";
 	/**An aryl subsituent or stem e.g. "phenyl", "styr" */
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
 	//FIXME ideally carbohydrates and nucleotides/nucleosides/natural products should have a common type or subtype
@@ -458,6 +456,8 @@ class XmlDeclarations {
 	static final String PERHALOGENO_SUBTYPE_VAL ="perhalogeno";
 	/** phospho and other very related substituents. Strongly prefer forming bonds to hydroxy groups */
 	static final String PHOSPHO_SUBTYPE_VAL ="phospho";
+	/**A ring group e.g. "pyridin" */
+	static final String RING_SUBTYPE_VAL ="ring";
 	/** A component of a salt e.g "hydrate", "2HCl" */
 	static final String SALTCOMPONENT_SUBTYPE_VAL ="saltComponent";
 	/**A substitutent with no suffix e.g. "amino" */

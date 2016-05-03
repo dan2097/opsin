@@ -112,79 +112,66 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="Þ">
-		<!--trivial-->
+		<!--trivial, always open-chain-->
 		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/">dithioerythritol</token>
 		<token value="SC[C@@H](O)[C@H](O)CS" labels="/1/2//3//4/">dithiothreitol</token>
-		<token value="O1C=C[C@@H](O)[C@@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a">galactal</token>
-		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/" additionalValue="n/a">glucal</token>
 		<token value="OC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">sorbitol</token>
 		<token value="OCC(=O)[C@@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" naturalEntIsOpposite="yes">rhamnulose</token><!--nomenclature wise this is more similar to sorbose than rhamnose!-->
 		<token value="OCC(=O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" naturalEntIsOpposite="yes">fuculose</token>
-
-		<token value="O=C1C(O)=C(O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbic acid</token>
-		<token value="O=C1C(=O)C(=O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">dehydroascorbic acid</token>
-		<token value="O=C1C(O)=C([O-])[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbate|ascorbat</token>
 		<token value="NC[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">glucamine|glucamin</token>
 		<token value="N(C)C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="//1/2//3//4//5//6/">meglumine|meglumin</token>
 		<token value="OC(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)O" labels="/1//2//3//4//5//6//" functionalIDs="1,14">saccharic acid</token>
 		<token value="[O-]C(=O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C(=O)[O-]" labels="/1//2//3//4//5//6//" functionalIDs="1,14">saccharate|saccharat</token>
+	</tokenList>
 
-		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO">galactosamine|galactosamin</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">glucosamine|glucosamin</token>
-		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" additionalValue="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">mannosamine|mannosamin</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C">fucosamine|fucosamin</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C">quinovosamine|quinovosamin</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](N)[C@H](O)C">bacillosamine|bacillosamin</token>
-		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" additionalValue="O=C[C@H](O)[C@@H](NC)[C@@](C)(O)CO" naturalEntIsOpposite="yes">garosamine|garosamin</token>
+	<tokenList tagname="group" type="carbohydrate" subType="ring" symbol="Þ">
+		<!--trivial, cyclic form always (or by default if additionalValue populated). suffixAppliesTo indicates the anomeric position-->
+		<token value="O1C=C[C@@H](O)[C@@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/">galactal</token>
+		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/">glucal</token>
 
-		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminic acid</token>
-		<token value="OC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">alpha-neuraminic acid</token>
-		<token value="OC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">beta-neuraminic acid</token>
-		<token value="[O-]C(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="[O-]C(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminate|neuraminat</token>
-		<token value="[O-]C(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">alpha-neuraminate|alpha-neuraminat</token>
-		<token value="[O-]C(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">beta-neuraminate|beta-neuraminat</token>
-		<token value="NC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="NC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminamide|neuraminamid</token>
-		<token value="NC(=O)[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">alpha-neuraminamide|alpha-neuraminamid</token>
-		<token value="NC(=O)[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" additionalValue="n/a" functionalIDs="1">beta-neuraminamide|beta-neuraminamid</token>
-		<token value="OCC1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="OCC(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">neuraminol</token>
-		<token value="OC[C@@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a">alpha-neuraminol</token>
-		<token value="OC[C@]1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" additionalValue="n/a">beta-neuraminol</token>
+		<token value="O=C1C(O)=C(O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbic acid</token>
+		<token value="O=C1C(=O)C(=O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">dehydroascorbic acid</token>
+		<token value="O=C1C(O)=C([O-])[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbate|ascorbat</token>
 
-		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O)CO" functionalIDs="10">muramic acid</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">alpha-muramic acid</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">beta-muramic acid</token>
-		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="O=C[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O)CO" functionalIDs="10">isomuramic acid</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">alpha-isomuramic acid</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" additionalValue="n/a" functionalIDs="10">beta-isomuramic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO">galactosamine|galactosamin</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">glucosamine|glucosamin</token>
+		<token value="OC1[C@@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">mannosamine|mannosamin</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)C">fucosamine|fucosamin</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)C">quinovosamine|quinovosamin</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](N)[C@H](O1)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](N)[C@H](O)C">bacillosamine|bacillosamin</token>
+		<token value="OC1[C@H](O)[C@@H](NC)[C@@](C)(O)CO1" labels="/1/2//3///4///5/" suffixAppliesTo="2" additionalValue="O=C[C@H](O)[C@@H](NC)[C@@](C)(O)CO" naturalEntIsOpposite="yes">garosamine|garosamin</token>
+
+		<token value="OC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" suffixAppliesTo="4" additionalValue="OC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminic acid</token>
+		<token value="[O-]C(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" suffixAppliesTo="4" additionalValue="[O-]C(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminate|neuraminat</token>
+		<token value="NC(=O)C1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1//2//3/4//5//6//7//8//9/" suffixAppliesTo="4" additionalValue="NC(=O)C(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO" functionalIDs="1">neuraminamide|neuraminamid</token>
+		<token value="OCC1(O)C[C@H](O)[C@@H](N)[C@@H](O1)[C@H](O)[C@H](O)CO" labels="/1/2//3/4//5//6//7//8//9/" suffixAppliesTo="3" additionalValue="OCC(=O)C[C@H](O)[C@@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">neuraminol</token>
+
+		<token value="OC1[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O[C@@H](C(=O)O)C)[C@H](O)[C@H](O)CO" functionalIDs="10">muramic acid</token>
+		<token value="OC1[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O1)CO" labels="/1/2//3///////4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O[C@H](C(=O)O)C)[C@H](O)[C@H](O)CO" functionalIDs="10">isomuramic acid</token>
 
 <!--oligo saccharides-->
-		<token value="OC1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">lactose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">alpha-lactose</token>
-		<token value="O[C@H]1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">beta-lactose</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">lactosamine|lactosamin</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">alpha-lactosamine|alpha-lactosamin</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">beta-lactosamine|beta-lactosamin</token>
-		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">lactosediamine|lactosediamin</token>
-		<token value="O[C@@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">alpha-lactosediamine|alpha-lactosediamin</token>
-		<token value="O[C@H]1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO">beta-lactosediamine|beta-lactosediamin</token>
+		<token value="OC1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="/1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="2">lactose</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="/1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="2">lactosamine|lactosamin</token>
+		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="/1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="2">lactosediamine|lactosediamin</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
 		<token value="O=CC(O)CO" labels="/1/2//3/">glyceraldehyde|glyceraldehyd</token>
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/">d-glyceraldehyde|(d)-glyceraldehyde|d-glyceraldehyd|(d)-glyceraldehyd</token>
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">l-glyceraldehyde|(l)-glyceraldehyde|l-glyceraldehyd|(l)-glyceraldehyd</token>
-
-<!--used by CAS to describe cyclic apiose-->
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-d-furanose|d-apio-alpha-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-d-furanose|d-apio-beta-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-alpha-l-furanose|d-apio-alpha-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">apio-beta-l-furanose|d-apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/" additionalValue="n/a">l-apio-beta-l-furanose</token>
-
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">dextrose</token>
+	</tokenList>
+
+	<tokenList tagname="group" type="carbohydrate" subType="ring" symbol="G">
+<!--used by CAS to describe cyclic apiose-->
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">apio-alpha-d-furanose|d-apio-alpha-d-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">apio-beta-d-furanose|d-apio-beta-d-furanose</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">apio-alpha-l-furanose|d-apio-alpha-l-furanose</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">apio-beta-l-furanose|d-apio-beta-l-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-alpha-d-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-beta-d-furanose</token>
+		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-alpha-l-furanose</token>
+		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-beta-l-furanose</token>
 	</tokenList>
 
 <!--dummy substituent for aldehydo prefix. This triggers the swapping of additionalValue with value on some trivial carbohydrate names but otherwise is ignored as carbohydrates are by default in the acyclic form-->

@@ -1460,7 +1460,7 @@ class ComponentGenerator {
 			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
 			group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
-			group.addAttribute(new Attribute(SUBTYPE_ATR, ARYLGROUP_SUBTYPE_VAL));
+			group.addAttribute(new Attribute(SUBTYPE_ATR, RING_SUBTYPE_VAL));
 			annulen.getParent().replaceChild(annulen, group);
 		}
 
@@ -2526,6 +2526,18 @@ class ComponentGenerator {
 					if (parentOfCarbohydate.getChildElements(CARBOHYDRATERINGSIZE_EL).size() > 0){
 						throw new ComponentGenerationException("Carbohydrate has a specified ring size but " + groupValue + " indicates the open chain form!");
 					}
+					for (Element suffix : parentOfCarbohydate.getChildElements(SUFFIX_EL)) {
+						if ("yl".equals(suffix.getAttributeValue(VALUE_ATR))) {
+							throw new ComponentGenerationException("Carbohydrate appears to be a glycosyl, but " + groupValue + " indicates the open chain form!");
+						}
+					}
+					Element alphaOrBetaLocantEl = OpsinTools.getPreviousSiblingIgnoringCertainElements(carbohydrate, new String[]{STEREOCHEMISTRY_EL, DLSTEREOCHEMISTRY_EL});
+					if (alphaOrBetaLocantEl != null && alphaOrBetaLocantEl.getName().equals(LOCANT_EL) ){
+						String value = alphaOrBetaLocantEl.getValue();
+						if (value.equals("alpha") || value.equals("beta") || value.equals("alpha,beta") || value.equals("beta,alpha")){
+							throw new ComponentGenerationException("Carbohydrate has alpha/beta anomeric form but " + groupValue + " indicates the open chain form!");
+						}
+					}
 					group.detach();
 					List<Element> childrenToMove = parentSubstituent.getChildElements();
 					for (int i = childrenToMove.size() -1 ; i >=0; i--) {
@@ -2536,11 +2548,11 @@ class ComponentGenerator {
 						}
 					}
 					parentSubstituent.detach();
-					String carbohydrateAdditionValue = carbohydrate.getAttributeValue(ADDITIONALVALUE_ATR);
-					//OPSIN assumes a few trival names are more likely to describe the cyclic form. additonalValue contains the SMILES for the acyclic form
-					if (carbohydrateAdditionValue != null){
-						if (carbohydrateAdditionValue.equals("n/a")){
-							throw new ComponentGenerationException(carbohydrate.getValue() + " can only describe the cyclic form  but " + groupValue + " indicates the open chain form!");
+					if (RING_SUBTYPE_VAL.equals(carbohydrate.getAttributeValue(SUBTYPE_ATR))) {
+						String carbohydrateAdditionValue = carbohydrate.getAttributeValue(ADDITIONALVALUE_ATR);
+						//OPSIN assumes a few trivial names are more likely to describe the cyclic form. additionalValue contains the SMILES for the acyclic form
+						if (carbohydrateAdditionValue == null){
+							throw new ComponentGenerationException(carbohydrate.getValue() + " can only describe the cyclic form but " + groupValue + " indicates the open chain form!");
 						}
 						carbohydrate.getAttribute(VALUE_ATR).setValue(carbohydrateAdditionValue);
 					}
