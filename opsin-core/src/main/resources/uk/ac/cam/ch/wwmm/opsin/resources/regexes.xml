@@ -39,6 +39,7 @@ does not define a CFG.
 	<regex name="%suffixableSubstituent%" value="X"/>
 	<regex name="%o%" value="Y"/>
 	<regex name="%e%" value="Z"/>
+	<regex name="%hwHeteroatomOnly%" value="`"/>
 	<regex name="%alkaneStemTrivial%" value="a"/>
 	<regex name="%trivialRingSubstituentInlineOnly%" value="b"/>
 	<regex name="%closeBracket%" value="c"/>
@@ -152,7 +153,7 @@ does not define a CFG.
 	<regex name="%ylium%" value="õ"/>
 	<regex name="%nucleosyl%" value="ö"/>
 	<regex name="%aldehyde%" value="÷"/>
-	<!--unused: ø -->
+	<regex name="%trivialGlycosyl%" value="ø"/>
 	<regex name="%lactoneAcidInfixForAcyclic%" value="ù"/>
 	<regex name="%mon%" value="ú"/>
 	<regex name="%endOfFunctionalGroup%" value="û"/>
@@ -268,19 +269,19 @@ does not define a CFG.
 
 	<!--cyclic-->
 	<regex name="%semiTrivialFusedRing%" value = "(%tetrOrHigher%%a%%FR2hydrocarbonComponent%)"/>
-	<regex name="%vonBaeyerSystem%" value = "(%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%%a%?%unsaturationBlock%|%heteroChain%))"/><!--support for alternating heteroChain missing-->
+	<regex name="%vonBaeyerSystem%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%locant%?(%alkaneStem%%a%?%unsaturationBlock%|%heteroChain%))"/><!--support for alternating heteroChain missing-->
 	<regex name="%cycloChain%" value = "(%cyclo%%straightChainGroups%)"/>
 	<regex name="%cycloChainSubstituent%" value = "(%cyclo%%alkaneStem%)"/>
-	<regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%%a%?%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
-	<regex name="%hantzschWidmanRing%" value = "((%locantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplierNotGroup%?%hwHeteroAtom%)*((%multiplierNotGroup%?%hwAneCompatible%)%hwAne%)|(((%multiplierNotGroup%?%hwHeteroAtom%){2,}|(%multiplierNotGroup%?%hwIneCompatible%))%hwIne%)|((%multiplierNotGroup%?%hwHeteroAtom%)+%hantzschWidmanSuffix%)))"/>
+	<regex name="%spiroSystem%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%locant%?%alkaneStem%%a%?%unsaturationBlock%)"/><!--support for heteroChain/alternating heteroChain missing-->
+	<regex name="%hantzschWidmanRing%" value = "((%locantGroupNoStartingHyphen%|%bracketedLocant%)?((%multiplierNotGroup%?(%hwHeteroatomOnly%|%heteroAtom%))*%multiplierNotGroup%?%hwAneCompatible%%hwAne%|((%multiplierNotGroup%?%hwHeteroAtom%){2,}|%multiplierNotGroup%?%hwIneCompatible%)%hwIne%|(%multiplierNotGroup%?(%hwHeteroatomOnly%|%heteroAtom%))*%multiplierNotGroup%?%hwHeteroAtom%%hantzschWidmanSuffix%))"/>
 	<regex name="%fusionComponent%" value = "(%fusionRing%|(%locantThatNeedsBrackets%|%bracketedLocant%)?%fusionRingAcceptsFrontLocants%|%benzo%|%cycloChainSubstituent%%a%?|%annulen%%o%|%semiTrivialFusedRing%%o%|%hantzschWidmanRing%%o%)"/>
 	<regex name="%cyclicUnsaturableHydrocarbonGroup%" value = "(%cyclicUnsaturableHydrocarbon%%a%?%unsaturationBlock%)" />
 	<regex name="%naturalProductGroup%" value = "(%naturalProductRequiresUnsaturator%%a%?%unsaturationBlock%)" />
 	<regex name="%trivialRingSubstituentGroup%" value = "(%bracketedLocant%?%trivialRingSubstituentAnySuffix%%suffixGroup%)" />
 	<regex name="%trivialRingSubstituentSub%" value = "(%bracketedLocant%?(%trivialRingSubstituentAnySuffix%|%trivialRingSubstituentInlineOnly%)%inlineSuffixGroup%|%trivialRingSubstituent%)" />
 	<!-- allows abbreviated alkanes e.g. bicyclo[2.2.2]octyl instead of bicyclo[2.2.2]octanyl-->
-	<regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%alkaneStem%)"/>
-	<regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%alkaneStem%)"/>
+	<regex name="%vonBaeyerSystemSubstituent%" value = "(%vonBaeyerMultiplier%%vonBaeyer%%locant%?%alkaneStem%)"/>
+	<regex name="%spiroSystemSubstituent%" value = "(%simpleMultiplierGroup%?%spiroDescriptor%%locant%?%alkaneStem%)"/>
 
 	<regex name="%conjunctiveSideChainRoot%" value ="(%hyphen%?(%locant%|%alphaBetaStereochemLocant%)?%multiplier%?(%alkaneStem%%hyphen%?(%ane%%suffixGroup%|%ane%?%ylamine%)|%optionalOpenBracket%%alkaneStem%%hyphen%?%ane%?%ylamine%%optionalCloseBracket%|%acidStem%%hyphen%?(%infixedSuffixForAcidStem%|%o%?%rootSuffixForAcidStem%)))"/>
 	<regex name="%conjunctiveSideChainInline%" value ="(%multiplier%?(%acidStem%(%infixedInlineSuffix%|%inlineSuffix%|%o%%infixableInlineSuffix%)))"/><!--No hyphen/locant to avoid ambiguity with a mixture e.g. benzene-acetylbenzene-->
@@ -298,7 +299,7 @@ does not define a CFG.
 	<regex name="%cyclicCarbohydrateSubstituentYl%" value="(%carbohydrateRingSizedStem%%ose%(%hyphen%?%glycosideSuffix%)?%osUloseSuffix%?%hyphen%?%locant%%locantedAminoAcidOrCarbohydrateYl%)"/>
 	<regex name="%cyclicCarbohydrateSubstituentGlycosyl%" value="(%carbohydrateRingSizedStem%%ose%%glycosylSuffix%(%osUloseSuffix%|%cyclicCarbohydrateAcidSuffixGroup%))"/>
 	<regex name="%cyclicCarbohydrateSubstituentEndingInGlycosyl%" value="(%carbohydrateRingSizedStem%%cyclicCarbohydrateAcidInfix%?%ose%%osUloseSuffix%?%glycosylSuffix%)"/>
-	<regex name="%cyclicCarbohydrateSubstituent%" value="(%cyclicCarbohydrateSubstituentYl%|(%unSpecifiedRingSizeSubstituentGlycosyl%|%cyclicCarbohydrateSubstituentGlycosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%)(%closeBracket%?%hyphen%?%biochemicalLinkage%)?)"/>
+	<regex name="%cyclicCarbohydrateSubstituent%" value="(%cyclicCarbohydrateSubstituentYl%|(%unSpecifiedRingSizeSubstituentGlycosyl%|%cyclicCarbohydrateSubstituentGlycosyl%|%cyclicCarbohydrateSubstituentEndingInGlycosyl%|%dlStereochemistryPrefix%?%trivialGlycosyl%)(%closeBracket%?%hyphen%?%biochemicalLinkage%)?)"/>
 
 	<regex name="%nucelosylSubstituent%" value="(%nucleosyl%(%hyphen%?%biochemicalLinkage%))"/>
 
@@ -341,7 +342,7 @@ does not define a CFG.
 	<regex name="%allRingGroups%" value = "((%ringGroupOrFusedRingSystem%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%preSuffixedRing%)"/>
 	<regex name="%allOtherSuffixableGroups%" value = "((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%?)"/>
 	<regex name="%mainGroupBody%" value="(%ringNonDetachableFeatures%%allRingGroups%|%acyclicNonDetachableFeatures%(%allOtherSuffixableGroups%|%simpleGroups%|%elementaryAtom%%chargeOrOxidationNumberSpecifier%?))"/>
-	<regex name="%mainGroupHead%" value="(%openBracket%?(%locant%?%multiplier%|%fractionalMultiplier%)?%openBracket%?%stereochemistry%*(%locantGroupNoStartingHyphen%%mono%?)?)" />
+	<regex name="%mainGroupHead%" value="(%openBracket%?(%locant%?%multiplier%|%fractionalMultiplier%%hyphen%?)?%openBracket%?%stereochemistry%*(%locantGroupNoStartingHyphen%%mono%?)?)" />
 	<regex name="%mainGroupTail%" value="(%closeBracket%*%endOfMainGroup%)" />
 	<regex name="%mainGroup%" value="(%mainGroupHead%%mainGroupBody%%mainGroupTail%)"/>
 	<regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%(%chalcogenAcidGroup%|%simpleGroupClass%)%mainGroupTail%)"/>

@@ -1715,7 +1715,7 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processRings(Element group) throws ComponentGenerationException {
-		Element previous = OpsinTools.getPreviousSibling(group);
+		Element previous = OpsinTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{LOCANT_EL});
 		if(previous != null) {
 			String previousElType = previous.getName();
 			if(previousElType.equals(SPIRO_EL)){

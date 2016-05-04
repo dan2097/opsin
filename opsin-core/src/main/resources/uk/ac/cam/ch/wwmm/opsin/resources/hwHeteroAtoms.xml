@@ -102,4 +102,35 @@
 
 		<token value="[As]">arsen</token>
 	</tokenList>
+
+	<tokenList tagname="heteroatom" symbol="`">
+		<!--All other "a" terms are the same as in general heteroatom replacement-->
+		<!--This set is used for heteroatoms beyond the first and is intentionally orthogonal to general heteroatom replacement to allow parsing ambiguity to be avoided-->
+		<token value="[Al]">aluma</token>
+		<token value="[In]">indiga</token>
+
+		<token value="F">fluor</token>
+		<token value="Cl">chlor</token>
+		<token value="Br">brom</token>
+		<token value="I">iod</token>
+		<token value="O">ox</token>
+		<token value="S">thi</token>
+		<token value="[Se]">selen</token>
+		<token value="[Te]">tellur</token>
+		<token value="N">az</token>
+		<token value="P">phosph</token>
+		<token value="[As]">ars</token>
+		<token value="[Sb]">stib</token>
+		<token value="[Bi]">bism</token>
+		<token value="[Si]">sil</token>
+		<token value="[Ge]">germ</token>
+		<token value="[Sn]">stann</token>
+		<token value="[Pb]">plumb</token>
+		<token value="B">bor</token>
+		<token value="[Al]">alum</token>
+		<token value="[Ga]">gall</token>
+		<token value="[In]">indig</token>
+		<token value="[Tl]">thall</token>
+		<token value="[Hg]">mercur</token>
+	</tokenList>
 </tokenLists>
