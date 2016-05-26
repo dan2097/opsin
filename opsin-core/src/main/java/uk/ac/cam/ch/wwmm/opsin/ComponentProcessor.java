@@ -1772,10 +1772,18 @@ class ComponentProcessor {
 
 	private Atom[] getDeterministicAtomRefs4ForAnomericAtom(Atom anomericAtom) {
 		List<Atom> neighbours = anomericAtom.getAtomNeighbours();
-		if (neighbours.size()!=3 && neighbours.size()!=4){
+		Atom[] atomRefs4 = new Atom[4];
+		if (neighbours.size() == 3 || neighbours.size() == 4 ){
+			//normal case
+		}
+		else if (neighbours.size() == 2 && anomericAtom.getOutValency() == 1) {
+			//trivial glycosyl
+			atomRefs4[1] = AtomParity.deoxyHydrogen;
+		}
+		else {
 			throw new RuntimeException("OPSIN bug: Unexpected number of atoms connected to anomeric atom of carbohydrate");
 		}
-		Atom[] atomRefs4 = new Atom[4];
+
 		for (Atom neighbour : neighbours) {
 			if (neighbour.getElement() == ChemEl.C){
 				if (neighbour.getAtomIsInACycle()){
