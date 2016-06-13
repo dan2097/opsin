@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -75,7 +76,7 @@ class AutomatonInitialiser {
 	private RunAutomaton loadCachedAutomaton(String automatonName) throws IOException{
 		InputStream automatonInput = resourceGetter.getInputstreamFromFileName(automatonName +"SerialisedAutomaton.aut");
 		try {
-			return RunAutomaton.load(automatonInput);
+			return RunAutomaton.load(new BufferedInputStream(automatonInput));
 		} catch (Exception e) {
 			IOException ioe = new IOException("Error loading automaton");
 			ioe.initCause(e);
