@@ -167,6 +167,8 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="C([C@H](C(=O))N)SSC[C@H](C(=O))N" outIDs="3,10">d-cystyl</token>
 		<token value="N[C@@H](CS)C=O" labels="/2,alpha/3,beta//1/" outIDs="4,5" defaultInID="1">half-cystyl|l-half-cystyl</token>
 		<token value="N[C@H](CS)C=O" labels="/2,alpha/3,beta//1/" outIDs="4,5" defaultInID="1">d-half-cystyl</token>
+		<token value="N[C@@H](Cc1c[nH]c2ccccc12)C=O" labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a//" outIDs="13" defaultInID="1">tryptyl|l-tryptyl</token>
+		<token value="N[C@H](Cc1c[nH]c2ccccc12)C=O" labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a//" outIDs="13" defaultInID="1">d-tryptyl</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="simpleGroup" symbol="Þ"><!--semi trivial amino acids (can be implicitly D/L prefixed)-->
