@@ -58,7 +58,7 @@
 		<token value="N[C@@H](CCON)C" labels="/2,alpha/3,beta/4,gamma///1" suffixAppliesTo="7" defaultInID="1">canal</token>
 		<token value="N[C@@H](CCONC(=N)C)C" labels="/2,alpha/3,beta/4,gamma//////1" suffixAppliesTo="10" defaultInID="1">canavan</token>
 		<token value="NC1(CCCC1)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" suffixAppliesTo="7" defaultInID="1">cycloleuc</token>
-		<token value="N[C@@](CC)(C)C" labels="/2,alpha/3,beta/4,gamma//1" suffixAppliesTo="6" defaultInID="1">isoval|iso-val</token>
+		<token value="N[C@@](C)(CC)C" labels="/2,alpha//3,beta/4,gamma/1" suffixAppliesTo="6" defaultInID="1">isoval|iso-val</token>
 		<token value="N[C@@H](C(C)(C)S)C" suffixAppliesTo="7" defaultInID="1">penicillam</token>
 		<token value="N[C@@H](CCC(=O)NCC)C" labels="/2,alpha/3,beta/4,gamma//////1" suffixAppliesTo="10" defaultInID="1">thean</token>
 		<token value="N[C@@H](CSC(C)(C)CCO)C" labels="/2,alpha/3,beta////////1" suffixAppliesTo="11" defaultInID="1">felin</token>
