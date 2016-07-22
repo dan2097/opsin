@@ -247,18 +247,19 @@ class FusedRingNumberer {
 
 	/**
 	 * Numbers the fused ring
-	 * Currently only works for a very limited selection of rings
+	 * Works reliably for all common ring systems.
+	 * Some complex fused ring systems involving multiple connections to rings with an odd number of edges may still be wrong
 	 * @param fusedRing
 	 * @throws StructureBuildingException
 	 */
 	static void numberFusedRing(Fragment fusedRing) throws StructureBuildingException {
 		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(fusedRing);
-		if (rings.size() <2){
+		if (rings.size() <2) {
 			throw new StructureBuildingException("Ring perception system found less than 2 rings within input fragment!");
 		}
 		List<Atom> atomList = fusedRing.getAtomList();
 		setupAdjacentFusedRingProperties(rings);
-		if (!checkRingApplicability(rings)){
+		if (!checkRingApplicability(rings)) {
 			for (Atom atom : atomList) {
 				atom.clearLocants();
 			}
@@ -399,25 +400,25 @@ class FusedRingNumberer {
 		currentRing.makeCyclicLists(previousBond, atom);
 		List<RingConnectivityTable> generatedCts = new ArrayList<RingConnectivityTable>();
 		List<FusionRingShape> allowedShapes = getAllowedShapesForRing(currentRing, previousBond);
-		if (allowedShapes.size()==0){
+		if (allowedShapes.size() == 0) {
 			throw new RuntimeException("OPSIN limitation, unsupported ring size in fused ring numbering");
 		}
 		ct.usedRings.add(currentRing);
-		for (int i = allowedShapes.size()-1; i >=0; i--) {
+		for (int i = allowedShapes.size() - 1; i >=0; i--) {
 			FusionRingShape fusionRingShape = allowedShapes.get(i);
 			RingConnectivityTable currentCT;
-			if (i==0){
+			if (i==0) {
 				currentCT = ct;
 			}
 			else{
-				currentCT =ct.copy();
+				currentCT = ct.copy();
 				cts.add(currentCT);
 				generatedCts.add(currentCT);
 			}
 			RingShape ringShape = new RingShape(currentRing, fusionRingShape);
 			List<RingConnectivityTable> ctsToExpand = new ArrayList<RingConnectivityTable>();
 			ctsToExpand.add(currentCT);//all the cts to consider, the currentCT and generated clones
-			for (Ring neighbourRing : currentRing.getNeighbours()){
+			for (Ring neighbourRing : currentRing.getNeighbours()) {
 				//find the directions between the current ring and all neighbouring rings including the previous ring
 				// this means that the direction to the previous ring will then be known in both directions
 
@@ -802,7 +803,7 @@ class FusedRingNumberer {
 	}
 
 	/**
-	 * Given a list of cts find the longest chain of rings in a line. This can be used a possible horizontal row
+	 * Given a list of cts find the longest chain of rings in a line. This can be used to find a possible horizontal row
 	 * The output is a map between the connection tables and the directions which give the longest chains
 	 * Some cts may have no directions that give a chain of rings of this length
 	 *
@@ -816,10 +817,11 @@ class FusedRingNumberer {
 			if (ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size()) {
 				throw new RuntimeException("OPSIN Bug: Sizes of arrays in fused ring numbering connection table are not equal");
 			}
-			int ctEntriesSize =ct.ringShapes.size();
-			List<Integer> directions = new  ArrayList<Integer>();
+			int ctEntriesSize = ct.ringShapes.size();
+			List<Integer> directions = new ArrayList<Integer>();
 			horizonalRowDirections.put(ct, directions);
-			for (int i=0; i< ctEntriesSize; i++){
+
+			for (int i = 0; i < ctEntriesSize; i++) {
 				Ring neighbour = ct.neighbouringRings.get(i);
 				int curChain = 1;
 				int curDir = ct.directionFromRingToNeighbouringRing.get(i);
@@ -828,7 +830,7 @@ class FusedRingNumberer {
 					int indexOfNeighbour = indexOfCorrespondingRingshape(ct.ringShapes, neighbour);
 
 					if (indexOfNeighbour >= 0) {
-						for (int j=indexOfNeighbour; j < ctEntriesSize; j++)	{
+						for (int j = indexOfNeighbour; j < ctEntriesSize; j++) {
 							if (ct.ringShapes.get(j).getRing() == neighbour && ct.directionFromRingToNeighbouringRing.get(j) == curDir) {
 								curChain++;
 								neighbour = ct.neighbouringRings.get(j);
