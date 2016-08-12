@@ -2369,25 +2369,6 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (groupValue.equals("aspart") || groupValue.equals("glutam")){//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
-			if (group.getAttributeValue(SUBTYPE_ATR).equals(ENDINIC_SUBTYPE_VAL)){
-				Element yl = OpsinTools.getNextSibling(group);
-				if (yl.getAttributeValue(VALUE_ATR).equals("yl")){
-					group.removeAttribute(group.getAttribute(SUFFIXAPPLIESTO_ATR));
-					if (groupValue.equals("aspart")){
-						group.getAttribute(LABELS_ATR).setValue("/2,alpha/3,beta/4,gamma///1/");
-						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CC(O)=O)C=O");
-						group.addAttribute(new Attribute(OUTIDS_ATR, "7"));
-					}
-					else {
-						group.getAttribute(LABELS_ATR).setValue("/2,alpha/3,beta/4,gamma/5,delta///1/");
-						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CCC(O)=O)C=O");
-						group.addAttribute(new Attribute(OUTIDS_ATR, "8"));
-					}
-					yl.detach();
-				}
-			}
-		}
 		else if (groupValue.equals("hydrogen")){
 			Element hydrogenParentEl = group.getParent();
 			Element nextSubOrRoot = OpsinTools.getNextSibling(hydrogenParentEl);
@@ -2665,7 +2646,18 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (SALTCOMPONENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+		else if (ENDINIC_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
+			//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
+			String[] suffixAppliesTo = MATCH_COMMA.split(group.getAttributeValue(SUFFIXAPPLIESTO_ATR));
+			if (suffixAppliesTo.length == 2) {
+				Element yl = OpsinTools.getNextSibling(group);
+				if (yl.getAttributeValue(VALUE_ATR).equals("yl")) {
+					if (yl.getAttribute(ADDITIONALVALUE_ATR) == null){
+						yl.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+					}
+				}
+			}
+		} else if (SALTCOMPONENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
 			Element parse = null;
 			Element tempParent = group.getParent();
 			while (tempParent != null) {
