@@ -313,6 +313,12 @@ sense of this -->
 		<removeTerminalOxygen order="2" />
 		<addFunctionalAtomsToHydroxyGroups/>
 	</rule>
+	<rule value="oximino">
+		<addgroup SMILES="[*]ON" outIDs="3,3" />
+	</rule>
+	<rule value="oximino-ylForAcyl">
+		<addgroup SMILES="[*](=O)ON" outIDs="4,4" />
+	</rule>
 	<rule value="oxoAndDiYl">
 		<addgroup SMILES="[*]=O"/>
 		<setOutAtom />
