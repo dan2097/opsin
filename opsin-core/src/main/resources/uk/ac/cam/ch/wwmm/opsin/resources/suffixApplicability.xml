@@ -16,6 +16,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 		<suffix value="carbonimidoyl">carboximidoyl</suffix>
 		<suffix value="ide">ide</suffix>
 		<suffix value="ium">ium</suffix>
+		<suffix value="oximino">oximino</suffix>
 		<suffix value="oxy">oxy</suffix>
 		<suffix value="oyl">oyl</suffix>
 		<suffix value="selenenyl">selenenyl</suffix>
@@ -70,6 +71,8 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 		<suffix value="onaphthone">onaphthone</suffix>
 		<!-- one is handled by hard coding common examples of its use -->
 		<suffix value="ophenone">ophenone</suffix>
+		<suffix value="oximino" subType="ylForAcyl">oximino-ylForAcyl</suffix>
+		<suffix value="oximino" subType="ylForYl">oximino</suffix>
 		<suffix value="oxy" subType="ylForAcyl">oxy-ylForAcyl</suffix>
 		<suffix value="oxy" subType="ylForYl">oxy</suffix>
 		<suffix value="oyl">oyl</suffix>
@@ -253,6 +256,7 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 		<suffix value="onaphthone">onaphthone</suffix>
 		<suffix value="one">one</suffix>
 		<suffix value="ophenone">ophenone</suffix>
+		<suffix value="oximino">oximino</suffix>
 		<suffix value="oxy">oxy</suffix>
 		<suffix value="oyl">oyl</suffix>
 		<suffix value="phosphonite">phosphonite</suffix>
