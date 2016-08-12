@@ -146,22 +146,14 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="simpleSubstituent" symbol="x"><!--semi trivial amino acid substituents-->
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">aspart-1-yl|l-aspart-1-yl</token>
-		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">d-aspart-1-yl</token>
-		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">alpha-aspartyl|l-alpha-aspartyl|alpha-l-aspartyl</token>
-		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">d-alpha-aspartyl|alpha-d-aspartyl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">aspart-4-yl|l-aspart-4-yl</token>
-		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">d-aspart-4-yl</token>
-		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">beta-aspartyl|l-beta-aspartyl|beta-l-aspartyl</token>
-		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">d-beta-aspartyl|beta-d-aspartyl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">glutam-1-yl|l-glutam-1-yl</token>
-		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">d-glutam-1-yl</token>
-		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">alpha-glutamyl|l-alpha-glutamyl|alpha-l-glutamyl</token>
-		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">d-alpha-glutamyl|alpha-d-glutamyl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">glutam-5-yl|l-glutam-5-yl</token>
-		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">d-glutam-5-yl</token>
-		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">gamma-glutamyl|l-gamma-glutamyl|gamma-l-glutamyl</token>
-		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">d-gamma-glutamyl|gamma-d-glutamyl</token>
+		<token value="N[C@@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">aspart-1-yl|l-aspart-1-yl|alpha-aspartyl|l-alpha-aspartyl|alpha-l-aspartyl</token>
+		<token value="N[C@H](CC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma///1/" outIDs="7" defaultInID="1">d-aspart-1-yl|d-alpha-aspartyl|alpha-d-aspartyl</token>
+		<token value="N[C@@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">aspart-4-yl|l-aspart-4-yl|beta-aspartyl|l-beta-aspartyl|beta-l-aspartyl</token>
+		<token value="N[C@H](CC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma//1//" outIDs="4" defaultInID="1">d-aspart-4-yl|d-beta-aspartyl|beta-d-aspartyl</token>
+		<token value="N[C@@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">glutam-1-yl|l-glutam-1-yl|alpha-glutamyl|l-alpha-glutamyl|alpha-l-glutamyl</token>
+		<token value="N[C@H](CCC(O)=O)C=O" labels="/2,alpha/3,beta/4,gamma/5,delta///1/" outIDs="8" defaultInID="1">d-glutam-1-yl|d-alpha-glutamyl|alpha-d-glutamyl</token>
+		<token value="N[C@@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">glutam-5-yl|l-glutam-5-yl|gamma-glutamyl|l-gamma-glutamyl|gamma-l-glutamyl</token>
+		<token value="N[C@H](CCC=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" outIDs="5" defaultInID="1">d-glutam-5-yl|d-gamma-glutamyl|gamma-d-glutamyl</token>
 
 		<token value="C([C@@H](C(=O))N)SSC[C@@H](C(=O))N" outIDs="3,10">cystyl|l-cystyl</token>
 		<token value="C([C@H](C(=O))N)SSC[C@H](C(=O))N" outIDs="3,10">d-cystyl</token>
