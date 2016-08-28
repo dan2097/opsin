@@ -504,28 +504,28 @@ class FragmentTools {
 
 	/**Increases the order of bonds joining atoms with spareValencies,
 	 * and uses up said spareValencies.
+	 * [spare valency is an indication of the atom's desire to form the maximum number of non-cumulative double bonds]
 	 * @param frag
      * @throws StructureBuildingException If the algorithm can't work out where to put the bonds
 	 */
 	static void convertSpareValenciesToDoubleBonds(Fragment frag) throws StructureBuildingException {
-		List<Atom> atomCollection =frag.getAtomList();
+		List<Atom> atomCollection = frag.getAtomList();
 		/* pick atom, getAtomNeighbours, decideIfTerminal, resolve */
 
 		/*
-		 * Correct spare valency by looking at valencyState of atom
-		 *
+		 * Remove spare valency on atoms with valency precluding creation of double bonds
 		 */
 		for(Atom a : atomCollection) {
 			a.ensureSVIsConsistantWithValency(true);
 		}
 
 		/*
-		 * Remove spare valency on atoms which may not form higher order bonds
+		 * Remove spare valency on atoms that are not adjacent to another atom with spare valency
 		 */
 		atomLoop: for(Atom a : atomCollection) {
 			if(a.hasSpareValency()) {
 				for(Atom aa : frag.getIntraFragmentAtomNeighbours(a)) {
-					if(aa.hasSpareValency()){
+					if(aa.hasSpareValency()) {
 						continue atomLoop;
 					}
 				}
@@ -534,10 +534,11 @@ class FragmentTools {
 		}
 
 		/*
-		 Reduce valency of atoms which cannot possibly have any of their bonds converted to double bonds
-		 pick an atom which definitely does have spare valency to be the indicated hydrogen.
+		*  The indicated hydrogen from the original SMILES definition of the fragment e.g. [nH] are used to disambiguate if there are
+		*  an odd number of atoms with spare valency. Hence pyrrole is unambiguously 1H-pyrrole unless specified otherwise
+		*  Things gets more complicated if the input contained multiple indicated hydrogen as it is unclear whether these still apply to the final molecule
 		*/
-		Atom atomToReduceValencyAt =null;
+		Atom atomToReduceValencyAt = null;
 		List<Atom> originalIndicatedHydrogen = frag.getIndicatedHydrogen();
 		List<Atom> indicatedHydrogen = new ArrayList<Atom>(originalIndicatedHydrogen.size());
 		for (Atom atom : frag.getIndicatedHydrogen()) {
@@ -546,17 +547,18 @@ class FragmentTools {
 			}
 		}
 		if (indicatedHydrogen.size() > 0) {
+			//typically there will be only one indicated hydrogen
 			if (indicatedHydrogen.size() > 1) {
 				for (Atom indicatedAtom : indicatedHydrogen) {
 					boolean couldBeInvolvedInSimpleNitrogenTautomerism = false;//fix for guanine like purine derivatives
-					if (indicatedAtom.getElement() == ChemEl.N && indicatedAtom.getAtomIsInACycle()){
+					if (indicatedAtom.getElement() == ChemEl.N && indicatedAtom.getAtomIsInACycle()) {
 						atomloop : for (Atom neighbour : indicatedAtom.getAtomNeighbours()) {
-							if (neighbour.getElement() == ChemEl.C && neighbour.getAtomIsInACycle()){
+							if (neighbour.getElement() == ChemEl.C && neighbour.getAtomIsInACycle()) {
 								List<Atom> distance2Neighbours = neighbour.getAtomNeighbours();
 								distance2Neighbours.remove(indicatedAtom);
 								for (Atom distance2Neighbour : distance2Neighbours) {
 									if (distance2Neighbour.getElement() == ChemEl.N && distance2Neighbour.getAtomIsInACycle() && !originalIndicatedHydrogen.contains(distance2Neighbour)){
-										couldBeInvolvedInSimpleNitrogenTautomerism =true;
+										couldBeInvolvedInSimpleNitrogenTautomerism = true;
 										break atomloop;
 									}
 								}
@@ -564,7 +566,7 @@ class FragmentTools {
 						}
 					}
 					//retain spare valency if has the cyclic [NH]C=N moiety but substitution has meant that this tautomerism doesn't actually occur cf. 8-oxoguanine
-					if (!couldBeInvolvedInSimpleNitrogenTautomerism || detectSimpleNitrogenTautomer(indicatedAtom) != null){
+					if (!couldBeInvolvedInSimpleNitrogenTautomerism || detectSimpleNitrogenTautomer(indicatedAtom) != null) {
 						indicatedAtom.setSpareValency(false);
 					}
 				}
@@ -579,9 +581,13 @@ class FragmentTools {
 			svCount += a.hasSpareValency() ? 1 :0;
 		}
 
+		/*
+		 * Double-bonds go between pairs of atoms so if there are an off number of candidate atoms (e.g. pyrrole) an atom must be chosen
+		 * The atom with indicated hydrogen (see above) is used in preference else heuristics are used to chose a candidate
+		 */
 		if((svCount % 2) == 1) {
 			if (atomToReduceValencyAt == null) {
-				atomToReduceValencyAt = findBestatomToRemoveSpareValencyFrom(frag, atomCollection);
+				atomToReduceValencyAt = findBestAtomToRemoveSpareValencyFrom(frag, atomCollection);
 			}
 			atomToReduceValencyAt.setSpareValency(false);
 			svCount--;
@@ -591,6 +597,7 @@ class FragmentTools {
 			boolean foundTerminalFlag = false;
 			boolean foundNonBridgeHeadFlag = false;
 			boolean foundBridgeHeadFlag = false;
+			//First handle cases where double bond placement is completely unambiguous i.e. an atom where only one neighbour has spare valency
 			for(Atom a : atomCollection) {
 				if(a.hasSpareValency()) {
 					int count = 0;
@@ -613,49 +620,59 @@ class FragmentTools {
 					}
 				}
 			}
-			if(!foundTerminalFlag) {
-				for(Atom a : atomCollection) {
-					List<Atom> neighbours =frag.getIntraFragmentAtomNeighbours(a);
-					if(a.hasSpareValency() && neighbours.size() < 3) {
-						for(Atom aa : neighbours) {
-							if(aa.hasSpareValency()) {
-								foundNonBridgeHeadFlag = true;
-								a.setSpareValency(false);
-								aa.setSpareValency(false);
-								a.getBondToAtomOrThrow(aa).addOrder(1);
-								svCount -= 2;//Two atoms where one of them is not a bridge head
-								break;
-							}
+			if(foundTerminalFlag) {
+				continue;
+			}
+
+			//Find two atoms where one, or both, of them are not bridgeheads
+			for(Atom a : atomCollection) {
+				List<Atom> neighbours = frag.getIntraFragmentAtomNeighbours(a);
+				if(a.hasSpareValency() && neighbours.size() < 3) {
+					for(Atom aa : neighbours) {
+						if(aa.hasSpareValency()) {
+							foundNonBridgeHeadFlag = true;
+							a.setSpareValency(false);
+							aa.setSpareValency(false);
+							a.getBondToAtomOrThrow(aa).addOrder(1);
+							svCount -= 2;//Two atoms where one of them is not a bridge head
+							break;
 						}
 					}
-					if(foundNonBridgeHeadFlag) break;
 				}
-				if(!foundNonBridgeHeadFlag){
-					for(Atom a : atomCollection) {
-						List<Atom> neighbours =frag.getIntraFragmentAtomNeighbours(a);
-						if(a.hasSpareValency()) {
-							for(Atom aa : neighbours) {
-								if(aa.hasSpareValency()) {
-									foundBridgeHeadFlag = true;
-									a.setSpareValency(false);
-									aa.setSpareValency(false);
-									a.getBondToAtomOrThrow(aa).addOrder(1);
-									svCount -= 2;//Two atoms where both of them are a bridge head e.g. necessary for something like coronene
-									break;
-								}
-							}
+				if(foundNonBridgeHeadFlag) {
+					break;
+				}
+			}
+			if(foundNonBridgeHeadFlag) {
+				continue;
+			}
+			
+			//Find two atoms where both of them are bridgheads
+			for(Atom a : atomCollection) {
+				List<Atom> neighbours = frag.getIntraFragmentAtomNeighbours(a);
+				if(a.hasSpareValency()) {
+					for(Atom aa : neighbours) {
+						if(aa.hasSpareValency()) {
+							foundBridgeHeadFlag = true;
+							a.setSpareValency(false);
+							aa.setSpareValency(false);
+							a.getBondToAtomOrThrow(aa).addOrder(1);
+							svCount -= 2;//Two atoms where both of them are a bridge head e.g. necessary for something like coronene
+							break;
 						}
-						if(foundBridgeHeadFlag) break;
-					}
-					if(!foundBridgeHeadFlag){
-						throw new StructureBuildingException("Could not assign all higher order bonds.");
 					}
 				}
+				if(foundBridgeHeadFlag) {
+					break;
+				}
+			}
+			if(!foundBridgeHeadFlag) {
+				throw new StructureBuildingException("Failed to assign all double bonds! (Check that indicated hydrogens have been appropriately specified)");
 			}
 		}
 	}
 
-	private static Atom findBestatomToRemoveSpareValencyFrom(Fragment frag, List<Atom> atomCollection) {
+	private static Atom findBestAtomToRemoveSpareValencyFrom(Fragment frag, List<Atom> atomCollection) {
 		for(Atom a : atomCollection) {//try and find an atom with SV that neighbours only one atom with SV
 			if(a.hasSpareValency()) {
 				int atomsWithSV = 0;

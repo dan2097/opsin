@@ -549,26 +549,26 @@ class Atom {
 	 * @throws StructureBuildingException
 	 */
 	void ensureSVIsConsistantWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
-		if (spareValency){
+		if (spareValency) {
 			Integer maxValency;
-			if (lambdaConventionValency != null){
-				maxValency=lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
+			if (lambdaConventionValency != null) {
+				maxValency = lambdaConventionValency + protonsExplicitlyAddedOrRemoved;
 			}
 			else{
 				Integer hwValency = ValencyChecker.getHWValency(chemEl);
-				if (hwValency == null){
-					throw new StructureBuildingException(chemEl +" is not expected to be aromatic!");
+				if (hwValency == null) {
+					throw new StructureBuildingException(chemEl + " is not expected to be aromatic!");
 				}
 				maxValency = hwValency + protonsExplicitlyAddedOrRemoved;
 			}
 			int maxSpareValency;
-			if (takeIntoAccountExternalBonds){
-				maxSpareValency =maxValency-getIncomingValency() -outValency;
+			if (takeIntoAccountExternalBonds) {
+				maxSpareValency = maxValency - getIncomingValency() - outValency;
 			}
 			else{
-				maxSpareValency =maxValency-frag.getIntraFragmentIncomingValency(this);
+				maxSpareValency = maxValency - frag.getIntraFragmentIncomingValency(this);
 			}
-			if (maxSpareValency < 1){
+			if (maxSpareValency < 1) {
 				setSpareValency(false);
 			}
 		}
