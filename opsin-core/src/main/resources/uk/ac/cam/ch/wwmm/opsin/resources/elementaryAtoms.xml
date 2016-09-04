@@ -124,4 +124,6 @@
 	<token value="[Kr]">krypton</token>
 	<token value="[Xe]">xenon</token>
 	<token value="[Rn]">radon</token>
+	<token value="[219Rn]">actinon</token>
+	<token value="[220Rn]">thoron</token>
 </tokenList>
