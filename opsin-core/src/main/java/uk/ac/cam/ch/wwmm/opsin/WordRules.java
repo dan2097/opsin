@@ -666,8 +666,24 @@ class WordRules {
 
 		private ChemEl getChemElFromElementaryAtomEl(Element elementaryAtomEl)  {
 			String elementStr = elementaryAtomEl.getAttributeValue(VALUE_ATR);
-			if (elementStr.startsWith("[")){
-				elementStr = elementStr.substring(1, elementStr.length() - 1);
+			if (elementStr.startsWith("[")) {
+				int len = elementStr.length() - 1;
+				for (int i = 1; i < len; i++) {
+					char ch = elementStr.charAt(i);
+					if ((ch >= 'A' && ch <='Z') || (ch >= 'a' && ch <='z')) {
+						if (i + 1 < len) {
+							char ch2 = elementStr.charAt(i + 1);
+							if ((ch2 >= 'A' && ch2 <='Z') || (ch2 >= 'a' && ch2 <='z')) {
+								//two letter element
+								elementStr = elementStr.substring(i, i + 2);
+								break;
+							}
+						}
+						//one letter element
+						elementStr = elementStr.substring(i, i + 1);
+						break;
+					}
+				}
 			}
 			return ChemEl.valueOf(elementStr);
 		}
