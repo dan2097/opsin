@@ -1700,10 +1700,14 @@ class ComponentGenerator {
 	 */
 	private void detectAlkaneFusedRingBridges(Element group) {
 		if (ALKANESTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
-			Element possibleBridgeFormer = OpsinTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
-			if(possibleBridgeFormer != null && possibleBridgeFormer.getName().equals(BRIDGEFORMINGO_EL)){
-				possibleBridgeFormer.detach();
-				group.setName(FUSEDRINGBRIDGE_EL);
+			Element unsaturator = OpsinTools.getNextSibling(group);
+			if (unsaturator != null && unsaturator.getName().equals(UNSATURATOR_EL)) {
+				Element possibleBridgeFormer = OpsinTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
+				if(possibleBridgeFormer != null && possibleBridgeFormer.getName().equals(BRIDGEFORMINGO_EL)){
+					group.setName(FUSEDRINGBRIDGE_EL);
+					possibleBridgeFormer.detach();
+					unsaturator.detach();
+				}
 			}
 		}
 	}

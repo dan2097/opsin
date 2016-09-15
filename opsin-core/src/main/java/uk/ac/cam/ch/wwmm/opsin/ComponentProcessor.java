@@ -131,6 +131,9 @@ class ComponentProcessor {
 				if (!removed){
 					removed = removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
 				}
+				if (!removed){
+					removed = removeAndMoveToAppropriateGroupIfRingBridge(substituent);
+				}
 				if (removed){
 					substituents.remove(j);
 					substituentsAndRoot.remove(substituent);
@@ -667,7 +670,7 @@ class ComponentProcessor {
 	/**
 	 * Removes substituents which are just a hydro/perhydro element and moves their contents to be in front of the next in scope ring
 	 * @param substituent
-	 * @return true is the substituent was a hydro substituent and hence was removed
+	 * @return true if the substituent was a hydro substituent and hence was removed
 	 * @throws ComponentGenerationException
 	 */
 	private boolean removeAndMoveToAppropriateGroupIfHydroSubstituent(Element substituent) throws ComponentGenerationException {
@@ -811,7 +814,7 @@ class ComponentProcessor {
 	/**
 	 * Removes substituents which are just a subtractivePrefix element e.g. deoxy and moves their contents to be in front of the next in scope biochemical fragment (or failing that group)
 	 * @param substituent
-	 * @return true is the substituent was a subtractivePrefix substituent and hence was removed
+	 * @return true if the substituent was a subtractivePrefix substituent and hence was removed
 	 * @throws ComponentGenerationException
 	 */
 	static boolean removeAndMoveToAppropriateGroupIfSubtractivePrefix(Element substituent) throws ComponentGenerationException {
@@ -906,6 +909,101 @@ class ComponentProcessor {
 		return false;
 	}
 
+	/**
+	 * Removes substituents which are just a fused ring element and moves their contents to be in front of the next in scope ring
+	 * @param substituent
+	 * @return true if the substituent was a ring bridge and hence was removed
+	 * @throws ComponentGenerationException
+	 */
+	private boolean removeAndMoveToAppropriateGroupIfRingBridge(Element substituent) throws ComponentGenerationException {
+		List<Element> ringBridges = substituent.getChildElements(FUSEDRINGBRIDGE_EL);
+		if (ringBridges.size() > 0 && substituent.getFirstChildElement(GROUP_EL) == null) {
+			if (ringBridges.size() != 1) {
+				throw new RuntimeException("Unexpected number of ring bridges found in substituent");
+			}
+			Element ringBridge = ringBridges.get(0);
+			final Element adjacentSubOrRootOrBracket = OpsinTools.getNextSibling(substituent);
+			Element nextSubOrRootOrBracket = adjacentSubOrRootOrBracket;
+			if (nextSubOrRootOrBracket == null){
+				throw new ComponentGenerationException("Unable to find group for: " +  ringBridge.getValue() +" to apply to!");
+			}
+			Element targetGroup = null;
+			Element standardGroup = null;
+			//prefer the nearest (unlocanted) ring group or the rightmost standard group
+			while (nextSubOrRootOrBracket != null) {
+				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
+				if (groupToConsider != null) {
+					if (containsCyclicAtoms(groupToConsider)) {
+						targetGroup = groupToConsider;
+						if (OpsinTools.getPreviousSiblingsOfType(targetGroup, LOCANT_EL).size() == 0) {
+							break;
+						}
+					}
+					else {
+						standardGroup = groupToConsider;
+					}
+				}
+				nextSubOrRootOrBracket = OpsinTools.getNextSibling(nextSubOrRootOrBracket);
+			}
+			if (targetGroup == null) {
+				targetGroup = standardGroup;
+			}
+			
+			if (targetGroup == null) {
+				throw new ComponentGenerationException("Unable to find group for: " + ringBridge.getValue() +" to apply to!");
+			}
+
+			//move the children of the fusedRingBridge substituent
+			List<Element> children = substituent.getChildElements();
+			Element targetSubstituent = targetGroup.getParent();
+			if (targetSubstituent.equals(adjacentSubOrRootOrBracket)) {
+				for (int i = children.size()-1; i >=0 ; i--) {
+					Element child =children.get(i);
+					if (!child.getName().equals(HYPHEN_EL)){
+						child.detach();
+						targetSubstituent.insertChild(child, 0);
+					}
+				}
+			}
+			else {
+				Element previousEl = OpsinTools.getPreviousSibling(ringBridge);
+				ringBridge.detach();
+				targetSubstituent.insertChild(ringBridge, 0);
+				if (previousEl != null && previousEl.getName().equals(MULTIPLIER_EL)) {
+					Element elToMove = previousEl;
+					previousEl = OpsinTools.getPreviousSibling(previousEl);
+					elToMove.detach();
+					targetSubstituent.insertChild(elToMove, 0);
+					if (previousEl != null && previousEl.getName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)) {
+						elToMove = previousEl;
+						previousEl = OpsinTools.getPreviousSibling(previousEl);
+						elToMove.detach();
+						targetSubstituent.insertChild(elToMove, 0);
+					}
+				}
+				else {
+					if (previousEl != null && previousEl.getName().equals(LOCANT_EL)) {
+						Element elToMove = previousEl;
+						previousEl = OpsinTools.getPreviousSibling(previousEl);
+						elToMove.detach();
+						targetSubstituent.insertChild(elToMove, 0);
+					}
+				}
+				while (previousEl != null && previousEl.getName().equals(STEREOCHEMISTRY_EL)) {
+					Element elToMove = previousEl;
+					previousEl = OpsinTools.getPreviousSibling(previousEl);
+					elToMove.detach();
+					adjacentSubOrRootOrBracket.insertChild(elToMove, 0);
+				}
+				if (previousEl != null) {
+					throw new ComponentGenerationException("Unexpected term found before detachable ring bridge: " + previousEl.getValue() );
+				}
+			}
+			substituent.detach();
+			return true;
+		}
+		return false;
+	}
 
 	private boolean containsCyclicAtoms(Element potentialRing) {
 		Fragment potentialRingFrag = potentialRing.getFrag();
@@ -3677,36 +3775,69 @@ class ComponentProcessor {
 		Fragment ringFrag = groupEl.getFrag();
 		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<Fragment, Atom[]>();
 		for (Element bridge : bridges) {
-			Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), groupEl, NONE_LABELS_VAL);
-			List<Atom> bridgeAtomList = bridgeFrag.getAtomList();
-			bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
-			bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size() - 1), 1, true);
-			Element possibleLocant = OpsinTools.getPreviousSibling(bridge);
-			Atom[] ringAtoms;
-			if (possibleLocant != null && possibleLocant.getName().equals(LOCANT_EL)){
-				String[] locantArray = MATCH_COMMA.split(possibleLocant.getValue());
-				if (locantArray.length == 2){
-					bridgeFrag.getOutAtom(0).setLocant(locantArray[0]);
-					bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
-					possibleLocant.detach();
+			Element possibleMultiplier = OpsinTools.getPreviousSibling(bridge);
+			List<String[]> locants = null;
+			int multiplier = 1;
+			if (possibleMultiplier != null) {
+				Element possibleLocant;
+				if (possibleMultiplier.getName().equals(MULTIPLIER_EL)) {
+					multiplier = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
+					possibleLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
+					possibleMultiplier.detach();
+					if (possibleLocant != null && possibleLocant.getName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)) {
+						locants = new ArrayList<String[]>();
+						String[] locantsForEachMultiple = MATCH_COLON.split(StringTools.removeDashIfPresent(possibleLocant.getValue()));
+						if (locantsForEachMultiple.length != multiplier) {
+							throw new RuntimeException("Mismatch between locant and multiplier counts (" + locantsForEachMultiple.length + " and " + multiplier + "): " + possibleLocant.getValue());
+						}
+						for (String locantsForInstance : locantsForEachMultiple) {
+							String[] locantArray = MATCH_COMMA.split(locantsForInstance);
+							if (locantArray.length != 2) {
+								throw new RuntimeException("Expected two locants per bridge, but was: " + possibleLocant.getValue());
+							}
+							locants.add(locantArray);
+						}
+						possibleLocant.detach();
+					}
 				}
-				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtomOrFirstAtom());
+				else {
+					possibleLocant = possibleMultiplier;
+					if (possibleLocant != null && possibleLocant.getName().equals(LOCANT_EL)) {
+						String[] locantArray = MATCH_COMMA.split(possibleLocant.getValue());
+						if (locantArray.length == 2) {
+							locants = new ArrayList<String[]>();
+							locants.add(locantArray);
+							possibleLocant.detach();
+						}
+					}
+				}
 			}
-			else{
-				List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(ringFrag, 1);
-				if (possibleAtoms.isEmpty()) {
-					throw new StructureBuildingException("Unable to find suitable atom to form bridge");
+			for (int i = 0; i < multiplier; i++) {
+				Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), groupEl, NONE_LABELS_VAL);
+				List<Atom> bridgeAtomList = bridgeFrag.getAtomList();
+				bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
+				bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size() - 1), 1, true);
+				Atom[] ringAtoms;
+				if (locants != null) {
+					String[] locantArray = locants.get(i);
+					if (locantArray.length == 2) {
+						bridgeFrag.getOutAtom(0).setLocant(locantArray[0]);
+						bridgeFrag.getOutAtom(1).setLocant(locantArray[1]);
+					}
+					ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, ringFrag.getDefaultInAtomOrFirstAtom());
 				}
-				if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
-					state.addIsAmbiguous("Addition of bridge to: " + groupEl.getValue());
+				else{
+					List<Atom> possibleAtoms = FragmentTools.findSubstituableAtoms(ringFrag, 1);
+					if (possibleAtoms.isEmpty()) {
+						throw new StructureBuildingException("Unable to find suitable atom to form bridge");
+					}
+					if (AmbiguityChecker.isSubstitutionAmbiguous(possibleAtoms, 1)) {
+						state.addIsAmbiguous("Addition of bridge to: " + groupEl.getValue());
+					}
+					ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, possibleAtoms.get(0));
 				}
-				ringAtoms = StructureBuildingMethods.formEpoxide(state, bridgeFrag, possibleAtoms.get(0));
-			}
-			bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
-			state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
-			Element unsaturator = OpsinTools.getNextSibling(bridge);
-			if (unsaturator.getName().equals(UNSATURATOR_EL)) {
-				unsaturator.detach();
+				bridgeToRingAtoms.put(bridgeFrag, ringAtoms);
+				state.fragManager.incorporateFragment(bridgeFrag, ringFrag);
 			}
 			bridge.detach();
 		}
