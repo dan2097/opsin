@@ -1,1 +1,13 @@
 cyclopenta[1,2-b:5,1-b']bis[1,4]oxathiine	InChI=1S/C9H6O2S2/c1-2-8-9(11-4-5-12-8)7(1)10-3-6-13-9/h1-6H
+4a,8a-propanoquinoline	InChI=1S/C12H13N/c1-2-8-12-9-3-6-11(12,5-1)7-4-10-13-12/h1-2,4-5,7-8,10H,3,6,9H2
+1,5-methanoindole	InChI=1S/C9H7N/c1-2-9-8-3-4-10(9)6-7(1)5-8/h1-5H,6H2
+1,5-methano-1H-indole	InChI=1S/C9H7N/c1-2-9-8-3-4-10(9)6-7(1)5-8/h1-5H,6H2
+9H-9,10-ethanoacridine	InChI=1S/C15H13N/c1-3-7-14-12(5-1)11-9-10-16(14)15-8-4-2-6-13(11)15/h1-8,11H,9-10H2
+1,3-epoxynaphthalene	InChI=1S/C10H6O/c1-2-4-9-7(3-1)5-8-6-10(9)11-8/h1-6H
+1,12-ethenobenzo[4,5]cyclohepta[1,2,3-de]naphthalene	InChI=1S/C20H12/c1-3-13-7-8-14-4-2-6-16-10-12-17-11-9-15(5-1)18(13)20(17)19(14)16/h1-12H
+2,6:5,7-dimethanoindeno[7,1-bc]furan	InChI=1S/C12H6O/c1-2-6-10-4-8-7-3-9(8)12(13-10)11(6)5(1)7/h1-2H,3-4H2
+1,2,3,4-tetrahydro-1,4-ethenoanthracen-2-ol	InChI=1S/C16H14O/c17-16-9-12-5-6-13(16)15-8-11-4-2-1-3-10(11)7-14(12)15/h1-8,12-13,16-17H,9H2
+1,4:5,8-dimethanonaphthalene	InChI=1S/C12H8/c1-2-8-5-7(1)11-9-3-4-10(6-9)12(8)11/h1-4H,5-6H2
+6,14:7,14-dimethanobenzo[7,8]cycloundeca[1,2-b]pyridine	InChI=1S/C20H15N/c1-2-5-16-10-20-11-17(8-14(16)4-1)18(12-20)9-15-6-3-7-21-19(15)13-20/h1-10,13H,11-12H2
+6,13-ethano-6,13-methanodibenzo[b,g][1,6]diazecine	InChI=1S/C19H16N2/c1-3-7-16-14(5-1)11-18-9-10-19(13-18,20-16)12-15-6-2-4-8-17(15)21-18/h1-8,11-12H,9-10,13H2
+(2S)-2-[(5R,6R,7R,14S)-N-cyclopropylmethyl-4,5-epoxy-6,14-ethano-3-hydroxy-6-methoxymorphinan-7-yl]-3,3-dimethylpentan-2-ol	InChI=1S/C30H43NO4/c1-6-26(2,3)27(4,33)21-16-28-11-12-30(21,34-5)25-29(28)13-14-31(17-18-7-8-18)22(28)15-19-9-10-20(32)24(35-25)23(19)29/h9-10,18,21-22,25,32-33H,6-8,11-17H2,1-5H3/t21-,22-,25-,27+,28-,29+,30-/m1/s1

@@ -327,6 +327,7 @@
 		<token value="N(=NC(C#N)(C)C)C(C#N)(C)C">azobisisobutyronitrile|azobis-isobutyronitrile|azobisisobutyronitril|azobis-isobutyronitril</token>
 		<token value="C(N)(c1ccccc1)C(N)c1ccccc1" labels="//1/2/3/4/5/6///1'/2'/3'/4'/5'/6'">diphenylethylenediamine|diphenylethylenediamin</token>
 		<token value="C(=O)(NC1CCCCC1)NC1CCCCC1" labels="///1/2/3/4/5/6//1'/2'/3'/4'/5'/6'">dicyclohexylurea</token>
+		<token value="C(O1)C1C(O2)C2" labels="1//2/3//4">diepoxybutane|diepoxybutan</token>
 		<token value="C(=O)(NC)NC">dimethylurea</token>
 		<token value="C(OC)C(OC)" labels="1///2//">dimethoxyethane|dimethoxyethan</token>
 		<token value="CC(=O)N(C)(C)" labels="2/1////">dimethylacetamide|dimethyl-acetamide|dimethylacetamid|dimethyl-acetamid</token>

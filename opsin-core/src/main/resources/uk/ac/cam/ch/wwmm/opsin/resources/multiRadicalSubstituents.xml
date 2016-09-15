@@ -80,19 +80,13 @@
 		<token value="C=N" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carboimidoyl</token>
 		<token value="C=NO" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydroximoyl</token>
 	</tokenList>
-	<tokenList tagname="group" type="substituent" subType="epoxyLike" symbol="x">
-		<token value="O" outIDs="1,1">epoxy</token>
-		<token value="S" outIDs="1,1">epithio</token>
-		<token value="[SeH2]" outIDs="1,1">episeleno</token>
-		<token value="[TeH2]" outIDs="1,1">epitelluro</token>
-		<token value="N" outIDs="1,1">epiazano|epimino|epiimino</token>
-	</tokenList>
 	<tokenList tagname="fusedRingBridge" symbol="å">
 		<token value="O">epoxy</token>
 		<token value="S">epithio</token>
 		<token value="[SeH2]">episeleno</token>
 		<token value="[TeH2]">epitelluro</token>
-		<token value="N" outIDs="1,1">epiazano|epimino|epiimino</token>
+		<token value="N">epiazano|epimino|epiimino</token>
+		<token value="C=C">etheno</token>
 	</tokenList>
 	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="Ù">
 		<token value="N" outIDs="1,1,1">amine|amin</token><!--Can not be used as the core of multiplicative nomenclature-->
