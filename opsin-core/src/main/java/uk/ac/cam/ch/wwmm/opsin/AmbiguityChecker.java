@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -176,7 +177,7 @@ class AmbiguityChecker {
 			//check for environments with double the required atoms where this means each atom can support two substitutions c.f. cyclohexane
 			for (List<Atom> atoms : atomsInEachEnvironment.values()) {
 				if (atoms.size() == (numberToBeSubstituted * 2)){
-					Set<Atom> uniquified = new HashSet<Atom>(atoms);
+					Set<Atom> uniquified = new LinkedHashSet<Atom>(atoms);//retain deterministic atom ordering
 					if (uniquified.size() == numberToBeSubstituted) {
 						if (preferredAtoms != null){
 							return null;
