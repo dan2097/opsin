@@ -33,6 +33,11 @@
 		<token value="anti">anti</token>
 	</tokenList>
 
+	<tokenList tagname="stereoChemistry" type="RorS" symbol="ā">
+		<token value="R">r</token>
+		<!--s has locant ambiguity-->
+	</tokenList>
+
 	<tokenList tagname="ine" symbol="«"><!--used for amino acids-->
 		<token value="ine">ine|in</token>
 	</tokenList>

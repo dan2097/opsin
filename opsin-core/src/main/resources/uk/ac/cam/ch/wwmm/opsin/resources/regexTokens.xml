@@ -59,7 +59,9 @@
 	<regexToken regex="%locantTypes%,%locantTypes%([:;]%locantTypes%,%locantTypes%)*([:;]%locantTypes%,(%locantTypes%-|%locantTypesOptionalHyphen%-?))" symbol="L" tagname="colonOrSemiColonDelimitedLocant" determinise="yes"/>
 	<regexToken regex="%openBracket%[1-9]'*->?[1-9]'*%closeBracket%" symbol="ì" tagname="biochemicalLinkage" determinise="yes"/>
 
-	<regexToken regex="(?&lt;![A-Za-z])(ez?|EZ?|[Zz])" symbol="æ" type="EorZ" tagname="stereoChemistry"/><!--unbracketted E or Z for stereochemistry-->
+	<regexToken regex="(ez?|EZ?|[Zz])" symbol="æ" type="EorZ" tagname="stereoChemistry" determinise="yes"/><!--unbracketted E or Z for stereochemistry-->
+	<regexToken regex="(?&lt;![A-Za-z])" symbol="Ă" ignoreWhenWritingXML="yes" tagname="NA"/><!--not preceded by letter -->
+	<regexToken regex="(?![A-Za-z])" symbol="ă" ignoreWhenWritingXML="yes" tagname="NA"/><!--not followed by letter -->
 	<regex name="%alphaBetaLocant%" regex="([1-9][0-9]?([abx]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]))"/>
 	<regexToken regex="((%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%,(%alphaBetaLocant%,|%locantTypes%,)*(%alphaBetaLocant%-?|%locantTypes%-|%locantTypesOptionalHyphen%-?)|%alphaBetaLocant%-?))" symbol="¹" type="alphaOrBeta" tagname="stereoChemistry" determinise="yes"/>
 	<regex name="%relativeOrientationStereochemTerm%" regex="((%locant%-?)?([eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]))"/>
