@@ -34,3 +34,4 @@ naphthalenium
 benzenediol
 pyridinecarbaldehyde
 pyridinone
+3,3,3-trifluoro-propane-d

@@ -111,6 +111,9 @@ class XmlDeclarations {
 
 	/**Adds a hydrogen to an unsaturated system to indicate what atoms are saturated in a system where not all atoms with spare valency can form double bonds e.g.  e.g. 2H-pyran*/
 	static final String INDICATEDHYDROGEN_EL ="indicatedHydrogen";
+
+	/**Specifies that one of more atoms are enriched with a particular isotope*/
+	static final String ISOTOPESPECIFICATION_EL ="isotopeSpecification";
 	
 	/**Was the word salt encountered indicating that a salt was expected? */
 	static final String ISSALT_ATR = "isSalt";
@@ -300,6 +303,9 @@ class XmlDeclarations {
 	/**A normal multiplier e.g. di*/
 	static final String BASIC_TYPE_VAL ="basic";
 	
+	/**An isotopeSpecification using boughton system nomenclature*/
+	static final String BOUGHTONSYSTEM_TYPE_VAL ="boughtonSystem";
+	
 	/**A locant enclosed in square brackets e.g. [5]*/
 	static final String BRACKETEDLOCANT_TYPE_VAL ="bracketedLocant";
 	
@@ -351,6 +357,9 @@ class XmlDeclarations {
 	
 	/**This suffix adds a radical to the preceding group e.g. yl, oyl*/
 	static final String INLINE_TYPE_VAL ="inline";
+	
+	/**An isotopeSpecification using IUPAC nomenclature*/
+	static final String IUPACSYSTEM_TYPE_VAL ="iupacSystem";
 	
 	/**This functional group is monovalent e.g. alcohol*/
 	static final String MONOVALENTGROUP_TYPE_VAL ="monoValentGroup";

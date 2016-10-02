@@ -89,6 +89,14 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@Test
+	public void testIsotopes() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "isotopes.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+	
+	@Test
 	public void testAdditiveNomenclature() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);

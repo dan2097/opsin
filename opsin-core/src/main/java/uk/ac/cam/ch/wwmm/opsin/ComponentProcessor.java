@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.IsotopeSpecificationParser.IsotopeSpecification;
+
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -4699,6 +4701,14 @@ class ComponentProcessor {
 				suffixValToSuffixes.put(suffixValue, suffixesWithThisVal);
 			}
 			suffixesWithThisVal.add(suffix);
+			
+			//Apply isotopes to suffixes if present
+			if (suffix.getFrag() != null) {
+				Element isotopeSpecification = OpsinTools.getNextSiblingIgnoringCertainElements(suffix, new String[]{SUFFIX_EL});
+				if (isotopeSpecification != null && isotopeSpecification.getName().equals(ISOTOPESPECIFICATION_EL) && BOUGHTONSYSTEM_TYPE_VAL.equals(isotopeSpecification.getAttributeValue(TYPE_ATR))) {
+					applyIsotopeToSuffix(suffix.getFrag(), isotopeSpecification);
+				}
+			}
 		}
 		
 		boolean reDetectCycles = false;
@@ -4894,6 +4904,29 @@ class ComponentProcessor {
 		return proKetonePositions;
 	}
 
+	private void applyIsotopeToSuffix(Fragment frag, Element isotopeSpecification) throws StructureBuildingException {
+		IsotopeSpecification isotopeSpec = IsotopeSpecificationParser.parseIsotopeSpecification(isotopeSpecification);
+		if (isotopeSpec.getLocants() == null) {
+			int multiplier = isotopeSpec.getMultiplier();
+			List<Atom> atoms = frag.getAtomList();
+			atoms.remove(0);
+			List<Atom> parentAtomsToApplyTo = FragmentTools.findnAtomsForSubstitution(atoms, null, multiplier, 1, true);
+			if (parentAtomsToApplyTo == null) {
+				return;
+			}
+			if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
+				state.addIsAmbiguous("Position of hydrogen isotope on " + frag.getTokenEl().getValue());
+			}
+			for (int j = 0; j < multiplier; j++) {
+				Atom atomWithHydrogenIsotope = parentAtomsToApplyTo.get(j);
+				Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+				hydrogen.setIsotope(isotopeSpec.getIsotope());
+				state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+			}
+			isotopeSpecification.detach();
+		}
+	}
+
 	private Atom getFragAtomToUse(Fragment frag, Element suffix, String suffixTypeToUse) throws StructureBuildingException {;
 		String locant = suffix.getAttributeValue(LOCANT_ATR);
 		if (locant != null) {
@@ -4912,7 +4945,6 @@ class ComponentProcessor {
 		}
 		return null;
 	}
-
 
 	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element suffix) throws StructureBuildingException, ComponentGenerationException {
 		List<Atom> rAtoms = new ArrayList<Atom>();
