@@ -2210,7 +2210,8 @@ class StructureBuildingMethods {
 	static int calculateSubstitutableHydrogenAtoms(Atom atom) {
 		int valency = atom.determineValency(true);	
 		int currentValency = atom.getIncomingValency() + atom.getOutValency();
-		return valency - currentValency;
+		int substitutableHydrogen = valency - currentValency;
+		return substitutableHydrogen >= 0 ? substitutableHydrogen : 0;
 	}
 
 	/**
