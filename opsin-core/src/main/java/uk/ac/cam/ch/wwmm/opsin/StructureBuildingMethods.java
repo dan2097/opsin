@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.cam.ch.wwmm.opsin.IsotopeSpecificationParser.IsotopeSpecification;
+
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
@@ -28,6 +30,7 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 class StructureBuildingMethods {
 	private static final Logger LOG = Logger.getLogger(StructureBuildingMethods.class);
 	private static final Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
+
 	private StructureBuildingMethods() {}
 
 	/**
@@ -470,6 +473,7 @@ class StructureBuildingMethods {
 		List<Element> heteroatoms = new ArrayList<Element>();
 		List<Element> hydrogenElements = new ArrayList<Element>();
 		List<Element> subtractivePrefixElements = new ArrayList<Element>();
+		List<Element> isotopeSpecifications = new ArrayList<Element>();
 
 		List<Element> children =subOrRoot.getChildElements();
 		for (Element currentEl : children) {
@@ -491,6 +495,9 @@ class StructureBuildingMethods {
 			}
 			else if (elName.equals(ADDEDHYDROGEN_EL)){
 				hydrogenElements.add(currentEl);
+			}
+			else if (elName.equals(ISOTOPESPECIFICATION_EL)){
+				isotopeSpecifications.add(currentEl);
 			}
 		}
 		/*
@@ -637,6 +644,10 @@ class StructureBuildingMethods {
 				heteroatomEl.detach();
 			}
 		}
+		
+		if (isotopeSpecifications.size() > 0) {
+			applyIsotopeSpecifications(state, thisFrag, isotopeSpecifications, true);
+		}
 	}
 
 	/**
@@ -725,6 +736,7 @@ class StructureBuildingMethods {
 		List<Integer> unsaturationBondOrders = new ArrayList<Integer>();
 		List<Element> heteroatoms = new ArrayList<Element>();
 		List<Element> hydrogenElements = new ArrayList<Element>();
+		List<Element> isotopeSpecifications = new ArrayList<Element>();
 
 		List<Element> children = subOrRoot.getChildElements();
 		for (Element currentEl : children) {
@@ -746,6 +758,9 @@ class StructureBuildingMethods {
 				hydrogenElements.add(currentEl);
 				currentEl.detach();
 			}
+			else if (elName.equals(ISOTOPESPECIFICATION_EL)){
+				isotopeSpecifications.add(currentEl);
+			}
 		}
 
 		if (hydrogenElements.size() > 0) {
@@ -758,6 +773,10 @@ class StructureBuildingMethods {
 
 		if (heteroatoms.size() > 0) {
 			applyUnlocantedHeteroatoms(state, frag, heteroatoms);
+		}
+		
+		if (isotopeSpecifications.size() > 0) {
+			applyIsotopeSpecifications(state, frag, isotopeSpecifications, false);
 		}
 
 		if (frag.getOutAtomCount() > 0){//assign any outAtoms that have not been set to a specific atom to a specific atom
@@ -1043,6 +1062,87 @@ class StructureBuildingMethods {
 				}
 			}
 		}
+	}
+	
+	private static void applyIsotopeSpecifications(BuildState state, Fragment frag, List<Element> isotopeSpecifications, boolean applyLocanted) throws StructureBuildingException {
+		for(int i = isotopeSpecifications.size() - 1; i >= 0; i--) {
+			Element isotopeSpecification = isotopeSpecifications.get(i);
+			IsotopeSpecification isotopeSpec = IsotopeSpecificationParser.parseIsotopeSpecification(isotopeSpecification);
+			String[] locants = isotopeSpec.getLocants();
+			if(locants != null) {
+				if(!applyLocanted) {
+					continue;
+				}
+				for (int j = 0; j < locants.length; j++) {
+					Atom atomWithHydrogenIsotope = frag.getAtomByLocantOrThrow(locants[j]);
+					Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+					hydrogen.setIsotope(isotopeSpec.getIsotope());
+					state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+				}
+				isotopeSpecification.detach();
+			}
+			else {
+				if (applyLocanted) {
+					continue;
+				}
+				int multiplier = isotopeSpec.getMultiplier();
+				List<Atom> parentAtomsToApplyTo = FragmentTools.findnAtomsForSubstitution(frag, multiplier, 1);
+				if (parentAtomsToApplyTo == null){
+					throw new StructureBuildingException("Failed to find sufficient hydrogen atoms for unlocanted hydrogen isotope replacement");
+				}
+				if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
+					if (!casIsotopeAmbiguitySpecialCase(frag, parentAtomsToApplyTo, multiplier)) {
+						state.addIsAmbiguous("Position of hydrogen isotope on " + frag.getTokenEl().getValue());
+					}
+				}
+				for (int j = 0; j < multiplier; j++) {
+					Atom atomWithHydrogenIsotope = parentAtomsToApplyTo.get(j);
+					Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+					hydrogen.setIsotope(isotopeSpec.getIsotope());
+					state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+				}
+				isotopeSpecification.detach();
+			}
+		}
+	}
+
+	private static boolean casIsotopeAmbiguitySpecialCase(Fragment frag, List<Atom> parentAtomsToApplyTo, int multiplier) throws StructureBuildingException {
+		if (multiplier !=1) {
+			return false;
+		}
+		List<Atom> atoms = frag.getAtomList();
+		Atom firstAtom = atoms.get(0);
+		if (!parentAtomsToApplyTo.get(0).equals(firstAtom)) {
+			return false;
+		}
+		ChemEl firstAtomEl = firstAtom.getElement();
+		if (atoms.size() ==2) {
+			if (firstAtomEl == atoms.get(1).getElement()) {
+				//e.g. ethane
+				return true;
+			}
+		}
+		else {
+			int intraFragValency = frag.getIntraFragmentIncomingValency(firstAtom);
+			boolean spareValency = firstAtom.hasSpareValency();
+			if (firstAtom.getAtomIsInACycle()) {
+				for (int i = 1; i < atoms.size(); i++) {
+					Atom atom = atoms.get(i);
+					if (atom.getElement() != firstAtomEl){
+						return false;
+					}
+					if (frag.getIntraFragmentIncomingValency(atom) != intraFragValency){
+						return false;
+					}
+					if (atom.hasSpareValency() != spareValency){
+						return false;
+					}
+				}
+				//e.g. benzene
+				return true;
+			}
+		}
+		return false;
 	}
 
 	static Atom findAtomForUnlocantedRadical(BuildState state, Fragment frag, OutAtom outAtom) throws StructureBuildingException {
