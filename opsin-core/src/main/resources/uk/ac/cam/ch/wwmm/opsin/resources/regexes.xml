@@ -210,7 +210,7 @@ does not define a CFG.
 
 	<regex name="%ringBridge%" value ="((%locantGroupNoStartingHyphen%|%colonOrSemiColonDelimitedLocant%?%multiplierNotGroup%)?(%alkaneStem%%ane%%bridgeFormingO%|%epoxy%)%hyphen%?)"/>
 	<regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="(%hydroGroup%*(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%subtractivePrefixGroup%|%ringBridge%)*)"/><!--bigCapitalH before lambdaConvention is preferred. Expected ordering often varies between IUPAC/CAS/Beilstein so be lenient-->
-	<regex name="%ringNonDetachableFeatures%" value="(((%bigCapitalH%|%lambdaConvention%|%heteroReplacement%)%ringBridge%?)*%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes. Be careful to avoid ambiguity with detachable ring bridges-->
+	<regex name="%ringNonDetachableFeatures%" value="(((%bigCapitalH%|%lambdaConvention%|%heteroReplacement%)%ringBridge%*)*%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes. Be careful to avoid ambiguity with detachable ring bridges-->
 	<regex name="%acyclicNonDetachableFeatures%" value="(%heteroReplacement%*%lambdaConvention%?%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->
 
 	<!--Terms with optionally bracketed locants building to an analogous term to ring_CanStartWithHydro_NonDetachableFeatures -->
