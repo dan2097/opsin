@@ -117,7 +117,8 @@ class WordTools {
 		List<Character> currentTerm = new ArrayList<Character>();
 		for (Character annot : annots) {
 			currentTerm.add(annot);
-			if (annot.equals(END_OF_SUBSTITUENT) || annot.equals(END_OF_MAINGROUP) || annot.equals(END_OF_FUNCTIONALTERM)) {
+			char ch = annot;
+			if (ch == END_OF_SUBSTITUENT || ch == END_OF_MAINGROUP || ch == END_OF_FUNCTIONALTERM) {
 				chunkList.add(currentTerm);
 				currentTerm = new ArrayList<Character>();
 			}
