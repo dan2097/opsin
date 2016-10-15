@@ -183,7 +183,7 @@ does not define a CFG.
 	<regex name="%locantGroup%" value="(%hyphen%?(%locant%|%orthoMetaPara%))"/>
 	<regex name="%locantGroupNoStartingHyphen%" value="(%locant%|%orthoMetaPara%)"/><!--Substituents/mainGroups may not start with a hyphen (otherwise it is ambiguous as to where to break up the name so this is used for prefixes-->
 	<regex name="%bracketedLocant%" value="(%optionalOpenBracket%%locantThatNeedsBrackets%%optionalCloseBracket%%hyphen%?)"/>
-	<regex name="%bracketedIupacIsotope%" value ="(%optionalOpenBracket%%iupacIsotope%%optionalCloseBracket%)"/><!--These brackets are actually compulsory but we don't want them in the parse tree-->
+	<regex name="%bracketedIupacIsotope%" value ="(%optionalOpenBracket%%iupacIsotope%(%comma%%iupacIsotope%)*%optionalCloseBracket%%hyphen%?)"/><!--These brackets are actually compulsory but we don't want them in the parse tree-->
 	<regex name="%infixReplacement%" value ="(%multiplier%?%replacementInfix%(%o%?%multiplier%?%replacementInfix%)*%o%?)"/>
 	<regex name="%infixedInlineSuffix%" value="(%o%?%infixReplacement%%infixableInlineSuffix%|%structuralOpenBracket%%infixReplacement%%infixableInlineSuffix%%structuralCloseBracket%)"/>
 	<regex name="%infixedPrefixedInlineSuffix%" value ="(%suffixPrefix%%infixReplacement%%inlineSuffixAllowingPrefixes%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%inlineSuffixAllowingPrefixes%%optionalCloseBracket%)" />
@@ -207,9 +207,9 @@ does not define a CFG.
 	<regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%%optionalCloseBracket%)" />
 	<regex name="%rootSuffixForAcidStem%" value= "(%acidStemSuffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%|%cycleFormingSuffix%)" />
 	<regex name="%rootSuffix%" value= "(%nonAcidStemSuffix%|%rootSuffixForAcidStem%)" />
-	<regex name="%unlocantedSuffixGroup%" value="(%multiplier%?(%infixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?(%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%|%infixedPrefixedSuffix%))|%multiplier%%optionalOpenBracket%%rootSuffix%%optionalCloseBracket%)"/>
+	<regex name="%unlocantedSuffixGroup%" value="(%multiplier%?%bracketedIupacIsotope%?(%infixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?(%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%|%infixedPrefixedSuffix%))|%multiplier%%optionalOpenBracket%%bracketedIupacIsotope%?%rootSuffix%%optionalCloseBracket%)"/>
 	<regex name="%suffixGroup%" value="(%hyphen%?(%relativeCisTrans%|%locantGroupNoStartingHyphen%|%alphaBetaStereochemLocant%)?%unlocantedSuffixGroup%)"/>
-	<regex name="%locantedGroupAddingSuffixAllowedBeforeSuffix%" value="(%locantGroup%%multiplier%?(%groupAddingSuffixBeforeSuffix%|%groupAddingSuffixBeforeSuffixRequiresLocant%))"/>
+	<regex name="%locantedGroupAddingSuffixAllowedBeforeSuffix%" value="(%locantGroup%%multiplier%?%bracketedIupacIsotope%?(%groupAddingSuffixBeforeSuffix%|%groupAddingSuffixBeforeSuffixRequiresLocant%))"/>
 	<regex name="%rootEnding%" value="(%inlineChargeGroup%?(%boughtonIsotope%?%locantedGroupAddingSuffixAllowedBeforeSuffix%?%suffixGroup%)?)"/>
 	<regex name="%locantOpenBracket%" value="(%stereochemistry%*(%relativeCisTrans%|%locantGroupNoStartingHyphen%{1,2})?%stereochemistry%*(%multiplier%%locant%?)?%openBracket%%hyphen%?)"/>
 	<regex name="%alkaneStemSystematic%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%)"/>
@@ -217,16 +217,16 @@ does not define a CFG.
 	<regex name="%dlStereochemistryPrefix%" value="(%dlStereochemistry%%lightRotation%?)"/>
 
 	<regex name="%ringBridge%" value ="((%locantGroupNoStartingHyphen%|%colonOrSemiColonDelimitedLocant%?%multiplierNotGroup%)?(%alkaneStem%%ane%%bridgeFormingO%|%epoxy%)%hyphen%?)"/>
-	<regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="(%hydroGroup%*(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%subtractivePrefixGroup%|%ringBridge%)*)"/><!--bigCapitalH before lambdaConvention is preferred. Expected ordering often varies between IUPAC/CAS/Beilstein so be lenient-->
-	<regex name="%ringNonDetachableFeatures%" value="(((%bigCapitalH%|%lambdaConvention%|%heteroReplacement%)%ringBridge%*)*%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes. Be careful to avoid ambiguity with detachable ring bridges-->
-	<regex name="%acyclicNonDetachableFeatures%" value="(%heteroReplacement%*%lambdaConvention%?%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->
+	<regex name="%ring_CanStartWithHydro_NonDetachableFeatures%" value="(%hydroGroup%*%bracketedIupacIsotope%?(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%subtractivePrefixGroup%|%ringBridge%)*)"/><!--bigCapitalH before lambdaConvention is preferred. Expected ordering often varies between IUPAC/CAS/Beilstein so be lenient-->
+	<regex name="%ringNonDetachableFeatures%" value="(%bracketedIupacIsotope%?((%bigCapitalH%|%lambdaConvention%|%heteroReplacement%)%ringBridge%*)*%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes. Be careful to avoid ambiguity with detachable ring bridges-->
+	<regex name="%acyclicNonDetachableFeatures%" value="(%bracketedIupacIsotope%?%heteroReplacement%*%lambdaConvention%?%locantGroupNoStartingHyphen%?)"/><!--last locant is an indirect locant for suffixes-->
 
 	<!--Terms with optionally bracketed locants building to an analogous term to ring_CanStartWithHydro_NonDetachableFeatures -->
 	<regex name="%hydroGroupSpiro%" value="(%bracketedLocant%%multiplier%%hydro%%hyphen%?|%hydroGroup%)"/>
 	<regex name="%heteroReplacementSpiro%" value="((%bracketedLocant%|%optionalOpenBracket%%lambdaConvention%%optionalCloseBracket%)%multiplierNotGroup%?%heteroAtom%%hyphen%?)"/>
 	<regex name="%fusedRingBridgesSpiro%" value ="(%bracketedLocant%(%alkaneStem%%ane%%bridgeFormingO%|%epoxy%)%hyphen%?)"/>
 	<regex name="%subtractivePrefixGroupSpiro%" value="(%bracketedLocant%%multiplier%?%subtractivePrefix%%hyphen%?)"/>
-	<regex name="%ring_SpiroComponent_NonDetachableFeatures%" value="(%hydroGroupSpiro%*(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%ringBridge%|%subtractivePrefixGroup%|%optionalOpenBracket%(%bigCapitalH%|%lambdaConvention%)%optionalCloseBracket%|%heteroReplacementSpiro%|%fusedRingBridgesSpiro%|%subtractivePrefixGroupSpiro%)*)"/>
+	<regex name="%ring_SpiroComponent_NonDetachableFeatures%" value="(%hydroGroupSpiro%*%bracketedIupacIsotope%?(%bigCapitalH%|%lambdaConvention%|%heteroReplacement%|%ringBridge%|%subtractivePrefixGroup%|%optionalOpenBracket%(%bigCapitalH%|%lambdaConvention%)%optionalCloseBracket%|%heteroReplacementSpiro%|%fusedRingBridgesSpiro%|%subtractivePrefixGroupSpiro%)*)"/>
 
 <!-- groups-->
 	<!--acyclic-->
@@ -351,7 +351,7 @@ does not define a CFG.
 	<regex name="%mainGroupHead%" value="(%openBracket%?(%locant%?%multiplier%|%fractionalMultiplier%%hyphen%?)?%openBracket%?%stereochemistry%*(%locantGroupNoStartingHyphen%%mono%?)?)" />
 	<regex name="%mainGroupTail%" value="(%closeBracket%*%endOfMainGroup%)" />
 	<regex name="%mainGroup%" value="(%mainGroupHead%%mainGroupBody%%mainGroupTail%)"/>
-	<regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%(%chalcogenAcidGroup%|%simpleGroupClass%)%boughtonIsotope%?%mainGroupTail%)"/>
+	<regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%%bracketedIupacIsotope%?(%chalcogenAcidGroup%|%simpleGroupClass%)%boughtonIsotope%?%mainGroupTail%)"/>
 
 	<!-- functional Groups-->
 	<regex name="%anhydride%" value="((%locant%|%colonOrSemiColonDelimitedLocant%)?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>

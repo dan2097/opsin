@@ -1070,39 +1070,73 @@ class StructureBuildingMethods {
 			IsotopeSpecification isotopeSpec = IsotopeSpecificationParser.parseIsotopeSpecification(isotopeSpecification);
 			String[] locants = isotopeSpec.getLocants();
 			if(locants != null) {
-				if(!applyLocanted) {
+				if (!applyLocanted) {
 					continue;
 				}
-				for (int j = 0; j < locants.length; j++) {
-					Atom atomWithHydrogenIsotope = frag.getAtomByLocantOrThrow(locants[j]);
-					Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
-					hydrogen.setIsotope(isotopeSpec.getIsotope());
-					state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
-				}
-				isotopeSpecification.detach();
 			}
-			else {
-				if (applyLocanted) {
-					continue;
-				}
-				int multiplier = isotopeSpec.getMultiplier();
-				List<Atom> parentAtomsToApplyTo = FragmentTools.findnAtomsForSubstitution(frag, multiplier, 1);
-				if (parentAtomsToApplyTo == null){
-					throw new StructureBuildingException("Failed to find sufficient hydrogen atoms for unlocanted hydrogen isotope replacement");
-				}
-				if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
-					if (!casIsotopeAmbiguitySpecialCase(frag, parentAtomsToApplyTo, multiplier)) {
-						state.addIsAmbiguous("Position of hydrogen isotope on " + frag.getTokenEl().getValue());
+			else if (applyLocanted) {
+				continue;
+			}
+
+			ChemEl chemEl = isotopeSpec.getChemEl();
+			int isotope = isotopeSpec.getIsotope();
+			if(locants != null) {
+				if (chemEl == ChemEl.H) {
+					for (int j = 0; j < locants.length; j++) {
+						Atom atomWithHydrogenIsotope = frag.getAtomByLocantOrThrow(locants[j]);
+						Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+						hydrogen.setIsotope(isotope);
+						state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
 					}
 				}
-				for (int j = 0; j < multiplier; j++) {
-					Atom atomWithHydrogenIsotope = parentAtomsToApplyTo.get(j);
-					Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
-					hydrogen.setIsotope(isotopeSpec.getIsotope());
-					state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+				else {
+					for (int j = 0; j < locants.length; j++) {
+						Atom atom = frag.getAtomByLocantOrThrow(locants[j]);
+						if (chemEl != atom.getElement()) {
+							throw new StructureBuildingException("The atom at locant: " + locants[j]  + " was not a " + chemEl.toString() );
+						}
+						atom.setIsotope(isotope);
+					}
 				}
-				isotopeSpecification.detach();
 			}
+			else {
+				int multiplier = isotopeSpec.getMultiplier();
+				if (chemEl == ChemEl.H) {
+					List<Atom> parentAtomsToApplyTo = FragmentTools.findnAtomsForSubstitution(frag, multiplier, 1);
+					if (parentAtomsToApplyTo == null){
+						throw new StructureBuildingException("Failed to find sufficient hydrogen atoms for unlocanted hydrogen isotope replacement");
+					}
+					if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
+						if (!casIsotopeAmbiguitySpecialCase(frag, parentAtomsToApplyTo, multiplier)) {
+							state.addIsAmbiguous("Position of hydrogen isotope on " + frag.getTokenEl().getValue());
+						}
+					}
+					for (int j = 0; j < multiplier; j++) {
+						Atom atomWithHydrogenIsotope = parentAtomsToApplyTo.get(j);
+						Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+						hydrogen.setIsotope(isotope);
+						state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+					}
+				}
+				else {
+					List<Atom> parentAtomsToApplyTo = new ArrayList<Atom>();
+					for (Atom atom : frag.getAtomList()) {
+						if (atom.getElement() == chemEl) {
+							parentAtomsToApplyTo.add(atom);
+						}
+					}
+					if (parentAtomsToApplyTo.size() < multiplier) {
+						throw new StructureBuildingException("Failed to find sufficient atoms for " + chemEl.toString() + " isotope replacement");
+					}
+					if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
+						state.addIsAmbiguous("Position of isotope on " + frag.getTokenEl().getValue());
+					}
+					for (int j = 0; j < multiplier; j++) {
+						parentAtomsToApplyTo.get(j).setIsotope(isotope);
+					}
+				}
+			}
+			isotopeSpecification.detach();
 		}
 	}
 
