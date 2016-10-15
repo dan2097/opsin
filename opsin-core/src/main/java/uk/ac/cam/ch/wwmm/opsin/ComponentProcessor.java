@@ -2171,6 +2171,13 @@ class ComponentProcessor {
 			Element referent = OpsinTools.getNextSibling(locant);
 			if (referent != null && locantValues.length == 1){
 				String refName = referent.getName();
+				if (refName.equals(ISOTOPESPECIFICATION_EL)) {
+					referent = OpsinTools.getNextSibling(referent);
+					if (referent == null) {
+						return;
+					}
+					refName = referent.getName();
+				}
 				//Only assigning locants to elements that were not created by a multiplier
 				if(referent.getAttribute(LOCANT_ATR) == null && referent.getAttribute(MULTIPLIED_ATR) == null && (refName.equals(UNSATURATOR_EL) ||
 						refName.equals(SUFFIX_EL) ||
@@ -4704,9 +4711,23 @@ class ComponentProcessor {
 			
 			//Apply isotopes to suffixes if present
 			if (suffix.getFrag() != null) {
-				Element isotopeSpecification = OpsinTools.getNextSiblingIgnoringCertainElements(suffix, new String[]{SUFFIX_EL});
-				if (isotopeSpecification != null && isotopeSpecification.getName().equals(ISOTOPESPECIFICATION_EL) && BOUGHTONSYSTEM_TYPE_VAL.equals(isotopeSpecification.getAttributeValue(TYPE_ATR))) {
-					applyIsotopeToSuffix(suffix.getFrag(), isotopeSpecification);
+				//boughton system applies to preceding suffix
+				//iupac system applies to following suffix
+				Element boughtonIsotopeSpecification = OpsinTools.getNextSibling(suffix);
+				if (boughtonIsotopeSpecification != null && boughtonIsotopeSpecification.getName().equals(ISOTOPESPECIFICATION_EL)) {
+					if (BOUGHTONSYSTEM_TYPE_VAL.equals(boughtonIsotopeSpecification.getAttributeValue(TYPE_ATR))) {
+						applyIsotopeToSuffix(suffix.getFrag(), boughtonIsotopeSpecification, false);
+					}
+					else {
+						throw new RuntimeException("Unexpected isotope specification after suffix");
+					}
+				}
+				Element iupacIsotopeSpecification = OpsinTools.getPreviousSibling(suffix);
+				while (iupacIsotopeSpecification != null && iupacIsotopeSpecification.getName().equals(ISOTOPESPECIFICATION_EL) &&
+							IUPACSYSTEM_TYPE_VAL.equals(iupacIsotopeSpecification.getAttributeValue(TYPE_ATR))) {
+					Element next = OpsinTools.getPreviousSibling(iupacIsotopeSpecification);
+					applyIsotopeToSuffix(suffix.getFrag(), iupacIsotopeSpecification, true);
+					iupacIsotopeSpecification = next;
 				}
 			}
 		}
@@ -4904,28 +4925,84 @@ class ComponentProcessor {
 		return proKetonePositions;
 	}
 
-	private void applyIsotopeToSuffix(Fragment frag, Element isotopeSpecification) throws StructureBuildingException {
+	private void applyIsotopeToSuffix(Fragment frag, Element isotopeSpecification, boolean mustBeApplied) throws StructureBuildingException {
 		IsotopeSpecification isotopeSpec = IsotopeSpecificationParser.parseIsotopeSpecification(isotopeSpecification);
-		if (isotopeSpec.getLocants() == null) {
-			int multiplier = isotopeSpec.getMultiplier();
+		ChemEl chemEl = isotopeSpec.getChemEl();
+		int isotope = isotopeSpec.getIsotope();
+		int multiplier = isotopeSpec.getMultiplier();
+		String[] locants = isotopeSpec.getLocants();
+		if (locants != null && !mustBeApplied) {
+			//locanted boughton isotope probably applies to the group rather than the suffix
+			return;
+		}
+		if (locants == null) {
 			List<Atom> atoms = frag.getAtomList();
 			atoms.remove(0);
-			List<Atom> parentAtomsToApplyTo = FragmentTools.findnAtomsForSubstitution(atoms, null, multiplier, 1, true);
-			if (parentAtomsToApplyTo == null) {
-				return;
+			if (chemEl == ChemEl.H) {
+				List<Atom> parentAtomsToApplyTo = FragmentTools.findnAtomsForSubstitution(atoms, null, multiplier, 1, true);
+				if (parentAtomsToApplyTo == null) {
+					if (mustBeApplied) {
+						throw new StructureBuildingException("Failed to find sufficient hydrogen atoms for unlocanted hydrogen isotope replacement");
+					}
+					else {
+						return;
+					}
+				}
+				if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
+					state.addIsAmbiguous("Position of hydrogen isotope on " + frag.getTokenEl().getValue());
+				}
+				for (int j = 0; j < multiplier; j++) {
+					Atom atomWithHydrogenIsotope = parentAtomsToApplyTo.get(j);
+					Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+					hydrogen.setIsotope(isotope);
+					state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+				}
 			}
-			if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
-				state.addIsAmbiguous("Position of hydrogen isotope on " + frag.getTokenEl().getValue());
+			else {
+				List<Atom> parentAtomsToApplyTo = new ArrayList<Atom>();
+				for (Atom atom : atoms) {
+					if (atom.getElement() == chemEl) {
+						parentAtomsToApplyTo.add(atom);
+					}
+				}
+				if (parentAtomsToApplyTo.size() < multiplier) {
+					if(mustBeApplied) {
+						throw new StructureBuildingException("Failed to find sufficient atoms for " + chemEl.toString() + " isotope replacement");
+					}
+					else {
+						return;
+					}
+				}
+				if (AmbiguityChecker.isSubstitutionAmbiguous(parentAtomsToApplyTo, multiplier)) {
+					state.addIsAmbiguous("Position of isotope on " + frag.getTokenEl().getValue());
+				}
+				for (int j = 0; j < multiplier; j++) {
+					parentAtomsToApplyTo.get(j).setIsotope(isotope);
+				}
 			}
-			for (int j = 0; j < multiplier; j++) {
-				Atom atomWithHydrogenIsotope = parentAtomsToApplyTo.get(j);
-				Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
-				hydrogen.setIsotope(isotopeSpec.getIsotope());
-				state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
-			}
-			isotopeSpecification.detach();
 		}
+		else {
+			if (chemEl == ChemEl.H) {
+				for (int j = 0; j < locants.length; j++) {
+					Atom atomWithHydrogenIsotope = frag.getAtomByLocantOrThrow(locants[j]);
+					Atom hydrogen = state.fragManager.createAtom(isotopeSpec.getChemEl(), frag);
+					hydrogen.setIsotope(isotope);
+					state.fragManager.createBond(atomWithHydrogenIsotope, hydrogen, 1);
+				}
+			}
+			else {
+				for (int j = 0; j < locants.length; j++) {
+					Atom atom = frag.getAtomByLocantOrThrow(locants[j]);
+					if (chemEl != atom.getElement()) {
+						throw new StructureBuildingException("The atom at locant: " + locants[j]  + " was not a " + chemEl.toString() );
+					}
+					atom.setIsotope(isotope);
+				}
+			}
+		}
+		isotopeSpecification.detach();
 	}
+	
 
 	private Atom getFragAtomToUse(Fragment frag, Element suffix, String suffixTypeToUse) throws StructureBuildingException {;
 		String locant = suffix.getAttributeValue(LOCANT_ATR);

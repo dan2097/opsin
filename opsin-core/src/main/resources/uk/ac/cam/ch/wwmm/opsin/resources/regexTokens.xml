@@ -40,7 +40,7 @@
 	<regexToken regex="(%locant%,)*%locant%-?" symbol="¯" type="bracketedLocant" tagname="locant" determinise="yes" />
 
 	<regexToken regex="(-%locantTypes%(,%locantTypes%)*)?-d([1-9][0-9]?)?" symbol="ÿ" type="boughtonSystem" tagname="isotopeSpecification" determinise="yes" />
-	<regexToken regex="(%locantTypes%(,%locantTypes%)*-)?([1-9][0-9]{1,2}(%elementSymbol%|Bi)|[1-3]H)([1-9][0-9]?)?" symbol="Ā" type="iupacSystem" tagname="isotopeSpecification" determinise="yes" />
+	<regexToken regex="(%locantTypes%(,%locantTypes%)*-)?[1-9][0-9]{1,2}(%elementSymbol%|Bi)([1-9][0-9]?)?|(%locantTypes%(,%locantTypes%)*-)[1-3]H([1-9][0-9]?)?|[1-3]H[1-9][0-9]?" symbol="Ā" type="iupacSystem" tagname="isotopeSpecification" determinise="yes" />
 
 	<regex name="%lambdaConvention%" regex="(%locantTypes%?[lL][aA][mM][bB][dD][aA](%superScriptedNumber%|[0-9]+))" />
 	<regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="¡" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
