@@ -673,7 +673,11 @@ class StructureBuildingMethods {
 
 	private static void applyAnhydroPrefix(BuildState state, Fragment frag, Element subtractivePrefix) throws StructureBuildingException {
 		ChemEl chemEl = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
-		String[] locants = MATCH_COMMA.split(subtractivePrefix.getAttributeValue(LOCANT_ATR));
+		String locantStr = subtractivePrefix.getAttributeValue(LOCANT_ATR);
+		if (locantStr == null) {
+			throw new StructureBuildingException("Two locants are required before an anhydro prefix");
+		}
+		String[] locants = MATCH_COMMA.split(locantStr);
 		Atom backBoneAtom1 = frag.getAtomByLocantOrThrow(locants[0]);
 		Atom backBoneAtom2 = frag.getAtomByLocantOrThrow(locants[1]);
 		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom1.getAtomNeighbours(), chemEl);
