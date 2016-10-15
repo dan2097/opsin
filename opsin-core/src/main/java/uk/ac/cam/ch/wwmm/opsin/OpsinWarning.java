@@ -15,12 +15,23 @@ public class OpsinWarning {
 		 * OPSIN stereo-perception doesn't support this type of stereocentre
 		 * The name describes the wrong structure
 		 * The stereochemistry is being requested at the wrong atom/bond */
-		STEREOCHEMISTRY_IGNORED,
+		STEREOCHEMISTRY_IGNORED("Stereochemical term ignored"),
 		/**OPSIN made a choice that appeared to be ambiguous to give this structure i.e. the name may describe multiple possible structures<br>
 		 *The name may be missing locants<br>
 		 *Alternatively the name could actually be a trivial rather than systematic name<br>
 		 *OPSIN tries to make sensible choices when choosing in ambiguous cases so the resultant structure may nonetheless be the intended one*/
-		APPEARS_AMBIGUOUS,
+		APPEARS_AMBIGUOUS("This names appears to be ambiguous");
+		
+		private final String explanation;
+
+		private OpsinWarningType(String explanation) {
+			this.explanation = explanation;
+		}
+		
+		public String getExplanation() {
+			return explanation;
+		}
+		
 	}
 	
 	private final OpsinWarningType type;
