@@ -129,9 +129,9 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O1C=C[C@@H](O)[C@@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/">galactal</token>
 		<token value="O1C=C[C@@H](O)[C@H](O)[C@H]1CO" labels="/1/2/3//4//5/6/">glucal</token>
 
-		<token value="O=C1C(O)=C(O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbic acid</token>
+		<token value="O=C1C(O)=C(O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes" functionalIDs="6">ascorbic acid</token>
 		<token value="O=C1C(=O)C(=O)[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">dehydroascorbic acid</token>
-		<token value="O=C1C(O)=C([O-])[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes">ascorbate|ascorbat</token>
+		<token value="O=C1C(O)=C([O-])[C@H](O1)[C@@H](O)CO" labels="/1/2//3//4//5//6/" naturalEntIsOpposite="yes" functionalIDs="6">ascorbate|ascorbat</token>
 
 		<token value="OC1[C@H](N)[C@@H](O)[C@@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@@H](O)[C@H](O)CO">galactosamine|galactosamin</token>
 		<token value="OC1[C@H](N)[C@@H](O)[C@H](O)[C@H](O1)CO" labels="/1/2//3//4//5//6/" suffixAppliesTo="2" additionalValue="O=C[C@H](N)[C@@H](O)[C@H](O)[C@H](O)CO">glucosamine|glucosamin</token>
