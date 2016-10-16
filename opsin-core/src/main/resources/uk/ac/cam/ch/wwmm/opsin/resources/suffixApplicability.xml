@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE suffixApplicability SYSTEM "suffixApplicability.dtd">
 <!-- This file dictates which suffixes are applicable to the group types that OPSIN recognises.
 The two most important/common types are: acidStem and standardGroup.
