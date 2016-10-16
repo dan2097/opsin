@@ -193,7 +193,7 @@ public class NomenclatureIntegrationTest {
 	}
 
 	private void checkNamesAgainstInChIs(String file, NameToStructureConfig n2sConfig) throws IOException{
-		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
+		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file), "UTF-8"));
 		try {
 			String line = null;
 			while ((line = input.readLine()) != null) {
