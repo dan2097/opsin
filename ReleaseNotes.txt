@@ -1,3 +1,19 @@
+Version 2.2.0 (2016-10-16)
+Added support for IUPAC system for isotope specification e.g. (3-14C,2,2-2H2)butane
+Added support for specifying deuteration using the Boughton system e.g. butane-2,2-d2
+Added support for multiplied bridges e.g. 1,2:3,4-diepoxy
+Front locants after a von baeyer descriptor are now supported e.g. bicyclo[2.2.2]-7-octene
+onosyl substituents now supported e.g. glucuronosyl
+More sugar substituents e.g. glucosaminyl
+Improved support for malformed polycyclic spiro names
+Support for oximino as a suffix
+Added method [NameToStructure.getVersion()] to retrieve OPSIN version number
+Allowed bridges to be used as detachable prefixes
+Allow odd numbers of hydro to be added e.g. trihydro
+Added support for unbracketted R stereochemistry (but not S, for the moment, due to the ambiguity with sulfur locants)
+Various minor bug fixes e.g. stereochemistry was incorrect for isovaline
+Minor vocabulary improvements
+
 Version 2.1.0 (2016-03-12)
 Added support for fractional multipliers e.g. hemihydrochloride
 Added support for abbreviated common salts e.g. HCl
