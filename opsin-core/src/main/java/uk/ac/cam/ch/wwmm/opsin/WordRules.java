@@ -22,6 +22,14 @@ class WordRules {
 
 	/**The wordRules themselves.*/
 	private final List<WordRuleDescription> wordRuleList;
+	
+	enum EndsWithGroup {
+		acid,
+		ateGroup;
+	}
+	
+	private static final Pattern icOrOusAcid = Pattern.compile("(ic|ous)([ ]?acid)?$");
+	private static final Pattern ateOrIteOrAmide = Pattern.compile("(at|it|amid)e?$");
 
 	/**
 	 * Describes a word that a wordRule is looking for
@@ -31,7 +39,10 @@ class WordRules {
 	private static class WordDescription {
 		/**Whether the word is a full word, substituent word or functionalTerm word*/
 		private final WordType type;
-
+		
+		/**A group with a hardcoded method for efficient detection */
+		private final EndsWithGroup endsWithGroup;
+		
 		/**A case insensitive pattern which attempts to match the end of the String value of the word*/
 		private final Pattern endsWithPattern;
 
@@ -40,9 +51,6 @@ class WordRules {
 
 		/** Only applicable for functionalTerms. The string value of the functionalTerm's type attribute*/
 		private final String functionalGroupType;
-
-		/** The value of the value attribute of the last group element in the word e.g. maybe a SMILES string*/
-		private final String endsWithGroupValueAtr;
 		
 		/** The value of the type attribute of the last group element in the word e.g. maybe aminoAcid*/
 		private final String endsWithGroupType;
@@ -56,10 +64,10 @@ class WordRules {
 		 */
 		WordDescription(XMLStreamReader reader){
 			WordType type = null;
-			Pattern endsWithPattern = null;
 			String value = null;
+			EndsWithGroup endsWithGroup = null;
+			Pattern endsWithPattern = null;
 			String functionalGroupType = null;
-			String endsWithGroupValueAtr = null;
 			String endsWithGroupType = null;
 			String endsWithGroupSubType = null;
 			for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
@@ -74,11 +82,11 @@ class WordRules {
 				else if (atrName.equals("functionalGroupType")){
 					functionalGroupType = atrValue;
 				}
+				else if (atrName.equals("endsWith")){
+					endsWithGroup = EndsWithGroup.valueOf(atrValue);
+				}
 				else if (atrName.equals("endsWithRegex")){
 					endsWithPattern = Pattern.compile(atrValue +"$", Pattern.CASE_INSENSITIVE);
-				}
-				else if (atrName.equals("endsWithGroupValueAtr")){
-					endsWithGroupValueAtr = atrValue;
 				}
 				else if (atrName.equals("endsWithGroupType")){
 					endsWithGroupType = atrValue;
@@ -91,16 +99,20 @@ class WordRules {
 				throw new RuntimeException("Malformed wordRules");
 			}
 			this.type = type;
+			this.endsWithGroup = endsWithGroup;
 			this.endsWithPattern = endsWithPattern;
 			this.value = value;
 			this.functionalGroupType = functionalGroupType;
-			this.endsWithGroupValueAtr = endsWithGroupValueAtr;
 			this.endsWithGroupType = endsWithGroupType;
 			this.endsWithGroupSubType = endsWithGroupSubType;
 		}
 
 		WordType getType() {
 			return type;
+		}
+		
+		EndsWithGroup getEndsWithGroup() {
+			return endsWithGroup;
 		}
 
 		Pattern getEndsWithPattern() {
@@ -113,10 +125,6 @@ class WordRules {
 
 		String getFunctionalGroupType() {
 			return functionalGroupType;
-		}
-
-		String getEndsWithGroupValueAtr() {
-			return endsWithGroupValueAtr;
 		}
 
 		String getEndsWithGroupType() {
@@ -254,48 +262,56 @@ class WordRules {
 						if (!wd.getType().toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 							continue wordRuleLoop;//type mismatch;
 						}
-						if (wd.getValue() !=null && !wordEl.getAttributeValue(VALUE_ATR).toLowerCase(Locale.ROOT).equals(wd.getValue())){//word string contents mismatch
-							continue wordRuleLoop;
-						}
-						if (wd.getFunctionalGroupType() !=null){
-							if (WordType.functionalTerm.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
-								List<Element> children = wordEl.getChildElements();
-								Element lastChild = children.get(children.size()-1);
-								while (lastChild.getChildCount() != 0){
-									children = lastChild.getChildElements();
-									lastChild = children.get(children.size()-1);
-								}
-								if (lastChild.getName().equals(CLOSEBRACKET_EL)){
-									lastChild = OpsinTools.getPreviousSibling(lastChild);
-								}
-								if (lastChild==null){
+
+						String functionalGroupTypePredicate = wd.getFunctionalGroupType();
+						if (functionalGroupTypePredicate != null) {
+							if (!WordType.functionalTerm.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
+								continue wordRuleLoop;
+							}
+							Element lastEl = getLastElementInWord(wordEl);
+							if (lastEl == null) {
+								throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
+							}
+							while (lastEl.getName().equals(CLOSEBRACKET_EL) || lastEl.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+								lastEl = OpsinTools.getPreviousSibling(lastEl);
+								if (lastEl == null) {
 									throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
 								}
-								if (!wd.getFunctionalGroupType().equals(lastChild.getAttributeValue(TYPE_ATR))){
-									continue wordRuleLoop;
-								}
 							}
-						}
-						if (wd.getEndsWithPattern() !=null){
-							if (!wd.getEndsWithPattern().matcher(wordEl.getAttributeValue(VALUE_ATR)).find()){
+							if (!functionalGroupTypePredicate.equals(lastEl.getAttributeValue(TYPE_ATR))) {
 								continue wordRuleLoop;
 							}
 						}
-						if (wd.getEndsWithGroupValueAtr() !=null){
-							Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
-							if (lastGroupInWordRule==null || !wd.getEndsWithGroupValueAtr().equals(lastGroupInWordRule.getAttributeValue(VALUE_ATR))){
+						
+						EndsWithGroup endsWithGroupPredicate = wd.getEndsWithGroup();
+						if (endsWithGroupPredicate != null && !endsWithGroupPredicateSatisfied(wordEl, endsWithGroupPredicate)) {
+							continue wordRuleLoop;
+						}
+
+						String valuePredicate = wd.getValue();
+						if (valuePredicate != null && !wordEl.getAttributeValue(VALUE_ATR).toLowerCase(Locale.ROOT).equals(valuePredicate)){//word string contents mismatch
+							continue wordRuleLoop;
+						}
+
+						Pattern endsWithPatternPredicate = wd.getEndsWithPattern();
+						if (endsWithPatternPredicate != null) {
+							if (!endsWithPatternPredicate.matcher(wordEl.getAttributeValue(VALUE_ATR)).find()){
 								continue wordRuleLoop;
 							}
 						}
-						if (wd.getEndsWithGroupType() !=null){
+
+						String endsWithGroupTypePredicate = wd.getEndsWithGroupType();
+						if (endsWithGroupTypePredicate != null) {
 							Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
-							if (lastGroupInWordRule==null || !wd.getEndsWithGroupType().equals(lastGroupInWordRule.getAttributeValue(TYPE_ATR))){
+							if (lastGroupInWordRule == null || !endsWithGroupTypePredicate.equals(lastGroupInWordRule.getAttributeValue(TYPE_ATR))){
 								continue wordRuleLoop;
 							}
 						}
-						if (wd.getEndsWithGroupSubType() !=null){
+
+						String endsWithSubGroupTypePredicate = wd.getEndsWithGroupSubType();
+						if (endsWithSubGroupTypePredicate != null) {
 							Element lastGroupInWordRule = getLastGroupInWordRule(wordEl);
-							if (lastGroupInWordRule==null || !wd.getEndsWithGroupSubType().equals(lastGroupInWordRule.getAttributeValue(SUBTYPE_ATR))){
+							if (lastGroupInWordRule == null || !endsWithSubGroupTypePredicate.equals(lastGroupInWordRule.getAttributeValue(SUBTYPE_ATR))){
 								continue wordRuleLoop;
 							}
 						}
@@ -483,6 +499,54 @@ class WordRules {
 			return false;
 		}
 
+		private boolean endsWithGroupPredicateSatisfied(Element wordEl, EndsWithGroup endsWithGroupPredicate) throws ParsingException {
+			Element lastEl = getLastElementInWord(wordEl);
+			if (lastEl == null) {
+				return false;
+			}
+			String elName = lastEl.getName();
+			while (elName.equals(CLOSEBRACKET_EL) || 
+					elName.equals(STRUCTURALCLOSEBRACKET_EL) ||
+					elName.equals(ISOTOPESPECIFICATION_EL)) {
+				lastEl = OpsinTools.getPreviousSibling(lastEl);
+				if (lastEl == null) {
+					return false;
+				}
+				elName = lastEl.getName();
+			}
+
+			if (endsWithGroupPredicate == EndsWithGroup.acid) {
+				if (elName.equals(SUFFIX_EL)) {
+					if (icOrOusAcid.matcher(lastEl.getAttributeValue(VALUE_ATR)).find()) {
+						return true;
+					}
+				}
+				else if (elName.equals(GROUP_EL)) {
+					if (lastEl.getAttribute(FUNCTIONALIDS_ATR) != null && icOrOusAcid.matcher(lastEl.getValue()).find()) {
+						return true;
+					}
+				}
+			}
+			else if (endsWithGroupPredicate == EndsWithGroup.ateGroup) {
+				if (elName.equals(GROUP_EL)) {
+					if (lastEl.getAttribute(FUNCTIONALIDS_ATR) != null && ateOrIteOrAmide.matcher(lastEl.getValue()).find()) {
+						return true;
+					}
+				}
+				else {
+					while (lastEl != null && elName.equals(SUFFIX_EL)) {
+						String suffixValAtr = lastEl.getAttributeValue(VALUE_ATR);
+						if (ateOrIteOrAmide.matcher(suffixValAtr).find() || suffixValAtr.equals("glycoside")) {
+							return true;
+						}
+						//glycoside is not always the last suffix
+						lastEl = OpsinTools.getPreviousSibling(lastEl, SUFFIX_EL);
+					}
+				}
+			}
+			return false;
+		}
+
 		private boolean oxidationNumberOrMultiplierIs(Element elementaryAtomEl, Element functionalGroupWord, int expectedVal) throws ParsingException {
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
 			if (functionalGroups.size() != 1) {
@@ -503,22 +567,27 @@ class WordRules {
 		}
 
 		private Element getLastGroupInWordRule(Element wordEl) {
-			List<Element> children = wordEl.getChildElements();
-			Element lastChild = children.get(children.size()-1);
-			while (lastChild.getChildCount() != 0){
-				children = lastChild.getChildElements();
-				lastChild = children.get(children.size()-1);
-			}
-			if (lastChild.getName().equals(GROUP_EL)){
-				return lastChild;
+			Element lastEl = getLastElementInWord(wordEl);
+			if (lastEl.getName().equals(GROUP_EL)) {
+				return lastEl;
 			}
 			else{
-				List<Element> groups = lastChild.getParent().getChildElements(GROUP_EL);
-				if (groups.size() > 0){
+				List<Element> groups = lastEl.getParent().getChildElements(GROUP_EL);
+				if (groups.size() > 0) {
 					return groups.get(groups.size() - 1);
 				}
 			}
 			return null;
+		}
+		
+		private Element getLastElementInWord(Element wordEl) {
+			List<Element> children = wordEl.getChildElements();
+			Element lastChild = children.get(children.size() - 1);
+			while (lastChild.getChildCount() != 0) {
+				children = lastChild.getChildElements();
+				lastChild = children.get(children.size() - 1);
+			}
+			return lastChild;
 		}
 
 		private void applySimpleWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {

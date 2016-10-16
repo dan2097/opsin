@@ -36,12 +36,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="ester" type="full">
 		<word type="substituent" />
-		<word type="full" endsWithRegex="\S(at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 <!--unusual case where the acid is not a mono acid and the replacements are different-->
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="substituent" />
@@ -51,7 +51,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="substituent" />
@@ -59,33 +59,33 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="substituent" />
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
 	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
@@ -167,13 +167,13 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	<wordRule name="multiEster" type="full">
 		<word type="substituent" />
 		<word type="substituent" />
-		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 	<wordRule name="multiEster" type="full"><!-- e.g. methyl ethyl propyl phosphate-->
 		<word type="substituent" />
 		<word type="substituent" />
 		<word type="substituent" />
-		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="multiEster" type="full">
@@ -181,7 +181,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="substituent" />
 		<word type="substituent" />
 		<word type="substituent" />
-		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="divalentFunctionalGroup" type="full">
@@ -204,7 +204,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="full"/>
 		<word type="substituent"/>
 		<word type="functionalTerm" value="ether" />
-		<word type="full" endsWithRegex="(at[e]?|amid[e]?|it[e]?)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="glycolEther" type="full">
@@ -237,18 +237,18 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
-		<word type="full" endsWithRegex="(ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
@@ -256,20 +256,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithRegex="((?&lt;!^arsen)ic|ous)([ ]?acid)?[\]\)\}]*"/>
+		<word type="full" endsWith="acid"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
@@ -344,52 +344,52 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupSubType="biochemical"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupSubType="biochemical"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupType="carbohydrate"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithGroupType="carbohydrate"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithRegex="ol[\]\)\}]*"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="potentialAlcoholEster" type="full">
 		<word type="full" endsWithRegex="ol[\]\)\}]*"/>
-		<word type="full" endsWithRegex="\S((?&lt;!hydr)at[e]?|amid[e]?|it[e]?|os[e]?id[e]?.*)[\]\)\}]*"/>
+		<word type="full" endsWith="ateGroup"/>
 	</wordRule>
 
 <!-- ester with osyluronate-->
 	<wordRule name="ester" type="substituent">
 		<word type="substituent" />
-		<word type="substituent" endsWithGroupType="carbohydrate" endsWithRegex="\S(at[e]?)[\]\)\}]*"/>
+		<word type="substituent" endsWithGroupType="carbohydrate" endsWith="ateGroup"/>
 	</wordRule>
 
 	<wordRule name="cyclicPeptide" type="full">
