@@ -138,9 +138,9 @@ class StringTools {
             case '\u00B1': return "+-";//plus minus symbol
             case '\u2213': return "-+";
             
-            case '\u2192': return "->";//right arrows
-            case '\u2794': return "->";
-            case '\u2799': return "->";
+            case '\u2192'://right arrows
+            case '\u2794':
+            case '\u2799':
             case '\u279C': return "->";
             
             case '\u00C6': return "AE";//common ligatures
@@ -256,16 +256,16 @@ class StringTools {
             case '\u02DD': return "''";
             case '\u030B': return "''";
 
-            case '\u2010': return "-";//dashes, hyphens and the minus sign
-            case '\u2011': return "-";
-            case '\u2012': return "-";
-            case '\u2013': return "-";
-            case '\u2014': return "-";
-            case '\u2015': return "-";
+            case '\u2010'://dashes, hyphens and the minus sign
+            case '\u2011':
+            case '\u2012':
+            case '\u2013':
+            case '\u2014':
+            case '\u2015':
             case '\u2212': return "-";
             
-            case '\u02DC': return "~";//small tilde
-            case '\u223C': return "~";//tilde operator
+            case '\u02DC'://small tilde
+            case '\u223C'://tilde operator
             case '\u301C': return "~";//wave dash
             
             case '\uff0c': return ",";//full width punctuation
@@ -282,15 +282,25 @@ class StringTools {
             
             case '\u00DF': return "beta";//similar glyph
             
-            case '\u00A0': return " ";//Non-breaking spaces
-            case '\u2007': return " ";
-            case '\u202F': return " ";
-            case '\u3000': return " ";//ideographics space
+            case '\u2000'://different sized spaces
+            case '\u2001':
+            case '\u2002':
+            case '\u2003':
+            case '\u2004':
+            case '\u2005':
+            case '\u2006':
+            case '\u2008':
+            case '\u2009':
+            case '\u200A':
+            case '\u205F':
+            case '\u00A0'://Non-breaking spaces
+            case '\u2007':
+            case '\u202F':
+            case '\u3000': return " ";//ideographic space
             
-            case '\u00AD': return "";//soft hyphen
-            case '\u200b': return "";//zero width space
-            case '\u200d': return "";//zero width joiner
-
+            case '\u00AD'://soft hyphen
+            case '\u200b'://zero width space
+            case '\u200d'://zero width joiner
             case '\uFEFF': return "";//BOM-found at the start of some UTF files
 
             default: throw new PreProcessingException("Unrecognised unicode character: " + c);
