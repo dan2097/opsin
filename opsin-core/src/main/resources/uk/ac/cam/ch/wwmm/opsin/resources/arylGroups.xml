@@ -98,6 +98,7 @@
 		<token value="[o+]1c(ccc2ccccc12)c3ccccc3" labels="1/2/3/4/4a,10/5/6/7/8/8a,9/1'/2'/3'/4'/5'/6'">flavylium</token>
 		<token value="c1ccc2cccc3c4ccccc4c1c23" labels="1/2/3/3a/4/5/6/6a/6b/7/8/9/10/10a/10b/10c">fluoranthen</token>
 		<token value="c1cccc2c3ccccc3[cH2]c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9/9a">fluoren</token>
+		<token value="c1cccc2c3ccccc3C4(c5ccccc5c6ccccc64)c12" labels="1/2/3/4/4a/4b/5/6/7/8/8a/9,9'/9a'/1'/2'/3'/4'/4a'/4b'/5'/6'/7'/8'/8a'/9a">spiro-9,9'-bifluoren</token><!--should be 9,9'-spirobifluoren -->
 		<token value="C1=CC=CC1=C" labels="1/2/3/4/5/6">fulven</token>
 		<token value="o1cccc1" labels="1/2/3/4/5">furan</token>
 		<token value="s1cccc1" labels="1/2/3/4/5">thiofuran</token>
