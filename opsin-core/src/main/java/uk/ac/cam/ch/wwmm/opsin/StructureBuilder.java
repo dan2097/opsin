@@ -2112,17 +2112,12 @@ class StructureBuilder {
 					}
 				}
 			}
-			else if (ENDININE_SUBTYPE_VAL.equals(subType) && group.getValue().contains("methion")) {
-				Fragment frag = group.getFrag();
-				Atom chalcogen = frag.getAtomByLocant("S");
-				if (chalcogen == null) {
-					chalcogen = frag.getAtomByLocant("Se");
-				}
-				if (chalcogen == null) {
-					chalcogen = frag.getAtomByLocant("Te");
-				}
-				if (chalcogen != null && chalcogen.getIncomingValency() == 3 && chalcogen.getCharge() == 0) {
-					chalcogen.addChargeAndProtons(1, 1);
+			else if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
+				for (Atom atom : group.getFrag().getAtomList()) {
+					if (atom.getElement().isChalcogen() && atom.getElement() != ChemEl.O &&
+							atom.getBondCount() == 3 && atom.getIncomingValency() == 3 && atom.getCharge() == 0) {
+						atom.addChargeAndProtons(1, 1);
+					}
 				}
 			}
 		}

@@ -231,8 +231,6 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="NCC[Se](=O)O" functionalIDs="6" defaultInID="1">selenohypotaurine|seleno-hypotaurine|selenohypotaurin|seleno-hypotaurin</token>
 		<token value="N(C(C)C(=O)O)CC(=O)O" functionalIDs="6,10" defaultInID="1">strombine</token>
 		<token value="NCCS(=O)(=O)O" functionalIDs="7" defaultInID="1">taurine|taurin</token>
-		<token value="N[C@@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" functionalIDs="26" defaultInID="1">s-adenosylmethionine|s-adenosyl-l-methionine|s-adenosylmethionin|s-adenosyl-l-methionin</token>
-		<token value="N[C@H](CC[S+](C[C@@H]1[C@H]([C@H]([C@H](N2C=NC3=C2N=CN=C3N)O1)O)O)C)C(O)=O" functionalIDs="26" defaultInID="1">s-adenosyl-d-methionine|s-adenosyl-d-methionin</token>
 		<token value="NCC[Se](=O)(=O)O" functionalIDs="7" defaultInID="1">selenotaurine|seleno-taurine|selenotaurin|seleno-taurin</token>
 		<token value="NC(=N)NCCS(=O)(=O)O" functionalIDs="10">taurocyamine|taurocyamin</token>
 		<token value="N(C(C)C(=O)O)CCS(=O)(=O)O" functionalIDs="6,12" defaultInID="1">tauropine|tauropin</token>
