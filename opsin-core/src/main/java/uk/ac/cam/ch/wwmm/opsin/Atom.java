@@ -386,6 +386,9 @@ class Atom {
 	 * @param isotope
 	 */
 	void setIsotope(Integer isotope) {
+		if (isotope != null && isotope < chemEl.ATOMIC_NUM) {
+			throw new RuntimeException("Isotopic mass cannot be less than the element's number of protons: " + chemEl.toString() + " " + isotope + " < " + chemEl.ATOMIC_NUM );
+		}
 		this.isotope = isotope;
 	}
 
