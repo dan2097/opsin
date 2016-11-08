@@ -7,6 +7,7 @@
 <!-- 3AA-9.2 added common examples of 'iso'-amino acids -->
 <!-- L-/D-/DL- etc. are handled by the grammar-->
 <!-- Make sure that the substitutable N is given the defaultInID, and do not include the modifiable acid but note its position using suffixAppliesTo-->
+<!-- The 99 locant of arginine like amino acids is a cludge to prevent the N5 and Nomega nitrogens being confused-->
 <tokenLists>
 	<tokenList tagname="group" type="aminoAcid" subType="endInIne" symbol="¨" >
 		<token value="N[C@@H](C)C" labels="/2,alpha/3,beta/1" suffixAppliesTo="4" defaultInID="1">alan</token>
@@ -79,7 +80,7 @@
 
 <!--homo amino acids-->
 		<token value="N[C@@H](CC)C" labels="/2,alpha/3,beta/4,gamma/1" suffixAppliesTo="5" defaultInID="1">homoalan</token>
-		<token value="N[C@@H](CCCCNC(=N)N)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" suffixAppliesTo="11" defaultInID="1">homoargin</token>
+		<token value="N[C@@H](CCCCNC(N)=N)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//guanidino-C,99/omega/omega'/1" suffixAppliesTo="11" defaultInID="1">homoargin</token>
 		<token value="N[C@@H](CCCCNC(=O)N)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" suffixAppliesTo="11" defaultInID="1">homocitrull</token>
 		<token value="N[C@@H](CCCSC)C" labels="/2,alpha/3,beta/4,gamma/5,delta//methyl/1" suffixAppliesTo="8" defaultInID="1">homomethion</token>
 		<token value="N[C@@H](CCSCC[C@H](N)C)C" suffixAppliesTo="10,11" defaultInID="1">homolanthion</token>
@@ -92,7 +93,7 @@
 <!--beta amino acids-->
 		<token value="NCCC" labels="/3,beta/2,alpha/1" suffixAppliesTo="4" defaultInID="1">beta-alan</token>
 		<token value="N[C@@H](C)CC" suffixAppliesTo="5" defaultInID="1">beta-homoalan</token>
-		<token value="N[C@@H](CCCNC(=N)N)CC" labels="/3,beta/4,gamma/5,delta/6,epsilon/////2,alpha/1" suffixAppliesTo="11" defaultInID="1">beta-homoargin</token>
+		<token value="N[C@@H](CCCNC(N)=N)CC" labels="/3,beta/4,gamma/5,delta/6,epsilon//guanidino-C,99/omega/omega'/2,alpha/1" suffixAppliesTo="11" defaultInID="1">beta-homoargin</token>
 		<token value="N[C@@H](CC(N)=O)CC" labels="/3,beta/4,gamma/5,delta///2,alpha/1" suffixAppliesTo="8" defaultInID="1">beta-homoasparag</token>
 		<token value="N1[C@H](CC)C[C@@H](O)C1" labels="1/2///3/4//5" suffixAppliesTo="4" defaultInID="1">beta-homohydroxyprol</token>
 		<token value="N[C@@H]([C@@H](C)CC)CC" labels="/3,beta/3'/4,gamma/5,delta/6,epsilon/2,alpha/1" suffixAppliesTo="8" defaultInID="1">beta-homoisoleuc</token>
@@ -183,8 +184,8 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 
 		<token value="N[C@@H](CCCNC(N)=N)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1//" functionalIDs="12,12" defaultInID="1">arginamide|arginamid</token>
 		<token value="N[C@@H](CCCNC(N)=N)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta//guanidino-C,99/omega/omega'/1//" functionalIDs="12" defaultInID="1">arginate|arginat</token>
-		<token value="N[C@@H](CCCCNC(=N)N)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1//" functionalIDs="13,13" defaultInID="1">homoarginamide|homoarginamid</token>
-		<token value="N[C@@H](CCCCNC(=N)N)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1//" functionalIDs="13" defaultInID="1">homoarginate|homoarginat</token>
+		<token value="N[C@@H](CCCCNC(N)=N)C(=O)N" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//guanidino-C,99/omega/omega'/1//" functionalIDs="13,13" defaultInID="1">homoarginamide|homoarginamid</token>
+		<token value="N[C@@H](CCCCNC(N)=N)C(=O)[O-]" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//guanidino-C,99/omega/omega'/1//" functionalIDs="13" defaultInID="1">homoarginate|homoarginat</token>
 		<token value="N[C@@H](CCS(=O)C)C(=O)O" labels="/2,alpha/3,beta/4,gamma///methyl/1//" functionalIDs="10" defaultInID="1">methionine sulfoxide|methioninesulfoxide|methionin sulfoxid|methionin-sulfoxid|methioninsulfoxid|methionine oxide|methionineoxide|methionin oxid|methionin-oxid|methioninoxid</token>
 		<token value="OCCCNC([C@H](O)C(C)(C)CO)=O">pantothenol|panthenol</token>
 		<token value="N1[C@@H](CCC1=O)C(=O)O" labels="/2,alpha/3,beta/4,gamma/5,delta//1//" functionalIDs="9" defaultInID="1">pidolic acid|pidolicacid</token>
