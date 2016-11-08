@@ -78,10 +78,7 @@ class XmlDeclarations {
 	
 	/** A delta used to indicate the position of a double bond in older nomenclature*/
 	static final String DELTA_EL ="delta";
-	
-	/** Used in amino acid and carbohydrate nomenclature to indicate stereochemistry*/
-	static final String DLSTEREOCHEMISTRY_EL ="dlStereochemistry";
-	
+		
 	/**A fractional multiplier e.g. hemi*/
 	static final String FRACTIONALMULTIPLIER_EL ="fractionalMultiplier";
 
@@ -341,6 +338,9 @@ class XmlDeclarations {
 	
 	/**A functional group describing a divalent group*/
 	static final String DIVALENTGROUP_TYPE_VAL ="diValentGroup";
+	
+	/** This stereochemsitry element indicates the configuration of an amino acid/carbohydrate relative to glyceraldehyde*/
+	static final String DLSTEREOCHEMISTRY_TYPE_VAL ="dlStereochemistry";
 	
 	/**This stereochemistry element conveys endo/exo/syn/anti stereochemistry
 	 * These indicate relative orientation of groups attached to non-bridgehead atoms in a bicyclo[x.y.z]alkane (x >= y > z > 0)*/

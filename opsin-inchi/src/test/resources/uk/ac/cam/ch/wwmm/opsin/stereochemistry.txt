@@ -1,2 +1,6 @@
 (3xi)-threonine	InChI=1S/C4H9NO3/c1-2(6)3(5)4(7)8/h2-3,6H,5H2,1H3,(H,7,8)/t2?,3-/m0/s1
 D-(+)-glucose	InChI=1S/C6H12O6/c7-1-3(9)5(11)6(12)4(10)2-8/h1,3-6,8-12H,2H2/t3-,4+,5+,6+/m0/s1
+L-2-phenylglycine	InChI=1S/C8H9NO2/c9-7(8(10)11)6-4-2-1-3-5-6/h1-5,7H,9H2,(H,10,11)/t7-/m0/s1
+L-2-Aminobutyric acid	InChI=1S/C4H9NO2/c1-2-3(5)4(6)7/h3H,2,5H2,1H3,(H,6,7)/t3-/m0/s1
+D-2-Aminobutyric acid	InChI=1S/C4H9NO2/c1-2-3(5)4(6)7/h3H,2,5H2,1H3,(H,6,7)/t3-/m1/s1
+L-5-oxopyrrolidine-2-carboxylic acid	InChI=1S/C5H7NO3/c7-4-2-1-3(6-4)5(8)9/h3H,1-2H2,(H,6,7)(H,8,9)/t3-/m0/s1

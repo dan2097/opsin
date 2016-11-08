@@ -2516,7 +2516,7 @@ class ComponentGenerator {
 							throw new ComponentGenerationException("Carbohydrate appears to be a glycosyl, but " + groupValue + " indicates the open chain form!");
 						}
 					}
-					Element alphaOrBetaLocantEl = OpsinTools.getPreviousSiblingIgnoringCertainElements(carbohydrate, new String[]{STEREOCHEMISTRY_EL, DLSTEREOCHEMISTRY_EL});
+					Element alphaOrBetaLocantEl = OpsinTools.getPreviousSiblingIgnoringCertainElements(carbohydrate, new String[]{STEREOCHEMISTRY_EL});
 					if (alphaOrBetaLocantEl != null && alphaOrBetaLocantEl.getName().equals(LOCANT_EL) ){
 						String value = alphaOrBetaLocantEl.getValue();
 						if (value.equals("alpha") || value.equals("beta") || value.equals("alpha,beta") || value.equals("beta,alpha")){

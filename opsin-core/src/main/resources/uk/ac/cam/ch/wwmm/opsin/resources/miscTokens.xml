@@ -65,7 +65,7 @@
 		<token value="spiroOldMethod">spiro|spiro-</token>
 	</tokenList>
 
-	<tokenList tagname="dlStereochemistry" symbol="Ü">
+	<tokenList tagname="stereoChemistry" type="dlStereochemistry" symbol="Ü">
 		<token value="d">d-|(d)-</token>
 		<token value="l">l-|(l)-</token>
 		<token value="dl">dl-|d,l-|(dl)-</token>
