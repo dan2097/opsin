@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -130,6 +131,9 @@ class StereochemistryHandler {
 		else if (stereoChemistryType.equals(ALPHA_OR_BETA_TYPE_VAL)){
 			assignAlphaBetaXiStereochem(stereoChemistryEl);
 		}
+		else if (stereoChemistryType.equals(DLSTEREOCHEMISTRY_TYPE_VAL)){
+			assignDlStereochem(stereoChemistryEl);
+		}
 		else if (stereoChemistryType.equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
@@ -179,7 +183,7 @@ class StereochemistryHandler {
 	 * @throws StereochemistryException 
 	 */
 	private void assignStereoCentre(Element stereoChemistryEl) throws StructureBuildingException, StereochemistryException {
-		//generally the LAST group in this list will be the appropriate groups e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
+		//generally the LAST group in this list will be the appropriate group e.g. (5S)-5-ethyl-6-methylheptane where the heptane is the appropriate group
 		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
@@ -814,6 +818,85 @@ class StereochemistryHandler {
 			}
 			notExplicitlyDefinedStereoCentreMap.remove(stereoAtom);
 		}
+	}
+	
+	private void assignDlStereochem(Element stereoChemistryEl) throws StructureBuildingException {
+		String dOrL = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+		Element elementToApplyTo = OpsinTools.getNextSiblingIgnoringCertainElements(stereoChemistryEl, new String[]{STEREOCHEMISTRY_EL});
+		if (elementToApplyTo != null
+				&& elementToApplyTo.getName().equals(GROUP_EL)
+				&& attemptAssignmentOfDlStereoToFragment(elementToApplyTo.getFrag(), dOrL)){
+			// D/L adjacent to group that now has an appropriate stereocentre e.g. glycine
+			return;
+		}
+
+		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
+		//generally the LAST group in this list will be the appropriate group
+		//we use the same algorithm as for unlocanted substitution so as to deprecate assignment into brackets
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
+		}
+		for (Fragment fragment : possibleFragments) {
+			if (attemptAssignmentOfDlStereoToFragment(fragment, dOrL)) {
+				return;
+			}
+		}
+		throw new StereochemistryException("Could not find stereocentre to apply " + dOrL.toUpperCase(Locale.ROOT) + " stereochemistry to");
+	}
+
+
+	private boolean attemptAssignmentOfDlStereoToFragment(Fragment fragment, String dOrL) throws StereochemistryException, StructureBuildingException {
+		List<Atom> atomList = fragment.getAtomList();
+		for (Atom potentialStereoAtom : atomList) {
+			if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom) && potentialStereoAtom.getBondCount() == 4) {
+				List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
+				Atom acidGroup = null;//A carbon connected to non-carbons e.g. COOH
+				Atom amineOrAlcohol = null;//N or O e.g. NH2 (as this may be substituted don't check H count)
+				Atom sideChain = null;//A carbon
+				Atom hydrogen = null;//A hydrogen
+				for (Atom atom : neighbours) {
+					ChemEl el = atom.getElement();
+					if (el == ChemEl.H) {
+						hydrogen = atom;
+					}
+					else if (el == ChemEl.C) {
+						int chalcogenNeighbours = 0;
+						for (Atom neighbour2 : atom.getAtomNeighbours()) {
+							if (atom == neighbour2) {
+								continue;
+							}
+							if (neighbour2.getElement().isChalcogen()) {
+								chalcogenNeighbours++;
+							}
+						}
+						if (chalcogenNeighbours > 0) {
+							acidGroup = atom;
+						}
+						else {
+							sideChain = atom;
+						}
+					}
+					else if (el == ChemEl.O || el ==ChemEl.N) {
+						amineOrAlcohol = atom;
+					}
+				}
+				if (acidGroup != null && amineOrAlcohol != null && sideChain != null && hydrogen != null) {
+					Atom[] atomRefs4 = new Atom[]{acidGroup, sideChain, amineOrAlcohol, hydrogen};
+					if (dOrL.equals("l") || dOrL.equals("ls")){
+						potentialStereoAtom.setAtomParity(atomRefs4, -1);
+					} else if (dOrL.equals("d") || dOrL.equals("ds")){
+						potentialStereoAtom.setAtomParity(atomRefs4, 1);
+					} else{
+						throw new RuntimeException("OPSIN bug: Unexpected value for D/L stereochemistry found: " + dOrL );
+					}
+					notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	static int swapsRequiredToSort(Atom[] atomRefs4){

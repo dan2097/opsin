@@ -127,7 +127,7 @@ public class ComponentProcessorTest {
 		aminoAcidEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
-		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "l");
+		assertEquals(true, processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "l"));
 		assertEquals(parityBefore, f.getAtomByID(2).getAtomParity().getParity());
 	}
 	
@@ -139,7 +139,7 @@ public class ComponentProcessorTest {
 		aminoAcidEl.setFrag(f);
 		int parityBefore = f.getAtomByID(2).getAtomParity().getParity();
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
-		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d");
+		assertEquals(true, processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d"));
 		assertEquals(parityBefore, -f.getAtomByID(2).getAtomParity().getParity());
 	}
 	
@@ -150,18 +150,18 @@ public class ComponentProcessorTest {
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
 		aminoAcidEl.setFrag(f);
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
-		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl");
+		assertEquals(true, processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl"));
 		assertEquals(null, f.getAtomByID(2).getAtomParity());
 	}
 	
-	@Test(expected=ComponentGenerationException.class)
+	@Test
 	public void testDLStereochemistryDOnAchiralAminoAcid() throws ComponentGenerationException, StructureBuildingException{
 		BuildState state = new BuildState(mock(NameToStructureConfig.class));
 		Fragment f = state.fragManager.buildSMILES("NC(C)C");
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
 		aminoAcidEl.setFrag(f);
 		ComponentProcessor processor = new ComponentProcessor(mock(SuffixRulesLookup.class), state);
-		processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d");
+		assertEquals(false, processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "d"));
 	}
 	
 	@Test

@@ -1224,23 +1224,25 @@ class ComponentProcessor {
 	}
 
 	private void applyDLPrefixes(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> dlStereochemistryEls = subOrRoot.getChildElements(DLSTEREOCHEMISTRY_EL);
+		List<Element> dlStereochemistryEls = OpsinTools.getChildElementsWithTagNameAndAttribute(subOrRoot, STEREOCHEMISTRY_EL, TYPE_ATR, DLSTEREOCHEMISTRY_TYPE_VAL);
 		for (Element dlStereochemistry : dlStereochemistryEls) {
 			String dlStereochemistryValue = dlStereochemistry.getAttributeValue(VALUE_ATR);
 			Element elementToApplyTo = OpsinTools.getNextSibling(dlStereochemistry);
 			if (elementToApplyTo == null){
-				throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
+				continue;
 			}
 			String type = elementToApplyTo.getAttributeValue(TYPE_ATR);
 			if (OPTICALROTATION_TYPE_VAL.equals(type)) {
 				elementToApplyTo = OpsinTools.getNextSibling(elementToApplyTo);
-				if (elementToApplyTo == null){
-					throw new RuntimeException("OPSIN bug: DL stereochemistry found in inappropriate position");
+				if (elementToApplyTo == null) {
+					continue;
 				}
 				type = elementToApplyTo.getAttributeValue(TYPE_ATR);
 			}
 			if (AMINOACID_TYPE_VAL.equals(type)) {
-				applyDlStereochemistryToAminoAcid(elementToApplyTo, dlStereochemistryValue);
+				if (!applyDlStereochemistryToAminoAcid(elementToApplyTo, dlStereochemistryValue)){
+					continue;
+				}
 			}
 			else if (CARBOHYDRATE_TYPE_VAL.equals(type)) {
 				applyDlStereochemistryToCarbohydrate(elementToApplyTo, dlStereochemistryValue);
@@ -1249,23 +1251,24 @@ class ComponentProcessor {
 				applyDlStereochemistryToCarbohydrateConfigurationalPrefix(elementToApplyTo, dlStereochemistryValue);
 			}
 			else{
-				throw new RuntimeException("OPSIN bug: Unrecognised element after DL stereochemistry: " +elementToApplyTo.toXML());
+				continue;
 			}
 			dlStereochemistry.detach();
 		}
 	}
 
-	void applyDlStereochemistryToAminoAcid(Element aminoAcidEl, String dlStereochemistryValue) throws ComponentGenerationException {
+	boolean applyDlStereochemistryToAminoAcid(Element aminoAcidEl, String dlStereochemistryValue) throws ComponentGenerationException {
 		Fragment aminoAcid = aminoAcidEl.getFrag();
 		List<Atom> atomList = aminoAcid.getAtomList();
 		List<Atom> atomsWithParities = new ArrayList<Atom>();
 		for (Atom atom : atomList) {
-			if (atom.getAtomParity()!=null){
+			if (atom.getAtomParity() != null) {
 				atomsWithParities.add(atom);
 			}
 		}
-		if (atomsWithParities.isEmpty()){
-			throw new ComponentGenerationException("D/L stereochemistry :" +dlStereochemistryValue + " found before achiral amino acid");
+		if (atomsWithParities.isEmpty()) {
+			//achiral amino acid... but may become chiral after substitution
+			return false;
 		}
 		if (dlStereochemistryValue.equals("dl")){
 			for (Atom atom : atomsWithParities) {
@@ -1279,7 +1282,7 @@ class ComponentProcessor {
 			} else if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("ds")){
 				invert = true;
 			} else{
-				throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before amino acid: " + dlStereochemistryValue );
+				throw new RuntimeException("OPSIN bug: Unexpected value for D/L stereochemistry found before amino acid: " + dlStereochemistryValue );
 			}
 			if ("yes".equals(aminoAcidEl.getAttributeValue(NATURALENTISOPPOSITE_ATR))){
 				invert = !invert;
@@ -1291,6 +1294,7 @@ class ComponentProcessor {
 				}
 			}
 		}
+		return true;
 	}
 
 	void applyDlStereochemistryToCarbohydrate(Element carbohydrateEl, String dlStereochemistryValue) throws ComponentGenerationException {
