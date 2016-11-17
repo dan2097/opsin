@@ -2099,7 +2099,7 @@ class ComponentProcessor {
 								locants.remove(locantBeforeHWSystem);
 							}
 							else if (heteroAtoms.size()>1){
-								throw new ComponentGenerationException("Mismatch between number of locants and HW heteroatoms");
+								throw new ComponentGenerationException("Mismatch between number of locants and Hantzsch-Widman heteroatoms");
 							}
 						}
 					}
@@ -2790,7 +2790,7 @@ class ComponentProcessor {
 					String heteroAtomElement =heteroatom.getAttributeValue(VALUE_ATR);
 					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(heteroAtomElement);
 					if (!m.find()){
-						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
+						throw new ComponentGenerationException("Failed to extract element from Hantzsch-Widman heteroatom");
 					}
 					heteroAtomElement = m.group();
 					if (heteroAtomElement.equals("N")){
@@ -2809,7 +2809,7 @@ class ComponentProcessor {
 					}
 				}
 				if (saturatedRing && !hasNitrogen && hasSiorGeorSnorPb){
-					throw new ComponentGenerationException("Blocked HW system (6 member saturated ring with no nitrogen but has Si/Ge/Sn/Pb)");
+					throw new ComponentGenerationException("Blocked Hantzsch-Widman system (6 member saturated ring with no nitrogen but has Si/Ge/Sn/Pb)");
 				}
 			}
 			StringBuilder nameSB = new StringBuilder();
@@ -2831,7 +2831,7 @@ class ComponentProcessor {
 					String specialInstruction =specialRingInformation[0];
 					if (!specialInstruction.equals("")){
 						if (specialInstruction.equals("blocked")){
-							throw new ComponentGenerationException("Blocked HW system");
+							throw new ComponentGenerationException("Blocked Hantzsch-Widman system");
 						}
 						else if (specialInstruction.equals("saturated")){
 							for (Atom a: atomList) {
@@ -2842,7 +2842,7 @@ class ComponentProcessor {
 							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null){
 								Element nextEl = OpsinTools.getNextSibling(group);
 								if (nextEl != null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR) == null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
-									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a HW ring");
+									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a Hantzsch-Widman ring");
 								}
 							}
 						}
@@ -2850,12 +2850,12 @@ class ComponentProcessor {
 							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null){
 								Element nextEl = OpsinTools.getNextSibling(group);
 								if (nextEl==null || (nextEl!=null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ate"))){
-									throw new ComponentGenerationException(name +" has the syntax for a HW ring but probably does not mean that in this context");
+									throw new ComponentGenerationException(name +" has the syntax for a Hantzsch-Widman ring but probably does not mean that in this context");
 								}
 							}
 						}
 						else{
-							throw new ComponentGenerationException("OPSIN Bug: Unrecognised special HW ring instruction");
+							throw new ComponentGenerationException("OPSIN Bug: Unrecognised special Hantzsch-Widman ring instruction");
 						}
 					}
 					//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
@@ -2880,7 +2880,7 @@ class ComponentProcessor {
 				String elementReplacement = heteroatom.getAttributeValue(VALUE_ATR);
 				Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
 				if (!m.find()){
-					throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
+					throw new ComponentGenerationException("Failed to extract element from Hantzsch-Widman heteroatom");
 				}
 				elementReplacement = m.group();
 				Atom a = hwRing.getAtomByLocantOrThrow(locant);
@@ -2923,18 +2923,18 @@ class ComponentProcessor {
 					//assume benzo fusions or hwring as a fusion prefix produce unambiguous heteroatom positioning
 					if (!(possibleBenzo != null && (possibleBenzo.getValue().equals("benz") || possibleBenzo.getValue().equals("benzo"))
 							|| "o".equals(group.getAttributeValue((SUBSEQUENTUNSEMANTICTOKEN_ATR))))) {
-						state.addIsAmbiguous("Heteroatom positioning in the Hantzsch–Widman name " + name);
+						state.addIsAmbiguous("Heteroatom positioning in the Hantzsch-Widman name " + name);
 					}
 				}
 				if (hetAtomsToProcess > carbonAtomsInRing.size()) {
-					throw new StructureBuildingException("More unlocanted heteroatoms than size of HW ring: " + heteroatomsToProcess.size() +" " + carbonAtomsInRing);
+					throw new StructureBuildingException(hetAtomsToProcess +" heteroatoms were specified for a Hantzsch-Widman ring with only " + carbonAtomsInRing.size() + " atoms");
 				}
 				for (int i = 0; i < hetAtomsToProcess; i++) {
 					Element heteroatom = heteroatomsToProcess.get(i);
 					String elementReplacement = heteroatom.getAttributeValue(VALUE_ATR);
 					Matcher m = MATCH_ELEMENT_SYMBOL.matcher(elementReplacement);
 					if (!m.find()){
-						throw new ComponentGenerationException("Failed to extract element from HW heteroatom");
+						throw new ComponentGenerationException("Failed to extract element from Hantzsch-Widman heteroatom");
 					}
 					elementReplacement = m.group();
 					Atom a = carbonAtomsInRing.get(i);
