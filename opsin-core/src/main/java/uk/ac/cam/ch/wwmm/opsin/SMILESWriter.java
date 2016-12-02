@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -138,6 +139,7 @@ class SMILESWriter {
 		List<String> positionVariationBonds = new ArrayList<String>();
 		Integer lastLabel = null;
 		int attachmentPointCounter = 1;
+		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
 		for (int i = 0, l = smilesOutputOrder.size(); i < l; i++) {
@@ -158,7 +160,17 @@ class SMILESWriter {
 					atomLabels.add("star_e");
 				}
 				else {
-					atomLabels.add("_AP" + String.valueOf(attachmentPointCounter++));
+					Integer atomClass = a.getProperty(Atom.ATOM_CLASS);
+					if (atomClass != null) {
+						seenAttachmentpoints.add(atomClass);
+					}
+					else {
+						do {
+							atomClass = attachmentPointCounter++;
+						}
+						while (seenAttachmentpoints.contains(atomClass));
+					}
+					atomLabels.add("_AP" + String.valueOf(atomClass));
 				}
 				lastLabel = i;
 			}
