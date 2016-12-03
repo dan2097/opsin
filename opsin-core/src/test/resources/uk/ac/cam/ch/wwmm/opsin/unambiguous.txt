@@ -59,3 +59,4 @@ methane-d
 3,3,3-trifluoro-propane-2-d-1-ol
 2,2,2-trifluoro-ethane-d
 2-chloro-6-(methyl-d3)-benzene-d
+tridemethylcaffeine

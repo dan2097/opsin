@@ -900,45 +900,6 @@ class FragmentTools {
 		}
 		return true;
 	}
-
-
-	/**
-	 * Removes a terminal atom of a particular element e.g. oxygen
-	 * A locant may be specified to indicate what atom is adjacent to the atom to be removed
-	 * Formally the atom is replaced by hydrogen, hence stereochemistry is intentionally preserved
-	 * @param state 
-	 * @param fragment
-	 * @param chemEl
-	 * @param locant A locant or null
-	 * @throws StructureBuildingException 
-	 */
-	static void removeHydroxyLikeTerminalAtom(BuildState state, Fragment fragment, ChemEl chemEl, String locant) throws StructureBuildingException {
-		List<Atom> applicableTerminalAtoms;
-		if (locant!=null){
-			Atom adjacentAtom = fragment.getAtomByLocantOrThrow(locant);
-			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(adjacentAtom.getAtomNeighbours(), chemEl);
-			if (applicableTerminalAtoms.isEmpty()){
-				throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " at locant "+ locant +" for subtractive nomenclature");
-			}
-		}
-		else{
-			applicableTerminalAtoms = findHydroxyLikeTerminalAtoms(fragment.getAtomList(), chemEl);
-			if (applicableTerminalAtoms.isEmpty()){
-				throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " for subtractive nomenclature");
-			}
-		}
-		Atom atomToRemove = applicableTerminalAtoms.get(0);
-		if (isFunctionalAtom(atomToRemove)){//This can occur with aminoglycosides where the anomeric OH is removed by deoxy
-			for (int i = 0, l = fragment.getFunctionalAtomCount(); i < l; i++) {
-				if (atomToRemove.equals(fragment.getFunctionalAtom(i).getAtom())){
-					fragment.removeFunctionalAtom(i);
-					break;
-				}
-			}
-			fragment.addFunctionalAtom(atomToRemove.getFirstBond().getOtherAtom(atomToRemove));
-		}
-		removeTerminalAtom(state, atomToRemove);
-	}
 	
 	static void removeTerminalAtom(BuildState state, Atom atomToRemove) {
 		AtomParity atomParity =  atomToRemove.getAtomNeighbours().get(0).getAtomParity();

@@ -505,6 +505,8 @@ class StructureBuildingMethods {
 		 */
 
 		List<Atom> atomsToDehydro = new ArrayList<Atom>();
+		//locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
+		Map<ChemEl, Integer> unlocantedSubtractivePrefixes = new HashMap<ChemEl, Integer>();
 
 		for(int i = subtractivePrefixElements.size() -1; i >= 0; i--) {
 			Element subtractivePrefix = subtractivePrefixElements.get(i);
@@ -512,8 +514,13 @@ class StructureBuildingMethods {
 			if (type.equals(DEOXY_TYPE_VAL)){
 				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
 				ChemEl chemEl = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
-				//locant can be null but locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
-				FragmentTools.removeHydroxyLikeTerminalAtom(state, thisFrag, chemEl, locant);
+				if (locant == null) {
+					Integer count = unlocantedSubtractivePrefixes.get(chemEl);
+					unlocantedSubtractivePrefixes.put(chemEl, count != null ? count + 1 : 1);
+				}
+				else {
+					applySubtractivePrefix(state, thisFrag, chemEl, locant);
+				}
 			}
 			else if (type.equals(ANHYDRO_TYPE_VAL)){
 				applyAnhydroPrefix(state, thisFrag, subtractivePrefix);
@@ -531,6 +538,9 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("OPSIN bug: Unexpected subtractive prefix type: " + type);
 			}
 			subtractivePrefix.detach();
+		}
+		for (Entry<ChemEl, Integer> entry : unlocantedSubtractivePrefixes.entrySet()) {
+			applyUnlocantedSubtractivePrefixes(state, thisFrag, entry.getKey(), entry.getValue());
 		}
 		
 		if (atomsToDehydro.size() > 0){
@@ -669,6 +679,68 @@ class StructureBuildingMethods {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Removes a terminal atom of a particular element e.g. oxygen
+	 * The locant specifies the atom adjacent to the atom to be removed
+	 * Formally the atom is replaced by hydrogen, hence stereochemistry is intentionally preserved
+	 * @param state 
+	 * @param fragment
+	 * @param chemEl
+	 * @param locant A locant or null
+	 * @throws StructureBuildingException 
+	 */
+	static void applySubtractivePrefix(BuildState state, Fragment fragment, ChemEl chemEl, String locant) throws StructureBuildingException {
+		Atom adjacentAtom = fragment.getAtomByLocantOrThrow(locant);
+		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(adjacentAtom.getAtomNeighbours(), chemEl);
+		if (applicableTerminalAtoms.isEmpty()) {
+			throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " at locant "+ locant +" for subtractive nomenclature");
+		}
+		Atom atomToRemove = applicableTerminalAtoms.get(0);
+		if (FragmentTools.isFunctionalAtom(atomToRemove)) {//This can occur with aminoglycosides where the anomeric OH is removed by deoxy
+			for (int i = 0, len = fragment.getFunctionalAtomCount(); i < len; i++) {
+				if (atomToRemove.equals(fragment.getFunctionalAtom(i).getAtom())) {
+					fragment.removeFunctionalAtom(i);
+					break;
+				}
+			}
+			fragment.addFunctionalAtom(atomToRemove.getFirstBond().getOtherAtom(atomToRemove));
+		}
+		FragmentTools.removeTerminalAtom(state, atomToRemove);
+	}
+	
+	/**
+	 * Removes terminal atoms of a particular element e.g. oxygen
+	 * The number to remove is decided by the count
+	 * Formally the atom is replaced by hydrogen, hence stereochemistry is intentionally preserved
+	 * @param state
+	 * @param fragment
+	 * @param chemEl
+	 * @param count
+	 * @throws StructureBuildingException
+	 */
+	static void applyUnlocantedSubtractivePrefixes(BuildState state, Fragment fragment, ChemEl chemEl, int count) throws StructureBuildingException {
+		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(fragment.getAtomList(), chemEl);
+		if (applicableTerminalAtoms.isEmpty() || applicableTerminalAtoms.size() < count) {
+			throw new StructureBuildingException("Unable to find terminal atom of type: " + chemEl + " for subtractive nomenclature");
+		}
+		if (AmbiguityChecker.isSubstitutionAmbiguous(applicableTerminalAtoms, count)) {
+			state.addIsAmbiguous("Group to remove with subtractive prefix");
+		}
+		for (int i = 0; i < count; i++) {
+			Atom atomToRemove = applicableTerminalAtoms.get(i);
+			if (FragmentTools.isFunctionalAtom(atomToRemove)) {//This can occur with aminoglycosides where the anomeric OH is removed by deoxy
+				for (int j = 0, len = fragment.getFunctionalAtomCount(); j < len; j++) {
+					if (atomToRemove.equals(fragment.getFunctionalAtom(j).getAtom())) {
+						fragment.removeFunctionalAtom(j);
+						break;
+					}
+				}
+				fragment.addFunctionalAtom(atomToRemove.getFirstBond().getOtherAtom(atomToRemove));
+			}
+			FragmentTools.removeTerminalAtom(state, atomToRemove);
+		}
 	}
 
 	private static void applyAnhydroPrefix(BuildState state, Fragment frag, Element subtractivePrefix) throws StructureBuildingException {
