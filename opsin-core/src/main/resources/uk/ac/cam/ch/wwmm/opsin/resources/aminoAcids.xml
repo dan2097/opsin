@@ -28,7 +28,7 @@
 		<token value="N[C@@H](CC[Te]C)C" labels="/2,alpha/3,beta/4,gamma//methyl/1" suffixAppliesTo="7" defaultInID="1">telluromethion|telluro-methion</token>
 		<token value="N[C@@H](Cc1ccccc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="10" defaultInID="1">phenylalan</token>
 		<token value="NC(=Cc1ccccc1)C" labels="/alpha/beta/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="10" defaultInID="1">dehydrophenylalan|alpha,beta-dehydrophenylalan</token>
-		<token value="N1[C@H](C)CCC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">prol</token>
+		<token value="N1[C@@H](CCC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/" suffixAppliesTo="6" defaultInID="1">prol</token>
 		<token value="N[C@@H](CO)C" labels="/2,alpha/3,beta/O/1" suffixAppliesTo="5" defaultInID="1">ser</token>
 		<token value="N[C@@H]([C@H](O)C)C" labels="/2,alpha/3,beta/O/4,gamma/1" suffixAppliesTo="6" defaultInID="1">threon</token>
 		<token value="N[C@@H]([C@@H](O)C)C" labels="/2,alpha/3,beta/O/4,gamma/1" suffixAppliesTo="6" defaultInID="1">allothreon|allo-threon</token>
@@ -44,7 +44,7 @@
 		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(c(I)c2)O)C" suffixAppliesTo="22" defaultInID="1">thyrox</token>
 		<token value="N[C@@H](CCCCNC([C@H]1[C@H](C)CC=N1)=O)C" suffixAppliesTo="16" defaultInID="1">pyrrolys</token>
 		<token value="N[C@@H](CSC[C@H](N)C)C" suffixAppliesTo="8,9" defaultInID="1">lanthion</token>
-		<token value="N1[C@H](C)C[C@@H](O)C1" labels="1/2//3/4//5" suffixAppliesTo="3" defaultInID="1">hydroxyprol</token>
+		<token value="N1[C@@H](C[C@@H](O)C1)C" labels="1/2,alpha/3,beta/4,gamma//5,delta/1" suffixAppliesTo="7" defaultInID="1">hydroxyprol</token>
 		<token value="N[C@@H](CC[C@@H](O)CN)C" labels="/2,alpha/3,beta/4,gamma/5,delta//6,epsilon//1" suffixAppliesTo="9" defaultInID="1">hydroxylys</token>
 		<token value="ON(C=O)CC" suffixAppliesTo="6">hadacid</token>
 		<token value="NCC(O)C" labels="/3,beta/2,alpha//1" suffixAppliesTo="5" defaultInID="1">isoser|iso-ser</token>
@@ -71,7 +71,7 @@
 		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)O)C" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O/" suffixAppliesTo="13" defaultInID="1">diiodotyros|di-iodotyros</token>
 		<token value="N[C@@H](Cc1cc(I)c(c(I)c1)Oc2cc(I)c(cc2)O)C" labels="/alpha/beta/1/2/3//4/5//6//1'/2'/3'//4'/5'/6'//" suffixAppliesTo="21" defaultInID="1">triiodothyron|tri-iodothyron</token>
 		<token value="N[C@@H](C(C)(C)C)C" suffixAppliesTo="7" defaultInID="1">tertiaryleuc|tertiary-leuc|tertleuc|tert-leuc|tert.leuc|tert.-leuc|t-leuc</token>
-		<token value="N1[C@H](C)CSC1" labels="1/2//3/4/5" suffixAppliesTo="3" defaultInID="1">thiaprol|thioprol</token>
+		<token value="N1[C@@H](CSC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/" suffixAppliesTo="6" defaultInID="1">thiaprol|thioprol</token>
 		<token value="N[C@@H](C(C)(C)CO)C" suffixAppliesTo="8" defaultInID="1">panton</token>
 		<token value="N[C@@H](CCCC[N+](C)(C)C)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" suffixAppliesTo="11" defaultInID="1">lamin</token>
 		<token value="N[C@@H](CCCCN[C@H](C(=O)O)CCC(=O)O)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon///////////1" suffixAppliesTo="17" defaultInID="1">saccharop</token>
@@ -86,6 +86,7 @@
 		<token value="N[C@@H](CCSCC[C@H](N)C)C" suffixAppliesTo="10,11" defaultInID="1">homolanthion</token>
 		<token value="N[C@@H](CCC(C)C)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6',epsilon'/6,epsilon/1" suffixAppliesTo="8" defaultInID="1">homoleuc</token>
 		<token value="N[C@@H](CCc1ccccc1)C" labels="/alpha/beta/gamma/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="11" defaultInID="1">homophenylalan</token>
+		<token value="N1[C@@H](CCCC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" suffixAppliesTo="7" defaultInID="1">homoprol</token>
 		<token value="N[C@@H](CCC#C)C" labels="/2,alpha/3,beta////1" suffixAppliesTo="7" defaultInID="1">homopropargylglyc</token>
 		<token value="N[C@@H](CCO)C" labels="/2,alpha/3,beta/4,gamma/O/1" suffixAppliesTo="6" defaultInID="1">homoser</token>
 		<token value="N[C@@H](CCc1ccc(cc1)O)C" labels="/alpha/beta/gamma/1/2,ortho/3,meta/4,para/5/6/O/" suffixAppliesTo="12" defaultInID="1">homotyros</token>
@@ -95,13 +96,13 @@
 		<token value="N[C@@H](C)CC" suffixAppliesTo="5" defaultInID="1">beta-homoalan</token>
 		<token value="N[C@@H](CCCNC(N)=N)CC" labels="/3,beta/4,gamma/5,delta/6,epsilon//guanidino-C,99/omega/omega'/2,alpha/1" suffixAppliesTo="11" defaultInID="1">beta-homoargin</token>
 		<token value="N[C@@H](CC(N)=O)CC" labels="/3,beta/4,gamma/5,delta///2,alpha/1" suffixAppliesTo="8" defaultInID="1">beta-homoasparag</token>
-		<token value="N1[C@H](CC)C[C@@H](O)C1" labels="1/2///3/4//5" suffixAppliesTo="4" defaultInID="1">beta-homohydroxyprol</token>
+		<token value="N1[C@@H](C[C@@H](O)C1)CC" labels="1/2/3/4//5//" suffixAppliesTo="8" defaultInID="1">beta-homohydroxyprol</token>
 		<token value="N[C@@H]([C@@H](C)CC)CC" labels="/3,beta/3'/4,gamma/5,delta/6,epsilon/2,alpha/1" suffixAppliesTo="8" defaultInID="1">beta-homoisoleuc</token>
 		<token value="N[C@@H](CC(C)C)CC" labels="/3,beta/4,gamma/5,delta/6',epsilon'/6,epsilon/2,alpha/1" suffixAppliesTo="8" defaultInID="1">beta-homoleuc</token>
 		<token value="N[C@@H](CCCCN)CC" labels="/3,beta/4,gamma/5,delta/6,epsilon/7,zeta//2,alpha/1" suffixAppliesTo="9" defaultInID="1">beta-homolys</token>
 		<token value="N[C@@H](CCSC)CC" labels="/3,beta/4,gamma/5,delta//methyl/2,alpha/1" suffixAppliesTo="8" defaultInID="1">beta-homomethion</token>
 		<token value="N[C@@H](Cc1ccccc1)CC" labels="/beta/gamma/1/2,ortho/3,meta/4,para/5/6/alpha/" suffixAppliesTo="11" defaultInID="1">beta-homophenylalan</token>
-		<token value="N1[C@H](CC)CCC1" labels="1/2///3/4/5" suffixAppliesTo="4" defaultInID="1">beta-homoprol</token>
+		<token value="N1[C@@H](CCC1)CC" labels="1/2,alpha/3,beta/4,gamma/5,delta//" suffixAppliesTo="7" defaultInID="1">beta-homoprol</token>
 		<token value="N[C@@H](CC#C)CC" labels="/3,beta////2,alpha/1" suffixAppliesTo="7" defaultInID="1">beta-homopropargylglyc</token>
 		<token value="N[C@@H](CO)CC" labels="/3,beta/4,gamma/O/2,alpha/1" suffixAppliesTo="6" defaultInID="1">beta-homoser</token>
 		<token value="N[C@@H]([C@H](O)C)CC" labels="/3,beta/4,gamma/O/5,delta/2,alpha/1" suffixAppliesTo="7" defaultInID="1">beta-homothreon</token>
