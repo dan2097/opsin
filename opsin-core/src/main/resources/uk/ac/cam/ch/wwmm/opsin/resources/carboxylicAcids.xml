@@ -95,7 +95,9 @@
 		<token value="Cc1c(O)cc(O)cc1C" labels="/1/2//3/4//5/6/">orsellin|o-orsellin|ortho-orsellin</token>
 		<token value="Cc1c(O)cc(C)cc1O" labels="/1/2,ortho//3,meta/4,para//5/6/">p-orsellin|para-orsellin</token>
 		<token value="CC(=O)Nc1ccccc1" labels="1/2///1/2/3/4/5/6">oxanil</token>
-		<token value="N1C(C)CCCC1" labels="1/2//3/4/5/6" suffixAppliesTo="3">pipecolin|pipecol</token>
+		<token value="N1[C@H](CCCC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" suffixAppliesTo="7">d-pipecolin|d(+)-pipecolin|d-(+)-pipecolin|d-pipecol|d(+)-pipecol|d-(+)-pipecol</token>
+		<token value="N1[C@@H](CCCC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" suffixAppliesTo="7">l-pipecolin|l(-)-pipecolin|l-(-)-pipecolin|l-pipecol|l(-)-pipecol|l-(-)-pipecol</token>
+		<token value="N1C(CCCC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" suffixAppliesTo="7">pipecolin|pipecol</token>
 		<token value="CC(=O)C" labels="1/2//3">pyruv</token>
 		<token value="S(=O)c1ccccc1" labels="//1/2,ortho/3,meta/4,para/5/6" addGroup="N locant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">sulfanil</token>
 		<token value="CCS" labels="1/2/">thioglycol</token>
