@@ -2718,6 +2718,21 @@ class ComponentProcessor {
 					}
 				}
 			}
+			else if (groupValue.equals("adenosin") || groupValue.equals("cytidin") || groupValue.equals("guanosin") || groupValue.equals("inosin")
+					 || groupValue.equals("uridin") || groupValue.equals("xanthosin")){
+				//These groups are 2'-deoxy by convention
+				Element previous = OpsinTools.getPreviousSibling(group);
+				if (previous != null && previous.getName().equals(SUBTRACTIVEPREFIX_EL) && 
+						previous.getAttributeValue(TYPE_ATR).equals(DEOXY_TYPE_VAL) && previous.getAttributeValue(VALUE_ATR).equals("O")
+						&& previous.getAttribute(LOCANT_ATR) == null) {
+					Element prev2 = OpsinTools.getPrevious(previous);
+					if (prev2 == null || !prev2.getName().equals(SUBTRACTIVEPREFIX_EL)) {
+						Fragment frag = group.getFrag();
+						StructureBuildingMethods.applySubtractivePrefix(state, frag, ChemEl.O, "2'");
+						previous.detach();
+					}
+				}
+			}
 
 			if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) 
 					&& group.getAttribute(DEFAULTINID_ATR) == null
