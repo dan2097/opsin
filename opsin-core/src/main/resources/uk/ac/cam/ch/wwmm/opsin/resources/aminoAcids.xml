@@ -61,6 +61,7 @@
 		<token value="NC1(CCCC1)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/1" suffixAppliesTo="7" defaultInID="1">cycloleuc</token>
 		<token value="N[C@@](C)(CC)C" labels="/2,alpha//3,beta/4,gamma/1" suffixAppliesTo="6" defaultInID="1">isoval|iso-val</token>
 		<token value="N[C@@H](C(C)(C)S)C" suffixAppliesTo="7" defaultInID="1">penicillam</token>
+		<token value="N[C@@H](c1ccccc1)C" labels="/alpha/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="9" defaultInID="1">phenylglyc</token>
 		<token value="N[C@@H](CCC(=O)NCC)C" labels="/2,alpha/3,beta/4,gamma//////1" suffixAppliesTo="10" defaultInID="1">thean</token>
 		<token value="N[C@@H](CSC(C)(C)CCO)C" labels="/2,alpha/3,beta////////1" suffixAppliesTo="11" defaultInID="1">felin</token>
 		<token value="N[C@@H](CCCCN=[N+]=[N-])C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon////1" suffixAppliesTo="10" defaultInID="1">azidolys</token><!--somewhat of a misnomer-->

@@ -185,6 +185,8 @@
 		<token value="Cc1c(OC)c(OC)ccc1" labels="/1/2,ortho///3,meta///4,para/5/6">o-veratr|orthoveratr|ortho-veratr</token>
 		<token value="CCc1c(OC)c(OC)ccc1" labels="/alpha/1/2,ortho///3,meta///4,para/5/6">o-homoveratr|orthohomoveratr|ortho-homoveratr</token>
 		<token value="CCCCCCCC\C=C/CCCCCC" labels="numeric" usableAsAJoiner="yes">palmitole</token>
+		<token value="S1C(C)(C)[C@H](C)N2[C@H]1CC2=O" labels="1/2///3//4/5/6/7/" suffixAppliesTo="6">penicillan</token>
+		<token value="S1C(C)(C)[C@H](C)N2[C@H]1[C@H](N)C2=O" labels="1/2///3//4/5/6//7/" suffixAppliesTo="6">6-aminopenicillan</token><!--6-APA-->
 		<token value="CCCCC\C=C/CCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">petroselin|petrosel</token>
 		<token value="[nH]1ccccc1" labels="1/2,ortho,alpha/3,meta,beta/4,para,gamma/5/6" addGroup="C locant 2" suffixAppliesTo="7" frontLocantsExpected="2,ortho,alpha,3,meta,beta,4,para,gamma">picol</token><!--contraction-->
 		<token value="Cc1cc(O)c(O)cc1" labels="/1/2,ortho/3,meta//4,para//5/6">protocatechu</token>
