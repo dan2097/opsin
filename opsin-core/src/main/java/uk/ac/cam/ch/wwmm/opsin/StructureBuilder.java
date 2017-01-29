@@ -426,17 +426,18 @@ class StructureBuilder {
 	}
 
 	private void buildFunctionalClassEster(List<Element> words) throws StructureBuildingException {
-		if (!words.get(0).getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
+		Element firstWord = words.get(0);
+		if (!firstWord.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())) {
 			throw new StructureBuildingException("Don't alter wordRules.xml without checking the consequences!");
 		}
-		resolveWordOrBracket(state, words.get(0));//the group
-		BuildResults acidBr = new BuildResults(words.get(0));
+		resolveWordOrBracket(state, firstWord);//the group
+		BuildResults acidBr = new BuildResults(firstWord);
 
-		if (acidBr.getFunctionalAtomCount()==0){
+		if (acidBr.getFunctionalAtomCount()==0) {
 			throw new StructureBuildingException("No functionalAtoms detected!");
 		}
 
-		int wordCountMinus1 = words.size() -1;
+		int wordCountMinus1 = words.size() - 1;
 		if (wordCountMinus1 < 2 || !words.get(wordCountMinus1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())) {
 			throw new StructureBuildingException("OPSIN Bug: Bug in functionalClassEster rule; 'ester' not found where it was expected");
 		}
@@ -444,40 +445,38 @@ class StructureBuilder {
 		for (int i = 1; i < wordCountMinus1; i++) {
 			Element currentWord = words.get(i);
 			String wordType  = currentWord.getAttributeValue(TYPE_ATR);
-			if (!wordType.equals(WordType.substituent.toString())){
-				if (wordType.equals(WordType.functionalTerm.toString()) && currentWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("ester")){
+			if (!wordType.equals(WordType.substituent.toString())) {
+				if (wordType.equals(WordType.functionalTerm.toString()) && currentWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("ester")) {
 					//superfluous ester word
 					continue;
 				}
 				throw new StructureBuildingException("OPSIN Bug: Bug in functionalClassEster rule; Encountered: " + currentWord.getAttributeValue(VALUE_ATR));
 			}
-			if (acidBr.getFunctionalAtomCount()==0){
-				throw new StructureBuildingException("Insufficient functionalAtoms on acid");
-			}
 			resolveWordOrBracket(state, currentWord);
 			BuildResults substituentBr = new BuildResults(currentWord);
-			if (substituentBr.getOutAtomCount() ==1){
+			int outAtomCount = substituentBr.getOutAtomCount();
+			if (acidBr.getFunctionalAtomCount() < outAtomCount) {
+				throw new StructureBuildingException("Insufficient functionalAtoms on acid");
+			}
+			for (int j = 0; j < outAtomCount; j++) {
 				String locantForSubstituent = currentWord.getAttributeValue(LOCANT_ATR);
 				Atom functionalAtom;
-				if (locantForSubstituent!=null){
-					functionalAtom =determineFunctionalAtomToUse(locantForSubstituent, acidBr);
+				if (locantForSubstituent != null) {
+					functionalAtom = determineFunctionalAtomToUse(locantForSubstituent, acidBr);
 				}
 				else{
-					functionalAtom =acidBr.getFunctionalAtom(0);
+					functionalAtom = acidBr.getFunctionalAtom(0);
 					acidBr.removeFunctionalAtom(0);
 				}
-				if (substituentBr.getOutAtom(0).getValency()!=1){
+				if (substituentBr.getOutAtom(j).getValency() != 1) {
 					throw new StructureBuildingException("Substituent was expected to have only have an outgoing valency of 1");
 				}
-				state.fragManager.createBond(functionalAtom, getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentBr, 0), 1);
-				if (functionalAtom.getCharge()==-1){
+				state.fragManager.createBond(functionalAtom, getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentBr, j), 1);
+				if (functionalAtom.getCharge() == -1) {
 					functionalAtom.neutraliseCharge();
 				}
-				substituentBr.removeOutAtom(0);
 			}
-			else {
-				throw new StructureBuildingException("Substituent was expected to have one outAtom");
-			}
+			substituentBr.removeAllOutAtoms();
 		}
 	}
 	
