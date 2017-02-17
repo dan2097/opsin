@@ -8,23 +8,23 @@
 
 <!ELEMENT token (#PCDATA)>
 <!ATTLIST token value CDATA #REQUIRED
-        labels CDATA #IMPLIED
-        fusedRingNumbering CDATA #IMPLIED
-        defaultInLocant CDATA #IMPLIED
-        defaultInID CDATA #IMPLIED
-        outIDs CDATA #IMPLIED
         acceptsAdditiveBonds CDATA #IMPLIED
-        iminoLike CDATA #IMPLIED
-        naturalEntIsOpposite CDATA #IMPLIED
-        functionalIDs CDATA #IMPLIED
+        addBond CDATA #IMPLIED
         addGroup CDATA #IMPLIED
         addHeteroAtom CDATA #IMPLIED
-        addBond CDATA #IMPLIED
-        usableAsAJoiner CDATA #IMPLIED
+        additionalValue CDATA #IMPLIED
+        alphaBetaClockWiseAtomOrdering CDATA #IMPLIED
+        commonOxidationStatesAndMax CDATA #IMPLIED
+        defaultInID CDATA #IMPLIED
+        defaultInLocant CDATA #IMPLIED
         frontLocantsExpected CDATA #IMPLIED
+        functionalIDs CDATA #IMPLIED
+        fusedRingNumbering CDATA #IMPLIED
+        iminoLike CDATA #IMPLIED
+        labels CDATA #IMPLIED
+        locant CDATA #IMPLIED>
+        naturalEntIsOpposite CDATA #IMPLIED
+        outIDs CDATA #IMPLIED
         suffixAppliesTo CDATA #IMPLIED
         suffixAppliesToByDefault CDATA #IMPLIED
-        additionalValue CDATA #IMPLIED
-        commonOxidationStatesAndMax CDATA #IMPLIED
-        alphaBetaClockWiseAtomOrdering CDATA #IMPLIED
-        locant CDATA #IMPLIED>
+        usableAsAJoiner CDATA #IMPLIED
