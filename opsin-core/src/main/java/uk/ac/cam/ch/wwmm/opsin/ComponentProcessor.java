@@ -247,6 +247,7 @@ class ComponentProcessor {
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
 		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
+		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
 		return thisFrag;
 	}
 	
@@ -657,6 +658,27 @@ class ComponentProcessor {
 						}
 					}
 				}
+			}
+		}
+	}
+	
+	private static void applyHomologyGroupLabelsIfSpecified(Element group, Fragment frag) {
+		String homologyValsStr = group.getAttributeValue(HOMOLOGY_ATR);
+		if (homologyValsStr != null) {
+			String[] vals = MATCH_SEMICOLON.split(homologyValsStr);
+			
+			List<Atom> homologyAtoms = new ArrayList<Atom>();
+			for (Atom a : frag.getAtomList()) {
+				if (a.getElement() == ChemEl.R) {
+					homologyAtoms.add(a);
+				}
+			}
+			int count = vals.length;
+			if (count != homologyAtoms.size()) {
+				throw new RuntimeException("OPSIN Bug: Number of homology atoms should match number of homology labels! for: " + group.getValue() );
+			}
+			for (int i = 0; i < count; i++) {
+				homologyAtoms.get(i).setProperty(Atom.HOMOLOGY_GROUP, vals[i]);
 			}
 		}
 	}

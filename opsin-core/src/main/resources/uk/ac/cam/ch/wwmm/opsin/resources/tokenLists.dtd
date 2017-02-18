@@ -28,6 +28,7 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
         frontLocantsExpected CDATA #IMPLIED
         functionalIDs CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
+        homology CDATA #IMPLIED
         iminoLike CDATA #IMPLIED
         labels CDATA #IMPLIED
         locant CDATA #IMPLIED>
@@ -52,6 +53,7 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
   frontLocantsExpected == Comma separated list of locants indicating what locants are expected in front of this group. If one of these locants is found it will preferentially be assigned to the suffix of the group. The group should correspond to a retained name. (codified in P-29.6 of IUPAC 2004 rules)
   functionalIDs == Comma separated IDs of locations which are functionalIDs on a group. IDs are relative to this particular fragment (first atom =1). Functional IDs are used in ester formation.
   fusedRingNumbering == The numbering to use for a ring when used in a fused ring system. Same syntax as labels attribute. It is only necessary where the ring has non-standard numbering that does not proceed regularly around the edge of the fused ring system c.f. purine
+  homology == Semi-colon delimited list of labels for * atoms, used for when * atoms represent generic groups (homology groups) e.g. Alkyl
   iminoLike == yes or absent. If present indicates that the substituent can either be -X- or X= or even -X=. It changes some behaviour to encourage substitutive bonding rather than additive bonds where this substituent is involved. This attribute is mostly ignored when doing polymers for which imino is always -N-
   labels == Slash delimited list of locants. List must be the same length as number of atoms. Multiple locants can be given to an atom by comma delimiting them
   locant == Used for an/ane to prevent a locant being given
