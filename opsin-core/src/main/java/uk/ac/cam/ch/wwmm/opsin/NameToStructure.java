@@ -289,30 +289,34 @@ public class NameToStructure {
 
 		System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
 		String outputType = cmd.getOptionValue("o", "smi");
-		if (outputType.equalsIgnoreCase("cml")){
+		if (outputType.equalsIgnoreCase("cml")) {
 			interactiveCmlOutput(input, output, n2sconfig);
 		}
-		else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")){
-			interactiveSmilesOutput(input, output, n2sconfig);
+		else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")) {
+			interactiveSmilesOutput(input, output, n2sconfig, false);
 		}
-		else if (outputType.equalsIgnoreCase("inchi")){
+		else if (outputType.equalsIgnoreCase("inchi")) {
 			interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH);
 		}
-		else if (outputType.equalsIgnoreCase("stdinchi")){
+		else if (outputType.equalsIgnoreCase("stdinchi")) {
 			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi);
 		}
-		else if (outputType.equalsIgnoreCase("stdinchikey")){
+		else if (outputType.equalsIgnoreCase("stdinchikey")) {
 			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey);
+		}
+		else if (outputType.equalsIgnoreCase("extendedsmi") || outputType.equalsIgnoreCase("extendedsmiles") || 
+				outputType.equalsIgnoreCase("cxsmi") || outputType.equalsIgnoreCase("cxsmiles")) {
+			interactiveSmilesOutput(input, output, n2sconfig, true);
 		}
 		else{
 			System.err.println("Unrecognised output format: " + outputType);
 			System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\", \"stdinchi\" and \"stdinchikey\"");
 			System.exit(1);
 		}
-		if (unparsedArgs.length == 1){
+		if (unparsedArgs.length == 1) {
 			input.close();
 		}
-		else if (unparsedArgs.length == 2){
+		else if (unparsedArgs.length == 2) {
 			input.close();
 			output.close();
 		}
@@ -338,6 +342,7 @@ public class NameToStructure {
 		outputOptionsDesc.append("Allowed values are:").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("cml for Chemical Markup Language").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("smi for SMILES").append(OpsinTools.NEWLINE);
+		outputOptionsDesc.append("extendedsmi for Extended SMILES").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("inchi for InChI (with FixedH)").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchi for StdInChI").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchikey for StdInChIKey");
@@ -396,14 +401,14 @@ public class NameToStructure {
 		writer.close();
 	}
 	
-	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException {
+	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean extendedSmiles) throws IOException {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
 		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 		String name;
 		while((name =inputReader.readLine()) != null) {
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
-			String output = result.getSmiles();
+			String output = extendedSmiles ? result.getExtendedSmiles() : result.getSmiles();
 			if(output == null) {
 				System.err.println(result.getMessage());
 			} else {
