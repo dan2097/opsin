@@ -31,12 +31,13 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
         homology CDATA #IMPLIED
         iminoLike CDATA #IMPLIED
         labels CDATA #IMPLIED
-        locant CDATA #IMPLIED>
+        locant CDATA #IMPLIED
         naturalEntIsOpposite CDATA #IMPLIED
         outIDs CDATA #IMPLIED
         suffixAppliesTo CDATA #IMPLIED
         suffixAppliesToByDefault CDATA #IMPLIED
         usableAsAJoiner CDATA #IMPLIED
+>
 <!--
   (the #PCDATA inside the tag) = the string to match
   value == Meaning depends on the name of the element e.g. SMILES for group, value of multipler for multiplier etc.
@@ -61,5 +62,5 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
   outIDs == Comma separated IDs of locations of radicals on a substituent. Typically used on substituents to create multivalent substituents. IDs are relative to this particular fragment (first atom = 1)
   suffixAppliesTo == comma separated IDs indicating where the suffix following a group should be applied. Currently used to direct the formation of trivial di-acids. IDs are relative to this particular fragment first atom = 1)
   suffixAppliesToByDefault == same as suffixAppliesTo but can be overridden by given locants
-  usableAsAJoiner == yes or absent. Can the substituent be implicitly bracketed to a previous substitutent e.g. methylaminobenzene --> (methylamino)benzene as amino has this attribute
+  usableAsAJoiner == yes or absent. Can the substituent be implicitly bracketed to a previous substitutent e.g. methylaminobenzene becomes (methylamino)benzene as amino has this attribute
   -->

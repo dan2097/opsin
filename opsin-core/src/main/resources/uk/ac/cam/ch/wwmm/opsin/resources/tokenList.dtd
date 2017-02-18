@@ -23,9 +23,10 @@
         homology CDATA #IMPLIED
         iminoLike CDATA #IMPLIED
         labels CDATA #IMPLIED
-        locant CDATA #IMPLIED>
+        locant CDATA #IMPLIED
         naturalEntIsOpposite CDATA #IMPLIED
         outIDs CDATA #IMPLIED
         suffixAppliesTo CDATA #IMPLIED
         suffixAppliesToByDefault CDATA #IMPLIED
         usableAsAJoiner CDATA #IMPLIED
+>
