@@ -236,6 +236,9 @@ class XmlDeclarations {
 
 	/**Numbering to use when ring is part of a fused ring system */
 	static final String FUSEDRINGNUMBERING_ATR = "fusedRingNumbering";
+	
+	/**Semi-colon delimited list of labels for * atoms, where the * atoms represent generic groups e.g. Alkyl*/
+	static final String HOMOLOGY_ATR = "homology";
 
 	/**Indicates that the substituent can either be -X- or X=  depending on context cf. imino or methylene*/
 	static final String IMINOLIKE_ATR = "iminoLike";

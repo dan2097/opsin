@@ -20,6 +20,7 @@
         frontLocantsExpected CDATA #IMPLIED
         functionalIDs CDATA #IMPLIED
         fusedRingNumbering CDATA #IMPLIED
+        homology CDATA #IMPLIED
         iminoLike CDATA #IMPLIED
         labels CDATA #IMPLIED
         locant CDATA #IMPLIED>
