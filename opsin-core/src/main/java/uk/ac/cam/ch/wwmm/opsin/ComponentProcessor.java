@@ -197,7 +197,7 @@ class ComponentProcessor {
 			addImplicitBracketsToAminoAcids(groups, brackets);
 			for (Element substituent : substituents) {
 				matchLocantsToIndirectFeatures(substituent);
-				addImplicitBracketsInCaseWhereSubstituentHasTwoLocants(substituent, brackets);
+				addImplicitBracketsWhenSubstituentHasTwoLocants(substituent, brackets);
 				implicitlyBracketToPreviousSubstituentIfAppropriate(substituent, brackets);
 			}
 			for (Element root : roots) {
@@ -5494,12 +5494,12 @@ class ComponentProcessor {
 	 * @param substituent
 	 * @param brackets
 	 */
-	private void addImplicitBracketsInCaseWhereSubstituentHasTwoLocants(Element substituent, List<Element> brackets) {
+	private void addImplicitBracketsWhenSubstituentHasTwoLocants(Element substituent, List<Element> brackets) {
 		Element siblingSubstituent = OpsinTools.getNextSibling(substituent);
-		if (siblingSubstituent != null && siblingSubstituent.getName().equals(SUBSTITUENT_EL)){
+		if (siblingSubstituent != null && siblingSubstituent.getName().equals(SUBSTITUENT_EL)) {
 			List<Element> locants = getLocantsAtStartOfSubstituent(substituent);
 			if (locants.size() == 2 && locantsAreSingular(locants)
-					&& getLocantsAtStartOfSubstituent(siblingSubstituent).size() == 0){
+					&& getLocantsAtStartOfSubstituent(siblingSubstituent).size() == 0) {
 				Element bracket = new GroupingEl(BRACKET_EL);
 				bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
 				Element parent = substituent.getParent();
@@ -5527,8 +5527,8 @@ class ComponentProcessor {
 	 */
 	private List<Element> getLocantsAtStartOfSubstituent(Element substituent) {
 		List<Element> locants = new ArrayList<Element>();
-		List<Element> children = substituent.getChildElements();
-		for (Element child : children) {
+		for (int i = 0, len = substituent.getChildCount(); i < len; i++) {
+			Element child = substituent.getChild(i);
 			String currentElementName = child.getName();
 			if (currentElementName.equals(LOCANT_EL)){
 				locants.add(child);
