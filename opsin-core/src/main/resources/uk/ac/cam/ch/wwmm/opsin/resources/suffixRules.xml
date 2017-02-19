@@ -42,6 +42,10 @@ sense of this -->
 		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
 		<addgroup SMILES="[*](=O)N" outIDs="3"/>
 	</rule>
+	<rule value="amidrazone">
+		<addSuffixPrefixIfNonePresentAndCyclic SMILES="C"/>
+		<addgroup SMILES="[*](=N)NN" labels="/N''/N'/N" /><!--double bond position not actually known-->
+	</rule>
 	<rule value="amine">
 		<addgroup SMILES="[*]N" />
 	</rule>
