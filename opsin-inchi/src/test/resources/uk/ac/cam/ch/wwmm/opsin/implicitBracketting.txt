@@ -14,3 +14,5 @@ tert-butyldimethylsilanoxycyclohexane	InChI=1S/C12H26OSi/c1-12(2,3)14(4,5)13-11-
 tert-butyl(dimethyl)siloxycyclohexane	InChI=1S/C12H26OSi/c1-12(2,3)14(4,5)13-11-9-7-6-8-10-11/h11H,6-10H2,1-5H3
 tert-butyl-dimethylsiloxycyclohexane	InChI=1S/C12H26OSi/c1-12(2,3)14(4,5)13-11-9-7-6-8-10-11/h11H,6-10H2,1-5H3
 tert-butyldiphenylsiloxycyclohexane	InChI=1S/C22H30OSi/c1-22(2,3)24(20-15-9-5-10-16-20,21-17-11-6-12-18-21)23-19-13-7-4-8-14-19/h5-6,9-12,15-19H,4,7-8,13-14H2,1-3H3
+pyridine ditrifluoroacetate	InChI=1S/C5H5N.2C2HF3O2/c1-2-4-6-5-3-1;2*3-2(4,5)1(6)7/h1-5H;2*(H,6,7)
+bis-tetrabutylammonium phosphate	InChI=1S/2C16H36N.H3O4P/c2*1-5-9-13-17(14-10-6-2,15-11-7-3)16-12-8-4;1-5(2,3)4/h2*5-16H2,1-4H3;(H3,1,2,3,4)/q2*+1;/p-2
