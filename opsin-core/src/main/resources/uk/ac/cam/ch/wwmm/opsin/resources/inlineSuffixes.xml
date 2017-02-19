@@ -38,7 +38,6 @@
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes-->
-		<token value="amido">amido</token>
 		<token value="oyl">oyl</token>
 		<token value="yl">yl</token>
 		<token value="ylidene">ylidene|yliden</token>
