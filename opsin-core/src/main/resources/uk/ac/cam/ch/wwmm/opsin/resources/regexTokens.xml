@@ -22,11 +22,11 @@
 	<regex name="%openBracket%" regex="[\[\(\{]"/>
 	<regex name="%closeBracket%" regex="[\]\)\}]"/>
 	<regex name="%locantNoPrime%" regex="([1-9][0-9]*[a-g]?)"/><!--standard numeric locant with optional letter-->
-	<regex name="%superScriptedNumber%" regex="(\^[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+%closeBracket%|\~[0-9]+\~|\*[0-9]+\*)"/><!--In cases where a superscript is expected anyway: ^num or ^num^^ or ^(num) or (num) or ~num~ or *num*-->
+	<regex name="%superScriptedNumber%" regex="(\^[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+%closeBracket%|\~[0-9]+\~|\*[0-9]+\*|\&lt;[0-9]+\&gt;)"/><!--In cases where a superscript is expected anyway: ^num or ^num^^ or ^(num) or (num) or ~num~ or *num* or &lt;num&gt;-->
 	<regex name="%locant%" regex="([1-9][0-9]*[a-g]?'*)"/><!--standard numeric locant with optional letter/primes-->
 	<regex name="%locantDoesNotEndInLetter%" regex="([1-9][0-9]*([a-g]'+)?'*)"/><!--as above but doesn't end in a letter-->
 	<regex name="%greek%" regex="([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[gG][aA][mM][mM][aA]|[dD][eE][lL][tT][aA]|[eE][pP][sS][iI][lL][oO][nN]|[zZ][eE][tT][aA]|[eE][tT][aA]|[oO][mM][eE][gG][aA])"/>
-	<regex name="%superScriptedLocant%" regex="(\^(%locant%|%greek%'*)(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?(%locant%|%greek%'*)%closeBracket%|\~(%locant%|%greek%'*)\~|\*(%locant%|%greek%'*)\*)"/><!--as superScriptedNumber but locant instead of number -->
+	<regex name="%superScriptedLocant%" regex="(\^(%locant%|%greek%'*)(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?(%locant%|%greek%'*)%closeBracket%|\~(%locant%|%greek%'*)\~|\*(%locant%|%greek%'*)\*|\&lt;(%locant%|%greek%'*)\&gt;)"/><!--as superScriptedNumber but locant instead of number -->
 
 <!--Assembles the rather large regex for detecting all locant variants-->
 	<regex name="%locantTypes%" regex="(%locant%(-%elementSymbol%'*)?|%elementSymbol%'*(%locant%|%superScriptedLocant%|%greek%'*)?|%greek%'*)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N' etc.-->
@@ -47,7 +47,7 @@
 	<regexToken regex="(%lambdaConvention%,|%locantTypes%,)*(%lambdaConvention%,(%lambdaConvention%,|%locantTypes%,)*(%locantTypes%-|%locantTypesOptionalHyphen%-?)|%lambdaConvention%-?)" symbol="¡" tagname="lambdaConvention" determinise="yes" /><!--a set of either locants or lamdas. There must be at least one lambda-->
 	<regexToken regex="[sS][pP][iI][rR][oO]-?%openBracket%[1-9][0-9]*([\.,][0-9]+%superScriptedNumber%?)+%closeBracket%-?" symbol="S" tagname="spiro" determinise="yes"/>
 
-	<regex name="%superScriptedVonBaeyerDescriptor%" regex="([\.,][0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|\*[0-9]+,[0-9]+\*|[0-9]+,[0-9]+))"/>
+	<regex name="%superScriptedVonBaeyerDescriptor%" regex="([\.,][0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|\*[0-9]+,[0-9]+\*|\&lt;[0-9]+,[0-9]+\&gt;|[0-9]+,[0-9]+))"/>
 	<regexToken regex="[cC][yY][cC][lL][oO]-?%openBracket%[0-9]+[\.,][0-9]+[\.,][0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%-?" symbol="B" tagname="vonBaeyer" determinise="yes"/>
 	<regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
