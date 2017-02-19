@@ -84,7 +84,7 @@ class ComponentGenerator {
 	private static final Pattern matchHdigit =Pattern.compile("H\\d");
 	private static final Pattern matchDigit =Pattern.compile("\\d+");
 	private static final Pattern matchNonDigit =Pattern.compile("\\D+");
-	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\]\\)\\}]+)[^\\[\\(\\{]*");
+	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)[^\\[\\(\\{]*");
 	private static final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
 	private static final Pattern matchBracketAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{](.*)[\\]\\)\\}]$");
 	private static final Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
