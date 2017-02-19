@@ -493,7 +493,7 @@
 
 <!--Prefixes that MUST be used to perform functional replacement-->
 	<tokenList tagname="group" type="substituent" subType="dedicatedFunctionalReplacementPrefix" symbol="x">
-		<token value="-N">amido</token>
+		<token value="-N" usableAsAJoiner="yes">amido</token><!--Interpret as amino if preceded by a carbonyl suffix-->
 		<token value="-NN">hydrazido</token>
 		<token value="=N">imido</token>
 		<token value="#N">nitrido</token>
