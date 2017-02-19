@@ -309,7 +309,7 @@
 		<token value="-SO">sulfeno</token>
 
 		<token value="-N=O">nitroso</token>
-		<token value="-C(=O)O">carboxy</token>
+		<token value="-C(=O)O">carboxy|carboxyl</token>
 		<token value="-C(=O)[O-]">carboxylato</token>
 		<token value="-C(N)=N" usableAsAJoiner="yes" defaultInID="2">amidino|guanyl</token>
 
