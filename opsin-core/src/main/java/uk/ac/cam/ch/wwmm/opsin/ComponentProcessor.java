@@ -212,10 +212,11 @@ class ComponentProcessor {
 
 			moveErroneouslyPositionedLocantsAndMultipliers(brackets);//e.g. (tetramethyl)azanium == tetra(methyl)azanium
 			List<Element> children = OpsinTools.getChildElementsWithTagNames(word, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
-			while (children.size() == 1){
+			addImplicitBracketsWhenFirstSubstituentHasTwoMultipliers(children.get(0), brackets);//e.g. ditrifluoroacetic acid --> di(trifluoroacetic acid)
+			while (children.size() == 1) {
 				children = OpsinTools.getChildElementsWithTagNames(children.get(0), new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
 			}
-			if (children.size() > 0){
+			if (children.size() > 0) {
 				assignLocantsToMultipliedRootIfPresent(children.get(children.size() - 1));//multiplicative nomenclature e.g. methylenedibenzene or 3,4'-oxydipyridine
 			}
 			substituentsAndRootAndBrackets =OpsinTools.combineElementLists(substituentsAndRoot, brackets);//implicit brackets may have been created
@@ -5441,6 +5442,45 @@ class ComponentProcessor {
 				}
 			}
 		}
+	}
+	
+
+	/**
+	 * Checks for case where the term is a substituent that starts with two multipliers
+	 * Interprets the first as a word level multiplier and the second as a substituent multiplier by adding an implicit bracket
+	 * @param substituent
+	 * @param brackets
+	 */
+	private void addImplicitBracketsWhenFirstSubstituentHasTwoMultipliers(Element substituent, List<Element> brackets) {
+		if (!substituent.getName().equals(SUBSTITUENT_EL)) {
+			return;
+		}
+		List<Element> multipliers = new ArrayList<Element>();
+		for (int i = 0, len = substituent.getChildCount(); i < len; i++) {
+			Element child = substituent.getChild(i);
+			if (child.getName().equals(MULTIPLIER_EL)) {
+				multipliers.add(child);
+			}
+			else {
+				break;
+			}
+		}
+		if (multipliers.size() != 2) {
+			return;
+		}
+		Element bracket = new GroupingEl(BRACKET_EL);
+		bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
+		Element parent = substituent.getParent();
+		List<Element> elsToAddToBracket = parent.getChildElements();
+		Element wordMultiplier = multipliers.get(0);
+		wordMultiplier.detach();
+		bracket.addChild(wordMultiplier);
+		for (Element el : elsToAddToBracket) {
+			el.detach();
+			bracket.addChild(el);
+		}
+		parent.addChild(bracket);
+		brackets.add(bracket);
 	}
 
 
