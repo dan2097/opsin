@@ -80,12 +80,12 @@ al is allowed on standardGroup/aminoAcids but not on acidStems c.f. acetal != ac
 	<tokenList tagname="suffix" type="root" subType="terminal" symbol="¥">
 		<token value="aldehyde">aldehyde|aldehyd</token>
 		<token value="amide">amide|amid</token>
-		<token value="amidrazone">amidrazone|amidrazon</token>
-		<token value="amidylium">amidylium</token>
 		<token value="amidium">amidium</token>
 		<token value="anilide">anilide|anilid</token>
 		<token value="amidine">amidine|amidin</token><!--deprecated-->
 		<token value="amidinium">amidinium</token><!--deprecated-->
+		<token value="amidrazone">amidrazone|amidrazon</token>
+		<token value="amidylium">amidylium</token>
 		<token value="ate">ate|at</token>
 		<token value="hydrazide">hydrazide|hydrazid</token>
 		<token value="hydroxamic">hydroxamic|hydroxamicacid|hydroxamic acid</token>
