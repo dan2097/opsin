@@ -337,6 +337,7 @@
 		<token value="C(=O)N" labels="1//N" defaultInID="3" functionalIDs="3,3">methanamide|methanamid</token>
 		<token value="CC(C)CCCC(C)CCCC(C)CCCC(C)(O)C(O)CO">phytantriol</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C(F)(F)F)c2" labels="1'/2'/3'//4'/5'///1/2//3/4//5/alpha////6">trifluorothymidine|trifluorothymidin</token><!--drug name-->
+		<token value="Cc1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]" labels="alpha/1/2,ortho////3,meta/4,para////5/6///">trinitrotoluene</token><!--2,4,6-->
 
 		<token value="C(=O)C(=O)N" labels="2//1//" functionalIDs="5,5">glyoxalylamide|glyoxalylamid</token>
 
