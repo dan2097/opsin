@@ -6,3 +6,4 @@ epoxybenzene	InChI=1S/C6H4O/c1-2-4-6-5(3-1)7-6/h1-4H
 2,3-epoxypyridine	InChI=1S/C5H3NO/c1-2-4-5(7-4)6-3-1/h1-3H
 methylenedioxydibenzene	InChI=1S/C13H12O2/c1-3-7-12(8-4-1)14-11-15-13-9-5-2-6-10-13/h1-10H,11H2
 3,4'-methylenedioxydipyridine	InChI=1S/C11H10N2O2/c1-2-11(8-13-5-1)15-9-14-10-3-6-12-7-4-10/h1-8H,9H2
+3,4-epoxy-1-phenyl-butane	InChI=1S/C10H12O/c1-2-4-9(5-3-1)6-7-10-8-11-10/h1-5,10H,6-8H2
