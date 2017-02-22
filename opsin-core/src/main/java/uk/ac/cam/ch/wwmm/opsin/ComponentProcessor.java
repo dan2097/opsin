@@ -905,11 +905,9 @@ class ComponentProcessor {
 			while (nextSubOrRootOrBracket != null) {
 				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
 				if (groupToConsider != null) {
-					if (containsCyclicAtoms(groupToConsider)) {
+					if (containsCyclicAtoms(groupToConsider) && OpsinTools.getPreviousSiblingsOfType(groupToConsider, LOCANT_EL).size() == 0) {
 						targetGroup = groupToConsider;
-						if (OpsinTools.getPreviousSiblingsOfType(targetGroup, LOCANT_EL).size() == 0) {
-							break;
-						}
+						break;
 					}
 					else {
 						standardGroup = groupToConsider;
@@ -920,7 +918,6 @@ class ComponentProcessor {
 			if (targetGroup == null) {
 				targetGroup = standardGroup;
 			}
-			
 			if (targetGroup == null) {
 				throw new ComponentGenerationException("Unable to find group for: " + ringBridges.get(0).getValue() +" to apply to!");
 			}
