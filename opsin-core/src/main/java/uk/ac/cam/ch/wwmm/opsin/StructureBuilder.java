@@ -1133,10 +1133,14 @@ class StructureBuilder {
 				}
 			}
 		}
-		int halideCount = functionalGroupFragments.size();
 		if (charge > 0) {
-			elementaryAtom.setCharge(charge - halideCount);
+			elementaryAtom.setCharge(charge - functionalGroupFragments.size());
 		}
+		
+		//[AlH3] --> [AlH4-] , [AlH4] --> [AlH4-]
+		applyAluminiumHydrideSpecialCase(firstWord, elementaryAtom, functionalGroupFragments);
+
+		int halideCount = functionalGroupFragments.size();
 		Integer maximumVal = ValencyChecker.getMaximumValency(elementaryAtom.getElement(), elementaryAtom.getCharge());
 		if (maximumVal != null && halideCount > maximumVal) {
 			throw new StructureBuildingException("Too many halides/psuedo halides addded to " +elementaryAtom.getElement());
@@ -1145,6 +1149,45 @@ class StructureBuilder {
 			Fragment ideFrag = functionalGroupFragments.get(i);
 			Atom ideAtom = ideFrag.getDefaultInAtomOrFirstAtom();
 			state.fragManager.incorporateFragment(ideFrag, ideAtom, elementaryAtomFrag, elementaryAtom, 1);
+		}
+	}
+
+	private void applyAluminiumHydrideSpecialCase(Element firstWord, Atom elementaryAtom,
+			List<Fragment> functionalGroupFragments) throws StructureBuildingException {
+		if ((elementaryAtom.getElement() == ChemEl.Al || elementaryAtom.getElement() == ChemEl.B)
+				&& elementaryAtom.getCharge() == 0) {
+			if (functionalGroupFragments.size() == 3) {
+				if (functionalGroupFragments.get(0).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H
+					&& functionalGroupFragments.get(1).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H
+					&& functionalGroupFragments.get(2).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H) {
+					Element counterCationWordRule = OpsinTools.getPreviousSibling(firstWord.getParent());
+					if (counterCationWordRule != null && counterCationWordRule.getChildCount() == 1) {
+						Element word =counterCationWordRule.getFirstChildElement(WORD_EL);
+						if (word != null && word.getChildCount() ==1) {
+							Element root = word.getFirstChildElement(ROOT_EL);
+							if (root != null && root.getChildCount() ==1) {
+								Element group = root.getFirstChildElement(GROUP_EL);
+								if (group != null && ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+									ChemEl chemEl = group.getFrag().getFirstAtom().getElement();
+									if (chemEl == ChemEl.Li || chemEl == ChemEl.Na || chemEl == ChemEl.K || chemEl == ChemEl.Rb || chemEl == ChemEl.Cs) {
+										functionalGroupFragments.add(state.fragManager.copyFragment(functionalGroupFragments.get(0)));
+										elementaryAtom.setCharge(-1);
+									}
+								}
+							}
+						}
+					}
+				
+				}
+			}
+			else if (functionalGroupFragments.size() == 4) {
+				if (functionalGroupFragments.get(0).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H
+					&& functionalGroupFragments.get(1).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H
+					&& functionalGroupFragments.get(2).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H
+					&& functionalGroupFragments.get(3).getDefaultInAtomOrFirstAtom().getElement() == ChemEl.H) {
+					elementaryAtom.setCharge(-1);
+				}
+			}
 		}
 	}
 	
