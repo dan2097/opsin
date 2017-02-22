@@ -388,11 +388,16 @@ class WordRules {
 									ChemEl chemEl2 = getChemElFromWordWithFunctionalGroup(functionalGroup);
 									if (!FragmentTools.isCovalent(chemEl1, chemEl2)) {//use separate word rules for ionic components
 										boolean specialCaseCovalency = false;
-										if (wordsInWordRule == 2 && chemEl2.isHalogen()) {
+										if (chemEl2.isHalogen() && wordsInWordRule == 2) {
 											switch (chemEl1) {
 											case Mg:
 												if (possibleElementaryAtomContainingWord.getChildCount() > 1) {
 													//treat grignards (i.e. substitutedmagnesium halides) as covalent
+													specialCaseCovalency = true;
+												}
+												break;
+											case Al:
+												if (chemEl2 == ChemEl.Cl || chemEl2 == ChemEl.Br || chemEl2 == ChemEl.I) {
 													specialCaseCovalency = true;
 												}
 												break;
@@ -430,6 +435,12 @@ class WordRules {
 												break;
 											default:
 												break;
+											}
+										}
+										else if (chemEl2 == ChemEl.H && wordsInWordRule == 2) {
+											if (chemEl1 == ChemEl.Al) {
+												//aluminium hydrides are covalent
+												specialCaseCovalency = true;
 											}
 										}
 										if (!specialCaseCovalency) {
