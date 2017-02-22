@@ -95,6 +95,13 @@ or
 
   if you also need InChI output support.
 
+#### Building from source
+To build OPSIN from source, download Maven 3 and download OPSIN's source code.
+
+Running `mvn package assembly:assembly` in the root of OPSIN's source will build the jar with dependencies
+
+Running `mvn assembly:assembly` in the opsin-core folder will build the "excludingInChI-jar-with-dependencies"
+
 ### About OPSIN
 
 The workings of OPSIN are more fully described in:
