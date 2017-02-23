@@ -382,6 +382,7 @@
 		<token value="ClCC[N+](C)(C)C">chlorocholine|chlorocholin</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine|eicosasphinganin</token>
 		<token value="C(O)CN">ethanolamine|ethanolamin</token>
+		<token value="OCC[N+](C)(C)CF">fluorocholine|fluorocholin</token><!--drug name-->
 		<token value="[nH]1c(=O)Nc(=O)c(F)c1" labels="1/2//3/4//5//6">fluorouracil</token><!--should be ambiguous but by convention isn't-->
 		<token value="[nH]1c(=S)Nc(=O)cc1CCC" labels="1/2//3/4//5/6///">propylthiouracil</token><!--should be ambiguous but by convention isn't-->
 		<token value="C(O)C(=O)CO" labels="1//2//3/">glycerone|glyceron</token>
@@ -391,6 +392,7 @@
 		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18">phytosphingosine|phytosphingosin</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphinganine|sphinganin</token>
 		<token value="OC[C@H](N)[C@H](O)/C=C/CCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphingosine|sphingosin</token>
+		<token value="OCC[N+](CC)(CC)CC">triethylcholine|triethylcholin</token><!--drug name-->
 		<token value="OC([C@H](O1)[C@H](CO)O)=C(O)C1=O">vitamin c</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](COP(=O)(O)OP(=O)(O)OCC(C)(C)[C@@H](O)C(=O)NCCC(=O)NCCS)O1)n2cnc3c(N)ncnc23" labels="1'/2'//3'//////4'/5'//P////P'/////////O///////////S//9/8/7/5/6/N/1/2/3/4" defaultInID="37">coenzyme a|coa</token>
 	</tokenList>

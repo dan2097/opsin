@@ -221,10 +221,13 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="O=C(O)CN(C)C(N)=N" functionalIDs="3">creatine|creatin</token>
 		<token value="NCCSSCCN" defaultInID="1">cystamine|cystamin</token>
 		<token value="NCCS" labels="/2,alpha/3,beta/" defaultInID="1">cysteamine|cysteamin</token>
+		<token value="N[C@@H](Cc1cc(Br)c(c(Br)c1)O)C(=O)O" labels="/alpha/beta/1/2,ortho/3,meta//4,para/5//6/O///" functionalIDs="15">dibromotyrosine|dibromotyrosin</token><!--drug name-->
+		<token value="N[C@@H](c1cc(O)cc(O)c1)C(=O)O" labels="/alpha/1/2,ortho/3,meta//4,para/5//6///" functionalIDs="13">dihydroxyphenylglycine|dihydroxyphenylglycin</token><!--drug name-->
 		<token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" functionalIDs="9,24,31,39">glutathione disulfide|glutathionedisulfide|glutathion disulfid|glutathion-disulfid|glutathiondisulfid</token>
 		<token value="N1CC(C(=O)O)=CCC1">guvacine|guvacin</token>
 		<token value="NC(=N)NCCS(=O)O" functionalIDs="9">hypotaurocyamine|hypotaurocyamin</token>
 		<token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" defaultInID="1">methioninamine|methioninamin</token>
+		<token value="N[C@@H](C[Se]C)C(=O)O" labels="/2,alpha/3,beta///1//" functionalIDs="8">methylselenocysteine|methylselenocystein</token><!--drug name-->
 		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="8,14">octopinic acid|octopinicacid</token>
 		<token value="NC(=N)NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="11,17">octopine|octopin</token>
 		<token value="NCC[Se][Se]CCN" defaultInID="1">selenocystamine|seleno-cystamine|selenocystamin|seleno-cystamin</token>
@@ -237,6 +240,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="NCC[Se](=O)(=O)O" functionalIDs="7" defaultInID="1">selenotaurine|seleno-taurine|selenotaurin|seleno-taurin</token>
 		<token value="NC(=N)NCCS(=O)(=O)O" functionalIDs="10">taurocyamine|taurocyamin</token>
 		<token value="N(C(C)C(=O)O)CCS(=O)(=O)O" functionalIDs="6,12" defaultInID="1">tauropine|tauropin</token>
+		<token value="NC(c1nnnn1)C(=O)O" labels="/2,alpha//////1//" functionalIDs="10">tetrazolylglycine|tetrazolylglycin</token><!--drug name-->
 		<token value="N(CC(=O)O)C(CO)(CO)CO" functionalIDs="5" defaultInID="1">tricine</token>
 		<token value="NC(CC(=O)(O))CCCN" labels="/3/2/1///4/5/6/" functionalIDs="6">isolysine|beta-lysine|isolysin|beta-lysin</token>
 		<token value="O=C(O)[C@H](N[C@H](C(=O)O)CCCCN)C" functionalIDs="3">lysopine|d-lysopine|lysopin|d-lysopin</token>

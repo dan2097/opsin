@@ -131,6 +131,7 @@
 		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="6,7">2'-inosinic|2'-inosinicacid|2'-inosinic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2/3/4" functionalIDs="8,9">3'-inosinic|3'-inosinicacid|3'-inosinic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" functionalIDs="11,12">5'-inosinic|5'-inosinicacid|5'-inosinic acid|inosinic acid</token>
+		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c([sH])ncnc23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2/3/4" functionalIDs="11,12">thioinosinic acid</token>
 		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="6,7">2'-xanthylic|2'-xanthylicacid|2'-xanthylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6//1/2//3/4" functionalIDs="8,9">3'-xanthylic|3'-xanthylicacid|3'-xanthylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'//4'/5'///////9/8/7/5/6//1/2//3/4" functionalIDs="11,12">5'-xanthylic|5'-xanthylicacid|5'-xanthylic acid</token>
