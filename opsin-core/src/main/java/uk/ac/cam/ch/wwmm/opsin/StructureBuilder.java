@@ -1912,12 +1912,18 @@ class StructureBuilder {
 		if (overallCharge==0){
 			return;
 		}
-		if (cationicElements.size() ==1 && overallCharge <0){//e.g. nickel tetrachloride [Ni2+]-->[Ni4+]
-			boolean success = setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0));
-			if (success){
+		if (cationicElements.size() ==1 && overallCharge < 0) {//e.g. nickel tetrachloride [Ni2+]-->[Ni4+]
+			if (setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0))) {
 				return;
 			}
 		}
+		if (overallCharge == -2) {
+			if (triHalideSpecialCase(wordRules)) {
+				//e.g. three iodides --> triiodide ion
+				return;
+			}
+		}
+		
 		for (Element wordRule : wordRules) {
 			BuildResults br = new BuildResults(wordRule);
 			componentToBR.put(wordRule, br);
@@ -1930,6 +1936,7 @@ class StructureBuilder {
 			}
 			componentToChargeMapping.put(wordRule, charge);
 		}
+		
 		if (!explicitStoichiometryPresent &&
 				(positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 )){
 			boolean success = multiplyChargedComponents(negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
@@ -2011,6 +2018,36 @@ class StructureBuilder {
 			}
 		}
 		return overallCharge;
+	}
+	
+	/**
+	 * Checks for tribromide/triodide and joins the ions if found
+	 * @param wordRules
+	 * @return
+	 */
+	private boolean triHalideSpecialCase(List<Element> wordRules) {
+		for (Element wordRule : wordRules) {
+			if (wordRule.getChildCount() == 3) {
+				String value = wordRule.getAttributeValue(VALUE_ATR);
+				if ("tribromide".equals(value) || "tribromid".equals(value) || "triiodide".equals(value) || "triiodid".equals(value)) {
+					List<Element> groups1 = OpsinTools.getDescendantElementsWithTagName(wordRule.getChild(0), GROUP_EL);
+					List<Element> groups2 = OpsinTools.getDescendantElementsWithTagName(wordRule.getChild(1), GROUP_EL);
+					List<Element> groups3 = OpsinTools.getDescendantElementsWithTagName(wordRule.getChild(2), GROUP_EL);
+					if (groups1.size() != 1 || groups2.size() != 1 || groups3.size() != 1) {
+						throw new RuntimeException("OPSIN Bug: Unexpected trihalide representation");
+					}
+					Atom centralAtom = groups1.get(0).getFrag().getFirstAtom();
+					Atom otherAtom1 = groups2.get(0).getFrag().getFirstAtom();
+					otherAtom1.setCharge(0);
+					Atom otherAtom2 = groups3.get(0).getFrag().getFirstAtom();
+					otherAtom2.setCharge(0);
+					state.fragManager.createBond(centralAtom, otherAtom1, 1);
+					state.fragManager.createBond(centralAtom, otherAtom2, 1);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
