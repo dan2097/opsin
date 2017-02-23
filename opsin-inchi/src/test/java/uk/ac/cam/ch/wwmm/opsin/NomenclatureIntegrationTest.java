@@ -55,6 +55,14 @@ public class NomenclatureIntegrationTest {
 		String file = "carbohydrates.txt";
 		checkNamesAgainstInChIs(file, n2sConfig);
 	}
+
+	@Test
+	public void testChargeBalancing() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "chargeBalancing.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
 	
 	@Test
 	public void testConjunctiveNomenclature() throws IOException{
