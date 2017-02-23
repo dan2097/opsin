@@ -1,3 +1,17 @@
+Version 2.3.0 (2016-02-23)
+D/L stereochemistry can now be assigned algorithmically e.g. L-2-aminobutyric acid
+Other minor improvements to amino acid support e.g. homoproline added
+Extended SMILES added to command-line interface
+Names intended to include the triiodide/tribromide anion no longer erroneously have three monohalides
+Ambiguity detected when applying unlocanted subtractive prefixes
+Better support for adjacent multipliers e.g. ditrifluoroacetic acid
+deoxynucleosides are now implicitly 2'-deoxynucleosides
+Added support for <number> as a syntax for a superscripted number
+Added support for amidrazones
+Aluminium hydrides/chlorides/bromides/iodides are now covalently bonded
+Fixed names with isotopes less than 10 not being supported
+Fixed interpretation of some trivial names that clash with systematic names
+
 Version 2.2.0 (2016-10-16)
 Added support for IUPAC system for isotope specification e.g. (3-14C,2,2-2H2)butane
 Added support for specifying deuteration using the Boughton system e.g. butane-2,2-d2
