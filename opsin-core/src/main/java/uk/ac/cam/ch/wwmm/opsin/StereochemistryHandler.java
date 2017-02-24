@@ -884,10 +884,13 @@ class StereochemistryHandler {
 				}
 				if (acidGroup != null && amineOrAlcohol != null && sideChain != null && hydrogen != null) {
 					Atom[] atomRefs4 = new Atom[]{acidGroup, sideChain, amineOrAlcohol, hydrogen};
-					if (dOrL.equals("l") || dOrL.equals("ls")){
+					if (dOrL.equals("l") || dOrL.equals("ls")) {
 						potentialStereoAtom.setAtomParity(atomRefs4, -1);
-					} else if (dOrL.equals("d") || dOrL.equals("ds")){
+					} else if (dOrL.equals("d") || dOrL.equals("ds")) {
 						potentialStereoAtom.setAtomParity(atomRefs4, 1);
+					} else if (dOrL.equals("dl")) {
+						//racemic
+						potentialStereoAtom.setAtomParity(null);
 					} else{
 						throw new RuntimeException("OPSIN bug: Unexpected value for D/L stereochemistry found: " + dOrL );
 					}
