@@ -99,7 +99,10 @@ class IsotopeSpecificationParser {
 		String[] locants = null;
 		if(locantsStr != null) {
 			locants = MATCH_COMMA.split(locantsStr);
-			if (multiplierStr != null && locants.length != multiplier) {
+			if (multiplierStr == null) {
+				multiplier = locants.length;
+			}
+			else if (locants.length != multiplier) {
 				throw new StructureBuildingException("Mismatch between number of locants: " + locants.length + " and number of " + chemEl.toString() +" isotopes requested: " + multiplier);
 			}
 		}
