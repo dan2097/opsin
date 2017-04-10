@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * An implementation of Rule 1 of the CIP rules i.e. constitutional differences excluding isotopes
- * Cases that require rules 2-5 to distinguish result in an exception
+ * An implementation of rules 1-2 of the CIP rules i.e. constitutional differences then isotopes if there is a tie
+ * Cases that require rules 3-5 to distinguish result in an exception
  * 
  * Phantom atoms are not added as I believe that the results of the program will still be the same even in their absence as everything beats a phantom and comparing phantoms to phantoms achieves nothing
  * (higher ligancy beats lower ligancy when comparisons are performed)
@@ -20,7 +20,7 @@ import java.util.Queue;
 class CipSequenceRules {
 	private static class CipOrderingRunTimeException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
-		public CipOrderingRunTimeException(String message) {
+		CipOrderingRunTimeException(String message) {
 			super(message);
 		}
 	}
@@ -36,12 +36,12 @@ class CipSequenceRules {
 	 * @return
 	 * @throws CipOrderingException 
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrder() throws CipOrderingException {
+	List<Atom> getNeighbouringAtomsInCipOrder() throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
 		try {
-			Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+			Collections.sort(neighbours, new SortByCipOrder(chiralAtom));
 		}
-		catch (CipOrderingRunTimeException e){
+		catch (CipOrderingRunTimeException e) {
 			throw new CipOrderingException(e.getMessage());
 		}
 		return neighbours;
@@ -53,15 +53,15 @@ class CipSequenceRules {
 	 * @return
 	 * @throws CipOrderingException 
 	 */
-	List<Atom> getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) throws CipOrderingException {
+	List<Atom> getNeighbouringAtomsInCipOrderIgnoringGivenNeighbour(Atom neighbourToIgnore) throws CipOrderingException {
 		List<Atom> neighbours = chiralAtom.getAtomNeighbours();
-		if (!neighbours.remove(neighbourToIgnore)){
+		if (!neighbours.remove(neighbourToIgnore)) {
 			throw new IllegalArgumentException("OPSIN bug: Atom" + neighbourToIgnore.getID() +" was not a neighbour of the given stereogenic atom");
 		}
 		try {
-			Collections.sort(neighbours, new SortByCIPOrder(chiralAtom));
+			Collections.sort(neighbours, new SortByCipOrder(chiralAtom));
 		}
-		catch (CipOrderingRunTimeException e){
+		catch (CipOrderingRunTimeException e) {
 			throw new CipOrderingException(e.getMessage());
 		}
 		return neighbours;
@@ -73,7 +73,7 @@ class CipSequenceRules {
 	 * @author dl387
 	 *
 	 */
-	private static class CipState{
+	private static class CipState {
 		CipState(List<AtomWithHistory> nextAtoms1, List<AtomWithHistory> nextAtoms2) {
 			this.nextAtoms1 = nextAtoms1;
 			this.nextAtoms2 = nextAtoms2;
@@ -87,7 +87,7 @@ class CipSequenceRules {
 	 * @author dl387
 	 *
 	 */
-	private static class AtomWithHistory{
+	private static class AtomWithHistory {
 		AtomWithHistory(Atom atom, List<Atom> visitedAtoms, Integer indexOfOriginalFromRoot) {
 			this.atom = atom;
 			this.visitedAtoms = visitedAtoms;
@@ -103,19 +103,19 @@ class CipSequenceRules {
 	 * @author dl387
 	 *
 	 */
-	private class SortByCIPOrder implements Comparator<Atom> {
+	private class SortByCipOrder implements Comparator<Atom> {
 		private final Atom chiralAtom;
-		private final AtomListCIPComparator atomListCIPComparator = new AtomListCIPComparator();
-		private final ListOfAtomListsCIPComparator listOfAtomListsCIPComparator = new ListOfAtomListsCIPComparator();
-		private final CIPComparator cipComparator = new CIPComparator();
+		private final AtomListCipComparator atomListCipComparator = new AtomListCipComparator();
+		private final ListOfAtomListsCipComparator listOfAtomListsCipComparator = new ListOfAtomListsCipComparator();
+		private final CipComparator cipComparator = new CipComparator();
 		private int rule = 0;
 		
 
-		SortByCIPOrder(Atom chiralAtom) {
+		SortByCipOrder(Atom chiralAtom) {
 			this.chiralAtom = chiralAtom;
 		}
 		
-		public int compare(Atom a, Atom b){
+		public int compare(Atom a, Atom b) {
 	    	/*
 	    	 * rule = 0 --> Rule 1a Higher atomic number precedes lower
 	    	 * rule = 1 --> Rule 1b A duplicated atom, with its predecessor node having the same label closer to the root, ranks higher than a duplicated atom, with its predecessor node having the same label farther from the root, which ranks higher than any non-duplicated atom node
@@ -128,7 +128,7 @@ class CipSequenceRules {
 				AtomWithHistory bWithHistory = new AtomWithHistory(b, new ArrayList<Atom>(atomsVisted), null);
 				
 	    		int compare = compareByCipRules(aWithHistory, bWithHistory);
-				if (compare != 0){
+				if (compare != 0) {
 					return compare;
 				}
 				
@@ -144,15 +144,15 @@ class CipSequenceRules {
 		    	/* Go through CIP states in a breadth-first manner:
 		    	 * Neighbours of the given atom/s (if multiple atoms this is because so far the two paths leading to them have been equivalent) are evaluated for both a and b
 		    	 * Neighbours are sorted by CIP priority
-		    	 * Comparisons performed between neighbours of a and neighbours of b (will break if compare!=0)
+		    	 * Comparisons performed between neighbours of a and neighbours of b (will break if compare != 0)
 		    	 * Degenerate neighbours grouped together
 		    	 * CIP state formed for each list of neighbours and added to queue in order of priority
 		    	 *
 		    	 */
-		    	while(!cipStateQueue.isEmpty()){
+		    	while(!cipStateQueue.isEmpty()) {
 		    		CipState currentState = cipStateQueue.removeFirst();
 		    		compare = compareAtNextLevel(currentState, cipStateQueue);
-		    		if (compare != 0){
+		    		if (compare != 0) {
 		    			return compare;
 		    		}
 		    	}
@@ -172,46 +172,46 @@ class CipSequenceRules {
 			List<List<List<AtomWithHistory>>> newNeighbours1 = getNextLevelNeighbours(cipState.nextAtoms1);
 			List<List<List<AtomWithHistory>>> newNeighbours2 = getNextLevelNeighbours(cipState.nextAtoms2);
 
-			int compare = compareNeighboursByCIPpriorityRules(newNeighbours1, newNeighbours2);
+			int compare = compareNeighboursByCipPriorityRules(newNeighbours1, newNeighbours2);
 
-			if (compare != 0){
+			if (compare != 0) {
 				return compare;
 			}
 	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
 	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
 
 	    	//As earlier compare was 0,  prioritisedNeighbours1.size==2.size and nextNeighbourLists1.size==2.size
-	    	for (int i = prioritisedNeighbours1.size() - 1; i >=0; i--) {
+	    	for (int i = prioritisedNeighbours1.size() - 1; i >= 0; i--) {
 	     		List<List<AtomWithHistory>> nextNeighbourLists1 = prioritisedNeighbours1.get(i);
 	    		List<List<AtomWithHistory>> nextNeighbourLists2 = prioritisedNeighbours2.get(i);
-	    		for (int j = nextNeighbourLists1.size() - 1; j >=0; j--) {
+	    		for (int j = nextNeighbourLists1.size() - 1; j >= 0; j--) {
 		    		List<AtomWithHistory> nextNeighbours1 = nextNeighbourLists1.get(j);
 		    		List<AtomWithHistory> nextNeighbours2 = nextNeighbourLists2.get(j);
-		    		CipState newCIPstate = new CipState(nextNeighbours1, nextNeighbours2);
-		    		queue.add(newCIPstate);
+		    		CipState newCipState = new CipState(nextNeighbours1, nextNeighbours2);
+		    		queue.add(newCipState);
 	    		}
 			}
 	    	return 0;
 		}
 		
-		private int compareNeighboursByCIPpriorityRules(List<List<List<AtomWithHistory>>> neighbours1, List<List<List<AtomWithHistory>>> neighbours2){
+		private int compareNeighboursByCipPriorityRules(List<List<List<AtomWithHistory>>> neighbours1, List<List<List<AtomWithHistory>>> neighbours2) {
 	    	int neighbours1Size = neighbours1.size();
 	    	int neighbours2Size = neighbours2.size();
 	    	int differenceInSize = neighbours1Size - neighbours2Size;
 	    	int maxCommonSize = neighbours1Size > neighbours2Size ? neighbours2Size : neighbours1Size;
 	    	for (int i = 1; i <= maxCommonSize; i++) {
-				int difference = listOfAtomListsCIPComparator.compare(neighbours1.get(neighbours1Size -i), neighbours2.get(neighbours2Size -i));
-				if (difference >0){
+				int difference = listOfAtomListsCipComparator.compare(neighbours1.get(neighbours1Size -i), neighbours2.get(neighbours2Size -i));
+				if (difference >0) {
 					return 1;
 				}
-				if (difference < 0){
+				if (difference < 0) {
 					return -1;
 				}
 			}
-	    	if (differenceInSize >0){
+	    	if (differenceInSize >0) {
 	    		return 1;
 	    	}
-	    	if (differenceInSize <0){
+	    	if (differenceInSize <0) {
 	    		return -1;
 	    	}
 			return 0;
@@ -220,9 +220,9 @@ class CipSequenceRules {
 		private List<List<List<AtomWithHistory>>> getNextLevelNeighbours(List<AtomWithHistory> nextAtoms) {
 			List<List<List<AtomWithHistory>>> neighbours = getNextAtomsWithAppropriateGhostAtoms(nextAtoms);
 			for (List<List<AtomWithHistory>> list : neighbours) {
-				Collections.sort(list, atomListCIPComparator);
+				Collections.sort(list, atomListCipComparator);
 			}
-			Collections.sort(neighbours, listOfAtomListsCIPComparator);
+			Collections.sort(neighbours, listOfAtomListsCipComparator);
 			return neighbours;
 		}
 		
@@ -244,7 +244,7 @@ class CipSequenceRules {
 					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
 					for (int j = i + 1; j < neighbourLists.size(); j++) {
 						List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
-						if (atomListCIPComparator.compare(primaryAtomList, neighbourListToCompareWith)==0){
+						if (atomListCipComparator.compare(primaryAtomList, neighbourListToCompareWith) == 0) {
 							neighbourListsToCombine.add(neighbourListToCompareWith);
 						}
 					}
@@ -264,14 +264,14 @@ class CipSequenceRules {
 					List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
 					for (int j = 0, lnl = neighbourList.size(); j < lnl; j++) {
 						AtomWithHistory a = neighbourList.get(j);
-						if (lastAtom != null && compareByCipRules(lastAtom, a) != 0){
+						if (lastAtom != null && compareByCipRules(lastAtom, a) != 0) {
 							updatedNeighbourLists.add(currentAtomList);
 							currentAtomList = new ArrayList<AtomWithHistory>();
 						}
 						currentAtomList.add(a);
 						lastAtom = a;
 					}
-					if (!currentAtomList.isEmpty()){
+					if (!currentAtomList.isEmpty()) {
 						updatedNeighbourLists.add(currentAtomList);
 					}
 				}
@@ -286,8 +286,8 @@ class CipSequenceRules {
 		 * @author dl387
 		 *
 		 */
-		private class CIPComparator implements Comparator<AtomWithHistory> {
-		    public int compare(AtomWithHistory a, AtomWithHistory b){
+		private class CipComparator implements Comparator<AtomWithHistory> {
+		    public int compare(AtomWithHistory a, AtomWithHistory b) {
 		    	return compareByCipRules(a, b);
 		    }
 		}
@@ -297,25 +297,25 @@ class CipSequenceRules {
 		 * @author dl387
 		 *
 		 */
-		private class AtomListCIPComparator implements Comparator<List<AtomWithHistory>> {
-			public int compare(List<AtomWithHistory> a, List<AtomWithHistory> b){
+		private class AtomListCipComparator implements Comparator<List<AtomWithHistory>> {
+			public int compare(List<AtomWithHistory> a, List<AtomWithHistory> b) {
 		    	int aSize = a.size();
 		    	int bSize = b.size();
 		    	int differenceInSize = aSize - bSize;
 		    	int maxCommonSize = aSize > bSize ? bSize : aSize;
 		    	for (int i = 1; i <= maxCommonSize; i++) {
-					int difference = compareByCipRules(a.get(aSize -i), b.get(bSize -i));
-					if (difference >0){
+					int difference = compareByCipRules(a.get(aSize - i), b.get(bSize - i));
+					if (difference > 0) {
 						return 1;
 					}
-					if (difference < 0){
+					if (difference < 0) {
 						return -1;
 					}
 				}
-		    	if (differenceInSize >0){
+		    	if (differenceInSize > 0) {
 		    		return 1;
 		    	}
-		    	if (differenceInSize <0){
+		    	if (differenceInSize < 0) {
 		    		return -1;
 		    	}
 		    	return 0;
@@ -327,39 +327,39 @@ class CipSequenceRules {
 		 * @author dl387
 		 *
 		 */
-		private class ListOfAtomListsCIPComparator implements Comparator<List<List<AtomWithHistory>>> {
-			public int compare(List<List<AtomWithHistory>> a, List<List<AtomWithHistory>> b){
+		private class ListOfAtomListsCipComparator implements Comparator<List<List<AtomWithHistory>>> {
+			public int compare(List<List<AtomWithHistory>> a, List<List<AtomWithHistory>> b) {
 		    	int aSize = a.size();
 		    	int bSize = b.size();
 		    	int differenceInSize = aSize - bSize;
 		    	int maxCommonSize = aSize > bSize ? bSize : aSize;
 		    	for (int i = 1; i <= maxCommonSize; i++) {
-		    		List<AtomWithHistory> aprime = a.get(aSize -i);
-		    		List<AtomWithHistory> bprime = b.get(bSize -i);
+		    		List<AtomWithHistory> aprime = a.get(aSize - i);
+		    		List<AtomWithHistory> bprime = b.get(bSize - i);
 			    	int aprimeSize = aprime.size();
 			    	int bprimeSize = bprime.size();
 			    	int differenceInSizeprime = aprimeSize - bprimeSize;
 			    	int maxCommonSizeprime = aprimeSize > bprimeSize ? bprimeSize : aprimeSize;
 			    	for (int j = 1; j <= maxCommonSizeprime; j++) {
-			    		int difference = compareByCipRules(aprime.get(aprimeSize -j), bprime.get(bprimeSize -j));
-						if (difference >0){
+			    		int difference = compareByCipRules(aprime.get(aprimeSize - j), bprime.get(bprimeSize - j));
+						if (difference > 0) {
 							return 1;
 						}
-						if (difference < 0){
+						if (difference < 0) {
 							return -1;
 						}
 			    	}
-			    	if (differenceInSizeprime >0){
+			    	if (differenceInSizeprime > 0) {
 			    		return 1;
 			    	}
-			    	if (differenceInSizeprime <0){
+			    	if (differenceInSizeprime < 0) {
 			    		return -1;
 			    	}
 				}
-		    	if (differenceInSize >0){
+		    	if (differenceInSize > 0) {
 		    		return 1;
 		    	}
-		    	if (differenceInSize <0){
+		    	if (differenceInSize < 0) {
 		    		return -1;
 		    	}
 		    	return 0;
@@ -387,12 +387,12 @@ class CipSequenceRules {
 				List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
 				for(Bond b :  atom.getBonds()) {
 					Atom atomBondConnectsTo = b.getOtherAtom(atom);
-					if (!atomBondConnectsTo.equals(chiralAtom)){//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
+					if (!atomBondConnectsTo.equals(chiralAtom)) {//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
 						for (int j = b.getOrder(); j >1; j--) {//add ghost atoms to represent higher order bonds
 							Atom ghost = new Atom(atomBondConnectsTo.getElement());
-							if (rule > 0){
+							if (rule > 0) {
 								int indexOfOriginalAtom = visitedAtoms.indexOf(atomBondConnectsTo);
-								if (indexOfOriginalAtom != -1){
+								if (indexOfOriginalAtom != -1) {
 									neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, indexOfOriginalAtom));
 								}
 								else{
@@ -404,10 +404,10 @@ class CipSequenceRules {
 							}
 						}
 					}
-					if (!atomBondConnectsTo.equals(previousAtom)){
-						if (visitedAtoms.contains(atomBondConnectsTo)){//cycle detected, add ghost atom instead
+					if (!atomBondConnectsTo.equals(previousAtom)) {
+						if (visitedAtoms.contains(atomBondConnectsTo)) {//cycle detected, add ghost atom instead
 							Atom ghost = new Atom(atomBondConnectsTo.getElement());
-							if (rule > 0){
+							if (rule > 0) {
 								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.indexOf(atomBondConnectsTo)));
 							}
 							else{
@@ -420,14 +420,14 @@ class CipSequenceRules {
 					}
 				}
 				Collections.sort(neighboursWithHistory, cipComparator);
-				if (lastPreviousAtom==null){
+				if (lastPreviousAtom == null) {
 					lastPreviousAtom = previousAtom;
 				}
-				else if (lastPreviousAtom !=previousAtom){
+				else if (lastPreviousAtom !=previousAtom) {
 					lastPreviousAtom = previousAtom;
 					counter++;
 				}
-				if (allNeighbours.size() <=  counter){
+				if (allNeighbours.size() <=  counter) {
 					allNeighbours.add(new ArrayList<List<AtomWithHistory>>());
 				}
 				allNeighbours.get(counter).add(neighboursWithHistory);
@@ -441,53 +441,53 @@ class CipSequenceRules {
 		 * @param b
 		 * @return
 		 */
-	    private int compareByCipRules(AtomWithHistory a, AtomWithHistory b){
+	    private int compareByCipRules(AtomWithHistory a, AtomWithHistory b) {
 	    	//rule 1a
 	    	//prefer higher atomic number
 	    	int atomicNumber1 = a.atom.getElement().ATOMIC_NUM;
 	    	int atomicNumber2 = b.atom.getElement().ATOMIC_NUM;
-	    	if (atomicNumber1 > atomicNumber2){
+	    	if (atomicNumber1 > atomicNumber2) {
 	    		return 1;
 	    	}
-	    	else if (atomicNumber1 < atomicNumber2){
+	    	else if (atomicNumber1 < atomicNumber2) {
 	    		return -1;
 	    	}
-	    	if (rule > 0){
+	    	if (rule > 0) {
 	    		//rule 1b
 	    		//prefer duplicate to non-duplicate
 	    		Integer indexFromRoot1 = a.indexOfOriginalFromRoot;
 	       		Integer indexFromRoot2 = b.indexOfOriginalFromRoot;
-	    		if (indexFromRoot1 != null && indexFromRoot2 == null){
+	    		if (indexFromRoot1 != null && indexFromRoot2 == null) {
 	    			return 1;
 	    		}
-	    		if (indexFromRoot1 == null && indexFromRoot2 != null){
+	    		if (indexFromRoot1 == null && indexFromRoot2 != null) {
 	    			return -1;
 	    		}
 	    		//prefer duplicate of node closer to root
-	    		if (indexFromRoot1 != null && indexFromRoot2 != null){
-	    	 		if (indexFromRoot1 < indexFromRoot2 ){
+	    		if (indexFromRoot1 != null && indexFromRoot2 != null) {
+	    	 		if (indexFromRoot1 < indexFromRoot2 ) {
 		    			return 1;
 		    		}
-	    	 		if (indexFromRoot1 > indexFromRoot2 ){
+	    	 		if (indexFromRoot1 > indexFromRoot2 ) {
 		    			return -1;
 		    		}
 	    		}
-	    		if (rule > 1){
+	    		if (rule > 1) {
 		    		//rule 2
 		    		//prefer higher atomic mass
 	    	    	Integer atomicMass1 = a.atom.getIsotope();
 	    	    	Integer atomicMass2 = b.atom.getIsotope();
-	    	    	if (atomicMass1 != null && atomicMass2 == null){
+	    	    	if (atomicMass1 != null && atomicMass2 == null) {
 	    	    		return 1;
 	    	    	}
-	    	    	else if (atomicMass1 == null && atomicMass2 != null){
+	    	    	else if (atomicMass1 == null && atomicMass2 != null) {
 	    	    		return -1;
 	    	    	}
-	    	    	else if (atomicMass1 != null && atomicMass2 != null){
-	    	        	if (atomicMass1 > atomicMass2){
+	    	    	else if (atomicMass1 != null && atomicMass2 != null) {
+	    	        	if (atomicMass1 > atomicMass2) {
 		    	    		return 1;
 		    	    	}
-		    	    	else if (atomicMass1 < atomicMass2){
+		    	    	else if (atomicMass1 < atomicMass2) {
 		    	    		return -1;
 		    	    	}
 	    	    	}

@@ -63,7 +63,7 @@ class StereoAnalyser {
 		}
 
 		List<Atom> getCipOrderedAtoms() throws CipOrderingException {
-			List<Atom> cipOrderedAtoms = new CipSequenceRules(stereoAtom).getNeighbouringAtomsInCIPOrder();
+			List<Atom> cipOrderedAtoms = new CipSequenceRules(stereoAtom).getNeighbouringAtomsInCipOrder();
 			if (cipOrderedAtoms.size()==3){//lone pair is the 4th. This is represented by the atom itself and is always the lowest priority
 				cipOrderedAtoms.add(0, stereoAtom);
 			}
@@ -97,8 +97,8 @@ class StereoAnalyser {
 		List<Atom> getOrderedStereoAtoms() throws CipOrderingException {
 			Atom a1 = bond.getFromAtom();
 			Atom a2 = bond.getToAtom();
-			List<Atom> cipOrdered1 = new CipSequenceRules(a1).getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a2);
-			List<Atom> cipOrdered2 = new CipSequenceRules(a2).getNeighbouringAtomsInCIPOrderIgnoringGivenNeighbour(a1);
+			List<Atom> cipOrdered1 = new CipSequenceRules(a1).getNeighbouringAtomsInCipOrderIgnoringGivenNeighbour(a2);
+			List<Atom> cipOrdered2 = new CipSequenceRules(a2).getNeighbouringAtomsInCipOrderIgnoringGivenNeighbour(a1);
 			List<Atom> stereoAtoms = new ArrayList<Atom>();
 			stereoAtoms.add(cipOrdered1.get(cipOrdered1.size()-1));//highest CIP adjacent to a1
 			stereoAtoms.add(a1);

@@ -225,7 +225,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority1() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C(Br)(F)([H])Cl");
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -246,7 +246,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority2() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C([H])(C1CC1)(C1CCC1)O");
-		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -268,7 +268,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority3() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("[C](N)(C1=CC(O)=CC=C1)([H])C2=CC=C(O)C=C2");
-		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -289,7 +289,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority4() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("[C](N)(C1CC(O)CCC1)([H])C2CCC(O)CC2");
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -310,7 +310,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority5() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C1([H])(C(=O)O[H])C([H])([H])SC([H])([H])N([H])1");
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -331,7 +331,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority6() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C1([H])(O)C([H])(C([H])([H])[H])OC([H])([H])C([H])([H])C1([H])(O[H])");
-		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered =  new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -352,7 +352,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority7() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("[H]OC2([H])(C([H])([H])C([H])([H])C3([H])(C4([H])(C([H])([H])C([H])([H])C1=C([H])C([H])([H])C([H])([H])C([H])([H])C1([H])C4([H])(C([H])([H])C([H])([H])C23(C([H])([H])[H])))))");
-		List<Atom> cipOrdered =  new CipSequenceRules(f.getAtomList().get(34)).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered =  new CipSequenceRules(f.getAtomList().get(34)).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -373,7 +373,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority8() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("(6aR)-6-phenyl-6,6a-dihydroisoindolo[2,1-a]quinazoline-5,11-dione").getStructure();
-		List<Atom> cipOrdered = new CipSequenceRules(f.getAtomByLocant("6a")).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getAtomByLocant("6a")).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -395,7 +395,7 @@ public class StereochemistryTest {
 	public void testCIPpriority9() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C1(C=C)CC1C2=CC=CC=C2");
 		fm.makeHydrogensExplicit();
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -417,7 +417,7 @@ public class StereochemistryTest {
 	public void testCIPpriority10() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C(O[H])([H])(C1([H])C([H])(F)C([H])(Cl)C([H])([H])C([H])(I)C1([H])([H]))C1([H])C([H])(F)C([H])(Br)C([H])([H])C([H])(Cl)C1([H])([H])");
 		fm.makeHydrogensExplicit();
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -441,7 +441,7 @@ public class StereochemistryTest {
 		fm.makeHydrogensExplicit();
 		//stereocentres at 1,4,5,7,8
 		List<Atom> atomList = f.getAtomList();
-		List<Atom> cipOrdered = new CipSequenceRules(atomList.get(0)).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(atomList.get(0)).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -457,7 +457,7 @@ public class StereochemistryTest {
 				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
-		cipOrdered = new CipSequenceRules(atomList.get(3)).getNeighbouringAtomsInCIPOrder();
+		cipOrdered = new CipSequenceRules(atomList.get(3)).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -473,7 +473,7 @@ public class StereochemistryTest {
 				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
-		cipOrdered = new CipSequenceRules(atomList.get(4)).getNeighbouringAtomsInCIPOrder();
+		cipOrdered = new CipSequenceRules(atomList.get(4)).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -489,7 +489,7 @@ public class StereochemistryTest {
 				assertEquals(9, a.getID());
 			}
 		}
-		cipOrdered = new CipSequenceRules(atomList.get(6)).getNeighbouringAtomsInCIPOrder();
+		cipOrdered = new CipSequenceRules(atomList.get(6)).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -505,7 +505,7 @@ public class StereochemistryTest {
 				assertEquals(ChemEl.O, a.getElement());
 			}
 		}
-		cipOrdered = new CipSequenceRules(atomList.get(7)).getNeighbouringAtomsInCIPOrder();
+		cipOrdered = new CipSequenceRules(atomList.get(7)).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -527,7 +527,7 @@ public class StereochemistryTest {
 	public void testCIPpriority12() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C1(C)(CCC(=O)N1)CCC(=O)NC(C)C");
 		fm.makeHydrogensExplicit();
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -549,7 +549,7 @@ public class StereochemistryTest {
 	public void testCIPpriority13() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C(O)(C#CC)C1=CC=CC=C1");
 		fm.makeHydrogensExplicit();
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
@@ -570,7 +570,7 @@ public class StereochemistryTest {
 	@Test
 	public void testCIPpriority14() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("C(Cl)([2H])([3H])[H]");
-		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCIPOrder();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
 			Atom a = cipOrdered.get(i);
 			if (i==0){
