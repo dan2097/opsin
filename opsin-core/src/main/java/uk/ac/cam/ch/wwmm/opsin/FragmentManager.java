@@ -742,7 +742,7 @@ class FragmentManager {
 				}
 				else if (neighbours.size() == 2 && positionOfDeoxyHydrogen != null && positionOfImplicitHydrogen != null) {
 					try{
-						List<Atom> cipOrderedAtoms = new CipSequenceRules(atom).getNeighbouringAtomsInCIPOrder();
+						List<Atom> cipOrderedAtoms = new CipSequenceRules(atom).getNeighbouringAtomsInCipOrder();
 						//higher priority group replaces the former hydroxy groups (deoxyHydrogen)
 						if (cipOrderedAtoms.indexOf(neighbours.get(0)) > cipOrderedAtoms.indexOf(neighbours.get(1))) {
 							atomRefs4[positionOfDeoxyHydrogen] = neighbours.get(0);
