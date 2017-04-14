@@ -131,7 +131,7 @@ class FunctionalReplacement {
 			else if (groupValue.equals("peroxy")){
 				replacementType =PREFIX_REPLACEMENT_TYPE.peroxy;
 			}
-			if (replacementType!=null){
+			if (replacementType != null) {
 				//need to check whether this is an instance of functional replacement by checking the substituent/root it is applying to
 				Element substituent = group.getParent();
 				Element nextSubOrBracket = OpsinTools.getNextSibling(substituent);
@@ -143,26 +143,26 @@ class FunctionalReplacement {
 						}
 						continue;//not 2,2'-thiodipyran
 					}
-					Element locantEl =null;//null unless a locant that agrees with the multiplier is present
-					Element multiplierEl =null;
-					int numberOfAtomsToReplace =1;//the number of atoms to be functionally replaced, modified by a multiplier e.g. dithio
+					Element locantEl = null;//null unless a locant that agrees with the multiplier is present
+					Element multiplierEl = null;
+					int numberOfAtomsToReplace = 1;//the number of atoms to be functionally replaced, modified by a multiplier e.g. dithio
 					Element possibleMultiplier = OpsinTools.getPreviousSibling(group);
-					if (possibleMultiplier !=null){
+					if (possibleMultiplier != null) {
 						Element possibleLocant;
-						if (possibleMultiplier.getName().equals(MULTIPLIER_EL)){
-							numberOfAtomsToReplace =Integer.valueOf(possibleMultiplier.getAttributeValue(VALUE_ATR));
+						if (possibleMultiplier.getName().equals(MULTIPLIER_EL)) {
+							numberOfAtomsToReplace = Integer.valueOf(possibleMultiplier.getAttributeValue(VALUE_ATR));
 							possibleLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
 							multiplierEl = possibleMultiplier;
 						}
 						else{
 							possibleLocant = possibleMultiplier;
 						}
-						if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && possibleLocant.getAttribute(TYPE_ATR)==null) {
+						if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && possibleLocant.getAttribute(TYPE_ATR) == null) {
 							int numberOfLocants = MATCH_COMMA.split(possibleLocant.getValue()).length;
 							if (numberOfLocants == numberOfAtomsToReplace){//locants and number of replacements agree
 								locantEl = possibleLocant;
 							}
-							else if (numberOfAtomsToReplace >1){//doesn't look like prefix functional replacement
+							else if (numberOfAtomsToReplace > 1) {//doesn't look like prefix functional replacement
 								if (replacementType  == PREFIX_REPLACEMENT_TYPE.dedicatedFunctionalReplacementPrefix){
 									throw new ComponentGenerationException("dedicated Functional Replacement Prefix used in an inappropriate position :" + groupValue);
 								}
@@ -172,11 +172,11 @@ class FunctionalReplacement {
 					}
 
 					int oxygenReplaced;
-					if (replacementType == PREFIX_REPLACEMENT_TYPE.chalcogen){
+					if (replacementType == PREFIX_REPLACEMENT_TYPE.chalcogen) {
 						oxygenReplaced = performChalcogenFunctionalReplacement(groupToBeModified, locantEl, numberOfAtomsToReplace, group.getAttributeValue(VALUE_ATR));
 					}
-					else if (replacementType == PREFIX_REPLACEMENT_TYPE.peroxy){
-						if (nextSubOrBracket.getName().equals(SUBSTITUENT_EL)){
+					else if (replacementType == PREFIX_REPLACEMENT_TYPE.peroxy) {
+						if (nextSubOrBracket.getName().equals(SUBSTITUENT_EL)) {
 							continue;
 						}
 						oxygenReplaced = performPeroxyFunctionalReplacement(groupToBeModified, locantEl, numberOfAtomsToReplace);
@@ -607,13 +607,13 @@ class FunctionalReplacement {
 	 */
 	private int performChalcogenFunctionalReplacement(Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
 		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(groupToBeModified);
-		if (oxygenAtoms.size()==0){
+		if (oxygenAtoms.size() == 0) {
 			oxygenAtoms = findOxygenAtomsInGroup(groupToBeModified);
 		}
-		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
+		if (locantEl != null) {//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			if(oxygenWithAppropriateLocants.size() < numberOfAtomsToReplace){
-				numberOfAtomsToReplace =1;
+			if(oxygenWithAppropriateLocants.size() < numberOfAtomsToReplace) {
+				numberOfAtomsToReplace = 1;
 				//e.g. -1-thioureidomethyl
 			}
 			else{
@@ -974,23 +974,33 @@ class FunctionalReplacement {
 	 */
 	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
 		String[] possibleLocants = MATCH_COMMA.split(locantEl.getValue());
+		
+		boolean pLocantSpecialCase = (possibleLocants.length == 1 && possibleLocants[0].equals("P"));
 		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
 		for (Atom atom : oxygenAtoms) {
 			List<String> atomlocants = atom.getLocants();
-			if (atomlocants.size()>0){
+			if (atomlocants.size() > 0) {
 				for (String locantVal : possibleLocants) {
-					if (atomlocants.contains(locantVal)){
+					if (atomlocants.contains(locantVal)) {
 						 oxygenWithAppropriateLocants.add(atom);
 						 break;
 					}
 				}
 			}
-			else{
+			else if (pLocantSpecialCase) {
+				for (Atom neighbour : atom.getAtomNeighbours()) {
+					if (neighbour.getElement() == ChemEl.P) {
+						 oxygenWithAppropriateLocants.add(atom);
+						 break;
+					}
+				}
+			}
+			else {
 				Atom atomWithNumericLocant = OpsinTools.depthFirstSearchForAtomWithNumericLocant(atom);
-				if (atomWithNumericLocant!=null){
+				if (atomWithNumericLocant != null) {
 					List<String> atomWithNumericLocantLocants = atomWithNumericLocant.getLocants();
 					for (String locantVal : possibleLocants) {
-						if (atomWithNumericLocantLocants.contains(locantVal)){
+						if (atomWithNumericLocantLocants.contains(locantVal)) {
 							 oxygenWithAppropriateLocants.add(atom);
 							 break;
 						}
