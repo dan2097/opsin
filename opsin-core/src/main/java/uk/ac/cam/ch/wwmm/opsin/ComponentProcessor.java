@@ -5277,18 +5277,18 @@ class ComponentProcessor {
 				 * Else the locant is assigned to the substituent
 				 */
 				boolean bracketAdded =false;
-				if (hasAdjacentGroupToSubstitute){
+				if (hasAdjacentGroupToSubstitute) {
 					//now find the brackets/substituents before this element
 					Element previous = OpsinTools.getPreviousSibling(substituent);
 					List<Element> previousElements = new ArrayList<Element>();
-					while( previous !=null){
-						if (!previous.getName().equals(SUBSTITUENT_EL) && !previous.getName().equals(BRACKET_EL)){
+					while( previous != null) {
+						if (!previous.getName().equals(SUBSTITUENT_EL) && !previous.getName().equals(BRACKET_EL)) {
 							break;
 						}
 						previousElements.add(previous);
 						previous = OpsinTools.getPreviousSibling(previous);
 					}
-					if (previousElements.size() > 0 ){//an explicit bracket is needed
+					if (previousElements.size() > 0) {//an explicit bracket is needed
 						Collections.reverse(previousElements);
 						Element bracket = new GroupingEl(BRACKET_EL);
 						bracket.addAttribute(locantAtr);
@@ -5303,18 +5303,21 @@ class ComponentProcessor {
 						parent.insertChild(bracket, indexToInsertAt);
 						brackets.add(bracket);
 						bracketAdded = true;
+						if (substituent.getAttribute(LOCANT_ATR) != null) {
+							throw new StructureBuildingException("Substituent with biochemical linkage descriptor should not also have a locant: " + substituent.getAttributeValue(LOCANT_ATR));
+						}
 					}
 				}
 				
 				if (!bracketAdded) {
 					Element elToAddAtrTo;
-					if (parent.getName().equals(BRACKET_EL) && !hasAdjacentGroupToSubstitute){
+					if (parent.getName().equals(BRACKET_EL) && !hasAdjacentGroupToSubstitute) {
 						elToAddAtrTo = parent;
 					}
 					else{
 						elToAddAtrTo = substituent;
 					}
-					if (elToAddAtrTo.getAttribute(LOCANT_ATR) !=null){
+					if (elToAddAtrTo.getAttribute(LOCANT_ATR) !=null) {
 						throw new StructureBuildingException("Substituent with biochemical linkage descriptor should not also have a locant: " + elToAddAtrTo.getAttributeValue(LOCANT_ATR));
 					}
 					elToAddAtrTo.addAttribute(locantAtr);
@@ -5326,7 +5329,7 @@ class ComponentProcessor {
 		for (Element bracket : brackets) {
 			List<Element> bioLinkLocants = bracket.getChildElements(BIOCHEMICALLINKAGE_EL);
 			if (bioLinkLocants.size() > 0){
-				if (bioLinkLocants.size() > 1){
+				if (bioLinkLocants.size() > 1) {
 					throw new RuntimeException("OPSIN Bug: More than 1 biochemical linkage locant associated with bracket");
 				}
 				Element bioLinkLocant = bioLinkLocants.get(0);

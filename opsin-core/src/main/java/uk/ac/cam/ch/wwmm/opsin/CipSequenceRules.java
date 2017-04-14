@@ -423,11 +423,11 @@ class CipSequenceRules {
 				if (lastPreviousAtom == null) {
 					lastPreviousAtom = previousAtom;
 				}
-				else if (lastPreviousAtom !=previousAtom) {
+				else if (lastPreviousAtom != previousAtom) {
 					lastPreviousAtom = previousAtom;
 					counter++;
 				}
-				if (allNeighbours.size() <=  counter) {
+				if (allNeighbours.size() <= counter) {
 					allNeighbours.add(new ArrayList<List<AtomWithHistory>>());
 				}
 				allNeighbours.get(counter).add(neighboursWithHistory);
