@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**Conducts finite-state parsing on chemical names.
  * Adds XML annotation to the semantic constituents of the name.
@@ -180,9 +179,9 @@ class Parser {
 	static Integer[] processStoichiometryIndication(String ratioString) throws ParsingException {
 		ratioString = ratioString.trim();
 		ratioString = ratioString.substring(1, ratioString.length()-1);
-		String[] ratioStrings = MATCH_COLON.split(ratioString);
+		String[] ratioStrings = ratioString.split(":");
 		if (ratioStrings.length ==1){
-			ratioStrings = MATCH_SLASH.split(ratioString);
+			ratioStrings = ratioString.split("/");
 		}
 		Integer[] componentRatios = new Integer[ratioStrings.length];
 		for (int i = 0; i < ratioStrings.length; i++) {

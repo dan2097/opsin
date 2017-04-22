@@ -543,7 +543,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
 		}
 		if (locantEls.size()==1){
-			String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
+			String[] locants = StringTools.removeDashIfPresent(locantEls.get(0).getValue()).split(",");
 			locantsForOxide.addAll(Arrays.asList(locants));
 			locantEls.get(0).detach();
 		}
@@ -715,8 +715,8 @@ class StructureBuilder {
 			if (locantEls.size() >1){
 				throw new StructureBuildingException("Expected 0 or 1 locant elements found: " + locantEls.size());
 			}
-			if (locantEls.size()==1){
-				String[] locants = MATCH_COMMA.split(StringTools.removeDashIfPresent(locantEls.get(0).getValue()));
+			if (locantEls.size() == 1) {
+				String[] locants = StringTools.removeDashIfPresent(locantEls.get(0).getValue()).split(",");
 				locantForFunctionalTerm.addAll(Arrays.asList(locants));
 				locantEls.get(0).detach();
 			}
@@ -934,7 +934,7 @@ class StructureBuilder {
 					}
 			
 					for (int i = 0; i < numberOfAnhydrideLinkages; i++) {
-						String[] locants = MATCH_COMMA.split(acidLocants[i]);
+						String[] locants = acidLocants[i].split(",");
 						Atom oxygen1 =null;
 						for (int j = functionalAtoms.size() -1; j >=0; j--) {
 							Atom functionalAtom = functionalAtoms.get(j);
@@ -1119,7 +1119,7 @@ class StructureBuilder {
 					}
 					else{
 						if (elementaryAtomEl.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR) != null) {
-							String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+							String[] typicalOxidationStates = elementaryAtomEl.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[0].split(",");
 							expectedValency = Integer.parseInt(typicalOxidationStates[0]);
 						}
 						else{
@@ -1325,7 +1325,7 @@ class StructureBuilder {
 		String functionalClass = functionalClassEl.getValue();
 		Element beforeAcetal = OpsinTools.getPreviousSibling(functionalClassEl);
 		int numberOfAcetals =1;
-		String[] elements = MATCH_COMMA.split(functionalClassEl.getAttributeValue(VALUE_ATR));
+		String[] elements = functionalClassEl.getAttributeValue(VALUE_ATR).split(",");
 		if (beforeAcetal != null){
 			if (beforeAcetal.getName().equals(MULTIPLIER_EL)){
 				numberOfAcetals = Integer.parseInt(beforeAcetal.getAttributeValue(VALUE_ATR));
@@ -1983,7 +1983,7 @@ class StructureBuilder {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
 				Atom metalAtom = elementaryAtom.getFrag().getFirstAtom();
 				if (metalAtom.getCharge() == 0 && metalAtom.getProperty(Atom.OXIDATION_NUMBER) == null) {//if not 0 charge cannot be implicitly modified
-					String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+					String[] typicalOxidationStates = elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[0].split(",");
 					int typicalCharge = Integer.parseInt(typicalOxidationStates[typicalOxidationStates.length-1]);
 					if (typicalCharge > metalAtom.getBondCount()){
 						cationicElements.add(elementaryAtom);
@@ -2005,7 +2005,7 @@ class StructureBuilder {
 	private int setCationicElementsToTypicalCharge(List<Element> cationicElements, int overallCharge)  {
 		for (Element cationicElement : cationicElements) {
 			Fragment cationicFrag = cationicElement.getFrag();
-			String[] typicalOxidationStates = MATCH_COMMA.split(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[0]);
+			String[] typicalOxidationStates = cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[0].split(",");
 			int incomingValency = cationicFrag.getFirstAtom().getIncomingValency();
 			for (String typicalOxidationState : typicalOxidationStates) {
 				int charge = Integer.parseInt(typicalOxidationState);
@@ -2122,7 +2122,7 @@ class StructureBuilder {
 	private boolean setChargeOnCationicElementAppropriately(int overallCharge, Element cationicElement)  {
 		Atom cation = cationicElement.getFrag().getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
-		int maximumCharge = Integer.parseInt(MATCH_COLON.split(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR))[1]);
+		int maximumCharge = Integer.parseInt(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[1]);
 		if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
 			cation.setCharge(chargeOnCationNeeded);
 			return true;

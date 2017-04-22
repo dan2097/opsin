@@ -338,7 +338,7 @@ class StructureBuildingMethods {
 		String[] locants = null;
 		String locantsAtrValue = subOrBracket.getAttributeValue(LOCANT_ATR);
 		if (locantsAtrValue != null){
-			locants = MATCH_COMMA.split(locantsAtrValue);
+			locants = locantsAtrValue.split(",");
 		}
 		Element parentWordOrBracket = subOrBracket.getParent();
 		int indexOfSubOrBracket = parentWordOrBracket.indexOf(subOrBracket);
@@ -749,7 +749,7 @@ class StructureBuildingMethods {
 		if (locantStr == null) {
 			throw new StructureBuildingException("Two locants are required before an anhydro prefix");
 		}
-		String[] locants = MATCH_COMMA.split(locantStr);
+		String[] locants = locantStr.split(",");
 		Atom backBoneAtom1 = frag.getAtomByLocantOrThrow(locants[0]);
 		Atom backBoneAtom2 = frag.getAtomByLocantOrThrow(locants[1]);
 		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom1.getAtomNeighbours(), chemEl);
@@ -1610,7 +1610,7 @@ class StructureBuildingMethods {
 				}
 			}
 			else{
-				inLocants = StringTools.arrayToList(MATCH_COMMA.split(inLocantsString));
+				inLocants = StringTools.arrayToList(inLocantsString.split(","));
 				if (inLocants.size() != multiplier){
 					throw new StructureBuildingException("Mismatch between multiplier and number of inLocants in multiplicative nomenclature");
 				}

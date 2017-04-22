@@ -158,7 +158,7 @@ class ComponentGenerator {
 							Element isThisALocant = OpsinTools.getPreviousSibling(apparentMultiplier);
 							if (isThisALocant == null ||
 									!isThisALocant.getName().equals(LOCANT_EL) ||
-									MATCH_COMMA.split(isThisALocant.getValue()).length != multiplierNum){
+									isThisALocant.getValue().split(",").length != multiplierNum){
 								throw new ComponentGenerationException(apparentMultiplier.getValue() + nextEl.getValue() +" should not have been lexed as two tokens!");
 							}
 						}
@@ -171,7 +171,7 @@ class ComponentGenerator {
 				if (possibleLocantOrMultiplierOrSuffix!=null){//null if not used as substituent
 					if (possibleLocantOrMultiplierOrSuffix.getName().equals(SUFFIX_EL)){//for phen the aryl substituent, expect an adjacent suffix e.g. phenyl, phenoxy
 						Element isThisALocant = OpsinTools.getPreviousSibling(apparentMultiplier);
-						if (isThisALocant == null || !isThisALocant.getName().equals(LOCANT_EL) || MATCH_COMMA.split(isThisALocant.getValue()).length != 1){
+						if (isThisALocant == null || !isThisALocant.getName().equals(LOCANT_EL) || isThisALocant.getValue().split(",").length != 1){
 							String multiplierAndGroup =apparentMultiplier.getValue() + nextEl.getValue();
 							throw new ComponentGenerationException(multiplierAndGroup +" should not have been lexed as one token!");
 						}
@@ -203,7 +203,7 @@ class ComponentGenerator {
 						}
 						currentElem = OpsinTools.getNextSibling(currentElem);
 					}
-					String[] locants = MATCH_COMMA.split(fusionText.substring(1, fusionText.length()-1));
+					String[] locants = fusionText.substring(1, fusionText.length() - 1).split(",");
 					if (locants.length == heteroCount){
 						boolean foundLocantNotInHwSystem =false;
 						for (String locant : locants) {
@@ -273,7 +273,7 @@ class ComponentGenerator {
 						if (StringTools.endsWithCaseInsensitive(brackettedText, "H")) {
 							locantText = m.replaceFirst("");//strip the bracket from the locantText
 							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
-							String[] addedHydrogens = MATCH_COMMA.split(brackettedText);
+							String[] addedHydrogens = brackettedText.split(",");
 							for (String addedHydrogen : addedHydrogens) {
 								Element addedHydrogenElement = new TokenEl(ADDEDHYDROGEN_EL);
 								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length() - 1)));
@@ -338,7 +338,7 @@ class ComponentGenerator {
 				int multiplierValue = Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR));
 				Element possibleOtherLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
 				if (possibleOtherLocant != null) {
-					String[] locantValues = MATCH_COMMA.split(possibleOtherLocant.getValue());
+					String[] locantValues = possibleOtherLocant.getValue().split(",");
 					if (locantValues.length == Integer.parseInt(possibleMultiplier.getAttributeValue(VALUE_ATR))){
 						for (int i = 0; i < locantValues.length; i++) {
 							locantValues[i] = locant.getValue() + locantValues[i];
@@ -447,7 +447,7 @@ class ComponentGenerator {
 				return true;
 			}
 			String outIds = afterOmpLocant.getAttributeValue(OUTIDS_ATR);
-			if (outIds != null && MATCH_COMMA.split(outIds).length > 1) {
+			if (outIds != null && outIds.split(",").length > 1) {
 				//e.g. p-phenylene
 				return true;
 			}
@@ -623,7 +623,7 @@ class ComponentGenerator {
 				int mvalue = Integer.parseInt(m.getAttributeValue(VALUE_ATR));
 				
 				Element possiblyALocant = OpsinTools.getPreviousSibling(m);//detect rare case where multiplier does not mean form a chain of heteroatoms e.g. something like 1,2-disulfanylpropane
-				if(possiblyALocant !=null && possiblyALocant.getName().equals(LOCANT_EL)&& mvalue==MATCH_COMMA.split(possiblyALocant.getValue()).length){
+				if(possiblyALocant !=null && possiblyALocant.getName().equals(LOCANT_EL)&& mvalue==possiblyALocant.getValue().split(",").length){
 					Element suffix = OpsinTools.getNextSibling(multipliedElem, SUFFIX_EL);
 					if (suffix !=null && suffix.getAttributeValue(TYPE_ATR).equals(INLINE_TYPE_VAL)){
 						Element possibleMultiplier = OpsinTools.getPreviousSibling(suffix);
@@ -706,7 +706,7 @@ class ComponentGenerator {
 						Element possibleLocant = OpsinTools.getPreviousSibling(m);
 						if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL)){
 							int expected = Integer.parseInt(m.getAttributeValue(VALUE_ATR)) + 1;
-							if (expected == MATCH_COMMA.split(possibleLocant.getValue()).length){
+							if (expected == possibleLocant.getValue().split(",").length){
 								foundLocantIndicatingHwRingHeteroatomPositions = true;
 							}
 						}
@@ -796,7 +796,7 @@ class ComponentGenerator {
 			if (!StringTools.endsWithCaseInsensitive(txt, "h")){//remove brackets if they are present
 				txt = txt.substring(1, txt.length()-1);
 			}
-			String[] hydrogenLocants =MATCH_COMMA.split(txt);
+			String[] hydrogenLocants =txt.split(",");
             for (String hydrogenLocant : hydrogenLocants) {
                 if (StringTools.endsWithCaseInsensitive(hydrogenLocant, "h")) {
                     Element indicatedHydrogenEl = new TokenEl(INDICATEDHYDROGEN_EL);
@@ -964,7 +964,7 @@ class ComponentGenerator {
 
 	private boolean assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
 		Element possibleLocant = OpsinTools.getPrevious(stereoChemistryElement);
-		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
+		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && possibleLocant.getValue().split(",").length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 			possibleLocant.detach();
 			return true;
@@ -974,7 +974,7 @@ class ComponentGenerator {
 	
 	private void processLocantAssigningForEndoExoSynAnti(Element stereoChemistryElement) {
 		Element possibleLocant = OpsinTools.getPrevious(stereoChemistryElement);
-		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && MATCH_COMMA.split(possibleLocant.getValue()).length==1){
+		if (possibleLocant !=null && possibleLocant.getName().equals(LOCANT_EL) && possibleLocant.getValue().split(",").length==1){
 			stereoChemistryElement.addAttribute(new Attribute(LOCANT_ATR, possibleLocant.getValue()));
 			Element group = OpsinTools.getNextSibling(stereoChemistryElement, GROUP_EL);
 			if (group != null && 
@@ -989,7 +989,7 @@ class ComponentGenerator {
 
 	private void processUnbracketedAlphaBetaStereochemistry(Element stereoChemistryElement) throws ComponentGenerationException {
 		String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
-		String[] stereoChemistryDescriptors = MATCH_COMMA.split(txt);
+		String[] stereoChemistryDescriptors = txt.split(",");
 		List<String> locants = new ArrayList<String>();
 		boolean createLocantsEl =false;
 		for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
@@ -1044,7 +1044,7 @@ class ComponentGenerator {
 	private void processRelativeCisTrans(Element stereoChemistryElement) {
 		String value = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
 		StringBuilder sb = new StringBuilder();
-		String[] terms = MATCH_COMMA.split(value);
+		String[] terms = value.split(",");
 		for (String term : terms) {
 			if (term.startsWith("c-")|| term.startsWith("t-") || term.startsWith("r-")){
 				if (sb.length() > 0){
@@ -1150,7 +1150,7 @@ class ComponentGenerator {
 				currentInfixInformation = new ArrayList<String>();
 			}
 			else{
-				currentInfixInformation = StringTools.arrayToList(MATCH_SEMICOLON.split(suffix.getAttributeValue(INFIX_ATR)));
+				currentInfixInformation = StringTools.arrayToList(suffix.getAttributeValue(INFIX_ATR).split(";"));
 			}
 			String infixValue =infix.getAttributeValue(VALUE_ATR);
 			currentInfixInformation.add(infixValue);
@@ -1229,7 +1229,7 @@ class ComponentGenerator {
 		}
 		for (Element lambdaConventionEl : lambdaConventionEls) {
 			boolean frontLocantsExpected =false;//Is the lambdaConvention el followed by benz/benzo of a fused ring system (these have front locants which correspond to the final fused rings numbering) or by a polycylicspiro system
-			String[] lambdaValues = MATCH_COMMA.split(StringTools.removeDashIfPresent(lambdaConventionEl.getValue()));
+			String[] lambdaValues = StringTools.removeDashIfPresent(lambdaConventionEl.getValue()).split(",");
 			Element possibleHeteroatomOrMultiplier = OpsinTools.getNextSibling(lambdaConventionEl);
 			int heteroCount = 0;
 			int multiplierValue = 1;
@@ -2193,7 +2193,7 @@ class ComponentGenerator {
 			if (!"e".equals(group.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) && possibleSuffix !=null && possibleSuffix.getName().equals(SUFFIX_EL)) {
 				if (possibleSuffix.getValue().startsWith("ol")){
 					Element isThisALocant = OpsinTools.getPreviousSibling(group);
-					if (isThisALocant == null || !isThisALocant.getName().equals(LOCANT_EL) || MATCH_COMMA.split(isThisALocant.getValue()).length != 1){
+					if (isThisALocant == null || !isThisALocant.getName().equals(LOCANT_EL) || isThisALocant.getValue().split(",").length != 1){
 						throw new ComponentGenerationException(groupValue + "ol has been incorrectly interpreted as "+ groupValue+", ol instead of phenol with the oxgen replaced");
 					}
 				}
@@ -2652,7 +2652,7 @@ class ComponentGenerator {
 		}
 		else if (ENDINIC_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 			//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
-			String[] suffixAppliesTo = MATCH_COMMA.split(group.getAttributeValue(SUFFIXAPPLIESTO_ATR));
+			String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
 			if (suffixAppliesTo.length == 2) {
 				Element yl = OpsinTools.getNextSibling(group);
 				if (yl.getAttributeValue(VALUE_ATR).equals("yl")) {

@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import java.util.ArrayDeque;
@@ -742,13 +741,13 @@ class SMILESFragmentBuilder {
 			FragmentTools.relabelLocantsAsFusedRingSystem(atomList);
 		}
 		else{
-			String[] labelMap = MATCH_SLASH.split(labelMapping, -1);//place slash delimited labels into an array
+			String[] labelMap = labelMapping.split("/", -1);//place slash delimited labels into an array
 			int numOfAtoms = atomList.size();
 			if (labelMap.length != numOfAtoms){
 				throw new StructureBuildingException("Group numbering has been invalidly defined in resource file: labels: " +labelMap.length + ", atoms: " + numOfAtoms );
 			}
 			for (int i = 0; i < numOfAtoms; i++) {
-				String labels[] = MATCH_COMMA.split(labelMap[i]);
+				String labels[] = labelMap[i].split(",");
 				for (String label : labels) {
 					if (label.length() > 0) {
 						atomList.get(i).addLocant(label);

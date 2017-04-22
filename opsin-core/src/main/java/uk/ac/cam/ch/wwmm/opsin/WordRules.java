@@ -698,7 +698,7 @@ class WordRules {
 				if (multiplierVal > 1) {
 					String commonOxidationStatesAndMax = elementaryAtom.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR);
 					if (commonOxidationStatesAndMax == null ||
-							Integer.parseInt(OpsinTools.MATCH_COLON.split(commonOxidationStatesAndMax)[1]) <= 2){
+							Integer.parseInt(commonOxidationStatesAndMax.split(":")[1]) <= 2){
 						chainInterpretation = true;
 					}
 				}
