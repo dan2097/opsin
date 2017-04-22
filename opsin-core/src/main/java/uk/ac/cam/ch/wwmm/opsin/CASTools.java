@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 /**
  * Tools for converting CAS nomenclature into IUPAC nomenclature.
@@ -34,7 +33,7 @@ class CASTools {
 		List<String> functionalTerms = new ArrayList<String>();
 
 		String parent = nameComponents.get(0);
-		String[] parentNameParts = MATCH_SPACE.split(parent);
+		String[] parentNameParts = parent.split(" ");
 		if (parentNameParts.length != 1) {
 			if (matchCasCollectiveIndex.matcher(parentNameParts[parentNameParts.length - 1]).matches()) {//CAS collective index description should be ignored
 				StringBuilder parentSB = new StringBuilder();
@@ -42,7 +41,7 @@ class CASTools {
 					parentSB.append(parentNameParts[i]);
 				}
 				parent = parentSB.toString();
-				parentNameParts = MATCH_SPACE.split(parent);
+				parentNameParts = parent.split(" ");
 			}
 			for (int i = 1; i < parentNameParts.length; i++) {
 				if (!matchAcid.matcher(parentNameParts[i]).matches()) {
@@ -64,7 +63,7 @@ class CASTools {
 				nameComponent = nameComponent.substring(m.group().length());
 				compoundWithcomponent = true;
 			}
-			String[] components = MATCH_SPACE.split(nameComponents.get(i));
+			String[] components = nameComponents.get(i).split(" ");
 			for (String component : components) {
 				if (compoundWithcomponent) {
 					functionalTerms.add(component);

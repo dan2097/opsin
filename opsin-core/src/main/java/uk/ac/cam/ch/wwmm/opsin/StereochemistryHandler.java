@@ -14,7 +14,6 @@ import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
-import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 /**
@@ -684,7 +683,7 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	private void applyAlphaBetaStereochemistryToStereoCentre(Atom stereoAtom, Fragment fragment, String alphaBetaClockWiseAtomOrdering, String alphaOrBeta, Fragment substituentGroup) throws StructureBuildingException {
-		List<String> ringOrder = StringTools.arrayToList(MATCH_SLASH.split(alphaBetaClockWiseAtomOrdering));
+		List<String> ringOrder = StringTools.arrayToList(alphaBetaClockWiseAtomOrdering.split("/"));
 		int positionInList = ringOrder.indexOf(stereoAtom.getFirstLocant());
 		if (stereoAtom.getAtomIsInACycle() && positionInList!=-1){
 			Atom[] atomRefs4 = new Atom[4];
@@ -785,7 +784,7 @@ class StereochemistryHandler {
 		Collections.reverse(carbohydrateStereoChemistryEls);
 		List<String> stereocentreConfiguration = new ArrayList<String>();
 		for (Element carbohydrateStereoChemistryEl: carbohydrateStereoChemistryEls) {
-			String[] values = MATCH_SLASH.split(carbohydrateStereoChemistryEl.getAttributeValue(VALUE_ATR));
+			String[] values = carbohydrateStereoChemistryEl.getAttributeValue(VALUE_ATR).split("/");
 			Collections.addAll(stereocentreConfiguration, values);
 		}
 		

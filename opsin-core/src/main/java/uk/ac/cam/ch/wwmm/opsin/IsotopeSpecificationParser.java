@@ -1,7 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.MATCH_COMMA;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,7 +69,7 @@ class IsotopeSpecificationParser {
 		String locantsStr = m.group(1);
 		String[] locants = null;
 		if(locantsStr != null) {
-			locants = MATCH_COMMA.split(locantsStr);
+			locants = locantsStr.split(",");
 			if (locants.length != multiplier) {
 				throw new StructureBuildingException("Mismatch between number of locants: " + locants.length + " and number of hydrogen isotopes requested: " + multiplier);
 			}
@@ -98,7 +96,7 @@ class IsotopeSpecificationParser {
 		String locantsStr = m.group(1);
 		String[] locants = null;
 		if(locantsStr != null) {
-			locants = MATCH_COMMA.split(locantsStr);
+			locants = locantsStr.split(",");
 			if (multiplierStr == null) {
 				multiplier = locants.length;
 			}
