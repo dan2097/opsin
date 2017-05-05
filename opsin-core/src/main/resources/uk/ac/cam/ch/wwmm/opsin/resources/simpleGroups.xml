@@ -389,6 +389,9 @@
 		<token value="O=C(O)CNC(N)=N" functionalIDs="3">glycocyamine|glycocyamin</token>
 		<token value="NC(=[NH2+])N" labels="1,N//2,N''/3,N'">guanidinium</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">icosasphinganine|icosasphinganin</token>
+		<token value="OC(=O)C(O)CC(C)C" labels="/1//2,alpha//3,beta/4,gamma/5',delta'/5,delta">leucinic acid|dl-leucinic acid</token><!--Alternative name for leucic acid, other suffixes give leucine derivatives-->
+		<token value="OC(=O)[C@H](O)CC(C)C" labels="/1//2,alpha//3,beta/4,gamma/5',delta'/5,delta">d-leucinic acid</token>
+		<token value="OC(=O)[C@@H](O)CC(C)C" labels="/1//2,alpha//3,beta/4,gamma/5',delta'/5,delta">l-leucinic acid</token>
 		<token value="OC[C@H](N)[C@H](O)[C@H](O)CCCCCCCCCCCCCC" labels="/1/2//3//4//5/6/7/8/9/10/11/12/13/14/15/16/17/18">phytosphingosine|phytosphingosin</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphinganine|sphinganin</token>
 		<token value="OC[C@H](N)[C@H](O)/C=C/CCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18">sphingosine|sphingosin</token>
