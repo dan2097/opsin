@@ -318,9 +318,9 @@
 	<tokenList tagname="group" type="acidStem" subType="ylForNothing" symbol="½">
 		<!--This token class disallows any radical forming suffix-->
 		<!--avoids ambiguity with leucine radicals-->
-		<token value="CC(O)CC(C)C">leuc|dl-leuc</token>
-		<token value="C[C@H](O)CC(C)C">d-leuc</token>
-		<token value="C[C@@H](O)CC(C)C">l-leuc</token>
+		<token value="CC(O)CC(C)C" labels="1/2,alpha//3,beta/4,gamma/5',delta'/5,delta">leuc|dl-leuc</token>
+		<token value="C[C@H](O)CC(C)C" labels="1/2,alpha//3,beta/4,gamma/5',delta'/5,delta">d-leuc</token>
+		<token value="C[C@@H](O)CC(C)C" labels="1/2,alpha//3,beta/4,gamma/5',delta'/5,delta">l-leuc</token>
 
 		<!--avoids ambiguity with N-butyryl substituents-->
 		<token value="CCCC" labels="1/2/3/4" usableAsAJoiner="yes">n-butyr</token>
