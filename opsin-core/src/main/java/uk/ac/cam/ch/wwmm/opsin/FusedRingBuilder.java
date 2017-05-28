@@ -519,16 +519,17 @@ class FusedRingBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void processBenzoFusions() throws StructureBuildingException {
-		for(int i= groupsInFusedRing.size() -2;i >=0; i--) {
-			if (groupsInFusedRing.get(i).getValue().equals("benz") || groupsInFusedRing.get(i).getValue().equals("benzo")){
-				Element possibleFusionbracket = OpsinTools.getNextSibling(groupsInFusedRing.get(i));
-				if (!possibleFusionbracket.getName().equals(FUSION_EL)){
-					Element possibleMultiplier = OpsinTools.getPreviousSibling(groupsInFusedRing.get(i));
-					if (possibleMultiplier==null || !possibleMultiplier.getName().equals(MULTIPLIER_EL)|| possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)){
+		for(int i = groupsInFusedRing.size() - 2; i >= 0; i--) {
+			Element group = groupsInFusedRing.get(i);
+			if (group.getValue().equals("benz") || group.getValue().equals("benzo")) {
+				Element possibleFusionbracket = OpsinTools.getNextSibling(group);
+				if (!possibleFusionbracket.getName().equals(FUSION_EL)) {
+					Element possibleMultiplier = OpsinTools.getPreviousSibling(group);
+					if (possibleMultiplier == null || !possibleMultiplier.getName().equals(MULTIPLIER_EL) || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL)) {
 						//e.g. 2-benzofuran. Fused rings of this type are a special case treated as being a single component
 						//and have a special convention for indicating the position of heteroatoms 
-						benzoSpecificFusion(groupsInFusedRing.get(i), groupsInFusedRing.get(i+1));
-						groupsInFusedRing.get(i).detach();
+						benzoSpecificFusion(group, groupsInFusedRing.get(i + 1));
+						group.detach();
 						groupsInFusedRing.remove(i);
 					}
 				}
@@ -940,7 +941,6 @@ class FusedRingBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void benzoSpecificFusion(Element benzoEl, Element parentEl) throws StructureBuildingException {
-		
 		/*
 		 * Perform the fusion, number it and associate it with the parentEl
 		 */
