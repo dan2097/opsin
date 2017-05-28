@@ -951,32 +951,33 @@ class FusedRingBuilder {
 		removeMergedAtoms();
 		FusedRingNumberer.numberFusedRing(parentRing);//numbers the fused ring;
 		Fragment fusedRing =parentRing;
+		setBenzoHeteroatomPositioning(benzoEl, fusedRing);
+	}
 
-		/*
-		 * Check for locants and use these to set the heteroatom positions
-		 */
+	/**
+	 * Checks for locant(s) before benzo and uses these to set 
+	 * @param benzoEl
+	 * @param fusedRing
+	 * @throws StructureBuildingException
+	 */
+	private void setBenzoHeteroatomPositioning(Element benzoEl, Fragment fusedRing) throws StructureBuildingException {
 		Element locantEl = OpsinTools.getPreviousSibling(benzoEl);
 		if (locantEl != null && locantEl.getName().equals(LOCANT_EL)) {
 			String[] locants = locantEl.getValue().split(",");
-			if (locantsAreAllNumeric(locants)) {
-				List<Element> suffixes = benzoEl.getParent().getChildElements(SUFFIX_EL);
-				int suffixesWithoutLocants =0;
-				for (Element suffix : suffixes) {
-					if (suffix.getAttribute(LOCANT_ATR)==null){
-						suffixesWithoutLocants++;
+			if (locantsCouldApplyToHeteroatomPositions(locants, benzoEl)) {
+				List<Atom> atomList =fusedRing.getAtomList();
+				List<Atom> heteroatoms = new ArrayList<Atom>();
+				List<ChemEl> elementOfHeteroAtom = new ArrayList<ChemEl>();
+				for (Atom atom : atomList) {//this iterates in the same order as the numbering system
+					if (atom.getElement() != ChemEl.C){
+						heteroatoms.add(atom);
+						elementOfHeteroAtom.add(atom.getElement());
 					}
 				}
-				if (locants.length != suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
-					List<Atom> atomList =fusedRing.getAtomList();
-					List<Atom> heteroatoms = new ArrayList<Atom>();
-					List<ChemEl> elementOfHeteroAtom = new ArrayList<ChemEl>();
-					for (Atom atom : atomList) {//this iterates in the same order as the numbering system
-						if (atom.getElement() != ChemEl.C){
-							heteroatoms.add(atom);
-							elementOfHeteroAtom.add(atom.getElement());
-						}
-					}
-					if (locants.length == heteroatoms.size()){//as many locants as there are heteroatoms to assign
+				if (locants.length == heteroatoms.size()){//as many locants as there are heteroatoms to assign
+					//check for special case of a single locant indicating where the group substitutes e.g. 4-benzofuran-2-yl
+					if (!(locants.length == 1 && OpsinTools.getPreviousSibling(locantEl) == null
+							 && ComponentProcessor.checkLocantPresentOnPotentialRoot(state, benzoEl.getParent(), locants[0]))) {
 						for (Atom atom : heteroatoms) {
 							atom.setElement(ChemEl.C);
 						}
@@ -985,12 +986,29 @@ class FusedRingBuilder {
 						}
 						locantEl.detach();
 					}
-					else if (locants.length > 1){
-						throw new StructureBuildingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
-					}
+				}
+				else if (locants.length > 1){
+					throw new StructureBuildingException("Unable to assign all locants to benzo-fused ring or multiplier was mising");
 				}
 			}
 		}
+	}
+
+	private boolean locantsCouldApplyToHeteroatomPositions(String[] locants, Element benzoEl) {
+		if (!locantsAreAllNumeric(locants)) {
+			return false;
+		}
+		List<Element> suffixes = benzoEl.getParent().getChildElements(SUFFIX_EL);
+		int suffixesWithoutLocants = 0;
+		for (Element suffix : suffixes) {
+			if (suffix.getAttribute(LOCANT_ATR)==null){
+				suffixesWithoutLocants++;
+			}
+		}
+		if (locants.length == suffixesWithoutLocants){//In preference locants will be assigned to suffixes rather than to this nomenclature
+			return false;
+		}
+		return true;
 	}
 
 	private boolean locantsAreAllNumeric(String[] locants) {
