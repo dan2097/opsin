@@ -2558,12 +2558,13 @@ class ComponentProcessor {
 	/**
 	 * Checks through the groups accessible from the startingElement taking into account brackets (i.e. those that it is feasible that the group of the startingElement could substitute onto).
 	 * It is assumed that one does not intentionally locant onto something in a deeper level of bracketing (not implicit bracketing). e.g. 2-propyl(ethyl)ammonia will give prop-2-yl
+	 * @param state
 	 * @param startingElement
 	 * @param locant: the locant string to check for the presence of
 	 * @return whether the locant was found
 	 * @throws StructureBuildingException
 	 */
-	private boolean checkLocantPresentOnPotentialRoot(Element startingElement, String locant) throws StructureBuildingException {
+	static boolean checkLocantPresentOnPotentialRoot(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
 		boolean foundSibling =false;
 		Deque<Element> s = new ArrayDeque<Element>();
 		s.add(startingElement);
@@ -4255,7 +4256,7 @@ class ComponentProcessor {
 				//if it only has 1 then assume locanted substitution onto it not intended. Or if doesn't have the required locant
 				if (frag.getAtomCount() == 1 || !frag.hasLocant(locantText) || matchElementSymbolOrAminoAcidLocant.matcher(locantText).find()
 						|| (locantValues.length == 1 && elAfterLocant.getName().equals(MULTIPLIER_EL))) {
-					if (checkLocantPresentOnPotentialRoot(substituent, locantText)){
+					if (checkLocantPresentOnPotentialRoot(state, substituent, locantText)){
 						moveLocants = true;//locant location is present elsewhere
 						break;
 					}
@@ -4433,7 +4434,7 @@ class ComponentProcessor {
 				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
 				 */
 				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
-						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
+						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
 					return;
 				}
 				boolean assignableToIndirectFeatures =true;
