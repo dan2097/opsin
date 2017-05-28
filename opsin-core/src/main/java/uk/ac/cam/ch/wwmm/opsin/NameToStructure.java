@@ -44,15 +44,15 @@ import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 public class NameToStructure {
 	
 	private static final Logger LOG = Logger.getLogger(NameToStructure.class);
+	
+	/**Applies OPSIN's grammar to tokenise and assign meaning to tokens*/
+	private ParseRules parseRules;
 
-	/**Does finite-state non-destructive parsing on chemical names.*/
+	/**Parses a chemical name into one (or more in the case of ambiguity) parse trees*/
 	private Parser parser;
 	
-	/**Applies OPSIN's grammar to tokenise and assign meanings tokens.*/
-	private ParseRules parseRules;
-	
-	/**Allows the lookup of the rules associated with suffixes*/
-	private SuffixRulesLookup suffixRulesLookup;
+	/**Which suffixes apply to what and what their effects are*/
+	private SuffixRules suffixRules;
 
 	private static NameToStructure NTS_INSTANCE;
 
@@ -100,7 +100,7 @@ public class NameToStructure {
 			parseRules = new ParseRules(resourceManager);
 			Tokeniser tokeniser = new Tokeniser(parseRules);
 			parser = new Parser(wordRules, tokeniser, resourceManager);
-			suffixRulesLookup = new SuffixRulesLookup(resourceGetter);
+			suffixRules = new SuffixRules(resourceGetter);
 		} catch (Exception e) {
 			throw new NameToStructureException(e.getMessage(), e);
 		}
@@ -191,7 +191,7 @@ public class NameToStructure {
 				}
 				BuildState state = new BuildState(n2sConfig);
 				//Converts the XML to fragments (handles many different nomenclatueres for describing structure). Assigns locants 
-				new ComponentProcessor(suffixRulesLookup, state).processParse(parse);
+				new ComponentProcessor(state, new SuffixApplier(state, suffixRules)).processParse(parse);
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(parse.toXML());
 				}

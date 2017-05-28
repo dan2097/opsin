@@ -914,6 +914,52 @@ class FragmentTools {
 		}
 		state.fragManager.removeAtomAndAssociatedBonds(atomToRemove);
 	}
+	
+	/**
+	 * Removes a terminal oxygen from the atom 
+	 * An exception is thrown if no suitable oxygen could be found connected to the atom
+	 * Note that [N+][O-] is treated as N=O
+	 * @param state
+	 * @param atom
+	 * @param desiredBondOrder
+	 * @throws StructureBuildingException
+	 */
+	static void removeTerminalOxygen(BuildState state, Atom atom, int desiredBondOrder) throws StructureBuildingException {
+		//TODO prioritise [N+][O-]
+		List<Atom> neighbours = atom.getAtomNeighbours();
+		for (Atom neighbour : neighbours) {
+			if (neighbour.getElement() == ChemEl.O && neighbour.getBondCount()==1){
+				Bond b = atom.getBondToAtomOrThrow(neighbour);
+				if (b.getOrder()==desiredBondOrder && neighbour.getCharge()==0){
+					FragmentTools.removeTerminalAtom(state, neighbour);
+					if (atom.getLambdaConventionValency()!=null){//corrects valency for phosphin/arsin/stibin
+						atom.setLambdaConventionValency(atom.getLambdaConventionValency()-desiredBondOrder);
+					}
+					if (atom.getMinimumValency()!=null){//corrects valency for phosphin/arsin/stibin
+						atom.setMinimumValency(atom.getMinimumValency()-desiredBondOrder);
+					}
+					return;
+				}
+				else if (neighbour.getCharge() ==-1 && b.getOrder()==1 && desiredBondOrder == 2){
+					if (atom.getCharge() ==1 && atom.getElement() == ChemEl.N){
+						FragmentTools.removeTerminalAtom(state, neighbour);
+						atom.neutraliseCharge();
+						return;
+					}
+				}
+			}
+		}
+		if (desiredBondOrder ==2){
+			throw new StructureBuildingException("Double bonded oxygen not found at suffix attachment position. Perhaps a suffix has been used inappropriately");
+		}
+		else if (desiredBondOrder ==1){
+			throw new StructureBuildingException("Hydroxy oxygen not found at suffix attachment position. Perhaps a suffix has been used inappropriately");
+		}
+		else {
+			throw new StructureBuildingException("Suitable oxygen not found at suffix attachment position Perhaps a suffix has been used inappropriately");
+		}
+
+	}
 
 
 	/**

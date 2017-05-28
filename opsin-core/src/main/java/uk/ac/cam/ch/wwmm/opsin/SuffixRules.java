@@ -13,7 +13,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 
-class SuffixRulesLookup {
+class SuffixRules {
 	
 	/**For a given group type what suffixes are applicable.
 	 * Within this group type which are applicable for a given suffixValue
@@ -31,7 +31,7 @@ class SuffixRulesLookup {
 		}
 	}
 	
-	SuffixRulesLookup(ResourceGetter resourceGetter) throws IOException {
+	SuffixRules(ResourceGetter resourceGetter) throws IOException {
 		Map<String, List<SuffixRule>> suffixRulesMap = generateSuffixRulesMap(resourceGetter);
 		suffixApplicability = generateSuffixApplicabilityMap(resourceGetter, suffixRulesMap);
 	}
@@ -137,6 +137,7 @@ class SuffixRulesLookup {
 		}
 		return suffixApplicability;
 	}
+	
 
 	/**
 	 * Returns the appropriate suffixRules for the given arguments.
@@ -174,6 +175,7 @@ class SuffixRulesLookup {
 		return suffixRules;
 	}
 	
+	
 	/**
 	 * Does suffixApplicability.xml have an entry for this group type? 
 	 * @param groupType
@@ -182,4 +184,6 @@ class SuffixRulesLookup {
 	boolean isGroupTypeWithSpecificSuffixRules(String groupType){
 		return suffixApplicability.containsKey(groupType);
 	}
+	
+
 }
