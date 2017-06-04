@@ -57,13 +57,16 @@ class FusedRingNumberer {
 		}
 	}
 
-	enum FusionRingShape{
+	enum FusionRingShape {
 		enterFromLeftHouse,//5 membered ring
 		enterFromTopLeftHouse,//5 membered ring
 		enterFromTopRightHouse,//5 membered ring
 		enterFromRightHouse,//5 membered ring
-		enterFromLeftSevenMembered,//7 membered ring, modified from 6 membered at bottom
-		enterFromRightSevenMembered,//7 membered ring, modified from 6 membered at top
+		enterFromLeftSevenMembered,//7 membered ring
+		enterFromTopSevenMembered,//7 membered ring
+		enterFromRightSevenMembered,//7 membered ring
+		enterFromBottomRightSevenMembered,//7 membered ring
+		enterFromBottomLeftSevenMembered,//7 membered ring
 		standard
 	}
 
@@ -491,7 +494,7 @@ class FusedRingNumberer {
 				else if (!distances.contains(3)){
 					allowedRingShapes.add(FusionRingShape.enterFromTopRightHouse);
 				}
-				allowedRingShapes = removeDegenerateRingShapes(allowedRingShapes, distances);
+				allowedRingShapes = removeDegenerateRingShapes(allowedRingShapes, distances, 5);
 			}
 			else if (fusedBondCount==5){
 				allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
@@ -507,8 +510,26 @@ class FusedRingNumberer {
 				allowedRingShapes.add(FusionRingShape.enterFromLeftSevenMembered);
 			}
 			else{
-				allowedRingShapes.add(FusionRingShape.enterFromLeftSevenMembered);
-				allowedRingShapes.add(FusionRingShape.enterFromRightSevenMembered);
+				List<Integer> distances = new ArrayList<Integer>();//one distance is likely to be 0
+				for (Bond fusedBond : fusedBonds) {
+					distances.add(calculateDistanceBetweenBonds(startingBond, fusedBond, ring));
+				}
+				if (!distances.contains(4) && !distances.contains(6)){
+					allowedRingShapes.add(FusionRingShape.enterFromLeftSevenMembered);
+				}
+				if (!distances.contains(1) && !distances.contains(6)){
+					allowedRingShapes.add(FusionRingShape.enterFromTopSevenMembered);
+				}
+				if (!distances.contains(1) && !distances.contains(3)){
+					allowedRingShapes.add(FusionRingShape.enterFromRightSevenMembered);
+				}
+				if (!distances.contains(2) && !distances.contains(4)){
+					allowedRingShapes.add(FusionRingShape.enterFromBottomRightSevenMembered);
+				}
+				if (!distances.contains(3) && !distances.contains(5)){
+					allowedRingShapes.add(FusionRingShape.enterFromBottomLeftSevenMembered);
+				}
+				allowedRingShapes = removeDegenerateRingShapes(allowedRingShapes, distances, 7);
 			}
 		}
 		else{
@@ -521,8 +542,9 @@ class FusedRingNumberer {
 	 * Removes the ring shapes that for given distances have identical properties
 	 * @param allowedRingShapes
 	 * @param distances
+	 * @param ringSize 
 	 */
-	private static List<FusionRingShape> removeDegenerateRingShapes(List<FusionRingShape> allowedRingShapes, List<Integer> distances) {
+	private static List<FusionRingShape> removeDegenerateRingShapes(List<FusionRingShape> allowedRingShapes, List<Integer> distances, int ringSize) {
 		distances = new ArrayList<Integer>(distances);
 		distances.remove((Integer)0);//remove distance 0 if present, this invariably comes from the starting bond and is not of interest (and breaks getDirectionFromDist)
 		for (int i = allowedRingShapes.size() - 1; i >=0; i--) {
@@ -531,7 +553,7 @@ class FusedRingNumberer {
 				FusionRingShape shapeToCompareWith = allowedRingShapes.get(j);
 				boolean foundDifference = false;
 				for (Integer distance : distances) {
-					if (getDirectionFromDist(shapeToConsiderRemoving, 5, distance) != getDirectionFromDist(shapeToCompareWith, 5, distance)){
+					if (getDirectionFromDist(shapeToConsiderRemoving, ringSize, distance) != getDirectionFromDist(shapeToCompareWith, ringSize, distance)){
 						foundDifference = true;
 						break;
 					}
@@ -622,7 +644,8 @@ class FusedRingNumberer {
 			else throw new RuntimeException("Impossible distance between bonds for a 4 membered ring");
 		}
 		else if (ringSize == 5) { // 5 member ring
-			if (fusionRingShape == FusionRingShape.enterFromLeftHouse){
+			switch (fusionRingShape) {
+			case enterFromLeftHouse:
 				if (dist ==1){
 					dir = -2;//fusion to an elongated bond
 				}
@@ -635,9 +658,11 @@ class FusedRingNumberer {
 				else if (dist ==4){
 					dir = 3;
 				}
-				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
-			}
-			else if (fusionRingShape == FusionRingShape.enterFromTopLeftHouse){
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
+				}
+				break;
+			case enterFromTopLeftHouse:
 				if (dist ==1){
 					dir = -3;
 				}
@@ -650,9 +675,11 @@ class FusedRingNumberer {
 				else if (dist ==4){
 					dir = 3;
 				}
-				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
-			}
-			else if (fusionRingShape == FusionRingShape.enterFromTopRightHouse){
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
+				}
+				break;
+			case enterFromTopRightHouse:
 				if (dist ==1){
 					dir = -3;
 				}
@@ -665,9 +692,11 @@ class FusedRingNumberer {
 				else if (dist ==4){
 					dir = 3;
 				}
-				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
-			}
-			else if (fusionRingShape == FusionRingShape.enterFromRightHouse){
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
+				}
+				break;
+			case enterFromRightHouse:
 				if (dist ==1){
 					dir = -3;
 				}
@@ -680,35 +709,17 @@ class FusedRingNumberer {
 				else if (dist ==4){
 					dir = 2;//fusion to an elongated bond
 				}
-				else throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
-			}
-			else{
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 5 membered ring");
+				}
+				break;
+			default :
 				throw new RuntimeException("OPSIN Bug: Unrecognised fusion ring shape for 5 membered ring");
 			}
 		}
 		else if (ringSize == 7) { // 7 member ring
-			if (fusionRingShape == FusionRingShape.enterFromLeftSevenMembered){
-				if (dist ==1){
-					dir = -3;//fusion to an abnormally angled bond
-				}
-				else if (dist ==2){
-					dir = -2;
-				}
-				else if (dist ==3){
-					dir = -1;//fusion to an abnormally angled bond
-				}
-				else if (dist ==4){
-					dir = 0;
-				}
-				else if (dist ==5){
-					dir = 1;
-				}
-				else if (dist ==6){
-					dir = 3;
-				}
-				else throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
-			}
-			else if (fusionRingShape == FusionRingShape.enterFromRightSevenMembered){
+			switch (fusionRingShape) {
+			case enterFromLeftSevenMembered:
 				if (dist ==1){
 					dir = -3;
 				}
@@ -727,9 +738,103 @@ class FusedRingNumberer {
 				else if (dist ==6){
 					dir = 3;//fusion to an abnormally angled bond
 				}
-				else throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
-			}
-			else{
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+				}
+				break;
+			case enterFromTopSevenMembered:
+				if (dist ==1){
+					dir = -3;//fusion to an abnormally angled bond
+				}
+				else if (dist ==2){
+					dir = -2;
+				}
+				else if (dist ==3){
+					dir = -1;
+				}
+				else if (dist ==4){
+					dir = 1;
+				}
+				else if (dist ==5){
+					dir = 2;
+				}
+				else if (dist ==6){
+					dir = 3;//fusion to an abnormally angled bond
+				}
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+				}
+				break;
+			case enterFromRightSevenMembered:
+				if (dist ==1){
+					dir = -3;//fusion to an abnormally angled bond
+				}
+				else if (dist ==2){
+					dir = -2;
+				}
+				else if (dist ==3){
+					dir = -1;//fusion to an abnormally angled bond
+				}
+				else if (dist ==4){
+					dir = 0;
+				}
+				else if (dist ==5){
+					dir = 1;
+				}
+				else if (dist ==6){
+					dir = 3;
+				}
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+				}
+				break;
+			case enterFromBottomRightSevenMembered:
+				if (dist ==1){
+					dir = -3;
+				}
+				else if (dist ==2){
+					dir = -2;//fusion to an abnormally angled bond
+				}
+				else if (dist ==3){
+					dir = -1;
+				}
+				else if (dist ==4){
+					dir = 0;//fusion to an abnormally angled bond
+				}
+				else if (dist ==5){
+					dir = 1;
+				}
+				else if (dist ==6){
+					dir = 3;
+				}
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+				}
+				break;
+			case enterFromBottomLeftSevenMembered:
+				if (dist ==1){
+					dir = -3;
+				}
+				else if (dist ==2){
+					dir = -1;
+				}
+				else if (dist ==3){
+					dir = 0;//fusion to an abnormally angled bond
+				}
+				else if (dist ==4){
+					dir = 1;
+				}
+				else if (dist ==5){
+					dir = 2;//fusion to an abnormally angled bond
+				}
+				else if (dist ==6){
+					dir = 3;
+				}
+				else {
+					throw new RuntimeException("Impossible distance between bonds for a 7 membered ring");
+				}
+				break;
+			default:
 				throw new RuntimeException("OPSIN Bug: Unrecognised fusion ring shape for 7 membered ring");
 			}
 		}
@@ -1672,8 +1777,7 @@ class FusedRingNumberer {
 		else {
 			interimDirection = relativeDirection + previousDir;
 		}
-
-		if (Math.abs(interimDirection)>4) {// Added
+		if (Math.abs(interimDirection) > 4) {// Added
 			interimDirection = (8 - Math.abs(interimDirection)) *  Integer.signum(interimDirection) * -1;
 		}
 		//TODO investigate this function and unit test
