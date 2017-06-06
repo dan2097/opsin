@@ -419,6 +419,23 @@ public class FusedRingNumbererTest {
 	public void anthyridine() throws StructureBuildingException {
 		compareNumbering("n1cccc2cc3cccnc3nc12", "1/2/3/4/4a/5/5a/6/7/8/9/9a/10/10a");
 	}
+	
+	@Test
+	public void benzo_cd_azulene() throws StructureBuildingException {
+		compareNumbering("c1cc2cccc3ccccc1c23", "1/2/2a/3/4/5/5a/6/7/8/9/9a/9b");
+	}
+	
+	@Test
+	public void indeno_7_1_cd_azepine() throws StructureBuildingException {
+		compareNumbering("c1nccc2ccc3cccc1c23", "1/2/3/4/4a/5/6/6a/7/8/9/9a/9b");
+	}
+	
+	@Test
+	@Ignore
+	public void tripleSubstituedSevenMembered() throws StructureBuildingException {
+		compareNumbering("C1NCCN2c3ncccc3Cc4ccccc4C12", "1/2/3/4/5/5a/6/7/8/9/9a/10/10a/11/12/13/14/14a/14b");
+		compareNumbering("c1cccc2C3CNCCN3c4ncccc4Cc12", "1/2/3/4/5/5a/6/7/8/9/9a/10/10a/11/12/13/14/14a/14b");
+	}
 
 	/**
 	 * Takes smiles and expected labels for a fused ring. Generates the fused ring, numbers it then compares to the given slash delimited labels
@@ -431,6 +448,7 @@ public class FusedRingNumbererTest {
 		String[] labelArray =labels.split("/", -1);
 		FusedRingNumberer.numberFusedRing(fusedRing);
 		List<Atom> atomList =fusedRing.getAtomList();
+		assertEquals(atomList.size(), labelArray.length);//bug in test if not true!
 		for (int i = 0; i < atomList.size(); i++) {
 			if (!labelArray[i].equals("")){//exterior atom locant
 				assertEquals(labelArray[i],atomList.get(i).getFirstLocant());

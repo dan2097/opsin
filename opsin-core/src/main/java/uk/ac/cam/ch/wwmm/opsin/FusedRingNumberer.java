@@ -632,11 +632,11 @@ class FusedRingNumberer {
 			else throw new RuntimeException("Impossible distance between bonds for a 3 membered ring");
 		}
 		else if (ringSize == 4) { // 4 member ring
-			if (dist == 2) {
-				dir = 0;
-			}
-			else if (dist ==1) {
+			if (dist ==1) {
 				dir = -2;
+			}
+			else if (dist == 2) {
+				dir = 0;
 			}
 			else if (dist ==3) {
 				dir = 2;
@@ -1784,7 +1784,7 @@ class FusedRingNumberer {
 		 /* Even numbered rings when angled do not have direction 2.
 		 * Almost true for 5 member except for corner case where fusion to elongated bond occurs
 		 */
-		if (Math.abs(interimDirection) == 2 && ((ringSize % 2 ==0) || ringSize==5)) {
+		if (Math.abs(interimDirection) == 2 && ((ringSize % 2 ==0) || ringSize==5 || ringSize==7)) {
 			// if (one of them equal to 1 and another is equal to 3, we decrease absolute value and conserve the sign)
 			if (Math.abs(relativeDirection)==1 && Math.abs(previousDir)==3  ||  Math.abs(relativeDirection)==3 && Math.abs(previousDir)==1) {
 				interimDirection = 1 * Integer.signum(interimDirection);
