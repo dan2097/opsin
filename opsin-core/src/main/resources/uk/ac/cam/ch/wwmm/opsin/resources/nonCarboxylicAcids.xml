@@ -162,8 +162,7 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="P(=O)([O-])([O-])P(=O)([O-])[O-]" labels="1////2///" functionalIDs="3,4,7,8">hypodiphosphate|hypodiphosphat</token>
 		<token value="P([O-])([O-])P([O-])[O-]" labels="1///2//" functionalIDs="2,3,5,6">hypodiphosphite|hypodiphosphit</token>
 		<token value="P(=O)([O-])([O-])P(=O)([O-])[O-]" labels="1////2///" functionalIDs="3,4,7,8">hypophosphate|hypophosphorate|hypophosphat|hypophosphorat</token>
-		<token value="P(=O)(O)(O)P(=O)(O)O" labels="1////2///" functionalIDs="3,4,7,8">hypophosphoric</token><!--hypophosphoric acid by convention refers to hypodiphosphoric acid-->
-		<token value="P(=O)(O)(O)P(=O)(O)O" labels="1////2///" functionalIDs="3,4,7,8">hypophosphoricacid|hypophosphoric acid</token>
+		<token value="P(=O)(O)(O)P(=O)(O)O" labels="1////2///" functionalIDs="3,4,7,8">hypophosphoric|hypophosphoricacid|hypophosphoric acid</token><!--hypophosphoric acid by convention refers to hypodiphosphoric acid-->
 		<token value="[PH2](=O)[O-]" functionalIDs="3">hypophosphite|hypophosphorite|hypophosphit|hypophosphorit</token>
 		<token value="[PH2](=O)O" functionalIDs="3">hypophosphorous|hypophosphorousacid|hypophosphorous acid</token>
 		<token value="P(=O)([O-])OP(=O)([O-])[O-]" functionalIDs="3,7,8">isohypophosphate|isohypophosphat</token>
