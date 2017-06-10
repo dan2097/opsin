@@ -4134,8 +4134,10 @@ class ComponentProcessor {
 		}
 
 		//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
+		//an exception is made for groups like carbonyl/sulfonyl as these typically should be implicitly bracketed e.g. tert-butoxy-carbonyl
 		Element elementDirectlyBeforeSubstituent = OpsinTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
-		if (elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL)) {
+		if (elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL) && 
+				!matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches()) {
 			return;
 		}
 		
@@ -4195,8 +4197,39 @@ class ComponentProcessor {
 		if (lastGroupOfElementBeforeSub.getAttribute(ISAMULTIRADICAL_ATR) != null && lastGroupOfElementBeforeSub.getAttribute(ACCEPTSADDITIVEBONDS_ATR) == null && lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR) == null) {
 			return;
 		}
-		if (substituentGroup.getAttribute(ISAMULTIRADICAL_ATR) != null && substituentGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) == null && substituentGroup.getAttribute(IMINOLIKE_ATR) == null) {
-			return;
+		if (substituentGroup.getAttribute(ISAMULTIRADICAL_ATR) != null) {
+			if (substituentGroup.getAttribute(ACCEPTSADDITIVEBONDS_ATR) == null && substituentGroup.getAttribute(IMINOLIKE_ATR) == null) {
+				//after implicit bracketting the substituent should no longer be a multi-radical. If neither of the above attributes apply this can't happen
+				return;
+			}
+			//being not substitutable doesn't mean it can't form additive bonds cf. oxy. Additive bonds can still benefit from implicit bracketing
+			boolean isSubstitutable = false;
+			for (Atom atom : frag.getAtomList()) {
+				if (StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom) > 0){
+					isSubstitutable = true;
+					break;
+				}
+			}
+			if (!isSubstitutable && elementAftersubstituent != null && elementAftersubstituent.getChild(0).getName().equals(MULTIPLIER_EL)) {
+				//return if multiplicative nomenclature detected, if the multiplier differs from the out atom count, additive bonds may still be possible
+				if (frag.getOutAtomCount() == Integer.parseInt(elementAftersubstituent.getChild(0).getAttributeValue(VALUE_ATR))){
+					String elType = elementAftersubstituent.getName();
+					if (elType.equals(ROOT_EL)) {
+						return;
+					}
+					else if (elType.equals(SUBSTITUENT_EL)) {
+						List<Element> groups = OpsinTools.getDescendantElementsWithTagName(elementAftersubstituent, GROUP_EL);
+						for (Element group : groups) {
+							if (group.getAttribute(ISAMULTIRADICAL_ATR) != null){
+								return ;//a multi radical
+							}
+						}
+					}
+					else if (elType.equals(BRACKET_EL) && OpsinTools.getDescendantElementsWithTagName(elementAftersubstituent, ROOT_EL).size() > 0) {
+						return;
+					}
+				}
+			}
 		}
 		if (lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR) != null && substituentGroup.getAttribute(IMINOLIKE_ATR) != null){
 			return;//possibly a multiplicative additive operation
