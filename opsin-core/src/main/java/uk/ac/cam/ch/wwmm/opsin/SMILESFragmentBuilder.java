@@ -538,8 +538,9 @@ class SMILESFragmentBuilder {
 				sf.slash = currentFrame.slash;
 				currentFrame.slash = null;
 			}
-			if (sf.atom.getAtomParity() != null){//replace ringclosureX with actual reference to id when it is known
-				sf.indexOfDummyAtom = addAtomToAtomParity(sf.atom.getAtomParity(), ringOpeningDummyAtom);
+			AtomParity atomParity = sf.atom.getAtomParity();
+			if (atomParity != null){//replace ringclosureX with actual reference to id when it is known
+				sf.indexOfDummyAtom = addAtomToAtomParity(atomParity, ringOpeningDummyAtom);
 			}
 			ringClosures.put(closure, sf);
 			currentFrame.bondOrder = 1;
@@ -558,31 +559,32 @@ class SMILESFragmentBuilder {
 				bondOrder = currentFrame.bondOrder;
 			}
 			Bond b;
-			if (currentFrame.slash == null){
-				b = createBond(sf.atom, currentFrame.atom, bondOrder);
-			}
-			else{
-				b = createBond(currentFrame.atom, sf.atom, bondOrder);//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
-			}
-			if(sf.slash != null) {
-				if(currentFrame.slash != null) {
-					if (sf.slash.equals(currentFrame.slash)){
-						throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
-					}
-				}
-				else{
-					b.setSmilesStereochemistry(sf.slash);
-				}
-			} else if(currentFrame.slash != null) {
+			if (currentFrame.slash != null) {
+				//stereochemistry specified on ring closure
+				//special case e.g. CC1=C/F.O\1  Bond is done from the O to the the C due to the presence of the \
+				b = createBond(currentFrame.atom, sf.atom, bondOrder);
 				b.setSmilesStereochemistry(currentFrame.slash);
+				if(sf.slash != null && sf.slash.equals(currentFrame.slash)) {//specified twice check for contradiction
+					throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
+				}
 				currentFrame.slash = null;
 			}
-			if (currentFrame.atom.getAtomParity() != null){
-				AtomParity atomParity = currentFrame.atom.getAtomParity();
-				addAtomToAtomParity(atomParity, sf.atom);
+			else {
+				b = createBond(sf.atom, currentFrame.atom, bondOrder);
+				if (sf.slash != null) {
+					//stereochemistry specified on ring opening
+					b.setSmilesStereochemistry(sf.slash);
+				}
 			}
-			if (sf.atom.getAtomParity() != null){//replace dummy atom with actual atom e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy atom before being replaced with the F atom
-				Atom[] atomRefs4 = sf.atom.getAtomParity().getAtomRefs4();
+
+			AtomParity currentAtomParity = currentFrame.atom.getAtomParity();
+			if (currentAtomParity != null) {
+				addAtomToAtomParity(currentAtomParity, sf.atom);
+			}
+			
+			AtomParity closureAtomParity = sf.atom.getAtomParity();
+			if (closureAtomParity != null) {//replace dummy atom with actual atom e.g. N[C@@H]1C.F1 where the 1 initially holds a dummy atom before being replaced with the F atom
+				Atom[] atomRefs4 = closureAtomParity.getAtomRefs4();
 				if (sf.indexOfDummyAtom == null) {
 					throw new RuntimeException("OPSIN Bug: Index of dummy atom representing ring closure atom not set");
 				}
@@ -798,56 +800,43 @@ class SMILESFragmentBuilder {
 	private void addBondStereoElements(Fragment currentFrag) throws StructureBuildingException {
 		Set<Bond> bonds = currentFrag.getBondSet();
 		for (Bond centralBond : bonds) {//identify cases of E/Z stereochemistry and add appropriate bondstereo tags
-			if (centralBond.getOrder() == 2){
-
-				List<Bond> fromAtomBonds =centralBond.getFromAtom().getBonds();
+			if (centralBond.getOrder() == 2) {
+				List<Bond> fromAtomBonds = centralBond.getFromAtom().getBonds();
 				for (Bond preceedingBond : fromAtomBonds) {
-					if (preceedingBond.getSmilesStereochemistry() != null){
+					if (preceedingBond.getSmilesStereochemistry() != null) {
 						List<Bond> toAtomBonds = centralBond.getToAtom().getBonds();
 						for (Bond followingBond : toAtomBonds) {
-							if (followingBond.getSmilesStereochemistry() != null){//now found a double bond surrounded by two bonds with slashs
+							if (followingBond.getSmilesStereochemistry() != null) {//now found a double bond surrounded by two bonds with slashs
 								boolean upFirst;
 								boolean upSecond;
 								Atom atom2 = centralBond.getFromAtom();
-								Atom atom1;
-								if (atom2 == preceedingBond.getToAtom()){
-									atom1 = preceedingBond.getFromAtom();
-								}
-								else{
-									atom1 = preceedingBond.getToAtom();
-								}
 								Atom atom3 = centralBond.getToAtom();
-								Atom atom4;
-								if (atom3 == followingBond.getFromAtom()){
-									atom4 = followingBond.getToAtom();
-								}
-								else{
-									atom4 = followingBond.getFromAtom();
-								}
-								if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
+								Atom atom1 = preceedingBond.getOtherAtom(atom2);
+								Atom atom4 = followingBond.getOtherAtom(atom3);
+								if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH) {
 									upFirst = preceedingBond.getToAtom() == atom2;//in normally constructed SMILES this will be the case but you could write C(/F)=C/F instead of F\C=C/F
 								}
-								else if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.RSLASH){
+								else if (preceedingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.RSLASH) {
 									upFirst = preceedingBond.getToAtom() != atom2;
 								}
 								else{
 									throw new StructureBuildingException(preceedingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
 
-								if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH){
+								if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.LSLASH) {
 									upSecond = followingBond.getFromAtom() != atom3;
 								}
-								else if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.RSLASH){
+								else if (followingBond.getSmilesStereochemistry() == SMILES_BOND_DIRECTION.RSLASH) {
 									upSecond = followingBond.getFromAtom() == atom3;
 								}
 								else{
 									throw new StructureBuildingException(followingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
 								BondStereoValue cisTrans = upFirst == upSecond ? BondStereoValue.CIS : BondStereoValue.TRANS;
-								if (centralBond.getBondStereo()!=null){
+								if (centralBond.getBondStereo() != null) {
 									//double bond has redundant specification e.g. C/C=C\\1/NC1 hence need to check it is consistent
 									Atom[] atomRefs4 = centralBond.getBondStereo().getAtomRefs4();
-									if (atomRefs4[0].equals(atom1) || atomRefs4[3].equals(atom4)){
+									if (atomRefs4[0].equals(atom1) || atomRefs4[3].equals(atom4)) {
 										if (centralBond.getBondStereo().getBondStereoValue().equals(cisTrans)){
 											throw new StructureBuildingException("Contradictory double bond stereoconfiguration");
 										}
