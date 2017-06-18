@@ -797,7 +797,7 @@ public class SMILESFragmentBuilderTest {
 	}
 
 	@Test
-	public void testDoubleBondNoelLike1() throws StructureBuildingException {
+	public void testDoubleBondCornerCase1() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("C\\1NC1=C/C");
 		Bond b =fragment.findBond(3, 4);
 		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
@@ -805,11 +805,39 @@ public class SMILESFragmentBuilderTest {
 	}
 
 	@Test
-	public void testDoubleBondNoelLike2() throws StructureBuildingException {
+	public void testDoubleBondCornerCase2() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("C1NC/1=C/C");
 		Bond b =fragment.findBond(3, 4);
 		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
 		assertEquals("1 3 4 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+	}
+	
+	@Test(expected=StructureBuildingException.class)
+	public void testDoubleBondCornerCase3() throws StructureBuildingException {
+		sBuilder.build("C/1=C/CCCCCC/1");
+		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	}
+	
+	@Test(expected=StructureBuildingException.class)
+	public void testDoubleBondCornerCase4() throws StructureBuildingException {
+		sBuilder.build("C\\1=C/CCCCCC\\1");
+		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	}
+	
+	@Test
+	public void testDoubleBondCornerCase5() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C\\1=C/CCCCCC/1");
+		Bond b = fragment.findBond(1, 2);
+		assertEquals(BondStereoValue.TRANS, b.getBondStereo().getBondStereoValue());
+		assertEquals("8 1 2 3", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
+	}
+
+	@Test
+	public void testDoubleBondCornerCase6() throws StructureBuildingException {
+		Fragment fragment = sBuilder.build("C/1=C/CCCCCC\\1");
+		Bond b = fragment.findBond(1, 2);
+		assertEquals(BondStereoValue.CIS, b.getBondStereo().getBondStereoValue());
+		assertEquals("8 1 2 3", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
 	}
 
 	private String atomRefsToIdStr(Atom[] atomRefs4) {
