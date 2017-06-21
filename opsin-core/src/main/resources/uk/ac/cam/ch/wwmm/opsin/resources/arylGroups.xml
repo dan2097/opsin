@@ -114,6 +114,10 @@
 		<token value="c1(C)nccc2c3ccc(OC)cc3[nH]c12" labels="1//2/3/4/4a/4b/5/6/7///8/8a/9/9a">harmin</token>
 		<token value="c1(C)c(C)c(C)ccc1" labels="1//2//3//4/5/6">hemimelliten</token>
 		<token value="NCCc1c[nH]cn1" labels="/alpha/beta/4/5/1,tele,tau/2/3,pros,pi">histamin</token>
+		<token value="N1CCOCCC1" labels="4,para/3,meta/2,ortho/1/7/6/5">homomorpholin</token>
+		<token value="N1CCSCCC1" labels="4,para/3,meta/2,ortho/1/7/6/5">thiahomomorpholin|thiohomomorpholin</token>
+		<token value="N1CC[Se]CCC1" labels="4,para/3,meta/2,ortho/1/7/6/5">selenohomomorpholin</token>
+		<token value="N1CC[Te]CCC1" labels="4,para/3,meta/2,ortho/1/7/6/5">tellurohomomorpholin</token>
 		<token value="N1CCNCCC1" labels="1/2/3/4/5/6/7">homopiperazin</token>
 		<token value="N1CCCCCC1" labels="1/2/3/4/5/6/7">homopiperidin</token>
 		<token value="N1C(=O)NC(=O)C1" labels="1/2//3/4//5">hydantoin</token>

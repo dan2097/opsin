@@ -102,9 +102,11 @@
 		<token value="-C=N">formimino</token>
 		<!--<token value="-c1c(OC)cccc1">guaiacyl</token> ambiguous, can also mean 4-hydroxy-3-methoxyphenyl-->
 		<token value="-CCC=C" labels="1,alpha/2,beta/3,gamma/4,delta" usableAsAJoiner="yes">homoallyl</token>
+		<token value="O1CCNCCC1" labels="1/2/3/4/5/6/7" outIDs="4">homomorpholino</token>
 		<token value="-C(=O)CNC(=O)N" labels="1//2/3/4//5" defaultInLocant="5">hydantoyl</token>
 		<token value="-NN" labels="1/2" usableAsAJoiner="yes">hydrazino</token>
 		<token value="=NN" labels="1/2" usableAsAJoiner="yes">hydrazono</token><!--Also used in functional replacement-->
+		<token value="-NN" labels="1/2" usableAsAJoiner="yes">hydrazyl</token>
 		<token value="-[H]">hydrido</token><!--for inorganic contexts-->
 		<token value="-[H]">hydrogen</token><!--only used in functional class nomenclature-->
 		<token value="-[SeH]">hydroseleno</token>
