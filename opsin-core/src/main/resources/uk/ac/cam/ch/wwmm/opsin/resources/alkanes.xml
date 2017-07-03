@@ -26,8 +26,7 @@
 	<tokenList tagname="alkaneStemComponent" symbol="Ð"><!--tens-->
 		<token value="10">dec</token>
 		<token value="20">cos|icos|eicos</token>
-		<token value="30">triacont</token>
-		<token value="30">tricont</token><!--triacont preferred-->
+		<token value="30">triacont|tricont</token><!--triacont preferred-->
 		<token value="40">tetracont</token>
 		<token value="50">pentacont</token>
 		<token value="60">hexacont</token>
