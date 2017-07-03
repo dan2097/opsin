@@ -2,6 +2,9 @@
 <!--The same as arylGroups except these cannot have suffixes. Or if you like the same as simpleGroups except they can accept indicated hydrogen-->
 <tokenLists>
 	<tokenList tagname="group" type="ring" subType="simpleGroup" symbol="¾">
+		<token value="N1NC(=O)C=C1" labels="1/2/3//4/5">3-pyrazolone|3-pyrazolon</token>
+		<token value="N1N=CC(=O)C1" labels="1/2/3/4//5">4-pyrazolone|4-pyrazolon</token>
+		<token value="N1N=CCC1=O" labels="1/2/3/4/5/">5-pyrazolone|5-pyrazolon</token>
 		<token value="C/C=C/C1=C(OC)C=C(OC)C(OC)=C1">alpha-asarone|alpha-asaron</token>
 		<token value="C/C=C\C1=C(OC)C=C(OC)C(OC)=C1">beta-asarone|beta-asaron</token>
 		<token value="o1cccc1C(=O)C(=O)c2ccco2" labels="1/2/3/4/5/////2'/3'/4'/5'/1'">alpha-furil|2,2'-furil</token>
