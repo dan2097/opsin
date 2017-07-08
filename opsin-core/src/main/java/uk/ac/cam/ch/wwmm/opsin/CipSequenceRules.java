@@ -169,76 +169,42 @@ class CipSequenceRules {
 		 * @return
 		 */
 		private int compareAtNextLevel(CipState cipState, Queue<CipState> queue) {
-			List<List<List<AtomWithHistory>>> newNeighbours1 = getNextLevelNeighbours(cipState.nextAtoms1);
-			List<List<List<AtomWithHistory>>> newNeighbours2 = getNextLevelNeighbours(cipState.nextAtoms2);
+			List<List<AtomWithHistory>> neighbours1 = getNextLevelNeighbours(cipState.nextAtoms1);
+			List<List<AtomWithHistory>> neighbours2 = getNextLevelNeighbours(cipState.nextAtoms2);
 
-			int compare = compareNeighboursByCipPriorityRules(newNeighbours1, newNeighbours2);
+			int compare = compareNeighboursByCipPriorityRules(neighbours1, neighbours2);
 
 			if (compare != 0) {
 				return compare;
 			}
-	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours1 = formListsWithSamePriority(newNeighbours1);
-	    	List<List<List<AtomWithHistory>>> prioritisedNeighbours2 = formListsWithSamePriority(newNeighbours2);
+	    	List<List<AtomWithHistory>> prioritisedNeighbours1 = formListsWithSamePriority(neighbours1);
+	    	List<List<AtomWithHistory>> prioritisedNeighbours2 = formListsWithSamePriority(neighbours2);
 
-	    	//As earlier compare was 0,  prioritisedNeighbours1.size==2.size and nextNeighbourLists1.size==2.size
+	    	//As earlier compare was 0, prioritisedNeighbours1.size() == prioritisedNeighbours2.size()
 	    	for (int i = prioritisedNeighbours1.size() - 1; i >= 0; i--) {
-	     		List<List<AtomWithHistory>> nextNeighbourLists1 = prioritisedNeighbours1.get(i);
-	    		List<List<AtomWithHistory>> nextNeighbourLists2 = prioritisedNeighbours2.get(i);
-	    		for (int j = nextNeighbourLists1.size() - 1; j >= 0; j--) {
-		    		List<AtomWithHistory> nextNeighbours1 = nextNeighbourLists1.get(j);
-		    		List<AtomWithHistory> nextNeighbours2 = nextNeighbourLists2.get(j);
-		    		CipState newCipState = new CipState(nextNeighbours1, nextNeighbours2);
-		    		queue.add(newCipState);
-	    		}
+	    		queue.add(new CipState(prioritisedNeighbours1.get(i), prioritisedNeighbours2.get(i)));
 			}
 	    	return 0;
 		}
 		
-		private int compareNeighboursByCipPriorityRules(List<List<List<AtomWithHistory>>> neighbours1, List<List<List<AtomWithHistory>>> neighbours2) {
-	    	int neighbours1Size = neighbours1.size();
-	    	int neighbours2Size = neighbours2.size();
-	    	int differenceInSize = neighbours1Size - neighbours2Size;
-	    	int maxCommonSize = neighbours1Size > neighbours2Size ? neighbours2Size : neighbours1Size;
-	    	for (int i = 1; i <= maxCommonSize; i++) {
-				int difference = listOfAtomListsCipComparator.compare(neighbours1.get(neighbours1Size -i), neighbours2.get(neighbours2Size -i));
-				if (difference >0) {
-					return 1;
-				}
-				if (difference < 0) {
-					return -1;
-				}
+		private int compareNeighboursByCipPriorityRules(List<List<AtomWithHistory>> neighbours1, List<List<AtomWithHistory>> neighbours2) {
+			int difference = listOfAtomListsCipComparator.compare(neighbours1, neighbours2);
+			if (difference >0) {
+				return 1;
 			}
-	    	if (differenceInSize >0) {
-	    		return 1;
-	    	}
-	    	if (differenceInSize <0) {
-	    		return -1;
-	    	}
+			if (difference < 0) {
+				return -1;
+			}
 			return 0;
 		}
 		
-		private List<List<List<AtomWithHistory>>> getNextLevelNeighbours(List<AtomWithHistory> nextAtoms) {
+		private List<List<AtomWithHistory>> getNextLevelNeighbours(List<AtomWithHistory> nextAtoms) {
 			List<List<AtomWithHistory>> neighbourLists = new ArrayList<List<AtomWithHistory>>();
 			for (AtomWithHistory nextAtom : nextAtoms) {
 				neighbourLists.add(getNextAtomsWithAppropriateGhostAtoms(nextAtom));
 			}
 			Collections.sort(neighbourLists, atomListCipComparator);
-			
-			List<List<List<AtomWithHistory>>> neighbours = new ArrayList<List<List<AtomWithHistory>>>();
-			int counter = 0;
-			List<AtomWithHistory> previousList = null;
-			for (int i = 0, len = neighbourLists.size(); i < len; i++) {
-				List<AtomWithHistory> list = neighbourLists.get(i);
-				if (previousList != null && atomListCipComparator.compare(list, previousList) != 0) {
-					counter++;
-				}
-				if (counter >= neighbours.size()) {
-					neighbours.add(new ArrayList<List<AtomWithHistory>>());
-				}
-				neighbours.get(counter).add(list);
-				previousList = list;
-			}
-			return neighbours;
+			return neighbourLists;
 		}
 
 		/**
@@ -246,52 +212,50 @@ class CipSequenceRules {
 		 * If given say [H,C,C] [H,C,C] this becomes [H,H] [C,C,C,C]
 		 * If given say [H,C,C] [H,C,F] this becomes [H],[C,C][H][C][F]
 		 * as [H,C,F] is higher priority than [H,C,C] so all its atoms must be evaluated first
-		 * The original neighbours list is assumed to have been presorted.
-		 * @param neighbours
+		 * The input lists of neighbours are assumed to have been presorted.
+		 * @param neighbourLists
 		 */
-		private List<List<List<AtomWithHistory>>> formListsWithSamePriority(List<List<List<AtomWithHistory>>> neighbours) {
-			List<List<List<AtomWithHistory>>> updatedNeighbours  = new ArrayList<List<List<AtomWithHistory>>>();
+		private List<List<AtomWithHistory>> formListsWithSamePriority(List<List<AtomWithHistory>> neighbourLists) {
 			List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
-			for (List<List<AtomWithHistory>> neighbourLists : neighbours) {
-				for (int i = 0; i < neighbourLists.size(); i++) {
-					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
-					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
-					for (int j = i + 1; j < neighbourLists.size(); j++) {
-						List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
-						if (atomListCipComparator.compare(primaryAtomList, neighbourListToCompareWith) == 0) {
-							neighbourListsToCombine.add(neighbourListToCompareWith);
-						}
-					}
-					for (List<AtomWithHistory> neighbourList: neighbourListsToCombine) {
-						listsToRemove.add(neighbourList);
-						primaryAtomList.addAll(neighbourList);
+			for (int i = 0; i < neighbourLists.size(); i++) {
+				List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
+				List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
+				for (int j = i + 1; j < neighbourLists.size(); j++) {
+					List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
+					if (atomListCipComparator.compare(primaryAtomList, neighbourListToCompareWith) == 0) {
+						neighbourListsToCombine.add(neighbourListToCompareWith);
 					}
 				}
-				neighbourLists.removeAll(listsToRemove);
-
-				List<List<AtomWithHistory>> updatedNeighbourLists  = new ArrayList<List<AtomWithHistory>>();
-				//lists of same priority have been combined e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
-				for (int i = 0, lnls = neighbourLists.size(); i < lnls; i++) {
-					List<AtomWithHistory> neighbourList = neighbourLists.get(i);
-					Collections.sort(neighbourList, cipComparator);
-					AtomWithHistory lastAtom = null;
-					List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
-					for (int j = 0, lnl = neighbourList.size(); j < lnl; j++) {
-						AtomWithHistory a = neighbourList.get(j);
-						if (lastAtom != null && compareByCipRules(lastAtom, a) != 0) {
-							updatedNeighbourLists.add(currentAtomList);
-							currentAtomList = new ArrayList<AtomWithHistory>();
-						}
-						currentAtomList.add(a);
-						lastAtom = a;
-					}
-					if (!currentAtomList.isEmpty()) {
-						updatedNeighbourLists.add(currentAtomList);
-					}
+				for (List<AtomWithHistory> neighbourList: neighbourListsToCombine) {
+					listsToRemove.add(neighbourList);
+					primaryAtomList.addAll(neighbourList);
 				}
-				updatedNeighbours.add(updatedNeighbourLists);
 			}
-			return updatedNeighbours;
+			neighbourLists.removeAll(listsToRemove);
+
+			List<List<AtomWithHistory>> updatedNeighbourLists  = new ArrayList<List<AtomWithHistory>>();
+			//lists of same priority have already been combined (see above) e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
+			//now sort these combined lists by CIP priority
+			//then group atoms that have the same CIP priority
+			for (int i = 0, lstsLen = neighbourLists.size(); i < lstsLen; i++) {
+				List<AtomWithHistory> neighbourList = neighbourLists.get(i);
+				Collections.sort(neighbourList, cipComparator);
+				AtomWithHistory lastAtom = null;
+				List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
+				for (int j = 0, lstLen = neighbourList.size(); j < lstLen; j++) {
+					AtomWithHistory a = neighbourList.get(j);
+					if (lastAtom != null && compareByCipRules(lastAtom, a) != 0) {
+						updatedNeighbourLists.add(currentAtomList);
+						currentAtomList = new ArrayList<AtomWithHistory>();
+					}
+					currentAtomList.add(a);
+					lastAtom = a;
+				}
+				if (!currentAtomList.isEmpty()) {
+					updatedNeighbourLists.add(currentAtomList);
+				}
+			}
+			return updatedNeighbourLists;
 		}
 
 
