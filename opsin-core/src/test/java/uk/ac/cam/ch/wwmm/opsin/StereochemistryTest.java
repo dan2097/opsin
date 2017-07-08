@@ -589,6 +589,25 @@ public class StereochemistryTest {
 	}
 	
 	@Test
+	public void testCIPpriority15() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("C([H])(O)(C(C(F)CCl)CCBr)C(C(F)CF)CCI");
+		fm.makeHydrogensExplicit();
+		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
+		assertEquals(4, cipOrdered.size());
+		assertEquals(2, cipOrdered.get(0).getID());
+		assertEquals(12, cipOrdered.get(1).getID());
+		assertEquals(4, cipOrdered.get(2).getID());
+		assertEquals(3, cipOrdered.get(3).getID());
+	}
+	
+	@Test(expected=CipOrderingException.class)
+	public void testCipUnassignable() throws StructureBuildingException {
+		//two sides of ring are identical
+		Fragment f = fm.buildSMILES("NC1(O)CCC(CCC2CCCCC2)CC1");
+		new CipSequenceRules(f.getAtomList().get(1)).getNeighbouringAtomsInCipOrder();
+	}
+	
+	@Test
 	public void testAtomParityEquivalence1() {
 		Atom a1= new Atom(1, ChemEl.C, mock(Fragment.class));
 		Atom a2= new Atom(2, ChemEl.C, mock(Fragment.class));

@@ -216,17 +216,31 @@ class CipSequenceRules {
 	    	}
 			return 0;
 		}
-
+		
 		private List<List<List<AtomWithHistory>>> getNextLevelNeighbours(List<AtomWithHistory> nextAtoms) {
-			List<List<List<AtomWithHistory>>> neighbours = getNextAtomsWithAppropriateGhostAtoms(nextAtoms);
-			for (List<List<AtomWithHistory>> list : neighbours) {
-				Collections.sort(list, atomListCipComparator);
+			List<List<AtomWithHistory>> neighbourLists = new ArrayList<List<AtomWithHistory>>();
+			for (AtomWithHistory nextAtom : nextAtoms) {
+				neighbourLists.add(getNextAtomsWithAppropriateGhostAtoms(nextAtom));
 			}
-			Collections.sort(neighbours, listOfAtomListsCipComparator);
+			Collections.sort(neighbourLists, atomListCipComparator);
+			
+			List<List<List<AtomWithHistory>>> neighbours = new ArrayList<List<List<AtomWithHistory>>>();
+			int counter = 0;
+			List<AtomWithHistory> previousList = null;
+			for (int i = 0, len = neighbourLists.size(); i < len; i++) {
+				List<AtomWithHistory> list = neighbourLists.get(i);
+				if (previousList != null && atomListCipComparator.compare(list, previousList) != 0) {
+					counter++;
+				}
+				if (counter >= neighbours.size()) {
+					neighbours.add(new ArrayList<List<AtomWithHistory>>());
+				}
+				neighbours.get(counter).add(list);
+				previousList = list;
+			}
 			return neighbours;
 		}
-		
-		
+
 		/**
 		 * If given say [H,C,C] this becomes [H] [C,C] 
 		 * If given say [H,C,C] [H,C,C] this becomes [H,H] [C,C,C,C]
@@ -367,72 +381,56 @@ class CipSequenceRules {
 		}
 		
 		/**
-		 * Gets the neighbouring atoms bar the previous atoms
+		 * Gets the neighbouring atoms bar the previous atom in CIP order
 		 * If the neighbouring atom has already been visited it is replaced with a ghost atom
 		 * Multiple bonds including those to previous atoms yield ghost atoms unless the bond goes to the chiral atom e.g. in a sulfoxide
 		 * @param atoms
 		 * @return
 		 */
-		private List<List<List<AtomWithHistory>>> getNextAtomsWithAppropriateGhostAtoms(List<AtomWithHistory> atoms) {
-			List<List<List<AtomWithHistory>>> allNeighbours = new ArrayList<List<List<AtomWithHistory>>>();
-			int counter =0;
-			Atom lastPreviousAtom = null;
-			for (AtomWithHistory atomWithHistory : atoms) {
-				Atom atom = atomWithHistory.atom;
-				List<Atom> visitedAtoms = atomWithHistory.visitedAtoms;
-				Atom previousAtom = visitedAtoms.get(visitedAtoms.size()-1);
-				List<Atom> visitedAtomsIncludingCurrentAtom = new ArrayList<Atom>(visitedAtoms);
-				visitedAtomsIncludingCurrentAtom.add(atom);
+		private List<AtomWithHistory> getNextAtomsWithAppropriateGhostAtoms(AtomWithHistory atomWithHistory) {
+			Atom atom = atomWithHistory.atom;
+			List<Atom> visitedAtoms = atomWithHistory.visitedAtoms;
+			Atom previousAtom = visitedAtoms.get(visitedAtoms.size()-1);
+			List<Atom> visitedAtomsIncludingCurrentAtom = new ArrayList<Atom>(visitedAtoms);
+			visitedAtomsIncludingCurrentAtom.add(atom);
 
-				List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
-				for(Bond b :  atom.getBonds()) {
-					Atom atomBondConnectsTo = b.getOtherAtom(atom);
-					if (!atomBondConnectsTo.equals(chiralAtom)) {//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
-						for (int j = b.getOrder(); j >1; j--) {//add ghost atoms to represent higher order bonds
-							Atom ghost = new Atom(atomBondConnectsTo.getElement());
-							if (rule > 0) {
-								int indexOfOriginalAtom = visitedAtoms.indexOf(atomBondConnectsTo);
-								if (indexOfOriginalAtom != -1) {
-									neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, indexOfOriginalAtom));
-								}
-								else{
-									neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.size() + 1));
-								}
+			List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
+			for(Bond b :  atom.getBonds()) {
+				Atom atomBondConnectsTo = b.getOtherAtom(atom);
+				if (!atomBondConnectsTo.equals(chiralAtom)) {//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)
+					for (int j = b.getOrder(); j >1; j--) {//add ghost atoms to represent higher order bonds
+						Atom ghost = new Atom(atomBondConnectsTo.getElement());
+						if (rule > 0) {
+							int indexOfOriginalAtom = visitedAtoms.indexOf(atomBondConnectsTo);
+							if (indexOfOriginalAtom != -1) {
+								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, indexOfOriginalAtom));
 							}
 							else{
-								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, null));
-							}
-						}
-					}
-					if (!atomBondConnectsTo.equals(previousAtom)) {
-						if (visitedAtoms.contains(atomBondConnectsTo)) {//cycle detected, add ghost atom instead
-							Atom ghost = new Atom(atomBondConnectsTo.getElement());
-							if (rule > 0) {
-								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.indexOf(atomBondConnectsTo)));
-							}
-							else{
-								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, null));
+								neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.size() + 1));
 							}
 						}
 						else{
-							neighboursWithHistory.add(new AtomWithHistory(atomBondConnectsTo, visitedAtomsIncludingCurrentAtom, null));
+							neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, null));
 						}
 					}
 				}
-				Collections.sort(neighboursWithHistory, cipComparator);
-				if (lastPreviousAtom == null) {
-					lastPreviousAtom = previousAtom;
+				if (!atomBondConnectsTo.equals(previousAtom)) {
+					if (visitedAtoms.contains(atomBondConnectsTo)) {//cycle detected, add ghost atom instead
+						Atom ghost = new Atom(atomBondConnectsTo.getElement());
+						if (rule > 0) {
+							neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, visitedAtoms.indexOf(atomBondConnectsTo)));
+						}
+						else{
+							neighboursWithHistory.add(new AtomWithHistory(ghost, visitedAtomsIncludingCurrentAtom, null));
+						}
+					}
+					else{
+						neighboursWithHistory.add(new AtomWithHistory(atomBondConnectsTo, visitedAtomsIncludingCurrentAtom, null));
+					}
 				}
-				else if (lastPreviousAtom != previousAtom) {
-					lastPreviousAtom = previousAtom;
-					counter++;
-				}
-				if (allNeighbours.size() <= counter) {
-					allNeighbours.add(new ArrayList<List<AtomWithHistory>>());
-				}
-				allNeighbours.get(counter).add(neighboursWithHistory);
 			}
-			return allNeighbours;
+			Collections.sort(neighboursWithHistory, cipComparator);
+			return neighboursWithHistory;
 		}
 		
 		/**
