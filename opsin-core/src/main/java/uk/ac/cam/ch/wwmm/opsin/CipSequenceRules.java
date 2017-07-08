@@ -216,22 +216,29 @@ class CipSequenceRules {
 		 * @param neighbourLists
 		 */
 		private List<List<AtomWithHistory>> formListsWithSamePriority(List<List<AtomWithHistory>> neighbourLists) {
-			List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
-			for (int i = 0; i < neighbourLists.size(); i++) {
-				List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
-				List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
-				for (int j = i + 1; j < neighbourLists.size(); j++) {
-					List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
-					if (atomListCipComparator.compare(primaryAtomList, neighbourListToCompareWith) == 0) {
-						neighbourListsToCombine.add(neighbourListToCompareWith);
+			int intialNeighbourListCount = neighbourLists.size();
+			if (intialNeighbourListCount > 1) {
+				List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
+				for (int i = 0; i < intialNeighbourListCount; i++) {
+					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
+					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
+					for (int j = i + 1; j < intialNeighbourListCount; j++) {
+						List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
+						if (atomListCipComparator.compare(primaryAtomList, neighbourListToCompareWith) == 0) {
+							neighbourListsToCombine.add(neighbourListToCompareWith);
+							i++;
+						}
+						else {
+							break;
+						}
+					}
+					for (List<AtomWithHistory> neighbourList: neighbourListsToCombine) {
+						listsToRemove.add(neighbourList);
+						primaryAtomList.addAll(neighbourList);
 					}
 				}
-				for (List<AtomWithHistory> neighbourList: neighbourListsToCombine) {
-					listsToRemove.add(neighbourList);
-					primaryAtomList.addAll(neighbourList);
-				}
+				neighbourLists.removeAll(listsToRemove);
 			}
-			neighbourLists.removeAll(listsToRemove);
 
 			List<List<AtomWithHistory>> updatedNeighbourLists  = new ArrayList<List<AtomWithHistory>>();
 			//lists of same priority have already been combined (see above) e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
