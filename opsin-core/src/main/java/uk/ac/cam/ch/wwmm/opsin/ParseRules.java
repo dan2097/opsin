@@ -13,7 +13,7 @@ import dk.brics.automaton.RunAutomaton;
  * Instantiate via NameToStructure.getOpsinParser()
  * 
  * Performs finite-state allocation of roles ("annotations") to tokens:
- * The chemical name is broken down into tokens e.g. ethyl -->eth yl by applying the chemical grammar in regexes.xml
+ * The chemical name is broken down into tokens e.g. ethyl --&gt;eth yl by applying the chemical grammar in regexes.xml
  * The tokens eth and yl are associated with a letter which is referred to here as an annotation which is the role of the token.
  * These letters are defined in regexes.xml and would in this case have the meaning alkaneStem and inlineSuffix
  *
