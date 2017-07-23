@@ -1,3 +1,13 @@
+Version 2.3.1 (2017-07-23)
+Fixed fused ring numbering algorithm incorrectly numbering some ortho- and peri-fused fused systems involving 7-membered rings
+Support P-thio to indicate thiophosphate linkage
+Count of isotopic replacements no longer required if locants given
+Fixed bug where CIP algorithm could assign priorities to identical substituents
+Fixed "DL" before a substituent not assigning the substituted alpha-carbon as racemic stereo
+L-stereochemistry no longer assumed on semi-systematic glycine derivatives e.g. phenylglycine
+Fixed some cases where substituents like carbonyl should have been part of an implicitly bracketed section 
+Fixed interpretation of leucinic acid and 3/4/5-pyrazolone
+
 Version 2.3.0 (2017-02-23)
 D/L stereochemistry can now be assigned algorithmically e.g. L-2-aminobutyric acid
 Other minor improvements to amino acid support e.g. homoproline added
@@ -24,7 +34,7 @@ Support for oximino as a suffix
 Added method [NameToStructure.getVersion()] to retrieve OPSIN version number
 Allowed bridges to be used as detachable prefixes
 Allow odd numbers of hydro to be added e.g. trihydro
-Added support for unbracketted R stereochemistry (but not S, for the moment, due to the ambiguity with sulfur locants)
+Added support for unbracketed R stereochemistry (but not S, for the moment, due to the ambiguity with sulfur locants)
 Various minor bug fixes e.g. stereochemistry was incorrect for isovaline
 Minor vocabulary improvements
 
