@@ -78,10 +78,12 @@
 		<token value="CCOCC" suffixAppliesTo="1,5">diglycol</token>
 		<token value="CC=O" labels="1/2/">glyoxyl|glyoxal</token>
 		<token value="CCNC(=O)c1ccccc1" labels="/////1/2,ortho/3,meta/4,para/5/6">hippur</token>
+		<token value="CCCC(=O)CC" labels="1/2/3/4//5/6">homolevulin</token>
 		<token value="CCCO" labels="1/2/3/">hydracryl</token>
 		<token value="N1CCC(C)CC1" labels="1/2/3/4//5/6" suffixAppliesTo="5">isonipecot</token>
 		<token value="n1c(C)ccc(C)c1" labels="1/2//3/4/5//6" suffixAppliesTo="3,7">isocinchomeron</token>
 		<token value="CC(=C)CC" suffixAppliesTo="1,5">itacon</token>
+		<token value="CCCC(=O)C" labels="1/2/3/4//5">levulin</token>
 		<token value="CC(O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">mal|dl-mal</token>
 		<token value="C[C@@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">l-mal|l(+)-mal|l-(+)-mal</token>
 		<token value="C[C@H](O)CC" suffixAppliesTo="1,5" labels="1/2//3/4">d-mal|d(-)-mal|d-(-)-mal</token>
@@ -229,7 +231,6 @@
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">heptacosyl</token><!--clashes with a systematic name-->
 		<token value="CCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">heptadecyl</token><!--clashes with a systematic name-->
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">hexatriacontyl</token><!--clashes with a systematic name-->
-		<token value="CCCC(=O)CC" labels="1/2/3/4//5/6">homolevulin</token><!--unknown-->
 		<token value="CCc1c(C)cccc1" labels="/alpha/1/2,ortho//3,meta/4,para/5/6" suffixAppliesTo="1,5">homophthal</token><!--both [by analogy]-->
 		<token value="CCc1cc(C)ccc1" labels="/alpha/1/2,ortho/3,meta//4,para/5/6" suffixAppliesTo="1,6">homoisophthal</token><!--both [by analogy]-->
 		<token value="CCc1ccc(C)cc1" labels="/alpha/1/2,ortho/3,meta/4,para//5/6" suffixAppliesTo="1,7">homoterephthal</token><!--both [by analogy]-->
@@ -239,7 +240,6 @@
 		<token value="CC(=O)c1cc(C)ccc1" labels="///1/2,ortho/3,meta//4,para/5/6" suffixAppliesTo="1,7">isophthalon</token><!--unknown-->
 		<token value="CC(CO)CC" suffixAppliesTo="1,6">itamal</token><!--unknown-->
 		<token value="CC(CO)(O)CC" suffixAppliesTo="1,7">itatartar</token><!--unknown-->
-		<token value="CCCC(=O)C" labels="1/2/3/4//5">levulin</token><!--unknown-->
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 4" frontLocantsExpected="2,3,4,5,6" suffixAppliesTo="7,8">lutidin</token>
 		<token value="Cc1c(C)cc(OC)c(OC)c1" labels="/1/2,ortho//3,meta/4,para///5///6" suffixAppliesTo="1,4">m-hemipin</token><!--unknown-->
 		<token value="Cc1c(C)cc(OC)c(OC)c1" labels="/1/2,ortho//3,meta/4,para///5///6" suffixAppliesTo="1,4">metahemipin</token><!--unknown-->
