@@ -64,7 +64,8 @@ class CASTools {
 				compoundWithcomponent = true;
 			}
 			String[] components = nameComponents.get(i).split(" ");
-			for (String component : components) {
+			for (int c = 0, componentLen = components.length; c < componentLen; c++) {
+				String component = components[c];
 				if (compoundWithcomponent) {
 					functionalTerms.add(component);
 					continue;
@@ -118,6 +119,9 @@ class CASTools {
 										|| StringTools.endsWithCaseInsensitive(component, "hydrofluoride") || StringTools.endsWithCaseInsensitive(component, "hydrochloride") 
 										|| StringTools.endsWithCaseInsensitive(component, "hydrobromide") || StringTools.endsWithCaseInsensitive(component, "hydroiodide")) {
 									functionalTerms.add(component);
+								} else if (StringTools.endsWithCaseInsensitive(component, "ic") && c + 1 < componentLen && components[c + 1].equalsIgnoreCase("acid")) {
+									functionalTerms.add(component);
+									functionalTerms.add(components[++c]);
 								} else {
 									throw new ParsingException("Unable to interpret: " + component + " (as part of a CAS index name)- A full word was encountered where a substituent or functionalTerm was expected");
 								}
