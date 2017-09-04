@@ -168,8 +168,20 @@ public class CASToolsTest {
 		String name = CASTools.uninvertCASName("Pyrrolo[1,2-a]pyrimidinium, 1-[4-[(aminoiminomethyl)amino]butyl]-7-[[2-[(aminoiminomethyl)-amino]ethyl]thio]-6-(11-dodecenyl)-2,3,4,6,7,8-hexahydro-6-hydroxy-, chloride, dihydrochloride", parseRules);
 		assertEquals("1-[4-[(aminoiminomethyl)amino]butyl]-7-[[2-[(aminoiminomethyl)-amino]ethyl]thio]-6-(11-dodecenyl)-2,3,4,6,7,8-hexahydro-6-hydroxy-Pyrrolo[1,2-a]pyrimidinium chloride dihydrochloride", name);
 	}
+
+	@Test
+	public void cas25() throws ParsingException{
+		//In acetic acid, sodium salt (1:1), the stoichiometry is removed prior to uninversion
+		String name = CASTools.uninvertCASName("acetic acid, sodium salt", parseRules);
+		assertEquals("acetic acid sodium salt", name);
+	}
 	
-	
+	@Test
+	public void commaDelimitedAcidSalt() throws ParsingException{
+		//I don't think this is actually a CAS name, but it's easiest to correct it in this function 
+		String name = CASTools.uninvertCASName("benzamide, trifluoroacetic acid salt", parseRules);
+		assertEquals("benzamide trifluoroacetic acid salt", name);
+	}
 
 	@Test(expected=ParsingException.class)
 	public void notCas1() throws ParsingException{
