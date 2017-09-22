@@ -173,8 +173,8 @@
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-        <version>1.8.5</version>
+        <artifactId>mockito-core</artifactId>
+        <version>2.10.0</version>
       </dependency>
       <dependency>
         <groupId>uk.ac.cam.ch.opsin</groupId>
