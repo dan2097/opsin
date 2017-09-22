@@ -51,7 +51,8 @@ class OpsinTools {
 	 * @return The new list
 	 */
 	static List<Element> combineElementLists(List<Element> list1, List<Element> list2) {
-		List<Element> elementList = new ArrayList<Element>(list1);
+		List<Element> elementList = new ArrayList<Element>(list1.size() + list2.size());
+		elementList.addAll(list1);
 		elementList.addAll(list2);
 		return elementList;
 	}
