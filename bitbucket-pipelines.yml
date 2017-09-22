@@ -1,0 +1,15 @@
+# This is a sample build configuration for Gradle.
+# Check our guides at https://confluence.atlassian.com/x/VYk8Lw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: maven:3.5.0-jdk-9-slim
+
+clone:           # the 'clone' section 
+  depth: 5       # the depth, in this case the clone will contain last five commits
+
+pipelines:
+  default:
+    - step:
+        script: # Modify the commands below to build your repository.
+          - mvn -B clean test package
