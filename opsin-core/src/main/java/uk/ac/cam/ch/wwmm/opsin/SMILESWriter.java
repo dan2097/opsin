@@ -136,8 +136,10 @@ class SMILESWriter {
 
 	private void writeExtendedSmilesLayer() {
 		List<String> atomLabels = new ArrayList<String>();
+		List<String> atomLocants = new ArrayList<String>();
 		List<String> positionVariationBonds = new ArrayList<String>();
 		Integer lastLabel = null;
+		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
 		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
@@ -177,6 +179,16 @@ class SMILESWriter {
 			else {
 				atomLabels.add("");
 			}
+
+			String firstLocant = a.getFirstLocant();
+			if (firstLocant != null) {
+				atomLocants.add(firstLocant);
+				lastLocant = i;
+			}
+			else {
+				atomLocants.add("");
+			}
+
 			List<Atom> atomsInPositionVariationBond = a.getProperty(Atom.POSITION_VARIATION_BOND);
 			if (atomsInPositionVariationBond != null) {
 				StringBuilder sb = new StringBuilder();
@@ -196,6 +208,9 @@ class SMILESWriter {
 		List<String> extendedSmiles = new ArrayList<String>(2);
 		if (lastLabel != null) {
 			extendedSmiles.add("$" + StringTools.stringListToString(atomLabels.subList(0, lastLabel + 1), ";") + "$" );
+		}
+		if (lastLocant != null) {
+			extendedSmiles.add("$_AV:" + StringTools.stringListToString(atomLocants.subList(0, lastLocant + 1), ";") + "$" );
 		}
 		if (positionVariationBonds.size() > 0) {
 			extendedSmiles.add("m:" + StringTools.stringListToString(positionVariationBonds, ","));
