@@ -442,6 +442,7 @@
 	<tokenList tagname="group" type="substituent" subType="biochemical" symbol="x">
 		<token value="-NC(=N)N" labels="1//2/3">guanidino</token>
 		<token value="-S(=O)(=O)CCN">tauryl</token>
+		<token value="-NCCS(=O)(=O)O">taurino</token>
 
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'/////4'/5'///9/8/7/5/6/N/1/2/3/4" outIDs="6">3'-adenylyl</token>
 		<token value="[C@@H]1(C[C@H](OP(=O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'/////4'/5'///1/2//3/4//5/alpha/6" outIDs="5">3'-thymidylyl</token>
