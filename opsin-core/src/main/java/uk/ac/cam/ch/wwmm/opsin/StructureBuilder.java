@@ -54,7 +54,7 @@ class StructureBuilder {
 		}
 
 		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(molecule, GROUP_EL);
-		processOxidoAndMethionineSpecialCases(groupElements);
+		processSpecialCases(groupElements);
 		processOxidationNumbers(groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
@@ -2152,14 +2152,17 @@ class StructureBuilder {
 	}
 
 	/**
-	 * Nasty special case to cope with oxido and related groups acting as O= or even [O-][N+]
+	 * Nasty special cases:
+	 * Oxido and related groups can act as O= or even [O-][N+]
 	 * This nasty behaviour is in generated ChemDraw names and is supported by most nameToStructure tools so it is supported here
 	 * Acting as O= notably is often correct behaviour for inorganics
 	 * 
 	 * Methionine (and the like) when substituted at the sulfur/selenium/tellurium are implicitly positively charged
+	 * 
+	 * purine nucleosides/nucleotides are implicitly positively charged when 7-substituted
 	 * @param groups
 	 */
-	private void processOxidoAndMethionineSpecialCases(List<Element> groups)  {
+	private void processSpecialCases(List<Element> groups)  {
 		for (Element group : groups) {
 			String subType = group.getAttributeValue(SUBTYPE_ATR);
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(subType)){
@@ -2196,6 +2199,23 @@ class StructureBuilder {
 					if (atom.getElement().isChalcogen() && atom.getElement() != ChemEl.O &&
 							atom.getBondCount() == 3 && atom.getIncomingValency() == 3 && atom.getCharge() == 0) {
 						atom.addChargeAndProtons(1, 1);
+					}
+				}
+			}
+			else if (BIOCHEMICAL_SUBTYPE_VAL.equals(subType)) {
+				Fragment frag = group.getFrag();
+				Atom atom = frag.getAtomByLocant("7");
+				if (atom != null) {
+					String groupName = group.getValue();
+					if (groupName.equals("adenosin") || groupName.equals("guanosin") || groupName.equals("inosin") || 
+							groupName.equals("thioinosin") || groupName.equals("xanthosin") || groupName.equals("nucleocidin") ||
+							groupName.contains("adenylic") || groupName.contains("guanylic") || groupName.contains("inosinic") ||
+							groupName.contains("xanthylic") || groupName.endsWith("adenylyl") || groupName.endsWith("adenosyl") ||
+							groupName.endsWith("guanylyl") || groupName.endsWith("guanosyl") || groupName.endsWith("inosinylyl") ||
+							groupName.endsWith("inosyl") || groupName.endsWith("xanthylyl") || groupName.endsWith("xanthosyl")) {
+						if (atom.getElement() == ChemEl.N && atom.hasSpareValency() && atom.getBondCount() == 3 && atom.getIncomingValency() == 3 && atom.getCharge() == 0) {
+							atom.addChargeAndProtons(1, 1);
+						}
 					}
 				}
 			}
