@@ -442,6 +442,17 @@
 	<tokenList tagname="group" type="substituent" subType="biochemical" symbol="x">
 		<token value="-NC(=N)N" labels="1//2/3">guanidino</token>
 		<token value="-S(=O)(=O)CCN">tauryl</token>
+		<token value="-NCCS(=O)(=O)O">taurino</token>
+
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'/////4'/5'///9/8/7/5/6/N/1/2/3/4" outIDs="6">3'-adenylyl</token>
+		<token value="[C@@H]1(C[C@H](OP(=O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'/////4'/5'///1/2//3/4//5/alpha/6" outIDs="5">3'-thymidylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(N)nc23" labels="1'/2'//3'/////4'/5'///9/8/7/5/6//1/2//3/4" outIDs="6">3'-guanylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2cnc3c([oH])ncnc23" labels="1'/2'//3'/////4'/5'///9/8/7/5/6//1/2/3/4" outIDs="6">3'-inosinylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2cnc3c(=O)[nH]c(=O)[nH]c23" labels="1'/2'//3'/////4'/5'///9/8/7/5/6//1/2//3/4" outIDs="6">3'-xanthylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2c(=O)nc([nH2])cc2" labels="1'/2'//3'/////4'/5'///1/2//3/4/N/5/6" outIDs="6">3'-cytidylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2" labels="1'/2'//3'/////4'/5'///1/2//3/4//5/6" outIDs="6">3'-uridylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'/////4'/5'///1/2//3/4//5/6///" outIDs="6">3'-orotidylyl</token>
+		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)O)[C@@H](CO)O1)c2c[nH]c(=O)[nH]c2(=O)" labels="1'/2'//3'/////4'/5'///5/6/1/2//3/4/" outIDs="6">3'-pseudouridylyl</token>
 
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)O)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//4'/5'//////9/8/7/5/6/N/1/2/3/4" outIDs="9">5'-adenylyl</token>
 		<token value="[C@@H]1(C[C@H](O)[C@@H](COP(=O)O)O1)n2c(=O)[nH]c(=O)c(C)c2" labels="1'/2'/3'//4'/5'//////1/2//3/4//5/alpha/6" outIDs="8">5'-thymidylyl</token>
