@@ -2360,9 +2360,7 @@ class ComponentGenerator {
 			for (Element otherGroup : OpsinTools.getDescendantElementsWithTagName(wordRule, GROUP_EL)) {
 				String type = otherGroup.getAttributeValue(TYPE_ATR);
 				String subType = otherGroup.getAttributeValue(SUBTYPE_ATR);
-				if (type.equals(AMINOACID_TYPE_VAL) || 
-						type.equals(CARBOHYDRATE_TYPE_VAL) ||
-						BIOCHEMICAL_SUBTYPE_VAL.equals(subType) ||
+				if (OpsinTools.isBiochemical(type, subType) ||
 						(YLFORACYL_SUBTYPE_VAL.equals(subType) &&
 								("glycol".equals(otherGroup.getValue()) || "diglycol".equals(otherGroup.getValue()))
 						)

@@ -29,6 +29,13 @@ class OpsinTools {
 	
 	static final String NEWLINE = System.getProperty("line.separator");
 	
+
+	static boolean isBiochemical(String type, String subType) {
+		return BIOCHEMICAL_SUBTYPE_VAL.equals(subType) || 
+				CARBOHYDRATE_TYPE_VAL.equals(type) || 
+				AMINOACID_TYPE_VAL.equals(type);
+	}
+	
 	/**
 	 * Returns the next sibling suffix node which is not related to altering charge (ium/ide/id)
 	 * @param currentEl

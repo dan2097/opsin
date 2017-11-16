@@ -453,8 +453,10 @@ class XmlDeclarations {
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	/**An aryl subsituent or stem e.g. "phenyl", "styr" */
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
-	//FIXME ideally carbohydrates and nucleotides/nucleosides/natural products should have a common type or subtype
-	/**Nucleotides/nucleosides/natural products. Carbohydrates can be detected by {@link XmlDeclarations#CARBOHYDRATE_TYPE_VAL}*/
+	/**Nucleotides/nucleosides/natural products.
+	 * Carbohydrates can be detected by {@link XmlDeclarations#CARBOHYDRATE_TYPE_VAL}
+	 * Amino acids can be detected by {@link XmlDeclarations#AMINOACID_TYPE_VAL}
+	 * For any of the above use {@link OpsinTools#isBiochemical(String, String)}*/
 	static final String BIOCHEMICAL_SUBTYPE_VAL ="biochemical";
 	/**A trivial carbohydrate stem for an aldose e.g. "galact"*/
 	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";

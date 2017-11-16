@@ -822,9 +822,7 @@ class ComponentProcessor {
 			while (nextSubOrRootOrBracket != null) {
 				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
 				if (groupToConsider != null) {
-					String type = groupToConsider.getAttributeValue(TYPE_ATR);
-					String subType = groupToConsider.getAttributeValue(SUBTYPE_ATR);
-					if (BIOCHEMICAL_SUBTYPE_VAL.equals(subType) || CARBOHYDRATE_TYPE_VAL.equals(type) || AMINOACID_TYPE_VAL.equals(type)){
+					if (OpsinTools.isBiochemical(groupToConsider.getAttributeValue(TYPE_ATR), groupToConsider.getAttributeValue(SUBTYPE_ATR))){
 						biochemicalGroup = groupToConsider;
 						if (OpsinTools.getPreviousSiblingsOfType(biochemicalGroup, LOCANT_EL).size() == 0) {
 							break;
