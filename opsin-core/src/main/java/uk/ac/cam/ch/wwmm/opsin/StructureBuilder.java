@@ -549,18 +549,8 @@ class StructureBuilder {
 		}
 		if (!locantsForOxide.isEmpty() && locantsForOxide.size()!=oxideFragments.size()){
 			throw new StructureBuildingException("Mismatch between number of locants and number of oxides specified");
-		}
-		List<Fragment> orderedPossibleFragments = new ArrayList<Fragment>();//In preference suffixes are substituted onto e.g. acetonitrile oxide
-		List<Element> suffixEls = rightMostGroup.getParent().getChildElements(SUFFIX_EL);
-		for (int i = suffixEls.size()-1; i >=0; i--) {//suffixes (if any) from right to left
-			Element suffixEl = suffixEls.get(i);
-			Fragment suffixFrag = suffixEl.getFrag();
-			if (suffixFrag!=null){
-				orderedPossibleFragments.add(suffixFrag);
-			}
-		}
-		Fragment groupToModify = rightMostGroup.getFrag();//all the suffixes are actually part of this fragment already
-		orderedPossibleFragments.add(groupToModify);
+		}	
+		Fragment groupToModify = rightMostGroup.getFrag();//all the suffixes are part of this fragment at this point
 		mainLoop: for (int i = 0; i < oxideFragments.size(); i++) {
 			Atom oxideAtom = oxideFragments.get(i).getFirstAtom();
 			if (!locantsForOxide.isEmpty()){
@@ -571,24 +561,32 @@ class StructureBuilder {
 				formAppropriateBondToOxideAndAdjustCharges(atomToAddOxideTo, oxideAtom);
 			}
 			else{
-				for (Fragment frag : orderedPossibleFragments) {
-					String subTypeVal = frag.getSubType();
-					if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
-						Atom elementaryAtom= frag.getFirstAtom();
-						formAppropriateBondToOxideAndAdjustCharges(elementaryAtom, oxideAtom);//e.g. carbon dioxide
-						int chargeOnAtom =elementaryAtom.getCharge();
-						if (chargeOnAtom>=2){
-							elementaryAtom.setCharge(chargeOnAtom-2);
-						}
-						continue mainLoop;
+				String subTypeVal = groupToModify.getSubType();
+				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
+					Atom elementaryAtom= groupToModify.getFirstAtom();
+					formAppropriateBondToOxideAndAdjustCharges(elementaryAtom, oxideAtom);//e.g. carbon dioxide
+					int chargeOnAtom =elementaryAtom.getCharge();
+					if (chargeOnAtom>=2){
+						elementaryAtom.setCharge(chargeOnAtom-2);
 					}
-					else{
-						List<Atom> atomList = frag.getAtomList();
-						for (Atom atom : atomList) {
-							if (atom.getElement() != ChemEl.C && atom.getElement() != ChemEl.O){
-								formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
-								continue mainLoop;
-							}
+					continue mainLoop;
+				}
+				else{
+					List<Atom> atomList = groupToModify.getAtomList();
+					//In preference suffixes are substituted onto e.g. acetonitrile oxide
+					for (Atom atom : atomList) {
+						if (!atom.getType().equals(SUFFIX_TYPE_VAL)) {
+							continue;
+						}
+						if (atom.getElement() != ChemEl.C && atom.getElement() != ChemEl.O) {
+							formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
+							continue mainLoop;
+						}
+					}
+					for (Atom atom : atomList) {
+						if (atom.getElement() != ChemEl.C && atom.getElement() != ChemEl.O) {
+							formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
+							continue mainLoop;
 						}
 					}
 				}
@@ -615,13 +613,21 @@ class StructureBuilder {
 						continue mainLoop;
 					}
 				}
-				for (Fragment frag : orderedPossibleFragments) {//something like where oxide goes on an oxygen propan-2-one oxide
-					List<Atom> atomList = frag.getAtomList();
-					for (Atom atom : atomList) {
-						if (atom.getElement() != ChemEl.C){
-							formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
-							continue mainLoop;
-						}
+				//something like where oxide goes on an oxygen propan-2-one oxide
+				List<Atom> atomList = groupToModify.getAtomList();
+				for (Atom atom : atomList) {
+					if (!atom.getType().equals(SUFFIX_TYPE_VAL)) {
+						continue;
+					}
+					if (atom.getElement() != ChemEl.C) {
+						formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
+						continue mainLoop;
+					}
+				}
+				for (Atom atom : atomList) {
+					if (atom.getElement() != ChemEl.C) {
+						formAppropriateBondToOxideAndAdjustCharges(atom, oxideAtom);
+						continue mainLoop;
 					}
 				}
 				throw new StructureBuildingException("Unable to find suitable atom or a double bond to add oxide to");

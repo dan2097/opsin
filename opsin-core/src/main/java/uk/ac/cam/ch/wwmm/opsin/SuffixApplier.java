@@ -236,6 +236,7 @@ class SuffixApplier {
 
 				if (suffixFrag != null) {//merge suffix frag and parent fragment
 					fragsToMerge.add(suffixFrag);
+					suffix.setFrag(null);
 				}
 			}
 		}
