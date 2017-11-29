@@ -158,7 +158,6 @@
 		<token value="c1[te+]ccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isotellurochromenylium</token>
 		<token value="c1(=O)occc2ccccc12" labels="1//2/3/4/4a/5/6/7/8/8a">isocoumarin|isocumarin</token>
 		<token value="c1(C)c(C)c(C)cc(C)c1" labels="1//2//3//4/5//6" suffixAppliesToByDefault="7">isoduren</token>
-		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/">isoguanin</token>
 		<token value="c1[nH]cc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoindol</token>
 		<token value="C1NCc2ccccc12" labels="1/2/3/3a/4/5/6/7/7a">isoindolin</token>
 		<token value="c1nccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">isoquinolin</token>
@@ -357,7 +356,9 @@
 		<!--nucleobases-->
 		<token value="n1cnc2nc[nH]c2c1N" labels="1/2/3/4/9/8/7/5/6/">adenin</token>
 		<token value="[nH]1c(=O)nc(N)cc1" labels="1/2//3/4//5/6">cytosin</token>
+		<token value="NC1=NC=CC(=O)N1" labels="/2/1/6/5/4//3">isocytosin</token>
 		<token value="[nH]1c(N)nc2nc[nH]c2c1=O" labels="1/2//3/4/9/8/7/5/6/">guanin</token>
+		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/">isoguanin</token>
 		<token value="[nH]1cnc2nc[nH]c2c1=O" labels="1/2/3/4/9/8/7/5/6/">hypoxanthin</token>
 		<token value="[nH]1c(=O)[nH]c(=O)c(C)c1" labels="1/2//3/4//5//6">thymin</token>
 		<token value="[nH]1c(=O)[nH]c(=O)cc1" labels="1/2//3/4//5/6">uracil</token>
