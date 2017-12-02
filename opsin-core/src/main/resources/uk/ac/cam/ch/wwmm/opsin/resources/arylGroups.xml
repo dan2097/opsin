@@ -356,7 +356,7 @@
 		<!--nucleobases-->
 		<token value="n1cnc2nc[nH]c2c1N" labels="1/2/3/4/9/8/7/5/6/">adenin</token>
 		<token value="[nH]1c(=O)nc(N)cc1" labels="1/2//3/4//5/6">cytosin</token>
-		<token value="NC1=NC=CC(=O)N1" labels="/2/1/6/5/4//3">isocytosin</token>
+		<token value="n1c(N)[nH]c(=O)cc1" labels="1/2//3/4//5/6">isocytosin</token>
 		<token value="[nH]1c(N)nc2nc[nH]c2c1=O" labels="1/2//3/4/9/8/7/5/6/">guanin</token>
 		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/">isoguanin</token>
 		<token value="[nH]1cnc2nc[nH]c2c1=O" labels="1/2/3/4/9/8/7/5/6/">hypoxanthin</token>
