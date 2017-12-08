@@ -2231,19 +2231,19 @@ class StructureBuildingMethods {
 	private static Fragment findFragmentWithLocant(Element startingElement, String locant) throws StructureBuildingException {
 		Deque<Element> stack = new ArrayDeque<Element>();
 		stack.add(startingElement.getParent());
-		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
-		Fragment monoNuclearHydride =null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
-		while (stack.size()>0){
-			Element currentElement =stack.removeLast();
-			if (currentElement.getName().equals(SUBSTITUENT_EL)|| currentElement.getName().equals(ROOT_EL)){
+		boolean doneFirstIteration = false;//check on index only done on first iteration to only get elements with an index greater than the starting element
+		Fragment monoNuclearHydride = null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
+		while (stack.size() > 0) {
+			Element currentElement = stack.removeLast();
+			if (currentElement.getName().equals(SUBSTITUENT_EL) || currentElement.getName().equals(ROOT_EL)) {
 				Fragment groupFrag = currentElement.getFirstChildElement(GROUP_EL).getFrag();
-				if (monoNuclearHydride != null && currentElement.getAttribute(LOCANT_ATR) != null){//It looks like all groups are locanting onto the monoNuclearHydride e.g. 1-oxo-1-phenyl-sulfanylidene
+				if (monoNuclearHydride != null && currentElement.getAttribute(LOCANT_ATR) != null) {//It looks like all groups are locanting onto the monoNuclearHydride e.g. 1-oxo-1-phenyl-sulfanylidene
 					return monoNuclearHydride;
 				}
-				if (groupFrag.hasLocant(locant)){
-					if (locant.equals("1") && groupFrag.getAtomCount()==1){
-						if (monoNuclearHydride ==null){
-							monoNuclearHydride= groupFrag;
+				if (groupFrag.hasLocant(locant)) {
+					if (locant.equals("1") && groupFrag.getAtomCount() == 1) {
+						if (monoNuclearHydride == null) {
+							monoNuclearHydride = groupFrag;
 						}
 					}
 					else{
@@ -2252,33 +2252,47 @@ class StructureBuildingMethods {
 				}
 				continue;
 			}
-			else if (monoNuclearHydride != null){
+			else if (monoNuclearHydride != null) {
 				return monoNuclearHydride;
 			}
 			List<Element> siblings = OpsinTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
 			List<Element> bracketted = new ArrayList<Element>();
-			if (!doneFirstIteration){//on the first iteration, ignore elements before the starting element and favour the element directly after the starting element (conditions apply)
+			if (!doneFirstIteration) {//on the first iteration, ignore elements before the starting element and favour the element directly after the starting element (conditions apply)
 				int indexOfStartingEl = currentElement.indexOf(startingElement);
-				Element substituentToTryFirst =null;
+				Element substituentToTryFirst = null;
 				for (Element bracketOrSubOrRoot : siblings) {
 					int indexOfCurrentEl = currentElement.indexOf(bracketOrSubOrRoot);
-					if (indexOfCurrentEl <= indexOfStartingEl){
+					if (indexOfCurrentEl <= indexOfStartingEl) {
 						continue;
 					}
-					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR) != null){
+					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR) != null) {
 						continue;
 					}
-					if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)){
-						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
-							stack.add(bracketOrSubOrRoot);
+					
+					if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)) {
+						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR)) && bracketOrSubOrRoot.getAttribute(LOCANT_EL) == null) {
+							//treat implicit brackets without locants as if they are not there
+							for (Element descendent : getChildrenIgnoringLocantlessImplicitBrackets(bracketOrSubOrRoot)) {
+								if (descendent.getName().equals(BRACKET_EL)) {
+									bracketted.add(descendent);
+								}
+								else {
+									if (substituentToTryFirst == null && descendent.getAttribute(LOCANT_EL) == null && MATCH_NUMERIC_LOCANT.matcher(locant).matches()) {
+										substituentToTryFirst = descendent;
+									}
+									else {
+										stack.add(descendent);
+									}
+								}
+							}
 						}
-						else{
+						else {
 							bracketted.add(bracketOrSubOrRoot);
 						}
 					}
-					else{
-						if (substituentToTryFirst ==null && bracketOrSubOrRoot.getAttribute(LOCANT_EL)==null && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
+					else {
+						if (substituentToTryFirst == null && bracketOrSubOrRoot.getAttribute(LOCANT_EL) == null && MATCH_NUMERIC_LOCANT.matcher(locant).matches()) {
 							substituentToTryFirst = bracketOrSubOrRoot;
 						}
 						else {
@@ -2286,25 +2300,33 @@ class StructureBuildingMethods {
 						}
 					}
 				}
-				if (substituentToTryFirst != null){
+				if (substituentToTryFirst != null) {
 					stack.add(substituentToTryFirst);
 				}
-				doneFirstIteration =true;
+				doneFirstIteration = true;
 			}
 			else {
 				for (Element bracketOrSubOrRoot : siblings) {
-					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR) != null){
+					if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR) != null) {
 						continue;
 					}
-					if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)){
-						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
-							stack.add(bracketOrSubOrRoot);
+					if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)) {
+						if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR)) && bracketOrSubOrRoot.getAttribute(LOCANT_EL) == null) {
+							//treat implicit brackets without locants as if they are not there
+							for (Element descendent : getChildrenIgnoringLocantlessImplicitBrackets(bracketOrSubOrRoot)) {
+								if (descendent.getName().equals(BRACKET_EL)) {
+									bracketted.add(descendent);
+								}
+								else {
+									stack.add(descendent);
+								}
+							}
 						}
-						else{
+						else {
 							bracketted.add(bracketOrSubOrRoot);
 						}
 					}
-					else{
+					else {
 						stack.add(bracketOrSubOrRoot);
 					}
 				}
@@ -2315,6 +2337,19 @@ class StructureBuildingMethods {
 			}
 		}
 		return monoNuclearHydride;
+	}
+
+	private static List<Element> getChildrenIgnoringLocantlessImplicitBrackets(Element implicitBracket) {
+		List<Element> childrenAndImplicitBracketChildren = new ArrayList<Element>();
+		for (Element child : implicitBracket.getChildElements()) {
+			if (child.getName().equals(BRACKET_EL) && IMPLICIT_TYPE_VAL.equals(child.getAttributeValue(TYPE_ATR)) && child.getAttribute(LOCANT_EL) == null) {
+				childrenAndImplicitBracketChildren.addAll(getChildrenIgnoringLocantlessImplicitBrackets(child));
+			}
+			else {
+				childrenAndImplicitBracketChildren.add(child);
+			}
+		}
+		return childrenAndImplicitBracketChildren;
 	}
 
 	static Element findRightMostGroupInBracket(Element bracket) {
