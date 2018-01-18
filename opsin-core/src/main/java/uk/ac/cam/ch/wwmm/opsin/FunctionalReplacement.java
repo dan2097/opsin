@@ -973,8 +973,7 @@ class FunctionalReplacement {
 	 */
 	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
 		String[] possibleLocants = locantEl.getValue().split(",");
-		
-		boolean pLocantSpecialCase = (possibleLocants.length == 1 && possibleLocants[0].equals("P"));
+		boolean pLocantSpecialCase = allLocantsP(possibleLocants);
 		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
 		for (Atom atom : oxygenAtoms) {
 			List<String> atomlocants = atom.getLocants();
@@ -1008,6 +1007,18 @@ class FunctionalReplacement {
 			}
 		}
 		return oxygenWithAppropriateLocants;
+	}
+
+	private boolean allLocantsP(String[] locants) {
+		if (locants.length == 0) {
+			return false;
+		}
+		for (String locant : locants) {
+			if (!locant.equals("P")) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
