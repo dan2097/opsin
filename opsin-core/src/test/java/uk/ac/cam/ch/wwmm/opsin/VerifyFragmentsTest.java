@@ -14,18 +14,19 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 public class VerifyFragmentsTest {
 	
 	private static ResourceGetter resourceGetter;
-	private static SMILESFragmentBuilder sBuilder;
+	private static FragmentManager fm;
 
 	@BeforeClass
 	public static void setUp() {
 		resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
-		sBuilder = new SMILESFragmentBuilder(new IDManager());
+		IDManager idManager = new IDManager();
+		fm = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
 	}
 	
 	@AfterClass
 	public static void cleanUp(){
 		resourceGetter = null;
-		sBuilder = null;
+		fm = null;
 	}
 	
 	@Test
@@ -72,30 +73,42 @@ public class VerifyFragmentsTest {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
 					if (reader.getLocalName().equals("token")) {
+						String smiles = reader.getAttributeValue(null, VALUE_ATR);
+						String labels =  reader.getAttributeValue(null, LABELS_ATR);
+						TokenEl tokenEl = new TokenEl(GROUP_EL);
+						if (type != null){
+							tokenEl.addAttribute(TYPE_ATR, type);
+						}
+						if (subType != null){
+							tokenEl.addAttribute(SUBTYPE_ATR, subType);
+						}
 						Fragment mol = null;
-						String smiles = null;
-						try{
-							smiles = reader.getAttributeValue(null, VALUE_ATR);
-							String labels =  reader.getAttributeValue(null, LABELS_ATR);
-							TokenEl tokenEl = new TokenEl(GROUP_EL);
-							if (type != null){
-								tokenEl.addAttribute(TYPE_ATR, type);
+						try {
+							mol = fm.buildSMILES(smiles, tokenEl, labels != null ? labels : "");
+							fm.convertSpareValenciesToDoubleBonds();
+							fm.makeHydrogensExplicit();
+							if (!tagname.equals(HETEROATOM_EL)) {
+								//some heteroatom replacements have weird valencues, so only verify valency on more normal fragments
+								try{
+									mol.checkValencies();
+								}
+								catch (StructureBuildingException e) {
+									fail("The following token's SMILES produced a structure with invalid valency: " + smiles);
+								}
 							}
-							if (subType != null){
-								tokenEl.addAttribute(SUBTYPE_ATR, subType);
-							}
-
-							mol = sBuilder.build(smiles, tokenEl, labels != null ? labels : "");
 						}
 						catch (Exception e) {
 							e.printStackTrace();
+							fail("The following SMILES were in error: " + smiles);
 						}
-						assertNotNull("The following token's SMILES or labels were in error: " + smiles, mol);
-						try{
-							mol.checkValencies();
-						}
-						catch (StructureBuildingException e) {
-							fail("The following token's SMILES produced a structure with invalid valency: " + smiles);
+						finally {
+							if (mol != null) {
+								try {
+									fm.removeFragment(mol);
+								} catch (StructureBuildingException e) {
+									e.printStackTrace();
+								}
+							}
 						}
 					}
 					break;
