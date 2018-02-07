@@ -2589,7 +2589,7 @@ class ComponentGenerator {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "F[Sb-](F)(F)(F)(F)F.[H+]" : "F[Sb-](F)(F)(F)(F)F");
 							matched = true;
 						}
-						else if (groupValue.startsWith("silicic")) {
+						else if (groupValue.startsWith("silicic") || groupValue.startsWith("silicat")) {
 							group.getAttribute(VALUE_ATR).setValue(isAcid ? "F[Si|6-2](F)(F)(F)(F)F.[H+].[H+]" : "F[Si|6-2](F)(F)(F)(F)F");
 							matched = true;
 						}
