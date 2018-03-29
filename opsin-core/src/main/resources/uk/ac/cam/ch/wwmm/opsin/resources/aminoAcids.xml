@@ -87,9 +87,11 @@
 		<token value="N[C@@H](CC)C" labels="/2,alpha/3,beta/4,gamma/1" suffixAppliesTo="5" defaultInID="1">homoalan</token>
 		<token value="N[C@@H](CCCCNC(N)=N)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon//guanidino-C,99/omega/omega'/1" suffixAppliesTo="11" defaultInID="1">homoargin</token>
 		<token value="N[C@@H](CCCCNC(=O)N)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/////1" suffixAppliesTo="11" defaultInID="1">homocitrull</token>
+		<token value="N[C@@H](CCc1c[nH]cn1)C" labels="/alpha/beta/gamma/4/5/1,tele,tau/2/3,pros,pi/" suffixAppliesTo="10" defaultInID="1">homohistid</token>
 		<token value="N[C@@H](CCCSC)C" labels="/2,alpha/3,beta/4,gamma/5,delta//methyl/1" suffixAppliesTo="8" defaultInID="1">homomethion</token>
 		<token value="N[C@@H](CCSCC[C@H](N)C)C" suffixAppliesTo="10,11" defaultInID="1">homolanthion</token>
 		<token value="N[C@@H](CCC(C)C)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6',epsilon'/6,epsilon/1" suffixAppliesTo="8" defaultInID="1">homoleuc</token>
+		<token value="N[C@@H](CCCCCN)C" labels="/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/7,zeta//1" suffixAppliesTo="9" defaultInID="1">homolys</token>
 		<token value="N[C@@H](CCc1ccccc1)C" labels="/alpha/beta/gamma/1/2,ortho/3,meta/4,para/5/6/" suffixAppliesTo="11" defaultInID="1">homophenylalan</token>
 		<token value="N1[C@@H](CCCC1)C" labels="1/2,alpha/3,beta/4,gamma/5,delta/6,epsilon/" suffixAppliesTo="7" defaultInID="1">homoprol</token>
 		<token value="NC(CCC#C)C" labels="/2,alpha/3,beta////1" suffixAppliesTo="7" defaultInID="1">homopropargylglyc</token>
