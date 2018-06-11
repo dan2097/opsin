@@ -397,6 +397,9 @@ class FragmentTools {
 			}
 		}
 		Bond b = fromAtom.getBondToAtomOrThrow(toAtom);
+		if (b.getOrder() != 1) {
+			throw new StructureBuildingException("Bond indicated to be unsaturated was already unsaturated");
+		}
 		b.setOrder(bondOrder);
 		return b;
 	}
@@ -412,6 +415,9 @@ class FragmentTools {
 	static void unsaturate(Atom fromAtom, String locantTo, int bondOrder, Fragment fragment) throws StructureBuildingException {
 		Atom toAtom = fragment.getAtomByLocantOrThrow(locantTo);
 		Bond b = fromAtom.getBondToAtomOrThrow(toAtom);
+		if (b.getOrder() != 1) {
+			throw new StructureBuildingException("Bond indicated to be unsaturated was already unsaturated");
+		}
 		b.setOrder(bondOrder);
 	}
 
