@@ -122,6 +122,18 @@
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="biochemical" symbol="¾">
+		<token value="n1c(C)c(O)c(C(=O)O)c(CO)c1" labels="1/2/2'/3//4/4'///5/5'//6" functionalIDs="9">4-pyridoxic|4-pyridoxic|4-pyridoxic acid</token>
+		<token value="n1c(C)c(O)c(C(=O)O2)c(C2)c1" labels="1/2/2'/3//4/4'///5/5'/6">4-pyridoxolactone|4-pyridoxolacton</token>
+		<token value="n1c(C)c(O)c(CO)c(C(=O)O)c1" labels="1/2/2'/3//4/4'//5/5'///6" functionalIDs="12">5-pyridoxic|5-pyridoxic|5-pyridoxic acid</token>
+		<token value="n1c(C)c(O)c(C2)c(C(=O)O2)c1" labels="1/2/2'/3//4/4'/5/5'///6">5-pyridoxolactone|5-pyridoxolacton</token>
+		<token value="n1c(C)c(O)c(CO)c(C=O)c1" labels="1/2/2'/3//4/4'//5/5'//6">isopyridoxal</token>
+		<token value="n1c(C)c(O)c(C=O)c(CO)c1" labels="1/2/2'/3//4/4'//5/5'//6">pyridoxal</token>
+		<token value="n1c(C)c(O)c(CN)c(CO)c1" labels="1/2/2'/3//4/4'//5/5'//6">pyridoxamine|pyridoxamin</token>
+		<token value="n1c(C)c(O)c(CO)c(CO)c1" labels="1/2/2'/3//4/4'//5/5'//6">pyridoxine|pyridoxin|pyridoxol</token>
+		<token value="n1c(C)c(O)c(C=O)c(COP(=O)(O)O)c1" labels="1/2/2'/3//4/4'//5/5'//////6" functionalIDs="14,15">pyridoxal-p</token>
+		<token value="n1c(C)c(O)c(CN)c(COP(=O)(O)O)c1" labels="1/2/2'/3//4/4'//5/5'//////6" functionalIDs="14,15">pyridoxamine-p|pyridoxamin-p</token>
+		<token value="n1c(C)c(O)c(CO)c(COP(=O)(O)O)c1" labels="1/2/2'/3//4/4'//5/5'//////6" functionalIDs="14,15">pyridoxine-p|pyridoxin-p|pyridoxol-p</token>
+
 <!--nucleotides-->
 		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//////3'//4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="6,7">2'-adenylic|2'-adenylicacid|2'-adenylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2cnc3c([nH2])ncnc23" labels="1'/2'//3'//////4'/5'///9/8/7/5/6/N/1/2/3/4" functionalIDs="8,9">3'-adenylic|3'-adenylicacid|3'-adenylic acid</token>

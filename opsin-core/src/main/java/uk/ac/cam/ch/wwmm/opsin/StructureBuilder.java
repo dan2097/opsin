@@ -1435,6 +1435,7 @@ class StructureBuilder {
 				}
 				else if (words.size() == 2) {
 					//special case for adenosine triphosphate and the like
+					//also true for pyridoxine derivatives
 					//guess that locant might be 5'
 					Atom atomOnAlcoholFragment = potentialAlcoholFragment.getAtomByLocant("O5'");
 					if (hydroxyAtoms.contains(atomOnAlcoholFragment)) {
