@@ -441,6 +441,10 @@
 
 	<tokenList tagname="group" type="substituent" subType="biochemical" symbol="x">
 		<token value="-NC(=N)N" labels="1//2/3">guanidino</token>
+		<token value="-Cc1c(CO)cnc(C)c1O" labels="4'/4/5/5'//6/1/2/2'/3/">pyridoxyl</token>
+		<token value="=Cc1c(CO)cnc(C)c1O" labels="4'/4/5/5'//6/1/2/2'/3/">pyridoxylidene|pyridoxyliden</token>
+		<token value="-Cc1c(COP(=O)(O)O)cnc(C)c1O" labels="4'/4/5/5'//////6/1/2/2'/3/">p-pyridoxyl|5'-p-pyridoxyl</token>
+		<token value="=Cc1c(COP(=O)(O)O)cnc(C)c1O" labels="4'/4/5/5'//////6/1/2/2'/3/">p-pyridoxylidene|p-pyridoxyliden|5'-p-pyridoxylidene|5'-p-pyridoxyliden</token>
 		<token value="-S(=O)(=O)CCN">tauryl</token>
 		<token value="-CNCCS(=O)(=O)O">taurinomethyl|taurino-methyl</token>
 
