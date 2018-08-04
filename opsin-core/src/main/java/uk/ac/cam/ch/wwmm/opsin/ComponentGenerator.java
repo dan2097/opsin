@@ -2432,7 +2432,7 @@ class ComponentGenerator {
 				if (groups.size() > 0){
 					Element possibleAcid = groups.get(groups.size() - 1);
 					if (ACIDSTEM_TYPE_VAL.equals(possibleAcid.getAttributeValue(TYPE_ATR))){
-						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR) != null){//multi acid. yl should be one oyl and the rest carboxylic acids
+						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR) != null && possibleAcid.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",").length > 1){//multi acid. yl should be one oyl and the rest carboxylic acids
 							Element suffix = OpsinTools.getNextSibling(possibleAcid, SUFFIX_EL);
 							if (suffix.getAttribute(ADDITIONALVALUE_ATR) == null){
 								suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
@@ -2682,6 +2682,24 @@ class ComponentGenerator {
 					multiplier.addAttribute(VALUE_ATR, String.valueOf(firstChar));
 					OpsinTools.insertBefore(group, multiplier);
 					group.setValue(groupValue.substring(1));
+				}
+			}
+		}
+
+		if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
+			Element previous = OpsinTools.getPreviousSibling(group.getParent());
+			if (previous != null) {
+				List<Element> groups = OpsinTools.getDescendantElementsWithTagName(previous, GROUP_EL);
+				if (groups.size() > 0) {
+					Element possibleAcid = groups.get(groups.size() - 1);
+					if (ACIDSTEM_TYPE_VAL.equals(possibleAcid.getAttributeValue(TYPE_ATR))) {
+						if (possibleAcid.getAttribute(SUFFIXAPPLIESTO_ATR) != null && possibleAcid.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",").length > 1) {//multi acid. yl should be one oyl and the rest carboxylic acids
+							Element suffix = OpsinTools.getNextSibling(possibleAcid, SUFFIX_EL);
+							if (suffix.getAttribute(ADDITIONALVALUE_ATR) == null) {
+								suffix.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+							}
+						}
+					}
 				}
 			}
 		}

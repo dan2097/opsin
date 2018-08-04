@@ -42,6 +42,7 @@
 
 	<tokenList tagname="functionalGroup" type="acidReplacingFunctionalGroup" subType="none" symbol="±">
 		<token value="[NH2-]">amide|amid</token>
+		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilide|anilid</token>
 		<token value="N1CCC1" labels="1/2/3/4">azetidide|azetidid</token>
 		<token value="NN" labels="1/2">hydrazide|hydrazid</token>
 		<token value="N1CCOCC1">morpholide|morpholid</token>
