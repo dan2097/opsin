@@ -205,10 +205,10 @@
 		<token value="[PH3]">phosphin</token>
 		<token value="P(=O)(N)(N)N" functionalIDs="3,4,5">phosphoramide|phosphoramid</token>
     <!--phosphorous is a variant spelling of phosphorus in these names-->
-		<token value="P(=O)(Br)(Br)Br">phosphorus oxybromide|phosphorusoxybromide|phosphorous oxybromide|phosphorousoxybromide|phosphorus oxybromid|phosphorusoxybromid|phosphorous oxybromid|phosphorousoxybromid</token>
-		<token value="P(=O)(Cl)(Cl)Cl">phosphorus oxychloride|phosphorusoxychloride|phosphorous oxychloride|phosphorousoxychloride|phosphorus oxychlorid|phosphorusoxychlorid|phosphorous oxychlorid|phosphorousoxychlorid</token>
-		<token value="P(=O)(F)(F)F">phosphorus oxyfluoride|phosphorusoxyfluoride|phosphorous oxyfluoride|phosphorousoxyfluoride|phosphorus oxyfluorid|phosphorusoxyfluorid|phosphorous oxyfluorid|phosphorousoxyfluorid</token>
-		<token value="P(=O)(I)(I)I">phosphorus oxyiodide|phosphorusoxyiodide|phosphorous oxyiodide|phosphorousoxyiodide|phosphorus oxyiodid|phosphorusoxyiodid|phosphorous oxyiodid|phosphorousoxyiodid</token>
+		<token value="P(=O)(Br)(Br)Br">phosphorus oxybromide|phosphorus(v) oxybromide|phosphorusoxybromide|phosphorous oxybromide|phosphorous(v) oxybromide|phosphorousoxybromide|phosphorus oxybromid|phosphorus(v) oxybromid|phosphorusoxybromid|phosphorous oxybromid|phosphorous(v) oxybromid|phosphorousoxybromid</token>
+		<token value="P(=O)(Cl)(Cl)Cl">phosphorus oxychloride|phosphorus(v) oxychloride|phosphorusoxychloride|phosphorous oxychloride|phosphorous(v) oxychloride|phosphorousoxychloride|phosphorus oxychlorid|phosphorus(v) oxychlorid|phosphorusoxychlorid|phosphorous oxychlorid|phosphorous(v) oxychlorid|phosphorousoxychlorid</token>
+		<token value="P(=O)(F)(F)F">phosphorus oxyfluoride|phosphorus(v) oxyfluoride|phosphorusoxyfluoride|phosphorous oxyfluoride|phosphorous(v) oxyfluoride|phosphorousoxyfluoride|phosphorus oxyfluorid|phosphorus(v) oxyfluorid|phosphorusoxyfluorid|phosphorous oxyfluorid|phosphorous(v) oxyfluorid|phosphorousoxyfluorid</token>
+		<token value="P(=O)(I)(I)I">phosphorus oxyiodide|phosphorus(v) oxyiodide|phosphorusoxyiodide|phosphorous oxyiodide|phosphorous(v) oxyiodide|phosphorousoxyiodide|phosphorus oxyiodid|phosphorus(v) oxyiodid|phosphorusoxyiodid|phosphorous oxyiodid|phosphorous(v) oxyiodid|phosphorousoxyiodid</token>
 		<token value="P12(=S)SP3(=S)SP(=S)(S1)SP(=S)(S2)S3">phosphorus pentasulfide|phosphorus pentasulfid</token>
 		<token value="CC(C)CCC[C@@H](C)CCC[C@@H](C)CCC/C(C)=C/CO">phytol</token>
 		<token value="OC(C)(C)C(C)(C)O">pinacol</token>
