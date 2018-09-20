@@ -457,6 +457,13 @@ class WordRules {
 							continue wordRuleLoop;
 						}
 						break;
+					case monovalentFunctionalGroup:
+						Element potentialOxy = getLastElementInWord(wordEls.get(0));
+						String val = potentialOxy.getValue();
+						if (val.equals("oxy") || val.equals("oxo")) {
+							throw new ParsingException(wordEls.get(0).getValue() + wordEls.get(1).getValue() +" is unlikely to be intended to be a molecule");
+						}
+						break;
 					default:
 						break;
 					}
