@@ -40,7 +40,7 @@
 
 	<token value="[Y]" commonOxidationStatesAndMax="3:3">yttrium</token>
 	<token value="[Zr]" commonOxidationStatesAndMax="4:4">zirconium</token>
-	<token value="[Nb]" commonOxidationStatesAndMax="5:5">niobium</token>
+	<token value="[Nb]" commonOxidationStatesAndMax="5:5">niobium|columbium</token>
 	<token value="[Mo]" commonOxidationStatesAndMax="4,6:6">molybdenum</token>
 	<token value="[Tc]" commonOxidationStatesAndMax="4,7:7">technetium</token>
 	<token value="[Ru]" commonOxidationStatesAndMax="3,4:8">ruthenium</token>
