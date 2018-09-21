@@ -313,6 +313,19 @@
 		<token value="[NH+]#[C-]">hydroisocyanicacid|hydroisocyanic acid</token>
 		<token value="N=[N+]=[N-]">hydrazoicacid|hydrazoic acid</token>
 
+		<!--Most inorganic amides don't actually involve the amide anion-->
+		<token value="[NH2-].[Li+]">lithium amide</token>
+		<token value="[NH2-].[Na+]">sodium amide|natrium amide</token>
+		<token value="[NH2-].[K+]">potassium amide|kalium amide</token>
+		<token value="[NH2-].[Rb+]">rubidium amide</token>
+		<token value="[NH2-].[Cs+]">caesium amide|cesium amide</token>
+		<token value="[NH2-].[Fr+]">francium amide</token>
+		<token value="[NH2-].[NH2-].[Be+2]">beryllium amide|beryllium diamide</token>
+		<token value="[NH2-].[NH2-].[Mg+2]">magnesium amide|magnesium diamide</token>
+		<token value="[NH2-].[NH2-].[Ca+2]">calcium amide|calcium diamide</token>
+		<token value="[NH2-].[NH2-].[Sr+2]">strontium amide|strontium diamide</token>
+		<token value="[NH2-].[NH2-].[Ba+2]">barium amide|barium diamide</token>
+		<token value="[NH2-].[NH2-].[Ra+2]">radium amide|radium diamide</token>
 
 		<!--The nomenclature of these compounds is a mess cf. http://www.iupac.org/publications/ci/2007/2904/ud.html -->
 		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis((trifluoromethyl)sulfonyl)imide|bis(trifluoromethane)sulfonimide|bis(trifluoromethanesulfonyl)imide|bis(trifluoromethylsulfonyl)imide|bistrifluoromethanesulfonimide|bis[(trifluoromethyl)sulfonyl]imide|trifluoromethanesulfonimide|bis((trifluoromethyl)sulfonyl)imid|bis(trifluoromethane)sulfonimid|bis(trifluoromethanesulfonyl)imid|bis(trifluoromethylsulfonyl)imid|bistrifluoromethanesulfonimid|bis[(trifluoromethyl)sulfonyl]imid|trifluoromethanesulfonimid</token>
