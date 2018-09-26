@@ -2332,7 +2332,7 @@ class ComponentGenerator {
 		}
 
 		//acridone (not codified), anthrone, phenanthrone and xanthone have the one at position 9 by default
-		else if (groupValue.equals("anthr") || groupValue.equals("phenanthr") || groupValue.equals("acrid") ||
+		else if (groupValue.equals("anthr")|| groupValue.equals("anthran") || groupValue.equals("phenanthr") || groupValue.equals("acrid") ||
 				groupValue.equals("xanth") || groupValue.equals("thioxanth") || groupValue.equals("selenoxanth")|| groupValue.equals("telluroxanth")|| groupValue.equals("xanthen")) {
 			Element possibleLocant = OpsinTools.getPreviousSibling(group);
 			if (possibleLocant==null || !possibleLocant.getName().equals(LOCANT_EL)){//only need to give one a locant of 9 if no locant currently present
