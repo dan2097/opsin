@@ -8,7 +8,6 @@
 		<token value="CC(C#N)(O)C">acetone cyanohydrin</token>
 		<token value="CC(C)=NO">acetoxime|acetoxim</token>
 		<token value="CC(=O)[O+]" labels="2/1//">acetoxylium</token>
-		<token value="[C-]#[C-]">acetylide|acetylid</token>
 		<token value="C(=O)C=C" labels="1//2/3">acrolein</token>
 		<token value="NC(NCCCCN)=N" defaultInID="8">agmatine|agmatin</token>
 		<token value="C=CCS(SCC=C)=O">allicin</token>
