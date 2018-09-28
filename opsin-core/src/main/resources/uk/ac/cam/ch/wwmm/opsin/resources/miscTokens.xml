@@ -66,14 +66,14 @@
 	</tokenList>
 
 	<tokenList tagname="stereoChemistry" type="dlStereochemistry" symbol="Ü">
-		<token value="d">d-|(d)-</token>
-		<token value="l">l-|(l)-</token>
-		<token value="dl">dl-|d,l-|(dl)-</token>
+		<token value="d">d|(d)</token>
+		<token value="l">l|(l)</token>
+		<token value="dl">dl|d,l|(dl)</token>
 	<!--used to distinguish amino acid D/L from carbohydrate D/L if desired-->
-		<token value="ds">ds-</token>
-		<token value="dg">dg-</token>
-		<token value="ls">ls-</token>
-		<token value="lg">lg-</token>
+		<token value="ds">ds</token>
+		<token value="dg">dg</token>
+		<token value="ls">ls</token>
+		<token value="lg">lg</token>
 	</tokenList>
 
 <!--As a purely non-detachable prefixe-->

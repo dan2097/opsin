@@ -175,7 +175,7 @@ does not define a CFG.
 	<regex name="%multiplierNoElidedA%" value="((%simpleMultiplier%|%groupMultiplier%)%hyphen%?)"/>
 	<regex name="%simpleMultiplierGroup%" value="(%simpleMultiplier%%hyphen%?)"/>
 	<regex name="%boughtonIsotope%" value="(%boughtonIsotopeTerm%%notFollowedByLetter%)"/>
-	<regex name="%dlStereochemistryPrefix%" value="(%notPrecededByLetter%%dlStereochemistry%%lightRotation%?)"/>
+	<regex name="%dlStereochemistryPrefix%" value="(%notPrecededByLetter%%dlStereochemistry%(%hyphen%?%lightRotation%|%hyphen%))"/>
 	<regex name="%ezStereoList%" value="((%locant%|%notPrecededByLetter%)%unbrackettedEZ%(%comma%%locant%?%unbrackettedEZ%)*)"/>
 	<regex name="%rStereoList%" value="((%locant%|%notPrecededByLetter%)%unbrackettedR%(%comma%%locant%?%unbrackettedR%)*)"/>
 	<regex name="%stereochemistry%" value="(%stereochemistryBracket%|%locant%?%unbrackettedCisTransEndoExoSynAnti%(%comma%%locant%?%unbrackettedCisTransEndoExoSynAnti%)*%hyphen%?|(%ezStereoList%|%rStereoList%)%hyphen%|%lightRotation%|%alphaBetaStereochemLocant%)"/>
@@ -200,6 +200,7 @@ does not define a CFG.
 	<regex name="%unsaturationBracketedLocant%" value="(%hyphen%?%bracketedLocant%%multiplier%?%unsaturator%)"/>
 	<regex name="%unsaturationBlock%" value="((%hyphen%?%ane%|%unsaturation%)%unsaturation%*)"/>
 	<regex name="%heteroReplacement%" value="((%locantGroupNoStartingHyphen%?%multiplierNotGroup%|(%locant%?|%lambdaConvention%)%multiplierNotGroup%?)%heteroAtom%%hyphen%?)"/>
+	<regex name="%detachableHeteroReplacement%" value="((%locant%|%lambdaConvention%)%multiplierNotGroup%?%heteroAtom%%hyphen%?)"/>
 	<regex name="%hydroGroup%" value="((%locant%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/><!--can be considered detachable or non detachable-->
 	<regex name="%subtractivePrefixGroup%" value="(%locant%?%multiplier%?%subtractivePrefix%%hyphen%?)"/>
 	<regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%nonAcidStemSuffix%|%acidStemSuffix%)"/>
@@ -343,7 +344,7 @@ does not define a CFG.
 	<regex name="%allOtherSubstituents%" value = "(%simpleSubstituents%|%chainSubstituent%|%acidSubstituent%|(%groupStemAllowingInlineSuffixes%|%groupStemAllowingAllSuffixes%)%e%?%inlineEndings%)"/>
 	<regex name="%subsituentBody%" value= "((%ringNonDetachableFeatures%%allRingSubstituents%|%acyclicNonDetachableFeatures%%allOtherSubstituents%)%boughtonIsotope%?)"/>
 	<regex name="%amineMeaningNitriloSubstituent%" value = "(%openBracket%*%multiplier%%openBracket%*%amineMeaningNitrilo%%closeBracket%*%interSubstituentHyphen%?)"/><!--needed to avoid "amine" being parsed as a substituent-->
-	<regex name="%substituent%" value= "((%locantOpenBracket%*%locantGroupNoStartingHyphen%?%stereochemistry%*(%relativeCisTrans%|%dlStereochemistryPrefix%?%locantGroupNoStartingHyphen%)?%multiplier%{0,2}(%subsituentBody%%closeBracket%*%interSubstituentHyphen%?|%hydroGroup%|%ringBridge%)|%amineMeaningNitriloSubstituent%)%endOfSubstituent%)"/>
+	<regex name="%substituent%" value= "((%detachableHeteroReplacement%*%locantOpenBracket%*%locantGroupNoStartingHyphen%?%stereochemistry%*(%relativeCisTrans%|%dlStereochemistryPrefix%?%locantGroupNoStartingHyphen%)?%multiplier%{0,2}(%subsituentBody%%closeBracket%*%interSubstituentHyphen%?|%hydroGroup%|%ringBridge%)|%amineMeaningNitriloSubstituent%)%endOfSubstituent%)"/>
 
 	<regex name="%allRingGroups%" value = "(((%ringGroupOrFusedRingSystem%|%ringAssembly%|%structuralOpenBracket%%ringAssembly%%structuralCloseBracket%|%polycyclicSpiroGroup%)(%rootEnding%|%conjunctiveSideChainRoot%)|%preSuffixedRing%)%boughtonIsotope%?)"/>
 	<regex name="%allOtherSuffixableGroups%" value = "(((%groupStemAllowingAllSuffixes%%e%?|%chainGroup%)%rootEnding%|%acidGroup%|%groupStemAllowingInlineSuffixes%%e%?%inlineChargeGroup%?)%boughtonIsotope%?)"/>
