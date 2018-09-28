@@ -300,38 +300,11 @@
 		<token value="OC(=S)S" functionalIDs="1,4">xanthic acid|xanthicacid</token><!--xanthic acid without any substituents is not acceptable-->
 
 		<token value="N">ammonia</token>
-		<token value="O">water</token>
 		<token value="[CH3+]">carbenium</token>
-
-		<token value="F">hydrofluoride|hydrofluorid</token>
-		<token value="Cl">hydrochloride|hydrochlorid</token>
-		<token value="Br">hydrobromide|hydrobromid</token>
-		<token value="I">hydroiodide|hydriodide|hydroiodid|hydriodid</token>
-		<token value="[AtH]">hydroastatide|hydroastatid</token>
-
-		<token value="F">hydrofluoricacid|hydrofluoric acid</token>
-		<token value="Cl">hydrochloricacid|hydrochloric acid</token>
-		<token value="Br">hydrobromicacid|hydrobromic acid</token>
-		<token value="I">hydroiodicacid|hydroiodic acid|hydriodicacid|hydriodic acid</token>
-		<token value="[AtH]">hydroastaticacid|hydroastatic acid</token>
 
 		<token value="C#N">hydrocyanicacid|hydrocyanic acid</token>
 		<token value="[NH+]#[C-]">hydroisocyanicacid|hydroisocyanic acid</token>
 		<token value="N=[N+]=[N-]">hydrazoicacid|hydrazoic acid</token>
-
-		<!--Most inorganic amides don't actually involve the amide anion-->
-		<token value="[NH2-].[Li+]">lithium amide</token>
-		<token value="[NH2-].[Na+]">sodium amide|natrium amide</token>
-		<token value="[NH2-].[K+]">potassium amide|kalium amide</token>
-		<token value="[NH2-].[Rb+]">rubidium amide</token>
-		<token value="[NH2-].[Cs+]">caesium amide|cesium amide</token>
-		<token value="[NH2-].[Fr+]">francium amide</token>
-		<token value="[NH2-].[NH2-].[Be+2]">beryllium amide|beryllium diamide</token>
-		<token value="[NH2-].[NH2-].[Mg+2]">magnesium amide|magnesium diamide</token>
-		<token value="[NH2-].[NH2-].[Ca+2]">calcium amide|calcium diamide</token>
-		<token value="[NH2-].[NH2-].[Sr+2]">strontium amide|strontium diamide</token>
-		<token value="[NH2-].[NH2-].[Ba+2]">barium amide|barium diamide</token>
-		<token value="[NH2-].[NH2-].[Ra+2]">radium amide|radium diamide</token>
 
 		<!--The nomenclature of these compounds is a mess cf. http://www.iupac.org/publications/ci/2007/2904/ud.html -->
 		<token value="[N-](S(=O)(=O)C(F)(F)F)S(=O)(=O)C(F)(F)F">bis((trifluoromethyl)sulfonyl)imide|bis(trifluoromethane)sulfonimide|bis(trifluoromethanesulfonyl)imide|bis(trifluoromethylsulfonyl)imide|bistrifluoromethanesulfonimide|bis[(trifluoromethyl)sulfonyl]imide|trifluoromethanesulfonimide|bis((trifluoromethyl)sulfonyl)imid|bis(trifluoromethane)sulfonimid|bis(trifluoromethanesulfonyl)imid|bis(trifluoromethylsulfonyl)imid|bistrifluoromethanesulfonimid|bis[(trifluoromethyl)sulfonyl]imid|trifluoromethanesulfonimid</token>
@@ -451,4 +424,36 @@
 	<tokenList tagname="suffix" type="root" subType="terminal" symbol="Ø"><!--Fudged by handleSuffixIrregularities such that the preceding subsituent is merged in front of this-->
 		<token value="nitrolic acid">nitrolic acid|nitrolicacid</token>
 	</tokenList>
+
+	<!--groups that cannot be substituted-->
+	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="_">
+		<token value="F">hydrofluoride|hydrofluorid</token>
+		<token value="Cl">hydrochloride|hydrochlorid</token>
+		<token value="Br">hydrobromide|hydrobromid</token>
+		<token value="I">hydroiodide|hydriodide|hydroiodid|hydriodid</token>
+		<token value="[AtH]">hydroastatide|hydroastatid</token>
+
+		<token value="F">hydrofluoricacid|hydrofluoric acid</token>
+		<token value="Cl">hydrochloricacid|hydrochloric acid</token>
+		<token value="Br">hydrobromicacid|hydrobromic acid</token>
+		<token value="I">hydroiodicacid|hydroiodic acid|hydriodicacid|hydriodic acid</token>
+		<token value="[AtH]">hydroastaticacid|hydroastatic acid</token>
+
+		<token value="O">water</token>
+
+		<!--Most inorganic amides don't actually involve the amide anion-->
+		<token value="[NH2-].[Li+]">lithium amide</token>
+		<token value="[NH2-].[Na+]">sodium amide|natrium amide</token>
+		<token value="[NH2-].[K+]">potassium amide|kalium amide</token>
+		<token value="[NH2-].[Rb+]">rubidium amide</token>
+		<token value="[NH2-].[Cs+]">caesium amide|cesium amide</token>
+		<token value="[NH2-].[Fr+]">francium amide</token>
+		<token value="[NH2-].[NH2-].[Be+2]">beryllium amide|beryllium diamide</token>
+		<token value="[NH2-].[NH2-].[Mg+2]">magnesium amide|magnesium diamide</token>
+		<token value="[NH2-].[NH2-].[Ca+2]">calcium amide|calcium diamide</token>
+		<token value="[NH2-].[NH2-].[Sr+2]">strontium amide|strontium diamide</token>
+		<token value="[NH2-].[NH2-].[Ba+2]">barium amide|barium diamide</token>
+		<token value="[NH2-].[NH2-].[Ra+2]">radium amide|radium diamide</token>
+	</tokenList>
+
 </tokenLists>

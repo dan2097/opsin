@@ -39,6 +39,7 @@ does not define a CFG.
 	<regex name="%suffixableSubstituent%" value="X"/>
 	<regex name="%o%" value="Y"/>
 	<regex name="%e%" value="Z"/>
+	<regex name="%simpleGroupUnsubstitutable%" value="_"/>
 	<regex name="%hwHeteroatomOnly%" value="`"/>
 	<regex name="%alkaneStemTrivial%" value="a"/>
 	<regex name="%trivialRingSubstituentInlineOnly%" value="b"/>
@@ -353,6 +354,7 @@ does not define a CFG.
 	<regex name="%mainGroupTail%" value="(%closeBracket%*%endOfMainGroup%)" />
 	<regex name="%mainGroup%" value="(%mainGroupHead%%mainGroupBody%%mainGroupTail%)"/>
 	<regex name="%mainGroupThatRequiresSubstituent%" value="(%mainGroupHead%%bracketedIupacIsotope%?(%chalcogenAcidGroup%|%simpleGroupClass%)%boughtonIsotope%?%mainGroupTail%)"/>
+	<regex name="%unsubstitutableMainGroup%" value="(%mainGroupHead%%bracketedIupacIsotope%?%simpleGroupUnsubstitutable%%boughtonIsotope%?%mainGroupTail%)"/>
 
 	<!-- functional Groups-->
 	<regex name="%anhydride%" value="((%locant%|%colonOrSemiColonDelimitedLocant%)?%multiplier%?(%anhydrideFunctionalGroup%|%openBracket%%anhydrideFunctionalGroup%%closeBracket%))"/>
@@ -361,6 +363,6 @@ does not define a CFG.
 	<regex name="%functionalGroup%" value ="(%multiplier%?(%monovalentFunctionalGroup%|%standaloneMonovalentFunctionalGroup%)|%divalentFunctionalGroup%)"/>
 	<regex name="%functionalTerm%" value="((%functionalClass%|%functionalGroup%)%endOfFunctionalGroup%)"/>
 
-	<regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%*%mainGroup%(%hyphen%?%functionalTerm%)?|%substituent%+(%functionalTerm%|%mainGroupThatRequiresSubstituent%(%hyphen%?%functionalTerm%)?)?)|%hyphen%?%functionalTerm%)"/>
+	<regex name="%chemical%" value="((%functionalModifier%%endOfFunctionalGroup%)?(%substituent%*%mainGroup%(%hyphen%?%functionalTerm%)?|%substituent%+(%functionalTerm%|%mainGroupThatRequiresSubstituent%(%hyphen%?%functionalTerm%)?)?)|%hyphen%?%functionalTerm%|%unsubstitutableMainGroup%)"/>
 <!--Note that the %functionalTerm%? in the term above indicates that a space has technically been omitted!-->
 </regexes>
