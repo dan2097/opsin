@@ -78,8 +78,11 @@ class IsotopeSpecificationParser {
 		String[] locants = null;
 		if(locantsStr != null) {
 			locants = locantsStr.split(",");
-			if (locants.length != multiplier) {
-				throw new StructureBuildingException("Mismatch between number of locants: " + locants.length + " and number of hydrogen isotopes requested: " + multiplier);
+			if (multiplierStr == null) {
+				multiplier = locants.length;
+			}
+			else if (locants.length != multiplier) {
+				throw new StructureBuildingException("Mismatch between number of locants: " + locants.length + " and number of " + chemEl.toString() + " isotopes requested: " + multiplier);
 			}
 		}
 		return new IsotopeSpecification(chemEl, isotope, multiplier, locants);
