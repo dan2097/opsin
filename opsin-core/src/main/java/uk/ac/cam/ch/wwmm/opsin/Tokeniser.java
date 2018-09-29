@@ -220,10 +220,11 @@ class Tokeniser {
 	
 		if (!parsedWords.isEmpty()) {//first see whether the space before the unparseable word is erroneous
 			ParseWord pw = parsedWords.get(parsedWords.size() - 1);
-			ParseRulesResults backResults = parseRules.getParses(pw.getWord() + result.getUnparsedName());
+			String lastWordAndUnparsed = pw.getWord() + result.getUnparsedName();
+			ParseRulesResults backResults = parseRules.getParses(lastWordAndUnparsed);
 			List<ParseTokens> backParseTokens = backResults.getParseTokensList();
 			String backUninterpretableName = backResults.getUninterpretableName();
-			String backParsedName = pw.getWord() + result.getUnparsedName().substring(0, result.getUnparsedName().length() - backUninterpretableName.length());
+			String backParsedName = lastWordAndUnparsed.substring(0, lastWordAndUnparsed.length() - backUninterpretableName.length());
 			if (backParsedName.length() > pw.getWord().length() && backParseTokens.size() > 0 && (backUninterpretableName.equals("") || backUninterpretableName.charAt(0) == ' ' || backUninterpretableName.charAt(0) == '-')) {//a word was interpretable
 				result.getParse().removeWord(pw);
 				List<ParseWord> parseWords = WordTools.splitIntoParseWords(backParseTokens, backParsedName);
