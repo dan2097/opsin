@@ -402,6 +402,7 @@
 
 	<!--groups that must be substituted-->
 	<tokenList tagname="group" type="simpleGroup" subType="simpleGroup" symbol="Ø">
+		<token value="C#[C-]">acetylide|acetylid</token>
 		<token value="N">amine|amin</token>
 		<token value="[NH4+]">aminium</token>
 		<token value="[NH2-]">aminide|aminid</token>
@@ -440,6 +441,9 @@
 		<token value="[AtH]">hydroastaticacid|hydroastatic acid</token>
 
 		<token value="O">water</token>
+
+    <!--Note that the monoanion is used when this is substituted-->
+		<token value="[C-]#[C-]">acetylide|acetylid</token>
 
 		<!--Most inorganic amides don't actually involve the amide anion-->
 		<token value="[NH2-].[Li+]">lithium amide</token>

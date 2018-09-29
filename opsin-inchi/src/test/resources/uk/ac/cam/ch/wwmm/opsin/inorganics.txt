@@ -9,3 +9,6 @@ iron(III) oxide	InChI=1S/2Fe.3O/q2*+3;3*-2
 boron trifluoride	InChI=1S/BF3/c2-1(3)4
 silicon dioxide	InChI=1S/O2Si/c1-3-2
 carbon tetrachloride	InChI=1S/CCl4/c2-1(3,4)5
+silver(I) acetylide	InChI=1S/C2.2Ag/c1-2;;/q-2;2*+1
+disilver acetylide	InChI=1S/C2.2Ag/c1-2;;/q-2;2*+1
+monosodium acetylide	InChI=1S/C2H.Na/c1-2;/h1H;/q-1;+1

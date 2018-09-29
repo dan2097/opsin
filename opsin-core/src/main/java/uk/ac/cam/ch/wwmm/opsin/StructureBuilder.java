@@ -1957,7 +1957,12 @@ class StructureBuilder {
 				return;
 			}
 		}
-		if (overallCharge <0){//neutralise functionalAtoms if they are the sole cause of the negative charge and multiple molecules are present
+		if (overallCharge <0){
+			if (overallCharge == -1 && acetylideSpecialCase(wordRules)) {
+				//e.g. acetylide dianion --> acetylide monoanion
+				return;
+			}
+			//neutralise functionalAtoms if they are the sole cause of the negative charge and multiple molecules are present
 			int chargeOnFunctionalAtoms = 0;
 			for (Element wordRule : wordRules) {
 				BuildResults br = componentToBR.get(wordRule);
@@ -2050,6 +2055,25 @@ class StructureBuilder {
 					otherAtom2.setCharge(0);
 					state.fragManager.createBond(centralAtom, otherAtom1, 1);
 					state.fragManager.createBond(centralAtom, otherAtom2, 1);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean acetylideSpecialCase(List<Element> wordRules) {
+		for (Element wordRule : wordRules) {
+			String value = wordRule.getAttributeValue(VALUE_ATR);
+			if ("acetylide".equals(value) || "acetylid".equals(value)) {
+				List<Element> groups = OpsinTools.getDescendantElementsWithTagName(wordRule, GROUP_EL);
+				if (groups.size() != 1) {
+					throw new RuntimeException("OPSIN Bug: Unexpected acetylide representation");
+				}
+				Fragment frag = groups.get(0).getFrag();
+				Atom firstAtom = frag.getFirstAtom();
+				if (frag.getCharge() == -2 && firstAtom.getCharge() == -1)  {
+					firstAtom.addChargeAndProtons(1, 1);
 					return true;
 				}
 			}

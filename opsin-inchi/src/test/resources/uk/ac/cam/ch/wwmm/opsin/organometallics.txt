@@ -4,3 +4,4 @@ dihydrido(naphthalen-2-yl)rhenium	InChI=1S/C10H7.Re.2H/c1-2-6-10-8-4-3-7-9(10)5-
 (prop-1-yn-1yl)copper	InChI=1S/C3H3.Cu/c1-3-2;/h1H3;
 bis(4-carboxyphenyl)mercury	InChI=1S/2C7H5O2.Hg/c2*8-7(9)6-4-2-1-3-5-6;/h2*2-5H,(H,8,9);
 trimethyltin(IV)	InChI=1S/3CH3.Sn/h3*1H3;/q;;;+1
+Lithium phenylacetylide	InChI=1S/C8H5.Li/c1-2-8-6-4-3-5-7-8;/h3-7H;/q-1;+1

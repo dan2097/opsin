@@ -129,7 +129,6 @@ For these groups the charge on the first atom will be increased by 1 if they are
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="monoValentStandaloneGroup" symbol="´">
-		<token value="[C-]#[C-]">acetylide|acetylid</token>
 		<token value="[N-]=[N+]=[N-]">azide|azid</token>
 		<token value="[Br-]">bromide|bromid</token>
 		<token value="[Cl-]">chloride|chlorid</token>
