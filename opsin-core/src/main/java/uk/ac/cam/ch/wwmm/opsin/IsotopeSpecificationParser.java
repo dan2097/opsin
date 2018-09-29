@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 class IsotopeSpecificationParser {
 	
-	private static final Pattern matchBoughtonIsotope =Pattern.compile("(?:-([^,]+(?:,[^,]+)*))?-d(\\d+)?");
+	private static final Pattern matchBoughtonIsotope =Pattern.compile("(?:-([^,]+(?:,[^,]+)*))?-((\\d+)([A-Z][a-z]?)|d)(\\d+)?");
 	private static final Pattern matchIupacIsotope =Pattern.compile("(?:([^,]+(?:,[^,]+)*)-)?(\\d+)([A-Z][a-z]?)(\\d+)?");
 
 	static class IsotopeSpecification {
@@ -57,11 +57,19 @@ class IsotopeSpecificationParser {
 		if (!m.matches()) {
 			throw new RuntimeException("Malformed isotope specification: " + val);
 		}
-		ChemEl chemEl = ChemEl.H;
-		int isotope = 2;
-		
+		int isotope;
+		ChemEl chemEl;
+		if (m.group(2).equals("d")) {
+			isotope = 2;
+			chemEl = ChemEl.H;
+		}
+		else {
+			isotope = Integer.parseInt(m.group(3));
+			chemEl = ChemEl.valueOf(m.group(4));
+		}
+
 		int multiplier = 1;
-		String multiplierStr = m.group(2);
+		String multiplierStr = m.group(5);
 		if (multiplierStr != null) {
 			multiplier = Integer.parseInt(multiplierStr);
 		}
