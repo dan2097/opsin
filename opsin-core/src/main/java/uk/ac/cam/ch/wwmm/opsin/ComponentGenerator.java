@@ -124,7 +124,8 @@ class ComponentGenerator {
 
 		/* Converts open/close bracket elements to bracket elements and
 		 *  places the elements inbetween within the newly created bracket */
-		findAndStructureBrackets(substituentsAndRoot);
+		List<Element> brackets = new ArrayList<Element>();
+		findAndStructureBrackets(substituentsAndRoot, brackets);
 		
 		for (Element subOrRoot: substituentsAndRoot) {
 			processHydroCarbonRings(subOrRoot);
@@ -134,6 +135,9 @@ class ComponentGenerator {
 			detectAlkaneFusedRingBridges(group);
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
+		}
+		for (Element bracket : brackets) {
+			moveDetachableHetAtomRepl(bracket);
 		}
 	}
 
@@ -1349,11 +1353,12 @@ class ComponentGenerator {
 
 	/**Finds matching open and close brackets, and places the
 	 * elements contained within in a big &lt;bracket&gt; element.
+	 * @param brackets 
 	 *
 	 * @param substituentsAndRoot: The substituent/root elements at the current level of the tree
 	 * @throws ComponentGenerationException
 	 */
-	private void findAndStructureBrackets(List<Element> substituentsAndRoot) throws ComponentGenerationException {
+	private void findAndStructureBrackets(List<Element> substituentsAndRoot, List<Element> brackets) throws ComponentGenerationException {
 		int blevel = 0;
 		Element openBracket = null;
 		boolean nestedBrackets = false;
@@ -1373,8 +1378,9 @@ class ComponentGenerator {
 					blevel--;
 					if(blevel == 0) {
 						Element bracket = structureBrackets(openBracket, child);
+						brackets.add(bracket);
 						if (nestedBrackets) {
-							findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagNames(bracket, new String[]{SUBSTITUENT_EL, ROOT_EL}));
+							findAndStructureBrackets(OpsinTools.getDescendantElementsWithTagNames(bracket, new String[]{SUBSTITUENT_EL, ROOT_EL}), brackets);
 						}
 						openBracket = null;
 						nestedBrackets = false;
@@ -2704,5 +2710,38 @@ class ComponentGenerator {
 			}
 		}
 	}
+	
+	private void moveDetachableHetAtomRepl(Element bracket) throws ComponentGenerationException {
+		int indexOfLastHeteroatom = -1;
+		for (int i = bracket.getChildCount() - 1; i >= 0; i--) {
+			Element child = bracket.getChild(i);
+			if (child.getName().equals(HETEROATOM_EL)) {
+				indexOfLastHeteroatom = i;
+				break;
+			}
+		}
+		if (indexOfLastHeteroatom >=0) {
+			Element rightMostGroup = null;
+			Element nextSubOrRootOrBracket = OpsinTools.getNextSibling(bracket);
+			while (nextSubOrRootOrBracket != null) {
+				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
+				if (groupToConsider != null) {
+					rightMostGroup = groupToConsider;
+				}
+				nextSubOrRootOrBracket = OpsinTools.getNextSibling(nextSubOrRootOrBracket);
+			}
+			
+			if (rightMostGroup == null) {
+				throw new ComponentGenerationException("Unable to find group for: " + bracket.getChild(0).getValue() +" to apply to!");
+			}
+			Element rightMostGroupParent = rightMostGroup.getParent();
+			for (int i = indexOfLastHeteroatom; i >= 0; i--) {
+				Element locantededHeteroAtomRepl = bracket.getChild(i);
+				locantededHeteroAtomRepl.detach();
+				rightMostGroupParent.insertChild(locantededHeteroAtomRepl, 0);
+			}
+		}
+	}
+
 }
 

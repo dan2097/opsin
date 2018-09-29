@@ -205,6 +205,9 @@ class ComponentProcessor {
 				assignImplicitLocantsToDiTerminalSuffixes(subOrRoot);
 				processConjunctiveNomenclature(subOrRoot);
 				suffixApplier.resolveSuffixes(subOrRoot.getFirstChildElement(GROUP_EL), subOrRoot.getChildElements(SUFFIX_EL));
+				if (subOrRoot.getName().equals(SUBSTITUENT_EL)) {
+					moveSubstituentDetachableHetAtomRepl(subOrRoot);
+				}
 			}
 
 			moveErroneouslyPositionedLocantsAndMultipliers(brackets);//e.g. (tetramethyl)azanium == tetra(methyl)azanium
@@ -4797,6 +4800,37 @@ class ComponentProcessor {
 		
 		if (OpsinTools.getNextGroup(group)==null){
 			throw new StructureBuildingException("Biochemical linkage descriptor should be followed by another biochemical: " + biochemicalLinkage);
+		}
+	}
+
+	private void moveSubstituentDetachableHetAtomRepl(Element substituent) throws ComponentGenerationException {
+		Element child = substituent.getChild(0);
+		List<Element> locantededHeteroAtomRepls = new ArrayList<Element>();
+		while (child != null && child.getName().equals(HETEROATOM_EL) && child.getAttribute(LOCANT_ATR) != null) {
+			locantededHeteroAtomRepls.add(child);
+			child = OpsinTools.getNextSibling(child);
+		}
+		if (!locantededHeteroAtomRepls.isEmpty() && child != null && child.getName().equals(LOCANT_EL)) {
+			//e.g. 4-aza-3-methyl
+			Element rightMostGroup = null;
+			Element nextSubOrRootOrBracket = OpsinTools.getNextSibling(substituent);
+			while (nextSubOrRootOrBracket != null) {
+				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
+				if (groupToConsider != null) {
+					rightMostGroup = groupToConsider;
+				}
+				nextSubOrRootOrBracket = OpsinTools.getNextSibling(nextSubOrRootOrBracket);
+			}
+			
+			if (rightMostGroup == null) {
+				throw new ComponentGenerationException("Unable to find group for: " + substituent.getChild(0).getValue() +" to apply to!");
+			}
+			Element rightMostGroupParent = rightMostGroup.getParent();
+			for (int i = locantededHeteroAtomRepls.size() - 1; i >= 0; i--) {
+				Element locantededHeteroAtomRepl = locantededHeteroAtomRepls.get(i);
+				locantededHeteroAtomRepl.detach();
+				rightMostGroupParent.insertChild(locantededHeteroAtomRepl, 0);
+			}
 		}
 	}
 
