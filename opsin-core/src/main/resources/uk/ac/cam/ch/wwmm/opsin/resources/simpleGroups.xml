@@ -342,6 +342,7 @@
 		<token value="S=P(OCC)(OCC)Oc1nc(nc(c1)C)C(C)C">diazinon|diazinone</token><!--pesticide name-->
 		<token value="OCN1C(NC(C1(CO)N(C(=O)NCO)CO)=O)=O">diazolidinylurea|diazolidinyl urea</token><!--antimicrobial name-->
 		<token value="ClC(C(C1=CC=C(C=C1)Cl)C1=CC=C(C=C1)Cl)(Cl)Cl">dichlorodiphenyltrichloroethane|dichlorodiphenyltrichloroethan</token><!--pesticide name-->
+		<token value="C(CCCN=[N+]=[N-])CCC(F)(F)S(=O)[O-]" labels="none" functionalIDs="15">difluoroheptylazidosulfinate|difluoroheptylazidosulfinat</token><!--trivial name-->
 		<token value="O=C1N(CO)CCN1CO">dimethylol ethylene urea</token><!--trivial name-->
 		<token value="C1=CC=C2C(=C1)C(=O)C3=C(C2=O)SC(=C(S3)C#N)C#N">dithianone|dithianon</token><!--pesticide name-->
 		<token value="CC(CCOc1ccc2Nc3ccccc3Nc2c1)CC\C=C(/C)CC\C=C(/C)CC\C=C(/C)CCC=C(C)C">dihydromethanophenazine|dihydromethanophenazin</token><!--trivial name-->
