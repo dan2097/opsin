@@ -178,9 +178,9 @@
 		<token value="=[SeH2]" usableAsAJoiner="yes">selenuranylidene|selenuranyliden</token>
 		<token value="-NNC(=O)N" labels="1/2/3//4">semicarbazido</token>
 		<token value="-C(C)C(C)C">siamyl</token>
-		<token value="-S(=O)(O)">sulfino</token>
-		<token value="-S(=O)(=O)(O)">sulfo</token>
-		<token value="-OS(=O)(=O)(O)">sulfoxy</token><!--contraction-->
+		<token value="-S(=O)O" functionalIDs="3">sulfino</token>
+		<token value="-S(=O)(=O)O" functionalIDs="4">sulfo</token>
+		<token value="-OS(=O)(=O)O" functionalIDs="5">sulfoxy</token><!--contraction-->
 		<token value="-[SH3]" usableAsAJoiner="yes">sulfuranyl</token>
 		<token value="-[SH4+]" usableAsAJoiner="yes">sulfuraniumyl</token>
 		<token value="=[SH2]" usableAsAJoiner="yes">sulfuranylidene|sulfuranyliden</token>
@@ -311,7 +311,7 @@
 		<token value="-SO">sulfeno</token>
 
 		<token value="-N=O">nitroso</token>
-		<token value="-C(=O)O">carboxy|carboxyl</token>
+		<token value="-C(=O)O" functionalIDs="3">carboxy|carboxyl</token>
 		<token value="-C(=O)[O-]">carboxylato</token>
 		<token value="-C(N)=N" usableAsAJoiner="yes" defaultInID="2">amidino|guanyl</token>
 
