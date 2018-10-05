@@ -1884,9 +1884,13 @@ class StructureBuilder {
 		}
 		if (negativelyChargedComponents.size() == 0 && (positivelyChargedComponents.size() > 0 || getMetalsThatCanBeImplicitlyCations(molecule).size() > 0)) {
 			for (int i = neutralComponents.size() - 1; i>=0; i--) {
-				BuildResults br =neutralComponents.get(i);
-				for (int j = br.getFunctionalAtomCount() -1; j >=0; j--) {
-					Atom functionalAtom = br.getFunctionalAtom(j);
+				List<Atom> functionalAtoms = new ArrayList<Atom>();
+				for (Fragment f : neutralComponents.get(i).getFragments()) {
+					for (int j = 0; j < f.getFunctionalAtomCount(); j++) {
+						functionalAtoms.add(f.getFunctionalAtom(j).getAtom());
+					}
+				}
+				for (Atom functionalAtom : functionalAtoms) {
 					if (functionalAtom.getCharge() == 0 && functionalAtom.getIncomingValency() == 1){
 						functionalAtom.addChargeAndProtons(-1, -1);
 					}
