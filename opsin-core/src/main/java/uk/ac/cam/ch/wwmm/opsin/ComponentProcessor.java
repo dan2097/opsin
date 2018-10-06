@@ -3763,9 +3763,6 @@ class ComponentProcessor {
 			}
 			for (int i = 0; i < multiplier; i++) {
 				Fragment bridgeFrag = state.fragManager.buildSMILES(bridge.getAttributeValue(VALUE_ATR), groupEl, NONE_LABELS_VAL);
-				List<Atom> bridgeAtomList = bridgeFrag.getAtomList();
-				bridgeFrag.addOutAtom(bridgeAtomList.get(0), 1, true);
-				bridgeFrag.addOutAtom(bridgeAtomList.get(bridgeAtomList.size() - 1), 1, true);
 				Atom[] ringAtoms;
 				if (locants != null) {
 					String[] locantArray = locants.get(i);

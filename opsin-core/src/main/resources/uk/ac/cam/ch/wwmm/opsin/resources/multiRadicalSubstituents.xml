@@ -81,12 +81,56 @@
 		<token value="C=NO" outIDs="1,1" usableAsAJoiner="yes" acceptsAdditiveBonds="yes">carbohydroximoyl</token>
 	</tokenList>
 	<tokenList tagname="fusedRingBridge" symbol="å">
-		<token value="O">epoxy</token>
-		<token value="S">epithio</token>
-		<token value="[SeH2]">episeleno</token>
-		<token value="[TeH2]">epitelluro</token>
-		<token value="N">epiazano|epimino|epiimino</token>
-		<token value="C=C">etheno</token>
+		<!--alkano bridges handled systematically -->
+		<!--Many of these other bridges could be handled systematically,
+		but as bridging nomenclature is rarely used and there are significant divergences
+		between IUPAC, CAS and Beilstein this may not be worth the effort-->
+		<token value="-C=C-">etheno</token>
+		<token value="-C=CC-">prop[1]eno|propeno</token>
+		<token value="-C=CCC-">but[1]eno|[1]buteno|but-1-eno</token>
+		<token value="-CC=CC-">but[2]eno|[2]buteno|but-2-eno</token>
+		<token value="-C=CC=C-">buta[1,3]dieno|1,3]butadieno|buta-1,3-dieno</token>
+
+		<token value="-O-">epoxy|epioxido</token>
+		<token value="-OO-">epidioxy|epidioxido</token>
+		<token value="-OOO-">epitrioxy|epitrioxido</token>
+		<token value="-S-">epithio|episulfano</token>
+		<token value="-[S|4]-">lambda4-sulfano|epi-lambda4-sulfano</token>
+		<token value="-[S|6]-">lambda6-sulfano|epi-lambda6-sulfano</token>
+		<token value="-SS-">epidithio|epidisulfano</token>
+		<token value="-[SeH2]-">episeleno|episelano</token>
+		<token value="-[TeH2]-">epitelluro|epitellano</token>
+		<token value="-N-">epimino|epiimino|epiazano</token><!--imino handled as a substituent-->
+		<token value="-NN-">diazano|biimino|epidiazano</token>
+		<token value="-N=N-">diazeno|epidiazeno</token><!--azo handled as a substituent-->
+		<token value="-N=NN-">triaz[1]eno|azimino|epitriazeno|epitriaz-1-eno</token>
+		<token value="-P-">phosphano|epiphosphano</token><!--phosphinidene handled as a substituent-->
+		<token value="-[AsH]-">arsano|epiarsano</token><!--arsinidene handled as a substituent-->
+		<token value="-[SbH]-">stibano|epistibano</token><!--stibylene handled as a substituent-->
+		<token value="-[SiH2]-">silano|episilano</token>
+		<token value="-[GeH2]-">germano|epigermano</token>
+		<token value="-[SnH2]-">stannano</token>
+		<token value="-B-">borano|epiborano</token><!--borylene handled as a substituent-->
+
+		<token value="-c-">(metheno)|metheno</token>
+		<token value="-n-">(azeno)|azeno|epiazanylylidene</token>
+		<token value="-p-">(phospheno)|phospheno|epiphosphanylylidene</token>
+
+		<token value="-CC=">(ethanylylidene)|ethanylylidene|epiethanylylidene</token>
+		<token value="=CC=">(ethanediylidene)|ethanediylidene|epiethanediylidene</token>
+		<token value="-CCC=">(propan[1]yl[3]ylidene)|propan[1]yl[3]ylidene</token>
+		<token value="-C=CC=">(prop[1]en[1]yl[3]ylidene)|prop[1]en[1]yl[3]ylidene</token>
+		<token value="=NN=">(diazanediylidene)|diazanediylidene|epidiazanediylidene</token><!--azino handled as a substituent-->
+
+		<token value="-OC-">(epoxymethano)|oxaethano</token>
+		<token value="-NCC-">(epiminoethano)|(iminoethano)|[1]azapropano</token>
+		<token value="-OC=CC-">(epoxyprop[1]eno)|(epoxy[1]propeno)|[1]oxabut-2-eno</token>
+		<token value="-OCC=C-">(epoxyprop[2]eno)|(epoxy[2]propeno)|[1]oxabut-3-eno</token>
+		<token value="-CCNC-">(ethanoiminomethano)|(ethaniminomethano)</token>
+		<token value="-CNCC-">[2]azabutano</token>
+		<token value="-COC=">(methanooxymetheno)|(methanoxymetheno)|epi[2]oxapropan-1-yl-3-ylidene</token>
+		<token value="-OCN=C-">(epoxymethanoazenometheno)|(epoxymethanonitrilometheno)|[1]oxa[3]azabut-3-eno</token>
+		<token value="-OC=NC-">(epoxymethenoazenomethano)|(epoxymethenonitrilomethano)|[1]oxa[3]azabut-2-eno</token>
 	</tokenList>
 	<tokenList tagname="group" type="substituent" subType="multiRadicalSubstituent" symbol="Ù">
 		<token value="N" outIDs="1,1,1">amine|amin</token><!--Can not be used as the core of multiplicative nomenclature-->

@@ -2084,11 +2084,11 @@ class StructureBuildingMethods {
 		else{
 			firstAtomToJoinTo = atomToJoinTo;
 		}
-		Atom chalcogenAtom1 = bridgingFragment.getOutAtom(0).getAtom();
+		OutAtom outAtom1 = bridgingFragment.getOutAtom(0);
 		bridgingFragment.removeOutAtom(0);
 		
 		//In epoxy chalcogenAtom1 will be chalcogenAtom2. Methylenedioxy is also handled by this method
-		state.fragManager.createBond(chalcogenAtom1, firstAtomToJoinTo, 1);
+		state.fragManager.createBond(outAtom1.getAtom(), firstAtomToJoinTo, outAtom1.getValency());
 		
 		Atom secondAtomToJoinTo;
 		if (bridgingFragment.getOutAtom(0).getLocant() != null){
@@ -2109,12 +2109,18 @@ class StructureBuildingMethods {
 			}
 			secondAtomToJoinTo = possibleSecondAtom.get(0);
 		}
-		Atom chalcogenAtom2 = bridgingFragment.getOutAtom(0).getAtom();
+		OutAtom outAtom2 = bridgingFragment.getOutAtom(0);
 		bridgingFragment.removeOutAtom(0);
-		if (chalcogenAtom1.equals(chalcogenAtom2) && firstAtomToJoinTo == secondAtomToJoinTo){
+		if (outAtom1.getAtom().equals(outAtom2.getAtom()) && firstAtomToJoinTo == secondAtomToJoinTo){
 			throw new StructureBuildingException("Epoxides must be formed between two different atoms");
 		}
-		state.fragManager.createBond(chalcogenAtom2, secondAtomToJoinTo, 1);
+		int bondValency = outAtom2.getValency();
+		if (outAtom2.getAtom().hasSpareValency() && !secondAtomToJoinTo.hasSpareValency()) {
+			//bridging groups like azeno are treated as aromatic so that it is not fixed as to which of the two bonds is the double bond
+			//if connected to a saturated group though, one of them must be a double bond
+			bondValency = 2;
+		}
+		state.fragManager.createBond(outAtom2.getAtom(), secondAtomToJoinTo, bondValency);
 		CycleDetector.assignWhetherAtomsAreInCycles(bridgingFragment);
 		return new Atom[]{firstAtomToJoinTo, secondAtomToJoinTo};
 	}

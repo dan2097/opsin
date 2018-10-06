@@ -1711,6 +1711,8 @@ class ComponentGenerator {
 				Element possibleBridgeFormer = OpsinTools.getNextSiblingIgnoringCertainElements(group, new String[]{UNSATURATOR_EL});
 				if(possibleBridgeFormer != null && possibleBridgeFormer.getName().equals(BRIDGEFORMINGO_EL)){
 					group.setName(FUSEDRINGBRIDGE_EL);
+					Attribute smilesValAtr = group.getAttribute(VALUE_ATR);
+					smilesValAtr.setValue("-" + smilesValAtr.getValue() + "-");
 					possibleBridgeFormer.detach();
 					unsaturator.detach();
 				}
