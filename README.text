@@ -139,7 +139,7 @@ tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thi
 * Lambda convention
 * Amino Acids and derivatives
 * Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)
-* Simple bridge prefixes e.g. methano
+* Bridge prefixes e.g. methano
 * Specification of oxidation numbers and charge on elements
 * Perhalogeno terms
 * Subtractive prefixes: deoxy, dehydro, anhydro, demethyl, deamino
@@ -156,7 +156,6 @@ tellurides, telluroketones, tellurosemicarbazones, tellurones, telluroxides, thi
 * Other less common stereochemical terms
 * Most natural Products other than steroids
 * Natural product specific nomenclature operations
-* Unsaturated or composite bridge prefixes e.g. epoxymethano
 
 ### Developers and Contributors
 * Dr. Daniel Lowe (Current maintainer)
