@@ -437,9 +437,9 @@ class WordRules {
 												break;
 											}
 										}
-										else if (chemEl2 == ChemEl.H && wordsInWordRule == 2) {
+										else if ((chemEl2 == ChemEl.H || chemEl2 == ChemEl.C ) && wordsInWordRule == 2) {
 											if (chemEl1 == ChemEl.Al) {
-												//aluminium hydrides are covalent
+												//organoaluminium and aluminium hydrides are covalent
 												specialCaseCovalency = true;
 											}
 										}
