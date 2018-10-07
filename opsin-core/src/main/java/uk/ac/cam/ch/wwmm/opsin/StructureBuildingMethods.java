@@ -2459,7 +2459,10 @@ class StructureBuildingMethods {
 	 * @return
 	 */
 	static int calculateSubstitutableHydrogenAtoms(Atom atom) {
-		int valency = atom.determineValency(true);	
+		if (!atom.getImplicitHydrogenAllowed()) {
+			return 0;
+		}
+		int valency = atom.determineValency(true);
 		int currentValency = atom.getIncomingValency() + atom.getOutValency();
 		int substitutableHydrogen = valency - currentValency;
 		return substitutableHydrogen >= 0 ? substitutableHydrogen : 0;
