@@ -149,6 +149,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
 		<token value="[TeH-]">hydrotelluride|hydrotellurid</token>
 		<token value="[Te-][TeH]">hydroditelluride|hydroditellurid</token>
 		<token value="[Te-][Te][TeH]">hydrotritelluride|hydrotritellurid</token>
+		<token value="[OH-]">hydroxide|hydroxid</token>
 		<token value="[I-]">iodide|iodid</token>
 		<token value="[N-]=C=O">isocyanate|isocyanat</token>
 		<token value="N#[C-]">isocyanide|isocyanid</token>
