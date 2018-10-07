@@ -385,6 +385,7 @@ class FragmentManager {
 			newAtom.setAtomIsInACycle(atom.getAtomIsInACycle());
 			newAtom.setType(atom.getType());//may be different from fragment type if the original atom was formerly in a suffix
 			newAtom.setMinimumValency(atom.getMinimumValency());
+			newAtom.setImplicitHydrogenAllowed(atom.getImplicitHydrogenAllowed());
 			newFragment.addAtom(newAtom);
 			oldToNewAtomMap.put(atom, newAtom);
 		}
@@ -680,9 +681,6 @@ class FragmentManager {
 	 */
 	void makeHydrogensExplicit() throws StructureBuildingException {
 		for (Fragment fragment : fragments) {
-			if (fragment.getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
-				continue;
-			}
 			List<Atom> atomList = fragment.getAtomList();
 			for (Atom parentAtom : atomList) {
 				int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom);

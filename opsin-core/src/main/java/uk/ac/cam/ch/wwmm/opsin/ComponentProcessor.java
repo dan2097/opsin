@@ -249,6 +249,12 @@ class ComponentProcessor {
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
 		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
 		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
+		if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+			//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
+			for (Atom a : thisFrag.getAtomList()) {
+				a.setImplicitHydrogenAllowed(false);
+			}
+		}
 		return thisFrag;
 	}
 	

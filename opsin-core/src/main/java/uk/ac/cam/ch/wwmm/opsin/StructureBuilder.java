@@ -1102,7 +1102,7 @@ class StructureBuilder {
 			Fragment monoValentFunctionGroup = state.fragManager.buildSMILES(functionGroup.getAttributeValue(VALUE_ATR), FUNCTIONALCLASS_TYPE_VAL, NONE_LABELS_VAL);
 			if (functionGroup.getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtomOrFirstAtom();
-				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
+				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide and the like charge neutral
 			}
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionGroup);
 			functionalGroupFragments.add(monoValentFunctionGroup);

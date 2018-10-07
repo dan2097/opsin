@@ -1,7 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.ELEMENTARYATOM_SUBTYPE_VAL;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -112,9 +110,6 @@ class AmbiguityChecker {
 		
 		List<Atom> ghostHydrogens = new ArrayList<Atom>();
 		for (Atom atom : atoms) {
-			if (atom.getFrag().getSubType().equals(ELEMENTARYATOM_SUBTYPE_VAL)){//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
-				continue;
-			}
 			int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom);
 			for (int i = 0; i < explicitHydrogensToAdd; i++) {
 				Atom ghostHydrogen = new Atom(ChemEl.H);

@@ -85,6 +85,9 @@ class Atom {
 	
 	/** Null by default or set by the SMILES builder*/
 	private Integer minimumValency;
+	
+	/** Can this atom have implicit hydrogen? True unless explicitly set otherwise otherwise*/
+	private boolean implicitHydrogenAllowed = true;
 
 	/** This is modified by ium/ide/ylium/uide and is used to choose the appropriate valency for the atom*/
 	private int protonsExplicitlyAddedOrRemoved = 0;
@@ -533,6 +536,14 @@ class Atom {
 
 	void setMinimumValency(Integer minimumValency) {
 		this.minimumValency = minimumValency;
+	}
+	
+	boolean getImplicitHydrogenAllowed() {
+		return implicitHydrogenAllowed;
+	}
+
+	void setImplicitHydrogenAllowed(boolean implicitHydrogenAllowed) {
+		this.implicitHydrogenAllowed = implicitHydrogenAllowed;
 	}
 
     @SuppressWarnings("unchecked")
