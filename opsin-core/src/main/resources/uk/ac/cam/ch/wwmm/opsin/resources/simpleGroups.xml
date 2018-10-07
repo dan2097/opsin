@@ -124,7 +124,6 @@
 		<token value="O=P(N(C)C)(N(C)C)N(C)C">hexametapol</token>
 		<token value="C[Si]([N-][Si](C)(C)C)(C)C">hexamethyldisilazide|hexamethyldisilazid</token>
 		<token value="[OH3+]">hydronium</token>
-		<token value="[OH-]">hydroxide|hydroxid</token>
 		<token value="[OH+]">hydroxylium</token>
 		<token value="[OH+]O">hydroperoxylium</token>
 		<token value="CC(CCCC(C)(C)O)CC=O">hydroxycitronellal</token>
