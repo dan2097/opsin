@@ -1,5 +1,5 @@
 # A docker image from Docker Hub to use as the build environment
-image: maven:3.5.0-jdk-9-slim
+image: maven:3.5.4-jdk-9-slim
 
 clone:           # the 'clone' section 
   depth: 5       # the depth, in this case the clone will contain last five commits
@@ -7,5 +7,23 @@ clone:           # the 'clone' section
 pipelines:
   default:
     - step:
+        name: Java 8
+        image: maven:3.5.4-jdk-8
+        caches:
+          - maven
         script: # Runs OPSIN's tests and assembly a fat jar containing all modules
-          - mvn clean test package assembly:assembly
+          - mvn -B clean test package assembly:assembly
+    - step:
+        name: Java 9
+        image: maven:3.5.4-jdk-9
+        caches:
+          - maven
+        script: # Runs OPSIN's tests and assembly a fat jar containing all modules
+          - mvn -B clean test package assembly:assembly
+    - step:
+        name: Java 11
+        image: maven:3.5.4-jdk-11
+        caches:
+          - maven
+        script: # Runs OPSIN's tests and assembly a fat jar containing all modules
+          - mvn -B clean test package assembly:assembly
