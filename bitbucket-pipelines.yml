@@ -14,13 +14,6 @@ pipelines:
         script: # Runs OPSIN's tests and assembly a fat jar containing all modules
           - mvn -B clean test package assembly:assembly
     - step:
-        name: Java 9
-        image: maven:3.5.4-jdk-9
-        caches:
-          - maven
-        script: # Runs OPSIN's tests and assembly a fat jar containing all modules
-          - mvn -B clean test package assembly:assembly
-    - step:
         name: Java 11
         image: maven:3.5.4-jdk-11
         caches:
