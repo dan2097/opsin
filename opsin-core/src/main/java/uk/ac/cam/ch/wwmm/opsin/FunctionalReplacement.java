@@ -115,7 +115,7 @@ class FunctionalReplacement {
 			Element group =groups.get(i);
 			String groupValue = group.getValue();
 			PREFIX_REPLACEMENT_TYPE replacementType = null;
-			if (matchChalcogenReplacement.matcher(groupValue).matches()){
+			if (matchChalcogenReplacement.matcher(groupValue).matches() || groupValue.equals("thiono")){
 				replacementType =PREFIX_REPLACEMENT_TYPE.chalcogen;
 			}
 			else if (HALIDEORPSEUDOHALIDE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
@@ -620,27 +620,40 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-
-		List<Atom> doubleBondedOxygen = new ArrayList<Atom>();
-		List<Atom> singleBondedOxygen = new ArrayList<Atom>();
-		List<Atom> ethericOxygen = new ArrayList<Atom>();
-		for (Atom oxygen : oxygenAtoms) {
-			int incomingValency = oxygen.getIncomingValency();
-			int bondCount = oxygen.getBondCount();
-			if (bondCount==1 && incomingValency==2){
-				doubleBondedOxygen.add(oxygen);
-			}
-			else if (bondCount==1 && incomingValency==1){
-				singleBondedOxygen.add(oxygen);
-			}
-			else if (bondCount==2 && incomingValency==2){
-				ethericOxygen.add(oxygen);
+		List<Atom> replaceableAtoms = new ArrayList<Atom>();
+		if (replacementSmiles.startsWith("=")) {
+			//e.g. thiono
+			replacementSmiles = replacementSmiles.substring(1);
+			for (Atom oxygen : oxygenAtoms) {
+				int incomingValency = oxygen.getIncomingValency();
+				int bondCount = oxygen.getBondCount();
+				if (bondCount == 1 && incomingValency == 2) {
+					replaceableAtoms.add(oxygen);
+				}
 			}
 		}
-		List<Atom> replaceableAtoms = new ArrayList<Atom>();
-		replaceableAtoms.addAll(doubleBondedOxygen);
-		replaceableAtoms.addAll(singleBondedOxygen);
-		replaceableAtoms.addAll(ethericOxygen);
+		else {
+			List<Atom> doubleBondedOxygen = new ArrayList<Atom>();
+			List<Atom> singleBondedOxygen = new ArrayList<Atom>();
+			List<Atom> ethericOxygen = new ArrayList<Atom>();
+			for (Atom oxygen : oxygenAtoms) {
+				int incomingValency = oxygen.getIncomingValency();
+				int bondCount = oxygen.getBondCount();
+				if (bondCount == 1 && incomingValency ==2 ) {
+					doubleBondedOxygen.add(oxygen);
+				}
+				else if (bondCount == 1 && incomingValency == 1) {
+					singleBondedOxygen.add(oxygen);
+				}
+				else if (bondCount == 2 && incomingValency == 2) {
+					ethericOxygen.add(oxygen);
+				}
+			}
+			replaceableAtoms.addAll(doubleBondedOxygen);
+			replaceableAtoms.addAll(singleBondedOxygen);
+			replaceableAtoms.addAll(ethericOxygen);
+		}
+
 		int totalOxygen = replaceableAtoms.size();
 		if (numberOfAtomsToReplace >1){
 			if (totalOxygen < numberOfAtomsToReplace){
