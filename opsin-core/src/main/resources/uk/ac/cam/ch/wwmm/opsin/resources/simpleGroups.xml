@@ -123,6 +123,8 @@
 		<token value="C(Cl)(Br)C(F)(F)F" labels="1///2///">halothane|halothan</token>
 		<token value="O=P(N(C)C)(N(C)C)N(C)C">hexametapol</token>
 		<token value="C[Si]([N-][Si](C)(C)C)(C)C">hexamethyldisilazide|hexamethyldisilazid</token>
+		<token value="N1CCCCCC1" labels="numeric">hexamethyleneimine|hexamethyleneimin|hexamethylenimine|hexamethylenimin</token>
+		<token value="[NH2+]1CCCCCC1" labels="numeric">hexamethyleneiminium|hexamethyleniminium</token>
 		<token value="[OH3+]">hydronium</token>
 		<token value="[OH+]">hydroxylium</token>
 		<token value="[OH+]O">hydroperoxylium</token>
@@ -164,6 +166,8 @@
 		<token value="C[O-]" labels="1/">methoxide|methoxid</token>
 		<token value="C[O+]" labels="1/">methoxylium</token>
 		<token value="COCOC">methylal</token>
+		<token value="C=N" labels="1/">methyleneimine|methyleneimin|methylenimine|methylenimin</token>
+		<token value="C=[NH2+]" labels="1/">methyleneiminium|methyleniminium</token>
 		<token value="C(O)CN">monoethanolamine|mono-ethanolamine|monoethanolamin|mono-ethanolamin</token>
 		<token value="C(OC)COC" labels="1///2//">monoglyme</token>
 		<token value="C=CC(CCCC(C)=C)=C">alpha-myrcene|alpha-myrcen</token>
