@@ -135,6 +135,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
 		<token value="[O-]C#N">cyanate|cyanat</token>
 		<token value="[C-]#N">cyanide|cyanid</token>
 		<token value="[2H-]">deuteride|deuterid</token>
+		<token value="[O-][2H]">deuteroxide|deuteroxid</token>
 		<token value="[F-]">fluoride|fluorid</token>
 		<token value="[O-][N+]#[C-]">fulminate|fulminat</token><!--technically fulminates are isofulminates but structure of fulminic acid was only later determined-->
 		<token value="[H-]">hydride|hydrid</token>
