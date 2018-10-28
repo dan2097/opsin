@@ -4119,10 +4119,14 @@ class ComponentProcessor {
 			return;
 		}
 		
+		// groups like carbonyl/sulfonyl should typically be implicitly bracketed e.g. tert-butoxy-carbonyl, unless they are part of multiplicative nomenclature
+		boolean sulfonylLike = matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches();
+		
 		Element elementAftersubstituent = OpsinTools.getNextSibling(substituent);
 		if (elementAftersubstituent != null) {
 			//Not preceded and followed by a bracket e.g. Not (benzyl)methyl(phenyl)amine	c.f. P-16.4.1.3 (draft 2004)
-			if (elementBeforeSubstituent.getName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getName().equals(BRACKET_EL)) {
+			//carbonyl-like allowed due to empirical usage
+			if (!sulfonylLike && elementBeforeSubstituent.getName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getName().equals(BRACKET_EL)) {
 				Element firstChildElementOfElementAfterSubstituent = elementAftersubstituent.getChild(0);
 				if ((firstChildElementOfElementAfterSubstituent.getName().equals(SUBSTITUENT_EL) || firstChildElementOfElementAfterSubstituent.getName().equals(BRACKET_EL))
 					&& !OpsinTools.getPrevious(firstChildElementOfElementAfterSubstituent).getName().equals(HYPHEN_EL)) {
@@ -4140,8 +4144,7 @@ class ComponentProcessor {
 		//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
 		//an exception is made for groups like carbonyl/sulfonyl as these typically should be implicitly bracketed e.g. tert-butoxy-carbonyl
 		Element elementDirectlyBeforeSubstituent = OpsinTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
-		if (elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL) && 
-				!matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches()) {
+		if (!sulfonylLike && elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL)) {
 			return;
 		}
 		
@@ -4314,7 +4317,7 @@ class ComponentProcessor {
 					Element shouldBeAGroupOrSubOrBracket = OpsinTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
 					if (shouldBeAGroupOrSubOrBracket != null) {
 						if ((shouldBeAGroupOrSubOrBracket.getName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-								|| (matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches())){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
+								|| sulfonylLike){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 							locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
 						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))) {//e.g. p-dimethylamino[ring]
@@ -4358,7 +4361,7 @@ class ComponentProcessor {
 		if (locantRelatedElements.size() == 0) {
 			Element possibleMultiplier = childrenOfElementBeforeSubstituent.get(0);
 			if (possibleMultiplier.getName().equals(MULTIPLIER_EL) && (
-					matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches() || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
+					sulfonylLike || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
 				Element desiredGroup = OpsinTools.getNextSiblingIgnoringCertainElements(possibleMultiplier, new String[]{MULTIPLIER_EL});
 				if (desiredGroup !=null && desiredGroup.getName().equals(GROUP_EL)) {
 					possibleMultiplier.detach();
