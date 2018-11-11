@@ -2133,8 +2133,25 @@ class StructureBuildingMethods {
 	 * @return
 	 */
 	private static List<Atom> findAtomsForSubstitution(Element subOrBracket, int numberOfSubstitutions, int bondOrder) {
+		FindAlternativeGroupsResult results = findAlternativeGroups(subOrBracket);
+		List<Atom> substitutableAtoms = findAtomsForSubstitution(results.groups, numberOfSubstitutions, bondOrder, true);
+		if (substitutableAtoms != null) {
+			return substitutableAtoms;
+		}
+		substitutableAtoms = findAtomsForSubstitution(results.groups, numberOfSubstitutions, bondOrder, false);
+		if (substitutableAtoms != null) {
+			return substitutableAtoms;
+		}
+		substitutableAtoms = findAtomsForSubstitution(results.groupsSubstitutionUnlikely, numberOfSubstitutions, bondOrder, true);
+		if (substitutableAtoms != null) {
+			return substitutableAtoms;
+		}
+		substitutableAtoms = findAtomsForSubstitution(results.groupsSubstitutionUnlikely, numberOfSubstitutions, bondOrder, false);
+		return substitutableAtoms;
+	}
+
+	private static List<Atom> findAtomsForSubstitution(List<Element> possibleParents, int numberOfSubstitutions, int bondOrder, boolean preserveValency) {
 		boolean rootHandled = false;
-		List<Element> possibleParents = findAlternativeGroups(subOrBracket);
 		for (int i = 0, l = possibleParents.size(); i < l; i++) {
 			Element possibleParent = possibleParents.get(i);
 			Fragment frag = possibleParent.getFrag();
@@ -2151,10 +2168,10 @@ class StructureBuildingMethods {
 					}
 				}
 				rootHandled = true;
-				substitutableAtoms = FragmentTools.findnAtomsForSubstitution(atoms, frag.getDefaultInAtom(), numberOfSubstitutions, bondOrder, true);
+				substitutableAtoms = FragmentTools.findnAtomsForSubstitution(atoms, frag.getDefaultInAtom(), numberOfSubstitutions, bondOrder, true, preserveValency);
 			}
 			else{
-				substitutableAtoms = FragmentTools.findnAtomsForSubstitution(frag, numberOfSubstitutions, bondOrder);
+				substitutableAtoms = FragmentTools.findnAtomsForSubstitution(frag.getAtomList(), frag.getDefaultInAtom(), numberOfSubstitutions, bondOrder, true, preserveValency);
 			}
 			if (substitutableAtoms != null){
 				return substitutableAtoms;
@@ -2171,7 +2188,11 @@ class StructureBuildingMethods {
 	 */
 	static List<Fragment> findAlternativeFragments(Element startingElement) {
 		List<Fragment> foundFragments = new ArrayList<Fragment>();
-		for (Element group : findAlternativeGroups(startingElement)) {
+		FindAlternativeGroupsResult results = findAlternativeGroups(startingElement);
+		for (Element group : results.groups) {
+			foundFragments.add(group.getFrag());
+		}
+		for (Element group : results.groupsSubstitutionUnlikely) {
 			foundFragments.add(group.getFrag());
 		}
 		return foundFragments;
@@ -2180,23 +2201,31 @@ class StructureBuildingMethods {
 	/**
 	 * Finds all the groups accessible from the startingElement taking into account brackets
 	 * i.e. those that it is feasible that the group of the startingElement could substitute onto
+	 * (locanting onto bracketted groups is unlikely so these are kept seperate in the results object)
 	 * @param startingElement
-	 * @return A list of groups in the order to try them as possible parent groups (for substitutive operations)
+	 * @return An object containing the groups in the order to try them as possible parent groups (for substitutive operations)
 	 */
-	static List<Element> findAlternativeGroups(Element startingElement) {
-		Deque<Element> stack = new ArrayDeque<Element>();
-		stack.add(startingElement.getParent());
-		List<Element> foundGroups = new ArrayList<Element>();
+	static FindAlternativeGroupsResult findAlternativeGroups(Element startingElement) {
+		Deque<AlternativeGroupFinderState> stack = new ArrayDeque<AlternativeGroupFinderState>();
+		stack.add(new AlternativeGroupFinderState(startingElement.getParent(), false));
+		List<Element> groups = new ArrayList<Element>();
+		List<Element> groupsSubstitutionUnlikely = new ArrayList<Element>();//locanting into brackets is rarely the desired answer so keep these separate
 		boolean doneFirstIteration = false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (stack.size() > 0) {
-			Element currentElement =stack.removeLast();
+			AlternativeGroupFinderState state = stack.removeLast();
+			Element currentElement = state.el;
+			boolean substitutionUnlikely = state.substitutionUnlikely;
 			if (currentElement.getName().equals(GROUP_EL)) {
-				foundGroups.add(currentElement);
+				if (substitutionUnlikely) {
+					groupsSubstitutionUnlikely.add(currentElement);
+				}
+				else {
+					groups.add(currentElement);
+				}
 				continue;
 			}
 			List<Element> siblings = OpsinTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			List<Element> bracketted = new ArrayList<Element>();
 			for (Element bracketOrSubOrRoot : siblings) {
 				if (!doneFirstIteration && currentElement.indexOf(bracketOrSubOrRoot) <= currentElement.indexOf(startingElement)){
 					continue;
@@ -2204,26 +2233,44 @@ class StructureBuildingMethods {
 				if (bracketOrSubOrRoot.getAttribute(MULTIPLIER_ATR) != null){
 					continue;
 				}
+				boolean substitutionUnlikelyForThisEl = substitutionUnlikely;
 				if (bracketOrSubOrRoot.getName().equals(BRACKET_EL)){
-					if (IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))){
-						stack.add(bracketOrSubOrRoot);
+					if (!IMPLICIT_TYPE_VAL.equals(bracketOrSubOrRoot.getAttributeValue(TYPE_ATR))) {
+						substitutionUnlikelyForThisEl = true;
 					}
-					else{
-						bracketted.add(bracketOrSubOrRoot);
-					}
+					stack.add(new AlternativeGroupFinderState(bracketOrSubOrRoot, substitutionUnlikelyForThisEl));
 				}
 				else{
+					if (bracketOrSubOrRoot.getAttribute(LOCANT_ATR) != null) {
+						substitutionUnlikelyForThisEl = true;
+					}
 					Element group = bracketOrSubOrRoot.getFirstChildElement(GROUP_EL);
-					stack.add(group);
+					stack.add(new AlternativeGroupFinderState(group, substitutionUnlikelyForThisEl));
 				}
-			}
-			//locanting into brackets is rarely the desired answer so place at the bottom of the stack
-			for (int i = bracketted.size() -1; i >=0; i--) {
-				stack.addFirst(bracketted.get(i));
 			}
 			doneFirstIteration = true;
 		}
-		return foundGroups;
+		return new FindAlternativeGroupsResult(groups, groupsSubstitutionUnlikely);
+	}
+	
+	private static class AlternativeGroupFinderState {
+		private final Element el;
+		private final boolean substitutionUnlikely;
+		
+		AlternativeGroupFinderState(Element el, boolean substitutionUnlikely) {
+			this.el = el;
+			this.substitutionUnlikely = substitutionUnlikely;
+		}
+	}
+	
+	private static class FindAlternativeGroupsResult {
+		private final List<Element> groups;
+		private final List<Element> groupsSubstitutionUnlikely;
+		
+		FindAlternativeGroupsResult(List<Element> groups, List<Element> groupsSubstitutionUnlikely) {
+			this.groups = groups;
+			this.groupsSubstitutionUnlikely = groupsSubstitutionUnlikely;
+		}
 	}
 
 	/**
