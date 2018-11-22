@@ -289,24 +289,25 @@ public class NameToStructure {
 
 		System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
 		String outputType = cmd.getOptionValue("o", "smi");
+		boolean outputName = cmd.hasOption("n");
 		if (outputType.equalsIgnoreCase("cml")) {
 			interactiveCmlOutput(input, output, n2sconfig);
 		}
 		else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")) {
-			interactiveSmilesOutput(input, output, n2sconfig, false);
+			interactiveSmilesOutput(input, output, n2sconfig, false, outputName);
 		}
 		else if (outputType.equalsIgnoreCase("inchi")) {
-			interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH);
+			interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH, outputName);
 		}
 		else if (outputType.equalsIgnoreCase("stdinchi")) {
-			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi);
+			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi, outputName);
 		}
 		else if (outputType.equalsIgnoreCase("stdinchikey")) {
-			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey);
+			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey, outputName);
 		}
 		else if (outputType.equalsIgnoreCase("extendedsmi") || outputType.equalsIgnoreCase("extendedsmiles") || 
 				outputType.equalsIgnoreCase("cxsmi") || outputType.equalsIgnoreCase("cxsmiles")) {
-			interactiveSmilesOutput(input, output, n2sconfig, true);
+			interactiveSmilesOutput(input, output, n2sconfig, true, outputName);
 		}
 		else{
 			System.err.println("Unrecognised output format: " + outputType);
@@ -353,6 +354,7 @@ public class NameToStructure {
 		
 		options.addOption("a", "allowAcidsWithoutAcid", false, "Allows interpretation of acids without the word acid e.g. \"acetic\"");
 		options.addOption("f", "detailedFailureAnalysis", false, "Enables reverse parsing to more accurately determine why parsing failed");
+		options.addOption("n", "name", false, "Include name in SMILES/InChI output (tab delimited)");
 		options.addOption("r", "allowRadicals", false, "Enables interpretation of radicals");
 		options.addOption("s", "allowUninterpretableStereo", false, "Allows stereochemistry uninterpretable by OPSIN to be ignored");
 		options.addOption("w", "wildcardRadicals", false, "Radicals are output as wildcard atoms");
@@ -385,8 +387,10 @@ public class NameToStructure {
 		CMLWriter cmlWriter = new CMLWriter(writer);
 		cmlWriter.writeCmlStart();
 		int id = 1;
-		String name;
-		while((name =inputReader.readLine()) != null) {
+		String line;
+		while((line =inputReader.readLine()) != null) {
+			int splitPoint = line.indexOf('\t');
+			String name = splitPoint >=0 ? line.substring(0, splitPoint) : line;
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			Fragment structure = result.getStructure();
 			cmlWriter.writeMolecule(structure, name, id++);
@@ -401,12 +405,14 @@ public class NameToStructure {
 		writer.close();
 	}
 	
-	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean extendedSmiles) throws IOException {
+	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean extendedSmiles, boolean outputName) throws IOException {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
 		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-		String name;
-		while((name =inputReader.readLine()) != null) {
+		String line;
+		while((line =inputReader.readLine()) != null) {
+			int splitPoint = line.indexOf('\t');
+			String name = splitPoint >=0 ? line.substring(0, splitPoint) : line;
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = extendedSmiles ? result.getExtendedSmiles() : result.getSmiles();
 			if(output == null) {
@@ -414,12 +420,16 @@ public class NameToStructure {
 			} else {
 				outputWriter.write(output);
 			}
+			if (outputName) {
+				outputWriter.write('\t');
+				outputWriter.write(line);
+			}
 			outputWriter.newLine();
 			outputWriter.flush();
 		}
 	}
 
-	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, InchiType inchiType) throws Exception {
+	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, InchiType inchiType, boolean outputName) throws Exception {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
 		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
@@ -445,14 +455,20 @@ public class NameToStructure {
 			throw new IllegalArgumentException("Unexepected enum value: " + inchiType);
 		}
 
-		String name;
-		while((name =inputReader.readLine()) != null) {
+		String line;
+		while((line =inputReader.readLine()) != null) {
+			int splitPoint = line.indexOf('\t');
+			String name = splitPoint >=0 ? line.substring(0, splitPoint) : line;
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = (String) m.invoke(null, result);
 			if(output == null) {
 				System.err.println(result.getMessage());
 			} else {
 				outputWriter.write(output);
+			}
+			if (outputName) {
+				outputWriter.write('\t');
+				outputWriter.write(line);
 			}
 			outputWriter.newLine();
 			outputWriter.flush();
