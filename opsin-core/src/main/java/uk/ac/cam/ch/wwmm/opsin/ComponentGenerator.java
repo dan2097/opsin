@@ -82,11 +82,11 @@ class ComponentGenerator {
 	private static final Pattern matchAxialStereo = Pattern.compile("M|P|Ra|Sa|Sp|Rp");
 	private static final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchHdigit =Pattern.compile("H\\d");
-	private static final Pattern matchDigit =Pattern.compile("\\d+");
 	private static final Pattern matchNonDigit =Pattern.compile("\\D+");
+	private static final Pattern matchAddedHydrogenLocantBracket = Pattern.compile("[1-9][0-9]*[a-g]?'*H(,[1-9][0-9]*[a-g]?'*H)*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchRSLocantBracket = Pattern.compile("[RS]|R[,/]?S", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)[^\\[\\(\\{]*");
 	private static final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
-	private static final Pattern matchBracketAtEndOfLocant = Pattern.compile("-?[\\[\\(\\{](.*)[\\]\\)\\}]$");
 	private static final Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
@@ -238,95 +238,118 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException 
 	 */
 	static void processLocants(Element subOrRoot) throws ComponentGenerationException {
-		List<Element> locants = subOrRoot.getChildElements(LOCANT_EL);
-		for (Element locant : locants) {
-			List<String> individualLocants = splitIntoIndividualLocants(StringTools.removeDashIfPresent(locant.getValue()));
-			for (int i = 0, locantCount = individualLocants.size(); i <  locantCount; i++) {
-				String locantText = individualLocants.get(i);
-				
-				if (locantText.contains("-")) {//avoids this regex being invoked typically
-					//rearranges locant to the older equivalent form
-					Matcher m = matchIUPAC2004ElementLocant.matcher(locantText);
-					if (m.matches()){
-						locantText = m.group(2) + m.group(1) + m.group(3);
-					}
-				}
-				
-				if (Character.isLetter(locantText.charAt(0))) {
-					//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
-					Matcher m =  matchSuperscriptedLocant.matcher(locantText);
-					if (m.lookingAt()) {
-						String replacementString = m.group(1) + m.group(2);
-						locantText = m.replaceFirst(replacementString);
-					}
-					if (locantText.length() >= 3){
-						//convert greeks to lower case
-						m =  matchGreek.matcher(locantText);
-						while (m.find()) {
-							locantText = locantText.substring(0, m.start()) + m.group().toLowerCase(Locale.ROOT) + locantText.substring(m.end());
-						}
-					}
-				}
-				char lastChar = locantText.charAt(locantText.length() - 1);
-				if(lastChar == ')' || lastChar == ']' || lastChar == '}') {
-					//stereochemistry or added hydrogen that result from the application of this locant as a locant for a substituent may be included in brackets after the locant
-					
-					Matcher m = matchBracketAtEndOfLocant.matcher(locantText);
-					if (m.find()) {
-						String brackettedText = m.group(1);
-						if (StringTools.endsWithCaseInsensitive(brackettedText, "H")) {
-							locantText = m.replaceFirst("");//strip the bracket from the locantText
-							//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
-							String[] addedHydrogens = brackettedText.split(",");
-							for (String addedHydrogen : addedHydrogens) {
-								Element addedHydrogenElement = new TokenEl(ADDEDHYDROGEN_EL);
-								addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, addedHydrogen.substring(0, addedHydrogen.length() - 1)));
-								OpsinTools.insertBefore(locant, addedHydrogenElement);
-							}
-							if (locant.getAttribute(TYPE_ATR) == null){
-								locant.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
+		List<Element> children = subOrRoot.getChildElements();
+		for (Element el : children) {
+			String elName = el.getName();
+			if (elName.equals(LOCANT_EL)) {
+				Element locantEl = el;
+				List<String> individualLocants = splitIntoIndividualLocants(StringTools.removeDashIfPresent(locantEl.getValue()));
+				for (int i = 0, locantCount = individualLocants.size(); i <  locantCount; i++) {
+					String locantText = individualLocants.get(i);
+					char lastChar = locantText.charAt(locantText.length() - 1);
+					if(lastChar == ')' || lastChar == ']' || lastChar == '}') {
+						//stereochemistry or added hydrogen that result from the application of this locant as a locant for a substituent may be included in brackets after the locant
+						int bracketStart = -1;
+						for (int j = locantText.length() - 2; j >=0; j--) {
+							char ch = locantText.charAt(j);
+							if (ch == '(' || ch == '[' || ch == '{') { 
+								bracketStart = j;
+								break;
 							}
 						}
-						else if (StringTools.endsWithCaseInsensitive(brackettedText, "R") || StringTools.endsWithCaseInsensitive(brackettedText, "S")){
-							locantText = m.replaceFirst("");//strip the bracket from the locantText
-							String rs;
-							if (brackettedText.length() == 3 && (brackettedText.charAt(1) ==','|| brackettedText.charAt(1) =='/')) {
-								rs = new StringBuilder(2).append(brackettedText.charAt(0)).append(brackettedText.charAt(2)).toString();
+						if (bracketStart >=0) {
+							String brackettedText = locantText.substring(bracketStart + 1, locantText.length() - 1);
+							if (matchAddedHydrogenLocantBracket.matcher(brackettedText).matches()) {
+								locantText = StringTools.removeDashIfPresent(locantText.substring(0, bracketStart));//strip the bracket from the locantText
+								//create individual tags for added hydrogen. Examples of bracketed text include "9H" or "2H,7H"
+								String[] addedHydrogens = brackettedText.split(",");
+								for (String addedHydrogen : addedHydrogens) {
+									Element addedHydrogenElement = new TokenEl(ADDEDHYDROGEN_EL);
+									String hydrogenLocant = fixLocantCapitalisation(addedHydrogen.substring(0, addedHydrogen.length() - 1));
+									addedHydrogenElement.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant));
+									OpsinTools.insertBefore(locantEl, addedHydrogenElement);
+								}
+								if (locantEl.getAttribute(TYPE_ATR) == null){
+									locantEl.addAttribute(new Attribute(TYPE_ATR, ADDEDHYDROGENLOCANT_TYPE_VAL));//this locant must not be used as an indirect locant
+								}
 							}
-							else {
-								rs = brackettedText;
+							else if (matchRSLocantBracket.matcher(brackettedText).matches()) {
+								locantText = StringTools.removeDashIfPresent(locantText.substring(0, bracketStart));//strip the bracket from the locantText
+								String rs = brackettedText.replaceAll("\\W", "");//convert R/S to RS		
+								Element newStereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, "(" + standardizeLocantVariants(locantText) + rs + ")");
+								newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
+								OpsinTools.insertBefore(locantEl, newStereoChemEl);
 							}
-	
-							Element newStereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, "(" + locantText + rs + ")");
-							newStereoChemEl.addAttribute(new Attribute(TYPE_ATR, STEREOCHEMISTRYBRACKET_TYPE_VAL));
-							OpsinTools.insertBefore(locant, newStereoChemEl);
-						}
-						else if (matchDigit.matcher(brackettedText).matches()) {
-							//compounds locant e.g. 1(10). Leave as is, it will be handled by the function that handles unsaturation
+							//compounds locant e.g. 1(10). are left as is, and handled by the function that handles unsaturation
+							//brackets for superscripts are removed by standardizeLocantVariants e.g. N(alpha)
 						}
 						else{
 							throw new ComponentGenerationException("OPSIN bug: malformed locant text");
 						}
 					}
-					else{
-						throw new ComponentGenerationException("OPSIN bug: malformed locant text");
-					}
-
+					individualLocants.set(i, standardizeLocantVariants(locantText));
 				}
-				individualLocants.set(i, locantText);
-			}
 
-			locant.setValue(StringTools.stringListToString(individualLocants, ","));
+				locantEl.setValue(StringTools.stringListToString(individualLocants, ","));
 
-			Element afterLocants = OpsinTools.getNextSibling(locant);
-			if(afterLocants == null) {
-				throw new ComponentGenerationException("Nothing after locant tag: " + locant.toXML());
+				Element afterLocants = OpsinTools.getNextSibling(locantEl);
+				if(afterLocants == null) {
+					throw new ComponentGenerationException("Nothing after locant tag: " + locantEl.toXML());
+				}
+				
+				if (individualLocants.size() == 1) {
+					ifCarbohydrateLocantConvertToAminoAcidStyleLocant(locantEl);
+				}
 			}
-			
-			if (individualLocants.size() == 1) {
-				ifCarbohydrateLocantConvertToAminoAcidStyleLocant(locant);
+			else if (elName.equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)) {
+				//e.g. (1,2:3,4)
+				//This type of locant is typically used with pairs of locants e.g epoxides, anhydrides
+				String locantText = StringTools.removeDashIfPresent(el.getValue());
+				StringBuilder updatedLocantText = new StringBuilder();
+				StringBuilder sb = new StringBuilder();
+				for (int i = 0, len = locantText.length(); i < len; i++) {
+					char ch = locantText.charAt(i);
+					if (ch == ',' || ch == ':' || ch == ';') {
+						updatedLocantText.append(standardizeLocantVariants(sb.toString()));
+						sb.setLength(0);
+						updatedLocantText.append(ch);
+					}
+					else {
+						sb.append(ch);
+					}
+				}
+				updatedLocantText.append(standardizeLocantVariants(sb.toString()));
+				el.setValue(updatedLocantText.toString());
 			}
 		}
+	}
+
+	private static String standardizeLocantVariants(String locantText) {
+		if (locantText.contains("-")) {//avoids this regex being invoked typically
+			//rearranges locant to the older equivalent form
+			Matcher m = matchIUPAC2004ElementLocant.matcher(locantText);
+			if (m.matches()){
+				locantText = m.group(2) + m.group(1) + m.group(3);
+			}
+		}
+		
+		if (Character.isLetter(locantText.charAt(0))) {
+			//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
+			Matcher m =  matchSuperscriptedLocant.matcher(locantText);
+			if (m.lookingAt()) {
+				String replacementString = m.group(1) + m.group(2);
+				locantText = m.replaceFirst(replacementString);
+			}
+			if (locantText.length() >= 3){
+				//convert greeks to lower case
+				m =  matchGreek.matcher(locantText);
+				while (m.find()) {
+					locantText = locantText.substring(0, m.start()) + m.group().toLowerCase(Locale.ROOT) + locantText.substring(m.end());
+				}
+			}
+		}
+		locantText = fixLocantCapitalisation(locantText);
+		return locantText;
 	}
 
 	/**
@@ -803,8 +826,9 @@ class ComponentGenerator {
 			String[] hydrogenLocants =txt.split(",");
             for (String hydrogenLocant : hydrogenLocants) {
                 if (StringTools.endsWithCaseInsensitive(hydrogenLocant, "h")) {
+                	String locant = fixLocantCapitalisation(hydrogenLocant.substring(0, hydrogenLocant.length() - 1));
                     Element indicatedHydrogenEl = new TokenEl(INDICATEDHYDROGEN_EL);
-                    indicatedHydrogenEl.addAttribute(new Attribute(LOCANT_ATR, hydrogenLocant.substring(0, hydrogenLocant.length() - 1)));
+                    indicatedHydrogenEl.addAttribute(new Attribute(LOCANT_ATR, locant));
                     OpsinTools.insertBefore(indicatedHydrogenGroup, indicatedHydrogenEl);
                 }
                 else{
@@ -888,7 +912,7 @@ class ComponentGenerator {
 		                Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
 		                String locantVal = m.group(1);
 		                if (locantVal.length() > 0){
-		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, StringTools.removeDashIfPresent(locantVal)));
+		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, fixLocantCapitalisation(StringTools.removeDashIfPresent(locantVal))));
 		                }
 			        	OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		                if (matchRS.matcher(m.group(2)).matches()) {
@@ -997,7 +1021,7 @@ class ComponentGenerator {
 		List<String> locants = new ArrayList<String>();
 		boolean createLocantsEl =false;
 		for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
-			Matcher digitMatcher  = matchDigit.matcher(stereoChemistryDescriptor);
+			Matcher digitMatcher  = MATCH_DIGITS.matcher(stereoChemistryDescriptor);
 			if (digitMatcher.lookingAt()){
 				String locant = digitMatcher.group();
 				String possibleAlphaBeta = digitMatcher.replaceAll("");
@@ -1299,45 +1323,43 @@ class ComponentGenerator {
 			}
 
 			for (int i = 0; i < lambdaValues.length; i++) {//assign all the lambdas to heteroatoms or to newly created lambdaConvention elements
-				String lambdaValue = lambdaValues[i];
-				Matcher m = matchLambdaConvention.matcher(lambdaValue);
+				Matcher m = matchLambdaConvention.matcher(lambdaValues[i]);
 				if (m.matches()){//a lambda
 					Attribute valencyChange = new Attribute(LAMBDA_ATR, m.group(2));
-					Attribute locantAtr = null;
-					if (m.group(1)!=null){
-						locantAtr = new Attribute(LOCANT_ATR, m.group(1));
-					}
+					String locant = m.group(1) != null ? fixLocantCapitalisation(m.group(1)) : null;
 					if (frontLocantsExpected){
-						if (m.group(1)==null){
+						if (locant == null) {
 							throw new ComponentGenerationException("Locant not found for lambda convention before a benzo fused ring system");
 						}
-						lambdaValues[i] = m.group(1);
+						lambdaValues[i] = locant;
 					}
 					if (assignLambdasToHeteroAtoms){
 						Element heteroAtom = heteroAtoms.get(i);
 						heteroAtom.addAttribute(valencyChange);
-						if (locantAtr!=null){
-							heteroAtom.addAttribute(locantAtr);
+						if (locant != null) {
+							heteroAtom.addAttribute(LOCANT_ATR, locant);
 						}
 					}
 					else{
 						Element newLambda = new TokenEl(LAMBDACONVENTION_EL);
 						newLambda.addAttribute(valencyChange);
-						if (locantAtr!=null){
-							newLambda.addAttribute(locantAtr);
+						if (locant != null) {
+							newLambda.addAttribute(LOCANT_ATR, locant);
 						}
 						OpsinTools.insertBefore(lambdaConventionEl, newLambda);
 					}
 				}
 				else{//just a locant e.g 1,3lambda5
+					String locant = fixLocantCapitalisation(lambdaValues[i]);
+					lambdaValues[i] = locant;
 					if (!assignLambdasToHeteroAtoms){
 						if (!frontLocantsExpected){
-							throw new ComponentGenerationException("Lambda convention not specified for locant: " + lambdaValue);
+							throw new ComponentGenerationException("Lambda convention not specified for locant: " + locant);
 						}
 					}
 					else{
 						Element heteroAtom = heteroAtoms.get(i);
-						heteroAtom.addAttribute(new Attribute(LOCANT_ATR, lambdaValue));
+						heteroAtom.addAttribute(new Attribute(LOCANT_ATR, locant));
 					}
 				}
 			}

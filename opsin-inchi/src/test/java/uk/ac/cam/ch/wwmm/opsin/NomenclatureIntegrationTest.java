@@ -201,6 +201,14 @@ public class NomenclatureIntegrationTest {
 	}
 
 	@Test
+	public void testLetterCasing() throws IOException{
+		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
+		String file = "lettercasing.txt";
+		checkNamesAgainstInChIs(file, n2sConfig);
+	}
+
+	@Test
 	public void testMiscellany() throws IOException{
 		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 		n2sConfig.setAllowRadicals(true);

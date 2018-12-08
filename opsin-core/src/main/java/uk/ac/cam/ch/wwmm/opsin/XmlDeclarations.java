@@ -67,6 +67,9 @@ class XmlDeclarations {
 	/**A charge specifier e.g. (2+). Value is the charge to set something to*/
 	static final String CHARGESPECIFIER_EL ="chargeSpecifier";
 
+	/**Used amongst other things to indicate how the rings of a ring assembly should be assembled*/
+	static final String COLONORSEMICOLONDELIMITEDLOCANT_EL ="colonOrSemiColonDelimitedLocant";
+
 	/**Created by the ComponentProcessor. Something like the acetic acid in benzene-1,3,5-triacetic acid*/
 	static final String CONJUNCTIVESUFFIXGROUP_EL ="conjunctiveSuffixGroup";
 
@@ -145,16 +148,13 @@ class XmlDeclarations {
 	/**e.g. (III), Specifies the oxidation number of an atom. Value is the oxidation number to set something to*/
 	static final String OXIDATIONNUMBERSPECIFIER_EL ="oxidationNumberSpecifier";
 
-	/**Used amongst other things to indicate how the rings of a ring assembly should be assembled*/
-	static final String COLONORSEMICOLONDELIMITEDLOCANT_EL ="colonOrSemiColonDelimitedLocant";
-
 	/**Used to indicate how many rings are in a ring assembly*/
 	static final String RINGASSEMBLYMULTIPLIER_EL ="ringAssemblyMultiplier";
 
 	/**A spiro system. Converted to a group by the ComponentGenerator*/
 	static final String SPIRO_EL ="spiro";
 
-	/**A locant that seperates components of a spiro system*/
+	/**A locant that separates components of a spiro system*/
 	static final String SPIROLOCANT_EL ="spiroLocant";
 
 	/**Something like R/S/E/Z. Indicates stereochemical configuration*/

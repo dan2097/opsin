@@ -3330,6 +3330,8 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("Unable to find spiroLocant for polycyclic spiro system");
 			}
 			String[] locants = spiroLocant.getValue().split(",");
+			locants[0] = fixLocantCapitalisation(locants[0]);
+			locants[1] = fixLocantCapitalisation(locants[1]);
 
 			List<Element> nextGroupEls = new ArrayList<Element>();
 			int indexOfLocant = subOrRoot.indexOf(spiroLocant);
@@ -3586,16 +3588,17 @@ class ComponentProcessor {
 		for (Fragment clone : clones) {
 			state.fragManager.incorporateFragment(clone, fragment);
 		}
-		
-		Atom atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(locants[0].split(",")[0]);
-		Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants[0].split(",")[1]);
+		String[] locants1 = locants[0].split(",");
+		Atom atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(fixLocantCapitalisation(locants1[0]));
+		Atom atomToBeReplaced = fragment.getAtomByLocantOrThrow(fixLocantCapitalisation(locants1[1]));
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
 		if (atomToBeReplaced.hasSpareValency()){
 			atomOnLessPrimedFragment.setSpareValency(true);
 		}
 		
-		atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(locants[1].split(",")[0]);
-		atomToBeReplaced = fragment.getAtomByLocantOrThrow(locants[1].split(",")[1]);
+		String[] locants2 = locants[1].split(",");
+		atomOnLessPrimedFragment = fragment.getAtomByLocantOrThrow(fixLocantCapitalisation(locants2[0]));
+		atomToBeReplaced = fragment.getAtomByLocantOrThrow(fixLocantCapitalisation(locants2[1]));
 		state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToBeReplaced, atomOnLessPrimedFragment);
 		if (atomToBeReplaced.hasSpareValency()){
 			atomOnLessPrimedFragment.setSpareValency(true);
