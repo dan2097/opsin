@@ -21,9 +21,8 @@
 	<regex name="%elementSymbol%" regex="(He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)"/>
 	<regex name="%openBracket%" regex="[\[\(\{]"/>
 	<regex name="%closeBracket%" regex="[\]\)\}]"/>
-	<regex name="%locantNoPrime%" regex="([1-9][0-9]*[a-g]?)"/><!--standard numeric locant with optional letter-->
 	<regex name="%superScriptedNumber%" regex="(\^[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+%closeBracket%|\~[0-9]+\~|\*[0-9]+\*|\&lt;[0-9]+\&gt;)"/><!--In cases where a superscript is expected anyway: ^num or ^num^^ or ^(num) or (num) or ~num~ or *num* or &lt;num&gt;-->
-	<regex name="%locant%" regex="([1-9][0-9]*[a-g]?'*)"/><!--standard numeric locant with optional letter/primes-->
+	<regex name="%locant%" regex="([1-9][0-9]*[a-gA-C]?'*)"/><!--standard numeric locant with optional letter/primes-->
 	<regex name="%locantDoesNotEndInLetter%" regex="([1-9][0-9]*([a-g]'+)?'*)"/><!--as above but doesn't end in a letter-->
 	<regex name="%greek%" regex="([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[gG][aA][mM][mM][aA]|[dD][eE][lL][tT][aA]|[eE][pP][sS][iI][lL][oO][nN]|[zZ][eE][tT][aA]|[eE][tT][aA]|[oO][mM][eE][gG][aA])"/>
 	<regex name="%superScriptedLocant%" regex="(\^(%locant%|%greek%'*)(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?(%locant%|%greek%'*)%closeBracket%|\~(%locant%|%greek%'*)\~|\*(%locant%|%greek%'*)\*|\&lt;(%locant%|%greek%'*)\&gt;)"/><!--as superScriptedNumber but locant instead of number -->

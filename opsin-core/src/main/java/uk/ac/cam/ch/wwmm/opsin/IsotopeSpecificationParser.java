@@ -84,6 +84,9 @@ class IsotopeSpecificationParser {
 			else if (locants.length != multiplier) {
 				throw new StructureBuildingException("Mismatch between number of locants: " + locants.length + " and number of " + chemEl.toString() + " isotopes requested: " + multiplier);
 			}
+			for (int i = 0; i < locants.length; i++) {
+				locants[i] = OpsinTools.fixLocantCapitalisation(locants[i]);
+			}
 		}
 		return new IsotopeSpecification(chemEl, isotope, multiplier, locants);
 	}
@@ -113,6 +116,9 @@ class IsotopeSpecificationParser {
 			}
 			else if (locants.length != multiplier) {
 				throw new StructureBuildingException("Mismatch between number of locants: " + locants.length + " and number of " + chemEl.toString() +" isotopes requested: " + multiplier);
+			}
+			for (int i = 0; i < locants.length; i++) {
+				locants[i] = OpsinTools.fixLocantCapitalisation(locants[i]);
 			}
 		}
 		return new IsotopeSpecification(chemEl, isotope, multiplier, locants);

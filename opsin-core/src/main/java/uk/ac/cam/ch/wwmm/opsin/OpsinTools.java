@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -17,6 +18,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  */
 class OpsinTools {
 
+	static final Pattern MATCH_DIGITS = Pattern.compile("\\d+");
 	static final Pattern MATCH_COLONORSEMICOLON = Pattern.compile("[:;]");
 
 	static final Pattern MATCH_AMINOACID_STYLE_LOCANT =Pattern.compile("([A-Z][a-z]?)('*)((\\d+[a-z]?|alpha|beta|gamma|delta|epsilon|zeta|eta|omega)'*)");
@@ -62,6 +64,18 @@ class OpsinTools {
 		elementList.addAll(list1);
 		elementList.addAll(list2);
 		return elementList;
+	}
+	
+	static String fixLocantCapitalisation(String locant) {
+		int len = locant.length();
+		if (len >= 2) {
+			char lastChar = locant.charAt(len - 1);
+			if ((lastChar >= 'A' && lastChar <= 'G') && MATCH_DIGITS.matcher(locant).region(0, len - 1).matches() ) {
+				//erroneous uppercase e.g. 1A rather than 1a
+				locant = locant.toLowerCase(Locale.ROOT);
+			}
+		}
+		return locant;
 	}
 
 	/**
