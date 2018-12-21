@@ -272,6 +272,7 @@ public class NameToStructure {
 		if (unparsedArgs.length == 0){
 			input = System.in;
 			output = System.out;
+			System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
 		}
 		else if (unparsedArgs.length == 1){
 			input = new FileInputStream(new File(unparsedArgs[0]));
@@ -287,7 +288,6 @@ public class NameToStructure {
 			displayUsage(options);
 		}
 
-		System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
 		String outputType = cmd.getOptionValue("o", "smi");
 		boolean outputName = cmd.hasOption("n");
 		if (outputType.equalsIgnoreCase("cml")) {
