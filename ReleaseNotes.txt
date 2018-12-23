@@ -1,3 +1,21 @@
+Version 2.4.0 (2018-12-23)
+OPSIN is now licensed under the MIT License
+Locant labels included in extended SMILES output
+Command-line now has a name flag to include the input name in SMILES/InChI output (tab delimited)
+Added support for carotenoids
+Added support for Vitamin B-6 related compounds
+Added support for more fused ring system bridge prefixes
+Added support for anilide as a functional replacement group
+Allow heteroatom replacement as a detachable prefix e.g. 3,6,9-triaza-2-(4-phenylbutyl)undecanoic acid
+Support Boughton system isotopic suffixes for 13C/14C/15N/17O/18O
+Support salts of acids in CAS inverted names
+Improved support for implicitly positively charged purine nucleosides/nucleotides
+Added various biochemical groups/substituents
+Improved logic for determining intended substitution in names with too few brackets
+Incorrectly capitalized locants can now be used to reference ring fusion atoms
+Some names no longer allow substitution e.g. water, hydrochloride
+Many minor precision/recall improvements
+
 Version 2.3.1 (2017-07-23)
 Fixed fused ring numbering algorithm incorrectly numbering some ortho- and peri-fused fused systems involving 7-membered rings
 Support P-thio to indicate thiophosphate linkage
