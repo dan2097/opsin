@@ -24,9 +24,6 @@
   </moduleSets>
   <files>
     <file>
-      <source>Acknowledgments.txt</source>
-    </file>
-    <file>
       <source>LICENSE.txt</source>
     </file>
     <file>
