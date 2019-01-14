@@ -236,19 +236,32 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="N[C@@H](c1cc(O)cc(O)c1)C(=O)O" labels="/alpha/1/2,ortho/3,meta//4,para/5//6///" functionalIDs="13">dihydroxyphenylglycine|dihydroxyphenylglycin</token><!--drug name-->
 		<token value="O=C(N[C@H](C(NCC(O)=O)=O)CSSC[C@H](NC(CC[C@H](N)C(O)=O)=O)C(NCC(O)=O)=O)CC[C@H](N)C(O)=O" functionalIDs="9,24,31,39">glutathione disulfide|glutathionedisulfide|glutathion disulfid|glutathion-disulfid|glutathiondisulfid</token>
 		<token value="N1CC(C(=O)O)=CCC1">guvacine|guvacin</token>
+		<token value="NCCCS(=O)O" labels="/3,gamma/2,beta/1,alpha///" functionalIDs="7" defaultInID="1">homohypotaurine|homohypotaurin</token>
+		<token value="NCCCS(=O)[O-]" labels="/3,gamma/2,beta/1,alpha///" functionalIDs="7" defaultInID="1">homohypotaurinate|homohypotaurate|homohypotaurinat|homohypotaurat</token>
+		<token value="NCCC[Se](=O)O" labels="/3,gamma/2,beta/1,alpha///" functionalIDs="7" defaultInID="1">homoselenohypotaurine|homoselenohypotaurin</token>
+		<token value="NCCC[Se](=O)[O-]" labels="/3,gamma/2,beta/1,alpha///" functionalIDs="7" defaultInID="1">homoselenohypotaurinate|homoselenohypotaurate|homoselenohypotaurinat|homoselenohypotaurat</token>
+		<token value="NCCCS(=O)(=O)O" labels="/3,gamma/2,beta/1,alpha////" functionalIDs="8" defaultInID="1">homotaurine|homotaurin</token>
+		<token value="NCCCS(=O)(=O)[O-]" labels="/3,gamma/2,beta/1,alpha////" functionalIDs="8" defaultInID="1">homotaurinate|homotaurate|homotaurinat|homotaurat</token>
+		<token value="NCCC[Se](=O)(=O)O" labels="/3,gamma/2,beta/1,alpha////" functionalIDs="8" defaultInID="1">homoselenotaurine|homoselenotaurin</token>
+		<token value="NCCC[Se](=O)(=O)[O-]" labels="/3,gamma/2,beta/1,alpha////" functionalIDs="8" defaultInID="1">homoselenotaurinate|homoselenotaurate|homoselenotaurinat|homoselenotaurat</token>
+		<token value="NCCS(=O)O" labels="/2,beta/1,alpha///" functionalIDs="6" defaultInID="1">hypotaurine|hypotaurin</token>
+		<token value="NCCS(=O)[O-]" labels="/2,beta/1,alpha///" functionalIDs="6" defaultInID="1">hypotaurinate|hypotaurate|hypotaurinat|hypotaurat</token>
 		<token value="NC(=N)NCCS(=O)O" functionalIDs="9">hypotaurocyamine|hypotaurocyamin</token>
 		<token value="NCCCSC" labels="/2,alpha/3,beta/4,gamma//methyl" defaultInID="1">methioninamine|methioninamin</token>
 		<token value="N[C@@H](C[Se]C)C(=O)O" labels="/2,alpha/3,beta///1//" functionalIDs="8">methylselenocysteine|methylselenocystein</token><!--drug name-->
+		<token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" functionalIDs="11,16,21">nopaline</token>
 		<token value="NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="8,14">octopinic acid|octopinicacid</token>
 		<token value="NC(=N)NCCCC(C(=O)O)NC(C)C(=O)O" functionalIDs="11,17">octopine|octopin</token>
 		<token value="NCC[Se][Se]CCN" defaultInID="1">selenocystamine|seleno-cystamine|selenocystamin|seleno-cystamin</token>
 		<token value="NCC[SeH]" labels="/2,alpha/3,beta/" defaultInID="1">selenocysteamine|seleno-cysteamine|selenocysteamin|seleno-cysteamin</token>
-		<token value="NCCS(=O)O" functionalIDs="6" defaultInID="1">hypotaurine|hypotaurin</token>
-		<token value="NC(=N)NCCCC(C(=O)O)NC(C(=O)O)CCC(=O)O" functionalIDs="11,16,21">nopaline</token>
-		<token value="NCC[Se](=O)O" functionalIDs="6" defaultInID="1">selenohypotaurine|seleno-hypotaurine|selenohypotaurin|seleno-hypotaurin</token>
+		<token value="NCC[Se](=O)O" labels="/2,beta/1,alpha///" functionalIDs="6" defaultInID="1">selenohypotaurine|seleno-hypotaurine|selenohypotaurin|seleno-hypotaurin</token>
+		<token value="NCC[Se](=O)[O-]" labels="/2,beta/1,alpha///" functionalIDs="6" defaultInID="1">selenohypotaurinate|seleno-hypotaurinate|selenohypotaurate|seleno-hypotaurate|selenohypotaurinat|seleno-hypotaurinat|selenohypotaurat|seleno-hypotaurat</token>
 		<token value="N(C(C)C(=O)O)CC(=O)O" functionalIDs="6,10" defaultInID="1">strombine</token>
-		<token value="NCCS(=O)(=O)O" functionalIDs="7" defaultInID="1">taurine|taurin</token>
-		<token value="NCC[Se](=O)(=O)O" functionalIDs="7" defaultInID="1">selenotaurine|seleno-taurine|selenotaurin|seleno-taurin</token>
+		<token value="NCCS(=O)(=O)O" labels="/2,beta/1,alpha////" functionalIDs="7" defaultInID="1">taurine|taurin</token>
+		<token value="NCCS(=O)(=O)[O-]" labels="/2,beta/1,alpha////" functionalIDs="7" defaultInID="1">taurinate|taurate|taurinat|taurat</token>
+		<token value="NC(C)(C)CS(=O)(=O)[O-]" labels="/2,beta///1,alpha////" functionalIDs="9" defaultInID="1">dimethyltaurate|dimethyltaurat</token><!--implicitly 2,2-dimethyl-->
+		<token value="NCC[Se](=O)(=O)O" labels="/2,beta/1,alpha////" functionalIDs="7" defaultInID="1">selenotaurine|seleno-taurine|selenotaurin|seleno-taurin</token>
+		<token value="NCC[Se](=O)(=O)[O-]" labels="/2,beta/1,alpha////" functionalIDs="7" defaultInID="1">selenotaurinate|seleno-taurinate|selenotaurate|seleno-taurate|selenotaurinat|seleno-taurinat|selenotaurat|seleno-taurat</token>
 		<token value="NC(=N)NCCS(=O)(=O)O" functionalIDs="10">taurocyamine|taurocyamin</token>
 		<token value="N(C(C)C(=O)O)CCS(=O)(=O)O" functionalIDs="6,12" defaultInID="1">tauropine|tauropin</token>
 		<token value="NC(c1nnnn1)C(=O)O" labels="/2,alpha//////1//" functionalIDs="10">tetrazolylglycine|tetrazolylglycin</token><!--drug name-->
