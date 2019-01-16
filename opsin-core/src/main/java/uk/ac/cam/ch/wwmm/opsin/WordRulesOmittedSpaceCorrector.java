@@ -81,12 +81,10 @@ class WordRulesOmittedSpaceCorrector {
 				Fragment rootFrag = rootGroup.getFrag();
 				int functionalAtomsCount = rootFrag.getFunctionalAtomCount();
 				int rootMultiplier = 1;
-				{
-					String rootElMultiplierAtrVal = rootEl.getAttributeValue(MULTIPLIER_ATR);
-					if (rootElMultiplierAtrVal != null) {
-						rootMultiplier = Integer.parseInt(rootElMultiplierAtrVal);
-						functionalAtomsCount *= rootMultiplier;
-					}
+				String rootElMultiplierAtrVal = rootEl.getAttributeValue(MULTIPLIER_ATR);
+				if (rootElMultiplierAtrVal != null) {
+					rootMultiplier = Integer.parseInt(rootElMultiplierAtrVal);
+					functionalAtomsCount *= rootMultiplier;
 				}
 				if (functionalAtomsCount > 0){
 					List<Element> substituents = children.subList(0, children.size() - 1);
@@ -96,6 +94,28 @@ class WordRulesOmittedSpaceCorrector {
 					}
 					Element firstChild = substituents.get(0);
 					if (!checkSuitabilityOfSubstituentForEsterFormation(firstChild, functionalAtomsCount)){
+						if (firstChild.getAttribute(LOCANT_ATR) != null) {
+							//Check for cases like 4-chlorophenyl-3-aminobenzoate i.e. 4-chlorophenyl is the substituent
+							Integer lastSubOrBracketWithoutLocantIdx = null;
+							for (int i = 1; i < substituents.size(); i++) {
+								Element subOrBracket = substituents.get(i);
+								if (subOrBracket.getAttribute(LOCANT_ATR) == null) {
+									if (!checkSuitabilityOfSubstituentForEsterFormation(subOrBracket, 1)) {
+										//shouldn't have a multiplier as preceding substituent needs to connect to this via locanted substitution
+										return;
+									}
+									lastSubOrBracketWithoutLocantIdx = i;
+									break;
+								}
+							}
+							if (lastSubOrBracketWithoutLocantIdx != null && substitutionWouldBeAmbiguous(rootFrag, null)) {
+								List<Element> elsToFormEsterSub = new ArrayList<Element>();
+								for (int i = 0; i <= lastSubOrBracketWithoutLocantIdx ; i++) {
+									elsToFormEsterSub.add(substituents.get(i));
+								}
+								transformToEster(wordRule, elsToFormEsterSub);
+							}
+						}
 						return;
 					}
 					String multiplierValue = firstChild.getAttributeValue(MULTIPLIER_ATR);
@@ -285,5 +305,21 @@ class WordRulesOmittedSpaceCorrector {
 				OpsinTools.insertAfter(newSubstituentWord, clone);
 			}
 		}
+	}
+	
+	private void transformToEster(Element parentSimpleWordRule, List<Element> elsToFormEsterSub) throws StructureBuildingException {
+		parentSimpleWordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.ester.toString());
+		List<Element> childElsOfSub = elsToFormEsterSub.get(elsToFormEsterSub.size() - 1).getChildElements();
+		Element lastChildElOfSub =childElsOfSub.get(childElsOfSub.size() - 1);
+		if (lastChildElOfSub.getName().equals(HYPHEN_EL)){
+			lastChildElOfSub.detach();
+		}
+		Element newSubstituentWord = new GroupingEl(WORD_EL);
+		newSubstituentWord.addAttribute(new Attribute(TYPE_ATR, SUBSTITUENT_TYPE_VAL));
+		for (Element elToFormEsterSub : elsToFormEsterSub) {
+			elToFormEsterSub.detach();
+			newSubstituentWord.addChild(elToFormEsterSub);
+		}
+		parentSimpleWordRule.insertChild(newSubstituentWord, 0);
 	}
 }
