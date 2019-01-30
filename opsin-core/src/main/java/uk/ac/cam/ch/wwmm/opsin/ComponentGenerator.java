@@ -2217,6 +2217,8 @@ class ComponentGenerator {
 				}
 			}
 		}
+		String groupType = group.getAttributeValue(TYPE_ATR);
+		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
 
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is generally phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = OpsinTools.getNextSibling(group);
@@ -2426,7 +2428,7 @@ class ComponentGenerator {
 			}
 		}
 		else if (groupValue.equals("acryl")){
-			if (SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			if (SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(groupSubType)){
 				Element nextEl = OpsinTools.getNext(group);
 				if (nextEl!=null && nextEl.getValue().equals("amid")){
 					throw new ComponentGenerationException("amide in acrylamide is not [NH2-]");
@@ -2509,7 +2511,7 @@ class ComponentGenerator {
 		}
 		else if (groupValue.equals("sel")){
 			//check that it is not "selenium"
-			if (HETEROSTEM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
+			if (HETEROSTEM_SUBTYPE_VAL.equals(groupSubType) && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
 				Element unsaturator = OpsinTools.getNextSibling(group);
 				if (unsaturator !=null && unsaturator.getName().equals(UNSATURATOR_EL) && unsaturator.getValue().equals("en") && group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) ==null){
 					Element ium = OpsinTools.getNextSibling(unsaturator);
@@ -2519,7 +2521,7 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if ((groupValue.equals("keto") || groupValue.equals("aldehydo")) && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+		else if ((groupValue.equals("keto") || groupValue.equals("aldehydo")) && SIMPLESUBSTITUENT_SUBTYPE_VAL.equals(groupSubType)){
 			//check for case where this is specifying the open chain form of a ketose/aldose
 			Element previousEl = OpsinTools.getPreviousSibling(group);
 			if (previousEl ==null || !previousEl.getName().equals(LOCANT_EL) || groupValue.equals("aldehydo")){
@@ -2678,7 +2680,7 @@ class ComponentGenerator {
 				}
 			}
 		}
-		else if (ENDINIC_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
+		else if (ENDINIC_SUBTYPE_VAL.equals(groupSubType) && AMINOACID_TYPE_VAL.equals(groupType)) {
 			//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
 			String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
 			if (suffixAppliesTo.length == 2) {
@@ -2689,7 +2691,7 @@ class ComponentGenerator {
 					}
 				}
 			}
-		} else if (SALTCOMPONENT_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+		} else if (SALTCOMPONENT_SUBTYPE_VAL.equals(groupSubType)) {
 			Element parse = null;
 			Element tempParent = group.getParent();
 			while (tempParent != null) {
@@ -2714,9 +2716,59 @@ class ComponentGenerator {
 					group.setValue(groupValue.substring(1));
 				}
 			}
+		} else if (ELEMENTARYATOM_SUBTYPE_VAL.equals(groupSubType)) {
+			//simple inorganic molecular diatomics should be implicitly bonded e.g. dioxygen
+			Element multiplier = OpsinTools.getPreviousSibling(group);
+			if (multiplier != null && "2".equals(multiplier.getAttributeValue(VALUE_ATR))) {
+				//check that the name is just formed of two tokens e.g. dinitrogen
+				Element temp = group.getParent();
+				Element parent = temp;
+				while (temp != null) {
+					parent = temp;
+					temp = parent.getParent();
+				}
+				if (OpsinTools.countNumberOfElementsAndNumberOfChildLessElements(parent)[1] == 2) {
+					String newVal;
+					switch (group.getAttributeValue(VALUE_ATR)) {
+					case "[H]":
+						newVal = "[H][H]";
+						break;
+					case "[N]":
+						newVal = "N#N";
+						break;
+					case "[O]":
+						newVal = "O=O";
+						break;
+					case "[F]":
+						newVal = "FF";
+						break;
+					case "[Cl]":
+						newVal = "ClCl";
+						break;
+					case "[Br]":
+						newVal = "BrBr";
+						break;
+					case "[I]":
+						newVal = "II";
+						break;
+					default:
+						newVal = null;
+						break;
+					}
+					if (newVal != null) {
+						Element newGroup = new TokenEl(GROUP_EL, groupValue);
+						newGroup.addAttribute(TYPE_ATR, SIMPLEGROUP_TYPE_VAL);
+						newGroup.addAttribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL);
+						newGroup.addAttribute(VALUE_ATR, newVal);
+						OpsinTools.insertAfter(group, newGroup);
+						group.detach();
+						multiplier.detach();
+					}
+				}
+			}
 		}
 
-		if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
+		if (AMINOACID_TYPE_VAL.equals(groupType)) {
 			Element previous = OpsinTools.getPreviousSibling(group.getParent());
 			if (previous != null) {
 				List<Element> groups = OpsinTools.getDescendantElementsWithTagName(previous, GROUP_EL);
