@@ -89,7 +89,7 @@
 		<token value="-C=CC-">prop[1]eno|propeno</token>
 		<token value="-C=CCC-">but[1]eno|[1]buteno|but-1-eno</token>
 		<token value="-CC=CC-">but[2]eno|[2]buteno|but-2-eno</token>
-		<token value="-C=CC=C-">buta[1,3]dieno|1,3]butadieno|buta-1,3-dieno</token>
+		<token value="-C=CC=C-">buta[1,3]dieno|[1,3]butadieno|buta-1,3-dieno</token>
 
 		<token value="-O-">epoxy|epioxido</token>
 		<token value="-OO-">epidioxy|epidioxido</token>
