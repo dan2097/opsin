@@ -245,6 +245,7 @@
 		<token value="-Cl=O">chloroso</token><!--deprecated-->
 		<token value="-I=O">iodosyl</token>
 		<token value="-I=O">iodoso</token><!--deprecated-->
+		<token value="-[At]=O">astatosyl</token>
 
 		<token value="-[F|5](=O)(=O)">fluoryl</token>
 		<token value="-Br(=O)(=O)">bromyl</token>
@@ -252,6 +253,8 @@
 		<token value="-Cl(=O)(=O)">chloroxy</token><!--deprecated-->
 		<token value="-I(=O)(=O)">iodyl</token>
 		<token value="-I(=O)(=O)">iodoxy</token><!--deprecated-->
+		<token value="-[At](=O)(=O)">astatyl</token><!--CAS-->
+		<token value="-[At](=O)(=O)">astatoxy</token><!--deprecated-->
 
 		<token value="-[F|7](=O)(=O)(=O)">perfluoryl</token>
 		<token value="-Br(=O)(=O)(=O)">perbromyl</token>
@@ -503,6 +506,7 @@
 
 <!--Used as prefixes and for functional replacement of some acids-->
 	<tokenList tagname="group" type="substituent" subType="halideOrPseudoHalide" symbol="x">
+		<token value="-[At|1]">astato</token><!--CAS-->
 		<token value="-N=[N+]=[N-]">azido</token>
 		<token value="-[Br|1]">bromo</token>
 		<token value="-[Cl|1]">chloro</token>
