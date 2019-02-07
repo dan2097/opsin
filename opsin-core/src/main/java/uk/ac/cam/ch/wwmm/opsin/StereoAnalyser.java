@@ -522,6 +522,7 @@ class StereoAnalyser {
 
 	/**
 	 * Roughly corresponds to the list of atoms in table 8 of the InChI manual
+	 * tetrahedral phosphorus/arsenic are also allowed by InChI but are, perhaps due to an oversight, omitted from this table
 	 * Essentially does a crude check for whether an atom is known to be able to possess tetrahedral geometry
 	 * and whether it is currently tetrahedral. Atoms that are tetrahedral but not typically considered chiral
 	 * like tertiary amines are not recognised
@@ -546,6 +547,10 @@ class StereoAnalyser {
 			if (chemEl == ChemEl.N && atom.getCharge() ==0 && atom.getIncomingValency()==3 && atomsContainABondBetweenThemselves(neighbours)){
 				return true;
 				//nitrogen where two attached atoms are connected together
+			}
+			if ((chemEl == ChemEl.P || chemEl == ChemEl.As) &&atom.getIncomingValency() == 3) {
+				//tetrahedral phosphorus/arsenic - 3 bonds and the lone pair
+				return true;
 			}
 		}
 		return false;
