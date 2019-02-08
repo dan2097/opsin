@@ -115,8 +115,12 @@ enum ChemEl {
 	Ds(110),
 	Rg(111),
 	Cn(112),
+	Nh(113),
 	Fl(114),
-	Lv(116);
+	Mc(115),
+	Lv(116),
+	Ts(117),
+	Og(118);
 	
 	final int ATOMIC_NUM;
 

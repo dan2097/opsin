@@ -92,7 +92,20 @@
 	<token value="[Md]" commonOxidationStatesAndMax="3:3">mendelevium</token>
 	<token value="[No]" commonOxidationStatesAndMax="3:3">nobelium</token>
 	<token value="[Lr]" commonOxidationStatesAndMax="3:3">lawrencium</token>
-		<token value="[Rf]" commonOxidationStatesAndMax="4:4">rutherfordium</token>
+	<token value="[Rf]" commonOxidationStatesAndMax="4:4">rutherfordium</token>
+	<token value="[Db]" commonOxidationStatesAndMax="5:5">dubnium</token>
+	<token value="[Sg]" commonOxidationStatesAndMax="6:6">seaborgium</token>
+	<token value="[Bh]" commonOxidationStatesAndMax="7:7">bohrium</token>
+	<token value="[Hs]" commonOxidationStatesAndMax="8:8">hassium</token>
+	<token value="[Mt]" commonOxidationStatesAndMax="6:6">meitnerium</token>
+	<token value="[Ds]" commonOxidationStatesAndMax="8:8">darmstadtium</token>
+	<token value="[Rg]" commonOxidationStatesAndMax="3:3">roentgenium</token>
+	<token value="[Cn]" commonOxidationStatesAndMax="2:2">copernicium</token>
+	<token value="[Nh]" commonOxidationStatesAndMax="3:3">nihonium</token>
+	<token value="[Fl]" commonOxidationStatesAndMax="2:2">flerovium</token>
+	<token value="[Mc]" commonOxidationStatesAndMax="3:3">moscovium</token>
+	<token value="[Lv]" commonOxidationStatesAndMax="2:2">livermorium</token>
+
 	<!--non metals-->
 	<!--hydrogen is currently excluded as it is already present as a substituent anyway allowing names like hydrogen chloride -->
 
@@ -117,6 +130,7 @@
 	<token value="[Br]" commonOxidationStatesAndMax="1,3,5,7:7">bromine</token>
 	<token value="[I]" commonOxidationStatesAndMax="1,3,5,7:7">iodine</token>
 	<token value="[At]" commonOxidationStatesAndMax="1:5">astatine</token>
+	<token value="[Ts]" commonOxidationStatesAndMax="1:5">tennessine</token>
 
 	<token value="[He]">helium</token>
 	<token value="[Ne]">neon</token>
@@ -126,4 +140,5 @@
 	<token value="[Rn]">radon</token>
 	<token value="[219Rn]">actinon</token>
 	<token value="[220Rn]">thoron</token>
+	<token value="[Og]">oganesson</token>
 </tokenList>
