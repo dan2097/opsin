@@ -2202,7 +2202,10 @@ class StructureBuilder {
 			String subType = group.getAttributeValue(SUBTYPE_ATR);
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(subType)){
 				Atom oxidoAtom = group.getFrag().getFirstAtom();
-				Atom connectedAtom = oxidoAtom.getAtomNeighbours().get(0);
+				if (oxidoAtom.getBondCount() != 1) {
+					continue;
+				}
+				Atom connectedAtom = oxidoAtom.getFirstBond().getOtherAtom(oxidoAtom);
 				ChemEl chemEl = connectedAtom.getElement();
 				if (checkForConnectedOxo(connectedAtom)){//e.g. not oxido(trioxo)ruthenium
 					continue;
