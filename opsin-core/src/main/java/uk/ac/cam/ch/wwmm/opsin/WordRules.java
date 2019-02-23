@@ -375,7 +375,7 @@ class WordRules {
 								}
 								Element oxideWord = wordEls.get(i + 1);
 								ChemEl chemEl2 = getChemElFromWordWithFunctionalGroup(oxideWord);
-								if (!FragmentTools.isCovalent(chemEl1, chemEl2)){
+								if (!FragmentTools.isCovalent(chemEl1, chemEl2) || chemEl1 == ChemEl.Ag){
 									Element oxideGroup = convertFunctionalGroupIntoGroup(oxideWord);
 									setOxideStructureAppropriately(oxideGroup, elementaryAtom);
 									applySimpleWordRule(wordEls, indexOfFirstWord, possibleElementaryAtomContainingWord);

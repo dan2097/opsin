@@ -1920,19 +1920,12 @@ class StructureBuilder {
 		
 		List<Element> cationicElements = getMetalsThatCanBeImplicitlyCations(molecule);
 		overallCharge = setCationicElementsToTypicalCharge(cationicElements, overallCharge);
-		if (overallCharge==0){
+		if (overallCharge == 0) {
 			return;
 		}
-		if (cationicElements.size() ==1 && overallCharge < 0) {//e.g. nickel tetrachloride [Ni2+]-->[Ni4+]
-			if (setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0))) {
-				return;
-			}
-		}
-		if (overallCharge == -2) {
-			if (triHalideSpecialCase(wordRules)) {
-				//e.g. three iodides --> triiodide ion
-				return;
-			}
+		if (overallCharge == -2 && triHalideSpecialCase(wordRules)) {
+			//e.g. three iodides --> triiodide ion
+			return;
 		}
 		
 		for (Element wordRule : wordRules) {
@@ -1947,6 +1940,13 @@ class StructureBuilder {
 			}
 			componentToChargeMapping.put(wordRule, charge);
 		}
+		if (cationicElements.size() ==1 && overallCharge < 0) {//e.g. manganese tetrachloride [Mn+2]-->[Mn+4]
+			boolean mustBeCommonOxidationState = negativelyChargedComponents.size() == 1 && negativelyChargedComponents.get(0).getChildElements(WORD_EL).size() == 1;
+			//For simple case e.g. silver oxide, constrain the metal to common oxidation states, otherwise allow any plausible oxidation state of metal
+			if (setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0), mustBeCommonOxidationState)) {
+				return;
+			}
+		}
 		
 		if (!explicitStoichiometryPresent &&
 				(positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 )){
@@ -1956,7 +1956,7 @@ class StructureBuilder {
 			}
 		}
 		if (cationicElements.size() ==1){//e.g. magnesium monochloride [Mg2+]-->[Mg+]
-			boolean success = setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0));
+			boolean success = setChargeOnCationicElementAppropriately(overallCharge, cationicElements.get(0), false);
 			if (success){
 				return;
 			}
@@ -2154,13 +2154,25 @@ class StructureBuilder {
 		return true;
 	}
 	
-	private boolean setChargeOnCationicElementAppropriately(int overallCharge, Element cationicElement)  {
+	private boolean setChargeOnCationicElementAppropriately(int overallCharge, Element cationicElement, boolean mustBeCommonOxidationState)  {
 		Atom cation = cationicElement.getFrag().getFirstAtom();
 		int chargeOnCationNeeded = -(overallCharge -cation.getCharge());
-		int maximumCharge = Integer.parseInt(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[1]);
-		if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
-			cation.setCharge(chargeOnCationNeeded);
-			return true;
+		if (mustBeCommonOxidationState) {
+			String[] typicalOxidationStates = cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[0].split(",");
+			for (String typicalOxidationState : typicalOxidationStates) {
+				int charge = Integer.parseInt(typicalOxidationState);
+				if (charge == chargeOnCationNeeded) {
+					cation.setCharge(chargeOnCationNeeded);
+					return true;
+				}
+			}
+		}
+		else {
+			int maximumCharge = Integer.parseInt(cationicElement.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR).split(":")[1]);
+			if (chargeOnCationNeeded >=0 && chargeOnCationNeeded <= maximumCharge){
+				cation.setCharge(chargeOnCationNeeded);
+				return true;
+			}
 		}
 		return false;
 	}
