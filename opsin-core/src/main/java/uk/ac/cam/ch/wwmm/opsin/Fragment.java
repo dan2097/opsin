@@ -21,7 +21,7 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  * @author dl387
  *
  */
-class Fragment {
+class Fragment implements Iterable<Atom> {
 
 	/**A mapping between IDs and the atoms in this fragment, by default is ordered by the order atoms are added to the fragment*/
 	private final Map<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
@@ -620,6 +620,11 @@ class Fragment {
 		List<Atom> atomList =getAtomList();
 		Collections.sort(atomList, new FragmentTools.SortByLocants());
 		reorderAtomCollection(atomList);
+	}
+
+	@Override
+	public Iterator<Atom> iterator() {
+		return atomCollection.iterator();
 	}
 }
 
