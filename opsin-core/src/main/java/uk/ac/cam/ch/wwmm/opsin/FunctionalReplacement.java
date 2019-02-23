@@ -115,7 +115,7 @@ class FunctionalReplacement {
 			Element group =groups.get(i);
 			String groupValue = group.getValue();
 			PREFIX_REPLACEMENT_TYPE replacementType = null;
-			if (matchChalcogenReplacement.matcher(groupValue).matches() || groupValue.equals("thiono")){
+			if (matchChalcogenReplacement.matcher(groupValue).matches() && !isChalcogenSubstituent(group) || groupValue.equals("thiono")){
 				replacementType =PREFIX_REPLACEMENT_TYPE.chalcogen;
 			}
 			else if (HALIDEORPSEUDOHALIDE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
@@ -228,6 +228,28 @@ class FunctionalReplacement {
 		return groups.size() != originalNumberOfGroups;
 	}
 	
+	private boolean isChalcogenSubstituent(Element group) {
+		//Is this group followed by a hyphen and directly preceded by a substituent i.e. no multiplier/locant
+		//e.g. methylthio-
+		Element next = OpsinTools.getNextSibling(group);
+		if (next != null && next.getName().equals(HYPHEN_EL) &&
+				OpsinTools.getPreviousSibling(group) == null) {
+			Element previousGroup = OpsinTools.getPreviousGroup(group);
+			if (previousGroup != null) {
+				//TODO We actually want to know if a carbon atom is the attachment point... but we don't know the attachment point locations at this point
+				Element suffix = OpsinTools.getNextSibling(previousGroup, SUFFIX_EL);
+				if (suffix == null || suffix.getFrag() == null) {
+					for (Atom a : previousGroup.getFrag()) {
+						if (a.getElement() == ChemEl.C) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Currently prefix replacement terms must be directly adjacent to the groupToBeModified with an exception made
 	 * for carbohydrate stereochemistry prefixes e.g. 'gluco' and for substractive prefixes e.g. 'deoxy'
