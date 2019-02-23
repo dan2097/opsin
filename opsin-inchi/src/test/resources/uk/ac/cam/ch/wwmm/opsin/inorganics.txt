@@ -5,6 +5,9 @@ sodium dioxide	InChI=1S/2Na.O2/c;;1-2/q2*+1;-2
 barium sulfide	InChI=1S/Ba.S/q+2;-2
 barium disulfide	InChI=1S/Ba.S2/c;1-2/q+2;-2
 iron(III) oxide	InChI=1S/2Fe.3O/q2*+3;3*-2
+silver oxide	InChI=1S/2Ag.O/q2*+1;-2
+silver monoxide	InChI=1S/2Ag.O/q2*+1;-2
+silver(I) oxide	InChI=1S/2Ag.O/q2*+1;-2
 //mostly covalent
 boron trifluoride	InChI=1S/BF3/c2-1(3)4
 silicon dioxide	InChI=1S/O2Si/c1-3-2
