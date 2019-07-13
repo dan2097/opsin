@@ -75,8 +75,8 @@ public class OpsinResult {
 	}
 
 	/**
-	 * Returns an enum with values SUCCESS, WARNING and FAILURE
-	 * Currently warning is never used
+	 * Returns an enum indicating whether interpreting the chemical name was successful
+	 * If an issue was identified but a chemical structure could be still be deduced the status is {@link OPSIN_RESULT_STATUS#WARNING}
 	 * @return {@link OPSIN_RESULT_STATUS} status
 	 */
 	public OPSIN_RESULT_STATUS getStatus() {
