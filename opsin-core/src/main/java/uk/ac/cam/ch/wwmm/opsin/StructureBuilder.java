@@ -515,7 +515,7 @@ class StructureBuilder {
 			multipliers.get(0).detach();
 		}
 		else{
-			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(rightMostGroup.getAttributeValue(SUBTYPE_ATR))){
+			if (ELEMENTARYATOM_TYPE_VAL.equals(rightMostGroup.getAttributeValue(TYPE_ATR))){
 				Atom elementaryAtom = rightMostGroup.getFrag().getFirstAtom();
 				int charge = elementaryAtom.getCharge();
 				if (charge >0 && charge %2 ==0){
@@ -555,14 +555,13 @@ class StructureBuilder {
 			Atom oxideAtom = oxideFragments.get(i).getFirstAtom();
 			if (!locantsForOxide.isEmpty()){
 				Atom atomToAddOxideTo =groupToModify.getAtomByLocantOrThrow(locantsForOxide.get(i));
-				if (atomToAddOxideTo.getElement() == ChemEl.C && !ELEMENTARYATOM_SUBTYPE_VAL.equals(groupToModify.getSubType())) {
+				if (atomToAddOxideTo.getElement() == ChemEl.C && !ELEMENTARYATOM_TYPE_VAL.equals(groupToModify.getType())) {
 					throw new StructureBuildingException("Locant " + locantsForOxide.get(i) + " indicated oxide applied to carbon, but this would lead to hypervalency!");
 				}
 				formAppropriateBondToOxideAndAdjustCharges(atomToAddOxideTo, oxideAtom);
 			}
 			else{
-				String subTypeVal = groupToModify.getSubType();
-				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(subTypeVal)){
+				if (ELEMENTARYATOM_TYPE_VAL.equals(groupToModify.getType())){
 					Atom elementaryAtom= groupToModify.getFirstAtom();
 					formAppropriateBondToOxideAndAdjustCharges(elementaryAtom, oxideAtom);//e.g. carbon dioxide
 					int chargeOnAtom =elementaryAtom.getCharge();
@@ -1173,7 +1172,7 @@ class StructureBuilder {
 							Element root = word.getFirstChildElement(ROOT_EL);
 							if (root != null && root.getChildCount() ==1) {
 								Element group = root.getFirstChildElement(GROUP_EL);
-								if (group != null && ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+								if (group != null && ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 									ChemEl chemEl = group.getFrag().getFirstAtom().getElement();
 									if (chemEl == ChemEl.Li || chemEl == ChemEl.Na || chemEl == ChemEl.K || chemEl == ChemEl.Rb || chemEl == ChemEl.Cs) {
 										functionalGroupFragments.add(state.fragManager.copyFragment(functionalGroupFragments.get(0)));
@@ -1994,7 +1993,7 @@ class StructureBuilder {
 
 	private List<Element> getMetalsThatCanBeImplicitlyCations(Element molecule) {
 		List<Element> cationicElements = new ArrayList<Element>();
-		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, TYPE_ATR, ELEMENTARYATOM_TYPE_VAL);
 		for (Element elementaryAtom : elementaryAtoms) {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
 				Atom metalAtom = elementaryAtom.getFrag().getFirstAtom();
@@ -2222,7 +2221,7 @@ class StructureBuilder {
 				if (checkForConnectedOxo(connectedAtom)){//e.g. not oxido(trioxo)ruthenium
 					continue;
 				}
-				if (ELEMENTARYATOM_SUBTYPE_VAL.equals(connectedAtom.getFrag().getSubType()) ||
+				if (ELEMENTARYATOM_TYPE_VAL.equals(connectedAtom.getFrag().getType()) ||
 						((chemEl == ChemEl.S || chemEl == ChemEl.P) && connectedAtom.getCharge() ==0 && ValencyChecker.checkValencyAvailableForBond(connectedAtom, 1))){
 					oxidoAtom.neutraliseCharge();
 					oxidoAtom.getFirstBond().setOrder(2);
@@ -2303,7 +2302,7 @@ class StructureBuilder {
 	 */
 	private void processOxidationNumbers(List<Element> groups) throws StructureBuildingException  {
 		for (Element group : groups) {
-			if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){
+			if (ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))){
 				Atom atom = group.getFrag().getFirstAtom();
 				if (atom.getProperty(Atom.OXIDATION_NUMBER)!=null){
 					List<Atom> neighbours = atom.getAtomNeighbours();

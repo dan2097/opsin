@@ -365,7 +365,7 @@ class WordRules {
 					case oxide:
 						//is the halide/pseudohalide/oxide actually a counterion rather than covalently bonded
 						Element possibleElementaryAtomContainingWord = wordEls.get(i);
-						List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtomContainingWord, GROUP_EL, SUBTYPE_ATR, ELEMENTARYATOM_SUBTYPE_VAL);
+						List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(possibleElementaryAtomContainingWord, GROUP_EL, TYPE_ATR, ELEMENTARYATOM_TYPE_VAL);
 						if (elementaryAtoms.size() == 1) {
 							Element elementaryAtom = elementaryAtoms.get(0);
 							ChemEl chemEl1 = getChemElFromElementaryAtomEl(elementaryAtom);

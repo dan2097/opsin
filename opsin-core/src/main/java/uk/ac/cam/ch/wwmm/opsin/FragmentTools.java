@@ -1066,7 +1066,7 @@ class FragmentTools {
 		}
 		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
 		List<Atom> substitutableAtoms = new ArrayList<Atom>();
-		if (atomCount == 1 && ELEMENTARYATOM_SUBTYPE_VAL.equals(atomList.get(0).getFrag().getSubType())) {
+		if (atomCount == 1 && ELEMENTARYATOM_TYPE_VAL.equals(atomList.get(0).getFrag().getType())) {
 			Atom atom = atomList.get(0);
 			int timesAtomCanBeSubstituted = getTimesElementaryAtomCanBeSubstituted(atom);
 			for (int j = 1; j <= timesAtomCanBeSubstituted; j++) {

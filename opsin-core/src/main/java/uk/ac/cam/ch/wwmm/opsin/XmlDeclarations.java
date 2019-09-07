@@ -376,6 +376,9 @@ class XmlDeclarations {
 
 	/** This stereochemsitry element indicates the configuration of an amino acid/carbohydrate relative to glyceraldehyde*/
 	static final String DLSTEREOCHEMISTRY_TYPE_VAL ="dlStereochemistry";
+	
+	/**An atom e.g. "lithium" */
+	static final String ELEMENTARYATOM_TYPE_VAL ="elementaryAtom";	
 
 	/**This stereochemistry element conveys endo/exo/syn/anti stereochemistry
 	 * These indicate relative orientation of groups attached to non-bridgehead atoms in a bicyclo[x.y.z]alkane (x >= y > z > 0)*/
@@ -468,8 +471,6 @@ class XmlDeclarations {
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
 	/**Replacmenet terms that are not substituents e.g.  amido/hydrazido/imido/nitrido*/
 	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
-	/**An atom e.g. "lithium" */
-	static final String ELEMENTARYATOM_SUBTYPE_VAL ="elementaryAtom";
 	/**An amino acid that ends in an e.g. tryptoph */
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
 	/**An amino acid that ends in ic e.g. aspart */
@@ -498,6 +499,8 @@ class XmlDeclarations {
 	static final String NONE_SUBTYPE_VAL ="none";
 	/**oxido/sulfido/selenido/tellurido These are handled similarly to oxide e.g. might give -[O-] or =O*/
 	static final String OXIDOLIKE_SUBTYPE_VAL ="oxidoLike";
+	/**An atom with implicit oxidation state e.g. "ferric" */
+	static final String OUSICATOM_SUBTYPE_VAL ="ousIcAtom";
 	/**A term indicating replacement of all substitutable hydrogens by a halogen e.g. "perchloro" */
 	static final String PERHALOGENO_SUBTYPE_VAL ="perhalogeno";
 	/** phospho and other very related substituents. Strongly prefer forming bonds to hydroxy groups */
