@@ -1,4 +1,4 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
 <!--For convenience in order of priority-->
 <!--Specified valencies have been provided for charged p-block elements-->
 <tokenList tagname="heteroatom" symbol="H">
