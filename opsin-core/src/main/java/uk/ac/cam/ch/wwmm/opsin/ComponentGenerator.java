@@ -2219,6 +2219,12 @@ class ComponentGenerator {
 		}
 		String groupType = group.getAttributeValue(TYPE_ATR);
 		String groupSubType = group.getAttributeValue(SUBTYPE_ATR);
+		if (OUSICATOM_SUBTYPE_VAL.equals(groupSubType)) {
+			Element next = OpsinTools.getNext(group, false);
+			if (next == null){
+				throw new ComponentGenerationException("counter anion not found after " +groupValue);
+			}
+		}
 
 		if(groupValue.equals("thiophen") || groupValue.equals("selenophen") || groupValue.equals("tellurophen")) {//thiophenol is generally phenol with an O replaced with S not thiophene with a hydroxy
 			Element possibleSuffix = OpsinTools.getNextSibling(group);
@@ -2716,7 +2722,7 @@ class ComponentGenerator {
 					group.setValue(groupValue.substring(1));
 				}
 			}
-		} else if (ELEMENTARYATOM_SUBTYPE_VAL.equals(groupSubType)) {
+		} else if (ELEMENTARYATOM_TYPE_VAL.equals(groupType)) {
 			//simple inorganic molecular diatomics should be implicitly bonded e.g. dioxygen
 			Element multiplier = OpsinTools.getPreviousSibling(group);
 			if (multiplier != null && "2".equals(multiplier.getAttributeValue(VALUE_ATR))) {

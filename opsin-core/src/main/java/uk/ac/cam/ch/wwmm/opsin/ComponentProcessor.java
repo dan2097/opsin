@@ -249,7 +249,7 @@ class ComponentProcessor {
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
 		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
 		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
-		if (ELEMENTARYATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+		if (ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 			//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
 			for (Atom a : thisFrag.getAtomList()) {
 				a.setImplicitHydrogenAllowed(false);
@@ -691,6 +691,13 @@ class ComponentProcessor {
 	}
 	
 	private void processChargeAndOxidationNumberSpecification(Element group, Fragment frag)  {
+		if (OUSICATOM_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+			String oxidationStates = group.getAttributeValue(COMMONOXIDATIONSTATESANDMAX_ATR);
+			if (oxidationStates == null) {
+				throw new RuntimeException(COMMONOXIDATIONSTATESANDMAX_ATR + " should be specified on: " + group.getValue());
+			}
+			frag.getFirstAtom().setProperty(Atom.OXIDATION_NUMBER, Integer.parseInt(oxidationStates.split(":")[0]));
+		}
 		Element nextEl = OpsinTools.getNextSibling(group);
 		if (nextEl != null){
 			if(nextEl.getName().equals(CHARGESPECIFIER_EL)) {
@@ -5265,7 +5272,7 @@ class ComponentProcessor {
 		if (multiVal ==1){
 			Element possibleElement = OpsinTools.getNextSibling(multiplier);
 			if (possibleElement != null && possibleElement.getName().equals(GROUP_EL) &&
-					(ELEMENTARYATOM_SUBTYPE_VAL.equals(possibleElement.getAttributeValue(SUBTYPE_ATR)) || possibleElement.getValue().equals("hydrogen"))){
+					(ELEMENTARYATOM_TYPE_VAL.equals(possibleElement.getAttributeValue(TYPE_ATR)) || possibleElement.getValue().equals("hydrogen"))){
 				return true;
 			}
 		}

@@ -338,13 +338,24 @@ class OpsinTools {
 	 * @return
 	 */
 	static Element getNext(Element element) {
+		return getNext(element, true);
+	}
+	
+	/**
+	 * Gets the next element. This element need not be a sibling
+	 * If withinConnectedComponent is set the method is restricted to the current branch of the root molecule element
+	 * @param element: starting element
+	 * @param withinConnectedComponent
+	 * @return
+	 */
+	static Element getNext(Element element, boolean withinConnectedComponent) {
 		Element parent = element.getParent();
-		if (parent == null || parent.getName().equals(XmlDeclarations.MOLECULE_EL)){
+		if (parent == null || (withinConnectedComponent && parent.getName().equals(XmlDeclarations.MOLECULE_EL))) {
 			return null;
 		}
 		int index = parent.indexOf(element);
 		if (index + 1 >= parent.getChildCount()) {
-			return getNext(parent);//reached end of element
+			return getNext(parent, withinConnectedComponent);//reached end of element
 		}
 		Element next = parent.getChild(index + 1);
 		while (next.getChildCount() > 0){
@@ -352,20 +363,32 @@ class OpsinTools {
 		}
 		return next;
 	}
-
+	
+	
 	/**
 	 * Gets the previous element. This element need not be a sibling
 	 * @param element: starting element
 	 * @return
 	 */
 	static Element getPrevious(Element element) {
+		return getPrevious(element, true);
+	}
+
+	/**
+	 * Gets the previous element. This element need not be a sibling
+	 * If withinConnectedComponent is set the method is restricted to the current branch of the root molecule element
+	 * @param element: starting element
+	 * @param withinConnectedComponent
+	 * @return
+	 */
+	static Element getPrevious(Element element, boolean withinConnectedComponent) {
 		Element parent = element.getParent();
-		if (parent == null || parent.getName().equals(XmlDeclarations.MOLECULE_EL)){
+		if (parent == null || (withinConnectedComponent && parent.getName().equals(XmlDeclarations.MOLECULE_EL))) {
 			return null;
 		}
 		int index = parent.indexOf(element);
 		if (index == 0) {
-			return getPrevious(parent);//reached beginning of element
+			return getPrevious(parent, withinConnectedComponent);//reached beginning of element
 		}
 		Element previous = parent.getChild(index - 1);
 		while (previous.getChildCount() > 0){

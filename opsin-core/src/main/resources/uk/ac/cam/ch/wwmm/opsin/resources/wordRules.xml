@@ -225,6 +225,11 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="functionalTerm" endsWithRegex="(oxid|sulfid|selenid|tellurid)[e]?" functionalGroupType="functionalClass" />
 	</wordRule>
 
+	<wordRule name="oxide" type="full">
+		<word type="full" endsWithGroupType="elementaryAtom" />
+		<word type="functionalTerm" endsWithRegex="(oxid|sulfid|selenid|tellurid)[e]?" functionalGroupType="functionalClass" />
+	</wordRule>
+
 	<wordRule name="carbonylDerivative" type="full">
 		<word type="full" />
 		<word type="substituent" />
@@ -294,7 +299,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">
-		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="full" endsWithGroupType="elementaryAtom"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
@@ -302,20 +307,20 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">
-		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="full" endsWithGroupType="elementaryAtom"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">
-		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="full" endsWithGroupType="elementaryAtom"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">
-		<word type="full" endsWithGroupSubType="elementaryAtom"/>
+		<word type="full" endsWithGroupType="elementaryAtom"/>
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
