@@ -1,4 +1,4 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
 <!--
 A limiting list of prefixes that modify the meaning of the following prefixes
 Not all suffixes appear to accept a suffixPrefix

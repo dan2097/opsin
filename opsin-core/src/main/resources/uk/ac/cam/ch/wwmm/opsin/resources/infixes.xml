@@ -1,4 +1,4 @@
-<!DOCTYPE tokenList SYSTEM "tokenList.dtd">
+<!DOCTYPE tokenList SYSTEM "tokenLists.dtd">
 <!-- value is:
 A comma seperated list of:
 SMILES bond type to oxygen
