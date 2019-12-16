@@ -4251,9 +4251,11 @@ class ComponentProcessor {
 		if (lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR) != null && substituentGroup.getAttribute(IMINOLIKE_ATR) != null){
 			return;//possibly a multiplicative additive operation
 		}
-
 		if (implicitBracketWouldPreventAdditiveBonding(elementBeforeSubstituent, elementAftersubstituent)) {
 			return;//e.g. N-ethylmethylsulfonimidoyl
+		}
+		if (implicitBracketWouldPreventConnectionToAmineSuffix(elementBeforeSubstituent, elementAftersubstituent)) {
+			return;//e.g. N-methylmethyleneamine 
 		}
 		
 		if (substituentGroup.getValue().equals("sulf") && frag.getAtomCount() == 1) {
@@ -4413,6 +4415,19 @@ class ComponentProcessor {
 					}
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean implicitBracketWouldPreventConnectionToAmineSuffix(Element elementBeforeSubstituent, Element elementAftersubstituent) {
+		//Treat amine like a suffix rather than a group cf. 815.3 (IUPAC 1979)... but only when a locant is present
+		//e.g. Dimethylaminopropylamine should still be (Dimethylaminopropyl)amine
+		//but N-methylmethyleneamine not N-(methylmethylene)amine
+		if (elementAftersubstituent != null && elementAftersubstituent.getName().equals(ROOT_EL) && elementAftersubstituent.getChildCount() == 1) {
+			String val = elementAftersubstituent.getValue();
+			if ((val.equals("amine") || val.equals("amin")) && elementBeforeSubstituent.getChild(0).getName().equals(LOCANT_EL)) {
+				return true ;
 			}
 		}
 		return false;
