@@ -27,10 +27,7 @@
       <source>LICENSE.txt</source>
     </file>
     <file>
-      <source>LICENSE-External.txt</source>
-    </file>
-    <file>
-      <source>README.text</source>
+      <source>README.md</source>
     </file>
     <file>
       <source>ReleaseNotes.txt</source>

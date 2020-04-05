@@ -19,20 +19,18 @@
     </license>
   </licenses>
   <scm>
-    <url>http://bitbucket.org/dan2097/opsin/</url>
+    <url>https://github.com/dan2097/opsin/</url>
     <connection>
-      scm:hg:http://bitbucket.org/dan2097/opsin
+      scm:git:https://github.com/dan2097/opsin
     </connection>
     <developerConnection>
-      scm:hg:http://bitbucket.org/dan2097/opsin
+      scm:git:https://github.com/dan2097/opsin
     </developerConnection>
   </scm>
   <developers>
     <developer>
       <name>Daniel Lowe</name>
-      <url>http://bitbucket.org/dan2097</url>
-      <organization>University of Cambridge</organization>
-      <organizationUrl>http://www.cam.ac.uk</organizationUrl>
+      <url>https://github.com/dan2097</url>
       <roles>
          <role>Lead Programmer</role>
       </roles>

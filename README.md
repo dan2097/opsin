@@ -1,7 +1,7 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
 =====================================================
 __Version 2.4.0 (see ReleaseNotes.txt for what's new in this version)__  
-__Source code: <http://bitbucket.org/dan2097/opsin/>__  
+__Source code: <https://github.com/dan2097/opsin>__  
 __Web interface and informational site: <http://opsin.ch.cam.ac.uk/>__  
 __License: [MIT License](https://opensource.org/licenses/MIT)__  
 
@@ -70,7 +70,7 @@ Convenience methods like `result.nameAppearsToBeAmbiguous()` may be used to chec
 NOTE: (Std)InChI cannot be generated for polymers or radicals generated in combination with the wildcardRadicals option
 
 ### Availability
-OPSIN is available as a standalone JAR from Bitbucket, <http://bitbucket.org/dan2097/opsin/downloads>  
+OPSIN is available as a standalone JAR from GitHub, <https://github.com/dan2097/opsin/releases>  
 `opsin-2.4.0-jar-with-dependencies.jar` can be executed as a commandline application or added to the classpath for library usage.
 OPSIN is also available from the Maven Central Repository for users of Apache Maven.  
 
@@ -178,4 +178,4 @@ YourKit supports open source projects with its full-featured Java Profiler.
 YourKit, LLC is the creator of [YourKit Java Profiler](https://www.yourkit.com/java/profiler/index.jsp) and [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/index.jsp), innovative and intelligent tools for profiling Java and .NET applications.
 
 Good Luck and let us know if you have problems, comments or suggestions!
-Bugs may be reported on the project's [issue tracker](https://bitbucket.org/dan2097/opsin/issues).
+Bugs may be reported on the project's [issue tracker](https://github.com/dan2097/opsin/issues).
