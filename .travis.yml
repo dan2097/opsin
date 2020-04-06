@@ -1,0 +1,14 @@
+language: java
+jdk:
+- openjdk8
+- openjdk11
+- openjdk14
+
+sudo: false
+
+cache:
+  directories:
+  - $HOME/.m2
+
+script:
+- mvn -B clean test javadoc:javadoc package assembly:assembly
