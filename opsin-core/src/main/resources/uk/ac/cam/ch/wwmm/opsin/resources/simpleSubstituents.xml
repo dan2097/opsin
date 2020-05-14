@@ -40,6 +40,7 @@
 		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal|benzylene</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/">benzidino</token>
 		<token value="c1(ccc3cc1)c2ccc(N)cc2.N3-" labels="1/2/3/4/5/6/1'/2'/3'/4'//5'/6'/" >4,4'-benzidino</token>
+		<token value="-S(=O)(=O)c1ccccc1">besyl</token>
 		<token value="-C(C)=C">beta-allyl</token>
 		<token value="-c1ccccc1-c2ccccc2" labels="2/3/4/5/6/1/1'/2'/3'/4'/5'/6'">biphen-2-yl</token>
 		<token value="-c1cccc(c1)-c2ccccc2" labels="3/4/5/6/1/2/1'/2'/3'/4'/5'/6'">biphen-3-yl</token>
