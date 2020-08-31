@@ -1751,7 +1751,7 @@ class StructureBuildingMethods {
 				if (parentOfMultipliedEl.getName().equals(BRACKET_EL)) {//brackets are allowed
 					siblings = OpsinTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
 					if (siblings.get(0).getAttribute(MULTIPLIER_ATR) == null) {
-						throw new StructureBuildingException("Multiplier not found where multiplier was expected for succesful multiplicative nomenclature");
+						throw new StructureBuildingException("Multiplier not found where multiplier was expected for successful multiplicative nomenclature");
 					}
 					performMultiplicativeOperations(state, newBr, siblings.get(0));
 				}
