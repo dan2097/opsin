@@ -82,6 +82,10 @@
 		<token value="NC(C(C)(C)C)C" labels="/2,alpha/////1" suffixAppliesTo="7" defaultInID="1">tertiarybutylglyc|tertiary-butylglyc|tertbutylglyc|tert-butylglyc|tert.butylglyc|tert.-butylglyc|t-butylglyc</token>
 		<token value="NC(CC#C)C" labels="/2,alpha////1" suffixAppliesTo="6" defaultInID="1">propargylglyc</token>
 		<token value="NC(CC=C)C" labels="/2,alpha/3,beta/4,gamma/5,delta/1" suffixAppliesTo="6" defaultInID="1">allylglyc</token>
+		<token value="N[C@@H](c1[nH]c2ccccc2c1)C" labels="/alpha/2/1/7a/7/6/5/4/3a/3/" suffixAppliesTo="12" defaultInID="1">2-indolylglyc</token>
+		<token value="N[C@@H](c1c[nH]c2ccccc12)C" labels="/alpha/3/2/1/7a/7/6/5/4/3a/" suffixAppliesTo="12" defaultInID="1">3-indolylglyc</token>
+		<token value="N[C@@H](CCNC(=O)N)C" labels="/2,alpha/3,beta/4,gamma/////1" suffixAppliesTo="9" defaultInID="1">norcitrull</token>
+		<token value="N[C@@H](c1ccc(cc1)O)C" labels="/alpha/1/2,ortho/3,meta/4,para/5/6/O/" suffixAppliesTo="10" defaultInID="1">nortyros</token><!--typically: 4-hydroxyphenylglycine-->
 		<token value="N[C@@H](C(c1ccccc1)c1ccccc1)C" labels="/alpha/beta/1/2/3/4/5/6/1'/2'/3'/4'/5'/6'/" suffixAppliesTo="16" defaultInID="1">diphenylalan</token>
 
 <!--homo amino acids-->
@@ -139,6 +143,7 @@ e.g. glutamyl relates to glutamic acid not glutamine-->
 		<token value="N[C@@H](Cc1c[nH]c2ccccc12)C" labels="/alpha/beta/3/2/1/7a/7/6/5/4/3a/" suffixAppliesTo="13" defaultInID="1">tryptoph</token>
 		<token value="N[C@@H](CCc1c[nH]c2ccccc12)C" labels="/alpha/beta/gamma/3/2/1/7a/7/6/5/4/3a/" suffixAppliesTo="14" defaultInID="1">homotryptoph</token>
 		<token value="N[C@@H](Cc1c[nH]c2ccccc12)CC" labels="/beta/gamma/3/2/1/7a/7/6/5/4/3a/alpha/" suffixAppliesTo="14" defaultInID="1">beta-homotryptoph</token>
+		<token value="N[C@@H](c1c[nH]c2ccccc12)C" labels="/alpha/3/2/1/7a/7/6/5/4/3a/" suffixAppliesTo="12" defaultInID="1">nortryptoph</token><!--typically: 3-indolylglycine-->
 	</tokenList>
 
 	<tokenList tagname="group" type="aminoAcid" subType="endInIc" symbol="ª" >
