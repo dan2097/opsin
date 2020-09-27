@@ -360,7 +360,7 @@
 		<token value="[nH]1c(N)nc2nc[nH]c2c1=O" labels="1/2//3/4/9/8/7/5/6/">guanin</token>
 		<token value="[nH]1c(=O)nc2nc[nH]c2c1N" labels="1/2//3/4/9/8/7/5/6/">isoguanin</token>
 		<token value="[nH]1cnc2nc[nH]c2c1=O" labels="1/2/3/4/9/8/7/5/6/">hypoxanthin</token>
-		<token value="[nH]1c(=O)[nH]c(=O)c(C)c1" labels="1/2//3/4//5//6">thymin</token>
+		<token value="[nH]1c(=O)[nH]c(=O)c(C)c1" labels="1/2//3/4//5/alpha/6">thymin</token>
 		<token value="[nH]1c(=O)[nH]c(=O)cc1" labels="1/2//3/4//5/6">uracil</token>
 		<token value="[nH]1c(=O)[nH]c2nc[nH]c2c1=O" labels="1/2//3/4/9/8/7/5/6/">xanthin</token>
 		<!--nucleosides (the common ones form 2'-deoxy derivatives if prefixed by deoxy, 7-susbtituted purine bases are implicitly positively charged) -->

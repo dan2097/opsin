@@ -167,6 +167,7 @@
 		<token value="-c1c(C)c(C)cc(C)c1">as-pseudocumyl</token>
 		<token value="-c1c(C)c(C)ccc1C">v-pseudocumyl</token>
 		<token value="-c1c(C)cc(C)c(C)c1">s-pseudocumyl</token>
+		<token value="-NCCCCN">putrescinyl</token>
 		<token value="-N1CCCC1" labels="1/2/3/4/5">pyrrolidino</token>
 		<token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6">salicylal</token>
 		<token value="-C(C)C(C)C">sec-iso-amyl|sec.-iso-amyl|sec-isoamyl|sec.-isoamyl|secisoamyl</token>
