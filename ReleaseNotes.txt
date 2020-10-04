@@ -1,3 +1,17 @@
+Version 2.5.0 (2020-10-04)
+OPSIN now requires Java 7 (or higher)
+Support for traditional oxidation state names e.g. ferric
+Added support for defining the stereochemistry of phosphines/arsines
+Added newly discovered elements
+Improved algorithm for correctly interpreting ester names with a missing space e.g. 3-aminophenyl-4-aminobenzenesulfonate
+Fixed structure of canavanine
+Corrected interpretation of silver oxide
+Vocabulary improvements
+Minor improvements/bug fixes
+
+Internal XML Changes:
+tokenList files now all use the same schema (tokenLists.dtd)
+
 Version 2.4.0 (2018-12-23)
 OPSIN is now licensed under the MIT License
 Locant labels included in extended SMILES output
