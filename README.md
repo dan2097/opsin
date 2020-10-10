@@ -1,6 +1,6 @@
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
 =====================================================
-__Version 2.4.0 (see ReleaseNotes.txt for what's new in this version)__  
+__Version 2.5.0 (see ReleaseNotes.txt for what's new in this version)__  
 __Source code: <https://github.com/dan2097/opsin>__  
 __Web interface and informational site: <http://opsin.ch.cam.ac.uk/>__  
 __License: [MIT License](https://opensource.org/licenses/MIT)__  
@@ -10,23 +10,23 @@ Supported outputs are SMILES, CML (Chemical Markup Language) and InChI (IUPAC In
 
 ### Simple Usage Examples
 #### Convert a chemical name to SMILES
-`java -jar opsin-2.4.0-jar-with-dependencies.jar -osmi input.txt output.txt`  
+`java -jar opsin-2.5.0-jar-with-dependencies.jar -osmi input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToStructure nts = NameToStructure.getInstance();
     String smiles = nts.parseToSmiles("acetonitrile");
 
 #### Convert a chemical name to CML
-`java -jar opsin-2.4.0-jar-with-dependencies.jar -ocml input.txt output.txt`  
+`java -jar opsin-2.5.0-jar-with-dependencies.jar -ocml input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToStructure nts = NameToStructure.getInstance();
     String cml = nts.parseToCML("acetonitrile");
 
 #### Convert a chemical name to StdInChI/StdInChIKey/InChI with FixedH 
-`java -jar opsin-2.4.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt`  
-`java -jar opsin-2.4.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt`  
-`java -jar opsin-2.4.0-jar-with-dependencies.jar -oinchi input.txt output.txt`  
+`java -jar opsin-2.5.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt`  
+`java -jar opsin-2.5.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt`  
+`java -jar opsin-2.5.0-jar-with-dependencies.jar -oinchi input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToInchi nti = new NameToInchi()
@@ -36,7 +36,7 @@ where input.txt contains chemical name/s, one per line
 
 NOTE: OPSIN's non-standard InChI includes an additional layer (FixedH) that indicates which tautomer the chemical name described. StdInChI aims to be tautomer independent.
 ### Advanced Usage
-OPSIN 2.4.0 allows enabling of the following options:
+OPSIN 2.5.0 allows enabling of the following options:
 
 * allowRadicals: Allows substituents to be interpretable e.g. allows interpretation of "ethyl"
 * wildcardRadicals: If allowRadicals is enabled, this option uses atoms in the output to represent radicals: 'R' in CML and '*' in SMILES e.g. changes the output of ethyl from C[CH2] to CC\*
@@ -48,7 +48,7 @@ OPSIN 2.4.0 allows enabling of the following options:
 \*When used as a library this is done by modifying Log4J's logging level e.g. `Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);`
 
 The usage of these options on the command line is described in the command line's help dialog accessible via:
-`java -jar opsin-2.4.0-jar-with-dependencies.jar -h`
+`java -jar opsin-2.5.0-jar-with-dependencies.jar -h`
 
 These options may be controlled using the following code:
 
@@ -71,7 +71,7 @@ NOTE: (Std)InChI cannot be generated for polymers or radicals generated in combi
 
 ### Availability
 OPSIN is available as a standalone JAR from GitHub, <https://github.com/dan2097/opsin/releases>  
-`opsin-2.4.0-jar-with-dependencies.jar` can be executed as a commandline application or added to the classpath for library usage.
+`opsin-2.5.0-jar-with-dependencies.jar` can be executed as a commandline application or added to the classpath for library usage.
 OPSIN is also available from the Maven Central Repository for users of Apache Maven.  
 
 If you are using Maven then add the following to your pom.xml:
@@ -79,7 +79,7 @@ If you are using Maven then add the following to your pom.xml:
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
        <artifactId>opsin-core</artifactId>
-       <version>2.4.0</version>
+       <version>2.5.0</version>
     </dependency>
 
 If you need just CML or SMILES output support
@@ -89,7 +89,7 @@ or
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
        <artifactId>opsin-inchi</artifactId>
-       <version>2.4.0</version>
+       <version>2.5.0</version>
     </dependency>
 
   if you also need InChI output support.
