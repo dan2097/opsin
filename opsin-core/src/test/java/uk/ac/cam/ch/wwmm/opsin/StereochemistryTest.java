@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -323,6 +324,48 @@ public class StereochemistryTest {
 	@Test
 	public void applyStereochemistryRelUnlocanted2() throws StructureBuildingException {
 		Fragment f         = n2s.parseChemicalName("(rac)-1-phenylethan-1-ol").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRorS() throws StructureBuildingException {
+		// just for James Davidson, should be 1R*
+		Fragment f         = n2s.parseChemicalName("(1R or S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rel)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+	}
+
+	// US20080015199A1_2830
+	// probably better to support via composite entity like techniques
+	@Ignore
+	public void applyStereochemistryRelUnlocantedRAndS() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRandS() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(1R and S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol").getStructure();
 		int      nRacAtoms = 0;
 		for (Atom atom : f.getAtomList()) {
 			if (atom.getAtomParity() != null) {

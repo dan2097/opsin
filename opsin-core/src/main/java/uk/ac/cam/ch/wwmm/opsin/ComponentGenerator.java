@@ -71,10 +71,10 @@ class ComponentGenerator {
 	private static final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Rr][*]|[Ss][*]|[Ee][Zz]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp)");
+	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Rr][*]|[Ss][*]|[Ee][Zz]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp|R(?:[Oo][Rr]|[Aa][Nn][Dd])S|S(?:[Oo][Rr]|[Aa][Nn][Dd])R)");
 	private static final Pattern matchStar = Pattern.compile("\\^?\\*");
 	private static final Pattern matchRacemic = Pattern.compile("rac(\\.|em(\\.|ic)?)?-?", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchRS = Pattern.compile("[Rr]/?[*Ss]?|[Ss][*Rr]?");
+	private static final Pattern matchRS = Pattern.compile("[Rr]/?[*Ss]?|[Ss][*Rr]?|R(?:[Oo][Rr]|[Aa][Nn][Dd])S|S(?:[Oo][Rr]|[Aa][Nn][Dd])R");
 	private static final Pattern matchEZ = Pattern.compile("[EZez]|[Ee][Zz]");
 	private static final Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private static final Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
@@ -919,11 +919,13 @@ class ComponentGenerator {
 						if (matchRS.matcher(m.group(2)).matches()) {
 							stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
 							String      symbol     = m.group(2).toUpperCase(Locale.ROOT).replaceAll("/", "");
-							StereoGroup groupLocal = group;
-							if (symbol.equals("RS") || symbol.equals("SR")) {
+							StereoGroup groupLocal = group; // needs to be local
+							if (symbol.equals("RS") || symbol.equals("SR") ||
+									symbol.equals("RANDS") || symbol.equals("SANDR")) {
 								groupLocal = StereoGroup.Rac;
 								symbol     = symbol.substring(0, 1); // RS => R, SR => S
-							} else if (symbol.length() == 2 && symbol.charAt(1) == '*') {
+							} else if (symbol.equals("R*") || symbol.equals("S*") ||
+												 symbol.equals("RORS") || symbol.equals("SORR")) {
 								groupLocal = StereoGroup.Rel;
 								symbol     = symbol.substring(0, 1); // R* => R, S* => S
 							}
