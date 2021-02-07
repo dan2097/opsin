@@ -920,13 +920,12 @@ class ComponentGenerator {
 							stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
 							String      symbol     = m.group(2).toUpperCase(Locale.ROOT).replaceAll("/", "");
 							StereoGroup groupLocal = group;
-							if (group == StereoGroup.Rac && symbol.length() == 1) {
-								symbol = (symbol.equals("R")) ? "RS" : "SR";
-							} else if (symbol.equals("RS") || symbol.equals("SR")) {
+							if (symbol.equals("RS") || symbol.equals("SR")) {
 								groupLocal = StereoGroup.Rac;
+								symbol     = symbol.substring(0, 1); // RS => R, SR => S
 							} else if (symbol.length() == 2 && symbol.charAt(1) == '*') {
-								symbol     = symbol.substring(0, 1); // R* => R, R* => S
 								groupLocal = StereoGroup.Rel;
+								symbol     = symbol.substring(0, 1); // R* => R, S* => S
 							}
 							stereoChemEl.addAttribute(new Attribute(VALUE_ATR, symbol));
 							if (groupLocal == null)

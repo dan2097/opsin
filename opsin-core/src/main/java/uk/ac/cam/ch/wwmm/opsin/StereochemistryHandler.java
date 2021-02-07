@@ -298,10 +298,10 @@ class StereochemistryHandler {
 		for (int i = 0; i < cipOrderedAtoms.size() -1; i++) {//from highest to lowest (true for S) hence atomParity 1 for S
 			atomRefs4[i+1] = cipOrderedAtoms.get(i);
 		}
-		if (rOrS.equals("R") || rOrS.equals("RS")){
+		if (rOrS.equals("R")) {
 			atom.setAtomParity(atomRefs4, -1);
 		}
-		else if (rOrS.equals("S") || rOrS.equals("SR")){
+		else if (rOrS.equals("S")) {
 			atom.setAtomParity(atomRefs4, 1);
 		}
 		else{
