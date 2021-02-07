@@ -628,11 +628,19 @@ class Atom {
 		return b;
 	}
 
+	/**
+	 * Set the stereo group, ignored if the atom does not have any parity info.
+	 * @param stroGrp the stereo group.
+	 */
 	public void setStereoGroup(StereoGroup stroGrp) {
 		if (atomParity != null)
 			atomParity.setStereoGroup(stroGrp);
 	}
 
+	/**
+	 * Access the stereo group on the atom parity info.
+	 * @return the stereo group
+	 */
 	public StereoGroup getStereoGroup() {
 		return atomParity != null ? atomParity.getStereoGroup() : StereoGroup.Unk;
 	}
