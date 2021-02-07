@@ -406,6 +406,7 @@ class FragmentManager {
 					}
 				}
 				AtomParity newAtomParity =new AtomParity(newAtomRefs4, atom.getAtomParity().getParity());
+				newAtomParity.setStereoGroup(atom.getAtomParity().getStereoGroup());
 				oldToNewAtomMap.get(atom).setAtomParity(newAtomParity);
 			}
 			Set<Atom> oldAmbiguousElementAssignmentAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);

@@ -189,6 +189,9 @@ class XmlDeclarations {
 	/**The semantic meaning of the token. Exact meaning is dependent on the element type e.g. SMILES for a group but a number for a multiplier*/
 	static final String VALUE_ATR ="value";
 
+	/**The stereo group (absolute, racemic, relative)  */
+	static final String STEREOGROUP_ATR ="stereoGroup";
+
 	/**The type of the token. Possible values are enumerated with strings ending in _TYPE_VAL */
 	static final String TYPE_ATR = "type";
 
@@ -361,6 +364,12 @@ class XmlDeclarations {
 
 	/**This stereochemistry element conveys E/Z stereochemistry*/
 	static final String E_OR_Z_TYPE_VAL ="EorZ";
+
+	/** The entire molecules is racemic and nothing else known. */
+	static final String RAC_TYPE_VAL ="RAC";
+
+	/** The entire molecules is relative and nothing else known (less common). */
+	static final String REL_TYPE_VAL ="REL";
 
 	/**This group is a sulfur/selenium/tellurium acid with the acidic hydroxy missing*/
 	static final String CHALCOGENACIDSTEM_TYPE_VAL ="chalcogenAcidStem";

@@ -71,10 +71,10 @@ class ComponentGenerator {
 	private static final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
 	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
-	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Ee][Zz]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp)");
+	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Rr][*]|[Ss][*]|[Ee][Zz]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp)");
 	private static final Pattern matchStar = Pattern.compile("\\^?\\*");
 	private static final Pattern matchRacemic = Pattern.compile("rac(\\.|em(\\.|ic)?)?-?", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchRS = Pattern.compile("[Rr]/?[Ss]?|[Ss][Rr]?");
+	private static final Pattern matchRS = Pattern.compile("[Rr]/?[*Ss]?|[Ss][*Rr]?");
 	private static final Pattern matchEZ = Pattern.compile("[EZez]|[Ee][Zz]");
 	private static final Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private static final Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
@@ -877,31 +877,32 @@ class ComponentGenerator {
 	}
 
 	private void processStereochemistryBracket(Element stereoChemistryElement) throws ComponentGenerationException {
+	  StereoGroup group = null;
 		String txt = stereoChemistryElement.getValue();
 		if (StringTools.startsWithCaseInsensitive(txt, "rel-")){
+			group = StereoGroup.Rel;
 			txt = txt.substring(4);
 		}
 		txt = StringTools.removeDashIfPresent(txt);
-		txt = matchStar.matcher(txt).replaceAll("");
-		boolean racemicStereo;
 		Matcher racemicMacher = matchRacemic.matcher(txt);
 		if (racemicMacher.lookingAt()) {
 			txt = txt.substring(racemicMacher.group().length());
-			racemicStereo = true;
+			// should be an error if relative is set already but should not be
+			// possible to be matched by grammar...
+			group = StereoGroup.Rac;
 		}
-		else {
-			racemicStereo = false;
-		}
+
 		if (txt.length() > 0) {//if txt is just "rel- or rac-" then it will be length 0 at this point
 			List<String> stereoChemistryDescriptors = splitStereoBracketIntoDescriptors(txt);
 			boolean exclusiveStereoTerm = false;
 			if (stereoChemistryDescriptors.size() == 1){
 				String stereoChemistryDescriptor = stereoChemistryDescriptors.get(0);
 				if (stereoChemistryDescriptor.equalsIgnoreCase("rel")){
+					group = StereoGroup.Rel;
 					exclusiveStereoTerm = true;
 				}
 				if (matchRacemic.matcher(stereoChemistryDescriptor).matches()) {
-					racemicStereo = true;
+					group = StereoGroup.Rac;
 					exclusiveStereoTerm = true;
 				}
 			}
@@ -914,14 +915,23 @@ class ComponentGenerator {
 		                if (locantVal.length() > 0){
 		                    stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, fixLocantCapitalisation(StringTools.removeDashIfPresent(locantVal))));
 		                }
-			        	OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
+                    OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 		                if (matchRS.matcher(m.group(2)).matches()) {
-		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
-		                    String symbol = m.group(2).toUpperCase(Locale.ROOT).replaceAll("/", "");
-		                    if (racemicStereo && symbol.length() == 1){
-		                    	symbol = (symbol.equals("R")) ? "RS" : "SR";
-		                    }
-		                    stereoChemEl.addAttribute(new Attribute(VALUE_ATR, symbol));
+                        stereoChemEl.addAttribute(new Attribute(TYPE_ATR, R_OR_S_TYPE_VAL));
+                        String symbol = m.group(2).toUpperCase(Locale.ROOT).replaceAll("/", "");
+                        StereoGroup groupLocal = group;
+                        if (group == StereoGroup.Rac && symbol.length() == 1) {
+                          symbol = (symbol.equals("R")) ? "RS" : "SR";
+                        } else if (symbol.equals("RS") || symbol.equals("SR")) {
+                          groupLocal = StereoGroup.Rac;
+                        } else if (symbol.length() == 2 && symbol.charAt(1) == '*') {
+                          symbol     = symbol.substring(0, 1); // R* => R, R* => S
+                          groupLocal = StereoGroup.Rel;
+                        }
+                        stereoChemEl.addAttribute(new Attribute(VALUE_ATR, symbol));
+                        if (groupLocal == null)
+                          groupLocal = StereoGroup.Abs;
+                        stereoChemEl.addAttribute(new Attribute(STEREOGROUP_ATR, groupLocal.name()));
 		                } else if (matchEZ.matcher(m.group(2)).matches()) {
 		                    stereoChemEl.addAttribute(new Attribute(TYPE_ATR, E_OR_Z_TYPE_VAL));
 		                    String symbol = m.group(2).toUpperCase(Locale.ROOT);
@@ -956,8 +966,26 @@ class ComponentGenerator {
 			            throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
 			        }
 			    }
+			} else {
+				// Rac or Rel exclusively
+				Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryElement.getValue());
+				if (group == StereoGroup.Rac)
+					stereoChemEl.addAttribute(new Attribute(TYPE_ATR, RAC_TYPE_VAL));
+				else
+					stereoChemEl.addAttribute(new Attribute(TYPE_ATR, REL_TYPE_VAL));
+				OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
+      }
+		} else {
+			if (group == StereoGroup.Rac || group == StereoGroup.Rel) {
+				Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryElement.getValue());
+				if (group == StereoGroup.Rac)
+					stereoChemEl.addAttribute(new Attribute(TYPE_ATR, RAC_TYPE_VAL));
+				else
+					stereoChemEl.addAttribute(new Attribute(TYPE_ATR, REL_TYPE_VAL));
+				OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 			}
-		}
+    }
+
 		stereoChemistryElement.detach();
 	}
 

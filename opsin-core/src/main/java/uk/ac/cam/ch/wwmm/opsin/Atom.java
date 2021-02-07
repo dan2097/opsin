@@ -627,4 +627,13 @@ class Atom {
 		}
 		return b;
 	}
+
+	public void setStereoGroup(StereoGroup stroGrp) {
+		if (atomParity != null)
+			atomParity.setStereoGroup(stroGrp);
+	}
+
+	public StereoGroup getStereoGroup() {
+		return atomParity != null ? atomParity.getStereoGroup() : StereoGroup.Unk;
+	}
 }

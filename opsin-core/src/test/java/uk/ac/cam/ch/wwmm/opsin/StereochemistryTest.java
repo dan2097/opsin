@@ -221,6 +221,117 @@ public class StereochemistryTest {
 			assertEquals(stereoCentres.get(1).getStereoAtom(), stereoAtoms.get(0));
 		}
 	}
+
+	@Test
+	public void applyStereochemistryLocantedRSracemic() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(1RS,2SR)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null && atom.getStereoGroup() == StereoGroup.Rac) {
+				nRacAtoms++;
+			}
+		}
+		assertEquals(2, nRacAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRSrel() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(1R*,2S*)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
+		int      nRelAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null && atom.getStereoGroup() == StereoGroup.Rel) {
+				nRelAtoms++;
+			}
+		}
+		assertEquals(2, nRelAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedPartialRac() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(1RS,2R)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
+		int      nRacAtoms = 0;
+		int      nAbsAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+				else if (atom.getStereoGroup() == StereoGroup.Abs)
+					nAbsAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+		assertEquals(1, nAbsAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedPartialRel() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(1R*,2R)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
+		int      nRelAtoms = 0;
+		int      nAbsAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rel)
+					nRelAtoms++;
+				else if (atom.getStereoGroup() == StereoGroup.Abs)
+					nAbsAtoms++;
+			}
+		}
+		assertEquals(1, nRelAtoms);
+		assertEquals(1, nAbsAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryRacemicUnlocanted() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("rac-1-phenylethan-1-ol").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryRacemicMultipleUnlocanted() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("rac-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
+		assertNotNull(f);
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(2, nRacAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryRelUnlocanted() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("rel-1-phenylethan-1-ol").getStructure();
+		int      nRelAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rel)
+					nRelAtoms++;
+			}
+		}
+		assertEquals(1, nRelAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryRelUnlocanted2() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(rac)-1-phenylethan-1-ol").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+	}
 	
 	@Test
 	public void testCIPpriority1() throws StructureBuildingException {
