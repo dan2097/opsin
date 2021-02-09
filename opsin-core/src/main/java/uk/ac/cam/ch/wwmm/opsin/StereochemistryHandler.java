@@ -46,6 +46,7 @@ class StereochemistryHandler {
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> carbohydrateStereoChemistryEls = new ArrayList<Element>();
+		List<Element> globalRacemicOrRelative = new ArrayList<>();
 		for (Element stereoChemistryElement : stereoChemistryEls) {
 			if (stereoChemistryElement.getAttributeValue(LOCANT_ATR)!=null){
 				locantedStereoChemistryEls.add(stereoChemistryElement);
@@ -53,7 +54,10 @@ class StereochemistryHandler {
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)){
 				carbohydrateStereoChemistryEls.add(stereoChemistryElement);
 			}
-			else{
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(RAC_TYPE_VAL) ||
+							 stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(REL_TYPE_VAL)) {
+				globalRacemicOrRelative.add(stereoChemistryElement);
+			} else{
 				unlocantedStereoChemistryEls.add(stereoChemistryElement);
 			}
 		}
@@ -75,6 +79,28 @@ class StereochemistryHandler {
 			processCarbohydrateStereochemistry(carbohydrateStereoChemistryEls);
 		}
 		for (Element stereochemistryEl : unlocantedStereoChemistryEls) {
+			try {
+				matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+			}
+			catch (StereochemistryException e) {
+				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+					state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, e.getMessage());
+				}
+				else{
+					throw e;
+				}
+			}
+		}
+
+		if (globalRacemicOrRelative.size() > 1) {
+			if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+				state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "More than one global indicator of rac- or rel- was specified");
+			} else {
+				throw new StructureBuildingException("More than one global indicator of rac- or rel- was specified");
+			}
+		}
+
+		for (Element stereochemistryEl : globalRacemicOrRelative) {
 			try {
 				matchStereochemistryToAtomsAndBonds(stereochemistryEl);
 			}
@@ -203,6 +229,11 @@ class StereochemistryHandler {
 		for (Fragment fragment : possibleFragments) {
 			List<Atom> atomList = fragment.getAtomList();
 			for (Atom potentialStereoAtom : atomList) {
+
+				if (potentialStereoAtom.getAtomParity() != null) {
+					potentialStereoAtom.setStereoGroup(group);
+				}
+
 				if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
 					applyStereoChemistryToStereoCentre(potentialStereoAtom,
 																						 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
