@@ -302,6 +302,12 @@ public class StereochemistryTest {
 	}
 
 	@Test
+	public void prefixTakesPrecedence() throws StructureBuildingException {
+		assertEnhancedStereo("rac-(R*)-1-phenylethan-1-ol", 1, 0, 0);
+		assertEnhancedStereo("rel-(RS)-1-phenylethan-1-ol", 0, 1, 0);
+	}
+
+	@Test
 	public void applyStereochemistryLocantedRorS() throws StructureBuildingException {
 		// just for James Davidson, should be rel-(1R)- or 1R*
 		assertEnhancedStereo("(1R or S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 0, 1, 0);

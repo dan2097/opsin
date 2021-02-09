@@ -900,8 +900,7 @@ class ComponentGenerator {
 				if (stereoChemistryDescriptor.equalsIgnoreCase("rel")) {
 					group               = StereoGroup.Rel;
 					exclusiveStereoTerm = true;
-				}
-				if (matchRacemic.matcher(stereoChemistryDescriptor).matches()) {
+				} else if (matchRacemic.matcher(stereoChemistryDescriptor).matches()) {
 					group               = StereoGroup.Rac;
 					exclusiveStereoTerm = true;
 				}
@@ -922,12 +921,18 @@ class ComponentGenerator {
 							StereoGroup groupLocal = group; // needs to be local
 							if (symbol.equals("RS") || symbol.equals("SR") ||
 									symbol.equals("RANDS") || symbol.equals("SANDR")) {
-								groupLocal = StereoGroup.Rac;
+								// rel-(RS) is conflicting, interpret as relative even though a
+								// relative descriptor was used
+								if (groupLocal == null)
+									groupLocal = StereoGroup.Rac;
 								symbol     = symbol.substring(0, 1); // RS => R, SR => S
 							} else if (symbol.equals("R*") || symbol.equals("S*") ||
 												 symbol.equals("R^*") || symbol.equals("S^*") ||
 												 symbol.equals("RORS") || symbol.equals("SORR")) {
-								groupLocal = StereoGroup.Rel;
+								// rac-(R*) is conflicting, interpret as racemic even though a
+								// relative descriptor was used
+								if (groupLocal == null)
+									groupLocal = StereoGroup.Rel;
 								symbol     = symbol.substring(0, 1); // R* => R, S* => S
 							}
 							stereoChemEl.addAttribute(new Attribute(VALUE_ATR, symbol));
