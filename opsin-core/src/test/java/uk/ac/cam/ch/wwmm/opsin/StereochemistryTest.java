@@ -223,129 +223,88 @@ public class StereochemistryTest {
 		}
 	}
 
-	@Test
-	public void applyStereochemistryLocantedRSracemic() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("(1RS,2SR)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
+	/**
+	 * Check the number of stereo atoms in a molecule name are assigned to the
+	 * correct groups.
+	 * @param name chemical name
+	 * @param nRacExp number of stereo centers expected to be racemic
+	 * @param nRelExp number of stereo centers expected to be relative
+	 * @param nAbsExp number of stereo centers expected to be absolute
+	 */
+	void assertEnhancedStereo(String name, int nRacExp, int nRelExp, int nAbsExp) {
+		Fragment f = n2s.parseChemicalName(name).getStructure();
 		int      nRacAtoms = 0;
+		int      nRelAtoms = 0;
+		int      nAbsAtoms = 0;
 		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null && atom.getStereoGroup() == StereoGroup.Rac) {
-				nRacAtoms++;
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+				if (atom.getStereoGroup() == StereoGroup.Rel)
+					nRelAtoms++;
+				else if (atom.getStereoGroup() == StereoGroup.Abs)
+					nAbsAtoms++;
 			}
 		}
-		assertEquals(2, nRacAtoms);
+		assertEquals("Incorrect number of racemic stereo centers", nRacExp, nRacAtoms);
+		assertEquals("Incorrect number of relative stereo centers",nRelExp, nRelAtoms);
+		assertEquals("Incorrect number of absolute stereo centers",nAbsExp, nAbsAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRSracemic() throws StructureBuildingException {
+		assertEnhancedStereo("(1RS,2SR)-2-(methylamino)-1-phenylpropan-1-ol", 2, 0, 0);
 	}
 
 	@Test
 	public void applyStereochemistryLocantedRSrel() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("(1R*,2S*)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
-		int      nRelAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null && atom.getStereoGroup() == StereoGroup.Rel) {
-				nRelAtoms++;
-			}
-		}
-		assertEquals(2, nRelAtoms);
+		assertEnhancedStereo("(1R*,2S*)-2-(methylamino)-1-phenylpropan-1-ol", 0, 2, 0);
 	}
 
 	@Test
 	public void applyStereochemistryLocantedPartialRac() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("(1RS,2R)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
-		int      nRacAtoms = 0;
-		int      nAbsAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
-					nRacAtoms++;
-				else if (atom.getStereoGroup() == StereoGroup.Abs)
-					nAbsAtoms++;
-			}
-		}
-		assertEquals(1, nRacAtoms);
-		assertEquals(1, nAbsAtoms);
+		assertEnhancedStereo("(1RS,2R)-2-(methylamino)-1-phenylpropan-1-ol", 1, 0, 1);
 	}
 
 	@Test
 	public void applyStereochemistryLocantedPartialRel() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("(1R*,2R)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
-		int      nRelAtoms = 0;
-		int      nAbsAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rel)
-					nRelAtoms++;
-				else if (atom.getStereoGroup() == StereoGroup.Abs)
-					nAbsAtoms++;
-			}
-		}
-		assertEquals(1, nRelAtoms);
-		assertEquals(1, nAbsAtoms);
+		assertEnhancedStereo("(1R*,2R)-2-(methylamino)-1-phenylpropan-1-ol", 0, 1, 1);
+	}
+
+	@Test
+	public void applyStereochemistryRacSlash() throws StructureBuildingException {
+		assertEnhancedStereo("(1R/S,2R)-2-(methylamino)-1-phenylpropan-1-ol", 1, 0, 1);
+	}
+
+	@Test
+	public void applyStereochemistryRelHatStar() throws StructureBuildingException {
+		assertEnhancedStereo("(1R^*,2S^*)-2-(methylamino)-1-phenylpropan-1-ol", 0, 2, 0);
 	}
 
 	@Test
 	public void applyStereochemistryRacemicUnlocanted() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("rac-1-phenylethan-1-ol").getStructure();
-		int      nRacAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
-					nRacAtoms++;
-			}
-		}
-		assertEquals(1, nRacAtoms);
+		assertEnhancedStereo("rac-1-phenylethan-1-ol", 1, 0, 0);
 	}
 
 	@Test
 	public void applyStereochemistryRacemicMultipleUnlocanted() throws StructureBuildingException {
-		Fragment f = n2s.parseChemicalName("rac-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
-		assertNotNull(f);
-		int      nRacAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
-					nRacAtoms++;
-			}
-		}
-		assertEquals(2, nRacAtoms);
+		assertEnhancedStereo("rac-2-(methylamino)-1-phenylpropan-1-ol", 2, 0, 0);
 	}
 
 	@Test
 	public void applyStereochemistryRelUnlocanted() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("rel-1-phenylethan-1-ol").getStructure();
-		int      nRelAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rel)
-					nRelAtoms++;
-			}
-		}
-		assertEquals(1, nRelAtoms);
+		assertEnhancedStereo("rel-1-phenylethan-1-ol", 0, 1, 0);
 	}
 
 	@Test
 	public void applyStereochemistryRelUnlocanted2() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("(rac)-1-phenylethan-1-ol").getStructure();
-		int      nRacAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
-					nRacAtoms++;
-			}
-		}
-		assertEquals(1, nRacAtoms);
+		assertEnhancedStereo("(rac)-1-phenylethan-1-ol", 1, 0, 0);
 	}
 
 	@Test
 	public void applyStereochemistryLocantedRorS() throws StructureBuildingException {
-		// just for James Davidson, should be 1R*
-		Fragment f         = n2s.parseChemicalName("(1R or S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol").getStructure();
-		int      nRacAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rel)
-					nRacAtoms++;
-			}
-		}
-		assertEquals(1, nRacAtoms);
+		// just for James Davidson, should be rel-(1R)- or 1R*
+		assertEnhancedStereo("(1R or S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 0, 1, 0);
 	}
 
 	// US20080015199A1_2830
