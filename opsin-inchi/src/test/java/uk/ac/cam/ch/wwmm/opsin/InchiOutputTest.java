@@ -60,4 +60,9 @@ public class InchiOutputTest {
 	public void testParseToStdInChIKey(){
 		assertEquals("DLFVBJFMPXGRIB-UHFFFAOYSA-N", n2i.parseToStdInchiKey("acetamide"));
 	}
+
+	@Test
+	public void ignoreRacemicStereoInInchi() throws StructureBuildingException{
+		assertEquals("InChI=1/C8H10O/c1-7(9)8-5-3-2-4-6-8/h2-7,9H,1H3", n2i.parseToInchi("rac-(R)-1-phenylethan-1-ol"));
+	}
 }
