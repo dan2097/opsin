@@ -248,15 +248,61 @@ class StereochemistryHandler {
 				List<Atom> atomList = fragment.getAtomList();
 				for (Atom potentialStereoAtom : atomList) {
 				  if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
-						applyStereoChemistryToStereoCentre(potentialStereoAtom,
-																							 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
-																							 "R");
+
+				  	// JWM: Don't assign to cyclo-propane substructure, other less
+						// common cases can happen (hence the catch below) but we get in to
+						// an interesting situation where by one of there stereocenters ends
+						// up ns being redundant but then removing it causes an asymmetry
+						// see p. 48 in the InChI 1.04 technical manual, for now we just
+						// tap out
+				  	if (isInCyclopropane(potentialStereoAtom)) {
+				  		continue;
+						}
+
+				  	try {
+							applyStereoChemistryToStereoCentre(potentialStereoAtom,
+																								 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
+																								 "R");
+						} catch (CipOrderingException e) {
+				  		// ignore.. because the stereocentre wasn't explicitly indicated
+							// we don't really lose anything
+						}
 						potentialStereoAtom.setStereoGroup(group);
 						notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
 					}
 				}
 			}
 		}
+	}
+
+	private int hcount(Atom atom) {
+		int hcnt = 0;
+		for (Bond bond : atom.getBonds())
+			if (bond.getOtherAtom(atom).getElement() == ChemEl.H)
+				hcnt++;
+		return hcnt;
+	}
+
+	// check if the atom is a substituted cyclo-propane
+	private boolean isInCyclopropane(Atom atom) {
+		if (atom.getElement() != ChemEl.C && hcount(atom) <= 1)
+			return false;
+		List<Bond> allbonds = atom.getBonds();
+		if (allbonds.size() != 4)
+			return false;
+		for (int i = 0; i < 4; i++) {
+			Atom nbr1 = allbonds.get(i).getOtherAtom(atom);
+			if (nbr1.getElement() != ChemEl.C && hcount(nbr1) <= 1)
+				continue;
+			for (int j = i+1; j < 4; j++) {
+				Atom nbr2 = allbonds.get(j).getOtherAtom(atom);
+				if (nbr1.getElement() != ChemEl.C && hcount(nbr1) <= 1)
+					continue;
+				if (nbr1.getBondToAtom(nbr2) != null)
+					return true;
+			}
+		}
+		return false;
 	}
 
 	/**
