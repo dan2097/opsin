@@ -226,20 +226,34 @@ class StereochemistryHandler {
 		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
 			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
 		}
+
+		// first for allready defined stereochemistry
+		List<Atom> definedStereo = new ArrayList<>();
 		for (Fragment fragment : possibleFragments) {
 			List<Atom> atomList = fragment.getAtomList();
 			for (Atom potentialStereoAtom : atomList) {
+				if (potentialStereoAtom.getAtomParity() != null)
+					definedStereo.add(potentialStereoAtom);
+			}
+		}
 
-				if (potentialStereoAtom.getAtomParity() != null) {
-					potentialStereoAtom.setStereoGroup(group);
-				}
-
-				if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
-					applyStereoChemistryToStereoCentre(potentialStereoAtom,
-																						 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
-																						 "R");
-					potentialStereoAtom.setStereoGroup(group);
-					notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
+		// if some were defined we assign them to be relative/racemic
+		if (definedStereo.size() > 0) {
+			for (Atom atom : definedStereo) {
+				atom.setStereoGroup(group);
+			}
+		} else {
+			// else no information is given, assign them all to R and set the flag
+			for (Fragment fragment : possibleFragments) {
+				List<Atom> atomList = fragment.getAtomList();
+				for (Atom potentialStereoAtom : atomList) {
+				  if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
+						applyStereoChemistryToStereoCentre(potentialStereoAtom,
+																							 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
+																							 "R");
+						potentialStereoAtom.setStereoGroup(group);
+						notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
+					}
 				}
 			}
 		}
