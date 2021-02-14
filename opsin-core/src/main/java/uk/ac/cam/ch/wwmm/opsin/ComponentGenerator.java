@@ -72,7 +72,6 @@ class ComponentGenerator {
 	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
 	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Rr]\\^?[*]|[Ss]\\^?[*]|[Ee][Zz]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp|R(?:[Oo][Rr]|[Aa][Nn][Dd])S|S(?:[Oo][Rr]|[Aa][Nn][Dd])R)");
-	private static final Pattern matchStar = Pattern.compile("\\^?\\*");
 	private static final Pattern matchRacemic = Pattern.compile("rac(\\.|em(\\.|ic)?)?-?", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchRS = Pattern.compile("[Rr]/?\\^?[*Ss]?|[Ss]\\^?[*Rr]?|R(?:[Oo][Rr]|[Aa][Nn][Dd])S|S(?:[Oo][Rr]|[Aa][Nn][Dd])R");
 	private static final Pattern matchEZ = Pattern.compile("[EZez]|[Ee][Zz]");

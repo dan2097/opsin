@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -371,7 +372,7 @@ public class NameToStructure {
 
 	private static void interactiveCmlOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig) throws IOException, XMLStreamException {
 		NameToStructure nts = NameToStructure.getInstance();
-		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 		XMLOutputFactory factory = new WstxOutputFactory();
 		factory.setProperty(WstxOutputProperties.P_OUTPUT_ESCAPE_CR, false);
 		XMLStreamWriter writer = factory.createXMLStreamWriter(out, "UTF-8");
@@ -400,8 +401,8 @@ public class NameToStructure {
 	
 	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean extendedSmiles, boolean outputName) throws IOException {
 		NameToStructure nts = NameToStructure.getInstance();
-		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
 		String line;
 		while((line =inputReader.readLine()) != null) {
 			int splitPoint = line.indexOf('\t');
@@ -424,8 +425,8 @@ public class NameToStructure {
 
 	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, InchiType inchiType, boolean outputName) throws Exception {
 		NameToStructure nts = NameToStructure.getInstance();
-		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
 		Class<?> c;
 		try {
 			c = Class.forName("uk.ac.cam.ch.wwmm.opsin.NameToInchi");
