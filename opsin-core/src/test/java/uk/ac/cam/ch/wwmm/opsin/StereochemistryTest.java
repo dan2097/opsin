@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -220,6 +221,130 @@ public class StereochemistryTest {
 			assertEquals(stereoCentres.get(0).getStereoAtom(), stereoAtoms.get(1));
 			assertEquals(stereoCentres.get(1).getStereoAtom(), stereoAtoms.get(0));
 		}
+	}
+
+	/**
+	 * Check the number of stereo atoms in a molecule name are assigned to the
+	 * correct groups.
+	 * @param name chemical name
+	 * @param nRacExp number of stereo centers expected to be racemic
+	 * @param nRelExp number of stereo centers expected to be relative
+	 * @param nAbsExp number of stereo centers expected to be absolute
+	 */
+	void assertEnhancedStereo(String name, int nRacExp, int nRelExp, int nAbsExp) {
+		Fragment f = n2s.parseChemicalName(name).getStructure();
+		int      nRacAtoms = 0;
+		int      nRelAtoms = 0;
+		int      nAbsAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+				if (atom.getStereoGroup() == StereoGroup.Rel)
+					nRelAtoms++;
+				else if (atom.getStereoGroup() == StereoGroup.Abs)
+					nAbsAtoms++;
+			}
+		}
+		assertEquals("Incorrect number of racemic stereo centers", nRacExp, nRacAtoms);
+		assertEquals("Incorrect number of relative stereo centers",nRelExp, nRelAtoms);
+		assertEquals("Incorrect number of absolute stereo centers",nAbsExp, nAbsAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRSracemic() throws StructureBuildingException {
+		assertEnhancedStereo("(1RS,2SR)-2-(methylamino)-1-phenylpropan-1-ol", 2, 0, 0);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRSrel() throws StructureBuildingException {
+		assertEnhancedStereo("(1R*,2S*)-2-(methylamino)-1-phenylpropan-1-ol", 0, 2, 0);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedPartialRac() throws StructureBuildingException {
+		assertEnhancedStereo("(1RS,2R)-2-(methylamino)-1-phenylpropan-1-ol", 1, 0, 1);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedPartialRel() throws StructureBuildingException {
+		assertEnhancedStereo("(1R*,2R)-2-(methylamino)-1-phenylpropan-1-ol", 0, 1, 1);
+	}
+
+	@Test
+	public void applyStereochemistryRacSlash() throws StructureBuildingException {
+		assertEnhancedStereo("(1R/S,2R)-2-(methylamino)-1-phenylpropan-1-ol", 1, 0, 1);
+	}
+
+	@Test
+	public void applyStereochemistryRelHatStar() throws StructureBuildingException {
+		assertEnhancedStereo("(1R^*,2S^*)-2-(methylamino)-1-phenylpropan-1-ol", 0, 2, 0);
+	}
+
+	@Test
+	public void applyStereochemistryRacemicUnlocanted() throws StructureBuildingException {
+		assertEnhancedStereo("rac-1-phenylethan-1-ol", 1, 0, 0);
+	}
+
+	@Test
+	public void applyStereochemistryRacemicMultipleUnlocanted() throws StructureBuildingException {
+		assertEnhancedStereo("rac-2-(methylamino)-1-phenylpropan-1-ol", 2, 0, 0);
+	}
+
+	@Test
+	public void applyStereochemistryRelUnlocanted() throws StructureBuildingException {
+		assertEnhancedStereo("rel-1-phenylethan-1-ol", 0, 1, 0);
+	}
+
+	@Test
+	public void applyStereochemistryRelUnlocanted2() throws StructureBuildingException {
+		assertEnhancedStereo("(rac)-1-phenylethan-1-ol", 1, 0, 0);
+	}
+
+	@Test
+	public void prefixTakesPrecedence() throws StructureBuildingException {
+		assertEnhancedStereo("rac-(R*)-1-phenylethan-1-ol", 1, 0, 0);
+		assertEnhancedStereo("rel-(RS)-1-phenylethan-1-ol", 0, 1, 0);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRorS() throws StructureBuildingException {
+		// just for James Davidson, should be rel-(1R)- or 1R*
+		assertEnhancedStereo("(1R or S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 0, 1, 0);
+	}
+
+	@Test
+	public void applyStereochemistryRacCis() throws StructureBuildingException {
+		// racemic cis
+		assertEnhancedStereo("rac-cis-N4-(2,2-dimethyl-3,4-dihydro-3-oxo-2H-pyrido[3,2-b][1,4]oxazin-6-yl)-N2-[6-[2,6-dimethylmorpholino)pyridin-3-yl]-5-fluoro-2,4-pyrimidinediamine", 2, 0, 0);
+	}
+
+	// US20080015199A1_2830
+	// probably better to support via composite entity like techniques
+	@Ignore
+	public void applyStereochemistryRelUnlocantedRAndS() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
+	}
+
+	@Test
+	public void applyStereochemistryLocantedRandS() throws StructureBuildingException {
+		Fragment f         = n2s.parseChemicalName("(1R and S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol").getStructure();
+		int      nRacAtoms = 0;
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				if (atom.getStereoGroup() == StereoGroup.Rac)
+					nRacAtoms++;
+			}
+		}
+		assertEquals(1, nRacAtoms);
 	}
 	
 	@Test

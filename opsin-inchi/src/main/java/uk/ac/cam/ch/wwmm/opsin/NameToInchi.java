@@ -163,7 +163,7 @@ public class NameToInchi {
 
 		for (Atom atom : atomList) {//add atomParities
 			AtomParity atomParity =atom.getAtomParity();
-        	if (atomParity != null){
+        	if (atomParity != null && atomParity.getStereoGroup() != StereoGroup.Rac){
         		Atom[] atomRefs4 = atomParity.getAtomRefs4();
 				int[] atomRefs4AsInt = new int[4];
 				for (int i = 0; i < atomRefs4.length; i++) {

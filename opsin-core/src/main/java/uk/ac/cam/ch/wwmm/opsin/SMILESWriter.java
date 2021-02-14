@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -44,10 +45,10 @@ class SMILESWriter {
 
 	/**Holds the SMILES string which is under construction*/
 	private final StringBuilder smilesBuilder = new StringBuilder();
-	
+
 	/**Should extended SMILES be output*/
 	private final boolean outputExtendedSmiles;
-	
+
 	/**The order atoms were traversed when creating the SMILES*/
 	private List<Atom> smilesOutputOrder;
 
@@ -62,7 +63,7 @@ class SMILESWriter {
 		organicAtomsToStandardValencies.put(ChemEl.Cl, new Integer[]{1});
 		organicAtomsToStandardValencies.put(ChemEl.Br, new Integer[]{1});
 		organicAtomsToStandardValencies.put(ChemEl.I, new Integer[]{1});
-		
+
 		organicAtomsToStandardValencies.put(ChemEl.R, new Integer[]{1,2,3,4,5,6,7,8,9});
 
 		for (int i = 1; i <=9; i++) {
@@ -77,7 +78,7 @@ class SMILESWriter {
 	/**
 	 * Creates a SMILES writer for the given fragment
 	 * @param structure
-	 * @param outputExtendedSmiles 
+	 * @param outputExtendedSmiles
 	 */
 	private SMILESWriter(Fragment structure, boolean outputExtendedSmiles) {
 		this.structure = structure;
@@ -126,7 +127,7 @@ class SMILESWriter {
 				isEmpty = false;
 			}
 		}
-		
+
 		if (outputExtendedSmiles) {
 			writeExtendedSmilesLayer();
 		}
@@ -141,6 +142,7 @@ class SMILESWriter {
 		Integer lastLabel = null;
 		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
+		Map<StereoGroup,List<Integer>> enhancedStereo = null;
 		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
@@ -204,6 +206,15 @@ class SMILESWriter {
 				}
 				positionVariationBonds.add(sb.toString());
 			}
+
+			if (a.getStereoGroup() != StereoGroup.Unk) {
+				if (enhancedStereo == null)
+					enhancedStereo = new TreeMap<>();
+				List<Integer> grps = enhancedStereo.get(a.getStereoGroup());
+				if (grps == null)
+					enhancedStereo.put(a.getStereoGroup(), grps = new ArrayList<>());
+				grps.add(smilesOutputOrder.indexOf(a));
+			}
 		}
 		List<String> extendedSmiles = new ArrayList<String>(2);
 		if (lastLabel != null) {
@@ -211,6 +222,46 @@ class SMILESWriter {
 		}
 		if (lastLocant != null) {
 			extendedSmiles.add("$_AV:" + StringTools.stringListToString(atomLocants.subList(0, lastLocant + 1), ";") + "$" );
+		}
+		if (enhancedStereo != null) {
+			if (enhancedStereo.size() == 1) {
+				if (enhancedStereo.get(StereoGroup.Rac) != null) {
+					extendedSmiles.add("r");
+				} else if (enhancedStereo.get(StereoGroup.Rel) != null) {
+					List<Integer> idxs = enhancedStereo.get(StereoGroup.Rel);
+					StringBuilder sb   = new StringBuilder();
+					sb.append("o1:");
+					sb.append(idxs.get(0));
+					for (int i = 1; i < idxs.size(); i++)
+						sb.append(',').append(idxs.get(i));
+					extendedSmiles.add(sb.toString());
+				}
+				// Abs is ignored in this case since that is the default in smiles that
+				// all stereochemistry is absolute
+			} else {
+				StringBuilder sb = new StringBuilder();
+				for (Map.Entry<StereoGroup, List<Integer>> e : enhancedStereo.entrySet()) {
+					sb.setLength(0);
+					switch (e.getKey()) {
+						case Abs:
+							sb.append("a:");
+							break;
+						case Rel:
+							sb.append("o1:");
+							break;
+						case Rac:
+							sb.append("&1:");
+							break;
+						case Unk:
+							continue;
+					}
+					List<Integer> idxs = e.getValue();
+					sb.append(idxs.get(0));
+					for (int i = 1; i < idxs.size(); i++)
+						sb.append(',').append(idxs.get(i));
+					extendedSmiles.add(sb.toString());
+				}
+			}
 		}
 		if (positionVariationBonds.size() > 0) {
 			extendedSmiles.add("m:" + StringTools.stringListToString(positionVariationBonds, ","));
@@ -237,12 +288,12 @@ class SMILESWriter {
 			smilesBuilder.append('|');
 		}
 	}
-	
+
 	private String escapeExtendedSmilesLabel(String str) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0, len = str.length(); i < len; i++) {
 			char ch = str.charAt(i);
-			if ((ch >= 'a' && ch <= 'z') || 
+			if ((ch >= 'a' && ch <= 'z') ||
 			   (ch >= 'A' && ch <= 'Z')  ||
 			   (ch >= '0' && ch <= '9') ) {
 				sb.append(ch);
@@ -271,7 +322,7 @@ class SMILESWriter {
 			}
 		}
 	}
-	
+
 	private static class TraversalState {
 		private final Atom atom;
 		private final Bond bondTaken;
@@ -283,9 +334,9 @@ class SMILESWriter {
 			this.depth = depth;
 		}
 	}
-	
+
 	/**
-	 * Iterative function for populating the Atom.VISITED property 
+	 * Iterative function for populating the Atom.VISITED property
 	 * Also populates the bondToNextAtom Map
 	 * @param startingAtom
 	 * @return
@@ -299,7 +350,7 @@ class SMILESWriter {
 			Bond bondtaken = currentstate.bondTaken;
 			if (bondtaken != null) {
 				bondToNextAtomMap.put(bondtaken, currentAtom);
-			}	
+			}
 			if(currentAtom.getProperty(Atom.VISITED) != null){
 				continue;
 			}
@@ -339,7 +390,7 @@ class SMILESWriter {
 			//just a hydrogen atom
 			return false;
 		}
-		
+
 		Atom neighbour = neighbours.get(0);
 		ChemEl chemEl = neighbour.getElement();
 		if (chemEl == ChemEl.H || chemEl == ChemEl.R) {
@@ -396,7 +447,7 @@ class SMILESWriter {
 				if (!bond2ToAtom.equals(atomRefs4[3])){
 					bond2Direction = bond2Direction.equals(SMILES_BOND_DIRECTION.LSLASH) ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
 				}
-				
+
 				//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
 				if (bond1Slash !=null && !bond1Slash.equals(bond1Direction)){
 					bond1Direction = bond1Direction.equals(SMILES_BOND_DIRECTION.LSLASH) ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
@@ -406,7 +457,7 @@ class SMILESWriter {
 					bond1Direction = bond1Direction.equals(SMILES_BOND_DIRECTION.LSLASH) ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
 					bond2Direction = bond2Direction.equals(SMILES_BOND_DIRECTION.LSLASH) ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
 				}
-	
+
 				//Also need to investigate the bonds which are implicitly set by the bondStereo
 				//F   Cl
 				// C=C
@@ -416,7 +467,7 @@ class SMILESWriter {
 				Bond bond2Other =null;
 				SMILES_BOND_DIRECTION bond1OtherDirection =null;
 				SMILES_BOND_DIRECTION bond2OtherDirection =null;
-				
+
 				List<Bond> bondsFrom2ndAtom = new ArrayList<Bond>(atomRefs4[1].getBonds());
 				bondsFrom2ndAtom.remove(bond1);
 				bondsFrom2ndAtom.remove(bond);
@@ -432,7 +483,7 @@ class SMILESWriter {
 						}
 					}
 				}
-				
+
 				List<Bond> bondsFrom3rdAtom= new ArrayList<Bond>(atomRefs4[2].getBonds());
 				bondsFrom3rdAtom.remove(bond2);
 				bondsFrom3rdAtom.remove(bond);
@@ -448,7 +499,7 @@ class SMILESWriter {
 						}
 					}
 				}
-				
+
 				//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
 				if (bond1Other !=null && bond1Other.getSmilesStereochemistry() !=null && !bond1Other.getSmilesStereochemistry().equals(bond1OtherDirection)){
 					bond1Direction = bond1Direction.equals(SMILES_BOND_DIRECTION.LSLASH) ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
@@ -466,12 +517,12 @@ class SMILESWriter {
 						bond1OtherDirection = bond1OtherDirection.equals(SMILES_BOND_DIRECTION.LSLASH) ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
 					}
 				}
-				
+
 				//Set slashes for all bonds that are not to implicit hydrogen
 				//In non conjugated systems this will yield redundant, but consistent, information
 				bond1.setSmilesStereochemistry(bond1Direction);
 				bond2.setSmilesStereochemistry(bond2Direction);
-	
+
 				if (bond1Other!=null){
 					bond1Other.setSmilesStereochemistry(bond1OtherDirection);
 				}
@@ -482,10 +533,10 @@ class SMILESWriter {
 		}
 	}
 
-	
+
 	private static final TraversalState startBranch = new TraversalState(null, null, -1);
 	private static final TraversalState endBranch = new TraversalState(null, null, -1);
-	
+
 	/**
 	 * Generates the SMILES starting from the currentAtom, iteratively exploring
 	 * in the same order as {@link SMILESWriter#traverseMolecule(Atom)}
@@ -548,7 +599,7 @@ class SMILESWriter {
 					availableClosureSymbols.addFirst(newlyAvailableClosureSymbols.get(i));
 				}
 			}
-	
+
 			boolean seenFirstBranch = false;
 			for (int i = bonds.size() - 1; i >=0; i--) {
 				//adjacent atoms which have not been previously written
@@ -601,7 +652,8 @@ class SMILESWriter {
 			}
 		}
 		if (atom.getAtomParity() != null){
-			atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
+			if (atom.getStereoGroup() != StereoGroup.Rac || outputExtendedSmiles)
+				atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
 		}
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
 			atomSmiles.append('H');
@@ -657,7 +709,8 @@ class SMILESWriter {
 		if (atom.getIsotope() != null){
 			return true;
 		}
-		if (atom.getAtomParity() != null){
+		if (atom.getAtomParity() != null &&
+				(atom.getStereoGroup() != StereoGroup.Rac || outputExtendedSmiles)) {
 			return true;
 		}
 
@@ -670,7 +723,7 @@ class SMILESWriter {
 		if (!valencyCanBeDescribedImplicitly){
 			return true;
 		}
-	
+
 		int nonHydrogenValency = valency - hydrogenCount;
 		int implicitValencyThatWouldBeGenerated = nonHydrogenValency;
 		for (int i = expectedValencies.length - 1; i >= 0; i--) {

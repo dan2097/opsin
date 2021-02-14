@@ -46,6 +46,7 @@ class StereochemistryHandler {
 		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
 		List<Element> carbohydrateStereoChemistryEls = new ArrayList<Element>();
+		List<Element> globalRacemicOrRelative = new ArrayList<>();
 		for (Element stereoChemistryElement : stereoChemistryEls) {
 			if (stereoChemistryElement.getAttributeValue(LOCANT_ATR)!=null){
 				locantedStereoChemistryEls.add(stereoChemistryElement);
@@ -53,7 +54,10 @@ class StereochemistryHandler {
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATECONFIGURATIONPREFIX_TYPE_VAL)){
 				carbohydrateStereoChemistryEls.add(stereoChemistryElement);
 			}
-			else{
+			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(RAC_TYPE_VAL) ||
+							 stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(REL_TYPE_VAL)) {
+				globalRacemicOrRelative.add(stereoChemistryElement);
+			} else{
 				unlocantedStereoChemistryEls.add(stereoChemistryElement);
 			}
 		}
@@ -75,6 +79,28 @@ class StereochemistryHandler {
 			processCarbohydrateStereochemistry(carbohydrateStereoChemistryEls);
 		}
 		for (Element stereochemistryEl : unlocantedStereoChemistryEls) {
+			try {
+				matchStereochemistryToAtomsAndBonds(stereochemistryEl);
+			}
+			catch (StereochemistryException e) {
+				if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+					state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, e.getMessage());
+				}
+				else{
+					throw e;
+				}
+			}
+		}
+
+		if (globalRacemicOrRelative.size() > 1) {
+			if (state.n2sConfig.warnRatherThanFailOnUninterpretableStereochemistry()){
+				state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "More than one global indicator of rac- or rel- was specified");
+			} else {
+				throw new StructureBuildingException("More than one global indicator of rac- or rel- was specified");
+			}
+		}
+
+		for (Element stereochemistryEl : globalRacemicOrRelative) {
 			try {
 				matchStereochemistryToAtomsAndBonds(stereochemistryEl);
 			}
@@ -133,6 +159,12 @@ class StereochemistryHandler {
 		else if (stereoChemistryType.equals(DLSTEREOCHEMISTRY_TYPE_VAL)){
 			assignDlStereochem(stereoChemistryEl);
 		}
+		else if (stereoChemistryType.equals(RAC_TYPE_VAL)){
+			initAll(stereoChemistryEl, StereoGroup.Rac);
+		}
+		else if (stereoChemistryType.equals(REL_TYPE_VAL)){
+			initAll(stereoChemistryEl, StereoGroup.Rel);
+		}
 		else if (stereoChemistryType.equals(ENDO_EXO_SYN_ANTI_TYPE_VAL)){
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
@@ -176,6 +208,104 @@ class StereochemistryHandler {
 	}
 
 	/**
+	 * Initialise the stereochemistry of all possibly stereo atoms to 'R'
+	 * setting the racemic or relative flag based on the provided 'group'.
+	 * Typical case for this is a single center where "rac-" is specified at the
+	 * start. However it's plausible you could add this when there
+	 * are multiple centers.
+	 *
+	 * @param stereoChemistryEl the stereo chemistry element
+	 * @param group the stereo group Rac(emic) or Rel(ative).
+	 * @throws StructureBuildingException
+	 * @throws StereochemistryException
+	 */
+	private void initAll(Element stereoChemistryEl, StereoGroup group) throws StructureBuildingException, StereochemistryException {
+		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
+		}
+
+		// first for allready defined stereochemistry
+		List<Atom> definedStereo = new ArrayList<>();
+		for (Fragment fragment : possibleFragments) {
+			List<Atom> atomList = fragment.getAtomList();
+			for (Atom potentialStereoAtom : atomList) {
+				if (potentialStereoAtom.getAtomParity() != null)
+					definedStereo.add(potentialStereoAtom);
+			}
+		}
+
+		// if some were defined we assign them to be relative/racemic
+		if (definedStereo.size() > 0) {
+			for (Atom atom : definedStereo) {
+				atom.setStereoGroup(group);
+			}
+		} else {
+			// else no information is given, assign them all to R and set the flag
+			for (Fragment fragment : possibleFragments) {
+				List<Atom> atomList = fragment.getAtomList();
+				for (Atom potentialStereoAtom : atomList) {
+				  if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
+
+				  	// JWM: Don't assign to cyclo-propane substructure, other less
+						// common cases can happen (hence the catch below) but we get in to
+						// an interesting situation where by one of there stereocenters ends
+						// up ns being redundant but then removing it causes an asymmetry
+						// see p. 48 in the InChI 1.04 technical manual, for now we just
+						// tap out
+				  	if (isInCyclopropane(potentialStereoAtom)) {
+				  		continue;
+						}
+
+				  	try {
+							applyStereoChemistryToStereoCentre(potentialStereoAtom,
+																								 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
+																								 "R");
+						} catch (CipOrderingException e) {
+				  		// ignore.. because the stereocentre wasn't explicitly indicated
+							// we don't really lose anything
+						}
+						potentialStereoAtom.setStereoGroup(group);
+						notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
+					}
+				}
+			}
+		}
+	}
+
+	private int hcount(Atom atom) {
+		int hcnt = 0;
+		for (Bond bond : atom.getBonds())
+			if (bond.getOtherAtom(atom).getElement() == ChemEl.H)
+				hcnt++;
+		return hcnt;
+	}
+
+	// check if the atom is a substituted cyclo-propane
+	private boolean isInCyclopropane(Atom atom) {
+		if (atom.getElement() != ChemEl.C && hcount(atom) <= 1)
+			return false;
+		List<Bond> allbonds = atom.getBonds();
+		if (allbonds.size() != 4)
+			return false;
+		for (int i = 0; i < 4; i++) {
+			Atom nbr1 = allbonds.get(i).getOtherAtom(atom);
+			if (nbr1.getElement() != ChemEl.C && hcount(nbr1) <= 1)
+				continue;
+			for (int j = i+1; j < 4; j++) {
+				Atom nbr2 = allbonds.get(j).getOtherAtom(atom);
+				if (nbr1.getElement() != ChemEl.C && hcount(nbr1) <= 1)
+					continue;
+				if (nbr1.getBondToAtom(nbr2) != null)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Handles R/S stereochemistry. r/s is not currently handled
 	 * @param stereoChemistryEl
 	 * @throws StructureBuildingException
@@ -192,8 +322,10 @@ class StereochemistryHandler {
 		}
 		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String rOrS = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+		String grpStr = stereoChemistryEl.getAttributeValue(STEREOGROUP_ATR);
+		StereoGroup grp = grpStr != null ? StereoGroup.valueOf(grpStr) : StereoGroup.Unk;
 		for (Fragment fragment : possibleFragments) {
-			if (attemptAssignmentOfStereoCentreToFragment(fragment, rOrS, locant)) {
+			if (attemptAssignmentOfStereoCentreToFragment(fragment, rOrS, locant, grp)) {
 				return;
 			}
 		}
@@ -205,7 +337,7 @@ class StereochemistryHandler {
 			for (Element word : words) {
 				List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
-					if (attemptAssignmentOfStereoCentreToFragment(possibleGroups.get(i).getFrag(), rOrS, locant)) {
+					if (attemptAssignmentOfStereoCentreToFragment(possibleGroups.get(i).getFrag(), rOrS, locant, grp)) {
 						return;
 					}
 				}
@@ -215,12 +347,13 @@ class StereochemistryHandler {
 	}
 
 
-	private boolean attemptAssignmentOfStereoCentreToFragment(Fragment fragment, String rOrS, String locant) throws StereochemistryException, StructureBuildingException {
+	private boolean attemptAssignmentOfStereoCentreToFragment(Fragment fragment, String rOrS, String locant, StereoGroup grp) throws StereochemistryException, StructureBuildingException {
 		if (locant == null) {//undefined locant
 			List<Atom> atomList = fragment.getAtomList();
 			for (Atom potentialStereoAtom : atomList) {
 				if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
 					applyStereoChemistryToStereoCentre(potentialStereoAtom, notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom), rOrS);
+					potentialStereoAtom.setStereoGroup(grp);
 					notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
 					return true;
 				}
@@ -230,6 +363,7 @@ class StereochemistryHandler {
 			Atom potentialStereoAtom = fragment.getAtomByLocant(locant);
 			if (potentialStereoAtom !=null && notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
 				applyStereoChemistryToStereoCentre(potentialStereoAtom, notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom), rOrS);
+				potentialStereoAtom.setStereoGroup(grp);
 				notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
 				return true;
 			}
@@ -255,14 +389,11 @@ class StereochemistryHandler {
 		for (int i = 0; i < cipOrderedAtoms.size() -1; i++) {//from highest to lowest (true for S) hence atomParity 1 for S
 			atomRefs4[i+1] = cipOrderedAtoms.get(i);
 		}
-		if (rOrS.equals("R")){
+		if (rOrS.equals("R")) {
 			atom.setAtomParity(atomRefs4, -1);
 		}
-		else if (rOrS.equals("S")){
+		else if (rOrS.equals("S")) {
 			atom.setAtomParity(atomRefs4, 1);
-		}
-		else if (rOrS.equals("RS") || rOrS.equals("SR")){
-			atom.setAtomParity(null);
 		}
 		else{
 			throw new StructureBuildingException("Unexpected stereochemistry type: " + rOrS);

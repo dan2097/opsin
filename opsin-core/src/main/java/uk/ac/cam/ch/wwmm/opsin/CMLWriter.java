@@ -135,7 +135,7 @@ class CMLWriter {
 			}
 		}
 		AtomParity atomParity = atom.getAtomParity();
-		if(atomParity != null){
+		if(atomParity != null && atomParity.getStereoGroup() != StereoGroup.Rac){
 			writeAtomParity(atomParity);
 		}
 		for(String locant : atom.getLocants()) {

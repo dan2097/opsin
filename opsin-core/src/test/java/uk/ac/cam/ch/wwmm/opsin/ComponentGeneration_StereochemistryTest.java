@@ -823,7 +823,11 @@ public class ComponentGeneration_StereochemistryTest {
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
-		assertEquals(0, children.size());
+		assertEquals(1, children.size());
+		Element stereoElement = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, stereoElement.getName());
+		assertEquals(null, stereoElement.getAttributeValue(LOCANT_ATR));
+		assertEquals(REL_TYPE_VAL, stereoElement.getAttributeValue(TYPE_ATR));
 	}
 	
 	//relativeCisTrans is only supported sufficiently to get constitutionally correct results i.e. locants extracted from the stereochemistry
@@ -861,7 +865,9 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals("2", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
-		assertEquals("RS", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 	
@@ -878,7 +884,9 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
-		assertEquals("RS", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 	
@@ -895,7 +903,9 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
-		assertEquals("RS", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 	
@@ -912,7 +922,9 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
-		assertEquals("SR", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals("S", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
 
@@ -929,13 +941,17 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getName());
 		assertEquals("2", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
-		assertEquals("RS", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals("R", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl1.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
 		
 		Element newStereochemistryEl2 = children.get(1);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getName());
 		assertEquals("4", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
-		assertEquals("SR", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals("S", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl2.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
 	}
 	
@@ -952,13 +968,17 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl1 = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getName());
 		assertEquals("2", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
-		assertEquals("RS", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals("R", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl1.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
 		
 		Element newStereochemistryEl2 = children.get(1);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getName());
 		assertEquals("4", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
-		assertEquals("SR", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals("S", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl2.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
 	}
 	
@@ -971,7 +991,11 @@ public class ComponentGeneration_StereochemistryTest {
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
-		assertEquals(0, children.size());
+		assertEquals(1, children.size());
+		Element stereoElement = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, stereoElement.getName());
+		assertEquals(null, stereoElement.getAttributeValue(LOCANT_ATR));
+		assertEquals(RAC_TYPE_VAL, stereoElement.getAttributeValue(TYPE_ATR));
 	}
 	
 	@Test
@@ -983,7 +1007,11 @@ public class ComponentGeneration_StereochemistryTest {
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
-		assertEquals(0, children.size());
+		assertEquals(1, children.size());
+		Element stereoElement = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, stereoElement.getName());
+		assertEquals(null, stereoElement.getAttributeValue(LOCANT_ATR));
+		assertEquals(RAC_TYPE_VAL, stereoElement.getAttributeValue(TYPE_ATR));
 	}
 
 	@Test
@@ -995,7 +1023,11 @@ public class ComponentGeneration_StereochemistryTest {
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
-		assertEquals(0, children.size());
+		assertEquals(1, children.size());
+		Element stereoElement = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, stereoElement.getName());
+		assertEquals(null, stereoElement.getAttributeValue(LOCANT_ATR));
+		assertEquals(RAC_TYPE_VAL, stereoElement.getAttributeValue(TYPE_ATR));
 	}
 	
 	@Test
@@ -1011,10 +1043,12 @@ public class ComponentGeneration_StereochemistryTest {
 		Element newStereochemistryEl = children.get(0);
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
-		assertEquals("RS", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
+		assertEquals(StereoGroup.Rac.name(),
+								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
-	
+
 	@Test
 	public void testRacemate10() throws ComponentGenerationException {
 		Element substituent = new GroupingEl(SUBSTITUENT_EL);
@@ -1024,8 +1058,14 @@ public class ComponentGeneration_StereochemistryTest {
 		processStereochemistry(substituent);
 
 		List<Element> children = substituent.getChildElements();
-		assertEquals(0, children.size());
+		assertEquals(1, children.size());
+		Element stereoElement = children.get(0);
+		assertEquals(STEREOCHEMISTRY_EL, stereoElement.getName());
+		assertEquals(null, stereoElement.getAttributeValue(LOCANT_ATR));
+		assertEquals(RAC_TYPE_VAL, stereoElement.getAttributeValue(TYPE_ATR));
 	}
+
+ // TODO (R or S)- (R and S)-
 
 	@Test
 	public void testRacemateEz1() throws ComponentGenerationException {
