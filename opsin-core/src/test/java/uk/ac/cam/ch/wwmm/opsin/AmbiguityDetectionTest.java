@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,8 +35,7 @@ public class AmbiguityDetectionTest {
 	}
 	
 	private void checkNames(String file, boolean isAmbiguous) throws IOException{
-		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
-		try {
+		try(BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)))) {
 			String line = null;
 			while ((line = input.readLine()) != null) {
 				if(line.startsWith("//")){
@@ -46,8 +44,6 @@ public class AmbiguityDetectionTest {
 				OpsinResult result = n2s.parseChemicalName(line);
 				assertEquals(line + " gave unexpected result", isAmbiguous, result.nameAppearsToBeAmbiguous());
 			}
-		} finally {
-			IOUtils.closeQuietly(input);
 		}
 	}
 	

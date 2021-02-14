@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,8 +32,7 @@ public class UninterpretableNameTest {
 	}
 
 	private void checkNames(String file) throws IOException{
-		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
-		try {
+		try (BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)))) {
 			String line = null;
 			while ((line = input.readLine()) != null) {
 				if(line.startsWith("//")){
@@ -43,8 +41,6 @@ public class UninterpretableNameTest {
 				OpsinResult result = n2s.parseChemicalName(line);
 				assertEquals(line + " gave unexpected result", OPSIN_RESULT_STATUS.FAILURE, result.getStatus());
 			}
-		} finally {
-			IOUtils.closeQuietly(input);
 		}
 	}
 	

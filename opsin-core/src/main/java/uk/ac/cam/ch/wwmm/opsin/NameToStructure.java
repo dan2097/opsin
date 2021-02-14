@@ -25,7 +25,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.log4j.Level;
@@ -68,16 +67,10 @@ public class NameToStructure {
 	 * @return Version number String
 	 */
 	public static String getVersion() {
-		try {
-			InputStream is = NameToStructure.class.getResourceAsStream("opsinbuild.props");
-			try {
-				Properties props = new Properties();
-				props.load(is);
-				return props.getProperty("version");
-			}
-			finally {
-				IOUtils.closeQuietly(is);
-			}
+		try(InputStream is = NameToStructure.class.getResourceAsStream("opsinbuild.props")) {
+			Properties props = new Properties();
+			props.load(is);
+			return props.getProperty("version");
 		}
 		catch (Exception e) {
 			return null;

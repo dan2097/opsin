@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -123,17 +123,8 @@ class ResourceGetter {
 		if(name == null){
 			throw new IllegalArgumentException("Input to function was null");
 		}
-		InputStreamReader is = null;
-		try {
-			try {
-				is = new InputStreamReader(getInputstreamFromFileName(name), "UTF-8");
-				return IOUtils.toString(is);
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException("Java VM is broken; UTF-8 should be supported", e);
-			}
-			finally{
-				IOUtils.closeQuietly(is);
-			}
+		try (InputStreamReader is = new InputStreamReader(getInputstreamFromFileName(name), StandardCharsets.UTF_8)) {
+			return IOUtils.toString(is);
 		} catch (IOException e) {
 			return "";
 		}

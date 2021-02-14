@@ -4,9 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import dk.brics.automaton.Automaton;
@@ -74,15 +73,12 @@ class AutomatonInitialiser {
 	}
 	
 	private RunAutomaton loadCachedAutomaton(String automatonName) throws IOException{
-		InputStream automatonInput = resourceGetter.getInputstreamFromFileName(automatonName +"SerialisedAutomaton.aut");
-		try {
+		try (InputStream automatonInput = resourceGetter.getInputstreamFromFileName(automatonName +"SerialisedAutomaton.aut")){
 			return RunAutomaton.load(new BufferedInputStream(automatonInput));
 		} catch (Exception e) {
 			IOException ioe = new IOException("Error loading automaton");
 			ioe.initCause(e);
 			throw ioe;
-		} finally {
-			IOUtils.closeQuietly(automatonInput);
 		}
 	}
 	
@@ -95,23 +91,13 @@ class AutomatonInitialiser {
 	}
 
 	private void cacheAutomaton(String automatonName, RunAutomaton automaton, String regex) {
-		OutputStream regexHashOutputStream = null;
-		OutputStream automatonOutputStream = null;
-		try {
-			regexHashOutputStream = resourceGetter.getOutputStream(automatonName + "RegexHash.txt");
-			try {
-				regexHashOutputStream.write(getRegexHash(regex).getBytes("UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException("Java VM is broken; UTF-8 should be supported", e);
+		try (OutputStream regexHashOutputStream = resourceGetter.getOutputStream(automatonName + "RegexHash.txt")) {
+			regexHashOutputStream.write(getRegexHash(regex).getBytes(StandardCharsets.UTF_8));
+			try (OutputStream automatonOutputStream = resourceGetter.getOutputStream(automatonName + "SerialisedAutomaton.aut")) {
+				automaton.store(automatonOutputStream);
 			}
-			automatonOutputStream = resourceGetter.getOutputStream(automatonName + "SerialisedAutomaton.aut");
-			automaton.store(automatonOutputStream);
 		} catch (IOException e) {
 			LOG.warn("Error serialising automaton: "+automatonName, e);
-		}
-		finally{
-			IOUtils.closeQuietly(regexHashOutputStream);
-			IOUtils.closeQuietly(automatonOutputStream);
 		}
 	}
 	

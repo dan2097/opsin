@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -216,9 +216,8 @@ public class NomenclatureIntegrationTest {
 		checkNamesAgainstInChIs(file, n2sConfig);
 	}
 
-	private void checkNamesAgainstInChIs(String file, NameToStructureConfig n2sConfig) throws IOException{
-		BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file), "UTF-8"));
-		try {
+	private void checkNamesAgainstInChIs(String file, NameToStructureConfig n2sConfig) throws IOException {
+		try(BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file), StandardCharsets.UTF_8))) {
 			String line = null;
 			while ((line = input.readLine()) != null) {
 				if(line.startsWith("//")){
@@ -237,8 +236,6 @@ public class NomenclatureIntegrationTest {
 					fail(lineArray[0] +" was uninterpretable");
 				}
 			}
-		} finally {
-			IOUtils.closeQuietly(input);
 		}
 	}
 }
