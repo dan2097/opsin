@@ -444,6 +444,14 @@
 		<token value="I">hydroiodicacid|hydroiodic acid|hydriodicacid|hydriodic acid</token>
 		<token value="[AtH]">hydroastaticacid|hydroastatic acid</token>
 
+		<token value="[H][H]">molecular hydrogen</token>
+		<token value="N#N">molecular nitrogen</token>
+		<token value="O=O">molecular oxygen</token>
+		<token value="FF">molecular fluorine</token>
+		<token value="ClCl">molecular chlorine</token>
+		<token value="BrBr">molecular bromine</token>
+		<token value="II">molecular iodine</token>
+
 		<token value="O">water</token>
 
     <!--Note that the monoanion is used when this is substituted-->

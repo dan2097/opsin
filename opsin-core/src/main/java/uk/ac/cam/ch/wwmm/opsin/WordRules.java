@@ -502,7 +502,7 @@ class WordRules {
 					}
 				}
 			}
-			else if (WordType.functionalTerm.toString().equals(firstWord.getAttributeValue(TYPE_ATR)) &&  firstWord.getAttributeValue(VALUE_ATR).toLowerCase(Locale.ROOT).equals("salt")) {
+			else if (WordType.functionalTerm.toString().equals(firstWord.getAttributeValue(TYPE_ATR)) && firstWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("salt")) {
 				wordEls.remove(indexOfFirstWord);
 				firstWord.detach();
 				if (moleculeEl.getAttribute(ISSALT_ATR) == null) {
@@ -510,9 +510,16 @@ class WordRules {
 				}
 				return true;
 			}
-			if (allowRadicals && wordEls.size() == 1 && indexOfFirstWord == 0 && firstWord.getName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))){
-				//name is all one substituent, make this a substituent and finish
-				applySubstituentWordRule(wordEls, indexOfFirstWord, firstWord);
+			
+			if (wordEls.size() == 1 && indexOfFirstWord == 0 && firstWord.getName().equals(WORD_EL) && WordType.substituent.toString().equals(firstWord.getAttributeValue(TYPE_ATR))) {
+				if (firstWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("dihydrogen")) {
+					convertToDihydrogenMolecule(firstWord);
+					return true;
+				}				
+				if (allowRadicals) {
+					//name is all one substituent, make this a substituent and finish
+					applySubstituentWordRule(wordEls, indexOfFirstWord, firstWord);
+				}
 			}
 			return false;
 		}
@@ -620,7 +627,6 @@ class WordRules {
 			wordEls.set(indexOfFirstWord, wordRuleEl);
 			parentEl.insertChild(wordRuleEl, indexToInsertAt);
 		}
-		
 
 		private void applySubstituentWordRule(List<Element> wordEls, int indexOfFirstWord, Element firstWord) {
 			Element parentEl = firstWord.getParent();
@@ -687,6 +693,20 @@ class WordRules {
 			return functionalGroup;
 		}
 		
+		private void convertToDihydrogenMolecule(Element word) {
+			word.getAttribute(TYPE_ATR).setValue(WordType.full.toString());
+			for (int i = word.getChildCount() - 1; i >=0; i--) {
+				word.removeChild(i);
+			}
+			Element root = new GroupingEl(ROOT_EL);
+			Element group = new TokenEl(GROUP_EL);
+			group.addAttribute(TYPE_ATR, SIMPLEGROUP_TYPE_VAL);
+			group.addAttribute(SUBTYPE_ATR, SIMPLEGROUP_SUBTYPE_VAL);
+			group.addAttribute(VALUE_ATR, "[H][H]");
+			group.setValue("dihydrogen");
+			root.addChild(group);
+			word.addChild(root);
+		}
 
 		/**
 		 * Sets the SMILES of the oxide group to be something like [O-2]
