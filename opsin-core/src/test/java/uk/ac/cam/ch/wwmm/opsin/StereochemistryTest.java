@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -247,8 +249,8 @@ public class StereochemistryTest {
 			}
 		}
 		assertEquals("Incorrect number of racemic stereo centers", nRacExp, nRacAtoms);
-		assertEquals("Incorrect number of relative stereo centers",nRelExp, nRelAtoms);
-		assertEquals("Incorrect number of absolute stereo centers",nAbsExp, nAbsAtoms);
+		assertEquals("Incorrect number of relative stereo centers", nRelExp, nRelAtoms);
+		assertEquals("Incorrect number of absolute stereo centers", nAbsExp, nAbsAtoms);
 	}
 
 	@Test
@@ -318,6 +320,30 @@ public class StereochemistryTest {
 		// racemic cis
 		assertEnhancedStereo("rac-cis-N4-(2,2-dimethyl-3,4-dihydro-3-oxo-2H-pyrido[3,2-b][1,4]oxazin-6-yl)-N2-[6-[2,6-dimethylmorpholino)pyridin-3-yl]-5-fluoro-2,4-pyrimidinediamine", 2, 0, 0);
 	}
+
+  @Test
+  public void applyStereochemistryPlusMinus() throws StructureBuildingException {
+    assertEnhancedStereo("(+/-)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
+    assertEnhancedStereo("(±)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
+  }
+
+  @Test public void testBracketNormalisation() {
+    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R)-and(S)-"),
+                             CoreMatchers.is("(RS)"));
+    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R,S)-and(S,R)-"),
+                             CoreMatchers.is("(RS,SR)"));
+    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(2R,3S)-and(2S,3S)-"),
+                             CoreMatchers.is("(2RS,3S)"));
+    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(2R,3S)-or(2S,3S)-"),
+                             CoreMatchers.is("(2R*,3S)"));
+  }
+
+  @Test
+  public void applyStereochemistryMultipleBrackets() throws StructureBuildingException {
+    assertEnhancedStereo("(R)- and (S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
+    assertEnhancedStereo("(R)- or (S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 0, 1, 0);
+    assertEnhancedStereo("(R,S)- or (S,S)-2-(methylamino)-1-phenylpropan-1-ol", 0, 1, 1);
+  }
 
 	// US20080015199A1_2830
 	// probably better to support via composite entity like techniques

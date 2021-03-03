@@ -357,6 +357,10 @@ class StringTools {
 	static boolean startsWithCaseInsensitive(String str, String prefix) {
 		return str.regionMatches(true, 0, prefix, 0, prefix.length());
 	}
+
+  static boolean startsWithCaseInsensitive(String str, int i, String prefix) {
+    return str.regionMatches(true, i, prefix, 0, prefix.length());
+  }
 	
 	/**
 	 * Tests if this string ends with the specified suffix ignoring case.
