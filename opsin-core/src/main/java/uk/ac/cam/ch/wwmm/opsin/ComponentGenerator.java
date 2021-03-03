@@ -1007,6 +1007,8 @@ class ComponentGenerator {
    * @return normalised bracket or the input if it could not be normalised
    */
   static String normaliseBinaryBrackets(String inputStr) {
+    if (inputStr.isEmpty())
+      return inputStr;
 	  int len = inputStr.length()-1;
 	  int i = 1;
 	  for (; i < len; i++)
