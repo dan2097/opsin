@@ -349,7 +349,7 @@ public class StereochemistryTest {
 	// US20080015199A1_2830
 	@Test
 	public void applyStereochemistryRelUnlocantedRAndS() throws StructureBuildingException {
-		assertEnhancedStereo("\"(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid\"", 1, 0, 0);
+		assertEnhancedStereo("(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid", 1, 0, 0);
 	}
 
 	@Test
