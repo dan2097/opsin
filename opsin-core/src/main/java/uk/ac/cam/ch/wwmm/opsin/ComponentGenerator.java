@@ -869,8 +869,8 @@ class ComponentGenerator {
 			else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(RELATIVECISTRANS_TYPE_VAL)){
 				processRelativeCisTrans(stereoChemistryElement);
 			} else if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(OPTICALROTATION_TYPE_VAL)){
-        processOpticalRotation(stereoChemistryElement);
-      }
+        		processOpticalRotation(stereoChemistryElement);
+      		}
 		}
 		if (locantedUnbrackettedEzTerms.size() > 0) {
 			duplicateLocantFromStereoTermIfAdjacentToEneOrYlidene(locantedUnbrackettedEzTerms);
@@ -996,74 +996,74 @@ class ComponentGenerator {
 		stereoChemistryElement.detach();
 	}
 
-  /**
-   * Normalizes brackets that are written with an AND or OR:
-   *
-   * "(R)- and (S)-" becomes "(RS)",
-   * "(R)- or (S)-" becomes "(R*)-"
-   * "(R,R)- or (S,R)-" becomes "(R*,R)-"
-   *
-   * @param inputStr the stereo bracket test
-   * @return normalised bracket or the input if it could not be normalised
-   */
-  static String normaliseBinaryBrackets(String inputStr) {
-    if (inputStr.isEmpty())
-      return inputStr;
-	  int len = inputStr.length()-1;
-	  int i = 1;
-	  for (; i < len; i++)
-	    if (inputStr.charAt(i) == ')')
-	      break;
-	  if (i == len)
-	    return inputStr; // no match
-	  String firstBracket = inputStr.substring(1, i);
-	  i++; // close bracket
-	  // optional dash
-	  if (i < len && inputStr.charAt(i) == '-')
-	    i++;
-    StereoGroup mode;
-	  if (StringTools.startsWithCaseInsensitive(inputStr, i, "AND"))
-	    mode = StereoGroup.Rac;
-    else if (StringTools.startsWithCaseInsensitive(inputStr, i, "OR"))
-      mode = StereoGroup.Rel;
-    else
-      return inputStr;
-    for (; i < len; i++)
-      if (inputStr.charAt(i) == '(')
-        break;
-    if (i == len)
-      return inputStr; // no match
-    int mark = i+1;
-    for (; i < len; i++)
-      if (inputStr.charAt(i) == ')')
-        break;
-    String secondBracket = inputStr.substring(mark, i);
+	/**
+	 * Normalizes brackets that are written with an AND or OR:
+	 * <p>
+	 * "(R)- and (S)-" becomes "(RS)",
+	 * "(R)- or (S)-" becomes "(R*)-"
+	 * "(R,R)- or (S,R)-" becomes "(R*,R)-"
+	 *
+	 * @param inputStr the stereo bracket test
+	 * @return normalised bracket or the input if it could not be normalised
+	 */
+	static String normaliseBinaryBrackets(String inputStr) {
+		if (inputStr.isEmpty())
+			return inputStr;
+		int len = inputStr.length() - 1;
+		int i = 1;
+		for (; i < len; i++)
+			if (inputStr.charAt(i) == ')')
+				break;
+		if (i == len)
+			return inputStr; // no match
+		String firstBracket = inputStr.substring(1, i);
+		i++; // close bracket
+		// optional dash
+		if (i < len && inputStr.charAt(i) == '-')
+			i++;
+		StereoGroup mode;
+		if (StringTools.startsWithCaseInsensitive(inputStr, i, "AND"))
+			mode = StereoGroup.Rac;
+		else if (StringTools.startsWithCaseInsensitive(inputStr, i, "OR"))
+			mode = StereoGroup.Rel;
+		else
+			return inputStr;
+		for (; i < len; i++)
+			if (inputStr.charAt(i) == '(')
+				break;
+		if (i == len)
+			return inputStr; // no match
+		int mark = i + 1;
+		for (; i < len; i++)
+			if (inputStr.charAt(i) == ')')
+				break;
+		String secondBracket = inputStr.substring(mark, i);
 
 
-    if (firstBracket.length() != secondBracket.length())
-      throw new IllegalArgumentException("brackets are different lengths"); // JWM how to handle error (2R)- and (R,S)-
+		if (firstBracket.length() != secondBracket.length())
+			throw new IllegalArgumentException("brackets are different lengths"); // JWM how to handle error (2R)- and (R,S)-
 
-    StringBuilder generated = new StringBuilder();
-    generated.append('(');
-    for (int j = 0; j < firstBracket.length(); j++) {
-      generated.append(firstBracket.charAt(j));
-      if (firstBracket.charAt(j) == secondBracket.charAt(j)) {
-        continue;
-      } else if (firstBracket.charAt(j) == 'R' ||
-                 firstBracket.charAt(j) == 'S' ||
-                 firstBracket.charAt(j) == 'r' ||
-                 firstBracket.charAt(j) == 's') { // allow EZ?
-        if (mode == StereoGroup.Rac)
-          generated.append(secondBracket.charAt(j));
-        else
-          generated.append('*');
-      } else {
-        throw new IllegalArgumentException("Invalid stereo combination");
-      }
-    }
-    generated.append(')');
-    return generated.toString();
-  }
+		StringBuilder generated = new StringBuilder();
+		generated.append('(');
+		for (int j = 0; j < firstBracket.length(); j++) {
+			generated.append(firstBracket.charAt(j));
+			if (firstBracket.charAt(j) == secondBracket.charAt(j)) {
+				continue;
+			} else if (firstBracket.charAt(j) == 'R' ||
+					firstBracket.charAt(j) == 'S' ||
+					firstBracket.charAt(j) == 'r' ||
+					firstBracket.charAt(j) == 's') { // allow EZ?
+				if (mode == StereoGroup.Rac)
+					generated.append(secondBracket.charAt(j));
+				else
+					generated.append('*');
+			} else {
+				throw new IllegalArgumentException("Invalid stereo combination");
+			}
+		}
+		generated.append(')');
+		return generated.toString();
+	}
 
 	private List<String> splitStereoBracketIntoDescriptors(String stereoBracket) {
 		List<String> stereoDescriptors = new ArrayList<String>();
@@ -1095,13 +1095,13 @@ class ComponentGenerator {
 	}
 
 	public void processOpticalRotation(Element e) {
-    if (e.getValue().startsWith("(+/-)") ||
-        e.getValue().startsWith("(+-)")) {
-      Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, e.getValue());
-      stereoChemEl.addAttribute(new Attribute(TYPE_ATR, RAC_TYPE_VAL));
-      OpsinTools.insertBefore(e, stereoChemEl);
-    }
-  }
+		if (e.getValue().startsWith("(+/-)") ||
+				e.getValue().startsWith("(+-)")) {
+			Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, e.getValue());
+			stereoChemEl.addAttribute(new Attribute(TYPE_ATR, RAC_TYPE_VAL));
+			OpsinTools.insertBefore(e, stereoChemEl);
+		}
+	}
 
 	private boolean assignLocantUsingPreviousElementIfPresent(Element stereoChemistryElement) {
 		Element possibleLocant = OpsinTools.getPrevious(stereoChemistryElement);

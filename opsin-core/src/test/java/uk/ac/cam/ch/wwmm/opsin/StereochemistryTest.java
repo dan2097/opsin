@@ -235,9 +235,9 @@ public class StereochemistryTest {
 	 */
 	void assertEnhancedStereo(String name, int nRacExp, int nRelExp, int nAbsExp) {
 		Fragment f = n2s.parseChemicalName(name).getStructure();
-		int      nRacAtoms = 0;
-		int      nRelAtoms = 0;
-		int      nAbsAtoms = 0;
+		int nRacAtoms = 0;
+		int nRelAtoms = 0;
+		int nAbsAtoms = 0;
 		for (Atom atom : f.getAtomList()) {
 			if (atom.getAtomParity() != null) {
 				if (atom.getStereoGroup() == StereoGroup.Rac)
@@ -321,43 +321,35 @@ public class StereochemistryTest {
 		assertEnhancedStereo("rac-cis-N4-(2,2-dimethyl-3,4-dihydro-3-oxo-2H-pyrido[3,2-b][1,4]oxazin-6-yl)-N2-[6-[2,6-dimethylmorpholino)pyridin-3-yl]-5-fluoro-2,4-pyrimidinediamine", 2, 0, 0);
 	}
 
-  @Test
-  public void applyStereochemistryPlusMinus() throws StructureBuildingException {
-    assertEnhancedStereo("(+/-)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
-    assertEnhancedStereo("(±)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
-  }
+	@Test
+	public void applyStereochemistryPlusMinus() throws StructureBuildingException {
+		assertEnhancedStereo("(+/-)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
+		assertEnhancedStereo("(±)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
+	}
 
-  @Test public void testBracketNormalisation() {
-    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R)-and(S)-"),
-                             CoreMatchers.is("(RS)"));
-    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R,S)-and(S,R)-"),
-                             CoreMatchers.is("(RS,SR)"));
-    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(2R,3S)-and(2S,3S)-"),
-                             CoreMatchers.is("(2RS,3S)"));
-    MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(2R,3S)-or(2S,3S)-"),
-                             CoreMatchers.is("(2R*,3S)"));
-  }
+	@Test
+	public void testBracketNormalisation() {
+		MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R)-and(S)-"),
+				CoreMatchers.is("(RS)"));
+		MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R,S)-and(S,R)-"),
+				CoreMatchers.is("(RS,SR)"));
+		MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(2R,3S)-and(2S,3S)-"),
+				CoreMatchers.is("(2RS,3S)"));
+		MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(2R,3S)-or(2S,3S)-"),
+				CoreMatchers.is("(2R*,3S)"));
+	}
 
-  @Test
-  public void applyStereochemistryMultipleBrackets() throws StructureBuildingException {
-    assertEnhancedStereo("(R)- and (S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
-    assertEnhancedStereo("(R)- or (S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 0, 1, 0);
-    assertEnhancedStereo("(R,S)- or (S,S)-2-(methylamino)-1-phenylpropan-1-ol", 0, 1, 1);
-  }
+	@Test
+	public void applyStereochemistryMultipleBrackets() throws StructureBuildingException {
+		assertEnhancedStereo("(R)- and (S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 1, 0, 0);
+		assertEnhancedStereo("(R)- or (S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol", 0, 1, 0);
+		assertEnhancedStereo("(R,S)- or (S,S)-2-(methylamino)-1-phenylpropan-1-ol", 0, 1, 1);
+	}
 
 	// US20080015199A1_2830
-	// probably better to support via composite entity like techniques
-	@Ignore
+	@Test
 	public void applyStereochemistryRelUnlocantedRAndS() throws StructureBuildingException {
-		Fragment f         = n2s.parseChemicalName("(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid").getStructure();
-		int      nRacAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
-					nRacAtoms++;
-			}
-		}
-		assertEquals(1, nRacAtoms);
+		assertEnhancedStereo("\"(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid\"", 1, 0, 0);
 	}
 
 	@Test
@@ -544,7 +536,7 @@ public class StereochemistryTest {
 	
 	@Test
 	public void testCIPpriority9() throws StructureBuildingException {
-		Fragment f = fm.buildSMILES("C1(C=C)CC1C2=CC=CC=C2");
+	  Fragment f = fm.buildSMILES("C1(C=C)CC1C2=CC=CC=C2");
 		fm.makeHydrogensExplicit();
 		List<Atom> cipOrdered = new CipSequenceRules(f.getFirstAtom()).getNeighbouringAtomsInCipOrder();
 		for (int i = 0; i < cipOrdered.size(); i++) {
