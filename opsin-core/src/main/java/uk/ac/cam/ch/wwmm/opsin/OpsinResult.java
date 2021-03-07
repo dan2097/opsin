@@ -147,7 +147,7 @@ public class OpsinResult {
 	/**
 	 * Generates the SMILES corresponding to the molecule described by the name
 	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned.
-	 * <br/>
+	 * <br>
 	 * The <code>options</code> parameter is used to control the output by a set of binary flags. This is
 	 * primarily used to control the output layers in ChemAxon Extended SMILES (CXSMILES).
 	 * <pre>
