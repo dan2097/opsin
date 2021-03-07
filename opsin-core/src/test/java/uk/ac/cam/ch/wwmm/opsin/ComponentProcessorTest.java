@@ -150,8 +150,9 @@ public class ComponentProcessorTest {
 		Element aminoAcidEl = new TokenEl(GROUP_EL);
 		aminoAcidEl.setFrag(f);
 		ComponentProcessor processor = new ComponentProcessor(state, mock(SuffixApplier.class));
-		assertEquals(true, processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl"));
-		assertEquals(null, f.getAtomByID(2).getAtomParity());
+		assertTrue(processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl"));
+		assertNotNull(f.getAtomByID(2).getAtomParity());
+		assertEquals(StereoGroup.Rac, f.getAtomByID(2).getAtomParity().getStereoGroup());
 	}
 	
 	@Test

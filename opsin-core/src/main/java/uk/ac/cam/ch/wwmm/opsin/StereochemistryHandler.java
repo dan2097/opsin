@@ -1019,8 +1019,10 @@ class StereochemistryHandler {
 					} else if (dOrL.equals("d") || dOrL.equals("ds")) {
 						potentialStereoAtom.setAtomParity(atomRefs4, 1);
 					} else if (dOrL.equals("dl")) {
-						//racemic
-						potentialStereoAtom.setAtomParity(null);
+						potentialStereoAtom.setAtomParity(atomRefs4, 1);
+						potentialStereoAtom.getAtomParity()
+								.setStereoGroup(StereoGroup.Rac,
+								                ++state.numRacGrps);
 					} else{
 						throw new RuntimeException("OPSIN bug: Unexpected value for D/L stereochemistry found: " + dOrL );
 					}
