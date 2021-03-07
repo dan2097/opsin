@@ -1303,8 +1303,9 @@ class ComponentProcessor {
 			return false;
 		}
 		if (dlStereochemistryValue.equals("dl")){
+			int grpnum = ++state.numRacGrps;
 			for (Atom atom : atomsWithParities) {
-				atom.setAtomParity(null);
+				atom.getAtomParity().setStereoGroup(StereoGroup.Rac, grpnum);
 			}
 		}
 		else{
@@ -1341,29 +1342,35 @@ class ComponentProcessor {
 		if (atomsWithParities.isEmpty()){
 			throw new ComponentGenerationException("D/L stereochemistry :" + dlStereochemistryValue + " found before achiral carbohydrate");//sounds like a vocab bug...
 		}
-		
-		if (dlStereochemistryValue.equals("dl")){
-			for (Atom atom : atomsWithParities) {
-				atom.setAtomParity(null);
-			}
-		}
-		else{
-			boolean invert;
-			if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
-				invert = false;
-			} else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
-				invert = true;
-			} else{
-				throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + dlStereochemistryValue );
-			}
-			if ("yes".equals(carbohydrateEl.getAttributeValue(NATURALENTISOPPOSITE_ATR))){
-				invert = !invert;
-			}
 
-			if (invert) {
-				for (Atom atom : atomsWithParities) {
-					atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
-				}
+		StereoGroup grp;
+		int grpnum = 0;
+		boolean invert;
+		if (dlStereochemistryValue.equals("dl")){
+			invert = false;
+			grp = StereoGroup.Rac;
+			grpnum = ++state.numRacGrps;
+		} else if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
+			invert = false;
+			grp = StereoGroup.Abs;
+		} else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
+			invert = true;
+			grp = StereoGroup.Abs;
+		} else{
+			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + dlStereochemistryValue );
+		}
+		if ("yes".equals(carbohydrateEl.getAttributeValue(NATURALENTISOPPOSITE_ATR))){
+			invert = !invert;
+		}
+
+		if (invert) {
+			for (Atom atom : atomsWithParities) {
+				atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
+				atom.getAtomParity().setStereoGroup(grp, grpnum);
+			}
+		} else if (grp != StereoGroup.Abs) {
+			for (Atom atom : atomsWithParities) {
+				atom.getAtomParity().setStereoGroup(grp, grpnum);
 			}
 		}
 	}

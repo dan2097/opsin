@@ -4,14 +4,17 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.AbstractMap;
+import java.util.Iterator;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -350,6 +353,49 @@ public class StereochemistryTest {
 	@Test
 	public void applyStereochemistryRelUnlocantedRAndS() throws StructureBuildingException {
 		assertEnhancedStereo("(R) and (S)-4-{3-[(4-Carbamimidoylphenylamino)-(3,5-dimethoxyphenyl)methyl]-5-oxo-4,5-dihydro-[1,2,4]triazol-1-yl}thiazole-5-carboxylic acid", 1, 0, 0);
+	}
+
+	@Test
+	public void racemicPeptides() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("DL-alanyl-DL-alanine").getStructure();
+		Map<Map.Entry<StereoGroup,Integer>, Integer> counter = new HashMap<>();
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				Map.Entry<StereoGroup,Integer> key
+						= new AbstractMap.SimpleImmutableEntry<>(atom.getAtomParity().getStereoGroup(),
+						                                         atom.getAtomParity().getStereoGroupNum());
+				Integer count = counter.get(key);
+				if (count == null)
+					count = 0;
+				counter.put(key, count+1);
+			}
+		}
+		assertEquals(2, counter.size());
+		Iterator<Integer> iterator = counter.values().iterator();
+		assertEquals(1, (int)iterator.next());
+		assertEquals(1, (int)iterator.next());
+	}
+
+	@Test
+	public void racemicCarbohydrates() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("4-O-α-DL-Glucopyranosyl-α-DL-glucose").getStructure();
+		Map<Map.Entry<StereoGroup,Integer>, Integer> counter = new HashMap<>();
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null &&
+				atom.getStereoGroup() == StereoGroup.Rac) {
+				Map.Entry<StereoGroup,Integer> key
+						= new AbstractMap.SimpleImmutableEntry<>(atom.getAtomParity().getStereoGroup(),
+						atom.getAtomParity().getStereoGroupNum());
+				Integer count = counter.get(key);
+				if (count == null)
+					count = 0;
+				counter.put(key, count+1);
+			}
+		}
+		assertEquals(2, counter.size());
+		Iterator<Integer> iterator = counter.values().iterator();
+		assertEquals(4, (int)iterator.next());
+		assertEquals(4, (int)iterator.next());
 	}
 
 	@Test

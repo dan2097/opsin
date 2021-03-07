@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -142,7 +143,7 @@ class SMILESWriter {
 		Integer lastLabel = null;
 		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
-		Map<StereoGroup,List<Integer>> enhancedStereo = null;
+		Map<Map.Entry<StereoGroup,Integer>,List<Integer>> enhancedStereo = null;
 		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
@@ -209,10 +210,14 @@ class SMILESWriter {
 
 			if (a.getStereoGroup() != StereoGroup.Unk) {
 				if (enhancedStereo == null)
-					enhancedStereo = new TreeMap<>();
-				List<Integer> grps = enhancedStereo.get(a.getStereoGroup());
-				if (grps == null)
-					enhancedStereo.put(a.getStereoGroup(), grps = new ArrayList<>());
+					enhancedStereo = new HashMap<>();
+				AbstractMap.SimpleImmutableEntry<StereoGroup, Integer> k
+						= new AbstractMap.SimpleImmutableEntry<>(a.getStereoGroup(),
+																 a.getAtomParity().getStereoGroupNum());
+				List<Integer> grps = enhancedStereo.get(k);
+				if (grps == null) {
+					enhancedStereo.put(k, grps = new ArrayList<>());
+				}
 				grps.add(smilesOutputOrder.indexOf(a));
 			}
 		}
@@ -225,10 +230,10 @@ class SMILESWriter {
 		}
 		if (enhancedStereo != null) {
 			if (enhancedStereo.size() == 1) {
-				if (enhancedStereo.get(StereoGroup.Rac) != null) {
+				if (enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rac, 1)) != null) {
 					extendedSmiles.add("r");
-				} else if (enhancedStereo.get(StereoGroup.Rel) != null) {
-					List<Integer> idxs = enhancedStereo.get(StereoGroup.Rel);
+				} else if (enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rel, 1)) != null) {
+					List<Integer> idxs = enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rel, 1));
 					StringBuilder sb   = new StringBuilder();
 					sb.append("o1:");
 					sb.append(idxs.get(0));
@@ -240,17 +245,19 @@ class SMILESWriter {
 				// all stereochemistry is absolute
 			} else {
 				StringBuilder sb = new StringBuilder();
-				for (Map.Entry<StereoGroup, List<Integer>> e : enhancedStereo.entrySet()) {
+				int numRac = 1, numRel = 1; // renumber
+				for (Map.Entry<Map.Entry<StereoGroup,Integer>, List<Integer>> e : enhancedStereo.entrySet()) {
 					sb.setLength(0);
-					switch (e.getKey()) {
+					Map.Entry<StereoGroup, Integer> key = e.getKey();
+					switch (key.getKey()) {
 						case Abs:
 							sb.append("a:");
 							break;
 						case Rel:
-							sb.append("o1:");
+							sb.append("o").append(numRac++).append(":");
 							break;
 						case Rac:
-							sb.append("&1:");
+							sb.append("&").append(numRel++).append(":");
 							break;
 						case Unk:
 							continue;

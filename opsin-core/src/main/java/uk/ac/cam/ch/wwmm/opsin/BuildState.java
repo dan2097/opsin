@@ -18,6 +18,7 @@ class BuildState {
 	final FragmentManager fragManager;
 	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
+	int numRacGrps = 0;
 	private final List<OpsinWarning> warnings = new ArrayList<OpsinWarning>();
 	
 	WordRule currentWordRule = null;
