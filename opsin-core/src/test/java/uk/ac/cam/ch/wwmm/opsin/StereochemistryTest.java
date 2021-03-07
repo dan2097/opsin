@@ -399,6 +399,27 @@ public class StereochemistryTest {
 	}
 
 	@Test
+	public void avoidCollisionOfRacemicDefinitions() throws StructureBuildingException {
+		Fragment f = n2s.parseChemicalName("DL-alanyl-(RS)-butan-2-ol").getStructure();
+		Map<Map.Entry<StereoGroup,Integer>, Integer> counter = new HashMap<>();
+		for (Atom atom : f.getAtomList()) {
+			if (atom.getAtomParity() != null) {
+				Map.Entry<StereoGroup,Integer> key
+						= new AbstractMap.SimpleImmutableEntry<>(atom.getAtomParity().getStereoGroup(),
+						atom.getAtomParity().getStereoGroupNum());
+				Integer count = counter.get(key);
+				if (count == null)
+					count = 0;
+				counter.put(key, count+1);
+			}
+		}
+		assertEquals(2, counter.size());
+		Iterator<Integer> iterator = counter.values().iterator();
+		assertEquals(1, (int)iterator.next());
+		assertEquals(1, (int)iterator.next());
+	}
+
+	@Test
 	public void applyStereochemistryLocantedRandS() throws StructureBuildingException {
 		Fragment f         = n2s.parseChemicalName("(1R and S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol").getStructure();
 		int      nRacAtoms = 0;
