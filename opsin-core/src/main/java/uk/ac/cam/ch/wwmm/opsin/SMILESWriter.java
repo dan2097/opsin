@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -48,7 +47,7 @@ class SMILESWriter {
 	private final StringBuilder smilesBuilder = new StringBuilder();
 
 	/**Should extended SMILES be output*/
-	private final boolean outputExtendedSmiles;
+	private int defaultOptions;
 
 	/**The order atoms were traversed when creating the SMILES*/
 	private List<Atom> smilesOutputOrder;
@@ -83,7 +82,20 @@ class SMILESWriter {
 	 */
 	private SMILESWriter(Fragment structure, boolean outputExtendedSmiles) {
 		this.structure = structure;
-		this.outputExtendedSmiles = outputExtendedSmiles;
+		this.defaultOptions = SmilesOptions.CXSMILES;
+	}
+
+	/**
+	 * Generates SMILES for the given fragment
+	 * The following assumptions are currently made:
+	 * 	The fragment contains no bonds to atoms outside the fragment
+	 * 	Hydrogens are all explicit
+	 * 	Spare valency has been converted to double bonds
+	 * @param options the set of {@link SmilesOptions} to use
+	 * @return SMILES String
+	 */
+	static String generateSmiles(Fragment structure, int options) {
+		return new SMILESWriter(structure, false).writeSmiles(options);
 	}
 
 	/**
@@ -95,7 +107,7 @@ class SMILESWriter {
 	 * @return SMILES String
 	 */
 	static String generateSmiles(Fragment structure) {
-		return new SMILESWriter(structure, false).writeSmiles();
+		return new SMILESWriter(structure, false).writeSmiles(SmilesOptions.DEFAULT);
 	}
 
 	/**
@@ -111,6 +123,10 @@ class SMILESWriter {
 	}
 
 	String writeSmiles() {
+		return writeSmiles(this.defaultOptions);
+	}
+
+	String writeSmiles(int options) {
 		assignSmilesOrder();
 		assignDoubleBondStereochemistrySlashes();
 
@@ -129,14 +145,14 @@ class SMILESWriter {
 			}
 		}
 
-		if (outputExtendedSmiles) {
-			writeExtendedSmilesLayer();
+		if ((options & SmilesOptions.CXSMILES) != 0) {
+			writeExtendedSmilesLayer(options);
 		}
 
 		return smilesBuilder.toString();
 	}
 
-	private void writeExtendedSmilesLayer() {
+	private void writeExtendedSmilesLayer(int options) {
 		List<String> atomLabels = new ArrayList<String>();
 		List<String> atomLocants = new ArrayList<String>();
 		List<String> positionVariationBonds = new ArrayList<String>();
@@ -222,13 +238,13 @@ class SMILESWriter {
 			}
 		}
 		List<String> extendedSmiles = new ArrayList<String>(2);
-		if (lastLabel != null) {
+		if (lastLabel != null && (options & SmilesOptions.CXSMILES_ATOM_LABELS) != 0) {
 			extendedSmiles.add("$" + StringTools.stringListToString(atomLabels.subList(0, lastLabel + 1), ";") + "$" );
 		}
-		if (lastLocant != null) {
+		if (lastLocant != null && (options & SmilesOptions.CXSMILES_ATOM_VALUES) != 0) {
 			extendedSmiles.add("$_AV:" + StringTools.stringListToString(atomLocants.subList(0, lastLocant + 1), ";") + "$" );
 		}
-		if (enhancedStereo != null) {
+		if (enhancedStereo != null && (options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0) {
 			if (enhancedStereo.size() == 1) {
 				if (enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rac, 1)) != null) {
 					extendedSmiles.add("r");
@@ -273,7 +289,7 @@ class SMILESWriter {
 		if (positionVariationBonds.size() > 0) {
 			extendedSmiles.add("m:" + StringTools.stringListToString(positionVariationBonds, ","));
 		}
-		if (isPolymer) {
+		if (isPolymer && (options & SmilesOptions.CXSMILES_POLYMERS) != 0) {
 			StringBuilder sruContents = new StringBuilder();
 			sruContents.append("Sg:n:");
 			boolean appendDelimiter = false;
@@ -659,7 +675,8 @@ class SMILESWriter {
 			}
 		}
 		if (atom.getAtomParity() != null){
-			if (atom.getStereoGroup() != StereoGroup.Rac || outputExtendedSmiles)
+			if (atom.getStereoGroup() != StereoGroup.Rac ||
+					(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) == 0)
 				atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
 		}
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
@@ -717,7 +734,8 @@ class SMILESWriter {
 			return true;
 		}
 		if (atom.getAtomParity() != null &&
-				(atom.getStereoGroup() != StereoGroup.Rac || outputExtendedSmiles)) {
+				(atom.getStereoGroup() != StereoGroup.Rac ||
+						(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) == 0)) {
 			return true;
 		}
 
