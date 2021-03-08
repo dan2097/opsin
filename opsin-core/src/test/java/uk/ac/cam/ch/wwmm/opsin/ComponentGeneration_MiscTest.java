@@ -51,7 +51,7 @@ public class ComponentGeneration_MiscTest {
 	}
 
 	private void processComponents(Element parse) throws ComponentGenerationException {
-		new ComponentGenerator(new NameToStructureConfig()).processParse(parse);
+		new ComponentGenerator(new BuildState(new NameToStructureConfig())).processParse(parse);
 	}
 	
 }

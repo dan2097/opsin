@@ -1134,6 +1134,6 @@ public class ComponentGeneration_StereochemistryTest {
 	}
 	
 	private void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
-		new ComponentGenerator(new NameToStructureConfig()).processStereochemistry(subOrRoot);
+		new ComponentGenerator(new BuildState(new NameToStructureConfig())).processStereochemistry(subOrRoot);
 	}
 }

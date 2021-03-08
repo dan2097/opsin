@@ -331,7 +331,7 @@ public class StereochemistryTest {
 	}
 
 	@Test
-	public void testBracketNormalisation() {
+	public void testBracketNormalisation() throws StereochemistryException {
 		MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R)-and(S)-"),
 				CoreMatchers.is("(RS)"));
 		MatcherAssert.assertThat(ComponentGenerator.normaliseBinaryBrackets("(R,S)-and(S,R)-"),

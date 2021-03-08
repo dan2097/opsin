@@ -179,12 +179,12 @@ public class NameToStructure {
 					LOG.debug(parse.toXML());
 				}
 				//Performs XML manipulation e.g. nesting bracketing, processing some nomenclatures
-				new ComponentGenerator(n2sConfig).processParse(parse);
+				BuildState state = new BuildState(n2sConfig);
+				new ComponentGenerator(state).processParse(parse);
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(parse.toXML());
 				}
-				BuildState state = new BuildState(n2sConfig);
-				//Converts the XML to fragments (handles many different nomenclatueres for describing structure). Assigns locants 
+				//Converts the XML to fragments (handles many different nomenclatueres for describing structure). Assigns locants
 				new ComponentProcessor(state, new SuffixApplier(state, suffixRules)).processParse(parse);
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(parse.toXML());
