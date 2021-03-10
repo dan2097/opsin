@@ -735,7 +735,7 @@ class SMILESWriter {
 		}
 		if (atom.getAtomParity() != null &&
 				(atom.getStereoGroup() != StereoGroup.Rac ||
-						(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) == 0)) {
+						(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)) {
 			return true;
 		}
 
