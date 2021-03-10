@@ -676,7 +676,7 @@ class SMILESWriter {
 		}
 		if (atom.getAtomParity() != null){
 			if (atom.getStereoGroup() != StereoGroup.Rac ||
-					(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) == 0)
+					(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
 				atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
 		}
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
