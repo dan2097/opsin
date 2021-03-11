@@ -4,6 +4,8 @@ import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -262,7 +264,29 @@ class SMILESWriter {
 			} else {
 				StringBuilder sb = new StringBuilder();
 				int numRac = 1, numRel = 1; // renumber
-				for (Map.Entry<Map.Entry<StereoGroup,Integer>, List<Integer>> e : enhancedStereo.entrySet()) {
+				List<Map.Entry<Map.Entry<StereoGroup,Integer>, List<Integer>>> entires
+						= new ArrayList<>(enhancedStereo.entrySet());
+				// ensure consistent output order
+				Collections.sort(entires,
+						new Comparator<Map.Entry<Map.Entry<StereoGroup, Integer>, List<Integer>>>() {
+							@Override
+							public int compare(Map.Entry<Map.Entry<StereoGroup, Integer>, List<Integer>> a,
+											   Map.Entry<Map.Entry<StereoGroup, Integer>, List<Integer>> b) {
+								int cmp = a.getKey().getKey().compareTo(b.getKey().getKey());
+								if (cmp != 0)
+									return cmp;
+								Collections.sort(a.getValue());
+								Collections.sort(b.getValue());
+								int len = Math.min(a.getValue().size(), b.getValue().size());
+								for (int i = 0; i < len; i++) {
+									cmp = a.getValue().get(i).compareTo(b.getValue().get(i));
+									if (cmp != 0)
+										return cmp;
+								}
+								return Integer.compare(a.getValue().size(), b.getValue().size());
+							}
+						});
+				for (Map.Entry<Map.Entry<StereoGroup,Integer>, List<Integer>> e : entires) {
 					sb.setLength(0);
 					Map.Entry<StereoGroup, Integer> key = e.getKey();
 					switch (key.getKey()) {
