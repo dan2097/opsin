@@ -31,8 +31,8 @@ public interface SmilesOptions {
 	/**
 	 * Include all CXSMILES layers that are relevant. This option is equivalent to turning on all CXSMILES features.s
 	 */
-	int CXSMILES                 = CXSMILES_ATOM_LABELS +
-			                       CXSMILES_ATOM_VALUES +
-			                       CXSMILES_POLYMERS +
-			                       CXSMILES_ATOM_VALUES;
+	int CXSMILES                 = CXSMILES_ATOM_LABELS |
+			                       CXSMILES_ATOM_VALUES |
+			                       CXSMILES_POLYMERS |
+			                       CXSMILES_ENHANCED_STEREO;
 }

@@ -103,6 +103,7 @@ class Fragment implements Iterable<Atom> {
 		return new ArrayList<Atom>(atomCollection);
 	}
 
+
 	/**
 	 * Adds a bond to the fragment.
 	 * @param bond

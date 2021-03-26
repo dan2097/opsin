@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -157,7 +158,7 @@ class SMILESWriter {
 		Integer lastLabel = null;
 		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
-		Map<Map.Entry<StereoGroup,Integer>,List<Integer>> enhancedStereo = null;
+		Map<StereoGrpKey,List<Integer>> enhancedStereo = null;
 		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
@@ -225,12 +226,10 @@ class SMILESWriter {
 			if (a.getStereoGroup() != StereoGroup.Unk) {
 				if (enhancedStereo == null)
 					enhancedStereo = new HashMap<>();
-				AbstractMap.SimpleImmutableEntry<StereoGroup, Integer> k
-						= new AbstractMap.SimpleImmutableEntry<>(a.getStereoGroup(),
-																 a.getAtomParity().getStereoGroupNum());
-				List<Integer> grps = enhancedStereo.get(k);
+				StereoGrpKey key = new StereoGrpKey(a.getAtomParity());
+				List<Integer> grps = enhancedStereo.get(key);
 				if (grps == null) {
-					enhancedStereo.put(k, grps = new ArrayList<>());
+					enhancedStereo.put(key, grps = new ArrayList<>());
 				}
 				grps.add(smilesOutputOrder.indexOf(a));
 			}
@@ -244,10 +243,11 @@ class SMILESWriter {
 		}
 		if (enhancedStereo != null && (options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0) {
 			if (enhancedStereo.size() == 1) {
-				if (enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rac, 1)) != null) {
+				if (enhancedStereo.get(new StereoGrpKey(StereoGroup.Rac, 1)) != null ||
+					enhancedStereo.get(new StereoGrpKey(StereoGroup.Rac, 2)) != null) {
 					extendedSmiles.add("r");
-				} else if (enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rel, 1)) != null) {
-					List<Integer> idxs = enhancedStereo.get(new AbstractMap.SimpleImmutableEntry<>(StereoGroup.Rel, 1));
+				} else if (enhancedStereo.get(new StereoGrpKey(StereoGroup.Rel, 1)) != null) {
+					List<Integer> idxs = enhancedStereo.get(new StereoGrpKey(StereoGroup.Rel, 1));
 					StringBuilder sb   = new StringBuilder();
 					sb.append("o1:");
 					sb.append(idxs.get(0));
@@ -260,35 +260,35 @@ class SMILESWriter {
 			} else {
 				StringBuilder sb = new StringBuilder();
 				int numRac = 1, numRel = 1; // renumber
-				List<Map.Entry<Map.Entry<StereoGroup,Integer>, List<Integer>>> entires
+				List<Map.Entry<StereoGrpKey, List<Integer>>> entires
 						= new ArrayList<>(enhancedStereo.entrySet());
 				// ensure consistent output order
 				Collections.sort(entires,
-						new Comparator<Map.Entry<Map.Entry<StereoGroup, Integer>, List<Integer>>>() {
+						new Comparator<Map.Entry<StereoGrpKey, List<Integer>>>() {
 							@Override
-							public int compare(Map.Entry<Map.Entry<StereoGroup, Integer>, List<Integer>> a,
-											   Map.Entry<Map.Entry<StereoGroup, Integer>, List<Integer>> b) {
-								int cmp = a.getKey().getKey().compareTo(b.getKey().getKey());
-								if (cmp != 0)
-									return cmp;
+							public int compare(Map.Entry<StereoGrpKey, List<Integer>> a,
+											   Map.Entry<StereoGrpKey, List<Integer>> b) {
 								Collections.sort(a.getValue());
 								Collections.sort(b.getValue());
 								int len = Math.min(a.getValue().size(), b.getValue().size());
 								for (int i = 0; i < len; i++) {
-									cmp = a.getValue().get(i).compareTo(b.getValue().get(i));
+									int cmp = a.getValue().get(i).compareTo(b.getValue().get(i));
 									if (cmp != 0)
 										return cmp;
 								}
-								return Integer.compare(a.getValue().size(), b.getValue().size());
+								int cmp = Integer.compare(a.getValue().size(), b.getValue().size());
+								if (cmp != 0)
+									return cmp;
+								return a.getKey().compareTo(b.getKey()); // error?
 							}
 						});
-				for (Map.Entry<Map.Entry<StereoGroup,Integer>, List<Integer>> e : entires) {
+				for (Map.Entry<StereoGrpKey, List<Integer>> e : entires) {
 					sb.setLength(0);
-					Map.Entry<StereoGroup, Integer> key = e.getKey();
-					switch (key.getKey()) {
+					StereoGrpKey key = e.getKey();
+					switch (key.group) {
 						case Abs:
-							sb.append("a:");
-							break;
+							// skip Abs this is the default in SMILES but we could be verbose about it
+							continue;
 						case Rel:
 							sb.append("o").append(numRac++).append(":");
 							break;
@@ -452,6 +452,29 @@ class SMILESWriter {
 			}
 		}
 		return true;
+	}
+
+	private boolean hasStereo(Atom atom) {
+		AtomParity partity = atom.getAtomParity();
+		if (partity == null)
+			return false;
+		if (atom.getStereoGroup() != StereoGroup.Rac)
+			return true;
+		if ((options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
+			return true;
+		return countStereoGroup(atom) > 1;
+	}
+
+	private int countStereoGroup(Atom atom) {
+		int count = 0;
+		for (Atom a : atom.getFrag().getAtomList()) {
+			if (a.getAtomParity() == null)
+				continue;
+			if (a.getAtomParity().getStereoGroup().equals(atom.getAtomParity().getStereoGroup()) &&
+					a.getAtomParity().getStereoGroupNum() == atom.getAtomParity().getStereoGroupNum())
+				count++;
+		}
+		return count;
 	}
 
 	/**
@@ -694,11 +717,9 @@ class SMILESWriter {
 				atomSmiles.append(chemEl.toString());
 			}
 		}
-		if (atom.getAtomParity() != null){
-			if (atom.getStereoGroup() != StereoGroup.Rac ||
-					(options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
-				atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
-		}
+		if (hasStereo(atom))
+			atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
+
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
 			atomSmiles.append('H');
 			if (hydrogenCount != 1){
@@ -753,9 +774,7 @@ class SMILESWriter {
 		if (atom.getIsotope() != null){
 			return true;
 		}
-		if (atom.getAtomParity() != null &&
-				(atom.getStereoGroup() != StereoGroup.Rac ||
-						(options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)) {
+		if (hasStereo(atom)) {
 			return true;
 		}
 
@@ -884,5 +903,47 @@ class SMILESWriter {
 			}
 		}
 		return bondSmiles;
+	}
+
+	private static final class StereoGrpKey implements Comparable<StereoGrpKey> {
+		private final StereoGroup group;
+		private final int number;
+
+		public StereoGrpKey(StereoGroup group, int number) {
+			this.group = group;
+			this.number = number;
+		}
+
+		public StereoGrpKey(AtomParity parity) {
+			this(parity.getStereoGroup(), parity.getStereoGroupNum());
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			StereoGrpKey that = (StereoGrpKey) o;
+			return number == that.number && group == that.group;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(group, number);
+		}
+
+		public int compareTo(StereoGrpKey that) {
+			int cmp = this.group.compareTo(that.group);
+			if (cmp != 0)
+				return cmp;
+			return Integer.compare(this.number, that.number);
+		}
+
+		@Override
+		public String toString() {
+			return "StereoGrpKey{" +
+					"group=" + group +
+					", number=" + number +
+					'}';
+		}
 	}
 }
