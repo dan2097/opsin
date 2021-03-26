@@ -49,7 +49,7 @@ class SMILESWriter {
 	private final StringBuilder smilesBuilder = new StringBuilder();
 
 	/**Should extended SMILES be output*/
-	private int defaultOptions;
+	private int options;
 
 	/**The order atoms were traversed when creating the SMILES*/
 	private List<Atom> smilesOutputOrder;
@@ -80,11 +80,11 @@ class SMILESWriter {
 	/**
 	 * Creates a SMILES writer for the given fragment
 	 * @param structure
-	 * @param outputExtendedSmiles
+	 * @param options
 	 */
-	private SMILESWriter(Fragment structure, boolean outputExtendedSmiles) {
+	private SMILESWriter(Fragment structure, int options) {
 		this.structure = structure;
-		this.defaultOptions = SmilesOptions.CXSMILES;
+		this.options = options;
 	}
 
 	/**
@@ -97,7 +97,7 @@ class SMILESWriter {
 	 * @return SMILES String
 	 */
 	static String generateSmiles(Fragment structure, int options) {
-		return new SMILESWriter(structure, false).writeSmiles(options);
+		return new SMILESWriter(structure, options).writeSmiles();
 	}
 
 	/**
@@ -109,7 +109,7 @@ class SMILESWriter {
 	 * @return SMILES String
 	 */
 	static String generateSmiles(Fragment structure) {
-		return new SMILESWriter(structure, false).writeSmiles(SmilesOptions.DEFAULT);
+		return new SMILESWriter(structure, SmilesOptions.DEFAULT).writeSmiles();
 	}
 
 	/**
@@ -121,14 +121,10 @@ class SMILESWriter {
 	 * @return Extended SMILES String
 	 */
 	static String generateExtendedSmiles(Fragment structure) {
-		return new SMILESWriter(structure, true).writeSmiles();
+		return new SMILESWriter(structure, SmilesOptions.CXSMILES).writeSmiles();
 	}
 
 	String writeSmiles() {
-		return writeSmiles(this.defaultOptions);
-	}
-
-	String writeSmiles(int options) {
 		assignSmilesOrder();
 		assignDoubleBondStereochemistrySlashes();
 
@@ -700,7 +696,7 @@ class SMILESWriter {
 		}
 		if (atom.getAtomParity() != null){
 			if (atom.getStereoGroup() != StereoGroup.Rac ||
-					(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
+					(options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
 				atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
 		}
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
@@ -759,7 +755,7 @@ class SMILESWriter {
 		}
 		if (atom.getAtomParity() != null &&
 				(atom.getStereoGroup() != StereoGroup.Rac ||
-						(defaultOptions & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)) {
+						(options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)) {
 			return true;
 		}
 
