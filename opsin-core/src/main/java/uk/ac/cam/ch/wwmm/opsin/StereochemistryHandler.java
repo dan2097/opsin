@@ -220,14 +220,31 @@ class StereochemistryHandler {
 	 * @throws StereochemistryException
 	 */
 	private void initAll(Element stereoChemistryEl, StereoGroup group) throws StructureBuildingException, StereochemistryException {
+
+		Element wordParent = stereoChemistryEl.getParent();
+		while (wordParent != null &&
+				!wordParent.getName().equals(WORD_EL)) {
+			wordParent = wordParent.getParent();
+		}
+		if (wordParent == null)
+			return;
+
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
-		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
+		List<Fragment> possibleFragments = new ArrayList<>(StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot));
 		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
-		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--)
 			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
+
+		// collect all fragments that occur after
+		List<Element> words = OpsinTools.getNextSiblingsOfType(wordParent, WORD_EL);
+		for (Element word : words) {
+			List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
+			for (int i = possibleGroups.size() - 1; i >= 0; i--) {
+				possibleFragments.add(possibleGroups.get(i).getFrag());
+			}
 		}
 
-		// first for allready defined stereochemistry
+		// first for all-ready defined stereochemistry
 		List<Atom> definedStereo = new ArrayList<>();
 		for (Fragment fragment : possibleFragments) {
 			List<Atom> atomList = fragment.getAtomList();
@@ -250,26 +267,26 @@ class StereochemistryHandler {
 				  if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)){
 
 				  	// JWM: Don't assign to cyclo-propane substructure, other less
-						// common cases can happen (hence the catch below) but we get in to
-						// an interesting situation where by one of there stereocenters ends
-						// up ns being redundant but then removing it causes an asymmetry
-						// see p. 48 in the InChI 1.04 technical manual, for now we just
-						// tap out
+					// common cases can happen (hence the catch below) but we get in to
+					// an interesting situation where by one of there stereocenters ends
+					// up ns being redundant but then removing it causes an asymmetry
+					// see p. 48 in the InChI 1.04 technical manual, for now we just
+					// tap out
 				  	if (isInCyclopropane(potentialStereoAtom)) {
 				  		continue;
-						}
+				  	}
 
 				  	try {
-							applyStereoChemistryToStereoCentre(potentialStereoAtom,
-																								 notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
-																								 "R");
-						} catch (CipOrderingException e) {
-				  		// ignore.. because the stereocentre wasn't explicitly indicated
-							// we don't really lose anything
-						}
-						potentialStereoAtom.setStereoGroup(group);
-						notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
+						applyStereoChemistryToStereoCentre(potentialStereoAtom,
+								notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom),
+								"R");
+					} catch (CipOrderingException e) {
+						// ignore.. because the stereocentre wasn't explicitly indicated
+						// we don't really lose anything
 					}
+					  potentialStereoAtom.setStereoGroup(group);
+					  notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
+				  }
 				}
 			}
 		}

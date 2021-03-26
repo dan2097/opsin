@@ -349,6 +349,17 @@ public class StereochemistryTest {
 		assertEnhancedStereo("(R,S)- or (S,S)-2-(methylamino)-1-phenylpropan-1-ol", 0, 1, 1);
 	}
 
+	@Test
+	public void onlyApplyRacToPostfix() throws StructureBuildingException {
+		assertEnhancedStereo("alanyl-rac-alanine", 1, 0, 1);
+	}
+
+	@Test
+	public void remoteRacSpecification() throws StructureBuildingException {
+		assertEnhancedStereo("rac-tert-butyl 7-[8-(tert-butoxycarbonylamino)-7-fluoro-3-[[(1S,2S,3R)-3-hydroxy-2,3-dimethyl-cyclobutoxy]carbonylamino]-6-isoquinolyl]-8-methyl-2,3-dihydropyrido[2,3-b][1,4]oxazine-1-carboxylate", 3, 0, 0);
+		assertEnhancedStereo("(+-)-tert-butyl 7-[8-(tert-butoxycarbonylamino)-7-fluoro-3-[[(1S,2S,3R)-3-hydroxy-2,3-dimethyl-cyclobutoxy]carbonylamino]-6-isoquinolyl]-8-methyl-2,3-dihydropyrido[2,3-b][1,4]oxazine-1-carboxylate", 3, 0, 0);
+	}
+
 	// US20080015199A1_2830
 	@Test
 	public void applyStereochemistryRelUnlocantedRAndS() throws StructureBuildingException {

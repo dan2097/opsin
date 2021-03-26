@@ -16,7 +16,7 @@ class AtomParity {
 	static final Atom deoxyHydrogen = new Atom(ChemEl.H);
 	private Atom[] atomRefs4;
 	private int parity;
-	private StereoGroup stereoGroup = StereoGroup.Unk;
+	private StereoGroup stereoGroup = StereoGroup.Abs;
 	private int stereoGroupNum = 1;
 	
 	/**
